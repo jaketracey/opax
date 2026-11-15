@@ -73,6 +73,7 @@ from parli.ingest.arag_sync import (  # noqa: E402
 from parli.ingest.speaker_names import non_person_name, normalize_speaker  # noqa: E402
 from scripts.roster_identity import COMMITTEES, agrees, federal_members, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
 from scripts.enrich_profile_jurisdictions import pinned_reference, repair, REVIEWED, REPRESENTATION_METHOD  # noqa: E402
+from parli.ingest.speaker_identity import BY_NAME, identity_for, member_rows  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 FLOOR = 5
@@ -93,6 +94,9 @@ HELD = 3
 # Letters (any script), spaces, hyphens, apostrophes, dots; 2-5 tokens; not a
 # sentence. "Shoebridge" (one token) passes: surname-only Hansard prints are
 # real collaborator values with entry pages of their own.
+# The apps' roster id rule (mobile/src/api/ids.ts rosterId). A pid outside it
+# makes the apps drop the row and mark the whole roster partial.
+ROSTER_ID_RE = re.compile(r"^(?:\d+|(?:nsw|vic|qld|sa|wa|tas|act|nt|wragge|zenodo|aph)_[a-z0-9_]+)$")
 NAME_RE = re.compile(r"^[^\W\d_][\w'’.\-]*(?: [^\W\d_][\w'’.\-]*){0,4}$", re.UNICODE)
 
 # speeches.party_canonical spells two parties out where the sync's canonical
@@ -228,16 +232,22 @@ def main(argv=()) -> None:
     columns = {r[1] for r in db.execute('PRAGMA table_info(speeches)')}
     witness_type = "OR speaker_type = 'witness'" if 'speaker_type' in columns else ''
     speaker_type = 'speaker_type' if 'speaker_type' in columns else 'NULL'
+    source_field = 'source' if 'source' in columns else 'NULL'
+    electorate_field = 'electorate' if 'electorate' in columns else 'NULL'
     rows = db.execute(f"""
         SELECT speaker_name, person_id, party, party_canonical, state, chamber,
                substr(date, 1, 10) AS speech_date,
                ((witness_name IS NOT NULL AND witness_name != '') {witness_type}) AS is_witness,
-               COUNT(*) AS n, {speaker_type} AS speaker_type
+               COUNT(*) AS n, {speaker_type} AS speaker_type,
+               {source_field} AS source, {electorate_field} AS electorate
         FROM speeches WHERE {where}
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 10""").fetchall()
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12""").fetchall()
     members = {r[0]: {"name": r[1], "party": member_party(*r[:6]), "state": r[2] or "federal",
                        "chamber": r[3], "start": r[6], "end": r[7]} for r in db.execute(
         "SELECT person_id, full_name, state, chamber, party, party_canonical, entered_house, left_house FROM members")}
+    for m in member_rows():
+        members[m['person_id']] = dict(name=m['full_name'], party=None, state='federal',
+                                      chamber=m['chamber'], start=m['entered_house'], end=m['left_house'])
     # Federal members with their terms: what a row's pid is verified against.
     federal = federal_members(db)
     same = same_person()
@@ -252,9 +262,17 @@ def main(argv=()) -> None:
     print(f"[export] {len(rows):,} speaker groups ({time.time() - t0:.0f}s)", file=sys.stderr)
 
     people = {}
-    for speaker, pid, party, canonical, state, chamber, speech_date, is_witness, n, row_type in rows:
+    for speaker, pid, party, canonical, state, chamber, speech_date, is_witness, n, row_type, source, electorate in rows:
         yr = (speech_date or '')[:4]
-        name = normalize_speaker(speaker)
+        # Group by original seat as well: a namesake's seat must never leak
+        # through an aggregate that happened to share a print, id and date.
+        person = identity_for(dict(speaker_name=speaker, person_id=pid, party=party,
+                                   state=state, chamber=chamber, date=speech_date,
+                                   source=source, electorate=electorate, speaker_type=row_type,
+                                   witness_name='witness' if is_witness else None))
+        name = person['name'] if person else normalize_speaker(speaker)
+        if person:
+            pid = person['person_id']
         if not name:
             continue
         p = people.get(name)
@@ -343,8 +361,12 @@ def main(argv=()) -> None:
             rec["party"] = ranked[0]
             if len(ranked) > 1:
                 rec["parties"] = ranked
-        if pid:
+        if pid and ROSTER_ID_RE.match(pid):
             rec["pid"] = pid
+        elif pid:
+            # A canonical id (person_<hex>) is not a roster id: the apps reject
+            # it in pid and would drop the row. Keep it for server-side joins.
+            rec["person_id"] = pid
         if pid in current:
             rec["current"] = True
             if current[pid][0]:
@@ -364,12 +386,19 @@ def main(argv=()) -> None:
                     and raw['state'] in rec['states'] and raw['chamber'] in set(rec['chambers'])-COMMITTEES):
                 rec['full']=raw['name']
         # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
-        order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
+        order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid", "person_id",
                  "current", "party_now", "full", "witness_rows", "recorded_parties", "separated_witnesses", "transcript", "_speech_groups"]
         out.append({k: rec[k] for k in order if k in rec})
 
     out.sort(key=lambda r: (-r["speeches"], r["name"]))
     repair(out,pinned_reference(),json.loads(REVIEWED.read_text()))
+    for row in out:
+        if row['name'] in BY_NAME:
+            p = BY_NAME[row['name']]
+            row['representation'] = [dict(jurisdiction='federal', chamber=p['house'], electorate=p['seat'],
+                                           state=p['state'], basis=f"OpenAustralia recorded House service {p['start']} to {p['end']}")]
+            if p.get('full_name'):
+                row['aliases'] = [p['full_name']]
     for row in out:row.pop('_speech_groups', None)
     speeches_total = sum(p['speeches'] for p in out)
     out.sort(key=lambda r: (-r['speeches'], r['name']))

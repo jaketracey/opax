@@ -13,6 +13,8 @@
  "portfolio": "Social Services",
  "status": "lapsed",
  "status_as_of": "2017-05-10",
+ "ended": "discharged",
+ "ended_label": "Discharged from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

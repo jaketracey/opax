@@ -306,7 +306,7 @@ test('loop follow-ups search the standalone question, expose asked_as and pre-wr
 test('three receipt follow-ups use fresh tool fields with the iOS author/text conversation shape in JSON and SSE',async()=>{
  const donor='Mining and Energy Union',originalAssets=h.env.ASSETS,originalFetch=globalThis.fetch
  const graph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url)))
- h.env.ASSETS={fetch:req=>new URL(req.url).pathname==='/graph/money.json'?Response.json(graph):originalAssets.fetch(req)}
+ h.env.ASSETS={fetch:req=>new URL(req.url).pathname==='/graph/money-receipts.json'?Response.json(graph):originalAssets.fetch(req)}
  h.env.RESEARCH_LOOP='route'
  globalThis.fetch=(url,init)=>{
   const body=JSON.parse(init?.body??'{}')
@@ -372,6 +372,62 @@ test('a planner fallback failure after released loop text ends with a checked cu
   assert.equal(deltas,done.answer);
   assert.deepEqual(logs.findLast(r=>r.kind==='research_loop_stream_cut_short'),{kind:'research_loop_stream_cut_short',count:1,reason:'fallback_error',preview_chars:first.length});
  }finally{globalThis.fetch=previousFetch;delete globalThis.__askTestFallbackAfterPreview;await flush()}
+});
+
+// Failure paths while an answer streams as reply text (review of the reply-text change, 14 November 2026).
+const housingFirst='The housing report found planning rules slowed approvals.',housingSecond='The housing report recommended simpler planning rules.';
+const housingReply=onPiece=>scriptedResearchModel([{tool_calls:[{name:'search',id:'s',args:{query:'housing report'}}]},{text:JSON.stringify({points:[{claim:housingFirst},{claim:housingSecond}]})}],{onPiece});
+// Reads the SSE body, calling shown() once checked answer text has reached the client.
+const readUntilShown=async(response,shown,stop=false)=>{
+ const reader=response.body.getReader(),decoder=new TextDecoder();let wire='';
+ for(;;){const {value,done}=await reader.read();if(done)break;wire+=decoder.decode(value,{stream:true});if(/event: (?:research_sentence|delta)/.test(wire)){shown();if(stop){await reader.cancel();break}}}
+ return wire;
+};
+test('a provider error after the first point was shown ends with one checked done that says the answer was cut short',async t=>{
+ h.env.RESEARCH_LOOP='route';t.mock.method(console,'error',()=>{});
+ let raw='',shown;const seen=new Promise(r=>shown=r);
+ // The provider fails mid-answer, once the first point is on the reader's screen.
+ const model=housingReply(async piece=>{raw+=piece;if(raw.includes('recommended')){await seen;throw Error('provider stream dropped')}});
+ globalThis.__researchModel=model;
+ try{
+  const wire=await readUntilShown(await post('What did the housing report find?',true),shown),done=decodeStream(wire);
+  assert.doesNotMatch(wire,/event: error|event: retry/);
+  assert.equal(done.answer,housingFirst+'\n\nThe answer was cut short because it could not finish.');
+  const deltas=[...wire.matchAll(/event: delta\ndata: (.+)/g)].map(m=>JSON.parse(m[1]).text).join('');
+  assert.equal(deltas,done.answer,'the reader is shown exactly the final answer, never the partial as a whole answer');
+  assert.equal(model.calls.length,2,'the checked draft answers; no further model call');
+  assert.equal(logs.findLast(r=>r.kind==='research_loop_answer')?.salvaged,'error');
+ }finally{await flush()}
+});
+test('a provider error before any text, with no fallback, ends with one clean error event',async t=>{
+ h.env.RESEARCH_LOOP='route';t.mock.method(console,'error',()=>{});
+ const previousFetch=globalThis.fetch;
+ globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/ask')?Promise.resolve(new Response('fixture unavailable',{status:503})):previousFetch(input,init);
+ globalThis.__researchModel=scriptedResearchModel([{error:'provider unavailable'}]);
+ try{
+  const wire=await(await post('What did the housing report find?',true)).text();
+  // The planner fallback may retry before any text; a retry is never sent after text.
+  const terminal=[...wire.matchAll(/^event: (done|error)$/gm)].map(m=>m[1]);
+  assert.deepEqual(terminal,['error']);
+  assert.doesNotMatch(wire,/event: (?:delta|research_sentence)/);
+  assert.equal(JSON.parse(/event: error\ndata: (.+)/.exec(wire)[1]).final,true);
+ }finally{globalThis.fetch=previousFetch;await flush()}
+});
+test('a reader that disconnects mid-answer aborts the model call, with no unhandled rejection',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const rejections=[],onRejection=error=>rejections.push(error);process.on('unhandledRejection',onRejection);
+ let raw='',shown;
+ // The provider holds the rest of the answer until its call is aborted.
+ const model=housingReply(async piece=>{raw+=piece;if(raw.includes('recommended')){const signal=model.calls.at(-1).abortSignal;await new Promise(r=>signal.aborted?r():signal.addEventListener('abort',r,{once:true}))}});
+ globalThis.__researchModel=model;
+ try{
+  await readUntilShown(await post('What did the housing report find?',true),()=>shown=true,true);
+  assert.equal(shown,true);
+  await flush();await new Promise(r=>setTimeout(r,50));
+  assert.equal(model.calls.at(-1).abortSignal.aborted,true,'the answer call is aborted upstream');
+  assert.equal(model.calls.length,2,'no salvage call after the reader has gone');
+  assert.deepEqual(rejections,[]);
+ }finally{process.off('unhandledRejection',onRejection);await flush()}
 });
 
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{

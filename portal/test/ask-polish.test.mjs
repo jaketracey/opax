@@ -37,7 +37,7 @@ test('industry prose uses a full party name, one singular FY and short cited rep
  assert.equal((out.answer.match(/financial year/g)??[]).length,1)
  assert.equal((out.answer.match(/1 July 2023/g)??[]).length,1)
  assert.doesNotMatch(out.answer,/to Liberal\b|—/)
- assert.match(out.coverage.note,/not every AEC receipt/)
+ assert.match(out.coverage.note,/uncapped published donor selection/)
  assert.match(out.coverage.note,/including more than gifts/)
  assert.deepEqual(result.rows.map(r=>[r.total_aud,r.receipts]),[[1360509,101],[1120000,8],[737500,16]])
  ranges(out)

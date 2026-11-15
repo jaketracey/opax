@@ -17,6 +17,9 @@ test('bill titles: the eight fields in index order, nothing else', () => {
   assert.deepEqual(billTitlesFile(index), {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', short_title: 'A', jurisdiction: 'federal', status: 'passed', status_as_of: '2026-11-01', has_summary: true}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw', has_summary: false}]});
   assert.deepEqual(Object.keys(billTitlesFile(index).bills[0]), ['key', 'title', 'short_title', 'jurisdiction', 'status', 'status_as_of', 'has_summary']);
   assert.throws(() => billTitlesFile({}));
+  // A dead bill's exact ending travels to speech pages next to its dated status.
+  const dead = billTitlesFile({generated_at: 'x', bills: [{key: 'k', title: 'T', status: 'lapsed', status_as_of: '2018-06-26', ended: 'removed', ended_label: 'Removed from the Notice Paper', has_summary: false}]}).bills[0];
+  assert.deepEqual(Object.keys(dead), ['key', 'title', 'status', 'status_as_of', 'ended_label', 'has_summary']);
 });
 
 test('bill titles: profiles render the same from the titles file as from the whole index', {skip: !existsSync(new URL(BILL_TITLES_PATH.slice(1), pub))}, async () => {

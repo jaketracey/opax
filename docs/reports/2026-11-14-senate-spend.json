@@ -1,0 +1,121 @@
+{
+  "as_of": "2026-11-14",
+  "estimator": "enrich/scripts/federal_backfill_cost.ts",
+  "estimator_sha256": "205e238bf69d9776dc159a7bed37ff4c8418ed95700d254c218845092488d17a",
+  "payload_sha256": "cc173df12cd31c559a87def9203d243f3d01b557fa9409ab99bbefdd6036fbb4",
+  "prices_verified_on": "2026-11-14",
+  "raw_estimator_receipt": {
+    "path": "opax-enrich: enrich/src/discover.ts \u2192 enrich/src/tick.ts \u2192 enrich/src/generate.ts \u2192 enrich/src/write.ts",
+    "documents": 2556,
+    "summaries": 2556,
+    "topic_labels": 2556,
+    "queue_rows_if_released": 5112,
+    "model_calls_first_pass": 2556,
+    "primary_model": "@cf/qwen/qwen3-30b-a3b-fp8",
+    "escalation_model": "@cf/openai/gpt-oss-120b",
+    "prompt_characters": 17319466,
+    "clipped_documents": 62,
+    "mean_output_tokens": 620,
+    "first_pass": {
+      "neurons": 71180.77921428559,
+      "usd": 0.7829885713571415
+    },
+    "five_percent_primary_retry_plus_one_percent_escalation": {
+      "neurons": 77394.79987736559,
+      "usd": 0.8513427986510215
+    },
+    "primary_max_output_every_call": {
+      "neurons": 334462.83721428626,
+      "usd": 3.6790912093571486
+    },
+    "method": "Actual combined Worker system/record messages and clip(); estimated input tokens = JS characters / 3.5; 620 output tokens (existing Qwen bake-off mean, includes thinking); neuronsFor() prices. One call supplies both summary and topics.",
+    "limitations": "Gross marginal USD before shared daily free allowance. Retry rates are scenarios, not measured for this corpus; excludes platform, D1 and KB costs. No generation or queueing performed. OA source does not trigger the separate hansard_hist hold.",
+    "pricing_source": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "priced_at": "2026-10-13"
+  },
+  "sample": {
+    "days": 10,
+    "inserted_rows": 3535,
+    "eligible_kb_documents": 2556,
+    "payload_bytes": 10078521,
+    "text_utf8_bytes": 6446303
+  },
+  "scenarios": [
+    {
+      "documents": 100000,
+      "model_usd_before_shared_free_allocation": {
+        "first_pass": 30.63335568689912,
+        "five_percent_primary_retry_plus_one_percent_escalation": 33.30762123047815,
+        "primary_max_output_every_call": 143.9394056868994
+      },
+      "payload_bytes": 394308333.3333333,
+      "index_gb_by_historic_pilot_analogy": 4.945,
+      "index_usd_per_month_at_published_overage": 19.78
+    },
+    {
+      "documents": 72590.4,
+      "model_usd_before_shared_free_allocation": {
+        "first_pass": 22.236875426542817,
+        "five_percent_primary_retry_plus_one_percent_escalation": 24.178135481689008,
+        "primary_max_output_every_call": 104.486190345743
+      },
+      "payload_bytes": 286229996.4,
+      "index_gb_by_historic_pilot_analogy": 3.5895952799999997,
+      "index_usd_per_month_at_published_overage": 14.358381119999999
+    }
+  ],
+  "progress": {
+    "resource_create_path": "parli/ingest/arag_sync.py:_push_one -> parli/arag.py:KbClient.create_resource -> POST /api/v1/kb/{kb_id}/resources",
+    "processing": "Progress multilingual embeddings, entity extraction and base relations, with no separate embedding API called by sync.",
+    "published_consumption_usd_per_platform_token": 0.008,
+    "published_extra_index_platform_tokens_per_gb_month": 500,
+    "published_extra_index_usd_per_gb_month": 4,
+    "published_pro_included_index_gb": 25,
+    "published_pro_included_resources": 80000,
+    "published_included_platform_tokens_per_month": 10000,
+    "processing_tokens_per_mb": null,
+    "remaining_account_quota": null,
+    "actual_contract_overage_rate": null,
+    "processing_usd_formula": "0.008 * billable Progress platform tokens; billable tokens per byte/document and remaining included usage are unknown.",
+    "storage_method": "Historical 2,000-document pilot recorded +98.9 MB including briefs: 49.45 decimal KB per document. Analogy, not a new Senate measurement or an upper bound.",
+    "historical_sources": [
+      {
+        "source": "/home/jake/.claude/projects/-Users-jake-Projects-opax/memory/opax-federation-1901.md",
+        "sha256": "ea52874875b5e9e26e39f9c362a97f9948b7188cb063b4eae772d1fdb6c5c533",
+        "observed_at": "2026-10-11",
+        "pilot_documents": 2000,
+        "index_delta_mb_including_briefs": 98.9,
+        "notes": "Prepaid Pro plan, reseller indexed-GB overage terms unresolved. This historic pilot used a different four-worker publisher, not the normal speech sync."
+      },
+      {
+        "source": "/home/jake/opax-staging/federation/PLAN.md",
+        "sha256": "dfc841bce61731074ef06a62167fe0344a37433e0580b8fc70dd8edf5800c2ad",
+        "observed_at": "2026-10-10",
+        "notes": "US$/MB processing rate unmeasured; earlier public list rates recorded."
+      }
+    ],
+    "pricing_source": "https://www.progress.com/agentic-rag/pricing"
+  },
+  "enrichment": {
+    "first_pass_model_calls_per_document": 1,
+    "tasks_per_document": 2,
+    "gross_usd_per_document": 0.0003063335568689912,
+    "gross_usd_per_document_retry_scenario": 0.00033307621230478147,
+    "shared_free_neurons_per_day": 10000,
+    "usd_per_1000_neurons": 0.011,
+    "existing_cumulative_model_run_ceiling_usd": 40,
+    "ceiling_excludes": [
+      "Progress processing",
+      "Progress indexed storage",
+      "D1",
+      "Workers platform usage"
+    ],
+    "pricing_source": "https://developers.cloudflare.com/workers-ai/platform/pricing/"
+  },
+  "limits": "These are offline model estimates and a historic storage analogy, not a bill or an all-inclusive total. Model output lengths/retry rates are scenarios; free allocations are shared and not assumed available. Progress processing remains unpriced. D1/platform usage also depends on shared quotas, attempts and admission transactions.",
+  "decision": {
+    "default_days": 2,
+    "time_only_supported_days": 10,
+    "reason": "User requires the conservative default when ingestion has a cost. No spending approval inferred, no production/KB/D1 writes."
+  }
+}

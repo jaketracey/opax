@@ -388,7 +388,7 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
     lead.append(': ')
     const n = el('b', '', lead)
     n.textContent = total.toLocaleString('en-AU')
-    lead.append(' labelled speeches so far')
+    lead.append(' speeches with this topic label')
     if (total < FEW_LABELS) {
       const few = el('span', 'mm-words-few', lead)
       few.textContent = ' · few labels yet, shares will move'
@@ -455,10 +455,10 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
     }
     const fine = el('p', 'mm-words-fine', host)
     fine.textContent = view.span
-      ? `${name}'s share of each debate's labelled speeches so far, across all years, beside ` +
+      ? `${name}'s share of each debate's speeches with this topic label, across all years, beside ` +
         `what it received from donors in the matching industry in ${view.span}. Shown ` +
         'together for comparison, not as cause.'
-      : `${name}'s share of each debate's labelled speeches so far, beside what ` +
+      : `${name}'s share of each debate's speeches with this topic label, beside what ` +
         'it received from donors in the matching industry. Shown together for comparison, ' +
         'not as cause.'
   }

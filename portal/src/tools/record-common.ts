@@ -38,6 +38,8 @@ export interface BillFields {
   royal_assent: string | null; act_number: string | null; acts: BillAct[]
   sponsor: string | null; sponsors: string[]; sponsor_parties: (string | null)[]; sponsor_party: string | null; sponsor_person_id: string | null
   portfolio: string | null; status: string | null; status_as_of: string | null
+  /** A dead bill's exact ending ("removed") and its words ("Removed from the Notice Paper"), only when the export names one. */
+  ended?: string; ended_label?: string
 }
 const textField = (value: unknown): string | null => typeof value === 'string' && value.trim() ? value.trim() : null
 const dateField = (value: unknown): string | null => {
@@ -50,6 +52,13 @@ const objectField = (value: unknown): Record<string, unknown> | null => value !=
 const objects = (value: unknown): Record<string, unknown>[] => Array.isArray(value) ? value.map(objectField).filter((item): item is Record<string, unknown> => !!item) : []
 const firstDate = (dates: (string | null)[]) => dates.filter((date): date is string => !!date).sort()[0] ?? null
 const sameDate = (dates: (string | null)[]) => { const unique = [...new Set(dates.filter((date): date is string => !!date))]; return unique.length === 1 ? unique[0] : null }
+
+/** A dead bill's exact ending from a published bill file or index row ("removed",
+ *  "Removed from the Notice Paper"); nothing when the export names none. */
+export function billEnding(record: Record<string, unknown>): { ended?: string; ended_label?: string } {
+  const ended = textField(record.ended), ended_label = textField(record.ended_label)
+  return ended && ended_label ? { ended, ended_label } : {}
+}
 
 /** A catalog link selects only a published bill key, never an arbitrary asset path. */
 export function billKey(href: string, slug: string): string | null {
@@ -96,7 +105,8 @@ export async function billFields(env: ToolEnv, key: string | null): Promise<Bill
     royal_assent: dateField(doc.royal_assent) ?? dateField(doc.assent) ?? sameDate([...key_dates.filter(event => ['royal_assent', 'assent', 'assented'].includes(event.stage)).map(event => event.date), ...acts.map(act => act.assent_date)]),
     act_number: textField(doc.act_number) ?? (actNumbers.length === 1 ? actNumbers[0] : null), acts,
     sponsor, sponsors, sponsor_parties, sponsor_party: textField(doc.sponsor_party), sponsor_person_id: textField(doc.sponsor_person_id),
-    portfolio: privatePortfolio ? null : portfolio, status: textField(doc.status), status_as_of: dateField(doc.status_as_of) }
+    portfolio: privatePortfolio ? null : portfolio, status: textField(doc.status), status_as_of: dateField(doc.status_as_of),
+    ...billEnding(doc) }
 }
 
 const houseName = (house: string | null) => house === 'representatives' ? 'House of Representatives' : house === 'senate' ? 'Senate' : house
@@ -130,7 +140,7 @@ export function billCitations(bill: BillFields, title: string, url: string, quer
     return party ? `${name} (${party})` : name
   })
   if (named.length) add('sponsor', `${named.join('; ')} ${named.length === 1 ? 'is the recorded sponsor' : 'are the recorded sponsors'} of the ${title}.`)
-  if (bill.status) add('status', `The ${title} has recorded status ${bill.status.replaceAll('_', ' ')}${bill.status_as_of ? ' as at ' + displayDate(bill.status_as_of) : ''}.`)
+  if (bill.status) add('status', `The ${title} has recorded status ${bill.status.replaceAll('_', ' ')}${bill.ended_label ? ` (${bill.ended_label})` : ''}${bill.status_as_of ? ' as at ' + displayDate(bill.status_as_of) : ''}.`)
   if (bill.portfolio && !/^\(s\)/i.test(bill.portfolio)) add('portfolio', `The ${title} is recorded under the ${bill.portfolio} portfolio.`)
   const stages: string[] = []
   for (const event of bill.key_dates) {

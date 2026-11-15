@@ -13,6 +13,8 @@
  "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
  "status": "lapsed",
  "status_as_of": "2024-11-25",
+ "ended": "discharged",
+ "ended_label": "Discharged from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

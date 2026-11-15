@@ -13,6 +13,8 @@
  "portfolio": "Attorney-General",
  "status": "lapsed",
  "status_as_of": "2026-03-05",
+ "ended": "discharged",
+ "ended_label": "Discharged from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

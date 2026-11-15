@@ -13,6 +13,8 @@
  "portfolio": "Trade and Competitiveness",
  "status": "lapsed",
  "status_as_of": "2013-05-16",
+ "ended": "lapsed",
+ "ended_label": "Lapsed",
  "key_dates": [
   {
    "stage": "introduced",

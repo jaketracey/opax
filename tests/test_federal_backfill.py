@@ -117,7 +117,7 @@ def test_missing_only_loader_recheck_keeps_citations_and_is_idempotent(tmp_path)
         assert all(r['held'] == 'occupied-day' for r in report)
 
 
-@pytest.mark.parametrize('changes', [dict(start='2018-01-01'),dict(end='2026-01-01'),
+@pytest.mark.parametrize('changes', [dict(start='2013-12-31'),dict(end='2026-01-01'),
     dict(max_days=0),dict(sync_kb=True),dict(modern_dir='nightly-cache'),dict(load_divisions=True),
     dict(staging_db='SOURCE')])
 def test_invalid_modes_reject_before_fetch_or_database_write(tmp_path, changes):

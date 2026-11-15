@@ -119,7 +119,7 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   const person=sponsorPerson(bill.sponsor,bill.sponsor_person_id,roster.people);
   const rows=person ? grouped.get(`${bill.jurisdiction}:${person.pid || person.name}`) || [] : [];
   const bills=[...rows].sort((a,b)=>String(b.introduced||'').localeCompare(String(a.introduced||''))).slice(0,6)
-   .map(b=>Object.fromEntries(['key','title','short_title','introduced','status','jurisdiction'].map(k=>[k,b[k]])));
+   .map(b=>Object.fromEntries(['key','title','short_title','introduced','status','ended_label','jurisdiction'].map(k=>[k,b[k]])));
   await write(path,{person:person ?Object.fromEntries(['name','full','pid'].filter(k=>person[k]!=null).map(k=>[k,person[k]])):null,bills,generated:index.meta?.generated || ''});
  }
  // Rank once during the build; browsers fetch only the five awards for one agency.
@@ -165,8 +165,8 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  // The home, map and money pages print the index's totals and dates, not its 22,000 rows.
  await write(SUPPLIERS_META_PATH,{meta:supplierDirectory.meta});
  // Profiles read their party's receipt rows from these buckets (portal/public/party-money-buckets.js), not the graphs.
- for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json']){
-  const graph=path==='/graph/money.json'?money:await read(path.slice(1)).catch(error=>{if(error.code==='ENOENT')return null;throw error});
+ for(const path of ['/graph/money-receipts.json','/graph/money.qld.json','/graph/money.vic.json']){
+  const graph=await read(path.slice(1)).catch(error=>{if(error.code==='ENOENT' && path!=='/graph/money-receipts.json')return null;throw error});
   if(!graph?.nodes)continue;
   await mkdir(join(output,'party-money',path.split('/').pop().replace(/\.json$/,'')),{recursive:true});
   for(const [file,data] of partyMoneyBucketFiles(path,graph))await write(file,data);

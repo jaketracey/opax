@@ -48,7 +48,7 @@ test('a donor counted three times by spelling ranks once, at its record figure',
     {id: 'donor:example minerals', label: 'Example Minerals Pty Ltd', total: 100000, href: '/subject/donor/Example%20Minerals%20Pty%20Ltd'},
     {id: 'donor:sample coal', label: 'Sample Coal Ltd', total: 45000, href: '/subject/donor/Sample%20Coal%20Ltd'},
   ]);
-  assert.equal(out.top_sources_scope, 'All receipt types, 2018-19 to 2020-21, as the parties reported them in federal returns');
+  assert.equal(out.top_sources_scope, 'All receipt types, 2018–19 to 2020–21, as the parties reported them in federal returns');
   for (const s of out.top_sources) assert.equal(s.total, receiptFigures(fixtureGraph.nodes.find(n => n.id === s.id)).total);
 });
 

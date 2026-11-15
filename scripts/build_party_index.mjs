@@ -136,14 +136,15 @@ function seatRosters(publicRoot) {
 }
 
 /** Party -> the bills the federal bills register records a sponsor of that party for, newest first: key, title,
- *  introduction date and status. Only the sponsor-party spellings the export accepts (public/facts/sponsor-parties.json),
+ *  introduction date and status, and a dead bill's exact ending (ended_label) when the export names one. Only the sponsor-party spellings the export accepts (public/facts/sponsor-parties.json),
  *  so a party known only as a sponsor's party ("Rex Patrick Team") has a page with its bills. */
 export function sponsoredBills(bills,accepted) {
   const ok=new Set(accepted || []),out={};
   for(const b of bills || []){
     const party=String(b?.sponsor_party || '').trim();
     if(!party || !ok.has(party) || !b.key)continue;
-    (out[party] ||= []).push({key:b.key,title:b.short_title || b.title || b.key,introduced:b.introduced || null,status:b.status || null});
+    (out[party] ||= []).push({key:b.key,title:b.short_title || b.title || b.key,introduced:b.introduced || null,status:b.status || null,
+      ...(b.ended_label ? {ended_label:b.ended_label} : {})});
   }
   const sorted={};
   for(const party of Object.keys(out).sort((a,b)=>a.localeCompare(b)))

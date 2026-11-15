@@ -155,8 +155,9 @@ test('unclassified prose sees every record tool, but speech counts it did not as
  const f=qualitativeFixture([reply([call('count_speeches',args)]),reply([call('search',{query:'housing affordability'})]),reply([call('answer',valid)])]);
  assert.equal(api.classifyAgentic('What does the record say about housing affordability?').shape,null);const run=await f.run();
  assert.equal(run.research.mode,'loop');assert.equal(run.answered,true);assert.equal(f.plannerCalls,0);
- for(const tool of ['count_speeches','parliamentary_pay','contracts','grants','declared_interests','find_records','search','answer','finish'])assert.ok(names(f.model.doGenerateCalls[0]).includes(tool),tool);
- assert.ok(!names(f.model.doGenerateCalls[0]).includes('find_quotes'));
+ for(const tool of ['count_speeches','parliamentary_pay','contracts','grants','declared_interests','find_records','search','finish'])assert.ok(names(f.model.doGenerateCalls[0]).includes(tool),tool);
+ // The answer is written as reply text (REPLY_ANSWER_RULE), so the answer tool is not offered; its call still answers.
+ assert.ok(!names(f.model.doGenerateCalls[0]).includes('find_quotes'));assert.ok(!names(f.model.doGenerateCalls[0]).includes('answer'));
  assert.match(JSON.stringify(f.model.doGenerateCalls[1].prompt),/does not ask for speech counts/);assert.deepEqual(run.steps.map(s=>s.tool),['search','answer']);
 });
 test('realistic four-turn usage survives token admission; search notes stay out of numerical answers',async()=>{
@@ -209,7 +210,10 @@ test('qualitative trace observes two searches and can still choose whether to an
  const f=qualitativeFixture([reply([call('search',{query:'housing'})],3500,500),reply([call('search',{query:'affordability safeguards'})],6000,500),reply([call('answer',{...valid,citations:[{...valid.citations[0],quote:'fabricated'}]})],9000,500)]);
  // The model's own sentence stands, cited by its valid range; the citation quote is not checked.
  const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.research.rounds,3);assert.equal(f.plannerCalls,0);assert.equal(f.failures.length,0);assert.equal(run.answer,text);assert.ok(run.qualitative.citations[id]);assert.deepEqual(run.tokens,{input:18500,output:1500});
- assert.deepEqual(f.model.doGenerateCalls.map(choice),['required','required','required']);assert.ok(f.model.doGenerateCalls.every(c=>JSON.stringify(names(c))===JSON.stringify(names(f.model.doGenerateCalls[0]))));
+ // The first turn must look something up; once a passage is held the model may also answer in its reply text.
+ assert.deepEqual(f.model.doGenerateCalls.map(choice),['required','auto','auto']);assert.ok(f.model.doGenerateCalls.every(c=>JSON.stringify(names(c))===JSON.stringify(names(f.model.doGenerateCalls[0]))));
+ // The answer is reply text: the answer tool is never offered, though a call to it (as here) is still checked.
+ assert.ok(!names(f.model.doGenerateCalls[0]).includes('answer')&&names(f.model.doGenerateCalls[0]).includes('search'));
  assert.deepEqual(f.events.filter(e=>e.step?.state!=='running'&&e.step).map(e=>[e.step.round,e.step.tool,e.step.state]),[[1,'search','done'],[2,'search','done'],[3,'answer','done']]);
 });
 test('reported per-turn input and cached tokens are separate from bytes/4 reserve, including realistic 60k usage',async()=>{

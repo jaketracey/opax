@@ -191,7 +191,7 @@ export async function tableApi(request: Request, env: TableEnv, ctx?: ExecutionC
       if(!['money-connections','party-money'].includes(name))return row
       const identity=(key:'from'|'to')=>disclosures?.get(String(row.jurisdiction)+':'+foldDonorName(row[key]))
       const from=identity('from'),to=identity('to'),donor=from || to
-      return {...row,from:from ? donorDisclosure(from).name : row.from,to:to ? donorDisclosure(to).name : row.to,from_href:from ? donorDisclosure(from).href : null,to_href:to ? donorDisclosure(to).href : null,return_reference:donor ? donorDisclosure(donor).reference : row.type==='receipts' ? [({federal:'AEC',qld:'ECQ',vic:'VEC',tas:'TEC'} as Record<string,string>)[String(row.jurisdiction)] || String(row.jurisdiction),'disclosure returns',row.firstYear===row.lastYear ? row.firstYear : `${row.firstYear}–${row.lastYear}`,({federal:'https://transparency.aec.gov.au/',qld:'https://disclosures.ecq.qld.gov.au/',vic:'https://disclosures.vec.vic.gov.au/',tas:'https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/'} as Record<string,string>)[String(row.jurisdiction)]].filter(Boolean).join(' · ') : ''}
+      return {...row,from:name==='party-money' ? row.from : from ? donorDisclosure(from).name : row.from,to:to ? donorDisclosure(to).name : row.to,from_href:from ? donorDisclosure(from).href : null,to_href:to ? donorDisclosure(to).href : null,return_reference:donor ? donorDisclosure(donor).reference : row.type==='receipts' ? [({federal:'AEC',qld:'ECQ',vic:'VEC',tas:'TEC'} as Record<string,string>)[String(row.jurisdiction)] || String(row.jurisdiction),'disclosure returns',row.firstYear===row.lastYear ? row.firstYear : `${row.firstYear}–${row.lastYear}`,({federal:'https://transparency.aec.gov.au/',qld:'https://disclosures.ecq.qld.gov.au/',vic:'https://disclosures.vec.vic.gov.au/',tas:'https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/'} as Record<string,string>)[String(row.jurisdiction)]].filter(Boolean).join(' · ') : ''}
     })
     const table=tableName(name), selection=where(table,query,undefined,supplierIds), columnSQL=config.columns.filter(c=>!c.computed).map(c=>'t.'+quote(c.key)).join(',')
     const kept=tableAggregates(version+'|'+(env.CACHE_EPOCH || '')),totalKey=name+'|count'
@@ -199,6 +199,15 @@ export async function tableApi(request: Request, env: TableEnv, ctx?: ExecutionC
     if (!selection.sql) kept.set(totalKey,total)
     if (csv) {
       const csvNotes=actReceipt?actInvoiceCoverageNotes({...actReceipt,public_copy:actInvoicesPublicCopy(actReceipt)}):[]
+      if (name==='party-money') {
+        const stored=await db.prepare("SELECT value FROM table_meta WHERE key='party-money'").first<string>('value')
+        const scopes=stored ? (JSON.parse(stored) as {scopes?:Record<string,Record<string,string>>}).scopes : null
+        const jurisdictions=query.filters?.jurisdiction,parties=query.filters?.to
+        if (Array.isArray(jurisdictions) && jurisdictions.length===1 && Array.isArray(parties) && parties.length===1) {
+          const scope=scopes?.[jurisdictions[0]]?.[parties[0]]
+          if (scope) csvNotes.push(`${jurisdictions[0]}: ${parties[0]}: ${scope}`)
+        }
+      }
       if(csvNotes.length)headers.set('x-table-csv-notes',encodeURIComponent(JSON.stringify(csvNotes)))
       const exportable=Math.min(MAX_CSV,total),exportLimited=total>MAX_CSV
       const csvPage=query.page!,pages=Math.ceil(exportable/CSV_PAGE)

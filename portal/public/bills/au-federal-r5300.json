@@ -13,6 +13,8 @@
  "portfolio": "Treasury",
  "status": "lapsed",
  "status_as_of": "2014-09-01",
+ "ended": "laid_aside",
+ "ended_label": "Laid aside",
  "key_dates": [
   {
    "stage": "introduced",

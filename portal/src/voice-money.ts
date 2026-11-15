@@ -4,7 +4,7 @@ import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {latestReceiptYear, readReceiptPeriod, type PeriodOption} from './receipt-reading'
 
 type Node = DonorDisclosureRecord & { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
-export type ReceiptEdge = { by_type?:Record<string,number>; by_type_year?:Record<string,Record<string,[number,number]>>; source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
+export type ReceiptEdge = { by_type?:Record<string,number>; by_type_year?:Record<string,Record<string,[number,number]>>; donation_exclusions?:DonorDisclosureRecord['donation_exclusions']; source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
 type CalculationEdge=ReceiptEdge&{receipt_type?:string;typed_periods?:string[];untyped?:true}
 export type ReceiptMeasure = 'donations'|'receipts_all'|'other_receipts'|'subscriptions'
 export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:ReceiptEdge[] }
@@ -73,7 +73,7 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
     const short=companyName(node.label)
     const phrases=new Set([normal(node.label),...[...(node.aliases||[]),...(node.lookup_names||[])].map(normal),...(short.length>=5&&shortCounts.get(short)===1?[short]:[])])
     for(const phrase of phrases) {
-      if(!phrase)continue
+      if(!phrase || scaffolding.has(phrase) || rankingWords.has(phrase))continue
       let start=q.indexOf(' '+phrase+' ')
       while(start>=0){matches.push({node,phrase,start,end:start+phrase.length+2});start=q.indexOf(' '+phrase+' ',start+1)}
     }
@@ -151,7 +151,7 @@ export function receiptJurisdiction(query:string): string | null {
 export async function receiptGraphForQuestion(query:string, load:(file:string)=>Promise<ReceiptGraph|null>, state?:string) {
   const direct=state || receiptJurisdiction(query)
   const read=async(jurisdiction:string)=>{
-    const file='/graph/'+(jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`)
+    const file='/graph/'+(jurisdiction==='federal'?'money-receipts.json':`money.${jurisdiction}.json`)
     const graph=await load(file)
     return graph?{graph:(graph),file,jurisdiction}:null
   }
@@ -193,10 +193,26 @@ const typedFinancialYear=(period:string):number|undefined=>{
  * marked untyped, so the calculator can fall back to it when nothing else matches. */
 function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
   if(!hasReceiptTypes(graph))return graph.edges
-  return graph.edges.flatMap((edge):CalculationEdge[]=>!Object.values(edge.by_type??{}).some(Number.isFinite)?[{...edge,untyped:true as const}]:Object.entries(edge.by_type??{}).flatMap(([type,total])=>{
+  return graph.edges.flatMap((edge):CalculationEdge[]=>{
+    if(!Object.values(edge.by_type??{}).some(Number.isFinite))return [{...edge,untyped:true as const}]
+    const amounts={...edge.by_type},years=Object.fromEntries(Object.entries(edge.by_type_year??{}).map(([period,types])=>[period,{...types}]))
+    const excluded=edge.donation_exclusions
+    if(excluded?.by_type?.donation_received) {
+      // Calculator-only bucket: retain every all-type receipt and the original
+      // AEC cells on the published edge, while excluding returned money from giving.
+      amounts.donation_received-=excluded.by_type.donation_received
+      amounts.returned_donation=excluded.by_type.donation_received
+      for(const [period,types] of Object.entries(excluded.by_type_year??{})) {
+        if(!types.donation_received)continue
+        const original=years[period].donation_received,removed=types.donation_received
+        years[period].donation_received=[original[0]-removed[0],original[1]-removed[1]]
+        years[period].returned_donation=removed
+      }
+    }
+    return Object.entries(amounts).flatMap(([type,total])=>{
     // Public Funding is election funding, never a donor's receipt (A35): no total, ranking or line counts it.
     if(!Number.isFinite(total)||type==='public_funding')return []
-    const periods=Object.entries(edge.by_type_year??{}).flatMap(([period,types])=>{
+    const periods=Object.entries(years).flatMap(([period,types])=>{
       const cell=types[type]
       return cell&&Number.isFinite(cell[0])&&Number.isInteger(cell[1])&&cell[1]>=0?[{period,cell}]:[]
     })
@@ -209,7 +225,8 @@ function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
       typed_periods:periods.filter(({cell})=>cell[0]||cell[1]).map(({period})=>period),
       firstYear:dated.length?Math.min(...dated.map(({year})=>year)):undefined,
       lastYear:dated.length?Math.max(...dated.map(({year})=>year)):undefined}]
-  }))
+    })
+  })
 }
 
 /** Lifetime disclosed receipts to one party, used only to order same-name choices. */
@@ -390,7 +407,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     read_query:query,
     ...(periodReading?{period_reading:periodReading}:{}),period_options:periodOptions,
     ...(scopeReading?{scope_reading:scopeReading}:{}),scope_options:scopeOptions,
-    scope:'Party-level totals for sources in the published OPAX money map.',
+    scope:graph.meta.uncapped?'Uncapped party-level totals from recipient returns.':'Party-level totals for sources on the map, which shows only the largest donors.',
     period_note:'Years use the first year of a financial year; election returns may use the polling year. Undated receipts are excluded when a year filter is requested. Dollar amounts are nominal, not inflation-adjusted.',
     coverage:graph.meta.coverage,methodology:graph.meta.methodology,generated:graph.meta.generated,
     sources:[{title:`${subject}: disclosed party receipts`,url},...(donationsUrl&&matching?[{title:`${subject}: donations received`,url:donationsUrl}]:[])],

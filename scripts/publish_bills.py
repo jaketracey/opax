@@ -25,6 +25,8 @@ What lands in the box:
             model's own words about the facts or the parsed metadata itself.
   labels    kind/bill, state/<jurisdiction>, decade/<2010s>, parliament/<47>,
             status/<status>, sponsor_party/<party> when known.
+  status    a dead bill's exact ending (`ended_label`, "Removed from the
+            Notice Paper") when the export names one, else the status word.
   extra     the structured record: dates, counts, division keys, speech slugs,
             source URLs, the summary payload, and content_hash.
 
@@ -115,7 +117,9 @@ def facts_block(doc: dict) -> list[str]:
     """Parsed metadata in plain sentences. Status, sponsor and dates are read
     from the registry, never written by a model."""
     parts: list[str] = []
-    status = STATUS_WORDS.get(doc.get("status") or "", doc.get("status") or "")
+    # A dead bill's exact ending ("Removed from the Notice Paper") when the
+    # export names one; otherwise the status word.
+    status = doc.get("ended_label") or STATUS_WORDS.get(doc.get("status") or "", doc.get("status") or "")
     where = HOUSE_NAMES.get(doc.get("originating_house") or "", doc.get("originating_house") or "")
     opening = []
     draft = doc.get("status") == "exposure_draft"
@@ -224,6 +228,9 @@ def metadata_for(doc: dict) -> dict:
         "portfolio": doc.get("portfolio"),
         "status": doc.get("status"),
         "status_as_of": doc.get("status_as_of"),
+        # Only a dead bill with a named ending carries these, so every other
+        # bill's content hash is unchanged.
+        **({"ended": doc["ended"], "ended_label": doc.get("ended_label")} if doc.get("ended") else {}),
         "key_dates": doc.get("key_dates") or [],
         "sources": doc.get("sources") or [],
         "summary": doc.get("summary"),

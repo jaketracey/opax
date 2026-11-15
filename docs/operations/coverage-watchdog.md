@@ -18,8 +18,8 @@ state directory, outside git:
 
 | File under `~/.cache/autoresearch/pipeline/coverage-sitting-days/` | Owner lane | Required chambers and years |
 | --- | --- | --- |
-| `senate.json` | `im/senate-backfill` | `senate`, every year 2014-2019 |
-| `nsw.json` | `im/nsw-hansard-gap` | `nsw_la` and `nsw_lc`, each year 2023-2025 |
+| `senate.json` | `im/backfill-joint` | `senate`, every year 2014-2019 |
+| `nsw.json` | `im/backfill-joint` | `nsw_la` and `nsw_lc`, each year 2023-2025 |
 
 Each file has `schema_version: 1`, `lane`, an aware ISO `generated_at`, a non-empty
 `evidence` description or inventory receipt path, and a `chambers` object. Every
@@ -35,7 +35,7 @@ Senate template, with empty placeholders to replace with the actual inventory:
 ```json
 {
   "schema_version": 1,
-  "lane": "im/senate-backfill",
+  "lane": "im/backfill-joint",
   "generated_at": "2026-11-14T00:00:00Z",
   "evidence": "Path and digest of the lane's source-day discovery receipt",
   "chambers": {
@@ -47,7 +47,7 @@ Senate template, with empty placeholders to replace with the actual inventory:
 }
 ```
 
-The NSW file uses the same envelope and `lane: im/nsw-hansard-gap`, with both
+The NSW file uses the same envelope and `lane: im/backfill-joint`, with both
 `nsw_la` and `nsw_lc` objects containing `2023`, `2024` and `2025` arrays.
 The nightly's daily check passes `--sitting-day-manifest-dir
 "$PIPE/coverage-sitting-days"` explicitly. An absent file remains a warning;
@@ -55,13 +55,13 @@ when present its dates join the other calendar evidence automatically.
 
 The three known holes end on 3 April 2019 (Senate), 21 November 2024 (NSW
 Assembly) and 10 February 2025 (NSW Council). Their lanes are listed above.
-Each currently has `review_by: 2026-12-14`, with the reason "backfill held for a
-spend decision; reset to ETA + 14 days when enabled". Senate pace and KB spend
-await Jake's decision. Both backfill stages merge switched off until he approves
-enabling them. In that enabling change, each owner lane updates each affected
-hole's own review date to its completion ETA plus 14 calendar days and records
-the ETA and review reason. A known scheduled fill stays report-only through that
-date; an unresolved hole becomes an alert afterwards.
+Jake approved the backfill spend; both stages default on in `im/backfill-joint`,
+which set each hole's review date to its projected publication finish plus 14
+days: Senate `2027-01-02` (finish 19 December 2026), both NSW entries
+`2027-01-23` (finish 9 January 2027), with Sundays skipped. If the pace or scope
+changes, the lane updates these dates and their reasons in the same change. A
+known scheduled fill stays report-only through that date; an unresolved hole
+becomes an alert afterwards.
 Once all expected dates within every affected chamber-year have rows,
 the warning retires and its resolved ID persists. Extended intervals use new
 IDs so an older, shorter resolved interval cannot hide the extension.

@@ -1,6 +1,6 @@
 // One cron tick: discover, then process a bounded batch of claimed resources.
 
-import { budgetView, effectiveBudget, utcDay, type BudgetMode } from './budget.ts'
+import { dayAllows, effectiveBudget, utcDay, type BudgetMode } from './budget.ts'
 import { admitWaiting, ownedBudget, assertBudgetOwnership, resourceBudget, reserveCall, settleCall, callUpper, releaseUnusedAdmission } from './run-budget.ts'
 import { hasTopicLabels, readClassifications } from './classify.ts'
 import {
@@ -17,7 +17,7 @@ import {
   reclaimStale,
   releaseClaims,
   setState,
-  spentOnDay,
+  spendOnDay,
   unwrittenRows,
   type Outcome,
   type QueueRow,
@@ -65,8 +65,13 @@ export interface TickStats {
   transient: number
   flushed: number
   neuronsTick: number
+  /** The Worker's own spend today: what counts against `budget`. */
   neuronsToday: number
+  /** The regen runner's `regen:` spend today (read at the tick's start): counted against `overallBudget` only. */
+  neuronsRegen: number
   budget: number
+  /** DAILY_NEURON_BUDGET: the cap on all of the day's spend, regen included. */
+  overallBudget: number
   budgetMode: BudgetMode
   stop: string | null
   ms: number
@@ -75,9 +80,14 @@ export interface TickStats {
 /** Shared by the concurrent workers of one tick. */
 interface Ctl {
   stop: string | null
-  /** The day's cap: DAILY while backfill rows remain, STEADY once none do. */
+  /** The live budget: DAILY while backfill rows remain, STEADY once none do. Counts `spent` only. */
   budget: number
+  /** The Worker's own spend today (no `regen:` rows), kept current through the tick. */
   spent: number
+  /** The regen runner's spend today, as read at the tick's start. */
+  regen: number
+  /** DAILY_NEURON_BUDGET, the cap on spent + regen. */
+  overall: number
   neuronsTick: number
   deadline: number
   consecutiveModelFailures: number
@@ -134,7 +144,9 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
     flushed: 0,
     neuronsTick: 0,
     neuronsToday: 0,
+    neuronsRegen: 0,
     budget: d.cfg.dailyBudget,
+    overallBudget: d.cfg.dailyBudget,
     budgetMode: 'backfill',
     stop: null,
     ms: 0,
@@ -143,18 +155,20 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
 
   try {
     // 1. Should we process at all?
-    const spent = await spentOnDay(d.db, day)
+    // The live budget counts the Worker's own spend; the regen runner's rows count against the overall cap only.
+    const { live: spent, regen } = await spendOnDay(d.db, day)
     stats.neuronsToday = spent
+    stats.neuronsRegen = regen
     // The processing deadline is soft: no new resource is started after it (in-flight ones finish).
     const { mode, budget } = effectiveBudget(await hasBackfill(d.db), d.cfg.dailyBudget, d.cfg.steadyBudget)
     stats.budget = budget
     stats.budgetMode = mode
-    const ctl: Ctl = { stop: null, budget, spent, neuronsTick: 0, deadline: d.now() + d.cfg.tickSoftMs, consecutiveModelFailures: 0 }
+    const ctl: Ctl = { stop: null, budget, spent, regen, overall: d.cfg.dailyBudget, neuronsTick: 0, deadline: d.now() + d.cfg.tickSoftMs, consecutiveModelFailures: 0 }
     const kbUntil = Number((await getState(d.db, kbBackoffKey)) ?? 0)
     const aiUntil = Number((await getState(d.db, aiPauseKey)) ?? 0)
     if (aiUntil > t0) ctl.stop = 'ai-paused'
     else if (kbUntil > t0) ctl.stop = 'kb-backoff'
-    else if (budgetView(spent, ctl.budget).exhausted) ctl.stop = 'budget'
+    else if (!dayAllows(ctl.spent, ctl.regen, ctl.budget, ctl.overall)) ctl.stop = 'budget'
 
     if (!ctl.stop) {
       await reclaimStale(d.db, t0)
@@ -240,7 +254,7 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
 }
 
 function mayContinue(d: TickDeps, ctl: Ctl): boolean {
-  return !ctl.stop && ctl.spent < ctl.budget && d.now() < ctl.deadline
+  return !ctl.stop && dayAllows(ctl.spent, ctl.regen, ctl.budget, ctl.overall) && d.now() < ctl.deadline
 }
 
 /** A row that hit an infrastructure failure goes back to pending, or is set aside after too many. */
@@ -355,7 +369,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     priorNamesRejected: todo.some((r) => isSummaryTask(r.task) && r.names_rejected === 1),
     mayContinue: () => mayContinue(d, ctl),
     beforeCall:runBudget ? async (model,body) => {
-      reservation=await reserveCall(d.db,rid,runBudget,callUpper(model,body),day,ctl.budget)
+      reservation=await reserveCall(d.db,rid,runBudget,callUpper(model,body),day,ctl.budget,ctl.overall)
       return reservation!==null
     } : undefined,
     onReject: (info) => logRejection(d.db, d.now(), rid, info.task, info.model, info.attempt, info.reasons.join('; '), historic ? '' : info.sample),
@@ -368,7 +382,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
       } else await addSpend(d.db, day, spend.model, spend.neurons, spend.promptTokens, spend.completionTokens)
       ctl.spent += charged
       ctl.neuronsTick += charged
-      if (ctl.spent >= ctl.budget) ctl.stop ??= 'budget'
+      if (!dayAllows(ctl.spent, ctl.regen, ctl.budget, ctl.overall)) ctl.stop ??= 'budget'
     },
   })
 

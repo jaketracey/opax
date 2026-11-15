@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import test from "node:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -35,6 +36,20 @@ const data = {
   years,
 };
 const ctx = makeQuizContext(data);
+
+test('seeded industry questions never offer identical answer labels', () => {
+  for (const template of TEMPLATES.filter(t => t.id.includes('industry'))) {
+    let built = 0;
+    for (let seed = 1; seed <= 200; seed++) {
+      const question = template.build(ctx, createRng(seed));
+      if (!question?.options) continue;
+      built++;
+      const labels = question.options.map(o => o.label);
+      assert.equal(new Set(labels).size, labels.length, `${template.id}, seed ${seed}`);
+    }
+    assert.ok(built > 0, template.id);
+  }
+});
 
 const built = new Map();
 for (const template of TEMPLATES) {

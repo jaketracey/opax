@@ -9,6 +9,7 @@ import tempfile
 import sqlite3
 from contextlib import closing
 import unittest
+from unittest.mock import patch
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -53,6 +54,7 @@ def manifest():
             {"name": "AEC donations (27+ industries classified)", "docs": 199233, "coverage": "1998–2026"},
         ],
         "refresh": {
+            "senate_backfill_enabled": True,
             "checked_at": "2026-09-21T00:00:00+00:00",
             "bills_registry": 40, "current_parliament_bills": 10, "latest_bill_introduced": "2026-09-01",
             "latest_nsw_release": "2026-09-20",
@@ -77,6 +79,27 @@ def run(prev=None, live=None, log=None, bills=None, nsw="2026-09-20", **kw):
 
 
 class ParseLog(unittest.TestCase):
+    def test_backfill_enablement_follows_current_operator_flag_even_with_old_coverage(self):
+        previous = manifest()
+        previous['refresh'].update(senate_backfill_enabled=True, federal_hansard_coverage={'empty_senate_years': [2014]})
+        for value, enabled in [(None, True), ('0', False), ('1', True)]:
+            with self.subTest(value=value), patch.dict('os.environ', {}, clear=True):
+                if value is not None:
+                    import os
+                    os.environ['OPAX_SENATE_BACKFILL'] = value
+                current, _ = run(prev=previous)
+                self.assertEqual(current['refresh']['senate_backfill_enabled'], enabled)
+                self.assertEqual(current['refresh']['federal_hansard_coverage'], {'empty_senate_years': [2014]})
+
+    def test_federal_coverage_updates_without_a_kb_change_and_is_retained_without_evidence(self):
+        coverage = {'empty_senate_years': [2014, 2018], 'unpublished_senate_years': [2014, 2018]}
+        new, result = run(federal_coverage=coverage)
+        self.assertEqual(new['refresh']['federal_hansard_coverage'], coverage)
+        self.assertFalse(result['kb_changed'])
+        self.assertIn('federal_hansard_coverage', result['changed_fields'])
+        retained, _ = run(prev=new)
+        self.assertEqual(retained['refresh']['federal_hansard_coverage'], coverage)
+
     def test_takes_the_last_block_only(self):
         log = ucm.parse_daily_log(LOG)
         self.assertTrue(log["complete"])

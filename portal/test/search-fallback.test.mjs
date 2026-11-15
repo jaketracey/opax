@@ -305,7 +305,7 @@ test('normal hybrid preserves result and page fields, reranking and normal cache
       kind: 'speech', id: 123, slug: 'speech-123', resource: 'fixture', title: 'Housing debate',
       speaker: 'Robin Example', party: null, state: null, chamber: null, person_id: null,
       speaker_type: null, speaker_attribution: null, role: null, organisation: null,
-      date: '2026-10-01', url: 'https://example.test/speech', snippet: 'Housing supply in the public record.', topics: [], score: 0.9,
+      date: '2026-10-01', url: 'https://example.test/speech', word_count: null, snippet: 'Housing supply in the public record.', topics: [], score: 0.9,
     }],
   });
   assert.equal(f.calls.length, 1);

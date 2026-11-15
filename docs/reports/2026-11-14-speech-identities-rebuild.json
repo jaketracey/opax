@@ -1,0 +1,1235 @@
+{
+  "scope": "Non-Wragge House speeches since 1993-03-13 under export_speakers eligibility",
+  "topic_basis": "Held legacy speech_topics labels; denominator is all eligible House speeches; multiple labels may overlap",
+  "moved": {
+    "person_efb744ffb3a25d578e592281": 85,
+    "person_9c02d321caef54b2ba21a1f8": 4
+  },
+  "profiles": {
+    "10592": {
+      "before": {
+        "speeches": 456,
+        "first": "1998-03-02",
+        "last": "2022-03-31",
+        "topics": {
+          "climate": {
+            "speeches": 105,
+            "share": 0.230263
+          },
+          "corruption": {
+            "speeches": 35,
+            "share": 0.076754
+          },
+          "cost_of_living": {
+            "speeches": 56,
+            "share": 0.122807
+          },
+          "defence": {
+            "speeches": 29,
+            "share": 0.063596
+          },
+          "economy": {
+            "speeches": 222,
+            "share": 0.486842
+          },
+          "education": {
+            "speeches": 99,
+            "share": 0.217105
+          },
+          "environment": {
+            "speeches": 31,
+            "share": 0.067982
+          },
+          "foreign_affairs": {
+            "speeches": 45,
+            "share": 0.098684
+          },
+          "health": {
+            "speeches": 57,
+            "share": 0.125
+          },
+          "housing": {
+            "speeches": 144,
+            "share": 0.315789
+          },
+          "immigration": {
+            "speeches": 20,
+            "share": 0.04386
+          },
+          "indigenous": {
+            "speeches": 29,
+            "share": 0.063596
+          },
+          "indigenous_affairs": {
+            "speeches": 18,
+            "share": 0.039474
+          },
+          "infrastructure": {
+            "speeches": 42,
+            "share": 0.092105
+          },
+          "israel_palestine": {
+            "speeches": 4,
+            "share": 0.008772
+          },
+          "media": {
+            "speeches": 103,
+            "share": 0.225877
+          },
+          "security": {
+            "speeches": 59,
+            "share": 0.129386
+          },
+          "taxation": {
+            "speeches": 139,
+            "share": 0.304825
+          },
+          "technology": {
+            "speeches": 353,
+            "share": 0.774123
+          }
+        }
+      },
+      "after": {
+        "speeches": 380,
+        "first": "2011-05-10",
+        "last": "2022-03-31",
+        "topics": {
+          "climate": {
+            "speeches": 99,
+            "share": 0.260526
+          },
+          "corruption": {
+            "speeches": 32,
+            "share": 0.084211
+          },
+          "cost_of_living": {
+            "speeches": 38,
+            "share": 0.1
+          },
+          "defence": {
+            "speeches": 24,
+            "share": 0.063158
+          },
+          "economy": {
+            "speeches": 195,
+            "share": 0.513158
+          },
+          "education": {
+            "speeches": 84,
+            "share": 0.221053
+          },
+          "environment": {
+            "speeches": 24,
+            "share": 0.063158
+          },
+          "foreign_affairs": {
+            "speeches": 33,
+            "share": 0.086842
+          },
+          "health": {
+            "speeches": 44,
+            "share": 0.115789
+          },
+          "housing": {
+            "speeches": 106,
+            "share": 0.278947
+          },
+          "immigration": {
+            "speeches": 18,
+            "share": 0.047368
+          },
+          "indigenous": {
+            "speeches": 14,
+            "share": 0.036842
+          },
+          "indigenous_affairs": {
+            "speeches": 8,
+            "share": 0.021053
+          },
+          "infrastructure": {
+            "speeches": 35,
+            "share": 0.092105
+          },
+          "israel_palestine": {
+            "speeches": 4,
+            "share": 0.010526
+          },
+          "media": {
+            "speeches": 78,
+            "share": 0.205263
+          },
+          "security": {
+            "speeches": 41,
+            "share": 0.107895
+          },
+          "taxation": {
+            "speeches": 121,
+            "share": 0.318421
+          },
+          "technology": {
+            "speeches": 285,
+            "share": 0.75
+          }
+        }
+      }
+    },
+    "10937": {
+      "before": {
+        "speeches": 246,
+        "first": "2002-03-14",
+        "last": "2022-03-31",
+        "topics": {
+          "climate": {
+            "speeches": 48,
+            "share": 0.195122
+          },
+          "corruption": {
+            "speeches": 16,
+            "share": 0.065041
+          },
+          "cost_of_living": {
+            "speeches": 27,
+            "share": 0.109756
+          },
+          "defence": {
+            "speeches": 17,
+            "share": 0.069106
+          },
+          "economy": {
+            "speeches": 114,
+            "share": 0.463415
+          },
+          "education": {
+            "speeches": 79,
+            "share": 0.321138
+          },
+          "environment": {
+            "speeches": 42,
+            "share": 0.170732
+          },
+          "foreign_affairs": {
+            "speeches": 23,
+            "share": 0.093496
+          },
+          "gambling": {
+            "speeches": 1,
+            "share": 0.004065
+          },
+          "health": {
+            "speeches": 121,
+            "share": 0.49187
+          },
+          "housing": {
+            "speeches": 83,
+            "share": 0.337398
+          },
+          "immigration": {
+            "speeches": 33,
+            "share": 0.134146
+          },
+          "indigenous": {
+            "speeches": 24,
+            "share": 0.097561
+          },
+          "indigenous_affairs": {
+            "speeches": 15,
+            "share": 0.060976
+          },
+          "infrastructure": {
+            "speeches": 44,
+            "share": 0.178862
+          },
+          "israel_palestine": {
+            "speeches": 2,
+            "share": 0.00813
+          },
+          "media": {
+            "speeches": 50,
+            "share": 0.203252
+          },
+          "security": {
+            "speeches": 49,
+            "share": 0.199187
+          },
+          "taxation": {
+            "speeches": 27,
+            "share": 0.109756
+          },
+          "technology": {
+            "speeches": 177,
+            "share": 0.719512
+          }
+        }
+      },
+      "after": {
+        "speeches": 244,
+        "first": "2019-07-25",
+        "last": "2022-03-31",
+        "topics": {
+          "climate": {
+            "speeches": 48,
+            "share": 0.196721
+          },
+          "corruption": {
+            "speeches": 16,
+            "share": 0.065574
+          },
+          "cost_of_living": {
+            "speeches": 27,
+            "share": 0.110656
+          },
+          "defence": {
+            "speeches": 17,
+            "share": 0.069672
+          },
+          "economy": {
+            "speeches": 112,
+            "share": 0.459016
+          },
+          "education": {
+            "speeches": 79,
+            "share": 0.32377
+          },
+          "environment": {
+            "speeches": 42,
+            "share": 0.172131
+          },
+          "foreign_affairs": {
+            "speeches": 21,
+            "share": 0.086066
+          },
+          "gambling": {
+            "speeches": 1,
+            "share": 0.004098
+          },
+          "health": {
+            "speeches": 121,
+            "share": 0.495902
+          },
+          "housing": {
+            "speeches": 82,
+            "share": 0.336066
+          },
+          "immigration": {
+            "speeches": 33,
+            "share": 0.135246
+          },
+          "indigenous": {
+            "speeches": 24,
+            "share": 0.098361
+          },
+          "indigenous_affairs": {
+            "speeches": 15,
+            "share": 0.061475
+          },
+          "infrastructure": {
+            "speeches": 44,
+            "share": 0.180328
+          },
+          "israel_palestine": {
+            "speeches": 2,
+            "share": 0.008197
+          },
+          "media": {
+            "speeches": 50,
+            "share": 0.204918
+          },
+          "security": {
+            "speeches": 49,
+            "share": 0.20082
+          },
+          "taxation": {
+            "speeches": 27,
+            "share": 0.110656
+          },
+          "technology": {
+            "speeches": 175,
+            "share": 0.717213
+          }
+        }
+      }
+    },
+    "person_efb744ffb3a25d578e592281": {
+      "before": {
+        "speeches": 0,
+        "first": null,
+        "last": null,
+        "topics": {}
+      },
+      "after": {
+        "speeches": 76,
+        "first": "1998-03-02",
+        "last": "1998-07-15",
+        "topics": {
+          "climate": {
+            "speeches": 6,
+            "share": 0.078947
+          },
+          "corruption": {
+            "speeches": 3,
+            "share": 0.039474
+          },
+          "cost_of_living": {
+            "speeches": 18,
+            "share": 0.236842
+          },
+          "defence": {
+            "speeches": 5,
+            "share": 0.065789
+          },
+          "economy": {
+            "speeches": 27,
+            "share": 0.355263
+          },
+          "education": {
+            "speeches": 15,
+            "share": 0.197368
+          },
+          "environment": {
+            "speeches": 7,
+            "share": 0.092105
+          },
+          "foreign_affairs": {
+            "speeches": 12,
+            "share": 0.157895
+          },
+          "health": {
+            "speeches": 13,
+            "share": 0.171053
+          },
+          "housing": {
+            "speeches": 38,
+            "share": 0.5
+          },
+          "immigration": {
+            "speeches": 2,
+            "share": 0.026316
+          },
+          "indigenous": {
+            "speeches": 15,
+            "share": 0.197368
+          },
+          "indigenous_affairs": {
+            "speeches": 10,
+            "share": 0.131579
+          },
+          "infrastructure": {
+            "speeches": 7,
+            "share": 0.092105
+          },
+          "media": {
+            "speeches": 25,
+            "share": 0.328947
+          },
+          "security": {
+            "speeches": 18,
+            "share": 0.236842
+          },
+          "taxation": {
+            "speeches": 18,
+            "share": 0.236842
+          },
+          "technology": {
+            "speeches": 68,
+            "share": 0.894737
+          }
+        }
+      }
+    },
+    "person_9c02d321caef54b2ba21a1f8": {
+      "before": {
+        "speeches": 297,
+        "first": "1998-03-02",
+        "last": "2002-06-27",
+        "topics": {
+          "climate": {
+            "speeches": 54,
+            "share": 0.181818
+          },
+          "corruption": {
+            "speeches": 17,
+            "share": 0.057239
+          },
+          "cost_of_living": {
+            "speeches": 44,
+            "share": 0.148148
+          },
+          "defence": {
+            "speeches": 109,
+            "share": 0.367003
+          },
+          "economy": {
+            "speeches": 161,
+            "share": 0.542088
+          },
+          "education": {
+            "speeches": 46,
+            "share": 0.154882
+          },
+          "environment": {
+            "speeches": 60,
+            "share": 0.20202
+          },
+          "foreign_affairs": {
+            "speeches": 77,
+            "share": 0.259259
+          },
+          "health": {
+            "speeches": 54,
+            "share": 0.181818
+          },
+          "housing": {
+            "speeches": 99,
+            "share": 0.333333
+          },
+          "immigration": {
+            "speeches": 27,
+            "share": 0.090909
+          },
+          "indigenous": {
+            "speeches": 17,
+            "share": 0.057239
+          },
+          "indigenous_affairs": {
+            "speeches": 3,
+            "share": 0.010101
+          },
+          "infrastructure": {
+            "speeches": 15,
+            "share": 0.050505
+          },
+          "israel_palestine": {
+            "speeches": 1,
+            "share": 0.003367
+          },
+          "media": {
+            "speeches": 101,
+            "share": 0.340067
+          },
+          "security": {
+            "speeches": 134,
+            "share": 0.451178
+          },
+          "taxation": {
+            "speeches": 88,
+            "share": 0.296296
+          },
+          "technology": {
+            "speeches": 248,
+            "share": 0.835017
+          }
+        }
+      },
+      "after": {
+        "speeches": 299,
+        "first": "1998-03-02",
+        "last": "2002-06-27",
+        "topics": {
+          "climate": {
+            "speeches": 54,
+            "share": 0.180602
+          },
+          "corruption": {
+            "speeches": 17,
+            "share": 0.056856
+          },
+          "cost_of_living": {
+            "speeches": 44,
+            "share": 0.147157
+          },
+          "defence": {
+            "speeches": 109,
+            "share": 0.364548
+          },
+          "economy": {
+            "speeches": 163,
+            "share": 0.545151
+          },
+          "education": {
+            "speeches": 46,
+            "share": 0.153846
+          },
+          "environment": {
+            "speeches": 60,
+            "share": 0.200669
+          },
+          "foreign_affairs": {
+            "speeches": 79,
+            "share": 0.264214
+          },
+          "health": {
+            "speeches": 54,
+            "share": 0.180602
+          },
+          "housing": {
+            "speeches": 100,
+            "share": 0.334448
+          },
+          "immigration": {
+            "speeches": 27,
+            "share": 0.090301
+          },
+          "indigenous": {
+            "speeches": 17,
+            "share": 0.056856
+          },
+          "indigenous_affairs": {
+            "speeches": 3,
+            "share": 0.010033
+          },
+          "infrastructure": {
+            "speeches": 15,
+            "share": 0.050167
+          },
+          "israel_palestine": {
+            "speeches": 1,
+            "share": 0.003344
+          },
+          "media": {
+            "speeches": 101,
+            "share": 0.337793
+          },
+          "security": {
+            "speeches": 134,
+            "share": 0.448161
+          },
+          "taxation": {
+            "speeches": 88,
+            "share": 0.294314
+          },
+          "technology": {
+            "speeches": 250,
+            "share": 0.83612
+          }
+        }
+      }
+    }
+  },
+  "speeches": [
+    {
+      "speech_id": 5,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-02",
+      "raw_sha256": "15a8f7ce80bb22c78b10aa399acd1c7b6e185b3a48695c9891c38a520fb2ab78"
+    },
+    {
+      "speech_id": 969,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-04",
+      "raw_sha256": "d26556a4bfd1029379f41e9fe275ba435d1505b6152d40680011349343c092cf"
+    },
+    {
+      "speech_id": 1332,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-05",
+      "raw_sha256": "7914450f64d9655b7017304e0920524a40ce81991f271f6f27c1e40c5efce66a"
+    },
+    {
+      "speech_id": 1905,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-10",
+      "raw_sha256": "b47f0fd6d39a0c0a18be0a994225062c77a5373b3a9e5c95fc122443489b9cb5"
+    },
+    {
+      "speech_id": 1906,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-10",
+      "raw_sha256": "aafe045b193e4d8cf0a1d5ad650a43b44207daee5ee3e9f29de7a3119e7b738e"
+    },
+    {
+      "speech_id": 2218,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-11",
+      "raw_sha256": "28305fb53ef4022d44384e12dc0c573c99aef6068e31fe9e72b61177f2929630"
+    },
+    {
+      "speech_id": 2317,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-11",
+      "raw_sha256": "d3b9da086ad52f34c7dd8205b11115be302c62d2ce8c88125aa34cbdec9758ef"
+    },
+    {
+      "speech_id": 2438,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-12",
+      "raw_sha256": "47156e1799052593b334945cc8ff39349fc7450d186ffee92e18852eac74f0fc"
+    },
+    {
+      "speech_id": 2564,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-12",
+      "raw_sha256": "d59893be4fd3f6bfa2bea94a601a97ae3c0a16dc9e18af1ec2c04e9bdb3a3ed2"
+    },
+    {
+      "speech_id": 2672,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-23",
+      "raw_sha256": "cc07a32008d33cc6327d7b16cc668bc61eb3b293259c888d7c3be20ba506f8ae"
+    },
+    {
+      "speech_id": 3449,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-25",
+      "raw_sha256": "6933a4252303ea5770ec43be977d31279f4baa1278c757fdac843e57afadcd00"
+    },
+    {
+      "speech_id": 3451,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-25",
+      "raw_sha256": "f66d400589df12b131c4c0d9e5b76edf5f7c8ab691f5aee7fb715acd34e5d056"
+    },
+    {
+      "speech_id": 3453,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-25",
+      "raw_sha256": "fb1b57b56775a9b5363c14ad752df9cf03dade9f3c354b5604271e32f9de8762"
+    },
+    {
+      "speech_id": 3456,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-25",
+      "raw_sha256": "288559890b150216a9c218e39c2b8ec194687a6c9786ec20b14d0355c0c21cf7"
+    },
+    {
+      "speech_id": 3463,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-25",
+      "raw_sha256": "7900b6b05c1d7f76acede47919c0460c27dd8980b646de5f906eb42177dae8c1"
+    },
+    {
+      "speech_id": 3796,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-26",
+      "raw_sha256": "4f94dfe4447802e751a988142d137874874aa8eb99dda2787398a339582cfb13"
+    },
+    {
+      "speech_id": 3797,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-03-26",
+      "raw_sha256": "abaef6d2621b691c56e8a7ec014d686f183ffa0ba8c9be5ba80681e1d2b43d3d"
+    },
+    {
+      "speech_id": 4497,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-01",
+      "raw_sha256": "6b24a7a370836ec13c7124c31979d0cdfa46da5426b50a80a2a9ece3fd701c22"
+    },
+    {
+      "speech_id": 4812,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-01",
+      "raw_sha256": "22c7888f14cad66640a60c6626a5eb51b571c7b8063ca3d9a4efcf529c719319"
+    },
+    {
+      "speech_id": 4814,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-01",
+      "raw_sha256": "d6d123a14b73e607d93057fe48255e9a334c9f2f5ed19b683dd5b4e1ebc4560f"
+    },
+    {
+      "speech_id": 5202,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-02",
+      "raw_sha256": "ba455b5f5d63dbb0c4366ae8fc4271abb5e5e7d27897b60cd6d72273c6f2d8e5"
+    },
+    {
+      "speech_id": 5203,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-02",
+      "raw_sha256": "afdcf2a9a9bbe4700ad82fedc2413e955df17ba2d7cfaa5b867dcfb341ec6958"
+    },
+    {
+      "speech_id": 5204,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-02",
+      "raw_sha256": "0d370916739a85507dd1fbb5ace3ee25c2d066ca0b9b8625bf6d4c2c5e718954"
+    },
+    {
+      "speech_id": 5206,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-02",
+      "raw_sha256": "d7e35f19d33a33931f5f141363b6628f23a313309126e68ab1b5cd8ef87c943e"
+    },
+    {
+      "speech_id": 6002,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-07",
+      "raw_sha256": "40266a7cd326e8a81585ea27d54c1c0b8d4e358bd76c5a4156fa9836bac5803f"
+    },
+    {
+      "speech_id": 6486,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-04-08",
+      "raw_sha256": "bacba9beb33b5fb5d042348f853f9b98415bb0bfbeb15a542a8aeac17e79681c"
+    },
+    {
+      "speech_id": 7409,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-14",
+      "raw_sha256": "9076174633bcd547ac1cdf56d71114ca8c67ac9a884ae1fd59ee8b630fc13601"
+    },
+    {
+      "speech_id": 7603,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-14",
+      "raw_sha256": "45c85ae56fca008e3df5903696c7736713b78be9646ffb47eafb81a08b181047"
+    },
+    {
+      "speech_id": 7605,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-14",
+      "raw_sha256": "d81ff3c1bd89e428ef2c65f8a0ebac9ac3182e095f736e63dcf112de82b2b60c"
+    },
+    {
+      "speech_id": 7607,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-14",
+      "raw_sha256": "f57a170b3c0332f59b2bdddd0888a0e4e98e343edda93b1df82bed56d8720844"
+    },
+    {
+      "speech_id": 7610,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-14",
+      "raw_sha256": "b125d101346c77d315dcbb021885a4e32593e2ca851018d6d1fc2ac56010e4e4"
+    },
+    {
+      "speech_id": 7612,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-14",
+      "raw_sha256": "36ef603e18d36d238481e0a8f07a9d903dbd22cff0e7a0157f3b5158a54e4685"
+    },
+    {
+      "speech_id": 8441,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-26",
+      "raw_sha256": "4d66788f65f332bf7151c7aea320593f27b81b30966dde53a815c581b4170ff8"
+    },
+    {
+      "speech_id": 9139,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-28",
+      "raw_sha256": "c0950932df8f94648d4d136c452d8bd1b5f87ec437903243c3b7c387fb0ba01a"
+    },
+    {
+      "speech_id": 9140,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-28",
+      "raw_sha256": "1b2ef73d879ed703c033c79a13e894e66e591183a62e1d108d4ea263a5126387"
+    },
+    {
+      "speech_id": 9141,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-05-28",
+      "raw_sha256": "7f380579a58def2a6e0d0edbe01812fbce3b2e8d4a368b56dc93297c06c608da"
+    },
+    {
+      "speech_id": 9311,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-01",
+      "raw_sha256": "2e437ddcdab36a245ce00e9c9def0b5d2008e6534722d957d202288d589a57f7"
+    },
+    {
+      "speech_id": 9644,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-01",
+      "raw_sha256": "8bfd8bfe47888a4e09c0b8d1003f305ca4985440bce34b4a6232c68ed632154a"
+    },
+    {
+      "speech_id": 9791,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-02",
+      "raw_sha256": "f33aec6752f1409588b3e7de45baa841aab45a7861cb5f642d68a17b6b8aaf11"
+    },
+    {
+      "speech_id": 9795,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-02",
+      "raw_sha256": "fbeacd29a4cb2686f2817bdc5256e671f002160778a4bf335fc5669904575c72"
+    },
+    {
+      "speech_id": 9797,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-02",
+      "raw_sha256": "fad23d4d186484e53c1ae015d976baf6d60f2955b9c60e86fc7845e2da0d596e"
+    },
+    {
+      "speech_id": 10571,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-03",
+      "raw_sha256": "55283f78bd52f032aa3cbff96240d2139220db886183b024323dae35510cfada"
+    },
+    {
+      "speech_id": 10572,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-03",
+      "raw_sha256": "c513d2c70f98b0a703580e3ecab671f4de24038afa4f65a429d850dcf72cb43d"
+    },
+    {
+      "speech_id": 10583,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-03",
+      "raw_sha256": "febc24e9850dc925d4ced25adc56aa218484e61a7a6c56bcc0faac428afa0a32"
+    },
+    {
+      "speech_id": 10603,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-03",
+      "raw_sha256": "7b5bf8a9f04b86bd20e4f87f84e87365f8183639eefde4e73d170767160f75d2"
+    },
+    {
+      "speech_id": 10682,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-03",
+      "raw_sha256": "783eac7ec9e61208563364a9100dd62bb0a9ee9292caebb644f46af7b121e23f"
+    },
+    {
+      "speech_id": 10683,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-03",
+      "raw_sha256": "c8746c32c0ec4766a5695a79673c604ed696b150a80a05b62bacf13e1b4c9456"
+    },
+    {
+      "speech_id": 10688,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-03",
+      "raw_sha256": "f765b687cbe47f95d699cebf743d4de12e376a6b6e9c0bef7f40825675ba1596"
+    },
+    {
+      "speech_id": 11093,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-04",
+      "raw_sha256": "3d8c5593fd4aa4eb3832065252445349b1b3b49c605eefcbafd9d8f81fb4f8da"
+    },
+    {
+      "speech_id": 11168,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-22",
+      "raw_sha256": "60f399b7d38607476442e50421b86f02e508a824efa025b253df9241ed9e8846"
+    },
+    {
+      "speech_id": 11396,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-23",
+      "raw_sha256": "e6ae7430601bf12ba6fe8586871d773acc7495e2f15aa38ef51982d2d5b065ed"
+    },
+    {
+      "speech_id": 11496,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-23",
+      "raw_sha256": "310d0a5bed28e9308b67fc0b2cdae2225a693f832aef510b8246d6a95bc47066"
+    },
+    {
+      "speech_id": 11497,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-23",
+      "raw_sha256": "747544f00e55a7e8a6fbdad707d02f128977cdd15d64e7a698710ff854f7ba6b"
+    },
+    {
+      "speech_id": 11555,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-23",
+      "raw_sha256": "122517e1c87f7706c95729230a082fd7f1fac0b611aa04373edc166eada5647e"
+    },
+    {
+      "speech_id": 11626,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-24",
+      "raw_sha256": "a8c1b8d4609880ec7a77dc98956358eac1048e7f9448923c81c3129a8b565b95"
+    },
+    {
+      "speech_id": 11747,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-24",
+      "raw_sha256": "0c49b97fc75e4ab0d8c297c222dbb321a88f2addb427baaa562cfb41523c98d0"
+    },
+    {
+      "speech_id": 11782,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-24",
+      "raw_sha256": "8fc13c4c8459d7b141e35deb61d74da3e8ea190255293fd730b52bb98df9f828"
+    },
+    {
+      "speech_id": 11783,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-24",
+      "raw_sha256": "96cba90b9f966635d3804de008cd51a8c2e8a2eef8c4258098682f6a5f230a62"
+    },
+    {
+      "speech_id": 12039,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-25",
+      "raw_sha256": "a4635dc3a10dc6a1bd47917adb392f3dcc830c5ca08c136b3a2247f8e7a46309"
+    },
+    {
+      "speech_id": 12469,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-30",
+      "raw_sha256": "a7217016ab13d156155441fb01d8ba3a714b537476066f40c696841c30512e34"
+    },
+    {
+      "speech_id": 12494,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-06-30",
+      "raw_sha256": "053a25aff834d6c9ae29de222d71f839e30102564442bb4dd81c0925dac2d007"
+    },
+    {
+      "speech_id": 12832,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "54e91cd175a73f581e7edc40f9db9a72f10be68edc4449c870f8a978a470fc66"
+    },
+    {
+      "speech_id": 12839,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "9ffcad7dfba08bdfe4608ee03a78fb868dbd7aa9fbf945597c052cfca93665ad"
+    },
+    {
+      "speech_id": 12841,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "f4ba1869361703b5b5d66d976105f3a071fd42d32eafd6371f20105567233523"
+    },
+    {
+      "speech_id": 12847,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "70cdff7ba0bec2e609e1d051ab67f76c4ea61666f1f74acba65c69edfd72065d"
+    },
+    {
+      "speech_id": 12867,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "e389a401ba21d1351622580e480f41ea8024a7b86d8746ab6552f1c96cb6ae63"
+    },
+    {
+      "speech_id": 12988,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "38a4cd67bc209850fa438ab69ec966ccaa5c966af8070707bed97587f0207f6d"
+    },
+    {
+      "speech_id": 13117,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "187337152e625d23c674161ce31287159d17ee9e94983019e301aa997e2c539c"
+    },
+    {
+      "speech_id": 13119,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "3c645636584ce776a0353a241608ebff183021bba6f17f2598b37d904a9a7821"
+    },
+    {
+      "speech_id": 13122,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "d2e48c7c72aa8652d1d772bd9a8e151103f9ca5ab6079a0b0ff2ff34b686708c"
+    },
+    {
+      "speech_id": 13125,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "a794a2a9bf69dc1bf0d705a31f61172696c10bfbf5263e4af10e3b89d8db7563"
+    },
+    {
+      "speech_id": 13128,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "51833e21806f2ed56ea9d35902082789cdae3fe3446eeedc624b0d5342f626dc"
+    },
+    {
+      "speech_id": 13130,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "ba2d8ba691a92998bcc0014a6aead396c70caa748e8dd95fd386c0abae5eaa4f"
+    },
+    {
+      "speech_id": 13132,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "aa223e1062bee5f0e1c8274fc80c492a43ee6c46830d6fbc01d966304a3d4b1a"
+    },
+    {
+      "speech_id": 13133,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "6a5bbfc71c3e39eda11a0d835b715af856272b2954541c9baf40aab82b18595e"
+    },
+    {
+      "speech_id": 13135,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "684621b565ad428f133222fea803bfff0fd6f80b08948d0637d37dc46b7c46c8"
+    },
+    {
+      "speech_id": 13136,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "28e6e915010d54b727f0ed02b7c6c8e503d988db45fe2bc3557ae30efa09cd64"
+    },
+    {
+      "speech_id": 13139,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "4a0aeae88190306f9f7316c49f2f7a73c60697076cf57d8f5775a60fb665b8d2"
+    },
+    {
+      "speech_id": 13141,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "6fb55229b90ce01360a72233a646c48edf3caf411fca2dea15fd3775b9444dcf"
+    },
+    {
+      "speech_id": 13199,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "8e647cc89ac1068dab43a531c08d8e194c29ce7534e0ff0f943752ab46b8d29c"
+    },
+    {
+      "speech_id": 13212,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "32be61c354f49bc64c7d8bf9d19106415e84e60c5e07fc9863b9db49928e3d48"
+    },
+    {
+      "speech_id": 13216,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-02",
+      "raw_sha256": "3f8e9b9f4bc3ce9187dc9ad84085b96d1322105062d49b359cd96e8366161047"
+    },
+    {
+      "speech_id": 13245,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-03",
+      "raw_sha256": "26c733338a8f6c27b4438a30ff0c7273840a8cee2c4adf9ca19478892accc7b7"
+    },
+    {
+      "speech_id": 13365,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-15",
+      "raw_sha256": "5934152f1616119ed3022205e11a9b676b04f4ad2f6c96cb4507c28d085670e8"
+    },
+    {
+      "speech_id": 13587,
+      "before": "10592",
+      "after": "person_efb744ffb3a25d578e592281",
+      "date": "1998-07-15",
+      "raw_sha256": "f066e69dfe050f4aa205f191f84f50be398129719e759ae53d2558d1de4e187b"
+    },
+    {
+      "speech_id": 73570,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8",
+      "date": "2002-03-14",
+      "raw_sha256": "4b5eb4815874cd282fa5231a3e0feb4436877e224737ff94a8ec1694341d3fc1"
+    },
+    {
+      "speech_id": 73572,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8",
+      "date": "2002-03-14",
+      "raw_sha256": "7c2a36e63644c082fedee60a19805d0d42e180237a93aee19fb39be5ad3ff46b"
+    },
+    {
+      "speech_id": 74645,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8",
+      "date": "2002-05-14",
+      "raw_sha256": "f0161fe902ffa8a8d340d1474b7a4313cdcfa44ab8ada018f6dc918db6f56959"
+    },
+    {
+      "speech_id": 74647,
+      "before": "10937",
+      "after": "person_9c02d321caef54b2ba21a1f8",
+      "date": "2002-05-14",
+      "raw_sha256": "754ca2bf92ad03e1b26564db48a874b0cc96ddb62af539dd990a939c10e8a305"
+    }
+  ],
+  "documents_sha256": "fcc4f825123c296249145cdc3bb3b3a435fd6f878b3efbf4e5a18ea49a0ea120"
+}

@@ -17,9 +17,9 @@ const graph=typedMoney()
 const realFetch=globalThis.fetch
 globalThis.fetch=async()=>{throw Error('Associated-entity tests must never call a public service.')}
 test.after(()=>{globalThis.fetch=realFetch})
-const deps={kb:async()=>{throw new Error('no KB')},asset:async path=>path==='/graph/money.json'?structuredClone(graph):null,origin:'https://opax.com.au'}
+const deps={kb:async()=>{throw new Error('no KB')},asset:async path=>path==='/graph/money-receipts.json'?structuredClone(graph):null,origin:'https://opax.com.au'}
 const assets=moneyAssets('typed'),untypedAssets=moneyAssets('untyped')
-const env={origin:'https://offline.test',asset:async path=>path==='/graph/money.json'?structuredClone(graph):null,ASSETS:assets}
+const env={origin:'https://offline.test',asset:async path=>path==='/graph/money-receipts.json'?structuredClone(graph):null,ASSETS:assets}
 const node=id=>graph.nodes.find(n=>n.id===id)
 const VAPOLD=/^associated entity of Liberal Party of Australia \(Victorian Division\), per AEC register \(returns \d{4}-\d{2} to \d{4}-\d{2}\)$/
 const SDA=/^associated entity of Labor, per AEC register \(returns \d{4}-\d{2} to \d{4}-\d{2}; \d+ party entries\)$/

@@ -89,7 +89,7 @@ const graph = {
 test('the money headline is read through receiptGraph: typed cells, every receipt type, the span they report', () => {
   const head = receiptHeadline(graph);
   assert.deepEqual({ ...head }, { total: 1_500_000, receipts: 6, pairs: 2, sources: 2, parties: 2, firstYear: 2010, lastYear: 2021, typed: true,
-    scope: 'All receipt types, 2010-11 to 2021-22, as the parties reported them in federal returns' });
+    scope: 'All receipt types, 2010–11 to 2021–22, as the parties reported them in federal returns' });
   // Not the plain sum of the older totals (3,000,000), and no grant or contract flows.
   assert.equal(receiptHeadline({ nodes: graph.nodes, edges: graph.edges.slice(3) }).total, 0);
 });
@@ -99,14 +99,14 @@ test('for the same map file the home line and the /money answer give one total, 
     : { meta: { generated_at: '2026-11-11', total: 1, contract_count: 1, source: 'AusTender', published_from: '2020', published_to: '2026' } };
   const answer = (await renderMoneyAnswer('Money map', read)).html;
   const federal = /<h2>Federal disclosed receipts<\/h2><p>([^<]*)<\/p>/.exec(answer)[1];
-  const [, dollars, sources] = /^\$([\d,]+) from (\d+) receipt sources, across 2 source-to-party totals on this map\. 2 parties\. /.exec(federal);
+  const [, dollars, sources] = /^\$([\d,]+) from (\d+) receipt sources, across 2 source-to-party totals on the map, which shows only the largest donors\. 2 parties\. /.exec(federal);
   const scope = /parties\. (All receipt types[^.]*)\./.exec(federal)[1];
 
   const doc = new JSDOM(homeMapFallbackHTML(graph)).window.document;
   const [line, scopeLine, link] = doc.querySelectorAll('#prerender-money.hp-map-fallback > p');
   assert.equal(line.textContent, `${shortMoney(Number(dollars.replace(/,/g, '')))} in receipts from ${sources} sources to 2 parties.`);
   assert.equal(line.textContent, '$1.5m in receipts from 2 sources to 2 parties.');
-  assert.equal(scopeLine.textContent, scope);
+  assert.equal(scopeLine.textContent, scope + '. Totals are on the map, which shows only the largest donors.');
   // The card's lede names the same years, not the file's wider coverage.
   assert.equal(homeMapSpan(graph), '2010–11 to 2021–22');
   assert.equal(homeMapSpan({ nodes: graph.nodes, edges: [] }), null);
@@ -119,7 +119,7 @@ test('for the same map file the home line and the /money answer give one total, 
 
 test('/map says who it draws from the file it draws, never a fixed count', () => {
   assert.doesNotMatch(mapHtml, /top \d+ donors|\b250\b|1998&ndash;2026/);
-  assert.equal(mapSpanPhrase(graph), 'AEC returns, 2010-11 to 2021-22');
+  assert.equal(mapSpanPhrase(graph), 'AEC returns, 2010–11 to 2021–22');
   assert.equal(mapSpanPhrase({ nodes: graph.nodes, edges: [] }), 'AEC returns');
   assert.match(mapHtml, /Who funds Australian politics: <span id="map-donors">the largest disclosed donors<\/span> and the parties/);
   const meta = { donor_nodes_by_total: 2, donors_via_public_money: 1, public_money_floor: 50_000_000 };
@@ -219,6 +219,7 @@ test('the Worker writes the person head, the /money boot field, the home fallbac
 
     const money = await (await h.fetch('/money')).text();
     assert.match(money, /<section id="prerender" data-boot-field="Drawing the map"/);
+    assert.doesNotMatch(new JSDOM(money).window.document.querySelector('#prerender').textContent, /\b\d{4}-\d{2}(?![\d-])/);
 
     const home = await (await h.fetch('/')).text();
     const card = new JSDOM(home).window.document.getElementById('hp-money-map');
@@ -228,7 +229,7 @@ test('the Worker writes the person head, the /money boot field, the home fallbac
     assert.ok(money.includes(`$${headline.total.toLocaleString('en-AU')} from ${headline.sources} receipt sources`), 'the /money answer states the same figures');
     assert.doesNotMatch(card.innerHTML, /<h2>/);
     // The lede over the card (it read the file's 1998-99 to 2025-26 coverage over a 2024-25 headline).
-    const [, first, last] = /, (\d{4}-\d{2}) to (\d{4}-\d{2}), as the parties/.exec(headline.scope);
+    const [, first, last] = /, (\d{4}–\d{2}) to (\d{4}–\d{2}), as the parties/.exec(headline.scope);
     const lede = new JSDOM(home).window.document.getElementById('hp-map-span').textContent;
     assert.equal(lede, `${first} to ${last}`.replace(/(\d{4})-(\d{2})/g, '$1–$2'));
     assert.match(homeHtml, /<span id="hp-map-span">from federal returns<\/span>/, 'no baked span to go stale');

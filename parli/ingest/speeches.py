@@ -173,7 +173,7 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
 
 XML_COLUMNS = ('gid', 'oa_office_id', 'citation_anchor', 'talktype', 'speaker_type',
                'chair_role', 'source_url', 'source_attribution',
-               'enrichment_run_id', 'enrichment_max_usd')
+               'enrichment_run_id', 'enrichment_max_usd', 'source_party', 'party_basis')
 
 
 def ensure_xml_columns(db):

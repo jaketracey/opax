@@ -13,6 +13,8 @@
  "portfolio": null,
  "status": "lapsed",
  "status_as_of": "2023-11-13",
+ "ended": "not_proceeding",
+ "ended_label": "Not proceeding",
  "key_dates": [
   {
    "stage": "introduced",

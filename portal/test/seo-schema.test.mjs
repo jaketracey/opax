@@ -131,6 +131,13 @@ test('Legislation identifies the bill and uses supported lifecycle/legal-force p
   assert.equal(legislationSchemaFields({ status: 'assented', legalForce: 'PartiallyInForce' }).legislationLegalForce, 'https://schema.org/PartiallyInForce');
 });
 
+test('a dead bill states its exact ending as its work status', () => {
+  const removed = legislationSchemaFields({ status: 'lapsed', statusLabel: 'Removed from the Notice Paper' });
+  assert.equal(removed.creativeWorkStatus, 'Removed from the Notice Paper');
+  assert.equal(removed.legislationLegalForce, 'https://schema.org/NotInForce');
+  assert.equal(legislationSchemaFields({ status: 'lapsed', statusLabel: null }).creativeWorkStatus, 'Lapsed');
+});
+
 test('all exported bill status values fit schema.org property ranges', () => {
   const statuses = new Set(read('../public/bills/index.json').bills.map(b => b.status).filter(Boolean));
   for (const status of statuses) {

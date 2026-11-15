@@ -6,7 +6,9 @@ import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { build } from 'esbuild'
 import { pruneChunks, readManifest, writeManifest } from '../graph/chunks.mjs'
+import { secureThreeUuid, secureThreeUuids } from '../graph/three-uuid.mjs'
 
 const portal = new URL('..', import.meta.url).pathname
 
@@ -76,4 +78,33 @@ test('graph/chunks.json names exactly the chunks the committed money map and exp
   assert.deepEqual([...loaded].sort(), listed)
   for (const name of listed) assert.ok(existsSync(join(portal, 'public/chunks', name)), `${name} is committed`)
   assert.ok(!listed.some((n) => n.startsWith('voice-')), 'the voice chunks belong to voice/build.mjs')
+})
+
+// three.js generateUUID drew from Math.random(); graph/three-uuid.mjs swaps the
+// draw for Web Crypto while bundling (CodeQL js/insecure-randomness).
+const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+
+test('the graph build gives three.js UUIDs from Web Crypto, in the same v4 format', async () => {
+  const core = readFileSync(join(portal, 'node_modules/three/build/three.core.js'), 'utf8')
+  const patched = secureThreeUuid(core)
+  assert.ok(!/Math\.random\(\) \* 0xffffffff/.test(patched), 'the Math.random() UUID draw is gone')
+  assert.ok(patched.includes('crypto.getRandomValues( new Int32Array( 4 ) )'), 'the Web Crypto draw is in')
+  assert.throws(() => secureThreeUuid(patched), /found 0/)
+
+  const out = await build({
+    stdin: { contents: "import { MathUtils } from 'three'; export const ids = Array.from({ length: 64 }, () => MathUtils.generateUUID())", resolveDir: portal },
+    bundle: true, format: 'esm', write: false, logLevel: 'silent', plugins: [secureThreeUuids],
+  })
+  const text = out.outputFiles[0].text
+  assert.ok(!/Math\.random\(\) \* 0xffffffff/.test(text), 'the bundle still has the Math.random() UUID draw')
+  const { ids } = await import(`data:text/javascript;base64,${Buffer.from(text).toString('base64')}`)
+  for (const id of ids) assert.match(id, UUID_V4)
+  assert.equal(new Set(ids).size, ids.length)
+})
+
+test('no committed graph chunk draws a three.js UUID from Math.random()', () => {
+  for (const name of readManifest(join(portal, 'graph/chunks.json'))) {
+    const text = readFileSync(join(portal, 'public/chunks', name), 'utf8')
+    assert.ok(!/Math\.random\(\)\*4294967295\|0/.test(text), `${name} still has the Math.random() UUID draw`)
+  }
 })

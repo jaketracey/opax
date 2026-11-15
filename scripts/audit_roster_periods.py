@@ -51,7 +51,7 @@ def inventory(root=ROOT):
     by_name = {}
     for p in roster['people']:
         for house in p.get('chambers', []):
-            actor = identity(p['name'], house, p.get('pid'), [p.get('full'), *p.get('aliases', []), *p.get('prints', [])])
+            actor = identity(p['name'], house, p.get('pid') or p.get('person_id'), [p.get('full'), *p.get('aliases', []), *p.get('prints', [])])
             by_name[(name_key(p['name']), house)] = actor
 
     def add(name, row, kind, key, *, actor=None, url=None, **extra):

@@ -12,13 +12,13 @@ from pathlib import Path
 
 from parli.ingest.aec_receipts import normal_type
 from scripts.aec_receipt_selection import load_selection
-from scripts.receipt_donor_match import ReceiptDonorMatcher
+from scripts.receipt_donor_match import ReceiptDonorMatcher, reviewed_receipt_identities
 from scripts.receipt_donor_match import has_receipt_annotation
 
 
 def audit(db, graph):
     selection = load_selection(db)
-    matcher = ReceiptDonorMatcher(graph["nodes"], selection)
+    matcher = ReceiptDonorMatcher(graph["nodes"], selection, reviewed_receipt_identities(db, selection))
     old_entities, old_names = {}, {}
     for node in graph["nodes"]:
         if node["kind"] != "donor":

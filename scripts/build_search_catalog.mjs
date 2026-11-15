@@ -98,13 +98,13 @@ const receiptSnippet=x=>{
 };
 export function donorSearchRecord(jur, node) {
  const disclosure=donorDisclosure(node), f=receiptSnippet(node);
- // Off the map a federal figure is the record total, donor and party returns together, and says so.
+ // Federal retained records carry selected receipt types; legacy untyped records name both sides.
  const scope=f.typed ? f.scope : jur==='federal' ? ' '+receiptScopeLabel(f)+'.' : '';
  // A donor only its own return declares, or one listed only as public funding, has no each-gift-once
  // figure (hasPartyReceipts): a labelled line (notListedLine), never $0.
  return {key:jur+':'+node.id,kind:'donor',title:disclosure.name,href:disclosure.href,
   snippet:node.kind==='reference' ? node.source_note || '' : !hasPartyReceipts(node) ? `${industrySentence(node.industry)}${notListedLine(node)}.`
-   : `${industrySentence(node.industry)}${cash(f.total)} in disclosed political receipts across ${f.count.toLocaleString()} records.${scope}`,
+   : `${industrySentence(node.industry)}${cash(f.total)} in disclosed political receipts across ${f.count.toLocaleString()} ${f.typed ? "receipts" : "records"}.${scope}`,
   extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:f.firstYear,to:f.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(f.firstYear,f.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
 }
 

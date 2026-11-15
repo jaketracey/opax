@@ -1,3 +1,4 @@
+import {financialYear, fy} from '../public/money-scope.js'
 import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,receiptGraph,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
@@ -9,6 +10,7 @@ import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'js
 import {rosterSeatParty, rosterListParty, type RosterSeatParty, type RosterListObservation} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
+import {votedAgainstParty, votedAgainstPartyHTML} from '../public/division-against-party.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
@@ -41,6 +43,8 @@ interface Seat {
 }
 interface Bill {
   key: string; title: string; short_title?: string; status?: string; status_as_of?: string;
+  /** A dead bill's exact ending in words ("Removed from the Notice Paper"); absent otherwise. */
+  ended_label?: string;
   sponsor?: string; sponsor_person_id?: string; sponsor_party?: string; portfolio?: string; introduced?: string;
   sponsors?: { name: string; person_id?: string | null; party?: string | null }[];
   sources?: { kind: string; url: string }[];
@@ -73,6 +77,8 @@ const PAGE_SIZE = 50
 export const escapeHtml = (value: unknown): string => String(value ?? '').slice(0,5000).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
 const fold = (s: string) => s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g,' ').trim().toLowerCase()
 const human = (s: string | null | undefined) => String(s ?? '').replace(/_/g,' ')
+/** A dead bill's exact ending when the export names one (`ended_label`), else its status. */
+const billStatusText = (b: { status?: string; ended_label?: string }, fallback: string) => b.ended_label?.trim() || human(b.status || fallback)
 const count = (n: number) => n.toLocaleString('en-AU')
 const currency = (n: number) => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
 // A chamber code by name (labels.js); a written-out stage house ("Assent") as written, never a code.
@@ -136,7 +142,7 @@ export function answerBlock(title: string, description: string, body = '', crumb
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
 }
 /** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
-export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'methods', 'about', 'stats'])
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'terms', 'security', 'methods', 'about', 'stats'])
 /**
  * The server-rendered copy of an information or policy page: the inner
  * markup of its panel in the shell (index.html), so the page a crawler or a
@@ -305,14 +311,14 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     }
   }
   body += '<h2>Receipt sources to their party</h2><p>Receipts to a party are not personal payments to this member. An association does not prove influence.</p>'
-  const graphs = [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']] as const
+  const graphs = [['/graph/money-receipts.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']] as const
   const received = party ? await Promise.all(graphs.map(([path]) => partyReceipts(read,path,party))) : []
   for (const [i,found] of received.entries()) {
     const source = graphs[i][1]
     if (!found) continue
     const {meta, label, rows, scope} = found
     const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',{party:label,jurisdiction:({AEC:'federal',ECQ:'qld',VEC:'vic'} as Record<string,string>)[source]})
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(meta.coverage || '')}</p>${scope ? `<p>${escapeHtml(scope)}</p>` : ''}${registerHTML(config)}`
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(fy(meta.coverage || ''))}</p>${scope ? `<p>${escapeHtml(scope)}</p>` : ''}${registerHTML(config)}`
     body += `<p>Source: ${escapeHtml(meta.sourceShort || meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
@@ -358,7 +364,7 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
 export function homeMapFallbackHTML(graph: unknown): string {
   const head = receiptHeadline(graph)
   const lines = head.typed && head.total > 0
-    ? `<p>${escapeHtml(shortMoney(head.total))} in receipts from ${count(head.sources)} sources to ${count(head.parties)} parties.</p><p class="hp-map-scope">${escapeHtml(head.scope)}</p>`
+    ? `<p>${escapeHtml(shortMoney(head.total))} in receipts from ${count(head.sources)} sources to ${count(head.parties)} parties.</p><p class="hp-map-scope">${escapeHtml(head.scope)}. Totals are on the map, which shows only the largest donors.</p>`
     : '<p>Disclosed funding between donors and parties, from federal returns.</p>'
   return `<div id="prerender-money" class="hp-map-fallback">${lines}<p><a href="/money">Open the money map</a></p></div>`
 }
@@ -372,7 +378,7 @@ export function homeMapFallbackHTML(graph: unknown): string {
  */
 export function mapSpanPhrase(graph: unknown): string {
   const {firstYear, lastYear} = receiptHeadline(graph)
-  const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
+  const fy = financialYear
   if (firstYear == null || lastYear == null) return 'AEC returns'
   return firstYear === lastYear ? `AEC returns, ${fy(firstYear)}` : `AEC returns, ${fy(firstYear)} to ${fy(lastYear)}`
 }
@@ -386,7 +392,7 @@ export function mapSpanPhrase(graph: unknown): string {
 export function homeMapSpan(graph: unknown): string | null {
   const {firstYear, lastYear} = receiptHeadline(graph)
   if (firstYear == null || lastYear == null) return null
-  const fy = (year: number) => `${year}–${String((year + 1) % 100).padStart(2, '0')}`
+  const fy = financialYear
   return firstYear === lastYear ? fy(firstYear) : `${fy(firstYear)} to ${fy(lastYear)}`
 }
 
@@ -434,7 +440,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const party = b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : null
   // A private member's "(s) ..." sponsor print is not a portfolio (bills-007).
   const portfolio = b.portfolio && !/^\s*\(s\)/.test(b.portfolio) ? b.portfolio : ''
-  const description = `${human(b.status || 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
+  const description = `${billStatusText(b, 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
   const coSponsors = (b.sponsors || []).slice(1).map(s=>{
     const person = sponsorPerson(s.name, s.person_id ?? undefined, people) as Person | null
     return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party && sponsorParties.includes(s.party) ? ` (${escapeHtml(s.party)})` : '')
@@ -450,7 +456,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const sameSponsor = related.filter(r=>r.key!==b.key && !!b.sponsor && fold(r.sponsor || '')===fold(b.sponsor)).slice(0,20)
   const samePortfolio = related.filter(r=>r.key!==b.key && !!b.portfolio && fold(r.portfolio || '')===fold(b.portfolio)).slice(0,20)
   for(const [label,rows] of [['Other bills from this sponsor',sameSponsor],['Other bills in this portfolio',samePortfolio]] as const) {
-    if (rows.length) body += `<h2>${label}</h2><ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(human(r.status || 'status not recorded'))}</li>`).join('')}</ul>`
+    if (rows.length) body += `<h2>${label}</h2><ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(billStatusText(r, 'status not recorded'))}</li>`).join('')}</ul>`
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural vote does not establish support for the bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
@@ -495,6 +501,9 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   if(!parties.length && !missing) html+='<p>Party affiliation on the division date is not recorded in the member export.</p>'
   // Said in words, never as a party line: an "Unknown" total would read as a party.
   if(missing && !minority) html+=`<p>${parties.length ? `No party is recorded for ${plural(missing)} on this date; they are not counted in any party line above.` : `No party is recorded for any of the ${plural(missing)} on this date.`}${heldNote}</p>`
+  // The same rule and words as Ask and the browser page (public/division-against-party.js); nothing when nobody did.
+  const against=votedAgainstParty(d)
+  if(against) html+=`<h3>${escapeHtml(against.title)}</h3>${votedAgainstPartyHTML(against,personUrl)}`
   if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
     const list=members.filter(m=>m.vote===side)
     const tally=(side==='aye' ? d.ayes : side==='no' ? d.noes : list.length) ?? list.length
@@ -531,7 +540,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   if (dir==='bills') {
     const data = await read<{bills:Bill[]}>('/bills/index.json')
     const hubs = await read<{weeks:{start:string;end:string}[]}>('/hubs/index.json')
-    const content = paginate(url,data.bills.map(b=>({href:`/bill/${b.key}`,label:b.short_title || b.title,detail:human(b.status || '')})),'Bills','Australian parliamentary bills: recorded stages, sponsors, divisions and machine-written summaries where available.')
+    const content = paginate(url,data.bills.map(b=>({href:`/bill/${b.key}`,label:b.short_title || b.title,detail:billStatusText(b, '')})),'Bills','Australian parliamentary bills: recorded stages, sponsors, divisions and machine-written summaries where available.')
     content.html = content.html.replace('</h1>',`</h1><p>${link(currentSittingPath(hubs.weeks,sydneyDay()),'This sitting week')}</p>`)
     return content
   }
@@ -625,7 +634,7 @@ export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise
     // receiptGraph): each receipt once, from the party's own return, every type;
     // no contracts, grants or other flows. The homepage card states the same line.
     const head=receiptHeadline(graph)
-    body+=`<h2>${label} disclosed receipts</h2><p>${currency(head.total)} from ${count(head.sources)} receipt sources, across ${count(head.pairs)} source-to-party totals on this map. ${parties.length} parties.${head.scope ? ` ${escapeHtml(head.scope)}.` : ''} Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
+    body+=`<h2>${label} disclosed receipts</h2><p>${currency(head.total)} from ${count(head.sources)} receipt sources, across ${count(head.pairs)} source-to-party totals on the map, which shows only the largest donors. ${parties.length} parties.${head.scope ? ` ${escapeHtml(head.scope)}.` : ''} Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(fy(graph.meta.coverage || 'See the source'))}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
   }
   // The index's meta from its own small file (public/supplier-row-buckets.js), else the 7.6 MB index.
   type SuppliersMeta = {meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}

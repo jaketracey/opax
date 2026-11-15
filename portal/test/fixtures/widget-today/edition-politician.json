@@ -7,7 +7,7 @@
   "kind": "politician",
   "subject": "person:Jordan Avery",
   "title": "Jordan Avery",
-  "text": "Jordan Avery: 768 speeches in the Opax record.\n\nTop topic labels: Tax & budget 19%; Climate & environment 12%.\n\nShares of labelled speeches; labels overlap.\n\nRecords: 2008–2026.\n\nhttps://opax.com.au/subject/person/Jordan%20Avery",
+  "text": "Jordan Avery: 768 speeches in the OPAX record.\n\nTop topic labels: Tax & budget 19%; Climate & environment 12%.\n\nShares of labelled speeches; labels overlap.\n\nRecords: 2008–2026.\n\nhttps://opax.com.au/subject/person/Jordan%20Avery",
   "url": "https://opax.com.au/subject/person/Jordan%20Avery",
   "slides": [
    {
@@ -29,8 +29,8 @@
      "Counts describe the collected record, not all parliamentary activity."
     ],
     "value": "768",
-    "label": "speeches in the Opax record",
-    "alt": "The record: 768 speeches by Jordan Avery in the Opax record, 2008 to 2026."
+    "label": "speeches in the OPAX record",
+    "alt": "The record: 768 speeches by Jordan Avery in the OPAX record, 2008 to 2026."
    },
    {
     "type": "bars",

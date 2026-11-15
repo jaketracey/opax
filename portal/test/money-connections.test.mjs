@@ -1,3 +1,4 @@
+import {displayName} from '../public/display-name.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -32,7 +33,32 @@ test('browser and SSR use identical source rows without remote validation',async
 import {JSDOM} from 'jsdom';
 import {dataTableHTML,toCSV,mountDataTable} from '../public/datatable.js';
 import {renderMoneyConnectionsTable} from '../src/money-connections-table.ts';
+import {moneyYearBounds,receiptGraphView} from '../graph/receipt-view.ts';
 import {tableHarness} from './datatable-harness.mjs';
+
+test('saved 2027 URL clamps to the same receipt year and rows on server and map',async()=>{
+ const raw=await read('graph/money.json');
+ const params=new URLSearchParams('receipt=donations&type=receipts&from=2027&to=2027');
+ const {min,max}=moneyYearBounds(raw);
+ assert.equal(max,2024);
+ const clamp=value=>Math.max(min,Math.min(max,Number(value)));
+ const view=receiptGraphView(raw,'donation_only',clamp(params.get('from')),clamp(params.get('to')));
+ const client=await prepareMoneyConnectionsConfig(filterMoneyConnectionView(view,params));
+ assert.equal(client.rows.length,91); // Main's alias-aware receipt export adds two 2024–25 flows.
+ const serverRows=[];
+ for(const page of [1,2]){
+  const url=new URL('https://fixture.test/money?'+params);url.searchParams.set('c.page',String(page));
+  const html=await renderMoneyConnectionsTable(url,async()=>raw);
+  const doc=new JSDOM(html).window.document;
+  const server=JSON.parse(doc.querySelector('[data-dt-page]').textContent);
+  const expected=applyQuery(client.rows,client,{page});
+  assert.equal(server.total,91);assert.equal(server.page,page);
+  assert.deepEqual(server.rows,JSON.parse(JSON.stringify(expected.rows)));
+  assert.match(doc.querySelector('.mc-explainer').textContent,/Donations only, 2024–25/);
+  serverRows.push(...server.rows);
+ }
+ assert.deepEqual(serverRows,JSON.parse(JSON.stringify(client.rows)));
+});
 for(const confident of [false,true])test((confident?'confident':'uncertain')+': source spelling and links agree in config, SSR, hydration and CSV; the return reference stays data, never a column',async()=>{
  const donor={id:'donor:fixture',label:'Canonical fixture',source_name:'EXAMPLE, ALEX',kind:'donor',
   returnReferences:[{return_type:'AEC annual return',year:'2024-25',return_id:'RETURN-7'}],
@@ -42,8 +68,8 @@ for(const confident of [false,true])test((confident?'confident':'uncertain')+': 
  const href=confident?donor.match.href:'/subject/donor/EXAMPLE%2C%20ALEX';
  function verify(html){
   const doc=new JSDOM(html).window.document,shown=doc.body.cloneNode(true);shown.querySelectorAll('script,template').forEach(n=>n.remove());
-  assert.ok(shown.textContent.includes(donor.source_name));assert.doesNotMatch(shown.textContent,/AEC annual return|RETURN-7|Return reference/);
-  const links=[...doc.querySelectorAll('a')].filter(a=>a.textContent===donor.source_name);
+  assert.ok(shown.textContent.includes(displayName(donor.source_name)));assert.doesNotMatch(shown.textContent,/AEC annual return|RETURN-7|Return reference/);
+  const links=[...doc.querySelectorAll('a')].filter(a=>a.textContent===displayName(donor.source_name));
   // Every donor name links (16 Oct): a confident match to its entity, any other to its own spelling's page.
   assert.equal(links.length,1);assert.equal(links[0].getAttribute('href'),href);
  }

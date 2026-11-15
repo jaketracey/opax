@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { claimRids, enqueue, finishRows, getState, reclaimStale, releaseClaims, STALE_CLAIM_MS } from '../src/db.ts'
+import { claimRids, enqueue, finishRows, getState, reclaimStale, releaseClaims, spendOnDay, STALE_CLAIM_MS } from '../src/db.ts'
+import { readConfig } from '../src/env.ts'
+import { buildStatus } from '../src/status.ts'
 import { runTick } from '../src/tick.ts'
 import { FakeAi, FakeKb, GOOD_SUMMARY, KbBackpressure, makeD1, makeDeps, rows, speechText } from './helpers.ts'
 
@@ -480,6 +482,64 @@ test('steady-state budget: once no low-priority backfill rows remain the STEADY 
   assert.equal(backfill.budget, 1000)
   assert.equal(backfill.stop, null)
   assert.ok(ai.calls.length >= 1)
+})
+
+test('regen spend (the 5b runner\'s regen: rows) counts against the overall cap only: a steady day still runs its whole live budget', async () => {
+  const kb = new FakeKb()
+  for (let i = 0; i < 6; i += 1) seed(kb, `r${i}`)
+  const ai = new FakeAi(() => ({ content: both, neurons: 40 }))
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { DAILY_NEURON_BUDGET: '1000', STEADY_NEURON_BUDGET: '100', CONCURRENCY: '1', BATCH_SIZE: '6' } })
+  for (let i = 0; i < 6; i += 1) await queueBoth(d1, `r${i}`) // priority 100, new content: no backfill, so steady
+  // The runner has used its whole share: the overall 1000 less the steady 100 it keeps free.
+  raw.prepare("INSERT INTO spend (day, model, neurons, calls) VALUES ('2026-09-28', 'regen:@cf/qwen/qwen3.8-27b', 900, 30)").run()
+  const stats = await runTick(deps)
+  assert.equal(stats.budgetMode, 'steady')
+  assert.deepEqual([stats.neuronsRegen, stats.overallBudget, stats.budget], [900, 1000, 100])
+  assert.equal(ai.calls.length, 3, 'the same 3 calls as on a day with no regen spend: 40, 80, then 120 crosses the steady 100')
+  assert.equal(stats.stop, 'budget')
+  assert.equal(stats.neuronsToday, 120, 'the live spend only')
+  assert.equal(rows(raw, "SELECT COUNT(*) AS n FROM queue WHERE status = 'done'")[0].n, 6)
+})
+
+test('regen spend counts against the overall cap: the Worker stops once its spend plus the runner\'s reaches DAILY_NEURON_BUDGET', async () => {
+  const kb = new FakeKb()
+  for (let i = 0; i < 6; i += 1) seed(kb, `r${i}`)
+  // backfill day: the live budget is the overall 1000 too, and the runner's 920 is in it
+  const a = new FakeAi(() => ({ content: both, neurons: 40 }))
+  const one = makeDeps({ kb, ai: a, env: { DAILY_NEURON_BUDGET: '1000', STEADY_NEURON_BUDGET: '100', CONCURRENCY: '1', BATCH_SIZE: '6' } })
+  for (let i = 0; i < 6; i += 1) await queueBoth(one.d1, `r${i}`, 0)
+  one.raw.prepare("INSERT INTO spend (day, model, neurons, calls) VALUES ('2026-09-28', 'regen:@cf/qwen/qwen3.8-27b', 920, 30)").run()
+  const backfill = await runTick(one.deps)
+  assert.deepEqual([backfill.budgetMode, a.calls.length, backfill.stop], ['backfill', 2, 'budget'], '920 + 40 + 40 = 1000')
+  // steady day where the runner went past its share: the overall cap still binds before the live budget
+  const b = new FakeAi(() => ({ content: both, neurons: 40 }))
+  const two = makeDeps({ kb, ai: b, env: { DAILY_NEURON_BUDGET: '1000', STEADY_NEURON_BUDGET: '100', CONCURRENCY: '1', BATCH_SIZE: '6' } })
+  for (let i = 0; i < 6; i += 1) await queueBoth(two.d1, `r${i}`)
+  two.raw.prepare("INSERT INTO spend (day, model, neurons, calls) VALUES ('2026-09-28', 'regen:@cf/qwen/qwen3.8-27b', 990, 30)").run()
+  const steady = await runTick(two.deps)
+  assert.deepEqual([steady.budgetMode, b.calls.length, steady.stop, steady.neuronsToday], ['steady', 1, 'budget', 40])
+  // and a day the runner's rows alone fill: no call at all
+  const c = new FakeAi(() => ({ content: both, neurons: 40 }))
+  const three = makeDeps({ kb, ai: c, env: { DAILY_NEURON_BUDGET: '1000', STEADY_NEURON_BUDGET: '100' } })
+  await queueBoth(three.d1, 'r0')
+  three.raw.prepare("INSERT INTO spend (day, model, neurons, calls) VALUES ('2026-09-28', 'regen:@cf/qwen/qwen3.8-27b', 1000, 30)").run()
+  assert.deepEqual([(await runTick(three.deps)).stop, c.calls.length], ['budget', 0])
+})
+
+test('the day\'s spend is split once: each row is live or regen, never both; /status shows both and the overall total', async () => {
+  const { d1, raw } = makeD1()
+  for (const [day, model, n] of [
+    ['2026-09-28', '@cf/qwen/qwen3-30b-a3b-fp8', 300], ['2026-09-28', '@cf/openai/gpt-oss-120b', 50],
+    ['2026-09-28', 'regen:@cf/qwen/qwen3.8-27b', 700], ['2026-09-28', 'regen:@cf/openai/gpt-oss-120b', 25],
+    ['2026-09-27', 'regen:@cf/qwen/qwen3.8-27b', 999], ['2026-09-27', '@cf/qwen/qwen3-30b-a3b-fp8', 888],
+  ] as const) raw.prepare('INSERT INTO spend (day, model, neurons, calls) VALUES (?, ?, ?, 1)').run(day, model, n)
+  const s = await spendOnDay(d1, '2026-09-28')
+  assert.deepEqual(s, { live: 350, regen: 725 })
+  assert.equal(s.live + s.regen, rows(raw, "SELECT SUM(neurons) AS n FROM spend WHERE day = '2026-09-28'")[0].n)
+  const st: any = await buildStatus(d1, readConfig({ DAILY_NEURON_BUDGET: '1500000' }), Date.parse('2026-09-28T12:00:00Z'))
+  assert.deepEqual([st.spendToday.spent, st.spendToday.calls, st.spendToday.budget], [350, 2, 150_000])
+  assert.deepEqual(st.spendToday.regen, { neurons: 725, calls: 2 })
+  assert.deepEqual([st.spendToday.overall.spent, st.spendToday.overall.budget], [1075, 1_500_000])
 })
 
 test('steady-state budget: a claimed backfill row still counts as backfill; a quarantined or done one does not', async () => {

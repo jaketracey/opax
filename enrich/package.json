@@ -6,7 +6,8 @@
     "dev": "wrangler dev --test-scheduled",
     "deploy": "wrangler deploy",
     "check": "tsc --noEmit",
-    "test": "node --test test/*.test.ts"
+    "test": "node --test test/*.test.ts",
+    "regen": "node scripts/regen/cli.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260926.1",

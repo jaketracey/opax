@@ -100,7 +100,7 @@
   ];
   // In the footer's site index (and the sheet's last line), never the menus.
   // Privacy is in both on every page: one tap from anywhere.
-  const footerOnly = [page('/expenses', 'Expense definitions'), page('/privacy', 'Privacy'), page('/support', 'Support')];
+  const footerOnly = [page('/expenses', 'Expense definitions'), page('/privacy', 'Privacy'), page('/terms', 'Terms of use'), page('/security', 'Security'), page('/support', 'Support')];
   // The sheet's first shortcuts: common first tasks, the same for every reader.
   // Nothing about a reader's history is kept.
   const shortcuts = [
@@ -121,7 +121,7 @@
   // Reached from a money page's Explain action; it sits under the money map.
   const EXPLAIN = page('/money/explain', 'Explain this flow');
   // The About pages sit under About OPAX in the trail.
-  const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/support', '/community', '/press', '/mcp']);
+  const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/terms', '/security', '/support', '/community', '/press', '/mcp']);
 
   const menuPages = groups.flatMap(g => g.columns.flatMap(c => [...c.links, ...(c.section ? [c.section] : [])]));
   const sectionPages = new Map([...menuPages, ...footerOnly].filter(p => !p.record).map(p => [p.href, p]));
@@ -142,7 +142,7 @@
     if (/^\/(subject\/topic|official-reports|reports|audit|explore)(\/|$)/.test(path)) return 'research';
     if (/^\/(subject|declared|vic-election-2026)(\/|$)/.test(path)) return 'people';
     if (/^\/(sitting|estimates|bills?|instruments?|video)(\/|$)/.test(path)) return 'parliament';
-    if (/^\/(about|methods|stats|expenses|privacy|support|community)(\/|$)/.test(path)) return 'about';
+    if (/^\/(about|methods|stats|expenses|privacy|terms|security|support|community)(\/|$)/.test(path)) return 'about';
     return null;
   };
 

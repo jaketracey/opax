@@ -53,7 +53,7 @@ const GRAPH = {
   ],
   edges: Object.keys(cells).map(source => ({source, target: 'party:Example', ...legacy(cells[source]), by_type: byType(cells[source]), by_type_year: cells[source]})),
 }
-const deps = {kb: async () => { throw Error('no retrieval') }, asset: async path => path === '/graph/money.json' ? structuredClone(GRAPH) : null, origin: 'https://opax.test'}
+const deps = {kb: async () => { throw Error('no retrieval') }, asset: async path => path === '/graph/money-receipts.json' ? structuredClone(GRAPH) : null, origin: 'https://opax.test'}
 const env = {origin: 'https://opax.test', asset: deps.asset}
 const LOAN = /\bloans?\b|\blent\b/i
 
@@ -136,7 +136,7 @@ test('the answer leads with the largest donation and gives other receipts and pu
   // are also filed under a known party label; the invented party itself gets a plain list.
   const relabel = label => JSON.parse(JSON.stringify(GRAPH).replaceAll('party:Example', `party:${label}`).replaceAll('"label":"Example"', `"label":"${label}"`))
   const answer = async (question, args, graph = GRAPH) => {
-    const result = await api.partyDonations({...deps, asset: async path => path === '/graph/money.json' ? structuredClone(graph) : null}, args)
+    const result = await api.partyDonations({...deps, asset: async path => path === '/graph/money-receipts.json' ? structuredClone(graph) : null}, args)
     const facts = api.factSheet([result]).facts
     const input = {question, period, facts: api.writingFacts(undefined, facts)}
     return {facts, input, out: api.proseFallback(input)}
@@ -218,7 +218,7 @@ test('a graph without receipt types never calls a figure donations', async () =>
   const untyped = {meta: {generated: '2026-11-13'}, nodes: [{id: 'party:Example', label: 'Example', kind: 'party', total: 900, count: 3, byYear: {2020: [900, 3]}},
     {id: BANK, label: 'Invented Bank Ltd', kind: 'donor', industry: 'finance', total: 900, count: 3, byYear: {2020: [900, 3]}}],
     edges: [{source: BANK, target: 'party:Example', total: 900, count: 3, byYear: {2020: [900, 3]}}]}
-  const asset = async path => path === '/graph/money.json' ? structuredClone(untyped) : null
+  const asset = async path => path === '/graph/money-receipts.json' ? structuredClone(untyped) : null
   const out = await api.partyDonations({...deps, asset}, {party: 'Example', measure: 'donations'})
   assert.equal(out.data.measure, undefined)
   assert.deepEqual(out.data.rows.map(r => [r.donor, r.total_aud]), [['Invented Bank Ltd', 900]])
@@ -248,7 +248,7 @@ const EXTRAS = {meta: {latest_year: '2024-25'}, parties: {Greens: {debts: {year:
   {name: 'Zed Studios', amount: 159225, type: 'Non-financial'}, {name: 'Invented Bank Ltd', amount: 100000, type: 'Financial'},
   {name: 'A Member', amount: 93652, type: 'Non-financial'}, {name: 'Fourth Creditor', amount: 1000, type: 'Non-financial'}]}}}}
 const greensGraph = () => JSON.parse(JSON.stringify(GRAPH).replaceAll('party:Example', 'party:Greens').replaceAll('"label":"Example"', '"label":"Greens"'))
-const lendingAsset = async path => path === '/graph/money.json' ? greensGraph() : path === '/graph/aec-extras.json' ? structuredClone(EXTRAS) : null
+const lendingAsset = async path => path === '/graph/money-receipts.json' ? greensGraph() : path === '/graph/aec-extras.json' ? structuredClone(EXTRAS) : null
 const DEBTS = "Greens' returns for 2024-25 declare $628,768 in debts owed at 30 June 2025; the largest creditors listed are Zed Studios ($159,225), Invented Bank Ltd ($100,000, a financial institution) and A Member ($93,652)."
 
 test('a lending question is flagged, and both money tools add the note and the declared debts, never a lent receipt', async () => {

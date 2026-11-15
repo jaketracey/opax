@@ -22,7 +22,7 @@ const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '
 export const NOT_FOUND_KINDS = {
   page: { title: 'Nothing at this address', pill: ['Go to the home page', '/'], words: true },
   person: { title: 'No parliamentarian at this address', pill: ['Browse parliamentarians', '/subject/person'], words: true },
-  donor: { title: 'No donor by this name', pill: ['Browse receipt sources', '/subject/donor'], words: true },
+  donor: { title: "This donor isn't in OPAX", pill: ['Browse receipt sources', '/subject/donor'], words: true },
   bill: { title: 'No bill at this address', pill: ['Browse bills', '/bills'], words: false },
   division: { title: 'No division at this address', pill: ['Browse bills', '/bills'], words: false },
   document: { title: 'No document at this address', pill: ['Search the speeches', '/ask?view=search&q=*&kind=speech'], words: false },

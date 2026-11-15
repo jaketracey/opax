@@ -44,6 +44,9 @@
 #                       needs it: without it every row count is a full scan of 29 GB on network disk)
 #   OPAX_REPO           checkout to run in (default: the checkout this script is in)
 #   OPAX_FORCE_KB_SYNC  1 = ignore the MIGRATED_TO_VM marker (never needed; see the cutover rule below)
+#   OPAX_SENATE_BACKFILL 0 = disable acquisition and normal-sync publication (default 1)
+#   OPAX_SENATE_BACKFILL_DAYS  zero-row Senate days per night (default 10); counters checked every 10
+#   OPAX_SENATE_BACKFILL_BUDGET_SECONDS  local work plus reserved normal-sync publication (default/max 1200)
 #
 # Not installed in crontab by this script. Suggested line (local time, after
 # OpenAustralia has published the previous day's Hansard):
@@ -78,6 +81,8 @@ ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 PARTIAL_OK=",arag_sync,"   # the KB push resumes from its checkpoint: hitting its own time limit is not a failure
 STALE_OK=",grants_apply,interests_federal,"   # refusal/unavailable source: rows kept, not a failure
+BACKFILL_STEPS=",senate_backfill,nsw_backfill,nsw_hansard_backfill,federal_coverage,"  # no periodic acquisition debt
+export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"
 SYNC_GATE="${OPAX_SYNC_GATE:-}"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with weekly_refresh.sh)
@@ -376,6 +381,17 @@ else
     "$PY" scripts/export_interests.py --out portal/public/interests
 fi
 
+if [[ " ${PAUSED_STEPS[*]} " == *" fed_download "* ]]; then
+  log "[senate_backfill] SKIP: federal source refused during normal refresh; coverage retained"
+elif [ "${OPAX_SENATE_BACKFILL:-1}" != 0 ]; then
+  STEP_TIMEOUT=21m run_step senate_backfill "" \
+    nice -n 10 "$PY" -m parli.ingest.senate_backfill --db "$DB" \
+    --stage "$PIPE/senate-backfill" --cache-dir "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}"
+else
+  log "[senate_backfill] OFF: OPAX_SENATE_BACKFILL=0"
+fi
+run_step federal_coverage "" nice -n 10 "$PY" scripts/federal_hansard_coverage.py \
+  --db "$DB" --output "$PIPE/federal-hansard-coverage.json"
 # Read-only coverage after the normal refresh. Keep its exit separate from
 # FAILED_STEPS so publication still completes. nightly.sh consumes the receipt
 # into the existing status-branch alerts, including a missing/timeout receipt.
@@ -392,6 +408,7 @@ log "Paused sources: ${PAUSED_STEPS[*]:-none}"
 log "===== daily refresh end ====="
 [ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale daily refresh: source refused to change the register: ${STALE_STEPS[*]}"
 [ "${#PARTIAL_STEPS[@]}" -eq 0 ] || log "Partial daily refresh: cut by its time limit, resumes from its checkpoint next run: ${PARTIAL_STEPS[*]}"
+[ "${#BACKFILL_FAILURES[@]}" -eq 0 ] || log "Backfill warnings: ${BACKFILL_FAILURES[*]}"
 if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then
   log "Incomplete refresh: failed steps ${FAILED_STEPS[*]}"
   exit 1

@@ -391,7 +391,7 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
   const topicText = topics.map(t => `${TOPIC_NAMES[t.slug] ?? t.slug} ${Math.round(t.share * 100)}%`)
   const url = `${ORIGIN}/subject/person/${slugIndex((roster?.people || []).map(p => ({ ...p, speeches: p.speeches ?? null }))).slugOf.get(person.name)}`
   const head = [
-    `${person.name}: ${formatNumber(person.speeches ?? 0)} speeches in the Opax record.`,
+    `${person.name}: ${formatNumber(person.speeches ?? 0)} speeches in the OPAX record.`,
     topics.length ? `Top topic labels: ${topicText.slice(0, 2).join('; ')}.` : [who, person.first ? `Records from ${person.first}${person.last ? ` to ${person.last}` : ''}.` : ''].filter(Boolean).join('\n'),
     topics.length ? 'Shares of labelled speeches; labels overlap.' : '',
   ]
@@ -415,7 +415,7 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
     alt: `${person.name}, ${[party, seatLine(rep)].filter(Boolean).join(', ')}.` }
   const count: StorySlide = { type: 'number', kicker: 'The record', title: 'What OPAX holds',
     lines: [span ? `Collected parliamentary records, ${span}.` : 'Collected parliamentary records.', 'Counts describe the collected record, not all parliamentary activity.'],
-    value: speeches, label: 'speeches in the Opax record', alt: `The record: ${speeches} speeches by ${person.name} in the Opax record${span ? `, ${span}` : ''}.` }
+    value: speeches, label: 'speeches in the OPAX record', alt: `The record: ${speeches} speeches by ${person.name} in the OPAX record${span ? `, ${span}` : ''}.` }
   // A speech can carry several labels, so the shares overlap: not parts of one whole, no `whole`.
   const bars: StorySlide | null = topics.length ? { type: 'bars', kicker: 'What they talk about', title: 'Most common topic labels', lines: [],
     items: topics.map(t => ({ label: TOPIC_NAMES[t.slug] ?? t.slug, pct: Math.round(t.share * 100) })),

@@ -1,3 +1,4 @@
+import {industryName, fy} from '../public/money-scope.js'
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {federalPartyMoneyAnswer,federalPartyMoneyResponse} from './ask-money-routing'
 import { withAppBanner } from './app-banner'
@@ -7,7 +8,7 @@ import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
 import {loadDonorIndex,loadDonorRecordsIndex,donorRecordsForName} from './donor-index'
 import {campaignerReturnsHTML,donorRecordsHTML,type CampaignerYear} from './subject-figures'
-import {donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {offMapDonorNote,donorDisclosure,donorLabelHTML,receiptTypeLine,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
@@ -17,6 +18,7 @@ import { identityAnswer, identityResponse } from './ask-identity'
 import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
+import { votedAgainstParty } from '../public/division-against-party.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
@@ -48,7 +50,7 @@ import { governmentFinancePage, governmentFinanceReader } from './government-fin
 import { govAdvertisingPage, govAdvertisingReader, govAdvertisingReady } from './gov-advertising'
 import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
-import {partyMoneyData,partyMoneyTableConfig,partyReturnFigures,partyReturnScopeLabel,receiptFigures,registerTableHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyTableScope,partyMoneyTableConfig,partyReturnFigures,partyReturnScopeLabel,receiptFigures,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
@@ -583,11 +585,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
-  // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${keyParams(['nocache'])}`))
+  // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs or word_count.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -896,6 +898,8 @@ async function searchWindow(
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null,
+      // Lets the clients leave short speech turns out of /api/brief; null when unknown.
+      word_count: typeof meta.word_count === 'number' && Number.isFinite(meta.word_count) ? meta.word_count : null,
       ...(typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // Recorded official URL, reused by topic pages and citations.
       snippet: windowed,
       // BASIC already includes resource and computed field classifications.
@@ -2810,6 +2814,22 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
 }
 
+// Briefs of speech turns under this many words had a 12% serious-error rate;
+// the turn text is short enough to show whole. Speech turns only: press
+// releases, research notes and grants keep their summaries at any length.
+// The web clients mirror this number (SHORT_TURN_WORDS in app.js and
+// timemachine.js) to leave short turns out of /api/brief.
+const SHORT_TURN_WORDS = 80
+/**
+ * Whether a speech turn is too short for a brief: its metadata word_count
+ * when that is a number, else the words of the text in hand. An unknown
+ * length is not short, so the brief stays (fail open).
+ */
+function shortTurn(wordCount: unknown, text = ''): boolean {
+  const words = typeof wordCount === 'number' && Number.isFinite(wordCount) ? wordCount : text.split(/\s+/).filter(Boolean).length
+  return words > 0 && words < SHORT_TURN_WORDS
+}
+
 /**
  * One document, cached an hour: summaries and topic labels arrive over time
  * from the enrichment passes, and an hour is the balance between a page
@@ -2829,11 +2849,14 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
         return json({slug,title:d.name || d.question,speaker:null,speaker_attribution:null,url:d.source_url,
           labels:{kind:'division',state:d.jurisdiction,chamber:d.house,result:d.result},topics:[],summary:null,
           metadata:{date:d.date,division_id:d.key,ayes_count:d.ayes,noes_count:d.noes,ayes:names('aye'),noes:names('no'),paired:names('paired')},
+          // Who voted against the rest of their party (public/division-against-party.js), outside text and
+          // metadata so Ask's record reads are unchanged; null when nobody did.
+          voted_against_party:votedAgainstParty(d),
           text:`${d.question || d.name || ''}\n${d.date}, ${d.house}. Ayes ${d.ayes}: ${names('aye').join(', ')}. Noes ${d.noes}: ${names('no').join(', ')}.`})
       }
     }
   }
-  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3-mixed-speakers-v1', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3-mixed-speakers-v1-short-turn-v1', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -2894,8 +2917,9 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     }
   }
   // Machine summary written by the enrichment pass (ask-task, destination
-  // "summary"): lands as the text field "da-summary-t-body". Optional.
-  const brief = texts['da-summary-t-body']?.value?.body?.trim() || null
+  // "summary"): lands as the text field "da-summary-t-body". Optional, and
+  // withheld from a short speech turn, whose own text is shown instead.
+  const brief = labels.kind === 'speech' && shortTurn(metadata.word_count, press.text) ? null : texts['da-summary-t-body']?.value?.body?.trim() || null
   const [presentation] = await joinMixedSpeakers([{resource: r.id || '', speaker_type: labels.speaker_type,
     ...speechPresentation(labels.speaker_type, metadata, r.title || slug)}], env.ASSETS)
   if (labels.speaker_type === 'multi_speaker') { delete labels.party; metadata.person_id = null; metadata.electorate = null }
@@ -3142,18 +3166,24 @@ async function apiRecent(env: Env): Promise<Response> {
  * come from /find (which returns paragraphs, never the summary text field).
  * One small per-field KB call per rid — GET /resource/{rid}/text/da-summary-t-body
  * is ~500 bytes — never the whole resource. Rids without a summary (the pass
- * has not reached them) are simply absent from the answer. Up to 24 rids;
- * cached an hour on the sorted rid set.
+ * has not reached them) are simply absent from the answer. Short speech
+ * turns (shortTurn) are left out by the clients, which read word_count off
+ * the search row and send only long or unknown-length rids, so this stays
+ * one call per rid. Up to 24 rids; cached an hour on the sorted rid set,
+ * under a versioned key (BRIEF_CACHE_VERSION) so a rule change drops old
+ * answers.
  */
 const BRIEF_MAX = 24
 const RID_RE = /^[0-9a-f]{32}$/
+// short-turn-v1: answers cached before short speech turns lost their briefs.
+const BRIEF_CACHE_VERSION = 'short-turn-v1'
 async function apiBrief(url: URL, env: Env): Promise<Response> {
   const rids = [...new Set((url.searchParams.get('rids') ?? '').split(',').map((r) => r.trim()).filter((r) => RID_RE.test(r)))]
     .sort()
     .slice(0, BRIEF_MAX)
   if (!rids.length) return json({ briefs: {} })
   const cache = caches.default
-  const cacheKey = new Request(`https://opax.com.au/api/brief?rids=${rids.join(',')}`)
+  const cacheKey = new Request(`https://opax.com.au/api/brief?v=${BRIEF_CACHE_VERSION}&rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
   if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const briefs: Record<string, string> = {}
@@ -3782,6 +3812,16 @@ type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier' | 
 const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
+/** /.well-known/security.txt (RFC 9116). Renew Expires before it passes: a test fails 30 days ahead. */
+const SECURITY_TXT = [
+  'Contact: https://github.com/jaketracey/opax/security/advisories/new',
+  'Contact: mailto:support@opax.com.au?subject=Security',
+  'Expires: 2027-11-14T00:00:00.000Z',
+  'Preferred-Languages: en',
+  `Canonical: ${SITE_ORIGIN}/.well-known/security.txt`,
+  `Policy: ${SITE_ORIGIN}/security`,
+  '',
+].join('\n')
 const STATIC_PAGES: Record<string, { title: string; description: string; query?: boolean }> = {
   ask: { title: 'Ask & search the record · OPAX', description: 'Ask questions with answers citing supporting records, or search Australian parliamentary speeches, votes, funding and disclosures.', query: true },
   bills: {
@@ -3861,7 +3901,15 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   privacy: {
     title: 'Privacy · OPAX',
-    description: 'What the OPAX website and iPhone and iPad app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
+    description: 'What the OPAX website and the iPhone, iPad and Android app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
+  },
+  terms: {
+    title: 'Terms of use · OPAX',
+    description: "The terms for using the OPAX website, the OPAX app and OPAX's research tools: what OPAX is, what you may do with it, and what it does not promise.",
+  },
+  security: {
+    title: 'Security · OPAX',
+    description: 'How to report a security problem with the OPAX website, app or research tools, and what to expect.',
   },
 }
 
@@ -4099,6 +4147,9 @@ interface BillRow {
   introduced: string | null
   originating_house: string | null
   status: string | null
+  /** A dead bill's exact ending and its words ("removed", "Removed from the Notice Paper"); absent otherwise. */
+  ended?: string
+  ended_label?: string
   sponsor: string | null
   sponsor_party: string | null
   portfolio: string | null
@@ -4214,7 +4265,7 @@ function moneyIndex<N extends { label: string; kind: string; aliases?: string[];
 }
 let moneyMemo: Promise<MoneyData> | null = null
 function loadMoney(env: Env): Promise<MoneyData> {
-  moneyMemo ??= Promise.all(MONEY_GRAPH_PATHS.map((p) => assetJson<MoneyFile<MoneyNode>>(env, p)))
+  moneyMemo ??= Promise.all(MONEY_GRAPH_PATHS.map((p) => assetJson<MoneyFile<MoneyNode>>(env, p === '/graph/money.json' ? '/graph/money-receipts.json' : p)))
     .then((files) => moneyIndex(files))
     .catch((err) => {
       moneyMemo = null
@@ -4457,12 +4508,12 @@ function longDate(iso: string | null | undefined): string {
   if (!m) return iso ?? ''
   return `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`
 }
-const industryLabel = (ind: string): string => ind.replace(/_/g, ' ')
+const industryLabel = industryName
 /** "Labor", then "Labor and LNP", then "Labor, LNP and the Greens". */
 const andList = (xs: string[]): string =>
   xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`
 /** "2024-25" on its own when an entity filed only once. */
-const yearSpan = (a: string, b: string): string => (a && b && a !== b ? `${a} to ${b}` : b || a)
+const yearSpan = (a: string, b: string): string => fy(a && b && a !== b ? `${a} to ${b}` : b || a)
 
 const indexLinks = (): string =>
   `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
@@ -4835,7 +4886,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const titles = bill.divisions?.length ? await read<Record<string,string>>(PROCEDURAL_TITLES_PATH).catch(() => ({})) : {}
         const proceduralConfig = {...divisionTableConfig(), urlKey:'pv'}
         const proceduralQuery = guardTableURL(proceduralConfig,url).query
-        meta.prerender=renderBillAnswer({...bill,division_titles:titles},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status}}
+        meta.prerender=renderBillAnswer({...bill,division_titles:titles},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status,statusLabel:bill.ended_label}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,sharedAgencyTopSuppliers(env))
       if(content) meta.prerender=content.html
@@ -4959,7 +5010,8 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   }
   const name = b.short_title || b.title || key
   const house = CHAMBER_NAMES[b.originating_house ?? ''] ?? null
-  const status = BILL_STATUS[b.status ?? ''] ?? ''
+  // A dead bill's exact ending when the export names one, else the status word.
+  const status = b.ended_label?.trim() || (BILL_STATUS[b.status ?? ''] ?? '')
   // "Passed. Introduced in the House of Representatives on 18 October 2006."
   const opening = [
     status ? `${status}.` : '',
@@ -5302,7 +5354,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       kicker: 'Parliamentarian',
       title: display,
       lines: [[p.party, where].filter(Boolean).join(' · '), ...(p.speech_scope ? [] : [`${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`])],
-      ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the Opax record' } }),
+      ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the OPAX record' } }),
       ...(p.representation?.some(r => r.jurisdiction === 'vic') ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}),
       dot: partyColour(moneyParties, p.party),
       portraitId,
@@ -5597,8 +5649,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     node = moneyData?.donors.get(foldName(name)) ?? null
     // The index is keyed by its own fold (donorLookup: foldDonorName), so it is read with that fold.
     const index = node ? null : await loadDonorIndex(env.ASSETS).catch(()=>null)
-    disclosureRecord = node ?? index?.get(foldDonorName(name)) ?? null
-    // A name the index holds nowhere is a 404; an index that could not be read is a 503, never "No donor by this name".
+    disclosureRecord = node ?? index?.get('federal:' + foldDonorName(name)) ?? index?.get(foldDonorName(name)) ?? null
+    // A name the index holds nowhere is a 404; an index that could not be read is a 503, never a missing-donor page.
     if (!disclosureRecord) return unknownSubjectMeta('donor', Boolean(index))
     // A map node in one jurisdiction must not hide index-only figures in another.
     // Keep the map's measure for its own jurisdiction, and each other record's scope.
@@ -5690,7 +5742,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
-    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns. Not drawn on the money map, which shows only the largest donors.`
+    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns. ${offMapDonorNote(disclosureRecord ?? {})}`
     card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts]}
   }
   // A renamed party's name history (labels.js PARTY_RENAMES): the line under its heading, with the notices.
@@ -5702,13 +5754,13 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let table = ''
   if (dir === 'party') {
     const read = <T>(path:string)=>assetJson<T>(env,path)
-    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
+    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money-receipts.json').catch(()=>null)
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display)) ?? graph?.nodes.find(n=>n.kind === 'party' && samePartyLabel(n.label, display))
     if (graph && party) {
       const {rows,scope} = partyMoneyData(graph,party.id)
       const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(scope)}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(partyTableScope(scope, graph.meta))}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
@@ -5718,7 +5770,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
-    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${donorRecordsHTML(offMapRecords)}${indexLinks()}`
+    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${node && receiptTypeLine(node) ? `<p class="entry-scope">${escHtml(receiptTypeLine(node))}.</p>` : ''}${donorRecordsHTML(offMapRecords)}${indexLinks()}`
       : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : dir === 'party' ? `<h2>Members</h2><p>${escHtml(PARTY_NO_MEMBERS)}</p>` : '')
         + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>{const as=recordedAsText(display,[b.party ?? ''],'sponsor recorded as');return `<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}${as ? `, ${escHtml(as)}` : ''}</li>`}).join('')}</ul>` : '')
         + indexLinks()) + table,
@@ -6055,7 +6107,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   const noindex = meta.noindex || meta.status >= 400 || originalTableState || tableState || moneyTableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
-  // The policy pages (privacy, support) name no association between records.
+  // The policy pages (privacy, support, terms, security) name no association between records.
   // Official report records quote a publisher's own document; they pair no records.
   if (!meta.notFound && route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
@@ -7357,6 +7409,8 @@ export default {
       : new Response('Not found', { status: 404 })
     // The ChatGPT app directory's domain check: the token its portal issued, or 404 while none is set.
     if (url.pathname === OPENAI_APPS_CHALLENGE_PATH) return openaiAppsChallenge(request, env.OPENAI_APPS_CHALLENGE)
+    // RFC 9116: where to report a security problem. The same contacts as /security.
+    if (url.pathname === '/.well-known/security.txt') return new Response(request.method === 'HEAD' ? null : SECURITY_TXT, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname === '/api/ops/ask-gold') {

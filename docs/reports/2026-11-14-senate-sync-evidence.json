@@ -1,0 +1,124 @@
+{
+  "as_of": "2026-11-14",
+  "normal_sync_runs": [
+    {
+      "id": "cached-normal-sync-2026-09-02",
+      "date": "2026-09-02",
+      "source": "/home/jake/.cache/autoresearch/pipeline/sync_after_backfill.log",
+      "sha256": "bb73f2f7fa9b06de15301e14f7e2ee8e7d69f322fb3723e3f48e706fef41a199",
+      "workers": 10,
+      "speech_pushed_before": 518685,
+      "speech_pushed_after": 595590,
+      "speech_acknowledgements": 76905,
+      "other_acknowledgements": 318,
+      "failed_before": 0,
+      "failed_after": 0,
+      "sync_seconds": 8606,
+      "stage_wall_seconds": 8613,
+      "speech_acknowledgements_per_sync_second": 8.936207297234487,
+      "speech_acknowledgements_per_stage_second": 8.928944618599791,
+      "receipt_lines": [
+        "[speeches] resuming after speech_id=1194168, 518,685 already pushed, 0 failed",
+        "[speeches] done: 595,590 pushed, 0 failed",
+        "Elapsed 8606s. State: /home/jake/.cache/autoresearch/arag_sync_state.json"
+      ],
+      "wall_receipt": [
+        "18:38:59 backfill done; starting knowledge-box sync",
+        "21:02:32 sync exit=0"
+      ],
+      "wall_source": "/home/jake/.cache/autoresearch/pipeline/sync_after_backfill.log"
+    },
+    {
+      "id": "cached-normal-sync-2026-09-28",
+      "date": "2026-09-28",
+      "source": "/home/jake/.cache/autoresearch/pipeline/arag_sync.log",
+      "sha256": "d6882f6808fecef269d42a7846dfd689595bced65cbf5bffd602b786b333b25a",
+      "workers": 10,
+      "speech_pushed_before": 598416,
+      "speech_pushed_after": 600482,
+      "speech_acknowledgements": 2066,
+      "other_acknowledgements": 0,
+      "failed_before": 0,
+      "failed_after": 0,
+      "sync_seconds": 111,
+      "stage_wall_seconds": 121,
+      "speech_acknowledgements_per_sync_second": 18.61261261261261,
+      "speech_acknowledgements_per_stage_second": 17.074380165289256,
+      "receipt_lines": [
+        "[speeches] resuming after speech_id=1321143, 598,416 already pushed, 0 failed",
+        "[speeches] done: 600,482 pushed, 0 failed",
+        "Elapsed 111s. State: /home/jake/.cache/autoresearch/arag_sync_state.json"
+      ],
+      "wall_receipt": [
+        "2026-09-28 21:48:12 [arag_sync] start",
+        "2026-09-28 21:50:13 [arag_sync] OK in 121s"
+      ],
+      "wall_source": "/home/jake/.cache/autoresearch/pipeline/daily.log"
+    }
+  ],
+  "measurement_limits": "Counters record successful create acknowledgements, including HTTP 409 existing slugs. They do not measure indexing completion or enrichment. No November speech rate can be calculated from retained receipts. The bulk run also spent time on 318 news acknowledgements; using speech count alone understates its total rate.",
+  "worker_pool_evidence": {
+    "current": "parli/ingest/arag_sync.py:WORKERS = 10; batches of 200",
+    "bulk_code_commit": "a3e50e07f92d11559f8fcb7171d7148bea1192df",
+    "recent_cached_code_commit": "c1e2a2bad6c8bbc746f07fc80a6c4238b2e4dd79"
+  },
+  "latest_nightly": {
+    "source": "origin/nightly-status:status.json",
+    "status_commit": "3293331286dbe9e26efe91443d402327e25d548b",
+    "sha256": "35b6087bb189207488fdbc8094bf0b3f989dc56f5951fc4993bc5aae7d722c32",
+    "date": "2026-11-14",
+    "commit": "3a5d46667",
+    "status": "failed",
+    "started": "2026-11-13T16:15:42Z",
+    "finished": "2026-11-13T19:09:33Z",
+    "new_speech_resources": 0,
+    "new_press_release_resources": 19,
+    "sync_timing_available": false,
+    "excluded_reason": "The +19 resources are press releases; total nightly runtime includes unrelated stages and a failed 75-minute portal-test blame."
+  },
+  "excluded_cached_runs": [
+    {
+      "source": "/home/jake/opax-staging/nightly-1011/nightly-2026-10-11.log",
+      "reason": "Two arag_sync stage entries report 0 seconds with no speech count. Cannot derive throughput."
+    },
+    {
+      "source": "/home/jake/.cache/autoresearch/pipeline/manual_speech_sync.log",
+      "reason": "Speech counter unchanged at 595754 and elapsed zero."
+    }
+  ],
+  "budget": {
+    "publication_docs_per_second": 8.9,
+    "basis": "cached-normal-sync-2026-09-02",
+    "method": "Bulk normal-sync speech acknowledgement rate rounded down to one decimal place. No worker-pool multiplication or assumed latency.",
+    "default_days": 2,
+    "time_only_supported_days": 10,
+    "maximum_days": 10,
+    "budget_seconds": 1200,
+    "sync_preparation_seconds": 120,
+    "commit_margin_seconds": 60,
+    "peak_reserved_long_xml_turns": 614,
+    "default_reason": "Paid enrichment and unresolved Progress processing/index overage. Retained at user request pending spend decision."
+  },
+  "schedules": [
+    {
+      "days_per_night": 2,
+      "manifest_days": 284,
+      "nights": 142,
+      "first_night": "2026-11-15",
+      "last_insertion_night": "2027-04-05",
+      "following_normal_sync": "2027-04-06",
+      "peak_day_model_seconds": 70.99549547894145,
+      "stage_model_seconds_with_commit_margin": 321.9909909578829
+    },
+    {
+      "days_per_night": 10,
+      "manifest_days": 284,
+      "nights": 29,
+      "first_night": "2026-11-15",
+      "last_insertion_night": "2026-12-13",
+      "following_normal_sync": "2026-12-14",
+      "peak_day_model_seconds": 70.99549547894145,
+      "stage_model_seconds_with_commit_margin": 889.9549547894145
+    }
+  ]
+}

@@ -93,7 +93,7 @@ test('an initials print the seat roster explains is shown once; an ambiguous one
 
 test('seat-roster members are dated, and after the next recorded election they no longer sit', (t) => {
   const people = [vicMember('Wren Talbot', 'vic_lc', 'Fixture Region'),
-    {name: 'Ida Marsh', party: 'Animal Justice Party', current: false, states: ['nsw'], first: 2015, last: 2019}];
+    {name: 'Ida Marsh', party: 'Animal Justice Party', current: false, end:'2019-06-30', states: ['nsw'], first: 2015, last: 2019}];
   const divisions = {seat_rosters: seatRosterMembers(people, [seat()], {vic: ['2022-11-26', '2026-11-28'], nsw: ['2026-12-01']})};
   assert.equal(divisions.seat_rosters['Animal Justice Party'][0].next_election, '2026-11-28', 'the first election after the roster date');
   const render = today => {
@@ -105,7 +105,7 @@ test('seat-roster members are dated, and after the next recorded election they n
   for (const today of ['2026-11-13', '2026-11-28']) {
     const {members, doc} = render(today);
     assert.deepEqual(names(members.current), ['Wren Talbot'], today);
-    assert.deepEqual(heads(doc), ['Sitting members, as at 9 Sep 2026 (1)', 'Former members (1)'], today);
+    assert.deepEqual(heads(doc), ['Sitting members across all parliaments, as at 9 Sep 2026 (1)', 'Former members (1)'], today);
   }
   // After it: not sitting, not former; listed under the roster's date. Still counted once.
   const {members, doc} = render('2026-11-29');
@@ -125,7 +125,7 @@ test('a mixed sitting group dates each seat-roster row instead of the heading', 
     {name: 'Ida Marsh', party: 'Animal Justice Party', party_now: 'Animal Justice Party', current: true, states: ['nsw'], first: 2019, last: 2026}];
   const members = partyMembers('Animal Justice Party', {roster: {people}, divisions: {seat_rosters: seatRosterMembers(people, [seat()], {})}});
   const doc = new JSDOM(partyMembersHTML('Animal Justice Party', members, helpers)).window.document;
-  assert.deepEqual([...doc.querySelectorAll('h3.entry-subhead')].map(h => h.textContent.trim()), ['Sitting members (2)']);
+  assert.deepEqual([...doc.querySelectorAll('h3.entry-subhead')].map(h => h.textContent.trim()), ['Sitting members across all parliaments (2)']);
   const rows = Object.fromEntries([...doc.querySelectorAll('li.dir-row')].map(li => [li.querySelector('.dir-name').textContent, li.textContent]));
   assert.match(rows['Wren Talbot'], /Parliamentary roster as at 9 Sep 2026/);
   assert.doesNotMatch(rows['Ida Marsh'], /as at/);

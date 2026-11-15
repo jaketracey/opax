@@ -13,7 +13,7 @@ const now = Date.UTC(2026,8,12,22);
 // A valid story (story.ts): a cover first, one fact a slide, the source last.
 const slides = [
  { type:'cover', kicker:'Parliamentarian · Test', title:'Test Member', line:'A test line.', photo:'parliament-house-flagpole', alt:'Parliament House with Test Member.' },
- { type:'number', kicker:'The record', title:'What OPAX holds', lines:['Collected records.'], value:'1,369', label:'speeches in the Opax record', alt:'1,369 speeches.' },
+ { type:'number', kicker:'The record', title:'What OPAX holds', lines:['Collected records.'], value:'1,369', label:'speeches in the OPAX record', alt:'1,369 speeches.' },
  { type:'source', kicker:'Read the speeches', title:'What do the speeches say?', rows:['Cited to Hansard'], url:'opax.com.au/subject/person', path:'Test Member', alt:'Read at opax.com.au.' },
 ];
 const story = { ...post, slides };

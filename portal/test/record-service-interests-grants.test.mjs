@@ -62,6 +62,19 @@ test('surname-first roster aliases retain service through their resolved person 
   assert.deepEqual(out.data.people[0].service.map(p => [p.electorate, p.start, p.end]), [['Gellibrand', '1972-12-02', '1998-08-31']]);
 });
 
+test('the repaired Cunningham profile resolves its existing catalogue id to dated House service', async () => {
+  const out = await api.findPeople(deps, { name: 'Stephen Martin' });
+  const person = out.data.people[0];
+  assert.equal(person.name, 'Stephen Martin');
+  assert.equal(person.speeches_indexed, 299);
+  assert.ok(person.service.some(p => p.chamber === 'representatives' && p.electorate === 'Cunningham'
+    && p.start === '1996-04-30' && p.end === '2002-08-16'));
+  assert.ok(!person.service.some(p => p.electorate === 'Reid'));
+  const dickson = await api.findPeople(deps, { name: 'Anthony Charles Smith' });
+  assert.ok(dickson.data.people[0].service.some(p => p.electorate === 'Dickson'
+    && p.start === '1996-03-02' && p.end === '1998-10-03'));
+});
+
 test('a service fact from find_people survives the research answer selection and reaches the answer with its source', async () => {
   const reply = (name, input) => ({ content: [{ type: 'tool-call', toolName: name, toolCallId: name, input: JSON.stringify(input) }], finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage: { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }, warnings: [] });
   const model = new MockLanguageModelV4({ doGenerate: [reply('find_people', { name: 'Ralph Willis' }), reply('answer', { facts: [2] })] });

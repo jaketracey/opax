@@ -109,7 +109,12 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   // The who shape selects supported subjects first; its authority fallback handles unnamed findings.
   // A body's finding cited only to one member's speech is that member's claim, and says so (ASK_ATTRIBUTION_RULE).
   out=attributeSpokenFindings(out)
-  out=distinctSummary(cleanAnswerShape(protectedDecision(out)?out:ACCOUNTABILITY_QUESTION.test(question)?out:leadWithFinding(leadWithFinding(out,undefined,fixedPrefix),question,fixedPrefix)))
+  // The research loop's own point answer keeps the order the model wrote: its instructions put the direct answer first,
+  // and moving a later finding ahead of it would reorder model prose (and move text a stream had already shown). A
+  // written record answer (pre_writer_sources) keeps its lead shaping.
+  const origin=payload.research as {mode?:string;pre_writer_sources?:unknown}|undefined
+  const loopPoints=origin?.mode==='loop'&&!origin.pre_writer_sources
+  out=distinctSummary(cleanAnswerShape(protectedDecision(out)||ACCOUNTABILITY_QUESTION.test(question)||loopPoints?out:leadWithFinding(leadWithFinding(out,undefined,fixedPrefix),question,fixedPrefix)))
   // The who lead has no released-prefix exemption: the stream releases a who answer only once this lead is decided
   // (research-sentence-stream.ts), and a final order that would still move released text takes the response's retry
   // path rather than keeping a lead this order would not choose. A checked prefix records whether its lead is a sentence

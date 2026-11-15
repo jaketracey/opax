@@ -13,6 +13,8 @@
  "portfolio": "Immigration, Citizenship and Multicultural Affairs",
  "status": "lapsed",
  "status_as_of": "2019-04-11",
+ "ended": "lapsed",
+ "ended_label": "Lapsed",
  "key_dates": [
   {
    "stage": "introduced",

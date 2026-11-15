@@ -26,7 +26,7 @@ const reply=calls=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_
 function loop(responses,{named=scope,q=question,wallMs,rosterDelay=0,money=null}={}){
  const failures=[],model=new MockLanguageModelV4({doGenerate:responses});
  const deps={
-  asset:async path=>{if(path==='/graph/money.json')return money;if(path!=='/parliamentarians.json')return null;if(rosterDelay)await new Promise(r=>setTimeout(r,rosterDelay));return roster;},
+  asset:async path=>{if(path==='/graph/money-receipts.json')return money;if(path!=='/parliamentarians.json')return null;if(rosterDelay)await new Promise(r=>setTimeout(r,rosterDelay));return roster;},
   kb:async()=>({resources:{[passage.resource]:{slug:passage.slug,title:passage.title,fields:{body:{paragraphs:{[id]:{text:speech}}}}}}}),
   generate:async()=>{throw Error('the old planner must not run')},
   research:api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),

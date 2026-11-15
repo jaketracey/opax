@@ -33,6 +33,9 @@ test('bill rows lead with a status label and the introduction date',()=>{
  assert.match(html,/<p class="hp-row-detail">Health<\/p>/);
  assert.match(billRowHTML({key:'d',title:'Draft',status:'exposure_draft',introduced:'2026-08-01'}),/data-tone="draft">Exposure draft<\/span> <span>Released/);
  assert.match(billRowHTML({key:'q',title:'Q',status:'second_reading',introduced:'2026-08-01',jurisdiction:'qld'}),/data-tone="ended">Second reading<\/span> <span>Introduced .* · Queensland/);
+ // A dead bill's exact ending, when the export names one, in place of "Lapsed".
+ assert.match(billRowHTML({key:'r',title:'R',status:'lapsed',ended:'removed',ended_label:'Removed from the Notice Paper',introduced:'2017-10-23'}),/data-tone="ended">Removed from the Notice Paper<\/span> <span>Introduced/);
+ assert.match(billRowHTML({key:'l',title:'L',status:'lapsed',introduced:'2017-10-23'}),/data-tone="ended">Lapsed<\/span>/);
 });
 test('declaration rows: official portraits only, the party from the roster, the register one tap away',()=>{
  const item={name:'Chris Bowen',description:'Two "tickets"',bucket:'gifts',kind:'addition',date:'2026-10-07',url:'https://www.aph.gov.au/register'};

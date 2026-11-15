@@ -7,7 +7,7 @@ const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.output
 const fixtures=JSON.parse(readFileSync(new URL('./fixtures/ask-money-followup-mining.json',import.meta.url)))
 const graph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url)))
 const period={kind:'all',label:''},donor='Mining and Energy Union'
-const env={origin:'http://localhost:8981',asset:async path=>path==='/graph/money.json'?structuredClone(graph):null}
+const env={origin:'http://localhost:8981',asset:async path=>path==='/graph/money-receipts.json'?structuredClone(graph):null}
 const result=await api.callTool(env,'money_totals',{donor})
 const fact=result.citations[0],record={resource:'fact-1',slug:'',title:fact.text,href:fact.url,url:fact.url,snippet:fact.text,cited:true,kind:'export'}
 const input=question=>({question,period,facts:api.writingFacts(undefined,[{id:1,text:fact.text,cite:{kind:'export',url:fact.url,label:fact.text}}])})

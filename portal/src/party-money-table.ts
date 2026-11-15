@@ -6,7 +6,7 @@ export async function partyMoneyResponse(request:Request,assets:Fetcher):Promise
  const id=new URL(request.url).searchParams.get('partyId') || ''
  if(!id.startsWith('party:') || id.length>200)return Response.json({error:'Party unavailable'},{status:404,headers})
  try {
-  const response=await assets.fetch(new Request('https://opax.com.au/graph/money.json'))
+  const response=await assets.fetch(new Request('https://opax.com.au/graph/money-receipts.json'))
   if(!response.ok)throw Error('unavailable')
   const graph=await response.json() as PartyGraph
   if(!graph.nodes.some(node=>node.kind==='party'&&node.id===id))return Response.json({error:'Party unavailable'},{status:404,headers})

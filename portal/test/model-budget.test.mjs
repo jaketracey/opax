@@ -46,7 +46,7 @@ test('industry donation limitations return early without spending model or overv
   let response = await post('/api/ask', {question});
   let out = await response.json();
   assert.equal(out.answer_status, 'calculated');
-  assert.match(out.answer.split(/[.!?]/)[0], /^\*\*Liberal\*\* leads parties receiving money from gambling-linked sources: \*\*\$1,093,352\*\* in donations received \(AEC receipt type: Donation Received\)/);
+  assert.match(out.answer.split(/[.!?]/)[0], /^\*\*Liberal\*\* leads parties receiving money from gambling-linked sources: \*\*\$2,044,652\*\* in donations received \(AEC receipt type: Donation Received\)/);
   assert.equal(out.money_overview, undefined);
   assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);
@@ -55,7 +55,7 @@ test('industry donation limitations return early without spending model or overv
   response = await post('/api/ask', {question});
   out = await response.json();
   assert.equal(out.answer_status, 'calculated');
-  assert.match(out.answer.split(/[.!?]/)[0], /^\*\*Liberal\*\* leads parties receiving money from gambling-linked sources: \*\*\$1,093,352\*\* in donations received \(AEC receipt type: Donation Received\)/);
+  assert.match(out.answer.split(/[.!?]/)[0], /^\*\*Liberal\*\* leads parties receiving money from gambling-linked sources: \*\*\$2,044,652\*\* in donations received \(AEC receipt type: Donation Received\)/);
   assert.equal(out.money_overview, undefined);
   assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);

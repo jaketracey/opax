@@ -30,5 +30,5 @@ test('a donor ranked just past the money map\'s cap keeps its index entry and it
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.doesNotMatch(html, /No donor by this name/);
-  assert.match(html, /Past Cap Example Pty Ltd: disclosed electoral returns\. Not drawn on the money map, which shows only the largest donors\./);
+  assert.match(html, /Past Cap Example Pty Ltd: disclosed electoral returns\. Receipts disclosed under this exact name\. This donor is not drawn on the money map, which shows a bounded selection of donors\./);
 });

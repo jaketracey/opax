@@ -1,0 +1,84 @@
+{
+  "counts": {
+    "OfficeSpeech-H": 9,
+    "OfficeUpper-H": 361,
+    "MemberUpper-H": 261,
+    "MemberSpeech-H": 461,
+    "MemberLower-H": 141,
+    "MemberQuestion-H": 82,
+    "MemberAnswer-H": 81,
+    "OfficeLower-H": 3
+  },
+  "examples": {
+    "OfficeSpeech-H": {
+      "uid": "HANSARD-1820781676-90643",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "OfficeSpeech-H"
+      }
+    },
+    "OfficeUpper-H": {
+      "uid": "HANSARD-1820781676-90644",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "OfficeUpper-H"
+      }
+    },
+    "MemberUpper-H": {
+      "uid": "HANSARD-1820781676-90645",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "MemberUpper-H"
+      }
+    },
+    "MemberSpeech-H": {
+      "uid": "HANSARD-1820781676-90648",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "MemberSpeech-H",
+        "data-mode": "member",
+        "data-type": "article",
+        "data-value": "2267",
+        "data-article": "speech"
+      }
+    },
+    "MemberLower-H": {
+      "uid": "HANSARD-1820781676-90656",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "MemberLower-H"
+      }
+    },
+    "MemberQuestion-H": {
+      "uid": "HANSARD-1820781676-90659",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "MemberQuestion-H",
+        "data-mode": "member",
+        "data-type": "article",
+        "data-value": "28",
+        "data-article": "question"
+      }
+    },
+    "MemberAnswer-H": {
+      "uid": "HANSARD-1820781676-90659",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "MemberAnswer-H",
+        "data-mode": "member",
+        "data-type": "article",
+        "data-value": "2259",
+        "data-article": "answer"
+      }
+    },
+    "OfficeLower-H": {
+      "uid": "HANSARD-1323879322-138372",
+      "tag": "{http://www.w3.org/1999/xhtml}span",
+      "attrs": {
+        "class": "OfficeLower-H"
+      }
+    }
+  },
+  "fragments_scanned": 564,
+  "basis": "Existing API cache only, including 73 legacy 2022 fragments for read-only parser comparison. Repair writes start 2023-01-01."
+}

@@ -13,6 +13,8 @@
  "portfolio": null,
  "status": "lapsed",
  "status_as_of": "2023-09-05",
+ "ended": "removed",
+ "ended_label": "Removed from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

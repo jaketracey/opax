@@ -58,7 +58,7 @@
  ],
  "services": [],
  "assets": {
-  "/graph/money.json": {
+  "/graph/money-receipts.json": {
    "meta": {
     "generated": "2026-11-11",
     "source": "AEC Transparency Register returns (annual, election, referendum) via parli.db `donations` table",

@@ -8,6 +8,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { CHAMBER_LABELS, chamberLabel } from '../public/labels.js';
 import * as divisionMarkdownModule from '../public/division-markdown.js';
+import * as divisionAgainstModule from '../public/division-against-party.js';
 const { divisionPlain } = divisionMarkdownModule;
 import { renderDivisionAnswer } from '../src/seo-content.ts';
 
@@ -70,7 +71,7 @@ function divisionPage() {
   const node = () => ({ textContent: '', innerHTML: '', hidden: true, focus() {}, querySelector: () => null });
   const context = {
     uiLabels: { chamberLabel, sourceLineHTML: (o) => `<p class="source">${o.source}: ${o.originals.map((x) => x.label).join(', ')}</p>` },
-    divisionMarkdown: divisionMarkdownModule,
+    divisionMarkdown: divisionMarkdownModule, divisionAgainst: divisionAgainstModule, personUrl: (n) => `/person/${n}`,
     $: (id) => { if (!nodes.has(id)) nodes.set(id, node()); return nodes.get(id); },
     esc: (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]),
     setStatus() {}, setCrumbs() {}, crumbsFor: () => [], billOutcomeLabelHTML: (r) => r || '', fmtDate: (d) => d,
@@ -82,7 +83,7 @@ function divisionPage() {
   runInNewContext(`${fn('chamberLabel')}\n${fn('sourceLineHTML')}\n${constLine('billHouse')}\n${fn('billStage')}\n${fn('billQuestion')}
     ${constLine('BILL_DESCRIPTION')}\n${constLine('BILL_PLACEHOLDER')}\n${constLine('billFlat')}\n${fn('billNoteRepair')}\n${fn('billStripStage')}\n${fn('billStripTitle')}
     ${fn('billQuestionParts')}\n${fn('divisionQuestionLead')}\n${fn('divisionBillsHTML')}
-    ${fn('divisionHeading')}\n${fn('renderDivisionDoc')}
+    ${fn('divisionHeading')}\n${fn('divisionAgainstHTML')}\n${fn('renderDivisionDoc')}
     Object.assign(globalThis, { billHouse, divisionHeading, renderDivisionDoc, divisionBillsHTML });`, context);
   return { ...context, nodes };
 }

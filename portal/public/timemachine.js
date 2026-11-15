@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
+import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=7280d96f90';
 /**
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
@@ -43,6 +43,14 @@ import { machineLabelHTML } from './labels.js?v=fcb2a1091c'
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026
 const START_YEAR = 2001 // a rich early year the index has definitely reached
+// Mirrors SHORT_TURN_WORDS in src/index.ts: speech turns under this many
+// words show their own text, never a machine brief.
+const SHORT_TURN_WORDS = 80
+/** A row wants a brief unless it is a speech turn known to be short (fail open). */
+function briefWanted(row) {
+  const words = row?.word_count
+  return !(row?.kind === 'speech' && typeof words === 'number' && words > 0 && words < SHORT_TURN_WORDS)
+}
 
 // ---------------------------------------------------------------------------
 // What was parliament arguing about? Curated probe queries per year.
@@ -1951,7 +1959,7 @@ export function mountTimeMachine(container, opts = {}) {
     cardsEl.replaceChildren()
     for (const { probe, r } of picks) cardsEl.appendChild(makeCard(probe.label, r))
     fillPortraits(cardsEl)
-    applyBriefs(picks.map(({ r }) => r.resource).filter(Boolean), seq, signal)
+    applyBriefs(picks.map(({ r }) => r).filter(briefWanted).map((r) => r.resource).filter(Boolean), seq, signal)
 
     // A thin year means the machine is mid-shelving it, not that parliament
     // went quiet — say so. Under the topic lens the labelling pass is the

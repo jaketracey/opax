@@ -10,6 +10,7 @@ import { mkdirSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { pruneChunks, readManifest, writeManifest } from './chunks.mjs'
+import { secureThreeUuids } from './three-uuid.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const pub = join(here, '..', 'public')
@@ -21,6 +22,7 @@ const result = await build({
   entryPoints: { 'money-map': join(here, 'index.ts'), explain: join(here, 'explain.ts') },
   bundle: true, splitting: true, minify: true, format: 'esm', target: 'es2022',
   outdir: pub, chunkNames: 'chunks/[name]-[hash]', metafile: true, logLevel: 'warning',
+  plugins: [secureThreeUuids],
 })
 for (const [file, meta] of Object.entries(result.metafile.outputs)) {
   if (file.endsWith('.js')) console.log(`${file}  ${(meta.bytes / 1024).toFixed(0)} kB`)

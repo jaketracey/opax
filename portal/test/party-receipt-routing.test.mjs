@@ -39,6 +39,7 @@ test('incompatible controls cannot send a family question to a model',async()=>{
 test('actual JSON/SSE payload bypasses caches and every model mode after money_facts is stripped',async()=>{
  const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
  const h=await loadWorker(root+'src/index.ts',root+'public',ctx),saved=caches.default
+ const realAssets=h.env.ASSETS;h.env.ASSETS={fetch:async req=>new URL(req.url).pathname==='/graph/money-receipts.json'?assets.fetch(req):realAssets.fetch(req)}
  let cacheReads=0;globalThis.caches.default={match:async()=>{cacheReads++;return Response.json({answer:'Poisoned old model answer'})},put:async()=>{}}
  const initial=outbound.length
  try{for(const mode of ['off','route','shadow'])for(const stream of [false,true]){
@@ -101,6 +102,7 @@ test('follow-up intent is resolved before incompatible filters, in both topic di
 test('Greens tense reproductions bypass a stale gift-framed cache in JSON and SSE',async()=>{
  const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
  const h=await loadWorker(root+'src/index.ts',root+'public',ctx),saved=caches.default
+ const realAssets=h.env.ASSETS;h.env.ASSETS={fetch:async req=>new URL(req.url).pathname==='/graph/money-receipts.json'?assets.fetch(req):realAssets.fetch(req)}
  let cacheReads=0;globalThis.caches.default={match:async()=>{cacheReads++;return Response.json({answer:'Example Bank gives the most money to the Greens: $90 million.'})},put:async()=>{}}
  const initial=outbound.length
  try{
@@ -145,12 +147,12 @@ test('ranked_money rows carry their direction and amounts as data',async()=>{
  const legacy=await api.federalPartyMoneyAnswer({question},untypedAssets)
  assert.equal(donorRanking(question,legacy.sources)[0].name,'Westpac Banking Corporation')
  const legacyRow=legacy.sources.find(s=>s.receipt);assert.equal(legacyRow.receipt.source,'Westpac Banking Corporation');assert.match(legacy.sources[0].snippet,/disclosed receipts, all types/)
- const app=fs.readFileSync(root+'public/app.js','utf8');assert.doesNotMatch(app,/heading: "Largest donors"|"major donors disclosed"|`disclosed donation\$/)
+ const app=fs.readFileSync(root+'public/app.js','utf8');assert.doesNotMatch(app,/heading: "Largest donors"|"major donors disclosed"/)
 })
 
 test('additional federal total labels use receipts and source wording throughout the public UI',()=>{
  for(const [file,old]of [
-  ['public/app.js',/"Largest donors"|"major donors disclosed"|disclosed donation\$|Disclosed money from this donor/],
+  ['public/app.js',/"Largest donors"|"major donors disclosed"|Disclosed money from this donor/],
   ['public/growth-modules.js',/Also in the donations register/],
   ['public/grants.js',/label: 'To donors'|label: 'In the donor registers'|>Donors only</],
   ['public/money-explain.js',/largest donors by lifetime total|all donors on the map|follows one giver/],
@@ -184,6 +186,7 @@ test('R7 exact reproductions and uncertain requests bypass poisoned caches in JS
  const {reproductions,uncertain}=await import('./fixtures/party-receipt-long-tail.mjs')
  const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
  const h=await loadWorker(root+'src/index.ts',root+'public',ctx),saved=caches.default
+ const realAssets=h.env.ASSETS;h.env.ASSETS={fetch:async req=>new URL(req.url).pathname==='/graph/money-receipts.json'?assets.fetch(req):realAssets.fetch(req)}
  let reads=0;globalThis.caches.default={match:async()=>{reads++;return Response.json({answer:'Old gift claim'})},put:async()=>{}}
  const before=outbound.length
  try{
@@ -237,6 +240,7 @@ test('six review regressions retain ordinary Ask on JSON and SSE',async()=>{
  const {regressions}=await import('./fixtures/party-receipt-long-tail.mjs')
  const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
  const h=await loadWorker(root+'src/index.ts',root+'public',ctx),saved=caches.default
+ const realAssets=h.env.ASSETS;h.env.ASSETS={fetch:async req=>new URL(req.url).pathname==='/graph/money-receipts.json'?assets.fetch(req):realAssets.fetch(req)}
  const cached={answer:'Ordinary Ask cached response.',answer_status:'answered',sources:[],citations:{}}
  let reads=0;globalThis.caches.default={match:async()=>{reads++;return Response.json(cached)},put:async()=>{}}
  const before=outbound.length

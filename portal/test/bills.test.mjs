@@ -42,14 +42,21 @@ assert.ok(index.meta.party_basis, "index states its party basis");
 // lifecycles to Ask and MCP"; `sponsors` and `sponsor_count` with bills-006
 // (every sponsor, not only the first).
 const LIFECYCLE_KEYS = ["passed_both_houses", "passed_both_houses_date", "royal_assent", "act_number"];
-const OPTIONAL_INDEX_KEYS = [...LIFECYCLE_KEYS, "sponsor_count"];
-const OPTIONAL_BILL_KEYS = [...LIFECYCLE_KEYS, "sponsors"];
+// `ended` and `ended_label` (how a dead bill ended) are written only for bills that did not pass.
+const ENDED_KEYS = ["ended", "ended_label"];
+const OPTIONAL_INDEX_KEYS = [...LIFECYCLE_KEYS, "sponsor_count", ...ENDED_KEYS];
+const OPTIONAL_BILL_KEYS = [...LIFECYCLE_KEYS, "sponsors", ...ENDED_KEYS];
 const STATUSES = new Set(["before_parliament", "passed", "lapsed", "negatived", "exposure_draft"]);
 const optional = (obj, keys) => keys.filter((k) => Object.hasOwn(obj, k));
 
 for (const row of index.bills) {
   assert.deepEqual(Object.keys(row).sort(), [...INDEX_KEYS, ...optional(row, OPTIONAL_INDEX_KEYS)].sort(), `index row ${row.key} keys`);
   assert.equal(typeof row.has_summary, "boolean", `${row.key} has_summary is a boolean`);
+  assert.equal(Object.hasOwn(row, "ended"), Object.hasOwn(row, "ended_label"), `${row.key} ended and ended_label come together`);
+  if (Object.hasOwn(row, "ended")) {
+    assert.ok(!["passed", "before_parliament", "exposure_draft"].includes(row.status), `${row.key} only a dead bill has an ending`);
+    assert.ok(typeof row.ended_label === "string" && row.ended_label.length > 0, `${row.key} ended_label is worded`);
+  }
 }
 const sorted = [...index.bills].every(
   (r, i, a) => i === 0 || (a[i - 1].introduced ?? "") >= (r.introduced ?? ""),

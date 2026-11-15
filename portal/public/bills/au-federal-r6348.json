@@ -13,6 +13,8 @@
  "portfolio": "Industrial Relations",
  "status": "lapsed",
  "status_as_of": "2019-11-28",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",

@@ -36,7 +36,7 @@ function harness({ money = { nodes: [] }, mount = async () => ({ destroy() {}, s
   const context = {
     $: element, esc, safeUrl: (u) => typeof u === 'string' && /^https?:\/\//i.test(u) ? u : null,
     document, window: {}, location: {search: ''}, URLSearchParams, AbortController, matchMedia: () => ({ matches: false }),
-    loadMoneyData: async () => money,
+    loadMoneyFile: async () => money,
     loadContractsModule: async () => ({mountContractsTable: async () => ({destroy() {}})}),
     loadMapModule: async () => ({ mountMoneyMap: mount }),
     askHash: (q) => `/ask?q=${encodeURIComponent(q)}`, industryLabel: (v) => v,
@@ -123,7 +123,7 @@ test('map refuses prefix-only donor matches', async () => {
 test('closing during donor lookup prevents a late map mount', async () => {
   const data = deferred(); let mounts = 0;
   const h = harness({ mount: async () => { mounts++; } });
-  h.context.loadMoneyData = () => data.promise;
+  h.context.loadMoneyFile = () => data.promise;
   const pending = h.context.mountDiscoveryMap(overlap('Acme'));
   await h.context.mountDiscoveryMap(overlap('Acme')); // toggle closed
   data.resolve({ nodes: [{ id: 'acme', kind: 'donor', label: 'Acme' }] });

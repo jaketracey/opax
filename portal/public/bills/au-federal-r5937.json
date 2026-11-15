@@ -13,6 +13,8 @@
  "portfolio": "(s) KATTER, Bob, Jnr, MP",
  "status": "lapsed",
  "status_as_of": "2018-02-27",
+ "ended": "removed",
+ "ended_label": "Removed from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

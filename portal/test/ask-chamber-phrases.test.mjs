@@ -139,7 +139,8 @@ test('research shows the model each passage\'s chamber, and a point that guesses
   assert.equal(run.answered,true)
   const answer=JSON.stringify(m.doGenerateCalls[1].prompt)
   assert.match(answer,/"chamber":"senate"/,'the search result the model reads carries the recorded chamber')
-  assert.match(JSON.stringify(m.doGenerateCalls[1].tools),/Name the chamber a passage records in its chamber field/)
+  // The answer is reply text (REPLY_ANSWER_RULE), so the rule reaches the model in its instructions.
+  assert.match(JSON.stringify(m.doGenerateCalls[1].prompt.filter(p=>p.role==='system')),/Name the chamber a passage records in its chamber field/)
   assert.match(run.answer,/In the Senate on 27 November 2024, Senator Jordan Sample said/)
   assert.doesNotMatch(run.answer,/In the House/)
   assert.equal(run.qualitative.sources.find(s=>s.resource===pid.split('/')[0])?.chamber,'senate')

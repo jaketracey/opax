@@ -7,7 +7,7 @@ import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {moneyFlowType} from '../portal/public/money-records.js';
 import {instrumentTableRows} from '../portal/public/instruments.js';
-import {categoryMembers,receiptFigures} from '../portal/public/register-tables.js';
+import {categoryMembers,receiptFigures,partyMoneyData} from '../portal/public/register-tables.js';
 import {interestHolder} from '../portal/public/interest-holder.js';
 import {donorDisclosure,hasPartyReceipts} from '../portal/public/donor-disclosure.js';
 import {contractTitle, placeholderContract, ausTenderURL} from '../portal/public/contracts-table.js';
@@ -30,14 +30,23 @@ export async function interestTableRows(root) {
 }
 
 /** Read existing public snapshots only. No database or network operations. */
-export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: suppliedGraphs, observe} = {}) {
+export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: suppliedGraphs, partyGraphs: suppliedPartyGraphs, observe} = {}) {
   const read = async name => JSON.parse(await readFile(join(root, name), 'utf8'));
   const files = async name => (await readdir(join(root, name))).filter(f => f.endsWith('.json')).sort();
   const graphs = suppliedGraphs || await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'].map(name => read(name.slice(1))));
+  // Connections are a drawing surface. Party tables are factual and use the
+  // uncapped federal receipts; explicitly injected test graphs keep their scope.
+  const partyGraphs = suppliedPartyGraphs || (suppliedGraphs ? suppliedGraphs : [await read('graph/money-receipts.json'), ...graphs.slice(1)]);
+  const partyScopes = {};
   const rows = Object.fromEntries(Object.keys(TABLE_DATASETS).map(name => [name, []]));
   const add = (name,row) => rows[name].push({row});
-  for (const [g,graph] of graphs.entries()) {
-    const jurisdiction = ['federal','qld','vic','tas'][g], nodes = new Map(graph.nodes.map(n=>[n.id,n]));
+  for (const [g,graph] of [...graphs, ...partyGraphs].entries()) {
+    const partyTable = g >= graphs.length;
+    const jurisdiction = ['federal','qld','vic','tas'][g % graphs.length], nodes = new Map(graph.nodes.map(n=>[n.id,n]));
+    if (partyTable) for (const node of graph.nodes.filter(n=>n.kind==='party')) {
+      const {scope} = partyMoneyData(graph,node.id);
+      if (scope) (partyScopes[jurisdiction] ||= {})[node.label] = scope;
+    }
     for (const [i,edge] of graph.edges.entries()) {
       const type = moneyFlowType(edge,nodes);if (!type) continue;
       // A receipt counts once, from the party's own return (receiptFigures), as the party page,
@@ -52,8 +61,8 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
       const donors = [from,to].filter(n=>n.kind==='donor');
       const identity=donors[0] ? donorDisclosure(donors[0]) : null;
       const row = {return_reference:identity?.reference || '',from_href:from.kind==='donor' ? donorDisclosure(from).href : from.profileUrl || '',to_href:to.kind==='donor' ? donorDisclosure(to).href : to.profileUrl || '',id:`${jurisdiction}:${i}`,from:from.label,to:to.label,type,jurisdiction,industry:donors[0]?.industry || '',amount:figures ? figures.total : edge.total,count:figures ? figures.count : edge.count ?? 0,firstYear:(figures ? figures.firstYear : edge.firstYear) ?? null,lastYear:(figures ? figures.lastYear : edge.lastYear) ?? null};
-      add('money-connections',row);
-      if (type==='receipts') add('party-money',row);
+      if (!partyTable) add('money-connections',row);
+      else if (type==='receipts') add('party-money',{...row,from:donorDisclosure(from).name});
     }
   }
   for (const s of (await read('suppliers.json')).suppliers) if (s.count > 0) add('suppliers', {id:s.id,name:s.name,abn:s.abn,jurisdiction:'federal',total:s.total,count:s.count,agency_count:s.agency_count,first_year:s.first_year,last_year:s.last_year});
@@ -72,7 +81,7 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   }
   const actInvoices=await actInvoicesSnapshot(root);
   rows['act-invoices']=actInvoices.rows;
-  const metadata=actInvoices.metadata ? {'act-invoices':actInvoices.metadata} : {};
+  const metadata={...(actInvoices.metadata ? {'act-invoices':actInvoices.metadata} : {}),'party-money':{scopes:partyScopes}};
   if (moneyOnly) return {rows,metadata};
   const bills = (await read('bills/index.json')).bills, billScopes = new Map(), stages = new Map();
   for (const bill of bills) {
@@ -153,6 +162,9 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     if (name==='act-invoices') {
       if (!metadata['act-invoices']) throw Error('ACT invoice source receipt missing; reload held');
       tail+=`INSERT INTO table_meta VALUES ('act-invoices',${literal(JSON.stringify(metadata['act-invoices']))});\n`;
+    }
+    if (name==='party-money' && metadata['party-money']) {
+      tail+=`INSERT INTO table_meta VALUES ('party-money',${literal(JSON.stringify(metadata['party-money']))});\n`;
     }
     group.hash.update(tail);
     const hash=group.hash.digest('hex').slice(0,24);group.done=true;

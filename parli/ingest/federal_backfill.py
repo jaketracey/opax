@@ -67,20 +67,36 @@ def owned_ids(db, run):
     return [r[0] for r in rows]
 
 
-def discover_days(db, available, start, end, max_days):
+def discover_days(db, available, start, end, max_days, chambers=None):
     """Only ZERO stored rows qualify, across all sources (including Zenodo)."""
     occupied = {(house, day): count for house, day, count in db.execute(
         'SELECT chamber,date,COUNT(*) FROM speeches WHERE date BETWEEN ? AND ? '
         "AND chamber IN ('representatives','senate') GROUP BY chamber,date", (start, end))}
     missing, held = [], []
-    for house in xml.FOLDERS:
-        for day in sorted(set(available[house])):
+    for house in chambers or xml.FOLDERS:
+        for day in sorted(set(available.get(house, []))):
             date.fromisoformat(day)
             if not start <= day <= end:
                 continue
             item = {'chamber': house, 'date': day, 'existing_rows': occupied.get((house, day), 0)}
             (held if item['existing_rows'] else missing).append(item)
     return missing[:max_days], held, len(missing)
+
+
+def source_days(path, chambers, start, end):
+    """A versioned source calendar, with no inferred weekdays or other hosts."""
+    manifest = json.loads(Path(path).read_text())
+    if manifest.get('version') != 1:
+        raise ValueError('unsupported source-day manifest')
+    available = {house: [] for house in chambers}
+    for item in manifest['days']:
+        house, day = item['chamber'], item['date']
+        date.fromisoformat(day)
+        if house not in xml.FOLDERS or item['url'] != f'{xml.BASE}/scrapedxml/{xml.FOLDERS[house]}/{day}.xml':
+            raise ValueError('source-day manifest has an unexpected source URL')
+        if house in chambers and start <= day <= end:
+            available[house].append(day)
+    return available
 
 
 class Archive:
@@ -383,8 +399,8 @@ def run(args):
 
 def _run(args):
     start, end = args.start, args.end
-    if not '2019-01-01' <= start <= end <= '2025-12-31':
-        raise ValueError('backfill dates must be within 2019-01-01..2025-12-31')
+    if not '2014-01-01' <= start <= end <= '2025-12-31':
+        raise ValueError('backfill dates must be within 2014-01-01..2025-12-31')
     date.fromisoformat(start); date.fromisoformat(end)
     if not 1 <= args.max_days <= 1000 or args.ingest_docs_per_second <= 0:
         raise ValueError('max-days must be 1..1000 and ingest rate positive')
@@ -420,9 +436,15 @@ def _run(args):
     archive = Archive(stage, args.cache_dir, args.offline)
     began = time.monotonic()
     with xml.read_only(source) as original:
-        available = archive.dates()
-        missing, held, total_missing = discover_days(original, available, start, end, args.max_days)
+        chambers = getattr(args, 'chamber', None) or list(xml.FOLDERS)
+        manifest = getattr(args, 'source_manifest', None)
+        available = source_days(manifest, chambers, start, end) if manifest else archive.dates()
+        missing, held, total_missing = discover_days(original, available, start, end, args.max_days, chambers)
         people = archive.people(original)
+        if start < '2019-01-01':
+            from .senate_backfill import DatedPeople
+            from scripts.vote_parties import load_evidence
+            people = DatedPeople(people, load_evidence(db=original))
     plan = {'start': start, 'end': end, 'source_db': str(source),
             'missing_days': missing, 'occupied_days': held, 'total_missing_days': total_missing,
             'selected_missing_days': len(missing), 'remaining_missing_days': total_missing - len(missing)}
@@ -437,6 +459,10 @@ def _run(args):
         house, day = item['chamber'], item['date']
         raw = archive.get(f'raw/{xml.FOLDERS[house]}/{day}.xml')
         records, _, _, bad = xml.parse_day(raw, house, day, people, {})
+        if start < '2019-01-01':
+            bad.extend({'kind': 'speech-identity', 'gid': r.get('gid'), 'reason': 'unresolved-speaker'}
+                       for r in records if r.get('person_id') is None)
+            records = [r for r in records if r.get('person_id') is not None]
         for r in records:
             r['source_attribution'] = ATTRIBUTION
             r['enrichment_run_id'], r['enrichment_max_usd'] = run_id, cap

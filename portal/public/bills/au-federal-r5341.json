@@ -13,6 +13,8 @@
  "portfolio": "Industry",
  "status": "lapsed",
  "status_as_of": "2015-03-25",
+ "ended": "discharged",
+ "ended_label": "Discharged from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

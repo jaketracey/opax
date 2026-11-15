@@ -16,7 +16,7 @@ const bundle=async(entry)=>{
 }
 const {federalPartyMoneyAnswer,rankedMoneyAnswer}=await bundle('../src/ask-money-routing.ts').then(async m=>({...m,rankedMoneyAnswer:(await bundle('../src/ask-money.ts')).rankedMoneyAnswer}))
 const {questionKey,sameQuestion}=await bundle('../src/question-key.ts')
-const graph=JSON.parse(await readFile(new URL('../public/graph/money.json',import.meta.url),'utf8'))
+const graph=JSON.parse(await readFile(new URL('../public/graph/money-receipts.json',import.meta.url),'utf8'))
 const assets={fetch:async req=>{
  const path=new URL(req.url).pathname
  try{return new Response(await readFile(new URL('../public'+path,import.meta.url)))}catch{return new Response('',{status:404})}
@@ -45,20 +45,19 @@ for(const [question,reading,from,to] of [
  assert.equal(out?.answer_status,'calculated',question)
  const expected=graphRanking(graph,{industry:'fossil_fuels',from,to})
  const top=expected.rows[0],opening=firstSentence(out.answer)
- assert.equal(expected.measure,'other_receipts')
- assert.equal(opening,`The AEC records no donations from fossil fuel-linked sources to any party ${from===to?'in '+fy(from):`from ${fy(from)} to ${fy(to)}`}.`)
- assert.equal(secondSentence(out.answer),`In other receipts (amounts other than donations or subscriptions), **${top.name}** received the most: **${dollars(top.cents)}**, ${expected.period}.`)
+ assert.equal(expected.measure,'donations')
+ assert.ok(opening.startsWith(`**${top.name}** leads parties receiving money from fossil fuel-linked sources: **${dollars(top.cents)}** in donations received`),opening)
  assert.equal(out.money_reading,reading)
  // The reading is its own line, straight after the opening paragraph.
  assert.equal(out.answer.split('\n\n')[1],reading)
  // Ranked rows under their own label; no $0 donation columns.
  for(const row of expected.rows)assert.match(out.answer,new RegExp(`\\| ${escapeRegExp(row.name)} \\| ${escapeRegExp(dollars(row.cents))} \\|`))
- assert.match(out.answer,/\| Recipient \| Other receipts \| Share \|/)
- assert.doesNotMatch(out.answer,/Donations \d{4}–\d{2}|\$0\b/)
+ assert.match(out.answer,/\| Recipient \| Donations \| Share \|/)
+ assert.doesNotMatch(out.answer,/follows on \$0\b/)
  assert.match(out.measure_label,/AEC receipt type/)
  // Cited, with the money explorer filtered to the window it read.
  assert.ok(out.sources.length>1&&Object.keys(out.citations).length>0)
- const map=new URL(out.answer.match(/\[See all receipt types on the money map\]\(([^)]+)\)/)[1])
+ const map=new URL(out.answer.match(/\[See these donations on the money map\]\(([^)]+)\)/)[1])
  assert.equal(map.searchParams.get('industry'),'fossil_fuels');assert.equal(map.searchParams.get('from'),String(from));assert.equal(map.searchParams.get('to'),String(to))
  // Other readings are one tap away, and none of them is the question asked.
  const labels=out.money_followups.map(f=>f.label)
@@ -149,7 +148,7 @@ test('the money eval scores a first sentence that ranks by money other than dona
  assert.deepEqual(scoreMoneyRanking(out,expected,selection,graph).errors,[])
  // The shape the review caught: "Labor leads ... in other receipts" as the opening sentence.
  const top=expected.rows[0]
- const old={...out,answer:`**${top.name}** leads parties receiving money from fossil fuel-linked sources: **${dollars(top.cents)}** in ${out.measure_label}, ${expected.period}.`+out.answer.slice(firstSentence(out.answer).length+secondSentence(out.answer).length+1)}
+ const old={...out,measure:'other_receipts',answer:`**${top.name}** leads parties receiving money from fossil fuel-linked sources: **${dollars(top.cents)}** in other receipts (amounts other than donations or subscriptions), ${expected.period}.`+out.answer.slice(firstSentence(out.answer).length+secondSentence(out.answer).length+1)}
  const score=scoreMoneyRanking(old,expected,selection,graph)
  assert.ok(score.errors.includes('first sentence ranks by non-donation money'),score.errors.join())
  assert.equal(score.accuracy,false)
@@ -181,5 +180,5 @@ test('a question that names its donor or party is answered for it, with its peri
  assert.equal(labor.answer_status,'calculated')
  assert.match(firstSentence(labor.answer),/^\*\*Labor received \$[\d,]+ (?:more|less) from gambling receipt sources in 2024–25 than in 2022–23\*\* in donations received/)
  assert.match(labor.money_reading,/Reading “in recent years” as the last three published disclosure years, 2022–23 to 2024–25\./)
- assert.match(labor.answer,/\| 2022–23 \| \$0 \| 0 \|/)
+ assert.match(labor.answer,/\| 2022–23 \| \$15,000 \| 1 \|/)
 })

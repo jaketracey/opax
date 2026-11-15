@@ -13,6 +13,8 @@
  "portfolio": "(s) CHRISTENSEN, George, MP",
  "status": "lapsed",
  "status_as_of": "2021-11-29",
+ "ended": "discharged",
+ "ended_label": "Discharged from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

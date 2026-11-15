@@ -13,12 +13,14 @@ let donorRows = (rows,_index,limit=Infinity) => [...(rows || [])].sort((a,b)=>b[
 let donorViewIndex = new Map();
 let donorDisclosure = record => ({name:typeof record==='string'?record:record?.label || '',href:null,reference:''});
 let donorLabelHTML = record => esc(typeof record==='string'?record:record?.label || '');
-let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLabel = () => '', receiptTypeLine = () => '', receiptFigures = x => x;
+let sourceDisplayName = value => String(value ?? "");
+let fy = value => String(value ?? '').replace(/(\d{4})-(\d{2})(?![\d-])/g, '$1–$2'), moneyScope = () => '', sharedIndustryName = value => String(value ?? '').replace(/_/g, ' ');
+let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLabel = () => '', offMapDonorNote = () => '', receiptTypeLine = () => '', receiptFigures = x => x;
 // Until donor-views.js loads: a donor with no figure at all is left out, as hasPartyReceipts leaves out
 // a donor the parties' returns list nothing from (donor-disclosure.js).
 let hasPartyReceipts = (x) => Boolean(x?.total || x?.count), DONOR_DECLARED_ONLY = '', notListedLine = () => DONOR_DECLARED_ONLY;
-const donorHelpersReady = import('/donor-views.js?v=be03bb4447').then(module => {
-  ({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
+const donorHelpersReady = import('/donor-views.js?v=75f497c532').then(module => {
+  ({displayName:sourceDisplayName,fy,moneyScope,industryName:sharedIndustryName,donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,offMapDonorNote,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
   return module;
 });
 // The disclosure helpers remain available everywhere; only consumers of the
@@ -39,20 +41,24 @@ async function showNotFound(container, kind, slug, { headingId, manageFocus = fa
   if (manageFocus) heading?.focus();
   return heading;
 }
-const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
+const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(name));
 /* OPAX portal — vanilla JS, no build step.
    The hash is the single source of truth for navigation; route() renders it. */
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=50d61c68ca").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=872590ff14").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
+// Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
+// Hand-stamped: bump ?v= when it changes (a content stamp would need a 101st _headers rule).
+let divisionAgainst;
+const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=348801ccf3").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=75fab98de7").then(module => { growthModules = module; }));
 let registerTables;
-const registerTablesReady = lazyReady(() => import('/register-tables.js?v=4f061ca4cf').then(module => { registerTables = module; }));
+const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
 const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
 let uiLabels;
@@ -125,7 +131,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "privacy", "support", "bill"];
+const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "privacy", "support", "terms", "security", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -471,10 +477,11 @@ const TOPIC_REPORT = Object.fromEntries(
   Object.entries(REPORT_TOPIC).map(([report, topic]) => [topic, report]));
 
 function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = false, hideSpeaker = false } = {}) {
+  if (item.speakerNotNamed) item = {...item, speaker: "Speaker not named", party: null};
   const bits = [];
   // The portrait slot sits outside the dot-separated run, so a speaker with
   // no photo leaves no stray separator. Filled by decorateMetaPortraits.
-  const slot = portrait && item.speaker && !isUnattributed(item)
+  const slot = portrait && item.speaker && !item.speakerNotNamed && !isUnattributed(item)
     ? `<span class="meta-portrait" data-speaker="${esc(item.speaker)}"></span>` : "";
   if (item.party && !isUnattributed(item)) {
     bits.push(linkParty
@@ -482,7 +489,7 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
       : partyChipHTML(item.party));
   }
   if (item.speaker && !hideSpeaker && !isMultiSpeaker(item)) {
-    bits.push(linkSpeaker
+    bits.push(linkSpeaker && !item.speakerNotNamed
       ? `<a class="meta-speaker" ${entityHrefAttr(speakerHref(item, subjectHash("person", item.speaker)))}>${esc(item.speaker)}</a>`
       : esc(item.speaker));
   }
@@ -511,7 +518,7 @@ function participantLinksHTML(row) {
 function speechIdentityHTML(row) {
   const label = speakerLabel(row);
   if (isMultiSpeaker(row)) return `<span class="speech-identity">${groupAvatarHTML()}<span>Several speakers</span></span>${participantLinksHTML(row)}`;
-  const name = row.speaker ? `<a ${entityHrefAttr(speakerHref(row, subjectHash('person', row.speaker)))}>${esc(label)}</a>` : esc(label);
+  const name = row.speaker && !row.speakerNotNamed ? `<a ${entityHrefAttr(speakerHref(row, subjectHash('person', row.speaker)))}>${esc(label)}</a>` : esc(label);
   return name + (isWitness(row) ? ' <span class="topic-arc-witness">witness</span>' : '');
 }
 
@@ -563,10 +570,19 @@ function aggregateApi(path, { signal, wait = AGGREGATE_WAIT_MS } = {}) {
     .finally(() => { clearTimeout(timer); signal?.removeEventListener("abort", forward); });
 }
 
+// Mirrors SHORT_TURN_WORDS in src/index.ts: speech turns under this many
+// words show their own text, never a machine brief.
+const SHORT_TURN_WORDS = 80;
+/** A row wants a brief unless it is a speech turn known to be short (fail open). */
+function briefWanted(row) {
+  const words = row?.word_count;
+  return !(row?.kind === "speech" && typeof words === "number" && words > 0 && words < SHORT_TURN_WORDS);
+}
+
 /** Read optional machine briefs without ever asking for whole resources. */
 async function fetchBriefMap(resources) {
   const validRid = /^[0-9a-f]{32}$/;
-  const rids = [...new Set((resources || []).map((r) => r.resource).filter((rid) => validRid.test(rid)))];
+  const rids = [...new Set((resources || []).filter(briefWanted).map((r) => r.resource).filter((rid) => validRid.test(rid)))];
   const briefs = {};
   // /api/brief deliberately caps a call at 24. Keep the groups serial so a
   // long topic spine never fans out into dozens of simultaneous KB reads.
@@ -1222,6 +1238,8 @@ const TITLES = {
   expenses: "Expense definitions · OPAX",
   privacy: "Privacy · OPAX",
   support: "Support · OPAX",
+  terms: "Terms of use · OPAX",
+  security: "Security · OPAX",
   bill: "Bill · OPAX",
   bills: "Federal bills: votes, speeches & summaries · OPAX",
 };
@@ -1352,11 +1370,11 @@ async function mountDiscoveryMap(signal) {
   const current = () => generation === discoveryMapGeneration && root.isConnected && document.documentElement.dataset.panel === "discover";
   root.innerHTML = '<p role="status">Opening the money map…</p>';
   try {
-    const data = await loadMoneyData();
+    const data = await loadMoneyFile('federal');
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
+    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1415,7 +1433,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=e8d40dcf06').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=9ce0addeb6').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1487,11 +1505,10 @@ const MONEY_JURISDICTIONS = {
   tas: { label: "Tasmania", file: "/graph/money.tas.json" },
 };
 
-const moneyFiles = {}; // jurisdiction -> promise of the parsed export (federal shares loadMoneyData)
+const moneyFiles = {}; // jurisdiction -> promise of the capped drawing export
 function loadMoneyFile(jur) {
   const cfg = MONEY_JURISDICTIONS[jur];
   if (!cfg) return Promise.resolve(null);
-  if (jur === "federal") return loadMoneyData();
   // A failed load is not kept, so the page's "Try again" fetches again.
   moneyFiles[jur] ??= fetch(cfg.file,{cache:"no-cache"})
     .then((r) => (r.ok ? r.json() : null)).catch(() => null)
@@ -1550,7 +1567,7 @@ function moneyFineprintHTML(jur, meta) {
     state: "totals are a floor",
     originals: [{ label: "Download the data (JSON)", href: cfg.file },
       { label: meta?.jurisdiction ? meta.commission : "AEC Transparency Register", href: meta?.jurisdiction ? (safeUrl(meta.source_url) || "/methods") : "https://transparency.aec.gov.au/" }],
-    notes: parts.filter(Boolean).map((t) => esc(t)),
+    notes: parts.filter(Boolean).map((t) => esc(fy(t))),
   });
 }
 
@@ -1571,7 +1588,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=6c195c4fb5');
+      const mod = await import('/grants-table.js?v=df96077281');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1580,7 +1597,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=8a3523e2ca' : '/ledger.js?v=0ca99519a6');
+    const mod = await import(grants ? '/grants.js?v=9eb86ce57b' : '/ledger.js?v=06503ff262');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1611,11 +1628,11 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=8d3155efdf');
+    const mod = await import('/money-explain.js?v=0e937c8404');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
-      params, manageFocus, loadMoney: loadMoneyFile, loadAecExtras, loadBillsIndex, loadBill, loadAccess, loadFits, normName,
+      params, manageFocus, loadMoney: jur => jur === 'federal' ? fetch('/graph/money-receipts.json').then(r => { if (!r.ok) throw Error('Receipt data unavailable'); return r.json(); }) : loadMoneyFile(jur), loadAecExtras, loadBillsIndex, loadBill, loadAccess, loadFits, normName,
       partyName: partyAskName, electionYears: [...BALANCE_ELECTION_YEARS],
       onAddress(path) { if (current() && path !== location.pathname + location.search) replaceRoute(path); },
       // After syncPathMeta: on the landed URL it restores the Worker's generic title.
@@ -1630,7 +1647,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=cde3a82929');
+    const mod = await import('/grant-recipient.js?v=43775fa359');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1740,7 +1757,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.classList.remove("show-key");
   root.innerHTML = MAP_DRAWING_HTML;
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=f0a9329cde"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=7204198ec1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=9fd4185a50"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=ca1a4d9f0b"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1883,7 +1900,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=d002e35d6d");
+    const module = await import("/suppliers.js?v=9e32cef723");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2276,6 +2293,10 @@ async function route() {
     document.title = TITLES.support;
     setCrumbs(crumbsFor("/support"));
     renderSupport(params);
+  } else if (view === "terms" || view === "security") {
+    showPanel(view);
+    document.title = TITLES[view];
+    setCrumbs(crumbsFor(`/${view}`));
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
@@ -3678,7 +3699,7 @@ addEventListener("hashchange", () => updateQuoteRail());
 
 // --- money answers ----------------------------------------------------------
 // "Who gives money to gambling?" deserves figures, not only quotes. The AEC
-// donations export already ships to every client (/graph/money.json), so a
+// uncapped receipt export supplies factual totals; the map has its own capped file, so a
 // money-intent question renders the structured answer INSTANTLY, while the
 // model composes the words alongside.
 
@@ -3688,11 +3709,16 @@ let moneyData = null;
 // party's own return, as on the donor and party pages. Every donor list on the
 // site reads its figures from here; party nodes are unchanged.
 let moneyReceipts = null;
+let moneyDonationReceipts = null;
+let moneyDonationScope = "";
 let moneyReceiptScope = "";
 let moneyDataPromise = null;
 function loadMoneyData() {
-  // The same parse the donor privacy index reads (donor-views.js), not a second download.
-  moneyDataPromise ??= import('/donor-views.js?v=be03bb4447').then((module) => Promise.all([module.loadMoneyGraph("/graph/money.json"), donorViewReady]).then(async ([d]) => {
+  // Factual profiles and Ask share the uncapped parse. Map mounts load their capped file separately.
+  moneyDataPromise ??= import('/donor-views.js?v=75f497c532').then((module) => Promise.all([module.loadMoneyGraph("/graph/money-receipts.json"), donorViewReady]).then(async ([d]) => {
+    const {donationGraph} = await import("/money-receipts.js");
+    moneyDonationReceipts = donationGraph(d);
+    moneyDonationScope = module.receiptGraphScope(moneyDonationReceipts).replace(/^All receipt types/, "Donations only");
     moneyReceipts = module.receiptGraph(d);
     moneyReceiptScope = module.receiptGraphScope(moneyReceipts);
     // Do not combine receipt projection and the dependent view's DOM work
@@ -3736,15 +3762,15 @@ function detectMoneyIndustry(q) {
 }
 
 function industryLabel(ind) {
-  return ind.replace(/_/g, " ");
+  return sharedIndustryName(ind);
 }
 
 function renderMoneyPanel(ind) {
   const box = $("ask-money");
-  if (!moneyReceipts) { box.hidden = true; return; }
+  if (!moneyDonationReceipts) { box.hidden = true; return; }
   // A donor the parties' returns hold nothing from (only its own return does) is left out, as on the party page.
-  const donors = moneyReceipts.nodes.filter(
-    (n) => n.kind === "donor" && (n.industry === ind || n.group === ind) && hasPartyReceipts(n));
+  const donors = moneyDonationReceipts.nodes.filter(
+    (n) => n.kind === "donor" && (n.industry === ind || !moneyDonationReceipts.meta?.uncapped && n.group === ind) && hasPartyReceipts(n));
   if (!donors.length) { box.hidden = true; return; }
   const donorIds = new Set(donors.map((n) => n.id));
   const total = donors.reduce((a, n) => a + (n.total || 0), 0);
@@ -3753,7 +3779,7 @@ function renderMoneyPanel(ind) {
     Math.max(...donors.map((n) => n.lastYear || 0)),
   ];
   const byParty = new Map();
-  for (const e of moneyReceipts.edges) {
+  for (const e of moneyDonationReceipts.edges) {
     if (!donorIds.has(e.source)) continue;
     const party = String(e.target).replace(/^party:/, "");
     byParty.set(party, (byParty.get(party) || 0) + (e.total || 0));
@@ -3764,11 +3790,11 @@ function renderMoneyPanel(ind) {
   box.hidden = false;
   box.innerHTML = `
     <p class="kicker">The money: ${esc(industryLabel(ind))} (AEC disclosures)</p>
-    ${moneyReceiptScope ? `<p class="entry-scope">${esc(moneyReceiptScope)}</p>` : ""}
+    ${moneyDonationScope ? `<p class="entry-scope">${esc(moneyDonationScope)}. Uncapped recipient selection (AEC Donation Received)</p>` : ""}
     <div class="tiles">
       ${tile(fmtMoney(total), `received from ${industryLabel(ind)} sources`)}
       ${tile(String(donors.length), "receipt sources shown")}
-      ${tile(receipts.toLocaleString(), `disclosed receipt${receipts === 1 ? "" : "s"}`)}
+      ${tile(receipts.toLocaleString(), `disclosed donation${receipts === 1 ? "" : "s"}`)}
       ${tile(`${years[0]}–${years[1]}`, "years covered")}
     </div>
     <div class="money-charts">
@@ -3777,7 +3803,7 @@ function renderMoneyPanel(ind) {
     </div>
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="/money">Explore on the money map</a> ·
-      <a href="/graph/money.json">Download the data</a></p>`;
+      <a href="/graph/money-receipts.json">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
   box.querySelectorAll(":scope > :not(.tiles, .money-charts), :scope > .tiles > .tile, :scope > .money-charts > .chart").forEach((el, i) => {
@@ -4041,7 +4067,7 @@ function votesFor(name, pid) {
 
 let personUrls = null;
 const personUrl = name => personUrls?.personUrl(name) || '/subject/person';
-const personUrlsReady = import('/canonical-urls.js?v=bcc9a57bab').then(module => { personUrls = module; });
+const personUrlsReady = import('/canonical-urls.js?v=9ce13e7ba5').then(module => { personUrls = module; });
 
 function subjectHash(kind, label) {
   // Person links use the roster's verified slugs and reviewed name aliases.
@@ -4645,6 +4671,9 @@ async function mountSubjectMap(nodeId, label = "") {
   const key = currentSubjectKey;
   const el = $("subject-map");
   if (!el) return;
+  const drawing = await loadMoneyFile('federal').catch(() => null);
+  if (currentSubjectKey !== key) return;
+  if (!drawing?.nodes?.some(node => node.id === nodeId)) { reserveSubjectMap(false); return; }
   if (window.matchMedia(SUBJECT_MAP_CARD).matches) {
     el.outerHTML = `<a class="subject-map-card" id="subject-map" href="/money?${new URLSearchParams({ focus: nodeId })}">
       <span class="subject-map-card-title">${label ? `${esc(label)} on the money map` : "Open the money map"}</span>
@@ -4655,7 +4684,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
+    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -4775,9 +4804,9 @@ function fillDatedMentionParties(results, roster) {
   const people = roster?.people || [];
   const byName = new Map(people.map(person => [person.name.toLowerCase(), person]));
   for (const row of results) {
-    if (row.party || !row.speaker) continue;
-    const person = byName.get(String(row.speaker).toLowerCase()) || splitPerson(people, row.speaker);
-    row.party = datedAffiliationParty(row, person);
+    const person = byName.get(String(row.speaker || "").toLowerCase()) || splitPerson(people, row.speaker);
+    row.speakerNotNamed = String(row.speaker || "").replace(/[^a-z]/gi, "").length < 4 || !person;
+    if (!row.party && row.speaker) row.party = datedAffiliationParty(row, person);
   }
 }
 
@@ -4809,8 +4838,10 @@ function donorRecordHTML(record, meta) {
   }
   const records = record.jurisdiction === "federal" && !record.by_type;
   const source = meta?.sourceShort || (record.jurisdiction === "federal" ? "AEC annual returns" : MONEY_JURISDICTIONS[record.jurisdiction]?.label || "Disclosure returns");
+  const scope = records ? receiptScopeLabel({typed:false}) : "";
   return `<section class="donor-record" id="donor-record" data-accent="money" data-rail-figure="${esc(fmtMoney(record.total))}">
     <h2 class="subject-section-title">${records ? "Federal source records" : record.jurisdiction === "federal" ? "Federal disclosed receipts" : "Disclosed receipts"}</h2>
+    ${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}
     <div class="tiles tiles-compact">
       ${tile(fmtMoney(record.total), "disclosed")}
       ${tile((record.count || 0).toLocaleString(), `${records ? "record" : "receipt"}${record.count === 1 ? "" : "s"}`)}
@@ -4818,7 +4849,7 @@ function donorRecordHTML(record, meta) {
     </div>
     ${record.by_type ? `<p class="entry-scope">${esc(receiptScopeLabel({typed:true,firstYear:record.firstYear,lastYear:record.lastYear}))}. ${esc(receiptTypeLine(record))}.</p>` : ""}
     ${sourceLineHTML({ source, state: "totals are a floor", originals,
-      notes: [`Receipts disclosed under this exact name${meta?.commission ? ` to the ${esc(meta.commission)}` : ""}. This donor is not drawn on the money map, which shows only the largest donors, so the recipients are listed in the source returns.`, esc(AEC_NOTE)],
+      notes: [esc(offMapDonorNote(record)), esc(AEC_NOTE)],
       licence: record.jurisdiction === "federal" ? AEC_LICENCE : "" })}
   </section>`;
 }
@@ -5530,7 +5561,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=da12f467ea'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=8be817cd12'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5571,7 +5602,7 @@ function partyReceiptsHTML(rows, registerURL, updated = "", returnsTo = "") {
     const otherPct = r.receipts ? (r.other / r.receipts) * 100 : 0;
     const missingPct = r.receipts ? (r.notItemised / r.receipts) * 100 : 0;
     return `<div class="receipts-row${index >= 10 ? " receipts-older" : ""}" aria-hidden="true">
-      <span class="receipts-year">${esc(r.year)}</span>
+      <span class="receipts-year">${esc(fy(r.year))}</span>
       <span class="receipts-track"><span class="receipts-bar" style="width:${((r.receipts / max) * 100).toFixed(1)}%">
         <i class="receipts-donations" style="flex-basis:${donationPct.toFixed(1)}%"></i>
         <i class="receipts-other" style="flex-basis:${otherPct.toFixed(1)}%"></i>
@@ -5583,11 +5614,11 @@ function partyReceiptsHTML(rows, registerURL, updated = "", returnsTo = "") {
   }).join("");
   const table = `<div class="visually-hidden"><table><caption>Receipts on the return</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Receipts</th><th scope="col">Itemised donations</th><th scope="col">Itemised other receipts</th><th scope="col">Not itemised</th></tr></thead>
-    <tbody>${series.map((r) => `<tr><th scope="row">${esc(r.year)}</th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td>${esc(fmtDollars(v))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    <tbody>${series.map((r) => `<tr><th scope="row">${esc(fy(r.year))}</th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td>${esc(fmtDollars(v))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
   return `<section class="party-receipts" id="party-receipts" data-accent="money" data-rail-figure="${esc(fmtMoney(latest.receipts))}" aria-labelledby="party-receipts-heading">
     <h2 class="subject-section-title" id="party-receipts-heading">Receipts on the return</h2>
     <div class="tiles receipts-tiles">
-      ${tile(fmtMoney(latest.receipts), `receipts on the ${latest.year} return${latest.branches > 1 ? `, ${latest.branches} branches summed` : ""}`)}
+      ${tile(fmtMoney(latest.receipts), moneyScope("return", latest))}
       ${tile(fmtMoney(latest.donations), "itemised as donations")}
       ${tile(`${pct(latest.notItemised, latest.receipts)}%`, "of receipts not itemised")}
     </div>
@@ -5643,7 +5674,7 @@ async function renderPartyDebts(label, sections) {
     head.querySelector(".subject-tag")?.insertAdjacentHTML("afterend",
       `<p class="party-return-line"><a href="#party-receipts">${esc(returnLine.text)}</a></p>`);
   }
-  if (html && lodged.note) html = html.replace(/<\/section>\s*$/, `<p class="party-lodged-as">${esc(lodged.note)}</p></section>`);
+  if (html && lodged.note) html = html.replace(/<\/section>\s*$/, `<p class="party-lodged-as">${esc(fy(lodged.note))}</p></section>`);
   if (d || b) {
     const lenders = (d?.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
     const top = (b?.top || []).slice(0, 3).map((t) => `${t.name} ${fmtMoney(t.amount || 0)}`).join(", ");
@@ -5654,12 +5685,12 @@ async function renderPartyDebts(label, sections) {
         ${tile(fmtMoney(d.financial_total || 0), "of it to banks and other financial institutions")}
         ${tile(String(d.lenders || 0), d.lenders === 1 ? "creditor listed" : "creditors listed")}
       </div>
-      ${lenders.length ? barList(lenders, { fmt: fmtMoney, heading: `Largest creditors, ${d.year}` }) : ""}
-      ${d.by_year?.length > 1 ? columnChart(d.by_year.map(([y, t]) => [y, t || 0]), {
+      ${lenders.length ? barList(lenders, { sourceNames: true, fmt: fmtMoney, heading: `Largest creditors, ${fy(d.year)}` }) : ""}
+      ${d.by_year?.length > 1 ? columnChart(d.by_year.map(([y, t]) => [fy(y), t || 0]), {
         fmt: fmtMoney, heading: "Owed at each 30 June",
         note: "Year-end balances, not new borrowing; a year with no debt itemised shows nothing.",
       }) : ""}` : ""}
-      ${b ? `<p class="party-benefits"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(b.year)}${top ? `: ${esc(top)}` : ""}.
+      ${b ? `<p class="party-benefits"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(fy(b.year))}${top ? `: ${esc(top)}` : ""}.
         These are government payments other than public election funding, as listed on the return.</p>` : ""}
       ${sourceLineHTML({
         updated, source: `AEC annual returns${returnsTo}`, originals,
@@ -5675,7 +5706,7 @@ async function renderPartyDebts(label, sections) {
       <h2 class="subject-section-title">Associated entities</h2>
       <ul class="subject-list" role="list">${shown.map((e) => `
       <li><a class="source-title" ${entityHrefAttr(subjectHash("campaigner", e.name))}>${esc(e.name)}</a>
-        <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
+        <span class="result-meta">${esc([fy(e.year), e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
           e.payments != null ? `payments ${fmtMoney(e.payments)}` : "", e.debts ? `debts ${fmtMoney(e.debts)}` : ""].filter(Boolean).join(" · "))}</span></li>`).join("")}</ul>
       ${sourceLineHTML({
         updated, source: "AEC associated-entity returns", originals,
@@ -5714,12 +5745,10 @@ async function renderPartyMembers(label, body, key) {
   }
   const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
     .find((party) => party && samePartyLabel(party, label)) || label;
-  const independent = partyPage.isIndependent(label);
-  const noun = independent ? (sitting.size === 1 ? "parliamentarian" : "parliamentarians") : (sitting.size === 1 ? "member" : "members");
   if (sitting.size) body.querySelector(".subject-tag .entry-active")?.insertAdjacentHTML("beforebegin",
-    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} sitting ${noun}</a> · `);
+    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} marked current in the directory</a> · `);
   body.querySelector("#entry-flows .ui-sheet-facts")?.insertAdjacentHTML("beforeend",
-    `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} sitting; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
+    `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} marked current in the directory; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
       data.meta?.generated ? ` (directory, ${esc(fmtDate(data.meta.generated))})` : ""}. Sitting members use their current party; member IDs counted once.</dd></div>`);
 }
 
@@ -6236,7 +6265,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       reserveSubjectMap(false); // no map for this one: give the space back
       const record = disclosedDonor(name, "federal") || disclosedDonor(name);
       const display = donorDisclosure(record).name || name;
-      $("subject-title").textContent = display;
+      $("subject-title").textContent = sourceDisplayName(display).replace(/\bLTD\b/g, "Ltd");
+      $("subject-title").title = display;
       name = display;
       const reference = record?.kind === "reference";
       const ownFile = record?.jurisdiction ? await loadMoneyFile(record.jurisdiction) : null;
@@ -6245,8 +6275,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         `<span>${esc(sentenceCase(industryLabel(record?.industry || "")) || "Receipt source")}</span>`,
         record?.firstYear ? `<span class="entry-active">${esc(returnsSpan(record.firstYear, record.lastYear))}</span>` : "",
       ].filter(Boolean).join(" · ");
-      // State figures appear once in their labelled commission rows below.
-      sections.innerHTML = record?.jurisdiction === "federal" || reference ? donorRecordHTML(record, ownFile?.meta) : "";
+      // State figures appear once in their labelled commission rows below; the
+      // page keeps the same off-map note as the server page, without figures.
+      sections.innerHTML = record?.jurisdiction === "federal" || reference ? donorRecordHTML(record, ownFile?.meta)
+        : record?.jurisdiction ? `<p class="donor-offmap-note">${esc(offMapDonorNote(record))}</p>` : "";
       box.innerHTML = infoboxHTML(
         [["Type", reference ? "Source reference" : "Disclosed donor"], fitsInfoRow(fits, "by_entity", name)], "",
         [actionBtn("search",searchHash(`"${name}"`,{}),"Search the record for them",{primary:true}),actionBtn("map","/money","Open the money map")]);
@@ -6255,12 +6287,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       subjectMentions(name, sections, "In parliament");
       return;
     }
-    // Rank runs over the donors the map picked by what they gave; a donor that
-    // is on the map for the public money it holds has no place in that order.
+    if (kind === "donor") {
+      $("subject-title").textContent = sourceDisplayName(node.label).replace(/\bLTD\b/g, "Ltd");
+      $("subject-title").title = node.label;
+    }
+    // Factual ranks use every eligible recipient receipt, independently of map admission.
     await donorViewReady;
     if (currentSubjectKey !== key) return;
     // A donor only its own return declares (hasPartyReceipts) has no each-gift-once figure, so no rank.
-    const donors = moneyData.nodes.filter((n) => n.kind === node.kind && !n.via && (n.kind === "party" || hasPartyReceipts(n)));
+    const donors = moneyData.nodes.filter((n) => n.kind === node.kind && (n.kind === "party" || hasPartyReceipts(n)));
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
     if (node.label && node.label !== name) {
@@ -6283,7 +6318,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       counter.set(label, (counter.get(label) || 0) + receiptFigures(e).total);
     }
     // A party's headline is its own returns, each receipt line once (partyReturnFigures);
-    // its by_type cells only sum the donors drawn on the map.
+    // its by_type cells sum the uncapped eligible recipient receipts.
     const own = isParty ? partyReturnFigures(node) : receiptFigures(node);
     const ownScope = isParty ? partyReturnScopeLabel(own) : receiptScopeLabel(own);
     // Declared only on the donor's own return, or listed only as public funding: the page says
@@ -6299,7 +6334,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
     // While the map draws no donor to a party (its donor side held, export rule 10), the section says so, never an empty table.
     const partyTable=!partyMoney ? '' : partyMoney.rows.length ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyMoney.rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'}))
-      : '<p class="entry-scope">The money map draws no donor to this party, so no donor rows are listed. The figures below count its own returns.</p>';
+      : '<p class="entry-scope">The selected recipient receipts list no source for this party. The figures below count its own returns.</p>';
     const flowRows = [...counter.entries()].sort((a,b)=>b[1]-a[1]).slice(0,10);
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.
@@ -6330,6 +6365,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       [isParty ? "Received (disclosed)" : "Received by parties (disclosed)", reported ? `<b>${esc(fmtMoney((own ? own.total : node.total) || 0))}</b>` : esc(declaredOnlyLine)],
       reported && ["Receipts counted", esc(((own ? own.count : node.count) || 0).toLocaleString())],
       reported && ["Measured as", esc(ownScope)],
+      !isParty && reported && receiptTypeLine(node) && ["Receipt types", esc(receiptTypeLine(node))],
       lodgedAs && ["Lodged as", esc(lodgedAs)],
       node.via === "public_money"
         ? ["On the map for", `${esc(fmtMoney(node.publicMoney || 0))} in Commonwealth contracts and grants`]
@@ -6338,13 +6374,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       aliasRow,
     ];
     const entryNote = `${esc(AEC_NOTE)}${!isParty ? "" : own.typed
-      ? " The donor amounts below are the donors on the money map."
+      ? " The donor amounts below use the uncapped selected recipient receipts."
       : " The received total includes internal party transfers; the donor amounts below exclude them."}`;
     if (!isParty) head.insertAdjacentHTML("beforeend", sourceLineHTML({
       updated: moneyData.meta?.generated || "", source: "AEC annual returns", state: "totals are a floor",
       originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
         { label: "Funding records", href: `/money/receipts?${new URLSearchParams({ focus: node.id })}` },
-        { label: "The money map's data (JSON)", href: "/graph/money.json" }],
+        { label: "Selected receipt data (JSON)", href: "/graph/money-receipts.json" }],
       facts: entryFacts,
       notes: [entryNote, "The parties with the largest disclosed sums."],
       licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
@@ -6364,14 +6400,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         askAbout,
         { href: searchHash(`"${node.label}"`, {}), label: "Search mentions in the record" },
         { href: `/money?focus=${encodeURIComponent(node.id)}`, label: "Open the full money map" },
-        { href: "/graph/money.json", label: "Download the map data", detail: "JSON, the whole map" },
+        { href: "/graph/money-receipts.json", label: "Download receipt data", detail: "JSON, uncapped party receipts" },
       ], isParty ? "More about this party" : "More about this donor")}
     </div>`);
     box.classList.add("entry-rail");
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
     sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${reported ? esc(fmtMoney((own ? own.total : node.total) || 0)) : ""}">
-      ${isParty ? `<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyTable}`
+      ${isParty ? `<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(registerTables.partyTableScope(partyMoney.scope, moneyData?.meta))}</p>` : ""}${partyTable}`
         : !reported ? `<figure class="chart donor-flow-bars"><figcaption>Where the money went</figcaption><p class="entry-scope">${esc(declaredOnlyLine)}.</p></figure>` : barList(flowRows, {
         fmt: fmtMoney,
         heading: isParty ? "Where it came from" : "Where the money went",
@@ -6388,7 +6424,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         updated: moneyData.meta?.generated || "", dateLabel: isParty ? "Map updated" : "Updated", source: "AEC annual returns", state: "totals are a floor",
         originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
           { label: "Funding records", href: `/money/receipts?${new URLSearchParams(isParty ? { party: node.id } : { focus: node.id })}` },
-          isParty && { label: "The money map's data (JSON)", href: "/graph/money.json" }].filter(Boolean),
+          isParty && { label: "Selected receipt data (JSON)", href: "/graph/money-receipts.json" }].filter(Boolean),
         facts: isParty ? entryFacts : [],
         notes: [isParty ? entryNote : "", `The ${isParty ? "donors" : "parties"} with the largest disclosed sums${isParty ? ", party transfers left out" : ""}.${isParty ? "" : ` ${esc(AEC_NOTE)}`}`],
         licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
@@ -6682,10 +6718,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // person sit side by side carries the association line, once.
   if (party) {
     const money = sections.querySelector("#person-expenses") || sections.querySelector("#person-pay");
-    const latest = partyOnMap ? partyLatestYear(findMoneyNode("party", party)) : null;
+    const latest = partyOnMap ? personPartyFigure(findMoneyNode("party", party), moneyData?.meta) : null;
     money?.insertAdjacentHTML("afterend", `<div class="person-party-money"><a href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}">${
       partyOnMap ? `${esc(party)} party receipts` : 'Party receipts on the money map'}</a>${latest
-        ? `<p class="person-party-figure"><b>${esc(fmtMoney(latest.total))}</b> in ${esc(latest.label)}, all receipt types</p>` : ""}
+        ? `<p class="person-party-figure"><b>${esc(fmtMoney(latest.total))}</b> ${esc(latest.scope)}</p>` : ""}
       <p>Party disclosures, not this person’s finances.</p>${growthModules.associationHTML()}</div>`);
   }
   sections.insertAdjacentHTML("beforeend", growthModules.correctionHTML());
@@ -7035,7 +7071,7 @@ function topicPhrase(slug) {
 /** The donors pairing for a topic that maps onto an AEC donor industry. */
 function topicMoneyHTML(ind) {
   const donors = (moneyReceipts?.nodes || []).filter(
-    (n) => n.kind === "donor" && (n.industry === ind || n.group === ind) && hasPartyReceipts(n));
+    (n) => n.kind === "donor" && (n.industry === ind || !moneyReceipts.meta?.uncapped && n.group === ind) && hasPartyReceipts(n));
   if (!donors.length) return "";
   const total = donors.reduce((a, n) => a + (n.total || 0), 0);
   const rankedDonors = donorRows(donors.map(n => [n.label,n.total || 0]), donorViewIndex, 6);
@@ -7643,7 +7679,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=c07cfc6fc9").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=f9961d152e").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -7697,10 +7733,17 @@ function partyLatestYear(node) {
   const total = Object.values(node.by_type_year[fy]).reduce((sum, cell) => sum + (Number(cell?.[0]) || 0), 0);
   return total > 0 ? { label: fy.replace("-", "–"), total } : null;
 }
+/** The person row keeps the party's selected-receipt figure until the return-total call is made;
+ *  its scope names the file it came from (the uncapped receipts, or a capped map file). */
+function personPartyFigure(node, meta) {
+  const latest = partyLatestYear(node);
+  return latest ? {...latest, scope: moneyScope(meta?.uncapped ? 'receipts' : 'map', {year: latest.label})} : null;
+}
 /** The years a name's disclosure returns cover, as a meta line says them: "Returns 1998 to 2024". */
 function returnsSpan(first, last) {
   if (!first && !last) return "";
-  return first === last || !last || !first ? `Returns in ${first || last}` : `Returns ${first} to ${last}`;
+  const year = value => fy(`${value}-${String((Number(value) + 1) % 100).padStart(2, '0')}`);
+  return first === last || !last || !first ? `Returns in ${year(first || last)}` : `Returns ${year(first)} to ${year(last)}`;
 }
 
 /** Party dot for a label the party map may not know (state-only parties): the money file's colour stands in. */
@@ -8217,7 +8260,7 @@ async function buildPartiesDirectory() {
 async function buildDonorsDirectory() {
   await donorViewReady;
   const [fed, qld, vic, tas, acc, fits] = await Promise.all([
-    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"), loadAccess(), loadFits(),
+    loadMoneyData(), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"), loadAccess(), loadFits(),
   ]);
   // Each donor and flow read through its typed cells (receiptGraph), as on the
   // donor page; the state files have none and keep their record figures.
@@ -8234,7 +8277,7 @@ async function buildDonorsDirectory() {
       if (n.kind !== "donor") continue;
       const k = normName(n.label) || String(n.label).toLowerCase();
       if (!donors.has(k)) {
-        donors.set(k, { label: n.label, labels: new Set(), industry: n.industry, group: n.group, money: {},
+        donors.set(k, { label: n.label, disclosure:n, labels: new Set(), industry: n.industry, group: n.group, money: {},
           parties: new Map(), first: n.firstYear || 9999, last: n.lastYear || 0 });
       }
       const d = donors.get(k);
@@ -8314,7 +8357,7 @@ async function buildDonorsDirectory() {
   const withAccess = items.filter((d) => d._lobbyists || d._meetings).length;
 
   const row = (d) => {
-    if(d.referenceOnly)return `<li class="dir-row dir-row-plain"><div class="dir-main"><span class="source-title dir-name">${donorNameHTML(d.label)}</span><span class="result-meta">Source reference; electoral donation not established.</span></div></li>`;
+    if(d.referenceOnly)return `<li class="dir-row dir-row-plain"><div class="dir-main"><span class="source-title dir-name">${donorNameHTML(d.label,d.disclosure)}</span><span class="result-meta">Source reference; electoral donation not established.</span></div></li>`;
     const colour = donorGroupColour(d.group);
     const shownParties = d._partyList.slice(0, 3);
     const more = d._partyList.length - shownParties.length;
@@ -8341,7 +8384,7 @@ async function buildDonorsDirectory() {
     ].join("") : "";
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
-        <span class="source-title dir-name">${donorNameHTML(d.label)}</span>
+        <span class="source-title dir-name">${donorNameHTML(d.label,d.disclosure)}</span>
         <span class="result-meta">${meta}</span>
       </div>
       <div class="dir-figs">${figs}</div>
@@ -8376,7 +8419,7 @@ async function buildDonorsDirectory() {
       ["name", "Name A-Z", byName],
     ],
     row,
-    fineprint: `This directory combines the bounded money-map selection with names referenced elsewhere in the source records. Unconfirmed electoral matches have no profile link or receipt amount.
+    fineprint: `Federal figures use the uncapped selected party receipts. State figures use each state money map’s selection. The directory also retains names referenced elsewhere in the source records. Unconfirmed electoral matches have no profile link or receipt amount.
       ${esc(AEC_NOTE)} The same goes for gifts under each state's disclosure threshold.
       ${esc(STATE_NOT_SUMMED)} Source: ${esc(commissions.join("; "))}. Lobbyist and meeting markers
       come from the six lobbyist registers and the NSW and QLD ministerial diaries; names must match
@@ -8697,7 +8740,7 @@ async function renderCampaignerEntry(name, key) {
     const figs = CAMPAIGNER_COLUMNS
       .map(([noun], i) => (r[i + 1] == null ? "" : `${noun} ${fmtMoney(Number(r[i + 1]))}`))
       .filter(Boolean).join(" · ");
-    return `<li><b>${esc(String(r[0] || ""))}</b>
+    return `<li><b>${esc(fy(r[0] || ""))}</b>
       <span class="result-meta">${esc(figs || "nothing itemised on the return")}</span></li>`;
   }).join("");
   const register = safeUrl(data?.meta?.register_url);
@@ -8952,9 +8995,13 @@ function billOutcomeLabelHTML(outcome) {
   return statusLabelHTML(word, String(outcome || "").toLowerCase() === "affirmative" ? "done" : "ended");
 }
 
+/** The status word a reader meets: a dead bill's exact ending when the export
+ *  names one ("Removed from the Notice Paper", `ended_label`), else the status. */
+const billStatusWord = (b) => String(b?.ended_label || "").trim() || sentenceCase(b?.status);
+
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
-  const status = sentenceCase(b?.status) || "Status not recorded";
+  const status = billStatusWord(b) || "Status not recorded";
   const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
@@ -9005,7 +9052,7 @@ function billRowHTML(b) {
   return `<li>
     <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
     <span class="result-meta bill-row-meta">${[
-      b.status ? statusLabelHTML(sentenceCase(b.status), billStatusTone(b.status)) : "",
+      b.status ? statusLabelHTML(billStatusWord(b), billStatusTone(b.status)) : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
       sponsorLabel ? esc(sponsorLabel) : esc(billPortfolio(b)),
@@ -9705,7 +9752,7 @@ async function openBill(key, manageFocus) {
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
-  const statusWord = sentenceCase(bill.status) || "Status not recorded";
+  const statusWord = billStatusWord(bill) || "Status not recorded";
   // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
   // repeat of the same three buttons is gone.
   const actions = `<div class="page-actions bill-actions">
@@ -9756,7 +9803,7 @@ function renderOtherSponsorBills(bill, body, view, generation) {
     if (!summary?.person || !rows.length) { slot.remove(); return; }
     slot.innerHTML = `<section class="ui-section bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
       <h2 class="ui-section-title">Other bills from this sponsor</h2>
-      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</p></li>`).join("")}</ul>
+      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(billStatusWord(b))}</p></li>`).join("")}</ul>
       ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
     </section>`;
   };
@@ -10050,8 +10097,8 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=8d3155efdf"), loadMoneyFile(jur)]);
-    const { loadDonorViewIndex } = await import("/donor-views.js?v=be03bb4447");
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=0e937c8404"), loadMoneyFile(jur)]);
+    const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
 }
@@ -10066,14 +10113,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=e291622b79", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=526db913ca", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=6bdc19df00", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=0ca99519a6", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=8a3523e2ca", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=06503ff262", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9eb86ce57b", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=1bc8c0ddf3", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=23905e63c4", mount: "mountThenVsNow" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ec4ba2c237", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -13706,6 +13753,8 @@ async function loadDivisionDoc(slug) {
   const res = await fetch(`/divisions/${encodeURIComponent(slug)}.json`);
   if (!res.ok) return null;
   const d = await res.json();
+  // Without the shared module the page still draws; only the against-party section is left out.
+  await divisionAgainstReady.then(null, () => {});
   const bills = Array.isArray(d.bills) ? d.bills : [];
   let entry = null;
   for (const b of bills) {
@@ -13807,6 +13856,17 @@ function divisionBillsHTML(bills) {
   return `<div class="division-bills">On the ${link(bills[0])}${rest.length ? ` <details class="division-bills-more"><summary>and ${rest.length} related ${rest.length === 1 ? "bill" : "bills"}</summary><ul class="ui-list" role="list">${rest.map((b) => `<li>${link(b)}</li>`).join("")}</ul></details>` : ""}</div>`;
 }
 
+/** "Voted differently from most of their party", by the shared rule (division-against-party.js), in the
+ *  Worker page's words; empty when nobody did or the module could not load. */
+function divisionAgainstHTML(d) {
+  const view = divisionAgainst?.votedAgainstParty(d);
+  if (!view) return "";
+  return `<section class="ui-section division-block division-against" aria-labelledby="division-against-head">
+      <h2 class="ui-section-title" id="division-against-head">${esc(view.title)}</h2>
+      ${divisionAgainst.votedAgainstPartyHTML(view, personUrl)}
+    </section>`;
+}
+
 function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   currentDoc = { slug, kind: "division", title: d.name || d.question || "", url: d.source_url, labels: { kind: "division" } };
   setStatus($("doc-status"), "");
@@ -13860,6 +13920,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       <h2 class="ui-section-title" id="division-split-head">How the parties voted</h2>
       ${BILL_SPLIT_LEGEND}${split.drawn}${split.restCount ? `<details class="ui-disclosure bill-division-more"><summary>${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}</summary><div class="ui-disclosure-body">${split.rest}</div></details>` : ""}${split.notes}
     </section>` : ""}
+    ${divisionAgainstHTML(d)}
     <section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head" aria-busy="true">
       <h2 class="ui-section-title" id="division-members-head">Who voted which way</h2>
       <p class="ui-status-line">Reading the member list…</p>
@@ -14385,7 +14446,7 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
  *  reads as the category. Only used where nothing else claims the label. */
 function barList(rows, {
   fmt = String, heading, linkTo, partyDots = false, term = null, detail = null,
-  className = "", maxValue = null, marker = null, scope = "",
+  className = "", maxValue = null, marker = null, scope = "", sourceNames = false,
 }) {
   const max = maxValue ?? Math.max(...rows.map(([, v]) => v), 1);
   const items = rows.map((row) => {
@@ -14393,7 +14454,7 @@ function barList(rows, {
     const target=linkTo?.(name,v,row);
     const canLink=Boolean(target);
     const key = canLink ? null : term?.(name);
-    const label = `${partyDots ? partyDotHTML(name) : ''}${esc(name)}`;
+    const label = `${partyDots ? partyDotHTML(name) : ''}${esc(sourceNames || String(target || "").startsWith("/subject/donor/") ? sourceDisplayName(name).replace(/\bLTD\b/g, "Ltd") : name)}`;
     const sub = detail?.(name, v, row);
     const marked = marker?.(name, v, row);
     const markerValue = Number(typeof marked === "object" ? marked?.value : marked);
@@ -14416,7 +14477,7 @@ function barList(rows, {
   return `<figure class="chart${className ? ` ${esc(className)}` : ""}"><figcaption>${esc(heading)}</figcaption>${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}${items}</figure>`;
 }
 
-const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ");
+const fmtIndustries = (list) => list.map(industryLabel).join(", ");
 
 
 const AEC_NOTE =
@@ -15361,7 +15422,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=1bc8c0ddf3");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=73ab26c144");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {
@@ -15371,7 +15432,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
+    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
@@ -16011,6 +16072,8 @@ const VIEW_DESCRIPTIONS = {
   expenses: "What each category in the Independent Parliamentary Expenses Authority's quarterly reports covers.",
   privacy: "What the OPAX website and app collect, which companies receive it, how long it is kept and how to delete your account.",
   support: "How to report a wrong record or answer, and help with signing in and deleting an OPAX account.",
+  terms: "The terms for using the OPAX website, the OPAX app and OPAX's research tools: what OPAX is, what you may do with it, and what it does not promise.",
+  security: "How to report a security problem with the OPAX website, app or research tools, and what to expect.",
 };
 const directoryPageCounts = new Map();
 function syncPathMeta() {

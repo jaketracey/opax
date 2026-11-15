@@ -26,6 +26,8 @@ COPIED = ["scripts/roster_state_parties.py", "scripts/vm/export_step.sh", "scrip
 # Copy the active immutable release too; older fixtures intentionally remain pinned.
 _active = json.loads((ROOT / 'portal/public/electorates/manifest.json').read_text())
 COPIED += ['portal/public' + _active[k] for k in ('reference_url', 'people_url')]
+COPIED += ['scripts/speech_identity_review.py', 'scripts/speech_identity_review.json',
+           'tests/fixtures/speech-identities/house.json']
 ROSTER = "portal/public/parliamentarians.json"
 SITTING = [("Anthony Albanese", "10007"), ("Pat Conaghan", "10922")]
 

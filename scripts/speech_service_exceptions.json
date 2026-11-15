@@ -1,0 +1,5 @@
+{
+  "reviewed": "2026-11-14",
+  "note": "A reviewed exception must pin speech_id, person_id, chamber and date, with a reason and source_url. These two repaired namesake pairs need no allowance.",
+  "exceptions": []
+}

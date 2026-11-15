@@ -17,7 +17,7 @@ import {partyMoneyResponse} from '../src/party-money-table.ts';
 import {partyMoneyBucketFiles} from '../../scripts/build_growth_modules.mjs';
 
 const graph = JSON.parse(readFileSync(new URL('../public/graph/money.json', import.meta.url), 'utf8'));
-const SCOPE = 'All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns';
+const SCOPE = 'All receipt types, 1998–99 to 2024–25, as the parties reported them in federal returns';
 const PRATT = 'Pratt Holdings Pty Ltd', WESTPAC = 'Westpac Banking Corporation';
 const id = label => graph.nodes.find(n => n.kind === 'donor' && n.label === label).id;
 const legacyTotal = (label, party) => graph.edges.find(e => e.source === id(label) && e.target === party).total;
@@ -151,14 +151,16 @@ test('the D1 party-money and money-connections rows carry the page\'s figures an
     assert.deepEqual(find(list, PRATT, 'Labor').map(r => [r.amount, r.count]), [[8473476, 40]]);
     assert.deepEqual(find(list, WESTPAC, 'Labor').map(r => [r.amount, r.count]), [[47331887, 201]]);
   }
-  // 13 Nov 2026: Labor 301 to 300 and Liberal 251 to 250, Linc Energy leaving the map (see above).
-  for (const [label, partyId, expected] of [['Labor', 'party:Labor', 300], ['Liberal', 'party:Liberal', 250]]) {
+  const full = JSON.parse(readFileSync(new URL('../public/graph/money-receipts.json', import.meta.url), 'utf8'));
+  // Factual tables restore off-map sources; the drawing list retains the old cap.
+  for (const [label, partyId, expected, capped] of [['Labor', 'party:Labor', 9832, 300], ['Liberal', 'party:Liberal', 7853, 250]]) {
     const d1 = party.filter(r => r.jurisdiction === 'federal' && r.to === label);
     assert.equal(d1.length, expected, label);
-    const page = partyMoneyData(graph, partyId).rows;
+    const page = partyMoneyData(full, partyId).rows;
     assert.equal(page.length, expected, label);
     const key = r => `${r.amount ?? r.total}|${r.count}|${r.firstYear}|${r.lastYear}`;
     assert.deepEqual(d1.map(key).sort(), page.map(key).sort(), `${label}: the CSV and the table hold the same figures`);
+    assert.equal(connections.filter(r=>r.jurisdiction==='federal' && r.to===label && r.type==='receipts').length,capped,label+' drawing cap');
   }
   // State graphs keep their record figures, and contract or grant rows are untouched.
   const qld = JSON.parse(readFileSync(new URL('../public/graph/money.qld.json', import.meta.url), 'utf8'));
@@ -179,7 +181,7 @@ test('the D1 party-money and money-connections rows carry the page\'s figures an
 const HEADLINES = {Labor: 726752702, Liberal: 476294163, Nationals: 69579462, Greens: 31529186, 'Country Liberal Party': 8416214,
   'United Australia Party': 255773752};
 // What the headline counts and leaves out, the same words on the party page, the server page and the map card.
-const PARTY_SCOPE = 'Itemised receipts in the party\'s own federal returns, 1998-99 to 2024-25, each counted once. '
+const PARTY_SCOPE = 'Itemised receipts in the party\'s own federal returns, 1998–99 to 2024–25, each counted once. '
   + 'Public funding, tax refunds and other government payments, transfers between the party\'s own branches and amounts under the disclosure threshold are not included.';
 
 test('a party\'s headline is its own return, each line once, with the scope line; an older file keeps the record total', () => {
@@ -192,8 +194,8 @@ test('a party\'s headline is its own return, each line once, with the scope line
     if (label === 'Country Liberal Party' || label === 'United Australia Party') assert.ok(own.total > node.total, label);
     else assert.ok(own.total < node.total, `${label}: below the legacy all-record total`);
     assert.ok(own.total > Object.values(node.by_type).reduce((a, b) => a + b, 0), `${label}: above the donors drawn on the map`);
-    const fy = y => `${y}-${String((y + 1) % 100).padStart(2, '0')}`;
-    assert.equal(partyReturnScopeLabel(own), PARTY_SCOPE.replace('1998-99 to 2024-25', `${fy(own.firstYear)} to ${fy(own.lastYear)}`));
+    const fy = y => `${y}–${String((y + 1) % 100).padStart(2, '0')}`;
+    assert.equal(partyReturnScopeLabel(own), PARTY_SCOPE.replace('1998–99 to 2024–25', `${fy(own.firstYear)} to ${fy(own.lastYear)}`));
     if (label !== 'United Australia Party') assert.deepEqual([own.firstYear, own.lastYear], [1998, 2024], label);
     const lines = Object.values(node.return_by_type_year).flatMap(types => Object.values(types)).reduce((n, [, c]) => n + c, 0);
     assert.equal(own.count, lines);

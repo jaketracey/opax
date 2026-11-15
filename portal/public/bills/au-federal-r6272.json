@@ -13,6 +13,8 @@
  "portfolio": "Health",
  "status": "lapsed",
  "status_as_of": "2019-04-02",
+ "ended": "not_proceeding",
+ "ended_label": "Not proceeding",
  "key_dates": [
   {
    "stage": "introduced",

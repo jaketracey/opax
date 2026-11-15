@@ -44,4 +44,6 @@ if [ "${OPAX_EVIDENCE_RUN:-0}" = 1 ] || evidence_run_due; then
   OPAX_EVIDENCE_RUN=1 exec timeout --kill-after=5m "${OPAX_EVIDENCE_RUN_LIMIT:-510m}" "$REPO/scripts/vm/nightly.sh"
 fi
 echo "$(date '+%F %T') [run-nightly] booted at $(uptime -s 2>/dev/null); starting nightly.sh" >>"$LOG"
+# The nightly's backfill cutoff counts back from the end of this limit (nightly.sh, section 1z).
+export OPAX_NIGHTLY_STARTED="${OPAX_NIGHTLY_STARTED:-$(date +%s)}"
 exec timeout --kill-after=5m "${OPAX_NIGHTLY_LIMIT:-6h}" "$REPO/scripts/vm/nightly.sh"

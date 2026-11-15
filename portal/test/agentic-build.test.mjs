@@ -91,7 +91,7 @@ test('planner partial-FY donations render an exact scoped limitation without com
  const q='Which party spoke most about gambling, and how much gambling money did each party receive in October 2026?';
  const plan={shape:'money',steps:[{tool:'party_receipts',args:{industry:'gambling'}},{tool:'count_speeches',args:{topic:'gambling',group_by:'party'}}]};
  const fixture={...deps,generate:async()=>({text:JSON.stringify(plan)}),
-  asset:async path=>{assert.notEqual(path,'/graph/money.json','partial FY must not read donation totals');return deps.asset(path)},
+  asset:async path=>{assert.notEqual(path,'/graph/money-receipts.json','partial FY must not read donation totals');return deps.asset(path)},
   kb:async()=>({fulltext:{total:777,facets:{'/classification.labels/party':{'/classification.labels/party/Labor':777}}}})};
  const run=await runAgentic(q,fixture),payload=agenticAskPayload(run,q);
  assert.equal(run.answered,true);assert.equal(run.steps.length,2);assert.ok(run.steps.every(step=>step.ok));
@@ -106,7 +106,7 @@ test('planner partial-FY donations render an exact scoped limitation without com
  const failed=await runAgentic(q,{...fixture,kb:async()=>{throw Error('speech lookup unavailable')}});
  assert.equal(failed.answered,false);assert.equal(failed.reason,'no_supported_claim');assert.equal(agenticAskPayload(failed,q).answer,'');
  const wholeFY=q.replace('October 2026','FY 2023-24');
- const empty=await runAgentic(wholeFY,{...fixture,asset:async path=>path==='/graph/money.json'?{nodes:[],edges:[]}:deps.asset(path)});
+ const empty=await runAgentic(wholeFY,{...fixture,asset:async path=>path==='/graph/money-receipts.json'?{nodes:[],edges:[]}:deps.asset(path)});
  assert.equal(empty.answered,false);assert.equal(empty.reason,'no_supported_claim');
 });
 
@@ -116,7 +116,7 @@ test('a known partial-FY limitation survives dependent received/receive planner 
   const plan=fallbackPlan(q);assert.equal(plan.steps[1].args.party,'$1');
   let lookups=0;
   const fixture={...deps,generate:async()=>({text:JSON.stringify(plan)}),
-   asset:async path=>{assert.notEqual(path,'/graph/money.json');return deps.asset(path)},
+   asset:async path=>{assert.notEqual(path,'/graph/money-receipts.json');return deps.asset(path)},
    kb:async()=>{lookups++;throw Error('dependent scope must not be guessed')}};
   const run=await runAgentic(q,fixture),payload=agenticAskPayload(run,q);
   assert.equal(run.answered,true);assert.equal(payload.answer_decision,'limitation');assert.equal(lookups,0);

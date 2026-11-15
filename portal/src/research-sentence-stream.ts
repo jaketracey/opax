@@ -80,7 +80,10 @@ export function researchSentenceStream(question: string, send: (text: string,che
       }else if(accountability){
         // A kept or moved sentence at the top rank stays first; recovered or rewritten text can still give way.
         if(!(checked.research as {who_lead_written?:boolean}|undefined)?.who_lead_written||!settledWhoLead(checked,question,basis))return
-      }else if(!released&&!stableResearchLead(checked, question))return
+      }
+      // A written record answer can still have its lead shaped, so it waits for a stable lead. The loop's own points keep
+      // the model's order (groundAnswerPayload), so their first checked sentence is shown at once.
+      else if((payload as unknown as {research?:{pre_writer_sources?:unknown}}).research?.pre_writer_sources&&!released&&!stableResearchLead(checked, question))return
       if (!answer.startsWith(released)) return // retain the affected tail until the whole-answer decision is made
       const {research:_internal,...emitted}=checked
       const result=researchPrefix(emitted as unknown as QualitativeAnswer,answer)

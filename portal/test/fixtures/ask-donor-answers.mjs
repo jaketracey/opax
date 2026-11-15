@@ -8,7 +8,7 @@ export const donorQuestions=[
  'How much has Example Quill Foundation donated to political parties?',
  'How much has Example Bracken Banking donated to political parties?',
 ]
-export const donorGraph={meta:{generated:'2026-11-14',receipt_types:{available:true,schema:1,donation_type:'donation_received'}},nodes:[
+export const donorGraph={meta:{generated:'2026-11-14',uncapped:true,receipt_types:{available:true,schema:1,donation_type:'donation_received'}},nodes:[
  ...['Example Harbor Party','Example Meadow Party','Example Orchard Party'].map(label=>({id:'party:'+label,kind:'party',label})),
  ...['Example Marigold Holdings','Example Quill Foundation','Example Bracken Banking'].map(label=>({id:'donor:'+label,kind:'donor',label,industry:'finance',total:999999,count:99,by_type:{},by_type_year:{}})),
  {id:'government',kind:'grantor',label:'Fixture Government'},
@@ -40,7 +40,7 @@ for(const node of donorGraph.nodes.filter(n=>n.kind==='donor')){
 }
 export const donorAssets={fetch:async request=>{
  const path=new URL(request.url).pathname
- if(path==='/graph/money.json')return Response.json(donorGraph)
+ if(path==='/graph/money-receipts.json')return Response.json(donorGraph)
  if(path==='/parliamentarians.json')return Response.json({people:[]})
  throw Error('Unexpected fixture asset: '+path)
 }}

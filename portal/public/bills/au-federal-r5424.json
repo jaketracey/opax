@@ -13,6 +13,8 @@
  "portfolio": "Health",
  "status": "lapsed",
  "status_as_of": "2015-09-17",
+ "ended": "discharged",
+ "ended_label": "Discharged from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

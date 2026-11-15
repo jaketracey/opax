@@ -399,7 +399,9 @@ test('built SSR pages for every route type expose one canonical, factual content
     assert.doesNotMatch(html,/href="(?:https:\/\/opax\.com\.au)?\/(?:search|home)(?:[?"#])/i,path);
     const text=html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/g,'').replace(/<[^>]+>/g,' ').trim();
     assert.ok(text.length>100,path);
-    assert.doesNotMatch(text,/linked to/i,path);
+    // No association wording ("X is linked to Y"). /privacy may say data is "not linked to you":
+    // that is the App Store's own label term (Data Not Linked to You), not an association.
+    assert.doesNotMatch(text,/linked to(?! you\b)/i,path);
     for(const match of html.matchAll(/(?:href|content)="((?:https?:\/\/(?:www\.)?opax\.com\.au)?\/subject\/(person|party)\/[^"?#]+)[^"]*"/g)) {
       const slug=match[1].split('/').at(-1);
       assert.match(slug,/^[a-z0-9]+(?:-[a-z0-9]+)*$/,path+' '+match[1]);
@@ -618,7 +620,7 @@ test('every empty record address is the one not-found block, served without the 
   const cases=[
     ['/this-page-does-not-exist','Nothing at this address','this page does not exist','/'],
     ['/subject/person/zz-nobody-here','No parliamentarian at this address','zz nobody here','/subject/person'],
-    ['/subject/donor/Zzqx%20Nobody%20Pty%20Ltd','No donor by this name','Zzqx Nobody Pty Ltd','/subject/donor'],
+    ['/subject/donor/Zzqx%20Nobody%20Pty%20Ltd',"This donor isn't in OPAX",'Zzqx Nobody Pty Ltd','/subject/donor'],
     ['/bill/au-federal-r99999','No bill at this address','','/bills'],
     ['/doc/division-federal-senate-9999999','No division at this address','','/bills'],
     ['/subject/electorate/federal-representatives-nsw-nowhere','No electorate at this address','nowhere','/subject/electorate'],
@@ -629,8 +631,8 @@ test('every empty record address is the one not-found block, served without the 
     assert.equal(response.status,404,path);
     const html=await response.text();
     const block=html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</section></section>')+20);
-    assert.match(block,new RegExp(`<h1 id="not-found-title" tabindex="-1">${title}</h1>`),path);
-    assert.match(html,new RegExp(`<title>${title} · OPAX</title>`),`${path}: the tab says what the heading says`);
+    assert.ok(block.includes(`<h1 id="not-found-title" tabindex="-1">${escapeHtml(title)}</h1>`),path);
+    assert.ok(html.includes(`<title>${escapeHtml(title)} · OPAX</title>`),`${path}: the tab says what the heading says`);
     assert.ok(block.includes(`name="q" type="search" value="${words}"`),path);
     assert.ok(block.includes(`<a class="ui-button" href="${pill}">`),path);
     // No profile shell, no source line, no alarm, never the raw identifier.
@@ -664,6 +666,42 @@ test('/privacy and /support are served whole, from their panels, with canonical 
   }
   const shell=readFileSync(new URL('spa-shell.js',pub),'utf8');
   assert.ok(shell.includes('if(answer.hasAttribute("data-panel-copy"))for(const el of answer.querySelectorAll("[id]"))el.removeAttribute("id");main.prepend(answer);'));
+});
+
+test('/terms and /security are served whole as HTML, with canonical links and no drafting marks',async()=>{
+  for(const [path,name,title,facts] of [
+    ['/terms','terms','Terms of use · OPAX',['Using OPAX','Last updated 14 November 2026','Noice Pty Ltd (ABN 91 634 536 360)','the law of Victoria, Australia','You keep the rights in what you write','support@opax.com.au','href="/security"','Australian Consumer Law']],
+    ['/security','security','Security · OPAX',['Reporting a security problem','Last updated 14 November 2026','https://github.com/jaketracey/opax/security/advisories/new','mailto:support@opax.com.au?subject=Security','within 5 working days','Testing in good faith','href="/terms"']]]){
+    const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
+    assert.equal(r.status,200,path);
+    assert.match(r.headers.get('content-type')||'',/^text\/html/,path);
+    const html=await r.text();checkHtml(html);
+    assert.match(html,new RegExp(`<link rel="canonical" href="https://opax\\.com\\.au${path}"`),path);
+    assert.match(html,new RegExp(`<meta property="og:url" content="https://opax\\.com\\.au${path}"`),path);
+    assert.ok(html.includes(`<title>${title}</title>`),path);
+    assert.match(html,new RegExp(`<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">`),path);
+    const main=html.match(/<main\b[^>]*data-server-rendered[^>]*>([\s\S]*?)<\/main>/)[1];
+    for(const fact of facts)assert.ok(main.includes(fact),`${path}: ${fact}`);
+    const copy=main.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+    assert.doesNotMatch(copy.replace(/<[^>]+>/g,' '),/[\[\]\u2014]|Jake:|TODO|placeholder/i,`${path}: no brackets, drafting notes or em dashes`);
+    assert.doesNotMatch(main,/An association does not prove influence/,path);
+  }
+});
+test('/.well-known/security.txt is plain text with contacts, a future Expires and its canonical',async()=>{
+  const r=await worker.fetch(new Request(origin+'/.well-known/security.txt'),env,{waitUntil(){}});
+  assert.equal(r.status,200);
+  assert.equal(r.headers.get('content-type'),'text/plain; charset=utf-8');
+  const body=await r.text();
+  const fields=body.trim().split('\n').map(l=>l.split(/: (.*)/s).slice(0,2));
+  const all=k=>fields.filter(([f])=>f===k).map(([,v])=>v);
+  assert.deepEqual(all('Contact'),['https://github.com/jaketracey/opax/security/advisories/new','mailto:support@opax.com.au?subject=Security']);
+  assert.deepEqual(all('Canonical'),['https://opax.com.au/.well-known/security.txt']);
+  assert.deepEqual(all('Policy'),['https://opax.com.au/security']);
+  const [expires]=all('Expires');
+  assert.match(expires,/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?Z$/);
+  // RFC 9116 wants a renewal before it lapses: fail 30 days ahead, not after.
+  assert.ok(Date.parse(expires)-Date.now()>30*864e5,`Expires ${expires} is within 30 days: renew it`);
+  assert.ok(Date.parse(expires)-Date.now()<=366*864e5,'Expires is at most a year away');
 });
 
 test('ordinary Victorian electorate summaries carry the exact authorisation server-side',async()=>{
@@ -735,4 +773,16 @@ test('server donor page: a donor no party return lists says so and what its own 
   const description=pratt.match(/<meta name="description" content="([^"]*)"/)[1];
   assert.match(description,/disclosed political .*donor, \$[\d.]+m across [\d,]+ receipts/);
   assert.doesNotMatch(description,/No party return lists/);
+});
+
+test('a dead bill answer and its related rows state the exact ending, and older files keep the status',()=>{
+  const related=[{key:'au-federal-r2',title:'Other Bill 2018',sponsor:'BANDT, Adam, MP',introduced:'2018-02-12',status:'lapsed',ended:'discharged',ended_label:'Discharged from the Notice Paper'},
+    {key:'au-federal-r3',title:'Third Bill 2018',sponsor:'BANDT, Adam, MP',introduced:'2018-03-12',status:'lapsed'}];
+  const bill={title:'National Integrity Commission Bill 2017',key:'au-federal-r1',sponsor:'BANDT, Adam, MP',status:'lapsed',status_as_of:'2018-06-26',ended:'removed',ended_label:'Removed from the Notice Paper',divisions:[]};
+  const html=renderBillAnswer(bill,[],new Map(),related).html;
+  assert.match(html,/Removed from the Notice Paper, as at 2018-06-26\./);
+  assert.match(html,/Other Bill 2018<\/a> — introduced 2018-02-12, Discharged from the Notice Paper</);
+  assert.match(html,/Third Bill 2018<\/a> — introduced 2018-03-12, lapsed</);
+  const {ended,ended_label,...plain}=bill;
+  assert.match(renderBillAnswer(plain,[],new Map(),[]).html,/lapsed, as at 2018-06-26\./);
 });

@@ -1,0 +1,184 @@
+{
+  "reviewed": "2026-11-14",
+  "note": "Reuse these existing catalogue identities. Match House, service date, original print, seat and prior id; retain raw attribution as evidence. No surname-wide alias.",
+  "handbook_cache_sha256": "3754df31cdb3df2e7f08eb06a08e501f0cb26ca5d2f211bdb819f957eb3ed3b8",
+  "handbook_people": [
+    {
+      "PHID": "282982",
+      "GivenName": "Fiona",
+      "MiddleNames": "Barbouttis",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Dr. Fiona Barbouttis",
+      "Party": "Liberal Party of Australia",
+      "Electorate": "Reid",
+      "SenateState": "",
+      "StateAbbrev": "NSW",
+      "State": "New South Wales",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        46
+      ],
+      "ServiceHistory_Start": "2019-05-18",
+      "ServiceHistory_End": "2022-05-21",
+      "Gender": "Female"
+    },
+    {
+      "PHID": "8I4",
+      "GivenName": "Stephen",
+      "MiddleNames": "Paul",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, the Hon. Dr Stephen Paul, AO",
+      "Party": "Australian Labor Party",
+      "Electorate": "Cunningham",
+      "SenateState": "",
+      "StateAbbrev": "NSW",
+      "State": "New South Wales",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "ServiceHistory_Start": "1984-12-01",
+      "ServiceHistory_End": "2002-08-16",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "00APG",
+      "GivenName": "Anthony ",
+      "MiddleNames": "David Hawthorn",
+      "FamilyName": "SMITH",
+      "PreferredName": "(Tony)",
+      "DisplayName": "SMITH, the Hon. Anthony (Tony) David Hawthorn",
+      "Party": "Liberal Party of Australia",
+      "Electorate": "Casey",
+      "SenateState": "",
+      "StateAbbrev": "Vic",
+      "State": "Victoria",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "ServiceHistory_Start": "2001-11-10",
+      "ServiceHistory_End": "2022-04-11",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "SK6",
+      "GivenName": "Anthony ",
+      "MiddleNames": "Charles",
+      "FamilyName": "SMITH",
+      "PreferredName": "(Tony)",
+      "DisplayName": "SMITH, Anthony (Tony) Charles",
+      "Party": "Independent",
+      "Electorate": "Dickson",
+      "SenateState": "",
+      "StateAbbrev": "Qld",
+      "State": "Queensland",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        38
+      ],
+      "ServiceHistory_Start": "1996-03-02",
+      "ServiceHistory_End": "1998-10-03",
+      "Gender": "Male"
+    }
+  ],
+  "identities": [
+    {
+      "person_id": "person_efb744ffb3a25d578e592281",
+      "name": "Anthony Charles Smith",
+      "phid": "SK6",
+      "old_person_id": "10592",
+      "prints": [
+        "Tony Smith"
+      ],
+      "seat": "Dickson",
+      "allow_missing_seat": true,
+      "state": "QLD",
+      "house": "representatives",
+      "start": "1996-03-02",
+      "end": "1998-10-03",
+      "catalog_term_id": "term_7c92080334c6545eaee623fe",
+      "sources": [
+        {
+          "fetched_at": "2026-09-09T02:34:26+00:00",
+          "label": "OpenAustralia parliamentary service records",
+          "licence": "See source terms",
+          "sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6",
+          "source_id": "source_4cc474fc3e765af4ab62ed6b",
+          "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv"
+        },
+        {
+          "fetched_at": "2026-11-10T13:05:07+00:00",
+          "label": "OpenAustralia people register (person ids)",
+          "licence": "See source terms",
+          "sha256": "42e310b1a1e8b63243e6027f0c07303bf068c1ef9db5d9fc9744880d93ed007f",
+          "source_id": "source_ffaddf0505bc5ba69160e6f1",
+          "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/061ec16fdc68ef52544a35d8c4f6413e4622e6cb/data/people.csv"
+        }
+      ],
+      "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%27SK6%27"
+    },
+    {
+      "person_id": "person_9c02d321caef54b2ba21a1f8",
+      "name": "Stephen Martin",
+      "phid": "8I4",
+      "old_person_id": "10937",
+      "prints": [
+        "Martin"
+      ],
+      "seat": "Cunningham",
+      "allow_missing_seat": false,
+      "state": "NSW",
+      "house": "representatives",
+      "start": "1996-04-30",
+      "end": "2002-08-16",
+      "catalog_term_id": "term_9c1dd8c325e95220a1499cbd",
+      "sources": [
+        {
+          "fetched_at": "2026-09-09T02:34:26+00:00",
+          "label": "OpenAustralia parliamentary service records",
+          "licence": "See source terms",
+          "sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6",
+          "source_id": "source_4cc474fc3e765af4ab62ed6b",
+          "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv"
+        },
+        {
+          "fetched_at": "2026-11-10T13:05:07+00:00",
+          "label": "OpenAustralia people register (person ids)",
+          "licence": "See source terms",
+          "sha256": "42e310b1a1e8b63243e6027f0c07303bf068c1ef9db5d9fc9744880d93ed007f",
+          "source_id": "source_ffaddf0505bc5ba69160e6f1",
+          "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/061ec16fdc68ef52544a35d8c4f6413e4622e6cb/data/people.csv"
+        }
+      ],
+      "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%278I4%27",
+      "full_name": "Stephen Paul Martin"
+    }
+  ]
+}

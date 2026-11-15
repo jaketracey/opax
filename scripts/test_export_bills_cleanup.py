@@ -162,6 +162,161 @@ class StatusAndStageTests(unittest.TestCase):
         self.assertEqual(lifecycle(flagged), BILL_STAGE_ORDER["before_parliament"])
 
 
+class EndingTests(unittest.TestCase):
+    """How a dead bill ended: `ended` and `ended_label`, from the register's words."""
+
+    def test_the_final_days_event_names_the_ending(self):
+        cases = {
+            "Removed from the Notice Paper in accordance with (SO 42)": "removed",
+            "Discharged from Notice Paper": "discharged",
+            "Discharged from Notice Paper (In accordance with House Standing Order 222(a))": "discharged",
+            "Lapsed at dissolution": "lapsed",
+            "Lapsed at end of Parliament": "lapsed",
+            "Laid aside": "laid_aside",
+            "Consideration of Senate message (Details: Bill laid aside)": "laid_aside",
+        }
+        for raw, ended in cases.items():
+            with self.subTest(raw=raw):
+                events = [event("introduced", "2019-02-12", "Introduced and read a first time"),
+                          event("other", "2020-03-01", raw)]
+                self.assertEqual(eb.bill_ended("lapsed", "Not Proceeding", events), ended)
+
+    def test_with_no_ending_event_the_status_text_is_the_ending(self):
+        events = [event("second_reading", "2019-02-12", "Second reading debate")]
+        self.assertEqual(eb.bill_ended("lapsed", "Not Proceeding", events), "not_proceeding")
+        self.assertEqual(eb.bill_ended("lapsed", "lapsed", events), "lapsed")
+        self.assertEqual(eb.bill_ended("lapsed", "Not Proceeding", []), "not_proceeding")
+
+    def test_a_negatived_bill_ended_negatived(self):
+        events = [event("second_reading", "2017-03-20", "Second reading negatived")]
+        status = eb.final_status("lapsed", events)
+        self.assertEqual(eb.bill_ended(status, "Not Proceeding", events), "negatived")
+        self.assertEqual(eb.ENDED_LABELS["negatived"], "Voted down")
+
+    def test_a_restored_bill_does_not_keep_its_earlier_ending(self):
+        events = [event("other", "2014-03-27", "Removed from the Notice Paper in accordance with (SO 42)"),
+                  event("other", "2014-05-13", "Restored to Notice Paper")]
+        self.assertEqual(eb.bill_ended("lapsed", "Not Proceeding", events), "not_proceeding")
+
+    def test_two_endings_on_the_last_day_read_the_status_text(self):
+        events = [event("other", "2016-04-15", "Discharged from Notice Paper"),
+                  event("other", "2016-04-15", "Lapsed at prorogation")]
+        self.assertEqual(eb.bill_ended("lapsed", "Not Proceeding", events), "not_proceeding")
+
+    def test_a_live_or_passed_bill_or_unnamed_ending_has_none(self):
+        removed = [event("other", "2020-03-01", "Removed from the Notice Paper in accordance with (SO 42)")]
+        self.assertIsNone(eb.bill_ended("before_parliament", "Before Senate", removed))
+        self.assertIsNone(eb.bill_ended("passed", "Act", removed))
+        quiet = [event("second_reading", "2019-02-12", "Second reading moved")]
+        for raw in ("", None, "Unknown", "Before Senate"):
+            with self.subTest(raw=raw):
+                self.assertIsNone(eb.bill_ended("lapsed", raw, quiet))
+
+    def test_every_ending_has_a_label_without_an_em_dash(self):
+        endings = {ended for _, ended in eb._ENDED_EVENT + eb._ENDED_STATUS}
+        self.assertTrue(endings <= set(eb.ENDED_LABELS))
+        self.assertEqual(eb.ENDED_LABELS["removed"], "Removed from the Notice Paper")
+        for label in eb.ENDED_LABELS.values():
+            self.assertNotIn("\u2014", label)
+
+    def test_the_fields_sit_after_status_as_of_and_leave_when_none(self):
+        record = {"key": "k", "status": "lapsed", "status_as_of": "2020-03-01", "sponsor": None}
+        got = eb.with_ended(record, "removed")
+        self.assertEqual(list(got), ["key", "status", "status_as_of", "ended", "ended_label", "sponsor"])
+        self.assertEqual(got["ended_label"], "Removed from the Notice Paper")
+        self.assertEqual(eb.with_ended(got, None), record)
+        self.assertEqual(eb.with_ended(record, "guess"), record)
+
+    def test_index_rows_and_docs_carry_the_ending_only_when_named(self):
+        doc = {"key": "k", "title": "t", "short_title": None, "jurisdiction": "federal", "parliament": 46,
+               "introduced": "2019-07-04", "originating_house": "senate", "status": "lapsed",
+               "status_as_of": "2022-04-11", "sponsor": None, "sponsor_party": None, "portfolio": None,
+               "summary": None, "divisions": [], "speeches": [], "acts": [], "ended": "lapsed"}
+        row = eb.index_row(doc)
+        self.assertEqual((row["ended"], row["ended_label"]), ("lapsed", "Lapsed"))
+        del doc["ended"]
+        self.assertNotIn("ended", eb.index_row(doc))
+
+    def test_fill_endings_adds_only_the_two_fields_to_a_retained_export(self):
+        import bills_schema
+        import sqlite3
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "parli.db"
+            db = sqlite3.connect(db_path)
+            for stmt in bills_schema.DDL:
+                db.execute(stmt)
+            bills = {  # key: (registry status, status text, events, published status)
+                "au-federal-r1": ("lapsed", "Not Proceeding",
+                                  [("introduced", "2019-07-04", "Introduced and read a first time"),
+                                   ("other", "2022-02-10", "Removed from the Notice Paper in accordance with (SO 42)")],
+                                  "lapsed"),
+                "au-federal-r2": ("lapsed", "Not Proceeding",
+                                  [("second_reading", "2020-08-27", "Second reading negatived")], "lapsed"),
+                "au-federal-r3": ("lapsed", "Not Proceeding", [], "before_parliament"),
+                "au-federal-r4": ("passed", "Act", [("royal_assent", "2021-03-01", "Assent")], "lapsed"),
+                "au-federal-r5": ("lapsed", "Not Proceeding",
+                                  [("second_reading", "2020-08-27", "Second reading debate")], "lapsed"),
+            }
+            for key, (status, raw, events, _) in bills.items():
+                db.execute("INSERT INTO bills_v2 (bill_key, jurisdiction, title, status, status_raw) "
+                           "VALUES (?, 'federal', ?, ?, ?)", (key, key, status, raw))
+                for stage, date, text in events:
+                    db.execute("INSERT INTO bill_events (bill_key, stage, date, house, event_raw) "
+                               "VALUES (?, ?, ?, 'House of Representatives', ?)", (key, stage, date, text))
+            db.commit()
+            db.close()
+            out = Path(tmp) / "bills"
+            out.mkdir()
+            rows = []
+            for key, (*_, published) in bills.items():
+                doc = {"key": key, "title": key, "status": published, "status_as_of": "2022-02-10",
+                       "key_dates": [], "divisions": []}
+                (out / f"{key}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n")
+                rows.append({"key": key, "status": published, "status_as_of": "2022-02-10", "divisions": 0})
+            # A few retained files were written compact; they stay compact.
+            compact = json.loads((out / "au-federal-r2.json").read_text())
+            (out / "au-federal-r2.json").write_text(json.dumps(compact, ensure_ascii=False, separators=(",", ":")) + "\n")
+            index = {"generated_at": "2026-10-04T16:27:54+00:00", "count": len(rows), "meta": {}, "bills": rows}
+            (out / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
+            before = {p.name: json.loads(p.read_text()) for p in out.iterdir()}
+
+            conn = eb.connect(f"file:{db_path}?mode=ro")
+            try:
+                self.assertEqual(eb.fill_endings(out, conn), 3)
+                self.assertEqual(eb.fill_endings(out, conn), 0)  # a rerun changes nothing
+            finally:
+                conn.rollback()
+                conn.close()
+
+            after = {p.name: json.loads(p.read_text()) for p in out.iterdir()}
+            want = {"au-federal-r1": ("removed", "Removed from the Notice Paper"),
+                    "au-federal-r2": ("negatived", "Voted down")}
+            def strip(record):
+                return {k: v for k, v in record.items() if k not in ("ended", "ended_label")}
+            for name, doc in after.items():
+                with self.subTest(name=name):
+                    if name == "index.json":
+                        doc = {**doc, "bills": [strip(r) for r in doc["bills"]]}
+                    self.assertEqual(strip(doc), before[name])
+            for key, (ended, label) in want.items():
+                self.assertEqual((after[f"{key}.json"]["ended"], after[f"{key}.json"]["ended_label"]), (ended, label))
+            for key in ("au-federal-r3", "au-federal-r4"):
+                self.assertNotIn("ended", after[f"{key}.json"])
+            self.assertEqual(after["au-federal-r5.json"]["ended"], "not_proceeding")
+            ended_rows = {r["key"]: r.get("ended") for r in after["index.json"]["bills"]}
+            self.assertEqual(ended_rows, {"au-federal-r1": "removed", "au-federal-r2": "negatived",
+                                          "au-federal-r3": None, "au-federal-r4": None,
+                                          "au-federal-r5": "not_proceeding"})
+            self.assertEqual(list(after["index.json"]["bills"][0]),
+                             ["key", "status", "status_as_of", "ended", "ended_label", "divisions"])
+            self.assertEqual(after["index.json"]["generated_at"], index["generated_at"])
+            r1 = (out / "au-federal-r1.json").read_text().splitlines()
+            self.assertIn(' "ended": "removed",', r1)
+            r2 = (out / "au-federal-r2.json").read_text()
+            self.assertEqual(r2.count("\n"), 1)
+            self.assertIn('"status_as_of":"2022-02-10","ended":"negatived","ended_label":"Voted down",', r2)
+
+
 class SuppressionTests(unittest.TestCase):
     """bills-008."""
 
