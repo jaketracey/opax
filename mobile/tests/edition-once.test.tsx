@@ -170,11 +170,14 @@ describe('the plate line never repeats the summary below it', () => {
   // The shape of two real bills whose titles carry "No. 1" / "No. 2": a
   // full stop inside the summary's first sentence. Invented words.
   const NUMBERED =
-    'The Fixture Laws Amendment (Scheme Measures No. 1) Bill would change how fixture payments are indexed and reported each year across the fixture scheme and its related programs.';
+    'The bill would change how fixture payments are indexed and reported under the Fixture Laws Amendment (Scheme Measures No. 1) Act and its related fixture programs and rules for members.';
   const NUMBERED_FITS =
-    'The Fixture Laws Amendment (Scheme Measures No. 2) Bill would change how fixture payments are indexed and then reported each year across the schemes.';
+    'The bill would change how fixture payments are indexed and reported under the Fixture Laws Amendment (Scheme Measures No. 2) Act and related rules.';
   test('a full stop inside the summary ("No. 1") leaves no fragment on the plate', () => {
     expect(clip(NUMBERED, 150).endsWith('…')).toBe(true);
+    // The number comes late, so what follows it is shorter than a repeat
+    // has to be: split there, that tail would stay on the plate.
+    expect(clip(NUMBERED, 150).split('No. ')[1]!.length).toBeLessThan(60);
     expect(plateLine(cover(NUMBERED), [body(NUMBERED)])).toBe(STATUS);
     expect(plateLine(clip(NUMBERED, 150), [body(NUMBERED)])).toBeNull();
     // Whole on the cover, cut below.
