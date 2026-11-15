@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=76942228e3").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=40bd90b342").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -6036,6 +6036,10 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const recentData = await loadPersonRecentVotes(keys);
   if (currentSubjectKey !== key || !slot.isConnected) return;
   const recent = voteTables.personVoteRecords(keys, votes, recentData);
+  // Divisions held back from the record that name this member (public/data/vote-coverage.json): said with the counts.
+  const coverage = await fetch(voteTables.VOTE_COVERAGE_PATH).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  const coverageNotes = voteTables.voteCoverageNotes(coverage, name);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
   const total = sum("divisions_total");
@@ -6057,6 +6061,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
     ${ayes + noes ? `<div class="votes-split" role="img" aria-label="${esc(ayePct)} percent ayes, ${esc(100 - ayePct)} percent noes"><i style="width:${ayePct}%"></i></div>
     <p class="votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}.</p>` : ""}
     ${rows.length ? `<p class="votes-scope">${esc(voteTables.voteScopeLine(rows.length, total, recent.recorded))}</p>` : ""}
+    ${coverageNotes.map((note) => `<p class="votes-scope votes-coverage-note">${esc(note)}</p>`).join("")}
     ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
     ${sourceLineHTML({
       updated: votes?._meta?.content_changed_at || "",

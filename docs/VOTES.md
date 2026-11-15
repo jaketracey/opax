@@ -552,7 +552,9 @@ Expected finish ≈ 2.5 h after 10:17 AEST.
 ([SOURCES-ACCESS.md](SOURCES-ACCESS.md), 13 October 2026). Before the first content request the run
 read `robots.txt` (it names two Facebook crawlers only and disallows nothing) and the site's copyright
 and disclaimer pages (copyright, reuse beyond personal and research use by permission of the Presiding
-Officers; neither restricts automated reading).
+Officers; neither restricts automated reading). That run identified itself as `opax-improve-audit`, as the hub
+directed; the committed importer sends the shared OPAX agent through the shared transport's request, like
+every other source.
 
 | Step | Count |
 | --- | ---: |
@@ -567,9 +569,12 @@ Officers; neither restricts automated reading).
 The mismatch list (`data/staged/vic-divisions/mismatches.json`, each entry with its Hansard link, the
 stated and the parsed counts and the reason):
 
-- **unresolved-name, 109.** Every one is a Council division between December 2022 and December 2023 that
+- **unresolved-name, 109.** Every one is a Council division from 7 February 2023 to 30 November 2023 that
   lists Matthew Bach, who is in no committed roster file. The tallies of all 109 reconcile. Adding him to
-  the roster and running `parse` again (no fetch) would release them.
+  the roster and running `parse` again (no fetch) would release them. While they are held, `parse` writes
+  `portal/public/data/vote-coverage.json` (the count, the dates and the members those divisions name), and
+  the site says so on the coverage page and on the voting section of each of those members
+  (`voteCoverageText` in `portal/public/vote-tables.js`). An empty list removes the note.
 - **result-contradicts-tally, 3.** Hansard's own result line disagrees with the tally it prints:
   `vic-la-2023-02-23-4` (Ayes 52, Noes 28, "Question defeated.") and `vic-la-2023-11-30-5` and `-7`
   ("divided on omission (members in favour vote no)").

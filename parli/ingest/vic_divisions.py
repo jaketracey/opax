@@ -97,10 +97,10 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 class Fetcher:
     """One host, one identity, one request at a time, everything logged and cached."""
 
-    def __init__(self, cache: Path, user_agent: str, interval: float = MIN_INTERVAL, budget: int = 3000):
+    def __init__(self, cache: Path, interval: float = MIN_INTERVAL, budget: int = 3000):
         if interval < MIN_INTERVAL:
             raise ValueError(f"the interval may not be under {MIN_INTERVAL} seconds")
-        self.cache, self.user_agent, self.interval, self.budget = cache, user_agent, interval, budget
+        self.cache, self.user_agent, self.interval, self.budget = cache, source_http.USER_AGENT, interval, budget
         self.opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
         self.log = cache / "requests.log"
         self.last = 0.0
@@ -116,7 +116,8 @@ class Fetcher:
         wait = self.last + self.interval - time.monotonic()
         if wait > 0:
             time.sleep(wait)
-        req = urllib.request.Request(url, headers={"User-Agent": self.user_agent, "Accept": accept})
+        # The shared transport's request: it carries the one identifying OPAX agent and no other.
+        req = source_http.Request(url, headers={"Accept": accept})
         status, body = None, b""
         try:
             with self.opener.open(req, timeout=180) as resp:
@@ -206,7 +207,7 @@ def pdf_path(cache: Path, day: dict) -> Path:
 
 def run_fetch(args) -> None:
     cache = Path(args.cache).expanduser()
-    fetcher = Fetcher(cache, args.user_agent, args.interval, args.max_requests)
+    fetcher = Fetcher(cache, args.interval, args.max_requests)
     only = set(args.dates or [])
     todo = []
     for house in ("la", "lc"):
@@ -576,7 +577,9 @@ def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[
                         "online_url": day.get("online"), "division_line": printed_line,
                         "stated": {"ayes": stated.get("ayes"), "noes": stated.get("noes")},
                         "parsed": {"ayes": parsed.get("ayes"), "noes": parsed.get("noes")},
-                        "reasons": reasons, "unresolved_names": sorted(set(unresolved))})
+                        "reasons": reasons, "unresolved_names": sorted(set(unresolved)),
+                        # Whose vote counts lack this division while it is held: the members it names.
+                        "members": sorted({v["person_name"] for v in votes if v["roster_basis"]})})
         else:
             good.append(record)
     # A tally line no division line claimed would be a division the parser did not see.
@@ -648,6 +651,9 @@ def run_parse(args) -> None:
         for g in good:
             f.write(json.dumps(g, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n")
     (out / "mismatches.json").write_text(json.dumps(bad, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    if args.coverage_out and not only:
+        Path(args.coverage_out).write_text(
+            json.dumps(vote_coverage(bad), ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(json.dumps({k: v for k, v in manifest.items() if k != "files"}, indent=1, ensure_ascii=False))
 
@@ -684,6 +690,25 @@ def hold_published_conflicts(good: list[dict], published: Path) -> tuple[list[di
     return keep, out
 
 
+def vote_coverage(bad: list[dict]) -> dict:
+    """What member pages must say about held divisions: one note a house, for the unresolved-name hold.
+
+    A division held because one name is not in the roster is missing from the
+    vote counts of every other member it names. The note carries the count, the
+    dates and those members, so the site says it on their pages and on the
+    coverage page (portal/public/vote-tables.js voteCoverageNotes). No held
+    divisions, no notes."""
+    notes = []
+    for house in ("vic_la", "vic_lc"):
+        held = [b for b in bad if b["house"] == house and b["reasons"] == ["unresolved-name"]]
+        if held:
+            notes.append({"id": f"{house}-unresolved-name", "jurisdiction": "vic", "house": house,
+                          "reason": "unresolved-name", "held": len(held),
+                          "from": min(b["date"] for b in held), "to": max(b["date"] for b in held),
+                          "members": sorted({m for b in held for m in b.get("members", [])})})
+    return {"schema": 1, "source": "data/staged/vic-divisions/mismatches.json", "notes": notes}
+
+
 def read_staged(staged: Path) -> tuple[list[Division], list[Vote]]:
     """The reconciled divisions as the unified rows `votes_state` loads and the exporters read."""
     divisions, votes = [], []
@@ -713,7 +738,6 @@ def main() -> None:
     f.add_argument("--estimate", action="store_true", help="list the days and count the PDFs still to fetch, then stop")
     f.add_argument("--interval", type=float, default=MIN_INTERVAL)
     f.add_argument("--max-requests", type=int, default=3000)
-    f.add_argument("--user-agent", default=source_http.USER_AGENT)
     f.set_defaults(run=run_fetch)
     p = sub.add_parser("parse", help="cache -> reconciled divisions and the mismatch list (no requests)")
     p.add_argument("--cache", required=True)
@@ -722,6 +746,8 @@ def main() -> None:
     p.add_argument("--to", dest="end", default="9999-12-31")
     p.add_argument("--dates", nargs="*")
     p.add_argument("--report-only", action="store_true", help="print the counts, write nothing")
+    p.add_argument("--coverage-out", default=str(REPO_ROOT / "portal" / "public" / "data" / "vote-coverage.json"),
+                   help="where to write the held-division note for member pages ('' for none)")
     p.set_defaults(run=run_parse)
     u = sub.add_parser("unified", help="staged divisions -> the votes_state JSON shape")
     u.add_argument("--staged", default=str(REPO_ROOT / "data" / "staged" / "vic-divisions"))

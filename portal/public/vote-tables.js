@@ -96,6 +96,26 @@ export function voteScopeLine(shown, total, recorded = true) {
   if (m <= n) return `All ${fmt(n)} recorded division${n === 1 ? '' : 's'}.`;
   return `The ${n === 1 ? 'most recent' : `${fmt(n)} most recent`} of ${fmt(m)} recorded divisions.`;
 }
+export const VOTE_COVERAGE_PATH = '/data/vote-coverage.json';
+const COVERAGE_HOUSES = {vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council'};
+const COVERAGE_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const coverageDay = iso => { const [y, m, d] = String(iso ?? '').split('-').map(Number); return y && m && d ? `${d} ${COVERAGE_MONTHS[m - 1]} ${y}` : ''; };
+const coverageName = name => String(name ?? '').normalize('NFKD').replace(/[\u0300-\u036f'’‘ʼ`.]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+/** What a held-division note says, with its count and dates (public/data/vote-coverage.json, written by
+ *  parli/ingest/vic_divisions.py). `whose`: "this member's" on a person page, "members'" on a coverage page. */
+export function voteCoverageText(note, whose = 'members’') {
+  const held = Number(note?.held) || 0, house = COVERAGE_HOUSES[note?.house], from = coverageDay(note?.from), to = coverageDay(note?.to);
+  if (!held || !house || !from || !to || note.reason !== 'unresolved-name') return '';
+  const n = held.toLocaleString('en-AU');
+  return `${n} ${house} division${held === 1 ? '' : 's'} from ${from} to ${to} ${held === 1 ? 'is' : 'are'} not in this record, so ${whose} vote counts for that period are incomplete. ${held === 1 ? 'It is' : 'They are'} held back until a former member named in ${held === 1 ? 'it' : 'them'} is added to the OPAX roster.`;
+}
+/** The held-division notes that apply to a person: those whose held divisions name them (any of `names`). */
+export function voteCoverageNotes(coverage, names) {
+  const mine = new Set((Array.isArray(names) ? names : [names]).map(coverageName).filter(Boolean));
+  return (Array.isArray(coverage?.notes) ? coverage.notes : [])
+    .filter(note => (note.members || []).some(member => mine.has(coverageName(member))))
+    .map(note => voteCoverageText(note, 'this member’s')).filter(Boolean);
+}
 export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
   return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},

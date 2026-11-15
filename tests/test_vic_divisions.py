@@ -155,19 +155,49 @@ def test_a_tally_with_no_division_line_is_reported():
 
 def test_the_fetcher_keeps_to_one_host_and_a_two_second_interval(tmp_path):
     with pytest.raises(ValueError):
-        V.Fetcher(tmp_path, "opax-test", interval=0.5)
-    fetcher = V.Fetcher(tmp_path, "opax-test")
+        V.Fetcher(tmp_path, interval=0.5)
+    fetcher = V.Fetcher(tmp_path)
     for url in ("https://example.test/a.pdf", "http://www.parliament.vic.gov.au/a.pdf"):
         with pytest.raises(ValueError):
             fetcher._request(url, "*/*")
     assert fetcher.made == 0
 
 
+def test_a_request_carries_the_shared_identifying_agent_and_a_refusal_stops_the_run(tmp_path, monkeypatch):
+    from parli.ingest import http as source_http
+    import io, urllib.error
+    seen = []
+
+    class Opener:
+        def __init__(self, status): self.status = status
+        def open(self, req, timeout=None):
+            seen.append(dict(req.header_items()))
+            if self.status != 200:
+                raise urllib.error.HTTPError(req.full_url, self.status, "no", {}, io.BytesIO(b""))
+            class Resp(io.BytesIO):
+                def getcode(self): return 200
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+            return Resp(b"%PDF-1.7 body")
+
+    monkeypatch.setattr(V.time, "sleep", lambda s: None)
+    fetcher = V.Fetcher(tmp_path)
+    fetcher.opener = Opener(200)
+    assert fetcher._request("https://www.parliament.vic.gov.au/a.pdf", "application/pdf") == b"%PDF-1.7 body"
+    assert seen[0]["User-agent"] == source_http.USER_AGENT
+    for status in (403, 429):
+        fetcher.opener = Opener(status)
+        with pytest.raises(SystemExit) as stop:
+            fetcher._request("https://www.parliament.vic.gov.au/b.pdf", "application/pdf")
+        assert stop.value.code == 4
+    assert fetcher.made == 3 and len((tmp_path / "requests.log").read_text().splitlines()) == 3
+
+
 def test_a_cached_file_is_never_requested_again(tmp_path):
     path = tmp_path / "pdf" / "a.pdf"
     path.parent.mkdir()
     path.write_bytes(b"%PDF-1.7 cached")
-    fetcher = V.Fetcher(tmp_path, "opax-test")
+    fetcher = V.Fetcher(tmp_path)
     assert fetcher.get("https://www.parliament.vic.gov.au/a.pdf", path, "application/pdf", lambda b: True) == b"%PDF-1.7 cached"
     assert fetcher.made == 0 and not (tmp_path / "requests.log").exists()
 
@@ -182,6 +212,15 @@ def test_a_number_a_published_record_disputes_is_held_with_the_new_ids_after_it(
     assert [(h["id"][-1], h["reasons"]) for h in held] == [("2", ["numbering-differs-from-published"]),
                                                            ("3", ["numbering-differs-from-published"])]
     assert held[0]["published"] == {"ayes": 2, "noes": 1} and held[1]["published"] is None
+
+
+def test_the_coverage_note_names_the_members_whose_counts_lack_the_held_divisions():
+    _, bad = parse([*division(noes="Noes (1): Zed Unknown"), *division(ayes="Ayes (2): Ann Able, Cy Cole", noes="Noes (1): Zed Unknown"),
+                    *division(result="Question defeated.")])
+    (note,) = V.vote_coverage(bad)["notes"]
+    assert (note["house"], note["held"], note["from"], note["to"]) == ("vic_lc", 2, "2023-02-23", "2023-02-23")
+    assert note["members"] == ["Ann Able", "Bob Baker", "Cy Cole"]      # never the unresolved name
+    assert V.vote_coverage([b for b in bad if b["reasons"] != ["unresolved-name"]])["notes"] == []
 
 
 def staged(tmp_path, records):

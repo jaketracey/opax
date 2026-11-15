@@ -16,7 +16,7 @@ import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../p
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
-import {voteTableConfig, personVoteKeys, personVoteRecords, votingRows, voteTablePage, voteTableHTML, billDivisionTablesHTML, voteScopeLine} from '../public/vote-tables.js'
+import {voteTableConfig, personVoteKeys, personVoteRecords, votingRows, voteTablePage, voteTableHTML, billDivisionTablesHTML, voteScopeLine, voteCoverageNotes, VOTE_COVERAGE_PATH, type VoteCoverageNote} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
@@ -292,6 +292,9 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       config.id += '-ssr'
       const divisionsTotal = keys.reduce((sum,key)=>sum+(Number((voteData as Record<string,{divisions_total?: unknown}> | null)?.[key]?.divisions_total)||0),0)
       body += `<p class="votes-scope">${escapeHtml(voteScopeLine(votes.length,divisionsTotal,hasRecent))}</p>`
+      // Divisions held back from the record that name this member, with their count and dates.
+      for (const note of voteCoverageNotes(await optional<{notes: VoteCoverageNote[]}>(read,VOTE_COVERAGE_PATH),[p.name, ...(p.full ? [p.full] : [])]))
+        body += `<p class="votes-scope votes-coverage-note">${escapeHtml(note)}</p>`
       body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
       body += '<p>This list covers the votes in OPAX’s published data. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
       body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote data') : `${link('/votes.json','OPAX bill-vote data')} (They Vote For You and state Hansard)`}.</p>`
