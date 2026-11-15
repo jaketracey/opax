@@ -22,7 +22,7 @@ import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-30-clause-who'
+export const ANSWER_WRITING_VERSION = 'written-answer-31-each-fact-once'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
@@ -127,9 +127,10 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
   if (source) for (const note of notes) add(note, {...source,resource:'coverage-'+stableEvidenceKey(note),title:'Coverage of the selected records',snippet:note}, true)
   return dedupeWritingFacts(out).slice(0, 80)
 }
-/** The one statement a structured record holds, or null for a passage or a record with several lines. */
+/** The one statement a tool record holds. Null for a record with several lines and for any passage: a paragraph of a
+ *  speech, bill text or division is one part of its resource, and another paragraph of it is another fact. */
 function singleStatement(source:Pick<WritingFact['source'],'kind'|'snippet'>):string|null {
-  if(['speech','bill'].includes(source.kind))return null
+  if(source.kind!=='record')return null
   const lines=source.snippet.split(/\n+/).filter(line=>/\p{L}/u.test(line))
   return lines.length===1?lines[0]:null
 }
@@ -696,7 +697,6 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
     const from=Array.from(answer.slice(0,clause.start)).length,until=from+Array.from(clause.text).length
     seen.add(signature(written,clause.text,from,until));identities(written,clause.text,from,until).forEach(id=>claims.add(id))
   }
-  const writtenIds=Object.keys(citations)
   const append=(text:string,from:number,until:number)=>{
     if(answer)answer+='\n\n';const offset=Array.from(answer).length;answer+=text
     for(const [id,ranges] of Object.entries(points.citations))for(const [a,b] of ranges)if(a<until&&b>from)(citations[id]??=[]).push([offset+Math.max(a,from)-from,offset+Math.min(b,until)-from])
@@ -704,13 +704,6 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
   for(const part of points.answer.matchAll(/[^\n]+/g)) {
     const from=Array.from(points.answer.slice(0,part.index)).length,until=from+Array.from(part[0]).length,division=divisionLine(points,part[0],from,until)
     if(division){if(!seen.has(division)){seen.add(division);append(part[0],from,until)}continue}
-    // Each fact appears once: a point that is the record's own statement again, resting only on single-statement
-    // records the written answer already cites, is the same record and the same statement, so the written sentence
-    // stands for it. A point that says anything else from that record is a different claim and is always kept; the
-    // writer is told what the points say (WritingInput.said) so its own sentences leave those facts to them.
-    const rests=Object.entries(points.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<until&&b>from)).map(([id])=>points.sources.find(s=>id===s.resource||id.startsWith(s.resource+'/')))
-    const restated=(s:typeof rests[number])=>{const statement=s&&singleStatement(s);return !!statement&&writtenIds.some(id=>id===s.resource||id.startsWith(s.resource+'/'))&&(signedKey(statement)===signedKey(part[0].replace(/^[-*•]\s*/,''))||sameStatement(statement,part[0]))}
-    if(rests.length&&rests.every(restated))continue
     const line=part[0],base=part.index!,all=claimClauses(line),kept:typeof all=[]
     for(const clause of all){
       const from=Array.from(points.answer.slice(0,base+clause.start)).length,until=from+Array.from(clause.text).length

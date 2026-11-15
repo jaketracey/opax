@@ -42,9 +42,24 @@ const sentence='Jo Briskey has served as the Labor member for Maribyrnong in the
 const writtenWith=(recordText,stated)=>{const text=lead+'\n\n'+stated;return {answer:text,answer_decision:'answer',sources:[record(1,expenses,'https://opax.com.au/expenses/jo-briskey'),record(2,recordText,url)],citations:{'fact-1/t/body/0':[span(text,lead)],'fact-2/t/body/0':[span(text,stated)]}}};
 const pointsOn=(recordText,...claims)=>{const answer=claims.join('\n');return {answer,answer_decision:'answer',sources:[record(2,recordText,url)],citations:{'fact-2':claims.map(claim=>span(answer,claim))}}};
 
-test('a point that is the record\'s own statement again is not added after a written sentence citing that record',()=>{
- const out=api.appendWrittenPoints(writtenWith(service,sentence),pointsOn(service,service));
- assert.equal(out.answer,lead+'\n\n'+sentence);
+// Review of c54f0737e (rv-pr422, P1): the writer may state only part of a record, and is now asked to leave facts to
+// the model's points. A point repeating the record word for word must still bring the part the writer left out.
+test('a point repeating a record word for word keeps the total when the written answer gave only the caveat',()=>{
+ const caveat='The itemised travel lines for Jo Briskey for 2026 are not loaded.';
+ const written={answer:caveat,answer_decision:'answer',sources:[record(1,expenses,'https://opax.com.au/expenses/jo-briskey')],citations:{'fact-1/t/body/0':[span(caveat,caveat)]}};
+ const points={answer:expenses,answer_decision:'answer',sources:[record(1,expenses,'https://opax.com.au/expenses/jo-briskey')],citations:{'fact-1':[span(expenses,expenses)]}};
+ const out=api.appendWrittenPoints(written,points);
+ assert.match(out.answer,/\$318,774/,'the total is only in the point, so the point stays');
+ assert.ok(out.answer.startsWith(caveat));
+});
+// Review P2: one paragraph of a bill's text or of a division is a passage of a larger resource, not the whole record.
+test('a one-paragraph passage is not taken for the whole record: a fact from another paragraph of it is kept',()=>{
+ for(const kind of ['bill_text','division','speech']){
+  const paragraph='Section 12 requires the Minister to publish each determination within 14 days.',other='Section 30 sets a penalty of 60 penalty units for a failure to report.';
+  const answer=`${paragraph}\n${other}`,source={resource:'bill-7',slug:'bill-7',title:'Example Bill 2026',href:'https://opax.com.au/bill/example',url:'https://opax.com.au/bill/example',snippet:paragraph,cited:true,kind};
+  const facts=api.writingFacts({answer,answer_decision:'answer',sources:[source],citations:{'bill-7/t/body/0-80':[span(answer,paragraph)],'bill-7/t/body/900-970':[span(answer,other)]}});
+  assert.deepEqual(facts.map(f=>f.text),[paragraph,other],kind);
+ }
 });
 // The review question (rv-pr422): one record can carry two different claims. Neither may be lost.
 const twoClaims='Pat Example served in the Senate for Tasmania from 1 July 2019, ongoing as at 4 September 2026; Liberal until 12 March 2023, then Independent.';
