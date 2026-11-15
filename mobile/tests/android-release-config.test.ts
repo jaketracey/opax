@@ -136,12 +136,15 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 // Data; nothing else changed.
 // Re-pinned for 1.1.5: the only change is the version string (2 places per
 // variant); swapping it back to 1.1.4 gives the previous hashes exactly.
+// Re-pinned for universal links: development and production add
+// ios.associatedDomains ["applinks:opax.com.au"] and nothing else; e2e claims
+// no domain and keeps its hash.
 const iosPrebuildHashes = {
   development:
-    'f0de6408a53ad81abb3cec7833a0c3ea78be9cd5268535a828f0e4cec39dc3b1',
+    '34f9ed9fb287be2cd7607ed1709943054b7fdfae1399c7a69f386a71bda87f82',
   e2e: '9a4c5fa53ed1c34e1878d9c2dad2522f7438b9751ebf1977f7cdba82f849d2b7',
   production:
-    '053c27780dc558f5a9db1d53410a11e3657b948c62abf55142b6ea69ce3c90ee',
+    'cd1909262e8584d3ec99d4f799bd04a6929a56ad6c71e02d8f42fce94f114ae1',
 };
 test.each(variants)(
   'iOS %s prebuild output stays byte-identical to the baseline',

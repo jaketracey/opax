@@ -73,6 +73,7 @@ import {
 } from './people/FinancialBlocks';
 import { MemberVoteRow } from './people/MemberVoteRow';
 import { PersonNotFound } from './people/NotFound';
+import { webFallback } from '../navigation/web-fallback';
 import { officialPageItem, usePageActions } from './people/PageActions';
 import { ProfileHeader, type IdentityRow } from './people/ProfileHeader';
 import { MoreFromRecord, PersonDiary } from './people/Sections';
@@ -459,6 +460,11 @@ export function ProfileScreen({
           >
             {load.status === 'not-found' ? (
               <PersonNotFound
+                web={webFallback(
+                  `/subject/person/${encodeURIComponent(slug)}`,
+                  'Person',
+                  'person-not-found-web',
+                )}
                 onSearch={() =>
                   router.navigate({
                     pathname: '/search',

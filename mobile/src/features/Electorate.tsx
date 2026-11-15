@@ -58,6 +58,7 @@ import { symbols } from '../design/symbols';
 import { minimumTarget, rhythm } from '../design/tokens';
 import { glassBar, headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
+import { webFallback } from '../navigation/web-fallback';
 import {
   directoryRoute,
   electionRoute,
@@ -275,6 +276,11 @@ function ElectorateContent({
                 onPress: () => router.navigate(directoryRoute('electorate')),
                 testID: 'electorate-not-found-search',
               }}
+              secondary={webFallback(
+                `/subject/electorate/${encodeURIComponent(id)}`,
+                'Electorate',
+                'electorate-not-found-web',
+              )}
               testID="electorate-error"
             />
           </View>

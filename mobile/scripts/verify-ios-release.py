@@ -763,10 +763,15 @@ def verify_app(app, args):
     entitlements = plistlib.loads(command("/usr/bin/codesign", "-d", "--entitlements", ":-", str(app)))
     team = os.environ["APPLE_TEAM_ID"]
     app_identifier = team + ".au.com.opax.app"
+    # Universal links (app.config.ts ios.associatedDomains): the one claimed
+    # domain, and no other associated-domain service.
+    domains = "com.apple.developer.associated-domains"
     allowed = {"application-identifier", "com.apple.developer.team-identifier",
-               "keychain-access-groups", "get-task-allow", "beta-reports-active"}
+               "keychain-access-groups", "get-task-allow", "beta-reports-active", domains}
     embedded_bundles = nested_entitlements(app)
     check(set(entitlements) <= allowed, "every bundle checked: no special app entitlements or embedded entitlements")
+    check(entitlements.get(domains) == ["applinks:opax.com.au"],
+          "associated domains: universal links to opax.com.au only")
     check(entitlements.get("application-identifier") == app_identifier and
           entitlements.get("com.apple.developer.team-identifier") == team and
           entitlements.get("keychain-access-groups", [app_identifier]) == [app_identifier],
