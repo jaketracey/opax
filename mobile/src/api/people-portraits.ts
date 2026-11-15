@@ -111,7 +111,7 @@ export class PeoplePortraits {
   }): { info: PortraitInfo; localURI: string } | null {
     const request = PeoplePortraits.request(slug, name);
     const info = request ? this.resolved.get(request) : undefined;
-    const localURI = info ? this.cache.peek(info.key) : undefined;
+    const localURI = info ? this.cache.peek?.(info.key) : undefined;
     return info && localURI ? { info, localURI } : null;
   }
   async get({
