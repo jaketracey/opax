@@ -1,6 +1,6 @@
 import { AlphaType, ColorType } from '@shopify/react-native-skia';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text as NativeText } from 'react-native';
+import { StyleSheet, Text as NativeText, View } from 'react-native';
 import {
   useFrameCallback,
   useSharedValue,
@@ -20,6 +20,22 @@ import type {
 /** Accessible journey actions exercise the same selection/year callbacks as touch input. */
 export function MoneyTestHooks({ graph, onYear, onFocus }: MoneyTestHookProps) {
   if (!isE2E) return null;
+  // Loading: the same two buttons, laid out and not seen or pressed, so the
+  // card they sit in is its final height before the graph is in.
+  if (!graph)
+    return (
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        pointerEvents="none"
+        style={styles.unseen}
+      >
+        <Group>
+          <Button label="Show 2024 only" onPress={() => undefined} />
+          <Button label="Focus Labor" onPress={() => undefined} />
+        </Group>
+      </View>
+    );
   const year = graph.edges.some((e) => e.byYear?.['2024'])
     ? 2024
     : Math.max(
@@ -162,6 +178,7 @@ export const useMoneyMapPerf: MoneyMapPerf = (
 };
 
 const styles = StyleSheet.create({
+  unseen: { opacity: 0 },
   perf: {
     position: 'absolute',
     left: 0,
