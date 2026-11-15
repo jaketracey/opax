@@ -937,6 +937,23 @@ describe('the first frame has the loaded page’s layout', () => {
     expect(hosts(r, 'today-sitting')).toHaveLength(0);
   });
 
+  test('How parliament voted holds its place while its file is read, and is absent when the file is not there', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    const votesRead = pending<{ status: 'missing' }>();
+    mock.recentDivisions.mockReturnValue(votesRead.promise as never);
+    const r = await render(<Today />);
+    // Its heading and skeleton sit between Bills and Just declared, so the
+    // block is not inserted above Just declared when the file answers.
+    const order = blocks(r.root);
+    expect(order.indexOf('today-votes')).toBe(order.indexOf('today-bills') + 1);
+    expect(order.indexOf('today-declarations')).toBe(
+      order.indexOf('today-votes') + 1,
+    );
+    expect(hosts(r, 'today-votes-title')).not.toHaveLength(0);
+    await act(async () => votesRead.answer({ status: 'missing' }));
+    expect(blocks(r.root)).not.toContain('today-votes');
+  });
+
   test('A: the edition’s slot holds its skeleton until a read answers, so the edition is not inserted above Bills', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     mock.todayEdition.mockImplementation(() => new Promise(() => {}));

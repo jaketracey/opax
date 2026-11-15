@@ -376,6 +376,37 @@ describe('full-width daily cards', () => {
       });
     },
   );
+  test('while the photograph is looked up the archive card holds its own shape, and a failed photo keeps the frame', async () => {
+    jest.mocked(explore.pictures).mockReturnValue(new Promise(() => {}));
+    const { root } = await render(<DailyPair today={today} attempt={0} />);
+    const loading = host(root, 'today-archive-loading');
+    // The 4:3 frame, then the kicker, the year, three caption lines and
+    // the credit, each an unseen line of the real type: the loaded card
+    // lands on it (a 200 pt stand-in pushed the cards under it 150 pt).
+    expect(
+      StyleSheet.flatten(host(root, 'today-archive-loading-frame').props.style),
+    ).toMatchObject({ width: '100%', aspectRatio: 4 / 3 });
+    expect(
+      host(root, 'today-archive-loading-words')
+        .findAllByType(Text)
+        .map((node) => node.props.variant),
+    ).toEqual([
+      'footnote',
+      'tileFigure',
+      'secondary',
+      'secondary',
+      'secondary',
+      'footnote',
+    ]);
+    expect(loading.props.accessibilityLabel).toBe(
+      'Loading the archive photograph',
+    );
+    // A photo that cannot be loaded leaves its frame: nothing collapses.
+    const card = await render(
+      <ArchiveCard year={archiveYear(today)} picture={picture} />,
+    );
+    expect(card.root.findByType(Picture).props.failure).toBe('quiet');
+  });
   test('a missing archive leaves the full-width question', async () => {
     jest.mocked(explore.pictures).mockRejectedValue(new Error('offline'));
     const { root } = await render(<DailyPair today={today} attempt={1} />);
