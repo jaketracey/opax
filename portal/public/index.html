@@ -1203,7 +1203,7 @@
       <h2 id="about-who">Who makes it</h2>
       <p>OPAX is an independent, non-partisan project of Jake Tracey, of
       <a href="https://noice.net.au" rel="noopener">Noice</a>. Noice Pty Ltd publishes OPAX,
-      including the iPhone and iPad app. The speech retrieval uses
+      including the iPhone, iPad and Android app. The speech retrieval uses
       <a href="https://www.progress.com/agentic-rag" rel="noopener">Progress Agentic RAG</a>;
       the portal shares work with <a href="https://corpuskit.org" rel="noopener">CorpusKit</a>.</p>
 
@@ -1498,7 +1498,7 @@
     <section id="panel-privacy" class="panel policy-page" hidden aria-labelledby="privacy-title">
       <div class="ui-page-head">
       <h1 id="privacy-title">What OPAX collects and who receives it</h1>
-      <p class="ui-page-meta">Last updated 13 November 2026. This page covers the OPAX website and the
+      <p class="ui-page-meta">Last updated 15 November 2026. This page covers the OPAX website and the
       OPAX app for iPhone, iPad and Android.</p>
       <p class="ui-lede">The Open Parliamentary Accountability Exchange (OPAX) publishes the public
       record of Australian politics. Reading it needs no account. This page sets out what the OPAX
@@ -1513,16 +1513,19 @@
         request rates and refuse abusive traffic.</li>
         <li>The website counts visits with Google Analytics and PostHog, and sends PostHog
         anonymous error reports when a page goes wrong. They receive your IP address and details
-        of your browser, but never the words you type or the answers you get. The app has no
-        analytics.</li>
+        of your browser, but never the words you type or the answers you get. The app sends
+        PostHog counts of how it is used and reports of crashes and errors, which are not linked
+        to you. It sends no advertising identifier and never reads your device's own identifier;
+        it uses a random install ID that isn't linked to you.</li>
         <li>Questions, searches of the record's documents and search summaries go to the services
         that search the record and write answers. OPAX adds no account details to them.</li>
         <li>An account holds your email address and whatever you choose to write or save. Your
         email address is never shown to other members.</li>
         <li>Voice is optional. Your voice goes to ElevenLabs, a third-party AI provider, only
         during a call you start.</li>
-        <li>The app's App Store privacy label lists seven kinds of data. None is used to track
-        you; see <a href="#privacy-app">In the iPhone and iPad app</a>.</li>
+        <li>The app's App Store privacy label and its Google Play Data safety section list nine
+        kinds of data. None is used to track you; see <a href="#privacy-app">In the iPhone, iPad
+        and Android app</a>.</li>
         <li>You can delete your account, and what you wrote, at any time.</li>
         <li>OPAX shows no advertising and does not sell personal information.</li>
       </ul>
@@ -1531,7 +1534,7 @@
         <p class="ui-toc-head" id="privacy-contents-title">On this page</p>
         <ul>
           <li><a href="#privacy-reading">Reading the record</a></li>
-          <li><a href="#privacy-app">In the iPhone and iPad app</a></li>
+          <li><a href="#privacy-app">In the iPhone, iPad and Android app</a></li>
           <li><a href="#privacy-accounts">Community accounts</a></li>
           <li><a href="#voice">Talking to OPAX by voice</a></li>
           <li><a href="#privacy-deletion">Deleting your account</a></li>
@@ -1665,45 +1668,75 @@
       <p>The grants map loads its map tiles from OpenStreetMap's servers, which receive your IP
       address.</p>
 
-      <h2 id="privacy-app">In the iPhone and iPad app</h2>
-      <p>The OPAX app for iPhone and iPad needs no account to read, search or ask. It has no
-      analytics, no advertising and no tracking. It sends no device or advertising identifier,
-      and it contains no analytics, crash-reporting or advertising code from other companies. Its
+      <h2 id="privacy-app">In the iPhone, iPad and Android app</h2>
+      <p>The OPAX app for iPhone, iPad and Android needs no account to read, search or ask. It has no
+      advertising and no tracking. It sends no advertising identifier and never reads your device's
+      own identifier; it uses a random install ID that isn't linked to you. Through PostHog,
+      it counts which screens and features are used and sends a report when the app crashes or
+      hits an error. These go through opax.com.au, which passes your IP address on to PostHog in
+      the United States, as it does for the website. They carry no account details or anything
+      you type, are not linked to you, and cannot be turned off in the app. Its
       requests go only to opax.com.au, with your device's IP address, under the same limits and
       logs as the website (see <a href="#privacy-reading">Reading the record</a>). Pages the app
       opens on opax.com.au are the website, and the website sections above apply to them.</p>
 
-      <h3 id="privacy-app-label">The App Store privacy label</h3>
-      <p>The app's privacy label on the App Store lists the seven kinds of data below. None of it
-      is used to track you, and all of it is used only to make the app work: to sign you in, run
-      the features you use, limit abuse and keep the service running. The label counts every kind
-      as connected to your identity. For searches and server logs that is a cautious answer: they carry no
-      account details, but a log of a request you made while signed in could be matched to your
+      <h3 id="privacy-app-label">App Store privacy label and Google Play Data safety</h3>
+      <p>The app's privacy label on the App Store and its Data safety section on Google Play list
+      the nine kinds of data below, each under its App Store name, with its Google Play name in
+      brackets. None of it is used to track you. It is used to make the app work: to sign you in,
+      run the features you use, limit abuse and keep the service running. The PostHog counts and
+      crash reports are also used to see how the app is used and to fix faults.</p>
+      <p>The App Store label counts seven kinds as connected to your identity, and Device ID and
+      Crash Data as not linked to you. The App Store takes one answer for each kind, so Product
+      Interaction and Other Diagnostic Data count as connected, because of voice call records and
+      server logs, even though the PostHog counts and crash reports in them are not linked to you.
+      For searches and server logs, being connected is a cautious answer: they carry no account
+      details, but a log of a request you made while signed in could be matched to your
       account.</p>
+      <p>Google Play asks whether data is collected or shared, not whether it is linked to you.
+      Every kind below is collected, and none is shared: Google Play does not count data that a
+      company handles on OPAX's behalf, such as Cloudflare or PostHog, as shared. Because the
+      PostHog counts and crash reports carry no account details, deleting your account does not
+      delete them; PostHog keeps them for the retention period of OPAX's account with it.</p>
       <ul class="about-list" id="privacy-app-data">
-        <li><strong>Email Address</strong> (contact info): the address you sign in with, kept with
+        <li><strong>Email Address</strong> (contact info; Google Play: Email address): the address you sign in with, kept with
         your account until you delete it. See <a href="#privacy-accounts">Community
         accounts</a>.</li>
-        <li><strong>User ID</strong> (identifiers): your account's member ID, which sits behind
+        <li><strong>User ID</strong> (identifiers; Google Play: User IDs): your account's member ID, which sits behind
         your sign-in session and on your voice records and saved conversations.</li>
-        <li><strong>Audio Data</strong> (user content): your voice during a Talk call, which
+        <li><strong>Audio Data</strong> (user content; Google Play: Voice or sound recordings):
+        your voice during a Talk call, which
         streams through OPAX's server to ElevenLabs. OPAX keeps no recording; see
         <a href="#voice">Talking to OPAX by voice</a>.</li>
-        <li><strong>Other User Content</strong> (user content): the questions you ask in Ask,
+        <li><strong>Other User Content</strong> (user content; Google Play: Other user-generated
+        content): the questions you ask in Ask,
         which go to Progress and a language model reached through OpenRouter once you agree, and,
         while you are signed in, the conversations copied to your account; and the words of a
         Talk call, spoken or typed, which go to ElevenLabs.</li>
-        <li><strong>Product Interaction</strong> (usage data): for each voice call, the seconds
-        reserved and charged and when it started and ended, which count your 10 minutes.</li>
-        <li><strong>Search History</strong>: the words you search for, which travel in the
+        <li><strong>Product Interaction</strong> (usage data; Google Play: App interactions): for
+        each voice call, the seconds reserved and charged and when it started and ended, which
+        count your 10 minutes; and the PostHog counts of how the app is used: which screens are
+        opened and which features, such as Ask, search, follows and sharing, are used, with
+        timings and result counts. The counts are not linked to you.</li>
+        <li><strong>Search History</strong> (Google Play: In-app search history): the words you search for, which travel in the
         request's address and so are kept in OPAX's server logs for 7 days. Searches of the
         record's documents also go to Progress.</li>
-        <li><strong>Other Diagnostic Data</strong> (diagnostics): OPAX's server logs record each
+        <li><strong>Other Diagnostic Data</strong> (diagnostics; Google Play: Diagnostics): OPAX's
+        server logs record each
         request's address, time and outcome and are kept for 7 days. Cloudflare may also record
         your IP address with a log entry. Cloudflare's traffic and security analytics record
         requests with their IP addresses for up to 31 days. Rate limits also read your IP address.
         OPAX uses this data only for security, to limit abuse and to keep the service
-        running.</li>
+        running. PostHog's counts and crash reports also carry the app's version, its operating
+        system and whether the device is a phone or a tablet.</li>
+        <li><strong>Device ID</strong> (identifiers; Google Play: Device or other IDs): a random
+        install ID that PostHog's code makes in the app and keeps on your device, so that the
+        app's counts and crash reports can be grouped. It is not your device's own identifier or
+        its advertising identifier, and it is not linked to you.</li>
+        <li><strong>Crash Data</strong> (diagnostics; Google Play: Crash logs): when the app
+        crashes or hits an error, a report of the kind of error, a shortened message with quoted
+        text, web and email addresses and long numbers removed, and the place in the app's code
+        where it happened. Reports are not linked to you.</li>
       </ul>
 
       <h3>What the app sends, and where</h3>
@@ -1736,7 +1769,7 @@
       <h3>What the app does not collect</h3>
       <ul class="about-list">
         <li><strong>Your location.</strong> If you use Use my location when picking your
-        electorate, iOS asks for your permission, and the app then uses one reading of your
+        electorate, your device asks for your permission, and the app then uses one reading of your
         location, on your device, to suggest an electorate. Your location is never sent to OPAX
         or anyone else, and is not stored: the app downloads every electorate's outline before it
         reads your location, so its requests are the same wherever you are, and only the
@@ -1747,11 +1780,14 @@
         setting, the records kept for offline reading, and your conversations with OPAX until you
         sign in. None of these is sent anywhere.</li>
         <li><strong>Nothing else:</strong> no messages, contacts, photos, health, financial or
-        purchase details, crash reports or device identifiers. Source links open in a Safari view that the
-        app cannot read, so it records no browsing history.</li>
+        purchase details. The app sends no advertising identifier and never reads your device's
+        own identifier; it uses a random install ID that isn't linked to you. Source links open
+        in a Safari view on iPhone
+        and iPad, or in a Custom Tab of your browser on Android, which the app cannot read, so it
+        records no browsing history.</li>
       </ul>
-      <p>The companies that receive data from the app are Cloudflare, ElevenLabs, Progress
-      Agentic RAG and OpenRouter, under <a href="#privacy-providers">Who else receives
+      <p>The companies that receive data from the app are Cloudflare, ElevenLabs, PostHog,
+      Progress Agentic RAG and OpenRouter, under <a href="#privacy-providers">Who else receives
       data</a>.</p>
 
       <h2 id="privacy-accounts">Community accounts</h2>
@@ -1788,8 +1824,9 @@
       code, with your email address, and deletes them a day or more after they expire, during
       later sign-in requests.</p>
       <p>Signing in starts a session that lasts up to 30 days. On the website it is held in a
-      secure cookie that page scripts cannot read; if you sign in to the app, it is held in the
-      device's Keychain, on that device only. OPAX stores a hash of the session token, the account it
+      secure cookie that page scripts cannot read. If you sign in to the app, it is held on that
+      device only: in the Keychain on an iPhone or iPad, and encrypted with a key kept in the
+      Android Keystore on Android. OPAX stores a hash of the session token, the account it
       belongs to, when it started and ends, and whether it began on the website or in the app.
       It does not store your IP address or device details with a session. You can sign out on
       one device or on every device.</p>
@@ -1816,8 +1853,9 @@
       <p>OPAX uses your microphone only during a call you start. On the website, opening the
       voice panel does not touch the microphone: it starts when you choose Start talking, and
       stops when the call ends, when you close the panel and when you leave the tab. If you use
-      voice in the app, you agree to the terms in this section once, then iOS asks for microphone
-      permission the first time you start a call. Your agreement is stored on your device; you can withdraw it
+      voice in the app, you agree to the terms in this section once, then your device asks for
+      microphone permission the first time you start a call (on Android, after the app explains
+      why it needs it). Your agreement is stored on your device; you can withdraw it
       at any time on the voice screen, and the app asks again before your next call. A call ends
       when you leave the app.</p>
       <h3>What is sent, and to whom</h3>
@@ -1924,8 +1962,9 @@
         <li><strong>Google</strong>, through Analytics and Tag Manager, receives page addresses,
         the events and browser details listed above and your IP address, on the website
         only.</li>
-        <li><strong>PostHog</strong> receives the same events and browser details, and your IP
-        address forwarded by OPAX's server, on the website only, in the United States.</li>
+        <li><strong>PostHog</strong> receives the same events and browser details from the
+        website, the app's counts and crash reports, and your IP address forwarded by OPAX's
+        server with both, in the United States.</li>
         <li><strong>OpenStreetMap</strong> receives your IP address when the grants map loads its
         tiles.</li>
         <li><strong>YouTube</strong>: on the website, a page with a Senate video loads its
@@ -1945,7 +1984,7 @@
 
       <h2 id="privacy-contact">Questions and requests</h2>
       <p>OPAX is an independent side project of Jake Tracey. Noice Pty Ltd publishes it, including
-      the app on the App Store, and is responsible for this policy.</p>
+      the app on the App Store and Google Play, and is responsible for this policy.</p>
       <p>For questions about your personal information, or a request to see, correct or delete
       it, email <a href="mailto:privacy@opax.com.au">privacy@opax.com.au</a>. For help with OPAX,
       email <a href="mailto:support@opax.com.au">support@opax.com.au</a>. You can also do most
@@ -1975,7 +2014,7 @@
     <section id="panel-support" class="panel policy-page" hidden aria-labelledby="support-title">
       <div class="ui-page-head">
       <h1 id="support-title">Help with OPAX</h1>
-      <p class="ui-lede">Help with the OPAX website and the OPAX app for iPhone and iPad: how to reach
+      <p class="ui-lede">Help with the OPAX website and the OPAX app for iPhone, iPad and Android: how to reach
       us, how to report a correction, signing in, and deleting your account.</p>
       <p class="ui-lede">The Open Parliamentary Accountability Exchange brings together Australian parliamentary
       speeches, votes, political funding and public disclosures, and links each record to its
@@ -2042,8 +2081,8 @@
         account page on the website, or on every device from your account page on the
         website.</li>
         <li><strong>Voice.</strong> Each account has 10 minutes of voice in total. Voice needs
-        microphone access, which you can turn on or off in your browser's settings, or for the
-        app in the Settings app.</li>
+        microphone access, which you can turn on or off in your browser's settings or, for the
+        app, in your device's Settings app, under Apps, then OPAX.</li>
         <li><strong>Saved conversations.</strong> While you are signed in, your conversations
         with OPAX are kept in your account. Delete one, or all of them, from Your conversations
         in Ask.</li>
@@ -2291,7 +2330,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=e3ca1e6185" defer></script>
+<script src="/spa-shell.js?v=ccb80ea027" defer></script>
 <script src="/navigation.js?v=ef10977b21" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
