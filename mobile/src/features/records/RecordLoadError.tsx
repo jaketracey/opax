@@ -10,6 +10,7 @@ import {
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { openSource, webPageUrl } from '../../navigation/external';
+import { SavedShelf, useSavedShelf } from './SavedShelf';
 
 /** Is the failure the device being offline (or too slow to reach OPAX)? */
 export const isOffline = (error: unknown) =>
@@ -72,6 +73,8 @@ export function MissingRecord({
  * reason, in plain words. A link that names no record, a record OPAX doesn't
  * hold, the device offline, or a read that failed, with Try again where
  * trying again can help and the web reader for a record the app can't read.
+ * Offline, the message is followed by the records already saved on this
+ * device (SavedShelf), so the reader has somewhere to go.
  */
 export function RecordLoadError({
   error,
@@ -90,8 +93,12 @@ export function RecordLoadError({
   sheet?: boolean;
   testID?: string;
 }) {
-  if (isMissingRecord(error, slug, subject))
-    return <MissingRecord sheet={sheet} testID={testID} />;
+  const missing = isMissingRecord(error, slug, subject);
+  const gone = error instanceof ApiError && error.code === 'not-found';
+  // Offline, on a page (a sheet has no stack to push a record on): the
+  // records already saved on this device, read before this view is drawn.
+  const shelf = useSavedShelf(!missing && !gone && !sheet && isOffline(error));
+  if (missing) return <MissingRecord sheet={sheet} testID={testID} />;
   if (error instanceof ApiError && error.code === 'not-found')
     return (
       <ContentUnavailable
@@ -100,8 +107,10 @@ export function RecordLoadError({
         testID={testID}
       />
     );
-  if (isOffline(error))
-    return (
+  if (isOffline(error)) {
+    // Whole on its first frame: the shelf is decided, then the view drawn.
+    if (shelf === undefined) return null;
+    const message = (
       <ContentUnavailable
         symbol="wifi.slash"
         title={`Not saved on this ${thisDevice()} yet`}
@@ -110,6 +119,17 @@ export function RecordLoadError({
         testID={testID}
       />
     );
+    if (!shelf.length) return message;
+    return (
+      <View style={{ gap: rhythm.group }}>
+        {message}
+        <SavedShelf
+          items={shelf}
+          testID={testID ? `${testID}-saved` : undefined}
+        />
+      </View>
+    );
+  }
   const web =
     slug && error instanceof ApiError && error.code === 'invalid-data'
       ? webPageUrl(`/doc/${slug}`)
