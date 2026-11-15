@@ -7,6 +7,7 @@ import {
 } from 'expo-router/react-navigation';
 import {
   ActionSheetIOS,
+  AppState,
   Dimensions,
   Platform,
   RefreshControl,
@@ -22,7 +23,13 @@ import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
 import { rhythm } from '../src/design/tokens';
-import { sinceWords } from '../src/features/today/SinceLastVisit';
+import {
+  LONGEST_LINE,
+  sinceSourceWords,
+  sinceWords,
+} from '../src/features/today/SinceLastVisit';
+import * as sheets from '../src/navigation/sheets';
+import { router } from 'expo-router';
 import { recentRecordsRoute } from '../src/navigation/routes';
 import {
   readVisit,
@@ -96,6 +103,7 @@ jest.mock('../src/api/runtime', () => ({
     todayEditionSaved: jest.fn(async () => null),
     // The collection record: unreadable unless a test publishes one.
     corpus: jest.fn(),
+    corpusSaved: jest.fn(async () => null),
   },
 }));
 jest.mock('../src/features/vic-election/reads', () => ({
@@ -317,6 +325,7 @@ function setUp({
   mock.todayEdition.mockResolvedValue(edition);
   mock.todayEditionSaved.mockResolvedValue(null);
   mock.corpus.mockRejectedValue(new Error('offline'));
+  mock.corpusSaved.mockResolvedValue(null);
   mock.sittingDaysSaved.mockResolvedValue(null);
   mock.todayBills.mockImplementation(async (limit = 3, kind = 'new') =>
     c.recentBillsFor(bills, limit, kind),
@@ -1108,6 +1117,12 @@ describe('the first frame has the loaded page’s layout', () => {
 describe('since your last visit', () => {
   const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
     r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  const flat = (n: ReactTestInstance) =>
+    (StyleSheet.flatten(
+      typeof n.props.style === 'function'
+        ? n.props.style({ pressed: false })
+        : n.props.style,
+    ) ?? {}) as Record<string, unknown>;
   const corpus = (total: number, checkedAt: string) =>
     ({
       data: { expected_resources: total, refresh: { checked_at: checkedAt } },
@@ -1122,6 +1137,19 @@ describe('since your last visit', () => {
       answer = resolve;
     });
     return { promise, answer };
+  };
+  /** A last visit, and the collection record saved then. */
+  const visited = async (total = 1000, checkedAt = longAgo()) => {
+    await rememberVisit({ openedAt: 1, total, checkedAt });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpusSaved.mockResolvedValue(corpus(total, checkedAt));
+    return checkedAt;
+  };
+  const leaveAndReturn = async () => {
+    const blur = mockFocusEffects
+      .map((effect) => effect() as unknown)
+      .filter((left): left is () => void => typeof left === 'function');
+    await act(async () => blur.forEach((leave) => leave()));
   };
 
   test('the first ever launch draws no line and holds no place; it keeps the visit on the device', async () => {
@@ -1139,123 +1167,193 @@ describe('since your last visit', () => {
   });
 
   test('a later visit: the place is held from the first frame, then states the count with its source and opens Just added', async () => {
-    const checked = longAgo();
-    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: checked });
-    setUp({ cached: { date: addDays(today, -1) } });
+    await visited();
     const read = pendingRead();
     mock.corpus.mockReturnValue(read.promise as never);
     const r = await render(<Today />);
-    // The record is still out: the line's place is already under the date.
+    // The record is still out: the line's place is already under the date,
+    // unseen, unread and not a button yet.
     const held = hosts(r, 'today-since-reserved');
-    expect(held).toHaveLength(1);
-    expect(held[0]!.props.accessible).toBe(false);
-    expect(StyleSheet.flatten(held[0]!.props.style)).toMatchObject({
-      opacity: 0,
-    });
+    expect(held).not.toHaveLength(0);
+    const place = held.at(-1)!;
+    expect(place.props.accessible).toBe(false);
+    expect(place.props.importantForAccessibility).toBe('no-hide-descendants');
     expect(
-      hosts(r, 'today-masthead')[0]!.findAll((n) => n === held[0]),
+      hosts(r, 'today-masthead')[0]!.findAll((n) => n === place),
     ).toHaveLength(1);
+    expect(hosts(r, 'today-since-words')).toHaveLength(0);
+    const box = flat(place);
     await act(async () =>
       read.answer(corpus(1412, '2026-11-15T03:00:00+00:00')),
     );
     expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
-    const line = hosts(r, 'today-since')[0]!;
+    const line = hosts(r, 'today-since').at(-1)!;
+    // The same box, before and after: nothing under it moves.
+    expect(flat(line)).toEqual(box);
     expect(line.props.accessibilityRole).toBe('link');
     expect(line.props.accessibilityLabel).toBe(
       '412 more records in OPAX since your last visit. As at 15 Nov 2026, OPAX collection coverage record.',
     );
     expect(line.props.accessibilityLabel).not.toMatch(/—|–/);
     expect(line.props.accessibilityHint).toBe('Opens Just added');
-    // It opens Just added, and the sources on touch and hold.
-    let owner: ReactTestInstance | null = line;
-    while (owner && owner.props.href === undefined) owner = owner.parent;
-    expect(owner!.props.href).toBe(recentRecordsRoute);
-    expect(owner!.props.menu.map((m: { title: string }) => m.title)).toEqual([
-      'Sources',
-    ]);
+    // It opens Just added; touch and hold, or its action, opens the sources.
+    jest.mocked(router.push).mockClear();
+    const owner = r.root.findAll(
+      (n) => n.props.testID === 'today-since' && !!n.props.onPress,
+    )[0]!;
+    act(() => owner.props.onPress());
+    expect(router.push).toHaveBeenCalledWith(recentRecordsRoute);
+    const present = jest
+      .spyOn(sheets, 'presentSource')
+      .mockImplementation(() => undefined);
+    try {
+      act(() => owner.props.onLongPress());
+      expect(present).toHaveBeenCalledTimes(1);
+      expect(present.mock.calls[0]![0]).toMatchObject({
+        asOf: '2026-11-15T03:00:00+00:00',
+        citation: 'OPAX collection coverage record',
+        originals: [{ url: '/corpus.json' }],
+      });
+      expect(line.props.accessibilityActions).toEqual([
+        { name: 'sources', label: 'Sources' },
+      ]);
+      act(() =>
+        owner.props.onAccessibilityAction({
+          nativeEvent: { actionName: 'sources' },
+        }),
+      );
+      expect(present).toHaveBeenCalledTimes(2);
+    } finally {
+      present.mockRestore();
+    }
     // The visit kept for next time is this one.
     await expect(readVisit()).resolves.toMatchObject({ total: 1412 });
   });
 
+  test('the place is as tall as the longest line can be: the unseen longest copy sets its size and the line is drawn over it', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1001, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    // The size comes from the longest copy, in the line's own type, inside
+    // the line's own box (its padding and hug), never from the line drawn.
+    const size = hosts(r, 'today-since-place').at(-1)!;
+    const sizer = r.root.findAll(
+      (n) => n.type === Text && n.props.testID === 'today-since-place',
+    )[0]!;
+    expect(sizer.props.children).toBe(LONGEST_LINE);
+    expect(sizer.props.variant).toBe('secondary');
+    expect(StyleSheet.flatten(size.props.style)).toMatchObject({ opacity: 0 });
+    const source = sinceSourceWords('2026-09-28');
+    for (const words of [
+      sinceWords(0),
+      sinceWords(1),
+      sinceWords(1234),
+      sinceWords(8_888_888),
+    ])
+      expect(LONGEST_LINE.length).toBeGreaterThanOrEqual(
+        `${words}. ${source}`.length,
+      );
+    // The drawn line takes no space of its own: it sits over the place, at
+    // the place's width, so a shorter line leaves the box as it was.
+    const drawnText = r.root.findAll(
+      (n) => n.type === Text && n.props.testID === 'today-since-words',
+    )[0]!;
+    expect(drawnText.props.variant).toBe(sizer.props.variant);
+    expect(drawnText.props.maxFontSizeMultiplier).toBe(
+      sizer.props.maxFontSizeMultiplier,
+    );
+    expect(StyleSheet.flatten(drawnText.props.style)).toMatchObject({
+      position: 'absolute',
+      left: rhythm.tight,
+      right: rhythm.tight,
+    });
+    expect(flat(hosts(r, 'today-since').at(-1)!)).toMatchObject({
+      paddingHorizontal: rhythm.tight,
+      marginHorizontal: -rhythm.tight,
+    });
+  });
+
   test('a held place is never left blank: a total that did not grow says so, with the same source and link', async () => {
-    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
-    setUp({ cached: { date: addDays(today, -1) } });
+    await visited();
     // The total fell: never a negative or a "fewer" line.
     mock.corpus.mockResolvedValue(corpus(990, '2026-11-15T03:00:00+00:00'));
     const r = await render(<Today />);
     expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
-    const line = hosts(r, 'today-since')[0]!;
+    const line = hosts(r, 'today-since').at(-1)!;
     expect(line.props.accessibilityLabel).toBe(
       'The OPAX record count hasn’t grown since your last visit. As at 15 Nov 2026, OPAX collection coverage record.',
     );
     expect(line.props.accessibilityRole).toBe('link');
     expect(line.props.accessibilityHint).toBe('Opens Just added');
-    let owner: ReactTestInstance | null = line;
-    while (owner && owner.props.href === undefined) owner = owner.parent;
-    expect(owner!.props.href).toBe(recentRecordsRoute);
-    expect(owner!.props.menu.map((m: { title: string }) => m.title)).toEqual([
-      'Sources',
-    ]);
-    // The same total says the same.
-    await rememberVisit({ openedAt: 1, total: 990, checkedAt: longAgo() });
-    setUp({ cached: { date: addDays(today, -1) } });
-    mock.corpus.mockResolvedValue(corpus(990, '2026-11-15T03:00:00+00:00'));
-    const same = await render(<Today />);
-    expect(hosts(same, 'today-since')[0]!.props.accessibilityLabel).toMatch(
-      /^The OPAX record count hasn’t grown since your last visit\./,
-    );
-    // It stays when Today goes out of view and comes back.
-    const blur = mockFocusEffects
-      .map((effect) => effect() as unknown)
-      .filter((left): left is () => void => typeof left === 'function');
-    await act(async () => blur.forEach((leave) => leave()));
-    expect(hosts(same, 'today-since')).not.toHaveLength(0);
   });
 
-  test('a held place whose record could not be read has nothing true to say: it is given back out of view', async () => {
+  test('a record that cannot be reached: the saved copy answers with its own date, so a held place always ends in a line', async () => {
+    const checked = await visited(1000, '2026-11-13T03:00:00+00:00');
+    // setUp leaves the collection record unreachable.
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    expect(hosts(r, 'today-since').at(-1)!.props.accessibilityLabel).toBe(
+      'The OPAX record count hasn’t grown since your last visit. As at 13 Nov 2026, OPAX collection coverage record.',
+    );
+    await expect(readVisit()).resolves.toMatchObject({
+      total: 1000,
+      checkedAt: checked,
+    });
+  });
+
+  test('nothing saved on the device holds no place, and a count that arrives is never inserted', async () => {
     await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
     setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpus.mockResolvedValue(corpus(1412, '2026-11-15T03:00:00+00:00'));
     const r = await render(<Today />);
     expect(hosts(r, 'today-since')).toHaveLength(0);
-    expect(hosts(r, 'today-since-reserved')).toHaveLength(1);
-    const blur = mockFocusEffects
-      .map((effect) => effect() as unknown)
-      .filter((left): left is () => void => typeof left === 'function');
-    await act(async () => blur.forEach((leave) => leave()));
     expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
   });
 
   test('a visit soon after the last holds no place, and a count that arrives is never inserted', async () => {
-    await rememberVisit({
-      openedAt: 1,
-      total: 1000,
-      checkedAt: new Date().toISOString(),
-    });
-    setUp({ cached: { date: addDays(today, -1) } });
+    await visited(1000, new Date().toISOString());
     mock.corpus.mockResolvedValue(corpus(1412, new Date().toISOString()));
     const r = await render(<Today />);
     expect(hosts(r, 'today-since')).toHaveLength(0);
     expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
   });
 
-  test('a collection record that cannot be read draws no line and keeps the last visit', async () => {
-    const last = { openedAt: 1, total: 1000, checkedAt: longAgo() };
-    await rememberVisit(last);
-    setUp({ cached: { date: addDays(today, -1) } });
+  test('a drawn line stays for the life of the screen: leaving Today and coming back removes nothing', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1412, '2026-11-15T03:00:00+00:00'));
     const r = await render(<Today />);
-    expect(hosts(r, 'today-since')).toHaveLength(0);
-    await expect(readVisit()).resolves.toEqual(last);
+    const before = hosts(r, 'today-since').at(-1)!.props.accessibilityLabel;
+    await leaveAndReturn();
+    expect(hosts(r, 'today-since').at(-1)!.props.accessibilityLabel).toBe(
+      before,
+    );
+    // Nor does the app leaving the screen (it used to give the line back,
+    // and the page moved on return).
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1412, '2026-11-15T03:00:00+00:00'));
+    const again = await render(<Today />);
+    const listeners = (
+      AppState.addEventListener as unknown as {
+        mock?: { calls: [string, (state: string) => void][] };
+      }
+    ).mock;
+    await act(async () =>
+      (listeners?.calls ?? [])
+        .filter(([type]) => type === 'change')
+        .forEach(([, handler]) => handler('background')),
+    );
+    expect(hosts(again, 'today-since')).not.toHaveLength(0);
   });
 
   test('the count is the collection record’s, free to read: no paid read, and nothing but the catalogue is asked', async () => {
-    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
-    setUp({ cached: { date: addDays(today, -1) } });
+    await visited();
     mock.corpus.mockResolvedValue(corpus(1001, '2026-11-15T03:00:00+00:00'));
     const r = await render(<Today />);
     expect(mock.corpus).toHaveBeenCalledTimes(1);
     // No argument carries the last-open time anywhere.
     expect(mock.corpus.mock.calls[0]).toEqual([]);
-    expect(hosts(r, 'today-since')[0]!.props.accessibilityLabel).toMatch(
+    expect(mock.corpusSaved.mock.calls[0]).toEqual([]);
+    expect(hosts(r, 'today-since').at(-1)!.props.accessibilityLabel).toMatch(
       /^1 more record in OPAX since your last visit\./,
     );
   });

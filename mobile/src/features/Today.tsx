@@ -12,7 +12,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { AppState, RefreshControl, StyleSheet, View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { Block, EditionView, Electorate } from '../api/catalogs';
 import { apiClient, catalogs } from '../api/runtime';
 import { useOffline } from '../api/useOffline';
@@ -56,7 +56,12 @@ import {
   shapeKey,
   type TodayShape,
 } from './today/shape-store';
-import { SinceLine, useSinceLastVisit } from './today/SinceLastVisit';
+import {
+  readSavedCollection,
+  SinceLine,
+  useSinceLastVisit,
+  type Collection,
+} from './today/SinceLastVisit';
 import { SittingLine, useSitting } from './today/SittingLine';
 import { readVisit, type Visit } from './today/visit-store';
 import {
@@ -107,6 +112,8 @@ interface Launch {
   shape: TodayShape | null;
   /** The last visit kept on the device; null on the first ever launch. */
   visit: Visit | null;
+  /** The collection record saved on the device, or null with none. */
+  collection: Collection | null;
 }
 
 /**
@@ -147,10 +154,11 @@ function useLaunch(day: SydneyDate): Launch | null {
         overrideInvitationDates({ welcomeDeclinedAt: declined });
       // The guide card's setting is read with the dates, so the card is in
       // the page's first frame and is not inserted above the edition later.
-      const [invitation, shape, visit] = await Promise.all([
+      const [invitation, shape, visit, collection] = await Promise.all([
         readInvitationDates(),
         readTodayShape(),
         readVisit(),
+        readSavedCollection(),
         loadLearnSettings().catch(() => undefined),
       ]);
       if (active)
@@ -160,6 +168,7 @@ function useLaunch(day: SydneyDate): Launch | null {
           invitation,
           shape,
           visit,
+          collection,
         });
     })().catch(() => {
       if (active)
@@ -169,6 +178,7 @@ function useLaunch(day: SydneyDate): Launch | null {
           invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
           shape: null,
           visit: null,
+          collection: null,
         });
     });
     return () => {
@@ -398,17 +408,13 @@ export default function Today() {
   // (another page over it, another tab), where nothing is seen to move.
   const [visit, setVisit] = useState(0);
   useScreenFocus(useCallback(() => () => setVisit((n) => n + 1), []));
-  // "Since your last visit": held from the first frame or not at all. Its
-  // empty held place goes the same way, and the line itself is given back
-  // when the app leaves the screen: the next visit starts a new count.
-  const since = useSinceLastVisit(launch ? launch.visit : undefined, now);
-  const [left, setLeft] = useState(false);
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'background') setLeft(true);
-    });
-    return () => subscription.remove();
-  }, []);
+  // "Since your last visit": held from the first frame or not at all, and
+  // once drawn it stays for the life of the screen.
+  const since = useSinceLastVisit(
+    launch ? launch.visit : undefined,
+    launch?.collection ?? null,
+    now,
+  );
   // The cover lifts on the page in its order, not on an empty body, and
   // with the saved sitting line (or its held place) already under the date.
   const shaped = order !== null && calendar.settled;
@@ -633,7 +639,7 @@ export default function Today() {
             reserve={calendar.reserve}
           />
         }
-        since={left ? null : <SinceLine since={since} dropped={visit > 0} />}
+        since={<SinceLine since={since} />}
         // From the first frame, neutral until the seat read answers, so the
         // map's clearance never moves the date (sweep 3, item 1).
         mark={

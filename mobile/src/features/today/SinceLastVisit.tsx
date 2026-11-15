@@ -5,7 +5,6 @@ import { catalogs } from '../../api/runtime';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { formatDate, type DateInput } from '../../design/format';
 import { Pressable } from '../../design/pressable';
-import { RowLink } from '../../design/row-link';
 import { useRowHighlight } from '../../design/row-padding';
 import type { SourceDetails } from '../../design/source';
 import { Text } from '../../design/text';
@@ -19,25 +18,53 @@ import {
   type Visit,
 } from './visit-store';
 
+/** The collection record's two facts the line needs. */
+export interface Collection {
+  /** Its stated total of records. */
+  total: number;
+  /** Its own check date. */
+  checkedAt: string;
+}
+
 /** What the collection record answered for this visit. */
 export interface Since {
   /** More records than at the last visit; 0 when the total did not grow. */
   count: number;
-  /** The collection record's own check date; null when it was not read. */
-  checkedAt: string | null;
+  /** The collection record's own check date. */
+  checkedAt: string;
 }
 
 export interface SinceLastVisit {
   /** Null until the collection record answers. */
   answer: Since | null;
   /**
-   * Hold the line's place from the first frame: there was a last visit and
-   * a newer collection record has likely been published since. Decided once,
-   * from the disk, and never turned on later, so no line is inserted after
-   * the page is drawn.
+   * Hold the line's place from the first frame. Decided once, from the disk
+   * alone: there was a last visit, a copy of the collection record is saved
+   * on the device, and a newer one has likely been published since. It is
+   * never turned on later, so no line is inserted after the page is drawn;
+   * and with a saved copy there is always a dated record to cite, so a held
+   * place always ends in a line and is never given back.
    */
   hold: boolean;
 }
+
+/** The collection record as the device saved it, for the launch read. */
+export async function readSavedCollection(): Promise<Collection | null> {
+  try {
+    const record = await catalogs.corpusSaved();
+    return record ? collectionOf(record.data) : null;
+  } catch {
+    // A reader without saved copies has nothing saved.
+    return null;
+  }
+}
+const collectionOf = (data: {
+  expected_resources: number;
+  refresh: { checked_at: string };
+}): Collection => ({
+  total: data.expected_resources,
+  checkedAt: data.refresh.checked_at,
+});
 
 /**
  * Today's "since your last visit": how many more records the collection
@@ -45,18 +72,21 @@ export interface SinceLastVisit {
  *
  * - The count is the change in the total the collection's own public record
  *   states (`/corpus.json`, a free catalogue read: no paid read on launch).
- * - `last` is the visit the launch read from the device (undefined until
- *   the disk answers, null on the first ever launch). It is compared on the
- *   device and never sent anywhere.
- * - This visit is kept for the next launch once the record answers; a read
- *   that fails keeps the last visit as it was.
+ * - `last` is the visit, and `saved` the collection record, as the launch
+ *   read them from the device (`last` undefined until the disk answers, null
+ *   on the first ever launch). They are compared on the device; the visit
+ *   is never sent anywhere.
+ * - The record is read once. If it cannot be reached, the saved copy
+ *   answers, with its own date. This visit is then kept for the next launch.
  */
 export function useSinceLastVisit(
   last: Visit | null | undefined,
+  saved: Collection | null,
   now: Date,
 ): SinceLastVisit {
   const [visit, setVisit] = useState<{
     last: Visit | null;
+    saved: Collection | null;
     hold: boolean;
   } | null>(null);
   // Latched while rendering, once: a later launch read (the date rolling
@@ -64,24 +94,26 @@ export function useSinceLastVisit(
   if (visit === null && last !== undefined)
     setVisit({
       last,
-      hold: !!last && refreshLikely(last, now.getTime()),
+      saved,
+      hold: !!last && !!saved && refreshLikely(last, now.getTime()),
     });
   const [answer, setAnswer] = useState<Since | null>(null);
   useEffect(() => {
     if (!visit) return;
     let active = true;
+    const settle = (collection: Collection | null) => {
+      if (!collection) return;
+      void rememberVisit({ openedAt: Date.now(), ...collection });
+      if (active)
+        setAnswer({
+          count: moreSince(visit.last, collection.total),
+          checkedAt: collection.checkedAt,
+        });
+    };
     Promise.resolve()
       .then(() => catalogs.corpus())
-      .then((record) => {
-        const total = record.data.expected_resources;
-        const checkedAt = record.data.refresh.checked_at;
-        void rememberVisit({ openedAt: Date.now(), total, checkedAt });
-        if (active)
-          setAnswer({ count: moreSince(visit.last, total), checkedAt });
-      })
-      .catch(() => {
-        if (active) setAnswer({ count: 0, checkedAt: null });
-      });
+      .then((record) => settle(collectionOf(record.data)))
+      .catch(() => settle(visit.saved));
     return () => {
       active = false;
     };
@@ -93,6 +125,12 @@ export function useSinceLastVisit(
 export const COLLECTION_RECORD = 'OPAX collection coverage record';
 
 /**
+ * The held place is never left blank: a total that has not grown (the same,
+ * or smaller) is said as plainly, with the same source and the same link.
+ */
+const NO_GROWTH = 'The OPAX record count hasn’t grown since your last visit';
+
+/**
  * The line's words. The number is the change in the collection's stated
  * total, so it says "more records in OPAX", which is exactly what it is.
  */
@@ -100,12 +138,6 @@ export const sinceWords = (count: number) =>
   count > 0
     ? `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since your last visit`
     : NO_GROWTH;
-
-/**
- * The held place is never left blank: a total that has not grown (the same,
- * or smaller) is said as plainly, with the same source and the same link.
- */
-const NO_GROWTH = 'The OPAX record count hasn’t grown since your last visit';
 
 /** The line's source, in the line: the record's own check date and name. */
 export const sinceSourceWords = (checkedAt: DateInput) =>
@@ -131,30 +163,30 @@ export function sinceSources(since: Since): SourceDetails {
 }
 
 /**
- * Unseen words the length of the usual line, so the held place wraps as
- * the line will at every text size.
+ * The longest line the place can hold, never seen: the longer of the
+ * no-growth sentence and a count of seven digits, with the longest date. It
+ * is laid out in the line's own box and type, so the place is as tall as
+ * any line can be at this width and text size, and the line that arrives
+ * sits in it without moving anything.
  */
-const RESERVED_WORDS = `${sinceWords(400)}. ${sinceSourceWords('2026-11-16')}`;
+export const LONGEST_LINE = (() => {
+  const count = sinceWords(8_888_888);
+  const words = count.length > NO_GROWTH.length ? count : NO_GROWTH;
+  return `${words}. ${sinceSourceWords('2026-09-28')}`;
+})();
 
 /**
  * The line under Today's date: "412 more records in OPAX since your last
  * visit. As at 15 Nov 2026, OPAX collection coverage record." It opens Just
  * added; touch and hold (or its VoiceOver action) opens the sources.
  *
- * Nothing is drawn unless `hold` was set on the first frame. A held place
- * always ends in a true line: the count, or that the count hasn't grown.
- * Only while the record is read is it empty, and when the record could not
- * be read at all, where there is nothing true to say: Today gives that
- * place back once it is out of view (`dropped`).
+ * Nothing is drawn unless `hold` was set on the first frame. The place is
+ * one box from then on: the unseen longest line sets its size, and the line
+ * that arrives is drawn over it, so the box never grows or shrinks and the
+ * page under it never moves. Once drawn, the line stays for the life of the
+ * screen; the next cold launch works it out again.
  */
-export function SinceLine({
-  since,
-  dropped = false,
-}: {
-  since: SinceLastVisit;
-  /** Today is out of view, or was: an empty held place is given back. */
-  dropped?: boolean;
-}) {
+export function SinceLine({ since }: { since: SinceLastVisit }) {
   const fixed = useAccessibilitySize();
   const highlight = useRowHighlight();
   const [textHeight, setTextHeight] = useState<number>(
@@ -162,71 +194,69 @@ export function SinceLine({
   );
   if (!since.hold) return null;
   const answer = since.answer;
-  if (!answer || !answer.checkedAt)
-    return dropped && answer ? null : (
+  const words = answer ? sinceWords(answer.count) : '';
+  const source = answer ? sinceSourceWords(answer.checkedAt) : '';
+  const band = Math.max(0, (minimumTarget - textHeight) / 2);
+  const openSources = () => {
+    if (answer) presentSource(sinceSources(answer), { testID: 'today-since' });
+  };
+  return (
+    <Pressable
+      disabled={!answer}
+      accessible={!!answer}
+      accessibilityElementsHidden={!answer}
+      importantForAccessibility={answer ? 'yes' : 'no-hide-descendants'}
+      accessibilityRole="link"
+      accessibilityLabel={answer ? `${words}. ${source}` : undefined}
+      accessibilityHint="Opens Just added"
+      accessibilityActions={[{ name: 'sources', label: 'Sources' }]}
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'sources') openSources();
+      }}
+      testID={answer ? 'today-since' : 'today-since-reserved'}
+      onPress={() => router.push(recentRecordsRoute)}
+      onLongPress={openSources}
+      style={({ pressed }) => [
+        styles.line,
+        { marginVertical: -band, paddingVertical: band },
+        fixed ? styles.fixed : styles.hug,
+        pressed && answer ? { backgroundColor: highlight } : null,
+      ]}
+    >
       <Text
         wordSafe={fixed}
         variant="secondary"
         maxFontSizeMultiplier={sinceCap}
         accessible={false}
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={styles.reserved}
-        testID="today-since-reserved"
+        style={styles.unseen}
+        testID="today-since-place"
+        onTextLayout={(event) => {
+          const total = event.nativeEvent.lines.reduce(
+            (sum, l) => sum + l.height,
+            0,
+          );
+          if (total > 0 && Math.abs(total - textHeight) > 0.5)
+            setTextHeight(total);
+        }}
       >
-        {RESERVED_WORDS}
+        {LONGEST_LINE}
       </Text>
-    );
-  const words = sinceWords(answer.count);
-  const source = sinceSourceWords(answer.checkedAt);
-  const details = sinceSources(answer);
-  const band = Math.max(0, (minimumTarget - textHeight) / 2);
-  return (
-    <RowLink
-      href={recentRecordsRoute}
-      menu={[
-        {
-          title: 'Sources',
-          symbol: 'doc.text',
-          onPress: () => presentSource(details, { testID: 'today-since' }),
-        },
-      ]}
-    >
-      <Pressable
-        accessible
-        accessibilityRole="link"
-        accessibilityLabel={`${words}. ${source}`}
-        accessibilityHint="Opens Just added"
-        testID="today-since"
-        onPress={() => router.push(recentRecordsRoute)}
-        style={({ pressed }) => [
-          styles.line,
-          { marginVertical: -band, paddingVertical: band },
-          fixed ? styles.fixed : styles.hug,
-          pressed ? { backgroundColor: highlight } : null,
-        ]}
-      >
+      {answer ? (
         <Text
           wordSafe={fixed}
           variant="secondary"
           maxFontSizeMultiplier={sinceCap}
           accessible={false}
-          onTextLayout={(event) => {
-            const total = event.nativeEvent.lines.reduce(
-              (sum, l) => sum + l.height,
-              0,
-            );
-            if (total > 0 && Math.abs(total - textHeight) > 0.5)
-              setTextHeight(total);
-          }}
+          style={[styles.drawn, { top: band }]}
+          testID="today-since-words"
         >
           <Text variant="secondary" tone="link" testID="today-since-count">
             {words}
           </Text>
           {`. ${source}`}
         </Text>
-      </Pressable>
-    </RowLink>
+      ) : null}
+    </Pressable>
   );
 }
 
@@ -234,8 +264,15 @@ export function SinceLine({
 const sinceCap = 1.353;
 
 const styles = StyleSheet.create({
-  // The held place: laid out, never seen.
-  reserved: { opacity: 0 },
+  // The place's size: laid out, never seen.
+  unseen: { opacity: 0 },
+  // The line, over the place, inside the box's own padding: the same width
+  // as the unseen line, so it wraps no later than that one does.
+  drawn: {
+    position: 'absolute',
+    left: rhythm.tight,
+    right: rhythm.tight,
+  },
   line: {
     justifyContent: 'center',
     paddingHorizontal: rhythm.tight,
