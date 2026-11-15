@@ -12,8 +12,9 @@ import { localImageURI } from '../../api/image-policy';
 import { yearPictures } from '../../api/runtime';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { useReduceMotion } from '../../design/accessibility';
+import { Icon } from '../../design/icon';
 import { InlineError } from '../../design/primitives';
-import { HeightReveal } from '../../design/reveal';
+import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
 
@@ -23,7 +24,9 @@ export const PHOTO_BLACK = colors.photoGround;
 /**
  * One year photograph in its frame. Native Image reads only a device cache
  * file, fetched when the frame mounts. The frame keeps its shape from
- * placeholder to photo. Cards fail quietly; the full viewer offers Try again.
+ * placeholder to photo, and when the photo cannot be loaded: nothing under
+ * it ever moves. Cards fail quietly; Today's preview adds a faint mark; the
+ * full viewer offers Try again.
  */
 export function Picture({
   file,
@@ -41,8 +44,8 @@ export function Picture({
   rounded?: boolean;
   /** Cover previews use the native centred crop; viewers keep the whole photo. */
   resizeMode?: 'contain' | 'cover';
-  /** Collapse an unavailable preview without leaving an empty photo frame. */
-  failure?: 'quiet' | 'inline' | 'collapse';
+  /** `mark`: an unavailable preview keeps its frame, with a faint mark. */
+  failure?: 'quiet' | 'inline' | 'mark';
 }) {
   const [retry, setRetry] = useState(0);
   const [saved, setSaved] = useState<{
@@ -104,7 +107,7 @@ export function Picture({
   const identity = `${file}/${retry}`;
   const ready = !!uri && shown === identity;
   const key = yearPictureKey('/' + file);
-  const frame = (
+  return (
     <View
       testID={`tm-photo-${key}${ready ? '-loaded' : '-placeholder'}`}
       accessibilityIgnoresInvertColors
@@ -133,6 +136,16 @@ export function Picture({
             onError={() => current?.onDisplay?.(false)}
           />
         </Animated.View>
+      ) : null}
+      {current?.failed && failure === 'mark' ? (
+        <View
+          testID={`tm-photo-${key}-unavailable`}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={styles.failed}
+        >
+          <Icon name={symbols.photo} size={28} tone="inkFaint" />
+        </View>
       ) : null}
       {current?.failed && failure === 'inline' ? (
         <View style={styles.failed}>
@@ -163,14 +176,6 @@ export function Picture({
         </View>
       ) : null}
     </View>
-  );
-  if (failure !== 'collapse') return frame;
-  // A collapsing preview gives back its 4:3 frame smoothly, so the content
-  // below slides up instead of snapping (at once with Reduce Motion).
-  return (
-    <HeightReveal reduceMotion={reduced}>
-      {current?.failed ? null : frame}
-    </HeightReveal>
   );
 }
 const styles = StyleSheet.create({

@@ -8,6 +8,8 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
+import type { RecordResult } from '../../api/client';
+import type { Roster, Slugs } from '../../api/catalog-decoders';
 import { catalogs } from '../../api/runtime';
 import { useReduceMotionSetting } from '../../design/accessibility';
 import { Card } from '../../design/card';
@@ -45,11 +47,42 @@ export const FEATURED_HEADING = 'Featured parliamentarians';
 export const FEATURED_CONTEXT =
   'Today’s featured member, then one from each party. It changes daily.';
 
-/** Today keeps the edition's existing loading, absence and freshness rules. */
+/**
+ * The carousel's width as last measured, for the next mount's first frame
+ * (the card was drawn at the column's full width, then narrowed to leave
+ * the next card's peek, and its text wrapped again).
+ */
+let measuredWidth = 0;
+const rememberWidth = (width: number) => {
+  measuredWidth = width;
+};
+const rememberedWidth = () => measuredWidth;
+/** Tests only. */
+export function resetFeaturedWidthForTests() {
+  measuredWidth = 0;
+}
+
+/**
+ * Today keeps the edition's existing loading, absence and freshness rules.
+ *
+ * A featured parliamentarian's edition draws as the carousel from its first
+ * frame. The roster and slugs Today already holds (`held`, the seat's
+ * directory) name the people at once; without them the carousel's heading
+ * and the card's place are drawn while the read is on its way, so the
+ * heading is never inserted above a card the reader can already see.
+ */
 export function TodayEditionCard({
   attempt = 0,
+  held,
   ...props
-}: React.ComponentProps<typeof EditionCard> & { attempt?: number }) {
+}: React.ComponentProps<typeof EditionCard> & {
+  attempt?: number;
+  /** The roster and slugs already read, when the page has them. */
+  held?: {
+    roster: RecordResult<Roster>;
+    slugs: RecordResult<Slugs>;
+  } | null;
+}) {
   const edition = props.edition?.status === 'ready' ? props.edition.data : null;
   const tier =
     props.tier ?? (edition ? editionTier(edition.date, props.today) : null);
@@ -57,34 +90,71 @@ export function TodayEditionCard({
     edition?.kind === 'politician' && tier !== 'old'
       ? `${edition.date}:${edition.title}`
       : null;
+  // A read that failed is not on its way: the edition's own card stands.
+  const [failed, setFailed] = useState<string | null>(null);
   const read = useTodayRead(
     key,
     async (refresh) => {
-      const [roster, slugs] = await Promise.all([
-        catalogs.roster(refresh),
-        catalogs.slugs(refresh),
-      ]);
-      return { roster, slugs };
+      try {
+        const [roster, slugs] = await Promise.all([
+          catalogs.roster(refresh),
+          catalogs.slugs(refresh),
+        ]);
+        setFailed(null);
+        return { roster, slugs };
+      } catch (error) {
+        setFailed(key);
+        throw error;
+      }
     },
     attempt,
   );
+  const names = read ?? held ?? null;
   const people = useMemo(
     () =>
-      edition && read
-        ? featuredPeople(edition, read.roster.data, read.slugs.data)
+      edition && names
+        ? featuredPeople(edition, names.roster.data, names.slugs.data)
         : [],
-    [edition, read],
+    [edition, names],
   );
   if (tier === 'old') return null;
-  if (!people.length || !read) return <EditionCard {...props} />;
+  // The names are on their way: the carousel's frame, with the edition's
+  // card in the first card's place.
+  if (key && !names && failed !== key)
+    return (
+      <View testID="today-featured-pending" style={styles.carousel}>
+        <FeaturedHeading />
+        <View style={styles.pendingCard}>
+          <EditionCard {...props} />
+        </View>
+        <View style={styles.pageTarget} />
+      </View>
+    );
+  if (!people.length || !names) return <EditionCard {...props} />;
   return (
     <FeaturedPeopleCarousel
       key={`${key}:${people.map((person) => person.slug).join(',')}`}
       people={people}
       tier={tier ?? undefined}
       savedAt={props.edition?.stale ? props.edition.savedAt : null}
-      rosterSavedAt={read.roster.stale ? read.roster.savedAt : null}
+      rosterSavedAt={names.roster.stale ? names.roster.savedAt : null}
     />
+  );
+}
+
+/** The carousel's heading and its line of context. */
+function FeaturedHeading() {
+  return (
+    <View style={styles.heading}>
+      <SectionHeader
+        compact
+        title={FEATURED_HEADING}
+        testID="today-featured-title"
+      />
+      <Text wordSafe variant="secondary" testID="today-featured-context">
+        {FEATURED_CONTEXT}
+      </Text>
+    </View>
   );
 }
 
@@ -129,7 +199,7 @@ export function FeaturedPeopleCarousel({
   rosterSavedAt?: number | null;
 }) {
   const scroll = useRef<ScrollView>(null);
-  const [width, setWidth] = useState(0);
+  const [width, setWidth] = useState(rememberedWidth);
   const [page, setPage] = useState(0);
   // Which sides have a card running off them, followed through a swipe. Only
   // a side that flips sets state, so scrolling doesn't re-render every frame
@@ -179,6 +249,7 @@ export function FeaturedPeopleCarousel({
       style={styles.carousel}
       onLayout={(event) => {
         const nextWidth = event.nativeEvent.layout.width;
+        rememberWidth(nextWidth);
         setWidth(nextWidth);
         // Preserve the selected person through rotation or split-view resize.
         const x = page * (Math.max(1, nextWidth - trailing) + GAP);
@@ -186,16 +257,7 @@ export function FeaturedPeopleCarousel({
         scroll.current?.scrollTo({ x, animated: false });
       }}
     >
-      <View style={styles.heading}>
-        <SectionHeader
-          compact
-          title={FEATURED_HEADING}
-          testID="today-featured-title"
-        />
-        <Text wordSafe variant="secondary" testID="today-featured-context">
-          {FEATURED_CONTEXT}
-        </Text>
-      </View>
+      <FeaturedHeading />
       <View style={multiple ? styles.pages : undefined}>
         <ScrollView
           ref={scroll}
@@ -411,6 +473,9 @@ const styles = StyleSheet.create({
     width: PEEK + BLEED,
   },
   unmeasured: { width: '100%' },
+  // The first card's width in the carousel: the column less the next
+  // card's gap and peek.
+  pendingCard: { marginRight: GAP + PEEK },
   card: {
     flexGrow: 1,
     backgroundColor: colors.raised,

@@ -3,9 +3,9 @@ import { useAccessibilitySize } from '../../design/accessibility';
 import { Card } from '../../design/card';
 import { Icon } from '../../design/icon';
 import type { RowMenuAction } from '../../design/row-link';
-import { Skeleton } from '../../design/states';
+import { LoadingStatus } from '../../design/states';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { colors, radii, rhythm } from '../../design/tokens';
 import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { presentSheet } from '../../navigation/sheets';
@@ -87,6 +87,10 @@ function Kicker({
  * the caption up to three lines, expanding at accessibility text sizes,
  * and "Photo: {author} · {licence}", never clamped. One element; it opens
  * the Time machine on that year with that photograph first.
+ *
+ * The frame keeps its 4:3 shape whatever happens to the photograph: a
+ * photo that cannot be loaded leaves the frame with a faint mark. It used to give
+ * the frame back, and everything under the card moved up about 150 pt.
  */
 export function ArchiveCard({
   year,
@@ -127,7 +131,7 @@ export function ArchiveCard({
         ratio={4 / 3}
         rounded={false}
         resizeMode="cover"
-        failure="collapse"
+        failure="mark"
       />
       <View style={styles.words}>
         <Kicker symbol="clock.arrow.circlepath" ink="tint">
@@ -151,6 +155,56 @@ export function ArchiveCard({
         ) : null}
       </View>
     </Card>
+  );
+}
+
+/** One line of the archive card while it loads, as tall as the real line. */
+function Bone({
+  variant,
+  width,
+}: {
+  variant: 'footnote' | 'tileFigure' | 'secondary';
+  width: `${number}%`;
+}) {
+  return (
+    <View>
+      <Text variant={variant} numberOfLines={1} style={styles.boneLine}>
+        {'\u00a0'}
+      </Text>
+      <View style={[styles.boneBar, { width }]} />
+    </View>
+  );
+}
+
+/**
+ * The archive card while the day's photograph is looked up, in the card's
+ * own shape: the 4:3 frame, then the kicker, the year, three lines of
+ * caption and the credit. The loaded card lands on it, so the cards under
+ * it do not move (they were pushed down about 150 pt by a shorter stand-in).
+ */
+export function ArchiveSkeleton() {
+  return (
+    <LoadingStatus
+      accessibilityLabel="Loading the archive photograph"
+      testID="today-archive-loading"
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <Card padded={false} style={styles.card}>
+          <View testID="today-archive-loading-frame" style={styles.boneFrame} />
+          <View testID="today-archive-loading-words" style={styles.words}>
+            <Bone variant="footnote" width="40%" />
+            <Bone variant="tileFigure" width="25%" />
+            <Bone variant="secondary" width="100%" />
+            <Bone variant="secondary" width="100%" />
+            <Bone variant="secondary" width="60%" />
+            <Bone variant="footnote" width="70%" />
+          </View>
+        </Card>
+      </View>
+    </LoadingStatus>
   );
 }
 
@@ -217,13 +271,8 @@ export function DailyPair({
     <View testID="today-pair" style={styles.pair}>
       <SurfaceGrid testID="today-pair-grid" gap={12}>
         {loading ? (
-          <View style={[styles.cell, styles.loading]}>
-            <Skeleton
-              shape="card"
-              count={1}
-              label="Loading the archive photograph"
-              testID="today-archive-loading"
-            />
+          <View style={styles.cell}>
+            <ArchiveSkeleton />
           </View>
         ) : archive ? (
           <View style={styles.cell}>
@@ -243,7 +292,22 @@ export function DailyPair({
 const styles = StyleSheet.create({
   pair: { gap: 12, alignItems: 'stretch' },
   cell: { alignSelf: 'stretch' },
-  loading: { minHeight: 200 },
+  // The photograph's frame, as Picture draws it before the photo arrives.
+  boneFrame: {
+    width: '100%',
+    aspectRatio: 4 / 3,
+    backgroundColor: colors.sunken,
+  },
+  boneLine: { opacity: 0 },
+  boneBar: {
+    position: 'absolute',
+    left: 0,
+    top: 3,
+    bottom: 3,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
   card: { flexGrow: 0, flexShrink: 1 },
   words: { padding: 12, gap: rhythm.line },
   question: { gap: rhythm.tight },

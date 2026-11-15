@@ -3,7 +3,7 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Image, Platform, StyleSheet, Text as NativeText } from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
-import { HeightReveal, revealMotion } from '../src/design/reveal';
+import { HeightReveal } from '../src/design/reveal';
 import { colors } from '../src/design/tokens';
 import { router } from 'expo-router';
 import { Button, InlineError } from '../src/design/primitives';
@@ -108,20 +108,6 @@ jest.mock('../src/design/accessibility', () => ({
   useAccessibilitySize: () => false,
 }));
 
-/** Lays out a collapsing preview's reveal, as a device would. */
-function layOutFrame(renderer: TestRenderer.ReactTestRenderer, height: number) {
-  const content = renderer.root
-    .findByType(HeightReveal)
-    .find(
-      (n) =>
-        typeof n.type === 'string' && typeof n.props.onLayout === 'function',
-    );
-  act(() =>
-    content.props.onLayout({
-      nativeEvent: { layout: { x: 0, y: 0, width: 320, height } },
-    }),
-  );
-}
 const texts = (r: TestRenderer.ReactTestRenderer) =>
   r.root
     .findAllByType(NativeText)
@@ -440,7 +426,7 @@ test.each([
   },
 );
 
-test('a failed archive image collapses its empty frame and keeps its caption and credit', async () => {
+test('a failed archive image keeps its 4:3 frame, with a faint mark, and its caption and credit', async () => {
   const picture = manifest['2014']!.find((p) =>
     p.file.includes('march-in-march'),
   )!;
@@ -457,86 +443,37 @@ test('a failed archive image collapses its empty frame and keeps its caption and
   expect(yearPictures.get).toHaveBeenCalledWith(key, false);
   const image = renderer.root.findByType(Image);
   expect(image.props.source.uri).toBe(`file:///cache/${key}.webp`);
-  // Reduce Motion (this suite's default): the frame goes at once, with no
-  // height animation, even once it has measured.
+  const frame = () =>
+    renderer.root.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.testID === `tm-photo-${key}-placeholder`,
+    );
+  const before = StyleSheet.flatten(frame()[0]!.props.style);
+  // The frame used to close its height and pull the page under it up about
+  // 150 pt (jumpiness, Today). It keeps its shape, and nothing animates.
   const heights = jest.spyOn(Reanimated, 'withTiming');
-  layOutFrame(renderer, 240);
   act(() => image.props.onError());
   expect(heights).not.toHaveBeenCalled();
   heights.mockRestore();
+  expect(renderer.root.findAllByType(HeightReveal)).toHaveLength(0);
+  expect(frame()).toHaveLength(1);
+  expect(StyleSheet.flatten(frame()[0]!.props.style)).toEqual(before);
+  expect(before).toMatchObject({ width: '100%', aspectRatio: 4 / 3 });
+  // A faint mark says the photo is not there; VoiceOver hears the card.
+  const mark = renderer.root.findAll(
+    (n) =>
+      typeof n.type === 'string' &&
+      n.props.testID === `tm-photo-${key}-unavailable`,
+  );
+  expect(mark).toHaveLength(1);
+  expect(mark[0]!.props.importantForAccessibility).toBe('no-hide-descendants');
   expect(texts(renderer)).toContain(picture.caption);
   expect(texts(renderer)).toContain(
     `Photo: ${picture.author} · ${picture.licence}`,
   );
-  expect(texts(renderer)).not.toContain('Try again');
-  expect(renderer.root.findAllByType(InlineError)).toHaveLength(0);
-  expect(renderer.root.findAllByType(Image)).toHaveLength(0);
-  expect(
-    renderer.root.findAllByProps({
-      testID: `tm-photo-${key}-placeholder`,
-    }),
-  ).toHaveLength(0);
   act(() => renderer.unmount());
 });
-
-test.each(['ios', 'android'])(
-  'on %s a failed archive frame closes its height over 200 ms so the content below slides up',
-  async (os) => {
-    jest.replaceProperty(Platform, 'OS', os as typeof Platform.OS);
-    mockReduceMotion = false;
-    const picture = manifest['2014']![0]!;
-    const key = yearPictureKey('/' + picture.file);
-    let renderer!: TestRenderer.ReactTestRenderer;
-    try {
-      await act(async () => {
-        renderer = TestRenderer.create(
-          <ArchiveCard year={2014} picture={picture} />,
-        );
-      });
-      const frame = () =>
-        renderer.root.findAll(
-          (n) =>
-            typeof n.type === 'string' &&
-            n.props.testID === `tm-photo-${key}-placeholder`,
-        ).length > 0;
-      expect(frame()).toBe(true);
-      // The frame sits in a reveal from the start: no height animation, and
-      // nothing clipped, while it shows.
-      expect(
-        renderer.root
-          .findByType(HeightReveal)
-          .findAll(
-            (n) =>
-              typeof n.type === 'string' &&
-              n.props.testID === `tm-photo-${key}-placeholder`,
-          ),
-      ).toHaveLength(1);
-      layOutFrame(renderer, 240);
-      jest.useFakeTimers();
-      const heights: [number, boolean][] = [];
-      const timing = jest
-        .spyOn(Reanimated, 'withTiming')
-        .mockImplementation((to) => {
-          heights.push([to as number, frame()]);
-          return to;
-        });
-      act(() => renderer.root.findByType(Image).props.onError());
-      // The height closes to 0 with the standard ease while the 4:3 frame is
-      // still drawn, and only then is the frame removed.
-      expect(heights).toEqual([[0, true]]);
-      expect(timing.mock.calls[0]![1]).toBe(revealMotion);
-      expect(frame()).toBe(true);
-      act(() => jest.advanceTimersByTime(revealMotion.duration));
-      expect(frame()).toBe(false);
-      expect(texts(renderer)).toContain(picture.caption);
-    } finally {
-      mockReduceMotion = true;
-      jest.useRealTimers();
-      jest.restoreAllMocks();
-      if (renderer) act(() => renderer.unmount());
-    }
-  },
-);
 
 test('a viewer photo that fails inline never animates a collapse', async () => {
   mockReduceMotion = false;
@@ -560,21 +497,25 @@ test('a viewer photo that fails inline never animates a collapse', async () => {
   }
 });
 
-test('an archive fetch failure also leaves no empty photo frame on Today', async () => {
+test('an archive fetch failure also keeps the photo frame on Today', async () => {
   jest.mocked(yearPictures.get).mockRejectedValue(new Error('offline'));
   let renderer!: TestRenderer.ReactTestRenderer;
   const picture = manifest['2014']![0]!;
+  const key = yearPictureKey('/' + picture.file);
   await act(async () => {
     renderer = TestRenderer.create(
       <ArchiveCard year={2014} picture={picture} />,
     );
   });
-  // No frame is drawn, not even an empty one.
-  expect(
-    renderer.root
-      .findByType(Picture)
-      .findAll((n) => typeof n.type === 'string'),
-  ).toHaveLength(0);
+  // The frame holds its place, with the mark, so the card keeps its height.
+  const ids = renderer.root
+    .findByType(Picture)
+    .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
+    .map((n) => n.props.testID);
+  expect(ids).toEqual([
+    `tm-photo-${key}-placeholder`,
+    `tm-photo-${key}-unavailable`,
+  ]);
   expect(texts(renderer)).toContain(picture.caption);
   act(() => renderer.unmount());
 });
