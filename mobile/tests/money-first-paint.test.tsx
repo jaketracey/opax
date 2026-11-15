@@ -1,6 +1,12 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { AccessibilityInfo, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { ApiError } from '../src/api/errors';
@@ -8,6 +14,7 @@ import { apiClient } from '../src/api/runtime';
 import { ContentUnavailable, SegmentedPicker } from '../src/design/primitives';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { forgetMoneyGraphs } from '../src/features/money/lookup';
+import { BAND_HOLD } from '../src/features/money/map/band';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
@@ -369,6 +376,65 @@ describe('the first frame', () => {
       await act(async () => r.unmount());
     },
   );
+});
+
+describe('the band under the panel', () => {
+  const stageLayout = { nativeEvent: { layout: { width: 402, height: 760 } } };
+  const inset = (height: number) => ({ nativeEvent: { layout: { height } } });
+  const band = (root: ReactTestInstance) =>
+    flat(byTestID(root, 'money-map-band-space')).height;
+  afterEach(() => jest.useRealTimers());
+
+  test('a safe area that drops for a few frames at the end of a push does not move the panel; a lasting drop is followed', async () => {
+    jest.useFakeTimers();
+    const r = await render();
+    const probe = () => byTestID(r.root, 'money-map-band');
+    // The stage and the probe report in one batch, the probe first: the
+    // band owes nothing to the stage's measured height.
+    act(() => {
+      probe().props.onLayout(inset(96));
+      byTestID(r.root, 'money-screen').props.onLayout(stageLayout);
+    });
+    expect(band(r.root)).toBe(96);
+    // The end of the push: the tab bar's share is gone, then back.
+    act(() => probe().props.onLayout(inset(34)));
+    act(() => {
+      jest.advanceTimersByTime(BAND_HOLD - 50);
+    });
+    expect(band(r.root)).toBe(96);
+    act(() => probe().props.onLayout(inset(96)));
+    act(() => {
+      jest.advanceTimersByTime(BAND_HOLD * 2);
+    });
+    expect(band(r.root)).toBe(96);
+    // A drop that holds (a rotation, a tab bar that minimises) is followed.
+    act(() => probe().props.onLayout(inset(34)));
+    act(() => {
+      jest.advanceTimersByTime(BAND_HOLD);
+    });
+    expect(band(r.root)).toBe(34);
+    // A rise is taken at once.
+    act(() => probe().props.onLayout(inset(96)));
+    expect(band(r.root)).toBe(96);
+    // The chrome takes no inset from the system on iOS.
+    expect(byTestID(r.root, 'money-map-chrome').props.edges).toEqual([]);
+    await act(async () => r.unmount());
+  });
+
+  test('Android keeps the system inset on its chrome: no probe, no spacer', async () => {
+    const os = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      const r = await render();
+      expect(byTestID(r.root, 'money-map-band')).toBeUndefined();
+      expect(byTestID(r.root, 'money-map-band-space')).toBeUndefined();
+      expect(byTestID(r.root, 'money-map-chrome').props.edges).toEqual([
+        'bottom',
+      ]);
+      await act(async () => r.unmount());
+    } finally {
+      os.restore();
+    }
+  });
 });
 
 describe('the words kept for the summary', () => {

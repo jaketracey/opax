@@ -19,6 +19,7 @@ import {
   type ChromeState,
 } from '../src/features/money/map/regions';
 import { emptyReservedRegions } from '../src/design/fold';
+import { reportBand } from './money-band';
 import { withNavigationOptions } from './navigation-options';
 import { pinned } from './pinned';
 
@@ -304,13 +305,7 @@ function settle(
       );
     const panel = root.findByType(MoneyMapPanel);
     const shown = Math.min(natural.peek, panel.props.maxHeight ?? Infinity);
-    act(() =>
-      panel.parent!.props.onLayout({
-        nativeEvent: {
-          layout: { y: device.stage - device.bottom - shown, height: shown },
-        },
-      }),
-    );
+    act(() => reportBand(root, panel, device.stage, device.bottom, shown));
   }
 }
 

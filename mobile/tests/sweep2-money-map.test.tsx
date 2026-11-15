@@ -13,6 +13,7 @@ import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { visibleLabels } from '../src/features/money/map/labels';
+import { reportBand } from './money-band';
 import { withNavigationOptions } from './navigation-options';
 import { pinned } from './pinned';
 
@@ -310,13 +311,7 @@ function settle(
       );
     const panel = root.findByType(MoneyMapPanel);
     const shown = Math.min(natural.peek, panel.props.maxHeight ?? Infinity);
-    act(() =>
-      panel.parent!.props.onLayout({
-        nativeEvent: {
-          layout: { y: device.stage - device.bottom - shown, height: shown },
-        },
-      }),
-    );
+    act(() => reportBand(root, panel, device.stage, device.bottom, shown));
   }
 }
 
