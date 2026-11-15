@@ -22,23 +22,28 @@ import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-34-one-voice'
+export const ANSWER_WRITING_VERSION = 'written-answer-35-one-voice'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 /** Added to the writer's contract only when two facts in the sheet come from one record. */
 export const ONE_RECORD_RULE = ' Facts that share a "record" value describe one record: write one sentence for that record, carrying every detail those facts hold and listing each of their ids.'
+/** The citation key of one point span resting on a record: the record, then a number fixed by the span's own words.
+ *  Two points on one record hold two keys, so a sentence citing one of them says nothing about the other. */
+export const pointKey=(resource:string,text:string):string=>`${resource}/t/body/${parseInt(stableEvidenceKey(key(text.replace(/^\s*[-*•]\s*/,''))),16)}`
 /** The model's points that a written sentence does not already state. A point resting only on tool records is one of
  *  the writer's facts under the point's own citation key (writingFacts). It is left to the written answer only when
  *  every key it cites is cited there: a sentence of the written answer states that very fact. Any other point is kept,
  *  as is every point resting on a passage or on nothing: a fact repeated is better than a fact lost. */
 export function pointsWrittenElsewhere(points: QualitativeAnswer, written: QualitativeAnswer): QualitativeAnswer {
   const kind=(id:string)=>points.sources.find(s=>id===s.resource||id.startsWith(s.resource+'/'))?.kind
-  const stated=(id:string)=>{const k=kind(id);return !!k&&!['speech','bill'].includes(k)&&!!written.citations[id]?.length}
+  // Several points can rest on one record under one citation id, so each cited span is looked up under its own key.
+  const stated=(id:string,text:string)=>{const k=kind(id);return !!k&&!['speech','bill'].includes(k)&&!!written.citations[id.includes('/')?id:pointKey(id,text)]?.length}
   let answer=''; const citations:QualitativeAnswer['citations']={}
   for(const part of points.answer.matchAll(/[^\n]+/g)){
     const from=Array.from(points.answer.slice(0,part.index)).length,until=from+Array.from(part[0]).length
     const ids=Object.entries(points.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<until&&b>from)).map(([id])=>id)
-    if(ids.length&&ids.every(stated))continue
+    const spans=ids.flatMap(id=>points.citations[id].filter(([a,b])=>a<until&&b>from).map(([a,b])=>({id,text:Array.from(points.answer).slice(a,b).join('')})))
+    if(spans.length&&spans.every(span=>stated(span.id,span.text)))continue
     if(answer)answer+='\n'
     const offset=Array.from(answer).length;answer+=part[0]
     for(const id of ids)for(const [a,b] of points.citations[id])if(a<until&&b>from)(citations[id]??=[]).push([offset+Math.max(a,from)-from,offset+Math.min(b,until)-from])
@@ -123,10 +128,10 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
   if (answer) for (const source of answer.sources.filter(s => s.cited)) {
     // The selected claim, not unrelated parts of a larger original record, is the authority here.
     // Each cited span is its own writer fact, under the citation key that span holds in the answer. The loop can select
-    // a record as a fact (key fact-N/t/body/0) and write a point resting on it too (key fact-N): two facts, two keys, so
+    // a record as a fact (key fact-N/t/body/0) and write a point resting on it too (its own pointKey): two facts, two keys, so
     // a written sentence shows by its citations which of them it states (see pointsWrittenElsewhere).
     const keyed = Object.entries(answer.citations).filter(([id]) => id === source.resource || id.startsWith(source.resource+'/'))
-    const spans = keyed.length && keyed.every(([,ranges]) => ranges.every(([a,b])=>b-a>3)) ? keyed.flatMap(([id,ranges]) => ranges.map(([a,b]) => ({ id, text: Array.from(answer.answer).slice(a,b).join('') }))) : [{ id: keyed[0]?.[0], text: source.snippet }]
+    const spans = keyed.length && keyed.every(([,ranges]) => ranges.every(([a,b])=>b-a>3)) ? keyed.flatMap(([id,ranges]) => ranges.map(([a,b]) => { const text = Array.from(answer.answer).slice(a,b).join(''); return { id: id === source.resource ? pointKey(id, text) : id, text } })) : [{ id: keyed[0]?.[0], text: source.snippet }]
     for (const span of spans) for (const part of span.text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
       const before=out.length;add(part, source, !!source.coverage || isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
       if(out.length>before){const f=out[out.length-1];if(!f.transcript)f.evidenceId=span.id??f.evidenceId;f.atoms=f.atoms?.map(a=>({...a,evidenceId:f.evidenceId!}))??atomsFromText(f.text,f.evidenceId!,source)}

@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {importBundle} from './fixtures/import-bundle.mjs';
-const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt,pointsWrittenElsewhere,ONE_RECORD_RULE} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
+const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt,pointsWrittenElsewhere,pointKey,ONE_RECORD_RULE} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
 const api=await importBundle(bundled.outputFiles[0].text,'ask-each-fact-once');
 
 const url='https://opax.com.au/subject/person/jo-briskey';
@@ -23,7 +23,8 @@ const loopAnswer=()=>{
 
 test('a record cited by its own line and by a point resting on it reaches the writer as two facts, each under its own citation key',()=>{
  const facts=api.writingFacts(loopAnswer());
- assert.deepEqual(facts.map(f=>[f.text,f.evidenceId]),[[expenses,'fact-1/t/body/0'],[service,'fact-2/t/body/0'],[point,'fact-2']]);
+ assert.deepEqual(facts.map(f=>[f.text,f.evidenceId]),[[expenses,'fact-1/t/body/0'],[service,'fact-2/t/body/0'],[point,api.pointKey('fact-2',point)]]);
+ assert.notEqual(api.pointKey('fact-2',point),api.pointKey('fact-2',service));
 });
 test('a point that is the only citation of a record still reaches the writer as written',()=>{
  const answer=`- ${expenses}\n${point}`;
@@ -114,7 +115,7 @@ const mixedPoints=()=>{const answer=[point,speech,context].join('\n');return {an
 /** A written answer whose second sentence cites the given keys of record 2. */
 const writtenCiting=(recordText,stated,keys)=>{const w=writtenWith(recordText,stated);delete w.citations['fact-2/t/body/0'];for(const key of keys)w.citations[key]=[span(w.answer,stated)];return w};
 test('a point is left to the written answer only when that answer cites the point\'s own key; passage and uncited points are always kept',()=>{
- const both=api.pointsWrittenElsewhere(mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0','fact-2']));
+ const both=api.pointsWrittenElsewhere(mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0',api.pointKey('fact-2',point)]));
  assert.equal(both.answer,speech+'\n'+context);
  assert.deepEqual(Object.fromEntries(Object.entries(both.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>Array.from(both.answer).slice(a,b).join(''))])),{'speech-9/t/body/0-40':[speech]});
  assert.deepEqual(both.sources.map(s=>s.resource),['speech-9']);
@@ -136,7 +137,7 @@ const answered=async(qualitative,points,written,coherence)=>{
  return (await api.runAgentic(question,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},scope)).answer;
 };
 test('end to end: a sentence citing the point\'s fact states the record once; passage and uncited points follow',async()=>{
- const out=await answered(loopAnswer(),mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0','fact-2']),{writer_passes:1});
+ const out=await answered(loopAnswer(),mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0',api.pointKey('fact-2',point)]),{writer_passes:1});
  assert.equal((out.match(/3 May 2025/g)??[]).length,1,out);
  assert.ok(out.includes(sentence)&&out.includes(speech)&&out.includes(context)&&!out.includes(point));
 });
@@ -150,5 +151,18 @@ test('end to end: a different claim on a shared record survives when the writer 
 test('end to end: an empty write, facts as recorded or a stopped draft keeps every point',async()=>{
  const empty=await answered(loopAnswer(),mixedPoints(),{answer:'',answer_decision:'answer',sources:[],citations:{}},{writer_passes:1});
  assert.ok(empty.includes(point)&&empty.includes(speech),JSON.stringify(empty));
- for(const coherence of [undefined,{writer_passes:1,fallback:true}])assert.ok((await answered(loopAnswer(),mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0','fact-2']),coherence)).includes(point));
+ for(const coherence of [undefined,{writer_passes:1,fallback:true}])assert.ok((await answered(loopAnswer(),mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0',api.pointKey('fact-2',point)]),coherence)).includes(point));
+});
+// Review rv-pr432 delta: two points on one record share one citation id. A sentence stating one says nothing of the other.
+test('end to end: two points under one citation id; the writer states one, and the other is kept',async()=>{
+ const loop=()=>{const answer=`${term}\n${change}`;return {answer,answer_decision:'answer',sources:[record(2,twoClaims,url)],citations:{'fact-2':[span(answer,term),span(answer,change)]}}};
+ const writtenTerm=key=>({answer:term,answer_decision:'answer',sources:[record(2,twoClaims,url)],citations:{[key]:[[0,Array.from(term).length]]}});
+ // The writer cites the shared id, as the review's probe did, or the key of the fact it stated: the change stays either way.
+ for(const key of ['fact-2',api.pointKey('fact-2',term)]){
+  const out=await answered(loop(),pointsOn(twoClaims,term,change),writtenTerm(key),{writer_passes:1});
+  assert.ok(out.includes(change),key+': '+out);assert.ok(out.includes(term));
+ }
+ // Tied by its own key, the stated point is not said again.
+ const once=await answered(loop(),pointsOn(twoClaims,term,change),writtenTerm(api.pointKey('fact-2',term)),{writer_passes:1});
+ assert.equal(once.split(term).length-1,1,once);
 });
