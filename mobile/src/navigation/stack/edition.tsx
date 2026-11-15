@@ -2,7 +2,7 @@ import { screen, untitled } from './screen';
 import { StyleSheet, View } from 'react-native';
 import { colors } from '../../design/tokens';
 import { designFlags } from '../../design/flags';
-import { glassBar, opaqueBar, type UnderBar } from '../chrome';
+import { glassBar, groundBar, opaqueBar, type UnderBar } from '../chrome';
 
 export function editionScreens(underBar: UnderBar = false) {
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
@@ -13,7 +13,9 @@ export function editionScreens(underBar: UnderBar = false) {
     return [
       screen('edition', 'Daily edition', {
         ...untitled,
-        ...opaqueBar(ground),
+        // Off the rail the page clears the bar before its first frame, and
+        // the registration asks for no hairline either.
+        ...(underBar === 'plain' ? groundBar(ground) : opaqueBar(ground)),
         contentStyle: { backgroundColor: ground },
       }),
     ];

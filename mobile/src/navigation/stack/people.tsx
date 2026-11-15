@@ -14,6 +14,8 @@ import { sheetListOptions } from '../sheet-lists';
  * Duo). The directory and Just declared keep a solid one there: a search
  * field holds their title band open, and React Native pins their sticky
  * section headers at the scroll view's top edge, which a clear bar covers.
+ * On other iOS 26 layouts they are laid out below their bar for the pinned
+ * headers alone, and that bar is the page's ground with no hairline.
  */
 export function peopleScreens(underBar: UnderBar = false) {
   return [

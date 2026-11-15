@@ -9,6 +9,8 @@ import {
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import * as accessibility from '../src/design/accessibility';
 import { ClearBarRest, Screen } from '../src/design/layout';
+import { colors } from '../src/design/tokens';
+import { opaqueBar } from '../src/navigation/chrome';
 import { sharedScreens } from '../src/navigation/stack';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -147,29 +149,40 @@ describe('no pushed page has a clear bar without a fade', () => {
     source(resolve(__dirname, '../src/features', `${name}.tsx`));
   /**
    * Every tab-stack route whose page is not a Screen or a MoneyList:
-   * - `fade`: its own list, wrapped in ClearBarRest (named file);
-   * - `solid`: keeps the stack's solid bar (sticky section headers or a
-   *   search field in the bar);
+   * - `fade`: its own list under the clear bar, with the fade from
+   *   ClearBarRest or its own ClearBarFade (named file and mark);
+   * - `ground`: a list whose section headers pin, laid out below its bar,
+   *   which is the page's ground with no hairline;
    * - `below`: a sheet or modal, or Ask pushed outside its tab, laid out
    *   below an opaque bar.
+   * No pushed page is solid with a hairline.
    */
+  const REST = /<ClearBarRest\b[^>]*\bground="paper"/;
   const pages: readonly (readonly [
     string,
-    'fade' | 'solid' | 'below',
+    'fade' | 'ground' | 'below',
     string,
+    RegExp?,
   ])[] = [
-    ['person/[slug]/speeches', 'fade', 'people/RecordList'],
-    ['record-list', 'fade', 'people/RecordList'],
-    ['bill-text/[key]', 'fade', 'records/ReaderList'],
-    ['doc/[slug]', 'fade', 'records/ReaderList'],
-    ['person/[slug]/interests', 'solid', ''],
-    ['party-sources', 'solid', ''],
-    ['vic-election/index', 'solid', ''],
-    ['bill-list', 'solid', ''],
-    ['person/[slug]/votes', 'solid', ''],
-    ['division-history', 'solid', ''],
-    ['declarations', 'solid', ''],
-    ['directory', 'solid', ''],
+    ['person/[slug]/speeches', 'fade', 'people/RecordList', REST],
+    ['record-list', 'fade', 'people/RecordList', REST],
+    ['bill-text/[key]', 'fade', 'records/ReaderList', REST],
+    ['doc/[slug]', 'fade', 'records/ReaderList', REST],
+    // A search field in the bar: clear all the same, the field on the
+    // fade's ground (the hub's ruling, build 83).
+    ['person/[slug]/votes', 'fade', 'people/PersonLists', REST],
+    ['division-history', 'fade', 'directories/DivisionHistory', REST],
+    ['vic-election/index', 'fade', 'vic-election/shared', REST],
+    [
+      'bill-list',
+      'fade',
+      'bills/BillsList',
+      /\(!pushed \|\| clearPushed\)[\s\S]*<ClearBarFade\b/,
+    ],
+    ['person/[slug]/interests', 'ground', 'people/PersonLists'],
+    ['party-sources', 'ground', 'people/PartySources'],
+    ['declarations', 'ground', 'declarations/Declarations'],
+    ['directory', 'ground', 'directories/DirectoryScreen'],
     ['ask', 'below', ''],
     ['ask-report', 'below', ''],
     ['consent', 'below', ''],
@@ -208,25 +221,109 @@ describe('no pushed page has a clear bar without a fade', () => {
       : (options ?? {});
   };
 
-  test.each(pages)('%s: %s', (route, kind, file) => {
+  // (Three parameters: a fourth would be taken for Jest's `done`.)
+  test.each(pages)('%s: %s', (route, kind, file, ...rest) => {
+    const mark = rest[0] as RegExp | undefined;
     // The filter pages are a stack of their own inside the `filters` sheet.
     const name = route.startsWith('filters/') ? 'filters' : route;
     expect(registered().has(name)).toBe(true);
     const options = optionsOf(name);
     if (kind === 'fade') {
-      // Under the stack's clear bar, with the fade from ClearBarRest.
+      // Under the stack's clear bar, with a fade on the list's own ground:
+      // no default is relied on.
       expect('headerTransparent' in options).toBe(false);
-      // Its ground is named, the list's own: no default is relied on.
-      expect(feature(file)).toMatch(/<ClearBarRest\b[^>]*\bground="paper"/);
+      expect('headerStyle' in options).toBe(false);
+      expect(feature(file)).toMatch(mark!);
       expect(feature(file)).toMatch(/backgroundColor: colors\.paper/);
-    } else if (kind === 'solid') {
+    } else if (kind === 'ground') {
+      // Laid out below the bar so its section headers pin at the bar's
+      // foot; the bar is the page's ground and has no hairline.
       expect(options.headerTransparent).toBe(false);
-      expect(options.headerStyle).toHaveProperty('backgroundColor');
+      expect(options.headerStyle).toEqual({ backgroundColor: colors.paper });
+      expect(options.headerShadowVisible).toBe(false);
+      expect(feature(file)).toMatch(
+        /stickySectionHeadersEnabled(?!=\{false\})/,
+      );
     } else if (name === 'explore/photo') {
       // The photo viewer: a full-screen modal with a clear bar of its own
       // over a dark scrim, not a pushed page.
       expect(options.presentation).toBe('fullScreenModal');
     } else expect(options.headerTransparent).toBe(false);
+  });
+
+  // Pages with a search field whose page is a Screen or a MoneyList: under
+  // the clear bar too, where the page's own fade covers the field's band.
+  test.each(['grants', 'grant-program', 'agencies', 'learn/glossary'])(
+    '%s: a search field, under the clear bar',
+    (name) => {
+      const options = optionsOf(name);
+      expect('headerTransparent' in options).toBe(false);
+      expect('headerStyle' in options).toBe(false);
+    },
+  );
+
+  // The hub's ruling: off the rail no pushed page keeps the hairline. One
+  // laid out below its bar is a list with pinned headers, in the table.
+  test('no pushed page is solid, and none has a hairline', () => {
+    const ground = new Set(
+      pages.filter(([, kind]) => kind === 'ground').map(([name]) => name),
+    );
+    const below: string[] = [];
+    const lined: string[] = [];
+    for (const name of registered().keys()) {
+      const options = optionsOf(name);
+      if (options.presentation && options.presentation !== 'card') continue;
+      if (options.headerTransparent === false && !ground.has(name))
+        below.push(name);
+      if (options.headerShadowVisible === true) lined.push(name);
+    }
+    // Ask outside its tab is laid out below its bar (the table's `below`).
+    // The electorate page asks for the clear bar itself, from whether the
+    // system has one as the module loads (not here, under Jest).
+    expect(
+      below.filter((name) => name !== 'ask' && name !== 'electorate/[id]'),
+    ).toEqual([]);
+    expect(lined).toEqual([]);
+  });
+
+  // With Reduce Transparency or Increase Contrast on, the stack is told its
+  // pages are below an opaque bar: no route asks for anything else, so every
+  // pushed page has the stack's opaque bar and its hairline, as the tab
+  // roots have under those settings (opaqueBar).
+  test('with a legibility setting on, no route changes the stack’s opaque bar or its hairline', () => {
+    const solid = new Map(
+      (
+        sharedScreens('(today)', false, false) as React.ReactElement<{
+          name: string;
+          options:
+            | Record<string, unknown>
+            | ((props: object) => Record<string, unknown>);
+        }>[]
+      ).map((entry) => [entry.props.name, entry.props.options]),
+    );
+    for (const name of [
+      'person/[slug]/interests',
+      'party-sources',
+      'declarations',
+      'directory',
+      'person/[slug]/votes',
+      'division-history',
+      'vic-election/index',
+      'bill-list',
+      'grants',
+    ]) {
+      const options = solid.get(name);
+      const resolved =
+        typeof options === 'function'
+          ? options({
+              route: { key: name, name, params: {} },
+              navigation: { getState: () => ({ index: 1, routes: [] }) },
+            })
+          : (options ?? {});
+      expect('headerShadowVisible' in resolved).toBe(false);
+      expect('headerStyle' in resolved).toBe(false);
+    }
+    expect(opaqueBar().headerShadowVisible).toBe(true);
   });
 
   // What a route's page draws, read from the source: the component the

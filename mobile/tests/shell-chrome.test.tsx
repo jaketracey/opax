@@ -421,14 +421,21 @@ test.each([
             route: { key: name, name, params: {} },
             navigation: { getState: () => ({ index: 1, routes: [] }) },
           });
-        expect(list.headerTransparent).toBe(underBar ? false : undefined);
+        // Off the rail only the lists with pinned section headers are laid
+        // out below their bar; a field alone keeps the clear bar and fade.
+        const pins = name === 'directory' || name === 'declarations';
+        const below = underBar && (edge !== 'unspecified' || pins);
+        expect(list.headerTransparent).toBe(below ? false : undefined);
         // Only the rail's solid bar needs a backing (UIKit's stops short
         // of the top edge there); elsewhere its own colour is enough.
         expect('headerBackground' in list).toBe(
           underBar && edge !== 'unspecified',
         );
-        if (underBar)
+        if (below)
           expect(list.headerStyle).toEqual({ backgroundColor: colors.paper });
+        // Off the rail that bar has no hairline: it reads as the clear bar.
+        if (below && edge === 'unspecified')
+          expect(list.headerShadowVisible).toBe(false);
       }
       // A seat's grants share the Grants route but have no search field:
       // they keep the stack's clear bar. The electorates view has a field.
@@ -451,7 +458,7 @@ test.each([
       );
       expect(
         grantsFor({ seat: 'Grayndler', view: 'electorates' }).headerTransparent,
-      ).toBe(underBar ? false : undefined);
+      ).toBe(underBar && edge !== 'unspecified' ? false : undefined);
       // Reduce Transparency or Increase Contrast: the solid bar, as the tab
       // roots have.
       mockSolidBar = true;

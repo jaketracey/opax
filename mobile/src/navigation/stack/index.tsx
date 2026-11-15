@@ -56,7 +56,7 @@ export function sharedScreens(
     ...recordsScreens(),
     ...referenceSharedScreens(),
     ...searchScreens(segment, signedIn),
-    ...askScreens(segment, signedIn),
+    ...askScreens(segment, signedIn, underBar),
     ...moneyMapScreens(),
     ...publicMoneyScreens(),
     ...exploreScreens(),
@@ -69,12 +69,12 @@ export function sharedScreens(
     ...screens
       .filter((screen) => screen.props.name !== root)
       .map((screen) =>
-        underBar && railSearchRoutes.has(screen.props.name)
-          ? withSolidRailBar(screen, underBar)
-          : underBar === 'plain'
-            ? plainSolidRoutes.has(screen.props.name)
-              ? withSolidRailBar(screen, underBar)
-              : withPresentedBelowBar(screen)
+        underBar === 'plain'
+          ? plainSolidRoutes.has(screen.props.name)
+            ? withSolidRailBar(screen, underBar)
+            : withPresentedBelowBar(screen)
+          : underBar && railSearchRoutes.has(screen.props.name)
+            ? withSolidRailBar(screen, underBar)
             : screen,
       ),
   ];
@@ -82,6 +82,7 @@ export function sharedScreens(
 
 /**
  * Pushed pages whose bar always holds a search field. Beside a vertical bar
+ * (only there: on other layouts these are under the clear bar with the fade)
  * such a bar is solid (see RouteOptions), and the page says so only once it
  * has rendered: the pushed Bills list was drawn under the clear bar for a
  * frame and laid out again below the solid one, redrawing its scope control
@@ -99,18 +100,19 @@ const railSearchRoutes = new Set([
 ]);
 
 /**
- * Pushed pages that keep the solid bar under the clear bar of a layout
- * without a vertical bar (iOS 26). The clear bar ships only with a fade
- * under it, and these cannot take one yet: React Native pins their sticky
- * section headers at the list's top edge, under a clear bar (Declared
- * interests, Largest sources by year), or their bar holds a search field
- * (the Victorian election, which says so itself once it has rendered; here
- * from the stack's first layout). The rail's own rule is unchanged.
+ * Pushed pages laid out below their bar under the clear bar of a layout
+ * without a vertical bar (iOS 26): lists whose section headers pin. React
+ * Native pins them at the list's top edge, which a clear bar covers, so
+ * these lists start at the bar's foot, and the bar takes the page's ground
+ * with no hairline (`groundBar`): it reads as the clear bar, and rows pass
+ * under the pinned header, which is its own ground. Just declared and the
+ * directory say the same in their own registrations. Every other pushed
+ * page there, a search field in its bar or not, is under the clear bar with
+ * the fade. The rail's own rule (`railSearchRoutes`) is unchanged.
  */
 export const plainSolidRoutes = new Set([
   'person/[slug]/interests',
   'party-sources',
-  'vic-election/index',
 ]);
 
 type StackScreen = ReactElement<{

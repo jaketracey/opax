@@ -106,6 +106,19 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
 });
 
 /**
+ * The bar of a pushed page that stays laid out below it where the stack's
+ * pushed pages are otherwise clear (iOS 26, off the rail): the page's own
+ * ground and no hairline, so it reads as the clear bar does. For a list
+ * whose section headers pin: React Native pins them at the list's top edge,
+ * which a clear bar covers, so the list must start at the bar's foot. The
+ * pinned header is its own ground, and rows pass under it, not through it.
+ */
+export const groundBar = (ground: ColorValue = colors.paper) => ({
+  ...opaqueBar(ground),
+  headerShadowVisible: false,
+});
+
+/**
  * UIKit on iOS 26 hides large titles when the standard appearance has a
  * background colour or blur (react-native-screens#3100, reproduced in UIKit).
  * Keep both appearances transparent while expanded. A scroll-edge background
@@ -254,14 +267,16 @@ export function useUnderBar(headerTransparent: boolean): UnderBar {
  * one: its title band never folds away (a search field in the bar, a map
  * that does not scroll), so content must end at the band, and a sticky
  * section header must hold below it. `underBar` is the stack's answer
- * (`useUnderRailBar`); elsewhere this adds nothing to the route.
+ * (`useUnderRailBar`); elsewhere this adds nothing to the route. Under the
+ * clear bar of a layout without a vertical bar (`'plain'`) the bar is the
+ * page's ground with no hairline (`groundBar`): no pushed page keeps one.
  */
 export const solidRailBar = (
   underBar: UnderBar,
   ground: ColorValue = colors.paper,
 ) =>
   underBar === 'plain'
-    ? { headerTransparent: false, ...opaqueBar(ground) }
+    ? { headerTransparent: false, ...groundBar(ground) }
     : underBar
       ? {
           headerTransparent: false,

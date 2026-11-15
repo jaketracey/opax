@@ -822,7 +822,13 @@ describe('a pushed page with a search field beside the rail', () => {
     {
       first = false,
       presentation,
-    }: { first?: boolean; presentation?: string } = {},
+      below = false,
+    }: {
+      first?: boolean;
+      presentation?: string;
+      /** The stack laid this route out below its bar (pinned headers). */
+      below?: boolean;
+    } = {},
   ) {
     mockBarEdge = edge;
     const calls: Record<string, unknown>[] = [];
@@ -847,7 +853,7 @@ describe('a pushed page with a search field beside the rail', () => {
               value={
                 {
                   [route.key]: {
-                    options: { headerTransparent: true, presentation },
+                    options: { headerTransparent: !below, presentation },
                   },
                 } as never
               }
@@ -899,12 +905,35 @@ describe('a pushed page with a search field beside the rail', () => {
     expect(backing(options)).toBe(colors.sunken);
   });
 
-  // Build 82: iPhone and iPad run pushed pages under a clear bar too. A
-  // field keeps the solid bar there, in its own colour, with no backing.
-  test('on iPhone a list with a field is solid in paper, with no backing', () => {
-    const options = set('unspecified', <RouteOptions options={search} />);
+  // iPhone and iPad run pushed pages under a clear bar too, and there the
+  // bar holds its field inside the height the fade covers: a page with a
+  // field keeps the clear bar, with no colour and no hairline (hub ruling:
+  // no pushed page keeps the hairline).
+  test('on iPhone a list with a field keeps the clear bar: no colour, no hairline', () => {
+    const options = set(
+      'unspecified',
+      <RouteOptions
+        options={{
+          ...search,
+          headerStyle: { backgroundColor: colors.paper },
+        }}
+      />,
+    );
+    expect(options.headerTransparent).toBe(true);
+    expect(options.headerStyle).toEqual({});
+    expect(options.headerShadowVisible).toBe(false);
+    expect(options.headerBackground).toBeUndefined();
+  });
+
+  // A list with pinned section headers is laid out below its bar by the
+  // stack. Its bar is the page's own ground with no hairline, and no backing.
+  test('on iPhone a list laid out below its bar, with a field, has the page’s ground and no hairline', () => {
+    const options = set('unspecified', <RouteOptions options={search} />, {
+      below: true,
+    });
     expect(options.headerTransparent).toBe(false);
     expect(options.headerStyle).toEqual({ backgroundColor: colors.paper });
+    expect(options.headerShadowVisible).toBe(false);
     expect('headerBackground' in options).toBe(false);
   });
 

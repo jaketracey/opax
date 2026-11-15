@@ -69,6 +69,7 @@ import {
   glassBar,
   headerItems,
   rootHeaderItems,
+  useClearRailBar,
 } from '../../navigation/chrome';
 import { billRoute } from '../../navigation/routes';
 import { divisionHistoryRoute } from '../../navigation/routes/bills';
@@ -268,11 +269,14 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   // keeps its own bar.
   const headerBottom = useHeaderBottom();
   const onRail = useVerticalBarEdge() !== 'unspecified';
+  // The pushed list is under the stack's clear bar off the rail, and
+  // fades as the root does; beside the rail its bar is solid.
+  const clearPushed = useClearRailBar();
   const fades =
     clearBars &&
     Platform.OS === 'ios' &&
     glassBar() &&
-    !pushed &&
+    (!pushed || clearPushed) &&
     !adaptive &&
     !onRail;
   const fadeScroll = useBarFadeScroll(fades);

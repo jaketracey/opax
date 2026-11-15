@@ -16,8 +16,8 @@ import { useDetailRouteOptions } from './useDetailRouteOptions';
 import {
   barBacking,
   clearBarStyle,
+  groundBar,
   headerItems,
-  opaqueBar,
   pendingHeaderItems,
   useClearRailBar,
 } from './chrome';
@@ -123,18 +123,21 @@ export function RouteOptions({
     // what UIKit's scroll edge covers, so rows ran through it under a
     // covered title (the pushed Bills list, b74). Like a rail root's, such a
     // bar is solid on the page's own ground: one surface for title and field.
-    // Off the rail the solid bar needs no backing, only its colour.
+    // Off the rail UIKit's bar holds the field inside the height the fade
+    // covers, so a page there keeps the clear bar and its fade. Only a
+    // route the stack laid out below its bar (a list with pinned section
+    // headers) stays there, in the page's ground with no hairline.
     if (
       (pushedRail === 'clear' || plainClear) &&
       !root &&
       'headerSearchBarOptions' in resolved
     )
-      return resolved.headerSearchBarOptions
+      return resolved.headerSearchBarOptions && !(plainClear && clearRail)
         ? {
             ...resolved,
             headerTransparent: false,
             ...(plainClear
-              ? opaqueBar(own ?? screenGround ?? colors.paper)
+              ? groundBar(own ?? screenGround ?? colors.paper)
               : barBacking(own ?? screenGround ?? colors.paper)),
           }
         : {

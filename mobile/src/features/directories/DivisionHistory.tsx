@@ -56,6 +56,7 @@ import {
   rhythm,
   type TextVariant,
 } from '../../design/tokens';
+import { ClearBarRest } from '../../design/layout';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { trackShare } from '../../navigation/share';
@@ -779,75 +780,77 @@ export default function DivisionHistory() {
         <ReportInset.Provider value={reportInset}>
           <VoteInset.Provider value={inset}>
             <StatePageProvider refreshing={refreshing}>
-              <SectionList
-                ref={list}
-                onScroll={scrollTitle.onScroll}
-                scrollEventThrottle={16}
-                testID="division-history-screen"
-                style={styles.screen}
-                contentContainerStyle={[styles.content, column.content, foot]}
-                onLayout={column.onLayout}
-                contentInsetAdjustmentBehavior="automatic"
-                keyboardDismissMode="on-drag"
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={refresh}
-                    tintColor={colors.navy}
-                  />
-                }
-                sections={loaded ? sections : []}
-                onEndReached={append}
-                onEndReachedThreshold={0.5}
-                stickySectionHeadersEnabled={false}
-                keyExtractor={(item) => item.key}
-                renderSectionHeader={({ section }) => (
-                  <BillHeader section={section as HistorySection} />
-                )}
-                renderItem={({ item, index }) => (
-                  <Vote item={item} index={index} />
-                )}
-                ItemSeparatorComponent={Separator}
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                windowSize={7}
-                removeClippedSubviews={false}
-                ListHeaderComponent={header}
-                ListEmptyComponent={empty}
-                ListFooterComponent={
-                  <View style={styles.footer}>
-                    {appending ? (
-                      <ActivityIndicator
-                        color={colors.inkSoft}
-                        accessibilityLabel="Loading more votes"
-                        testID="division-history-more-loading"
-                      />
-                    ) : null}
-                    {updatesAvailable ? (
-                      <Button
-                        label="Show updated votes"
-                        variant="plain"
-                        onPress={() => {
-                          if (sections.length)
-                            list.current?.scrollToLocation({
-                              sectionIndex: 0,
-                              itemIndex: 0,
-                              animated: false,
+              <ClearBarRest ground="paper">
+                <SectionList
+                  ref={list}
+                  onScroll={scrollTitle.onScroll}
+                  scrollEventThrottle={16}
+                  testID="division-history-screen"
+                  style={styles.screen}
+                  contentContainerStyle={[styles.content, column.content, foot]}
+                  onLayout={column.onLayout}
+                  contentInsetAdjustmentBehavior="automatic"
+                  keyboardDismissMode="on-drag"
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={refresh}
+                      tintColor={colors.navy}
+                    />
+                  }
+                  sections={loaded ? sections : []}
+                  onEndReached={append}
+                  onEndReachedThreshold={0.5}
+                  stickySectionHeadersEnabled={false}
+                  keyExtractor={(item) => item.key}
+                  renderSectionHeader={({ section }) => (
+                    <BillHeader section={section as HistorySection} />
+                  )}
+                  renderItem={({ item, index }) => (
+                    <Vote item={item} index={index} />
+                  )}
+                  ItemSeparatorComponent={Separator}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  windowSize={7}
+                  removeClippedSubviews={false}
+                  ListHeaderComponent={header}
+                  ListEmptyComponent={empty}
+                  ListFooterComponent={
+                    <View style={styles.footer}>
+                      {appending ? (
+                        <ActivityIndicator
+                          color={colors.inkSoft}
+                          accessibilityLabel="Loading more votes"
+                          testID="division-history-more-loading"
+                        />
+                      ) : null}
+                      {updatesAvailable ? (
+                        <Button
+                          label="Show updated votes"
+                          variant="plain"
+                          onPress={() => {
+                            if (sections.length)
+                              list.current?.scrollToLocation({
+                                sectionIndex: 0,
+                                itemIndex: 0,
+                                animated: false,
+                              });
+                            setPage({
+                              record: latest,
+                              query,
+                              filters: filterKey,
+                              limit: PAGE_SIZE,
                             });
-                          setPage({
-                            record: latest,
-                            query,
-                            filters: filterKey,
-                            limit: PAGE_SIZE,
-                          });
-                        }}
-                        testID="division-history-updates"
-                      />
-                    ) : null}
-                    {loaded ? source : null}
-                  </View>
-                }
-              />
+                          }}
+                          testID="division-history-updates"
+                        />
+                      ) : null}
+                      {loaded ? source : null}
+                    </View>
+                  }
+                />
+              </ClearBarRest>
             </StatePageProvider>
           </VoteInset.Provider>
         </ReportInset.Provider>
