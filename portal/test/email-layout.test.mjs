@@ -11,7 +11,9 @@ import {emailSamples, sampleArgs, digestSpec, ORIGIN} from '../scripts/email-sam
 
 const samples = emailSamples();
 const tokens = JSON.parse(readFileSync(new URL('../../docs/design/design-tokens.json', import.meta.url), 'utf8'));
-const decode = (s) => s.replaceAll('&amp;', '&').replaceAll('&quot;', '"').replaceAll('&#39;', "'").replaceAll('&lt;', '<').replaceAll('&gt;', '>');
+// One pass, so an escaped ampersand is never read twice ("&amp;lt;" is "&lt;", not "<").
+const ENTITIES = {'&amp;': '&', '&quot;': '"', '&#39;': "'", '&lt;': '<', '&gt;': '>'};
+const decode = (s) => s.replace(/&(?:amp|quot|#39|lt|gt);/g, (entity) => ENTITIES[entity]);
 const hrefs = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) => decode(m[1]));
 /** The body as a reader meets it: no head, no Outlook-only comments. */
 const body = (html) => html.slice(html.indexOf('<body')).replace(/<!--\[if mso\]>[\s\S]*?<!\[endif\]-->/g, '');
@@ -256,7 +258,7 @@ test('a digest plugs in: a heading, sourced items and an unsubscribe, with its t
   assert.deepEqual([...mail.html.matchAll(/<h2[^>]*>([^<]*)<\/h2>/g)].map((m) => m[1]), ['Bills', 'Votes']);
   const unsubscribe = digestSpec.links[0];
   assert.ok(hrefs(mail.html).includes(unsubscribe.href));
-  assert.match(text, new RegExp(`${unsubscribe.label}: ${unsubscribe.href.replace(/[?.]/g, '\\$&')}`));
+  assert.ok(text.includes(`${unsubscribe.label}: ${unsubscribe.href}`));
   // Item titles and footer links are each a line of their own, 44 px tall.
   // A later declaration wins, so the last padding and the last line height in
   // the style are the ones drawn.

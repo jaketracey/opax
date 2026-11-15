@@ -82,7 +82,8 @@ const light=(name:keyof typeof emailTokens)=>T[name][0]
 export const escapeHtml=(value:string)=>value.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]!))
 const rich=(value:Rich)=>typeof value==='string'?escapeHtml(value):value.map(part=>typeof part==='string'?escapeHtml(part):`<strong>${escapeHtml(part.strong)}</strong>`).join('')
 const plain=(value:Rich)=>typeof value==='string'?value:value.map(part=>typeof part==='string'?part:part.strong).join('')
-const host=(origin:string)=>origin.replace(/^https?:\/\//,'').replace(/\/.*$/,'')
+/** The origin's host, read by the URL parser; an origin that does not parse is shown as given. */
+const host=(origin:string)=>{try{return new URL(origin).host}catch{return origin}}
 const font=(role:'heading'|'section'|'subheading'|'body'|'metadata'|'fine')=>`font-size:${S[role][0]}px;line-height:${S[role][1]}px;`
 /**
  * Only an https address becomes a link. Anything else (javascript:, data:, a
