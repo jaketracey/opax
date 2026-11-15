@@ -640,6 +640,9 @@ check "status branch is a single parentless commit holding only status.json" bas
 check "local status file says ok" grep -q '"status": "ok"' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
 check "the real coverage check ran in the refresh and raised no coverage alert" bash -c "test -s '$HOME/.cache/autoresearch/pipeline/coverage-report-v1.json' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"coverage_alerts\"]==[], s'"
 check "log file written" test -s "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
+# The electorate release is republished from its own bundle (dissolved_for); the fixture release carries none,
+# so the step runs and changes nothing.
+check "electorate republish ran and left an unchanged release alone" grep -q 'Electorate references unchanged' "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
 
 echo "== 2. rerun straight away: checked_at is fresh and nothing else moved, so nothing is committed"
 before=$(git --git-dir="$ORIGIN" rev-parse main)

@@ -49,10 +49,10 @@ way and every file that `git status` shows as changed or added must parse.
   taxcharity entities/tax-charity: index.json (meta.counts, sources, caveats; the ABN counts held), names.json
              (by_name), and the <dd>.json shards by the last two digits of the ABN
 
-Not a nightly group (no refresh writes it; run it after a manual electorate export):
-
   electorates electorates/manifest.json: every release file it lists exists with its sha256; no OPAX
-             person id is held by two people; every elected candidacy names its person
+             person id is held by two people; every elected candidacy names its person; dissolved_for on
+             the index and detail rows is exactly what the release's own bundle and its reviewed
+             dissolution records give (the nightly republishes it: export_electorates.py --republish)
 """
 import datetime
 import importlib.util
@@ -1194,7 +1194,43 @@ def check_electorates() -> list[str]:
                 errs.append(f"elected candidacy {c['candidate_id']} ({c['name']}) names no person")
             elif c.get("person_id") and c["elected"] and c["person_id"] not in known:
                 errs.append(f"elected candidacy {c['candidate_id']} names {c['person_id']}, not in people.json")
+    errs += _dissolved_for_errors(release, manifest, reference)
     return errs[:20]
+
+
+def _dissolved_for_errors(release: Path, manifest: dict, reference: dict) -> list[str]:
+    """dissolved_for is derived, never typed: each row carries what its own bundle gives on the release's date.
+
+    A seat of a house a dissolution record names has the key (the election day, or null once the
+    post-result roster reload is in the bundle); every other row has no key. The app draws a
+    dissolved seat with no member, so a wrong or missing value here calls someone a member."""
+    from scripts.export_electorates import expected_dissolved_for
+    errs = []
+    try:
+        rows = json.loads((release / "index.json").read_text())["electorates"]
+    except (OSError, KeyError, TypeError, ValueError) as error:
+        # A release with no dissolution records and no index has nothing to check here.
+        return [f"dissolved_for cannot be checked: {error}"] if reference.get("dissolutions") else []
+    try:
+        expected = expected_dissolved_for(reference, manifest["generated"]) if reference.get("dissolutions") else {}
+    except (KeyError, TypeError, ValueError) as error:
+        return [f"dissolved_for cannot be checked: {error}"]
+    for row in rows:
+        eid = row["electorate_id"]
+        want = expected.get(eid, "absent")
+        got = row.get("dissolved_for", "absent")
+        if got != want:
+            errs.append(f"{row['name']} ({row['chamber']}): dissolved_for is {got!r}, the bundle gives {want!r}")
+            continue
+        if eid in expected:
+            try:
+                detail = json.loads((release / f"{eid}.json").read_text())
+            except (OSError, ValueError) as error:
+                errs.append(f"{eid}.json unreadable: {error}")
+                continue
+            if detail.get("dissolved_for", "absent") != want:
+                errs.append(f"{eid}.json: dissolved_for differs from its index row")
+    return errs[:10]
 
 
 def check_promoted_hub(name):
@@ -1215,10 +1251,10 @@ CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
           "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity,
-          "video": check_video}
-# Checks for data no nightly group carries: the electorate release is exported by
-# hand (scripts/export_electorates.py), so it is checked on request, never by default.
-MANUAL_CHECKS = {"electorates": check_electorates}
+          "video": check_video, "electorates": check_electorates}
+# Checks for data no nightly group carries; none today. (The electorate release was one until the
+# nightly began republishing it for dissolved_for.)
+MANUAL_CHECKS = {}
 
 
 def main() -> int:

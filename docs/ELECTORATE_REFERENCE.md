@@ -114,3 +114,13 @@ npm --prefix portal run check
 ```
 
 Browser checks exercised directory search, navigation, historical-date changes and back navigation, a five-member Council constituency, reciprocal person links, unknown-seat handling and a 390px viewport without overflow. Worker checks verified metadata/canonical URLs, 404 responses and sitemap coverage. Browser API requests were stubbed for the unrelated speech/search services because this checkout has no live search credentials.
+
+## Dissolved houses: `dissolved_for`
+
+A lower house dissolved for an election has no members until the result is declared, though the roster still lists who held each seat. Readers must not call those people members, so the index and each detail file say so.
+
+- **Contract.** A row of a house that a reviewed dissolution record names (today: every `vic_la` row) always carries the key. `dissolved_for: "YYYY-MM-DD"` is the election day while the house is dissolved; `dissolved_for: null` means not dissolved. A row with no key is one the pipeline cannot speak for, or a release from before the field: readers decide from their own election record.
+- **Written** from `scripts/hubs/electorate-dissolutions.json` (reviewed: jurisdiction, chamber, `dissolved_on`). The election day and the source link are read from the election file it names, so each is stated once. The value is the election day from `dissolved_on` onwards.
+- **Cleared only by the post-result roster reload.** The bundle must hold all three for the seat: a contest at that election with a candidate marked elected (the declared result, imported), a complete roster observation dated election day or later, and that roster seating every elected candidate. A roster refetched after election day with no declared result does not clear it; nor does a result while the roster still lists the old member.
+- **Published by the nightly**, not by hand: `scripts/export_electorates.py --republish` re-reads the published release's own bundle (`reference.json`), with no fetch and no database, and writes a new release only when a row's value or the records changed. `scripts/vm/validate_data.py electorates` recomputes every row from the release's bundle and refuses a value that differs.
+- **Old app builds.** The app's decoders ignore keys they do not name; `scripts/ci/app-data-guard.sh` checks the published release against each build still in use.
