@@ -400,12 +400,13 @@ export default function MoneyScreen() {
   );
   // The line's height is kept until its words arrive, in the words it is
   // expected to say, so the picker and the map's controls start in place.
+  // No words are coming after an error: nothing is kept for them.
   const summary =
     graph && filters ? (
       <Text wordSafe variant="secondary" testID="money-view-summary">
         {moneySummary(graph, filters)}
       </Text>
-    ) : (
+    ) : error && !record ? null : (
       <View
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
@@ -445,6 +446,7 @@ export default function MoneyScreen() {
           symbol="wifi.slash"
           title={copy.notSaved}
           body={copy.notSavedBody}
+          action={{ label: copy.tryAgain, onPress: retry }}
           testID="money-error"
         />
       ) : (
@@ -491,6 +493,8 @@ export default function MoneyScreen() {
               : null
           }
           unavailable={unavailable}
+          refreshing={refreshing}
+          refresh={refresh}
           jurisdiction={jurisdiction}
           params={params}
           write={write}
@@ -570,6 +574,8 @@ type MapData = {
 function MapMode({
   data,
   unavailable,
+  refreshing,
+  refresh,
   jurisdiction,
   params,
   write,
@@ -580,6 +586,8 @@ function MapMode({
   data: MapData | null;
   /** An error or an empty result, shown under the card in the map's place. */
   unavailable: React.ReactNode;
+  refreshing: boolean;
+  refresh: () => void;
   jurisdiction: MoneyJurisdiction;
   params: MoneyParams;
   write: (next: Record<string, string | undefined>) => void;
@@ -1102,7 +1110,19 @@ function MapMode({
               measured height, so they are in place on the first frame. */}
           <View style={styles.grow} pointerEvents="box-none">
             {unavailable ? (
-              <ScrollView contentContainerStyle={styles.unavailable}>
+              <ScrollView
+                contentContainerStyle={styles.unavailable}
+                // The map has no pull; its error and empty states do, as
+                // the List's have.
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={refresh}
+                    tintColor={colors.navy}
+                  />
+                }
+                testID="money-map-unavailable"
+              >
                 {unavailable}
               </ScrollView>
             ) : searchOpen || expanded ? null : (

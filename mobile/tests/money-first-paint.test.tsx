@@ -5,7 +5,7 @@ import * as Reanimated from 'react-native-reanimated';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { ApiError } from '../src/api/errors';
 import { apiClient } from '../src/api/runtime';
-import { SegmentedPicker } from '../src/design/primitives';
+import { ContentUnavailable, SegmentedPicker } from '../src/design/primitives';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { forgetMoneyGraphs } from '../src/features/money/lookup';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
@@ -280,11 +280,12 @@ describe('the first frame', () => {
   });
 
   test('the controls do not move when the card reports its height', async () => {
+    heldRead();
     const r = await render();
     const before = mapFrame(r.root).controls;
-    const top = r.root
-      .findAllByType(View)
-      .find((node) => node.props.onLayout && flat(node).paddingTop === 8)!;
+    // The card's host is the nearest view above it that reports a layout.
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (!top.props.onLayout) top = top.parent!;
     act(() => top.props.onLayout({ nativeEvent: { layout: { height: 212 } } }));
     expect(mapFrame(r.root).controls).toEqual(before);
     await act(async () => r.unmount());
@@ -300,6 +301,7 @@ describe('the first frame', () => {
       expect(space).toBeDefined();
       expect(flat(space).opacity).toBe(0);
       expect(space.props.accessibilityElementsHidden).toBe(true);
+      expect(space.props.importantForAccessibility).toBe('no-hide-descendants');
       expect(byTestID(r.root, 'money-view-summary')).toBeUndefined();
       await act(async () => read.answer());
       expect(byTestID(r.root, 'money-view-summary')).toBeDefined();
@@ -335,6 +337,38 @@ describe('the first frame', () => {
     expect(r.root.findAllByType(MoneyMapPanel)).toHaveLength(0);
     await act(async () => r.unmount());
   });
+
+  test('an error in the Map’s frame can be pulled to refresh, and offline has Try again', async () => {
+    const read = heldRead();
+    const r = await render();
+    await act(async () => read.fail(new ApiError('offline', 'Offline')));
+    const calls = jest.mocked(apiClient.get).mock.calls.length;
+    const pull = byTestID(r.root, 'money-map-unavailable').props.refreshControl;
+    expect(pull.props.refreshing).toBe(false);
+    await act(async () => pull.props.onRefresh());
+    expect(jest.mocked(apiClient.get).mock.calls.length).toBe(calls + 1);
+    const again = r.root
+      .findAllByType(ContentUnavailable)
+      .find((x) => x.props.testID === 'money-error')!.props.action;
+    expect(again.label).toBe('Try again');
+    await act(async () => again.onPress());
+    expect(jest.mocked(apiClient.get).mock.calls.length).toBe(calls + 2);
+    await act(async () => r.unmount());
+  });
+
+  test.each(['map', 'list'] as const)(
+    'no place is kept for a summary after an error (%s)',
+    async (view) => {
+      mockReader = view === 'list';
+      const read = heldRead();
+      const r = await render();
+      expect(byTestID(r.root, 'money-view-summary-space')).toBeDefined();
+      await act(async () => read.fail(new ApiError('offline', 'Offline')));
+      expect(byTestID(r.root, 'money-error')).toBeDefined();
+      expect(byTestID(r.root, 'money-view-summary-space')).toBeUndefined();
+      await act(async () => r.unmount());
+    },
+  );
 });
 
 describe('the words kept for the summary', () => {
