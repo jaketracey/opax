@@ -110,8 +110,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      # The newest app line. Its tree supplies the guard, the Jest config and the one install.
-      APP_REF: ios/apple-design
+      # The newest app line: the one TestFlight builds are cut from (builds 78 onwards). Its tree supplies the
+      # guard, the Jest config and the one install. ios/apple-design is older and lacks newer readers
+      # (people/firsts.json), so data those readers decode would go unchecked against it.
+      APP_REF: ad/b78-int
       # Builds still on readers' phones, checked with their own decoders: "label|tag|commit", one a line.
       # The tag keeps the commit in the repository; the job fails if the tag is missing or has moved.
       # Add a build when it ships; remove one only when that build is no longer in use.
@@ -133,7 +135,7 @@ jobs:
             portal/public/electorates portal/public/interests portal/public/pay.json \
             portal/public/expenses.json portal/public/expense-categories.json portal/public/photos \
             portal/public/corpus.json portal/public/discovery.json portal/public/graph \
-            portal/public/parliament portal/public/divisions \
+            portal/public/parliament portal/public/divisions portal/public/people \
             scripts/ci/app-data-guard.sh .github/workflows/gates.yml | head -1)
           if [ -n "$changed" ]; then
             echo 'changed=true' >> "$GITHUB_OUTPUT"
