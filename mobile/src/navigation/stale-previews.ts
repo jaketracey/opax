@@ -1,6 +1,7 @@
 import { CommonActions } from 'expo-router/react-navigation';
 import { InternalLinkPreviewContext } from 'expo-router/build/link/InternalLinkPreviewContext';
 import { useContext, useEffect } from 'react';
+import { Platform } from 'react-native';
 
 type State = {
   key?: string;
@@ -79,19 +80,30 @@ export function dropStalePreviews(): boolean {
 }
 
 /**
+ * How long after an iPad peek starts to close before its preload is dropped.
+ * Expo Router 57.0.24 opens a tapped peek on iPad only in its did-close
+ * event, once UIKit's close animation (about a third of a second) has
+ * finished, and that event reaches only Expo's own component. Dropped any
+ * sooner, the tapped peek opened a page loaded afresh, with no animation.
+ */
+export const padPeekCloseMs = 1000;
+
+/**
  * For a row's trigger inside a `Link` with a preview: when its peek closes,
  * or the row goes while it is open, what the peek preloaded is dropped.
  *
- * It waits one turn. A peek the reader opens (taps) navigates with its
- * preloaded route before it closes, and that navigation is already applied
- * by then, so an opened peek keeps the screen it handed to UIKit.
+ * It waits for a tapped peek to open first, since that uses the preload: on
+ * iPhone the tap navigates before the peek closes, so one turn is enough; on
+ * iPad it navigates after the close animation (`padPeekCloseMs`). By then an
+ * opened peek has taken its route, and only an unopened one is left to drop.
  */
 export function usePeekCleanup() {
   const open = useContext(InternalLinkPreviewContext)?.isVisible ?? false;
   useEffect(() => {
     if (!open) return;
     return () => {
-      setTimeout(dropStalePreviews, 0);
+      const pad = Platform.OS === 'ios' && Platform.isPad;
+      setTimeout(dropStalePreviews, pad ? padPeekCloseMs : 0);
     };
   }, [open]);
 }
