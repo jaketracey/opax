@@ -3425,6 +3425,43 @@ describe('the docked conversation column with nothing asked', () => {
     }
   });
 
+  test('the mark holds within a point of its threshold: heights half a point apart there change it once, not every time', async () => {
+    await at(1194, 834, pad, true, async () => {
+      await mount();
+      const markShown = () => hosts('ask-empty-mark').length > 0;
+      // Plenty of room: the mark is shown.
+      await layOut(834, 90, 100);
+      expect(markShown()).toBe(true);
+      // Grow the words until the mark goes: coarsely, then by half points.
+      let words = 100;
+      while (markShown() && words < 900) {
+        words += 16;
+        await layOut(834, 90, words);
+      }
+      expect(markShown()).toBe(false);
+      words -= 16;
+      // Well clear of the threshold again, it comes back.
+      await layOut(834, 90, words - 16);
+      expect(markShown()).toBe(true);
+      while (markShown() && words < 900) {
+        words += 0.5;
+        await layOut(834, 90, words);
+      }
+      expect(markShown()).toBe(false);
+      // The words now measure half a point shorter, then taller, and so on,
+      // as recentring them does. The mark stays as it is.
+      const seen: boolean[] = [];
+      for (let i = 0; i < 8; i += 1) {
+        await layOut(834, 90, words - (i % 2 === 0 ? 0.5 : 0));
+        seen.push(markShown());
+      }
+      expect(seen).toEqual(Array(8).fill(false));
+      // A real change, well past the threshold, still brings it back.
+      await layOut(834, 90, words - 4);
+      expect(markShown()).toBe(true);
+    });
+  });
+
   test('saved conversations that could not be read: the error stands alone, with the line, and no centred state', async () => {
     jest.mocked(loadChats).mockRejectedValueOnce(new Error('disk'));
     await at(834, 1194, pad, true, async () => {

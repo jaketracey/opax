@@ -353,6 +353,8 @@ const centredWords = (() => {
 
 const MARK = 96;
 const MARK_SCALE = 1.5;
+/** How far past its threshold the room must be before the mark changes. */
+const MARK_SLACK = 1;
 
 /**
  * The docked conversation column with nothing asked and nothing saved
@@ -419,7 +421,23 @@ export function AskEmptyState({
     Math.round(MARK * Math.min(Math.max(fontScale, 1), MARK_SCALE)) +
     rhythm.group;
   const wordsFit = !measured || words <= room;
-  const markFits = measured && words + mark <= room;
+  // The mark is shown while there is room for it under the words. Showing
+  // or hiding it recentres the words, which can move their measured height
+  // by a pixel; within a point of the threshold that would flip the mark
+  // back, and so on without end. So once it is shown or hidden it changes
+  // again only when the room is at least `MARK_SLACK` past the threshold.
+  const [markOn, setMarkOn] = useState<boolean | null>(null);
+  const spare = measured ? room - words - mark : null;
+  const markNext =
+    spare === null
+      ? null
+      : markOn === null
+        ? spare >= 0
+        : markOn
+          ? spare >= -MARK_SLACK
+          : spare >= MARK_SLACK;
+  if (markNext !== markOn) setMarkOn(markNext);
+  const markFits = markNext === true;
   useLayoutEffect(() => {
     centredWords.set(!shown || wordsFit);
     return () => centredWords.set(true);
