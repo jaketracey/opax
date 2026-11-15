@@ -144,15 +144,6 @@ export const APP_LINK_COMPONENTS: readonly AppLinkComponent[] = [
     "/": "/"
   },
   {
-    "/": "/today"
-  },
-  {
-    "/": "/today/edition"
-  },
-  {
-    "/": "/edition"
-  },
-  {
     "/": "/subject/person"
   },
   {
@@ -226,9 +217,6 @@ export const APP_LINK_COMPONENTS: readonly AppLinkComponent[] = [
   },
   {
     "/": "/connections"
-  },
-  {
-    "/": "/discover"
   },
   {
     "/": "/explore"

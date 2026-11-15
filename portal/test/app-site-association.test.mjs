@@ -85,9 +85,6 @@ test('the served components are the shared table, exclusions first', async () =>
 test('the claimed paths are exactly the pages the app opens', () => {
   assert.deepEqual(APP_LINK_COMPONENTS.filter((component) => !component.exclude), [
     { '/': '/' },
-    { '/': '/today' },
-    { '/': '/today/edition' },
-    { '/': '/edition' },
     { '/': '/subject/person' },
     { '/': '/subject/person/*' },
     { '/': '/subject/party' },
@@ -111,7 +108,6 @@ test('the claimed paths are exactly the pages the app opens', () => {
     { '/': '/money/grants' },
     { '/': '/money/grants/*/recipient/*' },
     { '/': '/connections' },
-    { '/': '/discover' },
     { '/': '/explore' },
     { '/': '/declared' },
     { '/': '/expenses' },
@@ -150,9 +146,22 @@ test('addresses that must stay on the web are not claimed', () => {
     '/money/grants?open=GA123', '/money/grants/federal/recipient/person:jane%20citizen', '/money/grants/qld/recipient/person%3Ajane%20citizen',
     '/money/receipts', '/money/explain', '/money/contracts', '/reports', '/reports/example', '/search?q=housing', '/subject/donor',
     '/budget', '/audit', '/audit/example', '/estimates', '/sitting', '/instruments', '/register/vic-gifts', '/official-reports',
+    // Addresses the web redirects elsewhere (canonicalRoutePath, todayRedirect), and app-only paths.
+    '/discover', '/discover?category=grants', '/today', '/today/edition', '/edition',
+    // Encodings of an excluded address: paths are compared decoded.
+    '/money/grants/federal/recipient/%70erson:jane', '/money/grants/federal/recipient/%70erson%3Ajane', '/%61pi/ask', '/%63ommunity?view=signin#token=example-token', '/privac%79', '/subject/person/%E0%A4%A',
+    '/Bills', '/bills/', '/ask?q=x&token=y',
     '/media/demo.mp4', '/bill-texts/au-federal-r7534/index.json', '/sitemap.xml', '/robots.txt', '/no-such-page',
   ])
     assert.equal(served(path), false, path);
+});
+
+test('no claimed path is one the Worker redirects to another page', () => {
+  // /discover 301s to /money/contracts and /today 302s to the day's page: neither may be claimed.
+  assert.match(index, /if\(path==='\/discover'\) return '\/money\/contracts'/);
+  const claims = APP_LINK_COMPONENTS.filter((component) => !component.exclude).map((component) => component['/']);
+  for (const path of ['/discover', '/today', '/money/contracts', '/index.html', '/home', '/search'])
+    assert.ok(!claims.includes(path), path);
 });
 
 test('each required exclusion is listed by name', () => {

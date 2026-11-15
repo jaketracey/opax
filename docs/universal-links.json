@@ -1,5 +1,5 @@
 {
-  "about": "The one table of opax.com.au addresses the OPAX app opens (universal links). scripts/build_universal_links.mjs writes it into the app (mobile/src/navigation/universal-links.generated.ts) and the Worker (portal/src/universal-links.generated.ts), which serves it as /.well-known/apple-app-site-association. Patterns use Apple's component syntax: '/' is the path, '?' the query and '#' the fragment; '*' is any run of characters and '?*' is at least one. Excluded addresses are tested first, and an address nothing claims stays on the web. See docs/UNIVERSAL-LINKS.md.",
+  "about": "The one table of opax.com.au addresses the OPAX app opens (universal links). scripts/build_universal_links.mjs writes it into the app (mobile/src/navigation/universal-links.generated.ts) and the Worker (portal/src/universal-links.generated.ts), which serves it as /.well-known/apple-app-site-association. Patterns use Apple's component syntax: '/' is the path, '?' the query and '#' the fragment; '*' is any run of characters and '?*' is at least one. Excluded addresses are tested first, and an address nothing claims stays on the web. Paths are matched decoded. Only addresses the web serves as a page of its own are claimed: one the web redirects elsewhere (/discover, /today) is left to the web. See docs/UNIVERSAL-LINKS.md.",
   "host": "opax.com.au",
   "bundleId": "au.com.opax.app",
   "exclude": [
@@ -122,33 +122,6 @@
       "examples": {
         "/": "/",
         "/#hp-indexed-title": "/(tabs)/(today)/recent-records"
-      }
-    },
-    {
-      "/": "/today",
-      "opens": [
-        "/"
-      ],
-      "examples": {
-        "/today": "/(tabs)/(today)"
-      }
-    },
-    {
-      "/": "/today/edition",
-      "opens": [
-        "/edition"
-      ],
-      "examples": {
-        "/today/edition": "/(tabs)/(today)/edition"
-      }
-    },
-    {
-      "/": "/edition",
-      "opens": [
-        "/edition"
-      ],
-      "examples": {
-        "/edition": "/(tabs)/(today)/edition"
       }
     },
     {
@@ -389,16 +362,6 @@
       "examples": {
         "/connections": "/(tabs)/(today)/connections",
         "/connections?entity=0123456789abcdef01234567": "/(tabs)/(today)/connection?id=0123456789abcdef01234567"
-      }
-    },
-    {
-      "/": "/discover",
-      "opens": [
-        "/leads"
-      ],
-      "examples": {
-        "/discover": "/(tabs)/(today)/leads",
-        "/discover?category=grants&item=record": "/(tabs)/(today)/leads?category=grants&item=record"
       }
     },
     {
