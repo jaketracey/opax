@@ -572,12 +572,21 @@ export class Catalogs {
   billIndexRow(key: string): decode.Bill | null {
     return this.billIndex?.data.bills.find((row) => row.key === key) ?? null;
   }
-  bill(key: string, refresh = false, signal?: AbortSignal) {
+  /**
+   * `persist: false` reads the file without saving it for offline use: for
+   * a screen that reads every bill at once (see `ApiClient.get`).
+   */
+  bill(
+    key: string,
+    refresh = false,
+    signal?: AbortSignal,
+    { persist = true }: { persist?: boolean } = {},
+  ) {
     return this.client.get(
       `/bills/${billKey(key)}.json`,
       decode.decodeBill,
       refresh,
-      { signal },
+      { signal, persist },
     );
   }
   votes(signal?: AbortSignal, refresh = false) {

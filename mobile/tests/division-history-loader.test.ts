@@ -105,7 +105,16 @@ test('partial failures and mismatched bill files settle before publishing a stab
   expect(final).toMatchObject({ loaded: 7, failed: 2, total: 9 });
   expect(final.rows).toHaveLength(7);
   expect(source.bills).toHaveBeenCalledWith(true, undefined);
-  expect(source.bill).toHaveBeenCalledWith(candidates[0]!.key, true, undefined);
+  // Read, not saved: a thousand saved files held the list and emptied the
+  // offline cache (tests/division-history-load.test.ts).
+  expect(source.bill).toHaveBeenCalledWith(
+    candidates[0]!.key,
+    true,
+    undefined,
+    {
+      persist: false,
+    },
+  );
 });
 
 test('cancelling a read never publishes an incomplete snapshot', async () => {

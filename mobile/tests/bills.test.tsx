@@ -618,7 +618,13 @@ describe('loading a bill (4.3)', () => {
     return {
       label: status.props.accessibilityLabel as string,
       text: status
-        .findAll((node) => typeof node.type === 'string')
+        // What is drawn: the pending event's unseen stand-in only holds
+        // the line's height (tests/bill-seed-shape.test.tsx).
+        .findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            StyleSheet.flatten(node.props.style)?.opacity !== 0,
+        )
         .flatMap((node) => node.children)
         .filter((child): child is string => typeof child === 'string')
         .join(' '),

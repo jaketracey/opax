@@ -474,7 +474,19 @@ function DetailSkeleton({
           {line('title', '60%', 'pageTitle')}
           {line('chamber', '90%')}
         </View>
-        {bone('follow', 112, controlHeight.default, true)}
+        {/* Follow keeps its touch target's height, and draws the capsule
+            the button draws inside it: a 48 pt bone stood 16 pt taller
+            than the button, its top 9 pt above where Follow lands. */}
+        {large ? (
+          bone('follow', 112, controlHeight.default, true)
+        ) : (
+          <View
+            testID={part('follow-slot')}
+            style={{ height: controlHeight.default, justifyContent: 'center' }}
+          >
+            {bone('follow', 104, buttonCapsule, true)}
+          </View>
+        )}
       </View>
       <View style={{ gap: rhythm.heading }}>
         {heading('members-heading')}

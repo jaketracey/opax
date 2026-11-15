@@ -31,7 +31,11 @@ import { personRoute } from '../src/navigation/routes';
 import { grantsRoute } from '../src/navigation/routes/public-money';
 import { LinkRow } from '../src/design/rows';
 import { RecordNameLink } from '../src/design/record';
-import { minimumTarget } from '../src/design/tokens';
+import {
+  buttonCapsule,
+  controlHeight,
+  minimumTarget,
+} from '../src/design/tokens';
 import {
   RepresentativeRows,
   sinceLine,
@@ -234,6 +238,14 @@ test('the pending electorate reserves the map, title and member layout with one 
   expect(
     StyleSheet.flatten(host('electorate-loading-map').props.style).height,
   ).toBe(200);
+  // Follow's bone is the capsule the button draws, inside the height its
+  // touch target takes: a 48 pt bone stood taller than the button it became.
+  expect(
+    StyleSheet.flatten(host('electorate-loading-follow').props.style).height,
+  ).toBe(buttonCapsule);
+  expect(
+    StyleSheet.flatten(host('electorate-loading-follow-slot').props.style),
+  ).toMatchObject({ height: controlHeight.default, justifyContent: 'center' });
   expect(
     host('electorate-loading').findAll(
       (node) =>
