@@ -181,7 +181,12 @@ FACTS_SCHEMA = 1
 
 
 def speech_facts(rows):
-    """The earliest speech per speaker, parliament and chamber, and the days each chamber has a speech, from rows
+    """Within a day the lowest speech_id stands for the earliest speech. The table holds no time of day or sitting
+    order (only the date, and for some sources an id that orders within one debate), so two speeches by one person
+    on their first day are told apart by load order: the DATE shown is exact, the linked speech is one of that
+    day's. Say so wherever the link is described.
+
+    The earliest speech per speaker, parliament and chamber, and the days each chamber has a speech, from rows
     of (speaker_name, person_id, party, state, chamber, day, speaker_type, source, electorate, is_witness,
     first speech_id) already under the corpus rule. Roster-free and JSON-ready, so the pass that built the dedupe
     can write it once (export_parliamentarians.py --speech-facts) and this export read it back."""

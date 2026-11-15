@@ -418,6 +418,48 @@ class FirstsTests(unittest.TestCase):
             doc["meta"].pop("generated")
         self.assertEqual(reused, expected)
 
+    def test_a_failure_writing_the_speech_facts_never_costs_the_roster_export(self):
+        import contextlib
+        import io
+        from unittest.mock import patch
+        from scripts import export_parliamentarians as people
+        path, _ = self.on_disk()
+        facts = os.path.join(os.path.dirname(path), "speech-facts.json")
+
+        def roster(argv, speech_facts=export.speech_facts):
+            out, err = io.StringIO(), io.StringIO()
+            with patch.object(people, "DB", f"file:{path}?mode=ro"), \
+                    patch.object(people, "PREVIOUS", os.path.join(os.path.dirname(path), "no-shipped-roster.json")), \
+                    patch.dict(os.environ, {"OPAX_ROSTER_ACCEPT": "1"}), patch.object(export, "speech_facts", speech_facts), \
+                    contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                people.main(argv)
+            return json.loads(out.getvalue()), err.getvalue()
+
+        plain, _ = roster(["--defer-check"])
+        self.assertTrue(plain["people"])
+        # With the facts: the same roster, and the facts beside it.
+        with_facts, _ = roster(["--defer-check", "--speech-facts", facts])
+        self.assertEqual(with_facts, plain)
+        self.assertTrue(os.path.isfile(facts))
+
+        def boom(rows):
+            list(rows)
+            raise RuntimeError("the facts query broke")
+
+        # A forced error in the facts: the roster is whole, the failure is one line, and no facts file is left
+        # (not even the last run's, which would be stale), so x_firsts skips.
+        broken, said = roster(["--defer-check", "--speech-facts", facts], speech_facts=boom)
+        self.assertEqual(broken, plain)
+        self.assertFalse(os.path.exists(facts))
+        self.assertFalse(os.path.exists(facts + ".partial"))
+        lines = [line for line in said.splitlines() if "speech facts not written" in line]
+        self.assertEqual(lines, ["[export] speech facts not written (RuntimeError: the facts query broke); "
+                                 "the roster export continues"])
+        # A path that cannot be written is the same: no error out of the roster export.
+        nowhere, said = roster(["--defer-check", "--speech-facts", os.path.join(facts, "no", "such", "dir.json")])
+        self.assertEqual(nowhere, plain)
+        self.assertIn("speech facts not written", said)
+
     def test_facts_from_another_version_or_corpus_floor_are_refused(self):
         path, _ = self.on_disk()
         bad = os.path.join(os.path.dirname(path), "facts.json")
@@ -441,6 +483,16 @@ class FirstsTests(unittest.TestCase):
         self.assertEqual(len(calls), 1)
         self.assertIn('--speech-facts "$TMP/speech-facts.json"', calls[0])
         self.assertLess(weekly.index("export OPAX_SPEECH_FACTS"), weekly.index("run_step x_firsts"))
+        # The step runs only inside the guard: with no facts, or an empty file, it is skipped and says so.
+        guard = weekly.index('if [ -s "$TMP/speech-facts.json" ]; then')
+        step, skip = weekly.index("run_step x_firsts"), weekly.index('log "[x_firsts] SKIP:')
+        self.assertLess(guard, step)
+        self.assertLess(step, weekly.index("  else\n", step))
+        self.assertLess(weekly.index("  else\n", step), skip)
+        self.assertLess(skip, weekly.index("  fi\n", skip))
+        self.assertNotIn("\n  fi\n", weekly[guard:step], "the x_firsts step is outside its guard")
+        # and the last run's facts are never read: they are removed before the people step
+        self.assertLess(weekly.index('rm -f "$TMP/speech-facts.json"'), weekly.index("export OPAX_SPEECH_FACTS"))
 
     def test_the_coverage_is_printed_per_chamber_for_review(self):
         import contextlib

@@ -210,6 +210,29 @@ def shipped_roster(path=None):
     return people, None
 
 
+def write_speech_facts(rows, path):
+    """Write the firsts' speech facts from this pass's rows to `path`, whole or not at all. Never raises."""
+    partial = path + '.partial'
+    try:
+        for stale in (path, partial):
+            if os.path.exists(stale):
+                os.remove(stale)
+        from scripts.export_people_firsts import speech_facts
+        facts = speech_facts((r[0], r[1], r[2], r[4], r[5], r[6], r[9], r[10], r[11], r[7], r[12]) for r in rows)
+        with open(partial, 'w', encoding='utf-8') as f:
+            json.dump(facts, f)
+        os.replace(partial, path)
+        return True
+    except Exception as e:  # noqa: BLE001 - whatever went wrong, the roster export carries on
+        print(f'[export] speech facts not written ({type(e).__name__}: {e}); the roster export continues', file=sys.stderr)
+        for left in (path, partial):
+            try:
+                os.remove(left)
+            except OSError:
+                pass
+        return False
+
+
 def main(argv=()) -> None:
     import argparse
     ap=argparse.ArgumentParser(description=__doc__)
@@ -268,9 +291,9 @@ def main(argv=()) -> None:
     if args.speech_facts:
         # The firsts side file (scripts/export_people_firsts.py) needs each speaker's earliest speech under this
         # same corpus rule; these rows already hold it, so it is written here and not read from the table again.
-        from scripts.export_people_firsts import speech_facts
-        with open(args.speech_facts, 'w', encoding='utf-8') as f:
-            json.dump(speech_facts((r[0], r[1], r[2], r[4], r[5], r[6], r[9], r[10], r[11], r[7], r[12]) for r in rows), f)
+        # The firsts must never cost the roster: any failure here is one line on stderr and no facts file (the
+        # weekly x_firsts step then skips and keeps the shipped file), and the export goes on.
+        write_speech_facts(rows, args.speech_facts)
     for speaker, pid, party, canonical, state, chamber, speech_date, is_witness, n, row_type, source, electorate, _first in rows:
         yr = (speech_date or '')[:4]
         # Group by original seat as well: a namesake's seat must never leak
