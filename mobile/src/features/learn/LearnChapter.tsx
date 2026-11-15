@@ -23,7 +23,7 @@ import { chapterKicker, learnCopy } from './copy';
 import { learnChapters, type TermId } from './glossary';
 import { chapterSymbols } from './LearnHub';
 import { openGuideLink } from './links';
-import { keepLearnPlace } from './place';
+import { chapterProgress, keepLearnPlace, useLearnPlaces } from './place';
 import { learnChapterRoute, learnRoute } from './routes';
 
 const one = (value: string | string[] | undefined) =>
@@ -140,6 +140,7 @@ function ChapterPage({
   const scroll = useRef<ScrollView>(null);
   const heading = useRef<View>(null);
   const headerBottom = useHeaderBottom();
+  const places = useLearnPlaces();
   // The screen the page was last reset for: Next resets it to the top, a
   // header settling later never does.
   const shown = useRef(at);
@@ -174,6 +175,10 @@ function ChapterPage({
   const following = last
     ? learnChapters[learnChapters.indexOf(chapter) + 1]
     : undefined;
+  const kept = following
+    ? chapterProgress(places[following.slug], following.screens.length)
+    : null;
+  const resume = kept?.kind === 'part' ? kept.at : undefined;
   return (
     <>
       <RouteOptions options={{ title: chapter.title }} />
@@ -214,7 +219,12 @@ function ChapterPage({
               detail={following.summary}
               detailLines={0}
               symbol={chapterSymbols[following.slug] ?? 'doc.text'}
-              onPress={() => router.replace(learnChapterRoute(following.slug))}
+              // The next chapter opens where the reader left it, if they
+              // did: opened at its start, their first Next would replace
+              // the place kept further in.
+              onPress={() =>
+                router.replace(learnChapterRoute(following.slug, resume))
+              }
               testID="learn-following-row"
             />
           </InsetGroup>
