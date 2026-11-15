@@ -1,4 +1,5 @@
 import { RouteOptions } from '../src/navigation/preview';
+import { emptyBarTitle } from '../src/navigation/useTitleOnScroll';
 import { ContentUnavailable } from '../src/design/states';
 import { StatStrip } from '../src/design/record';
 // Lane P, part 2 (people.md 2.1, 2.2): the person profile and the party
@@ -1288,6 +1289,22 @@ describe('profile', () => {
     });
     await pull();
     expect(has(r, 'person-role')).toBe(true);
+    await act(async () => r.unmount());
+  });
+
+  test('a profile opened over another person’s draws no title of theirs while it loads', async () => {
+    keepCatalog('/pay.json', catalogs.pay);
+    const { r, load } = await cold();
+    const loading = r.root.findByType(RouteOptions).props.options;
+    // The previous screen's bar title and collapsed back button are replaced
+    // on the first frame: an empty title view, and the full back button.
+    expect(loading.headerTitle).toBe(emptyBarTitle);
+    expect(loading.headerBackButtonDisplayMode).toBe('default');
+    await load();
+    // The page's scroll title takes over: no empty title is applied again.
+    const ready = r.root.findByType(RouteOptions).props.options;
+    expect(ready.headerTitle).toBeUndefined();
+    expect(ready.headerBackButtonDisplayMode).toBe('default');
     await act(async () => r.unmount());
   });
 

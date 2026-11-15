@@ -265,7 +265,7 @@ test('the pending electorate reserves the map, title and member layout with one 
   dimensions.mockRestore();
 });
 
-test('the electorate nav centre stays blank through loading, data arrival and scrolling, with its accessible content heading intact', async () => {
+test('the electorate nav centre is blank while loading, and names the seat once its heading has scrolled away', async () => {
   load('Grayndler');
   // Hold the actual seat read so loading is observed separately from completion.
   const seatResult = result(
@@ -280,11 +280,16 @@ test('the electorate nav centre stays blank through loading, data arrival and sc
   );
   const r = await render(<Electorate />);
   expect(has(r, 'electorate-loading')).toBe(true);
+  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBeUndefined();
   expect(mockOptions.some((options) => options.title === 'Electorate')).toBe(
     false,
   );
+  // The route's own blank title (stack options) stands until the seat loads.
+  for (const options of mockOptions)
+    expect(options.headerTitle).toBeUndefined();
   await act(async () => resolve(seatResult));
-  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBeUndefined();
+  // The seat's name is the bar's title, hidden until its heading is under it.
+  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBe('Grayndler');
   expect(r.root.findByProps({ testID: 'electorate-name' }).props.children).toBe(
     'Grayndler',
   );
@@ -296,23 +301,12 @@ test('the electorate nav centre stays blank through loading, data arrival and sc
         node.props.children === 'Grayndler',
     ),
   ).not.toHaveLength(0);
-  act(() =>
-    r.root
-      .findAllByType(ScrollView)[0]!
-      .props.onScroll({ nativeEvent: { contentOffset: { y: 2000 } } }),
-  );
-  for (const options of mockOptions) {
-    expect(options.title).not.toBe('Electorate');
-    const title = (
-      options.headerTitle as () => ReactElement<{ children?: unknown }>
-    )();
-    expect(title.props).toMatchObject({
-      accessibilityElementsHidden: true,
-      importantForAccessibility: 'no-hide-descendants',
-    });
-    expect(title.props.children).toBeUndefined();
-  }
-  expect(mockOptions.at(-1)!.title).toBe('Grayndler');
+  const last = mockOptions.at(-1)!;
+  expect(last.title).toBe('Grayndler');
+  const bar = (
+    last.headerTitle as () => ReactElement<{ title?: string; shown?: boolean }>
+  )();
+  expect(bar.props).toMatchObject({ title: 'Grayndler', shown: false });
   act(() => r.unmount());
 });
 

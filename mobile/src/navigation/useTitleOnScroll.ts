@@ -107,6 +107,26 @@ export function barTitleWidth(
 }
 
 /**
+ * How far to move a title right so it sits on the bar's centre line when
+ * the back button has collapsed to its 44 pt circle (`minimal`). UIKit
+ * centres the title view between the two groups, and the trailing group
+ * (Share and More: 104 pt) outweighs the circle, so the title sat 30 pt left
+ * of centre (sweep 78, member profile). Half the difference puts it back. No
+ * shift where the items are not on the bar (the Duo's rail passes 0).
+ */
+export function barTitleMinimalShift(
+  trailing = 2,
+  trailingWidth?: number,
+  itemGrowth = 0,
+): number {
+  if (trailingWidth === 0) return 0;
+  const items =
+    trailingWidth ??
+    44 + 60 * Math.max(0, trailing - 1) + itemGrowth * Math.max(0, trailing);
+  return Math.max(0, (items - (44 + itemGrowth)) / 2);
+}
+
+/**
  * The widest a bar title may be and still sit on the bar's centre line:
  * the bar less its wider side, twice. `barTitleWidth` is the span between
  * the items, which is lopsided whenever the trailing items outweigh the back
@@ -360,7 +380,24 @@ export function BarTitle({
     : room;
   return createElement(
     NativeView,
-    { style: { maxWidth: drawnRoom } },
+    {
+      style: {
+        maxWidth: drawnRoom,
+        ...(minimal
+          ? {
+              transform: [
+                {
+                  translateX: barTitleMinimalShift(
+                    trailing,
+                    trailingWidth,
+                    growth,
+                  ),
+                },
+              ],
+            }
+          : {}),
+      },
+    },
     createElement(
       Animated.Text,
       {

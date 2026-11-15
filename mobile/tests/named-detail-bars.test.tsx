@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   SectionList,
+  StyleSheet,
   View,
   ScrollView,
 } from 'react-native';
@@ -34,6 +35,7 @@ import {
 } from '../src/navigation/useNamedBackOptions';
 import {
   BarTitle,
+  barTitleMinimalShift,
   barTitleWidth,
   retreatBarTitle,
   barTitleCandidates,
@@ -1030,3 +1032,35 @@ test.each([
     act(() => Dimensions.set({ window: original }));
   },
 );
+
+test('a title beside the collapsed back button is moved onto the bar’s centre line, and only then', () => {
+  expect(barTitleMinimalShift(2)).toBe(30);
+  expect(barTitleMinimalShift(1)).toBe(0);
+  // The Duo's rail has no items on the bar.
+  expect(barTitleMinimalShift(2, 0)).toBe(0);
+  const original = Dimensions.get('window');
+  act(() =>
+    Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
+  );
+  const box = (width: number) => {
+    const navigation = { setOptions: jest.fn() };
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <BarTitle title="Anthony Albanese" person shown backTitle="Today" />
+        </NavigationContext.Provider>,
+      );
+    });
+    measureBarTitle(view!, { 'Anthony Albanese': width });
+    return StyleSheet.flatten(
+      view!.root.findByType(Animated.Text).parent!.props.style,
+    );
+  };
+  // Wider than the span with the back name, so the back button collapses.
+  expect(box(170)).toMatchObject({ transform: [{ translateX: 30 }] });
+  act(() => view!.unmount());
+  // Fits beside the back name: UIKit already centres it.
+  expect(box(100).transform).toBeUndefined();
+  act(() => view!.unmount());
+  act(() => Dimensions.set({ window: original }));
+});

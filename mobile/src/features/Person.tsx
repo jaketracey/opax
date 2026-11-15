@@ -1,4 +1,5 @@
 import { RouteOptions } from '../navigation/preview';
+import { emptyBarTitle } from '../navigation/useTitleOnScroll';
 import { useScreenReady } from '../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -354,6 +355,12 @@ export function ProfileScreen({
           options={{
             // The back button on the next page names this one.
             title: name ?? '',
+            // A screen opened over another person's keeps that bar's title
+            // and its collapsed back button until its own is installed: draw
+            // neither, so the bar never names anyone else. Once the page is
+            // up its scroll title replaces the empty one.
+            headerBackButtonDisplayMode: 'default',
+            ...(load.status === 'ready' ? {} : { headerTitle: emptyBarTitle }),
             ...(load.status === 'not-found'
               ? {
                   headerShown: true,
