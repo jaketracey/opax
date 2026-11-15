@@ -13,13 +13,63 @@
         "representatives.xml": "a2415948a28922fb9337c72ab42bc5c72e17b0adc78db76e87799d253ae0315d",
         "senators.xml": "4e45812d5c0f9006177ef412faaec18b4ff38d308d4d3fb37d5f032b0708ea8e"
       },
-      "source_in_office": {"representatives": 150, "senate": 76},
-      "roster": {"people": 226, "matched_by_id": 226, "name_only": 0, "opax_not_in_source": 0, "source_not_in_opax": 0, "differs": 1, "party_labels": 10},
-      "seat_roster": {"people": 226, "matched_by_id": 225, "name_only": 1, "opax_not_in_source": 0, "source_not_in_opax": 0, "differs": 0, "party_labels": 10},
+      "source_in_office": {
+        "representatives": 150,
+        "senate": 76
+      },
+      "roster": {
+        "people": 226,
+        "matched_by_id": 226,
+        "name_only": 0,
+        "opax_not_in_source": 0,
+        "source_not_in_opax": 0,
+        "differs": 1,
+        "party_labels": 10
+      },
+      "seat_roster": {
+        "people": 226,
+        "matched_by_id": 225,
+        "name_only": 1,
+        "opax_not_in_source": 0,
+        "source_not_in_opax": 0,
+        "differs": 0,
+        "party_labels": 10
+      },
       "verified_to": "2026-09-11",
-      "senate_cross_check": {"source": "scripts/handbook_party_service.json (Parliamentary Handbook, already in the repo)", "fetched": "2026-11-13", "senators_flagged_current": 76, "of": 76},
-      "result": "Who sits, in which house and for which seat agrees with the source as it stood on 2026-09-11, with one open difference (the roster row for Chris Gatenby records no Senate seat). Nothing after 2026-09-11 is verified by this source; the Senate alone is cross-checked to 2026-11-13.",
-      "report": "docs/roster-reverify-2026-11-16.md"
+      "result": "Who sits, in which house and for which seat agrees with OpenAustralia as it stood on 2026-09-11. One open difference (the roster row for Chris Gatenby records no Senate seat) and four open questions for a human check. The Senate is cross-checked to 2026-11-13; for the House after 2026-09-11 no change shows in the AEC's pages, announcements or OPAX's divisions, which is not a member-by-member confirmation.",
+      "report": "docs/roster-reverify-2026-11-16.md",
+      "cross_checks": [
+        {
+          "source": "AEC by-elections and 2026 media releases",
+          "url": "https://www.aec.gov.au/Elections/supplementary_by_elections/",
+          "fetched": "2026-11-16",
+          "finding": "No by-election since Farrer (2026-05-09); latest media release 2026-10-26"
+        },
+        {
+          "source": "Announcements found by web search (URLs and dates in the report)",
+          "fetched": "2026-11-16",
+          "finding": "No resignation, vacancy or change of party taking effect since 2026-09-04 found, apart from the open questions"
+        },
+        {
+          "source": "scripts/handbook_party_service.json (Parliamentary Handbook, already in the repo)",
+          "fetched": "2026-11-13",
+          "finding": "All 76 senators flagged as in the current Parliament"
+        },
+        {
+          "source": "portal/public/divisions (OPAX)",
+          "to": {
+            "representatives": "2026-10-29",
+            "senate": "2026-10-15"
+          },
+          "finding": "No voter outside the seat roster or in another house"
+        }
+      ],
+      "needs_human_check": [
+        "Jonathon Duniam: still a senator for Tasmania, or replaced by Sarah Courtney?",
+        "Zali Steggall and Allegra Spender: Independent or Community Strong Australia?",
+        "Matthew Canavan: Nationals or LNP?",
+        "Corinne Mulholland: still a senator for Queensland?"
+      ]
     }
   ]
 }

@@ -60,10 +60,14 @@ Do it after every by-election, casual vacancy or defection; quarterly otherwise.
 ## Re-verification of 2026-11-16
 
 The 226 sitting federal people were checked again, by OpenAustralia person id, against
-OpenAustralia's public member files (last modified 11 September 2026; Parliament's site was
-not fetched). Nobody is missing on either side and no seat, chamber or state differs. One
-roster row (Chris Gatenby) records no Senate seat, and a group for the accept list is
-proposed. The report is [roster-reverify-2026-11-16.md](roster-reverify-2026-11-16.md);
+OpenAustralia's public member files (last modified 11 September 2026), then cross-checked
+against the AEC's by-election pages, announcements since 4 September and the Handbook records
+in `scripts/handbook_party_service.json` (senators, to 13 November). Parliament's site was not
+fetched. Nobody is missing on either side and no seat, chamber or state differs. One roster
+row (Chris Gatenby) records no Senate seat, and a group for the accept list is proposed. Four
+questions are left for a human check (Jonathon Duniam's seat; Zali Steggall and Allegra
+Spender's party; Matthew Canavan's party label; Corinne Mulholland's seat). The report is
+[roster-reverify-2026-11-16.md](roster-reverify-2026-11-16.md);
 `scripts/roster_reverify.py` re-runs the comparison from cached files and
 `scripts/roster_verification.json` logs each check. The seat roster's own date stays
 4 September 2026.
