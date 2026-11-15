@@ -5,7 +5,6 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
-import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 import {
   Children,
   cloneElement,
@@ -37,7 +36,13 @@ import {
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
-import { barBacking, opaqueBar, useRailBar } from '../navigation/chrome';
+import {
+  barBacking,
+  clearBarStyle,
+  opaqueBar,
+  useClearRailBar,
+  useRailBar,
+} from '../navigation/chrome';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
@@ -258,17 +263,8 @@ const stickyDebounce = 64;
  * unfolded Duo, and the same page opened in a sheet).
  */
 export function useClearBarTop(): number {
-  const route = useContext(NavigationRouteContext);
   const bottom = useHeaderBottom();
-  const verticalBar = useVerticalBarEdge() !== 'unspecified';
-  // The stack's descriptors change on every setOptions of every page in it
-  // (a bar title fading in, say). Only a page beside a vertical bar reads
-  // them, so an iPhone or iPad page neither subscribes nor re-renders.
-  if (!verticalBar || !route) return 0;
-  const descriptors = use(DescriptorsContext);
-  return descriptors[route.key]?.options.headerTransparent === true
-    ? bottom
-    : 0;
+  return useClearRailBar() ? bottom : 0;
 }
 
 /**
@@ -507,12 +503,16 @@ export function Screen({
     underBar,
   });
   const backed = useSolidRailBacking();
+  const clearRail = useClearRailBar();
   const wasBacked = useRef(false);
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
     if (inPane || nativeRoot) return;
     setOptions({
-      ...opaqueBar(colors[ground]),
+      // Under the clear rail bar the page is the ground: no colour, no line.
+      ...(clearRail
+        ? clearBarStyle(opaqueBar(colors[ground]))
+        : opaqueBar(colors[ground])),
       ...(backed
         ? barBacking(colors[ground])
         : wasBacked.current
@@ -520,7 +520,7 @@ export function Screen({
           : {}),
     });
     wasBacked.current = backed;
-  }, [setOptions, ground, inPane, nativeRoot, backed]);
+  }, [setOptions, ground, inPane, nativeRoot, backed, clearRail]);
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();

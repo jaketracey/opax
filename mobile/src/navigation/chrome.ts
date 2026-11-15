@@ -1,11 +1,14 @@
 import {
   router,
   type Href,
+  type NativeStackNavigationOptions,
   type NativeStackHeaderItem,
   type NativeStackHeaderItemMenuAction,
   type NativeStackHeaderItemMenuSubmenu,
 } from 'expo-router';
-import { createElement } from 'react';
+import { NavigationRouteContext } from 'expo-router/react-navigation';
+import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
+import { createElement, use, useContext } from 'react';
 import {
   Dimensions,
   Platform,
@@ -217,6 +220,44 @@ export const solidRailBar = (
   underBar
     ? { headerTransparent: false, ...opaqueBar(ground), ...barBacking(ground) }
     : {};
+
+/**
+ * Whether this route's bar is clear beside a vertical bar: a tab stack's
+ * pushed page on the closed Duo (see `useStackChrome`). The stack's
+ * descriptors are read only beside a vertical bar, so on iPhone and iPad the
+ * caller neither subscribes to them nor re-renders when a page sets options.
+ */
+export function useClearRailBar(): boolean {
+  const route = useContext(NavigationRouteContext);
+  const verticalBar = useVerticalBarEdge() !== 'unspecified';
+  if (!verticalBar || !route) return false;
+  return use(DescriptorsContext)[route.key]?.options.headerTransparent === true;
+}
+
+/**
+ * Bar options for a page under the clear rail bar: no colour and no hairline.
+ * UIKit paints a coloured bar from 14 pt down to the band's foot, so a paper
+ * bar over the darker grouped ground was a paper band with a strip of the
+ * page above it at rest (the glossary), and the bar's hairline crossed the
+ * page at 24 pt once the band had folded (the electorate map, b73). The page
+ * itself is the ground under a clear bar. Other keys pass through.
+ */
+export function clearBarStyle<T extends NativeStackNavigationOptions>(
+  options: T,
+): T {
+  if (
+    !('headerStyle' in options) &&
+    !('headerLargeStyle' in options) &&
+    !('headerShadowVisible' in options)
+  )
+    return options;
+  return {
+    ...options,
+    ...('headerStyle' in options ? { headerStyle: {} } : {}),
+    ...('headerLargeStyle' in options ? { headerLargeStyle: {} } : {}),
+    headerShadowVisible: false,
+  };
+}
 
 /**
  * `tabStack`: the pages pushed in a tab's stack. Beside a vertical bar (the

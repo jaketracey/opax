@@ -7,6 +7,10 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import * as accessibility from '../src/design/accessibility';
+import { colors } from '../src/design/tokens';
+import { paperBar } from '../src/features/sources/parts';
+import { clearBarStyle, opaqueBar } from '../src/navigation/chrome';
+import { RouteOptions } from '../src/navigation/preview';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import { ClearBarRest, FixedPage, Screen } from '../src/design/layout';
 
@@ -403,5 +407,123 @@ describe('a solid bar beside a vertical bar', () => {
     mockBarEdge = edge;
     solid.mockReturnValue(on);
     expect('headerBackground' in page([...names], presentation)).toBe(false);
+  });
+});
+
+// Under the clear rail bar the page is the ground. UIKit paints a coloured
+// bar from 14 pt down to the band's foot and draws its hairline there: the
+// glossary's paper bar was a paper band over the darker page at rest, and
+// the hairline crossed the electorate map at 24 pt once the band had folded
+// (b73). Neither Screen nor a page's own RouteOptions colours a clear bar.
+describe('no bar colour or hairline under the clear rail bar', () => {
+  function options(
+    edge: typeof mockBarEdge,
+    headerTransparent: boolean,
+    content: ReactElement,
+  ) {
+    mockBarEdge = edge;
+    const calls: Record<string, unknown>[] = [];
+    const navigation = {
+      addListener: () => () => undefined,
+      setOptions: (value: Record<string, unknown>) => calls.push(value),
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'root' }, { key: route.key }],
+        routeNames: ['index', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route as never}>
+            <DescriptorsContext.Provider
+              value={
+                { [route.key]: { options: { headerTransparent } } } as never
+              }
+            >
+              {content}
+            </DescriptorsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    act(() => renderer.unmount());
+    return calls;
+  }
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  beforeEach(() => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 27,
+    });
+  });
+  afterEach(() => {
+    if (version) Object.defineProperty(Platform, 'Version', version);
+  });
+  const screen = (
+    <Screen grouped testID="electorate-screen">
+      <View />
+    </Screen>
+  );
+  // The glossary: a grouped page that sets a paper bar of its own.
+  const glossary = (
+    <>
+      <RouteOptions options={{ title: 'A to Z glossary', ...paperBar }} />
+      {screen}
+    </>
+  );
+
+  test.each([
+    ['the electorate page (Screen)', screen],
+    ['the glossary (a paper bar of its own)', glossary],
+  ] as const)('%s beside the rail', (_name, content) => {
+    const styled = options('trailing', true, content).filter(
+      (call) => 'headerStyle' in call,
+    );
+    expect(styled.length).toBeGreaterThan(0);
+    for (const call of styled) {
+      expect(call.headerStyle).toEqual({});
+      expect(call.headerLargeStyle).toEqual({});
+      expect(call.headerShadowVisible).toBe(false);
+    }
+  });
+
+  test.each([
+    // iPhone and iPad: the electorate's glass bar and the glossary's paper
+    // bar are the ones they had.
+    ['unspecified', true, screen, [colors.sunken]],
+    ['unspecified', false, glossary, [colors.paper, colors.sunken]],
+    // The same page in a sheet beside the rail keeps its opaque bar.
+    ['trailing', false, glossary, [colors.paper, colors.sunken]],
+  ] as const)(
+    'beside a %s bar with headerTransparent %s the bar keeps its colour and hairline',
+    (edge, transparent, content, grounds) => {
+      const styled = options(edge, transparent, content).filter(
+        (call) => 'headerStyle' in call,
+      );
+      expect(
+        styled.map(
+          (call) =>
+            (call.headerStyle as { backgroundColor: unknown }).backgroundColor,
+        ),
+      ).toEqual([...grounds]);
+      for (const call of styled) expect(call.headerShadowVisible).toBe(true);
+    },
+  );
+
+  test('clearBarStyle leaves other options and uncoloured options alone', () => {
+    const plain = { title: 'Bills', headerTitle: 'Bills' };
+    expect(clearBarStyle(plain)).toBe(plain);
+    expect(
+      clearBarStyle({ title: 'Glossary', ...opaqueBar(colors.paper) }),
+    ).toEqual({
+      title: 'Glossary',
+      headerStyle: {},
+      headerLargeStyle: {},
+      headerShadowVisible: false,
+    });
   });
 });

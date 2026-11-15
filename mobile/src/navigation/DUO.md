@@ -84,9 +84,18 @@ on the darker grouped ground (Leads) has its bar owned by `RouteOptions`,
 which knows no ground, so its Screen shares the ground with the owner; in
 paper it was a strip over the darker page at rest.
 
-Known, not fixed: a pushed page that sets a paper bar over the darker ground
-(the glossary, Methods, Datasets, Portraits, Photo credits) shows a paper
-title band with 14 pt of the page above it at rest beside the rail.
+Under the clear rail bar the page is the ground, so no page colours that bar
+or draws its hairline (`clearBarStyle`, applied by `Screen` and by
+`RouteOptions`). UIKit paints a coloured bar from 14 pt down to the band's
+foot: the glossary's paper bar was a paper band over the darker page at rest,
+and the bar's hairline crossed the electorate map at 24 pt once the band had
+folded (b73, where the hard scroll edge also drew a lighter band above it).
+The lighter patch at the rail end of that line is the top of the rail's own
+glass, which is the system's.
+
+Known, not fixed: the reference pages in the Account sheet (Methods, Datasets,
+Portraits, Photo credits) keep their opaque paper bar, and scrolled content
+shows in the 16 pt above it. A sheet cannot take the backing view.
 
 Known, not fixed: Search opened by a link from a page in another tab draws
 its title over the field on the rail (captured before and after this change).

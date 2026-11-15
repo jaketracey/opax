@@ -6,7 +6,12 @@ import {
 import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
 import { sheetListOptions } from './sheet-lists';
 import { useDetailRouteOptions } from './useDetailRouteOptions';
-import { headerItems, pendingHeaderItems } from './chrome';
+import {
+  clearBarStyle,
+  headerItems,
+  pendingHeaderItems,
+  useClearRailBar,
+} from './chrome';
 import {
   useRootBarAppearance,
   useRootBarSearchOptions,
@@ -66,17 +71,20 @@ export function RouteOptions({
     () => pendingHeaderItems(route?.name, route?.params),
     [route?.name, route?.params],
   );
-  const resolvedOptions = useMemo(
-    () =>
+  // A page that sets its own bar colour (the glossary's paper bar) loses it
+  // under the clear rail bar, as Screen's does (clearBarStyle).
+  const clearRail = useClearRailBar();
+  const resolvedOptions = useMemo(() => {
+    const resolved =
       options &&
       pending &&
       'unstable_headerRightItems' in options &&
       !options.unstable_headerRightItems &&
       !options.headerRight
         ? { ...options, ...headerItems(() => pending) }
-        : options,
-    [options, pending],
-  );
+        : options;
+    return resolved && clearRail ? clearBarStyle(resolved) : resolved;
+  }, [options, pending, clearRail]);
   const keepItems = stableItems || !!pending;
   useDetailRouteOptions(setOptions, keepItems ? resolvedOptions : undefined);
   useRootBarSearchOptions(options);
