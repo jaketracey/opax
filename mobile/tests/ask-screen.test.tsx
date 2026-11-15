@@ -1550,7 +1550,10 @@ test.each([
       expect(byId('ask-starter-seat').length).toBe(0);
       chosenInFlow('ask-starter-0');
     } finally {
-      Dimensions.set({ window: original });
+      // The mounted screen redraws for the size: inside act, as it is told.
+      await act(async () => {
+        Dimensions.set({ window: original });
+      });
     }
   },
 );
