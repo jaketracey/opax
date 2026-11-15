@@ -16,6 +16,7 @@ import {
   onScreen,
   placeCamera,
   ramp,
+  returnCamera,
   screenToWorld,
   smallNodeOpacity,
   thinEdgeOpacity,
@@ -25,6 +26,7 @@ import {
   zoomAbout,
   type Bounds,
   type Camera,
+  type CameraRest,
   type Viewport,
 } from '../src/features/money/map/camera';
 
@@ -424,5 +426,69 @@ describe('isDoubleTap', () => {
     expect(isDoubleTap(first, { x: 130, y: 200, at: 1400 }, 300, 40)).toBe(
       false,
     );
+  });
+});
+
+describe('a viewport that changes and comes back', () => {
+  const box: Bounds = { minX: -200, maxX: 200, minY: -300, maxY: 300 };
+  const view = (top: number, height = 760): Viewport => ({
+    width: 402,
+    height,
+    insets: { top, bottom: 196, left: 8, right: 76 },
+  });
+  /** What the stage does at each change: clamp to the moment's limits. */
+  const clamp = (camera: Camera, viewport: Viewport) =>
+    placeCamera(
+      { placed: true, settled: true },
+      { kept: null, current: camera },
+      box,
+      viewport,
+    ).camera;
+  /** One viewport change, through the clamp and the way back. */
+  const change = (
+    state: { camera: Camera; viewport: Viewport; rest: CameraRest | null },
+    viewport: Viewport,
+  ) => {
+    const back = returnCamera(
+      state.rest,
+      { previous: state.viewport, current: state.camera },
+      viewport,
+      clamp(state.camera, viewport),
+    );
+    return { camera: back.camera, viewport, rest: back.rest };
+  };
+  const card = view(308);
+  const search = view(98);
+  const start = { camera: fitCamera(box, card), viewport: card, rest: null };
+
+  test('the clamp alone leaves the map zoomed in after the search card', () => {
+    // The search card gives the map more than 1 / ZOOM_OUT of its room.
+    const opened = clamp(start.camera, search);
+    expect(opened.k).toBeGreaterThan(start.camera.k);
+    expect(clamp(opened, card)).not.toEqual(start.camera);
+  });
+
+  test('the view is put back exactly when the viewport returns', () => {
+    const opened = change(start, search);
+    expect(opened.camera.k).toBeGreaterThan(start.camera.k);
+    const closed = change(opened, card);
+    expect(closed.camera).toEqual(start.camera);
+    expect(closed.rest).toBeNull();
+  });
+
+  test('through several changes: the keyboard resizes the window, then all of it returns', () => {
+    let state = change(start, search);
+    state = change(state, view(98, 440));
+    state = change(state, view(308, 440));
+    state = change(state, card);
+    expect(state.camera).toEqual(start.camera);
+  });
+
+  test('a view the reader moved in between is theirs: it is not put back', () => {
+    const opened = change(start, search);
+    const moved = { ...opened, camera: { ...opened.camera, tx: 40 } };
+    const closed = change(moved, card);
+    expect(closed.camera).toEqual(clamp(moved.camera, card));
+    expect(closed.camera).not.toEqual(start.camera);
   });
 });
