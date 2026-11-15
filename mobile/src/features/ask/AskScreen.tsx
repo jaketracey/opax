@@ -27,7 +27,6 @@ import { useOffline } from '../../api/useOffline';
 import {
   useAccessibilitySize,
   useReduceMotion,
-  useSolidBar,
 } from '../../design/accessibility';
 import {
   RegionProvider,
@@ -45,7 +44,7 @@ import { colors, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { scrollToTop } from '../../design/scroll-to-top';
 import { askHeaderItems, clearBars, glassBar } from '../../navigation/chrome';
-import { BarFade } from '../../design/bar-fade';
+import { ClearBarFade } from '../../design/bar-fade';
 import { talkSignInRoute } from '../../navigation/routes/account';
 import { conversationsRoute } from '../../navigation/routes/ask';
 import { voiceLinked } from '../../voice/linked';
@@ -177,9 +176,7 @@ export default function AskScreen() {
   // Under the clear bar the page fades into its ground behind the title and
   // the bar buttons, from the first point of scroll (at accessibility sizes
   // the starters showed through, blurred). A solid bar covers its own.
-  const solidBar = useSolidBar();
-  const barFade =
-    clearBars && underBar && Platform.OS === 'ios' && glassBar() && !solidBar;
+  const barFade = clearBars && underBar && Platform.OS === 'ios' && glassBar();
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
@@ -556,7 +553,9 @@ export default function AskScreen() {
               </RegionProvider>
             </View>
             {/* After the scroll's chain, so UIKit still finds it first. */}
-            {barFade ? <BarFade bottom={headerBottom} ground={ground} /> : null}
+            {barFade ? (
+              <ClearBarFade bottom={headerBottom} ground={ground} />
+            ) : null}
           </SidebarSafe>
         </AskRevealContext.Provider>
       </View>

@@ -1,5 +1,5 @@
-import { animatedScroll, useSolidBar } from '../../design/accessibility';
-import { BarFade } from '../../design/bar-fade';
+import { animatedScroll } from '../../design/accessibility';
+import { ClearBarFade } from '../../design/bar-fade';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { RouteOptions } from '../../navigation/preview';
@@ -267,7 +267,6 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   // opaque bar, the Duo's rail root under a solid one, and a split pane
   // keeps its own bar.
   const headerBottom = useHeaderBottom();
-  const solidBar = useSolidBar();
   const onRail = useVerticalBarEdge() !== 'unspecified';
   const fades =
     clearBars &&
@@ -275,7 +274,6 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     glassBar() &&
     !pushed &&
     !adaptive &&
-    !solidBar &&
     !onRail;
   const [underBar, setUnderBar] = useState(false);
   const barY = useRef<number | null>(null);
@@ -629,7 +627,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <>
         <RouteOptions options={options} />
         {listView}
-        {fades && underBar ? <BarFade bottom={headerBottom} /> : null}
+        {fades && underBar ? <ClearBarFade bottom={headerBottom} /> : null}
       </>
     );
   return (
