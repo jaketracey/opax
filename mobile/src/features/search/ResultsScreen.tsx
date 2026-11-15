@@ -24,7 +24,7 @@ import {
 import { GroupResults, useGroupList } from './GroupResults';
 import { ResultsHeader } from './ResultsHeader';
 import { ResultsView, localSource } from './ResultsView';
-import { SEARCH_PLACEHOLDER } from './SearchScreen';
+import { useSearchPlaceholder } from './SearchScreen';
 import { scrollToTop } from '../../design/scroll-to-top';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { SearchField } from './SearchField';
@@ -98,8 +98,9 @@ export function ResultsScreen() {
     }
     scrollToTop(scroll.current, headerBottom);
   }
+  const placeholder = useSearchPlaceholder();
   const search = useListSearchBar({
-    placeholder: SEARCH_PLACEHOLDER,
+    placeholder,
     onChangeText: setText,
     onSearchButtonPress: submit,
     onCancelButtonPress: () => {
@@ -162,7 +163,7 @@ export function ResultsScreen() {
           <SearchField
             inputRef={input}
             value={text}
-            placeholder={SEARCH_PLACEHOLDER}
+            placeholder={placeholder}
             onChangeText={setText}
             onSubmitEditing={() => submit(text)}
             testID="results-input"
