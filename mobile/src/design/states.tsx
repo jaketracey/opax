@@ -263,6 +263,11 @@ export interface ProfileBones {
     /** False for a row that opens nothing: it has no chevron. */
     link?: boolean;
   }[];
+  /**
+   * Draw the portrait and the name only. What stands under the name is not
+   * known yet (a paid post's line), so nothing is drawn where it may move.
+   */
+  nameOnly?: boolean;
   /** The figures under the rows: tiles, one alone as a full-width row. */
   tiles?: readonly (keyof typeof tileBones)[];
 }
@@ -279,6 +284,7 @@ const sittingMemberBones: Required<ProfileBones> = {
   role: null,
   yourMP: false,
   follow: true,
+  nameOnly: false,
   rows: [
     { kind: 'party', title: 'Party' },
     { kind: 'seat', title: 'Member for a seat', detail: 'State, since a date' },
@@ -424,6 +430,7 @@ function DetailSkeleton({
   // A row's chevron: 13 pt, growing with the text to one and a half times.
   const chevron = <View style={{ width: 13 * Math.min(1.5, fontScale) }} />;
   const centred = large ? undefined : ({ textAlign: 'center' } as const);
+  const below = !header.nameOnly;
   const content = person ? (
     <>
       <ReadableColumn style={{ gap: rhythm.block }}>
@@ -441,7 +448,7 @@ function DetailSkeleton({
                 {header.name}
               </Heading>,
             )}
-            {header.role
+            {below && header.role
               ? ghost(
                   'role',
                   <Text wordSafe variant="secondary" style={centred}>
@@ -449,7 +456,7 @@ function DetailSkeleton({
                   </Text>,
                 )
               : null}
-            {header.yourMP
+            {below && header.yourMP
               ? ghost(
                   'your-mp',
                   <View
@@ -469,7 +476,7 @@ function DetailSkeleton({
                   </View>,
                 )
               : null}
-            {header.follow
+            {below && header.follow
               ? ghost(
                   'follow',
                   <Button
@@ -486,7 +493,7 @@ function DetailSkeleton({
                 )
               : null}
           </View>
-          {header.rows.length ? (
+          {below && header.rows.length ? (
             <View testID={part('identity')}>
               {header.rows.map((row, index) => {
                 const seats = header.rows
@@ -538,7 +545,7 @@ function DetailSkeleton({
             </View>
           ) : null}
         </View>
-        {header.tiles.length === 1 ? (
+        {!below ? null : header.tiles.length === 1 ? (
           <View
             testID={part('stat-row')}
             style={{
@@ -624,34 +631,36 @@ function DetailSkeleton({
           </View>
         ) : null}
       </ReadableColumn>
-      <View style={{ gap: rhythm.heading }}>
-        {heading('votes-heading')}
-        <View style={{ gap: rhythm.tight }}>
-          {line('votes-summary', '70%')}
-          <View>
-            {[0, 1, 2].map((index) => (
-              <View
-                key={index}
-                testID={part(`vote-${index}`)}
-                style={{
-                  paddingVertical: rhythm.row,
-                  gap: rhythm.line,
-                  minHeight: minimumTarget,
-                }}
-              >
-                {bone(
-                  `vote-${index}-position`,
-                  92,
-                  Math.max(28, height('footnote') + rhythm.tight),
-                  true,
-                )}
-                {line(`vote-${index}-title`, '90%', 'rowRecord')}
-                {line(`vote-${index}-date`, '60%')}
-              </View>
-            ))}
+      {below ? (
+        <View style={{ gap: rhythm.heading }}>
+          {heading('votes-heading')}
+          <View style={{ gap: rhythm.tight }}>
+            {line('votes-summary', '70%')}
+            <View>
+              {[0, 1, 2].map((index) => (
+                <View
+                  key={index}
+                  testID={part(`vote-${index}`)}
+                  style={{
+                    paddingVertical: rhythm.row,
+                    gap: rhythm.line,
+                    minHeight: minimumTarget,
+                  }}
+                >
+                  {bone(
+                    `vote-${index}-position`,
+                    92,
+                    Math.max(28, height('footnote') + rhythm.tight),
+                    true,
+                  )}
+                  {line(`vote-${index}-title`, '90%', 'rowRecord')}
+                  {line(`vote-${index}-date`, '60%')}
+                </View>
+              ))}
+            </View>
           </View>
         </View>
-      </View>
+      ) : null}
     </>
   ) : (
     <>
