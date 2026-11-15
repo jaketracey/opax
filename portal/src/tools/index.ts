@@ -37,7 +37,7 @@ import { MCP_PAGES, PAGED_OUTPUT_SCHEMA, RECORD_OUTPUT_SCHEMA } from './mcp-list
 export * from './identifiers'
 
 const PERSON_PAGES = new Set(['parliamentary_pay', 'member_expenses', 'declared_interests'])
-export const TOOL_REGISTRY_VERSION = 'structured-tools-19-transcript-counts'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-20-expense-lines'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
 export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports,
   // Public MCP record tools (mcpOnly): one paged envelope with an output schema, over the handlers above.
@@ -51,14 +51,17 @@ for (const tool of tools) {
 // Each is built on first use: converting every tool's JSON Schema at module load cost every
 // cold isolate (pages and searches included) the zod work of the whole registry.
 const schemas = new Map<string, ReturnType<typeof buildSchema>>()
-const buildSchema = (tool: ToolDefinition) => z.fromJSONSchema(tool.inputSchema).meta(tool.inputSchema)
-function schemaFor(name: string) {
-  let schema = schemas.get(name)
+/** The schema a caller is held to: Ask's own where a tool has one, else the public one. */
+const inputSchemaOf = (tool: ToolDefinition, ask = false) => ask && tool.askInputSchema ? tool.askInputSchema : tool.inputSchema
+const buildSchema = (tool: ToolDefinition, ask: boolean) => z.fromJSONSchema(inputSchemaOf(tool, ask)).meta(inputSchemaOf(tool, ask))
+function schemaFor(name: string, ask = false) {
+  const tool = getTool(name)
+  if (!tool) return undefined
+  const key = ask && tool.askInputSchema ? name + ' ask' : name
+  let schema = schemas.get(key)
   if (!schema) {
-    const tool = getTool(name)
-    if (!tool) return undefined
-    schema = buildSchema(tool)
-    schemas.set(name, schema)
+    schema = buildSchema(tool, ask)
+    schemas.set(key, schema)
   }
   return schema
 }
@@ -78,37 +81,38 @@ export function toolOutputSchema(name: string) {
 }
 export const listTools = () => tools.map(({ name, title, description, inputSchema, outputSchema }) => ({ name, ...(title ? { title } : {}), description, inputSchema, ...(outputSchema ? { outputSchema } : {}) }))
 /** What was wrong and what a valid call looks like, so a model can correct itself in one step. */
-function inputError(name: string, problem?: string): ToolInputError {
-  const schema = getTool(name)?.inputSchema, required = Array.isArray(schema?.required) ? schema.required : [], example = schema?.examples?.[0]
+function inputError(name: string, problem?: string, ask = false): ToolInputError {
+  const tool = getTool(name), schema = tool && inputSchemaOf(tool, ask), required = Array.isArray(schema?.required) ? schema.required : [], example = schema?.examples?.[0]
   return new ToolInputError(name, `Invalid arguments for ${name}${problem ? ': ' + problem : ''}.${required.length ? ` Required: ${required.join(', ')}.` : ''}${example ? ` Example: ${JSON.stringify(example)}.` : ''} See tools/list for the input schema.`)
 }
-export function parseToolArgs(name: string, args: unknown): ToolArgs {
-  const tool = getTool(name), schema = schemaFor(name)
+export function parseToolArgs(name: string, args: unknown, ask = false): ToolArgs {
+  const tool = getTool(name), schema = schemaFor(name, ask)
   if (!tool || !schema) throw new ToolInputError(name, `There is no tool named ${name}. See tools/list.`)
   const parsed = schema.safeParse(args)
   if (!parsed.success) {
     const issue = parsed.error.issues[0], field = issue?.path.join('.')
-    throw inputError(name, issue ? `${field ? field + ': ' : ''}${String(issue.message).slice(0, 160)}` : undefined)
+    throw inputError(name, issue ? `${field ? field + ': ' : ''}${String(issue.message).slice(0, 160)}` : undefined, ask)
   }
-  if (!parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) throw inputError(name, 'arguments must be an object')
+  if (!parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) throw inputError(name, 'arguments must be an object', ask)
   const data = parsed.data as ToolArgs
-  const identifiers = new Set([...Object.keys(tool.inputSchema.properties ?? {}).filter(key => /(?:^|_)(?:name|slug|id)$/.test(key)), ...tool.identifierFields ?? []])
-  for (const key of identifiers) if (data[key] !== undefined && !validToolIdentifier(data[key])) throw inputError(name, `${key} must be a plain name or id (letters, numbers, spaces and . ' ( ) - only)`)
-  if (tool.validate && !tool.validate(data)) throw inputError(name, 'these arguments cannot be combined, or a date or range is not valid')
+  const identifiers = new Set([...Object.keys(inputSchemaOf(tool, ask).properties ?? {}).filter(key => /(?:^|_)(?:name|slug|id)$/.test(key)), ...tool.identifierFields ?? []])
+  for (const key of identifiers) if (data[key] !== undefined && !validToolIdentifier(data[key])) throw inputError(name, `${key} must be a plain name or id (letters, numbers, spaces and . ' ( ) - only)`, ask)
+  if (tool.validate && !tool.validate(data)) throw inputError(name, 'these arguments cannot be combined, or a date or range is not valid', ask)
   return data
 }
-export function validRegisteredArgs(name: string, args: unknown): args is ToolArgs {
-  try { parseToolArgs(name, args); return true } catch { return false }
+export function validRegisteredArgs(name: string, args: unknown, ask = false): args is ToolArgs {
+  try { parseToolArgs(name, args, ask); return true } catch { return false }
 }
-export async function validateToolArgs(env: ToolEnv, name: string, args: unknown): Promise<ToolArgs> {
-  const parsed = parseToolArgs(name, args), tool = getTool(name)!
-  if (tool.validateKnown && !await tool.validateKnown(env, parsed)) throw inputError(name, 'a name or id is not in the published catalogue')
+export async function validateToolArgs(env: ToolEnv, name: string, args: unknown, ask = false): Promise<ToolArgs> {
+  const parsed = parseToolArgs(name, args, ask), tool = getTool(name)!
+  if (tool.validateKnown && !await tool.validateKnown(env, parsed)) throw inputError(name, 'a name or id is not in the published catalogue', ask)
   return parsed
 }
-export async function callTool(env: ToolEnv, name: string, args: unknown): Promise<StructuredToolResult> {
+/** `ask` holds the arguments to Ask's schema where a tool has one; every other caller is held to the public schema. */
+export async function callTool(env: ToolEnv, name: string, args: unknown, ask = false): Promise<StructuredToolResult> {
   const tool = getTool(name)
   try {
-    const parsed = await validateToolArgs(env, name, args)
+    const parsed = await validateToolArgs(env, name, args, ask)
     // Canonical wire JSON is identical in Ask and MCP, including optional metadata.
     const data = JSON.parse(JSON.stringify(await tool!.handler(env, parsed))) as StructuredToolResult
     // Every record set names an OPAX page to cite: its own listing or record page where it has one, else the register's page.
@@ -131,9 +135,9 @@ export async function callTool(env: ToolEnv, name: string, args: unknown): Promi
 const REGISTER_PAGES: Record<string, string> = { contracts: '/money/contracts', grants: '/money/grants' }
 /** Minimal adapter for the route lane's current ToolSpec/ToolResult contract. */
 export const askToolSpecs: ToolSpec[] = tools.filter(tool => !tool.mcpOnly).map(tool => ({
-  name: tool.askName ?? tool.name, description: tool.description, input: tool.inputSchema,
+  name: tool.askName ?? tool.name, description: tool.description, input: inputSchemaOf(tool, true),
   async run(deps: ToolDeps, args: ToolArgs) {
-    const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal }, tool.name, args)
+    const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal }, tool.name, args, true)
     return { tool: tool.askName ?? tool.name, ok: !data.error, ...(data.error ? { error: data.error === 'Published tool data is temporarily unavailable.' ? 'lookup timed out or unavailable' : data.error } : {}), ...(data.list ? { list: String(data.list) } : {}), data,
       cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }), ...(c.related ? { related: c.related } : {}), ...(c.remuneration ? { remuneration: c.remuneration } : {}) })),
       ...(data.coverage ? { coverage: data.coverage as ToolResult['coverage'] } : {}),

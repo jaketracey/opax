@@ -220,8 +220,14 @@ if [ "$want_weekly" = 1 ]; then
   # classifications, reviewed exclusions and legacy totals on every re-import.
   if run_step aec_receipt_types "SELECT COUNT(*) FROM aec_receipt_records" \
     "$PY" -m parli.ingest.donations --cache-only --backfill-types --db "$DB"; then
-    run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py \
-      --receipts-out portal/public/graph/money-receipts.json --industry-totals-out portal/public/graph/money-industry-totals.json
+    # The uncapped receipts and industry totals are written beside the map from the same selection: all three are
+    # installed together, each only if it says something new, and all three belong to the money group
+    # (scripts/vm/data_groups.sh), so the gate holds or publishes them as one.
+    run_step x_money "" "$EXPORT" json portal/public/graph/money.json \
+      --also portal/public/graph/money-receipts.json "$TMP/money-receipts.json" \
+      --also portal/public/graph/money-industry-totals.json "$TMP/money-industry-totals.json" \
+      "$PY" scripts/export_money_graph.py \
+      --receipts-out "$TMP/money-receipts.json" --industry-totals-out "$TMP/money-industry-totals.json"
   else
     log "[x_money] SKIP: AEC receipt types unavailable; last good graph kept"
   fi

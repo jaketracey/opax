@@ -852,6 +852,8 @@ new_refresh_sandbox() {
 #!/usr/bin/env bash
 echo "$*" >> "$RS_CALLS"
 echo "${STEP_TIMEOUT:-unset} $*" >> "$RS_CALLS.timeouts"
+# the money export writes its companion files where its flags say (export_step.sh refuses a missing one)
+prev=; for a in "$@"; do case "$prev" in --receipts-out|--industry-totals-out) echo '{}' > "$a" ;; esac; prev=$a; done
 if [ "${1:-}" = "-" ]; then
   case "${2:-}" in
     *.json) exit 0 ;;
@@ -1098,6 +1100,7 @@ check "QLD interests refresh weekly before the export; federal does not run twic
 check "the people directory is enriched with the recorded representation right after it is exported" order scripts/export_parliamentarians.py scripts/enrich_profile_jurisdictions.py
 check "the loaders come before the exports, and the tax/charity export is the last" order parli.ingest.acnc_ato scripts/export_speakers.py scripts/export_money_graph.py scripts/export_access.py scripts/export_fits.py scripts/export_interests.py scripts/export_tax_charity.py
 check "no monthly step ran" bash -c "! grep -qE 'qld_contracts|money_ipea|state_rosters|export_suppliers|export_grants|build_pay|export_discovery' '$RS_CALLS'"
+check "the money export writes its receipts and industry totals to scratch, never into the published tree" bash -c "grep 'scripts/export_money_graph.py' '$RS_CALLS' | grep -q -- '--receipts-out .*/pipeline/tmp/money-receipts.json --industry-totals-out .*/pipeline/tmp/money-industry-totals.json' && ! grep -q 'x_money\] FAIL' $WLOG"
 check "the FRL instrument crawl is not part of the Sunday weekly" bash -c "! grep -q 'frl_instruments' '$RS_CALLS' && ! grep -q 'frl_instruments' $WLOG"
 check "the roster export is laid onto the shipped roster after its safety check" order 'export_parliamentarians.py --check-directory' scripts/roster_overlay.py
 check "the contract_suppliers step is given the ABR index directory" bash -c "grep 'contract_suppliers' '$RS_CALLS' | grep -q -- '--abr-dir .*/abr'"

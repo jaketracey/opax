@@ -2,15 +2,46 @@
  * /media/<name>: larger media files (demo videos) live in R2, not in git or the static assets.
  * GET and HEAD only, a fixed name pattern, byte ranges for video players (206 with Content-Range,
  * 416 when the range cannot be served). Nothing here writes to the bucket.
+ *
+ * /media/expenses/v1/<person_id>/<year>.json: IPEA's itemised expense lines for one person and
+ * reporting year (scripts/export_expenses_itemised.py), as application/json with the object's ETag;
+ * a matching If-None-Match is answered 304.
  */
 const MEDIA_NAME = /^[a-z0-9][a-z0-9-]{0,100}\.(mp4|webm)$/
 const TYPES: Record<string, string> = { mp4: 'video/mp4', webm: 'video/webm' }
+const DATA_NAME = /^expenses\/v1\/[A-Za-z0-9_-]{1,80}\/\d{4}\.json$/
+// The files change once a quarter; an hour in caches, then revalidated by ETag.
+const DATA_CACHE = 'public, max-age=3600, stale-while-revalidate=86400'
+
+async function serveData(request: Request, bucket: R2Bucket, name: string): Promise<Response> {
+  let object: R2Object | R2ObjectBody | null
+  try {
+    object = request.method === 'HEAD' ? await bucket.head(name) : await bucket.get(name, { onlyIf: request.headers })
+  } catch {
+    return new Response('This data is unavailable just now.', { status: 503, headers: { 'retry-after': '60' } })
+  }
+  if (!object) return new Response('Not found', { status: 404 })
+  const headers = new Headers({ 'content-type': 'application/json; charset=utf-8', etag: object.httpEtag, 'cache-control': DATA_CACHE, 'x-content-type-options': 'nosniff' })
+  if (request.method === 'HEAD') { headers.set('content-length', String(object.size)); return new Response(null, { headers }) }
+  // R2 returns the object without a body when a precondition failed. A failed If-Match or If-Unmodified-Since is
+  // 412; a matched If-None-Match (or an unmodified If-Modified-Since) is 304.
+  if (!('body' in object)) {
+    const given = (name: string) => request.headers.get(name)
+    const tags = (value: string) => value.split(',').map(tag => tag.trim().replace(/^W\//, ''))
+    const noneMatch = given('if-none-match'), match = given('if-match')
+    const unchanged = noneMatch !== null && (noneMatch.trim() === '*' || tags(noneMatch).includes(object.httpEtag))
+    const failed = match !== null ? !(match.trim() === '*' || tags(match).includes(object.httpEtag)) : given('if-unmodified-since') !== null
+    return failed && !unchanged ? new Response(null, { status: 412, headers }) : new Response(null, { status: 304, headers })
+  }
+  return new Response((object as R2ObjectBody).body, { headers })
+}
 
 type Range = { offset?: number, length?: number, suffix?: number }
 
 export async function serveMedia(request: Request, bucket: R2Bucket | undefined, path: string): Promise<Response> {
   const name = path.slice('/media/'.length), match = MEDIA_NAME.exec(name)
   if (request.method !== 'GET' && request.method !== 'HEAD') return new Response('Method not allowed', { status: 405, headers: { allow: 'GET, HEAD' } })
+  if (bucket && DATA_NAME.test(name)) return serveData(request, bucket, name)
   if (!match || !bucket) return new Response('Not found', { status: 404 })
   const wanted = request.method === 'GET' ? request.headers.get('range') : null
   let object: R2Object | R2ObjectBody | null
