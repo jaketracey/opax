@@ -1,4 +1,5 @@
 import { TwoSlotStore } from '../../storage/two-slot';
+import type { Dissolved } from './dissolution';
 
 /**
  * What Today's lead looked like the last time the directory answered, kept
@@ -20,14 +21,33 @@ export interface TodayShape {
   state: boolean;
   /** The senators link row draws in the representatives group. */
   senators: boolean;
+  /**
+   * The state row is a dissolved house's row: the election it was
+   * dissolved for and the row's four lines, so the next launch holds a row
+   * of the same height. Null when the state row is a member's (or absent).
+   */
+  dissolved: Dissolved | null;
 }
 /**
- * Version 2: `state` is the state member's row (version 1 kept the old
- * state seat card, withheld for Victorian seats), and `senators` is new. A
- * version 1 file is not read; the page predicts from the saved choice.
+ * Version 3: `state` is the state row in the group (version 1 kept the old
+ * state seat card, withheld for Victorian seats); `senators` and
+ * `dissolved` are new. An older file is not read; the page predicts from
+ * the saved choice.
  */
 interface ShapeFile extends TodayShape {
-  version: 2;
+  version: 3;
+}
+function decodeDissolved(raw: unknown): Dissolved | null | undefined {
+  if (raw === null) return null;
+  if (!raw || typeof raw !== 'object') return undefined;
+  const { electionDay, lines } = raw as Record<string, unknown>;
+  return typeof electionDay === 'string' &&
+    /^\d{4}-\d{2}-\d{2}$/.test(electionDay) &&
+    Array.isArray(lines) &&
+    lines.length === 4 &&
+    lines.every((line) => typeof line === 'string' && line.length <= 200)
+    ? { electionDay, lines: lines as unknown as Dissolved['lines'] }
+    : undefined;
 }
 
 const store = new TwoSlotStore<ShapeFile>(
@@ -38,12 +58,16 @@ const store = new TwoSlotStore<ShapeFile>(
       string,
       unknown
     >;
-    return version === 2 &&
+    const dissolved = decodeDissolved(
+      (raw as { dissolved?: unknown }).dissolved,
+    );
+    return version === 3 &&
       typeof key === 'string' &&
       typeof house === 'boolean' &&
       typeof state === 'boolean' &&
-      typeof senators === 'boolean'
-      ? { version: 2, key, house, state, senators }
+      typeof senators === 'boolean' &&
+      dissolved !== undefined
+      ? { version: 3, key, house, state, senators, dissolved }
       : null;
   },
   (value) => value,
@@ -65,11 +89,12 @@ export async function readTodayShape(): Promise<TodayShape | null> {
         house: file.house,
         state: file.state,
         senators: file.senators,
+        dissolved: file.dissolved,
       }
     : null;
 }
 
 /** Keeps the shape the directory answered; a failed save changes nothing. */
 export async function rememberTodayShape(shape: TodayShape): Promise<void> {
-  await store.save({ version: 2, ...shape }).catch(() => undefined);
+  await store.save({ version: 3, ...shape }).catch(() => undefined);
 }

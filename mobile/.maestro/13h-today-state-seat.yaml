@@ -4,9 +4,11 @@ name: 13h Today with a federal and a Victorian state seat saved
 # OPAXSeat federal+state saves Melbourne and a Victorian district. Your
 # representatives is one group: the federal member's row, then the state
 # lower-house member's row, then the senators link, under one source line.
-# The Victorian Legislative Assembly dissolved on 3 November 2026 for the 28
-# November election, so at this capture date the state row says who last
-# held the district, never "member for". The old state seat card is gone.
+# While the election record says the Legislative Assembly is dissolved (its
+# caretaker date has passed and the roster's date for the district is before
+# election day), the state row is four lines and names no member: the
+# parliament and house, the district, that the Assembly is dissolved for
+# the election, and the last member. The old state seat card is gone.
 # Today draws no authorisation line; the election block has its own.
 - launchApp:
     clearState: true
@@ -23,8 +25,10 @@ name: 13h Today with a federal and a Victorian state seat saved
     id: today-rep-federal
     text: .*, Federal member for Melbourne
 - assertVisible:
+    id: today-rep-state-dissolved
+    text: Victoria, Legislative Assembly\. .*\. Assembly dissolved for the \d+ \w+ election\. Last member. .*
+- assertNotVisible:
     id: today-rep-state
-    text: .*, last held .* in the Victorian Legislative Assembly
 - scrollUntilVisible:
     element:
       id: today-your-mp-sources
@@ -39,9 +43,9 @@ name: 13h Today with a federal and a Victorian state seat saved
     id: today-state-seat
 - assertNotVisible:
     id: today-state-seat-header
-# The state row opens that member's profile.
+# The row opens the last member's profile.
 - tapOn:
-    id: today-rep-state
+    id: today-rep-state-dissolved
 - extendedWaitUntil:
     visible:
       id: person-screen-title

@@ -1,17 +1,38 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { StyleSheet, Text as NativeText } from 'react-native';
 import { catalogs } from '../src/api/runtime';
 import { yourMPFor, type Electorate } from '../src/api/catalogs';
-import { PersonRow, YourMPMark } from '../src/design/people';
-import { LinkRow } from '../src/design/rows';
-import { REPS_HEADING, repLabel } from '../src/features/today/RepsGroup';
 import {
+  PartyLabel,
+  PersonRow,
+  Portrait,
+  YourMPMark,
+} from '../src/design/people';
+import { LinkRow } from '../src/design/rows';
+import {
+  dissolvedLabel,
+  REPS_HEADING,
+  repLabel,
+} from '../src/features/today/RepsGroup';
+import {
+  DISSOLVED_STAND_IN,
+  dissolvedFor,
+  dissolvedLines,
+  dissolvedState,
+  electionDayWords,
+  rosterPredates,
+} from '../src/features/today/dissolution';
+import { decodeOverview } from '../src/features/vic-election/decoders';
+import electionOverview from '../scripts/fixtures/vic-election/overview.json';
+import {
+  dissolvedRow,
   federalRole,
   repsShape,
   stateRole,
   stateSeatFor,
-  VIC_DISSOLVED_FROM,
   YourMPCard,
   YourMPPending,
   yourMPSources,
@@ -94,9 +115,13 @@ const withMember = (seat: Electorate) => {
     } as typeof directory,
   };
 };
-/** A day the Victorian Legislative Assembly sat, and one after it dissolved. */
-const SITTING = '2026-10-01';
-const DISSOLVED = '2026-11-15';
+/** The election record as the app decodes it (pinned fixture). */
+const overview = decodeOverview(electionOverview);
+/** The election day the Assembly is dissolved for, from that record. */
+const ELECTION_DAY = overview.election_day;
+/** After the record's caretaker date, before its election day. */
+const DURING = new Date('2026-11-15T12:00:00+11:00');
+const dissolvedEssendon = dissolvedRow(essendon, directory, ELECTION_DAY);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -117,7 +142,6 @@ async function card(
         seat={maribyrnong}
         directory={directory}
         stateSeatIds={[essendon.electorate_id]}
-        today={SITTING}
         attempt={0}
         onRetry={jest.fn()}
         {...props}
@@ -233,7 +257,6 @@ describe('Today’s representatives group', () => {
             seat={maribyrnong}
             directory={directory}
             stateSeatIds={[essendon.electorate_id]}
-            today={SITTING}
             attempt={0}
             onRetry={jest.fn()}
           />
@@ -317,25 +340,265 @@ describe('Today’s representatives group', () => {
     await act(async () => renderer.unmount());
   });
 
-  test('while the Victorian Assembly is dissolved the state row says who last held the seat, never "member for"', async () => {
-    expect(DISSOLVED >= VIC_DISSOLVED_FROM).toBe(true);
-    const renderer = await card({ today: DISSOLVED });
-    const state = rows(renderer)[1]!;
-    expect(state.props.place).toBe(
-      'Victorian Legislative Assembly · last held Essendon',
+  describe('a dissolved Assembly', () => {
+    const last = memberOf(essendon);
+    const stateLines = (r: TestRenderer.ReactTestRenderer) =>
+      r.root
+        .findAllByType(NativeText)
+        .filter((t) => /^today-rep-state-line-/.test(t.props.testID ?? ''));
+    test('the state row is four lines in order, and calls nobody a member', async () => {
+      const renderer = await card({ dissolved: ELECTION_DAY });
+      const lines = stateLines(renderer).map((t) => t.props.children);
+      expect(lines).toEqual([
+        'Victoria · Legislative Assembly',
+        'Essendon',
+        'Assembly dissolved for the 28 November election',
+        expect.stringMatching(new RegExp(`^Last member: ${last}, \\w+`)),
+      ]);
+      expect(lines).toEqual([...dissolvedEssendon.lines]);
+      expect(stateLines(renderer).map((t) => t.props.testID)).toEqual(
+        [1, 2, 3, 4].map((n) => `today-rep-state-line-${n}`),
+      );
+      expect(strings(renderer).join(' ')).not.toMatch(
+        /member for|Victorian Legislative Assembly ·|last held/,
+      );
+      // The federal row is unchanged: the House of Representatives sits.
+      expect(rows(renderer).map((row) => row.props.testID)).toEqual([
+        'today-rep-federal',
+      ]);
+      await act(async () => renderer.unmount());
+    });
+
+    test('the last member is not styled as a current member: no portrait, no party dot or link, no name as the title', async () => {
+      const renderer = await card({ dissolved: ELECTION_DAY });
+      const row = host(renderer, 'today-rep-state-dissolved');
+      expect(row.findAllByType(Portrait)).toHaveLength(0);
+      expect(row.findAllByType(PartyLabel)).toHaveLength(0);
+      // The title line is the parliament and house; the person is the last
+      // line, in the secondary style the two lines above it have.
+      const style = (n: number) =>
+        StyleSheet.flatten(stateLines(renderer)[n]!.props.style);
+      expect(style(0).fontSize).toBe(
+        StyleSheet.flatten(
+          renderer.root
+            .findAllByType(NativeText)
+            .find((t) => t.props.testID === 'today-rep-federal-name')!.props
+            .style,
+        ).fontSize,
+      );
+      expect(style(3).fontSize).toBe(style(2).fontSize);
+      expect(style(3).fontWeight).toBe(style(2).fontWeight);
+      expect(style(3).color).toBe(style(2).color);
+      expect(style(3).fontSize).toBeLessThan(style(0).fontSize as number);
+      await act(async () => renderer.unmount());
+    });
+
+    test('VoiceOver reads the row as one element, the four lines in order, and a tap opens the last member’s profile', async () => {
+      const renderer = await card({ dissolved: ELECTION_DAY });
+      const row = host(renderer, 'today-rep-state-dissolved');
+      expect(row.props.accessible).toBe(true);
+      expect(row.props.accessibilityRole).toBe('link');
+      expect(row.props.accessibilityLabel).toBe(
+        dissolvedLabel(dissolvedEssendon.lines),
+      );
+      expect(row.props.accessibilityLabel).toMatch(
+        new RegExp(
+          `^Victoria, Legislative Assembly\\. Essendon\\. Assembly dissolved for the 28 November election\\. Last member: ${last}, \\w+\\.$`,
+        ),
+      );
+      expect(row.props.accessibilityHint).toBe(
+        'Opens the last member’s profile',
+      );
+      // Nothing inside the row is its own VoiceOver element.
+      expect(
+        row.findAll(
+          (n) => n !== row && typeof n.type === 'string' && n.props.accessible,
+        ),
+      ).toHaveLength(0);
+      await act(async () => renderer.unmount());
+    });
+
+    test('the election record and the roster decide it; no date is written in the app', () => {
+      const seat = essendon;
+      // Before the record's caretaker date the Assembly sits.
+      expect(
+        dissolvedFor(seat, overview, new Date('2026-11-01T12:00:00+11:00')),
+      ).toBeNull();
+      expect(dissolvedFor(seat, overview, DURING)).toBe(ELECTION_DAY);
+      // Another election, another day: whatever the record says.
+      const later = {
+        ...overview,
+        election_day: '2030-11-30',
+        key_dates: overview.key_dates.map((d) =>
+          d.id === 'caretaker'
+            ? { ...d, passes_at: '2030-11-05T18:00:00+11:00' }
+            : d,
+        ),
+      };
+      expect(dissolvedFor(seat, later, DURING)).toBeNull();
+      expect(
+        dissolvedFor(seat, later, new Date('2030-11-06T09:00:00+11:00')),
+      ).toBe('2030-11-30');
+      expect(electionDayWords('2030-11-30')).toBe('30 November');
+      expect(
+        dissolvedLines(
+          seat,
+          { name: 'A Person', party: null, status: 'current' },
+          '2030-11-30',
+        ),
+      ).toEqual([
+        'Victoria · Legislative Assembly',
+        'Essendon',
+        'Assembly dissolved for the 30 November election',
+        'Last member: A Person',
+      ]);
+      // A seat that is not one of the record's districts is not dissolved.
+      expect(dissolvedFor(maribyrnong, overview, DURING)).toBeNull();
+      expect(dissolvedFor(districtOf('nsw_la'), overview, DURING)).toBeNull();
+      // No source file names the dissolution or election date.
+      for (const file of [
+        'dissolution.ts',
+        'YourMPCard.tsx',
+        'RepsGroup.tsx',
+      ]) {
+        const source = readFileSync(
+          join(__dirname, '../src/features/today', file),
+          'utf8',
+        );
+        expect(source).not.toMatch(/2026-11-\d\d|\b(3|28) November\b/);
+      }
+    });
+
+    test('the row switches to the new member when the roster’s date for the district reaches election day', async () => {
+      // The roster reloaded with the declared member: representation_as_of
+      // is election day or later.
+      const declared = { ...essendon, representation_as_of: ELECTION_DAY };
+      expect(rosterPredates(essendon, ELECTION_DAY)).toBe(true);
+      expect(rosterPredates(declared, ELECTION_DAY)).toBe(false);
+      const after = new Date('2026-12-02T12:00:00+11:00');
+      expect(dissolvedFor(essendon, overview, after)).toBe(ELECTION_DAY);
+      expect(dissolvedFor(declared, overview, after)).toBeNull();
+      // With the record out of reach, what the last launch kept answers,
+      // still by the roster's date.
+      const none = { overview: null, loading: false };
+      const kept = { electionDay: ELECTION_DAY };
+      expect(dissolvedState(essendon, none, after, kept)).toBe(ELECTION_DAY);
+      expect(dissolvedState(declared, none, after, kept)).toBeNull();
+      expect(dissolvedState(essendon, none, after, null)).toBeNull();
+      expect(
+        dissolvedState(
+          essendon,
+          { overview: null, loading: true },
+          after,
+          null,
+        ),
+      ).toBe('unknown');
+      // Not dissolved: the row is the member's, as for any sitting house.
+      const renderer = await card({ dissolved: null });
+      expect(rows(renderer)[1]!.props.place).toBe(
+        'Victorian Legislative Assembly · Essendon',
+      );
+      expect(ids(renderer)).not.toContain('today-rep-state-dissolved');
+      await act(async () => renderer.unmount());
+    });
+
+    test('the group cites the Victorian Electoral Commission for the election day, and says why there is no member', async () => {
+      const renderer = await card({ dissolved: ELECTION_DAY });
+      const line = renderer.root.findAll(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'today-your-mp-sources',
+      )[0]!.props;
+      expect(line.citation.map((c: { label: string }) => c.label)).toEqual([
+        expect.any(String),
+        'Parliament of Victoria',
+        'Victorian Electoral Commission',
+      ]);
+      expect(line.notes.join(' ')).toMatch(/dissolved for the election/);
+      expect(line.notes.join(' ')).not.toMatch(/Your state member/);
+      await act(async () => renderer.unmount());
+    });
+
+    test.each([
+      ['Large', 1],
+      ['AX3', 2.353],
+      ['AX5', 3.571],
+    ] as const)(
+      'at %s the held row has the four lines’ height from the first frame: the kept lines, unseen',
+      async (_size, fontScale) => {
+        dimensions.mockReturnValue({
+          width: 402,
+          height: 874,
+          scale: 3,
+          fontScale,
+        });
+        const held = pendingGroup({
+          state: true,
+          senators: true,
+          dissolved: dissolvedEssendon.lines,
+        });
+        const loaded = await card({ dissolved: ELECTION_DAY });
+        expect(ids(held)).toContain('today-rep-state-dissolved-loading');
+        expect(ids(held)).not.toContain('today-rep-state-loading');
+        // The same lines in the same text styles, so they wrap alike.
+        const drawn = (r: TestRenderer.ReactTestRenderer) =>
+          stateLines(r).map((t) => [
+            t.props.children,
+            StyleSheet.flatten(t.props.style).fontSize,
+            StyleSheet.flatten(t.props.style).lineHeight,
+          ]);
+        expect(drawn(held)).toEqual(drawn(loaded));
+        expect(
+          stateLines(held).every(
+            (t) => StyleSheet.flatten(t.props.style).opacity === 0,
+          ),
+        ).toBe(true);
+        expect(groupHeight(held, 'today-reps-loading-group')).toBe(
+          groupHeight(loaded, 'today-reps-group'),
+        );
+        act(() => held.unmount());
+        await act(async () => loaded.unmount());
+      },
     );
-    const label = host(renderer, 'today-rep-state').props
-      .accessibilityLabel as string;
-    expect(label).toMatch(
-      /, last held Essendon in the Victorian Legislative Assembly$/,
-    );
-    expect(label).not.toMatch(/member for/);
-    // The federal row is unchanged: the House of Representatives sits.
-    expect(rows(renderer)[0]!.props.place).toBe('Federal · Maribyrnong');
-    expect(stateRole(essendon, SITTING).spokenRole).toBe(
-      'Victorian Legislative Assembly member for Essendon',
-    );
-    await act(async () => renderer.unmount());
+
+    test('with nothing kept, the stand-in is as long as the longest real district and member lines', () => {
+      const districts = index.electorates.filter((s) => s.chamber === 'vic_la');
+      const longest = (line: 1 | 3) =>
+        Math.max(
+          ...districts.map(
+            (s) => dissolvedRow(s, directory, ELECTION_DAY).lines[line].length,
+          ),
+        );
+      expect(DISSOLVED_STAND_IN[1].length).toBeGreaterThanOrEqual(longest(1));
+      expect(DISSOLVED_STAND_IN[3].length).toBeGreaterThanOrEqual(longest(3));
+      expect(DISSOLVED_STAND_IN[2].length).toBeGreaterThanOrEqual(
+        dissolvedEssendon.lines[2].length,
+      );
+      const held = pendingGroup({
+        state: true,
+        senators: true,
+        dissolved: true,
+      });
+      expect(stateLines(held).map((t) => t.props.children)).toEqual([
+        ...DISSOLVED_STAND_IN,
+      ]);
+      // Unseen and unspoken: the stand-in is never read to anyone.
+      expect(
+        host(held, 'today-rep-state-dissolved-loading').props
+          .importantForAccessibility,
+      ).toBe('no-hide-descendants');
+      act(() => held.unmount());
+    });
+
+    test('while the election record is on its way the row’s place is held, and nobody is drawn as a member', async () => {
+      const renderer = await card({ dissolved: 'unknown' });
+      expect(rows(renderer).map((row) => row.props.testID)).toEqual([
+        'today-rep-federal',
+      ]);
+      expect(ids(renderer)).toContain('today-rep-state-dissolved-loading');
+      expect(strings(renderer).join(' ')).not.toMatch(/member for/);
+      await act(async () => renderer.unmount());
+    });
   });
 
   test('the federal row alone when there is no state member: no saved district, a region only, or a seat with no recorded member', async () => {
@@ -412,6 +675,7 @@ describe('Today’s representatives group', () => {
       expect(repsShape(seat, directory, saved.stateSeatIds)).toEqual({
         state: false,
         senators: true,
+        dissolved: null,
       });
       await act(async () => renderer.unmount());
     }
@@ -423,7 +687,6 @@ describe('Today’s representatives group', () => {
       directory: recorded,
       seat: grayndler,
       stateSeatIds: [nsw.electorate_id],
-      today: DISSOLVED,
     });
     const state = rows(renderer)[1]!;
     expect(state.props.name).toBe(memberOf(nsw));
@@ -435,7 +698,7 @@ describe('Today’s representatives group', () => {
       (state.props.menu as { title: string }[]).map((item) => item.title),
     ).not.toContain('Change state electorate');
     const qld = districtOf('qld_la');
-    expect(stateRole(qld, DISSOLVED).role).toBe(
+    expect(stateRole(qld).role).toBe(
       `Queensland Legislative Assembly · ${qld.name}`,
     );
     await act(async () => renderer.unmount());
@@ -498,7 +761,7 @@ describe('Today’s representatives group', () => {
   });
 
   test('no authorisation line and no campaign words draw on Today’s group, for a Victorian reader too', async () => {
-    const renderer = await card({ today: DISSOLVED });
+    const renderer = await card({ dissolved: ELECTION_DAY });
     expect(strings(renderer).join(' ')).not.toMatch(
       /authoris|vote for|candidate|—/i,
     );
@@ -559,7 +822,7 @@ describe('Today’s representatives group', () => {
       expect(stateSeatFor(directory, [region.electorate_id])).toBeNull();
       expect(
         repsShape(maribyrnong, directory, [essendon.electorate_id]),
-      ).toEqual({ state: true, senators: true });
+      ).toEqual({ state: true, senators: true, dissolved: null });
       expect(federalRole(maribyrnong).role).toBe('Federal · Maribyrnong');
     });
 

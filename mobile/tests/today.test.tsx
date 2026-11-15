@@ -1009,6 +1009,7 @@ describe('the first frame has the loaded page’s layout', () => {
       house: false,
       state: false,
       senators: false,
+      dissolved: null,
     });
     // The next launch, the directory still out: no Your MP skeleton and no
     // reorder when the migration runs. It happened on every launch.
@@ -1035,6 +1036,7 @@ describe('the first frame has the loaded page’s layout', () => {
       house: false,
       state: true,
       senators: false,
+      dissolved: null,
     });
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     mock.directory.mockImplementation(() => new Promise(() => {}));
@@ -1048,6 +1050,7 @@ describe('the first frame has the loaded page’s layout', () => {
       house: true,
       state: true,
       senators: false,
+      dissolved: null,
     });
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     mock.directory.mockImplementation(() => new Promise(() => {}));
@@ -1095,7 +1098,78 @@ describe('the first frame has the loaded page’s layout', () => {
       house: true,
       state: true,
       senators: true,
+      dissolved: null,
     });
+  });
+
+  test('a Victorian reader while the Assembly is dissolved: the four-line row’s place from the first frame, the row when the directory answers, and its lines kept for the next launch', async () => {
+    const federal = index.electorates.find(
+      (s) =>
+        s.name === 'Maribyrnong' &&
+        s.jurisdiction === 'federal' &&
+        s.status !== 'historical',
+    )!;
+    const state = index.electorates.find(
+      (s) => s.name === 'Essendon' && s.chamber === 'vic_la',
+    )!;
+    const choice = {
+      version: 1 as const,
+      seatId: federal.electorate_id,
+      stateSeatIds: [state.electorate_id],
+    };
+    const overview = decodeOverview(electionOverview);
+    const launch = async () => {
+      setUp({ cached: { date: addDays(today, -1) } });
+      jest.mocked(loadChoice).mockResolvedValue(choice);
+      // The record's caretaker date has passed on the election clock and
+      // the roster's date for Essendon is before its election day.
+      jest.mocked(useElectionOverview).mockReturnValue({
+        record: { data: overview, stale: false, savedAt: 0, asOf: null },
+        loading: false,
+        error: null,
+        retry: jest.fn(),
+      });
+      const directoryRead = pending<typeof directory>();
+      mock.directory.mockReturnValue(directoryRead.promise as never);
+      const r = await render(<Today />);
+      return { r, directoryRead };
+    };
+    const lines = (r: TestRenderer.ReactTestRenderer) =>
+      r.root
+        .findAll(
+          (n) =>
+            n.type === 'Text' &&
+            /^today-rep-state-line-/.test(n.props.testID ?? ''),
+        )
+        .map((n) => n.props.children);
+    const first = await launch();
+    // Nothing kept: the stand-in holds four lines, and no member's row.
+    expect(hosts(first.r, 'today-rep-state-dissolved-loading')).toHaveLength(1);
+    expect(hosts(first.r, 'today-rep-state-loading')).toHaveLength(0);
+    expect(lines(first.r)).toHaveLength(4);
+    await act(async () => first.directoryRead.answer(directory));
+    expect(hosts(first.r, 'today-rep-state-dissolved')).toHaveLength(1);
+    expect(hosts(first.r, 'today-rep-state')).toHaveLength(0);
+    const drawn = lines(first.r);
+    expect(drawn.slice(0, 3)).toEqual([
+      'Victoria · Legislative Assembly',
+      'Essendon',
+      'Assembly dissolved for the 28 November election',
+    ]);
+    expect(drawn[3]).toMatch(/^Last member: /);
+    await expect(readTodayShape()).resolves.toEqual({
+      key: shapeKey(choice),
+      house: true,
+      state: true,
+      senators: true,
+      dissolved: { electionDay: overview.election_day, lines: drawn },
+    });
+    // The next launch holds the very lines it will draw.
+    const next = await launch();
+    expect(hosts(next.r, 'today-rep-state-dissolved-loading')).toHaveLength(1);
+    expect(lines(next.r)).toEqual(drawn);
+    await act(async () => next.directoryRead.answer(directory));
+    expect(lines(next.r)).toEqual(drawn);
   });
 
   test('a held, empty sitting line is given back once Today is out of view', async () => {

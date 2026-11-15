@@ -80,7 +80,13 @@ import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { TodayBody } from './today/TodayBody';
 import { VotesBlock } from './today/VotesBlock';
 import { TodayHeading } from './today/RepsGroup';
-import { repsShape, YourMPCard, YourMPPending } from './today/YourMPCard';
+import { dissolvedState } from './today/dissolution';
+import {
+  repsShape,
+  stateSeatFor,
+  YourMPCard,
+  YourMPPending,
+} from './today/YourMPCard';
 import { useProfilePreload } from './people/profile-preload';
 import { keepCatalog } from '../api/kept-catalogs';
 import { saveChoice } from './your-mp/choice-store';
@@ -303,7 +309,10 @@ export default function Today() {
   useTodayRendered();
   const dots = useTodayDotsScroll();
   const offline = useOffline();
-  const election = useElectionOverview(false);
+  // Read for a reader with a saved state seat: the election record says
+  // whether that seat's house is dissolved (today/dissolution).
+  const savedStateSeat = !!useSavedChoice()?.stateSeatIds.length;
+  const election = useElectionOverview(savedStateSeat);
   const electionNow = useElectionNow();
   const now = useNow();
   const day = sydneyDay(now);
@@ -364,15 +373,54 @@ export default function Today() {
   // state seat has a member's row; every state has senators). A capture's
   // seat on its way says which seats it will save.
   const pendingReps = seatArriving
-    ? { state: todayFixture().seat === 'federal+state', senators: true }
-    : {
-        state: kept ? kept.state : !!savedChoice?.stateSeatIds.length,
-        senators: kept ? kept.senators : true,
-      };
+    ? {
+        state: todayFixture().seat === 'federal+state',
+        senators: true,
+        dissolved: true as const,
+      }
+    : kept
+      ? {
+          state: kept.state,
+          senators: kept.senators,
+          dissolved: kept.dissolved?.lines ?? null,
+        }
+      : {
+          state: !!savedChoice?.stateSeatIds.length,
+          senators: true,
+          // Not known yet: while an election record is at hand or on its
+          // way the taller row's place is held, so nobody is drawn as a
+          // member before it answers.
+          dissolved:
+            election.record || election.loading ? (true as const) : null,
+        };
+  const stateSeat =
+    home && directory
+      ? stateSeatFor(directory, choice?.stateSeatIds ?? [])
+      : null;
+  // The election day the state seat's house is dissolved for, from the
+  // election record and the roster's date for the seat; never a date
+  // written here.
+  const dissolved = stateSeat
+    ? dissolvedState(
+        stateSeat,
+        {
+          overview: election.record?.data ?? null,
+          loading: election.loading,
+        },
+        electionNow,
+        kept?.dissolved ?? null,
+      )
+    : null;
   const drawnReps =
     home && directory
-      ? repsShape(home, directory, choice?.stateSeatIds ?? [])
-      : { state: false, senators: false };
+      ? repsShape(
+          home,
+          directory,
+          choice?.stateSeatIds ?? [],
+          dissolved === 'unknown' ? null : dissolved,
+        )
+      : { state: false, senators: false, dissolved: null };
+  const dissolvedKept = JSON.stringify(drawnReps.dissolved);
   const stateSeatDrawn = drawnReps.state;
   const senatorsDrawn = drawnReps.senators;
   const settledKey =
@@ -386,12 +434,14 @@ export default function Today() {
   const launched = !!launch;
   const leads = !!home;
   useEffect(() => {
-    if (settledKey === null || !launched) return;
+    // The state row's form is not known until the election record answers.
+    if (settledKey === null || !launched || dissolved === 'unknown') return;
     if (
       launchShape?.key === settledKey &&
       launchShape.house === leads &&
       launchShape.state === stateSeatDrawn &&
-      launchShape.senators === senatorsDrawn
+      launchShape.senators === senatorsDrawn &&
+      JSON.stringify(launchShape.dissolved) === dissolvedKept
     )
       return;
     void rememberTodayShape({
@@ -399,8 +449,18 @@ export default function Today() {
       house: leads,
       state: stateSeatDrawn,
       senators: senatorsDrawn,
+      dissolved: JSON.parse(dissolvedKept) as TodayShape['dissolved'],
     });
-  }, [settledKey, leads, stateSeatDrawn, senatorsDrawn, launched, launchShape]);
+  }, [
+    settledKey,
+    leads,
+    stateSeatDrawn,
+    senatorsDrawn,
+    dissolved,
+    dissolvedKept,
+    launched,
+    launchShape,
+  ]);
   const order =
     launch && seated !== null
       ? todayOrder({
@@ -506,7 +566,7 @@ export default function Today() {
               seat={home}
               directory={directory}
               stateSeatIds={choice?.stateSeatIds ?? []}
-              today={today}
+              dissolved={dissolved}
               attempt={attempt}
               onRetry={retry}
             />
