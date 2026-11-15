@@ -1,9 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/text';
 import {
+  border,
   colors,
   hairline,
   minimumTarget,
@@ -18,16 +20,29 @@ import { termRoute } from './routes';
 /** The popover's inset: its text and its action share it. */
 export const TIP_INSET = rhythm.block;
 /**
+ * The smallest text size iOS offers draws body text at about 0.8 of the
+ * default, and the label's line with it: the reach is worked out there, so
+ * the target is 44 pt tall at every size, not only at the default.
+ */
+const SMALLEST_TEXT = 0.8;
+const reach = Math.ceil(
+  (minimumTarget - textStyles.strong.lineHeight * SMALLEST_TEXT) / 2,
+);
+/** The label's own padding each side: the pressed wash's air. */
+const MORE_PADDING = rhythm.tight;
+/**
  * How far the touch reaches past the "More" label, so the target is at
  * least the minimum (44 pt) while the label keeps the text's insets. Never
- * past the popover's own edge: a touch outside it closes the popover.
+ * past the popover's own edge, on either side: a touch outside it closes
+ * the popover, and in a right-to-left layout "More" sits on the other
+ * side, so the two sides are the same. The label with its padding is
+ * already wider than the minimum.
  */
-const reach = Math.ceil((minimumTarget - textStyles.strong.lineHeight) / 2);
 export const MORE_SLOP = {
   top: reach,
   bottom: Math.min(reach, TIP_INSET),
-  left: minimumTarget,
-  right: Math.min(reach, TIP_INSET - rhythm.tight),
+  left: TIP_INSET - MORE_PADDING,
+  right: TIP_INSET - MORE_PADDING,
 } as const;
 
 const close = () => {
@@ -48,6 +63,8 @@ export default function TermTip() {
     over?: string;
   }>();
   const window = useWindowDimensions();
+  // A keyboard's focus shows as the app's ring, as on the shared Pressable.
+  const [focused, setFocused] = useState(false);
   useKeyCommand('list-escape', close);
   if (!isTermId(id)) return null;
   const term = glossaryTerm(id);
@@ -98,7 +115,9 @@ export default function TermTip() {
           // it to the 44 pt target.
           hitSlop={MORE_SLOP}
           android_ripple={{ color: colors.sunken }}
-          style={styles.more}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          style={focused ? [styles.more, styles.focused] : styles.more}
           testID={`term-tip-${id}-more`}
         >
           <Text variant="strong" tone="navy">
@@ -111,6 +130,12 @@ export default function TermTip() {
 }
 
 const styles = StyleSheet.create({
+  focused: {
+    outlineColor: colors.navy,
+    outlineWidth: border.focus,
+    outlineOffset: border.focus,
+    outlineStyle: 'solid',
+  },
   fill: StyleSheet.absoluteFill,
   bubble: {
     position: 'absolute',
@@ -137,8 +162,8 @@ const styles = StyleSheet.create({
   more: {
     alignSelf: 'flex-end',
     marginTop: rhythm.line,
-    paddingHorizontal: rhythm.tight,
-    marginHorizontal: -rhythm.tight,
+    paddingHorizontal: MORE_PADDING,
+    marginHorizontal: -MORE_PADDING,
     borderRadius: radii.thumb,
     borderCurve: 'continuous',
   },
