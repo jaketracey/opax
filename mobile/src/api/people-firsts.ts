@@ -129,6 +129,19 @@ function wording(
 }
 
 /**
+ * Who published a division, as the file names them, or undefined when its
+ * source is not a key of `meta.sources.divisions`: that fact is not shown.
+ */
+export function divisionPublisher(
+  sources: PeopleFirsts['meta']['sources'],
+  division: { source: string },
+): string | undefined {
+  return Object.hasOwn(sources.divisions, division.source)
+    ? sources.divisions[division.source]
+    : undefined;
+}
+
+/**
  * What the record holds for one roster row: by its roster id when it has
  * one, by its exact roster name only when it has none (the file's own rule).
  * A division whose source the file does not name is left out: every fact
@@ -158,11 +171,9 @@ export function memberFirsts(
       source: sources.speech,
       ...spoken,
     };
-  const publisher =
-    held.first_division &&
-    Object.hasOwn(sources.divisions, held.first_division.source)
-      ? sources.divisions[held.first_division.source]
-      : undefined;
+  const publisher = held.first_division
+    ? divisionPublisher(sources, held.first_division)
+    : undefined;
   const voted =
     held.first_division && wording(held.first_division, coverage?.divisions);
   if (held.first_division && publisher && voted)
