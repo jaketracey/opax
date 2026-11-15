@@ -2,7 +2,11 @@ import { readdirSync, readFileSync, existsSync, statSync } from 'fs';
 import { join, relative, resolve } from 'path';
 import * as d from '../src/api/catalog-decoders';
 import { ApiError } from '../src/api/errors';
-import { decodePeopleFirsts } from '../src/api/people-firsts';
+import {
+  decodePeopleFirsts,
+  divisionPublisher,
+  PEOPLE_FIRSTS_PATH,
+} from '../src/api/people-firsts';
 import {
   isPartialCatalog,
   observeLeniency,
@@ -67,6 +71,13 @@ const releases = (keep: (name: string) => boolean) => (root: string) => {
  * first division with no source) without a word, so that the person's other
  * fact still stands; here every fact the file gives must be one the decoder
  * kept. A key it refuses is a dropped row, reported by the decoder itself.
+ *
+ * A fact can also decode and still never be drawn: the page shows a
+ * division only with its publisher, by the app's own rule
+ * (`divisionPublisher`). A division whose source the file's
+ * `meta.sources.divisions` does not name is a fact no reader sees, so it
+ * is a problem here, by name. (An earliest fact with no coverage year is
+ * left out by design, and is not one.)
  */
 export function decodeFirstsWhole(value: unknown) {
   const decoded = decodePeopleFirsts(value);
@@ -82,6 +93,17 @@ export function decodeFirstsWhole(value: unknown) {
             `${group}.${key}.${fact}`,
             'Could not be read, left out of the person’s firsts',
           );
+  for (const group of ['by_pid', 'by_name'] as const)
+    for (const [key, kept] of Object.entries(decoded[group]))
+      if (
+        kept.first_division &&
+        divisionPublisher(decoded.meta.sources, kept.first_division) ===
+          undefined
+      )
+        tolerated(
+          `${group}.${key}.first_division.source`,
+          `"${kept.first_division.source}" is not in meta.sources.divisions, never shown`,
+        );
   return decoded;
 }
 
@@ -207,7 +229,9 @@ export const families: Family[] = [
     // has a say in its shape: the app's current decoder is the strictest
     // one that reads it.
     name: 'people firsts',
-    files: one('people/firsts.json'),
+    // The path the app itself reads, so a move cannot leave this family
+    // checking nothing.
+    files: one(PEOPLE_FIRSTS_PATH.replace(/^\//, '')),
     decode: decodeFirstsWhole,
   },
   {
