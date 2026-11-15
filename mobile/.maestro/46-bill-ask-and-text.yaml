@@ -1,11 +1,13 @@
 appId: au.com.opax.app
-name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill text leads with its summary
+name: 46 From a bill in the Bills tab, Ask about this bill opens Ask scoped to it; the bill text leads with its summary
 ---
 # The bill is opened from the Bills tab, not by deep link: a deep link can
 # land in the Ask tab's own stack, where the old pop-to-Ask worked, so only
-# a browsing tab shows a dead "Ask about this" (build 17). "Ask about this"
-# switches to the Ask tab and never submits; the draft waits for the reader,
-# and Ask's bar leads back to the bill (journeys/ask.md 4.2).
+# a browsing tab shows a dead "Ask about this" (build 17). "Ask about this
+# bill" switches to the Ask tab and never submits: Ask is scoped to the bill
+# (its chip is in the composer), nothing is drafted, no conversations or
+# starters are listed, and Ask's bar leads back to the bill
+# (journeys/ask.md 4.2).
 - launchApp
 - runFlow: support/launch-ready.yaml
 - tapOn:
@@ -62,8 +64,20 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     visible:
       id: ask-question
     timeout: 15000
-- assertVisible: What did parliament say about the .*\?
-- takeScreenshot: ${EVIDENCE}/46-ask-draft
+# The bill's chip and its remove button (Android: one of the options chips).
+- extendedWaitUntil:
+    visible:
+      id: ask-bill-chip-clear|ask-option-remove-bill
+    timeout: 15000
+- assertNotVisible: What did parliament say about the .*
+- assertNotVisible:
+    id: ask-starter-0
+- assertNotVisible:
+    id: ask-conversation-0
+- assertNotVisible:
+    id: ask-see-all-conversations
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/46-ask-scoped
 # Back to the bill: Ask's back item returns to the Bills tab, whose stack
 # kept the bill.
 - tapOn:

@@ -125,14 +125,20 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
     visible:
       id: ask-machine-label
     timeout: 90000
-# Once the answer completes, Send opens a new conversation with the draft.
+# The bill's Ask arrives with an empty composer, scoped to the bill. Once
+# the answer completes, a typed question opens a new conversation.
+- assertVisible:
+    id: ask-bill-chip-clear|ask-option-remove-bill
+- tapOn:
+    id: ask-question
+- inputText: What does this bill change?
 - tapOn:
     id: ask-submit
     enabled: true
 - extendedWaitUntil:
     visible:
       id: ask-user-question
-      text: What did parliament say about the .*
+      text: What does this bill change.*
     timeout: 60000
 - assertNotVisible:
     id: ask-user-question
