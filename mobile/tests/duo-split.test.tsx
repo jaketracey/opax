@@ -102,6 +102,16 @@ let setRegions: (regions: ReservedRegions) => void;
 let serial = 0;
 let client: ApiClient;
 let transport: jest.Mock;
+/**
+ * The client's clock, held by the test. The client measures a read's age
+ * with it: a read more than half way to its deadline (four seconds) takes
+ * no new waiters, so a later reader of the same address starts a request
+ * of its own. On the real clock that made the request counts here depend
+ * on the machine: on a loaded run over four seconds could pass between a
+ * pane's read and the fold that mounts a second reader, and the transport
+ * was called twice. Time now passes only when a test moves `clock`.
+ */
+let clock = 0;
 const mounted: TestRenderer.ReactTestRenderer[] = [];
 
 function windowSize(
@@ -117,6 +127,7 @@ function windowSize(
   });
 }
 beforeEach(() => {
+  clock = Date.parse('2026-11-16T00:00:00Z');
   serial++;
   listMounts = 0;
   mockSearchMounts = 0;
@@ -149,6 +160,7 @@ beforeEach(() => {
     version: '1',
     build: '1',
     transport,
+    now: () => clock,
     cache: new CatalogCache({
       readIndex: async () => [],
       writeIndex: async () => {},
@@ -382,6 +394,25 @@ it('a record still being read is one request across a fold and an unfold', async
   await settle();
   expect(hosts(tree, 'record-bill').length).toBeGreaterThan(0);
   expect(transport).toHaveBeenCalledTimes(1);
+});
+
+it('the request count follows the client’s clock, not the machine’s: a fold over four seconds into a read asks again', async () => {
+  // What a loaded run did by accident, done on purpose. The read is held;
+  // the fold comes after more than half its eight seconds have gone.
+  transport.mockImplementation(() => new Promise<Response>(() => {}));
+  await renderApp(app, `/library?open=${encodeEntry(bill)}`);
+  expect(transport).toHaveBeenCalledTimes(1);
+  // Exactly half way: the second reader still shares the one request.
+  clock += 4000;
+  windowSize(390, compact);
+  await settle();
+  expect(route().pathname).toBe(`/bill/${bill.key}`);
+  expect(transport).toHaveBeenCalledTimes(1);
+  // A millisecond past it: the next reader starts its own.
+  clock += 1;
+  windowSize(SPLIT);
+  await settle();
+  expect(transport).toHaveBeenCalledTimes(2);
 });
 
 it('hands off the whole mapped pane stack and restores Back below its open record', async () => {
