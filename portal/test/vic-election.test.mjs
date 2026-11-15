@@ -77,7 +77,7 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, r
     // Visible text only: the speech search's example words are an input attribute.
     assert.equal(page.status,200,s.name);assert.doesNotMatch(page.html.replace(/<[^>]+>/g,' '),/loading|opening|placeholder/i);
     assert.ok(page.html.includes(s.source_url));
-    for(const m of s.members){assert.ok(paths.has(m.href),m.name);assert.ok(page.html.includes(m.href));assert.ok(m.party,m.name);assert.ok(page.html.includes(partyLabelHTML(m.party)),`${s.name}: ${m.party}`);}
+    for(const m of s.members){assert.ok(paths.has(m.href),m.name);assert.ok(page.html.includes(m.href));assert.ok(m.party,m.name);assert.ok(page.html.includes(partyLabelHTML(m.party).replace(/\bparty-[a-z]+\b/,'party-oth')),`${s.name}: ${m.party}`);}
     for(const text of ['8 pm Tuesday 3 November 2026','18–27 November 2026','Saturday 28 November 2026','href="/methods#vic-election"'])assert.ok(page.html.includes(text),`${s.name}: ${text}`);
     // Jake, 13 Oct: sections OPAX can't fill are dropped; the caveats live on Methods.
     assert.doesNotMatch(page.html,/Not available|What OPAX holds|Grants by state electorate|Declared interests|Electoral boundaries|annual aggregate|snapshot|vote export|export/i,s.name);
@@ -358,7 +358,7 @@ test('Council headings retain group order, distinguish unnamed groups and Ungrou
   assert.deepEqual([...section.querySelectorAll('h3')].map(n=>n.textContent),['Group A, Labor','Group B','Ungrouped']);
   assert.deepEqual([...section.querySelectorAll('.vic-candidate-name')].map(n=>n.textContent),list.map(c=>c.name));
   assert.equal(section.querySelectorAll('ol,.vic-candidate-no').length,0);
-  assert.equal(section.querySelectorAll('.party-alp').length,2);
+  assert.equal(section.querySelectorAll('.party-oth').length,2);
   assert.equal(section.querySelectorAll('.party').length,2);
   for(const ul of section.querySelectorAll('ul'))assert.ok(doc.getElementById(ul.getAttribute('aria-labelledby')));
   // Source group names are text, never markup, even when no party alias exists.

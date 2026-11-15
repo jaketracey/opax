@@ -14,7 +14,10 @@ export interface Member {
   detailed_count: number; divisions: Division[];
 }
 export interface Contest { date: string; kind: 'general' | 'by-election' | 'supplementary'; party: string; share: number; against: string; against_share: number; margin: number; url: string }
-interface Candidate {name: string; party: string; group?: string | null; group_name?: string | null}
+/** `record` is the seam for the verified candidate-to-record mapping (lane im-vic-cand-links): a
+ *  candidate's own OPAX record, present only where the match has been verified. The builder and
+ *  validator allowlists do not admit it yet, so no candidate carries one today. */
+interface Candidate {name: string; party: string; group?: string | null; group_name?: string | null; record?: {href: string} | null}
 export interface Seat {
   name: string; kind: 'district' | 'region'; path: string; source_url: string; region: string | null;
   districts: string[]; boundary_note: string | null; formerly: string | null; created: boolean;
@@ -82,7 +85,9 @@ export function vicElectionCopy(d: VicElection, now = new Date(), seat: Seat | n
     : {title:'How and where to vote',text:state === 'election_day' ? 'Election day voting is from 8 am to 6 pm AEDT. Check voting locations with the VEC.' : past(VIC_ELECTION_EARLY_CLOSE,now) ? 'Early voting has closed. Election day voting is Saturday 28 November, 8 am to 6 pm AEDT.' : 'Early voting runs 18–27 November, 9 am to 6 pm, except Sunday 22 November. Check locations and hours with the VEC.',links:[{label:'VEC voting options and locations',url:d.sources.voting}]}
   return {state,title,lede,voting,finder:{title:closed ? 'Find a seat and its records' : 'Which seat am I in?',button:closed ? 'Find seat records' : 'Find my seat'}}
 }
-const party = (name: string | null) => name ? partyLabelHTML(name) : ''
+/** Every party's label carries the same grey dot on election pages: colour would mark out the
+ *  five parties that have one from the rest. */
+const party = (name: string | null) => name ? partyLabelHTML(name).replace(/\bparty-[a-z]+\b/,'party-oth') : ''
 /** A section in the site's shared shape (ui-section): its rule, its title, an optional note. */
 const section = (id: string, title: string, body: string, note = '') => `<section class="ui-section hub-section" id="${id}"><h2 class="ui-section-title">${title}</h2>${note ? `<p class="ui-section-note">${note}</p>` : ''}${body}</section>`
 /** A block's onward links on one wrapping row, each a full touch target. */
@@ -149,28 +154,26 @@ function finder(d: VicElection, place: string | null, hits: PlaceHit[] | null, c
 /** Only titled questions, without duplicate titles, in the source order. */
 export const titledVotes = (m: Member) => m.divisions.filter((r,i,all)=>!/^(?:assembly|council) divided on /i.test(r.title) && all.findIndex(x=>x.title === r.title) === i).slice(0,3)
 
-/** What a member has done: counts that are held, a speech search, recent votes. */
+/** What a member has done: counts that are held, a speech search, links to the full record.
+ *  No vote is singled out here: one featured division carries its motion's wording with it. */
 function record(m: Member, opts: {search: boolean; heading: string}) {
   const stats: string[] = []
   if (m.speeches) stats.push(`<li><b>${count(m.speeches.count)}</b> ${m.speeches.count === 1 ? 'speech' : 'speeches'} in Parliament, ${m.speeches.first === m.speeches.last ? m.speeches.first : `${m.speeches.first}–${m.speeches.last}`}</li>`)
   if (m.votes) stats.push(`<li><b>${count(m.votes.count)}</b> ${m.votes.count === 1 ? 'vote' : 'votes'} recorded in 2026: ${count(m.votes.ayes)} aye, ${count(m.votes.noes)} no</li>`)
-  const voteWord = (v: string) => ({aye:'Aye',no:'No',abstain:'Abstained',absent:'Absent'} as Record<string,string>)[v] || v
   const speeches = `/ask?${new URLSearchParams({view:'search',speaker:m.name,kind:'speech'})}`
   const search = opts.search
     ? `<form class="vic-speech-search" action="/ask" method="get" role="search"><input type="hidden" name="view" value="search"><input type="hidden" name="speaker" value="${esc(m.name)}"><input type="hidden" name="kind" value="speech"><label for="vic-speech-q">Search ${esc(m.name)}’s speeches</label><div class="vic-find-row"><input class="ui-input" id="vic-speech-q" name="q" type="search" placeholder="Housing, health, schools" maxlength="120" required><button class="ui-button" type="submit">Search</button></div></form>`
     : ''
-  // "Assembly divided on motion" says nothing about what was decided: only titled questions are listed.
-  const titled = titledVotes(m)
-  const votes = opts.search && titled.length
-    ? `<h3 class="ui-subsection-title">Recent votes</h3><ul class="vic-votes">${titled.map(r=>`<li><a href="${esc(r.href)}">${esc(r.title)}</a><span class="hub-meta">${esc(shortDate(r.date))} · ${esc(voteWord(r.vote))}</span></li>`).join('')}</ul>`
-    : ''
-  return `<article class="vic-member">${opts.heading}${stats.length ? `<ul class="vic-stats">${stats.join('')}</ul>` : ''}${search}${votes}${links([link(m.href,'Full profile'),...opts.search ? [] : [link(speeches,'Speeches')],link(m.source_url,'Parliament of Victoria profile')])}</article>`
+  return `<article class="vic-member">${opts.heading}${stats.length ? `<ul class="vic-stats">${stats.join('')}</ul>` : ''}${search}${links([link(m.href,'Full profile'),...opts.search ? [] : [link(speeches,'Speeches')],link(m.source_url,'Parliament of Victoria profile')])}</article>`
 }
 
-/** Candidates as the VEC publishes them after nominations close: ballot paper order, no other ordering. */
+/** Candidates as the VEC publishes them after nominations close: ballot paper order, no other ordering.
+ *  Every candidate is drawn by the one row: a name, the party as nominated with the same grey dot,
+ *  and a link to their record only where one is verified (Candidate.record). Nobody has a portrait:
+ *  one may be drawn only when every candidate in the seat has one, and none is held for candidates. */
 function candidates(s: Seat) {
   if (!s.candidates?.list.length) return ''
-  const row = (c: Candidate, number?: number) => `<li>${number === undefined ? '' : `<span class="vic-candidate-no" aria-hidden="true">${number}</span>`}<span class="vic-candidate"><span class="vic-candidate-name">${esc(c.name)}</span>${c.party && c.party.toLowerCase() !== 'independent' ? party(c.party) : ''}</span></li>`
+  const row = (c: Candidate, number?: number) => `<li>${number === undefined ? '' : `<span class="vic-candidate-no" aria-hidden="true">${number}</span>`}<span class="vic-candidate"><span class="vic-candidate-name">${c.record && /^\/subject\/person\/[^"<>\s]+$/.test(c.record.href) ? link(c.record.href,c.name) : esc(c.name)}</span>${c.party && c.party.toLowerCase() !== 'independent' ? party(c.party) : ''}</span></li>`
   let body: string
   if (s.kind === 'region') {
     const groups: {letter: Candidate['group']; name: string; list: Candidate[]}[] = []
