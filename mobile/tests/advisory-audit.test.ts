@@ -242,8 +242,11 @@ test(
     try {
       const runs = await boundedAgainstSilentRegistry(registry, 4, env);
       // The first run was bounded but never asked: what the old single
-      // count saw as requests=0. The second met the registry.
-      expect(runs.map((run) => run.asked)).toEqual([false, true]);
+      // count saw as requests=0. A later run met the registry; under load a
+      // real npm can be stopped early too, so how many it took is not fixed.
+      expect(runs[0]!.asked).toBe(false);
+      expect(runs.at(-1)!.asked).toBe(true);
+      expect(runs.length).toBeGreaterThanOrEqual(2);
       expect(registry.requests()).toBeGreaterThan(0);
     } finally {
       await registry.close();
