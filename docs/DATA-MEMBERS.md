@@ -57,6 +57,17 @@ authorised, re-fetch and re-run the diff (`/tmp/aph_diff.json` on desktop was th
 session's dry run), apply, then `export_parliamentarians.py` on desktop and copy the JSON in.
 Do it after every by-election, casual vacancy or defection; quarterly otherwise.
 
+## Re-verification of 2026-11-16
+
+The 226 sitting federal people were checked again, by OpenAustralia person id, against
+OpenAustralia's public member files (last modified 11 September 2026; Parliament's site was
+not fetched). Nobody is missing on either side and no seat, chamber or state differs. One
+roster row (Chris Gatenby) records no Senate seat, and a group for the accept list is
+proposed. The report is [roster-reverify-2026-11-16.md](roster-reverify-2026-11-16.md);
+`scripts/roster_reverify.py` re-runs the comparison from cached files and
+`scripts/roster_verification.json` logs each check. The seat roster's own date stays
+4 September 2026.
+
 ## State party corrections (2026-10-03)
 
 Annabelle Cleeland is the Victorian member for Euroa, [The Nationals](https://www.parliament.vic.gov.au/members/annabelle-cleeland/).
