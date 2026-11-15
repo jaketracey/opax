@@ -70,7 +70,7 @@ export function divisionPlain(text) {
   return blockLines(text)
     .replace(/\[([^\]]+)\]\(([^\s()]+(?:\([^\s()]*\)[^\s()]*)*)(?:\s+"[^"]*")?\)/g, '$1')
     .replace(/^\s*(?:#{1,3}\s+|>\s?|[-*]\s+|\d+[.)]\s+)/gm, '')
-    .replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, '$1')
+    .replace(/[*_]{1,3}(?=\S)([^*_]*?[^*_\s])[*_]{1,3}/g, '$1')
     .replace(/\s+/g, ' ').trim();
 }
 
