@@ -14,6 +14,8 @@
  * are reached by slug, and the platform rejects a whole request when one slug is not in the box.
  * The body therefore carries, under BILL_LABEL_ONLY, the filter to ask again with: the bill label
  * alone, which cannot be rejected and is still inside the bill (its text). Never the unscoped ask.
+ * That answer has lost the bill record and every speech and division, so it is logged (key and
+ * upstream status only) and not kept in the answer cache.
  *
  * Not reached: the later parts of a division split for the platform's 100-name limit
  * (`division-<key>-p2`, votes_ingest.py), which the bill file does not record, and speeches past
@@ -29,6 +31,8 @@ export interface BillScope { key: string; title: string; slugs: string[] }
 
 /** Symbol-keyed, so it is copied with the body on every retry and never serialised to the platform. */
 export const BILL_LABEL_ONLY = Symbol.for('opax.ask.bill-label-only')
+/** One object shared by a body and its retry copies; `fired` once the platform rejected the full filter. */
+export interface BillLabelOnly { key: string; filter: Record<string, unknown>; fired?: boolean }
 
 // au-federal-r7531, au-federal-alrc-1270, au-nsw-18524, au-federal-ed-<slug>-<year> (docs/BILLS-CONTRACT.md).
 // Nothing else is read as a bill file: not `index`, the 1.9 MB list of every bill.
@@ -63,7 +67,7 @@ export function billScopedBody(body: Record<string, unknown>, scope: BillScope):
   return {
     ...body,
     filter_expression: within(billScopeClause(scope)),
-    [BILL_LABEL_ONLY]: within({ prop: 'label', labelset: 'bill_key', label: scope.key }),
+    [BILL_LABEL_ONLY]: { key: scope.key, filter: within({ prop: 'label', labelset: 'bill_key', label: scope.key }) } satisfies BillLabelOnly,
     ...(Array.isArray(body.rag_strategies) ? { rag_strategies: (body.rag_strategies as { name?: string }[]).filter(s => s?.name !== 'prequeries') } : {}),
     ...(prompt ? { prompt: { ...prompt, user: about + (prompt.user ?? '') } } : {}),
   }

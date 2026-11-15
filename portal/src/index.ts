@@ -87,7 +87,7 @@ import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, sp
  */
 
 import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
-import { askBillKey, billScope, billScopedBody, type BillScope, type BillScopeFile } from './ask-bill-scope'
+import { askBillKey, billScope, billScopedBody, BILL_LABEL_ONLY, type BillLabelOnly, type BillScope, type BillScopeFile } from './ask-bill-scope'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { reviewerLoginEnabled } from './community-auth'
@@ -1736,12 +1736,15 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   }
   await scopeSpeakerBody(body, env, input.speaker)
   if (bill) body = billScopedBody(body, bill)
+  // Shared by every retry body: set once the platform rejected the full bill filter and the label alone answered.
+  const billLabelOnly = bill ? (body as { [BILL_LABEL_ONLY]?: BillLabelOnly })[BILL_LABEL_ONLY] : undefined
   firstBudget?.signal.throwIfAborted()
   // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
   // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
   body.generative_model = askModel
   const store = (payload: AskPayload): void => {
-    if (cacheKey && cacheableAnswer(payload) && !UNSHARED_ASK_REQUESTS.has(request)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
+    // An answer from the bill's text alone, after a rejected filter, is not kept: the next ask tries the full scope.
+    if (cacheKey && !billLabelOnly?.fired && cacheableAnswer(payload) && !UNSHARED_ASK_REQUESTS.has(request)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
   if (isPositionBody(body)) {
     // Read and bound original speaking turns before generation. A cached answer
@@ -1762,8 +1765,12 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
       const work = async (signal: AbortSignal) => {
         let res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
         // A bill-scoped filter the platform rejects (a listed record not in the box) is asked on the bill label alone (ask-bill-scope.ts).
-        const labelOnly = [400, 412, 422].includes(res.status) ? (b as Record<symbol, unknown>)[Symbol.for('opax.ask.bill-label-only')] : undefined
-        if (labelOnly) { await res.body?.cancel().catch(() => {}); res = await kbFetch(env, '/ask', { body: { ...b, filter_expression: labelOnly }, headers: { 'x-synchronous': 'true' }, signal }) }
+        const labelOnly = [400, 404, 412, 422].includes(res.status) ? (b as { [BILL_LABEL_ONLY]?: BillLabelOnly })[BILL_LABEL_ONLY] : undefined
+        if (labelOnly) {
+          // Counted from the logs: the answer loses the bill record and every speech and division. Key and status only.
+          labelOnly.fired = true; console.warn(JSON.stringify({ event: 'ask_bill_label_only', bill: labelOnly.key, status: res.status }))
+          await res.body?.cancel().catch(() => {}); res = await kbFetch(env, '/ask', { body: { ...b, filter_expression: labelOnly.filter }, headers: { 'x-synchronous': 'true' }, signal })
+        }
         if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
         if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
         return (await res.json()) as AskAnswer
@@ -2381,8 +2388,11 @@ async function streamAskOnce(
   })
   let res = await call(body)
   // As on the synchronous path: a rejected bill-scoped filter is asked on the bill label alone (ask-bill-scope.ts).
-  const labelOnly = [400, 412, 422].includes(res.status) ? (body as Record<symbol, unknown>)[Symbol.for('opax.ask.bill-label-only')] : undefined
-  if (labelOnly) { await res.body?.cancel().catch(() => {}); res = await call({ ...body, filter_expression: labelOnly }) }
+  const labelOnly = [400, 404, 412, 422].includes(res.status) ? (body as { [BILL_LABEL_ONLY]?: BillLabelOnly })[BILL_LABEL_ONLY] : undefined
+  if (labelOnly) {
+    labelOnly.fired = true; console.warn(JSON.stringify({ event: 'ask_bill_label_only', bill: labelOnly.key, status: res.status }))
+    await res.body?.cancel().catch(() => {}); res = await call({ ...body, filter_expression: labelOnly.filter })
+  }
   if (!res.ok || !res.body) throw new Error(`ask failed (${res.status})`)
 
   let answer = ''

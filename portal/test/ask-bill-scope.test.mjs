@@ -18,7 +18,7 @@ const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThrough
 const plugin={name:'scripted-model',setup(b){b.onResolve({filter:/^@openrouter\/ai-sdk-provider$/},()=>({path:'scripted',namespace:'ask-bill'}));b.onLoad({filter:/.*/,namespace:'ask-bill'},()=>({contents:'export const createOpenRouter=()=>()=>globalThis.__researchModel;',loader:'js'}))}}
 const publicDir=new URL('../public',import.meta.url).pathname
 const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,publicDir,ctx,{plugins:[plugin]})
-const {askBillKey,billScope,billScopeClause,billScopedBody,inBillScope}=await importBundle((await build({entryPoints:[new URL('../src/ask-bill-scope.ts',import.meta.url).pathname],bundle:true,format:'esm',write:false})).outputFiles[0].text,'ask-bill-scope')
+const {askBillKey,billScope,billScopeClause,billScopedBody,inBillScope,BILL_LABEL_ONLY}=await importBundle((await build({entryPoints:[new URL('../src/ask-bill-scope.ts',import.meta.url).pathname],bundle:true,format:'esm',write:false})).outputFiles[0].text,'ask-bill-scope')
 const daily=budgetDatabase()
 Object.assign(h.env,{OPENROUTER_API_KEY:'test-only-placeholder',AGENTIC_ASK_MODE:'route',RESEARCH_LOOP:'route',AGENTIC_INPUT_USD_PER_MILLION:'0.66',AGENTIC_OUTPUT_USD_PER_MILLION:'1.98',
   COMMUNITY_DB:daily.db,ASK_LIMITER:{limit:async()=>({success:true})},MODEL_LIMITER:{limit:async()=>({success:true})}})
@@ -66,7 +66,7 @@ const matches=(e,r)=>{
 }
 // As NucliaDB's parser does (parse_expression: "Cannot find slug"), a resource clause naming a slug that is not in
 // the box rejects the whole request. `absent` takes records out of the box for one test.
-const absent=new Set()
+const absent=new Set();let rejectStatus=412
 const inBox=()=>Object.fromEntries(Object.entries(pool).filter(([,r])=>!absent.has(r.slug)))
 const unknownSlug=e=>e.and?e.and.map(unknownSlug).find(Boolean):e.or?e.or.map(unknownSlug).find(Boolean):e.not?unknownSlug(e.not):e.prop==='resource'&&e.slug&&!Object.values(inBox()).some(r=>r.slug===e.slug)?e.slug:undefined
 const kbAsks=[],rejected=[]
@@ -79,7 +79,7 @@ const kb=async(input,init)=>{
   const body=JSON.parse(String(init.body));kbAsks.push(body)
   const field=body.filter_expression?.field
   const unknown=field&&unknownSlug(field)
-  if(unknown){rejected.push(unknown);return Response.json({detail:`Cannot find slug ${unknown}`},{status:412})}
+  if(unknown){rejected.push(unknown);return Response.json({detail:`Cannot find slug ${unknown}`},{status:rejectStatus})}
   const found=Object.fromEntries(Object.entries(inBox()).filter(([,r])=>!field||matches(field,r)))
   const ids=Object.values(found).flatMap(r=>Object.keys(r.fields.body.paragraphs))
   const answer=ids.length?ids.map((_,i)=>`Point ${i+1} from the record.[^${i+1}]`).join(' ')+'\n\n'+ids.map((_,i)=>`[^${i+1}]: block-${i+1}`).join('\n'):''
@@ -90,12 +90,13 @@ const kb=async(input,init)=>{
 }
 // A research model with nothing to say: the research route, when it runs, fails over to ordinary retrieval.
 const modelCalls=()=>globalThis.__researchModel.doStreamCalls.length+globalThis.__researchModel.doGenerateCalls.length
-const ask=async(input,stream=false)=>{
-  kbAsks.length=0;kbErrors.length=0;rejected.length=0
+const warned=[]
+const ask=async(input,stream=false,{cache=false}={})=>{
+  kbAsks.length=0;kbErrors.length=0;rejected.length=0;warned.length=0;stored.length=0
   globalThis.__researchModel=new MockLanguageModelV4({doGenerate:[]})
-  const realWarn=console.warn,realLog=console.log,realError=console.error;console.warn=console.log=console.error=()=>{}
+  const realWarn=console.warn,realLog=console.log,realError=console.error;console.log=console.error=()=>{};console.warn=(...args)=>{warned.push(args.map(String).join(' '))}
   try{
-    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1'},body:JSON.stringify(input)})
+    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(cache?{}:{'x-opax-nocache':'1'})},body:JSON.stringify(input)})
     const raw=await response.text()
     while(pending.length)await Promise.all(pending.splice(0))
     if(!stream)return {status:response.status,body:JSON.parse(raw)}
@@ -180,6 +181,44 @@ for(const stream of [false,true])for(const [name,slug] of [['a listed speech',de
     }finally{absent.clear()}
   })
 
+test('the label-only retry is logged with the bill key and the upstream status, and never the question; 404 is retried too',async()=>{
+  const question='What does this bill change for my neighbour Zebedee Quillfeather?'
+  absent.add(debated.speeches[5].slug)
+  try{
+    for(const status of [400,404,412,422])for(const stream of [false,true]){
+      rejectStatus=status
+      const run=await ask({question,bill:DEBATED},stream)
+      assert.equal(run.status,200,`${status} ${stream}`);assert.deepEqual(run.body.sources.map(s=>s.slug),[`bill-text-${DEBATED}-first-reps`],`${status}: answered from the bill's text`)
+      const logs=warned.filter(line=>line.includes('ask_bill_label_only'))
+      assert.ok(logs.length>0,`${status}: logged`)
+      for(const line of logs)assert.deepEqual(JSON.parse(line),{event:'ask_bill_label_only',bill:DEBATED,status})
+      assert.ok(!warned.some(line=>/Zebedee|Quillfeather|neighbour/.test(line)),'no question text in any log line')
+    }
+    // Another upstream failure is not this case: no label-only retry, no log.
+    rejectStatus=500
+    await ask({question,bill:DEBATED})
+    assert.equal(warned.filter(line=>line.includes('ask_bill_label_only')).length,0)
+    assert.ok(kbAsks.every(sent=>JSON.stringify(sent.filter_expression).includes('"prop":"resource"')),'500: the full filter only')
+  }finally{absent.clear();rejectStatus=412}
+  await ask({question,bill:DEBATED})
+  assert.equal(warned.filter(line=>line.includes('ask_bill_label_only')).length,0,'nothing logged when the full filter is accepted')
+})
+
+test('an answer from the label-only retry is not kept in the answer cache; a full bill answer is',async()=>{
+  for(const stream of [false,true]){
+    const question=`What does this bill change, asked ${stream?'on the stream':'as JSON'}?`
+    absent.add(debated.speeches[5].slug)
+    try{
+      const run=await ask({question,bill:DEBATED},stream,{cache:true})
+      assert.equal(run.status,200);assert.ok(rejected.length>0)
+      assert.deepEqual(stored,[],'the degraded answer is not stored')
+    }finally{absent.clear()}
+    const full=await ask({question,bill:DEBATED},stream,{cache:true})
+    assert.equal(full.status,200);assert.equal(rejected.length,0)
+    assert.ok(stored.length>0,'the full answer is stored as before')
+  }
+})
+
 test('a bill key with no file and no records: an answer with no sources, on JSON and on the stream, never an error',async()=>{
   for(const stream of [false,true]){
     const run=await ask({question:'What does this bill do?',bill:'au-federal-zz-no-such-bill'},stream)
@@ -224,8 +263,8 @@ test('the key, the clause and the body',()=>{
   assert.deepEqual(body.filter_expression.field.and[0],{and:[news]},'the request\'s own filter is kept')
   assert.deepEqual(body.rag_strategies,[{name:'neighbouring_paragraphs'}])
   const labelOnly={field:{and:[{and:[news]},{prop:'label',labelset:'bill_key',label:VETERANS}]}}
-  assert.deepEqual(body[Symbol.for('opax.ask.bill-label-only')],labelOnly,'the filter to ask again with')
-  assert.deepEqual({...body,top_k:12}[Symbol.for('opax.ask.bill-label-only')],labelOnly,'copied onto every retry body')
+  assert.deepEqual(body[BILL_LABEL_ONLY],{key:VETERANS,filter:labelOnly},'the filter to ask again with, and the key to log')
+  assert.equal({...body,top_k:12}[BILL_LABEL_ONLY],body[BILL_LABEL_ONLY],'one object, shared with every retry body')
   assert.ok(!JSON.stringify(body).includes('label-only'),'never sent to the platform')
   assert.ok(body.prompt.user.startsWith('Every passage belongs to one bill, the Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026'))
   assert.ok(body.prompt.user.endsWith('u'))
