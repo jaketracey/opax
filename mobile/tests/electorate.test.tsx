@@ -1101,3 +1101,89 @@ test('electorate content uses the shared loader while its headers and source ban
   }
   dimensions.mockRestore();
 });
+
+// Badgerys Creek (NSW Legislative Assembly, 2025 boundary): no roster, no
+// term and no member, and a source list holding the boundary file and the
+// statewide Legislative Council's, cited only by the seat's relation to that
+// chamber. The member block named that Council source under "No member is
+// recorded for this seat yet".
+describe('a seat with no member recorded', () => {
+  const council = 'New South Wales statewide Legislative Council constituency';
+  function badgerysCreek() {
+    const raw = structuredClone(pinned(seat('Grayndler').detail_url)) as {
+      sources: Record<string, { label: string; source_id: string }>;
+      rosters: unknown[];
+      terms: unknown[];
+      representatives: unknown[];
+      representation_status: string;
+      representation_as_of: string | null;
+      relations: { sources: string[] }[];
+    };
+    const [first] = Object.values(raw.sources);
+    raw.sources.source_council = {
+      ...first!,
+      source_id: 'source_council',
+      label: council,
+    };
+    raw.relations = raw.relations.map((relation) => ({
+      ...relation,
+      sources: ['source_council'],
+    }));
+    raw.rosters = [];
+    raw.terms = [];
+    raw.representatives = [];
+    raw.representation_status = 'unknown';
+    raw.representation_as_of = null;
+    return c.electorateFor(c.decodeElectorate(raw));
+  }
+
+  test('the member block cites roster, term and member sources only', () => {
+    const empty = badgerysCreek();
+    expect(empty.representatives.sources).toEqual([]);
+    // The seat's own list still holds every file, the Council's included.
+    expect(empty.identity.sources.map((s) => s.label)).toContain(council);
+    // A seat with members cites what its rosters, terms and members cite.
+    const detail = c.decodeElectorate(pinned(seat('Grayndler').detail_url));
+    const cited = new Set([
+      ...detail.rosters.flatMap((roster) => roster.sources),
+      ...detail.terms.flatMap((term) => term.sources),
+      ...detail.representatives.flatMap((member) => member.person.sources),
+    ]);
+    const labels = c
+      .electorateFor(detail)
+      .representatives.sources.map((s) => s.label);
+    expect(labels.length).toBeGreaterThan(0);
+    expect(labels.sort()).toEqual(
+      Object.entries(detail.sources)
+        .filter(([id]) => cited.has(id))
+        .map(([, s]) => s.label)
+        .sort(),
+    );
+    expect(labels.some((label) => /boundar/i.test(label))).toBe(false);
+  });
+
+  test('the page says so and draws no source line under it', async () => {
+    const s = seat('Grayndler');
+    mock.electorateFor.mockResolvedValue(result(badgerysCreek()));
+    mockParams.id = s.electorate_id;
+    const r = await render(<Electorate />);
+    const members = r.root.find(
+      (n) => n.props.testID === 'electorate-members' && n.type === View,
+    );
+    expect(
+      members.findAll((n) => n.props.testID === 'electorate-no-member').length,
+    ).toBeGreaterThan(0);
+    expect(
+      members.findAll(
+        (n) => n.props.testID === 'electorate-representatives-source',
+      ),
+    ).toHaveLength(0);
+    const words = members
+      .findAll((n) => n.type === 'Text')
+      .map((n) => [n.props.children].flat(9).join(''))
+      .join(' ');
+    expect(words).toContain('No member is recorded for this seat yet.');
+    expect(words).not.toContain('Legislative Council');
+    await act(async () => r.unmount());
+  });
+});

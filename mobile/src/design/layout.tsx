@@ -36,6 +36,7 @@ import {
   clearBarStyle,
   opaqueBar,
   useClearRailBar,
+  useRailBar,
 } from '../navigation/chrome';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -480,6 +481,7 @@ export function Screen({
   });
   const backed = useSolidRailBacking();
   const clearRail = useClearRailBar();
+  const onRail = useRailBar() !== null;
   const wasBacked = useRef(false);
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
@@ -494,9 +496,16 @@ export function Screen({
         : wasBacked.current
           ? { headerBackground: undefined }
           : {}),
+      // Beside a vertical bar UIKit's bar background stops short of the top
+      // edge, and what shows above it is the screen's container. A sheet's
+      // stack paints that in its own ground (Account: the darker grouped
+      // one), so a paper page there had a darker strip above its paper bar
+      // (Methods, Datasets, Portraits, Photo credits). A sheet cannot take
+      // the backing view, so the container takes the page's ground instead.
+      ...(onRail ? { contentStyle: { backgroundColor: colors[ground] } } : {}),
     });
     wasBacked.current = backed;
-  }, [setOptions, ground, inPane, nativeRoot, backed, clearRail]);
+  }, [setOptions, ground, inPane, nativeRoot, backed, clearRail, onRail]);
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();

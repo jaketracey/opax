@@ -598,3 +598,72 @@ test('a page’s own bar colour is backed in that colour under the solid rail ba
     if (version) Object.defineProperty(Platform, 'Version', version);
   }
 });
+
+// Methods, Datasets, Portraits and Photo credits are paper pages in the
+// Account sheet, whose stack paints its screens in the darker grouped
+// ground. Beside the rail UIKit's bar background stops short of the top
+// edge, so that darker container showed as a strip above the paper bar. A
+// sheet cannot take the backing view; Screen gives the container the page's
+// own ground instead.
+test.each([
+  ['trailing', false, colors.paper, true],
+  ['leading', true, colors.sunken, true],
+  // iPhone, iPad and the unfolded Duo: Screen sets what it set before.
+  ['unspecified', false, colors.paper, false],
+] as const)(
+  'beside a %s bar a sheet page (grouped: %s) paints its container in the page ground',
+  (edge, grouped, ground, painted) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 27,
+    });
+    mockBarEdge = edge;
+    const calls: Record<string, unknown>[] = [];
+    const navigation = {
+      addListener: () => () => undefined,
+      setOptions: (value: Record<string, unknown>) => calls.push(value),
+      // The Account stack: a sheet's own stack, not a tab's.
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'root' }, { key: route.key }],
+        routeNames: ['index', 'about', 'methods'],
+      }),
+      isFocused: () => true,
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      act(() => {
+        renderer = TestRenderer.create(
+          <NavigationContext.Provider value={navigation as never}>
+            <NavigationRouteContext.Provider value={route as never}>
+              <DescriptorsContext.Provider
+                value={
+                  {
+                    [route.key]: { options: { headerTransparent: false } },
+                  } as never
+                }
+              >
+                <Screen grouped={grouped} testID="methods-screen">
+                  <View />
+                </Screen>
+              </DescriptorsContext.Provider>
+            </NavigationRouteContext.Provider>
+          </NavigationContext.Provider>,
+        );
+      });
+      const set = Object.assign({}, ...calls) as Record<string, unknown>;
+      // The bar keeps its opaque colour and hairline, and takes no backing.
+      expect(set).toMatchObject(opaqueBar(ground));
+      expect('headerBackground' in set).toBe(false);
+      expect(set.contentStyle).toEqual(
+        painted ? { backgroundColor: ground } : undefined,
+      );
+      expect('contentStyle' in set).toBe(painted);
+    } finally {
+      act(() => renderer.unmount());
+      if (version) Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
