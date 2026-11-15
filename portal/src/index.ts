@@ -62,7 +62,7 @@ import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
 import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
-import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
+import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML, vicAssemblyEnded, vicAssemblyExpiredPhrase, vicCouncilEnded, vicCouncilExpiredPhrase } from '../public/vic-election.js'
 import { vicElectionPage, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP, VIC_ELECTION_CACHE } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
@@ -5142,7 +5142,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
 interface ElectorateSummary {
   electorate_id: string; slug: string; name: string; jurisdiction: string; chamber: string;
   state_code: string; status: string; url: string; detail_url: string;
-  representation_as_of: string | null; election_count: number;
+  representation_as_of: string | null; election_count: number; dissolved_for?: string | null;
   representatives: { person_id: string; party?: string; person: { name: string } }[];
 }
 interface ElectoratePerson {
@@ -5399,7 +5399,12 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const federal = p.states.includes('federal')
   // The title a search result shows: their role and seat as the parliament
   // names them, then what the page holds (see seo-titles.ts).
-  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
+  // A Victorian Assembly member whose house has expired is not titled "MP, Member for": the electorates
+  // index says which seats still wait on the new parliament's roster (dissolved_for).
+  const seatRows = p.speech_scope || !p.representation?.some(r => r.chamber === 'vic_la' || r.chamber === 'vic_lc') ? null : (await loadElectorates(env).catch(() => null))?.electorates ?? null
+  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear(), seat =>
+    seatRows?.some(e => vicAssemblyEnded(e) && e.name.toLowerCase() === seat.electorate.toLowerCase() && seat.chamber === 'vic_la') ? vicAssemblyExpiredPhrase()
+      : seat.chamber === 'vic_lc' && vicCouncilEnded(seatRows) ? vicCouncilExpiredPhrase() : null)
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
   const count = p.roster_only ? NO_HANSARD_HELD : p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
