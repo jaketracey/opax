@@ -295,6 +295,27 @@ export function BarTitle({
     person,
   );
   const fits = fallback || (ready && retreat.text !== null);
+  const drawn = shown && ready && !fallback ? (retreat.text ?? title) : title;
+  const minimal = ready && shown && retreat.mode === 'minimal';
+  // Beside the collapsed back button UIKit sets the title view at the leading
+  // end of the span between the bar groups, not on the bar's centre line (26.3;
+  // 18.4 centres a fitting title). Its window position is measured, and it is
+  // moved only as far as puts it on the centre line without passing where the
+  // trailing group's reserve begins. It keeps its place while it fades out,
+  // so it does not jump while visible; on its first frame it can still be
+  // measured a tick late, at the start of its fade-in.
+  const place =
+    Platform.OS === 'ios' &&
+    minimal &&
+    !fallback &&
+    trailingWidth !== 0 &&
+    safeWidth < 600;
+  const placeKey = `${drawn}:${safeWidth}:${fontScale}:${trailing}`;
+  const [placed, setPlaced] = useState<{ key: string; by: number } | null>(
+    null,
+  );
+  const settled = placed?.key === placeKey;
+  const shift = settled ? placed.by : 0;
   const visible = shown && fits;
   const backMode = fallback ? 'default' : retreat.mode;
   const [opacity] = useState(() => new Animated.Value(0));
@@ -339,10 +360,8 @@ export function BarTitle({
       ? retreat.room
       : namedRoom;
   const shrink = fontScale > 1 && !fallback;
-  const drawn = shown && ready && !fallback ? (retreat.text ?? title) : title;
   // Above Large the title is drawn larger than the retreat measured it. It
   // takes that extra size only while it still centres in the bar.
-  const minimal = ready && shown && retreat.mode === 'minimal';
   const drawnRoom = shrink
     ? barTitleDrawnWidth(
         room,
@@ -360,59 +379,60 @@ export function BarTitle({
         measured(drawn),
       )
     : room;
-  // Beside the collapsed back button UIKit centres the title between the two
-  // groups, not on the bar: the trailing pair outweighs the circle, so it can
-  // sit left of centre (26.3; 18.4 already centres it). Measure where it
-  // is, and move it only as far as puts it on the bar's centre line without
-  // leaving the span between the groups.
   const [box, setBox] = useState<View | null>(null);
-  const [moved, setMoved] = useState(0);
   const [laidOut, setLaidOut] = useState(0);
   const textWidth = measured(drawn);
-  const place =
-    Platform.OS === 'ios' && minimal && !fallback && trailingWidth !== 0;
-  const shift = place ? moved : 0;
   const applied = useRef(0);
   useEffect(() => {
     applied.current = shift;
   }, [shift]);
+  // The native position is copied back only on a size change or a layout
+  // pass, so measure again after the back button's change has settled.
   useEffect(() => {
     const node = box;
     if (!place || !node || !textWidth) return;
-    const timer = setTimeout(() => {
+    const measure = () =>
       node.measureInWindow((x, _y, boxWidth) => {
         if (!Number.isFinite(x) || !Number.isFinite(boxWidth) || boxWidth <= 0)
           return;
         // Where UIKit put it, before any move of ours.
         const left = x - applied.current;
         const centre = left + boxWidth / 2;
-        // The span ends where the trailing group's reserve begins (as in
-        // barTitleWidth): never move past it, so never under Share.
         const items =
           trailingWidth ??
           44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
-        const limit = width - (16 + items + 8);
-        const next = Math.round(
+        // The span ends where the trailing group's reserve begins, as in
+        // barTitleWidth: W - 16 - items - 8. Never move past it.
+        const origin =
+          adaptive || insets?.left !== insets?.right ? (insets?.left ?? 0) : 0;
+        const limit = origin + safeWidth - (16 + items + 8);
+        const next = Math.floor(
           Math.min(
             Math.max(0, limit - (left + boxWidth)),
-            Math.max(0, width / 2 - centre),
+            Math.max(0, origin + safeWidth / 2 - centre),
           ),
         );
-        setMoved((now) => (Math.abs(now - next) < 1 ? now : next));
+        setPlaced((now) =>
+          now?.key === placeKey && Math.abs(now.by - next) < 1
+            ? now
+            : { key: placeKey, by: next },
+        );
       });
-    }, 0);
-    return () => clearTimeout(timer);
+    const timers = [0, 200, 600].map((delay) => setTimeout(measure, delay));
+    return () => timers.forEach(clearTimeout);
   }, [
     box,
     place,
+    placeKey,
     textWidth,
-    width,
-    drawn,
-    fontScale,
+    safeWidth,
     laidOut,
     trailing,
     trailingWidth,
     growth,
+    adaptive,
+    insets?.left,
+    insets?.right,
   ]);
   return createElement(
     NativeView,

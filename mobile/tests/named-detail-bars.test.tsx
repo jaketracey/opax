@@ -1092,4 +1092,57 @@ describe('a title beside the collapsed back button is centred on the bar by meas
   test('18.4: a title UIKit already centres is not moved', async () => {
     expect((await place(144, onBar)).shift).toBeUndefined();
   });
+
+  test('18.4 at AX3: a title UIKit pushed against Share (ends 280) is not moved further', async () => {
+    const pushed = await place(170, () => 110);
+    expect(pushed.shift).toBeUndefined();
+  });
+
+  test('the shift never passes the span’s edge by rounding', async () => {
+    const { shift, right } = await place(170, () => 72.5);
+    expect(shift).toBe(31);
+    expect(right).toBeLessThanOrEqual(274);
+  });
+
+  test('the title keeps its place while it hides', async () => {
+    const original = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
+    );
+    const measure = jest
+      .spyOn(View.prototype, 'measureInWindow')
+      .mockImplementation((done) => done(72, 0, 144, 30));
+    jest.useFakeTimers();
+    const element = (shown: boolean) => (
+      <NavigationContext.Provider value={{ setOptions: jest.fn() } as never}>
+        <BarTitle
+          title="Anthony Albanese"
+          person
+          shown={shown}
+          backTitle="Today"
+        />
+      </NavigationContext.Provider>
+    );
+    act(() => {
+      view = TestRenderer.create(element(true));
+    });
+    measureBarTitle(view!, { 'Anthony Albanese': 144 });
+    const text = () => view!.root.findByType(Animated.Text);
+    const box = () =>
+      StyleSheet.flatten(text().parent!.props.style).transform?.[0]?.translateX;
+    // Measured a tick after it appears.
+    expect(box()).toBeUndefined();
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+    });
+    expect(text().props.accessibilityElementsHidden).toBe(false);
+    expect(box()).toBe(57);
+    // Hiding does not move it while it fades out.
+    act(() => view!.update(element(false)));
+    expect(box()).toBe(57);
+    act(() => view!.unmount());
+    measure.mockRestore();
+    jest.useRealTimers();
+    act(() => Dimensions.set({ window: original }));
+  });
 });
