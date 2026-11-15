@@ -565,6 +565,40 @@ describe('Browse by state', () => {
   });
 });
 
+describe('the search field’s placeholder at accessibility text sizes', () => {
+  // AX5 in the sheet with the keyboard up held about eleven letters: the
+  // Victorian line read "District, r…" (build 80 sweep).
+  test.each([
+    ['the default size', 1, 'vic', 'District, region or member’s name'],
+    [
+      'the largest standard size',
+      1.353,
+      'vic',
+      'District, region or member’s name',
+    ],
+    ['AX1', 1.643, 'vic', 'District'],
+    ['AX5', 3.119, 'vic', 'District'],
+    ['the default size', 1, undefined, 'Electorate or member’s name'],
+    ['AX1', 1.643, undefined, 'Electorate'],
+    ['AX5', 3.119, undefined, 'Electorate'],
+  ] as const)(
+    'at %s (%s) the %s chooser says "%s"',
+    async (_name, fontScale, scope, placeholder) => {
+      setFontScale(fontScale);
+      const r = await render(
+        <SeatChooser presentation="sheet" scope={scope} />,
+      );
+      expect(mockScreen.options.headerSearchBarOptions.placeholder).toBe(
+        placeholder,
+      );
+      // Short enough for the field at AX5, and no em dash.
+      if (fontScale > 1.4) expect(placeholder.length).toBeLessThanOrEqual(10);
+      expect(placeholder).not.toMatch(/—/);
+      await act(async () => r.unmount());
+    },
+  );
+});
+
 describe('the Victorian scope', () => {
   test('"Victorian electorate": districts and regions under two headers, no Browse by state', async () => {
     const r = await render(<SeatChooser presentation="sheet" scope="vic" />);
