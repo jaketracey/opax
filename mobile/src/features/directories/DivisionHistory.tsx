@@ -40,6 +40,7 @@ import {
   SidebarSafe,
   SourceLine,
   Text,
+  thisDevice,
   useScreenColumn,
 } from '../../design/primitives';
 import { rowMenus, useRowFollow } from '../../design/row-link';
@@ -591,7 +592,7 @@ export default function DivisionHistory() {
           {TITLE}
         </Heading>
       </View>
-      {record?.stale && !record.failed ? (
+      {record?.stale && (!record.failed || record.offline) ? (
         <OfflineLine
           savedAt={record.savedAt}
           testID="division-history-offline"
@@ -629,12 +630,23 @@ export default function DivisionHistory() {
         </View>
       ) : null}
       {record?.failed && record.loaded ? (
-        <InlineError
-          subject="some votes"
-          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`}
-          onRetry={refresh}
-          testID="division-history-partial"
-        />
+        record.offline ? (
+          // With no connection the rest did not fail: they are not saved.
+          // A note in the saved-date line's words and type, not an error:
+          // no failure is recorded for the page and none is announced.
+          <SavedNote
+            message={`Votes from the ${counted(record.loaded, 'bill', 'bills')} saved on this ${thisDevice()}.`}
+            onRetry={refresh}
+            testID="division-history-partial"
+          />
+        ) : (
+          <InlineError
+            subject="some votes"
+            message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`}
+            onRetry={refresh}
+            testID="division-history-partial"
+          />
+        )
       ) : null}
     </View>
   );
@@ -644,6 +656,12 @@ export default function DivisionHistory() {
         symbol="wifi.slash"
         title={copy.notSaved}
         body={copy.notSavedBody}
+        // A brief drop as the page opens lands here too: one tap reads again.
+        action={{
+          label: copy.tryAgain,
+          onPress: retry,
+          testID: 'division-history-offline-retry',
+        }}
         testID="division-history-offline-uncached"
       />
     ) : (error && !record) ||
@@ -691,7 +709,11 @@ export default function DivisionHistory() {
       <RouteOptions
         options={{
           title: TITLE,
-          headerTitleAlign: 'center',
+          // Android keeps the toolbar's own title, as every other bar title
+          // there is: a centred title is a view squeezed between Back and
+          // the three bar items with no margin either side, and at font
+          // scale 2.0 it sat hard against Back and was cut against Filters.
+          headerTitleAlign: Platform.OS === 'android' ? 'left' : 'center',
           headerLargeTitleEnabled: false,
           headerSearchBarOptions: {
             ...searchBar,
@@ -837,6 +859,44 @@ function Separator() {
   const inset = useContext(VoteInset);
   return <View style={[styles.separator, { marginLeft: inset }]} />;
 }
+/**
+ * What the page is showing while offline: the votes it has saved. It sits
+ * where the partial-read error sits, with the same Try again beside it, in
+ * the offline line's type (`secondary`, soft ink). It is information, so
+ * it has no error mark, registers no failure with the page and is read by
+ * VoiceOver and TalkBack as plain text.
+ */
+function SavedNote({
+  message,
+  onRetry,
+  testID,
+}: {
+  message: string;
+  onRetry: () => void;
+  testID: string;
+}) {
+  return (
+    <View style={styles.note}>
+      <View
+        accessible
+        accessibilityRole="text"
+        accessibilityLabel={message}
+        style={styles.noteWords}
+      >
+        <Text wordSafe variant="secondary" tone="inkSoft" testID={testID}>
+          {message}
+        </Text>
+      </View>
+      <Button
+        label={copy.tryAgain}
+        variant="plain"
+        onPress={onRetry}
+        testID={`${testID}-retry`}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   searchFilters: {
@@ -851,6 +911,15 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section,
   },
   header: { gap: rhythm.tight },
+  // The partial-read error's own row, so the note holds its place.
+  note: {
+    gap: rhythm.heading,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  noteWords: { flexShrink: 1, maxWidth: '100%' },
   count: {
     flexDirection: 'row',
     flexWrap: 'wrap',

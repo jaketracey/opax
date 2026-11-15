@@ -25,7 +25,6 @@ import {
   type DimensionValue,
   type LayoutChangeEvent,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   billEnding,
   billStatusLabel,
@@ -310,30 +309,12 @@ export default function BillDetail({
   const barTitle = useTitleOnScroll(
     embedded ? null : titleRef,
     embedded ? undefined : title || undefined,
-    { trailing: Platform.OS === 'ios' && canShare ? 2 : 1 },
+    { trailing: canShare ? 2 : 1 },
   );
+  // No Ask here on either platform: the menu has items only once the bill
+  // has loaded, and the loaded page always draws its own Ask button.
   const menu = identity
-    ? [
-        ...(Platform.OS === 'ios'
-          ? []
-          : [
-              {
-                title: 'Ask about this bill',
-                symbol: 'text.bubble' as const,
-                onPress: ask,
-              },
-              ...(canShare
-                ? [
-                    {
-                      title: 'Share',
-                      symbol: 'square.and.arrow.up' as const,
-                      onPress: share,
-                    },
-                  ]
-                : []),
-            ]),
-        ...billMenuItems({ billKey: identity.key, title: name, home }),
-      ]
+    ? billMenuItems({ billKey: identity.key, title: name, home })
     : [];
   const failed = notFound || (error && !record);
   // One element per shape: the crossfade keeps the last loading skeleton.
@@ -350,8 +331,10 @@ export default function BillDetail({
     skeleton,
   });
   // Share sits in the bar beside ⋯ and Ask about this bill is a button: iOS 26's
-  // floating tab bar stays up on pushes, and covered a bottom toolbar.
-  const barShare = Platform.OS === 'ios' && canShare && !failed;
+  // floating tab bar stays up on pushes, and covered a bottom toolbar. Android
+  // matches (as its member profile does): its bottom bar held one Share pill
+  // in a band about 70 dp tall above the tabs.
+  const barShare = canShare && !failed;
   return (
     <>
       {embedded ? null : (
@@ -471,9 +454,6 @@ export default function BillDetail({
           </CrossfadeLayers>
         )}
       </Screen>
-      {embedded || failed || Platform.OS === 'ios' || !canShare ? null : (
-        <BillToolbar onShare={share} canShare={!!identity} />
-      )}
     </>
   );
 }
@@ -523,37 +503,6 @@ export function PaneMenu({
         </Menu>
       </Host>
     </View>
-  );
-}
-
-/**
- * Android keeps Share in its bottom bar. Ask follows the summary on every
- * platform; iOS keeps Share in the navigation bar above the floating tab bar.
- */
-function BillToolbar({
-  onShare,
-  canShare: shareReady,
-}: {
-  onShare: () => void;
-  canShare: boolean;
-}) {
-  return (
-    <SafeAreaView
-      edges={['bottom']}
-      style={[
-        styles.toolbar,
-        Platform.OS === 'android' ? styles.androidToolbar : null,
-      ]}
-    >
-      {canShare ? (
-        <Button
-          label="Share"
-          onPress={onShare}
-          disabled={!shareReady}
-          testID="bill-share"
-        />
-      ) : null}
-    </SafeAreaView>
   );
 }
 
@@ -2383,12 +2332,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   paneMenuHost: { width: minimumTarget, height: minimumTarget },
-  toolbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.tight,
-    backgroundColor: colors.paper,
-  },
-  androidToolbar: { flexWrap: 'wrap', gap: rhythm.tight },
 });

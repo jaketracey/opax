@@ -16,6 +16,17 @@ import { scrollToTop } from '../src/design/scroll-to-top';
 import { useHeaderBottom } from '../src/design/useHeaderBottom';
 import { Screen } from '../src/design/layout';
 
+// These cases describe a scroll view under a translucent bar, which is iOS
+// 26 and later. Before iOS 26 the bars are opaque and the rest is 0 (below).
+const platformVersion = Object.getOwnPropertyDescriptor(Platform, 'Version');
+beforeAll(() => {
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
+});
+afterAll(() => {
+  if (platformVersion)
+    Object.defineProperty(Platform, 'Version', platformVersion);
+});
+
 test.each(['ios', 'android'] as const)(
   '%s: reset follows live header height, fallback inset and animation choice',
   (os) => {
@@ -323,4 +334,38 @@ test('vertical resets use the header-aware helper throughout src', () => {
   }
   scan(root);
   expect(offenders).toEqual([]);
+});
+
+test('before iOS 26 the rest is 0 whatever the scroll view measures: its bars are opaque', () => {
+  const os = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+  Object.defineProperty(Platform, 'OS', { configurable: true, value: 'ios' });
+  Object.defineProperty(Platform, 'Version', {
+    configurable: true,
+    value: '18.4',
+  });
+  try {
+    // A tab root under a large-title bar reads as starting at the window's
+    // top (y 0) on iOS 18, though UIKit lays it out below the bar. Search
+    // reset to minus the bar's height and left that much blank above its
+    // results (204 pt at the default text size on iOS 18.4).
+    for (const top of [0, 96, 204]) {
+      const scroll = {
+        scrollTo: jest.fn(),
+        measureInWindow: (
+          callback: (x: number, y: number, w: number, h: number) => void,
+        ) => callback(0, top, 402, 670),
+      };
+      scrollToTop(scroll, 204);
+      expect(scroll.scrollTo).toHaveBeenCalledWith({ y: 0, animated: false });
+    }
+    const unmeasured = { scrollTo: jest.fn() };
+    scrollToTop(unmeasured, 204);
+    expect(unmeasured.scrollTo).toHaveBeenCalledWith({ y: 0, animated: false });
+  } finally {
+    Object.defineProperty(Platform, 'OS', os);
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+  }
 });

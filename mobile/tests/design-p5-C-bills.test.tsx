@@ -395,7 +395,7 @@ describe('bill header (P1-3)', () => {
   });
 });
 
-test('Android bills keep whole scope labels at 2x and wrap the bottom actions; iOS uses the existing picker', async () => {
+test('Android bills keep whole scope labels at 2x and Share in the bar; iOS uses the existing picker', async () => {
   const original = Platform.OS;
   try {
     Platform.OS = 'android';
@@ -422,17 +422,9 @@ test('Android bills keep whole scope labels at 2x and wrap the bottom actions; i
       ids.indexOf('bill-summary'),
     );
     expect(ids.indexOf('bill-ask')).toBeLessThan(ids.indexOf('bill-read-text'));
-    const toolbar = detail.find((n) => {
-      if (typeof n.type !== 'string' || !n.props.style) return false;
-      const style = StyleSheet.flatten(n.props.style);
-      return (
-        style?.flexWrap === 'wrap' && style?.justifyContent === 'space-between'
-      );
-    });
-    expect(toolbar).toBeTruthy();
-    expect(
-      detail.findAllByProps({ testID: 'bill-share' }).length,
-    ).toBeGreaterThan(0);
+    // Share is in the bar beside the menu, not a bottom band above the tabs.
+    expect(barItems().map((item) => item.label)).toEqual(['Share', 'More']);
+    expect(detail.findAllByProps({ testID: 'bill-share' })).toHaveLength(0);
     Platform.OS = 'ios';
     const ios = await render(<BillsList />);
     expect(ios.findAllByType(ScopeChips)).toHaveLength(0);
@@ -443,13 +435,14 @@ test('Android bills keep whole scope labels at 2x and wrap the bottom actions; i
 });
 
 test.each([true, false])(
-  'Android renders a Share toolbar only with share support: %s',
+  'Android puts Share in the bar only with share support, and draws no bottom band: %s',
   async (enabled) => {
     const os = jest.replaceProperty(Platform, 'OS', 'android');
     const share = jest.replaceProperty(sharing, 'canShare', enabled);
     try {
       mockParams.key = 'au-federal-r7534';
       const detail = await render(<BillDetail />);
+      // The old bottom bar: one Share pill in a band about 70 dp tall.
       const bars = detail.findAll((node) => {
         if (typeof node.type !== 'string' || !node.props.style) return false;
         const style = StyleSheet.flatten(node.props.style);
@@ -458,12 +451,15 @@ test.each([true, false])(
           style?.justifyContent === 'space-between'
         );
       });
-      expect(bars).toHaveLength(enabled ? 1 : 0);
-      expect(
-        detail
-          .findAllByType(Button)
-          .filter((node) => node.props.testID === 'bill-share'),
-      ).toHaveLength(enabled ? 1 : 0);
+      expect(bars).toHaveLength(0);
+      expect(detail.findAllByProps({ testID: 'bill-share' })).toHaveLength(0);
+      const items = barItems();
+      expect(items.map((item) => item.label)).toEqual(
+        enabled ? ['Share', 'More'] : ['More'],
+      );
+      // Share is one control: the menu no longer repeats it.
+      const menu = items.find((item) => item.type === 'menu')!;
+      expect(menu.menu!.items.map((item) => item.label)).not.toContain('Share');
       expect(
         detail
           .findAllByType(Button)

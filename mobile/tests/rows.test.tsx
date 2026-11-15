@@ -1218,6 +1218,40 @@ test('MachinePill is a named button on a navy wash and standalone choices stay c
   expect(choice.findAllByType(ChoiceChip)).toHaveLength(1);
   expect(choice.findAllByType(Pressable)).toHaveLength(0);
 });
+test('on Android the MachinePill hugs its label in a column: its bordered target sits in a row wrapper', () => {
+  const note = { title: 'Machine-written', body: ['From the public record.'] };
+  const os = jest.replaceProperty(Platform, 'OS', 'android');
+  try {
+    const root = render(
+      <View>
+        <MachinePill note={note} testID="machine" />
+      </View>,
+    ).root;
+    // The target carries the border, so it must not be the column's child:
+    // there it stretched to the full width (Ask's answer, the Ask notice).
+    const target = host(root, 'machine');
+    expect(flat(target.props.style).borderWidth).toBe(1);
+    const hosts = root.findAll((node) => typeof node.type === 'string');
+    const wrapper = hosts[hosts.indexOf(target) - 1]!;
+    expect(flat(wrapper.props.style)).toMatchObject({
+      flexDirection: 'row',
+      maxWidth: '100%',
+    });
+    expect(wrapper.findAll((node) => node === target)).toHaveLength(1);
+  } finally {
+    os.restore();
+  }
+  // iOS draws no border on the target and needs no wrapper.
+  const ios = render(
+    <View testID="column">
+      <MachinePill note={note} testID="machine" />
+    </View>,
+  ).root;
+  const iosHosts = ios.findAll((node) => typeof node.type === 'string');
+  expect(
+    iosHosts[iosHosts.indexOf(host(ios, 'machine')) - 1]!.props.testID,
+  ).toBe('column');
+});
 test.each([1, 3.571])(
   'PageFoot lets the address wrap at full size at fontScale %s',
   (scale) => {
@@ -1560,6 +1594,50 @@ test.each([undefined, 'Anne'])(
 );
 
 test.each([
+  ['18.4', true, 'transparent'],
+  ['18.4', false, colors.sunken],
+  ['26.3', true, colors.sunken],
+] as const)(
+  'iOS %s, art under the title %s: the expanded large-title bar is %s',
+  (version, art, expected) => {
+    // Today's dot map is drawn behind the large title. Before iOS 26 the
+    // bar there is clear while the title is expanded and keeps the page's
+    // ground once it collapses; without it the opaque bar hid the map but
+    // for a patch under the title (iPhone 16 Pro, iOS 18.4).
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    const os = jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    const setOptions = jest.fn();
+    try {
+      const navigation = {
+        setOptions,
+        isFocused: () => true,
+        addListener: () => () => undefined,
+      };
+      render(
+        <NavigationContext.Provider value={navigation as never}>
+          <Screen grouped artUnderTitle={art}>
+            <Text>Content</Text>
+          </Screen>
+        </NavigationContext.Provider>,
+      );
+      const merged = Object.assign(
+        {},
+        ...setOptions.mock.calls.map(([options]) => options),
+      );
+      expect(merged.headerLargeStyle?.backgroundColor).toBe(expected);
+      expect(merged.headerStyle?.backgroundColor).toBe(colors.sunken);
+    } finally {
+      os.restore();
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
+
+test.each([
   [212_203_631_339, '$212.2bn', '212.2 billion dollars'],
   [28_682_373_476, '$28.7bn', '28.7 billion dollars'],
   [19_099_757_999, '$19.1bn', '19.1 billion dollars'],
@@ -1687,8 +1765,18 @@ describe('Today bill previews at accessibility sizes (sweep 1, 2.3)', () => {
 });
 
 describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
-  const band = (os: 'ios' | 'android') => {
+  const platformVersion = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  afterEach(() => {
+    if (platformVersion)
+      Object.defineProperty(Platform, 'Version', platformVersion);
+  });
+  const band = (os: 'ios' | 'android', version: string | number = 26) => {
     jest.replaceProperty(Platform, 'OS', os);
+    // Under a translucent bar (iOS 26 and later) unless a case says older.
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
     return render(
       <HeaderHeightContext.Provider value={100}>
         <Screen testID="page" pinned={<View testID="scopes" />}>
@@ -1762,6 +1850,21 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     const undragged = sticky(240, null);
     expect(undragged(-123)).toBe(0);
     expect(undragged(300)).toBe(0);
+  });
+  test('before iOS 26 the band uses React Native’s own sticky header: the scroll view starts below the opaque bar', () => {
+    // BarStickyHeader moves the stick point down by the bar's height, for a
+    // scroll view that runs under the bar. Below an opaque bar that held
+    // Search's scope control about 170 pt under the bar, over the rows
+    // (iPhone 16 Pro, iOS 18.4).
+    const older = band('ios', '18.4').find(
+      (node) => node.props.testID === 'page' && node.props.stickyHeaderIndices,
+    );
+    expect(older.props.stickyHeaderIndices).toEqual([0]);
+    expect(older.props.StickyHeaderComponent).toBeUndefined();
+    const newer = band('ios', '26.3').find(
+      (node) => node.props.testID === 'page' && node.props.stickyHeaderIndices,
+    );
+    expect(newer.props.StickyHeaderComponent).toBeDefined();
   });
   test('the first drag from rest sets where the band sticks', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');

@@ -110,6 +110,14 @@ const SCENE_FLOOR_MAX = 200;
 const COMPACT_WIDTH = 600;
 
 /**
+ * The least of a phone's visible height the map keeps at large text, the
+ * band its controls stand in included.
+ */
+export function phoneSceneFloor(visible: number) {
+  return Math.round(Math.min(SCENE_FLOOR_MAX, visible * SCENE_SHARE));
+}
+
+/**
  * How much height the map keeps when the card, the band and the panel share
  * one compact column over it (the folded Duo's 466 x 678 outer display, or a
  * camera cut-out on a narrow window). Without it the card and the panel took
