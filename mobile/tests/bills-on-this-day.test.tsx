@@ -10,6 +10,7 @@ import { Catalogs, type Bill } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import BillsList from '../src/features/bills/BillsList';
 import { ON_THIS_DAY_RULE, onThisDay } from '../src/features/bills/on-this-day';
+import { SegmentedPicker } from '../src/design/controls';
 import { formatDate } from '../src/design/format';
 import * as sheets from '../src/navigation/sheets';
 import { withNavigationOptions } from './navigation-options';
@@ -263,9 +264,9 @@ describe('the row on Bills', () => {
     const root = await render();
     // Before the register answers: the header's controls, no row, no bills.
     const before = ids(root);
-    expect(before).toEqual(
-      expect.arrayContaining(['bills-votes', 'bills-scope']),
-    );
+    expect(before).toContain('bills-votes');
+    // The scope control is already drawn, and is what must not move.
+    expect(root.findAllByType(SegmentedPicker)).toHaveLength(1);
     expect(before).not.toContain('bills-on-this-day-row');
     expect(before.some((id) => id.startsWith('bill-row-'))).toBe(false);
     await act(async () => {
@@ -280,10 +281,12 @@ describe('the row on Bills', () => {
     // Everything drawn before the data is still above the row: it was
     // inserted over nothing the reader could already see.
     const kept = before.filter((id) => after.includes(id));
-    expect(kept).toEqual(
-      expect.arrayContaining(['bills-votes', 'bills-scope']),
-    );
+    expect(kept).toContain('bills-votes');
     for (const id of kept) expect(after.indexOf(id)).toBeLessThan(row);
+    const drawn = root.findAll(() => true);
+    expect(drawn.indexOf(root.findByType(SegmentedPicker))).toBeLessThan(
+      drawn.indexOf(rows(root)[0]!),
+    );
     expect(after.indexOf('bills-count')).toBeLessThan(row);
     // Only bills follow it, and it has no height animation of its own.
     expect(after.slice(row + 1, firstBill)).toEqual([]);
