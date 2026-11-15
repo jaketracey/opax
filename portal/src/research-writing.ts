@@ -22,9 +22,13 @@ import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-30-clause-who'
+export const ANSWER_WRITING_VERSION = 'written-answer-31-each-fact-once'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
-export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
+export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
+  /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
+  said?: string[] }
+/** Added to the writer's contract only when the answer already holds points of its own. */
+export const EACH_FACT_ONCE_RULE = ' The answer already contains the sentences in "said", which follow yours. Each fact appears once across both: write the facts those sentences leave out, and leave to them what they already say.'
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
@@ -103,7 +107,13 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
   if (answer) for (const source of answer.sources.filter(s => s.cited)) {
     // The selected claim, not unrelated parts of a larger original record, is the authority here.
     const ranges = Object.entries(answer.citations).filter(([id]) => id === source.resource || id.startsWith(source.resource+'/')).flatMap(([,ranges]) => ranges)
-    const text = ranges.length && ranges.every(([a,b])=>b-a>3) ? ranges.map(([a,b]) => Array.from(answer.answer).slice(a,b).join('')).join('\n') : source.snippet
+    const cited = ranges.length && ranges.every(([a,b])=>b-a>3) ? ranges.map(([a,b]) => Array.from(answer.answer).slice(a,b).join('')) : null
+    // Each fact appears once. The loop can select a record as a fact and also write a point resting on it, so two spans
+    // of its answer cite that one record. When the record holds a single statement and one span is that statement, the
+    // other spans are the same fact again: the writer is given it once, as recorded.
+    const recorded = cited && cited.length > 1 ? singleStatement(source) : null
+    const own = recorded ? cited!.find(span => signedKey(span.replace(/^[-*•]\s*/, '')) === signedKey(recorded)) : undefined
+    const text = own ?? (cited ? cited.join('\n') : source.snippet)
     for (const part of text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
       const before=out.length;add(part, source, !!source.coverage || isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
       if(out.length>before){const f=out[out.length-1];if(!f.transcript)f.evidenceId=Object.keys(answer.citations).find(id=>id===source.resource || id.startsWith(source.resource+'/'))??f.evidenceId;f.atoms=f.atoms?.map(a=>({...a,evidenceId:f.evidenceId!}))??atomsFromText(f.text,f.evidenceId!,source)}
@@ -116,6 +126,13 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
   const source = out[0]?.source
   if (source) for (const note of notes) add(note, {...source,resource:'coverage-'+stableEvidenceKey(note),title:'Coverage of the selected records',snippet:note}, true)
   return dedupeWritingFacts(out).slice(0, 80)
+}
+/** The one statement a tool record holds. Null for a record with several lines and for any passage: a paragraph of a
+ *  speech, bill text or division is one part of its resource, and another paragraph of it is another fact. */
+function singleStatement(source:Pick<WritingFact['source'],'kind'|'snippet'>):string|null {
+  if(source.kind!=='record')return null
+  const lines=source.snippet.split(/\n+/).filter(line=>/\p{L}/u.test(line))
+  return lines.length===1?lines[0]:null
 }
 /** Tool retries and selected points can describe the same record twice. Keep one writer fact per statement. */
 export function dedupeWritingFacts(facts:WritingFact[]):WritingFact[] {
@@ -640,7 +657,7 @@ export function writingPrompt(input: WritingInput): string {
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
     'Hearing excerpts name the recorded speaker and hearing day/date, with a short literal quotation and fact id. A question by counsel or a commissioner is a question; identify each witness answer explicitly. Use recorded names and roles. Identify the material once as hearing evidence; licence details belong in the source card. ' +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
-    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' })
+    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
 }
 
 /** Keep already checked passage points (including loose uncited survivors) beside the written record answer. */
