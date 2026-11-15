@@ -1,0 +1,480 @@
+{
+  "about": "The one table of opax.com.au addresses the OPAX app opens (universal links). scripts/build_universal_links.mjs writes it into the app (mobile/src/navigation/universal-links.generated.ts) and the Worker (portal/src/universal-links.generated.ts), which serves it as /.well-known/apple-app-site-association. Patterns use Apple's component syntax: '/' is the path, '?' the query and '#' the fragment; '*' is any run of characters and '?*' is at least one. Excluded addresses are tested first, and an address nothing claims stays on the web. See docs/UNIVERSAL-LINKS.md.",
+  "host": "opax.com.au",
+  "bundleId": "au.com.opax.app",
+  "exclude": [
+    {
+      "/": "/api/*",
+      "why": "Data, sign-in and the Ask stream (POST /api/ask?stream=1)"
+    },
+    {
+      "/": "/mcp",
+      "why": "The MCP server"
+    },
+    {
+      "/": "/mcp/*",
+      "why": "The MCP server, member endpoint"
+    },
+    {
+      "/": "/oauth/*",
+      "why": "MCP sign-in and consent"
+    },
+    {
+      "/": "/.well-known/*",
+      "why": "Machine files"
+    },
+    {
+      "/": "/ingest/*",
+      "why": "The analytics proxy"
+    },
+    {
+      "/": "/og/*",
+      "why": "Share images"
+    },
+    {
+      "/": "/community",
+      "why": "Community, and its emailed sign-in link (/community?view=signin#token=…), which signs the browser in"
+    },
+    {
+      "/": "/community/*",
+      "why": "Community"
+    },
+    {
+      "/": "/privacy",
+      "why": "Legal page, web only"
+    },
+    {
+      "/": "/terms",
+      "why": "Legal page, web only"
+    },
+    {
+      "/": "/security",
+      "why": "Legal page, web only"
+    },
+    {
+      "/": "/support",
+      "why": "Support page, web only"
+    },
+    {
+      "/": "/chat",
+      "why": "The web's conversation page"
+    },
+    {
+      "/": "*",
+      "#": "token=*",
+      "why": "A sign-in token in the fragment, on any page"
+    },
+    {
+      "/": "*",
+      "?": {
+        "token": "?*"
+      },
+      "why": "A credential in the query, on any page"
+    },
+    {
+      "/": "*",
+      "?": {
+        "code": "?*"
+      },
+      "why": "A sign-in or OAuth code in the query, on any page"
+    },
+    {
+      "/": "*",
+      "?": {
+        "ask": "?*"
+      },
+      "why": "The web's legacy Ask entry, which runs on every page"
+    },
+    {
+      "/": "/",
+      "?": {
+        "q": "?*"
+      },
+      "why": "The home page with a question redirects to the web's Ask"
+    },
+    {
+      "/": "/money/grants",
+      "?": {
+        "open": "?*"
+      },
+      "why": "An opened grant row is a web view"
+    },
+    {
+      "/": "/money/grants/*/recipient/person:*",
+      "why": "An individual recipient's page stays on the web"
+    },
+    {
+      "/": "/money/grants/*/recipient/person%3A*",
+      "why": "The same, percent-encoded"
+    },
+    {
+      "/": "/money/grants/*/recipient/person%3a*",
+      "why": "The same, percent-encoded"
+    }
+  ],
+  "open": [
+    {
+      "/": "/",
+      "opens": [
+        "/",
+        "/recent-records"
+      ],
+      "examples": {
+        "/": "/",
+        "/#hp-indexed-title": "/(tabs)/(today)/recent-records"
+      }
+    },
+    {
+      "/": "/today",
+      "opens": [
+        "/"
+      ],
+      "examples": {
+        "/today": "/(tabs)/(today)"
+      }
+    },
+    {
+      "/": "/today/edition",
+      "opens": [
+        "/edition"
+      ],
+      "examples": {
+        "/today/edition": "/(tabs)/(today)/edition"
+      }
+    },
+    {
+      "/": "/edition",
+      "opens": [
+        "/edition"
+      ],
+      "examples": {
+        "/edition": "/(tabs)/(today)/edition"
+      }
+    },
+    {
+      "/": "/subject/person",
+      "opens": [
+        "/directory"
+      ],
+      "examples": {
+        "/subject/person": "/(tabs)/(search)/directory?kind=person"
+      }
+    },
+    {
+      "/": "/subject/person/*",
+      "opens": [
+        "/person/[slug]",
+        "/person/[slug]/votes",
+        "/person/[slug]/speeches",
+        "/person/[slug]/interests"
+      ],
+      "examples": {
+        "/subject/person/anthony-albanese": "/(tabs)/(today)/person/anthony-albanese",
+        "/subject/person/anthony-albanese?section=votes": "/(tabs)/(today)/person/anthony-albanese?section=votes",
+        "/subject/person/anthony-albanese/votes": "/(tabs)/(today)/person/anthony-albanese/votes",
+        "/subject/person/anthony-albanese/speeches": "/(tabs)/(today)/person/anthony-albanese/speeches",
+        "/subject/person/anthony-albanese/interests": "/(tabs)/(today)/person/anthony-albanese/interests"
+      }
+    },
+    {
+      "/": "/subject/party",
+      "opens": [
+        "/directory"
+      ],
+      "examples": {
+        "/subject/party": "/(tabs)/(search)/directory?kind=party"
+      }
+    },
+    {
+      "/": "/subject/party/*",
+      "opens": [
+        "/party/[slug]"
+      ],
+      "examples": {
+        "/subject/party/labor": "/(tabs)/(today)/party/labor"
+      }
+    },
+    {
+      "/": "/subject/electorate",
+      "opens": [
+        "/directory"
+      ],
+      "examples": {
+        "/subject/electorate": "/(tabs)/(search)/directory?kind=electorate"
+      }
+    },
+    {
+      "/": "/subject/electorate/*",
+      "opens": [
+        "/electorate/[id]"
+      ],
+      "examples": {
+        "/subject/electorate/el_5d600e7f6dca5b72ae04d686": "/(tabs)/(today)/electorate/el_5d600e7f6dca5b72ae04d686",
+        "/subject/electorate/el_5d600e7f6dca5b72ae04d686?asof=2019-05-18": "/(tabs)/(today)/electorate/el_5d600e7f6dca5b72ae04d686?asof=2019-05-18"
+      }
+    },
+    {
+      "/": "/subject/topic",
+      "opens": [
+        "/topics"
+      ],
+      "examples": {
+        "/subject/topic": "/(tabs)/(today)/topics"
+      }
+    },
+    {
+      "/": "/subject/topic/*",
+      "opens": [
+        "/topic/[slug]"
+      ],
+      "examples": {
+        "/subject/topic/housing": "/(tabs)/(today)/topic/housing",
+        "/subject/topic/housing?party=Labor": "/(tabs)/(today)/topic/housing?party=Labor"
+      }
+    },
+    {
+      "/": "/subject/agency",
+      "opens": [
+        "/agencies"
+      ],
+      "examples": {
+        "/subject/agency": "/(tabs)/(today)/agencies"
+      }
+    },
+    {
+      "/": "/subject/agency/*",
+      "opens": [
+        "/agency"
+      ],
+      "examples": {
+        "/subject/agency/Department%20of%20Health": "/(tabs)/(today)/agency?id=Department+of+Health"
+      }
+    },
+    {
+      "/": "/subject/donor/*",
+      "opens": [
+        "/money-record"
+      ],
+      "examples": {
+        "/subject/donor/Example%20Pty%20Ltd": "/(tabs)/(today)/money-record?node=donor%3AExample+Pty+Ltd&jur=federal"
+      }
+    },
+    {
+      "/": "/subject/supplier/*",
+      "opens": [
+        "/money-record"
+      ],
+      "examples": {
+        "/subject/supplier/abn:12345678901": "/(tabs)/(today)/money-record?rid=abn%3A12345678901&jur=federal"
+      }
+    },
+    {
+      "/": "/subject/campaigner/*",
+      "opens": [
+        "/money-record"
+      ],
+      "examples": {
+        "/subject/campaigner/Example%20Campaign": "/(tabs)/(today)/money-record?rid=Example+Campaign&jur=federal"
+      }
+    },
+    {
+      "/": "/bills",
+      "opens": [
+        "/bills",
+        "/bill-list",
+        "/division-history"
+      ],
+      "examples": {
+        "/bills": "/(tabs)/(bills)/bills",
+        "/bills?q=housing": "/(tabs)/(bills)/bill-list?q=housing",
+        "/bills?view=divisions": "/(tabs)/(bills)/division-history"
+      }
+    },
+    {
+      "/": "/bill/*",
+      "opens": [
+        "/bill/[key]",
+        "/bill-text/[key]"
+      ],
+      "examples": {
+        "/bill/au-federal-r7534": "/(tabs)/(bills)/bill/au-federal-r7534",
+        "/bill/au-federal-r7534#bill-full-text": "/(tabs)/(bills)/bill-text/au-federal-r7534",
+        "/bill/au-federal-r7534?division=d1": "/(tabs)/(bills)/bill/au-federal-r7534?division=d1"
+      }
+    },
+    {
+      "/": "/doc/*",
+      "opens": [
+        "/doc/[slug]"
+      ],
+      "examples": {
+        "/doc/speech-123456": "/(tabs)/(today)/doc/speech-123456"
+      }
+    },
+    {
+      "/": "/report/*",
+      "opens": [
+        "/report/[slug]"
+      ],
+      "examples": {
+        "/report/annual-report-2024-example": "/(tabs)/(today)/report/annual-report-2024-example"
+      }
+    },
+    {
+      "/": "/ask",
+      "?": {
+        "view": "search"
+      },
+      "opens": [
+        "/results/[kind]"
+      ],
+      "examples": {
+        "/ask?view=search&q=housing": "/(tabs)/(search)/results/all?q=housing&link=1",
+        "/ask?view=search&kind=bill&q=housing": "/(tabs)/(search)/results/bills?q=housing&link=1"
+      }
+    },
+    {
+      "/": "/ask",
+      "?": {
+        "q": "?*"
+      },
+      "opens": [
+        "/ask"
+      ],
+      "examples": {
+        "/ask?q=Who%20voted%20for%20it": "/(tabs)/(ask)/ask?question=Who+voted+for+it"
+      }
+    },
+    {
+      "/": "/money",
+      "opens": [
+        "/money",
+        "/money-record"
+      ],
+      "examples": {
+        "/money": "/(tabs)/(today)/money",
+        "/money?node=party:Labor": "/(tabs)/(today)/money-record?node=party%3ALabor"
+      }
+    },
+    {
+      "/": "/money/grants",
+      "opens": [
+        "/grants",
+        "/grant-program",
+        "/grants-allocation",
+        "/largest-grants"
+      ],
+      "examples": {
+        "/money/grants": "/(tabs)/(today)/grants?jur=federal&view=programs",
+        "/money/grants?program=GO7867": "/(tabs)/(today)/grants-allocation",
+        "/money/grants?program=X1": "/(tabs)/(today)/grant-program?id=X1&jur=federal",
+        "/money/grants?largest=2024-05": "/(tabs)/(today)/largest-grants?month=2024-05"
+      }
+    },
+    {
+      "/": "/money/grants/*/recipient/*",
+      "opens": [
+        "/money-record"
+      ],
+      "examples": {
+        "/money/grants/federal/recipient/abn:12345678901": "/(tabs)/(today)/money-record?rid=abn%3A12345678901&jur=federal"
+      }
+    },
+    {
+      "/": "/connections",
+      "opens": [
+        "/connections",
+        "/connection"
+      ],
+      "examples": {
+        "/connections": "/(tabs)/(today)/connections",
+        "/connections?entity=0123456789abcdef01234567": "/(tabs)/(today)/connection?id=0123456789abcdef01234567"
+      }
+    },
+    {
+      "/": "/discover",
+      "opens": [
+        "/leads"
+      ],
+      "examples": {
+        "/discover": "/(tabs)/(today)/leads",
+        "/discover?category=grants&item=record": "/(tabs)/(today)/leads?category=grants&item=record"
+      }
+    },
+    {
+      "/": "/explore",
+      "opens": [
+        "/explore",
+        "/explore/[tool]"
+      ],
+      "examples": {
+        "/explore": "/(tabs)/(today)/explore",
+        "/explore?game=quiz": "/(tabs)/(today)/explore/quiz"
+      }
+    },
+    {
+      "/": "/declared",
+      "opens": [
+        "/declarations"
+      ],
+      "examples": {
+        "/declared": "/(tabs)/(today)/declarations"
+      }
+    },
+    {
+      "/": "/expenses",
+      "opens": [
+        "/expense-glossary"
+      ],
+      "examples": {
+        "/expenses": "/(tabs)/(today)/expense-glossary"
+      }
+    },
+    {
+      "/": "/about",
+      "opens": [
+        "/account/about"
+      ],
+      "examples": {
+        "/about": "/account/about"
+      }
+    },
+    {
+      "/": "/methods",
+      "opens": [
+        "/account/methods"
+      ],
+      "examples": {
+        "/methods": "/account/methods"
+      }
+    },
+    {
+      "/": "/stats",
+      "opens": [
+        "/account/coverage"
+      ],
+      "examples": {
+        "/stats": "/account/coverage"
+      }
+    },
+    {
+      "/": "/vic-election-2026",
+      "opens": [
+        "/vic-election"
+      ],
+      "examples": {
+        "/vic-election-2026": "/(tabs)/(today)/vic-election",
+        "/vic-election-2026?place=Kew": "/(tabs)/(today)/vic-election?q=Kew"
+      }
+    },
+    {
+      "/": "/vic-election-2026/*",
+      "opens": [
+        "/vic-election/[district]"
+      ],
+      "examples": {
+        "/vic-election-2026/albert-park": "/(tabs)/(today)/vic-election/albert-park"
+      }
+    }
+  ]
+}
