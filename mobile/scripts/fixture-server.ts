@@ -371,14 +371,14 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp') && !isYearPicturePath(path))
       assertPortraitPath(path);
     else assertAllowedPath(path);
-    // Any valid on-this-day date is answered from the pinned day
+    // A valid on-this-day date the snapshot does not pin is a quiet 404
     // (scripts/on-this-day-fixture.ts); logged once a run.
     const onThisDay = onThisDayAnswer(path, files.keys());
     if (onThisDay && !onThisDayLogged) {
       onThisDayLogged = true;
       console.log(onThisDayLogLine(onThisDay));
     }
-    if (onThisDay && !onThisDay.path) {
+    if (onThisDay && !onThisDay.pinned) {
       status = 404;
       response.writeHead(status, {
         'Content-Type': 'application/json',
@@ -387,7 +387,7 @@ export const server = createServer(async (request, response) => {
       response.end(JSON.stringify({ error: 'Not published' }));
       return;
     }
-    const url = new URL(onThisDay?.path ?? path, `http://127.0.0.1:${port}`);
+    const url = new URL(path, `http://127.0.0.1:${port}`);
     if (url.pathname === sittingDaysPath && !files.has(sittingDaysPath)) {
       status = 404;
       response.writeHead(status, {
