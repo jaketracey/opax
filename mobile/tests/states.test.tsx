@@ -490,10 +490,10 @@ describe('word-safe text', () => {
     });
   // The cap scales the role's own size and line height: React Native's text
   // measure cache ignores maxFontSizeMultiplier, so that prop stays 0.
-  // The role's next word-safe size below `at` (roleWordSafeSizes), as a
-  // multiplier of its default size.
+  // The role's next word-safe size below `at` (roleWordSafeSizes), at least
+  // iOS's 0.04 step lower, as a multiplier of its default size.
   const below = (variant: TextVariant, at: number) =>
-    roleWordSafeSizes(variant, 0, 'ios').find((size) => size < at - 0.005)!;
+    roleWordSafeSizes(variant, 0, 'ios').find((size) => size < at - 0.04)!;
   // sectionTitle at AX5 (title2, 56pt of 22) and its first three steps:
   // 52.9pt (filling the 11% gap to 50pt), 50pt and 46.9pt.
   const AX5_HEADING = 56 / 22;

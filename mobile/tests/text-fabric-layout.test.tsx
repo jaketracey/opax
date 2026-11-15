@@ -18,11 +18,11 @@ jest.mock('../modules/opax-text-metrics', () => ({
 const role = textStyles.sectionTitle;
 const base = role.lineHeight + LINE_HEIGHT_NUDGE;
 const ax5 = 56 / 22;
-// The next word-safe size below `at` (roleWordSafeSizes), as a multiplier of
-// the role's default size.
+// The next word-safe size below `at` (roleWordSafeSizes), at least iOS's 0.04
+// step lower, as a multiplier of the role's default size.
 const below = (at: number, maxFontSizeMultiplier = 0) =>
   roleWordSafeSizes('sectionTitle', maxFontSizeMultiplier, 'ios').find(
-    (size) => size < at - 0.005,
+    (size) => size < at - 0.04,
   )!;
 const window = Dimensions.get('window');
 const screen = Dimensions.get('screen');
