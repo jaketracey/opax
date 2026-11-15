@@ -100,7 +100,8 @@ function useSeatPending(): boolean {
  *   tallest real questions are for hyphenated names.
  *
  * The box takes the tallest of its candidates, so it holds either kind.
- * Changing a name here means running that layout sweep again.
+ * Changing a name here means running that layout sweep again:
+ * scripts/ask-standin-sweep (its README says how).
  */
 export const SIZING_MEMBERS = [
   'Alexandrina Wetherington',
