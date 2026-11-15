@@ -141,7 +141,7 @@ export function recipientNextSteps(data, { jurisdiction = 'federal', programs = 
     const matches = programs.filter((p) => p?.key && (p.n === label || p.id === label));
     if (matches.length !== 1) continue;
     rows.push({ kind: 'Program', href: `/money/grants?${new URLSearchParams({ jur: jurisdiction, program: matches[0].id })}`, text: text(label).replace(/\)(?=[A-Za-z])/g, ') '),
-      meta: `${money(value)} to this recipient; all its awards` });
+      meta: `${money(value)} to this recipient` });
     if (rows.length >= 2) break;
   }
   for (const [name, value] of (data?.agencies || []).slice(0, 2)) {
