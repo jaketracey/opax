@@ -193,7 +193,11 @@ test('a dropped final line (fewer characters than the words) takes the floor; a 
   nested.done();
 });
 
-test('a listening Text that hears no line at all takes the floor: a fully clipped first line is silent', () => {
+test('silence takes no floor: a listening Text that hears no line event does not grow later', () => {
+  // Found on the device at AX5: four of Today's word-safe Texts heard no
+  // line event in 250 ms with the JS thread idle, and a floor taken on a
+  // timer moved the electorate's title and Follow down 2 to 5 pt about
+  // 450 ms after they were drawn.
   jest.useFakeTimers();
   try {
     let renderer!: TestRenderer.ReactTestRenderer;
@@ -207,31 +211,16 @@ test('a listening Text that hears no line at all takes the floor: a fully clippe
       }),
     );
     expect(floorOf(name())).toBeUndefined();
-    act(() => jest.advanceTimersByTime(300));
-    expect(floorOf(name())).toBe(142);
-    act(() => renderer.unmount());
-    // Lines that arrive in time cancel it.
-    act(() => {
-      renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
-    });
-    act(() =>
-      name().props.onLayout({
-        nativeEvent: { layout: { x: 0, y: 0, width: 298, height: 141.667 } },
-      }),
-    );
-    act(() => jest.advanceTimersByTime(100));
-    act(() =>
-      name().props.onTextLayout({ nativeEvent: { lines: nativeLines } }),
-    );
-    act(() => jest.advanceTimersByTime(300));
+    act(() => jest.advanceTimersByTime(5000));
     expect(floorOf(name())).toBeUndefined();
+    expect(jest.getTimerCount()).toBe(0);
     act(() => renderer.unmount());
   } finally {
     jest.useRealTimers();
   }
 });
 
-test('a Text that has had its lines takes no silent floor later: after a rotation the same lines send no event', () => {
+test('after a rotation the same lines send no event, and the Text takes no floor', () => {
   jest.useFakeTimers();
   try {
     jest

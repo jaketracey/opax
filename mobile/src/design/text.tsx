@@ -147,8 +147,6 @@ function bottomPadding(style: TextProps['style']): number {
   return typeof value === 'number' ? value : 0;
 }
 
-/** How long a listening Text waits for its first line before taking a floor. */
-const SILENT_LINES_MS = 250;
 /**
  * True when the laid-out lines hold all the words. A dropped final line
  * leaves fewer characters than the words have; lines may hold more (a nested
@@ -824,23 +822,6 @@ export function Text({
   });
   const nativeText = useRef<NativeText>(null);
   const listensForLines = wordSafe || probe.enabled || !!onTextLayout;
-  const mounted = useRef(true);
-  // Native line events are deduplicated: after a rotation the same lines
-  // send nothing, which is not a missing first line. Only a Text that has
-  // never had a line can be silently clipped.
-  const heardLines = useRef(false);
-  const silent = useRef<{
-    key: string;
-    timer: ReturnType<typeof setTimeout>;
-  } | null>(null);
-  useLayoutEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-      if (silent.current) clearTimeout(silent.current.timer);
-      silent.current = null;
-    };
-  }, []);
   const guardDrawing = () => {
     const { frame, lines, verified, linesFromBefore } = measured.current;
     if (!frame || frame.height <= 0 || frame.width <= 0) return;
@@ -850,12 +831,17 @@ export function Text({
       if (probe.enabled) probe.update(lines, frame);
       return;
     }
-    // The slack in the measured height (pixelSlack) keeps a frame from rounding below
-    // its lines, so nothing grows after its first layout. The floor remains
-    // only for a Text whose drawing is proven short: its lines do not carry
-    // its words or end below its frame, or (a Text that listens for lines)
-    // no line arrived at all: RN suppresses the initial empty onTextLayout
-    // event, so a completely missing first line is silent.
+    // The slack in the measured height (pixelSlack) keeps a frame from
+    // rounding below its lines, so nothing grows after its first layout. The
+    // floor remains only for a Text whose drawing is proven short by its own
+    // line event: lines that do not carry its words, a line that ends below
+    // its frame, or an event with no line at all.
+    // Silence proves nothing. A Text that listens often hears no line event
+    // (on the device, four of Today's at AX5 heard none in 250 ms with the
+    // JS thread idle), so a floor taken on a timer grew healthy text 1 to
+    // 2 pt well after it was drawn. With the slack, a frame cannot round
+    // below even its first line, which is the only way a first line was
+    // ever silently lost.
     // Queued onLayout events carry no identity or font scale. After a new
     // heightKey, only measure() of the committed, unguarded view may set the
     // floor. On first mount there is no previous identity to queue a frame.
@@ -893,39 +879,6 @@ export function Text({
           width: frame.width,
           minimum: Math.ceil(frame.height) + 1,
         });
-      } else if (
-        listensForLines &&
-        !heardLines.current &&
-        content.trim() !== ''
-      ) {
-        const key = heightKey;
-        if (silent.current?.key !== key) {
-          if (silent.current) clearTimeout(silent.current.timer);
-          silent.current = {
-            key,
-            timer: setTimeout(() => {
-              const now = measured.current;
-              if (
-                !mounted.current ||
-                heardLines.current ||
-                now.key !== key ||
-                now.lines?.length ||
-                !now.frame ||
-                !now.verified
-              )
-                return;
-              setHeightGuard((guard) =>
-                guard.key === key && guard.minimum > 0
-                  ? guard
-                  : {
-                      key,
-                      width: now.frame!.width,
-                      minimum: Math.ceil(now.frame!.height) + 1,
-                    },
-              );
-            }, SILENT_LINES_MS),
-          };
-        }
       }
     }
     probe.update(lines, frame);
@@ -1005,7 +958,6 @@ export function Text({
     const measurement = currentMeasurement();
     measurement.lines = event.nativeEvent.lines;
     measurement.linesFromBefore = false;
-    if (event.nativeEvent.lines.length) heardLines.current = true;
     guardDrawing();
     fitLines();
   };
