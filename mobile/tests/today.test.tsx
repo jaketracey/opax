@@ -22,9 +22,11 @@ import * as c from '../src/api/catalogs';
 import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
-import { rhythm } from '../src/design/tokens';
+import { formatDate } from '../src/design/format';
+import { minimumTarget, rhythm, textStyles } from '../src/design/tokens';
 import {
   LONGEST_LINE,
+  WIDEST_DATE,
   sinceSourceWords,
   sinceWords,
 } from '../src/features/today/SinceLastVisit';
@@ -1271,6 +1273,124 @@ describe('since your last visit', () => {
       paddingHorizontal: rhythm.tight,
       marginHorizontal: -rhythm.tight,
     });
+  });
+
+  test('the place is held by the widest date, not a real one of the same length', () => {
+    // "28 Sep 2026" is as long as any short date but not as wide: a
+    // no-growth line dated in May or March 2028 ran a line past the place
+    // (AX sizes at 402 pt, the default size at 320 pt) and over the next row.
+    expect(LONGEST_LINE.endsWith(sinceSourceWords('2026-09-28'))).toBe(false);
+    expect(
+      LONGEST_LINE.endsWith(
+        sinceSourceWords('2026-05-28').replace('28 May 2026', WIDEST_DATE),
+      ),
+    ).toBe(true);
+    // Glyph advances per 1000 units of a plain sans face: enough to rank
+    // the month names, and "8" is no narrower than any other digit.
+    const advance: Record<string, number> = {
+      A: 667,
+      D: 722,
+      F: 611,
+      J: 500,
+      M: 833,
+      N: 722,
+      O: 778,
+      S: 667,
+      a: 556,
+      b: 556,
+      c: 500,
+      e: 556,
+      g: 556,
+      l: 222,
+      n: 556,
+      o: 556,
+      p: 556,
+      r: 333,
+      t: 278,
+      u: 556,
+      v: 500,
+      y: 500,
+    };
+    const width = (word: string) =>
+      [...word].reduce((sum, letter) => sum + advance[letter]!, 0);
+    const [day, month, year] = WIDEST_DATE.split(' ') as [
+      string,
+      string,
+      string,
+    ];
+    expect(`${day}${year}`).toMatch(/^8{6}$/);
+    for (let m = 1; m <= 12; m += 1)
+      for (const d of [1, 28]) {
+        const date = formatDate(
+          `2028-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+          'short',
+        );
+        const [dd, mmm, yyyy] = date.split(' ') as [string, string, string];
+        expect(dd.length).toBeLessThanOrEqual(day.length);
+        expect(yyyy.length).toBe(year.length);
+        expect(width(mmm)).toBeGreaterThan(0);
+        expect(width(mmm)).toBeLessThanOrEqual(width(month));
+      }
+  });
+
+  test('the empty place cannot be pressed; it becomes a link when the line arrives', async () => {
+    await visited();
+    const read = pendingRead();
+    mock.corpus.mockReturnValue(read.promise as never);
+    const r = await render(<Today />);
+    const owner = (id: string) =>
+      r.root.findAll((n) => n.props.testID === id && !!n.props.onPress)[0]!;
+    // Nothing is drawn yet: a touch on the blank place must not open Just
+    // added, and a switch or keyboard must not stop on it.
+    expect(owner('today-since-reserved').props.disabled).toBe(true);
+    expect(
+      hosts(r, 'today-since-reserved').at(-1)!.props.accessibilityState,
+    ).toMatchObject({ disabled: true });
+    await act(async () =>
+      read.answer(corpus(1412, '2026-11-15T03:00:00+00:00')),
+    );
+    expect(owner('today-since').props.disabled).toBe(false);
+    expect(
+      hosts(r, 'today-since').at(-1)!.props.accessibilityState?.disabled,
+    ).not.toBe(true);
+  });
+
+  test('the drawn line starts where the unseen one does, under the touch band', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1001, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    const drawnTop = () =>
+      StyleSheet.flatten(
+        r.root.findAll(
+          (n) => n.type === Text && n.props.testID === 'today-since-words',
+        )[0]!.props.style,
+      ).top;
+    const box = () => flat(hosts(r, 'today-since').at(-1)!);
+    // One line of secondary text is shorter than a touch target: the box
+    // pads the unseen line down by the band, and the drawn line, which is
+    // absolute, must start that far down too or it sits above its place.
+    const band = (minimumTarget - textStyles.secondary.lineHeight) / 2;
+    expect(band).toBeGreaterThan(0);
+    expect(box().paddingVertical).toBe(band);
+    expect(drawnTop()).toBe(band);
+    // Wrapped past the touch target's height: no band, and the line starts
+    // at the top of the box.
+    const sizer = r.root.findAll(
+      (n) => n.type === Text && n.props.testID === 'today-since-place',
+    )[0]!;
+    const line = { height: minimumTarget };
+    act(() =>
+      sizer.props.onTextLayout({ nativeEvent: { lines: [line, line] } }),
+    );
+    expect(box().paddingVertical).toBe(0);
+    expect(drawnTop()).toBe(0);
+    // Two lines shorter than the target keep half the difference each side.
+    const short = { height: (minimumTarget - 8) / 2 };
+    act(() =>
+      sizer.props.onTextLayout({ nativeEvent: { lines: [short, short] } }),
+    );
+    expect(box().paddingVertical).toBe(4);
+    expect(drawnTop()).toBe(4);
   });
 
   test('a held place is never left blank: a total that did not grow says so, with the same source and link', async () => {

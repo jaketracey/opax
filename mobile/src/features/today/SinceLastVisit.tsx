@@ -141,7 +141,8 @@ export const sinceWords = (count: number) =>
 
 /** The line's source, in the line: the record's own check date and name. */
 export const sinceSourceWords = (checkedAt: DateInput) =>
-  `As at ${formatDate(checkedAt, 'short')}, ${COLLECTION_RECORD}.`;
+  sourceWords(formatDate(checkedAt, 'short'));
+const sourceWords = (date: string) => `As at ${date}, ${COLLECTION_RECORD}.`;
 
 /** The line's source, as About cites the collection record. */
 export function sinceSources(since: Since): SourceDetails {
@@ -163,8 +164,18 @@ export function sinceSources(since: Since): SourceDetails {
 }
 
 /**
+ * The widest short date the place can hold. It is no real date: every short
+ * date has the same count of characters, so the widest is the one with the
+ * widest glyphs, the widest month ("May") between the widest digits. A real
+ * date ("28 Sep 2026") is as long but narrower, and a no-growth line dated
+ * in May or March 2028 ran one line past the place (AX sizes at 402 pt, the
+ * default size at 320 pt) and over the row below.
+ */
+export const WIDEST_DATE = '88 May 8888';
+
+/**
  * The longest line the place can hold, never seen: the longer of the
- * no-growth sentence and a count of seven digits, with the longest date. It
+ * no-growth sentence and a count of seven digits, with the widest date. It
  * is laid out in the line's own box and type, so the place is as tall as
  * any line can be at this width and text size, and the line that arrives
  * sits in it without moving anything.
@@ -172,7 +183,7 @@ export function sinceSources(since: Since): SourceDetails {
 export const LONGEST_LINE = (() => {
   const count = sinceWords(8_888_888);
   const words = count.length > NO_GROWTH.length ? count : NO_GROWTH;
-  return `${words}. ${sinceSourceWords('2026-09-28')}`;
+  return `${words}. ${sourceWords(WIDEST_DATE)}`;
 })();
 
 /**
