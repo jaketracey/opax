@@ -1,7 +1,7 @@
 /** IPEA expenses grouped by reporting quarter, rather than the transaction date. */
 import { personUrl } from '../../public/party-page.js'
 import { aud, clip, fold, readableRange, siteUrl } from './record-common'
-import { readToolAsset, type ToolArgs, type ToolDefinition } from './types'
+import { readToolAsset, readToolMedia, type ToolArgs, type ToolCitation, type ToolDefinition, type ToolEnv, type ToolInputSchema } from './types'
 
 interface Expenses {
   meta: { from: string; to: string; quarters: number; reporting_periods?: string[]; attribution?: string }
@@ -44,17 +44,124 @@ function reportingPeriods(meta: Expenses['meta']): Set<string> {
   return new Set(ids.length === meta.quarters ? ids : [])
 }
 
-export const tool: ToolDefinition = {
-  name: 'member_expenses',
-  description: 'Federal member or senator parliamentary expenses reported by IPEA for a calendar year or Australian financial year. Always pass the requested year, e.g. 2025 or "2024-25", or exact January to December / July to June since and until dates. Returns that year’s reported expenditure, including adjustments, with complete or partial reporting-quarter coverage. Uses the requested reporting year and expense measure. Includes former members where held.',
-  inputSchema: { type: 'object', additionalProperties: false, properties: {
+// ---- itemised lines -------------------------------------------------------------------------------------------
+// Every IPEA line per person and reporting year, exported by scripts/export_expenses_itemised.py to the media
+// bucket. The export writes who travelled as a role only; nothing here reads or returns a traveller's name.
+interface Itemised { meta?: { name?: string; quarters?: { id: string; label?: string; source_url?: string }[] }; columns?: string[]; lines?: unknown[][] }
+interface Line { quarter: string; from_date: string | null; to_date: string | null; category_high: string | null; category_major: string | null; category_minor: string | null
+  description: string | null; from_location: string | null; to_location: string | null; nights: number | null; nightly_rate: number | null; amount: number
+  reason: string | null; notes: string | null; traveller: string | null }
+const GROUPS = ['fares', 'allowance', 'car', 'unscheduled', 'overseas', 'family', 'staff', 'office', 'other'] as const
+type Group = typeof GROUPS[number]
+const GROUP_LABEL: Record<Group, string> = { fares: 'scheduled fares', allowance: 'travel allowance', car: 'car costs', unscheduled: 'unscheduled transport and charter',
+  overseas: 'overseas travel', family: 'family travel', staff: 'staff travel and employee costs', office: 'office, printing and telecommunications', other: 'other' }
+/** The group of a line, from IPEA's own category tree (its names changed over the years). */
+export function expenseGroup(high: string | null, major: string | null): Group {
+  const h = (high ?? '').toLowerCase(), m = (major ?? '').toLowerCase()
+  if (h.includes('family')) return 'family'
+  if (h.includes('employee')) return 'staff'
+  if (h.includes('office') || h.includes('telecommunication')) return 'office'
+  if (h.includes('overseas') || h.includes('international')) return 'overseas'
+  if (h.includes('allowance')) return 'allowance'
+  if (h.includes('unscheduled') || h.includes('charter')) return 'unscheduled'
+  if (h.includes('scheduled') || m === 'fares') return 'fares'
+  if (h.includes('car')) return 'car'
+  return 'other'
+}
+const CATEGORIES = ['travel', ...GROUPS.filter(g => g !== 'other'), 'all'] as const
+const inCategory = (group: Group, category: string) => category === 'all' || (category === 'travel' ? group !== 'office' && group !== 'other' : group === category)
+const CATEGORY_LABEL = (category: string) => category === 'all' ? 'expense' : category === 'travel' ? 'travel' : GROUP_LABEL[category as Group]
+const cents = (n: number) => (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+const LINE_PAGE = 100, LINE_BYTES = 9_000
+const text = (v: unknown) => typeof v === 'string' && v.trim() ? v.trim() : null
+const num = (v: unknown) => typeof v === 'number' && Number.isFinite(v) ? v : null
+function readLines(file: Itemised | null): Line[] {
+  if (!file || !Array.isArray(file.columns) || !Array.isArray(file.lines)) return []
+  const at = (name: string) => file.columns!.indexOf(name)
+  const col = { quarter: at('quarter'), from_date: at('from_date'), to_date: at('to_date'), high: at('category_high'), major: at('category_major'), minor: at('category_minor'),
+    description: at('description'), from: at('from_location'), to: at('to_location'), nights: at('nights'), rate: at('nightly_rate'), amount: at('amount'), reason: at('reason'), notes: at('notes'), traveller: at('traveller') }
+  if (col.quarter < 0 || col.amount < 0) return []
+  return file.lines.flatMap(raw => {
+    const amount = num(raw[col.amount]), quarter = text(raw[col.quarter])
+    return amount === null || !quarter ? [] : [{ quarter, from_date: text(raw[col.from_date]), to_date: text(raw[col.to_date]), category_high: text(raw[col.high]), category_major: text(raw[col.major]),
+      category_minor: text(raw[col.minor]), description: text(raw[col.description]), from_location: text(raw[col.from]), to_location: text(raw[col.to]), nights: num(raw[col.nights]),
+      nightly_rate: num(raw[col.rate]), amount, reason: text(raw[col.reason]), notes: text(raw[col.notes]), traveller: text(raw[col.traveller]) }]
+  })
+}
+/** One line as IPEA published it, in a sentence a reader can follow. */
+function lineText(line: Line, quarterLabel: string): string {
+  const kind = [line.category_major ?? line.category_high, line.category_minor].filter(Boolean).join(', ')
+  const parts = [clip(line.description, 90)]
+  const route = [line.from_location, line.to_location].filter(Boolean).join(' to ')
+  if (route && !(line.description ?? '').includes(line.to_location ?? route)) parts.push(route)
+  const dates = readableRange(line.from_date, line.to_date)
+  if (dates) parts.push(dates)
+  if (line.nights) parts.push(`${line.nights} night${Math.abs(line.nights) === 1 ? '' : 's'}${line.nightly_rate ? ' at ' + cents(line.nightly_rate) : ''}`)
+  if (line.reason) parts.push(clip(line.reason, 80))
+  if (line.notes) parts.push(clip(line.notes, 60))
+  if (line.traveller && line.traveller !== 'Member') parts.push(line.traveller.toLowerCase())
+  return `${quarterLabel}, ${kind || 'expense'}: ${parts.filter(Boolean).join('; ')}: ${cents(line.amount)}`
+}
+async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person: { name: string }, pid: string, href: string, attribution?: string) {
+  const category = String(args.category ?? 'travel'), offset = Number(args.offset ?? 0)
+  const years = [...new Set(requested.quarters.map(id => id.slice(0, 4)))]
+  const files = await Promise.all(years.map(year => readToolMedia(env, `expenses/v1/${pid}/${year}.json`) as Promise<Itemised | null>))
+  const wanted = new Set(requested.quarters)
+  const quarters = new Map<string, { label: string; url: string }>()
+  for (const file of files) for (const q of file?.meta?.quarters ?? []) if (wanted.has(q.id)) quarters.set(q.id, { label: q.label ?? q.id, url: q.source_url ?? 'https://data.gov.au/data/organization/ipea' })
+  const held = [...quarters.keys()].sort()
+  const all = files.flatMap(readLines).filter(line => quarters.has(line.quarter))
+  const lines = all.filter(line => inCategory(expenseGroup(line.category_high, line.category_major), category)).sort((a, b) => a.quarter < b.quarter ? -1 : a.quarter > b.quarter ? 1 : 0)
+  const first = held.length ? quarterBounds(held[0]) : null, last = held.length ? quarterBounds(held.at(-1)!) : null
+  const coverage = { since: first?.since ?? null, until: last?.until ?? null, requested_since: requested.since, requested_until: requested.until, matched: held.length === requested.quarters.length }
+  const notes = ['Each line is as IPEA published it, grouped by IPEA\'s reporting quarter, which can differ from the date of travel. Negative lines are IPEA adjustments and repayments. Who travelled is given as a role: member, family member or staff.']
+  if (attribution) notes.push(attribution)
+  const span = readableRange(first?.since, last?.until), label = CATEGORY_LABEL(category)
+  if (!files.some(Boolean)) return { rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text: `OPAX holds ${person.name}'s IPEA expense totals by year; the itemised lines for ${requested.label} are not loaded yet.` }], notes }
+  if (!lines.length) return { rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text: `IPEA's published lines for ${person.name}${span ? ', ' + span : ''}, hold ${all.length} lines in other categories and none under ${label}.` }], notes }
+  const sum = (rows: Line[]) => Math.round(rows.reduce((n, r) => n + r.amount, 0) * 100) / 100
+  const total = sum(lines)
+  const groups = GROUPS.map(group => ({ group, rows: lines.filter(line => expenseGroup(line.category_high, line.category_major) === group) })).filter(g => g.rows.length)
+    .map(g => ({ group: g.group, label: GROUP_LABEL[g.group], lines: g.rows.length, amount_aud: sum(g.rows), nights: g.rows.reduce((n, r) => n + (r.nights ?? 0), 0) }))
+  const citations: ToolCitation[] = [{ kind: 'record', url: href, value: total, text: `${person.name}'s IPEA-reported ${label} lines${span ? ', ' + span : ''}: ${lines.length} lines totalling ${cents(total)}${coverage.matched ? '' : ` (reporting quarters held: ${held.join(', ')})`}.` }]
+  if (groups.length > 1) for (const g of groups) citations.push({ kind: 'record', url: href, value: g.amount_aud, text: `${person.name}, ${g.label}${span ? ', ' + span : ''}: ${g.lines} lines, ${cents(g.amount_aud)}${g.group === 'allowance' && g.nights ? `, ${g.nights} nights` : ''}.` })
+  let used = 0, shown = 0
+  for (const line of lines.slice(offset, offset + LINE_PAGE)) {
+    const q = quarters.get(line.quarter)!, label = lineText(line, q.label)
+    used += label.length + 24
+    if (shown && used > LINE_BYTES) break
+    citations.push({ kind: 'record', url: q.url, value: line.amount, text: label })
+    shown++
+  }
+  const next = offset + shown < lines.length ? offset + shown : null
+  if (next !== null) notes.push(`Lines ${offset + 1} to ${offset + shown} of ${lines.length} are listed. Call again with offset ${next} for the next lines, or with a narrower category.`)
+  if (!coverage.matched) notes.push(`Reporting quarters not held for ${requested.label}: ${requested.quarters.filter(id => !quarters.has(id)).join(', ')}.`)
+  return { rows: [{ name: person.name, person_id: pid, year: requested.key, period: requested.label, detail: 'itemised', category, reporting_quarters: held, lines: lines.length, amount_aud: total, groups, offset, lines_listed: shown, next_offset: next }],
+    coverage, citations, notes }
+}
+const ITEMISED_PROPERTIES: NonNullable<ToolInputSchema['properties']> = {
+  detail: { type: 'string', enum: ['totals', 'itemised'], description: 'itemised lists IPEA\'s individual published lines (each fare, allowance claim, car cost and so on) with subtotals; totals (the default) gives the year\'s total.' },
+  category: { type: 'string', enum: [...CATEGORIES], description: 'With detail itemised: which lines. travel (the default) is every travel line: fares, allowance, car, unscheduled, overseas, family and staff. all adds office costs.' },
+  offset: { type: 'integer', minimum: 0, maximum: 100000, description: 'With detail itemised: the next_offset of the previous result, for more lines.' },
+}
+
+const withItemised = (schema: ToolInputSchema): ToolInputSchema => ({ ...schema, properties: { ...schema.properties, ...ITEMISED_PROPERTIES },
+  examples: [...schema.examples, { person: 'Penny Wong', year: 2026, detail: 'itemised' }, { person: 'Penny Wong', year: 2026, detail: 'itemised', category: 'fares' }] })
+const PUBLIC_SCHEMA: ToolInputSchema = { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'Federal parliamentarian’s name; resolve spelling with find_people when needed.' },
     year: { anyOf: [{ type: 'integer', minimum: 1900, maximum: 2100 }, { type: 'string', pattern: '^\\d{4}(?:[-–−](?:\\d{2}|\\d{4}))?$' }], description: 'Calendar year (2025) or Australian financial year ("2024-25" or "2024-2025").' },
     since: { type: 'string', format: 'date', description: 'First day of a calendar or financial year; use with until.' },
     until: { type: 'string', format: 'date', description: 'Last day of the same calendar or financial year; use with since.' },
-  }, required: ['person'], examples: [{ person: 'Penny Wong', year: 2025 }, { person: 'Penny Wong', year: '2024-25' }] },
+  }, required: ['person'], examples: [{ person: 'Penny Wong', year: 2025 }, { person: 'Penny Wong', year: '2024-25' }] }
+const ASK_SCHEMA = withItemised(PUBLIC_SCHEMA)
+
+export const tool: ToolDefinition = {
+  name: 'member_expenses',
+  description: 'Federal member or senator parliamentary expenses reported by IPEA for a calendar year or Australian financial year: the year\'s total, or with detail itemised the individual published lines (each fare with its route and date, travel allowance nights and place, car costs, overseas, family and staff travel) and their subtotals. Use detail itemised for itemised, travel, flights, trips or what the money was spent on. Always pass the requested year, e.g. 2026 or "2024-25", or exact January to December / July to June since and until dates. Includes adjustments, complete or partial reporting-quarter coverage, and former members where held.',
+  inputSchema: PUBLIC_SCHEMA,
+  askInputSchema: ASK_SCHEMA,
   identifierFields: ['person'],
-  validate: args => period(args) !== null,
+  validate: args => period(args) !== null && (args.detail === 'itemised' || args.category === undefined && args.offset === undefined),
   stepLabel: args => ({ label: 'Checking parliamentary expenses', arg: clip(args.person, 40) }),
   async handler(env, args) {
     const requested = period(args)!
@@ -73,6 +180,7 @@ export const tool: ToolDefinition = {
     const href = person ? siteUrl(env, `${personUrl(person.name)}#person-expenses`) : 'https://data.gov.au/data/organization/ipea'
     const unavailable = (text: string) => ({ rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text }], notes })
     if (!person) return unavailable(candidates.length > 1 ? `The name "${clip(args.person, 60)}" matches several IPEA expense records. Please give the full name.` : `OPAX has no IPEA expense record for "${clip(args.person, 60)}".`)
+    if (args.detail === 'itemised') return itemised(env, args, requested, person, candidates[0], href, expenses.meta.attribution)
     const amounts = requested.financial ? person.by_financial_year : person.by_year
     if (!amounts) return unavailable(requested.financial
       ? `OPAX's expense export does not hold financial-year totals for ${person.name}. The IPEA ingest retains reporting quarters in ext_expenses; export sums of the July to June reporting quarters to answer ${requested.label}. Calendar-year or career totals cannot establish this amount.`

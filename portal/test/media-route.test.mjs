@@ -69,3 +69,44 @@ test('/media HEAD gives the size without a body; other names and methods are ref
   const down = { head: async () => { throw new Error('R2 down') }, get: async () => { throw new Error('R2 down') } }
   assert.equal((await serveMedia(new Request('https://opax.com.au/media/demo.mp4'), down, '/media/demo.mp4')).status, 503, 'a store failure on a plain GET is a 503, not a 416')
 })
+
+// ---- itemised expenses JSON ---------------------------------------------------------------------------------------
+const json = new TextEncoder().encode('{"meta":{"name":"Jane Example"},"columns":[],"lines":[]}')
+const dataBucket = {
+  async head(name) { return name === 'expenses/v1/11029/2026.json' ? { size: json.length, httpEtag: '"j1"' } : null },
+  async get(name, options = {}) {
+    if (name !== 'expenses/v1/11029/2026.json') return null
+    // like R2: a matched If-None-Match returns the object without a body
+    return options.onlyIf?.get?.('if-none-match') === '"j1"' ? { size: json.length, httpEtag: '"j1"' } : { size: json.length, httpEtag: '"j1"', body: json }
+  },
+}
+const getData = (path, headers = {}, method = 'GET', store = dataBucket) => serveMedia(new Request('https://opax.com.au' + path, { method, headers }), store, path)
+
+test('/media serves itemised expenses as JSON with an ETag and cache headers', async () => {
+  const r = await getData('/media/expenses/v1/11029/2026.json')
+  assert.equal(r.status, 200)
+  assert.equal(r.headers.get('content-type'), 'application/json; charset=utf-8')
+  assert.equal(r.headers.get('etag'), '"j1"')
+  assert.match(r.headers.get('cache-control'), /^public, max-age=3600/)
+  assert.equal(r.headers.get('x-content-type-options'), 'nosniff')
+  assert.equal((await r.json()).meta.name, 'Jane Example')
+  const head = await getData('/media/expenses/v1/11029/2026.json', {}, 'HEAD')
+  assert.equal(head.status, 200)
+  assert.equal(head.headers.get('content-length'), String(json.length))
+})
+
+test('/media answers a matching If-None-Match for expenses with 304 and no body', async () => {
+  const r = await getData('/media/expenses/v1/11029/2026.json', { 'if-none-match': '"j1"' })
+  assert.equal(r.status, 304)
+  assert.equal(r.headers.get('etag'), '"j1"')
+  assert.equal(await r.text(), '')
+})
+
+test('/media refuses expense paths outside the fixed pattern, other methods, and reports a store failure as 503', async () => {
+  for (const path of ['/media/expenses/v1/11029/2099.json', '/media/expenses/v1/../demo.mp4', '/media/expenses/v1/11029/2026.json.bak', '/media/expenses/v2/11029/2026.json', '/media/expenses/v1/11029/index.json', '/media/expenses/v1/a/b/2026.json']) {
+    assert.equal((await getData(path)).status, 404, path)
+  }
+  assert.equal((await getData('/media/expenses/v1/11029/2026.json', {}, 'POST')).status, 405)
+  const broken = { async head() { throw new Error('down') }, async get() { throw new Error('down') } }
+  assert.equal((await getData('/media/expenses/v1/11029/2026.json', {}, 'GET', broken)).status, 503)
+})

@@ -6832,7 +6832,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
       onResearchFailure: error => recordResearchFailure(String(input.question ?? ''), error),
       onResearchAnswer: tally => recordResearchAnswer(String(input.question ?? ''), tally),
     } : {}),
-    toolEnv: { ASSETS: env.ASSETS, TABLE_DB: env.TABLE_DB, COMMUNITY_ORIGIN: env.COMMUNITY_ORIGIN },
+    toolEnv: { ASSETS: env.ASSETS, TABLE_DB: env.TABLE_DB, MEDIA: env.MEDIA, COMMUNITY_ORIGIN: env.COMMUNITY_ORIGIN },
     generate: async (query, prompt, maxTokens, signal) => {
       const res = await kbFetch(env, '/ask', {
         body: { query, top_k: 1, reranker: 'noop', generative_model: env.ASK_MODEL || 'openai-compatible', max_tokens: maxTokens, prompt },
