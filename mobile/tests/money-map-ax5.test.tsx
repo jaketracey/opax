@@ -185,6 +185,11 @@ const naturals = [
   { card: 640, peek: 420 },
   { card: 1500, peek: 1100 },
 ];
+/** The jurisdiction and the picker: 150-200 pt together at AX5, in proportion below. */
+const pinnedAt = (fontScale: number) => ({
+  head: Math.round((22.4 * fontScale) / 2) * 2,
+  picker: Math.round((28 * fontScale) / 2) * 2,
+});
 const stackHeight = (os: Device['os']) => (os === 'android' ? 206 : 190);
 const rowHeight = (os: Device['os']) => (os === 'android' ? 52 : 48);
 
@@ -264,6 +269,7 @@ function settle(
   root: ReactTestInstance,
   device: Device,
   natural: { card: number; peek: number },
+  reportPinned = true,
 ) {
   act(() =>
     root.findByProps({ testID: 'money-screen' }).props.onLayout({
@@ -281,6 +287,18 @@ function settle(
       nativeEvent: { layout: { height: natural.peek - 20 - 16 } },
     }),
   );
+  // The card's pinned parts, as the device measures them at this size: the
+  // jurisdiction and the List | Map picker (the cap rule reads these).
+  const pinnedPart = (testID: string, height: number) => {
+    const node = root.findAllByProps({ testID })[0];
+    if (node)
+      act(() => node.props.onLayout?.({ nativeEvent: { layout: { height } } }));
+  };
+  if (reportPinned) {
+    const parts = pinnedAt(device.fontScale);
+    pinnedPart('money-map-card-head', parts.head);
+    pinnedPart('money-map-card-picker', parts.picker);
+  }
   for (let i = 0; i < 5; i++) {
     const top = topOf(root);
     const cap = flat(top).maxHeight as number | undefined;
@@ -393,17 +411,46 @@ test('a focused disc keeps search and zoom in view on the iPhone SE at AX5', asy
   expect(controlsBottom).toBeLessThanOrEqual(panelTop);
 });
 
+test.each([
+  [70, 80],
+  [90, 110],
+])(
+  'the iPhone SE at AX5 keeps search and zoom clear of the panel with the jurisdiction %i pt and the picker %i pt (reviewer P2)',
+  async (head, picker) => {
+    const device = devices.find((d) => d.name === 'iPhone SE at AX5')!;
+    const natural = { card: 640, peek: 420 };
+    const root = await mount(device);
+    settle(root, device, natural, false);
+    const part = (testID: string, height: number) =>
+      act(() =>
+        root
+          .findAllByProps({ testID })[0]!
+          .props.onLayout({ nativeEvent: { layout: { height } } }),
+      );
+    part('money-map-card-head', head);
+    part('money-map-card-picker', picker);
+    settle(root, device, natural, false);
+    const { controlsBottom, panelTop } = frames(root, device, natural);
+    // The sentence gave up its second line before the panel could run over
+    // the controls; the panel keeps its 44 pt floor.
+    expect(controlsBottom).toBeLessThanOrEqual(panelTop);
+    expect(
+      root.findByType(MoneyMapPanel).props.maxHeight,
+    ).toBeGreaterThanOrEqual(minimumTarget);
+  },
+);
+
 test('expanding the panel holds the card still; the search card takes the bandâ€™s room', async () => {
   const device = devices[0]!;
   const natural = { card: 640, peek: 420 };
   const root = await mount(device);
-  settle(root, device, natural);
+  settle(root, device, natural, false);
   const visible = device.stage - device.bottom;
   const atRest = flat(topOf(root)).maxHeight as number;
   expect(atRest).toBe(Math.floor((visible - 190 - 32) / 2));
 
   act(() => root.findByType(MoneyMapPanel).props.onExpanded(true));
-  settle(root, device, natural);
+  settle(root, device, natural, false);
   expect(controlsOf(root)).toBeUndefined();
   expect(flat(topOf(root)).maxHeight).toBe(atRest);
   expect(root.findByType(MoneyMapPanel).props.maxHeight).toBe(
@@ -411,9 +458,9 @@ test('expanding the panel holds the card still; the search card takes the bandâ€
   );
 
   act(() => root.findByType(MoneyMapPanel).props.onExpanded(false));
-  settle(root, device, natural);
+  settle(root, device, natural, false);
   act(() => controlsOf(root)!.props.onSearch());
-  settle(root, device, natural);
+  settle(root, device, natural, false);
   const top = topOf(root);
   expect(flat(top).maxHeight).toBe(Math.floor((visible - 32) / 2));
   expect(top.findByType(ScrollView).findAllByType(MoneyMapSearch)).toHaveLength(

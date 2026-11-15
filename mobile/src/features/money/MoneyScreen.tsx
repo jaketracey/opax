@@ -799,18 +799,29 @@ function MapMode({
     minimumTarget,
     textStyles.secondary.lineHeight * window.fontScale * SENTENCE_LINES,
   );
-  const pinnedNeed =
+  const pinnedBase =
     pinned.head && pinned.picker && !searchOpen
       ? pinned.head +
         pinned.picker +
-        sentenceNeed +
         rhythm.tight * 3 +
         rhythm.block * 2 +
         hairline * 2
       : 0;
+  const pinnedNeed = pinnedBase ? pinnedBase + sentenceNeed : 0;
+  // The least the sentence needs: one line's room, as the card always had.
+  const pinnedLeast = pinnedBase ? pinnedBase + minimumTarget : 0;
   const limits = caps
     ? (() => {
-        const topMaxHeight = Math.max(caps.topMaxHeight, pinnedNeed);
+        // Two lines of the sentence only where the panel keeps its floor
+        // (44 pt) once the card has taken them: on the smallest phones at
+        // the largest sizes the panel would otherwise run over the search
+        // and zoom controls, so the sentence gives up the second line.
+        const room =
+          caps.topMaxHeight + Math.max(0, caps.panelMaxHeight - minimumTarget);
+        const topMaxHeight = Math.max(
+          caps.topMaxHeight,
+          pinnedNeed <= room ? pinnedNeed : pinnedLeast,
+        );
         const over = Math.max(
           0,
           Math.min(top, topMaxHeight) - caps.topMaxHeight,
