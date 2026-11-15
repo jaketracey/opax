@@ -954,6 +954,7 @@ export function SectionHeader({
   const [titleHeight, setTitleHeight] = useState<number>(
     textStyles.sectionTitle.lineHeight,
   );
+  const titleMeasured = useRef(false);
   const headingLayout = useContext(SectionHeadingLayoutContext);
   const stacked = useAccessibilitySize();
   const glossEntry = useGlossEntry(gloss);
@@ -1009,7 +1010,18 @@ export function SectionHeader({
         onLayout={
           compact || (headingLayout && testID)
             ? (event) => {
-                if (compact) setTitleHeight(event.nativeEvent.layout.height);
+                // The height sets the action's margin, which moves the
+                // title in its centred row, and a text frame can differ by a
+                // pixel with where it sits. A change under a point is never
+                // a different line count, and must not feed back.
+                if (compact) {
+                  const next = event.nativeEvent.layout.height;
+                  const first = !titleMeasured.current;
+                  titleMeasured.current = true;
+                  setTitleHeight((height) =>
+                    !first && Math.abs(next - height) < 1 ? height : next,
+                  );
+                }
                 if (headingLayout && testID) headingLayout(testID, event);
               }
             : undefined

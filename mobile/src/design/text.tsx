@@ -107,8 +107,8 @@ export function roleColour(tone: Role | 'link', strong: boolean) {
 export const LINE_HEIGHT_NUDGE = 1 / 997;
 
 /**
- * Half a physical pixel under every iOS Text, so its frame is never shorter
- * than its lines.
+ * A hundredth of a physical pixel under every iOS Text, so its frame is
+ * never shorter than its lines.
  *
  * React Native ceils a text's measured height to whole pixels, and Yoga then
  * rounds a text node whose height is whole pixels by flooring both its top
@@ -118,16 +118,27 @@ export const LINE_HEIGHT_NUDGE = 1 / 997;
  * under its pixel while the top lands on its own, and the floor takes a
  * whole pixel off the frame (a 141.182 pt AX5 line measured 141.333 and
  * framed 141). TextKit then drops the last line. About one text in a hundred
- * at 3x; never at 2x, where halves are exact.
+ * at 3x in a model of tall pages; never at 2x, where halves are exact.
  *
  * A height with a fractional pixel takes Yoga's other branch: the bottom
- * edge is ceiled, so the frame is the measured height or a pixel more, from
+ * edge is ceiled, so the frame is the measured height and a pixel more, from
  * the first layout. Until b77 every Text was instead given a floor of
  * `ceil(height) + 1` after its first layout: one more render and layout for
  * each, and rows that mounted late grew 1 to 2 pt a line on screen.
+ *
+ * The frame is `ceil(top's fraction + slack)` pixels over its measure, so it
+ * still depends on where the text sits: one pixel over, or two when the top
+ * is within the slack of the next pixel. The slack is therefore small (Yoga
+ * counts anything over a ten-thousandth of a pixel as a fraction): half a
+ * pixel gave two pixels at every top past the half, a hundredth only in the
+ * last hundredth. No size removes it, so a measured text height must never
+ * be fed back raw into the text's own position: Today's section header set
+ * its action's margin from its title's height in a centred row, and flipped
+ * between the two frames without end until it ignored changes under a point
+ * (`SectionHeader`).
  */
 export const pixelSlack = (scale: number) =>
-  Platform.OS === 'ios' && scale > 0 ? 0.5 / scale : 0;
+  Platform.OS === 'ios' && scale > 0 ? 0.01 / scale : 0;
 /** A caller's own bottom padding on a Text, which the slack is added to. */
 function bottomPadding(style: TextProps['style']): number {
   if (!style) return 0;
@@ -814,6 +825,10 @@ export function Text({
   const nativeText = useRef<NativeText>(null);
   const listensForLines = wordSafe || probe.enabled || !!onTextLayout;
   const mounted = useRef(true);
+  // Native line events are deduplicated: after a rotation the same lines
+  // send nothing, which is not a missing first line. Only a Text that has
+  // never had a line can be silently clipped.
+  const heardLines = useRef(false);
   const silent = useRef<{
     key: string;
     timer: ReturnType<typeof setTimeout>;
@@ -835,7 +850,7 @@ export function Text({
       if (probe.enabled) probe.update(lines, frame);
       return;
     }
-    // The half pixel of slack (pixelSlack) keeps a frame from rounding below
+    // The slack in the measured height (pixelSlack) keeps a frame from rounding below
     // its lines, so nothing grows after its first layout. The floor remains
     // only for a Text whose drawing is proven short: its lines do not carry
     // its words or end below its frame, or (a Text that listens for lines)
@@ -869,7 +884,11 @@ export function Text({
             // One whole point survives Yoga rounding.
             minimum: Math.max(Math.ceil(frame.height) + 1, Math.ceil(bottom)),
           });
-      } else if (listensForLines && content.trim() !== '') {
+      } else if (
+        listensForLines &&
+        !heardLines.current &&
+        content.trim() !== ''
+      ) {
         const key = heightKey;
         if (silent.current?.key !== key) {
           if (silent.current) clearTimeout(silent.current.timer);
@@ -879,6 +898,7 @@ export function Text({
               const now = measured.current;
               if (
                 !mounted.current ||
+                heardLines.current ||
                 now.key !== key ||
                 now.lines?.length ||
                 !now.frame ||
@@ -976,6 +996,7 @@ export function Text({
     const measurement = currentMeasurement();
     measurement.lines = event.nativeEvent.lines;
     measurement.linesFromBefore = false;
+    if (event.nativeEvent.lines.length) heardLines.current = true;
     guardDrawing();
     fitLines();
   };

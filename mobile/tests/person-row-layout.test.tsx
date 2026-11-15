@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { PersonRow } from '../src/design/people';
-import { Text } from '../src/design/text';
+import { Text, pixelSlack } from '../src/design/text';
 import { drawnTextClipped } from '../src/design/text-probe.e2e';
 
 jest.mock('expo-constants', () => ({
@@ -114,12 +114,12 @@ test('word-safe text keeps the fractional AX5 final line inside its drawing fram
     );
   const lines = (value: typeof nativeLines) =>
     act(() => name().props.onTextLayout({ nativeEvent: { lines: value } }));
-  // Half a physical pixel is reserved from the first render: Yoga then ceils
+  // A fraction of a pixel is reserved from the first render: Yoga then ceils
   // the frame's bottom edge instead of flooring it (pixelSlack).
-  expect(StyleSheet.flatten(name().props.style).paddingBottom).toBeCloseTo(
-    0.5 / 3,
-    6,
+  expect(StyleSheet.flatten(name().props.style).paddingBottom).toBe(
+    pixelSlack(3),
   );
+  expect(pixelSlack(3)).toBeGreaterThan(0);
   // The frame the slack gives holds both lines: nothing grows.
   layout(141.667);
   lines(nativeLines);
@@ -224,6 +224,49 @@ test('a listening Text that hears no line at all takes the floor: a fully clippe
       name().props.onTextLayout({ nativeEvent: { lines: nativeLines } }),
     );
     act(() => jest.advanceTimersByTime(300));
+    expect(floorOf(name())).toBeUndefined();
+    act(() => renderer.unmount());
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+test('a Text that has had its lines takes no silent floor later: after a rotation the same lines send no event', () => {
+  jest.useFakeTimers();
+  try {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
+    });
+    const name = () => renderer.root.findByType(NativeText);
+    let committed!: (x: number, y: number, w: number, h: number) => void;
+    name().instance.measure = jest.fn((callback) => {
+      committed = callback;
+    });
+    act(() =>
+      name().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 298, height: 25 } },
+      }),
+    );
+    act(() =>
+      name().props.onTextLayout({
+        nativeEvent: {
+          lines: [
+            { text: 'Anthony Albanese', x: 0, y: 0, width: 150, height: 24 },
+          ],
+        },
+      }),
+    );
+    // Landscape: a new identity, the same one line, and no line event.
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 844, height: 390, scale: 3, fontScale: 1 });
+    act(() => renderer.update(<Text wordSafe>Anthony Albanese</Text>));
+    act(() => committed(0, 0, 298, 25));
+    act(() => jest.advanceTimersByTime(400));
     expect(floorOf(name())).toBeUndefined();
     act(() => renderer.unmount());
   } finally {
@@ -346,9 +389,8 @@ test.each(['body', 'secondary', 'footnote'] as const)(
         }),
       );
     // The caller's own padding keeps its value and the slack is added to it.
-    expect(StyleSheet.flatten(text().props.style).paddingBottom).toBeCloseTo(
-      4 + 0.5 / 3,
-      6,
+    expect(StyleSheet.flatten(text().props.style).paddingBottom).toBe(
+      4 + pixelSlack(3),
     );
     layout(141);
     // Plain text does not request line measurement, and takes no floor.
