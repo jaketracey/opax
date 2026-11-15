@@ -80,6 +80,7 @@ import {
 } from './data';
 import { useFirstScreenReader, useMoneyRecord } from './hooks';
 import { loadedMoneyGraph, partyNodeFor } from './lookup';
+import { useHeldInset } from './map/band';
 import { MoneyMap, type MapCommand, type MapRequest } from './map/MoneyMap';
 import { MoneyMapControls } from './map/MoneyMapControls';
 import { MoneyMapLegend } from './map/MoneyMapLegend';
@@ -688,10 +689,15 @@ function MapMode({
   // The stage runs under the tab bar and the home indicator; the panel host
   // sits above them, so the band beneath it is measured from its layout and
   // counted in the map's bottom inset with the panel's peek.
-  const [below, setBelow] = useState(0);
+  // On iOS the system's inset is read by a probe and held (map/band.ts);
+  // Android's tab bar sits below the stage and its inset is the chrome's own.
+  const [hostBelow, setBelow] = useState(0);
+  const [probed, reportInset] = useHeldInset();
   const managed =
     adaptive ||
     [...regions.divisions, ...regions.occlusions].some((r) => r.active);
+  const probes = Platform.OS === 'ios' && !managed;
+  const below = probes ? probed : hostBelow;
   const pose = mapControlLayout(
     {
       x: safe?.left ?? 0,
@@ -1058,12 +1064,31 @@ function MapMode({
             }
           />
         ) : null}
+        {probes ? (
+          // Reads the band under the panel (the tab bar and the home
+          // indicator) and draws nothing: a view of no content at the
+          // stage's foot, so its height is the system's bottom inset, with
+          // nothing taken from the stage's own measured size.
+          <SafeAreaView
+            edges={['bottom']}
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={styles.bandProbe}
+            testID="money-map-band"
+            onLayout={(event) =>
+              reportInset(Math.round(event.nativeEvent.layout.height))
+            }
+          />
+        ) : null}
         <SafeAreaView
           // The stack's opaque bar already sits above the stage: a top
           // edge here would count the status bar twice and push the card
           // down the map. The frame owns the safe sides so its absolute
           // controls clear a side rail too, without counting padding twice.
-          edges={managed ? [] : ['bottom']}
+          // On iOS the bottom band is the held one, kept by the spacer at
+          // the column's foot: the system's own inset moves at a push's end.
+          edges={managed || probes ? [] : ['bottom']}
           pointerEvents="box-none"
           style={[
             styles.chrome,
@@ -1169,7 +1194,7 @@ function MapMode({
               style={[styles.panelHost, regular ? styles.panelRegular : null]}
               pointerEvents="box-none"
               onLayout={(event) => {
-                if (managed) return;
+                if (managed || probes) return;
                 const { y, height } = event.nativeEvent.layout;
                 const gap = Math.max(
                   0,
@@ -1205,6 +1230,13 @@ function MapMode({
               />
             </View>
           )}
+          {probes ? (
+            <View
+              style={{ height: band }}
+              pointerEvents="none"
+              testID="money-map-band-space"
+            />
+          ) : null}
         </SafeAreaView>
       </View>
     </GestureHandlerRootView>
@@ -1530,6 +1562,7 @@ const styles = StyleSheet.create({
   unavailable: { flexGrow: 1, justifyContent: 'center', padding: rhythm.block },
   // Laid out, never seen or read: it keeps the place of words still to come.
   unseen: { opacity: 0 },
+  bandProbe: { position: 'absolute', left: 0, bottom: 0, width: 1, opacity: 0 },
   grow: { flex: 1 },
   panelHost: { width: '100%' },
   panelRegular: { maxWidth: 480 },

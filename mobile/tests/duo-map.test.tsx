@@ -51,6 +51,7 @@ import {
 import { mapControlLayout } from '../src/features/money/map/regions';
 import { TapRouter } from '../src/features/money/map/taps';
 import { FieldClearance } from '../src/features/seat/FieldClearance';
+import { reportBand } from './money-band';
 import { withNavigationOptions } from './navigation-options';
 import { pinned } from './pinned';
 
@@ -504,9 +505,7 @@ test.each([
     act(() => {
       top.props.onLayout({ nativeEvent: { layout: { height: 100 } } });
       panel.props.onPeekHeight(120);
-      panel.parent!.props.onLayout({
-        nativeEvent: { layout: { y: 400, height: 140 } },
-      });
+      reportBand(tree.root, panel, 560, 20, 140);
     });
     const stage = tree.root.findByType(MoneyMap);
     const view = { width: 380, height: 560, insets: stage.props.insets };
