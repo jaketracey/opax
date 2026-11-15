@@ -19,10 +19,15 @@ export const learnCopy = {
   more: 'More',
   /** Account › Glossary terms and its switches. */
   termsPage: 'Glossary terms',
-  underline: 'Underline terms',
+  /** The inline tips: a marked word and its short answer (Jake, build 76). */
+  underline: 'Glossary tips',
   explain: 'Explain terms',
   switchesFooter:
-    'Underline terms marks a word the guide explains: tap it for a short answer. Explain terms adds a plain line under some headings.',
+    'Glossary tips mark a word the guide explains: tap it for a short answer. Explain terms adds a plain line under some headings.',
+  /** The answer sheet's last control, and what it says once tapped. */
+  hideTips: 'Hide tips',
+  tipsHidden:
+    'Tips hidden. Turn them back on in Account, under Glossary terms.',
 } as const;
 
 /** "Explains division": the VoiceOver hint on text that holds a term. */

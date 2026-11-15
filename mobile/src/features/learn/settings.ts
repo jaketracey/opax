@@ -8,7 +8,7 @@ import { learnFixture } from './launch-fixture';
  *
  * - `underline`: inline glossary terms (a dotted underline on a term's first
  *   use on a screen). ON for everyone, existing installs included (Jake,
- *   14 Nov); Account › Underline terms turns it off.
+ *   14 Nov); Account › Glossary terms › Glossary tips turns it off.
  * - `explain`: option C's plain line under a section heading. OFF unless the
  *   reader asked for the basics on the welcome page (ad-newcomer-c sets it);
  *   Account › Explain terms changes it either way.

@@ -12,7 +12,7 @@ import {
 
 /**
  * Account › Glossary terms (`/account/terms`): the guide's two switches,
- * on their own page like Account › Ask settings. "Underline terms" (inline
+ * on their own page like Account › Ask settings. "Glossary tips" (inline
  * glossary terms, on for everyone until turned off) and "Explain terms"
  * (option C's plain lines under headings, set by the welcome's answer).
  */
