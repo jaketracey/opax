@@ -36,6 +36,7 @@ import { bills, index, manifest, people, roster, slugs } from './pinned';
 // An 11-inch iPad in portrait: regular width, and no room in the bar row,
 // so the field is the masthead's. 1032 (13-inch) has room for the bar item.
 let mockWidth = 834;
+let mockHeight = 1376;
 let mockFontScale = 1;
 jest.mock('react-native', () => {
   const actual = jest.requireActual('react-native');
@@ -44,7 +45,7 @@ jest.mock('react-native', () => {
     useWindowDimensions: {
       value: () => ({
         width: mockWidth,
-        height: 1376,
+        height: mockHeight,
         scale: 2,
         fontScale: mockFontScale,
       }),
@@ -126,6 +127,7 @@ const sources = {
 beforeEach(() => {
   jest.clearAllMocks();
   mockWidth = 834;
+  mockHeight = 1376;
   mockFontScale = 1;
   mockBarOptions = undefined;
   quickSearch.reset();
@@ -468,14 +470,16 @@ describe('hardware keyboard', () => {
 });
 
 describe("the field as Today's bar item (iPad, where the bar has room)", () => {
-  test('room: 13-inch in both orientations and 11-inch landscape; never 11-inch portrait, a narrow window or an iPhone', () => {
-    expect(barSearchWidth(1032, true)).toBe(206);
-    expect(barSearchWidth(1376, true)).toBe(300);
-    expect(barSearchWidth(1194, true)).toBe(287);
-    expect(barSearchWidth(834, true)).toBe(0);
-    expect(barSearchWidth(600, true)).toBe(0);
+  test('room: a 13-inch iPad, the same width in both orientations; never an 11-inch, a narrow window or an iPhone', () => {
+    expect(barSearchWidth(1032, 1376, true)).toBe(206);
+    // One width in both orientations: the bar's items never change size
+    // on a rotation (UIKit collapsed them into its overflow button).
+    expect(barSearchWidth(1376, 1032, true)).toBe(206);
+    expect(barSearchWidth(834, 1194, true)).toBe(0);
+    expect(barSearchWidth(1194, 834, true)).toBe(0);
+    expect(barSearchWidth(600, 1376, true)).toBe(0);
     // The unfolded Duo is an iPhone: its bar items sit on the rail.
-    expect(barSearchWidth(951, false)).toBe(0);
+    expect(barSearchWidth(951, 880, false)).toBe(0);
   });
 
   async function mountBar() {
@@ -650,7 +654,8 @@ describe('the placement switches while Today is open (review of 9dc926978)', () 
     });
     // Landscape: the field is elsewhere in a wider bar.
     mockWidth = 1376;
-    fieldAt = { x: 1010, y: 30, w: 300, h: 44 };
+    mockHeight = 1032;
+    fieldAt = { x: 1104, y: 30, w: 206, h: 44 };
     await act(async () => page.update(both()));
     await act(async () =>
       bar.update(mockBarOptions!.unstable_headerRightItems!()[0].element),
@@ -661,7 +666,7 @@ describe('the placement switches while Today is open (review of 9dc926978)', () 
     await focus(bar);
     expect(panelStyle()).toMatchObject({
       top: 30 + 44 + 6 - 142,
-      left: 1010 + 300 - 420 - 32,
+      left: 1104 + 206 - 420 - 32,
     });
     measure.mockRestore();
     blur.mockRestore();
@@ -669,6 +674,23 @@ describe('the placement switches while Today is open (review of 9dc926978)', () 
       bar.unmount();
       page.unmount();
     });
+  });
+});
+
+test('Today leaving the screen tree clears the field (review of 9dc926978)', async () => {
+  const renderer = await mount();
+  await focus(renderer);
+  await type(renderer, 'housing');
+  expect(quickSearch.snapshot()).toMatchObject({
+    text: 'housing',
+    armed: true,
+  });
+  await act(async () => renderer.unmount());
+  expect(quickSearch.snapshot()).toEqual({
+    text: '',
+    focused: false,
+    armed: false,
+    dismissed: false,
   });
 });
 

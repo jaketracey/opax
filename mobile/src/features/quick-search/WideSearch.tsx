@@ -69,19 +69,30 @@ const PANEL_GAP = 6;
  * The width of the field as a bar item, or 0 when the bar has no room for
  * it. iPad only: the bar row is shared with the floating tab bar (about
  * 420 pt, centred) and the account button, so each side of the tabs has
- * `(window - 420) / 2`, less the button and its margins. A 13-inch iPad in
- * portrait has about 206 pt; an 11-inch in portrait about 107 pt, too
- * little, and Today keeps the masthead field. An iPhone, the unfolded Duo
- * included, never draws the bar item: beside its vertical bar the items
- * sit on the rail.
+ * `(side - 420) / 2`, less the button and its margins.
+ *
+ * `side` is the window's shorter side, so the item is one width in both
+ * orientations. Sized from the current width it was 300 pt in landscape and
+ * 206 pt in portrait on a 13-inch iPad, and on turning back to portrait
+ * UIKit collapsed the bar's items into its overflow button before the
+ * narrower width arrived: the field was gone (iPadOS 26.3 sim, 15 Nov). A
+ * 13-inch iPad has about 206 pt; an 11-inch about 107 pt, too little, and
+ * Today keeps the masthead field in both orientations. An iPhone, the
+ * unfolded Duo included, never draws the bar item: beside its vertical bar
+ * the items sit on the rail.
  */
-export function barSearchWidth(width: number, pad = isPad): number {
+export function barSearchWidth(
+  width: number,
+  height: number,
+  pad = isPad,
+): number {
   if (!pad || sizeClassFor(width, 'pad') !== 'regular') return 0;
-  const room = Math.floor((width - 420) / 2 - 100);
+  const room = Math.floor((Math.min(width, height) - 420) / 2 - 100);
   return room >= BAR_FIELD_MIN ? Math.min(BAR_FIELD_WIDTH, room) : 0;
 }
 export function useBarSearchWidth(): number {
-  return barSearchWidth(useWindowDimensions().width);
+  const window = useWindowDimensions();
+  return barSearchWidth(window.width, window.height);
 }
 
 /**
@@ -105,6 +116,8 @@ export function useBarSearchWidth(): number {
 export function WideSearch() {
   const layout = useLayout();
   const bar = useBarSearchWidth();
+  // Today leaving the screen tree takes the words and the dropdown with it.
+  useEffect(() => () => quickSearch.reset(), []);
   if (!layout.regular || bar) return null;
   return <MastheadSearch columnWidth={layout.width} />;
 }
