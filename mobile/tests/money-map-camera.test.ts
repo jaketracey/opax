@@ -473,7 +473,9 @@ describe('a viewport that changes and comes back', () => {
     expect(opened.camera.k).toBeGreaterThan(start.camera.k);
     const closed = change(opened, card);
     expect(closed.camera).toEqual(start.camera);
-    expect(closed.rest).toBeNull();
+    // The chain stays until the reader moves the map: a later change that
+    // comes back restores too.
+    expect(closed.rest?.set).toEqual(start.camera);
   });
 
   test('through several changes: the keyboard resizes the window, then all of it returns', () => {
@@ -482,6 +484,62 @@ describe('a viewport that changes and comes back', () => {
     state = change(state, view(308, 440));
     state = change(state, card);
     expect(state.camera).toEqual(start.camera);
+  });
+
+  test('a change that never comes back does not stop a later Search from restoring (reviewer P2)', () => {
+    // A focus is cleared: the peek, and with it the viewport, changes for
+    // good. Then Search opens and closes.
+    const cleared = change(start, view(308, 760 + 120));
+    const opened = change(cleared, search);
+    expect(opened.camera.k).toBeGreaterThan(cleared.camera.k);
+    const closed = change(opened, view(308, 760 + 120));
+    expect(closed.camera).toEqual(cleared.camera);
+  });
+
+  test('a focus that changes with no fly ends the chain: nothing centred on the old one is restored', () => {
+    const under =
+      (focus: string | null) =>
+      (
+        state: { camera: Camera; viewport: Viewport; rest: CameraRest | null },
+        viewport: Viewport,
+      ) => {
+        const back = returnCamera(
+          state.rest,
+          { previous: state.viewport, current: state.camera },
+          viewport,
+          clamp(state.camera, viewport),
+          focus,
+        );
+        return { camera: back.camera, viewport, rest: back.rest };
+      };
+    // Under focus A the viewport changes and comes back: restored.
+    const opened = under('A')(start, search);
+    expect(under('A')(opened, card).camera).toEqual(start.camera);
+    // The focus changes to B with the disc already in view: no fly, the
+    // camera stays. The viewport then returns: the old pairs are not used.
+    const refocused = under('B')(opened, view(98, 440));
+    const back = under('B')(refocused, card);
+    expect(back.camera).toEqual(clamp(refocused.camera, card));
+    expect(back.camera).not.toEqual(start.camera);
+  });
+
+  test('a new chain that lands where it started keeps the clamp of the moment (reviewer P3)', () => {
+    // Same viewport, but the limits moved (new bounds): not the old camera.
+    const wide: Bounds = { minX: -20, maxX: 20, minY: -30, maxY: 30 };
+    const current = fitCamera(box, card);
+    const next = clampCamera(current, wide, card, 0.5, 0.6);
+    const back = returnCamera(null, { previous: card, current }, card, next);
+    expect(back.camera).toEqual(next);
+    expect(back.rest).toBeNull();
+  });
+
+  test('a long chain keeps its latest pairs and still restores the latest', () => {
+    let state = change(start, search);
+    for (let i = 0; i < 12; i++) state = change(state, view(308 + i, 760 - i));
+    const there = state.camera;
+    state = change(state, search);
+    state = change(state, view(308 + 11, 760 - 11));
+    expect(state.camera).toEqual(there);
   });
 
   test('a view the reader moved in between is theirs: it is not put back', () => {

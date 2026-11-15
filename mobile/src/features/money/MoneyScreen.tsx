@@ -62,6 +62,7 @@ import {
   minimumTarget,
   radii,
   rhythm,
+  textStyles,
 } from '../../design/tokens';
 import {
   barBacking,
@@ -138,6 +139,8 @@ import {
 import { track } from '../../analytics';
 
 const TOP_DONORS = 20;
+/** Lines of the card's sentence kept in view when the card is capped. */
+const SENTENCE_LINES = 2;
 /** Synchronous measuring passes allowed per change of window or state. */
 const SETTLE_PASSES = 8;
 type Mode = MoneyMode;
@@ -770,12 +773,13 @@ function MapMode({
   const phoneFloor = managed
     ? 0
     : Math.max(0, phoneSceneFloor(visible) - bandHeight - rhythm.block * 2);
-  const largeLimits = (top: number) =>
+  const panelState = searchOpen ? 'search' : expanded ? 'expanded' : 'map';
+  const largeLimits = (top: number, state: typeof panelState = panelState) =>
     largeTextLimits(
       managed ? pose.controls.height : visible,
       top,
       bandHeight,
-      searchOpen ? 'search' : expanded ? 'expanded' : 'map',
+      state,
       managed ? pose.sceneFloor : phoneFloor,
     );
   // Until the card reports its height, a capped card (large text on a
@@ -785,23 +789,47 @@ function MapMode({
   const top =
     topHeight || (large && !regular ? largeLimits(0).topMaxHeight : 0);
   const caps = large && !regular ? largeLimits(top) : null;
+  // The same limits with the panel at rest, whatever it is doing now.
+  const restCaps = large && !regular ? largeLimits(top, 'map') : null;
   // The jurisdiction and the List | Map picker never scroll out of a capped
   // card: only its sentence does. Where the two alone need more than the
   // cap (the largest sizes on a small phone) the cap is theirs, and the
   // panel gives the difference back.
   const [pinned, setPinned] = useState({ head: 0, picker: 0 });
-  const pinnedNeed =
+  // Two lines of the sentence stay in view, so the card says what the map
+  // shows ("Money to parties, 1998–99 to 2025–26") and not one word of it.
+  const sentenceNeed = Math.max(
+    minimumTarget,
+    textStyles.secondary.lineHeight * window.fontScale * SENTENCE_LINES,
+  );
+  const pinnedBase =
     pinned.head && pinned.picker && !searchOpen
       ? pinned.head +
         pinned.picker +
-        minimumTarget +
         rhythm.tight * 3 +
         rhythm.block * 2 +
         hairline * 2
       : 0;
+  const pinnedNeed = pinnedBase ? pinnedBase + sentenceNeed : 0;
+  // The least the sentence needs: one line's room, as the card always had.
+  const pinnedLeast = pinnedBase ? pinnedBase + minimumTarget : 0;
   const limits = caps
     ? (() => {
-        const topMaxHeight = Math.max(caps.topMaxHeight, pinnedNeed);
+        // Two lines of the sentence only where the panel keeps its floor
+        // (44 pt) once the card has taken them: on the smallest phones at
+        // the largest sizes the panel would otherwise run over the search
+        // and zoom controls, so the sentence gives up the second line.
+        // The choice is made from the room with the panel at rest. An
+        // expanded panel hides the controls and frees room, and a choice
+        // made from that grew the card as the panel opened and shrank it
+        // as it closed (the iPhone SE at the largest sizes).
+        const rest = restCaps ?? caps;
+        const room =
+          rest.topMaxHeight + Math.max(0, rest.panelMaxHeight - minimumTarget);
+        const topMaxHeight = Math.max(
+          caps.topMaxHeight,
+          pinnedNeed <= room ? pinnedNeed : pinnedLeast,
+        );
         const over = Math.max(
           0,
           Math.min(top, topMaxHeight) - caps.topMaxHeight,
@@ -879,7 +907,20 @@ function MapMode({
   const searching = searchOpen || topIsSearch;
   const [restInsets, setRestInsets] = useState(insets);
   if (!searching && restInsets !== insets) setRestInsets(insets);
-  const mapInsets = searching ? restInsets : insets;
+  // At large text the open Search and its keyboard fill the screen: the
+  // panel under them is out of reach, yet it held the map's room to a
+  // strip. It is hidden for the while and its room goes to the map (a
+  // tall card's room is the keyboard's, not the panel's).
+  const hidePanel = searchOpen && large && !regular && !managed;
+  const searchBottom = (managed ? (safe?.bottom ?? 0) : band) + rhythm.tight;
+  const searchHold = useMemo(
+    () =>
+      restInsets.bottom === searchBottom
+        ? restInsets
+        : { ...restInsets, bottom: searchBottom },
+    [restInsets, searchBottom],
+  );
+  const mapInsets = !searching ? insets : hidePanel ? searchHold : restInsets;
   // The map is drawn only between the card and the panel: no stroke above
   // the card or under the bar, and no name half under either (item 5.6).
   // A fold gives the map its own side, with nothing over it to clip. A
@@ -892,9 +933,21 @@ function MapMode({
         : {
             top:
               topHeight > 0 ? (managed ? pose.controls.y : 0) + topHeight : 0,
-            bottom: Math.max(0, insets.bottom - rhythm.tight),
+            bottom: Math.max(
+              0,
+              (hidePanel ? searchBottom : insets.bottom) - rhythm.tight,
+            ),
           },
-    [pose.folded, regular, topHeight, managed, pose.controls.y, insets.bottom],
+    [
+      pose.folded,
+      regular,
+      topHeight,
+      managed,
+      pose.controls.y,
+      insets.bottom,
+      hidePanel,
+      searchBottom,
+    ],
   );
   // Android's Back closes the search, then the panel, then the focus.
   useEffect(() => {
@@ -1385,8 +1438,17 @@ function MapMode({
           </View>
           {unavailable ? null : (
             <View
-              style={[styles.panelHost, regular ? styles.panelRegular : null]}
-              pointerEvents="box-none"
+              style={[
+                styles.panelHost,
+                regular ? styles.panelRegular : null,
+                hidePanel ? styles.unseen : null,
+              ]}
+              pointerEvents={hidePanel ? 'none' : 'box-none'}
+              accessibilityElementsHidden={hidePanel}
+              importantForAccessibility={
+                hidePanel ? 'no-hide-descendants' : 'auto'
+              }
+              testID="money-map-panel-host"
               onLayout={(event) => {
                 if (managed || probes) return;
                 const { y, height } = event.nativeEvent.layout;
