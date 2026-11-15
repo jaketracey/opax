@@ -161,6 +161,18 @@ export function useScreenColumn(
   return { onLayout, content, inner, bar, breakout, regular };
 }
 
+/**
+ * The scroll offset that keeps a scrolled page's rows in place when its
+ * scroll view's frame moves down by `delta` (the cut turning on) or up (off);
+ * null at the top of the page, where UIKit rests the content itself.
+ */
+export function clipOffset(y: number, delta: number): number | null {
+  // Turning on: scrolled past the old top inset's last `delta` points.
+  if (delta > 0) return y > -delta ? Math.max(0, y + delta) : null;
+  // Turning off: scrolled at all (the cut page rests at 0).
+  return y > 0 ? y + delta : null;
+}
+
 /** Half a point of rounding between UIKit's inset and the reported bar. */
 const underBarSlack = 1;
 const stickyFirst = [0];
@@ -575,6 +587,21 @@ export function Screen({
   // already starts under it, and a margin would only add a blank band.
   const clipTop =
     Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
+  // Turning the cut on or off moves the scroll view's frame by `safeTop`.
+  // At the top of the page UIKit puts the content back by itself; further
+  // down it keeps the offset, and every row would jump by that much. The
+  // offset moves with the frame instead, so the rows stay where they are.
+  const lastClipTop = useRef(clipTop);
+  useLayoutEffect(() => {
+    const delta = clipTop - lastClipTop.current;
+    lastClipTop.current = clipTop;
+    const y = scrollY.current;
+    const view =
+      scrollRef && typeof scrollRef === 'object' ? scrollRef.current : null;
+    if (!delta || y === null || !view) return;
+    const next = clipOffset(y, delta);
+    if (next !== null) view.scrollTo({ y: next, animated: false });
+  }, [clipTop, scrollRef]);
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);

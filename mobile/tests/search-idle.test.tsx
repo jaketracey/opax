@@ -19,9 +19,24 @@ import { Skeleton, Screen } from '../src/design/primitives';
 import { useScreenReady } from '../src/analytics/timing';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 import { IDLE_HOLD_MS, SearchIdle } from '../src/features/search/SearchIdle';
+import { cutsAtSafeTop } from '../src/features/search/cut';
+import { clipOffset } from '../src/design/layout';
 import { SearchSuggestions } from '../src/features/search/SearchSuggestions';
 import { ResultsView } from '../src/features/search/ResultsView';
 jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
+// iOS 26: the field is the tab bar's, so activating it hides the bar.
+let mockTabBarField = false;
+jest.mock('../src/features/search/cut', () => {
+  const actual = jest.requireActual('../src/features/search/cut');
+  return {
+    ...actual,
+    cutsAtSafeTop: (state: Parameters<typeof actual.cutsAtSafeTop>[0]) =>
+      actual.cutsAtSafeTop({
+        ...state,
+        tabBarField: state.tabBarField || mockTabBarField,
+      }),
+  };
+});
 
 jest.mock('../src/api/runtime', () => ({
   recordSearch: { search: jest.fn(), summary: jest.fn() },
@@ -309,6 +324,14 @@ describe('Search scroll region on iOS', () => {
       const frame = () =>
         StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style);
       const top = () => frame().marginTop ?? 0;
+      // Where the field is in the bar (iPad, an unfolded Duo, before iOS
+      // 26) the bar stays while the field is active: never cut.
+      await act(async () => mockBar.options!.headerSearchBarOptions.onFocus());
+      expect(top()).toBe(0);
+      await act(async () =>
+        mockBar.options!.headerSearchBarOptions.onCancelButtonPress(),
+      );
+      mockTabBarField = true;
       const bar = () => mockBar.options!.headerSearchBarOptions;
       const scroll = renderer.root.findByType(ScrollView);
       // Browse, under the large title: the bar is there, nothing is cut.
@@ -346,6 +369,7 @@ describe('Search scroll region on iOS', () => {
       expect(renderer.root.findAllByType(ResultsView)).toHaveLength(1);
       expect(top()).toBe(0);
     } finally {
+      mockTabBarField = false;
       if (renderer) act(() => renderer.unmount());
       if (version) Object.defineProperty(Platform, 'Version', version);
     }
@@ -380,4 +404,35 @@ describe('Search scroll region on iOS', () => {
     expect(renderer.root.findAllByType(SearchSuggestions)).toHaveLength(0);
     expect(renderer.root.findAllByType(ResultsView)).toHaveLength(0);
   });
+});
+
+test('the page is cut only where an active field hides the bar: the iPhone, never an iPad or an unfolded Duo', () => {
+  const iPhone = {
+    fieldActive: true,
+    tabBarField: true,
+    pad: false,
+    regular: false,
+  };
+  expect(cutsAtSafeTop(iPhone)).toBe(true);
+  expect(cutsAtSafeTop({ ...iPhone, fieldActive: false })).toBe(false);
+  // iPad: the field is in the bar, which stays.
+  expect(cutsAtSafeTop({ ...iPhone, pad: true, regular: true })).toBe(false);
+  expect(cutsAtSafeTop({ ...iPhone, pad: true })).toBe(false);
+  // The unfolded Duo: a phone at regular width, the scope control pinned.
+  expect(cutsAtSafeTop({ ...iPhone, regular: true })).toBe(false);
+  // Before iOS 26 the field is stacked in the bar.
+  expect(cutsAtSafeTop({ ...iPhone, tabBarField: false })).toBe(false);
+});
+
+test('a scrolled page keeps its rows in place when the cut turns on or off', () => {
+  // On: the frame moves down 62, so the offset moves with it.
+  expect(clipOffset(900, 62)).toBe(962);
+  expect(clipOffset(-20, 62)).toBe(42);
+  // At the top (resting under the bar's inset) UIKit rests the content.
+  expect(clipOffset(-106, 62)).toBeNull();
+  expect(clipOffset(-62, 62)).toBeNull();
+  // Off: back up by the same amount; the cut page's rest (0) is left alone.
+  expect(clipOffset(962, -62)).toBe(900);
+  expect(clipOffset(30, -62)).toBe(-32);
+  expect(clipOffset(0, -62)).toBeNull();
 });
