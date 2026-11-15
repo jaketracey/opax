@@ -4,9 +4,12 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
+import type { ColorValue } from 'react-native';
 import { sheetListOptions } from './sheet-lists';
+import { useSolidRailBacking } from './solid-rail';
 import { useDetailRouteOptions } from './useDetailRouteOptions';
 import {
+  barBacking,
   clearBarStyle,
   headerItems,
   pendingHeaderItems,
@@ -74,6 +77,7 @@ export function RouteOptions({
   // A page that sets its own bar colour (the glossary's paper bar) loses it
   // under the clear rail bar, as Screen's does (clearBarStyle).
   const clearRail = useClearRailBar();
+  const solidRail = useSolidRailBacking();
   const resolvedOptions = useMemo(() => {
     const resolved =
       options &&
@@ -83,8 +87,15 @@ export function RouteOptions({
       !options.headerRight
         ? { ...options, ...headerItems(() => pending) }
         : options;
-    return resolved && clearRail ? clearBarStyle(resolved) : resolved;
-  }, [options, pending, clearRail]);
+    if (!resolved) return resolved;
+    if (clearRail) return clearBarStyle(resolved);
+    // Under the solid rail bar a page's own bar colour is backed in that
+    // colour: the glossary's paper bar had 14 pt of the darker page above it.
+    const own = (
+      resolved.headerStyle as { backgroundColor?: ColorValue } | undefined
+    )?.backgroundColor;
+    return solidRail && own ? { ...resolved, ...barBacking(own) } : resolved;
+  }, [options, pending, clearRail, solidRail]);
   const keepItems = stableItems || !!pending;
   useDetailRouteOptions(setOptions, keepItems ? resolvedOptions : undefined);
   useRootBarSearchOptions(options);

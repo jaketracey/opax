@@ -527,3 +527,74 @@ describe('no bar colour or hairline under the clear rail bar', () => {
     });
   });
 });
+
+// With Reduce Transparency or Increase Contrast on, the rail bar is solid
+// and backed. A page that sets a bar colour of its own (the glossary's
+// paper bar on the darker grouped page) is backed in that colour: backed in
+// the page's, it had 14 pt of the darker page above a paper band at rest.
+test('a page’s own bar colour is backed in that colour under the solid rail bar', () => {
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  jest.replaceProperty(Platform, 'OS', 'ios');
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 27 });
+  const solid = jest.spyOn(accessibility, 'useSolidBar').mockReturnValue(true);
+  mockBarEdge = 'trailing';
+  const calls: Record<string, unknown>[] = [];
+  const navigation = {
+    addListener: () => () => undefined,
+    setOptions: (value: Record<string, unknown>) => calls.push(value),
+    getState: () => ({
+      index: 1,
+      routes: [{ key: 'root' }, { key: route.key }],
+      routeNames: ['index', 'bill/[key]', 'explore/[tool]'],
+    }),
+    isFocused: () => true,
+  };
+  let renderer!: TestRenderer.ReactTestRenderer;
+  try {
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route as never}>
+            <DescriptorsContext.Provider
+              value={
+                {
+                  [route.key]: { options: { headerTransparent: false } },
+                } as never
+              }
+            >
+              <RouteOptions
+                options={{ title: 'A to Z glossary', ...paperBar }}
+              />
+              <Screen grouped>
+                <View />
+              </Screen>
+            </DescriptorsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    // Each call that colours the bar backs it in the same colour.
+    const coloured = calls.filter((call) => 'headerStyle' in call);
+    expect(coloured.length).toBe(2);
+    for (const call of coloured) {
+      const backing = (
+        call.headerBackground as () => ReactElement<{
+          style: { backgroundColor: unknown };
+        }>
+      )();
+      expect(backing.props.style.backgroundColor).toBe(
+        (call.headerStyle as { backgroundColor: unknown }).backgroundColor,
+      );
+    }
+    expect(
+      coloured.map(
+        (call) =>
+          (call.headerStyle as { backgroundColor: unknown }).backgroundColor,
+      ),
+    ).toEqual([colors.paper, colors.sunken]);
+  } finally {
+    act(() => renderer.unmount());
+    solid.mockRestore();
+    if (version) Object.defineProperty(Platform, 'Version', version);
+  }
+});

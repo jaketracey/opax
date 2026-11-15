@@ -1,17 +1,12 @@
 import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
-import {
-  NavigationContext,
-  NavigationRouteContext,
-} from 'expo-router/react-navigation';
-import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
+import { NavigationContext } from 'expo-router/react-navigation';
 import {
   Children,
   cloneElement,
   createContext,
   isValidElement,
   useCallback,
-  use,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -41,15 +36,12 @@ import {
   clearBarStyle,
   opaqueBar,
   useClearRailBar,
-  useRailBar,
 } from '../navigation/chrome';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
-import {
-  isTabStack,
-  useFloatingBarClearance,
-} from '../navigation/floating-bar';
+import { useSolidRailBacking } from '../navigation/solid-rail';
+import { useFloatingBarClearance } from '../navigation/floating-bar';
 import {
   useRootBarAppearance,
   useRailSolidRoot,
@@ -265,22 +257,6 @@ const stickyDebounce = 64;
 export function useClearBarTop(): number {
   const bottom = useHeaderBottom();
   return useClearRailBar() ? bottom : 0;
-}
-
-/**
- * A pushed page in a tab's stack beside a vertical bar, with Reduce
- * Transparency or Increase Contrast on: it keeps the solid bar, and that bar
- * needs the page's ground behind it (`barBacking`), or the top 14 pt shows the
- * system's grey. Not a sheet: a backing view reserved a band in sheets.
- */
-function useSolidRailBacking(): boolean {
-  const rail = useRailBar();
-  const route = useContext(NavigationRouteContext);
-  const navigation = useContext(NavigationContext);
-  if (rail !== 'solid' || !route || !isTabStack(navigation?.getState()))
-    return false;
-  const presentation = use(DescriptorsContext)[route.key]?.options.presentation;
-  return !presentation || presentation === 'card';
 }
 
 /** When a late scroll view is looked at after mount (ms). */
