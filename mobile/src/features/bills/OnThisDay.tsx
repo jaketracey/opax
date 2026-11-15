@@ -2,11 +2,22 @@ import { StyleSheet, View } from 'react-native';
 import { billName } from '../../api/bill-transforms';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { formatDate } from '../../design/format';
+import { chamberName } from '../../design/parliament';
+import type { RowMenuAction } from '../../design/row-link';
 import { LinkRow } from '../../design/rows';
 import { Text } from '../../design/text';
 import { billRoute } from '../../navigation/routes';
 import { presentSheet } from '../../navigation/sheets';
-import { ON_THIS_DAY_RULE, type OnThisDayBill } from './on-this-day';
+import { docRoute } from '../../navigation/routes/records';
+import { stageTitle } from './divisions';
+import {
+  ON_THIS_DAY_DIVISION_RULE,
+  ON_THIS_DAY_RULE,
+  ON_THIS_DAY_SPEECH_RULE,
+  type OnThisDayBill,
+  type OnThisDayDivisionPick,
+  type OnThisDaySpeechPick,
+} from './on-this-day';
 
 /**
  * On this day, the last thing in the Bills list's header, directly above the
@@ -41,31 +52,12 @@ export function OnThisDayRow({
     <LinkRow
       symbol="calendar"
       aboveTitle={
-        // The "On this day" line always holds the space. Once its day has
-        // passed it is hidden, not removed, and the date is drawn over it
-        // out of the layout: the row's height cannot change.
-        <View>
-          <Text
-            wordSafe
-            variant="footnote"
-            tone="inkSoft"
-            testID="bills-on-this-day-kicker"
-            style={passed ? styles.held : undefined}
-          >
-            {kicker}
-          </Text>
-          {passed ? (
-            <Text
-              wordSafe
-              variant="footnote"
-              tone="inkSoft"
-              testID="bills-on-this-day-date"
-              style={styles.over}
-            >
-              {formatDate(pick.date)}
-            </Text>
-          ) : null}
-        </View>
+        <DayKicker
+          kicker={kicker}
+          date={pick.date}
+          passed={passed}
+          testID="bills-on-this-day"
+        />
       }
       title={name}
       titleLines={large ? undefined : 2}
@@ -91,6 +83,144 @@ export function OnThisDayRow({
       }
       accessibilityHint="Opens the bill"
       testID="bills-on-this-day-row"
+    />
+  );
+}
+
+/**
+ * The "On this day in 2018" line. It always holds the space. Once its day
+ * has passed it is hidden, not removed, and the record's own date is drawn
+ * over it out of the layout: the row's height cannot change.
+ */
+function DayKicker({
+  kicker,
+  date,
+  passed,
+  testID,
+}: {
+  kicker: string;
+  date: string;
+  passed: boolean;
+  testID: string;
+}) {
+  return (
+    <View>
+      <Text
+        wordSafe
+        variant="footnote"
+        tone="inkSoft"
+        testID={`${testID}-kicker`}
+        style={passed ? styles.held : undefined}
+      >
+        {kicker}
+      </Text>
+      {passed ? (
+        <Text
+          wordSafe
+          variant="footnote"
+          tone="inkSoft"
+          testID={`${testID}-date`}
+          style={styles.over}
+        >
+          {formatDate(date)}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+const howChosen = (rule: string): RowMenuAction[] => [
+  {
+    title: 'How this is chosen',
+    symbol: 'info.circle',
+    onPress: () =>
+      presentSheet({ kind: 'rule', title: 'How this is chosen', rule }),
+  },
+];
+
+/**
+ * On this day, a division on a bill: the bill, the house and the recorded
+ * stage, its date and They Vote For You. It opens the vote on the bill's
+ * page. No result and no count: the row says what the record is, and the
+ * record says the rest. Same first-frame and passed-day rules as the bill.
+ */
+export function OnThisDayDivisionRow({
+  pick,
+  passed = false,
+  onSelectBill,
+}: {
+  pick: OnThisDayDivisionPick;
+  passed?: boolean;
+  /** Two panes: select the bill beside the list instead of pushing it. */
+  onSelectBill?: (key: string, title: string) => void;
+}) {
+  const large = useAccessibilitySize();
+  const { division, billName: bill } = pick;
+  const stage = stageTitle(division.stage)?.toLocaleLowerCase('en-AU');
+  const words = `${chamberName(division.house) ?? 'Chamber not recorded'} division${stage ? `, ${stage}` : ''}`;
+  const kicker = `On this day in ${pick.year}`;
+  const said = `${bill}, ${words}, ${formatDate(division.date)}, They Vote For You`;
+  return (
+    <LinkRow
+      symbol="hand.raised"
+      aboveTitle={
+        <DayKicker
+          kicker={kicker}
+          date={division.date}
+          passed={passed}
+          testID="bills-on-this-day-division"
+        />
+      }
+      title={bill}
+      titleLines={large ? undefined : 2}
+      detail={`${words}, ${formatDate(division.date)} · They Vote For You`}
+      href={billRoute(division.bill, bill, { division: division.key })}
+      select={
+        onSelectBill ? () => onSelectBill(division.bill, bill) : undefined
+      }
+      menu={howChosen(ON_THIS_DAY_DIVISION_RULE)}
+      accessibilityLabel={passed ? said : `${kicker}, ${said}`}
+      accessibilityHint="Opens the vote on the bill"
+      testID="bills-on-this-day-division"
+    />
+  );
+}
+
+/**
+ * On this day, a speech on a bill: the speaker, the bill, its date and
+ * Hansard. It opens the speech. No party and no summary.
+ */
+export function OnThisDaySpeechRow({
+  pick,
+  passed = false,
+}: {
+  pick: OnThisDaySpeechPick;
+  passed?: boolean;
+}) {
+  const large = useAccessibilitySize();
+  const { speech, billName: bill } = pick;
+  const kicker = `On this day in ${pick.year}`;
+  const said = `${speech.speaker} spoke on the ${bill}, ${formatDate(speech.date)}, Hansard`;
+  return (
+    <LinkRow
+      symbol="text.bubble"
+      aboveTitle={
+        <DayKicker
+          kicker={kicker}
+          date={speech.date}
+          passed={passed}
+          testID="bills-on-this-day-speech"
+        />
+      }
+      title={speech.speaker}
+      titleLines={large ? undefined : 2}
+      detail={`Spoke on the ${bill}, ${formatDate(speech.date)} · Hansard`}
+      detailLines={large ? undefined : 3}
+      href={docRoute(speech.slug, speech.speaker)}
+      menu={howChosen(ON_THIS_DAY_SPEECH_RULE)}
+      accessibilityLabel={passed ? said : `${kicker}, ${said}`}
+      accessibilityHint="Opens the speech"
+      testID="bills-on-this-day-speech"
     />
   );
 }

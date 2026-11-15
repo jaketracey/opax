@@ -1,8 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
 import type { Bill } from '../../api/catalogs';
-import { onThisDay, type OnThisDayBill } from './on-this-day';
+import {
+  onThisDay,
+  onThisDayMore,
+  type OnThisDayIndex,
+  type OnThisDayPicks,
+} from './on-this-day';
+import { readOnThisDay } from './on-this-day-data';
 import { currentSydneyDay } from './sydney-day';
 
 /**
@@ -19,20 +25,45 @@ import { currentSydneyDay } from './sydney-day';
  * That leaves one case: the reader comes back to this list on a new day.
  * The pick stays, and `stale` says its day has passed, so the row can stop
  * calling it "On this day" without changing size, until the next blur.
+ *
+ * The division and the speech follow the same rules. They come from the
+ * day's dated index. `first` is the day the list was opened on and that
+ * day's index as the first load brought it (undefined until it answers,
+ * null when it had not answered in time): it is taken once, with the
+ * register, so those rows are in the first frame too, and a refresh never
+ * changes it. A later day's index is read when that day is chosen, out of
+ * sight. If it answers while the list is back in view it is held, and used
+ * the next time the list is hidden.
  */
-export function useOnThisDay(bills: readonly Bill[] | null | undefined): {
-  pick: OnThisDayBill | null;
+export function useOnThisDay(
+  bills: readonly Bill[] | null | undefined,
+  first?: { day: string; index: OnThisDayIndex | null | undefined },
+): OnThisDayPicks & {
+  /** The bill row's pick, by its earlier name. */
+  pick: OnThisDayPicks['bill'];
   stale: boolean;
 } {
   const navigation = useContext(NavigationContext);
-  const [day, setDay] = useState(currentSydneyDay);
+  const [day, setDay] = useState(() => first?.day ?? currentSydneyDay());
+  // Each day's index, once it may be shown.
+  const [files, setFiles] = useState<Record<string, OnThisDayIndex | null>>({});
+  // Indexes that answered while the list was in view, for the next blur.
+  const held = useRef<Record<string, OnThisDayIndex | null>>({});
+  if (first && first.index !== undefined && !(first.day in files))
+    setFiles({ ...files, [first.day]: first.index });
   // The day as last read, whether or not the list could choose again.
   const [today, setToday] = useState(day);
   useEffect(() => {
     const read = (hidden: boolean) => {
       const now = currentSydneyDay();
       setToday(now);
-      if (hidden) setDay(now);
+      if (!hidden) return;
+      setDay(now);
+      if (Object.keys(held.current).length) {
+        const answered = held.current;
+        held.current = {};
+        setFiles((old) => ({ ...old, ...answered }));
+      }
     };
     // No navigation (a test, a preview): treat the list as in view.
     const unseen = () => !!navigation && !navigation.isFocused();
@@ -50,14 +81,39 @@ export function useOnThisDay(bills: readonly Bill[] | null | undefined): {
       app.remove();
     };
   }, [navigation]);
-  const [chosen, setChosen] = useState<{
-    day: string;
-    pick: OnThisDayBill | null;
-  } | null>(null);
-  if (bills && chosen?.day !== day)
-    setChosen({ day, pick: onThisDay(bills, day) });
+  const reads = !!first;
+  const firstDay = first?.day;
+  useEffect(() => {
+    // The first day's index comes with the first load; no index, no reads.
+    if (!reads || day === firstDay) return;
+    let live = true;
+    void readOnThisDay(day).then((index) => {
+      if (!live) return;
+      if (navigation && !navigation.isFocused())
+        setFiles((old) => (day in old ? old : { ...old, [day]: index }));
+      else held.current[day] = index;
+    });
+    return () => {
+      live = false;
+    };
+  }, [day, reads, firstDay, navigation]);
+  const file =
+    day in files ? files[day] : first?.day === day ? first.index : undefined;
+  const [chosen, setChosen] = useState<
+    (OnThisDayPicks & { day: string; file: typeof file }) | null
+  >(null);
+  if (bills && (chosen?.day !== day || chosen.file !== file))
+    setChosen({
+      day,
+      file,
+      bill: onThisDay(bills, day),
+      ...onThisDayMore(file, day),
+    });
   return {
-    pick: chosen?.pick ?? null,
+    pick: chosen?.bill ?? null,
+    bill: chosen?.bill ?? null,
+    division: chosen?.division ?? null,
+    speech: chosen?.speech ?? null,
     stale: !!chosen && chosen.day === day && today !== day,
   };
 }

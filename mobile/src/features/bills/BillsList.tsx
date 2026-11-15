@@ -92,8 +92,14 @@ import {
   type BillSort,
 } from './filters';
 import type { BillEntry } from './navigation';
-import { OnThisDayRow } from './OnThisDay';
+import { onThisDayInTime, readOnThisDay } from './on-this-day-data';
+import {
+  OnThisDayDivisionRow,
+  OnThisDayRow,
+  OnThisDaySpeechRow,
+} from './OnThisDay';
 import { BillIndexRow } from './parts';
+import { currentSydneyDay } from './sydney-day';
 import { useOnThisDay } from './useOnThisDay';
 import { useCatalogRecord } from './useCatalogRecord';
 
@@ -175,10 +181,18 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   const [owner] = useState(() => (pushed ? `list-${++pushedLists}` : 'tab'));
   const list = useBillListState(owner, initial);
   const { scope, setScope, filters } = list;
+  // The day this list was opened on, for its first load.
+  const [firstDay] = useState(currentSydneyDay);
   const load = useCallback(
-    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
-      catalogs.bills(refresh, signal),
-    [],
+    async (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
+      // That day's index is read beside the register, for the tab's own list
+      // on its first load only. It joins the first frame if it has answered
+      // by then (give or take a moment) and is never added after it.
+      const more = refresh || pushed ? null : readOnThisDay(firstDay, signal);
+      const bills = await catalogs.bills(refresh, signal);
+      return { ...bills, onThisDay: more ? await onThisDayInTime(more) : null };
+    },
+    [firstDay, pushed],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   useRefreshCommand(refresh, refreshing);
@@ -294,7 +308,15 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   // row is in the list's first frame or not there: nothing is inserted above
   // content the reader can already see. A new day chooses again only while
   // the list is out of sight (useOnThisDay).
-  const { pick: dayPick, stale: dayPassed } = useOnThisDay(index?.bills);
+  const {
+    pick: dayPick,
+    division: dayDivision,
+    speech: daySpeech,
+    stale: dayPassed,
+  } = useOnThisDay(index?.bills, {
+    day: firstDay,
+    index: record ? record.onThisDay : undefined,
+  });
   const clear = () => list.store.set(list.store.model.reset(list.state));
   const stacked = useAccessibilitySize();
   const filteredEmpty = !!all && !searching && on > 0 && rows.length === 0;
@@ -357,6 +379,20 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
               : undefined
           }
         />
+      ) : null}
+      {all && dayDivision && !searching && !pushed ? (
+        <OnThisDayDivisionRow
+          pick={dayDivision}
+          passed={dayPassed}
+          onSelectBill={
+            split
+              ? (key, title) => select({ kind: 'bill', key, title })
+              : undefined
+          }
+        />
+      ) : null}
+      {all && daySpeech && !searching && !pushed ? (
+        <OnThisDaySpeechRow pick={daySpeech} passed={dayPassed} />
       ) : null}
     </View>
   );
