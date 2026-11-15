@@ -19,6 +19,12 @@ import { join, relative, resolve } from 'path';
 export type Decode = (value: unknown) => unknown;
 export interface Family {
   name: string;
+  /**
+   * One path of the family as the app asks for it, to put to the build's
+   * own allow-list (api/policy.ts): a build that may read the path must
+   * have its decoder here.
+   */
+  path: string;
   /** Paths under the published folder, with forward slashes. */
   files: (root: string) => string[];
   /** Absent when this build has no decoder for the family. */
@@ -83,56 +89,67 @@ const releases = (keep: (name: string) => boolean) => (root: string) => {
 export const families: Family[] = [
   {
     name: 'bills index',
+    path: '/bills/index.json',
     files: one('bills/index.json'),
     decode: decoder(d, 'decodeBillIndex'),
   },
   {
     name: 'bills',
+    path: '/bills/au-federal-r1.json',
     files: (root) => listed(root, 'bills', (name) => name !== 'index.json'),
     decode: decoder(d, 'decodeBill'),
   },
   {
     name: 'roster',
+    path: '/parliamentarians.json',
     files: one('parliamentarians.json'),
     decode: decoder(d, 'decodeRoster'),
   },
   {
     name: 'votes',
+    path: '/votes.json',
     files: one('votes.json'),
     decode: decoder(d, 'decodeVotes'),
   },
   {
     name: 'electorates manifest',
+    path: '/electorates/manifest.json',
     files: one('electorates/manifest.json'),
     decode: decoder(d, 'decodeManifest'),
   },
   {
     name: 'electorate indexes',
+    path: '/electorates/releases/0123456789abcdef/index.json',
     files: releases((name) => name === 'index.json'),
     decode: decoder(d, 'decodeElectorateIndex'),
   },
   {
     name: 'electorate people',
+    path: '/electorates/releases/0123456789abcdef/people.json',
     files: releases((name) => name === 'people.json'),
     decode: decoder(d, 'decodePeople'),
   },
   {
     name: 'electorates',
+    path: '/electorates/releases/0123456789abcdef/el_0123456789abcdef01234567.json',
     files: releases((name) => name.startsWith('el_')),
     decode: decoder(d, 'decodeElectorate'),
   },
   {
     name: 'interests index',
+    path: '/interests/index.json',
     files: one('interests/index.json'),
     decode: decoder(d, 'decodeInterestIndex'),
   },
   {
     name: 'recent interests',
+    path: '/interests/recent.json',
     files: one('interests/recent.json'),
     decode: decoder(d, 'decodeRecentInterests'),
   },
   {
     name: 'interests',
+    path: '/interests/1.json',
     // The keys the app's allow-list reads (api/policy.ts interestPath).
     files: (root) =>
       listed(root, 'interests', (name) =>
@@ -142,52 +159,67 @@ export const families: Family[] = [
   },
   {
     name: 'interest ties',
+    path: '/interests/ties-by-donor.json',
     files: one('interests/ties-by-donor.json'),
     decode: decoder(d, 'decodeInterestTies'),
   },
-  { name: 'pay', files: one('pay.json'), decode: decoder(d, 'decodePay') },
+  {
+    name: 'pay',
+    path: '/pay.json',
+    files: one('pay.json'),
+    decode: decoder(d, 'decodePay'),
+  },
   {
     name: 'expenses',
+    path: '/expenses.json',
     files: one('expenses.json'),
     decode: decoder(d, 'decodeExpenses'),
   },
   {
     name: 'expense categories',
+    path: '/expense-categories.json',
     files: one('expense-categories.json'),
     decode: decoder(d, 'decodeExpenseCategories'),
   },
   {
     name: 'photo people',
+    path: '/photos/people.json',
     files: one('photos/people.json'),
     decode: decoder(d, 'decodePhotoPeople'),
   },
   {
     name: 'photo credits',
+    path: '/photos/credits.json',
     files: one('photos/credits.json'),
     decode: decoder(d, 'decodePhotoCredits'),
   },
   {
     name: 'corpus',
+    path: '/corpus.json',
     files: one('corpus.json'),
     decode: decoder(d, 'decodeCorpus'),
   },
   {
     name: 'discovery',
+    path: '/discovery.json',
     files: one('discovery.json'),
     decode: decoder(d, 'decodeDiscovery'),
   },
   {
     name: 'money graph',
+    path: '/graph/money.json',
     files: one('graph/money.json'),
     decode: decoder(d, 'decodeMoney'),
   },
   {
     name: 'money extras',
+    path: '/graph/aec-extras.json',
     files: one('graph/aec-extras.json'),
     decode: decoder(d, 'decodeAecExtras'),
   },
   {
     name: 'on this day',
+    path: '/parliament/on-this-day/01-01.json',
     files: (root) =>
       listed(root, 'parliament/on-this-day', (name) =>
         /^\d{2}-\d{2}\.json$/.test(name),
@@ -196,16 +228,19 @@ export const families: Family[] = [
   },
   {
     name: 'sitting days',
+    path: '/parliament/sitting-days.json',
     files: one('parliament/sitting-days.json'),
     decode: decoder(load('features/today/sitting'), 'decodeSittingDays'),
   },
   {
     name: 'recent divisions',
+    path: '/divisions/recent.json',
     files: one('divisions/recent.json'),
     decode: decoder(load('features/today/votes'), 'decodeRecentDivisions'),
   },
   {
     name: 'party files',
+    path: '/graph/money.qld.json',
     files: (root) =>
       listed(root, 'graph', (name) =>
         /^money(\.(qld|vic|tas))?\.json$/.test(name),
@@ -270,6 +305,24 @@ function listening(run: () => void): string[] {
     stop?.();
   }
   return found;
+}
+
+/**
+ * Whether this build may ask for `path`: its own allow-list's answer
+ * (api/policy.ts `assertAllowedPath`), or null when the build has no such
+ * list to ask.
+ */
+export function buildReads(path: string): boolean | null {
+  const allow = load('api/policy').assertAllowedPath as
+    | ((path: string) => void)
+    | undefined;
+  if (typeof allow !== 'function') return null;
+  try {
+    allow(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 const isInvalidData = (error: unknown) =>
