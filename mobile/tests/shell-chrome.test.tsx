@@ -21,6 +21,7 @@ import TalkStack from '../src/app/talk/_layout';
 import TabStack from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
+import { BAR_FADE_TAIL } from '../src/design/bar-fade';
 import { Screen } from '../src/design/layout';
 import * as tokens from '../src/design/tokens';
 import {
@@ -1786,14 +1787,15 @@ const edgeCalls = (navigation: { setOptions: jest.Mock }) =>
     .map(([options]) => options.scrollEdgeEffects?.top)
     .filter(Boolean);
 test.each([
+  ['(today)', 'index'],
   ['(search)', 'search'],
   ['(today)', 'leads'],
   ['(ask)', 'ask'],
 ] as const)(
-  '%s %s turns the top edge hard once text runs under the bar, soft again at rest',
+  '%s %s keeps the soft edge and fades into its ground once text runs under the bar',
   (segment, name) =>
     withGlass(() => {
-      const { navigation, ground, page } = fadePage(
+      const { navigation, page } = fadePage(
         name,
         segment,
         name === 'leads',
@@ -1806,29 +1808,34 @@ test.each([
         // At rest UIKit insets the content to the bar's bottom edge.
         scrollTo(renderer, -expanded);
         expect(edgeCalls(navigation)).toEqual([]);
-        // Under the expanded bar, before the collapse height arrives.
+        const fades = () =>
+          renderer.root.findAll(
+            (node) =>
+              node.props?.testID === 'bar-fade' &&
+              typeof node.type === 'string',
+          );
+        expect(fades()).toHaveLength(0);
+        // Under the expanded bar, before the collapse height arrives: no
+        // panel, the page fades into its ground down to the bar's foot.
         scrollTo(renderer, -expanded + 2);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining({
-            ...largeTitleBar(
-              name === 'leads' ? colors.paper : ground,
-              false,
-              true,
-            ),
-            headerLargeTitleEnabled: true,
-          }),
-        );
-        expect(edgeCalls(navigation)).toEqual(['hard']);
-        // Collapsed: text keeps running under the compact bar, no repeats.
+        expect(edgeCalls(navigation)).not.toContain('hard');
+        expect(fades()).toHaveLength(1);
+        expect(StyleSheet.flatten(fades()[0]!.props.style)).toMatchObject({
+          position: 'absolute',
+          top: 0,
+          height: expanded + BAR_FADE_TAIL,
+        });
+        // Collapsed: text keeps running under the compact bar.
         act(() => renderer.update(page(68)));
         scrollTo(renderer, 0);
         scrollTo(renderer, 400);
-        expect(edgeCalls(navigation)).toEqual(['hard']);
-        // Back to the top: the bar expands over clean ground.
+        expect(fades()).toHaveLength(1);
+        // Back to the top: nothing over the clean ground.
         scrollTo(renderer, -68);
         act(() => renderer.update(page(expanded)));
         scrollTo(renderer, -expanded);
-        expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
+        expect(fades()).toHaveLength(0);
+        expect(edgeCalls(navigation)).not.toContain('hard');
         expect(RootBar!.setSolid).not.toHaveBeenCalled();
       } finally {
         act(() => renderer.unmount());
@@ -2868,7 +2875,7 @@ describe('scroll edges on every bar shape', () => {
         }
       }),
   );
-  test('the Search root on the folded rail sets a hard top edge under its search field', () =>
+  test('the Search root on the folded rail keeps the soft top edge under scrolled content', () =>
     withGlass(() => {
       mockBarEdge = 'trailing';
       const { page, navigation } = searchOwnerPage(false);
@@ -2884,7 +2891,7 @@ describe('scroll edges on every bar shape', () => {
         });
         expect(resolved.headerLargeTitleEnabled).not.toBe(true);
         scrollTo(renderer, -68 + 2);
-        expect(edgeCalls(navigation).at(-1)).toBe('hard');
+        expect(edgeCalls(navigation)).not.toContain('hard');
       } finally {
         act(() => renderer.unmount());
       }

@@ -1,4 +1,7 @@
-import { animatedScroll } from '../../design/accessibility';
+import { animatedScroll, useSolidBar } from '../../design/accessibility';
+import { BarFade } from '../../design/bar-fade';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import {
@@ -9,6 +12,7 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -22,6 +26,8 @@ import {
   RefreshControl,
   StyleSheet,
   View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   type TextLayoutEvent,
   type ViewToken,
 } from 'react-native';
@@ -58,7 +64,9 @@ import { useSplitSeparator } from '../../design/selection';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
 import {
+  clearBars,
   filtersItem,
+  glassBar,
   headerItems,
   rootHeaderItems,
 } from '../../navigation/chrome';
@@ -253,6 +261,35 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   );
   const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
   const androidRoot = useAndroidRootScroll(listRef, colors.paper);
+  // The tab root's clear bar: the list fades into the page's ground behind
+  // the title and the bar buttons once rows are under them (the inline
+  // title printed over bill names, iOS 27). A pushed list sits below an
+  // opaque bar, the Duo's rail root under a solid one, and a split pane
+  // keeps its own bar.
+  const headerBottom = useHeaderBottom();
+  const solidBar = useSolidBar();
+  const onRail = useVerticalBarEdge() !== 'unspecified';
+  const fades =
+    clearBars &&
+    Platform.OS === 'ios' &&
+    glassBar() &&
+    !pushed &&
+    !adaptive &&
+    !solidBar &&
+    !onRail;
+  const [underBar, setUnderBar] = useState(false);
+  const barY = useRef<number | null>(null);
+  const checkUnderBar = useCallback(() => {
+    if (barY.current !== null) setUnderBar(barY.current + headerBottom > 1);
+  }, [headerBottom]);
+  useLayoutEffect(checkUnderBar, [checkUnderBar]);
+  const onBarScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      barY.current = event.nativeEvent.contentOffset.y;
+      checkUnderBar();
+    },
+    [checkUnderBar],
+  );
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -570,7 +607,9 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         }
         {...(Platform.OS === 'android'
           ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
-          : {})}
+          : fades
+            ? { onScroll: onBarScroll, scrollEventThrottle: 16 }
+            : {})}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={rows.length ? footer : null}
         ListFooterComponentStyle={styles.footer}
@@ -590,6 +629,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <>
         <RouteOptions options={options} />
         {listView}
+        {fades && underBar ? <BarFade bottom={headerBottom} /> : null}
       </>
     );
   return (

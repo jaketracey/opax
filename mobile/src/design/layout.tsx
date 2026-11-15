@@ -33,6 +33,7 @@ import {
 } from 'react-native';
 import {
   barBacking,
+  clearBars,
   clearBarStyle,
   glassBar,
   opaqueBar,
@@ -49,7 +50,8 @@ import {
   useRailSolidRoot,
 } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
-import { useAccessibilitySize } from './accessibility';
+import { useAccessibilitySize, useSolidBar } from './accessibility';
+import { BarFade } from './bar-fade';
 import {
   columnBreakout,
   columns,
@@ -540,6 +542,18 @@ export function Screen({
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();
+  // Under a clear root bar the page fades into its own ground behind the
+  // bar, from the first point of scroll. A solid bar (the legibility
+  // settings, a rail root's search field) covers its own content.
+  const solidBar = useSolidBar();
+  const barFade =
+    clearBars &&
+    nativeRoot &&
+    underBar &&
+    Platform.OS === 'ios' &&
+    glassBar() &&
+    !solidBar &&
+    !railSolidRoot;
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
   // lays the scroll view out below it: React Native's own sticky header
   // holds at the right place. BarStickyHeader subtracts the bar's height
@@ -763,6 +777,7 @@ export function Screen({
               </SurfaceContext.Provider>
             </RegionProvider>
           </ScrollView>
+          {barFade ? <BarFade bottom={headerBottom} ground={ground} /> : null}
         </PinnedRestContext.Provider>
       </SidebarSafe>
     </StatePageProvider>

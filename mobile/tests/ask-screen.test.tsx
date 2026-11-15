@@ -3261,7 +3261,7 @@ test.each([
   ['Duo outer', 'trailing', 402, 678, false],
   ['vertical iPad bar', 'leading', 402, 678, true],
 ] as const)(
-  'AX5 %s: Ask reports the first scroll point through its RouteOptions owner and returns soft at rest',
+  'AX5 %s: Ask keeps the soft edge and fades into its ground from the first scroll point, clear again at rest',
   async (_device, edge, width, height, pad) => {
     const window = Dimensions.get('window');
     const barEdge = jest
@@ -3325,8 +3325,12 @@ test.each([
       scrollTo(-120);
       scrollTo(-121); // Pulling down is still at rest.
       expect(edges()).toEqual([]);
+      expect(byId('bar-fade')).toHaveLength(0);
       scrollTo(-118); // Before UIKit reports a collapsed header.
-      expect(edges()).toEqual(['hard']);
+      // No panel: the edge never turns hard. The page fades into its own
+      // ground behind the title and the bar buttons instead.
+      expect(edges()).not.toContain('hard');
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
       scrollTo(0);
       await act(async () =>
         view!.update(
@@ -3336,17 +3340,19 @@ test.each([
         ),
       );
       scrollTo(400);
-      expect(edges()).toEqual(['hard']);
+      expect(edges()).not.toContain('hard');
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
       scrollTo(-68);
-      expect(edges()).toEqual(['hard', 'soft']);
+      expect(byId('bar-fade')).toHaveLength(0);
 
       openSavedConversation();
       scrollTo(400);
-      expect(edges().at(-1)).toBe('hard');
+      expect(edges()).not.toContain('hard');
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
       await act(async () => barButton('New question')!.onPress());
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
-      expect(edges().at(-1)).toBe('soft');
+      expect(byId('bar-fade')).toHaveLength(0);
       await act(async () =>
         view!.update(
           withNavigationOptions(page(120), (options) => {
@@ -3355,7 +3361,8 @@ test.each([
         ),
       );
       // A new header height must not re-read the previous thread's offset.
-      expect(edges().at(-1)).toBe('soft');
+      expect(byId('bar-fade')).toHaveLength(0);
+      expect(edges()).not.toContain('hard');
     } finally {
       await act(async () => {
         view?.unmount();
