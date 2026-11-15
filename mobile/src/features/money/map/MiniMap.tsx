@@ -1,6 +1,7 @@
 import { Group, Picture, Rect } from '@shopify/react-native-skia';
 import { useMemo } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { PlainPressable as Pressable } from '../../../design/pressable';
 import { useDerivedValue, type SharedValue } from 'react-native-reanimated';
 import { SizedCanvas } from '../../../design/canvas';
 import { paletteFor } from '../../../design/palette';

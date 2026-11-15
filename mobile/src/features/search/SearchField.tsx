@@ -1,5 +1,6 @@
 import type { RefObject } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Icon } from '../../design/icon';
 import { symbols } from '../../design/symbols';
 import { colors, rhythm, textStyles } from '../../design/tokens';
@@ -42,6 +43,7 @@ export function SearchField({
       />
       {value ? (
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           accessibilityLabel="Clear search"
           onPress={() => {

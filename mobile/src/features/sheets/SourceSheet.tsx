@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import { Alert, Appearance, Pressable, View } from 'react-native';
+import { Alert, Appearance, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { copy } from '../../design/copy';
 import { hasSourcePreview, isE2E, webOrigin } from '../../design/environment';
 import { calendarDate, formatDate, type DateInput } from '../../design/format';

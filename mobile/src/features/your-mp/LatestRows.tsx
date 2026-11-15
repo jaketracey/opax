@@ -1,5 +1,6 @@
 import type { Href } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { billName } from '../../api/bill-transforms';
 import type { BillIndex, PersonProfile } from '../../api/catalogs';
 import { useAccessibilitySize } from '../../design/accessibility';

@@ -4,10 +4,10 @@ import {
   Easing,
   Image,
   Platform,
-  Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { localImageURI } from '../../api/image-policy';
 import { yearPictures } from '../../api/runtime';
 import { yearPictureKey } from '../../api/year-picture-policy';
@@ -142,6 +142,7 @@ export function Picture({
                 {'Photo couldn’t be loaded.'}
               </Text>
               <Pressable
+                feedback="dim"
                 accessibilityRole="button"
                 accessibilityLabel="Try again"
                 onPress={() => setRetry((v) => v + 1)}

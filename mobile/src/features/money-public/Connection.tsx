@@ -1,7 +1,8 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { router, useLocalSearchParams } from 'expo-router';
 import { passageText } from '../../api/passage-text';
 import { catalogs } from '../../api/runtime';
@@ -287,6 +288,7 @@ function Excerpt({ excerpt, index }: { excerpt: ExcerptData; index: number }) {
       {body}
       {long && !open ? (
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           accessibilityLabel={`More, ${publisher(excerpt.source)} excerpt ${index + 1}`}
           hitSlop={MORE_SLOP}

@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../../design/pressable';
 import { haptic } from '../../../design/haptics';
 import { InsetGroup } from '../../../design/layout';
 import {

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { NativeStackNavigationOptions } from 'expo-router';
 import { ContentUnavailable, Text } from '../../design/primitives';
 import { EXTERNAL_GLYPH, Icon } from '../../design/icon';

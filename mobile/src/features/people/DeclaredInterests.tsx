@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { InterestDetail } from '../../api/catalogs';
 import { Disclosure } from '../../design/disclosure';
 import { counted, formatCount, formatDate } from '../../design/format';
@@ -56,6 +57,7 @@ function EntryText({ text }: { text: string }) {
       </Text>
       {long && !open ? (
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           accessibilityLabel="More"
           accessibilityHint="Shows the whole entry"

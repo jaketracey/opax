@@ -6,7 +6,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  Pressable,
   RefreshControl,
   SectionList,
   StyleSheet,
@@ -15,6 +14,7 @@ import {
   type SectionListRenderItemInfo,
   type ViewToken,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { SearchBarCommands } from 'react-native-screens';
 import type { Electorate } from '../../api/catalog-decoders';
 import { ApiError } from '../../api/errors';
@@ -409,6 +409,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
               {[...active, count].join(' · ')}
             </Text>
             <Pressable
+              feedback="dim"
               accessibilityRole="button"
               accessibilityLabel={filtered ? 'Clear filters' : 'Clear search'}
               testID="directory-filter-clear"
@@ -539,12 +540,10 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         onViewableItemsChanged={adaptive ? onViewable : undefined}
         // A row not yet measured: scroll near it; the next step lands on it.
         onScrollToIndexFailed={({ index: at, averageItemLength }) =>
-          listRef.current
-            ?.getScrollResponder()
-            ?.scrollTo({
-              y: averageItemLength * at,
-              animated: animatedScroll(),
-            })
+          listRef.current?.getScrollResponder()?.scrollTo({
+            y: averageItemLength * at,
+            animated: animatedScroll(),
+          })
         }
         ItemSeparatorComponent={separator}
         initialNumToRender={10}

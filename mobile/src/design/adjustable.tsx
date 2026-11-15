@@ -95,6 +95,7 @@ export function Stepper(props: AdjustableProps) {
         importantForAccessibility="no-hide-descendants"
       >
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           accessibilityLabel={`Decrease ${props.label.toLocaleLowerCase('en-AU')}`}
           disabled={props.disabled || props.value <= props.min}
@@ -118,6 +119,7 @@ export function Stepper(props: AdjustableProps) {
           {props.valueLabel ?? String(props.value)}
         </Text>
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           accessibilityLabel={`Increase ${props.label.toLocaleLowerCase('en-AU')}`}
           disabled={props.disabled || props.value >= props.max}

@@ -59,7 +59,7 @@ export function ContextMenu({
         : {}),
   });
   if (Platform.OS === 'android' && children.type === NativePressable)
-    return <Pressable {...trigger.props} />;
+    return <Pressable feedback="none" {...trigger.props} />;
   if (Platform.OS !== 'ios') return trigger;
   return (
     <Host matchContents={{ vertical: true }}>

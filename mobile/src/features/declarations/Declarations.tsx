@@ -4,12 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  Pressable,
   RefreshControl,
   SectionList,
   StyleSheet,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { SearchBarCommands } from 'react-native-screens';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
@@ -212,6 +212,7 @@ export default function Declarations() {
               {[...active, count].join(' · ')}
             </Text>
             <Pressable
+              feedback="dim"
               accessibilityRole="button"
               accessibilityLabel={filtered ? 'Clear filters' : 'Clear search'}
               testID="declarations-filter-clear"

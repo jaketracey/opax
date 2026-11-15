@@ -2,7 +2,8 @@ import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { ApiError } from '../../api/errors';
 import { Button, SegmentedPicker } from '../../design/controls';
 import {
@@ -507,6 +508,7 @@ function AgencyLine({
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {agencyId ? (
         <Pressable
+          feedback="dim"
           accessibilityRole="link"
           accessibilityLabel={agency}
           hitSlop={{ top: 12, bottom: 12, left: 8, right: 8 }}

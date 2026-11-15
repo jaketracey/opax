@@ -1,4 +1,5 @@
-import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/primitives';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { accountCopy } from './copy';

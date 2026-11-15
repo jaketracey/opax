@@ -224,6 +224,7 @@ function MaterialMenuHost() {
         {/* a11y-ok(pressable-role): the tap-outside scrim. The modal menu
             takes TalkBack focus and Back closes it. */}
         <Pressable
+          feedback="none"
           style={StyleSheet.absoluteFill}
           onPress={close}
           accessible={false}
@@ -269,6 +270,7 @@ function MaterialMenuHost() {
             ) : null}
             {current.actions.map((action, index) => (
               <Pressable
+                feedback="dim"
                 ref={index === 0 ? firstItem : undefined}
                 key={`${index}-${action.title}`}
                 accessibilityRole="menuitem"

@@ -9,12 +9,12 @@ import {
   Text as NativeText,
   PanResponder,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { useRead } from '../../api/useRead';
 import {
   useAccessibilitySize,
@@ -100,6 +100,7 @@ function ZoomPage({
       }}
     >
       <Pressable
+        feedback="none"
         accessible
         accessibilityRole="image"
         accessibilityLabel={photo.caption}
@@ -250,6 +251,7 @@ export default function PhotoViewer() {
             ? {
                 headerLeft: () => (
                   <Pressable
+                    feedback="dim"
                     accessibilityRole="button"
                     onPress={close}
                     style={styles.androidDone}
@@ -324,6 +326,7 @@ export default function PhotoViewer() {
               </Text>
               {read.record ? null : (
                 <Pressable
+                  feedback="dim"
                   accessibilityRole="button"
                   onPress={read.retry}
                   style={styles.retry}
@@ -360,6 +363,7 @@ export default function PhotoViewer() {
               {current.caption}
             </Text>
             <Pressable
+              feedback="dim"
               accessibilityRole="button"
               accessibilityLabel={`Photo: ${current.author}, ${current.licence}.`}
               accessibilityHint="Double-tap for the source and licence."

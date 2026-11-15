@@ -1,5 +1,6 @@
 import { symbols } from '../../design/symbols';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { PartyLabel } from '../../design/people';
 import { RowLink } from '../../design/row-link';
@@ -104,6 +105,7 @@ export function SeatRow({
       }
     >
       <Pressable
+        feedback="fill"
         accessible
         accessibilityRole="link"
         accessibilityLabel={ax}
@@ -167,6 +169,7 @@ export function RegionRow({
   return (
     <RowLink href={vicSeatRoute(r.slug)}>
       <Pressable
+        feedback="fill"
         accessible
         accessibilityRole="link"
         accessibilityLabel={`${r.name}. ${names.join(', ')}.`}

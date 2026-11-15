@@ -243,6 +243,7 @@ export function RowLink({
   if (Platform.OS !== 'ios')
     return (
       <Pressable
+        feedback="none"
         {...child.props}
         {...accessibility}
         onPress={open}

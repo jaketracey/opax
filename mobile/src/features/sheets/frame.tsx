@@ -3,12 +3,12 @@ import type { ReactNode } from 'react';
 import { type NativeStackNavigationOptions } from 'expo-router';
 import {
   Platform,
-  Pressable,
   ScrollView,
   View,
   StyleSheet,
   ToastAndroid,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -125,6 +125,7 @@ export function SheetFrame({
     const trailingBar = androidHeaderBar(others);
     const closeButton = (
       <Pressable
+        feedback="dim"
         accessibilityRole="button"
         accessibilityLabel="Done"
         accessibilityHint="Closes this sheet"

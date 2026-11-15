@@ -1,6 +1,7 @@
 import type { Href } from 'expo-router';
 import { useState, type ReactNode } from 'react';
-import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import {
   counted,
   formatMoney,

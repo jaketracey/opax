@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Section, SourceLine, Text } from '../../design/primitives';
 import { counted, formatCount, formatPercent } from '../../design/format';
 import { colors, rhythm } from '../../design/tokens';
@@ -41,6 +42,7 @@ export function TopicTide({
           const share = formatPercent(bar.share * 100);
           return (
             <Pressable
+              feedback="dim"
               key={bar.decade.slug}
               accessibilityRole="button"
               accessibilityLabel={`${bar.decade.label}, ${share} of labelled federal speeches, ${counted(bar.count, 'speech', 'speeches')}`}

@@ -13,12 +13,12 @@ import {
   type ReactNode,
 } from 'react';
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../../design/pressable';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -293,6 +293,7 @@ export function MoneyMapPanel({
     >
       <GestureDetector gesture={drag}>
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Collapse details' : 'Expand details'}
           accessibilityState={{ expanded }}

@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text, useAccessibilitySize } from '../../design/primitives';
 import { colors, rhythm } from '../../design/tokens';
 
@@ -33,6 +34,7 @@ export function FiltersLine({
     <View style={[styles.line, stacked ? styles.stacked : null]}>
       {onPress ? (
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           accessibilityLabel={`Filters: ${text.replace(/ · /g, ', ')}`}
           onPress={onPress}
@@ -52,6 +54,7 @@ export function FiltersLine({
         </View>
       )}
       <Pressable
+        feedback="dim"
         accessibilityRole="button"
         accessibilityLabel="Clear filters"
         hitSlop={8}

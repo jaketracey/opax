@@ -11,12 +11,12 @@ import { useFocusEffect } from 'expo-router';
 import {
   BackHandler,
   Platform,
-  Pressable,
   StyleSheet,
   View,
   useColorScheme,
   type ViewProps,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import {
   Group,
   Heading as NativeHeading,
@@ -206,6 +206,7 @@ export function Disclosure({
       style={[styles.panel, { backgroundColor: palette.sunken }]}
     >
       <Pressable
+        feedback="dim"
         accessibilityRole="button"
         accessibilityLabel={title}
         accessibilityState={{ expanded: state.open }}

@@ -11,11 +11,11 @@ import {
   Alert,
   Keyboard,
   Platform,
-  Pressable,
   RefreshControl,
   StyleSheet,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { webOrigin } from '../../design/environment';
 import { counted, formatCount } from '../../design/format';
 import { useRefreshCommand } from '../../design/keyboard';

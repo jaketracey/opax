@@ -18,13 +18,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  AccessibilityInfo,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { decodeEntities } from '../../api/passage-text';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { IconButton } from '../../design/controls';
@@ -236,6 +231,7 @@ export function AnswerView({
     <View style={styles.answer} testID="ask-answer">
       {selectingText ? (
         <Pressable
+          feedback="dim"
           accessibilityRole="button"
           android_ripple={{ color: colors.dividerSubtle }}
           onPress={toggleTextSelection}

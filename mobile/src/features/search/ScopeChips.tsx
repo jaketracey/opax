@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/text';
 import { colors, rhythm } from '../../design/tokens';
 
@@ -34,6 +35,7 @@ export function ScopeChips<T extends string>({
         const selected = option.value === value;
         return (
           <Pressable
+            feedback="dim"
             key={option.value}
             role="tab"
             accessibilityRole="tab"

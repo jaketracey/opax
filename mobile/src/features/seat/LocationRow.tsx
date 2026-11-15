@@ -3,10 +3,10 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Linking,
-  Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { Electorate } from '../../api/catalogs';
 import { Button } from '../../design/controls';
 import { InsetGroup } from '../../design/layout';

@@ -1,5 +1,6 @@
 import { useRowIsMyMember } from '../your-mp/MyMemberContext';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { router } from 'expo-router';
 import type { Block } from '../../api/catalogs';
 import type { recentDeclarationsFor } from '../../api/selectors';
