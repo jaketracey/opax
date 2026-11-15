@@ -1,3 +1,4 @@
+import { keepCatalog } from './kept-catalogs';
 import { ReadSession } from './read-session';
 import { throwIfAborted } from './abort';
 import { samePartyLabel } from '../design/party';
@@ -590,9 +591,12 @@ export class Catalogs {
     );
   }
   votes(signal?: AbortSignal, refresh = false) {
-    return this.client.get('/votes.json', decode.decodeVotes, refresh, {
-      signal,
-    });
+    return this.client
+      .get('/votes.json', decode.decodeVotes, refresh, { signal })
+      .then((votes) => {
+        keepCatalog('/votes.json', votes.data);
+        return votes;
+      });
   }
   interestIndex(signal?: AbortSignal) {
     return this.client.get(
@@ -619,7 +623,12 @@ export class Catalogs {
     );
   }
   pay(signal?: AbortSignal) {
-    return this.client.get('/pay.json', decode.decodePay, false, { signal });
+    return this.client
+      .get('/pay.json', decode.decodePay, false, { signal })
+      .then((pay) => {
+        keepCatalog('/pay.json', pay.data);
+        return pay;
+      });
   }
   expenses(signal?: AbortSignal) {
     return this.client.get('/expenses.json', decode.decodeExpenses, false, {

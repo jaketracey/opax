@@ -11,7 +11,8 @@ import {
   type LayoutChangeEvent,
   type ScrollView,
 } from 'react-native';
-import type { Electorate } from '../api/catalogs';
+import { profileFor, rosterProfileFor, type Electorate } from '../api/catalogs';
+import { keptCatalogs } from '../api/kept-catalogs';
 import { joinPerson, type PersonProfile } from '../api/person-identity';
 import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
@@ -448,17 +449,22 @@ function releasedIdentity<
     : identity;
 }
 
+/** The catalogs a profile's bones read when they are already in memory. */
+type Kept = ReturnType<typeof keptCatalogs>;
+
 /**
  * The header the page will draw, read from the directory already in memory:
  * its name, lines and identity rows in the page's own words, so the bones
- * hold the same places at every text size. A paid post ("Minister for ...")
- * comes with the pay record and is not known yet. Null (the bones' default,
- * a sitting federal member) when the directory is not read or the slug is
- * not in it.
+ * hold the same places at every text size. With the votes and pay catalogs
+ * in memory too, the figures and a paid post ("Minister for ...") are the
+ * page's own; without them they follow what each parliament's records hold.
+ * Null (the bones' default, a sitting federal member) when the directory is
+ * not read or the slug is not in it.
  */
 export function profileBones(
   slug: string,
   directory: Directory | null,
+  kept: Kept = {},
 ): Omit<ProfileBones, 'yourMP'> | null {
   if (!directory) return null;
   let joined: PersonProfile;
@@ -482,9 +488,49 @@ export function profileBones(
     identity.partyStatus !== 'former'
       ? officialPage(released?.source_url)
       : null;
+  // The page's own selectors over what is in memory; null when they cannot
+  // run, and the rules below stand in.
+  let profile: Pick<ProfileView, 'blocks'> | null = null;
+  if (kept.votes || kept.pay) {
+    const data = {
+      manifest: directory.manifest.data,
+      roster: directory.roster.data,
+      slugs: directory.slugs.data,
+      people: directory.people.data,
+      votes: kept.votes,
+      pay: kept.pay,
+    };
+    try {
+      profile = identity.canonicalPersonId
+        ? profileFor(identity.canonicalPersonId, data)
+        : rosterProfileFor(identity, data);
+    } catch {
+      profile = null;
+    }
+  }
+  const federal = sittingFederal(identity);
+  const parliaments = new Set(
+    [...identity.seats, ...(identity.rosterRow?.representation ?? [])].map(
+      (seat) => seat.jurisdiction,
+    ),
+  );
+  const tiles: ('votes' | 'interests' | 'pay')[] = [];
+  // Divisions are held for the federal, NSW, Victorian and Queensland
+  // parliaments; a member from before the record starts has none.
+  if (
+    profile && kept.votes
+      ? votesCount(profile) !== null
+      : ['federal', 'nsw', 'vic', 'qld'].some((p) => parliaments.has(p))
+  )
+    tiles.push('votes');
+  // Registers of interests are read for sitting federal and Queensland
+  // members.
+  if (!former && (federal || parliaments.has('qld'))) tiles.push('interests');
+  if (profile && kept.pay ? annualPay(profile) !== null : federal)
+    tiles.push('pay');
   return {
     name: identity.name,
-    role: former,
+    role: former ?? (profile && kept.pay ? roleLine(profile, false) : null),
     follow: !!identity.canonicalPersonId,
     rows: [
       ...(identity.party
@@ -502,21 +548,24 @@ export function profileBones(
         kind: 'seat' as const,
         title: seat.title,
         detail: seat.detail,
+        link: !!seat.electorateId,
       })),
       ...(official
         ? [{ kind: 'official' as const, title: official.label }]
         : []),
     ],
-    // Votes, interests and pay for a sitting federal member; a former
-    // member's page keeps the divisions count alone, as one row.
-    tiles: former ? 1 : sittingFederal(identity) ? 3 : 0,
+    tiles,
   };
 }
 
 function PersonSkeleton({ slug, name }: { slug: string; name?: string }) {
   const yourMP = useIsMyMember(slug);
   const directory = savedSeatDirectory();
-  const bones = useMemo(() => profileBones(slug, directory), [slug, directory]);
+  const { votes, pay } = keptCatalogs();
+  const bones = useMemo(
+    () => profileBones(slug, directory, { votes, pay }),
+    [slug, directory, votes, pay],
+  );
   return (
     <Skeleton
       shape="person-profile"

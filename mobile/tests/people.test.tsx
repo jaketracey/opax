@@ -9,6 +9,7 @@ import * as Native from 'react-native';
 import { FlatList, Platform, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
+import { forgetCatalogs, keepCatalog } from '../src/api/kept-catalogs';
 import { ApiError } from '../src/api/errors';
 import { peopleDepth, catalogs as runtime } from '../src/api/runtime';
 import { PadGrid } from '../src/design/adaptive';
@@ -248,6 +249,7 @@ async function wong(element = <Person />) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  forgetCatalogs();
   mockHeaderBottom = 103;
   jest.mocked(useReduceMotion).mockReturnValue(false);
   delete mockParams.section;
@@ -1148,6 +1150,25 @@ describe('profile', () => {
     },
   );
 
+  test('with the pay catalog in memory the bones hold the paid post’s line too', async () => {
+    keepCatalog('/pay.json', catalogs.pay);
+    const { pending, loaded, bones, page } = await pair(held(true, false));
+    expect(page).toContain('role');
+    expect(bones).toEqual(page);
+    // The page's line as it is handed to the text component.
+    expect(words(pending, 'person-loading-role').text).toBe(
+      loaded.root.findAll(
+        (n) =>
+          n.props.testID === 'person-role' &&
+          typeof n.props.children === 'string',
+      )[0]!.props.children,
+    );
+    await act(async () => {
+      pending.unmount();
+      loaded.unmount();
+    });
+  });
+
   test('a former member’s bones hold the dated line the page draws, one figures row and no seat rows', async () => {
     const { pending, loaded, former, bones, page } = await pair(
       held(false, true),
@@ -1180,7 +1201,7 @@ describe('profile', () => {
       name: 'Penny Wong',
       role: null,
       follow: true,
-      tiles: 3,
+      tiles: ['votes', 'interests', 'pay'],
     });
     // No official page is held for her in this release, so no row for it.
     expect(kinds(sitting)).toEqual(['party', 'seat']);
@@ -1190,8 +1211,35 @@ describe('profile', () => {
       'official',
     ]);
     const gone = profileBones('penny-wong', held(false, true));
-    expect(gone).toMatchObject({ tiles: 1 });
+    expect(gone).toMatchObject({ tiles: ['votes'] });
     expect(kinds(gone)).toEqual(['party']);
+    // With the votes catalog in memory the count is the page's own: a
+    // former member from before the record starts has no figures at all.
+    const noRecords = { ...catalogs.votes!, records: {}, names: {} };
+    expect(
+      profileBones('penny-wong', held(false, true), { votes: noRecords }).tiles,
+    ).toEqual([]);
+    expect(
+      profileBones('penny-wong', held(false, true), { votes: catalogs.votes })
+        .tiles,
+    ).toEqual(['votes']);
+    // A state member: divisions are held for NSW, so one figures row, and
+    // none of the federal register or pay tiles.
+    const state = Object.keys(slugs.slugs).find((slug) => {
+      try {
+        const p = c.joinPerson(slug, slugs, roster, people, manifest);
+        return (
+          p.partyStatus !== 'former' &&
+          [...p.seats, ...(p.rosterRow?.representation ?? [])].some(
+            (s) => s.jurisdiction === 'nsw',
+          )
+        );
+      } catch {
+        return false;
+      }
+    });
+    if (!state) throw new Error('fixture: no sitting NSW member');
+    expect(profileBones(state, directory).tiles).toEqual(['votes']);
   });
 
   test.each(['votes', 'interests', 'pay'] as const)(
