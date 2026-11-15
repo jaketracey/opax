@@ -1786,7 +1786,6 @@ const edgeCalls = (navigation: { setOptions: jest.Mock }) =>
     .map(([options]) => options.scrollEdgeEffects?.top)
     .filter(Boolean);
 test.each([
-  ['(today)', 'index'],
   ['(search)', 'search'],
   ['(today)', 'leads'],
   ['(ask)', 'ask'],
@@ -1837,6 +1836,58 @@ test.each([
     }),
 );
 
+// Today's bar has no panel (b76: a frosted paper panel with a hairline once
+// the page scrolled, the card blurred behind the title). The page fades out
+// under the soft edge and UIKit collapses the large title, at every text
+// size: the AX band's solid backing drew over the title at rest (26.3, AX3).
+test.each([
+  ['default', 1],
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+] as const)(
+  'Today at %s text has no panel under its bar, at rest or scrolled',
+  (_size, fontScale) =>
+    withGlass(() => {
+      const window = Dimensions.get('window');
+      const { navigation, ground, page, listeners } = fadePage(
+        'index',
+        '(today)',
+      );
+      const renderer = tree(page(100));
+      const appearance = () =>
+        navigation.setOptions.mock.calls
+          .map(([options]) => options)
+          .filter((options) => 'headerTransparent' in options)
+          .at(-1);
+      try {
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        const clear = expect.objectContaining({
+          ...largeTitleBar(ground),
+          headerLargeTitleEnabled: true,
+        });
+        expect(appearance()).toEqual(clear);
+        expect(appearance().scrollEdgeEffects.top).toBe('soft');
+        scrollTo(renderer, -100);
+        scrollTo(renderer, -98);
+        act(() => renderer.update(page(68)));
+        scrollTo(renderer, 400);
+        expect(appearance()).toEqual(clear);
+        act(() => listeners.get('blur')?.forEach((listener) => listener()));
+        act(() => listeners.get('focus')?.forEach((listener) => listener()));
+        scrollTo(renderer, -68);
+        act(() => renderer.update(page(100)));
+        scrollTo(renderer, -100);
+        expect(appearance()).toEqual(clear);
+        expect(edgeCalls(navigation)).not.toContain('hard');
+        expect(edgeCalls(navigation)).not.toContain('hidden');
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
 test.each([
   ['(your-mp)', 'your-mp'],
   ['(bills)', 'bills'],
@@ -1871,52 +1922,6 @@ test('the accessibility backing keeps the edge hidden under scrolled text', () =
       mockSolidBar = false;
     }
   }));
-
-test.each([
-  ['AX3', 2.643],
-  ['AX5', 3.571],
-])(
-  'Today %s keeps a solid band across scroll, resize and focus',
-  (_size, fontScale) =>
-    withGlass(() => {
-      const window = Dimensions.get('window');
-      const { navigation, page, ground, identifier, listeners } = fadePage(
-        'index',
-        '(today)',
-      );
-      const renderer = tree(page(120));
-      try {
-        expect(RootBar!.setSolid).not.toHaveBeenCalled();
-        act(() => Dimensions.set({ window: { ...window, fontScale } }));
-        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground, true)),
-        );
-        navigation.setOptions.mockClear();
-        scrollTo(renderer, 400);
-        expect(edgeCalls(navigation)).not.toContain('hard');
-        act(() => renderer.update(page(68)));
-        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
-        act(() => listeners.get('blur')!.forEach((listener) => listener()));
-        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
-        jest.mocked(RootBar!.setSolid!).mockClear();
-        act(() => listeners.get('focus')!.forEach((listener) => listener()));
-        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
-        act(() => Dimensions.set({ window }));
-        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground, false, true)),
-        );
-        scrollTo(renderer, -120);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground)),
-        );
-      } finally {
-        act(() => renderer.unmount());
-        act(() => Dimensions.set({ window }));
-      }
-    }),
-);
 
 test.each(
   tabCases
@@ -1970,14 +1975,14 @@ test.each(['leading', 'trailing'] as const)(
       try {
         for (const fontScale of [2.643, 3.571]) {
           act(() => Dimensions.set({ window: { ...window, fontScale } }));
-          // The rail's top edge follows the content: soft at rest, hard
-          // from the first scroll point. AX never makes it solid.
+          // Today's top edge is soft on the rail too, at rest and under
+          // scrolled content. AX never makes it solid.
           expect(navigation.setOptions).toHaveBeenLastCalledWith(
             scrollBar(ground, false, edge, false),
           );
           scrollTo(renderer, 20);
           expect(navigation.setOptions).toHaveBeenLastCalledWith(
-            scrollBar(ground, false, edge, true),
+            scrollBar(ground, false, edge, false),
           );
           scrollTo(renderer, -100);
           expect(navigation.setOptions).toHaveBeenLastCalledWith(
@@ -2633,7 +2638,7 @@ describe('scroll edges on every bar shape', () => {
     ['leading', true],
     ['trailing', true],
   ] as const)(
-    'Today on the %s rail (isPad=%s) leaves the map whole at rest and covers it from the first scroll point',
+    'Today on the %s rail (isPad=%s) keeps the soft edge at rest and under scrolled content',
     (edge, pad) =>
       withGlass(() => {
         const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
@@ -2648,9 +2653,9 @@ describe('scroll edges on every bar shape', () => {
           expect(edgeCalls(navigation)).toEqual([]);
           scrollTo(renderer, -98);
           scrollTo(renderer, 20);
-          expect(edgeCalls(navigation)).toEqual(['hard']);
           scrollTo(renderer, -100);
-          expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
+          expect(edgeCalls(navigation)).not.toContain('hard');
+          expect(new Set(edgeCalls(navigation))).toEqual(new Set(['soft']));
         } finally {
           act(() => renderer.unmount());
           idiom.mockRestore();
