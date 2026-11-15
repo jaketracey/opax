@@ -121,4 +121,7 @@ test('opening all native directories and division history issues only static rea
   } finally {
     replaced.restore();
   }
-});
+  // Six catalogs are read, decoded and joined here: about half a second on
+  // an idle Mac, and past Jest's 5 s default when the gate's machine is
+  // saturated. Nothing in it waits on a clock.
+}, 60_000);
