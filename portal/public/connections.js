@@ -118,7 +118,7 @@ export function mountConnections(root, helpers = {}) {
  query.addEventListener('input',onInput);kind.addEventListener('change',onKind);
  query.value=params.get('q') || '';kind.value=params.get('kind') || '';
  // One copy of the shared animal: the list's loader walks, the starting card's stands still.
- const wombat=import('/wombat.js?v=cb89a88dad').catch(()=>null);
+ const wombat=import('/wombat.js?v=c3af36199d').catch(()=>null);
  status.textContent='Opening the records…';list.replaceChildren();emptyDetail();
  // The shared animal holds the list's place while the index loads; the status line announces it.
  const slot=document.createElement('li');slot.className='connection-loader';slot.setAttribute('aria-hidden','true');list.append(slot);

@@ -278,7 +278,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
   }
   const visibility = () => { if (document.hidden) pause(); };
   const motion = () => { if (reduced.matches) pause(); else render(); };
-  const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries) => { if (!entries.at(-1)?.isIntersecting) pause(); });
+  const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries) => { if (!entries[entries.length - 1]?.isIntersecting) pause(); });
   observer?.observe(stage);
   controls.addEventListener('click', onLens);
   story.addEventListener('click', onAction);

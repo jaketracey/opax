@@ -6,7 +6,7 @@ import {fy} from './money-scope.js';
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=fcb2a1091c';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=26ec61efd8';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=9ce13e7ba5';
 // sponsor-party-aliases:begin
 // Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
@@ -56,7 +56,7 @@ const SPONSOR_PARTY_ALIASES = {
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=fcb2a1091c';
+export * from './labels.js?v=26ec61efd8';
 export * from './canonical-urls.js?v=9ce13e7ba5';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
@@ -228,7 +228,7 @@ function initialsPrint(name, full = false) {
   if (parts.length < 2) return null;
   const given = parts.slice(0, -1);
   if (!full && !given.every(g => /^(?:[A-Z]\.?)+$/.test(g))) return null;
-  return {initial: given[0][0].toUpperCase(), surname: fold(parts.at(-1))};
+  return {initial: given[0][0].toUpperCase(), surname: fold(parts[parts.length - 1])};
 }
 
 /** The label the search index files a party's speeches under, with their count, or null when the
@@ -428,7 +428,7 @@ function combinedNode(nodes) {
   const parts = [...nodes].sort((a, b) => String(a.firstYear || '').localeCompare(String(b.firstYear || '')))
     .map(n => `${n.label} ${Math.round(n.total || 0).toLocaleString('en-AU', {style: 'currency', currency: 'AUD', maximumFractionDigits: 0})}`);
   return {...nodes[0], total: nodes.reduce((a, n) => a + (n.total || 0), 0), count: nodes.reduce((a, n) => a + (n.count || 0), 0),
-    firstYear: years[0], lastYear: years.at(-1), lodgedAs: `Lodged as ${parts.join('; as ')}`};
+    firstYear: years[0], lastYear: years[years.length - 1], lodgedAs: `Lodged as ${parts.join('; as ')}`};
 }
 /** A renamed party's money-map node: the part of its own-return total lodged under each name
  *  (money.json `return_by_name`, {name: [AUD, lines, first year, last year]}), oldest first, as one line:
@@ -454,7 +454,7 @@ export function partyReturns(label, parties, same = (a, b) => identity(a) === id
     const returns = parties[name]?.returns || [];
     if (!returns.length) continue;
     const years = returns.map(r => String(r[0] || '')).filter(Boolean).sort();
-    lodged.push({name, from: years[0], to: years.at(-1)});
+    lodged.push({name, from: years[0], to: years[years.length - 1]});
     for (const r of returns) {
       const year = String(r[0] || '');
       const prev = byYear.get(year);
@@ -509,7 +509,7 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
   const labels = Array.isArray(divisions?.parties) ? divisions.parties : Object.keys(divisions?.parties || {});
   for (const label of labels) add(label, 'divisions', divisions?.generated_at || roster?.meta?.generated);
   // A sponsor's party the bills register records ("Rex Patrick Team"): its page lists the bills.
-  for (const [label, bills] of Object.entries(divisions?.bills || {})) add(label, 'bills', (bills || []).map(b => b.introduced || '').sort().at(-1));
+  for (const [label, bills] of Object.entries(divisions?.bills || {})) add(label, 'bills', (bills || []).map(b => b.introduced || '').sort().slice(-1)[0]);
   return [...parties.values()].map(page => {
     const rename = renameOf(page.label, renames);
     // A renamed party's page carries its current name and address, whatever name the money file held;
@@ -541,8 +541,8 @@ export function resolvePartyPage(segment, pages) {
   const wantSlug = partySlug(segment);
   // A former name's own slug ("liberal-democratic-party") names its party's page: partyUrl now
   // writes the current address, so the raw slug is compared too, and the Worker answers it with a 301.
-  const slugs = label => [partyUrl(label).split('/').at(-1), partySlug(label)];
-  const exact = pages.find(page => page.href.split('/').at(-1) === wantSlug)
+  const slugs = label => [partyUrl(label).split('/').slice(-1)[0], partySlug(label)];
+  const exact = pages.find(page => page.href.split('/').slice(-1)[0] === wantSlug)
     || pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(wantSlug)));
   if (exact) return exact;
   const sponsor = Object.keys(SPONSOR_PARTY_ALIASES).find(label => fold(label) === want || partySlug(label) === wantSlug);

@@ -96,7 +96,7 @@ function recordTemplate(path) {
   return path.replace(/\/+$/, '') || '/';
 }
 export function cleanEvent(event, props = {}) {
-  if (!Object.hasOwn(fields, event)) return null;
+  if (!Object.prototype.hasOwnProperty.call(fields, event)) return null;
   const clean = {};
   for (const key of fields[event]) {
     const value = props[key];

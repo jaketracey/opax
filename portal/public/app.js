@@ -19,7 +19,7 @@ let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLab
 // Until donor-views.js loads: a donor with no figure at all is left out, as hasPartyReceipts leaves out
 // a donor the parties' returns list nothing from (donor-disclosure.js).
 let hasPartyReceipts = (x) => Boolean(x?.total || x?.count), DONOR_DECLARED_ONLY = '', notListedLine = () => DONOR_DECLARED_ONLY;
-const donorHelpersReady = import('/donor-views.js?v=75f497c532').then(module => {
+const donorHelpersReady = import('/donor-views.js?v=a5c3df1f13').then(module => {
   ({displayName:sourceDisplayName,fy,moneyScope,industryName:sharedIndustryName,donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,offMapDonorNote,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
   return module;
 });
@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=76942228e3").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=83352bd82b").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,13 +56,13 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=07eea0e196").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=8959f1acc2").then(module => { growthModules = module; }));
 let registerTables;
-const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
+const registerTablesReady = lazyReady(() => import('/register-tables.js?v=29ce239ec1').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=d4503cc057').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=26ec61efd8').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -81,7 +81,7 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=1ac63b9250').then(module => { heldBackHelpers = module; }));
+const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=d1bb0de663').then(module => { heldBackHelpers = module; }));
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -1144,7 +1144,7 @@ function mountExportMenu(root, onChoose) {
     menu.style.left = alignLeft ? '0' : '';
     menu.style.right = alignLeft ? 'auto' : '';
     trigger.setAttribute('aria-expanded', 'true');
-    (last ? options.at(-1) : options[0]).focus();
+    (last ? options[options.length - 1] : options[0]).focus();
   }
   trigger.addEventListener('click', () => menu.hidden ? open() : close());
   trigger.addEventListener('keydown', event => {
@@ -1383,7 +1383,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
+    const { mountMoneyMap } = await import("/money-map.js?v=cd036583c1");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1442,12 +1442,12 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=9ce0addeb6').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=6b019eaa08').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
   }).catch(() => { if (tableGeneration === contractsTableGeneration) slot.innerHTML = '<p role="alert">The contract records could not be loaded.</p>'; });
-  const category = Object.hasOwn(DISCOVERY_CATEGORIES, params.get("category")) ? params.get("category") : DISCOVERY_DEFAULT;
+  const category = Object.prototype.hasOwnProperty.call(DISCOVERY_CATEGORIES, params.get("category")) ? params.get("category") : DISCOVERY_DEFAULT;
   destroyDiscoveryMap();
   discoverySelected = params.get("item");
   discoveryVisible = 8;
@@ -1597,7 +1597,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=df96077281');
+      const mod = await import('/grants-table.js?v=490754f50c');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1606,7 +1606,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=9eb86ce57b' : '/ledger.js?v=06503ff262');
+    const mod = await import(grants ? '/grants.js?v=2b05e22611' : '/ledger.js?v=ef76b06868');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1637,7 +1637,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=0e937c8404');
+    const mod = await import('/money-explain.js?v=4def92d802');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1656,7 +1656,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=43775fa359');
+    const mod = await import('/grant-recipient.js?v=dd2f208455');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1766,7 +1766,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.classList.remove("show-key");
   root.innerHTML = MAP_DRAWING_HTML;
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=9fd4185a50"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=ca1a4d9f0b"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=cd036583c1"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=0c959b3781"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1909,7 +1909,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=164cd28997");
+    const module = await import("/suppliers.js?v=9159559a1d");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3740,7 +3740,7 @@ let moneyReceiptScope = "";
 let moneyDataPromise = null;
 function loadMoneyData() {
   // Factual profiles and Ask share the uncapped parse. Map mounts load their capped file separately.
-  moneyDataPromise ??= import('/donor-views.js?v=75f497c532').then((module) => Promise.all([module.loadMoneyGraph("/graph/money-receipts.json"), donorViewReady]).then(async ([d]) => {
+  moneyDataPromise ??= import('/donor-views.js?v=a5c3df1f13').then((module) => Promise.all([module.loadMoneyGraph("/graph/money-receipts.json"), donorViewReady]).then(async ([d]) => {
     const {donationGraph} = await import("/money-receipts.js");
     moneyDonationReceipts = donationGraph(d);
     moneyDonationScope = module.receiptGraphScope(moneyDonationReceipts).replace(/^All receipt types/, "Donations only");
@@ -4735,7 +4735,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
+    const { mountMoneyMap } = await import("/money-map.js?v=cd036583c1");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -5621,7 +5621,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=8be817cd12'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e5e6abf013'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -6976,7 +6976,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
     const data = await api(`/api/search?${new URLSearchParams({ q: opts.scope ? '*' : name, speaker: name, page: "1", per: "8", sort: "newest", ...(opts.scope ? { mode: 'keyword' } : {}), ...(opts.unattributed ? { attribution: 'unattributed' } : {}) })}`);
     newest = data.results || [];
     if (opts.scope) newest = newest.filter(r => belongsToScope(r, opts.scope));
-    spanThrough = newest.map((r) => String(r.date || "").slice(0, 10)).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().at(-1) || "";
+    spanThrough = newest.map((r) => String(r.date || "").slice(0, 10)).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().slice(-1)[0] || "";
   } catch {
     latest = false;
     newest = [...fallback].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
@@ -7775,7 +7775,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f9961d152e").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=769549e619").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -10193,8 +10193,8 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=0e937c8404"), loadMoneyFile(jur)]);
-    const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=4def92d802"), loadMoneyFile(jur)]);
+    const { loadDonorViewIndex } = await import("/donor-views.js?v=a5c3df1f13");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
 }
@@ -10209,14 +10209,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=526db913ca", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=215bbbcaee", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=06503ff262", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9eb86ce57b", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=59c0ff5240", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ef76b06868", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=2b05e22611", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ec4ba2c237", mount: "mountThenVsNow" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=691377482b", mount: "mountWordsDollars" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=c70a49333e", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -10380,7 +10380,7 @@ async function showWombat(label) {
   if (!wombat && !wombatLoading) {
     wombatLoading = true;
     try {
-      const mod = await import("/wombat.js?v=cb89a88dad");
+      const mod = await import("/wombat.js?v=c3af36199d");
       if (!$("ask-wombat").hidden) {
         wombat = mod.mountWombat(slot, { label });
       } else {
@@ -10499,7 +10499,7 @@ async function showLoader(slotId, label, opts) {
   const have = loaders.get(slotId);
   if (have) { have.setLabel(label); return; }
   try {
-    const mod = await import("/wombat.js?v=cb89a88dad");
+    const mod = await import("/wombat.js?v=c3af36199d");
     if (loaders.get(slotId)) return;
     loaders.set(slotId, mod.mountWombat(slot, { label, ...(opts || {}) }));
   } catch { /* the status text still carries the state */ }
@@ -11695,7 +11695,7 @@ async function initChat(manageFocus) {
   // The waiting state's pieces, warmed now so a question's first frame does
   // not wait on a module fetch.
   import("/stages.js?v=5a008f79bb").catch(() => {});
-  import("/wombat.js?v=cb89a88dad").catch(() => {});
+  import("/wombat.js?v=c3af36199d").catch(() => {});
   try {
     const raw = sessionStorage.getItem("opax-chat-seed");
     if (raw) {
@@ -12284,7 +12284,7 @@ async function sendChat(question, carry) {
   let reading = [];
   let note = "";
   announce(`${STEP_LABEL.question}.`);
-  import("/wombat.js?v=cb89a88dad")
+  import("/wombat.js?v=c3af36199d")
     .then((mod) => {
       if (!alive()) return;
       trundler = mod.mountWombat(track, { label: "", ...PAGE_LOADER });
@@ -12678,7 +12678,7 @@ function mountSearchSort(root, onChange, label = "Sort matches") {
     menu.style.left = alignLeft ? '0' : '';
     menu.style.right = alignLeft ? 'auto' : '';
     trigger.setAttribute('aria-expanded', 'true');
-    (last ? options.at(-1) : options.find(option => option.dataset.value === input.value) || options[0]).focus();
+    (last ? options[options.length - 1] : options.find(option => option.dataset.value === input.value) || options[0]).focus();
   }
   trigger.addEventListener('click', () => menu.hidden ? open() : close());
   trigger.addEventListener('keydown', event => {
@@ -13192,7 +13192,7 @@ function renderResults(results) {
   $("search-results").replaceChildren(
     ...results.map((r, index) => {
       const li = document.createElement("li");
-      if (Object.hasOwn(r, "href")) {
+      if (Object.prototype.hasOwnProperty.call(r, "href")) {
         // A row whose text a model wrote (a bill's summary) says so with the
         // machine label above that text, not with a phrase in its meta line.
         li.innerHTML = `<div class="ui-row-meta">${r.source_note ? "Source reference" : recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
@@ -15572,7 +15572,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=73ab26c144");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=691377482b");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {
@@ -15582,7 +15582,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
+    const { mountMoneyMap } = await import("/money-map.js?v=cd036583c1");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

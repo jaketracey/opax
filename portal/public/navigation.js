@@ -183,7 +183,7 @@
     const tail = records.filter(r => r && (typeof r === 'string' ? r.trim() : r.label))
       .map(r => typeof r === 'string' ? { label: clip(r) } : { label: clip(r.label), ...(r.href ? { href: r.href } : {}) });
     // A tool opened by its address names itself, wherever the trail is drawn.
-    if (!tail.length && p === '/explore' && Object.hasOwn(tools, params.get('game') || '')) tail.push({ label: tools[params.get('game')] });
+    if (!tail.length && p === '/explore' && Object.prototype.hasOwnProperty.call(tools, params.get('game') || '')) tail.push({ label: tools[params.get('game')] });
     if (at.page && !tail.length) return [...steps, { label: at.page.label }];
     const anchor = at.page || at.section;
     return [...steps, { label: anchor.label, href: anchor.href }, ...tail];

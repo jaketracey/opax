@@ -26,7 +26,7 @@
  * safety: model text and all live data reach the DOM through textContent,
  * never innerHTML.
  */
-import { machineLabelHTML } from './labels.js?v=fcb2a1091c'
+import { machineLabelHTML } from './labels.js?v=26ec61efd8'
 import {personUrl} from './canonical-urls.js?v=9ce13e7ba5';
 import {isMultiSpeaker, isUnattributed, speakerLabel, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
 
@@ -440,7 +440,7 @@ export function mountThenVsNow (container, opts = {}) {
   let compareAbort = null
   let waitTimer = 0
   let wombatModPromise = null
-  const loadWombat = () => (wombatModPromise ??= import('/wombat.js?v=cb89a88dad').catch(() => null))
+  const loadWombat = () => (wombatModPromise ??= import('/wombat.js?v=c3af36199d').catch(() => null))
 
   // ---- static chrome (no live data passes through this template) ----------
   const root = el('section', 'tvn-root')

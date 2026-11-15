@@ -158,7 +158,7 @@ export function partyFormerName(label) {
 export function partyNameForPeriod(label, lastFy) {
   const rename = partyRename(label);
   if (!rename || renameFold(label) !== renameFold(rename.name) || !Number.isInteger(lastFy)) return { name: label, now: null };
-  const former = rename.former.at(-1);
+  const former = rename.former.slice(-1)[0];
   return `${lastFy + 1}-06-30` < rename.since ? { name: former.name, now: rename.name } : { name: label, now: null };
 }
 for (const r of PARTY_RENAMES) for (const f of r.former) for (const name of [f.name, ...(f.aliases || [])]) PARTY_ALIASES[name] = r.code;

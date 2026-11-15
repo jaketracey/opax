@@ -110,7 +110,7 @@ const PARTIES = [['liberal', /liberal/], ['labor', /labor/], ['national', /natio
   ['lnp', /liberal national|lnp/], ['coalition', /liberal|national|lnp/], ['independent', /independent/]];
 function qualifiedAway(before, alias) {
   // A comma closes an appositive ("the previous minister, the member for Greenway"): its qualifier is not this alias's.
-  const clause = before.split(/[.,;:!?\n—–()]/).at(-1);
+  const clause = before.split(/[.,;:!?\n—–()]/).slice(-1)[0];
   const words = clause.trim().split(/\s+/).filter(Boolean).slice(-4).map(w => w.replace(/^[^\p{L}']+|[^\p{L}']+$/gu, ''));
   if (words.some(w => OTHER_HOLDER.has(w) || w.startsWith('ex-')) || FIRST_PERSON.test(words.join(' '))) return true;
   const party = foldMention(alias.party || '');
@@ -126,7 +126,7 @@ function qualifiedAway(before, alias) {
 export function mentionNamesPerson(row, name, { shown = 220, aliases = [] } = {}) {
   const passage = foldMention(String(row?.snippet || '').slice(0, shown));
   const word = phrase => new RegExp(`(^|[^\\p{L}'-])${escapeRegExp(foldMention(phrase))}($|[^\\p{L}])`, 'gu');
-  const surname = foldMention(name).trim().split(/\s+/).at(-1);
+  const surname = foldMention(name).trim().split(/\s+/).slice(-1)[0];
   if (surname && surname.length >= 2 && word(surname).test(passage)) return true;
   const date = /^\d{4}-\d{2}-\d{2}/.exec(String(row?.date || ''))?.[0];
   if (!date) return false;

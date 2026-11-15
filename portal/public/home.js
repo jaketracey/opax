@@ -1,4 +1,4 @@
-import { hydrateCollections, hydrateLatest, hydrateMostDivided, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=6717289dda';
+import { hydrateCollections, hydrateLatest, hydrateMostDivided, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=0b9596bbf8';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -421,7 +421,7 @@ async function mount() {
     $("hp-map-source").innerHTML = mapSourceHTML(graph.meta, await refreshInfo());
     // The lede's span is the Worker's (seo-content.ts homeMapSpan): the receipt headline's years, not the file's coverage.
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=9fd4185a50"
+      "/money-map.js?v=cd036583c1"
     );
     if (disposed) return;
     root.replaceChildren();
@@ -473,7 +473,7 @@ async function mount() {
 }
 const observer = new IntersectionObserver(
   (entries) => {
-    visible = entries.at(-1).isIntersecting;
+    visible = entries[entries.length - 1].isIntersecting;
     if (visible) mount();
     pause();
   },

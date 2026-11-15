@@ -31,7 +31,7 @@ export function yearCoverage(periods, year, { financial = false } = {}) {
   const runs = []
   expected.forEach((id, i) => {
     if (!held.has(id)) return
-    const last = runs.at(-1)
+    const last = runs[runs.length - 1]
     if (last && last.end === i - 1) last.end = i
     else runs.push({ start: i, end: i })
   })
@@ -40,6 +40,6 @@ export function yearCoverage(periods, year, { financial = false } = {}) {
     const a = part(expected[run.start]), b = part(expected[run.end])
     return a.year === b.year ? `${FIRST[a.q]} to ${LAST[b.q]} ${b.year}` : `${FIRST[a.q]} ${a.year} to ${LAST[b.q]} ${b.year}`
   })
-  const span = spans.length > 1 ? `${spans.slice(0, -1).join(', ')} and ${spans.at(-1)}` : spans[0]
+  const span = spans.length > 1 ? `${spans.slice(0, -1).join(', ')} and ${spans[spans.length - 1]}` : spans[0]
   return { quarters, complete, text: `${span} (${COUNT[quarters.length]} quarter${quarters.length === 1 ? '' : 's'} published)` }
 }

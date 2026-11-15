@@ -1,8 +1,8 @@
 import {industryName} from './money-scope.js';
-import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=d28448a137';
+import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=ddbd183486';
 import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
-import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
+import { sourceLineHTML } from './labels.js?v=26ec61efd8';
 /**
  * OPAX Ledger — an analyst-grade table over the donor→party money flows.
  *
@@ -221,11 +221,11 @@ export function parseLedgerParams (params, data) {
     if (p.getAll(key).length > 1) return { ok: false, error: 'This link contains more than one selection for the same filter. Clear filters to choose a new selection.' }
   }
   const jur = p.get('jur') || 'federal'
-  if (!Object.hasOwn(JURISDICTIONS, jur)) return { ok: false, error: 'Unknown jurisdiction. Clear filters, then choose Federal, Queensland, Victoria or Tasmania.' }
+  if (!Object.prototype.hasOwnProperty.call(JURISDICTIONS, jur)) return { ok: false, error: 'Unknown jurisdiction. Clear filters, then choose Federal, Queensland, Victoria or Tasmania.' }
   const type = p.get('type')
   if (type && type !== 'receipts') return { ok: false, error: 'This link asks for an unsupported kind of record. This list shows political receipts. Clear filters to start again.' }
   const view = p.get('view') || 'flows'
-  if (!Object.hasOwn(COLUMNS, view)) return { ok: false, error: 'This link uses an unsupported view. Clear filters to start again.' }
+  if (!Object.prototype.hasOwnProperty.call(COLUMNS, view)) return { ok: false, error: 'This link uses an unsupported view. Clear filters to start again.' }
   const sort = p.get('sort') || 'total', dir = p.get('dir') || 'desc'
   if (!COLUMNS[view].some((c) => c.key === sort) || !['asc', 'desc'].includes(dir)) return { ok: false, error: 'This link uses unsupported sorting. Clear filters to start again.' }
   const presentation = { view, sort: { key: sort, dir } }
@@ -495,7 +495,7 @@ export function mountLedger (container, opts = {}) {
   const routeJur = routeParams.get('jur')
 
   const state = {
-    jur: Object.hasOwn(JURISDICTIONS, routeJur) ? routeJur : (Object.hasOwn(JURISDICTIONS, opts.jurisdiction) ? opts.jurisdiction : 'federal'),
+    jur: Object.prototype.hasOwnProperty.call(JURISDICTIONS, routeJur) ? routeJur : (Object.prototype.hasOwnProperty.call(JURISDICTIONS, opts.jurisdiction) ? opts.jurisdiction : 'federal'),
     view: 'flows',                 // 'flows' | 'donors'
     q: '',
     industry: '',
@@ -1062,7 +1062,7 @@ export function mountLedger (container, opts = {}) {
 
   async function load (jur = state.jur) {
     const previousJur = state.jur
-    state.jur = Object.hasOwn(JURISDICTIONS, jur) ? jur : 'federal'
+    state.jur = Object.prototype.hasOwnProperty.call(JURISDICTIONS, jur) ? jur : 'federal'
     const switchedJurisdiction = previousJur !== state.jur
     jurEl.value = state.jur
     const token = ++loadSeq

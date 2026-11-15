@@ -1,9 +1,9 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=d86685a921';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=05186fc3d9';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=fcb2a1091c';
+import {statusLabelHTML} from './labels.js?v=26ec61efd8';
 import {divisionPlain} from './division-markdown.js?v=9914870fea';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -176,7 +176,7 @@ const LIMITATION = /^limitation of debate$/i;
 const PROCEDURE = /^(?:business(?: motions?)?(?: - .*)?|rearrangement(?: of business)?|suspension of (?:standing|sessional|standing and sessional) orders|declaration of urgency|closure(?: of debate)?|adjournment|motion to adjourn)$/i;
 export function divisionKind(division) {
   const labels = [String(division?.stage || '').replace(/_/g, ' ').trim(), headingTitle(division?.title || division?.name || '')]
-    .flatMap(label => [label, label.split(/;\s*/).at(-1)]).filter(Boolean);
+    .flatMap(label => [label, label.split(/;\s*/).slice(-1)[0]]).filter(Boolean);
   if (labels.some(label => LIMITATION.test(label))) return 'limitation';
   if (labels.some(label => PROCEDURE.test(label))) return 'procedure';
   return 'bill';
@@ -209,7 +209,7 @@ export function divisionGroupSentences(rows = [], kind = 'limitation') {
   }
   return [...byChamber].map(([chamber, list]) => {
     const dates = [...new Set(list.map(row => row.date).filter(Boolean))].sort();
-    const when = !dates.length ? '' : dates.length === 1 ? `On ${shortDate(dates[0])} ` : `Between ${shortDate(dates[0])} and ${shortDate(dates.at(-1))} `;
+    const when = !dates.length ? '' : dates.length === 1 ? `On ${shortDate(dates[0])} ` : `Between ${shortDate(dates[0])} and ${shortDate(dates[dates.length - 1])} `;
     const who = theChamber(chamber);
     const head = `${when}${when ? who : who[0].toUpperCase() + who.slice(1)} voted ${list.length === 1 ? 'once' : `${list.length.toLocaleString('en-AU')} times`} ${group.phrase}`;
     const agreed = list.filter(row => row.outcome === 'Agreed').length, not = list.filter(row => row.outcome === 'Not agreed').length;

@@ -17,11 +17,11 @@ const members = value => [...new Set((Array.isArray(value) ? value : [value]).fi
 const pageQueries = new WeakMap();
 // The table's own loader: the shared animal (wombat.js) in the table body. Held as
 // a variable so the Worker's bundler leaves the browser-only import alone.
-const LOADER_MODULE = '/wombat.js?v=cb89a88dad';
+const LOADER_MODULE = '/wombat.js?v=c3af36199d';
 let loaderModule;
 const facetMembers = (row,column) => column?.facetValues ? members(column.facetValues(row)) : members(row[column.key]);
 const prefix = key => key ? `${key}.` : '';
-const own = (object, key) => Object.hasOwn(object, key);
+const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
 const recognised = (key,config) => {
   const base=prefix(config.urlKey);
   return ['q','sort','page','pageSize'].some(name=>key === base+name) || config.columns.some(c=>c.facet && key === `${base}f.${c.key}`);

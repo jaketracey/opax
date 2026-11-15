@@ -34,7 +34,7 @@ const words = (s) => String(s ?? '').normalize('NFKD').replace(/[\u0300-\u036f]/
  */
 export function personVideos(videos, slug, person = null) {
   const pid = person?.pid ? String(person.pid) : '';
-  const surname = words(person?.full || person?.name).at(-1) || '';
+  const surname = words(person?.full || person?.name).slice(-1)[0] || '';
   return (videos || []).filter((v) => v?.kind === 'first_speech' && VIDEO_ID.test(v.id) && (
     (!!slug && v.person_slug === slug) ||
     (!!pid && !!surname && v.person_pid != null && String(v.person_pid) === pid && words(v.title).includes(surname))));
