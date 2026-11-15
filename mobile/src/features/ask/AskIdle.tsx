@@ -354,7 +354,7 @@ const centredWords = (() => {
 
 const MARK = 96;
 const MARK_SCALE = 1.5;
-/** How far past its threshold the room must be before the mark changes. */
+/** The room to spare, past a bare fit, before a hidden mark is shown. */
 const MARK_SLACK = 1;
 
 /**
@@ -425,8 +425,9 @@ export function AskEmptyState({
   // The mark is shown while there is room for it under the words. Showing
   // or hiding it recentres the words, which can move their measured height
   // by a pixel; within a point of the threshold that would flip the mark
-  // back, and so on without end. So once it is shown or hidden it changes
-  // again only when the room is at least `MARK_SLACK` past the threshold.
+  // back, and so on without end. So the band is one-sided: the mark goes
+  // as soon as it no longer fits, so it never overruns its room, and comes
+  // back only when there is at least `MARK_SLACK` to spare.
   const [markOn, setMarkOn] = useState<boolean | null>(null);
   const spare = measured ? room - words - mark : null;
   const markNext =
@@ -435,7 +436,7 @@ export function AskEmptyState({
       : markOn === null
         ? spare >= 0
         : markOn
-          ? spare >= -MARK_SLACK
+          ? spare >= 0
           : spare >= MARK_SLACK;
   if (markNext !== markOn) setMarkOn(markNext);
   const markFits = markNext === true;

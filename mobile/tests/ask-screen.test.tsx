@@ -3425,6 +3425,46 @@ describe('the docked conversation column with nothing asked', () => {
     }
   });
 
+  test('a shown mark goes as soon as it no longer fits: half a point short hides it, so it never overruns its room', async () => {
+    // A first measurement shows the mark exactly when it fits, so fresh
+    // mounts find the tallest words (to half a point) it still fits beside.
+    const fitsFresh = async (words: number) => {
+      let shown = false;
+      await at(1194, 834, pad, true, async () => {
+        await mount();
+        await layOut(834, 90, words);
+        shown = hosts('ask-empty-mark').length > 0;
+      });
+      return shown;
+    };
+    let fits = 100;
+    let over = 744;
+    expect(await fitsFresh(fits)).toBe(true);
+    expect(await fitsFresh(over)).toBe(false);
+    while (over - fits > 0.5) {
+      const mid = Math.round(fits + over) / 2;
+      if (await fitsFresh(mid)) fits = mid;
+      else over = mid;
+    }
+    expect(over - fits).toBe(0.5);
+    await at(1194, 834, pad, true, async () => {
+      await mount();
+      const markShown = () => hosts('ask-empty-mark').length > 0;
+      // It just fits: shown.
+      await layOut(834, 90, fits);
+      expect(markShown()).toBe(true);
+      // Half a point more and it does not: hidden at once.
+      await layOut(834, 90, over);
+      expect(markShown()).toBe(false);
+      // Back to a bare fit is not room to spare: it stays hidden.
+      await layOut(834, 90, fits);
+      expect(markShown()).toBe(false);
+      // A point to spare brings it back.
+      await layOut(834, 90, fits - 1);
+      expect(markShown()).toBe(true);
+    });
+  });
+
   test('the mark holds within a point of its threshold: heights half a point apart there change it once, not every time', async () => {
     await at(1194, 834, pad, true, async () => {
       await mount();
