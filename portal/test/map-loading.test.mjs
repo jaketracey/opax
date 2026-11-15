@@ -172,7 +172,8 @@ test('a person boots in the header shape: the head shows, the summary and the re
   assert.equal(shown(doc.querySelector('#prerender > .subject-head')), true);
   assert.deepEqual([...doc.querySelectorAll('#prerender > :not(.subject-head)')].map(shown), [false, false]);
   assert.equal(win.getComputedStyle(doc.getElementById('main')).paddingTop, '0px');
-  assert.equal(win.getComputedStyle(doc.querySelector('.subject-portrait')).marginTop, '0px');
+  // The portrait keeps the small margin the routed page gives it under the crumb line (nav.css).
+  assert.equal(win.getComputedStyle(doc.querySelector('.subject-portrait')).marginTop, 'var(--sp-8)');
   // Wider screens keep the boot padding and lay the head out as the app's grid.
   const wide = boot('/subject/person/someone', personHead, 1440);
   assert.notEqual(wide.getComputedStyle(wide.document.getElementById('main')).paddingTop, '0px');

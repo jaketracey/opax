@@ -13,7 +13,7 @@
     "deploy": "npm run build:release && npm run deploy:built",
     "types": "wrangler types",
     "typecheck": "tsc --noEmit",
-    "check": "wrangler types && tsc --noEmit && node ../scripts/build_tokens.mjs --check --only web,docs && node ../scripts/stamp_assets.mjs --check && node ../scripts/build_donor_index.mjs --check && node ../scripts/build_report_sources.mjs --check && node ../scripts/build_ask_statute_titles.mjs --check",
+    "check": "wrangler types && tsc --noEmit && node ../scripts/build_tokens.mjs --check --only web,docs && node ../scripts/build_universal_links.mjs --check && node ../scripts/stamp_assets.mjs --check && node ../scripts/build_donor_index.mjs --check && node ../scripts/build_report_sources.mjs --check && node ../scripts/build_ask_statute_titles.mjs --check",
     "build:analytics": "node analytics/build.mjs",
     "deploy:staging": "npm run build:release:staging && wrangler deploy --env staging",
     "build:tokens": "node ../scripts/build_tokens.mjs --only web,docs",
