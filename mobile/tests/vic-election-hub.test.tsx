@@ -645,9 +645,13 @@ test.each([
 // accessibility sizes its placeholder is the shorter one.
 test.each([
   ['the default text size', 1, 'Suburb, postcode or district'],
-  ['AX1', 1.786, 'Suburb or postcode'],
-  ['AX3', 2.353, 'Suburb or postcode'],
-  ['AX5', 3.12, 'Suburb or postcode'],
+  // The first accessibility size, the two the sweeps capture, and two
+  // scales between and below them.
+  ['AX1 (1.786)', 1.786, 'Suburb or postcode'],
+  ['a scale of 2.353', 2.353, 'Suburb or postcode'],
+  ['AX3 (2.643)', 2.643, 'Suburb or postcode'],
+  ['a scale of 3.12', 3.12, 'Suburb or postcode'],
+  ['AX5 (3.571)', 3.571, 'Suburb or postcode'],
 ] as const)(
   'the search field’s placeholder at %s',
   async (_size, fontScale, placeholder) => {
