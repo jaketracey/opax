@@ -816,11 +816,15 @@ script and `gate_hold.txt` are read after the sync and need no restart. `test_ni
 **Why a step failed, from the status.** When the daily or periodic refresh reports failed steps, `status.json` carries
 `failed_step_logs`: for each failed step, the end of `pipeline/<step>.log` (`scripts/vm/step_tails.py`; on 16 Nov 2026
 the status said `ipea (rc=1)` and nothing else, and the log is only on the box). The status branch is public, so the
-tail is treated as published: at most 15 lines and 2 KB per step, failed steps only; every value in `.env` and
-`nightly.env` and every credential-named environment variable is replaced, raw and URL-encoded; then anything shaped
+tail is treated as published: at most 15 lines and 2 KB per step, failed steps only; every value `.env` and
+`nightly.env` give a step (bash sources them in a clean shell and its environment is read, so quotes, comments and
+`export` mean what they mean to the steps) and every credential-named environment variable is replaced, raw and
+percent-encoded; then anything shaped
 like a secret is masked (authorisation headers, `key=value` secrets, URL credentials and query strings, email and IP
 addresses, home directories, long hex or base64 runs). It errs towards masking: a commit hash goes too. A tail that
-cannot be made is left out and never costs the night its status. `scripts/vm/test_step_tails.py` and `test_nightly.sh`
+cannot be made is left out and never costs the night its status. The status itself is built beside
+`nightly-last.json` and moved over it: if it cannot be built with the tails it is built without them, and failing that
+a short `failed` status says the status could not be built. Last night's file is never published again. `scripts/vm/test_step_tails.py` and `test_nightly.sh`
 section 3b (a step that prints every credential it can see) cover it.
 
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files

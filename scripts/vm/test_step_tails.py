@@ -5,9 +5,11 @@
 """
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 import urllib.parse
 from pathlib import Path
@@ -87,6 +89,107 @@ class Redaction(unittest.TestCase):
     def test_control_characters_and_long_lines_are_cut(self):
         self.assertNotIn("\x1b", self.red("\x1b[31mred\x1b[0m"))
         self.assertLessEqual(len(self.red("word " * 200)), st.MAX_LINE + len(" [cut]"))
+
+
+class ReviewFindings(unittest.TestCase):
+    """One test per finding of the 16 Nov 2026 review; every value here is made up."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.tmp = Path(self._tmp.name)
+
+    def test_p2a_an_env_file_value_with_quotes_and_a_trailing_comment_is_learned_as_bash_reads_it(self):
+        env = self.tmp / ".env"
+        env.write_text('TVFY_API_KEY="Wb7Nc3Kd9Fq2" # tvfy\nexport OA_ALT=Zx9Qw8Er7Ty6   # the spare\n'
+                       "SINGLE='Qp4Lm8Rs2Vt6'#x\nBARE=Hd5Jk9Nx3Bz7\n")
+        secrets = st.known_secrets({}, [env])
+        for value in ("Wb7Nc3Kd9Fq2", "Zx9Qw8Er7Ty6", "Qp4Lm8Rs2Vt6", "Hd5Jk9Nx3Bz7"):
+            self.assertIn(value, secrets)
+        # shapes pass 2 does not know: only the learned value can mask these
+        for line in ("retrying with Wb7Nc3Kd9Fq2 after 2 s", "sent [Zx9Qw8Er7Ty6]", "got Qp4Lm8Rs2Vt6."):
+            self.assertNotRegex(st.redact(line, secrets), r"Wb7Nc3Kd9Fq2|Zx9Qw8Er7Ty6|Qp4Lm8Rs2Vt6", line)
+
+    def test_p2a_the_environment_bash_dumped_is_taken_whole(self):
+        dump = self.tmp / "env0"
+        dump.write_bytes(b"TVFY_API_KEY=Wb7Nc3Kd9Fq2\0MULTI=first line\nSecond9Line7x\0PATH=/usr/bin:/bin\0HOME=/home/ubuntu\0SHLVL=1\0")
+        secrets = st.known_secrets({}, [], [dump])
+        self.assertIn("Wb7Nc3Kd9Fq2", secrets)
+        self.assertIn("first line\nSecond9Line7x", secrets)
+        self.assertNotIn("/usr/bin:/bin", secrets)
+        self.assertNotIn("/home/ubuntu", secrets)
+        self.assertEqual(st.known_secrets({}, [], [self.tmp / "missing"]), [])
+
+    def test_p2a_a_quoted_or_bare_value_after_a_secret_name_is_masked_without_knowing_it(self):
+        for line, leak in {
+            "TvfyClient(api_key='Wb7Nc3Kd9Fq2')": "Wb7Nc3Kd9Fq2",
+            'client(token="Wb7Nc3Kd9Fq2", retries=3)': "Wb7Nc3Kd9Fq2",
+            "invalid key Wb7Nc3Kd9Fq2": "Wb7Nc3Kd9Fq2",
+            "bad token Wb7Nc3Kd9Fq2 for the request": "Wb7Nc3Kd9Fq2",
+            "secret=ab,cd;ef&gh9 next": "cd;ef",
+            "password: 'two words, and; more&' tail": "more",
+            '{"api_key": "Wb7Nc3Kd9Fq2"}': "Wb7Nc3Kd9Fq2",
+        }.items():
+            self.assertNotIn(leak, st.redact(line, []), line)
+        for line in ("KeyError: 'result'", "the key steps are done", "token count 12", "keys: none found"):
+            self.assertEqual(st.redact(line, []), line)
+
+    def test_p3_every_usual_percent_encoding_of_a_known_value_is_replaced(self):
+        value = "wJalrXUtnFEMI/K7MDENG+bPxRfiCYzOPAXSECRET9"
+        secrets = st.known_secrets({"X_SECRET": value}, [])
+        quoted = {urllib.parse.quote(value, safe=""), urllib.parse.quote(value), urllib.parse.quote_plus(value)}
+        lowered = {st.re.sub(r"%[0-9A-F]{2}", lambda m: m.group(0).lower(), q) for q in quoted}
+        for form in quoted | lowered | {value.replace("+", " ")}:
+            out = st.redact(f"got <{form}> back", secrets)
+            self.assertEqual(out, "got <[redacted]> back", form)
+
+    def test_p3_a_password_holding_an_at_sign_leaves_no_tail_in_a_url(self):
+        out = st.redact("proxy https://svc:p@ss@w0rd9Zx@proxy.example.gov.au/v1 refused", [])
+        self.assertEqual(out, "proxy https://[redacted]@proxy.example.gov.au/v1 refused")
+
+    def test_p3_a_bare_aws_access_key_id_is_masked(self):
+        for key in ("AKIAIOSFODNN7OPAXKEY", "ASIAIOSFODNN7OPAXKEY"):
+            self.assertEqual(st.redact(f"signing with {key} as the id", []), "signing with [redacted] as the id")
+        self.assertEqual(st.redact("AKIAVALON is a word", []), "AKIAVALON is a word")
+
+    def test_p3_only_a_regular_file_is_read_and_never_more_than_the_limit(self):
+        pipe = self.tmp / "pipeline"
+        pipe.mkdir()
+        outside = self.tmp / "outside.txt"
+        outside.write_text("not a step log\n")
+        (pipe / "linked.log").symlink_to(outside)
+        (pipe / "zero.log").symlink_to("/dev/zero")
+        (pipe / "dir.log").mkdir()
+        os.mkfifo(pipe / "fifo.log")
+        (pipe / "real.log").write_text("a real line\n")
+        started = time.monotonic()
+        out = st.step_tails(pipe, ["linked", "zero", "dir", "fifo", "real"], {}, [])
+        self.assertLess(time.monotonic() - started, 5)
+        self.assertEqual(out, {"real": ["a real line"]})
+
+    def test_p2b_many_failed_steps_stay_small_and_say_what_was_left_out(self):
+        pipe = self.tmp / "pipeline"
+        pipe.mkdir()
+        names = [f"step{i}" for i in range(70)]
+        for name in names:
+            (pipe / f"{name}.log").write_text("".join("議会の記録 " * 22 + f"line {i}\n" for i in range(40)))
+        out = st.step_tails(pipe, names, {}, [])
+        self.assertLessEqual(len(json.dumps(out)), st.MAX_TOTAL + 200)
+        self.assertLessEqual(len(out) - 1, st.MAX_STEPS)
+        shown = len(out) - 1
+        self.assertEqual(out["_omitted"], [f"{70 - shown} more failed step(s) not shown"])
+        self.assertIn("step0", out)
+
+    def test_p2b_the_tails_go_to_a_private_file(self):
+        pipe = self.tmp / "pipeline"
+        pipe.mkdir()
+        (pipe / "ipea.log").write_text("boom\n")
+        out = self.tmp / "tails.json"
+        proc = subprocess.run([sys.executable, str(SCRIPT), "--pipe", str(pipe), "--out", str(out), "ipea"],
+                              capture_output=True, text=True)
+        self.assertEqual((proc.returncode, proc.stdout), (0, ""))
+        self.assertEqual(json.loads(out.read_text()), {"ipea": ["boom"]})
+        self.assertEqual(out.stat().st_mode & 0o777, 0o600)
 
 
 class Tails(unittest.TestCase):
