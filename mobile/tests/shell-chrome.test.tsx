@@ -2119,7 +2119,7 @@ test.each([41, 52, 85])(
 );
 
 test.each(tabCases)(
-  '%s %s keeps a solid accessibility backing across scroll and focus',
+  '%s %s has a solid accessibility backing once scrolled, across scroll and focus; at rest its large title is left uncovered',
   (segment, name) =>
     withGlass(() => {
       mockSolidBar = true;
@@ -2135,9 +2135,33 @@ test.each(tabCases)(
             headerLargeTitleEnabled: true,
           }),
         );
+        // A root whose scrolling view reports where it is (a Screen) has
+        // no backing at rest: the backing sits over the page, where UIKit
+        // draws the expanded large title, and covered it (RT27-title).
+        // Scrolled under the bar, the backing is there.
+        const reports = renderer.root.findAllByType(ScrollView).length > 0;
+        if (reports) {
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+          // (useHeaderBottom's measured bar in this suite is 100.)
+          scrollTo(renderer, -100);
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+          scrollTo(renderer, -98);
+          expect(RootBar!.setSolid).toHaveBeenLastCalledWith(
+            identifier,
+            ground,
+          );
+          // Back at rest the backing goes, and the title shows again.
+          jest.mocked(RootBar!.remove).mockClear();
+          scrollTo(renderer, -100);
+          expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+          jest.mocked(RootBar!.remove).mockClear();
+          jest.mocked(RootBar!.setSolid!).mockClear();
+          scrollTo(renderer, 40);
+        }
+        // A root that does not report keeps the backing throughout.
         expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
         // A Screen -> child RouteOptions ownership transfer must never clear
-        // the backing while mounted, including before the first scroll.
+        // the backing while mounted.
         expect(RootBar!.remove).not.toHaveBeenCalled();
         navigation.setOptions.mockClear();
         for (const height of [100, 68, 120, 144]) {
@@ -2161,9 +2185,15 @@ test.each(tabCases)(
         mockSolidBar = false;
         act(() => renderer.update(page(100)));
         expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground)),
+        // The clear bar again; a scrolled page may have its hard edge.
+        const cleared = navigation.setOptions.mock.calls.at(-1)![0];
+        expect(cleared).toEqual(
+          expect.objectContaining({
+            ...largeTitleBar(ground),
+            scrollEdgeEffects: expect.anything(),
+          }),
         );
+        expect(cleared.scrollEdgeEffects.top).not.toBe('hidden');
         jest.mocked(RootBar!.remove).mockClear();
         jest.mocked(RootBar!.setSolid!).mockClear();
         mockSolidBar = true;
@@ -2228,6 +2258,9 @@ test.each(searchOwnerCases)(
       const { page, navigation } = searchOwnerPage(split);
       const renderer = tree(page(120));
       try {
+        // At rest the large title is left uncovered: no backing yet.
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        scrollTo(renderer, 40);
         expectSolidSearch(navigation, split);
         act(() => renderer.update(page(68)));
         expectSolidSearch(navigation, split);
@@ -2245,12 +2278,15 @@ test.each(searchOwnerCases)(
       const { page, navigation } = searchOwnerPage(split);
       const renderer = tree(page(68));
       try {
+        scrollTo(renderer, 40);
         mockSolidBar = true;
         act(() => renderer.update(page(68)));
         expectSolidSearch(navigation, split);
         // Results change the ground without changing appearance ownership.
         act(() => renderer.update(page(68, false)));
         expectSolidSearch(navigation, split, colors.paper);
+        // Back at rest, then the setting goes off: the soft clear bar.
+        scrollTo(renderer, -100);
         mockSolidBar = false;
         act(() => renderer.update(page(68, false)));
         expect(navigation.setOptions).toHaveBeenLastCalledWith(
@@ -2279,6 +2315,7 @@ test.each(searchOwnerCases)(
       const { page, navigation, listeners } = searchOwnerPage(split);
       const renderer = tree(page(68));
       try {
+        scrollTo(renderer, 40);
         navigation.isFocused.mockReturnValue(false);
         act(() => listeners.get('blur')?.forEach((listener) => listener()));
         jest.mocked(RootBar!.remove).mockClear();
@@ -2306,6 +2343,8 @@ test('the solid fallback follows a resize even if header height stays the same',
     );
     const renderer = tree(page(68));
     try {
+      // The backing is there once the page has scrolled under the bar.
+      scrollTo(renderer, 40);
       navigation.setOptions.mockClear();
       jest.mocked(RootBar!.setSolid!).mockClear();
       act(() =>

@@ -30,6 +30,7 @@ import { useOffline } from '../../api/useOffline';
 import {
   useAccessibilitySize,
   useReduceMotion,
+  useSolidBar,
 } from '../../design/accessibility';
 import {
   RegionProvider,
@@ -45,6 +46,7 @@ import { useScreenColumn } from '../../design/layout';
 import { SurfaceContext } from '../../design/row-padding';
 import { colors, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { scrollToTop } from '../../design/scroll-to-top';
 import { askHeaderItems, clearBars, glassBar } from '../../navigation/chrome';
 import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
@@ -155,7 +157,26 @@ export default function AskScreen() {
   // The sources pane joins at the split breakpoint, as every split does.
   const docked =
     adaptive && splitAllowed(room?.width ?? outer.width, outer.rule);
-  const headerBottom = useHeaderBottom(!idle && !docked);
+  const measuredBottom = useHeaderBottom(!idle && !docked);
+  // With Reduce Transparency or Increase Contrast on, a root's bar without
+  // a large title is opaque (`scrollBar`), and the stack lays the page out
+  // below it: the scroll view starts at the bar's bottom edge, not under
+  // the bar. Offsets that allowed for the bar then put content short by its
+  // height. An opened thread's inset took the "hidden band" off a page
+  // with no band, so the question's top was cut by the bar (iOS 27.0), and
+  // a new question was pinned a bar's height down the page (26.3). There
+  // the bar takes no room in the scroll view: 0, not its height.
+  const tabRoot = useTabRootRoute();
+  const solidBar = useSolidBar();
+  const onRail = useVerticalBarEdge() !== 'unspecified';
+  const largeTitle = idle && (!docked || outer.rule !== 'pad');
+  const belowBar =
+    Platform.OS === 'ios' &&
+    glassBar() &&
+    tabRoot &&
+    solidBar &&
+    (onRail || !largeTitle);
+  const headerBottom = belowBar ? 0 : measuredBottom;
   // iPhone, once a thread is open: the bar shows its inline title, but UIKit
   // keeps the bar's large-title frame, so the automatic top inset kept the
   // hidden large-title band and the question sat about 70 pt under the bar
@@ -164,7 +185,9 @@ export default function AskScreen() {
   // Idle, docked, iPad and Android: no band, no change.
   const fullHeader = useHeaderBottom();
   const hiddenBand =
-    Platform.OS === 'ios' ? Math.max(0, fullHeader - headerBottom) : 0;
+    Platform.OS === 'ios' && !belowBar
+      ? Math.max(0, fullHeader - headerBottom)
+      : 0;
   // Match Screen's first-point-of-scroll report, including the expanded
   // title while UIKit debounces its height. The thread's inset has already
   // removed the hidden large-title band, so use its compact header there.
@@ -182,7 +205,6 @@ export default function AskScreen() {
   // Only the Ask tab's root: pushed elsewhere (a link, a keyboard shortcut)
   // Ask sits below an opaque bar with its content at 0, and the fade would
   // cover the top of the page.
-  const tabRoot = useTabRootRoute();
   const barFade = clearBars && tabRoot && Platform.OS === 'ios' && glassBar();
   const fadeScroll = useBarFadeScroll(barFade);
   const column = useScreenColumn('readable');
@@ -298,7 +320,9 @@ export default function AskScreen() {
       const inner = scroll.current?.getInnerViewNode();
       if (!inner) return;
       target.measureLayout(inner, (_x, y, _w, h) => {
-        const sheetTop = windowHeight / 2;
+        // In the scroll view's own points: below an opaque bar it starts
+        // at the bar's bottom edge.
+        const sheetTop = windowHeight / 2 - (belowBar ? fullHeader : 0);
         const room = sheetTop - headerBottom - rhythm.block;
         const offset =
           h > room
@@ -310,7 +334,7 @@ export default function AskScreen() {
         });
       });
     },
-    [windowHeight, headerBottom, reduceMotion],
+    [windowHeight, headerBottom, belowBar, fullHeader, reduceMotion],
   );
 
   async function ask(question: string, carry?: Followup) {
@@ -497,7 +521,10 @@ export default function AskScreen() {
             }}
             minHeight={Math.max(
               0,
-              windowHeight - headerBottom - dockHeight - rhythm.section * 2,
+              windowHeight -
+                (belowBar ? fullHeader : headerBottom) -
+                dockHeight -
+                rhythm.section * 2,
             )}
           />
         )}
@@ -524,8 +551,7 @@ export default function AskScreen() {
             // large title beside its panes, as Bills and Today do there.
             ...(Platform.OS === 'ios'
               ? {
-                  headerLargeTitleEnabled:
-                    idle && (!docked || outer.rule !== 'pad'),
+                  headerLargeTitleEnabled: largeTitle,
                 }
               : null),
           }}

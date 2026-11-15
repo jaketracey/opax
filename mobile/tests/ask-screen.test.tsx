@@ -483,6 +483,93 @@ test.each([
   },
 );
 
+// iOS 27.0, Reduce Transparency on: a thread's bar is opaque and the page
+// is laid out below it, so the scroll view's top edge is the bar's bottom
+// edge. Ask still allowed for a bar over the page: it took 13.5 pt (the
+// measured 114 pt bar less its 100.5 pt estimate) off the inset as a
+// "hidden band", and the bar cut the top of the question; a new question
+// was pinned a bar's height down the page.
+test.each([
+  ['Reduce Transparency or Increase Contrast on', true],
+  ['neither setting on', false],
+] as const)(
+  'with %s a thread on the tab root places its question for the bar it has',
+  async (_setting, solid) => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(false);
+    const frames = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation(() => 0);
+    const solidBar = jest
+      .spyOn(accessibility, 'useSolidBar')
+      .mockReturnValue(solid);
+    const route = { key: 'ask-root', name: 'ask' };
+    const navigation = {
+      setOptions: jest.fn(),
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    const measured = 114;
+    const estimate = 100.5;
+    try {
+      await mount(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <SafeAreaInsetsContext.Provider
+              value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+            >
+              <HeaderHeightContext.Provider value={measured}>
+                <AskScreen />
+              </HeaderHeightContext.Provider>
+            </SafeAreaInsetsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      await type('A fixture question?');
+      await press('ask-submit');
+      const scroll = view!.root.find(
+        (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+      );
+      // The heading's top at rest, from the scroll view's top edge.
+      const restTop =
+        (scroll.props.contentInset?.top ?? 0) +
+        StyleSheet.flatten(scroll.props.contentContainerStyle).paddingTop;
+      await act(async () => {
+        byId('ask-turn')[0]!.props.onLayout({
+          nativeEvent: { layout: { y: 400 } },
+        });
+      });
+      const pinned = scrollTo.mock.lastCall![0] as unknown as { y: number };
+      if (solid) {
+        // The view's top edge is the bar's bottom edge: nothing above it.
+        expect(restTop).toBeGreaterThanOrEqual(0);
+        expect(restTop).toBe(rhythm.heading);
+        expect(400 - pinned.y).toBe(rhythm.heading);
+      } else {
+        // Under the clear bar, exactly as before.
+        expect(scroll.props.contentInset).toEqual({
+          top: estimate - measured,
+        });
+        expect(400 - pinned.y).toBe(estimate + rhythm.heading);
+      }
+    } finally {
+      solidBar.mockRestore();
+      frames.mockRestore();
+      idiom.mockRestore();
+      platform.restore();
+    }
+  },
+);
+
 test.each(['before', 'after'] as const)(
   'send pins below the compact bar when fallback frames run %s the turn layout and native height arrives late',
   async (frameOrder) => {

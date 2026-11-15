@@ -2,6 +2,7 @@ import { animatedScroll } from '../../design/accessibility';
 import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
+import { useListUnderBar } from '../../navigation/useListUnderBar';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import {
@@ -25,6 +26,8 @@ import {
   RefreshControl,
   StyleSheet,
   View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   type TextLayoutEvent,
   type ViewToken,
 } from 'react-native';
@@ -273,6 +276,25 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     !adaptive &&
     !onRail;
   const fadeScroll = useBarFadeScroll(fades);
+  // With Reduce Transparency or Increase Contrast on the bar is solid, not
+  // clear, and takes its solid ground only once the list has scrolled under
+  // it: at rest that ground covered the large title. This list is not a
+  // Screen, so it says when it has left rest (useListUnderBar). With
+  // neither setting on nothing is reported: the fade above follows the
+  // scroll on the UI thread alone.
+  const underBar = useListUnderBar(!pushed);
+  // One scroll handler feeds both: the fade binds itself to the list's
+  // scroll on its first event, and the solid bar hears where the list is,
+  // which it keeps for a setting that turns on with the list scrolled.
+  const { onScroll: fadeOnScroll } = fadeScroll;
+  const { onScroll: barOnScroll } = underBar;
+  const onListScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      fadeOnScroll(event);
+      barOnScroll(event);
+    },
+    [fadeOnScroll, barOnScroll],
+  );
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -590,8 +612,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         }
         {...(Platform.OS === 'android'
           ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
-          : fades
-            ? { onScroll: fadeScroll.onScroll, scrollEventThrottle: 16 }
+          : fades || underBar.reports
+            ? { onScroll: onListScroll, scrollEventThrottle: 16 }
             : {})}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={rows.length ? footer : null}

@@ -61,8 +61,18 @@ function currentLargeTitle(navigation: object | undefined) {
   return !navigation || searchState(navigation).value.largeTitle !== false;
 }
 
-/** Report scroll state without owning or applying the bar's appearance. */
-export function useRootBarUnderBar(underBar: boolean, enabled = true) {
+/**
+ * Report scroll state without owning or applying the bar's appearance.
+ * With `withdraw`, a reporter that stops (it is no longer enabled, or it
+ * unmounts) takes its report back, so the page is unreported again and the
+ * bar is as it was before it reported. Screen and Ask report for as long
+ * as they are mounted and never withdraw.
+ */
+export function useRootBarUnderBar(
+  underBar: boolean,
+  enabled = true,
+  withdraw = false,
+) {
   const navigation = useContext(NavigationContext);
   useLayoutEffect(() => {
     if (!navigation || !enabled) return;
@@ -71,6 +81,16 @@ export function useRootBarUnderBar(underBar: boolean, enabled = true) {
     state.value = { ...state.value, underBar };
     state.listeners.forEach((listener) => listener());
   }, [navigation, enabled, underBar]);
+  useLayoutEffect(() => {
+    if (!navigation || !enabled || !withdraw) return;
+    return () => {
+      const state = searchState(navigation);
+      if (state.value.underBar === undefined) return;
+      const { underBar: _reported, ...rest } = state.value;
+      state.value = rest;
+      state.listeners.forEach((listener) => listener());
+    };
+  }, [navigation, enabled, withdraw]);
 }
 
 /**
@@ -213,6 +233,15 @@ export function useRootBarAppearance(
   // b73). The band does not fold away while it holds a field, so such a bar
   // is solid on the page's ground, like the legibility bar: the title and
   // the field are one surface, and the list ends at the field.
+  // The solid sibling sits under the bar and over the page, and UIKit draws
+  // an expanded large title in the page's layer: at rest the sibling
+  // covered the title (Today, Ask and Bills with Reduce Transparency or
+  // Increase Contrast on, iOS 26.3 and 27.2). At rest the bar needs no
+  // ground of its own, the page's is behind it, so the sibling is there
+  // only once the page has scrolled under the bar. A root whose scrolling
+  // view does not report (undefined) keeps the sibling throughout, as
+  // before: its content must never run through a clear bar.
+  const backed = solid && contentUnderBar !== false;
   const railSearch = verticalBar && !!rootOptions.search;
   const railSolid = solid || railSearch;
   const hardEdge =
@@ -276,7 +305,7 @@ export function useRootBarAppearance(
       !ownsBar ||
       !currentLargeTitle(navigation) ||
       verticalBar ||
-      !solid
+      !backed
     )
       return;
     if (navigation?.isFocused()) void RootBar?.setSolid?.(identifier, colour);
@@ -285,7 +314,7 @@ export function useRootBarAppearance(
     ownsBar,
     largeTitleEnabled,
     verticalBar,
-    solid,
+    backed,
     colour,
     headerHeight,
     width,
@@ -299,7 +328,7 @@ export function useRootBarAppearance(
       !ownsBar ||
       !currentLargeTitle(navigation) ||
       verticalBar ||
-      !solid
+      !backed
     )
       return;
     const focus = navigation?.addListener('focus', () => {
@@ -319,7 +348,7 @@ export function useRootBarAppearance(
     largeTitleEnabled,
     navigation,
     verticalBar,
-    solid,
+    backed,
     colour,
   ]);
   // Screen can hand appearance ownership to its child RouteOptions after
@@ -327,12 +356,12 @@ export function useRootBarAppearance(
   // sibling that the new owner has just applied. Its lifetime follows the
   // route and accessibility mode, independently of appearance ownership.
   useLayoutEffect(() => {
-    if (!identifier || !currentLargeTitle(navigation) || verticalBar || !solid)
+    if (!identifier || !currentLargeTitle(navigation) || verticalBar || !backed)
       return;
     return () => {
       void RootBar?.remove(identifier);
     };
-  }, [identifier, largeTitleEnabled, navigation, verticalBar, solid]);
+  }, [identifier, largeTitleEnabled, navigation, verticalBar, backed]);
   return !!root;
 }
 
