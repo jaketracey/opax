@@ -314,6 +314,28 @@ function DetailSkeleton({
     variant: TextVariant = 'secondary',
     onRaised = false,
   ) => bone(name, width, height(variant), false, onRaised);
+  // A line as tall as the text it stands for: an unseen line of that text
+  // style sizes the bone, so it is the laid-out line's height at every text
+  // size, not the token's (the profile header's lines).
+  const textLine = (
+    name: string,
+    width: DimensionValue,
+    variant: TextVariant = 'secondary',
+  ) => (
+    <View
+      testID={part(name)}
+      style={{
+        width,
+        borderRadius: radii.thumb,
+        borderCurve: 'continuous',
+        backgroundColor: onSunken ? colors.raised : colors.sunken,
+      }}
+    >
+      <Text variant={variant} numberOfLines={1} style={{ opacity: 0 }}>
+        {'\u00a0'}
+      </Text>
+    </View>
+  );
   const source = (name: string) => (
     <View style={{ minHeight: minimumTarget, justifyContent: 'center' }}>
       {line(name, '65%', 'footnote')}
@@ -386,9 +408,9 @@ function DetailSkeleton({
             }}
           >
             {bone('portrait', 96, 96, true)}
-            {line('name', '70%', 'pageTitle')}
-            {shape.role ? line('role', '45%') : null}
-            {shape.yourMP ? line('your-mp', 84) : null}
+            {textLine('name', '70%', 'pageTitle')}
+            {shape.role ? textLine('role', '45%') : null}
+            {shape.yourMP ? textLine('your-mp', 84) : null}
             {shape.follow ? (
               // The button's 44 pt target, its capsule drawn inside it.
               <View
@@ -444,7 +466,7 @@ function DetailSkeleton({
                         {row.kind === 'party'
                           ? bone('party-dot', 10, 10, true)
                           : null}
-                        {line(
+                        {textLine(
                           name,
                           row.kind === 'party'
                             ? '40%'
@@ -454,7 +476,7 @@ function DetailSkeleton({
                           'body',
                         )}
                       </View>
-                      {row.detail ? line(`${name}-detail`, '45%') : null}
+                      {row.detail ? textLine(`${name}-detail`, '45%') : null}
                     </View>
                   </Fragment>
                 );
@@ -499,17 +521,12 @@ function DetailSkeleton({
                   />
                 ) : null}
                 <View style={{ minHeight: minimumTarget, gap: rhythm.line }}>
-                  {line(`stat-value-${index}`, '85%', 'tileFigure')}
-                  {bone(
-                    `stat-label-${index}`,
-                    '90%',
-                    height('footnote') * (large ? 1 : 2),
-                  )}
+                  {textLine(`stat-value-${index}`, '85%', 'tileFigure')}
+                  {textLine(`stat-label-${index}`, '90%', 'footnote')}
                 </View>
               </View>
             ))}
           </View>
-          {source('source')}
         </View>
       </ReadableColumn>
       <View style={{ gap: rhythm.heading }}>

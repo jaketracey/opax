@@ -868,7 +868,6 @@ describe('profile', () => {
       'party',
       'seat',
       'stat-strip',
-      'source',
       'votes-heading',
       'vote-0',
       'vote-1',
@@ -954,6 +953,20 @@ describe('profile', () => {
       Native.StyleSheet.flatten(host(pending, testID).props.style);
     const rowStyles = [0, 1, 2].map((i) => style(`person-loading-row-${i}`));
     const followSlot = style('person-loading-follow-slot');
+    const lineVariants = Object.fromEntries(
+      [
+        'name',
+        'role',
+        'party',
+        'seat',
+        'official',
+        'stat-value-0',
+        'stat-label-0',
+      ].map((name) => [
+        name,
+        host(pending, `person-loading-${name}`).findByType(Text).props.variant,
+      ]),
+    );
     act(() => pending.unmount());
     const { r } = await wong();
     // The loaded header: a role line, then one row each for the party, the
@@ -980,6 +993,19 @@ describe('profile', () => {
     expect(bones.filter((id) => /-row-\d+$/.test(id))).toHaveLength(
       rows.length,
     );
+    // Each line is sized by an unseen line of the text style it stands for,
+    // so it is that text's laid-out height at every text size.
+    expect(lineVariants).toEqual({
+      name: 'pageTitle',
+      role: 'secondary',
+      party: 'body',
+      seat: 'body',
+      official: 'body',
+      'stat-value-0': 'tileFigure',
+      'stat-label-0': 'footnote',
+    });
+    // The strip's sources are at the page's foot, not under the strip.
+    expect(bones).not.toContain('person-loading-source');
     // Each placeholder row is a `LinkRow`'s height, and Follow its target.
     for (const row of rowStyles)
       expect(row).toMatchObject({ minHeight: 44, paddingVertical: 11 });
