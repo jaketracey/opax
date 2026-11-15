@@ -17,6 +17,8 @@
   },
 
   "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"e0b56c0457374743b580e7210e7b4515"}],
+  // Large media (demo videos) for /media/<name>; read-only from the Worker.
+  "r2_buckets": [{"binding":"MEDIA","bucket_name":"opax-media"}],
 
   // The deployed version's id, folded into the ETag of every page the Worker
   // assembles (src/html-etag.ts), so a Worker-only change never answers 304
@@ -207,6 +209,7 @@
       "name": "opax-portal-staging",
       "secrets": {"required":["ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
       "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"aed3fad08c95468ea8578c761ada6a72"}],
+      "r2_buckets": [{"binding":"MEDIA","bucket_name":"opax-media"}],
       "version_metadata": { "binding": "CF_VERSION_METADATA" },
       "d1_databases": [{"binding":"TABLE_DB","database_name":"opax-tables","database_id":"fe48f4bd-cce4-4ced-9705-566175ee0c53","migrations_dir":"table-migrations"},{"binding":"COMMUNITY_DB","database_name":"opax-community-staging","database_id":"033d5775-4443-4757-a984-326f2914ac7f","migrations_dir":"migrations"}],
       "send_email": [{"name":"COMMUNITY_EMAIL"}],
