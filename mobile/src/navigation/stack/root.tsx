@@ -5,6 +5,7 @@ import { routeSheetOptions } from '../../features/sheets/frame';
 import { isAccessibilityCategory } from '../../design/tokens';
 import { PixelRatio, Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
+import { noteRootRoutes } from '../sheet-status-bar';
 import { setSheetSegments } from '../sheets';
 import { hasSourcePreview, isProduction } from '../../design/environment';
 import { communityHome } from '../../features/community/entry';
@@ -134,6 +135,7 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
           const state = navigation.getState();
           const route = state.routes[state.index];
           if (route) setSheetSegments([route.name]);
+          noteRootRoutes(state.routes);
         };
         return { focus: update, state: update };
       },

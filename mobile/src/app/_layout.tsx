@@ -35,6 +35,7 @@ import {
 import { useStackChrome } from '../navigation/chrome';
 import { useLinkReadiness } from '../navigation/useLinkReadiness';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
+import { SheetStatusBar } from '../navigation/sheet-status-bar';
 import { welcomeRoute } from '../navigation/routes';
 import { navigationTheme } from '../navigation/theme';
 import {
@@ -128,6 +129,7 @@ export default function Layout() {
     <SafeAreaProvider>
       <MyMemberProvider>
         <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
+        <SheetStatusBar />
         <KeyboardFrames>
           <View style={styles.app}>
             <AndroidMenuHost />
