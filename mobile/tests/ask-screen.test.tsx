@@ -58,6 +58,7 @@ import { reconcileChats, syncSubmittedChat } from '../src/features/ask/sync';
 import { chatsSnapshot, loadChats } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
+import { STATUS_HOLD_MS } from '../src/features/ask/AskStatus';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
 import { chromeTextScaleCap } from '../src/design/text-scale';
 import { Icon } from '../src/design/icon';
@@ -964,21 +965,24 @@ const one = (id: string) =>
   )[0]!;
 /** The first string child under any node with this testID. */
 /**
- * Waits for the status line to read `text`, instead of sleeping a fixed
- * time. The line holds each status for 600 ms (STATUS_HOLD_MS) from when it was
- * drawn, measured with Date.now(); a test timer is measured from the event
- * loop's own clock, which lags under load. A fixed 650 ms sleep could
- * therefore end before the 600 ms hold it was meant to outlast.
+ * The test clock. The status line holds each status for STATUS_HOLD_MS and a
+ * stage is spoken STAGE_ANNOUNCEMENT_MS after the last, both measured with
+ * Date.now() and a timer. Waiting those out in real time made the result
+ * depend on how busy the machine was (a 650 ms sleep could end before the
+ * 600 ms hold it was meant to outlast). A test that waits on them runs on
+ * Jest's fake timers instead, where timers and Date.now() move together
+ * and only when the test says: `clock.on()` first, `clock.off()` after, and
+ * `pass(ms)` for time to go by.
  */
-// Under Jest's 5 s default, so a real miss reads as expected and received.
-async function statusBecomes(text: string, timeout = 4000) {
-  const end = Date.now() + timeout;
-  while (textOf('ask-status') !== text && Date.now() < end)
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 25));
-    });
-  expect(textOf('ask-status')).toBe(text);
-}
+const clock = {
+  on: () => void jest.useFakeTimers(),
+  off: () => void jest.useRealTimers(),
+};
+/** `ms` go by on the test clock: every timer due in them runs, in order. */
+const pass = (ms: number) =>
+  act(async () => {
+    await jest.advanceTimersByTimeAsync(ms);
+  });
 const textOf = (id: string) =>
   byId(id)
     .flatMap((n) => [n, ...n.findAll(() => true)])
@@ -2071,6 +2075,14 @@ test.each(['before', 'after'] as const)(
 );
 
 test('a sent question shows the status line, Stop, and is revealed below the header', async () => {
+  clock.on();
+  try {
+    await sentQuestion();
+  } finally {
+    clock.off();
+  }
+});
+async function sentQuestion() {
   let on: StreamHandlers | undefined,
     fail: (e: unknown) => void = () => {};
   jest.mocked(client.askPost).mockImplementationOnce(
@@ -2110,8 +2122,12 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
     on!.stage('Searching the record');
   });
   // Status copy has a minimum dwell time, even for a fast lookup: the line
-  // changes once the one before it has been held, however long that takes.
-  await statusBecomes('Searching the record');
+  // is held for the whole of it, to the millisecond, and changes at its end.
+  expect(textOf('ask-status')).toBe('Reading your question');
+  await pass(STATUS_HOLD_MS - 1);
+  expect(textOf('ask-status')).toBe('Reading your question');
+  await pass(1);
+  expect(textOf('ask-status')).toBe('Searching the record');
   await act(async () => {
     on!.step?.({
       id: 'hearings',
@@ -2122,7 +2138,10 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   });
   // Held: the step's line never replaces it at once.
   expect(textOf('ask-status')).toBe('Searching the record');
-  await statusBecomes('Checking committee hearings: housing');
+  await pass(STATUS_HOLD_MS - 1);
+  expect(textOf('ask-status')).toBe('Searching the record');
+  await pass(1);
+  expect(textOf('ask-status')).toBe('Checking committee hearings: housing');
   // An error after text keeps the question with one plain sentence, never
   // the server's words, and Try again.
   await act(async () => {
@@ -2136,7 +2155,7 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   expect(byId('ask-progress')).toEqual([]);
   // The failed question returns to the empty composer.
   expect(one('ask-question').props.value).toBe('Who spoke on housing?');
-});
+}
 
 test('a stream that stops partway keeps its text under one pill, read as Markdown', async () => {
   let on: StreamHandlers | undefined,
@@ -2182,10 +2201,9 @@ test('a stream that stops partway keeps its text under one pill, read as Markdow
 
 describe('streamed text and VoiceOver', () => {
   const pieces = ['Housing was debated. ', 'The bill passed. ', 'Two opposed.'];
-  const wait = (ms: number) =>
-    act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, ms));
-    });
+  // On the test clock: the two-second spacing between spoken stages and
+  // the frames after a layout pass as told, not as the machine allows.
+  const wait = pass;
   const move = jest.mocked(moveAccessibilityFocus);
   const tails = () =>
     move.mock.calls.filter(
@@ -2198,6 +2216,7 @@ describe('streamed text and VoiceOver', () => {
   let finish: (value: unknown) => void;
   const said = () => announce.mock.calls.map(([text]) => String(text));
   beforeEach(() => {
+    clock.on();
     takeFocusRequest('ask-status');
     move.mockClear();
     jest.mocked(announceAnswer).mockClear();
@@ -2216,6 +2235,7 @@ describe('streamed text and VoiceOver', () => {
   });
   afterEach(() => {
     takeFocusRequest('ask-status');
+    clock.off();
   });
   const stream = async () => {
     // "Reading your question" is spoken first, so the stage the first text
@@ -2224,7 +2244,7 @@ describe('streamed text and VoiceOver', () => {
     for (const piece of pieces)
       await act(async () => {
         on!.delta(piece);
-        await new Promise((resolve) => setTimeout(resolve, 40));
+        await jest.advanceTimersByTimeAsync(40);
       });
     // The status line has faded out.
     await wait(200);
@@ -2334,20 +2354,20 @@ describe('streamed text and VoiceOver', () => {
         byId(id)
           .find((n) => typeof n.props.onLayout === 'function')!
           .props.onLayout({ nativeEvent: { layout } });
-        await new Promise((resolve) => setTimeout(resolve, 40));
+        await jest.advanceTimersByTimeAsync(40);
       });
     const scroller = () => view!.root.findByType(ScrollView);
     const scrolled = async (y: number) =>
       act(async () => {
         scroller().props.onScroll({ nativeEvent: { contentOffset: { y } } });
-        await new Promise((resolve) => setTimeout(resolve, 40));
+        await jest.advanceTimersByTimeAsync(40);
       });
     const viewport = async (height: number) =>
       act(async () => {
         scroller().props.onLayout({
           nativeEvent: { layout: { x: 0, y: 0, width: 390, height } },
         });
-        await new Promise((resolve) => setTimeout(resolve, 40));
+        await jest.advanceTimersByTimeAsync(40);
       });
     const begin = async (thread = 8) => {
       await mount();
@@ -2468,7 +2488,7 @@ describe('streamed text and VoiceOver', () => {
       expect(scrollTo).not.toHaveBeenCalled();
       await act(async () => {
         scroller().props.onMomentumScrollEnd({ nativeEvent: {} });
-        await new Promise((resolve) => setTimeout(resolve, 40));
+        await jest.advanceTimersByTimeAsync(40);
       });
       expect(scrollTo).toHaveBeenLastCalledWith({
         y: followed(668),

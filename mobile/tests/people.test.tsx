@@ -1230,6 +1230,22 @@ describe('profile', () => {
     };
   };
 
+  // The wait for pay (POST_HOLD_MS) runs on Jest's fake timers in the tests
+  // that outlast it: a real sleep made them as slow, and as sure, as the
+  // machine. Real timers are back after each test, pass or fail.
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+  /** The wait for pay runs out, to the millisecond. */
+  const holdRunsOut = async (ms: number) => {
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(ms - 1);
+    });
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(1);
+    });
+  };
+
   test('with no pay catalog in memory the bones stop at the name, then draw the paid post’s line when it is read', async () => {
     const { r, bones, page, load } = await cold();
     // Nothing is drawn where a line not yet known could move it.
@@ -1247,10 +1263,16 @@ describe('profile', () => {
 
   test('when the wait for pay runs out the bones are drawn without the paid post’s line, and the page never gains it', async () => {
     const { POST_HOLD_MS } = jest.requireActual('../src/features/Person');
+    jest.useFakeTimers();
     const { r, bones, page, load } = await cold();
     expect(bones()).toEqual(['name']);
+    // Held for the whole wait, and not a millisecond less.
     await act(async () => {
-      await new Promise((done) => setTimeout(done, POST_HOLD_MS + 50));
+      await jest.advanceTimersByTimeAsync(POST_HOLD_MS - 1);
+    });
+    expect(bones()).toEqual(['name']);
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(1);
     });
     const drawn = bones();
     expect(drawn).toContain('party');
@@ -1268,10 +1290,9 @@ describe('profile', () => {
 
   test('a pull to refresh brings the withheld paid post’s line only with new content', async () => {
     const { POST_HOLD_MS } = jest.requireActual('../src/features/Person');
+    jest.useFakeTimers();
     const { r, person, profile, load } = await cold();
-    await act(async () => {
-      await new Promise((done) => setTimeout(done, POST_HOLD_MS + 50));
-    });
+    await holdRunsOut(POST_HOLD_MS);
     await load();
     expect(has(r, 'person-role')).toBe(false);
     const pull = async () => {
