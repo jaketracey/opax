@@ -1,4 +1,5 @@
 import { keepCatalog } from './kept-catalogs';
+import { decodePeopleFirsts, PEOPLE_FIRSTS_PATH } from './people-firsts';
 import { ReadSession } from './read-session';
 import { throwIfAborted } from './abort';
 import { samePartyLabel } from '../design/party';
@@ -658,6 +659,19 @@ export class Catalogs {
       .then((pay) => {
         keepCatalog('/pay.json', pay.data);
         return pay;
+      });
+  }
+  /**
+   * Each roster person's first speech and first division in the record.
+   * Kept in memory for the next profile to open: a profile shows these rows
+   * only when they were known on its first frame, so nothing moves.
+   */
+  peopleFirsts(signal?: AbortSignal) {
+    return this.client
+      .get(PEOPLE_FIRSTS_PATH, decodePeopleFirsts, false, { signal })
+      .then((firsts) => {
+        keepCatalog(PEOPLE_FIRSTS_PATH, firsts.data);
+        return firsts;
       });
   }
   expenses(signal?: AbortSignal) {

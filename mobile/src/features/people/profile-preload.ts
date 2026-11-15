@@ -7,6 +7,10 @@ import {
   decodeVotes,
 } from '../../api/catalog-decoders';
 import type { ApiClient } from '../../api/client';
+import {
+  decodePeopleFirsts,
+  PEOPLE_FIRSTS_PATH,
+} from '../../api/people-firsts';
 import { perfHeap, perfMark } from '../../perf/probe';
 
 /**
@@ -23,6 +27,17 @@ export const PROFILE_PRELOAD: readonly {
   { path: '/pay.json', decode: decodePay },
   { path: '/expenses.json', decode: decodeExpenses },
   { path: '/expense-categories.json', decode: decodeExpenseCategories },
+];
+
+/**
+ * What Today reads ahead: the four above, then the firsts file. It is small
+ * and last, and is kept in memory so a profile's first frame knows the
+ * person's first speech and first division rows (a profile shows them only
+ * when they were known as it opened).
+ */
+export const TODAY_PRELOAD: typeof PROFILE_PRELOAD = [
+  ...PROFILE_PRELOAD,
+  { path: PEOPLE_FIRSTS_PATH, decode: decodePeopleFirsts },
 ];
 
 /** After Today's first content is drawn, before the first idle read. */
@@ -97,6 +112,7 @@ export async function preloadProfileCatalogs(
     next = idleSlot,
     active = () => AppState.currentState === 'active',
     kept,
+    catalogs = PROFILE_PRELOAD,
   }: {
     signal: AbortSignal;
     first?: (signal: AbortSignal) => Promise<void>;
@@ -104,11 +120,13 @@ export async function preloadProfileCatalogs(
     active?: () => boolean;
     /** Each saved catalog as it is decoded (the pay catalog is kept). */
     kept?: (path: string, data: unknown) => void;
+    /** The saved catalogs to read, in order. */
+    catalogs?: typeof PROFILE_PRELOAD;
   },
 ): Promise<PreloadResult> {
   const result: PreloadResult = { outcome: 'done', read: [], skipped: [] };
   let wait = first;
-  for (const { path, decode } of PROFILE_PRELOAD) {
+  for (const { path, decode } of catalogs) {
     try {
       await wait(signal);
     } catch {
@@ -155,6 +173,7 @@ export function startProfilePreload(
     first?: (signal: AbortSignal) => Promise<void>;
     next?: (signal: AbortSignal) => Promise<void>;
     kept?: (path: string, data: unknown) => void;
+    catalogs?: typeof PROFILE_PRELOAD;
   } = {},
 ): () => void {
   let run: AbortController | null = null;
@@ -198,7 +217,10 @@ export function useProfilePreload(
 ) {
   useFocus(
     useCallback(
-      () => (drawn ? startProfilePreload(client, { kept }) : undefined),
+      () =>
+        drawn
+          ? startProfilePreload(client, { kept, catalogs: TODAY_PRELOAD })
+          : undefined,
       [client, drawn, kept],
     ),
   );

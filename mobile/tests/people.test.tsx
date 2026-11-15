@@ -10,6 +10,10 @@ import { FlatList, Platform, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { forgetCatalogs, keepCatalog } from '../src/api/kept-catalogs';
+import {
+  decodePeopleFirsts,
+  PEOPLE_FIRSTS_PATH,
+} from '../src/api/people-firsts';
 import { ApiError } from '../src/api/errors';
 import { peopleDepth, catalogs as runtime } from '../src/api/runtime';
 import { PadGrid } from '../src/design/adaptive';
@@ -918,6 +922,8 @@ describe('profile', () => {
     ['seat', /^person-electorate$/],
     ['seat-1', /^person-seat-1$/],
     ['official', /^person-official$/],
+    ['first-speech', /^person-first-speech$/],
+    ['first-division', /^person-first-division$/],
     ['stat-strip', /^person-figures$/],
     ['stat-row', /^person-figure-votes$/],
     ['votes-heading', /^person-votes-heading$/],
@@ -1193,6 +1199,177 @@ describe('profile', () => {
     expect(words(pending, 'person-loading-role').text).toMatch(
       /^Former .+, 2002 to 2019$/,
     );
+    await act(async () => {
+      pending.unmount();
+      loaded.unmount();
+    });
+  });
+
+  // A member's firsts (delight round 4): the first speech and first division
+  // (or the earliest the record holds, said so), drawn only when the firsts
+  // file was in memory as the page opened, so the bones hold the same two
+  // rows and nothing moves.
+  const wongFirsts = () => {
+    const row = c.joinPerson(
+      'penny-wong',
+      slugs,
+      roster,
+      people,
+      manifest,
+    ).rosterRow!;
+    return decodePeopleFirsts({
+      meta: {
+        schema: 1,
+        generated: '2026-11-15',
+        speeches_since: '1993-03-13',
+        coverage: {
+          speeches: { senate: '1998-03-02' },
+          divisions: { senate: '2006-02-07' },
+        },
+        sources: {
+          speech: 'Hansard, as held in the OPAX record',
+          divisions: { theyvoteforyou: 'They Vote For You' },
+        },
+      },
+      by_pid: {
+        [row.pid!]: {
+          service_from: '2002-07-01',
+          first_speech: {
+            date: '2002-08-21',
+            chamber: 'senate',
+            first: true,
+            slug: 'speech-4242',
+          },
+          // Entered before the record of Senate divisions starts.
+          first_division: {
+            date: '2006-02-07',
+            chamber: 'senate',
+            source: 'theyvoteforyou',
+            url: 'https://theyvoteforyou.org.au/divisions/senate/2006-02-07/1',
+          },
+        },
+      },
+      by_name: {},
+    });
+  };
+
+  test('with the firsts file in memory the bones hold the first speech and first division rows the page draws', async () => {
+    keepCatalog(PEOPLE_FIRSTS_PATH, wongFirsts());
+    const { pending, loaded, bones, page } = await pair(held(true, false));
+    expect(page.filter((part) => part.startsWith('first-'))).toEqual([
+      'first-speech',
+      'first-division',
+    ]);
+    expect(bones).toEqual(page.filter((part) => part !== 'role'));
+    for (const kind of ['first-speech', 'first-division']) {
+      const drawn = words(loaded, `person-${kind}`);
+      expect(words(pending, `person-loading-${kind}`)).toMatchObject({
+        text: drawn.text,
+        fontSize: drawn.fontSize,
+        lineHeight: drawn.lineHeight,
+      });
+      // The source line under it holds its place too.
+      expect(has(pending, `person-loading-${kind}-detail`)).toBe(true);
+    }
+    expect(words(loaded, 'person-first-speech').text).toBe(
+      'First speech: 21 Aug 2002',
+    );
+    const speech = loaded.root
+      .findAllByType(LinkRow)
+      .find((row) => row.props.testID === 'person-first-speech')!;
+    expect(speech.props).toMatchObject({
+      detail: 'Hansard, as held in the OPAX record',
+      href: { pathname: '/doc/[slug]', params: { slug: 'speech-4242' } },
+      accessibilityLabel:
+        'First speech, 21 August 2002. Source: Hansard, as held in the OPAX record',
+      accessibilityHint: 'Opens the speech',
+    });
+    const division = loaded.root
+      .findAllByType(LinkRow)
+      .find((row) => row.props.testID === 'person-first-division')!;
+    expect(division.props).toMatchObject({
+      title: 'Earliest division in the OPAX record (from 2006): 7 Feb 2006',
+      detail: 'They Vote For You',
+      external: {
+        url: 'https://theyvoteforyou.org.au/divisions/senate/2006-02-07/1',
+      },
+      accessibilityLabel:
+        'Earliest division in the OPAX record, which starts in 2006, 7 February 2006. Source: They Vote For You',
+    });
+    await act(async () => {
+      pending.unmount();
+      loaded.unmount();
+    });
+  });
+
+  test('a firsts file that lands after the page opened adds no row to it: nothing moves', async () => {
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue(held(true, false));
+    const release = held(true, false);
+    mock.directory.mockResolvedValue(release as never);
+    mockParams.slug = 'penny-wong';
+    let arrive!: (value: unknown) => void;
+    mock.person.mockReturnValue(
+      new Promise((resolve) => {
+        arrive = resolve;
+      }),
+    );
+    const person = c.joinPerson(
+      'penny-wong',
+      release.slugs.data,
+      release.roster.data,
+      release.people.data,
+      manifest,
+    );
+    const profile = c.profileFor(person.canonicalPersonId!, {
+      ...catalogs,
+      interest: c.decodeInterest(pinned('/interests/10678.json')),
+    });
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        identity: { ...profile.blocks.identity, data: person },
+      },
+    });
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(<Person />);
+    });
+    expect(has(page, 'person-loading-first-speech')).toBe(false);
+    // The read finishes while the placeholder is up.
+    keepCatalog(PEOPLE_FIRSTS_PATH, wongFirsts());
+    await act(async () => {
+      arrive(result(person));
+    });
+    expect(has(page, 'person-official')).toBe(true);
+    expect(has(page, 'person-first-speech')).toBe(false);
+    expect(has(page, 'person-first-division')).toBe(false);
+    await act(async () => {
+      page.unmount();
+    });
+    // The next profile to open has them on its first frame.
+    await act(async () => {
+      page = TestRenderer.create(<Person />);
+    });
+    expect(has(page, 'person-first-speech')).toBe(true);
+    await act(async () => {
+      page.unmount();
+    });
+  });
+
+  test('a member the firsts file does not hold has no firsts row, in the bones or on the page', async () => {
+    keepCatalog(PEOPLE_FIRSTS_PATH, {
+      ...wongFirsts(),
+      by_pid: {},
+    });
+    const { pending, loaded, bones, page } = await pair(held(true, false));
+    expect(bones.some((part) => part.startsWith('first-'))).toBe(false);
+    expect(page.some((part) => part.startsWith('first-'))).toBe(false);
     await act(async () => {
       pending.unmount();
       loaded.unmount();

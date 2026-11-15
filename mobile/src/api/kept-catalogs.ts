@@ -1,16 +1,20 @@
 import type { Pay, Votes } from './catalog-decoders';
+import { PEOPLE_FIRSTS_PATH, type PeopleFirsts } from './people-firsts';
 
 /**
  * The votes and pay catalogs last read this session, kept in memory only.
  * A profile's placeholder reads them to draw what the page will: the line
- * under the name ("Prime Minister") and the figures the person has.
+ * under the name ("Prime Minister") and the figures the person has. The
+ * firsts file is kept the same way: a profile draws its first speech and
+ * first division only when they are known as it opens.
  */
-const kept: { votes?: Votes; pay?: Pay } = {};
+const kept: { votes?: Votes; pay?: Pay; firsts?: PeopleFirsts } = {};
 
 /** A catalog as it is read or decoded from the device; other paths pass. */
 export function keepCatalog(path: string, data: unknown) {
   if (path === '/votes.json') kept.votes = data as Votes;
   else if (path === '/pay.json') kept.pay = data as Pay;
+  else if (path === PEOPLE_FIRSTS_PATH) kept.firsts = data as PeopleFirsts;
 }
 /** What has been read this session: never a read. */
 export function keptCatalogs(): Readonly<typeof kept> {
@@ -20,4 +24,5 @@ export function keptCatalogs(): Readonly<typeof kept> {
 export function forgetCatalogs() {
   delete kept.votes;
   delete kept.pay;
+  delete kept.firsts;
 }

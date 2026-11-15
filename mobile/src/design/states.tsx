@@ -257,7 +257,7 @@ export interface ProfileBones {
   follow?: boolean;
   /** The identity rows in order; `detail` is a second line. */
   rows?: readonly {
-    kind: 'party' | 'seat' | 'official';
+    kind: 'party' | 'seat' | 'official' | 'first-speech' | 'first-division';
     title: string;
     detail?: string;
     /** False for a row that opens nothing: it has no chevron. */

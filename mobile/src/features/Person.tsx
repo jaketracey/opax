@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { profileFor, rosterProfileFor, type Electorate } from '../api/catalogs';
 import { keptCatalogs } from '../api/kept-catalogs';
+import { memberFirsts, type PeopleFirsts } from '../api/people-firsts';
 import { joinPerson, type PersonProfile } from '../api/person-identity';
 import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
@@ -54,6 +55,7 @@ import type { Change } from './follows/changes';
 import { followKey, useFollows } from './follows/store';
 import { useFollowStates } from './follows/useFollowStates';
 import { ProfileBlock } from './people/Block';
+import { firstRows } from './people/firsts';
 import { DeclaredInterests, registerNotes } from './people/DeclaredInterests';
 import {
   ExpensesBlock,
@@ -160,6 +162,11 @@ const sittingFederal = (identity: PersonProfile) =>
   identity.seats.some((s) => s.current && s.jurisdiction === 'federal');
 
 export async function loadProfile(slug: string): Promise<Loaded | null> {
+  // For the next profile to open, never this one: a page shows its first
+  // speech and first division only when they were known on its first frame.
+  void Promise.resolve()
+    .then(() => catalogs.peopleFirsts())
+    .catch(() => undefined);
   let person;
   try {
     person = await catalogs.person(slug);
@@ -251,6 +258,15 @@ export function ProfileScreen({
       : { status: 'loading' };
   });
   useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
+  // The firsts file as this page opened: read once, so the placeholder and
+  // the page draw the same rows and a read that lands later moves nothing.
+  // Without the directory the placeholder cannot know the person's rows, so
+  // this visit shows none.
+  const [firsts] = useState<PeopleFirsts | undefined>(() =>
+    rememberedProfile(slug) || savedSeatDirectory()
+      ? keptCatalogs().firsts
+      : undefined,
+  );
   const [attempt, setAttempt] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -364,7 +380,7 @@ export function ProfileScreen({
               <RefreshControl refreshing={refreshing} onRefresh={refresh} />
             }
           >
-            <PersonSkeleton slug={slug} name={routeName} />
+            <PersonSkeleton slug={slug} name={routeName} firsts={firsts} />
           </Screen>
         }
       >
@@ -413,7 +429,7 @@ export function ProfileScreen({
                 />
               )
             ) : (
-              <PersonSkeleton slug={slug} name={routeName} />
+              <PersonSkeleton slug={slug} name={routeName} firsts={firsts} />
             )}
           </Screen>
         ) : load.status !== 'ready' || !identity ? null : (
@@ -421,6 +437,7 @@ export function ProfileScreen({
             slug={slug}
             loaded={load}
             identity={identity}
+            firsts={firsts}
             webPath={webPath}
             arrival={arrival}
             refreshing={refreshing}
@@ -558,18 +575,30 @@ export function profileBones(
       ...(official
         ? [{ kind: 'official' as const, title: official.label }]
         : []),
+      ...firstRows(memberFirsts(kept.firsts, identity.rosterRow)).map(
+        ({ kind, title, detail }) => ({ kind, title, detail }),
+      ),
     ],
     tiles,
   };
 }
 
-function PersonSkeleton({ slug, name }: { slug: string; name?: string }) {
+function PersonSkeleton({
+  slug,
+  name,
+  firsts,
+}: {
+  slug: string;
+  name?: string;
+  /** The firsts file as the page opened, never a later read. */
+  firsts?: PeopleFirsts;
+}) {
   const yourMP = useIsMyMember(slug);
   const directory = savedSeatDirectory();
   const { votes, pay } = keptCatalogs();
   const bones = useMemo(
-    () => profileBones(slug, directory, { votes, pay }),
-    [slug, directory, votes, pay],
+    () => profileBones(slug, directory, { votes, pay, firsts }),
+    [slug, directory, votes, pay, firsts],
   );
   return (
     <Skeleton
@@ -599,6 +628,7 @@ function ProfileContent({
   slug,
   loaded,
   identity,
+  firsts,
   webPath,
   arrival,
   refreshing,
@@ -609,6 +639,8 @@ function ProfileContent({
   slug: string;
   loaded: Loaded;
   identity: PersonProfile;
+  /** The firsts file as the page opened (ProfileScreen). */
+  firsts?: PeopleFirsts;
   webPath: string;
   arrival?: ProfileArrival;
   refreshing: boolean;
@@ -863,6 +895,8 @@ function ProfileContent({
           },
         ]
       : []),
+    // First speech and first division in the record, each with its source.
+    ...firstRows(memberFirsts(firsts, identity.rosterRow)),
   ];
 
   // The strip: each tile reads its section's selector and jumps there.
