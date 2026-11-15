@@ -1,9 +1,9 @@
-import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=d28448a137';
+import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=ddbd183486';
 /* Record-based landing modules. No generated answers or guessed identities. */
 import { shortDate } from './format.js';
 import { isOrganisationDonor } from './donor-entity.js?v=3fd3e51b56';
 export { isOrganisationDonor };
-import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
+import { sourceLineHTML } from './labels.js?v=26ec61efd8';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';

@@ -4,7 +4,7 @@ export const day = value => {
   const time = Date.parse(d + 'T00:00:00Z');
   return /^\d{4}-\d{2}-\d{2}$/.test(d) && Number.isFinite(time) && new Date(time).toISOString().slice(0, 10) === d ? d : '';
 };
-export const latest = dates => dates.map(day).filter(Boolean).sort().at(-1) || '';
+export const latest = dates => dates.map(day).filter(Boolean).sort().slice(-1)[0] || '';
 const within = (date, start, end) => day(date) && day(date) >= start && day(date) <= end;
 export const houseName = house => ({ representatives: 'House of Representatives', senate: 'Senate' }[house] || 'House not recorded');
 export const sydneyDay = (now = new Date()) => new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Sydney',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);

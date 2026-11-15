@@ -4,7 +4,8 @@
 //    in app.js. Safari before 16.4 cannot parse one, and a script holding a
 //    regex it cannot parse does not run at all, so the page never left its
 //    server copy. No file a browser loads may hold a lookbehind or a named
-//    group.
+//    group. Nor may one call Array "at" or Object.hasOwn, which Safari before
+//    15.4 parses and then throws on.
 // 2. "Importing a module script failed": a release replaced a module the open
 //    page was built against. spa-entry.js loads the page again, once a build.
 // 3. "p.getBBox is not a function": the masthead's stars were measured without
@@ -89,6 +90,42 @@ test('no built bundle a browser loads holds a lookbehind or a named group', () =
     if (count) found.push(`${file}: ${count}`);
   }
   assert.deepEqual(found, [], 'Safari before 16.4 cannot parse these; find the construct in what the bundle is built from');
+});
+
+// Two more a reader's browser can parse and then cannot run: Array and String
+// "at" and Object.hasOwn arrived in Safari 15.4, and before it the call throws
+// where it stands. The last item is list[list.length - 1], or .slice(-1)[0]
+// after a chain; an own key is Object.prototype.hasOwnProperty.call(o, key).
+const UNRUNNABLE = /\.at\(|\bObject\.hasOwn\(/;
+// Vendored code we do not write: the voice SDK's chunk, by its name, and the
+// chunk holding three.js, by the mark three.js leaves in it. Both sit behind
+// features (voice, the 3D maps) that are loaded on request, and are fixed by
+// the libraries or not at all.
+const vendored = (file, text) => /^public\/chunks\/voice-sdk-/.test(file) || (file.startsWith('public/chunks/') && text.includes('__THREE__'));
+
+test('no file a browser loads calls Array at or Object.hasOwn', () => {
+  const found = [];
+  for (const file of browserSources()) {
+    read(file).split('\n').forEach((line, i) => { if (UNRUNNABLE.test(line)) found.push(`${file}:${i + 1}`); });
+  }
+  assert.deepEqual(found, [], 'Safari before 15.4 throws on these; use index arithmetic and Object.prototype.hasOwnProperty.call');
+  // The bundles are built from those files, so they are clear too; a built
+  // file is named with a count, never printed.
+  const built = [];
+  let skipped = 0;
+  for (const file of builtFiles()) {
+    const text = read(file);
+    if (vendored(file, text)) { skipped += 1; continue; }
+    const count = text.match(new RegExp(UNRUNNABLE.source, 'g'))?.length ?? 0;
+    if (count) built.push(`${file}: ${count}`);
+  }
+  assert.deepEqual(built, [], 'rebuild the bundle from its fixed sources');
+  assert.ok(skipped >= 1 && skipped <= 3, `only the vendored chunks are passed over (${skipped})`);
+});
+
+test('the runtime scan would catch each call', () => {
+  for (const text of ['parts.at(-1)', 'a.b().at(0)', 'entries.at(-1)?.x', 'list?.at(-1)', 'Object.hasOwn(o, k)']) assert.ok(UNRUNNABLE.test(text), text);
+  for (const text of ['Object.prototype.hasOwnProperty.call(o, k)', 'list[list.length - 1]', 'list.slice(-1)[0]', 'format(x)', 'myObject.hasOwnProperty(k)', 'look at (this)']) assert.ok(!UNRUNNABLE.test(text), text);
 });
 
 test('the scan would catch each construct', () => {

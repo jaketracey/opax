@@ -79,7 +79,7 @@ export function notFoundHTML({ kind = 'page', slug = '', headingId = 'not-found-
 }
 
 const STYLESHEET = '/not-found.css';
-const WOMBAT = '/wombat.js?v=cb89a88dad';
+const WOMBAT = '/wombat.js?v=c3af36199d';
 
 function linkStyles() {
   if (typeof document === 'undefined' || document.querySelector('link[data-not-found-style]')) return;

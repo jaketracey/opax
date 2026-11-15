@@ -1,9 +1,9 @@
 import {donationGraph} from './money-receipts.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel,receiptSplit} from './donor-disclosure.js?v=d28448a137';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel,receiptSplit} from './donor-disclosure.js?v=ddbd183486';
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
-import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
-import {partyReturnFigures, industryName} from './register-tables.js?v=8d37f58e79';
+import {loadDonorViewIndex} from './donor-views.js?v=a5c3df1f13';
+import {partyReturnFigures, industryName} from './register-tables.js?v=29ce239ec1';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -21,7 +21,7 @@ import {partyReturnFigures, industryName} from './register-tables.js?v=8d37f58e7
 //
 // Styles: money-explain.css, loaded with the module.
 
-import { sourceLineHTML, partyLabelHTML } from './labels.js?v=fcb2a1091c';
+import { sourceLineHTML, partyLabelHTML } from './labels.js?v=26ec61efd8';
 import { subjectUrl } from './canonical-urls.js?v=9ce13e7ba5';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 
@@ -562,7 +562,7 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
   if (flow.undated[1] > 0) out.push(`${plural(flow.undated[1], 'receipt')} (${money(flow.undated[0])}) ${flow.undated[1] === 1 ? 'carries' : 'carry'} no year.`);
   if ((kind === 'party' || kind === 'industry') && flow.named.length) {
     const top = flow.named.slice(0, 3).map((r) => `${r.node.label} (${money(r.total)})`);
-    const lead = top.length === 1 ? top[0] : `${top.slice(0, -1).join(', ')} and ${top.at(-1)}`;
+    const lead = top.length === 1 ? top[0] : `${top.slice(0, -1).join(', ')} and ${top[top.length - 1]}`;
     out.push(`The largest ${top.length === 1 ? 'giver is' : 'givers are'} ${lead}.`);
   }
   if ((kind === 'donor' || (kind === 'industry' && !party)) && flow.parties.length) {
@@ -766,7 +766,7 @@ function parliamentHTML(rows, flow, partyName, words) {
     </li>`;
   }).join('');
   const quoted = words.map((w) => `“${w}”`);
-  const list = quoted.length === 1 ? quoted[0] : `${quoted.slice(0, -1).join(', ')} or ${quoted.at(-1)}`;
+  const list = quoted.length === 1 ? quoted[0] : `${quoted.slice(0, -1).join(', ')} or ${quoted[quoted.length - 1]}`;
   return `<p class="mx-caution">These are listed for context. A receipt does not show that a vote or speech was influenced.</p>
     <p class="mx-fine">${esc(`Bills whose titles include ${list}, with a vote on the bill or its amendments dated ${flow.firstYear} to ${flow.lastYear + 1}. For each, ${possessive(partyName(party.label))} votes at the bill’s last reading in that time (or its last division), and up to two of its members’ speeches on the bill. Procedural motions are left out.`)}</p>
     <ul class="mx-bills">${items}</ul>`;

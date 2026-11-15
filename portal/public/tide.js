@@ -54,8 +54,8 @@ export function mountTide (container, options = {}) {
 
   const metric = (series) => {
     const shares = series.map((point) => Number(point.share) || 0)
-    const change = (shares.at(-1) || 0) - (shares[0] || 0)
-    return { change, now: shares.at(-1) || 0 }
+    const change = (shares[shares.length - 1] || 0) - (shares[0] || 0)
+    return { change, now: shares[shares.length - 1] || 0 }
   }
 
   const paint = (data) => {

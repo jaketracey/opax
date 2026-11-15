@@ -224,7 +224,7 @@ export function otherReceiptsLine(name, party, split, {also = false, period = ''
   if (split.untyped[0]) parts.push(`${aud(split.untyped[0])} in receipts the return gave no type for`);
   const returned = split.returned?.[0] ? `${name} ${also || parts.length ? 'also ' : ''}recorded ${aud(split.returned[0])} in receipts explicitly marked returned or refunded (excluded from donations).` : '';
   if (!parts.length) return returned;
-  const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts.at(-1);
+  const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
   // Keep this AEC classification attached to subscriptions/untyped receipts,
   // separately from entries typed Donation Received but explicitly returned.
   const clause = split.subscriptions[0] || split.untyped[0] ? ", which the AEC doesn't class as donations" : '';

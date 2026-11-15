@@ -236,7 +236,7 @@ function markup(name) {
 
 export function mountWombat(container, { label = "Checking the record. This can take up to a minute.", animal, phase } = {}) {
   if (!container) throw new TypeError("mountWombat: container is required");
-  if (animal !== undefined && !Object.hasOwn(ANIMALS, animal)) {
+  if (animal !== undefined && !Object.prototype.hasOwnProperty.call(ANIMALS, animal)) {
     throw new TypeError(`mountWombat: unknown animal "${animal}"`);
   }
   const kinds = Object.keys(ANIMALS);

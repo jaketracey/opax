@@ -65,7 +65,7 @@ export function catalogueComplete(m) {
 export async function instrumentTableRows(read, manifest, records) {
   let registered = await read('/instruments/registered.json').catch(()=>null)
   // Offline fixtures and older exports can derive the same field from source metadata.
-  if (!registered || records.some(row=>!Object.hasOwn(registered,row[0]))) {
+  if (!registered || records.some(row=>!Object.prototype.hasOwnProperty.call(registered,row[0]))) {
     registered = {}
     for (let start=0;start<manifest.chunks.length;start+=4) {
       const chunks = await Promise.all(manifest.chunks.slice(start,start+4).map(chunk=>read(chunk.path)))

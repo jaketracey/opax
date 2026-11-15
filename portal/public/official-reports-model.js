@@ -27,7 +27,7 @@ export function reportOptions(index, key) {
   const values = index.rows.flatMap(r => key === 'year' && index.type === 'annual_report' ? r.years.map(y => y.year) : key === 'portfolio' ? r.years.map(y => y.portfolio) : [r[key]]).filter(Boolean);
   return [...new Set(values)].sort((a, b) => key === 'year' ? b.localeCompare(a) : a.localeCompare(b));
 }
-const dateKey = row => row.years && Array.isArray(row.years) ? row.years.map(y => y.year + (y.date || '')).sort().at(-1) || '' : row.date || row.year || '';
+const dateKey = row => row.years && Array.isArray(row.years) ? row.years.map(y => y.year + (y.date || '')).sort().slice(-1)[0] || '' : row.date || row.year || '';
 export function queryReports(index, state) {
   const needles = words(state.q);
   const annual = index.type === 'annual_report';
@@ -67,7 +67,7 @@ function rowHTML(r, type) {
   if (type === 'royal_commission') {
     const years = r.years.split(', ').filter(Boolean);
     const inquiry = r.inquiry_type && r.inquiry_type !== 'royal_commission' ? r.inquiry_type.replaceAll('_', ' ').replace(/^./, c => c.toUpperCase()) : '';
-    meta = [jurisdictionName(r.jurisdiction), years.length > 1 ? `${years[0]}–${years.at(-1)}` : years[0], r.final_date ? `Final report ${day(r.final_date)}` : r.status, inquiry];
+    meta = [jurisdictionName(r.jurisdiction), years.length > 1 ? `${years[0]}–${years[years.length - 1]}` : years[0], r.final_date ? `Final report ${day(r.final_date)}` : r.status, inquiry];
   } else {
     meta = [type === 'integrity_report' ? r.body : '', jurisdictionName(r.jurisdiction), r.year?.replace('-', '–'), r.date ? day(r.date) : '', r.operation ? `Case / operation: ${r.operation}` : ''];
   }

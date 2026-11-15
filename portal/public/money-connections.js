@@ -1,4 +1,4 @@
-import {donorDisclosure} from './donor-disclosure.js?v=d28448a137';
+import {donorDisclosure} from './donor-disclosure.js?v=ddbd183486';
 import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js?v=ia-ux-20260908-2';
 
@@ -9,7 +9,7 @@ export function filterMoneyConnectionView(graph,params) {
 }
 
 /** Source names and amounts are preserved; only confident donor matches link.
- * @returns {import('./datatable.js?v=d86685a921').DataTableConfig} */
+ * @returns {import('./datatable.js?v=05186fc3d9').DataTableConfig} */
 export function moneyConnectionsConfig(graph) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[],types=new Set();

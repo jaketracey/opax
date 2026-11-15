@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=d28448a137';
-import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=ddbd183486';
+import {loadDonorViewIndex} from './donor-views.js?v=a5c3df1f13';
 /** Guided views derived only from exported graph relationships and year cells. */
 const EXCLUDED_INDUSTRIES = new Set(['individual', 'individuals', 'unions', 'party_internal', 'government', 'other', 'unidentified']);
 const COMPANY_WORD = /\b(?:pty|ltd|limited|corporation|corp|bank|banking|group|holdings|plc)\b/i;
@@ -160,7 +160,7 @@ function timeJourney(view, requested) {
     .filter(([key, cell]) => /^(19|20)\d{2}$/.test(key) && Array.isArray(cell) && finite(cell[0]) && cell[0] > 0)
     .map(([key]) => Number(key)))).sort((a, b) => a - b);
   if (years.length < 2) return null;
-  const end = years.at(-1), width = Math.min(3, Math.floor((end - years[0] + 1) / 2));
+  const end = years[years.length - 1], width = Math.min(3, Math.floor((end - years[0] + 1) / 2));
   if (width < 1) return null;
   const earlier = { from: end - 2 * width + 1, to: end - width }, later = { from: end - width + 1, to: end };
   const candidates = view.companies.map(node => {
