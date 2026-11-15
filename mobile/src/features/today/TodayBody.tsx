@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from '../../design/accessibility';
-import { useLayout } from '../../design/adaptive';
+import { ColumnWidth, useLayout } from '../../design/adaptive';
 import { activeVerticalFold } from '../../design/fold';
 import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { rhythm } from '../../design/tokens';
@@ -61,22 +61,36 @@ function TodaySpread({
   const gap = fold
     ? Math.max(32, width - 2 * fold.x, 2 * (fold.x + fold.width) - width)
     : 32;
+  // Each side's width follows from the page's and the gap, as flex will
+  // lay it out (3:2, or even halves). The sides say so to what they hold,
+  // so a grid in one is the right size in its first frame (ColumnWidth).
+  const [lead, trail] = todaySpreadWidths(width, gap, !!fold || even);
   return (
     <View style={[styles.columns, { gap }]}>
       <View
         style={[styles.column, fold || even ? styles.even : styles.leading]}
         testID="today-spread-leading"
       >
-        {leading}
+        <ColumnWidth width={lead}>{leading}</ColumnWidth>
       </View>
       <View
         style={[styles.column, fold || even ? styles.even : styles.trailing]}
         testID="today-spread-trailing"
       >
-        {trailing}
+        <ColumnWidth width={trail}>{trailing}</ColumnWidth>
       </View>
     </View>
   );
+}
+
+/** The spread's two widths in a page `width` wide: 3:2, or even halves. */
+export function todaySpreadWidths(
+  width: number,
+  gap: number,
+  even: boolean,
+): [number, number] {
+  const room = Math.max(0, width - gap);
+  return even ? [room / 2, room / 2] : [(room * 3) / 5, (room * 2) / 5];
 }
 
 const styles = StyleSheet.create({

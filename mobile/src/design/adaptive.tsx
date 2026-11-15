@@ -480,6 +480,33 @@ export function ReadableColumn({
   );
 }
 
+/**
+ * The width a column hands its content, when the column knows it before
+ * anything is laid out: one side of Today's two-column spread, a grid's
+ * own cell. A grid inside reads it for its first frame, in place of the
+ * whole region's width, so its cells are their final size before any text
+ * in them is measured. Without it a grid in a narrow column drew its first
+ * frame for the full screen column, then again once it had measured
+ * itself: on a 13-inch iPad, Today's daily pair sized two 478 pt cards in
+ * a 374 pt column, and their text was measured a line short.
+ */
+const ColumnWidthContext = createContext<number | null>(null);
+export function ColumnWidth({
+  width,
+  children,
+}: {
+  width: number;
+  children: ReactNode;
+}) {
+  return (
+    <ColumnWidthContext.Provider value={Math.max(0, width)}>
+      {children}
+    </ColumnWidthContext.Provider>
+  );
+}
+/** The enclosing column's width, or null where no column has said. */
+export const useColumnWidth = () => useContext(ColumnWidthContext);
+
 export interface GridColumns {
   compact?: number;
   regular?: number;
@@ -512,7 +539,9 @@ export function Grid({
   const layout = useLayout();
   const { fontScale } = useWindowDimensions();
   const [measured, setMeasured] = useState<number | null>(null);
-  const width = measured ?? layout.width;
+  // Before it has measured itself: the column it is in, when that is known.
+  const column = useColumnWidth();
+  const width = measured ?? column ?? layout.width;
   const items = Children.toArray(children).filter(Boolean);
   const count = gridColumns(width, {
     columns: counts,
@@ -541,7 +570,10 @@ export function Grid({
           key={index}
           style={count > 1 ? [styles.cell, { width: Math.floor(cell) }] : null}
         >
-          {item}
+          {/* A grid inside a cell starts from the cell's width. */}
+          <ColumnWidth width={count > 1 ? Math.floor(cell) : width}>
+            {item}
+          </ColumnWidth>
         </View>
       ))}
     </View>
