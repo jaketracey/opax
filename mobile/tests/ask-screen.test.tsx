@@ -1398,25 +1398,38 @@ test('with no seat saved, the one starter is general and asks at once', async ()
   });
 });
 
-test('the sizing stand-ins cover both kinds of name: one with long words, one with none longer than the question’s own', () => {
-  const longestWord = (text: string) =>
-    Math.max(...text.split(/[^A-Za-z]+/).map((word) => word.length));
+test('the sizing stand-ins are the pair the layout sweep chose, and the full-size one is hyphen-aware with no part as long as the question’s own longest word', () => {
+  // Chosen by drawn height (system font, 17 to 53 pt, rows 200 to 330 pt
+  // wide): the taller of the two is never shorter than the question about
+  // any verified member of the House. Jest has no fonts, so the names are
+  // pinned here and the rule that makes them hold is checked below.
+  expect([...SIZING_MEMBERS]).toEqual([
+    'Alexandrina Wetherington',
+    'Annabelle Margaret Lee-Ray',
+  ]);
+  // A word breaks at spaces and at hyphens; each part must fit a line.
+  const parts = (text: string) => text.split(/[\s-]+/).filter(Boolean);
+  const longestPart = (text: string) =>
+    Math.max(...parts(text).map((part) => part.replace(/\W/g, '').length));
   // The question's own longest word, which every real question carries.
-  const template = longestWord(seatStarter(''));
+  const template = longestPart(seatStarter(''));
   expect(template).toBe('parliament'.length);
-  const [long, short] = SIZING_MEMBERS;
-  expect(SIZING_MEMBERS.length).toBe(2);
-  // Each is the roster's longest name (22 characters) plus a small margin.
-  for (const name of SIZING_MEMBERS) {
-    expect(name.length).toBeGreaterThanOrEqual(24);
-    expect(name.length).toBeLessThanOrEqual(26);
-  }
-  // A name with a long word: its question is stepped down at large sizes.
-  expect(longestWord(long)).toBeGreaterThan(template);
-  // A name of short words only: its question is never stepped down further
-  // than a real one, so at large sizes it is the taller candidate.
-  expect(longestWord(short)).toBeLessThanOrEqual(template);
-  expect(longestWord(seatStarter(short))).toBe(template);
+  const [long, full] = SIZING_MEMBERS;
+  // One name with a long word: its question is stepped down at large sizes.
+  expect(longestPart(long)).toBeGreaterThan(template);
+  // The other is drawn at full size. Letter count is not drawn width (a
+  // ten-letter name of wide letters draws wider than "parliament" and is
+  // stepped down), so every part is strictly shorter than that word.
+  expect(longestPart(full)).toBeLessThan(template);
+  expect(longestPart('Bernadette Annabelle Lee')).toBe(template);
+  // The tallest real questions are for hyphenated names, which break at
+  // the hyphen. The full-size stand-in is hyphenated too, and its question
+  // is longer and has more parts than the roster's longest such name's.
+  const hyphenated = 'Elizabeth Watson-Brown';
+  expect(full).toContain('-');
+  expect(full.length).toBeGreaterThan(hyphenated.length);
+  expect(parts(full).length).toBeGreaterThan(parts(hyphenated).length);
+  expect(longestPart(full)).toBeGreaterThanOrEqual(longestPart(hyphenated));
 });
 
 test.each([
@@ -2827,7 +2840,7 @@ test.each(
     [1, 2].map((fontScale) => [platform, fontScale] as const),
   ),
 )(
-  '%s font %s: Ask headings clear their groups with unchanged iOS spacing',
+  '%s font %s: Ask headings clear their groups at large text sizes, on both platforms',
   async (platform, fontScale) => {
     const original = Platform.OS;
     const window = Dimensions.get('window');
@@ -2839,7 +2852,11 @@ test.each(
       const heading = idle.findAllByType(SectionHeader)[0];
       const parent = heading.parent!;
       const gap = StyleSheet.flatten(parent.props.style)?.gap ?? 0;
-      if (platform === 'android' && fontScale === 2) {
+      // At accessibility sizes the stacked heading takes back part of its
+      // parent's gap. With no gap the card covers the foot of "Try asking"
+      // (seen on iOS at AX3, build 78 sweep), so both platforms give it.
+      if (fontScale === 2) {
+        expect(gap).toBe(rhythm.block);
         const header = heading.findByType(View);
         const margin = StyleSheet.flatten(header.props.style).marginBottom ?? 0;
         expect(Number(gap) + Number(margin)).toBeGreaterThanOrEqual(
@@ -3548,6 +3565,83 @@ describe('the docked conversation column with nothing asked', () => {
     } finally {
       act(() => Dimensions.set({ window }));
     }
+  });
+
+  test('a shown mark goes as soon as it no longer fits: half a point short hides it, so it never overruns its room', async () => {
+    // A first measurement shows the mark exactly when it fits, so fresh
+    // mounts find the tallest words (to half a point) it still fits beside.
+    const fitsFresh = async (words: number) => {
+      let shown = false;
+      await at(1194, 834, pad, true, async () => {
+        await mount();
+        await layOut(834, 90, words);
+        shown = hosts('ask-empty-mark').length > 0;
+      });
+      return shown;
+    };
+    let fits = 100;
+    let over = 744;
+    expect(await fitsFresh(fits)).toBe(true);
+    expect(await fitsFresh(over)).toBe(false);
+    while (over - fits > 0.5) {
+      const mid = Math.round(fits + over) / 2;
+      if (await fitsFresh(mid)) fits = mid;
+      else over = mid;
+    }
+    expect(over - fits).toBe(0.5);
+    await at(1194, 834, pad, true, async () => {
+      await mount();
+      const markShown = () => hosts('ask-empty-mark').length > 0;
+      // It just fits: shown.
+      await layOut(834, 90, fits);
+      expect(markShown()).toBe(true);
+      // Half a point more and it does not: hidden at once.
+      await layOut(834, 90, over);
+      expect(markShown()).toBe(false);
+      // Back to a bare fit is not room to spare: it stays hidden.
+      await layOut(834, 90, fits);
+      expect(markShown()).toBe(false);
+      // A point to spare brings it back.
+      await layOut(834, 90, fits - 1);
+      expect(markShown()).toBe(true);
+    });
+  });
+
+  test('the mark holds within a point of its threshold: heights half a point apart there change it once, not every time', async () => {
+    await at(1194, 834, pad, true, async () => {
+      await mount();
+      const markShown = () => hosts('ask-empty-mark').length > 0;
+      // Plenty of room: the mark is shown.
+      await layOut(834, 90, 100);
+      expect(markShown()).toBe(true);
+      // Grow the words until the mark goes: coarsely, then by half points.
+      let words = 100;
+      while (markShown() && words < 900) {
+        words += 16;
+        await layOut(834, 90, words);
+      }
+      expect(markShown()).toBe(false);
+      words -= 16;
+      // Well clear of the threshold again, it comes back.
+      await layOut(834, 90, words - 16);
+      expect(markShown()).toBe(true);
+      while (markShown() && words < 900) {
+        words += 0.5;
+        await layOut(834, 90, words);
+      }
+      expect(markShown()).toBe(false);
+      // The words now measure half a point shorter, then taller, and so on,
+      // as recentring them does. The mark stays as it is.
+      const seen: boolean[] = [];
+      for (let i = 0; i < 8; i += 1) {
+        await layOut(834, 90, words - (i % 2 === 0 ? 0.5 : 0));
+        seen.push(markShown());
+      }
+      expect(seen).toEqual(Array(8).fill(false));
+      // A real change, well past the threshold, still brings it back.
+      await layOut(834, 90, words - 4);
+      expect(markShown()).toBe(true);
+    });
   });
 
   test('saved conversations that could not be read: the error stands alone, with the line, and no centred state', async () => {
