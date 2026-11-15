@@ -89,11 +89,41 @@ const releases = (keep: (name: string) => boolean) => (root: string) => {
  * one the decoder kept. A key it refuses is a dropped row, reported by the
  * decoder itself.
  *
+ * A fact can also decode and still never be drawn: the page shows a
+ * division only with its publisher, by the app's own rule
+ * (`divisionPublisher`). A division whose source the file's
+ * `meta.sources.divisions` does not name, or names with an empty
+ * publisher, is a fact no reader sees, so it is a problem here, by name.
+ * (An earliest fact with no coverage year is left out by design, and is
+ * not one.)
+ *
  * Built from the build's own source like every other decoder: a build with
  * no `api/people-firsts` (1.1.4 (73) and 1.1.3 (57) never read the file)
  * has no decoder for the family, and is never checked with a newer one.
  */
-const decodeFirsts = decoder(load('api/people-firsts'), 'decodePeopleFirsts');
+const firstsModule = load('api/people-firsts');
+const decodeFirsts = decoder(firstsModule, 'decodePeopleFirsts');
+type FirstsSources = { divisions: Record<string, string> };
+/**
+ * The build's own rule for who published a division. A build that reads
+ * the file but has no `divisionPublisher` of its own (it applied the rule
+ * inline) is held to that same rule.
+ */
+const divisionPublisher =
+  typeof firstsModule.divisionPublisher === 'function'
+    ? (firstsModule.divisionPublisher as (
+        sources: FirstsSources,
+        division: { source: string },
+      ) => string | undefined)
+    : (sources: FirstsSources, division: { source: string }) =>
+        Object.hasOwn(sources.divisions, division.source)
+          ? sources.divisions[division.source]
+          : undefined;
+/** The path the build itself reads, so a move cannot leave the family empty. */
+export const firstsPath =
+  typeof firstsModule.PEOPLE_FIRSTS_PATH === 'string'
+    ? firstsModule.PEOPLE_FIRSTS_PATH
+    : '/people/firsts.json';
 const tolerated = validation.tolerated as
   | ((at: string, reason: string) => void)
   | undefined;
@@ -103,7 +133,7 @@ export const decodeFirstsWhole: Decode | undefined =
         const decoded = decodeFirsts(value) as Record<
           'by_pid' | 'by_name',
           Record<string, Record<string, unknown>>
-        >;
+        > & { meta: { sources: FirstsSources } };
         const given = value as Record<
           string,
           Record<string, Record<string, unknown>>
@@ -116,6 +146,19 @@ export const decodeFirstsWhole: Decode | undefined =
                   `${group}.${key}.${fact}`,
                   'Could not be read, left out of the person’s firsts',
                 );
+        for (const group of ['by_pid', 'by_name'] as const)
+          for (const [key, kept] of Object.entries(decoded[group])) {
+            const division = kept.first_division as
+              | { source: string }
+              | null
+              | undefined;
+            // Unnamed, or named with an empty publisher: hidden either way.
+            if (division && !divisionPublisher(decoded.meta.sources, division))
+              tolerated(
+                `${group}.${key}.first_division.source`,
+                `"${division.source}" names no publisher in meta.sources.divisions, never shown`,
+              );
+          }
         return decoded;
       }
     : undefined;
@@ -280,8 +323,10 @@ export const families: Family[] = [
   {
     // A side file to the roster, read from build 78 on.
     name: 'people firsts',
-    path: '/people/firsts.json',
-    files: one('people/firsts.json'),
+    path: firstsPath,
+    // The path the app itself reads, so a move cannot leave this family
+    // checking nothing.
+    files: one(firstsPath.replace(/^\//, '')),
     decode: decodeFirstsWhole,
   },
   {

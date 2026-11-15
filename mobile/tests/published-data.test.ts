@@ -6,13 +6,16 @@
 // The decoders: this tree's, or a pinned build's `mobile/src`
 // (OPAX_DECODERS_SRC, named by OPAX_DECODERS_LABEL), because published
 // data must decode under the strictest build still on readers' phones.
+import { readFileSync } from 'fs';
 import { join } from 'path';
 import {
   buildLabel,
   buildReads,
   checkFamily,
   decodersRoot,
+  decodeFirstsWhole,
   families,
+  firstsPath,
   problemsIn,
   publishedRoot,
 } from './published-data';
@@ -151,6 +154,41 @@ if (firsts.decode)
           `${named}people/firsts.json by_pid.90002.first_division: Could not be read, left out of the person’s firsts (tolerated)`,
         ],
       });
+    });
+
+    test('a division whose source the file does not name, which decodes and is never drawn, fails the family by name', () => {
+      expect(check('unnamed-source')).toEqual({
+        files: 1,
+        problems: [
+          `${named}people/firsts.json by_name.Casey Specimen.first_division.source: "vic_hansard_pdf" names no publisher in meta.sources.divisions, never shown (tolerated)`,
+        ],
+      });
+    });
+
+    test('a division whose source is named with an empty publisher, which the page also hides, fails the family by name', () => {
+      expect(check('empty-publisher')).toEqual({
+        files: 1,
+        problems: [
+          `${named}people/firsts.json by_name.Casey Specimen.first_division.source: "theyvoteforyou" names no publisher in meta.sources.divisions, never shown (tolerated)`,
+        ],
+      });
+    });
+
+    test('the family reads the path the app reads', () => {
+      expect(firstsPath).toBe('/people/firsts.json');
+      expect(
+        firsts.files(join(__dirname, 'fixtures/published-firsts/whole')),
+      ).toEqual([firstsPath.slice(1)]);
+    });
+
+    test('the portal export’s own sample is whole: a fact left out by design (no coverage year) is not a problem', () => {
+      const sample = JSON.parse(
+        readFileSync(
+          join(__dirname, 'fixtures', 'people-firsts.sample.json'),
+          'utf8',
+        ),
+      );
+      expect(problemsIn(sample, decodeFirstsWhole!)).toEqual([]);
     });
 
     test('a file in another shape (rows, and no meta) is refused', () => {
