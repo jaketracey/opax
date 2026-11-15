@@ -9,7 +9,11 @@ import {
   type CacheIndexEntry,
   type CacheStore,
 } from '../src/api/cache';
-import { ApiClient, shouldFreezeSnapshots } from '../src/api/client';
+import {
+  ApiClient,
+  LAST_WAITER_GRACE_MS,
+  shouldFreezeSnapshots,
+} from '../src/api/client';
 import { ApiError, httpError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
 import { pinnedBytes, slugs } from './pinned';
@@ -1620,10 +1624,23 @@ test('a superseded read aborts its transport and does not retry or substitute ca
     signal: controller.signal,
   });
   await new Promise((resolve) => setImmediate(resolve));
-  controller.abort();
-  await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
-  expect(transportSignal?.aborted).toBe(true);
-  expect(transport).toHaveBeenCalledTimes(1);
+  jest.useFakeTimers({
+    doNotFake: ['setImmediate', 'nextTick', 'queueMicrotask'],
+  });
+  try {
+    controller.abort();
+    // The caller stops waiting at once. The transport is aborted when the
+    // grace for a reader to rejoin has run out, and not before.
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+    jest.advanceTimersByTime(LAST_WAITER_GRACE_MS - 1);
+    expect(transportSignal?.aborted).toBe(false);
+    jest.advanceTimersByTime(1);
+    expect(transportSignal?.aborted).toBe(true);
+    await new Promise((resolve) => setImmediate(resolve));
+    expect(transport).toHaveBeenCalledTimes(1);
+  } finally {
+    jest.useRealTimers();
+  }
 });
 
 test('cancellation while decoding a response cannot publish or save that response', async () => {
@@ -1641,6 +1658,11 @@ test('cancellation while decoding a response cannot publish or save that respons
   controller.abort();
   finish({ generated: '2026-11-11' });
   await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+  expect(store.entries).toEqual([]);
+  // Nor a moment later: the response finished decoding inside the grace
+  // with nobody back to read it, so it is an abandoned read's.
+  for (let turn = 0; turn < 20; turn++)
+    await new Promise((resolve) => setImmediate(resolve));
   expect(store.entries).toEqual([]);
 });
 

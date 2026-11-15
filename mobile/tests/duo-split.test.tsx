@@ -256,10 +256,12 @@ function Detail({ entry }: { entry: RecordEntry }) {
   useEffect(() => {
     if (current) pane = current;
   });
-  // This is the same cache-backed loading boundary used by record screens.
+  // This is the same cache-backed loading boundary used by record screens,
+  // and like them (BillDetail) it passes the read's abort signal on: a
+  // detail that unmounts stops waiting for its read.
   const load = useCallback(
-    (refresh: boolean) =>
-      client.get(`/bills/${entry.key}.json`, whole, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      client.get(`/bills/${entry.key}.json`, whole, refresh, { signal }),
     [entry.key],
   );
   const { record } = useCatalogRecord(load);
@@ -365,7 +367,10 @@ it('collapses the open record to its route, then pops and selects it on expansio
 
 it('a record still being read is one request across a fold and an unfold', async () => {
   // The transport answers only when the test lets it, so the pane's read is
-  // still under way when the fold mounts the pushed route's detail.
+  // still under way when the fold mounts the pushed route's detail. The
+  // pane's detail unmounts in that fold and its read is aborted: it is the
+  // request's last waiter, and the route's detail, mounting a moment
+  // later, must rejoin the same request and not start a second.
   const waiting: ((response: Response) => void)[] = [];
   transport.mockImplementation(
     () => new Promise<Response>((answer) => waiting.push(answer)),
