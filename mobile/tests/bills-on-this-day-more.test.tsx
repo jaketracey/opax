@@ -3,7 +3,7 @@
 // dated index, chosen by date alone and drawn in the frame the bills first
 // draw or not at all. Every name here is invented.
 import { act } from 'react';
-import { RefreshControl, useWindowDimensions } from 'react-native';
+import { RefreshControl, StyleSheet, useWindowDimensions } from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Catalogs } from '../src/api/catalogs';
@@ -543,6 +543,14 @@ describe('the rows on Bills', () => {
       const root = await renderWatched();
       expect(labels(root)).toEqual(first);
       const drawn = ids(root);
+      // Before the day passes the date is there, holding its space unseen.
+      for (const id of [
+        'bills-on-this-day-division',
+        'bills-on-this-day-speech',
+      ])
+        expect(
+          StyleSheet.flatten(host(root, `${id}-date`)[0]!.props.style).opacity,
+        ).toBe(0);
       mockDay = nextDay;
       await emit('focus');
       // Nothing was read or chosen for the new day while the list is in view.
@@ -554,21 +562,18 @@ describe('the rows on Bills', () => {
         ['bills-on-this-day-division', '1 January 2014'],
         ['bills-on-this-day-speech', '1 January 2019'],
       ] as const) {
-        // The "On this day" line still holds its space, unseen.
+        // Both lines are laid out in one cell; only the date is seen.
         const [kicker] = host(root, `${id}-kicker`);
-        expect([kicker!.props.style].flat(3)).toEqual(
-          expect.arrayContaining([expect.objectContaining({ opacity: 0 })]),
-        );
         const [over] = host(root, `${id}-date`);
+        expect(StyleSheet.flatten(kicker!.props.style).opacity).toBe(0);
         expect(over!.props.children).toBe(date);
-        expect([over!.props.style].flat(3)).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({ position: 'absolute' }),
-          ]),
-        );
+        const style = StyleSheet.flatten(over!.props.style);
+        expect(style.opacity).not.toBe(0);
+        expect(style.position).toBeUndefined();
+        expect(style).toMatchObject({ width: '100%', marginLeft: '-100%' });
       }
-      // Only the two overlaid dates are new; everything else is where it was.
-      expect(ids(root).filter((id) => !id.endsWith('-date'))).toEqual(drawn);
+      // Nothing was added or removed: the dates were laid out all along.
+      expect(ids(root)).toEqual(drawn);
     });
 
     test('out of sight it reads the new day’s index and chooses again', async () => {

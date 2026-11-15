@@ -88,9 +88,12 @@ export function OnThisDayRow({
 }
 
 /**
- * The "On this day in 2018" line. It always holds the space. Once its day
- * has passed it is hidden, not removed, and the record's own date is drawn
- * over it out of the layout: the row's height cannot change.
+ * The "On this day in 2018" line and the record's own date, in one cell.
+ * Both are always laid out, one over the other, and only one is seen: the
+ * "On this day" line, or the date once its day has passed. The cell is as
+ * tall as the taller of the two from the first frame, so at the largest
+ * text sizes a date that needs more lines than the line it replaces has its
+ * room already, and swapping them moves and covers nothing.
  */
 function DayKicker({
   kicker,
@@ -104,27 +107,25 @@ function DayKicker({
   testID: string;
 }) {
   return (
-    <View>
+    <View style={styles.cell}>
       <Text
         wordSafe
         variant="footnote"
         tone="inkSoft"
         testID={`${testID}-kicker`}
-        style={passed ? styles.held : undefined}
+        style={[styles.layer, passed ? styles.unseen : null]}
       >
         {kicker}
       </Text>
-      {passed ? (
-        <Text
-          wordSafe
-          variant="footnote"
-          tone="inkSoft"
-          testID={`${testID}-date`}
-          style={styles.over}
-        >
-          {formatDate(date)}
-        </Text>
-      ) : null}
+      <Text
+        wordSafe
+        variant="footnote"
+        tone="inkSoft"
+        testID={`${testID}-date`}
+        style={[styles.layer, styles.second, passed ? null : styles.unseen]}
+      >
+        {formatDate(date)}
+      </Text>
     </View>
   );
 }
@@ -226,6 +227,10 @@ export function OnThisDaySpeechRow({
 }
 
 const styles = StyleSheet.create({
-  held: { opacity: 0 },
-  over: { position: 'absolute', top: 0, left: 0, right: 0 },
+  // Two full-width layers in a row, the second pulled back over the first:
+  // both take part in layout, and the row is as tall as the taller one.
+  cell: { flexDirection: 'row', alignItems: 'flex-start' },
+  layer: { width: '100%', flexShrink: 0 },
+  second: { marginLeft: '-100%' },
+  unseen: { opacity: 0 },
 });

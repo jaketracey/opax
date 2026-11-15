@@ -324,7 +324,7 @@ describe('the row on Bills', () => {
     ['the default size', 1],
     ['AX5', 3.571],
   ])(
-    'at %s the row whose day has passed lays out exactly as it did: only the hidden line and the date over it differ',
+    'at %s the row whose day has passed lays out exactly as it did: both lines hold their space, and only which one is seen differs',
     (_name, fontScale) => {
       jest
         .mocked(useWindowDimensions)
@@ -339,42 +339,67 @@ describe('the row on Bills', () => {
         mounted.push(r);
         return r.toJSON() as Json;
       };
-      // What takes part in layout: the date drawn over the line is out of
-      // it (absolute), and the held line differs only by its opacity.
-      const overlays: Json[] = [];
-      const inFlow = (node: Json | string): Json | string | null => {
+      const layers = ['bills-on-this-day-kicker', 'bills-on-this-day-date'];
+      // What takes part in layout: everything but the two layers' opacity.
+      const seen: Record<string, boolean> = {};
+      const cells: Json[] = [];
+      const laidOut = (node: Json | string): Json | string => {
         if (typeof node === 'string') return node;
-        if (node.props.testID === 'bills-on-this-day-date') {
-          overlays.push(node);
-          return null;
-        }
         const { accessibilityLabel: _label, ...props } = node.props;
         const style = { ...StyleSheet.flatten(props.style) };
-        if (props.testID === 'bills-on-this-day-kicker') delete style.opacity;
+        if (layers.includes(props.testID)) {
+          seen[props.testID] = style.opacity !== 0;
+          delete style.opacity;
+          // In the layout, never lifted out of it: its lines make room.
+          expect(style.position).toBeUndefined();
+          expect(style.width).toBe('100%');
+          expect(style.flexShrink).toBe(0);
+        }
+        if (
+          node.children?.some(
+            (child) =>
+              typeof child !== 'string' && layers.includes(child.props.testID),
+          )
+        )
+          cells.push(node);
         return {
           ...node,
           props: { ...props, style },
-          children:
-            node.children
-              ?.map(inFlow)
-              .filter((child): child is Json | string => child !== null) ??
-            null,
+          children: node.children?.map(laidOut) ?? null,
         };
       };
-      const fresh = inFlow(drawn(false));
-      expect(overlays).toHaveLength(0);
-      const passed = inFlow(drawn(true));
+      const fresh = laidOut(drawn(false));
+      expect(seen).toEqual({
+        'bills-on-this-day-kicker': true,
+        'bills-on-this-day-date': false,
+      });
+      const passed = laidOut(drawn(true));
+      expect(seen).toEqual({
+        'bills-on-this-day-kicker': false,
+        'bills-on-this-day-date': true,
+      });
       // As text: handlers are new functions on every render.
       expect(JSON.stringify(passed)).toBe(JSON.stringify(fresh));
-      expect(overlays).toHaveLength(1);
-      expect(StyleSheet.flatten(overlays[0]!.props.style)).toMatchObject({
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-      });
-      // The held line is still there to hold the height, unseen.
+      // One cell holds both lines, the date laid back over the first line,
+      // so the cell is as tall as whichever needs more lines.
+      expect(cells).toHaveLength(2);
+      for (const cell of cells) {
+        expect(StyleSheet.flatten(cell.props.style)).toMatchObject({
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+        });
+        const [first, second] = cell.children as Json[];
+        expect(first!.props.testID).toBe('bills-on-this-day-kicker');
+        expect(second!.props.testID).toBe('bills-on-this-day-date');
+        expect(StyleSheet.flatten(second!.props.style).marginLeft).toBe(
+          '-100%',
+        );
+        expect(
+          StyleSheet.flatten(first!.props.style).marginLeft,
+        ).toBeUndefined();
+      }
       expect(JSON.stringify(passed)).toContain(`On this day in ${pick.year}`);
+      expect(JSON.stringify(fresh)).toContain(formatDate(pick.date));
     },
   );
 
@@ -453,6 +478,9 @@ describe('the row on Bills', () => {
       root.findAll(
         (node) => typeof node.type === 'string' && node.props.testID === id,
       );
+    /** Whether a layer of the row's top line is the one the reader sees. */
+    const shown = (root: ReactTestInstance, id: string) =>
+      StyleSheet.flatten(part(root, id)[0]!.props.style).opacity !== 0;
     // Every way the list hears about the world while it has the focus.
     const whileFocused: [string, () => void][] = [
       ['a refresh', () => {}],
@@ -480,9 +508,8 @@ describe('the row on Bills', () => {
         event();
         // The same bill, in the same place, with the same things around it.
         expect(title(r.root)).toBe(bill);
-        expect(
-          ids(r.root).filter((id) => id !== 'bills-on-this-day-date'),
-        ).toEqual(before);
+        // The date was laid out all along, so nothing is added or removed.
+        expect(ids(r.root)).toEqual(before);
       },
     );
 
@@ -504,7 +531,8 @@ describe('the row on Bills', () => {
       async (_name, event) => {
         const r = await renderWatched();
         const pick = onThisDay(pinnedBills.bills, dayWithBill)!;
-        expect(part(r.root, 'bills-on-this-day-date')).toHaveLength(0);
+        expect(shown(r.root, 'bills-on-this-day-date')).toBe(false);
+        expect(shown(r.root, 'bills-on-this-day-kicker')).toBe(true);
         mockDay = nextDay;
         event();
         expect(label(r.root)).toBe(
@@ -512,11 +540,13 @@ describe('the row on Bills', () => {
         );
         const [date] = part(r.root, 'bills-on-this-day-date');
         expect(texts(date!)).toBe(formatDate(pick.date));
+        expect(shown(r.root, 'bills-on-this-day-date')).toBe(true);
+        expect(shown(r.root, 'bills-on-this-day-kicker')).toBe(false);
         // The next blur chooses again, and the row is today's once more.
         focused = false;
         emit('blur');
         expect(label(r.root)).toBe(labelFor(nextDay));
-        expect(part(r.root, 'bills-on-this-day-date')).toHaveLength(0);
+        expect(shown(r.root, 'bills-on-this-day-date')).toBe(false);
       },
     );
 
