@@ -1,16 +1,13 @@
 import { router, type Href } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { Icon } from '../../design/icon';
 import { InsetGroup } from '../../design/layout';
 import { partyText, type PartyContext } from '../../design/party';
+import { Pressable } from '../../design/pressable';
 import { PersonRow } from '../../design/people';
-import {
-  useRowCellStyle,
-  useRowHighlight,
-  useRowInset,
-} from '../../design/row-padding';
+import { useRowCellStyle, useRowInset } from '../../design/row-padding';
 import {
   menuSections,
   RowLink,
@@ -179,7 +176,6 @@ function DissolvedFrame({
 
 function DissolvedRow({ rep }: { rep: DissolvedRep }) {
   const cell = useRowCellStyle();
-  const highlight = useRowHighlight();
   return (
     <RowLink href={rep.href} menu={menuSections(rep.menu)}>
       <Pressable
@@ -189,11 +185,8 @@ function DissolvedRow({ rep }: { rep: DissolvedRep }) {
         accessibilityHint={rep.hint}
         onPress={() => router.push(rep.href)}
         testID="today-rep-state-dissolved"
-        style={({ pressed }) => [
-          styles.person,
-          cell,
-          pressed ? { backgroundColor: highlight } : null,
-        ]}
+        feedback="wash"
+        style={[styles.person, cell]}
       >
         <DissolvedFrame lines={rep.lines} />
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
