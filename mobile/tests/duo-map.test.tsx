@@ -507,7 +507,7 @@ test.each([
       tree.root
         .findAllByProps({ testID: 'money-map-band' })[0]
         ?.props.onLayout({
-          nativeEvent: { layout: { y: 400, height: 140 } },
+          nativeEvent: { layout: { height: 20 } },
         });
     });
     const stage = tree.root.findByType(MoneyMap);

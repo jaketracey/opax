@@ -384,7 +384,7 @@ describe('the band under the panel', () => {
     const report = (inset: number) =>
       act(() =>
         probe().props.onLayout({
-          nativeEvent: { layout: { y: 0, height: 760 - inset } },
+          nativeEvent: { layout: { height: inset } },
         }),
       );
     const band = () => flat(byTestID(r.root, 'money-map-band-space')).height;

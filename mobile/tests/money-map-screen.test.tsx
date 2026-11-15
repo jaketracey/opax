@@ -268,7 +268,7 @@ test.each([
       });
       act(() =>
         byTestID(r.root, 'money-map-band')?.props.onLayout({
-          nativeEvent: { layout: { y: height - bottom - 200, height: 200 } },
+          nativeEvent: { layout: { height: bottom } },
         }),
       );
       const legacy = {
@@ -627,7 +627,7 @@ test.each(['android', 'ios'] as const)(
         top.props.onLayout({ nativeEvent: { layout: { height: 560 } } });
         panel.props.onPeekHeight(180);
         byTestID(r.root, 'money-map-band')?.props.onLayout({
-          nativeEvent: { layout: { y: height - 200, height: 200 } },
+          nativeEvent: { layout: { height: 0 } },
         });
       });
       act(() =>
