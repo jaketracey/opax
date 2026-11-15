@@ -308,6 +308,11 @@ test('popup menus remain anchored inside the viewport, expose menu items and dis
   );
   expect(r.getByTestId('android-menu').props.accessibilityRole).toBe('menu');
   expect(styles(r.getByTestId('android-menu')).left).toBeLessThan(350);
+  // Every title starts at the leading edge: a one-line title is not centred
+  // between wrapped ones.
+  const item = styles(r.getByRole('menuitem', { name: 'Copy link' }));
+  expect(item).toMatchObject({ flexDirection: 'row', alignItems: 'center' });
+  expect(item.justifyContent ?? 'flex-start').toBe('flex-start');
   fireEvent.press(r.getByRole('menuitem', { name: 'Copy link' }));
   expect(action).toHaveBeenCalledTimes(1);
   expect(dismiss).toHaveBeenCalledTimes(1);
