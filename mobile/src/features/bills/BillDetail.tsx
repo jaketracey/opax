@@ -311,19 +311,10 @@ export default function BillDetail({
     embedded ? undefined : title || undefined,
     { trailing: canShare ? 2 : 1 },
   );
+  // No Ask here on either platform: the menu has items only once the bill
+  // has loaded, and the loaded page always draws its own Ask button.
   const menu = identity
-    ? [
-        ...(Platform.OS === 'ios'
-          ? []
-          : [
-              {
-                title: 'Ask about this bill',
-                symbol: 'text.bubble' as const,
-                onPress: ask,
-              },
-            ]),
-        ...billMenuItems({ billKey: identity.key, title: name, home }),
-      ]
+    ? billMenuItems({ billKey: identity.key, title: name, home })
     : [];
   const failed = notFound || (error && !record);
   // One element per shape: the crossfade keeps the last loading skeleton.
