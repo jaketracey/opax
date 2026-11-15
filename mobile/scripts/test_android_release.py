@@ -342,7 +342,9 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
             self.assertLess(script.index('\nupload_settings\n'), script.index('\ncheck_inputs\n'))
             sources = [line for line in script.splitlines() if line.lstrip().startswith(('source ', '. '))]
             self.assertEqual(len(sources), 4)
-            self.assertEqual([line for line in sources if not line.endswith('; upload_settings')], [])
+            # qa-env.sh and the host guard stay bare and adjacent (test-android-host.sh); one recheck follows both.
+            self.assertIn('\nsource scripts/qa-env.sh\nsource scripts/android-host.sh\nupload_settings\n', script)
+            self.assertEqual([line for line in sources[2:] if not line.endswith('; upload_settings')], [])
 
     def test_build_play_qa_local_env_cannot_turn_on_the_upload_or_bring_back_a_key(self):
         # qa-env.sh loads mobile/.qa.local.env with set -a in both passes.

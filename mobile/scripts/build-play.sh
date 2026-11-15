@@ -47,8 +47,10 @@ while [ "$#" -gt 0 ]; do
 done
 [[ "$EXPECTED_COMMIT" =~ ^[0-9a-f]{40}$ ]] || { echo 'Release requires --expected-commit with the full QA-approved SHA.' >&2; exit 2; }
 case "$EXPECTED_VOICE_MODE" in 0|1) ;; *) echo 'Release requires --expected-voice-mode 0 or 1.' >&2; exit 2 ;; esac
-source scripts/qa-env.sh; upload_settings
-source scripts/android-host.sh; upload_settings
+# The host guard must follow qa-env.sh directly (scripts/test-android-host.sh); the recheck comes after both.
+source scripts/qa-env.sh
+source scripts/android-host.sh
+upload_settings
 source scripts/android-gradle.sh; upload_settings
 source scripts/qa-lock.sh; upload_settings
 if [ "$CALLER_VOICE_MODE_SET" = x ]; then export OPAX_PRODUCTION_VOICE=$CALLER_VOICE_MODE; fi
