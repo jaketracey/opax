@@ -585,8 +585,18 @@ export function Screen({
     (nativeRoot && railSolidRoot) || (!glassBar() && !clearExpandedBar);
   // Only where the scroll view runs under the bar: below an opaque bar it
   // already starts under it, and a margin would only add a blank band.
-  const clipTop =
+  const wantClipTop =
     Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
+  // The cut in force. A change waits for a fling to end: mid-fling the
+  // offset known here is a frame or more behind, and moving it would stop
+  // the list and snap it back.
+  const [clipTop, setClipTop] = useState(wantClipTop);
+  const decelerating = useRef(false);
+  const latestClipTop = useRef(wantClipTop);
+  useLayoutEffect(() => {
+    latestClipTop.current = wantClipTop;
+    if (!decelerating.current) setClipTop(wantClipTop);
+  }, [wantClipTop]);
   // Turning the cut on or off moves the scroll view's frame by `safeTop`.
   // At the top of the page UIKit puts the content back by itself; further
   // down it keeps the offset, and every row would jump by that much. The
@@ -724,9 +734,16 @@ export function Screen({
               onScrollEndDrag={
                 clampScrollOnContentChange ? bounds.onScroll : undefined
               }
-              onMomentumScrollEnd={
-                clampScrollOnContentChange ? bounds.onScroll : undefined
-              }
+              onMomentumScrollBegin={() => {
+                decelerating.current = true;
+              }}
+              onMomentumScrollEnd={(event) => {
+                decelerating.current = false;
+                // The offset is final now: a cut held during the fling applies.
+                scrollY.current = event.nativeEvent.contentOffset.y;
+                setClipTop(latestClipTop.current);
+                if (clampScrollOnContentChange) bounds.onScroll(event);
+              }}
               scrollEventThrottle={16}
               stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
               // Under a solid bar the scroll view starts below the bar, and

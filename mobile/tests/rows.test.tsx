@@ -1888,6 +1888,64 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     // children out as in a box of fixed height, and the pinned band 0 pt
     // tall, with no background and the content over it (iOS 26.3).
     expect(flat(scroll.props.style).overflow).not.toBe('hidden');
+    // Mid-fling the change waits: correcting the offset then would use a
+    // stale position and stop the list. It applies when the fling ends.
+    const tree = render(
+      <SafeAreaInsetsContext.Provider
+        value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+      >
+        <HeaderHeightContext.Provider value={240}>
+          <Screen testID="page" clipAboveSafeTop={false}>
+            <View testID="first" />
+          </Screen>
+        </HeaderHeightContext.Provider>
+      </SafeAreaInsetsContext.Provider>,
+    );
+    const live = () =>
+      tree.root.find(
+        (node) =>
+          node.props.testID === 'page' &&
+          typeof node.props.onMomentumScrollEnd === 'function',
+      );
+    const cut = (on: boolean) =>
+      act(() =>
+        tree.update(
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={240}>
+              <Screen testID="page" clipAboveSafeTop={on}>
+                <View testID="first" />
+              </Screen>
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>,
+        ),
+      );
+    const end = (y: number) =>
+      act(() =>
+        live().props.onMomentumScrollEnd({
+          nativeEvent: {
+            contentOffset: { y },
+            contentSize: { height: 4000 },
+            layoutMeasurement: { height: 800 },
+          },
+        }),
+      );
+    act(() => live().props.onMomentumScrollBegin());
+    cut(true);
+    expect(flat(live().props.style).marginTop ?? 0).toBe(0);
+    end(900);
+    expect(flat(live().props.style).marginTop).toBe(62);
+    // And off again mid-fling: held, then applied.
+    act(() => live().props.onMomentumScrollBegin());
+    cut(false);
+    expect(flat(live().props.style).marginTop).toBe(62);
+    end(400);
+    expect(flat(live().props.style).marginTop ?? 0).toBe(0);
+    // With the list at rest the change is immediate.
+    cut(true);
+    expect(flat(live().props.style).marginTop).toBe(62);
+    act(() => tree.unmount());
     // Below an opaque bar (before iOS 26) the scroll view already starts
     // under the bar: a margin there would only add a blank band.
     Object.defineProperty(Platform, 'Version', {
