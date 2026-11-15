@@ -4335,14 +4335,7 @@ async function renderDeclaredPage(params, manageFocus) {
 // so the section keeps its position however long the fetches take.
 async function renderPersonVicGifts(name, sections, roster) {
   if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
-  // The section's plum accent and ink links live in vic-gifts.css. The Worker links it on a
-  // person page it serves; a member reached inside the app gets it here, linked once and
-  // before the fetch so the rules are in by the time the table draws.
-  if (!document.querySelector('link[data-vic-gifts-style]')) {
-    const sheet = Object.assign(document.createElement('link'), { rel: 'stylesheet', href: '/vic-gifts.css?v=c091b881f5' });
-    sheet.dataset.vicGiftsStyle = '';
-    document.head.append(sheet);
-  }
+  const styled = vicGiftsStyles();
   const key = currentSubjectKey, slot = document.createElement('div');
   sections.appendChild(slot);
   await Promise.all([personUrlsReady, registerTablesReady]);
@@ -4350,8 +4343,34 @@ async function renderPersonVicGifts(name, sections, roster) {
   const response = await fetch('/api/register/vic-gifts?' + new URLSearchParams({person:path,view:'person'})).catch(() => null);
   const data = response?.ok ? await response.json().catch(() => null) : null;
   if (currentSubjectKey !== key || !slot.isConnected || !data?.html) { slot.remove(); return; }
+  await styled;
+  if (currentSubjectKey !== key || !slot.isConnected) { slot.remove(); return; }
   slot.innerHTML = data.html;
   registerTables.hydrateRegisterTables(slot);
+}
+
+/* The Victorian gifts section's plum accent and ink links live in vic-gifts.css. The Worker
+   links it on a person page it serves; a member reached inside the app gets it here, linked
+   once, before the register is fetched. Settles when the sheet has loaded or failed, or after
+   a second at most: a cold cache never draws the section in the money green for a frame,
+   and a sheet that never answers does not hold the section back. */
+function vicGiftsStyles() {
+  let link = document.querySelector('link[data-vic-gifts-style]');
+  if (link?.vicGiftsReady) return link.vicGiftsReady;
+  const fresh = !link;
+  if (fresh) {
+    link = Object.assign(document.createElement('link'), { rel: 'stylesheet', href: '/vic-gifts.css?v=c091b881f5' });
+    link.dataset.vicGiftsStyle = '';
+  }
+  // The Worker's own link may have loaded already; a new one is watched before it is added.
+  link.vicGiftsReady = !fresh && link.sheet ? Promise.resolve() : new Promise((resolve) => {
+    const done = () => { clearTimeout(cap); resolve(); };
+    const cap = setTimeout(done, 1000);
+    link.addEventListener('load', done, { once: true });
+    link.addEventListener('error', done, { once: true });
+  });
+  if (fresh) document.head.append(link);
+  return link.vicGiftsReady;
 }
 
 /* The Senate's own video of this senator's first speech (public/video-card.js): a navy

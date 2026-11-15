@@ -2,8 +2,9 @@
 // The Worker links vic-gifts.css only on a page it serves, so a member page the
 // app drew after in-app navigation kept the default green on the "Victorian
 // gifts and hospitality" section: green bars and filters, green table links.
-// app.js now links the stamped stylesheet when it draws the section. This runs
-// the real renderPersonVicGifts in a document opened as another page
+// app.js now links the stamped stylesheet when it draws the section, and draws
+// it once the sheet has loaded (a second at most). This runs the real
+// renderPersonVicGifts and vicGiftsStyles in a document opened as another page
 // (index.html's own stylesheets, no vic-gifts.css), then reads the cascade
 // from the sheets that document links. jsdom loads no stylesheets and hands a
 // var() back as written, so each linked sheet is inlined from public/ and a
@@ -33,31 +34,52 @@ const staged = JSON.parse(readFileSync(new URL('../../data/staged/vic-gifts/hub.
 const href = clearedGiftRegisters(staged)[0].rows[0].official.href;
 const block = await vicGiftsPersonBlock(href, async () => staged, new URL('https://opax.test' + href));
 
-/** Draw a member's sections with app.js's own renderPersonVicGifts; fetch answers with the Worker's person block. */
-async function drawMember({ head = shellSheets, representation = [{ jurisdiction: 'vic' }] } = {}) {
-  const dom = new JSDOM(`<!doctype html><html><head>${head}</head><body><div id="subject-sections"></div></body></html>`,
+/** A document opened as another page, running app.js's own renderPersonVicGifts and vicGiftsStyles.
+ *  fetch answers with the Worker's person block; jsdom fetches no stylesheet, so by default the
+ *  sheet's load event fires while the register answers (sheetLoads: false leaves it pending). */
+function openPage({ head = shellSheets, sheetLoads = true } = {}) {
+  const dom = new JSDOM(`<!doctype html><html><head>${head}</head><body></body></html>`,
     { url: 'https://opax.com.au' + href, runScripts: 'outside-only' });
   const { window } = dom, requested = [];
   let linkedBeforeFetch = null;
+  const sheets = () => [...window.document.querySelectorAll('link[href^="/vic-gifts.css"]')];
   window.fetch = async (url) => {
     requested.push(String(url));
-    linkedBeforeFetch ??= Boolean(window.document.querySelector('link[href^="/vic-gifts.css"]'));
+    linkedBeforeFetch ??= sheets().length > 0;
+    if (sheetLoads) for (const link of sheets()) link.dispatchEvent(new window.Event('load'));
     return { ok: true, json: async () => ({ html: block }) };
   };
-  const source = fn('renderPersonVicGifts');
-  assert.ok(source, 'app.js still draws the section with renderPersonVicGifts');
+  for (const name of ['renderPersonVicGifts', 'vicGiftsStyles']) assert.ok(fn(name), `app.js still has ${name}`);
   window.eval(`(() => {
     let currentSubjectKey = 'person:fixture';
     const personUrlsReady = Promise.resolve(), registerTablesReady = Promise.resolve();
     const personUrl = () => ${JSON.stringify(href)};
     const registerTables = { hydrateRegisterTables() {} };
-    ${source}
+    ${fn('renderPersonVicGifts')}
+    ${fn('vicGiftsStyles')}
     window.__draw = renderPersonVicGifts;
+    window.__leave = () => { currentSubjectKey = 'person:elsewhere'; };
   })()`);
-  await window.__draw('Fixture Member', window.document.getElementById('subject-sections'), { representation });
-  const sheets = [...window.document.querySelectorAll('link[href^="/vic-gifts.css"]')];
-  return { dom, requested, sheets, linkedBeforeFetch };
+  /** Open a member page: a new sections list replaces the last one, as the app's subject render does. */
+  const draw = (representation = [{ jurisdiction: 'vic' }]) => {
+    window.document.getElementById('subject-sections')?.remove();
+    const sections = Object.assign(window.document.createElement('div'), { id: 'subject-sections' });
+    window.document.body.append(sections);
+    return window.__draw('Fixture Member', sections, { representation });
+  };
+  const drawn = () => window.document.querySelectorAll('#subject-sections #subject-vic-gifts').length;
+  return { dom, window, requested, sheets, draw, drawn, linkedBeforeFetch: () => linkedBeforeFetch };
 }
+
+/** One member page drawn to the end. */
+async function drawMember(options = {}) {
+  const page = openPage(options);
+  await page.draw(options.representation);
+  return { ...page, sheets: page.sheets(), linkedBeforeFetch: page.linkedBeforeFetch() };
+}
+
+// Lets the register's answer and any awaits behind it run (a macrotask in the test's own realm).
+const settle = () => new Promise((resolve) => setTimeout(resolve, 20));
 
 /** The drawn sections under every stylesheet the document links, with var() followed by hand. */
 function cascade(drawn) {
@@ -82,7 +104,7 @@ function cascade(drawn) {
 test('a Victorian member reached inside the app links the stamped vic-gifts.css once, before the fetch', async () => {
   assert.doesNotMatch(shellSheets, /vic-gifts\.css/, 'the page the reader opened does not link the sheet');
   const drawn = await drawMember();
-  assert.equal(drawn.dom.window.document.querySelectorAll('#subject-sections #subject-vic-gifts').length, 1, 'the section is drawn');
+  assert.equal(drawn.drawn(), 1, 'the section is drawn');
   assert.ok(drawn.requested.some((url) => new URLSearchParams(url.split('?')[1]).get('view') === 'person'));
   assert.equal(drawn.sheets.length, 1, 'one link to vic-gifts.css');
   assert.equal(drawn.sheets[0].getAttribute('href'), `/vic-gifts.css?v=${hashOf('vic-gifts.css')}`, 'the URL carries the current content stamp');
@@ -115,4 +137,49 @@ test('a page the Worker served keeps its one link; a member outside Victoria lin
   const federal = await drawMember({ representation: [{ jurisdiction: 'federal' }] });
   assert.equal(federal.sheets.length, 0);
   assert.deepEqual(federal.requested, []);
+});
+
+test('drawing the section twice in one document links the sheet once', async () => {
+  const page = openPage();
+  await page.draw();
+  assert.equal(page.drawn(), 1);
+  await page.draw(); // the reader goes on to another page and comes back to the member
+  assert.equal(page.drawn(), 1, 'drawn again on the second visit');
+  await Promise.all([page.draw(), page.draw()]);
+  assert.equal(page.requested.length, 4);
+  assert.equal(page.sheets().length, 1, 'one link to vic-gifts.css');
+  assert.equal(page.window.document.querySelectorAll('link[data-vic-gifts-style]').length, 1);
+});
+
+test('the section is drawn once its sheet has loaded or failed, or after a second at most', async () => {
+  for (const event of ['load', 'error']) {
+    const page = openPage({ sheetLoads: false }), drawing = page.draw();
+    await settle();
+    assert.equal(page.requested.length, 1, 'the register has answered');
+    assert.equal(page.drawn(), 0, `nothing is drawn before the sheet's ${event}`);
+    page.sheets()[0].dispatchEvent(new page.window.Event(event));
+    await drawing;
+    assert.equal(page.drawn(), 1, `drawn after the sheet's ${event}`);
+  }
+  // A sheet that never answers: the cap draws the section.
+  const page = openPage({ sheetLoads: false }), caps = [];
+  page.window.setTimeout = (callback, ms) => { caps.push({ callback, ms }); return caps.length; };
+  page.window.clearTimeout = () => {};
+  const drawing = page.draw();
+  await settle();
+  assert.equal(page.drawn(), 0, 'still waiting on the sheet');
+  assert.deepEqual(caps.map((c) => c.ms), [1000], 'one cap of a second');
+  caps[0].callback();
+  await drawing;
+  assert.equal(page.drawn(), 1, 'drawn at the cap');
+});
+
+test('a reader who leaves while the sheet loads gets no section on the next page', async () => {
+  const page = openPage({ sheetLoads: false }), drawing = page.draw();
+  await settle();
+  page.window.__leave();
+  page.sheets()[0].dispatchEvent(new page.window.Event('load'));
+  await drawing;
+  assert.equal(page.drawn(), 0);
+  assert.equal(page.window.document.querySelector('#subject-sections').children.length, 0, 'its placeholder is gone');
 });

@@ -6251,7 +6251,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'vic-gifts') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })
-  // A member reached inside the app gets the same sheet from app.js (renderPersonVicGifts); the attribute keeps it to one link.
+  // A member reached inside the app gets the same sheet from app.js (vicGiftsStyles); the attribute keeps it to one link.
   if (route.kind === 'vic-gifts' || route.kind === 'subject' && route.dir === 'person') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/vic-gifts.css" data-vic-gifts-style>',{html:true}) } })
   if (route.kind === 'state-bills') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
