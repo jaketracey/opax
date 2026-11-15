@@ -1,4 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import { Button } from '../../design/controls';
+import { Text } from '../../design/text';
+import { minimumTarget } from '../../design/tokens';
 import { InsetGroup } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { MissingPayload, SheetFrame } from '../sheets/frame';
@@ -6,6 +11,7 @@ import { openOriginal, Paragraphs } from '../sheets/SourceSheet';
 import { learnCopy } from './copy';
 import { glossaryTerm, isTermId, termTitle } from './glossary';
 import { glossaryRoute } from './routes';
+import { setUnderlineTerms, useUnderlineTerms } from './settings';
 
 /**
  * `/term?id=`: one glossary term's answer (README 8.2, B's sheet). The term
@@ -58,6 +64,70 @@ export default function TermSheet() {
           />
         </InsetGroup>
       )}
+      <HideTips id={id} />
     </SheetFrame>
   );
 }
+
+/** How long the notice stays before the sheet closes itself (ms). */
+export const TIPS_HIDDEN_HOLD = 1800;
+
+/**
+ * "Hide tips", last on every answer sheet while the tips are on (Jake,
+ * build 76): one tap turns the inline tips off across the app, the same
+ * device-only setting as Account › Glossary terms › Glossary tips, where
+ * they come back. The notice takes the button's own place and height, so
+ * nothing in the sheet moves; VoiceOver hears it; then the sheet closes.
+ * The A to Z glossary and this sheet stay reachable from the guide.
+ */
+function HideTips({ id }: { id: string }) {
+  const on = useUnderlineTerms();
+  const [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    if (!hidden) return;
+    const timer = setTimeout(() => {
+      if (router.canGoBack()) router.back();
+    }, TIPS_HIDDEN_HOLD);
+    return () => clearTimeout(timer);
+  }, [hidden]);
+  // Tips already off (the sheet opened from the A to Z glossary): nothing
+  // to hide.
+  if (!on && !hidden) return null;
+  return (
+    <View style={styles.hide}>
+      {hidden ? (
+        <Text
+          wordSafe
+          variant="secondary"
+          tone="inkSoft"
+          accessibilityLiveRegion="polite"
+          style={styles.notice}
+          testID={`term-${id}-tips-hidden`}
+        >
+          {learnCopy.tipsHidden}
+        </Text>
+      ) : (
+        <Button
+          label={learnCopy.hideTips}
+          variant="plain"
+          onPress={() => {
+            setHidden(true);
+            void setUnderlineTerms(false);
+            AccessibilityInfo.announceForAccessibility(learnCopy.tipsHidden);
+          }}
+          testID={`term-${id}-hide-tips`}
+        />
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  // The button's 44 pt row, kept for the notice that replaces it.
+  hide: {
+    minHeight: minimumTarget,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  notice: { textAlign: 'center' },
+});
