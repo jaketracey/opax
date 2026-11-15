@@ -609,9 +609,8 @@ describe('Just declared', () => {
         expect(style.paddingBottom).toBeGreaterThan(style.paddingTop);
         expect(style.height).toBeUndefined();
         expect(style.maxHeight).toBeUndefined();
-        expect(StyleSheet.flatten(meta.props.style).minHeight).toBe(
-          Math.ceil(height) + 1,
-        );
+        // The meta line takes no floor after its first layout.
+        expect(StyleSheet.flatten(meta.props.style).minHeight).toBeUndefined();
         expect(meta.props.allowFontScaling).toBe(true);
         expect(meta.props.maxFontSizeMultiplier).toBe(0);
         expect(meta.props.numberOfLines).toBeUndefined();
