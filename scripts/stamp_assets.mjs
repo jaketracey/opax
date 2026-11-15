@@ -148,6 +148,8 @@ export const MODULE_STAMPS = [
   ['party-page.js', 'canonical-urls.js'], ['party-page.js', 'labels.js'],
   // ⋯: app.js draws and runs it; electorates.js draws it.
   ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'], ['app.js', 'party-page.js'],
+  // The person header's house rule: app.js calls it by name, so an old cached copy would throw.
+  ['app.js', 'profile-jurisdictions.js'],
   ['datatable.js', 'server-csv.js'], ['datatable.js', 'wombat.js'], ['connections.js', 'wombat.js'],
 
   ['datatable-workbench.js', 'datatable.js'],
@@ -310,6 +312,10 @@ const SRC = join(ROOT, 'portal', 'src')
 const HEADER_RULE_LIMIT = 100
 // Local tools that are never a reader's page: .assetsignore keeps the workbench
 // off the deploy, and the *-test.html harnesses are opened by hand.
+// Stamped so a changed file is a new URL, but left on the default module cache:
+// _headers is at the 100 rules Workers Assets allows, and an immutable rule each
+// would pass it. A small module that is cheap to revalidate belongs here.
+const STAMPED_DEFAULT_CACHE = new Set(['profile-jurisdictions.js'])
 const DEV_ONLY = /(?:^|\/)(?:[a-z]+-test\.html|ui-workbench\.[a-z]+|datatable-workbench[\w.-]*)$/
 
 const walkFiles = (dir) => readdirSync(dir, { withFileTypes: true })
@@ -394,7 +400,7 @@ function stampHeaders({ check }) {
       process.exit(1)
     }
   }
-  const files = immutableModules(PUBLIC, SRC, {references: refs, hashFile}).filter((f) => !hand.has(f) && !DEV_ONLY.test(f))
+  const files = immutableModules(PUBLIC, SRC, {references: refs, hashFile}).filter((f) => !hand.has(f) && !DEV_ONLY.test(f) && !STAMPED_DEFAULT_CACHE.has(f))
   const block = [
     HEADERS_BEGIN,
     '# Each file here is referenced only as ?v=<content hash> (scripts/stamp_assets.mjs',
