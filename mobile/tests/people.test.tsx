@@ -1139,6 +1139,15 @@ describe('profile', () => {
         Native.StyleSheet.flatten(host(loaded, 'person-figures').props.style)
           .flexDirection,
       );
+      // A bar over words that hug their own width is pinned to both edges,
+      // never a share of the column.
+      for (const bone of ['name', 'follow']) {
+        const bar = Native.StyleSheet.flatten(
+          host(pending, `person-loading-${bone}`).children.at(-1)!.props.style,
+        );
+        expect(bar).toMatchObject({ position: 'absolute', left: 0, right: 0 });
+        expect(bar.width).toBeUndefined();
+      }
       // The Follow bone is the button itself, unseen: it grows as it does.
       expect(
         host(pending, 'person-loading-follow').findAllByType(Button),

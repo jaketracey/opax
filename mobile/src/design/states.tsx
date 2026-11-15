@@ -397,7 +397,9 @@ function DetailSkeleton({
   const ghost = (
     name: string,
     words: ReactNode,
-    width: DimensionValue = '100%',
+    // A share of a row's width. Without one the bar is as wide as the
+    // words: a share of a view that hugs its words is taken from the column.
+    width?: DimensionValue,
     style?: ViewStyle,
   ) => (
     <View testID={part(name)} style={style}>
@@ -410,7 +412,7 @@ function DetailSkeleton({
           top: 0,
           bottom: 0,
           left: 0,
-          width,
+          ...(width === undefined ? { right: 0 } : { width }),
           borderRadius: radii.thumb,
           borderCurve: 'continuous',
           backgroundColor: onSunken ? colors.raised : colors.sunken,
@@ -478,7 +480,7 @@ function DetailSkeleton({
                     disabled
                     onPress={() => {}}
                   />,
-                  '100%',
+                  undefined,
                   large ? { alignSelf: 'stretch' } : undefined,
                 )
               : null}
