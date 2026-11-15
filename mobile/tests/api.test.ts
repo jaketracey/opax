@@ -12,7 +12,7 @@ import {
 import { ApiClient, shouldFreezeSnapshots } from '../src/api/client';
 import { ApiError, httpError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
-import { pinnedBytes } from './pinned';
+import { pinnedBytes, slugs } from './pinned';
 class MemoryStore implements CacheStore {
   entries: CacheEntry[] = [];
   index: CacheIndexEntry[] = [];
@@ -1778,4 +1778,72 @@ test('Victorian election GET policy admits only the published paths', () => {
     `/api/app/v1/vic-election/find?q=${'x'.repeat(61)}`,
   ])
     expect(() => assertAllowedPath(path)).toThrow();
+});
+
+test('a launch reads and decodes each saved directory file once, however the saved read and the catalog read interleave', async () => {
+  const body = (url: string) => {
+    const path = new URL(url).pathname;
+    return path === '/api/person-slugs'
+      ? JSON.stringify(slugs)
+      : pinnedBytes(path).toString();
+  };
+  const transport = jest.fn(
+    async (url: string) =>
+      new Response(body(url), {
+        headers: { 'cache-control': 'max-age=3600', etag: 'fixture' },
+      }),
+  );
+  // An earlier session saved the directory's five files.
+  const earlier = setup(transport as never);
+  await new Catalogs(earlier.client).directory();
+  expect(transport).toHaveBeenCalledTimes(5);
+  transport.mockClear();
+  // This launch: a new session over the same disk, where every disk read
+  // is a new parse of the file.
+  const disk = earlier.store;
+  const diskReads = jest
+    .spyOn(disk, 'read')
+    .mockImplementation(async (url: string) =>
+      structuredClone(disk.entries.find((entry) => entry.url === url)),
+    );
+  const names = [
+    'decodeManifest',
+    'decodeRoster',
+    'decodeSlugs',
+    'decodePeople',
+    'decodeElectorateIndex',
+  ] as const;
+  const spies = names.map((name) => jest.spyOn(decoders, name));
+  try {
+    const catalogs = new Catalogs(
+      new ApiClient({
+        origin,
+        version: '1.0.0',
+        build: '1',
+        cache: new CatalogCache(disk),
+        transport: transport as never,
+        now: () => 1000,
+        retries: 0,
+      }),
+    );
+    // Today's saved read and the seat's catalog read, begun together.
+    const [saved, read] = await Promise.all([
+      catalogs.directorySaved(),
+      catalogs.directory(),
+    ]);
+    // And the saved read again, after both.
+    const again = await catalogs.directorySaved();
+    for (const file of ['manifest', 'roster', 'slugs', 'people'] as const) {
+      expect(saved![file].data).toBe(read[file].data);
+      expect(again![file].data).toBe(read[file].data);
+    }
+    expect(saved!.electorates.data).toBe(read.electorates.data);
+    expect(diskReads).toHaveBeenCalledTimes(5);
+    for (const spy of spies) expect(spy).toHaveBeenCalledTimes(1);
+    // The saved copies were fresh: nothing was requested.
+    expect(transport).not.toHaveBeenCalled();
+  } finally {
+    spies.forEach((spy) => spy.mockRestore());
+    diskReads.mockRestore();
+  }
 });

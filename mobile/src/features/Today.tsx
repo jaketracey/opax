@@ -12,6 +12,7 @@ import {
   Fragment,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -91,14 +92,21 @@ import {
 } from './today/dissolution';
 import {
   repsShape,
+  stateLines,
   stateSeatFor,
   YourMPCard,
   YourMPPending,
 } from './today/YourMPCard';
+import { useSavedDirectory } from './today/saved-directory';
 import { useProfilePreload } from './people/profile-preload';
 import { keepCatalog } from '../api/kept-catalogs';
 import { saveChoice } from './your-mp/choice-store';
-import { savedSeatDirectory, useSavedChoice, useSeat } from './your-mp/useSeat';
+import {
+  migrateSeatChoice,
+  savedSeatDirectory,
+  useSavedChoice,
+  useSeat,
+} from './your-mp/useSeat';
 
 /**
  * Runs `effect` each time Today's screen gains focus. Unit tests that render
@@ -314,7 +322,9 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
  * the disk holds (the launch read and the saved choice), so the page is
  * drawn in its order while the directory is still on its way, with Your MP's
  * skeleton in the tile's place; the launch cover lifts once that order is
- * known. Until then the body draws nothing, never a stand-in of another
+ * known. With no shape kept for the saved choice, the directory the device
+ * saved decides it (the migrated choice, and the group's rows), still with
+ * no request. Until then the body draws nothing, never a stand-in of another
  * shape (it was the edition's outline, and the edition then landed about
  * 450 pt lower, under Your MP and the guide card).
  */
@@ -370,20 +380,83 @@ export default function Today() {
     savedChoice && launch?.shape?.key === shapeKey(savedChoice)
       ? launch.shape
       : null;
+  const overview = election.record?.data ?? null;
+  // Nothing kept for this choice (the first launch of a build that keeps
+  // the shape, or a new choice): the directory the device saved stands in
+  // for the one on its way, so the choice is migrated before the first
+  // frame. Read from the disk only, beside the launch reads, used only in
+  // this case and let go once the seat has resolved.
+  const preview = useSavedDirectory(
+    !!launch &&
+      !!savedChoice &&
+      !kept &&
+      seat.status === 'loading' &&
+      !seatArriving,
+    seat.status !== 'loading',
+  );
+  const previewSeats = preview?.electorates.data.electorates ?? null;
+  const previewChoice =
+    previewSeats && savedChoice
+      ? migrateSeatChoice(savedChoice, previewSeats)
+      : null;
+  const previewFederal =
+    previewChoice && previewSeats
+      ? previewSeats.find((s) => s.electorate_id === previewChoice.seatId)
+      : undefined;
+  const previewHome =
+    previewFederal && house(previewFederal) ? previewFederal : null;
   // Whether the page leads with Your MP: the seat once the directory has
-  // answered, and until then the kept shape, or with none the choice as the
+  // answered, and until then the kept shape, or with none the migrated
+  // choice from the saved directory, or with neither the choice as the
   // device saved it (null while the disk is being read).
   const seated = seatArriving
     ? true
     : seat.status !== 'loading'
       ? !!home
-      : savedChoice === undefined
+      : savedChoice === undefined || preview === undefined
         ? null
-        : (kept?.house ?? !!savedChoice?.seatId);
+        : (kept?.house ?? (preview ? !!previewHome : !!savedChoice?.seatId));
+  // The group's rows as the saved directory decides them, by the rules the
+  // loaded group follows: no state row for a seat outside Victoria or a
+  // district with no recorded member, and the state row's own form.
+  const previewReps = (() => {
+    if (!preview || !previewHome || !previewChoice || !previewSeats)
+      return null;
+    const ids = previewChoice.stateSeatIds;
+    const district = stateSeatFor(preview, ids);
+    // The record will be on its way when this row asks for it (below).
+    const reading =
+      !(election.error instanceof ElectionUnavailable) &&
+      (election.loading ||
+        !(
+          todayWindow(electionNow) &&
+          todayEligible(
+            previewChoice,
+            previewSeats,
+            Intl.DateTimeFormat().resolvedOptions().timeZone,
+          )
+        ));
+    const form = district
+      ? stateRowForm(district, { overview, reading }, electionNow, null)
+      : null;
+    const shape = repsShape(previewHome, preview, ids, form);
+    return {
+      state: shape.state,
+      senators: shape.senators,
+      members: shape.members,
+      lines:
+        district && form
+          ? form.kind === 'held'
+            ? (form.lines ?? DISSOLVED_STAND_IN)
+            : stateLines(district, preview, form)
+          : null,
+    };
+  })();
   // The representatives group's rows, known before the directory answers:
-  // the kept shape, or with none the choice as the device saved it (a saved
-  // state seat has a member's row; every state has senators). A capture's
-  // seat on its way says which seats it will save.
+  // the kept shape, or with none the saved directory's answer, or with
+  // neither the choice as the device saved it (a saved state seat has a
+  // row; every state has senators). A capture's seat on its way says which
+  // seats it will save.
   const keptRow = kept?.stateRow ?? null;
   const pendingReps = seatArriving
     ? {
@@ -395,11 +468,13 @@ export default function Today() {
       ? {
           state: kept.state,
           senators: kept.senators,
+          // The rows' own words, so each held row wraps as its row will.
+          members: kept.members,
           // A kept member's row holds a member's row; kept lines hold
           // themselves.
           lines: keptRow && keptRow.kind !== 'member' ? keptRow.lines : null,
         }
-      : {
+      : (previewReps ?? {
           state: !!savedChoice?.stateSeatIds.length,
           senators: true,
           // Nothing kept: the row names no member until the data decides
@@ -409,12 +484,11 @@ export default function Today() {
             election.record || election.loading
               ? DISSOLVED_STAND_IN
               : NEUTRAL_STAND_IN,
-        };
+        });
   const stateSeat =
     home && directory
       ? stateSeatFor(directory, choice?.stateSeatIds ?? [])
       : null;
-  const overview = election.record?.data ?? null;
   // The election block reads the record for this reader while its window
   // runs; Today never adds a second read beside it.
   const electionBlockReads =
@@ -471,11 +545,22 @@ export default function Today() {
         keptDecision,
       )
     : null;
-  const drawnReps =
-    home && directory
-      ? repsShape(home, directory, choice?.stateSeatIds ?? [], stateForm)
-      : { state: false, senators: false, stateRow: null };
+  const stateIdsKey = (choice?.stateSeatIds ?? []).join(',');
+  const stateFormKey = JSON.stringify(stateForm);
+  const drawnReps = useMemo(
+    () =>
+      home && directory
+        ? repsShape(
+            home,
+            directory,
+            stateIdsKey ? stateIdsKey.split(',') : [],
+            JSON.parse(stateFormKey) as typeof stateForm,
+          )
+        : { state: false, senators: false, stateRow: null, members: null },
+    [home, directory, stateIdsKey, stateFormKey],
+  );
   const stateRowKept = JSON.stringify(drawnReps.stateRow);
+  const membersKept = JSON.stringify(drawnReps.members);
   const rowHeld = stateForm?.kind === 'held';
   const stateSeatDrawn = drawnReps.state;
   const senatorsDrawn = drawnReps.senators;
@@ -499,7 +584,8 @@ export default function Today() {
       launchShape.senators === senatorsDrawn &&
       launchShape.withdrawn === recordWithdrawn &&
       launchShape.electionDay === decidedFor &&
-      JSON.stringify(launchShape.stateRow) === stateRowKept
+      JSON.stringify(launchShape.stateRow) === stateRowKept &&
+      JSON.stringify(launchShape.members) === membersKept
     )
       return;
     void rememberTodayShape({
@@ -508,6 +594,7 @@ export default function Today() {
       state: stateSeatDrawn,
       senators: senatorsDrawn,
       stateRow: JSON.parse(stateRowKept) as TodayShape['stateRow'],
+      members: JSON.parse(membersKept) as TodayShape['members'],
       withdrawn: recordWithdrawn,
       electionDay: decidedFor,
     });
@@ -518,6 +605,7 @@ export default function Today() {
     senatorsDrawn,
     rowHeld,
     stateRowKept,
+    membersKept,
     recordWithdrawn,
     decidedFor,
     launched,

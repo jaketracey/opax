@@ -6,7 +6,7 @@ import { Icon } from '../../design/icon';
 import { InsetGroup } from '../../design/layout';
 import { partyText, type PartyContext } from '../../design/party';
 import { Pressable } from '../../design/pressable';
-import { PersonRow } from '../../design/people';
+import { PartyLabel, PersonRow } from '../../design/people';
 import { useRowCellStyle, useRowInset } from '../../design/row-padding';
 import {
   menuSections,
@@ -68,6 +68,30 @@ export interface Rep {
   /** The seat's own actions, after the person's. */
   menu: RowMenuAction[];
 }
+
+/**
+ * The words a member's row draws: its name, party and role lines. The
+ * row's held place lays the same words out unseen, in the row's own text
+ * styles, so it wraps as the row does at every text size.
+ */
+export type RepWords = Pick<Rep, 'name' | 'party' | 'partyStatus' | 'role'>;
+
+/** The words of the group's member rows, where the device knows them. */
+export interface RepsWords {
+  federal: RepWords | null;
+  state: RepWords | null;
+}
+
+/**
+ * Words of a usual length, for a held row whose member the device does not
+ * know yet. Never drawn or spoken.
+ */
+export const REP_STAND_IN: RepWords = {
+  name: 'Member’s full name',
+  party: 'Independent',
+  partyStatus: 'current',
+  role: 'Federal · Electorate',
+};
 
 /** "Jo Briskey, Labor, Federal member for Maribyrnong". */
 export function repLabel(
@@ -297,11 +321,41 @@ export function Bone({
 }
 
 /**
- * A member's row while the directory is read, in the row's own frame: the
- * 44 pt portrait, the name, and the party and role lines in their text
- * styles, in the space PersonRow gives them. The loaded row lands on it.
+ * One of a held row's lines: the words the loaded line will draw, unseen
+ * and free to wrap as that line does, with a bar drawn over them.
  */
-function RepBone({ testID }: { testID: string }) {
+function WordsBone({
+  width,
+  children,
+}: {
+  width: `${number}%`;
+  children: ReactNode;
+}) {
+  return (
+    <View>
+      <View pointerEvents="none" style={styles.boneLine}>
+        {children}
+      </View>
+      <View style={[styles.boneBar, { width }]} />
+    </View>
+  );
+}
+
+/**
+ * A member's row while the directory is read, in the row's own frame: the
+ * 44 pt portrait, then the name, party and role lines as PersonRow draws
+ * them (the same words in the same text styles, beside the same chevron),
+ * unseen under their bars. PersonRow's lines wrap at accessibility sizes,
+ * so the held row wraps with them and the loaded row lands on it without
+ * growing. The words are the member's where the device knows them.
+ */
+function RepBone({
+  testID,
+  words = REP_STAND_IN,
+}: {
+  testID: string;
+  words?: RepWords;
+}) {
   const stacked = useAccessibilitySize();
   const cell = useRowCellStyle();
   useRowInset(stacked ? 16 : 16 + 44 + rhythm.tight);
@@ -310,13 +364,37 @@ function RepBone({ testID }: { testID: string }) {
       <View style={[styles.personMain, stacked && styles.personStacked]}>
         <View style={styles.bonePortrait} />
         <View style={[styles.personText, !stacked && styles.personTextInline]}>
-          <Bone variant="name" width="55%" />
-          <View style={styles.personDetails}>
-            <Bone variant="secondary" width="30%" />
-            <Bone variant="secondary" width="65%" />
+          <WordsBone width="55%">
+            <Text wordSafe variant="name" style={styles.personName}>
+              {words.name}
+            </Text>
+          </WordsBone>
+          <View
+            style={[
+              styles.personDetails,
+              words.party ? styles.personParty : null,
+            ]}
+          >
+            {words.party ? (
+              <WordsBone width="30%">
+                <PartyLabel
+                  party={words.party}
+                  status={words.partyStatus}
+                  linked
+                  nested
+                  compact
+                />
+              </WordsBone>
+            ) : null}
+            <WordsBone width="65%">
+              <Text wordSafe variant="secondary">
+                {words.role}
+              </Text>
+            </WordsBone>
           </View>
         </View>
       </View>
+      <LinesChevron held />
     </View>
   );
 }
@@ -342,7 +420,10 @@ export function RepsBones({
   rows,
   lines,
   link,
+  members,
 }: {
+  /** The member rows' words, where the device knows them. */
+  members?: RepsWords | null;
   rows: 1 | 2;
   /** The state row is a lines row: the lines that hold its place. */
   lines?: readonly string[] | null;
@@ -350,12 +431,25 @@ export function RepsBones({
 }) {
   return (
     <InsetGroup testID="today-reps-loading-group">
-      <RepBone key="federal" testID="today-rep-federal-loading" />
+      <RepBone
+        key="federal"
+        testID="today-rep-federal-loading"
+        words={members?.federal ?? undefined}
+      />
       {rows === 2 ? (
         lines ? (
           <LinesBone key="state" lines={lines} />
         ) : (
-          <RepBone key="state" testID="today-rep-state-loading" />
+          <RepBone
+            key="state"
+            testID="today-rep-state-loading"
+            words={
+              members?.state ?? {
+                ...REP_STAND_IN,
+                role: 'Victorian Legislative Assembly · Electorate',
+              }
+            }
+          />
         )
       ) : null}
       {link ? <LinkBone key="senators" /> : null}
@@ -385,8 +479,10 @@ const styles = StyleSheet.create({
   },
   personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
+  personName: { flexShrink: 0 },
+  personDetails: { gap: rhythm.line },
   // The party line keeps its 44 pt target; the role line sits inside it.
-  personDetails: { gap: rhythm.line, minHeight: minimumTarget },
+  personParty: { minHeight: minimumTarget },
   // LinkRow's frame (design/rows).
   link: {
     flexDirection: 'row',

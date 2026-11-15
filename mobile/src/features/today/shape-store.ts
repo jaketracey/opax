@@ -1,5 +1,6 @@
 import { TwoSlotStore } from '../../storage/two-slot';
 import type { KeptStateRow } from './dissolution';
+import type { RepsWords, RepWords } from './RepsGroup';
 
 /**
  * What Today's lead looked like the last time the directory answered, kept
@@ -27,6 +28,12 @@ export interface TodayShape {
    * can answer while the election record is out. Null with no state row.
    */
   stateRow: KeptStateRow | null;
+  /**
+   * The words the member rows drew (name, party and role), so the next
+   * launch's held rows wrap as the rows will at every text size. Null when
+   * the page did not lead with the group, or from a file kept before this.
+   */
+  members: RepsWords | null;
   /** The election record was withdrawn: it is not asked for again. */
   withdrawn: boolean;
   /**
@@ -75,6 +82,27 @@ function decodeStateRow(raw: unknown): KeptStateRow | null | undefined {
   return undefined;
 }
 
+const STATUSES = ['current', 'former', 'unknown'];
+function decodeWords(raw: unknown): RepWords | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const { name, party, partyStatus, role } = raw as Record<string, unknown>;
+  const short = (v: unknown): v is string =>
+    typeof v === 'string' && v.length <= 200;
+  return short(name) &&
+    (party === null || short(party)) &&
+    typeof partyStatus === 'string' &&
+    STATUSES.includes(partyStatus) &&
+    short(role)
+    ? { name, party, partyStatus: partyStatus as RepWords['partyStatus'], role }
+    : null;
+}
+/** The kept words; an unreadable row holds words of a usual length. */
+function decodeMembers(raw: unknown): RepsWords | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const { federal, state } = raw as Record<string, unknown>;
+  return { federal: decodeWords(federal), state: decodeWords(state) };
+}
+
 const store = new TwoSlotStore<ShapeFile>(
   ['opax-today-shape-v1.json', 'opax-today-shape-v1.b.json'],
   (raw) => {
@@ -98,6 +126,7 @@ const store = new TwoSlotStore<ShapeFile>(
           state,
           senators,
           stateRow,
+          members: decodeMembers((raw as { members?: unknown }).members),
           withdrawn,
           electionDay,
         }
@@ -123,6 +152,7 @@ export async function readTodayShape(): Promise<TodayShape | null> {
         state: file.state,
         senators: file.senators,
         stateRow: file.stateRow,
+        members: file.members,
         withdrawn: file.withdrawn,
         electionDay: file.electionDay,
       }

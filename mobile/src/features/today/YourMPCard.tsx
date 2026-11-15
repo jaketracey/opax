@@ -37,6 +37,8 @@ import {
   type LinesRep,
   type Rep,
   type RepsLink,
+  type RepsWords,
+  type RepWords,
 } from './RepsGroup';
 import {
   DISSOLVED_STAND_IN,
@@ -174,7 +176,14 @@ export function YourMPPending({
   state = false,
   senators = true,
   lines = null,
+  members = null,
 }: {
+  /**
+   * The member rows' words (the ones the last launch kept, or the saved
+   * directory's), so each held row wraps as its row will. Null holds words
+   * of a usual length.
+   */
+  members?: RepsWords | null;
   /** The state row will draw. */
   state?: boolean;
   /**
@@ -206,6 +215,7 @@ export function YourMPPending({
             rows={state ? 2 : 1}
             lines={state ? lines : null}
             link={senators}
+            members={members}
           />
           <SourceBone />
         </View>
@@ -328,14 +338,69 @@ export function repsShape(
   directory: Directory,
   stateSeatIds: readonly string[],
   form: StateForm | null = null,
-): { state: boolean; senators: boolean; stateRow: KeptStateRow | null } {
+): {
+  state: boolean;
+  senators: boolean;
+  stateRow: KeptStateRow | null;
+  members: RepsWords;
+} {
   const seat = stateSeatFor(directory, stateSeatIds);
+  let federal: Rep | null = null;
+  try {
+    federal = federalRep(
+      home,
+      directory,
+      yourMPFromDirectory(directory, home.electorate_id, stateSeatIds),
+    );
+  } catch {
+    // The roster cannot say: the held row keeps words of a usual length.
+  }
   return {
     state: !!seat,
     senators: !!senatorsLink(home, directory),
     stateRow: seat && form ? keptStateRow(seat, directory, form) : null,
+    members: {
+      federal: repWords(federal),
+      // Only a member's row has a member's words.
+      state:
+        seat && (!form || form.kind === 'member')
+          ? repWords(stateRep(seat, directory))
+          : null,
+    },
   };
 }
+
+/**
+ * The federal row's words from the seat's own record in the directory, for
+ * the held row while the tile's view is still out: the one recorded
+ * member, as `recordedMember` picks them from the view. Null with no one
+ * member, where the held row keeps words of a usual length.
+ */
+function seatWords(seat: Electorate, directory: Directory): RepWords | null {
+  if (seat.representatives.length !== 1) return null;
+  const member = seat.representatives[0]!;
+  let identity: ReturnType<typeof representativeProfile> = null;
+  try {
+    identity = representativeProfile(member.person_id, directory);
+  } catch {
+    // An incomplete directory: the roster's own party stands.
+  }
+  return {
+    name: member.person.name,
+    party: identity?.party ?? member.party ?? null,
+    partyStatus: identity?.partyStatus ?? 'current',
+    role: federalRole(seat).role,
+  };
+}
+
+/** The words a member's row draws, for its held place. */
+const repWords = (rep: Rep | null): RepWords | null =>
+  rep && {
+    name: rep.name,
+    party: rep.party,
+    partyStatus: rep.partyStatus,
+    role: rep.role,
+  };
 
 /** A sitting member with nothing to end it: the form with no state seat. */
 const MEMBER: StateForm = { kind: 'member', until: null };
@@ -414,6 +479,15 @@ export function YourMPCard({
           state={!!stateSeat}
           senators={!!senatorsLink(seat, directory)}
           lines={lines}
+          members={{
+            // The directory is at hand though the tile's view is not: the
+            // seat's own recorded member gives the held row its words.
+            federal: seatWords(seat, directory),
+            state:
+              stateSeat && stateForm.kind === 'member'
+                ? repWords(stateRep(stateSeat, directory))
+                : null,
+          }}
         />
       </View>
     );
