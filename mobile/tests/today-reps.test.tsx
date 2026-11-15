@@ -213,6 +213,63 @@ function heightOf(node: TestRenderer.ReactTestRendererNode | null): number {
     Number(style.minHeight ?? 0),
   );
 }
+/** A text node's characters, through nested text. */
+const textLength = (node: TestRenderer.ReactTestRendererNode): number =>
+  typeof node === 'string'
+    ? node.length
+    : (node.children ?? []).reduce((sum, child) => sum + textLength(child), 0);
+/**
+ * A row's height where text wraps at `wrapAt` characters a line (a line
+ * held to `numberOfLines` wraps no further), as at an accessibility size.
+ */
+function rowHeight(
+  renderer: TestRenderer.ReactTestRenderer,
+  id: string,
+  wrapAt: number,
+): number {
+  const measure = (node: TestRenderer.ReactTestRendererNode | null): number => {
+    if (!node || typeof node === 'string') return 0;
+    const style = (StyleSheet.flatten(node.props.style) ?? {}) as Record<
+      string,
+      number | string | undefined
+    >;
+    if (style.position === 'absolute') return 0;
+    if (node.type === 'Text') {
+      const lines = Math.max(1, Math.ceil(textLength(node) / wrapAt));
+      return (
+        Number(style.lineHeight ?? 0) *
+        Math.min(lines, Number(node.props.numberOfLines ?? Infinity))
+      );
+    }
+    const kids = (node.children ?? []).map(measure);
+    const gap = Number(style.rowGap ?? style.gap ?? 0);
+    const inner =
+      style.flexDirection === 'row'
+        ? Math.max(0, ...kids)
+        : kids.reduce((sum, h) => sum + h, 0) +
+          gap * Math.max(0, kids.filter((h) => h > 0).length - 1);
+    const pad =
+      2 * Number(style.paddingVertical ?? style.padding ?? 0) +
+      Number(style.paddingTop ?? 0) +
+      Number(style.paddingBottom ?? 0);
+    return Math.max(
+      typeof style.height === 'number' ? style.height : inner + pad,
+      Number(style.minHeight ?? 0),
+    );
+  };
+  const find = (
+    node: TestRenderer.ReactTestRendererNode,
+  ): TestRenderer.ReactTestRendererJSON | null => {
+    if (typeof node === 'string') return null;
+    if (node.props.testID === id) return node;
+    for (const child of node.children ?? []) {
+      const found = find(child);
+      if (found) return found;
+    }
+    return null;
+  };
+  return measure(find(renderer.toJSON() as TestRenderer.ReactTestRendererJSON));
+}
 const groupHeight = (renderer: TestRenderer.ReactTestRenderer, id: string) => {
   const tree = renderer.toJSON() as TestRenderer.ReactTestRendererJSON;
   const find = (
@@ -856,7 +913,7 @@ describe('Today’s representatives group', () => {
       expect(
         renderer.root.findAllByType(LinkRow).map((row) => row.props.title),
       ).toEqual([`Senators for ${state}`]);
-      expect(repsShape(seat, directory, saved.stateSeatIds)).toEqual({
+      expect(repsShape(seat, directory, saved.stateSeatIds)).toMatchObject({
         state: false,
         senators: true,
         stateRow: null,
@@ -1006,7 +1063,7 @@ describe('Today’s representatives group', () => {
       expect(stateSeatFor(directory, [region.electorate_id])).toBeNull();
       expect(
         repsShape(maribyrnong, directory, [essendon.electorate_id]),
-      ).toEqual({ state: true, senators: true, stateRow: null });
+      ).toMatchObject({ state: true, senators: true, stateRow: null });
       expect(federalRole(maribyrnong).role).toBe('Federal · Maribyrnong');
     });
 
@@ -1062,6 +1119,61 @@ describe('Today’s representatives group', () => {
         await act(async () => loaded.unmount());
       },
     );
+
+    test('at AX3 a long name wraps in the held row as it wraps in the loaded row, so the row is as tall before it loads as after', async () => {
+      dimensions.mockReturnValue({
+        width: 402,
+        height: 874,
+        scale: 3,
+        fontScale: 2.353,
+      });
+      const long = 'Kathleen Alexandra Matthews-Ward Fitzgerald';
+      const seat = {
+        ...maribyrnong,
+        representatives: [
+          {
+            ...maribyrnong.representatives[0]!,
+            person: { ...maribyrnong.representatives[0]!.person, name: long },
+          },
+        ],
+      } as Electorate;
+      const longIndex = {
+        ...index,
+        electorates: index.electorates.map((s) =>
+          s.electorate_id === seat.electorate_id ? seat : s,
+        ),
+      };
+      const longDirectory = {
+        ...directory,
+        electorates: result(longIndex),
+      } as typeof directory;
+      jest
+        .mocked(catalogs.yourMP)
+        .mockImplementation(async (id: string) =>
+          yourMPFor(id, longIndex, manifest, []),
+        );
+      // A line of text wraps: a dozen characters to the line at this size.
+      const wrapped = (renderer: TestRenderer.ReactTestRenderer, id: string) =>
+        rowHeight(renderer, id, 12);
+      const held = pendingGroup(repsShape(seat, longDirectory, []));
+      const loaded = await card({
+        seat,
+        directory: longDirectory,
+        stateSeatIds: [],
+      });
+      expect(strings(loaded)).toContain(long);
+      const first = wrapped(held, 'today-rep-federal-loading');
+      const final = wrapped(loaded, 'today-rep-federal');
+      // The name takes four lines, not one.
+      expect(final).toBeGreaterThan(
+        rowHeight(loaded, 'today-rep-federal', Infinity),
+      );
+      expect(first).toBe(final);
+      // Unseen: the held words are never read to anyone.
+      expect(strings(held)).toContain(long);
+      act(() => held.unmount());
+      await act(async () => loaded.unmount());
+    });
 
     test('the card’s own read, while out, draws the same held place and never a row less', async () => {
       // No directory answer to hold: the card waits on its read.

@@ -1069,6 +1069,7 @@ describe('the first frame has the loaded page’s layout', () => {
       state: false,
       senators: false,
       stateRow: null,
+      members: null,
       withdrawn: false,
       electionDay: null,
     });
@@ -1152,6 +1153,16 @@ describe('the first frame has the loaded page’s layout', () => {
       state: true,
       senators: true,
       stateRow,
+      // The federal member's words; the state row here is never a member's.
+      members: {
+        federal: {
+          name: 'Jo Briskey',
+          party: 'Labor',
+          partyStatus: 'current' as const,
+          role: 'Federal · Maribyrnong',
+        },
+        state: null,
+      },
       withdrawn,
       electionDay,
     });
@@ -1587,6 +1598,32 @@ describe('the first frame has the loaded page’s layout', () => {
         expect(mock.directory).toHaveBeenCalledTimes(1);
       },
     );
+
+    test('the saved directory is read beside the launch reads, once, and not after them', async () => {
+      setUp({ cached: { date: addDays(today, -1) } });
+      jest.mocked(loadChoice).mockResolvedValue({
+        version: 1,
+        seatId: senate.electorate_id,
+        stateSeatIds: [],
+      });
+      mock.directorySaved.mockResolvedValue(directory as never);
+      mock.directory.mockReturnValue(new Promise(() => {}) as never);
+      // The launch's own disk reads are still out.
+      const dates = pending<Awaited<ReturnType<typeof readInvitationDates>>>();
+      jest.mocked(readInvitationDates).mockReturnValue(dates.promise);
+      const r = await render(<Today />);
+      expect(hosts(r, 'today-launching')).toHaveLength(1);
+      expect(mock.directorySaved).toHaveBeenCalledTimes(1);
+      await act(async () =>
+        dates.answer({ hiddenUntil: null, welcomeDeclinedAt: null }),
+      );
+      // The page is drawn from it at once, with no second read and no
+      // request of its own.
+      expect(blocks(r.root)).toContain('today-invitation');
+      expect(blocks(r.root)).not.toContain('today-your-mp-pending');
+      expect(mock.directorySaved).toHaveBeenCalledTimes(1);
+      expect(mock.directory).toHaveBeenCalledTimes(1);
+    });
 
     test('a federal and Victorian reader’s pending view reserves the state row at the final height', async () => {
       const victorian = {

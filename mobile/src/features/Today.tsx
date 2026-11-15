@@ -12,6 +12,7 @@ import {
   Fragment,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -96,10 +97,10 @@ import {
   YourMPCard,
   YourMPPending,
 } from './today/YourMPCard';
+import { useSavedDirectory } from './today/saved-directory';
 import { useProfilePreload } from './people/profile-preload';
 import { keepCatalog } from '../api/kept-catalogs';
 import { saveChoice } from './your-mp/choice-store';
-import type { Directory } from './your-mp/model';
 import {
   migrateSeatChoice,
   savedSeatDirectory,
@@ -310,31 +311,6 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
 }
 
 /**
- * The directory as the device saved it, read with no request while
- * `wanted`: undefined until the disk answers, null with none saved (or
- * when it is not wanted). Today asks only when the last launch kept no
- * shape for the saved choice, so the first frame is still decided from the
- * migrated choice and not from the choice as 1.0 wrote it.
- */
-function useSavedDirectory(wanted: boolean): Directory | null | undefined {
-  const [saved, setSaved] = useState<Directory | null | undefined>(undefined);
-  useEffect(() => {
-    if (!wanted) return;
-    let active = true;
-    void Promise.resolve()
-      .then(() => catalogs.directorySaved())
-      .catch(() => null)
-      .then((directory) => {
-        if (active) setSaved(directory ?? null);
-      });
-    return () => {
-      active = false;
-    };
-  }, [wanted]);
-  return wanted ? saved : null;
-}
-
-/**
  * Today, ordered by the reader's situation (today.md 5): Your MP or the
  * invitation to choose one; the daily edition, Following, Bills, How
  * parliament voted and Just declared; More to explore with the daily pair,
@@ -408,13 +384,15 @@ export default function Today() {
   // Nothing kept for this choice (the first launch of a build that keeps
   // the shape, or a new choice): the directory the device saved stands in
   // for the one on its way, so the choice is migrated before the first
-  // frame. Read from the disk only, and only in this case.
+  // frame. Read from the disk only, beside the launch reads, used only in
+  // this case and let go once the seat has resolved.
   const preview = useSavedDirectory(
     !!launch &&
       !!savedChoice &&
       !kept &&
       seat.status === 'loading' &&
       !seatArriving,
+    seat.status !== 'loading',
   );
   const previewSeats = preview?.electorates.data.electorates ?? null;
   const previewChoice =
@@ -465,6 +443,7 @@ export default function Today() {
     return {
       state: shape.state,
       senators: shape.senators,
+      members: shape.members,
       lines:
         district && form
           ? form.kind === 'held'
@@ -489,6 +468,8 @@ export default function Today() {
       ? {
           state: kept.state,
           senators: kept.senators,
+          // The rows' own words, so each held row wraps as its row will.
+          members: kept.members,
           // A kept member's row holds a member's row; kept lines hold
           // themselves.
           lines: keptRow && keptRow.kind !== 'member' ? keptRow.lines : null,
@@ -564,11 +545,22 @@ export default function Today() {
         keptDecision,
       )
     : null;
-  const drawnReps =
-    home && directory
-      ? repsShape(home, directory, choice?.stateSeatIds ?? [], stateForm)
-      : { state: false, senators: false, stateRow: null };
+  const stateIdsKey = (choice?.stateSeatIds ?? []).join(',');
+  const stateFormKey = JSON.stringify(stateForm);
+  const drawnReps = useMemo(
+    () =>
+      home && directory
+        ? repsShape(
+            home,
+            directory,
+            stateIdsKey ? stateIdsKey.split(',') : [],
+            JSON.parse(stateFormKey) as typeof stateForm,
+          )
+        : { state: false, senators: false, stateRow: null, members: null },
+    [home, directory, stateIdsKey, stateFormKey],
+  );
   const stateRowKept = JSON.stringify(drawnReps.stateRow);
+  const membersKept = JSON.stringify(drawnReps.members);
   const rowHeld = stateForm?.kind === 'held';
   const stateSeatDrawn = drawnReps.state;
   const senatorsDrawn = drawnReps.senators;
@@ -592,7 +584,8 @@ export default function Today() {
       launchShape.senators === senatorsDrawn &&
       launchShape.withdrawn === recordWithdrawn &&
       launchShape.electionDay === decidedFor &&
-      JSON.stringify(launchShape.stateRow) === stateRowKept
+      JSON.stringify(launchShape.stateRow) === stateRowKept &&
+      JSON.stringify(launchShape.members) === membersKept
     )
       return;
     void rememberTodayShape({
@@ -601,6 +594,7 @@ export default function Today() {
       state: stateSeatDrawn,
       senators: senatorsDrawn,
       stateRow: JSON.parse(stateRowKept) as TodayShape['stateRow'],
+      members: JSON.parse(membersKept) as TodayShape['members'],
       withdrawn: recordWithdrawn,
       electionDay: decidedFor,
     });
@@ -611,6 +605,7 @@ export default function Today() {
     senatorsDrawn,
     rowHeld,
     stateRowKept,
+    membersKept,
     recordWithdrawn,
     decidedFor,
     launched,
