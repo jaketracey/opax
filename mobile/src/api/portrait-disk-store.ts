@@ -50,6 +50,10 @@ export class PortraitDiskStore implements PortraitStore {
     if (!pattern.test(key)) throw new Error('Invalid image cache key');
     return new File(this.directory, `${key}.webp`);
   }
+  has(key: string): string | undefined {
+    const file = this.file(key);
+    return file.exists ? file.uri : undefined;
+  }
   async read(key: string): Promise<SavedPortrait | undefined> {
     await this.writes;
     const file = this.file(key);
