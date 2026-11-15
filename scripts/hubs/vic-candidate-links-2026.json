@@ -6,10 +6,12 @@
     "candidates": 1037,
     "members": 128,
     "verified": 92,
-    "ambiguous": 8,
+    "ambiguous": 0,
     "unmatched": 937,
-    "not_candidate": 27,
-    "unresolved": 1
+    "not_candidate": 28,
+    "unresolved": 0,
+    "reviewed": 8,
+    "linked": 100
   },
   "verified": [
     {
@@ -1485,8 +1487,7 @@
       }
     }
   ],
-  "reviewed": [],
-  "ambiguous": [
+  "reviewed": [
     {
       "candidate_id": "district:geelong:couzens-christine",
       "person_id": "person_ce191d7eee235875853957f5",
@@ -1495,6 +1496,22 @@
       "member": "Chris Couzens",
       "reasons": [
         "Name variant: the VEC lists \"COUZENS, Christine\", the roster has \"Chris Couzens\""
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The sitting member for Geelong is standing again in Geelong; news reports and the ABC guide name her as Christine Couzens, the name on the VEC list. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://timesnewsgroup.com.au/bellarinetimes/news/the-election-field-is-taking-shape-the-liberal-ticket-isnt/",
+          "publisher": "Bellarine Times",
+          "title": "The election field is taking shape – the Liberal ticket isn't",
+          "date": "2026-06-04",
+          "quote": "Incumbents Christine Couzens in Geelong, Ella George in Lara and Alison Marchant in Bellarine will also contest the election."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/geel",
+          "publisher": "ABC News election guide, Geelong",
+          "quote": "Held by Labor's Christine Couzens who was elected in 2014"
+        }
       ]
     },
     {
@@ -1505,6 +1522,20 @@
       "member": "Chris Crewther",
       "reasons": [
         "The same name has a record in another parliament"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Liberal candidate for Mornington is its sitting member, and the federal record under the same name is his: he was the federal member for Dunkley. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/morn",
+          "publisher": "ABC News election guide, Mornington",
+          "quote": "Held by Former federal MP, and current opposition whip, Chris Crewther since 2022. Crewther served a single term in federal parliament as the MP for Dunkley, losing seat at the 2019 federal election."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "Chris Crewther Sitting MP / LIB / Mornington"
+        }
       ]
     },
     {
@@ -1517,6 +1548,22 @@
         "Name variant: the VEC lists \"FOWLES, William\", the roster has \"Will Fowles\"",
         "Different seat: standing in Preston District, on the roster for Ringwood District",
         "No registered party on the VEC list to check (roster: Independent)"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The independent member for Ringwood nominated as an independent candidate for Preston. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.easternmelburnian.com.au/p/ringwood-mp-will-fowles-preston-candidate",
+          "publisher": "The Eastern Melburnian",
+          "title": "Ringwood MP Will Fowles is making one last bid for a state seat, despite conceding it's an impossible long shot",
+          "date": "2026-11-10",
+          "quote": "Fowles confirmed his nomination as an independent candidate for Preston on Monday November 9."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "Will Fowles Sitting MP / IND / Preston"
+        }
       ]
     },
     {
@@ -1527,6 +1574,23 @@
       "member": "Nick McGowan",
       "reasons": [
         "Different seat: standing in Ringwood District, on the roster for North-Eastern Metropolitan Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Liberal member for North-Eastern Metropolitan Region is the Liberal candidate for Ringwood District. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/ring",
+          "publisher": "ABC News election guide, Ringwood",
+          "title": "Ringwood - VIC Electorate, Candidates, Results - ABC News",
+          "quote": "McGowan is a sitting upper house member for the North Eastern Metropolitan region who was elected at the 2022 state election."
+        },
+        {
+          "url": "https://www.easternmelburnian.com.au/p/will-fowles-not-contesting-ringwood",
+          "publisher": "The Eastern Melburnian",
+          "title": "Will Fowles bows out of Ringwood, setting up major party fight for the seat",
+          "date": "2026-07-28",
+          "quote": "Labor's Rachel Halse and Liberal North-Eastern Metropolitan MLC Nick McGowan already announced as candidates."
+        }
       ]
     },
     {
@@ -1537,6 +1601,29 @@
       "member": "Enver Erdogan",
       "reasons": [
         "Different seat: standing in Eastern Victoria Region, on the roster for Northern Metropolitan Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Labor member for Northern Metropolitan Region moved to the Labor ticket in Eastern Victoria Region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/2026-10-01/victoria-labor-upper-house-ticket-mp/107215764",
+          "publisher": "ABC News",
+          "title": "Labor upper house candidates to be decided one month before state election as major losses loom",
+          "date": "2026-10-01",
+          "quote": "Enver Erdogan has served as member for Northern Metropolitan Region since 2022. [A handshake agreement] will move Mr Erdogan to the safer top position in Eastern Victoria"
+        },
+        {
+          "url": "https://www.tallyroom.com.au/68999",
+          "publisher": "The Tally Room",
+          "title": "Labor MLCs swap regions as nominations near in Victoria",
+          "date": "2026-11-07",
+          "quote": "Enver Erdogan and Tom McIntosh have swapped regions, with Erdogan moving from North Metro to Eastern Victoria and McIntosh the opposite."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "Enver Erdogan Sitting MP / ALP / Eastern Victoria"
+        }
       ]
     },
     {
@@ -1547,6 +1634,22 @@
       "member": "Ryan Batchelor",
       "reasons": [
         "Different seat: standing in North-Eastern Metropolitan Region, on the roster for Southern Metropolitan Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Labor member for Southern Metropolitan Region moved to the Labor ticket in North-Eastern Metropolitan Region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.tallyroom.com.au/68999",
+          "publisher": "The Tally Room",
+          "title": "Labor MLCs swap regions as nominations near in Victoria",
+          "date": "2026-11-07",
+          "quote": "Ryan Batchelor has moved from South Metro to North East Metro."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "Ryan Batchelor Sitting MP / ALP / North-Eastern Metropolitan"
+        }
       ]
     },
     {
@@ -1557,6 +1660,24 @@
       "member": "Tom McINTOSH",
       "reasons": [
         "Different seat: standing in Northern Metropolitan Region, on the roster for Eastern Victoria Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Labor member for Eastern Victoria Region moved to the Labor ticket in Northern Metropolitan Region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/2026-10-01/victoria-labor-upper-house-ticket-mp/107215764",
+          "publisher": "ABC News",
+          "title": "Labor upper house candidates to be decided one month before state election as major losses loom",
+          "date": "2026-10-01",
+          "quote": "The existing MP there, Tom McIntosh, will take Mr Erdogan's position as the second candidate in the Northern Metro."
+        },
+        {
+          "url": "https://www.tallyroom.com.au/68999",
+          "publisher": "The Tally Room",
+          "title": "Labor MLCs swap regions as nominations near in Victoria",
+          "date": "2026-11-07",
+          "quote": "Enver Erdogan and Tom McIntosh have swapped regions, with Erdogan moving from North Metro to Eastern Victoria and McIntosh the opposite."
+        }
       ]
     },
     {
@@ -1567,9 +1688,26 @@
       "member": "Moira Deeming",
       "reasons": [
         "Party differs: VEC \"Family First Victoria\", roster \"Independent\""
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The member for Western Metropolitan Region, on the roster as an independent, is the Family First lead candidate for the same region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://newshub.medianet.com.au/2026/09/moira-deeming-joins-family-first-as-western-metro-lead-candidate/170769/",
+          "publisher": "Family First Party media release",
+          "title": "Moira Deeming joins Family First as Western Metro lead candidate",
+          "date": "2026-09-10",
+          "quote": "[Family First] endorsed Moira Deeming as its lead candidate for the Western Metro region for the Victorian Legislative Council at the November election."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "Moira Deeming Sitting MP / FFP / Western Metropolitan"
+        }
       ]
     }
   ],
+  "ambiguous": [],
   "not_candidate": [
     {
       "person_id": "person_ddbcd16599825c9e8a5dd6e8",
@@ -1809,21 +1947,21 @@
       "member": "Gayle Tierney",
       "seat": "Western Victoria Region",
       "same_surname_candidates": []
-    }
-  ],
-  "members_to_check": [
+    },
     {
       "person_id": "person_ea727220eadf5a60ba127324",
       "member": "Michael O'Brien",
       "seat": "Malvern District",
-      "reason": "A candidate with the same surname shares the seat, the party or a first initial",
-      "candidates": [
+      "same_surname_candidates": [
         {
           "candidate": "O'BRIEN, Michelle",
           "seat": "Evelyn District",
           "party": "Family First Victoria"
         }
-      ]
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: no \"O'BRIEN, Michael\" in any district or region. \"O'BRIEN, Michelle\" (Evelyn District, Family First Victoria) is a different given name."
     }
-  ]
+  ],
+  "members_to_check": []
 }

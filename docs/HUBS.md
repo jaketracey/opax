@@ -196,23 +196,37 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | | Count |
   | --- | ---: |
   | Candidates on the VEC lists | 1,037 |
-  | Verified and linked | 92 |
-  | Ambiguous, not linked | 8 |
+  | Verified by the rule and linked | 92 |
+  | Ambiguous by the rule, linked after a recorded review | 8 |
+  | Ambiguous, not linked | 0 |
   | No name match with a roster member | 937 |
-  | Members marked "Not a candidate in 2026" | 27 |
-  | Members left unmarked for a person to check | 1 |
+  | Members marked "Not a candidate in 2026" | 28 |
+  | Members left unmarked for a person to check | 0 |
 
-  The remaining 8 of the 128 members are those named in the ambiguous pairs.
+  The eight reviewed pairs (16 November 2026) are members who changed seat,
+  house or party, a name variant and a federal namesake: Geelong (COUZENS,
+  Christine), Mornington (CREWTHER, Chris), Preston (FOWLES, William), Ringwood
+  (McGOWAN, Nick), Eastern Victoria (ERDOGAN, Enver), North-Eastern Metropolitan
+  (BATCHELOR, Ryan), Northern Metropolitan (MCINTOSH, Tom) and Western
+  Metropolitan (DEEMING, Moira). Each entry in `reviewed` keeps the rule's
+  reasons and the public sources relied on, with the words quoted.
   "Not a candidate in 2026" is shown only where the member has no name match and
   no remaining candidate with their surname shares their seat, their party or
   their first initial. The file keeps the same-surname candidates that were
   considered. A member who nominated under a different given name, in a
   different seat and for a different party would not be caught by this rule.
+  A separate test reads all 1,037 VEC rows and fails if any marked member is on
+  them under an exact surname and given-name comparison (case, apostrophes and
+  hyphens normalised), in any seat of either house. Michael O'Brien (Malvern)
+  is marked on that recorded check: the rule alone left him open because
+  "O'BRIEN, Michelle" stands in Evelyn.
 
   To settle an ambiguous pair, a person moves it to `reviewed` with
-  `reviewed_on` (a date) and `review_evidence` (what was checked); to settle a
-  member in `members_to_check`, they add the member to `not_candidate` with the
-  same two fields. The build accepts no other route, reruns keep these entries,
+  `reviewed_on` (a date), `review_evidence` (what was checked) and `sources`:
+  at least one https address of a party, member or news source that names the
+  person and the seat, with the words relied on in `quote`. To settle a member
+  in `members_to_check`, they add the member to `not_candidate` with
+  `reviewed_on` and `review_evidence`. The build accepts no other route, reruns keep these entries,
   and `portal/test/vic-candidate-links.test.mjs` pins the linked set, so each
   promotion is also a reviewed test change. After a refreshed VEC list, rerun
   the script, review the diff and commit it;

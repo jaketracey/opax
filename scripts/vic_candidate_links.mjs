@@ -14,7 +14,8 @@
 //   3. the VEC registered party and the roster party are the same party;
 //   4. nothing else makes the identity uncertain: the name is on the VEC lists once,
 //      matches one roster member, and has no record in another parliament.
-// Every other name match is ambiguous: it is listed for a person to check and never linked.
+// Every other name match is ambiguous: it is listed for a person to check, and is linked
+// only once a person records a public source that names the member and the seat contested.
 import {readFile, writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {personIndex} from '../portal/src/person-slug.ts';
@@ -117,19 +118,24 @@ export function matchVicCandidates(nominated, members) {
 }
 
 const reviewed = entry => /^\d{4}-\d{2}-\d{2}$/.test(entry?.reviewed_on ?? '') && typeof entry.review_evidence === 'string' && entry.review_evidence.trim().length > 0;
+const https = url => { try { return new URL(url).protocol === 'https:'; } catch { return false; } };
+// A promoted link also needs a public source that names the person and the seat, with the words relied on.
+const reviewedLink = entry => reviewed(entry) && Array.isArray(entry.sources) && entry.sources.length > 0
+  && entry.sources.every(s=>https(s?.url) && typeof s.quote === 'string' && s.quote.trim().length > 0);
 const pairKey = e => `${e.candidate_id} ${e.person_id}`;
 
 /**
  * The links and "not a candidate" marks the build may publish: the committed file, checked
  * against a fresh match. A verified entry must still verify. A person may promote an
- * ambiguous pair, or an unresolved member, only by recording the date and the evidence.
+ * ambiguous pair only by recording the date, the evidence and a public source that names
+ * the person and the seat; an unresolved member, by recording the date and the evidence.
  * An entry that fails is left out and reported, so the page falls back to plain text
  * and a later roster or VEC list never stops the election build.
  */
 export function approvedLinks(file, match) {
   const verified = new Set(match.verified.map(pairKey)), ambiguous = new Set(match.ambiguous.map(pairKey));
   const links = new Map(), people = new Set(), dropped = [];
-  for (const [list,allowed] of [[file.verified ?? [],e=>verified.has(pairKey(e))],[file.reviewed ?? [],e=>ambiguous.has(pairKey(e)) && reviewed(e)]]) for (const e of list) {
+  for (const [list,allowed] of [[file.verified ?? [],e=>verified.has(pairKey(e))],[file.reviewed ?? [],e=>ambiguous.has(pairKey(e)) && reviewedLink(e)]]) for (const e of list) {
     if (!allowed(e)) dropped.push(`Unverified candidate link: ${e?.candidate_id}`);
     else if (links.has(e.candidate_id) || people.has(e.person_id)) dropped.push(`Duplicate candidate link: ${e.candidate_id}`);
     else { links.set(e.candidate_id,e.person_id); people.add(e.person_id); }
@@ -145,14 +151,14 @@ export function approvedLinks(file, match) {
 
 /** The file to commit. A person's reviewed promotions are kept and leave the lists to check. */
 export function linksFile(match, nominated, previous = {}) {
-  const kept = (previous.reviewed ?? []).filter(e=>reviewed(e) && match.ambiguous.some(a=>pairKey(a) === pairKey(e)));
+  const kept = (previous.reviewed ?? []).filter(e=>reviewedLink(e) && match.ambiguous.some(a=>pairKey(a) === pairKey(e)));
   const keptOut = (previous.not_candidate ?? []).filter(e=>reviewed(e) && match.unresolved.some(u=>u.person_id === e.person_id));
   const linked = new Set(kept.map(e=>e.person_id)), ambiguous = match.ambiguous.filter(a=>!kept.some(e=>pairKey(e) === pairKey(a)));
   const members_to_check = match.unresolved.filter(u=>!keptOut.some(e=>e.person_id === u.person_id));
   return {
     note:'Written by scripts/vic_candidate_links.mjs and reviewed before commit. The election build links only "verified" and "reviewed" pairs and shows "Not a candidate in 2026" only for "not_candidate" members; "ambiguous" and "members_to_check" are for a person to check and are never published. See docs/HUBS.md.',
     candidates_published:nominated.published,candidates_source:nominated.url,
-    counts:{...match.counts,verified:match.verified.length + kept.length,ambiguous:ambiguous.length,
+    counts:{...match.counts,reviewed:kept.length,linked:match.verified.length + kept.length,ambiguous:ambiguous.length,
       not_candidate:match.not_candidate.length + keptOut.length,unresolved:members_to_check.length},
     verified:match.verified,reviewed:kept,ambiguous,
     not_candidate:[...match.not_candidate.filter(e=>!linked.has(e.person_id)),...keptOut],members_to_check,

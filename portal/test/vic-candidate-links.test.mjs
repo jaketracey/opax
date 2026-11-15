@@ -46,8 +46,10 @@ const VERIFIED = new Map([
   ['region:western-metropolitan:blandthorn-lizzie',"Lizzie Blandthorn"],['region:western-metropolitan:stitt-ingrid',"Ingrid Stitt"],['region:western-victoria:mansfield-sarah',"Sarah Mansfield"],
   ['region:western-victoria:ermacora-jacinta',"Jacinta Ermacora"],['region:western-victoria:mcarthur-bev',"Bev McArthur"],
 ]);
-// Name matches that are not verified: never linked, listed for a person to check.
-const AMBIGUOUS = {
+// Name matches the automatic rule does not verify, with its reasons. Each is linked only
+// because a person recorded a public source that names the member and the seat contested
+// (hub ruling, 16 November 2026). Without that record the pair stays unlinked.
+const REVIEWED = {
   'district:geelong:couzens-christine':[/^Name variant/],
   'district:mornington:crewther-chris':[/another parliament/],
   'district:preston:fowles-william':[/^Name variant/,/^Different seat/,/^No registered party/],
@@ -56,6 +58,13 @@ const AMBIGUOUS = {
   'region:north-eastern-metropolitan:batchelor-ryan':[/^Different seat/],
   'region:northern-metropolitan:mcintosh-tom':[/^Different seat/],
   'region:western-metropolitan:deeming-moira':[/^Party differs/],
+};
+// How the sources name each contested seat.
+const SEAT_NAMED = {
+  'district:geelong:couzens-christine':/geelong/,'district:mornington:crewther-chris':/mornington/,
+  'district:preston:fowles-william':/preston/,'district:ringwood:mcgowan-nick':/ringwood/,
+  'region:eastern-victoria:erdogan-enver':/eastern victoria/,'region:north-eastern-metropolitan:batchelor-ryan':/north[- ]east(ern)? metro/,
+  'region:northern-metropolitan:mcintosh-tom':/north(ern)? metro/,'region:western-metropolitan:deeming-moira':/western metro/,
 };
 
 const root = new URL('../public/',import.meta.url), hubs = new URL('../../scripts/hubs/',import.meta.url);
@@ -73,36 +82,45 @@ const linked = d => d.seats.flatMap(s=>(s.candidates?.list ?? []).filter(c=>c.hr
 
 test('the committed mapping is exactly the reviewed set, with the evidence for each pair',()=>{
   assert.deepEqual(file.verified.map(v=>[v.candidate_id,v.member]),[...VERIFIED]);
-  assert.deepEqual(file.reviewed,[]);
+  assert.deepEqual(file.reviewed.map(r=>r.candidate_id),Object.keys(REVIEWED));
+  for (const r of file.reviewed) {
+    assert.equal(r.reviewed_on,'2026-11-16');assert.ok(r.review_evidence.length > 40,r.candidate_id);
+    REVIEWED[r.candidate_id].forEach((reason,i)=>assert.match(r.reasons[i],reason));assert.equal(r.reasons.length,REVIEWED[r.candidate_id].length);
+    // At least two public sources, and one that names both the candidate's surname and the seat contested.
+    const surname = r.candidate.split(', ')[0].toLowerCase(), words = source => `${source.title ?? ''} ${source.quote}`.toLowerCase();
+    assert.ok(r.sources.length >= 2,r.candidate_id);
+    for (const source of r.sources) assert.ok(new URL(source.url).protocol === 'https:' && source.publisher && source.quote,r.candidate_id);
+    assert.ok(r.sources.some(source=>words(source).includes(surname) && SEAT_NAMED[r.candidate_id].test(words(source))),`${r.candidate_id}: no source names ${surname} and the seat`);
+  }
   for (const v of file.verified) {
     assert.match(v.person_id,/^person_[0-9a-f]{24}$/);
     assert.match(v.evidence.seat,new RegExp(`^Held ${v.seat} on the roster dated 2026-09-09$`));
     assert.ok(v.evidence.party.vec && v.evidence.party.roster && v.evidence.roster_source.startsWith('https://www.parliament.vic.gov.au/members/'),v.candidate_id);
   }
-  assert.equal(new Set(file.verified.map(v=>v.person_id)).size,VERIFIED.size);
-  assert.deepEqual(file.counts,{candidates:1037,members:128,verified:92,ambiguous:8,unmatched:937,not_candidate:27,unresolved:1});
+  assert.equal(new Set([...file.verified,...file.reviewed].map(v=>v.person_id)).size,100);
+  assert.deepEqual(file.counts,{candidates:1037,members:128,verified:92,ambiguous:0,unmatched:937,not_candidate:28,unresolved:0,reviewed:8,linked:100});
 });
 
 test('the committed mapping is what the matcher finds in the current VEC lists and roster',()=>{
   assert.deepEqual(linksFile(match,nominated,file),file);
-  // Every name match is accounted for: verified, or listed with the reason it is not.
-  assert.deepEqual(Object.fromEntries(file.ambiguous.map(a=>[a.candidate_id,a.reasons.length])),
-    Object.fromEntries(Object.entries(AMBIGUOUS).map(([id,reasons])=>[id,reasons.length])));
-  for (const a of file.ambiguous) AMBIGUOUS[a.candidate_id].forEach((reason,i)=>assert.match(a.reasons[i],reason));
-  assert.deepEqual(file.members_to_check.map(m=>[m.member,m.candidates.map(c=>c.candidate)]),[["Michael O'Brien",["O'BRIEN, Michelle"]]]);
+  // Every name match is accounted for: verified by rule, or ambiguous by rule and settled by a recorded review.
+  assert.deepEqual(match.ambiguous.map(a=>a.candidate_id),Object.keys(REVIEWED));
+  assert.deepEqual([file.ambiguous,file.members_to_check],[[],[]]);
+  // The one member the rule leaves open is marked on the recorded exact check, not by the rule.
+  assert.deepEqual(match.unresolved.map(m=>[m.member,m.candidates.map(c=>c.candidate)]),[["Michael O'Brien",["O'BRIEN, Michelle"]]]);
+  assert.deepEqual(file.not_candidate.filter(m=>m.reviewed_on).map(m=>[m.member,m.reviewed_on]),[["Michael O'Brien",'2026-11-16']]);
   assert.ok(file.not_candidate.some(m=>m.member === 'Maree Edwards' && m.seat === 'Bendigo West District'));
-  const named = new Set([...file.verified,...file.ambiguous,...file.not_candidate,...file.members_to_check].map(e=>e.person_id));
+  const named = new Set([...file.verified,...file.reviewed,...file.not_candidate].map(e=>e.person_id));
   assert.equal(named.size,128);
 });
 
 test('the built election data links the reviewed pairs and no others',()=>{
   const hrefs = new Map(members.map(m=>[m.person_id,data.seats.flatMap(s=>s.members).find(x=>x.name === m.name).href]));
-  assert.deepEqual(linked(data).sort(),file.verified.map(v=>[v.candidate_id,hrefs.get(v.person_id)]).sort());
-  assert.equal(linked(data).length,VERIFIED.size);
-  for (const [id] of linked(data)) assert.ok(VERIFIED.has(id),`Unverified pair linked: ${id}`);
-  for (const id of Object.keys(AMBIGUOUS)) assert.ok(!linked(data).some(([x])=>x === id),`Ambiguous pair linked: ${id}`);
-  // A linked candidate stands in the seat whose roster member the link opens.
-  for (const s of data.seats) for (const c of s.candidates.list) if (c.href) assert.ok(s.members.some(m=>m.href === c.href),c.name);
+  assert.deepEqual(linked(data).sort(),[...file.verified,...file.reviewed].map(v=>[v.candidate_id,hrefs.get(v.person_id)]).sort());
+  assert.equal(linked(data).length,VERIFIED.size + Object.keys(REVIEWED).length);
+  for (const [id] of linked(data)) assert.ok(VERIFIED.has(id) || id in REVIEWED,`Unverified pair linked: ${id}`);
+  // A rule-verified candidate stands in the seat whose roster member the link opens; only a reviewed pair may differ.
+  for (const s of data.seats) for (const c of s.candidates.list) if (c.href && VERIFIED.has(candidateId(s.kind,s.name,c.name))) assert.ok(s.members.some(m=>m.href === c.href),c.name);
   assert.deepEqual(data.seats.flatMap(s=>s.members.filter(m=>m.not_candidate).map(m=>m.name)).sort(),file.not_candidate.map(m=>m.member).sort());
 });
 
@@ -151,34 +169,49 @@ test('"not a candidate" needs the VEC lists to rule the member out',()=>{
   assert.deepEqual(status({Mildura:[{name:'HALLOWAY, Wren',party:'Australian Labor Party - Victorian Branch'}]}),[0,0]);
 });
 
+// The committed file with the recorded reviews taken out: what the rule alone supports.
+const ruleOnly = {...file,reviewed:[],not_candidate:file.not_candidate.filter(m=>!m.reviewed_on)};
+
 test('the build publishes only what the committed file and a fresh match both support',()=>{
-  const {links,notCandidate,dropped} = approvedLinks(file,match);
+  const full = approvedLinks(file,match);
+  assert.deepEqual([full.links.size,full.notCandidate.size,full.dropped],[100,28,[]]);
+  const {links,notCandidate,dropped} = approvedLinks(ruleOnly,match);
   assert.deepEqual([...links.keys()],[...VERIFIED.keys()]);assert.deepEqual([notCandidate.size,dropped],[27,[]]);
   const published = r => [[...r.links].join(),[...r.notCandidate].join()];
-  const ambiguous = file.ambiguous[0], open = file.members_to_check[0];
+  const ambiguous = match.ambiguous[0], open = match.unresolved[0];
   const pair = {candidate_id:ambiguous.candidate_id,person_id:ambiguous.person_id};
-  const review = {reviewed_on:'2026-11-17',review_evidence:'Checked against the Parliament of Victoria member page.'};
+  const review = {reviewed_on:'2026-11-17',review_evidence:'Checked against a published candidacy announcement.'};
+  const sources = [{url:'https://example.org/announcement',publisher:'Example',quote:'Named as the candidate for the seat.'}];
   // Each altered entry is left out and named; nothing else about the published set changes.
   for (const [bad,error,lost] of [
-    [{...file,verified:[...file.verified,pair]},/Unverified candidate link: district:geelong:couzens-christine/],
-    [{...file,verified:[{...file.verified[0],person_id:file.verified[1].person_id},...file.verified.slice(1)]},/Unverified candidate link: district:albert-park:taylor-nina/,file.verified[0].candidate_id],
-    [{...file,verified:[...file.verified,file.verified[0]]},/Duplicate candidate link/],
-    [{...file,reviewed:[pair]},/Unverified candidate link: district:geelong/],
-    [{...file,reviewed:[{...pair,reviewed_on:'2026-11-17',review_evidence:' '}]},/Unverified candidate link: district:geelong/],
-    [{...file,reviewed:[{...file.verified[1],...review,candidate_id:'district:lowan:nobody'}]},/Unverified candidate link: district:lowan:nobody/],
-    [{...file,not_candidate:[...file.not_candidate,{person_id:open.person_id,member:open.member}]},/Unconfirmed "not a candidate": Michael O'Brien/],
-    [{...file,not_candidate:[...file.not_candidate,{person_id:file.verified[0].person_id,member:file.verified[0].member}]},/Unconfirmed "not a candidate": Nina Taylor/],
+    [{...ruleOnly,verified:[...file.verified,pair]},/Unverified candidate link: district:geelong:couzens-christine/],
+    [{...ruleOnly,verified:[{...file.verified[0],person_id:file.verified[1].person_id},...file.verified.slice(1)]},/Unverified candidate link: district:albert-park:taylor-nina/,file.verified[0].candidate_id],
+    [{...ruleOnly,verified:[...file.verified,file.verified[0]]},/Duplicate candidate link/],
+    [{...ruleOnly,reviewed:[pair]},/Unverified candidate link: district:geelong/],
+    [{...ruleOnly,reviewed:[{...pair,reviewed_on:'2026-11-17',review_evidence:' ',sources}]},/Unverified candidate link: district:geelong/],
+    // A review without a public source, or with one that is not an https address or has no quoted words, is not enough.
+    [{...ruleOnly,reviewed:[{...pair,...review}]},/Unverified candidate link: district:geelong/],
+    [{...ruleOnly,reviewed:[{...pair,...review,sources:[]}]},/Unverified candidate link: district:geelong/],
+    [{...ruleOnly,reviewed:[{...pair,...review,sources:[{...sources[0],url:'http://example.org/'}]}]},/Unverified candidate link: district:geelong/],
+    [{...ruleOnly,reviewed:[{...pair,...review,sources:[{...sources[0],quote:''}]}]},/Unverified candidate link: district:geelong/],
+    [{...ruleOnly,reviewed:[{...file.verified[1],...review,sources,candidate_id:'district:lowan:nobody'}]},/Unverified candidate link: district:lowan:nobody/],
+    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{person_id:open.person_id,member:open.member}]},/Unconfirmed "not a candidate": Michael O'Brien/],
+    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{person_id:file.verified[0].person_id,member:file.verified[0].member}]},/Unconfirmed "not a candidate": Nina Taylor/],
   ]) {
     const result = approvedLinks(bad,match);
     assert.equal(result.dropped.length,1);assert.match(result.dropped[0],error);
     assert.deepEqual(published(result),published({links:new Map([...links].filter(([id])=>id !== lost)),notCandidate}),String(error));
   }
+  // A member linked by review cannot also be marked as not standing.
+  const both = approvedLinks({...file,not_candidate:[...file.not_candidate,{person_id:file.reviewed[0].person_id,member:file.reviewed[0].member,...review}]},match);
+  assert.deepEqual(both.dropped,['Unconfirmed "not a candidate": Chris Couzens']);assert.equal(both.notCandidate.size,28);
   // A person's recorded review is the only way past the automatic rule, and it is kept on a rerun.
-  const promoted = {...file,reviewed:[{...pair,...review}],not_candidate:[...file.not_candidate,{person_id:open.person_id,member:open.member,...review}]};
+  const promoted = {...ruleOnly,reviewed:[{...pair,...review,sources}],not_candidate:[...ruleOnly.not_candidate,{person_id:open.person_id,member:open.member,...review}]};
   const approved = approvedLinks(promoted,match);
   assert.equal(approved.links.get(pair.candidate_id),pair.person_id);assert.ok(approved.notCandidate.has(open.person_id));
   const rerun = linksFile(match,nominated,promoted);
-  assert.deepEqual([rerun.reviewed.length,rerun.ambiguous.length,rerun.members_to_check.length,rerun.counts.verified,rerun.counts.not_candidate],[1,7,0,93,28]);
+  assert.deepEqual([rerun.reviewed.length,rerun.ambiguous.length,rerun.members_to_check.length,rerun.counts.linked,rerun.counts.not_candidate],[1,7,0,93,28]);
+  assert.deepEqual(linksFile(match,nominated,{}).counts,{candidates:1037,members:128,verified:92,ambiguous:8,unmatched:937,not_candidate:27,unresolved:1,reviewed:0,linked:92});
 });
 
 test('the election build leaves out a stale or altered mapping entry and publishes the rest',async t=>{
@@ -190,20 +223,21 @@ test('the election build leaves out a stale or altered mapping entry and publish
     await buildVicElection(out,configPath);
     const built = JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'));
     assert.deepEqual(linked(built),linked(data));
-    const ambiguous = file.ambiguous[0];
-    await writeFile(linksPath,JSON.stringify({...file,verified:[...file.verified,{candidate_id:ambiguous.candidate_id,person_id:ambiguous.person_id}]}));
+    // Without its recorded review, an ambiguous pair moved into the verified list is left out.
+    const ambiguous = match.ambiguous[0];
+    await writeFile(linksPath,JSON.stringify({...file,reviewed:file.reviewed.slice(1),verified:[...file.verified,{candidate_id:ambiguous.candidate_id,person_id:ambiguous.person_id}]}));
     const warnings = [];t.mock.method(console,'warn',message=>warnings.push(message));
     const rebuilt = async () => { const summary = await buildVicElection(out,configPath); return [summary,JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'))]; };
     let [summary,result] = await rebuilt();
-    assert.deepEqual([summary.candidate_links,summary.not_candidate,summary.links_left_out],[92,27,1]);
-    assert.deepEqual(linked(result),linked(data));
+    assert.deepEqual([summary.candidate_links,summary.not_candidate,summary.links_left_out],[99,28,1]);
+    assert.deepEqual(linked(result),linked(data).filter(([id])=>id !== ambiguous.candidate_id));
     assert.deepEqual(warnings,['Victorian candidate links: left out. Unverified candidate link: district:geelong:couzens-christine']);
     // A changed VEC party for a linked candidate takes the link away; the member is not then marked as not standing.
     await writeFile(linksPath,JSON.stringify(file));
     const changed = structuredClone(nominated);changed.districts['Albert Park'].find(c=>c.name === 'TAYLOR, Nina').party = 'Family First Victoria';
     await writeFile(join(configRoot,'vic-candidates-2026.json'),JSON.stringify(changed));
     [summary,result] = await rebuilt();
-    assert.deepEqual([summary.candidate_links,summary.links_left_out],[91,1]);
+    assert.deepEqual([summary.candidate_links,summary.links_left_out],[99,1]);
     assert.deepEqual(linked(result),linked(data).filter(([id])=>id !== 'district:albert-park:taylor-nina'));
     assert.ok(!result.seats.find(s=>s.name === 'Albert Park').members[0].not_candidate);
     // A list without the member's name does not mark them either: the committed file never said so.
@@ -211,7 +245,7 @@ test('the election build leaves out a stale or altered mapping entry and publish
     await writeFile(join(configRoot,'vic-candidates-2026.json'),JSON.stringify(changed));
     [summary,result] = await rebuilt();
     assert.ok(!result.seats.find(s=>s.name === 'Albert Park').members[0].not_candidate);
-    assert.equal(result.seats.flatMap(s=>s.members).filter(m=>m.not_candidate).length,27);
+    assert.equal(result.seats.flatMap(s=>s.members).filter(m=>m.not_candidate).length,28);
   });
 });
 
@@ -250,12 +284,55 @@ test('"Not a candidate in 2026" appears only for members the VEC lists rule out,
   const note = '<p class="hub-meta">Not a candidate in 2026. Source: <a href="https://www.vec.vic.gov.au/voting/2026-state-election">VEC candidate lists</a>, published 11 Nov 2026.</p>';
   const bendigo = renderVicElection(data,seat('Bendigo West')).html;
   assert.ok(bendigo.includes(`<h2 class="ui-section-title">What Maree Edwards has done</h2><article class="vic-member">${note}`));
-  for (const name of ['Albert Park','Geelong','Malvern','Mornington']) assert.doesNotMatch(renderVicElection(data,seat(name)).html,/Not a candidate/,name);
+  assert.ok(renderVicElection(data,seat('Malvern')).html.includes(`<h2 class="ui-section-title">What Michael O'Brien has done</h2><article class="vic-member">${note}`.replace("'",'&#39;')));
+  // A member standing again, in the same seat or another, is never marked.
+  for (const name of ['Albert Park','Geelong','Mornington','Ringwood','Sunbury']) assert.doesNotMatch(renderVicElection(data,seat(name)).html,/Not a candidate/,name);
   const region = seat('Eastern Victoria'), html = renderVicElection(data,region).html;
   assert.deepEqual(region.members.filter(m=>m.not_candidate).map(m=>m.name),['Harriet Shing']);
   assert.equal(html.split(note).length,2);
-  assert.match(html,new RegExp(`Harriet Shing</a>[^\n]*?</h3>${note.replace(/[.?]/g,'\\$&')}`));
+  const shing = html.slice(html.indexOf('Harriet Shing</a>'));
+  assert.equal(shing.indexOf('</h3>'+note),shing.indexOf('</h3>'));
   // The hub page and the dissolution wording are unchanged by this.
   assert.doesNotMatch(renderVicElection(data,null).html,/Not a candidate/);
   assert.match(bendigo,/<dt>Held by<\/dt><dd><a href="\/subject\/person\/maree-edwards">Maree Edwards<\/a>/);
+});
+
+// Hub ruling, 16 November 2026: no one standing anywhere, in either house, may be marked
+// "Not a candidate in 2026". This check is deliberately separate from the matcher: it reads the
+// VEC rows itself and compares surname plus given name exactly, normalising only case,
+// apostrophes and hyphens. Extra given names on the VEC row still count as the same name.
+const exact = text => text.toLowerCase().replace(/[’‘ʼ`']/g,'').replace(/[-‐‑–]/g,' ').replace(/\s+/g,' ').trim();
+const vecRows = ['districts','regions'].flatMap(key=>Object.entries(nominated[key]).flatMap(([name,list])=>list.map(c=>{
+  const parts = c.name.split(', ');
+  return parts.length === 2 ? {seat:name,row:c.name,surname:exact(parts[0]),given:exact(parts[1])} : {seat:name,row:c.name,surname:null,given:exact(c.name)};
+})));
+const standing = name => {
+  const wanted = exact(name);
+  return vecRows.filter(r=>r.surname === null ? r.given === wanted
+    : wanted.endsWith(' '+r.surname) && (r.given === wanted.slice(0,-r.surname.length).trim() || r.given.startsWith(wanted.slice(0,-r.surname.length))));
+};
+
+test('no member marked "Not a candidate in 2026" is on any of the 1,037 VEC rows, in either house',()=>{
+  assert.equal(vecRows.length,1037);
+  // The check finds people who are standing: in their own seat, in another seat, and in the other house.
+  assert.deepEqual(standing('Nina Taylor').map(r=>r.seat),['Albert Park']);
+  assert.deepEqual(standing('Nick McGowan').map(r=>[r.seat,r.row]),[['Ringwood','McGOWAN, Nick']]);
+  assert.deepEqual(standing('Enver Erdogan').map(r=>r.seat),['Eastern Victoria']);
+  assert.deepEqual(standing("Danny O'Brien").map(r=>r.row),["O'BRIEN, Danny"]);
+  assert.deepEqual(standing('Kathleen Matthews-Ward').map(r=>r.row),['MATTHEWS-WARD, Kathleen']);
+  assert.deepEqual(standing('Brendan Thomas').map(r=>r.row),['THOMAS, Brendan William']);
+  assert.deepEqual(standing('Davinder Kaur').map(r=>r.row),['DAVINDER KAUR']);
+  const rosterNames = new Map(members.map(m=>[m.person_id,[m.name,...m.aliases]]));
+  const marked = data.seats.flatMap(s=>s.members.filter(m=>m.not_candidate).map(m=>m.name));
+  assert.deepEqual(marked.slice().sort(),file.not_candidate.map(m=>m.member).sort());assert.equal(marked.length,28);
+  const caught = file.not_candidate.flatMap(m=>rosterNames.get(m.person_id).flatMap(name=>standing(name).map(r=>`${m.member}: ${r.row} in ${r.seat}`)));
+  assert.deepEqual(caught,[]);
+  // The ruled case: no "O'BRIEN, Michael" anywhere; "O'BRIEN, Michelle" in Evelyn is a different given name.
+  assert.deepEqual(standing("Michael O'Brien"),[]);
+  assert.deepEqual(vecRows.filter(r=>r.surname === 'obrien').map(r=>[r.row,r.seat]),[["O'BRIEN, Michelle",'Evelyn'],["O'BRIEN, Danny",'Gippsland South']]);
+  // And no member with a linked candidate anywhere is marked.
+  const linkedHrefs = new Set(linked(data).map(([,href])=>href));
+  for (const s of data.seats) for (const m of s.members) assert.ok(!(m.not_candidate && linkedHrefs.has(m.href)),m.name);
+  // Had a moved member been marked, this check would name them.
+  assert.deepEqual(['Tom McINTOSH','Tom McIntosh','Ryan Batchelor','Moira Deeming'].map(name=>standing(name).map(r=>r.seat).join()),['Northern Metropolitan','Northern Metropolitan','North-Eastern Metropolitan','Western Metropolitan']);
 });
