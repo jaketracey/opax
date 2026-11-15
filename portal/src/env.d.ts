@@ -86,6 +86,8 @@ interface Env {
   RESEARCH_SHADOW?: boolean
   /** Request-local policy, created only after operatorAuthorized passes. */
   RESEARCH_EVAL?: import('./research-eval').ResearchEvalState
+  /** The most record reads a UTC day may spend filling label-only search passages (src/passage-fill.ts). Default 500; "0" turns reads off. */
+  PASSAGE_FILL_DAILY_READS?: string
   /** Request-local: an MCP request's Progress meter (mcp-access.ts), called by kbFetch before each knowledge-base query. */
   KB_METER?: import('./mcp-access').KbMeter
   /** Request-local: the key SEARCH_LIMITER counts an MCP request under (mcp-access.ts limitKey). Absent: the client IP. */

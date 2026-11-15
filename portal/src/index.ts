@@ -101,6 +101,7 @@ import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
 import { cacheKeyParams } from './cache-key'
 import { collapseHearings, passageTerms, pickPassage, type ScoredPassage } from './search-passages'
+import { fillPassages, recordBody, FILL_MAX, type FillRow } from './passage-fill'
 import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
 import { oauthRoute } from './community-oauth'
@@ -625,7 +626,12 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const ordered = [...win.results].sort((a, b) => compareSearchResults(a, b, sort))
   const pageCount = Math.max(1, Math.ceil(ordered.length / per))
   const clamped = Math.min(page, pageCount)
-  const rows = ordered.slice((clamped - 1) * per, clamped * per)
+  let rows = ordered.slice((clamped - 1) * per, clamped * per)
+  // A page a reader sees (never the 200-row window /api/search-all takes, which fills its own page).
+  if (!options.suggest && per <= FILL_MAX) {
+    rows = rows.map(row => ({ ...row }))
+    await fillSearchPassages(rows, url, env, ctx, request.signal)
+  }
   const years: Record<string, number> = {}
   for (const row of win.results) {
     const year = row.date?.match(/^(\d{4})/)?.[1]
@@ -652,6 +658,55 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   if (win.fallback) out.headers.set('cache-control', 'no-store')
   else cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
+}
+
+const PASSAGE_FILL_TTL = 7 * 86400
+const PASSAGE_FILL_EMPTY_TTL = 86400
+const PASSAGE_FILL_DAILY_READS = 500
+/**
+ * Fill the label-only cards of one page of a speaker search from each record's
+ * own text (src/passage-fill.ts). Only a search by speaker does this: that is
+ * where retrieval matches the speaker label and nothing else.
+ *  - Kept per record in the Cache API, keyed on the passage version and the
+ *    cache epoch, so a repeat page reads nothing.
+ *  - A read is one knowledge-box query (GET /slug, the read hansard_search and
+ *    /api/resource make). Reads are taken from a daily allowance first,
+ *    counted in community_limits like the MCP tier's guard; with no counter,
+ *    or once it is spent, no read is made and the card keeps its fallback.
+ *  - A metered request (MCP: env.KB_METER) reads nothing new. It is served
+ *    kept passages only, so a fill never spends a caller's Progress allowance
+ *    or turns their search into a limit error.
+ */
+async function fillSearchPassages(rows: FillRow[], url: URL, env: Env, ctx: ExecutionContext, signal?: AbortSignal): Promise<void> {
+  if (!url.searchParams.get('speaker')?.trim()) return
+  const key = (slug: string) => cacheRequest('passage-fill-v1', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const configured = Number(env.PASSAGE_FILL_DAILY_READS ?? PASSAGE_FILL_DAILY_READS)
+  const daily = Number.isInteger(configured) && configured >= 0 ? configured : PASSAGE_FILL_DAILY_READS
+  const done = await fillPassages(rows, {
+    signal,
+    async cached(slug) {
+      const hit = await caches.default.match(key(slug))
+      return hit ? String((await hit.json() as { passage?: unknown }).passage ?? '') : undefined
+    },
+    keep(slug, passage) { cacheStore(ctx, key(slug), json({ passage }), passage ? PASSAGE_FILL_TTL : PASSAGE_FILL_EMPTY_TTL) },
+    async read(slug, readSignal) {
+      const res = await kbFetch(env, `/slug/${slug}?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text`, { signal: readSignal })
+      if (!res.ok) throw new Error(`record read failed (${res.status})`)
+      return recordBody(await res.json())
+    },
+    ...(env.KB_METER || !env.COMMUNITY_DB || !daily ? {} : {
+      // Taken in one statement before any read, so pages filling at once cannot pass the allowance together.
+      async reserve(n: number) {
+        const day = Math.floor(Date.now() / 86_400_000)
+        const row = await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET hits=hits+excluded.hits RETURNING hits')
+          .bind(`passage-fill-day:${day}`, n, (day + 1) * 86400).first<{ hits: number }>()
+        const hits = row?.hits ?? Infinity
+        if (hits >= daily && hits - n < daily) console.warn(JSON.stringify({ kind: 'passage_fill_daily_cap', level: 'warn', day: day * 86400, hits }))
+        return Math.max(0, Math.min(n, daily - (hits - n)))
+      },
+    }),
+  })
+  if (done.reads) console.log(JSON.stringify({ kind: 'passage_fill', ...done }))
 }
 
 /** Unified public search. Existing /api/search callers retain document-only semantics. */
@@ -761,6 +816,8 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       return { ...record, score: row.score, sort_date: record.date || row.sort_date }
     })
   }
+  // Label-only cards on the page shown take their passage from the record's own text.
+  if (!options.suggest) await fillSearchPassages(shown as FillRow[], url, env, ctx, request.signal)
   // No record mentions the query (src/search-mention.ts): the page leads with the
   // recovery state, and the meaning-ranked records stay one tap away.
   const noMention = !options.suggest && noRecordMentions({ query: url.searchParams.get('q'), mode: url.searchParams.get('mode'),

@@ -95,7 +95,7 @@ test('Worker /api/search repairs stored name joins and bounds both snippet ends'
   const worker = compile(['apiSearch','searchWindow','label','calibrate'], {
     URL, URLSearchParams, Request, Response, isWitness, compareSearchResults, cacheKeyParams, searchFind,
     loadPeople:async()=>people, speakerAttribution:async()=>null, filterExpression:()=>null,
-    stripListingBoilerplate:evidence.stripListingBoilerplate, passageTerms, pickPassage,
+    stripListingBoilerplate:evidence.stripListingBoilerplate, passageTerms, pickPassage, fillSearchPassages:async()=>{}, FILL_MAX:20,
     SLUG_RE:/^(speech|legal|news)-(\d+)$/, DIVISION_SLUG_RE:/^division-/,
     SEARCH_PER_DEFAULT:20, SEARCH_PER_MAX:200, SEARCH_WINDOW_TOPK:200, SEARCH_TOPK_MAX:200,
     SEARCH_WINDOW_CACHE_TTL:3600, SEARCH_CACHE_TTL:600,
