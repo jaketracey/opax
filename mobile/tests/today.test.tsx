@@ -1926,7 +1926,10 @@ describe('since your last visit', () => {
     } finally {
       present.mockRestore();
     }
-    // The visit kept for next time is this one.
+    // The visit kept for next time is this one, once its save has run.
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
     await expect(readVisit()).resolves.toMatchObject({ total: 1412 });
     // Once drawn it stays for the life of the screen.
     await leaveAndReturn();
@@ -1949,8 +1952,99 @@ describe('since your last visit', () => {
     expect(blocks(r.root)).toEqual(page);
     await leaveAndReturn();
     expect(masthead(r)).toEqual(before);
-    // The visit is still kept, so the next launch counts from here.
+  });
+
+  test('a late answer with records added leaves the last visit as it was, so that growth is not lost', async () => {
+    const checked = await visited();
+    const read = pendingRead();
+    mock.corpus.mockReturnValue(read.promise as never);
+    const r = await render(<Today />);
+    firstFrame(r);
+    await act(async () => read.answer(corpus(1412, FRESH)));
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    // Not drawn, so not counted as told: the total the reader last saw
+    // stands, with its date and its time, untouched.
+    await expect(readVisit()).resolves.toEqual({
+      openedAt: 1,
+      total: 1000,
+      checkedAt: checked,
+    });
+  });
+
+  test('the next launch draws that growth from the saved copy of the record, in the first frame, with the network still out', async () => {
+    // The last launch's late answer is the copy the device now holds.
+    await visited();
+    mock.corpusSaved.mockResolvedValue(corpus(1412, FRESH));
+    mock.corpus.mockReturnValue(new Promise(() => {}) as never);
+    const r = await render(<Today />);
+    firstFrame(r);
+    expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
+      '412 more records in OPAX since your last visit',
+    );
+    expect(
+      hosts(r, 'today-since-source').at(-1)!.props.accessibilityLabel,
+    ).toBe(
+      `Updated ${formatDate(FRESH, 'short')}, OPAX collection coverage record`,
+    );
+    // Nothing of the visit rides on either read.
+    expect(mock.corpusSaved.mock.calls.flat()).toEqual([]);
+    expect(mock.corpus.mock.calls.flat()).toEqual([]);
+  });
+
+  test('a drawn line advances the last visit to the total it drew, not to a later answer the reader was never shown', async () => {
+    await visited();
+    mock.corpusSaved.mockResolvedValue(corpus(1412, FRESH));
+    const read = pendingRead();
+    mock.corpus.mockReturnValue(read.promise as never);
+    const r = await render(<Today />);
+    firstFrame(r);
+    expect(hosts(r, 'today-since')).toHaveLength(1);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    const kept = await readVisit();
+    expect(kept).toMatchObject({ total: 1412, checkedAt: FRESH });
+    expect(Math.abs(kept!.openedAt - Date.now())).toBeLessThan(60_000);
+    // More arrives after the first frame: the line stays as drawn, and
+    // the rest waits for the next launch.
+    const later = new Date().toISOString();
+    await act(async () => read.answer(corpus(1500, later)));
+    expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
+      '412 more records in OPAX since your last visit',
+    );
     await expect(readVisit()).resolves.toMatchObject({ total: 1412 });
+  });
+
+  test('the source line is spaced as a Today block’s source line: its touch band overlaps upward, a group gap under the count', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1412, FRESH));
+    const r = await render(<Today />);
+    firstFrame(r);
+    const flat = (n: ReactTestInstance) =>
+      (StyleSheet.flatten(
+        typeof n.props.style === 'function'
+          ? n.props.style({ pressed: false })
+          : n.props.style,
+      ) ?? {}) as Record<string, unknown>;
+    const affordance = (id: string) =>
+      r.root
+        .findAllByType(SourceAffordance)
+        .find((n) => n.props.testID === id)!;
+    expect(affordance('today-since-source').props.overlap).toBe(true);
+    expect(affordance('today-bills-sources').props.overlap).toBe(true);
+    const since = flat(hosts(r, 'today-since-source').at(-1)!);
+    const block = flat(hosts(r, 'today-bills-sources').at(-1)!);
+    // No 44 pt row with its own gap above the text: the same frame.
+    for (const key of [
+      'marginTop',
+      'paddingVertical',
+      'alignItems',
+      'minHeight',
+      'gap',
+    ])
+      expect(since[key]).toEqual(block[key]);
+    expect(since.marginTop).toBeLessThan(0);
+    expect(flat(hosts(r, 'today-since')[0]!).gap).toBe(rhythm.group);
   });
 
   test('no records added draws nothing: no "no change" line and no place, before or after the first frame', async () => {

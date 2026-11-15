@@ -28,6 +28,8 @@ export interface Since {
   count: number;
   /** The collection record's own check date. */
   checkedAt: string;
+  /** The collection's total the count was worked out from. */
+  total: number;
 }
 
 /** The collection record's two facts the line needs. */
@@ -51,16 +53,21 @@ const collectionOf = (data: {
  *   states (`/corpus.json`, a free catalogue read: no paid read on launch).
  * - The last visit is read from the device and compared on the device; it
  *   is never sent anywhere, and the read carries nothing of it.
- * - The record is asked for as soon as the device has answered for the
- *   last visit, at launch, beside Today's other launch reads.
- * - The line is drawn only if that answer is in hand when Today's first
+ * - The copy of the record the device saved answers first, from the disk,
+ *   and the record itself is asked for at launch, as soon as the device
+ *   has answered for the last visit, beside Today's other launch reads.
+ * - The line is drawn only if an answer is in hand when Today's first
  *   frame is `drawn` (the launch cover is still up), and only when it
  *   shows records added from a current source (`SOURCE_LIMIT_DAYS`). In
  *   every other case nothing is drawn for this session: no place is held
  *   for a line, and none is inserted later, so nothing under the date ever
  *   moves. The launch cover is never held for it.
- * - Either way this visit is kept for the next launch; if the record
- *   cannot be reached, the copy the device saved is kept with it.
+ * - What the device keeps as the last visit is the total the reader was
+ *   last told of. It moves on only when the line is drawn (to the total
+ *   drawn) or when the record shows nothing added. Growth that answers
+ *   too late to draw leaves it alone and only refreshes the saved copy of
+ *   the record, so the next launch draws that growth in its first frame,
+ *   from the disk, whatever the network does.
  */
 export function useSinceLastVisit(drawn: boolean): Since | null {
   const [answer, setAnswer] = useState<Since | null>(null);
@@ -68,24 +75,26 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
     let active = true;
     void (async () => {
       const last = await readVisit();
-      const collection = await Promise.resolve()
+      /** Growth from a current source is a line to draw, if in time. */
+      const offer = (collection: Collection) => {
+        const count = moreSince(last, collection.total);
+        if (active && sourceCurrent(collection.checkedAt, Date.now()))
+          setAnswer({ count, ...collection });
+      };
+      const saved = await Promise.resolve()
+        .then(() => catalogs.corpusSaved())
+        .then((record) => (record ? collectionOf(record.data) : null))
+        .catch(() => null);
+      if (saved && moreSince(last, saved.total) > 0) offer(saved);
+      // The read refreshes the saved copy; unreachable, that copy answers.
+      const fresh = await Promise.resolve()
         .then(() => catalogs.corpus())
         .then((record) => collectionOf(record.data))
-        .catch(async () => {
-          // Unreachable: the saved copy answers, with its own date.
-          const saved = await catalogs.corpusSaved();
-          return saved ? collectionOf(saved.data) : null;
-        });
-      if (!collection) return;
-      void rememberVisit({ openedAt: Date.now(), ...collection });
-      const count = moreSince(last, collection.total);
-      // Nothing added, or a record older than the limit: no line.
-      if (
-        active &&
-        count > 0 &&
-        sourceCurrent(collection.checkedAt, Date.now())
-      )
-        setAnswer({ count, checkedAt: collection.checkedAt });
+        .catch(() => saved);
+      if (!fresh) return;
+      if (moreSince(last, fresh.total) > 0) offer(fresh);
+      // Nothing added (or the first ever visit): the last visit moves on.
+      else void rememberVisit({ openedAt: Date.now(), ...fresh });
     })().catch(() => undefined);
     return () => {
       active = false;
@@ -95,7 +104,17 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
   // an answer after it is never drawn this session.
   const [first, setFirst] = useState<{ line: Since | null } | null>(null);
   if (drawn && first === null) setFirst({ line: answer });
-  return first?.line ?? null;
+  const line = first?.line ?? null;
+  // A drawn line is what the reader has now been told: kept as the visit.
+  useEffect(() => {
+    if (line)
+      void rememberVisit({
+        openedAt: Date.now(),
+        total: line.total,
+        checkedAt: line.checkedAt,
+      });
+  }, [line]);
+  return line;
 }
 
 /** The collection's public record, as About and Coverage name it. */
@@ -150,7 +169,7 @@ export function SinceLine({ since }: { since: Since | null }) {
   const openSources = () =>
     presentSource(sinceSources(since), { testID: 'today-since' });
   return (
-    <View testID="today-since">
+    <View testID="today-since" style={styles.block}>
       <Pressable
         accessible
         accessibilityRole="link"
@@ -199,6 +218,9 @@ export function SinceLine({ since }: { since: Since | null }) {
         accessibilityRole="link"
         onPress={openAdded}
         testID="today-since-source"
+        // As TodayBlock's source lines: the touch band overlaps upward, so
+        // the text sits a group gap under the count, not a band below it.
+        overlap
       />
     </View>
   );
@@ -208,6 +230,8 @@ export function SinceLine({ since }: { since: Since | null }) {
 const sinceCap = 1.353;
 
 const styles = StyleSheet.create({
+  // The count to its source line, as a Today block's body to its own.
+  block: { gap: rhythm.group },
   line: {
     justifyContent: 'center',
     paddingHorizontal: rhythm.tight,
