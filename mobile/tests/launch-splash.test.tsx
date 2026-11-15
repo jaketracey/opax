@@ -6,6 +6,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
+import { Profiler } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { useReduceMotionSetting } from '../src/design/accessibility';
 import {
@@ -386,21 +387,58 @@ describe('the launch cover', () => {
     'the %s status bar icons are %s once the fade passes halfway, never white on the page',
     (os, after) => {
       Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
-      draw({ sequence: 'full' });
-      loaded();
-      const bar = () => view!.root.findByType(StatusBar).props.style;
-      expect(bar()).toBe('light');
-      advance(motionLength + 1);
-      expect(style('launch-handoff').pointerEvents).toBe('none');
-      // The fade has begun and the navy still covers most of the page.
-      advance(full.exit / 2 - 5);
-      expect(bar()).toBe('light');
-      advance(10);
-      expect(bar()).toBe(after);
-      Object.defineProperty(Platform, 'OS', {
-        value: 'ios',
-        configurable: true,
-      });
+      // Reset whether or not the test passes: a failure must not leave
+      // `android` for the tests after it.
+      try {
+        draw({ sequence: 'full' });
+        loaded();
+        const bar = () => view!.root.findByType(StatusBar).props.style;
+        expect(bar()).toBe('light');
+        advance(motionLength + 1);
+        expect(style('launch-handoff').pointerEvents).toBe('none');
+        // The fade has begun and the navy still covers most of the page.
+        advance(full.exit / 2 - 5);
+        expect(bar()).toBe('light');
+        advance(10);
+        expect(bar()).toBe(after);
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          value: 'ios',
+          configurable: true,
+        });
+      }
+    },
+  );
+  test.each([
+    ['ios', 0],
+    ['android', 1],
+  ] as const)(
+    'on %s the cover is drawn again %i times during the fade (Android’s icon change, nothing on iOS)',
+    (os, redraws) => {
+      Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
+      try {
+        let commits = 0;
+        act(() => {
+          view = create(
+            <Profiler id="launch" onRender={() => (commits += 1)}>
+              <LaunchHandoff ready onDone={jest.fn()} sequence="full" />
+            </Profiler>,
+          );
+        });
+        loaded();
+        // The motion has run and the fade has begun.
+        advance(motionLength + 1);
+        expect(style('launch-handoff').pointerEvents).toBe('none');
+        const atFadeStart = commits;
+        // To just short of the fade's end (where the cover is handed off).
+        advance(full.exit - 5);
+        expect(commits - atFadeStart).toBe(redraws);
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          value: 'ios',
+          configurable: true,
+        });
+      }
     },
   );
   test('records the full sequence as played, once per splash version', async () => {
