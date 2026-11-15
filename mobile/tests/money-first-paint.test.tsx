@@ -593,6 +593,51 @@ describe('the map while its Search is open', () => {
   });
 });
 
+describe('Android’s band when the tab bar hides for the keyboard', () => {
+  test('is the same before and after, whichever of the stage and the panel host reports first', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    const os = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      const r = await render();
+      const stage = (height: number) =>
+        act(() =>
+          byTestID(r.root, 'money-screen').props.onLayout({
+            nativeEvent: { layout: { width: 411, height } },
+          }),
+        );
+      const host = (y: number) =>
+        act(() =>
+          r.root.findByType(MoneyMapPanel).parent!.props.onLayout({
+            nativeEvent: { layout: { y, height: 100 } },
+          }),
+        );
+      const bottom = () =>
+        jest.mocked(MoneyMap).mock.calls.at(-1)![0].insets.bottom;
+      // At rest: a 104 pt band (the tab bar) under the panel.
+      stage(709);
+      host(505);
+      act(() => r.root.findByType(MoneyMapPanel).props.onPeekHeight(100));
+      const rest = bottom();
+      expect(rest).toBe(104 + 100 + 8);
+      // The keyboard: the tab bar hides and the stage takes its room.
+      stage(813);
+      host(609);
+      // It comes back, and the host reports before the stage does.
+      host(505);
+      stage(709);
+      expect(bottom()).toBe(rest);
+      await act(async () => r.unmount());
+    } finally {
+      os.restore();
+    }
+  });
+});
+
 describe('the words kept for the summary', () => {
   const shape = (text: string) => text.replace(/\d/g, '0');
   test('with no graph yet they are the summary’s length', () => {

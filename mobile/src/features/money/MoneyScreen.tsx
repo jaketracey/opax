@@ -703,12 +703,21 @@ function MapMode({
   // counted in the map's bottom inset with the panel's peek.
   // On iOS the system's inset is read by a probe and held (map/band.ts);
   // Android's tab bar sits below the stage and its inset is the chrome's own.
-  const [hostBelow, setBelow] = useState(0);
+  // Where the panel host ends, as it last reported. The band is worked out
+  // from it against the stage's height of the moment: worked out once, at
+  // the report, it used a stage height a render old, and after Android's
+  // tab bar hid for the keyboard and came back the band stayed 104 pt too
+  // large, leaving the map almost no room.
+  const [hostBottom, setHostBottom] = useState<number | null>(null);
   const [probed, reportInset] = useHeldInset();
   const managed =
     adaptive ||
     [...regions.divisions, ...regions.occlusions].some((r) => r.active);
   const probes = Platform.OS === 'ios' && !managed;
+  const hostBelow =
+    hostBottom === null || !stage.height
+      ? 0
+      : Math.max(0, Math.round(stage.height - hostBottom));
   const below = probes ? probed : hostBelow;
   const pose = mapControlLayout(
     {
@@ -1381,11 +1390,10 @@ function MapMode({
               onLayout={(event) => {
                 if (managed || probes) return;
                 const { y, height } = event.nativeEvent.layout;
-                const gap = Math.max(
-                  0,
-                  Math.round(stage.height - (y + height)),
+                const bottom = y + height;
+                setHostBottom((previous) =>
+                  previous === bottom ? previous : bottom,
                 );
-                setBelow((previous) => (previous === gap ? previous : gap));
               }}
             >
               <MoneyMapPanel
