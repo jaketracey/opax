@@ -101,9 +101,30 @@ export function usePeekCleanup() {
   const open = useContext(InternalLinkPreviewContext)?.isVisible ?? false;
   useEffect(() => {
     if (!open) return;
+    // A new peek has its own preload: a drop still waiting on the last
+    // peek's close would take it, and a tap would then load the page afresh.
+    cancelDrop();
     return () => {
       const pad = Platform.OS === 'ios' && Platform.isPad;
-      setTimeout(dropStalePreviews, pad ? padPeekCloseMs : 0);
+      cancelDrop();
+      waiting = setTimeout(
+        () => {
+          waiting = null;
+          dropStalePreviews();
+        },
+        pad ? padPeekCloseMs : 0,
+      );
     };
   }, [open]);
+}
+
+/**
+ * The one drop waiting on a closed peek, shared by every row. The drop takes
+ * every preloaded route, so whatever an earlier peek left goes with the next
+ * peek's close.
+ */
+let waiting: ReturnType<typeof setTimeout> | null = null;
+function cancelDrop() {
+  if (waiting !== null) clearTimeout(waiting);
+  waiting = null;
 }
