@@ -532,6 +532,54 @@ describe('the card at large text', () => {
     await act(async () => r.unmount());
   });
 
+  test('with less than one line of room no part of the sentence is drawn; VoiceOver still has it', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 375, height: 603 } },
+      }),
+    );
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (flat(top).maxHeight === undefined) top = top.parent!;
+    const sentence = byTestID(r.root, 'money-view-summary')!.props.children;
+    // The iPhone SE at AX5: the pinned parts take all but 45 pt of the cap,
+    // and a line of the sentence is 71.5 pt.
+    const report = (id: string, height: number) =>
+      byTestID(r.root, id).props.onLayout({
+        nativeEvent: { layout: { height } },
+      });
+    const fit = (each: number) =>
+      act(() => {
+        report('money-map-card-head', each);
+        report('money-map-card-picker', each);
+        report('money-map-card-line', 71.5);
+      });
+    // The cap follows the pinned parts, so the room is found from it.
+    const room = (each: number) =>
+      (flat(top).maxHeight as number) -
+      2 * each -
+      (rhythm.tight * 3 + rhythm.block * 2 + hairline * 2);
+    fit(200);
+    expect(room(200)).toBeGreaterThan(0);
+    expect(room(200)).toBeLessThan(71.5);
+    const scroll = byTestID(r.root, 'money-map-card-scroll');
+    // Nothing of the sentence is drawn, and nothing scrolls into view.
+    expect(byTestID(r.root, 'money-view-summary')).toBeUndefined();
+    expect(scroll.props.scrollEnabled).toBe(false);
+    expect(flat(scroll).maxHeight).toBeUndefined();
+    // Its room stays (the card's height is the same) and says the sentence.
+    const unseen = byTestID(r.root, 'money-view-summary-unseen')!;
+    expect(flat(unseen).height).toBe(room(200));
+    expect(unseen.props.accessible).toBe(true);
+    expect(unseen.props.accessibilityLabel).toBe(sentence);
+    expect(unseen.props.children).toBeUndefined();
+    // With room for a line again the sentence is back.
+    fit(60);
+    expect(byTestID(r.root, 'money-view-summary')).toBeDefined();
+    expect(byTestID(r.root, 'money-view-summary-unseen')).toBeUndefined();
+    await act(async () => r.unmount());
+  });
+
   const gaps = rhythm.tight * 3 + rhythm.block * 2 + hairline * 2;
   const line =
     textStyles.secondary.lineHeight *

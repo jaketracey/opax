@@ -869,11 +869,20 @@ function MapMode({
   const [sentenceLine, setSentenceLine] = useState(0);
   const sentenceRoom =
     topMaxHeight !== undefined && pinnedBase ? topMaxHeight - pinnedBase : 0;
-  const sentenceMax =
+  const sentenceLines =
     sentenceLine > 0 && sentenceRoom > 0
-      ? Math.max(1, Math.floor((sentenceRoom + 0.5) / sentenceLine)) *
-        sentenceLine
-      : undefined;
+      ? Math.floor((sentenceRoom + 0.5) / sentenceLine)
+      : null;
+  const sentenceMax = sentenceLines ? sentenceLines * sentenceLine : undefined;
+  // Less than one line of room (the iPhone SE at the largest sizes, where
+  // the jurisdiction and the picker fill the cap): asking for a whole line
+  // changed nothing, since the card can only shrink, and the line was still
+  // cut through. No part of it is drawn. Its room stays, so the card keeps
+  // its height, and holds the sentence for VoiceOver; the List shows it.
+  // Taking a line from the panel instead would put the panel over the
+  // search and zoom controls there, which is why the card gave it up.
+  const sentenceUnseen =
+    sentenceLines === 0 && data ? moneySummary(data.graph, data.filters) : null;
   const insets = useMemo(
     () =>
       pose.folded
@@ -1441,12 +1450,23 @@ function MapMode({
                   }
                   keyboardShouldPersistTaps="handled"
                   // Android hides the bar at rest; a capped card shows it has more.
-                  persistentScrollbar
+                  persistentScrollbar={sentenceUnseen === null}
+                  scrollEnabled={sentenceUnseen === null}
                   testID="money-map-card-scroll"
                 >
-                  {summary}
+                  {sentenceUnseen === null ? (
+                    summary
+                  ) : (
+                    <View
+                      accessible
+                      accessibilityRole="text"
+                      accessibilityLabel={sentenceUnseen}
+                      style={{ height: sentenceRoom }}
+                      testID="money-view-summary-unseen"
+                    />
+                  )}
                   {hooks}
-                  {offline}
+                  {sentenceUnseen === null ? offline : null}
                 </ScrollView>
                 <View
                   ref={pickerRef}
