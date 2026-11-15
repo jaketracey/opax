@@ -134,7 +134,7 @@ export default function BillsList({ pushed = false }: { pushed?: boolean }) {
   const adaptive = useAdaptiveDevice();
   if (!adaptive) return <BillsScreen pushed={pushed} />;
   return (
-    <SidebarSafe style={styles.screen}>
+    <SidebarSafe style={styles.screen} tabRoot={!pushed}>
       <LayoutRegion style={styles.screen}>
         <BillsScreen pushed={pushed} />
       </LayoutRegion>

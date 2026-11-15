@@ -22,9 +22,13 @@ import {
   PointerHoverView,
   type PointerHoverProps,
 } from '../../modules/opax-ipad';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaInsetsContext,
+  SafeAreaView,
+} from 'react-native-safe-area-context';
 import { rhythm, rhythmRegular } from './tokens';
 import { OpaxDuo, type WindowTraits } from '../../modules/opax-duo';
+import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { evenColumns } from './fold';
 
 export type { WindowTraits } from '../../modules/opax-duo';
@@ -740,19 +744,39 @@ const SidebarSafeContext = createContext(false);
 export function SidebarSafe({
   children,
   style,
+  tabRoot = false,
 }: {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
+  /**
+   * A tab's root page. Tabs are laid out before they are shown, and the
+   * native view has no insets until its screen is: beside the closed Duo's
+   * rail the Bills list drew its first frames 84 pt too wide, its trailing
+   * text cut at the rail (build 82). Beside a vertical bar such a page pads
+   * by the window's insets instead, which are known before it is shown and
+   * are the insets a tab root's screen gets. The same native view either
+   * way, so folding still never remounts the page.
+   */
+  tabRoot?: boolean;
 }) {
   const inside = useContext(SidebarSafeContext);
   const adaptive = useAdaptiveDevice();
+  const rail = useVerticalBarEdge() !== 'unspecified';
+  const insets = useContext(SafeAreaInsetsContext);
   if (!(isPad || (Platform.OS === 'ios' && adaptive)) || inside)
     return <>{children}</>;
+  const early = tabRoot && rail && Platform.OS === 'ios';
   return (
     <SafeAreaView
-      edges={['left', 'right']}
+      edges={early ? noEdges : sideEdges}
       mode="padding"
-      style={[styles.safe, style]}
+      style={[
+        styles.safe,
+        style,
+        early
+          ? { paddingLeft: insets?.left ?? 0, paddingRight: insets?.right ?? 0 }
+          : null,
+      ]}
     >
       <SidebarSafeContext.Provider value>
         {children}
@@ -760,6 +784,8 @@ export function SidebarSafe({
     </SafeAreaView>
   );
 }
+const sideEdges = ['left', 'right'] as const;
+const noEdges = [] as const;
 
 /** True where pointer effects exist (iPad). */
 export const pointerAvailable = PointerHoverView !== null;
