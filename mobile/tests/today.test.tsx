@@ -36,6 +36,11 @@ import { decodeOverview } from '../src/features/vic-election/decoders';
 import electionOverview from '../scripts/fixtures/vic-election/overview.json';
 import { readCachedEdition } from '../src/features/today/edition-store';
 import { readInvitationDates } from '../src/features/today/invitation-store';
+import {
+  readTodayShape,
+  rememberTodayShape,
+  shapeKey,
+} from '../src/features/today/shape-store';
 import { addDays, sydneyDay } from '../src/features/today/rules';
 import { invitationBody } from '../src/features/today/SeatInvitation';
 import { loadChoice } from '../src/features/your-mp/choice-store';
@@ -221,6 +226,7 @@ const declarations = c.recentDeclarationsFor(
 /** The top-level blocks in the order drawn. */
 const BLOCKS = [
   'today-your-mp',
+  'today-your-mp-pending',
   'today-invitation',
   'today-edition-card',
   'today-edition-loading',
@@ -823,16 +829,23 @@ describe('the first frame has the loaded page’s layout', () => {
     // No stand-in of another shape: the page's own slots, in order.
     expect(hosts(r, 'today-launching')).toHaveLength(0);
     expect(blocks(r.root).slice(0, 4)).toEqual([
-      'today-your-mp',
+      'today-your-mp-pending',
       'today-edition-card',
       'today-following',
       'today-bills',
     ]);
     expect(hosts(r, 'today-your-mp-loading')).toHaveLength(1);
+    // The tile's own id is the tile's alone: a journey waiting on it waits
+    // for the tile, not for its place.
+    expect(hosts(r, 'today-your-mp')).toHaveLength(0);
     const before = blocks(r.root);
     await act(async () => directoryRead.answer(directory));
     // The directory answers: the same order, the tile where its skeleton was.
-    expect(blocks(r.root)).toEqual(before);
+    expect(blocks(r.root)).toEqual(
+      before.map((id) =>
+        id === 'today-your-mp-pending' ? 'today-your-mp' : id,
+      ),
+    );
     expect(hosts(r, 'today-your-mp-loading')).toHaveLength(0);
     expect(hosts(r, 'today-your-mp-member')).not.toHaveLength(0);
   });
@@ -897,6 +910,82 @@ describe('the first frame has the loaded page’s layout', () => {
     );
     expect(releaseSplash).toHaveBeenCalledWith('today');
     expect(blocks(r.root)[0]).toBe('today-your-mp');
+  });
+
+  test('a choice kept from 1.0 that is not a House seat: the next launch leads with the invitation from its first frame', async () => {
+    const senate = index.electorates.find(
+      (s) => s.jurisdiction === 'federal' && s.chamber === 'senate',
+    )!;
+    const legacy = {
+      version: 1 as const,
+      seatId: senate.electorate_id,
+      stateSeatIds: [],
+    };
+    // The first launch has only the saved choice to go by.
+    setUp({ cached: { date: addDays(today, -1) } });
+    jest.mocked(loadChoice).mockResolvedValue(legacy);
+    const first = await render(<Today />);
+    expect(blocks(first.root)).toContain('today-invitation');
+    expect(blocks(first.root)).not.toContain('today-your-mp');
+    // What the directory answered is kept for this choice.
+    await expect(readTodayShape()).resolves.toEqual({
+      key: shapeKey(legacy),
+      house: false,
+      state: false,
+    });
+    // The next launch, the directory still out: no Your MP skeleton and no
+    // reorder when the migration runs. It happened on every launch.
+    setUp({ cached: { date: addDays(today, -1) } });
+    jest.mocked(loadChoice).mockResolvedValue(legacy);
+    const directoryRead = pending<typeof directory>();
+    mock.directory.mockReturnValue(directoryRead.promise as never);
+    const next = await render(<Today />);
+    expect(blocks(next.root)).not.toContain('today-your-mp-pending');
+    const before = blocks(next.root);
+    expect(before).toContain('today-invitation');
+    await act(async () => directoryRead.answer(directory));
+    expect(blocks(next.root)).toEqual(before);
+  });
+
+  test('a kept shape for another choice is not used, and a kept state seat card holds its place beside Your MP', async () => {
+    const choice = {
+      version: 1 as const,
+      seatId: grayndler.electorate_id,
+      stateSeatIds: [],
+    };
+    await rememberTodayShape({ key: 'another|', house: false, state: true });
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    mock.directory.mockImplementation(() => new Promise(() => {}));
+    const other = await render(<Today />);
+    expect(blocks(other.root)[0]).toBe('today-your-mp-pending');
+    expect(hosts(other, 'today-state-seat-pending')).toHaveLength(0);
+    // The last launch drew a state seat card for this choice.
+    await rememberTodayShape({
+      key: shapeKey(choice),
+      house: true,
+      state: true,
+    });
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    mock.directory.mockImplementation(() => new Promise(() => {}));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-state-seat-pending')).toHaveLength(1);
+    expect(hosts(r, 'today-your-mp-pending')).toHaveLength(1);
+  });
+
+  test('a held, empty sitting line is given back once Today is out of view', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    const calendarRead = pending<null>();
+    mock.sittingDays.mockReturnValueOnce(calendarRead.promise as never);
+    const r = await render(<Today />);
+    await act(async () => calendarRead.answer(null));
+    // No calendar: the held place stays while Today is on screen.
+    expect(hosts(r, 'today-sitting-reserved')).toHaveLength(1);
+    // Today loses focus (a page over it, another tab), then shows again.
+    const blur = mockFocusEffects
+      .map((effect) => effect() as unknown)
+      .filter((left): left is () => void => typeof left === 'function');
+    await act(async () => blur.forEach((leave) => leave()));
+    expect(hosts(r, 'today-sitting-reserved')).toHaveLength(0);
   });
 
   test('with no saved calendar the sitting line’s place is held while the read is out, and stays held when it has no line', async () => {

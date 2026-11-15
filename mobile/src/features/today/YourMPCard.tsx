@@ -21,7 +21,7 @@ import {
   type RowMenuAction,
 } from '../../design/row-link';
 import { SourceLine, type SourceCitation } from '../../design/source';
-import { InlineError, LoadingStatus } from '../../design/states';
+import { InlineError, LoadingStatus, Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import {
@@ -168,7 +168,7 @@ function Bone({
   hook = false,
   testID,
 }: {
-  variant: 'footnote' | 'subsectionTitle' | 'secondary';
+  variant: 'footnote' | 'subsectionTitle' | 'secondary' | 'sectionTitle';
   width: `${number}%`;
   hook?: boolean;
   testID?: string;
@@ -235,12 +235,45 @@ export function YourMPSkeleton() {
 
 /**
  * Your MP's place while the directory is still being read: the tile's
- * column and its skeleton, where the tile will draw.
+ * column and its skeleton, where the tile will draw. Its own id, so a
+ * journey waiting on `today-your-mp` waits for the tile, not its place.
  */
 export function YourMPPending() {
   return (
-    <View testID="today-your-mp" style={styles.tileColumn}>
+    <View testID="today-your-mp-pending" style={styles.tileColumn}>
       <YourMPSkeleton />
+    </View>
+  );
+}
+
+/**
+ * The state seat card's place while the directory is read (the last launch
+ * drew one): its header's two lines, one member row and the source band.
+ */
+export function StateSeatPending() {
+  return (
+    <View
+      testID="today-state-seat-pending"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={styles.section}
+    >
+      <View style={styles.header}>
+        <View style={styles.headerWords}>
+          <Bone variant="sectionTitle" width="45%" />
+          <Bone variant="secondary" width="60%" />
+        </View>
+      </View>
+      <View style={styles.block}>
+        <InsetGroup>
+          <Skeleton
+            shape="people"
+            count={1}
+            label="Loading your state member"
+          />
+        </InsetGroup>
+        <View style={styles.boneSource} />
+      </View>
     </View>
   );
 }
