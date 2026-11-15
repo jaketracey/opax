@@ -217,20 +217,22 @@ describe('the count line', () => {
       .flatMap((n) => [n.props.children].flat())
       .filter((v) => typeof v === 'string')
       .join('');
-  // The stand-in as the device lays it out: its box, and one text line.
+  // The stand-in as the device lays it out: its box, and its line count.
   const layStandIn = (
     renderer: TestRenderer.ReactTestRenderer,
     box: number,
-    line: number,
+    lineCount: number,
   ) => {
     const standIn = host(renderer, 'search-count-stand-in');
     act(() =>
       standIn.props.onLayout({ nativeEvent: { layout: { height: box } } }),
     );
     act(() =>
-      standIn
-        .findByType(Text)
-        .props.onTextLayout({ nativeEvent: { lines: [{ height: line }] } }),
+      standIn.findByType(Text).props.onTextLayout({
+        nativeEvent: {
+          lines: Array.from({ length: lineCount }, () => ({ height: 56 })),
+        },
+      }),
     );
   };
   // The real line as the device lays it out, in `n` lines.
@@ -288,12 +290,12 @@ describe('the count line', () => {
     check();
     // The real line lies over it and cannot push anything: out of the flow,
     // exactly the stand-in's box, and nothing it draws leaves that box.
-    layStandIn(renderer, 280, 56);
+    layStandIn(renderer, 224, 4);
     expect(
       StyleSheet.flatten(host(renderer, 'search-count').props.style),
     ).toMatchObject({ position: 'absolute', height: 280, overflow: 'hidden' });
     // The box is the stand-in's latest layout: it shrinks as well as grows.
-    layStandIn(renderer, 44, 18);
+    layStandIn(renderer, 44, 2);
     expect(
       StyleSheet.flatten(host(renderer, 'search-count').props.style).height,
     ).toBe(44);
@@ -308,7 +310,7 @@ describe('the count line', () => {
       );
     });
     // AX5: the stand-in is five lines tall.
-    layStandIn(renderer, 280, 56);
+    layStandIn(renderer, 224, 4);
     expect(said(renderer)).toContain('Royal Commission into Violence');
     // The full line needs eight: it is counted instead, never cut short.
     layLine(renderer, 8);
@@ -349,7 +351,7 @@ describe('the count line', () => {
     // The line's layout arrives before the stand-in's box is known.
     layLine(renderer, 8);
     expect(said(renderer)).toContain('Royal Commission into Violence');
-    layStandIn(renderer, 280, 56);
+    layStandIn(renderer, 224, 4);
     expect(said(renderer)).toContain(sourcesCounted(2));
     // The short form's own layout does not bring the names back.
     layLine(renderer, 5);
@@ -365,21 +367,21 @@ describe('the count line', () => {
     act(() => {
       renderer = TestRenderer.create(draw());
     });
-    layStandIn(renderer, 280, 56);
+    layStandIn(renderer, 224, 4);
     layLine(renderer, 8);
     expect(said(renderer)).toContain(sourcesCounted(2));
     // Rotated: the stand-in lays out again, shorter, and the line is tried
     // in full at the new width. Here it fits.
     dimensions(844, 3.1);
     act(() => renderer.update(draw()));
-    layStandIn(renderer, 168, 56);
+    layStandIn(renderer, 168, 3);
     expect(said(renderer)).toContain('Royal Commission into Violence');
     layLine(renderer, 3);
     expect(said(renderer)).toContain('Royal Commission into Violence');
     // A smaller text size: back to one 44 pt target, two footnote lines.
     dimensions(390, 1);
     act(() => renderer.update(draw()));
-    layStandIn(renderer, 44, 18);
+    layStandIn(renderer, 44, 2);
     layLine(renderer, 2);
     expect(said(renderer)).toContain('Royal Commission into Violence');
     layLine(renderer, 3);

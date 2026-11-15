@@ -59,13 +59,10 @@ export function ResultsHeader({
   onClearFilters?: () => void;
   onOpenFilters?: () => void;
 }) {
-  // The stand-in's box and one of its text lines, as last laid out.
+  // The stand-in's box, and how many text lines it laid out in, as last
+  // laid out. Lines are counted, never derived from heights.
   const [box, setBox] = useState(0);
-  const [lineHeight, setLineHeight] = useState(0);
-  const lines =
-    box > 0 && lineHeight > 0
-      ? Math.max(1, Math.floor((box + 0.5) / lineHeight))
-      : null;
+  const [lines, setLines] = useState<number | null>(null);
   return (
     <View style={styles.header}>
       <View testID="search-count-slot">
@@ -91,8 +88,8 @@ export function ResultsHeader({
             tone="inkSoft"
             style={styles.text}
             onTextLayout={(event: TextLayoutEvent) => {
-              const first = event.nativeEvent.lines[0];
-              if (first) setLineHeight(first.height);
+              const n = event.nativeEvent.lines.length;
+              if (n > 0) setLines(n);
             }}
           >
             {COUNT_STAND_IN}
