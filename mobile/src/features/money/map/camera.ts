@@ -229,6 +229,8 @@ export interface CameraRest {
   pairs: CameraPair[];
   /** The camera the stage last set, to tell a reader's move from its own. */
   set: Camera;
+  /** The focus the pairs were made under: another focus ends the chain. */
+  focus: string | null;
 }
 
 /** Enough for a few changes in a row; a long chain drops its oldest. */
@@ -253,15 +255,22 @@ export function returnCamera(
   change: { previous: Viewport; current: Camera },
   viewport: Viewport,
   next: Camera,
+  focus: string | null = null,
 ): { camera: Camera; rest: CameraRest | null } {
-  const chain = rest && sameCamera(change.current, rest.set);
+  // A focus that changes without a fly (the disc is already in view) moves
+  // nothing, yet the pairs were centred on the old one: the chain ends.
+  const chain =
+    rest && rest.focus === focus && sameCamera(change.current, rest.set);
   // The camera at the viewport it was in is the one the stage set there.
   const pairs: CameraPair[] = chain
     ? rest.pairs
     : [{ viewport: change.previous, camera: change.current }];
   const match = pairs.find((pair) => sameViewport(pair.viewport, viewport));
   if (match && chain)
-    return { camera: match.camera, rest: { pairs, set: match.camera } };
+    return {
+      camera: match.camera,
+      rest: { pairs, set: match.camera, focus },
+    };
   // A new chain that lands where it started has changed nothing but the
   // limits (the bounds, say): the clamp of the moment stands.
   if (match) return { camera: next, rest: null };
@@ -270,6 +279,7 @@ export function returnCamera(
     rest: {
       pairs: [...pairs, { viewport, camera: next }].slice(-REST_PAIRS),
       set: next,
+      focus,
     },
   };
 }

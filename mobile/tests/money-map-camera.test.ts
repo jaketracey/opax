@@ -496,6 +496,33 @@ describe('a viewport that changes and comes back', () => {
     expect(closed.camera).toEqual(cleared.camera);
   });
 
+  test('a focus that changes with no fly ends the chain: nothing centred on the old one is restored', () => {
+    const under =
+      (focus: string | null) =>
+      (
+        state: { camera: Camera; viewport: Viewport; rest: CameraRest | null },
+        viewport: Viewport,
+      ) => {
+        const back = returnCamera(
+          state.rest,
+          { previous: state.viewport, current: state.camera },
+          viewport,
+          clamp(state.camera, viewport),
+          focus,
+        );
+        return { camera: back.camera, viewport, rest: back.rest };
+      };
+    // Under focus A the viewport changes and comes back: restored.
+    const opened = under('A')(start, search);
+    expect(under('A')(opened, card).camera).toEqual(start.camera);
+    // The focus changes to B with the disc already in view: no fly, the
+    // camera stays. The viewport then returns: the old pairs are not used.
+    const refocused = under('B')(opened, view(98, 440));
+    const back = under('B')(refocused, card);
+    expect(back.camera).toEqual(clamp(refocused.camera, card));
+    expect(back.camera).not.toEqual(start.camera);
+  });
+
   test('a new chain that lands where it started keeps the clamp of the moment (reviewer P3)', () => {
     // Same viewport, but the limits moved (new bounds): not the old camera.
     const wide: Bounds = { minX: -20, maxX: 20, minY: -30, maxY: 30 };

@@ -38,6 +38,7 @@ import {
   useFirstScreenReader,
   type ScreenReaderState,
 } from '../src/features/money/screen-reader';
+import { hairline, rhythm, textStyles } from '../src/design/tokens';
 import { pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
@@ -498,13 +499,68 @@ describe('the card at large text', () => {
     });
     const raised = flat(top).maxHeight as number;
     expect(raised).toBeGreaterThan(cap);
-    expect(raised).toBeGreaterThanOrEqual(400 + 44);
+    // The pinned parts, the gaps around them, and two lines of the
+    // sentence (not one word of it): the card says what the map shows.
+    const gaps = rhythm.tight * 3 + rhythm.block * 2 + hairline * 2;
+    const twoLines =
+      textStyles.secondary.lineHeight *
+      ReactNative.Dimensions.get('window').fontScale *
+      2;
+    expect(raised).toBeGreaterThanOrEqual(400 + gaps + twoLines);
     act(() =>
       top.props.onLayout({ nativeEvent: { layout: { height: raised } } }),
     );
     expect(r.root.findByType(MoneyMapPanel).props.maxHeight).toBeLessThan(
       panelCap,
     );
+    await act(async () => r.unmount());
+  });
+});
+
+describe('the map and its panel while Search is open at large text', () => {
+  let window: jest.SpyInstance;
+  beforeEach(() => {
+    window = jest
+      .spyOn(ReactNative, 'useWindowDimensions')
+      .mockReturnValue({ width: 402, height: 874, fontScale: 2.3, scale: 3 });
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+  });
+  afterEach(() => window.mockRestore());
+
+  test('the panel is hidden and its room goes to the map; both come back when Search closes', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    act(() => r.root.findByType(MoneyMapPanel).props.onPeekHeight(180));
+    const call = () => jest.mocked(MoneyMap).mock.calls.at(-1)![0];
+    const host = () => byTestID(r.root, 'money-map-panel-host');
+    const rest = { insets: call().insets, clip: call().clip };
+    expect(rest.insets.bottom).toBeGreaterThan(rhythm.tight);
+    expect(flat(host()).opacity).toBeUndefined();
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === 'money-map-search')!
+        .props.onPress(),
+    );
+    // The map keeps the band under it and the tight margin, no panel.
+    expect(call().insets.bottom).toBe(rhythm.tight);
+    expect(call().insets.bottom).toBeLessThan(rest.insets.bottom);
+    expect(call().clip!.bottom).toBeLessThan(rest.clip!.bottom);
+    expect(flat(host()).opacity).toBe(0);
+    expect(host().props.pointerEvents).toBe('none');
+    expect(host().props.importantForAccessibility).toBe('no-hide-descendants');
+    await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+    expect(call().insets).toEqual(rest.insets);
+    expect(flat(host()).opacity).toBeUndefined();
     await act(async () => r.unmount());
   });
 });

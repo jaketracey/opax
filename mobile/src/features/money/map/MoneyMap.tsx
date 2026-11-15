@@ -356,6 +356,7 @@ export function MoneyMap({
         { previous, current },
         viewport,
         next.camera,
+        focus,
       );
       next.camera = back.camera;
       rest.current = back.rest ? { bounds, rest: back.rest } : null;
@@ -379,6 +380,7 @@ export function MoneyMap({
     fitK,
     viewportSV,
     boundsSV,
+    focus,
     focusIndex,
     at,
     insets,
