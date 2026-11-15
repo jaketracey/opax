@@ -218,7 +218,10 @@ export function AskIdle({
   const seen = useSeenOnScreen();
   const [holds, setHolds] = useState<boolean | null>(seen ? pending : null);
   if (holds === null && seen) setHolds(pending);
-  const held = holds === true;
+  // Until it is seen the box follows the seat: held while it is being read,
+  // so the first frame the reader sees already has the held box, and let go
+  // if the seat settles first. At first sight it is fixed.
+  const held = holds ?? pending;
   const theirs = shown?.member ?? null;
   // Nothing is drawn only in the held box, before the first answer.
   const starters = theirs || !shown ? [] : [general];

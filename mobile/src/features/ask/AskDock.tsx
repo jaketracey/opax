@@ -10,7 +10,6 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
-import { useAccessibilitySize } from '../../design/accessibility';
 import { IconButton } from '../../design/controls';
 import { useAccessibilityFocusRequest } from '../../design/keyboard';
 import { formatCount } from '../../design/format';
@@ -46,6 +45,35 @@ export const composerCopy = {
   queued: 'Asks when this answer finishes',
 } as const;
 const MAX = 2000;
+/**
+ * The full placeholder's width in ems of its drawn size: 271 pt at the
+ * 23 pt cap (measured), with a little to spare.
+ */
+const PLACEHOLDER_EMS = 12;
+/**
+ * What stands beside the field before it is measured: the composer's
+ * margins and padding and its two 44 pt buttons (a 402 pt phone's field is
+ * 258 pt). The field's own measured width replaces this at once.
+ */
+export const COMPOSER_FIELD_SIDES = 144;
+/**
+ * Whether the full placeholder fits the field on its one line. Its type
+ * stops growing at the chrome cap (23 pt) while the buttons beside it stay
+ * 44 pt, so the full words are cut from about xxLarge on a narrow phone
+ * and from xxxLarge on most, not only at the accessibility sizes.
+ */
+export function placeholderFits({
+  fontScale,
+  room,
+}: {
+  fontScale: number;
+  /** The field's width. */
+  room: number;
+}): boolean {
+  const size =
+    textStyles.body.fontSize * Math.min(fontScale, chromeTextScaleCap);
+  return PLACEHOLDER_EMS * size <= room;
+}
 /** Lines before the field scrolls inside (journeys/ask.md 4.4a). */
 export function composerLines(fontScale: number) {
   const category = contentSizeCategory(fontScale);
@@ -200,7 +228,11 @@ export function AskDock({
     askSession.snapshot,
     askSession.snapshot,
   );
-  const { fontScale, height: windowHeight } = useWindowDimensions();
+  const {
+    fontScale,
+    height: windowHeight,
+    width: windowWidth,
+  } = useWindowDimensions();
   // The composer's height outside the field, measured: its body less the
   // field. Until both are laid out, the padding and the options line.
   const [bodyHeight, setBodyHeight] = useState<number | null>(null);
@@ -208,10 +240,14 @@ export function AskDock({
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
-  // The drawn placeholder is one capped line. At accessibility sizes the
-  // full words end in an ellipsis ("Ask about the public rec…"), so a
-  // shorter line is drawn. VoiceOver's hint keeps the full words.
-  const large = useAccessibilitySize();
+  // The drawn placeholder is one capped line. Where the full words do not
+  // fit the field they ended in an ellipsis ("Ask about the public rec…"),
+  // so a shorter line is drawn there. VoiceOver's hint keeps the full words.
+  const [fieldWidth, setFieldWidth] = useState<number | null>(null);
+  const shortPlaceholder = !placeholderFits({
+    fontScale,
+    room: fieldWidth ?? windowWidth - COMPOSER_FIELD_SIDES,
+  });
   // The draft as the reader last typed it. Any other draft is a prefill, as
   // is one already waiting when the composer mounts (prefilledCaret).
   const [typed, setTyped] = useState(s.draft);
@@ -427,6 +463,7 @@ export function AskDock({
         <View
           testID="ask-field"
           style={[styles.field, tags.length > 0 ? styles.fieldInset : null]}
+          onLayout={(e) => setFieldWidth(e.nativeEvent.layout.width)}
         >
           <TextInput
             ref={inputRef}
@@ -500,7 +537,7 @@ export function AskDock({
                 maxFontSizeMultiplier={chromeTextScaleCap}
                 testID="ask-placeholder"
               >
-                {large
+                {shortPlaceholder
                   ? composerCopy.placeholderShort
                   : composerCopy.placeholder}
               </Text>

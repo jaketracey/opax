@@ -39,7 +39,9 @@ import {
   caretAfterContent,
   caretAfterSelection,
   caretSelection,
+  COMPOSER_FIELD_SIDES,
   composerFieldCap,
+  placeholderFits,
   composerLines,
   prefilledCaret,
 } from '../src/features/ask/AskDock';
@@ -1645,34 +1647,68 @@ test('a later read of the seat keeps the starter that is drawn: Try asking is ne
   expect(byId('ask-starter-0').length).toBeGreaterThan(0);
 });
 
+const FULL = 'Ask about the public record';
+const SHORT = 'Ask about the record';
 test.each([
-  ['the default size', 1, 'Ask about the public record'],
-  ['xxxLarge', 1.353, 'Ask about the public record'],
-  ['AX1', 1.786, 'Ask about the record'],
-  ['AX3', 2.643, 'Ask about the record'],
-  ['AX5', 3.571, 'Ask about the record'],
+  ['the default size, 402 pt', 1, 402, FULL],
+  ['the default size, 375 pt', 1, 375, FULL],
+  ['xLarge, 375 pt', 1.118, 375, FULL],
+  ['xxLarge, 402 pt', 1.235, 402, FULL],
+  // The type has nearly reached its 23 pt cap and the field is 27 pt
+  // narrower: the full words no longer fit.
+  ['xxLarge, 375 pt', 1.235, 375, SHORT],
+  // At the cap the placeholder draws exactly as it does at AX3.
+  ['xxxLarge, 402 pt', 1.353, 402, SHORT],
+  ['xxxLarge, 375 pt', 1.353, 375, SHORT],
+  ['xxxLarge, 440 pt', 1.353, 440, FULL],
+  ['AX1, 402 pt', 1.786, 402, SHORT],
+  ['AX3, 402 pt', 2.643, 402, SHORT],
+  ['AX5, 402 pt', 3.571, 402, SHORT],
 ])(
-  '%s: the composer draws "%s" and VoiceOver hears the full words',
-  async (_size, fontScale, drawn) => {
+  '%s: the composer draws the placeholder that fits, and VoiceOver hears the full words',
+  async (_size, fontScale, width, drawn) => {
     const original = Dimensions.get('window');
     Dimensions.set({
-      window: { ...original, width: 402, height: 874, fontScale },
+      window: { ...original, width, height: 874, fontScale },
     });
     try {
       await mount();
-      const line = view!.root.find(
-        (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
-      );
-      expect(line.props.children).toBe(drawn);
-      expect(one('ask-question').props.accessibilityHint).toBe(
-        'Ask about the public record',
-      );
+      const line = () =>
+        view!.root.find(
+          (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
+        );
+      expect(line().props.children).toBe(drawn);
+      expect(one('ask-question').props.accessibilityHint).toBe(FULL);
       expect(one('ask-question').props.accessibilityLabel).toBe('Question');
+      // The field's own measured width decides once it is known.
+      const field = view!.root.find(
+        (n) => typeof n.type === 'string' && n.props.testID === 'ask-field',
+      );
+      await act(async () => {
+        field.props.onLayout({ nativeEvent: { layout: { width: 120 } } });
+      });
+      expect(line().props.children).toBe(SHORT);
+      await act(async () => {
+        field.props.onLayout({ nativeEvent: { layout: { width: 600 } } });
+      });
+      expect(line().props.children).toBe(FULL);
     } finally {
       Dimensions.set({ window: original });
     }
   },
 );
+
+test('the fit rule: the full words at their drawn size against the field', () => {
+  // 12 em of the drawn size; the size stops at the 23 pt cap.
+  expect(placeholderFits({ fontScale: 1, room: 204 })).toBe(true);
+  expect(placeholderFits({ fontScale: 1, room: 203 })).toBe(false);
+  expect(placeholderFits({ fontScale: 1.353, room: 276 })).toBe(true);
+  expect(placeholderFits({ fontScale: 1.353, room: 275 })).toBe(false);
+  expect(placeholderFits({ fontScale: 3.571, room: 276 })).toBe(true);
+  expect(placeholderFits({ fontScale: 0.823, room: 170 })).toBe(true);
+  // A 402 pt phone's field before it is measured.
+  expect(402 - COMPOSER_FIELD_SIDES).toBe(258);
+});
 
 describe('the starter box is held from when Try asking is first seen, not first mounted (b80 sweep, AX3)', () => {
   // Ask is mounted with the tabs at launch, before any seat is read, and
@@ -1724,14 +1760,15 @@ describe('the starter box is held from when Try asking is first seen, not first 
     jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
     jest.mocked(useSavedChoice).mockReturnValue(undefined);
     await mountBehind();
-    // Behind the other tabs: nothing is held yet, and no starter is drawn
-    // while the seat is unknown.
-    expect(byId('ask-starter-held').length).toBe(0);
-    expect(byId('ask-starter-place').length).toBe(0);
-    // The device answers that no seat is saved, long before Ask is opened.
+    // Behind the other tabs the box follows the seat: held while it is
+    // being read.
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    // The device answers that no seat is saved, long before Ask is opened:
+    // the hold is let go, still unseen.
     jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
     jest.mocked(useSavedChoice).mockReturnValue(null);
     await redraw();
+    expect(byId('ask-starter-held').length).toBe(0);
     await open();
     // The card is the one starter at its own height: no unseen candidates
     // making it as tall as the longest member's question.
@@ -1747,7 +1784,13 @@ describe('the starter box is held from when Try asking is first seen, not first 
     jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
     jest.mocked(useSavedChoice).mockReturnValue(undefined);
     await mountBehind();
+    // The tree the tab shows first, before the focus listener has run, is
+    // already the held box: nothing grows in after first sight.
+    const before = byId('ask-starter-place').length;
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    expect(before).toBeGreaterThan(0);
     await open();
+    expect(byId('ask-starter-place').length).toBe(before);
     expect(byId('ask-starter-held').length).toBeGreaterThan(0);
     expect(byId('ask-starter-place').length).toBeGreaterThan(0);
     jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
