@@ -22,9 +22,28 @@ import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-32-facts-once'
-export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
+export const ANSWER_WRITING_VERSION = 'written-answer-33-one-voice'
+export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn
+  /** The researcher's own wording of this same record (its point resting on it), for the one sentence about this fact. */
+  also?: string[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
+/** Added to the writer's contract only when a fact carries the researcher's own wording of its record. */
+export const ALSO_WRITING_RULE = ' A fact\'s "also" lines are the researcher\'s wording of that same record. Write one sentence for the fact that carries every detail those lines add.'
+/** The model's points that rest on passages or on nothing. A point resting only on tool records is record prose: its
+ *  wording is in the writer's fact sheet (writingFacts), and the writer's sentence is the one statement of that record. */
+export function pointsBeyondRecords(points: QualitativeAnswer): QualitativeAnswer {
+  const kind=(id:string)=>points.sources.find(s=>id===s.resource||id.startsWith(s.resource+'/'))?.kind
+  let answer=''; const citations:QualitativeAnswer['citations']={}
+  for(const part of points.answer.matchAll(/[^\n]+/g)){
+    const from=Array.from(points.answer.slice(0,part.index)).length,until=from+Array.from(part[0]).length
+    const ids=Object.entries(points.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<until&&b>from)).map(([id])=>id)
+    if(ids.length&&ids.every(id=>{const k=kind(id);return !!k&&!['speech','bill'].includes(k)}))continue
+    if(answer)answer+='\n'
+    const offset=Array.from(answer).length;answer+=part[0]
+    for(const id of ids)for(const [a,b] of points.citations[id])if(a<until&&b>from)(citations[id]??=[]).push([offset+Math.max(a,from)-from,offset+Math.min(b,until)-from])
+  }
+  return {...points,answer,citations,sources:points.sources.filter(s=>Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/')))}
+}
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
@@ -106,14 +125,19 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     const cited = ranges.length && ranges.every(([a,b])=>b-a>3) ? ranges.map(([a,b]) => Array.from(answer.answer).slice(a,b).join('')) : null
     // Each fact appears once. The loop can select a record as a fact and also write a point resting on it, so two spans
     // of its answer cite that one record. When the record holds a single statement and one span is that statement, the
-    // other spans are the same fact again: the writer is given it once, as recorded.
+    // other spans are the same fact again: the writer is given it once, as recorded, with those spans beside it
+    // ("also") so the one sentence about it can carry any detail the researcher's wording adds.
     const recorded = cited && cited.length > 1 ? singleStatement(source) : null
     const own = recorded ? cited!.find(span => signedKey(span.replace(/^[-*•]\s*/, '')) === signedKey(recorded)) : undefined
     const text = own ?? (cited ? cited.join('\n') : source.snippet)
+    const also = own ? [...new Set(cited!.filter(span => span !== own).map(span => clean(span).replace(/^[-*•]\s*/, '')).filter(Boolean))] : []
+    const held = also.length ? { ...source, snippet: [...new Set([source.snippet, ...also])].join('\n') } : source
+    const first = out.length
     for (const part of text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
-      const before=out.length;add(part, source, !!source.coverage || isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
+      const before=out.length;add(part, held, !!source.coverage || isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
       if(out.length>before){const f=out[out.length-1];if(!f.transcript)f.evidenceId=Object.keys(answer.citations).find(id=>id===source.resource || id.startsWith(source.resource+'/'))??f.evidenceId;f.atoms=f.atoms?.map(a=>({...a,evidenceId:f.evidenceId!}))??atomsFromText(f.text,f.evidenceId!,source)}
     }
+    if (also.length) { const fact = out.slice(first).find(f => !f.coverage) ?? out.find(f => f.source.resource === source.resource && !f.coverage); if (fact) fact.also = [...new Set([...(fact.also ?? []), ...also])] }
   }
   for (const fact of facts) {
     const source = {resource:`fact-${fact.id}`, slug:'', title:fact.cite.label, href:fact.cite.url, url:fact.cite.url, snippet:fact.text, cited:true, kind:fact.cite.kind, ...(fact.cite.remuneration?{remuneration:fact.cite.remuneration}:{}), ...(fact.receipt?{receipt:fact.receipt}:{}), ...(fact.entities?.length?{entities:fact.entities}:{}), ...(fact.member?{member:fact.member}:{})}
@@ -145,6 +169,7 @@ export function dedupeWritingFacts(facts:WritingFact[]):WritingFact[] {
         prior.atoms=fact.atoms?.map(a=>({...a,evidenceId:prior.evidenceId??a.evidenceId}))
       }
       prior.source={...prior.source,snippet:[...new Set([prior.source.snippet,fact.source.snippet,fact.text])].join('\n')}
+      if(fact.also?.length)prior.also=[...new Set([...(prior.also??[]),...fact.also])]
       continue
     }
     out.push({...fact,source:{...fact.source}})
@@ -653,7 +678,7 @@ export function writingPrompt(input: WritingInput): string {
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
     'Hearing excerpts name the recorded speaker and hearing day/date, with a short literal quotation and fact id. A question by counsel or a commissioner is a question; identify each witness answer explicitly. Use recorded names and roles. Identify the material once as hearing evidence; licence details belong in the source card. ' +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
-    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' })
+    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.facts.some(f=>f.also?.length) ? ALSO_WRITING_RULE : '') })
 }
 
 /** Keep already checked passage points (including loose uncited survivors) beside the written record answer. */

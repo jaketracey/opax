@@ -31,7 +31,7 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
-import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
+import { writingFacts, appendWrittenPoints, pointsBeyondRecords, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
@@ -666,10 +666,17 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
     if (transcriptListingOnly(sheet)) return run
     await progress('status', {phase:'writing'})
-    const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
+    const stats: import('./research-types').ResearchStats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
-    const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
+    // One voice per kind of evidence. Once the model writer has written, its sentences are the statement of every tool
+    // record (the model's own points on those records are in its fact sheet), and only the model's points resting on
+    // passages or on nothing follow. A writer that did not write (facts as recorded, or a stopped draft) keeps every point.
+    let modelWritten=false
+    const combine=(written:QualitativeAnswer)=>{
+      const points=run.passage_answer&&modelWritten?pointsBeyondRecords(run.passage_answer):run.passage_answer
+      return points?.answer.trim()?leadWithModelAnswer(appendWrittenPoints(written,points) as unknown as Record<string,unknown>,points,question) as unknown as QualitativeAnswer:written
+    }
     let active=true,checkedPartial:QualitativeAnswer|undefined
     // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.
     // A source's snippet, fact texts and title are read alone and joined, as written sources join them.
@@ -691,7 +698,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       })
     }
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
-    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
+    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).then(out=>{modelWritten=!!stats.coherence?.writer_passes&&!stats.coherence?.fallback&&!out.coherence?.fallback;return out}).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
     const complete=combine(written)
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
