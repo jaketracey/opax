@@ -13,7 +13,7 @@ import { getPathFromState } from 'expo-router/react-navigation';
 import { ContentUnavailable } from '../src/design/states';
 import * as accessibility from '../src/design/accessibility';
 import { PartyLabel } from '../src/design/people';
-import { minimumTarget } from '../src/design/tokens';
+import { minimumTarget, rhythm } from '../src/design/tokens';
 import * as titleOnScroll from '../src/navigation/useTitleOnScroll';
 import { SeatRow } from '../src/features/vic-election/rows';
 import Hub from '../src/features/vic-election/Hub';
@@ -54,6 +54,18 @@ test('Ahead puts status before dates, districts, regions and authorised foot', (
     0,
   );
   expect(text).toContain(mockVic.overview.record!.data.authorisation);
+});
+test('the status heading stands a block below the countdown, like every other block', () => {
+  const r = renderVic(<Hub />);
+  const status = r.root.findAll(
+    (node) =>
+      typeof node.type === 'string' &&
+      node.props.testID === 'vic-election-status',
+  )[0]!;
+  expect(
+    r.root.findAllByProps({ testID: 'vic-election-days' }).length,
+  ).toBeGreaterThan(0);
+  expect(StyleSheet.flatten(status.props.style).gap).toBe(rhythm.block);
 });
 test('Closed removes countdown and every upcoming section', () => {
   mockVic.now = new Date('2026-11-28T18:00:00+11:00');
