@@ -539,11 +539,43 @@ export function BarTitle({
  * unset draws the route title as a string at once.
  */
 export function emptyBarTitle() {
-  return createElement(NativeView, {
-    style: { width: 0, height: 0 },
-    accessibilityElementsHidden: true,
-    importantForAccessibility: 'no-hide-descendants',
-  });
+  return createElement(EmptyBarTitle);
+}
+
+const {
+  dynamicTypeRamp: _emptyRamp,
+  tabular: _emptyTabular,
+  ...emptyTitleStyle
+} = textStyles.inlineTitle;
+
+/**
+ * Beside a vertical bar (the closed iPhone Duo) UIKit sizes the title band
+ * to the title view: an empty view left the header 24 pt tall, and the page
+ * dropped 58 pt when its title was installed (a profile opened on its
+ * skeleton, build 82). There the empty title holds one hidden line of the
+ * title's own text style, so the band is its final height from the first
+ * frame. Elsewhere the bar's height does not follow the title view.
+ */
+function EmptyBarTitle() {
+  const rail = useVerticalBarEdge() !== 'unspecified';
+  return rail && Platform.OS === 'ios'
+    ? createElement(
+        NativeText,
+        {
+          numberOfLines: 1,
+          maxFontSizeMultiplier: inlineTitleScaleCap,
+          accessibilityElementsHidden: true,
+          importantForAccessibility: 'no-hide-descendants',
+          testID: 'bar-title-empty',
+          style: [emptyTitleStyle, { opacity: 0 }],
+        },
+        '\u00a0',
+      )
+    : createElement(NativeView, {
+        style: { width: 0, height: 0 },
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no-hide-descendants',
+      });
 }
 
 type TitleRef = RefObject<View | Text | null>;
