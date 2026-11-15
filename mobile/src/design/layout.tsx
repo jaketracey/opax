@@ -455,10 +455,19 @@ export function ClearBarRest({
  * A pushed page's whole-screen state that does not scroll: a skeleton or a
  * message in a plain View. It clears the bar where the page runs under one
  * (`useClearBarTop`); elsewhere it is the View it replaces.
+ *
+ * It sits inside the side safe area, as a Screen page does: beside a
+ * vertical tab bar (the Duo's outer display) a plain View runs under the
+ * bar, and its message was centred half a bar's width towards it, with
+ * long lines reaching under it.
  */
 export function FixedPage({ style, ...props }: ViewProps) {
   const top = useClearBarTop();
-  return <View {...props} style={top ? [style, { paddingTop: top }] : style} />;
+  return (
+    <SidebarSafe>
+      <View {...props} style={top ? [style, { paddingTop: top }] : style} />
+    </SidebarSafe>
+  );
 }
 
 /**
