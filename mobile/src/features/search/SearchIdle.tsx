@@ -108,22 +108,30 @@ type TryInputs = { edition: EditionView | null; bills: BillIndex | null };
 function useTryInputs(
   bills: BillIndex | null,
   billsSettled: boolean,
+  visited: boolean,
 ): TryInputs | null {
   const [edition, setEdition] = useState(heldEdition);
   const [expired, setExpired] = useState(false);
   const settled = edition !== null && (bills !== null || billsSettled);
   const [drawn, setDrawn] = useState<TryInputs | null>(null);
+  // The edition is read as soon as the tab is mounted (at launch), so it is
+  // in hand before the first visit.
   useEffect(() => {
     let active = true;
     void readEdition().then(() => {
       if (active) setEdition(heldEdition);
     });
-    const timer = setTimeout(() => setExpired(true), IDLE_HOLD_MS);
     return () => {
       active = false;
-      clearTimeout(timer);
     };
   }, []);
+  // The wait runs from the visit, not from the mount: the tab is mounted
+  // long before it is opened, and its bill index is read on focus.
+  useEffect(() => {
+    if (!visited) return;
+    const timer = setTimeout(() => setExpired(true), IDLE_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [visited]);
   if (drawn) return drawn;
   if (!settled && !expired) return null;
   // Fixed from this render on (state set while rendering, so the lists are
@@ -148,6 +156,7 @@ export function SearchIdle({
   onTry,
   bills = null,
   billsSettled = true,
+  visited = true,
 }: {
   onRecent: (item: RecentSearch) => void;
   /** A Try row with no native record searches its words. */
@@ -156,10 +165,12 @@ export function SearchIdle({
   bills?: BillIndex | null;
   /** False while the caller is still reading the bill index. */
   billsSettled?: boolean;
+  /** False until the screen is first opened (its reads start then). */
+  visited?: boolean;
 }) {
   const recent = useRecentSearches();
   const member = useContext(MyMemberContext) ?? null;
-  const inputs = useTryInputs(bills, billsSettled);
+  const inputs = useTryInputs(bills, billsSettled, visited);
   const tries = useMemo(
     () =>
       inputs
