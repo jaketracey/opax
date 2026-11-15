@@ -42,7 +42,7 @@ Left out on purpose: anything a reader cannot see (shared reads, test and build 
 
 | Option | Text | Count | Reasoning |
 | --- | --- | --- | --- |
-| A (keep) | Your MP, votes, bills and pay | 29 | The live subtitle. It names four things the app shows and puts "MP", "votes" and "bills" in an indexed field. Recommended: it is doing its job, and changing a subtitle resets what the store has learned about it |
+| A (keep) | Your MP, votes, bills and pay | 29 | The live subtitle. It names four things the app shows and puts "MP", "votes" and "bills" in an indexed field. Recommended: it is accurate and already indexed, and there is no evidence yet that it is the thing holding installs back |
 | B | How your MP voted, and bills | 28 | Follows the phrase people type ("how did my MP vote"). It gives up "pay", which is one of the less common things an app in this category shows |
 
 **Promotional text** (170 characters; can change at any time without a new build).
@@ -60,7 +60,7 @@ A dated line for the Victorian election (voting is Saturday 28 November 2026) co
 parliament,federal,hansard,senator,electorate,donations,victorian,election,politics,australia,grants
 ```
 
-100 of 100 characters and bytes. No spaces after commas. No word repeats the name (OPAX) or either subtitle option ("your", "MP", "votes", "voted", "bills", "pay", "how", "and"). No app, company or trademark names. The store combines words across the name, subtitle and keywords, so single words are enough to match phrases.
+100 of 100 characters and bytes. No spaces after commas. No word repeats the name (OPAX) or either subtitle option ("your", "MP", "votes", "voted", "bills", "pay", "how", "and"). No app, company or trademark names. Apple's guidance is that words across the name, subtitle and keywords are matched together, so single words are used rather than phrases.
 
 | Word | Why |
 | --- | --- |
@@ -73,7 +73,7 @@ parliament,federal,hansard,senator,electorate,donations,victorian,election,polit
 | victorian | With "election": the Victorian election pages, live for the 28 November vote |
 | election | "Victorian election", "election results": the election pages and each electorate's past results |
 | politics | The broad browse term; pairs with "australia" |
-| australia | "Australian politics", "Australia parliament"; the store stems it |
+| australia | "Australian politics", "Australia parliament" |
 | grants | Commonwealth grants and Community funding are in the app, and "grants" is a distinct search |
 
 Dropped from the 1.0 set: "politician", "legislation", "interests", "expenses", "salary" and "civics". They describe the app accurately but are not what people type; "bills" and "pay" in the subtitle already cover two of them. After the Victorian election, "victorian" can give its 9 characters back to "interests" (9).
@@ -107,7 +107,7 @@ Added for 1.1.5:
 
 - Capture on build 85 or later, so the clear bars and their fade are in every scrolled frame (frame 2 is the one that shows them).
 - Frame 4 uses a real answer, checked against the record it cites.
-- The iPad set is new: the app has supported iPad since 1.1, and the 1.0 plan had no iPad frames.
+- The iPad set is new: the app supports iPad now (`supportsTablet: true`), and the 1.0 plan had no iPad frames.
 
 ## 5. The description's first three lines
 
