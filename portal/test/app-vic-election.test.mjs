@@ -29,7 +29,7 @@ async function compile(entry) {
   return import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
 }
 const {appVicElection} = await compile('../src/app-vic-election.ts');
-const {renderVicElection,findSeats,titledVotes,contestName} = await compile('../src/vic-election.ts');
+const {renderVicElection,findSeats,titledVotes,contestName,vicElectionPage} = await compile('../src/vic-election.ts');
 const {default:worker} = await compile('../src/index.ts');
 const slug = s=>s.path.split('/').at(-1);
 function environment(election=data,index=places,flag='true') {
@@ -75,6 +75,57 @@ test('publication gate precedes method, query and assets on every sub-path, thro
     assert.equal(r.status,404);assert.equal(r.headers.get('cache-control'),'no-store');
     assert.equal(r.headers.get('x-robots-tag'),'noindex');assert.deepEqual(env.reads,[]);
     if(method==='HEAD')assert.equal(await r.text(),'');else assert.deepEqual(await r.json(),{error:'not_published'});
+  }
+});
+
+test('the app endpoint has its own gate, so it can outlive the web hub',async()=>{
+  const env=(hub,app)=>{const e=environment();e.VIC_ELECTION_HUB_ENABLED=hub;if(app!==undefined)e.VIC_ELECTION_APP_ENABLED=app;return e;};
+  // The hub switched off, the endpoint kept: the record is still served, through the Worker.
+  for(const path of ['', '/seat/albert-park']) {
+    const r=await worker.fetch(request(path),env('false','true'),{});
+    assert.equal(r.status,200,path);
+  }
+  assert.equal((await (await worker.fetch(request(),env('false','true'),{})).json()).districts.length,88);
+  // The web hub itself stays off: the endpoint's flag publishes nothing else.
+  const page=await vicElectionPage(null,async()=>data,{VIC_ELECTION_HUB_ENABLED:'false',VIC_ELECTION_APP_ENABLED:'true'});
+  assert.equal(page.title,'Hub not found');
+  // Only the exact value "true" publishes it; any other set value withdraws it, whatever the hub says.
+  for(const app of ['false','1','TRUE','']) {
+    const e=env('true',app);const r=await worker.fetch(request(),e,{});
+    assert.equal(r.status,404,app);assert.deepEqual(await r.json(),{error:'not_published'});assert.deepEqual(e.reads,[]);
+  }
+  // Unset, it follows the hub's flag, as before it had its own.
+  assert.equal((await worker.fetch(request(),env('true'),{})).status,200);
+  assert.equal((await worker.fetch(request(),env('false'),{})).status,404);
+  // Both deployments set it, so neither depends on the fallback.
+  const config=await readFile(new URL('../wrangler.jsonc',import.meta.url),'utf8');
+  assert.equal(config.match(/"VIC_ELECTION_APP_ENABLED": "(true|false)"/g).join(),'"VIC_ELECTION_APP_ENABLED": "true","VIC_ELECTION_APP_ENABLED": "false"');
+});
+
+// The app's Today reads this endpoint, after the hub's own Today block retires, to know the Legislative
+// Assembly is dissolved. It must keep answering until the flag is turned off: nothing may retire, gate
+// or empty it by date.
+test('the endpoint serves the dissolved Assembly\'s record long after the election: no date retires it',async t=>{
+  for(const at of ['2026-12-06T00:00:00+11:00','2026-12-29T00:00:00+11:00','2027-03-01T10:00:00+11:00','2027-11-28T10:00:00+11:00']) {
+    t.mock.timers.setTime(Date.parse(at));
+    // Through the Worker, on its own clock, and through the handler with the clock passed in.
+    const routed=await worker.fetch(request(),environment(),{});
+    const direct=await appVicElection(request(),environment(),new Date(at));
+    for(const r of [routed,direct]) {
+      assert.equal(r.status,200,at);
+      const d=await r.json();
+      assert.equal(d.schema_version,1);
+      // What the app's dissolved row reads: the election day, the caretaker instant and each district.
+      assert.equal(d.election_day,'2026-11-28');
+      assert.ok(Date.parse(d.key_dates.find(k=>k.id==='caretaker').passes_at)<Date.parse(at),at);
+      assert.equal(d.districts.length,88);
+      for(const row of d.districts) {
+        assert.ok(row.member.name,row.name);
+        assert.match(row.electorate_url,/^\/subject\/electorate\//);
+      }
+    }
+    const seat=await appVicElection(request('/seat/albert-park'),environment(),new Date(at));
+    assert.equal(seat.status,200,at);
   }
 });
 

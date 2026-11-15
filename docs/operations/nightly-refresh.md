@@ -790,6 +790,29 @@ inventory and publication require supervised reviewed batches; see
 Native reads use `~/opax/.env` on this box. The Mac currently has no usable KB
 credentials and can run only the public GET preview or an offline captured plan.
 
+**Reviewed holds (`scripts/vm/gate_hold.txt`).** One line per data group: the group, an expiry date (Sydney) and the
+reason. Before validation and the portal gate, the nightly puts each listed group that changed back to HEAD and reports it
+as a status warning, so the gate's first full run tests only what may be published. A held export is not a publication,
+so the weekly and monthly groups stay owed and run again each night until the hold is lifted. Use it when an export is known to need
+a review: on 15 Nov 2026 the money, interests and speakers exports turned 17 test files red, one full suite took 2,598 s
+of the 75 min budget, the blame search could not start, and every other group (the 2026Q3 expenses among them) was held
+for the night. A hold past its expiry, a line without a date and reason, an unknown group, or a group with its own
+acceptance state (bills, votes, divisions, evidence ...) fails the night loudly, and a dated group stays held: a hold
+never lapses or lingers in silence. A group whose exporter reads a held group's files has to be listed too
+(`scripts/vm/test_gate_hold.py` reads the exporters' source and fails otherwise; `test_nightly.sh` section 27b covers
+the behaviour). Remove a line in the reviewed change that fixes its cause.
+
+**A merged nightly fix applies the same night.** Bash has read `nightly.sh`, and sourced `data_groups.sh`, before the
+run's own sync pulls `main`, so until 15 Nov 2026 a fix to either first ran on the second night after its merge. Now,
+when the sync changed either file, the run starts again once with the new copy (`OPAX_NIGHTLY_REEXEC=1` marks the
+restarted run, which never restarts again). The process, and so the unit's time limit, the lock (the same descriptor,
+which a detached `git gc` left by the fetch may also hold), the start time in the status and the backfill cutoff's start
+all carry over, and so does the environment the first copy exported (`PATH`, the git identity and `GIT_SSH_COMMAND`,
+anything `nightly.env` set): a pulled change to the default of an exported variable applies from the next night. A pulled copy
+that fails `bash -n` is not started, and a restart whose `exec` fails returns (`shopt -s execfail`; `OPAX_NIGHTLY_SHELL`
+names the shell, default `bash`): either way the night goes on with the loaded copy and the status says so. Every other
+script and `gate_hold.txt` are read after the sync and need no restart. `test_nightly.sh` section 2c covers it.
+
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files
 (grant shards, money graph, suppliers, pay, parliamentarians ...). So after validation the nightly rebuilds the search
 catalog (`npm run build:search`, ~50 s), refreshes the content stamps (`scripts/stamp_assets.mjs`, as the deploy's
@@ -1335,7 +1358,7 @@ accepting the gap and listing it in `source_limitations`. Re-run `scripts/vm/pro
 
 ```
 # unit tests (Python 3.11+, run in the pipeline venv or with `requests` installed)
-python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py scripts/vm/test_export_step.py
+python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py scripts/vm/test_export_step.py scripts/vm/test_gate_hold.py
 
 # bills step: fixture git checkout, stubbed acquisition/export/fill, real guards/verifier/sweep
 python3 -m unittest scripts.vm.test_bills_refresh scripts.test_export_bills_sponsors tests.test_export_bill_divisions tests.test_bill_refresh_briefs

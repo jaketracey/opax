@@ -29,6 +29,22 @@ case "$mode" in
       [ "$#" -ge 3 ] || { echo "usage: export_step.sh json DEST [--also DEST TMP]... CMD..." >&2; exit 64; }
       also_dest+=("$2"); also_tmp+=("$3"); shift 3
     done
+    # A scratch file is removed before the export and again on exit: it must never be a published file (its own
+    # DEST, the main DEST or another companion's), nor be named twice. Paths are compared resolved, so another
+    # spelling of the same file (./tmp/x.json, a symlink) and a DEST that does not exist yet are caught too.
+    if [ "${#also_tmp[@]}" -gt 0 ]; then
+      "$PY" -c 'import os, sys
+count = (len(sys.argv) - 2) // 2
+published = {os.path.realpath(p): p for p in sys.argv[1:2 + count]}
+seen = {}
+for raw in sys.argv[2 + count:]:
+    path = os.path.realpath(raw)
+    if path in published:
+        sys.exit(f"export_step.sh: the scratch file {raw} is the published file {published[path]}; nothing run")
+    if path in seen:
+        sys.exit(f"export_step.sh: the scratch files {seen[path]} and {raw} are the same file; nothing run")
+    seen[path] = raw' "$dest" "${also_dest[@]}" "${also_tmp[@]}" || exit 64
+    fi
     tmp=$(mktemp "${TMPDIR:-/tmp}/export.XXXXXX")
     trap 'rm -f "$tmp" "${also_tmp[@]+"${also_tmp[@]}"}"' EXIT
     rm -f "${also_tmp[@]+"${also_tmp[@]}"}"
@@ -36,6 +52,22 @@ case "$mode" in
     for t in "${also_tmp[@]+"${also_tmp[@]}"}"; do
       [ -s "$t" ] || { echo "export_step.sh: the export did not write $t; nothing installed" >&2; exit 2; }
     done
+    # With companions, every file of the set is checked before the first is installed: keep_if_unchanged.py refuses
+    # an empty or unparseable file one at a time, which would leave the files before it new and the rest old.
+    if [ "${#also_tmp[@]}" -gt 0 ]; then
+      checks=("$dest" "$tmp")
+      for i in "${!also_dest[@]}"; do checks+=("${also_dest[$i]}" "${also_tmp[$i]}"); done
+      "$PY" -c 'import json, os, sys
+pairs = list(zip(sys.argv[1::2], sys.argv[2::2]))
+for dest, new in pairs:
+    if os.path.getsize(new) == 0:
+        sys.exit(f"export_step.sh: the export wrote nothing for {dest}; nothing installed")
+    if dest.endswith(".json"):
+        try:
+            json.load(open(new, encoding="utf-8"))
+        except ValueError as error:
+            sys.exit(f"export_step.sh: the export for {dest} is not valid JSON ({error}); nothing installed")' "${checks[@]}" || exit 2
+    fi
     for i in "${!also_dest[@]}"; do
       "$PY" scripts/vm/keep_if_unchanged.py "${also_dest[$i]}" "${also_tmp[$i]}"
     done

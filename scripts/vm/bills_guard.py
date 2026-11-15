@@ -118,8 +118,16 @@ def reviewed_moves(path: Path = LINK_CORRECTIONS) -> set[tuple[str, str]]:
     return moves
 
 
+def untexted_questions(doc: dict) -> int:
+    """Divisions whose `question` is not text. Every app build rejects the
+    whole bill for one of these (docs/BILLS-CONTRACT.md types it as text)."""
+    return sum("question" in d and not isinstance(d["question"], str) for d in doc.get("divisions", []))
+
+
 def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset()) -> list[str]:
     reasons = []
+    if faults := untexted_questions(new):
+        reasons.append(f"{faults} division questions are not text")
     for name, was, now in (
         ("latest stage date", latest_stage_date(old), latest_stage_date(new)),
         ("status_as_of", old.get("status_as_of"), new.get("status_as_of")),
@@ -168,6 +176,10 @@ def check(apply_holds: bool = False, held_report: Path | None = None) -> str:
     for key in sorted(suppressed):
         print(f"bill {key}: suppressed as a reviewed duplicate of {redirects[key]}", file=sys.stderr)
     old = {key: doc for key, doc in old.items() if key not in suppressed}
+    # A new bill has no HEAD copy to hold, so an untexted question fails loudly.
+    unreadable = sorted(key for key in set(new) - set(old) if untexted_questions(new[key]))
+    if unreadable:
+        raise ValueError(f"new bills with a division question that is not text: {', '.join(unreadable[:10])}")
     moved = reviewed_moves()
     held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key], moved))}
     if held_report is not None:

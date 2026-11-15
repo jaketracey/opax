@@ -728,7 +728,7 @@
    "key": "federal-senate-10436",
    "date": "2024-07-01",
    "house": "senate",
-   "question": null,
+   "question": "",
    "stage": "Second reading",
    "ayes": 10,
    "noes": 36,

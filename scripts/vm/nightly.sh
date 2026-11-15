@@ -85,7 +85,10 @@ STATUS_BRANCH="${OPAX_STATUS_BRANCH:-nightly-status}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
 export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"
 TODAY=$(TZ=Australia/Sydney date +%F)
-STARTED_AT=$(date -u +%FT%TZ)
+# a run restarted with the copy of this script its own sync pulled (section 1) keeps the first start time, for the
+# status (STARTED_AT) and for the backfill cutoff, which counts back from the unit's limit (START_EPOCH, section 1z)
+STARTED_AT=${OPAX_NIGHTLY_STARTED_AT:-$(date -u +%FT%TZ)}
+START_EPOCH=$(date +%s)
 LOGFILE="$PIPE/nightly-$TODAY.log"
 LASTFILE="$PIPE/nightly-last.json"
 LOCKFILE="$PIPE/nightly.lock"
@@ -135,7 +138,11 @@ coverage_status() {
 }
 
 # ---- lock ------------------------------------------------------------------------
-exec 8>"$LOCKFILE"
+# A restarted run (section 1) still holds the lock on the descriptor it inherited, and so may a child the first copy
+# left behind: git fetch starts a detached `git gc --auto` that keeps descriptor 8. Opening the file again would make
+# a second open file description, the child's lock would refuse it, and the night would end here in silence with
+# nothing published. So a restarted run keeps descriptor 8 when it is the lock file; flock on it then succeeds.
+if [ "${OPAX_NIGHTLY_REEXEC:-0}" != 1 ] || ! [ /proc/self/fd/8 -ef "$LOCKFILE" ]; then exec 8>"$LOCKFILE"; fi
 if ! flock -n 8; then
   echo "$(ts) [nightly] another nightly run holds $LOCKFILE; exiting" | tee -a "$LOGFILE"
   exit 0
@@ -301,7 +308,37 @@ sync_repo() {
   fi
 }
 log "syncing $BRANCH"
+PRE_SYNC_HEAD=$(git rev-parse -q --verify HEAD 2>/dev/null || true)
 if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; finish; fi
+# Bash had read this script, and sourced data_groups.sh, before the sync pulled main: a fix to either merged
+# today would otherwise first run tomorrow night (15 Nov 2026: the hold list and the money group's new files
+# took two nights to apply). So when the sync changed either file, start again once with the new copy. The
+# guard variable allows exactly one restart. What carries over: the process (so the unit's time limit), the lock
+# (the same descriptor), both start times, and the whole environment the first copy exported (PATH, the git
+# identity and GIT_SSH_COMMAND, anything nightly.env set): a pulled change to the default of an exported variable
+# therefore applies from the next night, everything else in the new copy applies now. The exit traps stay set: bash
+# runs none on a successful exec. A failed exec would end a script at once (127) without running the EXIT trap,
+# so with nothing published; `shopt -s execfail` makes it return instead, and the night goes on with the copy
+# already loaded and a failure in the status. Everything read after this point is read fresh anyway.
+if [ "${OPAX_NIGHTLY_REEXEC:-0}" != 1 ] && [ -n "$PRE_SYNC_HEAD" ] \
+   && ! git diff --quiet "$PRE_SYNC_HEAD" HEAD -- scripts/vm/nightly.sh scripts/vm/data_groups.sh 2>/dev/null; then
+  # a pulled copy that does not even parse must not take the night down with it: say so and go on with this one
+  if bash -n "$REPO/scripts/vm/nightly.sh" 2>>"$LOGFILE" && bash -n "$REPO/scripts/vm/data_groups.sh" 2>>"$LOGFILE"; then
+    log "the sync changed nightly.sh or data_groups.sh ($(git rev-parse --short "$PRE_SYNC_HEAD") -> $(git rev-parse --short HEAD)): restarting once with the new copy"
+    export OPAX_NIGHTLY_REEXEC=1 OPAX_NIGHTLY_STARTED_AT="$STARTED_AT" OPAX_NIGHTLY_STARTED="${OPAX_NIGHTLY_STARTED:-$START_EPOCH}"
+    # OPAX_NIGHTLY_SHELL exists for the tests, and nightly.env is sourced with set -a, so only a bash may restart
+    # this bash script: any other value (sh would die at `set -o pipefail` and publish nothing) falls back to bash.
+    nightly_shell=${OPAX_NIGHTLY_SHELL:-bash}
+    case "$nightly_shell" in bash|*/bash) ;; *) nightly_shell=bash ;; esac
+    shopt -s execfail
+    exec "$nightly_shell" "$REPO/scripts/vm/nightly.sh" "$@"
+    shopt -u execfail
+    unset OPAX_NIGHTLY_REEXEC OPAX_NIGHTLY_STARTED_AT
+    fail "could not restart with the nightly.sh pulled from origin/$BRANCH (exec failed): tonight runs with the copy already loaded"
+  else
+    fail "the nightly.sh or data_groups.sh pulled from origin/$BRANCH does not parse (bash -n): not restarted, tonight runs with the copy already loaded"
+  fi
+fi
 mapfile -t DATA_PATHS < <(tracked_data_paths)
 log "checkout at $(git rev-parse --short HEAD): $(git log -1 --format=%s | cut -c1-90)"
 
@@ -597,6 +634,45 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_SENATE_VIDEO:-1}" != 
     revert_group video
     fail "Senate video refresh failed: previous portal/public/video kept"
   fi
+fi
+
+# ---- 3z. groups held by review (scripts/vm/gate_hold.txt) ----------------------------------------
+# A reviewed, dated hold: "GROUP EXPIRY(YYYY-MM-DD) REASON" per line. A listed group that changed tonight is put
+# back to HEAD before validation and the portal gate, so the gate's first full run tests only what may be
+# published (15 Nov 2026: one full suite took 2,598 s of the 75 min budget, so the blame search could not start
+# and one held export cost every other group the night). Each hold is a status warning, and the periodic groups
+# stay owed while one of their exports is held. A hold past its expiry,
+# a malformed line or an unknown group fails the night loudly and the group stays held: a hold never lapses or
+# lingers in silence. Groups with their own acceptance state (bills, votes, divisions, evidence ...) cannot be
+# listed. scripts/vm/test_gate_hold.py checks that no group left to publish reads a held group's files.
+GATE_HOLD_FILE="$(dirname "${BASH_SOURCE[0]}")/gate_hold.txt"
+if [ -f "$GATE_HOLD_FILE" ]; then
+  hold_today=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}
+  while read -r hold_group hold_expiry hold_reason || [ -n "${hold_group:-}" ]; do
+    case "${hold_group:-}" in ''|'#'*) continue ;; esac
+    if [ -z "${GROUP_PATHS[$hold_group]:-}" ]; then
+      fail "gate_hold.txt names an unknown group: $hold_group"; continue
+    fi
+    case "$hold_group" in bills|votes|divisions|seovotes|evidence|corpus|wrangler|bills-tas|bills-act|budget|vic-gifts)
+      fail "gate_hold.txt cannot hold $hold_group (it has its own acceptance state)"; continue ;;
+    esac
+    if ! [[ "${hold_expiry:-}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || [ -z "${hold_reason:-}" ]; then
+      group_changed "$hold_group" && { revert_group "$hold_group"; PERIODIC_ACCEPTED=0; }
+      fail "gate_hold.txt: the hold on $hold_group needs an expiry date (YYYY-MM-DD) and a reason; $hold_group stays held"
+      continue
+    fi
+    if [[ "$hold_today" > "$hold_expiry" ]]; then
+      group_changed "$hold_group" && { revert_group "$hold_group"; PERIODIC_ACCEPTED=0; }
+      fail "the review hold on $hold_group expired on $hold_expiry (scripts/vm/gate_hold.txt: $hold_reason): renew it or remove it; $hold_group stays held"
+      continue
+    fi
+    group_changed "$hold_group" || continue
+    revert_group "$hold_group"
+    # A held export is not a publication: the periodic groups that produced it stay owed (periodic_refresh_complete),
+    # so the night after the hold is lifted runs them again instead of waiting for the next Sunday.
+    PERIODIC_ACCEPTED=0
+    warn "$hold_group held by review until $hold_expiry (scripts/vm/gate_hold.txt): $hold_reason; put back to HEAD, not published tonight"
+  done < "$GATE_HOLD_FILE"
 fi
 
 # ---- 4. validate what will be committed ----------------------------------------------------------

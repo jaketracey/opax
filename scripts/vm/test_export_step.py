@@ -93,6 +93,79 @@ class ExportStepCompanions(unittest.TestCase):
         self.assertEqual(self.step(2, outs=("tmp/a.json",)).returncode, 2)
         self.assertEqual(self.changed(), [])
 
+    def test_an_unparseable_companion_installs_nothing_not_even_the_files_before_it(self):
+        (self.repo / "bad.py").write_text(
+            'import json, sys\nopen(sys.argv[1], "w").write(json.dumps({"n": 2}))\n'
+            'open(sys.argv[2], "w").write("{not json")\nprint(json.dumps({"n": 2}))\n')
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/a.json", "tmp/a.json", "--also", "out/b.json", "tmp/b.json",
+             sys.executable, "bad.py", "tmp/a.json", "tmp/b.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 2, proc.stderr)
+        self.assertIn("out/b.json is not valid JSON", proc.stderr)
+        self.assertEqual(self.changed(), [])
+
+    def test_an_empty_main_document_installs_no_companion(self):
+        (self.repo / "quiet.py").write_text(
+            'import json, sys\nfor out in sys.argv[1:]:\n    open(out, "w").write(json.dumps({"n": 2}))\n')
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/a.json", "tmp/a.json", "--also", "out/b.json", "tmp/b.json",
+             sys.executable, "quiet.py", "tmp/a.json", "tmp/b.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 2, proc.stderr)
+        self.assertIn("wrote nothing for out/main.json", proc.stderr)
+        self.assertEqual(self.changed(), [])
+
+    def test_a_scratch_path_that_is_a_published_file_is_refused_before_anything_is_removed(self):
+        before = (self.repo / "out/a.json").read_bytes()
+        for also in (["--also", "out/a.json", "out/a.json"],                 # its own DEST
+                     ["--also", "out/a.json", "./out/a.json"],               # the same file by another spelling
+                     ["--also", "out/a.json", "out/main.json"],              # the main DEST
+                     ["--also", "out/a.json", "out/b.json", "--also", "out/b.json", "tmp/b.json"],   # another DEST
+                     ["--also", "out/a.json", "tmp/x.json", "--also", "out/b.json", "tmp/x.json"]):  # named twice
+            proc = subprocess.run(
+                ["bash", "scripts/vm/export_step.sh", "json", "out/main.json", *also,
+                 sys.executable, "exporter.py", "2", "0", "tmp/a.json", "tmp/b.json"],
+                cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 64, (also, proc.stderr))
+            self.assertEqual(self.changed(), [], also)
+            self.assertEqual((self.repo / "out/a.json").read_bytes(), before)
+
+    def test_one_scratch_file_under_two_spellings_is_refused(self):
+        # review repro: tmp/x.json and ./tmp/x.json both received the second file's content, exit 0
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/a.json", "tmp/x.json", "--also", "out/b.json", "./tmp/x.json",
+             sys.executable, "exporter.py", "2", "0", "tmp/x.json", "./tmp/x.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 64, proc.stderr)
+        self.assertIn("are the same file", proc.stderr)
+        self.assertEqual(self.changed(), [])
+
+    def test_a_scratch_path_that_is_a_new_published_file_is_refused(self):
+        # review repro: DEST did not exist yet, so -ef was false; the file was installed, then removed on exit
+        for scratch in ("./out/new.json", "out/../out/new.json"):
+            proc = subprocess.run(
+                ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+                 "--also", "out/new.json", scratch, "--also", "out/b.json", "tmp/b.json",
+                 sys.executable, "exporter.py", "2", "0", scratch, "tmp/b.json"],
+                cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 64, (scratch, proc.stderr))
+            self.assertIn("is the published file out/new.json", proc.stderr)
+            self.assertEqual(self.changed(), [], scratch)
+            self.assertFalse((self.repo / "out/new.json").exists())
+
+    def test_a_new_companion_file_is_installed_and_stays(self):
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/new.json", "tmp/new.json", "--also", "out/b.json", "tmp/b.json",
+             sys.executable, "exporter.py", "2", "0", "tmp/new.json", "tmp/b.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(json.loads((self.repo / "out/new.json").read_text())["n"], 2)
+
     def test_companions_are_not_left_in_the_scratch_directory(self):
         self.step(2)
         self.assertEqual(list((self.repo / "tmp").iterdir()), [])
@@ -109,13 +182,56 @@ def group_paths(text):
 class PeriodicExportsAreOwned(unittest.TestCase):
     """Every portal file the refresh scripts name belongs to a data group, so the gate can hold or publish it."""
 
+    @staticmethod
+    def named_in(body):
+        """The portal paths a script names, as fnmatch patterns: a shell variable inside a path ($j, ${j}) becomes
+        `*`, so `money.$j.json` is checked whole instead of being cut at the `$`."""
+        body = "\n".join(line for line in body.splitlines() if not line.lstrip().startswith("#"))
+        found = re.findall(r"portal/(?:public|src)/(?:[A-Za-z0-9_./-]|\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)+", body)
+        return sorted({re.sub(r"\$\{?[A-Za-z_][A-Za-z0-9_]*\}?", "*", path).rstrip(".") for path in found})
+
     def named(self, script):
-        body = "\n".join(line for line in (ROOT / script).read_text().splitlines() if not line.lstrip().startswith("#"))
-        return sorted({path.rstrip(".") for path in re.findall(r"portal/(?:public|src)/[A-Za-z0-9_./-]+", body)})
+        return self.named_in((ROOT / script).read_text())
+
+    @staticmethod
+    def covered(pattern, owned):
+        """A named path is owned when it is a group path or lies under one; a pattern with a variable is owned
+        when a group path matches it whole."""
+        if "*" in pattern:
+            # The variable may stand for part of one file name only, after a literal start (money.$j.json): a
+            # variable that is a whole path segment, or the whole stem of a name ($name.json), could expand to
+            # anything, so it proves nothing and the path has to be named in full.
+            if any("*" in part and not re.match(r"[A-Za-z0-9_-]", part) for part in pattern.split("/")):
+                return False
+            whole = re.compile("".join(r"[A-Za-z0-9_-]+" if piece == "*" else re.escape(piece)
+                                       for piece in re.split(r"(\*)", pattern)))
+            return any(whole.fullmatch(p) for p in owned)
+        if pattern.endswith(".tmp"):   # the scratch copy a step writes beside an owned file and then moves over it
+            pattern = pattern[:-len(".tmp")]
+        return any(pattern == p or pattern.startswith(p + "/") for p in owned)
+
+    def test_a_path_cut_at_a_variable_is_not_mistaken_for_an_owned_prefix(self):
+        owned = ["portal/public/graph/money.json", "portal/public/graph/money.qld.json", "portal/public/interests"]
+        self.assertEqual(self.named_in('x "portal/public/graph/money.$j.json" y'), ["portal/public/graph/money.*.json"])
+        self.assertEqual(self.named_in("x portal/public/graph/money.${j}.json"), ["portal/public/graph/money.*.json"])
+        self.assertTrue(self.covered("portal/public/graph/money.*.json", owned))
+        self.assertFalse(self.covered("portal/public/graph/mon", owned), "a bare prefix of an owned path")
+        self.assertFalse(self.covered("portal/public/graph/money.*.csv", owned))
+        # a variable that could expand to anything proves nothing, even though some owned path matches it
+        self.assertEqual(self.named_in("x portal/public/$f y"), ["portal/public/*"])
+        self.assertFalse(self.covered("portal/public/*", owned))
+        self.assertFalse(self.covered("portal/public/graph/*.json", owned))
+        self.assertFalse(self.covered("portal/public/*/money.json", owned))
+        self.assertFalse(self.covered("portal/public/graph/money*json", owned))
+        self.assertFalse(self.covered("portal/public/graph/money-receipts.json", owned))
+        self.assertTrue(self.covered("portal/public/interests/index.json", owned))
+        self.assertFalse(self.covered("portal/public/interests-old", owned))
+        self.assertTrue(self.covered("portal/public/graph/money.json.tmp", owned))
+        self.assertFalse(self.covered("portal/public/graph/other.json.tmp", owned))
 
     def test_every_named_portal_path_has_a_group(self):
         owned = group_paths((VM / "data_groups.sh").read_text())
-        covered = lambda f: any(f == p or f.startswith(p + "/") or f.startswith(p + ".") or p.startswith(f) for p in owned)
+        covered = lambda f: self.covered(f, owned)
         for script in ("scripts/weekly_refresh.sh", "scripts/daily_refresh.sh"):
             named = self.named(script)
             self.assertTrue(named, script)
