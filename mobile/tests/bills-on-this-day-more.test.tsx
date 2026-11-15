@@ -587,6 +587,42 @@ describe('the rows on Bills', () => {
       expect(labels(root)).toEqual(second);
     });
 
+    test('an index too late for the first frame is held, through a refresh, and its rows come at the next blur', async () => {
+      let answer!: (value: OnThisDayIndex) => void;
+      mockRead.mockReturnValue(
+        new Promise<OnThisDayIndex>((resolve) => {
+          answer = resolve;
+        }),
+      );
+      const root = await renderWatched();
+      await act(async () => {
+        await new Promise((resolve) =>
+          setTimeout(resolve, data.ON_THIS_DAY_GRACE_MS + 50),
+        );
+      });
+      // The list drew without the rows.
+      const drawn = ids(root);
+      expect(drawn.some((id) => id.startsWith('bill-row-'))).toBe(true);
+      expect(labels(root)).toEqual([undefined, undefined]);
+      await act(async () => {
+        root.findByType(RefreshControl).props.onRefresh();
+      });
+      await act(async () => {});
+      // The answer arrives with the list in view: nothing changes.
+      await act(async () => {
+        answer(index());
+      });
+      expect(ids(root)).toEqual(drawn);
+      // Out of sight, the rows are chosen; they are there on return.
+      focused = false;
+      await emit('blur');
+      expect(labels(root)).toEqual(first);
+      expect(mockRead).toHaveBeenCalledTimes(1);
+      focused = true;
+      await emit('focus');
+      expect(labels(root)).toEqual(first);
+    });
+
     test('an index that answers once the list is back in view waits for the next blur', async () => {
       let answer!: (value: OnThisDayIndex) => void;
       const root = await renderWatched();

@@ -33,11 +33,18 @@ import { currentSydneyDay } from './sydney-day';
  * register, so those rows are in the first frame too, and a refresh never
  * changes it. A later day's index is read when that day is chosen, out of
  * sight. If it answers while the list is back in view it is held, and used
- * the next time the list is hidden.
+ * the next time the list is hidden. The first day's index is held the same
+ * way when it answers too late for the first frame (`first.late`): the
+ * rows come at the next blur, not never.
  */
 export function useOnThisDay(
   bills: readonly Bill[] | null | undefined,
-  first?: { day: string; index: OnThisDayIndex | null | undefined },
+  first?: {
+    day: string;
+    index: OnThisDayIndex | null | undefined;
+    /** The first day's read, when it missed the first frame. */
+    late?: Promise<OnThisDayIndex | null> | null;
+  },
 ): OnThisDayPicks & {
   /** The bill row's pick, by its earlier name. */
   pick: OnThisDayPicks['bill'];
@@ -81,8 +88,24 @@ export function useOnThisDay(
       app.remove();
     };
   }, [navigation]);
-  const reads = !!first;
   const firstDay = first?.day;
+  // The first read that missed the first frame, kept through any refresh.
+  const [late, setLate] = useState<Promise<OnThisDayIndex | null> | null>(null);
+  if (first?.late && !late) setLate(first.late);
+  useEffect(() => {
+    if (!late || !firstDay) return;
+    let live = true;
+    void late.then((index) => {
+      if (!live || !index) return;
+      if (navigation && !navigation.isFocused())
+        setFiles((old) => ({ ...old, [firstDay]: index }));
+      else held.current[firstDay] = index;
+    });
+    return () => {
+      live = false;
+    };
+  }, [late, firstDay, navigation]);
+  const reads = !!first;
   useEffect(() => {
     // The first day's index comes with the first load; no index, no reads.
     if (!reads || day === firstDay) return;
