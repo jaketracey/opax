@@ -25,7 +25,7 @@ import { resultTitle } from '../src/features/search/present';
 import { moneyDestination } from '../src/features/search/GroupResults';
 import { speechSource } from '../src/features/search/speeches';
 import { openSource } from '../src/navigation/external';
-import { shareRecord } from '../src/navigation/share';
+import { shareSource } from '../src/navigation/share';
 
 jest.mock('../src/api/runtime', () => ({}));
 jest.mock('../src/navigation/external', () => ({
@@ -34,7 +34,7 @@ jest.mock('../src/navigation/external', () => ({
 }));
 jest.mock('../src/navigation/share', () => ({
   trackShare: jest.fn(),
-  shareRecord: jest.fn().mockResolvedValue(undefined),
+  shareSource: jest.fn().mockResolvedValue(undefined),
 }));
 
 const source = (title: string): Source => ({
@@ -151,7 +151,7 @@ test('Ask route names, shares and long-press actions use the same decoded title'
     if ('onPress' in item && ['Share', 'Open original'].includes(item.title))
       item.onPress();
   }
-  expect(shareRecord).toHaveBeenCalledWith({ path: s.href, title });
+  expect(shareSource).toHaveBeenCalledWith(s, title);
   // An Ask row's original says where it was opened from (analytics).
   expect(openSource).toHaveBeenCalledWith(s.url, title, 'inline');
   const turn: Turn = {

@@ -141,12 +141,11 @@ test('division menus follow the bill and use its canonical link', () => {
     ['Unfollow bill', 'Copy link', 'Share'],
   );
 });
-test('Follow and successful Copy link confirm with the success haptic', async () => {
+test('Follow leaves its tap to the save; a successful Copy link confirms with success', async () => {
   const leaves = menuLeaves(builders(false).person);
   leaves[0]!.onPress();
   expect(onFollow).toHaveBeenCalledTimes(1);
-  expect(haptic).toHaveBeenLastCalledWith('success');
-  jest.mocked(haptic).mockClear();
+  expect(haptic).not.toHaveBeenCalled();
   leaves.find((item) => item.title === 'Copy link')!.onPress();
   await Promise.resolve();
   expect(copyText).toHaveBeenCalledWith(
@@ -226,8 +225,9 @@ for (const following of [false, true]) {
       expect(leaves.every((item) => !item.destructive)).toBe(true);
       leaves[0]!.onPress();
       expect(onFollow).toHaveBeenCalledTimes(1);
-      if (following) expect(haptic).not.toHaveBeenCalled();
-      else expect(haptic).toHaveBeenCalledWith('success');
+      // The saved result plays the tap (useRowFollow), never the menu item:
+      // a follow refused at the limit confirms nothing.
+      expect(haptic).not.toHaveBeenCalled();
     },
   );
 }

@@ -1949,10 +1949,7 @@ function BillVoteRow({
     },
     {
       title: follow.following ? 'Unfollow bill' : 'Follow bill',
-      onPress: () => {
-        follow.onFollow();
-        if (!follow.following) haptic('success');
-      },
+      onPress: follow.onFollow,
     },
     {
       title: 'Copy link',
