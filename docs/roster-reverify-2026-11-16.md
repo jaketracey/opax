@@ -42,6 +42,22 @@ pages, announcements found through ordinary web search, and records already in t
 Each is a specific person and a specific question, where the sources disagree or the base
 source is older than something reported since.
 
+**Resolved on 16 November 2026**, by the hub, for three of the four. The changes are applied
+through the accept list in PR #454 (`docs/ROSTER-ACCEPT-2026-11-16.md` there has each source):
+
+* 2, Zali Steggall and Allegra Spender: Community Strong Australia. The AEC's register (file
+  of 6 November 2026) has the party registered on 2 October 2026.
+* 3, Matthew Canavan: LNP, with the Nationals as his party room.
+* 4, Corinne Mulholland: still a Labor senator for Queensland, no change. The "former
+  Senator" title is how openaustralia.org titles its senator pages in search results
+  generally; the same title appears for Chris Gatenby.
+* 1, Jonathon Duniam: **still open.** No dated source for his resignation or Sarah
+  Courtney's appointment. Recheck weekly: a joint sitting of the Tasmanian Parliament
+  choosing a senator in his place, and a report of Sarah Courtney being sworn in. Nothing
+  changes until both are dated.
+
+The questions as first put:
+
 1. **Jonathon Duniam, senator for Tasmania (Liberal). Is he still a senator, and has Sarah
    Courtney been appointed in his place?**
    OpenAustralia says in office, as at 11 September 2026. The Handbook records in the repo
@@ -260,10 +276,8 @@ OPAX's own records agree: 123 Senate divisions recorded for him (id 11064) from 
 The sources differ on one thing the group does not write: OpenAustralia dates his service from
 10 August 2026 (the day Wendy Askew resigned), the joint sitting was on 13 August.
 
-It is not installed by this report, and it is not yet in `scripts/roster_accept.json`: a group
-only applies when the box export shows exactly the accepted value, so the reviewer should
-confirm the `to` value against a raw export (`OPAX_ROSTER_ACCEPT=1 export_people.sh`) before
-adding it.
+It is not installed by this report. It is applied, with the three party changes above, in
+PR #454.
 
 New evidence entry:
 
