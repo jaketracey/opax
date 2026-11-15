@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {importBundle} from './fixtures/import-bundle.mjs';
-const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt,EACH_FACT_ONCE_RULE} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
+const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
 const api=await importBundle(bundled.outputFiles[0].text,'ask-each-fact-once');
 
 const url='https://opax.com.au/subject/person/jo-briskey';
@@ -81,16 +81,17 @@ test('a point in the model\'s own words on a record the written answer cites is 
  const out=api.appendWrittenPoints(writtenWith(service,sentence),pointsOn(service,point));
  assert.equal(out.answer,lead+'\n\n'+sentence+'\n\n'+point);
 });
-test('the writer is told what the model\'s points already say; with none its prompt is unchanged',()=>{
+// 15 November follow-up: the writer was briefly told what the model's points say ("said") and asked to leave those
+// facts to them. In the harness runs it left a fact out that the later checks then removed from the point too, so the
+// instruction is gone. The writer's prompt holds the question, the period, the facts and its contract, and no more.
+test('the writer prompt carries no list of the model\'s points and no instruction to leave facts to them',()=>{
  const input={question:'What were Jo Briskey\'s itemised travel expenses for 2026?',period:{kind:'all',label:''},facts:[]};
- const base=api.writingPrompt(input),told=JSON.parse(api.writingPrompt({...input,said:[point]}));
- assert.doesNotMatch(base,/"said"/);assert.equal(api.writingPrompt({...input,said:[]}),base);
- assert.deepEqual(told.said,[point]);assert.ok(told.contract.endsWith(api.EACH_FACT_ONCE_RULE));
- assert.match(api.EACH_FACT_ONCE_RULE,/Each fact appears once/);assert.doesNotMatch(api.EACH_FACT_ONCE_RULE,/\b(?:do not|never|must not|cannot)\b/i);
- const {said:_s,...rest}=told;
- assert.deepEqual({...rest,contract:rest.contract.slice(0,-api.EACH_FACT_ONCE_RULE.length)},JSON.parse(base));
+ const base=api.writingPrompt(input),withPoints=api.writingPrompt({...input,said:[point]});
+ assert.equal(withPoints,base);
+ assert.deepEqual(Object.keys(JSON.parse(base)).sort(),['contract','facts','period','question']);
+ assert.doesNotMatch(base,/"said"|leave to them|leave out/);
 });
-test('the run hands its writer the model\'s points, and nothing when the loop wrote none',async()=>{
+test('the run hands its writer each record once, as recorded, and never the model\'s points',async()=>{
  const question='What were Jo Briskey\'s itemised travel expenses for 2026?',scope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false};
  for(const withPoints of [true,false]){
   const loop=loopAnswer(),inputs=[];
@@ -99,7 +100,7 @@ test('the run hands its writer the model\'s points, and nothing when the loop wr
    write:async input=>{inputs.push(input);return writtenWith(service,sentence)}});
   await api.runAgentic(question,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},scope);
   assert.equal(inputs.length,1);
-  if(withPoints){assert.deepEqual(inputs[0].said,[point]);assert.deepEqual(inputs[0].facts.map(f=>f.text),[expenses,service],'and each record once, as recorded')}
-  else assert.equal('said' in inputs[0],false);
+  assert.equal('said' in inputs[0],false);
+  assert.deepEqual(inputs[0].facts.map(f=>f.text),[expenses,service],'each record once, as recorded');
  }
 });
