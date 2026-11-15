@@ -87,7 +87,7 @@ test('an interests register table has ink links; a money table keeps its green, 
   // outrank a:hover). The interests scope only sets the shared rule's variables.
   const datatable = read('datatable.css'), registers = read('register-tables.css');
   assert.match(datatable, /\n\.dt a \{ color: var\(--dt-link, var\(--money-ink\)\);/);
-  for (const name of ['style.css', 'ui-controls.css', 'datatable.css', 'register-tables.css', 'grants-table.css', 'vote-tables.css']) assert.doesNotMatch(read(name), /:visited/, `${name}: no visited rule`);
+  for (const name of ['style.css', 'ui-controls.css', 'datatable.css', 'register-tables.css', 'grants-table.css', 'vote-tables.css', 'vic-gifts.css']) assert.doesNotMatch(read(name), /:visited/, `${name}: no visited rule`);
   assert.match(registers, /#subject-interests \[data-register-table\],\s*\[data-register-table="ssr-interests-table"\] \{\s*--dt-link: var\(--ink\);\s*--dt-link-rule: var\(--bronze-rule\);/);
   // Focus keeps the section accent's ring, as before.
   assert.match(datatable, /\.dt-root :is\(button, summary, input, select, a\):focus-visible \{ outline: var\(--border-focus\) solid var\(--money-ink\)/);

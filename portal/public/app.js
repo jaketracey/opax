@@ -4335,6 +4335,14 @@ async function renderDeclaredPage(params, manageFocus) {
 // so the section keeps its position however long the fetches take.
 async function renderPersonVicGifts(name, sections, roster) {
   if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
+  // The section's plum accent and ink links live in vic-gifts.css. The Worker links it on a
+  // person page it serves; a member reached inside the app gets it here, linked once and
+  // before the fetch so the rules are in by the time the table draws.
+  if (!document.querySelector('link[data-vic-gifts-style]')) {
+    const sheet = Object.assign(document.createElement('link'), { rel: 'stylesheet', href: '/vic-gifts.css?v=c091b881f5' });
+    sheet.dataset.vicGiftsStyle = '';
+    document.head.append(sheet);
+  }
   const key = currentSubjectKey, slot = document.createElement('div');
   sections.appendChild(slot);
   await Promise.all([personUrlsReady, registerTablesReady]);
