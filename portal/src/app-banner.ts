@@ -1,6 +1,6 @@
 // Both URLs are content-stamped by scripts/stamp_assets.mjs.
 const stylesheet = '/app-banner.css?v=a2f04f7742'
-const script = '/app-banner.js?v=e094b8f17e'
+const script = '/app-banner.js?v=56d3e39f93'
 
 const APP_STORE = 'https://apps.apple.com/au/app/opax/id6818756305'
 const APP_ID = '6818756305'
@@ -45,6 +45,8 @@ const PROMPT_PATHS: [AppPromptType, RegExp][] = [
 export function appPromptFor(pathname: string): { type: AppPromptType; open: string } | null {
   const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname
   const type = PROMPT_PATHS.find(([, pattern]) => pattern.test(path))?.[0]
+  // The app decodes the id; one that does not decode has no screen.
+  try { decodeURIComponent(path) } catch { return null }
   return type ? { type, open: `opax:/${path}` } : null
 }
 
@@ -60,12 +62,14 @@ export function setAppStoreProvider(value: string | undefined): void {
 const campaign = (ct: string) => `${provider ? `pt=${provider}&` : ''}ct=${ct}`
 export const appStoreLink = (type: AppPromptType) => `${APP_STORE}?${campaign(`web_${type}`)}`
 
-/** Apple's own Smart App Banner, on the prompt pages only. Safari on iPhone and
- * iPad draws it above the page, knows whether the app is installed (Open or
- * View) and hands app-argument to the app. No script and no analytics of ours. */
+/** Apple's own Smart App Banner, on the prompt pages except Ask. Safari on
+ * iPhone and iPad draws it above the page, knows whether the app is installed
+ * (Open or View) and hands app-argument to the app. No script and no analytics
+ * of ours. Ask is left out: Apple's banner cannot be taken away while an answer
+ * is being written, and the worded line can, so Safari gets that one there. */
 export function smartBannerMeta(pathname: string): string {
   const prompt = appPromptFor(pathname)
-  return prompt ? `<meta name="apple-itunes-app" content="app-id=${APP_ID}, app-argument=${prompt.open}, affiliate-data=${campaign(`web_${prompt.type}_safari`)}">` : ''
+  return prompt && prompt.type !== 'ask' ? `<meta name="apple-itunes-app" content="app-id=${APP_ID}, app-argument=${prompt.open}, affiliate-data=${campaign(`web_${prompt.type}_safari`)}">` : ''
 }
 
 /** One banner, two lines, both in the HTML so nothing moves when the head
@@ -104,13 +108,19 @@ export function withAppBanner(response: Response, url: URL): Response {
   if (!response.body || !response.headers.get('content-type')?.startsWith('text/html') ||
       /^\/(?:api|support|privacy|community|signin|sign-in|login|auth|oauth)(?:\/|\.html|$)/i.test(url.pathname)) return response
 
+  // The worded line and Apple's banner are for a record that was found. A
+  // not-found or error page keeps the general line, and says so on <html>
+  // so the head script does not word the line from the address either.
+  const found = response.status === 200
+  const pathname = found ? url.pathname : '/'
   const transformed = new HTMLRewriter()
+    .on('html', { element(el) { if (!found && appPromptFor(url.pathname)) el.setAttribute('data-app-prompt-off', '') } })
     .on('head', { element(el) {
       // No defer or async: visibility is decided before the body can paint.
       // The Smart App Banner tag comes first, so the script can see it is there.
-      el.prepend(`${smartBannerMeta(url.pathname)}<link rel="stylesheet" href="${stylesheet}"><script src="${script}"></script>`, { html: true })
+      el.prepend(`${smartBannerMeta(pathname)}<link rel="stylesheet" href="${stylesheet}"><script src="${script}"></script>`, { html: true })
     } })
-    .on('body', { element(el) { el.prepend(skipLinkHTML(el.getAttribute('data-skip-target')) + appBannerHTML(url.pathname), { html: true }) } })
+    .on('body', { element(el) { el.prepend(skipLinkHTML(el.getAttribute('data-skip-target')) + appBannerHTML(pathname), { html: true }) } })
     // Every page marks its own skip link data-skip; it gives way to the one above, which comes first.
     .on('a[data-skip]', { element(el) { el.remove() } })
     .transform(response)

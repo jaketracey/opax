@@ -274,8 +274,9 @@ What is not measured:
   with `host=apps.apple.com`. The worded link sends that event too.
 - Dismiss.
 - Apple's Smart App Banner, which Safari on iPhone and iPad draws from the
-  `apple-itunes-app` tag on the same pages. It runs no script of ours. Where it
-  shows, the worded line does not, so neither event fires there.
+  `apple-itunes-app` tag on the same pages except Ask. It runs no script of
+  ours. Where it shows, the worded line does not, so neither event fires there.
+  Ask has no tag, so Safari gets the worded line there and both events apply.
 
 Two values are kept in the browser's local storage and never sent:
 `opax-app-banner-dismissed` (Dismiss was pressed) and `opax-app-prompt-seen`

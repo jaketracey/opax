@@ -251,9 +251,10 @@ const PAGES = {
 };
 
 /** The page as the Worker sends it for this path, then the head script, as a browser runs them. */
-async function land({ path = PAGES.member, ua = CHROME_IPHONE, touch = 0, stored = {}, extra = '' } = {}) {
+async function land({ path = PAGES.member, ua = CHROME_IPHONE, touch = 0, stored = {}, extra = '', notFound = false } = {}) {
   const pathname = path.split(/[?#]/)[0];
-  const dom = new JSDOM(`<!doctype html><html><head>${smartBannerMeta(pathname)}<style>${css}</style></head><body>${extra}</body></html>`, {
+  // A page the Worker answered without a record is marked on <html> and written as any other page.
+  const dom = new JSDOM(`<!doctype html><html${notFound ? ' data-app-prompt-off' : ''}><head>${notFound ? '' : smartBannerMeta(pathname)}<style>${css}</style></head><body>${extra}</body></html>`, {
     url: `https://opax.com.au${path}`, runScripts: 'outside-only',
   });
   const { window } = dom;
@@ -263,7 +264,7 @@ async function land({ path = PAGES.member, ua = CHROME_IPHONE, touch = 0, stored
   const events = [];
   window.addEventListener('opax:analytics', ({ detail }) => events.push({ event: detail.event, properties: { ...detail.properties } }));
   window.eval(script);
-  window.document.body.insertAdjacentHTML('afterbegin', appBannerHTML(pathname));
+  window.document.body.insertAdjacentHTML('afterbegin', appBannerHTML(notFound ? '/' : pathname));
   const banner = window.document.getElementById('opax-app-banner');
   // The view waits for the parsed document, when events.js (deferred) is listening.
   if (window.document.readyState !== 'complete') await new Promise(done => window.addEventListener('load', done, { once: true }));
@@ -355,6 +356,14 @@ test('Safari on iPhone and iPad shows Apple\'s banner and never ours with it', a
     assert.equal(page.general(), false, ua);
     page.dom.window.close();
   }
+  // Ask has no Smart App Banner tag, so that it can leave when a question is sent: Safari gets the worded line.
+  assert.equal(smartBannerMeta('/ask'), '');
+  const ask = await land({ ua: SAFARI_IPHONE, touch: 5, path: '/ask', extra: '<form id="ask-form"></form>' });
+  assert.equal(ask.worded(), true);
+  assert.deepEqual(ask.events, [{ event: 'opax_app_prompt_view', properties: { page_type: 'ask' } }]);
+  ask.window.dispatchEvent(new ask.window.CustomEvent('opax:ask', { detail: { state: 'start' } }));
+  assert.equal(ask.worded() || ask.general(), false);
+  ask.dom.window.close();
   // No Smart App Banner tag on the page (home, about): Safari keeps the general line.
   const home = await land({ ua: SAFARI_IPHONE, touch: 5, path: '/about' });
   assert.equal(home.general(), true);
@@ -411,7 +420,8 @@ test('in-page navigation rewords the line and repoints its link, as the Worker w
       assert.equal(page.banner.querySelector(sel).getAttribute('href'), fresh.querySelector(sel).getAttribute('href'), path);
       assert.equal(page.banner.querySelector(sel).textContent, fresh.querySelector(sel).textContent, path);
     }
-    assert.equal(page.window.document.querySelector('meta[name="apple-itunes-app"]').content, new JSDOM(smartBannerMeta(path)).window.document.querySelector('meta').content, path);
+    // Apple's banner, drawn for the page the reader landed on, follows too (Ask has none of its own).
+    if (type !== 'ask') assert.equal(page.window.document.querySelector('meta[name="apple-itunes-app"]').content, new JSDOM(smartBannerMeta(path)).window.document.querySelector('meta').content, path);
   }
   assert.equal(page.events.length, 1, 'one view for the page load, however far the reader goes');
   page.go('/about');
@@ -420,16 +430,36 @@ test('in-page navigation rewords the line and repoints its link, as the Worker w
   page.dom.window.close();
 });
 
-test('Ask never has the line while an answer is being written', async () => {
-  const idle = await land({ path: '/ask', extra: '<form id="ask-form"><input id="ask-input"></form>' });
-  assert.equal(idle.worded(), true);
-  // Sending a question takes the line away before the answer starts, and it stays away on Ask.
-  idle.window.document.getElementById('ask-form').dispatchEvent(new idle.window.Event('submit', { bubbles: true, cancelable: true }));
-  assert.equal(idle.worded() || idle.general(), false);
-  idle.go('/ask?q=who+voted');
-  assert.equal(idle.worded() || idle.general(), false);
-  idle.go('/ask');
-  assert.equal(idle.worded() || idle.general(), false);
+test('Ask never has the line while an answer is being written, however the question was asked', async () => {
+  const appJs = read('../public/app.js');
+  // Every way of asking goes through runAsk, and runAsk says so before it writes anything.
+  const runAsk = appJs.slice(appJs.indexOf('async function runAsk(question) {'));
+  assert.match(runAsk, /^async function runAsk\(question\) \{\n  announceAsk\("start"\);/);
+  assert.match(appJs, /const announceAsk = \(state\) => dispatchEvent\(new CustomEvent\("opax:ask", \{ detail: \{ state \} \}\)\);/);
+  assert.match(runAsk.slice(0, runAsk.indexOf('\n}\n')), /finally \{[\s\S]*announceAsk\("end"\);/);
+  const entries = {
+    'the question box': /\$\("ask-form"\)\.addEventListener\("submit", \(e\) => \{[\s\S]{0,400}?runAsk\(q\);/,
+    'the question builder': /\$\("ask-builder-form"\)\.addEventListener\("submit", \(e\) => \{[\s\S]{0,400}?runAsk\(q\);/,
+    'a suggested question': /function askSuggestion\(q\) \{[\s\S]{0,200}?runAsk\(q\);/,
+    'a question in the address': /else \{ runAsk\(q\); askedInPlace = onAskPage; \}/,
+    'a changed filter': /replaceRoute\(askHash\(q, askKind\(\)\)\);\n  runAsk\(q\);\n\}/,
+    'Try again': /retry\.addEventListener\("click", \(\) => runAsk\(question\)\);/,
+  };
+  for (const [name, pattern] of Object.entries(entries)) assert.match(appJs, pattern, name);
+  // The announcement, whichever entry point made it, takes the line away and keeps it away on Ask.
+  for (const ua of [CHROME_IPHONE, SAFARI_IPHONE]) {
+    const idle = await land({ path: '/ask', ua, touch: 5 });
+    assert.equal(idle.worded(), true, ua);
+    // A builder question or a suggested one: the address changes with no route event and no form submit.
+    idle.window.history.replaceState({}, '', '/ask?q=who+voted');
+    idle.window.dispatchEvent(new idle.window.CustomEvent('opax:ask', { detail: { state: 'start' } }));
+    assert.equal(idle.worded() || idle.general(), false, ua);
+    idle.window.dispatchEvent(new idle.window.CustomEvent('opax:ask', { detail: { state: 'end' } }));
+    assert.equal(idle.worded() || idle.general(), false, 'it does not come back and move the answer');
+    idle.go('/ask');
+    assert.equal(idle.worded() || idle.general(), false, ua);
+    idle.dom.window.close();
+  }
   // Arriving with a question in the address (a shared answer, a search result): never shown.
   for (const path of ['/ask?q=who+voted+for+the+bill', '/#/ask?q=who', '/ask?view=search']) {
     const asked = await land({ path });
@@ -438,7 +468,52 @@ test('Ask never has the line while an answer is being written', async () => {
     assert.equal(asked.window.localStorage.getItem(seenKey), null, path);
     asked.dom.window.close();
   }
-  idle.dom.window.close();
+});
+
+test('a record that was not found gets the general line: no worded prompt, no Smart App Banner, no link into the app', async () => {
+  for (const path of ['/doc/abc', '/subject/person/no-such-member-at-all']) {
+    const response = await workerFetch(path);
+    assert.notEqual(response.status, 200, path);
+    const doc = new JSDOM(await response.text()).window.document;
+    assert.equal(doc.querySelector('meta[name="apple-itunes-app"]'), null, path);
+    const banner = doc.getElementById('opax-app-banner');
+    assert.ok(banner, path);
+    assert.equal(banner.hasAttribute('data-app-prompt'), false, path);
+    assert.equal(banner.querySelector('[data-app-prompt-get]').getAttribute('href'), 'https://apps.apple.com/au/app/opax/id6818756305', path);
+    assert.doesNotMatch(doc.documentElement.outerHTML, /opax:\/\/|ct=web_/, path);
+    assert.equal(doc.documentElement.hasAttribute('data-app-prompt-off'), true, path);
+  }
+  // A found record is not marked.
+  assert.equal(new JSDOM(await (await workerFetch(PAGES.member)).text()).window.document.documentElement.hasAttribute('data-app-prompt-off'), false);
+  globalThis.HTMLRewriter = HTMLRewriter;
+  for (const status of [404, 410, 500, 503]) {
+    const html = await withAppBanner(new Response('<html><head></head><body>Gone</body></html>', { status, headers: { 'content-type': 'text/html' } }), new URL('https://opax.com.au/bill/au-federal-r7001')).text();
+    assert.doesNotMatch(html, /apple-itunes-app|data-app-prompt="|ct=web_/, String(status));
+  }
+  // In the browser the address alone would say "document": the mark keeps the general line, with no events.
+  for (const ua of [CHROME_IPHONE, SAFARI_IPHONE]) {
+    const page = await land({ path: '/doc/abc', ua, touch: 5, notFound: true });
+    assert.equal(page.worded(), false, ua);
+    assert.equal(page.general(), true, ua);
+    assert.deepEqual(page.events, [], ua);
+    assert.equal(page.window.localStorage.getItem(seenKey), null);
+    // Moving on to a record that exists is an ordinary prompt page.
+    page.go(PAGES.member);
+    assert.equal(page.worded(), true, ua);
+    page.dom.window.close();
+  }
+});
+
+test('an id the app could not decode has no prompt', async () => {
+  for (const path of ['/subject/donor/%zz', '/subject/supplier/abc%', '/money/grants/federal/recipient/%E0%A4%A']) {
+    assert.equal(appPromptFor(path), null, path);
+    assert.equal(smartBannerMeta(path), '', path);
+    const page = await land({ path });
+    assert.equal(page.worded(), false, path);
+    assert.equal(page.general(), true, path);
+    assert.deepEqual(page.events, [], path);
+    page.dom.window.close();
+  }
 });
 
 test('the worded line is a real link and button, reachable by keyboard, with a focus ring and room to wrap', async () => {
@@ -468,7 +543,7 @@ test('the provider token is absent from every link until the Worker variable is 
         const { get, meta } = links(path);
         assert.equal(get, `https://apps.apple.com/au/app/opax/id6818756305?ct=web_${type}`, String(unset));
         assert.equal(get, appStoreLink(type));
-        assert.match(meta, new RegExp(`affiliate-data=ct=web_${type}_safari$`));
+        assert.match(meta, type === 'ask' ? /^$/ : new RegExp(`affiliate-data=ct=web_${type}_safari$`));
         assert.doesNotMatch(get + meta, /pt=/);
       }
       assert.equal(links('/about').get, 'https://apps.apple.com/au/app/opax/id6818756305');
@@ -477,7 +552,7 @@ test('the provider token is absent from every link until the Worker variable is 
     for (const [type, path] of Object.entries(PAGES)) {
       const { get, meta } = links(path);
       assert.equal(get, `https://apps.apple.com/au/app/opax/id6818756305?pt=123456789&ct=web_${type}`);
-      assert.match(meta, new RegExp(`affiliate-data=pt=123456789&ct=web_${type}_safari$`));
+      assert.match(meta, type === 'ask' ? /^$/ : new RegExp(`affiliate-data=pt=123456789&ct=web_${type}_safari$`));
     }
     // In-page navigation keeps the token the Worker wrote, from a prompt page or any other.
     for (const start of [PAGES.member, '/about']) {

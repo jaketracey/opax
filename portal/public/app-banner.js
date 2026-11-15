@@ -46,6 +46,9 @@
   // it on a later page load. Within one load it stays as the reader moves.
   let seenBefore = false;
   try { seenBefore = Boolean(localStorage.getItem(seenKey)); } catch { /* show without storage */ }
+  // The Worker marks a response that is not a found record (data-app-prompt-off).
+  const noRecord = root.hasAttribute('data-app-prompt-off');
+  const landed = location.pathname.length > 1 ? location.pathname.replace(/\/$/, '') : location.pathname;
   let shown = false; // the worded line has been on screen in this page load
   let asked = false; // a question was sent from Ask in this page load
 
@@ -53,7 +56,11 @@
     const hashed = location.hash.startsWith('#/');
     const [rawPath, hashQuery = ''] = hashed ? location.hash.slice(1).split('?') : [location.pathname];
     const path = rawPath.length > 1 ? rawPath.replace(/\/$/, '') : rawPath;
-    const type = pages.find(([, pattern]) => pattern.test(path))?.[0] || null;
+    let type = pages.find(([, pattern]) => pattern.test(path))?.[0] || null;
+    // An id the app could not decode, or the page the Worker answered without
+    // a record (not found, an error): the general line, as on any other page.
+    try { decodeURIComponent(path); } catch { type = null; }
+    if (noRecord && path === landed) type = null;
     const query = new URLSearchParams(hashed ? hashQuery : location.search);
     // Ask with a question in the address is an answer being written; with a
     // view it is the search page. Neither gets the line.
@@ -119,11 +126,12 @@
   };
   document.addEventListener('click', tapped);
   document.addEventListener('auxclick', tapped);
-  // A question sent from Ask: the line leaves before the answer starts and
-  // stays away from Ask for the rest of this page load.
-  document.addEventListener('submit', event => {
-    if (event.target instanceof Element && event.target.id === 'ask-form') { asked = true; sync(); }
-  }, true);
+  // An answer is about to be written (app.js announces every way of asking,
+  // from runAsk): the line leaves first and stays away from Ask for the rest
+  // of this page load, so it is never there while an answer streams.
+  addEventListener('opax:ask', event => {
+    if (event.detail?.state === 'start') { asked = true; sync(); }
+  });
   // Skip to content (the Worker writes it first in the body, ahead of this banner):
   // focus the page's title, the H1 showing in the element the link names, else
   // that element itself (the map), else main.
