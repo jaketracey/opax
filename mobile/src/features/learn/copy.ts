@@ -17,6 +17,9 @@ export const learnCopy = {
   next: 'Next',
   back: 'Back to the guide',
   more: 'More',
+  /** A link to a chapter the guide does not have (an old link). */
+  missingChapter: 'This chapter isn’t in the guide',
+  missingChapterBody: 'The link may be old. The guide lists every chapter.',
   /** The hub's mark on a chapter read to its last idea. */
   read: 'Read',
   /** The header over the chapter that follows, on a chapter's last idea. */

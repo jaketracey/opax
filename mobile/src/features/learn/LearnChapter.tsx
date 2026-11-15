@@ -24,7 +24,7 @@ import { learnChapters, type TermId } from './glossary';
 import { chapterSymbols } from './LearnHub';
 import { openGuideLink } from './links';
 import { keepLearnPlace } from './place';
-import { learnChapterRoute } from './routes';
+import { learnChapterRoute, learnRoute } from './routes';
 
 const one = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
@@ -158,7 +158,15 @@ function ChapterPage({
       <Screen testID="learn-chapter">
         <ContentUnavailable
           symbol="text.book.closed"
-          title={learnCopy.name}
+          title={learnCopy.missingChapter}
+          body={learnCopy.missingChapterBody}
+          action={{
+            label: learnCopy.openGuide,
+            // The guide takes this page's place, so Back never returns to
+            // a chapter that is not there.
+            onPress: () => router.replace(learnRoute),
+            testID: 'learn-chapter-missing-open',
+          }}
           testID="learn-chapter-missing"
         />
       </Screen>

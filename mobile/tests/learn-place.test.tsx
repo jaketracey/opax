@@ -268,6 +268,26 @@ describe('a chapter keeps the idea showing', () => {
   });
 });
 
+describe('a chapter the guide does not have', () => {
+  test('says so, and one button opens the guide in its place', () => {
+    mockParams = { chapter: 'no-such-chapter' };
+    const tree = render(<LearnChapter />);
+    const state = tree.root.find(
+      (node) =>
+        node.props.testID === 'learn-chapter-missing' && 'title' in node.props,
+    );
+    expect(state.props).toMatchObject({
+      title: 'This chapter isn’t in the guide',
+      body: 'The link may be old. The guide lists every chapter.',
+    });
+    expect(state.props.action.label).toBe('Open the guide');
+    act(() => state.props.action.onPress());
+    expect(replace).toHaveBeenCalledWith({ pathname: '/learn' });
+    // Nothing is kept for a chapter that is not there.
+    expect(learnPlacesSnapshot()).toEqual({});
+  });
+});
+
 describe('the last idea points to the chapter that follows', () => {
   test('the next chapter in the guide’s order, taking this one’s place', () => {
     const at = learnChapters.indexOf(bill);
