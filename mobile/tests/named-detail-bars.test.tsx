@@ -1136,8 +1136,10 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
     );
     const shift = t.shift() ?? 0;
     expect(shift).toBeGreaterThan(0);
-    // Share's reserve begins at 274: the drawn text ends 4 pt short of it.
-    expect(72 + drawn + shift).toBeLessThanOrEqual(270);
+    // The items are larger above Large (the pill starts at 272 on the
+    // device): the drawn text ends short of their larger reserve, 262, by
+    // the spare.
+    expect(72 + drawn + shift).toBeLessThanOrEqual(258);
     t.done();
   });
 

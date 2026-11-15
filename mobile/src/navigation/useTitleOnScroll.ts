@@ -432,7 +432,11 @@ export function BarTitle({
       : measured(drawn),
     trailing,
     trailingWidth,
-    growth,
+    // The bar's items are already larger at the sizes between Large and the
+    // accessibility sizes (26.3 at xxxLarge: Share's pill starts 11 pt
+    // earlier), so the shift reserves their larger size at any size above
+    // Large.
+    growth: fontScale > 1 ? barItemGrowthAX : growth,
   });
   return createElement(
     NativeView,
