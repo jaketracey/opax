@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
     borderColor: colors.lineControl,
     backgroundColor: colors.navyWash,
   },
+  androidMachineHug: { flexDirection: 'row', maxWidth: '100%', flexShrink: 1 },
   machine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -366,45 +367,51 @@ export function MachinePill({
   testID?: string;
 }) {
   const highlight = useRowHighlight();
-  return (
-    <>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Machine-written"
-        accessibilityHint="Opens how this was written"
-        accessibilityShowsLargeContentViewer
-        accessibilityLargeContentTitle="Machine-written"
-        testID={testID}
-        onPress={() => presentSheet({ kind: 'machine', note, testID })}
-        style={
-          Platform.OS === 'android'
-            ? [styles.machineTarget, styles.androidMachineTarget]
-            : styles.machineTarget
-        }
-      >
-        {({ pressed }) => (
-          <View
-            style={[
-              styles.machine,
-              styles.hug,
-              ...(Platform.OS === 'android'
-                ? [
-                    {
-                      borderRadius: androidControls.chipRadius,
-                      borderCurve: 'continuous',
-                    } as const,
-                  ]
-                : []),
-              { backgroundColor: pressed ? highlight : colors.navyWash },
-            ]}
-          >
-            <Icon name={machineSymbol} size={12} maxScale={1.5} tone="navy" />
-            <Text wordSafe variant="capsule" tone="navy" style={styles.shrink}>
-              Machine-written
-            </Text>
-          </View>
-        )}
-      </Pressable>
-    </>
+  const pill = (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="Machine-written"
+      accessibilityHint="Opens how this was written"
+      accessibilityShowsLargeContentViewer
+      accessibilityLargeContentTitle="Machine-written"
+      testID={testID}
+      onPress={() => presentSheet({ kind: 'machine', note, testID })}
+      style={
+        Platform.OS === 'android'
+          ? [styles.machineTarget, styles.androidMachineTarget]
+          : styles.machineTarget
+      }
+    >
+      {({ pressed }) => (
+        <View
+          style={[
+            styles.machine,
+            styles.hug,
+            ...(Platform.OS === 'android'
+              ? [
+                  {
+                    borderRadius: androidControls.chipRadius,
+                    borderCurve: 'continuous',
+                  } as const,
+                ]
+              : []),
+            { backgroundColor: pressed ? highlight : colors.navyWash },
+          ]}
+        >
+          <Icon name={machineSymbol} size={12} maxScale={1.5} tone="navy" />
+          <Text wordSafe variant="capsule" tone="navy" style={styles.shrink}>
+            Machine-written
+          </Text>
+        </View>
+      )}
+    </Pressable>
+  );
+  // Android's bordered target is the pressable itself. As a column's child it
+  // stretched to the column's width (Ask's answer, the Ask notice): a row
+  // wrapper lets it hug its label, and leaves a row parent's centring alone.
+  return Platform.OS === 'android' ? (
+    <View style={styles.androidMachineHug}>{pill}</View>
+  ) : (
+    pill
   );
 }

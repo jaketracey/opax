@@ -320,7 +320,21 @@ describe('Coverage', () => {
     );
     for (const row of rows) {
       expect(row.props.accessory).toBe('none');
-      expect(row.props.detail).toMatch(/^[\d,]+ (speeches|records)$/);
+      expect(row.props.detail).toMatch(/^[\d,]+ (speeches|records)( · .+)?$/);
+    }
+    // A long window beside the name squeezes the name to one letter a line
+    // (seen on the Android emulator): it reads under the name instead.
+    const long = expected.filter((source) => source.window.length > 16);
+    expect(long.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      const source = expected.find((item) => item.name === row.props.title)!;
+      if (long.includes(source)) {
+        expect(row.props.value).toBeUndefined();
+        expect(row.props.detail).toBe(`${source.detail} · ${source.window}`);
+      } else {
+        expect(row.props.value).toBe(source.window);
+        expect(row.props.detail).toBe(source.detail);
+      }
     }
     const line = page.root
       .findAllByType(SourceLine)
