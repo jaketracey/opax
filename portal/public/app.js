@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=76942228e3").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=8e57d7d220").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,13 +56,13 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=07eea0e196").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=4ee4bb8063").then(module => { growthModules = module; }));
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=73435700a9').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=e6cfb1af2d').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1606,7 +1606,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=9eb86ce57b' : '/ledger.js?v=06503ff262');
+    const mod = await import(grants ? '/grants.js?v=5bfd1f1bc9' : '/ledger.js?v=cb72e8c441');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1637,7 +1637,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=0e937c8404');
+    const mod = await import('/money-explain.js?v=2272ef5ef7');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1656,7 +1656,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=43775fa359');
+    const mod = await import('/grant-recipient.js?v=11ea353bb5');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1909,7 +1909,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=164cd28997");
+    const module = await import("/suppliers.js?v=c3ce904b61");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5621,7 +5621,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=8be817cd12'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=313f458310'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -7775,7 +7775,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f9961d152e").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=b16edbf892").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8182,7 +8182,13 @@ async function buildPeopleDirectory() {
     for (const c of p.chambers || []) chamberCounts.set(c, (chamberCounts.get(c) || 0) + 1);
     for (const s of p.states || []) stateCounts.set(s, (stateCounts.get(s) || 0) + 1);
   }
-  const partyOptions = [...partyCounts.entries()].sort((a, b) => b[1] - a[1])
+  // A party that is only ever someone's party now (no speech row carries it yet) is still a party to
+  // filter by: a new party's page links here. Counts of the parties above are unchanged.
+  const partyNowOnly = new Map();
+  for (const p of items) {
+    if (p.party_now && !partyCounts.has(p.party_now)) partyNowOnly.set(p.party_now, (partyNowOnly.get(p.party_now) || 0) + 1);
+  }
+  const partyOptions = [...partyCounts.entries(), ...partyNowOnly.entries()].sort((a, b) => b[1] - a[1])
     .map(([party, n]) => countOpt(party, party, n));
   partyOptions.push(countOpt("none", "No party recorded", items.filter((p) => !p.party).length));
   const speeches = items.reduce((a, p) => a + (p.speeches || 0), 0);
@@ -8221,7 +8227,9 @@ async function buildPeopleDirectory() {
     text: (p) => `${p.name} ${p.full || ""} ${p.party || ""} ${(p.states || []).map((s) => STATE_NAMES[s] || s).join(" ")}`,
     filters: [
       { key: "party", label: "Party", options: partyOptions,
-        test: (p, v) => v === "none" ? !p.party : (p.party === v || (p.parties || []).includes(v)) },
+        // A sitting member's party now is theirs too: a party page links here by it (two members whose
+        // speeches all carry an earlier label would otherwise open an empty list).
+        test: (p, v) => v === "none" ? !p.party : (p.party === v || p.party_now === v || (p.parties || []).includes(v)) },
       { key: "state", label: "Parliament",
         options: Object.keys(STATE_NAMES).filter((s) => stateCounts.has(s)).map((s) => countOpt(s, STATE_NAMES[s], stateCounts.get(s))),
         test: (p, v) => (p.states || []).includes(v) },
@@ -10193,7 +10201,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=0e937c8404"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=2272ef5ef7"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10209,14 +10217,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=526db913ca", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8ebc029b59", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=06503ff262", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9eb86ce57b", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=cb72e8c441", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=5bfd1f1bc9", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ec4ba2c237", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=17f948089c", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
