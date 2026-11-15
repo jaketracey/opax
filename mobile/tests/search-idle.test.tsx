@@ -300,45 +300,36 @@ describe('Search scroll region on iOS', () => {
         </SafeAreaInsetsContext.Provider>,
       );
     });
-    const clip = () =>
-      StyleSheet.flatten(
-        renderer.root.find(
-          (n) =>
-            typeof n.type === 'string' &&
-            n.props.testID === 'screen-safe-top-clip',
-        ).props.style,
-      );
-    const scrollTop = () =>
-      StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style)
-        .marginTop ?? 0;
+    const frame = () =>
+      StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style);
     // Browse, under the large title: the bar is there, nothing is cut.
     const scroll = renderer.root.findByType(ScrollView);
-    expect(clip()).toMatchObject({ marginTop: 0, overflow: 'hidden' });
-    expect(scrollTop()).toBe(0);
-    // Typing: the bar is gone (iOS 26). The page is cut at the status bar's
-    // lower edge, and the scroll view backs up by the same amount, so its
-    // frame and its content do not move.
+    expect(frame().marginTop ?? 0).toBe(0);
+    // Typing: the bar is gone (iOS 26). The scroll view starts at the status
+    // bar's lower edge and clips to its own frame, so no row is drawn above
+    // it whatever the bar's background is.
     await type('hous');
-    expect(clip()).toMatchObject({ marginTop: 62, overflow: 'hidden' });
-    expect(scrollTop()).toBe(-62);
-    // It cuts; it paints nothing over the content or under a clear bar.
-    expect(Object.keys(clip())).not.toContain('backgroundColor');
-    // The same scroll view: turning the clip on did not remount the page.
+    expect(frame()).toMatchObject({ marginTop: 62, overflow: 'hidden' });
+    // The same scroll view: the page was not remounted, and nothing is laid
+    // over it to hide the rows.
     expect(renderer.root.findByType(ScrollView)).toBe(scroll);
-    // Results (the scope control pinned): still cut.
+    expectScrollRegion(renderer);
+    // Results: still cut, and the pinned scope control holds at the scroll
+    // view's own top (the plain sticky header, not the under-bar one).
     await act(async () =>
       renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
     );
-    expect(clip().marginTop).toBe(62);
-    expect(scrollTop()).toBe(-62);
-    expect(renderer.root.findByType(ScrollView)).toBe(scroll);
-    // Back to Browse: the bar returns and the cut goes.
+    expect(frame()).toMatchObject({ marginTop: 62, overflow: 'hidden' });
+    const results = renderer.root.findByType(ScrollView);
+    expect(results).toBe(scroll);
+    expect(results.props.stickyHeaderIndices).toEqual([0]);
+    expect(results.props.StickyHeaderComponent).toBeUndefined();
+    // Back to Browse: the bar returns and the page runs under it again.
     await type('');
     await act(async () =>
       mockBar.options!.headerSearchBarOptions.onCancelButtonPress(),
     );
-    expect(clip().marginTop).toBe(0);
-    expect(scrollTop()).toBe(0);
+    expect(frame().marginTop ?? 0).toBe(0);
     act(() => renderer.unmount());
   });
 
