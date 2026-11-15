@@ -99,8 +99,24 @@ type StackScreen = ReactElement<{
   options: (props: object) => NativeStackNavigationOptions;
 }>;
 function withSolidRailBar(screen: StackScreen) {
-  const { options } = screen.props;
+  const { name, options } = screen.props;
   return cloneElement(screen, {
-    options: (props: object) => ({ ...options(props), ...solidRailBar(true) }),
+    options: (props: object) => {
+      const base = options(props);
+      return fieldless(name, props) ? base : { ...base, ...solidRailBar(true) };
+    },
   });
+}
+
+/**
+ * A seat's grants (`/grants?seat=…`) share the Grants route but have no
+ * search field, and with no field nothing would turn the clear bar back on.
+ * The electorates view of that route does have one.
+ */
+function fieldless(name: string, props: object): boolean {
+  if (name !== 'grants') return false;
+  const params = (
+    props as { route?: { params?: { seat?: unknown; view?: unknown } } }
+  ).route?.params;
+  return !!params?.seat && params.view !== 'electorates';
 }

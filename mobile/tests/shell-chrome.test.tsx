@@ -391,6 +391,28 @@ test.each([
         expect(list.headerTransparent).toBe(underBar ? false : undefined);
         expect('headerBackground' in list).toBe(underBar);
       }
+      // A seat's grants share the Grants route but have no search field:
+      // they keep the stack's clear bar. The electorates view has a field.
+      const grants = (
+        tabs.children as React.ReactElement<{
+          name: string;
+          options: (props: object) => Record<string, unknown>;
+        }>[]
+      ).find((entry) => entry.props.name === 'grants')!;
+      const grantsFor = (params: object) =>
+        grants.props.options({
+          route: { key: 'grants', name: 'grants', params },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerTransparent' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect('headerBackground' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect(
+        grantsFor({ seat: 'Grayndler', view: 'electorates' }).headerTransparent,
+      ).toBe(underBar ? false : undefined);
       // Reduce Transparency or Increase Contrast: the solid bar, as the tab
       // roots have.
       mockSolidBar = true;
