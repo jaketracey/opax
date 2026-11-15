@@ -193,7 +193,7 @@ Every tracked file under `portal/public` that attaches a current party to these 
 |---|---|---|---|
 | `parliamentarians.json` | Web person and party pages, the app's party pages | Independent, Nationals | Changed, through the accept list |
 | `electorates/releases/<id>/` (`index.json`, `people.json`, three seat files, `reference.json`) | Web seat pages and electorate directory, the app's member rows | Independent (Warringah, Wentworth), Nationals (Canavan, Queensland Senate) | **Rebuilt here, without the box**: release `449ad8b79adf8b91` |
-| `pay.json` | Pay page rows, Ask's pay answers | Independent (Steggall, Spender) | Needs the box (below) |
+| `pay.json` | Pay page rows, Ask's pay answers | Independent (Steggall, Spender) | Needs the box's cached Handbook files (below) |
 | `votes.json` | Voting-record summaries on web and app | Independent (Steggall, Spender), Nationals (Canavan) | Needs the box (below) |
 
 Speech and vote records (division pages, reports, yearly summaries) keep the party printed on the
@@ -217,45 +217,93 @@ rows.
 
 ## Runbook: what still needs the data box
 
-Not run by this change (no ssh, no start of the box). In order:
+Not run by this change (no ssh, no start of the box). Run from the repo checkout on the box, in order.
+`DB=~/.cache/autoresearch/parli.db`, `PY=.venv/bin/python`. Runtimes are estimates; none was timed here.
 
-1. **Correct the members table** (`~/.cache/autoresearch/parli.db` on the box), so later exports
-   agree with the roster. Check first, then write:
+**1. Correct the members table** (seconds). Print the rows first:
 
-   ```sh
-   sqlite3 ~/.cache/autoresearch/parli.db "SELECT person_id, full_name, party, party_canonical FROM members WHERE person_id IN ('10941','11001','10827');"
-   sqlite3 ~/.cache/autoresearch/parli.db "UPDATE members SET party_canonical='Community Strong Australia' WHERE person_id IN ('10941','11001') AND party_canonical='Independent'; UPDATE members SET party_canonical='LNP' WHERE person_id='10827' AND party_canonical='Nationals';"
-   ```
+```sh
+sqlite3 "$DB" "SELECT rowid, person_id, full_name, chamber, party, party_canonical, left_house FROM members WHERE person_id IN ('10941','11001','10827') ORDER BY person_id;"
+```
 
-   Expect three rows changed. Seconds.
-2. **`votes.json`**: the nightly's vote export reads the party from the members table, so the next
-   nightly carries it. By hand, from the repo on the box:
-   `.venv/bin/python scripts/export_votes.py > /tmp/votes.json`, then install it the way the nightly
-   does (`scripts/vm/export_step.sh`). Minutes.
-3. **`pay.json`**: `.venv/bin/python scripts/build_pay.py --out portal/public/pay.json` (the box's
-   cached Handbook snapshot, no fetch; the weekly refresh runs the same script with `--refresh`).
-   It takes `party_now` from the roster, so Steggall and Spender become Community Strong Australia.
-   Canavan stays Nationals there by that script's own rule (it keeps the party room for LNP
-   members, as it does for David Littleproud). About a minute.
-4. **Validate and publish**: `python3 scripts/vm/validate_data.py votes pay`, then the nightly's
-   normal gate and publish, or wait for the next nightly.
-5. **Later, when the federal roster is next reconciled and a fresh electorate release is exported
-   from a members snapshot**: delete the entries in `scripts/corrections/electorate-rosters.json`
-   (the new roster has new ids and the corrected parties) in the same reviewed change. That export
-   also carries Vanessa Bleyer's id (`scripts/corrections/member-ids.json`), which a republish
-   cannot: the published bundle still holds her as `aph_25813`.
+Expected: three rows, one per person (Matthew Canavan `Nationals`, Zali Steggall `Independent`, Allegra Spender `Independent` in `party_canonical`). Then, one statement at a time:
 
-The runtimes are estimates; none of these was timed here.
+```sh
+sqlite3 "$DB" "UPDATE members SET party_canonical='Community Strong Australia' WHERE person_id IN ('10941','11001') AND party_canonical='Independent'; SELECT changes();"   # expect 2
+sqlite3 "$DB" "UPDATE members SET party_canonical='LNP' WHERE person_id='10827' AND party_canonical='Nationals'; SELECT changes();"                                      # expect 1
+```
 
-**Served stale until steps 1 to 4 land:**
+- **If a count is 0**: nothing was written. The first SELECT shows why. If `party_canonical` is NULL on the box (the exports fall back to `party`), set it by person id alone, for that person only: `UPDATE members SET party_canonical='<new party>' WHERE person_id='<id>' AND party_canonical IS NULL; SELECT changes();`. If it already holds the new party, it was corrected earlier: move on.
+- **If a count is higher than expected**: the person has several rows (one per term). Stop and look at the first SELECT before going on. All of that person's rows with the old party now carry the new one; that is right only if none of them is a closed past term (`left_house` set). Reverse any that is, by `rowid`.
+
+**2. `votes.json`** (minutes). The commands `scripts/refresh_divisions.sh` ends with (lines 16 to 18), without its ingest:
+
+```sh
+tmp=$(mktemp)
+$PY scripts/export_votes.py > "$tmp"
+$PY scripts/vm/keep_if_unchanged.py portal/public/votes.json "$tmp"
+$PY scripts/vm/divisions_guard.py --votes-only
+```
+
+**3. `pay.json`** (about a minute). **It must not fetch.** Without `--refresh` it reads two cached files and fetches whichever is missing (`scripts/build_pay.py:122-146`: about 200 requests to handbookapi.aph.gov.au, which the source rule bars). So guard it:
+
+```sh
+if test -s ~/.cache/autoresearch/pay/handbook_raw.json && test -s ~/.cache/autoresearch/pay/oa_people.csv; then
+  $PY scripts/build_pay.py --out portal/public/pay.json
+else
+  echo "STOP: a pay cache file is missing. Skip pay."
+fi
+```
+
+If either file is missing, stop and skip pay: it then stays stale until the monthly refresh (first Sunday of the month; next 6 December 2026), which runs the same script with `--refresh`. Canavan stays Nationals in `pay.json` by that script's own rule (it keeps the party room for LNP members, as for David Littleproud).
+
+**4. Validate, then spot-check, before publishing:**
+
+```sh
+$PY scripts/vm/validate_data.py votes pay
+python3 -c "
+import json
+v=json.load(open('portal/public/votes.json')); p=json.load(open('portal/public/pay.json'))
+pay={e['pid']:e['party'] for e in p['people'].values() if e.get('pid')}
+now={e['name']:e['party'] for e in p['current']}
+for pid,name in (('10941','Zali Steggall'),('11001','Allegra Spender'),('10827','Matthew Canavan')):
+    print(name, '| votes:', v[pid]['party'], '| pay:', pay.get(pid), '| pay current:', now.get(name))"
+```
+
+Expected:
+
+```
+Zali Steggall | votes: Community Strong Australia | pay: Community Strong Australia | pay current: Community Strong Australia
+Allegra Spender | votes: Community Strong Australia | pay: Community Strong Australia | pay current: Community Strong Australia
+Matthew Canavan | votes: LNP | pay: Nationals | pay current: Nationals
+```
+
+(With pay skipped in step 3, the two pay columns still read Independent, Independent, Nationals.) Anything else: do not publish.
+
+**5. Publish** through the box's usual gate and publish (the nightly's: it tests and publishes the data paths), or leave the files for the next nightly.
+
+**6. Live checks after publish:**
+
+| Check | URL | Expect |
+|---|---|---|
+| Person pages | https://opax.com.au/subject/person/zali-steggall, https://opax.com.au/subject/person/allegra-spender, https://opax.com.au/subject/person/matthew-canavan | Community Strong Australia; Community Strong Australia; LNP |
+| Seat pages | https://opax.com.au/subject/electorate/federal-representatives-nsw-warringah, https://opax.com.au/subject/electorate/federal-representatives-nsw-wentworth, https://opax.com.au/subject/electorate/federal-senate-qld-queensland | The same party beside each of the three |
+| Party page | https://opax.com.au/subject/party/community-strong-australia | Two sitting members; its directory link lists both |
+| App data: roster | https://opax.com.au/parliamentarians.json | `party_now` as above for pids 10941, 11001, 10827 |
+| App data: seats | https://opax.com.au/electorates/manifest.json | `release_id` `449ad8b79adf8b91` (or later); its `people.json` has the three current seats with the new parties |
+| App data: votes, pay | https://opax.com.au/votes.json, https://opax.com.au/pay.json | The spot-check line above, run against the downloaded files, prints the expected values |
+
+**7. Later**, when the federal roster is next reconciled and a fresh electorate release is exported from a members snapshot: delete the entries in `scripts/corrections/electorate-rosters.json` in the same reviewed change (the new roster has new ids and the corrected parties). That export also carries Vanessa Bleyer's id (`scripts/corrections/member-ids.json`), which a republish cannot.
+
+**Served stale until steps 1 to 5 land:**
 
 | What | Where | For whom |
 |---|---|---|
 | Party in voting-record summaries (`votes.json`) | Web and app | Steggall and Spender (Independent), Canavan (Nationals) |
 | Party on pay rows and in Ask's pay answers (`pay.json`) | Web and app | Steggall and Spender (Independent) |
 
-**Rollback.** The members table: the two updates in step 1, reversed
-(`party_canonical='Independent'` for 10941 and 11001, `'Nationals'` for 10827). The published files:
-revert the publishing commit; `votes.json` and `pay.json` come back from git. This change itself:
-revert the merge commit, which restores the roster, the accept list, and `electorates/manifest.json`
-pointing at release `db4a3cd54d53c143` (its files are still in the tree).
+**Rollback.**
+
+- The members table: `UPDATE members SET party_canonical='Independent' WHERE person_id IN ('10941','11001') AND party_canonical='Community Strong Australia'; SELECT changes();` (expect 2) and `UPDATE members SET party_canonical='Nationals' WHERE person_id='10827' AND party_canonical='LNP'; SELECT changes();` (expect 1). **Run these before the next nightly**, or it re-exports `votes.json` with the new parties.
+- The published files: revert the publishing commit; `votes.json` and `pay.json` come back from git.
+- This change itself: revert the merge commit, which restores the roster, the accept list, and `electorates/manifest.json` pointing at release `db4a3cd54d53c143` (its files are still in the tree).
