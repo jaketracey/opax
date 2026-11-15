@@ -568,6 +568,87 @@ describe('Hide tips on the answer sheet (build 76)', () => {
     ).toBe('underline');
   });
 
+  test('with a screen reader running the sheet does not close itself: the notice is read, Done closes it', async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => undefined);
+    const running = jest
+      .spyOn(AccessibilityInfo, 'isScreenReaderEnabled')
+      .mockResolvedValue(true);
+    mockParams = { id: 'division' };
+    let sheet!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      sheet = render(<TermSheet />);
+    });
+    back.mockClear();
+    await act(async () => {
+      pressable(sheet, 'term-division-hide-tips').props.onPress();
+    });
+    expect(learnSettingsSnapshot().underline).toBe(false);
+    expect(announce).toHaveBeenCalledWith(
+      'Tips hidden. Turn them back on in Account, under Glossary terms.',
+    );
+    // The notice is also a polite live region, for TalkBack.
+    expect(
+      byTestID(sheet, 'term-division-tips-hidden')[0]!.props
+        .accessibilityLiveRegion,
+    ).toBe('polite');
+    // Never closed, however long the reader takes.
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD * 10);
+    });
+    expect(back).not.toHaveBeenCalled();
+    running.mockResolvedValue(false);
+    announce.mockRestore();
+  });
+
+  test('a screen reader turned on while the notice shows cancels the close; leaving the sheet clears the timer', async () => {
+    let change!: (running: boolean) => void;
+    const listen = jest
+      .spyOn(AccessibilityInfo, 'addEventListener')
+      .mockImplementation(((name: string, listener: unknown) => {
+        if (name === 'screenReaderChanged')
+          change = listener as (running: boolean) => void;
+        return { remove: jest.fn() };
+      }) as never);
+    const running = jest
+      .spyOn(AccessibilityInfo, 'isScreenReaderEnabled')
+      .mockResolvedValue(false);
+    mockParams = { id: 'division' };
+    let sheet!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      sheet = render(<TermSheet />);
+    });
+    back.mockClear();
+    await act(async () => {
+      pressable(sheet, 'term-division-hide-tips').props.onPress();
+    });
+    // No screen reader: the close is timed. One turned on meanwhile
+    // cancels it.
+    const timed = jest.getTimerCount();
+    act(() => change(true));
+    expect(jest.getTimerCount()).toBe(timed - 1);
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD * 2);
+    });
+    expect(back).not.toHaveBeenCalled();
+    // Off again: timed again; then the reader leaves with Done first, and
+    // the timer goes with the sheet.
+    act(() => change(false));
+    const again = jest.getTimerCount();
+    act(() => {
+      mounted.splice(mounted.indexOf(sheet), 1);
+      sheet.unmount();
+    });
+    expect(jest.getTimerCount()).toBe(again - 1);
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD * 2);
+    });
+    expect(back).not.toHaveBeenCalled();
+    listen.mockRestore();
+    running.mockResolvedValue(false);
+  });
+
   test('with the tips already off the sheet offers nothing to hide; the glossary row stays', async () => {
     await act(async () => {
       await setUnderlineTerms(false);

@@ -69,6 +69,34 @@ export default function TermSheet() {
   );
 }
 
+/** Whether a screen reader is running; null until the system has answered. */
+function useScreenReader(): boolean | null {
+  const [running, setRunning] = useState<boolean | null>(null);
+  useEffect(() => {
+    let active = true;
+    const subscription = AccessibilityInfo.addEventListener(
+      'screenReaderChanged',
+      (next) => {
+        if (active) setRunning(next);
+      },
+    );
+    Promise.resolve(AccessibilityInfo.isScreenReaderEnabled()).then(
+      (next) => {
+        // A change heard meanwhile is newer than this first answer.
+        if (active) setRunning((known) => known ?? !!next);
+      },
+      () => {
+        if (active) setRunning((known) => known ?? false);
+      },
+    );
+    return () => {
+      active = false;
+      subscription?.remove?.();
+    };
+  }, []);
+  return running;
+}
+
 /** How long the notice stays before the sheet closes itself (ms). */
 export const TIPS_HIDDEN_HOLD = 1800;
 
@@ -83,13 +111,19 @@ export const TIPS_HIDDEN_HOLD = 1800;
 function HideTips({ id }: { id: string }) {
   const on = useUnderlineTerms();
   const [hidden, setHidden] = useState(false);
+  const reader = useScreenReader();
   useEffect(() => {
-    if (!hidden) return;
+    // With VoiceOver or TalkBack running the sheet stays: the notice is
+    // being read out, and a sheet that closed under it would cut it off
+    // and move the focus. The reader closes it with Done. Until the system
+    // has said whether one is running, nothing is timed either.
+    if (!hidden || reader !== false) return;
     const timer = setTimeout(() => {
+      // The stack's own dismiss: with Reduce Motion it is the system's.
       if (router.canGoBack()) router.back();
     }, TIPS_HIDDEN_HOLD);
     return () => clearTimeout(timer);
-  }, [hidden]);
+  }, [hidden, reader]);
   // Tips already off (the sheet opened from the A to Z glossary): nothing
   // to hide.
   if (!on && !hidden) return null;
