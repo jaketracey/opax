@@ -58,22 +58,6 @@ export async function rememberVisit(visit: Visit): Promise<void> {
 }
 
 /**
- * The collection is refreshed once a night. A copy checked this long ago
- * has very likely been replaced, so a line is worth holding a place for.
- */
-export const REFRESH_AFTER_MS = 20 * 60 * 60 * 1000;
-
-/**
- * Whether a newer collection record has likely been published since the
- * last visit: decided from the disk alone, before any request, so Today
- * knows on its first frame whether to hold the line's place.
- */
-export function refreshLikely(visit: Visit, now: number): boolean {
-  const checked = Date.parse(visit.checkedAt);
-  return Number.isFinite(checked) && now - checked >= REFRESH_AFTER_MS;
-}
-
-/**
  * How old the collection record's own check date may be for the line to
  * cite it: 14 days. The record is stamped every night, so an older one
  * means the refresh has stopped, and a count dated weeks ago is not news.
@@ -86,18 +70,6 @@ const SOURCE_LIMIT_MS = SOURCE_LIMIT_DAYS * 24 * 60 * 60 * 1000;
 export function sourceCurrent(checkedAt: string, at: number): boolean {
   const checked = Date.parse(checkedAt);
   return Number.isFinite(checked) && at - checked <= SOURCE_LIMIT_MS;
-}
-
-/**
- * Whether a line is likely this visit, so its place is worth holding:
- * a newer record has likely been published, and the record was within the
- * limit when the last visit read it (one already stale then is likely
- * stale still, and would hold a place that no line fills).
- */
-export function lineLikely(visit: Visit, now: number): boolean {
-  return (
-    refreshLikely(visit, now) && sourceCurrent(visit.checkedAt, visit.openedAt)
-  );
 }
 
 /**

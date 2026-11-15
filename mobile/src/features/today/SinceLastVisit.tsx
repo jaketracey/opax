@@ -1,13 +1,13 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { useAccessibilitySize } from '../../design/accessibility';
-import type { DateInput } from '../../design/format';
 import { Pressable } from '../../design/pressable';
 import { useRowHighlight } from '../../design/row-padding';
 import {
-  dateSeparator,
+  SourceAffordance,
+  sourceSymbol,
   updatedText,
   type SourceDetails,
 } from '../../design/source';
@@ -16,22 +16,13 @@ import { minimumTarget, radii, rhythm, textStyles } from '../../design/tokens';
 import { recentRecordsRoute } from '../../navigation/routes';
 import { presentSource } from '../../navigation/sheets';
 import {
-  lineLikely,
   moreSince,
+  readVisit,
   rememberVisit,
   sourceCurrent,
-  type Visit,
 } from './visit-store';
 
-/** The collection record's two facts the line needs. */
-export interface Collection {
-  /** Its stated total of records. */
-  total: number;
-  /** Its own check date. */
-  checkedAt: string;
-}
-
-/** The line this visit draws: records were added, and the source is current. */
+/** The line a visit draws: records were added, and the source is current. */
 export interface Since {
   /** More records than at the last visit; always more than 0. */
   count: number;
@@ -39,35 +30,10 @@ export interface Since {
   checkedAt: string;
 }
 
-export interface SinceLastVisit {
-  /**
-   * The line to draw, or null: until the collection record answers, and
-   * for good when nothing was added or the record's own date is older than
-   * the limit (`SOURCE_LIMIT_DAYS`). A "no change" line is never drawn.
-   */
-  answer: Since | null;
-  /** The collection record has answered (with a line or with none). */
-  settled: boolean;
-  /**
-   * Hold the line's place from the first frame. Decided once, from the disk
-   * alone: there was a last visit, a copy of the collection record is saved
-   * on the device, a newer one has likely been published since, and the
-   * record was current when last read. It is never turned on later, so no
-   * line is inserted after the page is drawn. A held place that ends with
-   * no line is given back once Today is out of view (`SinceLine`).
-   */
-  hold: boolean;
-}
-
-/** The collection record as the device saved it, for the launch read. */
-export async function readSavedCollection(): Promise<Collection | null> {
-  try {
-    const record = await catalogs.corpusSaved();
-    return record ? collectionOf(record.data) : null;
-  } catch {
-    // A reader without saved copies has nothing saved.
-    return null;
-  }
+/** The collection record's two facts the line needs. */
+interface Collection {
+  total: number;
+  checkedAt: string;
 }
 const collectionOf = (data: {
   expected_resources: number;
@@ -83,71 +49,57 @@ const collectionOf = (data: {
  *
  * - The count is the change in the total the collection's own public record
  *   states (`/corpus.json`, a free catalogue read: no paid read on launch).
- * - `last` is the visit, and `saved` the collection record, as the launch
- *   read them from the device (`last` undefined until the disk answers, null
- *   on the first ever launch). They are compared on the device; the visit
- *   is never sent anywhere.
- * - The record is read once. If it cannot be reached, the saved copy
- *   answers, with its own date. This visit is then kept for the next launch.
+ * - The last visit is read from the device and compared on the device; it
+ *   is never sent anywhere, and the read carries nothing of it.
+ * - The record is asked for as soon as the device has answered for the
+ *   last visit, at launch, beside Today's other launch reads.
+ * - The line is drawn only if that answer is in hand when Today's first
+ *   frame is `drawn` (the launch cover is still up), and only when it
+ *   shows records added from a current source (`SOURCE_LIMIT_DAYS`). In
+ *   every other case nothing is drawn for this session: no place is held
+ *   for a line, and none is inserted later, so nothing under the date ever
+ *   moves. The launch cover is never held for it.
+ * - Either way this visit is kept for the next launch; if the record
+ *   cannot be reached, the copy the device saved is kept with it.
  */
-export function useSinceLastVisit(
-  last: Visit | null | undefined,
-  saved: Collection | null,
-  now: Date,
-): SinceLastVisit {
-  const [visit, setVisit] = useState<{
-    last: Visit | null;
-    saved: Collection | null;
-    hold: boolean;
-    /** This visit's time, for the source limit. */
-    at: number;
-  } | null>(null);
-  // Latched while rendering, once: a later launch read (the date rolling
-  // over) never starts a second visit under the reader.
-  if (visit === null && last !== undefined)
-    setVisit({
-      last,
-      saved,
-      hold: !!last && !!saved && lineLikely(last, now.getTime()),
-      at: now.getTime(),
-    });
-  const [answer, setAnswer] = useState<{ line: Since | null } | null>(null);
+export function useSinceLastVisit(drawn: boolean): Since | null {
+  const [answer, setAnswer] = useState<Since | null>(null);
   useEffect(() => {
-    if (!visit) return;
     let active = true;
-    const settle = (collection: Collection | null) => {
+    void (async () => {
+      const last = await readVisit();
+      const collection = await Promise.resolve()
+        .then(() => catalogs.corpus())
+        .then((record) => collectionOf(record.data))
+        .catch(async () => {
+          // Unreachable: the saved copy answers, with its own date.
+          const saved = await catalogs.corpusSaved();
+          return saved ? collectionOf(saved.data) : null;
+        });
       if (!collection) return;
       void rememberVisit({ openedAt: Date.now(), ...collection });
-      const count = moreSince(visit.last, collection.total);
+      const count = moreSince(last, collection.total);
       // Nothing added, or a record older than the limit: no line.
-      if (active)
-        setAnswer({
-          line:
-            count > 0 && sourceCurrent(collection.checkedAt, visit.at)
-              ? { count, checkedAt: collection.checkedAt }
-              : null,
-        });
-    };
-    Promise.resolve()
-      .then(() => catalogs.corpus())
-      .then((record) => settle(collectionOf(record.data)))
-      .catch(() => settle(visit.saved));
+      if (
+        active &&
+        count > 0 &&
+        sourceCurrent(collection.checkedAt, Date.now())
+      )
+        setAnswer({ count, checkedAt: collection.checkedAt });
+    })().catch(() => undefined);
     return () => {
       active = false;
     };
-  }, [visit]);
-  return {
-    answer: answer?.line ?? null,
-    settled: answer !== null,
-    hold: visit?.hold ?? false,
-  };
+  }, []);
+  // The first frame takes what is in hand, once (latched while rendering):
+  // an answer after it is never drawn this session.
+  const [first, setFirst] = useState<{ line: Since | null } | null>(null);
+  if (drawn && first === null) setFirst({ line: answer });
+  return first?.line ?? null;
 }
 
 /** The collection's public record, as About and Coverage name it. */
 export const COLLECTION_RECORD = 'OPAX collection coverage record';
-
-/** Its short publisher name, as Today's source lines name a publisher. */
-export const COLLECTION_PUBLISHER = 'OPAX collection coverage';
 
 /**
  * The line's words, only ever for records added. The number is the change
@@ -156,19 +108,6 @@ export const COLLECTION_PUBLISHER = 'OPAX collection coverage';
  */
 export const sinceWords = (count: number) =>
   `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since your last visit`;
-
-/**
- * The line's source, in the form of Today's other source lines: "Updated
- * 15 Nov 2026 · OPAX collection coverage", the record's own check date and
- * its publisher, the dot kept on the date's line.
- */
-export const sinceSourceWords = (checkedAt: DateInput) =>
-  sourceWords(updatedText(checkedAt) ?? '');
-const sourceWords = (updated: string) =>
-  [updated, COLLECTION_PUBLISHER].filter(Boolean).join(dateSeparator);
-/** The source as VoiceOver says it: the same words, a comma for the dot. */
-const spokenSource = (checkedAt: DateInput) =>
-  sinceSourceWords(checkedAt).replace(dateSeparator, ', ');
 
 /** The line's source, as About cites the collection record. */
 export function sinceSources(since: Since): SourceDetails {
@@ -190,144 +129,85 @@ export function sinceSources(since: Since): SourceDetails {
 }
 
 /**
- * The widest short date the place can hold. It is no real date: every short
- * date has the same count of characters, so the widest is the one with the
- * widest glyphs, the widest month ("May") between the widest digits. A real
- * date ("28 Sep 2026") is as long but narrower, and a no-growth line dated
- * in May or March 2028 ran one line past the place (AX sizes at 402 pt, the
- * default size at 320 pt) and over the row below.
+ * Under Today's date, when records were added: "412 more records in OPAX
+ * since your last visit", and under it the source line every Today source
+ * draws (`SourceAffordance`: the source glyph, "Updated 15 Nov 2026" and
+ * the record's name in navy). Both open Just added; touch and hold on the
+ * count (or its VoiceOver action) opens the sources. With no line, nothing
+ * is drawn and no place is kept: there is no "no change" line.
  */
-export const WIDEST_DATE = '88 May 8888';
-
-/**
- * The longest line the place can hold, never seen: a count of seven
- * digits, then the source on its own line with the widest date. It is laid
- * out in the line's own box and type, so the place is as tall as any line
- * can be at this width and text size, and the line that arrives sits in it
- * without moving anything.
- */
-export const LONGEST_LINE = `${sinceWords(8_888_888)}\n${sourceWords(`Updated ${WIDEST_DATE}`)}`;
-
-/**
- * The line under Today's date: "412 more records in OPAX since your last
- * visit", and under it its source, "Updated 15 Nov 2026 · OPAX collection
- * coverage". It opens Just added; touch and hold (or its VoiceOver action)
- * opens the sources. It is drawn only when records were added and the
- * source is current: there is no "no change" line.
- *
- * Nothing is drawn unless `hold` was set on the first frame. The place is
- * one box from then on: the unseen longest line sets its size, and the line
- * that arrives is drawn over it, so the box never grows or shrinks and the
- * page under it never moves. Once drawn, the line stays for the life of the
- * screen; the next cold launch works it out again.
- *
- * A held place that ends with no line stays, empty, only while Today is on
- * screen (taking it away there would move the page up under the reader),
- * and is given back the first time Today is out of view: `away` counts the
- * times Today has left view. No place is left for the rest of the session.
- */
-export function SinceLine({
-  since,
-  away = 0,
-}: {
-  since: SinceLastVisit;
-  /** How many times Today has been out of view (a page over it, a tab). */
-  away?: number;
-}) {
+export function SinceLine({ since }: { since: Since | null }) {
   const fixed = useAccessibilitySize();
   const highlight = useRowHighlight();
   const [textHeight, setTextHeight] = useState<number>(
     textStyles.secondary.lineHeight,
   );
-  // When the record answered "no line", latched while rendering.
-  const [emptyAt, setEmptyAt] = useState<number | null>(null);
-  const empty = since.settled && !since.answer;
-  if (empty && emptyAt === null) setEmptyAt(away);
-  if (!since.hold) return null;
-  // Given back once Today has been out of view since.
-  if (empty && emptyAt !== null && away > emptyAt) return null;
-  const answer = since.answer;
-  const words = answer ? sinceWords(answer.count) : '';
-  const source = answer ? sinceSourceWords(answer.checkedAt) : '';
+  if (!since) return null;
+  const words = sinceWords(since.count);
+  const updated = updatedText(since.checkedAt);
   const band = Math.max(0, (minimumTarget - textHeight) / 2);
-  const openSources = () => {
-    if (answer) presentSource(sinceSources(answer), { testID: 'today-since' });
-  };
+  const openAdded = () => router.push(recentRecordsRoute);
+  const openSources = () =>
+    presentSource(sinceSources(since), { testID: 'today-since' });
   return (
-    <Pressable
-      disabled={!answer}
-      accessible={!!answer}
-      accessibilityElementsHidden={!answer}
-      importantForAccessibility={answer ? 'yes' : 'no-hide-descendants'}
-      accessibilityRole="link"
-      accessibilityLabel={
-        answer ? `${words}. ${spokenSource(answer.checkedAt)}.` : undefined
-      }
-      accessibilityHint="Opens Just added"
-      accessibilityActions={[{ name: 'sources', label: 'Sources' }]}
-      onAccessibilityAction={(event) => {
-        if (event.nativeEvent.actionName === 'sources') openSources();
-      }}
-      testID={answer ? 'today-since' : 'today-since-reserved'}
-      onPress={() => router.push(recentRecordsRoute)}
-      onLongPress={openSources}
-      style={({ pressed }) => [
-        styles.line,
-        { marginVertical: -band, paddingVertical: band },
-        fixed ? styles.fixed : styles.hug,
-        pressed && answer ? { backgroundColor: highlight } : null,
-      ]}
-    >
-      <Text
-        wordSafe={fixed}
-        variant="secondary"
-        maxFontSizeMultiplier={sinceCap}
-        accessible={false}
-        style={styles.unseen}
-        testID="today-since-place"
-        onTextLayout={(event) => {
-          const total = event.nativeEvent.lines.reduce(
-            (sum, l) => sum + l.height,
-            0,
-          );
-          if (total > 0 && Math.abs(total - textHeight) > 0.5)
-            setTextHeight(total);
+    <View testID="today-since">
+      <Pressable
+        accessible
+        accessibilityRole="link"
+        accessibilityLabel={words}
+        accessibilityHint="Opens Just added"
+        accessibilityActions={[{ name: 'sources', label: 'Sources' }]}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === 'sources') openSources();
         }}
+        testID="today-since-count"
+        onPress={openAdded}
+        onLongPress={openSources}
+        style={({ pressed }) => [
+          styles.line,
+          { marginVertical: -band, paddingVertical: band },
+          fixed ? styles.fixed : styles.hug,
+          pressed ? { backgroundColor: highlight } : null,
+        ]}
       >
-        {LONGEST_LINE}
-      </Text>
-      {answer ? (
         <Text
           wordSafe={fixed}
           variant="secondary"
+          tone="link"
           maxFontSizeMultiplier={sinceCap}
           accessible={false}
-          style={[styles.drawn, { top: band }]}
-          testID="today-since-words"
+          onTextLayout={(event) => {
+            const total = event.nativeEvent.lines.reduce(
+              (sum, l) => sum + l.height,
+              0,
+            );
+            if (total > 0 && Math.abs(total - textHeight) > 0.5)
+              setTextHeight(total);
+          }}
         >
-          <Text variant="secondary" tone="link" testID="today-since-count">
-            {words}
-          </Text>
-          {`\n${source}`}
+          {words}
         </Text>
-      ) : null}
-    </Pressable>
+      </Pressable>
+      <SourceAffordance
+        glyph={sourceSymbol}
+        date={updated}
+        name={COLLECTION_RECORD}
+        accessibilityLabel={[updated, COLLECTION_RECORD]
+          .filter(Boolean)
+          .join(', ')}
+        accessibilityHint="Opens Just added"
+        accessibilityRole="link"
+        onPress={openAdded}
+        testID="today-since-source"
+      />
+    </View>
   );
 }
 
-/** The line's Dynamic Type cap, the date line's and the sitting line's. */
+/** The count's Dynamic Type cap, the date line's and the sitting line's. */
 const sinceCap = 1.353;
 
 const styles = StyleSheet.create({
-  // The place's size: laid out, never seen.
-  unseen: { opacity: 0 },
-  // The line, over the place, inside the box's own padding: the same width
-  // as the unseen line, so it wraps no later than that one does.
-  drawn: {
-    position: 'absolute',
-    left: rhythm.tight,
-    right: rhythm.tight,
-  },
   line: {
     justifyContent: 'center',
     paddingHorizontal: rhythm.tight,

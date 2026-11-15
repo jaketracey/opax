@@ -535,7 +535,7 @@ export function licenceText(licence: string): string {
     : licence.trim();
 }
 
-const sourceSymbol = 'doc.text.magnifyingglass';
+export const sourceSymbol = 'doc.text.magnifyingglass';
 
 const styles = StyleSheet.create({
   line: {
