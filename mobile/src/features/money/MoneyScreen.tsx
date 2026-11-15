@@ -693,6 +693,8 @@ function MapMode({
   }
   const [stage, setStage] = useState({ width: 0, height: 0 });
   const [topHeight, setTopHeight] = useState(0);
+  // Whether that height is the search card's, not the card's.
+  const [topIsSearch, setTopIsSearch] = useState(false);
   const [peek, setPeek] = useState(0);
   const [controlsHeight, setControlsHeight] = useState(0);
   const window = useWindowDimensions();
@@ -860,6 +862,15 @@ function MapMode({
       expanded,
     ],
   );
+  // The map keeps its frame while Search is open, and until the card that
+  // comes back has been measured. The search card is far shorter than the
+  // card, so the map's room grew by more than its zoom limits allow: the
+  // camera was zoomed in to the new minimum, and stayed zoomed, lower and
+  // half under the panel, when Search closed.
+  const searching = searchOpen || topIsSearch;
+  const [restInsets, setRestInsets] = useState(insets);
+  if (!searching && restInsets !== insets) setRestInsets(insets);
+  const mapInsets = searching ? restInsets : insets;
   // The map is drawn only between the card and the panel: no stroke above
   // the card or under the bar, and no name half under either (item 5.6).
   // A fold gives the map its own side, with nothing over it to clip. A
@@ -1083,9 +1094,13 @@ function MapMode({
       changed = true;
     }
     const topFrame = frameOf(topRef);
-    if (topFrame && Math.ceil(topFrame.height) !== topHeight) {
-      setTopHeight(Math.ceil(topFrame.height));
-      changed = true;
+    if (topFrame) {
+      // Whose height it is, even when the height itself is the same.
+      setTopIsSearch(searchOpen && !!model);
+      if (Math.ceil(topFrame.height) !== topHeight) {
+        setTopHeight(Math.ceil(topFrame.height));
+        changed = true;
+      }
     }
     const controlsFrame = frameOf(controlsRef);
     if (controlsFrame) {
@@ -1143,7 +1158,7 @@ function MapMode({
             model={model}
             focus={focus}
             onFocus={(id) => setFocus(id)}
-            insets={insets}
+            insets={mapInsets}
             clip={clip}
             cacheKey={jurisdiction}
             accessibilityLabel={moneyMapLabel(model, focus)}
@@ -1224,9 +1239,10 @@ function MapMode({
               topMaxHeight === undefined ? null : { maxHeight: topMaxHeight },
             ]}
             pointerEvents="box-none"
-            onLayout={(event) =>
-              setTopHeight(Math.ceil(event.nativeEvent.layout.height))
-            }
+            onLayout={(event) => {
+              setTopHeight(Math.ceil(event.nativeEvent.layout.height));
+              setTopIsSearch(searchOpen && !!model);
+            }}
           >
             {topContent ? (
               topMaxHeight !== undefined ? (

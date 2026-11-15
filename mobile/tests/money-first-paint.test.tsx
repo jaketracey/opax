@@ -12,7 +12,11 @@ import * as Reanimated from 'react-native-reanimated';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { ApiError } from '../src/api/errors';
 import { apiClient } from '../src/api/runtime';
-import { ContentUnavailable, SegmentedPicker } from '../src/design/primitives';
+import {
+  ContentUnavailable,
+  IconButton,
+  SegmentedPicker,
+} from '../src/design/primitives';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { forgetMoneyGraphs } from '../src/features/money/lookup';
 import { BAND_HOLD } from '../src/features/money/map/band';
@@ -20,6 +24,7 @@ import * as measure from '../src/features/money/map/measure';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
+import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
 import MoneyScreen, {
   moneySummary,
   moneySummaryStandIn,
@@ -541,6 +546,50 @@ describe('sizes read before the first frame', () => {
     expect(map.insets.top).toBe(212 + 8);
     await act(async () => r.unmount());
     read.mockRestore();
+  });
+});
+
+describe('the map while its Search is open', () => {
+  test('keeps its frame: the short search card does not change the map’s insets, open or closed', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    const r = await render();
+    const top = () => {
+      let node = (byTestID(r.root, 'money-map-card') ??
+        byTestID(r.root, 'money-map-search-card'))!.parent!;
+      while (!node.props.onLayout) node = node.parent!;
+      return node;
+    };
+    const report = (height: number) =>
+      act(() => top().props.onLayout({ nativeEvent: { layout: { height } } }));
+    const insets = () => jest.mocked(MoneyMap).mock.calls.at(-1)![0].insets;
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    report(300);
+    const rest = insets();
+    expect(rest.top).toBe(308);
+    // Search opens: its card is a third of the height.
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === 'money-map-search')!
+        .props.onPress(),
+    );
+    report(90);
+    expect(insets()).toBe(rest);
+    // Search closes; the card is back but has not reported its height yet.
+    await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+    expect(insets()).toBe(rest);
+    report(300);
+    expect(insets()).toEqual(rest);
+    await act(async () => r.unmount());
   });
 });
 
