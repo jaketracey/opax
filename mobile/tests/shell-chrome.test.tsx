@@ -1675,33 +1675,32 @@ test('the accessibility backing keeps the edge hidden under scrolled text', () =
   }));
 
 test.each([
-  ['index', '(today)', 'AX3', 2.643],
-  ['index', '(today)', 'AX5', 3.571],
-  // Idle Ask: the hard edge still showed its starters, blurred, behind the
-  // bar at AX3 on iOS 26.3 (BACKLOG D5).
-  ['ask', '(ask)', 'AX3', 2.643],
-  ['ask', '(ask)', 'AX5', 3.571],
-] as const)(
-  '%s %s at %s keeps a solid band across scroll, resize and focus',
-  (name, segment, _size, fontScale) =>
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+])(
+  'Today %s rests on its large title and takes a solid band under scrolled text',
+  (_size, fontScale) =>
     withGlass(() => {
       const window = Dimensions.get('window');
       const { navigation, page, ground, identifier, listeners } = fadePage(
-        name,
-        segment,
+        'index',
+        '(today)',
       );
       const renderer = tree(page(120));
-      // The harness draws Ask as its RouteOptions alone: nothing to scroll.
-      const scrolls = name === 'index';
       try {
-        expect(RootBar!.setSolid).not.toHaveBeenCalled();
         act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        // At rest nothing is under the bar. On iOS 26.3 the backing drew
+        // over the expanded title, and Today rested with no title at AX3.
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground)),
+        );
+        navigation.setOptions.mockClear();
+        scrollTo(renderer, 400);
         expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
         expect(navigation.setOptions).toHaveBeenLastCalledWith(
           expect.objectContaining(largeTitleBar(ground, true)),
         );
-        navigation.setOptions.mockClear();
-        if (scrolls) scrollTo(renderer, 400);
         expect(edgeCalls(navigation)).not.toContain('hard');
         act(() => renderer.update(page(68)));
         expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
@@ -1710,14 +1709,20 @@ test.each([
         jest.mocked(RootBar!.setSolid!).mockClear();
         act(() => listeners.get('focus')!.forEach((listener) => listener()));
         expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        // Back at rest the band goes and the soft edge returns.
+        jest.mocked(RootBar!.remove).mockClear();
+        scrollTo(renderer, -120);
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground)),
+        );
+        // An ordinary size under scrolled text keeps UIKit's hard edge.
+        scrollTo(renderer, 400);
+        jest.mocked(RootBar!.remove).mockClear();
         act(() => Dimensions.set({ window }));
         expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
         expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground, false, scrolls)),
-        );
-        if (scrolls) scrollTo(renderer, -120);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground)),
+          expect.objectContaining(largeTitleBar(ground, false, true)),
         );
       } finally {
         act(() => renderer.unmount());
@@ -1728,7 +1733,7 @@ test.each([
 
 test.each(
   tabCases
-    .filter(([, name]) => name !== 'index' && name !== 'ask')
+    .filter(([, name]) => name !== 'index')
     .flatMap(([segment, name]) =>
       (
         [

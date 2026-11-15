@@ -2892,12 +2892,15 @@ test.each([
       isFocused: () => true,
       addListener: () => () => {},
     };
-    // A phone's idle Ask keeps its large title on a solid native backing at
-    // accessibility sizes, with UIKit's edge hidden behind it (BACKLOG D5).
-    // Beside a vertical bar and on iPad the edge still follows the scroll.
+    // On a phone at accessibility sizes, idle Ask under scrolled text takes
+    // a solid native backing with UIKit's edge hidden behind it: the hard
+    // edge still showed the starters, blurred (BACKLOG D5). At rest it is
+    // soft, as everywhere. Beside a vertical bar and on iPad the edge is hard.
     const idleSolid = edge === 'unspecified' && !pad;
     const idle = (...expected: string[]) =>
-      idleSolid ? expected.map(() => 'hidden') : expected;
+      idleSolid
+        ? expected.map((top) => (top === 'hard' ? 'hidden' : top))
+        : expected;
     const edges = () =>
       navigation.setOptions.mock.calls
         .map(([options]) => options.scrollEdgeEffects?.top)

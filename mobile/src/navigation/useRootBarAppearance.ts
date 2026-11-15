@@ -168,17 +168,21 @@ export function useRootBarAppearance(
   const verticalBar = barEdge !== 'unspecified';
   const solidSetting = useSolidBar();
   const name = root?.name ?? '';
+  const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
   // Today's tall AX title band on a phone needs an opaque ground even when
   // neither legibility setting is on. iPad and vertical bars keep their chrome.
   // Idle Ask too: UIKit's hard edge still drew its starters, blurred, behind
   // the title and the bar buttons at AX3 (iOS 26.3). An open thread has no
-  // large title and keeps its edge.
+  // large title and keeps its edge. The backing is for scrolled text only:
+  // at rest nothing is under the bar, and on iOS 26.3 the backing drew over
+  // the expanded large title, so Today rested with no title at AX sizes.
   const solid =
     solidSetting ||
     (Platform.OS === 'ios' &&
       !Platform.isPad &&
       !verticalBar &&
       largeTitleEnabled &&
+      !!contentUnderBar &&
       solidAtAX.includes(name) &&
       isAccessibilityCategory(fontScale));
   // RouteOptions owns the bar of a large-title list (Leads) but knows no
@@ -204,7 +208,6 @@ export function useRootBarAppearance(
     state.value = { ...state.value, ground };
     state.listeners.forEach((listener) => listener());
   }, [navigation, rootKey, owner, ground]);
-  const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
   // Beside a vertical bar a search field is stacked below the title band,
   // and UIKit's scroll edge (soft or hard) covers the band alone: the field
   // had no ground, and rows ran through it under a covered title (Bills,
