@@ -299,11 +299,11 @@
    app lays them out, so the app fills the head in place. */
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head { display: block; }
 @media (min-width: 701px) { .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head:has(.subject-portrait) { display: grid; } }
-/* On a phone the routed page sits flush under its crumb line (nav.css): no
-   top padding and no margin over the portrait. The boot head does the same. */
+/* On a phone the routed page sits under its crumb line (nav.css): no top
+   padding, and a small margin over the portrait. The boot head does the same. */
 @media (width < 700px) {
   .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #main:has(> #prerender > .subject-head) { padding-top: 0; }
-  .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head > .subject-portrait { margin-top: 0; }
+  .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head > .subject-portrait { margin-top: var(--sp-8); }
 }
 /* /money while the app boots: the map card's place under the title, saying
    what is coming, as the card itself does once the page has routed. */
@@ -2040,8 +2040,20 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .party-return-line a { color: inherit; text-decoration-color: var(--line-control); text-underline-offset: 0.2em; }
 /* Person page: where the speeches in the record stop, and why a register table holds fewer rows than its count. */
 .person-speech-span, .interests-shown { margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); }
-/* The dot before a part travels with it (app.js tagLineHTML). */
-.subject-tag-next::before { content: "·"; margin-inline-end: var(--sp-8); }
+/* The dot before a part travels with it (app.js tagLineHTML), in a slot at the
+   part's start. The line is drawn one slot to the left (by position, so no
+   layout's own margin on the line can undo it) and clipped there, so a
+   part that wraps to a new line starts at the text edge with its dot cut away:
+   no line starts or ends with a separator, at any width or text size. */
+.subject-tag-next { position: relative; padding-inline-start: var(--subject-tag-slot, 1.25rem); }
+.subject-tag-next::before { content: "·"; position: absolute; inset-inline-start: 0; width: var(--subject-tag-slot, 1.25rem); text-align: center; }
+.subject-tag:has(> .subject-tag-next) {
+  --subject-tag-slot: 1.25rem; column-gap: 0; row-gap: var(--sp-4);
+  position: relative; inset-inline-start: calc(-1 * var(--subject-tag-slot));
+  clip-path: inset(-0.5rem -0.5rem -0.5rem calc(var(--subject-tag-slot) - 0.3rem));
+}
+.subject-tag:has(> .subject-tag-next) > * { min-width: 0; max-width: 100%; }
+.subject-tag:has(> .subject-tag-next) > :first-child { margin-inline-start: var(--subject-tag-slot); max-width: calc(100% - var(--subject-tag-slot)); }
 .subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--sp-24) var(--sp-40); align-items: start; }
 .subject-main { min-width: 0; }
 .subject-map {

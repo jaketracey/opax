@@ -56,6 +56,8 @@ interface Env {
   BSKY_SERVICE?: string
   /** The ChatGPT app directory's domain-verification token, served at /.well-known/openai-apps-challenge (secret or var; unset = 404). */
   OPENAI_APPS_CHALLENGE?: string
+  /** The Apple Team ID of the OPAX app, for /.well-known/apple-app-site-association (var; unset = 404, links stay on the web). */
+  APPLE_TEAM_ID?: string
 
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code
