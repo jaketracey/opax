@@ -338,6 +338,24 @@ describe('the count line', () => {
     expect(said(renderer)).toContain('Hansard');
   });
 
+  test('the long name is counted whichever is measured first, the stand-in or the line', () => {
+    dimensions(390, 3.1);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <ResultsHeader count="57 results" details={commission} />,
+      );
+    });
+    // The line's layout arrives before the stand-in's box is known.
+    layLine(renderer, 8);
+    expect(said(renderer)).toContain('Royal Commission into Violence');
+    layStandIn(renderer, 280, 56);
+    expect(said(renderer)).toContain(sourcesCounted(2));
+    // The short form's own layout does not bring the names back.
+    layLine(renderer, 5);
+    expect(said(renderer)).toContain(sourcesCounted(2));
+  });
+
   test('the held place follows the width and the text size: a rotation or a smaller size asks again', () => {
     dimensions(390, 3.1);
     let renderer!: TestRenderer.ReactTestRenderer;

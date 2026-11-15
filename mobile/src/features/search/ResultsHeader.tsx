@@ -132,11 +132,14 @@ function CountLine({
   const parts = details ? sourceLineParts(details) : null;
   const lead = [count, parts?.date].filter(Boolean).join(' · ');
   const tail = parts?.rest.length ? ` · ${parts.rest.join(' · ')}` : '';
-  // The full line as it was when it last needed more lines than are held, at
-  // this width and text size. A new width, size or line asks again.
-  const key = `${lead}|${parts?.name ?? ''}|${tail}|${lines}|${width}|${fontScale}`;
-  const [tooLong, setTooLong] = useState<string | null>(null);
-  const counted = tooLong === key && !!parts?.name;
+  // How many lines the full line (with its sources' names) last laid out in,
+  // at this width and text size. The decision is derived from it and from the
+  // held box, so it does not depend on which of the two was measured first,
+  // and a new width or size drops it and asks again.
+  const key = `${lead}|${parts?.name ?? ''}|${tail}|${width}|${fontScale}`;
+  const [full, setFull] = useState<{ key: string; lines: number } | null>(null);
+  const counted =
+    !!parts?.name && lines !== null && full?.key === key && full.lines > lines;
   const spoken = [
     count,
     parts?.date,
@@ -159,12 +162,9 @@ function CountLine({
         style={styles.text}
         testID="search-count-text"
         onTextLayout={(event: TextLayoutEvent) => {
-          if (
-            !counted &&
-            lines !== null &&
-            event.nativeEvent.lines.length > lines
-          )
-            setTooLong(key);
+          // Only the full line is measured; once counted, the short form's
+          // layout must not undo the decision.
+          if (!counted) setFull({ key, lines: event.nativeEvent.lines.length });
         }}
       >
         {lead}
