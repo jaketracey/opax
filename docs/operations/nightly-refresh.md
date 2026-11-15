@@ -813,6 +813,16 @@ that fails `bash -n` is not started, and a restart whose `exec` fails returns (`
 names the shell, default `bash`): either way the night goes on with the loaded copy and the status says so. Every other
 script and `gate_hold.txt` are read after the sync and need no restart. `test_nightly.sh` section 2c covers it.
 
+**Why a step failed, from the status.** When the daily or periodic refresh reports failed steps, `status.json` carries
+`failed_step_logs`: for each failed step, the end of `pipeline/<step>.log` (`scripts/vm/step_tails.py`; on 16 Nov 2026
+the status said `ipea (rc=1)` and nothing else, and the log is only on the box). The status branch is public, so the
+tail is treated as published: at most 15 lines and 2 KB per step, failed steps only; every value in `.env` and
+`nightly.env` and every credential-named environment variable is replaced, raw and URL-encoded; then anything shaped
+like a secret is masked (authorisation headers, `key=value` secrets, URL credentials and query strings, email and IP
+addresses, home directories, long hex or base64 runs). It errs towards masking: a commit hash goes too. A tail that
+cannot be made is left out and never costs the night its status. `scripts/vm/test_step_tails.py` and `test_nightly.sh`
+section 3b (a step that prints every credential it can see) cover it.
+
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files
 (grant shards, money graph, suppliers, pay, parliamentarians ...). So after validation the nightly rebuilds the search
 catalog (`npm run build:search`, ~50 s), refreshes the content stamps (`scripts/stamp_assets.mjs`, as the deploy's
@@ -1358,7 +1368,7 @@ accepting the gap and listing it in `source_limitations`. Re-run `scripts/vm/pro
 
 ```
 # unit tests (Python 3.11+, run in the pipeline venv or with `requests` installed)
-python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py scripts/vm/test_export_step.py scripts/vm/test_gate_hold.py
+python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py scripts/vm/test_export_step.py scripts/vm/test_gate_hold.py scripts/vm/test_step_tails.py
 
 # bills step: fixture git checkout, stubbed acquisition/export/fill, real guards/verifier/sweep
 python3 -m unittest scripts.vm.test_bills_refresh scripts.test_export_bills_sponsors tests.test_export_bill_divisions tests.test_bill_refresh_briefs

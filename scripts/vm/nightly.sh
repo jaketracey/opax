@@ -110,6 +110,8 @@ FAILURES=()
 BACKFILL_FAILURES=()
 COVERAGE_FAILURES=()
 WARNINGS=()
+# the refresh steps reported as failed tonight: write_status publishes the redacted end of each one's log
+FAILED_STEP_NAMES=()
 STAMPED_FILES=()
 COMMIT_SHA=""
 DEPLOY="not pushed"
@@ -186,10 +188,22 @@ publish_status() {
 }
 
 write_status() {
-  local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
-import json, sys, datetime
+  local status=$1 step_tails='{}'
+  # Why a step failed, without a login to the box: the last lines of each failed step's log, cut short and
+  # redacted (scripts/vm/step_tails.py says how). The status branch is public, so anything doubtful is masked,
+  # and a tail that cannot be made is simply left out: it must never cost the night its status.
+  if [ "${#FAILED_STEP_NAMES[@]}" -gt 0 ] && [ -f "$REPO/scripts/vm/step_tails.py" ]; then
+    step_tails=$(timeout 60 "$PY" "$REPO/scripts/vm/step_tails.py" --pipe "$PIPE" --env-file "$REPO/.env" \
+      --env-file "$ENV_FILE" "${FAILED_STEP_NAMES[@]}" 2>/dev/null) || step_tails='{}'
+  fi
+  OPAX_STEP_TAILS="$step_tails" "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
+import json, os, sys, datetime
 path, status, day, run, started, sha, deploy, summary, nwarn, nfail, *rest = sys.argv[1:]
+try:
+    failed_step_logs = json.loads(os.environ.get("OPAX_STEP_TAILS") or "{}")
+    if not isinstance(failed_step_logs, dict): failed_step_logs = {}
+except ValueError:
+    failed_step_logs = {}
 nwarn, nfail = int(nwarn), int(nfail)
 warnings, failures, coverage_alerts = rest[:nwarn], rest[nwarn:nwarn + nfail], rest[nwarn + nfail:]
 from pathlib import Path
@@ -209,6 +223,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
+           **({"failed_step_logs": failed_step_logs} if failed_step_logs else {}),
            **backfill_fields,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
           open(path, "w"), indent=1)
@@ -471,6 +486,7 @@ else
   fi
   if [ "$rc" -ne 0 ]; then
     failed_steps=$(grep -E 'Incomplete refresh: failed steps' "$DAILY_LOG" | tail -1 | sed 's/.*failed steps //')
+    read -ra failed_names <<<"$failed_steps"; FAILED_STEP_NAMES+=("${failed_names[@]+"${failed_names[@]}"}")
     fail "daily_refresh.sh reported failed steps: ${failed_steps:-unknown} (rc=$rc); the rest was still published"
   fi
   stale=$(last_run_line "$DAILY_LOG" 'Stale daily refresh:' | sed 's/.*register: //')
@@ -538,6 +554,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
       fail "weekly_refresh.sh ($groups) did not complete a run (rc=$prc); the periodic files were put back to HEAD"
     elif [ "$prc" -ne 0 ]; then
       failed_steps=$(grep -E 'Incomplete weekly refresh: failed steps' "$WEEKLY_LOG" | tail -1 | sed 's/.*failed steps //')
+      read -ra failed_names <<<"$failed_steps"; FAILED_STEP_NAMES+=("${failed_names[@]+"${failed_names[@]}"}")
       fail "weekly_refresh.sh ($groups) reported failed steps: ${failed_steps:-unknown} (rc=$prc); the rest was still published"
     elif [ -n "${OPAX_ONLY:-}" ]; then
       # run_step deliberately returns success for excluded debugging steps.
