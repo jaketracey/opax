@@ -332,7 +332,96 @@ export class ApiClient {
       /* A listener never changes a read's outcome. */
     }
   }
+  /**
+   * Plain reads of one address that overlap share one request. Two screens
+   * that ask for the same file at the same moment (a pane hand-off, a fold
+   * or unfold during a slow load) each started their own download: the file
+   * came down two to five times.
+   *
+   * Only the network leg is shared; each caller decodes the body itself.
+   * The shared request belongs to no caller: a caller that aborts stops
+   * waiting and the request carries on for the others (and for the cache).
+   * Its outcome, a record or an error, reaches every waiter, and the entry
+   * goes when it settles, so a later read asks again. Only plain reads
+   * join: a forced, background, absence, summary or unsaved read, or one
+   * with its own retries or timeout, runs alone as before.
+   */
+  private flights = new Map<string, Promise<RecordResult<unknown>>>();
+  // One body check per decoder, so a saved body's decode memo stays small.
+  private bodyChecks = new WeakMap<Decoder<unknown>, Decoder<unknown>>();
+  private bodyCheck<T>(decode: Decoder<T>): Decoder<unknown> {
+    let check = this.bodyChecks.get(decode);
+    if (!check) {
+      check = (body) => {
+        this.decodeBody(body, decode);
+        return body;
+      };
+      this.bodyChecks.set(decode, check);
+    }
+    return check;
+  }
   private async read<T>(
+    path: string,
+    decode: Decoder<T>,
+    force = false,
+    options: GetOptions = {},
+  ): Promise<RecordResult<T>> {
+    const plain =
+      !force &&
+      !options.absence &&
+      !options.background &&
+      !options.summaryStream &&
+      options.persist !== false &&
+      options.retries === undefined &&
+      options.timeoutMs === undefined;
+    if (!plain) return this.readOnce(path, decode, force, options);
+    const { signal } = options;
+    const cancelled = () =>
+      Object.assign(new Error('Cancelled'), { name: 'AbortError' });
+    if (signal?.aborted) throw cancelled();
+    let flight = this.flights.get(path);
+    if (!flight) {
+      // The first caller's decoder checks the body before it is saved, as a
+      // read alone does; the record carries the body itself.
+      const started = this.readOnce(path, this.bodyCheck(decode), false, {
+        ...options,
+        signal: undefined,
+      }).finally(() => {
+        if (this.flights.get(path) === started) this.flights.delete(path);
+      });
+      // A waiter that left must not leave an unhandled rejection behind.
+      started.catch(() => undefined);
+      this.flights.set(path, started);
+      flight = started;
+    }
+    let abort: (() => void) | undefined;
+    const shared = await (signal
+      ? Promise.race([
+          flight,
+          new Promise<never>((_resolve, reject) => {
+            abort = () => reject(cancelled());
+            signal.addEventListener('abort', abort, { once: true });
+          }),
+        ]).finally(() => {
+          if (abort) signal.removeEventListener('abort', abort);
+        })
+      : flight);
+    let data: T;
+    try {
+      data = this.decodeBody(shared.data, decode);
+    } catch {
+      // Another caller's decoder accepted a body this one cannot read:
+      // this caller reads for itself, as it did before reads were shared.
+      return this.readOnce(path, decode, force, options);
+    }
+    const { partial: _partial, ...rest } = shared;
+    return {
+      ...rest,
+      data,
+      ...(isPartialCatalog(data) ? { partial: true } : {}),
+    };
+  }
+  private async readOnce<T>(
     path: string,
     decode: Decoder<T>,
     force = false,
