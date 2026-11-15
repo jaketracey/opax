@@ -1,10 +1,9 @@
 --- a/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
 +++ b/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
-@@ -28,7 +28,378 @@
- }
+@@ -29,6 +29,422 @@
  
  private let fatalCaptureErrorCode = "PosthogReactNativePluginFatalCaptureError"
-+
+ 
 +// OPAX privacy patch (mobile/patches/privacy-patches.json). posthog-ios builds and sends native
 +// crash reports itself, and adds its own device context to the native copy of a fatal JS error,
 +// so neither passes through the app's JS `scrubEvent`. This last `beforeSend` step applies the
@@ -75,6 +74,7 @@
 +    case token(NSRegularExpression?)
 +    case oneOf(Set<String>)
 +    case build
++    case bundle
 +}
 +
 +// The whole string must match: NSRegularExpression's `$` also matches before a final newline.
@@ -94,6 +94,9 @@
 +}
 +
 +private let opaxBuildDigits = opaxRegex(#"^[0-9]{1,10}$"#)
++// The app's JavaScript bundle, alone or at the end of the path Hermes prints it with. Only the
++// bundle's name (the group) is sent, never the path.
++private let opaxBundleName = opaxRegex(#"^(?:[A-Za-z0-9_.:/-]{0,400}/)?(main\.jsbundle|index\.android\.bundle)$"#)
 +
 +private func opaxKeep(_ field: OpaxField, _ value: Any) -> Any? {
 +    switch field {
@@ -119,6 +122,12 @@
 +        let digits = opaxWholeNumber(value).map { String($0) } ?? value as? String
 +        guard let digits, opaxMatches(opaxBuildDigits, digits) else { return nil }
 +        return digits
++    case .bundle:
++        guard let text = value as? String, let regex = opaxBundleName else { return nil }
++        let whole = NSRange(text.startIndex..., in: text)
++        guard let match = regex.firstMatch(in: text, options: [.anchored], range: whole), match.range == whole,
++              let name = Range(match.range(at: 1), in: text) else { return nil }
++        return String(text[name])
 +    }
 +}
 +
@@ -134,24 +143,58 @@
 +}
 +
 +private let opaxAddress = OpaxField.token(opaxRegex(#"^0x[0-9a-f]{1,16}$"#, .caseInsensitive))
-+private let opaxFrameFields: [String: OpaxField] = [
-+    "platform": .token(opaxRegex(#"^[a-z:]{1,32}$"#)),
-+    "function": .text(256),
-+    "filename": .path(512),
-+    "abs_path": .path(512),
-+    "module": .text(256),
-+    "package": .path(512),
++// Stack frames, as exceptions.ts: a frame is kept only as one of three shapes, chosen by its
++// `platform`, and only with that shape's fields; any other frame is dropped whole. The JS SDK
++// reads an error's `stack` a line at a time, and a line of the error's message with a path or a
++// URL in it parses as a frame whose `function` and `filename` are that line's words. So a
++// JavaScript frame needs a whole-number line, a function that is a plain name (no space, no
++// colon) and a file that is the app's bundle. Apple and Java frames are built by the native SDKs
++// from the binary's own tables, never from text: one is located by its instruction address, the
++// other by its class and method. The pattern texts are FRAME_PATTERNS in exceptions.ts.
++private let opaxJsFrameFields: [String: OpaxField] = [
++    "platform": .oneOf(["hermes", "web:javascript"]),
++    "function": .token(opaxRegex(#"^(?![\s\S]{129})(?:\?|<anonymous>|\??[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*)$"#)),
++    "filename": .bundle,
 +    "lineno": .integer,
 +    "colno": .integer,
 +    "in_app": .flag,
++    "chunk_id": .token(opaxRegex(#"^[0-9a-f-]{1,64}$"#, .caseInsensitive)),
++]
++private let opaxAppleFrameFields: [String: OpaxField] = [
++    "platform": .oneOf(["apple"]),
 +    "instruction_addr": opaxAddress,
 +    "image_addr": opaxAddress,
 +    "symbol_addr": opaxAddress,
-+    "chunk_id": .token(opaxRegex(#"^[0-9a-f-]{1,64}$"#, .caseInsensitive)),
-+    "map_id": .text(128),
-+    "method_synthetic": .flag,
-+    "client_resolved": .flag,
++    "in_app": .flag,
++    "module": .token(opaxRegex(#"^[A-Za-z0-9_.+-]{1,128}$"#)),
++    "package": .token(opaxRegex(#"^(?:(?:/private)?/var/containers/Bundle/Application/[0-9A-Fa-f-]{36}/OPAX\.app/(?:OPAX|Frameworks/[A-Za-z0-9_.+-]{1,64}(?:/[A-Za-z0-9_.+-]{1,64})?)|(?:/private/preboot/Cryptexes/OS)?/(?:System/Library|usr/lib)/[A-Za-z0-9_.+/-]{1,300})$"#)),
++    "function": .token(opaxRegex(#"^(?![\s\S]{257})(?:[A-Za-z_$][A-Za-z0-9_$.]*|(?:__[0-9]+)?[-+]\[[A-Za-z_][A-Za-z0-9_]*(?:\([A-Za-z0-9_]+\))? [A-Za-z_][A-Za-z0-9_:]*\](?:_block_invoke[A-Za-z0-9_.]*)?)$"#)),
 +]
++private let opaxJavaModule = OpaxField.token(opaxRegex(#"^(?![\s\S]{257})[A-Za-z_$-][A-Za-z0-9_$-]*(?:\.[A-Za-z_$-][A-Za-z0-9_$-]*)*$"#))
++private let opaxJavaFrameFields: [String: OpaxField] = [
++    "platform": .oneOf(["java"]),
++    "module": opaxJavaModule,
++    "function": .token(opaxRegex(#"^(?:<init>|<clinit>|[A-Za-z_$][A-Za-z0-9_$-]{0,127})$"#)),
++    "filename": .token(opaxRegex(#"^[A-Za-z0-9_$.-]{1,128}$"#)),
++    "lineno": .integer,
++    "in_app": .flag,
++    "map_id": .token(opaxRegex(#"^[A-Za-z0-9_.:@+-]{1,128}$"#)),
++    "method_synthetic": .flag,
++]
++// Each platform's fields, and the ones a frame is dropped without.
++private let opaxFrameShapes: [String: (fields: [String: OpaxField], required: [String])] = [
++    "hermes": (opaxJsFrameFields, ["function", "filename", "lineno"]),
++    "web:javascript": (opaxJsFrameFields, ["function", "filename", "lineno"]),
++    "apple": (opaxAppleFrameFields, ["instruction_addr"]),
++    "java": (opaxJavaFrameFields, ["module", "function"]),
++]
++
++private func opaxScrubFrame(_ value: Any) -> [String: Any]? {
++    guard let platform = (value as? [String: Any])?["platform"] as? String,
++          let shape = opaxFrameShapes[platform] else { return nil }
++    let clean = opaxPick(shape.fields, value)
++    return shape.required.allSatisfy { clean[$0] != nil } ? clean : nil
++}
 +private let opaxMechanismFields: [String: OpaxField] = [
 +    "type": .token(opaxRegex(#"^[a-z_]{1,40}$"#)),
 +    "handled": .flag,
@@ -315,7 +358,7 @@
 +    "app_version": opaxVersion,
 +    "app_build": .build,
 +]
- 
++
 +private func opaxScrubException(_ value: Any) -> [String: Any]? {
 +    guard let exception = value as? [String: Any] else { return nil }
 +    let type = exception["type"] as? String ?? ""
@@ -323,19 +366,20 @@
 +        "type": opaxExceptionTypes.contains(type) ? type : "Error",
 +    ]
 +    if let message = opaxScrubMessage(exception["value"]) { clean["value"] = message }
-+    if let raw = exception["module"], let module = opaxKeep(.text(256), raw) { clean["module"] = module }
++    if let raw = exception["module"], let module = opaxKeep(opaxJavaModule, raw) { clean["module"] = module }
 +    if let raw = exception["thread_id"], let thread = opaxKeep(.integer, raw) { clean["thread_id"] = thread }
 +    let mechanism = opaxPick(opaxMechanismFields, exception["mechanism"])
 +    if !mechanism.isEmpty { clean["mechanism"] = mechanism }
 +    if let stack = exception["stacktrace"] as? [String: Any] {
-+        let frames = (stack["frames"] as? [Any] ?? []).prefix(250)
-+            .map { opaxPick(opaxFrameFields, $0) }
-+            .filter { !$0.isEmpty }
-+        let stacktrace: [String: Any] = [
-+            "type": stack["type"] as? String == "resolved" ? "resolved" : "raw",
-+            "frames": frames,
-+        ]
-+        clean["stacktrace"] = stacktrace
++        let frames = (stack["frames"] as? [Any] ?? []).prefix(250).compactMap(opaxScrubFrame)
++        // No frame that may be sent: no stack at all.
++        if !frames.isEmpty {
++            let stacktrace: [String: Any] = [
++                "type": stack["type"] as? String == "resolved" ? "resolved" : "raw",
++                "frames": frames,
++            ]
++            clean["stacktrace"] = stacktrace
++        }
 +    }
 +    return clean
 +}
@@ -379,7 +423,7 @@
  /// Holds the JS-approved properties for the thread on which the JS layer's own fatal capture
  /// is running, so `beforeSend` can tell that capture apart from a native re-report of the same
  /// crash — and can put back the values native's own enrichment would otherwise win.
-@@ -368,7 +739,8 @@
+@@ -368,7 +784,8 @@
                  hedgeLog("Failed to record the fatal JS marker state: \(error.localizedDescription)")
              }
          }
@@ -389,7 +433,7 @@
              // The JS layer's own fatal capture is the event we want; only native re-reports
              // of a crash JS already captured are duplicates. Matching the event name as well
              // as the thread-local keeps anything else posthog-ios emits on this thread during
-@@ -394,7 +766,7 @@
+@@ -394,7 +811,7 @@
                  event.distinctId = distinctId
              }
              return event
@@ -398,7 +442,7 @@
  
          // Surveys and session replay are iOS-only in posthog-ios, so the APIs below
          // don't exist on macOS. macOS gets error tracking only.
-@@ -457,6 +829,14 @@
+@@ -457,6 +874,14 @@
          // JS owns flags; it tells us when the native preload would be a duplicate. posthog-ios
          // has no remoteConfig switch to mirror — it deprecated the option and always loads.
          config.preloadFeatureFlags = sdkOptions["preloadFeatureFlags"] as? Bool ?? true
@@ -438,10 +482,12 @@
  
                // Always apply the session replay configuration so that recording started later
                // (e.g. startRecording or a linked feature flag) uses the right mode and masking;
-@@ -919,3 +928,369 @@
+@@ -917,5 +926,417 @@
+   when (getString(map, "screenshotColorMode", "")) {
+     "ARGB_8888" -> config.screenshotColorMode = PostHogScreenshotColorMode.ARGB_8888
      "RGB_565" -> config.screenshotColorMode = PostHogScreenshotColorMode.RGB_565
-   }
- }
++  }
++}
 +
 +// OPAX privacy patch (mobile/patches/privacy-patches.json). posthog-android builds and sends
 +// native crash reports itself, and adds its own device context to the native copy of a fatal JS
@@ -522,6 +568,8 @@
 +  data class OneOf(val allowed: Set<String>) : OpaxField()
 +
 +  object Build : OpaxField()
++
++  object Bundle : OpaxField()
 +}
 +
 +// A whole number within JavaScript's safe integer range, as `Number.isSafeInteger`.
@@ -538,6 +586,10 @@
 +
 +private val opaxBuildDigits = opaxRegex("""^[0-9]{1,10}$""")
 +
++// The app's JavaScript bundle, alone or at the end of the path Hermes prints it with. Only the
++// bundle's name (the group) is sent, never the path.
++private val opaxBundleName = opaxRegex("""^(?:[A-Za-z0-9_.:/-]{0,400}/)?(main\.jsbundle|index\.android\.bundle)$""")
++
 +private fun opaxKeep(
 +  field: OpaxField,
 +  value: Any?,
@@ -551,7 +603,8 @@
 +    is OpaxField.Token -> (value as? String)?.takeIf { field.regex.matches(it) }
 +    is OpaxField.OneOf -> (value as? String)?.takeIf { it in field.allowed }
 +    OpaxField.Build -> (opaxWholeNumber(value)?.toString() ?: value as? String)?.takeIf { opaxBuildDigits.matches(it) }
-+  }
++    OpaxField.Bundle -> (value as? String)?.let { opaxBundleName.matchEntire(it)?.groupValues?.get(1) }
+   }
 +
 +private fun opaxPick(
 +  fields: Map<String, OpaxField>,
@@ -563,28 +616,68 @@
 +    clean[key] = opaxKeep(field, source[key]) ?: continue
 +  }
 +  return clean
-+}
+ }
 +
 +private val opaxAddress = OpaxField.Token(opaxRegex("""^0x[0-9a-f]{1,16}$""", ignoreCase = true))
-+private val opaxFrameFields: Map<String, OpaxField> =
++// Stack frames, as exceptions.ts: a frame is kept only as one of three shapes, chosen by its
++// `platform`, and only with that shape's fields; any other frame is dropped whole. The JS SDK
++// reads an error's `stack` a line at a time, and a line of the error's message with a path or a
++// URL in it parses as a frame whose `function` and `filename` are that line's words. So a
++// JavaScript frame needs a whole-number line, a function that is a plain name (no space, no
++// colon) and a file that is the app's bundle. Apple and Java frames are built by the native SDKs
++// from the binary's own tables, never from text: one is located by its instruction address, the
++// other by its class and method. The pattern texts are FRAME_PATTERNS in exceptions.ts.
++private val opaxJsFrameFields: Map<String, OpaxField> =
 +  mapOf(
-+    "platform" to OpaxField.Token(opaxRegex("""^[a-z:]{1,32}$""")),
-+    "function" to OpaxField.Text(256),
-+    "filename" to OpaxField.Path(512),
-+    "abs_path" to OpaxField.Path(512),
-+    "module" to OpaxField.Text(256),
-+    "package" to OpaxField.Path(512),
++    "platform" to OpaxField.OneOf(setOf("hermes", "web:javascript")),
++    "function" to OpaxField.Token(opaxRegex("""^(?![\s\S]{129})(?:\?|<anonymous>|\??[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*)$""")),
++    "filename" to OpaxField.Bundle,
 +    "lineno" to OpaxField.Whole,
 +    "colno" to OpaxField.Whole,
 +    "in_app" to OpaxField.Flag,
++    "chunk_id" to OpaxField.Token(opaxRegex("""^[0-9a-f-]{1,64}$""", ignoreCase = true)),
++  )
++private val opaxAppleFrameFields: Map<String, OpaxField> =
++  mapOf(
++    "platform" to OpaxField.OneOf(setOf("apple")),
 +    "instruction_addr" to opaxAddress,
 +    "image_addr" to opaxAddress,
 +    "symbol_addr" to opaxAddress,
-+    "chunk_id" to OpaxField.Token(opaxRegex("""^[0-9a-f-]{1,64}$""", ignoreCase = true)),
-+    "map_id" to OpaxField.Text(128),
-+    "method_synthetic" to OpaxField.Flag,
-+    "client_resolved" to OpaxField.Flag,
++    "in_app" to OpaxField.Flag,
++    "module" to OpaxField.Token(opaxRegex("""^[A-Za-z0-9_.+-]{1,128}$""")),
++    "package" to OpaxField.Token(opaxRegex("""^(?:(?:/private)?/var/containers/Bundle/Application/[0-9A-Fa-f-]{36}/OPAX\.app/(?:OPAX|Frameworks/[A-Za-z0-9_.+-]{1,64}(?:/[A-Za-z0-9_.+-]{1,64})?)|(?:/private/preboot/Cryptexes/OS)?/(?:System/Library|usr/lib)/[A-Za-z0-9_.+/-]{1,300})$""")),
++    "function" to OpaxField.Token(opaxRegex("""^(?![\s\S]{257})(?:[A-Za-z_$][A-Za-z0-9_$.]*|(?:__[0-9]+)?[-+]\[[A-Za-z_][A-Za-z0-9_]*(?:\([A-Za-z0-9_]+\))? [A-Za-z_][A-Za-z0-9_:]*\](?:_block_invoke[A-Za-z0-9_.]*)?)$""")),
 +  )
++private val opaxJavaModule = OpaxField.Token(opaxRegex("""^(?![\s\S]{257})[A-Za-z_$-][A-Za-z0-9_$-]*(?:\.[A-Za-z_$-][A-Za-z0-9_$-]*)*$"""))
++private val opaxJavaFrameFields: Map<String, OpaxField> =
++  mapOf(
++    "platform" to OpaxField.OneOf(setOf("java")),
++    "module" to opaxJavaModule,
++    "function" to OpaxField.Token(opaxRegex("""^(?:<init>|<clinit>|[A-Za-z_$][A-Za-z0-9_$-]{0,127})$""")),
++    "filename" to OpaxField.Token(opaxRegex("""^[A-Za-z0-9_$.-]{1,128}$""")),
++    "lineno" to OpaxField.Whole,
++    "in_app" to OpaxField.Flag,
++    "map_id" to OpaxField.Token(opaxRegex("""^[A-Za-z0-9_.:@+-]{1,128}$""")),
++    "method_synthetic" to OpaxField.Flag,
++  )
++
++// Each platform's fields, and the ones a frame is dropped without.
++private val opaxJsFrameShape = opaxJsFrameFields to listOf("function", "filename", "lineno")
++private val opaxFrameShapes: Map<String, Pair<Map<String, OpaxField>, List<String>>> =
++  mapOf(
++    "hermes" to opaxJsFrameShape,
++    "web:javascript" to opaxJsFrameShape,
++    "apple" to (opaxAppleFrameFields to listOf("instruction_addr")),
++    "java" to (opaxJavaFrameFields to listOf("module", "function")),
++  )
++
++private fun opaxScrubFrame(value: Any?): Map<String, Any>? {
++  val platform = (value as? Map<*, *>)?.get("platform") as? String ?: return null
++  val (fields, required) = opaxFrameShapes[platform] ?: return null
++  val clean = opaxPick(fields, value)
++  return if (required.all { it in clean }) clean else null
++}
++
 +private val opaxMechanismFields: Map<String, OpaxField> =
 +  mapOf(
 +    "type" to OpaxField.Token(opaxRegex("""^[a-z_]{1,40}$""")),
@@ -761,17 +854,16 @@
 +  val clean = LinkedHashMap<String, Any>()
 +  clean["type"] = if (type in opaxExceptionTypes) type else "Error"
 +  opaxScrubMessage(exception["value"])?.let { clean["value"] = it }
-+  opaxKeep(OpaxField.Text(256), exception["module"])?.let { clean["module"] = it }
++  opaxKeep(opaxJavaModule, exception["module"])?.let { clean["module"] = it }
 +  opaxKeep(OpaxField.Whole, exception["thread_id"])?.let { clean["thread_id"] = it }
 +  val mechanism = opaxPick(opaxMechanismFields, exception["mechanism"])
 +  if (mechanism.isNotEmpty()) clean["mechanism"] = mechanism
 +  (exception["stacktrace"] as? Map<*, *>)?.let { stack ->
-+    val frames =
-+      ((stack["frames"] as? List<*>) ?: emptyList<Any?>())
-+        .take(250)
-+        .map { opaxPick(opaxFrameFields, it) }
-+        .filter { it.isNotEmpty() }
-+    clean["stacktrace"] = mapOf("type" to if (stack["type"] == "resolved") "resolved" else "raw", "frames" to frames)
++    val frames = ((stack["frames"] as? List<*>) ?: emptyList<Any?>()).take(250).mapNotNull { opaxScrubFrame(it) }
++    // No frame that may be sent: no stack at all.
++    if (frames.isNotEmpty()) {
++      clean["stacktrace"] = mapOf("type" to if (stack["type"] == "resolved") "resolved" else "raw", "frames" to frames)
++    }
 +  }
 +  return clean
 +}

@@ -437,8 +437,10 @@ captures nothing automatically.
   - its message, only when it is on the fixed list every crash and error
     report is held to (below), and then as the fixed text. Any other
     message is left out and `message_omitted: true` is sent;
-  - its stack frames, as every JS error report has them (where the code is,
-    never what it was working on);
+  - its stack frames, as every JS error report has them: a function's name,
+    the bundle's name, a line and a column, under the frame rule every crash
+    and error report is held to (below). A line of the message that the SDK
+    reads as a frame is dropped;
   - `route_pattern`: the route file's pattern, such as `/bill/[key]`. It is
     built from the layout segments Expo Router gives (file names, never
     values), without groups, and kept only when it is on the fixed list in
@@ -448,8 +450,9 @@ captures nothing automatically.
     `app_build`, `platform`, `$device_type`, `layout`, `foldable`).
 
   It holds no search term, Ask text, postcode, electorate or URL query: the
-  message is a fixed text or absent, the route is a file pattern, and the
-  frames are code locations. It holds no component stack: Expo Router's
+  message is a fixed text or absent, the route is a file pattern, and a
+  frame is sent only when it is a code location (the frame rule below).
+  It holds no component stack: Expo Router's
   boundary does not pass one on. At most
   one is sent for each route in a launch, so a page that fails again (on Try
   again, or for another record) adds none; `opax_route_error` still counts
@@ -521,8 +524,8 @@ device.
 
 | Property | What it may hold |
 | --- | --- |
-| `$exception_list` | Up to 10 exceptions: `type` (only a name in the fixed set below, such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`; any other becomes `Error`), `value` (the message, only when it is on the fixed list below, as its fixed text; otherwise absent), `module`, `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames) |
-| Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
+| `$exception_list` | Up to 10 exceptions: `type` (only a name in the fixed set below, such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`; any other becomes `Error`), `value` (the message, only when it is on the fixed list below, as its fixed text; otherwise absent), `module` (a Java exception's package, a dotted name), `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames; absent when no frame may be sent) |
+| Stack frames | Only a frame in one of three shapes, by its `platform`, with that shape's fields and no others (the frame rule below). JavaScript: `platform`, `function`, `filename` (the bundle's name), `lineno`, `colno`, `in_app`, `chunk_id`. Apple: `platform`, `instruction_addr`, `image_addr`, `symbol_addr`, `in_app`, `module`, `package`, `function`. Java: `platform`, `module`, `function`, `filename`, `lineno`, `in_app`, `map_id`, `method_synthetic`. Source context, local variables and any other field are dropped |
 | `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
 | `message_omitted` | `true` when an exception had a message that is not on the fixed list and so was left out; otherwise absent |
@@ -575,6 +578,63 @@ Android and React Native classes, and Swift's three fatal kinds. A native
 class that is not in the set is reported as `Error` with its stack frames;
 add its name to the three copies to see it by name.
 
+**Frames.** A stack frame says where the code is, and a frame is sent only
+when it can be nothing else. The SDK builds a JS error's frames by reading its
+`stack` a line at a time; it skips only lines with "Error: " in them, and a
+line with a path or a URL in it parses as a frame. A stack begins with the
+error's name and message, so `AskFailure: No electorate for Grayndler 2042 at
+/electorate/grayndler` became a frame whose `function` was "AskFailure: No
+electorate for Grayndler 2042 at " and whose `filename` was
+"/electorate/grayndler"; a second line of a message and a `cause`'s message
+did the same. Cutting a path at `?` did not stop that. So a frame is kept
+only as one of three shapes, chosen by its `platform`, with that shape's
+fields and no others; a frame of any other platform, or without what its
+shape needs, is dropped whole; and an exception with no frame left sends no
+`stacktrace`. The patterns are `FRAME_PATTERNS` in `exceptions.ts`, with the
+same texts in the Swift and Kotlin copies.
+
+- **JavaScript** (`platform` `hermes` or `web:javascript`). All three of:
+  - `lineno`, a whole number;
+  - `function`, a plain name: an identifier or a dotted path of them
+    (letters, digits, `_`, `$`), with Hermes's leading `?` for a generator's
+    inner function (`?anon_0_load`), or the SDK's `?` or `<anonymous>` for
+    none; at most 128 characters. No space and no colon, so a line of words
+    is not a function;
+  - `filename`, the app's bundle: `main.jsbundle` (iOS) or
+    `index.android.bundle`, alone or at the end of the path Hermes prints it
+    with (letters, digits and `_ . : / -` only; no space, `?` or `#`). What
+    is sent is the bundle's name alone, never the path, which on iOS holds
+    the install's container folder.
+
+  Also kept: `colno`, `in_app`, `chunk_id`. This is what Hermes writes for
+  the app's bytecode, `at seatFor (address at …/main.jsbundle:1:48213)`
+  (hermes `lib/VM/JSError.cpp`: the name is the function's own `name`, with
+  no `async`, `new` or receiver added). Its `(native)` frames have no line
+  and are dropped; so is a frame whose function's name has a space in it
+  (`bound f`, `get x`).
+- **Apple** (`platform` `apple`, built by posthog-ios from the crash's
+  addresses). It must have `instruction_addr`, a hex address. Also kept:
+  `image_addr`, `symbol_addr`, `in_app`; `module`, a binary's name (`OPAX`,
+  `libsystem_kernel.dylib`); `package`, only the app's own binary or an
+  embedded framework inside the app's container, or a path under
+  `/System/Library` or `/usr/lib`; and `function`, only a C, C++ or Swift
+  symbol (one run of letters, digits, `_`, `$`, `.`) or an Objective-C
+  method (`-[Class selector:]`). A field that is anything else is left
+  off; the frame stays, located by its address.
+- **Java** (`platform` `java`, built by posthog-android from the
+  throwable's own stack trace). It must have `module`, a class name with its
+  package (`a.b.Foo$Bar`), and `function`, a method name (`invoke`,
+  `<init>`, `lambda$onCreate$0`). Also kept: `filename`, a file's name with
+  no `/` (`Foo.kt`, `SourceFile`); `lineno`; `in_app`; `map_id`;
+  `method_synthetic`.
+
+Apple and Java frames are built by the native SDKs from the binary's own
+tables, never from an error's text, and a line of text cannot name its own
+`platform`: the SDK's parser stamps every frame it reads `hermes`. What the
+rule cannot tell apart is a line of a message written exactly as a frame
+(`at word (address at main.jsbundle:1:7)`, one word, the bundle's name and a
+line); such a line would be sent as that word and those numbers.
+
 **No screen, URL or parameter.** No report carries `$screen_name`,
 `$current_url`, `$pathname` or a route parameter. The SDK's screen property
 is checked only for its shape, which a path with a record's key in it also
@@ -584,9 +644,11 @@ alone; native crash reports name no route. `$current_url`, `$pathname` and
 parameters were never on any list.
 
 **Builds already on phones** (1.1.4 and earlier, and 1.1.5 up to this change)
-still send a pattern-rewritten message and `$screen_name`.
-`docs/ANALYTICS-exception-ingestion-rule.md` is a draft of a PostHog
-ingestion rule that applies the same list to their reports. It is a draft
+still send a pattern-rewritten message and `$screen_name`, any type that has
+an identifier's shape, and every frame the SDK read, a message's lines
+included. `docs/ANALYTICS-exception-ingestion-rule.md` is a draft of a
+PostHog ingestion rule that applies the same message list, type set and
+frame rule to their reports. It is a draft
 only: nothing has been created or changed in PostHog.
 
 `$exception_steps`, app state, screen sizes, locale, device model, `$set` and

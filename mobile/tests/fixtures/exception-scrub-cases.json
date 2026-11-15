@@ -1,5 +1,5 @@
 {
- "note": "Invented inputs for the crash report scrub. tests/native-scrub.test.ts runs them through the JS rules and, with scripts/check-native-scrub.sh, through the Swift copy in the plugin patch, and expects the same output.",
+ "note": "Invented inputs for the crash report scrub. tests/native-scrub.test.ts runs them through the JS rules and, with scripts/check-native-scrub.sh, through the Swift copy in the plugin patch, and expects the same output. The named events at the end are stack frames: the privacy review's inputs as the SDK's own builder turns them into frames (tests/analytics-exceptions.test.ts builds them again and compares), and frames in the shapes posthog-ios and posthog-android send.",
  "messages": [
   "Bad input “my secret question” here",
   "Bad input ‘my secret question’ here",
@@ -2045,6 +2045,1042 @@
      {
       "type": "",
       "value": "Network request failed"
+     }
+    ]
+   }
+  },
+  {
+   "name": "review: a message with a path in it",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_list": [
+     {
+      "type": "AskFailure",
+      "value": "No electorate for Grayndler 2042 at /electorate/grayndler",
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "Seats.prototype.find",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2345
+        },
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "asyncGeneratorStep",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 1234
+        },
+        {
+         "platform": "hermes",
+         "filename": "native",
+         "function": "next",
+         "in_app": true
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "?anon_0_load",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 60012
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "anonymous",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 51200
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "seatFor",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 48213
+        },
+        {
+         "platform": "hermes",
+         "filename": "/electorate/grayndler",
+         "function": "AskFailure: No electorate for Grayndler 2042 at ",
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ],
+    "$exception_level": "error"
+   }
+  },
+  {
+   "name": "review: a second message line with a URL",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "Lookup failed\nJane Citizen housing https://x/s?q=jane",
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "Seats.prototype.find",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2345
+        },
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "asyncGeneratorStep",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 1234
+        },
+        {
+         "platform": "hermes",
+         "filename": "native",
+         "function": "next",
+         "in_app": true
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "?anon_0_load",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 60012
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "anonymous",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 51200
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "seatFor",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 48213
+        },
+        {
+         "platform": "hermes",
+         "filename": "https://x/s?q=jane",
+         "function": "Jane Citizen housing ",
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ],
+    "$exception_level": "error"
+   }
+  },
+  {
+   "name": "review: a type named from data",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_list": [
+     {
+      "type": "Grayndler",
+      "value": "No seat at /electorate/grayndler",
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "Seats.prototype.find",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2345
+        },
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "asyncGeneratorStep",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 1234
+        },
+        {
+         "platform": "hermes",
+         "filename": "native",
+         "function": "next",
+         "in_app": true
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "?anon_0_load",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 60012
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "anonymous",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 51200
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "seatFor",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 48213
+        },
+        {
+         "platform": "hermes",
+         "filename": "/electorate/grayndler",
+         "function": "Grayndler: No seat at ",
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ],
+    "$exception_level": "error"
+   }
+  },
+  {
+   "name": "a message of many lines",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "Lookup failed\nJane Citizen asked about housing in 3000\nat /person/jane-citizen\n    at Jane Citizen (/search/housing affordability:3:14)\njane@example.org@https://opax.com.au/search?q=jane%20citizen:1:2\nsaved to /var/mobile/Containers/Data/Application/jane/notes.js:12:3\nJane Citizen wrote main.jsbundle:1:5\n    at Jane Citizen (address at main.jsbundle:1:7)",
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "Seats.prototype.find",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2345
+        },
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "asyncGeneratorStep",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 1234
+        },
+        {
+         "platform": "hermes",
+         "filename": "native",
+         "function": "next",
+         "in_app": true
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "?anon_0_load",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 60012
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "anonymous",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 51200
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "seatFor",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 48213
+        },
+        {
+         "platform": "hermes",
+         "filename": "main.jsbundle",
+         "function": "Jane Citizen",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 7
+        },
+        {
+         "platform": "hermes",
+         "filename": "Jane Citizen wrote main.jsbundle",
+         "function": "?",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 5
+        },
+        {
+         "platform": "hermes",
+         "filename": "/var/mobile/Containers/Data/Application/jane/notes.js",
+         "function": "saved to ",
+         "in_app": true,
+         "lineno": 12,
+         "colno": 3
+        },
+        {
+         "platform": "hermes",
+         "filename": "https://opax.com.au/search?q=jane%20citizen",
+         "function": "jane@example.org",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2
+        },
+        {
+         "platform": "hermes",
+         "filename": "/search/housing affordability",
+         "function": "Jane Citizen",
+         "in_app": true,
+         "lineno": 3,
+         "colno": 14
+        },
+        {
+         "platform": "hermes",
+         "filename": "/person/jane-citizen",
+         "function": "?",
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ],
+    "$exception_level": "error"
+   }
+  },
+  {
+   "name": "a cause chain",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "Could not load the page",
+      "mechanism": {
+       "type": "onuncaughtexception",
+       "handled": false,
+       "synthetic": false,
+       "exception_id": 0
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "Seats.prototype.find",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2345
+        },
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "asyncGeneratorStep",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 1234
+        },
+        {
+         "platform": "hermes",
+         "filename": "native",
+         "function": "next",
+         "in_app": true
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "?anon_0_load",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 60012
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "anonymous",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 51200
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "seatFor",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 48213
+        }
+       ]
+      }
+     },
+     {
+      "type": "AskFailure",
+      "value": "No member Jane Citizen at /person/jane-citizen",
+      "mechanism": {
+       "type": "chained",
+       "source": "cause",
+       "synthetic": false,
+       "exception_id": 1,
+       "parent_id": 0
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "Seats.prototype.find",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2345
+        },
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "asyncGeneratorStep",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 1234
+        },
+        {
+         "platform": "hermes",
+         "filename": "native",
+         "function": "next",
+         "in_app": true
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "?anon_0_load",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 60012
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "anonymous",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 51200
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "seatFor",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 48213
+        },
+        {
+         "platform": "hermes",
+         "filename": "/person/jane-citizen",
+         "function": "AskFailure: No member Jane Citizen at ",
+         "in_app": true
+        }
+       ]
+      }
+     },
+     {
+      "type": "TypeError",
+      "value": "Network request failed",
+      "mechanism": {
+       "type": "chained",
+       "source": "cause",
+       "synthetic": false,
+       "exception_id": 2,
+       "parent_id": 1
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "Seats.prototype.find",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 2345
+        },
+        {
+         "platform": "hermes",
+         "filename": "index.android.bundle",
+         "function": "asyncGeneratorStep",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 1234
+        },
+        {
+         "platform": "hermes",
+         "filename": "native",
+         "function": "next",
+         "in_app": true
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "?anon_0_load",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 60012
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "anonymous",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 51200
+        },
+        {
+         "platform": "hermes",
+         "filename": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "function": "seatFor",
+         "in_app": true,
+         "lineno": 1,
+         "colno": 48213
+        }
+       ]
+      }
+     }
+    ],
+    "$exception_level": "error"
+   }
+  },
+  {
+   "name": "native frames: Apple",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_level": "fatal",
+    "$exception_list": [
+     {
+      "type": "EXC_BAD_ACCESS",
+      "value": "Attempted to dereference garbage pointer 0x10",
+      "thread_id": 0,
+      "mechanism": {
+       "type": "mach",
+       "handled": false,
+       "synthetic": false
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": true,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "module": "OPAX",
+         "package": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/OPAX",
+         "function": "$s4OPAX11AppDelegateC11applicationSbyF"
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": true,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "module": "React",
+         "package": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/Frameworks/React.framework/React",
+         "function": "-[RCTBridge(Private) invalidate:with:]"
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": true,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "module": "hermes",
+         "package": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/Frameworks/hermes.framework/hermes",
+         "function": "_ZN8facebook6hermes13HermesRuntime3runEv"
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": false,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "module": "Foundation",
+         "package": "/System/Library/Frameworks/Foundation.framework/Foundation",
+         "function": "__42-[NSOperation start]_block_invoke.123"
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": false,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "module": "libsystem_kernel.dylib",
+         "package": "/usr/lib/system/libsystem_kernel.dylib",
+         "function": "__pthread_kill"
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": false,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "module": "UIKitCore",
+         "package": "/private/preboot/Cryptexes/OS/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore",
+         "function": "<redacted>"
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": true
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": true,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "module": "Jane Citizen",
+         "package": "/electorate/grayndler",
+         "function": "Jane Citizen housing",
+         "filename": "/person/jane-citizen",
+         "lineno": 7,
+         "abs_path": "/person/jane-citizen"
+        },
+        {
+         "instruction_addr": "0x0000000104a3c1d8",
+         "platform": "apple",
+         "in_app": true,
+         "image_addr": "0x0000000104a00000",
+         "symbol_addr": "0x0000000104a3c100",
+         "package": "/var/containers/Bundle/Application/jane-citizen/OPAX.app/OPAX",
+         "function": "-[Jane Citizen housing in 3000]"
+        },
+        {
+         "platform": "apple",
+         "in_app": true,
+         "module": "OPAX",
+         "function": "main"
+        },
+        {
+         "platform": "apple",
+         "instruction_addr": "Jane Citizen",
+         "module": "OPAX"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "native frames: Java",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "Android",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_level": "fatal",
+    "$exception_list": [
+     {
+      "type": "java.lang.IllegalStateException",
+      "module": "java.lang",
+      "value": "No electorate for Grayndler",
+      "thread_id": 2,
+      "mechanism": {
+       "type": "UncaughtExceptionHandler",
+       "handled": false,
+       "synthetic": false
+      },
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "module": "com.android.internal.os.ZygoteInit",
+         "function": "main",
+         "platform": "java",
+         "in_app": false,
+         "filename": "ZygoteInit.java",
+         "lineno": 1053
+        },
+        {
+         "module": "java.lang.reflect.Method",
+         "function": "invoke",
+         "platform": "java",
+         "in_app": false
+        },
+        {
+         "module": "au.com.opax.app.MainActivity",
+         "function": "onCreate",
+         "platform": "java",
+         "in_app": true,
+         "filename": "MainActivity.kt",
+         "lineno": 21,
+         "map_id": "au.com.opax.app@1.1.4+58"
+        },
+        {
+         "module": "au.com.opax.app.MainActivity$onCreate$1",
+         "function": "invokeSuspend",
+         "platform": "java",
+         "in_app": true,
+         "filename": "MainActivity.kt",
+         "lineno": 30
+        },
+        {
+         "module": "au.com.opax.app.MainActivity$$ExternalSyntheticLambda0",
+         "function": "lambda$onCreate$0",
+         "platform": "java",
+         "in_app": true,
+         "filename": "D8$$SyntheticClass",
+         "lineno": 0,
+         "method_synthetic": true
+        },
+        {
+         "module": "a.b.c",
+         "function": "<init>",
+         "platform": "java",
+         "in_app": false,
+         "filename": "SourceFile",
+         "lineno": 3
+        },
+        {
+         "module": "expo.modules.kotlin.Foo",
+         "function": "bar-impl",
+         "platform": "java",
+         "in_app": false,
+         "filename": "r8-map-id-0b8e6a3c1d2e3f408a9b0c1d2e3f4a5b",
+         "lineno": 12
+        },
+        {
+         "module": "Jane Citizen",
+         "function": "main",
+         "platform": "java",
+         "in_app": false,
+         "filename": "Main.java",
+         "lineno": 1
+        },
+        {
+         "module": "au.com.opax.app.Main",
+         "function": "No electorate for Grayndler",
+         "platform": "java",
+         "in_app": false,
+         "filename": "Main.java",
+         "lineno": 1
+        },
+        {
+         "module": "au.com.opax.app.Main",
+         "function": "main",
+         "platform": "java",
+         "in_app": false,
+         "filename": "/electorate/grayndler",
+         "lineno": 1,
+         "colno": 3000,
+         "abs_path": "/electorate/grayndler",
+         "map_id": "Jane Citizen"
+        },
+        {
+         "platform": "java",
+         "filename": "Main.java",
+         "lineno": 4
+        }
+       ]
+      }
+     },
+     {
+      "type": "java.lang.RuntimeException",
+      "module": "Jane Citizen",
+      "value": "x"
+     }
+    ]
+   }
+  },
+  {
+   "name": "frames of other shapes",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": "58",
+    "$screen_name": "/electorate/[name]",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "Network request failed",
+      "stacktrace": {
+       "type": "resolved",
+       "frames": [
+        "Jane Citizen",
+        null,
+        7,
+        [
+         "a"
+        ],
+        {
+         "function": "seatFor",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 2
+        },
+        {
+         "platform": "node:javascript",
+         "function": "seatFor",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "Hermes",
+         "function": "seatFor",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "main.jsbundle"
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "main.jsbundle",
+         "lineno": "1"
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "main.jsbundle",
+         "lineno": 1.5
+        },
+        {
+         "platform": "hermes",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seat For",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "AskFailure:",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor\n",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "main.jsbundle\n",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "main.jsbundle?q=jane",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "https://x/s?q=jane",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "/electorate/grayndler",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "/electorate/jane citizen/main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "seatFor",
+         "filename": "main.jsbundle.map",
+         "lineno": 1
+        },
+        {
+         "platform": "hermes",
+         "function": "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        },
+        {
+         "platform": "web:javascript",
+         "function": "?",
+         "filename": "file:///private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/main.jsbundle",
+         "lineno": 1,
+         "colno": 9,
+         "in_app": true,
+         "module": "Jane Citizen",
+         "package": "/person/jane-citizen",
+         "abs_path": "/person/jane-citizen",
+         "map_id": "jane",
+         "instruction_addr": "0x10",
+         "context_line": "Jane Citizen",
+         "vars": {
+          "q": "jane"
+         }
+        },
+        {
+         "platform": "hermes",
+         "function": "<anonymous>",
+         "filename": "index.android.bundle",
+         "lineno": 1,
+         "colno": 10,
+         "in_app": true,
+         "chunk_id": "5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77"
+        },
+        {
+         "platform": "hermes",
+         "function": "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+         "filename": "main.jsbundle",
+         "lineno": 1
+        }
+       ]
+      }
+     },
+     {
+      "type": "Error",
+      "value": "Network request failed",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "hermes",
+         "function": "Jane Citizen",
+         "filename": "/x",
+         "lineno": 1
+        }
+       ]
+      }
+     },
+     {
+      "type": "Error",
+      "value": "Network request failed",
+      "stacktrace": "Jane Citizen"
      }
     ]
    }

@@ -2,9 +2,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { analyticsConfig, analyticsOptions } from '../src/analytics';
 import { scrubEvent, type AnalyticsContext } from '../src/analytics/events';
+import { ErrorTracking } from '@posthog/core';
 import {
   EXCEPTION_MESSAGE_MAX_LENGTH,
   EXCEPTION_TYPES,
+  FRAME_PATTERNS,
   MESSAGE_RULES,
   scrubExceptionMessage,
 } from '../src/analytics/exceptions';
@@ -26,10 +28,13 @@ const context: AnalyticsContext = {
   appBuild: '43',
   environment: 'production',
 };
+// Where the app's bundle is on a phone, as Hermes prints it in a frame.
+const appPath =
+  '/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app';
 const frame = {
-  platform: 'web:javascript',
+  platform: 'hermes',
   function: 'renderAnswer',
-  filename: `main.jsbundle?q=${encodeURIComponent(secrets.search)}`,
+  filename: `${appPath}/main.jsbundle`,
   lineno: 1,
   colno: 48213,
   in_app: true,
@@ -44,7 +49,9 @@ const nativeFrame = {
   instruction_addr: '0x0000000104a3c1d8',
   image_addr: '0x0000000104a00000',
   symbol_addr: '0x0000000104a3c100',
-  package: '/private/var/containers/Bundle/Application/X/OPAX.app/OPAX',
+  module: 'OPAX',
+  package: `${appPath}/OPAX`,
+  function: '$s4OPAX11AppDelegateC11applicationSbyF',
   in_app: true,
 };
 function exceptionEvent(value: string, extra: Record<string, unknown> = {}) {
@@ -78,7 +85,25 @@ function exceptionEvent(value: string, extra: Record<string, unknown> = {}) {
             exception_id: 0,
             source: secrets.field,
           },
-          stacktrace: { type: 'raw', frames: [frame, nativeFrame] },
+          stacktrace: {
+            type: 'raw',
+            frames: [
+              frame,
+              nativeFrame,
+              // A line of the message, as the SDK's parser reads one.
+              {
+                platform: 'hermes',
+                function: `TypeError: ${secrets.talk} at `,
+                filename: `/search/${secrets.search}`,
+                in_app: true,
+              },
+              // The bundle with a query on it is not the bundle.
+              {
+                ...frame,
+                filename: `main.jsbundle?q=${encodeURIComponent(secrets.search)}`,
+              },
+            ],
+          },
           extra: secrets.question,
         },
       ],
@@ -316,8 +341,9 @@ test('the exception payload is rebuilt from fixed lists', () => {
         type: 'raw',
         frames: [
           {
-            platform: 'web:javascript',
+            platform: 'hermes',
             function: 'renderAnswer',
+            // The bundle's name, never the path it was found at.
             filename: 'main.jsbundle',
             lineno: 1,
             colno: 48213,
@@ -450,6 +476,517 @@ test('Swift and Kotlin use the JS message rules and the same field patterns', ()
     expect(block).not.toMatch(/"\\?\$screen_name"/);
     expect(block).not.toMatch(/\$current_url|\$pathname/);
   }
+});
+
+// The SDK's own builder, set up as posthog-react-native sets it up on
+// Hermes (posthog-rn.js: the `hermes` platform, the Chrome then the Gecko
+// line parser).
+const sdkBuilder = new ErrorTracking.ErrorPropertiesBuilder(
+  [
+    new ErrorTracking.PromiseRejectionEventCoercer(),
+    new ErrorTracking.ErrorCoercer(),
+    new ErrorTracking.ErrorEventCoercer(),
+    new ErrorTracking.ObjectCoercer(),
+    new ErrorTracking.StringCoercer(),
+    new ErrorTracking.PrimitiveCoercer(),
+  ],
+  ErrorTracking.createStackParser(
+    'hermes',
+    ErrorTracking.chromeStackLineParser,
+    ErrorTracking.geckoStackLineParser,
+  ),
+);
+// A stack as Hermes writes it (lib/VM/JSError.cpp): "Name: message", then
+// "    at name (address at <bundle>:1:<offset>)" for the app's bytecode,
+// "(native)" for a native function. The name is the function's own.
+const hermesFrames = [
+  `    at seatFor (address at ${appPath}/main.jsbundle:1:48213)`,
+  `    at anonymous (address at ${appPath}/main.jsbundle:1:51200)`,
+  `    at ?anon_0_load (address at ${appPath}/main.jsbundle:1:60012)`,
+  '    at next (native)',
+  '    at asyncGeneratorStep (address at index.android.bundle:1:1234)',
+  '    at Seats.prototype.find (address at index.android.bundle:1:2345)',
+].join('\n');
+function hermesError(name: string, message: string, extra: object = {}) {
+  const error = Object.assign(new Error(message), extra);
+  error.name = name;
+  error.stack = `${name}: ${message}\n${hermesFrames}`;
+  return error;
+}
+// The five real frames, as sent: the SDK lists the outermost first.
+const realFrames = [
+  ['Seats.prototype.find', 'index.android.bundle', 2345],
+  ['asyncGeneratorStep', 'index.android.bundle', 1234],
+  ['?anon_0_load', 'main.jsbundle', 60012],
+  ['anonymous', 'main.jsbundle', 51200],
+  ['seatFor', 'main.jsbundle', 48213],
+].map(([name, filename, colno]) => ({
+  platform: 'hermes',
+  function: name,
+  filename,
+  lineno: 1,
+  colno,
+  in_app: true,
+}));
+type Fixture = {
+  events: {
+    name?: string;
+    event: string;
+    properties: Record<string, unknown>;
+  }[];
+};
+const fixture = JSON.parse(
+  readFileSync(join(__dirname, 'fixtures/exception-scrub-cases.json'), 'utf8'),
+) as Fixture;
+const fixtureEvent = (name: string) => {
+  const found = fixture.events.find((event) => event.name === name);
+  expect([name, found === undefined]).toEqual([name, false]);
+  return structuredClone(found!);
+};
+type SentException = {
+  type: string;
+  value?: string;
+  module?: string;
+  stacktrace?: { type: string; frames: Record<string, unknown>[] };
+};
+const sentExceptions = (event: {
+  event: string;
+  properties: Record<string, unknown>;
+}) =>
+  scrubEvent(event, context)!.properties!.$exception_list as SentException[];
+
+/**
+ * A stack frame is where the code is. The SDK reads an error's `stack` a
+ * line at a time, skipping only lines with "Error: " in them, so a line of
+ * the message that has a path or a URL in it becomes a frame whose
+ * `function` and `filename` are that line's words (the privacy review).
+ */
+describe('a stack frame is sent only as a code location', () => {
+  const reviewed: [name: string, error: Error, types: string[]][] = [
+    [
+      'review: a message with a path in it',
+      hermesError(
+        'AskFailure',
+        'No electorate for Grayndler 2042 at /electorate/grayndler',
+      ),
+      ['AskFailure'],
+    ],
+    [
+      'review: a second message line with a URL',
+      hermesError(
+        'Error',
+        'Lookup failed\nJane Citizen housing https://x/s?q=jane',
+      ),
+      ['Error'],
+    ],
+    [
+      'review: a type named from data',
+      hermesError('Grayndler', 'No seat at /electorate/grayndler'),
+      ['Error'],
+    ],
+    [
+      'a message of many lines',
+      hermesError(
+        'Error',
+        [
+          'Lookup failed',
+          'Jane Citizen asked about housing in 3000',
+          'at /person/jane-citizen',
+          '    at Jane Citizen (/search/housing affordability:3:14)',
+          'jane@example.org@https://opax.com.au/search?q=jane%20citizen:1:2',
+          'saved to /var/mobile/Containers/Data/Application/jane/notes.js:12:3',
+          'Jane Citizen wrote main.jsbundle:1:5',
+          '    at Jane Citizen (address at main.jsbundle:1:7)',
+        ].join('\n'),
+      ),
+      ['Error'],
+    ],
+    [
+      'a cause chain',
+      hermesError('Error', 'Could not load the page', {
+        cause: hermesError(
+          'AskFailure',
+          'No member Jane Citizen at /person/jane-citizen',
+          { cause: hermesError('TypeError', 'Network request failed') },
+        ),
+      }),
+      ['Error', 'AskFailure', 'TypeError'],
+    ],
+  ];
+  test.each(reviewed)(
+    'the SDK’s own frames for an error whose message has a path, a URL or more lines: %s',
+    (name, error, types) => {
+      const built = sdkBuilder.buildFromUnknown(error, {
+        mechanism: { handled: false, type: 'onuncaughtexception' },
+      });
+      // The shared fixture holds this same input, so the Swift and Kotlin
+      // copies are run on it (tests/native-scrub*.test.ts).
+      const shared = fixtureEvent(name);
+      expect(shared.properties.$exception_list).toEqual(
+        JSON.parse(JSON.stringify(built.$exception_list)),
+      );
+      const scrubbed = scrubEvent(shared, context)!;
+      const sent = scrubbed.properties!.$exception_list as SentException[];
+      expect(sent.map((exception) => exception.type)).toEqual(types);
+      // Every exception keeps its five real frames and nothing else.
+      for (const exception of sent)
+        expect(exception.stacktrace).toEqual({
+          type: 'raw',
+          frames: realFrames,
+        });
+      expect(leafValues(scrubbed)).not.toMatch(
+        /Grayndler|grayndler|electorate|2042|Jane|jane|Citizen|citizen|housing|3000|Lookup|seat at|https?:|\/person|\/search|\/var|notes|example\.org|5F0C3A1E|containers/,
+      );
+    },
+  );
+
+  test('the SDK does read those messages as frames: the review’s two, as it found them', () => {
+    const frames = (name: string) =>
+      (
+        fixtureEvent(name).properties.$exception_list as {
+          stacktrace: { frames: Record<string, unknown>[] };
+        }[]
+      )[0]!.stacktrace.frames;
+    expect(frames('review: a message with a path in it')).toContainEqual({
+      platform: 'hermes',
+      function: 'AskFailure: No electorate for Grayndler 2042 at ',
+      filename: '/electorate/grayndler',
+      in_app: true,
+    });
+    expect(frames('review: a second message line with a URL')).toContainEqual({
+      platform: 'hermes',
+      function: 'Jane Citizen housing ',
+      filename: 'https://x/s?q=jane',
+      in_app: true,
+    });
+  });
+
+  const hermes = (extra: Record<string, unknown>) => ({
+    platform: 'hermes',
+    function: 'seatFor',
+    filename: 'main.jsbundle',
+    lineno: 1,
+    colno: 48213,
+    in_app: true,
+    ...extra,
+  });
+  const framesSent = (...frames: unknown[]) =>
+    sentExceptions({
+      event: '$exception',
+      properties: {
+        $exception_list: [
+          { type: 'Error', stacktrace: { type: 'raw', frames } },
+        ],
+      },
+    })[0]!.stacktrace?.frames;
+
+  test('a JavaScript frame needs a whole-number line, a plain function name and the app’s bundle', () => {
+    // The names Hermes prints, and the SDK's two for no name.
+    const names = [
+      'seatFor',
+      'anonymous',
+      '?anon_0_load',
+      'Seats.prototype.find',
+      '_callee$',
+      '$r',
+      '?',
+      '<anonymous>',
+    ];
+    expect(
+      framesSent(...names.map((name) => hermes({ function: name })))!.map(
+        (kept) => kept.function,
+      ),
+    ).toEqual(names);
+    // The bundle, wherever Hermes found it: only its name is sent.
+    expect(
+      framesSent(
+        hermes({ filename: 'main.jsbundle' }),
+        hermes({ filename: `${appPath}/main.jsbundle` }),
+        hermes({ filename: `file://${appPath}/main.jsbundle` }),
+        hermes({ filename: 'index.android.bundle' }),
+        hermes({ filename: 'assets://index.android.bundle' }),
+        hermes({ platform: 'web:javascript' }),
+      )!.map((kept) => kept.filename),
+    ).toEqual([
+      'main.jsbundle',
+      'main.jsbundle',
+      'main.jsbundle',
+      'index.android.bundle',
+      'index.android.bundle',
+      'main.jsbundle',
+    ]);
+    // Anything else is no frame at all, and no frame is no stack at all.
+    for (const extra of [
+      { function: 'seat For' },
+      { function: 'AskFailure:' },
+      { function: 'AskFailure: No electorate for Grayndler 2042 at ' },
+      { function: 'Jane Citizen housing ' },
+      { function: 'bound seatFor' },
+      { function: 'seatFor\n' },
+      { function: 'seat-for' },
+      { function: 'Seats..find' },
+      { function: '' },
+      { function: undefined },
+      { function: 7 },
+      { function: 's'.repeat(129) },
+      { filename: '/electorate/grayndler' },
+      { filename: 'https://x/s?q=jane' },
+      { filename: 'main.jsbundle?q=jane' },
+      { filename: 'main.jsbundle#jane' },
+      { filename: 'main.jsbundle\n' },
+      { filename: 'main.jsbundle.map' },
+      { filename: 'xmain.jsbundle' },
+      { filename: '/person/jane citizen/main.jsbundle' },
+      { filename: 'native' },
+      { filename: undefined },
+      { lineno: undefined },
+      { lineno: '1' },
+      { lineno: 1.5 },
+      { lineno: Number.NaN },
+      { platform: 'javascript' },
+      { platform: 'Hermes' },
+      { platform: undefined },
+    ])
+      expect([extra, framesSent(hermes(extra))]).toEqual([extra, undefined]);
+    expect(framesSent('Jane Citizen', null, 7, ['x'], {})).toBeUndefined();
+    // A kept frame carries its shape's fields and no others.
+    expect(
+      framesSent(
+        hermes({
+          chunk_id: '5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77',
+          module: 'Jane Citizen',
+          package: '/person/jane-citizen',
+          abs_path: '/person/jane-citizen',
+          map_id: 'jane',
+          instruction_addr: '0x10',
+          colno: 'jane',
+          in_app: 'jane',
+          context_line: 'Jane Citizen',
+          vars: { q: 'jane' },
+        }),
+      ),
+    ).toEqual([
+      {
+        platform: 'hermes',
+        function: 'seatFor',
+        filename: 'main.jsbundle',
+        lineno: 1,
+        chunk_id: '5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77',
+      },
+    ]);
+  });
+
+  test('an Apple frame is its addresses; its symbol, binary and path are sent only in their own shapes', () => {
+    const [crash] = sentExceptions(fixtureEvent('native frames: Apple'));
+    const address = {
+      platform: 'apple',
+      instruction_addr: '0x0000000104a3c1d8',
+      image_addr: '0x0000000104a00000',
+      symbol_addr: '0x0000000104a3c100',
+    };
+    expect(crash).toEqual({
+      type: 'EXC_BAD_ACCESS',
+      thread_id: 0,
+      mechanism: { type: 'mach', handled: false, synthetic: false },
+      stacktrace: {
+        type: 'raw',
+        frames: [
+          {
+            ...address,
+            in_app: true,
+            module: 'OPAX',
+            package: `${appPath}/OPAX`,
+            function: '$s4OPAX11AppDelegateC11applicationSbyF',
+          },
+          {
+            ...address,
+            in_app: true,
+            module: 'React',
+            package: `${appPath}/Frameworks/React.framework/React`,
+            function: '-[RCTBridge(Private) invalidate:with:]',
+          },
+          {
+            ...address,
+            in_app: true,
+            module: 'hermes',
+            package: `${appPath}/Frameworks/hermes.framework/hermes`,
+            function: '_ZN8facebook6hermes13HermesRuntime3runEv',
+          },
+          {
+            ...address,
+            in_app: false,
+            module: 'Foundation',
+            package:
+              '/System/Library/Frameworks/Foundation.framework/Foundation',
+            function: '__42-[NSOperation start]_block_invoke.123',
+          },
+          {
+            ...address,
+            in_app: false,
+            module: 'libsystem_kernel.dylib',
+            package: '/usr/lib/system/libsystem_kernel.dylib',
+            function: '__pthread_kill',
+          },
+          // "<redacted>" is not a symbol: the address stands alone.
+          {
+            ...address,
+            in_app: false,
+            module: 'UIKitCore',
+            package:
+              '/private/preboot/Cryptexes/OS/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
+          },
+          {
+            platform: 'apple',
+            instruction_addr: '0x0000000104a3c1d8',
+            in_app: true,
+          },
+          // The same shape with words in it: the addresses and nothing else.
+          { ...address, in_app: true },
+          { ...address, in_app: true },
+        ],
+      },
+    });
+    expect(leafValues(crash)).not.toMatch(/Jane|Citizen|grayndler|housing/i);
+  });
+
+  test('a Java frame is its class and method; a file is a name, never a path', () => {
+    const [crash, second] = sentExceptions(fixtureEvent('native frames: Java'));
+    const java = (module: string, name: string, extra: object = {}) => ({
+      platform: 'java',
+      module,
+      function: name,
+      in_app: false,
+      ...extra,
+    });
+    expect(crash).toEqual({
+      type: 'java.lang.IllegalStateException',
+      module: 'java.lang',
+      thread_id: 2,
+      mechanism: { handled: false, synthetic: false },
+      stacktrace: {
+        type: 'raw',
+        frames: [
+          java('com.android.internal.os.ZygoteInit', 'main', {
+            filename: 'ZygoteInit.java',
+            lineno: 1053,
+          }),
+          // A native method has no line.
+          java('java.lang.reflect.Method', 'invoke'),
+          java('au.com.opax.app.MainActivity', 'onCreate', {
+            filename: 'MainActivity.kt',
+            lineno: 21,
+            in_app: true,
+            map_id: 'au.com.opax.app@1.1.4+58',
+          }),
+          java('au.com.opax.app.MainActivity$onCreate$1', 'invokeSuspend', {
+            filename: 'MainActivity.kt',
+            lineno: 30,
+            in_app: true,
+          }),
+          java(
+            'au.com.opax.app.MainActivity$$ExternalSyntheticLambda0',
+            'lambda$onCreate$0',
+            {
+              filename: 'D8$$SyntheticClass',
+              lineno: 0,
+              in_app: true,
+              method_synthetic: true,
+            },
+          ),
+          java('a.b.c', '<init>', { filename: 'SourceFile', lineno: 3 }),
+          java('expo.modules.kotlin.Foo', 'bar-impl', {
+            filename: 'r8-map-id-0b8e6a3c1d2e3f408a9b0c1d2e3f4a5b',
+            lineno: 12,
+          }),
+          // A path for a file name and words for a release: neither is sent.
+          java('au.com.opax.app.Main', 'main', { lineno: 1 }),
+        ],
+      },
+    });
+    // An exception's module is a package name or nothing.
+    expect(second).toEqual({ type: 'java.lang.RuntimeException' });
+    expect(leafValues([crash, second])).not.toMatch(
+      /Jane|Citizen|grayndler|electorate|3000/i,
+    );
+  });
+
+  test('frames of no known platform are dropped, and an exception with none left has no stack', () => {
+    const sent = sentExceptions(fixtureEvent('frames of other shapes'));
+    expect(sent).toEqual([
+      {
+        type: 'Error',
+        value: 'Network request failed',
+        stacktrace: {
+          type: 'resolved',
+          frames: [
+            {
+              platform: 'web:javascript',
+              function: '?',
+              filename: 'main.jsbundle',
+              lineno: 1,
+              colno: 9,
+              in_app: true,
+            },
+            {
+              platform: 'hermes',
+              function: '<anonymous>',
+              filename: 'index.android.bundle',
+              lineno: 1,
+              colno: 10,
+              in_app: true,
+              chunk_id: '5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77',
+            },
+            {
+              platform: 'hermes',
+              function: 's'.repeat(128),
+              filename: 'main.jsbundle',
+              lineno: 1,
+            },
+          ],
+        },
+      },
+      { type: 'Error', value: 'Network request failed' },
+      { type: 'Error', value: 'Network request failed' },
+    ]);
+  });
+
+  test('Swift and Kotlin hold the same frame patterns, shapes and required fields', () => {
+    const kotlinQuote = '"""';
+    for (const [name, pattern] of Object.entries(FRAME_PATTERNS)) {
+      expect([name, swiftSource.includes(`opaxRegex(#"${pattern}"#)`)]).toEqual(
+        [name, true],
+      );
+      expect([
+        name,
+        kotlinSource.includes(
+          `opaxRegex(${kotlinQuote}${pattern}${kotlinQuote})`,
+        ),
+      ]).toEqual([name, true]);
+    }
+    // Which fields a frame of each platform is dropped without.
+    for (const line of [
+      '"hermes": (opaxJsFrameFields, ["function", "filename", "lineno"]),',
+      '"web:javascript": (opaxJsFrameFields, ["function", "filename", "lineno"]),',
+      '"apple": (opaxAppleFrameFields, ["instruction_addr"]),',
+      '"java": (opaxJavaFrameFields, ["module", "function"]),',
+    ])
+      expect(swiftSource).toContain(line);
+    for (const line of [
+      'opaxJsFrameFields to listOf("function", "filename", "lineno")',
+      '"hermes" to opaxJsFrameShape,',
+      '"web:javascript" to opaxJsFrameShape,',
+      '"apple" to (opaxAppleFrameFields to listOf("instruction_addr")),',
+      '"java" to (opaxJavaFrameFields to listOf("module", "function")),',
+    ])
+      expect(kotlinSource).toContain(line);
+    // Neither copy keeps a frame's function or file as free text.
+    for (const source of [swiftSource, kotlinSource]) {
+      expect(source).not.toMatch(
+        /"(?:function|filename|module|map_id)"[^\n]*[Tt]ext\(/,
+      );
+      expect(source).not.toMatch(/"abs_path"|"client_resolved"/);
+    }
+  });
 });
 
 test('an exception’s type is sent only from the fixed set: a name is whatever the code set it to', () => {

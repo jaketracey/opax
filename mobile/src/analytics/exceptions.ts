@@ -267,25 +267,119 @@ function exceptionType(value: unknown): string {
     : 'Error';
 }
 
-/** Stack frame fields: where the code is, never what it was working on. */
-const frameFields: Record<string, Rule> = {
-  platform: token(/^[a-z:]{1,32}$/),
-  function: text(256),
-  filename: path(512),
-  abs_path: path(512),
-  module: text(256),
-  package: path(512),
+/**
+ * The patterns a stack frame's fields are held to. The Swift and Kotlin
+ * copies in the plugin patch use these exact texts
+ * (tests/analytics-exceptions.test.ts compares them), so they are written
+ * for JavaScript's `u` flag and for ICU. Each must match the whole value.
+ * `(?![\s\S]{n})` at the start is a length limit: fewer than n characters.
+ */
+export const FRAME_PATTERNS = {
+  /**
+   * A JavaScript function's name as Hermes prints it: the function's own
+   * `name` (hermes lib/VM/JSError.cpp), so an identifier, a dotted path of
+   * them, `anonymous`, `?anon_0_name` for a generator's inner function, and
+   * the SDK's `?` or `<anonymous>` for none. No space and no colon: a line
+   * of an error's message is not a function.
+   */
+  jsFunction: String.raw`^(?![\s\S]{129})(?:\?|<anonymous>|\??[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*)$`,
+  /**
+   * The app's JavaScript bundle: `main.jsbundle` (iOS) or
+   * `index.android.bundle`, alone or at the end of the path Hermes prints
+   * it with. Only the bundle's name (the group) is sent, never the path.
+   */
+  jsBundle: String.raw`^(?:[A-Za-z0-9_.:/-]{0,400}/)?(main\.jsbundle|index\.android\.bundle)$`,
+  /**
+   * A native symbol as posthog-ios reads it: a C, C++ or Swift symbol
+   * (mangled, so one run of identifier characters), or an Objective-C
+   * method (`-[Class selector:]`, `+[Class(Category) selector]`), with the
+   * numbered prefix and `_block_invoke` suffix a block's symbol has.
+   */
+  appleFunction: String.raw`^(?![\s\S]{257})(?:[A-Za-z_$][A-Za-z0-9_$.]*|(?:__[0-9]+)?[-+]\[[A-Za-z_][A-Za-z0-9_]*(?:\([A-Za-z0-9_]+\))? [A-Za-z_][A-Za-z0-9_:]*\](?:_block_invoke[A-Za-z0-9_.]*)?)$`,
+  /** A binary image's name: `OPAX`, `Foundation`, `libsystem_kernel.dylib`. */
+  appleModule: String.raw`^[A-Za-z0-9_.+-]{1,128}$`,
+  /**
+   * Where a binary image is: the app's own binary or one of its embedded
+   * frameworks, inside the app's container, or a system library. No other
+   * path, so none with a segment the app or its reader could name.
+   */
+  applePackage: String.raw`^(?:(?:/private)?/var/containers/Bundle/Application/[0-9A-Fa-f-]{36}/OPAX\.app/(?:OPAX|Frameworks/[A-Za-z0-9_.+-]{1,64}(?:/[A-Za-z0-9_.+-]{1,64})?)|(?:/private/preboot/Cryptexes/OS)?/(?:System/Library|usr/lib)/[A-Za-z0-9_.+/-]{1,300})$`,
+  /** A Java or Kotlin class name with its package: `a.b.Foo$Bar`. */
+  javaModule: String.raw`^(?![\s\S]{257})[A-Za-z_$-][A-Za-z0-9_$-]*(?:\.[A-Za-z_$-][A-Za-z0-9_$-]*)*$`,
+  /** A Java or Kotlin method name: `invoke`, `<init>`, `lambda$onCreate$0`. */
+  javaFunction: String.raw`^(?:<init>|<clinit>|[A-Za-z_$][A-Za-z0-9_$-]{0,127})$`,
+  /** A class's source file name, never a path: `Foo.kt`, `SourceFile`. */
+  javaFilename: String.raw`^[A-Za-z0-9_$.-]{1,128}$`,
+  /** The release a Java frame's R8 mapping belongs to. */
+  mapId: String.raw`^[A-Za-z0-9_.:@+-]{1,128}$`,
+} as const;
+const framePattern = (name: keyof typeof FRAME_PATTERNS) =>
+  new RegExp(FRAME_PATTERNS[name], 'u');
+/** The app's bundle, sent as its name alone. */
+const bundle: Rule = (value) => {
+  if (typeof value !== 'string') return undefined;
+  return framePattern('jsBundle').exec(value)?.[1];
+};
+
+/**
+ * Stack frames: where the code is, never what it was working on. A frame is
+ * kept only as one of three shapes, chosen by its `platform`, and only with
+ * the fields of that shape; a frame of any other platform, or without the
+ * fields its shape needs, is dropped whole.
+ *
+ * The SDK reads a JavaScript error's `stack` a line at a time, and a line of
+ * the error's message that has a path or a URL in it parses as a frame whose
+ * `function` and `filename` are that line's words. So a JavaScript frame
+ * needs all three of a whole-number line, a function that is a plain name
+ * and a file that is the app's bundle. The other two shapes are built by
+ * the native SDKs from the binary's own tables, never from text: an Apple
+ * frame is located by its instruction address, a Java frame by its class
+ * and method.
+ */
+const jsFrameFields: Record<string, Rule> = {
+  platform: token(/^(?:hermes|web:javascript)$/),
+  function: token(framePattern('jsFunction')),
+  filename: bundle,
   lineno: integer,
   colno: integer,
   in_app: flag,
+  chunk_id: token(/^[0-9a-f-]{1,64}$/i),
+};
+const appleFrameFields: Record<string, Rule> = {
+  platform: token(/^apple$/),
   instruction_addr: address,
   image_addr: address,
   symbol_addr: address,
-  chunk_id: token(/^[0-9a-f-]{1,64}$/i),
-  map_id: text(128),
-  method_synthetic: flag,
-  client_resolved: flag,
+  in_app: flag,
+  module: token(framePattern('appleModule')),
+  package: token(framePattern('applePackage')),
+  function: token(framePattern('appleFunction')),
 };
+const javaFrameFields: Record<string, Rule> = {
+  platform: token(/^java$/),
+  module: token(framePattern('javaModule')),
+  function: token(framePattern('javaFunction')),
+  filename: token(framePattern('javaFilename')),
+  lineno: integer,
+  in_app: flag,
+  map_id: token(framePattern('mapId')),
+  method_synthetic: flag,
+};
+type FrameShape = {
+  fields: Record<string, Rule>;
+  /** A frame without every one of these, valid, is dropped. */
+  required: readonly string[];
+};
+const jsFrame: FrameShape = {
+  fields: jsFrameFields,
+  required: ['function', 'filename', 'lineno'],
+};
+const frameShapes = new Map<string, FrameShape>([
+  ['hermes', jsFrame],
+  ['web:javascript', jsFrame],
+  ['apple', { fields: appleFrameFields, required: ['instruction_addr'] }],
+  ['java', { fields: javaFrameFields, required: ['module', 'function'] }],
+]);
 const mechanismFields: Record<string, Rule> = {
   type: token(/^[a-z_]{1,40}$/),
   handled: flag,
@@ -325,28 +419,40 @@ function list(value: unknown, max: number) {
   return Array.isArray(value) ? value.slice(0, max) : [];
 }
 
+function scrubFrame(value: unknown): Record<string, Json> | null {
+  const platform = record(value)?.platform;
+  const shape =
+    typeof platform === 'string' ? frameShapes.get(platform) : undefined;
+  if (!shape) return null;
+  const clean = pickFields(shape.fields, value);
+  return shape.required.every((key) => Object.hasOwn(clean, key))
+    ? clean
+    : null;
+}
+
 function scrubOne(value: unknown): Record<string, Json> | null {
   const exception = record(value);
   if (!exception) return null;
   const clean: Record<string, Json> = { type: exceptionType(exception.type) };
   const message = scrubExceptionMessage(exception.value);
   if (message) clean.value = message;
-  const module = text(256)(exception.module);
+  // A Java exception's package ("java.lang"): a dotted name, or nothing.
+  const module = token(framePattern('javaModule'))(exception.module);
   if (module) clean.module = module;
   const thread = integer(exception.thread_id);
   if (thread !== undefined) clean.thread_id = thread;
   const mechanism = pickFields(mechanismFields, exception.mechanism);
   if (Object.keys(mechanism).length) clean.mechanism = mechanism;
   const stack = record(exception.stacktrace);
-  if (stack) {
-    const frames = list(stack.frames, MAX_FRAMES)
-      .map((frame) => pickFields(frameFields, frame))
-      .filter((frame) => Object.keys(frame).length > 0);
+  const frames = list(stack?.frames, MAX_FRAMES)
+    .map(scrubFrame)
+    .filter((frame) => frame !== null);
+  // No frame that may be sent: no stack at all.
+  if (stack && frames.length)
     clean.stacktrace = {
       type: stack.type === 'resolved' ? 'resolved' : 'raw',
       frames,
     };
-  }
   return clean;
 }
 

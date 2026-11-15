@@ -287,14 +287,28 @@ describe('the route error report ($exception), within its limits', () => {
                 type: 'raw',
                 frames: [
                   {
-                    platform: 'javascript',
+                    platform: 'hermes',
                     function: 'BillDetail',
-                    filename: 'index.ios.bundle?platform=ios',
+                    filename: 'main.jsbundle',
                     lineno: 12,
                     colno: 34,
                     in_app: true,
                     vars: { question: 'housing' },
                     pre_context: ['housing in 3000'],
+                  },
+                  // Not the bundle's name: a frame with a query, and a
+                  // line of the message read as a frame, are dropped.
+                  {
+                    platform: 'hermes',
+                    function: 'BillDetail',
+                    filename: 'main.jsbundle?platform=ios',
+                    lineno: 12,
+                  },
+                  {
+                    platform: 'hermes',
+                    function: 'TypeError: Cannot read "housing in 3000" of ',
+                    filename: '/bill/r7520',
+                    in_app: true,
                   },
                 ],
               },
@@ -385,9 +399,9 @@ describe('the route error report ($exception), within its limits', () => {
           type: 'raw',
           frames: [
             {
-              platform: 'javascript',
+              platform: 'hermes',
               function: 'BillDetail',
-              filename: 'index.ios.bundle',
+              filename: 'main.jsbundle',
               lineno: 12,
               colno: 34,
               in_app: true,

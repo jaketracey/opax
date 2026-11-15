@@ -138,7 +138,9 @@ function jsKeys(file: string, name: string) {
 
 test('the Kotlin field lists match exceptions.ts and sdkProperties', () => {
   const lists: [kotlin: string, js: string][] = [
-    ['opaxFrameFields', 'frameFields'],
+    ['opaxJsFrameFields', 'jsFrameFields'],
+    ['opaxAppleFrameFields', 'appleFrameFields'],
+    ['opaxJavaFrameFields', 'javaFrameFields'],
     ['opaxMechanismFields', 'mechanismFields'],
     ['opaxImageFields', 'imageFields'],
   ];
