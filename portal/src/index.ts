@@ -115,7 +115,7 @@ import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
-import { networkBlock } from './network-block'
+import { networkBlock, CRAWLER_UA } from './network-block'
 import { openaiAppsChallenge, OPENAI_APPS_CHALLENGE_PATH } from './openai-apps-challenge'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
@@ -593,7 +593,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v5-no-label-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v5-no-label-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v5-no-label-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k', 'fill'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -630,7 +630,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // A page a reader sees (never the 200-row window /api/search-all takes, which fills its own page).
   if (!options.suggest && per <= FILL_MAX) {
     rows = rows.map(row => ({ ...row }))
-    await fillSearchPassages(rows, url, env, ctx, request.signal)
+    await fillSearchPassages(rows, request, url, env, ctx)
   }
   const years: Record<string, number> = {}
   for (const row of win.results) {
@@ -663,32 +663,45 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
 const PASSAGE_FILL_TTL = 7 * 86400
 const PASSAGE_FILL_EMPTY_TTL = 86400
 const PASSAGE_FILL_DAILY_READS = 200
-/** A day the allowance ran out is remembered this long, past every community_limits cleanup (they delete by expires_at). */
-const PASSAGE_FILL_CAP_HIT_DAYS = 120
+/** The day's counter is kept this long, past every community_limits cleanup (they delete by expires_at), so a day the allowance ran out can be read back. */
+const PASSAGE_FILL_COUNTER_DAYS = 120
+/** The UTC day (and the allowance) this isolate last saw spent: later pages that day ask the counter nothing. */
+let passageFillSpent = ''
+/** What PASSAGE_FILL_DAILY_READS allows: unset is the default; anything that is not a whole number of reads ("off", "", "-1") is none. */
+function passageFillAllowance(env: Env): number {
+  if (env.PASSAGE_FILL_DAILY_READS === undefined) return PASSAGE_FILL_DAILY_READS
+  return /^\d{1,6}$/.test(String(env.PASSAGE_FILL_DAILY_READS).trim()) ? Number(env.PASSAGE_FILL_DAILY_READS) : 0
+}
 /**
  * Fill the label-only cards of one page of a speaker search from each record's
- * own text (src/passage-fill.ts). Only a search by speaker does this: that is
- * where retrieval matches the speaker label and nothing else.
- *  - Kept per record in the Cache API, keyed on the passage version and the
- *    cache epoch, so a repeat page reads nothing.
+ * own text (src/passage-fill.ts).
+ *  - Only the search view's own request does this: it says so (fill=1) and it
+ *    filters by speaker, which is where retrieval matches the speaker label
+ *    and nothing else. Person pages, the apps and every other caller get the
+ *    search as it was, and so does a crawler, by Cloudflare's verified-bot
+ *    signal or the crawler user agents the network block already knows.
+ *  - Kept per record in the Cache API, keyed on the passage version alone. A
+ *    record's slug is its row id in the corpus (speech-<id>), which a
+ *    re-ingest keeps, so the nightly cache epoch has no bearing on it.
  *  - A read is one knowledge-box query (GET /slug, the read hansard_search and
- *    /api/resource make). Reads are taken from a daily allowance first,
- *    counted in community_limits like the MCP tier's guard; with no counter,
- *    or once it is spent, no read is made and the card keeps its fallback.
- *    A day the allowance cut a page short keeps one row,
- *    passage-fill-cap-hit:<day>, counting the reads refused: numbers only,
- *    for whoever sets the allowance to see whether it is too small.
+ *    /api/resource make). A request that would read passes the search limiter
+ *    first, even over a cached window, and the reads are then taken from a
+ *    daily allowance counted in community_limits like the MCP tier's guard.
+ *    With no counter, or once it is spent, no read is made and the card keeps
+ *    its fallback. The day's row counts every read asked for and is kept 120
+ *    days: past the allowance, hits minus the allowance is the reads refused.
  *  - A metered request (MCP: env.KB_METER) reads nothing new. It is served
  *    kept passages only, so a fill never spends a caller's Progress allowance
  *    or turns their search into a limit error.
  */
-async function fillSearchPassages(rows: FillRow[], url: URL, env: Env, ctx: ExecutionContext, signal?: AbortSignal): Promise<void> {
-  if (!url.searchParams.get('speaker')?.trim()) return
-  const key = (slug: string) => cacheRequest('passage-fill-v1', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
-  const configured = Number(env.PASSAGE_FILL_DAILY_READS ?? PASSAGE_FILL_DAILY_READS)
-  const daily = Number.isInteger(configured) && configured >= 0 ? configured : PASSAGE_FILL_DAILY_READS
+async function fillSearchPassages(rows: FillRow[], request: Request, url: URL, env: Env, ctx: ExecutionContext, limited = false): Promise<void> {
+  if (url.searchParams.get('fill') !== '1' || !url.searchParams.get('speaker')?.trim()) return
+  const cf = (request as Request & { cf?: { botManagement?: { verifiedBot?: boolean }; verifiedBotCategory?: string } }).cf
+  if (cf?.botManagement?.verifiedBot || cf?.verifiedBotCategory || CRAWLER_UA.test(request.headers.get('user-agent') ?? '')) return
+  const key = (slug: string) => cacheRequest('passage-fill-v2', slug)
+  const daily = passageFillAllowance(env)
   const done = await fillPassages(rows, {
-    signal,
+    signal: request.signal,
     async cached(slug) {
       const hit = await caches.default.match(key(slug))
       return hit ? String((await hit.json() as { passage?: unknown }).passage ?? '') : undefined
@@ -700,18 +713,20 @@ async function fillSearchPassages(rows: FillRow[], url: URL, env: Env, ctx: Exec
       return recordBody(await res.json())
     },
     ...(env.KB_METER || !env.COMMUNITY_DB || !daily ? {} : {
-      // Taken in one statement before any read, so pages filling at once cannot pass the allowance together.
       async reserve(n: number) {
         const day = Math.floor(Date.now() / 86_400_000)
+        if (passageFillSpent === `${day}:${daily}`) return 0
+        // A request about to read counts against the search limiter, cached window or not.
+        if (!limited && await rateLimited(env.SEARCH_LIMITER, request, env.MCP_LIMIT_KEY)) return 0
+        // Taken in one statement before any read, so pages filling at once cannot pass the allowance together.
         const row = await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET hits=hits+excluded.hits RETURNING hits')
-          .bind(`passage-fill-day:${day}`, n, (day + 1) * 86400).first<{ hits: number }>()
+          .bind(`passage-fill-day:${day}`, n, (day + PASSAGE_FILL_COUNTER_DAYS) * 86400).first<{ hits: number }>()
         const hits = row?.hits ?? Infinity
-        if (hits >= daily && hits - n < daily) console.warn(JSON.stringify({ kind: 'passage_fill_daily_cap', level: 'warn', day: day * 86400, hits }))
-        const granted = Math.max(0, Math.min(n, daily - (hits - n)))
-        // The reads the allowance refused today, kept after the day's own counter has gone.
-        if (granted < n) await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET hits=hits+excluded.hits')
-          .bind(`passage-fill-cap-hit:${day}`, n - granted, (day + PASSAGE_FILL_CAP_HIT_DAYS) * 86400).run().catch(() => {})
-        return granted
+        if (hits >= daily) {
+          passageFillSpent = `${day}:${daily}`
+          if (hits - n < daily) console.warn(JSON.stringify({ kind: 'passage_fill_daily_cap', level: 'warn', day: day * 86400, hits }))
+        }
+        return Math.max(0, Math.min(n, daily - (hits - n)))
       },
     }),
   })
@@ -826,7 +841,8 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
     })
   }
   // Label-only cards on the page shown take their passage from the record's own text.
-  if (!options.suggest) await fillSearchPassages(shown as FillRow[], url, env, ctx, request.signal)
+  // This request passed the search limiter on its way in.
+  if (!options.suggest) await fillSearchPassages(shown as FillRow[], request, url, env, ctx, true)
   // No record mentions the query (src/search-mention.ts): the page leads with the
   // recovery state, and the meaning-ranked records stay one tap away.
   const noMention = !options.suggest && noRecordMentions({ query: url.searchParams.get('q'), mode: url.searchParams.get('mode'),
