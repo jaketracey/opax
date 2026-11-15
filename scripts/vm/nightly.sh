@@ -636,6 +636,28 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_SENATE_VIDEO:-1}" != 
   fi
 fi
 
+# ---- 3e. electorate release: dissolved_for from the reviewed dissolution records -------------------------------
+# No fetch and no database: the release is republished from the bundle it already carries, and only when a house
+# has been dissolved (the field appears on its seats) or its post-result roster reload is in the bundle (the field
+# becomes null). On every other night it changes no file. The app draws a dissolved seat with no member from this
+# field, so a failure keeps the previous release rather than a half-written one. OPAX_ELECTORATES_REPUBLISH=0 skips it.
+if [ "${OPAX_ELECTORATES_REPUBLISH:-1}" != 0 ] && [ -f portal/public/electorates/manifest.json ]; then
+  if ! run "$PY" scripts/export_electorates.py --republish --as-of "${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}"; then
+    revert_group electorates
+    fail "electorate republish failed: previous release kept"
+  fi
+  # A reminder, never a failure: a state house clears only once a person records seated_on in
+  # scripts/hubs/electorate-dissolutions.json and the post-result roster is exported.
+  # If the reminder itself cannot run, that is said too (a warning): a silent skip would hide an overdue house.
+  if overdue_lines=$("$PY" scripts/export_electorates.py --overdue --as-of "${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}" 2>>"$LOGFILE"); then
+    while IFS= read -r overdue; do
+      [ -z "$overdue" ] || warn "$overdue"
+    done <<< "$overdue_lines"
+  else
+    warn "the dissolved-house reminder could not run (export_electorates.py --overdue failed): check by hand whether a house is still published as dissolved"
+  fi
+fi
+
 # ---- 3z. groups held by review (scripts/vm/gate_hold.txt) ----------------------------------------
 # A reviewed, dated hold: "GROUP EXPIRY(YYYY-MM-DD) REASON" per line. A listed group that changed tonight is put
 # back to HEAD before validation and the portal gate, so the gate's first full run tests only what may be

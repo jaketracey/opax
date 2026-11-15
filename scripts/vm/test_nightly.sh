@@ -68,6 +68,7 @@ new_sandbox() {
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
            scripts/hubs/sitting-2026.json \
+           scripts/export_electorates.py parli/electorates.py scripts/hubs/electorate-dissolutions.json scripts/hubs/vic-election-2026.json \
            scripts/vm/evidence_refresh.sh scripts/vm/evidence_guard.py scripts/vm/evidence_inputs.py scripts/vm/evidence_bundle_state.py \
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
@@ -640,6 +641,11 @@ check "status branch is a single parentless commit holding only status.json" bas
 check "local status file says ok" grep -q '"status": "ok"' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
 check "the real coverage check ran in the refresh and raised no coverage alert" bash -c "test -s '$HOME/.cache/autoresearch/pipeline/coverage-report-v1.json' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"coverage_alerts\"]==[], s'"
 check "log file written" test -s "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
+# The electorate release is republished from its own bundle (dissolved_for); the fixture release carries none,
+# so the step runs and changes nothing.
+check "electorate republish ran and left an unchanged release alone" grep -q 'Electorate references unchanged' "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
+# The overdue reminder runs on the same release and has nothing to say: no warning, and no "could not run".
+check "the dissolved-house reminder ran and raised nothing" bash -c "! grep -q 'dissolved-house reminder could not run\|still published as dissolved' '$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log'"
 
 echo "== 2. rerun straight away: checked_at is fresh and nothing else moved, so nothing is committed"
 before=$(git --git-dir="$ORIGIN" rev-parse main)

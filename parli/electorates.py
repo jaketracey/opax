@@ -116,6 +116,26 @@ def validate(bundle: dict) -> None:
             bid = row.get("boundary_version_id")
             if bid and (bid not in maps["boundaries"] or maps["boundaries"][bid]["electorate_id"] != row["electorate_id"]):
                 raise ValueError("Crosswalk/profile boundary mismatch")
+    chambers = {(e.get("jurisdiction"), e.get("chamber")) for e in maps["electorates"].values()}
+    for record in bundle.get("dissolutions", []):
+        if not isinstance(record, dict) or (record.get("jurisdiction"), record.get("chamber")) not in chambers:
+            raise ValueError("Dissolution names no house in this bundle")
+        for field in ("dissolved_on", "election_day"):
+            if not isinstance(record.get(field), str):
+                raise ValueError(f"Dissolution needs {field}")
+            _iso(record[field])
+        if record["election_day"] <= record["dissolved_on"]:
+            raise ValueError("A house is dissolved before its election day")
+        if not str(record.get("source_url", "")).startswith("https://"):
+            raise ValueError("Dissolution needs an https source_url")
+        if record.get("seated_on") is not None:
+            if not isinstance(record["seated_on"], str):
+                raise ValueError("Dissolution seated_on is a date")
+            _iso(record["seated_on"])
+            # Strictly after: a roster refetched on election day still lists the old members, and a
+            # seated_on equal to it would let that refetch clear every seat.
+            if record["seated_on"] <= record["election_day"]:
+                raise ValueError("Members are seated after election day")
     slugs = set()
     for e in maps["electorates"].values():
         if not isinstance(e.get("capacity", 1), int) or e.get("capacity", 1) < 1:
@@ -200,7 +220,7 @@ def import_bundle(db: sqlite3.Connection, bundle: dict, *, imported_at: str, sou
                 values = [row[key], canonical_json(row), *[row[r] for r in refs]]
                 db.execute(f"INSERT INTO ext_electorate_{name} ({','.join(columns)}) VALUES ({','.join('?' for _ in columns)}) "
                            f"ON CONFLICT({key}) DO UPDATE SET " + ','.join(f"{c}=excluded.{c}" for c in columns[1:]), values)
-        for key in ("coverage",):
+        for key in ("coverage", "dissolutions"):
             if key in bundle:
                 db.execute("INSERT INTO ext_electorate_metadata VALUES (?,?) ON CONFLICT(key) DO UPDATE SET document=excluded.document", (key, canonical_json(bundle[key])))
         validate(read_bundle(db))
@@ -263,6 +283,56 @@ class Registry:
         return self.result([r for r in rows if r["poll_date"] == latest], coverage="indexed contests only")
 
 
+def covered_by_dissolution(electorate: dict, dissolutions: list) -> bool:
+    """Whether a reviewed dissolution record names this seat's house."""
+    return any((r["jurisdiction"], r["chamber"]) == (electorate["jurisdiction"], electorate["chamber"]) for r in dissolutions)
+
+
+def dissolved_for(electorate: dict, dissolutions: list, contests: list, roster: dict | None, on: str) -> str | None:
+    """The election day a seat's house is dissolved for on `on`, or None.
+
+    A dissolved lower house has no members: the roster still lists who held each seat, but nobody is
+    the member until the result is declared. Readers (the app's Today) draw "Assembly dissolved ...
+    Last member" from this field instead of a member's row, so it must never clear early.
+
+    Written when a reviewed dissolution record (bundle["dissolutions"]) names the seat's jurisdiction
+    and chamber and `on` is its `dissolved_on` or later.
+
+    Cleared only by the post-result roster reload. The bundle can show that in two ways.
+
+    By the reviewed record (the way a state house clears today: the bundle carries no state contests,
+    so the pipeline cannot see a state result for itself). After the result is declared a person adds
+    `seated_on` to the dissolution record: the day from which the parliament's own member list is the
+    new house. The field clears once the seat's newest roster observation is complete and dated
+    `seated_on` or later. A roster refetched before that day, or a `seated_on` with no reload after
+    it, keeps the field.
+
+    By the result itself, where the bundle has it, as all three together:
+      1. the seat has a contest at that election (its poll_date is the record's `election_day`)
+         with a candidate marked elected and linked to a person: the result is declared and imported;
+      2. the seat's newest roster observation is complete and dated `election_day` or later;
+      3. that roster seats every elected candidate.
+    A roster refetched after election day with no declared result fails (1), and one that still
+    lists the old member after the result fails (3): the field stays in both cases.
+    """
+    for record in sorted(dissolutions, key=lambda r: r["election_day"], reverse=True):
+        if (record["jurisdiction"], record["chamber"]) != (electorate["jurisdiction"], electorate["chamber"]):
+            continue
+        if on < record["dissolved_on"]:
+            continue
+        elected = {c["person_id"] for contest in contests if contest["election"]["poll_date"] == record["election_day"]
+                   for c in contest.get("candidates", []) if c.get("elected")}
+        complete = bool(roster) and bool(roster.get("complete"))
+        seated_on = record.get("seated_on")
+        if seated_on and on >= seated_on and complete and roster["as_of"] >= seated_on:
+            continue
+        reloaded = complete and roster["as_of"] >= record["election_day"]
+        if elected and None not in elected and reloaded and elected <= {m["person_id"] for m in roster["members"]}:
+            continue
+        return record["election_day"]
+    return None
+
+
 def export_bundle(bundle: dict, directory: Path, *, generated: str) -> dict:
     """Content-addressed release assets; publish manifest last. No truncation of data."""
     validate(bundle)
@@ -300,6 +370,11 @@ def export_bundle(bundle: dict, directory: Path, *, generated: str) -> dict:
                        representation_status=("verified" if roster.get("complete") else "partial") if roster else "unknown",
                        latest_election=contests[0]["election"]["poll_date"] if contests else None,
                        election_count=len(contests), history_count=len(related["terms"]))
+        # Written on every seat of a house a dissolution record speaks for: the election day while it is
+        # dissolved, null when it is not. A row with no key is one the pipeline cannot speak for (or a
+        # release from before the field), and readers then decide from their own election record.
+        if covered_by_dissolution(e, bundle.get("dissolutions", [])):
+            summary["dissolved_for"] = dissolved_for(e, bundle["dissolutions"], contests, roster, generated)
         index.append(summary)
         pids = {t["person_id"] for t in related["terms"]} | {m["person_id"] for r in rosters for m in r["members"]}
         for pid in sorted(pids):

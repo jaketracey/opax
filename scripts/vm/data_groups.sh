@@ -15,7 +15,7 @@
 # shellcheck shell=bash
 
 # order = the order they are validated in
-DATA_GROUPS=(bills instruments audit annual-reports integrity-reports royal-commissions budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people firsts pay discovery taxcharity video)
+DATA_GROUPS=(bills instruments audit annual-reports integrity-reports royal-commissions budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people firsts pay discovery taxcharity video electorates)
 
 declare -A GROUP_PATHS=(
   [bills]="portal/public/bills"
@@ -48,6 +48,7 @@ declare -A GROUP_PATHS=(
   [discovery]="portal/public/discovery.json"
   [taxcharity]="portal/public/entities/tax-charity"
   [video]="portal/public/video" # the Senate's own YouTube uploads (feed, or API with a key); links only, never video bytes
+  [electorates]="portal/public/electorates portal/test/fixtures/agentic-ask-gold.json" # republished from its own bundle when a house is dissolved or its post-result roster reload lands (dissolved_for); the Ask gold cases quote the release id
 )
 
 # build:search outputs that read every group: rebuilt for each gate trial, put back to HEAD after the gate
