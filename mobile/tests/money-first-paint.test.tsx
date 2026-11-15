@@ -484,6 +484,142 @@ describe('the card at large text', () => {
     await act(async () => r.unmount());
   });
 
+  test('the sentence’s room is a whole number of its lines: none is cut through above the picker', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 758 } },
+      }),
+    );
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (flat(top).maxHeight === undefined) top = top.parent!;
+    // The sweep's frames (iPhone 17 Pro, AX3): the jurisdiction 62 pt, the
+    // picker 114 pt, a line of the sentence 43.25 pt.
+    act(() => {
+      byTestID(r.root, 'money-map-card-head').props.onLayout({
+        nativeEvent: { layout: { height: 62 } },
+      });
+      byTestID(r.root, 'money-map-card-picker').props.onLayout({
+        nativeEvent: { layout: { height: 114 } },
+      });
+      byTestID(r.root, 'money-map-card-line').props.onLayout({
+        nativeEvent: { layout: { height: 43.25 } },
+      });
+    });
+    const room =
+      (flat(top).maxHeight as number) -
+      62 -
+      114 -
+      (rhythm.tight * 3 + rhythm.block * 2 + hairline * 2);
+    const scroll = byTestID(r.root, 'money-map-card-scroll');
+    const height = flat(scroll).maxHeight as number;
+    const lines = height / 43.25;
+    expect(lines).toBe(Math.floor(room / 43.25));
+    expect(lines).toBeGreaterThanOrEqual(1);
+    // Not the whole of the room: the part line is given up, not shown.
+    expect(room % 43.25).toBeGreaterThan(1);
+    expect(height).toBeLessThan(room);
+    // It scrolls a line at a time, and the whole sentence is still in it
+    // for VoiceOver.
+    expect(scroll.props.snapToInterval).toBe(43.25);
+    expect(
+      scroll.findAll((n) => n.props.testID === 'money-view-summary').length,
+    ).toBeGreaterThan(0);
+    // The line it is measured by is never read out.
+    expect(
+      byTestID(r.root, 'money-map-card-line').props.accessibilityElementsHidden,
+    ).toBe(true);
+    await act(async () => r.unmount());
+  });
+
+  test('with less than one line of room no part of the sentence is drawn; VoiceOver still has it', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 375, height: 603 } },
+      }),
+    );
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (flat(top).maxHeight === undefined) top = top.parent!;
+    const sentence = byTestID(r.root, 'money-view-summary')!.props.children;
+    // The iPhone SE at AX5: the pinned parts take all but 45 pt of the cap,
+    // and a line of the sentence is 71.5 pt.
+    const report = (id: string, height: number) =>
+      byTestID(r.root, id).props.onLayout({
+        nativeEvent: { layout: { height } },
+      });
+    const fit = (each: number) =>
+      act(() => {
+        report('money-map-card-head', each);
+        report('money-map-card-picker', each);
+        report('money-map-card-line', 71.5);
+      });
+    // The cap follows the pinned parts, so the room is found from it.
+    const room = (each: number) =>
+      (flat(top).maxHeight as number) -
+      2 * each -
+      (rhythm.tight * 3 + rhythm.block * 2 + hairline * 2);
+    fit(200);
+    expect(room(200)).toBeGreaterThan(0);
+    expect(room(200)).toBeLessThan(71.5);
+    const scroll = byTestID(r.root, 'money-map-card-scroll');
+    // Nothing of the sentence is drawn, and nothing scrolls into view.
+    expect(byTestID(r.root, 'money-view-summary')).toBeUndefined();
+    expect(scroll.props.scrollEnabled).toBe(false);
+    expect(flat(scroll).maxHeight).toBeUndefined();
+    // Its room stays (the card's height is the same) and says the sentence.
+    const unseen = byTestID(r.root, 'money-view-summary-unseen')!;
+    expect(flat(unseen).height).toBe(room(200));
+    expect(unseen.props.accessible).toBe(true);
+    expect(unseen.props.accessibilityLabel).toBe(sentence);
+    expect(byTestID(r.root, 'money-offline-mark')).toBeUndefined();
+    // With room for a line again the sentence is back.
+    fit(60);
+    expect(byTestID(r.root, 'money-view-summary')).toBeDefined();
+    expect(byTestID(r.root, 'money-view-summary-unseen')).toBeUndefined();
+    await act(async () => r.unmount());
+  });
+
+  test('offline with less than one line of room: the stale-data notice is still shown and said', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: true,
+      asOf: '2026-09-21',
+      savedAt: Date.parse('2026-09-21T02:00:00Z'),
+    }));
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 375, height: 603 } },
+      }),
+    );
+    // With room, the offline line stands under the sentence, in words.
+    const sentence = byTestID(r.root, 'money-view-summary')!.props.children;
+    const message = r.root.find(
+      (n) => n.props.testID === 'money-offline' && n.props.accessibilityLabel,
+    ).props.accessibilityLabel as string;
+    expect(message).toMatch(/offline/i);
+    // The iPhone SE at AX5: under one line of room.
+    act(() => {
+      for (const id of ['money-map-card-head', 'money-map-card-picker'])
+        byTestID(r.root, id).props.onLayout({
+          nativeEvent: { layout: { height: 200 } },
+        });
+      byTestID(r.root, 'money-map-card-line').props.onLayout({
+        nativeEvent: { layout: { height: 71.5 } },
+      });
+    });
+    // The line's words cannot be drawn there either: its mark is, and the
+    // room says the sentence and then the same words.
+    expect(byTestID(r.root, 'money-offline')).toBeUndefined();
+    const unseen = byTestID(r.root, 'money-view-summary-unseen')!;
+    expect(
+      unseen.findAll((n) => n.props.testID === 'money-offline-mark').length,
+    ).toBeGreaterThan(0);
+    expect(unseen.props.accessibilityLabel).toBe(`${sentence} ${message}`);
+    await act(async () => r.unmount());
+  });
+
   const gaps = rhythm.tight * 3 + rhythm.block * 2 + hairline * 2;
   const line =
     textStyles.secondary.lineHeight *
@@ -577,6 +713,66 @@ describe('the map and its panel while Search is open at large text', () => {
     expect(flat(host()).opacity).toBeUndefined();
     await act(async () => r.unmount());
   });
+  test('the strip is fitted once for each set of results, never for a keystroke that lists the same ones', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    act(() => r.root.findByType(MoneyMapPanel).props.onPeekHeight(180));
+    const call = () => jest.mocked(MoneyMap).mock.calls.at(-1)![0];
+    const top = () => {
+      let node = (byTestID(r.root, 'money-map-card') ??
+        byTestID(r.root, 'money-map-search-card'))!.parent!;
+      while (!node.props.onLayout) node = node.parent!;
+      return node;
+    };
+    const report = (height: number) =>
+      act(() => top().props.onLayout({ nativeEvent: { layout: { height } } }));
+    const type = (text: string) =>
+      act(() =>
+        byTestID(r.root, 'money-map-search-field')!.props.onChangeText(text),
+      );
+    report(300);
+    const rest = call().insets;
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === 'money-map-search')!
+        .props.onPress(),
+    );
+    // Open, nothing typed: the short field is drawn and the map keeps its
+    // view (no key, the card's own top).
+    report(90);
+    expect(call().fitKey).toBeNull();
+    expect(call().insets.top).toBe(rest.top);
+    // Results are listed: the strip starts under the taller card, with a key.
+    type('lab');
+    report(420);
+    const listed = { insets: call().insets, fitKey: call().fitKey };
+    expect(listed.fitKey).toEqual(expect.any(String));
+    expect(listed.insets.top).toBe(420 + rhythm.tight);
+    expect(listed.insets.bottom).toBe(rhythm.tight);
+    // Nothing matches: another set, another strip.
+    type('zzzzqq');
+    report(150);
+    const none = { insets: call().insets, fitKey: call().fitKey };
+    expect(none.fitKey).not.toBe(listed.fitKey);
+    expect(none.insets.top).toBe(150 + rhythm.tight);
+    // One more letter: still nothing, and the line wraps. The same set, so
+    // the same insets object and key: the map is not asked to move.
+    type('zzzzqqq');
+    report(190);
+    expect(call().insets).toBe(none.insets);
+    expect(call().fitKey).toBe(none.fitKey);
+    // Closed: the card's frame again, and no key.
+    await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+    report(300);
+    expect(call().insets).toEqual(rest);
+    expect(call().fitKey).toBeNull();
+    await act(async () => r.unmount());
+  });
 });
 
 describe('sizes read before the first frame', () => {
@@ -660,6 +856,90 @@ describe('the map while its Search is open', () => {
     report(300);
     expect(insets()).toEqual(rest);
     await act(async () => r.unmount());
+  });
+});
+
+describe('a stage that changes under the open Search', () => {
+  const read = () =>
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+  const open = (r: TestRenderer.ReactTestRenderer) =>
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === 'money-map-search')!
+        .props.onPress(),
+    );
+  const call = () => jest.mocked(MoneyMap).mock.calls.at(-1)![0];
+
+  test('the map is told to hold its size for as long as its insets are held', async () => {
+    read();
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    expect(call().holdSize).toBe(false);
+    open(r);
+    expect(call().holdSize).toBe(true);
+    await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+    expect(call().holdSize).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('a turn during Search lets the held insets go: the map takes the ones of the moment', async () => {
+    read();
+    const before = ReactNative.Dimensions.get('window');
+    const turn = (width: number, height: number) =>
+      act(() =>
+        ReactNative.Dimensions.set({ window: { ...before, width, height } }),
+      );
+    try {
+      const r = await render();
+      const stage = (width: number, height: number) =>
+        act(() =>
+          byTestID(r.root, 'money-screen').props.onLayout({
+            nativeEvent: { layout: { width, height } },
+          }),
+        );
+      const top = () => {
+        let node = (byTestID(r.root, 'money-map-card') ??
+          byTestID(r.root, 'money-map-search-card'))!.parent!;
+        while (!node.props.onLayout) node = node.parent!;
+        return node;
+      };
+      const report = (height: number) =>
+        act(() =>
+          top().props.onLayout({ nativeEvent: { layout: { height } } }),
+        );
+      stage(before.width, 1200);
+      report(300);
+      const rest = call().insets;
+      open(r);
+      report(90);
+      expect(call().insets).toBe(rest);
+      // The turn: a new window, a new stage, and the search card measured
+      // in it.
+      turn(before.height, before.width);
+      stage(before.height, 640);
+      report(96);
+      expect(call().insets).not.toBe(rest);
+      expect(call().insets.top).toBe(96 + rhythm.tight);
+      expect(call().holdSize).toBe(false);
+      // Closed in the new orientation: its own card's frame.
+      await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+      report(260);
+      expect(call().insets.top).toBe(260 + rhythm.tight);
+      expect(call().holdSize).toBe(false);
+      await act(async () => r.unmount());
+    } finally {
+      turn(before.width, before.height);
+    }
   });
 });
 

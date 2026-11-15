@@ -542,6 +542,43 @@ describe('a viewport that changes and comes back', () => {
     expect(state.camera).toEqual(there);
   });
 
+  test('a turn to landscape and back, a dozen viewports long, still ends on the view it began with', () => {
+    // Each part of the chrome reports on its own: the safe sides, the
+    // stage, the card, the panel, the band, there and back again. The
+    // landscape stage leaves the map next to no room, so the clamp there
+    // zooms it far out; the way back must not be pushed out of the chain.
+    const turn = (
+      width: number,
+      height: number,
+      top: number,
+      bottom: number,
+      left: number,
+    ): Viewport => ({
+      width,
+      height,
+      insets: { top, bottom, left, right: left + 68 },
+    });
+    const there = [
+      turn(402, 760, 308, 196, 67),
+      turn(874, 300, 308, 196, 67),
+      turn(874, 300, 150, 196, 67),
+      turn(874, 300, 150, 140, 67),
+      turn(874, 300, 150, 110, 67),
+    ];
+    const back = [
+      turn(874, 300, 150, 110, 8),
+      turn(402, 760, 150, 110, 8),
+      turn(402, 760, 308, 110, 8),
+      turn(402, 760, 308, 140, 8),
+    ];
+    let state = change(start, there[0]!);
+    for (const viewport of [...there.slice(1), ...back])
+      state = change(state, viewport);
+    expect(state.camera).not.toEqual(start.camera);
+    state = change(state, card);
+    expect(state.camera).toEqual(start.camera);
+  });
+
   test('a view the reader moved in between is theirs: it is not put back', () => {
     const opened = change(start, search);
     const moved = { ...opened, camera: { ...opened.camera, tx: 40 } };

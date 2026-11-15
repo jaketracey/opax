@@ -233,8 +233,17 @@ export interface CameraRest {
   focus: string | null;
 }
 
-/** Enough for a few changes in a row; a long chain drops its oldest. */
+/**
+ * Enough for a few changes in a row. A longer chain drops from its middle:
+ * its first pair is the view the reader left, the one to go back to, and a
+ * turn to landscape and back is a dozen viewports, which pushed that pair
+ * out and left the map where the last clamp put it.
+ */
 const REST_PAIRS = 8;
+const keepPairs = (pairs: CameraPair[]) =>
+  pairs.length <= REST_PAIRS
+    ? pairs
+    : [pairs[0]!, ...pairs.slice(1 - REST_PAIRS)];
 
 /**
  * A viewport that changes and then comes back (the map's Search, a
@@ -277,7 +286,7 @@ export function returnCamera(
   return {
     camera: next,
     rest: {
-      pairs: [...pairs, { viewport, camera: next }].slice(-REST_PAIRS),
+      pairs: keepPairs([...pairs, { viewport, camera: next }]),
       set: next,
       focus,
     },

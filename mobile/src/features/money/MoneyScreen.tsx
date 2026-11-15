@@ -42,6 +42,7 @@ import {
   FigureBlock,
   Group,
   Heading,
+  Icon,
   MoneyRow,
   OfflineLine,
   PopUpButton,
@@ -56,6 +57,7 @@ import {
   useLayout,
   useScreenColumn,
 } from '../../design/primitives';
+import { symbols } from '../../design/symbols';
 import {
   colors,
   hairline,
@@ -859,6 +861,40 @@ function MapMode({
         : undefined);
   const topMaxHeight =
     limits?.topMaxHeight ?? (managed ? pose.topMaxHeight : undefined);
+  // The sentence's room in a capped card is what the pinned parts leave,
+  // which is no whole number of lines: its third line was cut through,
+  // right above the picker. The room is taken in whole lines, a line being
+  // the height of one as it is drawn at this text size (measured, since
+  // the system's type ramp is not the font scale). The card is the shorter
+  // by the part line, at one height; the rest of the sentence scrolls a
+  // line at a time, VoiceOver reads all of it, and the List shows it whole.
+  const [sentenceLine, setSentenceLine] = useState(0);
+  const sentenceRoom =
+    topMaxHeight !== undefined && pinnedBase ? topMaxHeight - pinnedBase : 0;
+  const sentenceLines =
+    sentenceLine > 0 && sentenceRoom > 0
+      ? Math.floor((sentenceRoom + 0.5) / sentenceLine)
+      : null;
+  const sentenceMax = sentenceLines ? sentenceLines * sentenceLine : undefined;
+  // Less than one line of room (the iPhone SE at the largest sizes, where
+  // the jurisdiction and the picker fill the cap): asking for a whole line
+  // changed nothing, since the card can only shrink, and the line was still
+  // cut through. No part of it is drawn. Its room stays, so the card keeps
+  // its height, and holds the sentence for VoiceOver; the List shows it.
+  // Taking a line from the panel instead would put the panel over the
+  // search and zoom controls there, which is why the card gave it up.
+  const sentenceUnseen =
+    sentenceLines === 0 && data ? moneySummary(data.graph, data.filters) : null;
+  // The offline line is set in the sentence's type, so where a line of the
+  // sentence does not fit, neither does it. Stale data is still said: the
+  // line's own mark is drawn in the room, and its words follow the sentence
+  // in the room's label.
+  const unseenOffline =
+    sentenceUnseen !== null && data?.record.stale && !data.record.staleReason
+      ? data.record.savedAt === null
+        ? 'You’re offline.'
+        : copy.offline(data.record.savedAt)
+      : null;
   const insets = useMemo(
     () =>
       pose.folded
@@ -907,20 +943,50 @@ function MapMode({
   const searching = searchOpen || topIsSearch;
   const [restInsets, setRestInsets] = useState(insets);
   if (!searching && restInsets !== insets) setRestInsets(insets);
+  // A turn during Search ends the hold: the insets kept are the other
+  // orientation's (its safe sides, its card, its band), and nothing of that
+  // frame is left to keep. The map takes the insets of the moment until
+  // Search closes. A turn is a new width; a keyboard changes the height.
+  const [restWidth, setRestWidth] = useState(window.width);
+  if (!searching && restWidth !== window.width) setRestWidth(window.width);
+  const turned = searching && restWidth !== window.width;
   // At large text the open Search and its keyboard fill the screen: the
   // panel under them is out of reach, yet it held the map's room to a
   // strip. It is hidden for the while and its room goes to the map (a
   // tall card's room is the keyboard's, not the panel's).
   const hidePanel = searchOpen && large && !regular && !managed;
   const searchBottom = (managed ? (safe?.bottom ?? 0) : band) + rhythm.tight;
-  const searchHold = useMemo(
-    () =>
-      restInsets.bottom === searchBottom
-        ? restInsets
-        : { ...restInsets, bottom: searchBottom },
-    [restInsets, searchBottom],
-  );
-  const mapInsets = !searching ? insets : hidePanel ? searchHold : restInsets;
+  // That strip starts under the search card, which grows and shrinks with
+  // its results. The map is fitted to the strip once for each set of
+  // results (the card's height as that set was first drawn), never for a
+  // keystroke that lists the same ones: the "nothing matches" line can wrap
+  // as the query grows. Until the first results the map keeps its view.
+  const [resultsKey, setResultsKey] = useState('');
+  const [strip, setStrip] = useState<{ key: string; top: number } | null>(null);
+  if (!searchOpen && (strip !== null || resultsKey !== '')) {
+    setStrip(null);
+    setResultsKey('');
+  }
+  const noteStrip = (height: number) => {
+    if (!hidePanel || !model) return;
+    // A card that leaves the map no strip is not fitted to.
+    const left =
+      (stage.height || window.height) - height - rhythm.tight - searchBottom;
+    if (left < minimumTarget * 2) return;
+    setStrip((previous) =>
+      (previous ? previous.key === resultsKey : resultsKey === '')
+        ? previous
+        : { key: resultsKey, top: height },
+    );
+  };
+  const searchHold = useMemo(() => {
+    const top = strip ? strip.top + rhythm.tight : restInsets.top;
+    return restInsets.bottom === searchBottom && restInsets.top === top
+      ? restInsets
+      : { ...restInsets, top, bottom: searchBottom };
+  }, [restInsets, searchBottom, strip]);
+  const mapInsets =
+    !searching || turned ? insets : hidePanel ? searchHold : restInsets;
   // The map is drawn only between the card and the panel: no stroke above
   // the card or under the bar, and no name half under either (item 5.6).
   // A fold gives the map its own side, with nothing over it to clip. A
@@ -1123,6 +1189,7 @@ function MapMode({
           requestFocus('money-map-search');
           setSearchOpen(false);
         }}
+        onResults={setResultsKey}
       />
     ) : null;
   // The sizes the chrome is worked out from are read before the frame is
@@ -1136,7 +1203,8 @@ function MapMode({
   const headRef = useRef<View>(null);
   const pickerRef = useRef<View>(null);
   const probeRef = useRef<View>(null);
-  const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}`;
+  const lineRef = useRef<View>(null);
+  const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}|${resultsKey}`;
   const settle = useRef({ key: '', left: 0 });
   // Every commit, on purpose: a frame can change without a dependency
   // changing. It sets state only on a difference, within the budget.
@@ -1159,6 +1227,7 @@ function MapMode({
     if (topFrame) {
       // Whose height it is, even when the height itself is the same.
       setTopIsSearch(searchOpen && !!model);
+      noteStrip(Math.ceil(topFrame.height));
       if (Math.ceil(topFrame.height) !== topHeight) {
         setTopHeight(Math.ceil(topFrame.height));
         changed = true;
@@ -1184,6 +1253,15 @@ function MapMode({
         setPinned(next);
         changed = true;
       }
+    }
+    const lineFrame = frameOf(lineRef);
+    if (
+      lineFrame &&
+      lineFrame.height > 0 &&
+      lineFrame.height !== sentenceLine
+    ) {
+      setSentenceLine(lineFrame.height);
+      changed = true;
     }
     const probeFrame = probes ? frameOf(probeRef) : null;
     if (probeFrame) reportInset(Math.round(probeFrame.height));
@@ -1221,6 +1299,8 @@ function MapMode({
             focus={focus}
             onFocus={(id) => setFocus(id)}
             insets={mapInsets}
+            holdSize={searching && !turned}
+            fitKey={hidePanel && strip && !turned ? strip.key : null}
             clip={clip}
             cacheKey={jurisdiction}
             accessibilityLabel={moneyMapLabel(model, focus)}
@@ -1304,6 +1384,7 @@ function MapMode({
             onLayout={(event) => {
               setTopHeight(Math.ceil(event.nativeEvent.layout.height));
               setTopIsSearch(searchOpen && !!model);
+              noteStrip(Math.ceil(event.nativeEvent.layout.height));
             }}
           >
             {topContent ? (
@@ -1335,9 +1416,38 @@ function MapMode({
                 >
                   {head}
                 </View>
+                {/* One line of the sentence's type, laid out and never seen:
+                    its height is the line the sentence's room is cut to. */}
+                <View
+                  ref={lineRef}
+                  pointerEvents="none"
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  style={styles.lineProbe}
+                  onLayout={(event) => {
+                    const { height } = event.nativeEvent.layout;
+                    if (height > 0) setSentenceLine(height);
+                  }}
+                  testID="money-map-card-line"
+                >
+                  <Text wordSafe variant="secondary" numberOfLines={1}>
+                    {'\u00a0'}
+                  </Text>
+                </View>
                 <ScrollView
                   ref={topScroll}
-                  style={styles.topScroll}
+                  style={[
+                    styles.topScroll,
+                    sentenceMax === undefined
+                      ? null
+                      : { maxHeight: sentenceMax },
+                  ]}
+                  snapToInterval={
+                    sentenceMax === undefined ? undefined : sentenceLine
+                  }
+                  decelerationRate={
+                    sentenceMax === undefined ? undefined : 'fast'
+                  }
                   contentContainerStyle={styles.cardScroll}
                   onContentSizeChange={(_w, h) =>
                     // The sentence's room: the cap less the pinned parts.
@@ -1352,12 +1462,37 @@ function MapMode({
                   }
                   keyboardShouldPersistTaps="handled"
                   // Android hides the bar at rest; a capped card shows it has more.
-                  persistentScrollbar
+                  persistentScrollbar={sentenceUnseen === null}
+                  scrollEnabled={sentenceUnseen === null}
                   testID="money-map-card-scroll"
                 >
-                  {summary}
+                  {sentenceUnseen === null ? (
+                    summary
+                  ) : (
+                    <View
+                      accessible
+                      accessibilityRole="text"
+                      accessibilityLabel={
+                        unseenOffline === null
+                          ? sentenceUnseen
+                          : `${sentenceUnseen} ${unseenOffline}`
+                      }
+                      style={[styles.unseenRoom, { height: sentenceRoom }]}
+                      testID="money-view-summary-unseen"
+                    >
+                      {unseenOffline === null ? null : (
+                        <View testID="money-offline-mark">
+                          <Icon
+                            name={symbols.offline}
+                            size={Math.min(28, sentenceRoom)}
+                            tone="inkSoft"
+                          />
+                        </View>
+                      )}
+                    </View>
+                  )}
                   {hooks}
-                  {offline}
+                  {sentenceUnseen === null ? offline : null}
                 </ScrollView>
                 <View
                   ref={pickerRef}
@@ -1819,6 +1954,8 @@ const styles = StyleSheet.create({
   unavailable: { flexGrow: 1, justifyContent: 'center', padding: rhythm.block },
   // Laid out, never seen or read: it keeps the place of words still to come.
   unseen: { opacity: 0 },
+  unseenRoom: { justifyContent: 'center' },
+  lineProbe: { position: 'absolute', left: 0, top: 0, opacity: 0 },
   bandProbe: { position: 'absolute', left: 0, bottom: 0, width: 1, opacity: 0 },
   grow: { flex: 1 },
   panelHost: { width: '100%' },
