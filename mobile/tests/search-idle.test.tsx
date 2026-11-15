@@ -17,7 +17,7 @@ import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { Skeleton, Screen } from '../src/design/primitives';
 import { useScreenReady } from '../src/analytics/timing';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
-import { SearchIdle } from '../src/features/search/SearchIdle';
+import { IDLE_HOLD_MS, SearchIdle } from '../src/features/search/SearchIdle';
 import { SearchSuggestions } from '../src/features/search/SearchSuggestions';
 import { ResultsView } from '../src/features/search/ResultsView';
 jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
@@ -114,6 +114,12 @@ test.each(['ios', 'android'] as const)(
           withNavigationOptions(<Search />, () => {}),
         );
       });
+      // The catalogues are still loading: the idle lists wait for them only
+      // so long, then draw once, in their final places.
+      expect(ids(renderer)).not.toContain('search-browse-person');
+      await act(
+        async () => new Promise((done) => setTimeout(done, IDLE_HOLD_MS + 20)),
+      );
       expect(ids(renderer)).toContain('search-browse-person');
       expect(useScreenReady).toHaveBeenLastCalledWith('/search', false);
       // A viewport measurement alone is not the content-ready signal.
@@ -157,6 +163,10 @@ test('idle Browse never shows a placeholder for suggestions it does not draw', a
     );
   });
   // Idle, still loading: the Browse links and no placeholder rows.
+  expect(renderer.root.findAllByType(Skeleton)).toHaveLength(0);
+  await act(
+    async () => new Promise((done) => setTimeout(done, IDLE_HOLD_MS + 20)),
+  );
   expect(renderer.root.findAllByType(Skeleton)).toHaveLength(0);
   expect(ids(renderer)).toContain('search-browse-person');
   expect(ids(renderer)).toContain('search-browse-topics');

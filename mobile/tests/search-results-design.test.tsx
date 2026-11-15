@@ -1,6 +1,7 @@
 import { act } from 'react';
-import { Text as NativeText } from 'react-native';
+import { StyleSheet, Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { Text } from '../src/design/text';
 import records from '../scripts/fixtures/search/records.json';
 import {
   Disclosure,
@@ -15,7 +16,10 @@ import {
   resultTitle,
   savedCopy,
 } from '../src/features/search/present';
-import { ResultsHeader } from '../src/features/search/ResultsHeader';
+import {
+  COUNT_STAND_IN,
+  ResultsHeader,
+} from '../src/features/search/ResultsHeader';
 import { speechSource, type SpeechList } from '../src/features/search/speeches';
 import { SpeechResults } from '../src/features/search/SpeechResults';
 
@@ -199,6 +203,54 @@ test('Summarise sits after the third result and nowhere else', () => {
     'results-summarise',
   ]);
   expect(many.text).toContain('Summarise these speeches');
+});
+
+test('the count line holds its height before the count is known, so results never move down', () => {
+  const host = (renderer: TestRenderer.ReactTestRenderer, testID: string) =>
+    renderer.root.find(
+      (n) => typeof n.type === 'string' && n.props.testID === testID,
+    );
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <ResultsHeader count={null} details={null} />,
+    );
+  });
+  // Held by the line itself, in its own text style with stand-in words, so
+  // it wraps as the real line will (three lines at AX3, not a fixed 44 pt).
+  const pending = host(renderer, 'search-count-pending');
+  expect(StyleSheet.flatten(pending.props.style)).toMatchObject({
+    minHeight: 44,
+    opacity: 0,
+  });
+  expect(pending.props.accessibilityElementsHidden).toBe(true);
+  const words = pending.findByType(Text);
+  expect(words.props.variant).toBe('footnote');
+  expect(words.props.children).toBe(COUNT_STAND_IN);
+  // The longest ordinary line, so the held height is never too small.
+  expect(COUNT_STAND_IN.length).toBeGreaterThanOrEqual(
+    '1,234+ results · Updated 30 Sep 2026 · Hansard and 3 more'.length,
+  );
+  // AX3: the stand-in laid out three lines tall. The real line keeps that
+  // height, so nothing under it moves when the count arrives.
+  act(() =>
+    pending.props.onLayout({ nativeEvent: { layout: { height: 140 } } }),
+  );
+  act(() =>
+    renderer.update(<ResultsHeader count="122 results" details={null} />),
+  );
+  expect(
+    StyleSheet.flatten(host(renderer, 'search-count').props.style).minHeight,
+  ).toBe(140);
+  // At the default size the line is one 44 pt target, as before.
+  act(() => {
+    renderer = TestRenderer.create(
+      <ResultsHeader count="122 results" details={null} />,
+    );
+  });
+  expect(
+    StyleSheet.flatten(host(renderer, 'search-count').props.style).minHeight,
+  ).toBe(44);
 });
 
 test('the results: one count and source line above, one row per record', () => {

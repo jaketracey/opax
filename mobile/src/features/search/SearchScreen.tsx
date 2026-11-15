@@ -114,7 +114,8 @@ function SearchContent({
   // The same query submitted again keeps its results up; this tells them to
   // report their count again, so Recent moves it to the top.
   const [submission, setSubmission] = useState(0);
-  const { sources, roster, failed, refreshing, retry } = useSearchSources();
+  const { sources, roster, failed, asked, refreshing, retry } =
+    useSearchSources();
   const signedIn = !!useAccount().status?.signedIn;
   const openAsk = useOpenAsk();
   const askNow = useAskNow();
@@ -329,6 +330,8 @@ function SearchContent({
             onRecent={(item: RecentSearch) => submit(item.q, item.scope)}
             onTry={(words) => submit(words, 'all')}
             bills={sources?.bills ?? null}
+            billsSettled={!!sources || failed}
+            visited={asked}
           />
         ) : phase === 'typing' ? (
           <SearchSuggestions

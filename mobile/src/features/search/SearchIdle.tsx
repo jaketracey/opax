@@ -71,57 +71,120 @@ export const browseRows: readonly Browse[] = [
   },
 ];
 
+/** The longest the idle lists wait for the edition and the bill index. */
+export const IDLE_HOLD_MS = 400;
+
+// The edition as last read this session: a later visit draws from it on its
+// first frame. Null until one read has settled.
+let heldEdition: { data: EditionView | null } | null = null;
+/** A new session (tests start each case with none). */
+export function forgetIdleEdition() {
+  heldEdition = null;
+}
 /**
  * The daily edition as the app cache holds it (Today reads it first), for
  * the Try group only. A failed or missing read draws no edition row.
  */
-function useCachedEdition() {
-  const [edition, setEdition] = useState<EditionView | null>(null);
+function readEdition(): Promise<void> {
+  return Promise.resolve()
+    .then(() => catalogs.todayEdition())
+    .then((block) => {
+      heldEdition = {
+        data: block?.status === 'ready' && block.data ? block.data : null,
+      };
+    })
+    .catch(() => {
+      heldEdition ??= { data: null };
+    });
+}
+
+type TryInputs = { edition: EditionView | null; bills: BillIndex | null };
+/**
+ * What the Try group is drawn from, fixed at the first draw: the lists wait
+ * (at most `IDLE_HOLD_MS`) for the edition and the bill index, then draw
+ * once and keep those rows. A read that settles later is used by the next
+ * visit, so no row is inserted above one already on screen.
+ */
+function useTryInputs(
+  bills: BillIndex | null,
+  billsSettled: boolean,
+  visited: boolean,
+): TryInputs | null {
+  const [edition, setEdition] = useState(heldEdition);
+  const [expired, setExpired] = useState(false);
+  const settled = edition !== null && (bills !== null || billsSettled);
+  const [drawn, setDrawn] = useState<TryInputs | null>(null);
+  // The edition is read as soon as the tab is mounted (at launch), so it is
+  // in hand before the first visit.
   useEffect(() => {
     let active = true;
-    Promise.resolve()
-      .then(() => catalogs.todayEdition())
-      .then((block) => {
-        if (active && block?.status === 'ready' && block.data)
-          setEdition(block.data);
-      })
-      .catch(() => undefined);
+    void readEdition().then(() => {
+      if (active) setEdition(heldEdition);
+    });
     return () => {
       active = false;
     };
   }, []);
-  return edition;
+  // The wait runs from the visit, not from the mount: the tab is mounted
+  // long before it is opened, and its bill index is read on focus.
+  useEffect(() => {
+    if (!visited) return;
+    const timer = setTimeout(() => setExpired(true), IDLE_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [visited]);
+  if (drawn) return drawn;
+  if (!settled && !expired) return null;
+  // Fixed from this render on (state set while rendering, so the lists are
+  // drawn in the same pass that learns their inputs).
+  const first = { edition: edition?.data ?? null, bills };
+  setDrawn(first);
+  return first;
 }
 
 /**
  * Search, idle (journeys/search.md 3.2): Recent (only when there is one),
  * then Try (sweep 1 item 5: rows chosen by rule in `try.ts`, two when
  * Recent shows), then Browse. No `SourceLine`: nothing here is a figure.
+ *
+ * The three groups are drawn together, once, in their final places: Recent
+ * is read from the device before the first draw (the read starts with the
+ * app), and Try from what `useTryInputs` holds then. Nothing is inserted
+ * above a group already on screen.
  */
 export function SearchIdle({
   onRecent,
   onTry,
   bills = null,
+  billsSettled = true,
+  visited = true,
 }: {
   onRecent: (item: RecentSearch) => void;
   /** A Try row with no native record searches its words. */
   onTry?: (q: string) => void;
   /** The bill index Search already holds for suggestions. */
   bills?: BillIndex | null;
+  /** False while the caller is still reading the bill index. */
+  billsSettled?: boolean;
+  /** False until the screen is first opened (its reads start then). */
+  visited?: boolean;
 }) {
   const recent = useRecentSearches();
   const member = useContext(MyMemberContext) ?? null;
-  const edition = useCachedEdition();
+  const inputs = useTryInputs(bills, billsSettled, visited);
   const tries = useMemo(
     () =>
-      tryRows({
-        member,
-        edition,
-        bills,
-        hasRecent: recent.items.length > 0,
-      }),
-    [member, edition, bills, recent.items.length],
+      inputs
+        ? tryRows({
+            member,
+            edition: inputs.edition,
+            bills: inputs.bills,
+            hasRecent: recent.items.length > 0,
+          })
+        : [],
+    [member, inputs, recent.items.length],
   );
+  if (!recent.ready || !inputs)
+    return <Group gap={rhythm.group} testID="search-idle-pending" />;
   return (
     <Group gap={rhythm.group} testID="search-idle">
       {recent.items.length ? (
