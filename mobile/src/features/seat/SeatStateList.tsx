@@ -30,7 +30,7 @@ import {
   stateName,
 } from './seat-model';
 import { SeatRow } from './SeatRow';
-import { FieldClearance } from './FieldClearance';
+import { FieldClearance, useFieldClearsKeyboard } from './FieldClearance';
 
 /**
  * Browse by state (`/seat/state/[code]`, `/welcome/seat/state/[code]`): the
@@ -79,6 +79,9 @@ export function SeatStateList({
     : [];
   const valid = isStateCode(code);
   const title = valid ? stateName(code) : seatCopy.title;
+  // The clearance ends the list above the keyboard where there is a bottom
+  // field; there the scroll view must not add its own keyboard inset too.
+  const fieldClearsKeyboard = useFieldClearsKeyboard();
   const search = useListSearchBar({
     placeholder: seatCopy.placeholder,
     onChangeText: setQuery,
@@ -110,7 +113,11 @@ export function SeatStateList({
         }}
       />
       <FieldClearance>
-        <Screen grouped testID={`seat-state-${code.toLowerCase()}`}>
+        <Screen
+          grouped
+          keyboardInsets={!fieldClearsKeyboard}
+          testID={`seat-state-${code.toLowerCase()}`}
+        >
           {/* A failed write says so, as in the chooser, with Try again. */}
           {failed ? (
             <SeatSaveError onRetry={() => void choose(failed)} />

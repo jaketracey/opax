@@ -527,6 +527,39 @@ describe('incoming links open in the tab the shell spec gives them', () => {
       '/(tabs)/(bills)/bills',
     );
   });
+  test.each([true, false])(
+    'a link to the bill list as it opens is the Bills tab itself, not the same list pushed on it (cold %s)',
+    (initial) => {
+      setSelectedTab('(today)');
+      // Pushed, it read "Bills" for both its back button and its title.
+      for (const path of [
+        'opax://bill-list',
+        'opax://bill-list/',
+        'opax://bills',
+        'opax://bill-list?name=Bills',
+        'https://opax.com.au/bills',
+      ])
+        expect(redirectSystemPath({ path, initial })).toBe(
+          '/(tabs)/(bills)/bills',
+        );
+      // A list of its own (a scope, a sort, a search) is still pushed, in
+      // Bills, with what it asked for.
+      const own = redirectSystemPath({
+        path: 'opax://bill-list?scope=all&sort=newest',
+        initial,
+      });
+      expect(own.startsWith('/(tabs)/(bills)/bill-list?')).toBe(true);
+      expect(new URLSearchParams(own.split('?')[1]).get('scope')).toBe('all');
+      expect(new URLSearchParams(own.split('?')[1]).get('sort')).toBe('newest');
+      expect(
+        redirectSystemPath({ path: 'opax://bill-list?q=housing', initial }),
+      ).toBe('/(tabs)/(bills)/bill-list?q=housing');
+      // Votes in parliament is another page and keeps its own route.
+      expect(
+        redirectSystemPath({ path: 'opax://bills?view=divisions', initial }),
+      ).toContain('division-history');
+    },
+  );
   test('a tab of its own: Search, Ask and Your MP pages', () => {
     expect(linkTab('/results/person', false)).toBe('(search)');
     expect(linkTab('/conversations', false)).toBe('(ask)');

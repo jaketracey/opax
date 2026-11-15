@@ -3,8 +3,10 @@ import { router } from 'expo-router';
 import { act } from 'react';
 import {
   Dimensions,
+  Keyboard,
   Linking,
   Platform,
+  ScrollView,
   StyleSheet,
   Text as NativeText,
   View,
@@ -19,6 +21,7 @@ import { LocationRow } from '../src/features/seat/LocationRow';
 import {
   FieldClearance,
   bottomFieldClearance,
+  fieldClearanceAboveKeyboard,
   BOTTOM_FIELD_HEIGHT,
 } from '../src/features/seat/FieldClearance';
 import { SeatStateList } from '../src/features/seat/SeatStateList';
@@ -724,6 +727,71 @@ describe('the bottom search field', () => {
       await act(async () => r.unmount());
     },
   );
+  test('with the keyboard up the list ends above the field that rides on it', () => {
+    // The keyboard, then the field and its gap; never less than at rest.
+    expect(fieldClearanceAboveKeyboard(reserve(34), 336)).toBe(336 + 48 + 8);
+    expect(fieldClearanceAboveKeyboard(reserve(34), 0)).toBe(reserve(34));
+    expect(fieldClearanceAboveKeyboard(reserve(34), 10)).toBe(reserve(34));
+    // No field to clear (iPad, Android, iOS 18): the keyboard adds nothing.
+    expect(fieldClearanceAboveKeyboard(0, 336)).toBe(0);
+  });
+
+  test('iOS 26: the Victorian chooser’s list ends above the keyboard and the field while the keyboard is up, and returns when it goes', async () => {
+    setPlatform('ios', '26.3');
+    setFontScale(1);
+    const handlers = new Map<string, (event: unknown) => void>();
+    const listen = jest.spyOn(Keyboard, 'addListener').mockImplementation(((
+      name: string,
+      handler: (e: unknown) => void,
+    ) => {
+      handlers.set(name, handler);
+      return { remove: () => handlers.delete(name) };
+    }) as never);
+    try {
+      const r = await render(inset(<SeatChooser presentation="sheet" />));
+      const screen = Dimensions.get('screen').height;
+      const frame = (height: number, screenY: number) => ({
+        endCoordinates: { height, screenY, screenX: 0, width: 402 },
+      });
+      expect(padded(r, reserve(34)).length).toBeGreaterThan(0);
+      // The clearance ends the list above the keyboard, so the scroll view
+      // takes no keyboard inset of its own: both together left a blank
+      // band as tall as the keyboard at the end of the list.
+      expect(
+        r.root
+          .findByType(FieldClearance)
+          .findAllByType(ScrollView)
+          .map((list) => list.props.automaticallyAdjustKeyboardInsets),
+      ).toEqual([false]);
+      await act(async () =>
+        handlers.get('keyboardWillShow')!(frame(336, screen - 336)),
+      );
+      // The row behind the field is no longer under it: the viewport ends
+      // 336 + 48 + 8 pt up, and the AEC row is still inside it.
+      const up = padded(r, 336 + 48 + 8);
+      expect(up.length).toBeGreaterThan(0);
+      expect(padded(r, reserve(34)).length).toBe(0);
+      expect(
+        up[0]!.findAll((n) => n.props.testID === 'seat-aec'),
+      ).not.toHaveLength(0);
+      // A frame change that takes the keyboard off the screen reads as gone.
+      await act(async () =>
+        handlers.get('keyboardWillChangeFrame')!(frame(336, screen)),
+      );
+      expect(padded(r, reserve(34)).length).toBeGreaterThan(0);
+      await act(async () =>
+        handlers.get('keyboardWillShow')!(frame(336, screen - 336)),
+      );
+      await act(async () => handlers.get('keyboardWillHide')!({}));
+      expect(padded(r, reserve(34)).length).toBeGreaterThan(0);
+      expect(padded(r, 336 + 48 + 8).length).toBe(0);
+      await act(async () => r.unmount());
+      expect(handlers.size).toBe(0);
+    } finally {
+      listen.mockRestore();
+    }
+  });
+
   test.each([
     ['sheet', <SeatChooser key="s" presentation="sheet" />],
     ['welcome', <SeatChooser key="w" presentation="welcome" />],
@@ -739,6 +807,13 @@ describe('the bottom search field', () => {
           r.root.findByType(FieldClearance).findByType(View).props.style,
         ).paddingBottom,
       ).toBeUndefined();
+      // No bottom field: the scroll view's own keyboard inset applies.
+      expect(
+        r.root
+          .findByType(FieldClearance)
+          .findAllByType(ScrollView)
+          .map((list) => list.props.automaticallyAdjustKeyboardInsets),
+      ).toEqual([true]);
       expect(byID(r, 'seat-aec')).not.toHaveLength(0);
       await act(async () => r.unmount());
     },

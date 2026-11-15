@@ -61,7 +61,9 @@ env:
           element:
             text: 'Lower house: 88 districts'
           centerElement: true
-      - tapOn: '.*Suburb, postcode or district.*'
+      # The placeholder is shorter at accessibility text sizes; either form
+      # is the field.
+      - tapOn: '.*Suburb(, postcode or district| or postcode).*'
       - inputText: '3350'
       - extendedWaitUntil:
           visible:
