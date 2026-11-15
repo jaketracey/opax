@@ -1,8 +1,9 @@
 /**
  * Anonymous crash and error reports (`$exception`, docs/ANALYTICS.md). The
  * SDK's exception properties are rebuilt here from fixed lists, the same way
- * `scrubEvent` rebuilds every other event: the exception's type, a scrubbed
- * message, its stack frames and the binary images native frames point into.
+ * `scrubEvent` rebuilds every other event: the exception's type, a message
+ * only when it is one of a fixed list (else `message_omitted`), its stack
+ * frames and the binary images native frames point into.
  * Breadcrumbs (`$exception_steps`), app state, screen sizes, debug fields and
  * anything else the SDK or a caller adds are dropped.
  *
@@ -14,103 +15,90 @@
 import { routeErrorPattern } from './route-patterns';
 
 /**
- * The longest message that leaves the phone. The route error report's own
- * limit is 300 characters, with no email address and no run of four or
- * more digits; this cut and the rules below already hold every exception
- * message to that, more tightly, and the route report itself sends only a
- * message from a fixed list (`scrubExceptionProperties`). The Swift and
- * Kotlin copies in the plugin patch use the same number
- * (`opaxMessageMaxLength`), so a change here is a change there.
+ * No message sent is longer than this. Every message that can be sent is a
+ * fixed text from the list below, and all are shorter; the cut is kept so a
+ * text added later cannot be long. The Swift and Kotlin copies in the plugin
+ * patch use the same number (`opaxMessageMaxLength`).
  */
 export const EXCEPTION_MESSAGE_MAX_LENGTH = 120;
-// Longer input is cut before the rules run; a quote the cut opens is then
-// caught by the unclosed-quote rule, so nothing past it survives.
+// Longer input is cut before the rules run.
 const MESSAGE_INPUT_MAX_LENGTH = 4000;
 const MAX_EXCEPTIONS = 10;
 const MAX_FRAMES = 250;
 const MAX_IMAGES = 500;
 
 /**
- * Message rules, in order: [pattern, case-insensitive, replacement]. Free
- * text cannot be recognised in general, so a message keeps only what sits
- * outside quotes, URL paths, queries and fragments, email addresses and long
- * numbers, cut to a short length.
+ * The messages an exception may carry: [pattern, case-insensitive, the fixed
+ * text sent]. A message is sent only when it matches one of these, first
+ * match first, and what is sent is the fixed text on the right, never the
+ * message itself. Anything else is left out, and the report says so
+ * (`message_omitted: true`).
+ *
+ * Rewriting free text by pattern cannot make it safe: "No electorate for
+ * Grayndler" has no quote, address or long number in it. So nothing is
+ * rewritten. The first group are whole messages with nothing interpolated
+ * (the ones `opax_route_error` allows, events.ts, and the test report's).
+ * The second are framework messages with a fixed opening; some go on to
+ * interpolate a value (an object's keys, a property's name), and that tail
+ * is never sent because only the fixed text is.
  *
  * The Swift and Kotlin copies in the plugin patch use these exact pattern
- * texts (tests/analytics-exceptions.test.ts compares them), so they are
- * written for JavaScript's `u` flag and for ICU, which runs NSRegularExpression
- * and Android's java.util.regex: `\x60` is a backtick, and characters are
- * written `\uFEFF`, which all three read the same way.
+ * texts and fixed texts, in this order (tests/analytics-exceptions.test.ts
+ * compares them), so they are written for JavaScript's `u` flag and for
+ * ICU, which runs NSRegularExpression and Android's java.util.regex:
+ * `(?![\s\S])` is the end of the message in all three (`$` is not: ICU's
+ * also matches before a final line break).
  */
+const whole = (text: string) =>
+  [`^${text.replace(/[.]/g, '\\.')}(?![\\s\\S])`, false, text] as const;
+const opening = (text: string) =>
+  [`^${text}(?![\\p{L}\\p{N}_-])`, false, text] as const;
 export const MESSAGE_RULES: readonly (readonly [string, boolean, string])[] = [
-  // Spaces the three engines disagree on: JavaScript's \s takes U+FEFF and
-  // not U+0085, ICU's the reverse, and Kotlin's trim() also strips U+001C to
-  // U+001F. All become a plain space first, so every copy cuts the same text.
-  [String.raw`[\u001C-\u001F\u0085\uFEFF]`, false, ' '],
-  // A URL's user name and password.
-  [String.raw`([a-z][a-z0-9+.-]*://)[^\s/?#@"'\x60<>]*@`, true, '$1'],
-  // An OPAX URL keeps its host only (without a trailing dot): its paths can
-  // carry what a reader searched or asked.
+  whole('Network request failed'),
+  whole('Failed to fetch'),
+  whole('The request timed out'),
+  whole('Maximum call stack size exceeded'),
+  whole('Rendered more hooks than during the previous render.'),
+  whole('Rendered fewer hooks than expected.'),
+  whole('Missing OPAX build configuration'),
+  whole('OPAX test error report'),
+  opening('Maximum update depth exceeded'),
+  opening('Rendered more hooks than during the previous render'),
+  opening('Rendered fewer hooks than expected'),
+  opening('Too many re-renders'),
+  opening('Objects are not valid as a React child'),
+  opening('Invalid hook call'),
+  opening('Text strings must be rendered within a <Text> component'),
+  // Hermes names the property in the middle ("Cannot read property 'x' of
+  // undefined"), V8 at the end ("Cannot read properties of undefined
+  // (reading 'x')"). The name is never sent.
   [
-    String.raw`((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)\.?(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*`,
-    true,
-    '$1',
-  ],
-  // A path with no host in front ("/ask/…", "/api/search/…") keeps its first
-  // segment, or "/api/<endpoint>": app routes and API paths carry record
-  // keys and typed text after that. File paths under a filesystem root
-  // ("/src/…", "/Users/…", "/private/var/…", "/data/…") stay whole, so stack
-  // locations stay readable.
-  [
-    String.raw`(?<![\p{L}\p{N}_.~:/-])(/(?!(?:Users|Applications|Library|System|Volumes|Developer|private|var|tmp|usr|opt|etc|home|root|mnt|data|storage|sdcard|apex|vendor|product|proc|dev|src|node_modules)(?![\p{L}\p{N}_.-]))(?:api/)?[^\s/?#"'\x60<>]+)[/?#][^\s"'\x60<>]*`,
-    true,
-    '$1',
-  ],
-  // Any other URL or path keeps its path; the query string and fragment go.
-  [String.raw`(/[^\s?#"'\x60<>]*)[?#][^\s"'\x60<>]*`, false, '$1'],
-  // A query string on a bare token.
-  [String.raw`\?[^\s"'\x60<>]*=[^\s"'\x60<>]*`, false, ''],
-  [
-    String.raw`[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+`,
+    String.raw`^Cannot read propert(?:y|ies)(?![\p{L}\p{N}_-])[\s\S]* of undefined(?![\p{L}\p{N}_-])`,
     false,
-    '[email]',
+    'Cannot read properties of undefined',
   ],
-  // Quoted strings, across lines. Double quotes, guillemets, corner
-  // brackets, backticks and the opening single quotes ‘ ‚ ‛ open anywhere
-  // (x"text", x‘text’); ' ’ ＇ and primes only after a space or punctuation.
-  // A single quote followed by a letter is an apostrophe (O'Brien, it’s) and
-  // does not close the quote.
   [
-    String.raw`(?:"[^"]*"|“[^”]*”|„[^“”]*[“”]|”[^”]*”|‟[^”]*”|«[^»]*»|»[^«»]*[«»]|‹[^›]*›|›[^‹›]*[‹›]|「[^」]*」|『[^』]*』|〝[^〞〟]*[〞〟]|＂[^＂]*＂|″[^″]*″|\x60[^\x60]*\x60)|(?:‘(?:[^’]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|‛(?:[^’‛]|[’‛](?=[\p{L}\p{N}_]))*[’‛])(?![\p{L}\p{N}_])|(?<![\p{L}\p{N}_])(?:'(?:[^']|'(?=[\p{L}\p{N}_]))*'|’(?:[^’]|’(?=[\p{L}\p{N}_]))*’|＇(?:[^＇]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])`,
+    String.raw`^Cannot read propert(?:y|ies)(?![\p{L}\p{N}_-])[\s\S]* of null(?![\p{L}\p{N}_-])`,
     false,
-    '[redacted]',
+    'Cannot read properties of null',
   ],
-  // A quote that never closes hides the rest of the message.
-  [
-    String.raw`["“„”‟«»‹›「『〝＂″\x60‘‚‛][\s\S]*|(?<![\p{L}\p{N}_])['’＇′][\s\S]*`,
-    false,
-    '[redacted]',
-  ],
-  // Codes, postcodes and phone numbers.
-  [String.raw`\p{N}{4,}`, false, '#'],
-  [String.raw`\s+`, false, ' '],
 ];
 const messageRules = MESSAGE_RULES.map(
-  ([pattern, ignoreCase, replacement]) =>
-    [new RegExp(pattern, ignoreCase ? 'giu' : 'gu'), replacement] as const,
+  ([pattern, ignoreCase, fixed]) =>
+    [new RegExp(pattern, ignoreCase ? 'iu' : 'u'), fixed] as const,
 );
 
-/** The message an exception may carry, or undefined when nothing is left. */
+/**
+ * The message an exception may carry: the fixed text of the first rule it
+ * matches, or undefined when it matches none.
+ */
 export function scrubExceptionMessage(value: unknown): string | undefined {
   if (typeof value !== 'string') return undefined;
-  let text = value.slice(0, MESSAGE_INPUT_MAX_LENGTH);
-  for (const [rule, replacement] of messageRules)
-    text = text.replace(rule, replacement);
-  text = Array.from(text.trim())
-    .slice(0, EXCEPTION_MESSAGE_MAX_LENGTH)
-    .join('')
-    .trim();
-  return text || undefined;
+  const text = value.slice(0, MESSAGE_INPUT_MAX_LENGTH);
+  for (const [rule, fixed] of messageRules)
+    if (rule.test(text))
+      return Array.from(fixed).slice(0, EXCEPTION_MESSAGE_MAX_LENGTH).join('');
+  return undefined;
 }
 
 type Json = string | number | boolean | Json[] | { [key: string]: Json };
@@ -211,17 +199,11 @@ function list(value: unknown, max: number) {
   return Array.isArray(value) ? value.slice(0, max) : [];
 }
 
-/** How one exception's message is kept: the text to send, or nothing. */
-type MessageRule = (value: unknown) => string | undefined;
-
-function scrubOne(
-  value: unknown,
-  keepMessage: MessageRule,
-): Record<string, Json> | null {
+function scrubOne(value: unknown): Record<string, Json> | null {
   const exception = record(value);
   if (!exception) return null;
   const clean: Record<string, Json> = { type: exceptionType(exception.type) };
-  const message = keepMessage(exception.value);
+  const message = scrubExceptionMessage(exception.value);
   if (message) clean.value = message;
   const module = text(256)(exception.module);
   if (module) clean.module = module;
@@ -243,40 +225,34 @@ function scrubOne(
 }
 
 const exceptionLevels = ['fatal', 'error', 'warning', 'log', 'info', 'debug'];
+/** A message was there, and it is not one that may be sent. */
+function messageOmitted(value: unknown): boolean {
+  const message = record(value)?.value;
+  return (
+    typeof message === 'string' &&
+    message.length > 0 &&
+    scrubExceptionMessage(message) === undefined
+  );
+}
+
 /**
  * The `$exception` properties that may leave the phone, or null when the
- * event carries no exception at all.
- *
- * A route boundary's report (one that names a `route_pattern`) is held to
- * a stricter rule for its message. Rewriting free text by pattern cannot
- * make it safe: "No electorate for Grayndler" has no quote, address or
- * long number in it. So that report sends a message only when
- * `knownMessage` recognises it as one of a fixed list of content-free
- * messages, and then sends the fixed text, never the caller's own. Any
- * other message is left out, and `message_omitted: true` says one was; the
- * error's name and stack frames still locate it. With no `knownMessage`
- * given, every message of such a report is left out.
+ * event carries no exception at all. Every report is held to the same
+ * rule, whatever caught the error (the global handler, the rejection
+ * tracker, a route boundary, the test report): a message is sent only from
+ * the fixed list, and `message_omitted: true` says one was left out. The
+ * error's type and stack frames still locate it.
  */
 export function scrubExceptionProperties(
   raw: Record<string, unknown>,
-  knownMessage: MessageRule = () => undefined,
 ): Record<string, Json> | null {
-  const routeReport = Object.hasOwn(raw, 'route_pattern');
-  let omitted = false;
-  const keepMessage: MessageRule = routeReport
-    ? (value) => {
-        const known = knownMessage(value);
-        if (known === undefined && typeof value === 'string' && value.trim())
-          omitted = true;
-        return known;
-      }
-    : scrubExceptionMessage;
-  const exceptions = list(raw.$exception_list, MAX_EXCEPTIONS)
-    .map((exception) => scrubOne(exception, keepMessage))
+  const listed = list(raw.$exception_list, MAX_EXCEPTIONS);
+  const exceptions = listed
+    .map(scrubOne)
     .filter((exception) => exception !== null);
   if (!exceptions.length) return null;
   const clean: Record<string, Json> = { $exception_list: exceptions };
-  if (omitted) clean.message_omitted = true;
+  if (listed.some(messageOmitted)) clean.message_omitted = true;
   const level = raw.$exception_level;
   if (typeof level === 'string' && exceptionLevels.includes(level))
     clean.$exception_level = level;
@@ -294,10 +270,14 @@ export function scrubExceptionProperties(
   // flag only, so dashboards can leave test reports out. JavaScript reports
   // only; a native crash report never carries it.
   if (raw.opax_test === true) clean.opax_test = true;
-  // The route a render error was caught on (reportRouteError): one of the
-  // fixed route-file patterns ("/bill/[key]"), or nothing. Never a path,
-  // a parameter's value or a query. JavaScript reports only.
-  const route = routeErrorPattern(raw.route_pattern);
+  // The route the error happened on: one of the fixed route-file patterns
+  // ("/bill/[key]"), or nothing. A route boundary names it itself
+  // (reportRouteError); for any other report it is the SDK's screen, which
+  // the app sets to a route template, kept only when it is on that list.
+  // Never a path, a parameter's value or a query. The SDK's own screen
+  // property is not sent on a report (events.ts). JavaScript reports only.
+  const route =
+    routeErrorPattern(raw.route_pattern) ?? routeErrorPattern(raw.$screen_name);
   if (route) clean.route_pattern = route;
   return clean;
 }

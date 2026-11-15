@@ -47,7 +47,10 @@ const sharedKeys = [
   '$app_namespace',
   '$app_version',
   '$app_build',
+  // Neither copy sends it on a report; listed so a copy that did would
+  // differ from the other.
   '$screen_name',
+  'message_omitted',
 ];
 function shared(properties: Record<string, unknown> | undefined) {
   if (!properties) return null;
@@ -146,10 +149,12 @@ test('the Kotlin field lists match exceptions.ts and sdkProperties', () => {
   }
   // Native events also keep the app's own app_version and app_build when the
   // JS copy of a fatal error carried them; JS sets those from its context.
+  // The screen name is the one SDK property a report does not carry: JS
+  // keeps it for `$screen` events and removes it from `$exception`.
   const sdk = jsKeys('events.ts', 'sdkProperties');
   expect(sdk).toContain('$screen_name');
   expect(kotlinKeys('opaxContextFields')).toEqual([
-    ...sdk,
+    ...sdk.filter((key) => key !== '$screen_name'),
     'app_version',
     'app_build',
   ]);

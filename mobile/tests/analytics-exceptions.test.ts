@@ -216,49 +216,42 @@ test.each([
   expect(scrubbed.properties!.$exception_list).toHaveLength(1);
 });
 
-test('messages keep their shape and are cut to a short length', () => {
+test('free text is never rewritten and sent: a message is one of the fixed texts, or nothing', () => {
+  // What the pattern rules used to send, with the private part cut out.
+  // None of it is a fixed text, so none of it is sent.
+  for (const message of [
+    `Property '${secrets.search}' doesn't exist`,
+    `Request to https://opax.com.au/api/search?q=${secrets.code}#top timed out`,
+    'Fetch https://example.org/img/a.png?w=2#x failed',
+    'Route /ask#top missing',
+    `Route /ask/${secrets.code} missing`,
+    'GET /api/search/x%20y failed',
+    'at /src/analytics/exceptions.ts:12:3',
+    'a\u0085b\ufeffc\u001fd',
+    "Can't find variable: Fixture",
+    `Reply from ${secrets.email}`,
+    `Render failed: ${'x'.repeat(400)}`,
+    `"${secrets.question}"`,
+  ])
+    expect(scrubExceptionMessage(message)).toBeUndefined();
+  // A known framework message is its fixed text, without what it
+  // interpolates.
   expect(
     scrubExceptionMessage(
       `Cannot read property '${secrets.search}' of undefined`,
     ),
-  ).toBe('Cannot read property [redacted] of undefined');
-  // An OPAX URL keeps its host; any other URL or path keeps its path.
-  expect(
-    scrubExceptionMessage(
-      `Request to https://opax.com.au/api/search?q=${secrets.code}#top timed out`,
-    ),
-  ).toBe('Request to https://opax.com.au timed out');
-  expect(
-    scrubExceptionMessage('Fetch https://example.org/img/a.png?w=2#x failed'),
-  ).toBe('Fetch https://example.org/img/a.png failed');
-  expect(scrubExceptionMessage('Route /ask#top missing')).toBe(
-    'Route /ask missing',
+  ).toBe('Cannot read properties of undefined');
+  expect(scrubExceptionMessage('Network request failed')).toBe(
+    'Network request failed',
   );
-  // A path with no host keeps its first segment ("/api/<endpoint>" for the
-  // API); file paths under a filesystem root stay whole.
-  expect(scrubExceptionMessage(`Route /ask/${secrets.code} missing`)).toBe(
-    'Route /ask missing',
-  );
-  expect(scrubExceptionMessage('GET /api/search/x%20y failed')).toBe(
-    'GET /api/search failed',
-  );
-  expect(scrubExceptionMessage('at /src/analytics/exceptions.ts:12:3')).toBe(
-    'at /src/analytics/exceptions.ts:12:3',
-  );
-  // Spaces JavaScript and ICU disagree on become plain spaces.
-  expect(scrubExceptionMessage('a\u0085b\ufeffc\u001fd')).toBe('a b c d');
-  expect(scrubExceptionMessage("Can't find variable: Fixture")).toBe(
-    "Can't find variable: Fixture",
-  );
-  expect(scrubExceptionMessage(`Reply from ${secrets.email}`)).toBe(
-    'Reply from [email]',
-  );
-  const long = `Render failed: ${'x'.repeat(400)}`;
-  expect(Array.from(scrubExceptionMessage(long)!)).toHaveLength(
-    EXCEPTION_MESSAGE_MAX_LENGTH,
-  );
-  expect(scrubExceptionMessage(`"${secrets.question}"`)).toBe('[redacted]');
   expect(scrubExceptionMessage(42)).toBeUndefined();
+  // Every text that can be sent is written in the list, and is short.
+  for (const [, , fixed] of MESSAGE_RULES) {
+    expect(Array.from(fixed).length).toBeLessThanOrEqual(
+      EXCEPTION_MESSAGE_MAX_LENGTH,
+    );
+    expect(scrubExceptionMessage(fixed)).toBe(fixed);
+  }
 });
 
 test('the exception payload is rebuilt from fixed lists', () => {
@@ -286,13 +279,14 @@ test('the exception payload is rebuilt from fixed lists', () => {
       '$lib_version',
       '$os_name',
       '$process_person_profile',
-      '$screen_name',
       '$session_id',
       'app',
       'app_build',
       'app_version',
       'environment',
+      'message_omitted',
       'platform',
+      'route_pattern',
     ].sort(),
   );
   expect(scrubbed.properties).toMatchObject({
@@ -300,7 +294,10 @@ test('the exception payload is rebuilt from fixed lists', () => {
     $is_identified: false,
     $geoip_disable: true,
     $exception_level: 'error',
-    $screen_name: '/person/[slug]',
+    // The SDK's screen is not sent; the route is, from the fixed list.
+    route_pattern: '/person/[slug]',
+    // The message was free text: left out, and said to be.
+    message_omitted: true,
     platform: 'ios',
     app_version: '1.1.4',
     app_build: '43',
@@ -308,7 +305,6 @@ test('the exception payload is rebuilt from fixed lists', () => {
   expect(scrubbed.properties!.$exception_list).toEqual([
     {
       type: 'TypeError',
-      value: "Property [redacted] doesn't exist",
       mechanism: {
         type: 'onuncaughtexception',
         handled: false,
@@ -436,7 +432,7 @@ test('Swift and Kotlin use the JS message rules and the same field patterns', ()
   // Android's java.util.regex runs on ICU, which rejects Java's (?U) flag:
   // every Kotlin rule would throw when the file's class loads.
   expect(kotlinSource).not.toMatch(/Regex\("\(\?U\)|"\(\?U\)\$pattern"/);
-  // The same context lists as events.ts, including the screen rule.
+  // The same context lists as events.ts, without the screen name.
   for (const value of [
     '"posthog-react-native"',
     '"Mobile", "Tablet", "Desktop", "TV"',
@@ -445,8 +441,14 @@ test('Swift and Kotlin use the JS message rules and the same field patterns', ()
     expect(swiftSource).toContain(value);
     expect(kotlinSource).toContain(value);
   }
-  expect(swiftSource).toContain('"$screen_name": .screen');
-  expect(kotlinSource).toContain('"\\$screen_name" to OpaxField.Screen');
+  // Neither native copy sends a screen name: its shape is all they could
+  // check, and a path with a record's key in it has that shape.
+  for (const source of [swiftSource, kotlinSource]) {
+    const block = source.slice(source.indexOf('OPAX privacy patch ('));
+    expect(block).toContain('message_omitted');
+    expect(block).not.toMatch(/"\\?\$screen_name"/);
+    expect(block).not.toMatch(/\$current_url|\$pathname/);
+  }
 });
 
 test('the native SDK fetches no feature flags, person properties or GeoIP', () => {
@@ -516,92 +518,172 @@ test('the plugin pins exactly the reviewed posthog-ios', () => {
 });
 
 /**
- * The limits set for the route error report's message: at most 300
- * characters, and no email address or run of four or more digits (a
- * postcode, an id), so a message that interpolates what a reader typed
- * cannot carry it. The one scrubber every exception message goes through
- * already holds to them, more tightly: its cut is 120 characters.
+ * Every `$exception`, whatever caught the error: a message is sent only when
+ * it is on the fixed list, and then as the fixed text. Rewriting free text by
+ * pattern cannot make it safe, so nothing is rewritten.
  */
-describe('an error message within the route report’s limits', () => {
-  test('a 1,000-character message is cut, to well inside 300 characters', () => {
-    const long = 'a'.repeat(1000);
-    const cut = scrubExceptionMessage(long)!;
-    expect(EXCEPTION_MESSAGE_MAX_LENGTH).toBeLessThanOrEqual(300);
-    expect(cut).toBe('a'.repeat(EXCEPTION_MESSAGE_MAX_LENGTH));
-    expect(cut.length).toBeLessThanOrEqual(300);
-    // Words, not one run: still cut, on the same count.
-    const words = scrubExceptionMessage('render failed '.repeat(72))!;
-    expect('render failed '.repeat(72)).toHaveLength(1008);
-    expect(words.length).toBeLessThanOrEqual(EXCEPTION_MESSAGE_MAX_LENGTH);
-    expect(words.startsWith('render failed render failed')).toBe(true);
-  });
-
-  test('an email address is redacted', () => {
-    expect(
-      scrubExceptionMessage(
-        'Could not load the profile for jane.citizen@example.com today',
-      ),
-    ).toBe('Could not load the profile for [email] today');
-    expect(
-      scrubExceptionMessage('No account for jo+opax@mail.example.org.au'),
-    ).toBe('No account for [email]');
-  });
-
-  test('"postcode 3040" and a long id are redacted', () => {
-    expect(scrubExceptionMessage('No seat found for postcode 3040')).toBe(
-      'No seat found for postcode #',
-    );
-    expect(scrubExceptionMessage('Record 1234567890 has no title')).toBe(
-      'Record # has no title',
-    );
-    // An id inside a longer token loses its digits too.
-    expect(scrubExceptionMessage('Bill au-federal-r7520 failed to draw')).toBe(
-      'Bill au-federal-r# failed to draw',
-    );
-    for (const message of [
-      'No seat found for postcode 3040',
-      'Record 1234567890 has no title',
-      'Bill au-federal-r7520 failed to draw',
-      'Could not load the profile for jane.citizen@example.com today',
-    ])
-      expect(scrubExceptionMessage(message)).not.toMatch(
-        /\d{4,}|@|example\.com/,
-      );
-  });
-
-  test('an ordinary message is unchanged', () => {
-    for (const message of [
-      'Maximum update depth exceeded',
-      'Rendered fewer hooks than expected',
-      'Text strings must be rendered within a Text component',
-      // Three digits are a status or a count, not a postcode or an id.
-      'Request failed with status 404',
-    ])
-      expect(scrubExceptionMessage(message)).toBe(message);
-  });
-
-  test('the route report’s own message is held to a fixed list on top of this: free text is left out, not rewritten', () => {
+describe('a message is sent only from the fixed list', () => {
+  const sentFor = (message: unknown, extra: Record<string, unknown> = {}) => {
     const scrubbed = scrubEvent(
       {
         event: '$exception',
         properties: {
-          $exception_list: [
-            {
-              type: 'Error',
-              value:
-                'No seat found for postcode 3040, asked by jane.citizen@example.com',
-            },
-          ],
-          route_pattern: '/bill/[key]',
+          $exception_list: [{ type: 'Error', value: message }],
+          ...extra,
         },
       },
       context,
     )!;
-    expect(scrubbed.properties).toMatchObject({
-      route_pattern: '/bill/[key]',
-      message_omitted: true,
-      $exception_list: [{ type: 'Error' }],
-    });
-    expect(JSON.stringify(scrubbed)).not.toMatch(/seat|postcode|asked|email/);
+    const properties = scrubbed.properties as {
+      $exception_list: { value?: string }[];
+      message_omitted?: boolean;
+    };
+    return {
+      message: properties.$exception_list[0]!.value,
+      omitted: properties.message_omitted === true,
+      text: JSON.stringify(scrubbed),
+    };
+  };
+
+  // From the privacy review: each came through the pattern rules with the
+  // reader's own words in it.
+  test.each([
+    [
+      'Invalid URL: housing affordability in 3000',
+      /housing|affordability|3000/,
+    ],
+    ['No electorate for Grayndler', /Grayndler|electorate/],
+    [
+      'Unknown member Anthony Albanese (postcode 2042, 800)',
+      /Anthony|Albanese|2042|800|postcode/,
+    ],
+    ['person/tony-abbott is not a record route', /tony|abbott|person\//],
+  ])('free text sends no message: %s', (message, words) => {
+    const sent = sentFor(message);
+    expect(sent).toMatchObject({ message: undefined, omitted: true });
+    expect(sent.text).not.toMatch(words);
+  });
+
+  test('a 1,000-character message, an email address, a postcode and a long id send no message', () => {
+    for (const message of [
+      'a'.repeat(1000),
+      'render failed '.repeat(72),
+      'Could not load the profile for jane.citizen@example.com today',
+      'No seat found for postcode 3040',
+      'Record 1234567890 has no title',
+      'Bill au-federal-r7520 failed to draw',
+    ]) {
+      const sent = sentFor(message);
+      expect(sent).toMatchObject({ message: undefined, omitted: true });
+      expect(sent.text).not.toMatch(
+        /aaaa|render failed|jane|example\.com|3040|1234567890|r7520|seat|profile/,
+      );
+    }
+  });
+
+  test('a fixed message is sent as it is, and a framework message as its fixed opening', () => {
+    for (const message of [
+      'Network request failed',
+      'Failed to fetch',
+      'The request timed out',
+      'Maximum call stack size exceeded',
+      'Rendered more hooks than during the previous render.',
+      'Rendered fewer hooks than expected.',
+      'Missing OPAX build configuration',
+      'OPAX test error report',
+    ])
+      expect(sentFor(message)).toMatchObject({ message, omitted: false });
+    for (const [message, fixed] of [
+      [
+        'Maximum update depth exceeded. This can happen when a component repeatedly calls setState.',
+        'Maximum update depth exceeded',
+      ],
+      [
+        'Too many re-renders. React limits the number of renders to prevent an infinite loop.',
+        'Too many re-renders',
+      ],
+      [
+        'Objects are not valid as a React child (found: object with keys {postcode, Grayndler}).',
+        'Objects are not valid as a React child',
+      ],
+      [
+        "Cannot read properties of undefined (reading 'housingAffordability3000')",
+        'Cannot read properties of undefined',
+      ],
+      [
+        "Cannot read property 'tonyAbbott' of null",
+        'Cannot read properties of null',
+      ],
+    ] as const) {
+      const sent = sentFor(message);
+      expect(sent).toMatchObject({ message: fixed, omitted: false });
+      expect(sent.text).not.toMatch(
+        /postcode|Grayndler|housing|3000|tony|Abbott|reading|setState|limits/,
+      );
+    }
+  });
+
+  test('a look-alike is not a known message; no message at all is not an omission', () => {
+    for (const message of [
+      'Maximum update depth exceededGrayndler',
+      'Too many re-renders-housing',
+      'grants: Too many re-renders',
+      'Network request failed for Grayndler',
+      'Network request failed\n',
+      ' Network request failed',
+      'network request failed',
+      '   ',
+    ])
+      expect(sentFor(message)).toMatchObject({
+        message: undefined,
+        omitted: true,
+      });
+    for (const message of ['', undefined, 7, null])
+      expect(sentFor(message)).toMatchObject({
+        message: undefined,
+        omitted: false,
+      });
+  });
+
+  test('no report carries the SDK’s screen, a URL, a path or a parameter; its route is a fixed pattern or absent', () => {
+    // An uncaught error or a rejection: the SDK's screen, which the app sets
+    // to a route template, becomes the route only when it is on the list.
+    expect(
+      scrubEvent(
+        exceptionEvent('Network request failed', {
+          $current_url: 'opax://bill/r7520?tab=votes',
+          $pathname: '/bill/r7520',
+          params: { key: 'r7520' },
+        }),
+        context,
+      )!.properties,
+    ).toMatchObject({ route_pattern: '/person/[slug]' });
+    for (const screen of [
+      '/bill/r7520',
+      '/person/tony-abbott',
+      '/search/housing',
+      '/electorate/grayndler?from=search',
+    ]) {
+      const scrubbed = scrubEvent(
+        exceptionEvent('Network request failed', {
+          $screen_name: screen,
+          $current_url: `opax:/${screen}`,
+          $pathname: screen,
+          params: { key: 'r7520', slug: 'tony-abbott' },
+        }),
+        context,
+      )!;
+      for (const key of [
+        '$screen_name',
+        '$current_url',
+        '$pathname',
+        'params',
+        'route_pattern',
+      ])
+        expect(scrubbed.properties).not.toHaveProperty(key);
+      expect(JSON.stringify(scrubbed)).not.toMatch(
+        /r7520|tony-abbott|housing|grayndler|from=search/,
+      );
+    }
   });
 });

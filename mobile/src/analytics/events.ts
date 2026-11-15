@@ -150,67 +150,6 @@ export function scrubErrorMessage(value: unknown): string | undefined {
     : undefined;
 }
 
-/**
- * Framework messages with a fixed opening, for the route error report's
- * `$exception`: [how the message starts, the fixed text sent for it]. Some
- * go on to interpolate a value (the keys of an object, a property's name,
- * a component's name); only the fixed text on the right is ever sent, so
- * that tail never is. Nothing here is matched loosely: a message must
- * start with the opening, at a word's end.
- */
-const frameworkMessages: readonly (readonly [RegExp, string])[] = [
-  [/^Maximum update depth exceeded(?![\w-])/, 'Maximum update depth exceeded'],
-  [
-    /^Rendered more hooks than during the previous render(?![\w-])/,
-    'Rendered more hooks than during the previous render',
-  ],
-  [
-    /^Rendered fewer hooks than expected(?![\w-])/,
-    'Rendered fewer hooks than expected',
-  ],
-  [/^Too many re-renders(?![\w-])/, 'Too many re-renders'],
-  [
-    /^Objects are not valid as a React child(?![\w-])/,
-    'Objects are not valid as a React child',
-  ],
-  [/^Invalid hook call(?![\w-])/, 'Invalid hook call'],
-  [
-    /^Text strings must be rendered within a <Text> component(?![\w-])/,
-    'Text strings must be rendered within a <Text> component',
-  ],
-  // Hermes names the property in the middle ("Cannot read property 'x' of
-  // undefined"), V8 at the end ("Cannot read properties of undefined
-  // (reading 'x')"). The name is never sent.
-  [
-    /^Cannot read propert(?:y|ies)(?![\w-])[\s\S]* of undefined(?![\w-])/,
-    'Cannot read properties of undefined',
-  ],
-  [
-    /^Cannot read propert(?:y|ies)(?![\w-])[\s\S]* of null(?![\w-])/,
-    'Cannot read properties of null',
-  ],
-];
-// Longer input is not read at all.
-const KNOWN_MESSAGE_INPUT_MAX_LENGTH = 4000;
-/**
- * The message the route error report may send: one of the exact,
- * content-free diagnostics above, or the fixed text of a framework message
- * it starts with. Undefined for anything else, which is then left out.
- * Every result is a string written in this file, well under 300 characters.
- */
-export function knownErrorMessage(value: unknown): string | undefined {
-  if (
-    typeof value !== 'string' ||
-    value.length > KNOWN_MESSAGE_INPUT_MAX_LENGTH
-  )
-    return undefined;
-  const exact = scrubErrorMessage(value);
-  if (exact !== undefined) return exact;
-  for (const [opening, fixed] of frameworkMessages)
-    if (opening.test(value)) return fixed;
-  return undefined;
-}
-
 export const timedRoutes = [
   '/',
   '/person/[slug]',
@@ -544,9 +483,7 @@ export function scrubEvent<T extends CaptureEvent>(
   const raw = captured.properties ?? {};
   // Crash and error reports: their own fixed lists (./exceptions.ts).
   const exception =
-    captured.event === '$exception'
-      ? scrubExceptionProperties(raw, knownErrorMessage)
-      : null;
+    captured.event === '$exception' ? scrubExceptionProperties(raw) : null;
   if (captured.event === '$exception' && !exception) return null;
   const rules = Object.hasOwn(eventFields, captured.event)
     ? (eventFields[captured.event as AnalyticsEvent] as Record<string, Rule>)
@@ -576,10 +513,11 @@ export function scrubEvent<T extends CaptureEvent>(
     captured.event === 'opax_app_start'
   )
     delete properties.$screen_name;
-  // A route boundary's error report names its route from the fixed list
-  // too (`route_pattern`), so the SDK's screen property goes the same way.
-  if (captured.event === '$exception' && exception?.route_pattern)
-    delete properties.$screen_name;
+  // A crash or error report names its route from the fixed list
+  // (`route_pattern`, exceptions.ts). The SDK's screen property is checked
+  // only for its shape, which a path with a record's key in it also has,
+  // so no report carries it.
+  if (captured.event === '$exception') delete properties.$screen_name;
   if (captured.event === '$screen' && !properties.$screen_name) return null;
   return {
     ...captured,

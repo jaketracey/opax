@@ -214,10 +214,11 @@ export function resetRouteErrorReports() {
  * this is the only report of it.
  *
  * The `$exception` carries the error's name, its stack frames, the route,
- * and the build and window class every event carries. It carries a message
- * only when the message is one of a fixed list of content-free ones
- * (`knownErrorMessage`), and then that fixed text; any other message is
- * left out and `message_omitted: true` is sent in its place. Nothing else:
+ * and the build and window class every event carries. Like every crash and
+ * error report it carries a message only when the message is one of a fixed
+ * list of content-free ones (exceptions.ts `MESSAGE_RULES`), and then that
+ * fixed text; any other message is left out and `message_omitted: true` is
+ * sent in its place. Nothing else:
  * no parameter, path, query, or anything the reader typed, searched or
  * chose.
  * - The route is the route file's pattern ("/bill/[key]"): the layout

@@ -5,11 +5,8 @@ import TestRenderer from 'react-test-renderer';
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import Constants from 'expo-constants';
 import { reportRouteError, resetRouteErrorReports } from '../src/analytics';
-import {
-  cleanEvent,
-  knownErrorMessage,
-  scrubEvent,
-} from '../src/analytics/events';
+import { cleanEvent, scrubEvent } from '../src/analytics/events';
+import { scrubExceptionMessage } from '../src/analytics/exceptions';
 import { RouteErrorBoundary } from '../src/navigation/RouteErrorBoundary';
 
 // Mirrors DEVELOPMENT_ROUTE in scripts/verify-ios-release.py.
@@ -437,7 +434,7 @@ describe('the route error report ($exception), within its limits', () => {
     expect(sent.message).toBeUndefined();
     expect(sent.omitted).toBe(true);
     expect(sent.text).not.toMatch(words);
-    expect(knownErrorMessage(message)).toBeUndefined();
+    expect(scrubExceptionMessage(message)).toBeUndefined();
   });
 
   test.each([
@@ -536,19 +533,22 @@ describe('the route error report ($exception), within its limits', () => {
         message: undefined,
         omitted: true,
       });
-    for (const message of ['', '   ', undefined, 7, null])
+    // Any text at all, even blank, is a message that was left out.
+    expect(sentFor('   ')).toMatchObject({ message: undefined, omitted: true });
+    for (const message of ['', undefined, 7, null])
       expect(sentFor(message)).toMatchObject({
         message: undefined,
         omitted: false,
       });
     // Every text that can be sent is a fixed one, inside the 300 limit.
     expect(
-      knownErrorMessage(`Maximum update depth exceeded. ${'x'.repeat(1000)}`)!
-        .length,
+      scrubExceptionMessage(
+        `Maximum update depth exceeded. ${'x'.repeat(1000)}`,
+      )!.length,
     ).toBeLessThanOrEqual(300);
   });
 
-  test('only the route report is held to the list: another $exception keeps its pattern-scrubbed message', () => {
+  test('every $exception is held to the list, not only the route report', () => {
     const scrubbed = scrubEvent(
       {
         event: '$exception',
@@ -559,9 +559,10 @@ describe('the route error report ($exception), within its limits', () => {
       context,
     )!;
     expect(scrubbed.properties).toMatchObject({
-      $exception_list: [{ type: 'Error', value: 'Plain failure #' }],
+      $exception_list: [{ type: 'Error' }],
+      message_omitted: true,
     });
-    expect(scrubbed.properties).not.toHaveProperty('message_omitted');
+    expect(JSON.stringify(scrubbed)).not.toMatch(/Plain|failure|12345/);
   });
 
   test('a route that is not on the fixed list is left out of the payload, and the SDK’s screen is kept out with it', () => {

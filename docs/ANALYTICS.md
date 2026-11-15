@@ -433,38 +433,23 @@ captures nothing automatically.
   `captureException`, beside `opax_route_error`. This is what says what was
   thrown when a page shows "This page couldn't be shown". The report holds:
   - the error's name (a built-in or runtime type name, else `Error`);
-  - its message, only when it is a known content-free one. Rewriting free
-    text by pattern cannot make it safe ("No electorate for Grayndler" has
-    no quote, address or long number in it), so this report does not send
-    a rewritten message. It sends one of the exact diagnostics
-    `opax_route_error` allows (`scrubErrorMessage`), or the fixed text of a
-    framework message the error's message starts with: "Maximum update
-    depth exceeded", "Rendered more hooks than during the previous render",
-    "Rendered fewer hooks than expected", "Too many re-renders", "Objects
-    are not valid as a React child", "Invalid hook call", "Text strings
-    must be rendered within a <Text> component", "Cannot read properties
-    of undefined" and "Cannot read properties of null". Only that fixed
-    text is sent, never what the message goes on to interpolate (an
-    object's keys, a property's name). Any other message is left out, and
-    `message_omitted: true` is sent in its place. Every text that can be
-    sent is well under 300 characters;
+  - its message, only when it is on the fixed list every crash and error
+    report is held to (below), and then as the fixed text. Any other
+    message is left out and `message_omitted: true` is sent;
   - its stack frames, as every JS error report has them (where the code is,
     never what it was working on);
   - `route_pattern`: the route file's pattern, such as `/bill/[key]`. It is
     built from the layout segments Expo Router gives (file names, never
     values), without groups, and kept only when it is on the fixed list in
     `mobile/src/analytics/route-patterns.ts`; anything else is `/other`.
-    A parameter's value, a path and a query never appear. With its own
-    route named, the report drops the SDK's screen property;
+    A parameter's value, a path and a query never appear;
   - the build and device class every event carries (`app_version`,
     `app_build`, `platform`, `$device_type`, `layout`, `foldable`).
 
   It holds no search term, Ask text, postcode, electorate or URL query: the
   message is a fixed text or absent, the route is a file pattern, and the
   frames are code locations. It holds no component stack: Expo Router's
-  boundary does not pass one on. The other `$exception` reports (uncaught
-  JS errors, unhandled rejections and native crashes) are not held to the
-  fixed list; their messages go through the pattern scrubber below. At most
+  boundary does not pass one on. At most
   one is sent for each route in a launch, so a page that fails again (on Try
   again, or for another record) adds none; `opax_route_error` still counts
   each failure. The build gate is the only switch: the app has no analytics
@@ -520,7 +505,7 @@ JS, so `mobile/patches/@posthog+react-native-plugin+2.13.0.patch` (pinned by
 rules in Swift and Kotlin as the native SDK's last `beforeSend`, and drops every
 native event that is not `$exception`. The three copies must stay in step:
 `tests/analytics-exceptions.test.ts` checks that Swift and Kotlin use the JS
-message rules' exact pattern texts, and `tests/native-scrub.test.ts` runs the
+message rules' exact pattern texts and fixed texts, and `tests/native-scrub.test.ts` runs the
 Swift copy, cut from the patch by `scripts/check-native-scrub.sh`, on the
 invented inputs in `tests/fixtures/exception-scrub-cases.json` and expects what
 JS keeps (on a Mac a missing `swift` fails it; only Linux skips it).
@@ -535,35 +520,60 @@ device.
 
 | Property | What it may hold |
 | --- | --- |
-| `$exception_list` | Up to 10 exceptions: `type` (an identifier such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`, or one of Swift's three fatal kinds; anything else becomes `Error`), `value` (the scrubbed message), `module`, `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames) |
+| `$exception_list` | Up to 10 exceptions: `type` (an identifier such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`, or one of Swift's three fatal kinds; anything else becomes `Error`), `value` (the message, only when it is on the fixed list below, as its fixed text; otherwise absent), `module`, `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames) |
 | Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
 | `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
+| `message_omitted` | `true` when an exception had a message that is not on the fixed list and so was left out; otherwise absent |
+| `route_pattern` | JS reports only: the route file's pattern from the fixed list in `route-patterns.ts` (`/bill/[key]`), named by the route boundary, or else taken from the SDK's screen when that is on the list; otherwise absent. Never a path, a parameter's value or a query |
 | `opax_test` | `true` on a test error report (JS only), otherwise absent |
-| Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
+| Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
 
-Messages keep their shape but lose anything that could be user text, in this
-order: spaces the engines disagree on (U+0085, U+FEFF and U+001C to U+001F)
-become plain spaces, so all three copies cut the same text; a URL loses its
-user name and password; an OPAX URL (`opax.com.au` or a subdomain, with or
-without a scheme or a trailing dot) keeps only its host, since its paths can
-carry a search or question; a path with no host in front keeps only its first
-segment, or `/api/<endpoint>` for the API (`/ask/why-is-rent-late?x=1` becomes
-`/ask`, `/api/search/rent` becomes `/api/search`), except a file path under a
-filesystem root such as `/src`, `/node_modules`, `/Users`, `/private`, `/var`
-or `/data`, which stays whole so stack locations stay readable; any other URL
-or path keeps its path, losing its query string and fragment; any other
-`?key=value` query goes; email addresses become `[email]`; quoted text becomes
-`[redacted]`, across lines: double quotes, curly, German and fullwidth quotes,
-guillemets, corner brackets, double primes, backticks and the opening single
-quotes ‘ ‚ ‛ wherever they open (`x"text"` included), and ' ’ ＇ and primes
-after a space or punctuation, where an apostrophe followed by a letter
-(`O'Brien`, `it's`) does not close the quote; a quote that never closes hides
-the rest of the message; runs of four or more digits (codes, postcodes, phone
-numbers) become `#`; the result is cut to 120 characters. So `Cannot read
-property 'wombat crossing' of undefined` is sent as `Cannot read property
-[redacted] of undefined`. Unquoted
-free text cannot be recognised in general, which is why the cap is short.
+**Messages.** A message is sent only when it is on a fixed list, and what is
+sent is the list's own fixed text, never the message itself. Rewriting free
+text by pattern cannot make it safe: "No electorate for Grayndler" and
+"person/tony-abbott is not a record route" have no quote, address or long
+number to remove. So nothing is rewritten. Any message that is not on the list
+is left out, and the report carries `message_omitted: true`; the exception's
+type and stack frames still locate the failure. This holds for every path: an
+uncaught JS exception, an unhandled promise rejection, a route boundary's
+report, the test report and a native crash on iOS and Android. The list
+(`MESSAGE_RULES` in `mobile/src/analytics/exceptions.ts`, with the same
+pattern texts and fixed texts, in the same order, in the Swift and Kotlin
+copies) is:
+
+- whole messages with nothing interpolated, sent as they are: "Network
+  request failed", "Failed to fetch", "The request timed out", "Maximum call
+  stack size exceeded", "Rendered more hooks than during the previous
+  render.", "Rendered fewer hooks than expected.", "Missing OPAX build
+  configuration" and "OPAX test error report";
+- framework messages with a fixed opening, sent as that opening only:
+  "Maximum update depth exceeded", "Rendered more hooks than during the
+  previous render", "Rendered fewer hooks than expected", "Too many
+  re-renders", "Objects are not valid as a React child", "Invalid hook
+  call", "Text strings must be rendered within a <Text> component", "Cannot
+  read properties of undefined" and "Cannot read properties of null" (for
+  either engine's wording of that error). What such a message goes on to
+  interpolate (an object's keys, a property's name) is never sent.
+
+So `Cannot read property 'wombat crossing' of undefined` is sent as `Cannot
+read properties of undefined`, and `Invalid URL: housing affordability in
+3000` is sent with no message and `message_omitted: true`.
+
+**No screen, URL or parameter.** No report carries `$screen_name`,
+`$current_url`, `$pathname` or a route parameter. The SDK's screen property
+is checked only for its shape, which a path with a record's key in it also
+has, so JS removes it from every `$exception` and the native copies no longer
+keep it. JS reports name their route as `route_pattern`, from the fixed list
+alone; native crash reports name no route. `$current_url`, `$pathname` and
+parameters were never on any list.
+
+**Builds already on phones** (1.1.4 and earlier, and 1.1.5 up to this change)
+still send a pattern-rewritten message and `$screen_name`.
+`docs/ANALYTICS-exception-ingestion-rule.md` is a draft of a PostHog
+ingestion rule that applies the same list to their reports. It is a draft
+only: nothing has been created or changed in PostHog.
+
 `$exception_steps`, app state, screen sizes, locale, device model, `$set` and
 any property a caller adds are dropped. `tests/analytics-exceptions.test.ts`
 plants an invented search, question, Talk transcript, sign-in email and code

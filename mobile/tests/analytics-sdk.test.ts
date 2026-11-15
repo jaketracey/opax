@@ -132,8 +132,14 @@ beforeAll(async () => {
   posthog.capture('opax_question', { question });
   posthog.screen(`/ask/${question}`, { question });
   posthog.screen('/person/[slug]', { slug: 'jane-citizen', question });
-  uncaught!(new TypeError(`Cannot read property '${question}' of undefined`), false);
-  unhandled!(1, new Error(`Fetch failed: https://opax.com.au/api/ask?q=${encoded}`));
+  uncaught!(
+    new TypeError(`Cannot read property '${question}' of undefined`),
+    false,
+  );
+  unhandled!(
+    1,
+    new Error(`Fetch failed: https://opax.com.au/api/ask?q=${encoded}`),
+  );
   posthog.addExceptionStep(`Asked ${question}`);
   posthog.captureException(new RangeError(`"${question}"`), { question });
   await posthog.flush();
@@ -240,12 +246,19 @@ test('uncaught errors, unhandled rejections and caught errors arrive scrubbed', 
       return [exception!.type, exception!.value, exception!.mechanism.handled];
     }),
   ).toEqual([
-    ['TypeError', 'Cannot read property [redacted] of undefined', false],
-    // An OPAX URL keeps only its host (exceptions.ts).
-    ['Error', 'Fetch failed: https://opax.com.au', false],
-    ['RangeError', '[redacted]', true],
+    // A known framework message is sent as its fixed text: the property
+    // name it interpolated is not. Any other message is left out.
+    ['TypeError', 'Cannot read properties of undefined', false],
+    ['Error', undefined, false],
+    ['RangeError', undefined, true],
   ]);
+  expect(
+    exceptions.map((event) => event.properties.message_omitted === true),
+  ).toEqual([false, true, true]);
   for (const event of exceptions) {
+    expect(event.properties).not.toHaveProperty('$screen_name');
+    expect(event.properties).not.toHaveProperty('$current_url');
+    expect(event.properties).not.toHaveProperty('$pathname');
     expect(event.properties).not.toHaveProperty('$exception_steps');
     expect(event.properties).not.toHaveProperty('question');
     expect(event.properties).not.toHaveProperty('$app_state');

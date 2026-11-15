@@ -90,7 +90,42 @@
   "a\u001cb\u001dc\u001ed\u001ff",
   "\u001c\u001f\ufeff\u0085",
   "\"my\u0085rent\" kept\ufeff",
-  "https://example.org/a\u0085b?q=1 /ask/x\ufeffy"
+  "https://example.org/a\u0085b?q=1 /ask/x\ufeffy",
+  "Invalid URL: housing affordability in 3000",
+  "No electorate for Grayndler",
+  "Unknown member Anthony Albanese (postcode 2042, 800)",
+  "person/tony-abbott is not a record route",
+  "Network request failed",
+  "Network request failed\n",
+  "Network request failed for Grayndler",
+  "Failed to fetch",
+  "The request timed out",
+  "Maximum call stack size exceeded",
+  "Rendered more hooks than during the previous render.",
+  "Rendered fewer hooks than expected.",
+  "Missing OPAX build configuration",
+  "OPAX test error report",
+  "Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate.",
+  "Rendered more hooks than during the previous render",
+  "Rendered fewer hooks than expected. This may be caused by an accidental early return statement.",
+  "Too many re-renders. React limits the number of renders to prevent an infinite loop.",
+  "Objects are not valid as a React child (found: object with keys {postcode, electorate, Grayndler}). If you meant to render a collection of children, use an array instead.",
+  "Invalid hook call. Hooks can only be called inside of the body of a function component.",
+  "Text strings must be rendered within a <Text> component.",
+  "Cannot read properties of undefined (reading 'housingAffordability3000')",
+  "Cannot read property 'grayndlerMember' of undefined",
+  "Cannot read properties of null (reading 'tonyAbbott')",
+  "Cannot read property 'searchTerm' of null",
+  "Cannot read property 'of null' of undefined",
+  "Maximum update depth exceededGrayndler",
+  "Too many re-renders-housing",
+  "grants: Too many re-renders",
+  "Cannot read property of Grayndler",
+  "network request failed",
+  " Network request failed",
+  "Attempt to invoke virtual method on a null object reference: Grayndler",
+  "",
+  "   "
  ],
  "events": [
   {
@@ -1608,6 +1643,299 @@
      }
     ],
     "question": "secret question"
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$screen_name": "/search",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Invalid URL: housing affordability in 3000",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$screen_name": "/electorate/grayndler",
+    "$current_url": "opax://electorate/grayndler?from=search",
+    "$pathname": "/electorate/grayndler",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "No electorate for Grayndler",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$screen_name": "/person/[slug]",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "Unknown member Anthony Albanese (postcode 2042, 800)",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$screen_name": "/person/tony-abbott",
+    "params": {
+     "slug": "tony-abbott"
+    },
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "person/tony-abbott is not a record route",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$screen_name": "/bill/[key]",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Network request failed",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "Objects are not valid as a React child (found: object with keys {postcode, Grayndler}).",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$exception_list": [
+     {
+      "type": "Error",
+      "value": "Maximum update depth exceeded. Too deep.",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     },
+     {
+      "type": "TypeError",
+      "value": "Cannot load Grayndler",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "web:javascript",
+         "function": "renderBill",
+         "filename": "main.jsbundle",
+         "lineno": 1,
+         "colno": 512,
+         "in_app": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$lib_version": "4.85.1",
+    "$session_id": "01a1d2da-3c1f-7473-ae26-a29720df9a91",
+    "$os_name": "iOS",
+    "$device_type": "Mobile",
+    "$app_name": "OPAX",
+    "$app_namespace": "au.com.opax.app",
+    "$app_version": "1.1.4",
+    "$app_build": 58,
+    "$exception_level": "error",
+    "$exception_list": [
+     {
+      "type": "Error"
+     },
+     {
+      "type": "Error",
+      "value": ""
+     },
+     {
+      "type": "Error",
+      "value": 7
+     }
+    ]
    }
   }
  ]
