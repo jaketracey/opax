@@ -30,7 +30,11 @@ import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { conversationsRoute } from '../../navigation/routes/ask';
 import { copyText } from '../records/actions';
 import { representativeProfile } from '../your-mp/model';
-import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
+import {
+  savedSeatDirectory,
+  useSavedChoice as useSavedSeatChoice,
+  useSeat,
+} from '../your-mp/useSeat';
 import { AskSuggestionRow } from './AskRows';
 import { conversationWhen } from './conversation-dates';
 import { defaultOptions } from './model';
@@ -72,19 +76,28 @@ export function useSeatMember(): string | null {
     .find(Boolean);
   return member?.name ?? null;
 }
+// A screen test that stands in for the seat store may not carry this hook;
+// without it the choice is simply not known yet.
+const useSavedChoice: typeof useSavedSeatChoice =
+  useSavedSeatChoice ?? (() => undefined);
 /**
- * True until the saved seat has been read, so Try asking can hold its one
- * row's place instead of drawing the general starter and then swapping it.
+ * True while the reader's member may still turn up: the saved seat is being
+ * read, and the device has not already said there is none. Try asking then
+ * holds its one row's box instead of drawing the general starter and
+ * swapping it. With no seat saved the general starter is final at once.
  */
 function useSeatPending(): boolean {
-  return useSeat().status === 'loading';
+  const loading = useSeat().status === 'loading';
+  return useSavedChoice() !== null && loading;
 }
 /**
- * A member's name as long as any the roster holds, never seen: with the
- * general starter it sizes the held box, so the question about the reader's
- * own member fits whatever their name is.
+ * A member's name for sizing the held box, never seen. The longest verified
+ * House name in the roster is 22 characters; this is 24, a small margin. No
+ * word is over 14 letters, so at large text sizes it wraps between words as
+ * a real name does and is never shrunk to fit. The roster itself is not on
+ * hand while the seat is still being read, so this is a constant.
  */
-export const LONGEST_MEMBER = 'Maximilian Featherstonehaugh-Montgomery';
+export const LONGEST_MEMBER = 'Alexandrina Wetherington';
 const noop = () => {};
 // The member the seat starter put in Person, so a starter tapped next does
 // not inherit it.
@@ -216,29 +229,36 @@ export function AskIdle({
           <InsetGroup testID={`${testPrefix}-starters`}>
             {held ? (
               // The seat was still being read when Try asking was first
-              // drawn. The box is as tall as its tallest candidate, both
-              // laid out unseen in the row's own type and width, and the
-              // row that is chosen is drawn over it: the box never changes
-              // size, so nothing under it moves when the member is known.
-              <View testID={`${testPrefix}-starter-held`}>
-                <View
-                  pointerEvents="none"
-                  accessibilityElementsHidden
-                  importantForAccessibility="no-hide-descendants"
-                  style={styles.candidates}
-                  testID={`${testPrefix}-starter-place`}
-                >
-                  {[general, seatStarter(LONGEST_MEMBER)].map((question) => (
-                    <View key={question} style={styles.candidate}>
-                      <AskSuggestionRow
-                        question={question}
-                        variant="fill"
-                        onPress={noop}
-                      />
-                    </View>
-                  ))}
-                </View>
-                <View style={styles.over}>{row}</View>
+              // drawn. One row holds the chosen starter and, unseen beside
+              // it, both candidates in the row's own type and width. The
+              // row is as tall as the tallest of the three, so the box is
+              // never shorter than the starter drawn in it and never
+              // changes size when the member is known.
+              <View style={styles.sizing} testID={`${testPrefix}-starter-held`}>
+                {(Array.isArray(row) ? row.length : row) ? (
+                  <View
+                    style={styles.sized}
+                    testID={`${testPrefix}-starter-chosen`}
+                  >
+                    {row}
+                  </View>
+                ) : null}
+                {[general, seatStarter(LONGEST_MEMBER)].map((question) => (
+                  <View
+                    key={question}
+                    pointerEvents="none"
+                    accessibilityElementsHidden
+                    importantForAccessibility="no-hide-descendants"
+                    style={[styles.sized, styles.unseen]}
+                    testID={`${testPrefix}-starter-place`}
+                  >
+                    <AskSuggestionRow
+                      question={question}
+                      variant="fill"
+                      onPress={noop}
+                    />
+                  </View>
+                ))}
               </View>
             ) : (
               row
@@ -447,19 +467,11 @@ const styles = StyleSheet.create({
   },
   emptyWords: { gap: rhythm.line, maxWidth: 420 },
   unseen: { opacity: 0 },
-  // The held box's candidates: side by side, each the box's full width, so
-  // the row is as tall as the taller one; laid out, never seen.
-  candidates: { flexDirection: 'row', overflow: 'hidden', opacity: 0 },
-  candidate: { width: '100%', flexShrink: 0 },
-  // The chosen row, over the held box, centred in it.
-  over: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: 'center',
-  },
+  // The held box: the chosen starter and the unseen candidates side by
+  // side, each the box's full width, so the row is as tall as the tallest.
+  // The candidates lie past the box's right edge, clipped.
+  sizing: { flexDirection: 'row', overflow: 'hidden' },
+  sized: { width: '100%', flexShrink: 0, justifyContent: 'center' },
   centredText: { textAlign: 'center' },
   stackedSection: { gap: rhythm.block },
 });

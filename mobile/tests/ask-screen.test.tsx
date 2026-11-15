@@ -53,7 +53,7 @@ import { Text } from '../src/design/text';
 import { designFlags } from '../src/design/flags';
 import * as ScrollTop from '../src/design/scroll-to-top';
 import { askRoute, conversationsRoute } from '../src/navigation/routes/ask';
-import { useSeat } from '../src/features/your-mp/useSeat';
+import { useSavedChoice, useSeat } from '../src/features/your-mp/useSeat';
 import { startersFor } from '../src/features/ask/starters';
 import {
   dispatchKeyCommand,
@@ -163,6 +163,7 @@ jest.mock('../src/features/ask/sync', () => ({
 // The seat is read on the device only; no seat unless a test sets one.
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: jest.fn(() => ({ status: 'none' })),
+  useSavedChoice: jest.fn(() => undefined),
   savedSeatDirectory: jest.fn(() => mockDirectory.current),
 }));
 const mockDirectory: { current: unknown } = { current: null };
@@ -269,6 +270,7 @@ afterEach(async () => {
   askSession.setDraft('');
   (useLocalSearchParams as jest.Mock).mockReturnValue({});
   jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+  jest.mocked(useSavedChoice).mockReturnValue(undefined);
   jest.mocked(catalogs.roster).mockRejectedValue(new Error('Offline'));
   mockDirectory.current = null;
   setAskReturn(null);
@@ -1392,11 +1394,18 @@ test('with no seat saved, the one starter is general and asks at once', async ()
   });
 });
 
+test('the sizing stand-in is the roster’s longest name plus a small margin, with no word a large text size would break', () => {
+  expect(LONGEST_MEMBER.length).toBeGreaterThanOrEqual(22);
+  expect(LONGEST_MEMBER.length).toBeLessThanOrEqual(26);
+  for (const word of LONGEST_MEMBER.split(/[\s-]+/))
+    expect(word.length).toBeLessThanOrEqual(14);
+});
+
 test.each([
   ['the default text size', 1],
   ['AX5', 3.12],
 ] as const)(
-  'a seat still being read holds the one row’s box, and the box is the same when the seat resolves, at %s',
+  'a seat still being read holds the one row’s box; the chosen row joins the sizing row and the box’s candidates never change, at %s',
   async (_size, fontScale) => {
     const original = Dimensions.get('window');
     Dimensions.set({
@@ -1405,56 +1414,79 @@ test.each([
     try {
       jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
       const renderer = await mount();
-      const hostOf = (id: string) =>
-        renderer.root.find(
+      const hostsOf = (id: string) =>
+        renderer.root.findAll(
           (n) => typeof n.type === 'string' && n.props.testID === id,
         );
+      const flat = (n: { props: { style?: unknown } }) =>
+        StyleSheet.flatten(n.props.style as never) as Record<string, unknown>;
       // What sizes the box: every unseen candidate's words and styles.
-      const place = () => {
-        const node = hostOf('ask-starter-place');
-        return JSON.stringify({
-          style: StyleSheet.flatten(node.props.style),
-          parts: node
-            .findAll((n) => typeof n.type === 'string')
-            .map((n) => [
-              n.type,
-              StyleSheet.flatten(n.props.style),
-              n.props.maxFontSizeMultiplier,
-              typeof n.props.children === 'string' ? n.props.children : null,
-            ]),
-        });
+      const places = () =>
+        JSON.stringify(
+          hostsOf('ask-starter-place').map((node) => ({
+            style: flat(node),
+            parts: node
+              .findAll((n) => typeof n.type === 'string')
+              .map((n) => [
+                n.type,
+                flat(n),
+                n.props.maxFontSizeMultiplier,
+                typeof n.props.children === 'string' ? n.props.children : null,
+              ]),
+          })),
+        );
+      const held = () => hostsOf('ask-starter-held')[0]!;
+      // The nearest host element above a node, through any components.
+      const hostAbove = (node: ReturnType<typeof held>) => {
+        let at = node.parent!;
+        while (typeof at.type !== 'string') at = at.parent!;
+        return at;
       };
-      const held = hostOf('ask-starter-place');
-      expect(held.props).toMatchObject({
-        pointerEvents: 'none',
-        accessibilityElementsHidden: true,
-        importantForAccessibility: 'no-hide-descendants',
-      });
-      expect(StyleSheet.flatten(held.props.style)).toMatchObject({
-        opacity: 0,
+      // The box's own members, in order.
+      const members = () =>
+        held()
+          .findAll(
+            (n) =>
+              typeof n.type === 'string' &&
+              /^ask-starter-(chosen|place)$/.test(String(n.props.testID)),
+          )
+          .map((n) => n.props.testID as string);
+      // One row, clipped at its edge, as tall as its tallest child.
+      expect(flat(held())).toMatchObject({
         flexDirection: 'row',
         overflow: 'hidden',
       });
-      // Both candidates are laid out, each the box's full width: the
+      expect(flat(held()).height).toBeUndefined();
+      // Both candidates are laid out unseen, each the box's full width: the
       // general starter, and the member's question at its longest.
-      const labels = held
-        .findAll((n) => typeof n.props.accessibilityLabel === 'string')
-        .map((n) => n.props.accessibilityLabel as string)
-        .filter((label, i, all) => all.indexOf(label) === i);
+      expect(hostsOf('ask-starter-place').length).toBe(2);
+      for (const place of hostsOf('ask-starter-place')) {
+        expect(place.props).toMatchObject({
+          pointerEvents: 'none',
+          accessibilityElementsHidden: true,
+          importantForAccessibility: 'no-hide-descendants',
+        });
+        expect(flat(place)).toMatchObject({
+          width: '100%',
+          flexShrink: 0,
+          opacity: 0,
+        });
+        expect(hostAbove(place) === held()).toBe(true);
+      }
+      const labels = hostsOf('ask-starter-place').map(
+        (place) =>
+          place.find((n) => typeof n.props.accessibilityLabel === 'string')
+            .props.accessibilityLabel as string,
+      );
       expect(labels).toEqual([
         startersFor(Date.now(), 1)[0],
         `What has ${LONGEST_MEMBER} said in parliament this year?`,
       ]);
-      expect(
-        held.children.map(
-          (child) =>
-            StyleSheet.flatten((child as typeof held).props.style).width,
-        ),
-      ).toEqual(['100%', '100%']);
       // Nothing is drawn or pressable while the seat is unknown.
+      expect(hostsOf('ask-starter-chosen').length).toBe(0);
       expect(byId('ask-starter-0').length).toBe(0);
       expect(byId('ask-starter-seat').length).toBe(0);
-      const before = place();
+      const before = places();
       const redraw = async () => {
         await act(async () => {
           askSession.setDraft('x');
@@ -1463,7 +1495,28 @@ test.each([
           askSession.setDraft('');
         });
       };
-      // The seat answers with a member: their row is drawn over the box.
+      // The row that is drawn is a member of the sizing row, in flow, so
+      // the box is at least as tall as it: never laid over the box.
+      const chosenInFlow = (id: string) => {
+        const chosen = hostsOf('ask-starter-chosen');
+        expect(chosen.length).toBe(1);
+        expect(hostAbove(chosen[0]!) === held()).toBe(true);
+        expect(members()).toEqual([
+          'ask-starter-chosen',
+          'ask-starter-place',
+          'ask-starter-place',
+        ]);
+        expect(flat(chosen[0]!)).toMatchObject({
+          width: '100%',
+          flexShrink: 0,
+        });
+        expect(flat(chosen[0]!).position).toBeUndefined();
+        expect(flat(chosen[0]!).opacity).toBeUndefined();
+        expect(
+          chosen[0]!.findAll((n) => n.props.testID === id).length,
+        ).toBeGreaterThan(0);
+      };
+      // The seat answers with a member.
       jest.mocked(useSeat).mockReturnValue({
         status: 'chosen',
         choice: { version: 1, seatId: 'el_fixture', stateSeatIds: [] },
@@ -1485,36 +1538,31 @@ test.each([
         },
       };
       await redraw();
-      expect(place()).toBe(before);
-      const over = hostOf('ask-starter-held').children[1] as typeof held;
-      expect(StyleSheet.flatten(over.props.style)).toMatchObject({
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-      });
-      expect(
-        over.findAll((n) => n.props.testID === 'ask-starter-seat').length,
-      ).toBeGreaterThan(0);
+      expect(places()).toBe(before);
+      chosenInFlow('ask-starter-seat');
       expect(a11y('ask-starter-seat', 'accessibilityLabel')).toBe(
         'What has Sam Placeholder said in parliament this year?',
       );
       // And with no seat after all: the general starter, in the same box.
       jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
       await redraw();
-      expect(place()).toBe(before);
+      expect(places()).toBe(before);
       expect(byId('ask-starter-seat').length).toBe(0);
-      expect(
-        (hostOf('ask-starter-held').children[1] as typeof held).findAll(
-          (n) => n.props.testID === 'ask-starter-0',
-        ).length,
-      ).toBeGreaterThan(0);
+      chosenInFlow('ask-starter-0');
     } finally {
       Dimensions.set({ window: original });
     }
   },
 );
+
+test('with no seat saved on the device, a seat read still under way holds nothing: the general starter is final at once', async () => {
+  jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+  jest.mocked(useSavedChoice).mockReturnValue(null);
+  await mount();
+  expect(byId('ask-starter-held').length).toBe(0);
+  expect(byId('ask-starter-place').length).toBe(0);
+  expect(byId('ask-starter-0').length).toBeGreaterThan(0);
+});
 
 test('a seat already known when Try asking is first drawn needs no held box', async () => {
   await mount();
