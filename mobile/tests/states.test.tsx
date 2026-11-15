@@ -1184,6 +1184,69 @@ describe('shared state kit', () => {
     act(() => r.root.findByType(Button).props.onPress());
     expect(retry).toHaveBeenCalledTimes(1);
   });
+  // Build 84, the Duo's outer display: beside the vertical tab bar SwiftUI
+  // centred the symbol, title and body in the safe area, and React Native
+  // centred "Try again" in the view's frame, half the bar's width apart.
+  // The hosted text ignores the safe area, so both take the frame's centre.
+  test('ContentUnavailable centres its text and its action on the same axis under a side inset', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...window, width: 466, fontScale: 1 },
+        screen,
+      }),
+    );
+    const r = mount(
+      <ContentUnavailable
+        symbol={symbols.error}
+        title="This page couldn’t be shown"
+        body="Something went wrong while drawing it."
+        action={{
+          label: 'Try again',
+          onPress: noop,
+          containerTestID: 'unavailable-action',
+        }}
+        testID="unavailable"
+      />,
+    );
+    // The text: centred in the Host's own frame, whatever insets cross it.
+    const host = r.root.findByType(Host);
+    expect(host.props.ignoreSafeArea).toBe('all');
+    // The Host is centred in the block, and the action's row spans the
+    // block and centres its button: one centre, the block's.
+    const block = r.root.find(
+      (node) =>
+        node.props.testID === 'unavailable' &&
+        typeof node.props.onLayout === 'function',
+    );
+    expect(StyleSheet.flatten(block.props.style)).toMatchObject({
+      alignItems: 'center',
+      alignSelf: 'stretch',
+    });
+    const row = r.root.find(
+      (node) =>
+        node.props.testID === 'unavailable-action' &&
+        typeof node.type === 'string',
+    );
+    expect(StyleSheet.flatten(row.props.style)).toMatchObject({
+      justifyContent: 'center',
+      alignSelf: 'stretch',
+    });
+    // Neither is pushed off that centre by a margin or padding of its own.
+    for (const style of [host.props.style, row.props.style, block.props.style])
+      for (const key of [
+        'marginLeft',
+        'marginRight',
+        'marginStart',
+        'marginEnd',
+        'paddingLeft',
+        'paddingRight',
+        'paddingStart',
+        'paddingEnd',
+        'left',
+        'right',
+      ])
+        expect(StyleSheet.flatten(style)).not.toHaveProperty(key);
+  });
   // Sweep 2 lane A: at AX3 SwiftUI's view came out a line short on three of
   // seven not-found pages and cut the title to "This electorate…". At
   // accessibility sizes the title is React Native's word-safe text.

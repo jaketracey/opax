@@ -1,4 +1,5 @@
 import { ScrollView, StyleSheet } from 'react-native';
+import { SidebarSafe } from './adaptive';
 import { copy } from './copy';
 import { ContentUnavailable } from './states';
 import { symbols } from './symbols';
@@ -21,23 +22,28 @@ export function RouteErrorBoundary({
   retry: () => Promise<void>;
 }) {
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.content}
-      contentInsetAdjustmentBehavior="automatic"
-      testID="route-error"
-    >
-      <ContentUnavailable
-        symbol={symbols.error}
-        title={routeErrorCopy.title}
-        body={routeErrorCopy.body}
-        action={{
-          label: copy.tryAgain,
-          onPress: () => void retry(),
-          testID: 'route-error-retry',
-        }}
-      />
-    </ScrollView>
+    // Beside a vertical tab bar (the Duo's outer display) a scroll view's
+    // content runs under the bar: the state is centred in the space the bar
+    // leaves, as every Screen page is.
+    <SidebarSafe style={styles.screen}>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        contentInsetAdjustmentBehavior="automatic"
+        testID="route-error"
+      >
+        <ContentUnavailable
+          symbol={symbols.error}
+          title={routeErrorCopy.title}
+          body={routeErrorCopy.body}
+          action={{
+            label: copy.tryAgain,
+            onPress: () => void retry(),
+            testID: 'route-error-retry',
+          }}
+        />
+      </ScrollView>
+    </SidebarSafe>
   );
 }
 

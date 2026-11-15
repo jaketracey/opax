@@ -3,6 +3,7 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Try } from 'expo-router/build/views/Try';
 import { routeErrorCopy } from '../src/design/route-error';
+import { SidebarSafe } from '../src/design/adaptive';
 import { RouteErrorBoundary } from '../src/navigation/RouteErrorBoundary';
 import * as rootLayout from '../src/app/_layout';
 import * as tabLayout from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
@@ -45,6 +46,11 @@ test('a page that throws while drawing shows a recoverable state, and Try again 
   const text = JSON.stringify(tree.toJSON());
   expect(text).toContain(routeErrorCopy.title);
   expect(text).not.toContain('Fixture render failure');
+  // Inside the side safe area, so beside a vertical tab bar the state and
+  // its Try again are centred in the space the bar leaves (build 84).
+  expect(
+    tree.root.findByType(SidebarSafe).findAllByProps({ testID: 'route-error' }),
+  ).not.toHaveLength(0);
   broken = false;
   const retry = tree.root.findAll(
     (node) => node.props.testID === 'route-error-retry' && !!node.props.onPress,
