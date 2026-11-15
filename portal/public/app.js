@@ -13084,11 +13084,14 @@ function renderResults(results) {
       // Briefs mode: a brief is OPAX's words, in the sans, under the list's one
       // machine label; a row with no brief keeps the record's own passage in
       // the serif. Each says which it is to a screen reader.
+      // A record with no passage to show (retrieval matched only its speaker
+      // label) says where its words are, as the other passage lists do.
+      const passageText = cleanPassage(r.snippet);
       const text = r.kind === "division"
         ? `<div id="search-passage-${index}" class="search-result-text snippet division-markdown">${billNoteHTML(r.snippet)}</div>`
         : searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(brief)}</p>`
-        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="visually-hidden">From the record: </span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
+        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="visually-hidden">From the record: </span>` : ""}${passageText ? highlightHTML(passageText, lastSearch.query) : esc(r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage.")}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}`
         : isCommitteeChamber(r.chamber) ? committeeResultTitle(displayTitle(r)) : displayTitle(r);
       // RecordRow (§5.2): kind · date · place above the title, then who spoke.

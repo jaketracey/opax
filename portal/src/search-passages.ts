@@ -17,27 +17,36 @@ export function passageTerms(q: string, speaker?: string | null): string[] {
   return phrases.length ? phrases : words(q).filter((w) => w.length >= 3)
 }
 
-/** A paragraph that only names who is about to speak: "Senator DAVID POCOCK:", "CHAIR:", "Ms Barrett (Fremantle):". */
+/**
+ * A paragraph that only names who is about to speak: an honorific, at most a
+ * name and a parenthetical, then a colon and nothing else. "Senator ADA
+ * QUILL:", "CHAIR:", "Ms Barrett (Fremantle):". A sentence that happens to end
+ * in a colon ("I have three questions for the department:") is the record's
+ * own words. The page's cleanPassage (public/app.js) uses the same definition.
+ */
 export function isSpeakerLabel(text: string): boolean {
   const t = text.replace(/\s+/g, ' ').trim()
-  if (!t.endsWith(':') || t.length > 90 || t.split(' ').length > 10) return false
-  // An honorific's full stop is not a sentence; any other one means there are words here.
-  return !/[.!?]/.test(t.replace(/\b(?:mr|mrs|ms|dr|prof|hon|sen|rev)\./gi, ''))
+  const label = /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?|(?:the\s+)?(?:acting\s+|deputy\s+)?chair)(?=[\s:(])(.*)$/i.exec(t)
+  return !!label && /^(?:\s+[A-Z][A-Za-z'’.\-]*){0,5}\s*(?:\([^)]{0,80}\)\s*)?:$/.test(label[1])
 }
 
 export type ScoredPassage = { text: string; score: number }
 
 /**
  * The passage to show for one record: the one with the most query words, the
- * better calibrated score between equals. A speaker label is passed over while
- * the record has any paragraph with words in it.
+ * better calibrated score between equals. A speaker label is never the
+ * passage. Retrieval returns only the paragraphs it matched, not the record's
+ * text, so a record whose every matched paragraph is a label has no passage
+ * here: the text is empty and the score is the label's, which keeps the
+ * record's place in the ranking. Readers open the record for its words.
  */
 export function pickPassage(passages: ScoredPassage[], terms: string[]): { text: string; score: number; at: number } {
-  const spoken = passages.filter((p) => p.text && !isSpeakerLabel(p.text))
   let best = { text: '', score: 0, at: -1 }
   let bestHits = -1
-  for (const passage of spoken.length ? spoken : passages) {
+  let labelScore = 0
+  for (const passage of passages) {
     if (!passage.text) continue
+    if (isSpeakerLabel(passage.text)) { labelScore = Math.max(labelScore, passage.score); continue }
     const lower = passage.text.toLowerCase()
     let hits = 0
     let at = -1
@@ -50,7 +59,7 @@ export function pickPassage(passages: ScoredPassage[], terms: string[]): { text:
       best = { text: passage.text, score: passage.score, at }
     }
   }
-  return best
+  return bestHits < 0 ? { text: '', score: labelScore, at: -1 } : best
 }
 
 const COMMITTEE_CHAMBERS = new Set(['senate_committee', 'house_committee', 'joint_committee'])
