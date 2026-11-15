@@ -1,7 +1,7 @@
 import {industryName, fy} from '../public/money-scope.js'
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {federalPartyMoneyAnswer,federalPartyMoneyResponse} from './ask-money-routing'
-import { withAppBanner } from './app-banner'
+import { setAppStoreProvider, withAppBanner } from './app-banner'
 import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
@@ -7451,6 +7451,7 @@ function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
+    setAppStoreProvider(env.APP_STORE_PROVIDER)
     const url = new URL(request.url)
     if (url.pathname === '/gov-advertising/ready.json') return withSecurityHeaders(await govAdvertisingReady(request,govAdvertisingReader(env.ASSETS)),url)
     if (url.pathname === '/tax-expenditures/ready.json') return withSecurityHeaders(await taxExpendituresReady(request,taxExpendituresReader(env.ASSETS)),url)
