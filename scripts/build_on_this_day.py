@@ -4,12 +4,16 @@
 Writes portal/public/parliament/on-this-day/MM-DD.json, one small file for each of the
 366 calendar dates, from the bill files already in this repo (portal/public/bills/*.json,
 written by scripts/export_bills.py). Each file lists every division and every speech the
-bill files record on that month and day, in any year, in date order. Nothing is chosen,
-ranked or left out here: the reader's app picks by date alone. A date with no record
-still gets a file, with empty lists, so a reader gets a definite answer.
+bill files record on that month and day, in any year, in date order. Nothing is chosen
+or ranked here; only a speech with no date or no named speaker is left out. The reader's
+app picks by date alone. A date with no record still gets a file, with empty lists, so a
+reader gets a definite answer.
 
     python scripts/build_on_this_day.py            # rebuild from portal/public/bills
     python scripts/build_on_this_day.py --check    # exit 1 if the published files are stale
+
+A file is rewritten only when its records change; its generated_at is the bills index's
+stamp at that rebuild. It is run by hand after a bills refresh; the nightly does not run it.
 
 No network and no database. See docs/DATA-ON-THIS-DAY.md.
 """
@@ -27,8 +31,8 @@ OUT = ROOT / "portal/public/parliament/on-this-day"
 SCHEMA_VERSION = 1
 DATE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})")
 DAYS_IN_MONTH = (31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-NOTE = ("Every division and speech recorded on a bill on this month and day, in any year, "
-        "oldest first. Nothing is ranked or left out.")
+NOTE = ("Every division, and every dated speech with a named speaker, recorded on a bill on "
+        "this month and day, in any year, oldest first. Nothing is ranked.")
 SOURCES = {
     "divisions": {"publisher": "They Vote For You", "url": "https://theyvoteforyou.org.au/"},
     "speeches": {"publisher": "Hansard", "via": "OPAX bill records"},
@@ -105,6 +109,24 @@ def render(day: str, lists: dict, generated_at: str) -> str:
     }, ensure_ascii=False, separators=(",", ":")) + "\n"
 
 
+def changed(path: Path, text: str) -> bool:
+    """Whether the published file differs from `text` in anything but its stamp.
+
+    `generated_at` follows the bills index, which moves whenever any bill changes. A date
+    whose records did not change keeps its file, old stamp and all, so a rebuild rewrites
+    only the dates that gained or lost a record.
+    """
+    try:
+        old = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return True
+    new = json.loads(text)
+    if not isinstance(old, dict):
+        return True
+    return ({k: v for k, v in old.items() if k != "generated_at"}
+            != {k: v for k, v in new.items() if k != "generated_at"})
+
+
 def load_bills(folder: Path) -> tuple[list[dict], str]:
     index = json.loads((folder / "index.json").read_text(encoding="utf-8"))
     generated_at = index.get("generated_at")
@@ -136,9 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     except (IndexError_, KeyError, json.JSONDecodeError) as error:
         print(f"build_on_this_day: {error}; nothing written", file=sys.stderr)
         return 2
-    stale = [name for name, text in files.items()
-             if not (args.out / name).is_file()
-             or (args.out / name).read_text(encoding="utf-8") != text]
+    stale = [name for name, text in files.items() if changed(args.out / name, text)]
     extra = sorted(p.name for p in args.out.glob("*.json") if p.name not in files) \
         if args.out.is_dir() else []
     if args.check:

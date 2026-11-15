@@ -1,4 +1,4 @@
-"""The "On this day" index (scripts/build_on_this_day.py).
+"""The "On this day" index (scripts/build_on_this_day.py). CI collects scripts/test_*.py.
 
 Invented bills prove the rules: every dated division and speech is listed once under its
 month and day, oldest first, with nothing ranked or dropped; every calendar date has a
@@ -120,6 +120,31 @@ class Files(unittest.TestCase):
             self.assertEqual(B.main(args + ["--check"]), 1)
             self.assertEqual(B.main(args), 0)
             self.assertFalse((out / "13-01.json").exists())
+            self.assertEqual(B.main(args + ["--check"]), 0)
+
+    def test_a_rebuild_after_another_bill_changed_rewrites_only_the_dates_that_changed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            bills, out = Path(tmp) / "bills", Path(tmp) / "out"
+            bills.mkdir()
+            self.write(bills)
+            args = ["--bills", str(bills), "--out", str(out)]
+            self.assertEqual(B.main(args), 0)
+            before = {p.name: p.read_text() for p in out.glob("*.json")}
+            # The bills index moves on, and one bill gains a division on 3 March.
+            (bills / "index.json").write_text(json.dumps({"generated_at": "2026-11-20T01:00:00+00:00"}))
+            extra = bill("au-federal-r11", [division("federal-representatives-40", "2021-03-03")])
+            (bills / "au-federal-r11.json").write_text(json.dumps(extra))
+            self.assertEqual(B.main(args + ["--check"]), 1)
+            self.assertEqual(B.main(args), 0)
+            after = {p.name: p.read_text() for p in out.glob("*.json")}
+            self.assertEqual([n for n in after if after[n] != before[n]], ["03-03.json"])
+            self.assertEqual(json.loads(after["03-03.json"])["generated_at"], "2026-11-20T01:00:00+00:00")
+            self.assertEqual(json.loads(after["11-15.json"])["generated_at"], "2026-10-04T16:27:54+00:00")
+            self.assertEqual(B.main(args + ["--check"]), 0)
+            # An unreadable file is rewritten.
+            (out / "01-01.json").write_text("not json")
+            self.assertEqual(B.main(args + ["--check"]), 1)
+            self.assertEqual(B.main(args), 0)
             self.assertEqual(B.main(args + ["--check"]), 0)
 
     def test_no_bill_files_writes_nothing(self):
