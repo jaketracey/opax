@@ -58,6 +58,7 @@ query-free internal paths. Google signals and advertising personalization are of
 | `opax_map_action` | Apply filters, open records, focus a record or export connections; no selected names |
 | `opax_community_open` | Follow a public link to community; navigation/footer placement |
 | `opax_download`, `opax_export` | Download a resource/export; export format and row count |
+| `opax_app_prompt_view`, `opax_app_prompt_tap` | The app prompt was shown, or its App Store link was followed: `{page_type}` only (see "App prompt" below) |
 
 No raw questions, search strings, answers, titles or postcodes are sent. Error
 reports go to PostHog only, scrubbed as described under "Error reports" below.
@@ -245,3 +246,43 @@ compare chip positions/kinds with answer completion and source opening. An
 immediate second Ask is a proxy for an unsatisfying first answer: the events
 cannot identify a typed “what else” because they carry no question text. The
 saved conversation text is not an analytics input.
+
+## App prompt
+
+Since November 2026 the banner at the top of each page (`portal/src/app-banner.ts`,
+`portal/public/app-banner.js`) words its line for the page on the nine page
+types people most often arrive at: "Follow this member in the app", "Track this
+bill in the app" and so on. Two events measure it, and they are the only
+analytics change that came with it:
+
+| Event | When | Properties |
+| --- | --- | --- |
+| `opax_app_prompt_view` | The worded line is shown, once for each page load | `page_type` |
+| `opax_app_prompt_tap` | Its App Store link is followed (click, keyboard or middle button) | `page_type` |
+
+`page_type` is one of `document`, `supplier`, `grant_recipient`, `ask`,
+`vic_district`, `member`, `electorate`, `bill` or `donor`; any other value is
+dropped by `cleanEvent`. No id, slug, name, question or search words are sent.
+Like every event, both pick up the page's route pattern (`page_path`, for
+example `/subject/person/[slug]`) and `page_section`, pass the Do Not Track and
+automated-browser gates, and go to PostHog and GA4 through the same allowlist.
+
+What is not measured:
+
+- The general line ("OPAX is on iPhone and iPad. Get the app") on desktop and
+  on other pages. Its link is counted, as before, only by `opax_outbound`
+  with `host=apps.apple.com`. The worded link sends that event too.
+- "Open this page" (an `opax://` link for readers who have the app) and Dismiss.
+- Apple's Smart App Banner, which Safari on iPhone and iPad draws from the
+  `apple-itunes-app` tag on the same pages. It runs no script of ours. Where it
+  shows, the worded line does not, so neither event fires there.
+
+Two values are kept in the browser's local storage and never sent:
+`opax-app-banner-dismissed` (Dismiss was pressed) and `opax-app-prompt-seen`
+(the worded line has been shown once, so later page loads leave it out).
+
+The App Store links carry a campaign token, `ct=web_<page_type>` on the worded
+link and `ct=web_<page_type>_safari` in the Smart App Banner, so App Store
+Connect can report installs by page type. Apple only reports campaigns when the
+link also carries the provider token (`pt`) from App Store Connect; it is not
+set yet (`APP_STORE_PROVIDER` in `app-banner.ts`, `provider` in `app-banner.js`).

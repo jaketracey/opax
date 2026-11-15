@@ -10,6 +10,14 @@
   font: var(--type-metadata, 400 0.9375rem/1.45 sans-serif);
 }
 .opax-app-banner-hidden .opax-app-banner { display: none; }
+/* Two lines are in the HTML and one shows: the general line, or on an iPhone
+   or iPad the line worded for the page (app-banner.js decides before paint). */
+.opax-app-banner-prompt, .opax-app-prompt .opax-app-banner-general { display: none; }
+.opax-app-prompt .opax-app-banner-prompt { display: block; }
+.opax-app-banner-have { white-space: nowrap; }
+/* The worded link may wrap on a narrow phone; the row grows with it. */
+.opax-app-banner .opax-app-banner-prompt > a { white-space: normal; }
+.opax-app-banner-have::before { content: "\00a0\00b7\00a0"; }
 .opax-app-banner-row {
   box-sizing: border-box;
   display: flex;

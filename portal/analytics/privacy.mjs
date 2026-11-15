@@ -15,6 +15,8 @@ const fields = {
   opax_source_open: ['from_section', 'placement'],
   opax_share: ['kind', 'record_type'],
   opax_press: ['action'],
+  opax_app_prompt_view: ['page_type'],
+  opax_app_prompt_tap: ['page_type'],
   opax_ask_started: ['from_section', 'page_type'],
   opax_module_click: ['module', 'page_type', 'position'],
   opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer', 'is_overview_intent'],
@@ -27,12 +29,16 @@ const fields = {
   table_filter: ['table_id', 'page_type'],
   table_export: ['table_id', 'page_type'],
 };
+const APP_PROMPT_PAGES = ['document', 'supplier', 'grant_recipient', 'ask', 'vic_district', 'member', 'electorate', 'bill', 'donor'];
 // Properties that take one of a fixed set of words; anything else is dropped.
 // A shared link says what sort of record it was (record_type), never which.
 const CHOICES = {
   opax_source_open: { placement: ['inline', 'sources_pane', 'talk_sources', 'other'] },
   opax_share: { kind: ['record', 'question', 'answer', 'copy_link'], record_type: ['person', 'party', 'bill', 'electorate', 'doc', 'money', 'other'] },
   opax_press: { action: ['asset_download', 'boilerplate_copy'] },
+  // The app prompt (public/app-banner.js): which kind of page it was on, never which record.
+  opax_app_prompt_view: { page_type: APP_PROMPT_PAGES },
+  opax_app_prompt_tap: { page_type: APP_PROMPT_PAGES },
 };
 // Pages with no record in their address are counted by name, and only as
 // themselves: any extra segment ("/ask/<words>") is a typed or shared address,

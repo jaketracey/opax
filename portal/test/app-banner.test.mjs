@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
-import { APP_BANNER_HTML, SKIP_LINK_HTML, withAppBanner } from '../src/app-banner.ts';
+import { APP_BANNER_HTML, APP_PROMPTS, SKIP_LINK_HTML, appBannerHTML, appPromptFor, smartBannerMeta, withAppBanner } from '../src/app-banner.ts';
+import { cleanEvent } from '../analytics/privacy.mjs';
 import { HTMLRewriter, workerFetch } from './helpers/worker-fetch.mjs';
 
 const read = file => readFileSync(new URL(file, import.meta.url), 'utf8');
@@ -229,4 +230,226 @@ test('every page has exactly one skip link, first, pointing at an element the pa
     // The first tab stop: before the banner where there is one (privacy has none, for App Review).
     assert.equal(doc.body.querySelector('a[href], button, input, select, textarea, summary'), links[0], path);
   }
+});
+
+// --- The page-worded app prompt -------------------------------------------------
+
+const CHROME_IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 19_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/142.0 Mobile/15E148 Safari/604.1';
+const SAFARI_IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 19_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/19.1 Mobile/15E148 Safari/604.1';
+const SAFARI_MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/19.1 Safari/605.1.15';
+const seenKey = 'opax-app-prompt-seen';
+const PAGES = {
+  document: '/doc/hansard-2024-02-07-house-a1b2',
+  supplier: '/subject/supplier/abn-12345678901',
+  grant_recipient: '/money/grants/federal/recipient/abn%3A12345678901',
+  ask: '/ask',
+  vic_district: '/vic-election-2026/albert-park',
+  member: '/subject/person/anthony-albanese',
+  electorate: '/subject/electorate/grayndler',
+  bill: '/bill/au-federal-r7001',
+  donor: '/subject/donor/example-holdings',
+};
+
+/** The page as the Worker sends it for this path, then the head script, as a browser runs them. */
+async function land({ path = PAGES.member, ua = CHROME_IPHONE, touch = 0, stored = {}, extra = '' } = {}) {
+  const pathname = path.split(/[?#]/)[0];
+  const dom = new JSDOM(`<!doctype html><html><head>${smartBannerMeta(pathname)}<style>${css}</style></head><body>${extra}</body></html>`, {
+    url: `https://opax.com.au${path}`, runScripts: 'outside-only',
+  });
+  const { window } = dom;
+  Object.defineProperty(window.navigator, 'userAgent', { value: ua });
+  Object.defineProperty(window.navigator, 'maxTouchPoints', { value: touch });
+  for (const [k, v] of Object.entries(stored)) window.localStorage.setItem(k, v);
+  const events = [];
+  window.addEventListener('opax:analytics', ({ detail }) => events.push({ event: detail.event, properties: { ...detail.properties } }));
+  window.eval(script);
+  window.document.body.insertAdjacentHTML('afterbegin', appBannerHTML(pathname));
+  const banner = window.document.getElementById('opax-app-banner');
+  // The view waits for the parsed document, when events.js (deferred) is listening.
+  if (window.document.readyState !== 'complete') await new Promise(done => window.addEventListener('load', done, { once: true }));
+  const shows = sel => window.getComputedStyle(banner).display !== 'none' && window.getComputedStyle(banner.querySelector(sel)).display !== 'none';
+  return { dom, window, banner, events,
+    worded: () => shows('.opax-app-banner-prompt'), general: () => shows('.opax-app-banner-general'),
+    go(to) { window.history.pushState({}, '', to); window.dispatchEvent(new window.Event('opax:route')); } };
+}
+
+test('each landing page type is recognised by its path alone, and everything else keeps the general line', async () => {
+  for (const [type, path] of Object.entries(PAGES)) {
+    assert.deepEqual(appPromptFor(path), { type, open: `opax:/${path}` }, path);
+    assert.equal(appPromptFor(path + '/')?.type, type, 'a trailing slash is the same page');
+  }
+  assert.deepEqual(Object.keys(APP_PROMPTS), Object.keys(PAGES));
+  for (const path of ['/', '/about', '/ask/some words', '/bills', '/subject/person', '/subject/party/labor', '/money/grants',
+    // Screens the app does not have: another state's recipients, and a person's.
+    '/money/grants/nsw/recipient/abn-1', '/money/grants/federal/recipient/person:jo-citizen', '/money/grants/federal/recipient/person%3Ajo-citizen',
+    // Nothing that could leave the attribute or split the Smart App Banner's list.
+    '/subject/donor/a"b', '/subject/donor/a,b', '/subject/supplier/a b', '/subject/donor/<x>']) {
+    assert.equal(appPromptFor(path), null, path);
+    assert.equal(smartBannerMeta(path), '', path);
+  }
+});
+
+test('every line is plain, non-partisan copy about the record, with no Android or Play wording', async () => {
+  for (const line of Object.values(APP_PROMPTS)) {
+    assert.match(line, /^[A-Z][a-z' ]+ in the app$/, line);
+    assert.doesNotMatch(line, /—|Android|Play/);
+  }
+  for (const text of [script, css, read('../src/app-banner.ts')]) assert.doesNotMatch(text, /Google Play|play\.google|Android app/i);
+});
+
+test('the Worker writes the worded line, both links and Apple\'s Smart App Banner on a member page, and none of it on other pages', async () => {
+  const response = await workerFetch(PAGES.member);
+  assert.equal(response.status, 200);
+  const doc = new JSDOM(await response.text()).window.document;
+  const meta = doc.querySelectorAll('head meta[name="apple-itunes-app"]');
+  assert.equal(meta.length, 1);
+  assert.equal(meta[0].content, 'app-id=6818756305, app-argument=opax://subject/person/anthony-albanese, affiliate-data=ct=web_member_safari');
+  // Ahead of the script, which looks for it before the body is parsed.
+  assert.ok(meta[0].compareDocumentPosition(doc.querySelector('head script[src^="/app-banner.js"]')) & 4);
+  const banner = doc.getElementById('opax-app-banner');
+  assert.equal(banner.dataset.appPrompt, 'member');
+  const get = banner.querySelector('a[data-app-prompt-get]');
+  assert.equal(get.textContent, 'Follow this member in the app');
+  assert.equal(get.href, 'https://apps.apple.com/au/app/opax/id6818756305?ct=web_member');
+  assert.equal(banner.querySelector('a[data-app-prompt-open]').getAttribute('href'), 'opax://subject/person/anthony-albanese');
+  assert.equal(banner.querySelector('.opax-app-banner-general a').href, 'https://apps.apple.com/au/app/opax/id6818756305');
+
+  for (const path of ['/about', '/', '/privacy']) {
+    const html = await (await workerFetch(path)).text();
+    assert.doesNotMatch(html, /apple-itunes-app|data-app-prompt="/, path);
+  }
+});
+
+test('an iPhone browser without Apple\'s banner gets the worded line once, in the banner\'s own space', async () => {
+  const page = await land();
+  assert.equal(page.worded(), true);
+  assert.equal(page.general(), false);
+  // One line or the other is in the flow from the first paint: nothing is inserted later.
+  assert.equal(page.banner.querySelectorAll('p').length, 2);
+  assert.equal(page.window.document.activeElement, page.window.document.body, 'no focus movement');
+  assert.deepEqual(page.events, [{ event: 'opax_app_prompt_view', properties: { page_type: 'member' } }]);
+  assert.equal(page.window.localStorage.getItem(seenKey), '1');
+
+  // Shown once per visitor: the next page load has neither line on a prompt page.
+  const again = await land({ stored: { [seenKey]: '1' }, path: PAGES.bill });
+  assert.equal(again.worded(), false);
+  assert.equal(again.general(), false);
+  assert.deepEqual(again.events, []);
+  // Elsewhere the general line is as it was.
+  again.go('/about');
+  assert.equal(again.general(), true);
+  page.dom.window.close(); again.dom.window.close();
+});
+
+test('Safari on iPhone and iPad shows Apple\'s banner and never ours with it', async () => {
+  for (const [ua, touch] of [[SAFARI_IPHONE, 5], [SAFARI_MAC, 5]]) {
+    const page = await land({ ua, touch });
+    assert.equal(page.worded(), false, ua);
+    assert.equal(page.general(), false, ua);
+    assert.deepEqual(page.events, [], ua);
+    assert.equal(page.window.localStorage.getItem(seenKey), null, 'Apple\'s banner does not use up the one showing');
+    // Still away after moving within the site: Apple's banner stays for the page load.
+    page.go('/about');
+    assert.equal(page.general(), false, ua);
+    page.dom.window.close();
+  }
+  // No Smart App Banner tag on the page (home, about): Safari keeps the general line.
+  const home = await land({ ua: SAFARI_IPHONE, touch: 5, path: '/about' });
+  assert.equal(home.general(), true);
+  // Arriving at a prompt page from there, with no Apple banner on screen, shows ours.
+  home.go(PAGES.member);
+  assert.equal(home.worded(), true);
+  home.dom.window.close();
+});
+
+test('desktop keeps the one quiet general line, with no prompt and no events; Android gets nothing', async () => {
+  const mac = await land({ ua: SAFARI_MAC, touch: 0 });
+  assert.equal(mac.general(), true);
+  assert.equal(mac.worded(), false);
+  mac.banner.querySelector('.opax-app-banner-general a').dispatchEvent(new mac.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  assert.deepEqual(mac.events, []);
+  const android = await land({ ua: 'Mozilla/5.0 (Linux; Android 16) Chrome/142 Mobile Safari/537.36' });
+  assert.equal(android.worded() || android.general(), false);
+  assert.deepEqual(android.events, []);
+  mac.dom.window.close(); android.dom.window.close();
+});
+
+test('a tap on the App Store link sends one event with the page type; Open this page and Dismiss send none', async () => {
+  const page = await land({ path: PAGES.document });
+  const click = el => { const e = new page.window.MouseEvent('click', { bubbles: true, cancelable: true }); el.addEventListener('click', ev => ev.preventDefault(), { once: true }); el.dispatchEvent(e); };
+  click(page.banner.querySelector('[data-app-prompt-get]'));
+  click(page.banner.querySelector('[data-app-prompt-open]'));
+  assert.deepEqual(page.events.map(e => [e.event, e.properties]), [
+    ['opax_app_prompt_view', { page_type: 'document' }], ['opax_app_prompt_tap', { page_type: 'document' }]]);
+  click(page.banner.querySelector('[data-app-banner-dismiss]'));
+  assert.equal(page.worded() || page.general(), false);
+  assert.equal(page.window.localStorage.getItem(key), '1');
+  assert.equal(page.events.length, 2);
+  const later = await land({ stored: { [key]: '1' } });
+  assert.equal(later.worded() || later.general(), false);
+  page.dom.window.close(); later.dom.window.close();
+});
+
+test('the two events pass the allowlist with the page type and nothing else', async () => {
+  for (const event of ['opax_app_prompt_view', 'opax_app_prompt_tap']) {
+    for (const type of Object.keys(APP_PROMPTS)) {
+      assert.deepEqual(cleanEvent(event, { page_type: type, slug: 'anthony-albanese', name: 'A Member', q: 'words', id: 7 }), { page_type: type });
+    }
+    for (const value of ['anthony-albanese', '/subject/person/anthony-albanese', 'person', '', undefined]) assert.deepEqual(cleanEvent(event, { page_type: value }), {});
+  }
+});
+
+test('in-page navigation rewords the line and repoints both links, as the Worker would have written them', async () => {
+  const page = await land();
+  for (const [type, path] of Object.entries(PAGES)) {
+    page.go(path);
+    const fresh = new JSDOM(appBannerHTML(path)).window.document;
+    assert.equal(page.worded(), true, path);
+    assert.equal(page.banner.dataset.appPrompt, type);
+    for (const sel of ['[data-app-prompt-get]', '[data-app-prompt-open]']) {
+      assert.equal(page.banner.querySelector(sel).getAttribute('href'), fresh.querySelector(sel).getAttribute('href'), path);
+      assert.equal(page.banner.querySelector(sel).textContent, fresh.querySelector(sel).textContent, path);
+    }
+    assert.equal(page.window.document.querySelector('meta[name="apple-itunes-app"]').content, new JSDOM(smartBannerMeta(path)).window.document.querySelector('meta').content, path);
+  }
+  assert.equal(page.events.length, 1, 'one view for the page load, however far the reader goes');
+  page.go('/about');
+  assert.equal(page.general(), true);
+  assert.equal(page.worded(), false);
+  page.dom.window.close();
+});
+
+test('Ask never has the line while an answer is being written', async () => {
+  const idle = await land({ path: '/ask', extra: '<form id="ask-form"><input id="ask-input"></form>' });
+  assert.equal(idle.worded(), true);
+  // Sending a question takes the line away before the answer starts, and it stays away on Ask.
+  idle.window.document.getElementById('ask-form').dispatchEvent(new idle.window.Event('submit', { bubbles: true, cancelable: true }));
+  assert.equal(idle.worded() || idle.general(), false);
+  idle.go('/ask?q=who+voted');
+  assert.equal(idle.worded() || idle.general(), false);
+  idle.go('/ask');
+  assert.equal(idle.worded() || idle.general(), false);
+  // Arriving with a question in the address (a shared answer, a search result): never shown.
+  for (const path of ['/ask?q=who+voted+for+the+bill', '/#/ask?q=who', '/ask?view=search']) {
+    const asked = await land({ path });
+    assert.equal(asked.worded() || asked.general(), false, path);
+    assert.deepEqual(asked.events, [], path);
+    assert.equal(asked.window.localStorage.getItem(seenKey), null, path);
+    asked.dom.window.close();
+  }
+  idle.dom.window.close();
+});
+
+test('the worded line is a real link and button, reachable by keyboard, with a focus ring and room to wrap', async () => {
+  const page = await land();
+  const [get, open] = page.banner.querySelectorAll('.opax-app-banner-prompt a');
+  assert.equal(get.tagName, 'A');
+  assert.equal(get.textContent, 'Follow this member in the app', 'the link says what it does without the text around it');
+  assert.equal(open.textContent, 'Open this page');
+  assert.equal(page.banner.querySelector('[tabindex], [aria-live], [role="alert"], [autofocus]'), null);
+  assert.equal(page.banner.querySelector('button').tabIndex, 0);
+  assert.match(css, /\.opax-app-banner-prompt > a \{ white-space: normal; \}/);
+  // The line not showing is display: none, so its links are out of the tab order.
+  assert.equal(page.window.getComputedStyle(page.banner.querySelector('.opax-app-banner-general')).display, 'none');
+  page.dom.window.close();
 });
