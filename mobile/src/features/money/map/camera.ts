@@ -208,6 +208,49 @@ export function placeCamera(
   };
 }
 
+const near = (a: number, b: number, by: number) => Math.abs(a - b) <= by;
+const sameViewport = (a: Viewport, b: Viewport) =>
+  near(a.width, b.width, 0.5) &&
+  near(a.height, b.height, 0.5) &&
+  (['top', 'bottom', 'left', 'right'] as const).every((edge) =>
+    near(a.insets[edge], b.insets[edge], 0.5),
+  );
+const sameCamera = (a: Camera, b: Camera) =>
+  near(a.k, b.k, 1e-6) && near(a.tx, b.tx, 1e-3) && near(a.ty, b.ty, 1e-3);
+
+/** The view a passing change of viewport started from, to go back to. */
+export interface CameraRest {
+  viewport: Viewport;
+  camera: Camera;
+  /** The camera the stage last set, to tell a reader's move from its own. */
+  set: Camera;
+}
+
+/**
+ * A viewport that changes and then comes back (the map's Search, a
+ * keyboard that resizes the window, a turn to landscape and back) leaves
+ * the view as it was. Each change clamps the camera to limits worked out
+ * from the viewport of the moment, and the clamped camera was kept when
+ * the viewport returned: the map was left zoomed in and half under the
+ * panel after its Search. The view at the first change is remembered and
+ * put back when the viewport is that one again, unless the reader has
+ * moved the map since.
+ */
+export function returnCamera(
+  rest: CameraRest | null,
+  change: { previous: Viewport; current: Camera },
+  viewport: Viewport,
+  next: Camera,
+): { camera: Camera; rest: CameraRest | null } {
+  const from =
+    rest && sameCamera(change.current, rest.set)
+      ? rest
+      : { viewport: change.previous, camera: change.current, set: next };
+  if (sameViewport(viewport, from.viewport))
+    return { camera: from.camera, rest: null };
+  return { camera: next, rest: { ...from, set: next } };
+}
+
 /** The camera centred on a world point at scale `k` (the current one by default). */
 export function cameraAt(
   camera: Camera,
