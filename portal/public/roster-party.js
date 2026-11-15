@@ -31,7 +31,7 @@ const isoDate = (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.te
   !Number.isNaN(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
 
 /** Whether a roster representative is this person: the ID where both carry one, else the exact name. */
-function isPerson(rep, person) {
+export function rosterIsPerson(rep, person) {
   const member = rep?.person || {};
   const ids = [member.legacy_person_id].filter(Boolean);
   if (person.pid && ids.length) return ids.includes(person.pid);
@@ -56,7 +56,7 @@ export function rosterSeatParty(person, electorates) {
     const seat = seats[0];
     if (seat.representation_status !== 'verified' || !isoDate(seat.representation_as_of)) continue;
     for (const rep of seat.representatives || []) {
-      if (isPerson(rep, person)) hits.push({ rep, seat });
+      if (rosterIsPerson(rep, person)) hits.push({ rep, seat });
     }
   }
   if (hits.length !== 1) return null;
