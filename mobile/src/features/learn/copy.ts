@@ -23,7 +23,7 @@ export const learnCopy = {
   underline: 'Glossary tips',
   explain: 'Explain terms',
   switchesFooter:
-    'Glossary tips marks a word the guide explains: tap it for a short answer. Explain terms adds a plain line under some headings.',
+    'Glossary tips mark a word the guide explains: tap it for a short answer. Explain terms adds a plain line under some headings.',
   /** The answer sheet's last control, and what it says once tapped. */
   hideTips: 'Hide tips',
   tipsHidden:

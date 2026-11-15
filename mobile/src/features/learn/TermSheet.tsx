@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import { Button } from '../../design/controls';
 import { Text } from '../../design/text';
 import { minimumTarget } from '../../design/tokens';
@@ -97,8 +97,11 @@ function useScreenReader(): boolean | null {
   return running;
 }
 
-/** How long the notice stays before the sheet closes itself (ms). */
-export const TIPS_HIDDEN_HOLD = 1800;
+/**
+ * How long the notice stays before the sheet closes itself (ms): long
+ * enough to read two short sentences without hurrying.
+ */
+export const TIPS_HIDDEN_HOLD = 4000;
 
 /**
  * "Hide tips", last on every answer sheet while the tips are on (Jake,
@@ -129,39 +132,56 @@ function HideTips({ id }: { id: string }) {
   if (!on && !hidden) return null;
   return (
     <View style={styles.hide}>
-      {hidden ? (
-        <Text
-          wordSafe
-          variant="secondary"
-          tone="inkSoft"
-          accessibilityLiveRegion="polite"
-          style={styles.notice}
-          testID={`term-${id}-tips-hidden`}
-        >
-          {learnCopy.tipsHidden}
-        </Text>
-      ) : (
-        <Button
-          label={learnCopy.hideTips}
-          variant="plain"
-          onPress={() => {
-            setHidden(true);
-            void setUnderlineTerms(false);
-            AccessibilityInfo.announceForAccessibility(learnCopy.tipsHidden);
-          }}
-          testID={`term-${id}-hide-tips`}
-        />
+      {/* The notice is laid out from the start, unseen, so the slot is its
+          height at every text size: the sheet is fitted and scrolls to it
+          before the tap, and nothing grows when it appears (at AX3 it is
+          three lines, and it used to run off the sheet's foot). */}
+      <Text
+        wordSafe
+        variant="secondary"
+        tone="inkSoft"
+        // TalkBack reads a live region as it changes; VoiceOver has none,
+        // so iOS is told once instead (below). One reading on each.
+        accessibilityLiveRegion={
+          hidden && Platform.OS === 'android' ? 'polite' : 'none'
+        }
+        accessibilityElementsHidden={!hidden}
+        importantForAccessibility={hidden ? 'yes' : 'no-hide-descendants'}
+        style={hidden ? undefined : styles.unseen}
+        testID={hidden ? `term-${id}-tips-hidden` : `term-${id}-tips-reserved`}
+      >
+        {learnCopy.tipsHidden}
+      </Text>
+      {hidden ? null : (
+        <View style={styles.button}>
+          <Button
+            label={learnCopy.hideTips}
+            variant="plain"
+            onPress={() => {
+              setHidden(true);
+              void setUnderlineTerms(false);
+              if (Platform.OS !== 'android')
+                AccessibilityInfo.announceForAccessibility(
+                  learnCopy.tipsHidden,
+                );
+            }}
+            testID={`term-${id}-hide-tips`}
+          />
+        </View>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  // The button's 44 pt row, kept for the notice that replaces it.
-  hide: {
-    minHeight: minimumTarget,
-    alignItems: 'center',
+  // The button's 44 pt row at least, and the notice's own height where that
+  // is more. Both start on the text's leading edge.
+  hide: { minHeight: minimumTarget, justifyContent: 'center' },
+  button: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
-  notice: { textAlign: 'center' },
+  // Laid out, not drawn: it holds the notice's place.
+  unseen: { opacity: 0 },
 });
