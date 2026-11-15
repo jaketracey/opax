@@ -1,6 +1,13 @@
 import { router } from 'expo-router';
 import { colors } from '../../design/tokens';
-import { askHeaderItems, glassBar, largeTitleBar, opaqueBar } from '../chrome';
+import {
+  askHeaderItems,
+  glassBar,
+  largeTitleBar,
+  opaqueBar,
+  groundBar,
+  type UnderBar,
+} from '../chrome';
 import { conversationsRoute } from '../routes/ask';
 import { screen, screenInStack, sheetOptions } from './screen';
 
@@ -9,12 +16,22 @@ import { screen, screenInStack, sheetOptions } from './screen';
  * the conversation (New question disabled while idle or answering), so
  * AskScreen sets them; these are the first frame's.
  */
-export function askScreens(segment = '', signedIn = false) {
+export function askScreens(
+  segment = '',
+  signedIn = false,
+  /** As `sharedScreens` is told: 'plain' where pushed pages are clear. */
+  underBar: UnderBar = false,
+) {
   return [
     screen('ask', 'Ask', {
       ...(segment === '(ask)'
         ? largeTitleBar(colors.sunken)
-        : opaqueBar(colors.sunken)),
+        : // Pushed outside its tab Ask is laid out below its bar. Where
+          // pushed pages are clear, that bar is Ask's ground with no
+          // hairline, as theirs has none.
+          underBar === 'plain'
+          ? groundBar(colors.sunken)
+          : opaqueBar(colors.sunken)),
       contentStyle: { backgroundColor: colors.sunken },
       headerLargeTitleEnabled: segment === '(ask)',
       headerTransparent: segment === '(ask)' && glassBar(),

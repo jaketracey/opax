@@ -68,9 +68,10 @@ import {
 } from '../../design/tokens';
 import {
   barBacking,
+  fixedPageBar,
   headerItems,
-  opaqueBar,
   pageItems,
+  usePushedBar,
   useRailBar,
 } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
@@ -620,15 +621,20 @@ function MapMode({
   // beside a vertical bar (the closed Duo), where the other pushed pages run
   // under a clear one. That bar needs its own ground there; the list sets the
   // stack's bar again when the map hands over to it (ListMode).
+  // Off the rail, where pushed pages are clear, it has no hairline either
+  // (the hub's ruling); a legibility setting keeps the opaque bar and its
+  // hairline (fixedPageBar).
   const rail = useRailBar() !== null;
+  // Asked without reading the stack's descriptors: the map would render
+  // again whenever any page set options. This route is a pushed card, so
+  // the stack's own answer is the route's (as ListMode asks it).
+  const plainClear = usePushedBar() === 'clear' && !rail;
   useLayoutEffect(() => {
     setOptions({
-      ...opaqueBar(colors.paper),
-      headerTransparent: false,
+      ...fixedPageBar(plainClear, rail, colors.paper),
       headerTitle: barTitle,
-      ...(rail ? barBacking(colors.paper) : {}),
     });
-  }, [setOptions, barTitle, rail]);
+  }, [setOptions, barTitle, rail, plainClear]);
   const navigation = useNavigation();
   const router = useRouter();
   const { regular } = useLayout();
@@ -1664,16 +1670,18 @@ function ListMode({
   // stack's bar again, from the same check, so a fold or unfold after the
   // map still follows the other pushed pages.
   const rail = useRailBar();
+  // Off the rail the pushed pages' bar is clear too (iOS 26).
+  const clear = usePushedBar() === 'clear';
   const setOptions = useSafeSetOptions();
   useLayoutEffect(() => {
     setOptions({
-      headerTransparent: rail === 'clear',
+      headerTransparent: clear,
       // Screen below sets the solid bar's ground; this runs after it.
       ...(rail === 'solid'
         ? barBacking(colors.paper)
         : { headerBackground: undefined }),
     });
-  }, [setOptions, rail]);
+  }, [setOptions, rail, clear]);
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />

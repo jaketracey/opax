@@ -48,6 +48,7 @@ import {
   headerItems,
   noHeaderItems,
   pageItems,
+  useClearRailBar,
 } from '../../navigation/chrome';
 import { useListUnderBar } from '../../navigation/useListUnderBar';
 import { openOnWeb } from '../../navigation/external';
@@ -484,8 +485,14 @@ export function MoneyList<T>({
   // rail's own.
   const headerBottom = useHeaderBottom();
   const onRail = useVerticalBarEdge() !== 'unspecified';
+  // A pushed money list under the stack's clear bar fades the same way.
+  const clearPushed = useClearRailBar();
   const fades =
-    largeTitle && clearBars && Platform.OS === 'ios' && glassBar() && !onRail;
+    (largeTitle || clearPushed) &&
+    clearBars &&
+    Platform.OS === 'ios' &&
+    glassBar() &&
+    !onRail;
   const fadeScroll = useBarFadeScroll(fades);
   // Reduce Transparency and Increase Contrast: the bar is solid, and takes
   // its ground only once the list has scrolled under it (useListUnderBar).

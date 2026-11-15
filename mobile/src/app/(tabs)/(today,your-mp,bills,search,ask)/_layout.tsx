@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { useStackChrome } from '../../../navigation/chrome';
+import { useStackChrome, useUnderBar } from '../../../navigation/chrome';
 import {
   sharedScreens,
   tabRootName,
@@ -13,15 +13,10 @@ export { RouteErrorBoundary as ErrorBoundary } from '../../../navigation/RouteEr
 export default function TabStack({ segment }: { segment: string }) {
   const account = useAccount();
   const chrome = useStackChrome({ tabStack: true });
+  const underBar = useUnderBar(chrome.headerTransparent);
   return (
     <Stack initialRouteName={tabRootName(segment)} screenOptions={chrome}>
-      {[
-        ...sharedScreens(
-          segment,
-          !!account.status?.signedIn,
-          chrome.headerTransparent,
-        ),
-      ]}
+      {[...sharedScreens(segment, !!account.status?.signedIn, underBar)]}
     </Stack>
   );
 }

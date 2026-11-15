@@ -11,6 +11,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
+import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
@@ -1962,6 +1963,48 @@ describe.each([
       }),
   );
 });
+
+// Build 82: pushed on iPhone, a money list has the stack's clear bar (no
+// colour, no hairline) and fades under it, large title or not.
+test.each([
+  ['Community funding', Allocation],
+  ['Largest grants', Largest],
+] as const)('%s fades under the clear bar when pushed', (_name, Page) =>
+  withGlassBar(async () => {
+    const root = { key: 'today-root', name: 'index' };
+    const route = { key: 'pushed-1', name: 'pushed' };
+    const navigation = {
+      setOptions: jest.fn(),
+      getState: () => ({
+        index: 1,
+        routes: [root, route],
+        routeNames: ['index', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    const r = await mount(() => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route as never}>
+          <DescriptorsContext.Provider
+            value={
+              {
+                [route.key]: { options: { headerTransparent: true } },
+              } as never
+            }
+          >
+            <Page />
+          </DescriptorsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    ));
+    try {
+      expect(fadeLayers(r)).toHaveLength(1);
+    } finally {
+      await act(async () => r.unmount());
+    }
+  }),
+);
 
 test('a money list under the stack’s own solid bar has no fade', () =>
   withGlassBar(async () => {

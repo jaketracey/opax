@@ -201,7 +201,7 @@ export function PersonVotes() {
         </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
-          <ClearBarRest>
+          <ClearBarRest ground="paper">
             <FlatList
               testID="person-votes-screen"
               style={styles.page}
@@ -324,7 +324,7 @@ export function PersonInterests() {
         </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
-          <ClearBarRest>
+          <ClearBarRest ground="paper">
             <SectionList
               testID="person-interests-screen"
               style={styles.page}

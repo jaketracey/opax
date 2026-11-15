@@ -282,7 +282,7 @@ export default function RecordList({
         </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
-          <ClearBarRest>
+          <ClearBarRest ground="paper">
             <FlatList
               testID="record-list-screen"
               style={styles.page}

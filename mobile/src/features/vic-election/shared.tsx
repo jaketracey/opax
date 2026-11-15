@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import type { RecordResult } from '../../api/client';
 import { RegionProvider, SidebarSafe } from '../../design/adaptive';
 import { formatDate } from '../../design/format';
-import { useScreenColumn } from '../../design/layout';
+import { ClearBarRest, useScreenColumn } from '../../design/layout';
 import { PageFoot } from '../../design/record';
 import { LinkRow } from '../../design/rows';
 import { SourceLine, type SourceDetails } from '../../design/source';
@@ -222,65 +222,71 @@ export function ElectionList({
     <StatePageProvider>
       <SidebarSafe style={styles.screen}>
         <RegionProvider value={column.inner}>
-          <SectionList
-            ref={listRef}
-            testID={testID}
-            style={styles.screen}
-            contentContainerStyle={[
-              column.content,
-              { paddingBottom: rhythm.section },
-              foot,
-            ]}
-            onLayout={(e) => {
-              column.onLayout(e);
-              onLayout?.();
-            }}
-            contentInsetAdjustmentBehavior="automatic"
-            scrollToOverflowEnabled={scrollToOverflowEnabled}
-            automaticallyAdjustKeyboardInsets
-            keyboardShouldPersistTaps="handled"
-            keyboardDismissMode="on-drag"
-            stickySectionHeadersEnabled={false}
-            sections={sections}
-            keyExtractor={(row) => row.key}
-            renderItem={({ item: row }) => (
-              <Animated.View
-                style={{ paddingBottom: rhythm.tight, opacity: arrivalOpacity }}
-              >
-                {row.element}
-              </Animated.View>
-            )}
-            renderSectionHeader={({ section }) =>
-              section.title ? (
+          {/* The hub restores its own place: the bar's fade alone. */}
+          <ClearBarRest rest={false} ground="paper">
+            <SectionList
+              ref={listRef}
+              testID={testID}
+              style={styles.screen}
+              contentContainerStyle={[
+                column.content,
+                { paddingBottom: rhythm.section },
+                foot,
+              ]}
+              onLayout={(e) => {
+                column.onLayout(e);
+                onLayout?.();
+              }}
+              contentInsetAdjustmentBehavior="automatic"
+              scrollToOverflowEnabled={scrollToOverflowEnabled}
+              automaticallyAdjustKeyboardInsets
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
+              stickySectionHeadersEnabled={false}
+              sections={sections}
+              keyExtractor={(row) => row.key}
+              renderItem={({ item: row }) => (
                 <Animated.View
-                  style={[styles.heading, { opacity: arrivalOpacity }]}
+                  style={{
+                    paddingBottom: rhythm.tight,
+                    opacity: arrivalOpacity,
+                  }}
                 >
-                  <SectionTitle>{section.title}</SectionTitle>
-                  {section.note ? (
-                    <Text wordSafe variant="footnote" tone="inkSoft">
-                      {section.note}
-                    </Text>
-                  ) : null}
+                  {row.element}
                 </Animated.View>
-              ) : null
-            }
-            ListHeaderComponent={
-              <View style={{ gap: rhythm.block }}>
-                {column.bar}
-                {header}
-              </View>
-            }
-            ListFooterComponent={
-              <Animated.View
-                style={{ gap: rhythm.block, opacity: arrivalOpacity }}
-              >
-                {footer}
-              </Animated.View>
-            }
-            onScroll={(e) => onScroll?.(e.nativeEvent.contentOffset.y)}
-            scrollEventThrottle={16}
-            removeClippedSubviews={false}
-          />
+              )}
+              renderSectionHeader={({ section }) =>
+                section.title ? (
+                  <Animated.View
+                    style={[styles.heading, { opacity: arrivalOpacity }]}
+                  >
+                    <SectionTitle>{section.title}</SectionTitle>
+                    {section.note ? (
+                      <Text wordSafe variant="footnote" tone="inkSoft">
+                        {section.note}
+                      </Text>
+                    ) : null}
+                  </Animated.View>
+                ) : null
+              }
+              ListHeaderComponent={
+                <View style={{ gap: rhythm.block }}>
+                  {column.bar}
+                  {header}
+                </View>
+              }
+              ListFooterComponent={
+                <Animated.View
+                  style={{ gap: rhythm.block, opacity: arrivalOpacity }}
+                >
+                  {footer}
+                </Animated.View>
+              }
+              onScroll={(e) => onScroll?.(e.nativeEvent.contentOffset.y)}
+              scrollEventThrottle={16}
+              removeClippedSubviews={false}
+            />
+          </ClearBarRest>
         </RegionProvider>
       </SidebarSafe>
     </StatePageProvider>

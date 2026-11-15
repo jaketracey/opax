@@ -52,6 +52,7 @@ import {
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { ClearBarFade, useBarFadeScroll } from './bar-fade';
+import type { GroundFadeGround } from './ground-fade';
 import {
   columnBreakout,
   columns,
@@ -381,11 +382,73 @@ export function useClearBarRest() {
  * itself re-rendered without end ("Maximum update depth exceeded", the people
  * lists in the b71 review). Only this child subscribes, and only beside a
  * vertical bar. It adds its props to the list element the page made, so the
- * page's row functions keep their identity and no row is rebuilt.
+ * page's row functions keep their identity and no row is rebuilt. The
+ * list's own scroll handlers still run.
  */
-export function ClearBarRest({ children }: { children: ReactElement<object> }) {
+type ListScroll = {
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onScrollBeginDrag?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+};
+export function ClearBarRest({
+  children,
+  ground,
+  rest = true,
+}: {
+  children: ReactElement<ListScroll>;
+  /** The page's ground, which the fade under the bar takes. */
+  ground?: GroundFadeGround;
+  /**
+   * False for a list that places itself (a reader restoring its place):
+   * it takes the fade alone, and keeps its own offset.
+   */
+  rest?: boolean;
+}) {
   const { list } = useClearBarRest();
-  return list ? cloneElement(children, list) : children;
+  // Under the stack's clear bar (iOS 26, off the rail) a page's own list
+  // fades into the page's ground behind the bar, as a Screen page does: a
+  // clear bar with no fade let rows run through the title. The fade follows
+  // the list's scroll on the UI thread. A detail pane has no bar of its own,
+  // and the rail's band folds away.
+  const headerBottom = useHeaderBottom();
+  const onRail = useRailBar() !== null;
+  const inPane = useSplitPane() !== null;
+  const fades =
+    !!list &&
+    !onRail &&
+    !inPane &&
+    clearBars &&
+    Platform.OS === 'ios' &&
+    glassBar();
+  const fadeScroll = useBarFadeScroll(fades);
+  const { onScroll: fadeOnScroll } = fadeScroll;
+  const own = children.props.onScroll;
+  const ownDrag = children.props.onScrollBeginDrag;
+  const props = useMemo(() => {
+    if (!list) return null;
+    const held = rest
+      ? list
+      : { scrollEventThrottle: list.scrollEventThrottle };
+    return {
+      ...held,
+      onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        if (fades) fadeOnScroll(event);
+        if (rest) list.onScroll(event);
+        own?.(event);
+      },
+      onScrollBeginDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        if (rest) list.onScrollBeginDrag();
+        ownDrag?.(event);
+      },
+    };
+  }, [list, rest, fades, fadeOnScroll, own, ownDrag]);
+  return (
+    <>
+      {props ? cloneElement(children, props) : children}
+      {fades ? (
+        <ClearBarFade y={fadeScroll.y} bottom={headerBottom} ground={ground} />
+      ) : null}
+    </>
+  );
 }
 
 /**
@@ -577,12 +640,13 @@ export function Screen({
   // bar as content goes under it, on the UI thread. A solid bar (the
   // legibility settings, read by the fade itself; a rail root's search
   // field) covers its own content.
+  // A pushed page under the stack's clear bar fades the same way (off the
+  // rail, whose band folds away); a detail pane has no bar of its own.
   const barFade =
     clearBars &&
-    nativeRoot &&
     Platform.OS === 'ios' &&
     glassBar() &&
-    !railSolidRoot;
+    (nativeRoot ? !railSolidRoot : clearRail && !onRail && !inPane);
   const fadeScroll = useBarFadeScroll(barFade);
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
   // lays the scroll view out below it: React Native's own sticky header
