@@ -76,6 +76,8 @@ test('Today never shows the authorisation line, a state record footer still does
     loading.root.findAllByProps({ testID: 'today-vic-election' }).length,
   ).toBeGreaterThan(0);
   none(loading);
-  const foot = renderVic(<PageFoot variant="authorised" />);
+  const foot = renderVic(<PageFoot variant="authorised" jurisdiction="vic" />);
   expect(words(foot)).toContain('Authorised by');
+  const nsw = renderVic(<PageFoot variant="authorised" jurisdiction="nsw" />);
+  expect(words(nsw)).not.toContain('Authorised by');
 });

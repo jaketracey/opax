@@ -1,4 +1,5 @@
 import { PARTY_NOT_RECORDED, isPartyLabel } from '../design/party';
+import { isVictorian } from '../design/authorisation';
 import { RecordNameLink } from '../design/record';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -758,11 +759,11 @@ function ElectoratePage({
         eligible
       />,
     );
-  // 9. Authorisation on state electorates.
-  if (identity.jurisdiction !== 'federal')
+  // 9. Authorisation on Victorian electorates only.
+  if (isVictorian(identity.jurisdiction))
     page.push(
       <View key="authorisation" testID="electorate-authorisation">
-        <PageFoot variant="authorised" />
+        <PageFoot variant="authorised" jurisdiction={identity.jurisdiction} />
       </View>,
     );
   // 10. The page's end, for journeys that scroll to it.

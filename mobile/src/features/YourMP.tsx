@@ -50,7 +50,11 @@ import {
   RepresentativesSkeleton,
 } from './your-mp/RepresentativesGroup';
 import { seatLine } from './your-mp/state-names';
-import { showsVictorianSection, StateMembers } from './your-mp/StateMembers';
+import {
+  authorisedFootJurisdiction,
+  showsVictorianSection,
+  StateMembers,
+} from './your-mp/StateMembers';
 import { migratedSeat, savedSeatDirectory, useSeat } from './your-mp/useSeat';
 
 const house = (s: Electorate) =>
@@ -399,7 +403,14 @@ export default function YourMP() {
             state={federal.state_code}
             eligible={house(federal)}
           />
-          {victorian ? <PageFoot variant="authorised" /> : null}
+          <PageFoot
+            variant="authorised"
+            jurisdiction={authorisedFootJurisdiction(
+              federal,
+              directory,
+              stateSeatIds,
+            )}
+          />
           <PageEnd />
         </>
       ) : directory ? (
@@ -542,7 +553,10 @@ function NoSeat({
           testID="your-directory-electorates"
         />
       </InsetGroup>
-      {stateSeatIds.length ? <PageFoot variant="authorised" /> : null}
+      <PageFoot
+        variant="authorised"
+        jurisdiction={authorisedFootJurisdiction(null, directory, stateSeatIds)}
+      />
       <PageEnd />
     </>
   );

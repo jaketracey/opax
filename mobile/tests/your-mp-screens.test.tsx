@@ -1,6 +1,7 @@
 import { SkeletonCrossfade } from '../src/design/states';
 import { withNavigationOptions } from './navigation-options';
 import { Icon } from '../src/design/icon';
+import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import {
   LatestRow as LatestVoteRow,
   type LatestRecord,
@@ -807,7 +808,7 @@ test.each(['federal', 'state'])(
     const seat = index.electorates.find((s) =>
       kind === 'federal'
         ? s.jurisdiction === 'federal'
-        : s.jurisdiction !== 'federal' && !!files[s.detail_url],
+        : s.jurisdiction === 'vic' && !!files[s.detail_url],
     )!;
     mockParams.id = seat.electorate_id;
     mock.electorateFor.mockResolvedValue(
@@ -950,6 +951,79 @@ describe('Your MP tab', () => {
     await act(async () => control().props.onRefresh());
     expect(control().props.refreshing).toBe(false);
     await act(async () => r.unmount());
+  });
+
+  describe('the authorisation line is Victorian only', () => {
+    const line = (r: TestRenderer.ReactTestRenderer) =>
+      text(r).includes(AUTHORISATION_LINE);
+    // The saved state seat read as another jurisdiction.
+    const stateSeatAs = (jurisdiction: string) => {
+      const wendouree = seatNamed('Wendouree');
+      mock.directory.mockResolvedValue({
+        ...directory,
+        electorates: result({
+          ...index,
+          electorates: index.electorates.map((s) =>
+            s.electorate_id === wendouree.electorate_id
+              ? { ...s, jurisdiction, state_code: jurisdiction }
+              : s,
+          ),
+        }),
+      } as never);
+      return wendouree;
+    };
+    afterEach(() => {
+      mock.directory.mockResolvedValue(directory as never);
+    });
+    const serve = (seatId: string) => {
+      mock.yourMP.mockImplementation(async (id, chosen) =>
+        c.yourMPFor(id, index, manifest, chosen),
+      );
+      mock.profileFor.mockImplementation(async (id) =>
+        c.profileFor(id, catalogs),
+      );
+      choose(seatId);
+    };
+    test('a NSW federal seat with a NSW state seat draws none', async () => {
+      const state = stateSeatAs('nsw');
+      const seat = seatNamed('Grayndler');
+      serve(seat.electorate_id);
+      choose(seat.electorate_id, [state.electorate_id]);
+      const r = await render(<YourMP />);
+      expect(has(r, 'your-mp-end')).toBe(true);
+      expect(line(r)).toBe(false);
+      await act(async () => r.unmount());
+    });
+    test('a Victorian federal seat and a Victorian state seat draw it', async () => {
+      const state = stateSeatAs('vic');
+      const seat = seatNamed('Ballarat');
+      serve(seat.electorate_id);
+      choose(seat.electorate_id, [state.electorate_id]);
+      const r = await render(<YourMP />);
+      expect(line(r)).toBe(true);
+      await act(async () => r.unmount());
+    });
+    test('a Victorian federal seat alone keeps it', async () => {
+      serve(seatNamed('Ballarat').electorate_id);
+      const r = await render(<YourMP />);
+      expect(line(r)).toBe(true);
+      await act(async () => r.unmount());
+    });
+    test('no federal seat: a NSW state seat draws none, a Victorian one does', async () => {
+      for (const [jurisdiction, shown] of [
+        ['nsw', false],
+        ['vic', true],
+      ] as const) {
+        resetSeatForTests();
+        const state = stateSeatAs(jurisdiction);
+        serve(seatNamed('Higgins').electorate_id);
+        choose(seatNamed('Higgins').electorate_id, [state.electorate_id]);
+        const r = await render(<YourMP />);
+        expect(text(r)).toContain('Higgins is no longer an electorate.');
+        expect(line(r)).toBe(shown);
+        await act(async () => r.unmount());
+      }
+    });
   });
 
   test('a saved abolished seat says so and returns to the invitation', async () => {

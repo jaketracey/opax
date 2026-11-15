@@ -9,7 +9,11 @@ import type { Href } from 'expo-router';
 import { useRecordLink } from '../navigation/record-link';
 import { copyText } from '../features/records/actions';
 import { useAccessibilitySize } from './accessibility';
-import { AUTHORISATION_LINE, CORRECTION_CONTACT } from './authorisation';
+import {
+  AUTHORISATION_LINE,
+  CORRECTION_CONTACT,
+  isVictorian,
+} from './authorisation';
 import { copy } from './copy';
 import { spokenFigures, type DateInput } from './format';
 import { haptic } from './haptics';
@@ -263,20 +267,31 @@ export async function openCorrection(email: string = copy.correctionsEmail) {
 }
 export function PageFoot({
   variant,
+  jurisdiction,
   line = AUTHORISATION_LINE,
   corrections,
   testID,
   independenceTestID,
   correctionTestID,
 }: {
-  variant: 'today' | 'authorised';
   line?: string;
   corrections?: { email: string; response: string };
   testID?: string;
   independenceTestID?: string;
   correctionTestID?: string;
-}) {
+} & (
+  | { variant: 'today'; jurisdiction?: undefined }
+  | {
+      variant: 'authorised';
+      /**
+       * Required. The authorisation is Victorian election material, so any
+       * other jurisdiction draws nothing.
+       */
+      jurisdiction: string;
+    }
+)) {
   const highlight = useRowHighlight();
+  if (variant === 'authorised' && !isVictorian(jurisdiction)) return null;
   return (
     <View
       testID={testID}

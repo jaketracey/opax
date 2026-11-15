@@ -1225,7 +1225,9 @@ test.each([1, 3.571])(
     expect(strings(render(<PageFoot variant="today" />).root)).toContain(
       'OPAX is independent and non-partisan. It is not a government app.',
     );
-    const root = render(<PageFoot variant="authorised" />).root;
+    const root = render(
+      <PageFoot variant="authorised" jurisdiction="vic" />,
+    ).root;
     expect(strings(root)).toEqual([
       AUTHORISATION_LINE,
       'Report a correction:',

@@ -24,6 +24,28 @@ import { representativeProfile, type Directory } from './model';
 const vic = (s: Pick<Electorate, 'state_code' | 'jurisdiction'>) =>
   s.state_code.toLowerCase() === 'vic' || s.jurisdiction === 'vic';
 
+/** True when any saved state seat id is a Victorian seat in the directory. */
+export function hasVictorianStateSeat(
+  directory: Directory,
+  stateSeatIds: readonly string[],
+): boolean {
+  return directory.electorates.data.electorates.some(
+    (s) => stateSeatIds.includes(s.electorate_id) && vic(s),
+  );
+}
+
+/** The jurisdiction the authorisation foot is drawn for ('' draws none). */
+export function authorisedFootJurisdiction(
+  federal: Electorate | null,
+  directory: Directory,
+  stateSeatIds: readonly string[],
+): string {
+  return (federal ? vic(federal) : false) ||
+    hasVictorianStateSeat(directory, stateSeatIds)
+    ? 'vic'
+    : '';
+}
+
 /** Drawn only for a Victorian federal seat or a saved Victorian state seat. */
 export function showsVictorianSection(
   federal: Electorate | null,

@@ -17,6 +17,7 @@ import { Heading, Text } from '../src/design/text';
 import { Screen, SectionHeader } from '../src/design/layout';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { HeaderHeightContext } from 'expo-router/react-navigation';
+import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -1045,6 +1046,67 @@ test('dates at their stated precision', () => {
   expect(
     identityLine({ chamber: 'vic_lc', jurisdiction: 'vic', state: 'vic' }),
   ).toBe('Legislative Council region, Victoria');
+});
+
+// The authorisation line is Victorian election material: Victorian pages
+// only. Richmond is the pinned Victorian district; the others are the same
+// file and directory row read as another jurisdiction.
+const asJurisdiction = (jurisdiction: string) => {
+  const s = seat('Richmond', 'vic');
+  const raw = {
+    ...(pinned(s.detail_url) as Record<string, unknown>),
+    jurisdiction,
+    state_code: jurisdiction,
+  };
+  mock.electorateFor.mockResolvedValue(
+    result(c.electorateFor(c.decodeElectorate(raw))),
+  );
+  mockParams.id = s.electorate_id;
+  mockParams.seat = s.electorate_id;
+  mock.directory.mockResolvedValue({
+    ...directory,
+    electorates: result({
+      ...index,
+      electorates: index.electorates.map((e) =>
+        e.electorate_id === s.electorate_id
+          ? { ...e, jurisdiction, state_code: jurisdiction }
+          : e,
+      ),
+    }),
+  } as never);
+};
+
+describe('the authorisation line is Victorian only', () => {
+  afterEach(() => {
+    mock.directory.mockResolvedValue(directory as never);
+  });
+  test.each([
+    ['nsw', false],
+    ['qld', false],
+    ['vic', true],
+  ])('a %s state electorate: authorisation line %s', async (j, shown) => {
+    asJurisdiction(j);
+    const r = await render(<Electorate />);
+    expect(has(r, 'electorate-authorisation')).toBe(shown);
+    expect(text(r).includes(AUTHORISATION_LINE)).toBe(shown);
+    await act(async () => r.unmount());
+  });
+  test('a federal electorate has none', async () => {
+    load('Higgins');
+    const r = await render(<Electorate />);
+    expect(has(r, 'electorate-authorisation')).toBe(false);
+    expect(text(r).includes(AUTHORISATION_LINE)).toBe(false);
+    await act(async () => r.unmount());
+  });
+  test.each([
+    ['nsw', false],
+    ['vic', true],
+  ])('Members for a %s state seat: authorisation line %s', async (j, shown) => {
+    asJurisdiction(j);
+    const r = await render(<Members />);
+    expect(text(r).includes(AUTHORISATION_LINE)).toBe(shown);
+    await act(async () => r.unmount());
+  });
 });
 
 test('the Members page uses the system page-heading role', async () => {
