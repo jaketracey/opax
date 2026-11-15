@@ -57,7 +57,7 @@
  {
   "name": "read_record",
   "title": "Read a public record",
-  "description": "Open one record in full by its slug from search_records: a speech, press release, bill text, division, grant award or roster profile. Returns the text, metadata, the original source link and the OPAX page. A long text comes in parts: pass next_text_offset back as text_offset. An unknown slug returns found: false.",
+  "description": "Open one record in full by its slug from search_records: a speech, press release, bill text, division, grant award, roster profile or catalogue entry such as a bill (a bill entry gives the bill_id for bill_detail). Returns the text, metadata, the original source link and the OPAX page. A long text comes in parts: pass next_text_offset back as text_offset. An unknown slug returns found: false.",
   "annotations": {
    "title": "Read a public record",
    "readOnlyHint": true,

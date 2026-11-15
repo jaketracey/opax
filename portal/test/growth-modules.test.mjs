@@ -169,9 +169,9 @@ test('person sections are reused once, and money/vote pairings carry the associa
  assert.match(region,/Party disclosures, not this person’s finances\.<\/p>\$\{growthModules.associationHTML\(\)\}/);
  assert.doesNotMatch(region,/#person-pay, #person-expenses/);
 });
-test('suggested questions are plain links, and the bill module asks about the bill',()=>{
+test('suggested questions are links that carry the whole question, and the bill module asks about the bill',()=>{
  const html=askBlockHTML({name,pageType:'person',seed:'',questions:['What interests has Alex Example declared?']});
- assert.match(html,/<li><a href="\/ask\?[^"]+" rel="nofollow">What interests has Alex Example declared\?<\/a><\/li>/);
+ assert.match(html,/<li><a href="\/ask\?[^"]+" rel="nofollow" title="What interests has Alex Example declared\?">What interests has Alex Example declared\?<\/a><\/li>/);
  assert.doesNotMatch(html,/class="ui-button" href/);
  assert.match(askBlockHTML({bill:{title:'A Bill'},pageType:'bill'}),/<h2 id="growth-ask-title">Ask about this bill<\/h2>/);
 });
