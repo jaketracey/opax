@@ -72,6 +72,13 @@ export function useSeatMember(): string | null {
     .find(Boolean);
   return member?.name ?? null;
 }
+/**
+ * True until the saved seat has been read, so Try asking can hold its one
+ * row's place instead of drawing the general starter and then swapping it.
+ */
+function useSeatPending(): boolean {
+  return useSeat().status === 'loading';
+}
 // The member the seat starter put in Person, so a starter tapped next does
 // not inherit it.
 let seatFill: string | null = null;
@@ -86,16 +93,15 @@ export function fillComposer(question: string, speaker?: string) {
 
 /**
  * Ask with nothing asked yet (journeys/ask.md 4.1): one line under the
- * title, Try asking (the seat starter first when a seat is saved, which
- * only fills the composer, then today's starters, which ask at once), then
- * the newest Conversations. Four rows either way.
+ * title, Try asking, then the newest Conversations. Try asking is one row:
+ * the seat starter when a seat is saved (it only fills the composer), else
+ * the first of today's starters (it asks at once).
  */
 export function AskIdle({
   onAsk,
   offline,
   readFailed,
   now: nowProp,
-  starterCount = 4,
   showStarters = true,
   showConversations = true,
   conversationCount = 3,
@@ -105,7 +111,6 @@ export function AskIdle({
   offline: boolean;
   readFailed: boolean;
   now?: number;
-  starterCount?: number;
   /** False in the docked conversation column: the pane has the starters. */
   showStarters?: boolean;
   /** False in the sources pane: the conversation column has them. */
@@ -130,12 +135,16 @@ export function AskIdle({
   const now = nowProp ?? mounted;
   // Sydney's day, as Today's rotation counts it (DIRECTION 6.5).
   const day = sydneyDayIndex(now);
-  const starters = useMemo(
-    () => startersFor(now, member ? starterCount - 1 : starterCount),
+  const pending = useSeatPending();
+  // One starter (Jake, 15 Nov): the reader's own member when a seat is
+  // saved, else the first of the day's reviewed questions. Never a list.
+  const general = useMemo(
+    () => startersFor(now, 1)[0]!,
     // `now` only matters through its Sydney day.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [day, member, starterCount],
+    [day],
   );
+  const starters = member || pending ? [] : [general];
   const recent = saved.chats.slice(0, conversationCount);
   const menu = (question: string) => [
     { title: idleCopy.edit, onPress: () => fillComposer(question) },
@@ -168,8 +177,25 @@ export function AskIdle({
         <View style={sectionStyle}>
           <SectionHeader title={idleCopy.tryAsking} />
           <InsetGroup testID={`${testPrefix}-starters`}>
-            {/* With a seat saved, the first row is about the reader's own
-              member (sweep 1 item 7.2); the day's starters follow. */}
+            {/* One row. With a seat saved it is about the reader's own
+              member; while the saved seat is still being read its place is
+              held, so nothing under it moves when the member is known. */}
+            {!member && pending ? (
+              <View
+                pointerEvents="none"
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                testID={`${testPrefix}-starter-pending`}
+              >
+                <View style={styles.unseen}>
+                  <AskSuggestionRow
+                    question={general}
+                    variant="send"
+                    onPress={() => {}}
+                  />
+                </View>
+              </View>
+            ) : null}
             {member ? (
               <AskSuggestionRow
                 question={seatStarter(member)}

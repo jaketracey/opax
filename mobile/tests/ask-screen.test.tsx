@@ -1035,11 +1035,13 @@ test('starters follow Sydney’s day: 9:30 am on 10 Nov is 10 Nov, not UTC’s 9
     .mockReturnValue(Date.parse('2026-11-09T22:30:00Z'));
   try {
     await mount();
-    const shown = [0, 1, 2, 3].map((i) =>
-      a11y(`ask-starter-${i}`, 'accessibilityLabel'),
-    );
-    expect(shown).toEqual(startersFor(Date.UTC(2026, 10, 10, 2), 4));
-    expect(shown).not.toEqual(startersFor(Date.UTC(2026, 10, 9, 2), 4));
+    // One starter (Jake, 15 Nov): the first of the day's, never a list.
+    const shown = [a11y('ask-starter-0', 'accessibilityLabel')];
+    expect(shown).toEqual(startersFor(Date.UTC(2026, 10, 10, 2), 1));
+    expect(shown).not.toEqual(startersFor(Date.UTC(2026, 10, 9, 2), 1));
+    expect(byId('ask-starter-1')).toEqual([]);
+    expect(byId('ask-starter-seat')).toEqual([]);
+    expect(byId('ask-starter-pending')).toEqual([]);
   } finally {
     now.mockRestore();
   }
@@ -1344,7 +1346,7 @@ test('a starter asks at once; the seat starter only fills the composer', async (
   const renderer = await mount();
   const seat = one('ask-starter-seat');
   expect(seat).toBeDefined();
-  // Sweep 1 item 7.2: the member's row leads the four, above the day's three.
+  // One starter: with a seat saved it is the member's row, and nothing else.
   const order = renderer.root
     .findAll(
       (n) =>
@@ -1354,12 +1356,7 @@ test('a starter asks at once; the seat starter only fills the composer', async (
     )
     .map((n) => n.props.testID as string)
     .filter((id, i, all) => all.indexOf(id) === i);
-  expect(order).toEqual([
-    'ask-starter-seat',
-    'ask-starter-0',
-    'ask-starter-1',
-    'ask-starter-2',
-  ]);
+  expect(order).toEqual(['ask-starter-seat']);
   expect(a11y('ask-starter-seat', 'accessibilityLabel')).toBe(
     'What has Sam Placeholder said in parliament this year?',
   );
@@ -1375,17 +1372,57 @@ test('a starter asks at once; the seat starter only fills the composer', async (
     speaker: 'Sam Placeholder',
     kind: 'speech',
   });
-  // Three rotating starters plus the seat starter.
-  expect(byId('ask-starter-3')).toEqual([]);
-  // A fresh page: the seat starter's Person option set the composer's.
-  await act(async () => {
-    askSession.newConversation();
-  });
+  // No general starter beside the member's, and no held place.
+  expect(byId('ask-starter-0')).toEqual([]);
+  expect(byId('ask-starter-pending')).toEqual([]);
+});
+
+test('with no seat saved, the one starter is general and asks at once', async () => {
+  jest.mocked(client.askPost).mockResolvedValue(answer);
+  await mount();
+  expect(byId('ask-starter-seat')).toEqual([]);
+  expect(byId('ask-starter-1')).toEqual([]);
   const starter = a11y('ask-starter-0', 'accessibilityLabel')!;
+  expect(a11y('ask-starter-0', 'accessibilityHint')).toBe(
+    'Asks this question.',
+  );
   await press('ask-starter-0');
   expect(jest.mocked(client.askPost).mock.calls[0]?.[1]).toMatchObject({
     question: starter,
   });
+});
+
+test('while the saved seat is being read, the one row’s place is held and nothing is drawn or spoken there', async () => {
+  jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+  const renderer = await mount();
+  const held = renderer.root.find(
+    (n) =>
+      typeof n.type === 'string' && n.props.testID === 'ask-starter-pending',
+  );
+  expect(held.props).toMatchObject({
+    pointerEvents: 'none',
+    accessibilityElementsHidden: true,
+    importantForAccessibility: 'no-hide-descendants',
+  });
+  // The held row has the general starter's own shape, unseen.
+  const unseen = held.findAll(
+    (n) =>
+      typeof n.type === 'string' &&
+      StyleSheet.flatten(n.props.style)?.opacity === 0,
+  );
+  expect(unseen.length).toBeGreaterThan(0);
+  expect(byId('ask-starter-0')).toEqual([]);
+  expect(byId('ask-starter-seat')).toEqual([]);
+  // The seat answers "none": the general starter takes the held place.
+  jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+  await act(async () => {
+    askSession.setDraft('x');
+  });
+  await act(async () => {
+    askSession.setDraft('');
+  });
+  expect(byId('ask-starter-pending')).toEqual([]);
+  expect(byId('ask-starter-0')).not.toEqual([]);
 });
 
 test.each(['before', 'after'] as const)(
@@ -2635,10 +2672,10 @@ test.each([
       expect(hostIds('ask-conversations')).toHaveLength(1);
       expect(hostIds('ask-pane-idle-list')).toHaveLength(docked ? 1 : 0);
       const prefix = docked ? 'ask-pane' : 'ask';
-      const shown = [0, 1, 2, 3].map((i) =>
-        a11y(`${prefix}-starter-${i}`, 'accessibilityLabel'),
-      );
-      expect(shown).toEqual(startersFor(Date.parse('2026-11-13T04:00:00Z'), 4));
+      // One starter on every layout, phone and docked pane alike.
+      const shown = [a11y(`${prefix}-starter-0`, 'accessibilityLabel')];
+      expect(shown).toEqual(startersFor(Date.parse('2026-11-13T04:00:00Z'), 1));
+      expect(byId(`${prefix}-starter-1`)).toEqual([]);
       // A regular iPhone keeps the large title at idle, as its Bills does.
       expect(mockBar.options.headerLargeTitleEnabled).toBe(true);
     } finally {
