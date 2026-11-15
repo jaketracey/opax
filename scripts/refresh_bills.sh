@@ -8,6 +8,8 @@ PARLIAMENT="${OPAX_BILL_PARLIAMENT:-48}"
 # New registry bills must also see exact TVFY relationships already acquired.
 "$PY" -m parli.ingest.tvfy_bill_links
 "$PY" scripts/export_bills.py --out portal/public/bills
+# The dated index for the app's On this day rows follows the bill files.
+"$PY" scripts/build_on_this_day.py
 if [ "${OPAX_SYNC_KB:-0}" = 1 ]; then
   keys=$("$PY" - "$PARLIAMENT" <<'PY'
 import json,sys
