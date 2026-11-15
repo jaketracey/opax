@@ -24,6 +24,7 @@ import { isYearPicturePath } from '../src/api/year-picture-policy';
 import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
 import { searchFixture, searchResourceFixture } from './search-fixture';
+import { onThisDayAnswer, onThisDayLogLine } from './on-this-day-fixture';
 import {
   decodeEdition,
   decodePay,
@@ -326,6 +327,7 @@ const normalize = (value: string) =>
     .toLowerCase();
 const bill = JSON.parse(files.get('/bills/au-federal-r7534.json')!.toString());
 let voice: Awaited<ReturnType<typeof createVoiceFixture>> | undefined;
+let onThisDayLogged = false;
 export const server = createServer(async (request, response) => {
   let status = 200;
   let loud = false;
@@ -369,6 +371,22 @@ export const server = createServer(async (request, response) => {
     if (path.endsWith('.webp') && !isYearPicturePath(path))
       assertPortraitPath(path);
     else assertAllowedPath(path);
+    // A valid on-this-day date the snapshot does not pin is a quiet 404
+    // (scripts/on-this-day-fixture.ts); logged once a run.
+    const onThisDay = onThisDayAnswer(path, files.keys());
+    if (onThisDay && !onThisDayLogged) {
+      onThisDayLogged = true;
+      console.log(onThisDayLogLine(onThisDay));
+    }
+    if (onThisDay && !onThisDay.pinned) {
+      status = 404;
+      response.writeHead(status, {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+      });
+      response.end(JSON.stringify({ error: 'Not published' }));
+      return;
+    }
     const url = new URL(path, `http://127.0.0.1:${port}`);
     if (url.pathname === sittingDaysPath && !files.has(sittingDaysPath)) {
       status = 404;

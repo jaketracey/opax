@@ -463,6 +463,51 @@ test(
   fixtureHookTimeout,
 );
 
+describe('On this day in the fixture', () => {
+  let fixture: Fixture;
+  beforeAll(() => {
+    fixture = startEdition('pinned');
+    return fixture.ready;
+  }, fixtureHookTimeout);
+  afterAll(() => fixture?.stop());
+  const day = '/parliament/on-this-day/11-15.json';
+  test('a valid day the snapshot does not pin is a quiet 404, logged once a run', async () => {
+    expect(Object.keys(snapshot.files)).not.toContain(day);
+    for (const path of [day, day, '/parliament/on-this-day/02-29.json']) {
+      const result = await getAt(fixture.port(), path);
+      expect(result.status).toBe(404);
+      expect(JSON.parse(result.body)).toEqual({ error: 'Not published' });
+      expect(result.headers['cache-control']).toBe('no-store');
+    }
+    await waitForOutput(
+      '"path":"/parliament/on-this-day/02-29.json","status":404,"allowed":true',
+      fixture,
+    );
+    const log = fixture.log();
+    expect(log).toContain(`"path":"${day}","status":404,"allowed":true`);
+    expect(log).not.toContain('OUTSIDE_ALLOW_LIST');
+    expect(log).not.toContain('"allowed":false');
+    // Once a run, for the first day asked.
+    expect(log.match(/^ONTHISDAY .*$/gm)).toEqual([
+      'ONTHISDAY 11-15 -> 404 (not pinned)',
+    ]);
+  });
+  test.each([
+    `${day}?x=1`,
+    '/parliament/on-this-day/13-40.json',
+    `${day}.bak`,
+    `${day}/extra`,
+  ])('%s is still outside the allow-list', async (path) => {
+    const result = await getAt(fixture.port(), path);
+    expect(result.status).toBe(404);
+    await waitForOutput(`OUTSIDE_ALLOW_LIST GET ${path}`, fixture);
+    expect(fixture.log()).toContain(`OUTSIDE_ALLOW_LIST GET ${path}`);
+    expect(JSON.parse(result.body)).toEqual({
+      error: 'Route is outside the fixture allow-list',
+    });
+  });
+});
+
 describe('the no-edition fixture', () => {
   let fixture: Fixture;
   beforeAll(() => {
