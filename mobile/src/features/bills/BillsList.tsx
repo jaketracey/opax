@@ -93,8 +93,9 @@ import {
 } from './filters';
 import type { BillEntry } from './navigation';
 import { onThisDay } from './on-this-day';
-import { OnThisDayRow, useSydneyDay } from './OnThisDay';
+import { OnThisDayRow } from './OnThisDay';
 import { BillIndexRow } from './parts';
+import { useSydneyDay } from './sydney-day';
 import { useCatalogRecord } from './useCatalogRecord';
 
 // Short enough for the bar's field on a phone and beside a Duo's split

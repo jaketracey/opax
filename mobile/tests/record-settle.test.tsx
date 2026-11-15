@@ -85,7 +85,7 @@ describe('a division’s bar', () => {
       ]),
     );
     // Its width is the ayes' share from the start: only the scale moves.
-    expect(JSON.stringify(style)).toContain('"width":"58.01526717557252%"');
+    expect(JSON.stringify(style)).toContain(`"width":"${(76 / 131) * 100}%"`);
     expect(runs()).toHaveLength(1);
     expect(runs()[0]).toMatchObject({
       toValue: 1,

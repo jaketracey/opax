@@ -3,7 +3,11 @@
 // Bills list. Invented bills prove the rule; the pinned register proves the
 // row.
 import { act } from 'react';
-import { useWindowDimensions } from 'react-native';
+import {
+  AppState,
+  useWindowDimensions,
+  type AppStateStatus,
+} from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billName } from '../src/api/bill-transforms';
 import { Catalogs, type Bill } from '../src/api/catalogs';
@@ -46,9 +50,8 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   default: jest.fn(),
 }));
 let mockDay = '2026-11-15';
-jest.mock('../src/features/today/rules', () => ({
-  ...jest.requireActual('../src/features/today/rules'),
-  sydneyDay: () => mockDay,
+jest.mock('../src/features/bills/sydney-day', () => ({
+  useSydneyDay: () => mockDay,
 }));
 let mockReduced = false;
 jest.mock('../src/design/accessibility', () => ({
@@ -125,6 +128,46 @@ describe('the rule', () => {
   test('the rule sheet names the source and no person or party', () => {
     expect(ON_THIS_DAY_RULE).toContain('ParlInfo');
     expect(ON_THIS_DAY_RULE).not.toMatch(/—|most|top|best/i);
+  });
+});
+
+describe('the day', () => {
+  const { useSydneyDay } = jest.requireActual<
+    typeof import('../src/features/bills/sydney-day')
+  >('../src/features/bills/sydney-day');
+  afterEach(() => jest.restoreAllMocks());
+
+  test('is Sydney’s calendar day, read again when the app comes forward', () => {
+    let listener: ((state: AppStateStatus) => void) | undefined;
+    const remove = jest.fn();
+    jest.spyOn(AppState, 'addEventListener').mockImplementation(((
+      _type: string,
+      fn: (state: AppStateStatus) => void,
+    ) => {
+      listener = fn;
+      return { remove };
+    }) as never);
+    const now = jest
+      .spyOn(Date, 'now')
+      // 13:30 UTC on 15 November is already the 16th in Sydney.
+      .mockReturnValue(Date.UTC(2026, 10, 15, 13, 30));
+    const seen: string[] = [];
+    function Probe() {
+      seen.push(useSydneyDay());
+      return null;
+    }
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(<Probe />);
+    });
+    expect(seen.at(-1)).toBe('2026-11-16');
+    now.mockReturnValue(Date.UTC(2026, 10, 16, 13, 30));
+    act(() => listener!('background'));
+    expect(seen.at(-1)).toBe('2026-11-16');
+    act(() => listener!('active'));
+    expect(seen.at(-1)).toBe('2026-11-17');
+    act(() => r.unmount());
+    expect(remove).toHaveBeenCalledTimes(1);
   });
 });
 

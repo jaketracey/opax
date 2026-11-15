@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import { AppState } from 'react-native';
 import { billName } from '../../api/bill-transforms';
 import {
   useAccessibilitySize,
@@ -11,20 +9,7 @@ import { LinkRow } from '../../design/rows';
 import { Text } from '../../design/text';
 import { billRoute } from '../../navigation/routes';
 import { presentSheet } from '../../navigation/sheets';
-import { sydneyDay, type SydneyDate } from '../today/rules';
 import { ON_THIS_DAY_RULE, type OnThisDayBill } from './on-this-day';
-
-/** The Sydney calendar day, checked again each time the app comes forward. */
-export function useSydneyDay(): SydneyDate {
-  const [day, setDay] = useState(() => sydneyDay());
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active') setDay(sydneyDay());
-    });
-    return () => subscription.remove();
-  }, []);
-  return day;
-}
 
 /**
  * On this day, in the Bills list's header: "On this day in 2018", the bill's

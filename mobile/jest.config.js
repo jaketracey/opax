@@ -23,6 +23,7 @@ module.exports = {
   setupFilesAfterEnv: [
     '<rootDir>/tests/hermes-runtime.js',
     '<rootDir>/tests/native-map-mocks.js',
+    '<rootDir>/tests/pinned-day.js',
     '<rootDir>/tests/renderer-cleanup.js',
     '<rootDir>/tests/session-cleanup.js',
   ],
