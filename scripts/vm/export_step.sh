@@ -30,19 +30,21 @@ case "$mode" in
       also_dest+=("$2"); also_tmp+=("$3"); shift 3
     done
     # A scratch file is removed before the export and again on exit: it must never be a published file (its own
-    # DEST, the main DEST or another companion's), nor be named twice.
-    for i in "${!also_tmp[@]}"; do
-      for d in "$dest" "${also_dest[@]}"; do
-        if [ "${also_tmp[$i]}" = "$d" ] || [ "${also_tmp[$i]}" -ef "$d" ]; then
-          echo "export_step.sh: the scratch file ${also_tmp[$i]} is the published file $d; nothing run" >&2; exit 64
-        fi
-      done
-      for j in "${!also_tmp[@]}"; do
-        if [ "$i" != "$j" ] && [ "${also_tmp[$i]}" = "${also_tmp[$j]}" ]; then
-          echo "export_step.sh: the scratch file ${also_tmp[$i]} is named twice; nothing run" >&2; exit 64
-        fi
-      done
-    done
+    # DEST, the main DEST or another companion's), nor be named twice. Paths are compared resolved, so another
+    # spelling of the same file (./tmp/x.json, a symlink) and a DEST that does not exist yet are caught too.
+    if [ "${#also_tmp[@]}" -gt 0 ]; then
+      "$PY" -c 'import os, sys
+count = (len(sys.argv) - 2) // 2
+published = {os.path.realpath(p): p for p in sys.argv[1:2 + count]}
+seen = {}
+for raw in sys.argv[2 + count:]:
+    path = os.path.realpath(raw)
+    if path in published:
+        sys.exit(f"export_step.sh: the scratch file {raw} is the published file {published[path]}; nothing run")
+    if path in seen:
+        sys.exit(f"export_step.sh: the scratch files {seen[path]} and {raw} are the same file; nothing run")
+    seen[path] = raw' "$dest" "${also_dest[@]}" "${also_tmp[@]}" || exit 64
+    fi
     tmp=$(mktemp "${TMPDIR:-/tmp}/export.XXXXXX")
     trap 'rm -f "$tmp" "${also_tmp[@]+"${also_tmp[@]}"}"' EXIT
     rm -f "${also_tmp[@]+"${also_tmp[@]}"}"

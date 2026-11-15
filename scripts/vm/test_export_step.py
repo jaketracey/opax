@@ -8,7 +8,6 @@ data group owned them. The portal gate could neither put them back with the mone
 so a blame trial tested HEAD's map against the night's receipts, and a green night would have published the
 map without them.
 """
-import fnmatch
 import json
 import os
 import re
@@ -134,6 +133,39 @@ class ExportStepCompanions(unittest.TestCase):
             self.assertEqual(self.changed(), [], also)
             self.assertEqual((self.repo / "out/a.json").read_bytes(), before)
 
+    def test_one_scratch_file_under_two_spellings_is_refused(self):
+        # review repro: tmp/x.json and ./tmp/x.json both received the second file's content, exit 0
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/a.json", "tmp/x.json", "--also", "out/b.json", "./tmp/x.json",
+             sys.executable, "exporter.py", "2", "0", "tmp/x.json", "./tmp/x.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 64, proc.stderr)
+        self.assertIn("are the same file", proc.stderr)
+        self.assertEqual(self.changed(), [])
+
+    def test_a_scratch_path_that_is_a_new_published_file_is_refused(self):
+        # review repro: DEST did not exist yet, so -ef was false; the file was installed, then removed on exit
+        for scratch in ("./out/new.json", "out/../out/new.json"):
+            proc = subprocess.run(
+                ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+                 "--also", "out/new.json", scratch, "--also", "out/b.json", "tmp/b.json",
+                 sys.executable, "exporter.py", "2", "0", scratch, "tmp/b.json"],
+                cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 64, (scratch, proc.stderr))
+            self.assertIn("is the published file out/new.json", proc.stderr)
+            self.assertEqual(self.changed(), [], scratch)
+            self.assertFalse((self.repo / "out/new.json").exists())
+
+    def test_a_new_companion_file_is_installed_and_stays(self):
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/new.json", "tmp/new.json", "--also", "out/b.json", "tmp/b.json",
+             sys.executable, "exporter.py", "2", "0", "tmp/new.json", "tmp/b.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(json.loads((self.repo / "out/new.json").read_text())["n"], 2)
+
     def test_companions_are_not_left_in_the_scratch_directory(self):
         self.step(2)
         self.assertEqual(list((self.repo / "tmp").iterdir()), [])
@@ -166,7 +198,14 @@ class PeriodicExportsAreOwned(unittest.TestCase):
         """A named path is owned when it is a group path or lies under one; a pattern with a variable is owned
         when a group path matches it whole."""
         if "*" in pattern:
-            return any(fnmatch.fnmatchcase(p, pattern) for p in owned)
+            # The variable may stand for part of one file name only, after a literal start (money.$j.json): a
+            # variable that is a whole path segment, or the whole stem of a name ($name.json), could expand to
+            # anything, so it proves nothing and the path has to be named in full.
+            if any("*" in part and not re.match(r"[A-Za-z0-9_-]", part) for part in pattern.split("/")):
+                return False
+            whole = re.compile("".join(r"[A-Za-z0-9_-]+" if piece == "*" else re.escape(piece)
+                                       for piece in re.split(r"(\*)", pattern)))
+            return any(whole.fullmatch(p) for p in owned)
         if pattern.endswith(".tmp"):   # the scratch copy a step writes beside an owned file and then moves over it
             pattern = pattern[:-len(".tmp")]
         return any(pattern == p or pattern.startswith(p + "/") for p in owned)
@@ -178,6 +217,12 @@ class PeriodicExportsAreOwned(unittest.TestCase):
         self.assertTrue(self.covered("portal/public/graph/money.*.json", owned))
         self.assertFalse(self.covered("portal/public/graph/mon", owned), "a bare prefix of an owned path")
         self.assertFalse(self.covered("portal/public/graph/money.*.csv", owned))
+        # a variable that could expand to anything proves nothing, even though some owned path matches it
+        self.assertEqual(self.named_in("x portal/public/$f y"), ["portal/public/*"])
+        self.assertFalse(self.covered("portal/public/*", owned))
+        self.assertFalse(self.covered("portal/public/graph/*.json", owned))
+        self.assertFalse(self.covered("portal/public/*/money.json", owned))
+        self.assertFalse(self.covered("portal/public/graph/money*json", owned))
         self.assertFalse(self.covered("portal/public/graph/money-receipts.json", owned))
         self.assertTrue(self.covered("portal/public/interests/index.json", owned))
         self.assertFalse(self.covered("portal/public/interests-old", owned))
