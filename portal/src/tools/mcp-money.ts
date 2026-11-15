@@ -22,7 +22,7 @@ export const moneyReceipts: ToolDefinition = {
     financial_year: { type: 'string', pattern: '^(19|20)[0-9]{2}-([0-9]{2}|(19|20)[0-9]{2})$', description: 'One financial year, e.g. 2023-24.' },
     from_year: { type: 'integer', minimum: 1990, maximum: 2099, description: 'First financial year, by starting year (2019 means 2019-20).' },
     to_year: { type: 'integer', minimum: 1990, maximum: 2099, description: 'Last financial year, by starting year.' },
-    measure: { type: 'string', enum: Object.keys(MEASURE_LABELS), description: 'all_receipts (default) or donations_only. Party totals always cover all receipt types.' },
+    measure: { type: 'string', enum: Object.keys(MEASURE_LABELS), description: 'all_receipts (default, every receipt type) or donations_only (Donation Received only).' },
     lending: { type: 'boolean', description: 'With a party: also list the debts the party\'s own returns declare. No receipt is labelled a loan.' },
     detail: detailProp('the counting basis, coverage dates and receipts only the donor declared.'),
     limit: limitProp(25, 10), cursor: cursorProp,
@@ -62,7 +62,7 @@ export const moneyReceipts: ToolDefinition = {
     const apart = cites.slice(rows.length).map(cite => ({ statement: cite.text, amount_aud: typeof cite.value === 'number' ? cite.value : null, url: cite.url }))
     // A donor with only non-donation receipts, or a period outside coverage, has no ranked rows: its lines still answer.
     const other_lines = rows.length ? apart : data.coverage_only === true && !data.donor_declared ? [] : cites.map(cite => ({ statement: cite.text, amount_aud: typeof cite.value === 'number' ? cite.value : null, url: cite.url }))
-    // Party aggregates have no type split, so they are never labelled donations.
+    // A figure is labelled by the measure the calculator actually applied, never by the one asked for.
     const measure = data.measure === 'donations' ? 'donations_only' : 'all_receipts'
     // A donor query links the page focused on that donor, as its own lines do, when they name one donor.
     const focused = args.donor ? [...new Set(cites.map(cite => new URL(cite.url, 'https://opax.com.au').searchParams.get('focus')).filter(Boolean))] : []
