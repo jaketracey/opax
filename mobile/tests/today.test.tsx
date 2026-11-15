@@ -1177,11 +1177,44 @@ describe('since your last visit', () => {
     await expect(readVisit()).resolves.toMatchObject({ total: 1412 });
   });
 
-  test('a total that did not grow draws no line; its held place stays until Today is out of view', async () => {
+  test('a held place is never left blank: a total that did not grow says so, with the same source and link', async () => {
     await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
     setUp({ cached: { date: addDays(today, -1) } });
     // The total fell: never a negative or a "fewer" line.
     mock.corpus.mockResolvedValue(corpus(990, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    const line = hosts(r, 'today-since')[0]!;
+    expect(line.props.accessibilityLabel).toBe(
+      'The OPAX record count hasn’t grown since your last visit. As at 15 Nov 2026, OPAX collection coverage record.',
+    );
+    expect(line.props.accessibilityRole).toBe('link');
+    expect(line.props.accessibilityHint).toBe('Opens Just added');
+    let owner: ReactTestInstance | null = line;
+    while (owner && owner.props.href === undefined) owner = owner.parent;
+    expect(owner!.props.href).toBe(recentRecordsRoute);
+    expect(owner!.props.menu.map((m: { title: string }) => m.title)).toEqual([
+      'Sources',
+    ]);
+    // The same total says the same.
+    await rememberVisit({ openedAt: 1, total: 990, checkedAt: longAgo() });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpus.mockResolvedValue(corpus(990, '2026-11-15T03:00:00+00:00'));
+    const same = await render(<Today />);
+    expect(hosts(same, 'today-since')[0]!.props.accessibilityLabel).toMatch(
+      /^The OPAX record count hasn’t grown since your last visit\./,
+    );
+    // It stays when Today goes out of view and comes back.
+    const blur = mockFocusEffects
+      .map((effect) => effect() as unknown)
+      .filter((left): left is () => void => typeof left === 'function');
+    await act(async () => blur.forEach((leave) => leave()));
+    expect(hosts(same, 'today-since')).not.toHaveLength(0);
+  });
+
+  test('a held place whose record could not be read has nothing true to say: it is given back out of view', async () => {
+    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
+    setUp({ cached: { date: addDays(today, -1) } });
     const r = await render(<Today />);
     expect(hosts(r, 'today-since')).toHaveLength(0);
     expect(hosts(r, 'today-since-reserved')).toHaveLength(1);

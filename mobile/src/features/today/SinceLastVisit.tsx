@@ -97,7 +97,15 @@ export const COLLECTION_RECORD = 'OPAX collection coverage record';
  * total, so it says "more records in OPAX", which is exactly what it is.
  */
 export const sinceWords = (count: number) =>
-  `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since your last visit`;
+  count > 0
+    ? `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since your last visit`
+    : NO_GROWTH;
+
+/**
+ * The held place is never left blank: a total that has not grown (the same,
+ * or smaller) is said as plainly, with the same source and the same link.
+ */
+const NO_GROWTH = 'The OPAX record count hasn’t grown since your last visit';
 
 /** The line's source, in the line: the record's own check date and name. */
 export const sinceSourceWords = (checkedAt: DateInput) =>
@@ -133,9 +141,11 @@ const RESERVED_WORDS = `${sinceWords(400)}. ${sinceSourceWords('2026-11-16')}`;
  * visit. As at 15 Nov 2026, OPAX collection coverage record." It opens Just
  * added; touch and hold (or its VoiceOver action) opens the sources.
  *
- * Nothing is drawn unless `hold` was set on the first frame. While the
- * record is read, and when the total did not grow, the held place stays
- * empty; Today gives it back once it is out of view (`dropped`).
+ * Nothing is drawn unless `hold` was set on the first frame. A held place
+ * always ends in a true line: the count, or that the count hasn't grown.
+ * Only while the record is read is it empty, and when the record could not
+ * be read at all, where there is nothing true to say: Today gives that
+ * place back once it is out of view (`dropped`).
  */
 export function SinceLine({
   since,
@@ -152,7 +162,7 @@ export function SinceLine({
   );
   if (!since.hold) return null;
   const answer = since.answer;
-  if (!answer || answer.count <= 0)
+  if (!answer || !answer.checkedAt)
     return dropped && answer ? null : (
       <Text
         wordSafe={fixed}
@@ -168,7 +178,7 @@ export function SinceLine({
       </Text>
     );
   const words = sinceWords(answer.count);
-  const source = answer.checkedAt ? sinceSourceWords(answer.checkedAt) : '';
+  const source = sinceSourceWords(answer.checkedAt);
   const details = sinceSources(answer);
   const band = Math.max(0, (minimumTarget - textHeight) / 2);
   return (
@@ -185,7 +195,7 @@ export function SinceLine({
       <Pressable
         accessible
         accessibilityRole="link"
-        accessibilityLabel={`${words}. ${source}`.trim()}
+        accessibilityLabel={`${words}. ${source}`}
         accessibilityHint="Opens Just added"
         testID="today-since"
         onPress={() => router.push(recentRecordsRoute)}
@@ -213,7 +223,7 @@ export function SinceLine({
           <Text variant="secondary" tone="link" testID="today-since-count">
             {words}
           </Text>
-          {source ? `. ${source}` : ''}
+          {`. ${source}`}
         </Text>
       </Pressable>
     </RowLink>
