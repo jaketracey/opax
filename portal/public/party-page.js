@@ -6,7 +6,7 @@ import {fy} from './money-scope.js';
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=fcb2a1091c';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=249097b26e';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=9ce13e7ba5';
 // sponsor-party-aliases:begin
 // Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
@@ -56,7 +56,7 @@ const SPONSOR_PARTY_ALIASES = {
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=fcb2a1091c';
+export * from './labels.js?v=249097b26e';
 export * from './canonical-urls.js?v=9ce13e7ba5';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
@@ -390,6 +390,93 @@ export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
 }
 
 const identity = label => PARTY_MAP[fold(label)]?.[1] || fold(label);
+
+/* Registered parties and their candidates (the party index's `registered`, scripts/build_party_index.mjs
+   registeredParties): today the VEC's register and the 2026 Victorian candidate lists. A registered name is
+   joined to its party by the one alias map (labels.js PARTY_ALIASES), so "Australian Labor Party - Victorian
+   Branch" is Labor's page and never a page of its own. Every registered party is treated the same way: its
+   page carries its registration and its candidates, whether the record holds anything else about it or not. */
+const registers = divisions => Object.values(divisions?.registered || {}).filter(r => Array.isArray(r?.parties));
+/** A party's entry on a register, with the register it is on, or null: {register, party}. */
+export function partyRegistration(label, divisions) {
+  for (const register of registers(divisions)) {
+    const party = register.parties.find(p => identity(p.name) === identity(label));
+    if (party) return {register, party};
+  }
+  return null;
+}
+/** True when the register is all the record holds of a party: no money file, roster, division or bill names it. */
+export const registerOnlyParty = page => Boolean(page?.register && !page.money && !page.roster && !page.divisions && !page.bills);
+/** The registration and candidate sentences, shared by the page, its description and the search entry. */
+export function partyRegistrationText({register, party}) {
+  const election = register.election || {}, n = (party.candidates || []).length;
+  return {
+    registered: `Registered with the ${register.authority} as ${party.name}. First registered ${dayMonthYear(party.first_registered)}${
+      party.re_registered ? `; re-registered ${dayMonthYear(party.re_registered)}` : ''}.${party.abbreviation ? ` Registered abbreviated name: ${party.abbreviation}.` : ''}`,
+    candidates: n ? `${n.toLocaleString('en-AU')} candidate${n === 1 ? '' : 's'} at the ${election.name}, ${dayMonthYear(election.day)}.`
+      : `No candidates at the ${election.name}, ${dayMonthYear(election.day)}.`,
+  };
+}
+const CANDIDATES_SHOWN = 12;
+/** The registration block: the registered name and dates, then the party's candidates in the commission's
+ *  published order, each with its seat's election page. Names are printed as the commission lists them.
+ *  `h` carries app.js's esc and sourceLineHTML (the Worker passes its own). Empty for an unregistered party. */
+export function partyRegistrationHTML(label, divisions, h) {
+  const found = partyRegistration(label, divisions);
+  if (!found) return '';
+  const {register, party} = found, election = register.election || {}, text = partyRegistrationText(found);
+  const row = c => {
+    const seat = register.seats?.[c.seat];
+    const name = `${c.seat} ${seat?.kind === 'region' ? 'Region' : 'District'}`;
+    return `<li><span class="party-candidate-name">${h.esc(c.name)}</span> ${
+      seat?.path ? `<a href="${h.esc(seat.path)}">${h.esc(name)}</a>` : `<span>${h.esc(name)}</span>`}</li>`;
+  };
+  const list = party.candidates || [], shown = list.slice(0, CANDIDATES_SHOWN), rest = list.slice(CANDIDATES_SHOWN);
+  const source = h.sourceLineHTML ? h.sourceLineHTML({updated: register.retrieved, dateLabel: 'Register read', source: register.authority,
+    originals: [{href: register.url, label: 'Register of political parties'}, {href: election.candidates_url, label: 'Candidate lists'}],
+    notes: [h.esc(`Registered names, dates and abbreviated names are the register's. Candidates are those the commission published on ${dayMonthYear(election.candidates_published)}, in its order: districts, then regions. A party is shown its registration and candidates in the same way as every other registered party.`)],
+    licence: h.esc(register.licence || '')}) : '';
+  return `<section class="party-registration" id="party-registration">
+    <h2 class="subject-section-title">${h.esc(election.name)}</h2>
+    <p>${h.esc(text.registered)}</p>
+    <p>${h.esc(text.candidates)}${election.path ? ` <a href="${h.esc(election.path)}">All seats and candidates</a>` : ''}</p>
+    ${shown.length ? `<ul class="subject-list party-candidates" role="list">${shown.map(row).join('')}</ul>` : ''}
+    ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString('en-AU')} more candidate${rest.length === 1 ? '' : 's'}</summary>
+      <ul class="subject-list party-candidates" role="list">${rest.map(row).join('')}</ul></details>` : ''}
+    ${source}
+  </section>`;
+}
+/* Where a registered party's label links: its one party page. A party the money files name keeps their
+   spelling in its address ("Labor"), which a registered name alone cannot give, so those are listed; every
+   other registered party's page is at its registered name. test/vic-party-pages.test.mjs checks each against
+   the built pages, and the Worker sends any other spelling of a party to its page (canonicalRoutePath). */
+const REGISTERED_PAGE_LABELS = {ALP: 'Labor', LIB: 'Liberal', NAT: 'Nationals', GRN: 'Greens', ONP: 'One Nation', FF: 'Family First',
+  LCP: 'Legalise Cannabis', SFF: 'Shooters, Fishers and Farmers', DLP: 'DLP'};
+export const registeredPartyUrl = name => partyUrl(REGISTERED_PAGE_LABELS[identity(name)] || name);
+/** `html` with each party label in it (labels.js partyLabelHTML), in order, linked to the matching address
+ *  in `hrefs`; the label's own markup and text are unchanged. A count that does not match links nothing. */
+export function linkPartyLabels(html, hrefs) {
+  const spans = [];
+  for (let at = 0; ;) {
+    const start = html.indexOf('<span class="ui-party', at);
+    if (start < 0) break;
+    // The label's closing tag: the one that balances its own opening, past the spans inside it.
+    const tag = /<(\/?)span\b[^>]*>/g;
+    tag.lastIndex = start;
+    let depth = 0, end = -1;
+    for (let m; (m = tag.exec(html));) { depth += m[1] ? -1 : 1; if (!depth) { end = tag.lastIndex; break; } }
+    if (end < 0) return html;
+    spans.push([start, end]);
+    at = end;
+  }
+  if (spans.length !== hrefs.length) return html;
+  let out = '', at = 0;
+  for (const [i, [start, end]] of spans.entries()) {
+    out += `${html.slice(at, start)}<a class="party-link" href="${String(hrefs[i]).replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`)}">${html.slice(start, end)}</a>`;
+    at = end;
+  }
+  return out + html.slice(at);
+}
 /** A renamed party's entry (labels.js PARTY_RENAMES) for its current or a former name, or null. */
 function renameOf(label, renames = PARTY_RENAMES) {
   const key = fold(label);
@@ -495,7 +582,7 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
     if (!label || label.length > 120 || /^(?:null|undefined|PRES|DPRES|SPK|DSPK|CWM|CHAIR)$/i.test(label)) return;
     // A renamed party is one page under every name it was recorded as (labels.js PARTY_RENAMES).
     const key = renameOf(label, renames) ? `rename:${renameOf(label, renames).code}` : identity(label);
-    if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, bills: false, lastmod: '' });
+    if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, bills: false, register: false, lastmod: '' });
     const page = parties.get(key);
     if (!page.aliases.includes(label)) page.aliases.push(label);
     if (source === 'money' && !page.money) page.label = label;
@@ -510,6 +597,10 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
   for (const label of labels) add(label, 'divisions', divisions?.generated_at || roster?.meta?.generated);
   // A sponsor's party the bills register records ("Rex Patrick Team"): its page lists the bills.
   for (const [label, bills] of Object.entries(divisions?.bills || {})) add(label, 'bills', (bills || []).map(b => b.introduced || '').sort().at(-1));
+  // A party on an electoral commission's register ("Australian Labor Party - Victorian Branch", "Victorian
+  // Socialists"): its registered name is an alias of the page its identity already has, and a page of its own
+  // only where the record holds the party nowhere else. Last, so it never renames an existing page.
+  for (const register of registers(divisions)) for (const party of register.parties || []) add(party.name, 'register', register.retrieved);
   return [...parties.values()].map(page => {
     const rename = renameOf(page.label, renames);
     // A renamed party's page carries its current name and address, whatever name the money file held;
@@ -552,6 +643,7 @@ export function resolvePartyPage(segment, pages) {
 
 export function partyPageCoverage(page) {
   if (isIndependent(page.label)) return INDEPENDENTS_DESCRIPTION;
-  const held = page.roster ? `Parliamentary roster${page.divisions ? ' and recorded divisions' : ''}` : page.divisions ? 'Recorded divisions' : page.bills ? 'Bill sponsor records' : 'Recorded divisions';
+  const held = page.roster ? `Parliamentary roster${page.divisions ? ' and recorded divisions' : ''}` : page.divisions ? 'Recorded divisions' : page.bills ? 'Bill sponsor records'
+    : page.register ? 'Electoral commission register of political parties and published candidate lists' : 'Recorded divisions';
   return page.money ? 'Published political receipts; federal and state returns remain separate.' : `${held}. No party-level disclosure file held by OPAX.`;
 }

@@ -1,4 +1,5 @@
 import {partyLabelHTML, partyShortName} from '../public/party-page.js'
+import {linkPartyLabels, registeredPartyUrl} from '../public/party-page.js'
 import {shortDate} from '../public/format.js'
 import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_DAY_START, VIC_ELECTION_EARLY_OPEN, VIC_ELECTION_EARLY_CLOSE, VIC_ELECTION_RESULTS_URL, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
@@ -186,7 +187,9 @@ function candidates(s: Seat) {
   } else {
     body = `<ol class="vic-candidates" role="list">${s.candidates.list.map((c,i)=>row(c,i+1)).join('')}</ol>`
   }
-  return section('candidates','Candidates',body,
+  // Each party label links to that party's one page (party-page.js): every registered party has one.
+  const partyPages = s.candidates.list.filter(c => c.party && c.party.toLowerCase() !== 'independent').map(c => registeredPartyUrl(c.party))
+  return section('candidates','Candidates',linkPartyLabels(body,partyPages),
     `In ballot paper order, as published by the VEC on ${esc(shortDate(s.candidates.published))}. ${link(s.candidates.url,'VEC candidate list')}`)
 }
 

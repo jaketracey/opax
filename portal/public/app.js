@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=76942228e3").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=b2779a51fb").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,13 +56,13 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=07eea0e196").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=958ed46f1a").then(module => { growthModules = module; }));
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=4596ba3c63').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=249097b26e').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1606,7 +1606,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=9eb86ce57b' : '/ledger.js?v=06503ff262');
+    const mod = await import(grants ? '/grants.js?v=946660940b' : '/ledger.js?v=fcaef0ba29');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1637,7 +1637,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=0e937c8404');
+    const mod = await import('/money-explain.js?v=998d2a4965');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1656,7 +1656,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=43775fa359');
+    const mod = await import('/grant-recipient.js?v=9bd7e63f1d');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1909,7 +1909,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=164cd28997");
+    const module = await import("/suppliers.js?v=0b6ebc048d");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5622,7 +5622,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=8be817cd12'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=33273928d2'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5861,6 +5861,20 @@ async function renderPartySponsoredBills(label, sections, key) {
   slot.remove();
 }
 
+/** A registered party's registration and candidates (party-page.js partyRegistrationHTML, from the party
+ *  index's `registered`): the same block on every registered party's page. Its slot is placed at once,
+ *  like the Members block; a party on no register has no block. */
+async function renderPartyRegistration(label, sections, key) {
+  const slot = document.createElement("section");
+  slot.id = "party-registration";
+  sections.appendChild(slot);
+  const [divisions, partyPage] = await Promise.all([loadPartyMembers(), loadPartyPage()]);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  const html = divisions ? partyPage.partyRegistrationHTML(label, divisions, partyPageHelpers()) : "";
+  if (html) slot.insertAdjacentHTML("beforebegin", html);
+  slot.remove();
+}
+
 /** A party with no money-map node: one senator's own party, a party from before the
  *  disclosure files, a state-only party. Named from the roster, the division records,
  *  the state money files or the record's party labels; a name none of them holds is not
@@ -5897,6 +5911,14 @@ async function renderRosterParty(segment, key, body) {
   if (page.href !== location.pathname) replaceRoute(page.href);
   currentSubjectKey = key = `party:${label}`;
   setCrumbs(crumbsFor("/subject/party", label));
+  // A party the register alone records: its name, its registration and its candidates, nothing else
+  // (party-page.js registerOnlyParty). No members, speeches or money are implied by blocks that would be empty.
+  if (partyPage.registerOnlyParty(page)) {
+    subjectTag(body).innerHTML = tagLineHTML([partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`]);
+    box.innerHTML = "";
+    sections.innerHTML = partyPage.partyRegistrationHTML(label, divisions, partyPageHelpers());
+    return;
+  }
   const members = partyPage.partyMembers(label, { roster, divisions, same: samePartyLabel });
   // A party with money or divisions but no speech in the record ("Reason Party") offers no empty search.
   const speeches = partyPage.partySpeechLabel(label, { indexed, roster, same: samePartyLabel });
@@ -5925,6 +5947,7 @@ async function renderRosterParty(segment, key, body) {
   settle(renderPartyMembers(label, body, key));
   await settle(renderPartyMemberList(label, sections, key, { speechesLink: false })); // the head's button says it
   if (currentSubjectKey !== key) return;
+  settle(renderPartyRegistration(label, sections, key));
   settle(renderPartySponsoredBills(label, sections, key));
   const stateMoney = partyPage.partyStateMoneyHTML(label, states.map((jur, i) => [jur, stateFiles[i]]), partyPageHelpers());
   if (stateMoney) sections.insertAdjacentHTML("beforeend", stateMoney);
@@ -6512,6 +6535,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (isParty) {
       settle(renderPartyMembers(node.label, body, key));
       settle(renderPartyMemberList(node.label, sections, key));
+      settle(renderPartyRegistration(node.label, sections, key));
       settle(renderPartySponsoredBills(node.label, sections, key));
       settle(renderPartyDebts(node.label, sections));
       settle(renderPartyBillDivisions(node.label, sections, key));
@@ -6911,7 +6935,7 @@ const PERSON_RAIL = [
 ];
 /* The same rail on a party's and a donor's entry (it replaced their Quick facts). */
 const PARTY_RAIL = [
-  ["entry-flows", "Where it came from"], ["party-members", "Members"], ["party-sponsored-bills", "Bills sponsored"], ["party-state-money", "State commissions"],
+  ["entry-flows", "Where it came from"], ["party-members", "Members"], ["party-registration", "2026 Victorian election"], ["party-sponsored-bills", "Bills sponsored"], ["party-state-money", "State commissions"],
   ["party-receipts", "Receipts on the return"], ["party-debts", "Debts"],
   ["party-entities", "Associated entities"], ["party-bills", "Bills they divided on"], ["entry-mentions", "In parliament"],
   ["entry-news", "In the news"],
@@ -7791,7 +7815,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=4533ad7591").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=99bb8cac04").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -10209,7 +10233,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=0e937c8404"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=998d2a4965"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10225,14 +10249,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=526db913ca", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=58f66cc086", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=06503ff262", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9eb86ce57b", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=fcaef0ba29", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=946660940b", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ec4ba2c237", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=6640c6201e", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {

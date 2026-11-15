@@ -2112,6 +2112,9 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .subject-list { list-style: none; margin: 0; padding: 0; }
 .subject-list li { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-row) 0; }
 .subject-list li:first-child { border-top: none; }
+/* A registered party's candidates (party-page.js partyRegistrationHTML): the name, then the seat's election page. */
+.party-candidates li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--space-block); min-height: var(--size-target); padding: 0; }
+.party-candidates a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 
 /* ---- encyclopedia indexes (directories) --------------------------------- */
 /* Parliamentarians / Parties / Donors: figures, a controls row (search first,

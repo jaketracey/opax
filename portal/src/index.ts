@@ -20,7 +20,7 @@ import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { votedAgainstParty } from '../public/division-against-party.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
-import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
+import {partySpeechLabel, partyMembers, partyBills, partyRegistration, partyRegistrationText, partyRegistrationHTML, registerOnlyParty, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill, type PartyRegister} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -5747,6 +5747,9 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let memberNames: string[] = []
   let memberRows: {name: string; labels: string[]}[] = []
   let sponsored: PartyBill[] = []
+  // A registered party's registration and candidates (party-page.js): the same block for every registered party.
+  let registrationHTML = ''
+  let registerOnly = false
   if (dir === 'party') {
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
     // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
@@ -5754,7 +5757,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const speeches = partySpeechLabel(display, { indexed, roster: people, same: samePartyLabel })?.count ?? 0
     // The division records name those who sat for a party the roster files elsewhere
     // (scripts/build_party_index.mjs): one senator's own party has its senator.
-    const recorded = await assetJson<{ parties?: Record<string, { name: string }[]>; bills?: Record<string, PartyBill[]> }>(env, '/graph/party-members.json').catch(() => null)
+    const recorded = await assetJson<{ parties?: Record<string, { name: string }[]>; bills?: Record<string, PartyBill[]>; registered?: Record<string, PartyRegister> }>(env, '/graph/party-members.json').catch(() => null)
     // Shared with the browser directory and party page: a distinct person may
     // have recorded affiliations with more than one party across their career.
     const members = partyMembers(display, {roster: people, divisions: recorded})
@@ -5762,6 +5765,12 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     memberNames = memberRows.map(p=>p.name)
     // The bills the register records a sponsor of this party for (scripts/build_party_index.mjs bills).
     sponsored = partyBills(display, recorded)
+    const registration = partyRegistration(display, recorded)
+    // The prerendered copy carries no id: the page's own block has it (as the history line does).
+    registrationHTML = partyRegistrationHTML(display, recorded, {esc: s => escHtml(String(s ?? ''))}).replace(' id="party-registration"', '')
+    // A party the register alone records says its registration and candidates, and nothing else.
+    registerOnly = Boolean(registration) && registerOnlyParty(resolvePartyPage(display, await loadPartyPages(env).catch(() => [])))
+    const registered = registration && registerOnly ? partyRegistrationText(registration) : null
     const parts: string[] = []
     const count = memberNames.length
     const speechDate = indexed?.generated || people?.generated
@@ -5779,13 +5788,15 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       facts = independent ? `${heading}: ${INDEPENDENTS_DESCRIPTION} ${parts.join('; ')}.` : `${heading}: ${parts.join('; ')}.`
       if (scopeNote) facts += ` ${scopeNote}`
       tail = independent ? (speeches ? 'Their recorded speeches.' : '') : speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
+    } else if (registered) {
+      facts = `${heading}: ${registered.registered} ${registered.candidates}`
     } else {
       facts = independent ? INDEPENDENTS_DESCRIPTION : `${heading} in the OPAX record of Australian parliamentary speeches and disclosed political receipts.`
     }
     card = {
       kicker: independent ? 'Independent parliamentarians' : 'Political party',
       title: heading,
-      lines: independent ? [INDEPENDENTS_DESCRIPTION, ...parts] : parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
+      lines: independent ? [INDEPENDENTS_DESCRIPTION, ...parts] : parts.length ? parts : registered ? [registered.registered, registered.candidates] : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
       dot: node?.colour ?? null,
     }
   } else if (node) {
@@ -5846,7 +5857,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
     prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${node && receiptTypeLine(node) ? `<p class="entry-scope">${escHtml(receiptTypeLine(node))}.</p>` : ''}${donorRecordsHTML(offMapRecords)}${indexLinks()}`
-      : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : dir === 'party' ? `<h2>Members</h2><p>${escHtml(PARTY_NO_MEMBERS)}</p>` : '')
+      : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : dir === 'party' && !registerOnly ? `<h2>Members</h2><p>${escHtml(PARTY_NO_MEMBERS)}</p>` : '')
+        + registrationHTML
         + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>{const as=recordedAsText(display,[b.party ?? ''],'sponsor recorded as');return `<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}${as ? `, ${escHtml(as)}` : ''}</li>`}).join('')}</ul>` : '')
         + indexLinks()) + table,
     card,

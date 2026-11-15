@@ -175,6 +175,27 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | The West Party | WEST | The West Party | neutral |
   | Victorian Socialists | VS | Victorian Socialists | neutral |
 
+  **Party links and pages.** The table above is the one alias map
+  (`portal/public/labels.js` `PARTY_ALIASES`). Its Victorian entries are the
+  registered names and registered abbreviated names on the VEC's
+  [register of political parties](https://www.vec.vic.gov.au/candidates-and-parties/registered-political-parties/currently-registered-parties),
+  saved by `python3 -I scripts/fetch_vec_parties.py` (one request) to
+  `scripts/hubs/vic-registered-parties-2026.json`: names, registration dates and
+  abbreviated names only. The register also lists Put Australia First, Save the
+  Environment (code PAF), which has no candidate on the 2026 lists.
+
+  A candidate's party label keeps its text and links to that party's one page.
+  A registered name is an alias of the page its party already has (Australian
+  Labor Party - Victorian Branch is `/subject/party/labor`), never a page of
+  its own. Every registered party is treated the same way: `npm run
+  build:parties` writes the register and each party's candidates into
+  `/graph/party-members.json` (`registered`), and every registered party's page
+  shows its registration and its 2026 candidates. A registered party the record
+  holds nowhere else has a page made from the register alone, showing only
+  that. A candidate nominated without a party has no party line and no link.
+  `portal/test/vic-party-pages.test.mjs` checks all 1,037 candidate rows, the
+  alias map against the register, and that no party page is empty.
+
 The optional **`scripts/hubs/vic-results-2026.json`** is the after-poll results
 input. It is absent before acquisition, so no results section is rendered.
 Use the [2026 results runbook](reports/2026-11-14-vic-after-poll.md#results-data-path-and-rehearsal)

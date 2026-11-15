@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket, PERSON_SEARCH_ALIASES } from '../portal/src/catalog-query.mjs';
 import { personNameKey, personUrl, partyUrl } from '../portal/public/canonical-urls.js';
 import { PARTY_RENAMES } from '../portal/public/labels.js';
+import { registeredPartyUrl, partyRegistrationText } from '../portal/public/party-page.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex, fullNameMatches } from '../portal/src/person-slug.ts';
 import {donorDisclosure,donorLookup,receiptFigures,receiptScopeLabel,hasPartyReceipts,notListedLine} from '../portal/public/donor-disclosure.js';
@@ -143,6 +144,17 @@ async function main() {
   page.states.push(jur);
   page.from=Math.min(page.from||n.firstYear,n.firstYear||page.from); page.to=Math.max(page.to||0,n.lastYear||0);
  }
+ // A registered party (the party index's `registered`: the VEC's register and candidate lists). Its registered
+ // name and abbreviated name find the one entry its party has above ("Australian Labor Party - Victorian
+ // Branch" finds Labor); a registered party with no entry above gets one, at its one page, further down.
+ const registeredOnly=[];
+ for(const register of Object.values((await read('graph/party-members.json')).registered||{})) for(const p of register.parties) {
+  const href=registeredPartyUrl(p.name), page=partyPages.get(href), names=[p.name,p.abbreviation].filter(Boolean);
+  if(page) for(const name of names) page.aliases.add(name);
+  else { const text=partyRegistrationText({register,party:p});
+   registeredOnly.push({key:'register:'+href,title:p.name,href,snippet:`Parties. ${text.registered} ${text.candidates}`,
+    extra:{aliases:names.join(' '),from:year(register.election.day),to:year(register.election.day),state:['vic'],parties:[p.name],source:register.authority+' register of political parties'}}); }
+ }
  // Added where its first node stood (the federal one when there is one), so its place among equal scores is unchanged.
  const addPartyPage=page=>{
   const [first]=page.parts, snippet=page.parts.length===1 ? `Parties. ${first.line}.`
@@ -173,6 +185,7 @@ async function main() {
  // A renamed party (labels.js PARTY_RENAMES) is one search entry under its current name, found by every
  // former name, at its one page. A party the money map holds already has its entry above.
  for(const r of renamedPartyRecords(PARTY_RENAMES)) if(!ids.has(r.key) && !partyPages.has(r.href)) add(r.key,'party',r.title,r.href,r.snippet,r.extra);
+ for(const r of registeredOnly) add(r.key,'party',r.title,r.href,r.snippet,r.extra);
  for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
  const suppliers=await read('suppliers.json');
  // a supplier with no counted contract (every notice cancelled at source or held for review) keeps its page, not a search entry
