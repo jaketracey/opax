@@ -1816,17 +1816,11 @@ describe('since your last visit', () => {
   /** A last visit, and the collection record saved then. */
   /** The record the last visit read: checked a night before. */
   const LAST_NIGHT = new Date(Date.now() - 21 * 60 * 60 * 1000).toISOString();
-  /** When the device kept that visit's total: four days ago. */
-  const KEPT = Date.now() - 4 * 24 * 60 * 60 * 1000;
   /** A record's date as the line says it: "14 Nov", no year this year. */
   const day = (iso: string) =>
     formatDate(iso, 'short').replace(` ${new Date().getFullYear()}`, '');
-  const visited = async (
-    total = 1000,
-    checkedAt = LAST_NIGHT,
-    openedAt = KEPT,
-  ) => {
-    await rememberVisit({ openedAt, total, checkedAt });
+  const visited = async (total = 1000, checkedAt = LAST_NIGHT) => {
+    await rememberVisit({ total, checkedAt });
     setUp({ cached: { date: addDays(today, -1) } });
     mock.corpusSaved.mockResolvedValue(corpus(total, checkedAt));
     return checkedAt;
@@ -1859,8 +1853,7 @@ describe('since your last visit', () => {
     firstFrame(r);
     expect(hosts(r, 'today-since')).toHaveLength(0);
     const kept = await readVisit();
-    expect(kept).toMatchObject({ total: 1000, checkedAt: FRESH });
-    expect(Math.abs(kept!.openedAt - Date.now())).toBeLessThan(60_000);
+    expect(kept).toEqual({ total: 1000, checkedAt: FRESH });
   });
 
   test('an answer in hand before the first frame, with records added, draws the count and its source line; both open Just added', async () => {
@@ -1974,7 +1967,6 @@ describe('since your last visit', () => {
     // Not drawn, so not counted as told: the total the reader last saw
     // stands, with its date and its time, untouched.
     await expect(readVisit()).resolves.toEqual({
-      openedAt: KEPT,
       total: 1000,
       checkedAt: checked,
     });
@@ -2015,11 +2007,10 @@ describe('since your last visit', () => {
   });
 
   test('a total from a copy checked before the visit names the copy’s date, not the visit’s, whichever launch draws it; once drawn, the date moves on', async () => {
-    // The copy was checked nine days ago; the visit that kept it was four
-    // days ago.
+    // The copy was checked nine days ago, well before any visit since.
     const copy = new Date(Date.now() - 9 * DAY_MS).toISOString();
-    await visited(1000, copy, KEPT);
-    expect(day(copy)).not.toBe(day(new Date(KEPT).toISOString()));
+    await visited(1000, copy);
+    expect(day(copy)).not.toBe(day(new Date().toISOString()));
     // A launch since then: the growth answered late, so nothing was drawn
     // and the total kept (with its copy's date) stayed as it was.
     const read = pendingRead();
@@ -2046,6 +2037,93 @@ describe('since your last visit', () => {
       total: 1412,
       checkedAt: FRESH,
     });
+  });
+
+  test('the sheet’s notes name both copies’ dates, and say only what is kept on the device', async () => {
+    const from = new Date(Date.now() - 3 * DAY_MS).toISOString();
+    await visited(1000, from);
+    mock.corpus.mockResolvedValue(corpus(1412, FRESH));
+    const r = await render(<Today />);
+    firstFrame(r);
+    const present = jest
+      .spyOn(sheets, 'presentSource')
+      .mockImplementation(() => undefined);
+    try {
+      act(() => owner(r, 'today-since-count').props.onLongPress());
+      const details = present.mock.calls[0]![0];
+      // The sheet's own date is the later copy's; the notes give both.
+      expect(details.asOf).toBe(FRESH);
+      expect(details.notes).toEqual([
+        `The number is the change in the total number of records between the copy of the record checked on ${formatDate(from, 'short')} and the copy checked on ${formatDate(FRESH, 'short')}.`,
+        'The copy the count starts from is kept on this device only.',
+      ]);
+      expect(formatDate(from, 'short')).not.toBe(formatDate(FRESH, 'short'));
+      expect(details.notes!.join(' ')).not.toMatch(
+        /date shown|last saw|last opened|—|–/,
+      );
+    } finally {
+      present.mockRestore();
+    }
+  });
+
+  /** The visit record's two slots, as builds 77 to 82 wrote them. */
+  const oldRecords = () =>
+    new TwoSlotStore<Record<string, unknown>>(
+      ['opax-today-visit-v1.json', 'opax-today-visit-v1.b.json'],
+      (raw) => raw as Record<string, unknown>,
+      (value) => value,
+    );
+  const visitFiles = () =>
+    [...mockWelcomeFiles].filter(([name]) => /^opax-today-visit/.test(name));
+
+  test('a new visit record has no last-open time: only the total and its copy’s date are written', async () => {
+    // Drawn, and with nothing added: both paths that write.
+    for (const total of [1412, 1000]) {
+      mockWelcomeFiles.clear();
+      await visited();
+      mock.corpus.mockResolvedValue(corpus(total, FRESH));
+      const r = await render(<Today />);
+      firstFrame(r);
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+      await expect(readVisit()).resolves.toEqual({ total, checkedAt: FRESH });
+      expect(visitFiles()).not.toHaveLength(0);
+      // Both slots: the record just written, and the one before it.
+      expect(visitFiles().some(([, body]) => body.includes(FRESH))).toBe(true);
+      for (const [, body] of visitFiles()) {
+        expect(body).not.toMatch(/openedAt|opened/);
+        // No instant of this launch, in any form.
+        expect(body).not.toContain(String(Date.now()).slice(0, 8));
+      }
+    }
+  });
+
+  test('an old record that has a last-open time still reads, as its total and date alone, and the line counts from it', async () => {
+    await oldRecords().save({
+      version: 1,
+      openedAt: 1_794_000_000_000,
+      total: 1000,
+      checkedAt: LAST_NIGHT,
+    });
+    await expect(readVisit()).resolves.toEqual({
+      total: 1000,
+      checkedAt: LAST_NIGHT,
+    });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpusSaved.mockResolvedValue(corpus(1000, LAST_NIGHT));
+    mock.corpus.mockResolvedValue(corpus(1412, FRESH));
+    const r = await render(<Today />);
+    firstFrame(r);
+    expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
+      `412 more records in OPAX since ${day(LAST_NIGHT)}`,
+    );
+    // The record written next no longer carries it.
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    for (const [, body] of visitFiles())
+      if (body.includes(FRESH)) expect(body).not.toContain('openedAt');
   });
 
   test('the next launch draws that growth from the saved copy of the record, in the first frame, with the network still out', async () => {
@@ -2080,8 +2158,7 @@ describe('since your last visit', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
     const kept = await readVisit();
-    expect(kept).toMatchObject({ total: 1412, checkedAt: FRESH });
-    expect(Math.abs(kept!.openedAt - Date.now())).toBeLessThan(60_000);
+    expect(kept).toEqual({ total: 1412, checkedAt: FRESH });
     // More arrives after the first frame: the line stays as drawn, and
     // the rest waits for the next launch.
     const later = new Date().toISOString();

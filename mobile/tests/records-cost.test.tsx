@@ -455,11 +455,7 @@ test('Today with a last visit draws its since-your-last-visit line from the free
       expected_resources: total,
       refresh: { checked_at: checked },
     }) as never;
-  jest.mocked(readVisit).mockResolvedValue({
-    openedAt: Date.parse('2026-11-12T09:00:00'),
-    total: 1000,
-    checkedAt,
-  });
+  jest.mocked(readVisit).mockResolvedValue({ total: 1000, checkedAt });
   jest
     .mocked(catalogs.corpusSaved)
     .mockResolvedValue(collection(1000, checkedAt));

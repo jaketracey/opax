@@ -101,7 +101,7 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
       if (!fresh) return;
       if (moreSince(last, fresh.total) > 0) offer(fresh);
       // Nothing added (or the first ever visit): the last visit moves on.
-      else void rememberVisit({ openedAt: Date.now(), ...fresh });
+      else void rememberVisit(fresh);
     })().catch(() => undefined);
     return () => {
       active = false;
@@ -115,11 +115,7 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
   // A drawn line is what the reader has now been told: kept as the visit.
   useEffect(() => {
     if (line)
-      void rememberVisit({
-        openedAt: Date.now(),
-        total: line.total,
-        checkedAt: line.checkedAt,
-      });
+      void rememberVisit({ total: line.total, checkedAt: line.checkedAt });
   }, [line]);
   return line;
 }
@@ -155,8 +151,9 @@ export function sinceSources(since: Since): SourceDetails {
       },
     ],
     notes: [
-      'The number is the change in the total number of records the collection record states, from the copy of the record checked on the date shown.',
-      'Which copy you last saw is kept on this device only.',
+      // Both copies' dates: the sheet's own date is only the later one's.
+      `The number is the change in the total number of records between the copy of the record checked on ${formatDate(since.since, 'short')} and the copy checked on ${formatDate(since.checkedAt, 'short')}.`,
+      'The copy the count starts from is kept on this device only.',
     ],
   };
 }
