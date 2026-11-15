@@ -101,6 +101,7 @@ export function SittingLine({
   /** `useSitting`'s `reserve`: hold the line's place. */
   reserve?: boolean;
 }) {
+  const fixed = useAccessibilitySize();
   const [held, setHeld] = useState(false);
   // Held while rendering (React's adjust-state-on-change pattern).
   if (reserve && !held) setHeld(true);
@@ -109,15 +110,16 @@ export function SittingLine({
   if (!read || !line)
     return reserve || held ? (
       <Text
+        wordSafe={fixed}
         variant="secondary"
         maxFontSizeMultiplier={sittingCap}
-        numberOfLines={1}
         accessible={false}
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
+        style={styles.reserved}
         testID="today-sitting-reserved"
       >
-        {'\u00a0'}
+        {RESERVED_WORDS}
       </Text>
     ) : null;
   return (
@@ -127,6 +129,13 @@ export function SittingLine({
     />
   );
 }
+
+/**
+ * Unseen words the length of the usual line ("... next sits <day>"), so the
+ * held place wraps as the line will at accessibility sizes: one line at the
+ * standard sizes, two where the line itself takes two.
+ */
+const RESERVED_WORDS = 'The House next sits Monday 16 November';
 
 /** The sitting line's Dynamic Type cap, shared with its marked term. */
 const sittingCap = 1.353;
@@ -200,6 +209,8 @@ const styles = StyleSheet.create({
     borderRadius: radii.thumb,
     borderCurve: 'continuous',
   },
+  // The held place: laid out, never seen.
+  reserved: { opacity: 0 },
   // Hugging its text, so the pressed highlight is the line's own shape.
   hug: { alignSelf: 'flex-start', maxWidth: '100%' },
   // At accessibility sizes the column's full width, so word-safe text has a
