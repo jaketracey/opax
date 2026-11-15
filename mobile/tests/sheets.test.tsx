@@ -225,9 +225,20 @@ test('originals deduplicate, keep their own dates, and open in one tap', () => {
 });
 test('in-app originals dismiss then push; originals above a modal use the browser', () => {
   const original = { label: 'Person', url: '/subject/person/anthony-albanese' };
+  // The push lands two frames after the close, never in the same commit:
+  // a page pushed with the close was laid out in the closing sheet's frame.
+  const queued: FrameRequestCallback[] = [];
+  const frames = jest
+    .spyOn(global, 'requestAnimationFrame')
+    .mockImplementation((callback) => queued.push(callback));
   openOriginal(original, false);
   expect(router.back).toHaveBeenCalledTimes(1);
-  expect(router.push).toHaveBeenCalled();
+  expect(router.push).not.toHaveBeenCalled();
+  queued.shift()!(0);
+  expect(router.push).not.toHaveBeenCalled();
+  queued.shift()!(0);
+  expect(router.push).toHaveBeenCalledTimes(1);
+  frames.mockRestore();
   jest.clearAllMocks();
   const browser = jest
     .spyOn(WebBrowser, 'openBrowserAsync')

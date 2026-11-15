@@ -31,7 +31,7 @@ import {
   licenceHubRoute,
   licenceRoute,
 } from '../../navigation/routes/reference';
-import { useSheetPayload } from '../../navigation/sheets';
+import { pushBeneathSheet, useSheetPayload } from '../../navigation/sheets';
 import {
   presentSourceDestination,
   recordExternalURL,
@@ -78,8 +78,7 @@ export function openOriginal(original: SourceOriginal, overModal: boolean) {
   }
   const native = path.startsWith('/') ? fromWebPath(path) : null;
   if (native && !overModal) {
-    router.back();
-    router.push(native);
+    pushBeneathSheet(native);
   } else if (overModal && native) {
     // openSource normally resolves OPAX records to native routes. Here the
     // browser must stay above Account/Talk and the source sheet beneath it.

@@ -45,7 +45,7 @@ import { personRoute } from '../../navigation/routes';
 import { askReportRoute } from '../../navigation/routes/ask';
 import { resultsRoute } from '../../navigation/routes/search';
 import { shareRecord, trackShare } from '../../navigation/share';
-import { presentSource } from '../../navigation/sheets';
+import { presentSource, pushBeneathSheet } from '../../navigation/sheets';
 import { CachedPortrait } from '../CachedPortrait';
 import { copyText } from '../records/actions';
 import { useIsMyMember } from '../your-mp/useIsMyMember';
@@ -460,12 +460,14 @@ export function askSourceDetails({
   const key = turnKey(chat, index);
   // The phone's Sources sheet is its sources list, as the iPad pane is.
   const leave = (source: Source) => {
-    router.back();
     const href = sourceRoute(source);
     if (href) {
-      router.push(href);
+      pushBeneathSheet(href);
       trackSourceOpen('app', 'sources_pane');
-    } else openAnswerLink(sourcePath(source), 'sources_pane');
+    } else {
+      router.back();
+      openAnswerLink(sourcePath(source), 'sources_pane');
+    }
   };
   const originals = groups.cited.filter((s) => s.url?.startsWith('https://'));
   const calculated = isCalculated(data);
@@ -485,8 +487,7 @@ export function askSourceDetails({
       testID: 'ask-sources-report',
       label: 'Report this answer',
       onPress: () => {
-        router.back();
-        router.push(askReportRoute(key));
+        pushBeneathSheet(askReportRoute(key));
       },
     },
     extra: (

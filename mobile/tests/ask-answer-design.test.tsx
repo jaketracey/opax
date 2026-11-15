@@ -33,7 +33,11 @@ import type { AskPerson } from '../src/features/ask/people';
 import { copyText } from '../src/features/records/actions';
 import { shareRecord, trackShare } from '../src/navigation/share';
 import { track } from '../src/analytics';
-import { presentSheet, presentSource } from '../src/navigation/sheets';
+import {
+  presentSheet,
+  presentSource,
+  pushBeneathSheet,
+} from '../src/navigation/sheets';
 
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -87,6 +91,7 @@ jest.mock('../src/api/runtime', () => ({}));
 jest.mock('../src/navigation/sheets', () => ({
   presentSource: jest.fn(),
   presentSheet: jest.fn(),
+  pushBeneathSheet: jest.fn(),
 }));
 jest.mock('../src/analytics', () => ({
   ...jest.requireActual('../src/analytics'),
@@ -499,6 +504,17 @@ test('the sources sheet never repeats a record title as a serif line', () => {
     legacy: null,
   });
   expect(details.report?.label).toBe('Report this answer');
+  // The report page opens beneath the closing sheet, a commit after it
+  // (navigation/sheets.ts): never a close and a push together.
+  jest.mocked(router.back).mockClear();
+  jest.mocked(router.push).mockClear();
+  details.report!.onPress();
+  expect(pushBeneathSheet).toHaveBeenCalledWith({
+    pathname: '/ask-report',
+    params: { turn: 'fixture-chat:1' },
+  });
+  expect(router.back).not.toHaveBeenCalled();
+  expect(router.push).not.toHaveBeenCalled();
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(<>{details.extra}</>);

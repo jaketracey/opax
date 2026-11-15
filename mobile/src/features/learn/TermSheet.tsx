@@ -1,6 +1,7 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { InsetGroup } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
+import { pushBeneathSheet } from '../../navigation/sheets';
 import { MissingPayload, SheetFrame } from '../sheets/frame';
 import { openOriginal, Paragraphs } from '../sheets/SourceSheet';
 import { learnCopy } from './copy';
@@ -50,10 +51,7 @@ export default function TermSheet() {
           <LinkRow
             title={learnCopy.glossary}
             symbol="books.vertical"
-            onPress={() => {
-              router.back();
-              router.push(glossaryRoute);
-            }}
+            onPress={() => pushBeneathSheet(glossaryRoute)}
             testID={`term-${id}-glossary`}
           />
         </InsetGroup>

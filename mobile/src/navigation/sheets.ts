@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import type { NativeStackHeaderItem } from 'expo-router';
+import type { Href, NativeStackHeaderItem } from 'expo-router';
 import type { ReactNode } from 'react';
 import type { SourceDetails } from '../design/source';
 import type { MachineNote } from '../design/labels';
@@ -90,6 +90,21 @@ export function presentSheet(payload: SheetPayload): void {
     table: ruleRoute({ key, variant: 'table' }),
   }[payload.kind];
   router.push(route);
+}
+/**
+ * Closes the sheet on top and pushes a page in the tab beneath it.
+ *
+ * The push waits two frames, so it lands in a later commit than the close.
+ * Closed and pushed in one commit, the new page was laid out in the closing
+ * sheet's frame and kept it: a short sheet (a glossary term, a rule) left the
+ * page it opened drawn in the top half of the screen, the rest blank, on
+ * every iOS (A to Z glossary from a term, iPhone 16 Pro on iOS 18.4 and
+ * iPhone 17 Pro on iOS 26.3). The sheet still slides away as the page
+ * arrives.
+ */
+export function pushBeneathSheet(href: Href): void {
+  router.back();
+  requestAnimationFrame(() => requestAnimationFrame(() => router.push(href)));
 }
 export function presentSource(
   details: SourceDetails,

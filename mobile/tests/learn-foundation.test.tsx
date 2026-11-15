@@ -285,14 +285,31 @@ describe('openTerm and the answer sheet', () => {
     expect(text).toContain(term.more);
     expect(text).toContain('See it in OPAX');
     expect(text).toContain(term.example!.label);
+    // The page is pushed two frames after the sheet closes. Pushed in the
+    // close's own commit, the glossary took the short sheet's frame and drew
+    // in the top half of the screen (iOS 18.4 and 26.3).
+    const queued: FrameRequestCallback[] = [];
+    const frames = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation((callback) => queued.push(callback));
+    const twoFrames = () => {
+      queued.shift()!(0);
+      expect(push).not.toHaveBeenCalled();
+      queued.shift()!(0);
+    };
     act(() => pressable(tree, 'term-bill-glossary').props.onPress());
     expect(back).toHaveBeenCalled();
+    expect(push).not.toHaveBeenCalled();
+    twoFrames();
     expect(push).toHaveBeenCalledWith({ pathname: '/learn/glossary' });
     push.mockClear();
     back.mockClear();
     act(() => pressable(tree, 'term-bill-example').props.onPress());
     expect(back).toHaveBeenCalled();
+    expect(push).not.toHaveBeenCalled();
+    twoFrames();
     expect(push).toHaveBeenCalledTimes(1);
+    frames.mockRestore();
   });
 
   test('a term without a record has no "See it" row; above tabs, no glossary row', () => {
