@@ -1068,21 +1068,25 @@ function MapMode({
         ) : null}
         {managed ? null : (
           // Measures the band under the panel (the tab bar and the home
-          // indicator) and draws nothing: a view of no content at the
-          // stage's foot, so its height is the system's bottom inset and
-          // owes nothing to the stage's own measured size. The chrome keeps
-          // that band by a spacer of its own, not by the inset, which moves.
+          // indicator) and draws nothing. The chrome keeps that band by a
+          // spacer of its own, not by the system's inset, which moves.
           <SafeAreaView
             edges={['bottom']}
             pointerEvents="none"
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
-            style={styles.bandProbe}
-            testID="money-map-band"
-            onLayout={(event) =>
-              keepBand(Math.round(event.nativeEvent.layout.height))
-            }
-          />
+            style={[styles.chrome, styles.unseen]}
+          >
+            <View
+              style={styles.grow}
+              testID="money-map-band"
+              onLayout={(event) => {
+                if (!stage.height) return;
+                const { y, height } = event.nativeEvent.layout;
+                keepBand(Math.max(0, Math.round(stage.height - (y + height))));
+              }}
+            />
+          </SafeAreaView>
         )}
         <SafeAreaView
           // The stack's opaque bar already sits above the stage: a top
@@ -1555,7 +1559,6 @@ const styles = StyleSheet.create({
   unavailable: { flexGrow: 1, justifyContent: 'center', padding: rhythm.block },
   // Laid out, never seen or read: it keeps the place of words still to come.
   unseen: { opacity: 0 },
-  bandProbe: { position: 'absolute', left: 0, bottom: 0, width: 1, opacity: 0 },
   grow: { flex: 1 },
   panelHost: { width: '100%' },
   panelRegular: { maxWidth: 480 },

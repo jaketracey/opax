@@ -308,10 +308,12 @@ function settle(
           },
         }),
       );
+    const panel = root.findByType(MoneyMapPanel);
+    const shown = Math.min(natural.peek, panel.props.maxHeight ?? Infinity);
     act(() =>
       root.findAllByProps({ testID: 'money-map-band' })[0]?.props.onLayout({
         nativeEvent: {
-          layout: { height: device.bottom },
+          layout: { y: device.stage - device.bottom - shown, height: shown },
         },
       }),
     );
