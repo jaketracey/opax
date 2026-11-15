@@ -23,6 +23,7 @@ import {
   boldStep,
   colors,
   contentSizeCategory,
+  contentSizeScales,
   textStyles,
   type Role,
   type TextVariant,
@@ -56,7 +57,9 @@ export interface OpaxTextProps extends TextProps {
   /**
    * Keep words whole. React Native has no hyphenation on iOS, so this text
    * steps its own scale down only after a measured mid-word break, as far as
-   * its longest word needs, with an 11pt floor.
+   * its longest word needs, with an 11pt floor. The steps are shared by every
+   * reader text size, so a larger setting never draws smaller (on iOS, and on
+   * Android with linear font scaling).
    * URLs and email addresses wrap at full size instead of stepping down.
    * Headings, control labels and field labels use it.
    */
@@ -164,6 +167,142 @@ export function nextWordSafeCap(
   return Math.max(floor, Math.round(current * 90) / 100);
 }
 
+/** No two word-safe sizes are further apart than this ratio. */
+const WORD_SAFE_STEP = 0.9;
+
+/**
+ * The sizes word-safe text steps down through, largest first, as multipliers
+ * of the role's default size, ending at `floor`. They are the same for every
+ * reader. Ten per cent steps from each reader's own size gave each reader a
+ * different set of sizes, so "(Strengthening" in a 110pt column drew 16pt at
+ * Medium but 15.3pt at Large, and 14.6pt at AX4 below 14.9pt at AX1.
+ *
+ * `anchors` holds each reader text size's full size for the role. A reader
+ * whose words fit keeps their own size. A reader whose size breaks a word
+ * settles on the largest of these sizes that fits. That is never smaller than
+ * the size of any smaller reader whose words fit, because that size is among
+ * the anchors. So a larger text setting never draws smaller. Gaps wider than
+ * 10% between anchors are filled, so no step loses more than 10%.
+ */
+export function wordSafeSizes(
+  anchors: readonly number[],
+  floor: number,
+): number[] {
+  const points = anchors
+    .filter((size) => size > floor + 0.01)
+    .sort((a, b) => b - a);
+  const sizes: number[] = [];
+  for (const point of [...points, floor]) {
+    const above = sizes[sizes.length - 1];
+    if (above !== undefined) {
+      if (above - point < 0.005) continue;
+      const steps = Math.ceil(
+        Math.log(point / above) / Math.log(WORD_SAFE_STEP) - 1e-9,
+      );
+      for (let i = 1; i < steps; i++)
+        sizes.push(above * (point / above) ** (i / steps));
+    }
+    sizes.push(point);
+  }
+  return sizes;
+}
+
+// Android's standard font sizes (Settings, Font size), then 10% steps for
+// larger custom scales.
+const androidScales = [
+  0.85,
+  1,
+  1.15,
+  1.3,
+  1.5,
+  1.8,
+  2,
+  ...Array.from({ length: 7 }, (_, i) => 2 / WORD_SAFE_STEP ** (i + 1)),
+];
+const roleSizes = new Map<string, readonly number[]>();
+/**
+ * A role's word-safe sizes (wordSafeSizes), computed once per role. On iOS the
+ * anchors are each Dynamic Type size's full size for the role, worked out as
+ * Text works out `full`: its ramp, maxFontSizeMultiplier and the title
+ * ceiling. Android's native metrics convert only at the device's own font
+ * scale, so the anchors there are its standard font scales. With linear SP
+ * scaling those are each reader's own size, as on iOS. Android 14's nonlinear
+ * scaling draws other sizes, so a smaller reader can still draw slightly
+ * larger there, but every reader whose size breaks a word settles on the
+ * same size.
+ */
+export function roleWordSafeSizes(
+  variant: TextVariant,
+  maxFontSizeMultiplier = 0,
+  os: string = Platform.OS,
+): readonly number[] {
+  const key = `${variant}|${maxFontSizeMultiplier}|${os}`;
+  const known = roleSizes.get(key);
+  if (known) return known;
+  const role = textStyles[variant];
+  const anchors =
+    os === 'ios'
+      ? contentSizeScales.map(
+          (scale) =>
+            (textRampScale(
+              role.dynamicTypeRamp,
+              scale,
+              maxFontSizeMultiplier,
+              'ios',
+            ) ?? scale) * titleSizeCap(variant, scale, 'ios'),
+        )
+      : androidScales;
+  const sizes = wordSafeSizes(anchors, wordSafeFloor(role.fontSize));
+  roleSizes.set(key, sizes);
+  return sizes;
+}
+
+/**
+ * The next of `sizes` at least `step` below `current`, and at or below
+ * `fits`; null at the floor. Sizes above `fits` are proven to break the word
+ * still, so skipping them keeps the largest size that fits.
+ */
+function nextWordSafeSize(
+  current: number,
+  floor: number,
+  sizes: readonly number[],
+  step: number,
+  fits = Infinity,
+): number | null {
+  if (current <= floor + 0.01) return null;
+  return Math.max(
+    floor,
+    sizes.find((size) => size < current - step && size <= fits) ?? floor,
+  );
+}
+
+// A line holding only part of one unbreakable run: letters, digits,
+// apostrophes and brackets, with no space, hyphen or other break opportunity.
+const runOnly = /^[\p{L}\p{N}'’()[\]]+$/u;
+/**
+ * A lower bound on the widest word broken across lines, in the layout's own
+ * points: the summed width of the lines that hold nothing but that word.
+ * A word over several whole lines (AX5 in a narrow card) is at least that
+ * wide, so every size at which that width would still overflow the column can
+ * be skipped. Lines with any break opportunity count for nothing.
+ */
+function brokenRunWidth(lines: readonly WordSafeLine[]): number {
+  let widest = 0;
+  let run = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]!;
+    // A line joins the run above only across a mid-word break, and only a
+    // line that is all one run carries it on.
+    if (i === 0 || !breaksMidWord([lines[i - 1]!, line])) run = 0;
+    run =
+      runOnly.test(line.text) && Number.isFinite(line.width)
+        ? run + line.width
+        : 0;
+    widest = Math.max(widest, run);
+  }
+  return widest;
+}
+
 // Apple's title1 ramp. The recordTitle role alone stops at AX2 (43pt).
 const recordTitleSizes = {
   xSmall: 25,
@@ -262,6 +401,16 @@ export const wordSafeStart = (
 });
 /** Two-place rounding of the line height leaves this much noise. */
 const MEASURED_AT_TOLERANCE = 0.03;
+/**
+ * Every step clears that tolerance, so a layout queued from the size before
+ * can never read as the new size's own and step it again: past two-place
+ * rounding on iOS, and past pixel-rounded line heights on Android too. Ten per
+ * cent steps always did. On iOS it passes over only 1pt steps of the largest
+ * roles (title1 at 25 to 28pt), so a smaller reader there can draw up to 1pt
+ * larger; Android's own sizes are all further apart.
+ */
+const wordSafeStep = (os: string) =>
+  os === 'ios' ? MEASURED_AT_TOLERANCE + 0.01 : 2 * MEASURED_AT_TOLERANCE;
 /** Frame widths are compared to the half point; fits keep a point spare. */
 const WIDTH_EPSILON = 0.5;
 const FIT_MARGIN = 1;
@@ -326,11 +475,12 @@ function provenToFit(state: WordSafeState): WordSafeState {
 
 /**
  * The state after one line measurement. Only the generation now drawn counts,
- * and only for this text. The cap only steps down, in 10% steps, after a
- * mid-word break measured at the size now drawn. At any reader text size it
- * may step below the role's default size, to `floor` (wordSafeFloor), when a
- * word is still wider than its column (a layout from a larger size delivered
- * late included). The first measurement must
+ * and only for this text. The cap only steps down, one of `sizes` at a time
+ * (roleWordSafeSizes), after a mid-word break measured at the size now drawn.
+ * Without `sizes` (direct callers) it steps 10% below the measured size. At
+ * any reader text size it may step below the role's default size, to `floor`
+ * (wordSafeFloor), when a word is still wider than its column (a layout from
+ * a larger size delivered late included). The first measurement must
  * also match the expected full scale when native conversion is available.
  * Without it, retain the measurement-backed baseline used by older binaries.
  * Returns `state` itself when nothing changes.
@@ -344,6 +494,8 @@ export function wordSafeOnLines(
   validateScale = true,
   floor = 1,
   fontSize = 0,
+  sizes: readonly number[] = [],
+  os: string = Platform.OS,
 ): WordSafeState {
   if (at.key !== state.key || at.gen !== state.gen || !lines.length)
     return state;
@@ -363,9 +515,17 @@ export function wordSafeOnLines(
   // A full-size, whole-word layout that fits the current frame proves every
   // word fits, even if it arrives after a queued narrow-column break capped
   // us. This also recovers when both columns happen to have the same height.
+  // Only a layout that is clearly not the cap's own counts: a cap within the
+  // tolerance of full size (a last step to a floor just below it) would
+  // otherwise fit, restart, break and fit again on every frame. Steps clear
+  // the tolerance otherwise (wordSafeStep). Nor does a one-line layout:
+  // with no line advance its height is TextKit's used rect, a point taller,
+  // which can make a capped line read as full size ("Community" at Large).
   if (
     state.cap &&
     state.frame &&
+    lines.length > 1 &&
+    Math.abs(measuredAt - state.cap) > MEASURED_AT_TOLERANCE &&
     Math.abs(measuredAt - state.full) <= MEASURED_AT_TOLERANCE &&
     !breaksMidWord(lines) &&
     lines.every((line) => visibleWidth(line) <= state.frame + WIDTH_EPSILON)
@@ -379,15 +539,39 @@ export function wordSafeOnLines(
   )
     return state;
   if (breaksMidWord(lines)) {
-    const next = nextWordSafeCap(lineHeight, baseLineHeight, floor);
+    // Step from the exact size drawn, which the measurement must agree with:
+    // a two-place measured scale can round up to the size just taken. Without
+    // native conversion (validateScale false) the first layout has no exact
+    // size, and Android's nonlinear SP scaling can draw a cap above itself
+    // (1.29 for 1.23 at 200%), where the next size below the measured one is
+    // the cap again. Those step 10% below the measured size, as before.
+    // A word wider than several whole lines skips the sizes at which it
+    // would still overflow its column, even 10% narrower per point than it
+    // measured (glyph advances scale nearly, not exactly, with size). Only
+    // on iOS, where the font scales with the line height: Android 14's
+    // nonlinear SP scaling shrinks the font faster than the line, so a skip
+    // there could pass a size that fits.
+    const column = state.frame || state.fullFrame;
+    const run = os === 'ios' ? brokenRunWidth(lines) : 0;
+    const fits =
+      run > column ? (drawnAt * column) / run / WORD_SAFE_STEP : Infinity;
+    const next =
+      sizes.length &&
+      drawnAt &&
+      Math.abs(measuredAt - drawnAt) <= MEASURED_AT_TOLERANCE
+        ? nextWordSafeSize(drawnAt, floor, sizes, wordSafeStep(os), fits)
+        : nextWordSafeCap(lineHeight, baseLineHeight, floor);
     if (next === null || (state.cap && next >= state.cap)) return state;
     return {
       ...state,
       gen: state.gen + 1,
       cap: next,
-      // Native conversion validates the ramp when available. Otherwise this
+      // Native conversion validates the ramp when available, and its exact
+      // scale stays the baseline: the two-place measured one drew every cap
+      // up to 0.4% off its size (15.97pt for 16pt at xLarge). Otherwise this
       // first matching frame/content pair supplies the measured baseline.
-      full: state.cap ? state.full : measuredAt,
+      full:
+        state.cap || (validateScale && state.full) ? state.full : measuredAt,
       frame: 0,
       word: 0,
     };
@@ -624,6 +808,8 @@ export function Text({
         expectedFull !== undefined,
         wordSafeFloor(role.fontSize),
         role.fontSize,
+        roleWordSafeSizes(variant, given.maxFontSizeMultiplier ?? 0),
+        Platform.OS,
       ),
     );
   };

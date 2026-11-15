@@ -6,7 +6,7 @@ import {
   Text as NativeText,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { LINE_HEIGHT_NUDGE, Text } from '../src/design/text';
+import { LINE_HEIGHT_NUDGE, Text, roleWordSafeSizes } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
 import { textRampScale } from '../src/design/text-scale';
 
@@ -18,6 +18,12 @@ jest.mock('../modules/opax-text-metrics', () => ({
 const role = textStyles.sectionTitle;
 const base = role.lineHeight + LINE_HEIGHT_NUDGE;
 const ax5 = 56 / 22;
+// The next word-safe size below `at` (roleWordSafeSizes), at least iOS's 0.04
+// step lower, as a multiplier of the role's default size.
+const below = (at: number, maxFontSizeMultiplier = 0) =>
+  roleWordSafeSizes('sectionTitle', maxFontSizeMultiplier, 'ios').find(
+    (size) => size < at - 0.04,
+  )!;
 const window = Dimensions.get('window');
 const screen = Dimensions.get('screen');
 let renderer: TestRenderer.ReactTestRenderer;
@@ -97,9 +103,10 @@ test('B: a native font-size change using the old cap cannot poison the new basel
   expect(ratio()).toBe(1);
   frame(200, 2 * base * 2);
   lines(2);
-  frame(200, 2 * base * 1.8);
-  lines(1.8);
-  expect(ratio()).toBeCloseTo(1.62 / 2, 6);
+  // AX3's 44pt steps to 41.4pt, then to AX2's own 39pt.
+  frame(200, 2 * base * below(2));
+  lines(below(2));
+  expect(ratio() * 44).toBeCloseTo(39, 6);
 });
 
 test('C: a queued portrait break cannot cap a landscape heading that fits', () => {
@@ -195,18 +202,20 @@ test('committed measurement covers unchanged frames and cannot raise an existing
   expect(ratio()).toBe(1);
   // No onLayout after the prop change: the committed measure supplies it.
   act(() => callbacks[0]!(0, 0, 200, base * 4));
-  expect(ratio()).toBeCloseTo(0.9);
-  frame(200, base * 3.6);
+  // The capped 2 steps to 41.4pt of its 44pt.
+  const step = below(2, 2);
+  expect(ratio()).toBeCloseTo(step / 2);
+  frame(200, base * 2 * step);
   // This step has a new heightKey. A queued frame cannot set its floor;
   // establish it from the committed measurement before testing reinflation.
-  act(() => callbacks[1]!(0, 0, 200, base * 3.6));
+  act(() => callbacks[1]!(0, 0, 200, base * 2 * step));
   const floor = StyleSheet.flatten(text().props.style).minHeight;
-  expect(floor).toBe(Math.ceil(base * 3.6) + 1);
+  expect(floor).toBe(Math.ceil(base * 2 * step) + 1);
   act(() => callbacks[1]!(0, 0, 200, floor));
   expect(StyleSheet.flatten(text().props.style).minHeight).toBe(floor);
   setSize(1);
   // A measure from the capped step cannot write into the new identity.
-  act(() => callbacks[1]!(0, 0, 200, base * 3.6));
+  act(() => callbacks[1]!(0, 0, 200, base * 2 * step));
   expect(ratio()).toBe(1);
   expect(text()).toBe(original);
 });

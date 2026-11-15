@@ -94,11 +94,12 @@ test.each([1, 1.3, 1.5, 2])(
         expect(size()).toBeLessThan(firstCap);
       else expect(size()).toBe(firstCap);
       if (fontScale === 1) {
-        // Two 10% steps below 1 still use Android's inverse SP conversion.
-        expect(size()).toBeCloseTo(textStyles.sectionTitle.fontSize * 0.81, 5);
+        // Two steps below 1 (0.92, then Android's smallest standard font
+        // size, 0.85) still use Android's inverse SP conversion.
+        expect(size()).toBeCloseTo(textStyles.sectionTitle.fontSize * 0.85, 5);
         expect(
           spToDp(StyleSheet.flatten(text().props.style).lineHeight, fontScale),
-        ).toBeCloseTo(base * 0.81, 5);
+        ).toBeCloseTo(base * 0.85, 5);
       }
       layout(
         spToDp(StyleSheet.flatten(text().props.style).lineHeight, fontScale),

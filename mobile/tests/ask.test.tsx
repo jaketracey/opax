@@ -321,7 +321,9 @@ describe('Account › Ask', () => {
         expect(label.props.numberOfLines).toBeUndefined();
         await act(async () => row.props.onValueChange(true));
         expect(resetAskConsent).toHaveBeenCalled();
-        expect(haptic).toHaveBeenCalledWith('success');
+        // The switch row plays the one tap (haptic-moments.test.tsx); the
+        // save adds no second one.
+        expect(haptic).not.toHaveBeenCalled();
         expect(askConsentGiven).toHaveBeenCalled();
         await act(async () => row.props.onValueChange(false));
         expect(giveAskConsent).toHaveBeenCalled();

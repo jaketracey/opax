@@ -1,17 +1,21 @@
-import { act } from 'react';
+import { Profiler, act } from 'react';
 import {
   Dimensions,
   Platform,
   StyleSheet,
   Text as NativeText,
+  View,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import {
+  LINE_HEIGHT_NUDGE,
   Text,
   WORD_SAFE_MIN_POINTS,
   breaksMidWord,
   nextWordSafeCap,
+  roleWordSafeSizes,
   wordSafeFloor,
+  wordSafeSizes,
 } from '../src/design/text';
 import { textRampScale } from '../src/design/text-scale';
 import { textStyles, type TextVariant } from '../src/design/tokens';
@@ -366,3 +370,197 @@ test.each([
     act(() => renderer.unmount());
   },
 );
+
+// Every iOS reader text size, xSmall to AX5 (RN's font-scale multipliers).
+const readerSizes = [
+  ['xSmall', 0.823],
+  ['Small', 0.882],
+  ['Medium', 0.941],
+  ['Large', 1],
+  ['xLarge', 1.118],
+  ['xxLarge', 1.235],
+  ['xxxLarge', 1.353],
+  ['AX1', 1.786],
+  ['AX2', 2.143],
+  ['AX3', AX3],
+  ['AX4', 3.143],
+  ['AX5', AX5],
+] as const;
+
+describe('one set of word-safe sizes for every reader (D8 leftover)', () => {
+  test('"(Strengthening" in a 110pt column at Large takes the 16pt Medium draws, whole', () => {
+    // Before, Large stepped 10% from its own 17pt to 15.3pt, smaller than
+    // the 16pt a Medium reader draws, where the word already fits.
+    const { lines, drawnPoints } = settle(
+      'rowRecord',
+      'Online Safety Amendment (Strengthening Enforcement for the Social Media Minimum Age) Bill 2026',
+      110,
+      1,
+    );
+    expect(breaksMidWord(lines)).toBe(false);
+    expect(lines.some((line) => line.text.startsWith('(Strengthening'))).toBe(
+      true,
+    );
+    expect(drawnPoints).toBeCloseTo(16, 6);
+  });
+
+  test.each([
+    ['rowRecord', 'Bill (Strengthening changes', 110],
+    ['rowRecord', 'Bill (Consequential changes', 120],
+    ['rowRecord', cases[0]![2], 200],
+    ['body', 'Community', 110],
+    ['sectionTitle', 'Who wins government contracts?', 110],
+    ['sectionTitle', 'Who wins government contracts?', 200],
+    ['recordTitle', 'Parliamentary Representation', 160],
+  ] as const)(
+    '%s "%s" at %spt: a larger text setting never draws smaller, and never breaks a word',
+    (variant, content, column) => {
+      const drawn = readerSizes.map(([name, fontScale]) => {
+        const { lines, drawnPoints } = settle(
+          variant,
+          content,
+          column,
+          fontScale,
+        );
+        expect(`${name} ${breaksMidWord(lines)}`).toBe(`${name} false`);
+        return [name, drawnPoints] as const;
+      });
+      // Small, Large, xLarge, AX1 and AX5 among them.
+      for (let i = 1; i < drawn.length; i++) {
+        const [smaller, below] = drawn[i - 1]!;
+        const [larger, above] = drawn[i]!;
+        expect(`${larger} ${above >= below - 1e-6}`).toBe(`${larger} true`);
+        if (above < below - 1e-6)
+          throw new Error(`${larger} ${above}pt < ${smaller} ${below}pt`);
+      }
+    },
+  );
+
+  test('every reader size draws exactly its role size when the text fits', () => {
+    const role = textStyles.rowRecord;
+    const content = 'That the amendment be agreed to';
+    for (const [name, fontScale] of readerSizes) {
+      const { lines, drawnPoints } = settle(
+        'rowRecord',
+        content,
+        330,
+        fontScale,
+      );
+      const ramp = textRampScale(role.dynamicTypeRamp, fontScale) ?? 1;
+      expect(`${name} ${drawnPoints}`).toBe(`${name} ${role.fontSize * ramp}`);
+      expect(lines.map((line) => line.text).join('')).toBe(content);
+    }
+  });
+
+  test('the sizes hold every Dynamic Type size of the role, no step wider than 10%, down to 11pt', () => {
+    const points = roleWordSafeSizes('rowRecord', 0, 'ios').map(
+      (size) => size * textStyles.rowRecord.fontSize,
+    );
+    for (const own of [14, 15, 16, 17, 19, 21, 23, 28, 33, 40, 47, 53])
+      expect(points.some((point) => Math.abs(point - own) < 1e-9)).toBe(true);
+    for (let i = 1; i < points.length; i++) {
+      expect(points[i]!).toBeLessThan(points[i - 1]!);
+      expect(points[i]! / points[i - 1]!).toBeGreaterThanOrEqual(0.9 - 1e-9);
+    }
+    expect(points[points.length - 1]).toBeCloseTo(
+      wordSafeFloor(textStyles.rowRecord.fontSize) * 17,
+      6,
+    );
+    // The title ceiling: recordTitle never steps from above AX2's 43pt.
+    expect(roleWordSafeSizes('recordTitle', 0, 'ios')[0]! * 28).toBeCloseTo(
+      43,
+      6,
+    );
+    // Equal anchors collapse, and each gap wider than 10% is filled evenly.
+    expect(wordSafeSizes([1, 1, 0.8], 0.5).map((x) => +x.toFixed(4))).toEqual([
+      1, 0.9283, 0.8618, 0.8, 0.7282, 0.6629, 0.6034, 0.5493, 0.5,
+    ]);
+  });
+});
+
+test('fifty fitting rows: word-safe adds no render and no measure after layout', () => {
+  act(() =>
+    Dimensions.set({
+      window: { ...window, width: 402, fontScale: 1 },
+      screen: { ...screen, width: 402, fontScale: 1 },
+    }),
+  );
+  const run = (wordSafe: boolean) => {
+    const renders = new Map<number, number>();
+    const measure = jest.fn();
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <View>
+          {Array.from({ length: 50 }, (_, row) => (
+            <Profiler
+              key={row}
+              id={String(row)}
+              onRender={() => renders.set(row, (renders.get(row) ?? 0) + 1)}
+            >
+              <Text wordSafe={wordSafe} variant="rowRecord">
+                {`Division ${row + 1}: that the bill be read a second time`}
+              </Text>
+            </Profiler>
+          ))}
+        </View>,
+        { createNodeMock: () => ({ measure }) },
+      );
+    });
+    const measuredOnMount = measure.mock.calls.length;
+    const rows = renderer.root.findAllByType(NativeText);
+    const sizes = rows.map(
+      (row) => StyleSheet.flatten(row.props.style).fontSize as number,
+    );
+    const height = textStyles.rowRecord.lineHeight + LINE_HEIGHT_NUDGE;
+    // Fabric may deliver each event more than once.
+    for (let pass = 0; pass < 2; pass++)
+      for (const [row, text] of rows.entries()) {
+        const content = `Division ${row + 1}: that the bill be read a second time`;
+        act(() =>
+          text.props.onLayout({
+            nativeEvent: {
+              layout: { x: 0, y: 0, width: 360, height: Math.ceil(2 * height) },
+            },
+          }),
+        );
+        text.props.onTextLayout &&
+          act(() =>
+            text.props.onTextLayout({
+              nativeEvent: {
+                lines: wrap(
+                  content,
+                  360,
+                  textStyles.rowRecord.fontSize,
+                  height,
+                ),
+              },
+            }),
+          );
+      }
+    const after = renderer.root
+      .findAllByType(NativeText)
+      .map((row) => StyleSheet.flatten(row.props.style).fontSize as number);
+    act(() => renderer.unmount());
+    return {
+      renders: [...renders.values()],
+      measuredOnMount,
+      measuredAfter: measure.mock.calls.length - measuredOnMount,
+      sizes,
+      after,
+    };
+  };
+  const plain = run(false);
+  const safe = run(true);
+  // Every row fits, so word-safe never changes a size...
+  expect(safe.after).toEqual(safe.sizes);
+  expect(
+    safe.after.every((size) => size === textStyles.rowRecord.fontSize),
+  ).toBe(true);
+  // ...and each row renders exactly as often as plain text (its mount and the
+  // shared height floor), with no measure() beyond the one on mount.
+  expect(safe.renders).toHaveLength(50);
+  expect(safe.renders).toEqual(plain.renders);
+  expect(safe.measuredOnMount).toBeLessThanOrEqual(50);
+  expect(safe.measuredAfter).toBe(0);
+});
