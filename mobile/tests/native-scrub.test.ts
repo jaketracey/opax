@@ -8,8 +8,9 @@ import { scrubExceptionMessage } from '../src/analytics/exceptions';
 // them again in Swift and Kotlin. This runs the Swift copy, cut from the
 // patch by scripts/check-native-scrub.sh, on the invented inputs in
 // tests/fixtures/exception-scrub-cases.json and expects what the JS rules
-// keep. The Mac has `swift` but no Kotlin compiler, so Kotlin is not run here;
-// tests/analytics-exceptions.test.ts checks it uses the same pattern texts.
+// keep. tests/native-scrub-kotlin.test.ts runs the Kotlin copy where Java 17
+// is found (the Android desktop); tests/analytics-exceptions.test.ts checks it
+// uses the same pattern texts.
 // On a Mac a missing `swift` fails the test; only Linux (no Xcode) skips it.
 type Case = { event: string; properties: Record<string, unknown> };
 const casesPath = join(__dirname, 'fixtures/exception-scrub-cases.json');

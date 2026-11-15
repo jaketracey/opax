@@ -19,8 +19,8 @@ from urllib.parse import unquote, urlsplit
 
 sys.dont_write_bytecode = True
 from privacy_scan import scan as scan_binary_privacy
-from release_support import (JS_CHUNK_ID, JS_SOURCE_MAP, PRIVATE_NAMES, ReleaseError, load_credentials, matches,
-                             private_values, redact, scan_tracked)
+from release_support import (ANALYTICS_CONFIG, JS_CHUNK_ID, JS_SOURCE_MAP, PRIVATE_NAMES, ReleaseError,
+                             load_credentials, matches, private_values, redact, scan_tracked)
 
 GUARDS = (
     "Route is outside the public catalog allow-list",
@@ -52,9 +52,7 @@ POSTHOG_SDK_HOSTS = {"us.i.posthog.com", "eu.i.posthog.com", "us-assets.i.postho
 SDK_PATTERN_EXEMPT = {b"sentryuptimebot", b"amplitude"}
 POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types",
                     "node_modules/@posthog/react-native-plugin"}
-ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
-                    "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
-                    "environment": "production"}
+# ANALYTICS_CONFIG (release_support.py) is the one embedded analytics config.
 # What analytics adds to the privacy manifest: not linked, not tracking, Analytics.
 ANALYTICS_DATA_TYPES = ("ProductInteraction", "DeviceID")
 # Anonymous crash and error reports: not linked, not tracking, App Functionality.
