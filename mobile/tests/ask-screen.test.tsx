@@ -1394,25 +1394,38 @@ test('with no seat saved, the one starter is general and asks at once', async ()
   });
 });
 
-test('the sizing stand-ins cover both kinds of name: one with long words, one with none longer than the question’s own', () => {
-  const longestWord = (text: string) =>
-    Math.max(...text.split(/[^A-Za-z]+/).map((word) => word.length));
+test('the sizing stand-ins are the pair the layout sweep chose, and the full-size one is hyphen-aware with no part as long as the question’s own longest word', () => {
+  // Chosen by drawn height (system font, 17 to 53 pt, rows 200 to 330 pt
+  // wide): the taller of the two is never shorter than the question about
+  // any verified member of the House. Jest has no fonts, so the names are
+  // pinned here and the rule that makes them hold is checked below.
+  expect([...SIZING_MEMBERS]).toEqual([
+    'Alexandrina Wetherington',
+    'Annabelle Margaret Lee-Ray',
+  ]);
+  // A word breaks at spaces and at hyphens; each part must fit a line.
+  const parts = (text: string) => text.split(/[\s-]+/).filter(Boolean);
+  const longestPart = (text: string) =>
+    Math.max(...parts(text).map((part) => part.replace(/\W/g, '').length));
   // The question's own longest word, which every real question carries.
-  const template = longestWord(seatStarter(''));
+  const template = longestPart(seatStarter(''));
   expect(template).toBe('parliament'.length);
-  const [long, short] = SIZING_MEMBERS;
-  expect(SIZING_MEMBERS.length).toBe(2);
-  // Each is the roster's longest name (22 characters) plus a small margin.
-  for (const name of SIZING_MEMBERS) {
-    expect(name.length).toBeGreaterThanOrEqual(24);
-    expect(name.length).toBeLessThanOrEqual(26);
-  }
-  // A name with a long word: its question is stepped down at large sizes.
-  expect(longestWord(long)).toBeGreaterThan(template);
-  // A name of short words only: its question is never stepped down further
-  // than a real one, so at large sizes it is the taller candidate.
-  expect(longestWord(short)).toBeLessThanOrEqual(template);
-  expect(longestWord(seatStarter(short))).toBe(template);
+  const [long, full] = SIZING_MEMBERS;
+  // One name with a long word: its question is stepped down at large sizes.
+  expect(longestPart(long)).toBeGreaterThan(template);
+  // The other is drawn at full size. Letter count is not drawn width (a
+  // ten-letter name of wide letters draws wider than "parliament" and is
+  // stepped down), so every part is strictly shorter than that word.
+  expect(longestPart(full)).toBeLessThan(template);
+  expect(longestPart('Bernadette Annabelle Lee')).toBe(template);
+  // The tallest real questions are for hyphenated names, which break at
+  // the hyphen. The full-size stand-in is hyphenated too, and its question
+  // is longer and has more parts than the roster's longest such name's.
+  const hyphenated = 'Elizabeth Watson-Brown';
+  expect(full).toContain('-');
+  expect(full.length).toBeGreaterThan(hyphenated.length);
+  expect(parts(full).length).toBeGreaterThan(parts(hyphenated).length);
+  expect(longestPart(full)).toBeGreaterThanOrEqual(longestPart(hyphenated));
 });
 
 test.each([

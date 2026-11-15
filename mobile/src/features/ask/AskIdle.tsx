@@ -88,22 +88,29 @@ function useSeatPending(): boolean {
 }
 /**
  * Members' names for sizing the held box, never seen. The roster itself is
- * not on hand while the seat is still being read, so these are constants.
- * Both are 24 characters; the longest verified House name in the roster is
- * 22. There are two because a name sets the question's height in two ways:
+ * not on hand while the seat is still being read, so these are constants,
+ * chosen by drawn height, not by letter count: laid out in the system font
+ * at every text size from 17 to 53 pt and every row width from 200 to
+ * 330 pt, the taller of the two questions is never shorter than the
+ * question about any verified member of the House (worst margin 0 pt).
  *
- * - with long words. At large text sizes the row's type steps down until
- *   its longest word fits the line, so this question is drawn smaller;
- * - with no word longer than "parliament", the longest word in the
- *   question itself. This one is never stepped down further than any real
- *   question, so at large sizes it is the taller of the two, and as tall as
- *   the question about a member whose name is all short words.
+ * A name sets the question's height in two ways, so there are two:
+ *
+ * - one with long words. At large text sizes the row's type steps down
+ *   until its longest word fits the line, so this question is drawn
+ *   smaller, as a real long-worded name's is;
+ * - one whose every part is shorter than "parliament", the longest word in
+ *   the question itself, so it is never stepped down further than a real
+ *   question (a ten-letter name can draw wider than "parliament" and was).
+ *   It is long, and hyphenated, because a hyphen is a place to break: the
+ *   tallest real questions are for hyphenated names.
  *
  * The box takes the tallest of its candidates, so it holds either kind.
+ * Changing a name here means running that layout sweep again.
  */
 export const SIZING_MEMBERS = [
   'Alexandrina Wetherington',
-  'Bernadette Annabelle Lee',
+  'Annabelle Margaret Lee-Ray',
 ] as const;
 const noop = () => {};
 // The member the seat starter put in Person, so a starter tapped next does
