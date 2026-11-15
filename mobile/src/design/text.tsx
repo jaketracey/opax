@@ -379,6 +379,8 @@ export interface WordSafeState {
    * text scaled to full size (an upper bound: its widest line). */
   frame: number;
   word: number;
+  /** The size the generation before this one drew; 0 when there was none. */
+  prev: number;
 }
 /** The measurement identity captured by an event callback. */
 export interface WordSafeInstance {
@@ -398,19 +400,21 @@ export const wordSafeStart = (
   fullFrame: 0,
   frame: 0,
   word: 0,
+  prev: 0,
 });
 /** Two-place rounding of the line height leaves this much noise. */
 const MEASURED_AT_TOLERANCE = 0.03;
 /**
- * Every step clears that tolerance, so a layout queued from the size before
- * can never read as the new size's own and step it again: past two-place
- * rounding on iOS, and past pixel-rounded line heights on Android too. Ten per
- * cent steps always did. On iOS it passes over only 1pt steps of the largest
- * roles (title1 at 25 to 28pt), so a smaller reader there can draw up to 1pt
- * larger; Android's own sizes are all further apart.
+ * The smallest step. A layout queued from the size before a step belongs to
+ * whichever size it measures nearer (WordSafeState.prev), so a step need only
+ * clear the noise in each measurement twice over. On iOS that is two-place
+ * rounding (0.005), which keeps Apple's 1pt steps of the largest roles (2.9%
+ * at figure's 34pt), so a larger setting never draws smaller. Android's line
+ * heights round to whole pixels too (up to 0.024 for a 16dp line), and its own
+ * sizes are all further apart than this.
  */
 const wordSafeStep = (os: string) =>
-  os === 'ios' ? MEASURED_AT_TOLERANCE + 0.01 : 2 * MEASURED_AT_TOLERANCE;
+  os === 'ios' ? 0.015 : 2 * MEASURED_AT_TOLERANCE;
 /** Frame widths are compared to the half point; fits keep a point spare. */
 const WIDTH_EPSILON = 0.5;
 const FIT_MARGIN = 1;
@@ -456,6 +460,7 @@ function wordSafeLineHeight(lines: readonly WordSafeLine[]): number {
 /** Full size again, as a new generation; the uncapped multiplier still holds. */
 const restart = (state: WordSafeState): WordSafeState => ({
   ...wordSafeStart(state.key, state.full, state.gen + 1),
+  prev: state.cap,
 });
 /**
  * The column grew enough: the capped instance's frame is wider than the one
@@ -538,6 +543,17 @@ export function wordSafeOnLines(
     Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE
   )
     return state;
+  // A layout nearer the size drawn before this one is that size's, queued and
+  // delivered to current props: it must not step the new size again. Only
+  // where native conversion validated the scale; without it a cap can draw
+  // nearer the size before (1.29 for 1.23 after 1.33).
+  if (
+    validateScale &&
+    drawnAt &&
+    state.prev &&
+    Math.abs(measuredAt - state.prev) < Math.abs(measuredAt - drawnAt)
+  )
+    return state;
   if (breaksMidWord(lines)) {
     // Step from the exact size drawn, which the measurement must agree with:
     // a two-place measured scale can round up to the size just taken. Without
@@ -566,6 +582,7 @@ export function wordSafeOnLines(
       ...state,
       gen: state.gen + 1,
       cap: next,
+      prev: drawnAt || measuredAt,
       // Native conversion validates the ramp when available, and its exact
       // scale stays the baseline: the two-place measured one drew every cap
       // up to 0.4% off its size (15.97pt for 16pt at xLarge). Otherwise this
