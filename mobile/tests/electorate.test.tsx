@@ -363,6 +363,10 @@ test('Grayndler reads in the stated order with no pipeline words', async () => {
 });
 
 test('election rows push the election screen, newest first', async () => {
+  // A standard text size: the date shares the title's line.
+  const dimensions = jest
+    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
   load('Grayndler');
   const r = await render(<Electorate />);
   // On iOS the row is a Link trigger: the link carries the route.
@@ -452,10 +456,16 @@ test('election rows push the election screen, newest first', async () => {
   expect(has(r, 'election-expand-0')).toBe(false);
   // Sweep 1 item 8: the date is on the title's line and never breaks; the
   // result line is the winner's share after preferences from the AEC file.
+  // Build 80 sweep: the dot goes with the date, so it never ends a line.
   const line = (id: string) =>
     r.root.find((n) => n.props.testID === id && n.type === Text).props.children;
   expect(line('election-row-0-title')).toBe(
-    '2025 federal election · 3\u00a0May\u00a02025',
+    '2025 federal election ·\u00a03\u00a0May\u00a02025',
+  );
+  expect(has(r, 'election-row-0-date')).toBe(false);
+  // VoiceOver hears the plain words, as before.
+  expect(firstRow.props.accessibilityLabel).toMatch(
+    /^2025 federal election\. 3 May 2025\. /,
   );
   expect(
     r.root.find(
@@ -476,6 +486,39 @@ test('election rows push the election screen, newest first', async () => {
   expect(locator.props.accessibilityElementsHidden).toBe(true);
   expect(locator.props.importantForAccessibility).toBe('no-hide-descendants');
   await act(async () => r.unmount());
+  dimensions.mockRestore();
+});
+
+test('at accessibility sizes an election row’s date has its own line, with no dot left at a line’s end', async () => {
+  const dimensions = jest
+    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+    .mockReturnValue({ width: 402, height: 874, scale: 3, fontScale: 1.941 });
+  try {
+    load('Grayndler');
+    const r = await render(<Electorate />);
+    const line = (id: string) =>
+      r.root.find((n) => n.props.testID === id && n.type === Text).props
+        .children;
+    expect(line('election-row-0-title')).toBe('2025 federal election');
+    expect(line('election-row-0-date')).toBe('3\u00a0May\u00a02025');
+    // Both lines are word-safe: at the largest sizes the date alone is
+    // wider than a phone's column, and must step down, never break inside
+    // a number.
+    for (const id of ['election-row-0-title', 'election-row-0-date'])
+      expect(
+        r.root.find((n) => n.props.testID === id && n.type === Text).props
+          .wordSafe,
+      ).toBe(true);
+    const row = r.root.find(
+      (n) => n.props.testID === 'election-row-0' && n.props.accessible,
+    );
+    expect(row.props.accessibilityLabel).toMatch(
+      /^2025 federal election\. 3 May 2025\. /,
+    );
+    await act(async () => r.unmount());
+  } finally {
+    dimensions.mockRestore();
+  }
 });
 
 test.each([1, 3.571])(

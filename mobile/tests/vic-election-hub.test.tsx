@@ -723,3 +723,18 @@ test.each([
     }
   },
 );
+
+test('a finder heading binds its dot to the next word only, so a two-word kind still breaks between its words', async () => {
+  // A council area found by name, in the shape of the suburb fixture.
+  const council = {
+    ...finder,
+    hits: [{ ...finder.hits[0]!, name: 'Port Phillip', kind: 'Council area' }],
+  };
+  const r = await find('Port Phillip', decodeFind(council));
+  // The drawn words, without the marks word-safe text puts inside words.
+  const drawn = words(r).replace(/\u2060/g, '');
+  // The dot goes down with "Council"; "Council area" may break at its space.
+  expect(drawn).toContain('Port Phillip ·\u00a0Council area');
+  expect(drawn).not.toContain('Port Phillip · ');
+  expect(drawn).not.toContain('Council\u00a0area');
+});

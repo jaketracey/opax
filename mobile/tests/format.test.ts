@@ -10,6 +10,8 @@ import {
   formatCount,
   formatDate,
   formatFinancialYear,
+  titleWith,
+  titleWithWords,
   formatMoney,
   formatMoneyCompact,
   formatMoneyWords,
@@ -282,4 +284,19 @@ test('compact money is spoken as drawn, and cents never read as minus zero', () 
   expect(formatMoneyWords(-0.4)).toBe('$0');
   expect(moneyAccessibilityLabel(-0.4)).toBe('0 dollars');
   expect(formatMoney(-0.5)).toBe('-$1');
+});
+
+test('a title’s separator goes with the part after it, which never breaks: the dot never ends a line', () => {
+  expect(titleWith('2025 federal election', '3 May 2025')).toBe(
+    '2025 federal election · 3 May 2025',
+  );
+  // No break point follows the dot, and none sits inside the part.
+  expect(titleWith('Albert Park', 'Suburb')).not.toMatch(/· /);
+  // A part of several words keeps its own breaks: only the dot is bound.
+  expect(titleWithWords('St Kilda', 'Council area')).toBe(
+    'St Kilda ·\u00a0Council area',
+  );
+  expect(titleWithWords('St Kilda', 'Suburb')).toBe(
+    titleWith('St Kilda', 'Suburb'),
+  );
 });
