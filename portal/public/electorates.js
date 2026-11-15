@@ -61,7 +61,9 @@ export function recordedRepresentationHTML(representation, electorates) {
   const entry = recordedElectorate(representation, electorates);
   const label = esc(representation.electorate);
   const name = entry ? `<a href="${esc(entry.url)}">${label}</a>` : label;
-  return name + (representation.state && representation.chamber !== 'senate' ? `, ${esc(representation.state)}` : '');
+  // A statewide seat is the state itself ("New South Wales"): its code after it would say the state twice.
+  const statewide = JURISDICTIONS[String(representation.state || '').toLowerCase()] === representation.electorate;
+  return name + (representation.state && representation.chamber !== 'senate' && !statewide ? `, ${esc(representation.state)}` : '');
 }
 export function personElectorateLinksHTML(person, representations = [], electorates = []) {
   const seats = person?.electorates || [];
