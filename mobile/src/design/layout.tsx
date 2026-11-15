@@ -327,6 +327,22 @@ export function useClearBarRest() {
 }
 
 /**
+ * `useClearBarRest` for a page's own list. The hook reads the stack's
+ * descriptors, which change on every `setOptions`; a page that sets options
+ * as it renders (`RouteOptions` with inline options) and read them itself
+ * re-rendered without end ("Maximum update depth exceeded", the people lists
+ * in the b71 review). Only this child subscribes: it calls `children` again
+ * with the props to spread on the list, and the page does not re-render.
+ */
+export function ClearBarRest({
+  children,
+}: {
+  children: (list: ReturnType<typeof useClearBarRest>['list']) => ReactElement;
+}) {
+  return children(useClearBarRest().list);
+}
+
+/**
  * A pushed page's whole-screen state that does not scroll: a skeleton or a
  * message in a plain View. It clears the bar where the page runs under one
  * (`useClearBarTop`); elsewhere it is the View it replaces.

@@ -1,12 +1,12 @@
-import { act } from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { act, useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { FlatList, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import {
   HeaderHeightContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
-import { FixedPage, Screen } from '../src/design/layout';
+import { ClearBarRest, FixedPage, Screen } from '../src/design/layout';
 
 let mockBarEdge: 'unspecified' | 'leading' | 'trailing' = 'unspecified';
 jest.mock('../modules/opax-root-bar', () => ({
@@ -145,4 +145,71 @@ describe('a late scroll view under the clear bar', () => {
       act(() => page.renderer.unmount());
     },
   );
+});
+
+// The people lists set their route options as they render (RouteOptions
+// with inline options), and every setOptions gives the stack new
+// descriptors. A page that read the descriptors itself re-rendered without
+// end: "Maximum update depth exceeded" on Voting record, Declared interests,
+// Speeches and Largest sources (b71 review, caught on the simulator).
+test('a list under ClearBarRest does not re-render its page when options change', () => {
+  jest.replaceProperty(Platform, 'OS', 'ios');
+  mockBarEdge = 'trailing';
+  let pageRenders = 0;
+  let listProps: object | null = null;
+  function Options({
+    options,
+    set,
+  }: {
+    options: object;
+    set: (value: object) => void;
+  }) {
+    // As RouteOptions does: a new options object is a new setOptions.
+    useLayoutEffect(() => set(options), [options, set]);
+    return null;
+  }
+  function Page({ set }: { set: (value: object) => void }) {
+    pageRenders += 1;
+    return (
+      <>
+        <Options options={{ title: 'Voting record' }} set={set} />
+        <ClearBarRest>
+          {(list) => {
+            listProps = list;
+            return <FlatList data={[]} renderItem={() => null} {...list} />;
+          }}
+        </ClearBarRest>
+      </>
+    );
+  }
+  function Stack() {
+    const [descriptors, setDescriptors] = useState({
+      [route.key]: { options: { headerTransparent: true } },
+    });
+    const set = useCallback(
+      (options: object) =>
+        setDescriptors({
+          [route.key]: { options: { headerTransparent: true, ...options } },
+        }),
+      [],
+    );
+    const page = useMemo(() => <Page set={set} />, [set]);
+    return (
+      <NavigationRouteContext.Provider value={route as never}>
+        <DescriptorsContext.Provider value={descriptors as never}>
+          <HeaderHeightContext.Provider value={82}>
+            {page}
+          </HeaderHeightContext.Provider>
+        </DescriptorsContext.Provider>
+      </NavigationRouteContext.Provider>
+    );
+  }
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<Stack />);
+  });
+  expect(pageRenders).toBe(1);
+  // Under the clear bar the list still gets the rest check's props.
+  expect(listProps).toMatchObject({ scrollEventThrottle: 16 });
+  act(() => renderer.unmount());
 });

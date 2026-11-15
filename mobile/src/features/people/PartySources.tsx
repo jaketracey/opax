@@ -9,11 +9,7 @@ import {
   disclosureYearNote,
   formatDisclosureYear,
 } from '../../design/format';
-import {
-  FixedPage,
-  useClearBarRest,
-  useScreenColumn,
-} from '../../design/layout';
+import { FixedPage, ClearBarRest, useScreenColumn } from '../../design/layout';
 import { MoneyRow } from '../../design/rows';
 import {
   ContentUnavailable,
@@ -68,7 +64,6 @@ export default function PartySources() {
       disclosureYearNote,
     ],
   };
-  const rest = useClearBarRest();
   const { onLayout, content } = useScreenColumn('readable');
   const foot = useFloatingBarFoot();
   return (
@@ -108,84 +103,92 @@ export default function PartySources() {
         </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
-          <SectionList
-            testID="party-sources-screen"
-            style={styles.page}
-            contentInsetAdjustmentBehavior="automatic"
-            {...rest.list}
-            stickySectionHeadersEnabled
-            onLayout={onLayout}
-            contentContainerStyle={[styles.content, content, foot]}
-            sections={sections}
-            keyExtractor={(d, i) => `${d.id}-${i}`}
-            renderSectionHeader={({ section }) => (
-              <View style={styles.header}>
-                <Text wordSafe variant="groupHeader" accessibilityRole="header">
-                  {section.title}
-                </Text>
-              </View>
-            )}
-            renderItem={({ item, index, section }) => (
-              <MoneyRow
-                name={item.name}
-                detail={item.associated ?? undefined}
-                amount={item.amount}
-                href={moneyRecordRoute({ node: item.id }, item.name)}
-                testID={`party-sources-${section.title}-${index}`}
+          <ClearBarRest>
+            {(list) => (
+              <SectionList
+                testID="party-sources-screen"
+                style={styles.page}
+                contentInsetAdjustmentBehavior="automatic"
+                {...list}
+                stickySectionHeadersEnabled
+                onLayout={onLayout}
+                contentContainerStyle={[styles.content, content, foot]}
+                sections={sections}
+                keyExtractor={(d, i) => `${d.id}-${i}`}
+                renderSectionHeader={({ section }) => (
+                  <View style={styles.header}>
+                    <Text
+                      wordSafe
+                      variant="groupHeader"
+                      accessibilityRole="header"
+                    >
+                      {section.title}
+                    </Text>
+                  </View>
+                )}
+                renderItem={({ item, index, section }) => (
+                  <MoneyRow
+                    name={item.name}
+                    detail={item.associated ?? undefined}
+                    amount={item.amount}
+                    href={moneyRecordRoute({ node: item.id }, item.name)}
+                    testID={`party-sources-${section.title}-${index}`}
+                  />
+                )}
+                ListEmptyComponent={
+                  !record || receipts?.status === 'loading' ? (
+                    <Skeleton
+                      shape="rows"
+                      count={8}
+                      label="Loading largest sources"
+                      testID="party-sources-loading"
+                    />
+                  ) : receipts?.status === 'error' ? (
+                    // A failed read is not an empty disclosure record.
+                    <ContentUnavailable
+                      symbol="exclamationmark.triangle"
+                      title="Couldn’t load largest sources"
+                      body="Check your connection and try again."
+                      action={{ label: 'Try again', onPress: retry }}
+                      testID="party-sources-error"
+                    />
+                  ) : !view ? (
+                    <ContentUnavailable
+                      symbol="person.3"
+                      title="This party isn’t in OPAX’s records yet"
+                      testID="party-sources-not-found"
+                    />
+                  ) : (
+                    <ContentUnavailable
+                      symbol="banknote"
+                      title="No sources disclosed"
+                      testID="party-sources-empty"
+                    />
+                  )
+                }
+                ListFooterComponent={
+                  receipts && sections.length ? (
+                    <View style={styles.foot}>
+                      <BlockSource
+                        block={receipts}
+                        citation={about.citation}
+                        notes={about.notes}
+                        licenceDataset="aec"
+                        testID="party-sources-source"
+                      />
+                      <Text
+                        wordSafe
+                        variant="footnote"
+                        testID="party-sources-count"
+                      >
+                        {`${counted(sections.length, 'year', 'years')}`}
+                      </Text>
+                    </View>
+                  ) : null
+                }
               />
             )}
-            ListEmptyComponent={
-              !record || receipts?.status === 'loading' ? (
-                <Skeleton
-                  shape="rows"
-                  count={8}
-                  label="Loading largest sources"
-                  testID="party-sources-loading"
-                />
-              ) : receipts?.status === 'error' ? (
-                // A failed read is not an empty disclosure record.
-                <ContentUnavailable
-                  symbol="exclamationmark.triangle"
-                  title="Couldn’t load largest sources"
-                  body="Check your connection and try again."
-                  action={{ label: 'Try again', onPress: retry }}
-                  testID="party-sources-error"
-                />
-              ) : !view ? (
-                <ContentUnavailable
-                  symbol="person.3"
-                  title="This party isn’t in OPAX’s records yet"
-                  testID="party-sources-not-found"
-                />
-              ) : (
-                <ContentUnavailable
-                  symbol="banknote"
-                  title="No sources disclosed"
-                  testID="party-sources-empty"
-                />
-              )
-            }
-            ListFooterComponent={
-              receipts && sections.length ? (
-                <View style={styles.foot}>
-                  <BlockSource
-                    block={receipts}
-                    citation={about.citation}
-                    notes={about.notes}
-                    licenceDataset="aec"
-                    testID="party-sources-source"
-                  />
-                  <Text
-                    wordSafe
-                    variant="footnote"
-                    testID="party-sources-count"
-                  >
-                    {`${counted(sections.length, 'year', 'years')}`}
-                  </Text>
-                </View>
-              ) : null
-            }
-          />
+          </ClearBarRest>
         </StatePageProvider>
       )}
     </>
