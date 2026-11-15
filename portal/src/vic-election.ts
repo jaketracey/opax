@@ -12,9 +12,12 @@ export interface Member {
   speeches: {count: number; first: number; last: number; within_term: boolean} | null;
   speech_gap: string | null; votes: {count: number; ayes: number; noes: number} | null;
   detailed_count: number; divisions: Division[];
+  /** Set only where the VEC candidate lists confirm the member is not standing. */
+  not_candidate?: true;
 }
 export interface Contest { date: string; kind: 'general' | 'by-election' | 'supplementary'; party: string; share: number; against: string; against_share: number; margin: number; url: string }
-interface Candidate {name: string; party: string; group?: string | null; group_name?: string | null}
+/** href is set only for a reviewed, verified match to a roster member's record (scripts/vic_candidate_links.mjs). */
+interface Candidate {name: string; party: string; group?: string | null; group_name?: string | null; href?: string}
 export interface Seat {
   name: string; kind: 'district' | 'region'; path: string; source_url: string; region: string | null;
   districts: string[]; boundary_note: string | null; formerly: string | null; created: boolean;
@@ -150,7 +153,7 @@ function finder(d: VicElection, place: string | null, hits: PlaceHit[] | null, c
 export const titledVotes = (m: Member) => m.divisions.filter((r,i,all)=>!/^(?:assembly|council) divided on /i.test(r.title) && all.findIndex(x=>x.title === r.title) === i).slice(0,3)
 
 /** What a member has done: counts that are held, a speech search, recent votes. */
-function record(m: Member, opts: {search: boolean; heading: string}) {
+function record(m: Member, opts: {search: boolean; heading: string; notCandidate: string}) {
   const stats: string[] = []
   if (m.speeches) stats.push(`<li><b>${count(m.speeches.count)}</b> ${m.speeches.count === 1 ? 'speech' : 'speeches'} in Parliament, ${m.speeches.first === m.speeches.last ? m.speeches.first : `${m.speeches.first}–${m.speeches.last}`}</li>`)
   if (m.votes) stats.push(`<li><b>${count(m.votes.count)}</b> ${m.votes.count === 1 ? 'vote' : 'votes'} recorded in 2026: ${count(m.votes.ayes)} aye, ${count(m.votes.noes)} no</li>`)
@@ -164,13 +167,14 @@ function record(m: Member, opts: {search: boolean; heading: string}) {
   const votes = opts.search && titled.length
     ? `<h3 class="ui-subsection-title">Recent votes</h3><ul class="vic-votes">${titled.map(r=>`<li><a href="${esc(r.href)}">${esc(r.title)}</a><span class="hub-meta">${esc(shortDate(r.date))} · ${esc(voteWord(r.vote))}</span></li>`).join('')}</ul>`
     : ''
-  return `<article class="vic-member">${opts.heading}${stats.length ? `<ul class="vic-stats">${stats.join('')}</ul>` : ''}${search}${votes}${links([link(m.href,'Full profile'),...opts.search ? [] : [link(speeches,'Speeches')],link(m.source_url,'Parliament of Victoria profile')])}</article>`
+  return `<article class="vic-member">${opts.heading}${m.not_candidate ? opts.notCandidate : ''}${stats.length ? `<ul class="vic-stats">${stats.join('')}</ul>` : ''}${search}${votes}${links([link(m.href,'Full profile'),...opts.search ? [] : [link(speeches,'Speeches')],link(m.source_url,'Parliament of Victoria profile')])}</article>`
 }
 
-/** Candidates as the VEC publishes them after nominations close: ballot paper order, no other ordering. */
+/** Candidates as the VEC publishes them after nominations close: ballot paper order, no other ordering.
+ *  A verified roster member's name is a plain link to their record; nothing else about the row differs. */
 function candidates(s: Seat) {
   if (!s.candidates?.list.length) return ''
-  const row = (c: Candidate, number?: number) => `<li>${number === undefined ? '' : `<span class="vic-candidate-no" aria-hidden="true">${number}</span>`}<span class="vic-candidate"><span class="vic-candidate-name">${esc(c.name)}</span>${c.party && c.party.toLowerCase() !== 'independent' ? party(c.party) : ''}</span></li>`
+  const row = (c: Candidate, number?: number) => `<li>${number === undefined ? '' : `<span class="vic-candidate-no" aria-hidden="true">${number}</span>`}<span class="vic-candidate"><span class="vic-candidate-name">${c.href ? link(c.href,c.name) : esc(c.name)}</span>${c.party && c.party.toLowerCase() !== 'independent' ? party(c.party) : ''}</span></li>`
   let body: string
   if (s.kind === 'region') {
     const groups: {letter: Candidate['group']; name: string; list: Candidate[]}[] = []
@@ -270,6 +274,8 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
   const rosterNote = closed ? `Members are from the published roster dated ${shortDate(d.seats.map(s=>s.roster_date).sort().at(-1)!)}. ` : ''
   const districtNote = rosterNote + 'Each row shows the member and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.'
   const districts = d.seats.filter(x=>x.kind === 'district'), regions = d.seats.filter(x=>x.kind === 'region')
+  // Factual and sourced: shown only for members the VEC lists rule out.
+  const notCandidate = s?.candidates ? `<p class="hub-meta">Not a candidate in 2026. Source: ${link(d.sources.candidates || d.sources.election,'VEC candidate lists')}, published ${esc(shortDate(s.candidates.published))}.</p>` : ''
   let title: string, description: string, body: string, crumbs: Crumb[]
   if (!s) {
     title = copy.title
@@ -293,7 +299,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + electionResults(d,s,now)
       + `<dl class="vic-facts"><div><dt>${closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>${resultFacts(s)}</dl>`
       + candidates(s)
-      + section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''}))
+      + section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:'',notCandidate}))
       + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.`)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'District map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find another seat')])}</div>`
@@ -305,7 +311,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
       + candidates(s)
-      + section('members',closed ? 'Members in the published roster' : 'Members',`<div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`})).join('')}</div>`,closed ? `Roster dated ${esc(shortDate(s.roster_date))}.` : '')
+      + section('members',closed ? 'Members in the published roster' : 'Members',`<div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`,notCandidate})).join('')}</div>`,closed ? `Roster dated ${esc(shortDate(s.roster_date))}.` : '')
       + section('districts','Districts in this region',seatList(s.districts.map(name=>seatRow(memberOf(d,name))).join(''),'Districts'),districtNote)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'Region map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find your seat')])}</div>`

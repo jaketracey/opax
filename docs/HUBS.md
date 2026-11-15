@@ -175,6 +175,54 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | The West Party | WEST | The West Party | neutral |
   | Victorian Socialists | VS | Victorian Socialists | neutral |
 
+- `vic-candidate-links-2026.json`, from `node scripts/vic_candidate_links.mjs`:
+  the reviewed mapping of VEC candidates to the 128 roster members. A wrong link
+  would put another person's parliamentary record beside a candidate, so nothing
+  is matched at request time. The build links a candidate only when the pair is
+  in this committed file and a fresh match of the current lists and roster still
+  supports it. An entry that no longer holds is left out with a build warning
+  (`links_left_out` in the build summary), so the row falls back to plain text
+  and a later roster or VEC list cannot stop the election build.
+
+  A pair is **verified** only when the VEC name equals the roster name or a
+  roster alias (after folding case, accents, apostrophes and punctuation), the
+  candidate stands in the seat the member held on the roster, the VEC registered
+  party and the roster party are the same party under the existing label
+  aliases, and nothing else is in doubt. Every other name match is **ambiguous**
+  and is never linked: a name variant, a different seat, a different or blank
+  party, the same name on the VEC lists twice, a name matching two members, or a
+  name that also has a record in another parliament.
+
+  | | Count |
+  | --- | ---: |
+  | Candidates on the VEC lists | 1,037 |
+  | Verified and linked | 92 |
+  | Ambiguous, not linked | 8 |
+  | No name match with a roster member | 937 |
+  | Members marked "Not a candidate in 2026" | 27 |
+  | Members left unmarked for a person to check | 1 |
+
+  The remaining 8 of the 128 members are those named in the ambiguous pairs.
+  "Not a candidate in 2026" is shown only where the member has no name match and
+  no remaining candidate with their surname shares their seat, their party or
+  their first initial. The file keeps the same-surname candidates that were
+  considered. A member who nominated under a different given name, in a
+  different seat and for a different party would not be caught by this rule.
+
+  To settle an ambiguous pair, a person moves it to `reviewed` with
+  `reviewed_on` (a date) and `review_evidence` (what was checked); to settle a
+  member in `members_to_check`, they add the member to `not_candidate` with the
+  same two fields. The build accepts no other route, reruns keep these entries,
+  and `portal/test/vic-candidate-links.test.mjs` pins the linked set, so each
+  promotion is also a reviewed test change. After a refreshed VEC list, rerun
+  the script, review the diff and commit it;
+  `node scripts/vic_candidate_links.mjs --check` fails on a stale file.
+
+  A linked candidate's name is a plain text link to the profile the roster
+  member's name already opens. The row is otherwise identical to every other
+  candidate's: no portrait, colour or position change. The app endpoints do not
+  carry the link or the mark; their candidate and member fields are unchanged.
+
 The optional **`scripts/hubs/vic-results-2026.json`** is the after-poll results
 input. It is absent before acquisition, so no results section is rendered.
 Use the [2026 results runbook](reports/2026-11-14-vic-after-poll.md#results-data-path-and-rehearsal)

@@ -22,7 +22,7 @@ function validContest(c: Contest): boolean {
 
 function validMember(m: Member): boolean {
   return object(m) && text(m.name) && nullableText(m.party) && text(m.href) && /^\/subject\/person\/[a-z0-9-]+$/.test(m.href)
-    && https(m.source_url) && nullableText(m.speech_gap)
+    && https(m.source_url) && nullableText(m.speech_gap) && (m.not_candidate === undefined || m.not_candidate === true)
     && (m.speeches === null || fields(m.speeches,['count','first','last'],integer) && typeof m.speeches?.within_term === 'boolean')
     && (m.votes === null || fields(m.votes,['count','ayes','noes'],integer))
     && Array.isArray(m.divisions) && m.divisions.every(v=>object(v) && validDate(v.date)
@@ -40,7 +40,17 @@ function validSeat(s: Seat): boolean {
     && (s.candidates === null || object(s.candidates) && validDate(s.candidates.published) && https(s.candidates.url)
       && Array.isArray(s.candidates.list) && s.candidates.list.every(c=>fields(c,['name','party'],text)
         && (c.group == null || text(c.group) && /^[A-Z]$/.test(c.group))
-        && (c.group_name == null || text(c.group_name))))
+        && (c.group_name == null || text(c.group_name))
+        && (c.href === undefined || text(c.href))))
+    // "Not a candidate" rests on a published VEC list.
+    && (s.candidates !== null || s.members.every(m=>!m.not_candidate))
+}
+
+/** A candidate links only to a roster member's record, each member at most once, and never one marked as not standing. */
+function validLinks(d: VicElection): boolean {
+  const members = new Set(d.seats.flatMap(s=>s.members.filter(m=>!m.not_candidate).map(m=>m.href)))
+  const linked = d.seats.flatMap(s=>(s.candidates?.list ?? []).flatMap(c=>c.href === undefined ? [] : [c.href]))
+  return linked.every(href=>members.has(href)) && new Set(linked).size === linked.length
 }
 
 export function validateVicResults(value: unknown, electionDay: string, districts: string[]): VicResults {
@@ -74,7 +84,7 @@ export function validateVicElection(value: unknown): VicElection {
     || !text(d.authorisation) || !fields(d.corrections,['email','response'],text)
     || !fields(d.sources,[...VIC_ELECTION_SOURCE_KEYS],https) || !Array.isArray(d.seats) || !d.seats.every(validSeat)
     || d.seats.filter(s=>s.kind === 'district').length !== 88 || d.seats.filter(s=>s.kind === 'region').length !== 8
-    || new Set(d.seats.map(s=>s.path)).size !== 96
+    || new Set(d.seats.map(s=>s.path)).size !== 96 || !validLinks(d)
     || d.seats.some(s=>s.kind === 'district'
       ? !d.seats.some(r=>r.kind === 'region' && r.name === s.region)
       : s.districts.length !== 11 || s.districts.some(name=>!d.seats.some(x=>x.kind === 'district' && x.name === name)))
