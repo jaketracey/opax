@@ -15,7 +15,7 @@
 # shellcheck shell=bash
 
 # order = the order they are validated in
-DATA_GROUPS=(bills instruments audit annual-reports integrity-reports royal-commissions budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity video electorates)
+DATA_GROUPS=(bills instruments audit annual-reports integrity-reports royal-commissions budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people firsts pay discovery taxcharity video electorates)
 
 declare -A GROUP_PATHS=(
   [bills]="portal/public/bills"
@@ -43,6 +43,7 @@ declare -A GROUP_PATHS=(
   [fits]="portal/public/fits.json"
   [speakers]="portal/public/speakers.json"
   [people]="portal/public/parliamentarians.json portal/src/passage-names.json portal/public/person-paths.js portal/public/growth/sponsors portal/public/seo-links.json" # the roster and what the build derives from it (sponsor links read the bills too) travel together
+  [firsts]="portal/public/people/firsts.json" # each roster person's first speech and division in the record; reads the roster, so after people
   [pay]="portal/public/pay.json"
   [discovery]="portal/public/discovery.json"
   [taxcharity]="portal/public/entities/tax-charity"

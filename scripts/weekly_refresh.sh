@@ -208,7 +208,10 @@ if [ "$want_weekly" = 1 ]; then
   # --- exports, in dependency order (later ones read earlier outputs) -------------------------------------------
   run_step x_speakers "" "$EXPORT" json portal/public/speakers.json "$PY" scripts/export_speakers.py
   # the directory plus the recorded representation the portal needs (scripts/vm/export_people.sh says why)
+  rm -f "$TMP/speech-facts.json"
+  export OPAX_SPEECH_FACTS="$TMP/speech-facts.json"   # export_people.sh: the pass also writes the firsts' speech facts
   run_step x_people "" "$EXPORT" json portal/public/parliamentarians.json bash scripts/vm/export_people.sh
+  unset OPAX_SPEECH_FACTS
   # exit 3: the export would take a sitting member's id or seat, change >25 rows' identity or drop rows, so the
   # shipped roster is kept (STALE_OK); say why, for the nightly status (docs/PHOTOS.md, "Nightly safety net")
   held=$(grep -m1 '^ROSTER HELD:' "$PIPE/x_people.log" 2>/dev/null || true)
@@ -216,6 +219,18 @@ if [ "$want_weekly" = 1 ]; then
   # what the export said that the shipped roster kept or held back (scripts/roster_overlay.py)
   overlay=$(grep -m1 '^ROSTER OVERLAY:' "$PIPE/x_people.log" 2>/dev/null || true)
   [ -z "$overlay" ] || log "Roster overlay: ${overlay#ROSTER OVERLAY: }"
+  # each roster person's first speech and first division in the record (scripts/export_people_firsts.py): reads the
+  # roster x_people just left on disk and parli.db read-only; the firsts group owns the file (scripts/vm/data_groups.sh)
+  # It reads the speech facts x_people's pass just wrote, never the speeches again (one dedupe a night); with no
+  # facts (x_people failed before its pass) the step is skipped and the shipped file kept.
+  if [ -s "$TMP/speech-facts.json" ]; then
+    run_step x_firsts "" "$EXPORT" json portal/public/people/firsts.json \
+      "$PY" scripts/export_people_firsts.py --speech-facts "$TMP/speech-facts.json"
+  else
+    log "[x_firsts] SKIP: the people step wrote no speech facts; last good firsts kept"
+  fi
+  coverage=$(grep -c '^\[firsts\] coverage ' "$PIPE/x_firsts.log" 2>/dev/null || true)
+  [ "${coverage:-0}" -eq 0 ] || log "Firsts: $(grep -m1 '^\[firsts\] .* roster people' "$PIPE/x_firsts.log" | cut -c10-)"
   # nightly.sh calls this periodic path. Offline provenance rebuild preserves
   # classifications, reviewed exclusions and legacy totals on every re-import.
   if run_step aec_receipt_types "SELECT COUNT(*) FROM aec_receipt_records" \

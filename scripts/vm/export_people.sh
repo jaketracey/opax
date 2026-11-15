@@ -21,7 +21,9 @@ PY="${PY:-.venv/bin/python}"
 DB="${OPAX_DB:-$HOME/.cache/autoresearch/parli.db}"
 T=$(mktemp -d "${TMPDIR:-/tmp}/people.XXXXXX")
 trap 'rm -rf "$T"' EXIT
-"$PY" scripts/export_parliamentarians.py --defer-check > "$T/directory.json"
+# OPAX_SPEECH_FACTS (weekly_refresh.sh sets it): the same pass also writes each speaker's earliest speech there, for the
+# firsts side file (scripts/export_people_firsts.py --speech-facts), so the speeches are deduped once a night.
+"$PY" scripts/export_parliamentarians.py --defer-check ${OPAX_SPEECH_FACTS:+--speech-facts "$OPAX_SPEECH_FACTS"} > "$T/directory.json"
 sqlite3 -readonly -json "$DB" "SELECT full_name, state, chamber, electorate, entered_house, left_house FROM members" > "$T/members.json"
 "$PY" scripts/enrich_profile_jurisdictions.py --members "$T/members.json" --directory "$T/directory.json" \
     --research portal/public/research/mlci.json >&2
