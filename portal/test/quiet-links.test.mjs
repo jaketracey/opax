@@ -43,7 +43,8 @@ test('a question asked from lower on the Ask page is brought into view by one sh
 });
 
 test('an interests register table has ink links; a money table keeps its green, visited or not', () => {
-  const dom = new JSDOM(`<!doctype html><html><head>${sheets('style.css', 'datatable.css', 'register-tables.css', 'grants-table.css')}</head><body>
+  const dom = new JSDOM(`<!doctype html><html><head>${sheets('style.css', 'datatable.css', 'register-tables.css', 'grants-table.css', 'vic-gifts.css')}</head><body>
+    <section id="subject-vic-gifts" class="vic-gifts-content"><div data-register-table="vic-gifts-table" class="dt-root"><table class="dt"><tbody><tr><td data-primary><a id="vic-gift" href="https://example.org/gifts">An office holder</a></td></tr></tbody></table></div><p class="vic-gifts-receipt"><a id="vic-receipt" href="https://example.org/source">Source</a></p></section>
     <section id="subject-interests"><div data-register-table="interests-table" class="dt-root"><table class="dt"><tbody><tr><td data-primary><a id="interest" href="https://example.org/register">An entry</a></td></tr></tbody></table></div></section>
     <div data-register-table="ssr-interests-table" class="dt-root"><table class="dt"><tbody><tr><td><a id="ssr" href="https://example.org/register">An entry</a></td></tr></tbody></table></div>
     <section id="person-party-money"><div data-register-table="party-money-table" class="dt-root"><table class="dt"><tbody><tr><td><a id="party-money" href="/m">A source</a></td></tr></tbody></table></div></section>
@@ -71,11 +72,14 @@ test('an interests register table has ink links; a money table keeps its green, 
   assert.ok(INK && GREEN && PLUM && new Set([INK, GREEN, PLUM]).size === 3, 'three different tokens');
   assert.equal(linkColour('prose'), INK, 'the site link colour is ink');
   // The interests registers: ink on the bronze rule, the site's ordinary link.
-  for (const id of ['interest', 'ssr']) {
+  // The Victorian gifts register borrows the same plum accent (vic-gifts.css).
+  for (const id of ['interest', 'ssr', 'vic-gift']) {
     assert.equal(linkColour(id), INK, `#${id}: an interests register link is ink, not the plum accent`);
     assert.equal(ruleColour(id), token('--bronze-rule'), `#${id}: on the site's underline colour`);
     assert.equal(dom.window.getComputedStyle(document.getElementById(id)).textDecoration, 'underline', `#${id}: still underlined`);
   }
+  assert.equal(custom(document.getElementById('vic-gift'), '--money-ink'), 'var(--interests-ink)', 'the gifts register keeps its plum accent for bars, filters and focus');
+  assert.equal(linkColour('vic-receipt'), INK, 'its source links outside the table are the site link, as before');
   // Money tables keep their green.
   for (const id of ['party-money', 'grant', 'plain']) assert.equal(linkColour(id), GREEN, `#${id}: a money table link keeps the money green`);
   // Visited or not: no stylesheet names :visited at all, so a visited link is
