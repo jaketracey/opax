@@ -5,6 +5,7 @@ import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-con
 import {hubShell, type HubFooterConfig} from './hubs'
 import {trail} from './nav-model.mjs'
 import {validateVicElection} from './vic-election-data'
+import {nextStepsHTML, vicDistrictNextSteps} from '../public/next-steps.js'
 
 interface Division { date: string; title: string; href: string; vote: string; source_url: string }
 export interface Member {
@@ -292,6 +293,8 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
       + `<dl class="vic-facts"><div><dt>${closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>${resultFacts(s)}</dl>`
+      // Neutral next steps only until polls close: no person, party, vote or member count (next-steps.js).
+      + nextStepsHTML(vicDistrictNextSteps(s,region,{closed}),{pageType:'vic-election',id:'vic-next'})
       + candidates(s)
       + section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''}))
       + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.`)
