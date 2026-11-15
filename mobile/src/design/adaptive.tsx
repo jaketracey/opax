@@ -386,20 +386,20 @@ export function RegionProvider({
   children: ReactNode;
 }) {
   const parent = useContext(RegionContext);
-  const region = (
-    <RegionContext.Provider value={value ?? parent}>
-      {children}
-    </RegionContext.Provider>
-  );
+  const column = useContext(ColumnWidthContext);
   // A measured region is nearer than any column around it: what it holds
   // starts from the region's own width, not a width handed down from
   // outside (ColumnWidth). With no measure yet, the column still stands.
-  return value ? (
-    <ColumnWidthContext.Provider value={null}>
-      {region}
+  // The provider is always rendered, whatever the value: a wrapper that
+  // came and went with the measure changed this element's type, and React
+  // remounted everything inside each time a region was first measured
+  // (every Screen's content, a split's list pane on each rotation).
+  return (
+    <ColumnWidthContext.Provider value={value ? null : column}>
+      <RegionContext.Provider value={value ?? parent}>
+        {children}
+      </RegionContext.Provider>
     </ColumnWidthContext.Provider>
-  ) : (
-    region
   );
 }
 
