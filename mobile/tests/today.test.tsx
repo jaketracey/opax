@@ -42,7 +42,7 @@ import {
 import { Text } from '../src/design/text';
 import * as learnSettings from '../src/features/learn/settings';
 import { OfflineLine } from '../src/design/states';
-import Today from '../src/features/Today';
+import Today, { EDITION_HEADING } from '../src/features/Today';
 import { WelcomePage } from '../src/features/welcome/Welcome';
 import { AustraliaDots } from '../src/features/today/AustraliaDots';
 import { TodayEditionCard } from '../src/features/today/FeaturedPeopleCard';
@@ -744,7 +744,7 @@ describe('the page', () => {
   });
   test('Your MP loading is one element, read once', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
-    // The tile's skeleton stands while the directory is on its way.
+    // The group's rows hold its place while the directory is on its way.
     mock.directory.mockImplementation(() => new Promise(() => {}));
     const r = await render(<Today />);
     // What VoiceOver can reach: not inside a hidden subtree.
@@ -756,7 +756,7 @@ describe('the page', () => {
     const spoken = r.root.findAll(
       (n) =>
         typeof n.type === 'string' &&
-        n.props.accessibilityLabel === 'Loading your MP' &&
+        n.props.accessibilityLabel === 'Loading your representatives' &&
         n.props.accessible === true &&
         !hidden(n.parent),
     );
@@ -780,7 +780,7 @@ describe('the page', () => {
     expect(r.root.findByType(Screen).props.grouped).toBe(true);
     expect(blocks(r.root)).not.toContain('today-votes');
   });
-  test('Your MP: one tile for the member and its line; no records or senators on Home', async () => {
+  test('Your representatives: a heading, one group with the member\u2019s row and its line; no records on Home', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     const r = await render(<Today />);
     const card = r.root.find(
@@ -789,14 +789,66 @@ describe('the page', () => {
     const ids = card
       .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
       .map((n) => n.props.testID as string);
-    expect(ids).toContain('today-your-mp-member');
-    expect(ids).toContain('today-your-mp-hook');
+    expect(ids[1]).toBe('today-reps-heading');
+    expect(ids).toContain('today-rep-federal');
+    expect(ids).not.toContain('today-rep-state');
+    expect(ids).toContain('today-reps-senators');
     expect(ids.filter((id) => id === 'today-your-mp-sources').length).toBe(1);
     for (const id of ids)
-      expect(id).not.toMatch(/latest|senators|declaration|your-mp-group/);
-    expect(strings(card)).toContain('Grayndler');
-    expect(strings(card)).toContain('Represents you in federal parliament');
+      expect(id).not.toMatch(/latest|declaration|your-mp-group|your-mp-mark/);
+    expect(strings(card)).toContain('Your representatives');
+    expect(strings(card)).toContain('Federal · Grayndler');
+    // The eyebrow and its line are gone: the heading says whose they are.
+    expect(strings(card)).not.toMatch(/Your MP\b/);
+    expect(strings(card)).not.toContain('Represents you in federal parliament');
     expect(strings(card)).not.toMatch(/authoris/i);
+  });
+  test('the featured edition has its heading, in the heading style the representatives and the election share', async () => {
+    setUp({ seat: true, cached: { date: today }, edition: editionAged(0) });
+    const r = await render(<Today />);
+    const heading = (id: string) =>
+      r.root.findAll((n) => n.type === 'Text' && n.props.testID === id)[0]!;
+    const edition = heading('today-edition-heading');
+    const reps = heading('today-reps-heading');
+    expect(strings(edition.parent!)).toContain(EDITION_HEADING);
+    expect(EDITION_HEADING).toBe('Daily edition');
+    expect(edition.props.accessibilityRole).toBe('header');
+    // One text style for both, so side by side they share a baseline.
+    expect(StyleSheet.flatten(edition.props.style)).toEqual(
+      StyleSheet.flatten(reps.props.style),
+    );
+    expect(StyleSheet.flatten(edition.props.style)).toMatchObject({
+      fontSize: StyleSheet.flatten(
+        r.root.findAll(
+          (n) => n.type === 'Text' && n.props.accessibilityRole === 'header',
+        )[0]!.props.style,
+      ).fontSize,
+    });
+    // The heading is over the card, in the card's own block.
+    const block = r.root.findAll(
+      (n) =>
+        n.type === 'View' &&
+        n.findAll((c) => c.props.testID === 'today-edition-heading').length >
+          0 &&
+        n.findAll((c) => c.props.testID === 'today-edition-card').length > 0,
+    );
+    expect(block.length).toBeGreaterThan(0);
+    expect(StyleSheet.flatten(block.at(-1)!.props.style)).toMatchObject({
+      gap: rhythm.tight,
+    });
+  });
+  test('the edition\u2019s heading stands over its skeleton, so the card never moves when the edition lands', async () => {
+    setUp({ cached: null });
+    mock.todayEdition.mockImplementation(() => new Promise(() => {}));
+    const r = await render(<Today />);
+    const ids = r.root
+      .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
+      .map((n) => n.props.testID as string);
+    expect(ids).toContain('today-edition-loading');
+    expect(ids.indexOf('today-edition-heading')).toBeGreaterThan(-1);
+    expect(ids.indexOf('today-edition-heading')).toBeLessThan(
+      ids.indexOf('today-edition-loading'),
+    );
   });
   test('no string says a retired or pipeline word, or an em dash', async () => {
     for (const options of [
@@ -869,34 +921,34 @@ describe('the first frame has the loaded page’s layout', () => {
       ),
     );
     expect(hosts(r, 'today-your-mp-loading')).toHaveLength(0);
-    expect(hosts(r, 'today-your-mp-member')).not.toHaveLength(0);
+    expect(hosts(r, 'today-rep-federal')).not.toHaveLength(0);
+    // The heading was there from the first frame, and is the same one.
+    expect(hosts(r, 'today-reps-heading')).toHaveLength(1);
   });
 
-  test('Your MP’s skeleton has the tile’s shape: the card, a 56 pt portrait, four lines of the tile’s type and the source band', async () => {
+  test('the representatives\u2019 place has the group\u2019s shape: the heading, a row with a 44 pt portrait and the row\u2019s three lines of type, the senators row and the source band', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     mock.directory.mockImplementation(() => new Promise(() => {}));
     const r = await render(<Today />);
-    const tile = hosts(r, 'today-your-mp-loading-tile')[0]!;
-    // The card's own face and padding, as the loaded tile's.
-    expect(flat(tile)).toMatchObject({ padding: 20 });
-    expect(flat(hosts(r, 'today-your-mp-loading-portrait')[0]!)).toMatchObject({
-      width: 56,
-      height: 56,
-    });
+    expect(hosts(r, 'today-reps-heading')).toHaveLength(1);
+    // No kept shape and no saved state seat: one member row.
+    expect(hosts(r, 'today-rep-federal-loading')).toHaveLength(1);
+    expect(hosts(r, 'today-rep-state-loading')).toHaveLength(0);
+    expect(hosts(r, 'today-reps-loading-senators')).toHaveLength(1);
+    const row = hosts(r, 'today-rep-federal-loading')[0]!;
     // Unseen lines of the real text styles set the heights, so they follow
     // the text size as the loaded lines do.
-    const words = hosts(r, 'today-your-mp-loading-words')[0]!;
-    const lines = words
-      .findAll((n) => n.type === Text)
-      .map((n) => n.props.variant);
-    expect(lines).toEqual([
-      'footnote',
-      'subsectionTitle',
-      'secondary',
-      'secondary',
-    ]);
-    expect(flat(words)).toMatchObject({ gap: rhythm.line });
-    expect(flat(hosts(r, 'today-your-mp-loading-source')[0]!).minHeight).toBe(
+    expect(
+      row.findAll((n) => n.type === Text).map((n) => n.props.variant),
+    ).toEqual(['name', 'secondary', 'secondary']);
+    expect(flat(row)).toMatchObject({ paddingVertical: rhythm.row });
+    expect(
+      row.findAll(
+        (n) =>
+          n.type === 'View' && flat(n).width === 44 && flat(n).height === 44,
+      ),
+    ).toHaveLength(1);
+    expect(flat(hosts(r, 'today-reps-loading-source')[0]!).minHeight).toBe(
       Platform.OS === 'android' ? 48 : 44,
     );
   });
@@ -906,8 +958,10 @@ describe('the first frame has the loaded page’s layout', () => {
     mock.yourMP.mockImplementation(() => new Promise(() => {}));
     const r = await render(<Today />);
     expect(hosts(r, 'today-your-mp-loading')).toHaveLength(0);
-    expect(hosts(r, 'today-your-mp-member')).not.toHaveLength(0);
-    expect(strings(hosts(r, 'today-your-mp')[0]!)).toContain('Grayndler');
+    expect(hosts(r, 'today-rep-federal')).not.toHaveLength(0);
+    expect(strings(hosts(r, 'today-your-mp')[0]!)).toContain(
+      'Federal · Grayndler',
+    );
   });
 
   test('before the disk answers the body draws nothing, and the cover waits for the page’s order', async () => {
@@ -954,6 +1008,7 @@ describe('the first frame has the loaded page’s layout', () => {
       key: shapeKey(legacy),
       house: false,
       state: false,
+      senators: false,
     });
     // The next launch, the directory still out: no Your MP skeleton and no
     // reorder when the migration runs. It happened on every launch.
@@ -969,29 +1024,78 @@ describe('the first frame has the loaded page’s layout', () => {
     expect(blocks(next.root)).toEqual(before);
   });
 
-  test('a kept shape for another choice is not used, and a kept state seat card holds its place beside Your MP', async () => {
+  test('a kept shape for another choice is not used; the kept shape for this choice sets the rows held for the group', async () => {
     const choice = {
       version: 1 as const,
       seatId: grayndler.electorate_id,
       stateSeatIds: [],
     };
-    await rememberTodayShape({ key: 'another|', house: false, state: true });
+    await rememberTodayShape({
+      key: 'another|',
+      house: false,
+      state: true,
+      senators: false,
+    });
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     mock.directory.mockImplementation(() => new Promise(() => {}));
     const other = await render(<Today />);
     expect(blocks(other.root)[0]).toBe('today-your-mp-pending');
-    expect(hosts(other, 'today-state-seat-pending')).toHaveLength(0);
-    // The last launch drew a state seat card for this choice.
+    expect(hosts(other, 'today-rep-state-loading')).toHaveLength(0);
+    expect(hosts(other, 'today-reps-loading-senators')).toHaveLength(1);
+    // The last launch drew a state member's row and no senators row.
     await rememberTodayShape({
       key: shapeKey(choice),
       house: true,
       state: true,
+      senators: false,
     });
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     mock.directory.mockImplementation(() => new Promise(() => {}));
     const r = await render(<Today />);
-    expect(hosts(r, 'today-state-seat-pending')).toHaveLength(1);
+    expect(hosts(r, 'today-rep-federal-loading')).toHaveLength(1);
+    expect(hosts(r, 'today-rep-state-loading')).toHaveLength(1);
+    expect(hosts(r, 'today-reps-loading-senators')).toHaveLength(0);
     expect(hosts(r, 'today-your-mp-pending')).toHaveLength(1);
+  });
+
+  test('a Victorian reader: two rows from the first frame, before any shape is kept, and the same two when the directory answers', async () => {
+    const federal = index.electorates.find(
+      (s) =>
+        s.name === 'Maribyrnong' &&
+        s.jurisdiction === 'federal' &&
+        s.status !== 'historical',
+    )!;
+    const state = index.electorates.find(
+      (s) => s.name === 'Essendon' && s.chamber === 'vic_la',
+    )!;
+    const choice = {
+      version: 1 as const,
+      seatId: federal.electorate_id,
+      stateSeatIds: [state.electorate_id],
+    };
+    setUp({ cached: { date: addDays(today, -1) } });
+    jest.mocked(loadChoice).mockResolvedValue(choice);
+    const directoryRead = pending<typeof directory>();
+    mock.directory.mockReturnValue(directoryRead.promise as never);
+    const r = await render(<Today />);
+    // Nothing kept yet (a version 1 shape file is not read): the saved
+    // choice alone says a state member's row will draw.
+    await expect(readTodayShape()).resolves.toBeNull();
+    const held = ['today-rep-federal-loading', 'today-rep-state-loading'];
+    for (const id of held) expect(hosts(r, id)).toHaveLength(1);
+    await act(async () => directoryRead.answer(directory));
+    for (const id of held) expect(hosts(r, id)).toHaveLength(0);
+    expect(hosts(r, 'today-rep-federal')).toHaveLength(1);
+    expect(hosts(r, 'today-rep-state')).toHaveLength(1);
+    expect(hosts(r, 'today-reps-senators')).toHaveLength(1);
+    // The old state seat card is gone: one group, not two cards.
+    expect(hosts(r, 'today-state-seat')).toHaveLength(0);
+    await expect(readTodayShape()).resolves.toEqual({
+      key: shapeKey(choice),
+      house: true,
+      state: true,
+      senators: true,
+    });
   });
 
   test('a held, empty sitting line is given back once Today is out of view', async () => {

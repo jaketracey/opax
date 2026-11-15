@@ -84,7 +84,8 @@ jest.mock('../src/features/today/SeatInvitation', () => ({
 }));
 jest.mock('../src/features/today/YourMPCard', () => ({
   YourMPCard: () => null,
-  StateSeatCard: () => null,
+  YourMPPending: () => null,
+  repsShape: () => ({ state: false, senators: false }),
 }));
 jest.mock('../src/features/today/DailyPair', () => ({ DailyPair: () => null }));
 jest.mock('../src/features/today/BillFeed', () => ({ BillsBlock: () => null }));

@@ -16,13 +16,13 @@ name: Equal Today, hero and profile affordances for one member
     id: seat-row-${SEAT_SLUG}
 - extendedWaitUntil:
     visible:
-      id: today-your-mp-member
-      text: Your MP, ${MEMBER}.*
+      id: today-rep-federal
+      text: ${MEMBER}, .*
     timeout: 60000
 - assertVisible:
     id: today-your-mp-sources
 - longPressOn:
-    id: today-your-mp-member
+    id: today-rep-federal
 - runFlow:
     file: my-mp-neutrality-menu.yaml
 - tapOn:

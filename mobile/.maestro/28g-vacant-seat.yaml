@@ -52,9 +52,9 @@ name: 28g A federal seat with no member recorded, chosen from Today
     timeout: 30000
 - assertVisible:
     id: today-your-mp-vacant
-    text: Your electorate, Grayndler\. No member is recorded for this seat yet\.
+    text: Your federal electorate, Grayndler\. No member is recorded for this seat yet\.
 - assertNotVisible:
-    id: today-your-mp-member
+    id: today-rep-federal
 - scrollUntilVisible:
     element:
       id: today-your-mp-sources
