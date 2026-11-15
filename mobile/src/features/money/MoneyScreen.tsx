@@ -97,7 +97,6 @@ import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
 import { useMoneyFilters } from './MoneyFilters';
 import { moneyPartyGroups, PartyMoneyRow } from './parts';
-import { FadeThroughHost, useFadeThrough } from '../../design/fade-through';
 import { moneyMode, type MoneyMode } from './screen-reader';
 import {
   donationsCaveat,
@@ -302,13 +301,6 @@ function sharePath(params: MoneyParams) {
  * `/filters/money`, which writes this screen's params live.
  */
 export default function MoneyScreen() {
-  return (
-    <FadeThroughHost>
-      <MoneyPage />
-    </FadeThroughHost>
-  );
-}
-function MoneyPage() {
   const params = useLocalSearchParams<MoneyParams>();
   const navigation = useNavigation();
   const router = useRouter();
@@ -334,8 +326,6 @@ function MoneyPage() {
   // the List is never drawn and then swapped for the Map (screen-reader.ts).
   const [chosen, setMode] = useState<Mode | null>(null);
   const mode = moneyMode(chosen, param(params.view), reader);
-  // The reader's own switch between the views fades through (no cut).
-  const switching = useFadeThrough<Mode>(setMode);
   const select = useCallback(
     (id: string, name?: string) => {
       if (filters)
@@ -382,8 +372,8 @@ function MoneyPage() {
         { value: 'list', label: 'List', testID: 'money-mode-list' },
         { value: 'map', label: 'Map', testID: 'money-mode-map' },
       ]}
-      value={switching.target ?? mode ?? 'list'}
-      onChange={(next: Mode) => switching.choose(next, mode)}
+      value={mode ?? 'list'}
+      onChange={(next: Mode) => setMode(next)}
       accessibilityLabel="View"
       testID="money-view-toggle"
     />
