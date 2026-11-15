@@ -47,7 +47,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",integrity_reports,x_integrity_reports,transparency_portal,transparency_legacy,x_annual_reports,royal_commissions,x_royal_commissions,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,r2_expenses_itemised,x_people,"
+STALE_OK=",integrity_reports,x_integrity_reports,transparency_portal,transparency_legacy,x_annual_reports,royal_commissions,x_royal_commissions,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -267,18 +267,15 @@ if [ "$want_monthly" = 1 ]; then
   fi
 
   # --- exports ---------------------------------------------------------------------------------------------------
-  run_step x_expenses "" "$EXPORT" json portal/public/expenses.json "$PY" scripts/export_expenses.py
-  # Every IPEA line per person and year: too big for git, so it is written outside the repo and sent to R2
-  # (opax-media, expenses/v1/), which the portal serves under /media/. The upload sends only files that changed,
-  # never deletes, and waits for the bucket-scoped R2 token in .env; exit 3 = a shrunken tree was refused.
-  if run_step x_expenses_itemised "" "$PY" scripts/export_expenses_itemised.py --out "$PIPE/expenses-itemised"; then
-    if [ -n "${OPAX_R2_ACCESS_KEY_ID:-}" ]; then
-      run_step r2_expenses_itemised "" "$PY" scripts/vm/upload_expenses_itemised.py --tree "$PIPE/expenses-itemised"
-    elif step_selected r2_expenses_itemised; then
-      log "[r2_expenses_itemised] SKIP: no R2 token in .env (OPAX_R2_ACCESS_KEY_ID); the tree is at $PIPE/expenses-itemised"
-    fi
-  elif step_selected r2_expenses_itemised; then
-    log "[r2_expenses_itemised] SKIP: the itemised export failed; the stored files are kept"
+  # Every IPEA line per person and year is too big for git: the tree is written outside the repo, stamped with the
+  # sha256 of the expenses.json exported beside it, and sent to R2 by the nightly only after that expenses.json is
+  # published (scripts/vm/nightly.sh, sync_expenses_itemised). Nothing is uploaded from here.
+  if run_step x_expenses "" "$EXPORT" json portal/public/expenses.json "$PY" scripts/export_expenses.py; then
+    # the stamp says "exported beside this expenses.json", so it is only written when that export ran in this run
+    stamp_arg=(); if step_selected x_expenses; then stamp_arg=(--expenses-json portal/public/expenses.json); fi
+    run_step x_expenses_itemised "" "$PY" scripts/export_expenses_itemised.py --out "$PIPE/expenses-itemised" "${stamp_arg[@]}"
+  elif step_selected x_expenses_itemised; then
+    log "[x_expenses_itemised] SKIP: the expenses export failed; the last itemised tree is kept"
   fi
   if [ "$SUPPLIERS_READY" = 1 ]; then
     run_step x_suppliers "" "$EXPORT" dir portal/public/suppliers portal/public/agencies \

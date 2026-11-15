@@ -71,6 +71,7 @@
 #                         groups not cleared by then are held, the ones proven green are published
 #   OPAX_FRL_DOW          ISO weekday of the FRL instrument night (default 4, Thursday)
 #   OPAX_UV_SYNC_TIMEOUT  time limit of the `uv sync --frozen` that starts the night (default 15m)
+#   OPAX_R2_SYNC_TIMEOUT  time limit of the itemised expenses sync to R2 after the push (default 30m)
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
 set -uo pipefail
@@ -252,6 +253,25 @@ nightly_exit() {
 }
 trap nightly_exit EXIT
 trap 'fail "nightly interrupted"; finish' TERM INT
+
+# ---- itemised expenses: R2 follows what is published ---------------------------------------------
+# The per-person expense lines are too big for git and live in R2 (scripts/vm/upload_expenses_itemised.py). They are
+# sent only from here, after tonight's push or on a night with nothing to publish, never before the validation and
+# the gate and never under NO_PUSH, and only while HEAD's expenses.json is the export the tree was written beside
+# (--repo): a night that holds the expenses group leaves R2 as it was. It runs every night, so a failed or held sync
+# is made up on the next one; an unchanged tree costs three list requests.
+sync_expenses_itemised() {
+  local tree="$PIPE/expenses-itemised" script="$REPO/scripts/vm/upload_expenses_itemised.py" rc=0
+  [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
+  [ -d "$tree" ] && [ -f "$script" ] || return 0
+  run timeout --kill-after=60 "${OPAX_R2_SYNC_TIMEOUT:-30m}" "$PY" "$script" --tree "$tree" --repo "$REPO" \
+    --env "$REPO/.env" --skip-without-credentials || rc=$?
+  case $rc in
+    0) ;;
+    3) warn "itemised expenses: the tree is smaller than what R2 holds, so nothing was sent and the stored files are kept" ;;
+    *) fail "itemised expenses sync to R2 failed (rc=$rc); R2 keeps what it has and the next night retries" ;;
+  esac
+}
 
 # ---- preflight -------------------------------------------------------------------------
 [ -x "$PY" ] || { fail "$PY missing: run scripts/vm/bootstrap.sh"; finish; }
@@ -1008,6 +1028,7 @@ if git diff --cached --quiet; then
       divisions_refresh_complete
       evidence_refresh_complete
       periodic_refresh_complete
+      sync_expenses_itemised
     fi
     finish
   fi
@@ -1074,4 +1095,6 @@ bills_refresh_complete
 divisions_refresh_complete
 evidence_refresh_complete
 periodic_refresh_complete
+# only now that expenses.json is on origin may R2 follow it
+sync_expenses_itemised
 finish

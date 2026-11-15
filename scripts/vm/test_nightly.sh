@@ -9,6 +9,7 @@
 # OPAX_TEST_FOCUS=evidence-alerts runs only the enabled-build alert/deferral scenarios.
 # OPAX_TEST_FOCUS=coverage runs only the coverage watchdog scenarios.
 # OPAX_TEST_FOCUS=python-environment requires Node and tests its Python child environment.
+# OPAX_TEST_FOCUS=itemised-sync runs only the itemised expenses R2 sync scenarios.
 #
 # Nothing here touches the network, the real knowledge box, GitHub or the real repo:
 # a throwaway HOME, a bare git repo as "origin", a fake daily_refresh.sh and a knowledge-box
@@ -598,6 +599,72 @@ coverage_scenarios() {
   check "regression: status ok, the drop to zero is a coverage alert" cov_status "s['status']=='ok' and s['failures']==[] and any('senate/2025 rows 1 -> 0' in a for a in s['coverage_alerts'])"
   check "regression: the refresh watchdog pages on it" cov_pages 'senate/2025 rows 1 -> 0'
 }
+
+# The itemised expenses tree is sent to R2 only after the night's push (or on a night with nothing to publish),
+# never before it and never under NO_PUSH. A stand-in uploader records what was published when it was called.
+fake_itemised_upload() {
+  mkdir -p "$HOME/.cache/autoresearch/pipeline/expenses-itemised/11029"
+  echo '{}' > "$HOME/.cache/autoresearch/pipeline/expenses-itemised/11029/2026.json"
+  cat > "$REPO/scripts/vm/upload_expenses_itemised.py" <<'PYEOF'
+import os, subprocess, sys
+repo = sys.argv[sys.argv.index("--repo") + 1]
+git = lambda *a: subprocess.run(["git", "-C", repo, *a], capture_output=True, text=True).stdout.split()
+head, origin = git("rev-parse", "HEAD")[0], git("ls-remote", "origin", "refs/heads/main")[0]
+with open(os.path.expanduser("~/r2-sync.calls"), "a") as f:
+    f.write(("published" if head == origin else "UNPUBLISHED") + " " + " ".join(sys.argv[1:]) + "\n")
+sys.exit(int(os.environ.get("FAKE_R2_RC", "0")))
+PYEOF
+}
+itemised_sync_scenarios() {
+  echo "== itemised expenses: R2 is synced after the push, with the publish check and the box's credentials file"
+  new_sandbox r2-push
+  fake_itemised_upload
+  FAKE_MODE=ok nightly
+  check "exit 0 and the nightly commit reached origin" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
+  check "the sync ran once, after the push (HEAD was already on origin)" bash -c "[ \"\$(wc -l < '$HOME/r2-sync.calls')\" -eq 1 ] && grep -q '^published ' '$HOME/r2-sync.calls'"
+  check "it is told to check HEAD's expenses.json and to read the credentials file" bash -c "grep -q -- '--tree $HOME/.cache/autoresearch/pipeline/expenses-itemised --repo $REPO --env $REPO/.env --skip-without-credentials' '$HOME/r2-sync.calls'"
+  check "the push is logged before the sync starts" bash -c "awk '/pushed [0-9a-f]+ to origin/{p=NR} /upload_expenses_itemised|r2-sync/{u=NR} END{exit !(p>0)}' '$SB/nightly.out'"
+  FAKE_MODE=ok nightly
+  check "the next night syncs again, with or without a new commit (a held or failed sync is made up)" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(wc -l < '$HOME/r2-sync.calls')\" -eq 2 ] && ! grep -q UNPUBLISHED '$HOME/r2-sync.calls'"
+
+  echo "== itemised expenses: NO_PUSH never syncs"
+  new_sandbox r2-nopush
+  fake_itemised_upload
+  OPAX_NIGHTLY_NO_PUSH=1 FAKE_MODE=ok nightly
+  check "exit 0, committed locally, origin untouched" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(git --git-dir='$ORIGIN' log --format=%s main | head -1)\" = seed ]"
+  check "the uploader was never called" test ! -e "$HOME/r2-sync.calls"
+
+  echo "== itemised expenses: a refused push never syncs"
+  new_sandbox r2-pushfail
+  fake_itemised_upload
+  export OPAX_PUSH_SLEEP_UNIT=0
+  printf '#!/bin/sh\necho "remote: push refused by test hook" >&2\nexit 1\n' > "$ORIGIN/hooks/pre-receive"; chmod +x "$ORIGIN/hooks/pre-receive"
+  FAKE_MODE=ok nightly
+  unset OPAX_PUSH_SLEEP_UNIT
+  check "the push failed and the uploader was never called" bash -c "[ '$NRC' -eq 1 ] && [ ! -e '$HOME/r2-sync.calls' ]"
+
+  echo "== itemised expenses: no tree, no sync; a failed sync fails the night after the data is published; a refusal is a warning"
+  new_sandbox r2-notree
+  fake_itemised_upload; rm -rf "$HOME/.cache/autoresearch/pipeline/expenses-itemised"
+  FAKE_MODE=ok nightly
+  check "without a tree the uploader is not called" bash -c "[ '$NRC' -eq 0 ] && [ ! -e '$HOME/r2-sync.calls' ]"
+  new_sandbox r2-fail
+  fake_itemised_upload
+  FAKE_R2_RC=1 FAKE_MODE=ok nightly
+  check "a failed sync exits 1 and the status names it" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"failed\" and any(\"itemised expenses sync to R2 failed (rc=1)\" in f for f in s[\"failures\"]), s'"
+  check "the night's data was still published" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
+  new_sandbox r2-refused
+  fake_itemised_upload
+  FAKE_R2_RC=3 FAKE_MODE=ok nightly
+  check "a refused (shrunken) tree is a warning, not a failure" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"itemised expenses\" in w for w in s[\"warnings\"]), s'"
+}
+
+if [ "${OPAX_TEST_FOCUS:-}" = itemised-sync ]; then
+  itemised_sync_scenarios
+  echo "passed $PASS, failed $FAILN"
+  [ "$FAILN" -eq 0 ]
+  exit $?
+fi
 
 if [ "${OPAX_TEST_FOCUS:-}" = coverage ]; then
   coverage_scenarios
@@ -1700,6 +1767,7 @@ FAKE_MODE=paused FAKE_BILLS_MODE=paused nightly
 check "nightly pauses exit 0 and status contains both paused sources" bash -c "[ '$NRC' -eq 0 ] && python3 -c 'import json; d=json.load(open(\"$HOME/.cache/autoresearch/pipeline/nightly-last.json\")); assert d[\"status\"]==\"ok\" and {\"bills\",\"interests_federal\"} <= set(d[\"paused_sources\"]) and \"Paused sources:\" in d[\"summary\"]'"
 check "a refused bill source retains the published bill while votes refresh" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; assert json.load(sys.stdin)[\"status_as_of\"]==\"2026-09-01\"' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | python3 -c 'import json,sys; assert \"9999\" in json.load(sys.stdin)'"
 
+itemised_sync_scenarios
 coverage_scenarios
 evidence_alert_scenarios
 python_environment_scenario

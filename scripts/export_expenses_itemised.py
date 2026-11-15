@@ -6,9 +6,11 @@ box in the monthly refresh group, after scripts/export_expenses.py:
 
   python3 scripts/export_expenses_itemised.py --out ~/.cache/autoresearch/pipeline/expenses-itemised
 
-It writes one file per person and year, `<out>/<person_id>/<year>.json`, about 3,300 files and 170 MB
-in all (37 quarters, 1.23M lines), which is too much for git. scripts/vm/upload_expenses_itemised.py
-sends the tree to the R2 bucket the portal serves `/media/` from, under `expenses/v1/`.
+It writes one file per person and year, `<out>/<person_id>/<year>.json`: 2,675 files and 235 MB for
+the 37 quarters to 2026Q02 (1.22M lines, 427 people), which is too much for git. With --expenses-json
+it stamps the sha256 of the expenses.json exported beside it, and scripts/vm/upload_expenses_itemised.py,
+run by the nightly after its push, sends the tree to the R2 bucket the portal serves `/media/` from,
+under `expenses/v1/`, only while the published expenses.json is that same file.
 
 One file:
 
@@ -28,13 +30,14 @@ are skipped and counted on stderr.
 Who travelled is written as a role only: "Member", "Family member" or "Staff". IPEA's files give
 family travel under the placeholder "Family Traveller" and staff travel as aggregated totals under
 the member, so no other person is named there. This export still never copies the traveller column,
-and blanks a free-text field of a family or staff line if it ever carried the traveller's name.
+and blanks a free-text field of any line whose traveller is not the member if it carries that name.
 
 The files carry no generation stamp, so a run on unchanged data writes byte-identical files and the
 upload sends nothing.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -79,9 +82,13 @@ def traveller_role(traveller_name, category_high, category_major):
     return ROLE_MEMBER
 
 
-def scrub(value, traveller_name, member_name, role):
-    """A free-text field, blanked when a family or staff line's text carries the traveller's own name."""
-    if value is None or role == ROLE_MEMBER:
+def scrub(value, traveller_name, member_name):
+    """A free-text field, blanked when the line's traveller is not the member and the text carries their name.
+
+    This applies whatever the line's category: a line filed under the member's own fares whose traveller
+    column names someone else is scrubbed the same way as a family or staff line.
+    """
+    if value is None:
         return value
     name = (traveller_name or "").strip().lower()
     if not name or name == FAMILY_PLACEHOLDER or name == clean_name(member_name):
@@ -126,9 +133,9 @@ def export(db, out_dir):
             role = traveller_role(traveller_name, cat_high, cat_major)
             p["lines"].append([
                 period_id, from_date, to_date, category, cat_high, cat_major, cat_minor,
-                scrub(description, traveller_name, member_name, role), from_loc, to_loc, nights,
+                scrub(description, traveller_name, member_name), from_loc, to_loc, nights,
                 money(nightly_rate), money(amount), trip, leg,
-                scrub(reason, traveller_name, member_name, role), scrub(notes, traveller_name, member_name, role),
+                scrub(reason, traveller_name, member_name), scrub(notes, traveller_name, member_name),
                 role,
             ])
         for pid, p in sorted(people.items()):
@@ -168,24 +175,41 @@ def export(db, out_dir):
             "unresolved_names": len(unresolved), "from": lo, "to": hi}
 
 
+SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,80}$")   # ASCII only: the upload's file pattern and the portal route are the same
+
+
 def safe_id(pid):
     """A person_id as one path segment; ids are digits or person_<hex>, anything else is refused."""
     pid = str(pid)
-    if not pid or not all(c.isalnum() or c in "_-" for c in pid):
+    if not SAFE_ID_RE.match(pid):
         raise SystemExit(f"person_id {pid!r} is not a safe file name")
     return pid
+
+
+def stamp_path(out_dir):
+    """Where the sha256 of the expenses.json this tree was exported beside is kept."""
+    return out_dir.with_name(out_dir.name + ".expenses-sha256")
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description="IPEA expense lines per person and year -> a JSON tree")
     ap.add_argument("--out", required=True, type=Path, help="directory to (re)write; replaced as a whole")
     ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--expenses-json", type=Path,
+                    help="the expenses.json exported from the same database just before; its sha256 is stamped beside "
+                         "the tree, and the upload sends the tree only while the published expenses.json is that file")
     args = ap.parse_args(argv)
+    out = args.out.expanduser()
+    stamp = stamp_path(out)
+    # no stamp while the tree is being replaced: a half-finished run can never look current
+    stamp.unlink(missing_ok=True)
     db = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     try:
-        counts = export(db, args.out.expanduser())
+        counts = export(db, out)
     finally:
         db.close()
+    if args.expenses_json:
+        stamp.write_text(hashlib.sha256(args.expenses_json.read_bytes()).hexdigest() + "\n")
     print(" ".join(f"{k}={v}" for k, v in counts.items()), file=sys.stderr)
 
 

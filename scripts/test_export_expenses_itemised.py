@@ -135,6 +135,38 @@ class ItemisedExportTests(unittest.TestCase):
         line = dict(zip(X.COLUMNS, docs["P1/2026.json"]["lines"][0]))
         self.assertEqual((line["traveller"], line["description"]), ("Member", "Office of Jane Smith, printing"))
 
+    def test_a_stranger_named_on_a_fares_line_is_scrubbed_too(self):
+        # the category says nothing about who travelled: any traveller who is not the member is scrubbed
+        docs, raw, _ = run([row(1, traveller_name=SECRET, description=f"Canberra to Sydney for {SECRET}",
+                                reason="Quillfeather attending", notes="booked by Zebedee")])
+        line = dict(zip(X.COLUMNS, docs["P1/2026.json"]["lines"][0]))
+        self.assertEqual((line["description"], line["reason"], line["notes"], line["amount"]), (None, None, None, 120.5))
+        self.assertIn(line["traveller"], X.ROLES)
+        for needle in (b"zebedee", b"quillfeather"):
+            self.assertNotIn(needle, raw["P1/2026.json"].lower())
+
+    def test_the_stamp_names_the_expenses_json_the_tree_was_exported_beside(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "parli.db"
+            db = sqlite3.connect(path)
+            db.execute("CREATE TABLE members (person_id TEXT, full_name TEXT, left_house TEXT)")
+            db.execute("INSERT INTO members VALUES ('P1', 'Jane Smith', NULL)")
+            db.execute(f"CREATE TABLE ext_expenses ({', '.join(COLS)})")
+            db.executemany(f"INSERT INTO ext_expenses VALUES ({','.join('?' for _ in COLS)})", [row(1)])
+            db.commit(); db.close()
+            expenses = Path(d) / "expenses.json"
+            expenses.write_bytes(b'{"meta":{}}')
+            out, stamp = Path(d) / "tree", Path(d) / "tree.expenses-sha256"
+            with redirect_stderr(io.StringIO()):
+                X.main(["--out", str(out), "--db", str(path), "--expenses-json", str(expenses)])
+            self.assertEqual(stamp.read_text().strip(), hashlib.sha256(b'{"meta":{}}').hexdigest())
+            self.assertEqual(X.stamp_path(out), stamp)
+            # a run without the expenses export leaves no stamp, so the upload holds
+            with redirect_stderr(io.StringIO()):
+                X.main(["--out", str(out), "--db", str(path)])
+            self.assertFalse(stamp.exists())
+
     def test_unchanged_data_writes_identical_bytes(self):
         self.assertEqual(run()[1], run()[1])
         for blob in run()[1].values():
@@ -157,6 +189,9 @@ class ItemisedExportTests(unittest.TestCase):
         with self.assertRaises(SystemExit), redirect_stderr(io.StringIO()):
             X.safe_id("../etc")
         self.assertEqual(X.safe_id("person_0a1b"), "person_0a1b")
+        for bad in ("pérson", "１２３", "a/b", "", "x" * 81):      # ASCII only, like the upload's and the route's pattern
+            with self.assertRaises(SystemExit), redirect_stderr(io.StringIO()):
+                X.safe_id(bad)
 
 
 if __name__ == "__main__":
