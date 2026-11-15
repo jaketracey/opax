@@ -248,6 +248,15 @@ test('unknown and invalid seat slugs answer JSON 404 without caching',async()=>{
   }
 });
 
+test('find keeps schema 1: a candidate name adds no hit kind that installed apps reject',async()=>{
+  const election=candidateData(),seat=election.seats.find(s=>s.candidates?.list.length);assert.ok(seat);
+  const name=seat.candidates.list[0].name;
+  assert.ok(findSeats(name,election,places,{candidates:true}).some(h=>h.kind==='Candidate'),'the web finder matches the name');
+  const api=await payload('/find?q='+encodeURIComponent(name),environment(election,places));
+  assert.deepEqual(api.hits.map(h=>h.kind),findSeats(name,election,places).map(h=>h.kind));assert.ok(api.hits.length<=8);
+  for(const h of api.hits)assert.ok(['District','Region','Member','Suburb','Postcode','Council area'].includes(h.kind),h.kind);
+});
+
 for(const [q,name] of [['3350','find-3350'],['St Kilda','find-st-kilda'],['Bass','find-bass'],['allan','find-allan'],['9999','find-9999']]) {
   test('find matches page kinds, order, seats and shares for '+q,async()=>{
     const api=await payload('/find?q='+encodeURIComponent(q));const found=findSeats(q,data,places);

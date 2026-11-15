@@ -190,7 +190,7 @@ app API rejects the invalid asset with 503. Upper house results link to VEC.
 The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
 read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form
 (`/vic-election-2026?place=3350`), answered by the Worker without scripts; result
-pages are `noindex` and keep the hub's canonical. Seat and member names match
+pages are `noindex` and keep the hub's canonical. Seat, member and candidate names match
 without the places file. All 88 Assembly districts have one roster member and all 8 Council
 regions have five, dated to the published roster snapshot.
 
@@ -204,6 +204,20 @@ Metropolitan/North-Eastern Metropolitan name changes and nine abolished and
 nine new district names. These changes predate this term; there is no 2025
 state redivision identified by those sources. No spatial boundaries are copied
 or approximated. Each region's 11-district membership uses its VEC page.
+
+Once the VEC list is loaded, the web finder also matches **candidate names**, for all
+1,037 district and region candidates by one rule: every word typed must be a whole word
+of the published name, in any order (for an invented “QUILL, Avery”: “quill”, “Avery
+Quill” or “QUILL, Avery”; “qui” does not match). Each match shows the name as published, the word “Candidate” and one plain
+row for that candidate's seat (house and candidate count), linking to the seat's
+candidate list. The row carries no party, member, margin or profile link, and the match
+never reads the roster, so a sitting member who is standing gets the same candidate row
+as everyone else. Candidate matches follow the place, seat and member matches, a full
+name first, then by published name. More than 24 matches show a count and a prompt to
+add another part of the name, since a cut-off list would show some candidates and not
+others. Roster “Member” matches are unchanged. The app's `/find` endpoint and the MCP
+postcode lookup do not return candidate matches: schema 1 has no `Candidate` kind and
+installed apps reject unknown kinds.
 
 The [VEC legal terms](https://vec.vic.gov.au/legal) grant **CC BY 4.0 International**
 for website material, excluding images, photographs, videos, branding (including

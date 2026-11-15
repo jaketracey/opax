@@ -42,7 +42,7 @@ export type VicElectionState = 'pre_poll' | 'early_voting' | 'election_day' | 'p
 /** Suburb, postcode and council rows: [name, [[district index, share in tenths of a percent]], usual residents]. */
 type PlaceRow = [string, [number, number][], number]
 export interface VicPlaces { attribution: string; note: string; districts: string[]; suburb: PlaceRow[]; postcode: PlaceRow[]; council: PlaceRow[] }
-export interface PlaceHit { name: string; kind: 'District' | 'Region' | 'Member' | 'Suburb' | 'Postcode' | 'Council area'; seats: {seat: Seat; share: number | null}[] }
+export interface PlaceHit { name: string; kind: 'District' | 'Region' | 'Member' | 'Candidate' | 'Suburb' | 'Postcode' | 'Council area'; seats: {seat: Seat; share: number | null}[] }
 
 const ORIGIN = 'https://opax.com.au'
 const approvedFooter = (footer: HubFooterConfig): HubFooterConfig => ({...footer,
@@ -129,21 +129,34 @@ function seatRow(s: Seat, share: number | null = null) {
     : r ? [`${r.party} by ${points(r.margin)}`, r.kind === 'general' ? '' : contestName(r)] : ['','']
   return `<li><a class="vic-seat" href="${esc(s.path)}"><span class="vic-seat-name">${esc(s.name)}</span>${figure ? `<span class="vic-seat-figure">${esc(figure)}</span>` : ''}<span class="vic-seat-held">${held}</span>${when ? `<span class="vic-seat-when">${esc(when)}</span>` : ''}</a></li>`
 }
+/** A candidate's seat, the same row for every candidate: the seat, its house and how many are standing. */
+function candidateSeatRow(s: Seat) {
+  const n = s.candidates?.list.length ?? 0
+  return `<li><a class="vic-seat" href="${esc(s.path)}#candidates"><span class="vic-seat-name">${esc(s.kind === 'region' ? s.name+' Region' : s.name)}</span><span class="vic-seat-held">${s.kind === 'district' ? 'Lower house district' : 'Upper house region'}, ${count(n)} ${n === 1 ? 'candidate' : 'candidates'}</span></a></li>`
+}
+/** More name matches than this are counted, not listed: a cut-off list would show some candidates and hide others. */
+const CANDIDATE_HIT_LIMIT = 24
 const seatList = (seats: string, label: string) => `<ul class="vic-seats" aria-label="${esc(label)}">${seats}</ul>`
 
 function finder(d: VicElection, place: string | null, hits: PlaceHit[] | null, copy: ReturnType<typeof vicElectionCopy>['finder']) {
   const value = place ? ` value="${esc(place)}"` : ''
+  // Candidate names are searched once the VEC has published them.
+  const named = d.seats.some(s=>s.candidates?.list.length)
+  const things = named ? 'suburb, postcode, district or candidate' : 'suburb, postcode or district'
   let results = ''
   if (place !== null && hits) {
+    const standing = hits.filter(h=>h.kind === 'Candidate')
+    const tooMany = standing.length > CANDIDATE_HIT_LIMIT
+    const shown = tooMany ? hits.filter(h=>h.kind !== 'Candidate') : hits
     results = hits.length
-      ? `<div class="vic-hits"><h3 class="visually-hidden">Results</h3>${hits.map(h=>`<div class="vic-hit">${h.kind === 'District' || h.kind === 'Region' ? '' : `<p class="vic-hit-place"><strong>${esc(h.name)}</strong> <span>${esc(h.kind)}</span></p>`}${seatList(h.seats.map(x=>seatRow(x.seat,h.seats.length > 1 ? x.share : null)).join(''),h.name)}</div>`).join('')}${hits.some(h=>h.seats.length > 1) ? `<p class="hub-meta">Some places cross district lines. ${link(d.sources.address,'Check your exact address with the VEC')}.</p>` : ''}</div>`
+      ? `<div class="vic-hits"><h3 class="visually-hidden">Results</h3>${shown.map(h=>`<div class="vic-hit">${h.kind === 'District' || h.kind === 'Region' ? '' : `<p class="vic-hit-place"><strong>${esc(h.name)}</strong> <span>${esc(h.kind)}</span></p>`}${seatList(h.seats.map(x=>h.kind === 'Candidate' ? candidateSeatRow(x.seat) : seatRow(x.seat,h.seats.length > 1 ? x.share : null)).join(''),h.name)}</div>`).join('')}${tooMany ? `<p class="hub-meta">${count(standing.length)} candidates match “${esc(place)}”. Add another part of the name to see them.</p>` : ''}${hits.some(h=>h.seats.length > 1) ? `<p class="hub-meta">Some places cross district lines. ${link(d.sources.address,'Check your exact address with the VEC')}.</p>` : ''}</div>`
       : /^\d{4}$/.test(place.trim())
         // PO box postcodes have no residents, so the ABS postal areas don't include them.
         ? `<p class="vic-hits">No Victorian postcode area matches “${esc(place)}”. PO box postcodes aren’t included: try your suburb, or ${link(d.sources.address,'check your address with the VEC')}.</p>`
-        : `<p class="vic-hits">No suburb, postcode or district matches “${esc(place)}”. Try a nearby suburb, or ${link(d.sources.address,'check your address with the VEC')}.</p>`
+        : `<p class="vic-hits">No ${things} matches “${esc(place)}”. Try a nearby suburb, or ${link(d.sources.address,'check your address with the VEC')}.</p>`
   }
   return `<section class="vic-finder" id="find" aria-labelledby="find-title"><h2 id="find-title">${esc(copy.title)}</h2>
-<form class="vic-find-form" action="${VIC_ELECTION_PATH}#find" method="get" role="search"><label for="vic-place">Suburb, postcode or district</label><div class="vic-find-row"><input class="ui-input" id="vic-place" name="place" type="search" inputmode="search" autocomplete="address-level2" maxlength="60" required${value}><button class="ui-button" type="submit" data-variant="primary">${esc(copy.button)}</button></div></form>${results}</section>`
+<form class="vic-find-form" action="${VIC_ELECTION_PATH}#find" method="get" role="search"><label for="vic-place">${things.replace(/^s/,'S')}</label><div class="vic-find-row"><input class="ui-input" id="vic-place" name="place" type="search" inputmode="search" autocomplete="address-level2" maxlength="60" required${value}><button class="ui-button" type="submit" data-variant="primary">${esc(copy.button)}</button></div></form>${results}</section>`
 }
 
 /** Only titled questions, without duplicate titles, in the source order. */
@@ -232,8 +245,32 @@ const fold = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCa
 // Folding ~3,700 place names is the costly part of a search: once per parsed index.
 const folded = new WeakMap<PlaceRow[], string[]>()
 const foldedNames = (rows: PlaceRow[]) => { let names = folded.get(rows); if (!names) folded.set(rows, names = rows.map(r=>fold(r[0]))); return names }
-/** Places matching a reader's words: exact names first, then names that start with them. */
-export function findSeats(q: string, d: VicElection, places: VicPlaces | null): PlaceHit[] {
+/** A person's name as plain words: no place rewrites, so "Victoria" and "St" stay as written. */
+const nameWords = (s: string) => s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’'.]/g,'')
+  .replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean)
+/**
+ * Candidates on the published VEC list whose name has every word asked for, whole words
+ * in any order ("de vietri", "gabrielle de vietri", "de VIETRI, Gabrielle"). Each match is
+ * the candidate's own seat. All candidates are matched by the same rule and listed by the
+ * same sort: a full name first, then by published name. Nothing here reads the roster.
+ */
+function findCandidates(q: string, d: VicElection): PlaceHit[] {
+  const want = [...new Set(nameWords(q))]
+  if (!want.some(w=>w.length >= 2)) return []
+  const hits: (PlaceHit & {full: boolean})[] = []
+  for (const s of d.seats) for (const c of s.candidates?.list ?? []) {
+    const name = new Set(nameWords(c.name))
+    if (want.every(w=>name.has(w))) hits.push({name:c.name,kind:'Candidate',seats:[{seat:s,share:null}],full:want.length === name.size})
+  }
+  hits.sort((a,b)=>Number(b.full) - Number(a.full) || a.name.localeCompare(b.name,'en') || a.seats[0].seat.name.localeCompare(b.seats[0].seat.name,'en'))
+  return hits.map(({name,kind,seats})=>({name,kind,seats}))
+}
+/**
+ * Places matching a reader's words: exact names first, then names that start with them.
+ * With `candidates`, candidate name matches follow the (at most eight) place, seat and
+ * member hits. The app API leaves it off: its schema 1 has no Candidate kind.
+ */
+export function findSeats(q: string, d: VicElection, places: VicPlaces | null, opts: {candidates?: boolean} = {}): PlaceHit[] {
   const want = fold(q.slice(0,60))
   if (!want) return []
   const seatByName = new Map(d.seats.map(s=>[s.kind+':'+s.name,s]))
@@ -258,8 +295,9 @@ export function findSeats(q: string, d: VicElection, places: VicPlaces | null): 
   // "Bass" the district, suburb and council area are one answer: a place wholly inside a
   // district already listed by name adds nothing. Other suburbs keep their own row.
   const named = new Set(hits.filter(h=>h.kind === 'District').map(h=>h.seats[0].seat.path))
-  return hits.filter(h=>h.kind === 'District' || h.seats.length > 1 || !named.has(h.seats[0].seat.path))
+  const found: PlaceHit[] = hits.filter(h=>h.kind === 'District' || h.seats.length > 1 || !named.has(h.seats[0].seat.path))
     .slice(0,8).map(({name,kind,seats})=>({name,kind,seats}))
+  return opts.candidates ? [...found,...findCandidates(q.slice(0,60),d)] : found
 }
 
 // ---- pages -----------------------------------------------------------------------------
@@ -337,8 +375,8 @@ export async function vicElectionPage(id: string | null, read: ReadAsset, config
   }
   if (id === null) {
     const q = place?.trim().slice(0,60) || null
-    // Seat and member names answer without the place index; suburbs and postcodes need it.
-    const find = q ? {place:q,hits:findSeats(q,d,await read<VicPlaces>(VIC_ELECTION_PLACES).catch(()=>null))} : null
+    // Seat, member and candidate names answer without the place index; suburbs and postcodes need it.
+    const find = q ? {place:q,hits:findSeats(q,d,await read<VicPlaces>(VIC_ELECTION_PLACES).catch(()=>null),{candidates:true})} : null
     return {...renderVicElection(d,null,config,now,find),status:200,noindex:Boolean(q)}
   }
   const s = d.seats.find(s=>s.path === `${VIC_ELECTION_PATH}/${id}`)
