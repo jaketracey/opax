@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=75fab98de7").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=07eea0e196").then(module => { growthModules = module; }));
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
@@ -1900,7 +1900,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=9e32cef723");
+    const module = await import("/suppliers.js?v=164cd28997");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2106,6 +2106,7 @@ async function route() {
   if (segs[0] === 'search') { replaceRoute(pathFor(hereRoute())); params.set('view', 'search'); }
   const view = segs[0] === 'search' || (segs[0] === 'ask' && params.get('view') === 'search') ? 'search' : segs[0];
   const manageFocus = !firstRoute;
+  let askedInPlace = false;
   firstRoute = false;
   if (view !== "chat") chatAskOnArrival = null; // a follow-up is asked only where it was headed
   destroySupplierPage();
@@ -2298,6 +2299,9 @@ async function route() {
     document.title = TITLES[view];
     setCrumbs(crumbsFor(`/${view}`));
   } else {
+    // A link on the Ask page that asks again (a next step under an answer)
+    // finds the panel already showing.
+    const onAskPage = manageFocus && !$("panel-ask").hidden;
     showPanel("ask");
     document.title = TITLES.ask;
     const q = params.get("q");
@@ -2314,7 +2318,7 @@ async function route() {
       if (askTopic && $("a-topic")) $("a-topic").value = TOPICS[askTopic] ? askTopic : "";
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       if (draft) focusEntry("ask-input");
-      else runAsk(q);
+      else { runAsk(q); askedInPlace = onAskPage; }
     } else if (!q && $("ask-result").hidden) {
       if (!takeEarlyAsk()) focusEntry("ask-input");
     }
@@ -2329,7 +2333,9 @@ async function route() {
     document.querySelector("main").focus();
   }
   // Fresh view, fresh top of page (section deep-links re-scroll themselves).
-  if (manageFocus) window.scrollTo(0, 0);
+  // A question asked again from under an answer goes to its own top instead.
+  if (askedInPlace) bringAskIntoView();
+  else if (manageFocus) window.scrollTo(0, 0);
 }
 
 function resetAsk() {
@@ -2344,6 +2350,7 @@ function resetAsk() {
   setQueryValue("ask-input", "");
   setStatus($("ask-status"), "");
   $("ask-result").hidden = true;
+  setAskQuestion("");
   $("ask-money").hidden = true;
   $("quote-rail").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
@@ -4357,7 +4364,6 @@ async function renderPersonFirstSpeech(name, sections, roster) {
   const rows = cards?.personVideos(data?.videos, personSlugs.byName.get(roster?.name ?? name), roster) || [];
   if (currentSubjectKey !== key || !slot.isConnected || !rows.length) { slot.remove(); return; }
   slot.innerHTML = `<h2 class="subject-section-title">First speech</h2>
-    <p class="person-caveat">Video published by the Senate Public Information Office on YouTube.</p>
     <div class="video-cards">${rows.map((v) => cards.videoCardHTML(v)).join("")}</div>
     <p class="video-more"><a href="/video/senate?kind=first-speech">All first speeches</a></p>
     ${sourceLineHTML({ updated: String(rows[0].published || "").slice(0, 10), dateLabel: "Published", source: "AuSenate YouTube channel",
@@ -10495,8 +10501,50 @@ function askRequestBody(question, kind, filters, automaticSpeaker) {
   return body;
 }
 
+/** The question on its way to an answer, as the heading the answer sits under.
+ *  It is read out, not drawn: the box above already shows the words. */
+function setAskQuestion(question) {
+  const heading = $("ask-question");
+  if (!heading) return;
+  heading.textContent = question || "";
+  heading.hidden = !question;
+}
+
+/**
+ * A new question asked from lower on the page (a suggestion under an answer,
+ * a next-step link, the builder): the old answer has just left, so the page
+ * would otherwise sit at its foot while the new one arrives out of sight.
+ * Bring the question box and the waiting state into view at once, and put
+ * focus on the question's heading so a screen reader says what was asked.
+ * Call it after runAsk, which names the heading and clears the old answer.
+ */
+function bringAskIntoView() {
+  const heading = $("ask-question"), form = $("ask-form");
+  if (!heading || heading.hidden || !form) return;
+  // The hero folds a beat after a question is asked. Left to that, it would
+  // fold after this scroll has landed and carry the box up under the header,
+  // so it folds now, in one step: the reader is below it and on the way past.
+  const hero = $("hero-intro");
+  if (hero && !hero.classList.contains("hero-folded")) {
+    clearTimeout(heroFoldTimer);
+    hero.style.transition = "none";
+    hero.classList.add("hero-folded");
+    void hero.offsetHeight;
+    hero.style.transition = "";
+    heroSettledAt = Date.now();
+  }
+  // The page is about to move on its own; that is not the reader scrolling.
+  holdPeopleRail(1000);
+  form.scrollIntoView({
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    block: "start",
+  });
+  heading.focus({ preventScroll: true });
+}
+
 async function runAsk(question) {
   renderRegisterNote(question);
+  setAskQuestion(question);
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
   askAbort = myAbort;
@@ -10916,6 +10964,7 @@ function initAskBuilder() {
     replaceRoute(askHash(q, askKind()));
     setCrumbs(crumbsFor("/ask"));
     runAsk(q);
+    bringAskIntoView();
   });
 }
 
@@ -10967,6 +11016,7 @@ function askSuggestion(q) {
   replaceRoute(askHash(q));
   setCrumbs(crumbsFor("/ask"));
   runAsk(q);
+  bringAskIntoView();
 }
 
 /** A sample question: a plain link (concept 5), which asks it in place. */

@@ -1,7 +1,5 @@
-/* Each register uses its section's existing accent, supplied by design tokens. */
-[data-register-table] .dt a {
-  text-decoration-color: var(--money-ink);
-}
+/* Each register uses its section's existing accent, supplied by design tokens.
+   Links keep the shared table link colour (datatable.css). */
 .instrument-content [data-register-table],
 .audit-content [data-register-table] {
   --money-ink: var(--bronze-ink);

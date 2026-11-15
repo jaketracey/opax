@@ -252,6 +252,9 @@ test('person page: a matched senator gets a First speech card; others get no sec
   assert.match(quill, /<h2 class="ui-section-title">First speech<\/h2>/);
   assert.match(quill, /data-video-id="fsQuill0916"/);
   assert.doesNotMatch(quill, /<iframe/);
+  // The card and its "All first speeches" link stand without a caption line.
+  assert.match(quill, /<a href="\/video\/senate\?kind=first-speech">All first speeches<\/a>/);
+  assert.doesNotMatch(quill, /Video published by the Senate Public Information Office|class="video-note"/);
   for (const p of [roster[1], roster[2], roster[5]]) assert.doesNotMatch((await renderPersonAnswer(p, read, slugs)).html, /First speech<\/h2>|data-video-card/, p.name);
   assert.equal(personVideos(rows, null).length, 0, 'no slug, no match');
   // The same senator listed under a second, full-name row (the electorate reference's): same pid, own slug.

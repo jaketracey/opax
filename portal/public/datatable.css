@@ -52,7 +52,10 @@
 @media (width < 1024px) { .dt :is(th, td):first-child:not([colspan]) { box-shadow: inset calc(-1 * var(--border-hairline)) 0 0 var(--divider-default); } }
 .dt-value { position: relative; }
 .dt [data-primary] { font: var(--type-strong); }
-.dt a { color: var(--money-ink); text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--space-line); }
+/* A table link is the site's ordinary link, visited or not: ink on the bronze
+   rule. The section's accent stays on the bars, the chosen filters and the
+   focus ring, never on the link text, where it read as a visited colour. */
+.dt a, .dt a:visited { color: var(--ink); text-decoration-color: var(--bronze-rule); text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--space-line); }
 .dt-bar-track { display: block; height: var(--space-line); background: var(--money-wash); margin-top: var(--space-tight); border-radius: var(--radius-pill); overflow: hidden; }
 .dt-bar { display: block; width: var(--dt-bar); height: 100%; background: var(--money-ink); }
 .dt-scale { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }

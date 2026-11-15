@@ -3470,6 +3470,10 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-meaning-toggle:hover { color: var(--bronze-ink); }
 #panel-search .search-meaning-count { font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; min-height: var(--size-target); }
+/* A result's title is a link by its place and its hover, not by a standing
+   underline: the list is all titles, and a rule under each one read as noise. */
+#panel-search .search-result-heading a.result-title { text-decoration-line: none; }
+#panel-search .search-result-heading a.result-title:is(:hover, :focus-visible) { text-decoration-line: underline; }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
 /* Give the bronze reading action room beneath the faded passage. */
 #panel-search .search-result-text.is-collapsed { position: relative; }
@@ -5239,21 +5243,29 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
 
 /* Landing modules use the view's bronze accent and the shared controls. */
-.growth-ask { margin: var(--space-group) 0 var(--space-section); padding: var(--space-block) 0; border-block: var(--border-hairline) solid var(--divider-default); }
+.growth-ask { margin: var(--space-group) 0 var(--space-section); padding: var(--space-block) 0 0; border-top: var(--border-hairline) solid var(--divider-default); }
 .growth-ask h2 { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
 .growth-ask-form { display: flex; align-items: start; gap: var(--space-tight); }
 .growth-ask-form .ui-input { flex: 1; min-width: 0; font: var(--type-body); resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }
 .growth-ask-form .ui-button { flex-shrink: 0; }
-/* Suggested questions are the home page's list of links, the whole question
-   the target. A long one wraps to a second line rather than stopping
-   mid-word under an ellipsis. Ask receives the full question from the href. */
-.growth-questions { display: grid; list-style: none; margin: var(--space-tight) 0 0; padding: 0; }
+/* Suggested questions are a wrapping row of quiet pills: one line each, cut
+   with an ellipsis at a capped width so a long bill title cannot make one
+   giant pill. The link's title and its href both carry the whole question. */
+.growth-questions { display: flex; flex-wrap: wrap; gap: var(--space-tight); list-style: none; margin: var(--space-row) 0 0; padding: 0; }
 .growth-questions:empty { display: none; }
-.growth-questions li { min-width: 0; }
+.growth-questions li { min-width: 0; max-width: 100%; }
 .growth-questions a {
-  display: block; width: fit-content; max-width: 100%; padding-block: calc((var(--size-target) - 1.55em) / 2);
-  white-space: normal; overflow-wrap: normal; word-break: normal; text-wrap: pretty;
-  color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em;
+  display: block; box-sizing: border-box; max-width: min(100%, 26rem);
+  padding: var(--space-tight) var(--space-heading);
+  border: var(--border-hairline) solid var(--divider-default); border-radius: var(--radius-pill);
+  background: var(--paper-raised); color: var(--ink); font: var(--type-fine); text-decoration: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: background-color var(--ui-motion), border-color var(--ui-motion);
+}
+.growth-questions a:hover { background: var(--paper-sunken); border-color: var(--line-control); color: var(--ink); }
+/* Touch: the pill itself is 44 tall. */
+@media (max-width: 1000px), (pointer: coarse) {
+  .growth-questions a { min-height: var(--size-target); padding-block: calc((var(--size-target) - 1.45em) / 2 - var(--border-hairline)); }
 }
 .growth-ask :is(input, textarea, button), .growth-records summary { min-height: var(--size-target); }
 .growth-records .subject-list > li > a, .growth-donor a { display: inline-flex; align-items: center; min-height: var(--size-target); }

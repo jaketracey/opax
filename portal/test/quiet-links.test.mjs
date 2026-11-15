@@ -1,0 +1,136 @@
+// Five small reading fixes (15 Nov 2026), each checked where it lives:
+// 1. a question asked from lower on the Ask page comes into view at once
+//    (the browser proof is test/ask-scroll-browser.mjs; this holds the wiring);
+// 2. links in data tables keep the site's link colour, never a section accent
+//    that reads as a visited colour;
+// 3. no Senate caption line over a member's First speech card;
+// 4. the "Ask about" questions are one-line pills and the block has one rule;
+// 5. a search result's title is underlined on hover and keyboard focus only.
+// jsdom has no layout, so the CSS checks read the cascade: the real
+// stylesheets, the page's own markup, getComputedStyle. jsdom does not expand
+// a shorthand that holds a var(), nor report text-decoration-line, so those
+// few are read from the rule's own text.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { JSDOM } from 'jsdom';
+
+// OPAX_PUBLIC_DIR points at another copy of public/ (a revert check).
+const publicDir = process.env.OPAX_PUBLIC_DIR ? new URL(`file://${process.env.OPAX_PUBLIC_DIR.replace(/\/?$/, '/')}`) : new URL('../public/', import.meta.url);
+const read = (name) => readFileSync(new URL(name, publicDir), 'utf8');
+const { askBlockHTML, questionsHTML, questionLabel } = await import(new URL('growth-modules.js', publicDir).href);
+const style = read('style.css');
+const app = read('app.js');
+const sheets = (...names) => names.map((name) => `<style>${read(name).replace(/@import[^;]+;/g, '')}</style>`).join('');
+const styleOf = (dom, selector) => dom.window.getComputedStyle(dom.window.document.querySelector(selector));
+
+test('a question asked from lower on the Ask page is brought into view by one shared helper', () => {
+  const index = read('index.html');
+  assert.match(index, /<h2 id="ask-question" class="visually-hidden" tabindex="-1" hidden><\/h2>\s*<div id="ask-status"/, 'the question heading sits above the waiting state and the answer');
+  const body = (name) => { const at = app.indexOf(`function ${name}(`); assert.ok(at > 0, name); return app.slice(at, app.indexOf('\n}', at)); };
+  const helper = body('bringAskIntoView');
+  assert.match(helper, /prefers-reduced-motion: reduce\)"\)\.matches \? "instant" : "smooth"/, 'smooth unless the reader asked for less motion');
+  assert.match(helper, /heading\.focus\(\{ preventScroll: true \}\)/, 'focus goes to the question heading');
+  assert.match(body('runAsk'), /setAskQuestion\(question\)/, 'every ask names the heading');
+  // The callers: a suggestion (under an answer or under the box), the builder,
+  // and a link on the Ask page that asks again (the money next step).
+  assert.match(body('askSuggestion'), /replaceRoute\(askHash\(q\)\);[\s\S]*runAsk\(q\);\s*bringAskIntoView\(\);/, 'a suggestion keeps its address handling and then comes into view');
+  assert.match(body('initAskBuilder'), /runAsk\(q\);\s*bringAskIntoView\(\);/);
+  assert.match(app, /if \(askedInPlace\) bringAskIntoView\(\);\s*else if \(manageFocus\) window\.scrollTo\(0, 0\);/);
+  assert.equal(app.split('bringAskIntoView()').length - 1, 4, 'one helper, three callers');
+});
+
+test('data table links keep the ordinary link colour in every records table', () => {
+  const dom = new JSDOM(`<!doctype html><html><head>${sheets('style.css', 'datatable.css', 'register-tables.css', 'grants-table.css', 'vic-gifts.css')}</head><body>
+    <section id="subject-interests"><div data-register-table="interests-table" class="dt-root"><table class="dt"><tbody><tr><td data-primary><a id="interest" href="https://example.org/register">An entry</a></td></tr></tbody></table></div></section>
+    <div data-register-table="ssr-interests-table" class="dt-root"><table class="dt"><tbody><tr><td><a id="ssr" href="https://example.org/register">An entry</a></td></tr></tbody></table></div>
+    <div class="audit-content"><div data-register-table="audit" class="dt-root"><table class="dt"><tbody><tr><td><a id="audit" href="/a">A report</a></td></tr></tbody></table></div></div>
+    <div data-grants-table class="dt-root"><table class="dt"><tbody><tr><td><a id="grant" href="/g">A grant</a></td></tr></tbody></table></div>
+    <div class="vic-gifts-content"><div class="dt-root"><table class="dt"><tbody><tr><td><a id="gift" href="/v">A gift</a></td></tr></tbody></table></div></div>
+    <div class="dt-root"><table class="dt"><tbody><tr><td><a id="plain" href="/p">A row</a></td></tr></tbody></table></div>
+    <p><a id="prose" href="/x">A link in prose</a></p>
+  </body></html>`);
+  const prose = styleOf(dom, '#prose');
+  assert.equal(prose.color, 'var(--ink)', 'the site link colour is ink');
+  for (const id of ['interest', 'ssr', 'audit', 'grant', 'gift', 'plain']) {
+    const link = styleOf(dom, `#${id}`);
+    assert.equal(link.color, prose.color, `#${id}: the table link is the site link colour, not a section accent`);
+    assert.equal(link.textDecorationColor, prose.textDecorationColor, `#${id}: and keeps the site underline colour`);
+    assert.equal(link.textDecoration, 'underline', `#${id}: it is still underlined`);
+  }
+  // Visited or not: the shared rule names the visited state, and no table
+  // stylesheet gives a table link a colour of its own.
+  assert.match(read('datatable.css'), /\n\.dt a, \.dt a:visited \{ color: var\(--ink\);/);
+  for (const name of ['register-tables.css', 'grants-table.css', 'vic-gifts.css', 'vote-tables.css', 'procurement.css', 'state-bills.css']) {
+    assert.doesNotMatch(read(name), /\.dt a\b[^{]*\{[^}]*(?<![-\w])color:/, `${name} sets no table link colour`);
+  }
+  // Focus keeps the section accent's ring, as before.
+  assert.match(read('datatable.css'), /\.dt-root :is\(button, summary, input, select, a\):focus-visible \{ outline: var\(--border-focus\) solid var\(--money-ink\)/);
+});
+
+test('a member page draws no Senate caption over the First speech card', () => {
+  const at = app.indexOf('async function renderPersonFirstSpeech(');
+  const fn = app.slice(at, app.indexOf('\n}', at));
+  assert.match(fn, /<h2 class="subject-section-title">First speech<\/h2>\s*<div class="video-cards">/, 'the card follows the heading');
+  assert.doesNotMatch(fn, /person-caveat|Video published by/);
+  assert.match(fn, /All first speeches/);
+  assert.match(fn, /dateLabel: "Published", source: "AuSenate YouTube channel"/, 'the attribution line stays');
+  const seo = readFileSync(new URL('../src/seo-content.ts', import.meta.url), 'utf8');
+  assert.doesNotMatch(seo, /Video published by the Senate Public Information Office/);
+});
+
+test('the Ask-about questions are one-line pills in a wrapping list, and the block keeps one rule', () => {
+  const long = 'How did each party vote on the Treasury Laws Amendment (A Very Long Title That Keeps Going For Some Considerable Distance) Bill 2026?';
+  const block = askBlockHTML({ name: 'Ada Quill', pageType: 'person', questions: ['What interests has Ada Quill declared?', long] });
+  const dom = new JSDOM(`<!doctype html><html><head>${sheets('style.css')}</head><body>${block}</body></html>`);
+  const { document } = dom.window;
+  // Still a list of links to Ask, with the whole question on each.
+  const links = [...document.querySelectorAll('ul.growth-questions[role="list"] > li > a')];
+  assert.equal(links.length, 2);
+  assert.equal(links[1].getAttribute('title'), long, 'the full question is the title');
+  assert.equal(links[1].textContent, questionLabel(long), 'the label keeps the 100-character cut');
+  assert.ok(links[1].textContent.length <= 101);
+  assert.equal(new URL(links[1].getAttribute('href'), 'https://opax.com.au').searchParams.get('q'), long, 'Ask receives the whole question');
+  assert.equal(links[1].getAttribute('rel'), 'nofollow');
+  assert.match(questionsHTML(['A "quoted" question?'], 'bill'), /title="A &quot;quoted&quot; question\?"/, 'the title is escaped');
+
+  const list = styleOf(dom, '.growth-questions');
+  assert.equal(list.display, 'flex');
+  assert.equal(list.flexWrap, 'wrap');
+  assert.equal(list.gap, 'var(--space-tight)');
+  const pill = styleOf(dom, '.growth-questions a');
+  assert.equal(pill.borderRadius, 'var(--radius-pill)', 'fully rounded');
+  assert.equal(pill.whiteSpace, 'nowrap');
+  assert.equal(pill.overflow, 'hidden');
+  assert.equal(pill.textOverflow, 'ellipsis');
+  assert.match(pill.maxWidth, /^min\(100%, \d+(rem|px)\)$/, 'a capped width, so a long bill title cannot make one giant pill');
+  assert.equal(pill.textDecoration, 'none', 'no underline');
+  assert.equal(pill.color, 'var(--ink)');
+  assert.equal(pill.background, 'var(--paper-raised)');
+  assert.match(style, /\n\.growth-questions a \{[^}]*border: var\(--border-hairline\) solid var\(--divider-default\);/, 'a hairline border');
+  assert.match(style, /\n\.growth-questions a:hover \{ background: var\(--paper-sunken\);/, 'a hover state');
+  assert.match(style, /:is\(\.growth-ask, \.growth-records, \.growth-donor\) :is\(a, button, input, textarea, summary\):focus-visible \{ outline: var\(--border-focus\) solid var\(--bronze-ink\)/, 'a visible focus ring');
+  assert.match(style, /@media \(max-width: 1000px\), \(pointer: coarse\) \{\s*\.growth-questions a \{ min-height: var\(--size-target\);/, '44px tall on touch');
+
+  // One rule: the top divider stays, the bottom border is gone.
+  const section = /\n\.growth-ask \{([^}]*)\}/.exec(style)[1];
+  assert.match(section, /border-top: var\(--border-hairline\) solid var\(--divider-default\);/);
+  assert.doesNotMatch(section, /border-block|border-bottom|border:/, 'no bottom border');
+  assert.doesNotMatch(style, /\.growth-ask \{[^}]*border-(?:block|bottom)[^}]*solid/);
+});
+
+test('a search result title is underlined on hover and keyboard focus only', () => {
+  const dom = new JSDOM(`<!doctype html><html><head>${sheets('style.css')}</head><body><section id="panel-search"><ul id="search-results" class="ui-list"><li>
+    <div class="ui-row-meta"><a id="kind" href="/ask?view=search&kind=speech">Speech</a> · 27 May 2026</div>
+    <h3 class="ui-row-title search-result-heading"><a id="title" class="result-title" href="/doc/x">A committee hearing</a></h3>
+    <div class="result-byline"><a id="speaker" href="/subject/person/x">A Speaker</a></div>
+  </li></ul></section></body></html>`);
+  const line = (id) => styleOf(dom, `#${id}`).textDecoration;
+  assert.match(style, /\n#panel-search \.search-result-heading a\.result-title \{ text-decoration-line: none; \}/, 'no underline at rest');
+  assert.equal(styleOf(dom, '#title').color, styleOf(dom, '.search-result-heading').color, 'the title keeps its colour');
+  assert.equal(dom.window.document.querySelector('#title').tagName, 'A', 'and is still a link');
+  // The kind link and the speaker's name are other rules and keep their underline.
+  assert.equal(line('kind'), 'underline');
+  assert.equal(line('speaker'), 'underline');
+  assert.match(style, /\n#panel-search \.search-result-heading a\.result-title:is\(:hover, :focus-visible\) \{ text-decoration-line: underline; \}/);
+});
