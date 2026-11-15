@@ -1,9 +1,9 @@
 {
-  "version": "2026-11-15",
-  "expected_resources": 1003326,
+  "version": "2026-11-16",
+  "expected_resources": 1003333,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 1003325,
-    "new_press_release_resources": 1
+    "live_index_before_refresh": 1003326,
+    "new_press_release_resources": 7
   },
   "collected_speeches": 964517,
   "sources": [
@@ -69,7 +69,7 @@
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5587,
+      "docs": 5593,
       "coverage": "2024–2026"
     },
     {
@@ -104,7 +104,7 @@
     },
     {
       "name": "Queensland Government ministerial statements",
-      "docs": 289,
+      "docs": 290,
       "coverage": "7–21 Sep 2026"
     },
     {
@@ -152,12 +152,12 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-11-14T20:51:23+00:00",
+    "checked_at": "2026-11-15T17:52:10+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
     "latest_bill_introduced": "2026-09-17",
-    "latest_nsw_release": "2026-11-12",
+    "latest_nsw_release": "2026-11-14",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
       "Federal Hansard is current to 2026-10-29 (no sittings since); NSW Parliament to 2026-11-12; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-10-29. Federal committee hearings (Senate, House and Joint) are current to 2026-10-29.",
@@ -197,7 +197,7 @@
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 995,
-      "press_release": 7063,
+      "press_release": 7070,
       "research_report": 35,
       "speech": 964517
     },
@@ -206,13 +206,13 @@
       "nsw_speeches": 0,
       "vic_speeches": 0,
       "act_speeches": 0,
-      "nsw_releases": 0,
-      "austender_contracts": 0
+      "nsw_releases": 6,
+      "austender_contracts": 1
     },
     "structured_sources": {
       "grantconnect_awards": 369742,
       "austender_latest_contracts": 876132,
-      "published_supplier_contracts": 108607,
+      "published_supplier_contracts": 108821,
       "lobbyist_firms": 1967,
       "lobbyist_client_links": 15181,
       "lobbyist_people": 6046,
@@ -241,19 +241,19 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-14T19:56:50.293787+00:00",
+        "checked_at": "2026-11-15T16:54:40.389925+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-14T16:20:21.677224+00:00",
+        "checked_at": "2026-11-15T16:19:21.175254+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "grants_fetch": {
         "status": "paused",
         "host": "www.grants.gov.au",
-        "checked_at": "2026-11-14T16:32:48.484496+00:00",
+        "checked_at": "2026-11-15T16:32:01.637651+00:00",
         "reason": "HTTP 403"
       },
       "integrity_nsw_icac": {
@@ -277,13 +277,13 @@
       "interests_federal": {
         "status": "paused",
         "host": "www.aph.gov.au",
-        "checked_at": "2026-11-14T16:44:42.924466+00:00",
+        "checked_at": "2026-11-15T16:44:20.962586+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld": {
         "status": "paused",
         "host": "data.parliament.qld.gov.au",
-        "checked_at": "2026-11-14T16:20:19.584898+00:00",
+        "checked_at": "2026-11-15T16:19:17.125222+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld_contracts": {
@@ -295,7 +295,7 @@
       "sa": {
         "status": "paused",
         "host": "hansardsearch.parliament.sa.gov.au",
-        "checked_at": "2026-11-14T16:20:24.448705+00:00",
+        "checked_at": "2026-11-15T16:19:24.391997+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       }
     },
@@ -469,7 +469,7 @@
         2017,
         2018
       ],
-      "checked_at": "2026-11-14T16:44:44.997812+00:00"
+      "checked_at": "2026-11-15T16:44:22.505345+00:00"
     }
   },
   "enrichment": {

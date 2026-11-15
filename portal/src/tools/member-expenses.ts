@@ -1,6 +1,7 @@
 /** IPEA expenses grouped by reporting quarter, rather than the transaction date. */
 import { personUrl } from '../../public/party-page.js'
-import { aud, clip, fold, readableRange, siteUrl } from './record-common'
+import { yearCoverage } from '../../public/expense-coverage.js'
+import { aud, clip, fold, readableDate, readableRange, siteUrl } from './record-common'
 import { readToolAsset, readToolMedia, type ToolArgs, type ToolCitation, type ToolDefinition, type ToolEnv, type ToolInputSchema } from './types'
 
 interface Expenses {
@@ -43,6 +44,14 @@ function reportingPeriods(meta: Expenses['meta']): Set<string> {
   }
   return new Set(ids.length === meta.quarters ? ids : [])
 }
+
+// ---- partial years ----------------------------------------------------------------------------------------------
+// A figure for a year IPEA has not finished publishing says what it covers, e.g. "January to June 2026 (two quarters
+// published)", worked out from the quarters held (public/expense-coverage.js), never from today's date. A finished
+// year says nothing extra. Ask states it now. The public MCP output keeps its earlier wording while its directory
+// reviews are pending: to switch MCP on, make this return true (the citation text and the row's `covers` then
+// change for MCP exactly as they have for Ask; the tool list, names and schemas do not change).
+const statesCoverage = (env: ToolEnv) => env.ask === true
 
 // ---- itemised lines -------------------------------------------------------------------------------------------
 // Every IPEA line per person and reporting year, exported by scripts/export_expenses_itemised.py to the media
@@ -107,7 +116,7 @@ function lineText(line: Line, quarterLabel: string): string {
   if (role) parts.push(role)
   return `${quarterLabel}, ${kind || 'expense'}: ${parts.filter(Boolean).join('; ')}: ${cents(line.amount)}`
 }
-async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person: { name: string }, pid: string, href: string, yearTotal: number | undefined, attribution?: string) {
+async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person: { name: string }, pid: string, href: string, yearTotal: number | undefined, published: { quarters: string[]; complete: boolean; text: string }, outside: string, attribution?: string) {
   const category = String(args.category ?? 'travel'), offset = Number(args.offset ?? 0)
   const years = [...new Set(requested.quarters.map(id => id.slice(0, 4)))]
   const files = await Promise.all(years.map(year => readToolMedia(env, `expenses/v1/${pid}/${year}.json`) as Promise<Itemised | null>))
@@ -117,17 +126,21 @@ async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person:
   const held = [...quarters.keys()].sort()
   const all = files.flatMap(readLines).filter(line => quarters.has(line.quarter))
   const lines = all.filter(line => inCategory(expenseGroup(line.category_high, line.category_major), category)).sort((a, b) => a.quarter < b.quarter ? -1 : a.quarter > b.quarter ? 1 : 0)
-  const first = held.length ? quarterBounds(held[0]) : null, last = held.length ? quarterBounds(held.at(-1)!) : null
-  const coverage = { since: first?.since ?? null, until: last?.until ?? null, requested_since: requested.since, requested_until: requested.until, matched: held.length === requested.quarters.length }
+  // Coverage is what IPEA has published for the year (the handler's reading of expenses.json), not the quarters in
+  // which this member happens to have lines: a member with lines in one quarter of a finished year has a full year.
+  const known = published.quarters.length > 0, partial = known && !published.complete
+  const first = known ? quarterBounds(published.quarters[0]) : null, last = known ? quarterBounds(published.quarters.at(-1)!) : null
+  const coverage = { since: first?.since ?? null, until: last?.until ?? null, requested_since: requested.since, requested_until: requested.until, matched: published.complete }
   const notes = ['Each line is as IPEA published it, grouped by IPEA\'s reporting quarter, which can differ from the date of travel. Negative lines are IPEA adjustments and repayments. Who travelled is given as a role: member, family member or staff.']
   if (attribution) notes.push(attribution)
-  const span = readableRange(first?.since, last?.until), label = CATEGORY_LABEL(category)
+  // In words: the whole year when all four quarters are published, else the months published and how many quarters.
+  const span = published.complete ? requested.label : known ? published.text : '', label = CATEGORY_LABEL(category)
   const only = (text: string, value?: number) => ({ rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text, ...(value === undefined ? {} : { value }) }], notes })
   if (!files.some(Boolean)) {
     // No file for the year: either IPEA reported nothing for this person then (no total either), or the total is held and its lines are yet to be loaded.
     return yearTotal === undefined
-      ? only(`OPAX has no reported IPEA expense lines for ${person.name} for ${requested.label}. This does not mean expenditure was zero.`)
-      : only(`${person.name}'s IPEA-reported expenses for ${requested.label} total ${aud(yearTotal)}; the itemised lines for that year are not loaded yet.`, yearTotal)
+      ? only(`OPAX has no reported IPEA expense lines for ${person.name} for ${requested.label}. This does not mean expenditure was zero.${outside}`)
+      : only(`${person.name}'s IPEA-reported expenses for ${partial ? published.text : requested.label} total ${aud(yearTotal)}${partial ? `, a partial subtotal of ${requested.label}` : ''}; the itemised lines for that year are not loaded yet.`, yearTotal)
   }
   if (!lines.length) return only(all.length
     ? `${person.name}'s IPEA-published lines${span ? ', ' + span : ''}: ${all.length} in other categories and none under ${label}.`
@@ -136,7 +149,7 @@ async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person:
   const total = sum(lines)
   const groups = GROUPS.map(group => ({ group, rows: lines.filter(line => expenseGroup(line.category_high, line.category_major) === group) })).filter(g => g.rows.length)
     .map(g => ({ group: g.group, label: GROUP_LABEL[g.group], lines: g.rows.length, amount_aud: sum(g.rows), nights: g.rows.reduce((n, r) => n + (r.nights ?? 0), 0) }))
-  const citations: ToolCitation[] = [{ kind: 'record', url: href, value: total, text: `${person.name}'s IPEA-reported ${label} lines${span ? ', ' + span : ''}: ${lines.length} lines totalling ${cents(total)}${coverage.matched ? '' : ` (reporting quarters held: ${held.join(', ')})`}.` }]
+  const citations: ToolCitation[] = [{ kind: 'record', url: href, value: total, text: `${person.name}'s IPEA-reported ${label} lines${span ? ', ' + span : ''}: ${lines.length} lines totalling ${cents(total)}${partial ? `, a partial subtotal of ${requested.label}` : ''}.` }]
   if (groups.length > 1) for (const g of groups) citations.push({ kind: 'record', url: href, value: g.amount_aud, text: `${person.name}, ${g.label}${span ? ', ' + span : ''}: ${g.lines} lines, ${cents(g.amount_aud)}${g.group === 'allowance' && g.nights ? `, ${g.nights} nights` : ''}.` })
   let used = 0, shown = 0
   for (const line of lines.slice(offset, offset + LINE_PAGE)) {
@@ -148,8 +161,8 @@ async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person:
   }
   const next = offset + shown < lines.length ? offset + shown : null
   if (next !== null) notes.push(`Lines ${offset + 1} to ${offset + shown} of ${lines.length} are listed. Call again with offset ${next} for the next lines, or with a narrower category.`)
-  if (!coverage.matched) notes.push(`Reporting quarters not held for ${requested.label}: ${requested.quarters.filter(id => !quarters.has(id)).join(', ')}.`)
-  return { rows: [{ name: person.name, person_id: pid, year: requested.key, period: requested.label, detail: 'itemised', category, reporting_quarters: held, lines: lines.length, amount_aud: total, groups, offset, lines_listed: shown, next_offset: next }],
+  if (partial) notes.push(`Reporting quarters not yet published for ${requested.label}: ${requested.quarters.filter(id => !published.quarters.includes(id)).join(', ')}.`)
+  return { rows: [{ name: person.name, person_id: pid, year: requested.key, period: requested.label, ...(partial ? { covers: published.text } : {}), detail: 'itemised', category, reporting_quarters: held, lines: lines.length, amount_aud: total, groups, offset, lines_listed: shown, next_offset: next }],
     coverage, citations, notes }
 }
 const ITEMISED_PROPERTIES: NonNullable<ToolInputSchema['properties']> = {
@@ -194,21 +207,32 @@ export const tool: ToolDefinition = {
     const unavailable = (text: string) => ({ rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text }], notes })
     if (!person) return unavailable(candidates.length > 1 ? `The name "${clip(args.person, 60)}" matches several IPEA expense records. Please give the full name.` : `OPAX has no IPEA expense record for "${clip(args.person, 60)}".`)
     const amounts = requested.financial ? person.by_financial_year : person.by_year
+    const covers = yearCoverage(held, requested.key, { financial: requested.financial }), stated = statesCoverage(env)
+    // A year with none of its quarters in the data: later than the last published quarter, IPEA has not published it
+    // yet; earlier than the first, it is before OPAX's IPEA data begins. A year inside the range says nothing extra.
+    const periods = [...held].sort(), earliest = periods[0], latest = periods.at(-1)
+    const outside = !stated || !periods.length || selected.length ? ''
+      : requested.quarters[0] > latest! ? ` IPEA has published no quarters of ${requested.label} yet.`
+      : requested.quarters.at(-1)! < earliest! ? ` OPAX's IPEA data starts on ${readableDate(quarterBounds(earliest!)?.since)}.`
+      : ''
     if (args.detail === 'itemised') {
       const held = amounts?.find(([year]) => year === requested.key)?.[1]
-      return itemised(env, args, requested, person, candidates[0], href, typeof held === 'number' && Number.isFinite(held) ? held : undefined, expenses.meta.attribution)
+      return itemised(env, args, requested, person, candidates[0], href, typeof held === 'number' && Number.isFinite(held) ? held : undefined, covers, outside, expenses.meta.attribution)
     }
     if (!amounts) return unavailable(requested.financial
       ? `OPAX's expense export does not hold financial-year totals for ${person.name}. The IPEA ingest retains reporting quarters in ext_expenses; export sums of the July to June reporting quarters to answer ${requested.label}. Calendar-year or career totals cannot establish this amount.`
       : `OPAX's expense export does not hold calendar-year totals for ${person.name}. Export sums by reporting quarter's calendar year from ext_expenses; a career total cannot establish ${requested.label}.`)
     const amount = amounts.find(([year]) => year === requested.key)?.[1]
-    if (typeof amount !== 'number' || !Number.isFinite(amount)) return unavailable(`OPAX has no reported IPEA expense total for ${person.name} for ${requested.label}. This does not mean expenditure was zero.`)
+    if (typeof amount !== 'number' || !Number.isFinite(amount)) return unavailable(`OPAX has no reported IPEA expense total for ${person.name} for ${requested.label}. This does not mean expenditure was zero.${outside}`)
     if (!selected.length) return unavailable(`OPAX cannot establish reporting-quarter coverage for ${requested.label}; the available aggregate is not established as a full-year total.`)
     const complete = selected.length === 4
     if (!complete) notes.push(`Partial coverage: missing reporting quarters ${requested.quarters.filter(id => !held.has(id)).join(', ')}. The amount is a reported subtotal, not a complete annual total.`)
     if (expenses.meta.attribution) notes.push(expenses.meta.attribution)
-    return { rows: [{ name: person.name, person_id: candidates[0], year: requested.key, period: requested.label, amount_aud: amount, complete, reporting_quarters: selected }],
+    const partial = stated && !complete && covers.text
+    return { rows: [{ name: person.name, person_id: candidates[0], year: requested.key, period: requested.label, ...(partial ? { covers: partial } : {}), amount_aud: amount, complete, reporting_quarters: selected }],
       coverage: { ...coverage, matched: complete },
-      citations: [{ kind: 'record', url: href, value: amount, text: `${person.name}: ${aud(amount)} in IPEA-reported parliamentary expenses for ${requested.label}${complete ? '' : ` (partial reported subtotal${readableRange(first?.since, last?.until) ? ', ' + readableRange(first?.since, last?.until) : ''})`}.` }], notes }
+      citations: [{ kind: 'record', url: href, value: amount, text: partial
+        ? `${person.name}: ${aud(amount)} in IPEA-reported parliamentary expenses for ${partial}, a partial reported subtotal of ${requested.label}.`
+        : `${person.name}: ${aud(amount)} in IPEA-reported parliamentary expenses for ${requested.label}${complete ? '' : ` (partial reported subtotal${readableRange(first?.since, last?.until) ? ', ' + readableRange(first?.since, last?.until) : ''})`}.` }], notes }
   },
 }

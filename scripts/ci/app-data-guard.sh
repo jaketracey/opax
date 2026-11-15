@@ -41,6 +41,12 @@ case "$command" in
       echo 'present=false'
       exit 0
     fi
+    # A pinned run swaps in that build's decoders through OPAX_DECODERS_SRC. A guard helper that does not read
+    # it would test the app line's decoders again under the pinned build's name and pass without checking it.
+    if [ -n "$(pinned)" ] && ! grep -q 'OPAX_DECODERS_SRC' "$app/tests/published-data.ts" 2>/dev/null; then
+      echo "app-data-guard: the guard on $APP_REF does not read OPAX_DECODERS_SRC, so pinned builds would not be checked" >&2
+      exit 1
+    fi
     while IFS='|' read -r label tag commit; do
       [ -n "$label" ] || continue
       [ -n "$tag" ] && [ -n "$commit" ] || { echo "app-data-guard: $label: a pin is \"label|tag|commit\"" >&2; exit 1; }
