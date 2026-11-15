@@ -274,6 +274,40 @@ test('a Text that has had its lines takes no silent floor later: after a rotatio
   }
 });
 
+test('an event with no line at all, for words that are there, takes the floor at once, even after earlier lines', () => {
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 3.571 });
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
+  });
+  const name = () => renderer.root.findByType(NativeText);
+  const layout = (height: number) =>
+    act(() =>
+      name().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 298, height } },
+      }),
+    );
+  const lines = (value: typeof nativeLines) =>
+    act(() => name().props.onTextLayout({ nativeEvent: { lines: value } }));
+  layout(141.667);
+  lines(nativeLines);
+  expect(floorOf(name())).toBeUndefined();
+  // Nothing fitted the frame this time: no timer, no wait.
+  lines([]);
+  expect(floorOf(name())).toBe(143);
+  act(() => renderer.unmount());
+  // Empty words send an empty event too, and that proves nothing.
+  act(() => {
+    renderer = TestRenderer.create(<Text wordSafe>{''}</Text>);
+  });
+  layout(20);
+  lines([]);
+  expect(floorOf(name())).toBeUndefined();
+  act(() => renderer.unmount());
+});
+
 test('298 → 320 → 298 → 600 measures afresh without carrying the old floor', () => {
   jest
     .mocked(useWindowDimensions)

@@ -884,6 +884,15 @@ export function Text({
             // One whole point survives Yoga rounding.
             minimum: Math.max(Math.ceil(frame.height) + 1, Math.ceil(bottom)),
           });
+      } else if (lines && !linesFromBefore && content.trim() !== '') {
+        // An event with no line at all, for words that are there: nothing
+        // fitted the frame. This is proof, whether or not the Text has had
+        // lines before.
+        setHeightGuard({
+          key: heightKey,
+          width: frame.width,
+          minimum: Math.ceil(frame.height) + 1,
+        });
       } else if (
         listensForLines &&
         !heardLines.current &&
