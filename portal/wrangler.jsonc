@@ -59,6 +59,12 @@
     // "0", or anything that is not a whole number, turns the reads off. The day's count is the
     // community_limits row passage-fill-day:<day>, kept 120 days. Staging has its own pool of 40.
     "PASSAGE_FILL_DAILY_READS": "200",
+    // Do not turn this off before the Victorian roster is reloaded with the members elected on
+    // 28 November 2026. The app's Today reads /api/app/v1/vic-election to know the Legislative Assembly
+    // is dissolved, and draws "Assembly dissolved ... Last member: ..." in place of a member's row until
+    // the electorates index holds each district's 2026 result. A 404 here before that reload leaves a
+    // new install unable to tell, so it shows a neutral dated row. Nothing in src/ retires the endpoint
+    // by date (test/app-vic-election.test.mjs pins that at a 2027 clock): this flag is its only gate.
     "VIC_ELECTION_HUB_ENABLED": "true",
     // The six standing reports are off for now (Jake, 19 Oct: "just remove the reports for now").
     // "true" restores every page, link, data file, search row and sitemap entry (src/reports-gate.ts).
