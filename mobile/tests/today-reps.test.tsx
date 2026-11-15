@@ -26,6 +26,7 @@ import {
 import {
   DISSOLVED_STAND_IN,
   termEndWords,
+  termLine,
   electionDayWords,
   formFromIndex,
   formFromRecord,
@@ -624,9 +625,38 @@ describe('Today’s representatives group', () => {
       });
       // The term ends 25 days before election day, whatever the record's
       // day is: the row's date is worked out, never written.
-      expect(termEndWords('2026-11-28')).toBe('3 November');
-      expect(termEndWords('2030-11-30')).toBe('5 November');
-      expect(termEndWords('2027-01-10')).toBe('16 December');
+      expect(termEndWords('2026-11-28', 'vic')).toBe('3 November');
+      expect(termEndWords('2030-11-30', 'VIC')).toBe('5 November');
+      expect(termLine('2026-11-28', 'vic')).toBe(
+        'Parliament’s term ended on 3 November for the 28 November election',
+      );
+      // The 25 days are Victoria's, for its fixed election day (the last
+      // Saturday of November). Another state's house, or a Victorian
+      // election on another day, gets no invented date.
+      expect(termEndWords('2026-11-28', 'sa')).toBeNull();
+      expect(termEndWords('2026-11-21', 'vic')).toBeNull();
+      expect(termEndWords('2027-03-20', 'vic')).toBeNull();
+      expect(termLine('2026-03-21', 'sa')).toBe(
+        'Parliament’s term has ended for the 21 March election',
+      );
+      expect(termLine('2027-03-20', 'vic')).toBe(
+        'Parliament’s term has ended for the 20 March election',
+      );
+      // A day that is not one never throws: the line goes without it.
+      for (const bad of ['', 'soon', '2026-13-45', '2026-02-30'])
+        expect(termLine(bad, 'vic')).toBe(
+          'Parliament’s term has ended for the election',
+        );
+      expect(electionDayWords('2026-13-45')).toBe('');
+      // Every form of the line fits the place the stand-in holds.
+      for (const line of [
+        termLine('2026-11-28', 'vic'),
+        termLine('2026-03-21', 'sa'),
+        termLine('', 'vic'),
+      ])
+        expect(DISSOLVED_STAND_IN[2]!.length).toBeGreaterThanOrEqual(
+          line.length,
+        );
       // No source file names the term's end or the election date.
       for (const file of [
         'dissolution.ts',

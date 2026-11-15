@@ -1243,6 +1243,59 @@ describe('the first frame has the loaded page’s layout', () => {
       }
     });
 
+    test('lines kept in the older wording hold the new line’s place, so the row does not grow as it lands', async () => {
+      const old = [
+        'Victoria\u00a0·\u00a0Legislative Assembly',
+        'Essendon',
+        'Assembly dissolved for the 28 November election',
+        'Last member: Danny Pearson, Labor',
+      ];
+      await rememberTodayShape(
+        shape(
+          { kind: 'dissolved', electionDay: overview.election_day, lines: old },
+          false,
+          overview.election_day,
+        ),
+      );
+      const next = await launch(victorian, { record: atHand });
+      const held = lines(next.r);
+      expect(held[2]).not.toBe(old[2]);
+      await next.answer();
+      const drawn = lines(next.r);
+      expect(drawn[2]).toBe(
+        'Parliament’s term ended on 3 November for the 28 November election',
+      );
+      // Never shorter than the line that lands on it.
+      expect(held[2]!.length).toBeGreaterThanOrEqual(drawn[2]!.length);
+    });
+
+    test('a kept election day that is not a day draws the row without it, and nothing throws', async () => {
+      await rememberTodayShape(
+        shape(
+          {
+            kind: 'dissolved',
+            electionDay: '2026-13-45',
+            lines: [
+              'Victoria\u00a0·\u00a0Legislative Assembly',
+              'Essendon',
+              'Parliament’s term has ended for the election',
+              'Last member: Danny Pearson, Labor',
+            ],
+          },
+          false,
+          '2026-13-45',
+        ),
+      );
+      // The record is out of reach, so the kept row is what answers.
+      const next = await launch(victorian, {});
+      await next.answer();
+      expect(hosts(next.r, 'route-error')).toHaveLength(0);
+      expect(hosts(next.r, 'today-rep-state-dissolved')).toHaveLength(1);
+      expect(lines(next.r)[2]).toBe(
+        'Parliament’s term has ended for the election',
+      );
+    });
+
     test('a kept member row answers while the record is out: a member’s place, then the member’s row, never the stand-in between', async () => {
       // The last launch decided the member (the result is loaded).
       await rememberTodayShape(shape({ kind: 'member', until: null }));

@@ -1,5 +1,9 @@
 import { TwoSlotStore } from '../../storage/two-slot';
-import type { KeptStateRow } from './dissolution';
+import {
+  DISSOLVED_STAND_IN,
+  TERM_LINE_START,
+  type KeptStateRow,
+} from './dissolution';
 import type { RepsWords, RepWords } from './RepsGroup';
 
 /**
@@ -72,7 +76,16 @@ function decodeStateRow(raw: unknown): KeptStateRow | null | undefined {
     return lines &&
       typeof row.electionDay === 'string' &&
       DAY.test(row.electionDay)
-      ? { kind: 'dissolved', electionDay: row.electionDay, lines }
+      ? {
+          kind: 'dissolved',
+          electionDay: row.electionDay,
+          // Lines kept by a build with the older, shorter wording would hold
+          // a shorter place once, and the row would grow as it landed: such
+          // a line gives way to the stand-in, the longest the row can be.
+          lines: lines[2]!.startsWith(TERM_LINE_START)
+            ? lines
+            : [lines[0]!, lines[1]!, DISSOLVED_STAND_IN[2]!, lines[3]!],
+        }
       : undefined;
   }
   if (row.kind === 'neutral') {

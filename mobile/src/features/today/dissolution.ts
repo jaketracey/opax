@@ -36,28 +36,74 @@ export type KeptStateRow =
   | { kind: 'dissolved'; electionDay: string; lines: readonly string[] }
   | { kind: 'neutral'; lines: readonly string[] };
 
-/** The record's election day as a day and month, as the row says it. */
-export function electionDayWords(day: string): string {
-  return new Intl.DateTimeFormat('en-AU', {
+/** A day the data gave, or null for anything that is not a real day. */
+function dayOf(day: string): Date | null {
+  if (typeof day !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(day)) return null;
+  const date = new Date(`${day.slice(0, 10)}T00:00:00Z`);
+  return Number.isFinite(date.getTime()) &&
+    date.toISOString().slice(0, 10) === day.slice(0, 10)
+    ? date
+    : null;
+}
+const dayWords = (date: Date) =>
+  new Intl.DateTimeFormat('en-AU', {
     day: 'numeric',
     month: 'long',
     timeZone: 'UTC',
-  }).format(new Date(`${day.slice(0, 10)}T00:00:00Z`));
+  }).format(date);
+
+/**
+ * The record's election day as a day and month, as the row says it. Empty
+ * for a day that is not one: this is drawn on Today, and never throws.
+ */
+export function electionDayWords(day: string): string {
+  const date = dayOf(day);
+  return date ? dayWords(date) : '';
 }
 
 /**
- * The day the Victorian Parliament's term ended before that election, as a
- * day and month. The Parliament is not dissolved for a general election:
- * under the Constitution Act 1975 (Vic) its term expires 25 days before
- * election day, so the day follows from the record's election day and no
- * date is written here.
+ * The day the Victorian Parliament's term ended before a fixed-date general
+ * election, as a day and month; null where that rule does not give it.
+ *
+ * The Parliament is not dissolved for a general election: under the
+ * Constitution Act 1975 (Vic) its term expires 25 days before election
+ * day, and election day is the last Saturday of November. So the day
+ * follows from the record's election day, and only then: another state's
+ * house, or a Victorian election on any other day (an early dissolution),
+ * has no date this rule can give. No date is written here. When the roster
+ * carries the day the term ended, it should be read from there instead.
  */
 const TERM_ENDS_DAYS_BEFORE = 25;
-export function termEndWords(electionDay: string): string {
-  const day = new Date(`${electionDay.slice(0, 10)}T00:00:00Z`);
-  day.setUTCDate(day.getUTCDate() - TERM_ENDS_DAYS_BEFORE);
-  return electionDayWords(day.toISOString());
+export function termEndWords(
+  electionDay: string,
+  stateCode: string,
+): string | null {
+  const day = dayOf(electionDay);
+  if (!day || stateCode.toLowerCase() !== 'vic') return null;
+  const nextWeek = new Date(day.getTime() + 7 * 86_400_000);
+  const lastSaturdayOfNovember =
+    day.getUTCDay() === 6 &&
+    day.getUTCMonth() === 10 &&
+    nextWeek.getUTCMonth() !== 10;
+  if (!lastSaturdayOfNovember) return null;
+  return dayWords(new Date(day.getTime() - TERM_ENDS_DAYS_BEFORE * 86_400_000));
 }
+
+/**
+ * The row's line for a house whose term has ended for an election: with
+ * the day it ended where the rule above gives one, without it otherwise,
+ * and with no election day when the data's is not a day.
+ */
+export function termLine(electionDay: string, stateCode: string): string {
+  const election = electionDayWords(electionDay);
+  if (!election) return 'Parliament’s term has ended for the election';
+  const ended = termEndWords(electionDay, stateCode);
+  return ended
+    ? `Parliament’s term ended on ${ended} for the ${election} election`
+    : `Parliament’s term has ended for the ${election} election`;
+}
+/** How every dated or dateless term line begins; older builds kept another. */
+export const TERM_LINE_START = 'Parliament’s term ';
 
 const HOUSES: Record<string, string> = {
   la: 'Legislative Assembly',
@@ -189,7 +235,7 @@ export function dissolvedLines(
   return [
     houseLine(seat),
     seat.name,
-    `Parliament’s term ended on ${termEndWords(electionDay)} for the ${electionDayWords(electionDay)} election`,
+    termLine(electionDay, seat.state_code),
     `Last member: ${personWords(last)}`,
   ];
 }
