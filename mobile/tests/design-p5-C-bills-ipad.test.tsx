@@ -15,8 +15,6 @@ import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { BillRow } from '../src/design/primitives';
 import BillsList from '../src/features/bills/BillsList';
-import { scopedQuestion } from '../src/features/ask/AskAbout';
-import { askRoute } from '../src/navigation/routes';
 import { pinned, slugs } from './pinned';
 
 // Design pass 5, lane C, P2-21 (bills half), as revised by specs/bills.md
@@ -207,7 +205,7 @@ test("Today's link to Bills (a navigate, with params of its own) opens the first
   expect(todayParams(view)).toEqual({});
 });
 
-test("the pane's Ask drafts the same question as the bill page's", async () => {
+test("the pane's Ask opens Ask scoped to the bill, as the bill page's does", async () => {
   const navigate = jest.spyOn(router, 'navigate');
   const view = await render('/bills');
   const actions = view.root.find(
@@ -219,20 +217,19 @@ test("the pane's Ask drafts the same question as the bill page's", async () => {
       node.props.testID === 'bill-pane-ask' &&
       typeof node.props.onPress === 'function',
   );
-  // Only the draft is checked: this test app has no Ask route.
+  // Only the route is checked: this test app has no Ask route.
   navigate.mockClear().mockImplementation(() => undefined);
   await act(async () => ask.props.onPress());
-  // Each draft carries its own entry id; the rest is the same.
-  const { entry: _entry, ...draft } = (
-    askRoute(scopedQuestion('bill', actions.props.title)) as {
-      params: Record<string, string>;
-    }
-  ).params;
-  // Bills' split is the Bills tab: Ask is another tab, so it switches.
+  // Bills' split is the Bills tab: Ask is another tab, so it switches. No
+  // question is drafted; the bill's key and short title scope the Ask.
   expect(navigate).toHaveBeenCalledWith(
     expect.objectContaining({
       pathname: '/(tabs)/(ask)/ask',
-      params: expect.objectContaining(draft),
+      params: expect.objectContaining({
+        question: '',
+        bill: actions.props.billKey,
+        billName: actions.props.title,
+      }),
     }),
   );
   navigate.mockRestore();

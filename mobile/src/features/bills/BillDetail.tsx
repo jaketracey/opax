@@ -97,8 +97,7 @@ import { resultsRoute } from '../../navigation/routes/search';
 import { canShare, shareRecord, trackShare } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { CachedPortrait } from '../CachedPortrait';
-import { scopedQuestion } from '../ask/AskAbout';
-import { useOpenAsk } from '../ask/open';
+import { useOpenBillAsk } from '../ask/open';
 import { AddedSinceGroup } from '../follows/AddedSinceGroup';
 import { NewDot } from '../follows/NewDot';
 import type { Change } from '../follows/changes';
@@ -299,8 +298,8 @@ export default function BillDetail({
   // Followed bills: what was added since the reader last looked.
   const follow = useBillChanges(identity?.key ?? null);
 
-  const openAsk = useOpenAsk();
-  const ask = () => openAsk(scopedQuestion('bill', title), title);
+  const openBillAsk = useOpenBillAsk();
+  const ask = () => openBillAsk({ key, name: title });
   const share = () =>
     void shareRecord({ path: `/bill/${key}`, title: name || 'Bill' });
   // The bar title is the short name, and its view truncates inside the bar
@@ -682,7 +681,7 @@ function BillPage({
               variant="primary"
               symbol={symbols.ask}
               accessibilityLabel={`Ask about this bill: ${name}`}
-              accessibilityHint="Opens Ask with a question drafted"
+              accessibilityHint="Opens Ask for this bill"
               onPress={onAsk}
               testID="bill-ask"
             />

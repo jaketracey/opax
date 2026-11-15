@@ -42,7 +42,7 @@ import { canonicalUrl, openSource } from '../../navigation/external';
 import { canShare, shareRecord } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useBillNavigation } from '../bills/navigation';
-import { useOpenAsk } from '../ask/open';
+import { useOpenBillAsk } from '../ask/open';
 import { records } from './runtime';
 import {
   firstSentences,
@@ -85,7 +85,7 @@ export default function BillTextReader({
   const key = recordKey ?? params.key ?? '';
   const asked = recordKey ? undefined : params.version;
   const bills = useBillNavigation();
-  const openAsk = useOpenAsk();
+  const openBillAsk = useOpenBillAsk();
   const navigation = useContext(NavigationContext);
   const loadManifest = useCallback(
     (signal?: AbortSignal) => records.billManifest(key, signal),
@@ -230,11 +230,7 @@ export default function BillTextReader({
       anchor: 'bill-full-text',
       title: shortTitle,
     });
-  const ask = () =>
-    openAsk(
-      { question: `What did parliament say about the ${shortTitle}?` },
-      shortTitle,
-    );
+  const ask = () => openBillAsk({ key, name: shortTitle });
   const menu: RowMenuLeaf[] = [
     {
       title: 'Bill page',
@@ -492,7 +488,7 @@ export default function BillTextReader({
                     variant="primary"
                     symbol={symbols.ask}
                     accessibilityLabel={`Ask about this bill: ${manifest.title}`}
-                    accessibilityHint="Opens Ask with a question drafted"
+                    accessibilityHint="Opens Ask for this bill"
                     onPress={ask}
                     testID="bill-text-ask"
                   />

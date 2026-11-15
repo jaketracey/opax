@@ -68,8 +68,7 @@ import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
 import { shareRecord } from '../../navigation/share';
 import { useAccount } from '../account/store';
-import { scopedQuestion } from '../ask/AskAbout';
-import { useOpenAsk } from '../ask/open';
+import { useOpenBillAsk } from '../ask/open';
 import BillTextReader from '../records/BillTextReader';
 import { ScopeChips } from '../search/ScopeChips';
 import { BillTextPaneBar } from '../split/RecordDetail';
@@ -738,14 +737,16 @@ function ScopeControl({
 
 /** The iPad detail pane's bar: Ask about this bill, Share and ⋯. */
 function PaneActions({ billKey, title }: { billKey: string; title: string }) {
-  const openAsk = useOpenAsk();
+  const openBillAsk = useOpenBillAsk();
   return (
     <View style={styles.paneActions}>
       <IconButton
         symbol="text.bubble"
         accessibilityLabel="Ask about this bill"
         testID="bill-pane-ask"
-        onPress={() => openAsk(scopedQuestion('bill', title))}
+        onPress={() =>
+          openBillAsk({ key: billKey, name: title }, { open: true })
+        }
       />
       <IconButton
         symbol="square.and.arrow.up"

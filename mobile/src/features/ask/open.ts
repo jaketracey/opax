@@ -53,7 +53,8 @@ export function tabsState(state: NavState | undefined): NavState | undefined {
  * not handle, so the tap was silently dropped (build 17).
  *
  * `from`: the source page's name for the back item; without one the item
- * names the source tab.
+ * names the source tab. `short`: the back item's visible word, when the
+ * route alone does not say what kind of page it was.
  */
 function useGoToAsk() {
   const segments = useSegments() as string[];
@@ -66,6 +67,7 @@ function useGoToAsk() {
     scope: Scope,
     arrive: (session: Session, entry: string) => void,
     from?: string,
+    short?: string,
   ) => {
     const route = askRoute(scope);
     // Loaded at the tap: every row imports this hook, and the session
@@ -85,7 +87,7 @@ function useGoToAsk() {
         ? {
             tab: source,
             name: from?.trim() || sourceTabNames[source],
-            short: shortReturnName(source, segments),
+            short: short ?? shortReturnName(source, segments),
           }
         : null,
     );
@@ -128,6 +130,26 @@ export function useOpenAsk() {
   const go = useGoToAsk();
   return (scope: Scope, from?: string) =>
     go(scope, (session, entry) => session.arriveInAsk(scope, entry), from);
+}
+
+/**
+ * A bill's "Ask about this bill": Ask scoped to that bill, with an empty
+ * composer and no draft. From the bill's page or its text the way back
+ * reads "Bill". `open`: the bill is open on screen where the route does not
+ * say so (the iPad pane beside the list), so the way back reads "Bill"
+ * there too. From a row's menu in a list it names the list, as built.
+ */
+export function useOpenBillAsk() {
+  const go = useGoToAsk();
+  return (bill: { key: string; name: string }, { open = false } = {}) => {
+    const scope = { question: '', bill: bill.key, billName: bill.name };
+    go(
+      scope,
+      (session, entry) => session.arriveInBillAsk(scope, entry),
+      bill.name,
+      open ? 'Bill' : undefined,
+    );
+  };
 }
 
 /**

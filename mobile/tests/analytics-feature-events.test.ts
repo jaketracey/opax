@@ -375,6 +375,8 @@ describe('fire points', () => {
           topic: '',
           from: '',
           to: '',
+          bill: '',
+          billName: '',
         },
       },
     });

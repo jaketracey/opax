@@ -216,7 +216,8 @@ export class AskController {
     // Editing a queued question makes it the reader's: Send sends it.
     const queued = this.state.queued && text === this.state.draft;
     // Emptying the composer turns a fresh draft back into a follow-up box.
-    if (!text.trim() && this.state.fresh)
+    // A bill's Ask arrives empty and stays: its chip's × is what ends it.
+    if (!text.trim() && this.state.fresh && !this.state.freshOptions?.bill)
       this.update({ draft: text, fresh: false, freshOptions: null, queued });
     else this.update({ draft: text, queued });
   }

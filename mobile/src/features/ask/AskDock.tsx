@@ -27,6 +27,7 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
+import { BillScopeChip, billScopeCopy } from './AskBillScope';
 import { chips, clearChip, defaultOptions } from './model';
 import { askSession } from './session';
 import { topics } from './topics';
@@ -130,7 +131,15 @@ export function AskDock({
   const [bodyHeight, setBodyHeight] = useState<number | null>(null);
   const [fieldHeight, setFieldHeight] = useState<number | null>(null);
   const options = askSession.composerOptions();
-  const tags = chips(options, (slug) => topics[slug] ?? slug);
+  const allTags = chips(options, (slug) => topics[slug] ?? slug);
+  // iOS draws a bill's scope as its own chip above the options line.
+  // Android's options line is chips already, each with its ×.
+  const billTag =
+    Platform.OS === 'ios' ? allTags.find((tag) => tag.id === 'bill') : null;
+  const tags = billTag ? allTags.filter((tag) => tag !== billTag) : allTags;
+  const placeholder = options.bill
+    ? billScopeCopy.placeholder
+    : composerCopy.placeholder;
   const empty = !s.draft.trim();
   // iOS: an empty composer is one capped line, its symbols scaling with it.
   const drawn = empty && Platform.OS === 'ios';
@@ -145,7 +154,9 @@ export function AskDock({
   const chrome =
     bodyHeight !== null && fieldHeight !== null
       ? Math.max(0, bodyHeight - fieldHeight)
-      : 2 * rhythm.line + (line ? 28 + rhythm.line : 0);
+      : 2 * rhythm.line +
+        (line ? 28 + rhythm.line : 0) +
+        (billTag ? minimumTarget + rhythm.tight + rhythm.line : 0);
   const maxHeight = composerFieldCap({
     fontScale,
     windowHeight,
@@ -194,6 +205,13 @@ export function AskDock({
       style={styles.body}
       onLayout={(e) => setBodyHeight(e.nativeEvent.layout.height)}
     >
+      {billTag ? (
+        <BillScopeChip
+          name={billTag.value}
+          disabled={locked}
+          onClear={() => askSession.options(clearChip(options, 'bill'))}
+        />
+      ) : null}
       {Platform.OS === 'android' && line ? (
         <View style={styles.androidOptions}>
           <ScrollView
@@ -324,10 +342,10 @@ export function AskDock({
         <IconButton
           symbol="slider.horizontal.3"
           maxScale={symbolScale}
-          selected={tags.length > 0}
+          selected={allTags.length > 0}
           accessibilityLabel={
-            tags.length
-              ? `${composerCopy.options}, ${tags.length} on`
+            allTags.length
+              ? `${composerCopy.options}, ${allTags.length} on`
               : composerCopy.options
           }
           disabled={locked}
@@ -343,9 +361,9 @@ export function AskDock({
             // multiline placeholder scales without a cap and wraps, so at
             // AX3 the empty composer took three lines (sweep 1, 2.1).
             // Android keeps its native hint and its own field height.
-            placeholder={drawn ? undefined : composerCopy.placeholder}
+            placeholder={drawn ? undefined : placeholder}
             placeholderTextColor={drawn ? undefined : colors.inkSoft}
-            accessibilityHint={drawn ? composerCopy.placeholder : undefined}
+            accessibilityHint={drawn ? placeholder : undefined}
             // Empty, the field sizes its one line to the placeholder; typed
             // text keeps the reader's full size.
             maxFontSizeMultiplier={drawn ? chromeTextScaleCap : undefined}
@@ -393,7 +411,7 @@ export function AskDock({
                 maxFontSizeMultiplier={chromeTextScaleCap}
                 testID="ask-placeholder"
               >
-                {composerCopy.placeholder}
+                {placeholder}
               </Text>
             </View>
           ) : null}

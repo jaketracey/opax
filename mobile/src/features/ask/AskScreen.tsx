@@ -53,6 +53,7 @@ import { AskRevealContext, announceAnswer } from './AnswerView';
 import { AskDock } from './AskDock';
 import { AskColumns } from './AskLayout';
 import { ReservedRegionArea } from '../../design/fold-area';
+import { AskBillIdle } from './AskBillScope';
 import { AskEmptyState, AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
 import { streamStarted } from './AskProgress';
@@ -64,6 +65,7 @@ import { useReturnFromAsk } from './open';
 import { openAskOptions, topics } from './Options';
 import { rosterProfiles, type AskPerson } from './people';
 import {
+  arrivalHandled,
   arriveInAsk,
   askQuestion,
   askSession,
@@ -104,6 +106,9 @@ export default function AskScreen() {
     askSession.snapshot,
   );
   const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
+  // Opened from a bill's Ask button: idle shows no conversations and no
+  // starters until the chip's × ends the scope.
+  const scoped = !!askSession.composerOptions().bill;
   const saved = useSyncExternalStore(
     subscribeChats,
     chatsSnapshot,
@@ -196,10 +201,16 @@ export default function AskScreen() {
       'from',
       'to',
       'kind',
+      'bill',
+      'billName',
     ] as const)
       if (params[k]) scope[k] = params[k];
     if (scope.question.trim()) arriveInAsk(scope, params.entry);
-    else if (!handledBlankEntries.has(params.entry)) {
+    // A bill's Ask arrives blank and was handled at its tap.
+    else if (
+      !handledBlankEntries.has(params.entry) &&
+      !arrivalHandled(params.entry)
+    ) {
       handledBlankEntries.add(params.entry);
       if (handledBlankEntries.size > 32)
         handledBlankEntries.delete(handledBlankEntries.values().next().value!);
@@ -347,6 +358,7 @@ export default function AskScreen() {
     onAsk: (q) => void ask(q),
     readFailed,
     offline,
+    quiet: scoped,
   });
   const dock = (
     <AskDock
@@ -449,7 +461,9 @@ export default function AskScreen() {
     >
       {androidRoot.title}
       <RegionProvider value={column.inner}>
-        {idle ? (
+        {idle && scoped ? (
+          <AskBillIdle />
+        ) : idle ? (
           // Docked, the list is split across the panes (specs/ask.md 2.8):
           // the conversations here, the day's starters in the pane, so
           // neither pane repeats the other.
@@ -537,7 +551,11 @@ export default function AskScreen() {
                       content={content}
                       dock={dock}
                       sources={docked ? sources.pane : null}
-                      empty={<AskEmptyState readFailed={readFailed} />}
+                      empty={
+                        scoped ? null : (
+                          <AskEmptyState readFailed={readFailed} />
+                        )
+                      }
                       keyboard={keyboard}
                       keyboardVisible={keyboardVisible}
                       ground={ground}

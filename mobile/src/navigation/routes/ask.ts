@@ -14,6 +14,9 @@ export const askRoute = (
     from?: string;
     to?: string;
     kind?: string;
+    /** A bill's key and short title: Ask scoped to that bill. */
+    bill?: string;
+    billName?: string;
   },
   name?: string,
 ) => ({

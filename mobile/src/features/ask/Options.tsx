@@ -65,7 +65,11 @@ export function bindAskOptions(choices?: FilterChoice[]) {
     owner: ASK_OPTIONS_OWNER,
     value: toFilterValues(askSession.composerOptions()),
     // Done and every change land on the fresh draft or the open conversation.
-    onChange: (next) => askSession.options(fromFilterValues(next)),
+    // A bill's scope is not a row in the sheet: it is kept as it is.
+    onChange: (next) => {
+      const { bill, billName } = askSession.composerOptions();
+      askSession.options({ ...fromFilterValues(next), bill, billName });
+    },
   });
 }
 export async function openAskOptions() {

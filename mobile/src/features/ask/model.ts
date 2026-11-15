@@ -11,6 +11,13 @@ export type AskOptions = {
   topic: string;
   from: string;
   to: string;
+  /**
+   * A bill's key (`/bill/<key>`): answers use only that bill's records. Set
+   * by a bill's own Ask button, never by the options sheet.
+   */
+  bill: string;
+  /** The bill's short title, for the composer's chip. Never sent. */
+  billName: string;
 };
 export const defaultOptions: AskOptions = {
   kind: 'all',
@@ -20,13 +27,21 @@ export const defaultOptions: AskOptions = {
   topic: '',
   from: '',
   to: '',
+  bill: '',
+  billName: '',
 };
+/** A bill key as the bill pages use it: "au-federal-r7531". */
+export const billKeyPattern = /^[a-z][a-z0-9-]{0,199}$/;
 export function decodeOptions(raw: unknown): AskOptions {
   const v = object(raw),
     out = { ...defaultOptions };
   for (const k of ['speaker', 'party', 'state', 'topic', 'from', 'to'] as const)
     if (typeof v[k] === 'string')
       out[k] = v[k].slice(0, k === 'speaker' ? 120 : 2000);
+  if (typeof v.bill === 'string' && billKeyPattern.test(v.bill)) {
+    out.bill = v.bill;
+    if (typeof v.billName === 'string') out.billName = v.billName.slice(0, 300);
+  }
   out.kind = v.kind === 'speech' ? 'speech' : 'all';
   return out;
 }
@@ -290,6 +305,7 @@ export function requestBody(
   topic?: string;
   from?: string;
   to?: string;
+  bill?: string;
   context?: { author: string; text: string }[];
   prior_resources?: string[];
 } {
@@ -322,7 +338,9 @@ export function requestBody(
     question: question.trim(),
     kind: o.kind,
     ...Object.fromEntries(
-      Object.entries(o).filter(([k, v]) => k !== 'kind' && v),
+      Object.entries(o).filter(
+        ([k, v]) => k !== 'kind' && k !== 'billName' && v,
+      ),
     ),
     ...(thread.length ? { context, prior_resources: prior.slice(0, 6) } : {}),
   };
@@ -343,6 +361,8 @@ export const parliaments: Record<string, string> = {
 export function chips(o: AskOptions, topicLabel = (slug: string) => slug) {
   const out: { id: keyof AskOptions | 'years'; key: string; value: string }[] =
     [];
+  if (o.bill)
+    out.push({ id: 'bill', key: 'Bill', value: o.billName || 'This bill' });
   for (const [id, key] of [
     ['speaker', 'Person'],
     ['party', 'Party'],
@@ -379,7 +399,9 @@ export function clearChip(
 ): AskOptions {
   return id === 'years'
     ? { ...o, from: '', to: '' }
-    : { ...o, [id]: id === 'kind' ? 'all' : '' };
+    : id === 'bill'
+      ? { ...o, bill: '', billName: '' }
+      : { ...o, [id]: id === 'kind' ? 'all' : '' };
 }
 export function sourceGroups(sources: Source[]) {
   const cited = sources.filter((s) => s.cited);
@@ -401,13 +423,22 @@ export function parseTurnKey(
   const match = /^([\w-]{8,64}):(\d{1,4})$/.exec(key);
   return match ? { chat: match[1]!, index: Number(match[2]) } : null;
 }
+const cut = (text: string, max: number) =>
+  text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
+/**
+ * A conversation's title: its first question. One asked from a bill's page
+ * opens with the bill's short title, so the list says which bill it is about.
+ */
 export function titleFor(thread: Turn[]) {
-  const first =
-    thread
-      .find((m) => m.role === 'user')
-      ?.text.replace(/\s+/g, ' ')
-      .trim() || 'Conversation';
-  return first.length > 90 ? `${first.slice(0, 89).trimEnd()}…` : first;
+  const asked = thread.find((m) => m.role === 'user');
+  const first = cut(
+    asked?.text.replace(/\s+/g, ' ').trim() || 'Conversation',
+    90,
+  );
+  const bill = asked?.options?.bill
+    ? asked.options.billName.replace(/\s+/g, ' ').trim()
+    : '';
+  return bill ? `${cut(bill, 70)}: ${first}` : first;
 }
 export function trimTurn(m: Turn): Turn {
   if (m.role === 'user') return m;

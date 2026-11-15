@@ -415,7 +415,7 @@ test('Android bills keep whole scope labels at 2x and Share in the bar; iOS uses
     expect(asks).toHaveLength(1);
     expect(asks[0]!.props).toMatchObject({
       variant: 'primary',
-      accessibilityHint: 'Opens Ask with a question drafted',
+      accessibilityHint: 'Opens Ask for this bill',
     });
     const ids = order(detail);
     expect(ids.indexOf('bill-ask')).toBeGreaterThan(

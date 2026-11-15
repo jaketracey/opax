@@ -8,6 +8,7 @@ import { askConsentRoute } from '../../navigation/routes/ask';
 import { AskController } from './controller';
 import { askConsentGiven, giveAskConsent } from './consent';
 import {
+  billKeyPattern,
   defaultOptions,
   parseTurnKey,
   type AskOptions,
@@ -60,12 +61,18 @@ export type AskScope = {
   from?: string;
   to?: string;
   kind?: string;
+  bill?: string;
+  billName?: string;
 };
 export function scopeOptions(scope: Partial<AskScope>): AskOptions {
   const o = { ...defaultOptions };
   for (const k of ['speaker', 'party', 'state', 'topic', 'from', 'to'] as const)
     if (typeof scope[k] === 'string' && scope[k]) o[k] = scope[k]!;
   o.kind = scope.kind === 'speech' ? 'speech' : 'all';
+  if (typeof scope.bill === 'string' && billKeyPattern.test(scope.bill)) {
+    o.bill = scope.bill;
+    o.billName = (scope.billName ?? '').trim();
+  }
   return o;
 }
 // Each arrival is handled once: by `useOpenAsk` at the tap, or by the Ask
@@ -75,6 +82,8 @@ export function markArrival(entry: string) {
   handled.add(entry);
   if (handled.size > 32) handled.delete(handled.values().next().value!);
 }
+/** True once an arrival has been handled at its tap. */
+export const arrivalHandled = (entry: string) => handled.has(entry);
 /** True the first time an arrival's entry is seen. */
 function firstArrival(entry?: string) {
   if (!entry) return true;
@@ -94,6 +103,26 @@ export function arriveInAsk(scope: AskScope, entry?: string) {
   requestFocus('ask');
   AccessibilityInfo.announceForAccessibilityWithOptions(
     running ? 'Draft added. Starts a new conversation.' : 'Draft added.',
+    { queue: true },
+  );
+}
+
+export const billAskCopy = {
+  arrived: 'Asking about this bill.',
+  waits: 'Asking about this bill. Starts a new conversation.',
+} as const;
+/**
+ * A bill's own Ask button: a new conversation whose answers use only that
+ * bill's records. The composer is empty with the keyboard up, the bill's
+ * chip is in it, and nothing is sent. A running answer keeps running.
+ */
+export function arriveInBillAsk(scope: AskScope, entry?: string) {
+  if (!firstArrival(entry)) return;
+  const running = askSession.snapshot().busy;
+  askSession.arrive('', scopeOptions(scope));
+  requestFocus('ask');
+  AccessibilityInfo.announceForAccessibilityWithOptions(
+    running ? billAskCopy.waits : billAskCopy.arrived,
     { queue: true },
   );
 }

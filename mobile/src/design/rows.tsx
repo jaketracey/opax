@@ -3,7 +3,7 @@ import { type Href } from 'expo-router';
 import { useRecordLink } from '../navigation/record-link';
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import { useOpenAsk } from '../features/ask/open';
+import { useOpenBillAsk } from '../features/ask/open';
 import { useRowIsMyMember } from '../features/your-mp/MyMemberContext';
 import { openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
@@ -490,7 +490,7 @@ function BillLink({
   select?: () => void;
 }) {
   const follow = useRowFollow('bill', billKey, title);
-  const openAsk = useOpenAsk();
+  const openBillAsk = useOpenBillAsk();
   return (
     <RowLink
       href={href}
@@ -499,8 +499,7 @@ function BillLink({
         billKey,
         title,
         ...follow,
-        onAsk: () =>
-          openAsk({ question: `What does the record say about ${title}?` }),
+        onAsk: () => openBillAsk({ key: billKey, name: title }),
       })}
     >
       {children}

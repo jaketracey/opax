@@ -79,7 +79,10 @@ export function useAskSources(
     onAsk,
     readFailed = false,
     offline = false,
+    quiet = false,
   }: {
+    /** Idle with nothing to suggest (Ask scoped to a bill): the pane is bare. */
+    quiet?: boolean;
     chat?: string | null;
     profiles?: Map<string, AskPerson>;
     onAsk?: (question: string) => void;
@@ -196,6 +199,7 @@ export function useAskSources(
         onAsk={onAsk}
         readFailed={readFailed}
         offline={offline}
+        quiet={quiet}
       />
     ),
   };
@@ -212,7 +216,9 @@ function SourcesPane({
   onAsk,
   readFailed,
   offline,
+  quiet,
 }: {
+  quiet: boolean;
   answer?: Turn;
   marked: number;
   move: (n: number) => void;
@@ -274,6 +280,8 @@ function SourcesPane({
               open={open}
               profiles={profiles}
             />
+          ) : quiet ? (
+            <View style={styles.grow} testID="ask-pane-quiet" />
           ) : (
             <ScrollView
               style={styles.grow}
