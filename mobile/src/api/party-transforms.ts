@@ -298,3 +298,53 @@ export function partyReceiptsFor(party: string | null) {
     party: node?.label ?? null,
   };
 }
+
+type DatedPerson = PeopleCatalog['people'][number];
+/**
+ * The people catalogue's rows by the roster ID they carry, built once for a
+ * whole roster (Ask's people rows cover about 1,500 names).
+ */
+export function datedPeopleByRosterId(
+  people: PeopleCatalog | null | undefined,
+): Map<string, DatedPerson> {
+  const byId = new Map<string, DatedPerson>();
+  for (const person of people?.people ?? [])
+    if (person.legacy_person_id && !byId.has(person.legacy_person_id))
+      byId.set(person.legacy_person_id, person);
+  return byId;
+}
+
+/**
+ * Whether the record says a person sits in the federal parliament now, sat
+ * before, or does not say: the claim behind "Member for", "Former member
+ * for" and a seat named alone, in Search and in Ask.
+ *
+ * The roster's `current` flag is set only for some people, so its absence
+ * proves nothing, and it also means sitting in a state parliament. In order:
+ * - flagged current and also recorded in a state parliament: the flag may
+ *   be the state seat, so only the dated federal seats speak. One held now
+ *   is sitting; all ended is a former federal member; none dated, unknown;
+ * - the roster says so (`current` true or false);
+ * - the dated seats, joined by the roster's ID: a seat held now is sitting,
+ *   and seats that have all ended are former where they cover every
+ *   parliament the roster records (`partyStatusFor`);
+ * - otherwise unknown.
+ */
+export function federalServiceStatus(
+  row: Roster['people'][number],
+  dated?: DatedPerson,
+  people?: PeopleCatalog | null,
+): PartyStatus {
+  if (row.current === true && !recordedFederalOnly(row)) {
+    const federal = (dated?.electorates ?? []).filter(
+      (seat) => seat.jurisdiction === 'federal',
+    );
+    if (federal.some((seat) => seat.current)) return 'current';
+    return federal.length ? 'former' : 'unknown';
+  }
+  if (row.current === true) return 'current';
+  return partyStatusFor(
+    partyStatusSeatsFor(dated?.electorates ?? [], row, people ?? undefined),
+    row,
+  );
+}

@@ -1,5 +1,11 @@
-import type { Roster, Slugs } from '../../api/catalog-decoders';
-import { recordedFederalOnly } from '../../api/party-transforms';
+import type { PeopleCatalog, Roster, Slugs } from '../../api/catalog-decoders';
+import {
+  datedPeopleByRosterId,
+  federalServiceStatus,
+  recordedFederalOnly,
+  type PartyStatus,
+} from '../../api/party-transforms';
+import type { Catalogs } from '../../api/catalogs';
 import { rosterPeople, type Answer } from './model';
 
 export type AskPerson = {
@@ -7,6 +13,13 @@ export type AskPerson = {
   slug: string;
   party: string | null;
   place: string | null;
+  /**
+   * Every line `place` can be for this person, in a fixed order (the seat
+   * alone, the sitting form, the former form). The row lays all of them out
+   * and shows one, so it is as tall as the tallest from the first frame and
+   * does not move when the dated record sharpens the line.
+   */
+  placeForms?: readonly string[];
 };
 const states: Record<string, string> = {
   nsw: 'New South Wales',
@@ -31,43 +44,127 @@ const stateName = (raw: string | null | undefined) =>
  * to tell the two apart, so it names the federal seat alone for anyone the
  * roster also records in a state parliament.
  */
-export function placeLine(person: Roster['people'][number]): string | null {
+/** The three things a person's place line can say, or null with no seat. */
+export function placeForms(
+  person: Roster['people'][number],
+): { current: string; former: string; plain: string } | null {
   const seats = (person.representation ?? []).filter(
     (r) => r.jurisdiction === 'federal',
   );
   const seat = seats.at(-1);
   if (!seat) return null;
   const state = stateName(seat.state ?? person.states?.at(-1));
-  // The roster's `current` means sitting in any parliament it covers. For
-  // someone it also records in a state parliament, true may be the state
-  // seat, so it claims no federal one: the seat is named alone.
-  const sits = person.current === true && recordedFederalOnly(person);
-  const said = (claim: string, former: string, plain: string) =>
-    sits ? claim : person.current === false ? former : plain;
   if (/senate/i.test(seat.chamber))
     return state
-      ? said(
-          `Senator for ${state}`,
-          `Former senator for ${state}`,
-          `Senate, ${state}`,
-        )
+      ? {
+          current: `Senator for ${state}`,
+          former: `Former senator for ${state}`,
+          plain: `Senate, ${state}`,
+        }
       : null;
   if (!seat.electorate) return null;
   const where = `${seat.electorate}${state ? `, ${state}` : ''}`;
-  return said(`Member for ${where}`, `Former member for ${where}`, where);
+  return {
+    current: `Member for ${where}`,
+    former: `Former member for ${where}`,
+    plain: where,
+  };
+}
+export function placeLine(
+  person: Roster['people'][number],
+  /**
+   * What the dated record says of the person's federal service, when Ask
+   * has the people catalogue (`rosterProfiles`). Without it the roster's
+   * flag alone decides, as before.
+   */
+  status?: PartyStatus,
+): string | null {
+  const forms = placeForms(person);
+  if (!forms) return null;
+  // The roster's `current` means sitting in any parliament it covers. For
+  // someone it also records in a state parliament, true may be the state
+  // seat, so alone it claims no federal one: the seat is named alone.
+  const sits = person.current === true && recordedFederalOnly(person);
+  const known: PartyStatus =
+    status ??
+    (sits ? 'current' : person.current === false ? 'former' : 'unknown');
+  return known === 'current'
+    ? forms.current
+    : known === 'former'
+      ? forms.former
+      : forms.plain;
+}
+/**
+ * The people catalogue for Ask's place lines: the manifest, then the people
+ * file it names, both through the catalog cache as Search reads them. Any
+ * failure is null: the rows are then drawn from the roster alone.
+ */
+export async function askPeopleCatalog(
+  source: Pick<Catalogs, 'manifest' | 'people'>,
+): Promise<PeopleCatalog | null> {
+  try {
+    const manifest = await source.manifest();
+    return (await source.people(manifest.data)).data;
+  } catch {
+    return null;
+  }
+}
+/**
+ * Ask's people rows, in two steps. The rows are shown at once from the
+ * roster (as before the people catalogue was read at all), so a slow
+ * network never holds them back. The people read, started beside the
+ * roster's, then sharpens the place lines in place: the same people in the
+ * same order, each row the same height (`placeForms`). If it fails, the
+ * first rows stand.
+ */
+export async function loadAskProfiles(
+  source: Pick<Catalogs, 'roster' | 'slugs' | 'manifest' | 'people'>,
+  show: (profiles: Map<string, AskPerson>, names: string[]) => void,
+): Promise<void> {
+  const dated = askPeopleCatalog(source);
+  const [roster, slugs] = await Promise.all([source.roster(), source.slugs()]);
+  const names = roster.data.people.map((p) => p.name);
+  show(rosterProfiles(roster.data, slugs.data), names);
+  const people = await dated;
+  if (people) show(rosterProfiles(roster.data, slugs.data, people), names);
 }
 /** Roster name → the person row's data; the only names People lists. */
-export function rosterProfiles(roster: Roster, slugs: Slugs) {
+/**
+ * With the people catalogue (the read Search already makes), each row's
+ * place line rests on the dated federal seats as well as the roster's flag,
+ * as in Search: a sitting federal member the roster also records in a state
+ * parliament reads "Member for", not the seat alone. Without it (the read
+ * is missing or failed) every line is as the roster alone gives it.
+ */
+export function rosterProfiles(
+  roster: Roster,
+  slugs: Slugs,
+  people?: PeopleCatalog | null,
+) {
   const known = rosterPeople(roster, slugs);
+  const dated = people ? datedPeopleByRosterId(people) : null;
   const out = new Map<string, AskPerson>();
   for (const p of roster.people) {
     const slug = known.get(p.name);
     if (!slug) continue;
+    const forms = placeForms(p);
     out.set(p.name, {
       name: p.name,
       slug,
       party: p.party_now || p.party || null,
-      place: placeLine(p),
+      place: placeLine(
+        p,
+        dated
+          ? federalServiceStatus(
+              p,
+              p.pid ? dated.get(p.pid) : undefined,
+              people,
+            )
+          : undefined,
+      ),
+      ...(forms
+        ? { placeForms: [forms.plain, forms.current, forms.former] }
+        : {}),
     });
   }
   return out;

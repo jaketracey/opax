@@ -6,9 +6,7 @@ import type {
   PeopleCatalog,
 } from '../../api/catalog-decoders';
 import {
-  partyStatusFor,
-  partyStatusSeatsFor,
-  recordedFederalOnly,
+  federalServiceStatus,
   type PartyStatus,
 } from '../../api/party-transforms';
 import type { SuggestionRoster } from '../../api/selectors';
@@ -60,20 +58,10 @@ const stateName = (code?: string | null) =>
     : null;
 
 /**
- * Whether the record says a person sits now, sat before, or does not say.
- * The roster's `current` flag is set only for some people (it comes from
- * the federal APH list), so its absence proves nothing. In order:
- * - the roster says so (`current` true or false);
- * - the dated seats of the people catalogue, joined by the roster's ID: a
- *   seat held now is sitting, and seats that have all ended are former
- *   where they cover every parliament the roster records (`partyStatusFor`);
- * - otherwise unknown, and the row claims neither.
- *
- * This is service in the federal parliament, the seat the place line names.
- * The roster's `current` also means sitting in a state parliament, so for
- * someone flagged current and recorded in one as well it is not taken as a
- * federal seat: their dated federal seats decide, and with none dated the
- * row claims neither.
+ * Whether the record says a person sits in the federal parliament now, sat
+ * before, or does not say: the roster's flag, then the people catalogue's
+ * dated seats joined by the roster's ID. The rule is `federalServiceStatus`
+ * (api/party-transforms), which Ask's people rows share.
  */
 export function serviceStatus(
   person: Person,
@@ -82,27 +70,7 @@ export function serviceStatus(
   const dated = person.pid
     ? sources.people?.people.find((p) => p.legacy_person_id === person.pid)
     : undefined;
-  if (person.current === true && !recordedFederalOnly(person)) {
-    // Flagged current, and also recorded in a state parliament: the flag
-    // may be the state seat (a former federal member who now sits in a
-    // state house), so only the dated federal seats can speak for federal
-    // service. One held now is sitting; all ended is a former federal
-    // member; with none dated the row claims neither.
-    const federal = (dated?.electorates ?? []).filter(
-      (seat) => seat.jurisdiction === 'federal',
-    );
-    if (federal.some((seat) => seat.current)) return 'current';
-    return federal.length ? 'former' : 'unknown';
-  }
-  if (person.current === true) return 'current';
-  return partyStatusFor(
-    partyStatusSeatsFor(
-      dated?.electorates ?? [],
-      person,
-      sources.people ?? undefined,
-    ),
-    person,
-  );
+  return federalServiceStatus(person, dated, sources.people);
 }
 
 /**

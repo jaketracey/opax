@@ -411,6 +411,14 @@ export interface PersonRowProps {
   partyStatus?: PartyStatus;
   formerly?: string | null;
   place?: string | null;
+  /**
+   * Every line `place` may become on this row (Ask's people rows, whose
+   * place line is sharpened once the dated record arrives). All of them are
+   * laid out in one cell, one over the other, and only `place` is seen, so
+   * the row is as tall as the tallest from its first frame and does not
+   * move when the line changes.
+   */
+  placeForms?: readonly string[];
   detail?: string | null;
   size?: 44 | 56;
   href?: Href;
@@ -475,6 +483,7 @@ export function PersonRow({
   partyStatus,
   formerly,
   place,
+  placeForms,
   detail,
   size = 44,
   href,
@@ -581,7 +590,31 @@ export function PersonRow({
                   {former}
                 </Text>
               ) : null}
-              {place ? (
+              {place && placeForms?.includes(place) ? (
+                <View
+                  style={styles.placeCell}
+                  testID={testID && `${testID}-place`}
+                >
+                  {placeForms.map((form, i) => (
+                    <Text
+                      key={form}
+                      wordSafe
+                      variant="secondary"
+                      accessibilityElementsHidden={form !== place}
+                      importantForAccessibility={
+                        form === place ? 'auto' : 'no-hide-descendants'
+                      }
+                      style={[
+                        styles.placeLayer,
+                        i > 0 ? styles.placeOver : null,
+                        form === place ? null : styles.placeUnseen,
+                      ]}
+                    >
+                      {form}
+                    </Text>
+                  ))}
+                </View>
+              ) : place ? (
                 <Text wordSafe variant="secondary">
                   {place}
                 </Text>
@@ -756,6 +789,12 @@ const styles = StyleSheet.create({
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
   personDetails: { gap: rhythm.line },
+  // Full-width layers in a row, each pulled back over the first: all take
+  // part in layout, and the cell is as tall as the tallest.
+  placeCell: { flexDirection: 'row', alignItems: 'flex-start' },
+  placeLayer: { width: '100%', flexShrink: 0 },
+  placeOver: { marginLeft: '-100%' },
+  placeUnseen: { opacity: 0 },
   // Seat and role sit within the compact party link's expanded hit target,
   // so only a stack without those lines needs blank space below the party.
   personParty: { minHeight: minimumTarget },

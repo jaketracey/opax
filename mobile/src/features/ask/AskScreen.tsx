@@ -68,7 +68,7 @@ import { askGround } from './ground';
 import type { Followup } from './model';
 import { useReturnFromAsk } from './open';
 import { openAskOptions, topics } from './Options';
-import { rosterProfiles, type AskPerson } from './people';
+import { loadAskProfiles, type AskPerson } from './people';
 import {
   arriveInAsk,
   askQuestion,
@@ -252,12 +252,12 @@ export default function AskScreen() {
     if (loadingNames.current || names.length) return;
     loadingNames.current = true;
     try {
-      const [roster, slugs] = await Promise.all([
-        catalogs.roster(),
-        catalogs.slugs(),
-      ]);
-      setProfiles(rosterProfiles(roster.data, slugs.data));
-      setNames(roster.data.people.map((p) => p.name));
+      // The rows at once from the roster, then their place lines sharpened
+      // in place when the people catalogue answers (loadAskProfiles).
+      await loadAskProfiles(catalogs, (next, people) => {
+        setProfiles(next);
+        setNames(people);
+      });
     } catch {
       /* People rows wait for the roster; the answer reads without them. */
     } finally {
