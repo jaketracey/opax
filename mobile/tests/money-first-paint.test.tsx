@@ -577,6 +577,66 @@ describe('the map and its panel while Search is open at large text', () => {
     expect(flat(host()).opacity).toBeUndefined();
     await act(async () => r.unmount());
   });
+  test('the strip is fitted once for each set of results, never for a keystroke that lists the same ones', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    act(() => r.root.findByType(MoneyMapPanel).props.onPeekHeight(180));
+    const call = () => jest.mocked(MoneyMap).mock.calls.at(-1)![0];
+    const top = () => {
+      let node = (byTestID(r.root, 'money-map-card') ??
+        byTestID(r.root, 'money-map-search-card'))!.parent!;
+      while (!node.props.onLayout) node = node.parent!;
+      return node;
+    };
+    const report = (height: number) =>
+      act(() => top().props.onLayout({ nativeEvent: { layout: { height } } }));
+    const type = (text: string) =>
+      act(() =>
+        byTestID(r.root, 'money-map-search-field')!.props.onChangeText(text),
+      );
+    report(300);
+    const rest = call().insets;
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === 'money-map-search')!
+        .props.onPress(),
+    );
+    // Open, nothing typed: the short field is drawn and the map keeps its
+    // view (no key, the card's own top).
+    report(90);
+    expect(call().fitKey).toBeNull();
+    expect(call().insets.top).toBe(rest.top);
+    // Results are listed: the strip starts under the taller card, with a key.
+    type('lab');
+    report(420);
+    const listed = { insets: call().insets, fitKey: call().fitKey };
+    expect(listed.fitKey).toEqual(expect.any(String));
+    expect(listed.insets.top).toBe(420 + rhythm.tight);
+    expect(listed.insets.bottom).toBe(rhythm.tight);
+    // Nothing matches: another set, another strip.
+    type('zzzzqq');
+    report(150);
+    const none = { insets: call().insets, fitKey: call().fitKey };
+    expect(none.fitKey).not.toBe(listed.fitKey);
+    expect(none.insets.top).toBe(150 + rhythm.tight);
+    // One more letter: still nothing, and the line wraps. The same set, so
+    // the same insets object and key: the map is not asked to move.
+    type('zzzzqqq');
+    report(190);
+    expect(call().insets).toBe(none.insets);
+    expect(call().fitKey).toBe(none.fitKey);
+    // Closed: the card's frame again, and no key.
+    await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+    report(300);
+    expect(call().insets).toEqual(rest);
+    expect(call().fitKey).toBeNull();
+    await act(async () => r.unmount());
+  });
 });
 
 describe('sizes read before the first frame', () => {
@@ -660,6 +720,90 @@ describe('the map while its Search is open', () => {
     report(300);
     expect(insets()).toEqual(rest);
     await act(async () => r.unmount());
+  });
+});
+
+describe('a stage that changes under the open Search', () => {
+  const read = () =>
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+  const open = (r: TestRenderer.ReactTestRenderer) =>
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === 'money-map-search')!
+        .props.onPress(),
+    );
+  const call = () => jest.mocked(MoneyMap).mock.calls.at(-1)![0];
+
+  test('the map is told to hold its size for as long as its insets are held', async () => {
+    read();
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    expect(call().holdSize).toBe(false);
+    open(r);
+    expect(call().holdSize).toBe(true);
+    await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+    expect(call().holdSize).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('a turn during Search lets the held insets go: the map takes the ones of the moment', async () => {
+    read();
+    const before = ReactNative.Dimensions.get('window');
+    const turn = (width: number, height: number) =>
+      act(() =>
+        ReactNative.Dimensions.set({ window: { ...before, width, height } }),
+      );
+    try {
+      const r = await render();
+      const stage = (width: number, height: number) =>
+        act(() =>
+          byTestID(r.root, 'money-screen').props.onLayout({
+            nativeEvent: { layout: { width, height } },
+          }),
+        );
+      const top = () => {
+        let node = (byTestID(r.root, 'money-map-card') ??
+          byTestID(r.root, 'money-map-search-card'))!.parent!;
+        while (!node.props.onLayout) node = node.parent!;
+        return node;
+      };
+      const report = (height: number) =>
+        act(() =>
+          top().props.onLayout({ nativeEvent: { layout: { height } } }),
+        );
+      stage(before.width, 1200);
+      report(300);
+      const rest = call().insets;
+      open(r);
+      report(90);
+      expect(call().insets).toBe(rest);
+      // The turn: a new window, a new stage, and the search card measured
+      // in it.
+      turn(before.height, before.width);
+      stage(before.height, 640);
+      report(96);
+      expect(call().insets).not.toBe(rest);
+      expect(call().insets.top).toBe(96 + rhythm.tight);
+      expect(call().holdSize).toBe(false);
+      // Closed in the new orientation: its own card's frame.
+      await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+      report(260);
+      expect(call().insets.top).toBe(260 + rhythm.tight);
+      expect(call().holdSize).toBe(false);
+      await act(async () => r.unmount());
+    } finally {
+      turn(before.width, before.height);
+    }
   });
 });
 

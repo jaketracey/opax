@@ -907,20 +907,50 @@ function MapMode({
   const searching = searchOpen || topIsSearch;
   const [restInsets, setRestInsets] = useState(insets);
   if (!searching && restInsets !== insets) setRestInsets(insets);
+  // A turn during Search ends the hold: the insets kept are the other
+  // orientation's (its safe sides, its card, its band), and nothing of that
+  // frame is left to keep. The map takes the insets of the moment until
+  // Search closes. A turn is a new width; a keyboard changes the height.
+  const [restWidth, setRestWidth] = useState(window.width);
+  if (!searching && restWidth !== window.width) setRestWidth(window.width);
+  const turned = searching && restWidth !== window.width;
   // At large text the open Search and its keyboard fill the screen: the
   // panel under them is out of reach, yet it held the map's room to a
   // strip. It is hidden for the while and its room goes to the map (a
   // tall card's room is the keyboard's, not the panel's).
   const hidePanel = searchOpen && large && !regular && !managed;
   const searchBottom = (managed ? (safe?.bottom ?? 0) : band) + rhythm.tight;
-  const searchHold = useMemo(
-    () =>
-      restInsets.bottom === searchBottom
-        ? restInsets
-        : { ...restInsets, bottom: searchBottom },
-    [restInsets, searchBottom],
-  );
-  const mapInsets = !searching ? insets : hidePanel ? searchHold : restInsets;
+  // That strip starts under the search card, which grows and shrinks with
+  // its results. The map is fitted to the strip once for each set of
+  // results (the card's height as that set was first drawn), never for a
+  // keystroke that lists the same ones: the "nothing matches" line can wrap
+  // as the query grows. Until the first results the map keeps its view.
+  const [resultsKey, setResultsKey] = useState('');
+  const [strip, setStrip] = useState<{ key: string; top: number } | null>(null);
+  if (!searchOpen && (strip !== null || resultsKey !== '')) {
+    setStrip(null);
+    setResultsKey('');
+  }
+  const noteStrip = (height: number) => {
+    if (!hidePanel || !model) return;
+    // A card that leaves the map no strip is not fitted to.
+    const left =
+      (stage.height || window.height) - height - rhythm.tight - searchBottom;
+    if (left < minimumTarget * 2) return;
+    setStrip((previous) =>
+      (previous ? previous.key === resultsKey : resultsKey === '')
+        ? previous
+        : { key: resultsKey, top: height },
+    );
+  };
+  const searchHold = useMemo(() => {
+    const top = strip ? strip.top + rhythm.tight : restInsets.top;
+    return restInsets.bottom === searchBottom && restInsets.top === top
+      ? restInsets
+      : { ...restInsets, top, bottom: searchBottom };
+  }, [restInsets, searchBottom, strip]);
+  const mapInsets =
+    !searching || turned ? insets : hidePanel ? searchHold : restInsets;
   // The map is drawn only between the card and the panel: no stroke above
   // the card or under the bar, and no name half under either (item 5.6).
   // A fold gives the map its own side, with nothing over it to clip. A
@@ -1123,6 +1153,7 @@ function MapMode({
           requestFocus('money-map-search');
           setSearchOpen(false);
         }}
+        onResults={setResultsKey}
       />
     ) : null;
   // The sizes the chrome is worked out from are read before the frame is
@@ -1136,7 +1167,7 @@ function MapMode({
   const headRef = useRef<View>(null);
   const pickerRef = useRef<View>(null);
   const probeRef = useRef<View>(null);
-  const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}`;
+  const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}|${resultsKey}`;
   const settle = useRef({ key: '', left: 0 });
   // Every commit, on purpose: a frame can change without a dependency
   // changing. It sets state only on a difference, within the budget.
@@ -1159,6 +1190,7 @@ function MapMode({
     if (topFrame) {
       // Whose height it is, even when the height itself is the same.
       setTopIsSearch(searchOpen && !!model);
+      noteStrip(Math.ceil(topFrame.height));
       if (Math.ceil(topFrame.height) !== topHeight) {
         setTopHeight(Math.ceil(topFrame.height));
         changed = true;
@@ -1221,6 +1253,8 @@ function MapMode({
             focus={focus}
             onFocus={(id) => setFocus(id)}
             insets={mapInsets}
+            holdSize={searching && !turned}
+            fitKey={hidePanel && strip && !turned ? strip.key : null}
             clip={clip}
             cacheKey={jurisdiction}
             accessibilityLabel={moneyMapLabel(model, focus)}
@@ -1304,6 +1338,7 @@ function MapMode({
             onLayout={(event) => {
               setTopHeight(Math.ceil(event.nativeEvent.layout.height));
               setTopIsSearch(searchOpen && !!model);
+              noteStrip(Math.ceil(event.nativeEvent.layout.height));
             }}
           >
             {topContent ? (

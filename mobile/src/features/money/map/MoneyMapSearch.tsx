@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { formatMoney, moneyAccessibilityLabel } from '../../../design/format';
 import {
@@ -43,13 +43,23 @@ export function MoneyMapSearch({
   model,
   onChoose,
   onClose,
+  onResults,
 }: {
   model: MapModel;
   onChoose: (id: string) => void;
   onClose: () => void;
+  /**
+   * Which results are listed, as one key, said before the frame they are
+   * drawn in: a keystroke that lists the same results says nothing.
+   */
+  onResults?: (key: string) => void;
 }) {
   const [query, setQuery] = useState('');
   const results = useMemo(() => searchModel(model, query), [model, query]);
+  const resultsKey = results.map((node) => node.id).join('\n');
+  useLayoutEffect(() => {
+    onResults?.(resultsKey);
+  }, [resultsKey, onResults]);
   useKeyCommand('list-escape', onClose);
   return (
     <View style={styles.card} testID="money-map-search-card">

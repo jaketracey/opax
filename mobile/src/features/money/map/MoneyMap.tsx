@@ -126,6 +126,17 @@ export interface MoneyMapProps {
   onReady?: (state: { nodes: number; edges: number }) => void;
   children?: React.ReactNode;
   command?: MapCommand | null;
+  /**
+   * The stage's own size is held as it was when this came on (the map's
+   * Search): Android's tab bar hides for the keyboard and the stage grows
+   * under it, which is not the map's room changing.
+   */
+  holdSize?: boolean;
+  /**
+   * A viewport that changes with a new key is fitted, once (the strip left
+   * to the map as its Search's results come and go). None: the view is kept.
+   */
+  fitKey?: string | null;
 }
 
 /** The camera a reader left each jurisdiction at. */
@@ -139,6 +150,8 @@ const TAP_SLACK = 14;
 const FLY_MS = motion.duration.launchLatest;
 /** How long after a fly the chrome's new insets may still re-aim it. */
 const FLY_SETTLE_MS = 1500;
+/** How long a held stage size outlasts its hold, waiting for the stage. */
+const HOLD_RELEASE_MS = 600;
 /** How far inside the chrome a focused disc must sit to count as in view. */
 const VIEW_MARGIN = 6;
 const DIM = 0.2;
@@ -193,6 +206,8 @@ export function MoneyMap({
   onReady,
   children,
   command = null,
+  holdSize = false,
+  fitKey = null,
 }: MoneyMapProps) {
   const reduced = useReduceMotion();
   const adaptive = useAdaptiveDevice();
@@ -203,6 +218,25 @@ export function MoneyMap({
   const palette = paletteFor('light');
   const window = useWindowDimensions();
   const [size, setSize] = useState({ width: 0, height: 0 });
+  // The size the camera works from: the stage's, or the one held. The stage
+  // grows from its top left, so the held room stays where it was on screen.
+  // The hold outlasts its prop until the stage is that size again (the tab
+  // bar comes back after the keyboard has gone), or a moment has passed; a
+  // new width is a turn, and never held.
+  const [heldSize, setHeldSize] = useState<typeof size | null>(null);
+  if (holdSize && !heldSize && size.width > 0) setHeldSize(size);
+  if (
+    heldSize &&
+    (size.width !== heldSize.width ||
+      (!holdSize && size.height === heldSize.height))
+  )
+    setHeldSize(null);
+  useEffect(() => {
+    if (holdSize || !heldSize) return;
+    const timer = setTimeout(() => setHeldSize(null), HOLD_RELEASE_MS);
+    return () => clearTimeout(timer);
+  }, [holdSize, heldSize]);
+  const room = heldSize ?? size;
   const canvasRef = useCanvasRef();
 
   // ---- layout and model ------------------------------------------------
@@ -297,13 +331,16 @@ export function MoneyMap({
   const resizedCamera = useRef(false);
   const rest = useRef<{ bounds: Bounds; rest: CameraRest } | null>(null);
   const pendingFly = useRef<{ id: string; at: number } | null>(null);
+  const fitted = useRef(fitKey);
+  // How many pans and pinches are down.
+  const touching = useSharedValue(0);
   const viewport: Viewport = useMemo(
     () =>
       reservedViewport(
-        { width: size.width, height: size.height, insets },
+        { width: room.width, height: room.height, insets },
         regions,
       ),
-    [size.width, size.height, insets, regions],
+    [room.width, room.height, insets, regions],
   );
   useEffect(() => {
     if (!size.width || !size.height) return;
@@ -327,33 +364,48 @@ export function MoneyMap({
               previous.insets[key as keyof Insets] !==
               viewport.insets[key as keyof Insets],
           )));
-    const next = resized
-      ? {
-          camera: resizeCamera(
-            current,
-            previous,
+    // A new key with a new viewport is fitted, unless the reader has the
+    // map under a finger: that view is theirs until they let go.
+    const refit =
+      placed.current &&
+      !!previous &&
+      previous !== viewport &&
+      fitKey !== null &&
+      fitKey !== fitted.current &&
+      touching.get() === 0;
+    fitted.current = fitKey;
+    const next = refit
+      ? { camera: fit, placed: true }
+      : resized
+        ? {
+            camera: resizeCamera(
+              current,
+              previous,
+              viewport,
+              focusIndex === null ? undefined : at(focusIndex),
+            ),
+            placed: true,
+          }
+        : placeCamera(
+            { placed: placed.current, settled },
+            {
+              kept: cameras.get(cacheKey) ?? null,
+              current,
+            },
+            bounds,
             viewport,
-            focusIndex === null ? undefined : at(focusIndex),
-          ),
-          placed: true,
-        }
-      : placeCamera(
-          { placed: placed.current, settled },
-          {
-            kept: cameras.get(cacheKey) ?? null,
-            current,
-          },
-          bounds,
-          viewport,
-        );
+          );
     resizedCamera.current = !!resized;
     if (resized) pendingFly.current = null;
     // A viewport that changes and comes back leaves the view as it was
     // (camera.ts returnCamera). A new box is a new map: nothing to go back to.
     if (placed.current && previous && previous !== viewport) {
+      const kept = rest.current?.bounds === bounds ? rest.current.rest : null;
       const back = returnCamera(
-        rest.current?.bounds === bounds ? rest.current.rest : null,
-        { previous, current },
+        kept,
+        // A fit replaces whatever view the strip had, the reader's own
+        // included, so the way back to the view before it stays open.
+        { previous, current: refit && kept ? kept.set : current },
         viewport,
         next.camera,
         focus,
@@ -385,6 +437,8 @@ export function MoneyMap({
     at,
     insets,
     adaptive,
+    fitKey,
+    touching,
   ]);
   // Keep the camera for the next visit.
   const remember = useCallback(() => {
@@ -641,6 +695,7 @@ export function MoneyMap({
     }
     rebase();
     gesture.set({ ...gesture.get(), active: gesture.get().active + 1 });
+    touching.set(gesture.get().active);
   };
   const finish = () => {
     'worklet';
@@ -648,6 +703,7 @@ export function MoneyMap({
       ...gesture.get(),
       active: Math.max(0, gesture.get().active - 1),
     });
+    touching.set(gesture.get().active);
     if (gesture.get().active > 0) rebase();
   };
   const pan = Gesture.Pan()
