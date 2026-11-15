@@ -207,21 +207,19 @@ export function electorateNextSteps(detail, { members = [], personHref = () => '
 }
 
 /**
- * A Victorian election district page. Until polls close this block names no person, party or vote
- * and counts no members: only the seat's previous result at the VEC, how to vote, its region and the
- * seat finder. After polls close it adds the seat's standing electorate record. The region's members are
- * counted only from a roster dated after the poll (`pollDay`, YYYY-MM-DD): the new parliament's.
- * It never names the roster member: how members and candidates are shown is the page's own business.
+ * A Victorian election district page. This block names no person, party or vote and counts no members,
+ * before or after the poll: the hub's roster date is the day a member list was fetched, not a term date,
+ * so it cannot say which parliament a member belongs to. Until polls close: the seat's previous result at
+ * the VEC, how to vote, its region, the district list and the seat finder. After: the seat's standing
+ * electorate record in place of the voting link. How members and candidates are shown is the page's own business.
  */
-export function vicDistrictNextSteps(seat, region, { closed = false, pollDay = '' } = {}) {
-  const newRoster = closed && /^\d{4}-\d{2}-\d{2}$/.test(pollDay) && /^\d{4}-\d{2}-\d{2}/.test(String(region?.roster_date || '')) && String(region.roster_date).slice(0, 10) > pollDay;
+export function vicDistrictNextSteps(seat, region, { closed = false } = {}) {
   const rows = [];
   const general = seat?.result?.general;
   if (general?.url && /^\d{4}/.test(String(general.date || ''))) rows.push({ kind: 'Previous result', href: general.url, text: `${seat.name}: ${String(general.date).slice(0, 4)} election result`, meta: 'Victorian Electoral Commission' });
   if (!closed) rows.push({ kind: 'Voting', href: '#voting', text: 'How and where to vote', meta: 'Voting times and the VEC’s locations' });
   if (closed && seat?.electorate_url) rows.push({ kind: 'Electorate record', href: seat.electorate_url, text: `${seat.name}: electorate record`, meta: 'Election timeline and Census context' });
-  if (region?.path) rows.push({ kind: 'Upper house region', href: region.path, text: `${region.name} Region`,
-    meta: newRoster ? `${plural(region.members?.length, 'member')} and ${plural(region.districts?.length, 'district')}` : plural(region.districts?.length, 'district') });
+  if (region?.path) rows.push({ kind: 'Upper house region', href: region.path, text: `${region.name} Region`, meta: plural(region.districts?.length, 'district') });
   rows.push({ kind: 'Districts', href: '/vic-election-2026#districts', text: 'All 88 lower house districts', meta: 'Listed by name' });
   rows.push({ kind: 'Another seat', href: '/vic-election-2026#find', text: 'Search by suburb, postcode or district', meta: '88 districts and 8 regions' });
   return rows;

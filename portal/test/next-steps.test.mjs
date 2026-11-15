@@ -10,7 +10,7 @@ import {
   NEXT_STEPS_TITLE, NEXT_STEPS_MAX, nextStepRows, nextStepsHTML, fillNextSteps, docNextSteps, supplierNextSteps,
   recipientNextSteps, billNextSteps, memberNextSteps, memberVoteSteps, electorateNextSteps, vicDistrictNextSteps, seriesNextSteps,
 } from '../public/next-steps.js';
-import { profileHTML, nextStepsReady, nextStepsNameMembers } from '../public/electorates.js';
+import { profileHTML, nextStepsReady, nextStepsMembers } from '../public/electorates.js';
 await nextStepsReady;
 import { safePath } from '../analytics/privacy.mjs';
 
@@ -192,10 +192,10 @@ test('the electorate profile names a member only of today: not at a past date or
   assert.equal(blockPeople(profileHTML(federal, '2026-09-04')), 0, 'a past date names nobody in the block');
   assert.ok(!blockKinds(profileHTML(federal, '2026-09-04')).some((k) => /Member|represents/.test(k)));
   assert.equal(blockPeople(profileHTML({ ...federal, dissolved_for: '2027-05-01' })), 0, 'a dissolved house names nobody');
-  assert.equal(nextStepsNameMembers(federal), true);
+  assert.deepEqual(nextStepsMembers(federal, '', federal.representatives), federal.representatives, 'outside Victoria the roster stands');
 });
 
-test('a Victorian electorate names a member only from a verified roster dated after the 2026 poll, in either house', () => {
+test('a Victorian electorate names a member only when that member\'s own service is recorded from after the 2026 poll, in either house', () => {
   const manifest = json('../public/electorates/manifest.json');
   const index = json(`../public${manifest.index_url}`);
   const silent = (html, why) => {
@@ -216,14 +216,33 @@ test('a Victorian electorate names a member only from a verified roster dated af
       finally { mock.timers.reset(); }
     }
     // A roster dated on polling day itself is still the old parliament's; unverified or historical records never name anyone.
-    silent(profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-11-28' }), `${chamber}: dated on polling day`);
-    silent(profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-12-15', representation_status: 'partial' }), `${chamber}: unverified`);
-    silent(profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-12-15', status: 'historical' }), `${chamber}: historical`);
-    silent(profileHTML({ ...detail, dissolved_for: '2026-11-28', representation_as_of: '2026-12-15' }), `${chamber}: still published as dissolved`);
-    // The new parliament's roster: verified, current, dated after the poll, and not dissolved.
-    const fresh = profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-12-15' });
-    assert.equal(blockPeople(fresh), Math.min(3, detail.representatives.length), `${chamber}: new roster`);
-    assert.ok(blockKinds(fresh).includes('Member'));
+    // A refresh dated 5 December that still returns the outgoing members names nobody: a fetch date is not a term date.
+    const refreshed = { ...detail, dissolved_for: null, representation_as_of: '2026-12-05', rosters: detail.rosters.map((r) => ({ ...r, as_of: '2026-12-05' })) };
+    silent(profileHTML(refreshed), `${chamber}: 5 December refresh, outgoing members`);
+    // Nor does one whose members' recorded service began before, or on, polling day.
+    const term = (m, start, extra = {}) => ({ person_id: m.person_id, start, start_precision: 'day', end: null, end_precision: 'open', party_periods: [], ...extra });
+    const reps = detail.representatives;
+    silent(profileHTML({ ...refreshed, terms: reps.map((m) => term(m, '2022-11-26')) }), `${chamber}: service from 2022`);
+    silent(profileHTML({ ...refreshed, terms: reps.map((m) => term(m, '2026-11-28')) }), `${chamber}: service dated polling day`);
+    silent(profileHTML({ ...refreshed, representatives: reps.map((m) => ({ ...m, seated_on: '2026-09-01' })) }), `${chamber}: seated before the poll`);
+    silent(profileHTML({ ...refreshed, terms: reps.map((m) => term(m, '2026-12-15', { start_precision: 'year' })) }), `${chamber}: an undated start proves nothing`);
+    silent(profileHTML({ ...refreshed, terms: reps.map((m) => term(m, '2026-12-15', { end: '2026-12-20', end_precision: 'day' })) }), `${chamber}: an ended term is not current`);
+    // An old open term beside a new one still holds the member back: service that began before the poll is never named.
+    silent(profileHTML({ ...refreshed, terms: reps.flatMap((m) => [term(m, '2022-11-26'), term(m, '2026-12-15')]) }), `${chamber}: old and new open terms`);
+    // The new parliament: each member's own service is recorded from after polling day (a term start, or a reviewed seated_on).
+    for (const fresh of [{ ...refreshed, terms: reps.map((m) => term(m, '2026-12-15')) }, { ...refreshed, representatives: reps.map((m) => ({ ...m, seated_on: '2026-12-15' })) }]) {
+      const html = profileHTML(fresh);
+      assert.equal(blockPeople(html), Math.min(3, reps.length), `${chamber}: new parliament`);
+      assert.ok(blockKinds(html).includes('Member'));
+      silent(profileHTML({ ...fresh, dissolved_for: '2026-11-28' }), `${chamber}: still published as dissolved`);
+      silent(profileHTML({ ...fresh, representation_status: 'partial' }), `${chamber}: unverified`);
+      silent(profileHTML(fresh, '2026-12-16'), `${chamber}: a past date`);
+    }
+    // Member by member: only the one whose service is recorded from after the poll is named.
+    if (reps.length > 1) {
+      const mixed = profileHTML({ ...refreshed, terms: [term(reps[0], '2026-12-15'), term(reps[1], '2022-11-26')] });
+      assert.equal(blockPeople(mixed), 1, `${chamber}: one new member among the old`);
+    }
   }
 });
 
@@ -274,12 +293,9 @@ test('a Victorian district page names no person, party or vote in the block unti
     assert.doesNotMatch(nav.textContent, /\bmembers?\b/i, 'the old roster is not counted after the close');
     assert.match(nav.textContent, /11 districts/);
   }
-  // Only the new parliament's roster (dated after polling day) is counted, and only once polls have closed.
+  // Members are never counted, whatever the roster's date says: it is a fetch date, not a term date.
   const meta = (r, options) => vicDistrictNextSteps(seat, r, options).find((row) => row.kind === 'Upper house region').meta;
-  assert.equal(meta({ ...region, roster_date: '2026-12-15' }, { closed: true, pollDay: '2026-11-28' }), '5 members and 11 districts');
-  assert.equal(meta({ ...region, roster_date: '2026-11-28' }, { closed: true, pollDay: '2026-11-28' }), '11 districts');
-  assert.equal(meta({ ...region, roster_date: '2026-12-15' }, { closed: false, pollDay: '2026-11-28' }), '11 districts');
-  assert.equal(meta({ ...region, roster_date: '2026-12-15' }, { closed: true }), '11 districts');
+  for (const roster_date of ['2026-09-09', '2026-12-05', '2027-02-01']) for (const closed of [false, true]) assert.equal(meta({ ...region, roster_date }, { closed }), '11 districts');
   assert.deepEqual(vicDistrictNextSteps(seat, region).map((r) => r.kind), vicDistrictNextSteps(seat, region, { closed: false }).map((r) => r.kind), 'the neutral block is the default');
   const page = renderVicElection(data, seat, {}, new Date(BEFORE));
   assert.ok(page.html.indexOf('id="vic-next"') > page.html.indexOf('class="vic-facts"'));
