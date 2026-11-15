@@ -67,7 +67,12 @@ import {
   type Viewport,
 } from './camera';
 import { blockedMapPoint, HitGrid, pickMapPoint } from './hit';
-import { labelSlots, visibleLabels, type LabelSlot } from './labels';
+import {
+  labelSlots,
+  sameLabels,
+  visibleLabels,
+  type LabelSlot,
+} from './labels';
 import {
   layoutBounds,
   layoutFor,
@@ -730,7 +735,7 @@ export function MoneyMap({
     () => ({ tx: tx.value, ty: ty.value, k: k.value }),
     (camera) => {
       const viewport = viewportSV.value;
-      allowed.value = visibleLabels(
+      const next = visibleLabels(
         slots,
         camera,
         {
@@ -742,6 +747,8 @@ export function MoneyMap({
         },
         box,
       );
+      // Only when a name comes or goes: each one fades on that change.
+      if (!sameLabels(allowed.value, next)) allowed.value = next;
     },
     [slots, box, safeLeft, safeRight, clipTop],
   );
@@ -896,6 +903,7 @@ export function MoneyMap({
                   fitK={fitK}
                   allowed={allowed}
                   width={size.width}
+                  reduceMotion={reduced}
                 />
               ) : null}
             </Animated.View>

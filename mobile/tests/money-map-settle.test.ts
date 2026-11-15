@@ -10,6 +10,8 @@ import {
   layoutLinks,
   layoutNodes,
 } from '../src/features/money/map/layout';
+import { sameLabels } from '../src/features/money/map/labels';
+import { LABEL_FADE_MS } from '../src/features/money/map/MoneyMapLabels';
 import {
   SETTLE_BUDGET_MS,
   SETTLE_TICKS,
@@ -148,4 +150,34 @@ test('the stage draws nothing of a layout still settling', () => {
   expect(stage).toMatch(/if \(!settled\) return null;/);
   expect(stage).toMatch(/settled \? labelSlots\(/);
   expect(stage).toMatch(/\{pictures \? \(/);
+});
+
+describe('names on the map', () => {
+  test('sameLabels is true only for the same set of names', () => {
+    expect(sameLabels({}, {})).toBe(true);
+    expect(sameLabels({ a: 1, b: 1 }, { b: 1, a: 1 })).toBe(true);
+    expect(sameLabels({ a: 1 }, { a: 1, b: 1 })).toBe(false);
+    expect(sameLabels({ a: 1, b: 1 }, { a: 1 })).toBe(false);
+    expect(sameLabels({ a: 1 }, { b: 1 })).toBe(false);
+    expect(sameLabels({}, { a: 1 })).toBe(false);
+  });
+  test('the stage writes the visible names only when they change, and each name fades on its own change', () => {
+    const read = (file: string) =>
+      readFileSync(join(__dirname, '../src/features/money/map', file), 'utf8');
+    // Not on every camera frame: a write restarts every name's reaction.
+    expect(read('MoneyMap.tsx')).toMatch(
+      /if \(!sameLabels\(allowed\.value, next\)\) allowed\.value = next;/,
+    );
+    expect(read('MoneyMap.tsx')).not.toMatch(
+      /allowed\.value = visibleLabels\(/,
+    );
+    const labels = read('MoneyMapLabels.tsx');
+    // The fade, its Reduce Motion cut, and no fade for the first answer.
+    expect(labels).toMatch(
+      /reduceMotion \|\| before === null\s*\?\s*now\s*:\s*withTiming\(now, \{ duration: LABEL_FADE_MS \}\)/,
+    );
+    expect(labels).toMatch(/opacity: byKind \* shown\.value/);
+    expect(LABEL_FADE_MS).toBeGreaterThanOrEqual(100);
+    expect(LABEL_FADE_MS).toBeLessThanOrEqual(200);
+  });
 });
