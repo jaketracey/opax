@@ -151,3 +151,20 @@ export fails validation instead of publishing an empty file. The nightly publish
 has, so the committed file starts as an empty seed (no people, and a note
 saying so); the first gated weekly run replaces it. It is never exported by
 hand.
+
+## A former Victorian member with no Hansard in the corpus (2026-11-16)
+
+Matthew Bach sat in the Legislative Council from 2 March 2020 to 7 December 2023 (Liberal; Eastern
+Metropolitan, then North-Eastern Metropolitan from 26 November 2022), by his
+[Parliament of Victoria member page](https://www.parliament.vic.gov.au/members/matthew-bach/). The corpus holds
+no Council Hansard before 2024, so he had no roster row, and 109 Council divisions of 2023 that list him could
+not be published (a name the roster does not hold is never guessed; [VOTES.md](VOTES.md)).
+
+He is added the way the SA Council's list-only members were: a dated record in
+`scripts/roster_state_evidence.json` (his member page, archived SHA-256 in the accept entry), an evidence entry
+and a `new` entry in `scripts/roster_accept.json`, and the row rebuilt from them by
+`scripts/roster_source_profiles.py`. One thing is new: a reviewed `term_end` beside `term_start`. With it
+the profile is a former member's: no `current`, no `party_now`, a last year equal to the end's, and a seat
+basis that states the dated service. The row is source-only (`roster_only`, 0 speeches) and carries his last
+seat; the earlier region is in the entry's note. A re-export reproduces the row from the same two files.
+

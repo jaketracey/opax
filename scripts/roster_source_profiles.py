@@ -187,18 +187,47 @@ def term_start(entry, snap):
     return ts['start']
 
 
+def term_end(entry, snap):
+    """The day a reviewed list entry's service ended (`term_end`: {end, url, checked, note}), or None while the
+    member sits. A former member's own official record gives it (a member page: "26 November 2022 - 7 December
+    2023"). It must be an ISO date on or after the record's date, sourced like a term start, and it needs a
+    reviewed term start beside it: a closed period states both ends."""
+    te = entry.get('term_end')
+    if te is None:
+        return None
+    if not (isinstance(te, dict) and set(te) == {'end', 'url', 'checked', 'note'}
+            and all(isinstance(te[k], str) and te[k].strip() for k in te) and str(te['url']).startswith('https://')):
+        raise ValueError('A reviewed term end needs an end, an https source, a check date and a note')
+    try:
+        end = date.fromisoformat(te['end'])
+    except ValueError:
+        raise ValueError('A reviewed term end is not an ISO date') from None
+    if end.isoformat() != te['end'] or te['end'] < snap['as_of']:
+        raise ValueError('A reviewed term end must be an ISO date on or after the record date')
+    if entry.get('term_start') is None:
+        raise ValueError('A reviewed term end needs a reviewed term start')
+    return te['end']
+
+
 def list_row(entry, state):
     """The list-only profile a reviewed `new` entry describes, rebuilt from the list itself (and its reviewed term
-    start, when it has one: the profile's first year)."""
+    start, when it has one: the profile's first year). With a reviewed term end the profile is a former member's:
+    its last year is the end's, the seat's basis states the dated service, and it carries the record's party
+    without `current` or `party_now`."""
     snap, m = list_member(entry.get('list'), entry.get('list_name'), state)
-    start = term_start(entry, snap)
-    if entry.get('service') != dict(jurisdiction=snap['jurisdiction'], chamber=snap['chamber'], start=start, end=None):
+    start, end = term_start(entry, snap), term_end(entry, snap)
+    if entry.get('service') != dict(jurisdiction=snap['jurisdiction'], chamber=snap['chamber'], start=start, end=end):
         raise ValueError('Reviewed list service differs from the official list')
     row = dict(name=m['name'], speeches=0, states=[snap['jurisdiction']], chambers=[snap['chamber']],
-               first=int(start[:4]), last=int(snap['as_of'][:4]), roster_only=True)
+               first=int(start[:4]), last=int((end or snap['as_of'])[:4]), roster_only=True)
     if m.get('aliases'):
         row['aliases'] = list(m['aliases'])
-    row.update(party=m['party'], current=True, party_now=m['party'], representation=[list_seat(snap, m)])
+    if end:
+        seat = dict(list_seat(snap, m), basis=f"Official member record: service {start} to {end}; "
+                                              "source-only profile, no speech attribution")
+        row.update(party=m['party'], representation=[seat])
+    else:
+        row.update(party=m['party'], current=True, party_now=m['party'], representation=[list_seat(snap, m)])
     return row
 
 

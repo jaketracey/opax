@@ -196,6 +196,14 @@
       "checked": "2026-11-13",
       "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
       "reason": "The Parliament of South Australia's Legislative Council member list for the 56th Parliament, reviewed in scripts/roster_state_evidence.json (as_of 2026-11-13; the page loads its members from the parliament's contact-details API, whose response is hashed there). No new source request. OPAX holds SA Council Hansard only to 2023, so a member it does not print has no speech row: they get a list-only profile (roster_only, zero speeches, no id; service dated from the list, which gives no term start). A member whose exact full name is one roster person with a verified id and a seat in South Australia is linked to the Council instead, never duplicated."
+    },
+    "vic-council-service-matthew-bach": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Matthew Bach",
+      "checked": "2026-11-16",
+      "url": "https://www.parliament.vic.gov.au/members/matthew-bach/",
+      "reason": "Parliament of Victoria member page for Dr Matthew Donald Andrew Bach, former member: Member of Victorian Parliament between 2020 and 2023; Party represented: Liberal Party; Electorates: North-Eastern Metropolitan (26 November 2022 - 7 December 2023), Eastern Metropolitan (2 March 2020 - 25 November 2022), both regions of the Legislative Council. Fetched 16 November 2026; archived matthew-bach.html SHA-256 1c1ca797ab2fe16664db9a933510ed8fa1ac93f5a8d9c32375686e8c7f55979a. The corpus holds no Legislative Council speeches before 2024, so the profile is source-only. Hansard lists him in 109 Council divisions from 7 February to 30 November 2023 (data/staged/vic-divisions)."
     }
   },
   "vote_party_periods": {
@@ -1697,6 +1705,62 @@
         ]
       },
       "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7378, Hon Melanie Selwood, Greens SA. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
+    },
+    "Matthew Bach": {
+      "evidence": "vic-council-service-matthew-bach",
+      "url": "https://www.parliament.vic.gov.au/members/matthew-bach/",
+      "checked": "2026-11-16",
+      "list": {
+        "chamber": "vic_lc",
+        "as_of": "2023-11-30",
+        "sha256": "1c1ca797ab2fe16664db9a933510ed8fa1ac93f5a8d9c32375686e8c7f55979a"
+      },
+      "list_name": "Matthew Bach",
+      "service": {
+        "jurisdiction": "vic",
+        "chamber": "vic_lc",
+        "start": "2020-03-02",
+        "end": "2023-12-07"
+      },
+      "note": "Former Liberal member of the Legislative Council, 2 March 2020 to 7 December 2023, from his own member page. The seat shown is his last, North-Eastern Metropolitan (from 26 November 2022); before it he sat for Eastern Metropolitan. No speeches are attributed: the corpus holds no Council Hansard before 2024.",
+      "term_start": {
+        "start": "2020-03-02",
+        "url": "https://www.parliament.vic.gov.au/members/matthew-bach/",
+        "checked": "2026-11-16",
+        "note": "Member page, Electorates: Eastern Metropolitan (2 March 2020 - 25 November 2022), his first Council seat. For members elected after 1900 the page's start date is the date they were elected."
+      },
+      "term_end": {
+        "end": "2023-12-07",
+        "url": "https://www.parliament.vic.gov.au/members/matthew-bach/",
+        "checked": "2026-11-16",
+        "note": "Member page, Electorates: North-Eastern Metropolitan (26 November 2022 - 7 December 2023), his last Council seat."
+      },
+      "row": {
+        "name": "Matthew Bach",
+        "speeches": 0,
+        "states": [
+          "vic"
+        ],
+        "chambers": [
+          "vic_lc"
+        ],
+        "first": 2020,
+        "last": 2023,
+        "roster_only": true,
+        "aliases": [
+          "Matthew Donald Andrew Bach"
+        ],
+        "party": "Liberal",
+        "representation": [
+          {
+            "jurisdiction": "vic",
+            "chamber": "vic_lc",
+            "electorate": "North-Eastern Metropolitan",
+            "state": "VIC",
+            "basis": "Official member record: service 2020-03-02 to 2023-12-07; source-only profile, no speech attribution"
+          }
+        ]
+      }
     }
   }
 }

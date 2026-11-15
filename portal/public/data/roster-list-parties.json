@@ -3589,6 +3589,19 @@
    "name": "Ros Spence",
    "party": "Labor",
    "source_url": "https://www.parliament.vic.gov.au/members/ros-spence/"
+  },
+  {
+   "aliases": [
+    "Matthew Donald Andrew Bach"
+   ],
+   "as_of": "2023-11-30",
+   "basis": "official list",
+   "chamber": "vic_lc",
+   "electorate": "North-Eastern Metropolitan",
+   "jurisdiction": "vic",
+   "name": "Matthew Bach",
+   "party": "Liberal",
+   "source_url": "https://www.parliament.vic.gov.au/members/matthew-bach/"
   }
  ]
 }

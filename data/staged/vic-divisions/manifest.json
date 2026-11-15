@@ -7,25 +7,25 @@
  "sitting_days_parsed": 377,
  "sitting_days_missing": [],
  "divisions_found": 1113,
- "reconciled": 998,
- "mismatch_list": 115,
+ "reconciled": 1107,
+ "mismatch_list": 6,
  "mismatch_divisions_by_reason": {
   "numbering-differs-from-published": 3,
-  "result-contradicts-tally": 3,
-  "unresolved-name": 109
+  "result-contradicts-tally": 3
  },
- "votes": 51992,
+ "votes": 55979,
  "member_lists_short": [],
  "name_basis": {
-  "people-directory": 832,
-  "release-roster": 51160
+  "hansard-member-list:release-roster": 90,
+  "people-directory": 1050,
+  "release-roster": 54839
  },
  "question_basis": {
-  "division-line": 775,
+  "division-line": 868,
   "printed-before-amendment-division": 1,
-  "printed-before-division": 222
+  "printed-before-division": 238
  },
- "requests_made": 405,
+ "requests_made": 406,
  "files": [
   {
    "date": "2022-12-20",
@@ -65,7 +65,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-974425065-20022/hansard-974425065-20022.pdf",
    "sha256": "21b660281597a368e592338d52fca624544f5e712a156b4b55c86dadad725cec",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-02-08",
@@ -165,7 +165,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-974425065-20349/hansard-974425065-20349.pdf",
    "sha256": "b5fd1da98b2bd2a70abc2af178b71edbbba0cf21cffcea798bd7a8ea709bc5c4",
    "divisions": 1,
-   "reconciled": 0
+   "reconciled": 1
   },
   {
    "date": "2023-03-07",
@@ -205,7 +205,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa0a7/globalassets/hansard-daily-pdfs/hansard-974425065-20512/hansard-974425065-20512.pdf",
    "sha256": "be1fc0743014ed80eb4587e58362e487df967b24f07f58e705cc373d0be78fa3",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-03-09",
@@ -225,7 +225,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf",
    "sha256": "b5424eb07974535093381cfd3fe8514631834608e396d224f2d7564d1a4511ee",
    "divisions": 7,
-   "reconciled": 0
+   "reconciled": 7
   },
   {
    "date": "2023-03-21",
@@ -305,7 +305,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa07f/globalassets/hansard-daily-pdfs/hansard-974425065-21326/hansard-974425065-21326.pdf",
    "sha256": "0df58c4deaa4644f23a7f217ac86315dfe337c4c61e5ff5a143546a525a13f8a",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-05-03",
@@ -325,7 +325,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa08f/globalassets/hansard-daily-pdfs/hansard-974425065-21403/hansard-974425065-21403.pdf",
    "sha256": "40291752578a5ceba8b1d73c1421cbca3c6b9df7668ed16aa00c014d8bd817e1",
    "divisions": 1,
-   "reconciled": 0
+   "reconciled": 1
   },
   {
    "date": "2023-05-04",
@@ -345,7 +345,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf",
    "sha256": "466f97f09d85b0de8924f7b856da7198f817c62a05fe027374e92ed5e6b7a9fa",
    "divisions": 10,
-   "reconciled": 0
+   "reconciled": 10
   },
   {
    "date": "2023-05-16",
@@ -385,7 +385,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa055/globalassets/hansard-daily-pdfs/hansard-974425065-21831/hansard-974425065-21831.pdf",
    "sha256": "2414c67cc6de197b4b8389eb2b9393821d0afbdf4839208c949c3dad581a21e6",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-05-18",
@@ -435,7 +435,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa05b/globalassets/hansard-daily-pdfs/hansard-974425065-22003/hansard-974425065-22003.pdf",
    "sha256": "14e36e6a98aea7737f49ba78dd77b3f1bc00ef0a71ee7a5a2bb519438873e27b",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-05-31",
@@ -455,7 +455,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa06a/globalassets/hansard-daily-pdfs/hansard-974425065-22087/hansard-974425065-22087.pdf",
    "sha256": "842c4e383593e4049a3ee1511e0a492af35b67a51584bbbc1f7a58d3aec1ba0c",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-06-01",
@@ -465,7 +465,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa03e/globalassets/hansard-daily-pdfs/hansard-974425065-22164/hansard-974425065-22164.pdf",
    "sha256": "6c08daa8f37ef874ff038d87f872e958ffb70f3c3318ed2d0b24f2dc0788b2a7",
    "divisions": 4,
-   "reconciled": 0
+   "reconciled": 4
   },
   {
    "date": "2023-06-20",
@@ -485,7 +485,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf",
    "sha256": "1f5b8e7f3e46c4f7a75f57ef46fc648d2e1c05632275c2558e9ce221d7dbad1b",
    "divisions": 10,
-   "reconciled": 0
+   "reconciled": 10
   },
   {
    "date": "2023-06-21",
@@ -505,7 +505,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa032/globalassets/hansard-daily-pdfs/hansard-974425065-22324/hansard-974425065-22324.pdf",
    "sha256": "4b16bc80bd845188962dbc4f74f5ab098b5be3989155c8781bb24a15443cc4c8",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-06-22",
@@ -545,7 +545,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa023/globalassets/hansard-daily-pdfs/hansard-974425065-22835/hansard-974425065-22835.pdf",
    "sha256": "912436c904d66f98e6bd9b099430e1e32e169f4e1aafcbc0ce8b085e7bf55d03",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-08-02",
@@ -565,7 +565,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa00f/globalassets/hansard-daily-pdfs/hansard-974425065-22913/hansard-974425065-22913.pdf",
    "sha256": "9a0f50bcee9033b6d7b78802d87c7348b975ee34da6960cf05a9cd54a9edd713",
    "divisions": 4,
-   "reconciled": 0
+   "reconciled": 4
   },
   {
    "date": "2023-08-03",
@@ -625,7 +625,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fed/globalassets/hansard-daily-pdfs/hansard-974425065-23163/hansard-974425065-23163.pdf",
    "sha256": "33dc57ec9ac7df7db0be4416b6d1040d175fe205fb469b77eee75dda53f5d73b",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-08-17",
@@ -645,7 +645,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4aa00e/globalassets/hansard-daily-pdfs/hansard-974425065-23242/hansard-974425065-23242.pdf",
    "sha256": "53eb3771cf78f3ec8593236fdad0a4d8f2ed8ab4f272491b44e835a0044dbc99",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-08-29",
@@ -665,7 +665,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9ff8/globalassets/hansard-daily-pdfs/hansard-974425065-23323/hansard-974425065-23323.pdf",
    "sha256": "f2977d4f8c8ebb67f0f4ec84fa9e716ad7b1fcdc44816792588ccde69cc20b19",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-08-30",
@@ -685,7 +685,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9ff1/globalassets/hansard-daily-pdfs/hansard-974425065-23401/hansard-974425065-23401.pdf",
    "sha256": "8c956740d057d36090c0de3821f26b4432bf6a9dac9e75f7b8f613036f4ab92f",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-08-31",
@@ -725,7 +725,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fd6/globalassets/hansard-daily-pdfs/hansard-974425065-23567/hansard-974425065-23567.pdf",
    "sha256": "fde38d93d26c994c2036639495eb2fcbde3c2b8a9538359824f70a5c72683700",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-10-04",
@@ -745,7 +745,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fe3/globalassets/hansard-daily-pdfs/hansard-974425065-23645/hansard-974425065-23645.pdf",
    "sha256": "cec99125208b7323ecf9644fcd0f1e051ec9204b9fe201efe56ab27df0a91ee3",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-10-05",
@@ -765,7 +765,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf",
    "sha256": "992a7c27c34f24816786df2a4f8e276058a272c55083355aba190c662dffb94e",
    "divisions": 6,
-   "reconciled": 0
+   "reconciled": 6
   },
   {
    "date": "2023-10-17",
@@ -785,7 +785,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fc1/globalassets/hansard-daily-pdfs/hansard-974425065-23801/hansard-974425065-23801.pdf",
    "sha256": "228643d2ee85f58bc6f5e86f70197dfaa38cecfddfd540994d3cab6084979f5e",
    "divisions": 4,
-   "reconciled": 0
+   "reconciled": 4
   },
   {
    "date": "2023-10-18",
@@ -805,7 +805,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fcf/globalassets/hansard-daily-pdfs/hansard-974425065-23877/hansard-974425065-23877.pdf",
    "sha256": "911c1072c57f73a1c23fd17558792806b5fd4bd05e08b41f9f9e03bd9551823b",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-10-19",
@@ -825,7 +825,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-974425065-23953/hansard-974425065-23953.pdf",
    "sha256": "2c10349d9f8432092493102de8acbcb305e2cd07399c91f220ecda8ab429520f",
    "divisions": 5,
-   "reconciled": 0
+   "reconciled": 5
   },
   {
    "date": "2023-10-31",
@@ -845,7 +845,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fbb/globalassets/hansard-daily-pdfs/hansard-974425065-24031/hansard-974425065-24031.pdf",
    "sha256": "5b8f086dd39c87e26b4f533cb655570c078ef11045aa8a351e93c8ffdfeb1143",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-11-01",
@@ -865,7 +865,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fc9/globalassets/hansard-daily-pdfs/hansard-974425065-24120/hansard-974425065-24120.pdf",
    "sha256": "b38fa07266ef72fff25c0096d3d1312f97e6ef95f5513dd880be4f20e899234b",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-11-02",
@@ -885,7 +885,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fad/globalassets/hansard-daily-pdfs/hansard-974425065-24193/hansard-974425065-24193.pdf",
    "sha256": "33e25a2cecd294542b6824264b15e5cf82511dfb6e46f1b378728216df38dcf2",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-11-14",
@@ -925,7 +925,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9faa/globalassets/hansard-daily-pdfs/hansard-974425065-24339/hansard-974425065-24339.pdf",
    "sha256": "e06a6e734c3eada6f9095d3d289f09b49e422357f29970b50644c24900ea21fc",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-11-16",
@@ -945,7 +945,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fb5/globalassets/hansard-daily-pdfs/hansard-974425065-24429/hansard-974425065-24429.pdf",
    "sha256": "5282076c793cbf07722f2725256fbaa1f267ac87e561c453881736b3a252da90",
    "divisions": 2,
-   "reconciled": 0
+   "reconciled": 2
   },
   {
    "date": "2023-11-28",
@@ -985,7 +985,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9fb2/globalassets/hansard-daily-pdfs/hansard-974425065-24609/hansard-974425065-24609.pdf",
    "sha256": "1e307030e9c1a931e82a16aa7ca8032e473e6be07325992269603e76a65caf32",
    "divisions": 3,
-   "reconciled": 0
+   "reconciled": 3
   },
   {
    "date": "2023-11-30",
@@ -1005,7 +1005,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9f96/globalassets/hansard-daily-pdfs/hansard-974425065-24712/hansard-974425065-24712.pdf",
    "sha256": "c7c4aa1b843459bf02f2cf0dc2703b780112b4581bdfa3c0f693f93f5c09af49",
    "divisions": 4,
-   "reconciled": 0
+   "reconciled": 4
   },
   {
    "date": "2024-02-06",

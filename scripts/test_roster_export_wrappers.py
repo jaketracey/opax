@@ -114,7 +114,12 @@ class RealWrapperTests(unittest.TestCase):
         # in any export: Alan Griffiths (OpenAustralia service) and the six SA Council members on the official list
         # dated 2026-11-13 whom OPAX's SA Hansard (to 2023) never prints (roster_accept.json "sa-council-list").
         sa_list = {'Mira El Dannawi', 'Hilton Gumbys', 'Rebecca Hewett', 'Benjamin Hood', 'Carlos Quaremba', 'Melanie Selwood'}
-        self.assertEqual({r["name"] for r in rows}, {n for n, _ in SITTING} | {'Alan Griffiths'} | sa_list)
+        # And Matthew Bach, a former Victorian Council member rebuilt from his member page ("vic-council-service-
+        # matthew-bach"): the corpus holds no Council Hansard before 2024.
+        self.assertEqual({r["name"] for r in rows}, {n for n, _ in SITTING} | {'Alan Griffiths', 'Matthew Bach'} | sa_list)
+        bach = next(r for r in rows if r['name'] == 'Matthew Bach')
+        self.assertEqual((bach['speeches'], bach['roster_only'], bach['chambers'], bach['last'], 'current' in bach),
+                         (0, True, ['vic_lc'], 2023, False))
         self.assertFalse(any(r.get("pid") for r in rows if r['name'] != 'Alan Griffiths'),
                          "the override cannot supply missing speech-derived identities")
         for r in rows:

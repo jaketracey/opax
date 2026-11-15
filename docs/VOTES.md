@@ -561,20 +561,22 @@ every other source.
 | Requests made, all to www.parliament.vic.gov.au, one at a time, two seconds or more apart, none refused | 405 |
 | Sitting days fetched (Assembly 188, Council 189), each a Final daily Hansard PDF | 377 |
 | Divisions found | 1,113 |
-| Reconciled (names parsed equal both stated tallies, result line agrees, every name resolved) | 998 |
-| On the mismatch list, not published | 115 |
+| Reconciled (names parsed equal both stated tallies, result line agrees, every name resolved) | 1,107 (998 before the roster addition) |
+| On the mismatch list, not published | 6 (115 before) |
 | Already published (14 August to 24 September 2026), left as they are | 72 |
-| New division records in `portal/public/divisions/` | 926 |
+| New division records in `portal/public/divisions/` | 1,035 (926, then 109) |
 
 The mismatch list (`data/staged/vic-divisions/mismatches.json`, each entry with its Hansard link, the
 stated and the parsed counts and the reason):
 
-- **unresolved-name, 109.** Every one is a Council division from 7 February 2023 to 30 November 2023 that
-  lists Matthew Bach, who is in no committed roster file. The tallies of all 109 reconcile. Adding him to
-  the roster and running `parse` again (no fetch) would release them. While they are held, `parse` writes
-  `portal/public/data/vote-coverage.json` (the count, the dates and the members those divisions name), and
-  the site says so on the coverage page and on the voting section of each of those members
-  (`voteCoverageText` in `portal/public/vote-tables.js`). An empty list removes the note.
+- **unresolved-name, 0 (was 109).** Every one was a Council division from 7 February 2023 to 30 November 2023
+  that lists Matthew Bach, who was in no committed roster file. He was added as a former member through the
+  accept list ([DATA-MEMBERS.md](DATA-MEMBERS.md), "A former Victorian member with no Hansard in the corpus"),
+  `parse` was run again from the cache with no fetch, and all 109 reconciled under the same rules. While any
+  division is held for this reason, `parse` writes `portal/public/data/vote-coverage.json` (the count, the
+  dates and the members those divisions name), and the site says so on the coverage page and on the voting
+  section of each of those members (`voteCoverageText` in `portal/public/vote-tables.js`). The list is empty
+  now, so no note shows.
 - **result-contradicts-tally, 3.** Hansard's own result line disagrees with the tally it prints:
   `vic-la-2023-02-23-4` (Ayes 52, Noes 28, "Question defeated.") and `vic-la-2023-11-30-5` and `-7`
   ("divided on omission (members in favour vote no)").

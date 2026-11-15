@@ -1,56 +1,5 @@
 {
  "schema": 1,
  "source": "data/staged/vic-divisions/mismatches.json",
- "notes": [
-  {
-   "id": "vic_lc-unresolved-name",
-   "jurisdiction": "vic",
-   "house": "vic_lc",
-   "reason": "unresolved-name",
-   "held": 109,
-   "from": "2023-02-07",
-   "to": "2023-11-30",
-   "members": [
-    "Adem Somyurek",
-    "Aiv Puglielli",
-    "Ann-Marie Hermans",
-    "Bev McArthur",
-    "David Davis",
-    "David Ettershank",
-    "David Limbrick",
-    "Enver Erdogan",
-    "Evan Mulholland",
-    "Gaelle Broad",
-    "Gayle Tierney",
-    "Georgie Crozier",
-    "Georgie Purcell",
-    "Harriet Shing",
-    "Ingrid Stitt",
-    "Jacinta Ermacora",
-    "Jaclyn Symes",
-    "Jeff Bourman",
-    "Joe McCracken",
-    "John Berger",
-    "Katherine Copsey",
-    "Lee Tarlamis",
-    "Lizzie Blandthorn",
-    "Melina Bath",
-    "Michael Galea",
-    "Moira Deeming",
-    "Nick McGowan",
-    "Rachel Payne",
-    "Renee Heath",
-    "Rikkie-Lee Tyrrell",
-    "Ryan Batchelor",
-    "Samantha Ratnam",
-    "Sarah Mansfield",
-    "Shaun Leane",
-    "Sheena Watt",
-    "Sonja Terpstra",
-    "Tom McIntosh",
-    "Trung Luu",
-    "Wendy Lovell"
-   ]
-  }
- ]
+ "notes": []
 }
