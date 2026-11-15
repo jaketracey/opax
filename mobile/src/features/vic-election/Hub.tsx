@@ -3,7 +3,10 @@ import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Animated, Platform, SectionList, View } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
-import { useAccessibilitySize } from '../../design/accessibility';
+import {
+  useAccessibilitySize,
+  useShortPlaceholder,
+} from '../../design/accessibility';
 import { FigureBlock } from '../../design/record';
 import { Skeleton, OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
@@ -84,6 +87,7 @@ export default function Hub() {
     : null;
   const titleRef = useRef<View>(null);
   const accessible = useAccessibilitySize();
+  const shortPlaceholder = useShortPlaceholder();
   const title = useTitleOnScroll(
     titleRef,
     Platform.OS === 'android' && accessible ? c.barShort : c.bar,
@@ -120,7 +124,8 @@ export default function Hub() {
   const searchBar = useListSearchBar({
     // The full words fit at default sizes (checked on an iPhone 17 Pro);
     // at accessibility sizes the shorter ones do.
-    placeholder: accessible ? c.placeholderShort : c.placeholder,
+    // The short form is for the eye: a screen reader reads the full words.
+    placeholder: shortPlaceholder ? c.placeholderShort : c.placeholder,
     onChangeText: change,
     onSearchButtonPress: (text) => {
       setSearch((prev) => ({

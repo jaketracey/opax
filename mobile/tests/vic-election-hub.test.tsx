@@ -1,5 +1,11 @@
 import { act } from 'react';
-import { Dimensions, Platform, SectionList, StyleSheet } from 'react-native';
+import {
+  AccessibilityInfo,
+  Dimensions,
+  Platform,
+  SectionList,
+  StyleSheet,
+} from 'react-native';
 import {
   mockVic,
   renderVic,
@@ -640,6 +646,50 @@ test.each([
     }
   },
 );
+
+// The screen reader, as the system reports it. The app's store listens
+// once for the whole run, so the listener is caught as it subscribes.
+const readerListeners: ((running: boolean) => void)[] = [];
+// A plain replacement, not a Jest spy: it must outlive mock resets.
+const addAccessibilityListener = AccessibilityInfo.addEventListener;
+AccessibilityInfo.addEventListener = ((
+  event: string,
+  handler: (running: boolean) => void,
+) => {
+  if (event === 'screenReaderChanged') readerListeners.push(handler);
+  return addAccessibilityListener.call(
+    AccessibilityInfo,
+    event as never,
+    handler as never,
+  );
+}) as never;
+const setScreenReader = (running: boolean) =>
+  act(() => readerListeners.forEach((listener) => listener(running)));
+
+// The system field has no label, so a screen reader reads the placeholder,
+// whole even when drawn cut off: with one running the hub's field keeps
+// its full words at every size. The short form is for the eye only.
+test('at AX5 the search field keeps its full placeholder while a screen reader is running', async () => {
+  const window = Dimensions.get('window');
+  act(() => Dimensions.set({ window: { ...window, fontScale: 3.571 } }));
+  try {
+    let searchBar!: SearchBarProps;
+    const r = renderVic(<Hub />, (options: Record<string, unknown>) => {
+      searchBar = options.headerSearchBarOptions as SearchBarProps;
+    });
+    await act(async () => {});
+    expect(readerListeners.length).toBeGreaterThan(0);
+    expect(searchBar.placeholder).toBe('Suburb or postcode');
+    setScreenReader(true);
+    expect(searchBar.placeholder).toBe('Suburb, postcode or district');
+    setScreenReader(false);
+    expect(searchBar.placeholder).toBe('Suburb or postcode');
+    await act(async () => r.unmount());
+  } finally {
+    setScreenReader(false);
+    act(() => Dimensions.set({ window }));
+  }
+});
 
 // Hub ruling 4c: the system search field takes no inset from the app, so at
 // accessibility sizes its placeholder is the shorter one.

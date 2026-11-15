@@ -2,6 +2,7 @@ import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
 import {
+  AccessibilityInfo,
   Dimensions,
   Keyboard,
   Linking,
@@ -597,6 +598,62 @@ describe('the search field’s placeholder at accessibility text sizes', () => {
       await act(async () => r.unmount());
     },
   );
+});
+
+// The screen reader, as the system reports it. The app's store listens
+// once for the whole run, so the listener is caught as it subscribes.
+const readerListeners: ((running: boolean) => void)[] = [];
+// A plain replacement, not a Jest spy: it must outlive mock resets.
+const addAccessibilityListener = AccessibilityInfo.addEventListener;
+AccessibilityInfo.addEventListener = ((
+  event: string,
+  handler: (running: boolean) => void,
+) => {
+  if (event === 'screenReaderChanged') readerListeners.push(handler);
+  return addAccessibilityListener.call(
+    AccessibilityInfo,
+    event as never,
+    handler as never,
+  );
+}) as never;
+const setScreenReader = (running: boolean) =>
+  act(() => readerListeners.forEach((listener) => listener(running)));
+
+describe('the search field’s placeholder with a screen reader', () => {
+  // The system field has no label: VoiceOver and TalkBack read the
+  // placeholder, and read it whole even when it is drawn cut off. The short
+  // form is for the eye only.
+  afterEach(() => setScreenReader(false));
+  test.each([
+    ['vic', 'District, region or member’s name', 'District'],
+    [undefined, 'Electorate or member’s name', 'Electorate'],
+  ] as const)(
+    'at AX5 the %s chooser keeps its full words while one is running, and the short one once it stops',
+    async (scope, full, short) => {
+      setFontScale(3.119);
+      const r = await render(
+        <SeatChooser presentation="sheet" scope={scope} />,
+      );
+      const placeholder = () =>
+        mockScreen.options.headerSearchBarOptions.placeholder;
+      expect(readerListeners.length).toBeGreaterThan(0);
+      expect(placeholder()).toBe(short);
+      setScreenReader(true);
+      expect(placeholder()).toBe(full);
+      setScreenReader(false);
+      expect(placeholder()).toBe(short);
+      await act(async () => r.unmount());
+    },
+  );
+  test('at the default size a screen reader changes nothing', async () => {
+    setFontScale(1);
+    const r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+    setScreenReader(true);
+    expect(mockScreen.options.headerSearchBarOptions.placeholder).toBe(
+      'District, region or member’s name',
+    );
+    await act(async () => r.unmount());
+  });
 });
 
 describe('the Victorian scope', () => {

@@ -10,7 +10,8 @@ function setting(
     | 'reduceMotionChanged'
     | 'reduceTransparencyChanged'
     | 'darkerSystemColorsChanged'
-    | 'highTextContrastChanged',
+    | 'highTextContrastChanged'
+    | 'screenReaderChanged',
 ) {
   let value = false;
   // False until the first read or change event: the value is a guess before.
@@ -55,6 +56,15 @@ const boldText = setting(
 const reduceMotion = setting(
   () => AccessibilityInfo.isReduceMotionEnabled(),
   'reduceMotionChanged',
+);
+// A read the system refuses is "not running": nothing waits on it for good.
+const screenReader = setting(
+  () =>
+    Promise.resolve(AccessibilityInfo.isScreenReaderEnabled()).then(
+      (running) => !!running,
+      () => false,
+    ),
+  'screenReaderChanged',
 );
 const increaseContrast = setting(
   () =>
@@ -149,6 +159,30 @@ export function useReduceMotionSetting(): boolean | null {
     reduceMotion.getKnown,
     reduceMotion.getKnown,
   );
+}
+/**
+ * Whether a screen reader (VoiceOver, TalkBack) is running; null until the
+ * system has answered.
+ */
+export function useScreenReaderSetting(): boolean | null {
+  return useSyncExternalStore(
+    screenReader.subscribe,
+    screenReader.getKnown,
+    screenReader.getKnown,
+  );
+}
+/**
+ * Whether a native search field draws its shorter placeholder: at
+ * accessibility text sizes, where the full one is cut off, and only once
+ * it is known that no screen reader is running. The system field has no
+ * label of its own, so VoiceOver and TalkBack read the placeholder: with
+ * one running (or not yet known) the field keeps its full words, which are
+ * read whole even when drawn cut off. The short form is for the eye only.
+ */
+export function useShortPlaceholder(): boolean {
+  const large = useAccessibilitySize();
+  const reader = useScreenReaderSetting();
+  return large && reader === false;
 }
 /**
  * True at accessibility text sizes (AX1 to AX5). Side-by-side layouts stack
