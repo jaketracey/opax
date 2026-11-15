@@ -610,10 +610,12 @@ describe('system navigation on both displays', () => {
     expect(barScrollEdges('leading')).toMatchObject({
       left: 'hard',
       right: 'soft',
+      bottom: 'hidden',
     });
     expect(barScrollEdges('trailing')).toMatchObject({
       left: 'soft',
       right: 'hard',
+      bottom: 'hidden',
     });
     expect(barScrollEdges('unspecified')).toEqual({
       top: 'hard',

@@ -67,6 +67,10 @@ export const glassBar = () => liquidGlass();
  * collapse. Its top edge follows the page too: soft at rest so the masthead
  * shows whole, hard under scrolled content, hidden behind a solid bar.
  * Phones, the unfolded Duo and iPad report 'unspecified' and keep `active`.
+ *
+ * The bottom edge follows the tab bar: soft where the bar is at the bottom
+ * ('unspecified') and minimises over the page, hidden where UIKit has moved
+ * it to a side.
  */
 export function barScrollEdges(
   edge: VerticalBarEdge,
@@ -76,7 +80,10 @@ export function barScrollEdges(
     ? { top: active, bottom: 'soft' as const }
     : {
         top: active,
-        bottom: 'soft' as const,
+        // The tab bar is on the side, so nothing sits at the bottom for a
+        // soft edge to protect: left on, UIKit veiled the page's last lines
+        // (Today's closing sentence was all but invisible, 1.1.5 build 84).
+        bottom: 'hidden' as const,
         left: edge === 'leading' ? active : ('soft' as const),
         right: edge === 'trailing' ? active : ('soft' as const),
       };

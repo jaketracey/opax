@@ -156,7 +156,19 @@ export function GroundFade({
         />
       ) : null}
       {!solid ? (
-        <Svg width="100%" height="100%">
+        // A unit canvas stretched over the view, not lengths in per cent.
+        // react-native-svg 15.15.4 works a child's "100%" out once and
+        // keeps that shape when the view is resized, so after a Duo was
+        // unfolded the bar's fade still drew at the folded display's 382 pt:
+        // a band over Today's leading column that cut into the trailing
+        // one's first card, and no fade over the rest. The stretch is
+        // worked out again on each draw.
+        <Svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 1 1"
+          preserveAspectRatio="none"
+        >
           <Defs>
             <LinearGradient id={id} {...VECTORS[side]}>
               {stops.map(([offset, opacity]) => (
@@ -169,7 +181,7 @@ export function GroundFade({
               ))}
             </LinearGradient>
           </Defs>
-          <Rect width="100%" height="100%" fill={`url(#${id})`} />
+          <Rect x={0} y={0} width={1} height={1} fill={`url(#${id})`} />
         </Svg>
       ) : null}
     </View>
