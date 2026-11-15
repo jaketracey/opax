@@ -31,7 +31,7 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
-import { writingFacts, appendWrittenPoints, pointsBeyondRecords, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
+import { writingFacts, appendWrittenPoints, pointsWrittenElsewhere, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
@@ -669,12 +669,12 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const stats: import('./research-types').ResearchStats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
-    // One voice per kind of evidence. Once the model writer has written, its sentences are the statement of every tool
-    // record (the model's own points on those records are in its fact sheet), and only the model's points resting on
-    // passages or on nothing follow. A writer that did not write (facts as recorded, or a stopped draft) keeps every point.
+    // One statement per record fact. The model's points on tool records are in the writer's fact sheet under their own
+    // citation keys; once the model writer has written, a point is left to its answer only when that answer cites every
+    // key the point rests on. An empty write, facts as recorded or a stopped draft keeps every point.
     let modelWritten=false
     const combine=(written:QualitativeAnswer)=>{
-      const points=run.passage_answer&&modelWritten?pointsBeyondRecords(run.passage_answer):run.passage_answer
+      const points=run.passage_answer&&modelWritten&&written.answer.trim()?pointsWrittenElsewhere(run.passage_answer,written):run.passage_answer
       return points?.answer.trim()?leadWithModelAnswer(appendWrittenPoints(written,points) as unknown as Record<string,unknown>,points,question) as unknown as QualitativeAnswer:written
     }
     let active=true,checkedPartial:QualitativeAnswer|undefined

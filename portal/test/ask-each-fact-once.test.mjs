@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {importBundle} from './fixtures/import-bundle.mjs';
-const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt,pointsBeyondRecords,ALSO_WRITING_RULE} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
+const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt,pointsWrittenElsewhere,ONE_RECORD_RULE} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
 const api=await importBundle(bundled.outputFiles[0].text,'ask-each-fact-once');
 
 const url='https://opax.com.au/subject/person/jo-briskey';
@@ -21,12 +21,9 @@ const loopAnswer=()=>{
   citations:{'fact-1/t/body/0':[span(answer,expenses)],'fact-2/t/body/0':[span(answer,service)],'fact-2':[span(answer,point)]}};
 };
 
-test('a record cited by its own line and by a point resting on it is one writer fact, in the record\'s words',()=>{
+test('a record cited by its own line and by a point resting on it reaches the writer as two facts, each under its own citation key',()=>{
  const facts=api.writingFacts(loopAnswer());
- assert.deepEqual(facts.map(f=>f.text),[expenses,service]);
- // The point's wording stays beside its record, so the one sentence about it can carry what the point adds.
- assert.deepEqual(facts.map(f=>f.also),[undefined,[point]]);
- assert.ok(facts[1].source.snippet.includes(point),'and it is evidence for that sentence');
+ assert.deepEqual(facts.map(f=>[f.text,f.evidenceId]),[[expenses,'fact-1/t/body/0'],[service,'fact-2/t/body/0'],[point,'fact-2']]);
 });
 test('a point that is the only citation of a record still reaches the writer as written',()=>{
  const answer=`- ${expenses}\n${point}`;
@@ -70,7 +67,7 @@ const term='Pat Example has served in the Senate for Tasmania since 1 July 2019.
 test('a record carrying a term and a party change reaches the writer whole, and a point on its other claim is kept',()=>{
  const answer=`- ${twoClaims}\n${change}`;
  const facts=api.writingFacts({answer,answer_decision:'answer',sources:[record(2,twoClaims,url)],citations:{'fact-2/t/body/0':[span(answer,twoClaims)],'fact-2':[span(answer,change)]}});
- assert.deepEqual(facts.map(f=>f.text),[twoClaims],'the writer is given the record as recorded, with both claims in it');
+ assert.deepEqual(facts.map(f=>f.text),[twoClaims,change],'the writer is given the record and the point resting on it');
  const out=api.appendWrittenPoints(writtenWith(twoClaims,term),pointsOn(twoClaims,change));
  assert.equal(out.answer,lead+'\n\n'+term+'\n\n'+change,'the party change is a different claim from the same record, so it stays');
 });
@@ -94,7 +91,7 @@ test('the writer prompt carries no list of the model\'s points and no instructio
  assert.deepEqual(Object.keys(JSON.parse(base)).sort(),['contract','facts','period','question']);
  assert.doesNotMatch(base,/"said"|leave to them|leave out/);
 });
-test('the run hands its writer each record once, as recorded, and never the model\'s points',async()=>{
+test('the run hands its writer the record and the point on it as facts, and no separate list of points',async()=>{
  const question='What were Jo Briskey\'s itemised travel expenses for 2026?',scope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false};
  for(const withPoints of [true,false]){
   const loop=loopAnswer(),inputs=[];
@@ -104,38 +101,54 @@ test('the run hands its writer each record once, as recorded, and never the mode
   await api.runAgentic(question,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},scope);
   assert.equal(inputs.length,1);
   assert.equal('said' in inputs[0],false);
-  assert.deepEqual(inputs[0].facts.map(f=>f.text),[expenses,service],'each record once, as recorded');
+  assert.deepEqual(inputs[0].facts.map(f=>f.text),withPoints?[expenses,service,point]:[expenses,service]);
  }
 });
 
-// One voice per kind of evidence (16 November): the writer's sentence is the one statement of a tool record, with the
-// model's wording of that record beside the fact; only the model's points on passages, or on nothing, follow it.
+// One statement per record fact (16 November, after review rv-pr432). The model's point on a tool record is a writer
+// fact under the point's own citation key. A point is left to the written answer only when that answer cites every key
+// the point rests on; otherwise it is kept. A fact repeated is better than a fact lost.
 const speechSource={resource:'speech-9',slug:'speech-9',title:'Expenses debate',href:'https://opax.com.au/doc/speech-9',url:'https://opax.com.au/doc/speech-9',snippet:'travel claims should be published monthly',cited:true,kind:'speech',speaker:'Jo Briskey',date:'2026-03-02'};
 const speech='Jo Briskey told the House on 2 March 2026 that travel claims should be published monthly.',context='IPEA is the independent authority that reports these expenses.';
 const mixedPoints=()=>{const answer=[point,speech,context].join('\n');return {answer,answer_decision:'answer',sources:[record(2,service,url),speechSource],citations:{'fact-2':[span(answer,point)],'speech-9/t/body/0-40':[span(answer,speech)]}}};
-test('points resting only on tool records are left to the writer; passage points and uncited points are kept, with their citations',()=>{
- const out=api.pointsBeyondRecords(mixedPoints());
- assert.equal(out.answer,speech+'\n'+context);
- assert.deepEqual(Object.fromEntries(Object.entries(out.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>Array.from(out.answer).slice(a,b).join(''))])),{'speech-9/t/body/0-40':[speech]});
- assert.deepEqual(out.sources.map(s=>s.resource),['speech-9']);
+/** A written answer whose second sentence cites the given keys of record 2. */
+const writtenCiting=(recordText,stated,keys)=>{const w=writtenWith(recordText,stated);delete w.citations['fact-2/t/body/0'];for(const key of keys)w.citations[key]=[span(w.answer,stated)];return w};
+test('a point is left to the written answer only when that answer cites the point\'s own key; passage and uncited points are always kept',()=>{
+ const both=api.pointsWrittenElsewhere(mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0','fact-2']));
+ assert.equal(both.answer,speech+'\n'+context);
+ assert.deepEqual(Object.fromEntries(Object.entries(both.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>Array.from(both.answer).slice(a,b).join(''))])),{'speech-9/t/body/0-40':[speech]});
+ assert.deepEqual(both.sources.map(s=>s.resource),['speech-9']);
+ // The written sentence cites the record's own line only: the point's fact is not stated, so the point stays.
+ assert.equal(api.pointsWrittenElsewhere(mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0'])).answer,mixedPoints().answer);
 });
-test('the writer contract asks for one sentence carrying the researcher\'s detail only when a fact has it',()=>{
+test('the writer contract asks for one sentence per record only when two facts share one, and marks which facts do',()=>{
  const input={question:'What were Jo Briskey\'s itemised travel expenses for 2026?',period:{kind:'all',label:''},facts:api.writingFacts(loopAnswer())};
- const told=JSON.parse(api.writingPrompt(input)),plain=JSON.parse(api.writingPrompt({...input,facts:input.facts.map(({also:_a,...f})=>f)}));
- assert.ok(told.contract.endsWith(api.ALSO_WRITING_RULE));assert.deepEqual(told.facts[1].also,[point]);
- assert.equal(plain.contract+api.ALSO_WRITING_RULE,told.contract);assert.equal('also' in plain.facts[1],false);
- assert.doesNotMatch(api.ALSO_WRITING_RULE,/\b(?:do not|never|must not|cannot)\b/i);
+ const told=JSON.parse(api.writingPrompt(input)),plain=JSON.parse(api.writingPrompt({...input,facts:input.facts.slice(0,2)}));
+ assert.ok(told.contract.endsWith(api.ONE_RECORD_RULE));assert.deepEqual(told.facts.map(f=>f.record),[undefined,'fact-2','fact-2']);
+ assert.equal(plain.contract+api.ONE_RECORD_RULE,told.contract);assert.ok(plain.facts.every(f=>!('record' in f)));
+ assert.doesNotMatch(api.ONE_RECORD_RULE,/\b(?:do not|never|must not|cannot)\b/i);
 });
-test('once the writer has written, a record is stated once: its sentence stands, and only passage and uncited points follow',async()=>{
- const question='What were Jo Briskey\'s itemised travel expenses for 2026?',scope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false};
- const run=async coherence=>{
-  const research=Object.assign(async()=>({rounds:1,steps:[],results:[],selected:[],tokens:{input:0,output:0},qualitative:loopAnswer(),points:mixedPoints()}),{writingWallMs:8000,
-   write:async(_input,stats)=>{stats.coherence=coherence;return writtenWith(service,sentence)}});
-  return (await api.runAgentic(question,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},scope)).answer;
- };
- const written=await run({writer_passes:1});
- assert.equal((written.match(/3 May 2025/g)??[]).length,1,written);
- assert.ok(written.includes(sentence)&&written.includes(speech)&&written.includes(context)&&!written.includes(point));
- // A writer that did not write (facts as recorded, or a stopped draft) keeps every point: nothing is lost.
- for(const coherence of [undefined,{writer_passes:1,fallback:true}])assert.ok((await run(coherence)).includes(point));
+const scope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false};
+/** The whole run with a stub writer: what it returns and what it reports about itself (stats.coherence). */
+const answered=async(qualitative,points,written,coherence)=>{
+ const question='What were Jo Briskey\'s itemised travel expenses for 2026?';
+ const research=Object.assign(async()=>({rounds:1,steps:[],results:[],selected:[],tokens:{input:0,output:0},qualitative,points}),{writingWallMs:8000,write:async(_input,stats)=>{stats.coherence=coherence;return written}});
+ return (await api.runAgentic(question,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},scope)).answer;
+};
+test('end to end: a sentence citing the point\'s fact states the record once; passage and uncited points follow',async()=>{
+ const out=await answered(loopAnswer(),mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0','fact-2']),{writer_passes:1});
+ assert.equal((out.match(/3 May 2025/g)??[]).length,1,out);
+ assert.ok(out.includes(sentence)&&out.includes(speech)&&out.includes(context)&&!out.includes(point));
+});
+// Review rv-pr432 P1: one record, two claims. The writer states the term and leaves the party change out.
+test('end to end: a different claim on a shared record survives when the writer leaves it out',async()=>{
+ const loop=()=>{const answer=`- ${expenses}\n- ${twoClaims}\n${change}`;return {answer,answer_decision:'answer',sources:[record(1,expenses,'https://opax.com.au/expenses/jo-briskey'),record(2,twoClaims,url)],citations:{'fact-1/t/body/0':[span(answer,expenses)],'fact-2/t/body/0':[span(answer,twoClaims)],'fact-2':[span(answer,change)]}}};
+ const out=await answered(loop(),pointsOn(twoClaims,change),writtenWith(twoClaims,term),{writer_passes:1});
+ assert.ok(out.includes(term)&&out.includes(change),out);
+});
+// Review rv-pr432 P2: Ask never returns an empty answer.
+test('end to end: an empty write, facts as recorded or a stopped draft keeps every point',async()=>{
+ const empty=await answered(loopAnswer(),mixedPoints(),{answer:'',answer_decision:'answer',sources:[],citations:{}},{writer_passes:1});
+ assert.ok(empty.includes(point)&&empty.includes(speech),JSON.stringify(empty));
+ for(const coherence of [undefined,{writer_passes:1,fallback:true}])assert.ok((await answered(loopAnswer(),mixedPoints(),writtenCiting(service,sentence,['fact-2/t/body/0','fact-2']),coherence)).includes(point));
 });
