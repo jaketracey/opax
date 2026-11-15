@@ -5,7 +5,7 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import React, { act } from 'react';
+import React, { Profiler, act } from 'react';
 import * as Native from 'react-native';
 import {
   Animated,
@@ -1830,6 +1830,24 @@ test.each([
         scrollTo(renderer, 0);
         scrollTo(renderer, 400);
         expect(fades()).toHaveLength(1);
+        // The fade switches once each way. Scrolling on under the bar
+        // commits nothing: no render per scroll frame.
+        let commits = 0;
+        act(() =>
+          renderer.update(
+            <Profiler id="page" onRender={() => commits++}>
+              {page(68)}
+            </Profiler>,
+          ),
+        );
+        // The profiler remounts the page: bring it back under the bar.
+        scrollTo(renderer, 0);
+        scrollTo(renderer, 400);
+        expect(fades()).toHaveLength(1);
+        commits = 0;
+        for (let y = 401; y < 460; y += 3) scrollTo(renderer, y);
+        expect(commits).toBe(0);
+        act(() => renderer.update(page(68)));
         // Back to the top: nothing over the clean ground.
         scrollTo(renderer, -68);
         act(() => renderer.update(page(expanded)));
