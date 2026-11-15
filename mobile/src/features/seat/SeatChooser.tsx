@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
+import { useShortPlaceholder } from '../../design/accessibility';
 import { Button } from '../../design/controls';
 import { copy } from '../../design/copy';
 import { formatCount } from '../../design/format';
@@ -332,8 +333,12 @@ export function SeatChooser({
   // The clearance ends the list above the keyboard where there is a bottom
   // field; there the scroll view must not add its own keyboard inset too.
   const fieldClearsKeyboard = useFieldClearsKeyboard();
+  const short = useShortPlaceholder();
+  const words = vic ? vicCopy : seatCopy;
   const search = useListSearchBar({
-    placeholder: vic ? vicCopy.placeholder : seatCopy.placeholder,
+    // Fewer words at accessibility text sizes, as the Victorian hub's field,
+    // and the full ones whenever a screen reader would read them.
+    placeholder: short ? words.placeholderShort : words.placeholder,
     onChangeText: typed,
     onSearchButtonPress: typed,
     onCancelButtonPress: () => {

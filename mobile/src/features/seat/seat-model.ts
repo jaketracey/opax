@@ -30,6 +30,14 @@ export const isStateCode = (code: string): code is StateCode =>
 export const seatCopy = {
   title: 'Your electorate',
   placeholder: 'Electorate or member’s name',
+  /**
+   * The search field's placeholder at accessibility text sizes. In the
+   * chooser's sheet the field takes the full text size beside a close
+   * button, and holds about eleven letters at AX5 with the keyboard up:
+   * the full line was cut to its first word and a half. The field still
+   * finds a member by name.
+   */
+  placeholderShort: 'Electorate',
   useLocation: 'Use my location',
   footnote: () =>
     `Your location is used once to find your electorate. Your choice is saved on this ${thisDevice()} only.`,
@@ -194,6 +202,12 @@ export function matchIn(
 export const vicCopy = {
   title: 'Victorian electorate',
   placeholder: 'District, region or member’s name',
+  /**
+   * At accessibility text sizes, as `seatCopy.placeholderShort`: the full
+   * line read "District, r…" at AX5 with the keyboard up (build 80 sweep).
+   * The field still finds a region or a member by name.
+   */
+  placeholderShort: 'District',
   districts: 'Legislative Assembly districts',
   regions: 'Legislative Council regions',
   outside:

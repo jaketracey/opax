@@ -2,6 +2,7 @@ import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
 import {
+  AccessibilityInfo,
   Dimensions,
   Keyboard,
   Linking,
@@ -561,6 +562,96 @@ describe('Browse by state', () => {
       'Your electorate couldn’t be saved on this iPhone.',
     );
     expect(closeWelcome).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  });
+});
+
+describe('the search field’s placeholder at accessibility text sizes', () => {
+  // AX5 in the sheet with the keyboard up held about eleven letters: the
+  // Victorian line read "District, r…" (build 80 sweep).
+  test.each([
+    ['the default size', 1, 'vic', 'District, region or member’s name'],
+    [
+      'the largest standard size',
+      1.353,
+      'vic',
+      'District, region or member’s name',
+    ],
+    ['AX1', 1.643, 'vic', 'District'],
+    ['AX5', 3.119, 'vic', 'District'],
+    ['the default size', 1, undefined, 'Electorate or member’s name'],
+    ['AX1', 1.643, undefined, 'Electorate'],
+    ['AX5', 3.119, undefined, 'Electorate'],
+  ] as const)(
+    'at %s (%s) the %s chooser says "%s"',
+    async (_name, fontScale, scope, placeholder) => {
+      setFontScale(fontScale);
+      const r = await render(
+        <SeatChooser presentation="sheet" scope={scope} />,
+      );
+      expect(mockScreen.options.headerSearchBarOptions.placeholder).toBe(
+        placeholder,
+      );
+      // Short enough for the field at AX5, and no em dash.
+      if (fontScale > 1.4) expect(placeholder.length).toBeLessThanOrEqual(10);
+      expect(placeholder).not.toMatch(/—/);
+      await act(async () => r.unmount());
+    },
+  );
+});
+
+// The screen reader, as the system reports it. The app's store listens
+// once for the whole run, so the listener is caught as it subscribes.
+const readerListeners: ((running: boolean) => void)[] = [];
+// A plain replacement, not a Jest spy: it must outlive mock resets.
+const addAccessibilityListener = AccessibilityInfo.addEventListener;
+AccessibilityInfo.addEventListener = ((
+  event: string,
+  handler: (running: boolean) => void,
+) => {
+  if (event === 'screenReaderChanged') readerListeners.push(handler);
+  return addAccessibilityListener.call(
+    AccessibilityInfo,
+    event as never,
+    handler as never,
+  );
+}) as never;
+const setScreenReader = (running: boolean) =>
+  act(() => readerListeners.forEach((listener) => listener(running)));
+
+describe('the search field’s placeholder with a screen reader', () => {
+  // The system field has no label: VoiceOver and TalkBack read the
+  // placeholder, and read it whole even when it is drawn cut off. The short
+  // form is for the eye only.
+  afterEach(() => setScreenReader(false));
+  test.each([
+    ['vic', 'District, region or member’s name', 'District'],
+    [undefined, 'Electorate or member’s name', 'Electorate'],
+  ] as const)(
+    'at AX5 the %s chooser keeps its full words while one is running, and the short one once it stops',
+    async (scope, full, short) => {
+      setFontScale(3.119);
+      const r = await render(
+        <SeatChooser presentation="sheet" scope={scope} />,
+      );
+      const placeholder = () =>
+        mockScreen.options.headerSearchBarOptions.placeholder;
+      expect(readerListeners.length).toBeGreaterThan(0);
+      expect(placeholder()).toBe(short);
+      setScreenReader(true);
+      expect(placeholder()).toBe(full);
+      setScreenReader(false);
+      expect(placeholder()).toBe(short);
+      await act(async () => r.unmount());
+    },
+  );
+  test('at the default size a screen reader changes nothing', async () => {
+    setFontScale(1);
+    const r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+    setScreenReader(true);
+    expect(mockScreen.options.headerSearchBarOptions.placeholder).toBe(
+      'District, region or member’s name',
+    );
     await act(async () => r.unmount());
   });
 });
