@@ -1440,6 +1440,27 @@ export function billFor(bill: BillDetail, index: BillIndex) {
     became: bill.became ?? null,
   };
 }
+/**
+ * The sources a seat's members rest on: the ones its rosters, its service
+ * terms and its present and past members' identities cite. The seat's whole source list also
+ * holds its boundary, election and relation files; an Assembly district with
+ * no member recorded (Badgerys Creek, NSW) named the statewide Legislative
+ * Council's source under "No member is recorded", cited only by the seat's
+ * relation to that chamber. Empty when nothing about members is held.
+ */
+function memberSources(seat: ElectorateDetail): Provenance[] {
+  const cited = new Set([
+    ...seat.rosters.flatMap((roster) => roster.sources),
+    ...seat.terms.flatMap((term) => term.sources),
+    ...seat.representatives.flatMap((member) => member.person.sources),
+    // Past members too: `people` holds only the seat's own members, and an
+    // abolished seat has no present member to cite their identities.
+    ...Object.values(seat.people).flatMap((person) => person.sources),
+  ]);
+  return Object.entries(seat.sources)
+    .filter(([id]) => cited.has(id))
+    .map(([, s]) => ({ label: s.label, url: s.url, licence: s.licence }));
+}
 export function electorateFor(seat: ElectorateDetail) {
   return {
     identity: block(
@@ -1461,11 +1482,7 @@ export function electorateFor(seat: ElectorateDetail) {
     representatives: block(
       seat.representation_status === 'verified' ? seat.representatives : null,
       seat.representation_as_of,
-      Object.values(seat.sources).map((s) => ({
-        label: s.label,
-        url: s.url,
-        licence: s.licence,
-      })),
+      memberSources(seat),
     ),
     elections: seat.elections.map((e) =>
       block(

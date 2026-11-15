@@ -1101,3 +1101,99 @@ test('electorate content uses the shared loader while its headers and source ban
   }
   dimensions.mockRestore();
 });
+
+// Badgerys Creek (NSW Legislative Assembly, 2025 boundary): no roster, no
+// term and no member, and a source list holding the boundary file and the
+// statewide Legislative Council's, cited only by the seat's relation to that
+// chamber. The member block named that Council source under "No member is
+// recorded for this seat yet".
+describe('a seat with no member recorded', () => {
+  const council = 'New South Wales statewide Legislative Council constituency';
+  function badgerysCreek() {
+    const raw = structuredClone(pinned(seat('Grayndler').detail_url)) as {
+      sources: Record<string, { label: string; source_id: string }>;
+      rosters: unknown[];
+      terms: unknown[];
+      representatives: unknown[];
+      people: Record<string, unknown>;
+      representation_status: string;
+      representation_as_of: string | null;
+      relations: { sources: string[] }[];
+    };
+    const [first] = Object.values(raw.sources);
+    raw.sources.source_council = {
+      ...first!,
+      source_id: 'source_council',
+      label: council,
+    };
+    raw.relations = raw.relations.map((relation) => ({
+      ...relation,
+      sources: ['source_council'],
+    }));
+    raw.rosters = [];
+    raw.terms = [];
+    raw.representatives = [];
+    raw.people = {};
+    raw.representation_status = 'unknown';
+    raw.representation_as_of = null;
+    return c.electorateFor(c.decodeElectorate(raw));
+  }
+
+  test('the member block cites roster, term and member sources only', () => {
+    const empty = badgerysCreek();
+    expect(empty.representatives.sources).toEqual([]);
+    // The seat's own list still holds every file, the Council's included.
+    expect(empty.identity.sources.map((s) => s.label)).toContain(council);
+    // A seat with members cites its service records, roster and identities,
+    // and none of its boundary, election or Census files.
+    const labels = (name: string) =>
+      c
+        .electorateFor(c.decodeElectorate(pinned(seat(name).detail_url)))
+        .representatives.sources.map((s) => s.label)
+        .sort();
+    expect(labels('Grayndler')).toEqual([
+      'OPAX existing parliamentary person identifiers',
+      'OPAX federal roster reconciled against APH, 2026-09-04',
+      'OpenAustralia parliamentary service records',
+    ]);
+  });
+
+  test('an abolished seat keeps its past members’ identity source', () => {
+    // Higgins has no present member and no roster: only its past members'
+    // identities cite the identifiers file.
+    const detail = c.decodeElectorate(pinned(seat('Higgins').detail_url));
+    expect(detail.representatives).toEqual([]);
+    expect(
+      c.electorateFor(detail).representatives.sources.map((s) => s.label),
+    ).toContain('OPAX existing parliamentary person identifiers');
+  });
+
+  test('the page says so and draws no source line under it', async () => {
+    const s = seat('Grayndler');
+    mock.electorateFor.mockResolvedValue(result(badgerysCreek()));
+    mockParams.id = s.electorate_id;
+    const r = await render(<Electorate />);
+    const members = r.root.find(
+      (n) => n.props.testID === 'electorate-members' && n.type === View,
+    );
+    expect(
+      members.findAll((n) => n.props.testID === 'electorate-no-member').length,
+    ).toBeGreaterThan(0);
+    expect(
+      members.findAll(
+        (n) => n.props.testID === 'electorate-representatives-source',
+      ),
+    ).toHaveLength(0);
+    const words = members
+      .findAll((n) => n.type === 'Text')
+      .map((n) => [n.props.children].flat(9).join(''))
+      .join(' ');
+    expect(words).toContain('No member is recorded for this seat yet.');
+    expect(words).not.toContain('Legislative Council');
+    // The caveat the hidden source line carried is said in place.
+    expect(words).toContain(
+      'A date with no recorded member does not establish a vacancy.',
+    );
+    await act(async () => r.unmount());
+  });
+});

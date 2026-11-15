@@ -373,6 +373,9 @@ function ElectorateBar({
   );
 }
 
+const NO_MEMBER_NOTE =
+  'A date with no recorded member does not establish a vacancy.';
+
 /** The menu hook cannot offer to save a seat until its identity is known. */
 const pendingSeat = {
   electorate_id: '',
@@ -804,8 +807,11 @@ function MembersSection({
       .map((t) => t.observed_through)
       .sort()
       .at(-1) ?? null;
+  // The members' own sources (rosters, terms, identities), never the seat's
+  // boundary or relation files: see `memberSources`.
   const block = representationBlock({
     ...combinedBlock([view.identity, view.representatives]),
+    sources: view.representatives.sources,
     asAt: observed ?? view.representatives.asAt ?? view.identity.asAt,
   });
   return (
@@ -849,16 +855,29 @@ function MembersSection({
         directory={directory}
         header={!abolished || !!asof}
       />
-      <BlockSource
-        block={block}
-        title="About the members"
-        notes={[
-          'Election winners and present-day representation can differ.',
-          'A date with no recorded member does not establish a vacancy.',
-          'Gaps in the history mean the records do not cover that time.',
-        ]}
-        testID="electorate-representatives-source"
-      />
+      {/* With no member source there is nothing to cite, and no line; the
+          caveat that matters most on such a seat is said in place. */}
+      {block.sources.length ? (
+        <BlockSource
+          block={block}
+          title="About the members"
+          notes={[
+            'Election winners and present-day representation can differ.',
+            NO_MEMBER_NOTE,
+            'Gaps in the history mean the records do not cover that time.',
+          ]}
+          testID="electorate-representatives-source"
+        />
+      ) : (
+        <Text
+          wordSafe
+          variant="footnote"
+          tone="inkSoft"
+          testID="electorate-no-member-note"
+        >
+          {NO_MEMBER_NOTE}
+        </Text>
+      )}
     </View>
   );
 }

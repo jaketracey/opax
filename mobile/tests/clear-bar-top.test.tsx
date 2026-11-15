@@ -598,3 +598,186 @@ test('a page’s own bar colour is backed in that colour under the solid rail ba
     if (version) Object.defineProperty(Platform, 'Version', version);
   }
 });
+
+// Methods, Datasets, Portraits and Photo credits are paper pages in the
+// Account sheet, whose stack paints its screens in the darker grouped
+// ground. Beside the rail UIKit's bar background stops short of the top
+// edge, so that darker container showed as a strip above the paper bar. A
+// sheet cannot take the backing view; Screen gives the container the page's
+// own ground instead.
+test.each([
+  ['trailing', false, colors.paper, true],
+  ['leading', true, colors.sunken, true],
+  // iPhone, iPad and the unfolded Duo: Screen sets what it set before.
+  ['unspecified', false, colors.paper, false],
+] as const)(
+  'beside a %s bar a sheet page (grouped: %s) paints its container in the page ground',
+  (edge, grouped, ground, painted) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 27,
+    });
+    mockBarEdge = edge;
+    const calls: Record<string, unknown>[] = [];
+    const navigation = {
+      addListener: () => () => undefined,
+      setOptions: (value: Record<string, unknown>) => calls.push(value),
+      // The Account stack: a sheet's own stack, not a tab's.
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'root' }, { key: route.key }],
+        routeNames: ['index', 'about', 'methods'],
+      }),
+      isFocused: () => true,
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      act(() => {
+        renderer = TestRenderer.create(
+          <NavigationContext.Provider value={navigation as never}>
+            <NavigationRouteContext.Provider value={route as never}>
+              <DescriptorsContext.Provider
+                value={
+                  {
+                    [route.key]: { options: { headerTransparent: false } },
+                  } as never
+                }
+              >
+                <Screen grouped={grouped} testID="methods-screen">
+                  <View />
+                </Screen>
+              </DescriptorsContext.Provider>
+            </NavigationRouteContext.Provider>
+          </NavigationContext.Provider>,
+        );
+      });
+      const set = Object.assign({}, ...calls) as Record<string, unknown>;
+      // The bar keeps its opaque colour and hairline, and takes no backing.
+      expect(set).toMatchObject(opaqueBar(ground));
+      expect('headerBackground' in set).toBe(false);
+      expect(set.contentStyle).toEqual(
+        painted ? { backgroundColor: ground } : undefined,
+      );
+      expect('contentStyle' in set).toBe(painted);
+    } finally {
+      act(() => renderer.unmount());
+      if (version) Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
+
+// The photo viewer is a full-screen modal in the tab stack. It sets a clear
+// bar of its own with a dark scrim under its white "n of N" title. Beside
+// the rail RouteOptions stripped that scrim as if it were a pushed page's
+// bar colour (b74 review), and the title sat straight on the photo.
+describe('a presented page keeps the bar it sets itself', () => {
+  const scrim = { backgroundColor: 'rgba(0,0,0,0.4)' };
+  const viewer = {
+    title: '1 of 6',
+    headerTransparent: true,
+    headerStyle: scrim,
+  };
+  function set(
+    edge: typeof mockBarEdge,
+    presentation: string | undefined,
+    options: Record<string, unknown>,
+    solidSetting = false,
+  ) {
+    mockBarEdge = edge;
+    const solid = jest
+      .spyOn(accessibility, 'useSolidBar')
+      .mockReturnValue(solidSetting);
+    const calls: Record<string, unknown>[] = [];
+    const navigation = {
+      addListener: () => () => undefined,
+      setOptions: (value: Record<string, unknown>) => calls.push(value),
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'root' }, { key: route.key }],
+        routeNames: ['index', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route as never}>
+            <DescriptorsContext.Provider
+              value={
+                {
+                  [route.key]: {
+                    options: {
+                      headerTransparent: options.headerTransparent ?? false,
+                      presentation,
+                    },
+                  },
+                } as never
+              }
+            >
+              <RouteOptions options={options} />
+            </DescriptorsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    act(() => renderer.unmount());
+    solid.mockRestore();
+    return Object.assign({}, ...calls) as Record<string, unknown>;
+  }
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  beforeEach(() => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 27,
+    });
+  });
+  afterEach(() => {
+    if (version) Object.defineProperty(Platform, 'Version', version);
+  });
+
+  test.each([
+    ['trailing', false],
+    ['leading', false],
+    // Increase Contrast: still its own scrim, and no backing behind it.
+    ['trailing', true],
+    ['unspecified', false],
+  ] as const)(
+    'the photo viewer beside a %s bar (legibility setting: %s) keeps its scrim',
+    (edge, solidSetting) => {
+      const options = set(edge, 'fullScreenModal', viewer, solidSetting);
+      expect(options.headerStyle).toEqual(scrim);
+      expect('headerShadowVisible' in options).toBe(false);
+      expect('headerBackground' in options).toBe(false);
+    },
+  );
+
+  test('a pushed page with the same options loses the colour beside the rail', () => {
+    // The control: the gate is the presentation, not the options.
+    expect(set('trailing', undefined, viewer).headerStyle).toEqual({});
+    expect(set('trailing', 'card', viewer).headerStyle).toEqual({});
+  });
+
+  test.each([
+    // iPhone, iPad and the unfolded Duo, with a legibility setting on.
+    ['unspecified', undefined],
+    // A sheet beside the rail.
+    ['trailing', 'formSheet'],
+  ] as const)(
+    'a paper bar beside a %s bar (presentation %s) takes no backing',
+    (edge, presentation) => {
+      const options = set(edge, presentation, { ...paperBar }, true);
+      expect(options).toEqual({ ...paperBar });
+      expect('headerBackground' in options).toBe(false);
+    },
+  );
+
+  test('a pushed page’s paper bar on the solid rail bar is backed in paper', () => {
+    // The control for the case above.
+    const options = set('trailing', undefined, { ...paperBar }, true);
+    expect(typeof options.headerBackground).toBe('function');
+  });
+});

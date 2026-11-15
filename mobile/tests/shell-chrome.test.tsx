@@ -310,6 +310,16 @@ test.each([
       // above the title band.
       expect(pushed.scrollEdgeEffects.top).toBe(underBar ? 'soft' : 'hard');
       expect(pushed.scrollEdgeEffects.bottom).toBe('soft');
+      // Under the clear bar the stack itself sets no bar colour or hairline:
+      // a page with no Screen and no bar style of its own (Voting record)
+      // kept the hairline, and a paper strip once the band folded.
+      expect(pushed.headerStyle).toEqual(
+        underBar ? {} : { backgroundColor: colors.paper },
+      );
+      expect(pushed.headerLargeStyle).toEqual(
+        underBar ? {} : { backgroundColor: colors.paper },
+      );
+      expect(pushed.headerShadowVisible).toBe(!underBar);
       // Away from a vertical bar the two stacks are the same, option for
       // option: iPhone, the unfolded Duo and iPad are unchanged.
       if (!underBar) expect(pushed).toEqual(sheet);
