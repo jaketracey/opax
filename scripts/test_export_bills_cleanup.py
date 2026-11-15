@@ -477,5 +477,54 @@ class GuardTests(unittest.TestCase):
                 os.chdir(cwd)
 
 
+class DivisionQuestionTests(unittest.TestCase):
+    """A null division `question` made every app build reject the whole bill
+    (15 Nov 2026: 64 bills, among them the Interactive Gambling Amendment
+    (Gambling Reform) Bill 2026). The contract types it as text."""
+
+    def test_a_division_with_no_question_or_name_writes_empty_text(self):
+        self.assertEqual(eb.division_question(None, None), "")
+        self.assertEqual(eb.division_question("  ", "", ()), "")
+
+    def test_a_recorded_question_or_name_is_kept_as_before(self):
+        q = "That the bill be now read a second time."
+        self.assertEqual(eb.division_question(q, "Bills"), eb.clean_division_question(q))
+        self.assertEqual(eb.division_question(None, q), eb.clean_division_question(q))
+
+    def test_the_nightly_reconcile_never_copies_a_null_question_back(self):
+        # --refresh-division-facts copies shared fields from the division page,
+        # which holds None for a placeholder question.
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            (directory / "division-example.json").write_text(json.dumps(
+                {"key": "example", "question": None, "ayes": 1, "noes": 2,
+                 "result": "Agreed", "source_url": "https://example.invalid/d"}))
+            doc = {"divisions": [{"key": "example", "question": "", "ayes": 0, "noes": 0}]}
+            eb.reconcile_divisions([doc], directory)
+            self.assertEqual(doc["divisions"][0]["question"], "")
+            self.assertEqual(doc["divisions"][0]["ayes"], 1)
+
+    def test_reconciling_a_committed_bill_keeps_every_question_text(self):
+        root = HERE.parent / "portal" / "public"
+        doc = json.loads((root / "bills" / "au-federal-r7520.json").read_text(encoding="utf-8"))
+        eb.reconcile_divisions([doc], root / "divisions")
+        self.assertTrue(doc["divisions"])
+        self.assertEqual([d["key"] for d in doc["divisions"] if not isinstance(d["question"], str)], [])
+
+    def test_every_committed_bill_file_has_text_questions(self):
+        bad = []
+        for path in sorted((HERE.parent / "portal" / "public" / "bills").glob("*.json")):
+            if path.name == "index.json":
+                continue
+            doc = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(doc, dict):
+                continue
+            for division in doc.get("divisions") or []:
+                if not isinstance(division.get("question"), str):
+                    bad.append(f"{path.name} {division.get('key')}")
+        self.assertEqual(bad, [])
+
+
 if __name__ == "__main__":
     unittest.main()
+

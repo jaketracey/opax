@@ -254,7 +254,7 @@
    "key": "federal-representatives-4589",
    "date": "2017-03-01",
    "house": "representatives",
-   "question": null,
+   "question": "",
    "stage": "Consideration in detail",
    "ayes": 73,
    "noes": 70,
