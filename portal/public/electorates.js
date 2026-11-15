@@ -1,4 +1,4 @@
-import { vicElectionFooterHTML } from './vic-election.js?v=a2838bb3ae';
+import { vicElectionFooterHTML, vicAssemblyEnded, vicAssemblyExpiredPhrase } from './vic-election.js?v=f9cf80c25b';
 import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
@@ -206,7 +206,10 @@ export function heldSinceLine(detail) {
 export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
   const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
   const plural = Math.max(detail.capacity || 1, selected.members.length) > 1;
-  const title = on ? `Representation on ${date(on)}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
+  // A Victorian Assembly seat whose house has expired has no current member: the roster names who was
+  // the member until then. dissolved_for clears when the new parliament's roster is exported.
+  const ended = !on && vicAssemblyEnded(detail);
+  const title = on ? `Representation on ${date(on)}` : ended ? `Member ${vicAssemblyExpiredPhrase()}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
   // The upper house a seat sits within represents its people too; any other relation is named as such.
   const upperOnly = detail.relations.every((r) => r.kind === 'within_upper_house');
   const boundary = [...detail.boundaries].filter((b) => b.geometry).sort((a, b) => Number(b.geometry_kind === 'official') - Number(a.geometry_kind === 'official') || String(b.applicable_election_date || b.effective_from || b.vintage || '').localeCompare(String(a.applicable_election_date || a.effective_from || a.vintage || '')))[0];
@@ -218,7 +221,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
   const service = sourcesOf(detail, ['terms']);
   const census = sourcesOf(detail, ['demographics']);
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'As at', originals: originalsOf(list), licence: licences(list), ...opts });
-  const heldSince = on ? null : heldSinceLine(detail);
+  const heldSince = on || ended ? null : heldSinceLine(detail);
   return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1>${heldSince ? `<p class="ui-page-meta el-held-since">${esc(heldSince.text)}</p>` : ''}<p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
