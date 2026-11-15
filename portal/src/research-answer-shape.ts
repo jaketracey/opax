@@ -102,6 +102,14 @@ function mergedRestatement(first:string,second:string):string|null {
  * the same source stay with it. The record's opening is said once: a model point restating it goes, unless it is the cited
  * lead, when the record sentence keeps only what it adds. A count or money question keeps its calculated record lead. Every
  * kept line moves with its citations. */
+/** The composed loop answer with the model's own answer leading, and its citations in a map of their own. When the
+ *  lead stays put leadWithModelAnswer hands back its input; the loop clears its citation map before refilling it from
+ *  the result, which emptied that same map: the answer left with no citation on any fact or point, and the model's
+ *  points never reached the writer's fact sheet. */
+export function ledAnswer(answer:string,citations:Record<string,[number,number][]>,points:{answer?:unknown;citations?:unknown},question=''):{answer:string;citations:Record<string,[number,number][]>} {
+  const led=leadWithModelAnswer({answer,citations},points,question)
+  return {answer:led.answer,citations:Object.fromEntries(Object.entries(led.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a,b] as [number,number])]))}
+}
 export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined,question=''):T {
   if(typeof payload.answer!=='string'||typeof points?.answer!=='string')return payload
   const answer=payload.answer,pointText=points.answer
