@@ -526,7 +526,7 @@ device.
 | --- | --- |
 | `$exception_list` | Up to 10 exceptions: `type` (only a name in the fixed set below, such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`; any other becomes `Error`), `value` (the message, only when it is on the fixed list below, as its fixed text; otherwise absent), `module` (a Java exception's package, a dotted name), `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames; absent when no frame may be sent) |
 | Stack frames | Only a frame in one of three shapes, by its `platform`, with that shape's fields and no others (the frame rule below). JavaScript: `platform`, `function`, `filename` (the bundle's name), `lineno`, `colno`, `in_app`, `chunk_id`. Apple: `platform`, `instruction_addr`, `image_addr`, `symbol_addr`, `in_app`, `module`, `package`, `function`. Java: `platform`, `module`, `function`, `filename`, `lineno`, `in_app`, `map_id`, `method_synthetic`. Source context, local variables and any other field are dropped |
-| `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
+| `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file` (the binary's file name alone, never its path; see "Binary names" below), `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
 | `message_omitted` | `true` when an exception had a message that is not on the fixed list and so was left out; otherwise absent |
 | `route_pattern` | JS reports only: the route file's pattern from the fixed list in `route-patterns.ts` (`/bill/[key]`), named by the route boundary, or else taken from the SDK's screen when that is on the list; otherwise absent. Never a path, a parameter's value or a query |
@@ -615,9 +615,8 @@ same texts in the Swift and Kotlin copies.
 - **Apple** (`platform` `apple`, built by posthog-ios from the crash's
   addresses). It must have `instruction_addr`, a hex address. Also kept:
   `image_addr`, `symbol_addr`, `in_app`; `module`, a binary's name (`OPAX`,
-  `libsystem_kernel.dylib`); `package`, only the app's own binary or an
-  embedded framework inside the app's container, or a path under
-  `/System/Library` or `/usr/lib`; and `function`, only a C, C++ or Swift
+  `libsystem_kernel.dylib`); `package`, the binary's file name alone
+  (below), never the path it was loaded from; and `function`, only a C, C++ or Swift
   symbol (one run of letters, digits, `_`, `$`, `.`) or an Objective-C
   method (`-[Class selector:]`). A field that is anything else is left
   off; the frame stays, located by its address.
@@ -635,6 +634,28 @@ rule cannot tell apart is a line of a message written exactly as a frame
 (`at word (address at main.jsbundle:1:7)`, one word, the bundle's name and a
 line); such a line would be sent as that word and those numbers.
 
+**Binary names.** posthog-ios names a binary image by the full path it was
+loaded from, in a frame's `package` and an image's `code_file`. For the
+app's own binary and frameworks that path runs through the install's
+container folder (`/private/var/containers/Bundle/Application/<UUID>/
+OPAX.app/OPAX`), and that UUID is the same on every report from one install:
+a second identifier, which nothing here discloses. So both fields are sent as
+the file's name alone (`OPAX`, `hermes`, `libsystem_kernel.dylib`): the last
+segment of an absolute path, or a bare name, of letters, digits and
+`_ . + -`, at most 128 characters. Anything else (a space, a `?` or `#`, a
+URL, no name after the last `/`) and the field is left off. The folders are
+never sent, whatever they are. The same rule holds an Android image's path,
+which has the install's own folder in it too.
+
+Symbols do not need the path. The release uploads the archive's dSYMs with
+`posthog-cli dsym upload` (`mobile/scripts/upload-crash-symbols.sh`), and
+PostHog files each under its Mach-O UUID. A report's frame is tied to its
+image by `image_addr` (or by its address falling inside the image), and the
+symbol file is looked up by that image's `debug_id`; `code_file` is optional
+and `package` is not read (PostHog `rust/cymbal/src/core/types/langs/
+apple.rs` and `native.rs`: `find_debug_image`, then
+`lookup(team_id, OrChunkId::chunk_id(debug_image.debug_id))`).
+
 **No screen, URL or parameter.** No report carries `$screen_name`,
 `$current_url`, `$pathname` or a route parameter. The SDK's screen property
 is checked only for its shape, which a path with a record's key in it also
@@ -645,10 +666,10 @@ parameters were never on any list.
 
 **Builds already on phones** (1.1.4 and earlier, and 1.1.5 up to this change)
 still send a pattern-rewritten message and `$screen_name`, any type that has
-an identifier's shape, and every frame the SDK read, a message's lines
-included. `docs/ANALYTICS-exception-ingestion-rule.md` is a draft of a
-PostHog ingestion rule that applies the same message list, type set and
-frame rule to their reports. It is a draft
+an identifier's shape, every frame the SDK read (a message's lines
+included), and a binary's full path. `docs/ANALYTICS-exception-ingestion-rule.md` is a draft of a
+PostHog ingestion rule that applies the same message list, type set, frame
+rule and binary names to their reports. It is a draft
 only: nothing has been created or changed in PostHog.
 
 `$exception_steps`, app state, screen sizes, locale, device model, `$set` and

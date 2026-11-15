@@ -104,19 +104,6 @@ export function scrubExceptionMessage(value: unknown): string | undefined {
 type Json = string | number | boolean | Json[] | { [key: string]: Json };
 type Rule = (value: unknown) => Json | undefined;
 
-const text =
-  (max: number): Rule =>
-  (value) =>
-    typeof value === 'string' && value.length > 0 && value.length <= max
-      ? value
-      : undefined;
-/** A file or path: the query string and fragment are removed. */
-const path =
-  (max: number): Rule =>
-  (value) =>
-    typeof value === 'string'
-      ? text(max)(value.replace(/[?#].*$/su, ''))
-      : undefined;
 const integer: Rule = (value) =>
   typeof value === 'number' && Number.isSafeInteger(value) ? value : undefined;
 const flag: Rule = (value) => (typeof value === 'boolean' ? value : undefined);
@@ -299,11 +286,13 @@ export const FRAME_PATTERNS = {
   /** A binary image's name: `OPAX`, `Foundation`, `libsystem_kernel.dylib`. */
   appleModule: String.raw`^[A-Za-z0-9_.+-]{1,128}$`,
   /**
-   * Where a binary image is: the app's own binary or one of its embedded
-   * frameworks, inside the app's container, or a system library. No other
-   * path, so none with a segment the app or its reader could name.
+   * A binary image's file: `OPAX`, `Foundation`, `libhermes.so`, alone or at
+   * the end of the path it was loaded from. Only the file's name (the group)
+   * is sent. The path is not: on a phone the app's own binaries load from
+   * the install's container folder, whose name is the same on every report
+   * from that install. Symbols are matched by `debug_id` and the addresses.
    */
-  applePackage: String.raw`^(?:(?:/private)?/var/containers/Bundle/Application/[0-9A-Fa-f-]{36}/OPAX\.app/(?:OPAX|Frameworks/[A-Za-z0-9_.+-]{1,64}(?:/[A-Za-z0-9_.+-]{1,64})?)|(?:/private/preboot/Cryptexes/OS)?/(?:System/Library|usr/lib)/[A-Za-z0-9_.+/-]{1,300})$`,
+  binaryName: String.raw`^(?:/(?:[^\s/]{1,255}/){0,32})?([A-Za-z0-9_.+-]{1,128})$`,
   /** A Java or Kotlin class name with its package: `a.b.Foo$Bar`. */
   javaModule: String.raw`^(?![\s\S]{257})[A-Za-z_$-][A-Za-z0-9_$-]*(?:\.[A-Za-z_$-][A-Za-z0-9_$-]*)*$`,
   /** A Java or Kotlin method name: `invoke`, `<init>`, `lambda$onCreate$0`. */
@@ -315,11 +304,13 @@ export const FRAME_PATTERNS = {
 } as const;
 const framePattern = (name: keyof typeof FRAME_PATTERNS) =>
   new RegExp(FRAME_PATTERNS[name], 'u');
-/** The app's bundle, sent as its name alone. */
-const bundle: Rule = (value) => {
-  if (typeof value !== 'string') return undefined;
-  return framePattern('jsBundle').exec(value)?.[1];
-};
+/** A file sent as its name alone: the pattern's group, never the path. */
+const named =
+  (name: keyof typeof FRAME_PATTERNS): Rule =>
+  (value) =>
+    typeof value === 'string' ? framePattern(name).exec(value)?.[1] : undefined;
+const bundle = named('jsBundle');
+const binaryName = named('binaryName');
 
 /**
  * Stack frames: where the code is, never what it was working on. A frame is
@@ -352,7 +343,7 @@ const appleFrameFields: Record<string, Rule> = {
   symbol_addr: address,
   in_app: flag,
   module: token(framePattern('appleModule')),
-  package: token(framePattern('applePackage')),
+  package: binaryName,
   function: token(framePattern('appleFunction')),
 };
 const javaFrameFields: Record<string, Rule> = {
@@ -392,7 +383,7 @@ const imageFields: Record<string, Rule> = {
   type: token(/^[a-z]{1,16}$/),
   debug_id: token(/^[0-9a-f-]{1,64}$/i),
   code_id: token(/^[0-9a-f]{1,64}$/i),
-  code_file: path(512),
+  code_file: binaryName,
   image_addr: address,
   image_vmaddr: address,
   image_size: integer,

@@ -2737,7 +2737,7 @@
          "image_addr": "0x0000000104a00000",
          "symbol_addr": "0x0000000104a3c100",
          "module": "Jane Citizen",
-         "package": "/electorate/grayndler",
+         "package": "/electorate/jane citizen",
          "function": "Jane Citizen housing",
          "filename": "/person/jane-citizen",
          "lineno": 7,
@@ -3081,6 +3081,171 @@
       "type": "Error",
       "value": "Network request failed",
       "stacktrace": "Jane Citizen"
+     }
+    ]
+   }
+  },
+  {
+   "name": "binary images",
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$os_name": "iOS",
+    "$exception_level": "fatal",
+    "$exception_list": [
+     {
+      "type": "EXC_BAD_ACCESS",
+      "stacktrace": {
+       "type": "raw",
+       "frames": [
+        {
+         "platform": "apple",
+         "instruction_addr": "0x0000000104a3c1d8",
+         "image_addr": "0x0000000104a00000",
+         "in_app": true,
+         "module": "OPAX",
+         "package": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/OPAX"
+        }
+       ]
+      }
+     }
+    ],
+    "$debug_images": [
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/OPAX"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/Frameworks/hermes.framework/hermes"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/usr/lib/system/libsystem_kernel.dylib"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/private/preboot/Cryptexes/OS/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore"
+     },
+     {
+      "type": "elf",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/data/app/~~Zm9vYmFy==/au.com.opax.app-aGVsbG8=/lib/arm64/libhermes.so",
+      "code_id": "0b8e6a3c1d2e3f40"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "OPAX"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/person/jane citizen"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "Jane Citizen"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/OPAX?q=jane"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/OPAX#jane"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/private/var/containers/Bundle/Application/5F0C3A1E-7B0D-4F4E-9D0B-3F2A6C1D9E77/OPAX.app/"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "/person/jane citizen/OPAX"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "https://x/s?q=jane"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "OPAX\n"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+     },
+     {
+      "type": "macho",
+      "debug_id": "0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b",
+      "image_addr": "0x0000000104a00000",
+      "image_size": 1048576,
+      "arch": "arm64e",
+      "code_file": 7
      }
     ]
    }

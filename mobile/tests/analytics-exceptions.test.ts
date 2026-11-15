@@ -350,7 +350,8 @@ test('the exception payload is rebuilt from fixed lists', () => {
             in_app: true,
             chunk_id: '5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77',
           },
-          nativeFrame,
+          // The binary's name, never the path it was loaded from.
+          { ...nativeFrame, package: 'OPAX' },
         ],
       },
     },
@@ -359,7 +360,7 @@ test('the exception payload is rebuilt from fixed lists', () => {
     {
       type: 'macho',
       debug_id: '0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b',
-      code_file: '/private/var/containers/Bundle/Application/X/OPAX.app/OPAX',
+      code_file: 'OPAX',
       image_addr: '0x0000000104a00000',
       image_size: 1048576,
       arch: 'arm64e',
@@ -795,36 +796,35 @@ describe('a stack frame is sent only as a code location', () => {
             ...address,
             in_app: true,
             module: 'OPAX',
-            package: `${appPath}/OPAX`,
+            package: 'OPAX',
             function: '$s4OPAX11AppDelegateC11applicationSbyF',
           },
           {
             ...address,
             in_app: true,
             module: 'React',
-            package: `${appPath}/Frameworks/React.framework/React`,
+            package: 'React',
             function: '-[RCTBridge(Private) invalidate:with:]',
           },
           {
             ...address,
             in_app: true,
             module: 'hermes',
-            package: `${appPath}/Frameworks/hermes.framework/hermes`,
+            package: 'hermes',
             function: '_ZN8facebook6hermes13HermesRuntime3runEv',
           },
           {
             ...address,
             in_app: false,
             module: 'Foundation',
-            package:
-              '/System/Library/Frameworks/Foundation.framework/Foundation',
+            package: 'Foundation',
             function: '__42-[NSOperation start]_block_invoke.123',
           },
           {
             ...address,
             in_app: false,
             module: 'libsystem_kernel.dylib',
-            package: '/usr/lib/system/libsystem_kernel.dylib',
+            package: 'libsystem_kernel.dylib',
             function: '__pthread_kill',
           },
           // "<redacted>" is not a symbol: the address stands alone.
@@ -832,8 +832,7 @@ describe('a stack frame is sent only as a code location', () => {
             ...address,
             in_app: false,
             module: 'UIKitCore',
-            package:
-              '/private/preboot/Cryptexes/OS/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
+            package: 'UIKitCore',
           },
           {
             platform: 'apple',
@@ -842,11 +841,59 @@ describe('a stack frame is sent only as a code location', () => {
           },
           // The same shape with words in it: the addresses and nothing else.
           { ...address, in_app: true },
-          { ...address, in_app: true },
+          // A path's folders are never sent, whatever they are named.
+          { ...address, in_app: true, package: 'OPAX' },
         ],
       },
     });
-    expect(leafValues(crash)).not.toMatch(/Jane|Citizen|grayndler|housing/i);
+    expect(leafValues(crash)).not.toMatch(
+      /Jane|Citizen|grayndler|housing|containers|5F0C3A1E|\//i,
+    );
+  });
+
+  test('a binary image is named by its file alone: the path it loaded from holds the install’s folder', () => {
+    const scrubbed = scrubEvent(fixtureEvent('binary images'), context)!;
+    const image = {
+      type: 'macho',
+      debug_id: '0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b',
+      image_addr: '0x0000000104a00000',
+      image_size: 1048576,
+      arch: 'arm64e',
+    };
+    expect(scrubbed.properties!.$debug_images).toEqual([
+      { ...image, code_file: 'OPAX' },
+      { ...image, code_file: 'hermes' },
+      { ...image, code_file: 'libsystem_kernel.dylib' },
+      { ...image, code_file: 'UIKitCore' },
+      {
+        ...image,
+        type: 'elf',
+        code_id: '0b8e6a3c1d2e3f40',
+        code_file: 'libhermes.so',
+      },
+      { ...image, code_file: 'OPAX' },
+      // No file, or not a file's name: the image without one. Its debug_id
+      // and addresses are what symbols are matched by.
+      ...Array<typeof image>(11).fill(image),
+    ]);
+    expect(
+      sentExceptions(fixtureEvent('binary images'))[0]!.stacktrace,
+    ).toEqual({
+      type: 'raw',
+      frames: [
+        {
+          platform: 'apple',
+          instruction_addr: '0x0000000104a3c1d8',
+          image_addr: '0x0000000104a00000',
+          in_app: true,
+          module: 'OPAX',
+          package: 'OPAX',
+        },
+      ],
+    });
+    expect(leafValues(scrubbed.properties!.$debug_images)).not.toMatch(
+      /\/|jane|citizen|5F0C3A1E|containers|Zm9v|aGVs|\?|#/i,
+    );
   });
 
   test('a Java frame is its class and method; a file is a name, never a path', () => {

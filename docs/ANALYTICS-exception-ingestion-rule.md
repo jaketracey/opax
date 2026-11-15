@@ -28,11 +28,16 @@ list, and never sends `$screen_name` on a report. Builds already on phones
   "AskFailure: No electorate for Grayndler 2042 at " and whose `filename` is
   "/electorate/grayndler". From the build with the frame rule (see "Frames"),
   such a frame is dropped.
+- A binary's full path, in an Apple frame's `package` and an image's
+  `code_file`. For the app's own binary it runs through the install's
+  container folder, whose UUID is the same on every report from that
+  install. From the build with binary names (see "Binary names"), only the
+  file's name is sent.
 - Never `$current_url`, `$pathname` or route parameters: they are on no list
   in any build. The rule drops them anyway, so it does not depend on that.
 
-This rule applies the same message list, type set and frame rule to those
-reports as they arrive. An audit of the app's stored reports from 11 Nov 2026
+This rule applies the same message list, type set, frame rule and binary
+names to those reports as they arrive. An audit of the app's stored reports from 11 Nov 2026
 on (5 events, 190 frames) found no frame with a space or a colon in its name
 and none with a route or a URL for its source, so no stored leak is known;
 the rule is for the ones that could arrive.
@@ -149,7 +154,7 @@ let jsFunction := '^([?]|<anonymous>|[?]?[A-Za-z_$][A-Za-z0-9_$]*([.][A-Za-z_$][
 let jsBundle := '^([A-Za-z0-9_.:/-]{0,400}/)?(main[.]jsbundle|index[.]android[.]bundle)$'
 let appleFunction := '^([A-Za-z_$][A-Za-z0-9_$.]*|(__[0-9]+)?[-+]\\[[A-Za-z_][A-Za-z0-9_]*([(][A-Za-z0-9_]+[)])? [A-Za-z_][A-Za-z0-9_:]*\\](_block_invoke[A-Za-z0-9_.]*)?)$'
 let appleModule := '^[A-Za-z0-9_.+-]{1,128}$'
-let applePackage := '^((/private)?/var/containers/Bundle/Application/[0-9A-Fa-f-]{36}/OPAX[.]app/(OPAX|Frameworks/[A-Za-z0-9_.+-]{1,64}(/[A-Za-z0-9_.+-]{1,64})?)|(/private/preboot/Cryptexes/OS)?/(System/Library|usr/lib)/[A-Za-z0-9_.+/-]{1,300})$'
+let binaryPath := '^(/([^\\s/]{1,255}/){0,32})?[A-Za-z0-9_.+-]{1,128}$'
 let javaModule := '^[A-Za-z_$-][A-Za-z0-9_$-]*([.][A-Za-z_$-][A-Za-z0-9_$-]*)*$'
 let javaFunction := '^(<init>|<clinit>|[A-Za-z_$][A-Za-z0-9_$-]{0,127})$'
 let javaFilename := '^[A-Za-z0-9_$.-]{1,128}$'
@@ -159,6 +164,15 @@ let chunkId := '^[0-9a-fA-F-]{1,64}$'
 
 fun isText(value, pattern, max) {
     return typeof(value) = 'string' and length(value) <= max and match(value, pattern)
+}
+// A binary's file name alone: the last segment of its path, or null. The
+// folders (on a phone, the install's own container folder) are not kept.
+fun binaryName(value) {
+    if (not isText(value, binaryPath, 8500)) {
+        return null
+    }
+    let parts := splitByString('/', value)
+    return parts[length(parts)]
 }
 fun isWhole(value) {
     return typeof(value) = 'integer' or (typeof(value) = 'float' and value = floor(value))
@@ -197,7 +211,7 @@ fun cleanFrame(frame) {
         if (isText(frame.symbol_addr, address, 18)) { clean.symbol_addr := frame.symbol_addr }
         if (typeof(frame.in_app) = 'boolean') { clean.in_app := frame.in_app }
         if (isText(frame.module, appleModule, 128)) { clean.module := frame.module }
-        if (isText(frame.package, applePackage, 512)) { clean.package := frame.package }
+        if (binaryName(frame.package) != null) { clean.package := binaryName(frame.package) }
         if (isText(frame.function, appleFunction, 256)) { clean.function := frame.function }
         return clean
     }
@@ -282,6 +296,20 @@ if (typeof(list) = 'array') {
         cleaned := arrayPushBack(cleaned, item)
     }
     properties.$exception_list := cleaned
+}
+
+// Binary images: `code_file` is the binary's file name alone, or nothing.
+let images := properties.$debug_images
+if (typeof(images) = 'array') {
+    let named := []
+    for (let image in images) {
+        let item := image
+        if (typeof(item) = 'object' and item.code_file != null) {
+            item.code_file := binaryName(item.code_file)
+        }
+        named := arrayPushBack(named, item)
+    }
+    properties.$debug_images := named
 }
 
 // Rebuild the properties without the screen and URL properties, and without
@@ -533,7 +561,13 @@ These are the things this draft could not confirm without touching PostHog.
    `'\\['` in a Hog string reaches RE2 as `\[` (the Objective-C method
    pattern). Then confirm in the tester that a frame whose `function` is
    `AskFailure: No electorate for Grayndler 2042 at ` is dropped and that an
-   Apple and a Java frame from a real crash come through whole.
+   Apple and a Java frame from a real crash come through whole. For binary
+   names: `splitByString` and a 1-based `parts[length(parts)]` giving the
+   last segment; `'\\s'` reaching RE2 as `\s`; and that
+   `/private/var/containers/Bundle/Application/<UUID>/OPAX.app/OPAX` comes
+   out as `OPAX` in both `package` and `code_file`, with a crash from that
+   build still symbolicated (PostHog matches a dSYM by the image's
+   `debug_id`, not its path).
 3. **Grouping.** Emptying a message changes how existing issues group. Expect
    issues from older builds to regroup by type and stack. Sending the
    bundle's name for its path, and dropping `(native)` frames and frames that

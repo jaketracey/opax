@@ -1,9 +1,10 @@
 --- a/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
 +++ b/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
-@@ -29,6 +29,422 @@
+@@ -28,7 +28,420 @@
+ }
  
  private let fatalCaptureErrorCode = "PosthogReactNativePluginFatalCaptureError"
- 
++
 +// OPAX privacy patch (mobile/patches/privacy-patches.json). posthog-ios builds and sends native
 +// crash reports itself, and adds its own device context to the native copy of a fatal JS error,
 +// so neither passes through the app's JS `scrubEvent`. This last `beforeSend` step applies the
@@ -67,14 +68,13 @@
 +}
 +
 +private enum OpaxField {
-+    case text(Int)
-+    case path(Int)
 +    case integer
 +    case flag
 +    case token(NSRegularExpression?)
 +    case oneOf(Set<String>)
 +    case build
 +    case bundle
++    case binaryName
 +}
 +
 +// The whole string must match: NSRegularExpression's `$` also matches before a final newline.
@@ -97,16 +97,12 @@
 +// The app's JavaScript bundle, alone or at the end of the path Hermes prints it with. Only the
 +// bundle's name (the group) is sent, never the path.
 +private let opaxBundleName = opaxRegex(#"^(?:[A-Za-z0-9_.:/-]{0,400}/)?(main\.jsbundle|index\.android\.bundle)$"#)
++// A binary image: its file name alone (the group), never the path it was loaded from, which
++// on a phone holds the install's own container folder. Not a file name: nothing.
++private let opaxBinaryName = opaxRegex(#"^(?:/(?:[^\s/]{1,255}/){0,32})?([A-Za-z0-9_.+-]{1,128})$"#)
 +
 +private func opaxKeep(_ field: OpaxField, _ value: Any) -> Any? {
 +    switch field {
-+    case let .text(max):
-+        guard let text = value as? String, !text.isEmpty, text.utf16.count <= max else { return nil }
-+        return text
-+    case let .path(max):
-+        guard let text = value as? String else { return nil }
-+        let end = text.firstIndex { $0 == "?" || $0 == "#" } ?? text.endIndex
-+        return opaxKeep(.text(max), String(text[..<end]))
 +    case .integer:
 +        return opaxWholeNumber(value).map { NSNumber(value: $0) }
 +    case .flag:
@@ -122,8 +118,10 @@
 +        let digits = opaxWholeNumber(value).map { String($0) } ?? value as? String
 +        guard let digits, opaxMatches(opaxBuildDigits, digits) else { return nil }
 +        return digits
-+    case .bundle:
-+        guard let text = value as? String, let regex = opaxBundleName else { return nil }
++    case .bundle, .binaryName:
++        let named: NSRegularExpression?
++        if case .bundle = field { named = opaxBundleName } else { named = opaxBinaryName }
++        guard let text = value as? String, let regex = named else { return nil }
 +        let whole = NSRange(text.startIndex..., in: text)
 +        guard let match = regex.firstMatch(in: text, options: [.anchored], range: whole), match.range == whole,
 +              let name = Range(match.range(at: 1), in: text) else { return nil }
@@ -167,7 +165,7 @@
 +    "symbol_addr": opaxAddress,
 +    "in_app": .flag,
 +    "module": .token(opaxRegex(#"^[A-Za-z0-9_.+-]{1,128}$"#)),
-+    "package": .token(opaxRegex(#"^(?:(?:/private)?/var/containers/Bundle/Application/[0-9A-Fa-f-]{36}/OPAX\.app/(?:OPAX|Frameworks/[A-Za-z0-9_.+-]{1,64}(?:/[A-Za-z0-9_.+-]{1,64})?)|(?:/private/preboot/Cryptexes/OS)?/(?:System/Library|usr/lib)/[A-Za-z0-9_.+/-]{1,300})$"#)),
++    "package": .binaryName,
 +    "function": .token(opaxRegex(#"^(?![\s\S]{257})(?:[A-Za-z_$][A-Za-z0-9_$.]*|(?:__[0-9]+)?[-+]\[[A-Za-z_][A-Za-z0-9_]*(?:\([A-Za-z0-9_]+\))? [A-Za-z_][A-Za-z0-9_:]*\](?:_block_invoke[A-Za-z0-9_.]*)?)$"#)),
 +]
 +private let opaxJavaModule = OpaxField.token(opaxRegex(#"^(?![\s\S]{257})[A-Za-z_$-][A-Za-z0-9_$-]*(?:\.[A-Za-z_$-][A-Za-z0-9_$-]*)*$"#))
@@ -206,7 +204,7 @@
 +    "type": .token(opaxRegex(#"^[a-z]{1,16}$"#)),
 +    "debug_id": .token(opaxRegex(#"^[0-9a-f-]{1,64}$"#, .caseInsensitive)),
 +    "code_id": .token(opaxRegex(#"^[0-9a-f]{1,64}$"#, .caseInsensitive)),
-+    "code_file": .path(512),
++    "code_file": .binaryName,
 +    "image_addr": opaxAddress,
 +    "image_vmaddr": opaxAddress,
 +    "image_size": .integer,
@@ -358,7 +356,7 @@
 +    "app_version": opaxVersion,
 +    "app_build": .build,
 +]
-+
+ 
 +private func opaxScrubException(_ value: Any) -> [String: Any]? {
 +    guard let exception = value as? [String: Any] else { return nil }
 +    let type = exception["type"] as? String ?? ""
@@ -423,7 +421,7 @@
  /// Holds the JS-approved properties for the thread on which the JS layer's own fatal capture
  /// is running, so `beforeSend` can tell that capture apart from a native re-report of the same
  /// crash — and can put back the values native's own enrichment would otherwise win.
-@@ -368,7 +784,8 @@
+@@ -368,7 +781,8 @@
                  hedgeLog("Failed to record the fatal JS marker state: \(error.localizedDescription)")
              }
          }
@@ -433,7 +431,7 @@
              // The JS layer's own fatal capture is the event we want; only native re-reports
              // of a crash JS already captured are duplicates. Matching the event name as well
              // as the thread-local keeps anything else posthog-ios emits on this thread during
-@@ -394,7 +811,7 @@
+@@ -394,7 +808,7 @@
                  event.distinctId = distinctId
              }
              return event
@@ -442,7 +440,7 @@
  
          // Surveys and session replay are iOS-only in posthog-ios, so the APIs below
          // don't exist on macOS. macOS gets error tracking only.
-@@ -457,6 +874,14 @@
+@@ -457,6 +871,14 @@
          // JS owns flags; it tells us when the native preload would be a duplicate. posthog-ios
          // has no remoteConfig switch to mirror — it deprecated the option and always loads.
          config.preloadFeatureFlags = sdkOptions["preloadFeatureFlags"] as? Bool ?? true
@@ -482,7 +480,7 @@
  
                // Always apply the session replay configuration so that recording started later
                // (e.g. startRecording or a linked feature flag) uses the right mode and masking;
-@@ -917,5 +926,417 @@
+@@ -917,5 +926,416 @@
    when (getString(map, "screenshotColorMode", "")) {
      "ARGB_8888" -> config.screenshotColorMode = PostHogScreenshotColorMode.ARGB_8888
      "RGB_565" -> config.screenshotColorMode = PostHogScreenshotColorMode.RGB_565
@@ -555,10 +553,6 @@
 +}
 +
 +private sealed class OpaxField {
-+  data class Text(val max: Int) : OpaxField()
-+
-+  data class Path(val max: Int) : OpaxField()
-+
 +  object Whole : OpaxField()
 +
 +  object Flag : OpaxField()
@@ -570,6 +564,8 @@
 +  object Build : OpaxField()
 +
 +  object Bundle : OpaxField()
++
++  object BinaryName : OpaxField()
 +}
 +
 +// A whole number within JavaScript's safe integer range, as `Number.isSafeInteger`.
@@ -589,22 +585,23 @@
 +// The app's JavaScript bundle, alone or at the end of the path Hermes prints it with. Only the
 +// bundle's name (the group) is sent, never the path.
 +private val opaxBundleName = opaxRegex("""^(?:[A-Za-z0-9_.:/-]{0,400}/)?(main\.jsbundle|index\.android\.bundle)$""")
++// A binary image: its file name alone (the group), never the path it was loaded from, which
++// on a phone holds the install's own container folder. Not a file name: nothing.
++private val opaxBinaryName = opaxRegex("""^(?:/(?:[^\s/]{1,255}/){0,32})?([A-Za-z0-9_.+-]{1,128})$""")
 +
 +private fun opaxKeep(
 +  field: OpaxField,
 +  value: Any?,
 +): Any? =
 +  when (field) {
-+    is OpaxField.Text -> (value as? String)?.takeIf { it.isNotEmpty() && it.length <= field.max }
-+    is OpaxField.Path ->
-+      (value as? String)?.let { opaxKeep(OpaxField.Text(field.max), it.substringBefore('?').substringBefore('#')) }
 +    OpaxField.Whole -> opaxWholeNumber(value)
 +    OpaxField.Flag -> value as? Boolean
 +    is OpaxField.Token -> (value as? String)?.takeIf { field.regex.matches(it) }
 +    is OpaxField.OneOf -> (value as? String)?.takeIf { it in field.allowed }
 +    OpaxField.Build -> (opaxWholeNumber(value)?.toString() ?: value as? String)?.takeIf { opaxBuildDigits.matches(it) }
 +    OpaxField.Bundle -> (value as? String)?.let { opaxBundleName.matchEntire(it)?.groupValues?.get(1) }
-   }
++    OpaxField.BinaryName -> (value as? String)?.let { opaxBinaryName.matchEntire(it)?.groupValues?.get(1) }
++  }
 +
 +private fun opaxPick(
 +  fields: Map<String, OpaxField>,
@@ -616,7 +613,7 @@
 +    clean[key] = opaxKeep(field, source[key]) ?: continue
 +  }
 +  return clean
- }
++}
 +
 +private val opaxAddress = OpaxField.Token(opaxRegex("""^0x[0-9a-f]{1,16}$""", ignoreCase = true))
 +// Stack frames, as exceptions.ts: a frame is kept only as one of three shapes, chosen by its
@@ -645,7 +642,7 @@
 +    "symbol_addr" to opaxAddress,
 +    "in_app" to OpaxField.Flag,
 +    "module" to OpaxField.Token(opaxRegex("""^[A-Za-z0-9_.+-]{1,128}$""")),
-+    "package" to OpaxField.Token(opaxRegex("""^(?:(?:/private)?/var/containers/Bundle/Application/[0-9A-Fa-f-]{36}/OPAX\.app/(?:OPAX|Frameworks/[A-Za-z0-9_.+-]{1,64}(?:/[A-Za-z0-9_.+-]{1,64})?)|(?:/private/preboot/Cryptexes/OS)?/(?:System/Library|usr/lib)/[A-Za-z0-9_.+/-]{1,300})$""")),
++    "package" to OpaxField.BinaryName,
 +    "function" to OpaxField.Token(opaxRegex("""^(?![\s\S]{257})(?:[A-Za-z_$][A-Za-z0-9_$.]*|(?:__[0-9]+)?[-+]\[[A-Za-z_][A-Za-z0-9_]*(?:\([A-Za-z0-9_]+\))? [A-Za-z_][A-Za-z0-9_:]*\](?:_block_invoke[A-Za-z0-9_.]*)?)$""")),
 +  )
 +private val opaxJavaModule = OpaxField.Token(opaxRegex("""^(?![\s\S]{257})[A-Za-z_$-][A-Za-z0-9_$-]*(?:\.[A-Za-z_$-][A-Za-z0-9_$-]*)*$"""))
@@ -691,7 +688,7 @@
 +    "type" to OpaxField.Token(opaxRegex("""^[a-z]{1,16}$""")),
 +    "debug_id" to OpaxField.Token(opaxRegex("""^[0-9a-f-]{1,64}$""", ignoreCase = true)),
 +    "code_id" to OpaxField.Token(opaxRegex("""^[0-9a-f]{1,64}$""", ignoreCase = true)),
-+    "code_file" to OpaxField.Path(512),
++    "code_file" to OpaxField.BinaryName,
 +    "image_addr" to opaxAddress,
 +    "image_vmaddr" to opaxAddress,
 +    "image_size" to OpaxField.Whole,
@@ -864,9 +861,9 @@
 +    if (frames.isNotEmpty()) {
 +      clean["stacktrace"] = mapOf("type" to if (stack["type"] == "resolved") "resolved" else "raw", "frames" to frames)
 +    }
-+  }
+   }
 +  return clean
-+}
+ }
 +
 +// `set` is the deprecated legacy `$set` field; it is cleared, never read.
 +@Suppress("DEPRECATION")

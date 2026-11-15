@@ -128,17 +128,17 @@
     "package": "@posthog/react-native-plugin",
     "version": "2.13.0",
     "patch": "@posthog+react-native-plugin+2.13.0.patch",
-    "sha256": "45895faa6f56d44e4ee6bd12fc8e5d6b944f43fc79190beb48d861af03df1f1f",
+    "sha256": "7a50277eeaf92e675d4adc67cb43c8ca8a451da13c4e55306d6041f9f902f69e",
     "files": [
       {
         "path": "ios/PosthogReactNativePlugin.swift",
         "before": "6608ddee0af43d9ef3c112d5f259e822df77755664bf71609619958a27ce5671",
-        "after": "d5c6ab63ba48b7a534bf622454eb4b2116327cf88b2edfab70c60fae6ffbea9e"
+        "after": "9515808dc1fc8749d95551dc8478419df0854595157cf0e6d264d1f73ce4a443"
       },
       {
         "path": "android/src/main/java/com/posthogreactnativeplugin/PosthogReactNativePluginModule.kt",
         "before": "02fff3805fa1cc77ed7a7812eefa1b8ff5b385eddad35eaae84b05074b695986",
-        "after": "f8f97b2989385c6643ea66fe4f6e1bc8b3ead06b386d0248a07db20b6689fe00"
+        "after": "fb065ef6a16dc5e01dca859b37a811b0b9e7e00f88c9acbd08136021d7ac4579"
       },
       {
         "path": "posthog-react-native-plugin.podspec",
