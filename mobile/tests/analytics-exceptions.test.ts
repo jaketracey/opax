@@ -580,7 +580,7 @@ describe('an error message within the route report’s limits', () => {
       expect(scrubExceptionMessage(message)).toBe(message);
   });
 
-  test('the route report’s own message goes through this same scrubber', () => {
+  test('the route report’s own message is held to a fixed list on top of this: free text is left out, not rewritten', () => {
     const scrubbed = scrubEvent(
       {
         event: '$exception',
@@ -599,12 +599,9 @@ describe('an error message within the route report’s limits', () => {
     )!;
     expect(scrubbed.properties).toMatchObject({
       route_pattern: '/bill/[key]',
-      $exception_list: [
-        {
-          type: 'Error',
-          value: 'No seat found for postcode #, asked by [email]',
-        },
-      ],
+      message_omitted: true,
+      $exception_list: [{ type: 'Error' }],
     });
+    expect(JSON.stringify(scrubbed)).not.toMatch(/seat|postcode|asked|email/);
   });
 });

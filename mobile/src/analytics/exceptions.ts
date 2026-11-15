@@ -17,9 +17,10 @@ import { routeErrorPattern } from './route-patterns';
  * The longest message that leaves the phone. The route error report's own
  * limit is 300 characters, with no email address and no run of four or
  * more digits; this cut and the rules below already hold every exception
- * message to that, more tightly. The Swift and Kotlin copies in the plugin
- * patch use the same number (`opaxMessageMaxLength`), so a change here is
- * a change there.
+ * message to that, more tightly, and the route report itself sends only a
+ * message from a fixed list (`scrubExceptionProperties`). The Swift and
+ * Kotlin copies in the plugin patch use the same number
+ * (`opaxMessageMaxLength`), so a change here is a change there.
  */
 export const EXCEPTION_MESSAGE_MAX_LENGTH = 120;
 // Longer input is cut before the rules run; a quote the cut opens is then
@@ -210,11 +211,17 @@ function list(value: unknown, max: number) {
   return Array.isArray(value) ? value.slice(0, max) : [];
 }
 
-function scrubOne(value: unknown): Record<string, Json> | null {
+/** How one exception's message is kept: the text to send, or nothing. */
+type MessageRule = (value: unknown) => string | undefined;
+
+function scrubOne(
+  value: unknown,
+  keepMessage: MessageRule,
+): Record<string, Json> | null {
   const exception = record(value);
   if (!exception) return null;
   const clean: Record<string, Json> = { type: exceptionType(exception.type) };
-  const message = scrubExceptionMessage(exception.value);
+  const message = keepMessage(exception.value);
   if (message) clean.value = message;
   const module = text(256)(exception.module);
   if (module) clean.module = module;
@@ -239,15 +246,37 @@ const exceptionLevels = ['fatal', 'error', 'warning', 'log', 'info', 'debug'];
 /**
  * The `$exception` properties that may leave the phone, or null when the
  * event carries no exception at all.
+ *
+ * A route boundary's report (one that names a `route_pattern`) is held to
+ * a stricter rule for its message. Rewriting free text by pattern cannot
+ * make it safe: "No electorate for Grayndler" has no quote, address or
+ * long number in it. So that report sends a message only when
+ * `knownMessage` recognises it as one of a fixed list of content-free
+ * messages, and then sends the fixed text, never the caller's own. Any
+ * other message is left out, and `message_omitted: true` says one was; the
+ * error's name and stack frames still locate it. With no `knownMessage`
+ * given, every message of such a report is left out.
  */
 export function scrubExceptionProperties(
   raw: Record<string, unknown>,
+  knownMessage: MessageRule = () => undefined,
 ): Record<string, Json> | null {
+  const routeReport = Object.hasOwn(raw, 'route_pattern');
+  let omitted = false;
+  const keepMessage: MessageRule = routeReport
+    ? (value) => {
+        const known = knownMessage(value);
+        if (known === undefined && typeof value === 'string' && value.trim())
+          omitted = true;
+        return known;
+      }
+    : scrubExceptionMessage;
   const exceptions = list(raw.$exception_list, MAX_EXCEPTIONS)
-    .map(scrubOne)
+    .map((exception) => scrubOne(exception, keepMessage))
     .filter((exception) => exception !== null);
   if (!exceptions.length) return null;
   const clean: Record<string, Json> = { $exception_list: exceptions };
+  if (omitted) clean.message_omitted = true;
   const level = raw.$exception_level;
   if (typeof level === 'string' && exceptionLevels.includes(level))
     clean.$exception_level = level;

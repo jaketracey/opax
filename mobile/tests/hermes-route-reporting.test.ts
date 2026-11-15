@@ -5,8 +5,11 @@ import TestRenderer from 'react-test-renderer';
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import Constants from 'expo-constants';
 import { reportRouteError, resetRouteErrorReports } from '../src/analytics';
-import { cleanEvent, scrubEvent } from '../src/analytics/events';
-import { scrubExceptionMessage } from '../src/analytics/exceptions';
+import {
+  cleanEvent,
+  knownErrorMessage,
+  scrubEvent,
+} from '../src/analytics/events';
 import { RouteErrorBoundary } from '../src/navigation/RouteErrorBoundary';
 
 // Mirrors DEVELOPMENT_ROUTE in scripts/verify-ios-release.py.
@@ -262,7 +265,7 @@ describe('the route error report ($exception), within its limits', () => {
       expect(sent(segments)).toEqual([{ route_pattern: '/other' }]);
   });
 
-  test('the payload carries only the name, the scrubbed message, the stack, the route, the build and the device class', () => {
+  test('the payload carries only the name, the stack, the route, the build and the device class; a message that is not a known one is left out and said to be', () => {
     const message = 'Cannot read "housing in 3000" of /bill/r7520?tab=votes';
     const scrubbed = scrubEvent(
       {
@@ -295,7 +298,20 @@ describe('the route error report ($exception), within its limits', () => {
           $exception_steps: [{ message: 'Asked about housing' }],
           route_pattern: '/bill/[key]',
           $screen_name: '/bill/r7520',
+          // What the SDK puts on every event it sends.
           $device_type: 'Mobile',
+          $session_id: '0195f0c3-7b0d-7f4e-9d0b-3f2a6c1d9e77',
+          $lib: 'posthog-react-native',
+          $lib_version: '4.10.2',
+          $os_name: 'iOS',
+          $os_version: '26.3',
+          $app_name: 'OPAX',
+          $app_namespace: 'au.com.opax.app',
+          $app_version: '1.1.0',
+          $app_build: '46',
+          $device_name: 'Jake’s iPhone',
+          $locale: 'en-AU',
+          $timezone: 'Australia/Melbourne',
           params: { key: 'r7520' },
           pathname: '/bill/r7520',
           query: 'tab=votes',
@@ -310,24 +326,43 @@ describe('the route error report ($exception), within its limits', () => {
     const properties = scrubbed.properties as Record<string, unknown>;
     expect(Object.keys(properties).sort()).toEqual(
       [
+        '$app_build',
+        '$app_name',
+        '$app_namespace',
+        '$app_version',
         '$device_type',
         '$exception_level',
         '$exception_list',
         '$geoip_disable',
         '$is_identified',
+        '$lib',
+        '$lib_version',
+        '$os_name',
         '$process_person_profile',
+        '$session_id',
         'app',
         'app_build',
         'app_version',
         'environment',
         'foldable',
         'layout',
+        'message_omitted',
         'platform',
         'route_pattern',
       ].sort(),
     );
     expect(properties).toMatchObject({
       route_pattern: '/bill/[key]',
+      // The message interpolated what the reader was looking at: not sent.
+      message_omitted: true,
+      $session_id: '0195f0c3-7b0d-7f4e-9d0b-3f2a6c1d9e77',
+      $lib: 'posthog-react-native',
+      $lib_version: '4.10.2',
+      $os_name: 'iOS',
+      $app_name: 'OPAX',
+      $app_namespace: 'au.com.opax.app',
+      $app_version: '1.1.0',
+      $app_build: '46',
       $device_type: 'Mobile',
       layout: 'compact',
       foldable: false,
@@ -338,7 +373,6 @@ describe('the route error report ($exception), within its limits', () => {
     expect(properties.$exception_list).toEqual([
       {
         type: 'TypeError',
-        value: scrubExceptionMessage(message),
         mechanism: { type: 'generic', handled: true },
         stacktrace: {
           type: 'raw',
@@ -358,8 +392,176 @@ describe('the route error report ($exception), within its limits', () => {
     // No search term, postcode, electorate, parameter or query, anywhere:
     // not in the message, the route or any other field.
     expect(JSON.stringify(scrubbed)).not.toMatch(
-      /housing|3000|Grayndler|r7520|tab=votes|platform=ios/,
+      /housing|3000|Grayndler|r7520|tab=votes|platform=ios|Jake|Melbourne|26\.3|Cannot read/,
     );
+  });
+
+  /** The report's message and omission flag for one thrown message. */
+  const sentFor = (message: unknown) => {
+    const scrubbed = scrubEvent(
+      {
+        event: '$exception',
+        properties: {
+          $exception_list: [{ type: 'Error', value: message }],
+          route_pattern: '/bill/[key]',
+        },
+      },
+      context,
+    )!;
+    const properties = scrubbed.properties as {
+      $exception_list: { value?: string }[];
+      message_omitted?: boolean;
+    };
+    return {
+      message: properties.$exception_list[0]!.value,
+      omitted: properties.message_omitted === true,
+      text: JSON.stringify(scrubbed),
+    };
+  };
+
+  // Rewriting free text by pattern cannot make it safe: these four came
+  // through the pattern scrubber with the reader's own words in them.
+  test.each([
+    [
+      'Invalid URL: housing affordability in 3000',
+      /housing|affordability|3000/,
+    ],
+    ['No electorate for Grayndler', /Grayndler|electorate/],
+    [
+      'Unknown member Anthony Albanese (postcode 2042, 800)',
+      /Anthony|Albanese|2042|800|postcode/,
+    ],
+    ['person/tony-abbott is not a record route', /tony|abbott|person\//],
+  ])('free text is never sent: %s', (message, words) => {
+    const sent = sentFor(message);
+    expect(sent.message).toBeUndefined();
+    expect(sent.omitted).toBe(true);
+    expect(sent.text).not.toMatch(words);
+    expect(knownErrorMessage(message)).toBeUndefined();
+  });
+
+  test.each([
+    'Network request failed',
+    'Failed to fetch',
+    'The request timed out',
+    'Maximum call stack size exceeded',
+    'Rendered more hooks than during the previous render.',
+    'Rendered fewer hooks than expected.',
+    'Missing OPAX build configuration',
+  ])('an exact, content-free diagnostic is sent as it is: %s', (message) => {
+    expect(sentFor(message)).toMatchObject({ message, omitted: false });
+  });
+
+  test.each([
+    [
+      'Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate.',
+      'Maximum update depth exceeded',
+    ],
+    [
+      'Rendered more hooks than during the previous render',
+      'Rendered more hooks than during the previous render',
+    ],
+    [
+      'Rendered fewer hooks than expected. This may be caused by an accidental early return statement.',
+      'Rendered fewer hooks than expected',
+    ],
+    [
+      'Too many re-renders. React limits the number of renders to prevent an infinite loop.',
+      'Too many re-renders',
+    ],
+    [
+      'Invalid hook call. Hooks can only be called inside of the body of a function component.',
+      'Invalid hook call',
+    ],
+    [
+      'Text strings must be rendered within a <Text> component.',
+      'Text strings must be rendered within a <Text> component',
+    ],
+  ])(
+    'a fixed framework message is kept, as its fixed text: %s',
+    (message, fixed) => {
+      expect(sentFor(message)).toMatchObject({
+        message: fixed,
+        omitted: false,
+      });
+    },
+  );
+
+  // The fixed opening is sent; what the message interpolates after it (an
+  // object's keys, a property's name) never is.
+  test.each([
+    [
+      'Objects are not valid as a React child (found: object with keys {postcode, electorate, Grayndler}). If you meant to render a collection of children, use an array instead.',
+      'Objects are not valid as a React child',
+      /postcode|electorate|Grayndler|found|keys/,
+    ],
+    [
+      "Cannot read properties of undefined (reading 'housingAffordability3000')",
+      'Cannot read properties of undefined',
+      /housing|3000|reading/,
+    ],
+    [
+      "Cannot read property 'grayndlerMember' of undefined",
+      'Cannot read properties of undefined',
+      /grayndler|Member/,
+    ],
+    [
+      "Cannot read properties of null (reading 'tonyAbbott')",
+      'Cannot read properties of null',
+      /tony|Abbott|reading/,
+    ],
+    [
+      "Cannot read property 'searchTerm' of null",
+      'Cannot read properties of null',
+      /search|Term/,
+    ],
+  ])(
+    'the interpolated tail of a known message is not sent: %s',
+    (message, fixed, tail) => {
+      const sent = sentFor(message);
+      expect(sent).toMatchObject({ message: fixed, omitted: false });
+      expect(sent.text).not.toMatch(tail);
+    },
+  );
+
+  test('a message that only looks like a known one, an empty one and a non-string are not sent; nothing omitted is claimed for no message', () => {
+    for (const message of [
+      'Maximum update depth exceededGrayndler',
+      'Too many re-renders-housing',
+      'grants: Too many re-renders',
+      'Cannot read property of Grayndler',
+      'x'.repeat(5000),
+    ])
+      expect(sentFor(message)).toMatchObject({
+        message: undefined,
+        omitted: true,
+      });
+    for (const message of ['', '   ', undefined, 7, null])
+      expect(sentFor(message)).toMatchObject({
+        message: undefined,
+        omitted: false,
+      });
+    // Every text that can be sent is a fixed one, inside the 300 limit.
+    expect(
+      knownErrorMessage(`Maximum update depth exceeded. ${'x'.repeat(1000)}`)!
+        .length,
+    ).toBeLessThanOrEqual(300);
+  });
+
+  test('only the route report is held to the list: another $exception keeps its pattern-scrubbed message', () => {
+    const scrubbed = scrubEvent(
+      {
+        event: '$exception',
+        properties: {
+          $exception_list: [{ type: 'Error', value: 'Plain failure 12345' }],
+        },
+      },
+      context,
+    )!;
+    expect(scrubbed.properties).toMatchObject({
+      $exception_list: [{ type: 'Error', value: 'Plain failure #' }],
+    });
+    expect(scrubbed.properties).not.toHaveProperty('message_omitted');
   });
 
   test('a route that is not on the fixed list is left out of the payload, and the SDK’s screen is kept out with it', () => {

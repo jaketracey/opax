@@ -213,10 +213,13 @@ export function resetRouteErrorReports() {
  * on to the global handler in release builds, and console capture is off, so
  * this is the only report of it.
  *
- * The `$exception` carries the error's name, its message through the
- * exception scrubber, its stack frames, the route, and the build and window
- * class every event carries. Nothing else: no parameter, path, query, or
- * anything the reader typed, searched or chose.
+ * The `$exception` carries the error's name, its stack frames, the route,
+ * and the build and window class every event carries. It carries a message
+ * only when the message is one of a fixed list of content-free ones
+ * (`knownErrorMessage`), and then that fixed text; any other message is
+ * left out and `message_omitted: true` is sent in its place. Nothing else:
+ * no parameter, path, query, or anything the reader typed, searched or
+ * chose.
  * - The route is the route file's pattern ("/bill/[key]"): the layout
  *   segments Expo Router gives (file names, never values), without groups,
  *   and only when the result is on the fixed list; otherwise "/other".
@@ -227,8 +230,10 @@ export function resetRouteErrorReports() {
  *   opt-out; that gate is the only switch there is.
  */
 export function reportRouteError(error: unknown, segments: readonly string[]) {
-  const route = routeErrorPattern(screenName(segments)) ?? '/other';
+  let route = '/other';
   try {
+    // Inside the try: nothing on the report's path may throw in a boundary.
+    route = routeErrorPattern(screenName(segments)) ?? '/other';
     const posthog = analytics();
     if (posthog && !reportedRoutes.has(route)) {
       reportedRoutes.add(route);

@@ -433,9 +433,21 @@ captures nothing automatically.
   `captureException`, beside `opax_route_error`. This is what says what was
   thrown when a page shows "This page couldn't be shown". The report holds:
   - the error's name (a built-in or runtime type name, else `Error`);
-  - its message, through the exception scrubber below (nothing in quotes,
-    no URL path past its first segment, no query, email or long number, at
-    most 120 characters);
+  - its message, only when it is a known content-free one. Rewriting free
+    text by pattern cannot make it safe ("No electorate for Grayndler" has
+    no quote, address or long number in it), so this report does not send
+    a rewritten message. It sends one of the exact diagnostics
+    `opax_route_error` allows (`scrubErrorMessage`), or the fixed text of a
+    framework message the error's message starts with: "Maximum update
+    depth exceeded", "Rendered more hooks than during the previous render",
+    "Rendered fewer hooks than expected", "Too many re-renders", "Objects
+    are not valid as a React child", "Invalid hook call", "Text strings
+    must be rendered within a <Text> component", "Cannot read properties
+    of undefined" and "Cannot read properties of null". Only that fixed
+    text is sent, never what the message goes on to interpolate (an
+    object's keys, a property's name). Any other message is left out, and
+    `message_omitted: true` is sent in its place. Every text that can be
+    sent is well under 300 characters;
   - its stack frames, as every JS error report has them (where the code is,
     never what it was working on);
   - `route_pattern`: the route file's pattern, such as `/bill/[key]`. It is
@@ -447,8 +459,12 @@ captures nothing automatically.
   - the build and device class every event carries (`app_version`,
     `app_build`, `platform`, `$device_type`, `layout`, `foldable`).
 
-  It holds no search term, Ask text, postcode, electorate or URL query, and
-  no component stack: Expo Router's boundary does not pass one on. At most
+  It holds no search term, Ask text, postcode, electorate or URL query: the
+  message is a fixed text or absent, the route is a file pattern, and the
+  frames are code locations. It holds no component stack: Expo Router's
+  boundary does not pass one on. The other `$exception` reports (uncaught
+  JS errors, unhandled rejections and native crashes) are not held to the
+  fixed list; their messages go through the pattern scrubber below. At most
   one is sent for each route in a launch, so a page that fails again (on Try
   again, or for another record) adds none; `opax_route_error` still counts
   each failure. The build gate is the only switch: the app has no analytics
