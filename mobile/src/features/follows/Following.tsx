@@ -30,6 +30,7 @@ import { familyNameKey, useFaceURIs } from '../your-mp/FaceStackRow';
 import { useSavedMember } from '../your-mp/useIsMyMember';
 import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
 import { FollowRow, WITHDRAWN } from './FollowRow';
+import { allQuiet, QuietFoot } from './QuietFoot';
 import type { FollowState } from './markers';
 import { checkedText, sortChanges } from './changes';
 import { useFollowStates, markAllSeen } from './useFollowStates';
@@ -297,6 +298,11 @@ export default function Following() {
       ? checkedText(sources.savedAt)
       : '';
 
+  // Caught up: a clean check, online, with nothing changed, unchecked or
+  // withdrawn. The foot says so and points to the newest records.
+  const quiet =
+    !!checked && offline === undefined && !leaving.length && allQuiet(entries);
+
   return (
     <Screen
       grouped
@@ -442,6 +448,7 @@ export default function Following() {
               list
             );
           })}
+          {quiet ? <QuietFoot /> : null}
           {inEdit ? (
             <InsetGroup testID="follows-unfollow-all-group">
               <Pressable

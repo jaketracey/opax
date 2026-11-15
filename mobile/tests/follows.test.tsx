@@ -37,6 +37,7 @@ import Following, {
   type FollowEntry,
 } from '../src/features/follows/Following';
 import { FollowingSection } from '../src/features/follows/FollowingSection';
+import { allQuiet, QUIET_LINE } from '../src/features/follows/QuietFoot';
 import {
   quarterEnd,
   followState as readFollowState,
@@ -1466,6 +1467,89 @@ describe('Following', () => {
     expect(changedRow.props.detail ?? '').not.toMatch(/^Nothing new/);
     expect(changedRow.props.secondary).toBeTruthy();
     await act(async () => r.unmount());
+  });
+
+  // Delight round 3: caught up says so, and points to the newest records.
+  test('caught up: one sentence and one row to Just added, after the list; gone once something changes', async () => {
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+    const r = await render();
+    const line = r.root.find(
+      (n) => n.props.testID === 'follows-quiet-line' && n.type === Text,
+    );
+    expect(line.props.children).toBe(QUIET_LINE);
+    expect(QUIET_LINE).toBe('Nothing new in what you follow.');
+    const recent = row(r, 'follows-quiet-recent');
+    expect(recent.props).toMatchObject({
+      title: 'Just added',
+      detail: 'The newest records in OPAX',
+      href: { pathname: '/recent-records' },
+      accessibilityHint: 'Opens Just added',
+    });
+    // The foot comes after the followed rows, never before them.
+    const ids = r.root
+      .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
+      .map((n) => String(n.props.testID));
+    expect(ids.indexOf('follows-quiet')).toBeGreaterThan(
+      ids.indexOf(`follows-row-bill-${BILL}`),
+    );
+    expect(ids).toContain(`follows-row-bill-${BILL}`);
+    mock.followSources.mockResolvedValue(changedSources());
+    await act(async () =>
+      r.root.findByType(ScrollView).props.refreshControl.props.onRefresh(),
+    );
+    expect(has(r, 'follows-changed')).toBe(true);
+    expect(has(r, 'follows-quiet')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('not caught up: no foot in Edit, on a saved copy, after a failed check or with a withdrawn follow', async () => {
+    await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+    // Edit mode.
+    mock.followSources.mockResolvedValue(sources());
+    mockParams = { edit: '1' };
+    let r = await render();
+    expect(has(r, 'follows-quiet')).toBe(false);
+    await act(async () => r.unmount());
+    mockParams = {};
+    // A saved copy: the check did not reach the record.
+    mock.followSources.mockResolvedValue(sources({ stale: true }));
+    r = await render();
+    expect(has(r, `follows-row-bill-${BILL}`)).toBe(true);
+    expect(has(r, 'follows-quiet')).toBe(false);
+    await act(async () => r.unmount());
+    // A failed check.
+    mock.followSources.mockRejectedValue(new Error('broken'));
+    r = await render();
+    expect(has(r, 'follows-quiet')).toBe(false);
+    await act(async () => r.unmount());
+    // One follow whose record is gone.
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'bill', id: 'au-federal-r0000', title: 'Gone bill' });
+    r = await render();
+    expect(has(r, 'follows-withdrawn')).toBe(true);
+    expect(has(r, 'follows-quiet')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('the caught-up rule: every follow checked, none changed, and at least one', () => {
+    const ready = readyState(
+      followState({ kind: 'bill', id: BILL, seen: null }, sources()),
+    );
+    expect(ready.changes).toEqual([]);
+    const changed = readyState(
+      followState(
+        { kind: 'bill', id: BILL, seen: seenFor('bill', BILL) },
+        changedSources(),
+      ),
+    );
+    expect(changed.changes.length).toBeGreaterThan(0);
+    expect(allQuiet([{ state: ready }])).toBe(true);
+    expect(allQuiet([])).toBe(false);
+    expect(allQuiet([{ state: ready }, {}])).toBe(false);
+    expect(allQuiet([{ state: { status: 'unavailable' } }])).toBe(false);
+    expect(allQuiet([{ state: { status: 'missing' } }])).toBe(false);
+    expect(allQuiet([{ state: ready }, { state: changed }])).toBe(false);
   });
 });
 
