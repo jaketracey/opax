@@ -1,7 +1,9 @@
 // The newsletter sign-up card (docs/NEWSLETTER.md). The Worker adds an inert
 // <template> and a deferred script to a page only while NEWSLETTER_ENABLED is
 // exactly "true" and a Turnstile site key is set; with the flag off a page is
-// byte-for-byte what it was. When, where and whether the card appears is
+// byte-for-byte what it was. The script is deferred and the stylesheet is
+// fetched only when the card is about to appear, so neither holds up a page.
+// When, where and whether the card appears is
 // decided in the browser (public/newsletter-card.js), so cached HTML is the
 // same for everyone.
 
@@ -25,15 +27,11 @@ export const NEWSLETTER_CARD_HTML = `<aside class="opax-newsletter" aria-labelle
       <h2 id="opax-newsletter-title">The record, once a week</h2>
       <button type="button" class="opax-newsletter-dismiss" aria-label="Dismiss newsletter sign-up" data-newsletter-dismiss><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
     </div>
-    <p class="opax-newsletter-lede">A weekly email of bills that moved in parliament. Add a postcode or electorate to also get your MP's votes and speeches. Every item links to its source.</p>
+    <p class="opax-newsletter-lede">A weekly email of bills that moved in parliament. Every item links to its source.</p>
     <form class="opax-newsletter-form" novalidate>
       <div class="opax-newsletter-field">
         <label for="opax-newsletter-email">Email address</label>
         <input id="opax-newsletter-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" aria-describedby="opax-newsletter-status">
-      </div>
-      <div class="opax-newsletter-field">
-        <label for="opax-newsletter-place">Postcode or electorate (optional)</label>
-        <input id="opax-newsletter-place" name="electorate" type="text" maxlength="60">
       </div>
       <button type="submit" class="opax-newsletter-submit">Subscribe</button>
       <div class="opax-newsletter-check" data-newsletter-check></div>
@@ -46,8 +44,8 @@ export const NEWSLETTER_CARD_HTML = `<aside class="opax-newsletter" aria-labelle
 export function withNewsletterCard(response: Response, url: URL, siteKey: string): Response {
   if (!response.body || response.status !== 200 || !response.headers.get('content-type')?.startsWith('text/html') || EXCLUDED.test(url.pathname)) return response
   const transformed = new HTMLRewriter()
-    .on('head', { element(el) { el.append(`<link rel="stylesheet" href="${stylesheet}"><script src="${script}" defer></script>`, { html: true }) } })
-    .on('body', { element(el) { el.append(`<template id="opax-newsletter-template" data-site-key="${siteKey}">${NEWSLETTER_CARD_HTML}</template>`, { html: true }) } })
+    .on('head', { element(el) { el.append(`<script src="${script}" defer></script>`, { html: true }) } })
+    .on('body', { element(el) { el.append(`<template id="opax-newsletter-template" data-site-key="${siteKey}" data-stylesheet="${stylesheet}">${NEWSLETTER_CARD_HTML}</template>`, { html: true }) } })
     .transform(response)
   const out = new Response(transformed.body, transformed)
   out.headers.delete('content-length')

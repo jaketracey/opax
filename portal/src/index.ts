@@ -6612,6 +6612,9 @@ const CSP_API = "default-src 'none'; base-uri 'none'; form-action 'none'; frame-
 // The unsubscribe endpoint is a script-free HTML form, including when signed out.
 const CSP_UNSUBSCRIBE = "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
 
+// The newsletter's confirmation page runs one same-origin script that makes one same-origin post (src/newsletter.ts).
+const CSP_NEWSLETTER_CONFIRM = "default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+
 // Statuses whose Response must be constructed with a null body.
 const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 
@@ -6629,13 +6632,15 @@ function withSecurityHeaders(res: Response, url: URL): Response {
   // res.body is passed through unread, so SSE keeps streaming.
   const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, { status: res.status, statusText: res.statusText, headers: res.headers, ...(res.webSocket ? { webSocket: res.webSocket } : {}) })
   for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
-  // The newsletter's confirm and unsubscribe pages are the same kind of script-free form (src/newsletter.ts).
-  const isUnsubscribePage = (url.pathname === '/api/community/email/unsubscribe' || url.pathname === '/api/newsletter/confirm' || url.pathname === '/api/newsletter/unsubscribe') && res.headers.get('content-type')?.startsWith('text/html')
+  // The newsletter's unsubscribe page is the same kind of script-free form (src/newsletter.ts).
+  const isHtml = res.headers.get('content-type')?.startsWith('text/html')
+  const isUnsubscribePage = (url.pathname === '/api/community/email/unsubscribe' || url.pathname === '/api/newsletter/unsubscribe') && isHtml
+  const isConfirmPage = url.pathname === '/api/newsletter/confirm' && isHtml
   // The consent page is script-free and names its own form target (community-oauth.ts); every other sign-in address is data.
   const isOauth = url.pathname.startsWith('/oauth/') || url.pathname.startsWith('/.well-known/oauth-')
   const ownCsp = url.pathname === '/oauth/authorize' ? res.headers.get('content-security-policy') : null
   const isMcpData = (url.pathname === '/mcp' && !res.headers.get('content-type')?.startsWith('text/html')) || url.pathname === '/mcp/member'
-  out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : ownCsp ? ownCsp : isApi || isOauth || isMcpData ? CSP_API : newsletterSiteKey ? CSP_PAGE_NEWSLETTER : CSP_PAGE)
+  out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : isConfirmPage ? CSP_NEWSLETTER_CONFIRM : ownCsp ? ownCsp : isApi || isOauth || isMcpData ? CSP_API : newsletterSiteKey ? CSP_PAGE_NEWSLETTER : CSP_PAGE)
   if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/newsletter/') || url.pathname.startsWith('/api/voice/') || isMcpData || url.pathname.startsWith('/oauth/')) { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', ownCsp ? 'same-origin' : 'no-referrer') }
   if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
@@ -7677,7 +7682,7 @@ export default {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
       try {console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))} catch {console.error(JSON.stringify({event:'community_reply_email_dispatch_failed'}))}
-      // Newsletter retention (docs/NEWSLETTER.md); does nothing while the flag is off.
+      // Newsletter retention (docs/NEWSLETTER.md) runs whatever the flag says, and is a no-op before the migration is applied.
       try {await purgeNewsletter(env)} catch {console.error(JSON.stringify({event:'newsletter_purge_failed'}))}
       await warmCatalog(env, _ctx)
       return

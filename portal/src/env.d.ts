@@ -16,6 +16,10 @@ interface Env {
   /** Cloudflare Turnstile for the sign-up form: the public site key (a var) and its secret (a Worker secret). */
   NEWSLETTER_TURNSTILE_SITE_KEY?: string
   TURNSTILE_SECRET_KEY?: string
+  /** Worker secret, 32 characters or more: the HMAC key for the sign-up form's rate-limit counters. Sign-up refuses to run without it. */
+  NEWSLETTER_HASH_SECRET?: string
+  /** Most confirmation emails a day across the site; 300 when unset. */
+  NEWSLETTER_DAILY_CAP?: string
   AUTHORISATION_LINE?: string
   CORRECTION_CONTACT?: string
   /** Minimum native app version; absent/invalid defaults to 0.0.0 (never blocks). Raising it is Jake's deliberate update lever. */

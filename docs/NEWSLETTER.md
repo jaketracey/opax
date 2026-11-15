@@ -17,8 +17,8 @@ reading about 1.8 pages each. The newsletter is a way to be asked back.
 | Sending domain | `login.opax.com.au`. Published DNS on 16 November: DMARC `p=reject` on `_dmarc.login.opax.com.au`, SPF on the Cloudflare bounce subdomain. `docs/COMMUNITY.md` records a real sign-in email passing SPF, DKIM and DMARC. The apex `opax.com.au` has no DMARC record. None of this is in the repository's config; the Cloudflare dashboard holds it. |
 | Stored email addresses | `members.email` and `login_links.email` in the `opax-community` D1 database (`COMMUNITY_DB`). There was no leads table or endpoint, on the website or in the apps. |
 | Privacy page today | "OPAX sends no newsletters or marketing email." (`/privacy`, Email). Terms do not mention newsletters. Both must change before the flag goes on; see the proposed diff below. |
-| Follows | Community follows are member to member only. There is no "follow this MP or bill" feature to reuse; the newsletter's optional postcode or electorate is the first. |
-| Reused here | `limit()` (hashed, expiring counters in `community_limits`), the email layout, the reply email's token-link and one-click unsubscribe pattern, the five-minute cron, the app banner's Worker-side injection pattern. |
+| Follows | Community follows are member to member only. There is no "follow this MP or bill" feature to reuse. |
+| Reused here | The email layout, the reply email's token-link and one-click unsubscribe pattern, the five-minute cron, the app banner's Worker-side injection pattern. |
 
 ## Rulings from the hub (16 November)
 
@@ -35,45 +35,67 @@ reading about 1.8 pages each. The newsletter is a way to be asked back.
 5. **The card** is never shown on a first page view, and never on an /ask answer until the
    answer has finished.
 
+The security and privacy review of 16 November (PR #437) is applied; what it changed is
+marked "review" below.
+
 ## The newsletter
 
 Every edition is built from the record by fixed templates. No model writes any of it, nothing
 is ranked or called important, and every item links to its source page on OPAX.
 
-| Edition | Key | What is in it | Needs |
+| Edition | Key | What is in it | State |
 | --- | --- | --- | --- |
-| Bills that moved | `bills` | Bills introduced, passed by a house, assented to or ended that week, by parliament, in date order. Title, stage reached, date, link. | Nothing |
-| Your MP this week | `mp` | For the reader's electorate: how their member voted in each division, and their speeches, by date. Member name, the question, their vote, link. A week with nothing sends nothing. | Postcode or electorate |
+| Bills that moved | `bills` | Bills introduced, passed by a house, assented to or ended that week, by parliament, in date order. Title, stage reached, date, link. | The one edition the sign-up offers |
+| Your MP this week | (not built) | For the reader's electorate: how their member voted in each division, and their speeches, by date. A week with nothing sends nothing. | Needs a postcode or electorate on the row, which the hub's list of stored fields does not include. Jake's decision. |
 | Victorian election results | (not built) | One issue after polls close on 28 November: declared results by district from the VEC, each linked. | Jake's sign-off |
 
-**Default:** Bills that moved for everyone; a reader who gives a postcode or electorate also
-gets Your MP this week. Weekly, on Friday morning after a sitting week's last sitting day. A
-reader in a non-sitting week gets nothing rather than a filler issue.
+**Default:** Bills that moved, weekly, on Friday morning after a sitting week's last sitting
+day. A reader in a non-sitting week gets nothing rather than a filler issue.
 
 **Electoral matter.** An edition that carries electoral matter (the results edition, and any
 issue during a campaign that names candidates or parties) carries the authorised line
-(`AUTHORISATION_LINE`) in its footer. Whether the two standing editions need it outside a
-campaign is a question for Jake; the safe default is to print it in every edition.
+(`AUTHORISATION_LINE`) in its footer. Whether the standing edition needs it outside a campaign
+is a question for Jake; the safe default is to print it in every edition.
 
 ## Sign-up and consent
 
-- **The form** asks for an email address and, optionally, a postcode or electorate. Nothing else.
+- **The form** asks for an email address. Nothing else. (Review: the optional postcode or
+  electorate was removed until Jake decides whether it may be stored.)
+- **One plain address.** The address must be a single addr-spec: no display name, angle
+  brackets, quotes, spaces or control characters, a local part of 64 characters or fewer, 254
+  in all. It is stored trimmed and lower-cased, as typed otherwise.
 - **Double opt-in.** `POST /api/newsletter/subscribe` stores the address unconfirmed and sends
-  one confirmation email. The link opens a page with one button; pressing it confirms.
-  The link alone does not confirm, because mail scanners follow links and a scanner must not be
+  one confirmation email. The link opens a page with one button; pressing it confirms. The
+  link alone does not confirm, because mail scanners follow links and a scanner must not be
   able to consent for anyone. This is one more press than a one-tap link; Jake can choose the
   one-tap form instead (see decisions).
+- **The confirmation token is never in a URL the server receives.** The link is
+  `/api/newsletter/confirm#t=<token>&from=<page type>`. A browser does not send the part after
+  `#`. The page's one script (`portal/public/newsletter-confirm.js`) removes it from the
+  address bar and, when the button is pressed, posts it in the body of a same-origin request.
+  Why: Workers Logs is on (`observability` in `wrangler.jsonc`) and records each request's
+  URL. Cloudflare's documentation does not say whether that includes the query string, so the
+  code assumes it does. The page needs JavaScript.
 - **Only confirmed addresses are recipients.** `newsletterRecipients()` in
   `portal/src/newsletter.ts` is the one place a sending job may take addresses from.
 - **Unsubscribe.** Every email carries an unsubscribe link and the `List-Unsubscribe` and
-  `List-Unsubscribe-Post` headers. The link's page has one button; a mailbox's one-click post
-  works too. It takes effect at once and keeps working when the flag is off.
+  `List-Unsubscribe-Post` headers. The link's page has one button. A mailbox's one-click post
+  works as RFC 8058 section 3.2 describes it: the pair `List-Unsubscribe=One-Click`, as
+  `multipart/form-data` (SHOULD) or `application/x-www-form-urlencoded` (MAY); both are
+  accepted, with no cookie or other context (section 3.1). It takes effect at once and keeps
+  working when the flag is off. The unsubscribe token has to be in the URL (section 3.1: the
+  URI identifies the recipient), so it can appear in request logs; all it can do is
+  unsubscribe that address.
 - **Sender identity.** Every email names the sender and a postal address from
   `NEWSLETTER_SENDER`. Sign-up refuses to run while that is empty.
 - **A subscriber who signs up again** gets the same on-screen answer and no email, so the form
   cannot be used to pester them or to find out who subscribes.
-- Confirmation links last 48 hours. The confirmation email also carries a "remove this address
-  now" link for someone who did not ask.
+- **An address signed up again while unconfirmed or unsubscribed** gets a fresh confirmation
+  link and nothing else changes: its dates stand and it stays off the list until its owner
+  confirms. Nobody can keep an address on file, or bring an unsubscribed one back, by
+  resubmitting it. (Review.)
+- Confirmation links last two days (48 to 72 hours; the expiry is a whole day). The
+  confirmation email also carries a "remove this address now" link for someone who did not ask.
 
 ## The sign-up card
 
@@ -86,10 +108,13 @@ footer, in the normal flow. It covers nothing.
   is no timer at all, only the end of an answer.
 - No layout shift: it is added only while the footer is below the screen, so nothing in view
   moves. If the footer is already in view, it waits for another page view.
+- Nothing render-blocking: the page carries an inert `<template>` and a deferred script. The
+  card's stylesheet is fetched only when a card is about to appear, and the card is added
+  after it has loaded. (Review.)
 - Once per visitor: after it has been on screen, dismissed or used, the device remembers
   (`localStorage` key `opax-newsletter`) and it is not offered again. A browser that cannot
   store that is never shown the card.
-- Keyboard and screen reader: an `aside` named by its heading, labelled fields, a named
+- Keyboard and screen reader: an `aside` named by its heading, a labelled field, a named
   dismiss button, a polite status line. It never takes focus when it appears. Dismissing moves
   focus to the footer, where the card was.
 - Not in the app's web views, and not on privacy, terms, support, security, community, sign-in,
@@ -108,34 +133,52 @@ top of the page is not a prompt and does not count.
 
 Migration `portal/migrations/0020_newsletter.sql`, in the `opax-community` database. Not applied.
 
-`newsletter_subscribers`: `id`, `email`, `editions`, `electorate` (optional, as typed),
-`confirm_token_hash`, `confirm_expires_at`, `unsubscribe_token`, `created_at`, `confirmed_at`,
-`unsubscribed_at`. There is no member id, analytics id, IP address or source page on the row,
-and a test fails if a column is added.
+`newsletter_subscribers`: `id`, `email`, `editions`, `confirm_token_hash`,
+`confirm_expires_at`, `unsubscribe_token`, `created_at`, `confirmed_at`, `unsubscribed_at`.
+There is no member id, analytics id, IP address, place or source page on the row, and a test
+fails if a column is added.
 
+- **Dates are whole days.** `created_at`, `confirmed_at`, `unsubscribed_at` and the link's
+  expiry are stored as the start of a UTC day, never a time of day, so a row cannot be matched
+  to an analytics event by when it happened. (Review.)
 - The confirmation token is stored as a hash. The unsubscribe token is stored as issued,
   because every later edition has to rebuild the same link; the only thing it can do is
   unsubscribe that address.
-- **Deletion:** an unsubscribed address is deleted 30 days after unsubscribing (kept that long
-  so an issue already queued skips it and a complaint can be answered). An address never
-  confirmed is deleted after 7 days. An address the confirmation email could not be sent to is
-  deleted at once. `purgeNewsletter()` runs from the five-minute cron while the flag is on.
+- **Deletion:** an unsubscribed address is deleted 29 to 30 days after unsubscribing, so always
+  within 30 (kept that long so an issue already queued skips it and a complaint can be
+  answered). An address never confirmed is deleted 7 to 8 days after sign-up. An address the
+  confirmation email could not be sent to is deleted at once. `purgeNewsletter()` runs from
+  the five-minute cron **whatever the flag says**, and is a quiet no-op before the migration
+  has been applied. (Review.)
 - No open tracking, no tracking pixel and no click tracking. Links in emails go straight to
   opax.com.au with no per-reader parameter.
 
 `newsletter_counts`: daily totals of submitted, confirmed and unsubscribed, by page type. Not
 joined to any subscriber.
 
+`newsletter_limits`: the sign-up form's rate-limit counters. Each key is an HMAC-SHA-256, under
+the Worker secret `NEWSLETTER_HASH_SECRET`, of what is counted and its time window. No IP
+address or email address is stored, and without the secret a key cannot be tested against a
+guess. A counter is deleted when its window ends: an hour for the network counter, a day for
+the mailbox and site counters. (Review: these were unsalted hashes in the community table,
+cleaned up a day or more late.)
+
 ## Abuse
 
-- Turnstile, verified on the server (`TURNSTILE_SECRET_KEY`). With no secret the endpoint
-  refuses; it does not fall open.
-- Same-origin posts only.
-- Limits, all as hashed expiring counters: 5 sign-ups an hour per IP address, 3 confirmation
-  emails a day per email address, 300 confirmation emails a day across the site. The IP address
-  is used for the counter and sent to Turnstile's check; it is not stored.
-- The reply is the same for a new, pending or subscribed address, and the email is sent after
-  the reply, so the timing is the same too.
+- Turnstile, verified on the server (`TURNSTILE_SECRET_KEY`): the token must pass, and be for
+  this site's hostname and the `newsletter` action. With no secret the endpoint refuses; it
+  does not fall open.
+- Same-origin posts only, for sign-up and for confirming.
+- Limits (review):
+  - 5 sign-ups an hour per network: an IPv4 address, or an IPv6 /64.
+  - 3 confirmation emails a day per mailbox. The limiter folds an address to the mailbox it
+    most likely reaches (the `+tag` dropped, and Gmail's dots), so tagged variants of one inbox
+    share one allowance. The stored address is never folded.
+  - 300 confirmation emails a day across the site (`NEWSLETTER_DAILY_CAP`).
+- The reply is the same for a new, pending or subscribed address. Every path does the same
+  database work (one read, one write, one count) and the email is sent after the reply, so the
+  time taken does not show whether an address is on the list. The Turnstile check runs on
+  every path before any of that. Its latency was not measured.
 - Logs carry event names, a provider message id or an error code. Never an address or token.
 
 ## Measurement
@@ -145,32 +188,42 @@ Counts only, with page type (`home`, `person`, `bill`, `electorate`, `party`, `t
 
 | Step | Where it is counted |
 | --- | --- |
-| Shown, dismissed, submitted (browser) | Analytics event `opax_newsletter` with `action` and `page_type`, both from fixed lists, with no page path (`portal/analytics/privacy.mjs`). |
-| Submitted, confirmed, unsubscribed (server) | `newsletter_counts`. The page type rides in the confirmation link's `from` parameter, so it is never stored against the address. |
+| Shown, dismissed | Analytics event `opax_newsletter` with `action` and `page_type`, both from fixed lists, with no page path (`portal/analytics/privacy.mjs`). |
+| Submitted, confirmed, unsubscribed | `newsletter_counts`, on the server, as daily numbers. The page type rides in the confirmation link, so it is never stored against the address. |
+
+**No analytics event at sign-up.** (Review.) Checked in `portal/analytics/index.js`: every
+measured event goes out through `posthog.capture`, which stamps the browser's anonymous
+`distinct_id` and a timestamp (`person_profiles` is `'never'`, but the id is still on the
+event). A `submitted` event in the same second as a row's `created_at` would have tied an
+address to that id at this traffic. The card now sends nothing when a sign-up is submitted,
+and the row's dates are whole days.
 
 ## Flags and settings
 
 | Name | Kind | Meaning |
 | --- | --- | --- |
-| `NEWSLETTER_ENABLED` | var, `"false"` | Exactly `"true"` turns on the card, sign-up and confirm. Off: 404, and pages are unchanged. |
+| `NEWSLETTER_ENABLED` | var, `"false"` | Exactly `"true"` turns on the card, sign-up and confirm. Off: 404, and pages are unchanged. Unsubscribe and deletion run either way. |
 | `NEWSLETTER_SENDER` | var, unset | Legal name and postal address for the footer. Required. |
 | `NEWSLETTER_TURNSTILE_SITE_KEY` | var, unset | Turnstile widget's public key. Without it the card is not added. |
-| `TURNSTILE_SECRET_KEY` | Worker secret, unset | Turnstile's secret. |
+| `TURNSTILE_SECRET_KEY` | Worker secret, unset | Turnstile's secret. Required. |
+| `NEWSLETTER_HASH_SECRET` | Worker secret, unset | 32 characters or more; keys the rate-limit counters. Required. |
+| `NEWSLETTER_DAILY_CAP` | var, unset | Most confirmation emails a day across the site; 300 when unset. |
 
 While the card is on, the page Content-Security-Policy also allows
 `https://challenges.cloudflare.com` in `script-src` and `frame-src`. With the flag off the
-policy is unchanged.
+policy is unchanged. The confirmation page has its own policy: one same-origin script, one
+same-origin post, inline styles, nothing else.
 
 To turn on, in order, each with Jake's approval: publish the privacy and terms text; create
-the Turnstile widget (free) and set the key and secret; set `NEWSLETTER_SENDER`; apply
-migration 0020 to staging, then production; set the flag on staging and test with real
-mailboxes; then production.
+the Turnstile widget (free) with the action `newsletter` and set the key and secret; set
+`NEWSLETTER_HASH_SECRET` and `NEWSLETTER_SENDER`; apply migration 0020 to staging, then
+production; set the flag on staging and test with real mailboxes; then production.
 
 ## The sending job (designed, not built)
 
 - **Provider.** Editions cannot go through Cloudflare. Options, in US dollars, from public
   price lists and third-party summaries read on 16 November; check the provider's page before
-  buying. Volume assumes one or two issues a week per subscriber: about 4,000 to 9,000 emails a
+  buying. Volume assumes one or two issues a week per subscriber (a second edition later): about 4,000 to 9,000 emails a
   month at 1,000 subscribers, 43,000 to 87,000 at 10,000.
 
   | Provider | 1,000 subscribers | 10,000 subscribers | Notes |
@@ -186,8 +239,7 @@ mailboxes; then production.
   (for example `news.opax.com.au`) with its own SPF, DKIM and DMARC, so a newsletter complaint
   cannot hurt sign-in email from `login.opax.com.au`.
 - **Building an issue.** A weekly cron reads the same published record files the pages read,
-  for the seven days to the cut-off, and fills fixed templates. One issue body per edition for
-  Bills; one per electorate for Your MP. The issue is stored before any send, so what was sent
+  for the seven days to the cut-off, and fills fixed templates. One issue body per edition. The issue is stored before any send, so what was sent
   can be shown.
 - **Release.** The first issues are sent to an internal address first and released by an
   operator (`operator-auth.ts`), not automatically. Automatic release is a later decision.
@@ -220,26 +272,32 @@ Against `portal/public/index.html`, the `/privacy` Email section. Wording to be 
 +      address, and OPAX emails you a link to confirm. Nothing else is sent unless you
 +      confirm.</p>
 +      <ul class="about-list">
-+        <li><strong>What is stored:</strong> your email address, the editions you chose, the
-+        postcode or electorate if you gave one, and the dates you signed up, confirmed and
++        <li><strong>What is stored:</strong> your email address, which newsletter you asked
++        for, and the dates (the day, not the time) you signed up, confirmed and
 +        unsubscribed.</li>
 +        <li><strong>What it is not joined to:</strong> the list is kept apart from community
-+        accounts and from OPAX's usage measurement. OPAX does not record which pages you read
-+        against your address, and does not build a profile of you.</li>
++        accounts and from OPAX's usage measurement. Signing up sends no measurement event,
++        OPAX does not record which pages you read against your address, and does not build a
++        profile of you.</li>
 +        <li><strong>No tracking in emails:</strong> no tracking pixels, and links are not
 +        rewritten to record clicks. OPAX does not know whether you opened an issue.</li>
 +        <li><strong>Where it is held:</strong> in OPAX's database on Cloudflare. Issues are
 +        sent through [provider], which receives your email address to deliver them.</li>
 +        <li><strong>Leaving:</strong> every email has an unsubscribe link. It works at once,
 +        and OPAX deletes your address from the list within 30 days. An address that is never
-+        confirmed is deleted after 7 days.</li>
++        confirmed is deleted within 8 days.</li>
 +        <li><strong>Never sold or shared:</strong> OPAX does not sell, rent or share the
 +        list.</li>
 +      </ul>
 +      <p>The sign-up form uses Cloudflare Turnstile to check that a person, not a program, is
 +      filling it in. Turnstile loads when you start to fill in the form and receives your IP
-+      address and browser details, under Cloudflare's privacy policy. OPAX counts sign-ups
-+      per IP address for an hour to stop misuse and does not keep the address.</p>
++      address and browser details, under Cloudflare's privacy policy. To stop the form being
++      misused, OPAX keeps three counters: sign-ups from your network (your IP address, or the
++      first half of an IPv6 address) for up to an hour, confirmation emails to your mailbox
++      for up to a day, and confirmation emails in total for up to a day. Each is stored as a
++      keyed code that cannot be turned back into the IP address or email address, and is
++      deleted when its hour or day ends. Like every request to OPAX, the unsubscribe link you
++      follow is recorded in Cloudflare's request logs for up to 7 days.</p>
 ```
 
 Also needed with it: a line in `/terms`, the newsletter in the "what is deleted" notes (it is
@@ -256,13 +314,16 @@ companies that receive reader data, and `docs/PRIVACY.md` updated to match.
    whether the authorised line goes in every edition or only electoral ones.
 5. The results edition after 28 November.
 6. Confirm by link then button (built, safer against mail scanners) or by link alone.
-7. The editions, the default and the send day.
+7. The editions, the default and the send day, and whether a postcode or electorate may be
+   stored for Your MP this week (the hub's list of stored fields does not include it, so it
+   is not collected).
 8. Whether deleting a community account should also unsubscribe the same address.
 9. The card's wording and the ten-second wait.
 
 ## Tests
 
 `portal/test/newsletter.test.mjs`: flag off (nothing stored, checked or sent; pages unchanged),
-double opt-in, token reuse, unsubscribe and deletion periods, rate limits and Turnstile, sender
-identity and unsubscribe in the email, no address in logs, counts or analytics, and the card's
-rules in a browser. The email sender is a list in the test; nothing is sent.
+double opt-in, token reuse, strict addresses and the mailbox, /64 and site limits, keyed
+counters, both one-click content types, retention with the flag off, resubmitted addresses,
+sender identity, no analytics event at sign-up and whole-day dates, no address or token in
+logs or counts, the confirmation page's script, and the card's rules in a browser. The email sender is a list in the test; nothing is sent.

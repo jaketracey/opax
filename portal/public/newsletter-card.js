@@ -45,24 +45,43 @@
     if (root.dataset.opaxPrompt === 'newsletter') delete root.dataset.opaxPrompt;
   }
 
+  const fits = footer => footer.isConnected && footer.getClientRects().length > 0 && footer.getBoundingClientRect().top > innerHeight;
+  let styles = null;
+  /** The stylesheet is fetched only now, when a card is about to appear: no page waits on it. */
+  function loadStyles() {
+    if (!styles) styles = new Promise((resolve, reject) => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = template.dataset.stylesheet || '/newsletter-card.css';
+      link.addEventListener('load', resolve);
+      link.addEventListener('error', () => { styles = null; link.remove(); reject(new Error('styles')); });
+      document.head.append(link);
+    });
+    return styles;
+  }
+
+  function eligible() { return !card && !asking && !read(DONE) && !excluded() && Number(read(VIEWS)) >= 2 && !root.dataset.opaxPrompt; }
   function place() {
-    if (card || asking || read(DONE) || excluded() || Number(read(VIEWS)) < 2) return;
-    if (root.dataset.opaxPrompt) return; // another prompt has this page view
-    const footer = document.querySelector('body > footer');
+    if (!eligible()) return;
+    const footer = document.querySelector('body > footer'), at = viewed;
     // Only while the footer is below the screen, so nothing in view moves.
-    if (!footer || !footer.getClientRects().length || footer.getBoundingClientRect().top <= innerHeight) return;
-    card = template.content.firstElementChild.cloneNode(true);
-    footer.before(card);
-    root.dataset.opaxPrompt = 'newsletter';
-    wire(card, footer);
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(entries => {
-        if (!entries.some(entry => entry.isIntersecting)) return;
-        observer.disconnect();
-        shown();
-      }, { threshold: 0.5 });
-      observer.observe(card);
-    } else shown();
+    if (!footer || !fits(footer)) return;
+    loadStyles().then(() => {
+      // Styled before it is added. Everything is checked again: the reader may have moved on while the styles loaded.
+      if (at !== viewed || !eligible() || !fits(footer)) return;
+      card = template.content.firstElementChild.cloneNode(true);
+      footer.before(card);
+      root.dataset.opaxPrompt = 'newsletter';
+      wire(card, footer);
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+          if (!entries.some(entry => entry.isIntersecting)) return;
+          observer.disconnect();
+          shown();
+        }, { threshold: 0.5 });
+        observer.observe(card);
+      } else shown();
+    }, () => { /* no styles, no card */ });
   }
   function shown() {
     if (seen) return;
@@ -114,7 +133,7 @@
     form.addEventListener('focusin', () => { loadCheck(slot).catch(() => {}); });
     form.addEventListener('submit', async event => {
       event.preventDefault();
-      const email = form.elements.email.value.trim(), electorate = form.elements.electorate.value.trim();
+      const email = form.elements.email.value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say('Enter a valid email address.', true); form.elements.email.focus(); return; }
       submit.disabled = true;
       say('Checking, one moment.');
@@ -125,12 +144,12 @@
         if (!turnstile) throw new Error('The check did not pass. Reload the page and try again.');
         const response = await fetch('/api/newsletter/subscribe', {
           method: 'POST', headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email, electorate, page_type: pageType(), turnstile }),
+          body: JSON.stringify({ email, page_type: pageType(), turnstile }),
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'That did not work. Please try again shortly.');
+        // No analytics event here: a sign-up is counted on the server, as a daily number, so nothing ties an address to a browser.
         write(DONE, 'subscribed');
-        track('submitted');
         form.remove();
         say(typeof data.message === 'string' ? data.message : 'Check your email and confirm to finish.');
         status.setAttribute('tabindex', '-1');

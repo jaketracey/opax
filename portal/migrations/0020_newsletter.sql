@@ -1,14 +1,14 @@
 -- The newsletter list (docs/NEWSLETTER.md). One row per address, holding only
 -- what a reader typed into the sign-up card and the dates of their choices.
 -- No member id, no analytics id, no IP address, no page the reader was on.
+-- The three dates are the start of a UTC day, never a time of day, so a row
+-- cannot be matched to an analytics event by when it happened.
 CREATE TABLE newsletter_subscribers (
  id TEXT PRIMARY KEY,
  email TEXT NOT NULL UNIQUE,
- -- Comma-separated edition keys: 'bills', 'mp'.
+ -- Comma-separated edition keys: 'bills'.
  editions TEXT NOT NULL,
- -- Optional, as typed: a four-digit postcode or an electorate name in slug form.
- electorate TEXT,
- -- SHA-256 of the confirmation link's token; cleared on unsubscribe.
+ -- SHA-256 of the newest confirmation link's token; cleared on unsubscribe.
  confirm_token_hash TEXT UNIQUE,
  confirm_expires_at INTEGER,
  -- Kept as issued: every edition's unsubscribe link is rebuilt from it, and
@@ -30,3 +30,9 @@ CREATE TABLE newsletter_counts (
  n INTEGER NOT NULL DEFAULT 0,
  PRIMARY KEY(day,event,page_type)
 );
+
+-- Rate-limit counters for the sign-up form. The key is an HMAC under a Worker
+-- secret of what is being counted (a network, a mailbox, the site) and the
+-- window; a row is deleted when its window ends (an hour or a day).
+CREATE TABLE newsletter_limits (key TEXT PRIMARY KEY, hits INTEGER NOT NULL, expires_at INTEGER NOT NULL);
+CREATE INDEX newsletter_limits_expiry ON newsletter_limits(expires_at);
