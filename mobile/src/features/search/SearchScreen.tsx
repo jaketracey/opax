@@ -20,6 +20,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { Screen } from '../../design/primitives';
+import { useLayout } from '../../design/adaptive';
+import { cutsAtSafeTop } from './cut';
 import { searchTabRole, useFocusRequest } from '../../design/keyboard';
 import { useListSearchBar } from '../../design/search-bar';
 import { scrollToTop } from '../../design/scroll-to-top';
@@ -97,6 +99,10 @@ function SearchContent({
   }, []);
   const [text, setText] = useState('');
   const [editing, setEditing] = useState(false);
+  // The native field is active (focused, until Cancel): on iOS 26 the bar
+  // is hidden for as long as it is, whether or not the keyboard is up.
+  const [fieldActive, setFieldActive] = useState(false);
+  const { regular } = useLayout();
   const [submitted, setSubmitted] = useState<{
     q: string;
     scope: Scope;
@@ -186,6 +192,7 @@ function SearchContent({
     if (!textRef.current.trim()) setSubmitted(null);
     else if (submitted) fieldText(submitted.q);
     setEditing(false);
+    setFieldActive(false);
     cancelling.current = true;
     requestAnimationFrame(() => {
       cancelling.current = false;
@@ -212,6 +219,7 @@ function SearchContent({
     Keyboard.dismiss();
     fieldText('');
     setEditing(false);
+    setFieldActive(false);
     setSubmitted(null);
     controls.setFilters(defaultSpeechFilters);
     onRows?.([]);
@@ -289,6 +297,7 @@ function SearchContent({
             ? {
                 headerSearchBarOptions: {
                   ...search,
+                  onFocus: () => setFieldActive(true),
                   obscureBackground: false,
                   placement: searchBarPlacement(),
                 },
@@ -307,6 +316,16 @@ function SearchContent({
         // leave the content beneath the bar with the large title collapsed.
         key={tabReset}
         testID="search-screen"
+        // With the field active the bar is gone (iOS 26), and rows would
+        // scroll up through the status bar, above the pinned scope control.
+        // Results opened without the field (a link, a Try row, after Cancel)
+        // keep the bar, and are not cut.
+        clipAboveSafeTop={cutsAtSafeTop({
+          fieldActive,
+          tabBarField: searchBarPlacement() === 'automatic',
+          pad: Platform.OS === 'ios' && Platform.isPad,
+          regular,
+        })}
         grouped={phase === 'idle'}
         scrollRef={scroll}
         scrollToOverflowEnabled

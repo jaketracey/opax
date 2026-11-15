@@ -169,6 +169,12 @@ const stickyFirst = [0];
  * offset at rest, below the bar. Null until the reader first drags.
  */
 export const PinnedRestContext = createContext<number | null>(null);
+/**
+ * True when Screen's scroll view starts at the safe area's top edge
+ * (`clipAboveSafeTop`): the pinned band then holds at the scroll view's own
+ * top, with no bar to stand clear of.
+ */
+export const PinnedAtTopContext = createContext(false);
 
 /**
  * Screen's pinned band: it scrolls with the content until its top meets the
@@ -194,22 +200,25 @@ function BarStickyHeader(props: {
   const { scrollAnimatedValue } = props;
   const headerBottom = useHeaderBottom();
   const rest = useContext(PinnedRestContext);
+  const atTop = useContext(PinnedAtTopContext);
   const [top, setTop] = useState<number | null>(null);
   const [latest, setLatest] = useState<number | null>(null);
   const translateY = useMemo(() => {
-    if (top === null || rest === null)
+    if (top === null || (!atTop && rest === null))
       return scrollAnimatedValue.interpolate({
         inputRange: [-1, 0],
         outputRange: [0, 0],
       });
-    const stick = Math.max(top - headerBottom, rest + top);
+    // A scroll view cut at the safe area's top edge has no bar over it and
+    // no inset: the band holds once its own top reaches the scroll view's.
+    const stick = atTop ? top : Math.max(top - headerBottom, rest! + top);
     return scrollAnimatedValue.interpolate({
       inputRange: [stick - 1, stick, stick + 1],
       outputRange: [0, 0, 1],
       extrapolateLeft: 'clamp',
       extrapolateRight: 'extend',
     });
-  }, [scrollAnimatedValue, top, headerBottom, rest]);
+  }, [scrollAnimatedValue, top, headerBottom, rest, atTop]);
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | null = null;
     const id = translateY.addListener(({ value }) => {
@@ -390,6 +399,7 @@ export function Screen({
   testID,
   children,
   pinned,
+  clipAboveSafeTop,
   refreshControl,
   scrollRef,
   onScroll,
@@ -451,6 +461,19 @@ export function Screen({
    * platforms draw it first in the content and let it scroll.
    */
   pinned?: ReactNode;
+  /**
+   * iOS: nothing the page scrolls is drawn above the safe area's top edge
+   * (the status bar's lower edge), whatever the bar's background is. For a
+   * page whose bar is hidden while it scrolls (Search with its field
+   * active on iOS 26): rows otherwise run up through the clock, above the
+   * pinned band. Ask for it only while the bar is hidden: under a bar that
+   * is showing, UIKit would draw its large title in the space and the
+   * pinned band would hold behind the bar. The scroll view itself starts at that edge and clips to
+   * its own frame; nothing is painted over the content. UIKit then gives it
+   * no top inset, so the content rests where it did, and a pinned band
+   * holds at the scroll view's own top (BarStickyHeader is told so).
+   */
+  clipAboveSafeTop?: boolean;
   refreshControl?: ReactElement<RefreshControlProps>;
   /** The content column on regular width: `readable` (700pt) or `wide`. */
   column?: keyof typeof columns;
@@ -538,6 +561,7 @@ export function Screen({
     clearExpandedBar,
   ]);
   const rest = useClearBarRest();
+  const safeTop = useContext(SafeAreaInsetsContext)?.top ?? 0;
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
@@ -547,6 +571,15 @@ export function Screen({
   // scope control about 170 pt below the bar, over the rows (iOS 18.4).
   const belowBar =
     (nativeRoot && railSolidRoot) || (!glassBar() && !clearExpandedBar);
+  // Only where the scroll view runs under the bar: below an opaque bar it
+  // already starts under it, and a margin would only add a blank band.
+  // Turning the cut on or off moves the scroll view's frame by `safeTop`.
+  // The offset needs no correction here: UIKit moves it with the top inset
+  // it gives the scroll view (the inset goes to 0 as the frame drops below
+  // the status bar, and back), so scrolled rows stay where the bar's own
+  // hiding and return leave them (measured on iOS 26.3: 358 → 474 → 358).
+  const clipTop =
+    Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
@@ -598,171 +631,188 @@ export function Screen({
     <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
       <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
         <PinnedRestContext.Provider value={pinnedRest}>
-          <ScrollView
-            ref={targetRef}
-            testID={testID}
-            style={[styles.screen, { backgroundColor: colors[ground] }]}
-            contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
-            scrollToOverflowEnabled={scrollToOverflowEnabled}
-            contentOffset={nativeRoot ? undefined : rest.contentOffset}
-            alwaysBounceVertical={Platform.OS === 'ios'}
-            keyboardShouldPersistTaps="handled"
-            automaticallyAdjustKeyboardInsets={keyboardInsets}
-            keyboardDismissMode="on-drag"
-            refreshControl={refreshControl}
-            contentContainerStyle={[
-              styles.content,
-              // Blank space on short pages must accept drags and refresh pulls.
-              { flexGrow: 1 },
-              content,
-              regular ? { gap: rhythmRegular.section } : null,
-              // The last block ends above the floating Today and Search buttons.
-              clearance ? { paddingBottom: rhythm.section + clearance } : null,
-            ]}
-            maintainVisibleContentPosition={maintainVisibleContentPosition}
-            onContentSizeChange={
-              clampScrollOnContentChange
-                ? bounds.onContentSizeChange
-                : undefined
-            }
-            onLayout={(event) => {
-              onLayout(event);
-              onPageLayout?.(event);
-              if (clampScrollOnContentChange) bounds.onLayout(event);
-            }}
-            onScroll={(event) => {
-              if (clampScrollOnContentChange) bounds.onScroll(event);
-              const y = event.nativeEvent.contentOffset.y;
-              scrollY.current = y;
-              rest.track(y);
-              checkUnderBar();
-              if (Platform.OS === 'android') androidRoot.onScroll(y);
-              if (titleScroll.current) titleScroll.current(y, anchorBottom);
-              else if (!inPane && barTitle) nativeTitle.onScroll(y);
-              onScroll?.(y);
-            }}
-            onScrollBeginDrag={
-              pinnedHere
-                ? (event) => {
-                    rest.drag();
-                    const y = event.nativeEvent.contentOffset.y;
-                    // At rest UIKit's inset makes the offset negative; a drag
-                    // that starts further down says nothing about the bar.
-                    if (y < 0)
-                      setPinnedRest((rest) =>
-                        rest === null ? y : Math.min(rest, y),
-                      );
-                  }
-                : rest.drag
-            }
-            onScrollEndDrag={
-              clampScrollOnContentChange ? bounds.onScroll : undefined
-            }
-            onMomentumScrollEnd={
-              clampScrollOnContentChange ? bounds.onScroll : undefined
-            }
-            scrollEventThrottle={16}
-            stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
-            // Under a solid bar the scroll view starts below the bar, and
-            // React Native's own sticky header holds at the right place.
-            StickyHeaderComponent={
-              pinnedHere && !belowBar ? BarStickyHeader : undefined
-            }
-          >
-            {pinnedHere ? (
-              <View
-                testID="screen-pinned"
-                style={[
-                  {
-                    // Full width, so rows scrolling under it never show at its
-                    // sides; its own content keeps the page margins.
-                    marginLeft: -(
-                      content.paddingLeft ?? content.paddingHorizontal
-                    ),
-                    marginRight: -(
-                      content.paddingRight ?? content.paddingHorizontal
-                    ),
-                    paddingLeft:
-                      content.paddingLeft ?? content.paddingHorizontal,
-                    paddingRight:
-                      content.paddingRight ?? content.paddingHorizontal,
-                    backgroundColor: colors[ground],
-                    // The content's own gap would stand between this band and
-                    // the content; it keeps a line's space instead.
-                    marginBottom:
-                      rhythm.line -
-                      (regular ? rhythmRegular.section : layout.sectionGap),
-                  },
-                ]}
-              >
-                <RegionProvider value={inner}>
-                  <SurfaceContext.Provider value={ground}>
-                    {pinned}
-                  </SurfaceContext.Provider>
-                </RegionProvider>
-              </View>
-            ) : null}
-            <RegionProvider value={inner}>
-              <SurfaceContext.Provider value={ground}>
-                <TitleAnchorContext.Provider value={setContentAnchor}>
-                  <TitleHeadingContext.Provider
-                    value={{
-                      setRef: setHeading,
-                      onLayout:
-                        Platform.OS === 'ios'
-                          ? nativeTitle.onTitleLayout
-                          : undefined,
-                    }}
-                  >
-                    <TitleContentContext.Provider value={contentRoot}>
-                      <View
-                        ref={contentRoot}
-                        onLayout={onContentLayout}
-                        style={{
-                          gap: regular ? rhythmRegular.section : rhythm.section,
-                          ...(centred
-                            ? { flexGrow: 1, justifyContent: 'center' as const }
-                            : {}),
-                        }}
-                      >
-                        {bar ? (
-                          // The record starts just under its pane actions,
-                          // not a section gap below them (build 61 Bills).
-                          <View
-                            testID="screen-pane-bar"
-                            style={{
-                              marginBottom:
-                                rhythm.tight * 2 -
-                                (regular
-                                  ? rhythmRegular.section
-                                  : rhythm.section),
-                            }}
-                          >
-                            {bar}
-                          </View>
-                        ) : null}
-                        {androidRoot.title}
-                        {pinned && !pinnedHere ? pinned : null}
-                        <ScreenSectionGapContext.Provider
-                          value={
-                            regular ? rhythmRegular.section : rhythm.section
-                          }
+          <PinnedAtTopContext.Provider value={clipTop > 0}>
+            <ScrollView
+              ref={targetRef}
+              testID={testID}
+              style={[
+                styles.screen,
+                { backgroundColor: colors[ground] },
+                // Starts at the safe area's top edge. A scroll view clips to its
+                // frame by itself; `overflow: 'hidden'` here would replace its
+                // `overflow: 'scroll'` in layout, and its children would be laid
+                // out as in a box of fixed height (the pinned band 0 pt tall).
+                clipTop ? { marginTop: clipTop } : null,
+              ]}
+              contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+              scrollToOverflowEnabled={scrollToOverflowEnabled}
+              contentOffset={nativeRoot ? undefined : rest.contentOffset}
+              alwaysBounceVertical={Platform.OS === 'ios'}
+              keyboardShouldPersistTaps="handled"
+              automaticallyAdjustKeyboardInsets={keyboardInsets}
+              keyboardDismissMode="on-drag"
+              refreshControl={refreshControl}
+              contentContainerStyle={[
+                styles.content,
+                // Blank space on short pages must accept drags and refresh pulls.
+                { flexGrow: 1 },
+                content,
+                regular ? { gap: rhythmRegular.section } : null,
+                // The last block ends above the floating Today and Search buttons.
+                clearance
+                  ? { paddingBottom: rhythm.section + clearance }
+                  : null,
+              ]}
+              maintainVisibleContentPosition={maintainVisibleContentPosition}
+              onContentSizeChange={
+                clampScrollOnContentChange
+                  ? bounds.onContentSizeChange
+                  : undefined
+              }
+              onLayout={(event) => {
+                onLayout(event);
+                onPageLayout?.(event);
+                if (clampScrollOnContentChange) bounds.onLayout(event);
+              }}
+              onScroll={(event) => {
+                if (clampScrollOnContentChange) bounds.onScroll(event);
+                const y = event.nativeEvent.contentOffset.y;
+                scrollY.current = y;
+                rest.track(y);
+                checkUnderBar();
+                if (Platform.OS === 'android') androidRoot.onScroll(y);
+                if (titleScroll.current) titleScroll.current(y, anchorBottom);
+                else if (!inPane && barTitle) nativeTitle.onScroll(y);
+                onScroll?.(y);
+              }}
+              onScrollBeginDrag={
+                pinnedHere
+                  ? (event) => {
+                      rest.drag();
+                      const y = event.nativeEvent.contentOffset.y;
+                      // At rest UIKit's inset makes the offset negative; a drag
+                      // that starts further down says nothing about the bar.
+                      if (y < 0)
+                        setPinnedRest((rest) =>
+                          rest === null ? y : Math.min(rest, y),
+                        );
+                    }
+                  : rest.drag
+              }
+              onScrollEndDrag={
+                clampScrollOnContentChange ? bounds.onScroll : undefined
+              }
+              onMomentumScrollEnd={
+                clampScrollOnContentChange ? bounds.onScroll : undefined
+              }
+              scrollEventThrottle={16}
+              stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
+              // Under a solid bar the scroll view starts below the bar, and
+              // React Native's own sticky header holds at the right place.
+              StickyHeaderComponent={
+                pinnedHere && !belowBar ? BarStickyHeader : undefined
+              }
+            >
+              {pinnedHere ? (
+                <View
+                  testID="screen-pinned"
+                  style={[
+                    {
+                      // Full width, so rows scrolling under it never show at its
+                      // sides; its own content keeps the page margins.
+                      marginLeft: -(
+                        content.paddingLeft ?? content.paddingHorizontal
+                      ),
+                      marginRight: -(
+                        content.paddingRight ?? content.paddingHorizontal
+                      ),
+                      paddingLeft:
+                        content.paddingLeft ?? content.paddingHorizontal,
+                      paddingRight:
+                        content.paddingRight ?? content.paddingHorizontal,
+                      backgroundColor: colors[ground],
+                      // The content's own gap would stand between this band and
+                      // the content; it keeps a line's space instead.
+                      marginBottom:
+                        rhythm.line -
+                        (regular ? rhythmRegular.section : layout.sectionGap),
+                    },
+                  ]}
+                >
+                  <RegionProvider value={inner}>
+                    <SurfaceContext.Provider value={ground}>
+                      {pinned}
+                    </SurfaceContext.Provider>
+                  </RegionProvider>
+                </View>
+              ) : null}
+              <RegionProvider value={inner}>
+                <SurfaceContext.Provider value={ground}>
+                  <TitleAnchorContext.Provider value={setContentAnchor}>
+                    <TitleHeadingContext.Provider
+                      value={{
+                        setRef: setHeading,
+                        onLayout:
+                          Platform.OS === 'ios'
+                            ? nativeTitle.onTitleLayout
+                            : undefined,
+                      }}
+                    >
+                      <TitleContentContext.Provider value={contentRoot}>
+                        <View
+                          ref={contentRoot}
+                          onLayout={onContentLayout}
+                          style={{
+                            gap: regular
+                              ? rhythmRegular.section
+                              : rhythm.section,
+                            ...(centred
+                              ? {
+                                  flexGrow: 1,
+                                  justifyContent: 'center' as const,
+                                }
+                              : {}),
+                          }}
                         >
-                          <ScreenGutterContext.Provider value={gutter}>
-                            <ColumnMarginContext.Provider
-                              value={content.paddingHorizontal}
+                          {bar ? (
+                            // The record starts just under its pane actions,
+                            // not a section gap below them (build 61 Bills).
+                            <View
+                              testID="screen-pane-bar"
+                              style={{
+                                marginBottom:
+                                  rhythm.tight * 2 -
+                                  (regular
+                                    ? rhythmRegular.section
+                                    : rhythm.section),
+                              }}
                             >
-                              {anchorHeadings(withOffline(children, offline))}
-                            </ColumnMarginContext.Provider>
-                          </ScreenGutterContext.Provider>
-                        </ScreenSectionGapContext.Provider>
-                      </View>
-                    </TitleContentContext.Provider>
-                  </TitleHeadingContext.Provider>
-                </TitleAnchorContext.Provider>
-              </SurfaceContext.Provider>
-            </RegionProvider>
-          </ScrollView>
+                              {bar}
+                            </View>
+                          ) : null}
+                          {androidRoot.title}
+                          {pinned && !pinnedHere ? pinned : null}
+                          <ScreenSectionGapContext.Provider
+                            value={
+                              regular ? rhythmRegular.section : rhythm.section
+                            }
+                          >
+                            <ScreenGutterContext.Provider value={gutter}>
+                              <ColumnMarginContext.Provider
+                                value={content.paddingHorizontal}
+                              >
+                                {anchorHeadings(withOffline(children, offline))}
+                              </ColumnMarginContext.Provider>
+                            </ScreenGutterContext.Provider>
+                          </ScreenSectionGapContext.Provider>
+                        </View>
+                      </TitleContentContext.Provider>
+                    </TitleHeadingContext.Provider>
+                  </TitleAnchorContext.Provider>
+                </SurfaceContext.Provider>
+              </RegionProvider>
+            </ScrollView>
+          </PinnedAtTopContext.Provider>
         </PinnedRestContext.Provider>
       </SidebarSafe>
     </StatePageProvider>

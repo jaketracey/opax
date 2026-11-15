@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import Search from '../src/features/Search';
 import { catalogs } from '../src/api/runtime';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
@@ -18,9 +19,23 @@ import { Skeleton, Screen } from '../src/design/primitives';
 import { useScreenReady } from '../src/analytics/timing';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 import { IDLE_HOLD_MS, SearchIdle } from '../src/features/search/SearchIdle';
+import { cutsAtSafeTop } from '../src/features/search/cut';
 import { SearchSuggestions } from '../src/features/search/SearchSuggestions';
 import { ResultsView } from '../src/features/search/ResultsView';
 jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
+// iOS 26: the field is the tab bar's, so activating it hides the bar.
+let mockTabBarField = false;
+jest.mock('../src/features/search/cut', () => {
+  const actual = jest.requireActual('../src/features/search/cut');
+  return {
+    ...actual,
+    cutsAtSafeTop: (state: Parameters<typeof actual.cutsAtSafeTop>[0]) =>
+      actual.cutsAtSafeTop({
+        ...state,
+        tabBarField: state.tabBarField || mockTabBarField,
+      }),
+  };
+});
 
 jest.mock('../src/api/runtime', () => ({
   recordSearch: { search: jest.fn(), summary: jest.fn() },
@@ -286,6 +301,79 @@ describe('Search scroll region on iOS', () => {
     ).toBe(true);
   });
 
+  test('with the field active nothing scrolls above the safe area; results that keep the bar are not cut', async () => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      await act(async () => {
+        renderer = TestRenderer.create(
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+          >
+            {withNavigationOptions(<Search />, (options) => {
+              if (options.headerSearchBarOptions) mockBar.options = options;
+            })}
+          </SafeAreaInsetsContext.Provider>,
+        );
+      });
+      const frame = () =>
+        StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style);
+      const top = () => frame().marginTop ?? 0;
+      // Where the field is in the bar (iPad, an unfolded Duo, before iOS
+      // 26) the bar stays while the field is active: never cut.
+      await act(async () => mockBar.options!.headerSearchBarOptions.onFocus());
+      expect(top()).toBe(0);
+      await act(async () =>
+        mockBar.options!.headerSearchBarOptions.onCancelButtonPress(),
+      );
+      mockTabBarField = true;
+      const bar = () => mockBar.options!.headerSearchBarOptions;
+      const scroll = renderer.root.findByType(ScrollView);
+      // Browse, under the large title: the bar is there, nothing is cut.
+      expect(top()).toBe(0);
+      // Results opened without the field taking focus (a link, a Try row):
+      // the bar is still showing. Cutting the page here would put UIKit's
+      // large title in the space and pin the scope control behind the bar.
+      await type('zzzzzz');
+      await act(async () =>
+        renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
+      );
+      expect(renderer.root.findAllByType(ResultsView)).toHaveLength(1);
+      expect(top()).toBe(0);
+      // The field takes focus: the bar is gone (iOS 26). The scroll view
+      // starts at the status bar's lower edge, so no row is drawn above it
+      // whatever the bar's background is. It keeps its own overflow.
+      await act(async () => bar().onFocus());
+      expect(top()).toBe(62);
+      expect(frame().overflow).not.toBe('hidden');
+      // Typing, and the results after it, with the keyboard down: the field
+      // is still active and the page still cut. The same scroll view
+      // throughout: nothing is remounted or laid over it.
+      await type('hous');
+      expect(top()).toBe(62);
+      await act(async () =>
+        renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
+      );
+      expect(top()).toBe(62);
+      const results = renderer.root.findByType(ScrollView);
+      expect(results).toBe(scroll);
+      expect(results.props.stickyHeaderIndices).toEqual([0]);
+      // Cancel with a query submitted: the results return under the bar,
+      // uncut.
+      await act(async () => bar().onCancelButtonPress());
+      expect(renderer.root.findAllByType(ResultsView)).toHaveLength(1);
+      expect(top()).toBe(0);
+    } finally {
+      mockTabBarField = false;
+      if (renderer) act(() => renderer.unmount());
+      if (version) Object.defineProperty(Platform, 'Version', version);
+    }
+  });
+
   test('typing, short results and returning to Browse keep the same unobscured scroll region', async () => {
     const renderer = await renderSearch();
     const scroll = expectScrollRegion(renderer);
@@ -315,4 +403,22 @@ describe('Search scroll region on iOS', () => {
     expect(renderer.root.findAllByType(SearchSuggestions)).toHaveLength(0);
     expect(renderer.root.findAllByType(ResultsView)).toHaveLength(0);
   });
+});
+
+test('the page is cut only where an active field hides the bar: the iPhone, never an iPad or an unfolded Duo', () => {
+  const iPhone = {
+    fieldActive: true,
+    tabBarField: true,
+    pad: false,
+    regular: false,
+  };
+  expect(cutsAtSafeTop(iPhone)).toBe(true);
+  expect(cutsAtSafeTop({ ...iPhone, fieldActive: false })).toBe(false);
+  // iPad: the field is in the bar, which stays.
+  expect(cutsAtSafeTop({ ...iPhone, pad: true, regular: true })).toBe(false);
+  expect(cutsAtSafeTop({ ...iPhone, pad: true })).toBe(false);
+  // The unfolded Duo: a phone at regular width, the scope control pinned.
+  expect(cutsAtSafeTop({ ...iPhone, regular: true })).toBe(false);
+  // Before iOS 26 the field is stacked in the bar.
+  expect(cutsAtSafeTop({ ...iPhone, tabBarField: false })).toBe(false);
 });
