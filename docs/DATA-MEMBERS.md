@@ -93,3 +93,61 @@ existing mislinked federal rows, including `sa_harvey`, `nsw_david_shoebridge`,
 current federal members still carry their former state IDs. Relink actual
 members to their federal identities while keeping committee witnesses separate,
 then re-export the directory with its normal representation enrichment.
+
+## First speech and first division in the record (2026-11-15)
+
+`portal/public/people/firsts.json` is a side file to the roster, written by
+`scripts/export_people_firsts.py` (read-only on `parli.db`; it reads the
+shipped roster and never rewrites it). For each roster person it holds the
+date and document of the first speech the corpus holds for them, and the date
+and source address of the first division in which they are recorded voting aye
+or no. The script's docstring is the contract: what counts, how a speech or a
+division is matched to one roster row, and when nothing is published (a name
+two rows answer to, a scoped namesake, a division with no source address).
+
+"First" is a claim, so the export makes it only when the record can carry it.
+Each fact names its chamber, and `meta.coverage` gives the date the record of
+speeches and of divisions starts for each chamber. It is read from the
+database, never a constant, with a density floor: the first date held in the
+first calendar year with at least `meta.coverage_min_days` distinct days of
+rows, so one stray early row cannot move it. A chamber with no such year has
+no start. `meta.coverage_earliest_row` gives the bare earliest date beside it,
+and the export prints both per chamber for review.
+
+A fact is marked `"first": true` only for a person with a roster id that
+exactly one Parliamentary Handbook person (`ext_handbook_people`) is matched
+to, where the Handbook lists them in that one chamber only, their service
+history starts on or after that chamber's coverage start, and the fact falls
+no more than `meta.first_window_days` after it. The Handbook's service start
+is the first-ever entry to the federal parliament. The members table is not
+used: it holds one row per person with the latest membership's chamber and
+dates, so a member who returned or changed chamber would look newly arrived
+(it is read only to withhold a first when it dates the entry earlier than the
+Handbook does). The Handbook table holds recent parliaments only, so earlier
+members and every state member are never marked.
+
+Readers label a marked fact "First speech" or "First division". Every other
+fact is the earliest the record holds: readers say "Earliest speech in the
+OPAX record (from 1998)", with the year from `meta.coverage`, or leave it out
+when the chamber has no start, and never call it a first. Nothing ranks or
+compares people.
+
+A roster row with a `pid` is under `by_pid`; a row without one is under
+`by_name` by its exact roster name. Fields are only ever added.
+`portal/test/people-firsts.test.mjs` holds the shape the apps decode, on a
+sample built from a synthetic database (`scripts/test_export_people_firsts.py`).
+
+The `firsts` data group owns the file (`scripts/vm/data_groups.sh`), validated
+right after `people` by `validate_data.py firsts`: the shape, people that are
+in the roster on disk, no fewer people than HEAD's by more than a tenth, and no
+fact marked first without an entry date inside its chamber's record. The
+weekly refresh writes it in step `x_firsts`, after `x_people`, and logs the
+coverage the export printed. The speeches are scanned and deduped once a
+night: the roster export's own pass also writes each speaker's earliest
+speech (`export_parliamentarians.py --speech-facts`), and `x_firsts` reads
+that file instead of the table; with no facts the step is skipped and the
+shipped file kept. An export holds at least 500 people, so a broken first
+export fails validation instead of publishing an empty file. The nightly publishes only paths HEAD already
+has, so the committed file starts as an empty seed (no people, and a note
+saying so); the first gated weekly run replaces it. It is never exported by
+hand.

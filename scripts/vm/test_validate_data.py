@@ -481,6 +481,134 @@ class SuppliersTests(Base):
         self.assertLessEqual(len(self.errs("suppliers")), 12)
 
 
+class FirstsTests(Base):
+    """people/firsts.json: the side file of first speeches and divisions the firsts group owns."""
+    REL = f"{P}/people/firsts.json"
+
+    def setUp(self):
+        super().setUp()
+        # the three-person fixture is under the real floor; the floor has its own test below
+        floor = mock.patch.object(vd, "FIRSTS_MIN_PEOPLE", 3)
+        floor.start()
+        self.addCleanup(floor.stop)
+
+    def doc(self, **people):
+        roster = {"meta": {"people": 3}, "people": [{"name": "Avery Example", "pid": "90001"},
+                                                    {"name": "Blair Sample", "pid": "90002"},
+                                                    {"name": "Casey Specimen"}]}
+        by_pid = {"90001": {"service_from": "2007-11-24",
+                            "first_speech": {"date": "2008-02-12", "chamber": "representatives", "first": True,
+                                             "slug": "speech-11"},
+                            "first_division": {"date": "2008-02-13", "chamber": "representatives", "first": True,
+                                               "source": "theyvoteforyou",
+                                               "url": "https://theyvoteforyou.org.au/divisions/representatives/2008-02-13/1"}},
+                  "90002": {"first_speech": {"date": "2011-08-16", "chamber": "senate", "slug": "speech-21"}}}
+        by_name = {"Casey Specimen": {"first_speech": {"date": "2019-05-07", "chamber": "nsw_la", "slug": "speech-30"}}}
+        by_pid.update(people)
+        return roster, {"meta": {"schema": 1, "people": len(by_pid) + len(by_name),
+                                 "coverage": {"speeches": {"representatives": "1995-06-01"},
+                                              "divisions": {"representatives": "2006-02-07"}},
+                                 "sources": {"speech": "Hansard", "divisions": {"theyvoteforyou": "They Vote For You"}}},
+                        "by_pid": by_pid, "by_name": by_name}
+
+    def publish(self, firsts=None):
+        roster, doc = self.doc()
+        self.files[f"{P}/parliamentarians.json"] = roster
+        self.files[self.REL] = doc if firsts is None else firsts
+        self.make()
+
+    def test_a_file_neither_on_disk_nor_in_head_is_not_an_error_but_a_deleted_one_is(self):
+        self.assertFalse((self.root / self.REL).exists())
+        self.assertOk("firsts")
+        self.publish()
+        self.assertOk("firsts")
+        (self.root / self.REL).unlink()
+        self.assertFails("firsts", "deleted (HEAD has it)")
+
+    def test_the_empty_seed_passes_and_the_first_export_replaces_it(self):
+        _, doc = self.doc()
+        seed = {**doc, "meta": {**doc["meta"], "people": 0}, "by_pid": {}, "by_name": {}}
+        self.publish(seed)
+        self.assertOk("firsts")
+        self.write(self.REL, doc)
+        self.assertOk("firsts")
+
+    def test_an_export_under_the_floor_fails_and_the_untouched_seed_passes(self):
+        _, doc = self.doc()
+        seed = {**doc, "meta": {**doc["meta"], "people": 0}, "by_pid": {}, "by_name": {}}
+        self.publish(seed)
+        self.assertEqual(vd.FIRSTS_MIN_PEOPLE, 3)
+        self.assertOk("firsts")                                   # the seed, byte for byte HEAD's
+        # A broken first export: valid, empty, and not the seed's bytes.
+        self.write(self.REL, {**seed, "meta": {**seed["meta"], "generated": "2026-11-17"}})
+        self.assertFails("firsts", "0 people, under the floor of 3 for an export")
+        del doc["by_pid"]["90002"]
+        doc["meta"]["people"] = 2
+        self.write(self.REL, doc)
+        self.assertFails("firsts", "2 people, under the floor of 3 for an export")
+        with mock.patch.object(vd, "FIRSTS_MIN_PEOPLE", 500):
+            _, doc = self.doc()
+            self.write(self.REL, doc)
+            self.assertFails("firsts", "3 people, under the floor of 500 for an export")
+
+    def test_the_real_floor_is_a_third_of_the_roster(self):
+        self.assertEqual(SCRIPT.read_text().count("FIRSTS_MIN_PEOPLE = 500"), 1)
+
+    def test_people_may_not_shrink_under_the_ratio(self):
+        self.publish()
+        _, doc = self.doc()
+        del doc["by_pid"]["90002"]
+        doc["meta"]["people"] = 2
+        self.write(self.REL, doc)
+        with mock.patch.object(vd, "FIRSTS_MIN_PEOPLE", 2):
+            self.assertFails("firsts", "2 people, under 90% of HEAD's 3")
+
+    def test_a_first_needs_an_entry_date_inside_its_chambers_record(self):
+        self.publish()
+        for edit, why in (
+                (lambda d: d["by_pid"]["90001"].pop("service_from"), "no entry date"),
+                (lambda d: d["by_pid"]["90001"].update(service_from="1990-03-24"), "entered before the record"),
+                (lambda d: d["meta"]["coverage"]["divisions"].clear(), "no coverage start"),
+                (lambda d: d["by_pid"]["90002"]["first_speech"].update(first=True), "no entry date, no coverage"),
+                (lambda d: d["by_pid"]["90001"]["first_speech"].update(first=False), "first is true or absent"),
+        ):
+            with self.subTest(why):
+                _, doc = self.doc()
+                edit(doc)
+                self.write(self.REL, doc)
+                self.assertFails("firsts", "marked first without an entry date")
+
+    def test_people_must_be_in_the_roster_and_counted(self):
+        self.publish()
+        _, doc = self.doc(**{"99999": {"first_speech": {"date": "2020-02-04", "chamber": "senate", "slug": "speech-9"}}})
+        self.write(self.REL, doc)
+        self.assertFails("firsts", "1 people are not in the roster on disk")
+        _, doc = self.doc()
+        doc["by_name"]["Avery Example"] = doc["by_name"].pop("Casey Specimen")   # a row with a pid, under its name
+        self.write(self.REL, doc)
+        self.assertFails("firsts", "not in the roster on disk")
+        _, doc = self.doc()
+        doc["meta"]["people"] = 7
+        self.write(self.REL, doc)
+        self.assertFails("firsts", "meta.people is 7 but the file holds 3")
+
+    def test_each_fact_needs_its_document_or_named_source(self):
+        self.publish()
+        for edit, needle in (
+                (lambda d: d["by_pid"]["90001"]["first_speech"].update(slug="legal-3"), "no speech document"),
+                (lambda d: d["by_pid"]["90001"]["first_division"].update(url="http://example.org/x"), "no named source"),
+                (lambda d: d["by_pid"]["90001"]["first_division"].update(source="unnamed"), "no named source"),
+                (lambda d: d["by_pid"]["90002"]["first_speech"].pop("chamber"), "no date or chamber"),
+                (lambda d: d["by_pid"].update({"90002": {}}), "holds neither fact"),
+                (lambda d: d["meta"].update(schema=2), "meta.schema is 2"),
+        ):
+            with self.subTest(needle):
+                _, doc = self.doc()
+                edit(doc)
+                self.write(self.REL, doc)
+                self.assertFails("firsts", needle)
+
+
 class SpeakersTests(Base):
     def test_speakers_must_be_at_least_95_percent(self):
         self.write(f"{P}/speakers.json", self.load(f"{P}/speakers.json")[:95])
