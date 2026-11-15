@@ -8,15 +8,25 @@ export const VIC_ELECTION_POLLS_CLOSE = '2026-11-28T18:00:00+11:00';
 export const VIC_ELECTION_DAY_START = '2026-11-28T00:00:00+11:00';
 export const VIC_ELECTION_EARLY_OPEN = '2026-11-18T09:00:00+11:00';
 export const VIC_ELECTION_EARLY_CLOSE = '2026-11-27T18:00:00+11:00';
-// The Legislative Assembly expired on Tuesday 3 November 2026: Constitution Act 1975 s 38 (the Tuesday 25
-// days before election day), as the Parliament of Victoria's election page states. It expired; it was not
-// dissolved. The instant is the 6 pm issue of the writs, when the caretaker period began.
+// The Legislative Assembly expired on Tuesday 3 November 2026: Constitution Act 1975 s 38(1) (the Tuesday
+// 25 days before election day), as the Parliament of Victoria's election page and the Victorian caretaker
+// guidelines state. It expired; it was not dissolved. The Legislative Council ended with it: s 28(2) has
+// the Council "exist and continue until the dissolution or other lawful determination of the Assembly",
+// and s 27A(2) speaks of a Council seat becoming "vacant due to the expiry of the Assembly". Every seat of
+// both houses is contested on 28 November. The instant is the 6 pm issue of the writs, when the caretaker
+// period began.
 export const VIC_ASSEMBLY_EXPIRED_AT = '2026-11-03T18:00:00+11:00';
 /** "until the Assembly expired on 3 November": said of the roster member of a seat whose house has ended. */
-export const vicAssemblyExpiredPhrase = () => `until the Assembly expired on ${Number(VIC_ASSEMBLY_EXPIRED_AT.slice(8,10))} ${['January','February','March','April','May','June','July','August','September','October','November','December'][Number(VIC_ASSEMBLY_EXPIRED_AT.slice(5,7)) - 1]}`;
+const expiredDay = () => `${Number(VIC_ASSEMBLY_EXPIRED_AT.slice(8,10))} ${['January','February','March','April','May','June','July','August','September','October','November','December'][Number(VIC_ASSEMBLY_EXPIRED_AT.slice(5,7)) - 1]}`;
+export const vicAssemblyExpiredPhrase = () => `until the Assembly expired on ${expiredDay()}`;
+/** "until the Council expired on 3 November": said of a region's roster members, as "Member for X Region". */
+export const vicCouncilExpiredPhrase = () => `until the Council expired on ${expiredDay()}`;
 /** A Legislative Assembly record (an electorates index row or detail file) that still carries dissolved_for:
  *  the Assembly has ended and the new parliament's roster has not been exported for the seat. */
 export const vicAssemblyEnded = row => row?.chamber === 'vic_la' && Boolean(row.dissolved_for);
+/** The Council's term is the Assembly's, and the index records the Assembly's alone: the Council has ended
+ *  while any Assembly row still waits on the new parliament's roster. */
+export const vicCouncilEnded = rows => Array.isArray(rows) && rows.some(vicAssemblyEnded);
 export const VIC_ELECTION_RESULTS_URL = 'https://www.vec.vic.gov.au/results/state-election-results';
 // Time-sensitive election responses must revalidate, including at the close of polls.
 export const VIC_ELECTION_CACHE = 'public, max-age=0, must-revalidate';

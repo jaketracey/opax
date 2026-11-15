@@ -1,6 +1,6 @@
 import {partyLabelHTML, partyShortName} from '../public/party-page.js'
 import {shortDate} from '../public/format.js'
-import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_DAY_START, VIC_ELECTION_EARLY_OPEN, VIC_ELECTION_EARLY_CLOSE, VIC_ELECTION_RESULTS_URL, VIC_ASSEMBLY_EXPIRED_AT, vicAssemblyExpiredPhrase, vicAssemblyEnded, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
+import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_DAY_START, VIC_ELECTION_EARLY_OPEN, VIC_ELECTION_EARLY_CLOSE, VIC_ELECTION_RESULTS_URL, VIC_ASSEMBLY_EXPIRED_AT, vicAssemblyExpiredPhrase, vicCouncilExpiredPhrase, vicAssemblyEnded, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
 import {hubShell, type HubFooterConfig} from './hubs'
 import {trail} from './nav-model.mjs'
@@ -72,6 +72,11 @@ export type AssemblyIndex = ReadonlyMap<string, string | null>
 export const assemblyExpired = (d: VicElection, s: Seat, now: Date, index: AssemblyIndex | null = null) =>
   s.kind === 'district' && past(VIC_ASSEMBLY_EXPIRED_AT,now)
     && (index?.has(s.name) ? index.get(s.name) != null : s.roster_date < d.election_day)
+/** The same for a region's members. The Council ended with the Assembly (Constitution Act 1975 s 28(2))
+ *  and the index records the Assembly's seats alone, so a region follows its own districts. */
+export const councilExpired = (d: VicElection, s: Seat, now: Date, index: AssemblyIndex | null = null) =>
+  s.kind === 'region' && past(VIC_ASSEMBLY_EXPIRED_AT,now)
+    && (index && s.districts.some(name=>index.has(name)) ? s.districts.some(name=>index.get(name) != null) : s.roster_date < d.election_day)
 export const pollsClosed = (now: Date) => past(VIC_ELECTION_POLLS_CLOSE,now)
 export const visibleResults = (d: VicElection, now: Date) => pollsClosed(now) ? d.current_results ?? null : null
 
@@ -279,6 +284,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
   const rosterNote = closed ? `Members are from the published roster dated ${shortDate(d.seats.map(s=>s.roster_date).sort().at(-1)!)}. ` : ''
   const districts = d.seats.filter(x=>x.kind === 'district'), regions = d.seats.filter(x=>x.kind === 'region')
   const expired = (x: Seat) => assemblyExpired(d,x,now,index), until = vicAssemblyExpiredPhrase()
+  const councilEnded = (x: Seat) => councilExpired(d,x,now,index), untilCouncil = vicCouncilExpiredPhrase()
   // Nobody is called a member of a house that no longer sits: the rows name who was the member until it expired.
   const districtNote = rosterNote + `Each row shows the ${districts.every(expired) ? `member ${until}` : 'member'} and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.`
   let title: string, description: string, body: string, crumbs: Crumb[]
@@ -292,7 +298,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + `<div class="vic-top">${finder(d,find?.place ?? null,find?.hits ?? null,copy.finder,expired)}${keyDates(d,now)}</div>`
       + electionResults(d,null,now)
       + section('districts','Lower house: 88 districts',seatList(districts.map(x=>seatRow(x)).join(''),'Districts'),districtNote)
-      + section('regions','Upper house: 8 regions',`<ul class="vic-regions">${regions.map(r=>`<li><a class="vic-region" href="${esc(r.path)}"><span class="vic-seat-name">${esc(r.name)}</span><span class="vic-region-members">${r.members.map(m=>`<span>${esc(m.name)} ${party(m.party)}</span>`).join('')}</span></a></li>`).join('')}</ul>`,rosterNote+'Each region elects five members.')
+      + section('regions','Upper house: 8 regions',`<ul class="vic-regions">${regions.map(r=>`<li><a class="vic-region" href="${esc(r.path)}"><span class="vic-seat-name">${esc(r.name)}</span><span class="vic-region-members">${r.members.map(m=>`<span>${esc(m.name)} ${party(m.party)}</span>`).join('')}</span></a></li>`).join('')}</ul>`,rosterNote+'Each region elects five members.'+(regions.every(councilEnded) ? ` Each row shows the members ${untilCouncil}.` : ''))
   } else if (s.kind === 'district') {
     const m = s.members[0], region = d.seats.find(r=>r.kind === 'region' && r.name === s.region)!
     title = `${s.name} district · Victorian election 2026`
@@ -308,18 +314,19 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + `<dl class="vic-facts"><div><dt>${ended ? esc(`Member for ${s.name} ${until}${closed ? `, from the published roster dated ${shortDate(s.roster_date)}` : ''}`) : closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>${resultFacts(s)}</dl>`
       + candidates(s)
       + section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''}))
-      + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.`)
+      + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.${councilEnded(region) ? ` Listed are the members for ${esc(region.name)} Region ${untilCouncil}.` : ''}`)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'District map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find another seat')])}</div>`
   } else {
     title = `${s.name} Region · Victorian election 2026`
-    description = `The five upper house members ${closed ? 'in the published roster for' : 'for'} ${s.name} Region, what they have done in Parliament, and its 11 districts. ${copy.lede}`
+    const ended = councilEnded(s)
+    description = `The five ${ended ? `members for ${s.name} Region ${untilCouncil}` : `upper house members ${closed ? 'in the published roster for' : 'for'} ${s.name} Region`}, what they have done in Parliament, and its 11 districts. ${copy.lede}`
     crumbs = trail(VIC_ELECTION_PATH, s.name+' Region')
     body = `<div class="ui-page-head"><h1>${esc(s.name)} Region</h1><p class="ui-page-meta">Upper house region with five members and 11 districts${s.formerly ? `. Called ${esc(s.formerly)} Region before 2022` : ''}.</p></div>`
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
       + candidates(s)
-      + section('members',closed ? 'Members in the published roster' : 'Members',`<div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`})).join('')}</div>`,closed ? `Roster dated ${esc(shortDate(s.roster_date))}.` : '')
+      + section('members',ended ? `Members for ${esc(s.name)} Region ${untilCouncil}` : closed ? 'Members in the published roster' : 'Members',`<div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`})).join('')}</div>`,closed ? `Roster dated ${esc(shortDate(s.roster_date))}.` : '')
       + section('districts','Districts in this region',seatList(s.districts.map(name=>seatRow(memberOf(d,name))).join(''),'Districts'),districtNote)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'Region map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find your seat')])}</div>`

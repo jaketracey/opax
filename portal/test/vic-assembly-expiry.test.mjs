@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
-import {VIC_ASSEMBLY_EXPIRED_AT,VIC_ELECTION_ASSET,vicAssemblyEnded,vicAssemblyExpiredPhrase} from '../public/vic-election.js';
+import {VIC_ASSEMBLY_EXPIRED_AT,VIC_ELECTION_ASSET,vicAssemblyEnded,vicAssemblyExpiredPhrase,vicCouncilEnded,vicCouncilExpiredPhrase} from '../public/vic-election.js';
 import {profileHTML} from '../public/electorates.js';
 import {personRole,personTitle,roleLine} from '../src/seo-titles.ts';
 
@@ -15,11 +15,13 @@ async function compile(entry) {
   const result=await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false});
   return import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
 }
-const {renderVicElection,vicElectionPage,assemblyExpired,readAssemblyIndex}=await compile('../src/vic-election.ts');
+const {renderVicElection,vicElectionPage,assemblyExpired,councilExpired,readAssemblyIndex}=await compile('../src/vic-election.ts');
 const json=async path=>JSON.parse(await readFile(new URL(path,import.meta.url),'utf8'));
 const data=await json('../public/hubs/vic-election-2026.json');
 const record=(await json('../../scripts/hubs/electorate-dissolutions.json')).dissolutions.find(r=>r.chamber==='vic_la');
 const PHRASE='until the Assembly expired on 3 November';
+const COUNCIL='until the Council expired on 3 November';
+const region=data.seats.find(s=>s.kind==='region');
 const seat=data.seats.find(s=>s.kind==='district'&&s.name==='Richmond'),member=seat.members[0].name;
 const BEFORE=new Date('2026-11-03T17:59:00+11:00'),NOW=new Date('2026-11-16T10:00:00+11:00'),AFTER=new Date('2026-11-29T10:00:00+11:00');
 const index=value=>new Map(data.seats.filter(s=>s.kind==='district').map(s=>[s.name,value]));
@@ -54,8 +56,8 @@ test('the wording changes when the new parliament’s roster loads',()=>{
   assert.equal(label(NOW,null),`Member for Richmond ${PHRASE}`);
   assert.equal(assemblyExpired(data,{...seat,roster_date:'2026-12-20'},new Date('2026-12-21T10:00:00+11:00'),null),false);
   assert.equal(assemblyExpired(data,seat,AFTER,new Map()),true);
-  // Regions are the Council: this wording is the Assembly's alone.
-  assert.equal(assemblyExpired(data,data.seats.find(s=>s.kind==='region'),NOW,null),false);
+  // Regions are the Council: the Assembly's wording is not theirs.
+  assert.equal(assemblyExpired(data,region,NOW,null),false);
 });
 
 test('the hub rows and the finder say member until the Assembly expired',()=>{
@@ -87,7 +89,7 @@ test('an electorate profile has no current member while the Assembly is ended',a
   const title=html=>JSDOM.fragment(html).querySelector('#el-held h2').textContent;
   assert.equal(title(profileHTML(detail)),`Member ${PHRASE}`);
   assert.equal(title(profileHTML({...detail,dissolved_for:null})),'Current member');
-  // Only the Assembly's rows carry the record: a Council region and a federal seat are unchanged.
+  // Only the Assembly's rows carry the record.
   assert.equal(vicAssemblyEnded({chamber:'vic_lc',dissolved_for:'2026-11-28'}),false);
   assert.equal(vicAssemblyEnded({chamber:'representatives'}),false);
 });
@@ -99,8 +101,51 @@ test('a person title drops "MP" for a member of the expired Assembly',()=>{
   assert.equal(ended.name,'Example Member');assert.equal(ended.former,'');
   assert.equal(roleLine(ended),`Labor Member for Richmond ${PHRASE} (Vic)`);
   assert.equal(personTitle('Example Member',ended,'Speeches'),`Example Member, Member for Richmond ${PHRASE} · OPAX`);
-  // A former member stays former; a Council member is not the Assembly's to describe.
+  // A former member stays former.
   assert.equal(roleLine(personRole({...p,last:2019},2026,()=>PHRASE)),'former Labor Member for Richmond (Vic)');
+  // A Council member is "Member for X Region until the Council expired", and "MLC for" once the new roster loads.
   const mlc={...p,representation:[{jurisdiction:'vic',chamber:'vic_lc',electorate:'Northern Metropolitan',state:'VIC'}]};
-  assert.equal(roleLine(personRole(mlc,2026,()=>PHRASE)),'Labor MLC for Northern Metropolitan (Vic)');
+  assert.equal(roleLine(personRole(mlc,2026)),'Labor MLC for Northern Metropolitan (Vic)');
+  assert.equal(roleLine(personRole(mlc,2026,()=>COUNCIL)),`Labor Member for Northern Metropolitan Region ${COUNCIL} (Vic)`);
+  assert.equal(personTitle('Example Member',personRole(mlc,2026,()=>COUNCIL),'Speeches'),`Example Member, Member for Northern Metropolitan Region ${COUNCIL} · OPAX`);
+});
+
+test('a region page names its members until the Council expired, following the Assembly’s record',()=>{
+  assert.equal(vicCouncilExpiredPhrase(),COUNCIL);
+  const title=(now,idx)=>JSDOM.fragment(renderVicElection(data,region,{},now,null,idx).html).querySelector('#members h2').textContent;
+  for(const idx of [index(data.election_day),null]) for(const now of [NOW,AFTER]) {
+    assert.equal(title(now,idx),`Members for ${region.name} Region ${COUNCIL}`);
+    assert.match(renderVicElection(data,region,{},now,null,idx).description,new RegExp(`^The five members for ${region.name} Region ${COUNCIL}, `));
+  }
+  assert.equal(title(BEFORE,index(data.election_day)),'Members');
+  // The new parliament's roster clears the Assembly's rows, and the Council's wording goes with them.
+  assert.equal(title(NOW,index(null)),'Members');assert.equal(title(AFTER,index(null)),'Members in the published roster');
+  assert.equal(councilExpired(data,region,AFTER,index(null)),false);
+  assert.equal(councilExpired(data,{...region,roster_date:'2026-12-20'},new Date('2026-12-21T10:00:00+11:00'),null),false);
+  assert.equal(councilExpired(data,seat,NOW,null),false);
+  // The hub's region list and a district page's region section say the same.
+  assert.match(renderVicElection(data,null,{},NOW,null,index(data.election_day)).html,new RegExp(`Each region elects five members\\. Each row shows the members ${COUNCIL}\\.`));
+  assert.doesNotMatch(renderVicElection(data,null,{},BEFORE).html,/Council expired/);
+  const own=data.seats.find(r=>r.kind==='region'&&r.name===seat.region);
+  assert.match(JSDOM.fragment(renderVicElection(data,seat,{},NOW,null,index(data.election_day)).html).querySelector('#region .ui-section-note').textContent,new RegExp(`Listed are the members for ${own.name} Region ${COUNCIL}\\.$`));
+});
+
+test('a Council region’s electorate profile has no current members while the Assembly’s rows say the house has ended',async()=>{
+  const manifest=await json('../public/electorates/manifest.json'),rows=(await json('../public'+manifest.index_url)).electorates;
+  const detail=await json('../public'+rows.find(e=>e.chamber==='vic_lc').detail_url);
+  const title=html=>JSDOM.fragment(html).querySelector('#el-held h2').textContent;
+  assert.equal(vicCouncilEnded(rows),true);
+  assert.equal(title(profileHTML(detail,'',{councilEnded:vicCouncilEnded(rows)})),`Members ${COUNCIL}`);
+  const seated=rows.map(e=>'dissolved_for' in e?{...e,dissolved_for:null}:e);
+  assert.equal(vicCouncilEnded(seated),false);assert.equal(vicCouncilEnded(null),false);
+  assert.equal(title(profileHTML(detail,'',{councilEnded:vicCouncilEnded(seated)})),'Current members');
+  // Another state's council is never read from Victoria's record.
+  assert.equal(title(profileHTML({...detail,chamber:'nsw_lc'},'',{councilEnded:true})),'Current members');
+});
+
+test('nothing a reader sees says this parliament was dissolved',()=>{
+  for(const s of [null,seat,region]) for(const now of [NOW,AFTER]) {
+    const page=renderVicElection(data,s,{},now,null,index(data.election_day));
+    assert.doesNotMatch(page.html.replace(/<[^>]+>/g,' ')+' '+page.title+' '+page.description,/dissol/i);
+  }
 });

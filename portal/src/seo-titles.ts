@@ -59,7 +59,8 @@ export interface PersonRole {
  * `ended` answers for a seat whose house no longer sits (an expired or dissolved
  * lower house before its new roster loads) with the words that say so, such as
  * "until the Assembly expired on 3 November": its sitting member is then named
- * without "MP", as the member for the seat until that day.
+ * without "MP", as the member for the seat until that day. An ended Council
+ * seat reads "Member for X Region until the Council expired on 3 November".
  */
 export function personRole(p: RolePerson, year: number, ended: (seat: RoleSeat) => string | null = () => null): PersonRole | null {
   const seats = p.representation ?? []
@@ -78,9 +79,10 @@ export function personRole(p: RolePerson, year: number, ended: (seat: RoleSeat) 
   const senate = federal && seat.chamber === 'senate'
   // Some state rosters append the member's portfolios ("Williamstown – Minister for Ports").
   const place = seat.electorate.split(/\s+[–—-]\s+/)[0].trim().replace(/^Legislative Council district of /, '')
-  const until = sitting && LOWER_HOUSES.has(seat.chamber) ? ended(seat) : null
+  const until = sitting && (LOWER_HOUSES.has(seat.chamber) || COUNCILS.has(seat.chamber)) ? ended(seat) : null
   const role = senate ? `Senator for ${TERRITORIES[place] ?? place}`
-    : COUNCILS.has(seat.chamber) ? `MLC for ${place}`
+    // Victoria's form for a region's member once the Council has expired: "Member for X Region until ...".
+    : COUNCILS.has(seat.chamber) ? (until ? `Member for ${place} Region ${until}` : `MLC for ${place}`)
     : LOWER_HOUSES.has(seat.chamber) ? `Member for ${place}${until ? ` ${until}` : ''}`
     : `representative for ${place}`
   const stateTag = STATE_TAGS[String(seat.state ?? seat.jurisdiction).toUpperCase()] ?? ''

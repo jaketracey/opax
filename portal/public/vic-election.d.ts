@@ -8,6 +8,8 @@ export const VIC_ELECTION_EARLY_CLOSE: string;
 export const VIC_ELECTION_RESULTS_URL: string;
 export const VIC_ASSEMBLY_EXPIRED_AT: string;
 export function vicAssemblyExpiredPhrase(): string;
+export function vicCouncilExpiredPhrase(): string;
+export function vicCouncilEnded(rows?: {chamber?: string; dissolved_for?: string | null}[] | null): boolean;
 export function vicAssemblyEnded(row?: {chamber?: string; dissolved_for?: string | null} | null): boolean;
 export const VIC_ELECTION_CACHE: string;
 export const VIC_ELECTION_ASSET: string;
