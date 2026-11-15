@@ -12,7 +12,7 @@ import { layoutProbeEnabled } from './layout-probe-flag';
 /**
  * A measuring build only. On the closed iPhone Duo every pushed page was
  * reported to start higher and drop about 58 pt a moment later; the
- * simulator does not show it. With `EXPO_PUBLIC_OPAX_LAYOUT_PROBE=1` set at
+ * simulator does not show it. With `OPAX_LAYOUT_PROBE=1` set at
  * build time, each Screen records where its content sits in the window on
  * its first layout, 250 ms later and 1 s later, with the header height and
  * the scroll offset at each. The numbers stay in memory on the device, are

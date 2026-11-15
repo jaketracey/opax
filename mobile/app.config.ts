@@ -27,9 +27,9 @@ const microphonePrompt =
 // Store build. It travels in this configuration, not in the JavaScript:
 // Metro's transform cache is not keyed on environment variables, so a value
 // inlined into the bundle can outlive the build that set it.
-const layoutProbe = process.env.EXPO_PUBLIC_OPAX_LAYOUT_PROBE ?? '0';
+const layoutProbe = process.env.OPAX_LAYOUT_PROBE ?? '0';
 if (!['0', '1'].includes(layoutProbe))
-  throw new Error('EXPO_PUBLIC_OPAX_LAYOUT_PROBE must be 0 or 1');
+  throw new Error('OPAX_LAYOUT_PROBE must be 0 or 1');
 // Anonymous product analytics and crash reports (docs/ANALYTICS.md): every
 // production build, iOS and Android (from Android b71, with its Google Play
 // Data safety answers in docs/ANDROID-STORE.md), under the same runtime gates
