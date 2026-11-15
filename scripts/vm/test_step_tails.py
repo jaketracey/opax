@@ -243,6 +243,38 @@ class DeltaReviewFindings(unittest.TestCase):
         self.assertLess(nightly.index("flock -n 8"), nightly.index('rm -rf "$PIPE"/.status.*'))
 
 
+class ThirdReviewFindings(unittest.TestCase):
+    """The ordering regression and the cut found in the third review; every value here is made up."""
+
+    def test_p2_a_known_value_holding_a_space_quote_or_symbol_is_masked_whole(self):
+        cases = {
+            "correct horse battery9": ("password=correct horse battery9", "password=[redacted]"),
+            "Wb7Nc3Kd9Fq2!Zx$81": ("invalid key Wb7Nc3Kd9Fq2!Zx$81", "invalid key [redacted]"),
+            'pa"ss\\wo rd9!': ('{"password": "pa\\"ss\\\\wo rd9!"}', '{"password": "[redacted]"}'),
+        }
+        for value, (line, want) in cases.items():
+            secrets = st.known_secrets({"X_SECRET": value}, [])
+            out = st.redact(line, secrets)
+            self.assertTrue(out.startswith(want[:want.index("[redacted]")].rstrip('"')), out)
+            for piece in ("horse", "battery9", "Zx$81", "!Zx", 'pa\\"', "wo rd9", "rd9!"):
+                self.assertNotIn(piece, out, line)
+
+    def test_p2_a_known_value_before_a_colon_that_is_not_an_assignment_is_still_masked(self):
+        secrets = st.known_secrets({"X_SECRET": "Wb7Nc3Kd9Fq2"}, [])
+        self.assertEqual(st.redact("sent Wb7Nc3Kd9Fq2: refused", secrets), "sent [redacted]: refused")
+        self.assertEqual(st.redact("Wb7Nc3Kd9Fq2=1", secrets), "[redacted]=1")
+
+    def test_p3_the_start_of_a_known_value_at_the_cut_is_masked(self):
+        secrets = st.known_secrets({"X_SECRET": "Wb7Nc3Kd9Fq2"}, [])
+        line = 'token="' + "a" * (st.PRE_CUT - 23) + '" then Wb7Nc3Kd9Fq2 and more'
+        self.assertEqual(line[:st.PRE_CUT][-9:], "Wb7Nc3Kd9")   # the cut falls inside the value
+        out = st.redact(line, secrets)
+        self.assertEqual(out, "token=[redacted] then [redacted]")
+        # an ordinary long line that merely ends at the cut is not eaten
+        plain = st.redact("word " * 2000, secrets)
+        self.assertTrue(plain.startswith("word word") and "[redacted]" not in plain)
+
+
 class Tails(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()

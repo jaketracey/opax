@@ -43,6 +43,7 @@ MAX_LINE = 300
 READ_BYTES = 65536
 MIN_SECRET = 6
 MIN_DIGITS = 8          # an all-digit value this long is a PIN or an id, not a count or a port
+MIN_PREFIX = 4          # the shortest start of a known value masked at the end of a cut line
 PRE_CUT = 4096          # characters of a line that are redacted at all; the rest is dropped first
 MAX_STEPS = 40          # failed steps shown; the rest are counted
 MAX_TOTAL = 49152       # bytes of JSON for all tails together
@@ -185,13 +186,29 @@ def _mask_long_runs(line: str) -> str:
 
 def redact(line: str, secrets: list[str], home: str = "") -> str:
     # Cut first: the patterns below are slow on a very long line (64 KiB of `a.b-c_d.` took 84 s, past the
-    # caller's timeout, so no tails at all). A secret split by this cut lies far beyond MAX_LINE and is dropped.
-    line = CONTROL.sub(" ", line[:PRE_CUT])
-    # name=value secrets go first: a known value that is itself a word (GRANT_TYPE=password) would otherwise
-    # rewrite the name in `password=...` and leave the value standing
+    # caller's timeout, so no tails at all). The cut may fall inside a known value, and masking earlier text
+    # can pull that half into the published part: if the cut line ends with the start of a known value
+    # (MIN_PREFIX characters or more, so ordinary words are not eaten), that end is masked.
+    if len(line) > PRE_CUT:
+        line = line[:PRE_CUT]
+        longest = 0
+        for secret in secrets:
+            for size in range(min(len(secret) - 1, PRE_CUT), max(MIN_PREFIX, longest + 1) - 1, -1):
+                if line.endswith(secret[:size]):
+                    longest = size
+                    break
+        if longest:
+            line = line[:-longest] + "[redacted]"
+    line = CONTROL.sub(" ", line)
+    # Pass 1, what this run knows to be a credential, comes first and whole: a value holding a space, a quote or
+    # a symbol would otherwise be masked only up to it by the shapes below. One exception: a match that is the
+    # name of an assignment (directly followed by `=` or `:`) is left for now, or a known value that is itself a
+    # word (GRANT_TYPE=password) would rewrite the name in `password=...` and hide the value from the shapes.
+    for secret in secrets:
+        line = re.sub(re.escape(secret) + r"(?![\"']?\s*[=:])", "[redacted]", line)
     line = SECRET_ASSIGNMENT.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
     line = SECRET_WORD_VALUE.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
-    for secret in secrets:                      # pass 1: what this run knows to be a credential
+    for secret in secrets:                      # and the matches left above, now that their values are masked
         line = line.replace(secret, "[redacted]")
     if home and len(home) > 1:                  # pass 2: what is only shaped like one
         line = line.replace(home, "~")
