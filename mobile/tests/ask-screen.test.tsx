@@ -875,7 +875,8 @@ const one = (id: string) =>
  * loop's own clock, which lags under load. A fixed 650 ms sleep could
  * therefore end before the 600 ms hold it was meant to outlast.
  */
-async function statusBecomes(text: string, timeout = 10_000) {
+// Under Jest's 5 s default, so a real miss reads as expected and received.
+async function statusBecomes(text: string, timeout = 4000) {
   const end = Date.now() + timeout;
   while (textOf('ask-status') !== text && Date.now() < end)
     await act(async () => {
