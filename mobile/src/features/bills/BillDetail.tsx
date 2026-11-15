@@ -1107,7 +1107,18 @@ function SeededHead({
   row: IndexRow;
   directory: SponsorDirectory | null | undefined;
 }) {
-  const display = billDisplay(row);
+  const display = useMemo(() => billDisplay(row), [row]);
+  // The loaded header's own sponsor rows, from what the row knows. The index
+  // row carries no person ID: the bill's file confirms it.
+  const sponsors = useMemo(
+    () => ({
+      sponsorMembers: display.sponsorMembers,
+      sponsorParty: display.sponsor_party,
+      sponsorPersonId: null,
+      portfolio: display.portfolio,
+    }),
+    [display],
+  );
   const name = billName(row);
   // The index row carries no stages or votes, only the export's ending when
   // it has one: the same word the bill's own file gives.
@@ -1151,16 +1162,7 @@ function SeededHead({
           </TermText>
         ) : null}
       </View>
-      <Sponsors
-        identity={{
-          sponsorMembers: display.sponsorMembers,
-          sponsorParty: display.sponsor_party,
-          // The index row carries no person ID: the bill's file confirms it.
-          sponsorPersonId: null,
-          portfolio: display.portfolio,
-        }}
-        directory={directory}
-      />
+      <Sponsors identity={sponsors} directory={directory} />
       <FollowButton
         kind="bill"
         id={row.key}

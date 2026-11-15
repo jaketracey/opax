@@ -573,20 +573,21 @@ export class Catalogs {
     return this.billIndex?.data.bills.find((row) => row.key === key) ?? null;
   }
   /**
-   * `persist: false` reads the file without saving it for offline use: for
-   * a screen that reads every bill at once (see `ApiClient.get`).
+   * `persist: false` reads the file without saving it for offline use, and
+   * `retries` bounds the attempts: for a screen that reads every bill at
+   * once (see `ApiClient.get`).
    */
   bill(
     key: string,
     refresh = false,
     signal?: AbortSignal,
-    { persist = true }: { persist?: boolean } = {},
+    { persist = true, retries }: { persist?: boolean; retries?: number } = {},
   ) {
     return this.client.get(
       `/bills/${billKey(key)}.json`,
       decode.decodeBill,
       refresh,
-      { signal, persist },
+      { signal, persist, ...(retries === undefined ? {} : { retries }) },
     );
   }
   votes(signal?: AbortSignal, refresh = false) {
