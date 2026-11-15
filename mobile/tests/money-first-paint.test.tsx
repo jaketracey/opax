@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import * as ReactNative from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { ApiError } from '../src/api/errors';
@@ -434,6 +435,71 @@ describe('the band under the panel', () => {
     } finally {
       os.restore();
     }
+  });
+});
+
+describe('the card at large text', () => {
+  let window: jest.SpyInstance;
+  beforeEach(() => {
+    window = jest
+      .spyOn(ReactNative, 'useWindowDimensions')
+      .mockReturnValue({ width: 402, height: 874, fontScale: 2.3, scale: 3 });
+    // Each case reads the graph itself: an earlier case may have left a
+    // held read behind (clearAllMocks keeps implementations).
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+  });
+  afterEach(() => window.mockRestore());
+
+  test('the jurisdiction and the List | Map picker stay out of the scroll; only the sentence scrolls', async () => {
+    const r = await render();
+    const card = byTestID(r.root, 'money-map-card');
+    const scroll = byTestID(r.root, 'money-map-card-scroll');
+    const within = (root: ReactTestInstance, id: string) =>
+      root.findAll((n) => n.props.testID === id).length > 0;
+    expect(within(scroll, 'money-view-summary')).toBe(true);
+    for (const pinned of ['money-map-card-head', 'money-map-card-picker']) {
+      expect(within(card, pinned)).toBe(true);
+      expect(within(scroll, pinned)).toBe(false);
+    }
+    expect(
+      within(byTestID(r.root, 'money-map-card-picker'), 'money-view-toggle'),
+    ).toBe(true);
+    await act(async () => r.unmount());
+  });
+
+  test('where the pinned parts need more than the cap, the cap is theirs and the panel gives it back', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (flat(top).maxHeight === undefined) top = top.parent!;
+    const cap = flat(top).maxHeight as number;
+    const panelCap = r.root.findByType(MoneyMapPanel).props.maxHeight;
+    // The jurisdiction and the picker, far taller than the cap allows.
+    act(() => {
+      for (const id of ['money-map-card-head', 'money-map-card-picker'])
+        byTestID(r.root, id).props.onLayout({
+          nativeEvent: { layout: { height: 200 } },
+        });
+    });
+    const raised = flat(top).maxHeight as number;
+    expect(raised).toBeGreaterThan(cap);
+    expect(raised).toBeGreaterThanOrEqual(400 + 44);
+    act(() =>
+      top.props.onLayout({ nativeEvent: { layout: { height: raised } } }),
+    );
+    expect(r.root.findByType(MoneyMapPanel).props.maxHeight).toBeLessThan(
+      panelCap,
+    );
+    await act(async () => r.unmount());
   });
 });
 
