@@ -42,6 +42,7 @@ import {
   FigureBlock,
   Group,
   Heading,
+  Icon,
   MoneyRow,
   OfflineLine,
   PopUpButton,
@@ -56,6 +57,7 @@ import {
   useLayout,
   useScreenColumn,
 } from '../../design/primitives';
+import { symbols } from '../../design/symbols';
 import {
   colors,
   hairline,
@@ -883,6 +885,16 @@ function MapMode({
   // search and zoom controls there, which is why the card gave it up.
   const sentenceUnseen =
     sentenceLines === 0 && data ? moneySummary(data.graph, data.filters) : null;
+  // The offline line is set in the sentence's type, so where a line of the
+  // sentence does not fit, neither does it. Stale data is still said: the
+  // line's own mark is drawn in the room, and its words follow the sentence
+  // in the room's label.
+  const unseenOffline =
+    sentenceUnseen !== null && data?.record.stale && !data.record.staleReason
+      ? data.record.savedAt === null
+        ? 'You’re offline.'
+        : copy.offline(data.record.savedAt)
+      : null;
   const insets = useMemo(
     () =>
       pose.folded
@@ -1460,10 +1472,24 @@ function MapMode({
                     <View
                       accessible
                       accessibilityRole="text"
-                      accessibilityLabel={sentenceUnseen}
-                      style={{ height: sentenceRoom }}
+                      accessibilityLabel={
+                        unseenOffline === null
+                          ? sentenceUnseen
+                          : `${sentenceUnseen} ${unseenOffline}`
+                      }
+                      style={[styles.unseenRoom, { height: sentenceRoom }]}
                       testID="money-view-summary-unseen"
-                    />
+                    >
+                      {unseenOffline === null ? null : (
+                        <View testID="money-offline-mark">
+                          <Icon
+                            name={symbols.offline}
+                            size={Math.min(28, sentenceRoom)}
+                            tone="inkSoft"
+                          />
+                        </View>
+                      )}
+                    </View>
                   )}
                   {hooks}
                   {sentenceUnseen === null ? offline : null}
@@ -1928,6 +1954,7 @@ const styles = StyleSheet.create({
   unavailable: { flexGrow: 1, justifyContent: 'center', padding: rhythm.block },
   // Laid out, never seen or read: it keeps the place of words still to come.
   unseen: { opacity: 0 },
+  unseenRoom: { justifyContent: 'center' },
   lineProbe: { position: 'absolute', left: 0, top: 0, opacity: 0 },
   bandProbe: { position: 'absolute', left: 0, bottom: 0, width: 1, opacity: 0 },
   grow: { flex: 1 },

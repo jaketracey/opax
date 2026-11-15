@@ -572,11 +572,51 @@ describe('the card at large text', () => {
     expect(flat(unseen).height).toBe(room(200));
     expect(unseen.props.accessible).toBe(true);
     expect(unseen.props.accessibilityLabel).toBe(sentence);
-    expect(unseen.props.children).toBeUndefined();
+    expect(byTestID(r.root, 'money-offline-mark')).toBeUndefined();
     // With room for a line again the sentence is back.
     fit(60);
     expect(byTestID(r.root, 'money-view-summary')).toBeDefined();
     expect(byTestID(r.root, 'money-view-summary-unseen')).toBeUndefined();
+    await act(async () => r.unmount());
+  });
+
+  test('offline with less than one line of room: the stale-data notice is still shown and said', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: true,
+      asOf: '2026-09-21',
+      savedAt: Date.parse('2026-09-21T02:00:00Z'),
+    }));
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 375, height: 603 } },
+      }),
+    );
+    // With room, the offline line stands under the sentence, in words.
+    const sentence = byTestID(r.root, 'money-view-summary')!.props.children;
+    const message = r.root.find(
+      (n) => n.props.testID === 'money-offline' && n.props.accessibilityLabel,
+    ).props.accessibilityLabel as string;
+    expect(message).toMatch(/offline/i);
+    // The iPhone SE at AX5: under one line of room.
+    act(() => {
+      for (const id of ['money-map-card-head', 'money-map-card-picker'])
+        byTestID(r.root, id).props.onLayout({
+          nativeEvent: { layout: { height: 200 } },
+        });
+      byTestID(r.root, 'money-map-card-line').props.onLayout({
+        nativeEvent: { layout: { height: 71.5 } },
+      });
+    });
+    // The line's words cannot be drawn there either: its mark is, and the
+    // room says the sentence and then the same words.
+    expect(byTestID(r.root, 'money-offline')).toBeUndefined();
+    const unseen = byTestID(r.root, 'money-view-summary-unseen')!;
+    expect(
+      unseen.findAll((n) => n.props.testID === 'money-offline-mark').length,
+    ).toBeGreaterThan(0);
+    expect(unseen.props.accessibilityLabel).toBe(`${sentence} ${message}`);
     await act(async () => r.unmount());
   });
 
