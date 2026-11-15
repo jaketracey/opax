@@ -115,7 +115,16 @@ describe('people firsts, from a folder named by OPAX_PUBLISHED_DIR', () => {
     expect(check('unnamed-source')).toEqual({
       files: 1,
       problems: [
-        'people/firsts.json by_name.Casey Specimen.first_division.source: "vic_hansard_pdf" is not in meta.sources.divisions, never shown (tolerated)',
+        'people/firsts.json by_name.Casey Specimen.first_division.source: "vic_hansard_pdf" names no publisher in meta.sources.divisions, never shown (tolerated)',
+      ],
+    });
+  });
+
+  test('a division whose source is named with an empty publisher, which the page also hides, fails the family by name', () => {
+    expect(check('empty-publisher')).toEqual({
+      files: 1,
+      problems: [
+        'people/firsts.json by_name.Casey Specimen.first_division.source: "theyvoteforyou" names no publisher in meta.sources.divisions, never shown (tolerated)',
       ],
     });
   });

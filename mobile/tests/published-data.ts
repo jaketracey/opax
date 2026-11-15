@@ -75,7 +75,8 @@ const releases = (keep: (name: string) => boolean) => (root: string) => {
  * A fact can also decode and still never be drawn: the page shows a
  * division only with its publisher, by the app's own rule
  * (`divisionPublisher`). A division whose source the file's
- * `meta.sources.divisions` does not name is a fact no reader sees, so it
+ * `meta.sources.divisions` does not name, or names with an empty publisher,
+ * is a fact no reader sees, so it
  * is a problem here, by name. (An earliest fact with no coverage year is
  * left out by design, and is not one.)
  */
@@ -97,12 +98,12 @@ export function decodeFirstsWhole(value: unknown) {
     for (const [key, kept] of Object.entries(decoded[group]))
       if (
         kept.first_division &&
-        divisionPublisher(decoded.meta.sources, kept.first_division) ===
-          undefined
+        // Unnamed, or named with an empty publisher: hidden either way.
+        !divisionPublisher(decoded.meta.sources, kept.first_division)
       )
         tolerated(
           `${group}.${key}.first_division.source`,
-          `"${kept.first_division.source}" is not in meta.sources.divisions, never shown`,
+          `"${kept.first_division.source}" names no publisher in meta.sources.divisions, never shown`,
         );
   return decoded;
 }
