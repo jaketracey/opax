@@ -5,7 +5,7 @@
 //
 // A wrong link puts someone else's parliamentary record beside a candidate, so the
 // matcher only proposes; the committed file is what the election build reads, and the
-// build re-runs the matcher and leaves out any entry the current data no longer supports.
+// build re-runs the matcher and stops on any entry the current data no longer supports.
 //
 // A pair is verified only when all of these hold:
 //   1. the VEC name equals the roster name (or a roster alias) after folding case,
@@ -98,18 +98,19 @@ export function matchVicCandidates(nominated, members) {
       party:{vec:c.party,roster:m.party},roster_source:m.source_url}});
   }
   // "Not a candidate" needs the VEC lists to rule the member out, not just a missing name match.
+  // Given names are no test: a member can nominate under a formal name (Bill as William), in
+  // another seat and with no registered party. So any candidate left on the lists who shares a
+  // surname with the member's name or an alias, in any seat of either house, leaves the member
+  // for a person to check. Only a candidate verified as another roster member is set aside.
   const linkedElsewhere = new Set(verified.map(v=>v.candidate_id));
   const not_candidate = [], unresolved = [];
   members.forEach((m,i)=>{
     if (pairs.some(p=>p.m === m)) return;
-    const fold = names[i][0];
     const surname = candidates.filter(c=>!linkedElsewhere.has(c.id) && names[i].some(n=>sharesSurname(c,n)));
-    const blockers = surname.filter(c=>c.kind === m.kind && c.seat === m.seat || sameParty(c.party,m.party)
-      || candidateGiven(c)[0] === fold[0]);
     const base = {person_id:m.person_id,member:m.name,seat:seatLabel(m.kind,m.seat)};
-    const shown = list => list.map(c=>({candidate:c.name,seat:seatLabel(c.kind,c.seat),party:c.party}));
-    if (blockers.length) unresolved.push({...base,reason:'A candidate with the same surname shares the seat, the party or a first initial',candidates:shown(blockers)});
-    else not_candidate.push({...base,same_surname_candidates:shown(surname)});
+    if (surname.length) unresolved.push({...base,reason:'A candidate with the same surname is on the VEC lists',
+      candidates:surname.map(c=>({candidate:c.name,seat:seatLabel(c.kind,c.seat),party:c.party}))});
+    else not_candidate.push(base);
   });
   const matched = new Set(pairs.map(p=>p.c.id));
   return {verified,ambiguous,not_candidate,unresolved,
@@ -119,49 +120,72 @@ export function matchVicCandidates(nominated, members) {
 
 const reviewed = entry => /^\d{4}-\d{2}-\d{2}$/.test(entry?.reviewed_on ?? '') && typeof entry.review_evidence === 'string' && entry.review_evidence.trim().length > 0;
 const https = url => { try { return new URL(url).protocol === 'https:'; } catch { return false; } };
-// A promoted link also needs a public source that names the person and the seat, with the words relied on.
-const reviewedLink = entry => reviewed(entry) && Array.isArray(entry.sources) && entry.sources.length > 0
+// A public source, with the words relied on.
+const sourced = entry => Array.isArray(entry?.sources) && entry.sources.length > 0
   && entry.sources.every(s=>https(s?.url) && typeof s.quote === 'string' && s.quote.trim().length > 0);
+// A promoted link also needs a source that names the person and the seat.
+const reviewedLink = entry => reviewed(entry) && sourced(entry);
 const pairKey = e => `${e.candidate_id} ${e.person_id}`;
 
 /**
  * The links and "not a candidate" marks the build may publish: the committed file, checked
  * against a fresh match. A verified entry must still verify. A person may promote an
  * ambiguous pair only by recording the date, the evidence and a public source that names
- * the person and the seat; an unresolved member, by recording the date and the evidence.
- * An entry that fails is left out and reported, so the page falls back to plain text
- * and a later roster or VEC list never stops the election build.
+ * the person and the seat. Nominations have closed, so the VEC lists alone support a "not a
+ * candidate" mark where no candidate anywhere shares the member's surname. Where one does,
+ * the mark needs a person's dated check and a public source that the member is not standing.
+ * A member in "held" is never linked or marked: the seat keeps its present wording by a
+ * reviewed exception. An entry that fails is left out and reported; the build then stops,
+ * so a stale mapping is noticed, never published.
  */
 export function approvedLinks(file, match) {
   const verified = new Set(match.verified.map(pairKey)), ambiguous = new Set(match.ambiguous.map(pairKey));
   const links = new Map(), people = new Set(), dropped = [];
+  const held = new Set((file.held ?? []).map(e=>e?.person_id));
   for (const [list,allowed] of [[file.verified ?? [],e=>verified.has(pairKey(e))],[file.reviewed ?? [],e=>ambiguous.has(pairKey(e)) && reviewedLink(e)]]) for (const e of list) {
-    if (!allowed(e)) dropped.push(`Unverified candidate link: ${e?.candidate_id}`);
+    if (held.has(e?.person_id)) dropped.push(`Link to a held member: ${e?.candidate_id}`);
+    else if (!allowed(e)) dropped.push(`Unverified candidate link: ${e?.candidate_id}`);
     else if (links.has(e.candidate_id) || people.has(e.person_id)) dropped.push(`Duplicate candidate link: ${e.candidate_id}`);
     else { links.set(e.candidate_id,e.person_id); people.add(e.person_id); }
   }
   const ruledOut = new Set(match.not_candidate.map(e=>e.person_id)), open = new Set(match.unresolved.map(e=>e.person_id));
   const notCandidate = new Set();
   for (const e of file.not_candidate ?? []) {
-    if (people.has(e?.person_id) || !(ruledOut.has(e?.person_id) || open.has(e?.person_id) && reviewed(e))) dropped.push(`Unconfirmed "not a candidate": ${e?.member}`);
+    if (people.has(e?.person_id) || held.has(e?.person_id) || !(ruledOut.has(e?.person_id) || open.has(e?.person_id) && reviewed(e) && sourced(e))) dropped.push(`Unconfirmed "not a candidate": ${e?.member}`);
     else notCandidate.add(e.person_id);
   }
   return {links,notCandidate,dropped};
 }
 
-/** The file to commit. A person's reviewed promotions are kept and leave the lists to check. */
+/** The file to commit. Recorded sources and a person's reviews are kept; whatever lacks them is listed to check. */
 export function linksFile(match, nominated, previous = {}) {
   const kept = (previous.reviewed ?? []).filter(e=>reviewedLink(e) && match.ambiguous.some(a=>pairKey(a) === pairKey(e)));
-  const keptOut = (previous.not_candidate ?? []).filter(e=>reviewed(e) && match.unresolved.some(u=>u.person_id === e.person_id));
   const linked = new Set(kept.map(e=>e.person_id)), ambiguous = match.ambiguous.filter(a=>!kept.some(e=>pairKey(e) === pairKey(a)));
-  const members_to_check = match.unresolved.filter(u=>!keptOut.some(e=>e.person_id === u.person_id));
+  const before = new Map((previous.not_candidate ?? []).filter(sourced).map(e=>[e.person_id,e]));
+  const notes = new Map((previous.members_to_check ?? []).filter(e=>e.note).map(e=>[e.person_id,e.note]));
+  const not_candidate = [], members_to_check = [];
+  const check = entry => members_to_check.push({...entry,...notes.has(entry.person_id) ? {note:notes.get(entry.person_id)} : {}});
+  // A reviewed exception holds a member out of every list: no link, no mark, nothing to settle here.
+  const known = new Set([...match.not_candidate,...match.unresolved].map(e=>e.person_id));
+  const held = (previous.held ?? []).filter(e=>known.has(e?.person_id) && typeof e.reason === 'string' && e.reason.trim());
+  const isHeld = id => held.some(e=>e.person_id === id);
+  for (const e of match.not_candidate) {
+    if (linked.has(e.person_id) || isHeld(e.person_id)) continue;
+    // No candidate anywhere has the surname: the VEC lists are the source. A further source is kept where recorded.
+    not_candidate.push({...e,...before.has(e.person_id) ? {sources:before.get(e.person_id).sources} : {}});
+  }
+  for (const e of match.unresolved) {
+    if (isHeld(e.person_id)) continue;
+    const was = before.get(e.person_id);
+    if (was && reviewed(was)) not_candidate.push({...e,reviewed_on:was.reviewed_on,review_evidence:was.review_evidence,sources:was.sources});
+    else check(e);
+  }
   return {
-    note:'Written by scripts/vic_candidate_links.mjs and reviewed before commit. The election build links only "verified" and "reviewed" pairs and shows "Not a candidate in 2026" only for "not_candidate" members; "ambiguous" and "members_to_check" are for a person to check and are never published. See docs/HUBS.md.',
+    note:'Written by scripts/vic_candidate_links.mjs and reviewed before commit. The election build links only "verified" and "reviewed" pairs and shows "Not a candidate in 2026" only for "not_candidate" members; "ambiguous" and "members_to_check" are for a person to check and are never published; a member in "held" is never linked or marked. See docs/HUBS.md.',
     candidates_published:nominated.published,candidates_source:nominated.url,
     counts:{...match.counts,reviewed:kept.length,linked:match.verified.length + kept.length,ambiguous:ambiguous.length,
-      not_candidate:match.not_candidate.length + keptOut.length,unresolved:members_to_check.length},
-    verified:match.verified,reviewed:kept,ambiguous,
-    not_candidate:[...match.not_candidate.filter(e=>!linked.has(e.person_id)),...keptOut],members_to_check,
+      not_candidate:not_candidate.length,unresolved:members_to_check.length,held:held.length},
+    verified:match.verified,reviewed:kept,ambiguous,not_candidate,members_to_check,held,
   };
 }
 

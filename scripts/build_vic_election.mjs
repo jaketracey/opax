@@ -39,11 +39,11 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   // Links to a member's record come only from the reviewed, committed mapping, and only
   // while a fresh match of the current lists and roster still supports each entry.
   const reviewedLinks = nominated && await readFile(sibling(VIC_CANDIDATE_LINKS),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return null;throw e;});
-  // An entry that no longer holds is left out, never published: the row falls back to plain text.
+  // An entry that no longer holds is never published, and stops the build so that it is noticed.
   const {links,notCandidate,dropped} = reviewedLinks
     ? approvedLinks(reviewedLinks,matchVicCandidates(nominated,rosterMembers(index,roster,await read(manifest.people_url))))
     : {links:new Map(),notCandidate:new Set(),dropped:[]};
-  for (const reason of dropped) console.warn(`Victorian candidate links: left out. ${reason}`);
+  if (dropped.length) throw new Error(`Stale ${VIC_CANDIDATE_LINKS}: ${dropped.join('; ')}. Run node scripts/vic_candidate_links.mjs and review the change.`);
   const personHref = new Map();
   const currentSource = await readFile(sibling('vic-results-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return undefined;throw e;});
   for (const name of Object.keys({...nominated?.districts,...nominated?.regions})) if (!config.districts.concat(config.regions).some(c=>c.name === name)) throw new Error(`Candidates for an unknown constituency: ${name}`);
@@ -137,6 +137,6 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   await writeFile(join(root,'hubs/vic-election-2026.json'),JSON.stringify(data)+'\n');
   await writeFile(join(root,VIC_ELECTION_PLACES.replace(/^\//,'')),JSON.stringify(placeData)+'\n');
   return {districts:config.districts.length,regions:config.regions.length,members:seats.reduce((n,s)=>n+s.members.length,0),pages:pages.length,
-    candidate_links:links.size,not_candidate:notCandidate.size,links_left_out:dropped.length};
+    candidate_links:links.size,not_candidate:notCandidate.size};
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) console.log('Victorian election:',JSON.stringify(await buildVicElection(fileURLToPath(new URL('../portal/public/',import.meta.url)))));

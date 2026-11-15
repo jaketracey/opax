@@ -78,6 +78,13 @@ const match = matchVicCandidates(nominated,members);
 const compiled = await build({entryPoints:[new URL('../src/vic-election.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*']});
 const {renderVicElection} = await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 const seat = name => data.seats.find(s=>s.name === name);
+const exact = text => text.toLowerCase().replace(/[’‘ʼ`']/g,'').replace(/[-‐‑–]/g,' ').replace(/\s+/g,' ').trim();
+const vecRows = ['districts','regions'].flatMap(key=>Object.entries(nominated[key]).flatMap(([name,list])=>list.map(c=>{
+  const parts = c.name.split(', ');
+  return parts.length === 2 ? {seat:name,row:c.name,surname:exact(parts[0]),given:exact(parts[1])} : {seat:name,row:c.name,surname:null,given:exact(c.name)};
+})));
+// VEC rows already verified as another roster member's.
+const linkedRows = new Set(file.verified.map(v=>`${v.seat.replace(/ (District|Region)$/,'')}|${v.candidate}`));
 const linked = d => d.seats.flatMap(s=>(s.candidates?.list ?? []).filter(c=>c.href).map(c=>[candidateId(s.kind,s.name,c.name),c.href]));
 
 test('the committed mapping is exactly the reviewed set, with the evidence for each pair',()=>{
@@ -98,19 +105,47 @@ test('the committed mapping is exactly the reviewed set, with the evidence for e
     assert.ok(v.evidence.party.vec && v.evidence.party.roster && v.evidence.roster_source.startsWith('https://www.parliament.vic.gov.au/members/'),v.candidate_id);
   }
   assert.equal(new Set([...file.verified,...file.reviewed].map(v=>v.person_id)).size,100);
-  assert.deepEqual(file.counts,{candidates:1037,members:128,verified:92,ambiguous:0,unmatched:937,not_candidate:28,unresolved:0,reviewed:8,linked:100});
+  assert.deepEqual(file.counts,{candidates:1037,members:128,verified:92,ambiguous:0,unmatched:937,not_candidate:27,unresolved:0,reviewed:8,linked:100,held:1});
 });
 
 test('the committed mapping is what the matcher finds in the current VEC lists and roster',()=>{
   assert.deepEqual(linksFile(match,nominated,file),file);
   // Every name match is accounted for: verified by rule, or ambiguous by rule and settled by a recorded review.
   assert.deepEqual(match.ambiguous.map(a=>a.candidate_id),Object.keys(REVIEWED));
-  assert.deepEqual([file.ambiguous,file.members_to_check],[[],[]]);
-  // The one member the rule leaves open is marked on the recorded exact check, not by the rule.
-  assert.deepEqual(match.unresolved.map(m=>[m.member,m.candidates.map(c=>c.candidate)]),[["Michael O'Brien",["O'BRIEN, Michelle"]]]);
-  assert.deepEqual(file.not_candidate.filter(m=>m.reviewed_on).map(m=>[m.member,m.reviewed_on]),[["Michael O'Brien",'2026-11-16']]);
+  assert.deepEqual(file.ambiguous,[]);
+  // The rule alone marks no one whose surname is still on the VEC lists, whatever the given name, seat or party.
+  const open = ['Jackson Taylor','Maree Edwards','Tim Read','Tim Bull','Mary-Anne Thomas',"Michael O'Brien",'Darren Cheeseman','Joe McCracken'];
+  assert.deepEqual(match.unresolved.map(m=>m.member),open);
+  assert.deepEqual(match.unresolved.find(m=>m.member === "Michael O'Brien").candidates.map(c=>c.candidate),["O'BRIEN, Michelle"]);
+  assert.deepEqual([match.not_candidate.length,match.counts.not_candidate,match.counts.unresolved],[20,20,8]);
+  // Seven of those are marked on a person's recorded check with a public source; one is held (below).
+  assert.deepEqual(file.not_candidate.filter(m=>m.reviewed_on).map(m=>[m.member,m.reviewed_on]),open.filter(name=>name !== 'Tim Read').map(name=>[name,'2026-11-16']));
+  for (const m of file.not_candidate) {
+    // Nominations have closed: where no VEC row has the surname, the VEC lists alone support the mark.
+    const surname = exact(m.member).split(' ').at(-1);
+    const rows = vecRows.filter(r=>(r.surname ?? r.given).split(' ').includes(surname) && !linkedRows.has(`${r.seat}|${r.row}`));
+    assert.equal(rows.length > 0,Boolean(m.reviewed_on),m.member);
+    if (m.reviewed_on) assert.ok(m.sources?.length >= 1,m.member);
+    for (const source of m.sources ?? []) {
+      assert.ok(new URL(source.url).protocol === 'https:' && source.publisher && source.read_on === '2026-11-16',m.member);
+      // The quoted words name the member and say they are leaving.
+      assert.ok(source.quote.includes(m.member),`${m.member}: not named in the quote`);
+      assert.match(`${source.context ?? ''} ${source.quote}`,/retire|retiring|vacated|not seeking|not running|bowing out|follow suit/i,m.member);
+    }
+  }
+  const allan = file.not_candidate.find(m=>m.member === 'Jacinta Allan');
+  assert.deepEqual(allan.sources.map(x=>[x.url,x.quote]),[['https://www.pollbludger.net/vic2026/LA.htm?s=BendigoEast','Bendigo East will be vacated at the election with the retirement of Jacinta Allan']]);
+  // No stored quote or note gives anyone a current office.
+  assert.doesNotMatch(JSON.stringify(file),/\b(?:the Premier|Minister|Treasurer|Speaker|whip|Opposition Leader|President of)\b/i);
+  // SOMYUREK is on no VEC row, so that member is marked on the VEC lists alone.
+  assert.deepEqual(file.not_candidate.filter(m=>!m.sources).map(m=>m.member),['Adem Somyurek']);
+  assert.deepEqual(vecRows.filter(r=>/somyurek/.test(`${r.surname} ${r.given}`)),[]);
+  // No one is left to check. One member is held by a reviewed exception: no link, no mark, present wording.
+  assert.deepEqual(file.members_to_check,[]);
+  assert.deepEqual(file.held.map(m=>[m.member,m.seat,m.held_on]),[['Tim Read','Brunswick District','2026-11-16']]);
+  assert.doesNotMatch(JSON.stringify(file),/\b(?:death|died|deceased|the late|vacant|resign)/i);
   assert.ok(file.not_candidate.some(m=>m.member === 'Maree Edwards' && m.seat === 'Bendigo West District'));
-  const named = new Set([...file.verified,...file.reviewed,...file.not_candidate].map(e=>e.person_id));
+  const named = new Set([...file.verified,...file.reviewed,...file.not_candidate,...file.members_to_check,...file.held].map(e=>e.person_id));
   assert.equal(named.size,128);
 });
 
@@ -157,32 +192,42 @@ test('a federal member of the same name keeps a Victorian roster member unlinked
 
 test('"not a candidate" needs the VEC lists to rule the member out',()=>{
   const wren = member('Wren Halloway','Lowan','Labor');
-  const status = districts => { const r = run(districts,[wren]); return [r.not_candidate.length,r.unresolved.length]; };
+  const status = (districts, roster = [wren]) => { const r = run(districts,roster); return [r.not_candidate.length,r.unresolved.length]; };
   assert.deepEqual(status({Lowan:[{name:'KETCH, Rowan',party:'Australian Labor Party - Victorian Branch'}]}),[1,0]);
-  assert.deepEqual(status({Mildura:[{name:'HALLOWAY, Iona',party:'Australian Greens Victoria'}]}),[1,0]);
-  // The same surname with the member's seat, party or first initial is left for a person.
+  // Any remaining candidate with the surname leaves the member for a person: a formal given name
+  // (Bill as William), another seat and no registered party would otherwise pass as someone else.
+  assert.deepEqual(status({Mildura:[{name:'HALLOWAY, Iona',party:'Australian Greens Victoria'}]}),[0,1]);
+  assert.deepEqual(status({Mildura:[{name:'HALLOWAY, Gwendolyn',party:''}]}),[0,1]);
   assert.deepEqual(status({Lowan:[{name:'HALLOWAY, Iona',party:'Australian Greens Victoria'}]}),[0,1]);
-  assert.deepEqual(status({Mildura:[{name:'HALLOWAY, Iona',party:'Australian Labor Party - Victorian Branch'}]}),[0,1]);
-  assert.deepEqual(status({Mildura:[{name:'HALLOWAY, Willa',party:'Australian Greens Victoria'}]}),[0,1]);
   assert.deepEqual(status({Mildura:[{name:'QUILL-HALLOWAY, Willa',party:'Australian Greens Victoria'}]}),[0,1]);
+  assert.deepEqual(status({Mildura:[{name:'IONA HALLOWAY',party:''}]}),[0,1]);
+  // A surname the member is known by only through an alias counts too.
+  const alias = [member('Wren Halloway','Lowan','Labor',{aliases:['Wren Ketch']})];
+  assert.deepEqual(status({Mildura:[{name:'KETCH, Gwendolyn',party:''}]},alias),[0,1]);
+  assert.deepEqual(status({Mildura:[{name:'KETCH, Gwendolyn',party:''}]}),[1,0]);
+  // Only a candidate verified as another roster member is set aside.
+  const iona = member('Iona Halloway','Mildura','Greens');
+  const both = run({Mildura:[{name:'HALLOWAY, Iona',party:'Australian Greens Victoria'}]},[wren,iona]);
+  assert.deepEqual([both.verified.length,both.not_candidate.map(m=>m.member),both.unresolved],[1,['Wren Halloway'],[]]);
   // A name match that is not verified never becomes "not a candidate".
   assert.deepEqual(status({Mildura:[{name:'HALLOWAY, Wren',party:'Australian Labor Party - Victorian Branch'}]}),[0,0]);
 });
 
-// The committed file with the recorded reviews taken out: what the rule alone supports.
+// The committed file with the recorded reviews taken out: what the rule and the recorded sources support.
 const ruleOnly = {...file,reviewed:[],not_candidate:file.not_candidate.filter(m=>!m.reviewed_on)};
 
 test('the build publishes only what the committed file and a fresh match both support',()=>{
   const full = approvedLinks(file,match);
-  assert.deepEqual([full.links.size,full.notCandidate.size,full.dropped],[100,28,[]]);
+  assert.deepEqual([full.links.size,full.notCandidate.size,full.dropped],[100,27,[]]);
   const {links,notCandidate,dropped} = approvedLinks(ruleOnly,match);
-  assert.deepEqual([...links.keys()],[...VERIFIED.keys()]);assert.deepEqual([notCandidate.size,dropped],[27,[]]);
+  assert.deepEqual([...links.keys()],[...VERIFIED.keys()]);assert.deepEqual([notCandidate.size,dropped],[20,[]]);
   const published = r => [[...r.links].join(),[...r.notCandidate].join()];
-  const ambiguous = match.ambiguous[0], open = match.unresolved[0];
+  const ambiguous = match.ambiguous[0], open = match.unresolved.find(m=>m.member === "Michael O'Brien"), heldMember = file.held[0];
   const pair = {candidate_id:ambiguous.candidate_id,person_id:ambiguous.person_id};
-  const review = {reviewed_on:'2026-11-17',review_evidence:'Checked against a published candidacy announcement.'};
-  const sources = [{url:'https://example.org/announcement',publisher:'Example',quote:'Named as the candidate for the seat.'}];
-  // Each altered entry is left out and named; nothing else about the published set changes.
+  const review = {reviewed_on:'2026-11-17',review_evidence:'Checked against a published announcement.'};
+  const sources = [{url:'https://example.org/announcement',publisher:'Example',quote:'Named in the announcement.'}];
+  const out = {person_id:open.person_id,member:open.member};
+  // Each altered entry is refused and named; nothing else about the approved set changes.
   for (const [bad,error,lost] of [
     [{...ruleOnly,verified:[...file.verified,pair]},/Unverified candidate link: district:geelong:couzens-christine/],
     [{...ruleOnly,verified:[{...file.verified[0],person_id:file.verified[1].person_id},...file.verified.slice(1)]},/Unverified candidate link: district:albert-park:taylor-nina/,file.verified[0].candidate_id],
@@ -195,57 +240,65 @@ test('the build publishes only what the committed file and a fresh match both su
     [{...ruleOnly,reviewed:[{...pair,...review,sources:[{...sources[0],url:'http://example.org/'}]}]},/Unverified candidate link: district:geelong/],
     [{...ruleOnly,reviewed:[{...pair,...review,sources:[{...sources[0],quote:''}]}]},/Unverified candidate link: district:geelong/],
     [{...ruleOnly,reviewed:[{...file.verified[1],...review,sources,candidate_id:'district:lowan:nobody'}]},/Unverified candidate link: district:lowan:nobody/],
-    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{person_id:open.person_id,member:open.member}]},/Unconfirmed "not a candidate": Michael O'Brien/],
-    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{person_id:file.verified[0].person_id,member:file.verified[0].member}]},/Unconfirmed "not a candidate": Nina Taylor/],
+    // A member the rule leaves open needs a person's dated check and a source.
+    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,out]},/Unconfirmed "not a candidate": Michael O'Brien/],
+    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{...out,sources}]},/Unconfirmed "not a candidate": Michael O'Brien/],
+    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{...out,...review}]},/Unconfirmed "not a candidate": Michael O'Brien/],
+    // A held member is never marked and never linked, whatever is recorded.
+    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{person_id:heldMember.person_id,member:heldMember.member,...review,sources}]},/Unconfirmed "not a candidate": Tim Read/],
+    [{...ruleOnly,reviewed:[{candidate_id:'district:ripon:read-megan',person_id:heldMember.person_id,...review,sources}]},/Link to a held member: district:ripon:read-megan/],
+    [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,{person_id:file.verified[0].person_id,member:file.verified[0].member,...review,sources}]},/Unconfirmed "not a candidate": Nina Taylor/],
   ]) {
     const result = approvedLinks(bad,match);
     assert.equal(result.dropped.length,1);assert.match(result.dropped[0],error);
     assert.deepEqual(published(result),published({links:new Map([...links].filter(([id])=>id !== lost)),notCandidate}),String(error));
   }
   // A member linked by review cannot also be marked as not standing.
-  const both = approvedLinks({...file,not_candidate:[...file.not_candidate,{person_id:file.reviewed[0].person_id,member:file.reviewed[0].member,...review}]},match);
-  assert.deepEqual(both.dropped,['Unconfirmed "not a candidate": Chris Couzens']);assert.equal(both.notCandidate.size,28);
+  const both = approvedLinks({...file,not_candidate:[...file.not_candidate,{person_id:file.reviewed[0].person_id,member:file.reviewed[0].member,...review,sources}]},match);
+  assert.deepEqual(both.dropped,['Unconfirmed "not a candidate": Chris Couzens']);assert.equal(both.notCandidate.size,27);
   // A person's recorded review is the only way past the automatic rule, and it is kept on a rerun.
-  const promoted = {...ruleOnly,reviewed:[{...pair,...review,sources}],not_candidate:[...ruleOnly.not_candidate,{person_id:open.person_id,member:open.member,...review}]};
+  const promoted = {...ruleOnly,reviewed:[{...pair,...review,sources}],not_candidate:[...ruleOnly.not_candidate,{...out,...review,sources}]};
   const approved = approvedLinks(promoted,match);
   assert.equal(approved.links.get(pair.candidate_id),pair.person_id);assert.ok(approved.notCandidate.has(open.person_id));
   const rerun = linksFile(match,nominated,promoted);
-  assert.deepEqual([rerun.reviewed.length,rerun.ambiguous.length,rerun.members_to_check.length,rerun.counts.linked,rerun.counts.not_candidate],[1,7,0,93,28]);
-  assert.deepEqual(linksFile(match,nominated,{}).counts,{candidates:1037,members:128,verified:92,ambiguous:8,unmatched:937,not_candidate:27,unresolved:1,reviewed:0,linked:92});
+  assert.deepEqual([rerun.reviewed.length,rerun.ambiguous.length,rerun.members_to_check.length,rerun.counts.linked,rerun.counts.not_candidate],[1,7,6,93,21]);
+  assert.deepEqual(rerun.held,file.held);
+  // With nothing recorded, the rule links 92 and marks the 20 whose surname is on no VEC row.
+  assert.deepEqual(linksFile(match,nominated,{}).counts,{candidates:1037,members:128,verified:92,ambiguous:8,unmatched:937,not_candidate:20,unresolved:8,reviewed:0,linked:92,held:0});
 });
 
-test('the election build leaves out a stale or altered mapping entry and publishes the rest',async t=>{
+test('a stale or altered mapping stops the election build, and the published file is left as it was',async()=>{
   await withVicElectionBuild(async({root:out,configRoot,configPath})=>{
     const peoplePath = manifest.people_url.replace(/^\//,'');
     await mkdir(dirname(join(out,peoplePath)),{recursive:true});await copyFile(new URL(peoplePath,root),join(out,peoplePath));
-    const linksPath = join(configRoot,VIC_CANDIDATE_LINKS);
+    const linksPath = join(configRoot,VIC_CANDIDATE_LINKS), assetPath = join(out,VIC_ELECTION_ASSET);
     await writeFile(linksPath,JSON.stringify(file));
-    await buildVicElection(out,configPath);
-    const built = JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'));
-    assert.deepEqual(linked(built),linked(data));
-    // Without its recorded review, an ambiguous pair moved into the verified list is left out.
+    const summary = await buildVicElection(out,configPath);
+    assert.deepEqual([summary.candidate_links,summary.not_candidate],[100,27]);
+    const good = await readFile(assetPath,'utf8');
+    assert.deepEqual(linked(JSON.parse(good)),linked(data));
+    // Without its recorded review, an ambiguous pair moved into the verified list is refused.
     const ambiguous = match.ambiguous[0];
     await writeFile(linksPath,JSON.stringify({...file,reviewed:file.reviewed.slice(1),verified:[...file.verified,{candidate_id:ambiguous.candidate_id,person_id:ambiguous.person_id}]}));
-    const warnings = [];t.mock.method(console,'warn',message=>warnings.push(message));
-    const rebuilt = async () => { const summary = await buildVicElection(out,configPath); return [summary,JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'))]; };
-    let [summary,result] = await rebuilt();
-    assert.deepEqual([summary.candidate_links,summary.not_candidate,summary.links_left_out],[99,28,1]);
-    assert.deepEqual(linked(result),linked(data).filter(([id])=>id !== ambiguous.candidate_id));
-    assert.deepEqual(warnings,['Victorian candidate links: left out. Unverified candidate link: district:geelong:couzens-christine']);
-    // A changed VEC party for a linked candidate takes the link away; the member is not then marked as not standing.
+    await assert.rejects(buildVicElection(out,configPath),/Stale vic-candidate-links-2026\.json: Unverified candidate link: district:geelong:couzens-christine\. Run node scripts\/vic_candidate_links\.mjs/);
+    // A reviewed mark whose source was removed is refused, and so is a mark on the held member.
+    await writeFile(linksPath,JSON.stringify({...file,not_candidate:file.not_candidate.map(({sources,...m})=>m.member === 'Maree Edwards' ? m : {...m,...sources ? {sources} : {}})}));
+    await assert.rejects(buildVicElection(out,configPath),/Unconfirmed "not a candidate": Maree Edwards/);
+    await writeFile(linksPath,JSON.stringify({...file,not_candidate:[...file.not_candidate,{...file.held[0],reviewed_on:'2026-11-17',review_evidence:'x',sources:file.not_candidate[0].sources}]}));
+    await assert.rejects(buildVicElection(out,configPath),/Unconfirmed "not a candidate": Tim Read/);
+    // A changed VEC party for a linked candidate, or a list without them, is refused too.
     await writeFile(linksPath,JSON.stringify(file));
     const changed = structuredClone(nominated);changed.districts['Albert Park'].find(c=>c.name === 'TAYLOR, Nina').party = 'Family First Victoria';
     await writeFile(join(configRoot,'vic-candidates-2026.json'),JSON.stringify(changed));
-    [summary,result] = await rebuilt();
-    assert.deepEqual([summary.candidate_links,summary.links_left_out],[99,1]);
-    assert.deepEqual(linked(result),linked(data).filter(([id])=>id !== 'district:albert-park:taylor-nina'));
-    assert.ok(!result.seats.find(s=>s.name === 'Albert Park').members[0].not_candidate);
-    // A list without the member's name does not mark them either: the committed file never said so.
+    await assert.rejects(buildVicElection(out,configPath),/Unverified candidate link: district:albert-park:taylor-nina/);
     changed.districts['Albert Park'] = changed.districts['Albert Park'].filter(c=>c.name !== 'TAYLOR, Nina');
     await writeFile(join(configRoot,'vic-candidates-2026.json'),JSON.stringify(changed));
-    [summary,result] = await rebuilt();
-    assert.ok(!result.seats.find(s=>s.name === 'Albert Park').members[0].not_candidate);
-    assert.equal(result.seats.flatMap(s=>s.members).filter(m=>m.not_candidate).length,28);
+    await assert.rejects(buildVicElection(out,configPath),/Unverified candidate link: district:albert-park:taylor-nina/);
+    // A new candidate with a marked member's surname sends the member back to a person.
+    const added = structuredClone(nominated);added.districts.Mildura.push({name:'ALLAN, Gwendolyn',party:''});
+    await writeFile(join(configRoot,'vic-candidates-2026.json'),JSON.stringify(added));
+    await assert.rejects(buildVicElection(out,configPath),/Unconfirmed "not a candidate": Jacinta Allan/);
+    assert.equal(await readFile(assetPath,'utf8'),good);
   });
 });
 
@@ -284,9 +337,10 @@ test('"Not a candidate in 2026" appears only for members the VEC lists rule out,
   const note = '<p class="hub-meta">Not a candidate in 2026. Source: <a href="https://www.vec.vic.gov.au/voting/2026-state-election">VEC candidate lists</a>, published 11 Nov 2026.</p>';
   const bendigo = renderVicElection(data,seat('Bendigo West')).html;
   assert.ok(bendigo.includes(`<h2 class="ui-section-title">What Maree Edwards has done</h2><article class="vic-member">${note}`));
+  assert.ok(renderVicElection(data,seat('Bendigo East')).html.includes(`<h2 class="ui-section-title">What Jacinta Allan has done</h2><article class="vic-member">${note}`));
   assert.ok(renderVicElection(data,seat('Malvern')).html.includes(`<h2 class="ui-section-title">What Michael O'Brien has done</h2><article class="vic-member">${note}`.replace("'",'&#39;')));
   // A member standing again, in the same seat or another, is never marked.
-  for (const name of ['Albert Park','Geelong','Mornington','Ringwood','Sunbury']) assert.doesNotMatch(renderVicElection(data,seat(name)).html,/Not a candidate/,name);
+  for (const name of ['Albert Park','Geelong','Mornington','Ringwood','Sunbury','Brunswick']) assert.doesNotMatch(renderVicElection(data,seat(name)).html,/Not a candidate/,name);
   const region = seat('Eastern Victoria'), html = renderVicElection(data,region).html;
   assert.deepEqual(region.members.filter(m=>m.not_candidate).map(m=>m.name),['Harriet Shing']);
   assert.equal(html.split(note).length,2);
@@ -301,11 +355,6 @@ test('"Not a candidate in 2026" appears only for members the VEC lists rule out,
 // "Not a candidate in 2026". This check is deliberately separate from the matcher: it reads the
 // VEC rows itself and compares surname plus given name exactly, normalising only case,
 // apostrophes and hyphens. Extra given names on the VEC row still count as the same name.
-const exact = text => text.toLowerCase().replace(/[’‘ʼ`']/g,'').replace(/[-‐‑–]/g,' ').replace(/\s+/g,' ').trim();
-const vecRows = ['districts','regions'].flatMap(key=>Object.entries(nominated[key]).flatMap(([name,list])=>list.map(c=>{
-  const parts = c.name.split(', ');
-  return parts.length === 2 ? {seat:name,row:c.name,surname:exact(parts[0]),given:exact(parts[1])} : {seat:name,row:c.name,surname:null,given:exact(c.name)};
-})));
 const standing = name => {
   const wanted = exact(name);
   return vecRows.filter(r=>r.surname === null ? r.given === wanted
@@ -324,7 +373,7 @@ test('no member marked "Not a candidate in 2026" is on any of the 1,037 VEC rows
   assert.deepEqual(standing('Davinder Kaur').map(r=>r.row),['DAVINDER KAUR']);
   const rosterNames = new Map(members.map(m=>[m.person_id,[m.name,...m.aliases]]));
   const marked = data.seats.flatMap(s=>s.members.filter(m=>m.not_candidate).map(m=>m.name));
-  assert.deepEqual(marked.slice().sort(),file.not_candidate.map(m=>m.member).sort());assert.equal(marked.length,28);
+  assert.deepEqual(marked.slice().sort(),file.not_candidate.map(m=>m.member).sort());assert.equal(marked.length,27);
   const caught = file.not_candidate.flatMap(m=>rosterNames.get(m.person_id).flatMap(name=>standing(name).map(r=>`${m.member}: ${r.row} in ${r.seat}`)));
   assert.deepEqual(caught,[]);
   // The ruled case: no "O'BRIEN, Michael" anywhere; "O'BRIEN, Michelle" in Evelyn is a different given name.
@@ -335,4 +384,25 @@ test('no member marked "Not a candidate in 2026" is on any of the 1,037 VEC rows
   for (const s of data.seats) for (const m of s.members) assert.ok(!(m.not_candidate && linkedHrefs.has(m.href)),m.name);
   // Had a moved member been marked, this check would name them.
   assert.deepEqual(['Tom McINTOSH','Tom McIntosh','Ryan Batchelor','Moira Deeming'].map(name=>standing(name).map(r=>r.seat).join()),['Northern Metropolitan','Northern Metropolitan','North-Eastern Metropolitan','Western Metropolitan']);
+});
+
+// Every seat, every member: each of the 128 is in exactly one state, and none is left unresolved.
+test('every seat resolves each roster member to one outcome: linked, marked, or held by a reviewed exception',()=>{
+  const linkedHrefs = new Set(linked(data).map(([,href])=>href));
+  const heldNames = new Set(file.held.map(m=>m.member));
+  const outcomes = {linked:0,marked:0,held:0};
+  assert.equal(data.seats.length,96);
+  for (const s of data.seats) for (const m of s.members) {
+    const states = [linkedHrefs.has(m.href) && 'linked',m.not_candidate && 'marked',heldNames.has(m.name) && 'held'].filter(Boolean);
+    assert.equal(states.length,1,`${s.name}: ${m.name} is ${states.join(' and ') || 'unresolved'}`);
+    outcomes[states[0]]++;
+  }
+  assert.deepEqual(outcomes,{linked:100,marked:27,held:1});
+  // The held seat is published exactly as before this change: no mark, no linked candidate, same page.
+  const brunswick = seat('Brunswick');
+  assert.deepEqual([brunswick.members.length,brunswick.members[0].not_candidate,brunswick.candidates.list.some(c=>c.href)],[1,undefined,false]);
+  assert.deepEqual(Object.keys(brunswick.members[0]).sort(),['detailed_count','divisions','href','name','party','source_url','speech_gap','speeches','votes']);
+  assert.doesNotMatch(renderVicElection(data,brunswick).html,/Not a candidate|vacant/i);
+  // No candidate anywhere links to the held member's record.
+  assert.ok(!linkedHrefs.has(brunswick.members[0].href));
 });

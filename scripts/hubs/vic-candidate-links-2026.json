@@ -1,5 +1,5 @@
 {
-  "note": "Written by scripts/vic_candidate_links.mjs and reviewed before commit. The election build links only \"verified\" and \"reviewed\" pairs and shows \"Not a candidate in 2026\" only for \"not_candidate\" members; \"ambiguous\" and \"members_to_check\" are for a person to check and are never published. See docs/HUBS.md.",
+  "note": "Written by scripts/vic_candidate_links.mjs and reviewed before commit. The election build links only \"verified\" and \"reviewed\" pairs and shows \"Not a candidate in 2026\" only for \"not_candidate\" members; \"ambiguous\" and \"members_to_check\" are for a person to check and are never published; a member in \"held\" is never linked or marked. See docs/HUBS.md.",
   "candidates_published": "2026-11-11",
   "candidates_source": "https://www.vec.vic.gov.au/voting/2026-state-election",
   "counts": {
@@ -8,10 +8,11 @@
     "verified": 92,
     "ambiguous": 0,
     "unmatched": 937,
-    "not_candidate": 28,
+    "not_candidate": 27,
     "unresolved": 0,
     "reviewed": 8,
-    "linked": 100
+    "linked": 100,
+    "held": 1
   },
   "verified": [
     {
@@ -1511,6 +1512,12 @@
           "url": "https://www.abc.net.au/news/elections/vic/2026/guide/geel",
           "publisher": "ABC News election guide, Geelong",
           "quote": "Held by Labor's Christine Couzens who was elected in 2014"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "read_on": "2026-11-16",
+          "quote": "Christine Couzens Sitting MP ALP Geelong"
         }
       ]
     },
@@ -1529,12 +1536,13 @@
         {
           "url": "https://www.abc.net.au/news/elections/vic/2026/guide/morn",
           "publisher": "ABC News election guide, Mornington",
-          "quote": "Held by Former federal MP, and current opposition whip, Chris Crewther since 2022. Crewther served a single term in federal parliament as the MP for Dunkley, losing seat at the 2019 federal election."
+          "quote": "Crewther served a single term in federal parliament as the MP for Dunkley, losing seat at the 2019 federal election."
         },
         {
           "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
           "publisher": "ABC News election guide, candidates A to Z",
-          "quote": "Chris Crewther Sitting MP / LIB / Mornington"
+          "quote": "Chris Crewther Sitting MP LIB Mornington",
+          "read_on": "2026-11-16"
         }
       ]
     },
@@ -1562,7 +1570,8 @@
         {
           "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
           "publisher": "ABC News election guide, candidates A to Z",
-          "quote": "Will Fowles Sitting MP / IND / Preston"
+          "quote": "Will Fowles Sitting MP IND Preston",
+          "read_on": "2026-11-16"
         }
       ]
     },
@@ -1590,6 +1599,12 @@
           "title": "Will Fowles bows out of Ringwood, setting up major party fight for the seat",
           "date": "2026-07-28",
           "quote": "Labor's Rachel Halse and Liberal North-Eastern Metropolitan MLC Nick McGowan already announced as candidates."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "read_on": "2026-11-16",
+          "quote": "Nick McGowan LIB Ringwood"
         }
       ]
     },
@@ -1622,7 +1637,8 @@
         {
           "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
           "publisher": "ABC News election guide, candidates A to Z",
-          "quote": "Enver Erdogan Sitting MP / ALP / Eastern Victoria"
+          "quote": "Enver Erdogan Sitting MP ALP Eastern Victoria",
+          "read_on": "2026-11-16"
         }
       ]
     },
@@ -1648,7 +1664,8 @@
         {
           "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
           "publisher": "ABC News election guide, candidates A to Z",
-          "quote": "Ryan Batchelor Sitting MP / ALP / North-Eastern Metropolitan"
+          "quote": "Ryan Batchelor Sitting MP ALP North-Eastern Metropolitan",
+          "read_on": "2026-11-16"
         }
       ]
     },
@@ -1677,6 +1694,12 @@
           "title": "Labor MLCs swap regions as nominations near in Victoria",
           "date": "2026-11-07",
           "quote": "Enver Erdogan and Tom McIntosh have swapped regions, with Erdogan moving from North Metro to Eastern Victoria and McIntosh the opposite."
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "read_on": "2026-11-16",
+          "quote": "Tom McIntosh Sitting MP ALP Northern Metropolitan"
         }
       ]
     },
@@ -1702,7 +1725,8 @@
         {
           "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
           "publisher": "ABC News election guide, candidates A to Z",
-          "quote": "Moira Deeming Sitting MP / FFP / Western Metropolitan"
+          "quote": "Moira Deeming Sitting MP FFP Western Metropolitan",
+          "read_on": "2026-11-16"
         }
       ]
     }
@@ -1713,13 +1737,262 @@
       "person_id": "person_ddbcd16599825c9e8a5dd6e8",
       "member": "Jordan Crugnale",
       "seat": "Bass District",
-      "same_surname_candidates": []
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Bass",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Bass will be vacated at the election with the retirement of Jordan Crugnale"
+        }
+      ]
+    },
+    {
+      "person_id": "person_542057b056305cf8a50976ce",
+      "member": "Bill Tilley",
+      "seat": "Benambra District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Benambra",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Bill Tilley"
+        }
+      ]
+    },
+    {
+      "person_id": "person_08c11b8d396c569caad79d37",
+      "member": "Jacinta Allan",
+      "seat": "Bendigo East District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=BendigoEast",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Bendigo East will be vacated at the election with the retirement of Jacinta Allan"
+        }
+      ]
+    },
+    {
+      "person_id": "person_d0be21ab290d584f87d1a9df",
+      "member": "David Hodgett",
+      "seat": "Croydon District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Croydon",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of David Hodgett, the member since 2006."
+        }
+      ]
+    },
+    {
+      "person_id": "person_338ceb1ad2cb538c9dfd75ef",
+      "member": "Harriet Shing",
+      "seat": "Eastern Victoria Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=EasternVictoria",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "The other elected member from 2022, Harriet Shing, announced her retirement"
+        }
+      ]
+    },
+    {
+      "person_id": "person_872f9524636f51459838d388",
+      "member": "Danny Pearson",
+      "seat": "Essendon District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Essendon",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "will be vacated at the election with the retirement of Danny Pearson"
+        }
+      ]
+    },
+    {
+      "person_id": "person_9ffea3411fb15484ac345657",
+      "member": "Steve McGhie",
+      "seat": "Melton District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Melton",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Melton will be vacated at the election with the retirement of Steve McGhie"
+        }
+      ]
+    },
+    {
+      "person_id": "person_00fe30183f1a564e938963aa",
+      "member": "Lily D'Ambrosio",
+      "seat": "Mill Park District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=MillPark",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Lily D'Ambrosio"
+        }
+      ]
+    },
+    {
+      "person_id": "person_365e547617d75f19bea1f8ab",
+      "member": "Peter Walsh",
+      "seat": "Murray Plains District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=MurrayPlains",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "To be vacated at the election with the retirement of former Nationals leader Peter Walsh"
+        }
+      ]
+    },
+    {
+      "person_id": "person_4e699a8cd1955d3086184859",
+      "member": "Gary Maas",
+      "seat": "Narre Warren South District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=NarreWarrenSouth",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "To be vacated at the election with the retirement of Gary Maas"
+        }
+      ]
+    },
+    {
+      "person_id": "person_dae2b3f30edc5d53b2f49e70",
+      "member": "Shaun Leane",
+      "seat": "North-Eastern Metropolitan Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=North-EasternMetropolitan",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "with Shaun Leane retiring after a career going back to 2006",
+          "context": "Neither of Labor's two incumbents is seeking re-election"
+        }
+      ]
+    },
+    {
+      "person_id": "person_cbdc42ca514151b9bf92bc07",
+      "member": "Sonja Terpstra",
+      "seat": "North-Eastern Metropolitan Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=North-EasternMetropolitan",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Sonja Terpstra announcing she would follow suit in October after serving since 2018",
+          "context": "Neither of Labor's two incumbents is seeking re-election"
+        }
+      ]
+    },
+    {
+      "person_id": "person_577ef041fe635f3b85925923",
+      "member": "Adem Somyurek",
+      "seat": "Northern Metropolitan Region"
+    },
+    {
+      "person_id": "person_82a64ff57a9752dc9a8b1d40",
+      "member": "Wendy Lovell",
+      "seat": "Northern Victoria Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=NorthernVictoria",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "The top position will be vacated with the retirement of Wendy Lovell"
+        }
+      ]
+    },
+    {
+      "person_id": "person_9ffa21b2f8ee5a0bbd0ac206",
+      "member": "Emma Vulin",
+      "seat": "Pakenham District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Pakenham",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Pakenham will be vacated at the election with the retirement of Labor member Emma Vulin"
+        }
+      ]
+    },
+    {
+      "person_id": "person_d083ecba4e8b5995851d5338",
+      "member": "Kim Wells",
+      "seat": "Rowville District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Rowville",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "South-eastern Melbourne seat to be vacated with the retirement of Kim Wells"
+        }
+      ]
+    },
+    {
+      "person_id": "person_d7b507e51c335ecea76d748f",
+      "member": "Kim O'Keeffe",
+      "seat": "Shepparton District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Shepparton",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Northern Victorian seat that will be vacated at the election by Kim O'Keeffe, who is bowing out as Nationals member after a single term."
+        }
+      ]
+    },
+    {
+      "person_id": "person_f43a8ec079465ce5a3d42048",
+      "member": "Natalie Hutchins",
+      "seat": "Sydenham District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Sydenham",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "will be vacated at the election with the retirement of Labor member Natalie Hutchins."
+        }
+      ]
+    },
+    {
+      "person_id": "person_acf010ba9dab5b87921f6c02",
+      "member": "David Ettershank",
+      "seat": "Western Metropolitan Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=WesternMetropolitan",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Not seeking re-election is David Ettershank"
+        }
+      ]
+    },
+    {
+      "person_id": "person_97ff30920f2b557693bacaf8",
+      "member": "Gayle Tierney",
+      "seat": "Western Victoria Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=BoxHill",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "concurrent retirement announcements from Mary-Anne Thomas, Danny Pearson and Gayle Tierney"
+        }
+      ]
     },
     {
       "person_id": "person_2028f412ba41525dbf9ab8b4",
       "member": "Jackson Taylor",
       "seat": "Bayswater District",
-      "same_surname_candidates": [
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
         {
           "candidate": "VENDITTI-TAYLOR, Steven",
           "seat": "Eureka District",
@@ -1730,81 +2003,61 @@
           "seat": "Northern Victoria Region",
           "party": "Legalise Cannabis Victoria"
         }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Bayswater",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Jackson Taylor, the member since 2018."
+        }
       ]
-    },
-    {
-      "person_id": "person_542057b056305cf8a50976ce",
-      "member": "Bill Tilley",
-      "seat": "Benambra District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_08c11b8d396c569caad79d37",
-      "member": "Jacinta Allan",
-      "seat": "Bendigo East District",
-      "same_surname_candidates": []
     },
     {
       "person_id": "person_73afad22341c5d24b89f5247",
       "member": "Maree Edwards",
       "seat": "Bendigo West District",
-      "same_surname_candidates": [
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
         {
           "candidate": "EDWARDS, Dylan",
           "seat": "Eastern Victoria Region",
           "party": "Victorian Socialists"
         }
-      ]
-    },
-    {
-      "person_id": "person_2841eb5eccfe57458fda8ffb",
-      "member": "Tim Read",
-      "seat": "Brunswick District",
-      "same_surname_candidates": [
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
         {
-          "candidate": "READ, Megan",
-          "seat": "Ripon District",
-          "party": "Liberal Party of Australia - Victorian Division"
-        },
-        {
-          "candidate": "READ, Paul",
-          "seat": "Northern Victoria Region",
-          "party": "Affordable Housing Now – Sustainable Australia Party"
-        },
-        {
-          "candidate": "READ, Ellie",
-          "seat": "Western Victoria Region",
-          "party": "Liberal Party of Australia - Victorian Division"
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=BendigoWest",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Maree Edwards"
         }
       ]
-    },
-    {
-      "person_id": "person_d0be21ab290d584f87d1a9df",
-      "member": "David Hodgett",
-      "seat": "Croydon District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_338ceb1ad2cb538c9dfd75ef",
-      "member": "Harriet Shing",
-      "seat": "Eastern Victoria Region",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_872f9524636f51459838d388",
-      "member": "Danny Pearson",
-      "seat": "Essendon District",
-      "same_surname_candidates": []
     },
     {
       "person_id": "person_a127672fc76954e3a7760880",
       "member": "Tim Bull",
       "seat": "Gippsland East District",
-      "same_surname_candidates": [
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
         {
           "candidate": "BULL, Sue",
           "seat": "Western Victoria Region",
           "party": "Socialist Alliance"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=GippslandEast",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "To be vacated at the election with the retirement of Nationals member Tim Bull"
         }
       ]
     },
@@ -1812,7 +2065,8 @@
       "person_id": "person_01fe0127242157e2bfc9da83",
       "member": "Mary-Anne Thomas",
       "seat": "Macedon District",
-      "same_surname_candidates": [
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
         {
           "candidate": "THOMAS, Nofoao",
           "seat": "Croydon District",
@@ -1833,103 +2087,71 @@
           "seat": "Western Victoria Region",
           "party": "Family First Victoria"
         }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Macedon",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Mary-Anne Thomas"
+        }
       ]
     },
     {
-      "person_id": "person_9ffea3411fb15484ac345657",
-      "member": "Steve McGhie",
-      "seat": "Melton District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_00fe30183f1a564e938963aa",
-      "member": "Lily D'Ambrosio",
-      "seat": "Mill Park District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_365e547617d75f19bea1f8ab",
-      "member": "Peter Walsh",
-      "seat": "Murray Plains District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_4e699a8cd1955d3086184859",
-      "member": "Gary Maas",
-      "seat": "Narre Warren South District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_dae2b3f30edc5d53b2f49e70",
-      "member": "Shaun Leane",
-      "seat": "North-Eastern Metropolitan Region",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_cbdc42ca514151b9bf92bc07",
-      "member": "Sonja Terpstra",
-      "seat": "North-Eastern Metropolitan Region",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_577ef041fe635f3b85925923",
-      "member": "Adem Somyurek",
-      "seat": "Northern Metropolitan Region",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_82a64ff57a9752dc9a8b1d40",
-      "member": "Wendy Lovell",
-      "seat": "Northern Victoria Region",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_9ffa21b2f8ee5a0bbd0ac206",
-      "member": "Emma Vulin",
-      "seat": "Pakenham District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_d083ecba4e8b5995851d5338",
-      "member": "Kim Wells",
-      "seat": "Rowville District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_d7b507e51c335ecea76d748f",
-      "member": "Kim O'Keeffe",
-      "seat": "Shepparton District",
-      "same_surname_candidates": []
+      "person_id": "person_ea727220eadf5a60ba127324",
+      "member": "Michael O'Brien",
+      "seat": "Malvern District",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "O'BRIEN, Michelle",
+          "seat": "Evelyn District",
+          "party": "Family First Victoria"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Malvern",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Michael O'Brien"
+        }
+      ]
     },
     {
       "person_id": "person_c075c82ddf5057b6ac289844",
       "member": "Darren Cheeseman",
       "seat": "South Barwon District",
-      "same_surname_candidates": [
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
         {
           "candidate": "CHEESEMAN, Andrew",
           "seat": "Frankston District",
           "party": "Victorian Socialists"
         }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.tallyroom.com.au/vic2026/southbarwon2026",
+          "publisher": "The Tally Room, Victoria 2026 guide",
+          "title": "South Barwon – Victoria 2026",
+          "read_on": "2026-11-16",
+          "quote": "Sitting independent MP Darren Cheeseman is not running for re-election."
+        }
       ]
-    },
-    {
-      "person_id": "person_f43a8ec079465ce5a3d42048",
-      "member": "Natalie Hutchins",
-      "seat": "Sydenham District",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_acf010ba9dab5b87921f6c02",
-      "member": "David Ettershank",
-      "seat": "Western Metropolitan Region",
-      "same_surname_candidates": []
     },
     {
       "person_id": "person_8d72383a175d5d4290868e0b",
       "member": "Joe McCracken",
       "seat": "Western Victoria Region",
-      "same_surname_candidates": [
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
         {
           "candidate": "McCRACKEN, Lachlan",
           "seat": "Narre Warren North District",
@@ -1940,28 +2162,27 @@
           "seat": "Narre Warren South District",
           "party": "Victorian Socialists"
         }
-      ]
-    },
-    {
-      "person_id": "person_97ff30920f2b557693bacaf8",
-      "member": "Gayle Tierney",
-      "seat": "Western Victoria Region",
-      "same_surname_candidates": []
-    },
-    {
-      "person_id": "person_ea727220eadf5a60ba127324",
-      "member": "Michael O'Brien",
-      "seat": "Malvern District",
-      "same_surname_candidates": [
-        {
-          "candidate": "O'BRIEN, Michelle",
-          "seat": "Evelyn District",
-          "party": "Family First Victoria"
-        }
       ],
       "reviewed_on": "2026-11-16",
-      "review_evidence": "Exact check of all 1,037 VEC rows: no \"O'BRIEN, Michael\" in any district or region. \"O'BRIEN, Michelle\" (Evelyn District, Family First Victoria) is a different given name."
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=WesternVictoria",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "The second Liberal elected in 2022, Joe McCracken, is not seeking a second term."
+        }
+      ]
     }
   ],
-  "members_to_check": []
+  "members_to_check": [],
+  "held": [
+    {
+      "person_id": "person_2841eb5eccfe57458fda8ffb",
+      "member": "Tim Read",
+      "seat": "Brunswick District",
+      "held_on": "2026-11-16",
+      "reason": "Reviewed exception: this seat keeps its present wording pending a separate check. No link and no mark."
+    }
+  ]
 }

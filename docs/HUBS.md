@@ -180,9 +180,9 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   would put another person's parliamentary record beside a candidate, so nothing
   is matched at request time. The build links a candidate only when the pair is
   in this committed file and a fresh match of the current lists and roster still
-  supports it. An entry that no longer holds is left out with a build warning
-  (`links_left_out` in the build summary), so the row falls back to plain text
-  and a later roster or VEC list cannot stop the election build.
+  supports it. An entry that no longer holds is never published and stops the
+  build with its reason, so a stale mapping is noticed: rerun the script, review
+  the diff and commit it.
 
   A pair is **verified** only when the VEC name equals the roster name or a
   roster alias (after folding case, accents, apostrophes and punctuation), the
@@ -200,7 +200,8 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | Ambiguous by the rule, linked after a recorded review | 8 |
   | Ambiguous, not linked | 0 |
   | No name match with a roster member | 937 |
-  | Members marked "Not a candidate in 2026" | 28 |
+  | Members marked "Not a candidate in 2026" | 27 |
+  | Members held by a reviewed exception (no link, no mark) | 1 |
   | Members left unmarked for a person to check | 0 |
 
   The eight reviewed pairs (16 November 2026) are members who changed seat,
@@ -210,23 +211,35 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   (BATCHELOR, Ryan), Northern Metropolitan (MCINTOSH, Tom) and Western
   Metropolitan (DEEMING, Moira). Each entry in `reviewed` keeps the rule's
   reasons and the public sources relied on, with the words quoted.
-  "Not a candidate in 2026" is shown only where the member has no name match and
-  no remaining candidate with their surname shares their seat, their party or
-  their first initial. The file keeps the same-surname candidates that were
-  considered. A member who nominated under a different given name, in a
-  different seat and for a different party would not be caught by this rule.
+  "Not a candidate in 2026" rests on the VEC lists, which are final now that
+  nominations have closed. The member has no name match, and no remaining
+  candidate in any seat of either house shares a surname with the member's name
+  or an alias: then the lists alone support the mark (20 members, including one
+  with no further source recorded). Given names, seats and parties are not used
+  to tell people apart, because a member can nominate under a formal given
+  name, elsewhere, with no registered party; only a candidate verified as
+  another roster member is set aside. Where a same-surname candidate remains,
+  the mark also needs a person's dated check (`reviewed_on`,
+  `review_evidence`) and a public source that the member is not standing, kept
+  in `sources` with the words quoted. Seven members are marked that way:
+  Jackson Taylor, Maree Edwards, Tim Bull, Mary-Anne Thomas, Michael O'Brien,
+  Darren Cheeseman and Joe McCracken.
+
+  A member in `held` is never linked and never marked: the seat keeps its
+  present wording by a reviewed exception until a person decides otherwise.
+  One seat is held (Brunswick). A test checks that every member of every seat
+  is in exactly one state: linked, marked or held.
   A separate test reads all 1,037 VEC rows and fails if any marked member is on
   them under an exact surname and given-name comparison (case, apostrophes and
-  hyphens normalised), in any seat of either house. Michael O'Brien (Malvern)
-  is marked on that recorded check: the rule alone left him open because
-  "O'BRIEN, Michelle" stands in Evelyn.
+  hyphens normalised), in any seat of either house. Source quotes and notes
+  give no one a current office.
 
   To settle an ambiguous pair, a person moves it to `reviewed` with
   `reviewed_on` (a date), `review_evidence` (what was checked) and `sources`:
   at least one https address of a party, member or news source that names the
   person and the seat, with the words relied on in `quote`. To settle a member
   in `members_to_check`, they add the member to `not_candidate` with
-  `reviewed_on` and `review_evidence`. The build accepts no other route, reruns keep these entries,
+  `reviewed_on`, `review_evidence` and `sources`. The build accepts no other route, reruns keep these entries,
   and `portal/test/vic-candidate-links.test.mjs` pins the linked set, so each
   promotion is also a reviewed test change. After a refreshed VEC list, rerun
   the script, review the diff and commit it;
