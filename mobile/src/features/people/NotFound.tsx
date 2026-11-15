@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { SidebarSafe } from '../../design/adaptive';
 import { ContentUnavailable } from '../../design/states';
 import { rhythm } from '../../design/tokens';
 
@@ -9,23 +10,29 @@ import { rhythm } from '../../design/tokens';
  */
 export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
   return (
-    <View style={styles.page}>
-      <ContentUnavailable
-        symbol="person.crop.circle.badge.questionmark"
-        title="This person isn’t in OPAX"
-        body="Profiles cover people who have served in an Australian parliament."
-        testID="person-not-found"
-        action={{
-          label: 'Search parliamentarians',
-          onPress: onSearch,
-          testID: 'person-not-found-search',
-          containerTestID: 'person-not-found-action',
-        }}
-      />
-    </View>
+    // Clear of a vertical tab bar wherever it is drawn. Inside a Screen,
+    // which already is, this adds nothing.
+    <SidebarSafe style={styles.safe}>
+      <View style={styles.page}>
+        <ContentUnavailable
+          symbol="person.crop.circle.badge.questionmark"
+          title="This person isn’t in OPAX"
+          body="Profiles cover people who have served in an Australian parliament."
+          testID="person-not-found"
+          action={{
+            label: 'Search parliamentarians',
+            onPress: onSearch,
+            testID: 'person-not-found-search',
+            containerTestID: 'person-not-found-action',
+          }}
+        />
+      </View>
+    </SidebarSafe>
   );
 }
 
 const styles = StyleSheet.create({
   page: { gap: rhythm.heading },
+  // As tall as its message, not the page: SidebarSafe fills by default.
+  safe: { flex: 0 },
 });

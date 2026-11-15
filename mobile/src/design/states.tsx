@@ -1162,9 +1162,18 @@ export function ContentUnavailable({
       {system ? (
         // Verified in @expo/ui 57.0.21 HostProps: boolean | { vertical?, horizontal? }.
         // Propose the column width; only height follows SwiftUI.
+        // SwiftUI centres its content in the safe area, React Native in the
+        // view's own frame. Where this block runs under a side inset (the
+        // Duo's vertical tab bar, a notch in landscape) the symbol, title
+        // and body moved half the inset away from it while the action below
+        // stayed on the frame's centre ("Try again" sat to the right of its
+        // text, build 84). The hosted text ignores the safe area, so it and
+        // the action share the frame's centre in every layout; keeping the
+        // frame clear of the bar is its page's job (Screen, SidebarSafe).
         <Host
           style={{ width: columnWidth, maxWidth: '100%' }}
           matchContents={{ vertical: true }}
+          ignoreSafeArea="all"
         >
           <ContentUnavailableView
             title={phoneCopy(title)}

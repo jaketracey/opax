@@ -18,6 +18,8 @@ import {
   listedPair,
   requiredRatio,
 } from '../src/design/contrast';
+import { SidebarSafe } from '../src/design/adaptive';
+import { PersonNotFound } from '../src/features/people/NotFound';
 import { copy } from '../src/design/copy';
 import { light, partyColors } from '../src/design/palette';
 import {
@@ -1183,6 +1185,40 @@ describe('shared state kit', () => {
     });
     act(() => r.root.findByType(Button).props.onPress());
     expect(retry).toHaveBeenCalledTimes(1);
+  });
+  // Build 84, the Duo's outer display: beside the vertical tab bar SwiftUI
+  // centred the symbol, title and body in the safe area, and React Native
+  // centred "Try again" in the view's frame, half the bar's width apart.
+  // The hosted text ignores the safe area, so both take the frame's centre.
+  test('ContentUnavailable centres its text and its action on the same axis under a side inset', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...window, width: 466, fontScale: 1 },
+        screen,
+      }),
+    );
+    const r = mount(
+      <ContentUnavailable
+        symbol={symbols.error}
+        title="This page couldn’t be shown"
+        body="Something went wrong while drawing it."
+        action={{ label: 'Try again', onPress: noop }}
+        testID="unavailable"
+      />,
+    );
+    // The text: centred in the Host's own frame, whatever insets cross it,
+    // as the React Native action below it is.
+    expect(r.root.findByType(Host).props.ignoreSafeArea).toBe('all');
+  });
+  // The unknown-person state is inside the side safe area wherever it is
+  // drawn, so beside a vertical tab bar it is centred in the space left.
+  test('PersonNotFound sits inside the side safe area', () => {
+    const r = mount(<PersonNotFound onSearch={noop} />);
+    expect(
+      r.root
+        .findByType(SidebarSafe)
+        .findAllByProps({ testID: 'person-not-found-action' }),
+    ).not.toHaveLength(0);
   });
   // Sweep 2 lane A: at AX3 SwiftUI's view came out a line short on three of
   // seven not-found pages and cut the title to "This electorate…". At

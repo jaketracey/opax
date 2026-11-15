@@ -13,6 +13,7 @@ import { clearBarStyle, opaqueBar } from '../src/navigation/chrome';
 import { RouteOptions } from '../src/navigation/preview';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import { ClearBarRest, FixedPage, Screen } from '../src/design/layout';
+import { SidebarSafe } from '../src/design/adaptive';
 
 let mockBarEdge: 'unspecified' | 'leading' | 'trailing' = 'unspecified';
 jest.mock('../modules/opax-root-bar', () => ({
@@ -75,6 +76,34 @@ test.each([
     expect(page(transparent)).toEqual({ flex: 1 });
   },
 );
+
+// Build 84: a plain View runs under a vertical tab bar, so a fixed page's
+// message was centred half a bar's width towards it. It sits inside the
+// side safe area, as a Screen page does (person votes and interests, the
+// record lists and party sources error states).
+test('a fixed page sits inside the side safe area', () => {
+  jest.replaceProperty(Platform, 'OS', 'ios');
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <NavigationRouteContext.Provider value={route as never}>
+        <DescriptorsContext.Provider
+          value={
+            { [route.key]: { options: { headerTransparent: false } } } as never
+          }
+        >
+          <HeaderHeightContext.Provider value={82}>
+            <FixedPage style={{ flex: 1 }} testID="fixed" />
+          </HeaderHeightContext.Provider>
+        </DescriptorsContext.Provider>
+      </NavigationRouteContext.Provider>,
+    );
+  });
+  expect(
+    renderer.root.findByType(SidebarSafe).findAllByProps({ testID: 'fixed' }),
+  ).not.toHaveLength(0);
+  act(() => renderer.unmount());
+});
 
 // A scroll view that mounts after its page is on screen (a skeleton swapped
 // for the loaded page) has been left 24 pt past rest under the clear bar,
