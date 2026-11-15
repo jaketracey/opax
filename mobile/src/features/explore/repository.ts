@@ -1,4 +1,5 @@
 import type { ApiClient } from '../../api/client';
+import { decoderPerKey } from '../../api/decoder-memo';
 import { decodeMatrix, decodeTide } from '../reports/model';
 import { decodeYear, type Matrix, type Tide, type TideScope } from './model';
 import { date, invalid, object, optional } from '../../api/validation';
@@ -22,15 +23,17 @@ export const decodeDatedMatrix = (raw: unknown): Matrix => ({
   ...decodeMatrix(raw),
   ...generatedAt(raw),
 });
+/** A year's decoder, the same function each time for the same year. */
+const yearDecoder = decoderPerKey(
+  (year: number) => (raw: unknown) => decodeYear(raw, year),
+);
+
 export class ExploreRepository {
   constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
   year = (year: number, signal?: AbortSignal) =>
-    this.client.get(
-      `/years/${year}.json`,
-      (raw) => decodeYear(raw, year),
-      false,
-      { signal },
-    );
+    this.client.get(`/years/${year}.json`, yearDecoder(year), false, {
+      signal,
+    });
   pictures = (signal?: AbortSignal) =>
     this.client.get('/years/pictures.json', decodePictures, false, { signal });
   tide = (scope: TideScope, signal?: AbortSignal) =>
