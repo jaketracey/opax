@@ -468,6 +468,53 @@ test('expanding the panel holds the card still; the search card takes the bandâ€
   );
 });
 
+test.each([
+  ['at its measured parts', null],
+  ['with the jurisdiction 70 pt and the picker 80 pt', [70, 80]],
+  ['with the jurisdiction 90 pt and the picker 110 pt', [90, 110]],
+] as const)(
+  'the iPhone SE at AX5 holds the card at one height as the panel expands and collapses, %s (reviewer P2)',
+  async (_case, parts) => {
+    const device = devices.find((d) => d.name === 'iPhone SE at AX5')!;
+    const natural = { card: 640, peek: 420 };
+    const root = await mount(device);
+    // The card's pinned parts are reported, as a device reports them: the
+    // sentence's two-line or one-line choice reads them.
+    const report = () => {
+      settle(root, device, natural, parts === null);
+      if (!parts) return;
+      for (const [testID, height] of [
+        ['money-map-card-head', parts[0]],
+        ['money-map-card-picker', parts[1]],
+      ] as const)
+        act(() =>
+          root
+            .findAllByProps({ testID })[0]
+            ?.props.onLayout?.({ nativeEvent: { layout: { height } } }),
+        );
+      settle(root, device, natural, false);
+    };
+    report();
+    const atRest = flat(topOf(root)).maxHeight as number;
+    expect(atRest).toBeGreaterThan(0);
+
+    act(() => root.findByType(MoneyMapPanel).props.onExpanded(true));
+    report();
+    expect(controlsOf(root)).toBeUndefined();
+    const expanded = flat(topOf(root)).maxHeight as number;
+
+    act(() => root.findByType(MoneyMapPanel).props.onExpanded(false));
+    report();
+    const collapsed = flat(topOf(root)).maxHeight as number;
+
+    // Both heights, so a card that grows on expand says by how much.
+    expect({ expanded, collapsed }).toEqual({
+      expanded: atRest,
+      collapsed: atRest,
+    });
+  },
+);
+
 test.each(['Android phone at 200%', 'small Android phone at 200%'])(
   'the map keeps a floor under a row of controls: %s',
   async (name) => {

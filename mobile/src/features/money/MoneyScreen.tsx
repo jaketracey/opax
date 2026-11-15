@@ -773,12 +773,13 @@ function MapMode({
   const phoneFloor = managed
     ? 0
     : Math.max(0, phoneSceneFloor(visible) - bandHeight - rhythm.block * 2);
-  const largeLimits = (top: number) =>
+  const panelState = searchOpen ? 'search' : expanded ? 'expanded' : 'map';
+  const largeLimits = (top: number, state: typeof panelState = panelState) =>
     largeTextLimits(
       managed ? pose.controls.height : visible,
       top,
       bandHeight,
-      searchOpen ? 'search' : expanded ? 'expanded' : 'map',
+      state,
       managed ? pose.sceneFloor : phoneFloor,
     );
   // Until the card reports its height, a capped card (large text on a
@@ -788,6 +789,8 @@ function MapMode({
   const top =
     topHeight || (large && !regular ? largeLimits(0).topMaxHeight : 0);
   const caps = large && !regular ? largeLimits(top) : null;
+  // The same limits with the panel at rest, whatever it is doing now.
+  const restCaps = large && !regular ? largeLimits(top, 'map') : null;
   // The jurisdiction and the List | Map picker never scroll out of a capped
   // card: only its sentence does. Where the two alone need more than the
   // cap (the largest sizes on a small phone) the cap is theirs, and the
@@ -816,8 +819,13 @@ function MapMode({
         // (44 pt) once the card has taken them: on the smallest phones at
         // the largest sizes the panel would otherwise run over the search
         // and zoom controls, so the sentence gives up the second line.
+        // The choice is made from the room with the panel at rest. An
+        // expanded panel hides the controls and frees room, and a choice
+        // made from that grew the card as the panel opened and shrank it
+        // as it closed (the iPhone SE at the largest sizes).
+        const rest = restCaps ?? caps;
         const room =
-          caps.topMaxHeight + Math.max(0, caps.panelMaxHeight - minimumTarget);
+          rest.topMaxHeight + Math.max(0, rest.panelMaxHeight - minimumTarget);
         const topMaxHeight = Math.max(
           caps.topMaxHeight,
           pinnedNeed <= room ? pinnedNeed : pinnedLeast,
