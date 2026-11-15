@@ -351,7 +351,7 @@ test('"Not a candidate in 2026" appears only for members the VEC lists rule out,
   const bendigo = renderVicElection(data,seat('Bendigo West')).html;
   assert.ok(bendigo.includes(`<h2 class="ui-section-title">What Maree Edwards has done</h2><article class="vic-member">${note}`));
   assert.ok(renderVicElection(data,seat('Bendigo East')).html.includes(`<h2 class="ui-section-title">What Jacinta Allan has done</h2><article class="vic-member">${note}`));
-  assert.ok(renderVicElection(data,seat('Malvern')).html.includes(`<h2 class="ui-section-title">What Michael O'Brien has done</h2><article class="vic-member">${note}`.replace("'",'&#39;')));
+  assert.ok(renderVicElection(data,seat('Malvern')).html.includes(`<h2 class="ui-section-title">What Michael O&#39;Brien has done</h2><article class="vic-member">${note}`));
   // A member standing again, in the same seat or another, is never marked.
   for (const name of ['Albert Park','Geelong','Mornington','Ringwood','Sunbury','Brunswick']) assert.doesNotMatch(renderVicElection(data,seat(name)).html,/Not a candidate/,name);
   const region = seat('Eastern Victoria'), html = renderVicElection(data,region).html;
