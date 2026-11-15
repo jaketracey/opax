@@ -1818,12 +1818,9 @@ describe('since your last visit', () => {
   const LAST_NIGHT = new Date(Date.now() - 21 * 60 * 60 * 1000).toISOString();
   /** When the device kept that visit's total: four days ago. */
   const KEPT = Date.now() - 4 * 24 * 60 * 60 * 1000;
-  /** That day as Today's lines say a date: "12 Nov", no year this year. */
-  const day = (at: number) => {
-    const d = new Date(at);
-    const month = d.toLocaleDateString('en-AU', { month: 'short' });
-    return `${d.getDate()} ${month.replace('.', '')}${d.getFullYear() === new Date().getFullYear() ? '' : ` ${d.getFullYear()}`}`;
-  };
+  /** A record's date as the line says it: "14 Nov", no year this year. */
+  const day = (iso: string) =>
+    formatDate(iso, 'short').replace(` ${new Date().getFullYear()}`, '');
   const visited = async (
     total = 1000,
     checkedAt = LAST_NIGHT,
@@ -1883,7 +1880,7 @@ describe('since your last visit', () => {
     const count = hosts(r, 'today-since-count').at(-1)!;
     expect(count.props.accessibilityRole).toBe('link');
     expect(count.props.accessibilityLabel).toBe(
-      `412 records added since ${day(KEPT)}`,
+      `412 more records in OPAX since ${day(LAST_NIGHT)}`,
     );
     expect(count.props.accessibilityHint).toBe('Opens Just added');
     // The source is the source line Today's other sources draw: the
@@ -1983,67 +1980,72 @@ describe('since your last visit', () => {
     });
   });
 
-  test('the line names the date its count is from: the day this device kept the total, as Today says a date, and never "your last visit"', async () => {
+  test('the line says what is counted and from when: "412 more records in OPAX since 14 Nov", the date of the copy the count starts from', async () => {
     await visited();
-    mock.corpus.mockResolvedValue(corpus(2204, FRESH));
+    mock.corpus.mockResolvedValue(corpus(1412, FRESH));
     const r = await render(<Today />);
     firstFrame(r);
-    const words = `1,204 records added since ${day(KEPT)}`;
+    const words = `412 more records in OPAX since ${day(LAST_NIGHT)}`;
     expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
       words,
     );
     expect(strings(hosts(r, 'today-since-count').at(-1)!)).toBe(words);
     expect(strings(hosts(r, 'today-since')[0]!)).not.toMatch(
-      /last visit|more records in OPAX/,
+      /last visit|records added/,
     );
-    // The date form: day and short month, the year only in another year.
-    expect(sinceWords(1, Date.parse('2026-11-12T09:00:00'), 2026)).toBe(
-      '1 record added since 12 Nov',
+    // The wording, with the year only for a copy from another year.
+    expect(sinceWords(412, '2026-11-14T03:00:00+00:00', 2026)).toBe(
+      '412 more records in OPAX since 14 Nov',
     );
-    expect(sinceWords(12, Date.parse('2025-12-30T09:00:00'), 2026)).toBe(
-      '12 records added since 30 Dec 2025',
+    expect(sinceWords(1, '2026-11-14', 2026)).toBe(
+      '1 more record in OPAX since 14 Nov',
     );
-    // The source line still carries the copy's own date.
+    expect(sinceWords(1204, '2025-12-30', 2026)).toBe(
+      '1,204 more records in OPAX since 30 Dec 2025',
+    );
+    // The source line beneath still carries the later copy's own date.
     expect(
       hosts(r, 'today-since-source').at(-1)!.props.accessibilityLabel,
     ).toBe(
       `Updated ${formatDate(FRESH, 'short')}, OPAX collection coverage record`,
     );
-    // The date is the device's own: no read carries it.
+    // Which copy the device kept is the device's own: no read carries it.
     expect(mock.corpus.mock.calls.flat()).toEqual([]);
     expect(mock.corpusSaved.mock.calls.flat()).toEqual([]);
   });
 
-  test('a total kept on an earlier visit names that visit’s date, not the latest launch’s; once drawn, the date moves on', async () => {
-    // Kept nine days ago.
-    const earlier = Date.now() - 9 * DAY_MS;
-    await visited(1000, LAST_NIGHT, earlier);
+  test('a total from a copy checked before the visit names the copy’s date, not the visit’s, whichever launch draws it; once drawn, the date moves on', async () => {
+    // The copy was checked nine days ago; the visit that kept it was four
+    // days ago.
+    const copy = new Date(Date.now() - 9 * DAY_MS).toISOString();
+    await visited(1000, copy, KEPT);
+    expect(day(copy)).not.toBe(day(new Date(KEPT).toISOString()));
     // A launch since then: the growth answered late, so nothing was drawn
-    // and the total kept (with its date) stayed as it was.
+    // and the total kept (with its copy's date) stayed as it was.
     const read = pendingRead();
     mock.corpus.mockReturnValue(read.promise as never);
     const late = await render(<Today />);
     firstFrame(late);
     await act(async () => read.answer(corpus(1412, FRESH)));
     expect(hosts(late, 'today-since')).toHaveLength(0);
-    await expect(readVisit()).resolves.toMatchObject({ openedAt: earlier });
-    // This launch draws it from the saved copy: since nine days ago.
+    await expect(readVisit()).resolves.toMatchObject({ checkedAt: copy });
+    // This launch draws it from the saved copy: since the first copy's date.
     setUp({ cached: { date: addDays(today, -1) } });
     mock.corpusSaved.mockResolvedValue(corpus(1412, FRESH));
     mock.corpus.mockResolvedValue(corpus(1412, FRESH));
     const r = await render(<Today />);
     firstFrame(r);
-    expect(day(earlier)).not.toBe(day(Date.now()));
     expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
-      `412 records added since ${day(earlier)}`,
+      `412 more records in OPAX since ${day(copy)}`,
     );
-    // Drawn, so the total kept is now this launch's, with today's date.
+    // Drawn, so the total kept is now the drawn copy's, with its date.
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
-    const kept = await readVisit();
-    expect(kept).toMatchObject({ total: 1412 });
-    expect(day(kept!.openedAt)).toBe(day(Date.now()));
+    await expect(readVisit()).resolves.toMatchObject({
+      total: 1412,
+      checkedAt: FRESH,
+    });
   });
 
   test('the next launch draws that growth from the saved copy of the record, in the first frame, with the network still out', async () => {
@@ -2054,7 +2056,7 @@ describe('since your last visit', () => {
     const r = await render(<Today />);
     firstFrame(r);
     expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
-      `412 records added since ${day(KEPT)}`,
+      `412 more records in OPAX since ${day(LAST_NIGHT)}`,
     );
     expect(
       hosts(r, 'today-since-source').at(-1)!.props.accessibilityLabel,
@@ -2085,7 +2087,7 @@ describe('since your last visit', () => {
     const later = new Date().toISOString();
     await act(async () => read.answer(corpus(1500, later)));
     expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
-      `412 records added since ${day(KEPT)}`,
+      `412 more records in OPAX since ${day(LAST_NIGHT)}`,
     );
     await expect(readVisit()).resolves.toMatchObject({ total: 1412 });
   });
@@ -2131,7 +2133,7 @@ describe('since your last visit', () => {
       firstFrame(r);
       expect(masthead(r).filter((id) => /^today-since/.test(id))).toEqual([]);
       expect(strings(r.root)).not.toMatch(
-        /hasn’t grown|added since|last visit|collection coverage/,
+        /hasn’t grown|more records? in OPAX|last visit|collection coverage/,
       );
       await expect(readVisit()).resolves.toMatchObject({ total });
     }
@@ -2189,7 +2191,7 @@ describe('since your last visit', () => {
     expect(mock.corpus.mock.calls[0]).toEqual([]);
     expect(mock.corpusSaved.mock.calls.flat()).toEqual([]);
     expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
-      `1 record added since ${day(KEPT)}`,
+      `1 more record in OPAX since ${day(LAST_NIGHT)}`,
     );
   });
 });

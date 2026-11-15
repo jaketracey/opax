@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { useAccessibilitySize } from '../../design/accessibility';
+import { formatDate, type DateInput } from '../../design/format';
 import { Pressable } from '../../design/pressable';
 import { useRowHighlight } from '../../design/row-padding';
 import {
@@ -15,7 +16,6 @@ import { Text } from '../../design/text';
 import { minimumTarget, radii, rhythm, textStyles } from '../../design/tokens';
 import { recentRecordsRoute } from '../../navigation/routes';
 import { presentSource } from '../../navigation/sheets';
-import { changeDate } from '../follows/changes';
 import {
   moreSince,
   readVisit,
@@ -32,10 +32,11 @@ export interface Since {
   /** The collection's total the count was worked out from. */
   total: number;
   /**
-   * When the total it is counted from was kept on this device (ms): the
-   * date the line names. Never leaves the device.
+   * The check date of the collection record the count starts from (the
+   * copy whose total this device kept): the date the line names. Kept with
+   * that total, on the device only.
    */
-  since: number;
+  since: string;
 }
 
 /** The collection record's two facts the line needs. */
@@ -53,7 +54,7 @@ const collectionOf = (data: {
 
 /**
  * Today's records-added line: how many more records the collection holds
- * than the total this device last kept, and the day it kept it.
+ * than the copy of its record this device last kept, and that copy's date.
  *
  * - The count is the change in the total the collection's own public record
  *   states (`/corpus.json`, a free catalogue read: no paid read on launch).
@@ -85,7 +86,7 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
       const offer = (collection: Collection) => {
         const count = moreSince(last, collection.total);
         if (active && last && sourceCurrent(collection.checkedAt, Date.now()))
-          setAnswer({ count, ...collection, since: last.openedAt });
+          setAnswer({ count, ...collection, since: last.checkedAt });
       };
       const saved = await Promise.resolve()
         .then(() => catalogs.corpusSaved())
@@ -127,15 +128,19 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
 export const COLLECTION_RECORD = 'OPAX collection coverage record';
 
 /**
- * The line's words, only ever for records added: "1,204 records added
- * since 12 Nov". The number is the change in the collection's stated total
- * from the total this device last kept, and the date is the day it kept
- * it, in the form Today's other lines use (no year in this year). It names
- * that date, not "your last visit": the total kept moves on only when a
- * line is drawn or nothing was added, so it can be several launches old.
+ * The line's words, only ever for records added: "412 more records in OPAX
+ * since 14 Nov". The number is the change in the collection's stated total
+ * between two copies of its record, and the date is the earlier copy's own
+ * check date, so the sentence is true whichever launch draws it and
+ * however long before a visit that copy was checked. The date is said as
+ * the source line says the later copy's, without the year in this year.
  */
-export const sinceWords = (count: number, since: number, year?: number) =>
-  `${count.toLocaleString('en-AU')} ${count === 1 ? 'record' : 'records'} added since ${changeDate(since, year)}`;
+export const sinceWords = (
+  count: number,
+  since: DateInput,
+  year = new Date().getFullYear(),
+) =>
+  `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since ${formatDate(since, 'short').replace(new RegExp(` ${year}$`), '')}`;
 
 /** The line's source, as About cites the collection record. */
 export function sinceSources(since: Since): SourceDetails {
@@ -150,15 +155,15 @@ export function sinceSources(since: Since): SourceDetails {
       },
     ],
     notes: [
-      'The number is the change in the total number of records the collection record states, from the total this device last kept, on the date shown.',
-      'That total and its date are kept on this device only.',
+      'The number is the change in the total number of records the collection record states, from the copy of the record checked on the date shown.',
+      'Which copy you last saw is kept on this device only.',
     ],
   };
 }
 
 /**
- * Under Today's date, when records were added: "412 records added since
- * 12 Nov", and under it the source line every Today source
+ * Under Today's date, when records were added: "412 more records in OPAX
+ * since 14 Nov", and under it the source line every Today source
  * draws (`SourceAffordance`: the source glyph, "Updated 15 Nov 2026" and
  * the record's name in navy). Both open Just added; touch and hold on the
  * count (or its VoiceOver action) opens the sources. With no line, nothing

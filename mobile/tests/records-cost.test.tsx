@@ -481,7 +481,7 @@ test('Today with a last visit draws its since-your-last-visit line from the free
     (n) => typeof n.type === 'string' && n.props.testID === 'today-since-count',
   );
   expect(line.at(-1)!.props.accessibilityLabel).toMatch(
-    /^12 records added since 12 Nov( 2026)?$/,
+    /^12 more records in OPAX since \d{1,2} [A-Z][a-z]{2}( \d{4})?$/,
   );
   expect(catalogs.corpus).toHaveBeenCalledTimes(1);
   expect(rememberVisit).toHaveBeenCalledTimes(1);
