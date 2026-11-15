@@ -776,8 +776,8 @@ OA_KEY=Ha7QmZpX2vEwRt9LkNcB4sYd
 # learns a value that is in no log (review, 16 Nov 2026).
 TVFY_KEY=Wb7Nc3Kd9Fq2; OA_ALT=Zx9Qw8Er7Ty6
 printf 'ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=%s\nOPENAUSTRALIA_API_KEY="%s"\nTVFY_API_KEY="%s" # tvfy\nexport OA_ALT=%s   # the spare\n' "$KB_TOKEN" "$OA_KEY" "$TVFY_KEY" "$OA_ALT" > "$REPO/.env"
-OPAX_R2_ACCESS_KEY_ID=$R2_ID OPAX_R2_SECRET_ACCESS_KEY=$R2_SECRET OPAX_R2_ENDPOINT=$R2_ENDPOINT mkdir -p "$HOME/.cache/autoresearch/pipeline/.status.stale1"; echo STALE_SWEEP_FIXTURE > "$HOME/.cache/autoresearch/pipeline/.status.stale1/env0"; echo STALE_SWEEP_FIXTURE > "$SB/stale.marker"
-FAKE_STEP_LEAK=1 FAKE_MODE=failsteps nightly
+mkdir -p "$HOME/.cache/autoresearch/pipeline/.status.stale1"; echo STALE_SWEEP_FIXTURE > "$HOME/.cache/autoresearch/pipeline/.status.stale1/env0"; echo STALE_SWEEP_FIXTURE > "$SB/stale.marker"
+OPAX_R2_ACCESS_KEY_ID=$R2_ID OPAX_R2_SECRET_ACCESS_KEY=$R2_SECRET OPAX_R2_ENDPOINT=$R2_ENDPOINT FAKE_STEP_LEAK=1 FAKE_MODE=failsteps nightly
 git --git-dir="$ORIGIN" show nightly-status:status.json > "$SB/status.json"
 check "the night still publishes a failed status naming the step" bash -c "[ '$NRC' -eq 1 ] && grep -q 'failed steps: nsw' '$SB/status.json'"
 check "the step really printed the credentials into its log (the fixture leaks)" bash -c "grep -qF '$R2_SECRET' '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF '$KB_TOKEN' '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF '$OA_KEY' '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF '$TVFY_KEY' '$HOME/.cache/autoresearch/pipeline/nsw.log'"
