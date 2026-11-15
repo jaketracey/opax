@@ -687,6 +687,36 @@ describe('an open thread when its tab is shown again', () => {
     }
   });
 
+  test('the band appearing as a thread opens does not move it: the send is placed by its own animated scroll', async () => {
+    const thread = await open();
+    try {
+      // `open` sent the first question from the idle page at rest: the band
+      // went from 0 to its full depth. Nothing unanimated ran for it.
+      expect(thread.inset()).toBeLessThan(0);
+      const unanimated = scrollTo.mock.calls.filter(
+        ([to]) => (to as { animated?: boolean }).animated === false,
+      );
+      expect(unanimated).toEqual([]);
+    } finally {
+      thread.restore();
+    }
+  });
+
+  test('a reader a little way past rest is left alone, as is one further on', async () => {
+    const thread = await open();
+    try {
+      const rest = 168 + thread.inset();
+      thread.at(-rest);
+      // 30 pt into the thread: neither at rest nor carried by the band.
+      thread.at(-rest + 30);
+      scrollTo.mockClear();
+      await thread.refocus();
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      thread.restore();
+    }
+  });
+
   test('a thread the reader has scrolled is left where it is', async () => {
     const thread = await open();
     try {

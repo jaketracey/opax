@@ -205,18 +205,20 @@ export default function AskScreen() {
   // The hidden band is only there while UIKit keeps the large-title frame.
   // When the tab is left and shown again UIKit reports the bar it draws (116
   // pt for 168 on iOS 27.2), the band shrinks, and so does the inset above.
-  // UIKit keeps the offset the old inset gave, so a thread that was at rest
-  // came back the difference higher, its question behind the bar's title and
-  // buttons (build 88). A thread at rest is put back at rest for the new
-  // band; one the reader has scrolled is left where it is.
+  // UIKit carries a thread at rest up by the difference and leaves it there,
+  // its question behind the bar's title and buttons (build 88). Such a
+  // thread is put back at rest. Only for a band that shrinks: a band that
+  // appears is the thread opening, which `reveal` places with its own
+  // animation. And only a thread found at rest or carried exactly that far:
+  // one the reader has scrolled is left where it is.
   const band = useRef(hiddenBand);
   useLayoutEffect(() => {
     const before = band.current;
     band.current = hiddenBand;
-    if (before === hiddenBand || idle || scrollY.current === null) return;
-    // At rest before the change, wherever the old inset has left it now.
+    if (hiddenBand >= before || idle || scrollY.current === null) return;
     const above = scrollY.current + headerBottom;
-    if (above > Math.max(0, before - hiddenBand) + 1) return;
+    const carried = before - hiddenBand;
+    if (above > 1 && Math.abs(above - carried) > 1) return;
     const rest = { y: -headerBottom, animated: false };
     scroll.current?.scrollTo(rest);
     // Once more when the native inset has landed: it can follow this commit.
