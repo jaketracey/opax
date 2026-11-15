@@ -384,10 +384,8 @@ const followItem = (
 ): RowMenuLeaf => ({
   title: `${following ? 'Unfollow' : 'Follow'}${bill ? ' bill' : ''}`,
   symbol: following ? 'minus.circle' : 'plus',
-  onPress: () => {
-    onFollow();
-    if (!following) haptic('success');
-  },
+  // useRowFollow confirms the saved change; nothing plays at the limit.
+  onPress: onFollow,
 });
 const seatItems = ({ setSeat }: SeatAction): RowMenuAction[] =>
   setSeat
@@ -532,10 +530,17 @@ export function useRowFollow(
       void (async () => {
         const followId = canonical ?? (await followIdentity(kind, id));
         const current = await loadFollows();
-        if (current.some((item) => item.kind === kind && item.id === followId))
+        if (
+          current.some((item) => item.kind === kind && item.id === followId)
+        ) {
           await unfollow(`${kind}:${followId}`);
-        else if ((await follow({ kind, id: followId, title })) === 'limit')
+          haptic('selection');
+          return;
+        }
+        const result = await follow({ kind, id: followId, title });
+        if (result === 'limit')
           Alert.alert('Following', 'Unfollow an item to add another.');
+        else if (result === 'followed') haptic('success');
       })().catch(() =>
         Alert.alert('Following', 'Your follows could not be saved.'),
       );

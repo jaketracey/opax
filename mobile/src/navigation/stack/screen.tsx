@@ -15,6 +15,7 @@ import {
   type TabSegment,
 } from '../chrome';
 import { sheetListOptions, sheetListRoutes } from '../sheet-lists';
+import { sheetSnapListeners } from '../sheet-snap';
 import { emptyBarTitle } from '../useTitleOnScroll';
 
 /**
@@ -218,6 +219,7 @@ export function screen(
       key={name}
       name={name}
       redirect={redirect}
+      listeners={sheetSnapListeners}
       options={({ route, navigation }) =>
         sheetListOptions(
           {
