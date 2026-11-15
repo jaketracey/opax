@@ -106,16 +106,7 @@ export function barTitleWidth(
   return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
 }
 
-/**
- * How far to move a title right so its text sits on the bar's centre line,
- * beside the back button's collapsed circle. On iOS 26 UIKit sets the title
- * view, as wide as its text, at the leading end of the span between the bar
- * groups: 72 pt from the edge (the circle's 16 + 44, and 12), not centred in
- * it (device capture, 26.3: a 143 pt title spanned 73 to 216 on a 402 pt
- * phone). The move puts the text's centre on the bar's, and stops where its
- * edge meets the trailing group's reserve (16 pt in, the items, 8 pt gap),
- * so a wide title moves less, and one that fills the span not at all.
- */
+/** Kept free before the trailing reserve: wider phones may set wider bar margins. */
 export const barTitleShiftSpare = 4;
 /** A title's drawn width above Large: its Large width scaled, within its room. */
 export function drawnTextWidth(
@@ -126,6 +117,16 @@ export function drawnTextWidth(
   if (large === undefined) return undefined;
   return Math.min(room, large * Math.min(fontScale, inlineTitleScaleCap));
 }
+/**
+ * How far to move a title right so its text sits on the bar's centre line,
+ * beside the back button's collapsed circle. On iOS 26 UIKit sets the title
+ * view, as wide as its text, at the leading end of the span between the bar
+ * groups: 72 pt from the edge (the circle's 16 + 44, and 12), not centred in
+ * it (device capture, 26.3: a 143 pt title spanned 73 to 216 on a 402 pt
+ * phone). The move puts the text's centre on the bar's, and stops where its
+ * edge meets the trailing group's reserve (16 pt in, the items, 8 pt gap),
+ * so a wide title moves less, and one that fills the span not at all.
+ */
 export function barTitleShift({
   active,
   width,
@@ -274,7 +275,10 @@ export function BarTitle({
   // as every other size does, and let the drawn title shrink back towards
   // it to fit: a title that fits at Large is shown at AX3 (sweep 1, 2.6).
   const ax = isAccessibilityCategory(fontScale);
-  const growth = ax ? barItemGrowthAX : 0;
+  // The bar's items are already larger at the sizes between Large and the
+  // accessibility sizes (26.3 at xxxLarge: Share's pill starts 11 pt
+  // earlier), so their larger size is reserved at any size above Large.
+  const growth = fontScale > 1 ? barItemGrowthAX : 0;
   const clearance = ax ? barTitleClearanceAX : 0;
   const key = `${title}:${backTitle}:${fontScale}`;
   const [metrics, setMetrics] = useState<Record<string, number>>({});
@@ -432,11 +436,7 @@ export function BarTitle({
       : measured(drawn),
     trailing,
     trailingWidth,
-    // The bar's items are already larger at the sizes between Large and the
-    // accessibility sizes (26.3 at xxxLarge: Share's pill starts 11 pt
-    // earlier), so the shift reserves their larger size at any size above
-    // Large.
-    growth: fontScale > 1 ? barItemGrowthAX : growth,
+    growth,
   });
   return createElement(
     NativeView,

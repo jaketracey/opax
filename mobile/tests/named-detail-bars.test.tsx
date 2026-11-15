@@ -1248,3 +1248,31 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
     );
   });
 });
+
+test('xxxLarge: a 205 pt title is shortened, not run under Share’s larger pill', () => {
+  const original = Dimensions.get('window');
+  act(() =>
+    Dimensions.set({ window: { ...original, width: 402, fontScale: 1.353 } }),
+  );
+  const title = 'Interactive Games Amendment Bill';
+  act(() => {
+    view = TestRenderer.create(
+      <NavigationContext.Provider value={{ setOptions: jest.fn() } as never}>
+        <BarTitle title={title} shown backTitle="Today" />
+      </NavigationContext.Provider>,
+    );
+  });
+  // Share and More are larger above Large: the span beside the collapsed
+  // back button is 194 pt (402 - 68 - 16 - 116 - 8), not 206.
+  measureBarTitle(view!, {
+    [title]: 205,
+    'Interactive Games Amendment…': 180,
+    'Interactive Games…': 120,
+  });
+  expect(view!.root.findByType(Animated.Text).props).toMatchObject({
+    children: 'Interactive Games Amendment…',
+    accessibilityLabel: title,
+  });
+  act(() => view!.unmount());
+  act(() => Dimensions.set({ window: original }));
+});

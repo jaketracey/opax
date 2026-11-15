@@ -1351,9 +1351,10 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     });
 
     test.each([
-      // Below the accessibility sizes the items keep their Large width, so
-      // the centred width (146 pt) already holds the name.
-      ['xxxLarge', 1.353, 146],
+      // The items are already larger above Large (26.3 at xxxLarge: Share's
+      // pill starts 11 pt earlier), so their larger size is reserved there
+      // too and the name is drawn at its Large width.
+      ['xxxLarge', 1.353, 137],
       ['AX1', 1.786, 137],
       ['AX5', 3.571, 137],
     ])('%s: the same rule holds', (_size, fontScale, width) => {
