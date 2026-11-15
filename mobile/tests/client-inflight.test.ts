@@ -5,7 +5,7 @@ import {
   type CacheIndexEntry,
   type CacheStore,
 } from '../src/api/cache';
-import { ApiClient } from '../src/api/client';
+import { ApiClient, LAST_WAITER_GRACE_MS } from '../src/api/client';
 import { ApiError } from '../src/api/errors';
 
 class MemoryStore implements CacheStore {
@@ -82,6 +82,17 @@ const quiet = async () => {
   for (let turn = 0; turn < 20; turn++)
     await new Promise((resolve) => setImmediate(resolve));
 };
+/**
+ * The grace after a last waiter leaves runs on Jest's clock, moved only by
+ * the test. The event loop's own turns (`reached`, `quiet`) stay real.
+ */
+const heldClock = () =>
+  jest.useFakeTimers({
+    doNotFake: ['setImmediate', 'nextTick', 'queueMicrotask'],
+  });
+afterEach(() => {
+  jest.useRealTimers();
+});
 const same = (value: unknown) => value as typeof body;
 const strict = (value: unknown) => {
   const rows = (value as { rows?: unknown }).rows;
@@ -149,7 +160,8 @@ test('an already-aborted caller never joins or starts anything', async () => {
   expect(transport).not.toHaveBeenCalled();
 });
 
-test('two waiters that abort in one pass cancel the request, and nothing is saved', async () => {
+test('two waiters that abort in one pass: nobody rejoins, so the request is cancelled when the grace ends, and nothing is saved', async () => {
+  heldClock();
   const { client, calls, store } = held();
   const one = new AbortController();
   const two = new AbortController();
@@ -162,16 +174,19 @@ test('two waiters that abort in one pass cancel the request, and nothing is save
   two.abort();
   await expect(first).rejects.toMatchObject({ name: 'AbortError' });
   await expect(second).rejects.toMatchObject({ name: 'AbortError' });
-  const aborted = calls[0]!.signal.aborted;
-  if (!aborted) calls[0]!.answer(reply());
+  // Kept for the grace, to the millisecond, in case a reader comes back.
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS - 1);
+  expect(calls[0]!.signal.aborted).toBe(false);
+  jest.advanceTimersByTime(1);
+  expect(calls[0]!.signal.aborted).toBe(true);
   await quiet();
-  expect({ aborted, saved: store.entries.size }).toEqual({
-    aborted: true,
-    saved: 0,
-  });
+  // Cancelled, not left running: nothing saved, and no timer left behind.
+  expect(store.entries.size).toBe(0);
+  expect(jest.getTimerCount()).toBe(0);
 });
 
-test('when the waiters leave one after another, the last one cancels; the next read starts again', async () => {
+test('when the waiters leave one after another, the last one starts the grace; after it the request is cancelled and the next read starts again', async () => {
+  heldClock();
   const { client, transport, calls, store } = held();
   const one = new AbortController();
   const two = new AbortController();
@@ -181,9 +196,14 @@ test('when the waiters leave one after another, the last one cancels; the next r
   await quiet();
   one.abort();
   await expect(first).rejects.toMatchObject({ name: 'AbortError' });
+  // Another waiter remains: no grace is running at all.
+  expect(jest.getTimerCount()).toBe(1); // the request's own deadline
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS);
   expect(calls[0]!.signal.aborted).toBe(false);
   two.abort();
   await expect(second).rejects.toMatchObject({ name: 'AbortError' });
+  expect(calls[0]!.signal.aborted).toBe(false);
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS);
   expect(calls[0]!.signal.aborted).toBe(true);
   await quiet();
   expect(store.entries.size).toBe(0);
@@ -194,19 +214,125 @@ test('when the waiters leave one after another, the last one cancels; the next r
   expect((await again).data).toEqual(body);
 });
 
-test('a caller arriving after the last abort, before the transport settles, starts fresh', async () => {
+test('a reader arriving within the grace after the last abort rejoins the one request (a screen replaced by another)', async () => {
+  heldClock();
   const { client, transport, calls } = held();
   const one = new AbortController();
   const first = client.get(path, same, false, { signal: one.signal });
   await reached(calls, 1);
   await quiet();
+  // The pane's detail unmounts, and the route's mounts a little later.
   one.abort();
-  const late = client.get(path, same);
   await expect(first).rejects.toMatchObject({ name: 'AbortError' });
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS - 1);
+  const two = new AbortController();
+  const rejoined = client.get(path, same, false, { signal: two.signal });
+  await quiet();
+  // The grace it interrupted never fires: the request is the reader's now.
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS * 4);
+  expect(calls[0]!.signal.aborted).toBe(false);
+  expect(transport).toHaveBeenCalledTimes(1);
+  calls[0]!.answer(reply());
+  expect((await rejoined).data).toEqual(body);
+  expect(transport).toHaveBeenCalledTimes(1);
+  // And when that reader leaves in turn, a fresh grace starts for it.
+  const three = new AbortController();
+  const held2 = client.get('/expenses.json', same, false, {
+    signal: three.signal,
+  });
+  await reached(calls, 2);
+  three.abort();
+  await expect(held2).rejects.toMatchObject({ name: 'AbortError' });
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS);
+  expect(calls[1]!.signal.aborted).toBe(true);
+});
+
+test('an answer that lands in the grace with nobody back is not saved, and leaves no timer behind', async () => {
+  heldClock();
+  const { client, transport, calls, store } = held();
+  const one = new AbortController();
+  const first = client.get(path, same, false, { signal: one.signal });
+  await reached(calls, 1);
+  await quiet();
+  one.abort();
+  await expect(first).rejects.toMatchObject({ name: 'AbortError' });
+  // The transport answers while the request is on its way out.
+  calls[0]!.answer(reply());
+  await quiet();
+  // An abandoned read's answer, as a lone read's abort always was: not
+  // saved, and the grace's timer went with the request.
+  expect(store.entries.size).toBe(0);
+  expect(jest.getTimerCount()).toBe(0);
+  // The next reader asks again.
+  const next = client.get(path, same);
   await reached(calls, 2);
   expect(transport).toHaveBeenCalledTimes(2);
-  expect(calls[1]!.signal.aborted).toBe(false);
   calls[1]!.answer(reply());
+  expect((await next).data).toEqual(body);
+});
+
+test('an answer that lands after a reader rejoined in the grace is that reader’s, and is saved', async () => {
+  heldClock();
+  const { client, transport, calls, store } = held();
+  const one = new AbortController();
+  const first = client.get(path, same, false, { signal: one.signal });
+  await reached(calls, 1);
+  await quiet();
+  one.abort();
+  await expect(first).rejects.toMatchObject({ name: 'AbortError' });
+  const rejoined = client.get(path, same);
+  await quiet();
+  calls[0]!.answer(reply());
+  expect((await rejoined).data).toEqual(body);
+  expect(store.entries.size).toBe(1);
+  expect(transport).toHaveBeenCalledTimes(1);
+});
+
+test('the half-way rule still holds over the grace: a request too old to join is cancelled at once, and is never rejoined', async () => {
+  heldClock();
+  let time = 1_000_000;
+  const { client, transport, calls } = held({
+    now: () => time,
+    timeoutMs: 8000,
+  });
+  // Past half way when its last waiter leaves: nobody could join it, so
+  // there is no grace to wait out.
+  const one = new AbortController();
+  const first = client.get(path, same, false, { signal: one.signal });
+  await reached(calls, 1);
+  await quiet();
+  time += 4001;
+  one.abort();
+  await expect(first).rejects.toMatchObject({ name: 'AbortError' });
+  expect(calls[0]!.signal.aborted).toBe(true);
+  // Exactly half way when it leaves: the grace runs, and a reader in it
+  // still joins.
+  const two = new AbortController();
+  const second = client.get(path, same, false, { signal: two.signal });
+  await reached(calls, 2);
+  await quiet();
+  time += 4000;
+  two.abort();
+  await expect(second).rejects.toMatchObject({ name: 'AbortError' });
+  expect(calls[1]!.signal.aborted).toBe(false);
+  const joiner = new AbortController();
+  const joined = client.get(path, same, false, { signal: joiner.signal });
+  await quiet();
+  expect(transport).toHaveBeenCalledTimes(2);
+  // That reader leaves too, and the clock passes half way inside the
+  // grace: the next reader does not rejoin the old request. It starts its
+  // own, and the old one is cancelled when its grace ends.
+  joiner.abort();
+  await expect(joined).rejects.toMatchObject({ name: 'AbortError' });
+  time += 1;
+  const late = client.get(path, same);
+  await reached(calls, 3);
+  expect(transport).toHaveBeenCalledTimes(3);
+  expect(calls[1]!.signal.aborted).toBe(false);
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS);
+  expect(calls[1]!.signal.aborted).toBe(true);
+  expect(calls[2]!.signal.aborted).toBe(false);
+  calls[2]!.answer(reply());
   expect((await late).data).toEqual(body);
 });
 

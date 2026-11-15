@@ -1,7 +1,11 @@
 import { act, useCallback } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { useRead } from '../src/api/useRead';
-import { ApiClient, type RecordResult } from '../src/api/client';
+import {
+  ApiClient,
+  LAST_WAITER_GRACE_MS,
+  type RecordResult,
+} from '../src/api/client';
 import { CatalogCache, type CacheStore } from '../src/api/cache';
 import { useCatalogRecord } from '../src/features/bills/useCatalogRecord';
 import { useRead as useDocumentRead } from '../src/features/records/useRead';
@@ -128,6 +132,18 @@ describe.each([
   'reference',
   'people',
 ] as const)('%s cancellation', (kind) => {
+  // The read's transport outlives its last reader by a short grace, in
+  // case a reader comes back; it runs on Jest's clock, moved by the test.
+  beforeEach(() => {
+    jest.useFakeTimers({
+      doNotFake: ['setImmediate', 'nextTick', 'queueMicrotask'],
+    });
+  });
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+  const graceEnds = () => jest.advanceTimersByTime(LAST_WAITER_GRACE_MS);
+
   test('an AbortError never becomes an error or a retry state', async () => {
     const probe = setup(kind, true);
     await act(async () => {});
@@ -137,11 +153,13 @@ describe.each([
     probe.unmount();
   });
 
-  test('unmount aborts the transport and a late response never reaches the cache', async () => {
+  test('unmount aborts the transport when the grace ends, and a late response never reaches the cache', async () => {
     const probe = setup(kind);
     await act(async () => {});
     expect(probe.requests).toHaveLength(1);
     probe.unmount();
+    expect(probe.requests[0]!.signal.aborted).toBe(false);
+    graceEnds();
     expect(probe.requests[0]!.signal.aborted).toBe(true);
     await act(async () =>
       probe.requests[0]!.resolve(
@@ -153,10 +171,27 @@ describe.each([
     expect(probe.current.error).toBeNull();
   });
 
+  test('a response that lands inside the grace after unmount never reaches the cache either', async () => {
+    const probe = setup(kind);
+    await act(async () => {});
+    probe.unmount();
+    // Not cancelled yet, and it answers: an abandoned read's answer.
+    expect(probe.requests[0]!.signal.aborted).toBe(false);
+    await act(async () =>
+      probe.requests[0]!.resolve(
+        new Response(JSON.stringify({ value: 'In the grace' })),
+      ),
+    );
+    expect(probe.put).not.toHaveBeenCalled();
+    expect(probe.store.write).not.toHaveBeenCalled();
+    expect(probe.current.error).toBeNull();
+  });
+
   test('changing subject aborts the old read, and only the new response is published or cached', async () => {
     const probe = setup(kind);
     await act(async () => {});
     probe.replace();
+    graceEnds();
     expect(probe.requests[0]!.signal.aborted).toBe(true);
     await act(async () => {});
     expect(probe.requests[1]!.signal.aborted).toBe(false);

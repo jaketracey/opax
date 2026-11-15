@@ -132,6 +132,13 @@ export function freezeSnapshot(...values: unknown[]) {
     for (const child of Object.values(item)) pending.push(child);
   }
 }
+/**
+ * How long a shared read outlives its last waiter: 250 ms. Long enough for
+ * a screen that unmounts to be remounted elsewhere in the same commit or
+ * the next few frames and rejoin the request; short enough that a read
+ * nobody wants is still cancelled at once to the eye and the network.
+ */
+export const LAST_WAITER_GRACE_MS = 250;
 export class ApiClient {
   /** Validated saved copy, without a network read. */
   async saved<T>(
@@ -346,8 +353,11 @@ export class ApiClient {
    *
    * The request belongs to no one waiter. A waiter that aborts stops
    * waiting and the request carries on for the rest; when the last one
-   * goes it is cancelled, as a lone read's abort always was (neither
-   * retried nor saved). Its outcome, a record or an error, reaches every
+   * goes it is cancelled after a short grace (LAST_WAITER_GRACE_MS) in
+   * which a new reader may join it, and at once when it is too old to be
+   * joined. Cancelled, it is neither retried nor saved, as a lone read's
+   * abort always was; nor is an answer saved that lands in the grace with
+   * nobody back to read it. Its outcome, a record or an error, reaches every
    * waiter, and the flight is forgotten when it settles, so a later read
    * asks again. A flight more than half way to its deadline takes no new
    * waiters: a late reader starts its own, with its own full time.
@@ -364,6 +374,8 @@ export class ApiClient {
         controller: AbortController;
         waiters: number;
         startedAt: number;
+        /** Set while the last waiter's leaving is being waited out. */
+        grace?: ReturnType<typeof setTimeout>;
       }
     >
   >();
@@ -399,13 +411,28 @@ export class ApiClient {
       flight = undefined;
     if (!flight) {
       const controller = new AbortController();
-      const promise = this.readOnce(path, decode, false, {
-        ...options,
-        signal: controller.signal,
-      }).finally(() => forget(started));
+      const promise = this.readOnce(
+        path,
+        decode,
+        false,
+        { ...options, signal: controller.signal },
+        // In its grace, with nobody back yet: an answer that lands now is
+        // an abandoned read's, and is not saved (a lone read's abort
+        // never was).
+        () => started.waiters === 0,
+      ).finally(() => {
+        clearTimeout(started.grace);
+        forget(started);
+      });
       // A waiter that left must not leave an unhandled rejection behind.
       promise.catch(() => undefined);
-      const started = {
+      const started: {
+        promise: Promise<RecordResult<unknown>>;
+        controller: AbortController;
+        waiters: number;
+        startedAt: number;
+        grace?: ReturnType<typeof setTimeout>;
+      } = {
         promise: promise as Promise<RecordResult<unknown>>,
         controller,
         waiters: 0,
@@ -420,6 +447,13 @@ export class ApiClient {
     }
     const joined = flight;
     joined.waiters++;
+    // Someone is waiting again: the request is no longer on its way out.
+    clearTimeout(joined.grace);
+    joined.grace = undefined;
+    const cancel = () => {
+      forget(joined);
+      joined.controller.abort();
+    };
     if (!signal) {
       try {
         return (await joined.promise) as RecordResult<T>;
@@ -440,8 +474,21 @@ export class ApiClient {
             left = true;
             joined.waiters--;
             if (joined.waiters === 0) {
-              forget(joined);
-              joined.controller.abort();
+              // The last waiter has gone. A screen that is replaced (a
+              // Duo folding: the pane's detail unmounts and the route's
+              // mounts) leaves and asks again in the same commit or the
+              // next frame, so the request is kept for a short grace and
+              // the new reader joins it. With nobody back by then it is
+              // cancelled, as before. A request already too old to join
+              // (the half-way rule above) can gain no one: it goes now.
+              if (this.now() - joined.startedAt > timeoutMs / 2) cancel();
+              else {
+                clearTimeout(joined.grace);
+                joined.grace = setTimeout(() => {
+                  joined.grace = undefined;
+                  if (joined.waiters === 0) cancel();
+                }, LAST_WAITER_GRACE_MS);
+              }
             }
             reject(cancelled());
           };
@@ -466,6 +513,8 @@ export class ApiClient {
       summaryStream = false,
       persist = true,
     }: GetOptions = {},
+    /** Asked before saving: true when every reader of a shared read has left. */
+    abandoned: () => boolean = () => false,
   ): Promise<RecordResult<T>> {
     if (path.startsWith('/api/community/'))
       throw new ApiError(
@@ -691,6 +740,8 @@ export class ApiClient {
             (response.status === 304 ? cached?.etag : undefined),
         };
         cancelled();
+        if (abandoned())
+          throw Object.assign(new Error('Cancelled'), { name: 'AbortError' });
         if (!persist) return result(entry, false);
         // Persistence failure must not turn a successful network read into an error.
         const retained = await this.options.cache
