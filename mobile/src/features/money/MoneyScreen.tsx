@@ -688,15 +688,7 @@ function MapMode({
   // The stage runs under the tab bar and the home indicator; the panel host
   // sits above them, so the band beneath it is measured from its layout and
   // counted in the map's bottom inset with the panel's peek.
-  // It is the largest seen for this window: at the end of a push iOS
-  // reports the bottom safe area without the tab bar for a few frames, and
-  // a panel that followed it dipped 62 pt and came back.
-  const bandKey = `${window.width}x${window.height}`;
-  const [measured, setMeasured] = useState({ key: bandKey, value: 0 });
-  const below = measured.key === bandKey ? measured.value : 0;
-  const keepBand = (gap: number) => {
-    if (gap > below) setMeasured({ key: bandKey, value: gap });
-  };
+  const [below, setBelow] = useState(0);
   const managed =
     adaptive ||
     [...regions.divisions, ...regions.occlusions].some((r) => r.active);
@@ -1066,35 +1058,12 @@ function MapMode({
             }
           />
         ) : null}
-        {managed ? null : (
-          // Measures the band under the panel (the tab bar and the home
-          // indicator) and draws nothing. The chrome keeps that band by a
-          // spacer of its own, not by the system's inset, which moves.
-          <SafeAreaView
-            edges={['bottom']}
-            pointerEvents="none"
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-            style={[styles.chrome, styles.unseen]}
-          >
-            <View
-              style={styles.grow}
-              testID="money-map-band"
-              onLayout={(event) => {
-                if (!stage.height) return;
-                const { y, height } = event.nativeEvent.layout;
-                keepBand(Math.max(0, Math.round(stage.height - (y + height))));
-              }}
-            />
-          </SafeAreaView>
-        )}
         <SafeAreaView
           // The stack's opaque bar already sits above the stage: a top
           // edge here would count the status bar twice and push the card
           // down the map. The frame owns the safe sides so its absolute
           // controls clear a side rail too, without counting padding twice.
-          // The bottom band is kept by the spacer at the column's foot.
-          edges={[]}
+          edges={managed ? [] : ['bottom']}
           pointerEvents="box-none"
           style={[
             styles.chrome,
@@ -1199,6 +1168,15 @@ function MapMode({
             <View
               style={[styles.panelHost, regular ? styles.panelRegular : null]}
               pointerEvents="box-none"
+              onLayout={(event) => {
+                if (managed) return;
+                const { y, height } = event.nativeEvent.layout;
+                const gap = Math.max(
+                  0,
+                  Math.round(stage.height - (y + height)),
+                );
+                setBelow((previous) => (previous === gap ? previous : gap));
+              }}
             >
               <MoneyMapPanel
                 focus={panelFocus}
@@ -1226,13 +1204,6 @@ function MapMode({
                 onPeekHeight={setPeek}
               />
             </View>
-          )}
-          {managed ? null : (
-            <View
-              style={{ height: band }}
-              pointerEvents="none"
-              testID="money-map-band-space"
-            />
           )}
         </SafeAreaView>
       </View>

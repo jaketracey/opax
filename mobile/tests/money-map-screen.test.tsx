@@ -267,7 +267,7 @@ test.each([
         panel.props.onPeekHeight(180);
       });
       act(() =>
-        byTestID(r.root, 'money-map-band')?.props.onLayout({
+        panel.parent!.props.onLayout({
           nativeEvent: { layout: { y: height - bottom - 200, height: 200 } },
         }),
       );
@@ -626,7 +626,7 @@ test.each(['android', 'ios'] as const)(
         // 206 stack leave Fit under the panel (560 + 16 + 206 + 16 > 734).
         top.props.onLayout({ nativeEvent: { layout: { height: 560 } } });
         panel.props.onPeekHeight(180);
-        byTestID(r.root, 'money-map-band')?.props.onLayout({
+        panel.parent!.props.onLayout({
           nativeEvent: { layout: { y: height - 200, height: 200 } },
         });
       });

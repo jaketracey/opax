@@ -371,36 +371,6 @@ describe('the first frame', () => {
   );
 });
 
-describe('the band under the panel', () => {
-  test('is kept at the largest seen: a safe area that drops for a few frames does not move the panel', async () => {
-    const r = await render();
-    const stage = byTestID(r.root, 'money-screen');
-    act(() =>
-      stage.props.onLayout({
-        nativeEvent: { layout: { width: 402, height: 760 } },
-      }),
-    );
-    const probe = () => byTestID(r.root, 'money-map-band');
-    const report = (inset: number) =>
-      act(() =>
-        probe().props.onLayout({
-          nativeEvent: { layout: { y: 0, height: 760 - inset } },
-        }),
-      );
-    const band = () => flat(byTestID(r.root, 'money-map-band-space')).height;
-    report(96);
-    expect(band()).toBe(96);
-    // The end of the push: the tab bar's share is gone, then back.
-    report(34);
-    expect(band()).toBe(96);
-    report(96);
-    expect(band()).toBe(96);
-    // The chrome itself takes no inset from the system.
-    expect(byTestID(r.root, 'money-map-chrome').props.edges).toEqual([]);
-    await act(async () => r.unmount());
-  });
-});
-
 describe('the words kept for the summary', () => {
   const shape = (text: string) => text.replace(/\d/g, '0');
   test('with no graph yet they are the summary’s length', () => {
