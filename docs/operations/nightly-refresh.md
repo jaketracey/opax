@@ -802,6 +802,13 @@ never lapses or lingers in silence. A group whose exporter reads a held group's 
 (`scripts/vm/test_gate_hold.py` reads the exporters' source and fails otherwise; `test_nightly.sh` section 27b covers
 the behaviour). Remove a line in the reviewed change that fixes its cause.
 
+**A merged nightly fix applies the same night.** Bash has read `nightly.sh`, and sourced `data_groups.sh`, before the
+run's own sync pulls `main`, so until 15 Nov 2026 a fix to either first ran on the second night after its merge. Now,
+when the sync changed either file, the run starts again once with the new copy (`OPAX_NIGHTLY_REEXEC=1` marks the
+restarted run, which never restarts again; the start time, the lock and the unit's time limit carry over). A pulled copy
+that fails `bash -n` is not started: the night goes on with the loaded copy and the status says so. Every other
+script and `gate_hold.txt` are read after the sync and need no restart. `test_nightly.sh` section 2c covers it.
+
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files
 (grant shards, money graph, suppliers, pay, parliamentarians ...). So after validation the nightly rebuilds the search
 catalog (`npm run build:search`, ~50 s), refreshes the content stamps (`scripts/stamp_assets.mjs`, as the deploy's

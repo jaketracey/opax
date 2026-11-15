@@ -85,7 +85,8 @@ STATUS_BRANCH="${OPAX_STATUS_BRANCH:-nightly-status}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
 export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"
 TODAY=$(TZ=Australia/Sydney date +%F)
-STARTED_AT=$(date -u +%FT%TZ)
+# a run restarted with the copy of this script its own sync pulled (section 1) keeps the first start time
+STARTED_AT=${OPAX_NIGHTLY_STARTED_AT:-$(date -u +%FT%TZ)}
 LOGFILE="$PIPE/nightly-$TODAY.log"
 LASTFILE="$PIPE/nightly-last.json"
 LOCKFILE="$PIPE/nightly.lock"
@@ -301,7 +302,27 @@ sync_repo() {
   fi
 }
 log "syncing $BRANCH"
+PRE_SYNC_HEAD=$(git rev-parse -q --verify HEAD 2>/dev/null || true)
 if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; finish; fi
+# Bash had read this script, and sourced data_groups.sh, before the sync pulled main: a fix to either merged
+# today would otherwise first run tomorrow night (15 Nov 2026: the hold list and the money group's new files
+# took two nights to apply). So when the sync changed either file, start again once with the new copy. The
+# guard variable allows exactly one restart; the start time, the lock (reopened by the new copy) and the
+# unit's time limit (same process) carry over. Everything read after this point is read fresh anyway.
+if [ "${OPAX_NIGHTLY_REEXEC:-0}" != 1 ] && [ -n "$PRE_SYNC_HEAD" ] \
+   && ! git diff --quiet "$PRE_SYNC_HEAD" HEAD -- scripts/vm/nightly.sh scripts/vm/data_groups.sh 2>/dev/null; then
+  # a pulled copy that does not even parse must not take the night down with it: say so and go on with this one
+  if bash -n "$REPO/scripts/vm/nightly.sh" 2>>"$LOGFILE" && bash -n "$REPO/scripts/vm/data_groups.sh" 2>>"$LOGFILE"; then
+    log "the sync changed nightly.sh or data_groups.sh ($(git rev-parse --short "$PRE_SYNC_HEAD") -> $(git rev-parse --short HEAD)): restarting once with the new copy"
+    trap - EXIT TERM INT
+    rm -f "$MARK"
+    export OPAX_NIGHTLY_REEXEC=1 OPAX_NIGHTLY_STARTED_AT="$STARTED_AT"
+    exec bash "$REPO/scripts/vm/nightly.sh" "$@"
+    fail "could not restart with the new nightly.sh; continuing with the copy already loaded"
+  else
+    fail "the nightly.sh or data_groups.sh pulled from origin/$BRANCH does not parse (bash -n): not restarted, tonight runs with the copy already loaded"
+  fi
+fi
 mapfile -t DATA_PATHS < <(tracked_data_paths)
 log "checkout at $(git rev-parse --short HEAD): $(git log -1 --format=%s | cut -c1-90)"
 

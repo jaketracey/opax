@@ -677,6 +677,38 @@ check "main untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | he
 check "status failed, naming the sync" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"failed\" and any(\"uv sync --frozen failed\" in f for f in s[\"failures\"]), s'"
 rm -rf "$other"
 
+echo "== 2c. a sync that pulls a new nightly.sh or data_groups.sh restarts the night once with the new copy"
+# what a merged nightly fix looks like from the box: origin/main is ahead, and the copy bash already loaded is the old one
+push_nightly_change() { # FILE SED_EXPRESSION
+  local other; other=$(mktemp -d); git clone -q "$ORIGIN" "$other"
+  sed -i "$2" "$other/$1"
+  (cd "$other" && git add -A && git commit -q -m "a nightly fix" && git push -q origin HEAD:main)
+}
+new_sandbox s2c
+push_nightly_change scripts/vm/nightly.sh 's|^log "checkout at |log "NEWCOPY the pulled nightly.sh is running"\n&|'
+FAKE_MODE=ok nightly
+check "exit 0 and the night published" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh'"
+check "it restarted exactly once" bash -c "[ \$(grep -c 'restarting once with the new copy' '$SB/nightly.out') -eq 1 ] && [ \$(grep -c '===== nightly start' '$SB/nightly.out') -eq 2 ]"
+check "the new copy ran, and only after the restart" bash -c "[ \$(grep -c 'NEWCOPY' '$SB/nightly.out') -eq 1 ] && [ \$(grep -n 'NEWCOPY' '$SB/nightly.out' | cut -d: -f1) -gt \$(grep -n 'restarting once' '$SB/nightly.out' | cut -d: -f1) ]"
+check "status ok, and one status commit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"], s' && [ \$(git --git-dir='$ORIGIN' rev-list --count nightly-status) -eq 1 ]"
+check "the lock was taken again by the new copy, not left held" bash -c "! grep -q 'another nightly run holds' '$SB/nightly.out'"
+new_sandbox s2c2
+push_nightly_change scripts/vm/data_groups.sh '$a # a new group path would go here'
+FAKE_MODE=ok nightly
+check "a changed data_groups.sh restarts it too, once" bash -c "[ '$NRC' -eq 0 ] && [ \$(grep -c 'restarting once with the new copy' '$SB/nightly.out') -eq 1 ]"
+new_sandbox s2c3
+push_nightly_change scripts/vm/nightly.sh 's|^log "checkout at |log "NEWCOPY the pulled nightly.sh is running"\n&|'
+OPAX_NIGHTLY_REEXEC=1 FAKE_MODE=ok nightly
+check "the guard allows no second restart: an already restarted run goes on with the copy it has" bash -c "[ '$NRC' -eq 0 ] && ! grep -q 'restarting once' '$SB/nightly.out' && ! grep -q NEWCOPY '$SB/nightly.out'"
+new_sandbox s2c5
+push_nightly_change scripts/vm/nightly.sh '$a if then fi ((('
+FAKE_MODE=ok nightly
+check "a pulled nightly.sh that does not parse is not started: the loaded copy finishes the night, publishes, and the status says why it failed" bash -c "[ '$NRC' -eq 1 ] && ! grep -q 'restarting once' '$SB/nightly.out' && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh' && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'does not parse'"
+new_sandbox s2c4
+other=$(mktemp -d); git clone -q "$ORIGIN" "$other"; echo hi > "$other/HUMAN.txt"; (cd "$other" && git add -A && git commit -q -m "a human commit" && git push -q origin HEAD:main)
+FAKE_MODE=ok nightly
+check "a pull that leaves both files alone does not restart" bash -c "[ '$NRC' -eq 0 ] && ! grep -q 'restarting once' '$SB/nightly.out' && [ \$(grep -c '===== nightly start' '$SB/nightly.out') -eq 1 ]"
+
 echo "== 3. refresh reports failed steps: still pushes, publishes status 'failed' with the reason, exits 1"
 new_sandbox s3
 FAKE_MODE=failsteps nightly
