@@ -1821,28 +1821,90 @@ test('sweep 2: the four public money pages set their titles at one size, and eve
   }
 });
 
-// RT27-title: these two pages have a large title and a list of their own,
-// so with a solid bar they report their scroll; without one they hear none.
-test.each([
+// These two pages have a large title and a list of their own (MoneyList),
+// so their list runs under a clear bar, as a tab root's does.
+const largeTitlePages = [
   ['Community funding', Allocation, 'allocation-list'],
   ['Programs and places', Connections, 'connections-list'],
-] as const)(
-  '%s passes its list the solid bar’s scroll report only while it reports',
+] as const;
+const listOf = (r: TestRenderer.ReactTestRenderer, id: string) =>
+  r.root.find((n) => n.props.testID === id && 'data' in n.props);
+const fadeLayers = (r: TestRenderer.ReactTestRenderer) =>
+  r.root.findAll(
+    (n) => n.props.testID === 'bar-fade' && typeof n.type === 'string',
+  );
+function withGlassBar<T>(run: () => Promise<T>) {
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
+  return run().finally(() =>
+    Object.defineProperty(Platform, 'Version', version),
+  );
+}
+
+// RT27-title: with a solid bar they report their scroll.
+test.each(largeTitlePages)(
+  '%s feeds its list’s scroll to the solid bar’s report while it reports, and hears none without',
   async (_name, Page, list) => {
-    const scrollOf = (r: TestRenderer.ReactTestRenderer) =>
-      r.root.find((n) => n.props.testID === list && 'data' in n.props).props
-        .onScroll;
     mockUnderBar.reports = false;
+    mockUnderBar.onScroll.mockClear();
     const quiet = await mount(Page);
-    expect(scrollOf(quiet)).toBeUndefined();
+    // Before iOS 26 there is no clear bar and no fade: nothing listens.
+    expect(listOf(quiet, list).props.onScroll).toBeUndefined();
     await act(async () => quiet.unmount());
     mockUnderBar.reports = true;
     try {
       const solid = await mount(Page);
-      expect(scrollOf(solid)).toBe(mockUnderBar.onScroll);
+      const event = { nativeEvent: { contentOffset: { y: 40 } } };
+      act(() => listOf(solid, list).props.onScroll(event));
+      expect(mockUnderBar.onScroll).toHaveBeenCalledWith(event);
       await act(async () => solid.unmount());
     } finally {
       mockUnderBar.reports = false;
     }
   },
 );
+
+// Clear bars: the page fades into its ground behind the bar as it scrolls.
+test.each(largeTitlePages)(
+  '%s under a glass bar has the bar’s fade, bound to its list’s scroll on the native side',
+  (_name, Page, list) =>
+    withGlassBar(async () => {
+      const attach = jest
+        .spyOn(
+          Animated as unknown as {
+            attachNativeEvent: (...args: unknown[]) => unknown;
+          },
+          'attachNativeEvent',
+        )
+        .mockReturnValue({ detach: jest.fn() });
+      mockUnderBar.onScroll.mockClear();
+      const r = await mount(Page);
+      try {
+        expect(fadeLayers(r)).toHaveLength(1);
+        const view = { tag: 7 };
+        for (const y of [-160, -100, 0, 300])
+          act(() =>
+            listOf(r, list).props.onScroll({
+              currentTarget: view,
+              nativeEvent: { contentOffset: { y } },
+            }),
+          );
+        // Bound once, to the list itself: scrolling renders nothing.
+        expect(attach).toHaveBeenCalledTimes(1);
+        expect(attach.mock.calls[0]!.slice(0, 2)).toEqual([view, 'onScroll']);
+        // The same events keep the solid bar's reporter informed, so a
+        // legibility setting turned on later is right at once.
+        expect(mockUnderBar.onScroll).toHaveBeenCalledTimes(4);
+      } finally {
+        await act(async () => r.unmount());
+        attach.mockRestore();
+      }
+    }),
+);
+
+test('a money list under the stack’s own solid bar has no fade', () =>
+  withGlassBar(async () => {
+    const r = await mount(Agencies);
+    expect(fadeLayers(r)).toHaveLength(0);
+    await act(async () => r.unmount());
+  }));

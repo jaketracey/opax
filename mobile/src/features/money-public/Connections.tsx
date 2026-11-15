@@ -21,7 +21,6 @@ import {
   recordSource,
   useMoneySearch,
 } from './parts';
-import { useListUnderBar } from '../../navigation/useListUnderBar';
 
 /** The three publishers the counts come from (specs/money.md 2.12). */
 export const CONNECTIONS_CITATION = [
@@ -74,11 +73,6 @@ export default function Connections() {
     status = useCatalogRecord(load),
     data = status.record?.data;
   const search = useMoneySearch('Programs, places and organisations');
-  // This page has a large title and its list is not a Screen: with Reduce
-  // Transparency or Increase Contrast on, it says when it has scrolled
-  // under the bar, so the bar's solid ground does not cover the title at
-  // rest. With neither on, the list hears no scroll events for it.
-  const underBar = useListUnderBar();
   const [kind, setKind] = useState<Kind>('all');
   const inKind = useMemo(
     () =>
@@ -117,7 +111,7 @@ export default function Connections() {
       <MoneyList
         loaded={!!data}
         id="connections-list"
-        onScroll={underBar.reports ? underBar.onScroll : undefined}
+        largeTitle
         rows={rows}
         rowKey={(r) => r.id}
         refreshing={status.refreshing}
