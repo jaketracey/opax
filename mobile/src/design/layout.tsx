@@ -615,6 +615,15 @@ export function Screen({
     if (settle.current) clearTimeout(settle.current);
     settle.current = null;
   }, []);
+  // A drag while the bar settles: the reader has taken over, so nothing
+  // scrolls back. The room still goes at once: the timer cancelled here was
+  // the only thing that would take it back, and left in place it is a blank
+  // band under the last row until the field is next used.
+  const takeOver = useCallback(() => {
+    if (!settle.current) return;
+    cancelSettle();
+    setEndRoom(0);
+  }, [cancelSettle]);
   const settleLater = useCallback(() => {
     if (settle.current) clearTimeout(settle.current);
     settle.current = setTimeout(() => {
@@ -772,8 +781,7 @@ export function Screen({
               onScrollBeginDrag={
                 pinnedHere
                   ? (event) => {
-                      // The reader has taken over: no scrolling back.
-                      cancelSettle();
+                      takeOver();
                       rest.drag();
                       const y = event.nativeEvent.contentOffset.y;
                       // At rest UIKit's inset makes the offset negative; a drag
@@ -784,7 +792,7 @@ export function Screen({
                         );
                     }
                   : () => {
-                      cancelSettle();
+                      takeOver();
                       rest.drag();
                     }
               }

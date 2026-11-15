@@ -2021,17 +2021,23 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
       at(358, 874);
       settleNow();
       expect(calls).toHaveLength(0);
-      // A drag in the meantime means the reader has taken over.
+      // A drag in the meantime means the reader has taken over: nothing
+      // scrolls back, and the room goes at once. (The drag cancels the only
+      // timer that would take it back; left in place it is a 62 pt blank
+      // under the last row until the field is next used.)
       act(() => end.update(cutPage(true)));
       at(548, 812);
       act(() => end.update(cutPage(false)));
       at(370, 874);
+      expect(room()).toEqual({ bottom: 62 });
       act(() =>
         view().props.onScrollBeginDrag({
           nativeEvent: { contentOffset: { y: 370 } },
         }),
       );
+      expect(room()).toBeUndefined();
       settleNow();
+      expect(room()).toBeUndefined();
       expect(calls).toHaveLength(0);
       // With no scroll report after the cut turned off there is no sure
       // end to go to: nothing scrolls.
