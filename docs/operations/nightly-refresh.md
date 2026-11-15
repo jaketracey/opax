@@ -809,7 +809,8 @@ restarted run, which never restarts again). The process, and so the unit's time 
 which a detached `git gc` left by the fetch may also hold), the start time in the status and the backfill cutoff's start
 all carry over, and so does the environment the first copy exported (`PATH`, the git identity and `GIT_SSH_COMMAND`,
 anything `nightly.env` set): a pulled change to the default of an exported variable applies from the next night. A pulled copy
-that fails `bash -n` is not started: the night goes on with the loaded copy and the status says so. Every other
+that fails `bash -n` is not started, and a restart whose `exec` fails returns (`shopt -s execfail`; `OPAX_NIGHTLY_SHELL`
+names the shell, default `bash`): either way the night goes on with the loaded copy and the status says so. Every other
 script and `gate_hold.txt` are read after the sync and need no restart. `test_nightly.sh` section 2c covers it.
 
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files

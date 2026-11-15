@@ -317,15 +317,20 @@ if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; fin
 # (the same descriptor), both start times, and the whole environment the first copy exported (PATH, the git
 # identity and GIT_SSH_COMMAND, anything nightly.env set): a pulled change to the default of an exported variable
 # therefore applies from the next night, everything else in the new copy applies now. The exit traps stay set: bash
-# runs none on a successful exec, and if the exec itself fails the shell exits through them, so the failure is
-# published like any other death. Everything read after this point is read fresh anyway.
+# runs none on a successful exec. A failed exec would end a script at once (127) without running the EXIT trap,
+# so with nothing published; `shopt -s execfail` makes it return instead, and the night goes on with the copy
+# already loaded and a failure in the status. Everything read after this point is read fresh anyway.
 if [ "${OPAX_NIGHTLY_REEXEC:-0}" != 1 ] && [ -n "$PRE_SYNC_HEAD" ] \
    && ! git diff --quiet "$PRE_SYNC_HEAD" HEAD -- scripts/vm/nightly.sh scripts/vm/data_groups.sh 2>/dev/null; then
   # a pulled copy that does not even parse must not take the night down with it: say so and go on with this one
   if bash -n "$REPO/scripts/vm/nightly.sh" 2>>"$LOGFILE" && bash -n "$REPO/scripts/vm/data_groups.sh" 2>>"$LOGFILE"; then
     log "the sync changed nightly.sh or data_groups.sh ($(git rev-parse --short "$PRE_SYNC_HEAD") -> $(git rev-parse --short HEAD)): restarting once with the new copy"
     export OPAX_NIGHTLY_REEXEC=1 OPAX_NIGHTLY_STARTED_AT="$STARTED_AT" OPAX_NIGHTLY_STARTED="${OPAX_NIGHTLY_STARTED:-$START_EPOCH}"
-    exec bash "$REPO/scripts/vm/nightly.sh" "$@"
+    shopt -s execfail
+    exec "${OPAX_NIGHTLY_SHELL:-bash}" "$REPO/scripts/vm/nightly.sh" "$@"
+    shopt -u execfail
+    unset OPAX_NIGHTLY_REEXEC OPAX_NIGHTLY_STARTED_AT
+    fail "could not restart with the nightly.sh pulled from origin/$BRANCH (exec failed): tonight runs with the copy already loaded"
   else
     fail "the nightly.sh or data_groups.sh pulled from origin/$BRANCH does not parse (bash -n): not restarted, tonight runs with the copy already loaded"
   fi
