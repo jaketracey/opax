@@ -92,6 +92,8 @@ import {
   type BillSort,
 } from './filters';
 import type { BillEntry } from './navigation';
+import { onThisDay } from './on-this-day';
+import { OnThisDayRow, useSydneyDay } from './OnThisDay';
 import { BillIndexRow } from './parts';
 import { useCatalogRecord } from './useCatalogRecord';
 
@@ -288,6 +290,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     ),
   };
 
+  const day = useSydneyDay();
+  const dayPick = useMemo(() => onThisDay(index?.bills, day), [index, day]);
   const clear = () => list.store.set(list.store.model.reset(list.state));
   const stacked = useAccessibilitySize();
   const filteredEmpty = !!all && !searching && on > 0 && rows.length === 0;
@@ -301,6 +305,16 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
           testID="bills-votes"
         />
       )}
+      <OnThisDayRow
+        pick={searching || pushed ? null : dayPick}
+        gap={rhythm.block}
+        onSelect={
+          split
+            ? ({ bill }) =>
+                select({ kind: 'bill', key: bill.key, title: billName(bill) })
+            : undefined
+        }
+      />
       <ScopeControl value={scope} onChange={setScope} />
       {record?.stale ? (
         record.staleReason ? (
