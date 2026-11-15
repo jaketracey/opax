@@ -141,6 +141,12 @@ div.hub-coverage { margin-top: var(--space-group); }
 .vic-candidate-name { font: var(--type-strong); }
 .vic-candidate .party-link { display: inline-flex; align-items: center; min-height: var(--size-target); color: inherit; text-decoration: underline; text-decoration-color: var(--ink-soft); text-underline-offset: 3px; }
 .vic-candidate .party-link:hover { text-decoration-color: currentColor; }
+/* The register view (vic-election-parties.ts): each seat, then its candidates in ballot paper order. */
+.vic-register-seats { max-width: 46rem; margin: 0; padding: 0; list-style: none; }
+.vic-register-seats > li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; gap: 0 var(--space-block); padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-register-seats > li > a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+.vic-register-seats ul { margin: 0; padding: 0; list-style: none; }
+.vic-register-seats ul > li { padding: var(--space-line) 0; }
 .vic-candidates-region > li { grid-template-columns: minmax(0, 1fr); }
 /* Wide screens: the finder and the key dates side by side above the seat list,
    their titles on one line. */

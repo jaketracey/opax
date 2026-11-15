@@ -1,5 +1,5 @@
 import {partyLabelHTML, partyShortName} from '../public/party-page.js'
-import {linkPartyLabels, registeredPartyUrl} from '../public/party-page.js'
+import {linkPartyLabels, candidatePartyPath, registerView} from './vic-election-parties'
 import {shortDate} from '../public/format.js'
 import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_DAY_START, VIC_ELECTION_EARLY_OPEN, VIC_ELECTION_EARLY_CLOSE, VIC_ELECTION_RESULTS_URL, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
@@ -188,9 +188,9 @@ function candidates(s: Seat) {
   } else {
     body = `<ol class="vic-candidates" role="list">${s.candidates.list.map((c,i)=>row(c,i+1)).join('')}</ol>`
   }
-  // Each party label links to that party's one page (party-page.js): every registered party has one.
-  const partyPages = s.candidates.list.filter(c => c.party && c.party.toLowerCase() !== 'independent').map(c => registeredPartyUrl(c.party))
-  return section('candidates','Candidates',linkPartyLabels(body,partyPages),
+  // Each party label links to that party's register view (vic-election-parties.ts): the same page for every party.
+  const registerViews = s.candidates.list.filter(c => c.party && c.party.toLowerCase() !== 'independent').map(c => candidatePartyPath(c.party))
+  return section('candidates','Candidates',linkPartyLabels(body,registerViews),
     `In ballot paper order, as published by the VEC on ${esc(shortDate(s.candidates.published))}. ${link(s.candidates.url,'VEC candidate list')}`)
 }
 
@@ -348,5 +348,8 @@ export async function vicElectionPage(id: string | null, read: ReadAsset, config
     return {...renderVicElection(d,null,config,now,find),status:200,noindex:Boolean(q)}
   }
   const s = d.seats.find(s=>s.path === `${VIC_ELECTION_PATH}/${id}`)
-  return s ? {...renderVicElection(d,s,config,now),status:200} : missing
+  if (s) return {...renderVicElection(d,s,config,now),status:200}
+  // Not a seat: a registered party's register view (vic-election-parties.ts), or nothing.
+  const view = registerView(id,d)
+  return view ? {title:view.title,description:view.description,html:hubShell(view.body,approvedFooter(config),trail(VIC_ELECTION_PATH,view.party.name)),jsonLd:null,status:200} : missing
 }

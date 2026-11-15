@@ -160,7 +160,7 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | Christian Alliance Party – Reform AU | CAP | Christian Alliance | neutral |
   | Climate Action Now | CAN | Climate Action Now | neutral |
   | Democratic Labour Party (DLP) | DLP | DLP | neutral |
-  | Family First Victoria | FF | Family First | neutral |
+  | Family First Victoria | FFV | Family First Victoria | neutral |
   | Free Palestine | FP | Free Palestine | neutral |
   | I'm Voting to Avoid the Fine | FINE | I'm Voting to Avoid the Fine | neutral |
   | Legalise Cannabis Victoria | LCP | Legalise Cannabis | neutral |
@@ -175,26 +175,32 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | The West Party | WEST | The West Party | neutral |
   | Victorian Socialists | VS | Victorian Socialists | neutral |
 
-  **Party links and pages.** The table above is the one alias map
-  (`portal/public/labels.js` `PARTY_ALIASES`). Its Victorian entries are the
-  registered names and registered abbreviated names on the VEC's
+  **Party links and the register view.** The table above gives a label its
+  short name and dot (`portal/public/labels.js` `PARTY_ALIASES`). Its Victorian
+  entries are the registered names and registered abbreviated names on the VEC's
   [register of political parties](https://www.vec.vic.gov.au/candidates-and-parties/registered-political-parties/currently-registered-parties),
   saved by `python3 -I scripts/fetch_vec_parties.py` (one request) to
   `scripts/hubs/vic-registered-parties-2026.json`: names, registration dates and
   abbreviated names only. The register also lists Put Australia First, Save the
-  Environment (code PAF), which has no candidate on the 2026 lists.
+  Environment (code PAF), which has no candidate on the 2026 lists. Family First
+  Victoria has its own code (FFV) and short label, so it never shares the federal
+  Family First's.
 
-  A candidate's party label keeps its text and links to that party's one page.
-  A registered name is an alias of the page its party already has (Australian
-  Labor Party - Victorian Branch is `/subject/party/labor`), never a page of
-  its own. Every registered party is treated the same way: `npm run
-  build:parties` writes the register and each party's candidates into
-  `/graph/party-members.json` (`registered`), and every registered party's page
-  shows its registration and its 2026 candidates. A registered party the record
-  holds nowhere else has a page made from the register alone, showing only
-  that. A candidate nominated without a party has no party line and no link.
-  `portal/test/vic-party-pages.test.mjs` checks all 1,037 candidate rows, the
-  alias map against the register, and that no party page is empty.
+  A code is not a finding that a registered Victorian party and a party in the
+  parliamentary or money record are one organisation. So a candidate's party
+  label keeps its text and links to that party's **register view**
+  (`/vic-election-2026/party-<registered name>`, `portal/src/vic-election-parties.ts`),
+  the same page for all 24 registered parties: registered name, registration
+  dates, abbreviated name, its 2026 candidates by seat in the VEC's order, and
+  the VEC source line. It has no receipts, donors, members, bills, colour or
+  portraits and no link to a party page, and no party page carries election
+  material. A candidate nominated without a party has no party line and no
+  link. `portal/test/vic-party-pages.test.mjs` checks all 1,037 candidate rows,
+  the one shape of the 24 views, and the label map against the register.
+
+  The app is sent `party: null` for every candidate, with the party as nominated
+  on a second line of `name`, because app builds to 1.1.5 turn any `party` into a
+  link to their own party screen (`docs/IOS-API-CONTRACT.md`).
 
 The optional **`scripts/hubs/vic-results-2026.json`** is the after-poll results
 input. It is absent before acquisition, so no results section is rendered.

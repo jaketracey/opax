@@ -24,19 +24,10 @@
 //
 // bills lists the bills a party's member sponsored, as the bills register records the sponsor's party
 // (sponsoredBills): the party pages' "Bills sponsored", and a page for a party the record names only there.
-//
-// registered lists the parties on an electoral commission's register with the candidates each nominated
-// (registeredParties): today the VEC's register and the 2026 Victorian candidate lists. A candidate's party is
-// joined to its register entry through the one alias map (labels.js PARTY_ALIASES), so the party pages give
-// every registered party its registration and its candidates, and a party the record holds nowhere else a page.
 import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {referenceOnlyPeople,rosterFold,rosterSeatParty} from '../portal/public/roster-party.js';
-import {PARTY_MAP} from '../portal/public/labels.js';
-import {registeredPartyUrl} from '../portal/public/party-page.js';
-import {personSlug} from '../portal/src/person-slug.ts';
-import {VIC_ELECTION_PATH} from '../portal/public/vic-election.js';
 const SCRIPTS=dirname(fileURLToPath(import.meta.url));
 const PUBLIC=join(SCRIPTS,'..','portal','public');
 export const PARTY_INDEX='/graph/party-members.json';
@@ -133,6 +124,24 @@ export function recordedElections(manifest,hubsDir=join(SCRIPTS,'hubs')) {
   return Object.fromEntries(Object.entries(out).map(([jur,days])=>[jur,[...days].sort()]));
 }
 
+/** Houses whose term ended before their election day. From that day nobody is a member of the house, so a
+ *  roster dated before it no longer says who sits, although the election has not been held. The Victorian
+ *  Legislative Assembly expired on 3 November 2026 (recorded in scripts/hubs/electorate-dissolutions.json), and
+ *  the Legislative Council's members hold their seats only until the Assembly ends (Constitution Act 1975
+ *  (Vic) s 28). Reviewed by hand: add a house only on a dated source. */
+export const ENDED_HOUSES=[{jurisdiction:'vic',chambers:['vic_la','vic_lc'],ended:'2026-11-03'}];
+
+/** Each seat-roster entry gains `house_ended` when its house ended after the roster's date: the party pages
+ *  stop listing the member as sitting from that day (party-page.js partyMembers), not from the election day. */
+export function withEndedHouses(seats,ended=ENDED_HOUSES) {
+  const out={};
+  for(const [party,members] of Object.entries(seats))out[party]=members.map(m=>{
+    const end=ended.find(h=>h.jurisdiction===m.jurisdiction && h.chambers.includes(m.chamber) && ISO_DAY.test(String(m.as_of || '')) && m.as_of<h.ended);
+    return end ? {...m,house_ended:end.ended} : m;
+  });
+  return out;
+}
+
 function seatRosters(publicRoot) {
   const people=JSON.parse(readFileSync(join(publicRoot,'parliamentarians.json'),'utf8')).people;
   const manifest=JSON.parse(readFileSync(join(publicRoot,'electorates','manifest.json'),'utf8'));
@@ -141,7 +150,7 @@ function seatRosters(publicRoot) {
   const seats=seatRosterMembers(people,asset(manifest.index_url).electorates,elections,asset(manifest.people_url).people);
   const lists=JSON.parse(readFileSync(join(publicRoot,'data','roster-list-parties.json'),'utf8')).observations;
   const windows=JSON.parse(readFileSync(join(SCRIPTS,'roster_service.json'),'utf8')).snapshot_party_windows;
-  return officialListMembers(people,lists,windows,elections,seats);
+  return withEndedHouses(officialListMembers(people,lists,windows,elections,seats));
 }
 
 /** Party -> the bills the federal bills register records a sponsor of that party for, newest first: key, title,
@@ -159,39 +168,6 @@ export function sponsoredBills(bills,accepted) {
   for(const party of Object.keys(out).sort((a,b)=>a.localeCompare(b)))
     sorted[party]=out[party].sort((a,b)=>String(b.introduced || '').localeCompare(String(a.introduced || '')) || a.key.localeCompare(b.key));
   return sorted;
-}
-
-/** The VEC's register of political parties (scripts/hubs/vic-registered-parties-2026.json, from
- *  scripts/fetch_vec_parties.py) with each party's candidates on the VEC's 2026 lists
- *  (scripts/hubs/vic-candidates-2026.json), in the lists' order: districts, then regions, ballot paper order
- *  within each; `seats` gives each seat's kind and election page, and `page` the party's one party page, so a
- *  reader of this file can link a registered name without an alias table of its own. A candidate's party is its register entry when both names carry one identity in the alias map
- *  (labels.js); a blank party or "Independent" is no party. A party name on a candidate row that the register
- *  does not hold, or that two register entries would claim, stops the build: nothing is guessed. */
-export function registeredParties(hubsDir=join(SCRIPTS,'hubs')) {
-  const read=file=>JSON.parse(readFileSync(join(hubsDir,file),'utf8'));
-  const register=read('vic-registered-parties-2026.json'),lists=read('vic-candidates-2026.json'),config=read('vic-election-2026.json');
-  const identity=name=>{const key=String(name ?? '').normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase();return PARTY_MAP[key]?.[1] || key;};
-  const parties=new Map(),seatIndex={};
-  for(const p of register.parties){
-    if(parties.has(identity(p.name)))throw new Error(`Two registered parties share one identity: ${p.name}`);
-    parties.set(identity(p.name),{name:p.name,page:registeredPartyUrl(p.name),first_registered:p.first_registered,re_registered:p.re_registered || null,
-      abbreviation:p.abbreviation || null,acronym:p.acronym || null,candidates:[]});
-  }
-  for(const [kind,seats] of [['district',lists.districts],['region',lists.regions]])
-    for(const [seat,rows] of Object.entries(seats || {}))for(const c of rows){
-      seatIndex[seat] ||= {kind,path:`${VIC_ELECTION_PATH}/${personSlug(seat)}`};
-      if(seatIndex[seat].kind!==kind)throw new Error(`A district and a region share a name: ${seat}`);
-      const party=String(c.party || '').trim();
-      if(!party || party.toLowerCase()==='independent')continue;
-      const entry=parties.get(identity(party));
-      if(!entry)throw new Error(`Candidate party not on the VEC register: ${party} (${seat})`);
-      entry.candidates.push({name:c.name,seat});
-    }
-  return {vic:{authority:'Victorian Electoral Commission',source:register.source,url:register.url,licence:register.licence,retrieved:register.retrieved,
-    election:{name:'2026 Victorian state election',day:config.election_day,path:VIC_ELECTION_PATH,
-      candidates_published:lists.published,candidates_url:lists.url},
-    seats:seatIndex,parties:[...parties.values()]}};
 }
 
 export function partyIndexFile(publicRoot=PUBLIC) {
@@ -218,7 +194,7 @@ export function partyIndexFile(publicRoot=PUBLIC) {
   const read=path=>JSON.parse(readFileSync(join(publicRoot,...path.split('/')),'utf8')),index=read('bills/index.json');
   return {version:1,source:'Recorded divisions (They Vote For You and the parliamentary division records); verified electorate rosters; the federal bills register',
     parties:out,seat_rosters:seatRosters(publicRoot),bills:sponsoredBills(index.bills,read('facts/sponsor-parties.json')),
-    bills_generated_at:typeof index.generated_at==='string' ? index.generated_at : null,registered:registeredParties()};
+    bills_generated_at:typeof index.generated_at==='string' ? index.generated_at : null};
 }
 
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)){

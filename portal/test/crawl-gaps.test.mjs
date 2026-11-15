@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile, stat} from 'node:fs/promises';
-import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers, partyBills, partyRegistration} from '../public/party-page.js';
+import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers, partyBills} from '../public/party-page.js';
 import {renderDirectory} from '../src/seo-content.ts';
 import {officialReportCrawlEntries} from '../../scripts/official_report_crawl.mjs';
 import {sitemapFiles, latestDate, exportDate, personPaths} from '../../scripts/build_crawl_catalog.mjs';
@@ -236,12 +236,11 @@ test('F12: every party in the sitemap is one identity with a non-empty page; the
   const resolved = listed.map(path => resolvePartyPage(path.split('/').at(-1), pages));
   assert.ok(resolved.every(Boolean));
   assert.equal(new Set(resolved).size, listed.length, 'no two URLs resolve to the same party');
-  // A page is empty without disclosed money, a member, a sponsored bill or, for a registered party, its
-  // registration and candidates (test/vic-party-pages.test.mjs); such a page stays out of the sitemap.
+  // A page is empty without disclosed money, a member or a sponsored bill; such a page stays out of the sitemap.
   const roster = await read('/parliamentarians.json'), divisions = await read('/graph/party-members.json');
   for (const page of resolved) {
     const m = partyMembers(page.label, {roster, divisions});
-    assert.ok(page.money || page.bills || m.current.length + m.former.length > 0 || partyRegistration(page.label, divisions), page.label);
+    assert.ok(page.money || page.bills || m.current.length + m.former.length > 0, page.label);
   }
   for (const label of [...missing, 'Libertarian Party']) assert.ok(listed.includes(pages.find(p => p.label === label)?.href), label);
   // Parties named by sponsor records are listed too; see the A4b tests.
