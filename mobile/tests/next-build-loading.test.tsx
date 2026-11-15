@@ -151,14 +151,22 @@ test('division history shows a skeleton during both the index and progressive fi
   };
   jest.mocked(useCatalogRecord).mockReturnValue(state);
   const r = await render(<DivisionHistory />);
-  expect(r.root.findAllByType(Skeleton)).toHaveLength(1);
+  // The page's own placeholder, in the loaded list's shape
+  // (tests/division-history-loading-shape.test.tsx).
+  const placeholder = () =>
+    r.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'division-history-loading',
+    );
+  expect(placeholder()).toHaveLength(1);
   expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
   jest.mocked(useCatalogRecord).mockReturnValue({
     ...state,
     record: { rows: [], total: 2, loaded: 0, failed: 0, stale: false },
   });
   await act(async () => r.update(<DivisionHistory />));
-  expect(r.root.findAllByType(Skeleton)).toHaveLength(1);
+  expect(placeholder()).toHaveLength(1);
   expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
   jest.mocked(useCatalogRecord).mockReturnValue({
     ...state,
