@@ -190,6 +190,35 @@ python3 scripts/asc-testflight.py 1.0.0 "$BUILD" \
   --what-to-test 'Check public catalog browsing, search and saved data.'
 ```
 
+### TestFlight-only lenient mode
+
+A TestFlight upload may set `OPAX_TF_LENIENT=1`. It changes two kinds of step
+and nothing else (`mobile/scripts/tf-lenient.sh`):
+
+- the harness's own self-tests in `qa.sh` (release tooling, privacy scan
+  self-test, shared-host lock, Android host guard, simulator lifetime,
+  simulator admission, Jest retry policy, pass records, the lenient mode's own
+  test, and the Android flow, harness and results self-tests);
+- the two capacity waits in `release-ios.sh`.
+
+Each of these gets one retry. If the retry also fails, one line goes to
+`warnings.txt` in the release evidence directory and the release carries on.
+The line is tab-separated: step name, `attempts=2`, then the exit status and
+the first failing test the step named. A passing retry records nothing. The
+release prints every warning at the end, and `release.json` records
+`"tf_lenient": true`.
+
+Everything else blocks as before: the expected commit, the clean worktree,
+signing and entitlements, the voice mode, the secret scans, the request
+allow-list, the version and build number, typecheck, lint, Jest, the design
+token check, `qa-static`, `qa-advisories`, the production bundle checks and
+both verifier runs.
+
+Never set the flag for a build that will be submitted to the App Store. A
+submission build needs the full harness: check that its `release.json` does
+not say `"tf_lenient": true` and that its evidence directory has no
+`warnings.txt`. The flag is refused outside a release evidence directory.
+
 Upload runs outside the build gate and sends `export/OPAX.ipa` itself with
 `xcrun altool --upload-app`. The upload process reads API credentials internally
 and never logs its argument list. Immediately before starting altool it compares
