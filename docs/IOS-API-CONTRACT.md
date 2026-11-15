@@ -141,7 +141,7 @@ All rows below have no-store browser responses, or `no-cache, no-transform` for 
 type AskPayload = {
   answer: string; citations: Record<string, unknown>; sources: unknown[];
   scope?: {party?:string,speaker?:string,kind?:string,state?:string,
-    chamber?:string,from?:string,to?:string}; answer_status?: string;
+    chamber?:string,from?:string,to?:string,bill?:string}; answer_status?: string;
   evidence_excerpts?: {resource:string,text:string}[];
   evidence_kind?: 'original_position_proposal';
 }; // sources contain source identity, links, cited flags and optional answer ranges
@@ -153,6 +153,17 @@ type SummaryPayload = {
   reviewed_count?: number; partial?: boolean;
 };
 ```
+
+Bill scope (November 2026): the `/api/ask` body accepts an optional `bill`, the key in `/bill/<key>` (for example `au-federal-s1515`). The ask is then answered by retrieval filtered to that bill's records: every version of its text (label `bill_key`), the bill record `bill-<key>` with its summary written from the explanatory memorandum, and the speeches and divisions listed in `/bills/<key>.json`. Other request filters join it. The calculators, identity answers and research tools do not run for a bill-scoped ask, since they read records outside the bill, and `prior_resources` is not used. The response's `scope.bill` echoes the key when the scope applied. A value that is not a bill key is ignored and the ask runs unscoped, with no `scope.bill`. Explanatory memoranda and Bills Digests are not separate resources. MCP tools are unchanged.
+
+Bill scope limits and behaviour:
+
+- Key: only `au-<jurisdiction>-<id>` (for example `au-federal-r7531`, `au-federal-alrc-1270`, `au-nsw-18524`) is a bill key. Anything else, including `index`, is not read as a bill file and does not scope.
+- `scope` on a bill-scoped answer holds only `{bill}`. Nothing is inferred from the wording, and the request's own filters are not echoed.
+- Speeches and divisions carry no bill label, so the filter names them by resource slug. The platform rejects a whole request when one named slug is not in the knowledge box (a listed speech or division not yet published, a bill record not yet published, a key with no records). That request (upstream 400, 404, 412 or 422; the platform answers 412 `Cannot find slug`, measured 16 Nov 2026 on `/find`, JSON and ndjson alike) is sent once more with the `bill_key` label alone: the answer then comes from the bill's text only, still inside the bill and never from the whole record. JSON and the stream behave the same. Each such retry logs `ask_bill_label_only` with the bill key and the upstream status, and its answer is not stored in the answer cache.
+- A bill file lists at most 24 speeches (`SPEECH_CAP` in `scripts/export_bills.py`; 76 bills reach it). The other speeches on those bills are not reached by a bill-scoped ask.
+- A division with more than 100 named voters is published in parts (`division-<key>-p2`, `-p3`; `parli/ingest/votes_ingest.py`): part 1 names the ayes and the noes are in a later part, which the bill file does not list. For a bill with divisions, the Worker first runs the same scoped retrieval with generation off to see which of the bill's divisions come back. For each returned division with more than 100 named voters (at most 6 per ask) it reads the full-member file `/divisions/division-<key>.json` and gives the model the parts after the first as records, so every vote is in the model's context. They are listed in `sources` as `division-<key>-p<n>` with `href` `/doc/division-<key>` and resource `USER_CONTEXT_<n>`. A failed lookup or a missing file leaves the ask as it was and logs `ask_bill_division_parts_skipped` with the bill key, the division and the status. The party split is not in any text the model reads: it is held only in the record's metadata.
+- A follow-up in a conversation is first rewritten as a standalone question (`standaloneQuestion`). That call sends the platform an unfiltered `/ask` with `top_k: 1`; its passage is never a source or citation of the answer, which is retrieved afterwards inside the bill.
 
 | Method and path | Input and output | Source / cost class | Auth; internal cache; limits; blocks |
 | --- | --- | --- | --- |

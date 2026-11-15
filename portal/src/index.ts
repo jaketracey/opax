@@ -87,6 +87,7 @@ import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, sp
  */
 
 import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
+import { askBillKey, billScope, billScopedBody, divisionParts, returnedBillDivisions, BILL_LABEL_ONLY, type DivisionFile, type BillLabelOnly, type BillScope, type BillScopeFile } from './ask-bill-scope'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { reviewerLoginEnabled } from './community-auth'
@@ -1007,6 +1008,8 @@ interface AskInput {
   to?: string
   since?: string
   until?: string
+  /** A bill key (/bill/<key>): the ask is answered from that bill's records only (ask-bill-scope.ts). */
+  bill?: string
   context?: import('./ask-followup').SourceTurn[]
   /**
    * Resource ids the conversation's earlier answers cited, sent by the chat.
@@ -1416,6 +1419,8 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     from: yr(input.from),
     to: yr(input.to),
     ...(input.since || input.until ? { since: str(input.since), until: str(input.until) } : {}),
+    // Only a bill-scoped ask carries the key, so every other answer keeps its cache entry.
+    ...(typeof input.bill === 'string' && askBillKey(input.bill) ? { bill: askBillKey(input.bill) } : {}),
     // buildAskBody swaps in the custom prompt and the guidance turn on ANY
     // non-empty filter value, including ones filterExpression then discards
     // (an unknown topic, a "from" that is not a year). Two asks that differ
@@ -1563,10 +1568,54 @@ function earlyOverviewStream(work: () => Promise<Response>, budget: AskDeadline,
   return new Response(readable, {headers:SSE_HEADERS})
 }
 
+/** The request's bill scope, with the speeches and divisions its file lists; null when `bill` is not a bill key. */
+async function askBill(value: string, env: Env): Promise<BillScope | null> {
+  const key = askBillKey(value)
+  return key ? billScope(key, await keptAssetJson<BillScopeFile>(billFileMemo, 32, env, `/bills/${key}.json`).catch(() => null)) : null
+}
+// The split divisions whose other parts one bill-scoped ask may carry: each part is up to 1,800 characters of names.
+const BILL_DIVISION_PARTS_MAX = 6
+/**
+ * The other parts of the split divisions a bill-scoped retrieval returns (ask-bill-scope.ts divisionParts). The same
+ * scoped body is run with generation off to see which of the bill's divisions come back; each one's full-member file
+ * is then read by its key. Nothing here can cost the reader the answer: a rejected or failed lookup, or a missing
+ * file, leaves the ask as it was, logged by bill key, division and status only.
+ */
+async function billDivisionParts(body: Record<string, unknown>, bill: BillScope, env: Env, signal?: AbortSignal): Promise<AskRecords['records']> {
+  if (!bill.slugs.some(slug => slug.startsWith('division-'))) return []
+  const skipped = (status: number | string, division?: string) => console.warn(JSON.stringify({ event: 'ask_bill_division_parts_skipped', bill: bill.key, ...(division ? { division } : {}), status }))
+  try {
+    const within = AbortSignal.any([AbortSignal.timeout(8_000), ...(signal ? [signal] : [])])
+    const res = await kbFetch(env, '/ask', { body: { ...body, generate_answer: false }, headers: { 'x-synchronous': 'true' }, signal: within })
+    if (!res.ok) {
+      await res.body?.cancel().catch(() => {})
+      // A rejected bill filter is the label-only case: the answer's own request logs it, and no division is returned.
+      if (![400, 404, 412, 422].includes(res.status)) skipped(res.status)
+      return []
+    }
+    const found = await res.json() as AskAnswer
+    const divisions = returnedBillDivisions(bill, Object.values(found.retrieval_results?.resources ?? {}).map(r => r.slug)).slice(0, BILL_DIVISION_PARTS_MAX * 2)
+    const parts = await Promise.all(divisions.map(async slug => {
+      try {
+        const file = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/divisions/${encodeURIComponent(slug)}.json`, { signal: within }))
+        if (!file.ok) { await file.body?.cancel().catch(() => {}); skipped(file.status, slug); return [] }
+        return divisionParts(slug, await file.json() as DivisionFile)
+      } catch { skipped('unavailable', slug); return [] }
+    }))
+    return parts.filter(list => list.length).slice(0, BILL_DIVISION_PARTS_MAX).flat()
+  } catch {
+    if (signal?.aborted) throw signal.reason
+    skipped('unavailable')
+    return []
+  }
+}
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline, quotaTaken = false, selectedToolsOnly = false): Promise<Response> {
   const rawInput = saConversationInput((prepared || ((await request.json().catch(() => ({}))) ?? {})) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
-  const overviewCandidate = (isPersonOverviewCandidate(rawInput.question || '') || isPersonRecentCandidate(rawInput.question || '')) && !rawInput.topic && !rawInput.from && !rawInput.to && (!rawInput.kind || ['speech','all'].includes(rawInput.kind))
-  if (!firstBudget && (overviewCandidate || isPersonRecentIntent(rawInput))) {
+  // One bill's records only: no calculator, identity or person route answers in its place, since each
+  // draws on records outside the bill. Retrieval below is the single path, filtered to the bill.
+  const bill = typeof rawInput.bill === 'string' ? await askBill(rawInput.bill, env) : null
+  const overviewCandidate = !bill && (isPersonOverviewCandidate(rawInput.question || '') || isPersonRecentCandidate(rawInput.question || '')) && !rawInput.topic && !rawInput.from && !rawInput.to && (!rawInput.kind || ['speech','all'].includes(rawInput.kind))
+  if (!firstBudget && (overviewCandidate || !bill && isPersonRecentIntent(rawInput))) {
     const budget = new AskDeadline(OVERVIEW_FIRST_ANSWER_MS, request.signal)
     const work = () => budget.run(async () => {
       const response = await apiAsk(request,env,ctx,rawInput,budget,quotaTaken)
@@ -1590,9 +1639,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
   try {
-    const routedMoney=await federalPartyMoneyAnswer(rawInput,env.ASSETS)
+    const routedMoney=bill?null:await federalPartyMoneyAnswer(rawInput,env.ASSETS)
     if(routedMoney)return federalPartyMoneyResponse(routedMoney,request)
-    const ranked = selectedToolsOnly ? null : await rankedMoneyAnswer(rawInput, env.ASSETS)
+    const ranked = selectedToolsOnly || bill ? null : await rankedMoneyAnswer(rawInput, env.ASSETS)
     if (ranked) {
       mark('receipts')
       // The sheet is for writing the opening, never for the reader: it leaves
@@ -1613,7 +1662,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   // What a parliamentarian is paid is set by instrument, not said in a speech:
   // answered from /pay.json, again with no model call. A failure here is not
   // the reader's problem; the question falls through to the record.
-  const paid = selectedToolsOnly ? null : await paidAnswer(rawInput, env.ASSETS).catch(() => null)
+  const paid = selectedToolsOnly || bill ? null : await paidAnswer(rawInput, env.ASSETS).catch(() => null)
   if (paid) { mark('pay'); return timed(json(paid)) }
   // A follow-up in a conversation rarely names its subject ("no he has been
   // in tons of grants, look more"), and the record is searched on the words
@@ -1637,19 +1686,22 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     if (askedAs) {
       rawInput.question = askedAs
       // "And the Liberals?" after a pay answer only reads as one once rewritten.
-      const paidFollowUp = selectedToolsOnly ? null : await paidAnswer({ ...rawInput, context: undefined }, env.ASSETS).catch(() => null)
+      const paidFollowUp = selectedToolsOnly || bill ? null : await paidAnswer({ ...rawInput, context: undefined }, env.ASSETS).catch(() => null)
       if (paidFollowUp) { mark('pay'); return timed(json(withAskedAs(paidFollowUp, askedAs))) }
     }
   }
   mark('rewrite')
-  const identity = await identityAnswer(rawInput, agenticToolDeps(env, firstBudget?.signal ?? request.signal, ctx))
+  const identity = bill ? null : await identityAnswer(rawInput, agenticToolDeps(env, firstBudget?.signal ?? request.signal, ctx))
   if (identity) { mark('identity'); return timed(identityResponse(identity, request)) }
   let people: { name: string }[] = []
-  if (needsAskPeople(rawInput)) {
+  if (!bill && needsAskPeople(rawInput)) {
     try { people = (await loadPeople(env)).people }
     catch { return json({ error: 'The parliamentarian list is temporarily unavailable. Please try again.' }, 503) }
   }
-  const { input, scope } = resolveAskScope(rawInput, people)
+  // The bill is the scope: nothing more is inferred from the wording, and the response says which bill applied.
+  const { input, scope } = bill
+    ? { input: { ...rawInput, bill: bill.key, prior_resources: undefined }, scope: { bill: bill.key } as AskScope }
+    : resolveAskScope(rawInput, people)
 
   const url = new URL(request.url)
   const wantStream =
@@ -1683,11 +1735,13 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
 
   let records: AskRecords
   let overview: OverviewPack | undefined
-  const overviewIntent = isPersonOverviewIntent(input)
-  const recentIntent = isPersonRecentIntent(input)
+  const overviewIntent = !bill && isPersonOverviewIntent(input)
+  const recentIntent = !bill && isPersonRecentIntent(input)
   firstBudget?.signal.throwIfAborted()
   try {
-    if (overviewIntent || recentIntent) {
+    // The published-record tables (money, interests, contracts) are not the bill's records.
+    if (bill) records = { records: [], coverage: '', total: 0 }
+    else if (overviewIntent || recentIntent) {
       try {
         overview = await personOverviewPack(input, env, ctx, firstBudget?.signal)
         records = overview.records
@@ -1705,7 +1759,8 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503)
   }
   mark('records')
-  const body = buildAskBody(input, records, { reasoned: overviewIntent || recentIntent })
+  // `reasoned` for a bill: the ordinary prompt, never the named-politician path, which reads speeches on its own.
+  let body = buildAskBody(input, records, { reasoned: overviewIntent || recentIntent || !!bill })
   if (overview || recentIntent) {
     const prompt = body.prompt as {system: string; user: string}
     // The evidence uses ordinary extra_context IDs and the existing Ask preset.
@@ -1716,12 +1771,22 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
       'Use only the supplied verified speech records for this answer. ' + FOOTNOTE_INSTRUCTIONS)
   }
   await scopeSpeakerBody(body, env, input.speaker)
+  if (bill) {
+    body = billScopedBody(body, bill)
+    // A division split for the platform's 100-name limit keeps its noes in a later part: when retrieval returns
+    // the division, the model gets every part, so no member who voted is read as not voting.
+    const parts = await billDivisionParts(body, bill, env, firstBudget?.signal ?? request.signal)
+    if (parts.length) { records = { records: parts, coverage: '', total: parts.length }; body.extra_context = recordContext(parts) }
+  }
+  // Shared by every retry body: set once the platform rejected the full bill filter and the label alone answered.
+  const billLabelOnly = bill ? (body as { [BILL_LABEL_ONLY]?: BillLabelOnly })[BILL_LABEL_ONLY] : undefined
   firstBudget?.signal.throwIfAborted()
   // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
   // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
   body.generative_model = askModel
   const store = (payload: AskPayload): void => {
-    if (cacheKey && cacheableAnswer(payload) && !UNSHARED_ASK_REQUESTS.has(request)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
+    // An answer from the bill's text alone, after a rejected filter, is not kept: the next ask tries the full scope.
+    if (cacheKey && !billLabelOnly?.fired && cacheableAnswer(payload) && !UNSHARED_ASK_REQUESTS.has(request)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
   if (isPositionBody(body)) {
     // Read and bound original speaking turns before generation. A cached answer
@@ -1740,7 +1805,14 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
       const work = async (signal: AbortSignal) => {
-        const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
+        let res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
+        // A bill-scoped filter the platform rejects (a listed record not in the box) is asked on the bill label alone (ask-bill-scope.ts).
+        const labelOnly = [400, 404, 412, 422].includes(res.status) ? (b as { [BILL_LABEL_ONLY]?: BillLabelOnly })[BILL_LABEL_ONLY] : undefined
+        if (labelOnly) {
+          // Counted from the logs: the answer loses the bill record and every speech and division. Key and status only.
+          labelOnly.fired = true; console.warn(JSON.stringify({ event: 'ask_bill_label_only', bill: labelOnly.key, status: res.status }))
+          await res.body?.cancel().catch(() => {}); res = await kbFetch(env, '/ask', { body: { ...b, filter_expression: labelOnly.filter }, headers: { 'x-synchronous': 'true' }, signal })
+        }
         if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
         if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
         return (await res.json()) as AskAnswer
@@ -2348,14 +2420,21 @@ async function streamAskOnce(
   signal: AbortSignal,
   onProgress?: () => void,
 ): Promise<AskAnswer> {
-  const res = await kbFetch(env, '/ask', {
+  const call = (b: Record<string, unknown>) => kbFetch(env, '/ask', {
     headers: {
       'content-type': 'application/json',
       accept: 'application/x-ndjson',
     },
-    body,
+    body: b,
     signal,
   })
+  let res = await call(body)
+  // As on the synchronous path: a rejected bill-scoped filter is asked on the bill label alone (ask-bill-scope.ts).
+  const labelOnly = [400, 404, 412, 422].includes(res.status) ? (body as { [BILL_LABEL_ONLY]?: BillLabelOnly })[BILL_LABEL_ONLY] : undefined
+  if (labelOnly) {
+    labelOnly.fired = true; console.warn(JSON.stringify({ event: 'ask_bill_label_only', bill: labelOnly.key, status: res.status }))
+    await res.body?.cancel().catch(() => {}); res = await call({ ...body, filter_expression: labelOnly.filter })
+  }
   if (!res.ok || !res.body) throw new Error(`ask failed (${res.status})`)
 
   let answer = ''
@@ -6935,6 +7014,9 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     answerQuestion=question;routedInput=body.value
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
+    // A bill-scoped ask is answered from that bill's records by filtered retrieval (ask-bill-scope.ts): the
+    // research tools and the calculators search the whole record, so none of them runs for it.
+    if (askBillKey(body.value.bill)) return apiAsk(replayPost(request, body.text), selected, ctx)
     const identity = await identityAnswer(body.value as AskInput, agenticToolDeps(selected, request.signal, ctx))
     if (identity) return identityResponse(identity, request)
     const money=await federalPartyMoneyAnswer(body.value as AskInput,selected.ASSETS)
