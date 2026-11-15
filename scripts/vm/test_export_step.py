@@ -8,6 +8,7 @@ data group owned them. The portal gate could neither put them back with the mone
 so a blame trial tested HEAD's map against the night's receipts, and a green night would have published the
 map without them.
 """
+import fnmatch
 import json
 import os
 import re
@@ -93,6 +94,46 @@ class ExportStepCompanions(unittest.TestCase):
         self.assertEqual(self.step(2, outs=("tmp/a.json",)).returncode, 2)
         self.assertEqual(self.changed(), [])
 
+    def test_an_unparseable_companion_installs_nothing_not_even_the_files_before_it(self):
+        (self.repo / "bad.py").write_text(
+            'import json, sys\nopen(sys.argv[1], "w").write(json.dumps({"n": 2}))\n'
+            'open(sys.argv[2], "w").write("{not json")\nprint(json.dumps({"n": 2}))\n')
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/a.json", "tmp/a.json", "--also", "out/b.json", "tmp/b.json",
+             sys.executable, "bad.py", "tmp/a.json", "tmp/b.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 2, proc.stderr)
+        self.assertIn("out/b.json is not valid JSON", proc.stderr)
+        self.assertEqual(self.changed(), [])
+
+    def test_an_empty_main_document_installs_no_companion(self):
+        (self.repo / "quiet.py").write_text(
+            'import json, sys\nfor out in sys.argv[1:]:\n    open(out, "w").write(json.dumps({"n": 2}))\n')
+        proc = subprocess.run(
+            ["bash", "scripts/vm/export_step.sh", "json", "out/main.json",
+             "--also", "out/a.json", "tmp/a.json", "--also", "out/b.json", "tmp/b.json",
+             sys.executable, "quiet.py", "tmp/a.json", "tmp/b.json"],
+            cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 2, proc.stderr)
+        self.assertIn("wrote nothing for out/main.json", proc.stderr)
+        self.assertEqual(self.changed(), [])
+
+    def test_a_scratch_path_that_is_a_published_file_is_refused_before_anything_is_removed(self):
+        before = (self.repo / "out/a.json").read_bytes()
+        for also in (["--also", "out/a.json", "out/a.json"],                 # its own DEST
+                     ["--also", "out/a.json", "./out/a.json"],               # the same file by another spelling
+                     ["--also", "out/a.json", "out/main.json"],              # the main DEST
+                     ["--also", "out/a.json", "out/b.json", "--also", "out/b.json", "tmp/b.json"],   # another DEST
+                     ["--also", "out/a.json", "tmp/x.json", "--also", "out/b.json", "tmp/x.json"]):  # named twice
+            proc = subprocess.run(
+                ["bash", "scripts/vm/export_step.sh", "json", "out/main.json", *also,
+                 sys.executable, "exporter.py", "2", "0", "tmp/a.json", "tmp/b.json"],
+                cwd=self.repo, env=GIT_ENV, capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 64, (also, proc.stderr))
+            self.assertEqual(self.changed(), [], also)
+            self.assertEqual((self.repo / "out/a.json").read_bytes(), before)
+
     def test_companions_are_not_left_in_the_scratch_directory(self):
         self.step(2)
         self.assertEqual(list((self.repo / "tmp").iterdir()), [])
@@ -109,13 +150,43 @@ def group_paths(text):
 class PeriodicExportsAreOwned(unittest.TestCase):
     """Every portal file the refresh scripts name belongs to a data group, so the gate can hold or publish it."""
 
+    @staticmethod
+    def named_in(body):
+        """The portal paths a script names, as fnmatch patterns: a shell variable inside a path ($j, ${j}) becomes
+        `*`, so `money.$j.json` is checked whole instead of being cut at the `$`."""
+        body = "\n".join(line for line in body.splitlines() if not line.lstrip().startswith("#"))
+        found = re.findall(r"portal/(?:public|src)/(?:[A-Za-z0-9_./-]|\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)+", body)
+        return sorted({re.sub(r"\$\{?[A-Za-z_][A-Za-z0-9_]*\}?", "*", path).rstrip(".") for path in found})
+
     def named(self, script):
-        body = "\n".join(line for line in (ROOT / script).read_text().splitlines() if not line.lstrip().startswith("#"))
-        return sorted({path.rstrip(".") for path in re.findall(r"portal/(?:public|src)/[A-Za-z0-9_./-]+", body)})
+        return self.named_in((ROOT / script).read_text())
+
+    @staticmethod
+    def covered(pattern, owned):
+        """A named path is owned when it is a group path or lies under one; a pattern with a variable is owned
+        when a group path matches it whole."""
+        if "*" in pattern:
+            return any(fnmatch.fnmatchcase(p, pattern) for p in owned)
+        if pattern.endswith(".tmp"):   # the scratch copy a step writes beside an owned file and then moves over it
+            pattern = pattern[:-len(".tmp")]
+        return any(pattern == p or pattern.startswith(p + "/") for p in owned)
+
+    def test_a_path_cut_at_a_variable_is_not_mistaken_for_an_owned_prefix(self):
+        owned = ["portal/public/graph/money.json", "portal/public/graph/money.qld.json", "portal/public/interests"]
+        self.assertEqual(self.named_in('x "portal/public/graph/money.$j.json" y'), ["portal/public/graph/money.*.json"])
+        self.assertEqual(self.named_in("x portal/public/graph/money.${j}.json"), ["portal/public/graph/money.*.json"])
+        self.assertTrue(self.covered("portal/public/graph/money.*.json", owned))
+        self.assertFalse(self.covered("portal/public/graph/mon", owned), "a bare prefix of an owned path")
+        self.assertFalse(self.covered("portal/public/graph/money.*.csv", owned))
+        self.assertFalse(self.covered("portal/public/graph/money-receipts.json", owned))
+        self.assertTrue(self.covered("portal/public/interests/index.json", owned))
+        self.assertFalse(self.covered("portal/public/interests-old", owned))
+        self.assertTrue(self.covered("portal/public/graph/money.json.tmp", owned))
+        self.assertFalse(self.covered("portal/public/graph/other.json.tmp", owned))
 
     def test_every_named_portal_path_has_a_group(self):
         owned = group_paths((VM / "data_groups.sh").read_text())
-        covered = lambda f: any(f == p or f.startswith(p + "/") or f.startswith(p + ".") or p.startswith(f) for p in owned)
+        covered = lambda f: self.covered(f, owned)
         for script in ("scripts/weekly_refresh.sh", "scripts/daily_refresh.sh"):
             named = self.named(script)
             self.assertTrue(named, script)

@@ -29,6 +29,20 @@ case "$mode" in
       [ "$#" -ge 3 ] || { echo "usage: export_step.sh json DEST [--also DEST TMP]... CMD..." >&2; exit 64; }
       also_dest+=("$2"); also_tmp+=("$3"); shift 3
     done
+    # A scratch file is removed before the export and again on exit: it must never be a published file (its own
+    # DEST, the main DEST or another companion's), nor be named twice.
+    for i in "${!also_tmp[@]}"; do
+      for d in "$dest" "${also_dest[@]}"; do
+        if [ "${also_tmp[$i]}" = "$d" ] || [ "${also_tmp[$i]}" -ef "$d" ]; then
+          echo "export_step.sh: the scratch file ${also_tmp[$i]} is the published file $d; nothing run" >&2; exit 64
+        fi
+      done
+      for j in "${!also_tmp[@]}"; do
+        if [ "$i" != "$j" ] && [ "${also_tmp[$i]}" = "${also_tmp[$j]}" ]; then
+          echo "export_step.sh: the scratch file ${also_tmp[$i]} is named twice; nothing run" >&2; exit 64
+        fi
+      done
+    done
     tmp=$(mktemp "${TMPDIR:-/tmp}/export.XXXXXX")
     trap 'rm -f "$tmp" "${also_tmp[@]+"${also_tmp[@]}"}"' EXIT
     rm -f "${also_tmp[@]+"${also_tmp[@]}"}"
@@ -36,6 +50,22 @@ case "$mode" in
     for t in "${also_tmp[@]+"${also_tmp[@]}"}"; do
       [ -s "$t" ] || { echo "export_step.sh: the export did not write $t; nothing installed" >&2; exit 2; }
     done
+    # With companions, every file of the set is checked before the first is installed: keep_if_unchanged.py refuses
+    # an empty or unparseable file one at a time, which would leave the files before it new and the rest old.
+    if [ "${#also_tmp[@]}" -gt 0 ]; then
+      checks=("$dest" "$tmp")
+      for i in "${!also_dest[@]}"; do checks+=("${also_dest[$i]}" "${also_tmp[$i]}"); done
+      "$PY" -c 'import json, os, sys
+pairs = list(zip(sys.argv[1::2], sys.argv[2::2]))
+for dest, new in pairs:
+    if os.path.getsize(new) == 0:
+        sys.exit(f"export_step.sh: the export wrote nothing for {dest}; nothing installed")
+    if dest.endswith(".json"):
+        try:
+            json.load(open(new, encoding="utf-8"))
+        except ValueError as error:
+            sys.exit(f"export_step.sh: the export for {dest} is not valid JSON ({error}); nothing installed")' "${checks[@]}" || exit 2
+    fi
     for i in "${!also_dest[@]}"; do
       "$PY" scripts/vm/keep_if_unchanged.py "${also_dest[$i]}" "${also_tmp[$i]}"
     done
