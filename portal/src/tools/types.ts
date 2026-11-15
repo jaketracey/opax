@@ -4,10 +4,12 @@ export type ToolArgs = Record<string, unknown>
 export type ToolInputSchema = Exclude<Parameters<typeof z.fromJSONSchema>[0], boolean> & { type: 'object'; examples: ToolArgs[] }
 /** Only public bindings/read adapters; generation credentials are not part of the tool interface. */
 export type ToolOutputSchema = Exclude<Parameters<typeof z.fromJSONSchema>[0], boolean> & { type: 'object' }
-export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'COMMUNITY_ORIGIN' | 'VIC_ELECTION_HUB_ENABLED'>> & {
+export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'MEDIA' | 'COMMUNITY_ORIGIN' | 'VIC_ELECTION_HUB_ENABLED'>> & {
   origin?: string
   signal?: AbortSignal
   asset?: (path: string) => Promise<unknown>
+  /** Read-only reader of one published JSON object in the media bucket, by key; null when it is not there. */
+  media?: (key: string) => Promise<unknown>
   /** Read-only KB adapter; credentials remain outside tool handlers. */
   kb?: (path: string, body?: unknown) => Promise<Record<string, unknown>>
 }
@@ -25,6 +27,8 @@ export interface ToolDefinition {
   title?: string
   description: string
   inputSchema: ToolInputSchema
+  /** Ask's input schema when it takes arguments the public MCP schema does not list yet. MCP reads inputSchema only. */
+  askInputSchema?: ToolInputSchema
   /** JSON Schema of the structured result. A tool that declares it must always return a conforming result. */
   outputSchema?: ToolOutputSchema
   stepLabel: (args: ToolArgs) => { label: string; arg?: string }
@@ -47,6 +51,15 @@ export interface ToolDefinition {
 export class ToolInputError extends Error {
   readonly code = -32602
   constructor(name: string, message?: string) { super(message ?? 'Invalid arguments for ' + name + '. See tools/list for the input schema.'); this.name = 'ToolInputError' }
+}
+/** One published JSON object from the media bucket (R2), or null when it is absent or the bucket is not bound. */
+export async function readToolMedia(env: ToolEnv, key: string): Promise<unknown> {
+  env.signal?.throwIfAborted()
+  if (env.media) return env.media(key)
+  if (!env.MEDIA) return null
+  const object = await env.MEDIA.get(key)
+  env.signal?.throwIfAborted()
+  return object ? object.json() : null
 }
 export async function readToolAsset(env: ToolEnv, path: string): Promise<unknown> {
   env.signal?.throwIfAborted()

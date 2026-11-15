@@ -121,8 +121,17 @@ test('every record tool is a register on MCP with its registry schema, and bad i
   for (const name of ['find_records', 'parliamentary_pay', 'member_expenses', 'contracts', 'grants', 'declared_interests']) {
     const entry = listed.find(t => t.name === 'query_register');
     assert.ok(entry.inputSchema.properties.register.enum.includes(name), name); assert.equal(entry.annotations.readOnlyHint, true);
-    // The same tool, same schema, is on the Ask loop.
-    assert.deepEqual(api.TOOL_SPECS.find(t => t.name === name).input, tool(name).inputSchema);
+    // The same tool is on the Ask loop, with the same schema unless it declares arguments MCP does not list yet.
+    assert.deepEqual(api.TOOL_SPECS.find(t => t.name === name).input, tool(name).askInputSchema ?? tool(name).inputSchema);
+  }
+  // member_expenses' itemised arguments are Ask's for now: MCP's guide does not list them and MCP refuses them unread.
+  const guide = (await send('tools/call', { name: 'register_guide', arguments: { register: 'member_expenses' } })).result.structuredContent;
+  assert.deepEqual(Object.keys(guide.arguments.properties), ['person', 'year', 'since', 'until']);
+  assert.doesNotMatch(JSON.stringify(guide), /itemised/);
+  for (const args of [{ person: 'Robin Example', year: 2025, detail: 'itemised' }, { person: 'Robin Example', year: 2025, category: 'fares' }]) {
+    for (const call of [{ name: 'member_expenses', arguments: args }, { name: 'query_register', arguments: { register: 'member_expenses', arguments: args } }]) {
+      assert.equal((await send('tools/call', call)).result?.isError, true, JSON.stringify(call));
+    }
   }
   for (const [name, args] of [['contracts', { limit: 99 }], ['grants', { state: 'western australia' }], ['declared_interests', { category: 'yachts' }], ['parliamentary_pay', { person: 'x'.repeat(200) }], ['find_records', {}], ['grants', { from_year: 2025, to_year: 2020 }]]) {
     const rpc = await send('tools/call', { name, arguments: args });

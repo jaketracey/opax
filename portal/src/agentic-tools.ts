@@ -23,7 +23,7 @@ function registeredArgProblem(schema: unknown, args: unknown): string {
 }
 export function toolArgProblem(name: string, args: unknown): string | null {
   const registered = getAskTool(name)
-  if (registered && registered.askFactStyle !== 'legacy') return validRegisteredArgs(registered.name, args) ? null : registeredArgProblem(registered.inputSchema, args)
+  if (registered && registered.askFactStyle !== 'legacy') return validRegisteredArgs(registered.name, args, true) ? null : registeredArgProblem(registered.askInputSchema ?? registered.inputSchema, args)
   const spec = TOOL_SPECS.find(t => t.name === name)
   if (!spec) return `unknown tool ${name}`
   if (!args || typeof args !== 'object' || Array.isArray(args)) return 'arguments must be an object'
