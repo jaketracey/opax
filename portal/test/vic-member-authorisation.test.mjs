@@ -27,8 +27,29 @@ test('a Victorian member page carries the seat pages’ block up to the close of
     for(const person of [vic,mlc]) assert.equal(vicMemberAuthorisationHTML(person,now),'',now.toISOString());
 });
 
+// The failure that matters is the line missing before the close. A page cached before 6 pm may carry it a
+// few hours longer, which is harmless: nothing shortens caching or purges at the boundary.
+test('the line shows at 5:59 pm on 28 November and is gone by the next morning',()=>{
+  const block=vicElectionFooterHTML();
+  for(const person of [vic,mlc]) {
+    assert.equal(vicMemberAuthorisationHTML(person,new Date('2026-11-28T17:59:00+11:00')),block);
+    assert.equal(vicMemberAuthorisationHTML(person,new Date('2026-11-28T08:00:00+11:00')),block,'while the polls are open');
+    assert.equal(vicMemberAuthorisationHTML(person,new Date('2026-11-29T07:00:00+11:00')),'');
+  }
+});
+
+test('the helper only reads the clock: no cache header or purge depends on the boundary',async()=>{
+  const worker=await readFile(new URL('../src/index.ts',import.meta.url),'utf8'),cache=await readFile(new URL('../src/page-cache.ts',import.meta.url),'utf8');
+  assert.doesNotMatch(cache,/VIC_ELECTION_POLLS_CLOSE|vicMemberAuthorisation/);
+  for(const line of worker.split('\n').filter(l=>l.includes('vicMemberAuthorisationHTML')&&!l.startsWith('import'))) assert.doesNotMatch(line,/cache|ttl|max-age|purge/i);
+});
+
+// Anyone with Victorian state representation on their record, former state members included; a federal
+// member from Victoria is not a Victorian state member (the share card's existing rule).
 test('only Victorian members carry it',()=>{
   const now=new Date('2026-11-16T10:00:00+11:00');
+  const formerState={name:'Example Former',last:2014,representation:[{jurisdiction:'vic',chamber:'vic_la',electorate:'Example District'}]};
+  assert.equal(vicMemberAuthorisationHTML(formerState,now),vicElectionFooterHTML());
   for(const person of [federal,{name:'No seat'},{name:'Empty',representation:[]},null,undefined]) assert.equal(vicMemberAuthorisationHTML(person,now),'');
   assert.equal(vicMemberAuthorisationHTML({representation:[...federal.representation,...vic.representation]},now),vicElectionFooterHTML());
 });
