@@ -18,7 +18,7 @@ import { useRefreshCommand } from '../../design/keyboard';
 import {
   ContentUnavailable,
   copy,
-  Divider,
+  RowSeparator,
   OfflineLine,
   RegionProvider,
   rowMenus,
@@ -373,7 +373,7 @@ export default function Declarations() {
               />
             );
           }}
-          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          ItemSeparatorComponent={RowSeparator}
           ListHeaderComponent={
             <RegionProvider value={column.inner}>
               {column.bar}

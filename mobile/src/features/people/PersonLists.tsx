@@ -241,7 +241,7 @@ export function PersonVotes() {
                   testID={`person-votes-row-${index}`}
                 />
               )}
-              ItemSeparatorComponent={() => <View style={styles.inset} />}
+              ItemSeparatorComponent={InsetSeparator}
               ListEmptyComponent={
                 <ContentUnavailable
                   symbol="magnifyingglass"
@@ -390,6 +390,10 @@ export function PersonInterests() {
   );
 }
 
+/** Module level: an inline separator is a new component type each render. */
+function InsetSeparator() {
+  return <View style={styles.inset} />;
+}
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.paper },
   content: { paddingBottom: rhythm.section },

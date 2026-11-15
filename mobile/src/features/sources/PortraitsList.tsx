@@ -5,7 +5,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import type { PortraitListing } from '../../api/people-portraits';
 import { portraits } from '../../api/runtime';
 import {
-  Divider,
+  RowSeparator,
   InlineError,
   InsetGroup,
   LinkRow,
@@ -131,7 +131,7 @@ export default function PortraitsList() {
           data={list ? shown : []}
           keyExtractor={(row) => row.info.key}
           ListHeaderComponent={header}
-          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          ItemSeparatorComponent={RowSeparator}
           renderItem={({ item: row }) => {
             const officialPortrait = /^\d+$/.test(row.info.key);
             return (
