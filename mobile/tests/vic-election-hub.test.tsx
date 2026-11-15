@@ -13,7 +13,7 @@ import { getPathFromState } from 'expo-router/react-navigation';
 import { ContentUnavailable } from '../src/design/states';
 import * as accessibility from '../src/design/accessibility';
 import { PartyLabel } from '../src/design/people';
-import { minimumTarget } from '../src/design/tokens';
+import { minimumTarget, rhythm } from '../src/design/tokens';
 import * as titleOnScroll from '../src/navigation/useTitleOnScroll';
 import { SeatRow } from '../src/features/vic-election/rows';
 import Hub from '../src/features/vic-election/Hub';
@@ -36,6 +36,16 @@ test('Ahead puts status before dates, districts, regions and authorised foot', (
     'vic-election-date-early',
   ])
     expect(r.root.findAllByProps({ testID: id }).length).toBeGreaterThan(0);
+  // The countdown and the status heading are separate blocks, not flush.
+  const status = r.root.find(
+    (node) =>
+      typeof node.type === 'string' &&
+      node.props.testID === 'vic-election-status',
+  );
+  expect(
+    r.root.findAllByProps({ testID: 'vic-election-days' }).length,
+  ).toBeGreaterThan(0);
+  expect(StyleSheet.flatten(status.props.style)?.gap).toBe(rhythm.block);
   expect(text).toContain('Key dates');
   expect(text).toContain(
     `Lower house: ${mockVic.overview.record!.data.districts.length} districts`,
