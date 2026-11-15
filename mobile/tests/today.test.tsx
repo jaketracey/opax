@@ -1650,7 +1650,7 @@ describe('the first second and the last line (sweep 3, lane A)', () => {
     r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
   test('the dot map draws in the first frame, neutral, holding the date’s place; the seat then tints it', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
-    // A compact phone: the map is not drawn on a regular-width phone.
+    // A compact phone, where this test's bar and column sizes hold.
     const window = Dimensions.get('window');
     const screen = Dimensions.get('screen');
     Dimensions.set({

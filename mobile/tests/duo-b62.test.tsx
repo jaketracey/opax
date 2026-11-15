@@ -22,7 +22,6 @@ import { PaneBar, PaneHost } from '../src/design/split';
 import { rhythm, rhythmRegular } from '../src/design/tokens';
 import { PLACEHOLDER } from '../src/features/bills/BillsList';
 import { PaneMenu } from '../src/features/bills/BillDetail';
-import { AustraliaDots } from '../src/features/today/AustraliaDots';
 import type { TodayOrder, TodaySlot } from '../src/features/today/order';
 import { SurfaceGrid } from '../src/features/today/SurfaceGrid';
 import { TodayBody } from '../src/features/today/TodayBody';
@@ -217,13 +216,7 @@ describe('Today on an unfolded Duo', () => {
       stateSeatFor(directory, [seat.electorate_id], '2026-11-13'),
     ).toBeNull();
   });
-  test('the dot map is not drawn under the title and date on a regular phone', () => {
-    const shared = { value: 0 } as never;
-    const tree = render(
-      <AustraliaDots state={null} scroll={shared} expandedHeader={shared} />,
-    );
-    expect(hosts(tree, 'today-australia-dots')).toHaveLength(0);
-  });
+  // The dot map on the unfolded Duo: tests/today-dots-duo.test.tsx.
 });
 
 describe('a register entry’s words', () => {
