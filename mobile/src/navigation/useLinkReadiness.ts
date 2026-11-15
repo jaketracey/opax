@@ -7,6 +7,7 @@ import {
   setLinkNavigationReady,
   subscribeAndroidLinks,
 } from './link-readiness';
+import { setLinkContainer } from './stale-previews';
 import { resolveSystemPath } from './system-path';
 
 type RouteState = {
@@ -30,6 +31,11 @@ function selectedDelivery(state: RouteState | undefined): unknown {
 export function useLinkReadiness(rootRendered: boolean) {
   const navigation = useNavigationContainerRef();
   const [ready, setReady] = useState(false);
+  // Warm links clear what row previews left preloaded (stale-previews.ts).
+  useEffect(() => {
+    setLinkContainer(navigation);
+    return () => setLinkContainer(null);
+  }, [navigation]);
   useEffect(() => {
     if (Platform.OS !== 'android') return;
     let cancelDelivery: (() => void) | undefined;

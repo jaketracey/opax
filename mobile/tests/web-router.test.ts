@@ -547,7 +547,7 @@ describe('incoming links open in the tab the shell spec gives them', () => {
       const own = redirectSystemPath({
         path: 'opax://bill-list?scope=all&sort=newest',
         initial,
-      });
+      }) as string;
       expect(own.startsWith('/(tabs)/(bills)/bill-list?')).toBe(true);
       expect(new URLSearchParams(own.split('?')[1]).get('scope')).toBe('all');
       expect(new URLSearchParams(own.split('?')[1]).get('sort')).toBe('newest');
