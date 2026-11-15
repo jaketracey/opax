@@ -809,7 +809,10 @@ alone, then cumulatively, the whole suite every time) re-ran six identical ~15 m
 culprits (the roster export and the instruments test) and the divisions catch-up waiting behind them. Every tracked file a
 night writes belongs to one group (`scripts/vm/data_groups.sh`), including what the build derives from it: `person-paths.js`
 and `growth/sponsors` travel with the roster, the donor index and `growth/donors.json` with money, `growth/agencies` with
-suppliers; `seo-links.json` (written by the stamp step from bills and roster) with people; the search manifest and party-member
+suppliers; the uncapped `money-receipts.json` and `money-industry-totals.json` that `x_money` writes with the map are money's too
+(until 15 Nov 2026 no group owned them and the export wrote them in place, so the gate could neither put them back nor
+commit them: a blame trial would have tested HEAD's map against the night's receipts; `export_step.sh json --also` now
+installs all three together and `scripts/vm/test_export_step.py` checks every portal file the refresh scripts name has a group); `seo-links.json` (written by the stamp step from bills and roster) with people; the search manifest and party-member
 index read every group and are put back to HEAD after the gate. Some derived files read more than their owner
 (`growth/sponsors` and `seo-links.json` read the bills too), so when a red gate ends without a green build of exactly
 the data that stays (budget spent, closing run skipped or red), every derived file goes back to HEAD with the groups, and
@@ -1332,7 +1335,7 @@ accepting the gap and listing it in `source_limitations`. Re-run `scripts/vm/pro
 
 ```
 # unit tests (Python 3.11+, run in the pipeline venv or with `requests` installed)
-python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py
+python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py scripts/vm/test_export_step.py
 
 # bills step: fixture git checkout, stubbed acquisition/export/fill, real guards/verifier/sweep
 python3 -m unittest scripts.vm.test_bills_refresh scripts.test_export_bills_sponsors tests.test_export_bill_divisions tests.test_bill_refresh_briefs
