@@ -1488,6 +1488,32 @@ describe('party', () => {
       .map((n) => n.props.testID as string)
       .filter((id, i, all) => all.indexOf(id) === i);
 
+  // The loading state and the loaded page share one Screen. With two, the
+  // second scroll view mounted after the page was on screen, and beside the
+  // Duo's rail UIKit carried it 24 pt past rest as the push ended: the page
+  // was drawn there and then moved (measured in 3 of 6 opens).
+  test('loading and the loaded page are one scroll view, never a second one', async () => {
+    let resolve!: (view: (typeof views)[string]) => void;
+    jest.mocked(runtime.partyPage).mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done as typeof resolve;
+        }) as never,
+    );
+    const r = await party('Labor');
+    const scrollView = () =>
+      r.root.find(
+        (n) => n.type === ScrollView && n.props.testID === 'party-screen',
+      );
+    expect(has(r, 'party-loading')).toBe(true);
+    const loading = scrollView().instance;
+    await act(async () => resolve(views.Labor!));
+    expect(has(r, 'party-loading')).toBe(false);
+    expect(has(r, 'party-end')).toBe(true);
+    expect(scrollView().instance).toBe(loading);
+    await act(async () => r.unmount());
+  });
+
   test('two parties draw the same layout', async () => {
     const labor = await party('Labor');
     const liberal = await party('Liberal');

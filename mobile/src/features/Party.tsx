@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type RefObject,
 } from 'react';
 import {
   Platform,
@@ -226,6 +227,7 @@ export function PartyPage({
     [input, notAParty, presentation],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
+  const scroll = useRef<ScrollView>(null);
   const view = notAParty ? null : (record?.data ?? null);
   const label = view?.label ?? input;
   const webPath = `/subject/party/${encodeURIComponent(label)}`;
@@ -274,6 +276,7 @@ export function PartyPage({
       <Skeleton shape="rows" count={3} label="Loading party" />
     </>
   ) : null;
+  const loading = !!pending || !view;
   return (
     <>
       {embedded ? null : (
@@ -295,33 +298,40 @@ export function PartyPage({
           }}
         />
       )}
-      {pending || !view ? (
-        <Screen
-          column="wide"
-          testID="party-screen"
-          // A missing party sits at the same centre as every other missing
-          // record; the copy is its own.
-          centred={notAParty || (!!record && !record.data)}
-          // "Not a party" makes no read, so a pull would spin forever.
-          refreshControl={
-            notAParty ? undefined : (
-              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-            )
-          }
-        >
-          {pending}
-        </Screen>
-      ) : (
-        <PartyContent
-          view={view}
-          afterFrame={presentation?.afterFrame}
-          onTitleLayout={presentation?.didLayout}
-          arrival={arrival}
-          refreshing={refreshing}
-          refresh={refresh}
-          retry={retry}
-        />
-      )}
+      {/* One Screen for the loading state and the loaded page. Two of them
+          meant a second scroll view mounting after the page was on screen;
+          beside the Duo's rail UIKit carried such a view 24 pt past rest as
+          the push ended, and the page was drawn there and then moved
+          (3 of 6 opens from a scrolled page). The same scroll view, placed
+          once with its page, has nothing to move. */}
+      <Screen
+        column="wide"
+        testID="party-screen"
+        barTitle={loading ? undefined : label}
+        scrollRef={scroll}
+        // A missing party sits at the same centre as every other missing
+        // record; the copy is its own.
+        centred={loading && (notAParty || (!!record && !record.data))}
+        // "Not a party" makes no read, so a pull would spin forever.
+        refreshControl={
+          notAParty ? undefined : (
+            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          )
+        }
+      >
+        {loading ? (
+          pending
+        ) : (
+          <PartyContent
+            view={view}
+            scroll={scroll}
+            afterFrame={presentation?.afterFrame}
+            onTitleLayout={presentation?.didLayout}
+            arrival={arrival}
+            retry={retry}
+          />
+        )}
+      </Screen>
     </>
   );
 }
@@ -418,25 +428,23 @@ function useFaces(
 
 function PartyContent({
   view,
+  scroll,
   afterFrame,
   onTitleLayout,
   arrival,
-  refreshing,
-  refresh,
   retry,
 }: {
   view: View_;
+  /** The page's one scroll view, owned by Party's Screen. */
+  scroll: RefObject<ScrollView | null>;
   afterFrame?: (signal?: AbortSignal) => Promise<void>;
   onTitleLayout?: () => void;
   arrival?: PartySection;
-  refreshing: boolean;
-  refresh: () => void;
   retry: () => void;
 }) {
   const label = view.label;
   const rename = partyRename(label);
   const [titleTiming, setTitleTiming] = useState<string | undefined>();
-  const scroll = useRef<ScrollView>(null);
   const y = useRef<Partial<Record<PartySection, number>>>({});
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
@@ -462,7 +470,7 @@ function PartyContent({
       y: Math.max(0, top - offset - rhythm.heading),
       animated: goTo.animated,
     });
-  }, [goTo, headerBottom]);
+  }, [goTo, headerBottom, scroll]);
   const arrived = useRef(false);
   const placed = (to: PartySection) => (top: number) => {
     y.current[to] = top;
@@ -856,15 +864,7 @@ function PartyContent({
   // Match the person's measured title handover on iOS only.
   const ProfileTitle = Platform.OS === 'ios' ? TitleAnchor : Fragment;
   return (
-    <Screen
-      column="wide"
-      barTitle={label}
-      scrollRef={scroll}
-      testID="party-screen"
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-      }
-    >
+    <>
       <View style={styles.top} testID={titleTiming ?? 'party'}>
         <ProfileTitle>
           <ProfileHeader
@@ -950,7 +950,7 @@ function PartyContent({
       ) : null}
       {/* The page's end, for journeys that scroll to it; nothing drawn. */}
       <View testID="party-end" collapsable={false} style={styles.end} />
-    </Screen>
+    </>
   );
 }
 

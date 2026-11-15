@@ -193,12 +193,20 @@ export function useRootBarAppearance(
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
   useRootBarUnderBar(underBar, !!rootKey && owner === 'screen');
   useLayoutEffect(() => {
-    if (!navigation || !rootKey || owner !== 'screen' || !ground) return;
+    // A root's Screen, and beside a vertical bar any page's: a pushed page
+    // with a search field takes the solid bar there too (RouteOptions).
+    if (
+      !navigation ||
+      (!rootKey && !verticalBar) ||
+      owner !== 'screen' ||
+      !ground
+    )
+      return;
     const state = searchState(navigation);
     if (state.value.ground === ground) return;
     state.value = { ...state.value, ground };
     state.listeners.forEach((listener) => listener());
-  }, [navigation, rootKey, owner, ground]);
+  }, [navigation, rootKey, verticalBar, owner, ground]);
   const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
   // Beside a vertical bar a search field is stacked below the title band,
   // and UIKit's scroll edge (soft or hard) covers the band alone: the field
@@ -326,6 +334,30 @@ export function useRootBarAppearance(
     };
   }, [identifier, largeTitleEnabled, navigation, verticalBar, solid]);
   return !!root;
+}
+
+/**
+ * The ground this route's Screen shares (see `colour` above), for the bar's
+ * owner when that is not the Screen. Undefined until a Screen has said.
+ */
+export function useScreenGround(): ColorValue | undefined {
+  const navigation = useContext(NavigationContext);
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (!navigation) return () => {};
+      const state = searchState(navigation);
+      state.listeners.add(listener);
+      return () => {
+        state.listeners.delete(listener);
+      };
+    },
+    [navigation],
+  );
+  return useSyncExternalStore(
+    subscribe,
+    () => (navigation ? searchState(navigation).value.ground : undefined),
+    () => undefined,
+  );
 }
 
 /**
