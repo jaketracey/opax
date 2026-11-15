@@ -154,10 +154,12 @@ test('the browser bill page uses the shared renderer and one outcome vocabulary'
   assert.match(html, /<caption>Divisions on the bill<\/caption>/);
   assert.match(html, /<summary>11 votes under limitation of debate<\/summary>/);
   assert.doesNotMatch(textOf(html), /negatived/i);
-  // Suggestions wrap instead of clipping under an ellipsis or a line clamp.
+  // Suggestions are one-line pills: cut with an ellipsis at a capped width,
+  // never a line clamp (test/quiet-links.test.mjs holds the rest of the pill).
   const css = readFileSync(new URL('../public/style.css', import.meta.url), 'utf8');
   const rule = css.slice(css.indexOf('.growth-questions a {'), css.indexOf('}', css.indexOf('.growth-questions a {')));
-  assert.doesNotMatch(rule, /nowrap|ellipsis/);
+  assert.match(rule, /white-space: nowrap/);
+  assert.match(rule, /text-overflow: ellipsis/);
   assert.doesNotMatch(css, /\.growth-questions a \{[^}]*line-clamp/);
 });
 

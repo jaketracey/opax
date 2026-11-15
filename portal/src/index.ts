@@ -164,6 +164,7 @@ import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type Photo
 import { withTranscriptNote } from './transcript-answer'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
+import { serveMedia } from './media'
 
 interface FindParagraph {
   score: number
@@ -7400,6 +7401,8 @@ export default {
       : new Response('Not found', { status: 404 })
     // The ChatGPT app directory's domain check: the token its portal issued, or 404 while none is set.
     if (url.pathname === OPENAI_APPS_CHALLENGE_PATH) return openaiAppsChallenge(request, env.OPENAI_APPS_CHALLENGE)
+    // Demo videos and other large media are served from R2 with byte ranges (src/media.ts).
+    if (url.pathname.startsWith('/media/')) return serveMedia(request, env.MEDIA, url.pathname)
     // RFC 9116: where to report a security problem. The same contacts as /security.
     if (url.pathname === '/.well-known/security.txt') return new Response(request.method === 'HEAD' ? null : SECURITY_TXT, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
     const isApi = url.pathname.startsWith('/api/')

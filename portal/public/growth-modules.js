@@ -105,7 +105,8 @@ export function questionsHTML(questions, pageType, seed = '') {
     const key = questionKey(question);
     if (seen.has(key)) return [];
     seen.add(key);
-    return [`<li><a href="${esc(askEntry(question,pageType))}" rel="nofollow">${esc(questionLabel(label || question))}</a></li>`];
+    // A pill shows one line; the whole question stays on the link as its title.
+    return [`<li><a href="${esc(askEntry(question,pageType))}" rel="nofollow" title="${esc(text(question).replace(/\s+/g,' '))}">${esc(questionLabel(label || question))}</a></li>`];
   }).join('');
 }
 /** Latest vote per bill, including both sides, without changing votes.json. */

@@ -1,4 +1,4 @@
-.vic-gifts-content{padding-block:var(--space-section);color:var(--ink);--money-ink:var(--interests-ink);--money-wash:var(--interests-wash)}
+.vic-gifts-content{padding-block:var(--space-section);color:var(--ink);--money-ink:var(--interests-ink);--money-wash:var(--interests-wash);--dt-link:var(--ink);--dt-link-rule:var(--bronze-rule)}
 .vic-gifts-content section{margin-block:var(--space-section);border-top:1px solid var(--divider-default);padding-top:var(--space-group)}
 .vic-gifts-content h2{font:var(--type-heading);margin-bottom:var(--space-block)}
 .vic-gifts-periods{display:flex;flex-wrap:wrap;gap:var(--space-tight);margin-bottom:var(--space-group)}
