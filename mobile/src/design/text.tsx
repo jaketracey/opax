@@ -469,17 +469,18 @@ export function wordSafeOnLines(
   )
     return state;
   if (breaksMidWord(lines)) {
-    // Step from the exact size drawn when the measurement agrees with it:
-    // a two-place measured scale can round up to the size just taken.
-    const next = sizes.length
-      ? nextWordSafeSize(
-          drawnAt && Math.abs(measuredAt - drawnAt) <= MEASURED_AT_TOLERANCE
-            ? drawnAt
-            : measuredAt,
-          floor,
-          sizes,
-        )
-      : nextWordSafeCap(lineHeight, baseLineHeight, floor);
+    // Step from the exact size drawn, which the measurement must agree with:
+    // a two-place measured scale can round up to the size just taken. Without
+    // native conversion (validateScale false) the first layout has no exact
+    // size, and Android's nonlinear SP scaling can draw a cap above itself
+    // (1.29 for 1.23 at 200%), where the next size below the measured one is
+    // the cap again. Those step 10% below the measured size, as before.
+    const next =
+      sizes.length &&
+      drawnAt &&
+      Math.abs(measuredAt - drawnAt) <= MEASURED_AT_TOLERANCE
+        ? nextWordSafeSize(drawnAt, floor, sizes)
+        : nextWordSafeCap(lineHeight, baseLineHeight, floor);
     if (next === null || (state.cap && next >= state.cap)) return state;
     return {
       ...state,
