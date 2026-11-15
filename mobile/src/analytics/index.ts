@@ -200,15 +200,46 @@ export function track<E extends AnalyticsEvent>(
   }
 }
 
+/** The routes whose render error has been reported this launch. */
+const reportedRoutes = new Set<string>();
+/** Forget them (tests). */
+export function resetRouteErrorReports() {
+  reportedRoutes.clear();
+}
+
 /**
  * A render error a route boundary caught: the `opax_route_error` count, and
- * one `$exception` with its stack. React does not pass a caught error on to
- * the global handler in release builds, and console capture is off, so this
- * is the only report of it. The shared release gate and the scrubbers apply.
+ * a `$exception` saying what was thrown. React does not pass a caught error
+ * on to the global handler in release builds, and console capture is off, so
+ * this is the only report of it.
+ *
+ * The `$exception` carries the error's name, its stack frames, the route,
+ * and the build and window class every event carries. Like every crash and
+ * error report it carries a message only when the message is one of a fixed
+ * list of content-free ones (exceptions.ts `MESSAGE_RULES`), and then that
+ * fixed text; any other message is left out and `message_omitted: true` is
+ * sent in its place. Nothing else:
+ * no parameter, path, query, or anything the reader typed, searched or
+ * chose.
+ * - The route is the route file's pattern ("/bill/[key]"): the layout
+ *   segments Expo Router gives (file names, never values), without groups,
+ *   and only when the result is on the fixed list; otherwise "/other".
+ * - At most one for each route in a launch: a page that fails again, on
+ *   Try again or for another record, adds no second report.
+ * - It goes through the shared release gate (`analyticsEnabled`): a build
+ *   that sends no analytics sends none of this. The app has no separate
+ *   opt-out; that gate is the only switch there is.
  */
 export function reportRouteError(error: unknown, segments: readonly string[]) {
+  let route = '/other';
   try {
-    analytics()?.captureException(error);
+    // Inside the try: nothing on the report's path may throw in a boundary.
+    route = routeErrorPattern(screenName(segments)) ?? '/other';
+    const posthog = analytics();
+    if (posthog && !reportedRoutes.has(route)) {
+      reportedRoutes.add(route);
+      posthog.captureException(error, { route_pattern: route });
+    }
   } catch {
     /* optional */
   }
@@ -219,7 +250,7 @@ export function reportRouteError(error: unknown, segments: readonly string[]) {
         : undefined;
     track('opax_route_error', {
       error_class: constructor,
-      route_pattern: routeErrorPattern(screenName(segments)) ?? '/other',
+      route_pattern: route,
       error_message: scrubErrorMessage(
         error instanceof Error ? error.message : undefined,
       ),

@@ -91,7 +91,7 @@ Android production builds now send the same anonymous product analytics and cras
 | --- | --- | --- | --- | --- | --- | --- |
 | App activity: App interactions | Add the Analytics purpose | Yes (already) | No: PostHog processes it as OPAX's service provider | No (not user-optional) | No | App functionality, Analytics |
 | Device or other IDs | Newly collected (the SDK's random install ID, not the Android ID or advertising ID) | Yes | No: service provider | No | No | Analytics |
-| App info and performance: Crash logs | Newly collected (anonymous crash and error reports: exception type, scrubbed message, stack frames) | Yes | No: service provider | No | No | App functionality, Analytics |
+| App info and performance: Crash logs | Newly collected (anonymous crash and error reports: exception type, a message only from a fixed list, stack frames) | Yes | No: service provider | No | No | App functionality, Analytics |
 | App info and performance: Diagnostics | Add the Analytics purpose (crash reports' app version, OS and device type) | Yes (already) | No: service provider | No | No | App functionality, Analytics |
 
 Everything else stays as it is, including encryption in transit (yes) and the deletion answer. Crash logs then leave "Not collected". Analytics events and crash reports carry no account ID, so deleting an account does not reach them; the privacy page should say so. Before saving, check that PostHog's terms still qualify it as a service provider for the "Shared" answer.

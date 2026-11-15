@@ -352,8 +352,8 @@ boundary, including a new failure after Try again. It uses `track`, the same
 build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
 separate analytics consent setting in the app. Voice consent does not enable
 analytics. E2E and all development builds send no report. No
-identify call or new identifier is added. The same error also goes out once
-as a crash and error report (below).
+identify call or new identifier is added. The error also goes out as a crash
+and error report (below), at most once for each route in a launch.
 
 `error_class` accepts the built-in Error constructors, `ApiError`,
 `PersonIdentityError`, `ChatSyncError` and `AskFailure`; unknown constructors
@@ -429,8 +429,35 @@ captures nothing automatically.
   `errorTracking.autocapture`. Console capture is off (`console: []`) and
   breadcrumbs (`exceptionSteps`) are off.
 - **Route render errors.** React does not pass an error a boundary caught to
-  the global handler in release builds, so `reportRouteError` sends it once
-  with `captureException`, beside `opax_route_error`.
+  the global handler in release builds, so `reportRouteError` sends it with
+  `captureException`, beside `opax_route_error`. This is what says what was
+  thrown when a page shows "This page couldn't be shown". The report holds:
+  - the error's name, only when it is in the fixed set of types every crash
+    and error report is held to (below); any other name is sent as `Error`;
+  - its message, only when it is on the fixed list every crash and error
+    report is held to (below), and then as the fixed text. Any other
+    message is left out and `message_omitted: true` is sent;
+  - its stack frames, as every JS error report has them: a function's name,
+    the bundle's name, a line and a column, under the frame rule every crash
+    and error report is held to (below). A line of the message that the SDK
+    reads as a frame is dropped;
+  - `route_pattern`: the route file's pattern, such as `/bill/[key]`. It is
+    built from the layout segments Expo Router gives (file names, never
+    values), without groups, and kept only when it is on the fixed list in
+    `mobile/src/analytics/route-patterns.ts`; anything else is `/other`.
+    A parameter's value, a path and a query never appear;
+  - the build and device class every event carries (`app_version`,
+    `app_build`, `platform`, `$device_type`, `layout`, `foldable`).
+
+  It holds no search term, Ask text, postcode, electorate or URL query: the
+  message is a fixed text or absent, the route is a file pattern, and a
+  frame is sent only when it is a code location (the frame rule below).
+  It holds no component stack: Expo Router's
+  boundary does not pass one on. At most
+  one is sent for each route in a launch, so a page that fails again (on Try
+  again, or for another record) adds none; `opax_route_error` still counts
+  each failure. The build gate is the only switch: the app has no analytics
+  opt-out, and a build that sends no analytics sends none of this.
 - **Native crashes.** `@posthog/react-native-plugin` 2.13.0 (posthog-ios
   3.92.7 with PLCrashReporter, posthog-android 3.74.2) with `nativeCrashes`
   and `androidNdkCrashes` on. A crash is written to disk and sent on the next
@@ -482,7 +509,7 @@ JS, so `mobile/patches/@posthog+react-native-plugin+2.13.0.patch` (pinned by
 rules in Swift and Kotlin as the native SDK's last `beforeSend`, and drops every
 native event that is not `$exception`. The three copies must stay in step:
 `tests/analytics-exceptions.test.ts` checks that Swift and Kotlin use the JS
-message rules' exact pattern texts, and `tests/native-scrub.test.ts` runs the
+message rules' exact pattern texts and fixed texts, and `tests/native-scrub.test.ts` runs the
 Swift copy, cut from the patch by `scripts/check-native-scrub.sh`, on the
 invented inputs in `tests/fixtures/exception-scrub-cases.json` and expects what
 JS keeps (on a Mac a missing `swift` fails it; only Linux skips it).
@@ -497,35 +524,154 @@ device.
 
 | Property | What it may hold |
 | --- | --- |
-| `$exception_list` | Up to 10 exceptions: `type` (an identifier such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`, or one of Swift's three fatal kinds; anything else becomes `Error`), `value` (the scrubbed message), `module`, `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames) |
-| Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
-| `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
+| `$exception_list` | Up to 10 exceptions: `type` (only a name in the fixed set below, such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`; any other becomes `Error`), `value` (the message, only when it is on the fixed list below, as its fixed text; otherwise absent), `module` (a Java exception's package, a dotted name), `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames; absent when no frame may be sent) |
+| Stack frames | Only a frame in one of three shapes, by its `platform`, with that shape's fields and no others (the frame rule below). JavaScript: `platform`, `function`, `filename` (the bundle's name), `lineno`, `colno`, `in_app`, `chunk_id`. Apple: `platform`, `instruction_addr`, `image_addr`, `symbol_addr`, `in_app`, `module`, `package`, `function`. Java: `platform`, `module`, `function`, `filename`, `lineno`, `in_app`, `map_id`, `method_synthetic`. Source context, local variables and any other field are dropped |
+| `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file` (the binary's file name alone, never its path; see "Binary names" below), `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
+| `message_omitted` | `true` when an exception had a message that is not on the fixed list and so was left out; otherwise absent |
+| `route_pattern` | JS reports only: the route file's pattern from the fixed list in `route-patterns.ts` (`/bill/[key]`), named by the route boundary, or else taken from the SDK's screen when that is on the list; otherwise absent. Never a path, a parameter's value or a query |
 | `opax_test` | `true` on a test error report (JS only), otherwise absent |
-| Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
+| Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
 
-Messages keep their shape but lose anything that could be user text, in this
-order: spaces the engines disagree on (U+0085, U+FEFF and U+001C to U+001F)
-become plain spaces, so all three copies cut the same text; a URL loses its
-user name and password; an OPAX URL (`opax.com.au` or a subdomain, with or
-without a scheme or a trailing dot) keeps only its host, since its paths can
-carry a search or question; a path with no host in front keeps only its first
-segment, or `/api/<endpoint>` for the API (`/ask/why-is-rent-late?x=1` becomes
-`/ask`, `/api/search/rent` becomes `/api/search`), except a file path under a
-filesystem root such as `/src`, `/node_modules`, `/Users`, `/private`, `/var`
-or `/data`, which stays whole so stack locations stay readable; any other URL
-or path keeps its path, losing its query string and fragment; any other
-`?key=value` query goes; email addresses become `[email]`; quoted text becomes
-`[redacted]`, across lines: double quotes, curly, German and fullwidth quotes,
-guillemets, corner brackets, double primes, backticks and the opening single
-quotes ‘ ‚ ‛ wherever they open (`x"text"` included), and ' ’ ＇ and primes
-after a space or punctuation, where an apostrophe followed by a letter
-(`O'Brien`, `it's`) does not close the quote; a quote that never closes hides
-the rest of the message; runs of four or more digits (codes, postcodes, phone
-numbers) become `#`; the result is cut to 120 characters. So `Cannot read
-property 'wombat crossing' of undefined` is sent as `Cannot read property
-[redacted] of undefined`. Unquoted
-free text cannot be recognised in general, which is why the cap is short.
+**Messages.** A message is sent only when it is on a fixed list, and what is
+sent is the list's own fixed text, never the message itself. Rewriting free
+text by pattern cannot make it safe: "No electorate for Grayndler" and
+"person/tony-abbott is not a record route" have no quote, address or long
+number to remove. So nothing is rewritten. Any message that is not on the list
+is left out, and the report carries `message_omitted: true`; the exception's
+type and stack frames still locate the failure. This holds for every path: an
+uncaught JS exception, an unhandled promise rejection, a route boundary's
+report, the test report and a native crash on iOS and Android. The list
+(`MESSAGE_RULES` in `mobile/src/analytics/exceptions.ts`, with the same
+pattern texts and fixed texts, in the same order, in the Swift and Kotlin
+copies) is:
+
+- whole messages with nothing interpolated, sent as they are: "Network
+  request failed", "Failed to fetch", "The request timed out", "Maximum call
+  stack size exceeded", "Rendered more hooks than during the previous
+  render.", "Rendered fewer hooks than expected.", "Missing OPAX build
+  configuration" and "OPAX test error report";
+- framework messages with a fixed opening, sent as that opening only:
+  "Maximum update depth exceeded", "Rendered more hooks than during the
+  previous render", "Rendered fewer hooks than expected", "Too many
+  re-renders", "Objects are not valid as a React child", "Invalid hook
+  call", "Text strings must be rendered within a <Text> component", "Cannot
+  read properties of undefined" and "Cannot read properties of null" (for
+  either engine's wording of that error). What such a message goes on to
+  interpolate (an object's keys, a property's name) is never sent.
+
+So `Cannot read property 'wombat crossing' of undefined` is sent as `Cannot
+read properties of undefined`, and `Invalid URL: housing affordability in
+3000` is sent with no message and `message_omitted: true`.
+
+**Types.** A type is the error's name, which code can set to anything, so a
+name is not sent for having the shape of an identifier: `Grayndler`,
+`Anthony.Albanese` and `housing_affordability_3000` all have it. Only a name
+in a fixed set is sent (`EXCEPTION_TYPES` in `exceptions.ts`, the same set in
+the Swift and Kotlin copies); any other is sent as `Error`. The set is the
+JavaScript error classes (`Error`, `TypeError`, `RangeError` and the rest),
+the app's own (`ApiError`, `PersonIdentityError`, `ChatSyncError`,
+`AskFailure`, `ElectionUnavailable`, `OpaxTestReport`), the kernel's
+exception and signal names (`EXC_BAD_ACCESS`, `SIGABRT` and the rest),
+Foundation's and the C++ library's exception names, the usual Java, Kotlin,
+Android and React Native classes, and Swift's three fatal kinds. A native
+class that is not in the set is reported as `Error` with its stack frames;
+add its name to the three copies to see it by name.
+
+**Frames.** A stack frame says where the code is, and a frame is sent only
+when it can be nothing else. The SDK builds a JS error's frames by reading its
+`stack` a line at a time; it skips only lines with "Error: " in them, and a
+line with a path or a URL in it parses as a frame. A stack begins with the
+error's name and message, so `AskFailure: No electorate for Grayndler 2042 at
+/electorate/grayndler` became a frame whose `function` was "AskFailure: No
+electorate for Grayndler 2042 at " and whose `filename` was
+"/electorate/grayndler"; a second line of a message and a `cause`'s message
+did the same. Cutting a path at `?` did not stop that. So a frame is kept
+only as one of three shapes, chosen by its `platform`, with that shape's
+fields and no others; a frame of any other platform, or without what its
+shape needs, is dropped whole; and an exception with no frame left sends no
+`stacktrace`. The patterns are `FRAME_PATTERNS` in `exceptions.ts`, with the
+same texts in the Swift and Kotlin copies.
+
+- **JavaScript** (`platform` `hermes` or `web:javascript`). All three of:
+  - `lineno`, a whole number;
+  - `function`, a plain name: an identifier or a dotted path of them
+    (letters, digits, `_`, `$`), with Hermes's leading `?` for a generator's
+    inner function (`?anon_0_load`), or the SDK's `?` or `<anonymous>` for
+    none; at most 128 characters. No space and no colon, so a line of words
+    is not a function;
+  - `filename`, the app's bundle: `main.jsbundle` (iOS) or
+    `index.android.bundle`, alone or at the end of the path Hermes prints it
+    with (letters, digits and `_ . : / -` only; no space, `?` or `#`). What
+    is sent is the bundle's name alone, never the path, which on iOS holds
+    the install's container folder.
+
+  Also kept: `colno`, `in_app`, `chunk_id`. This is what Hermes writes for
+  the app's bytecode, `at seatFor (address at …/main.jsbundle:1:48213)`
+  (hermes `lib/VM/JSError.cpp`: the name is the function's own `name`, with
+  no `async`, `new` or receiver added). Its `(native)` frames have no line
+  and are dropped; so is a frame whose function's name has a space in it
+  (`bound f`, `get x`).
+- **Apple** (`platform` `apple`, built by posthog-ios from the crash's
+  addresses). It must have `instruction_addr`, a hex address. Also kept:
+  `image_addr`, `symbol_addr`, `in_app`; `module`, a binary's name (`OPAX`,
+  `libsystem_kernel.dylib`); `package`, the binary's file name alone
+  (below), never the path it was loaded from; and `function`, only a C, C++ or Swift
+  symbol (one run of letters, digits, `_`, `$`, `.`) or an Objective-C
+  method (`-[Class selector:]`). A field that is anything else is left
+  off; the frame stays, located by its address.
+- **Java** (`platform` `java`, built by posthog-android from the
+  throwable's own stack trace). It must have `module`, a class name with its
+  package (`a.b.Foo$Bar`), and `function`, a method name (`invoke`,
+  `<init>`, `lambda$onCreate$0`). Also kept: `filename`, a file's name with
+  no `/` (`Foo.kt`, `SourceFile`); `lineno`; `in_app`; `map_id`;
+  `method_synthetic`.
+
+Apple and Java frames are built by the native SDKs from the binary's own
+tables, never from an error's text, and a line of text cannot name its own
+`platform`: the SDK's parser stamps every frame it reads `hermes`. What the
+rule cannot tell apart is a line of a message written exactly as a frame
+(`at word (address at main.jsbundle:1:7)`, one word, the bundle's name and a
+line); such a line would be sent as that word and those numbers.
+
+**Binary names.** posthog-ios names a binary image by the full path it was
+loaded from, in a frame's `package` and an image's `code_file`. For the
+app's own binary and frameworks that path runs through the install's
+container folder (`/private/var/containers/Bundle/Application/<UUID>/
+OPAX.app/OPAX`), and that UUID is the same on every report from one install:
+a second identifier, which nothing here discloses. So both fields are sent as
+the file's name alone (`OPAX`, `hermes`, `libsystem_kernel.dylib`): the last
+segment of an absolute path, or a bare name, of letters, digits and
+`_ . + -`, at most 128 characters. Anything else (a space, a `?` or `#`, a
+URL, no name after the last `/`) and the field is left off. The folders are
+never sent, whatever they are. The same rule holds an Android image's path,
+which has the install's own folder in it too.
+
+Symbols do not need the path. The release uploads the archive's dSYMs with
+`posthog-cli dsym upload` (`mobile/scripts/upload-crash-symbols.sh`), and
+PostHog files each under its Mach-O UUID. A report's frame is tied to its
+image by `image_addr` (or by its address falling inside the image), and the
+symbol file is looked up by that image's `debug_id`; `code_file` is optional
+and `package` is not read (PostHog `rust/cymbal/src/core/types/langs/
+apple.rs` and `native.rs`: `find_debug_image`, then
+`lookup(team_id, OrChunkId::chunk_id(debug_image.debug_id))`).
+
+**No screen, URL or parameter.** No report carries `$screen_name`,
+`$current_url`, `$pathname` or a route parameter. The SDK's screen property
+is checked only for its shape, which a path with a record's key in it also
+has, so JS removes it from every `$exception` and the native copies no longer
+keep it. JS reports name their route as `route_pattern`, from the fixed list
+alone; native crash reports name no route. `$current_url`, `$pathname` and
+parameters were never on any list.
+
+**Builds already on phones** (1.1.4 and earlier, and 1.1.5 up to this change)
+still send a pattern-rewritten message and `$screen_name`, any type that has
+an identifier's shape, every frame the SDK read (a message's lines
+included), and a binary's full path. `docs/ANALYTICS-exception-ingestion-rule.md` is a draft of a
+PostHog ingestion rule that applies the same message list, type set, frame
+rule and binary names to their reports. It is a draft
+only: nothing has been created or changed in PostHog.
+
 `$exception_steps`, app state, screen sizes, locale, device model, `$set` and
 any property a caller adds are dropped. `tests/analytics-exceptions.test.ts`
 plants an invented search, question, Talk transcript, sign-in email and code

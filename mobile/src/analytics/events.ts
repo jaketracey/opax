@@ -513,6 +513,11 @@ export function scrubEvent<T extends CaptureEvent>(
     captured.event === 'opax_app_start'
   )
     delete properties.$screen_name;
+  // A crash or error report names its route from the fixed list
+  // (`route_pattern`, exceptions.ts). The SDK's screen property is checked
+  // only for its shape, which a path with a record's key in it also has,
+  // so no report carries it.
+  if (captured.event === '$exception') delete properties.$screen_name;
   if (captured.event === '$screen' && !properties.$screen_name) return null;
   return {
     ...captured,

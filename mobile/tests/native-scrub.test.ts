@@ -42,7 +42,10 @@ const sharedKeys = [
   '$app_namespace',
   '$app_version',
   '$app_build',
+  // Neither copy sends it on a report; listed so a copy that did would
+  // differ from the other.
   '$screen_name',
+  'message_omitted',
 ];
 function shared(properties: Record<string, unknown> | undefined) {
   if (!properties) return null;
