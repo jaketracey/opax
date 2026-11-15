@@ -366,6 +366,40 @@ test('Council headings retain group order, distinguish unnamed groups and Ungrou
   assert.match(escaped,/Group A, &lt;img/);assert.doesNotMatch(escaped,/<img src=x/);
 });
 
+test('seat titles, descriptions and structured data lead with candidates, with the same fields for every candidate',async()=>{
+  const richmond=data.seats.find(s=>s.name==='Richmond'),region=data.seats.find(s=>s.kind==='region'&&s.name===richmond.region);
+  const before=new Date('2026-11-16T10:00:00+11:00'),after=new Date('2026-11-28T18:00:00+11:00');
+  const page=renderVicElection(data,richmond,{},before);
+  assert.equal(page.title,'Richmond candidates · 2026 Victorian election');assert.equal(page.card.title,page.title);
+  assert.ok(page.description.startsWith(`The ${richmond.candidates.list.length} candidates for Richmond at the 2026 Victorian election, in ballot paper order. Who holds Richmond, `));
+  const upper=renderVicElection(data,region,{},before);
+  assert.equal(upper.title,`${region.name} Region candidates · 2026 Victorian election`);
+  assert.ok(upper.description.startsWith(`The ${region.candidates.list.length} candidates for ${region.name} Region at the 2026 Victorian election, in ballot paper order. The five upper house members for `));
+  // The words on the page are unchanged; only the head and the structured data lead with candidates.
+  assert.match(page.html,/<h1>Richmond<\/h1>/);assert.match(page.html,/<dt>Held by<\/dt>/);
+  for(const s of data.seats) {
+    const graph=renderVicElection(data,s,{},before).jsonLd['@graph'];
+    assert.deepEqual(graph.map(x=>x['@type']),['Event','ItemList','ItemList'],s.name);
+    // The record list is as it was: the roster members' own pages.
+    assert.equal(graph[1]['@id'],`https://opax.com.au${s.path}#records`);assert.equal(graph[1].numberOfItems,s.members.length);
+    const list=graph[2];assert.equal(list['@id'],`https://opax.com.au${s.path}#candidates`);
+    assert.equal(list.numberOfItems,s.candidates.list.length);
+    // Ballot paper order, and nothing but a position and the published name for anyone, the roster member included.
+    assert.deepEqual(list.itemListElement,s.candidates.list.map((c,i)=>({'@type':'ListItem',position:i+1,item:{'@type':'Person',name:c.name}})),s.name);
+    assert.doesNotMatch(JSON.stringify(list),/subject\/person|"url"|sameAs|jobTitle|affiliation|memberOf/);
+  }
+  // No published list: the earlier title and description, and no candidate list.
+  const bare=renderVicElection(data,{...richmond,candidates:null},{},before);
+  assert.equal(bare.title,'Richmond district · Victorian election 2026');assert.ok(bare.description.startsWith('Who holds Richmond, '));
+  assert.equal(bare.jsonLd['@graph'].length,2);
+  // After the polls close the reviewed post-poll head stays as it was; the list remains a record of who stood.
+  const closed=renderVicElection(data,richmond,{},after);
+  assert.equal(closed.title,'Richmond district · Victorian election 2026');assert.ok(closed.description.startsWith('Published member records for Richmond, '));
+  assert.equal(renderVicElection(data,region,{},after).title,`${region.name} Region · Victorian election 2026`);
+  assert.equal(closed.jsonLd['@graph'][2].numberOfItems,richmond.candidates.list.length);
+  // The hub lists seats only.
+  assert.equal(renderVicElection(data,null,{},before).jsonLd['@graph'].length,2);
+});
 test('election detection identifies state election copy without treating federal records in Victoria as state electoral copy',()=>{
   for(const text of ['Victorian election 2026','2026 Victorian state election','Victoria’s election','State election in Victoria','VIC election 2026','https://opax.com.au/vic-election-2026/lowan'])assert.ok(vicElectionMaterial(text),text);
   for(const text of ['Federal election in Victoria','Federal election grants in Victoria','Gippsland, Vic. Held at the 2025 federal election.','Victorian Hansard speeches','Time to the next federal election'])assert.equal(vicElectionMaterial(text),false,text);

@@ -194,6 +194,14 @@ pages are `noindex` and keep the hub's canonical. Seat and member names match
 without the places file. All 88 Assembly districts have one roster member and all 8 Council
 regions have five, dated to the published roster snapshot.
 
+While a seat has a published candidate list and until the polls close, its page title is
+“<seat> candidates · 2026 Victorian election” and its description starts with the
+candidate count. After the polls close both return to the post-poll wording. Each seat's
+structured data adds an `ItemList` (`#candidates`) in ballot paper order. Every entry
+has the same fields: a position and the name as the VEC published it. No candidate,
+the roster member included, gets a link, party or other property there. The existing
+`#records` list of roster members' pages is unchanged.
+
 The VEC's [district list](https://www.vec.vic.gov.au/electoral-boundaries/state-districts)
 and [region list](https://www.vec.vic.gov.au/electoral-boundaries/state-regions)
 were checked on 10 October 2026. The [VEC boundary review](https://www.vec.vic.gov.au/electoral-boundaries/state-boundary-reviews)
