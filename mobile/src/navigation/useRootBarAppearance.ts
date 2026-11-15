@@ -366,6 +366,18 @@ export function useScreenGround(): ColorValue | undefined {
  * scroll view then starts below the bar instead of running under it, which
  * Screen's pinned band needs to know. False on every other layout.
  */
+/**
+ * The route is the first page of a tab's stack, the one a clear root bar
+ * belongs to. The same page pushed elsewhere (Ask from a link or a keyboard
+ * shortcut, the Bills list in another tab) sits below an opaque bar.
+ */
+export function useTabRootRoute(): boolean {
+  const navigation = useContext(NavigationContext);
+  const route = useContext(NavigationRouteContext);
+  const state = route ? navigation?.getState() : undefined;
+  return isTabStack(state) && route?.key === state?.routes[0]?.key;
+}
+
 export function useRailSolidRoot(): boolean {
   const navigation = useContext(NavigationContext);
   const subscribe = useCallback(

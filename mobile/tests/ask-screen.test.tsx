@@ -3286,13 +3286,16 @@ test.each([
         mockBar.options = { ...mockBar.options, ...options };
       }),
       getState: () => ({
-        index: 0,
-        routes: [route],
+        index: pushedAsk ? 1 : 0,
+        routes: pushedAsk
+          ? [{ key: 'today-root', name: 'index' }, route]
+          : [route],
         routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
       }),
       isFocused: () => true,
       addListener: () => () => {},
     };
+    let pushedAsk = false;
     const edges = () =>
       navigation.setOptions.mock.calls
         .map(([options]) => options.scrollEdgeEffects?.top)
@@ -3363,6 +3366,16 @@ test.each([
       // A new header height must not re-read the previous thread's offset.
       expect(byId('bar-fade')).toHaveLength(0);
       expect(edges()).not.toContain('hard');
+
+      // Ask pushed in another tab (a link, a keyboard shortcut) sits below
+      // an opaque bar with its content at 0: no fade over the page's top.
+      scrollTo(400);
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
+      scrollTo(-120);
+      pushedAsk = true;
+      scrollTo(0);
+      scrollTo(400);
+      expect(byId('bar-fade')).toHaveLength(0);
     } finally {
       await act(async () => {
         view?.unmount();

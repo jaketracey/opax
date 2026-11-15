@@ -1,6 +1,9 @@
 import { AndroidFocusBack } from '../../navigation/AndroidFocusBack';
 import { RouteOptions } from '../../navigation/preview';
-import { useRootBarUnderBar } from '../../navigation/useRootBarAppearance';
+import {
+  useRootBarUnderBar,
+  useTabRootRoute,
+} from '../../navigation/useRootBarAppearance';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import { useScreenReady } from '../../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -176,7 +179,12 @@ export default function AskScreen() {
   // Under the clear bar the page fades into its ground behind the title and
   // the bar buttons, from the first point of scroll (at accessibility sizes
   // the starters showed through, blurred). A solid bar covers its own.
-  const barFade = clearBars && underBar && Platform.OS === 'ios' && glassBar();
+  // Only the Ask tab's root: pushed elsewhere (a link, a keyboard shortcut)
+  // Ask sits below an opaque bar with its content at 0, and the fade would
+  // cover the top of the page.
+  const tabRoot = useTabRootRoute();
+  const barFade =
+    clearBars && tabRoot && underBar && Platform.OS === 'ios' && glassBar();
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
