@@ -107,12 +107,55 @@ export function catalogWarning(message: string) {
   if ((typeof __DEV__ !== 'undefined' && __DEV__) || e2eDiagnostics)
     console.warn(message);
 }
-export function logDroppedRow(label: string, row: string | number) {
+/**
+ * What a decoder let through that a stricter one would refuse: a row it
+ * dropped, or a value it read leniently (a null where text is expected).
+ * `at` is where: the rows being decoded, outermost first, then the row or
+ * field ("bill.divisions[2]", "question"); `reason` is a field path and
+ * message, never the row's data.
+ *
+ * For the data guard (tests/published-data.test.ts), which runs these
+ * decoders over every published file. The app is tolerant so one bad
+ * sub-record never hides a record; the guard is not, so the data is fixed
+ * before a shipped version, including older and stricter ones, meets it.
+ * With no observer nothing is recorded.
+ */
+export interface Leniency {
+  kind: 'dropped' | 'tolerated';
+  at: string[];
+  reason: string;
+}
+type LeniencyListener = (event: Leniency) => void;
+let leniencyListener: LeniencyListener | null = null;
+// The rows being decoded now, outermost first; kept only while observed.
+const rowPath: string[] = [];
+export function observeLeniency(listener: LeniencyListener): () => void {
+  leniencyListener = listener;
+  rowPath.length = 0;
+  return () => {
+    if (leniencyListener === listener) leniencyListener = null;
+    rowPath.length = 0;
+  };
+}
+/** A decoder read `field` leniently, for the reason given. */
+export function tolerated(field: string, reason: string) {
+  leniencyListener?.({ kind: 'tolerated', at: [...rowPath, field], reason });
+}
+export function logDroppedRow(
+  label: string,
+  row: string | number,
+  reason = '',
+) {
+  leniencyListener?.({
+    kind: 'dropped',
+    at: [...rowPath, `${label}[${row}]`],
+    reason,
+  });
   catalogWarning(`Dropped malformed catalog row: ${label} [${row}]`);
 }
 // Metadata stays outside the published data and is retained by decode memoization.
 const partialCatalogs = new WeakSet<object>();
-type LossPolicy = 'bounded' | 'counted' | 'optional';
+type LossPolicy = 'bounded' | 'counted' | 'optional' | 'tolerant';
 const losses = new WeakMap<
   object,
   { total: number; dropped: number; policy: LossPolicy }
@@ -135,7 +178,10 @@ function markFromChildren<T extends object>(value: T): T {
  * attribution use array/dict instead, with no allowance. Discovery counts
  * and announces omitted signals, so its policy has no percentage cap.
  * Optional enrichment can lose every item without invalidating its host or
- * marking unrelated identity and membership data as partial. */
+ * marking unrelated identity and membership data as partial. A tolerant
+ * list (a record's own sub-records, such as a bill's divisions) can lose
+ * any item, even every one, without invalidating its host; unlike optional
+ * enrichment the host is marked partial, so the reader is told. */
 function withLoss<T extends object>(
   out: T,
   total: number,
@@ -144,6 +190,7 @@ function withLoss<T extends object>(
 ): T {
   if (
     policy !== 'optional' &&
+    policy !== 'tolerant' &&
     dropped &&
     (dropped === total ||
       (policy === 'bounded' && dropped > Math.max(1, Math.floor(total / 100))))
@@ -208,12 +255,16 @@ export const rows =
     if (!Array.isArray(v)) invalid();
     const out: T[] = [];
     v.forEach((row, index) => {
+      const observed = leniencyListener !== null;
+      if (observed) rowPath.push(`${label}[${index}]`);
       try {
         out.push(decode(row));
+        if (observed) rowPath.pop();
       } catch (error) {
+        if (observed) rowPath.pop();
         if (!(error instanceof ApiError) || error.code !== 'invalid-data')
           throw error;
-        logDroppedRow(label, index);
+        logDroppedRow(label, index, error.message);
       }
     });
     return withLoss(out, v.length, v.length - out.length, policy);
@@ -250,7 +301,7 @@ export const records =
       } catch (error) {
         if (!(error instanceof ApiError) || error.code !== 'invalid-data')
           throw error;
-        logDroppedRow(label, index);
+        logDroppedRow(label, index, error.message);
       }
     });
     return withLoss(

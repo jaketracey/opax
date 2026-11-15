@@ -41,12 +41,14 @@ import {
   type BillTimelineStage,
 } from '../../api/bill-transforms';
 import { billKey } from '../../api/catalogs';
+import { billEvidence } from '../../api/selectors';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { useReduceMotion } from '../../design/accessibility';
 import { ContextMenu } from '../../design/context-menu';
 import { copy as words } from '../../design/copy';
 import { formatCount, formatDate } from '../../design/format';
+import { partialNote } from '../CatalogNotice';
 import { haptic } from '../../design/haptics';
 import { MachinePill } from '../../design/labels';
 import { TitleAnchor } from '../../design/layout';
@@ -773,8 +775,8 @@ function BillHead({
     status: identity.status,
     status_as_of: identity.statusAsOf,
     originating_house: identity.house,
-    key_dates: view.keyDates.data ?? [],
-    votes: view.divisions.data?.rawRows,
+    key_dates: billEvidence(view).stages,
+    votes: billEvidence(view).divisions,
     ended: identity.ended,
     ended_label: identity.endedLabel,
   });
@@ -820,6 +822,26 @@ function BillHead({
 
 /** Page provenance follows the last content section, including related bills. */
 /** The page's own source line: the bill's identity record (testID bill-source). */
+/**
+ * A list of the bill's that lost an item (api/catalog-decoders `billList`):
+ * the source line of the section that draws that list says "partial", and
+ * its sheet carries the standard note, as every catalog block does
+ * (CatalogState). Only that line: a dropped stage says nothing about the
+ * votes. A saved copy says "Saved" instead, as there.
+ */
+type BillList = keyof Identity['partialLists'];
+function partialState(
+  view: BillView,
+  ...lists: BillList[]
+): { state?: 'partial'; note: string | null } {
+  const lost = view.identity.data?.partialLists;
+  const partial = !!lost && lists.some((list) => lost[list]);
+  return {
+    ...(partial && !view.identity.stale ? { state: 'partial' as const } : {}),
+    note: partial ? partialNote : null,
+  };
+}
+
 function billSourceDetails(
   view: BillView,
   identity: Identity,
@@ -830,8 +852,8 @@ function billSourceDetails(
     status: identity.status,
     status_as_of: identity.statusAsOf,
     originating_house: identity.house,
-    key_dates: view.keyDates.data ?? [],
-    votes: view.divisions.data?.rawRows,
+    key_dates: billEvidence(view).stages,
+    votes: billEvidence(view).divisions,
     ended: identity.ended,
     ended_label: identity.endedLabel,
   });
@@ -849,9 +871,11 @@ function billSourceDetails(
     originals,
     licence:
       unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') || null,
+    state: partialState(view, 'sources').state,
     notes: [
       unsponsored && !draft ? 'Sponsor not recorded.' : null,
       event && !event.resolved ? notes.status : null,
+      partialState(view, 'sources').note,
     ],
   };
 }
@@ -895,7 +919,8 @@ export function shareSourceLine(
   return {
     ...page,
     originals,
-    notes: [...(page.notes ?? []), ...(section.notes ?? [])],
+    // Once each: a partial bill's note is on the page's line and the section's.
+    notes: [...new Set([...(page.notes ?? []), ...(section.notes ?? [])])],
   };
 }
 
@@ -1484,7 +1509,8 @@ function keyDatesSource(view: BillView, savedAt: number | null): SourceDetails {
     citation: 'ParlInfo',
     savedAt,
     originals,
-    notes: [notes.voices],
+    state: partialState(view, 'stages').state,
+    notes: [notes.voices, partialState(view, 'stages').note],
   };
 }
 
@@ -1514,12 +1540,16 @@ function KeyDates({
   // The six-step tracker replaces the ruler wherever the record maps to it
   // truthfully; any other bill keeps the ruler. Either way the full dated
   // list stays one tap away, so no stage or date is lost.
+  // The same evidence the pill and its date read (selectors billEvidence): with
+  // a stage or division dropped it is empty, the tracker steps aside for
+  // the plain dated list, and nothing here claims more than the pill.
+  const evidence = billEvidence(view);
   const mapped = billTracker({
-    stages: view.keyDates.data ?? [],
+    stages: evidence.stages,
     status: identity?.status,
     originatingHouse: identity?.house,
     title: identity?.title,
-    divisions: view.divisions.data?.rawRows,
+    divisions: evidence.divisions,
     acts: view.acts.data ?? [],
     ended: identity?.ended,
     ended_label: identity?.endedLabel,
@@ -1528,8 +1558,8 @@ function KeyDates({
   const points =
     !tracker && entries.length > 1
       ? rulerPoints(entries, identity?.status, {
-          stages: view.keyDates.data,
-          divisions: view.divisions.data?.rawRows,
+          stages: evidence.stages,
+          divisions: evidence.divisions,
           ended: identity?.ended,
           ended_label: identity?.endedLabel,
         })
@@ -1826,7 +1856,12 @@ function Votes({
             url: d.url,
             record: `division, ${short(d.date)}`,
           }))}
-          notes={[view.divisions.data!.partyBasisNote || null, notes.stages]}
+          state={partialState(view, 'divisions').state}
+          notes={[
+            view.divisions.data!.partyBasisNote || null,
+            notes.stages,
+            partialState(view, 'divisions').note,
+          ]}
           testID="bill-divisions-source"
         />
       </Section>
@@ -2115,7 +2150,8 @@ function Speeches({
               record: 'Parliament of Australia',
             },
           ]}
-          notes={[notes.speeches]}
+          state={partialState(view, 'speeches').state}
+          notes={[notes.speeches, partialState(view, 'speeches').note]}
           testID="bill-speeches-source"
         />
       </Section>
@@ -2176,6 +2212,8 @@ function Acts({
             url: act.frl_uri,
             record: act.title,
           }))}
+          state={partialState(view, 'acts').state}
+          notes={[partialState(view, 'acts').note]}
           testID="bill-acts-source"
         />
         {pageSource ? (
@@ -2207,7 +2245,8 @@ function relatedSource(view: BillView, savedAt: number | null): SourceDetails {
     citation: home.length ? 'ParlInfo' : unique(sources.map((s) => s.label)),
     savedAt,
     originals,
-    notes: [notes.related],
+    state: partialState(view, 'related').state,
+    notes: [notes.related, partialState(view, 'related').note],
   };
 }
 

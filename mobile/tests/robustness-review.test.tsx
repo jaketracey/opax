@@ -368,7 +368,6 @@ test.each([
       'url',
     ],
   ],
-  ['/bills/au-federal-r7534.json', d.decodeBill, ['divisions', 0, 'ayes']],
 ] as [string, (v: unknown) => unknown, (string | number)[]][])(
   '%s factual list %# stays whole when a missing row would change a fact or citation',
   (path, decode, field) => {
@@ -389,6 +388,20 @@ test('a partial representation never becomes a shortened history for the same pe
     replaceAt(raw, ['people', row, 'representation', 0, 'jurisdiction'], null),
   );
   expect(bad.people).toEqual(good.people.filter((_, i) => i !== row));
+  expect(isPartialCatalog(bad)).toBe(true);
+});
+// A bill's own lists decode item by item (catalog-decoders.ts, billList):
+// one malformed division used to hide the whole bill in every shipped app
+// (15 Nov 2026). The missing row still changes a fact, so the bill is never
+// shown as whole: it is marked partial, and its page says so and claims no
+// more than its evidence (bill-partial.test.tsx).
+test('a malformed division leaves the rest of the bill and marks it partial, never silently whole', () => {
+  const raw = pinned('/bills/au-federal-r7534.json');
+  const good = d.decodeBill(raw);
+  const bad = d.decodeBill(replaceAt(raw, ['divisions', 0, 'ayes'], null));
+  expect(bad.divisions).toEqual(good.divisions.slice(1));
+  expect(bad.key).toBe(good.key);
+  expect(isPartialCatalog(good)).toBe(false);
   expect(isPartialCatalog(bad)).toBe(true);
 });
 
