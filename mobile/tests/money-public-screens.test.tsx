@@ -4,7 +4,13 @@ import { act } from 'react';
 import { Heading } from '../src/design/text';
 import TestRenderer from 'react-test-renderer';
 import { Redirect } from 'expo-router';
-import { Animated, Dimensions, Platform, StyleSheet } from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  Dimensions,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
@@ -97,6 +103,16 @@ jest.mock('../src/api/runtime', () => ({
 }));
 jest.mock('../src/features/money-public/runtime', () => ({ money: {} }));
 // The solid-bar scroll report (RT27-title): off unless a test turns it on.
+// The system's accessibility events, as the app subscribes to them: a test
+// turns Reduce Transparency or Increase Contrast on by sending the event.
+const systemSettings = new Map<string, ((on: boolean) => void)[]>();
+jest.spyOn(AccessibilityInfo, 'addEventListener').mockImplementation(((
+  event: string,
+  handler: (on: boolean) => void,
+) => {
+  systemSettings.set(event, [...(systemSettings.get(event) ?? []), handler]);
+  return { remove: () => undefined };
+}) as never);
 const mockUnderBar = { reports: false, onScroll: jest.fn() };
 jest.mock('../src/navigation/useListUnderBar', () => ({
   useListUnderBar: () => mockUnderBar,
@@ -1901,6 +1917,51 @@ test.each(largeTitlePages)(
       }
     }),
 );
+
+// With a legibility setting on the bar is solid and the page starts below
+// what it covers: a fade there would be a band of ground over the first rows.
+describe.each([
+  ['Reduce Transparency', 'reduceTransparencyChanged'],
+  ['Increase Contrast', 'darkerSystemColorsChanged'],
+] as const)('with %s on', (_setting, event) => {
+  test.each(largeTitlePages)(
+    '%s draws no fade under its solid bar, and draws it again when the setting goes off',
+    (_name, Page, list) =>
+      withGlassBar(async () => {
+        const attach = jest
+          .spyOn(
+            Animated as unknown as {
+              attachNativeEvent: (...args: unknown[]) => unknown;
+            },
+            'attachNativeEvent',
+          )
+          .mockReturnValue({ detach: jest.fn() });
+        const r = await mount(Page);
+        const heard = systemSettings.get(event) ?? [];
+        const send = (on: boolean) => heard.forEach((hear) => hear(on));
+        try {
+          expect(heard.length).toBeGreaterThan(0);
+          expect(fadeLayers(r)).toHaveLength(1);
+          await act(async () => send(true));
+          expect(fadeLayers(r)).toHaveLength(0);
+          // Scrolled under the bar, still none.
+          act(() =>
+            listOf(r, list).props.onScroll({
+              currentTarget: { tag: 7 },
+              nativeEvent: { contentOffset: { y: 300 } },
+            }),
+          );
+          expect(fadeLayers(r)).toHaveLength(0);
+          await act(async () => send(false));
+          expect(fadeLayers(r)).toHaveLength(1);
+        } finally {
+          await act(async () => send(false));
+          await act(async () => r.unmount());
+          attach.mockRestore();
+        }
+      }),
+  );
+});
 
 test('a money list under the stack’s own solid bar has no fade', () =>
   withGlassBar(async () => {
