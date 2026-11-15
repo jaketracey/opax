@@ -2,7 +2,7 @@ import { throwIfAborted } from '../../api/abort';
 import { catalogs } from '../../api/runtime';
 import { buildPortraitIndexAsync } from '../../api/portrait-index';
 import {
-  peopleRows,
+  peopleRowsAsync,
   partyRows,
   peopleFacets,
   partyFacets,
@@ -48,6 +48,16 @@ export interface DirectoryRecord {
   staleReason?: RecordResult<unknown>['staleReason'];
   sources: { asAt: string | null; label: string }[];
 }
+/** The people rows last built, and the catalogue snapshots they came from. */
+let built: {
+  inputs: readonly unknown[];
+  people: PeopleRow[];
+  facets: Facet[];
+} | null = null;
+/** Tests start each case with nothing built. */
+export function forgetDirectoryRows() {
+  built = null;
+}
 export async function loadDirectory(
   kind: DirectoryKind,
   refresh = false,
@@ -68,16 +78,35 @@ export async function loadDirectory(
       catalogs.photoPeople(refresh, signal),
       catalogs.photoCredits(refresh, signal),
     ]);
-    const portraits = await buildPortraitIndexAsync({
-      roster: d.roster.data,
-      slugs: d.slugs.data,
-      people: d.people.data,
-      manifest: d.manifest.data,
-      photoPeople: photos.data,
-      photoCredits: credits.data,
-    });
-    rows.people = peopleRows(d, votes.data, portraits);
-    rows.facets = peopleFacets(rows.people);
+    // The catalogues are immutable snapshots, the same objects while their
+    // bytes are unchanged (a revalidation that finds nothing new, coming
+    // back to Members). The same inputs give the same rows: they are built
+    // once, not again on every load.
+    const inputs = [
+      d.roster.data,
+      d.slugs.data,
+      d.people.data,
+      d.manifest.data,
+      d.electorates.data,
+      votes.data,
+      photos.data,
+      credits.data,
+    ];
+    if (!built || inputs.some((input, i) => input !== built!.inputs[i])) {
+      const portraits = await buildPortraitIndexAsync({
+        roster: d.roster.data,
+        slugs: d.slugs.data,
+        people: d.people.data,
+        manifest: d.manifest.data,
+        photoPeople: photos.data,
+        photoCredits: credits.data,
+      });
+      const people = await peopleRowsAsync(d, votes.data, portraits);
+      throwIfAborted(signal);
+      built = { inputs, people, facets: peopleFacets(people) };
+    }
+    rows.people = built.people;
+    rows.facets = built.facets;
     records.push(...Object.values(d), votes, photos, credits);
     sources.push(
       {
