@@ -89,6 +89,7 @@ const mockSeat: { current: { status: string } } = {
 };
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: () => mockSeat.current,
+  useSavedChoice: () => undefined,
 }));
 
 function setFontScale(fontScale: number, width = 390) {

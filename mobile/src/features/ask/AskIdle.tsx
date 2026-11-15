@@ -32,7 +32,7 @@ import { copyText } from '../records/actions';
 import { representativeProfile } from '../your-mp/model';
 import {
   savedSeatDirectory,
-  useSavedChoice as useSavedSeatChoice,
+  useSavedChoice,
   useSeat,
 } from '../your-mp/useSeat';
 import { AskSuggestionRow } from './AskRows';
@@ -76,10 +76,6 @@ export function useSeatMember(): string | null {
     .find(Boolean);
   return member?.name ?? null;
 }
-// A screen test that stands in for the seat store may not carry this hook;
-// without it the choice is simply not known yet.
-const useSavedChoice: typeof useSavedSeatChoice =
-  useSavedSeatChoice ?? (() => undefined);
 /**
  * True while the reader's member may still turn up: the saved seat is being
  * read, and the device has not already said there is none. Try asking then
@@ -91,13 +87,24 @@ function useSeatPending(): boolean {
   return useSavedChoice() !== null && loading;
 }
 /**
- * A member's name for sizing the held box, never seen. The longest verified
- * House name in the roster is 22 characters; this is 24, a small margin. No
- * word is over 14 letters, so at large text sizes it wraps between words as
- * a real name does and is never shrunk to fit. The roster itself is not on
- * hand while the seat is still being read, so this is a constant.
+ * Members' names for sizing the held box, never seen. The roster itself is
+ * not on hand while the seat is still being read, so these are constants.
+ * Both are 24 characters; the longest verified House name in the roster is
+ * 22. There are two because a name sets the question's height in two ways:
+ *
+ * - with long words. At large text sizes the row's type steps down until
+ *   its longest word fits the line, so this question is drawn smaller;
+ * - with no word longer than "parliament", the longest word in the
+ *   question itself. This one is never stepped down further than any real
+ *   question, so at large sizes it is the taller of the two, and as tall as
+ *   the question about a member whose name is all short words.
+ *
+ * The box takes the tallest of its candidates, so it holds either kind.
  */
-export const LONGEST_MEMBER = 'Alexandrina Wetherington';
+export const SIZING_MEMBERS = [
+  'Alexandrina Wetherington',
+  'Bernadette Annabelle Lee',
+] as const;
 const noop = () => {};
 // The member the seat starter put in Person, so a starter tapped next does
 // not inherit it.
@@ -164,7 +171,13 @@ export function AskIdle({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [day],
   );
-  const starters = member || pending ? [] : [general];
+  // The answer last known. A later read of the seat (a retry) keeps the
+  // row that is drawn until it answers, so the group is never left empty.
+  const [known, setKnown] = useState<{ member: string | null } | null>(
+    pending ? null : { member },
+  );
+  if (!pending && known?.member !== member) setKnown({ member });
+  const shown = pending ? known : { member };
   const recent = saved.chats.slice(0, conversationCount);
   const menu = (question: string) => [
     { title: idleCopy.edit, onPress: () => fillComposer(question) },
@@ -177,11 +190,14 @@ export function AskIdle({
   // Decided once, as Try asking is first drawn: a seat still being read
   // then means the row's box is held for the life of the page.
   const [held] = useState(pending);
-  const row = member ? (
+  const theirs = shown?.member ?? null;
+  // Nothing is drawn only in the held box, before the first answer.
+  const starters = theirs || !shown ? [] : [general];
+  const row = theirs ? (
     <AskSuggestionRow
-      question={seatStarter(member)}
+      question={seatStarter(theirs)}
       variant="fill"
-      onPress={() => fillComposer(seatStarter(member), member)}
+      onPress={() => fillComposer(seatStarter(theirs), theirs)}
       testID={`${testPrefix}-starter-seat`}
     />
   ) : (
@@ -230,8 +246,8 @@ export function AskIdle({
             {held ? (
               // The seat was still being read when Try asking was first
               // drawn. One row holds the chosen starter and, unseen beside
-              // it, both candidates in the row's own type and width. The
-              // row is as tall as the tallest of the three, so the box is
+              // it, every candidate in the row's own type and width. The
+              // row is as tall as the tallest of them, so the box is
               // never shorter than the starter drawn in it and never
               // changes size when the member is known.
               <View style={styles.sizing} testID={`${testPrefix}-starter-held`}>
@@ -243,22 +259,24 @@ export function AskIdle({
                     {row}
                   </View>
                 ) : null}
-                {[general, seatStarter(LONGEST_MEMBER)].map((question) => (
-                  <View
-                    key={question}
-                    pointerEvents="none"
-                    accessibilityElementsHidden
-                    importantForAccessibility="no-hide-descendants"
-                    style={[styles.sized, styles.unseen]}
-                    testID={`${testPrefix}-starter-place`}
-                  >
-                    <AskSuggestionRow
-                      question={question}
-                      variant="fill"
-                      onPress={noop}
-                    />
-                  </View>
-                ))}
+                {[general, ...SIZING_MEMBERS.map(seatStarter)].map(
+                  (question) => (
+                    <View
+                      key={question}
+                      pointerEvents="none"
+                      accessibilityElementsHidden
+                      importantForAccessibility="no-hide-descendants"
+                      style={[styles.sized, styles.unseen]}
+                      testID={`${testPrefix}-starter-place`}
+                    >
+                      <AskSuggestionRow
+                        question={question}
+                        variant="fill"
+                        onPress={noop}
+                      />
+                    </View>
+                  ),
+                )}
               </View>
             ) : (
               row
@@ -469,8 +487,10 @@ const styles = StyleSheet.create({
   unseen: { opacity: 0 },
   // The held box: the chosen starter and the unseen candidates side by
   // side, each the box's full width, so the row is as tall as the tallest.
-  // The candidates lie past the box's right edge, clipped.
-  sizing: { flexDirection: 'row', overflow: 'hidden' },
+  // The candidates lie past the box's right edge, unseen and untouchable;
+  // the box itself clips nothing, so the starter's highlight and tap area
+  // reach the group's edges as they do in any row.
+  sizing: { flexDirection: 'row' },
   sized: { width: '100%', flexShrink: 0, justifyContent: 'center' },
   centredText: { textAlign: 'center' },
   stackedSection: { gap: rhythm.block },

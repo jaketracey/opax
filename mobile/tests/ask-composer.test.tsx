@@ -47,6 +47,7 @@ jest.mock('../src/features/ask/sync', () => ({
 }));
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: jest.fn(() => ({ status: 'none' })),
+  useSavedChoice: () => undefined,
   savedSeatDirectory: () => ({
     electorates: {
       data: {
