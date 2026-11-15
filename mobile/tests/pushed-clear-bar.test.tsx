@@ -10,8 +10,8 @@ import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descript
 import * as accessibility from '../src/design/accessibility';
 import { ClearBarRest, Screen } from '../src/design/layout';
 import { sharedScreens } from '../src/navigation/stack';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 
 jest.mock('../modules/opax-root-bar', () => ({
   RootBar: null,
@@ -139,7 +139,10 @@ describe('no pushed page has a clear bar without a fade', () => {
     __dirname,
     '../src/app/(tabs)/(today,your-mp,bills,search,ask)',
   );
-  const source = (path: string) => readFileSync(path, 'utf8');
+  // Files the walk's own tests write: read before the disk, never on it.
+  const written = new Map<string, string>();
+  const source = (path: string) =>
+    written.get(path) ?? readFileSync(path, 'utf8');
   const feature = (name: string) =>
     source(resolve(__dirname, '../src/features', `${name}.tsx`));
   /**
@@ -224,9 +227,110 @@ describe('no pushed page has a clear bar without a fade', () => {
     } else expect(options.headerTransparent).toBe(false);
   });
 
-  // A new route cannot slip through: one whose page file renders neither a
-  // Screen nor a MoneyList must be in the table above.
-  test('every tab-stack route with its own scroll view is in the table', () => {
+  // What a route's page draws, read from the source: the component the
+  // route file exports, then every component it renders, through local
+  // declarations and relative imports. The page is covered when that walk
+  // reaches a Screen or a MoneyList (each draws the fade), and is a redirect
+  // when a Redirect is all it renders. A file that merely contains "<Screen"
+  // somewhere, in a component the page never renders, does not count.
+  const COVERS = /^(Screen|KeyboardStableScreen|MoneyList)$/;
+  const moduleFile = (from: string, spec: string) => {
+    const base = resolve(dirname(from), spec);
+    return (
+      [base + '.tsx', base + '.ts', join(base, 'index.tsx')].find(
+        (path) => written.has(path) || existsSync(path),
+      ) ?? null
+    );
+  };
+  /** The top-level declarations of a file, by name, each with its text. */
+  const declarations = (text: string) => {
+    const starts = [
+      ...text.matchAll(
+        /^(?:export\s+)?(?:default\s+)?(?:async\s+)?(?:function\s+|const\s+|class\s+)([A-Za-z_$][\w$]*)/gm,
+      ),
+    ];
+    return new Map(
+      starts.map((match, index) => [
+        match[1]!,
+        text.slice(match.index, starts[index + 1]?.index ?? text.length),
+      ]),
+    );
+  };
+  /** Local name -> [module, exported name] for a file's relative imports. */
+  const imports = (text: string) => {
+    const found = new Map<string, [string, string]>();
+    for (const match of text.matchAll(
+      /^import\s+(?:type\s+)?([^;]+?)\s+from\s+'(\.[^']*)'/gm,
+    )) {
+      const [, clause, spec] = match as unknown as [string, string, string];
+      const named = /\{([^}]*)\}/.exec(clause)?.[1] ?? '';
+      const first = clause
+        .replace(/\{[^}]*\}/, '')
+        .replace(/,/g, '')
+        .trim();
+      if (first && !first.startsWith('*')) found.set(first, [spec, 'default']);
+      for (const part of named.split(',')) {
+        const [name, alias] = part
+          .replace(/^\s*type\s+/, '')
+          .trim()
+          .split(/\s+as\s+/);
+        if (name) found.set(alias ?? name, [spec, name]);
+      }
+    }
+    return found;
+  };
+  /** The declaration a file exports under a name, as [file, local name]. */
+  const exported = (path: string, name: string): [string, string] | null => {
+    const text = source(path);
+    const again = (
+      name === 'default'
+        ? /^export\s+\{\s*(?:default|([\w$]+)\s+as\s+default)\s*\}\s+from\s+'(\.[^']*)'/m
+        : new RegExp(
+            String.raw`^export\s+\{[^}]*\b(?:([\w$]+)\s+as\s+)?${name}\b[^}]*\}\s+from\s+'(\.[^']*)'`,
+            'm',
+          )
+    ).exec(text);
+    if (again) {
+      const file = moduleFile(path, again[2]!);
+      return file ? exported(file, again[1] ?? name) : null;
+    }
+    if (name !== 'default') return [path, name];
+    const own =
+      /^export\s+default\s+(?:async\s+)?function\s+([\w$]+)/m.exec(text) ??
+      /^export\s+default\s+(?:memo\(|forwardRef\()?([\w$]+)/m.exec(text);
+    return own ? [path, own[1]!] : null;
+  };
+  /** Every component a page renders, as tag names, from its export down. */
+  const rendered = (route: string) => {
+    const tags = new Set<string>();
+    const seen = new Set<string>();
+    const visit = (path: string, name: string) => {
+      const key = path + '#' + name;
+      if (seen.has(key)) return;
+      seen.add(key);
+      const text = source(path);
+      const body = declarations(text).get(name);
+      if (!body) return;
+      const local = declarations(text);
+      const from = imports(text);
+      for (const [, tag] of body.matchAll(/(?<![\w$])<([A-Z][\w$]*)/g)) {
+        tags.add(tag!);
+        if (COVERS.test(tag!)) continue;
+        if (local.has(tag!)) visit(path, tag!);
+        else if (from.has(tag!)) {
+          const [spec, as] = from.get(tag!)!;
+          const file = moduleFile(path, spec);
+          const target = file && exported(file, as);
+          if (target) visit(...target);
+        }
+      }
+    };
+    const start = exported(route, 'default');
+    if (start) visit(...start);
+    return tags;
+  };
+
+  const routeFiles = () => {
     const files: string[] = [];
     const walk = (dir: string) => {
       for (const entry of readdirSync(dir)) {
@@ -237,28 +341,125 @@ describe('no pushed page has a clear bar without a fade', () => {
       }
     };
     walk(tabRoutes);
+    return files;
+  };
+  /** The routes whose page draws no Screen or MoneyList and are not listed. */
+  const unlistedIn = (files: string[]) => {
     const listed = new Set(pages.map(([name]) => name));
-    const unlisted: string[] = [];
-    for (const path of files) {
-      const imports = [
-        ...source(path).matchAll(/from '(?:\.\.\/)+features\/([^']+)'/g),
-      ].map((match) => match[1]!);
-      // A redirect, or a route with no feature page of its own.
-      if (!imports.length) continue;
-      const page = imports.map((name) => {
-        try {
-          return feature(name);
-        } catch {
-          return '';
-        }
-      });
-      const covered = page.some((text) =>
-        /<(Screen|KeyboardStableScreen|MoneyList)\b/.test(text),
+    return files
+      .filter((path) => {
+        // Every route file is read, the file itself included: one that
+        // renders its own list with no feature page is not skipped. Only a
+        // route that does nothing but redirect has no page; one that can
+        // redirect and can also draw a page is checked as a page.
+        const tags = rendered(path);
+        if (tags.size === 1 && tags.has('Redirect')) return false;
+        return ![...tags].some((tag) => COVERS.test(tag));
+      })
+      .map((path) => relative(tabRoutes, path).replace(/\.tsx$/, ''))
+      .filter((name) => !listed.has(name));
+  };
+
+  // A new route cannot slip through: one whose page renders neither a
+  // Screen nor a MoneyList must be in the table above.
+  test('every tab-stack route with its own scroll view is in the table', () => {
+    expect(routeFiles().length).toBeGreaterThan(50);
+    expect(unlistedIn(routeFiles())).toEqual([]);
+  });
+
+  // The walk itself, on routes written here: a route file with a list of
+  // its own and no feature page was skipped, and a page file that held a
+  // Screen in some other component counted as covered.
+  describe('the route walk', () => {
+    const scratch = join(tabRoutes, '__pushed-clear-bar-probe__');
+    const feature = resolve(
+      __dirname,
+      '../src/features/__pushed-clear-bar-probe__.tsx',
+    );
+    const probe = (name: string, text: string) => {
+      const path = join(scratch, name + '.tsx');
+      written.set(path, text);
+      return path;
+    };
+    afterEach(() => written.clear());
+
+    test('a route that renders its own list in the route file is found', () => {
+      const path = probe(
+        'own-list',
+        [
+          "import { FlatList } from 'react-native';",
+          'export default function Probe() {',
+          '  return <FlatList data={[]} renderItem={() => null} />;',
+          '}',
+        ].join('\n'),
       );
-      const name = relative(tabRoutes, path).replace(/\.tsx$/, '');
-      if (!covered && !listed.has(name)) unlisted.push(name);
-    }
-    expect(unlisted).toEqual([]);
+      expect(unlistedIn([path])).toEqual([
+        '__pushed-clear-bar-probe__/own-list',
+      ]);
+      expect(unlistedIn([...routeFiles(), path])).toEqual([
+        '__pushed-clear-bar-probe__/own-list',
+      ]);
+    });
+
+    test('a page that renders its own list is found, though its file holds a Screen elsewhere', () => {
+      written.set(
+        feature,
+        [
+          "import { FlatList } from 'react-native';",
+          "import { Screen } from '../design/layout';",
+          'export function Unused() {',
+          '  return <Screen />;',
+          '}',
+          'function Rows() {',
+          '  return <FlatList data={[]} renderItem={() => null} />;',
+          '}',
+          'export default function Page() {',
+          '  return <Rows />;',
+          '}',
+        ].join('\n'),
+      );
+      const path = probe(
+        'own-page',
+        "export { default } from '../../../../features/__pushed-clear-bar-probe__';",
+      );
+      expect(unlistedIn([path])).toEqual([
+        '__pushed-clear-bar-probe__/own-page',
+      ]);
+    });
+
+    test('a page whose own component renders a Screen is covered, and a route that only redirects has no page', () => {
+      written.set(
+        feature,
+        [
+          "import { Screen } from '../design/layout';",
+          'function Body() {',
+          '  return <Screen />;',
+          '}',
+          'export function Page() {',
+          '  return <Body />;',
+          '}',
+        ].join('\n'),
+      );
+      const page = probe(
+        'covered',
+        [
+          "import { Page } from '../../../../features/__pushed-clear-bar-probe__';",
+          'export default function Probe() {',
+          '  return <Page />;',
+          '}',
+        ].join('\n'),
+      );
+      const redirect = probe(
+        'redirect',
+        [
+          "import { Redirect } from 'expo-router';",
+          'export default function Probe() {',
+          '  return <Redirect href="/" />;',
+          '}',
+        ].join('\n'),
+      );
+      expect(unlistedIn([page, redirect])).toEqual([]);
+    });
   });
 
   function list(onScroll?: jest.Mock) {
