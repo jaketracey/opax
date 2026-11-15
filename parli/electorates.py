@@ -132,8 +132,10 @@ def validate(bundle: dict) -> None:
             if not isinstance(record["seated_on"], str):
                 raise ValueError("Dissolution seated_on is a date")
             _iso(record["seated_on"])
-            if record["seated_on"] < record["election_day"]:
-                raise ValueError("Members are seated on or after election day")
+            # Strictly after: a roster refetched on election day still lists the old members, and a
+            # seated_on equal to it would let that refetch clear every seat.
+            if record["seated_on"] <= record["election_day"]:
+                raise ValueError("Members are seated after election day")
     slugs = set()
     for e in maps["electorates"].values():
         if not isinstance(e.get("capacity", 1), int) or e.get("capacity", 1) < 1:

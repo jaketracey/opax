@@ -236,11 +236,14 @@ def test_seated_on_alone_or_a_refetch_before_it_keeps_the_field():
 
 
 def test_seated_on_is_validated_and_read_from_the_reviewed_file(bundle, tmp_path):
-    for bad, message in ((dict(SEATED, seated_on="2026-11-27"), "on or after election day"),
+    # Election day itself is refused: a refetch that day still lists the old members.
+    for bad, message in ((dict(SEATED, seated_on="2026-11-27"), "after election day"),
+                         (dict(SEATED, seated_on=DAY), "after election day"),
                          (dict(SEATED, seated_on=20261215), "is a date")):
         with pytest.raises(ValueError, match=message):
             validate({**bundle, "dissolutions": [bad]})
     validate({**bundle, "dissolutions": [SEATED]})
+    validate({**bundle, "dissolutions": [dict(SEATED, seated_on="2026-11-29")]})  # the day after is the earliest
     # The shipped record has it unset, so it is not carried and the published release is unchanged.
     assert all("seated_on" not in record for record in load_dissolutions(DISSOLUTIONS))
     reviewed = json.loads(DISSOLUTIONS.read_text())
@@ -340,4 +343,31 @@ def test_the_nightly_turns_each_overdue_line_into_a_warning_never_a_failure():
     assert "--overdue" in step and 'warn "$overdue"' in step
     # After the republish, inside the same guard, and no fail on its account.
     assert step.index("--republish") < step.index("--overdue")
-    assert step.count("fail ") == 1 and "|| true" in step
+    assert step.count("fail ") == 1
+    # A reminder that cannot run is itself a warning: its exit status is read, never swallowed.
+    reminder = step[step.index("if overdue_lines="):]
+    assert "|| true" not in reminder
+    assert 'warn "the dissolved-house reminder could not run' in reminder
+
+
+def test_a_reminder_that_crashes_warns_and_the_night_goes_on(tmp_path):
+    """The step itself, run in bash with a stand-in exporter: lines become warnings, a crash becomes one too."""
+    import subprocess
+    script = (ROOT / "scripts/vm/nightly.sh").read_text()
+    step = script[script.index("  if overdue_lines="):script.index("# ---- 3z.")]
+    step = step[:step.rindex("\nfi")]  # the reminder alone, without the guard's closing fi
+    def night(body):
+        fake = tmp_path / "py"
+        fake.write_text("#!/bin/bash\n" + body + "\n")
+        fake.chmod(0o755)
+        program = ('WARNINGS=(); FAILURES=(); warn() { WARNINGS+=("$*"); }; fail() { FAILURES+=("$*"); }\n'
+                   f'PY={fake}; LOGFILE={tmp_path / "log"}; OPAX_TODAY=2027-01-10\n' + step +
+                   '\nprintf "%s\\n" "warnings=${#WARNINGS[@]} failures=${#FAILURES[@]}" "${WARNINGS[@]}"\n')
+        done = subprocess.run(["bash", "-c", program], capture_output=True, text=True, check=True)
+        return done.stdout.splitlines()
+    assert night("exit 0") == ["warnings=0 failures=0"]
+    assert night("echo '88 seats of vic_la are still published as dissolved'") == [
+        "warnings=1 failures=0", "88 seats of vic_la are still published as dissolved"]
+    crashed = night("echo 'Traceback' >&2; exit 1")
+    assert crashed[0] == "warnings=1 failures=0" and "reminder could not run" in crashed[1]
+    assert "Traceback" in (tmp_path / "log").read_text()
