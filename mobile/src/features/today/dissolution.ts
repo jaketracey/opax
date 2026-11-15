@@ -6,7 +6,7 @@ import type { Overview } from '../vic-election/decoders';
 
 /**
  * The state row's form in "Your representatives". A state lower house
- * dissolved for an election has no members until the result is declared
+ * whose term has ended for an election has no members until the result is declared
  * and loaded, so the row says a person is the member only when the data at
  * hand decides it. Everything here is read from data; no date is written
  * in the app.
@@ -14,7 +14,9 @@ import type { Overview } from '../vic-election/decoders';
  * - `member`: the roster's member, drawn as any member. `until` is the
  *   instant the decision stops holding (the election record's caretaker
  *   date), or null when nothing ends it.
- * - `dissolved`: the house is dissolved for the election on `electionDay`.
+ * - `dissolved`: the Parliament's term has ended for the election on
+ *   `electionDay` (the name is the data field's, `dissolved_for`; in
+ *   Victoria the term expires, the Parliament is not dissolved).
  * - `neutral`: it cannot be decided on this device; the row states only
  *   what the roster recorded and when, and calls nobody the member.
  * - `held`: the election record is on its way; the row's place is held.
@@ -34,14 +36,74 @@ export type KeptStateRow =
   | { kind: 'dissolved'; electionDay: string; lines: readonly string[] }
   | { kind: 'neutral'; lines: readonly string[] };
 
-/** The record's election day as a day and month, as the row says it. */
-export function electionDayWords(day: string): string {
-  return new Intl.DateTimeFormat('en-AU', {
+/** A day the data gave, or null for anything that is not a real day. */
+function dayOf(day: string): Date | null {
+  if (typeof day !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(day)) return null;
+  const date = new Date(`${day.slice(0, 10)}T00:00:00Z`);
+  return Number.isFinite(date.getTime()) &&
+    date.toISOString().slice(0, 10) === day.slice(0, 10)
+    ? date
+    : null;
+}
+const dayWords = (date: Date) =>
+  new Intl.DateTimeFormat('en-AU', {
     day: 'numeric',
     month: 'long',
     timeZone: 'UTC',
-  }).format(new Date(`${day.slice(0, 10)}T00:00:00Z`));
+  }).format(date);
+
+/**
+ * The record's election day as a day and month, as the row says it. Empty
+ * for a day that is not one: this is drawn on Today, and never throws.
+ */
+export function electionDayWords(day: string): string {
+  const date = dayOf(day);
+  return date ? dayWords(date) : '';
 }
+
+/**
+ * The day the Victorian Parliament's term ended before a fixed-date general
+ * election, as a day and month; null where that rule does not give it.
+ *
+ * The Parliament is not dissolved for a general election: under the
+ * Constitution Act 1975 (Vic) its term expires 25 days before election
+ * day, and election day is the last Saturday of November. So the day
+ * follows from the record's election day, and only then: another state's
+ * house, or a Victorian election on any other day (an early dissolution),
+ * has no date this rule can give. No date is written here. When the roster
+ * carries the day the term ended, it should be read from there instead.
+ */
+const TERM_ENDS_DAYS_BEFORE = 25;
+export function termEndWords(
+  electionDay: string,
+  stateCode: string,
+): string | null {
+  const day = dayOf(electionDay);
+  if (!day || stateCode.toLowerCase() !== 'vic') return null;
+  const nextWeek = new Date(day.getTime() + 7 * 86_400_000);
+  const lastSaturdayOfNovember =
+    day.getUTCDay() === 6 &&
+    day.getUTCMonth() === 10 &&
+    nextWeek.getUTCMonth() !== 10;
+  if (!lastSaturdayOfNovember) return null;
+  return dayWords(new Date(day.getTime() - TERM_ENDS_DAYS_BEFORE * 86_400_000));
+}
+
+/**
+ * The row's line for a house whose term has ended for an election: with
+ * the day it ended where the rule above gives one, without it otherwise,
+ * and with no election day when the data's is not a day.
+ */
+export function termLine(electionDay: string, stateCode: string): string {
+  const election = electionDayWords(electionDay);
+  if (!election) return 'Parliament’s term has ended for the election';
+  const ended = termEndWords(electionDay, stateCode);
+  return ended
+    ? `Parliament’s term ended on ${ended} for the ${election} election`
+    : `Parliament’s term has ended for the ${election} election`;
+}
+/** How every dated or dateless term line begins; older builds kept another. */
+export const TERM_LINE_START = 'Parliament’s term ';
 
 const HOUSES: Record<string, string> = {
   la: 'Legislative Assembly',
@@ -95,7 +157,7 @@ type RecordSeat = Pick<Electorate, 'url' | 'latest_election' | 'dissolved_for'>;
 
 /**
  * What the electorates index itself says, when it carries the field: the
- * election day while the seat's house is dissolved, null once the
+ * election day while the Parliament's term has ended, null once the
  * post-result roster is loaded. Undefined from an index that predates the
  * field, which says nothing either way.
  */
@@ -119,7 +181,7 @@ export function formFromRecord(
     return { kind: 'member', until: null };
   if (resultLoaded(seat, overview.election_day))
     return { kind: 'member', until: null };
-  // The caretaker period begins when the Assembly is dissolved.
+  // The caretaker period begins when the Parliament's term ends.
   const began = overview.key_dates.find((d) => d.id === 'caretaker')?.passes_at;
   if (!began) return { kind: 'neutral' };
   return now.getTime() >= Date.parse(began)
@@ -164,7 +226,7 @@ export function stateForm(
     : { kind: 'neutral' };
 }
 
-/** The dissolved row's four lines. Nobody is called a current member. */
+/** The ended-term row's four lines. Nobody is called a current member. */
 export function dissolvedLines(
   seat: Pick<Electorate, 'name' | 'chamber' | 'state_code'>,
   last: Person,
@@ -173,7 +235,7 @@ export function dissolvedLines(
   return [
     houseLine(seat),
     seat.name,
-    `Assembly dissolved for the ${electionDayWords(electionDay)} election`,
+    termLine(electionDay, seat.state_code),
     `Last member: ${personWords(last)}`,
   ];
 }
@@ -208,7 +270,7 @@ export function neutralLines(
 export const DISSOLVED_STAND_IN: readonly string[] = [
   'Victoria\u00a0·\u00a0Legislative Assembly',
   'Narre Warren North',
-  'Assembly dissolved for the 00 September election',
+  'Parliament’s term ended on 00 September for the 00 September election',
   'Last member: Kathleen Matthews-Ward, Independent',
 ];
 export const NEUTRAL_STAND_IN: readonly string[] = [

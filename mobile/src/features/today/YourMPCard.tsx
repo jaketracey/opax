@@ -767,7 +767,7 @@ export function yourMPSources(
         : null,
       stateSeat
         ? dissolved
-          ? 'The Assembly is dissolved for the election, so the district has no member until the result is declared. The last member and their party are from the state parliament’s roster; the election day is from the Victorian Electoral Commission.'
+          ? 'The Parliament’s term has ended for the election, so the district has no member until the result is declared. The last member and their party are from the state parliament’s roster; the election day is from the Victorian Electoral Commission.'
           : stateKind === 'neutral'
             ? 'The state row shows what the state parliament’s roster recorded on that date. This device has no election record to say whether the house is sitting, so the row names nobody as the member.'
             : 'Your state member, their party and their district from the state parliament’s roster.'

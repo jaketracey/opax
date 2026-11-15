@@ -25,6 +25,8 @@ import {
 } from '../src/features/today/RepsGroup';
 import {
   DISSOLVED_STAND_IN,
+  termEndWords,
+  termLine,
   electionDayWords,
   formFromIndex,
   formFromRecord,
@@ -126,7 +128,7 @@ const withMember = (seat: Electorate) => {
 };
 /** The election record as the app decodes it (pinned fixture). */
 const overview = decodeOverview(electionOverview);
-/** The election day the Assembly is dissolved for, from that record. */
+/** The election day the Parliament's term ended for, from that record. */
 const ELECTION_DAY = overview.election_day;
 /** After the record's caretaker date, before its election day. */
 const DURING = new Date('2026-11-15T12:00:00+11:00');
@@ -422,7 +424,7 @@ describe('Today’s representatives group', () => {
       expect(words(renderer)).toEqual([
         'Victoria\u00a0·\u00a0Legislative Assembly',
         'Essendon',
-        'Assembly dissolved for the 28 November election',
+        'Parliament’s term ended on 3 November for the 28 November election',
         expect.stringMatching(new RegExp(`^Last member: ${last}, \\w+`)),
       ]);
       expect(words(renderer)).toEqual([...dissolvedEssendon]);
@@ -569,7 +571,7 @@ describe('Today’s representatives group', () => {
       expect(row.props.accessibilityLabel).toBe(linesLabel(dissolvedEssendon));
       expect(row.props.accessibilityLabel).toMatch(
         new RegExp(
-          `^Victoria, Legislative Assembly\\. Essendon\\. Assembly dissolved for the 28 November election\\. Last member: ${last}, \\w+\\.$`,
+          `^Victoria, Legislative Assembly\\. Essendon\\. Parliament’s term ended on 3 November for the 28 November election\\. Last member: ${last}, \\w+\\.$`,
         ),
       );
       expect(row.props.accessibilityHint).toBe(
@@ -621,7 +623,41 @@ describe('Today’s representatives group', () => {
         kind: 'member',
         until: null,
       });
-      // No source file names the dissolution or election date.
+      // The term ends 25 days before election day, whatever the record's
+      // day is: the row's date is worked out, never written.
+      expect(termEndWords('2026-11-28', 'vic')).toBe('3 November');
+      expect(termEndWords('2030-11-30', 'VIC')).toBe('5 November');
+      expect(termLine('2026-11-28', 'vic')).toBe(
+        'Parliament’s term ended on 3 November for the 28 November election',
+      );
+      // The 25 days are Victoria's, for its fixed election day (the last
+      // Saturday of November). Another state's house, or a Victorian
+      // election on another day, gets no invented date.
+      expect(termEndWords('2026-11-28', 'sa')).toBeNull();
+      expect(termEndWords('2026-11-21', 'vic')).toBeNull();
+      expect(termEndWords('2027-03-20', 'vic')).toBeNull();
+      expect(termLine('2026-03-21', 'sa')).toBe(
+        'Parliament’s term has ended for the 21 March election',
+      );
+      expect(termLine('2027-03-20', 'vic')).toBe(
+        'Parliament’s term has ended for the 20 March election',
+      );
+      // A day that is not one never throws: the line goes without it.
+      for (const bad of ['', 'soon', '2026-13-45', '2026-02-30'])
+        expect(termLine(bad, 'vic')).toBe(
+          'Parliament’s term has ended for the election',
+        );
+      expect(electionDayWords('2026-13-45')).toBe('');
+      // Every form of the line fits the place the stand-in holds.
+      for (const line of [
+        termLine('2026-11-28', 'vic'),
+        termLine('2026-03-21', 'sa'),
+        termLine('', 'vic'),
+      ])
+        expect(DISSOLVED_STAND_IN[2]!.length).toBeGreaterThanOrEqual(
+          line.length,
+        );
+      // No source file names the term's end or the election date.
       for (const file of [
         'dissolution.ts',
         'YourMPCard.tsx',
@@ -792,7 +828,7 @@ describe('Today’s representatives group', () => {
         'Parliament of Victoria',
         'Victorian Electoral Commission',
       ]);
-      expect(line.notes.join(' ')).toMatch(/dissolved for the election/);
+      expect(line.notes.join(' ')).toMatch(/term has ended for the election/);
       expect(line.notes.join(' ')).not.toMatch(/Your state member/);
       await act(async () => renderer.unmount());
     });

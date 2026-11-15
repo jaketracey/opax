@@ -1218,7 +1218,7 @@ describe('the first frame has the loaded page’s layout', () => {
       expect(drawn.slice(0, 3)).toEqual([
         'Victoria\u00a0·\u00a0Legislative Assembly',
         'Essendon',
-        'Assembly dissolved for the 28 November election',
+        'Parliament’s term ended on 3 November for the 28 November election',
       ]);
       expect(drawn[3]).toMatch(/^Last member: /);
       await expect(readTodayShape()).resolves.toEqual(
@@ -1241,6 +1241,59 @@ describe('the first frame has the loaded page’s layout', () => {
         expect(hosts(next.r, 'today-rep-state-dissolved')).toHaveLength(1);
         expect(lines(next.r)).toEqual(drawn);
       }
+    });
+
+    test('lines kept in the older wording hold the new line’s place, so the row does not grow as it lands', async () => {
+      const old = [
+        'Victoria\u00a0·\u00a0Legislative Assembly',
+        'Essendon',
+        'Assembly dissolved for the 28 November election',
+        'Last member: Danny Pearson, Labor',
+      ];
+      await rememberTodayShape(
+        shape(
+          { kind: 'dissolved', electionDay: overview.election_day, lines: old },
+          false,
+          overview.election_day,
+        ),
+      );
+      const next = await launch(victorian, { record: atHand });
+      const held = lines(next.r);
+      expect(held[2]).not.toBe(old[2]);
+      await next.answer();
+      const drawn = lines(next.r);
+      expect(drawn[2]).toBe(
+        'Parliament’s term ended on 3 November for the 28 November election',
+      );
+      // Never shorter than the line that lands on it.
+      expect(held[2]!.length).toBeGreaterThanOrEqual(drawn[2]!.length);
+    });
+
+    test('a kept election day that is not a day draws the row without it, and nothing throws', async () => {
+      await rememberTodayShape(
+        shape(
+          {
+            kind: 'dissolved',
+            electionDay: '2026-13-45',
+            lines: [
+              'Victoria\u00a0·\u00a0Legislative Assembly',
+              'Essendon',
+              'Parliament’s term has ended for the election',
+              'Last member: Danny Pearson, Labor',
+            ],
+          },
+          false,
+          '2026-13-45',
+        ),
+      );
+      // The record is out of reach, so the kept row is what answers.
+      const next = await launch(victorian, {});
+      await next.answer();
+      expect(hosts(next.r, 'route-error')).toHaveLength(0);
+      expect(hosts(next.r, 'today-rep-state-dissolved')).toHaveLength(1);
+      expect(lines(next.r)[2]).toBe(
+        'Parliament’s term has ended for the election',
+      );
     });
 
     test('a kept member row answers while the record is out: a member’s place, then the member’s row, never the stand-in between', async () => {
@@ -1322,7 +1375,7 @@ describe('the first frame has the loaded page’s layout', () => {
             const r = await launchWith('2026-11-28', { loading: true });
             expect(hosts(r, 'today-rep-state-dissolved')).toHaveLength(1);
             expect(lines(r)[2]).toBe(
-              'Assembly dissolved for the 28 November election',
+              'Parliament’s term ended on 3 November for the 28 November election',
             );
             expect(shared).not.toHaveBeenCalled();
           } finally {
@@ -1400,7 +1453,7 @@ describe('the first frame has the loaded page’s layout', () => {
         await r.answer();
         expect(hosts(r.r, 'today-rep-state-dissolved')).toHaveLength(1);
         expect(lines(r.r)[2]).toBe(
-          'Assembly dissolved for the 30 November election',
+          'Parliament’s term ended on 5 November for the 30 November election',
         );
         await expect(readTodayShape()).resolves.toMatchObject({
           electionDay: '2030-11-30',
@@ -1628,7 +1681,7 @@ describe('the first frame has the loaded page’s layout', () => {
         seatId: maribyrnong.electorate_id,
         stateSeatIds: [essendon.electorate_id],
       };
-      // The index says the Assembly is dissolved: the four lines the row
+      // The index says the Parliament's term has ended: the four lines the row
       // will draw hold its place, under the one heading.
       const dissolved = await launch(victorian, saying('2026-11-28'));
       expect(hosts(dissolved.r, 'today-your-mp-pending')).toHaveLength(1);
