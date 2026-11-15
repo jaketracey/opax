@@ -48,12 +48,16 @@ interface Env {
   /** Bluesky (AT Protocol): the account handle, an app password (secret), the PDS (default https://bsky.social). */
   BLUESKY_POST_ENABLED?: string
   BSKY_HANDLE?: string
+  /** App Store Connect provider token (pt) for the app banner's campaign links; unset = no pt in the links. */
+  APP_STORE_PROVIDER?: string
   /** The account's DID, served at /.well-known/atproto-did so the domain can be the handle. */
   BSKY_DID?: string
   BSKY_APP_PASSWORD?: string
   BSKY_SERVICE?: string
   /** The ChatGPT app directory's domain-verification token, served at /.well-known/openai-apps-challenge (secret or var; unset = 404). */
   OPENAI_APPS_CHALLENGE?: string
+  /** The Apple Team ID of the OPAX app, for /.well-known/apple-app-site-association (var; unset = 404, links stay on the web). */
+  APPLE_TEAM_ID?: string
 
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code
@@ -143,6 +147,7 @@ declare namespace Cloudflare {
     META_API_VERSION?: string
     BLUESKY_POST_ENABLED?: string
     BSKY_HANDLE?: string
+    APP_STORE_PROVIDER?: string
     BSKY_DID?: string
     BSKY_APP_PASSWORD?: string
     BSKY_SERVICE?: string

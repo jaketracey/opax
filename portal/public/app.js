@@ -47,9 +47,9 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=872590ff14").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=76942228e3").then(module => { voteTables = module; }));
 let divisionMarkdown;
-const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
+const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
 // Hand-stamped: bump ?v= when it changes (a content stamp would need a 101st _headers rule).
 let divisionAgainst;
@@ -224,10 +224,19 @@ function titleSubject(rec) {
  * all the reader has. Exports and citations never come through here; they
  * quote the record's own title verbatim.
  */
+/**
+ * The text up to and including its first sentence end (".", "!" or "?" before
+ * white space), or all of it. Written without a lookbehind: Safari before 16.4
+ * cannot parse one, and a regex it cannot parse stops this whole file loading.
+ */
+function firstSentence(text) {
+  const value = String(text ?? "");
+  return value.match(/^[\s\S]*?[.!?](?=\s)/)?.[0] ?? value;
+}
 function displayTitle(rec) {
   const title = titleSubject(rec) || String(rec?.title || rec?.slug || "");
   return (rec?.labels?.kind || rec?.kind) === "division"
-    ? billQuestion(title).split(/(?<=[.!?])\s/)[0] : title;
+    ? firstSentence(billQuestion(title)) : title;
 }
 
 function fmtMoney(value) {
@@ -2479,6 +2488,7 @@ attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: (
     line.setAttribute("x1", a.x); line.setAttribute("y1", a.y);
     line.setAttribute("x2", b.x); line.setAttribute("y2", b.y);
     line.setAttribute("class", "logo-thread");
+    if (typeof line.animate !== "function") return; // nothing would fade it away
     svg.insertBefore(line, svg.firstChild); // beneath the land and stars
     line.animate(
       [{ opacity: 0 }, { opacity: 0.4, offset: 0.4 }, { opacity: 0 }],
@@ -2486,10 +2496,18 @@ attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: (
     ).onfinish = () => line.remove();
   };
   const glint = () => {
-    stars ??= [...svg.querySelectorAll(".logo-star")].map((p) => {
-      const b = p.getBBox();
-      return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+    // A star is measured only if it can be: a page a browser has rewritten
+    // (translated, or read through a proxy) can hold a node here that is not an
+    // SVG graphics element, and getBBox throws on one that is not rendered.
+    stars ??= [...svg.querySelectorAll(".logo-star")].flatMap((p) => {
+      if (typeof p.getBBox !== "function") return [];
+      try {
+        const b = p.getBBox();
+        return [{ x: b.x + b.width / 2, y: b.y + b.height / 2 }];
+      } catch { return []; }
     });
+    // Fewer than two stars to join: there is nothing to draw, now or later.
+    if (stars.length < 2) return;
     // Two or, one time in three, three distinct stars in a short chain.
     const picks = [...stars].sort(() => Math.random() - 0.5)
       .slice(0, Math.random() < 1 / 3 ? 3 : 2);
@@ -4672,7 +4690,8 @@ function subjectTag(body) {
 }
 
 /** A tag line from its parts, each dot bound to the part after it (style.css
- *  .subject-tag-next), so a line that wraps never ends in a dot. */
+ *  .subject-tag-next), so a line that wraps never ends in a dot; the dot of a
+ *  part that starts a line is clipped away, so no line starts with one either. */
 function tagLineHTML(parts) {
   return parts.filter(Boolean).map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join("");
 }
@@ -5787,8 +5806,10 @@ async function renderPartyMembers(label, body, key) {
   }
   const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
     .find((party) => party && samePartyLabel(party, label)) || label;
-  if (sitting.size) body.querySelector(".subject-tag .entry-active")?.insertAdjacentHTML("beforebegin",
-    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} marked current in the directory</a> · `);
+  // Its own part of the tag line, before the years (tagLineHTML: the dot travels with the part).
+  const active = body.querySelector(".subject-tag .entry-active");
+  if (sitting.size) (active?.closest(".subject-tag-next") || active)?.insertAdjacentHTML("beforebegin",
+    `<span class="subject-tag-next"><a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} marked current in the directory</a></span>`);
   body.querySelector("#entry-flows .ui-sheet-facts")?.insertAdjacentHTML("beforeend",
     `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} marked current in the directory; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
       data.meta?.generated ? ` (directory, ${esc(fmtDate(data.meta.generated))})` : ""}. Sitting members use their current party; member IDs counted once.</dd></div>`);
@@ -5882,10 +5903,10 @@ async function renderRosterParty(segment, key, body) {
   const everyone = [...members.current, ...members.former];
   const first = Math.min(...everyone.map((m) => m.first || 9999));
   const last = Math.max(0, ...everyone.map((m) => m.last || 0));
-  subjectTag(body).innerHTML = [
+  subjectTag(body).innerHTML = tagLineHTML([
     independent ? `<span>${esc(partyPage.INDEPENDENTS_DESCRIPTION)}</span>` : partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
     first < 9999 ? `<span class="entry-active">${independent ? 'Parliamentarians' : 'Members'} in the record ${esc(yearSpan(first, last))}</span>` : "",
-  ].filter(Boolean).join(" · ");
+  ].filter(Boolean));
   // A renamed party: its name history, from the registers' notices (labels.js PARTY_RENAMES).
   const history = partyPage.partyHistoryHTML(label, partyPageHelpers());
   if (history) body.querySelector(".subject-head").insertAdjacentHTML("beforeend", history);
@@ -6313,10 +6334,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       const reference = record?.kind === "reference";
       const ownFile = record?.jurisdiction ? await loadMoneyFile(record.jurisdiction) : null;
       if (currentSubjectKey !== key) return;
-      subjectTag(body).innerHTML = reference ? "<span>Source reference; electoral donation not established.</span>" : [
+      subjectTag(body).innerHTML = reference ? "<span>Source reference; electoral donation not established.</span>" : tagLineHTML([
         `<span>${esc(sentenceCase(industryLabel(record?.industry || "")) || "Receipt source")}</span>`,
         record?.firstYear ? `<span class="entry-active">${esc(returnsSpan(record.firstYear, record.lastYear))}</span>` : "",
-      ].filter(Boolean).join(" · ");
+      ].filter(Boolean));
       // State figures appear once in their labelled commission rows below; the
       // page keeps the same off-map note as the server page, without figures.
       sections.innerHTML = record?.jurisdiction === "federal" || reference ? donorRecordHTML(record, ownFile?.meta)
@@ -6382,11 +6403,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // party's own dot and full name (or the donor's industry) and its years.
     // Quick facts became the head's source sheet and the "On this page" rail;
     // its four buttons became one pill and ⋯ (principle 5).
-    subjectTag(body).innerHTML = [
+    subjectTag(body).innerHTML = tagLineHTML([
       isParty ? partyChipHTML(node.label, { full: true })
         : `<span>${esc(sentenceCase(industryLabel(node.industry || "")) || "Receipt source")}</span>`,
       (own?.firstYear ?? node.firstYear) ? `<span class="entry-active">${esc(returnsSpan(own?.firstYear ?? node.firstYear, own?.lastYear ?? node.lastYear))}</span>` : "",
-    ].filter(Boolean).join(" · ");
+    ].filter(Boolean));
     const head = body.querySelector(".subject-head");
     const aliasRow = !isParty && (node.aliases || []).length > 0 && ["Also disclosed as", (() => {
       // The registers spell one donor many ways; the totals cover them all.
@@ -6569,7 +6590,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // party they spoke for, so a defector reads "One Nation · formerly Nationals".
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
-  const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261016-1');
+  const { profileJurisdictions, profileAffiliations, profileHouses } = await import('/profile-jurisdictions.js?v=253a7152bb');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
   let party = partyNow || roster?.party || spokeAs;
@@ -6657,12 +6678,22 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       ? electorateReference.module.rosterListParty?.(roster, rosterLists.observations) || null : null);
   if (seatParty) party = seatParty.party;
   const partyOnMap = Boolean(party && findMoneyNode("party", party));
+  // The house a sitting member sits in now, from their verified current seats or, without
+  // one, an open dated service record (profileHouses). Any other house in the record reads
+  // "formerly"; where nothing says which house is current, the houses are left out.
+  const seatsNow = roster?.current ? (electorateReference?.person?.electorates || []).filter((e) => e.current) : [];
+  const housesHeld = profileHouses(roster, seatsNow);
+  const housesNow = housesHeld.rows.filter((r) => r.status === "current");
+  const house = housesNow.length ? (housesNow.length === 1 ? housesNow[0].house : "")
+    : representation.chambers.length === 1 ? representation.chambers[0] : "";
+  // Recorded seats may include past ones: beside a known current house, only its seats are named.
+  const seatsRecorded = housesNow.length
+    ? representation.representations.filter((r) => housesNow.some((h) => h.chamber === r.chamber)) : representation.representations;
   const electorateLinks = electorateReference
-    ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
-    : representation.representations.map((r) => esc(r.electorate)).join(', ');
+    ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, seatsRecorded, electorateReference.data.electorates)
+    : seatsRecorded.map((r) => esc(r.electorate)).join(', ');
   // "Member for Grayndler", "Senator for South Australia", "MLC for South Australia":
   // said only of a sitting member in one house, where the roster says so; otherwise the seat.
-  const house = representation.chambers.length === 1 ? representation.chambers[0] : "";
   const seatWord = roster?.current && electorateLinks
     ? (house === "Senate" ? "Senator for " : /council/i.test(house) ? "MLC for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
   // One meta line (principle 3): party, seat, house, parliament. The Quick
@@ -6674,8 +6705,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
-    representation.chambers.length ? `<span>${esc(representation.chambers.join(" ·\u00a0"))}</span>` : "",
-    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" ·\u00a0"))}</span>` : "",
+    // Each house with its parliament as one part, so the pair wraps together; a former
+    // house says so and comes last.
+    ...housesHeld.rows.filter((r) => r.status === "current" || r.status === "").map((r) => `<span>${esc(r.label)}</span>`),
+    ...housesHeld.parliamentsOnly.map((label) => `<span>${esc(label)}</span>`),
+    ...housesHeld.rows.filter((r) => r.status === "former").map((r) => `<span>formerly ${esc(r.label)}</span>`),
   ]) || "<span>From the parliamentary record</span>";
   const electorateRows = electorateReference
     ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
@@ -7757,7 +7791,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f9961d152e").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=4533ad7591").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -10614,7 +10648,14 @@ function bringAskIntoView() {
   heading.focus({ preventScroll: true });
 }
 
+/** Every way of asking (the box, the builder, a suggested question, a changed
+ * filter, a question in the address, Try again) comes through runAsk, which
+ * says so: "start" before anything is written and "end" when the answer is
+ * complete, has failed or was cancelled. The app banner leaves on "start". */
+const announceAsk = (state) => dispatchEvent(new CustomEvent("opax:ask", { detail: { state } }));
+
 async function runAsk(question) {
+  announceAsk("start");
   renderRegisterNote(question);
   setAskQuestion(question);
   if (askAbort) askAbort.abort();
@@ -10859,6 +10900,7 @@ async function runAsk(question) {
       btn.disabled = false;
       btn.removeAttribute("aria-busy");
       btn.textContent = "Ask the record";
+      announceAsk("end");
     }
   }
 }
@@ -13967,7 +14009,7 @@ function divisionMembersHTML(names, { ayes, noes } = {}) {
 function divisionHeading(d, entry) {
   const recorded = String(entry?.title || "").trim();
   const stage = billStage(entry?.stage || "");
-  const motion = billQuestion(d.name || d.question || "").split(/(?<=[.!?])\s/)[0];
+  const motion = firstSentence(billQuestion(d.name || d.question || ""));
   return { title: recorded || stage || motion || "Division", house: billHouse(d.house) || "Parliament" };
 }
 
@@ -14120,7 +14162,7 @@ async function openDocPage(slug, manageFocus) {
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
     $("doc-title").textContent = (doc.labels?.kind || doc.kind) === "division"
-      ? billQuestion(doc.title || doc.name).split(/(?<=[.!?])\s/)[0]
+      ? firstSentence(billQuestion(doc.title || doc.name))
       : doc.speaker || displayTitle(doc);
     // The trail names the page the same way, shortened for the strip.
     setCrumbs(crumbsFor("/ask?view=search", (doc.kind || slug.split("-")[0]) === "division"
@@ -14324,13 +14366,15 @@ function renderDocText(doc) {
     if (!line.trim()) { nodes.push(document.createTextNode(line)); continue; }
     // Only explicit capitalised speaker/office calls at sentence boundaries.
     // Style one sentence; do not guess how much subsequent prose they own.
-    const calls = /(?:^|(?<=[.!?])[ \t]+)((?:(?:The )?(?:(?:ACTING |DEPUTY )?(?:PRESIDENT|SPEAKER)|CHAIR)|(?:Mr|Mrs|Ms|Dr|Senator|The Hon\.) [A-Z][A-Z’'\-]+(?: [A-Z][A-Z’'\-]+){0,4}):[ \t]+)/g;
+    // No lookbehind (Safari before 16.4 cannot parse one): the sentence end is
+    // matched in group 1 and the call itself is group 2.
+    const calls = /(^|[.!?][ \t]+)((?:(?:The )?(?:(?:ACTING |DEPUTY )?(?:PRESIDENT|SPEAKER)|CHAIR)|(?:Mr|Mrs|Ms|Dr|Senator|The Hon\.) [A-Z][A-Z’'\-]+(?: [A-Z][A-Z’'\-]+){0,4}):[ \t]+)/g;
     let offset = 0;
     for (const match of line.matchAll(calls)) {
-      const start = match.index + match[0].length - match[1].length;
+      const start = match.index + match[0].length - match[2].length;
       if (start < offset) continue;
-      if (identity(match[1].replace(/:\s*$/, "")) === identity(doc.speaker)) continue;
-      const bodyStart = start + match[1].length;
+      if (identity(match[2].replace(/:\s*$/, "")) === identity(doc.speaker)) continue;
+      const bodyStart = start + match[2].length;
       const tail = line.slice(bodyStart);
       const endings = [...tail.matchAll(/[.!?](?=\s|$)/g)];
       const endMark = endings.find((m) => !/\b(?:Mr|Mrs|Ms|Dr|Hon|Sen)\.$/.test(tail.slice(0, m.index + 1)));
@@ -16188,7 +16232,7 @@ function bootTitleHere() {
 // and the title/description on the view now showing.
 const VIEW_DESCRIPTIONS = {
   discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
-  search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
+  search: "Search Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Follow the money in Australian politics: who donates to which party, by industry and year, and the contracts and grants that flow back, from federal and state records.",
   connections: "Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
@@ -16233,7 +16277,7 @@ function syncPathMeta() {
       ? VIEW_DESCRIPTIONS.discover
     : view && view !== "ask"
       ? (VIEW_DESCRIPTIONS[view] || VIEW_DESCRIPTIONS.subject)
-      : "Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";
+      : "Ask questions of Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";
   document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
   document.querySelector('meta[property="og:url"]')?.setAttribute("content", url);
   for (const sel of ['meta[name="description"]', 'meta[property="og:description"]', 'meta[name="twitter:description"]']) {

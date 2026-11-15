@@ -703,6 +703,28 @@ test('/.well-known/security.txt is plain text with contacts, a future Expires an
   assert.ok(Date.parse(expires)-Date.now()>30*864e5,`Expires ${expires} is within 30 days: renew it`);
   assert.ok(Date.parse(expires)-Date.now()<=366*864e5,'Expires is at most a year away');
 });
+test('/.well-known/apple-app-site-association is JSON from the Worker itself, never a redirect',async()=>{
+  // A made-up team: the real one is the Worker var APPLE_TEAM_ID, not in the repository.
+  const withTeam={...env,APPLE_TEAM_ID:'A1B2C3D4E5'};
+  const path='/.well-known/apple-app-site-association';
+  for(const suffix of ['','?utm_source=x']){
+    const r=await worker.fetch(new Request('https://opax.com.au'+path+suffix),withTeam,{waitUntil(){}});
+    assert.equal(r.status,200,suffix);
+    assert.equal(r.headers.get('content-type'),'application/json');
+    assert.equal(r.headers.get('location'),null);
+    const {applinks}=await r.json();
+    assert.deepEqual(applinks.details[0].appIDs,['A1B2C3D4E5.au.com.opax.app']);
+    assert.ok(applinks.details[0].components.some(c=>c['/']==='/bill/*'&&!c.exclude));
+    assert.ok(applinks.details[0].components.some(c=>c['/']==='/api/*'&&c.exclude===true));
+  }
+  // www is not an associated domain: a 404 there, not the 308 other paths get.
+  const www=await worker.fetch(new Request('https://www.opax.com.au'+path),withTeam,{waitUntil(){}});
+  assert.equal(www.status,404);
+  assert.equal(www.headers.get('location'),null);
+  // Unset, every link stays on the web.
+  const unset=await worker.fetch(new Request('https://opax.com.au'+path),{...env,APPLE_TEAM_ID:undefined},{waitUntil(){}});
+  assert.equal(unset.status,404);
+});
 
 test('ordinary Victorian electorate summaries carry the exact authorisation server-side',async()=>{
   const manifest=await read('/electorates/manifest.json');
