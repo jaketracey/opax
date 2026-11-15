@@ -321,7 +321,9 @@ const against9535 = {
 };
 
 test('a division shows who voted against their party, linked, in the web page words', async () => {
-  const raw = responses['/api/resource/division-federal-senate-10701'] as Record<string, unknown>;
+  const raw = responses[
+    '/api/resource/division-federal-senate-10701'
+  ] as Record<string, unknown>;
   const division = decodeDocument({ ...raw, voted_against_party: against9535 });
   expect(division.votedAgainstParty).toEqual({
     title: 'Voted differently from most of their party',
@@ -341,24 +343,42 @@ test('a division shows who voted against their party, linked, in the web page wo
   const view = await mount(<DocumentReader />);
   const shown = text(view);
   expect(shown).toContain('Voted differently from most of their party');
-  expect(shown).toContain("Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.");
-  expect(shown).toContain('Liberal. Voted no; the other 8 Liberal senators voted aye.');
+  expect(shown).toContain(
+    "Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.",
+  );
+  expect(shown).toContain(
+    'Liberal. Voted no; the other 8 Liberal senators voted aye.',
+  );
   const row = view.root.findAll(
-    (node) => node.props.testID === 'doc-against-party-0' && node.props.title === 'Alex Antic',
+    (node) =>
+      node.props.testID === 'doc-against-party-0' &&
+      node.props.title === 'Alex Antic',
   )[0]!;
   expect(row.props.href).toEqual(personRoute('alex-antic'));
   await act(async () => view.unmount());
 });
 
 test('a division with nobody against their party, or an older response, shows no section', async () => {
-  const raw = responses['/api/resource/division-federal-senate-10701'] as Record<string, unknown>;
-  for (const value of [undefined, null, { ...against9535, members: [] }, 'bad', { members: [{ name: 1 }] }]) {
+  const raw = responses[
+    '/api/resource/division-federal-senate-10701'
+  ] as Record<string, unknown>;
+  for (const value of [
+    undefined,
+    null,
+    { ...against9535, members: [] },
+    'bad',
+    { members: [{ name: 1 }] },
+  ]) {
     const division = decodeDocument({ ...raw, voted_against_party: value });
     expect(division.votedAgainstParty).toBeUndefined();
     jest.mocked(records.document).mockResolvedValue(record(division));
     const view = await mount(<DocumentReader />);
-    expect(view.root.findAllByProps({ testID: 'doc-against-party' })).toHaveLength(0);
-    expect(text(view)).not.toMatch(/most of their party|free vote|crossing the floor/i);
+    expect(
+      view.root.findAllByProps({ testID: 'doc-against-party' }),
+    ).toHaveLength(0);
+    expect(text(view)).not.toMatch(
+      /most of their party|free vote|crossing the floor/i,
+    );
     await act(async () => view.unmount());
   }
 });
@@ -825,6 +845,31 @@ test.each([
   },
 );
 
+test.each(['loading', 'failed'] as const)(
+  'Android: while the bill text is %s the bar has no menu, so no Ask is lost',
+  async (state) => {
+    const original = Platform.OS;
+    let view: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      Platform.OS = 'android';
+      mockBillText();
+      if (state === 'loading')
+        jest
+          .mocked(records.billManifest)
+          .mockImplementation(() => new Promise(() => {}));
+      else
+        jest
+          .mocked(records.billManifest)
+          .mockRejectedValue(new Error('offline'));
+      view = await mount(<BillTextReader />);
+      expect(barLabels()).toEqual([]);
+    } finally {
+      if (view) await act(async () => view!.unmount());
+      Platform.OS = original;
+    }
+  },
+);
+
 test('Android retains Version, Contents and More as bar items', async () => {
   const original = Platform.OS;
   let view: TestRenderer.ReactTestRenderer | undefined;
@@ -841,7 +886,15 @@ test('Android retains Version, Contents and More as bar items', async () => {
     const labels = more.menu!.items.map((item) => item.label);
     expect(labels).not.toContain('Contents');
     expect(labels).not.toContain('Version');
-    expect(labels).toContain('Ask about this bill');
+    // Ask is the header's one button, never repeated in the menu.
+    expect(labels).not.toContain('Ask about this bill');
+    expect(
+      view.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'bill-text-ask',
+      ),
+    ).toHaveLength(1);
   } finally {
     if (view) await act(async () => view!.unmount());
     Platform.OS = original;
