@@ -173,3 +173,52 @@ export const ON_THIS_DAY_DIVISION_RULE =
   'A division on a bill held on this date in an earlier year, from They Vote For You. When there are several, they take turns year by year, in the order they were held.';
 export const ON_THIS_DAY_SPEECH_RULE =
   'A speech on a bill given on this date in an earlier year, from Hansard. When there are several, they take turns year by year, in the order they are recorded.';
+
+// The end of a bill's name that says which bill it is: "Bill 2018",
+// "Bill (No. 2) 2018", "Bill 2018 [No. 2]", and the same for an Act.
+const NAME_END =
+  /\s+((?:Bill|Act)(?:\s+\(No\.\s*\d+\))?\s+\d{4}(?:\s+\[No\.\s*\d+\])?)$/;
+
+/**
+ * A bill's name for a clamped line. A name longer than `budget` characters
+ * is shortened in the middle, at a whole word, so its end ("Bill 2018")
+ * survives: a clamp cuts from the end, and the year is what tells two bills
+ * of one name apart. A name with no such end, or one that fits, is returned
+ * as it is.
+ */
+export function shortBillName(name: string, budget: number): string {
+  const text = name.trim();
+  const end = NAME_END.exec(text)?.[1];
+  if (!end || text.length <= budget) return text;
+  const words = text
+    .slice(0, text.length - end.length)
+    .trim()
+    .split(/\s+/);
+  const room = budget - end.length - 2;
+  let head = '';
+  for (const word of words) {
+    const next = head ? `${head} ${word}` : word;
+    if (next.length > room) break;
+    head = next;
+  }
+  // Never less than the first word, and no comma or opening bracket left
+  // hanging before the ellipsis.
+  head = (head || words[0] || '').replace(/[\s,(\[]+$/, '');
+  return `${head}… ${end}`;
+}
+
+/**
+ * How many characters two clamped lines of the row's title hold, counted
+ * generously wide (0.6 em a character) so the shortened name never reaches
+ * the clamp. `width` is the window's, less the row's margins, symbol and
+ * chevron.
+ */
+export function titleBudget(
+  width: number,
+  fontScale: number,
+  fontSize: number,
+) {
+  const line =
+    Math.max(0, width - 118) / (fontSize * 0.6 * Math.max(1, fontScale));
+  return Math.max(24, Math.floor(line) * 2);
+}

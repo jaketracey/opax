@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { billName } from '../../api/bill-transforms';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { formatDate } from '../../design/format';
@@ -6,6 +6,7 @@ import { chamberName } from '../../design/parliament';
 import type { RowMenuAction } from '../../design/row-link';
 import { LinkRow } from '../../design/rows';
 import { Text } from '../../design/text';
+import { textStyles } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes';
 import { presentSheet } from '../../navigation/sheets';
 import { docRoute } from '../../navigation/routes/records';
@@ -17,7 +18,24 @@ import {
   type OnThisDayBill,
   type OnThisDayDivisionPick,
   type OnThisDaySpeechPick,
+  shortBillName,
+  titleBudget,
 } from './on-this-day';
+
+/**
+ * The bill's name as the row draws it. Clamped to two lines (below the
+ * accessibility sizes) it is shortened in the middle, so "Bill 2018" is
+ * never what the clamp cuts. VoiceOver always hears the whole name.
+ */
+function useRowBillName(name: string, clamped: boolean) {
+  const { width, fontScale } = useWindowDimensions();
+  return clamped
+    ? shortBillName(
+        name,
+        titleBudget(width, fontScale, textStyles.body.fontSize),
+      )
+    : name;
+}
 
 /**
  * On this day, the last thing in the Bills list's header, directly above the
@@ -48,6 +66,7 @@ export function OnThisDayRow({
   const name = billName(pick.bill);
   const kicker = `On this day in ${pick.year}`;
   const introduced = `Introduced ${formatDate(pick.date)}`;
+  const drawnName = useRowBillName(name, !large);
   return (
     <LinkRow
       symbol="calendar"
@@ -59,7 +78,7 @@ export function OnThisDayRow({
           testID="bills-on-this-day"
         />
       }
-      title={name}
+      title={drawnName}
       titleLines={large ? undefined : 2}
       detail={introduced}
       href={billRoute(pick.bill.key, name)}
@@ -161,6 +180,7 @@ export function OnThisDayDivisionRow({
   const words = `${chamberName(division.house) ?? 'Chamber not recorded'} division${stage ? `, ${stage}` : ''}`;
   const kicker = `On this day in ${pick.year}`;
   const said = `${bill}, ${words}, ${formatDate(division.date)}, They Vote For You`;
+  const drawnBill = useRowBillName(bill, !large);
   return (
     <LinkRow
       symbol="hand.raised"
@@ -172,7 +192,7 @@ export function OnThisDayDivisionRow({
           testID="bills-on-this-day-division"
         />
       }
-      title={bill}
+      title={drawnBill}
       titleLines={large ? undefined : 2}
       detail={`${words}, ${formatDate(division.date)} · They Vote For You`}
       href={billRoute(division.bill, bill, { division: division.key })}

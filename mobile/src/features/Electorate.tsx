@@ -977,7 +977,10 @@ function ElectionRow({
                 href={winnerHref}
                 testID={`${testID}-winner`}
               />
-              <View style={styles.party}>
+              {/* The compact party link's touch area reaches below its
+                  text. The result line gives it that room; only a row with
+                  no result reserves it, or the room is an empty band. */}
+              <View style={result ? undefined : styles.party}>
                 <PartyLabel
                   party={summary.winner.party}
                   status="unknown"

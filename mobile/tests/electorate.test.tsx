@@ -387,10 +387,33 @@ test('election rows push the election screen, newest first', async () => {
   expect(parties[0]!.props.dense).toBeUndefined();
   expect(parties[0]!.props.compact).toBe(true);
   const partyFrame = parentView(parties[0]!);
-  expect(StyleSheet.flatten(partyFrame.props.style).minHeight).toBe(
-    minimumTarget,
-  );
   expect(StyleSheet.flatten(parentView(partyFrame).props.style).gap).toBe(4);
+  // The party link's touch area reaches below its text. A result line
+  // gives it that room; only a row with no result reserves 44 pt for it,
+  // so no row has an empty band above "after preferences".
+  const electionRows = r.root.findAll(
+    (n) =>
+      typeof n.type === 'string' &&
+      /^election-row-\d+$/.test(n.props.testID ?? ''),
+  );
+  const reserved = electionRows.map((row) => {
+    const party = row.findAllByType(PartyLabel)[0];
+    return {
+      result:
+        row.findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.testID === `${row.props.testID}-result`,
+        ).length > 0,
+      minHeight: party
+        ? StyleSheet.flatten(parentView(party).props.style)?.minHeight
+        : 'no party',
+    };
+  });
+  expect(reserved[0]).toEqual({ result: true, minHeight: undefined });
+  for (const row of reserved)
+    if (row.minHeight !== 'no party')
+      expect(row.minHeight).toBe(row.result ? undefined : minimumTarget);
   // VoiceOver hears the party's name, as drawn, never the file's code.
   expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
   expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);

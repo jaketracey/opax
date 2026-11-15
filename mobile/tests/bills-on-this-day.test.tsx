@@ -15,7 +15,12 @@ import { billName } from '../src/api/bill-transforms';
 import { Catalogs, type Bill } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import BillsList from '../src/features/bills/BillsList';
-import { ON_THIS_DAY_RULE, onThisDay } from '../src/features/bills/on-this-day';
+import {
+  ON_THIS_DAY_RULE,
+  onThisDay,
+  shortBillName,
+  titleBudget,
+} from '../src/features/bills/on-this-day';
 import { OnThisDayRow } from '../src/features/bills/OnThisDay';
 import { SegmentedPicker } from '../src/design/controls';
 import { formatDate } from '../src/design/format';
@@ -127,6 +132,105 @@ describe('the rule', () => {
   test('the rule sheet names the source and no person or party', () => {
     expect(ON_THIS_DAY_RULE).toContain('ParlInfo');
     expect(ON_THIS_DAY_RULE).not.toMatch(/—|most|top|best/i);
+  });
+});
+
+describe('a long name keeps its year (sweep 78)', () => {
+  const long =
+    'Australian Research Council Amendment (Ensuring Research Independence) Bill 2018';
+
+  test('it is shortened in the middle, at a whole word, never at its end', () => {
+    expect(shortBillName(long, 54)).toBe(
+      'Australian Research Council Amendment… Bill 2018',
+    );
+    for (const budget of [24, 30, 40, 54, 60, 70, 78]) {
+      const short = shortBillName(long, budget);
+      expect(short.endsWith('Bill 2018')).toBe(true);
+      expect(short.length).toBeLessThanOrEqual(Math.max(budget, 31));
+      // Whole words only before the ellipsis, and nothing left hanging.
+      const head = short.split('…')[0]!;
+      expect(long.startsWith(head)).toBe(true);
+      expect(long.charAt(head.length)).toBe(' ');
+      expect(head).not.toMatch(/[\s,(\[]$/);
+    }
+  });
+
+  test('a name that fits, or has no year at its end, is left alone', () => {
+    expect(shortBillName(long, 80)).toBe(long);
+    expect(shortBillName('Housing Bill 2026', 10)).toBe('Housing… Bill 2026');
+    const noYear =
+      'A very long name for a bill that carries no year at its end';
+    expect(shortBillName(noYear, 20)).toBe(noYear);
+  });
+
+  test.each([
+    [
+      'Treasury Laws Amendment (Fairer for Families and Farmers) Bill (No. 2) 2024',
+      'Bill (No. 2) 2024',
+    ],
+    [
+      'Social Security and Other Legislation Amendment (Responding to Robodebt) Bill 2025 [No. 2]',
+      'Bill 2025 [No. 2]',
+    ],
+    [
+      'Interactive Gambling Amendment (Cost Recovery and Other Measures) Act 2026',
+      'Act 2026',
+    ],
+  ])('%s keeps "%s"', (name, end) => {
+    const short = shortBillName(name, 44);
+    expect(short).toContain('… ');
+    expect(short.endsWith(end)).toBe(true);
+  });
+
+  test('the budget is two generous lines of the row, and shrinks as text grows', () => {
+    // 402 pt window: 284 pt of title at 0.6 em a character is 27 a line.
+    expect(titleBudget(402, 1, 17)).toBe(54);
+    expect(titleBudget(402, 1.353, 17)).toBeLessThan(titleBudget(402, 1, 17));
+    expect(titleBudget(320, 1.353, 17)).toBeGreaterThanOrEqual(24);
+  });
+
+  const pick = {
+    bill: {
+      key: 'au-federal-r6222',
+      title: long,
+      short_title: null,
+      introduced: '2018-11-15',
+    } as unknown as Bill,
+    year: 2018,
+    date: '2018-11-15',
+  };
+  const drawnRow = (fontScale: number) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 402, height: 874, scale: 3, fontScale });
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(<OnThisDayRow pick={pick} />);
+    });
+    const row = r.root.find(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'bills-on-this-day-row',
+    );
+    const json = JSON.stringify(r.toJSON());
+    const label = row.props.accessibilityLabel as string;
+    act(() => r.unmount());
+    return { json, label };
+  };
+
+  test('at the default size the row draws the name with its year, and VoiceOver hears all of it', () => {
+    const { json, label } = drawnRow(1);
+    expect(json).toContain('Australian Research Council Amendment… Bill 2018');
+    // The whole name is only in the spoken label, never drawn.
+    expect(json.split(long).length - 1).toBe(1);
+    expect(label).toContain(long);
+  });
+
+  test('at AX3 the title is not clamped, so the whole name is drawn', () => {
+    const { json, label } = drawnRow(2.643);
+    expect(json).toContain(long);
+    expect(json).not.toContain('…');
+    expect(label).toContain(long);
   });
 });
 
