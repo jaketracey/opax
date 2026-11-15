@@ -1218,7 +1218,7 @@ describe('the first frame has the loaded page’s layout', () => {
       expect(hosts(first.r, 'today-rep-state')).toHaveLength(0);
       const drawn = lines(first.r);
       expect(drawn.slice(0, 3)).toEqual([
-        'Victoria · Legislative Assembly',
+        'Victoria ·\u00a0Legislative Assembly',
         'Essendon',
         'Assembly dissolved for the 28 November election',
       ]);

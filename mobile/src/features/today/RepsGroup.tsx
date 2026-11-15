@@ -148,7 +148,7 @@ export interface LinesRep {
 
 /** The lines as one spoken label, in order. */
 export function linesLabel(lines: readonly string[]): string {
-  return `${lines.map((line) => line.replace(' · ', ', ')).join('. ')}.`;
+  return `${lines.map((line) => line.replace(/ ·[ \u00a0]/, ', ')).join('. ')}.`;
 }
 
 /** The lines row's frame, shared by the row and its held place. */

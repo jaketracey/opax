@@ -420,12 +420,16 @@ describe('Today’s representatives group', () => {
     test('dissolved: four lines in order, and nobody is called a member', async () => {
       const renderer = await card({ stateForm: DISSOLVED });
       expect(words(renderer)).toEqual([
-        'Victoria · Legislative Assembly',
+        'Victoria ·\u00a0Legislative Assembly',
         'Essendon',
         'Assembly dissolved for the 28 November election',
         expect.stringMatching(new RegExp(`^Last member: ${last}, \\w+`)),
       ]);
       expect(words(renderer)).toEqual([...dissolvedEssendon]);
+      // The dot is bound to "Legislative" (at AX3 it ended the line), and
+      // the house's two words still break at their own space.
+      expect(words(renderer)[0]).toMatch(/ ·\u00a0Legislative Assembly$/);
+      expect(words(renderer)[0]).not.toMatch(/· /);
       expect(stateLines_(renderer).map((t) => t.props.testID)).toEqual(
         [1, 2, 3, 4].map((n) => `today-rep-state-line-${n}`),
       );
@@ -449,7 +453,7 @@ describe('Today’s representatives group', () => {
       expect(form).toEqual({ kind: 'neutral' });
       const renderer = await card({ stateForm: form });
       expect(words(renderer)).toEqual([
-        'Victoria · Legislative Assembly',
+        'Victoria ·\u00a0Legislative Assembly',
         'Essendon',
         expect.stringMatching(
           new RegExp(`^On the roster at 9 Sep 2026: ${last}, \\w+$`),
