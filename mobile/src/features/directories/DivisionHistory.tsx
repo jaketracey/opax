@@ -630,17 +630,23 @@ export default function DivisionHistory() {
         </View>
       ) : null}
       {record?.failed && record.loaded ? (
-        <InlineError
-          subject="some votes"
-          message={
-            // With no connection the rest did not fail: they are not saved.
-            record.offline
-              ? `Votes from the ${counted(record.loaded, 'bill', 'bills')} saved on this ${thisDevice()}.`
-              : `Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`
-          }
-          onRetry={refresh}
-          testID="division-history-partial"
-        />
+        record.offline ? (
+          // With no connection the rest did not fail: they are not saved.
+          // A note in the saved-date line's words and type, not an error:
+          // no failure is recorded for the page and none is announced.
+          <SavedNote
+            message={`Votes from the ${counted(record.loaded, 'bill', 'bills')} saved on this ${thisDevice()}.`}
+            onRetry={refresh}
+            testID="division-history-partial"
+          />
+        ) : (
+          <InlineError
+            subject="some votes"
+            message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`}
+            onRetry={refresh}
+            testID="division-history-partial"
+          />
+        )
       ) : null}
     </View>
   );
@@ -853,6 +859,44 @@ function Separator() {
   const inset = useContext(VoteInset);
   return <View style={[styles.separator, { marginLeft: inset }]} />;
 }
+/**
+ * What the page is showing while offline: the votes it has saved. It sits
+ * where the partial-read error sits, with the same Try again beside it, in
+ * the offline line's type (`secondary`, soft ink). It is information, so
+ * it has no error mark, registers no failure with the page and is read by
+ * VoiceOver and TalkBack as plain text.
+ */
+function SavedNote({
+  message,
+  onRetry,
+  testID,
+}: {
+  message: string;
+  onRetry: () => void;
+  testID: string;
+}) {
+  return (
+    <View style={styles.note}>
+      <View
+        accessible
+        accessibilityRole="text"
+        accessibilityLabel={message}
+        style={styles.noteWords}
+      >
+        <Text wordSafe variant="secondary" tone="inkSoft" testID={testID}>
+          {message}
+        </Text>
+      </View>
+      <Button
+        label={copy.tryAgain}
+        variant="plain"
+        onPress={onRetry}
+        testID={`${testID}-retry`}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   searchFilters: {
@@ -867,6 +911,15 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section,
   },
   header: { gap: rhythm.tight },
+  // The partial-read error's own row, so the note holds its place.
+  note: {
+    gap: rhythm.heading,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  noteWords: { flexShrink: 1, maxWidth: '100%' },
   count: {
     flexDirection: 'row',
     flexWrap: 'wrap',
