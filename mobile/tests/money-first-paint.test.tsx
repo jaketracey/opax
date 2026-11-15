@@ -38,7 +38,12 @@ import {
   useFirstScreenReader,
   type ScreenReaderState,
 } from '../src/features/money/screen-reader';
-import { hairline, rhythm, textStyles } from '../src/design/tokens';
+import {
+  hairline,
+  minimumTarget,
+  rhythm,
+  textStyles,
+} from '../src/design/tokens';
 import { pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
@@ -479,42 +484,51 @@ describe('the card at large text', () => {
     await act(async () => r.unmount());
   });
 
-  test('where the pinned parts need more than the cap, the cap is theirs and the panel gives it back', async () => {
-    const r = await render();
-    act(() =>
-      byTestID(r.root, 'money-screen').props.onLayout({
-        nativeEvent: { layout: { width: 402, height: 760 } },
-      }),
-    );
-    let top = byTestID(r.root, 'money-map-card').parent!;
-    while (flat(top).maxHeight === undefined) top = top.parent!;
-    const cap = flat(top).maxHeight as number;
-    const panelCap = r.root.findByType(MoneyMapPanel).props.maxHeight;
-    // The jurisdiction and the picker, far taller than the cap allows.
-    act(() => {
-      for (const id of ['money-map-card-head', 'money-map-card-picker'])
-        byTestID(r.root, id).props.onLayout({
-          nativeEvent: { layout: { height: 200 } },
-        });
-    });
-    const raised = flat(top).maxHeight as number;
-    expect(raised).toBeGreaterThan(cap);
-    // The pinned parts, the gaps around them, and two lines of the
-    // sentence (not one word of it): the card says what the map shows.
-    const gaps = rhythm.tight * 3 + rhythm.block * 2 + hairline * 2;
-    const twoLines =
-      textStyles.secondary.lineHeight *
-      ReactNative.Dimensions.get('window').fontScale *
-      2;
-    expect(raised).toBeGreaterThanOrEqual(400 + gaps + twoLines);
-    act(() =>
-      top.props.onLayout({ nativeEvent: { layout: { height: raised } } }),
-    );
-    expect(r.root.findByType(MoneyMapPanel).props.maxHeight).toBeLessThan(
-      panelCap,
-    );
-    await act(async () => r.unmount());
-  });
+  const gaps = rhythm.tight * 3 + rhythm.block * 2 + hairline * 2;
+  const line =
+    textStyles.secondary.lineHeight *
+    ReactNative.Dimensions.get('window').fontScale;
+  test.each([
+    // Room for the panel to keep its floor: two lines of the sentence.
+    ['two lines', 80, 2],
+    // The pinned parts alone fill the room: one line, as the card always had.
+    ['one line', 200, 1],
+  ])(
+    'where the pinned parts need more than the cap, the cap is theirs and the panel gives it back (%s)',
+    async (_name, each, lines) => {
+      const r = await render();
+      act(() =>
+        byTestID(r.root, 'money-screen').props.onLayout({
+          nativeEvent: { layout: { width: 402, height: 760 } },
+        }),
+      );
+      let top = byTestID(r.root, 'money-map-card').parent!;
+      while (flat(top).maxHeight === undefined) top = top.parent!;
+      const cap = flat(top).maxHeight as number;
+      const panelCap = r.root.findByType(MoneyMapPanel).props.maxHeight;
+      act(() => {
+        for (const id of ['money-map-card-head', 'money-map-card-picker'])
+          byTestID(r.root, id).props.onLayout({
+            nativeEvent: { layout: { height: each } },
+          });
+      });
+      const raised = flat(top).maxHeight as number;
+      expect(raised).toBeGreaterThan(cap);
+      // The pinned parts, the gaps around them, and the sentence's lines.
+      const sentence = Math.max(minimumTarget, line * lines);
+      expect(raised).toBeGreaterThanOrEqual(2 * each + gaps + sentence);
+      // Never more than the lines it keeps: the second line gives way
+      // where the panel would lose its floor.
+      expect(raised).toBeLessThan(2 * each + gaps + sentence + 1);
+      act(() =>
+        top.props.onLayout({ nativeEvent: { layout: { height: raised } } }),
+      );
+      expect(r.root.findByType(MoneyMapPanel).props.maxHeight).toBeLessThan(
+        panelCap,
+      );
+      await act(async () => r.unmount());
+    },
+  );
 });
 
 describe('the map and its panel while Search is open at large text', () => {
