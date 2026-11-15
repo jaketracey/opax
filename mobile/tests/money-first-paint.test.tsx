@@ -1,6 +1,7 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, ScrollView, StyleSheet, View } from 'react-native';
+import * as Reanimated from 'react-native-reanimated';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { ApiError } from '../src/api/errors';
 import { apiClient } from '../src/api/runtime';
@@ -359,5 +360,49 @@ describe('the words kept for the summary', () => {
     expect(moneySummaryStandIn('federal', {})).toBe(
       moneySummary(graph, filtersFromParams(graph, {})),
     );
+  });
+});
+
+describe('the panel’s height', () => {
+  afterEach(() => jest.restoreAllMocks());
+  test('is set at once when first placed or re-capped, and glides only after the reader’s action', async () => {
+    const timing = jest.spyOn(Reanimated, 'withTiming');
+    const props = {
+      focus: null,
+      totals: { donations: 1, publicMoney: 2 },
+      caption: '',
+      legend: null,
+      sourceLine: null,
+      stageHeight: 800,
+      onExpanded: () => undefined,
+      onClear: () => undefined,
+      onPeekHeight: () => undefined,
+    };
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<MoneyMapPanel {...props} expanded={false} />);
+    });
+    const content = r.root
+      .findByType(ScrollView)
+      .findAllByType(View)
+      .find((node) => node.props.onLayout)!;
+    // First placement.
+    act(() =>
+      content.props.onLayout({ nativeEvent: { layout: { height: 100 } } }),
+    );
+    // A cap corrected as the stage measures itself.
+    await act(async () =>
+      r.update(<MoneyMapPanel {...props} expanded={false} maxHeight={90} />),
+    );
+    await act(async () =>
+      r.update(<MoneyMapPanel {...props} expanded={false} maxHeight={120} />),
+    );
+    expect(timing).not.toHaveBeenCalled();
+    // The reader opens the panel.
+    await act(async () =>
+      r.update(<MoneyMapPanel {...props} expanded maxHeight={400} />),
+    );
+    expect(timing).toHaveBeenCalledTimes(1);
+    await act(async () => r.unmount());
   });
 });

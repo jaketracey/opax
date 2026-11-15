@@ -727,16 +727,21 @@ function MapMode({
   // safe inset is the floor of that band.
   const band = Math.max(below, managed ? 0 : (safe?.bottom ?? 0));
   const visible = (stage.height || window.height) - band;
-  const limits =
-    large && !regular
-      ? largeTextLimits(
-          managed ? pose.controls.height : visible,
-          topHeight,
-          controlsHeight || (horizontalControls ? 48 : 190),
-          searchOpen ? 'search' : expanded ? 'expanded' : 'map',
-          managed ? pose.sceneFloor : 0,
-        )
-      : null;
+  const largeLimits = (top: number) =>
+    largeTextLimits(
+      managed ? pose.controls.height : visible,
+      top,
+      controlsHeight || (horizontalControls ? 48 : 190),
+      searchOpen ? 'search' : expanded ? 'expanded' : 'map',
+      managed ? pose.sceneFloor : 0,
+    );
+  // Until the card reports its height, a capped card (large text on a
+  // compact width) is taken to fill its cap, as it does there. The panel's
+  // share was worked out from a card of no height on the first frame and
+  // shrank when the height came in.
+  const top =
+    topHeight || (large && !regular ? largeLimits(0).topMaxHeight : 0);
+  const limits = large && !regular ? largeLimits(top) : null;
   // Below accessibility sizes a phone's panel keeps its own height, unless
   // a focus makes it taller than the room under the controls: then it stops
   // at the controls and scrolls, so all four stay whole (item 5.6).
@@ -744,7 +749,7 @@ function MapMode({
     !limits && !managed && !searchOpen && !expanded && !horizontalControls
       ? Math.max(
           minimumTarget,
-          visible - topHeight - (controlsHeight || 190) - rhythm.block * 2,
+          visible - top - (controlsHeight || 190) - rhythm.block * 2,
         )
       : undefined;
   const panelMaxHeight =
@@ -767,7 +772,7 @@ function MapMode({
           }
         : {
             top:
-              topHeight +
+              top +
               rhythm.tight +
               (managed ? pose.controls.y : 0) +
               (horizontalControls && !searchOpen && !expanded
@@ -786,7 +791,7 @@ function MapMode({
       pose.folded,
       safe,
       managed,
-      topHeight,
+      top,
       peek,
       band,
       panelMaxHeight,

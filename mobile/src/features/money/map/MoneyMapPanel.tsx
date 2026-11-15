@@ -9,6 +9,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -206,11 +207,30 @@ export function MoneyMapPanel({
     ? Math.max(peek, Math.round(stageHeight * EXPANDED_SHARE))
     : peek;
   const target = maxHeight === undefined ? wanted : Math.min(wanted, maxHeight);
+  // The height glides only after the reader opens or closes the panel or
+  // changes its subject. Its first placement, and a cap corrected as the
+  // stage measures itself, are set at once: gliding those moved the totals
+  // for a third of a second after the map had drawn.
+  const subject = focus?.node.id ?? null;
+  const asked = useRef<number | null>(null);
+  const mounted = useRef(false);
+  const placed = useRef(false);
+  useEffect(() => {
+    // Declared before the height's effect, so it runs first in a commit.
+    if (mounted.current) asked.current = Date.now();
+    mounted.current = true;
+  }, [expanded, subject]);
   useEffect(() => {
     if (!peek) return;
-    height.value = reduced
-      ? target
-      : withTiming(target, { duration: motion.duration.standard });
+    const glide =
+      !reduced &&
+      placed.current &&
+      asked.current !== null &&
+      Date.now() - asked.current < PANEL_GLIDE_WINDOW;
+    height.value = glide
+      ? withTiming(target, { duration: motion.duration.standard })
+      : target;
+    placed.current = true;
   }, [target, peek, reduced, height]);
   const style = useAnimatedStyle(() => ({
     height: height.value || undefined,
@@ -561,6 +581,8 @@ export function MoneyMapPanel({
 }
 
 const HANDLE = 20;
+/** How long after the reader's action a new height still glides (ms). */
+const PANEL_GLIDE_WINDOW = 600;
 const styles = StyleSheet.create({
   panel: {
     backgroundColor: colors.raised,
