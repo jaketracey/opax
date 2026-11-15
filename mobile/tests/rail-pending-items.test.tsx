@@ -16,9 +16,16 @@ import {
   noHeaderItems,
   pageItems,
   pendingHeaderItems,
+  RAIL_STAND_IN_BUTTONS,
 } from '../src/navigation/chrome';
 import { moneyBar } from '../src/features/money-public/parts';
+
 import { RouteOptions } from '../src/navigation/preview';
+
+// The stand-in buttons are switched off (chrome.ts): they made a remembered
+// profile drop 38 pt on the simulator. These tests describe them and run
+// again when the switch is on; the last test pins what ships now.
+const whenOn = RAIL_STAND_IN_BUTTONS ? describe : describe.skip;
 
 let mockBarEdge: 'unspecified' | 'leading' | 'trailing' = 'unspecified';
 jest.mock('../modules/opax-root-bar', () => ({
@@ -49,32 +56,34 @@ const labels = (name: string, params?: object) =>
         }`,
   );
 
-test.each(['leading', 'trailing'] as const)(
-  'beside a %s rail the stand-ins are the disabled buttons themselves',
-  (edge) => {
-    at(edge, 27);
-    expect(labels('person/[slug]')).toEqual([
-      'Share (disabled)',
-      'More (disabled)',
-    ]);
-    expect(labels('bill/[key]')).toEqual([
-      'Share (disabled)',
-      'More (disabled)',
-    ]);
-    expect(labels('directory')).toEqual([
-      'Filters (disabled)',
-      'More (disabled)',
-    ]);
-    expect(labels('grant-program')).toEqual(['More (disabled)']);
-    // The real More item is matched across the swap by its identifier.
-    expect(pendingHeaderItems('person/[slug]')!.at(-1)).toMatchObject({
-      identifier: 'header-more',
-    });
-    // No items of its own, and a sheet: nothing, as before.
-    expect(labels('topics')).toBeUndefined();
-    expect(labels('money-item', { sheet: '1' })).toBeUndefined();
-  },
-);
+whenOn('with the stand-in buttons on', () => {
+  test.each(['leading', 'trailing'] as const)(
+    'beside a %s rail the stand-ins are the disabled buttons themselves',
+    (edge) => {
+      at(edge, 27);
+      expect(labels('person/[slug]')).toEqual([
+        'Share (disabled)',
+        'More (disabled)',
+      ]);
+      expect(labels('bill/[key]')).toEqual([
+        'Share (disabled)',
+        'More (disabled)',
+      ]);
+      expect(labels('directory')).toEqual([
+        'Filters (disabled)',
+        'More (disabled)',
+      ]);
+      expect(labels('grant-program')).toEqual(['More (disabled)']);
+      // The real More item is matched across the swap by its identifier.
+      expect(pendingHeaderItems('person/[slug]')!.at(-1)).toMatchObject({
+        identifier: 'header-more',
+      });
+      // No items of its own, and a sheet: nothing, as before.
+      expect(labels('topics')).toBeUndefined();
+      expect(labels('money-item', { sheet: '1' })).toBeUndefined();
+    },
+  );
+});
 
 test.each([
   // iPhone, iPad and the unfolded Duo.
@@ -95,7 +104,7 @@ test.each([
 // never will (not found, a failed load, offline, or loaded with nothing to
 // share) must not keep dimmed Share and More on the rail: VoiceOver read
 // "Share, dimmed" on a page with nothing to share.
-describe('a page that will have no items of its own', () => {
+whenOn('a page that will have no items of its own', () => {
   const route = { key: 'person-1', name: 'person/[slug]' };
   function items(content: ReactElement) {
     const calls: Record<string, unknown>[] = [];
@@ -247,4 +256,12 @@ describe('a page that will have no items of its own', () => {
     at('unspecified', 27);
     expect(noHeaderItems()).toEqual({});
   });
+});
+
+test('the stand-in buttons are off: the rail keeps its spacing item', () => {
+  expect(RAIL_STAND_IN_BUTTONS).toBe(false);
+  at('trailing', 27);
+  expect(labels('person/[slug]')).toEqual(['spacing 104']);
+  expect(labels('directory')).toEqual(['spacing 104']);
+  expect(labels('grant-program')).toEqual(['spacing 44']);
 });

@@ -886,10 +886,21 @@ export function noHeaderItems() {
  */
 function railItems(): boolean {
   return (
+    RAIL_STAND_IN_BUTTONS &&
     glassBar() &&
     (RootBar?.getVerticalBarEdge?.() ?? 'unspecified') !== 'unspecified'
   );
 }
+
+/**
+ * Off. On the Duo simulator the stand-in buttons made a remembered profile
+ * draw 38 pt high and drop when its own items replaced them (2 of 2 warm
+ * opens), where the spacing item showed no shift. The simulator never
+ * showed the 58 pt drop reported from the phone, so neither stand-in is
+ * proven there; until that is measured on a device the rail keeps the
+ * spacing item it had.
+ */
+export const RAIL_STAND_IN_BUTTONS: boolean = false;
 
 export function pendingHeaderOptions(name: string, params?: object) {
   const items = pendingHeaderItems(name, params);
