@@ -102,6 +102,7 @@ import { useIsMyMember } from './your-mp/useIsMyMember';
 import { savedSeatDirectory } from './your-mp/useSeat';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
 import { perfMark, useDrawnMark } from '../perf/probe';
+import { personDisplayName } from '../design/person-name';
 import {
   forgetProfile,
   rememberedProfile,
@@ -221,6 +222,23 @@ export async function loadProfile(slug: string): Promise<Loaded | null> {
       },
     };
   }
+  // A surname the record gives in capitals is drawn as people write it:
+  // in the heading, the bar's title and the share text. The record that was
+  // read is not changed.
+  const loaded = profile.blocks.identity.data;
+  const drawnName = loaded ? personDisplayName(loaded.name) : null;
+  if (loaded && drawnName !== null && drawnName !== loaded.name) {
+    profile = {
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        identity: {
+          ...profile.blocks.identity,
+          data: { ...loaded, name: drawnName },
+        },
+      },
+    };
+  }
   const sitting = person.data.partyStatus !== 'former';
   const house = person.data.seats.find(
     (s) => s.current && s.jurisdiction === 'federal' && s.chamber !== 'senate',
@@ -247,7 +265,7 @@ const noSeat = {
 
 export function ProfileScreen({
   slug,
-  name: routeName,
+  name: givenName,
   arrival,
   embedded = false,
 }: {
@@ -257,6 +275,7 @@ export function ProfileScreen({
   arrival?: ProfileArrival;
   embedded?: boolean;
 }) {
+  const routeName = givenName ? personDisplayName(givenName) : givenName;
   // A profile already read this session draws on the first frame; the read
   // below still runs and redraws only if the record changed (PF4).
   const [load, setLoad] = useState<Load>(() => {
@@ -601,7 +620,9 @@ export function profileBones(
   if (profile && kept.pay ? annualPay(profile) !== null : federal)
     tiles.push('pay');
   return {
-    name: identity.name,
+    // As the loaded heading draws it (loadProfile), so the line wraps the
+    // same before and after the read.
+    name: personDisplayName(identity.name),
     role: former ?? (profile && kept.pay ? roleLine(profile, false) : null),
     follow: !!identity.canonicalPersonId,
     rows: [
