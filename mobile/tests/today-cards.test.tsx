@@ -22,11 +22,19 @@ import { Text } from '../src/design/text';
 import { colors, radii } from '../src/design/tokens';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { Plate } from '../src/features/edition/Plate';
+import Svg, { Path } from 'react-native-svg';
+import { paletteFor } from '../src/design/palette';
 import { Picture } from '../src/features/explore/Picture';
+import {
+  QUIZ_ART_RATIO,
+  QuizArt,
+  quizArtPaths,
+} from '../src/features/today/QuizArt';
 import { explore } from '../src/features/explore/runtime';
 import type { YearPicture } from '../src/features/explore/pictures';
 import {
   ArchiveCard,
+  archiveLabel,
   archivePicture,
   DailyPair,
   QuestionCard,
@@ -241,7 +249,7 @@ describe('full-width daily cards', () => {
     expect(root.findAllByType(QuestionCard)).toHaveLength(1);
     expect(
       StyleSheet.flatten(root.findByType(QuestionCard).parent!.props.style),
-    ).toEqual({ alignSelf: 'stretch' });
+    ).toEqual({ alignSelf: 'stretch', flexGrow: 1 });
   });
   describe.each(['landscape', 'portrait'] as const)(
     '%s archive media',
@@ -349,6 +357,7 @@ describe('full-width daily cards', () => {
       for (const card of [archive, question]) {
         expect(StyleSheet.flatten(card.parent!.props.style)).toEqual({
           alignSelf: 'stretch',
+          flexGrow: 1,
         });
         expect(
           StyleSheet.flatten(card.parent!.props.style).height,
@@ -406,6 +415,111 @@ describe('full-width daily cards', () => {
       <ArchiveCard year={archiveYear(today)} picture={picture} />,
     );
     expect(card.root.findByType(Picture).props.failure).toBe('mark');
+  });
+  test.each(['light', 'dark'] as const)(
+    'the question card has a header in the archive photograph’s frame, drawn in the app palette (%s)',
+    async (scheme) => {
+      jest.spyOn(Native, 'useColorScheme').mockReturnValue(scheme);
+      const { root } = await render(<DailyPair today={today} attempt={0} />);
+      const question = root.findByType(QuestionCard);
+      const card = question.findByType(Card);
+      // The archive card's construction: no padding, the header first.
+      expect(card.props.padded).toBe(false);
+      expect(card.props.children[0].type).toBe(QuizArt);
+      const art = host(question, 'today-question-art');
+      const palette = paletteFor(scheme);
+      // The same slot: the card's full width, 4:3, the card's own corners.
+      expect(StyleSheet.flatten(art.props.style)).toEqual({
+        width: '100%',
+        aspectRatio: 4 / 3,
+        overflow: 'hidden',
+        backgroundColor: palette.navyWash,
+      });
+      const archive = root.findByType(ArchiveCard);
+      const photo = StyleSheet.flatten(
+        archive
+          .findByType(Picture)
+          .findAll((n) => typeof n.type === 'string')[0]!.props.style,
+      );
+      expect(photo).toMatchObject({ width: '100%', aspectRatio: 4 / 3 });
+      // Decoration: the card stays one link, read as before.
+      expect(art.props.importantForAccessibility).toBe('no-hide-descendants');
+      expect(art.props.accessibilityElementsHidden).toBe(true);
+      const link = question
+        .findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.accessibilityRole === 'link',
+        )
+        .at(-1)!;
+      expect(link.props.accessibilityLabel).toMatch(/^Today’s question\. /);
+      // Vector, in the art's own 4:3 units, filling the frame: crisp at
+      // every size, and in its final size with no measuring.
+      const svg = art.findByType(Svg);
+      expect(svg.props).toMatchObject({
+        width: '100%',
+        height: '100%',
+        viewBox: '0 0 320 240',
+        preserveAspectRatio: 'xMidYMid slice',
+      });
+      const [field, lit] = art.findAllByType(Path);
+      expect(field!.props.fill).toBe(palette.navy);
+      expect(lit!.props.fill).toBe(palette.todayDotBronze);
+      // Both cards fill their cell, so side by side they end on one line.
+      for (const each of [archive, question])
+        expect(
+          StyleSheet.flatten(each.findByType(Card).props.style),
+        ).toMatchObject({ flexGrow: 1 });
+    },
+  );
+  test('the quiz art is one image: a question mark in a field of dots, the same for every question', () => {
+    const first = quizArtPaths();
+    expect(quizArtPaths()).toEqual(first);
+    // 31 by 23 dots on a 10 unit grid; the lit ones are the mark.
+    const dots = (d: string) => d.split('M').length - 1;
+    expect(dots(first.field) + dots(first.lit)).toBe(31 * 23);
+    expect(dots(first.lit)).toBe(first.count);
+    expect(first.count).toBeGreaterThan(30);
+    expect(QUIZ_ART_RATIO).toBe(4 / 3);
+  });
+  test('a photograph from this year is "From the record" with its full date; older ones keep the archive and the year', async () => {
+    expect(archiveLabel(2021, '2021-05-04', '2026-11-15')).toEqual({
+      kicker: 'From the archive',
+      figure: '2021',
+    });
+    expect(archiveLabel(2026, '2026-11-03', '2026-11-15')).toEqual({
+      kicker: 'From the record',
+      figure: '3 Nov 2026',
+    });
+    // No whole date: the year, never a guessed day.
+    expect(archiveLabel(2026, null, '2026-11-15')).toEqual({
+      kicker: 'From the record',
+      figure: '2026',
+    });
+    expect(archiveLabel(2026, '2026-11', '2026-11-15').figure).toBe('2026');
+    const { root } = await render(
+      <ArchiveCard
+        year={2026}
+        picture={{ ...picture, date: '2026-11-03' }}
+        today="2026-11-15"
+      />,
+    );
+    const words = root.findAllByType(Text).map((node) => node.props.children);
+    expect(words).toContain('From the record');
+    expect(words).not.toContain('From the archive');
+    expect(host(root, 'today-archive-figure').props.children).toBe(
+      '3 Nov 2026',
+    );
+    const link = root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'link',
+      )
+      .at(-1)!;
+    expect(link.props.accessibilityLabel).toMatch(
+      /^From the record, 3 Nov 2026\. /,
+    );
   });
   test('a missing archive leaves the full-width question', async () => {
     jest.mocked(explore.pictures).mockRejectedValue(new Error('offline'));
