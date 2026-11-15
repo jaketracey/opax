@@ -68,13 +68,14 @@ import {
 } from '../../design/tokens';
 import {
   barBacking,
+  fixedPageBar,
   headerItems,
-  opaqueBar,
   pageItems,
   usePushedBar,
   useRailBar,
 } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
+import { usePushedPlainClear } from '../../navigation/solid-rail';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
   moneyCatalogs,
@@ -621,15 +622,17 @@ function MapMode({
   // beside a vertical bar (the closed Duo), where the other pushed pages run
   // under a clear one. That bar needs its own ground there; the list sets the
   // stack's bar again when the map hands over to it (ListMode).
+  // Off the rail, where pushed pages are clear, it has no hairline either
+  // (the hub's ruling); a legibility setting keeps the opaque bar and its
+  // hairline (fixedPageBar).
   const rail = useRailBar() !== null;
+  const plainClear = usePushedPlainClear();
   useLayoutEffect(() => {
     setOptions({
-      ...opaqueBar(colors.paper),
-      headerTransparent: false,
+      ...fixedPageBar(plainClear, rail, colors.paper),
       headerTitle: barTitle,
-      ...(rail ? barBacking(colors.paper) : {}),
     });
-  }, [setOptions, barTitle, rail]);
+  }, [setOptions, barTitle, rail, plainClear]);
   const navigation = useNavigation();
   const router = useRouter();
   const { regular } = useLayout();

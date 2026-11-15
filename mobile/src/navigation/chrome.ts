@@ -214,6 +214,25 @@ export const barBacking = (ground: ColorValue = colors.paper) => ({
 });
 
 /**
+ * The bar of a pushed page that does not scroll (the money map): it is laid
+ * out below its bar on every layout. Where the stack's pushed pages are
+ * clear off the rail (`plainClear`, `usePushedPlainClear`) the bar is the
+ * page's ground with no hairline, as theirs has none. Everywhere else it is
+ * the opaque bar with its hairline: before iOS 26, and with Reduce
+ * Transparency or Increase Contrast on. Beside a vertical bar (`rail`) it
+ * is backed in its ground, since UIKit's own bar background stops short.
+ */
+export const fixedPageBar = (
+  plainClear: boolean,
+  rail: boolean,
+  ground: ColorValue = colors.paper,
+) => ({
+  ...(plainClear ? groundBar(ground) : opaqueBar(ground)),
+  headerTransparent: false,
+  ...(rail ? barBacking(ground) : {}),
+});
+
+/**
  * Whether a tab stack's pushed pages run under a clear bar: beside a vertical
  * bar on iOS 26 and later, unless Reduce Transparency or Increase Contrast
  * asks for a solid bar, as it does of the tab roots.

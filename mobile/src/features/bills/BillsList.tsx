@@ -638,7 +638,9 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <>
         <RouteOptions options={options} />
         {listView}
-        {fades ? <ClearBarFade y={fadeScroll.y} bottom={headerBottom} /> : null}
+        {fades ? (
+          <ClearBarFade y={fadeScroll.y} bottom={headerBottom} ground="paper" />
+        ) : null}
       </>
     );
   return (

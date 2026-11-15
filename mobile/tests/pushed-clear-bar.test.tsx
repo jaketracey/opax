@@ -10,7 +10,7 @@ import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descript
 import * as accessibility from '../src/design/accessibility';
 import { ClearBarRest, Screen } from '../src/design/layout';
 import { colors } from '../src/design/tokens';
-import { opaqueBar } from '../src/navigation/chrome';
+import { fixedPageBar, opaqueBar } from '../src/navigation/chrome';
 import { sharedScreens } from '../src/navigation/stack';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -177,7 +177,7 @@ describe('no pushed page has a clear bar without a fade', () => {
       'bill-list',
       'fade',
       'bills/BillsList',
-      /\(!pushed \|\| clearPushed\)[\s\S]*<ClearBarFade\b/,
+      /\(!pushed \|\| clearPushed\)[\s\S]*<ClearBarFade\b[^>]*\bground="paper"/,
     ],
     ['person/[slug]/interests', 'ground', 'people/PersonLists'],
     ['party-sources', 'ground', 'people/PartySources'],
@@ -284,6 +284,57 @@ describe('no pushed page has a clear bar without a fade', () => {
       below.filter((name) => name !== 'ask' && name !== 'electorate/[id]'),
     ).toEqual([]);
     expect(lined).toEqual([]);
+  });
+
+  // The money page's map mode does not scroll: it sets its own bar, laid
+  // out below it, and the route walk reads its list mode's Screen. Its bar
+  // is checked here: no hairline where pushed pages are clear, the opaque
+  // bar and its hairline everywhere else (a legibility setting included).
+  describe('a pushed page that sets its own bar (the money map)', () => {
+    test('off the rail it is the page’s ground with no hairline; with a legibility setting on, or before iOS 26, it keeps the opaque bar and its hairline', () => {
+      expect(fixedPageBar(true, false)).toEqual({
+        headerStyle: { backgroundColor: colors.paper },
+        headerLargeStyle: { backgroundColor: colors.paper },
+        headerShadowVisible: false,
+        headerTransparent: false,
+      });
+      const opaque = fixedPageBar(false, false);
+      expect(opaque).toEqual({
+        ...opaqueBar(colors.paper),
+        headerTransparent: false,
+      });
+      expect(opaque.headerShadowVisible).toBe(true);
+      // Beside the rail it is backed in its ground, as before.
+      const railed = fixedPageBar(false, true) as {
+        headerBackground?: unknown;
+      };
+      expect(typeof railed.headerBackground).toBe('function');
+      expect('headerBackground' in fixedPageBar(true, false)).toBe(false);
+    });
+
+    test('the map takes that bar, from whether its route is a clear pushed page', () => {
+      const text = feature('money/MoneyScreen');
+      expect(text).toMatch(
+        /const plainClear = usePushedPlainClear\(\);[\s\S]{0,200}fixedPageBar\(plainClear, rail, colors\.paper\)/,
+      );
+    });
+
+    // Any page that sets an opaque bar for itself would keep the hairline
+    // the same way. The one other use is a bar colour handed to
+    // RouteOptions, which clears it under a clear bar (sources/parts.tsx).
+    test('no feature sets an opaque bar of its own', () => {
+      const found: string[] = [];
+      const walk = (dir: string) => {
+        for (const entry of readdirSync(dir)) {
+          const path = join(dir, entry);
+          if (statSync(path).isDirectory()) walk(path);
+          else if (/\.tsx?$/.test(entry) && /\bopaqueBar\(/.test(source(path)))
+            found.push(relative(resolve(__dirname, '../src/features'), path));
+        }
+      };
+      walk(resolve(__dirname, '../src/features'));
+      expect(found).toEqual(['sources/parts.tsx']);
+    });
   });
 
   // With Reduce Transparency or Increase Contrast on, the stack is told its
