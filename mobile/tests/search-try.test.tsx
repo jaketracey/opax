@@ -265,6 +265,65 @@ describe('SearchIdle', () => {
     act(() => r.unmount());
   });
 
+  test('the lists wait for a bill index that arrives inside the hold, and draw its row with the rest', async () => {
+    const draw = (index: typeof bills | null) => (
+      <MyMemberContext.Provider value={member}>
+        <SearchIdle onRecent={jest.fn()} bills={index} billsSettled={false} />
+      </MyMemberContext.Provider>
+    );
+    catalogs.todayEdition.mockResolvedValue({ status: 'missing', data: null });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(draw(null));
+    });
+    expect(groups(r)).toEqual([]);
+    await act(async () => {
+      r.update(draw(bills));
+    });
+    expect(groups(r)).toEqual(['search-try', 'search-browse']);
+    expect(ids(r)).toEqual(
+      expect.arrayContaining(['search-try-member', 'search-try-bill']),
+    );
+    act(() => r.unmount());
+  });
+
+  test('a tab mounted at launch does not use up its wait before it is opened', async () => {
+    jest.useFakeTimers();
+    try {
+      const draw = (index: typeof bills | null, visited: boolean) => (
+        <MyMemberContext.Provider value={member}>
+          <SearchIdle
+            onRecent={jest.fn()}
+            bills={index}
+            billsSettled={false}
+            visited={visited}
+          />
+        </MyMemberContext.Provider>
+      );
+      catalogs.todayEdition.mockResolvedValue({
+        status: 'missing',
+        data: null,
+      });
+      let r!: TestRenderer.ReactTestRenderer;
+      await act(async () => {
+        r = TestRenderer.create(draw(null, false));
+      });
+      // Mounted behind Today for far longer than the wait.
+      await act(async () => {
+        jest.advanceTimersByTime(IDLE_HOLD_MS * 20);
+      });
+      expect(groups(r)).toEqual([]);
+      // Opened: the bill index is read on focus and its row is drawn.
+      await act(async () => {
+        r.update(draw(bills, true));
+      });
+      expect(ids(r)).toContain('search-try-bill');
+      act(() => r.unmount());
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   test('a read that settles after the lists are drawn adds no row above them; the next visit has it at once', async () => {
     jest.useFakeTimers();
     try {
