@@ -868,6 +868,21 @@ const one = (id: string) =>
         typeof n.props.onChangeText === 'function'),
   )[0]!;
 /** The first string child under any node with this testID. */
+/**
+ * Waits for the status line to read `text`, instead of sleeping a fixed
+ * time. The line holds each status for 600 ms (STATUS_HOLD_MS) from when it was
+ * drawn, measured with Date.now(); a test timer is measured from the event
+ * loop's own clock, which lags under load. A fixed 650 ms sleep could
+ * therefore end before the 600 ms hold it was meant to outlast.
+ */
+async function statusBecomes(text: string, timeout = 10_000) {
+  const end = Date.now() + timeout;
+  while (textOf('ask-status') !== text && Date.now() < end)
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    });
+  expect(textOf('ask-status')).toBe(text);
+}
 const textOf = (id: string) =>
   byId(id)
     .flatMap((n) => [n, ...n.findAll(() => true)])
@@ -1764,10 +1779,10 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   );
   await act(async () => {
     on!.stage('Searching the record');
-    // Status copy has a minimum dwell time, even for a fast lookup.
-    await new Promise((resolve) => setTimeout(resolve, 650));
   });
-  expect(textOf('ask-status')).toBe('Searching the record');
+  // Status copy has a minimum dwell time, even for a fast lookup: the line
+  // changes once the one before it has been held, however long that takes.
+  await statusBecomes('Searching the record');
   await act(async () => {
     on!.step?.({
       id: 'hearings',
@@ -1775,9 +1790,10 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
       arg: 'housing',
       state: 'running',
     });
-    await new Promise((resolve) => setTimeout(resolve, 650));
   });
-  expect(textOf('ask-status')).toBe('Checking committee hearings: housing');
+  // Held: the step's line never replaces it at once.
+  expect(textOf('ask-status')).toBe('Searching the record');
+  await statusBecomes('Checking committee hearings: housing');
   // An error after text keeps the question with one plain sentence, never
   // the server's words, and Try again.
   await act(async () => {
