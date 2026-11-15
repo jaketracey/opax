@@ -78,10 +78,11 @@ export function resetLayoutProbe() {
 }
 
 /**
- * Screen's recorder. `content` is the page's content view, `offset` the
- * scroll offset Screen already tracks, `header` where the bar ends.
+ * The recorder, used only in a build with the flag. `content` is the page's
+ * content view, `offset` the scroll offset Screen already tracks, `header`
+ * where the bar ends.
  */
-export function useLayoutProbe(
+function useRecorder(
   content: RefObject<View | null>,
   offset: RefObject<number | null>,
   header: number,
@@ -92,7 +93,6 @@ export function useLayoutProbe(
     latestHeader.current = header;
   }, [header]);
   useLayoutEffect(() => {
-    if (!layoutProbeEnabled) return;
     const entry: Entry = { route, samples: [] };
     entries.push(entry);
     if (entries.length > KEEP) entries.shift();
@@ -120,3 +120,11 @@ export function useLayoutProbe(
     return () => timers.forEach(clearTimeout);
   }, [route, content, offset]);
 }
+
+/**
+ * Chosen once, when the module loads: without the build flag Screen calls a
+ * function that does nothing at all, with no hooks and no subscriptions.
+ */
+export const useLayoutProbe: typeof useRecorder = layoutProbeEnabled
+  ? useRecorder
+  : () => undefined;

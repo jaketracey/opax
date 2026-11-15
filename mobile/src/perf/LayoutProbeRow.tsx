@@ -15,13 +15,12 @@ import {
  * copied. Drawn only in a build made with the probe's flag; see
  * `layout-probe.ts`. Nothing here leaves the device.
  */
-export function LayoutProbeRow() {
+function Readings() {
   useSyncExternalStore(
     subscribeLayoutProbe,
     layoutProbeVersion,
     layoutProbeVersion,
   );
-  if (!layoutProbeEnabled) return null;
   const text = layoutProbeText();
   return (
     <InsetGroup header="Layout probe">
@@ -34,3 +33,9 @@ export function LayoutProbeRow() {
     </InsetGroup>
   );
 }
+
+/**
+ * Chosen once, when the module loads: without the build flag this draws
+ * nothing and subscribes to nothing.
+ */
+export const LayoutProbeRow = layoutProbeEnabled ? Readings : () => null;

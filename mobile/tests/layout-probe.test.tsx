@@ -9,7 +9,7 @@ import {
 } from 'expo-router/react-navigation';
 import { Screen } from '../src/design/layout';
 import { LayoutProbeRow } from '../src/perf/LayoutProbeRow';
-import { layoutProbeText } from '../src/perf/layout-probe';
+import { layoutProbeText, useLayoutProbe } from '../src/perf/layout-probe';
 import { layoutProbeEnabled } from '../src/perf/layout-probe-flag';
 
 const route = { key: 'bill-1', name: 'bill/[key]' };
@@ -39,6 +39,14 @@ test('without the build flag nothing is recorded and Account has no row', () => 
   ).toHaveLength(0);
   act(() => renderer.unmount());
   jest.useRealTimers();
+});
+
+test('with the flag off the hook and the row are plain no-ops', () => {
+  // Called outside any component: a real hook or a subscription would throw.
+  const ref = { current: null };
+  expect(() => useLayoutProbe(ref, ref, 82)).not.toThrow();
+  expect(useLayoutProbe(ref, ref, 82)).toBeUndefined();
+  expect((LayoutProbeRow as () => unknown)()).toBeNull();
 });
 
 test.each([
