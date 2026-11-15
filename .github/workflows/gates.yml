@@ -101,8 +101,8 @@ jobs:
   # on the app branch): a data change that any app version would refuse, or lose a row from, fails here and
   # names the file and the path inside it. main has no mobile tree, so the app tree is exported from
   # APP_REF beside this checkout and its guard is pointed at this commit's portal/public. It runs only when
-  # a pull request into main changes a file family the app reads; nightly commits pushed straight to main
-  # do not pass through here.
+  # a pull request into main changes a file family the app reads (the paths in the first step); nightly
+  # commits pushed straight to main do not pass through here.
   app-data:
     if: ${{ !inputs.senate_only && github.event_name == 'pull_request' && github.base_ref == 'main' }}
     runs-on: ubuntu-latest
@@ -121,7 +121,8 @@ jobs:
             portal/public/bills portal/public/parliamentarians.json portal/public/votes.json \
             portal/public/electorates portal/public/interests portal/public/pay.json \
             portal/public/expenses.json portal/public/expense-categories.json portal/public/photos \
-            portal/public/corpus.json portal/public/discovery.json portal/public/graph | head -1)
+            portal/public/corpus.json portal/public/discovery.json portal/public/graph \
+            portal/public/parliament portal/public/divisions | head -1)
           if [ -n "$changed" ]; then
             echo 'changed=true' >> "$GITHUB_OUTPUT"
           else
@@ -131,12 +132,12 @@ jobs:
         id: app
         if: steps.data.outputs.changed == 'true'
         run: |
-          git fetch --depth=1 origin "$APP_REF"
           mkdir -p "$RUNNER_TEMP/app"
-          git archive FETCH_HEAD mobile | tar -x -C "$RUNNER_TEMP/app"
+          git archive "origin/$APP_REF" mobile | tar -x -C "$RUNNER_TEMP/app"
           if [ -f "$RUNNER_TEMP/app/mobile/tests/published-data.test.ts" ]; then
             echo 'present=true' >> "$GITHUB_OUTPUT"
           else
+            echo "::warning title=App data guard::The data guard is not on $APP_REF; this change to app-read data was not checked."
             echo "The data guard is not on $APP_REF yet; nothing was checked." >> "$GITHUB_STEP_SUMMARY"
           fi
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -152,7 +153,9 @@ jobs:
         working-directory: ${{ runner.temp }}/app/mobile
         env:
           OPAX_PUBLISHED_DIR: ${{ github.workspace }}/portal/public
-        run: npx jest tests/published-data.test.ts --maxWorkers=2
+        # npm test, not jest directly: the package script applies the app's Jest flags
+        # (--no-sparkplug) to this one in-band file as well.
+        run: npm test -- tests/published-data.test.ts
 
   # Stored Ask research payloads replayed through the current answer pipeline: no model, network,
   # secrets or release build. Fails on an empty, limitation-only or uncited answer, or a changed API shape.
