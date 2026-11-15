@@ -185,6 +185,14 @@ const failedPartyBlock = (error: unknown): Block<never> => ({
       ? error
       : new ApiError('invalid-data', 'This catalog could not be read.'),
 });
+/**
+ * The discovery export's decoder, one function for every caller: Leads and
+ * a lead's page read the same address side by side on a split, and reads
+ * share a request only when they pass the same decoder.
+ */
+const decodePublicDiscovery = (v: unknown) =>
+  publicDiscovery(decode.decodeDiscovery(v));
+
 export class Catalogs {
   private suggestionReads = new ReadSession<SuggestionSources>();
   private suggestionGeneration = 0;
@@ -750,12 +758,9 @@ export class Catalogs {
   }
   /** Leads (P1): the static discovery export, decoded whole. */
   discovery(refresh = false, signal?: AbortSignal) {
-    return this.client.get(
-      '/discovery.json',
-      (v) => publicDiscovery(decode.decodeDiscovery(v)),
-      refresh,
-      { signal },
-    );
+    return this.client.get('/discovery.json', decodePublicDiscovery, refresh, {
+      signal,
+    });
   }
   /**
    * The declared-interests feed behind Today's recent declarations: every

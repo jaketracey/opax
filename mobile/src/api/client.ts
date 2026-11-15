@@ -332,7 +332,128 @@ export class ApiClient {
       /* A listener never changes a read's outcome. */
     }
   }
+  /**
+   * Plain reads of one address with one decoder that overlap share one
+   * request. A screen that asks for a file it is already loading (a pane
+   * hand-off, a fold or unfold during a slow load) started another
+   * download: the file came down two to five times.
+   *
+   * A flight is the whole of one plain read, for one address and one
+   * decoder, so the decoder that checks the body before it is saved is each
+   * waiter's own: a reader never takes another reader's verdict on a body,
+   * and its stale copy stands as it would alone. Readers with different
+   * decoders do not share.
+   *
+   * The request belongs to no one waiter. A waiter that aborts stops
+   * waiting and the request carries on for the rest; when the last one
+   * goes it is cancelled, as a lone read's abort always was (neither
+   * retried nor saved). Its outcome, a record or an error, reaches every
+   * waiter, and the flight is forgotten when it settles, so a later read
+   * asks again. A flight more than half way to its deadline takes no new
+   * waiters: a late reader starts its own, with its own full time.
+   *
+   * Only plain reads join: a forced, background, absence, summary or
+   * unsaved read, or one with its own retries or timeout, runs alone.
+   */
+  private flights = new Map<
+    string,
+    Map<
+      Decoder<unknown>,
+      {
+        promise: Promise<RecordResult<unknown>>;
+        controller: AbortController;
+        waiters: number;
+        startedAt: number;
+      }
+    >
+  >();
   private async read<T>(
+    path: string,
+    decode: Decoder<T>,
+    force = false,
+    options: GetOptions = {},
+  ): Promise<RecordResult<T>> {
+    const plain =
+      !force &&
+      !options.absence &&
+      !options.background &&
+      !options.summaryStream &&
+      options.persist !== false &&
+      options.retries === undefined &&
+      options.timeoutMs === undefined;
+    if (!plain) return this.readOnce(path, decode, force, options);
+    const { signal } = options;
+    const cancelled = () =>
+      Object.assign(new Error('Cancelled'), { name: 'AbortError' });
+    if (signal?.aborted) throw cancelled();
+    const key = decode as Decoder<unknown>;
+    const forget = (flight: object) => {
+      const byDecoder = this.flights.get(path);
+      if (byDecoder?.get(key) !== flight) return;
+      byDecoder.delete(key);
+      if (!byDecoder.size) this.flights.delete(path);
+    };
+    const timeoutMs = this.options.timeoutMs ?? 8000;
+    let flight = this.flights.get(path)?.get(key);
+    if (flight && this.now() - flight.startedAt > timeoutMs / 2)
+      flight = undefined;
+    if (!flight) {
+      const controller = new AbortController();
+      const promise = this.readOnce(path, decode, false, {
+        ...options,
+        signal: controller.signal,
+      }).finally(() => forget(started));
+      // A waiter that left must not leave an unhandled rejection behind.
+      promise.catch(() => undefined);
+      const started = {
+        promise: promise as Promise<RecordResult<unknown>>,
+        controller,
+        waiters: 0,
+        startedAt: this.now(),
+      };
+      let byDecoder = this.flights.get(path);
+      if (!byDecoder) this.flights.set(path, (byDecoder = new Map()));
+      // A flight too old to join stays its own waiters'; this one replaces
+      // it for whoever comes next.
+      byDecoder.set(key, started);
+      flight = started;
+    }
+    const joined = flight;
+    joined.waiters++;
+    if (!signal) {
+      try {
+        return (await joined.promise) as RecordResult<T>;
+      } finally {
+        joined.waiters--;
+      }
+    }
+    let left = false;
+    let leave!: () => void;
+    try {
+      return (await Promise.race([
+        joined.promise,
+        new Promise<never>((_resolve, reject) => {
+          leave = () => {
+            // Counted here, at once: two waiters that leave in one pass
+            // (two panes unmounting in one commit) must both be gone before
+            // either is asked whether anyone is still waiting.
+            left = true;
+            joined.waiters--;
+            if (joined.waiters === 0) {
+              forget(joined);
+              joined.controller.abort();
+            }
+            reject(cancelled());
+          };
+          signal.addEventListener('abort', leave, { once: true });
+        }),
+      ])) as RecordResult<T>;
+    } finally {
+      if (!left) joined.waiters--;
+      signal.removeEventListener('abort', leave);
+    }
+  }
+  private async readOnce<T>(
     path: string,
     decode: Decoder<T>,
     force = false,

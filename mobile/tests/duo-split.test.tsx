@@ -235,6 +235,10 @@ function List() {
     </ScrollView>
   );
 }
+// One decoder for every mount, as a record screen has: the pane's detail and
+// the pushed route's read the same address, and share a request only when
+// they pass the same decoder.
+const whole = (value: unknown) => value;
 function Detail({ entry }: { entry: RecordEntry }) {
   const current = useSplitPane<RecordEntry>();
   useEffect(() => {
@@ -243,7 +247,7 @@ function Detail({ entry }: { entry: RecordEntry }) {
   // This is the same cache-backed loading boundary used by record screens.
   const load = useCallback(
     (refresh: boolean) =>
-      client.get(`/bills/${entry.key}.json`, (value) => value, refresh),
+      client.get(`/bills/${entry.key}.json`, whole, refresh),
     [entry.key],
   );
   const { record } = useCatalogRecord(load);
@@ -345,6 +349,39 @@ it('collapses the open record to its route, then pops and selects it on expansio
   expect(readerStack().routes).toHaveLength(1);
   expect(transport).toHaveBeenCalledTimes(1);
   expect(listMounts).toBe(1);
+});
+
+it('a record still being read is one request across a fold and an unfold', async () => {
+  // The transport answers only when the test lets it, so the pane's read is
+  // still under way when the fold mounts the pushed route's detail.
+  const waiting: ((response: Response) => void)[] = [];
+  transport.mockImplementation(
+    () => new Promise<Response>((answer) => waiting.push(answer)),
+  );
+  const tree = await renderApp(app, `/library?open=${encodeEntry(bill)}`);
+  expect(transport).toHaveBeenCalledTimes(1);
+  windowSize(390, compact);
+  await settle();
+  expect(route().pathname).toBe(`/bill/${bill.key}`);
+  windowSize(SPLIT);
+  await settle();
+  // Folded and unfolded with nothing answered: still the one request.
+  expect(transport).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    for (const answer of waiting)
+      answer(
+        new Response(JSON.stringify({ title: bill.title }), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'max-age=86400',
+          },
+        }),
+      );
+  });
+  await settle();
+  expect(hosts(tree, 'record-bill').length).toBeGreaterThan(0);
+  expect(transport).toHaveBeenCalledTimes(1);
 });
 
 it('hands off the whole mapped pane stack and restores Back below its open record', async () => {
