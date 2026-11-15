@@ -267,6 +267,13 @@ export function ProfileScreen({
   // bones stood. The next open has the catalog in memory.
   const [postWithheld, setPostWithheld] = useState(false);
   const withholdPost = useCallback(() => setPostWithheld(true), []);
+  // A pull to refresh may bring the line: only with new content, which
+  // redraws the page anyway, so the line lands with it and moves nothing.
+  const pulled = useRef(false);
+  const shown = useRef(load);
+  useEffect(() => {
+    shown.current = load;
+  }, [load]);
   useEffect(() => {
     let active = true;
     loadProfile(slug)
@@ -274,6 +281,14 @@ export function ProfileScreen({
         if (loaded) rememberProfile(slug, loaded);
         else forgetProfile(slug);
         if (!active) return;
+        const was = shown.current;
+        if (
+          pulled.current &&
+          loaded &&
+          was.status === 'ready' &&
+          !sameLoaded(was, loaded)
+        )
+          setPostWithheld(false);
         setLoad((was) =>
           !loaded
             ? { status: 'not-found' }
@@ -295,6 +310,7 @@ export function ProfileScreen({
         );
       })
       .finally(() => {
+        pulled.current = false;
         if (active) setRefreshing(false);
       });
     return () => {
@@ -304,6 +320,7 @@ export function ProfileScreen({
   // A block's Try again reads the profile again without clearing the page.
   const retry = () => setAttempt((n) => n + 1);
   const refresh = () => {
+    pulled.current = true;
     setRefreshing(true);
     retry();
   };

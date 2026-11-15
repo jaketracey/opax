@@ -24,8 +24,6 @@ export function subscribeKept(listener: () => void) {
 }
 /** The pay catalog if it has been read this session. */
 export const keptPay = () => kept.pay;
-/** The votes catalog if it has been read this session. */
-export const keptVotes = () => kept.votes;
 /** What has been read this session: never a read. */
 export function keptCatalogs(): Readonly<typeof kept> {
   return kept;
