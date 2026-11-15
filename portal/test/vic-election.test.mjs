@@ -19,7 +19,7 @@ const compile = async entry => {
   const r = await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-og',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'vic-test'}));b.onLoad({filter:/.*/,namespace:'vic-test'},()=>({contents:'export const renderOgPng=async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
   return import('data:text/javascript;base64,'+Buffer.from(r.outputFiles[0].text).toString('base64'));
 };
-const {renderVicElection,vicElectionPage,findSeats} = await compile('../src/vic-election.ts');
+const {renderVicElection,vicElectionPage,findSeats,vicElectionIndexNow} = await compile('../src/vic-election.ts');
 const {renderSittingIndex,hubPage} = await compile('../src/hubs.ts');
 const {renderEstimatesRound,renderEstimatesIndex} = await compile('../src/estimates.ts');
 const estimatesRounds = JSON.parse(await readFile(new URL('../../scripts/hubs/estimates-rounds.json',import.meta.url),'utf8'));
@@ -366,6 +366,23 @@ test('Council headings retain group order, distinguish unnamed groups and Ungrou
   assert.match(escaped,/Group A, &lt;img/);assert.doesNotMatch(escaped,/<img src=x/);
 });
 
+test('IndexNow rows cover exactly the sitemap pages while published, fingerprinted by what each page serves',async()=>{
+  for(const value of [undefined,'false','TRUE'])assert.deepEqual(await vicElectionIndexNow(()=>assert.fail('Unpublished hub read its facts'),{VIC_ELECTION_HUB_ENABLED:value}),[]);
+  const on={VIC_ELECTION_HUB_ENABLED:'true'},now=new Date('2026-11-16T10:00:00+11:00');
+  const rows=await vicElectionIndexNow(read,on,now);
+  assert.deepEqual(rows.map(r=>r[0]),vicElectionDiscovery(data,true)['vic-election'].map(p=>p.path));assert.equal(rows.length,97);
+  for(const [path,fingerprint] of rows){assert.match(path,/^\/vic-election-2026(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/);assert.match(fingerprint,/^[0-9a-f]{64}$/);}
+  assert.equal(new Set(rows.map(r=>r[1])).size,97);
+  // Stable for an unchanged page; a data change moves only the pages that show it; the close of polls moves every page.
+  assert.deepEqual(await vicElectionIndexNow(read,on,new Date('2026-11-16T15:00:00+11:00')),rows);
+  const lowan=data.seats.find(s=>s.name==='Lowan');
+  const edited={...data,seats:data.seats.map(s=>s===lowan?{...s,candidates:{...s.candidates,list:s.candidates.list.slice(1)}}:s)};
+  const after=await vicElectionIndexNow(async path=>path===VIC_ELECTION_ASSET?edited:read(path),on,now);
+  assert.deepEqual(after.filter((r,i)=>r[1]!==rows[i][1]).map(r=>r[0]),[lowan.path]);
+  const closed=await vicElectionIndexNow(read,on,new Date('2026-11-28T18:00:00+11:00'));
+  assert.ok(closed.every((r,i)=>r[0]===rows[i][0]&&r[1]!==rows[i][1]));
+  await assert.rejects(vicElectionIndexNow(async()=>({}),on,now));
+});
 test('election detection identifies state election copy without treating federal records in Victoria as state electoral copy',()=>{
   for(const text of ['Victorian election 2026','2026 Victorian state election','Victoria’s election','State election in Victoria','VIC election 2026','https://opax.com.au/vic-election-2026/lowan'])assert.ok(vicElectionMaterial(text),text);
   for(const text of ['Federal election in Victoria','Federal election grants in Victoria','Gippsland, Vic. Held at the 2025 federal election.','Victorian Hansard speeches','Time to the next federal election'])assert.equal(vicElectionMaterial(text),false,text);

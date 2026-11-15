@@ -61,8 +61,12 @@ export function extraUrls(list = ''): string[] {
     .slice(0, 1000).map(path => INDEXNOW_ORIGIN + path);
 }
 
+// The Victorian election hub and its 96 seat pages, exactly as the sitemap lists them.
+const ELECTION_PAGE = /^\/vic-election-2026(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/;
+
 function eligiblePath(path: string): boolean {
   if (path.startsWith(DONOR_PREFIX)) return donorPath(path) === path;
+  if (ELECTION_PAGE.test(path)) return true;
   try {
     return /^\/(?:bill\/au-[a-z0-9-]+|doc\/division-[a-z0-9-]+|subject\/person\/[^/?#]+)$/.test(path)
       && !/\/(?:null|undefined)$/i.test(decodeURIComponent(path));
@@ -165,9 +169,14 @@ function legacyReceipts(jobs: PlannedJob[], extras: string[], token: string): Se
   return [...sent.values()];
 }
 
-/** The receiver has no idempotency token; journal successful batches locally. */
+/**
+ * The receiver has no idempotency token; journal successful batches locally.
+ * `electionPages` supplies the published election pages' snapshot rows at request
+ * time, because the generated crawl files stay election-free. It returns no rows
+ * while the hub is unpublished.
+ */
 export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: typeof fetch = fetch,
-  clock?: () => number): Promise<void> {
+  clock?: () => number, electionPages?: () => Promise<Snapshot>): Promise<void> {
   if (env.INDEXNOW_ENABLED !== 'true' || env.STAGING_API || !env.CACHE_EPOCH) return;
   // Follow elapsed time across UTC midnight, while allowing deterministic stub tests.
   const epoch = env.CACHE_EPOCH;
@@ -223,7 +232,11 @@ export async function runIndexNow(env: IndexNowEnv, now = Date.now(), send: type
     if (!job || !job.plan_version || job.superseded || job.priority === null) {
       const response = await env.ASSETS.fetch(new Request(`${INDEXNOW_ORIGIN}/crawl/indexnow.json`));
       if (!response.ok) throw new IndexNowHttpError(response.status);
-      const {entries} = await response.json<{entries:Snapshot}>();
+      const generated = (await response.json<{entries:Snapshot}>()).entries;
+      // A failed election read must not hold up the rest of the feed; the pages wait for the next epoch.
+      const election = electionPages ? await electionPages().catch(() => { log('indexnow_election_pages_unavailable'); return [] as Snapshot; }) : [];
+      const entries: Snapshot = [...generated.filter(([path]) => !ELECTION_PAGE.test(path)),
+        ...election.filter(([path,fingerprint]) => ELECTION_PAGE.test(path) && typeof fingerprint === 'string')];
       const {results:jobs} = await db.prepare(`SELECT j.*, s.entries, p.ranks AS priority, j.rowid AS sequence FROM indexnow_jobs j
         LEFT JOIN indexnow_snapshots s ON s.epoch = j.epoch
         LEFT JOIN indexnow_priority p ON p.epoch = j.epoch ORDER BY j.rowid`).all<PlannedJob>();

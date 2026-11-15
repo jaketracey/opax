@@ -73,6 +73,13 @@ is gated at request time by the same flag as SSR and canonical resolution;
 the base generated crawl files always remain election-free. Published trailing
 slashes redirect once to the canonical no-slash path, including www aliases.
 
+The same 97 pages enter IndexNow. The five-minute cron asks the Worker for them when
+it plans an epoch (`vicElectionIndexNow` in `portal/src/vic-election.ts`), under the
+same flag, so `/crawl/indexnow.json` stays election-free. Each page's fingerprint is
+a hash of what it serves: a change of data, wording or election state notifies that
+page once at the next epoch, and an unchanged page is not sent again. They rank with
+other pages, after the people, donor and division priorities.
+
 `npm run build:search` finishes with `build:vic-election`. Its offline projection
 uses the VEC source config in `scripts/hubs/vic-election-2026.json`, the exact
 state electorate index, validated roster, existing canonical person-path table,

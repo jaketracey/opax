@@ -325,6 +325,25 @@ export async function readVicElection(read: ReadAsset): Promise<VicElection> {
   }
 }
 
+/**
+ * IndexNow snapshot rows for the pages in the election sitemap: [path, fingerprint].
+ * The fingerprint is a hash of what the page serves, so a change of data, wording or
+ * election state re-notifies, and an unchanged page does not. No rows while unpublished.
+ */
+export async function vicElectionIndexNow(read: ReadAsset, config: HubFooterConfig & {VIC_ELECTION_HUB_ENABLED?: string} = {}, now = new Date()): Promise<[string, string][]> {
+  if (!vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED)) return []
+  const d = await readVicElection(read)
+  const rows: [string, string][] = []
+  for (const {path} of d.pages) {
+    const s = path === VIC_ELECTION_PATH ? null : d.seats.find(s=>s.path === path)
+    if (s === undefined) continue
+    const page = renderVicElection(d,s,config,now)
+    const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify([page.title,page.description,page.html,page.jsonLd])))
+    rows.push([path,[...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('')])
+  }
+  return rows
+}
+
 export async function vicElectionPage(id: string | null, read: ReadAsset, config: HubFooterConfig & {VIC_ELECTION_HUB_ENABLED?: string} = {}, place: string | null = null, now = new Date()) {
   const missing = {title:'Hub not found',description:'This hub is not available.',html:hubShell('<h1>Hub not found</h1><p>This hub is not available.</p>',vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? approvedFooter(config) : {},vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? trail(VIC_ELECTION_PATH,'Not found') : []),jsonLd:null,status:404}
   if (!vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) || (id !== null && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id))) return missing

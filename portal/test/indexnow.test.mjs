@@ -510,3 +510,32 @@ test('the fence migration is idempotent and replay preserves the authoritative v
   for(let i=0;i<2;i++)h.sqlite.exec(readFileSync(new URL('../migrations/0015_indexnow_epoch_fence.sql',import.meta.url),'utf8'));
   assert.equal(dump(),before);
 });
+
+test('election pages join the feed only through the published-pages provider, and re-notify only when a page changes',async()=>{
+  const hub='/vic-election-2026',seat='/vic-election-2026/richmond',base=[['/bill/au-federal-r1','bill-1']];
+  // Eligibility is the sitemap's shape: the hub and one lower-case seat segment, no query, no deeper path.
+  assert.deepEqual(indexNowPayloads(['https://opax.com.au'+hub,'https://opax.com.au'+seat,'https://opax.com.au/vic-election-2026/',
+    'https://opax.com.au/vic-election-2026?place=3350','https://opax.com.au/vic-election-2026/Richmond','https://opax.com.au/vic-election-2026/richmond/extra',
+    'https://opax.com.au/vic-election-2027','https://opax.com.au/hubs/vic-election-2026.json'])[0].urlList,['https://opax.com.au'+hub,'https://opax.com.au'+seat]);
+  const go=(h,now,pages)=>run(h.env,now,h.send,()=>now,pages);
+  // No provider (as before this change), or an unpublished hub: nothing but the generated entries.
+  const off=harness(base);await go(off,1000);await go(off,2000,async()=>[]);
+  assert.deepEqual(off.calls.flatMap(c=>c.body.urlList),['https://opax.com.au/bill/au-federal-r1']);
+  // The generated crawl file cannot add election pages itself: publication is decided at request time.
+  const gated=harness([...base,[hub,'from-the-build']]);await go(gated,1000,async()=>[]);
+  assert.deepEqual(gated.calls.flatMap(c=>c.body.urlList),['https://opax.com.au/bill/au-federal-r1']);
+  const h=harness(base);let pages=[[hub,'hub-1'],[seat,'seat-1'],['/subject/person/not-an-election-page','x'],['/vic-election-2026/Bad_Slug','x']];
+  await go(h,1000,async()=>pages);
+  assert.deepEqual(h.calls.flatMap(c=>c.body.urlList),['https://opax.com.au/bill/au-federal-r1','https://opax.com.au'+hub,'https://opax.com.au'+seat],'other entries keep their place; the provider adds election pages only');
+  assert.equal(h.job().complete,1);
+  assert.deepEqual(h.sqlite.prepare("SELECT path, fingerprint FROM indexnow_sent WHERE path LIKE '/vic-election%' ORDER BY path").all().map(r=>[r.path,r.fingerprint]),[[hub,'hub-1'],[seat,'seat-1']]);
+  h.env.CACHE_EPOCH='epoch-2';await go(h,DAY+1000,async()=>pages);
+  assert.equal(h.calls.length,1,'unchanged election pages are not sent again');
+  pages=[[hub,'hub-1'],[seat,'seat-2']];h.env.CACHE_EPOCH='epoch-3';await go(h,2*DAY+1000,async()=>pages);
+  assert.deepEqual(h.calls.at(-1).body.urlList,['https://opax.com.au'+seat]);
+  // A failed election read is logged without detail and does not hold up the rest of the feed.
+  const broken=harness(base);const logs=[];const original=console.log;console.log=line=>logs.push(JSON.parse(line));
+  try {await go(broken,1000,async()=>{throw new Error('/private/path');});} finally {console.log=original;}
+  assert.deepEqual(broken.calls.flatMap(c=>c.body.urlList),['https://opax.com.au/bill/au-federal-r1']);
+  assert.ok(logs.some(l=>l.event==='indexnow_election_pages_unavailable'));assert.doesNotMatch(JSON.stringify(logs),/private/);
+});

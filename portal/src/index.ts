@@ -63,7 +63,7 @@ import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type Estim
 import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
-import { vicElectionPage, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
+import { vicElectionPage, vicElectionIndexNow, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP, VIC_ELECTION_CACHE } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
@@ -7659,7 +7659,8 @@ export default {
 
   // Cron: one daily edition across connected channels. See docs/DAILY-POST.md.
   async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
-    if (controller.cron === INDEXNOW_CRON) await runIndexNow(env, controller.scheduledTime)
+    if (controller.cron === INDEXNOW_CRON) await runIndexNow(env, controller.scheduledTime, undefined, undefined,
+      () => vicElectionIndexNow(<T>(path: string) => assetJson<T>(env,path), env, new Date(controller.scheduledTime)))
     if (controller.cron === REPLY_EMAIL_CRON) {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
