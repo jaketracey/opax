@@ -577,7 +577,7 @@ test('expanded iOS 26 roots leave both appearances uncoloured; older roots remai
   });
   if (version) Object.defineProperty(Platform, 'Version', version);
 });
-test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
+test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25, but for Today on an iPhone', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   const rootOptions = () =>
     [
@@ -627,8 +627,33 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
       value: '18.4',
     });
     expect(glassBar()).toBe(false);
-    for (const options of rootOptions())
-      expect(options.headerTransparent ?? false).toBe(false);
+    for (const options of rootOptions()) {
+      // Today alone runs under its bar on an iPhone before iOS 26, so its
+      // dot map draws behind the large title: clear while the title is
+      // expanded, the opaque ground once it collapses (iOS 18.4).
+      const today = options.title === 'Today';
+      expect(options.headerTransparent ?? false).toBe(today);
+      expect(options.headerStyle).toHaveProperty('backgroundColor');
+      expect(options.headerLargeStyle?.backgroundColor).toBe(
+        today
+          ? 'transparent'
+          : (options.headerStyle as { backgroundColor: string })
+              .backgroundColor,
+      );
+    }
+    // An iPad keeps the opaque bar on Today too.
+    const pad = Object.getOwnPropertyDescriptor(Platform, 'isPad');
+    Object.defineProperty(Platform, 'isPad', {
+      configurable: true,
+      value: true,
+    });
+    try {
+      for (const options of rootOptions())
+        expect(options.headerTransparent ?? false).toBe(false);
+    } finally {
+      if (pad) Object.defineProperty(Platform, 'isPad', pad);
+      else delete (Platform as { isPad?: boolean }).isPad;
+    }
   } finally {
     if (version) Object.defineProperty(Platform, 'Version', version);
   }

@@ -1560,6 +1560,50 @@ test.each([undefined, 'Anne'])(
 );
 
 test.each([
+  ['18.4', true, 'transparent'],
+  ['18.4', false, colors.sunken],
+  ['26.3', true, colors.sunken],
+] as const)(
+  'iOS %s, art under the title %s: the expanded large-title bar is %s',
+  (version, art, expected) => {
+    // Today's dot map is drawn behind the large title. Before iOS 26 the
+    // bar there is clear while the title is expanded and keeps the page's
+    // ground once it collapses; without it the opaque bar hid the map but
+    // for a patch under the title (iPhone 16 Pro, iOS 18.4).
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    const os = jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    const setOptions = jest.fn();
+    try {
+      const navigation = {
+        setOptions,
+        isFocused: () => true,
+        addListener: () => () => undefined,
+      };
+      render(
+        <NavigationContext.Provider value={navigation as never}>
+          <Screen grouped artUnderTitle={art}>
+            <Text>Content</Text>
+          </Screen>
+        </NavigationContext.Provider>,
+      );
+      const merged = Object.assign(
+        {},
+        ...setOptions.mock.calls.map(([options]) => options),
+      );
+      expect(merged.headerLargeStyle?.backgroundColor).toBe(expected);
+      expect(merged.headerStyle?.backgroundColor).toBe(colors.sunken);
+    } finally {
+      os.restore();
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
+
+test.each([
   [212_203_631_339, '$212.2bn', '212.2 billion dollars'],
   [28_682_373_476, '$28.7bn', '28.7 billion dollars'],
   [19_099_757_999, '$19.1bn', '19.1 billion dollars'],

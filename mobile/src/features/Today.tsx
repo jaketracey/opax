@@ -593,6 +593,7 @@ export default function Today() {
   return (
     <Screen
       testID="today-screen"
+      artUnderTitle
       onLayout={() => setLaidOut(true)}
       column="wide"
       grouped
