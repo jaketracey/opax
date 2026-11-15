@@ -24,7 +24,12 @@ import { useReduceMotion } from '../src/design/accessibility';
 import { SegmentedPicker } from '../src/design/controls';
 import { Icon } from '../src/design/icon';
 import { LinkRow, ValueRow } from '../src/design/rows';
-import { rhythm } from '../src/design/tokens';
+import {
+  controlHeight,
+  minimumTarget,
+  rhythm,
+  textStyles,
+} from '../src/design/tokens';
 import { partySlug } from '../src/design/party';
 import { Text } from '../src/design/primitives';
 import { followKey, useFollows } from '../src/features/follows/store';
@@ -839,6 +844,13 @@ describe('profile', () => {
     jest
       .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
       .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    // No directory in memory: the bones of a sitting federal member.
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue(null);
     mock.person.mockReturnValue(new Promise(() => {}));
     let r!: TestRenderer.ReactTestRenderer;
     await act(async () => {
@@ -866,8 +878,9 @@ describe('profile', () => {
       'follow',
       'party',
       'seat',
+      'seat-detail',
+      'official',
       'stat-strip',
-      'source',
       'votes-heading',
       'vote-0',
       'vote-1',
@@ -896,6 +909,137 @@ describe('profile', () => {
           node.props.testID?.startsWith('person-loading-stat-divider-'),
       ),
     ).toHaveLength(2);
+  });
+
+  // The parts in the order drawn, bones beside the loaded page's own.
+  const parts: [bone: string, loaded: RegExp][] = [
+    ['name', /^person-screen-title$/],
+    ['your-mp', /^person-your-mp$/],
+    ['follow', /^person-follow-(on|off)$/],
+    ['party', /^person-party$/],
+    ['seat', /^person-electorate$/],
+    ['seat-1', /^person-seat-1$/],
+    ['official', /^person-official$/],
+    ['stat-strip', /^person-figures$/],
+    ['votes-heading', /^person-votes-heading$/],
+  ];
+  // The release as it is for a sitting member whose official page is held.
+  const withOfficialPage = () => {
+    const id = c.joinPerson(
+      'penny-wong',
+      slugs,
+      roster,
+      people,
+      manifest,
+    ).canonicalPersonId;
+    return {
+      ...directory,
+      people: result({
+        ...people,
+        people: people.people.map((p) =>
+          p.person_id === id
+            ? {
+                ...p,
+                source_url:
+                  'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=00AOU',
+              }
+            : p,
+        ),
+      }),
+    };
+  };
+  const order = (
+    r: TestRenderer.ReactTestRenderer,
+    name: (testID: string) => string | undefined,
+  ) => {
+    const seen: string[] = [];
+    for (const node of r.root.findAll((n) => typeof n.type === 'string')) {
+      const part =
+        typeof node.props.testID === 'string'
+          ? name(node.props.testID)
+          : undefined;
+      if (part && !seen.includes(part)) seen.push(part);
+    }
+    return seen;
+  };
+
+  test('the bones hold the loaded header’s lines and rows in its order, so nothing below them moves', async () => {
+    jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    const held = withOfficialPage();
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue(held);
+    mock.directory.mockResolvedValue(held as never);
+    mockParams.slug = 'penny-wong';
+    mock.person.mockReturnValue(new Promise(() => {}));
+    let pending!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      pending = TestRenderer.create(<Person />);
+    });
+    const bones = order(
+      pending,
+      (id) => parts.find(([bone]) => id === `person-loading-${bone}`)?.[0],
+    );
+    const flat = (id: string) =>
+      Native.StyleSheet.flatten(
+        host(pending, `person-loading-${id}`).props.style,
+      );
+    // The Follow button's target, a one-line tile label, and no source line
+    // between the tiles and the first section (it is at the page's end).
+    expect(flat('follow').height).toBe(controlHeight.compact);
+    expect(flat('stat-label-0').height).toBe(textStyles.footnote.lineHeight);
+    expect(has(pending, 'person-loading-source')).toBe(false);
+    // Each row is a LinkRow's height: one line, or two with a detail.
+    expect(flat('official-row')).toMatchObject({
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    });
+    await act(async () => pending.unmount());
+
+    const { r } = await wong();
+    const loaded = order(r, (id) => parts.find(([, re]) => re.test(id))?.[0]);
+    expect(loaded).toContain('official');
+    expect(bones).toEqual(loaded);
+  });
+
+  test('the bones read a person’s header from the directory in memory', async () => {
+    const { profileBones } = jest.requireActual('../src/features/Person');
+    expect(profileBones('penny-wong', null)).toBeNull();
+    expect(profileBones('no-such-person', directory)).toBeNull();
+    const kinds = (bones: { rows: { kind: string }[] }) =>
+      bones.rows.map((row) => row.kind);
+    const sitting = profileBones('penny-wong', directory);
+    expect(sitting).toMatchObject({ role: false, follow: true });
+    // No official page is held for her in this release, so no row for it.
+    expect(kinds(sitting)).toEqual(['party', 'seat']);
+    expect(kinds(profileBones('penny-wong', withOfficialPage()))).toEqual([
+      'party',
+      'seat',
+      'official',
+    ]);
+    // A former member: the last seat is the line under the name, there are
+    // no seat rows and no official page.
+    const former = Object.keys(slugs.slugs).find((slug) => {
+      try {
+        return (
+          c.joinPerson(slug, slugs, roster, people, manifest).partyStatus ===
+          'former'
+        );
+      } catch {
+        return false;
+      }
+    });
+    if (!former) throw new Error('fixture: no former member');
+    const gone = profileBones(former, directory);
+    expect(gone.role).toBe(true);
+    expect(
+      gone.rows.filter((row: { kind: string }) => row.kind !== 'party'),
+    ).toEqual([]);
   });
 
   test.each(['votes', 'interests', 'pay'] as const)(

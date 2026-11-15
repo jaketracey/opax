@@ -240,18 +240,51 @@ const bar = (
     ]}
   />
 );
+/**
+ * What a profile's header will hold, as far as it is known before the read:
+ * the bones draw the same lines and rows, so nothing below them moves when
+ * the page arrives.
+ */
+export interface ProfileBones {
+  /** A line under the name ("Former member for ..."). */
+  role?: boolean;
+  /** The "Your MP" line. */
+  yourMP?: boolean;
+  /** The Follow button. */
+  follow?: boolean;
+  /** The identity rows in order; `detail` is a second line. */
+  rows?: readonly {
+    kind: 'party' | 'seat' | 'official';
+    detail?: boolean;
+  }[];
+}
+/** A sitting federal member: the party, one seat and the official page. */
+const sittingMemberBones: Required<ProfileBones> = {
+  role: false,
+  yourMP: false,
+  follow: true,
+  rows: [
+    { kind: 'party' },
+    { kind: 'seat', detail: true },
+    { kind: 'official' },
+  ],
+};
+
 /** Detail placeholders follow the same type, row and spacing tokens as content. */
 function DetailSkeleton({
   person,
+  profile,
   label,
   onSunken,
   testID,
 }: {
   person: boolean;
+  profile?: ProfileBones;
   label: string;
   onSunken: boolean;
   testID?: string;
 }) {
+  const header = { ...sittingMemberBones, ...profile };
   const large = useAccessibilitySize();
   const { regular } = useLayout();
   const { fontScale } = useWindowDimensions();
@@ -356,82 +389,103 @@ function DetailSkeleton({
           >
             {bone('portrait', 96, 96, true)}
             {line('name', '70%', 'pageTitle')}
-            {bone('follow', large ? '100%' : 112, controlHeight.default, true)}
+            {header.role ? line('role', '55%') : null}
+            {header.yourMP ? line('your-mp', 84) : null}
+            {header.follow
+              ? bone(
+                  'follow',
+                  large ? '100%' : 112,
+                  controlHeight.compact,
+                  true,
+                )
+              : null}
           </View>
-          <View>
-            <View
-              style={{
-                minHeight: minimumTarget,
-                paddingVertical: rhythm.row,
-                justifyContent: 'center',
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: rhythm.tight,
-                }}
-              >
-                {bone('party-dot', 10, 10, true)}
-                {line('party', '40%', 'body')}
-              </View>
+          {header.rows.length ? (
+            <View testID={part('identity')}>
+              {header.rows.map((row, index) => {
+                const seats = header.rows
+                  .slice(0, index)
+                  .filter((r) => r.kind === 'seat').length;
+                const name =
+                  row.kind === 'seat' && seats ? `seat-${seats}` : row.kind;
+                return (
+                  <View key={name}>
+                    {index ? divider(`${name}-divider`) : null}
+                    <View
+                      testID={part(`${name}-row`)}
+                      style={{
+                        minHeight: minimumTarget,
+                        paddingVertical: rhythm.row,
+                        justifyContent: 'center',
+                        gap: rhythm.line,
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: rhythm.tight,
+                        }}
+                      >
+                        {row.kind === 'party'
+                          ? bone('party-dot', 10, 10, true)
+                          : null}
+                        {line(
+                          name,
+                          row.kind === 'party' ? '40%' : '65%',
+                          'body',
+                        )}
+                      </View>
+                      {row.detail ? line(`${name}-detail`, '45%') : null}
+                    </View>
+                  </View>
+                );
+              })}
+              {divider('identity-end')}
             </View>
-            {divider('identity-divider')}
-            <View style={{ gap: rhythm.line, paddingVertical: rhythm.row }}>
-              {line('seat', '65%', 'body')}
-              {line('seat-detail', '45%')}
-            </View>
-            {divider('identity-end')}
-          </View>
+          ) : null}
         </View>
-        <View style={{ gap: rhythm.tight }}>
-          <View
-            testID={part('stat-strip')}
-            style={{
-              flexDirection: large ? 'column' : 'row',
-              gap: rhythm.block,
-            }}
-          >
-            {[0, 1, 2].map((index) => (
-              <View
-                key={index}
-                testID={part(`stat-tile-${index}`)}
-                style={large ? undefined : { flex: 1 }}
-              >
-                {index ? (
-                  <View
-                    testID={part(`stat-divider-${index}`)}
-                    style={
-                      large
-                        ? {
-                            height: hairline,
-                            backgroundColor: colors.dividerSubtle,
-                            marginBottom: rhythm.block,
-                          }
-                        : {
-                            position: 'absolute',
-                            top: 0,
-                            bottom: 0,
-                            left: -rhythm.tight,
-                            width: hairline,
-                            backgroundColor: colors.dividerSubtle,
-                          }
-                    }
-                  />
-                ) : null}
-                <View style={{ minHeight: minimumTarget, gap: rhythm.line }}>
-                  {line(`stat-value-${index}`, '85%', 'tileFigure')}
-                  {bone(
-                    `stat-label-${index}`,
-                    '90%',
-                    height('footnote') * (large ? 1 : 2),
-                  )}
-                </View>
+        <View
+          testID={part('stat-strip')}
+          style={{
+            flexDirection: large ? 'column' : 'row',
+            gap: rhythm.block,
+          }}
+        >
+          {[0, 1, 2].map((index) => (
+            <View
+              key={index}
+              testID={part(`stat-tile-${index}`)}
+              style={large ? undefined : { flex: 1 }}
+            >
+              {index ? (
+                <View
+                  testID={part(`stat-divider-${index}`)}
+                  style={
+                    large
+                      ? {
+                          height: hairline,
+                          backgroundColor: colors.dividerSubtle,
+                          marginBottom: rhythm.block,
+                        }
+                      : {
+                          position: 'absolute',
+                          top: 0,
+                          bottom: 0,
+                          left: -rhythm.tight,
+                          width: hairline,
+                          backgroundColor: colors.dividerSubtle,
+                        }
+                  }
+                />
+              ) : null}
+              {/* A tile's label is one line ("divisions", "a year in pay"). */}
+              <View style={{ minHeight: minimumTarget, gap: rhythm.line }}>
+                {line(`stat-value-${index}`, '85%', 'tileFigure')}
+                {line(`stat-label-${index}`, '90%', 'footnote')}
               </View>
-            ))}
-          </View>
-          {source('source')}
+            </View>
+          ))}
         </View>
       </ReadableColumn>
       <View style={{ gap: rhythm.heading }}>
@@ -518,18 +572,22 @@ export function Skeleton({
   count = 3,
   label = 'Loading',
   onSunken = false,
+  profile,
   testID,
 }: {
   shape?: SkeletonShape;
   count?: number;
   label?: string;
   onSunken?: boolean;
+  /** For `person-profile`: the header's lines and rows, when known. */
+  profile?: ProfileBones;
   testID?: string;
 }) {
   if (shape === 'person-profile' || shape === 'electorate-profile')
     return (
       <DetailSkeleton
         person={shape === 'person-profile'}
+        profile={profile}
         label={label}
         onSunken={onSunken}
         testID={testID}
