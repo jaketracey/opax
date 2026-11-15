@@ -315,8 +315,11 @@ describe('no pushed page has a clear bar without a fade', () => {
     test('the map takes that bar, from whether its route is a clear pushed page', () => {
       const text = feature('money/MoneyScreen');
       expect(text).toMatch(
-        /const plainClear = usePushedPlainClear\(\);[\s\S]{0,200}fixedPageBar\(plainClear, rail, colors\.paper\)/,
+        /const plainClear = usePushedBar\(\) === 'clear' && !rail;[\s\S]{0,200}fixedPageBar\(plainClear, rail, colors\.paper\)/,
       );
+      // The map does not read the stack's descriptors: it would render
+      // again on every page's setOptions.
+      expect(text).not.toMatch(/usePushedPlainClear|DescriptorsContext/);
     });
 
     // Any page that sets an opaque bar for itself would keep the hairline

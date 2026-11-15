@@ -75,7 +75,6 @@ import {
   useRailBar,
 } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
-import { usePushedPlainClear } from '../../navigation/solid-rail';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
   moneyCatalogs,
@@ -626,7 +625,10 @@ function MapMode({
   // (the hub's ruling); a legibility setting keeps the opaque bar and its
   // hairline (fixedPageBar).
   const rail = useRailBar() !== null;
-  const plainClear = usePushedPlainClear();
+  // Asked without reading the stack's descriptors: the map would render
+  // again whenever any page set options. This route is a pushed card, so
+  // the stack's own answer is the route's (as ListMode asks it).
+  const plainClear = usePushedBar() === 'clear' && !rail;
   useLayoutEffect(() => {
     setOptions({
       ...fixedPageBar(plainClear, rail, colors.paper),
