@@ -47,6 +47,7 @@ import {
   todayFixture,
 } from './today/launch-fixture';
 import { Masthead, useNow } from './today/Masthead';
+import { WideSearch } from './quick-search/WideSearch';
 import { LearnCard, WithLearnCard } from './learn/LearnCard';
 import { loadLearnSettings } from './learn/settings';
 import { MoreToExplore } from './today/MoreToExplore';
@@ -607,6 +608,7 @@ export default function Today() {
     >
       <Masthead
         now={now}
+        search={<WideSearch />}
         offlineSavedAt={offlineAt ?? null}
         sitting={
           <SittingLine

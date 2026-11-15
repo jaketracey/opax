@@ -32,6 +32,7 @@ jest.mock('../src/api/runtime', () => ({
   },
 }));
 const mockBar: { options?: Record<string, any> } = {};
+let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   return {
@@ -43,7 +44,7 @@ jest.mock('expo-router', () => {
     }),
     router: { push: jest.fn(), navigate: jest.fn() },
     useSegments: () => [],
-    useLocalSearchParams: () => ({}),
+    useLocalSearchParams: () => mockParams,
     useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
     Stack: {
       Screen: ({ options }: { options?: Record<string, any> }) => {
@@ -77,6 +78,7 @@ function page(q: string, rows: typeof speeches, kind = 'speech') {
 }
 
 beforeEach(() => {
+  mockParams = {};
   jest.clearAllMocks();
   resetSearchSession();
   recentSearches.clear();
@@ -133,6 +135,23 @@ test('only a query that found something enters Recent', async () => {
   await search('zzqqxxvv');
   expect(recent()).toEqual(['housing']);
   await act(async () => renderer.unmount());
+});
+
+test("words typed into Today's wide field enter Recent; a link's query never does", async () => {
+  // Lane ad-wide-search: the field opens Search with `typed`, so the query
+  // is submitted as typed and kept on this device like any other.
+  mockParams = { q: 'water', scope: 'all' };
+  const link = await mount();
+  await frame();
+  expect(bar().placeholder).toBeDefined();
+  expect(recent()).toEqual([]);
+  await act(async () => link.unmount());
+  resetSearchSession();
+  mockParams = { q: 'water', scope: 'all', typed: '1' };
+  const typed = await mount();
+  await frame();
+  expect(recent()).toEqual(['water']);
+  await act(async () => typed.unmount());
 });
 
 test('the same query submitted again while its results stay up moves to the top of Recent', async () => {

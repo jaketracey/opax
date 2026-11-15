@@ -247,7 +247,9 @@ function SearchContent({
     applied.current = key;
     const scope_ = isScope(params.scope) ? params.scope : 'all';
     controls.setFilters(filtersFromParams(params));
-    submit(params.q!, scope_, true);
+    // Typed into Today's wide field (`typed`): submitted as typed here, so
+    // it enters Recent like any other; a link's query never does.
+    submit(capQuery(params.q), scope_, params.typed !== '1');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
