@@ -109,7 +109,7 @@ export function composerLines(fontScale: number) {
 }
 /** The share of the visible height the whole composer may take. */
 export const COMPOSER_HEIGHT_SHARE = 0.4;
-/** The field's padding above and below its text (styles.input). */
+/** The field's padding above and below its text. */
 export const COMPOSER_FIELD_PADDING = 11;
 /**
  * The field's maximum height (ask.md 2.11, "AX3 and above, composer"). The
@@ -136,6 +136,10 @@ export const COMPOSER_FIELD_PADDING = 11;
  * One that overflows is returned as it is, even under the floor: lifted to
  * the floor, a one-line field showed a slice of its second line. The field
  * around it keeps the floor (AskDock).
+ *
+ * This is the padded field's height. On iOS the text view inside it is the
+ * lines alone (`composerTextCap`) and `overflowing` is never given: the
+ * padding there does not scroll. Android's text view is the padded field.
  */
 export function composerFieldCap({
   fontScale,
@@ -154,21 +158,59 @@ export function composerFieldCap({
   overflowing?: boolean;
 }): number {
   const line = textStyles.body.lineHeight * fontScale;
-  const visible = Math.max(0, windowHeight - keyboard);
-  const byHeight = COMPOSER_HEIGHT_SHARE * visible - chrome;
-  const lines = Math.max(
-    1,
-    Math.min(
-      composerLines(fontScale),
-      Math.floor((byHeight - 2 * COMPOSER_FIELD_PADDING) / line),
-    ),
-  );
+  const lines = composerFieldLines({
+    fontScale,
+    windowHeight,
+    keyboard,
+    chrome,
+  });
   return overflowing
     ? lines * line + COMPOSER_FIELD_PADDING
     : Math.max(
         composerFieldFloor(fontScale),
         lines * line + 2 * COMPOSER_FIELD_PADDING,
       );
+}
+/** How many whole lines the field shows before it scrolls inside. */
+function composerFieldLines({
+  fontScale,
+  windowHeight,
+  keyboard = 0,
+  chrome,
+}: {
+  fontScale: number;
+  windowHeight: number;
+  keyboard?: number;
+  chrome: number;
+}): number {
+  const line = textStyles.body.lineHeight * fontScale;
+  const visible = Math.max(0, windowHeight - keyboard);
+  const byHeight = COMPOSER_HEIGHT_SHARE * visible - chrome;
+  return Math.max(
+    1,
+    Math.min(
+      composerLines(fontScale),
+      Math.floor((byHeight - 2 * COMPOSER_FIELD_PADDING) / line),
+    ),
+  );
+}
+/**
+ * iOS: the most the text view itself may be, the cap's whole lines and
+ * nothing else. On iOS the field's padding is the wrapper's, outside what
+ * scrolls. Inside the text view it scrolled with the text, and UIKit keeps
+ * the caret's line on the view's bottom edge without the padding under it:
+ * typing past the cap at AX3 showed three lines under an 11 pt slice of the
+ * line above (build 82 sweep). A text view that is whole lines tall, over
+ * content that is whole lines, rests on a line's edge wherever the caret
+ * puts it. `chrome` is the composer's height outside the padded field.
+ */
+export function composerTextCap(room: {
+  fontScale: number;
+  windowHeight: number;
+  keyboard?: number;
+  chrome: number;
+}): number {
+  return composerFieldLines(room) * textStyles.body.lineHeight * room.fontScale;
 }
 /**
  * The least the field's touch area may be: 44 pt, and on Android 48 dp or
@@ -219,10 +261,11 @@ export function caretAfterContent(
 ): DraftCaret | null {
   if (!caret || caret.draft !== draft || caret.sized) return caret;
   // Judged once: a later size (a rotation, a wider window) moves nothing.
-  // Like for like: UIKit's content height includes the field's own vertical
+  // Like for like: a text view's content height includes its own vertical
   // padding (measured on iOS 27: three lines report 88 = 3 x 22 + 22, the
-  // laid-out height; ten lines report 242 in a field capped at 130), and
-  // the cap is the field's whole height, padding included.
+  // laid-out height; ten lines report 242 in a field capped at 130). So
+  // the cap given is the text view's own: its lines alone on iOS, where it
+  // has no padding (composerTextCap), the field's whole height on Android.
   return contentHeight <= fieldCap + 1
     ? { draft, at: 'end', done: false, sized: true }
     : { ...caret, sized: true };
@@ -359,7 +402,16 @@ export function AskDock({
     keyboard,
     chrome,
   });
-  const overflowing = contentHeight > fitHeight + 1;
+  // iOS: the text view is the cap's whole lines, with the padding outside
+  // it (composerTextCap); nothing changes when the draft overflows.
+  const ios = Platform.OS === 'ios';
+  const textCap = composerTextCap({
+    fontScale,
+    windowHeight,
+    keyboard,
+    chrome,
+  });
+  const overflowing = !ios && contentHeight > fitHeight + 1;
   const floor = composerFieldFloor(fontScale);
   const maxHeight = overflowing
     ? composerFieldCap({
@@ -563,6 +615,7 @@ export function AskDock({
             styles.field,
             tags.length > 0 ? styles.fieldInset : null,
             underFloor ? { minHeight: floor } : null,
+            ios ? [styles.fieldPadded, { minHeight: floor }] : null,
           ]}
           onLayout={(e) => setFieldWidth(e.nativeEvent.layout.width)}
         >
@@ -578,7 +631,12 @@ export function AskDock({
               const { height } = e.nativeEvent.contentSize;
               setContentHeight(height);
               setCaret((old) =>
-                caretAfterContent(old, s.draft, height, fitHeight),
+                caretAfterContent(
+                  old,
+                  s.draft,
+                  height,
+                  ios ? textCap : fitHeight,
+                ),
               );
             }}
             onSelectionChange={(e) => {
@@ -620,10 +678,17 @@ export function AskDock({
             // Under the floor the text view is its whole lines only; the
             // field around it keeps the floor, and a tap in the rest of
             // it still lands here.
-            hitSlop={underFloor ? { bottom: floor - maxHeight } : undefined}
+            hitSlop={
+              ios
+                ? { top: COMPOSER_FIELD_PADDING, bottom: floor }
+                : underFloor
+                  ? { bottom: floor - maxHeight }
+                  : undefined
+            }
             style={[
               styles.input,
-              { maxHeight },
+              ios ? styles.inputBare : styles.inputPadded,
+              { maxHeight: ios ? textCap : maxHeight },
               Platform.OS === 'android'
                 ? { minHeight: floor, textAlignVertical: 'top' }
                 : null,
@@ -631,7 +696,17 @@ export function AskDock({
             ]}
             onLayout={(e) =>
               setFieldHeight(
-                Math.max(e.nativeEvent.layout.height, underFloor ? floor : 0),
+                ios
+                  ? // The padded field: the text view and the padding
+                    // around it, never under the touch floor.
+                    Math.max(
+                      floor,
+                      e.nativeEvent.layout.height + 2 * COMPOSER_FIELD_PADDING,
+                    )
+                  : Math.max(
+                      e.nativeEvent.layout.height,
+                      underFloor ? floor : 0,
+                    ),
               )
             }
             testID="ask-question"
@@ -780,12 +855,19 @@ const styles = StyleSheet.create({
   // The field wrapper takes the row's width; the input grows with its lines
   // (flex here would be vertical, holding typed lines at the minimum).
   input: {
-    minHeight: minimumTarget,
-    paddingTop: COMPOSER_FIELD_PADDING,
-    paddingBottom: COMPOSER_FIELD_PADDING,
     paddingHorizontal: 0,
     ...textStyles.body,
     color: colors.ink,
   },
+  // Android: the padding is the text view's own, and scrolls with the text.
+  inputPadded: {
+    minHeight: minimumTarget,
+    paddingTop: COMPOSER_FIELD_PADDING,
+    paddingBottom: COMPOSER_FIELD_PADDING,
+  },
+  // iOS: whole lines only; the padding is the field's (fieldPadded), so it
+  // never scrolls and no caret position leaves part of a line showing.
+  inputBare: { paddingTop: 0, paddingBottom: 0 },
+  fieldPadded: { paddingVertical: COMPOSER_FIELD_PADDING },
   counter: { alignSelf: 'flex-end', paddingRight: rhythm.block },
 });
