@@ -184,6 +184,13 @@ describe.each([
     );
     expect(probe.put).not.toHaveBeenCalled();
     expect(probe.store.write).not.toHaveBeenCalled();
+    // Held until the grace ends, then cancelled with the request.
+    graceEnds();
+    await act(async () => {});
+    expect(probe.requests[0]!.signal.aborted).toBe(true);
+    expect(probe.requests).toHaveLength(1);
+    expect(probe.put).not.toHaveBeenCalled();
+    expect(probe.store.write).not.toHaveBeenCalled();
     expect(probe.current.error).toBeNull();
   });
 

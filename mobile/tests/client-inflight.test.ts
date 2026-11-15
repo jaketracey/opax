@@ -247,7 +247,7 @@ test('a reader arriving within the grace after the last abort rejoins the one re
   expect(calls[1]!.signal.aborted).toBe(true);
 });
 
-test('an answer that lands in the grace with nobody back is not saved, and leaves no timer behind', async () => {
+test('an answer that lands in the grace with nobody back is held to the grace’s end, then goes with the cancelled request: not saved, no timer left', async () => {
   heldClock();
   const { client, transport, calls, store } = held();
   const one = new AbortController();
@@ -259,16 +259,88 @@ test('an answer that lands in the grace with nobody back is not saved, and leave
   // The transport answers while the request is on its way out.
   calls[0]!.answer(reply());
   await quiet();
-  // An abandoned read's answer, as a lone read's abort always was: not
-  // saved, and the grace's timer went with the request.
+  // Held, not saved and not thrown away: a reader may still come back.
+  expect(store.entries.size).toBe(0);
+  expect(calls[0]!.signal.aborted).toBe(false);
+  jest.advanceTimersByTime(LAST_WAITER_GRACE_MS - 1);
+  await quiet();
+  expect(store.entries.size).toBe(0);
+  expect(calls[0]!.signal.aborted).toBe(false);
+  // Nobody came back: cancelled, as a lone read's abort always was. It
+  // is not an "offline" failure, so it is never retried.
+  jest.advanceTimersByTime(1);
+  expect(calls[0]!.signal.aborted).toBe(true);
+  await quiet();
   expect(store.entries.size).toBe(0);
   expect(jest.getTimerCount()).toBe(0);
+  expect(transport).toHaveBeenCalledTimes(1);
   // The next reader asks again.
   const next = client.get(path, same);
   await reached(calls, 2);
   expect(transport).toHaveBeenCalledTimes(2);
   calls[1]!.answer(reply());
   expect((await next).data).toEqual(body);
+});
+
+// From review: the answer lands in the grace and a reader rejoins after
+// it. Thrown away, it cost a second download with retries, and with none
+// (the client documents are read with) an "offline" error although the
+// network had answered.
+test.each([0, 2])(
+  'the answer lands in the grace, then a reader rejoins (retries %s): it gets that answer, saved, from the one request',
+  async (retries) => {
+    heldClock();
+    const { client, transport, calls, store } = held({ retries });
+    const leaving = new AbortController();
+    const first = client.get(path, same, false, { signal: leaving.signal });
+    await reached(calls, 1);
+    await quiet();
+    leaving.abort(); // the pane's detail unmounts
+    await expect(first).rejects.toMatchObject({ name: 'AbortError' });
+    calls[0]!.answer(reply()); // the answer lands inside the grace
+    await quiet();
+    jest.advanceTimersByTime(LAST_WAITER_GRACE_MS - 1);
+    const rejoined = client.get(path, same); // the route's detail mounts
+    const outcome = await Promise.allSettled([rejoined]);
+    // Well past the grace: nothing more is asked, and nothing is cancelled.
+    jest.advanceTimersByTime(LAST_WAITER_GRACE_MS * 4);
+    await quiet();
+    expect({
+      status: outcome[0]!.status,
+      requests: transport.mock.calls.length,
+      aborted: calls[0]!.signal.aborted,
+      saved: store.entries.size,
+    }).toEqual({ status: 'fulfilled', requests: 1, aborted: false, saved: 1 });
+    expect((await rejoined).data).toEqual(body);
+    expect(jest.getTimerCount()).toBe(0);
+  },
+);
+
+test('a reader that rejoins at any moment just after the answer lands never gets an error it did not cause (no retries)', async () => {
+  heldClock();
+  const seen: string[] = [];
+  for (let n = 0; n < 12; n++) {
+    const { client, calls } = held({ retries: 0 });
+    const leaving = new AbortController();
+    const first = client.get(path, same, false, { signal: leaving.signal });
+    await reached(calls, 1);
+    await quiet();
+    leaving.abort();
+    await first.catch(() => undefined);
+    calls[0]!.answer(reply());
+    // The rejoin comes `n` microtasks after the answer.
+    for (let i = 0; i < n; i++) await Promise.resolve();
+    const [outcome] = await Promise.allSettled([client.get(path, same)]);
+    const reason = (outcome as PromiseRejectedResult).reason as
+      | { code?: string; name?: string }
+      | undefined;
+    seen.push(
+      `${n}: ${outcome!.status}${reason ? ` (${reason.code ?? reason.name})` : ''}, ${calls.length} request${calls.length === 1 ? '' : 's'}`,
+    );
+  }
+  expect(seen).toEqual(
+    Array.from({ length: 12 }, (_, n) => `${n}: fulfilled, 1 request`),
+  );
 });
 
 test('an answer that lands after a reader rejoined in the grace is that reader’s, and is saved', async () => {

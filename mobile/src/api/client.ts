@@ -356,8 +356,9 @@ export class ApiClient {
    * goes it is cancelled after a short grace (LAST_WAITER_GRACE_MS) in
    * which a new reader may join it, and at once when it is too old to be
    * joined. Cancelled, it is neither retried nor saved, as a lone read's
-   * abort always was; nor is an answer saved that lands in the grace with
-   * nobody back to read it. Its outcome, a record or an error, reaches every
+   * abort always was. An answer that lands in the grace is held to its
+   * end: a reader back by then gets it, and with nobody back it goes
+   * unsaved with the cancelled request. Its outcome, a record or an error, reaches every
    * waiter, and the flight is forgotten when it settles, so a later read
    * asks again. A flight more than half way to its deadline takes no new
    * waiters: a late reader starts its own, with its own full time.
@@ -376,6 +377,11 @@ export class ApiClient {
         startedAt: number;
         /** Set while the last waiter's leaving is being waited out. */
         grace?: ReturnType<typeof setTimeout>;
+        /**
+         * Set while the answer is in hand and the grace is still running:
+         * called when a reader rejoins, or when the request is cancelled.
+         */
+        wake?: () => void;
       }
     >
   >();
@@ -416,10 +422,25 @@ export class ApiClient {
         decode,
         false,
         { ...options, signal: controller.signal },
-        // In its grace, with nobody back yet: an answer that lands now is
-        // an abandoned read's, and is not saved (a lone read's abort
-        // never was).
-        () => started.waiters === 0,
+        // The answer is in hand. With a reader waiting it goes on to be
+        // saved. In the grace, with nobody back yet, it is held until the
+        // grace is over: a reader who rejoins in what is left of it gets
+        // this answer, saved as any other; with nobody back the request is
+        // cancelled and the answer goes with it, unsaved, as a lone read's
+        // abort always was. It is never discarded as a failure or retried.
+        () =>
+          started.waiters > 0 || controller.signal.aborted
+            ? undefined
+            : new Promise<void>((resolve) => {
+                started.wake = resolve;
+                // No grace is running to end the wait: nobody can be
+                // coming back, so it ends now, as a cancel.
+                if (started.grace === undefined) {
+                  forget(started);
+                  controller.abort();
+                  resolve();
+                }
+              }),
       ).finally(() => {
         clearTimeout(started.grace);
         forget(started);
@@ -432,6 +453,7 @@ export class ApiClient {
         waiters: number;
         startedAt: number;
         grace?: ReturnType<typeof setTimeout>;
+        wake?: () => void;
       } = {
         promise: promise as Promise<RecordResult<unknown>>,
         controller,
@@ -450,9 +472,15 @@ export class ApiClient {
     // Someone is waiting again: the request is no longer on its way out.
     clearTimeout(joined.grace);
     joined.grace = undefined;
+    // An answer held for the grace is this reader's now.
+    joined.wake?.();
+    joined.wake = undefined;
     const cancel = () => {
       forget(joined);
       joined.controller.abort();
+      // An answer held for the grace goes with the request.
+      joined.wake?.();
+      joined.wake = undefined;
     };
     if (!signal) {
       try {
@@ -513,8 +541,12 @@ export class ApiClient {
       summaryStream = false,
       persist = true,
     }: GetOptions = {},
-    /** Asked before saving: true when every reader of a shared read has left. */
-    abandoned: () => boolean = () => false,
+    /**
+     * Asked once the answer is in hand, before it is saved. A shared read
+     * whose readers have all left answers with a wait: it ends when a
+     * reader is back, or with this read's signal aborted.
+     */
+    held: () => Promise<void> | undefined = () => undefined,
   ): Promise<RecordResult<T>> {
     if (path.startsWith('/api/community/'))
       throw new ApiError(
@@ -740,8 +772,12 @@ export class ApiClient {
             (response.status === 304 ? cached?.etag : undefined),
         };
         cancelled();
-        if (abandoned())
-          throw Object.assign(new Error('Cancelled'), { name: 'AbortError' });
+        const wait = held();
+        if (wait) {
+          await wait;
+          // Nobody came back: a cancel, never a failure to retry.
+          cancelled();
+        }
         if (!persist) return result(entry, false);
         // Persistence failure must not turn a successful network read into an error.
         const retained = await this.options.cache
