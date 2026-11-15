@@ -25,7 +25,7 @@ const region=data.seats.find(s=>s.kind==='region');
 const seat=data.seats.find(s=>s.kind==='district'&&s.name==='Richmond'),member=seat.members[0].name;
 const BEFORE=new Date('2026-11-03T17:59:00+11:00'),NOW=new Date('2026-11-16T10:00:00+11:00'),AFTER=new Date('2026-11-29T10:00:00+11:00');
 const index=value=>new Map(data.seats.filter(s=>s.kind==='district').map(s=>[s.name,value]));
-const label=(now,idx)=>JSDOM.fragment(renderVicElection(data,seat,{},now,null,idx).html).querySelector('.vic-facts dt').textContent;
+const label=(now,idx)=>JSDOM.fragment(renderVicElection(data,seat,{},now,null,idx).html).querySelector('#last-parliament dt').textContent;
 
 test('the expiry day is the reviewed record’s day and the Tuesday 25 days before election day',()=>{
   assert.equal(VIC_ASSEMBLY_EXPIRED_AT.slice(0,10),record.dissolved_on);
@@ -40,11 +40,11 @@ test('a district page names the member until the Assembly expired, while the ind
     // After the polls close the label also dates the roster it is read from.
     assert.ok(label(now,index(data.election_day)).startsWith(`Member for Richmond ${PHRASE}`+(now===AFTER?', from the published roster dated ':'')));
     if(now===NOW) assert.equal(label(now,index(data.election_day)),`Member for Richmond ${PHRASE}`);
-    assert.ok(page.description.startsWith(`${member} was Member for Richmond ${PHRASE}. `),page.description);
+    assert.ok(page.description.includes(`${member} was Member for Richmond ${PHRASE}. `),page.description);
     assert.doesNotMatch(page.html+page.description,/Held by|Who holds|Member in published roster/);
   }
   assert.equal(label(BEFORE,index(data.election_day)),'Held by');
-  assert.match(renderVicElection(data,seat,{},BEFORE).description,/^Who holds Richmond/);
+  assert.doesNotMatch(renderVicElection(data,seat,{},BEFORE).description,/expired|was Member/);
 });
 
 test('the wording changes when the new parliament’s roster loads',()=>{
@@ -94,28 +94,35 @@ test('an electorate profile has no current member while the Assembly is ended',a
   assert.equal(vicAssemblyEnded({chamber:'representatives'}),false);
 });
 
-test('a person title drops "MP" for a member of the expired Assembly',()=>{
+test('a person title drops "MP" for a member of the expired Assembly, and dates the term within the limit',()=>{
   const p={name:'Example Member',party:'Labor',states:['vic'],last:2026,representation:[{jurisdiction:'vic',chamber:'vic_la',electorate:'Richmond',state:'VIC'}]};
-  const sitting=personRole(p,2026),ended=personRole(p,2026,()=>vicAssemblyExpiredPhrase());
+  const until=phrase=>({phrase,title:'until 3 November 2026',short:'to 3 Nov 2026'});
+  const member={jurisdiction:'vic',member:{role:'Member for Richmond',party:'Greens',until:until(PHRASE)}};
+  const sitting=personRole(p,2026),ended=personRole(p,2026,member);
   assert.equal(roleLine(sitting),'Labor Member for Richmond (Vic)');assert.equal(sitting.name,'Example Member MP');
   assert.equal(ended.name,'Example Member');assert.equal(ended.former,'');
-  assert.equal(roleLine(ended),`Labor Member for Richmond ${PHRASE} (Vic)`);
-  assert.equal(personTitle('Example Member',ended,'Speeches'),`Example Member, Member for Richmond ${PHRASE} · OPAX`);
-  // A former member stays former.
-  assert.equal(roleLine(personRole({...p,last:2019},2026,()=>PHRASE)),'former Labor Member for Richmond (Vic)');
-  // A Council member is "Member for X Region until the Council expired", and "MLC for" once the new roster loads.
+  // The party is the seat roster's; the sentence carries the whole phrase, the title a short date.
+  assert.equal(roleLine(ended),`Greens Member for Richmond ${PHRASE} (Vic)`);
+  assert.equal(personTitle('Example Member',ended,'Speeches'),'Example Member, Member for Richmond until 3 November 2026 · OPAX');
+  const long=personRole({...p,name:'Example Longer-Named Member'},2026,{jurisdiction:'vic',member:{role:'Member for South-Eastern Metropolitan Region',until:until(COUNCIL)}});
+  assert.equal(roleLine(long),`Labor Member for South-Eastern Metropolitan Region ${COUNCIL} (Vic)`);
+  assert.equal(personTitle('Example Longer-Named Member',long,'Speeches'),'Example Longer-Named Member · OPAX');
+  // Anyone else recorded in the ended house is a former member; another jurisdiction's seat is not touched.
+  assert.equal(roleLine(personRole(p,2026,{jurisdiction:'vic',member:null})),'former Labor Member for Richmond (Vic)');
+  const nsw={...p,states:['nsw'],representation:[{jurisdiction:'nsw',chamber:'nsw_la',electorate:'Maitland',state:'NSW'}]};
+  assert.equal(roleLine(personRole(nsw,2026,{jurisdiction:'vic',member:null})),'Labor Member for Maitland (NSW)');
   const mlc={...p,representation:[{jurisdiction:'vic',chamber:'vic_lc',electorate:'Northern Metropolitan',state:'VIC'}]};
   assert.equal(roleLine(personRole(mlc,2026)),'Labor MLC for Northern Metropolitan (Vic)');
-  assert.equal(roleLine(personRole(mlc,2026,()=>COUNCIL)),`Labor Member for Northern Metropolitan Region ${COUNCIL} (Vic)`);
-  assert.equal(personTitle('Example Member',personRole(mlc,2026,()=>COUNCIL),'Speeches'),`Example Member, Member for Northern Metropolitan Region ${COUNCIL} · OPAX`);
 });
 
 test('a region page names its members until the Council expired, following the Assembly’s record',()=>{
   assert.equal(vicCouncilExpiredPhrase(),COUNCIL);
-  const title=(now,idx)=>JSDOM.fragment(renderVicElection(data,region,{},now,null,idx).html).querySelector('#members h2').textContent;
+  const members=(now,idx)=>JSDOM.fragment(renderVicElection(data,region,{},now,null,idx).html).querySelector('#members');
+  const title=(now,idx)=>members(now,idx).querySelector('h2').textContent;
   for(const idx of [index(data.election_day),null]) for(const now of [NOW,AFTER]) {
-    assert.equal(title(now,idx),`Members for ${region.name} Region ${COUNCIL}`);
-    assert.match(renderVicElection(data,region,{},now,null,idx).description,new RegExp(`^The five members for ${region.name} Region ${COUNCIL}, `));
+    assert.equal(title(now,idx),'Last parliament');
+    assert.ok(members(now,idx).querySelector('.ui-section-note').textContent.startsWith(`Members for ${region.name} Region ${COUNCIL}.`));
+    assert.match(renderVicElection(data,region,{},now,null,idx).description,new RegExp(`^The five members for ${region.name} Region ${COUNCIL},? `));
   }
   assert.equal(title(BEFORE,index(data.election_day)),'Members');
   // The new parliament's roster clears the Assembly's rows, and the Council's wording goes with them.

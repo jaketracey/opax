@@ -47,7 +47,13 @@ export interface PersonRole {
   /** " (NSW)" or "" */
   tag: string
   federal: boolean
+  /** A member until their house's term ended: the full phrase for a sentence ("until the Assembly
+   *  expired on 3 November") and the dated forms a title has room for ("until 3 November 2026"). */
+  until?: TermEnd
 }
+export interface TermEnd { phrase: string; title: string; short: string }
+/** What a reviewed record says of a person and a house whose term has ended (public/vic-term.js). */
+export type EndedSeat = { jurisdiction: string; member: { role: string; until: TermEnd; party?: string | null } | null } | null
 
 /**
  * The seat a person is best known by and whether they still hold it. Federal
@@ -56,13 +62,13 @@ export interface PersonRole {
  * sitting, and anyone else as former. A dated current service takes priority
  * over those heuristics for careers that span parliaments or chambers.
  *
- * `ended` answers for a seat whose house no longer sits (an expired or dissolved
- * lower house before its new roster loads) with the words that say so, such as
- * "until the Assembly expired on 3 November": its sitting member is then named
- * without "MP", as the member for the seat until that day. An ended Council
- * seat reads "Member for X Region until the Council expired on 3 November".
+ * `ended` speaks for a house whose term has ended before its new roster loads. It
+ * answers once for the person, for their seat in its jurisdiction: `member` is the
+ * role, party and end of term of someone a seat's own roster names ("Member for
+ * Richmond", until the Assembly expired); a null `member` is anyone else recorded
+ * in that house, who is no sitting member either. Null: it has nothing to say.
  */
-export function personRole(p: RolePerson, year: number, ended: (seat: RoleSeat) => string | null = () => null): PersonRole | null {
+export function personRole(p: RolePerson, year: number, ended: EndedSeat = null): PersonRole | null {
   const seats = p.representation ?? []
   if (!seats.length) return null
   const federalSeat = seats.find(s => s.jurisdiction === 'federal')
@@ -74,27 +80,28 @@ export function personRole(p: RolePerson, year: number, ended: (seat: RoleSeat) 
     s.chamber === service.chamber && s.electorate === service.electorate)
   const seat = datedSeat ?? (p.current && federalSeat ? federalSeat : stateSitting ? stateSeat! : (federalSeat ?? stateSeat!))
   const federal = seat.jurisdiction === 'federal'
-  const sitting = datedSeat ? !!p.current : federal ? !!p.current : stateSitting
-  const party = (sitting ? (datedSeat ? service?.party : null) ?? p.party_now : null) ?? p.party ?? ''
+  const closed = ended && seat.jurisdiction === ended.jurisdiction ? ended : null
+  const term = closed?.member ?? null
+  const sitting = closed ? !!term : datedSeat ? !!p.current : federal ? !!p.current : stateSitting
+  const party = term?.party ?? (sitting ? (datedSeat ? service?.party : null) ?? p.party_now : null) ?? p.party ?? ''
   const senate = federal && seat.chamber === 'senate'
   // Some state rosters append the member's portfolios ("Williamstown – Minister for Ports").
   const place = seat.electorate.split(/\s+[–—-]\s+/)[0].trim().replace(/^Legislative Council district of /, '')
-  const until = sitting && (LOWER_HOUSES.has(seat.chamber) || COUNCILS.has(seat.chamber)) ? ended(seat) : null
-  const role = senate ? `Senator for ${TERRITORIES[place] ?? place}`
-    // Victoria's form for a region's member once the Council has expired: "Member for X Region until ...".
-    : COUNCILS.has(seat.chamber) ? (until ? `Member for ${place} Region ${until}` : `MLC for ${place}`)
-    : LOWER_HOUSES.has(seat.chamber) ? `Member for ${place}${until ? ` ${until}` : ''}`
+  const role = term ? term.role : senate ? `Senator for ${TERRITORIES[place] ?? place}`
+    : COUNCILS.has(seat.chamber) ? `MLC for ${place}`
+    : LOWER_HOUSES.has(seat.chamber) ? `Member for ${place}`
     : `representative for ${place}`
   const stateTag = STATE_TAGS[String(seat.state ?? seat.jurisdiction).toUpperCase()] ?? ''
   const statewide = COUNCILS.has(seat.chamber) && stateTag === STATE_TAGS[place.toUpperCase()]
   return {
-    name: sitting && LOWER_HOUSES.has(seat.chamber) && !until ? `${p.name} MP` : p.name,
+    name: sitting && LOWER_HOUSES.has(seat.chamber) && !term ? `${p.name} MP` : p.name,
     former: sitting ? '' : 'former ',
     party,
     role,
     // Senate and statewide Council seats already name their state.
     tag: !senate && !statewide && stateTag ? ` (${stateTag})` : '',
     federal,
+    ...(term ? { until: term.until } : {}),
   }
 }
 
@@ -104,9 +111,11 @@ function roleLead(r: PersonRole, withParty: boolean, withTag: boolean): string {
   return `${r.name}, ${r.former}${party}${r.role}${withTag ? r.tag : ''}`
 }
 
-/** The role in a sentence: "Labor Member for Grayndler (NSW)". */
+/** The role in a sentence: "Labor Member for Grayndler (NSW)", or with the end of a term
+ *  "Labor Member for Richmond until the Assembly expired on 3 November (Vic)". */
 export function roleLine(r: PersonRole): string {
-  return roleLead(r, true, true).slice(r.name.length + 2)
+  const line = roleLead(r, true, true).slice(r.name.length + 2)
+  return r.until ? `${line.slice(0, line.length - r.tag.length)} ${r.until.phrase}${r.tag}` : line
 }
 
 /**
@@ -115,6 +124,13 @@ export function roleLine(r: PersonRole): string {
  */
 export function personTitle(display: string, r: PersonRole | null, suffix: string, max = TITLE_MAX): string {
   if (!r) return `${display} · OPAX`
+  // An ended term is dated in the title's own short forms, never past the limit: the full sentence
+  // is in the description and on the page.
+  if (r.until) return [
+    `${roleLead(r, true, false)} ${r.until.title} · OPAX`,
+    `${roleLead(r, false, false)} ${r.until.title} · OPAX`,
+    `${roleLead(r, false, false)} ${r.until.short} · OPAX`,
+  ].find(t => t.length <= max) ?? `${display} · OPAX`
   const candidates = [
     `${roleLead(r, true, true)} · ${suffix} · OPAX`,
     `${roleLead(r, true, true)} · OPAX`,

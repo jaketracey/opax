@@ -7,3 +7,4 @@ export function rosterListParty(person: { name: string; chambers?: readonly stri
 export interface ReferenceSeat { current: boolean; name: string; jurisdiction: string; chamber: string; party?: string | null; as_of?: string | null }
 export interface ReferencePerson { name: string; aliases?: string[]; person_id?: string; legacy_person_id?: string; electorates: ReferenceSeat[] }
 export function referenceOnlyPeople<P extends ReferencePerson>(rosterPeople: readonly { name: string; full?: string | null; speech_scope?: unknown; prints?: string[] }[], referencePeople: readonly P[] | null | undefined): { person: P; seats: P['electorates'] }[];
+export function rosterIsPerson(rep: { person?: { name?: string; aliases?: string[]; legacy_person_id?: string } } | null | undefined, person: { name: string; pid?: string | null }): boolean;

@@ -79,7 +79,8 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, r
     // Visible text only: the speech search's example words are an input attribute.
     assert.equal(page.status,200,s.name);assert.doesNotMatch(page.html.replace(/<[^>]+>/g,' '),/loading|opening|placeholder/i);
     assert.ok(page.html.includes(s.source_url));
-    for(const m of s.members){assert.ok(paths.has(m.href),m.name);assert.ok(page.html.includes(m.href));assert.ok(m.party,m.name);assert.ok(page.html.includes(partyLabelHTML(m.party).replace(/\bparty-[a-z]+\b/,'party-oth')),`${s.name}: ${m.party}`);}
+    // A seat that was vacant when the term ended names and links nobody (vic-term.test.mjs).
+    for(const m of s.members){assert.ok(paths.has(m.href),m.name);if(s.name==='Brunswick'){assert.ok(!page.html.includes(m.href));continue;}assert.ok(page.html.includes(m.href));assert.ok(m.party,m.name);assert.ok(page.html.includes(partyLabelHTML(m.party).replace(/\bparty-[a-z]+\b/,'party-grey')),`${s.name}: ${m.party}`);}
     for(const text of ['8 pm Tuesday 3 November 2026','18–27 November 2026','Saturday 28 November 2026','href="/methods#vic-election"'])assert.ok(page.html.includes(text),`${s.name}: ${text}`);
     // Jake, 13 Oct: sections OPAX can't fill are dropped; the caveats live on Methods.
     assert.doesNotMatch(page.html,/Not available|What OPAX holds|Grants by state electorate|Declared interests|Electoral boundaries|annual aggregate|snapshot|vote export|export/i,s.name);
@@ -88,7 +89,7 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, r
       assert.ok(page.html.includes(`${r.margin.toFixed(1)} points`),s.name);
       // The member's record section, with its speech search, is on the page only after the polls close.
       assert.doesNotMatch(page.html,/name="speaker"|id="record"/,s.name);
-      assert.ok(renderVicElection(data,s,{},AFTER_POLLS).html.includes(`name="speaker" value="${s.members[0].name.replace(/'/g,'&#39;')}"`),s.name);
+      if(s.name!=='Brunswick') assert.ok(renderVicElection(data,s,{},AFTER_POLLS).html.includes(`name="speaker" value="${s.members[0].name.replace(/'/g,'&#39;')}"`),s.name);
     }
     assert.doesNotMatch(page.html,/An association does not prove influence/);
     assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');assert.equal(page.jsonLd['@graph'][1]['@type'],'ItemList');
@@ -322,7 +323,7 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
       const region=built.seats.find(s=>s.name==='Eastern Victoria');
       assert.deepEqual(region.candidates.list,[{name:'MOSS, Ren',party:'',group:'A',group_name:''},{name:'FERN, Iona',party:'',group:null,group_name:''}]);
       assert.equal(region.candidates.url,region.source_url+'/nominations');
-      const html=renderVicElection(built,lowan).html;assert.match(html,/<h2 class="ui-section-title">Candidates<\/h2><p class="ui-section-note">In ballot paper order, as published by the VEC on 10 Nov 2026/);assert.ok(html.indexOf('Avery Quill')<html.indexOf('Rowan Ketch'));
+      const html=renderVicElection(built,lowan).html;assert.match(html,/<h2 class="ui-section-title">Candidates<\/h2><p class="ui-section-note">Listed in the VEC’s published order, which is ballot paper order, with each party as the VEC names it\. Published 10 Nov 2026/);assert.ok(html.indexOf('Avery Quill')<html.indexOf('Rowan Ketch'));
       await writeFile(join(dir,'vic-candidates-2026.json'),JSON.stringify({published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',districts:{Nowhere:[{name:'Avery Quill'}]}}));
       await assert.rejects(buildVicElection(out,join(dir,'vic-election-2026.json')),/unknown constituency: Nowhere/);
     } finally {await rm(out,{recursive:true,force:true});}
@@ -343,7 +344,7 @@ test('published VEC input covers every seat and renders district and region cand
     const {JSDOM}=await import('jsdom');
     const document=new JSDOM(page.html).window.document;
     assert.deepEqual([...document.querySelectorAll('.vic-candidate-name')].map(n=>n.textContent),seat.candidates.list.map(c=>c.name));
-    assert.match(document.querySelector('#candidates').textContent,/In ballot paper order/);
+    assert.match(document.querySelector('#candidates').textContent,/Listed in the VEC’s published order, which is ballot paper order/);
     assert.equal(document.querySelector('#candidates a').href,seat.source_url+'/nominations');
     if(seat.kind==='region')assert.equal(document.querySelectorAll('.vic-candidate-no, #candidates ol').length,0);
   }
@@ -361,10 +362,12 @@ test('Council headings retain group order, distinguish unnamed groups and Ungrou
   ];
   const html=renderVicElection(data,{...region,candidates:{published:'2026-11-11',url:region.source_url+'/nominations',list}}).html;
   const doc=new JSDOM(html).window.document,section=doc.querySelector('#candidates');
-  assert.deepEqual([...section.querySelectorAll('h3')].map(n=>n.textContent),['Group A, Labor','Group B','Ungrouped']);
+  assert.deepEqual([...section.querySelectorAll('h3')].map(n=>n.textContent),['Group A, Australian Labor Party','Group B','Ungrouped']);
   assert.deepEqual([...section.querySelectorAll('.vic-candidate-name')].map(n=>n.textContent),list.map(c=>c.name));
   assert.equal(section.querySelectorAll('ol,.vic-candidate-no').length,0);
-  assert.equal(section.querySelectorAll('.party-oth').length,2);
+  assert.equal(section.querySelectorAll('.party-grey').length,2);
+  // The party is printed as the VEC publishes it, not by a short name.
+  assert.deepEqual([...section.querySelectorAll('.ui-party')].map(n=>n.textContent),Array(2).fill('Australian Labor Party - Victorian Branch'));
   assert.equal(section.querySelectorAll('.party').length,2);
   for(const ul of section.querySelectorAll('ul'))assert.ok(doc.getElementById(ul.getAttribute('aria-labelledby')));
   // Source group names are text, never markup, even when no party alias exists.

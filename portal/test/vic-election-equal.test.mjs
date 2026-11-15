@@ -24,7 +24,7 @@ test('every party label on every election page has the same grey dot',()=>{
   let labels=0;
   for(const {seat,doc} of pages) for(const label of doc.querySelectorAll('.vic-hub .ui-party')) {
     labels++;
-    assert.deepEqual([...label.classList].filter(c=>c.startsWith('party-')),['party-oth'],seat?.name??'hub');
+    assert.deepEqual([...label.classList].filter(c=>c.startsWith('party-')),['party-grey'],seat?.name??'hub');
   }
   assert.ok(labels>500,'the pages do carry party labels');
 });
@@ -34,7 +34,7 @@ test('every candidate in a seat is drawn by the same row, in the VEC’s ballot 
     if(!seat?.candidates) continue;
     const section=doc.querySelector('#candidates'),rows=[...section.querySelectorAll('.vic-candidates > li')];
     assert.deepEqual(rows.map(li=>li.querySelector('.vic-candidate-name').textContent),seat.candidates.list.map(c=>c.name),seat.name);
-    assert.match(section.querySelector('.ui-section-note').textContent,/^In ballot paper order, as published by the VEC on /);
+    assert.match(section.querySelector('.ui-section-note').textContent,/^Listed in the VEC’s published order, which is ballot paper order, with each party as the VEC names it\. Published \d/);
     // Two shapes only: with a party label, or without one for a candidate nominated without a party.
     const withParty=new Set(),without=new Set();
     for(const [i,li] of rows.entries()) (seat.candidates.list[i].party&&seat.candidates.list[i].party.toLowerCase()!=='independent'?withParty:without).add(shape(li));
@@ -73,17 +73,28 @@ test('no seat page carries a record section for anyone until the polls close; it
       assert.doesNotMatch(page.html+page.description,/has done|have done/,s.name);
       if(s.kind!=='district') continue;
       // The previous member is named once on the page, in the dated line, as a plain link to their own page.
-      const m=s.members[0],row=doc.querySelector('.vic-facts > div');
+      const m=s.members[0],row=doc.querySelector('#last-parliament .vic-facts > div');
+      // The line sits apart from the candidates, after them, and the previous result is attached to nobody.
+      const order=[...doc.querySelectorAll('.vic-hub > .vic-facts, #candidates, #last-parliament')].map(n=>n.id||'result');
+      assert.deepEqual(order,['result','candidates','last-parliament'],s.name);
+      assert.equal(doc.querySelector('#last-parliament h2').textContent,'Last parliament');
+      assert.equal(doc.querySelectorAll('.vic-hub > .vic-facts a[href^="/subject/person/"]').length,0,s.name);
+      if(s.name==='Brunswick') {  // vacant when the term ended: nobody is named (vic-term.test.mjs)
+        assert.equal(row.textContent,'MemberVacant when the Assembly expired on 3 November.');
+        assert.ok(!(page.html+page.description).includes(m.name));continue;
+      }
       assert.equal(row.querySelector('dt').textContent,`Member for ${s.name} until the Assembly expired on 3 November`,s.name);
       assert.deepEqual([...row.querySelectorAll('dd a')].map(a=>[a.getAttribute('href'),a.textContent]),[[m.href,m.name]],s.name);
       const elsewhere=doc.querySelector('.vic-hub').cloneNode(true);
-      for(const part of elsewhere.querySelectorAll('.vic-facts > div:first-child, #candidates, #region')) part.remove();
+      for(const part of elsewhere.querySelectorAll('#last-parliament, #candidates, #region')) part.remove();
       assert.ok(!elsewhere.textContent.includes(m.name),s.name);
       assert.equal(page.description.split(m.name).length,2,s.name);
     }
     // A region's previous members are a plain list of links under the dated heading.
     const {doc}=render(region,now),members=doc.querySelector('#members');
-    assert.equal(members.querySelector('h2').textContent,`Members for ${region.name} Region until the Council expired on 3 November`);
+    assert.equal(members.querySelector('h2').textContent,'Last parliament');
+    assert.ok(members.querySelector('.ui-section-note').textContent.startsWith(`Members for ${region.name} Region until the Council expired on 3 November.`));
+    assert.ok(doc.querySelector('#candidates').compareDocumentPosition(members)&4,'after the candidates');
     assert.deepEqual([...members.querySelectorAll('.vic-people > li > a')].map(a=>[a.getAttribute('href'),a.textContent]),region.members.map(m=>[m.href,m.name]));
     assert.equal(members.querySelectorAll('a').length,region.members.length);
   }

@@ -1,7 +1,8 @@
-import {partyLabelHTML, partyShortName} from '../public/party-page.js'
+import {partyLabelHTML} from '../public/party-page.js'
 import {shortDate} from '../public/format.js'
 import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_DAY_START, VIC_ELECTION_EARLY_OPEN, VIC_ELECTION_EARLY_CLOSE, VIC_ELECTION_RESULTS_URL, VIC_ASSEMBLY_EXPIRED_AT, vicAssemblyExpiredPhrase, vicCouncilExpiredPhrase, vicAssemblyEnded, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
+import {vicSeatVacantAtExpiry, vicVacantSentence} from '../public/vic-term.js'
 import {hubShell, type HubFooterConfig} from './hubs'
 import {trail} from './nav-model.mjs'
 import {validateVicElection} from './vic-election-data'
@@ -100,9 +101,12 @@ export function vicElectionCopy(d: VicElection, now = new Date(), seat: Seat | n
     : {title:'How and where to vote',text:state === 'election_day' ? 'Election day voting is from 8 am to 6 pm AEDT. Check voting locations with the VEC.' : past(VIC_ELECTION_EARLY_CLOSE,now) ? 'Early voting has closed. Election day voting is Saturday 28 November, 8 am to 6 pm AEDT.' : 'Early voting runs 18–27 November, 9 am to 6 pm, except Sunday 22 November. Check locations and hours with the VEC.',links:[{label:'VEC voting options and locations',url:d.sources.voting}]}
   return {state,title,lede,voting,finder:{title:closed ? 'Find a seat and its records' : 'Which seat am I in?',button:closed ? 'Find seat records' : 'Find my seat'}}
 }
-/** Every party's label carries the same grey dot on election pages: colour would mark out the
- *  five parties that have one from the rest. */
-const party = (name: string | null) => name ? partyLabelHTML(name).replace(/\bparty-[a-z]+\b/,'party-oth') : ''
+/** Every party's label carries the same grey dot on election pages (hubs.css .party-grey, the neutral
+ *  ink token): colour would mark out the five parties that have one from the rest. */
+const party = (name: string | null) => name ? partyLabelHTML(name).replace(/\bparty-[a-z]+\b/,'party-grey') : ''
+/** A candidate's party exactly as the VEC publishes it, with that dot: no short names, so no party is
+ *  treated as better known than another. A candidate published with no party has no label. */
+const nominated = (name: string) => name.trim() ? `<span class="ui-party party party-grey"><i aria-hidden="true"></i>${esc(name.trim())}</span>` : ''
 /** A section in the site's shared shape (ui-section): its rule, its title, an optional note. */
 const section = (id: string, title: string, body: string, note = '') => `<section class="ui-section hub-section" id="${id}"><h2 class="ui-section-title">${title}</h2>${note ? `<p class="ui-section-note">${note}</p>` : ''}${body}</section>`
 /** A block's onward links on one wrapping row, each a full touch target. */
@@ -141,9 +145,10 @@ function keyDates(d: VicElection, now: Date) {
 
 /** A seat as one tappable row: name, who holds it, and the last winning margin
  *  (or, in finder results for a split place, the share of its residents). */
-function seatRow(s: Seat, share: number | null = null) {
+function seatRow(s: Seat, share: number | null = null, vacant = false) {
   const r = latest(s)
-  const held = s.kind === 'district' ? `${esc(s.members[0].name)} ${party(s.members[0].party)}` : `${s.members.length} members`
+  // A seat that was vacant when the term ended names nobody.
+  const held = s.kind === 'district' ? vacant ? 'Vacant' : `${esc(s.members[0].name)} ${party(s.members[0].party)}` : `${s.members.length} members`
   const [figure, when] = share !== null ? [share >= 99.95 ? 'All' : share < 1 ? 'Under 1%' : `${Math.round(share)}%`, 'of residents']
     // The caption says 2022; only a later by-election names its contest.
     : r ? [`${r.party} by ${points(r.margin)}`, r.kind === 'general' ? '' : contestName(r)] : ['','']
@@ -151,12 +156,14 @@ function seatRow(s: Seat, share: number | null = null) {
 }
 const seatList = (seats: string, label: string) => `<ul class="vic-seats" aria-label="${esc(label)}">${seats}</ul>`
 
-function finder(d: VicElection, place: string | null, hits: PlaceHit[] | null, copy: ReturnType<typeof vicElectionCopy>['finder'], expired: (s: Seat) => boolean) {
+function finder(d: VicElection, place: string | null, hits: PlaceHit[] | null, copy: ReturnType<typeof vicElectionCopy>['finder'], expired: (s: Seat) => boolean, vacant: (s: Seat) => boolean) {
+  // A search for the last member of a seat that was vacant when the term ended finds no member.
+  hits = hits && hits.filter(h=>!(h.kind === 'Member' && vacant(h.seats[0].seat)))
   const value = place ? ` value="${esc(place)}"` : ''
   let results = ''
   if (place !== null && hits) {
     results = hits.length
-      ? `<div class="vic-hits"><h3 class="visually-hidden">Results</h3>${hits.map(h=>`<div class="vic-hit">${h.kind === 'District' || h.kind === 'Region' ? '' : `<p class="vic-hit-place"><strong>${esc(h.name)}</strong> <span>${esc(h.kind === 'Member' && expired(h.seats[0].seat) ? 'Member '+vicAssemblyExpiredPhrase() : h.kind)}</span></p>`}${seatList(h.seats.map(x=>seatRow(x.seat,h.seats.length > 1 ? x.share : null)).join(''),h.name)}</div>`).join('')}${hits.some(h=>h.seats.length > 1) ? `<p class="hub-meta">Some places cross district lines. ${link(d.sources.address,'Check your exact address with the VEC')}.</p>` : ''}</div>`
+      ? `<div class="vic-hits"><h3 class="visually-hidden">Results</h3>${hits.map(h=>`<div class="vic-hit">${h.kind === 'District' || h.kind === 'Region' ? '' : `<p class="vic-hit-place"><strong>${esc(h.name)}</strong> <span>${esc(h.kind === 'Member' && expired(h.seats[0].seat) ? 'Member '+vicAssemblyExpiredPhrase() : h.kind)}</span></p>`}${seatList(h.seats.map(x=>seatRow(x.seat,h.seats.length > 1 ? x.share : null,vacant(x.seat))).join(''),h.name)}</div>`).join('')}${hits.some(h=>h.seats.length > 1) ? `<p class="hub-meta">Some places cross district lines. ${link(d.sources.address,'Check your exact address with the VEC')}.</p>` : ''}</div>`
       : /^\d{4}$/.test(place.trim())
         // PO box postcodes have no residents, so the ABS postal areas don't include them.
         ? `<p class="vic-hits">No Victorian postcode area matches “${esc(place)}”. PO box postcodes aren’t included: try your suburb, or ${link(d.sources.address,'check your address with the VEC')}.</p>`
@@ -183,12 +190,12 @@ function record(m: Member, opts: {search: boolean; heading: string}) {
 }
 
 /** Candidates as the VEC publishes them after nominations close: ballot paper order, no other ordering.
- *  Every candidate is drawn by the one row: a name, the party as nominated with the same grey dot,
+ *  Every candidate is drawn by the one row: a name, the party exactly as published with the same grey dot,
  *  and a link to their record only where one is verified (Candidate.record). Nobody has a portrait:
  *  one may be drawn only when every candidate in the seat has one, and none is held for candidates. */
 function candidates(s: Seat) {
   if (!s.candidates?.list.length) return ''
-  const row = (c: Candidate, number?: number) => `<li>${number === undefined ? '' : `<span class="vic-candidate-no" aria-hidden="true">${number}</span>`}<span class="vic-candidate"><span class="vic-candidate-name">${c.record && /^\/subject\/person\/[^"<>\s]+$/.test(c.record.href) ? link(c.record.href,c.name) : esc(c.name)}</span>${c.party && c.party.toLowerCase() !== 'independent' ? party(c.party) : ''}</span></li>`
+  const row = (c: Candidate, number?: number) => `<li>${number === undefined ? '' : `<span class="vic-candidate-no" aria-hidden="true">${number}</span>`}<span class="vic-candidate"><span class="vic-candidate-name">${c.record && /^\/subject\/person\/[^"<>\s]+$/.test(c.record.href) ? link(c.record.href,c.name) : esc(c.name)}</span>${nominated(c.party || '')}</span></li>`
   let body: string
   if (s.kind === 'region') {
     const groups: {letter: Candidate['group']; name: string; list: Candidate[]}[] = []
@@ -197,7 +204,7 @@ function candidates(s: Seat) {
       groups.at(-1)!.list.push(c)
     }
     body = groups.map((g,i) => {
-      const heading = g.letter === null ? 'Ungrouped' : g.letter ? `Group ${g.letter}${g.name ? ', '+partyShortName(g.name) : ''}` : ''
+      const heading = g.letter === null ? 'Ungrouped' : g.letter ? `Group ${g.letter}${g.name.trim() ? ', '+g.name.trim() : ''}` : ''
       const id = `candidate-group-${i}`
       return `${heading ? `<h3 class="ui-subsection-title" id="${id}">${esc(heading)}</h3>` : ''}<ul class="vic-candidates vic-candidates-region" role="list"${heading ? ` aria-labelledby="${id}"` : ''}>${g.list.map(c=>row(c)).join('')}</ul>`
     }).join('')
@@ -205,7 +212,7 @@ function candidates(s: Seat) {
     body = `<ol class="vic-candidates" role="list">${s.candidates.list.map((c,i)=>row(c,i+1)).join('')}</ol>`
   }
   return section('candidates','Candidates',body,
-    `In ballot paper order, as published by the VEC on ${esc(shortDate(s.candidates.published))}. ${link(s.candidates.url,'VEC candidate list')}`)
+    `Listed in the VEC’s published order, which is ballot paper order, with each party as the VEC names it. Published ${esc(shortDate(s.candidates.published))}. ${link(s.candidates.url,'VEC candidate list')}`)
 }
 
 function resultFacts(s: Seat) {
@@ -291,6 +298,9 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
   // Until the polls close no seat page carries a record section for anyone: the roster member, who may be
   // standing, is named once in a dated line with a plain link, and their record lives on their own page.
   const campaign = !closed
+  // A reviewed exception (public/vic-term.js): the roster names a member whose service ended, with no
+  // by-election, before the Assembly expired. The seat was vacant, and nobody is named its member.
+  const vacant = (x: Seat) => expired(x) && vicSeatVacantAtExpiry({jurisdiction:'vic',chamber:'vic_la',name:x.name})
   const councilEnded = (x: Seat) => councilExpired(d,x,now,index), untilCouncil = vicCouncilExpiredPhrase()
   // Nobody is called a member of a house that no longer sits: the rows name who was the member until it expired.
   const districtNote = rosterNote + `Each row shows the ${districts.every(expired) ? `member ${until}` : 'member'} and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.`
@@ -302,28 +312,35 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
     body = `<div class="ui-page-head"><h1>${esc(title)}</h1>`
       + `<p class="ui-lede">${esc(copy.lede)}${!past(d.enrolment_close,now) ? ' '+link(d.sources.enrolment,'Check your enrolment') : ''}</p></div>`
       // Side by side on wide screens, so the seat list starts in the first screen.
-      + `<div class="vic-top">${finder(d,find?.place ?? null,find?.hits ?? null,copy.finder,expired)}${keyDates(d,now)}</div>`
+      + `<div class="vic-top">${finder(d,find?.place ?? null,find?.hits ?? null,copy.finder,expired,vacant)}${keyDates(d,now)}</div>`
       + electionResults(d,null,now)
-      + section('districts','Lower house: 88 districts',seatList(districts.map(x=>seatRow(x)).join(''),'Districts'),districtNote)
+      + section('districts','Lower house: 88 districts',seatList(districts.map(x=>seatRow(x,null,vacant(x))).join(''),'Districts'),districtNote)
       + section('regions','Upper house: 8 regions',`<ul class="vic-regions">${regions.map(r=>`<li><a class="vic-region" href="${esc(r.path)}"><span class="vic-seat-name">${esc(r.name)}</span><span class="vic-region-members">${r.members.map(m=>`<span>${esc(m.name)} ${party(m.party)}</span>`).join('')}</span></a></li>`).join('')}</ul>`,rosterNote+'Each region elects five members.'+(regions.every(councilEnded) ? ` Each row shows the members ${untilCouncil}.` : ''))
   } else if (s.kind === 'district') {
     const m = s.members[0], region = d.seats.find(r=>r.kind === 'region' && r.name === s.region)!
     title = `${s.name} district · Victorian election 2026`
     const r = latest(s)
-    const ended = expired(s)
-    description = ended
-      ? `${m.name} was Member for ${s.name} ${until}. See ${campaign ? `the candidates${r ? ` and the ${contestName(r)} result and winning margin` : ''}` : `${r ? `the ${contestName(r)} result and winning margin, and ` : ''}what ${m.name} has done in Parliament`}. ${copy.lede}`
-      : campaign ? `Who holds ${s.name}, the candidates${r ? `, and the ${contestName(r)} result and winning margin` : ''}. ${copy.lede}`
+    const ended = expired(s), empty = vacant(s)
+    // During the campaign the description leads with the contest; the previous member follows, once.
+    const before = empty ? `${s.name} was vacant when the Assembly expired on ${until.split(' on ')[1]}.` : ended ? `${m.name} was Member for ${s.name} ${until}.` : ''
+    description = campaign
+      ? `${s.name} district: the candidates${r ? ` and the ${contestName(r)} result and winning margin` : ''}.${before ? ' '+before : ''} ${copy.lede}`
+      : empty ? `${before} See ${r ? `the ${contestName(r)} result and winning margin` : 'the district'}. ${copy.lede}`
+      : ended ? `${before} See ${r ? `the ${contestName(r)} result and winning margin, and ` : ''}what ${m.name} has done in Parliament. ${copy.lede}`
       : `Published member records for ${s.name}, ${r ? `the ${contestName(r)} result and winning margin, ` : ''}and what ${m.name} has done in Parliament. ${copy.lede}`
     crumbs = trail(VIC_ELECTION_PATH, s.name)
     body = `<div class="ui-page-head"><h1>${esc(s.name)}</h1><p class="ui-page-meta">Lower house district in ${link(region.path,region.name+' Region')}${s.formerly ? `. Called ${esc(s.formerly)} before 2022` : s.created ? '. First contested in 2022' : ''}.</p></div>`
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
-      + `<dl class="vic-facts"><div><dt>${ended ? esc(`Member for ${s.name} ${until}${closed ? `, from the published roster dated ${shortDate(s.roster_date)}` : ''}`) : closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>${resultFacts(s)}</dl>`
+      // The previous result stands alone: it is the seat's, and is attached to no person.
+      + (resultFacts(s) ? `<dl class="vic-facts">${resultFacts(s)}</dl>` : '')
       // Neutral next steps only until polls close: no person, party, vote or member count (next-steps.js).
       + nextStepsHTML(vicDistrictNextSteps(s,region,{closed}),{pageType:'vic-election',id:'vic-next'})
       + candidates(s)
-      + (campaign ? '' : section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''})))
+      // Apart from the candidates and below them: who was the member when the last parliament ended, once,
+      // as a dated line with a plain link to their own page.
+      + section('last-parliament',ended ? 'Last parliament' : 'Member',`<dl class="vic-facts">${empty ? `<div><dt>Member</dt><dd>${esc(vicVacantSentence({chamber:'vic_la'}))}</dd></div>` : `<div><dt>${ended ? esc(`Member for ${s.name} ${until}${closed ? `, from the published roster dated ${shortDate(s.roster_date)}` : ''}`) : closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>`}</dl>`)
+      + (campaign || empty ? '' : section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''})))
       + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.${councilEnded(region) ? ` Listed are the members for ${esc(region.name)} Region ${untilCouncil}.` : ''}`)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'District map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find another seat')])}</div>`
@@ -336,14 +353,15 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
       + candidates(s)
-      + section('members',ended ? `Members for ${esc(s.name)} Region ${untilCouncil}` : closed ? 'Members in the published roster' : 'Members',campaign ? `<ul class="vic-people">${s.members.map(m=>`<li>${link(m.href,m.name)} ${party(m.party)}</li>`).join('')}</ul>`
-        : `<div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`})).join('')}</div>`,closed ? `Roster dated ${esc(shortDate(s.roster_date))}.` : '')
-      + section('districts','Districts in this region',seatList(s.districts.map(name=>seatRow(memberOf(d,name))).join(''),'Districts'),districtNote)
+      + section('members',ended ? 'Last parliament' : closed ? 'Members in the published roster' : 'Members',campaign ? `<ul class="vic-people">${s.members.map(m=>`<li>${link(m.href,m.name)} ${party(m.party)}</li>`).join('')}</ul>`
+        : `<div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`})).join('')}</div>`,
+        [ended ? `Members for ${esc(s.name)} Region ${untilCouncil}.` : '',closed ? `Roster dated ${esc(shortDate(s.roster_date))}.` : ''].filter(Boolean).join(' '))
+      + section('districts','Districts in this region',seatList(s.districts.map(name=>memberOf(d,name)).map(x=>seatRow(x,null,vacant(x))).join(''),'Districts'),districtNote)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'Region map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find your seat')])}</div>`
   }
   body += section('voting',esc(copy.voting.title),`<p>${esc(copy.voting.text)}</p>${links(copy.voting.links.map(x=>link(x.url,x.label)))}`) + about()
-  return {state:copy.state,title,description,html:hubShell(`<div class="vic-hub" data-election-state="${copy.state}">${body}</div>`,approvedFooter(footer),crumbs),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(x=>({href:x.path,name:x.name}))),
+  return {state:copy.state,title,description,html:hubShell(`<div class="vic-hub" data-election-state="${copy.state}">${body}</div>`,approvedFooter(footer),crumbs),jsonLd:structured(path,d,s ? (vacant(s) ? [] : s.members).map(m=>({href:m.href,name:m.name})) : d.seats.map(x=>({href:x.path,name:x.name}))),
     card:{kicker:'Victorian election · 28 November 2026',title,lines:[description],authorisation:VIC_ELECTION_AUTHORISATION_LINE}}
 }
 /** The electorates index's word on each Assembly seat; null when it cannot be read, so the page's own record decides. */
