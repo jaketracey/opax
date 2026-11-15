@@ -320,6 +320,10 @@ const categories = [
   ['ax5', 3.571],
 ] as const;
 export type ContentSizeCategory = (typeof categories)[number][0];
+/** Every iOS reader text size's font-scale multiplier, xSmall to AX5. */
+export const contentSizeScales: readonly number[] = categories.map(
+  ([, scale]) => scale,
+);
 export function contentSizeCategory(fontScale: number): ContentSizeCategory {
   let best: ContentSizeCategory = 'large';
   let distance = Infinity;
