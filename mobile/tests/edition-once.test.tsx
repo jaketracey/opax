@@ -167,6 +167,41 @@ describe('the plate line never repeats the summary below it', () => {
     expect(plateLine(`${body(sentence)} ${STATUS}`, [sentence])).toBe(STATUS);
   });
 
+  // The shape of two real bills whose titles carry "No. 1" / "No. 2": a
+  // full stop inside the summary's first sentence. Invented words.
+  const NUMBERED =
+    'The bill would change how fixture payments are indexed and reported under the Fixture Laws Amendment (Scheme Measures No. 1) Act and its related fixture programs and rules for members.';
+  const NUMBERED_FITS =
+    'The bill would change how fixture payments are indexed and reported under the Fixture Laws Amendment (Scheme Measures No. 2) Act and related rules.';
+  test('a full stop inside the summary ("No. 1") leaves no fragment on the plate', () => {
+    expect(clip(NUMBERED, 150).endsWith('…')).toBe(true);
+    // The number comes late, so what follows it is shorter than a repeat
+    // has to be: split there, that tail would stay on the plate.
+    expect(clip(NUMBERED, 150).split('No. ')[1]!.length).toBeLessThan(60);
+    expect(plateLine(cover(NUMBERED), [body(NUMBERED)])).toBe(STATUS);
+    expect(plateLine(clip(NUMBERED, 150), [body(NUMBERED)])).toBeNull();
+    // Whole on the cover, cut below.
+    expect([...NUMBERED_FITS].length).toBeGreaterThanOrEqual(146);
+    expect([...NUMBERED_FITS].length).toBeLessThanOrEqual(150);
+    expect(plateLine(cover(NUMBERED_FITS), [body(NUMBERED_FITS)])).toBe(STATUS);
+  });
+
+  test('two whole sentences that open alike are different sentences: both stay', () => {
+    const short =
+      'The bill would repeal the fixture levy on fixture producers and fixture importers.';
+    const long =
+      'The bill would repeal the fixture levy on fixture producers and fixture importers and amend related laws.';
+    expect(short.length).toBeGreaterThanOrEqual(60);
+    expect(plateLine(`${short} ${STATUS}`, [long])).toBe(`${short} ${STATUS}`);
+    expect(plateLine(`${long} ${STATUS}`, [short])).toBe(`${long} ${STATUS}`);
+    // The same pair with the shorter one cut is a repeat.
+    expect(plateLine(`${long} ${STATUS}`, [`${short.slice(0, -1)}…`])).toBe(
+      STATUS,
+    );
+    // The same sentence in other spacing and case is still a repeat.
+    expect(plateLine(`${short.toUpperCase()} ${STATUS}`, [short])).toBe(STATUS);
+  });
+
   test('a shared opening shorter than a real cut is not a repeat', () => {
     const line = `The bill would protect specified fixture treatment… ${STATUS}`;
     expect(plateLine(line, [body(LONG)])).toBe(line);

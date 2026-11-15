@@ -100,31 +100,59 @@ export function plateLine(
   }
   if (!line?.trim()) return null;
   const below = new Set((shownBelow ?? []).flatMap(sentences));
-  const belowStems = (shownBelow ?? []).flatMap(pieces).map(stem);
+  const belowPieces = (shownBelow ?? [])
+    .flatMap(cutChunks)
+    .flatMap((chunk) => [chunk, ...lineSentences(chunk)])
+    .map(asPiece);
   // The cover line and the text below are each the summary's first
   // sentence, cut to their own lengths ("… spending caps and reviews…" on
   // the cover, "… spending caps and…" below; or the sentence whole on the
-  // cover and cut below). Either way one opens with the other, and that
-  // piece is the text below again: it goes, and what follows it stays.
+  // cover and cut below). The shorter copy ends in "…" and the longer one
+  // opens with it: that piece is the text below again, so it goes, and
+  // what follows it stays. Two whole sentences that merely open alike
+  // ("… repeal the levy." and "… repeal the levy and amend related laws.")
+  // are different sentences, and both stay.
   const repeated = (piece: string) => {
-    const own = stem(piece);
-    return belowStems.some(
+    const own = asPiece(piece);
+    return belowPieces.some(
       (other) =>
-        Math.min(own.length, other.length) >= REPEAT_STEM &&
-        (own.startsWith(other) || other.startsWith(own)),
+        Math.min(own.stem.length, other.stem.length) >= REPEAT_STEM &&
+        (own.stem === other.stem ||
+          (other.cut && own.stem.startsWith(other.stem)) ||
+          (own.cut && other.stem.startsWith(own.stem))),
     );
   };
-  const rest = pieces(line).filter(
-    (piece) => !below.has(piece) && !repeated(piece),
+  // A piece ending in "…" is compared whole first: a full stop inside it
+  // ("No. 1") is not the end of a sentence, and splitting there would
+  // leave its tail on the plate.
+  const rest = cutChunks(line).flatMap((chunk) =>
+    chunk.endsWith('…') && repeated(chunk)
+      ? []
+      : lineSentences(chunk).filter(
+          (piece) => !below.has(piece) && !repeated(piece),
+        ),
   );
   return rest.length ? rest.join(' ').replace(/\.$/, '') : null;
 }
-/** A line's sentences, and the pieces a "…" cut leaves before the next. */
-const pieces = (text: string) => text.split(/(?<=…)\s+/).flatMap(sentences);
-/** A piece without its ending ("…", a full stop), spacing and case. */
-const stem = (piece: string) => folded(piece.trim().replace(/[….]+$/, ''));
+/** The pieces a "…" cut leaves: each ends in "…", but for the last. */
+const cutChunks = (text: string) =>
+  text
+    .split(/(?<=…)\s+/)
+    .map((chunk) => chunk.trim())
+    .filter(Boolean);
+/** Sentences, but "No. 1" is a number, not the end of one. */
+const lineSentences = (text: string) =>
+  text
+    .split(/(?<=[.!?])(?<!\bNo\.)\s+/)
+    .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+/** A piece's stem (no ending, spacing or case) and whether it was cut. */
+const asPiece = (text: string) => ({
+  stem: folded(text.trim().replace(/[….]+$/, '')),
+  cut: text.trim().endsWith('…'),
+});
 /**
- * Two pieces this long, one opening with the other, are the same sentence.
+ * Two pieces this long, the cut one opening the other, are one sentence.
  * The edition cuts its summary at 145 and 150 characters and never below
  * 60% of that, so a real cut is far longer; a shorter shared opening ("The
  * bill would") is not a repeat.
