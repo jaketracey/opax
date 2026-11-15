@@ -22,6 +22,8 @@ import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
 import { rhythm } from '../src/design/tokens';
+import { Text } from '../src/design/text';
+import * as learnSettings from '../src/features/learn/settings';
 import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
 import { WelcomePage } from '../src/features/welcome/Welcome';
@@ -76,6 +78,9 @@ jest.mock('../src/api/runtime', () => ({
     slugs: jest.fn(() => new Promise(() => {})),
     // No published calendar: no sitting line, the closing line's date alone.
     sittingDays: jest.fn(async () => null),
+    // Nothing saved unless a test says so.
+    sittingDaysSaved: jest.fn(async () => null),
+    todayEditionSaved: jest.fn(async () => null),
   },
 }));
 jest.mock('../src/features/vic-election/reads', () => ({
@@ -294,6 +299,8 @@ function setUp({
     .mocked(readInvitationDates)
     .mockResolvedValue({ hiddenUntil, welcomeDeclinedAt });
   mock.todayEdition.mockResolvedValue(edition);
+  mock.todayEditionSaved.mockResolvedValue(null);
+  mock.sittingDaysSaved.mockResolvedValue(null);
   mock.todayBills.mockImplementation(async (limit = 3, kind = 'new') =>
     c.recentBillsFor(bills, limit, kind),
   );
@@ -709,7 +716,8 @@ describe('the page', () => {
   });
   test('Your MP loading is one element, read once', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
-    mock.yourMP.mockImplementation(() => new Promise(() => {}));
+    // The tile's skeleton stands while the directory is on its way.
+    mock.directory.mockImplementation(() => new Promise(() => {}));
     const r = await render(<Today />);
     // What VoiceOver can reach: not inside a hidden subtree.
     const hidden = (n: ReactTestInstance | null): boolean =>
@@ -777,6 +785,161 @@ describe('the page', () => {
         expect(text).not.toMatch(
           /Daily edition ·|snapshot|export|indexed|native|Try again\.|—/i,
         );
+    }
+  });
+});
+
+/**
+ * Jumpiness (ad-jank-today): the first frame of Today has the loaded page's
+ * layout, so nothing already on screen moves. Each test fails without its
+ * fix: the launch stand-in was the edition's outline whatever the page's
+ * order, Your MP's tile waited a frame behind a skeleton of another shape,
+ * and the edition was inserted in case A.
+ */
+describe('the first frame has the loaded page’s layout', () => {
+  const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  const flat = (n: ReactTestInstance) =>
+    (StyleSheet.flatten(n.props.style) ?? {}) as Record<string, unknown>;
+  const pending = <T,>() => {
+    let answer!: (value: T) => void;
+    const promise = new Promise<T>((resolve) => {
+      answer = resolve;
+    });
+    return { promise, answer };
+  };
+  const layOut = (r: TestRenderer.ReactTestRenderer) =>
+    act(() =>
+      r.root.findByType(Screen).props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 844 } },
+      }),
+    );
+
+  test('while the directory is read, the page is already in its order: Your MP’s skeleton, then the edition', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    const directoryRead = pending<typeof directory>();
+    mock.directory.mockReturnValue(directoryRead.promise as never);
+    const r = await render(<Today />);
+    // No stand-in of another shape: the page's own slots, in order.
+    expect(hosts(r, 'today-launching')).toHaveLength(0);
+    expect(blocks(r.root).slice(0, 4)).toEqual([
+      'today-your-mp',
+      'today-edition-card',
+      'today-following',
+      'today-bills',
+    ]);
+    expect(hosts(r, 'today-your-mp-loading')).toHaveLength(1);
+    const before = blocks(r.root);
+    await act(async () => directoryRead.answer(directory));
+    // The directory answers: the same order, the tile where its skeleton was.
+    expect(blocks(r.root)).toEqual(before);
+    expect(hosts(r, 'today-your-mp-loading')).toHaveLength(0);
+    expect(hosts(r, 'today-your-mp-member')).not.toHaveLength(0);
+  });
+
+  test('Your MP’s skeleton has the tile’s shape: the card, a 56 pt portrait, four lines of the tile’s type and the source band', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    mock.directory.mockImplementation(() => new Promise(() => {}));
+    const r = await render(<Today />);
+    const tile = hosts(r, 'today-your-mp-loading-tile')[0]!;
+    // The card's own face and padding, as the loaded tile's.
+    expect(flat(tile)).toMatchObject({ padding: 20 });
+    expect(flat(hosts(r, 'today-your-mp-loading-portrait')[0]!)).toMatchObject({
+      width: 56,
+      height: 56,
+    });
+    // Unseen lines of the real text styles set the heights, so they follow
+    // the text size as the loaded lines do.
+    const words = hosts(r, 'today-your-mp-loading-words')[0]!;
+    const lines = words
+      .findAll((n) => n.type === Text)
+      .map((n) => n.props.variant);
+    expect(lines).toEqual([
+      'footnote',
+      'subsectionTitle',
+      'secondary',
+      'secondary',
+    ]);
+    expect(flat(words)).toMatchObject({ gap: rhythm.line });
+    expect(flat(hosts(r, 'today-your-mp-loading-source')[0]!).minHeight).toBe(
+      Platform.OS === 'android' ? 48 : 44,
+    );
+  });
+
+  test('the tile draws from the directory at once, with no skeleton frame while its own read is out', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    mock.yourMP.mockImplementation(() => new Promise(() => {}));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-your-mp-loading')).toHaveLength(0);
+    expect(hosts(r, 'today-your-mp-member')).not.toHaveLength(0);
+    expect(strings(hosts(r, 'today-your-mp')[0]!)).toContain('Grayndler');
+  });
+
+  test('before the disk answers the body draws nothing, and the cover waits for the page’s order', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    const choiceRead = pending<Awaited<ReturnType<typeof loadChoice>>>();
+    jest.mocked(loadChoice).mockReturnValue(choiceRead.promise);
+    const r = await render(<Today />);
+    const launching = hosts(r, 'today-launching');
+    expect(launching).toHaveLength(1);
+    // It was the edition's outline, and the edition then landed under Your
+    // MP and the guide card.
+    expect(launching[0]!.children).toHaveLength(0);
+    expect(hosts(r, 'today-edition-loading')).toHaveLength(0);
+    layOut(r);
+    expect(releaseSplash).not.toHaveBeenCalled();
+    await act(async () =>
+      choiceRead.answer({
+        version: 1,
+        seatId: grayndler.electorate_id,
+        stateSeatIds: [],
+      }),
+    );
+    expect(releaseSplash).toHaveBeenCalledWith('today');
+    expect(blocks(r.root)[0]).toBe('today-your-mp');
+  });
+
+  test('A: the edition’s slot holds its skeleton until a read answers, so the edition is not inserted above Bills', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    mock.todayEdition.mockImplementation(() => new Promise(() => {}));
+    const r = await render(<Today />);
+    expect(blocks(r.root).slice(0, 3)).toEqual([
+      'today-your-mp',
+      'today-edition-loading',
+      'today-following',
+    ]);
+  });
+
+  test('the saved edition draws first, with no request, and is not marked a saved copy', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    mock.todayEdition.mockImplementation(() => new Promise(() => {}));
+    mock.todayEditionSaved.mockResolvedValue(editionAged(1));
+    const r = await render(<Today />);
+    expect(blocks(r.root).slice(0, 2)).toEqual([
+      'today-your-mp',
+      'today-edition-card',
+    ]);
+    expect(hosts(r, 'today-edition-loading')).toHaveLength(0);
+    expect(r.root.findAllByType(OfflineLine)).toHaveLength(0);
+  });
+
+  test('the guide card’s setting is read before the page is drawn, so the card is never inserted above the edition', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    const settingsRead = pending<undefined>();
+    const load = jest
+      .spyOn(learnSettings, 'loadLearnSettings')
+      .mockReturnValue(settingsRead.promise as never);
+    try {
+      const r = await render(<Today />);
+      // Everything else has answered: the body still waits for the setting.
+      expect(load).toHaveBeenCalled();
+      expect(hosts(r, 'today-launching')).toHaveLength(1);
+      expect(blocks(r.root)).toEqual([]);
+      await act(async () => settingsRead.answer(undefined));
+      expect(hosts(r, 'today-launching')).toHaveLength(0);
+      expect(blocks(r.root)[0]).toBe('today-your-mp');
+    } finally {
+      load.mockRestore();
     }
   });
 });

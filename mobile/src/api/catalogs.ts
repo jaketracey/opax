@@ -105,6 +105,32 @@ function cached<T>(
       : block.savedAt,
   };
 }
+/**
+ * Your MP's view from a directory already read, with no request: what
+ * `Catalogs.yourMP` answers once its directory read does. Today draws the
+ * tile from the directory it holds, so the tile is in the first frame.
+ */
+export function yourMPFromDirectory(
+  directory: {
+    electorates: RecordResult<Parameters<typeof yourMPFor>[1]>;
+    manifest: RecordResult<Parameters<typeof yourMPFor>[2]>;
+  },
+  id: string,
+  chosenStateSeats: readonly string[] = [],
+) {
+  const view = yourMPFor(
+    id,
+    directory.electorates.data,
+    directory.manifest.data,
+    [...chosenStateSeats],
+  );
+  const records = [directory.electorates, directory.manifest];
+  view.seat = cached(view.seat, records);
+  view.members = cached(view.members, records);
+  view.senators = view.senators.map((block) => cached(block, records));
+  view.stateMembers = view.stateMembers.map((block) => cached(block, records));
+  return view;
+}
 export interface PartyPageRecord {
   data: {
     label: string;
@@ -160,7 +186,10 @@ export class Catalogs {
   /** The last bills index read this session, for the bill page's party note. */
   private billIndex?: RecordResult<decode.BillIndex>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
-  constructor(private client: Pick<ApiClient, 'get'>) {}
+  constructor(
+    // `saved` is optional: a reader without saved copies has nothing saved.
+    private client: Pick<ApiClient, 'get'> & Partial<Pick<ApiClient, 'saved'>>,
+  ) {}
   async partyPage(
     input: string,
     refresh = false,
@@ -1012,6 +1041,45 @@ export class Catalogs {
     }
   }
   /**
+   * The edition as the device last saved it, with no request, for Today's
+   * first frame: the read that follows revalidates it. Null when nothing is
+   * saved. It is not marked stale, since no read has failed.
+   */
+  async todayEditionSaved(): Promise<Block<EditionView> | null> {
+    const record =
+      (await this.client
+        .saved?.(editionPath, decode.decodeEditionRead)
+        .catch(() => null)) ?? null;
+    if (!record) return null;
+    if ('absent' in record.data)
+      return {
+        sources: [],
+        asAt: null,
+        stale: false,
+        savedAt: null,
+        data: null,
+        status: 'missing',
+      };
+    return {
+      ...editionFor(record.data),
+      ...recordFlags([record]),
+      stale: false,
+      savedAt: record.savedAt,
+    };
+  }
+  /**
+   * The sitting calendar as the device last saved it, with no request, so
+   * the line under Today's date is in the first frame. Null when nothing is
+   * saved. Not marked stale: the read that follows revalidates it.
+   */
+  async sittingDaysSaved(): Promise<RecordResult<SittingDays> | null> {
+    const record =
+      (await this.client
+        .saved?.(sittingDaysPath, decodeSittingDays)
+        .catch(() => null)) ?? null;
+    return record ? { ...record, stale: false } : null;
+  }
+  /**
    * Local follows (src/features/follows): the shared catalogs their change
    * markers read. Nothing is read per followed record, so following many
    * items never crowds the bounded cache. `refresh` revalidates each file,
@@ -1156,21 +1224,11 @@ export class Catalogs {
     chosenStateSeats: string[] = [],
     signal?: AbortSignal,
   ) {
-    const directory = await this.directory(undefined, signal);
-    const view = yourMPFor(
+    return yourMPFromDirectory(
+      await this.directory(undefined, signal),
       id,
-      directory.electorates.data,
-      directory.manifest.data,
       chosenStateSeats,
     );
-    const records = [directory.electorates, directory.manifest];
-    view.seat = cached(view.seat, records);
-    view.members = cached(view.members, records);
-    view.senators = view.senators.map((block) => cached(block, records));
-    view.stateMembers = view.stateMembers.map((block) =>
-      cached(block, records),
-    );
-    return view;
   }
   async electorateFor(path: string, signal?: AbortSignal) {
     const result = await this.electorate(path, signal);

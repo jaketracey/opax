@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import type { Electorate } from '../../api/catalogs';
+import { yourMPFromDirectory, type Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { Card } from '../../design/card';
@@ -21,10 +21,16 @@ import {
   type RowMenuAction,
 } from '../../design/row-link';
 import { SourceLine, type SourceCitation } from '../../design/source';
-import { InlineError, LoadingStatus, Skeleton } from '../../design/states';
+import { InlineError, LoadingStatus } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm, textStyles } from '../../design/tokens';
+import {
+  colors,
+  minimumTarget,
+  radii,
+  rhythm,
+  textStyles,
+} from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import {
   electorateRoute,
@@ -59,6 +65,8 @@ function useLoad<T>(
   key: string | null,
   load: () => Promise<T>,
   attempt: number,
+  /** What is already at hand for this key: drawn until the read answers. */
+  held?: T,
 ): Load<T> {
   const [state, setState] = useState<{ key: string; value: Load<T> } | null>(
     null,
@@ -87,8 +95,10 @@ function useLoad<T>(
       active = false;
     };
   }, [key, attempt]);
-  return state?.key === key && key ? state.value : { status: 'loading' };
+  if (state?.key === key && key) return state.value;
+  return held !== undefined ? { status: 'ready', data: held } : LOADING;
 }
+const LOADING = { status: 'loading' } as const;
 
 /**
  * A seat's header (the state seat card, and Your MP when its roster fails):
@@ -147,8 +157,40 @@ function SeatHeader({
   );
 }
 
-/** The tile's skeleton in its final shape: one person and the line. */
+/**
+ * One line of the tile while it loads: an unseen line of the real text
+ * style, so the line is as tall as the loaded one at every text size, with
+ * a bar drawn inside it.
+ */
+function Bone({
+  variant,
+  width,
+  hook = false,
+  testID,
+}: {
+  variant: 'footnote' | 'subsectionTitle' | 'secondary';
+  width: `${number}%`;
+  hook?: boolean;
+  testID?: string;
+}) {
+  return (
+    <View testID={testID} style={hook ? styles.tileHook : undefined}>
+      <Text variant={variant} numberOfLines={1} style={styles.boneLine}>
+        {'\u00a0'}
+      </Text>
+      <View style={[styles.boneBar, { width }]} />
+    </View>
+  );
+}
+
+/**
+ * The tile's skeleton in the tile's own shape: the card with its padding,
+ * the 56 pt portrait, the four lines the loaded tile draws (the mark, the
+ * name, the party and seat, the plain line) and the source line's band
+ * under it. The loaded tile lands on it and nothing below moves.
+ */
 export function YourMPSkeleton() {
+  const stacked = useAccessibilitySize();
   return (
     // One element for VoiceOver, read once; the shapes inside keep the
     // tile's layout.
@@ -164,10 +206,42 @@ export function YourMPSkeleton() {
         importantForAccessibility="no-hide-descendants"
         style={styles.block}
       >
-        <Skeleton shape="people" count={1} label="Loading your MP" />
-        <Skeleton shape="text" count={1} label="Loading your MP" />
+        <Card testID="today-your-mp-loading-tile">
+          <View style={styles.tile}>
+            <View style={[styles.tileMain, stacked && styles.tileStacked]}>
+              <View
+                testID="today-your-mp-loading-portrait"
+                style={styles.bonePortrait}
+              />
+              <View
+                testID="today-your-mp-loading-words"
+                style={[styles.tileWords, !stacked && styles.tileWordsInline]}
+              >
+                <Bone variant="footnote" width="30%" />
+                <Bone variant="subsectionTitle" width="65%" />
+                <Bone variant="secondary" width="50%" />
+                <Bone variant="secondary" width="85%" hook />
+              </View>
+            </View>
+          </View>
+        </Card>
+        <View testID="today-your-mp-loading-source" style={styles.boneSource}>
+          <View style={[styles.boneBar, styles.boneSourceBar]} />
+        </View>
       </View>
     </LoadingStatus>
+  );
+}
+
+/**
+ * Your MP's place while the directory is still being read: the tile's
+ * column and its skeleton, where the tile will draw.
+ */
+export function YourMPPending() {
+  return (
+    <View testID="today-your-mp" style={styles.tileColumn}>
+      <YourMPSkeleton />
+    </View>
   );
 }
 
@@ -232,10 +306,23 @@ export function YourMPCard({
   onRetry: () => void;
 }) {
   const seatKey = `${seat.electorate_id}|${stateSeatIds.join(',')}`;
+  // The directory Today already holds answers the tile at once: the read
+  // below asks the same directory again, so its answer lands on a tile
+  // already drawn and no skeleton stands in for it.
+  const held = useMemo(() => {
+    try {
+      return yourMPFromDirectory(directory, seat.electorate_id, stateSeatIds);
+    } catch {
+      return undefined;
+    }
+    // Keyed by the seats' ids: the list itself is a new array each render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [directory, seatKey]);
   const view = useLoad<YourMPView>(
     seatKey,
     () => catalogs.yourMP(seat.electorate_id, [...stateSeatIds]),
     attempt,
+    held,
   );
   return (
     <View testID="today-your-mp" style={styles.tileColumn}>
@@ -766,6 +853,33 @@ const styles = StyleSheet.create({
   tileSeparator: { flexShrink: 0 },
   // The hook sits a step under the identity, as the tile's own sentence.
   tileHook: { marginTop: rhythm.line },
+  // The skeleton's lines: the unseen text sets the height, the bar sits in it.
+  boneLine: { opacity: 0 },
+  boneBar: {
+    position: 'absolute',
+    left: 0,
+    top: 3,
+    bottom: 3,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
+  bonePortrait: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
+  // The source line's band: its touch height, the bar where its text draws.
+  boneSource: { minHeight: minimumTarget, justifyContent: 'center' },
+  boneSourceBar: {
+    position: 'relative',
+    top: 0,
+    bottom: 0,
+    width: '70%',
+    height: 12,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

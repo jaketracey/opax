@@ -667,12 +667,67 @@ describe('featured carousel', () => {
     expect(catalogs.roster).toHaveBeenLastCalledWith(true);
     expect(catalogs.slugs).toHaveBeenLastCalledWith(true);
   });
+  test('the carousel is in the first frame: from the roster the page holds, or its heading and the card’s place while the read is out', async () => {
+    jest.mocked(catalogs.roster).mockReturnValue(new Promise(() => {}));
+    jest.mocked(catalogs.slugs).mockReturnValue(new Promise(() => {}));
+    // The page's directory names the people at once.
+    const held = await render(
+      <TodayEditionCard
+        edition={block}
+        today={today}
+        held={{
+          roster: { data: roster, stale: false, savedAt: 1 } as never,
+          slugs: { data: slugs, stale: false, savedAt: 1 } as never,
+        }}
+      />,
+    );
+    expect(held.root.findAllByType(FeaturedPeopleCarousel)).toHaveLength(1);
+    // Nothing held: the heading and context are drawn over the edition's
+    // card, at the first card's width, with the dots' row under it. The
+    // heading was inserted above the card when the read answered.
+    const { root } = await render(
+      <TodayEditionCard edition={block} today={today} />,
+    );
+    expect(root.findAllByType(FeaturedPeopleCarousel)).toHaveLength(0);
+    const frame = host(root, 'today-featured-pending');
+    const ids = frame
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          ['today-featured-title', 'today-featured-context'].includes(
+            node.props.testID,
+          ),
+      )
+      .map((node) => node.props.testID);
+    expect(new Set(ids)).toEqual(
+      new Set(['today-featured-title', 'today-featured-context']),
+    );
+    const card = frame.findByType(EditionCard);
+    const place = card.parent!;
+    expect(StyleSheet.flatten(place.props.style)).toMatchObject({
+      marginRight: 28,
+    });
+    const frameHost = frame.findAll(
+      (node) => typeof node.type === 'string',
+    )[0]!;
+    const last = frameHost.children[frameHost.children.length - 1] as {
+      props: { style: unknown };
+    };
+    expect(StyleSheet.flatten(last.props.style as never)).toMatchObject({
+      height: 44,
+    });
+  });
+
   test('an unavailable roster retains the edition, and old or non-person editions do not start selection reads', async () => {
     jest.mocked(catalogs.roster).mockRejectedValue(new Error('offline'));
     const { root } = await render(
       <TodayEditionCard edition={block} today={today} />,
     );
     expect(root.findAllByType(EditionCard)).toHaveLength(1);
+    // A failed read is not on its way: no carousel heading over one card.
+    expect(
+      root.findAll((node) => node.props.testID === 'today-featured-pending'),
+    ).toHaveLength(0);
     jest.mocked(catalogs.roster).mockClear();
     const old = await render(
       <TodayEditionCard edition={block} today="2026-12-01" />,

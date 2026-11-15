@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -21,11 +21,29 @@ export interface SittingRead {
 /**
  * Today's one read of the sitting calendar, shared by the line under the
  * date and the page's closing line (sweep 3, item 7), so a launch asks once
- * and a pull revalidates both together. Null until the read answers; a read
+ * and a pull revalidates both together. Null until a read answers; a read
  * that throws answers "no calendar", so the closing line still draws.
+ *
+ * The copy the device saved answers first, with no request, so the line is
+ * under the date in the first frame and is not inserted when the network
+ * read answers (which pushed the whole page down a line).
  */
 export function useSittingRead(attempt: number): SittingRead | null {
-  return useTodayRead(
+  const [saved, setSaved] = useState<SittingRead | null>(null);
+  useEffect(() => {
+    let active = true;
+    // A reader without saved copies is "nothing saved", like a failed read.
+    Promise.resolve()
+      .then(() => catalogs.sittingDaysSaved())
+      .then((record) => {
+        if (active && record) setSaved({ record });
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, []);
+  const read = useTodayRead(
     'sitting',
     async (refresh): Promise<SittingRead> => {
       try {
@@ -36,6 +54,7 @@ export function useSittingRead(attempt: number): SittingRead | null {
     },
     attempt,
   );
+  return read ?? saved;
 }
 
 /**
