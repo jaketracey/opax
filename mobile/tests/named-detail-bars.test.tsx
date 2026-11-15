@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   SectionList,
+  StyleSheet,
   View,
   ScrollView,
 } from 'react-native';
@@ -1030,3 +1031,61 @@ test.each([
     act(() => Dimensions.set({ window: original }));
   },
 );
+
+// Where UIKit puts the title view, as the window measures it: its left edge
+// and width. The bar is 402 pt, Share and More start at 282, the back button
+// collapses to its circle (ends at 60).
+describe('a title beside the collapsed back button is centred on the bar by measuring', () => {
+  const place = async (text: number, x: (width: number) => number) => {
+    const original = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
+    );
+    const navigation = { setOptions: jest.fn() };
+    const measure = jest
+      .spyOn(View.prototype, 'measureInWindow')
+      .mockImplementation((done) => done(x(text), 0, text, 30));
+    jest.useFakeTimers();
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <BarTitle title="Anthony Albanese" person shown backTitle="Today" />
+        </NavigationContext.Provider>,
+      );
+    });
+    measureBarTitle(view!, { 'Anthony Albanese': text });
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+    });
+    const shift = StyleSheet.flatten(
+      view!.root.findByType(Animated.Text).parent!.props.style,
+    ).transform?.[0]?.translateX as number | undefined;
+    act(() => view!.unmount());
+    measure.mockRestore();
+    jest.useRealTimers();
+    act(() => Dimensions.set({ window: original }));
+    return { shift, right: (x(text) ?? 0) + (shift ?? 0) + text };
+  };
+  // 26.3: UIKit centres the view in the span between the groups (60 to 282).
+  const betweenGroups = (width: number) => 171 - width / 2;
+  // 18.4: UIKit centres a fitting view on the bar.
+  const onBar = (width: number) => 201 - width / 2;
+
+  test('26.3: a title just too wide to sit beside the back name moves onto the bar’s centre line', async () => {
+    const { shift } = await place(144, betweenGroups);
+    expect(shift).toBe(30);
+  });
+
+  test('26.3: a title that fills the span never moves under Share', async () => {
+    const full = await place(206, betweenGroups);
+    expect(full.shift).toBeUndefined();
+    // A wide one moves only as far as the span allows.
+    const wide = await place(170, betweenGroups);
+    expect(wide.shift).toBe(18);
+    expect(wide.right).toBeLessThanOrEqual(274);
+  });
+
+  test('18.4: a title UIKit already centres is not moved', async () => {
+    expect((await place(144, onBar)).shift).toBeUndefined();
+  });
+});

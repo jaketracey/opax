@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type ClassAttributes,
   type RefObject,
 } from 'react';
 import {
@@ -21,6 +22,7 @@ import {
   type NativeSyntheticEvent,
   type Text,
   type View,
+  type ViewProps,
 } from 'react-native';
 import { NavigationRouteContext } from 'expo-router/react-navigation';
 import { useSafeSetOptions } from './preview';
@@ -358,9 +360,50 @@ export function BarTitle({
         measured(drawn),
       )
     : room;
+  // Beside the collapsed back button UIKit centres the title between the two
+  // groups, not on the bar: the trailing pair outweighs the circle, so it can
+  // sit left of centre (26.3; 18.4 already centres it). Measure where it
+  // is, and move it only as far as puts it on the bar's centre line without
+  // leaving the span between the groups.
+  const [box, setBox] = useState<View | null>(null);
+  const [moved, setMoved] = useState(0);
+  const [laidOut, setLaidOut] = useState(0);
+  const textWidth = measured(drawn);
+  const place =
+    Platform.OS === 'ios' && minimal && !fallback && trailingWidth !== 0;
+  const shift = place ? moved : 0;
+  const applied = useRef(0);
+  useEffect(() => {
+    applied.current = shift;
+  }, [shift]);
+  useEffect(() => {
+    const node = box;
+    if (!place || !node || !textWidth) return;
+    const timer = setTimeout(() => {
+      node.measureInWindow((x, _y, boxWidth) => {
+        if (!Number.isFinite(x) || !Number.isFinite(boxWidth) || boxWidth <= 0)
+          return;
+        // Where UIKit put it, before any move of ours.
+        const centre = x - applied.current + boxWidth / 2;
+        const free = Math.max(0, (room - boxWidth) / 2);
+        const next = Math.round(
+          Math.min(free, Math.max(0, width / 2 - centre)),
+        );
+        setMoved((now) => (Math.abs(now - next) < 1 ? now : next));
+      });
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [box, place, textWidth, room, width, drawn, fontScale, laidOut]);
   return createElement(
     NativeView,
-    { style: { maxWidth: drawnRoom } },
+    {
+      ref: setBox,
+      onLayout: () => setLaidOut((n) => n + 1),
+      style: {
+        maxWidth: drawnRoom,
+        ...(shift ? { transform: [{ translateX: shift }] } : {}),
+      },
+    } as ViewProps & ClassAttributes<View>,
     createElement(
       Animated.Text,
       {
