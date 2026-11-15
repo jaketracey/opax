@@ -381,6 +381,48 @@ test.each([
       expect('headerBackground' in solid).toBe(
         edge !== 'unspecified' && version >= 26,
       );
+      // The backing is for pushed pages. Every sheet and the photo viewer
+      // in the stack clear it: in a sheet it reserves an extra header-height
+      // band, and the viewer's white title and Done would sit on paper.
+      const solidScreens = view.root.findByType(Stack).props
+        .children as React.ReactElement<{
+        name: string;
+        options: (props: object) => Record<string, unknown>;
+      }>[];
+      const presented = [
+        'expense-glossary',
+        'consent',
+        'ask-report',
+        'conversations',
+        'bill-text-contents/[key]',
+        'explore/tide-table',
+        'explore/years',
+        'explore/photo',
+        'filters',
+        'money-item',
+      ];
+      for (const name of presented) {
+        const entry = solidScreens.find((item) => item.props.name === name);
+        expect([name, !!entry]).toEqual([name, true]);
+        const own = entry!.props.options({
+          route: { key: name, name, params: { sheet: '1' } },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+        expect([name, { ...solid, ...own }.headerBackground]).toEqual([
+          name,
+          undefined,
+        ]);
+      }
+      // A pushed page keeps the stack's backing.
+      const pushedBill = solidScreens
+        .find((item) => item.props.name === 'bill/[key]')!
+        .props.options({
+          route: { key: 'bill', name: 'bill/[key]', params: {} },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerBackground' in { ...solid, ...pushedBill }).toBe(
+        edge !== 'unspecified' && version >= 26,
+      );
       mockSolidBar = false;
       act(() => view!.unmount());
       view = tree(<TalkStack />);
