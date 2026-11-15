@@ -22,10 +22,19 @@ export function setShelfReaderForTests(
  * later. A read that fails or takes longer than `SHELF_WAIT_MS` is no
  * shelf. When `active` is false nothing is read and the answer is none.
  */
-export function useSavedShelf(active: boolean): ShelfItem[] | undefined {
-  const [shelf, setShelf] = useState<ShelfItem[] | undefined>(
-    active ? undefined : NONE,
-  );
+export function useSavedShelf(
+  active: boolean,
+  /**
+   * What the answer is for (the failure being shown). A new one starts
+   * undecided, as a fresh mount does, so a view whose error turns into an
+   * offline one draws nothing until its shelf is decided.
+   */
+  subject: unknown = null,
+): ShelfItem[] | undefined {
+  const [decision, setDecision] = useState<{
+    subject: unknown;
+    items: ShelfItem[];
+  } | null>(null);
   useEffect(() => {
     if (!active) return;
     let decided = false;
@@ -33,7 +42,7 @@ export function useSavedShelf(active: boolean): ShelfItem[] | undefined {
       if (decided) return;
       decided = true;
       clearTimeout(timer);
-      setShelf(items);
+      setDecision({ subject, items });
     };
     const timer = setTimeout(() => decide(NONE), SHELF_WAIT_MS);
     reader().then(decide, () => decide(NONE));
@@ -41,8 +50,9 @@ export function useSavedShelf(active: boolean): ShelfItem[] | undefined {
       decided = true;
       clearTimeout(timer);
     };
-  }, [active]);
-  return active ? shelf : NONE;
+  }, [active, subject]);
+  if (!active) return NONE;
+  return decision && decision.subject === subject ? decision.items : undefined;
 }
 const NONE: ShelfItem[] = [];
 
