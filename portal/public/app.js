@@ -4351,6 +4351,18 @@ async function renderDeclaredPage(params, manageFocus) {
 // CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
 // members by a name slug the index resolves. The slot is placed synchronously
 // so the section keeps its position however long the fetches take.
+/* A Victorian member's page carries the election authorisation under its sections until the polls
+   close (vic-election.js decides by the clock), in the block the seat pages use. */
+async function renderPersonVicAuthorisation(roster, sections) {
+  if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
+  const key = currentSubjectKey;
+  const module = await loadElectorateModule().catch(() => null);
+  if (currentSubjectKey !== key || !sections.isConnected) return;
+  const html = module?.vicMemberAuthorisationHTML?.(roster) || '';
+  const main = sections.parentElement;
+  main.querySelector(':scope > .authorisation')?.remove();
+  if (html) sections.insertAdjacentHTML('afterend', html);
+}
 async function renderPersonVicGifts(name, sections, roster) {
   if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
   const styled = vicGiftsStyles();
@@ -6755,6 +6767,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const voteQuestions = renderPersonVotes(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
+  renderPersonVicAuthorisation(roster, sections);
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });
@@ -7775,7 +7788,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f9961d152e").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=015b9517ec").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

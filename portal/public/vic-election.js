@@ -24,6 +24,10 @@ export const vicElectionMaterial = text => /vic-election-2026|\b(?:victorian?|vi
 // Approved constants only: shared by server summaries and client electorate
 // profiles, drawn by the one authorisation partial the hubs use.
 export const vicElectionFooterHTML = () => authorisationHTML({line: VIC_ELECTION_AUTHORISATION_LINE, email: VIC_ELECTION_CORRECTIONS_EMAIL, response: VIC_ELECTION_CORRECTIONS_RESPONSE});
+/** The same block on a Victorian member's own page, until the polls close at 6 pm on Saturday
+ *  28 November 2026, Melbourne time: from that instant it is no longer drawn. */
+export const vicMemberAuthorisationHTML = (person, now = new Date()) =>
+  person?.representation?.some(r => r.jurisdiction === 'vic') && now.getTime() < Date.parse(VIC_ELECTION_POLLS_CLOSE) ? vicElectionFooterHTML() : '';
 export const vicElectionEnabled = value => value === 'true' || (value == null && VIC_ELECTION_HUB_ENABLED);
 export function vicElectionAssetPath(path) {
   try { return decodeURIComponent(path).replace(/\/+/g,'/').toLowerCase().startsWith('/hubs/vic-election'); }
