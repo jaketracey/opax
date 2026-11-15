@@ -302,7 +302,8 @@ describe('Today map in a window narrower than the screen', () => {
     // The column's inset is 16 pt (under 414 pt): the art starts at -8.
     expect(view.art().left).toBe(-8 - 16);
 
-    // Unfolded: a regular phone window, where the art is not drawn.
+    // Unfolded: a regular phone window. The art stays drawn, at the edge of
+    // the wider column (J76-map; tests/today-dots-duo.test.tsx places it).
     act(() => {
       windowOf({ width: 951, height: 669 });
       setWindowTraitsOverride({
@@ -313,7 +314,9 @@ describe('Today map in a window narrower than the screen', () => {
       });
     });
     view.layOut(871, 669);
-    expect(view.drawn()).toBe(false);
+    expect(view.drawn()).toBe(true);
+    expect(view.art().left).toBe(-8 - view.gutter());
+    expect(view.gutter()).toBeGreaterThan(16);
 
     // Folded again: drawn, whole, at the edge.
     advance(5000);

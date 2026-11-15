@@ -135,9 +135,16 @@ export function useTodayDotsScroll() {
 }
 
 /**
- * Decorative only. Hidden at AX sizes so the title and first card have room,
- * and on a regular phone (iPhone Duo): there the art fell under the large
- * title and the date, and text is never drawn over it.
+ * Decorative only. Hidden at AX sizes so the title and first card have room.
+ *
+ * It draws on every iOS layout the same way: hung from the large title, from
+ * the leading edge of the pane that holds Today, 192 pt wide, with the date
+ * starting clear below it (`DateClearance`). That includes the unfolded
+ * iPhone Duo (a regular phone window): the art stays in the leading pane,
+ * short of the hinge, and well short of the search field at the masthead's
+ * trailing corner. It was once hidden there, when the date still ran over
+ * it; the clearance has since made that impossible (J76, build 76: Today on
+ * the Duo's inner display had no map).
  *
  * Today draws it from the first frame, `neutral` while the seat is read, so
  * its clearance holds the date where it will stay (sweep 3, item 1: the date
@@ -151,9 +158,7 @@ export function AustraliaDots(props: {
   expandedHeader: SharedValue<number>;
 }) {
   const { fontScale } = useWindowDimensions();
-  const { rule } = useLayout();
-  if (isAccessibilityCategory(fontScale) || rule === 'phone-regular')
-    return null;
+  if (isAccessibilityCategory(fontScale)) return null;
   return <DotField {...props} />;
 }
 
