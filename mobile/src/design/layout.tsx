@@ -734,16 +734,28 @@ export function Screen({
               onScrollEndDrag={
                 clampScrollOnContentChange ? bounds.onScroll : undefined
               }
-              onMomentumScrollBegin={() => {
-                decelerating.current = true;
-              }}
-              onMomentumScrollEnd={(event) => {
-                decelerating.current = false;
-                // The offset is final now: a cut held during the fling applies.
-                scrollY.current = event.nativeEvent.contentOffset.y;
-                setClipTop(latestClipTop.current);
-                if (clampScrollOnContentChange) bounds.onScroll(event);
-              }}
+              // Only a page that may be cut listens for flings; every other page
+              // keeps the handlers it had.
+              onMomentumScrollBegin={
+                clipAboveSafeTop === undefined
+                  ? undefined
+                  : () => {
+                      decelerating.current = true;
+                    }
+              }
+              onMomentumScrollEnd={
+                clipAboveSafeTop === undefined
+                  ? clampScrollOnContentChange
+                    ? bounds.onScroll
+                    : undefined
+                  : (event) => {
+                      decelerating.current = false;
+                      // The offset is final now: a cut held during the fling applies.
+                      scrollY.current = event.nativeEvent.contentOffset.y;
+                      setClipTop(latestClipTop.current);
+                      if (clampScrollOnContentChange) bounds.onScroll(event);
+                    }
+              }
               scrollEventThrottle={16}
               stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
               // Under a solid bar the scroll view starts below the bar, and
