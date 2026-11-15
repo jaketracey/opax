@@ -123,6 +123,19 @@ def verify_location_info(info):
 
 
 
+def layout_probe_enabled(value=None):
+    """The layout probe is for one measuring build: OPAX_LAYOUT_PROBE=1 at the
+    release invocation, and the embedded config must say exactly the same."""
+    value = os.environ.get("OPAX_LAYOUT_PROBE", "0") if value is None else value
+    require(value in ("0", "1"), "OPAX_LAYOUT_PROBE must be 0 or 1")
+    return value == "1"
+
+
+def layout_probe_matches(config, enabled):
+    extra = config["extra"]
+    return extra.get("layoutProbe") is True if enabled else "layoutProbe" not in extra
+
+
 def production_voice_enabled(value=None):
     value = os.environ.get("OPAX_PRODUCTION_VOICE", "1") if value is None else value
     require(value in ("0", "1"), "OPAX_PRODUCTION_VOICE must be 0 or 1")
@@ -804,10 +817,14 @@ def verify_app(app, args):
         check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
+    probe_enabled = layout_probe_enabled()
     for path in configs:
         config = json.loads(path.read_bytes())
         check((config["extra"].get("productionVoiceEnabled") is True) == voice_enabled,
               "embedded production voice switch matches the release invocation")
+        check(layout_probe_matches(config, probe_enabled),
+              "layout probe " + ("ON (OPAX_LAYOUT_PROBE=1): a measuring build, not for the store"
+                                 if probe_enabled else "absent from the embedded config"))
         verify_location_info(config["ios"]["infoPlist"])
         verify_voice_info(config["ios"]["infoPlist"], voice_enabled)
         if voice_enabled:

@@ -129,7 +129,11 @@ PY
 trap 'release_status=$?; cleanup; exit "$release_status"' EXIT
 logged_public() { python3 scripts/release_support.py --log "$OUT/$1.log" --public-env -- "${@:2}"; }
 release_step() { python3 scripts/release_support.py --log "$OUT/$1.log" --step "$1"; }
-scripts/capacity.sh
+# TestFlight-only: with OPAX_TF_LENIENT=1 the capacity waits here and the
+# harness self-tests in qa.sh retry once, then warn in $OUT/warnings.txt.
+# Every other step blocks either way. Never set it for an App Store build.
+source scripts/tf-lenient.sh
+lenient_step 'capacity wait' scripts/capacity.sh
 echo "Release $VERSION ($BUILD_NUMBER), exact commit $COMMIT; Xcode $XCODE_BUILD"
 release_step dependencies
 logged_public qa nice -n 10 npm run qa
@@ -139,7 +143,7 @@ logged_public native-config ./node_modules/.bin/tsx scripts/native-config.ts
   echo 'Prebuild changed tracked inputs; review and commit before archiving.' >&2; exit 1;
 }
 printf 'export NODE_BINARY=%q\n' "$(command -v node)" > ios/.xcode.env.local
-scripts/capacity.sh
+lenient_step 'capacity wait' scripts/capacity.sh
 START=$SECONDS
 echo 'Archiving through the configured build gate…'
 release_step archive
@@ -183,9 +187,10 @@ python3 scripts/release_support.py --scan-tracked "$ROOT"
   echo 'Release refused: worktree or HEAD changed during the build.' >&2; exit 1;
 }
 python3 - "$OUT" "$ARCHIVE_SECONDS" <<'PY'
-import json,pathlib,sys
+import json,os,pathlib,sys
 p=pathlib.Path(sys.argv[1]); v=json.loads((p/'verification-distribution.json').read_text())
 v['archive_seconds']=int(sys.argv[2]); v['uploaded']=False
+v['tf_lenient']=os.environ.get('OPAX_TF_LENIENT')=='1'
 v['production_voice_mode']='on' if v['production_voice_enabled'] else 'off'
 (p/'release.json').write_text(json.dumps(v,indent=2)+'\n')
 print(f"Archive: {v['archive_seconds']} seconds; IPA: {v['ipa_bytes']} bytes; SHA256: {v['ipa_sha256']}")
@@ -206,4 +211,5 @@ if [ "$UPLOAD" = 1 ]; then
   # the verified IPA hash immediately before uploading those exact bytes.
   release_step upload
 fi
+tf_lenient_summary
 echo "Verified release evidence: private/release/$VERSION-$BUILD_NUMBER/"

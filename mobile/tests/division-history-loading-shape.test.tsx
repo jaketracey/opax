@@ -1,7 +1,20 @@
 import { act } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Dimensions, StyleSheet, Text as NativeText } from 'react-native';
-import { DivisionRow, LinkRow } from '../src/design/primitives';
+import {
+  AccessibilityInfo,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text as NativeText,
+} from 'react-native';
+import { RouteOptions } from '../src/navigation/preview';
+import { copy } from '../src/design/copy';
+import {
+  DivisionRow,
+  InlineError,
+  LinkRow,
+  Text,
+} from '../src/design/primitives';
 import { rhythm } from '../src/design/tokens';
 import { ApiError } from '../src/api/errors';
 import { useCatalogRecord } from '../src/features/bills/useCatalogRecord';
@@ -172,4 +185,133 @@ test('a failed load holds no count line and draws no placeholder', async () => {
   expect(host(r, 'division-history-loading')).toHaveLength(0);
   expect(host(r, 'division-history-error')).toHaveLength(1);
   await act(async () => r.unmount());
+});
+
+test('with nothing saved and no connection, the page offers Try again, which reads again', async () => {
+  const offline = new ApiError('offline', 'Not saved on this iPhone yet.');
+  const value = state(null, offline);
+  jest.mocked(useCatalogRecord).mockReturnValue(value);
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<DivisionHistory />);
+  });
+  expect(host(r, 'division-history-offline-uncached')).toHaveLength(1);
+  const again = r.root.findAll(
+    (node) =>
+      node.props.testID === 'division-history-offline-retry' &&
+      typeof node.props.onPress === 'function',
+  );
+  expect(again.length).toBeGreaterThan(0);
+  await act(async () => again[0]!.props.onPress());
+  expect(value.retry).toHaveBeenCalledTimes(1);
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['android', 'left'],
+  ['ios', 'center'],
+] as const)(
+  'on %s the bar title is aligned %s: Android keeps the toolbar own title, with its margins',
+  async (os, align) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    try {
+      const r = await render(record);
+      expect(r.root.findByType(RouteOptions).props.options).toMatchObject({
+        title: 'Votes in parliament',
+        headerTitleAlign: align,
+      });
+      await act(async () => r.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  },
+);
+
+test('offline with a few saved bills, the page says so plainly and keeps the saved date', async () => {
+  const saved: DivisionRecord = {
+    ...record,
+    loaded: 3,
+    total: 1012,
+    failed: 1009,
+    stale: true,
+    savedAt: Date.UTC(2026, 10, 14),
+    offline: true,
+  };
+  const r = await render(saved);
+  const partial = r.root.findAll(
+    (node) =>
+      node.props.testID === 'division-history-partial' &&
+      typeof node.props.message === 'string',
+  );
+  expect(partial[0]!.props.message).toBe(
+    'Votes from the 3 bills saved on this iPhone.',
+  );
+  expect(host(r, 'division-history-offline').length).toBeGreaterThan(0);
+  // Online, a partial read still counts what could not be loaded.
+  await act(async () => r.unmount());
+  const online = await render({ ...saved, offline: false, stale: false });
+  expect(
+    online.root.findAll(
+      (node) =>
+        node.props.testID === 'division-history-partial' &&
+        typeof node.props.message === 'string',
+    )[0]!.props.message,
+  ).toBe('Votes from 3 of 1,012 bills. 1,009 couldn’t be loaded.');
+  expect(host(online, 'division-history-offline')).toHaveLength(0);
+  await act(async () => online.unmount());
+});
+
+// R-ie: offline with saved bills is not a failure.
+test('offline, the saved-votes sentence is a plain note: no error, no failure announced, Try again kept', async () => {
+  const announce = jest
+    .spyOn(AccessibilityInfo, 'announceForAccessibility')
+    .mockImplementation(() => {});
+  // The shared mock keeps earlier tests' calls.
+  announce.mockClear();
+  const saved: DivisionRecord = {
+    ...record,
+    loaded: 3,
+    total: 1012,
+    failed: 1009,
+    stale: true,
+    savedAt: Date.UTC(2026, 10, 14),
+    offline: true,
+  };
+  const r = await render(saved);
+  expect(r.root.findAllByType(InlineError)).toHaveLength(0);
+  expect(announce).not.toHaveBeenCalledWith(copy.someSectionsFailed);
+  const text = host(r, 'division-history-partial')[0]!;
+  const words = hostParent(text);
+  expect(words.props).toMatchObject({
+    accessible: true,
+    accessibilityRole: 'text',
+    accessibilityLabel: 'Votes from the 3 bills saved on this iPhone.',
+  });
+  expect(words.props.accessibilityLiveRegion).toBeUndefined();
+  // The offline line's type: secondary, soft ink, and no error mark.
+  const drawn = r.root.find(
+    (node) =>
+      node.type === Text && node.props.testID === 'division-history-partial',
+  );
+  expect(drawn.props).toMatchObject({ variant: 'secondary', tone: 'inkSoft' });
+  expect(
+    hostParent(words).findAll((node) => node.props.tone === 'danger'),
+  ).toHaveLength(0);
+  // Try again is still beside it.
+  const retry = r.root.find(
+    (node) =>
+      node.props.testID === 'division-history-partial-retry' &&
+      typeof node.props.onPress === 'function',
+  );
+  expect(retry.props.label ?? 'Try again').toBe('Try again');
+  await act(async () => r.unmount());
+  // Online, a partial read is still an error and is still announced.
+  const online = await render({ ...saved, offline: false, stale: false });
+  expect(
+    online.root.findAllByType(InlineError).map((node) => node.props.testID),
+  ).toEqual(['division-history-partial']);
+  expect(announce).toHaveBeenCalledWith(copy.someSectionsFailed);
+  await act(async () => online.unmount());
+  announce.mockRestore();
 });

@@ -337,3 +337,84 @@ test('a cap within the tolerance of full size never reads its own layout as full
   expect(next.cap).toBe(0.98);
   expect(next.gen).toBe(capped.gen);
 });
+
+test("iOS figure: Apple's 1pt steps hold against a layout queued from the size before", () => {
+  // figure is 34pt on the largeTitle ramp, so its readers' sizes are 1pt
+  // (2.9%) apart: closer than the 0.03 measurement tolerance. A layout
+  // queued from the size before a step must not step the new size again.
+  Object.defineProperty(Platform, 'OS', { configurable: true, value: 'ios' });
+  act(() =>
+    Dimensions.set({
+      window: { ...window, fontScale: 1 },
+      screen: { ...screen, fontScale: 1 },
+    }),
+  );
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <Text wordSafe variant="figure">
+        Representation
+      </Text>,
+    );
+  });
+  const text = () => renderer.root.findByType(NativeText);
+  const base = textStyles.figure.lineHeight + LINE_HEIGHT_NUDGE;
+  const points = () => StyleSheet.flatten(text().props.style).fontSize;
+  const broken = (at: number) =>
+    act(() => {
+      text().props.onLayout({
+        nativeEvent: {
+          layout: {
+            x: 0,
+            y: 0,
+            width: 200,
+            height: Math.ceil(2 * base * at + 1),
+          },
+        },
+      });
+      text().props.onTextLayout({
+        nativeEvent: {
+          lines: [
+            { text: 'Representatio', width: 198, height: base * at + 1, y: 0 },
+            { text: 'n', width: 14, height: base * at + 1, y: base * at },
+          ],
+        },
+      });
+    });
+  broken(1);
+  // Medium's own 33pt, the next size down.
+  expect(points()).toBeCloseTo(33, 6);
+  broken(1); // The 34pt layout, queued, through current props.
+  expect(points()).toBeCloseTo(33, 6);
+  broken(33 / 34); // 33pt's own layout still breaks: Small's 32pt.
+  expect(points()).toBeCloseTo(32, 6);
+  broken(33 / 34); // And the 33pt layout queued after that step.
+  expect(points()).toBeCloseTo(32, 6);
+  act(() => renderer.unmount());
+});
+
+test.each([
+  ['figure', 'Representation', 200],
+  ['figure', '$1,234,567', 150],
+  ['figure', 'Senate · 19 Aug 2026', 110],
+  ['pageTitle', 'Representation', 200],
+  ['pageTitle', 'Parliamentarians', 160],
+  ['recordTitle', 'Senate · 19 Aug 2026', 90],
+  ['recordTitle', 'Representation', 180],
+] as const)(
+  'iOS %s "%s" in a %spt column: a larger text setting never draws smaller, 1pt steps included',
+  (variant, content, column) => {
+    let below = 0;
+    for (const fontScale of [
+      0.823, 0.882, 0.941, 1, 1.118, 1.235, 1.353, 1.786, 2.143, 2.643, 3.143,
+      3.571,
+    ]) {
+      const result = settle('ios', variant, content, column, fontScale);
+      expect(result.after).toBe(result.settledSize);
+      expect(`${fontScale} ${result.drawn >= below - 1e-6}`).toBe(
+        `${fontScale} true`,
+      );
+      below = result.drawn;
+    }
+  },
+);

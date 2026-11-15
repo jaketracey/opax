@@ -119,6 +119,9 @@ describe('the saved copies the shelf reads', () => {
     await save('/electorates/manifest.json', 50);
     await save('/bills/index.json', 90);
     await save('/parliamentarians.json', 80);
+    await save('/api/person-slugs', 79, {});
+    await save(manifest.index_url, 78, {});
+    await save(manifest.people_url, 77, {});
     await save(`/bills/${BILL_A}.json`, 10);
     await save(seat.detail_url, 30);
     await save(`/bills/${BILL_B}.json`, 20);
@@ -180,6 +183,36 @@ describe('the saved copies the shelf reads', () => {
     await bare.save(seat.detail_url, 5);
     await expect(readSavedShelf(bare.client)).resolves.toEqual([]);
   });
+
+  test.each([
+    '/parliamentarians.json',
+    '/api/person-slugs',
+    manifest.index_url,
+    manifest.people_url,
+  ])(
+    'an electorate is listed only with the seat directory saved: without %s it is left out',
+    async (absent) => {
+      const { client, save } = setup();
+      await save('/electorates/manifest.json', 50);
+      await save(seat.detail_url, 30);
+      await save(`/bills/${BILL_A}.json`, 10);
+      for (const path of [
+        '/parliamentarians.json',
+        '/api/person-slugs',
+        manifest.index_url,
+        manifest.people_url,
+      ])
+        if (path !== absent) await save(path, 40, {});
+      expect((await readSavedShelf(client)).map((item) => item.kind)).toEqual([
+        'Bill',
+      ]);
+      await save(absent, 41, {});
+      expect((await readSavedShelf(client)).map((item) => item.kind)).toEqual([
+        'Electorate',
+        'Bill',
+      ]);
+    },
+  );
 
   test(`at most ${SHELF_ROWS} rows`, async () => {
     const { client, save } = setup();
@@ -284,6 +317,32 @@ describe('the offline dead end', () => {
         !!node.props.accessibilityLabel,
     );
     expect(drawn.props.accessibilityLabel).toBe('Fixture Bill 2026, Bill');
+  });
+
+  test('an error that turns offline on a mounted view starts undecided: nothing, then the whole view', async () => {
+    let answer!: (items: ShelfItem[]) => void;
+    setShelfReaderForTests(
+      () => new Promise<ShelfItem[]>((resolve) => (answer = resolve)),
+    );
+    const tree = render(view({ error: new Error('broken') }));
+    expect(messages(tree)[0]!.props.title).toMatch(/couldn’t be loaded$/);
+    act(() => tree.update(view()));
+    // No offline message without its shelf, and no rows added after it.
+    expect(tree.toJSON()).toBeNull();
+    await act(async () => answer(items));
+    expect(messages(tree)[0]!.props.title).toMatch(/^Not saved on this /);
+    expect(rows(tree)).toHaveLength(2);
+    // A second offline failure (a retry that failed again) is decided anew.
+    setShelfReaderForTests(
+      () => new Promise<ShelfItem[]>((resolve) => (answer = resolve)),
+    );
+    act(() =>
+      tree.update(view({ error: new ApiError('offline', 'Still offline.') })),
+    );
+    expect(tree.toJSON()).toBeNull();
+    await act(async () => answer([]));
+    expect(messages(tree)).toHaveLength(1);
+    expect(rows(tree)).toHaveLength(0);
   });
 
   test('with nothing saved it is the message alone', async () => {

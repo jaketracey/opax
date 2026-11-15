@@ -80,6 +80,7 @@ export function Masthead({
   offlineSavedAt,
   mark,
   sitting,
+  since,
   search,
 }: {
   now: Date;
@@ -89,10 +90,12 @@ export function Masthead({
   mark?: ReactNode;
   /** The sitting line under the date (`SittingLine`); draws nothing when unknown. */
   sitting?: ReactNode;
+  /** "Since your last visit" (`SinceLine`); draws nothing unless held. */
+  since?: ReactNode;
   /**
    * Regular width only: the search field (`WideSearch`). It places itself,
-   * absolutely, in the large title's band and draws nothing on a phone, so
-   * the lines above are laid out the same with or without it.
+   * absolutely, at the masthead's top trailing corner and draws nothing on
+   * a phone, so the lines above are laid out the same with or without it.
    */
   search?: ReactNode;
 }) {
@@ -126,6 +129,7 @@ export function Masthead({
         </>
       )}
       {sitting}
+      {since}
       {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
         <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
       ) : null}

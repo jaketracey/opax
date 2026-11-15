@@ -122,6 +122,12 @@ test('the status event is held by its own likely words, unseen, in the event tex
   // one line at standard sizes and two where the event will wrap.
   expect(pending[0]!.props.accessibilityElementsHidden).toBe(true);
   expect(StyleSheet.flatten(pending[0]!.props.style)?.height).toBeUndefined();
+  // It takes the status row's own alignment (centred beside the capsule at
+  // standard sizes), as the event's words do: an alignment of its own stood
+  // it 2 pt above where the words land.
+  expect(
+    StyleSheet.flatten(pending[0]!.props.style)?.alignSelf,
+  ).toBeUndefined();
   const stand = pending[0]!.findAllByType(NativeText);
   expect(stand).toHaveLength(1);
   expect(StyleSheet.flatten(stand[0]!.props.style).opacity).toBe(0);

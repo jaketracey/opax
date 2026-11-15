@@ -1,6 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
-import { AccessibilityInfo, Dimensions, StyleSheet } from 'react-native';
+import {
+  AccessibilityInfo,
+  Dimensions,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { useReduceMotionSetting } from '../src/design/accessibility';
 import {
@@ -374,6 +379,30 @@ describe('the launch cover', () => {
     advance(full.exit);
     expect(onDone).toHaveBeenCalledTimes(1);
   });
+  test.each([
+    ['android', 'dark'],
+    ['ios', 'light'],
+  ])(
+    'the %s status bar icons are %s once the fade passes halfway, never white on the page',
+    (os, after) => {
+      Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
+      draw({ sequence: 'full' });
+      loaded();
+      const bar = () => view!.root.findByType(StatusBar).props.style;
+      expect(bar()).toBe('light');
+      advance(motionLength + 1);
+      expect(style('launch-handoff').pointerEvents).toBe('none');
+      // The fade has begun and the navy still covers most of the page.
+      advance(full.exit / 2 - 5);
+      expect(bar()).toBe('light');
+      advance(10);
+      expect(bar()).toBe(after);
+      Object.defineProperty(Platform, 'OS', {
+        value: 'ios',
+        configurable: true,
+      });
+    },
+  );
   test('records the full sequence as played, once per splash version', async () => {
     draw({ sequence: 'full' });
     loaded();

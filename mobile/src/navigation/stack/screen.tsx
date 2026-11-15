@@ -260,6 +260,17 @@ export const sheetOptions: NativeStackNavigationOptions = {
     : {}),
 };
 
+/**
+ * Today draws its dot map behind the large title, from the window's top.
+ * Before iOS 26 a tab root's bar is opaque and UIKit lays the page out below
+ * it, so the map was cut off at the bar's bottom edge and read as scrolled
+ * a bar's height: a small patch under the title (iPhone, iOS 18.4). There
+ * Today alone runs under its bar, as on iOS 26: clear while the large title
+ * is expanded, the opaque bar once it collapses. iPad keeps its bar.
+ */
+export const artUnderTitle = (name: string) =>
+  Platform.OS === 'ios' && !Platform.isPad && !glassBar() && name === 'index';
+
 export function tabRootScreen(
   segment: string,
   expected: TabSegment,
@@ -274,7 +285,10 @@ export function tabRootScreen(
           headerLargeTitleEnabled: true,
           // Translucent for the native large-title collapse on iOS 26 and
           // later only; iOS 18.4 to 25 keeps the opaque bar (shell.md 2.3).
-          headerTransparent: glassBar(),
+          headerTransparent: glassBar() || artUnderTitle(name),
+          ...(artUnderTitle(name)
+            ? { headerLargeStyle: { backgroundColor: 'transparent' } }
+            : {}),
           ...headerItems(() =>
             rootHeaderItems({ segment: expected, signedIn }),
           ),

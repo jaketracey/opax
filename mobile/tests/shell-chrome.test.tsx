@@ -62,7 +62,9 @@ import {
 import {
   BarTitle,
   barItemGrowthAX,
+  barTitleCentredWidth,
   barTitleClearanceAX,
+  barTitleDrawnWidth,
   barTitleWidth,
   emptyBarTitle,
   inlineTitleScaleCap,
@@ -363,7 +365,20 @@ test.each([
       expect('headerTransparent' in tabEdition).toBe(!underBar);
       // The directory and Just declared hold their band open with a search
       // field and pin sticky section headers: a solid, backed bar there.
-      for (const name of ['directory', 'declarations']) {
+      // So do the pushed pages whose bar always holds a field, from the
+      // stack's first layout: set later, the pushed Bills list was drawn
+      // under the clear bar for a frame and laid out again.
+      for (const name of [
+        'directory',
+        'declarations',
+        'bill-list',
+        'person/[slug]/votes',
+        'division-history',
+        'grants',
+        'grant-program',
+        'agencies',
+        'learn/glossary',
+      ]) {
         const list = (
           tabs.children as React.ReactElement<{
             name: string;
@@ -378,6 +393,28 @@ test.each([
         expect(list.headerTransparent).toBe(underBar ? false : undefined);
         expect('headerBackground' in list).toBe(underBar);
       }
+      // A seat's grants share the Grants route but have no search field:
+      // they keep the stack's clear bar. The electorates view has a field.
+      const grants = (
+        tabs.children as React.ReactElement<{
+          name: string;
+          options: (props: object) => Record<string, unknown>;
+        }>[]
+      ).find((entry) => entry.props.name === 'grants')!;
+      const grantsFor = (params: object) =>
+        grants.props.options({
+          route: { key: 'grants', name: 'grants', params },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerTransparent' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect('headerBackground' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect(
+        grantsFor({ seat: 'Grayndler', view: 'electorates' }).headerTransparent,
+      ).toBe(underBar ? false : undefined);
       // Reduce Transparency or Increase Contrast: the solid bar, as the tab
       // roots have.
       mockSolidBar = true;
@@ -577,7 +614,7 @@ test('expanded iOS 26 roots leave both appearances uncoloured; older roots remai
   });
   if (version) Object.defineProperty(Platform, 'Version', version);
 });
-test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
+test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25, but for Today on an iPhone', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   const rootOptions = () =>
     [
@@ -627,8 +664,33 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
       value: '18.4',
     });
     expect(glassBar()).toBe(false);
-    for (const options of rootOptions())
-      expect(options.headerTransparent ?? false).toBe(false);
+    for (const options of rootOptions()) {
+      // Today alone runs under its bar on an iPhone before iOS 26, so its
+      // dot map draws behind the large title: clear while the title is
+      // expanded, the opaque ground once it collapses (iOS 18.4).
+      const today = options.title === 'Today';
+      expect(options.headerTransparent ?? false).toBe(today);
+      expect(options.headerStyle).toHaveProperty('backgroundColor');
+      expect(options.headerLargeStyle?.backgroundColor).toBe(
+        today
+          ? 'transparent'
+          : (options.headerStyle as { backgroundColor: string })
+              .backgroundColor,
+      );
+    }
+    // An iPad keeps the opaque bar on Today too.
+    const pad = Object.getOwnPropertyDescriptor(Platform, 'isPad');
+    Object.defineProperty(Platform, 'isPad', {
+      configurable: true,
+      value: true,
+    });
+    try {
+      for (const options of rootOptions())
+        expect(options.headerTransparent ?? false).toBe(false);
+    } finally {
+      if (pad) Object.defineProperty(Platform, 'isPad', pad);
+      else delete (Platform as { isPad?: boolean }).isPad;
+    }
   } finally {
     if (version) Object.defineProperty(Platform, 'Version', version);
   }
@@ -1190,6 +1252,132 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
       act(() => view.unmount());
     }
   });
+  describe('above Large the drawn title stays on the centre line (18.4, AX3 profile)', () => {
+    const at = (fontScale: number) => {
+      const window = Dimensions.get('window');
+      Dimensions.set({
+        window: { ...window, width: 402, fontScale },
+        screen: { ...Dimensions.get('screen'), width: 402, fontScale },
+      });
+    };
+    const drawn = (
+      element: React.ReactElement,
+      widths: Record<string, number>,
+    ) => {
+      let view!: TestRenderer.ReactTestRenderer;
+      act(() => {
+        view = TestRenderer.create(element);
+      });
+      measureBarTitle(view, widths);
+      const text = view.root.findByType(Animated.Text);
+      const result = {
+        maxWidth: style(view).maxWidth as number,
+        // The title view and its text share one width.
+        widths: view.root
+          .findAll((node) => typeof node.type === 'string')
+          .map((node) => StyleSheet.flatten(node.props.style)?.maxWidth)
+          .filter((width) => width !== undefined),
+        text: text.props.children as string,
+        shrinks: text.props.adjustsFontSizeToFit === true,
+      };
+      act(() => view.unmount());
+      return result;
+    };
+    // The capture: a 402 pt window, back chevron, Share and More. UIKit put
+    // the 184 pt name's trailing edge at 280 pt, 9 pt before Share.
+    const trailingLimit = 280;
+    const centredEnd = (width: number) => (402 + width) / 2;
+
+    test('the centred width is the bar less its wider side, twice', () => {
+      // Chevron back (68 pt) against Share and More at AX (140 pt).
+      expect(
+        barTitleCentredWidth(402, 2, undefined, '', undefined, barItemGrowthAX),
+      ).toBe(402 - 2 * 140);
+      // Equal sides: the same as the span between the items.
+      expect(barTitleCentredWidth(402, 2)).toBe(barTitleWidth(402, 2));
+      // A named back pill wider than the trailing items is the wider side.
+      expect(barTitleCentredWidth(402, 1, undefined, 'Bills', 90)).toBe(
+        402 - 2 * (16 + 48 + 90 + 20),
+      );
+      // A trailing text pill against the short named back estimate.
+      expect(barTitleCentredWidth(402, 2, 150)).toBe(402 - 2 * (150 + 24));
+      // Never negative, and half the window at most on iPad.
+      expect(barTitleCentredWidth(320, 3, undefined, '', undefined, 6)).toBe(0);
+      expect(barTitleCentredWidth(1024, 1, undefined, '')).toBe(512);
+      // It is never wider than the span between the items.
+      for (const width of [320, 375, 393, 402, 440])
+        for (const trailing of [0, 1, 2, 3])
+          expect(
+            barTitleCentredWidth(width, trailing, undefined, ''),
+          ).toBeLessThanOrEqual(barTitleWidth(width, trailing, undefined, ''));
+    });
+
+    test('the drawn width grows only while centred, then falls back to the Large width', () => {
+      // Fits centred at any size up to the centred width.
+      expect(barTitleDrawnWidth(186, 114, 70)).toBe(114);
+      // Too wide to centre when enlarged: its Large width, plus a point.
+      expect(barTitleDrawnWidth(186, 114, 135.6)).toBe(137);
+      // Never wider than the span between the items.
+      expect(barTitleDrawnWidth(186, 114, 200)).toBe(186);
+      // Unmeasured: the span, as before.
+      expect(barTitleDrawnWidth(186, 114, undefined)).toBe(186);
+    });
+
+    test('AX3: the name is drawn in its Large width and centres clear of Share', () => {
+      at(2.643);
+      const title = drawn(
+        <BarTitle title="Anthony Albanese" shown trailing={2} person />,
+        { 'Anthony Albanese': 136, Albanese: 70 },
+      );
+      expect(title.text).toBe('Anthony Albanese');
+      expect(title.shrinks).toBe(true);
+      expect(title.maxWidth).toBe(137);
+      expect(new Set(title.widths)).toEqual(new Set([137]));
+      expect(centredEnd(title.maxWidth)).toBeLessThanOrEqual(trailingLimit);
+      // Before: the whole 186 pt span, whose centred end is under Share.
+      const span =
+        barTitleWidth(402, 2, undefined, '', undefined, barItemGrowthAX) -
+        barTitleClearanceAX;
+      expect(centredEnd(span)).toBeGreaterThan(trailingLimit);
+    });
+
+    test('AX3: a short title still grows, inside the centred width', () => {
+      at(2.643);
+      const title = drawn(<BarTitle title="Bills" shown trailing={2} />, {
+        Bills: 35,
+      });
+      expect(title.maxWidth).toBe(402 - 2 * 140 - barTitleClearanceAX);
+      expect(centredEnd(title.maxWidth)).toBeLessThanOrEqual(trailingLimit);
+    });
+
+    test.each([
+      // Below the accessibility sizes the items keep their Large width, so
+      // the centred width (146 pt) already holds the name.
+      ['xxxLarge', 1.353, 146],
+      ['AX1', 1.786, 137],
+      ['AX5', 3.571, 137],
+    ])('%s: the same rule holds', (_size, fontScale, width) => {
+      at(fontScale);
+      const title = drawn(
+        <BarTitle title="Anthony Albanese" shown trailing={2} person />,
+        { 'Anthony Albanese': 136, Albanese: 70 },
+      );
+      expect(title.maxWidth).toBe(width);
+      expect(centredEnd(title.maxWidth)).toBeLessThanOrEqual(trailingLimit);
+    });
+
+    test('at Large nothing changes: the title keeps the room it had', () => {
+      at(1);
+      const title = drawn(
+        <BarTitle title="Anthony Albanese" shown trailing={2} person />,
+        { 'Anthony Albanese': 136, Albanese: 70 },
+      );
+      expect(title.shrinks).toBe(false);
+      // The name fits the equal-sided room at Large, as it did before.
+      expect(title.maxWidth).toBe(barTitleWidth(402, 2));
+    });
+  });
+
   test('at rest the title keeps its text and width, hidden only by opacity and accessibility', () => {
     const view = tree(
       <BarTitle title="Interactive Gambling Bill" shown={false} />,
