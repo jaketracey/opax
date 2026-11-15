@@ -47,6 +47,7 @@ import { useReduceMotion } from '../../design/accessibility';
 import { ContextMenu } from '../../design/context-menu';
 import { copy as words } from '../../design/copy';
 import { formatCount, formatDate } from '../../design/format';
+import { partialNote } from '../CatalogNotice';
 import { haptic } from '../../design/haptics';
 import { MachinePill } from '../../design/labels';
 import { TitleAnchor } from '../../design/layout';
@@ -820,6 +821,23 @@ function BillHead({
 
 /** Page provenance follows the last content section, including related bills. */
 /** The page's own source line: the bill's identity record (testID bill-source). */
+/**
+ * A bill whose own lists lost an item (api/catalog-decoders `billList`):
+ * its source lines say "partial", and their sheets carry the standard note,
+ * as every catalog block does (CatalogState). A saved copy says "Saved"
+ * instead, as there.
+ */
+function partialState(view: BillView): {
+  state?: 'partial';
+  note: string | null;
+} {
+  const partial = !!view.identity.partial;
+  return {
+    ...(partial && !view.identity.stale ? { state: 'partial' as const } : {}),
+    note: partial ? partialNote : null,
+  };
+}
+
 function billSourceDetails(
   view: BillView,
   identity: Identity,
@@ -849,9 +867,11 @@ function billSourceDetails(
     originals,
     licence:
       unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') || null,
+    state: partialState(view).state,
     notes: [
       unsponsored && !draft ? 'Sponsor not recorded.' : null,
       event && !event.resolved ? notes.status : null,
+      partialState(view).note,
     ],
   };
 }
@@ -895,7 +915,8 @@ export function shareSourceLine(
   return {
     ...page,
     originals,
-    notes: [...(page.notes ?? []), ...(section.notes ?? [])],
+    // Once each: a partial bill's note is on the page's line and the section's.
+    notes: [...new Set([...(page.notes ?? []), ...(section.notes ?? [])])],
   };
 }
 
@@ -1484,7 +1505,8 @@ function keyDatesSource(view: BillView, savedAt: number | null): SourceDetails {
     citation: 'ParlInfo',
     savedAt,
     originals,
-    notes: [notes.voices],
+    state: partialState(view).state,
+    notes: [notes.voices, partialState(view).note],
   };
 }
 
@@ -1826,7 +1848,12 @@ function Votes({
             url: d.url,
             record: `division, ${short(d.date)}`,
           }))}
-          notes={[view.divisions.data!.partyBasisNote || null, notes.stages]}
+          state={partialState(view).state}
+          notes={[
+            view.divisions.data!.partyBasisNote || null,
+            notes.stages,
+            partialState(view).note,
+          ]}
           testID="bill-divisions-source"
         />
       </Section>
@@ -2115,7 +2142,8 @@ function Speeches({
               record: 'Parliament of Australia',
             },
           ]}
-          notes={[notes.speeches]}
+          state={partialState(view).state}
+          notes={[notes.speeches, partialState(view).note]}
           testID="bill-speeches-source"
         />
       </Section>
@@ -2176,6 +2204,8 @@ function Acts({
             url: act.frl_uri,
             record: act.title,
           }))}
+          state={partialState(view).state}
+          notes={[partialState(view).note]}
           testID="bill-acts-source"
         />
         {pageSource ? (
@@ -2207,7 +2237,8 @@ function relatedSource(view: BillView, savedAt: number | null): SourceDetails {
     citation: home.length ? 'ParlInfo' : unique(sources.map((s) => s.label)),
     savedAt,
     originals,
-    notes: [notes.related],
+    state: partialState(view).state,
+    notes: [notes.related, partialState(view).note],
   };
 }
 

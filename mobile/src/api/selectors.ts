@@ -35,6 +35,7 @@ import type {
   Votes,
 } from './catalog-decoders';
 import { ApiError } from './errors';
+import { isPartialCatalog } from './validation';
 import {
   interestKey,
   nameKey,
@@ -1342,11 +1343,20 @@ export function billFor(bill: BillDetail, index: BillIndex) {
         status: bill.status,
         // The pill's word, from the bill's own record: the same one the
         // stage tracker stops on (api/bill-status.ts).
-        statusLabel: billStatusLabel(bill.status, {
-          stages: bill.key_dates,
-          divisions: bill.divisions,
-          ...billEnding(bill),
-        }),
+        // An incomplete record proves nothing: with a stage or division
+        // dropped (a partial bill), the word rests on the bill's own
+        // status and ending alone, as in every list row, never "Voted down"
+        // read from what is left.
+        statusLabel: billStatusLabel(
+          bill.status,
+          isPartialCatalog(bill.key_dates) || isPartialCatalog(bill.divisions)
+            ? billEnding(bill)
+            : {
+                stages: bill.key_dates,
+                divisions: bill.divisions,
+                ...billEnding(bill),
+              },
+        ),
         ended: bill.ended ?? null,
         endedLabel: bill.ended_label ?? null,
         statusAsOf: bill.status_as_of,
