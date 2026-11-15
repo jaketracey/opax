@@ -25,8 +25,44 @@ function enabled() {
     } catch {
       on = false;
     }
+    if (on) watchFrames();
   }
   return on;
+}
+/** A JS frame this late has cost at least one frame at 60 Hz. */
+export const LATE_FRAME_MS = 25;
+/**
+ * JS-thread frame pacing, for the motion work: while the probe is on, each
+ * second in which a JS frame ran late leaves one `js-frames` mark with the
+ * frames that second, how many were late and the longest gap in ms. It
+ * shows where JS stalls (a heavy screen mounting under a push, the money
+ * map settling), which is what a simulator can measure; it says nothing of
+ * the UI thread's own pacing.
+ */
+function watchFrames() {
+  let last = performance.now();
+  let windowStart = last;
+  let frames = 0;
+  let late = 0;
+  let worst = 0;
+  const frame = () => {
+    const at = performance.now();
+    const gap = at - last;
+    last = at;
+    frames++;
+    if (gap >= LATE_FRAME_MS) late++;
+    if (gap > worst) worst = gap;
+    if (at - windowStart >= 1000) {
+      if (late)
+        record(['js-frames', round(windowStart), [frames, late, round(worst)]]);
+      windowStart = at;
+      frames = 0;
+      late = 0;
+      worst = 0;
+    }
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
 }
 type Mark = [name: string, at: number, detail?: string | number[]];
 const marks: Mark[] = [];
