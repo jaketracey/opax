@@ -79,9 +79,9 @@ const sentences = (text: string) =>
  * cover line often restates the first paragraph. A bill with a stage rail
  * uses its published portfolio instead; other lines keep only what the
  * paragraphs lack: a whole sentence shown below goes, and so does a piece
- * cut short with "…" that the text below contains. So a summary is printed
- * once, in the body under its own label, never on the plate as well. Detail
- * lines have no trailing full stop.
+ * that opens as a piece below does, whichever of the two was cut short.
+ * So a summary is printed once, in the body under its own label, never on
+ * the plate as well. Detail lines have no trailing full stop.
  */
 export function plateLine(
   line: string | null,
@@ -100,25 +100,36 @@ export function plateLine(
   }
   if (!line?.trim()) return null;
   const below = new Set((shownBelow ?? []).flatMap(sentences));
-  const belowText = (shownBelow ?? []).map(folded);
-  // A cover line may open with the summary cut short ("… spending caps and
-  // reviews… Introduced 15 Sep 2026; before parliament"). The cut piece is
-  // the text below again, so it goes; what follows it stays.
-  const clippedRepeat = (piece: string) => {
-    if (!piece.endsWith('…')) return false;
-    const stem = folded(piece.slice(0, -1));
-    return (
-      stem.length >= CLIPPED_STEM && belowText.some((t) => t.includes(stem))
+  const belowStems = (shownBelow ?? []).flatMap(pieces).map(stem);
+  // The cover line and the text below are each the summary's first
+  // sentence, cut to their own lengths ("… spending caps and reviews…" on
+  // the cover, "… spending caps and…" below; or the sentence whole on the
+  // cover and cut below). Either way one opens with the other, and that
+  // piece is the text below again: it goes, and what follows it stays.
+  const repeated = (piece: string) => {
+    const own = stem(piece);
+    return belowStems.some(
+      (other) =>
+        Math.min(own.length, other.length) >= REPEAT_STEM &&
+        (own.startsWith(other) || other.startsWith(own)),
     );
   };
-  const rest = line
-    .split(/(?<=…)\s+/)
-    .flatMap(sentences)
-    .filter((piece) => !below.has(piece) && !clippedRepeat(piece));
+  const rest = pieces(line).filter(
+    (piece) => !below.has(piece) && !repeated(piece),
+  );
   return rest.length ? rest.join(' ').replace(/\.$/, '') : null;
 }
-/** A cut piece shorter than this is too little to call a repeat. */
-const CLIPPED_STEM = 12;
+/** A line's sentences, and the pieces a "…" cut leaves before the next. */
+const pieces = (text: string) => text.split(/(?<=…)\s+/).flatMap(sentences);
+/** A piece without its ending ("…", a full stop), spacing and case. */
+const stem = (piece: string) => folded(piece.trim().replace(/[….]+$/, ''));
+/**
+ * Two pieces this long, one opening with the other, are the same sentence.
+ * The edition cuts its summary at 145 and 150 characters and never below
+ * 60% of that, so a real cut is far longer; a shorter shared opening ("The
+ * bill would") is not a repeat.
+ */
+const REPEAT_STEM = 60;
 
 const folded = (text: string) =>
   text.replace(/\s+/g, ' ').trim().toLocaleLowerCase('en-AU');
