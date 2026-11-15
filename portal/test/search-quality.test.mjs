@@ -133,6 +133,16 @@ test('a committee card names the committee once, says how many passages it stand
   // (a) A passage with words is shown whole; a bare label is not shown at all.
   assert.equal(estimates.querySelector('.search-result-text').textContent, SPOKEN);
   assert.equal(inquiry.querySelector('.search-result-text').textContent, 'Open the speech to read the passage.', 'no empty paragraph: the card says where the words are');
+  // The mentions list on person and donor pages draws the same line in place
+  // of an empty paragraph.
+  const mentions = appText.slice(appText.indexOf('async function subjectMentions('), appText.indexOf('\n}', appText.indexOf('async function subjectMentions(')));
+  const paragraph = /<p class="snippet">\$\{esc\((.+?)\)\}<\/p>/.exec(mentions)?.[1] || '';
+  const drawn = (r) => runInNewContext(`(${paragraph})`, { r, String });
+  assert.equal(drawn({ kind: 'speech', snippet: '' }), 'Open the speech to read the passage.', 'a mention with no passage is not an empty paragraph');
+  assert.equal(drawn({ kind: 'speech', snippet: '  ' }), 'Open the speech to read the passage.');
+  assert.equal(drawn({ kind: 'press_release', snippet: '' }), 'Open the record to read the passage.');
+  assert.equal(drawn({ kind: 'speech', snippet: SPOKEN }), SPOKEN, 'a mention with a passage is unchanged');
+  assert.equal(drawn({ kind: 'speech', snippet: 'x'.repeat(300) }).length, 220);
   // One definition of a label, on the page and in the Worker.
   for (const label of [LABEL, 'CHAIR:', 'Senator Quill:', 'The Hon. Jo Example MP:', 'ACTING CHAIR:', 'ACTING CHAIR (Senator Example):', 'Ms Barrett (Fremantle):']) { assert.equal(api.cleanPassage(label), '', label); assert.equal(passages.isSpeakerLabel(label), true, label); }
   for (const words of ['I have three questions for the department:', 'Senator Quill asked the following question:']) { assert.equal(api.cleanPassage(words), words); assert.equal(passages.isSpeakerLabel(words), false, words); }

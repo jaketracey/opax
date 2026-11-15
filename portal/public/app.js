@@ -4787,10 +4787,12 @@ async function subjectMentions(name, container, heading, moneyContext = false, {
       : data.results.slice(0, 5);
     if (!rows.length) return;
     fillDatedMentionParties(rows, roster);
+    // A row with no passage (retrieval matched only the record's speaker
+    // label) says where its words are, as the search view does.
     const items = rows.map((r) => `
       <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(person ? (heldBackHelpers?.mentionTitleCase || String)(mentionTitle(r)) : displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
-        <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p>${excerptNoticeHTML(r)}</li>`).join("");
+        <p class="snippet">${esc(String(r.snippet || "").trim().slice(0, 220) || (r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage."))}</p>${excerptNoticeHTML(r)}</li>`).join("");
     container.insertAdjacentHTML("beforeend",
       `<div class="entry-section-head"><h2 class="subject-section-title">${esc(heading)}</h2>
         <a href="${esc(searchHash(`"${name}"`, {}))}">All mentions</a></div>
