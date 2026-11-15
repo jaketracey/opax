@@ -59,13 +59,19 @@
     // "0", or anything that is not a whole number, turns the reads off. The day's count is the
     // community_limits row passage-fill-day:<day>, kept 120 days. Staging has its own pool of 40.
     "PASSAGE_FILL_DAILY_READS": "200",
-    // Do not turn this off before the Victorian roster is reloaded with the members elected on
-    // 28 November 2026. The app's Today reads /api/app/v1/vic-election to know the Legislative Assembly
-    // is dissolved, and draws "Assembly dissolved ... Last member: ..." in place of a member's row until
-    // the electorates index holds each district's 2026 result. A 404 here before that reload leaves a
-    // new install unable to tell, so it shows a neutral dated row. Nothing in src/ retires the endpoint
-    // by date (test/app-vic-election.test.mjs pins that at a 2027 clock): this flag is its only gate.
+    // The web hub's gate. The app endpoint has its own, VIC_ELECTION_APP_ENABLED below, so turning the
+    // hub off does not take the endpoint with it.
     "VIC_ELECTION_HUB_ENABLED": "true",
+    // The app's /api/app/v1/vic-election. Keep this "true" after the web hub is switched off: the
+    // endpoint must outlive the hub. The app's Today reads it to know the Legislative Assembly is
+    // dissolved and draws "Assembly dissolved ... Last member: ..." in place of a member's row. A 404
+    // is never safe for a new install, before or after the Victorian roster is reloaded: with no record
+    // it cannot decide, and its state row stays a neutral dated line for good, even once the result has
+    // loaded. Turn it off only when the electorates index itself says a house is dissolved and no app
+    // build still in use reads this endpoint for that. Nothing in src/ retires the endpoint by date
+    // (test/app-vic-election.test.mjs pins that at a 2027 clock): this flag is its only gate. Unset, it
+    // follows VIC_ELECTION_HUB_ENABLED.
+    "VIC_ELECTION_APP_ENABLED": "true",
     // The six standing reports are off for now (Jake, 19 Oct: "just remove the reports for now").
     // "true" restores every page, link, data file, search row and sitemap entry (src/reports-gate.ts).
     "REPORTS_ENABLED": "false",
@@ -238,6 +244,7 @@
       ],
       "vars": { "PASSAGE_FILL_DAILY_READS":"40", "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "MCP_ANON_ENABLED":"true", "MCP_ANON_DAILY_PROGRESS_SHARED":"250", "MCP_ANON_DAILY_PROGRESS_DIRECT":"250", "MCP_ANON_DAILY_PROGRESS_NETWORK":"150", "MCP_ANON_DAILY_REQUESTS_SHARED":"100000", "MCP_ANON_DAILY_REQUESTS_DIRECT":"100000", "MCP_ANON_DAILY_REQUESTS_NETWORK":"20000", "MCP_PROGRESS_REPORT":"true", "MCP_ANON_PER_CLIENT_MINUTE":"60", "MCP_ANON_PER_IP_MINUTE":"300", "MCP_ANON_SHARED_IP_MINUTE":"1500", "MCP_ANON_GLOBAL_MINUTE":"3000", "MCP_ANON_ALERT_HOURLY":"20000", "MCP_ANON_SHARED_RANGES":"", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-11-15-nightly",
         "VIC_ELECTION_HUB_ENABLED": "false",
+        "VIC_ELECTION_APP_ENABLED": "false",
         "REPORTS_ENABLED": "false",
         "REPORTS_APP_DATA": "true",
         "INDEXNOW_EPOCH_VERSION": "1794689491063",

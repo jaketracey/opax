@@ -29,7 +29,7 @@ async function compile(entry) {
   return import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
 }
 const {appVicElection} = await compile('../src/app-vic-election.ts');
-const {renderVicElection,findSeats,titledVotes,contestName} = await compile('../src/vic-election.ts');
+const {renderVicElection,findSeats,titledVotes,contestName,vicElectionPage} = await compile('../src/vic-election.ts');
 const {default:worker} = await compile('../src/index.ts');
 const slug = s=>s.path.split('/').at(-1);
 function environment(election=data,index=places,flag='true') {
@@ -76,6 +76,30 @@ test('publication gate precedes method, query and assets on every sub-path, thro
     assert.equal(r.headers.get('x-robots-tag'),'noindex');assert.deepEqual(env.reads,[]);
     if(method==='HEAD')assert.equal(await r.text(),'');else assert.deepEqual(await r.json(),{error:'not_published'});
   }
+});
+
+test('the app endpoint has its own gate, so it can outlive the web hub',async()=>{
+  const env=(hub,app)=>{const e=environment();e.VIC_ELECTION_HUB_ENABLED=hub;if(app!==undefined)e.VIC_ELECTION_APP_ENABLED=app;return e;};
+  // The hub switched off, the endpoint kept: the record is still served, through the Worker.
+  for(const path of ['', '/seat/albert-park']) {
+    const r=await worker.fetch(request(path),env('false','true'),{});
+    assert.equal(r.status,200,path);
+  }
+  assert.equal((await (await worker.fetch(request(),env('false','true'),{})).json()).districts.length,88);
+  // The web hub itself stays off: the endpoint's flag publishes nothing else.
+  const page=await vicElectionPage(null,async()=>data,{VIC_ELECTION_HUB_ENABLED:'false',VIC_ELECTION_APP_ENABLED:'true'});
+  assert.equal(page.title,'Hub not found');
+  // Only the exact value "true" publishes it; any other set value withdraws it, whatever the hub says.
+  for(const app of ['false','1','TRUE','']) {
+    const e=env('true',app);const r=await worker.fetch(request(),e,{});
+    assert.equal(r.status,404,app);assert.deepEqual(await r.json(),{error:'not_published'});assert.deepEqual(e.reads,[]);
+  }
+  // Unset, it follows the hub's flag, as before it had its own.
+  assert.equal((await worker.fetch(request(),env('true'),{})).status,200);
+  assert.equal((await worker.fetch(request(),env('false'),{})).status,404);
+  // Both deployments set it, so neither depends on the fallback.
+  const config=await readFile(new URL('../wrangler.jsonc',import.meta.url),'utf8');
+  assert.equal(config.match(/"VIC_ELECTION_APP_ENABLED": "(true|false)"/g).join(),'"VIC_ELECTION_APP_ENABLED": "true","VIC_ELECTION_APP_ENABLED": "false"');
 });
 
 // The app's Today reads this endpoint, after the hub's own Today block retires, to know the Legislative
