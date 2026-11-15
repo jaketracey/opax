@@ -1,3 +1,25 @@
+// A module that will not load is nearly always a release that replaced the
+// files this page was built against ("Importing a module script failed" in
+// Safari). The page is loaded again, once: the build that failed is kept for
+// the tab (sessionStorage), so a module that still fails after the reload, or
+// with no network, leaves the page as it is and never loops.
+(() => {
+  const STALE = /Importing a module script failed|Failed to fetch dynamically imported module|error loading dynamically imported module/i;
+  const KEY = 'opax-module-reload';
+  // The build is the app script's content stamp, written by the release.
+  const build = () => document.querySelector('script[src^="/app.js"]')?.getAttribute('src') || 'unstamped';
+  const reloadOnce = (message) => {
+    if (!STALE.test(String(message ?? '')) || navigator.onLine === false) return;
+    try {
+      const id = build();
+      if (sessionStorage.getItem(KEY) === id) return;
+      sessionStorage.setItem(KEY, id);
+    } catch { return; } // nowhere to keep the guard, so no reload
+    location.reload();
+  };
+  window.addEventListener('unhandledrejection', (e) => reloadOnce(e.reason?.message ?? e.reason));
+  window.addEventListener('error', (e) => reloadOnce(e.message));
+})();
 // Run before first paint. The no-JS answer remains visible when scripts are disabled.
 if (location.pathname !== '/' && location.pathname !== '/index.html') {
   document.documentElement.classList.add('spa-booting');
