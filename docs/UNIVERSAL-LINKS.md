@@ -10,7 +10,20 @@ addresses that always stay on the web (`exclude`). Patterns use Apple's
 component syntax: `/` is the path, `?` the query, `#` the fragment; `*` is any
 run of characters and `?*` is at least one. Exclusions are tested first, then
 the first matching `open` entry wins. An address nothing matches is not
-claimed.
+claimed. Paths are compared percent-decoded, so `%70erson:` is `person:`.
+
+Only an address the web serves as a page of its own is claimed. One the web
+redirects elsewhere is left to the web: `/discover` (a 301 to
+`/money/contracts`, which the app does not have) and `/today` (a 302 to the
+page behind the day's post). Check `canonicalRoutePath` and `todayRedirect`
+in `portal/src` before adding a path.
+
+The table lives at one path, `docs/universal-links.json`, in both the app
+branch and the web branch, with the script beside it. Once both are merged
+there is one file and one script, not two copies: it is the single source,
+and each side's `--check` compares its generated file with it. Until then
+the two branches must carry the same bytes; a difference shows as a merge
+conflict on that path.
 
 `node scripts/build_universal_links.mjs` writes the table into both sides
 (`--check` exits 1 while either is stale, and the tests on both sides run it):
@@ -52,8 +65,13 @@ so the two may differ for a while without a dead end.
 Inside the app, an https link that is not claimed, or that is claimed but
 cannot be placed (a `/doc/` slug the app does not read, an unknown section),
 opens in the browser: nothing is routed, and "This page isn’t in the app" is
-never shown for it. `opax://` links and widget links are the app's own and
-are not gated.
+never shown for it. Every https link is gated, whatever it carries
+(`?src=widget` included). `opax://` links are the app's own and are not.
+
+A pattern is claimed before the app knows whether it holds that id
+(`/subject/person/no-such`). The not-found page for an unknown person,
+electorate, bill, record or topic therefore has "Open on opax.com.au" under
+its Search action, so a link can always get back to the website.
 
 ## Identifiers
 
@@ -63,9 +81,10 @@ The association file names the app as `<Team ID>.<bundle ID>`.
   `mobile/app.config.ts` (the table's `bundleId`; a test holds them equal).
 - Team ID: not in the app config or the repository. The release tooling
   reads it from the local App Store Connect environment file as
-  `APPLE_TEAM_ID`. The Worker reads the same value from its var
-  `APPLE_TEAM_ID`. While that is unset the path answers 404 and every link
-  opens on the web.
+  `APPLE_TEAM_ID`, and the release check forbids it in tracked files. The
+  Worker reads the same value from its var `APPLE_TEAM_ID`, set at deploy
+  time and never written to `wrangler.jsonc` or any other file. While that
+  is unset the path answers 404 and every link opens on the web.
 
 ## Turning it on
 

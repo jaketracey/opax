@@ -127,6 +127,23 @@ const webOnly = [
   '/money/grants?open=GA123',
   '/money/grants/federal/recipient/person:jane%20citizen',
   '/money/grants/federal/recipient/person%3Ajane%20citizen',
+  // Addresses the web redirects elsewhere, and app paths the web lacks.
+  '/discover',
+  '/discover?category=grants&item=record',
+  '/today',
+  '/today/edition',
+  '/edition',
+  // Encodings and spellings of an excluded or unknown address.
+  '/money/grants/federal/recipient/%70erson:jane',
+  '/money/grants/federal/recipient/%70erson%3Ajane',
+  '/%61pi/ask',
+  '/%63ommunity?view=signin#token=example-token',
+  '/privac%79',
+  '/subject/person/%E0%A4%A',
+  '/Bills',
+  '/bills/',
+  '/subject/person/..%2f..%2fapi/ask',
+  '/ask?q=x&token=y',
   // Pages the app does not have.
   '/money/receipts',
   '/money/explain',
@@ -218,10 +235,55 @@ describe('links the table does not gate', () => {
     expect(openURL).not.toHaveBeenCalled();
   });
 
-  test('a widget’s link is the app’s own', () => {
+  test('the widget marker does not exempt an https link', () => {
+    // A claimed address the app can place opens, counted as a widget's.
     expect(
       redirectSystemPath({
         path: `${site}/subject/person/anthony-albanese?src=widget`,
+        initial: true,
+      }),
+    ).toBe('/(tabs)/(today)/person/anthony-albanese');
+    expect(openURL).not.toHaveBeenCalled();
+    expect(jest.mocked(track).mock.calls).toEqual([
+      [
+        'opax_link_open',
+        { source: 'widget', route_pattern: '/person/[slug]', initial: true },
+      ],
+    ]);
+    jest.mocked(track).mockClear();
+    // One it cannot place, or does not claim, goes to the browser without
+    // the marker and is not counted.
+    for (const [path, web] of [
+      [
+        '/subject/person/anthony-albanese/unknown?src=widget',
+        '/subject/person/anthony-albanese/unknown',
+      ],
+      ['/privacy?src=widget', '/privacy'],
+      ['/no-such-page?src=widget&x=1', '/no-such-page?x=1'],
+    ] as const) {
+      openURL.mockClear();
+      expect(
+        redirectSystemPath({ path: `${site}${path}`, initial: true }),
+      ).toBe('/');
+      expect(
+        redirectSystemPath({ path: `${site}${path}`, initial: false }),
+      ).toBe('');
+      expect(openURL.mock.calls).toEqual([
+        [`${site}${web}`],
+        [`${site}${web}`],
+      ]);
+    }
+    expect(track).not.toHaveBeenCalled();
+    // An opax:// link is the app's own, with or without the marker.
+    expect(
+      redirectSystemPath({ path: 'opax://follows?src=widget', initial: true }),
+    ).toBe('/(tabs)/(today)/follows');
+  });
+
+  test('a trailing slash on a claimed page opens the same page', () => {
+    expect(
+      redirectSystemPath({
+        path: `${site}/subject/person/anthony-albanese/`,
         initial: true,
       }),
     ).toBe('/(tabs)/(today)/person/anthony-albanese');

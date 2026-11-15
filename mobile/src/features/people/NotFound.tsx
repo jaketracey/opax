@@ -8,7 +8,14 @@ import { rhythm } from '../../design/tokens';
  * item 2), the system's unavailable view with Search centred under it at
  * every size.
  */
-export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
+export function PersonNotFound({
+  onSearch,
+  web,
+}: {
+  onSearch: () => void;
+  /** The person's address on the website (navigation/web-fallback.ts). */
+  web?: { label: string; onPress: () => void; testID?: string };
+}) {
   return (
     // Clear of a vertical tab bar wherever it is drawn. Inside a Screen,
     // which already is, this adds nothing.
@@ -25,6 +32,7 @@ export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
             testID: 'person-not-found-search',
             containerTestID: 'person-not-found-action',
           }}
+          secondary={web}
         />
       </View>
     </SidebarSafe>

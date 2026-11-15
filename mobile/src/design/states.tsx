@@ -1099,6 +1099,7 @@ export function ContentUnavailable({
   body,
   announcement,
   action,
+  secondary,
   inline = false,
   testID,
 }: {
@@ -1122,6 +1123,12 @@ export function ContentUnavailable({
     testID?: string;
     containerTestID?: string;
   };
+  /**
+   * A second way on, under the action: the page's own address on the
+   * website, for a record the app does not hold (navigation/web-fallback.ts).
+   * A link from the web can then always get back to it.
+   */
+  secondary?: { label: string; onPress: () => void; testID?: string };
   testID?: string;
 }) {
   // A whole-page state: the page will have no bar items of its own.
@@ -1215,6 +1222,19 @@ export function ContentUnavailable({
             centredLabel
             onPress={action.onPress}
             testID={action.testID ?? (testID ? `${testID}-retry` : undefined)}
+          />
+        </View>
+      ) : null}
+      {secondary ? (
+        // Centred like the action above it, and quieter: a text link.
+        <View style={styles.unavailableAction}>
+          <Button
+            label={secondary.label}
+            variant="plain"
+            hug
+            centredLabel
+            onPress={secondary.onPress}
+            testID={secondary.testID ?? (testID ? `${testID}-web` : undefined)}
           />
         </View>
       ) : null}

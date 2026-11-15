@@ -51,6 +51,7 @@ import { TopicMoney, hasTopicMoney } from './TopicMoney';
 import { SPEECH_PAGE, TopicSpeeches } from './TopicSpeeches';
 import { TopicTide } from './TopicTide';
 import { TopicWho } from './TopicWho';
+import { webFallback } from '../../navigation/web-fallback';
 
 type Params = {
   slug?: string;
@@ -82,12 +83,12 @@ export function topicWebPath(slug: string, filters: SpeechFilters = {}) {
 export default function TopicPage() {
   const params = useLocalSearchParams<Params>();
   const slug = typeof params.slug === 'string' ? params.slug : '';
-  if (!topicNames[slug]) return <UnknownTopic />;
+  if (!topicNames[slug]) return <UnknownTopic slug={slug} />;
   return <TopicContent key={slug} slug={slug} params={params} />;
 }
 
 /** The shared not-found pattern (sweep 2, item 2), with Browse topics. */
-function UnknownTopic() {
+function UnknownTopic({ slug }: { slug: string }) {
   return (
     <>
       <RouteOptions stableItems options={{ title: '' }} />
@@ -101,6 +102,15 @@ function UnknownTopic() {
             onPress: () => router.navigate(topicsRoute),
             testID: 'topic-unknown-browse',
           }}
+          secondary={
+            /^[a-z0-9-]+$/.test(slug)
+              ? webFallback(
+                  `/subject/topic/${slug}`,
+                  'Topic',
+                  'topic-unknown-web',
+                )
+              : undefined
+          }
           testID="topic-unknown"
         />
       </Screen>

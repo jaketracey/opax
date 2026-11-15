@@ -49,8 +49,9 @@ export function resolveSystemPath({
     const placed = { value: false };
     const destination = redirect(url, native, initial, placed);
     // An https link the app has no page for (navigation/universal-links.ts)
-    // opens in the browser. A widget's link is the app's own.
-    if (!native && !widget && !(placed.value && opensInApp(web, destination))) {
+    // opens in the browser. Only an opax:// link is the app's own: an https
+    // link is gated whatever it carries, the widget marker included.
+    if (!native && !(placed.value && opensInApp(web, destination))) {
       openOnWeb(web);
       return stayPath(initial);
     }

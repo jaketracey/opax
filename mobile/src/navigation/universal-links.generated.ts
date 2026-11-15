@@ -105,24 +105,6 @@ export const universalLinkOpens: readonly (UniversalLinkPattern & {
     ]
   },
   {
-    "/": "/today",
-    "opens": [
-      "/"
-    ]
-  },
-  {
-    "/": "/today/edition",
-    "opens": [
-      "/edition"
-    ]
-  },
-  {
-    "/": "/edition",
-    "opens": [
-      "/edition"
-    ]
-  },
-  {
     "/": "/subject/person",
     "opens": [
       "/directory"
@@ -275,12 +257,6 @@ export const universalLinkOpens: readonly (UniversalLinkPattern & {
     "opens": [
       "/connections",
       "/connection"
-    ]
-  },
-  {
-    "/": "/discover",
-    "opens": [
-      "/leads"
     ]
   },
   {

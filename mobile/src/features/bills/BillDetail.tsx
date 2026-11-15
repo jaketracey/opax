@@ -138,6 +138,7 @@ import { memberPosition, useMyMemberVotes } from './your-mp-vote';
 import { sydneyDay } from '../today/rules';
 import { TermText, useTermWords, withTermAction } from '../../design/term';
 import { chamberTerm, stageTerm } from '../learn/term-map';
+import { webFallback } from '../../navigation/web-fallback';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
@@ -432,6 +433,11 @@ export default function BillDetail({
                     router.push(billListRoute({ scope: 'all', focus: '1' })),
                   testID: 'bill-not-found-search',
                 }}
+                secondary={webFallback(
+                  `/bill/${encodeURIComponent(key)}`,
+                  'Bill',
+                  'bill-not-found-web',
+                )}
                 testID="bill-not-found"
               />
             ) : offline && !record ? (

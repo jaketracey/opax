@@ -15,8 +15,8 @@ import {
  * addresses listed there. This module applies the table again inside the
  * app: an https link the table does not claim, or one that would not land
  * on the page its entry names, opens in the browser instead of on "This
- * page isn’t in the app". opax:// links and widget links are the app's own
- * and are not gated.
+ * page isn’t in the app". Every https link is gated, whatever it carries
+ * (`?src=widget` included); opax:// links are the app's own and are not.
  */
 
 /** Apple's wildcard match: `*` is any run of characters, `?` exactly one. */
@@ -33,9 +33,22 @@ function wildcard(glob: string, text: string): boolean {
   return new RegExp(`^${source}$`).test(text);
 }
 
-/** A missing query item matches as the empty string, as it does on iOS. */
+/** The path as a reader would see it, or null when it cannot be decoded. */
+function decodedPath(url: URL): string | null {
+  try {
+    return decodeURIComponent(url.pathname);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The path is compared decoded, so "%70erson:" is "person:". A missing
+ * query item matches as the empty string, as it does on iOS.
+ */
 function matches(pattern: UniversalLinkPattern, url: URL): boolean {
-  if (!wildcard(pattern['/'], url.pathname)) return false;
+  const path = decodedPath(url);
+  if (path === null || !wildcard(pattern['/'], path)) return false;
   for (const [key, glob] of Object.entries(pattern['?'] ?? {}))
     if (!wildcard(glob, url.searchParams.get(key) ?? '')) return false;
   const fragment = pattern['#'];
@@ -46,6 +59,7 @@ function matches(pattern: UniversalLinkPattern, url: URL): boolean {
 
 /** The table entry that claims an address: exclusions first, then the first match. */
 export function universalLinkEntry(url: URL) {
+  if (decodedPath(url) === null) return null;
   if (universalLinkExcludes.some((pattern) => matches(pattern, url)))
     return null;
   return universalLinkOpens.find((pattern) => matches(pattern, url)) ?? null;

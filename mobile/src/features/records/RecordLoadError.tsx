@@ -11,6 +11,7 @@ import {
 import { rhythm } from '../../design/tokens';
 import { openSource, webPageUrl } from '../../navigation/external';
 import { SavedShelf, useSavedShelf } from './SavedShelf';
+import { webFallback } from '../../navigation/web-fallback';
 
 /** Is the failure the device being offline (or too slow to reach OPAX)? */
 export const isOffline = (error: unknown) =>
@@ -44,9 +45,12 @@ export function isMissingRecord(
  */
 export function MissingRecord({
   sheet = false,
+  webPath,
   testID,
 }: {
   sheet?: boolean;
+  /** The record's address on the website, when the link named one. */
+  webPath?: string;
   testID?: string;
 }) {
   return (
@@ -63,6 +67,11 @@ export function MissingRecord({
         },
         testID: testID ? `${testID}-search` : undefined,
       }}
+      secondary={
+        webPath && !sheet
+          ? webFallback(webPath, 'Record', `${testID ?? 'record-missing'}-web`)
+          : undefined
+      }
       testID={testID}
     />
   );
@@ -101,7 +110,14 @@ export function RecordLoadError({
     !missing && !gone && !sheet && isOffline(error),
     error,
   );
-  if (missing) return <MissingRecord sheet={sheet} testID={testID} />;
+  if (missing)
+    return (
+      <MissingRecord
+        sheet={sheet}
+        webPath={isRecordSlug(slug) ? `/doc/${slug}` : undefined}
+        testID={testID}
+      />
+    );
   if (error instanceof ApiError && error.code === 'not-found')
     return (
       <ContentUnavailable

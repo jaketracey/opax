@@ -68,9 +68,23 @@ export function wildcard(glob, text) {
   return new RegExp(`^${source}$`, 's').test(text)
 }
 
-/** Whether one component matches an address. A missing query item is the empty string. */
+/** The path as a reader would see it: percent-decoded, or null when it cannot be decoded. */
+export function decodedPath(url) {
+  try {
+    return decodeURIComponent(url.pathname)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Whether one component matches an address. The path is compared decoded, so
+ * "%70erson:" is "person:"; a path that cannot be decoded matches nothing.
+ * A missing query item is the empty string.
+ */
 export function componentMatches(component, url) {
-  if (!wildcard(component['/'], url.pathname)) return false
+  const path = decodedPath(url)
+  if (path === null || !wildcard(component['/'], path)) return false
   for (const [key, glob] of Object.entries(component['?'] ?? {})) if (!wildcard(glob, url.searchParams.get(key) ?? '')) return false
   if ('#' in component && !wildcard(component['#'], url.hash.slice(1))) return false
   return true
@@ -78,6 +92,7 @@ export function componentMatches(component, url) {
 
 /** The open entry that claims an address, or null: excluded addresses first, then the first match. */
 export function claimed(source, url) {
+  if (decodedPath(url) === null) return null
   if (source.exclude.some((entry) => componentMatches(entry, url))) return null
   return source.open.find((entry) => componentMatches(entry, url)) ?? null
 }
