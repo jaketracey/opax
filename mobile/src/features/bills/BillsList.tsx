@@ -92,7 +92,7 @@ import {
   type BillSort,
 } from './filters';
 import type { BillEntry } from './navigation';
-import { onThisDay } from './on-this-day';
+import { onThisDay, type OnThisDayBill } from './on-this-day';
 import { OnThisDayRow } from './OnThisDay';
 import { BillIndexRow } from './parts';
 import { useSydneyDay } from './sydney-day';
@@ -291,8 +291,15 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     ),
   };
 
+  // On this day is chosen once, in the render that first has the register,
+  // so the row is in the list's first frame or not in this visit at all:
+  // nothing is inserted above content the reader can already see.
   const day = useSydneyDay();
-  const dayPick = useMemo(() => onThisDay(index?.bills, day), [index, day]);
+  const [onDay, setOnDay] = useState<{ pick: OnThisDayBill | null } | null>(
+    null,
+  );
+  if (index && !onDay) setOnDay({ pick: onThisDay(index.bills, day) });
+  const dayPick = onDay?.pick ?? null;
   const clear = () => list.store.set(list.store.model.reset(list.state));
   const stacked = useAccessibilitySize();
   const filteredEmpty = !!all && !searching && on > 0 && rows.length === 0;
@@ -306,16 +313,6 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
           testID="bills-votes"
         />
       )}
-      <OnThisDayRow
-        pick={searching || pushed ? null : dayPick}
-        gap={rhythm.block}
-        onSelect={
-          split
-            ? ({ bill }) =>
-                select({ kind: 'bill', key: bill.key, title: billName(bill) })
-            : undefined
-        }
-      />
       <ScopeControl value={scope} onChange={setScope} />
       {record?.stale ? (
         record.staleReason ? (
@@ -352,6 +349,18 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         </View>
       ) : !record && !error ? (
         <Skeleton shape="text" count={1} label="Loading bills" />
+      ) : null}
+      {/* Last in the header, so it arrives with the rows and pushes nothing. */}
+      {all && dayPick && !searching && !pushed ? (
+        <OnThisDayRow
+          pick={dayPick}
+          onSelect={
+            split
+              ? ({ bill }) =>
+                  select({ kind: 'bill', key: bill.key, title: billName(bill) })
+              : undefined
+          }
+        />
       ) : null}
     </View>
   );

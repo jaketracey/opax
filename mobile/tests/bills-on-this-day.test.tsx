@@ -3,11 +3,7 @@
 // Bills list. Invented bills prove the rule; the pinned register proves the
 // row.
 import { act } from 'react';
-import {
-  AppState,
-  useWindowDimensions,
-  type AppStateStatus,
-} from 'react-native';
+import { RefreshControl, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billName } from '../src/api/bill-transforms';
 import { Catalogs, type Bill } from '../src/api/catalogs';
@@ -137,37 +133,25 @@ describe('the day', () => {
   >('../src/features/bills/sydney-day');
   afterEach(() => jest.restoreAllMocks());
 
-  test('is Sydney’s calendar day, read again when the app comes forward', () => {
-    let listener: ((state: AppStateStatus) => void) | undefined;
-    const remove = jest.fn();
-    jest.spyOn(AppState, 'addEventListener').mockImplementation(((
-      _type: string,
-      fn: (state: AppStateStatus) => void,
-    ) => {
-      listener = fn;
-      return { remove };
-    }) as never);
+  test('is Sydney’s calendar day as the screen first saw it, for the whole visit', () => {
     const now = jest
       .spyOn(Date, 'now')
       // 13:30 UTC on 15 November is already the 16th in Sydney.
       .mockReturnValue(Date.UTC(2026, 10, 15, 13, 30));
     const seen: string[] = [];
-    function Probe() {
-      seen.push(useSydneyDay());
+    function Probe({ n }: { n: number }) {
+      seen.push(`${n}:${useSydneyDay()}`);
       return null;
     }
     let r!: TestRenderer.ReactTestRenderer;
     act(() => {
-      r = TestRenderer.create(<Probe />);
+      r = TestRenderer.create(<Probe n={1} />);
     });
-    expect(seen.at(-1)).toBe('2026-11-16');
     now.mockReturnValue(Date.UTC(2026, 10, 16, 13, 30));
-    act(() => listener!('background'));
-    expect(seen.at(-1)).toBe('2026-11-16');
-    act(() => listener!('active'));
-    expect(seen.at(-1)).toBe('2026-11-17');
+    act(() => r.update(<Probe n={2} />));
+    expect(seen.at(0)).toBe('1:2026-11-16');
+    expect(seen.at(-1)).toBe('2:2026-11-16');
     act(() => r.unmount());
-    expect(remove).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -256,6 +240,78 @@ describe('the row on Bills', () => {
     expect(onThisDay(pinnedBills.bills, mockDay)).toBeNull();
     const root = await render();
     expect(rows(root)).toHaveLength(0);
+  });
+
+  const ids = (root: ReactTestInstance) =>
+    root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          typeof node.props.testID === 'string',
+      )
+      .map((node) => node.props.testID as string);
+
+  test('it arrives in the frame the bills first draw, below everything already on screen', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    mock.bills.mockImplementation(async (refresh) => {
+      await gate;
+      return fixture.bills(refresh);
+    });
+    const root = await render();
+    // Before the register answers: the header's controls, no row, no bills.
+    const before = ids(root);
+    expect(before).toEqual(
+      expect.arrayContaining(['bills-votes', 'bills-scope']),
+    );
+    expect(before).not.toContain('bills-on-this-day-row');
+    expect(before.some((id) => id.startsWith('bill-row-'))).toBe(false);
+    await act(async () => {
+      release();
+    });
+    await act(async () => {});
+    const after = ids(root);
+    const row = after.indexOf('bills-on-this-day-row');
+    const firstBill = after.findIndex((id) => id.startsWith('bill-row-'));
+    expect(row).toBeGreaterThan(-1);
+    expect(firstBill).toBeGreaterThan(row);
+    // Everything drawn before the data is still above the row: it was
+    // inserted over nothing the reader could already see.
+    const kept = before.filter((id) => after.includes(id));
+    expect(kept).toEqual(
+      expect.arrayContaining(['bills-votes', 'bills-scope']),
+    );
+    for (const id of kept) expect(after.indexOf(id)).toBeLessThan(row);
+    expect(after.indexOf('bills-count')).toBeLessThan(row);
+    // Only bills follow it, and it has no height animation of its own.
+    expect(after.slice(row + 1, firstBill)).toEqual([]);
+    expect(after).not.toContain('bills-on-this-day');
+  });
+
+  test('it is never inserted, or taken away, after the list has drawn', async () => {
+    mockDay = '2026-01-01';
+    const without = await render();
+    expect(rows(without)).toHaveLength(0);
+    const settled = ids(without);
+    mockDay = dayWithBill;
+    await act(async () => {
+      without.findByType(RefreshControl).props.onRefresh();
+    });
+    await act(async () => {});
+    expect(mock.bills).toHaveBeenCalledTimes(2);
+    expect(rows(without)).toHaveLength(0);
+    expect(ids(without)).toEqual(settled);
+
+    const withRow = await render();
+    expect(rows(withRow)).toHaveLength(1);
+    mockDay = '2026-01-01';
+    await act(async () => {
+      withRow.findByType(RefreshControl).props.onRefresh();
+    });
+    await act(async () => {});
+    expect(rows(withRow)).toHaveLength(1);
   });
 
   test('a search hides it, as it hides Votes in parliament', async () => {
