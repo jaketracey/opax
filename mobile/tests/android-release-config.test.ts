@@ -134,12 +134,14 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 // (docs/ANALYTICS.md): every variant adds the PostHog push opt-out Info.plist
 // key, and production's privacy manifest adds Crash Data and Other Diagnostic
 // Data; nothing else changed.
+// Re-pinned for 1.1.5: the only change is the version string (2 places per
+// variant); swapping it back to 1.1.4 gives the previous hashes exactly.
 const iosPrebuildHashes = {
   development:
-    'cbc9aebadf377a24a00dae46ca14237af2103a43d2ff1a3e5580948d15e9adff',
-  e2e: '96f06fbaf5a51c6c5cd9dc540e9057342af4bf674a9c4f96fae839e89b157291',
+    'f0de6408a53ad81abb3cec7833a0c3ea78be9cd5268535a828f0e4cec39dc3b1',
+  e2e: '9a4c5fa53ed1c34e1878d9c2dad2522f7438b9751ebf1977f7cdba82f849d2b7',
   production:
-    '89463b95d753b6fbaf4140c914f5e3d7eb8da71b7f6b3696be32541a3f380157',
+    '053c27780dc558f5a9db1d53410a11e3657b948c62abf55142b6ea69ce3c90ee',
 };
 test.each(variants)(
   'iOS %s prebuild output stays byte-identical to the baseline',
