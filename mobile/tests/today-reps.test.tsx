@@ -19,6 +19,7 @@ import { Icon } from '../src/design/icon';
 import { LinkRow } from '../src/design/rows';
 import {
   linesLabel,
+  REP_STAND_IN,
   REPS_HEADING,
   repLabel,
 } from '../src/features/today/RepsGroup';
@@ -1187,6 +1188,80 @@ describe('Today’s representatives group', () => {
         ids(renderer).filter((id) => /^today-rep-.*-loading$/.test(id)),
       ).toEqual(['today-rep-federal-loading', 'today-rep-state-loading']);
       await act(async () => renderer.unmount());
+    });
+
+    test('the loading tile sizes its held federal row from the member’s words in the directory at hand, and from stand-in words only with no one member', async () => {
+      dimensions.mockReturnValue({
+        width: 402,
+        height: 874,
+        scale: 3,
+        fontScale: 2.353,
+      });
+      const long = 'Kathleen Alexandra Matthews-Ward Fitzgerald';
+      const seat = {
+        ...maribyrnong,
+        representatives: [
+          {
+            ...maribyrnong.representatives[0]!,
+            person: { ...maribyrnong.representatives[0]!.person, name: long },
+          },
+        ],
+      } as Electorate;
+      const longIndex = {
+        ...index,
+        electorates: index.electorates.map((s) =>
+          s.electorate_id === seat.electorate_id ? seat : s,
+        ),
+      };
+      // The directory is at hand, but the tile's own view cannot be made
+      // from it and its read is still out.
+      const at = (electorates: typeof index) =>
+        ({
+          ...directory,
+          manifest: { ...directory.manifest, data: null },
+          electorates: result(electorates),
+        }) as unknown as typeof directory;
+      jest.mocked(catalogs.yourMP).mockReturnValue(new Promise(() => {}));
+      const loading = await card({
+        seat,
+        directory: at(longIndex),
+        stateSeatIds: [],
+      });
+      expect(ids(loading)).toContain('today-rep-federal-loading');
+      expect(strings(loading)).toContain(long);
+      expect(strings(loading)).toContain('Federal · Maribyrnong');
+      expect(strings(loading)).not.toContain(REP_STAND_IN.name);
+      // As tall as the row that loads on it.
+      jest
+        .mocked(catalogs.yourMP)
+        .mockImplementation(async (id: string) =>
+          yourMPFor(id, longIndex, manifest, []),
+        );
+      const loaded = await card({
+        seat,
+        directory: { ...directory, electorates: result(longIndex) },
+        stateSeatIds: [],
+      });
+      expect(rowHeight(loading, 'today-rep-federal-loading', 12)).toBe(
+        rowHeight(loaded, 'today-rep-federal', 12),
+      );
+      // No one recorded member: nothing is at hand, so the stand-in holds.
+      jest.mocked(catalogs.yourMP).mockReturnValue(new Promise(() => {}));
+      const vacant = { ...maribyrnong, representatives: [] } as Electorate;
+      const none = await card({
+        seat: vacant,
+        directory: at({
+          ...index,
+          electorates: index.electorates.map((s) =>
+            s.electorate_id === vacant.electorate_id ? vacant : s,
+          ),
+        }),
+        stateSeatIds: [],
+      });
+      expect(strings(none)).toContain(REP_STAND_IN.name);
+      await act(async () => loading.unmount());
+      await act(async () => loaded.unmount());
+      await act(async () => none.unmount());
     });
   });
 });

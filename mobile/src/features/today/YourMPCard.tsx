@@ -370,6 +370,29 @@ export function repsShape(
   };
 }
 
+/**
+ * The federal row's words from the seat's own record in the directory, for
+ * the held row while the tile's view is still out: the one recorded
+ * member, as `recordedMember` picks them from the view. Null with no one
+ * member, where the held row keeps words of a usual length.
+ */
+function seatWords(seat: Electorate, directory: Directory): RepWords | null {
+  if (seat.representatives.length !== 1) return null;
+  const member = seat.representatives[0]!;
+  let identity: ReturnType<typeof representativeProfile> = null;
+  try {
+    identity = representativeProfile(member.person_id, directory);
+  } catch {
+    // An incomplete directory: the roster's own party stands.
+  }
+  return {
+    name: member.person.name,
+    party: identity?.party ?? member.party ?? null,
+    partyStatus: identity?.partyStatus ?? 'current',
+    role: federalRole(seat).role,
+  };
+}
+
 /** The words a member's row draws, for its held place. */
 const repWords = (rep: Rep | null): RepWords | null =>
   rep && {
@@ -457,7 +480,9 @@ export function YourMPCard({
           senators={!!senatorsLink(seat, directory)}
           lines={lines}
           members={{
-            federal: null,
+            // The directory is at hand though the tile's view is not: the
+            // seat's own recorded member gives the held row its words.
+            federal: seatWords(seat, directory),
             state:
               stateSeat && stateForm.kind === 'member'
                 ? repWords(stateRep(stateSeat, directory))
