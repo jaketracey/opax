@@ -295,8 +295,9 @@ export default function Following() {
 
   // Caught up: a clean check, online, with nothing changed, unchecked or
   // withdrawn. The foot says so and points to the newest records.
-  const quiet =
-    !!checked && offline === undefined && !leaving.length && allQuiet(entries);
+  // A row on its way out does not take the foot with it: the foot stays
+  // through the removal and goes only if what is left is no longer quiet.
+  const quiet = !!checked && offline === undefined && allQuiet(entries);
 
   return (
     <Screen
