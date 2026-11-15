@@ -8,6 +8,7 @@ import type {
 import {
   partyStatusFor,
   partyStatusSeatsFor,
+  recordedFederalOnly,
   type PartyStatus,
 } from '../../api/party-transforms';
 import type { SuggestionRoster } from '../../api/selectors';
@@ -67,15 +68,33 @@ const stateName = (code?: string | null) =>
  *   seat held now is sitting, and seats that have all ended are former
  *   where they cover every parliament the roster records (`partyStatusFor`);
  * - otherwise unknown, and the row claims neither.
+ *
+ * This is service in the federal parliament, the seat the place line names.
+ * The roster's `current` also means sitting in a state parliament, so for
+ * someone flagged current and recorded in one as well it is not taken as a
+ * federal seat: their dated federal seats decide, and with none dated the
+ * row claims neither.
  */
 export function serviceStatus(
   person: Person,
   sources: Pick<RowSources, 'people'> = {},
 ): PartyStatus {
-  if (person.current === true) return 'current';
   const dated = person.pid
     ? sources.people?.people.find((p) => p.legacy_person_id === person.pid)
     : undefined;
+  if (person.current === true && !recordedFederalOnly(person)) {
+    // Flagged current, and also recorded in a state parliament: the flag
+    // may be the state seat (a former federal member who now sits in a
+    // state house), so only the dated federal seats can speak for federal
+    // service. One held now is sitting; all ended is a former federal
+    // member; with none dated the row claims neither.
+    const federal = (dated?.electorates ?? []).filter(
+      (seat) => seat.jurisdiction === 'federal',
+    );
+    if (federal.some((seat) => seat.current)) return 'current';
+    return federal.length ? 'former' : 'unknown';
+  }
+  if (person.current === true) return 'current';
   return partyStatusFor(
     partyStatusSeatsFor(
       dated?.electorates ?? [],

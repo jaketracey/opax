@@ -532,6 +532,106 @@ describe('a person’s place line claims only what the record says', () => {
       : [{ start: '1979-06-23', end: '2004-10-09' }],
   });
 
+  describe('someone the roster flags current for a seat in a state parliament', () => {
+    // The roster's `current` covers every parliament it records. A former
+    // federal member who now sits in a state upper house is flagged
+    // current, and read "Member for" their old federal seat.
+    const stateSeat = (current: boolean): Seat =>
+      ({
+        ...ended,
+        name: 'New South Wales',
+        jurisdiction: 'nsw',
+        chamber: 'nsw_lc',
+        current,
+        periods: [{ start: '2019-03-23', end: current ? null : '2023-03-25' }],
+      }) as Seat;
+    const moved = {
+      name: 'Invented Mover',
+      current: true,
+      states: ['federal', 'nsw'],
+    };
+
+    test('Search: the ended federal seat is a former one, whatever the flag says', () => {
+      const row = rowOf(person(moved, [watson(false), stateSeat(true)]));
+      expect(row.place).toBe('Former member for Watson, New South Wales');
+      expect(row.place).not.toMatch(/^Member for/);
+      expect(row.quick).toBe('Former member for Watson, New South Wales');
+    });
+
+    test('Search: with no dated federal seat the row names the seat alone', () => {
+      for (const seats of [[], [stateSeat(true)]]) {
+        const row = rowOf(person(moved, seats));
+        expect(row.place).toBe('Watson, New South Wales');
+        expect(row.quick).toBe('Watson, New South Wales');
+      }
+      const senator = rowOf(
+        person(
+          {
+            ...moved,
+            name: 'Invented Senator',
+            chamber: 'senate',
+            electorate: 'South Australia',
+            state: 'SA',
+            states: ['federal', 'sa'],
+          },
+          [],
+        ),
+      );
+      expect(senator.place).toBe('Senate, South Australia');
+    });
+
+    test('Search: a sitting federal member with an earlier state seat still reads "Member for", from the dated federal seat', () => {
+      const row = rowOf(person(moved, [watson(true), stateSeat(false)]));
+      expect(row.place).toBe('Member for Watson, New South Wales');
+    });
+
+    test('Ask: the roster alone cannot say which seat is current, so it names the federal seat alone', () => {
+      const { item } = person(moved, []);
+      expect(askPlaceLine(item)).toBe('Watson, New South Wales');
+      expect(askPlaceLine(item)).not.toMatch(/Member for/);
+      const { item: senator } = person(
+        {
+          ...moved,
+          name: 'Invented Senator',
+          chamber: 'senate',
+          electorate: 'South Australia',
+          state: 'SA',
+          states: ['federal', 'sa'],
+        },
+        [],
+      );
+      expect(askPlaceLine(senator)).toBe('Senate, South Australia');
+      // The state seat recorded beside the federal one, with no states list.
+      const beside = {
+        ...item,
+        states: undefined,
+        representation: [
+          ...item.representation!,
+          {
+            jurisdiction: 'nsw',
+            chamber: 'nsw_lc',
+            electorate: '',
+            state: 'NSW',
+          },
+        ],
+      } as typeof item;
+      expect(askPlaceLine(beside)).toBe('Watson, New South Wales');
+    });
+
+    test('Ask: federal-only rows read as before, and a flagged former member is still former', () => {
+      expect(
+        askPlaceLine(
+          person({ name: 'Invented Sitting', current: true }, []).item,
+        ),
+      ).toBe('Member for Watson, New South Wales');
+      expect(
+        askPlaceLine(
+          person({ ...moved, name: 'Invented Left', current: false }, []).item,
+        ),
+      ).toBe('Former member for Watson, New South Wales');
+    });
+  });
+
   test('a former member, whom the roster does not flag, is a former member: the seat ended in the dated record', () => {
     const row = rowOf(person({ name: 'Leo McLeay' }, [watson(false)]));
     expect(row.place).toBe('Former member for Watson, New South Wales');

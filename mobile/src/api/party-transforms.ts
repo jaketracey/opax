@@ -45,6 +45,21 @@ export function samePartyLabel(a: string, b: string) {
  * reads "Former member" on its row; unknown says nothing either way.
  */
 export type PartyStatus = 'current' | 'former' | 'unknown';
+/**
+ * Whether the roster records this person for the federal parliament alone.
+ * The roster's `current` flag means sitting in any parliament it covers:
+ * someone who left the federal parliament and now sits in a state one is
+ * flagged current too. So `current` speaks for a federal seat only where
+ * no other parliament is recorded.
+ */
+export function recordedFederalOnly(
+  row: Pick<Roster['people'][number], 'states' | 'representation'>,
+): boolean {
+  return [
+    ...(row.states ?? []),
+    ...(row.representation ?? []).map((r) => r.jurisdiction),
+  ].every((jurisdiction) => jurisdiction === 'federal');
+}
 /** Dated evidence for status only; never an identity, portrait or record join. */
 export function partyStatusSeatsFor(
   seats: SeatObservation[],
