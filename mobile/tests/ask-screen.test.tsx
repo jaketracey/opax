@@ -1039,9 +1039,9 @@ test('starters follow Sydney’s day: 9:30 am on 10 Nov is 10 Nov, not UTC’s 9
     const shown = [a11y('ask-starter-0', 'accessibilityLabel')];
     expect(shown).toEqual(startersFor(Date.UTC(2026, 10, 10, 2), 1));
     expect(shown).not.toEqual(startersFor(Date.UTC(2026, 10, 9, 2), 1));
-    expect(byId('ask-starter-1')).toEqual([]);
-    expect(byId('ask-starter-seat')).toEqual([]);
-    expect(byId('ask-starter-pending')).toEqual([]);
+    expect(byId('ask-starter-1').length).toBe(0);
+    expect(byId('ask-starter-seat').length).toBe(0);
+    expect(byId('ask-starter-pending').length).toBe(0);
   } finally {
     now.mockRestore();
   }
@@ -1373,15 +1373,15 @@ test('a starter asks at once; the seat starter only fills the composer', async (
     kind: 'speech',
   });
   // No general starter beside the member's, and no held place.
-  expect(byId('ask-starter-0')).toEqual([]);
-  expect(byId('ask-starter-pending')).toEqual([]);
+  expect(byId('ask-starter-0').length).toBe(0);
+  expect(byId('ask-starter-pending').length).toBe(0);
 });
 
 test('with no seat saved, the one starter is general and asks at once', async () => {
   jest.mocked(client.askPost).mockResolvedValue(answer);
   await mount();
-  expect(byId('ask-starter-seat')).toEqual([]);
-  expect(byId('ask-starter-1')).toEqual([]);
+  expect(byId('ask-starter-seat').length).toBe(0);
+  expect(byId('ask-starter-1').length).toBe(0);
   const starter = a11y('ask-starter-0', 'accessibilityLabel')!;
   expect(a11y('ask-starter-0', 'accessibilityHint')).toBe(
     'Asks this question.',
@@ -1411,8 +1411,8 @@ test('while the saved seat is being read, the one row’s place is held and noth
       StyleSheet.flatten(n.props.style)?.opacity === 0,
   );
   expect(unseen.length).toBeGreaterThan(0);
-  expect(byId('ask-starter-0')).toEqual([]);
-  expect(byId('ask-starter-seat')).toEqual([]);
+  expect(byId('ask-starter-0').length).toBe(0);
+  expect(byId('ask-starter-seat').length).toBe(0);
   // The seat answers "none": the general starter takes the held place.
   jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
   await act(async () => {
@@ -1421,8 +1421,8 @@ test('while the saved seat is being read, the one row’s place is held and noth
   await act(async () => {
     askSession.setDraft('');
   });
-  expect(byId('ask-starter-pending')).toEqual([]);
-  expect(byId('ask-starter-0')).not.toEqual([]);
+  expect(byId('ask-starter-pending').length).toBe(0);
+  expect(byId('ask-starter-0').length).toBeGreaterThan(0);
 });
 
 test.each(['before', 'after'] as const)(
@@ -2675,7 +2675,7 @@ test.each([
       // One starter on every layout, phone and docked pane alike.
       const shown = [a11y(`${prefix}-starter-0`, 'accessibilityLabel')];
       expect(shown).toEqual(startersFor(Date.parse('2026-11-13T04:00:00Z'), 1));
-      expect(byId(`${prefix}-starter-1`)).toEqual([]);
+      expect(byId(`${prefix}-starter-1`).length).toBe(0);
       // A regular iPhone keeps the large title at idle, as its Bills does.
       expect(mockBar.options.headerLargeTitleEnabled).toBe(true);
     } finally {
