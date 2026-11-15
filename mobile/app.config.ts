@@ -204,6 +204,16 @@ const config: ExpoConfig = {
     // orientation list (`orientation: 'default'`) unchanged.
     supportsTablet: true,
     requireFullScreen: false,
+    // Universal links: opax.com.au links to pages the app has open in the
+    // app. The Worker's /.well-known/apple-app-site-association lists the
+    // same addresses as src/navigation/universal-links.ts, both generated
+    // from docs/universal-links.json. There is one site and no staging
+    // scheme, so one domain (tests/universal-links.test.ts holds it to the
+    // table's host). E2E builds claim nothing: they never leave the local
+    // fixture.
+    ...(variant === 'e2e'
+      ? {}
+      : { associatedDomains: ['applinks:opax.com.au'] }),
     privacyManifests: {
       NSPrivacyTracking: false,
       NSPrivacyCollectedDataTypes: analyticsDataTypes,

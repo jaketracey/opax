@@ -1,3 +1,4 @@
 scripts/fixtures/
 tests/fixtures/interests/
 src/features/electorate-map/state-outlines.json
+src/navigation/universal-links.generated.ts

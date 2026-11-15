@@ -3,6 +3,7 @@ import { routePatternFor } from '../analytics/route-patterns';
 import { communityHome } from '../features/community/entry';
 import { fromWebPath } from './external';
 import { inLinkTab } from './link-tab';
+import { openOnWeb, opensInApp, stayPath } from './universal-links';
 import { webOrigin } from '../design/environment';
 import { perfHeap, perfMark } from '../perf/probe';
 /**
@@ -43,7 +44,16 @@ export function resolveSystemPath({
     // Read once, then dropped: the destination never sees the widget marker.
     const widget = url.searchParams.get('src') === 'widget';
     if (widget) url.searchParams.delete('src');
-    const destination = redirect(url, native, initial);
+    // The address as it arrived, for the browser when it stays on the web.
+    const web = new URL(url.href);
+    const placed = { value: false };
+    const destination = redirect(url, native, initial, placed);
+    // An https link the app has no page for (navigation/universal-links.ts)
+    // opens in the browser. A widget's link is the app's own.
+    if (!native && !widget && !(placed.value && opensInApp(web, destination))) {
+      openOnWeb(web);
+      return stayPath(initial);
+    }
     trackLink(
       widget ? 'widget' : native ? 'scheme' : 'universal',
       destination,
@@ -66,7 +76,17 @@ const BILL_LIST_PARAMS = [
   'focus',
 ] as const;
 
-function redirect(url: URL, native: boolean, initial: boolean): string {
+/**
+ * The app path for a link. `placed` is set when a web address was mapped to
+ * its page (the home page, the Bills tab or a resolver's route), not passed
+ * through as an app path of the same spelling.
+ */
+function redirect(
+  url: URL,
+  native: boolean,
+  initial: boolean,
+  placed: { value: boolean },
+): string {
   const route =
     native && url.hostname ? `/${url.hostname}${url.pathname}` : url.pathname;
   if (url.searchParams.has('name')) url.searchParams.delete('name');
@@ -84,10 +104,13 @@ function redirect(url: URL, native: boolean, initial: boolean): string {
   if (
     /^\/(bills|bill-list)\/?$/.test(route) &&
     !BILL_LIST_PARAMS.some((name) => url.searchParams.has(name))
-  )
+  ) {
+    placed.value = true;
     return '/(tabs)/(bills)/bills';
+  }
   const mapped = fromWebPath(`${route}${suffix}`);
   if (mapped) {
+    placed.value = true;
     const params: Record<string, unknown> =
       'params' in mapped ? { ...mapped.params } : {};
     delete params.name;
@@ -110,5 +133,7 @@ function redirect(url: URL, native: boolean, initial: boolean): string {
   // App links to native routes (opax://person/...) are not web paths.
   if (native && /^\/[^/]/.test(route))
     return `${inLinkTab(route, initial)}${suffix}`;
+  // The home page is the app's first page.
+  if (route === '/') placed.value = true;
   return `${route}${suffix}`;
 }

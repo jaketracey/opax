@@ -465,7 +465,6 @@ describe('incoming links open in the tab the shell spec gives them', () => {
         'https://opax.com.au/subject/party/liberal-democratic-party',
         'https://opax.com.au/subject/party/liberal-democrats',
         'https://opax.com.au/subject/party/Liberal%20Democratic%20Party',
-        'https://opax.com.au/party/liberal-democratic-party',
         'https://opax.com.au/subject/party/libertarian-party',
         'opax://party/liberal-democratic-party',
       ])
