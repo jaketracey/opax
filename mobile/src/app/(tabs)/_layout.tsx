@@ -50,12 +50,18 @@ export default function TabsLayout() {
       testID="tab-search"
       role={searchRole ? 'search' : undefined}
       // This trigger also supplies the floating Search button on pushed pages.
-      // Own both effects so returning from another tab resets Search as well.
+      // Own both effects (the pop and the cleared field) so they follow one
+      // rule, the system's: pressed while Search is in front, Search goes
+      // back to its root with an empty field; pressed from another tab, it
+      // opens where it was left (Members stays open under a visit to Bills).
+      // `tabPress` is heard before the tab changes, so `isFocused` says which
+      // tab was in front when it was pressed.
       disablePopToTop
       disableScrollToTop
       listeners={({ navigation, route }) => ({
         tabPress: (event) => {
           if (event.data.isPrevented) return;
+          if (!navigation.isFocused()) return;
           requestSearchTabReset();
           const state: NavigationState = navigation.getState();
           const stack = state.routes.find(

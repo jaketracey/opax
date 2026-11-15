@@ -330,6 +330,8 @@ export function SeatChooser({
     setQuery(text);
     if (text.trim()) setStopKey((n) => n + 1);
   };
+  const short = useShortPlaceholder();
+  const words = vic ? vicCopy : seatCopy;
   // The clearance ends the list above the keyboard where there is a bottom
   // field; there the scroll view must not add its own keyboard inset too.
   const fieldClearsKeyboard = useFieldClearsKeyboard();
