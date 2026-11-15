@@ -305,7 +305,7 @@ function settle(
     const panel = root.findByType(MoneyMapPanel);
     const shown = Math.min(natural.peek, panel.props.maxHeight ?? Infinity);
     act(() =>
-      panel.parent!.props.onLayout({
+      root.findAllByProps({ testID: 'money-map-band' })[0]?.props.onLayout({
         nativeEvent: {
           layout: { y: device.stage - device.bottom - shown, height: shown },
         },

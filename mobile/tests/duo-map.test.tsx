@@ -504,9 +504,11 @@ test.each([
     act(() => {
       top.props.onLayout({ nativeEvent: { layout: { height: 100 } } });
       panel.props.onPeekHeight(120);
-      panel.parent!.props.onLayout({
-        nativeEvent: { layout: { y: 400, height: 140 } },
-      });
+      tree.root
+        .findAllByProps({ testID: 'money-map-band' })[0]
+        ?.props.onLayout({
+          nativeEvent: { layout: { y: 400, height: 140 } },
+        });
     });
     const stage = tree.root.findByType(MoneyMap);
     const view = { width: 380, height: 560, insets: stage.props.insets };
