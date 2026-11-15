@@ -662,7 +662,9 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
 
 const PASSAGE_FILL_TTL = 7 * 86400
 const PASSAGE_FILL_EMPTY_TTL = 86400
-const PASSAGE_FILL_DAILY_READS = 500
+const PASSAGE_FILL_DAILY_READS = 200
+/** A day the allowance ran out is remembered this long, past every community_limits cleanup (they delete by expires_at). */
+const PASSAGE_FILL_CAP_HIT_DAYS = 120
 /**
  * Fill the label-only cards of one page of a speaker search from each record's
  * own text (src/passage-fill.ts). Only a search by speaker does this: that is
@@ -673,6 +675,9 @@ const PASSAGE_FILL_DAILY_READS = 500
  *    /api/resource make). Reads are taken from a daily allowance first,
  *    counted in community_limits like the MCP tier's guard; with no counter,
  *    or once it is spent, no read is made and the card keeps its fallback.
+ *    A day the allowance cut a page short keeps one row,
+ *    passage-fill-cap-hit:<day>, counting the reads refused: numbers only,
+ *    for whoever sets the allowance to see whether it is too small.
  *  - A metered request (MCP: env.KB_METER) reads nothing new. It is served
  *    kept passages only, so a fill never spends a caller's Progress allowance
  *    or turns their search into a limit error.
@@ -702,7 +707,11 @@ async function fillSearchPassages(rows: FillRow[], url: URL, env: Env, ctx: Exec
           .bind(`passage-fill-day:${day}`, n, (day + 1) * 86400).first<{ hits: number }>()
         const hits = row?.hits ?? Infinity
         if (hits >= daily && hits - n < daily) console.warn(JSON.stringify({ kind: 'passage_fill_daily_cap', level: 'warn', day: day * 86400, hits }))
-        return Math.max(0, Math.min(n, daily - (hits - n)))
+        const granted = Math.max(0, Math.min(n, daily - (hits - n)))
+        // The reads the allowance refused today, kept after the day's own counter has gone.
+        if (granted < n) await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET hits=hits+excluded.hits')
+          .bind(`passage-fill-cap-hit:${day}`, n - granted, (day + PASSAGE_FILL_CAP_HIT_DAYS) * 86400).run().catch(() => {})
+        return granted
       },
     }),
   })

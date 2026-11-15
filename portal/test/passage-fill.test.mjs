@@ -58,18 +58,25 @@ globalThis.fetch = async (input, init) => {
 };
 
 // community_limits, as the daily allowance uses it: one counter per key.
-const limits = { hits: new Map(), calls: [] };
+const limits = { hits: new Map(), expires: new Map(), calls: [] };
+const today = () => Math.floor(Date.now() / 86_400_000);
 env.COMMUNITY_DB = { prepare(sql) {
-  assert.match(sql, /^INSERT INTO community_limits\(key,hits,expires_at\) VALUES \(\?,\?,\?\) ON CONFLICT\(key\) DO UPDATE SET hits=hits\+excluded\.hits RETURNING hits$/);
-  return { bind(key, n, expires) { return { async first() {
-    assert.match(key, /^passage-fill-day:\d+$/);
-    assert.ok(expires > Date.now() / 1000, 'the counter expires after today');
-    limits.calls.push(n);
-    limits.hits.set(key, (limits.hits.get(key) || 0) + n);
-    return { hits: limits.hits.get(key) };
-  } }; } };
+  const upsert = /^INSERT INTO community_limits\(key,hits,expires_at\) VALUES \(\?,\?,\?\) ON CONFLICT\(key\) DO UPDATE SET hits=hits\+excluded\.hits( RETURNING hits)?$/.exec(sql);
+  assert.ok(upsert, sql);
+  return { bind(key, n, expires) {
+    const add = () => {
+      assert.match(key, /^passage-fill-(?:day|cap-hit):\d+$/, 'counts only: a kind and a day, never an address or a query');
+      limits.hits.set(key, (limits.hits.get(key) || 0) + n);
+      limits.expires.set(key, expires);
+      return { hits: limits.hits.get(key) };
+    };
+    return {
+      async first() { assert.ok(upsert[1] && key.startsWith('passage-fill-day:')); limits.calls.push(n); return add(); },
+      async run() { assert.ok(!upsert[1] && key.startsWith('passage-fill-cap-hit:')); add(); return { success: true }; },
+    };
+  } };
 } };
-const fresh = () => { limits.hits.clear(); limits.calls = []; };
+const fresh = () => { limits.hits.clear(); limits.expires.clear(); limits.calls = []; };
 const settle = () => new Promise((ok) => setTimeout(ok, 20)); // cache writes go through waitUntil
 
 const search = async (path) => {
@@ -94,6 +101,15 @@ test('the speaker\'s own words, without the header and the label', () => {
   assert.ok(long.length <= 600 && long.endsWith('…'), 'windowed like every other passage');
 });
 
+test('the allowance is 200 reads a day unless the Worker is told otherwise', async () => {
+  const worker = (await import('node:fs')).readFileSync(new URL('src/index.ts', root), 'utf8');
+  assert.match(worker, /\nconst PASSAGE_FILL_DAILY_READS = 200\n/);
+  const config = (await import('node:fs')).readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
+  assert.equal(config.split('"PASSAGE_FILL_DAILY_READS"').length - 1, 2, 'set once for production and once for staging');
+  assert.match(config, /\n    "PASSAGE_FILL_DAILY_READS": "200",\n/);
+  assert.match(config, /"vars": \{ "PASSAGE_FILL_DAILY_READS":"200", "SA_HANSARD_FULL_TEXT"/);
+});
+
 test('a label-only card is filled from the record text; a card with a passage is left alone', async () => {
   fresh(); corpus(101, 103, [102]);
   const rows = bySlug(await search(page()));
@@ -103,6 +119,7 @@ test('a label-only card is filled from the record text; a card with a passage is
   assert.deepEqual(kb.reads.sort(), ['speech-101', 'speech-103'], 'one read per label-only card, none for the card that had a passage');
   assert.equal(kb.find, 1);
   assert.deepEqual(limits.calls, [2], 'the two reads were taken from today\'s allowance, once, before they were made');
+  assert.deepEqual([...limits.hits.keys()], [`passage-fill-day:${today()}`], 'no cap-hit row on a day inside the allowance');
 });
 
 test('a second identical page makes no new reads', async () => {
@@ -154,10 +171,16 @@ test('a spent daily allowance makes no reads; a part-spent one makes only what i
     const rows = await search(page());
     assert.equal(kb.reads.length, 3, 'three reads left today, three made');
     assert.equal(rows.filter((r) => r.snippet).length, 3);
+    // The day the allowance cut a page short is recorded: the reads refused, kept for 120 days.
+    const capHit = `passage-fill-cap-hit:${today()}`;
+    assert.equal(limits.hits.get(capHit), 2, 'two of the five reads were refused');
+    assert.equal(limits.expires.get(capHit), (today() + 120) * 86400, 'kept long past the cleanup of expired counters');
     await settle();
     kb.reads = [];
     const later = await search(page());
     assert.deepEqual(kb.reads, [], 'the allowance is spent: no read');
+    assert.equal(limits.hits.get(capHit), 4, 'a request past the cap adds its refused reads to the same row');
+    assert.deepEqual([...limits.hits.keys()].sort(), [capHit, `passage-fill-day:${today()}`], 'two rows a day, nothing else');
     assert.equal(later.filter((r) => r.snippet).length, 3, 'kept passages are still served');
     assert.equal(later.filter((r) => r.snippet === '').length, 2, 'the others keep the fallback');
     // Turned off outright, or with no counter to take from, nothing is read.
