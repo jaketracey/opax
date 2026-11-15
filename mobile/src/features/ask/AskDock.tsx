@@ -109,6 +109,8 @@ export function composerLines(fontScale: number) {
 }
 /** The share of the visible height the whole composer may take. */
 export const COMPOSER_HEIGHT_SHARE = 0.4;
+/** The field's padding above and below its text (styles.input). */
+export const COMPOSER_FIELD_PADDING = 11;
 /**
  * The field's maximum height (ask.md 2.11, "AX3 and above, composer"). The
  * text keeps the reader's size at every size (DIRECTION: every role scales
@@ -116,13 +118,31 @@ export const COMPOSER_HEIGHT_SHARE = 0.4;
  * far that the whole composer, field and its own chrome (padding, the
  * options line, the options and send row), passes 40% of the height the
  * reader can see: the window, less the keyboard while it is up. Past that
- * the field scrolls inside. It never drops below one 44 pt line.
+ * the field scrolls inside. It never drops below one whole line at the
+ * reader's size, even where 40% has no room for one.
+ *
+ * Lines are counted at the size they are drawn: the reader's own text size,
+ * below the default as well as above it.
+ *
+ * The cap is always a whole number of lines, so the field never ends part
+ * way through one. A draft that fits is its lines and the padding above and
+ * below. One that overflows (`overflowing`) gives up one padding: scrolled
+ * to the top it shows the top padding and whole lines, scrolled to the end
+ * whole lines and the bottom padding. With both paddings kept, the space
+ * of the second showed a slice of the next line (five lines and 9 pt of a
+ * sixth at the default size).
+ *
+ * A draft that fits is never under the touch floor (`composerFieldFloor`).
+ * One that overflows is returned as it is, even under the floor: lifted to
+ * the floor, a one-line field showed a slice of its second line. The field
+ * around it keeps the floor (AskDock).
  */
 export function composerFieldCap({
   fontScale,
   windowHeight,
   keyboard = 0,
   chrome,
+  overflowing = false,
 }: {
   fontScale: number;
   windowHeight: number;
@@ -130,15 +150,37 @@ export function composerFieldCap({
   keyboard?: number;
   /** The composer's height outside the field. */
   chrome: number;
+  /** The draft has more lines than the cap holds. */
+  overflowing?: boolean;
 }): number {
-  const byLines =
-    textStyles.body.lineHeight *
-      Math.max(1, fontScale) *
-      composerLines(fontScale) +
-    20;
+  const line = textStyles.body.lineHeight * fontScale;
   const visible = Math.max(0, windowHeight - keyboard);
   const byHeight = COMPOSER_HEIGHT_SHARE * visible - chrome;
-  return Math.max(minimumTarget, Math.min(byLines, byHeight));
+  const lines = Math.max(
+    1,
+    Math.min(
+      composerLines(fontScale),
+      Math.floor((byHeight - 2 * COMPOSER_FIELD_PADDING) / line),
+    ),
+  );
+  return overflowing
+    ? lines * line + COMPOSER_FIELD_PADDING
+    : Math.max(
+        composerFieldFloor(fontScale),
+        lines * line + 2 * COMPOSER_FIELD_PADDING,
+      );
+}
+/**
+ * The least the field's touch area may be: 44 pt, and on Android 48 dp or
+ * one line with its paddings, whichever is more.
+ */
+export function composerFieldFloor(fontScale: number): number {
+  return Platform.OS === 'android'
+    ? Math.max(
+        48,
+        textStyles.body.lineHeight * fontScale + 2 * COMPOSER_FIELD_PADDING,
+      )
+    : minimumTarget;
 }
 /**
  * Where the caret goes in a draft the reader did not type (an arrival's
@@ -308,12 +350,30 @@ export function AskDock({
     bodyHeight !== null && fieldHeight !== null
       ? Math.max(0, bodyHeight - fieldHeight)
       : 2 * rhythm.line + (line ? 28 + rhythm.line : 0);
-  const maxHeight = composerFieldCap({
+  // What a draft that fits may take, and what one that overflows is held
+  // to: the same whole lines, less one padding (composerFieldCap).
+  const [contentHeight, setContentHeight] = useState(0);
+  const fitHeight = composerFieldCap({
     fontScale,
     windowHeight,
     keyboard,
     chrome,
   });
+  const overflowing = contentHeight > fitHeight + 1;
+  const floor = composerFieldFloor(fontScale);
+  const maxHeight = overflowing
+    ? composerFieldCap({
+        fontScale,
+        windowHeight,
+        keyboard,
+        chrome,
+        overflowing,
+      })
+    : fitHeight;
+  // A short window with the keyboard up can hold one line. One line and
+  // its top padding is under the touch floor: the text view stays that
+  // size, so no slice of the next line shows, and the field keeps the floor.
+  const underFloor = overflowing && maxHeight < floor;
   const spoken = [
     s.fresh ? freshLabel : null,
     ...tags.map((tag) => `${tag.key}, ${tag.value}`),
@@ -499,7 +559,11 @@ export function AskDock({
         <View
           ref={fieldRef}
           testID="ask-field"
-          style={[styles.field, tags.length > 0 ? styles.fieldInset : null]}
+          style={[
+            styles.field,
+            tags.length > 0 ? styles.fieldInset : null,
+            underFloor ? { minHeight: floor } : null,
+          ]}
           onLayout={(e) => setFieldWidth(e.nativeEvent.layout.width)}
         >
           <TextInput
@@ -512,8 +576,9 @@ export function AskDock({
             selection={caretSelection(caret, s.draft)}
             onContentSizeChange={(e) => {
               const { height } = e.nativeEvent.contentSize;
+              setContentHeight(height);
               setCaret((old) =>
-                caretAfterContent(old, s.draft, height, maxHeight),
+                caretAfterContent(old, s.draft, height, fitHeight),
               );
             }}
             onSelectionChange={(e) => {
@@ -552,24 +617,23 @@ export function AskDock({
               if (!s.busy && !empty && !offline) onSend();
             }}
             allowFontScaling
+            // Under the floor the text view is its whole lines only; the
+            // field around it keeps the floor, and a tap in the rest of
+            // it still lands here.
+            hitSlop={underFloor ? { bottom: floor - maxHeight } : undefined}
             style={[
               styles.input,
               { maxHeight },
               Platform.OS === 'android'
-                ? {
-                    minHeight: Math.max(
-                      48,
-                      textStyles.body.lineHeight * fontScale + 22,
-                    ),
-                    maxHeight: Math.max(
-                      maxHeight,
-                      textStyles.body.lineHeight * fontScale + 22,
-                    ),
-                    textAlignVertical: 'top',
-                  }
+                ? { minHeight: floor, textAlignVertical: 'top' }
                 : null,
+              underFloor ? { minHeight: maxHeight } : null,
             ]}
-            onLayout={(e) => setFieldHeight(e.nativeEvent.layout.height)}
+            onLayout={(e) =>
+              setFieldHeight(
+                Math.max(e.nativeEvent.layout.height, underFloor ? floor : 0),
+              )
+            }
             testID="ask-question"
           />
           {drawn ? (
@@ -717,8 +781,8 @@ const styles = StyleSheet.create({
   // (flex here would be vertical, holding typed lines at the minimum).
   input: {
     minHeight: minimumTarget,
-    paddingTop: 11,
-    paddingBottom: 11,
+    paddingTop: COMPOSER_FIELD_PADDING,
+    paddingBottom: COMPOSER_FIELD_PADDING,
     paddingHorizontal: 0,
     ...textStyles.body,
     color: colors.ink,
