@@ -61,8 +61,18 @@ function currentLargeTitle(navigation: object | undefined) {
   return !navigation || searchState(navigation).value.largeTitle !== false;
 }
 
-/** Report scroll state without owning or applying the bar's appearance. */
-export function useRootBarUnderBar(underBar: boolean, enabled = true) {
+/**
+ * Report scroll state without owning or applying the bar's appearance.
+ * With `withdraw`, a reporter that stops (it is no longer enabled, or it
+ * unmounts) takes its report back, so the page is unreported again and the
+ * bar is as it was before it reported. Screen and Ask report for as long
+ * as they are mounted and never withdraw.
+ */
+export function useRootBarUnderBar(
+  underBar: boolean,
+  enabled = true,
+  withdraw = false,
+) {
   const navigation = useContext(NavigationContext);
   useLayoutEffect(() => {
     if (!navigation || !enabled) return;
@@ -71,6 +81,16 @@ export function useRootBarUnderBar(underBar: boolean, enabled = true) {
     state.value = { ...state.value, underBar };
     state.listeners.forEach((listener) => listener());
   }, [navigation, enabled, underBar]);
+  useLayoutEffect(() => {
+    if (!navigation || !enabled || !withdraw) return;
+    return () => {
+      const state = searchState(navigation);
+      if (state.value.underBar === undefined) return;
+      const { underBar: _reported, ...rest } = state.value;
+      state.value = rest;
+      state.listeners.forEach((listener) => listener());
+    };
+  }, [navigation, enabled, withdraw]);
 }
 
 /**

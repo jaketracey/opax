@@ -1,8 +1,8 @@
-import { animatedScroll, useSolidBar } from '../../design/accessibility';
+import { animatedScroll } from '../../design/accessibility';
 import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
-import { useRootBarUnderBar } from '../../navigation/useRootBarAppearance';
+import { useListUnderBar } from '../../navigation/useListUnderBar';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import {
@@ -279,20 +279,22 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   // With Reduce Transparency or Increase Contrast on the bar is solid, not
   // clear, and takes its solid ground only once the list has scrolled under
   // it: at rest that ground covered the large title. This list is not a
-  // Screen, so it says when it has left rest, from the first point of
-  // scroll, as Screen does. With neither setting on nothing is reported:
-  // the fade above follows the scroll on the UI thread alone.
-  const solidBar = useSolidBar();
-  const reportsBar = Platform.OS === 'ios' && solidBar && !pushed;
-  const [underBar, setUnderBar] = useState(false);
-  useRootBarUnderBar(underBar, reportsBar);
+  // Screen, so it says when it has left rest (useListUnderBar). With
+  // neither setting on nothing is reported: the fade above follows the
+  // scroll on the UI thread alone.
+  const underBar = useListUnderBar(!pushed);
   // One scroll handler feeds both: the fade binds itself to the list's
-  // scroll on its first event, and the solid bar hears each side of rest.
-  const onListScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    fadeScroll.onScroll(event);
-    if (reportsBar)
-      setUnderBar(event.nativeEvent.contentOffset.y + headerBottom > 1);
-  };
+  // scroll on its first event, and the solid bar hears where the list is,
+  // which it keeps for a setting that turns on with the list scrolled.
+  const { onScroll: fadeOnScroll } = fadeScroll;
+  const { onScroll: barOnScroll } = underBar;
+  const onListScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      fadeOnScroll(event);
+      barOnScroll(event);
+    },
+    [fadeOnScroll, barOnScroll],
+  );
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -610,7 +612,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         }
         {...(Platform.OS === 'android'
           ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
-          : fades || reportsBar
+          : fades || underBar.reports
             ? { onScroll: onListScroll, scrollEventThrottle: 16 }
             : {})}
         ListHeaderComponentStyle={styles.header}

@@ -34,6 +34,7 @@ import {
 import { moneyItemHref } from './routes';
 import { unnamedRecipient } from './privacy';
 import { money } from './runtime';
+import { useListUnderBar } from '../../navigation/useListUnderBar';
 
 const MERIT =
   'A difference in funding does not establish that a project lacked merit. The government describes this program as delivering election commitments. Assessment scores and unsuccessful applications would be needed to test merit.';
@@ -123,6 +124,11 @@ export default function Allocation() {
       : 'awards',
   );
   const search = useMoneySearch('Projects');
+  // This page has a large title and its list is not a Screen: with Reduce
+  // Transparency or Increase Contrast on, it says when it has scrolled
+  // under the bar, so the bar's solid ground does not cover the title at
+  // rest. With neither on, the list hears no scroll events for it.
+  const underBar = useListUnderBar();
   const years = useMemo(
     () => [
       ...new Set(
@@ -233,6 +239,7 @@ export default function Allocation() {
       <MoneyList
         loaded={!!data}
         id="allocation-list"
+        onScroll={underBar.reports ? underBar.onScroll : undefined}
         rows={rows}
         rowKey={(r) => r.id}
         refreshing={status.refreshing}

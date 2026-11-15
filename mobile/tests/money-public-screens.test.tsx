@@ -96,6 +96,11 @@ jest.mock('../src/api/runtime', () => ({
   apiClient: { get: jest.fn() },
 }));
 jest.mock('../src/features/money-public/runtime', () => ({ money: {} }));
+// The solid-bar scroll report (RT27-title): off unless a test turns it on.
+const mockUnderBar = { reports: false, onScroll: jest.fn() };
+jest.mock('../src/navigation/useListUnderBar', () => ({
+  useListUnderBar: () => mockUnderBar,
+}));
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: () => ({ status: 'none' }),
   savedSeatDirectory: () => null,
@@ -1815,3 +1820,29 @@ test('sweep 2: the four public money pages set their titles at one size, and eve
     await act(async () => r.unmount());
   }
 });
+
+// RT27-title: these two pages have a large title and a list of their own,
+// so with a solid bar they report their scroll; without one they hear none.
+test.each([
+  ['Community funding', Allocation, 'allocation-list'],
+  ['Programs and places', Connections, 'connections-list'],
+] as const)(
+  '%s passes its list the solid bar’s scroll report only while it reports',
+  async (_name, Page, list) => {
+    const scrollOf = (r: TestRenderer.ReactTestRenderer) =>
+      r.root.find((n) => n.props.testID === list && 'data' in n.props).props
+        .onScroll;
+    mockUnderBar.reports = false;
+    const quiet = await mount(Page);
+    expect(scrollOf(quiet)).toBeUndefined();
+    await act(async () => quiet.unmount());
+    mockUnderBar.reports = true;
+    try {
+      const solid = await mount(Page);
+      expect(scrollOf(solid)).toBe(mockUnderBar.onScroll);
+      await act(async () => solid.unmount());
+    } finally {
+      mockUnderBar.reports = false;
+    }
+  },
+);

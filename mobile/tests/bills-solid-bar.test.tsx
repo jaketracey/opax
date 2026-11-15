@@ -99,7 +99,7 @@ const scroll = (renderer: TestRenderer.ReactTestRenderer, y: number) =>
 test('with neither legibility setting on, the list attaches no scroll handler and reports nothing', async () => {
   const renderer = await render(<BillsList />);
   expect(renderer.root.findByType(FlatList).props.onScroll).toBeUndefined();
-  expect(report()).toEqual([false, false]);
+  expect(report()!.slice(0, 2)).toEqual([false, false]);
   await act(async () => renderer.unmount());
 });
 
@@ -107,13 +107,13 @@ test('with a solid bar, the list reports when it has scrolled under the bar and 
   mockSolidBar = true;
   const renderer = await render(<BillsList />);
   // At rest: reporting, and not under the bar, so the large title shows.
-  expect(report()).toEqual([false, true]);
+  expect(report()!.slice(0, 2)).toEqual([false, true]);
   expect(renderer.root.findByType(FlatList).props.scrollEventThrottle).toBe(16);
   scroll(renderer, 400);
-  expect(report()).toEqual([true, true]);
+  expect(report()!.slice(0, 2)).toEqual([true, true]);
   // Back above the bar's foot (the list's own top inset): at rest again.
   scroll(renderer, -400);
-  expect(report()).toEqual([false, true]);
+  expect(report()!.slice(0, 2)).toEqual([false, true]);
   await act(async () => renderer.unmount());
 });
 
@@ -121,6 +121,34 @@ test('a pushed bill list is not the tab’s root and reports nothing', async () 
   mockSolidBar = true;
   const renderer = await render(<PushedBillsList />);
   expect(renderer.root.findByType(FlatList).props.onScroll).toBeUndefined();
-  expect(report()).toEqual([false, false]);
+  expect(report()!.slice(0, 2)).toEqual([false, false]);
   await act(async () => renderer.unmount());
+});
+
+test('a setting that turns on with the list already scrolled makes the bar solid at once, with no scroll', async () => {
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
+  try {
+    const renderer = await render(<BillsList />);
+    const list = () => renderer.root.findByType(FlatList);
+    // Under a clear bar the list hears its scroll for the fade; where it
+    // does not, the list is unheard until the setting is on.
+    const heard = typeof list().props.onScroll === 'function';
+    if (heard) scroll(renderer, 400);
+    mockSolidBar = true;
+    await act(async () => renderer.update(<BillsList />));
+    const [underBar, enabled] = report()!;
+    if (heard) {
+      // Solid at once: the page is known to be under the bar.
+      expect([underBar, enabled]).toEqual([true, true]);
+    } else {
+      // Not known: unreported, so the bar keeps its solid ground.
+      expect(enabled).toBe(false);
+      scroll(renderer, 400);
+      expect(report()!.slice(0, 2)).toEqual([true, true]);
+    }
+    await act(async () => renderer.unmount());
+  } finally {
+    Object.defineProperty(Platform, 'Version', version);
+  }
 });
