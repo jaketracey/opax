@@ -13,6 +13,11 @@ import {
 import { catalogs as runtime } from '../src/api/runtime';
 import BillDetail from '../src/features/bills/BillDetail';
 import BillsList, { PushedBillsList } from '../src/features/bills/BillsList';
+import * as accessibility from '../src/design/accessibility';
+import {
+  resetAdaptiveDeviceForTests,
+  setWindowTraitsOverride,
+} from '../src/design/adaptive';
 import { pinned, pinnedBytes, slugs } from './pinned';
 
 const mockParams: { key: string } = { key: 'au-federal-r7501' };
@@ -20,9 +25,14 @@ jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
-  router: { push: jest.fn() },
+  router: { push: jest.fn(), setParams: jest.fn() },
   useNavigation: () => ({ setParams: jest.fn() }),
   useIsFocused: () => true,
+  // The split layout: run the focus effect as an effect.
+  useFocusEffect: (effect: () => void | (() => void)) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    (require('react') as typeof import('react')).useEffect(effect, [effect]);
+  },
   // The bill page's bottom toolbar, and rows that link through Link.
   Stack: {
     Screen: () => null,
@@ -244,3 +254,72 @@ test.each([
     }
   },
 );
+
+// A split's list pane (iPad) runs under the window's clear bar with no bar
+// of its own: its scrolled rows showed behind the status bar's clock (iOS
+// 27.2, build 87). The list's own fade now runs in the pane, over the list
+// alone, and not when the bar is solid.
+describe('the Bills list in a split', () => {
+  const split = async (solid: boolean) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const solidBar = jest
+      .spyOn(accessibility, 'useSolidBar')
+      .mockReturnValue(solid);
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 1024, height: 1366, scale: 2, fontScale: 1 });
+    act(() => {
+      resetAdaptiveDeviceForTests();
+      setWindowTraitsOverride({
+        horizontal: 'regular',
+        vertical: 'regular',
+        foldable: false,
+      });
+    });
+    const renderer = await render(<BillsList />);
+    const pane = renderer.root.findAll(
+      (node) =>
+        node.props.testID === 'bills-split-list' &&
+        typeof node.type === 'string',
+    );
+    const layers = (root: ReactTestInstance) =>
+      root.findAll(
+        (node) =>
+          node.props.testID === 'bar-fade' && typeof node.type === 'string',
+      );
+    const read = {
+      panes: pane.length,
+      inPane: pane[0] ? layers(pane[0]).length : 0,
+      everywhere: layers(renderer.root).length,
+      scrolls: typeof renderer.root.findAll(
+        (node) => node.props.testID === 'bills-screen' && !!node.props.data,
+      )[0]!.props.onScroll,
+    };
+    act(() => renderer.unmount());
+    act(() => {
+      setWindowTraitsOverride(undefined);
+      resetAdaptiveDeviceForTests();
+    });
+    solidBar.mockRestore();
+    Object.defineProperty(Platform, 'Version', version);
+    return read;
+  };
+
+  test('under the clear bar the fade is drawn once, inside the list pane, and follows the list', async () => {
+    const read = await split(false);
+    expect(read.panes).toBe(1);
+    expect(read.inPane).toBe(1);
+    expect(read.everywhere).toBe(1);
+    expect(read.scrolls).toBe('function');
+  });
+
+  test('with Reduce Transparency or Increase Contrast on the bar is solid and nothing is drawn over the list', async () => {
+    const read = await split(true);
+    expect(read.panes).toBe(1);
+    expect(read.everywhere).toBe(0);
+  });
+});

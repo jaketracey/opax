@@ -271,19 +271,21 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   // The tab root's clear bar: the list fades into the page's ground behind
   // the title and the bar buttons once rows are under them (the inline
   // title printed over bill names, iOS 27). A pushed list sits below an
-  // opaque bar, the Duo's rail root under a solid one, and a split pane
-  // keeps its own bar.
+  // opaque bar, and the Duo's rail root under a solid one.
   const headerBottom = useHeaderBottom();
   const onRail = useVerticalBarEdge() !== 'unspecified';
   // The pushed list is under the stack's clear bar off the rail, and
   // fades as the root does; beside the rail its bar is solid.
   const clearPushed = usePushedClearFade();
+  // A split's list pane (iPad, the unfolded Duo) runs under the same clear
+  // bar with no bar of its own: without the fade its scrolled rows showed
+  // behind the status bar's clock (iOS 27.2, build 87). The fade is drawn
+  // inside the pane, over the list alone.
   const fades =
     clearBars &&
     Platform.OS === 'ios' &&
     glassBar() &&
     (!pushed || clearPushed) &&
-    !adaptive &&
     !onRail;
   const fadeScroll = useBarFadeScroll(fades);
   // With Reduce Transparency or Increase Contrast on the bar is solid, not
@@ -639,14 +641,15 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       ? { kind: 'bill', key: first.key, title: billName(first) }
       : null;
   }
+  const fade = fades ? (
+    <ClearBarFade y={fadeScroll.y} bottom={headerBottom} ground="paper" />
+  ) : null;
   if (!adaptive)
     return (
       <>
         <RouteOptions options={options} />
         {listView}
-        {fades ? (
-          <ClearBarFade y={fadeScroll.y} bottom={headerBottom} ground="paper" />
-        ) : null}
+        {fade}
       </>
     );
   return (
@@ -655,7 +658,12 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <SplitLayout<BillEntry>
         id="bills"
         testID="bills-split"
-        list={listView}
+        list={
+          <>
+            {listView}
+            {fade}
+          </>
+        }
         selected={selected}
         // The pane never opens empty while the scope has rows.
         initialSelection={firstEntry}
