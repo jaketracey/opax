@@ -93,8 +93,9 @@ and never start it.
    on `tests/fixtures/exception-scrub-cases.json` and expects what
    `exceptions.ts` and `events.ts` keep, as `tests/native-scrub.test.ts` does
    for Swift. A second test, which runs everywhere, checks that the Kotlin
-   field lists name the same keys, in the same order, as `frameFields`,
-   `mechanismFields`, `imageFields` and `sdkProperties`. The first needs Java
+   field lists name the same keys, in the same order, as `jsFrameFields`,
+   `appleFrameFields`, `javaFrameFields`, `mechanismFields`, `imageFields`
+   and `sdkProperties`. The first needs Java
    17 or later and skips without it, saying why in its name and on stderr (the
    Mac's Java is 1.8). `OPAX_REQUIRE_KOTLIN_SCRUB=1` makes a missing compiler or
    Java fail instead. For b71 it is a named pre-submit step, with its output in
