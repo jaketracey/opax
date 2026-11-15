@@ -32,6 +32,7 @@ import {
   partyName,
   topicNames,
 } from '../reports/model';
+import accepted from './voice-party-accepted.json';
 
 const yearSource = shape({
   slug: nonempty,
@@ -151,72 +152,80 @@ export function rosterMatch(
 }
 /** The roster fields a voice's party is proved from. */
 export interface VoiceRosterRow {
-  party?: string | null;
-  party_now?: string | null;
-  parties?: readonly string[];
   affiliations?: readonly {
     party: string;
     start?: string | null;
     end?: string | null;
+    jurisdiction?: string;
   }[];
   states?: readonly string[];
   first?: number;
   last?: number;
 }
-const partySet = (values: readonly (string | null | undefined)[]) =>
-  new Set(values.map((v) => v?.trim()).filter((v): v is string => !!v));
 /**
- * The party the roster proves a person sat for in a year, or null.
+ * The party the roster's DATED record proves a person sat for in a year, or
+ * null.
  *
  * The roster's `party` is the label most of a person's speeches carry over
- * their whole record, and `party_now` is today's. Neither is dated, so
- * neither is the party at the time for anyone who changed party or sat in
- * two parliaments, and a wrong party is worse than none. This answers in two
- * cases only, for a year inside the person's record:
- *  - dated: the row carries dated affiliations, and every one that overlaps
- *    the year names the same party;
- *  - single: no dated affiliations, one party over the whole record
- *    (`party`, `party_now` and `parties` agree) in a single parliament.
+ * their whole record, and `party_now` is today's. Neither is dated, and eras
+ * of unlabelled speeches hide a change of party, so a single recorded label
+ * is not proof of the party in any one year. A wrong party is worse than
+ * none: this never reads `party`, `party_now` or `parties`.
+ *
+ * It answers only from dated affiliations, for a full name (a single-token
+ * name is a surname stub) and a year inside the person's record, where:
+ *  - every affiliation that overlaps the year names the same party; and
+ *  - the affiliations speak for every parliament the row records, so a
+ *    namesake in another parliament folded into the row is not given it.
  *
  * The year files are filled by the same rule (roster_party in
  * scripts/generate_years.py); change them together.
  */
-export function rosterPartyAt(row: VoiceRosterRow, year: number) {
+export function rosterPartyAt(name: string, row: VoiceRosterRow, year: number) {
+  if (!name.trim().includes(' ')) return null;
   if (year < (row.first ?? year) || year > (row.last ?? year)) return null;
-  const only = (parties: Set<string>) =>
-    parties.size === 1 ? [...parties][0]! : null;
-  if (row.affiliations?.length) {
-    const yearOf = (day: string) => Number(day.slice(0, 4));
-    return only(
-      partySet(
-        row.affiliations
-          .filter(
-            (a) =>
-              (!a.start || yearOf(a.start) <= year) &&
-              (!a.end || year <= yearOf(a.end)),
-          )
-          .map((a) => a.party),
-      ),
-    );
-  }
-  return row.states?.length === 1
-    ? only(partySet([row.party, row.party_now, ...(row.parties ?? [])]))
-    : null;
+  const dated = row.affiliations ?? [];
+  const spoken = new Set(dated.map((a) => a.jurisdiction));
+  if (
+    !dated.length ||
+    !row.states?.length ||
+    !row.states.every((state) => spoken.has(state))
+  )
+    return null;
+  const yearOf = (day: string) => Number(day.slice(0, 4));
+  const parties = new Set(
+    dated
+      .filter(
+        (a) =>
+          (!a.start || yearOf(a.start) <= year) &&
+          (!a.end || year <= yearOf(a.end)),
+      )
+      .map((a) => a.party.trim())
+      .filter(Boolean),
+  );
+  return parties.size === 1 ? [...parties][0]! : null;
 }
+const acceptedParties = new Map(
+  accepted.rows.map((r) => [`${r.year} ${r.name.trim()}`, r.party.trim()]),
+);
 /**
  * A voice's party. The year's own speech labels come first: they are the
  * party the person spoke for that year. Many speeches carry no label (most
- * Senate rows, ministers at the table), so a joined parliamentarian then
- * takes the party the roster proves for that year, and no party otherwise.
+ * Senate rows, ministers at the table). A joined parliamentarian then takes
+ * a reviewed row (voice-party-accepted.json) or the party the roster's dated
+ * record proves for that year, and no party otherwise.
  */
 export function voiceParty(
-  voice: { party: string | null },
+  voice: { name: string; party: string | null },
   year: number,
   row: VoiceRosterRow | null,
 ): string | null {
   const recorded = voice.party?.trim();
   if (recorded) return partyName(recorded);
-  const party = row ? rosterPartyAt(row, year) : null;
+  if (!row) return null;
+  const party =
+    acceptedParties.get(`${year} ${voice.name.trim()}`) ??
+    rosterPartyAt(voice.name, row, year);
   return party ? partyName(party) : null;
 }
 /** "Statements by Members", from "Scott Buchholz \u2014 Statements by Members \u2014 2025-02-10". */
