@@ -23,12 +23,19 @@ interface VisitFile extends Visit {
   version: 1;
 }
 
+/**
+ * Set when a copy read from the disk still carries a visit time
+ * (`openedAt`, from builds 77 to 82): `rememberVisit` then clears it.
+ */
+let carriesVisitTime = false;
+
 const store = new TwoSlotStore<VisitFile>(
   ['opax-today-visit-v1.json', 'opax-today-visit-v1.b.json'],
   (raw) => {
     if (!raw || typeof raw !== 'object') return null;
     // An older record's `openedAt` is not read and not carried on.
     const { version, total, checkedAt } = raw as Record<string, unknown>;
+    if ('openedAt' in raw) carriesVisitTime = true;
     return version === 1 &&
       typeof total === 'number' &&
       Number.isSafeInteger(total) &&
@@ -46,12 +53,32 @@ export async function readVisit(): Promise<Visit | null> {
   return file ? { total: file.total, checkedAt: file.checkedAt } : null;
 }
 
-/** Keeps this copy for the next launch; a failed save changes nothing. */
+/**
+ * Keeps this copy for the next launch; a failed save changes nothing.
+ *
+ * The record is two alternating copies, and a save writes only the older
+ * one, so after an upgrade the other copy would keep its visit time until
+ * some later save. The first save after the upgrade therefore saves twice:
+ * the second write lands on what is by then the older copy, the one still
+ * carrying the time, so neither copy has it afterwards. Each write still
+ * goes to the older copy only, so the newest whole copy is never at risk.
+ */
 export async function rememberVisit(visit: Visit): Promise<void> {
   // Only the total and its date: nothing else a caller holds is written.
-  await store
-    .save({ version: 1, total: visit.total, checkedAt: visit.checkedAt })
-    .catch(() => undefined);
+  const file: VisitFile = {
+    version: 1,
+    total: visit.total,
+    checkedAt: visit.checkedAt,
+  };
+  try {
+    await store.save(file);
+    // Does a copy on the disk still carry a visit time?
+    carriesVisitTime = false;
+    await store.read();
+    if (carriesVisitTime) await store.save(file);
+  } catch {
+    // A failed save changes nothing; the next save tries again.
+  }
 }
 
 /**
