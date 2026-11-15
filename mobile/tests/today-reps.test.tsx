@@ -420,16 +420,23 @@ describe('Today’s representatives group', () => {
     test('dissolved: four lines in order, and nobody is called a member', async () => {
       const renderer = await card({ stateForm: DISSOLVED });
       expect(words(renderer)).toEqual([
-        'Victoria ·\u00a0Legislative Assembly',
+        'Victoria\u00a0·\u00a0Legislative Assembly',
         'Essendon',
         'Assembly dissolved for the 28 November election',
         expect.stringMatching(new RegExp(`^Last member: ${last}, \\w+`)),
       ]);
       expect(words(renderer)).toEqual([...dissolvedEssendon]);
-      // The dot is bound to "Legislative" (at AX3 it ended the line), and
-      // the house's two words still break at their own space.
-      expect(words(renderer)[0]).toMatch(/ ·\u00a0Legislative Assembly$/);
-      expect(words(renderer)[0]).not.toMatch(/· /);
+      // The dot is bound on both sides: it never ends a line (AX3, build 81)
+      // or starts one (AX3, build 82). The only break is the house's own
+      // space: "Victoria · Legislative" over "Assembly", or one line.
+      expect(words(renderer)[0]).toBe(
+        'Victoria\u00a0·\u00a0Legislative Assembly',
+      );
+      expect(words(renderer)[0]).not.toMatch(/ ·|· /);
+      expect(words(renderer)[0].split(' ')).toEqual([
+        'Victoria\u00a0·\u00a0Legislative',
+        'Assembly',
+      ]);
       expect(stateLines_(renderer).map((t) => t.props.testID)).toEqual(
         [1, 2, 3, 4].map((n) => `today-rep-state-line-${n}`),
       );
@@ -443,6 +450,53 @@ describe('Today’s representatives group', () => {
       await act(async () => renderer.unmount());
     });
 
+    test.each([
+      ['AX3', 2.643],
+      ['AX5', 3.571],
+    ])(
+      'at %s the house line stacks its two parts with no dot, in the row and in its held place; it is spoken as at every size',
+      async (_size, fontScale) => {
+        dimensions.mockReturnValue({
+          width: 402,
+          height: 874,
+          scale: 3,
+          fontScale,
+        });
+        const renderer = await card({ stateForm: DISSOLVED });
+        // "Victoria · Legislative" is wider than the column there: no dot
+        // is drawn, so none ends a line or starts one.
+        expect(words(renderer)[0]).toBe('Victoria\nLegislative Assembly');
+        expect(words(renderer).slice(1)).toEqual(dissolvedEssendon.slice(1));
+        const row = renderer.root.find(
+          (n) =>
+            n.props.testID === 'today-rep-state-dissolved' &&
+            typeof n.props.accessibilityLabel === 'string',
+        );
+        expect(row.props.accessibilityLabel).toBe(
+          linesLabel(dissolvedEssendon),
+        );
+        expect(row.props.accessibilityLabel).toMatch(
+          /^Victoria, Legislative Assembly\. /,
+        );
+        // The held place wraps as the row does: the same drawn line.
+        const held = pendingGroup({
+          state: true,
+          senators: true,
+          lines: dissolvedEssendon,
+        });
+        expect(
+          held.root
+            .findAllByType(NativeText)
+            .filter((n) => n.props.testID === 'today-rep-state-line-1')
+            .map((n) => n.props.children),
+        ).toEqual(['Victoria\nLegislative Assembly']);
+        await act(async () => {
+          renderer.unmount();
+          held.unmount();
+        });
+      },
+    );
+
     test('neutral: with no election record and nothing kept, the row states the roster’s dated record and makes no current-member claim', async () => {
       const form = stateForm(
         essendon,
@@ -453,7 +507,7 @@ describe('Today’s representatives group', () => {
       expect(form).toEqual({ kind: 'neutral' });
       const renderer = await card({ stateForm: form });
       expect(words(renderer)).toEqual([
-        'Victoria ·\u00a0Legislative Assembly',
+        'Victoria\u00a0·\u00a0Legislative Assembly',
         'Essendon',
         expect.stringMatching(
           new RegExp(`^On the roster at 9 Sep 2026: ${last}, \\w+$`),

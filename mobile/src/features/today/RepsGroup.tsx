@@ -148,7 +148,18 @@ export interface LinesRep {
 
 /** The lines as one spoken label, in order. */
 export function linesLabel(lines: readonly string[]): string {
-  return `${lines.map((line) => line.replace(/ ·[ \u00a0]/, ', ')).join('. ')}.`;
+  return `${lines.map((line) => line.replace(/[ \u00a0]·[ \u00a0]/, ', ')).join('. ')}.`;
+}
+
+/**
+ * The row's first line as drawn. At the accessibility sizes "Victoria ·
+ * Legislative" is wider than the column, so no binding can keep the dot off
+ * a line's end or start (build 81 and 82 sweeps, AX3): there the two parts
+ * stack, as side-by-side parts do at those sizes, and the dot is not drawn.
+ * Spoken, the line is the same at every size (linesLabel).
+ */
+export function drawnHouseLine(line: string, stacked: boolean): string {
+  return stacked ? line.replace(/[ \u00a0]·[ \u00a0]/, '\n') : line;
 }
 
 /** The lines row's frame, shared by the row and its held place. */
@@ -179,7 +190,7 @@ function LinesFrame({
               style={held ? styles.boneLine : undefined}
               testID={`today-rep-state-line-${index + 1}`}
             >
-              {line}
+              {index === 0 ? drawnHouseLine(line, stacked) : line}
             </Text>
             {held ? <View style={[styles.boneBar, styles.boneWide]} /> : null}
           </View>
