@@ -4792,7 +4792,7 @@ async function subjectMentions(name, container, heading, moneyContext = false, {
     const items = rows.map((r) => `
       <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(person ? (heldBackHelpers?.mentionTitleCase || String)(mentionTitle(r)) : displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
-        <p class="snippet">${esc(String(r.snippet || "").trim().slice(0, 220) || (r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage."))}</p>${excerptNoticeHTML(r)}</li>`).join("");
+        <p class="snippet">${esc(cleanPassage(r.snippet).slice(0, 220) || (r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage."))}</p>${excerptNoticeHTML(r)}</li>`).join("");
     container.insertAdjacentHTML("beforeend",
       `<div class="entry-section-head"><h2 class="subject-section-title">${esc(heading)}</h2>
         <a href="${esc(searchHash(`"${name}"`, {}))}">All mentions</a></div>
@@ -7163,6 +7163,25 @@ function topicTideHTML(data, slug, phrase) {
    on a committee transcript, the hearing's context block and the witness's
    name ("[Legal and Constitutional … Police] Ms Barrett : Thank you"). None
    of that is the speech. Display only; exports and citations quote the record. */
+// speaker-label:begin
+// One definition of a transcript's speaker label, held as a copy in
+// src/search-passages.ts and public/app.js; test/search-quality.test.mjs keeps
+// the two copies identical. A label is a title, at most a name and any number
+// of parentheticals, then a colon: "Senator ADA QUILL:", "The PRESIDENT:",
+// "Mr ALBANESE (Grayndler—Prime Minister) (14:02):", "Dr de Brouwer:".
+const LABEL_TITLES = ['the hon\\.?', 'hon\\.?', 'mr', 'mrs', 'ms', 'miss', 'dr', 'prof\\.?', 'professor', 'senator', 'madam', 'rev\\.?',
+  '(?:deputy |assistant |acting )?commissioner', '(?:lieutenant |major )?general', 'brigadier', '(?:vice |rear )?admiral', 'air (?:chief |vice )?marshal',
+  '(?:the )?(?:acting |deputy )?(?:chair|president|speaker)']
+  .map(title => title.replace(/[a-z]/g, letter => '[' + letter + letter.toUpperCase() + ']').replace(/ /g, '\\s+')).join('|')
+const LABEL_NAME = "(?:\\s+(?:[A-Z][A-Za-z'’.\\-]*|de|van|von|la|le|di|da|du|der|den|del))"
+const LABEL_CORE = '(?:' + LABEL_TITLES + ')' + LABEL_NAME + '{0,5}\\s*(?:\\([^)]{0,80}\\)\\s*)*'
+/** The whole text is a label. */
+const SPEAKER_LABEL = new RegExp('^' + LABEL_CORE + ':$')
+/** A label opens the text; what follows is what the speaker said. */
+const SPEAKER_LABEL_LEAD = new RegExp('^' + LABEL_CORE + ':\\s*')
+/** The "[committee, date, portfolio, agency]" block a committee transcript puts above a turn. */
+const HEARING_HEADER = /^\[[^\]]{0,400}\]\s*/
+// speaker-label:end
 function cleanPassage(text) {
   let raw = String(text || "").replace(/\b(?:the\s+)?full\s+listing\s+can\s+be\s+found\s+at\s*:?\s*(?:\[[^\]\n]*\]\(https?:\/\/[^\s)]+\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>]+)\.?/gi, '');
   // A heading the source glued above the passage: "Gambling\n\nGambling is also…"
@@ -7181,10 +7200,10 @@ function cleanPassage(text) {
   s = s.replace(/^(?:mr|mrs|ms|miss|dr|prof\.?|senator|chair|the chair)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*)?\s*:\s+/i, "");
   s = s.replace(/^[:;,—–\-\s]+/, "");
   // A passage that is only the label of who is about to speak ("Senator DAVID
-  // POCOCK:", "CHAIR:") has no words of the record in it.
-  // An honorific, then at most a name and a parenthetical, then the colon.
-  const label = /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?|(?:the\s+)?(?:acting\s+|deputy\s+)?chair)(?=[\s:(])(.*)$/i.exec(s);
-  if (label && /^(?:\s+[A-Z][A-Za-z'’.\-]*){0,5}\s*(?:\([^)]{0,80}\)\s*)?:$/.test(label[1])) return "";
+  // POCOCK:", "The PRESIDENT:") has no words of the record in it; a label that
+  // opens a passage gives way to what was said.
+  if (SPEAKER_LABEL.test(s)) return "";
+  s = s.replace(SPEAKER_LABEL_LEAD, "");
   return s;
 }
 /* A committee record's title in a result list. Estimates get the short form
@@ -13093,7 +13112,7 @@ function renderResults(results) {
         ? `<div id="search-passage-${index}" class="search-result-text snippet division-markdown">${billNoteHTML(r.snippet)}</div>`
         : searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(brief)}</p>`
-        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="visually-hidden">From the record: </span>` : ""}${passageText ? highlightHTML(passageText, lastSearch.query) : esc(r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage.")}</p>`;
+        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" && passageText ? `<span class="visually-hidden">From the record: </span>` : ""}${passageText ? highlightHTML(passageText, lastSearch.query) : esc(r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage.")}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}`
         : isCommitteeChamber(r.chamber) ? committeeResultTitle(displayTitle(r)) : displayTitle(r);
       // RecordRow (§5.2): kind · date · place above the title, then who spoke.

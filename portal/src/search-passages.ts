@@ -17,17 +17,39 @@ export function passageTerms(q: string, speaker?: string | null): string[] {
   return phrases.length ? phrases : words(q).filter((w) => w.length >= 3)
 }
 
+// speaker-label:begin
+// One definition of a transcript's speaker label, held as a copy in
+// src/search-passages.ts and public/app.js; test/search-quality.test.mjs keeps
+// the two copies identical. A label is a title, at most a name and any number
+// of parentheticals, then a colon: "Senator ADA QUILL:", "The PRESIDENT:",
+// "Mr ALBANESE (Grayndler—Prime Minister) (14:02):", "Dr de Brouwer:".
+const LABEL_TITLES = ['the hon\\.?', 'hon\\.?', 'mr', 'mrs', 'ms', 'miss', 'dr', 'prof\\.?', 'professor', 'senator', 'madam', 'rev\\.?',
+  '(?:deputy |assistant |acting )?commissioner', '(?:lieutenant |major )?general', 'brigadier', '(?:vice |rear )?admiral', 'air (?:chief |vice )?marshal',
+  '(?:the )?(?:acting |deputy )?(?:chair|president|speaker)']
+  .map(title => title.replace(/[a-z]/g, letter => '[' + letter + letter.toUpperCase() + ']').replace(/ /g, '\\s+')).join('|')
+const LABEL_NAME = "(?:\\s+(?:[A-Z][A-Za-z'’.\\-]*|de|van|von|la|le|di|da|du|der|den|del))"
+const LABEL_CORE = '(?:' + LABEL_TITLES + ')' + LABEL_NAME + '{0,5}\\s*(?:\\([^)]{0,80}\\)\\s*)*'
+/** The whole text is a label. */
+const SPEAKER_LABEL = new RegExp('^' + LABEL_CORE + ':$')
+/** A label opens the text; what follows is what the speaker said. */
+const SPEAKER_LABEL_LEAD = new RegExp('^' + LABEL_CORE + ':\\s*')
+/** The "[committee, date, portfolio, agency]" block a committee transcript puts above a turn. */
+const HEARING_HEADER = /^\[[^\]]{0,400}\]\s*/
+// speaker-label:end
+export { SPEAKER_LABEL, SPEAKER_LABEL_LEAD, HEARING_HEADER }
+
 /**
- * A paragraph that only names who is about to speak: an honorific, at most a
- * name and a parenthetical, then a colon and nothing else. "Senator ADA
- * QUILL:", "CHAIR:", "Ms Barrett (Fremantle):". A sentence that happens to end
- * in a colon ("I have three questions for the department:") is the record's
- * own words. The page's cleanPassage (public/app.js) uses the same definition.
+ * A paragraph with none of the record's words in it: only the label that names
+ * who is about to speak, with or without the hearing header above it, or the
+ * header alone. "[Finance … Commission] Senator ADA QUILL:" is one; a sentence
+ * that happens to end in a colon ("I have three questions for the
+ * department:") is the record's own words.
  */
 export function isSpeakerLabel(text: string): boolean {
   const t = text.replace(/\s+/g, ' ').trim()
-  const label = /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?|(?:the\s+)?(?:acting\s+|deputy\s+)?chair)(?=[\s:(])(.*)$/i.exec(t)
-  return !!label && /^(?:\s+[A-Z][A-Za-z'’.\-]*){0,5}\s*(?:\([^)]{0,80}\)\s*)?:$/.test(label[1])
+  let bare = t
+  while (HEARING_HEADER.test(bare)) bare = bare.replace(HEARING_HEADER, '')
+  return bare ? SPEAKER_LABEL.test(bare) : t.length > 0
 }
 
 export type ScoredPassage = { text: string; score: number }
