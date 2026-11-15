@@ -13,7 +13,9 @@ import { exploreScreens } from './explore';
 import { learnScreens } from './learn';
 import { filtersScreens } from './filters';
 import { referenceSharedScreens } from './reference';
-import type { TabSegment } from '../chrome';
+import { cloneElement, type ReactElement } from 'react';
+import type { NativeStackNavigationOptions } from 'expo-router';
+import { solidRailBar, type TabSegment } from '../chrome';
 
 const tabRoots = {
   '(today)': 'index',
@@ -64,6 +66,41 @@ export function sharedScreens(
   const root = tabRootName(segment);
   return [
     ...screens.filter((screen) => screen.props.name === root),
-    ...screens.filter((screen) => screen.props.name !== root),
+    ...screens
+      .filter((screen) => screen.props.name !== root)
+      .map((screen) =>
+        underBar && railSearchRoutes.has(screen.props.name)
+          ? withSolidRailBar(screen)
+          : screen,
+      ),
   ];
+}
+
+/**
+ * Pushed pages whose bar always holds a search field. Beside a vertical bar
+ * such a bar is solid (see RouteOptions), and the page says so only once it
+ * has rendered: the pushed Bills list was drawn under the clear bar for a
+ * frame and laid out again below the solid one, redrawing its scope control
+ * (1 of 2 opens on the simulator). Their routes carry the solid bar from the
+ * stack's first layout, as the directory and Just declared already do.
+ */
+const railSearchRoutes = new Set([
+  'bill-list',
+  'person/[slug]/votes',
+  'division-history',
+  'grants',
+  'grant-program',
+  'agencies',
+  'learn/glossary',
+]);
+
+type StackScreen = ReactElement<{
+  name: string;
+  options: (props: object) => NativeStackNavigationOptions;
+}>;
+function withSolidRailBar(screen: StackScreen) {
+  const { options } = screen.props;
+  return cloneElement(screen, {
+    options: (props: object) => ({ ...options(props), ...solidRailBar(true) }),
+  });
 }

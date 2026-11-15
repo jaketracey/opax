@@ -363,7 +363,20 @@ test.each([
       expect('headerTransparent' in tabEdition).toBe(!underBar);
       // The directory and Just declared hold their band open with a search
       // field and pin sticky section headers: a solid, backed bar there.
-      for (const name of ['directory', 'declarations']) {
+      // So do the pushed pages whose bar always holds a field, from the
+      // stack's first layout: set later, the pushed Bills list was drawn
+      // under the clear bar for a frame and laid out again.
+      for (const name of [
+        'directory',
+        'declarations',
+        'bill-list',
+        'person/[slug]/votes',
+        'division-history',
+        'grants',
+        'grant-program',
+        'agencies',
+        'learn/glossary',
+      ]) {
         const list = (
           tabs.children as React.ReactElement<{
             name: string;
