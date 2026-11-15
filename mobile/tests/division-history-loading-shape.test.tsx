@@ -220,3 +220,37 @@ test.each([
     }
   },
 );
+
+test('offline with a few saved bills, the page says so plainly and keeps the saved date', async () => {
+  const saved: DivisionRecord = {
+    ...record,
+    loaded: 3,
+    total: 1012,
+    failed: 1009,
+    stale: true,
+    savedAt: Date.UTC(2026, 10, 14),
+    offline: true,
+  };
+  const r = await render(saved);
+  const partial = r.root.findAll(
+    (node) =>
+      node.props.testID === 'division-history-partial' &&
+      typeof node.props.message === 'string',
+  );
+  expect(partial[0]!.props.message).toBe(
+    'Votes from the 3 bills saved on this iPhone.',
+  );
+  expect(host(r, 'division-history-offline').length).toBeGreaterThan(0);
+  // Online, a partial read still counts what could not be loaded.
+  await act(async () => r.unmount());
+  const online = await render({ ...saved, offline: false, stale: false });
+  expect(
+    online.root.findAll(
+      (node) =>
+        node.props.testID === 'division-history-partial' &&
+        typeof node.props.message === 'string',
+    )[0]!.props.message,
+  ).toBe('Votes from 3 of 1,012 bills. 1,009 couldn’t be loaded.');
+  expect(host(online, 'division-history-offline')).toHaveLength(0);
+  await act(async () => online.unmount());
+});

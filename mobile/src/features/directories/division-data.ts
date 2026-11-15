@@ -14,6 +14,8 @@ export interface DivisionRecord {
   stale: boolean;
   savedAt: number;
   partial: boolean;
+  /** Read with no connection: only the bills saved on the device. */
+  offline?: boolean;
 }
 /** Bill files in flight at once. */
 const CONCURRENCY = 8;
@@ -134,6 +136,7 @@ export async function readDivisionHistory(
     throw new ApiError('http', 'Bill division records could not be loaded.');
   }
   throwIfAborted(signal);
+  if (savedOnly) view.offline = true;
   // Candidate order in, so the rows are the same whichever read lands first.
   view.rows = divisionRows(files.filter((file) => file !== undefined));
   publish?.(view);

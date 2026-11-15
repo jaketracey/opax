@@ -290,6 +290,8 @@ test('offline, a bill saved from its own page still shows, whatever place it hol
   expect(record.loaded).toBe(1);
   expect(record.failed).toBe(candidates.length - 1);
   expect(record.stale).toBe(true);
+  // The page says these are the saved bills, not that the rest failed.
+  expect(record.offline).toBe(true);
   expect(record.rows.length).toBeGreaterThan(0);
   expect(new Set(record.rows.map((row) => row.billKey))).toEqual(
     new Set([opened.key]),

@@ -1037,9 +1037,6 @@ function StatusEventBone({
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       testID="bill-status-pending"
-      // Stacked at accessibility sizes, the bar hugs its words as the event
-      // will, not the column's width.
-      style={styles.capsule}
     >
       <Text variant="secondary" tabular wordSafe style={styles.unseen}>
         {statusEventText(event)}
