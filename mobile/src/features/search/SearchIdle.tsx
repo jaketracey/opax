@@ -1,6 +1,12 @@
 import { ElectionSearchRow } from '../vic-election/SearchRow';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import type { BillIndex } from '../../api/catalog-decoders';
 import { catalogs } from '../../api/runtime';
 import type { EditionView } from '../../api/selectors';
@@ -30,6 +36,17 @@ type Browse = {
 };
 /** A Try row's title clamps here at every text size. */
 export const TRY_TITLE_LINES = 2;
+/**
+ * Android's largest text sizes stop at 2.0, so a bill title there wraps
+ * further instead of ending in "L.." against the chevron. iOS keeps the
+ * two-line clamp at every size (its AX sizes run to nine lines).
+ */
+export const TRY_TITLE_LINES_ANDROID_LARGE = 6;
+export function tryTitleLines(os: string, fontScale: number): number {
+  return os === 'android' && fontScale > 1.3
+    ? TRY_TITLE_LINES_ANDROID_LARGE
+    : TRY_TITLE_LINES;
+}
 
 /** Browse, fixed order, each pushing inside the current tab. */
 export const browseRows: readonly Browse[] = [
@@ -169,6 +186,7 @@ export function SearchIdle({
   visited?: boolean;
 }) {
   const recent = useRecentSearches();
+  const { fontScale } = useWindowDimensions();
   const member = useContext(MyMemberContext) ?? null;
   const inputs = useTryInputs(bills, billsSettled, visited);
   const tries = useMemo(
@@ -251,7 +269,7 @@ export function SearchIdle({
               // A bill's full title ran to nine lines at AX3, one row filling
               // the screen under the field (sweep 2, item 8.3). The whole
               // title stays in the label and on the page it opens.
-              titleLines={TRY_TITLE_LINES}
+              titleLines={tryTitleLines(Platform.OS, fontScale)}
               detail={row.detail}
               symbol={row.symbol}
               accessibilityLabel={`${row.title}, ${row.detail}`}
