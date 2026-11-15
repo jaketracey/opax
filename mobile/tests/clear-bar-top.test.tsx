@@ -113,7 +113,7 @@ describe('a late scroll view under the clear bar', () => {
     const page = screen(true);
     expect(page.scroll().props.contentOffset).toBeUndefined();
     page.at(-58);
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => jest.advanceTimersByTime(450));
     expect(page.scroll().props.contentOffset).toEqual({ x: 0, y: -82 });
     act(() => page.renderer.unmount());
   });
@@ -210,35 +210,71 @@ describe('the rest check ends with the settling', () => {
     act(() => view.renderer.unmount());
   });
 
-  test('seen at rest, then moved without a drag (VoiceOver), it is left alone', () => {
+  test('at rest first and carried past it afterwards, it is still corrected', () => {
+    // The race as captured: rest, then 24 pt past it, with no reader.
     const view = page();
     view.at(-82);
+    view.at(-58);
+    act(() => jest.advanceTimersByTime(450));
+    expect(view.scroll().props.contentOffset).toEqual({ x: 0, y: -82 });
+    act(() => view.renderer.unmount());
+  });
+
+  test('once settled, a scroll that begins no drag (VoiceOver) is left alone', () => {
+    const view = page();
+    view.at(-82);
+    act(() => jest.advanceTimersByTime(3000));
     view.at(-60);
-    act(() => jest.advanceTimersByTime(1000));
     act(() => listeners.transitionEnd!());
+    act(() => jest.advanceTimersByTime(3000));
     expect(view.scroll().props.contentOffset).toBeUndefined();
     act(() => view.renderer.unmount());
   });
 
   test('after the settling time, coming back from another page corrects nothing', () => {
     const view = page();
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => jest.advanceTimersByTime(3000));
     view.at(-40);
     act(() => listeners.transitionEnd!());
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => jest.advanceTimersByTime(3000));
     expect(view.scroll().props.contentOffset).toBeUndefined();
     act(() => view.renderer.unmount());
   });
 
-  test('it corrects once: the reader may then scroll back into the range', () => {
+  test('carried off again after a correction, it is corrected again', () => {
+    // The prop only acts when it changes, so each correction is a new value.
     const view = page();
     view.at(-58);
     act(() => jest.advanceTimersByTime(450));
-    const corrected = view.scroll().props.contentOffset;
-    expect(corrected).toEqual({ x: 0, y: -82 });
-    view.at(-30);
-    act(() => jest.advanceTimersByTime(1000));
-    expect(view.scroll().props.contentOffset).toBe(corrected);
+    const first = view.scroll().props.contentOffset;
+    expect(first.y).toBeCloseTo(-82, 1);
+    view.at(-58);
+    act(() => listeners.transitionEnd!());
+    const second = view.scroll().props.contentOffset;
+    expect(second.y).toBeCloseTo(-82, 1);
+    expect(second.y).not.toBe(first.y);
+    act(() => view.renderer.unmount());
+  });
+
+  test('a push that ends late is still looked at, and a moment after', () => {
+    const view = page();
+    view.at(-82);
+    act(() => jest.advanceTimersByTime(1600));
+    act(() => listeners.transitionEnd!());
+    expect(view.scroll().props.contentOffset).toBeUndefined();
+    view.at(-58);
+    act(() => jest.advanceTimersByTime(300));
+    expect(view.scroll().props.contentOffset.y).toBeCloseTo(-82, 1);
+    act(() => view.renderer.unmount());
+  });
+
+  test('a drag ends it at once', () => {
+    const view = page();
+    act(() => view.scroll().props.onScrollBeginDrag());
+    view.at(-58);
+    act(() => listeners.transitionEnd!());
+    act(() => jest.advanceTimersByTime(3000));
+    expect(view.scroll().props.contentOffset).toBeUndefined();
     act(() => view.renderer.unmount());
   });
 });

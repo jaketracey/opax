@@ -284,8 +284,10 @@ function useSolidRailBacking(): boolean {
   return !presentation || presentation === 'card';
 }
 
-/** How long after mount a late scroll view may still be settling (ms). */
-const restChecks = [400, 900];
+/** When a late scroll view is looked at after mount (ms). */
+const restChecks = [400, 900, 1500];
+/** After this long from mount the page has settled, and is the reader's. */
+const restWindow = 2500;
 
 /**
  * A scroll view that mounts after its page is already on screen (a skeleton
@@ -295,9 +297,9 @@ const restChecks = [400, 900];
  * under the title band, and UIKit's two inset steps (the 24 pt safe area,
  * then the band) are a race with the push: it has been left 24 pt past rest,
  * its heading under the band's edge (party page, b71 review).
- * This watches the offset and, once, while it settles (under a second from
- * mount) and before the reader moves it, puts a view found between rest and
- * 0 back at rest. `contentOffset` is the command: the prop
+ * This watches the offset and, while it settles (the first seconds from
+ * mount) and until the reader drags, puts a view found between rest and 0
+ * back at rest. `contentOffset` is the command: the prop
  * sets the native offset unclamped, where `scrollTo` needs overflow enabled.
  * Spread `props` on the scroll view; inert under an opaque bar.
  */
@@ -305,48 +307,52 @@ export function useClearBarRest() {
   const top = useClearBarTop();
   const navigation = useContext(NavigationContext);
   const y = useRef<number | null>(null);
-  // The check is over: the view was seen at rest, the reader moved it, the
-  // correction was made, or the settling time passed. Nothing after that is
-  // this hook's business, a VoiceOver scroll (which begins no drag) and a
-  // return from another page included.
+  // The check is over once the reader drags or the settling time has passed.
+  // Nothing after that is this hook's business: a VoiceOver scroll (which
+  // begins no drag) once the page has settled, and a return from another
+  // page, are left alone.
   const done = useRef(false);
   const [offset, setOffset] = useState<{ x: number; y: number } | undefined>();
   const check = useCallback(() => {
     if (!top || done.current || y.current === null) return;
-    if (y.current > -top + underBarSlack && y.current <= 0) {
-      done.current = true;
-      setOffset({ x: 0, y: -top });
-    }
+    if (y.current > -top + underBarSlack && y.current <= 0)
+      // The prop only acts when it changes, and UIKit can carry the view off
+      // again after a correction: a hundredth of a point makes each one new.
+      setOffset((now) => ({ x: 0, y: now?.y === -top ? -top - 0.01 : -top }));
   }, [top]);
   useEffect(() => {
     if (!top) return;
-    const timers = restChecks.map((ms, index) =>
+    const timers = restChecks.map((ms) => setTimeout(check, ms));
+    timers.push(
       setTimeout(() => {
         check();
-        if (index === restChecks.length - 1) done.current = true;
-      }, ms),
+        done.current = true;
+      }, restWindow),
     );
+    // The view is carried off as the push ends, which under load is later
+    // than any fixed time from mount (3 of 10 opens were missed without
+    // this); look then, and once more when that has had time to land.
     const end = (
       navigation as
         | {
             addListener?: (name: string, listener: () => void) => () => void;
           }
         | undefined
-    )?.addListener?.('transitionEnd', check);
+    )?.addListener?.('transitionEnd', () => {
+      check();
+      timers.push(setTimeout(check, 250));
+    });
     return () => {
       timers.forEach(clearTimeout);
       end?.();
     };
   }, [top, check, navigation]);
-  const track = useCallback(
-    (offsetY: number) => {
-      if (done.current) return;
-      y.current = offsetY;
-      // At rest: UIKit placed it, and any later offset is the reader's.
-      if (top && offsetY <= -top + underBarSlack) done.current = true;
-    },
-    [top],
-  );
+  const track = useCallback((offsetY: number) => {
+    // Being seen at rest ends nothing: in the race the view is at rest
+    // first and is carried 24 pt past it afterwards (6 of 10 opens were
+    // left there when rest ended the check).
+    if (!done.current) y.current = offsetY;
+  }, []);
   const drag = useCallback(() => {
     done.current = true;
   }, []);
