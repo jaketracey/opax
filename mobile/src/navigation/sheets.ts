@@ -91,8 +91,13 @@ export function presentSheet(payload: SheetPayload): void {
   }[payload.kind];
   router.push(route);
 }
-/** How long UIKit takes to dismiss a sheet, with room (as TalkScreen waits). */
-export const SHEET_DISMISS_MS = 500;
+/**
+ * How long a sheet opened from a closing sheet waits. UIKit's dismissal is
+ * about half a second from the native commit; 500 ms from the tap was too
+ * short on a loaded iOS 18.4 simulator (the report sheet never opened, as
+ * the library's early return predicts), and 900 ms opened it.
+ */
+export const SHEET_DISMISS_MS = 900;
 let leaving = false;
 
 /**
@@ -111,7 +116,7 @@ let leaving = false;
  * drops a modal presented then (RNSScreenStack.mm, `beingDismissed`) and
  * leaves its stack waiting, so no later sheet opens there either. No event
  * reaches JS when a sheet closed from JS has gone, so this waits out the
- * dismissal.
+ * dismissal (SHEET_DISMISS_MS).
  *
  * A second call while one is pending is ignored: a double tap must not close
  * two screens or open the page twice.

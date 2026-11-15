@@ -66,7 +66,9 @@ test('a sheet is presented only once the closing sheet’s dismissal has ended',
   jest.advanceTimersByTime(1);
   expect(order).toEqual(['back', 'push']);
   expect(router.push).toHaveBeenCalledWith({ pathname: '/ask-report' });
-  expect(SHEET_DISMISS_MS).toBeGreaterThanOrEqual(500);
+  // 500 ms was too short on a loaded iOS 18.4 simulator: the sheet never
+  // opened. Keep room above the dismissal's own half second.
+  expect(SHEET_DISMISS_MS).toBeGreaterThanOrEqual(900);
 });
 
 test.each(['page', 'sheet'] as const)(
