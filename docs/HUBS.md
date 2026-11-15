@@ -175,6 +175,83 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | The West Party | WEST | The West Party | neutral |
   | Victorian Socialists | VS | Victorian Socialists | neutral |
 
+- `vic-candidate-links-2026.json`, from `node scripts/vic_candidate_links.mjs`:
+  the reviewed mapping of VEC candidates to the 128 roster members. A wrong link
+  would put another person's parliamentary record beside a candidate, so nothing
+  is matched at request time. The build links a candidate only when the pair is
+  in this committed file and a fresh match of the current lists and roster still
+  supports it. An entry that no longer holds is never published and stops the
+  build with its reason, so a stale mapping is noticed: rerun the script, review
+  the diff and commit it.
+
+  A pair is **verified** only when the VEC name equals the roster name or a
+  roster alias (after folding case, accents, apostrophes and punctuation), the
+  candidate stands in the seat the member held on the roster, the VEC registered
+  party and the roster party are the same party under the existing label
+  aliases, and nothing else is in doubt. Every other name match is **ambiguous**
+  and is never linked: a name variant, a different seat, a different or blank
+  party, the same name on the VEC lists twice, a name matching two members, or a
+  name that also has a record in another parliament.
+
+  | | Count |
+  | --- | ---: |
+  | Candidates on the VEC lists | 1,037 |
+  | Verified by the rule and linked | 92 |
+  | Ambiguous by the rule, linked after a recorded review | 8 |
+  | Ambiguous, not linked | 0 |
+  | No name match with a roster member | 937 |
+  | Members marked "Not a candidate in 2026" | 27 |
+  | Members held by a reviewed exception (no link, no mark) | 1 |
+  | Members left unmarked for a person to check | 0 |
+
+  The eight reviewed pairs (16 November 2026) are members who changed seat,
+  house or party, a name variant and a federal namesake: Geelong (COUZENS,
+  Christine), Mornington (CREWTHER, Chris), Preston (FOWLES, William), Ringwood
+  (McGOWAN, Nick), Eastern Victoria (ERDOGAN, Enver), North-Eastern Metropolitan
+  (BATCHELOR, Ryan), Northern Metropolitan (MCINTOSH, Tom) and Western
+  Metropolitan (DEEMING, Moira). Each entry in `reviewed` keeps the rule's
+  reasons and the public sources relied on, with the words quoted.
+  "Not a candidate in 2026" rests on the VEC lists, which are final now that
+  nominations have closed. The member has no name match, and no remaining
+  candidate in any seat of either house shares a surname with the member's name
+  or an alias: then the lists alone support the mark (20 members, including one
+  with no further source recorded). Given names, seats and parties are not used
+  to tell people apart, because a member can nominate under a formal given
+  name, elsewhere, with no registered party; only a candidate verified as
+  another roster member is set aside. Where a same-surname candidate remains,
+  the mark also needs a person's dated check (`reviewed_on`,
+  `review_evidence`) and a public source that the member is not standing, kept
+  in `sources` with the words quoted. A `quote` is text as it appears on the
+  page, with no inserts; a table row is labelled as one. A `finding` is our own
+  reading of a list (the VEC candidate lists) and never stands alone. Seven members are marked that way:
+  Jackson Taylor, Maree Edwards, Tim Bull, Mary-Anne Thomas, Michael O'Brien,
+  Darren Cheeseman and Joe McCracken.
+
+  A member in `held` is never linked and never marked: the seat keeps its
+  present wording by a reviewed exception until a person decides otherwise.
+  One seat is held (Brunswick). A test checks that every member of every seat
+  is in exactly one state: linked, marked or held.
+  A separate test reads all 1,037 VEC rows and fails if any marked member is on
+  them under an exact surname and given-name comparison (case, apostrophes and
+  hyphens normalised), in any seat of either house. Source quotes and notes
+  give no one a current office.
+
+  To settle an ambiguous pair, a person moves it to `reviewed` with
+  `reviewed_on` (a date), `review_evidence` (what was checked) and `sources`:
+  at least one https address of a party, member or news source that names the
+  person and the seat, with the words relied on in `quote`. To settle a member
+  in `members_to_check`, they add the member to `not_candidate` with
+  `reviewed_on`, `review_evidence` and `sources`. The build accepts no other route, reruns keep these entries,
+  and `portal/test/vic-candidate-links.test.mjs` pins the linked set, so each
+  promotion is also a reviewed test change. After a refreshed VEC list, rerun
+  the script, review the diff and commit it;
+  `node scripts/vic_candidate_links.mjs --check` fails on a stale file.
+
+  A linked candidate's name is a plain text link to the profile the roster
+  member's name already opens. The row is otherwise identical to every other
+  candidate's: no portrait, colour or position change. The app endpoints do not
+  carry the link or the mark; their candidate and member fields are unchanged.
+
 The optional **`scripts/hubs/vic-results-2026.json`** is the after-poll results
 input. It is absent before acquisition, so no results section is rendered.
 Use the [2026 results runbook](reports/2026-11-14-vic-after-poll.md#results-data-path-and-rehearsal)

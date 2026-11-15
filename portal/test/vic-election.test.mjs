@@ -183,7 +183,7 @@ test('individual donor data is absent outside official candidate lists, with no 
   // Their existing roster identity is allowed only in its member context.
   const memberNames=new Set(data.seats.flatMap(s=>s.members.map(m=>personNameKey(m.name))));
   for(const name of individuals)if(!memberNames.has(personNameKey(name)))assert.ok(!all.includes(name),name);
-  for(const s of data.seats)for(const m of s.members)assert.deepEqual(Object.keys(m).sort(),['name','party','href','source_url','speeches','speech_gap','votes','detailed_count','divisions'].sort());
+  for(const s of data.seats)for(const m of s.members)assert.deepEqual(Object.keys(m).sort(),['name','party','href','source_url','speeches','speech_gap','votes','detailed_count','divisions',...m.not_candidate?['not_candidate']:[]].sort());
   // Results keep parties and shares only: no candidate names.
   for(const s of data.seats.filter(s=>s.result))for(const c of [s.result.general,s.result.since].filter(Boolean))assert.deepEqual(Object.keys(c).sort(),['date','kind','party','share','against','against_share','margin','url'].sort());
   const full=JSON.stringify(data)+[null,...data.seats].map(s=>renderVicElection(data,s).html).join('\n');
@@ -329,7 +329,8 @@ test('published VEC input covers every seat and renders district and region cand
   for(const seat of data.seats){
     const list=source[seat.kind==='district'?'districts':'regions'][seat.name];
     assert.ok(list.length>0,seat.name);
-    assert.deepEqual(seat.candidates,{published:source.published,url:seat.source_url+'/nominations',list});
+    // The VEC fields are the source's; the only addition is a reviewed link to a roster member's record (vic-candidate-links.test.mjs).
+    assert.deepEqual({...seat.candidates,list:seat.candidates.list.map(({href,...c})=>c)},{published:source.published,url:seat.source_url+'/nominations',list});
   }
   for(const name of ['Albert Park','Eastern Victoria']){
     const seat=data.seats.find(s=>s.name===name);

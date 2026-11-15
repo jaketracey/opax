@@ -1,0 +1,2216 @@
+{
+  "note": "Written by scripts/vic_candidate_links.mjs and reviewed before commit. The election build links only \"verified\" and \"reviewed\" pairs and shows \"Not a candidate in 2026\" only for \"not_candidate\" members; \"ambiguous\" and \"members_to_check\" are for a person to check and are never published; a member in \"held\" is never linked or marked. See docs/HUBS.md.",
+  "candidates_published": "2026-11-11",
+  "candidates_source": "https://www.vec.vic.gov.au/voting/2026-state-election",
+  "counts": {
+    "candidates": 1037,
+    "members": 128,
+    "verified": 92,
+    "ambiguous": 0,
+    "unmatched": 937,
+    "not_candidate": 27,
+    "unresolved": 0,
+    "reviewed": 8,
+    "linked": 100,
+    "held": 1
+  },
+  "verified": [
+    {
+      "candidate_id": "district:albert-park:taylor-nina",
+      "person_id": "person_65138932b2a8547397e0b76a",
+      "seat": "Albert Park District",
+      "candidate": "TAYLOR, Nina",
+      "member": "Nina Taylor",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Albert Park District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/nina-taylor/"
+      }
+    },
+    {
+      "candidate_id": "district:ashwood:fregon-matt",
+      "person_id": "person_6624fae1bd945e65bd4b9de4",
+      "seat": "Ashwood District",
+      "candidate": "FREGON, Matt",
+      "member": "Matt Fregon",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Ashwood District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/matt-fregon/"
+      }
+    },
+    {
+      "candidate_id": "district:bellarine:marchant-alison",
+      "person_id": "person_0d5e3625ae2656c68f22ed25",
+      "seat": "Bellarine District",
+      "candidate": "MARCHANT, Alison",
+      "member": "Alison Marchant",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Bellarine District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/alison-marchant/"
+      }
+    },
+    {
+      "candidate_id": "district:bentleigh:staikos-nick",
+      "person_id": "person_1343a110e01555f1b16b6698",
+      "seat": "Bentleigh District",
+      "candidate": "STAIKOS, Nick",
+      "member": "Nick Staikos",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Bentleigh District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/nick-staikos/"
+      }
+    },
+    {
+      "candidate_id": "district:berwick:battin-brad",
+      "person_id": "person_fbe54ff1edbe586b930043c7",
+      "seat": "Berwick District",
+      "candidate": "BATTIN, Brad",
+      "member": "Brad Battin",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Berwick District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/brad-battin/"
+      }
+    },
+    {
+      "candidate_id": "district:box-hill:hamer-paul",
+      "person_id": "person_af0d5d874dc654fd8fe26670",
+      "seat": "Box Hill District",
+      "candidate": "HAMER, Paul",
+      "member": "Paul Hamer",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Box Hill District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/paul-hamer/"
+      }
+    },
+    {
+      "candidate_id": "district:brighton:newbury-james",
+      "person_id": "person_4eb1e59426b95253999ee67b",
+      "seat": "Brighton District",
+      "candidate": "NEWBURY, James",
+      "member": "James Newbury",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Brighton District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/james-newbury/"
+      }
+    },
+    {
+      "candidate_id": "district:broadmeadows:matthews-ward-kathleen",
+      "person_id": "person_7c6b9c7470b75777b5d3d6e6",
+      "seat": "Broadmeadows District",
+      "candidate": "MATTHEWS-WARD, Kathleen",
+      "member": "Kathleen Matthews-Ward",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Broadmeadows District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/kathleen-matthews-ward/"
+      }
+    },
+    {
+      "candidate_id": "district:bulleen:guy-matthew",
+      "person_id": "person_a1e96b1a4397515eae81ff66",
+      "seat": "Bulleen District",
+      "candidate": "GUY, Matthew",
+      "member": "Matthew Guy",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Bulleen District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/matthew-guy/"
+      }
+    },
+    {
+      "candidate_id": "district:bundoora:brooks-colin",
+      "person_id": "person_8dac684303b55754aeb79f26",
+      "seat": "Bundoora District",
+      "candidate": "BROOKS, Colin",
+      "member": "Colin Brooks",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Bundoora District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/colin-brooks/"
+      }
+    },
+    {
+      "candidate_id": "district:carrum:kilkenny-sonya",
+      "person_id": "person_d8e48b42b5f2554fab9e5303",
+      "seat": "Carrum District",
+      "candidate": "KILKENNY, Sonya",
+      "member": "Sonya Kilkenny",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Carrum District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/sonya-kilkenny/"
+      }
+    },
+    {
+      "candidate_id": "district:caulfield:southwick-david",
+      "person_id": "person_b56121dfd6b356b49884e002",
+      "seat": "Caulfield District",
+      "candidate": "SOUTHWICK, David",
+      "member": "David Southwick",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Caulfield District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/david-southwick/"
+      }
+    },
+    {
+      "candidate_id": "district:clarinda:tak-meng-heang",
+      "person_id": "person_015ef68f2471549dba00b285",
+      "seat": "Clarinda District",
+      "candidate": "TAK, Meng Heang",
+      "member": "Meng Heang Tak",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Clarinda District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/meng-heang-tak/"
+      }
+    },
+    {
+      "candidate_id": "district:cranbourne:richards-pauline",
+      "person_id": "person_da76b0f4e65257c2a2a9acdd",
+      "seat": "Cranbourne District",
+      "candidate": "RICHARDS, Pauline",
+      "member": "Pauline Richards",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Cranbourne District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/pauline-richards/"
+      }
+    },
+    {
+      "candidate_id": "district:dandenong:williams-gabrielle",
+      "person_id": "person_34f2fa87db2c554bb111cf99",
+      "seat": "Dandenong District",
+      "candidate": "WILLIAMS, Gabrielle",
+      "member": "Gabrielle Williams",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Dandenong District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/gabrielle-williams/"
+      }
+    },
+    {
+      "candidate_id": "district:eildon:mcleish-cindy",
+      "person_id": "person_a321da318cb455ea833b1b0e",
+      "seat": "Eildon District",
+      "candidate": "MCLEISH, Cindy",
+      "member": "Cindy McLeish",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Eildon District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/cindy-mcleish/"
+      }
+    },
+    {
+      "candidate_id": "district:eltham:ward-vicki",
+      "person_id": "person_9892c9e7d4425816afb87eb3",
+      "seat": "Eltham District",
+      "candidate": "WARD, Vicki",
+      "member": "Vicki Ward",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Eltham District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/vicki-ward/"
+      }
+    },
+    {
+      "candidate_id": "district:eureka:settle-michaela",
+      "person_id": "person_7049a10c1e1b5180b7668e58",
+      "seat": "Eureka District",
+      "candidate": "SETTLE, Michaela",
+      "member": "Michaela Settle",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Eureka District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/michaela-settle/"
+      }
+    },
+    {
+      "candidate_id": "district:euroa:cleeland-annabelle",
+      "person_id": "person_2343d4acf23f5802928c509c",
+      "seat": "Euroa District",
+      "candidate": "CLEELAND, Annabelle",
+      "member": "Annabelle Cleeland",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Euroa District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/annabelle-cleeland/"
+      }
+    },
+    {
+      "candidate_id": "district:evelyn:vallence-bridget",
+      "person_id": "person_7b734a9904ab59e8846acb9a",
+      "seat": "Evelyn District",
+      "candidate": "VALLENCE, Bridget",
+      "member": "Bridget Vallence",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Evelyn District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/bridget-vallence/"
+      }
+    },
+    {
+      "candidate_id": "district:footscray:hall-katie",
+      "person_id": "person_7f6257d413985f53b397a722",
+      "seat": "Footscray District",
+      "candidate": "HALL, Katie",
+      "member": "Katie Hall",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Footscray District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/katie-hall/"
+      }
+    },
+    {
+      "candidate_id": "district:frankston:edbrooke-paul",
+      "person_id": "person_69a6a10aa6335d25bd99a0d4",
+      "seat": "Frankston District",
+      "candidate": "EDBROOKE, Paul",
+      "member": "Paul Edbrooke",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Frankston District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/paul-edbrooke/"
+      }
+    },
+    {
+      "candidate_id": "district:gippsland-south:obrien-danny",
+      "person_id": "person_9f783de32abd5d2ba4cf449c",
+      "seat": "Gippsland South District",
+      "candidate": "O'BRIEN, Danny",
+      "member": "Danny O'Brien",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Gippsland South District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/danny-obrien/"
+      }
+    },
+    {
+      "candidate_id": "district:glen-waverley:mullahy-john",
+      "person_id": "person_8a2b833ce98e5a80b133e718",
+      "seat": "Glen Waverley District",
+      "candidate": "MULLAHY, John",
+      "member": "John Mullahy",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Glen Waverley District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/john-mullahy/"
+      }
+    },
+    {
+      "candidate_id": "district:greenvale:walters-iwan",
+      "person_id": "person_9ab57da959775d4385e2098f",
+      "seat": "Greenvale District",
+      "candidate": "WALTERS, Iwan",
+      "member": "Iwan Walters",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Greenvale District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/iwan-walters/"
+      }
+    },
+    {
+      "candidate_id": "district:hastings:mercurio-paul",
+      "person_id": "person_ec8885afee0557cdb4f3a000",
+      "seat": "Hastings District",
+      "candidate": "MERCURIO, Paul",
+      "member": "Paul Mercurio",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Hastings District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/paul-mercurio/"
+      }
+    },
+    {
+      "candidate_id": "district:hawthorn:pesutto-john",
+      "person_id": "person_980861cacba95c0f9d68c14d",
+      "seat": "Hawthorn District",
+      "candidate": "PESUTTO, John",
+      "member": "John Pesutto",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Hawthorn District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/john-pesutto/"
+      }
+    },
+    {
+      "candidate_id": "district:ivanhoe:carbines-anthony",
+      "person_id": "person_9b2a12b3a4ba58a2afcdd3e9",
+      "seat": "Ivanhoe District",
+      "candidate": "CARBINES, Anthony",
+      "member": "Anthony Carbines",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Ivanhoe District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/anthony-carbines/"
+      }
+    },
+    {
+      "candidate_id": "district:kalkallo:spence-ros",
+      "person_id": "person_c01a94ea6f0854eeb56ef5ad",
+      "seat": "Kalkallo District",
+      "candidate": "SPENCE, Ros",
+      "member": "Ros Spence",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Kalkallo District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/ros-spence/"
+      }
+    },
+    {
+      "candidate_id": "district:kew:wilson-jess",
+      "person_id": "person_66fa34c179df576ea8da1a86",
+      "seat": "Kew District",
+      "candidate": "WILSON, Jess",
+      "member": "Jess Wilson",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Kew District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/jess-wilson/"
+      }
+    },
+    {
+      "candidate_id": "district:kororoit:grigorovitch-luba",
+      "person_id": "person_1af557b522c4555490a5e3b7",
+      "seat": "Kororoit District",
+      "candidate": "GRIGOROVITCH, Luba",
+      "member": "Luba Grigorovitch",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Kororoit District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/luba-grigorovitch/"
+      }
+    },
+    {
+      "candidate_id": "district:lara:george-ella",
+      "person_id": "person_0cc39f5b022c5089b2f576f2",
+      "seat": "Lara District",
+      "candidate": "GEORGE, Ella",
+      "member": "Ella George",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Lara District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/ella-george/"
+      }
+    },
+    {
+      "candidate_id": "district:laverton:connolly-sarah",
+      "person_id": "person_d8ef9c606865585aaa0ddde4",
+      "seat": "Laverton District",
+      "candidate": "CONNOLLY, Sarah",
+      "member": "Sarah Connolly",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Laverton District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/sarah-connolly/"
+      }
+    },
+    {
+      "candidate_id": "district:lowan:kealy-emma",
+      "person_id": "person_724914df64f85f1c9701e20b",
+      "seat": "Lowan District",
+      "candidate": "KEALY, Emma",
+      "member": "Emma Kealy",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Lowan District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/emma-kealy/"
+      }
+    },
+    {
+      "candidate_id": "district:melbourne:sandell-ellen",
+      "person_id": "person_2b4da74e6da7597a8da34fb6",
+      "seat": "Melbourne District",
+      "candidate": "SANDELL, Ellen",
+      "member": "Ellen Sandell",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Melbourne District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Greens Victoria",
+          "roster": "Greens"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/ellen-sandell/"
+      }
+    },
+    {
+      "candidate_id": "district:mildura:benham-jade",
+      "person_id": "person_931112b56b60532ba81d7102",
+      "seat": "Mildura District",
+      "candidate": "BENHAM, Jade",
+      "member": "Jade Benham",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Mildura District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/jade-benham/"
+      }
+    },
+    {
+      "candidate_id": "district:monbulk:de-martino-daniela",
+      "person_id": "person_aa806ed99c4557b9b22b3ee4",
+      "seat": "Monbulk District",
+      "candidate": "DE MARTINO, Daniela",
+      "member": "Daniela De Martino",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Monbulk District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/daniela-de-martino/"
+      }
+    },
+    {
+      "candidate_id": "district:mordialloc:richardson-tim",
+      "person_id": "person_317c53cfe9295b7c85030584",
+      "seat": "Mordialloc District",
+      "candidate": "RICHARDSON, Tim",
+      "member": "Tim Richardson",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Mordialloc District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/tim-richardson/"
+      }
+    },
+    {
+      "candidate_id": "district:morwell:cameron-martin",
+      "person_id": "person_0be176bd3f715e68b205b76e",
+      "seat": "Morwell District",
+      "candidate": "CAMERON, Martin",
+      "member": "Martin Cameron",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Morwell District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/martin-cameron/"
+      }
+    },
+    {
+      "candidate_id": "district:mulgrave:foster-eden",
+      "person_id": "person_202970b1b2ec5ce78364f535",
+      "seat": "Mulgrave District",
+      "candidate": "FOSTER, Eden",
+      "member": "Eden Foster",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Mulgrave District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/eden-foster/"
+      }
+    },
+    {
+      "candidate_id": "district:narracan:farnham-wayne",
+      "person_id": "person_514a687edd7c5d4ba9ec3e55",
+      "seat": "Narracan District",
+      "candidate": "FARNHAM, Wayne",
+      "member": "Wayne Farnham",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Narracan District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/wayne-farnham/"
+      }
+    },
+    {
+      "candidate_id": "district:narre-warren-north:wilson-belinda",
+      "person_id": "person_25b3319f49bb5922b94edb1a",
+      "seat": "Narre Warren North District",
+      "candidate": "WILSON, Belinda",
+      "member": "Belinda Wilson",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Narre Warren North District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/belinda-wilson/"
+      }
+    },
+    {
+      "candidate_id": "district:nepean:marsh-anthony",
+      "person_id": "person_402484c02884583483e01e35",
+      "seat": "Nepean District",
+      "candidate": "MARSH, Anthony",
+      "member": "Anthony Marsh",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Nepean District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/anthony-marsh/"
+      }
+    },
+    {
+      "candidate_id": "district:niddrie:carroll-ben",
+      "person_id": "person_217d2254eeaf52d79ecbf754",
+      "seat": "Niddrie District",
+      "candidate": "CARROLL, Ben",
+      "member": "Ben Carroll",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Niddrie District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/ben-carroll/"
+      }
+    },
+    {
+      "candidate_id": "district:northcote:theophanous-kat",
+      "person_id": "person_d27c03d6370d5d27ac65a9b6",
+      "seat": "Northcote District",
+      "candidate": "THEOPHANOUS, Kat",
+      "member": "Kat Theophanous",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northcote District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/kat-theophanous/"
+      }
+    },
+    {
+      "candidate_id": "district:oakleigh:dimopoulos-steve",
+      "person_id": "person_7d383a2b583f5edf84494ebd",
+      "seat": "Oakleigh District",
+      "candidate": "DIMOPOULOS, Steve",
+      "member": "Steve Dimopoulos",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Oakleigh District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/steve-dimopoulos/"
+      }
+    },
+    {
+      "candidate_id": "district:ovens-valley:mccurdy-tim",
+      "person_id": "person_fd015a13decf5f489e41aa41",
+      "seat": "Ovens Valley District",
+      "candidate": "McCURDY, Tim",
+      "member": "Tim McCurdy",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Ovens Valley District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/tim-mccurdy/"
+      }
+    },
+    {
+      "candidate_id": "district:pascoe-vale:cianflone-anthony",
+      "person_id": "person_082aeb77117356a48206eed7",
+      "seat": "Pascoe Vale District",
+      "candidate": "CIANFLONE, Anthony",
+      "member": "Anthony Cianflone",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Pascoe Vale District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/anthony-cianflone/"
+      }
+    },
+    {
+      "candidate_id": "district:point-cook:hilakari-mathew",
+      "person_id": "person_627e0e2dfefb51c3937242a9",
+      "seat": "Point Cook District",
+      "candidate": "HILAKARI, Mathew",
+      "member": "Mathew Hilakari",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Point Cook District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/mathew-hilakari/"
+      }
+    },
+    {
+      "candidate_id": "district:polwarth:riordan-richard",
+      "person_id": "person_7b2c578172445eaab82a1971",
+      "seat": "Polwarth District",
+      "candidate": "RIORDAN, Richard",
+      "member": "Richard Riordan",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Polwarth District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/richard-riordan/"
+      }
+    },
+    {
+      "candidate_id": "district:prahran:westaway-rachel",
+      "person_id": "person_8e189e2191f85bd187673f13",
+      "seat": "Prahran District",
+      "candidate": "WESTAWAY, Rachel",
+      "member": "Rachel Westaway",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Prahran District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/rachel-westaway/"
+      }
+    },
+    {
+      "candidate_id": "district:preston:lambert-nathan",
+      "person_id": "person_bb0cf7e4814b51bda8520f0d",
+      "seat": "Preston District",
+      "candidate": "LAMBERT, Nathan",
+      "member": "Nathan Lambert",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Preston District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/nathan-lambert/"
+      }
+    },
+    {
+      "candidate_id": "district:richmond:de-vietri-gabrielle",
+      "person_id": "person_05f9f15b9eb753388cab1e52",
+      "seat": "Richmond District",
+      "candidate": "de VIETRI, Gabrielle",
+      "member": "Gabrielle de Vietri",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Richmond District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Greens Victoria",
+          "roster": "Greens"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/gabrielle-de-vietri/"
+      }
+    },
+    {
+      "candidate_id": "district:ripon:haylett-martha",
+      "person_id": "person_8bdce4bf1097551bb1e54c15",
+      "seat": "Ripon District",
+      "candidate": "HAYLETT, Martha",
+      "member": "Martha Haylett",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Ripon District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/martha-haylett/"
+      }
+    },
+    {
+      "candidate_id": "district:sandringham:rowswell-brad",
+      "person_id": "person_789bb46337d15d34bc3c4240",
+      "seat": "Sandringham District",
+      "candidate": "ROWSWELL, Brad",
+      "member": "Brad Rowswell",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Sandringham District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/brad-rowswell/"
+      }
+    },
+    {
+      "candidate_id": "district:south-west-coast:britnell-roma",
+      "person_id": "person_299c894c7b425e18ab5bd6ca",
+      "seat": "South-West Coast District",
+      "candidate": "BRITNELL, Roma",
+      "member": "Roma Britnell",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held South-West Coast District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/roma-britnell/"
+      }
+    },
+    {
+      "candidate_id": "district:st-albans:suleyman-natalie",
+      "person_id": "person_ad1abc727af65a598c01850d",
+      "seat": "St Albans District",
+      "candidate": "SULEYMAN, Natalie",
+      "member": "Natalie Suleyman",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held St Albans District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/natalie-suleyman/"
+      }
+    },
+    {
+      "candidate_id": "district:sunbury:bull-josh",
+      "person_id": "person_81e8d28b4a9251d09fefe275",
+      "seat": "Sunbury District",
+      "candidate": "BULL, Josh",
+      "member": "Josh Bull",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Sunbury District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/josh-bull/"
+      }
+    },
+    {
+      "candidate_id": "district:tarneit:wight-dylan",
+      "person_id": "person_417be180756559f69f0d6426",
+      "seat": "Tarneit District",
+      "candidate": "WIGHT, Dylan",
+      "member": "Dylan Wight",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Tarneit District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/dylan-wight/"
+      }
+    },
+    {
+      "candidate_id": "district:thomastown:halfpenny-bronwyn",
+      "person_id": "person_35c9d54c2ce45c65a4c6906f",
+      "seat": "Thomastown District",
+      "candidate": "HALFPENNY, Bronwyn",
+      "member": "Bronwyn Halfpenny",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Thomastown District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/bronwyn-halfpenny/"
+      }
+    },
+    {
+      "candidate_id": "district:warrandyte:werner-nicole",
+      "person_id": "person_32356691e23f5b7f8f3aa27c",
+      "seat": "Warrandyte District",
+      "candidate": "WERNER, Nicole",
+      "member": "Nicole Werner",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Warrandyte District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/nicole-werner/"
+      }
+    },
+    {
+      "candidate_id": "district:wendouree:addison-juliana",
+      "person_id": "person_3df42141bee5512ca306c509",
+      "seat": "Wendouree District",
+      "candidate": "ADDISON, Juliana",
+      "member": "Juliana Addison",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Wendouree District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/juliana-addison/"
+      }
+    },
+    {
+      "candidate_id": "district:werribee:lister-john",
+      "person_id": "person_793b482ee98e56ed9f78f9e3",
+      "seat": "Werribee District",
+      "candidate": "LISTER, John",
+      "member": "John Lister",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Werribee District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/john-lister/"
+      }
+    },
+    {
+      "candidate_id": "district:williamstown:horne-melissa",
+      "person_id": "person_8cc3780a43025abd912c0c69",
+      "seat": "Williamstown District",
+      "candidate": "HORNE, Melissa",
+      "member": "Melissa Horne",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Williamstown District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/melissa-horne/"
+      }
+    },
+    {
+      "candidate_id": "district:yan-yean:kathage-lauren",
+      "person_id": "person_48ab44156b835bc4913770b0",
+      "seat": "Yan Yean District",
+      "candidate": "KATHAGE, Lauren",
+      "member": "Lauren Kathage",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Yan Yean District on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/lauren-kathage/"
+      }
+    },
+    {
+      "candidate_id": "region:eastern-victoria:heath-renee",
+      "person_id": "person_66f521e56b145d928c3e66d5",
+      "seat": "Eastern Victoria Region",
+      "candidate": "HEATH, Renee",
+      "member": "Renee Heath",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Eastern Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/renee-heath/"
+      }
+    },
+    {
+      "candidate_id": "region:eastern-victoria:bath-melina",
+      "person_id": "person_f4fad596a1a15cc8a8843ceb",
+      "seat": "Eastern Victoria Region",
+      "candidate": "BATH, Melina",
+      "member": "Melina Bath",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Eastern Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/melina-bath/"
+      }
+    },
+    {
+      "candidate_id": "region:eastern-victoria:bourman-jeff",
+      "person_id": "person_7a292aa2c15f5e378c5a879b",
+      "seat": "Eastern Victoria Region",
+      "candidate": "BOURMAN, Jeff",
+      "member": "Jeff Bourman",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Eastern Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Shooters, Fishers and Farmers Party Victoria",
+          "roster": "Shooters, Fishers and Farmers Party Victoria"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/jeff-bourman/"
+      }
+    },
+    {
+      "candidate_id": "region:north-eastern-metropolitan:welch-richard",
+      "person_id": "person_808f229a84ed524d9a39f38f",
+      "seat": "North-Eastern Metropolitan Region",
+      "candidate": "WELCH, Richard",
+      "member": "Richard Welch",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held North-Eastern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/richard-welch/"
+      }
+    },
+    {
+      "candidate_id": "region:north-eastern-metropolitan:puglielli-aiv",
+      "person_id": "person_86096b4ce8cf57b9acf62448",
+      "seat": "North-Eastern Metropolitan Region",
+      "candidate": "PUGLIELLI, Aiv",
+      "member": "Aiv Puglielli",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held North-Eastern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Greens Victoria",
+          "roster": "Greens"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/aiv-puglielli/"
+      }
+    },
+    {
+      "candidate_id": "region:northern-metropolitan:mulholland-evan",
+      "person_id": "person_c4fba05f49565eb9baaa22c3",
+      "seat": "Northern Metropolitan Region",
+      "candidate": "MULHOLLAND, Evan",
+      "member": "Evan Mulholland",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/evan-mulholland/"
+      }
+    },
+    {
+      "candidate_id": "region:northern-metropolitan:gray-barberio-anasina",
+      "person_id": "person_996a66ac17f05dd1969fadb6",
+      "seat": "Northern Metropolitan Region",
+      "candidate": "GRAY-BARBERIO, Anasina",
+      "member": "Anasina Gray-Barberio",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Greens Victoria",
+          "roster": "Greens"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/anasina-gray-barberio/"
+      }
+    },
+    {
+      "candidate_id": "region:northern-metropolitan:watt-sheena",
+      "person_id": "person_d5a71338e6795e60b0651dbf",
+      "seat": "Northern Metropolitan Region",
+      "candidate": "WATT, Sheena",
+      "member": "Sheena Watt",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/sheena-watt/"
+      }
+    },
+    {
+      "candidate_id": "region:northern-victoria:symes-jaclyn",
+      "person_id": "person_7357623e60495fef910e3f6c",
+      "seat": "Northern Victoria Region",
+      "candidate": "SYMES, Jaclyn",
+      "member": "Jaclyn Symes",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northern Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/jaclyn-symes/"
+      }
+    },
+    {
+      "candidate_id": "region:northern-victoria:tyrrell-rikkie-lee",
+      "person_id": "person_cb6fe32bf53b53a483b6ed3d",
+      "seat": "Northern Victoria Region",
+      "candidate": "TYRRELL, Rikkie-Lee",
+      "member": "Rikkie-Lee Tyrrell",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northern Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "One Nation Victoria",
+          "roster": "Pauline Hanson's One Nation"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/rikkielee-tyrrell/"
+      }
+    },
+    {
+      "candidate_id": "region:northern-victoria:purcell-georgie",
+      "person_id": "person_239546dfa4fb5cabb834ca5d",
+      "seat": "Northern Victoria Region",
+      "candidate": "PURCELL, Georgie",
+      "member": "Georgie Purcell",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northern Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Animal Justice Party",
+          "roster": "Animal Justice Party"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/georgie-purcell/"
+      }
+    },
+    {
+      "candidate_id": "region:northern-victoria:broad-gaelle",
+      "person_id": "person_bbf94e17cfec582b93b31e48",
+      "seat": "Northern Victoria Region",
+      "candidate": "BROAD, Gaelle",
+      "member": "Gaelle Broad",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Northern Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "National Party of Australia - Victoria",
+          "roster": "Nationals"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/gaelle-broad/"
+      }
+    },
+    {
+      "candidate_id": "region:south-eastern-metropolitan:tarlamis-lee",
+      "person_id": "person_fd556c9430d651f78b14f32e",
+      "seat": "South-Eastern Metropolitan Region",
+      "candidate": "TARLAMIS, Lee",
+      "member": "Lee Tarlamis",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held South-Eastern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/lee-tarlamis/"
+      }
+    },
+    {
+      "candidate_id": "region:south-eastern-metropolitan:galea-michael",
+      "person_id": "person_58eeb0b51a1c564cae222523",
+      "seat": "South-Eastern Metropolitan Region",
+      "candidate": "GALEA, Michael",
+      "member": "Michael Galea",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held South-Eastern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/michael-galea/"
+      }
+    },
+    {
+      "candidate_id": "region:south-eastern-metropolitan:payne-rachel",
+      "person_id": "person_7fcc97fbda985877a8447efb",
+      "seat": "South-Eastern Metropolitan Region",
+      "candidate": "PAYNE, Rachel",
+      "member": "Rachel Payne",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held South-Eastern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Legalise Cannabis Victoria",
+          "roster": "Legalise Cannabis Victoria"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/rachel-payne/"
+      }
+    },
+    {
+      "candidate_id": "region:south-eastern-metropolitan:limbrick-david",
+      "person_id": "person_e95427570533544cba71dc44",
+      "seat": "South-Eastern Metropolitan Region",
+      "candidate": "LIMBRICK, David",
+      "member": "David Limbrick",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held South-Eastern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Libertarian Party (formerly Liberal Democrats)",
+          "roster": "Libertarian Party"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/david-limbrick/"
+      }
+    },
+    {
+      "candidate_id": "region:south-eastern-metropolitan:hermans-ann-marie",
+      "person_id": "person_ba2f81b282de52cd9eceeaf8",
+      "seat": "South-Eastern Metropolitan Region",
+      "candidate": "HERMANS, Ann-Marie",
+      "member": "Ann-Marie Hermans",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held South-Eastern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/ann-marie-hermans/"
+      }
+    },
+    {
+      "candidate_id": "region:southern-metropolitan:berger-john",
+      "person_id": "person_bdb54b1babcb5338a4969160",
+      "seat": "Southern Metropolitan Region",
+      "candidate": "BERGER, John",
+      "member": "John Berger",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Southern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/john-berger/"
+      }
+    },
+    {
+      "candidate_id": "region:southern-metropolitan:davis-david",
+      "person_id": "person_92f0584279555be3b000cd3e",
+      "seat": "Southern Metropolitan Region",
+      "candidate": "DAVIS, David",
+      "member": "David Davis",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Southern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/david-davis/"
+      }
+    },
+    {
+      "candidate_id": "region:southern-metropolitan:crozier-georgie",
+      "person_id": "person_562c52cc6e6e518ebb904774",
+      "seat": "Southern Metropolitan Region",
+      "candidate": "CROZIER, Georgie",
+      "member": "Georgie Crozier",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Southern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/georgie-crozier/"
+      }
+    },
+    {
+      "candidate_id": "region:southern-metropolitan:copsey-katherine",
+      "person_id": "person_78a3db1e7e65591b922cab3b",
+      "seat": "Southern Metropolitan Region",
+      "candidate": "COPSEY, Katherine",
+      "member": "Katherine Copsey",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Southern Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Greens Victoria",
+          "roster": "Greens"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/katherine-copsey/"
+      }
+    },
+    {
+      "candidate_id": "region:western-metropolitan:luu-trung",
+      "person_id": "person_475d29cf058e5128925d0e7a",
+      "seat": "Western Metropolitan Region",
+      "candidate": "LUU, Trung",
+      "member": "Trung Luu",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Western Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/trung-luu/"
+      }
+    },
+    {
+      "candidate_id": "region:western-metropolitan:blandthorn-lizzie",
+      "person_id": "person_bd127acc27cb54c28674fc50",
+      "seat": "Western Metropolitan Region",
+      "candidate": "BLANDTHORN, Lizzie",
+      "member": "Lizzie Blandthorn",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Western Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/lizzie-blandthorn/"
+      }
+    },
+    {
+      "candidate_id": "region:western-metropolitan:stitt-ingrid",
+      "person_id": "person_1a32ce2308ab5f2f8074cbff",
+      "seat": "Western Metropolitan Region",
+      "candidate": "STITT, Ingrid",
+      "member": "Ingrid Stitt",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Western Metropolitan Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/ingrid-stitt/"
+      }
+    },
+    {
+      "candidate_id": "region:western-victoria:mansfield-sarah",
+      "person_id": "person_0c906de96862506492d17c02",
+      "seat": "Western Victoria Region",
+      "candidate": "MANSFIELD, Sarah",
+      "member": "Sarah Mansfield",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Western Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Greens Victoria",
+          "roster": "Greens"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/sarah-mansfield/"
+      }
+    },
+    {
+      "candidate_id": "region:western-victoria:ermacora-jacinta",
+      "person_id": "person_aa0c861263d65b858162397a",
+      "seat": "Western Victoria Region",
+      "candidate": "ERMACORA, Jacinta",
+      "member": "Jacinta Ermacora",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Western Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Australian Labor Party - Victorian Branch",
+          "roster": "Labor"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/jacinta-ermacora/"
+      }
+    },
+    {
+      "candidate_id": "region:western-victoria:mcarthur-bev",
+      "person_id": "person_904a1d9519df5ea48ef16be4",
+      "seat": "Western Victoria Region",
+      "candidate": "MCARTHUR, Bev",
+      "member": "Bev McArthur",
+      "evidence": {
+        "name": "Same name after folding case and punctuation",
+        "seat": "Held Western Victoria Region on the roster dated 2026-09-09",
+        "party": {
+          "vec": "Liberal Party of Australia - Victorian Division",
+          "roster": "Liberal"
+        },
+        "roster_source": "https://www.parliament.vic.gov.au/members/bev-mcarthur/"
+      }
+    }
+  ],
+  "reviewed": [
+    {
+      "candidate_id": "district:geelong:couzens-christine",
+      "person_id": "person_ce191d7eee235875853957f5",
+      "seat": "Geelong District",
+      "candidate": "COUZENS, Christine",
+      "member": "Chris Couzens",
+      "reasons": [
+        "Name variant: the VEC lists \"COUZENS, Christine\", the roster has \"Chris Couzens\""
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The sitting member for Geelong is standing again in Geelong; news reports and the ABC guide name her as Christine Couzens, the name on the VEC list. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://timesnewsgroup.com.au/bellarinetimes/news/the-election-field-is-taking-shape-the-liberal-ticket-isnt/",
+          "publisher": "Bellarine Times",
+          "title": "The election field is taking shape – the Liberal ticket isn't",
+          "date": "2026-06-04",
+          "quote": "Incumbents Christine Couzens in Geelong, Ella George in Lara and Alison Marchant in Bellarine will also contest the election.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/geel",
+          "publisher": "ABC News election guide, Geelong",
+          "quote": "Couzens was born and raised in Geelong and before entering parliament she worked on the staff of her predecessor as the member for Geelong, Ian Trezise, from 1999 until replacing him at the 2014 election.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "read_on": "2026-11-16",
+          "quote": "ABC candidate table row: Christine Couzens | Sitting MP | ALP | Geelong"
+        }
+      ]
+    },
+    {
+      "candidate_id": "district:mornington:crewther-chris",
+      "person_id": "person_037a9c693bba5f07ac5143f8",
+      "seat": "Mornington District",
+      "candidate": "CREWTHER, Chris",
+      "member": "Chris Crewther",
+      "reasons": [
+        "The same name has a record in another parliament"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Liberal candidate for Mornington is its sitting member, and the federal record under the same name is his: he was the federal member for Dunkley. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/morn",
+          "publisher": "ABC News election guide, Mornington",
+          "quote": "Crewther served a single term in federal parliament as the MP for Dunkley, losing seat at the 2019 federal election.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "ABC candidate table row: Chris Crewther | Sitting MP | LIB | Mornington",
+          "read_on": "2026-11-16"
+        }
+      ]
+    },
+    {
+      "candidate_id": "district:preston:fowles-william",
+      "person_id": "person_deebd0b978e155af949d93c1",
+      "seat": "Preston District",
+      "candidate": "FOWLES, William",
+      "member": "Will Fowles",
+      "reasons": [
+        "Name variant: the VEC lists \"FOWLES, William\", the roster has \"Will Fowles\"",
+        "Different seat: standing in Preston District, on the roster for Ringwood District",
+        "No registered party on the VEC list to check (roster: Independent)"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The independent member for Ringwood nominated as an independent candidate for Preston. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.easternmelburnian.com.au/p/ringwood-mp-will-fowles-preston-candidate",
+          "publisher": "The Eastern Melburnian",
+          "title": "Ringwood MP Will Fowles is making one last bid for a state seat, despite conceding it's an impossible long shot",
+          "date": "2026-11-10",
+          "quote": "Fowles confirmed his nomination as an independent candidate for Preston on Monday November 9.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "ABC candidate table row: Will Fowles | Sitting MP | IND | Preston",
+          "read_on": "2026-11-16"
+        }
+      ]
+    },
+    {
+      "candidate_id": "district:ringwood:mcgowan-nick",
+      "person_id": "person_f2860ee5bd1d54e3badab1fe",
+      "seat": "Ringwood District",
+      "candidate": "McGOWAN, Nick",
+      "member": "Nick McGowan",
+      "reasons": [
+        "Different seat: standing in Ringwood District, on the roster for North-Eastern Metropolitan Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Liberal member for North-Eastern Metropolitan Region is the Liberal candidate for Ringwood District. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/ring",
+          "publisher": "ABC News election guide, Ringwood",
+          "title": "Ringwood - VIC Electorate, Candidates, Results - ABC News",
+          "quote": "McGowan is a sitting upper house member for the North Eastern Metropolitan region who was elected at the 2022 state election.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.easternmelburnian.com.au/p/will-fowles-not-contesting-ringwood",
+          "publisher": "The Eastern Melburnian",
+          "title": "Will Fowles bows out of Ringwood, setting up major party fight for the seat",
+          "date": "2026-07-28",
+          "quote": "Labor's Rachel Halse and Liberal North-Eastern Metropolitan MLC Nick McGowan already announced as candidates.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "read_on": "2026-11-16",
+          "quote": "ABC candidate table row: Nick McGowan | LIB | Ringwood"
+        }
+      ]
+    },
+    {
+      "candidate_id": "region:eastern-victoria:erdogan-enver",
+      "person_id": "person_2deb199e03375fdfbeacee60",
+      "seat": "Eastern Victoria Region",
+      "candidate": "ERDOGAN, Enver",
+      "member": "Enver Erdogan",
+      "reasons": [
+        "Different seat: standing in Eastern Victoria Region, on the roster for Northern Metropolitan Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Labor member for Northern Metropolitan Region moved to the Labor ticket in Eastern Victoria Region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/2026-10-01/victoria-labor-upper-house-ticket-mp/107215764",
+          "publisher": "ABC News",
+          "title": "Labor upper house candidates to be decided one month before state election as major losses loom",
+          "date": "2026-10-01",
+          "quote": "The ABC has confirmed with several sources that a handshake agreement will move Mr Erdogan to the safer top position in Eastern Victoria, which covers Gippsland.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.tallyroom.com.au/68999",
+          "publisher": "The Tally Room",
+          "title": "Labor MLCs swap regions as nominations near in Victoria",
+          "date": "2026-11-07",
+          "quote": "Enver Erdogan and Tom McIntosh have swapped regions, with Erdogan moving from North Metro to Eastern Victoria and McIntosh the opposite.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "ABC candidate table row: Enver Erdogan | Sitting MP | ALP | Eastern Victoria",
+          "read_on": "2026-11-16"
+        }
+      ]
+    },
+    {
+      "candidate_id": "region:north-eastern-metropolitan:batchelor-ryan",
+      "person_id": "person_201e5d59f5b754a79162fe22",
+      "seat": "North-Eastern Metropolitan Region",
+      "candidate": "BATCHELOR, Ryan",
+      "member": "Ryan Batchelor",
+      "reasons": [
+        "Different seat: standing in North-Eastern Metropolitan Region, on the roster for Southern Metropolitan Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Labor member for Southern Metropolitan Region moved to the Labor ticket in North-Eastern Metropolitan Region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/lc-preview",
+          "publisher": "ABC News election guide, Legislative Council preview",
+          "read_on": "2026-11-16",
+          "quote": "Labor is at risk of losing a seat in this region, and its second-elected MLC Ryan Batchelor has switched districts and is contesting North-Eastern Metropolitan this election."
+        },
+        {
+          "url": "https://www.tallyroom.com.au/68999",
+          "publisher": "The Tally Room",
+          "title": "Labor MLCs swap regions as nominations near in Victoria",
+          "date": "2026-11-07",
+          "quote": "Ryan Batchelor has moved from South Metro to North East Metro.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "ABC candidate table row: Ryan Batchelor | Sitting MP | ALP | North-Eastern Metropolitan",
+          "read_on": "2026-11-16"
+        }
+      ]
+    },
+    {
+      "candidate_id": "region:northern-metropolitan:mcintosh-tom",
+      "person_id": "person_8d630ca323f85f7798ea5535",
+      "seat": "Northern Metropolitan Region",
+      "candidate": "MCINTOSH, Tom",
+      "member": "Tom McINTOSH",
+      "reasons": [
+        "Different seat: standing in Northern Metropolitan Region, on the roster for Eastern Victoria Region"
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The Labor member for Eastern Victoria Region moved to the Labor ticket in Northern Metropolitan Region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/2026-10-01/victoria-labor-upper-house-ticket-mp/107215764",
+          "publisher": "ABC News",
+          "title": "Labor upper house candidates to be decided one month before state election as major losses loom",
+          "date": "2026-10-01",
+          "quote": "The existing MP there, Tom McIntosh, will take Mr Erdogan's position as the second candidate in the Northern Metro.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.tallyroom.com.au/68999",
+          "publisher": "The Tally Room",
+          "title": "Labor MLCs swap regions as nominations near in Victoria",
+          "date": "2026-11-07",
+          "quote": "Enver Erdogan and Tom McIntosh have swapped regions, with Erdogan moving from North Metro to Eastern Victoria and McIntosh the opposite.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "read_on": "2026-11-16",
+          "quote": "ABC candidate table row: Tom McIntosh | Sitting MP | ALP | Northern Metropolitan"
+        }
+      ]
+    },
+    {
+      "candidate_id": "region:western-metropolitan:deeming-moira",
+      "person_id": "person_2d1844108b1d5b27ae7c12b8",
+      "seat": "Western Metropolitan Region",
+      "candidate": "DEEMING, Moira",
+      "member": "Moira Deeming",
+      "reasons": [
+        "Party differs: VEC \"Family First Victoria\", roster \"Independent\""
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The member for Western Metropolitan Region, on the roster as an independent, is the Family First lead candidate for the same region. Sources read on 16 November 2026.",
+      "sources": [
+        {
+          "url": "https://newshub.medianet.com.au/2026/09/moira-deeming-joins-family-first-as-western-metro-lead-candidate/170769/",
+          "publisher": "Family First Party media release",
+          "title": "Moira Deeming joins Family First as Western Metro lead candidate",
+          "date": "2026-09-10",
+          "quote": "Family First National Director Lyle Shelton today announced that the party's Federal Executive has endorsed Moira Deeming as its lead candidate for the Western Metro region for the Victorian Legislative Council at the November election.",
+          "read_on": "2026-11-16"
+        },
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/candidates",
+          "publisher": "ABC News election guide, candidates A to Z",
+          "quote": "ABC candidate table row: Moira Deeming | Sitting MP | FFP | Western Metropolitan",
+          "read_on": "2026-11-16"
+        }
+      ]
+    }
+  ],
+  "ambiguous": [],
+  "not_candidate": [
+    {
+      "person_id": "person_ddbcd16599825c9e8a5dd6e8",
+      "member": "Jordan Crugnale",
+      "seat": "Bass District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Bass",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Bass will be vacated at the election with the retirement of Jordan Crugnale"
+        }
+      ]
+    },
+    {
+      "person_id": "person_542057b056305cf8a50976ce",
+      "member": "Bill Tilley",
+      "seat": "Benambra District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Benambra",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Bill Tilley"
+        }
+      ]
+    },
+    {
+      "person_id": "person_08c11b8d396c569caad79d37",
+      "member": "Jacinta Allan",
+      "seat": "Bendigo East District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=BendigoEast",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Bendigo East will be vacated at the election with the retirement of Jacinta Allan"
+        }
+      ]
+    },
+    {
+      "person_id": "person_d0be21ab290d584f87d1a9df",
+      "member": "David Hodgett",
+      "seat": "Croydon District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Croydon",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of David Hodgett, the member since 2006."
+        }
+      ]
+    },
+    {
+      "person_id": "person_338ceb1ad2cb538c9dfd75ef",
+      "member": "Harriet Shing",
+      "seat": "Eastern Victoria Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=EasternVictoria",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "The other elected member from 2022, Harriet Shing, announced her retirement"
+        }
+      ]
+    },
+    {
+      "person_id": "person_872f9524636f51459838d388",
+      "member": "Danny Pearson",
+      "seat": "Essendon District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Essendon",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "will be vacated at the election with the retirement of Danny Pearson"
+        }
+      ]
+    },
+    {
+      "person_id": "person_9ffea3411fb15484ac345657",
+      "member": "Steve McGhie",
+      "seat": "Melton District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Melton",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Melton will be vacated at the election with the retirement of Steve McGhie"
+        }
+      ]
+    },
+    {
+      "person_id": "person_00fe30183f1a564e938963aa",
+      "member": "Lily D'Ambrosio",
+      "seat": "Mill Park District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=MillPark",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Lily D'Ambrosio"
+        }
+      ]
+    },
+    {
+      "person_id": "person_365e547617d75f19bea1f8ab",
+      "member": "Peter Walsh",
+      "seat": "Murray Plains District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=MurrayPlains",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "To be vacated at the election with the retirement of former Nationals leader Peter Walsh"
+        }
+      ]
+    },
+    {
+      "person_id": "person_4e699a8cd1955d3086184859",
+      "member": "Gary Maas",
+      "seat": "Narre Warren South District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=NarreWarrenSouth",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "To be vacated at the election with the retirement of Gary Maas"
+        }
+      ]
+    },
+    {
+      "person_id": "person_dae2b3f30edc5d53b2f49e70",
+      "member": "Shaun Leane",
+      "seat": "North-Eastern Metropolitan Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=North-EasternMetropolitan",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "with Shaun Leane retiring after a career going back to 2006"
+        }
+      ]
+    },
+    {
+      "person_id": "person_cbdc42ca514151b9bf92bc07",
+      "member": "Sonja Terpstra",
+      "seat": "North-Eastern Metropolitan Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=North-EasternMetropolitan",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Neither of Labor's two incumbents is sseeking re-election, with Shaun Leane retiring after a career going back to 2006"
+        },
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=North-EasternMetropolitan",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Sonja Terpstra announcing she would follow suit in October after serving since 2018"
+        }
+      ]
+    },
+    {
+      "person_id": "person_577ef041fe635f3b85925923",
+      "member": "Adem Somyurek",
+      "seat": "Northern Metropolitan Region"
+    },
+    {
+      "person_id": "person_82a64ff57a9752dc9a8b1d40",
+      "member": "Wendy Lovell",
+      "seat": "Northern Victoria Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=NorthernVictoria",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "The top position will be vacated with the retirement of Wendy Lovell"
+        }
+      ]
+    },
+    {
+      "person_id": "person_9ffa21b2f8ee5a0bbd0ac206",
+      "member": "Emma Vulin",
+      "seat": "Pakenham District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Pakenham",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Pakenham will be vacated at the election with the retirement of Labor member Emma Vulin"
+        }
+      ]
+    },
+    {
+      "person_id": "person_d083ecba4e8b5995851d5338",
+      "member": "Kim Wells",
+      "seat": "Rowville District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Rowville",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "South-eastern Melbourne seat to be vacated with the retirement of Kim Wells"
+        }
+      ]
+    },
+    {
+      "person_id": "person_d7b507e51c335ecea76d748f",
+      "member": "Kim O'Keeffe",
+      "seat": "Shepparton District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Shepparton",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Northern Victorian seat that will be vacated at the election by Kim O'Keeffe, who is bowing out as Nationals member after a single term."
+        }
+      ]
+    },
+    {
+      "person_id": "person_f43a8ec079465ce5a3d42048",
+      "member": "Natalie Hutchins",
+      "seat": "Sydenham District",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Sydenham",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "will be vacated at the election with the retirement of Labor member Natalie Hutchins."
+        }
+      ]
+    },
+    {
+      "person_id": "person_acf010ba9dab5b87921f6c02",
+      "member": "David Ettershank",
+      "seat": "Western Metropolitan Region",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=WesternMetropolitan",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "Not seeking re-election is David Ettershank"
+        }
+      ]
+    },
+    {
+      "person_id": "person_97ff30920f2b557693bacaf8",
+      "member": "Gayle Tierney",
+      "seat": "Western Victoria Region",
+      "sources": [
+        {
+          "url": "https://www.abc.net.au/news/elections/vic/2026/guide/lc-preview",
+          "publisher": "ABC News election guide, Legislative Council preview",
+          "section": "Western Victoria",
+          "read_on": "2026-11-16",
+          "quote": "Sitting Labor MLC Gayle Tierney is retiring after 20 years in the upper house"
+        }
+      ]
+    },
+    {
+      "person_id": "person_2028f412ba41525dbf9ab8b4",
+      "member": "Jackson Taylor",
+      "seat": "Bayswater District",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "VENDITTI-TAYLOR, Steven",
+          "seat": "Eureka District",
+          "party": ""
+        },
+        {
+          "candidate": "TAYLOR, Wayne",
+          "seat": "Northern Victoria Region",
+          "party": "Legalise Cannabis Victoria"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Bayswater",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Jackson Taylor, the member since 2018."
+        }
+      ]
+    },
+    {
+      "person_id": "person_73afad22341c5d24b89f5247",
+      "member": "Maree Edwards",
+      "seat": "Bendigo West District",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "EDWARDS, Dylan",
+          "seat": "Eastern Victoria Region",
+          "party": "Victorian Socialists"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=BendigoWest",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Maree Edwards"
+        }
+      ]
+    },
+    {
+      "person_id": "person_a127672fc76954e3a7760880",
+      "member": "Tim Bull",
+      "seat": "Gippsland East District",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "BULL, Sue",
+          "seat": "Western Victoria Region",
+          "party": "Socialist Alliance"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=GippslandEast",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "To be vacated at the election with the retirement of Nationals member Tim Bull"
+        }
+      ]
+    },
+    {
+      "person_id": "person_01fe0127242157e2bfc9da83",
+      "member": "Mary-Anne Thomas",
+      "seat": "Macedon District",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "THOMAS, Nofoao",
+          "seat": "Croydon District",
+          "party": "Family First Victoria"
+        },
+        {
+          "candidate": "THOMAS, Hannah",
+          "seat": "Northern Metropolitan Region",
+          "party": "Australian Greens Victoria"
+        },
+        {
+          "candidate": "THOMAS, Athol",
+          "seat": "Northern Victoria Region",
+          "party": "One Nation Victoria"
+        },
+        {
+          "candidate": "THOMAS, Brendan William",
+          "seat": "Western Victoria Region",
+          "party": "Family First Victoria"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Macedon",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Mary-Anne Thomas"
+        }
+      ]
+    },
+    {
+      "person_id": "person_ea727220eadf5a60ba127324",
+      "member": "Michael O'Brien",
+      "seat": "Malvern District",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "O'BRIEN, Michelle",
+          "seat": "Evelyn District",
+          "party": "Family First Victoria"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LA.htm?s=Malvern",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "It will be vacated at the election with the retirement of Michael O'Brien"
+        }
+      ]
+    },
+    {
+      "person_id": "person_c075c82ddf5057b6ac289844",
+      "member": "Darren Cheeseman",
+      "seat": "South Barwon District",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "CHEESEMAN, Andrew",
+          "seat": "Frankston District",
+          "party": "Victorian Socialists"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "The mark rests on the VEC candidate lists, which are final: the member's name is on none of the 1,037 rows, in either house. The Tally Room guide says plainly that he is not running. The ABC retiring members page (https://www.abc.net.au/news/elections/vic/2026/guide/retiring-mps) is less definite: \"his intentions for this election are currently unclear\".",
+      "sources": [
+        {
+          "url": "https://www.vec.vic.gov.au/voting/2026-state-election",
+          "publisher": "Victorian Electoral Commission, candidate lists published 11 November 2026",
+          "finding": "Nominations have closed. No row in any of the 96 lists has this surname with this given name, under the exact name and alias check; the only CHEESEMAN is \"CHEESEMAN, Andrew\" in Frankston District."
+        },
+        {
+          "url": "https://www.tallyroom.com.au/vic2026/southbarwon2026",
+          "publisher": "The Tally Room, Victoria 2026 guide",
+          "title": "South Barwon – Victoria 2026",
+          "read_on": "2026-11-16",
+          "quote": "Sitting independent MP Darren Cheeseman is not running for re-election."
+        }
+      ]
+    },
+    {
+      "person_id": "person_8d72383a175d5d4290868e0b",
+      "member": "Joe McCracken",
+      "seat": "Western Victoria Region",
+      "reason": "A candidate with the same surname is on the VEC lists",
+      "candidates": [
+        {
+          "candidate": "McCRACKEN, Lachlan",
+          "seat": "Narre Warren North District",
+          "party": "Victorian Socialists"
+        },
+        {
+          "candidate": "McCRACKEN, Bailey",
+          "seat": "Narre Warren South District",
+          "party": "Victorian Socialists"
+        }
+      ],
+      "reviewed_on": "2026-11-16",
+      "review_evidence": "Exact check of all 1,037 VEC rows: the member's name is on none, in either house. The remaining candidates with the surname have different given names, and a public source says the member is not standing.",
+      "sources": [
+        {
+          "url": "https://www.pollbludger.net/vic2026/LC.htm?s=WesternVictoria",
+          "publisher": "The Poll Bludger, Victorian election guide 2026",
+          "read_on": "2026-11-16",
+          "quote": "The second Liberal elected in 2022, Joe McCracken, is not seeking a second term."
+        }
+      ]
+    }
+  ],
+  "members_to_check": [],
+  "held": [
+    {
+      "person_id": "person_2841eb5eccfe57458fda8ffb",
+      "member": "Tim Read",
+      "seat": "Brunswick District",
+      "held_on": "2026-11-16",
+      "reason": "Reviewed exception, 16 November 2026: no candidate link and no \"Not a candidate\" mark. The wording of the seat page is decided separately."
+    }
+  ]
+}

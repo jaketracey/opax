@@ -2,7 +2,8 @@
 // and existing exports, including the optional fetched VEC candidate report.
 // No donor, grant or Hansard text ingestion.
 // VEC results (fetch_vec_results.py) and ABS place splits (build_vic_places.py)
-// are committed source files beside the VEC config.
+// are committed source files beside the VEC config, as is the reviewed mapping of
+// candidates to roster members (vic_candidate_links.mjs).
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -11,6 +12,7 @@ import {personNameKey} from '../portal/public/canonical-urls.js';
 import {day, latest} from '../portal/public/hubs-data.js';
 import {divisionPlain} from '../portal/public/division-markdown.js';
 import {validateVicElection, validateVicPlaces, validateVicResults} from '../portal/src/vic-election-data.ts';
+import {approvedLinks, candidateId, matchVicCandidates, rosterMembers, VIC_CANDIDATE_LINKS} from './vic_candidate_links.mjs';
 import {VIC_ELECTION_PATH, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE} from '../portal/public/vic-election.js';
 
 // Only the result fields the hub shows: no candidate names.
@@ -34,6 +36,15 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   const index = await read(manifest.index_url);
   // Candidates exist only once the VEC publishes them after nominations close (noon 9 November).
   const nominated = await readFile(sibling('vic-candidates-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return null;throw e;});
+  // Links to a member's record come only from the reviewed, committed mapping, and only
+  // while a fresh match of the current lists and roster still supports each entry.
+  const reviewedLinks = nominated && await readFile(sibling(VIC_CANDIDATE_LINKS),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return null;throw e;});
+  // An entry that no longer holds is never published, and stops the build so that it is noticed.
+  const {links,notCandidate,dropped} = reviewedLinks
+    ? approvedLinks(reviewedLinks,matchVicCandidates(nominated,rosterMembers(index,roster,await read(manifest.people_url))))
+    : {links:new Map(),notCandidate:new Set(),dropped:[]};
+  if (dropped.length) throw new Error(`Stale ${VIC_CANDIDATE_LINKS}: ${dropped.join('; ')}. Run node scripts/vic_candidate_links.mjs and review the change.`);
+  const personHref = new Map();
   const currentSource = await readFile(sibling('vic-results-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return undefined;throw e;});
   for (const name of Object.keys({...nominated?.districts,...nominated?.regions})) if (!config.districts.concat(config.regions).some(c=>c.name === name)) throw new Error(`Candidates for an unknown constituency: ${name}`);
   // Canonical people are exactly the already-published roster. The few roster-only
@@ -82,8 +93,9 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
         .sort((a,b)=>b.date.localeCompare(a.date) || a.href.localeCompare(b.href));
       const vicOnly = p && p.states.length === 1 && p.states[0] === 'vic' && !p.speech_scope && !p.speech_count_basis;
       const speeches = vicOnly && p.speeches > 0 ? {count:p.speeches,first:p.first,last:p.last,within_term:p.first >= 2023 && p.last <= 2026} : null;
+      personHref.set(person.person_id,href);
       // Explicit allowlist excludes all funding, donor, candidate and party fields.
-      return {name:person.name,party:party || null,href,source_url:person.source_url,speeches,
+      return {name:person.name,party:party || null,href,source_url:person.source_url,...notCandidate.has(person.person_id) ? {not_candidate:true} : {},speeches,
         speech_gap:!p || !p.speeches ? 'No speech count for this member.' : !vicOnly ? 'This speech count cannot be split from speeches in other parliaments.' : null,
         votes:v ? {count:v.divisions_total,ayes:v.ayes,noes:v.noes} : null,
         detailed_count:rows.length,divisions:rows.slice(0,5)};
@@ -95,9 +107,16 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
       formerly:c.formerly || null,created:config.boundaries.created.includes(c.name) && !c.formerly,
       result:result ? {general:contest(result.general),since:contest(result.since) || null} : null,
       candidates:list?.length ? {published:nominated.published,url:c.source_url.replace(/\/$/,'')+'/nominations',list:list.map(x=>({name:x.name,party:x.party || '',
-        ...c.kind === 'region' ? {group:x.group,group_name:x.group_name} : {}}))} : null,
+        ...c.kind === 'region' ? {group:x.group,group_name:x.group_name} : {},
+        ...links.has(candidateId(c.kind,c.name,x.name)) ? {person_id:links.get(candidateId(c.kind,c.name,x.name))} : {}}))} : null,
       electorate_url:seat.url,roster_date:seat.representation_as_of,members};
   });
+  // A verified candidate's name opens the record the roster member's name already opens.
+  for (const s of seats) for (const c of s.candidates?.list ?? []) if (c.person_id) {
+    const href = personHref.get(c.person_id);
+    if (!href) throw new Error(`No published person path for linked candidate: ${c.name}`);
+    delete c.person_id; c.href = href;
+  }
   const updated = latest([config.updated,nominated?.published,currentResults?.fetched,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
   const pages = [{path:VIC_ELECTION_PATH,lastmod:updated},...seats.map(s=>({path:s.path,lastmod:updated}))];
   const data = {authorisation:VIC_ELECTION_AUTHORISATION_LINE,
@@ -117,6 +136,7 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   await mkdir(join(root,'hubs'),{recursive:true});
   await writeFile(join(root,'hubs/vic-election-2026.json'),JSON.stringify(data)+'\n');
   await writeFile(join(root,VIC_ELECTION_PLACES.replace(/^\//,'')),JSON.stringify(placeData)+'\n');
-  return {districts:config.districts.length,regions:config.regions.length,members:seats.reduce((n,s)=>n+s.members.length,0),pages:pages.length};
+  return {districts:config.districts.length,regions:config.regions.length,members:seats.reduce((n,s)=>n+s.members.length,0),pages:pages.length,
+    candidate_links:links.size,not_candidate:notCandidate.size};
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) console.log('Victorian election:',JSON.stringify(await buildVicElection(fileURLToPath(new URL('../portal/public/',import.meta.url)))));
