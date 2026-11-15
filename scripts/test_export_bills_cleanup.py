@@ -479,3 +479,31 @@ class GuardTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DivisionQuestionTests(unittest.TestCase):
+    """A null division `question` made every app build reject the whole bill
+    (15 Nov 2026: 64 bills, among them the Interactive Gambling Amendment
+    (Gambling Reform) Bill 2026). The contract types it as text."""
+
+    def test_a_division_with_no_question_or_name_writes_empty_text(self):
+        self.assertEqual(eb.division_question(None, None), "")
+        self.assertEqual(eb.division_question("  ", "", ()), "")
+
+    def test_a_recorded_question_or_name_is_kept_as_before(self):
+        q = "That the bill be now read a second time."
+        self.assertEqual(eb.division_question(q, "Bills"), eb.clean_division_question(q))
+        self.assertEqual(eb.division_question(None, q), eb.clean_division_question(q))
+
+    def test_every_committed_bill_file_has_text_questions(self):
+        bad = []
+        for path in sorted((HERE.parent / "portal" / "public" / "bills").glob("*.json")):
+            if path.name == "index.json":
+                continue
+            doc = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(doc, dict):
+                continue
+            for division in doc.get("divisions") or []:
+                if not isinstance(division.get("question"), str):
+                    bad.append(f"{path.name} {division.get('key')}")
+        self.assertEqual(bad, [])

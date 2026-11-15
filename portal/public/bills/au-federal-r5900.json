@@ -379,7 +379,7 @@
    "key": "federal-representatives-4721",
    "date": "2017-06-19",
    "house": "representatives",
-   "question": null,
+   "question": "",
    "stage": "Third reading",
    "ayes": 67,
    "noes": 78,

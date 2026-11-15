@@ -349,6 +349,15 @@ def clean_division_question(question: str | None, speaker_names: tuple[str, ...]
     return _NAMED_QUESTION_PREFIX.sub("", text, count=1)
 
 
+def division_question(question: str | None, name: str | None,
+                      speaker_names: tuple[str, ...] = ()) -> str:
+    """A division's `question` is always text (docs/BILLS-CONTRACT.md): every
+    shipped app rejects a whole bill whose division carries a null one. A
+    division with no recorded question or name writes "", which readers
+    treat as no question."""
+    return clean_division_question((question or name or "").strip() or None, speaker_names) or ""
+
+
 _SPEECH_STAGE = re.compile(
     r"\b(second reading|third reading|first reading|in committee|"
     r"consideration in detail|committee of the whole)\b", re.I)
@@ -1087,8 +1096,7 @@ def load_divisions(db: sqlite3.Connection, timeline: PartyTimeline) -> dict[str,
             "key": r["id"],
             "date": r["date"],
             "house": r["house"],
-            "question": clean_division_question(
-                (r["question"] or r["name"] or "").strip() or None, speaker_names),
+            "question": division_question(r["question"], r["name"], speaker_names),
             "stage": stage,
             **({"title": title} if title else {}),
             "ayes": r["ayes_count"],

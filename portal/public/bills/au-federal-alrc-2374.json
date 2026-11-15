@@ -195,7 +195,7 @@
    "key": "federal-representatives-1082",
    "date": "2013-05-14",
    "house": "representatives",
-   "question": null,
+   "question": "",
    "stage": "Consideration in detail",
    "ayes": 71,
    "noes": 67,
