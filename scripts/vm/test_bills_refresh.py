@@ -174,6 +174,13 @@ class RegressionTests(unittest.TestCase):
         dropped["key_dates"].pop(0)
         self.assertEqual(bills_guard.regressions(old, dropped), ["1 recorded stages removed"])
 
+    def test_a_division_question_that_is_not_text_is_held(self):
+        # Every app build rejects the whole bill for one (15 Nov 2026, 64 bills).
+        old = {"divisions": [{"key": "division-1", "question": "q"}]}
+        new = {"divisions": [{"key": "division-1", "question": None}]}
+        self.assertEqual(bills_guard.regressions(old, new), ["1 division questions are not text"])
+        self.assertEqual(bills_guard.untexted_questions({"divisions": [{"key": "d", "question": ""}]}), 0)
+
     def test_division_key_loss_or_count_drop_is_held(self):
         old = {"divisions": [{"key": "division-1"}, {"key": "division-2"}]}
         replaced = {"divisions": [{"key": "division-1"}, {"key": "division-3"}]}

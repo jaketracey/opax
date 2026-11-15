@@ -1743,6 +1743,10 @@ def reconcile_divisions(docs: list[dict], directory: Path) -> None:
             for field in list(division):
                 if field in record:
                     division[field] = record[field]
+            # A division page holds None for a placeholder question; the bill
+            # file's question is always text (see division_question).
+            if "question" in division:
+                division["question"] = division["question"] or ""
             division["ayes"] = record.get("ayes")
             division["noes"] = record.get("noes")
             division["outcome"] = record.get("result")
