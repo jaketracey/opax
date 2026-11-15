@@ -78,7 +78,10 @@ const sentences = (text: string) =>
  * The plate's detail line, less any sentence already shown below it. The
  * cover line often restates the first paragraph. A bill with a stage rail
  * uses its published portfolio instead; other lines keep only what the
- * paragraphs lack. Detail lines have no trailing full stop.
+ * paragraphs lack: a whole sentence shown below goes, and so does a piece
+ * cut short with "…" that the text below contains. So a summary is printed
+ * once, in the body under its own label, never on the plate as well. Detail
+ * lines have no trailing full stop.
  */
 export function plateLine(
   line: string | null,
@@ -97,9 +100,25 @@ export function plateLine(
   }
   if (!line?.trim()) return null;
   const below = new Set((shownBelow ?? []).flatMap(sentences));
-  const rest = sentences(line).filter((sentence) => !below.has(sentence));
+  const belowText = (shownBelow ?? []).map(folded);
+  // A cover line may open with the summary cut short ("… spending caps and
+  // reviews… Introduced 15 Sep 2026; before parliament"). The cut piece is
+  // the text below again, so it goes; what follows it stays.
+  const clippedRepeat = (piece: string) => {
+    if (!piece.endsWith('…')) return false;
+    const stem = folded(piece.slice(0, -1));
+    return (
+      stem.length >= CLIPPED_STEM && belowText.some((t) => t.includes(stem))
+    );
+  };
+  const rest = line
+    .split(/(?<=…)\s+/)
+    .flatMap(sentences)
+    .filter((piece) => !below.has(piece) && !clippedRepeat(piece));
   return rest.length ? rest.join(' ').replace(/\.$/, '') : null;
 }
+/** A cut piece shorter than this is too little to call a repeat. */
+const CLIPPED_STEM = 12;
 
 const folded = (text: string) =>
   text.replace(/\s+/g, ' ').trim().toLocaleLowerCase('en-AU');
