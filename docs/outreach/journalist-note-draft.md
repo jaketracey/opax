@@ -1,120 +1,170 @@
-# A note to political reporters and researchers (draft)
+# A note to political reporters and researchers (draft, r2)
 
-Status: a draft for Jake to edit and send himself. Nothing here has been
-sent, and nobody has been contacted.
+Status: a draft for the promotion lane to fold into its own pitches. It
+does not go out on its own. Nothing here has been sent and nobody has
+been contacted.
 
-Every URL below returned 200 without an account on 16 November 2026, and
-the figures quoted are the ones each page showed on that day. They change
-as the record is updated, so check them again before sending.
+It follows the angle of the pitches sent on 10 and 11 November: OPAX is a
+free, open-source site over the Australian parliamentary record, built in
+Melbourne. Records only: no polls, predictions or rankings. Every item
+links to the official record. The offer is a same-day CSV in whatever
+shape the reporter asks for.
+
+Every URL below returned 200 without an account on 16 November 2026.
+Counts are from https://opax.com.au/api/stats, read once on that day:
+964,517 speeches (740,302 federal, 50,744 Victorian), 14,244 recorded
+divisions and 2,994 bills. Read it again before sending and replace the
+figures and the date.
+
+## Sign-off (all variants)
+
+Jake Tracey
+OPAX (opax.com.au), Noice Pty Ltd, Melbourne
+support@opax.com.au
+
+## Authorisation line
+
+The seat finder is electoral matter. Any message that mentions or links
+to it carries this line, as the page itself does:
+
+> Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little
+> Collins Street, Melbourne VIC 3000.
+
+The first note and the follow-up below both carry it. The researcher
+variant does not mention the election, so it does not.
 
 ## Subject lines
 
-1. A searchable record of what federal MPs said, how they voted and who funds the parties
-2. For your next politics story: speeches, votes, donations and grants in one place, each linked to its source
+1. A free, searchable record of Australian parliaments, with a CSV on request
+2. Hansard, divisions and bills in one place, each linked to the official record
 
-## The note (for reporters)
+## The note (desks not yet contacted)
 
 Hello,
 
-I make OPAX, a free site and app that puts the public Australian
-parliamentary record in one place: speeches, votes, bills, political
-donations, declared interests, grants and contracts. It is searchable,
-and each item links to its official source, so you can check it and cite
-the original.
+I make OPAX, a free, open-source site over the Australian parliamentary
+record, built in Melbourne. It holds records only: no polls, predictions
+or rankings. On 16 November it held 964,517 speeches, 14,244 recorded
+divisions and 2,994 bills, and every item links to the official record.
 
-In a minute you can look up how a member voted on a bill, see which
-parties disclosed receipts from a donor, or open an electorate and its
-election contests. A member's votes export as CSV.
+Three things you can check in a minute:
 
-It is free to read, with no account needed. It is independent, open
-source and not affiliated with any parliament, agency or party.
+- Search Hansard by keyword, speaker, party, state and year:
+  https://opax.com.au/ask?view=search
+- Federal bills, with their stages and divisions:
+  https://opax.com.au/bills
+- For the Victorian election on 28 November, find a seat by suburb or
+  postcode: https://opax.com.au/vic-election-2026
 
-https://opax.com.au
+If a table would help a story, tell me the shape and I will send a CSV
+the same day. The press kit is at https://opax.com.au/press.
 
-If something in the record looks wrong, I want to know: support@opax.com.au.
+[Sign-off]
 
-Jake Tracey
+Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little
+Collins Street, Melbourne VIC 3000.
 
-## Three things to check in under a minute
+## The three examples, and what each page shows
 
-These pages were picked only because they are widely known. The same
-pages exist for every member, donor and electorate in the record.
+Facts are as each page stated them on 16 November 2026. No donor or
+donations record is used in any of them.
 
-1. **A member's recorded votes.**
-   https://opax.com.au/subject/person/anthony-albanese
-   The page lists "The 10 most recent of 2,938 recorded divisions", each
-   with the bill or division, the date and the vote (Aye or No), with
-   search, filters and "Export CSV". Further down, "Declared interests"
-   shows "28 recorded entries in the latest register snapshot, as at
-   2026-09-19".
+1. **Hansard search.** https://opax.com.au/ask?view=search
+   The page is headed "Search Hansard: every parliamentary speech" and
+   says speeches can be searched "by keyword, speaker, party, state,
+   topic and year. Every result links to the official record." (Its own
+   line still says "half a million" speeches; the stats endpoint gave
+   964,517 on the day, which is the figure the note uses.)
 
-2. **A donor's disclosed receipts.**
-   https://opax.com.au/subject/donor/Telstra%20Corporation%20Limited
-   The page reads "$855.3k across 97 receipts, 1998 to 2024 (AEC
-   returns)" and shows which parties disclosed receipts from it, split
-   into "Donation Received: $67,545 (5 receipts); Other Receipt: $781,861
-   (89 receipts); Unspecified: $5,898 (3 receipts)". It carries the
-   site's own caution: "An association does not prove influence."
+2. **Federal bills and their divisions.** https://opax.com.au/bills
+   The page reads "Australian parliamentary bills: recorded stages,
+   sponsors, divisions and machine-written summaries where available.
+   2,989 entries. Page 1 of 60." and lists each bill with its status, for
+   example "before parliament".
 
-3. **An electorate.**
-   https://opax.com.au/subject/electorate/federal-representatives-nsw-grayndler
-   The page reads "Grayndler, Federal House of Representatives. Anthony
-   Albanese (Labor). Verified 2026-09-04. 3 election contests on record."
-
-Notes for Jake:
-
-- The receipts and electorate pages draw their tables in the browser.
-  The lines quoted above are in the page as served; open each page once
-  before sending to see the full tables as a reporter would.
-- Examples 1 and 3 name the same member. Swap either for another member
-  or seat if you would rather the three examples span parties.
-- The Victorian election pages are in the app; `opax.com.au/vic-election`
-  returned 404 on the web, so no Victorian election link is used here.
+3. **The Victorian seat finder.** https://opax.com.au/vic-election-2026
+   The page reads "Victorians vote on Saturday 28 November", has a
+   "Which seat am I in?" field for a suburb, postcode or district, lists
+   the key dates, and under "Lower house: 88 districts" says "Each row
+   shows the member and the winning margin at the 2022 election, in
+   percentage points, unless a later by-election is named." It carries
+   the authorisation line above and holds no donor records.
 
 ## Variant for researchers
 
 Hello,
 
-OPAX is a free, open-source site that brings together the public
-Australian parliamentary record: Hansard speeches, recorded divisions,
-bills, political receipts, declared interests, grants and contracts.
-Each item links to its publisher, and a member's votes export as CSV.
+OPAX is a free, open-source site over the Australian parliamentary
+record, built in Melbourne. Records only: no polls, predictions or
+rankings. On 16 November it held 964,517 speeches across the federal
+parliament and five states and territories, 14,244 recorded divisions
+and 2,994 bills, each linked to the official record.
 
-For AI assistants there is a read-only connector (Model Context
-Protocol) at https://opax.com.au/mcp, with no account needed. It
-searches the record and returns records with their source links.
+For research clients there are read-only MCP tools, with no account
+needed. The reference is at https://opax.com.au/methods#mcp, beside the
+methods and how to cite.
 
 On reuse, the site says its code is AGPL-3.0 and that source material
 keeps its publisher's terms: there is no single licence covering the
-record, so check the attribution and reuse note for what you use.
-Methods and how to cite: https://opax.com.au/methods
+record. If a dataset would help, name its shape and I will send a CSV
+the same day.
 
-Jake Tracey
+[Sign-off]
 
-## Where to send it
+## Follow-up (state politics and data desks contacted on 10 and 11 November, no reply)
 
-Kinds of desk only. Choose the people yourself.
+Subject: Re: [the original subject line]
 
-- Federal press gallery bureaus
-- State politics desks, Victoria first while its election is on
-- Data and investigations desks
-- Fact-checking units
-- Regional and local newsrooms that cover a federal seat
-- University politics, public policy and journalism departments
-- Parliamentary and political science research centres
-- Civic technology and open data groups
+Hello,
 
-## What was checked
+Following up my note of [10 or 11] November about OPAX, in case it is
+useful before Victoria votes on 28 November. The offer stands: name a
+table and I will send it as a CSV the same day, from the record only,
+with each row linked to its official source.
 
-- `https://opax.com.au/` 200
-- `https://opax.com.au/subject/person/anthony-albanese` 200
-- `https://opax.com.au/subject/donor/Telstra%20Corporation%20Limited` 200
-- `https://opax.com.au/subject/electorate/federal-representatives-nsw-grayndler` 200
-  (`/subject/electorate/grayndler` redirects to it)
-- `https://opax.com.au/mcp` 200, `https://opax.com.au/methods` 200,
-  `https://opax.com.au/about` 200, `https://opax.com.au/press` 200
+The seat finder is at https://opax.com.au/vic-election-2026 and the
+press kit at https://opax.com.au/press. No need to reply if it is not
+for you.
 
-The wording on sources ("each item links to its official source"),
-"free", "open source", "not affiliated with any parliament, government
-agency or political party" and the licence statement follow the site's
-own About, Methods and Press kit pages.
+[Sign-off]
+
+Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little
+Collins Street, Melbourne VIC 3000.
+
+## Where the new note goes
+
+Desks not yet contacted. Kinds of desk and outlets only; choose the
+people yourself.
+
+- The federal press gallery bureaus
+- SBS News
+- Crikey
+- The Conversation
+- The Saturday Paper
+- Regional dailies, written to directly
+- Academic researchers in politics, public policy and journalism at
+  universities other than ANU
+
+The follow-up goes only to the state politics and data desks already
+written to on 10 and 11 November that have not replied.
+
+## What was left out, and why
+
+- The donor example from the first draft is dropped. Nothing tied to
+  the Victorian election uses donor or donations records.
+- No claim about an app on any platform, and no mention of assistant
+  directories.
+- No client of the publisher is named.
+
+## What was checked on 16 November 2026
+
+One request each, a second apart, as `opax-improve-audit`:
+
+- `https://opax.com.au/vic-election-2026` 200
+- `https://opax.com.au/press` 200
+- `https://opax.com.au/ask?view=search` 200
+- `https://opax.com.au/bills` 200
+- `https://opax.com.au/methods` 200, and the page has the `mcp` anchor
+- `https://opax.com.au/api/stats` 200: `speech` 964,517; `division`
+  14,244; `bill` 2,994; speeches by state: federal 740,302, NSW 115,308,
+  Victoria 50,744, SA 37,971, Queensland 10,228, ACT 9,964
