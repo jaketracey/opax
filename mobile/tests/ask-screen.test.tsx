@@ -41,6 +41,7 @@ import {
   caretAfterSelection,
   caretSelection,
   composerFieldCap,
+  composerFieldFloor,
   composerLines,
   prefilledCaret,
 } from '../src/features/ask/AskDock';
@@ -2871,6 +2872,121 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
     ).toBe(textStyles.body.lineHeight * 5 + 22);
   });
 
+  describe('whole lines at the small sizes, under the touch floor and on Android (review)', () => {
+    const fieldOf = (r: ReactTestRenderer) =>
+      r.root.find(
+        (n) => n.props.testID === 'ask-question' && n.props.style !== undefined,
+      );
+    const wrapperOf = (r: ReactTestRenderer) =>
+      r.root.find(
+        (n) => typeof n.type === 'string' && n.props.testID === 'ask-field',
+      );
+    const report = (r: ReactTestRenderer, height: number) =>
+      act(() =>
+        fieldOf(r).props.onContentSizeChange({
+          nativeEvent: { contentSize: { width: 300, height } },
+        }),
+      );
+
+    test.each([
+      ['xSmall', 0.823],
+      ['Small', 0.882],
+      ['Medium', 0.941],
+    ])(
+      '%s: lines are counted at the size they are drawn, below the default too',
+      (_name, fontScale) => {
+        const line = textStyles.body.lineHeight * fontScale;
+        const fits = composerFieldCap({
+          fontScale,
+          windowHeight: 874,
+          chrome: 16,
+        });
+        const over = composerFieldCap({
+          fontScale,
+          windowHeight: 874,
+          chrome: 16,
+          overflowing: true,
+        });
+        // Five of the reader's own lines, not five default-size lines.
+        expect(fits).toBeCloseTo(5 * line + 2 * COMPOSER_FIELD_PADDING, 6);
+        expect(over).toBeCloseTo(5 * line + COMPOSER_FIELD_PADDING, 6);
+        expect(fits).toBeLessThan(
+          5 * textStyles.body.lineHeight + 2 * COMPOSER_FIELD_PADDING,
+        );
+      },
+    );
+
+    test('a short window with the keyboard up: the text view is one whole line, and the field keeps 44 pt', () => {
+      act(() =>
+        Dimensions.set({
+          window: { ...original, width: 402, height: 500, fontScale: 1 },
+        }),
+      );
+      const { r } = dock(350);
+      const line = textStyles.body.lineHeight;
+      const flat = (node: { props: { style?: unknown } }) =>
+        StyleSheet.flatten(node.props.style as never) as Record<
+          string,
+          number | undefined
+        >;
+      // Room for one line. A draft that fits is that line and its paddings.
+      expect(flat(fieldOf(r)).maxHeight).toBe(line + 22);
+      expect(wrapperOf(r).props.style).not.toEqual(
+        expect.arrayContaining([expect.objectContaining({ minHeight: 44 })]),
+      );
+      // Three lines: the text view is one line and its top padding, never
+      // lifted to 44 pt, where 11 pt of the second line showed.
+      report(r, 3 * line + 22);
+      expect(flat(fieldOf(r)).maxHeight).toBe(line + COMPOSER_FIELD_PADDING);
+      expect(flat(fieldOf(r)).minHeight).toBe(line + COMPOSER_FIELD_PADDING);
+      // The field around it is still a 44 pt target, and a tap in the rest
+      // of it reaches the text view.
+      expect(flat(wrapperOf(r)).minHeight).toBe(44);
+      expect(fieldOf(r).props.hitSlop).toEqual({
+        bottom: 44 - (line + COMPOSER_FIELD_PADDING),
+      });
+      // Back to a draft that fits: the usual 44 pt text view, no wrapper floor.
+      report(r, line + 22);
+      expect(flat(fieldOf(r)).maxHeight).toBe(line + 22);
+      expect(flat(fieldOf(r)).minHeight).toBe(44);
+      expect(fieldOf(r).props.hitSlop).toBeUndefined();
+      act(() => r.unmount());
+    });
+
+    test('Android: the same paddings, so the same whole lines, and a 48 dp floor', () => {
+      act(() =>
+        Dimensions.set({
+          window: { ...original, width: 402, height: 874, fontScale: 1 },
+        }),
+      );
+      const platform = jest.replaceProperty(Platform, 'OS', 'android');
+      try {
+        const { r } = dock(336);
+        const line = textStyles.body.lineHeight;
+        const flat = () =>
+          StyleSheet.flatten(fieldOf(r).props.style) as Record<
+            string,
+            number | string | undefined
+          >;
+        // The field's padding is 11 above and below on Android too.
+        expect(flat().paddingTop).toBe(COMPOSER_FIELD_PADDING);
+        expect(flat().paddingBottom).toBe(COMPOSER_FIELD_PADDING);
+        expect(flat().maxHeight).toBe(5 * line + 22);
+        expect(flat().minHeight).toBe(48);
+        expect(flat().textAlignVertical).toBe('top');
+        expect(composerFieldFloor(1)).toBe(48);
+        expect(composerFieldFloor(2)).toBe(2 * line + 22);
+        // Six lines: five whole lines from the top padding down.
+        report(r, 6 * line + 22);
+        expect(flat().maxHeight).toBe(5 * line + COMPOSER_FIELD_PADDING);
+        act(() => r.unmount());
+      } finally {
+        platform.restore();
+      }
+      expect(composerFieldFloor(1)).toBe(44);
+    });
+  });
+
   describe('the field never ends part way through a line (b80 sweep)', () => {
     const sizes: [string, number][] = [
       ['the default size', 1],
@@ -2905,11 +3021,9 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
           );
           // One that overflows: the same lines and one padding, so the top
           // of the draft shows the top padding and whole lines, and its
-          // end whole lines and the bottom padding. Never under 44 pt.
-          expect(over).toBeCloseTo(
-            Math.max(44, lines * line + COMPOSER_FIELD_PADDING),
-            6,
-          );
+          // end whole lines and the bottom padding. It is not lifted to the
+          // touch floor: the field around it keeps that.
+          expect(over).toBeCloseTo(lines * line + COMPOSER_FIELD_PADDING, 6);
           // Within the 40% rule whenever one line fits it at all.
           const room40 =
             COMPOSER_HEIGHT_SHARE * (room.windowHeight - room.keyboard) -
