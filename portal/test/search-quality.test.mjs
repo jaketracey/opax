@@ -39,12 +39,13 @@ test('a speaker search scores passages on no words, and a quoted or worded query
 
 test('the passage shown is never the speaker label while the record has words', () => {
   const { isSpeakerLabel, pickPassage, passageTerms } = passages;
-  for (const label of [LABEL, 'CHAIR:', 'Ms Barrett (Fremantle):', 'The Hon. Jo Example MP:', 'ACTING CHAIR (Senator Example):']) assert.equal(isSpeakerLabel(label), true, label);
-  // A sentence ending in a colon is the record's words, on the server as on the page.
-  for (const text of [SPOKEN, `${LABEL} ${SPOKEN}`, 'I have three questions for the department:', 'I have three questions: first, the target.', 'Senator Quill asked the following question:', 'Thank you.']) assert.equal(isSpeakerLabel(text), false, text);
   // The record as retrieval returns it: the label paragraph ranks first.
   const paragraphs = [{ text: LABEL, score: 0.91 }, { text: SPOKEN, score: 0.42 }, { text: 'Thank you.', score: 0.2 }];
   assert.equal(pickPassage(paragraphs, passageTerms(SPEAKER, SPEAKER)).text, SPOKEN, 'a speaker search shows the best paragraph with words');
+  // Real committee text carries the hearing header above the label: still a label, and still passed over.
+  const headed = [{ text: `[Finance and Public Administration Legislation Committee 27/05/2026 Estimates PRIME MINISTER AND CABINET PORTFOLIO Australian Public Service Commission] ${LABEL}`, score: 0.95 }, { text: SPOKEN, score: 0.4 }];
+  assert.equal(pickPassage(headed, []).text, SPOKEN);
+  assert.equal(pickPassage(headed.slice(0, 1), []).text, '', 'a record with nothing but its header and label has no passage');
   // Even scored on the name (an unfiltered search for it), the label is passed over.
   assert.equal(pickPassage(paragraphs, ['ada', 'quill']).text, SPOKEN);
   // A real query still finds its words and where they start.
@@ -94,7 +95,8 @@ test('the turns of one hearing collapse into its best-ranked card, with a count'
 // The page's own functions, run on fixture rows.
 const source = ts.createSourceFile('app.js', appText, ts.ScriptTarget.Latest, true);
 const wanted = ['renderResults', 'cleanPassage', 'committeeShortTitle', 'committeeResultTitle', 'committeeHouse'];
-const declarations = source.statements.filter((n) => ts.isFunctionDeclaration(n) && wanted.includes(n.name?.text)).map((n) => n.getText(source)).join('\n');
+const labelBlock = (text) => text.slice(text.indexOf('// speaker-label:begin'), text.indexOf('// speaker-label:end'));
+const declarations = labelBlock(appText) + '\n' + source.statements.filter((n) => ts.isFunctionDeclaration(n) && wanted.includes(n.name?.text)).map((n) => n.getText(source)).join('\n');
 function page(rows) {
   const document = new JSDOM('<ul id="search-results"></ul>').window.document;
   const esc = (s) => String(s ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
@@ -137,16 +139,55 @@ test('a committee card names the committee once, says how many passages it stand
   // of an empty paragraph.
   const mentions = appText.slice(appText.indexOf('async function subjectMentions('), appText.indexOf('\n}', appText.indexOf('async function subjectMentions(')));
   const paragraph = /<p class="snippet">\$\{esc\((.+?)\)\}<\/p>/.exec(mentions)?.[1] || '';
-  const drawn = (r) => runInNewContext(`(${paragraph})`, { r, String });
+  const drawn = (r) => runInNewContext(`(${paragraph})`, { r, String, cleanPassage: api.cleanPassage });
   assert.equal(drawn({ kind: 'speech', snippet: '' }), 'Open the speech to read the passage.', 'a mention with no passage is not an empty paragraph');
   assert.equal(drawn({ kind: 'speech', snippet: '  ' }), 'Open the speech to read the passage.');
   assert.equal(drawn({ kind: 'press_release', snippet: '' }), 'Open the record to read the passage.');
   assert.equal(drawn({ kind: 'speech', snippet: SPOKEN }), SPOKEN, 'a mention with a passage is unchanged');
   assert.equal(drawn({ kind: 'speech', snippet: 'x'.repeat(300) }).length, 220);
-  // One definition of a label, on the page and in the Worker.
-  for (const label of [LABEL, 'CHAIR:', 'Senator Quill:', 'The Hon. Jo Example MP:', 'ACTING CHAIR:', 'ACTING CHAIR (Senator Example):', 'Ms Barrett (Fremantle):']) { assert.equal(api.cleanPassage(label), '', label); assert.equal(passages.isSpeakerLabel(label), true, label); }
-  for (const words of ['I have three questions for the department:', 'Senator Quill asked the following question:']) { assert.equal(api.cleanPassage(words), words); assert.equal(passages.isSpeakerLabel(words), false, words); }
+  // The mention is cleaned like every other passage: no header, no banner, and a bare label is the fallback.
+  assert.equal(drawn({ kind: 'speech', snippet: `[A Committee 27/05/2026 Estimates] ${LABEL} ${SPOKEN}` }), SPOKEN.slice(0, 220));
+  assert.equal(drawn({ kind: 'speech', snippet: `[A Committee 27/05/2026 Estimates] ${LABEL}` }), 'Open the speech to read the passage.');
   assert.equal(api.cleanPassage(`${LABEL} ${SPOKEN}`), SPOKEN, 'a label with words after it still gives the words');
   assert.equal(api.cleanPassage('Chair of the committee said: yes.'), 'Chair of the committee said: yes.');
+  // Briefs mode: "From the record" is said before a passage, never before the fallback line.
+  assert.match(appText, /searchReadMode === "briefs" && passageText \? `<span class="visually-hidden">From the record: <\/span>` : ""/);
   assert.equal(api.cleanPassage('Senator Quill asked the following question:'), 'Senator Quill asked the following question:', 'a sentence that ends in a colon is not a label');
+});
+
+// One definition of a speaker label, in the Worker and on the page.
+const LABELS = [
+  LABEL, 'Senator Quill:', 'CHAIR:', 'ACTING CHAIR:', 'ACTING CHAIR (Senator Example):', 'Ms Barrett (Fremantle):', 'The Hon. Jo Example MP:',
+  // These were labels at 5e2db4d19 and must stay labels.
+  'Mr ALBANESE (Grayndler—Prime Minister) (14:02):', 'Commissioner Kershaw:', 'General Campbell:', 'Air Chief Marshal Binskin:',
+  'The PRESIDENT:', 'The SPEAKER:', 'Dr de Brouwer:',
+  // Ranks, offices and name particles.
+  'Lieutenant General Example:', 'Vice Admiral Example:', 'Brigadier Example:', 'Deputy Commissioner Example:', 'The DEPUTY PRESIDENT:', 'The DEPUTY SPEAKER (Ms Example):',
+  'Mr van der Example:', 'Senator Di Example:', 'Ms Le Example (Example—Minister for Examples) (10:15):',
+  // Real committee text: the hearing header, then the label.
+  `[Finance and Public Administration Legislation Committee - Finance and Public Administration Legislation Committee 27/05/2026 Estimates PRIME MINISTER AND CABINET PORTFOLIO Australian Public Service Commission] ${LABEL}`,
+  '[Rural and Regional Affairs and Transport Legislation Committee 28/05/2026 Estimates AGRICULTURE, FISHERIES AND FORESTRY PORTFOLIO Meat & Livestock Australia Limited] Senator CANAVAN:',
+];
+const NOT_LABELS = [
+  'Senator Smith: thank you', 'I have three questions for the department:', 'Senator Quill asked the following question:', SPOKEN, `${LABEL} ${SPOKEN}`,
+  'I have three questions: first, the target.', 'Thank you.', 'General business was then called on:', 'The president of the board said:',
+];
+
+test('server and page agree on what a speaker label is', () => {
+  // The two copies of the definition are the same text.
+  const normal = (block) => block.split('\n').map((line) => line.trim()).join('\n');
+  const server = labelBlock(read('src/search-passages.ts')), client = labelBlock(appText);
+  assert.ok(server.length > 400 && client.length > 400, 'both copies are present');
+  assert.equal(normal(client), normal(server), 'public/app.js and src/search-passages.ts hold one definition');
+  const { api } = page([]);
+  for (const label of LABELS) {
+    assert.equal(passages.isSpeakerLabel(label), true, `server: a label: ${label}`);
+    assert.equal(api.cleanPassage(label), '', `page: a label: ${label}`);
+  }
+  for (const words of NOT_LABELS) {
+    assert.equal(passages.isSpeakerLabel(words), false, `server: not a label: ${words}`);
+    assert.notEqual(api.cleanPassage(words), '', `page: not a label: ${words}`);
+  }
+  // The same table through the Worker's choice of passage: a label never beats words.
+  for (const label of LABELS) assert.equal(passages.pickPassage([{ text: label, score: 0.99 }, { text: SPOKEN, score: 0.1 }], []).text, SPOKEN, label);
 });
