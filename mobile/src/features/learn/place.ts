@@ -117,7 +117,8 @@ export function useLearnPlaces(): LearnPlaces {
 /**
  * What the hub says about a chapter, against the chapter as it is now (a
  * later edition of the guide may be shorter than the place kept):
- * - `read`: the last idea was reached;
+ * - `read`: the last idea was reached, in the chapter as it was then or as
+ *   it is now;
  * - `part`: the reader stopped at idea `at`, the second or later;
  * - null: not opened, or only its first idea seen.
  */
@@ -126,9 +127,10 @@ export function chapterProgress(
   total: number,
 ): { kind: 'read' } | { kind: 'part'; at: number } | null {
   if (!place || total < 1) return null;
-  if (place.read) return { kind: 'read' };
-  const at = Math.min(place.at, total);
-  return at >= 2 ? { kind: 'part', at } : null;
+  // A place at or past the end is the end reached: a chapter that has
+  // since got shorter is read, not "4 of 4".
+  if (place.read || place.at >= total) return { kind: 'read' };
+  return place.at >= 2 ? { kind: 'part', at: place.at } : null;
 }
 
 /** Tests only. */

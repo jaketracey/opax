@@ -356,6 +356,7 @@ export function MoneyMap({
         { previous, current },
         viewport,
         next.camera,
+        focus,
       );
       next.camera = back.camera;
       rest.current = back.rest ? { bounds, rest: back.rest } : null;
@@ -379,6 +380,7 @@ export function MoneyMap({
     fitK,
     viewportSV,
     boundsSV,
+    focus,
     focusIndex,
     at,
     insets,
@@ -524,12 +526,15 @@ export function MoneyMap({
   }, [command, fit, zoom, flyTo]);
   const pick = useCallback(
     (sx: number, sy: number) => {
-      if (blockedMapPoint(sx, sy, regions)) return;
+      // Nothing is drawn until the layout has settled, and the hit grid
+      // is built from places that are still moving: a tap before then
+      // would focus a disc the reader never saw.
+      if (!settled || blockedMapPoint(sx, sy, regions)) return;
       const cam = current();
       const mi = pickMapPoint(hit, cam, sx, sy, TAP_SLACK, regions);
       onFocus(mi === null ? null : (model.nodes[mi]?.id ?? null));
     },
-    [current, hit, model, onFocus, regions],
+    [current, hit, model, onFocus, regions, settled],
   );
   // Taps are decided on JS (see TapRouter): a second tap inside the window
   // zooms about the point; a lone tap picks once the window has passed.

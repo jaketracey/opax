@@ -75,9 +75,18 @@ export function TodayBlock({
           testID="today-vic-election-status"
         />
         <LinkRow
-          title={district?.name ?? c.findDistrict}
+          // The district's contest, not its member: "Your representatives"
+          // names who holds (or last held) the seat, so the two never say
+          // the same thing.
+          title={district ? c.contestIn(district.name) : c.findDistrict}
           titleRole="strong"
-          detail={district ? c.stateDistrict : c.findDetail}
+          detail={
+            district
+              ? o.candidates_published
+                ? c.contestDetail
+                : c.contestDetailEarly
+              : c.findDetail
+          }
           symbol="building.columns"
           symbolInk="votes"
           href={district ? vicSeatRoute(district.slug) : vicElectionRoute()}

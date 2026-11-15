@@ -2,6 +2,7 @@
  * The people directory's rows are built in slices, so opening Members no
  * longer holds the JS thread in one block (features/directories/model.ts).
  */
+import * as portraitIndex from '../src/api/portrait-index';
 import { buildPortraitIndex } from '../src/api/portrait-index';
 import {
   PEOPLE_ROWS_SLICE,
@@ -119,5 +120,39 @@ test('the same catalogue snapshots give the same rows without building them agai
   const changed = await loadDirectory('person', true);
   expect(changed.people).not.toBe(first.people);
   expect(changed.people).toEqual(first.people);
+  forgetDirectoryRows();
+});
+
+test('going back from Members then reopening runs one build, not two', async () => {
+  forgetDirectoryRows();
+  const snapshot = {
+    manifest: record(manifest),
+    roster: record(roster),
+    slugs: record(slugs),
+    people: record(people),
+    electorates: record(index),
+  };
+  mockCatalogs.directory.mockImplementation(async () => ({ ...snapshot }));
+  mockCatalogs.votes.mockResolvedValue(record(catalogs.votes));
+  mockCatalogs.photoPeople.mockResolvedValue(record(catalogs.photoPeople));
+  mockCatalogs.photoCredits.mockResolvedValue(record(catalogs.photoCredits));
+  const builds = jest.spyOn(portraitIndex, 'buildPortraitIndexAsync');
+  const left = new AbortController();
+  const first = loadDirectory('person', false, left.signal);
+  const abandoned = first.catch((e: unknown) => e);
+  // Back out while the rows are being built, then open Members again.
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  left.abort();
+  const reopened = await loadDirectory('person');
+  expect((await abandoned) as { name?: string }).toMatchObject({
+    name: 'AbortError',
+  });
+  expect(reopened.people.length).toBeGreaterThan(1000);
+  expect(builds).toHaveBeenCalledTimes(1);
+  // And the rows are kept: the next open is instant.
+  const again = await loadDirectory('person');
+  expect(again.people).toBe(reopened.people);
+  expect(builds).toHaveBeenCalledTimes(1);
+  builds.mockRestore();
   forgetDirectoryRows();
 });

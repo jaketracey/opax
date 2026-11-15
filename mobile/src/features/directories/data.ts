@@ -49,14 +49,26 @@ export interface DirectoryRecord {
   sources: { asAt: string | null; label: string }[];
 }
 /** The people rows last built, and the catalogue snapshots they came from. */
-let built: {
+type BuiltRows = {
   inputs: readonly unknown[];
   people: PeopleRow[];
   facets: Facet[];
+};
+let built: BuiltRows | null = null;
+/**
+ * The build in progress. It is not tied to any one screen's signal: if the
+ * screen is left, the build still finishes and keeps its rows, and a reopen
+ * with the same snapshots joins it instead of starting a second build
+ * beside it.
+ */
+let building: {
+  inputs: readonly unknown[];
+  done: Promise<BuiltRows>;
 } | null = null;
 /** Tests start each case with nothing built. */
 export function forgetDirectoryRows() {
   built = null;
+  building = null;
 }
 export async function loadDirectory(
   kind: DirectoryKind,
@@ -93,20 +105,36 @@ export async function loadDirectory(
       credits.data,
     ];
     if (!built || inputs.some((input, i) => input !== built!.inputs[i])) {
-      const portraits = await buildPortraitIndexAsync({
-        roster: d.roster.data,
-        slugs: d.slugs.data,
-        people: d.people.data,
-        manifest: d.manifest.data,
-        photoPeople: photos.data,
-        photoCredits: credits.data,
-      });
-      const people = await peopleRowsAsync(d, votes.data, portraits);
+      if (
+        !building ||
+        inputs.some((input, i) => input !== building!.inputs[i])
+      ) {
+        const done = (async () => {
+          const portraits = await buildPortraitIndexAsync({
+            roster: d.roster.data,
+            slugs: d.slugs.data,
+            people: d.people.data,
+            manifest: d.manifest.data,
+            photoPeople: photos.data,
+            photoCredits: credits.data,
+          });
+          const people = await peopleRowsAsync(d, votes.data, portraits);
+          return (built = { inputs, people, facets: peopleFacets(people) });
+        })();
+        const run = (building = { inputs, done });
+        const clear = () => {
+          if (building === run) building = null;
+        };
+        done.then(clear, clear);
+      }
+      const ready: BuiltRows = await building!.done;
       throwIfAborted(signal);
-      built = { inputs, people, facets: peopleFacets(people) };
+      rows.people = ready.people;
+      rows.facets = ready.facets;
+    } else {
+      rows.people = built.people;
+      rows.facets = built.facets;
     }
-    rows.people = built.people;
-    rows.facets = built.facets;
     records.push(...Object.values(d), votes, photos, credits);
     sources.push(
       {

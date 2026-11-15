@@ -1,6 +1,11 @@
 import { Children, type ComponentProps } from 'react';
 import { View } from 'react-native';
-import { PadGrid, useLayout, useMeasuredRegion } from '../../design/adaptive';
+import {
+  PadGrid,
+  useColumnWidth,
+  useLayout,
+  useMeasuredRegion,
+} from '../../design/adaptive';
 import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { activeVerticalFold } from '../../design/fold';
 import { rhythm } from '../../design/tokens';
@@ -28,7 +33,9 @@ function FoldGrid({
   const layout = useLayout();
   const [onLayout, measured] = useMeasuredRegion();
   const reserved = useReservedRegions();
-  const width = measured?.width ?? layout.width;
+  // As Grid does: the enclosing column's width until this has measured.
+  const column = useColumnWidth();
+  const width = measured?.width ?? column ?? layout.width;
   const fold = activeVerticalFold(reserved.divisions);
   // Equal columns, with a gutter containing the whole fold, even off centre.
   const gutter = fold

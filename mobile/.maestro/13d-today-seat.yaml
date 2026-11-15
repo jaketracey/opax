@@ -18,8 +18,18 @@ name: 13d Today with a seat saved, the Your MP tile first, one link to the profi
       id: today-your-mp
     timeout: 60000
 - assertVisible:
-    id: today-your-mp-member
-    text: Your MP, Anthony Albanese, .*Grayndler\. Represents you in federal parliament\.
+    id: today-rep-federal
+    text: Anthony Albanese, .*, Federal member for Grayndler
+- assertVisible:
+    id: today-reps-heading
+    text: Your representatives
+# Senators have one link row, never rows of their own.
+- assertVisible:
+    id: today-reps-senators
+    text: Senators for New South Wales.*
+# The device saves no state district outside Victoria: the federal row alone.
+- assertNotVisible:
+    id: today-rep-state
 - assertNotVisible:
     id: today-invitation
 - assertNotVisible:
@@ -43,7 +53,7 @@ name: 13d Today with a seat saved, the Your MP tile first, one link to the profi
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/13d-edition-after-card
-# The tile opens the member's profile.
+# The row opens the member's profile.
 - scrollUntilVisible:
     element:
       id: today-screen-message
@@ -51,7 +61,7 @@ name: 13d Today with a seat saved, the Your MP tile first, one link to the profi
     timeout: 90000
 - waitForAnimationToEnd
 - tapOn:
-    id: today-your-mp-member
+    id: today-rep-federal
 - extendedWaitUntil:
     visible:
       id: person-screen-title

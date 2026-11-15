@@ -1,4 +1,5 @@
 import { Link, router } from 'expo-router';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
   HeaderHeightContext,
   NavigationContext,
@@ -19,6 +20,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Icon } from '../src/design/icon';
 import {
   InsetGroup,
+  PinnedAtTopContext,
   PinnedRestContext,
   Screen,
   ScreenHeader,
@@ -1850,6 +1852,136 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     const undragged = sticky(240, null);
     expect(undragged(-123)).toBe(0);
     expect(undragged(300)).toBe(0);
+  });
+  test('a page cut at the safe area’s top edge: the scroll view starts there, and the band holds at its top', () => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const page = (clip: boolean) =>
+      render(
+        <SafeAreaInsetsContext.Provider
+          value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+        >
+          <HeaderHeightContext.Provider value={240}>
+            <Screen
+              testID="page"
+              clipAboveSafeTop={clip}
+              pinned={<View testID="scopes" />}
+            >
+              <View testID="first" />
+            </Screen>
+          </HeaderHeightContext.Provider>
+        </SafeAreaInsetsContext.Provider>,
+      ).root.find(
+        (node) =>
+          node.props.testID === 'page' && node.props.stickyHeaderIndices,
+      );
+    // Not asked for: the page runs under the bar as before.
+    expect(flat(page(false).props.style).marginTop ?? 0).toBe(0);
+    // Asked for: no row can be drawn above the status bar's lower edge,
+    // because the scroll view starts there and clips to its own frame.
+    const scroll = page(true);
+    expect(flat(scroll.props.style).marginTop).toBe(62);
+    // It keeps the scroll view's own overflow: `hidden` would lay its
+    // children out as in a box of fixed height, and the pinned band 0 pt
+    // tall, with no background and the content over it (iOS 26.3).
+    expect(flat(scroll.props.style).overflow).not.toBe('hidden');
+    // Turning the cut on or off never scrolls the page itself: UIKit moves
+    // the offset with the inset it gives the scroll view, and a correction
+    // on top of that over-shifted the rows (30 pt on the tap, iOS 26.3).
+    const scrollTo = jest.spyOn(ScrollView.prototype, 'scrollTo');
+    const wrap = (on: boolean) => (
+      <SafeAreaInsetsContext.Provider
+        value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+      >
+        <HeaderHeightContext.Provider value={240}>
+          <Screen testID="page" clipAboveSafeTop={on}>
+            <View testID="first" />
+          </Screen>
+        </HeaderHeightContext.Provider>
+      </SafeAreaInsetsContext.Provider>
+    );
+    const tree = render(wrap(false));
+    const live = () =>
+      tree.root.find(
+        (node) =>
+          node.props.testID === 'page' &&
+          typeof node.props.onScroll === 'function',
+      );
+    act(() =>
+      live().props.onScroll({
+        nativeEvent: {
+          contentOffset: { y: 358 },
+          contentSize: { height: 4000 },
+          layoutMeasurement: { height: 800 },
+        },
+      }),
+    );
+    act(() => tree.update(wrap(true)));
+    expect(flat(live().props.style).marginTop).toBe(62);
+    act(() => tree.update(wrap(false)));
+    expect(flat(live().props.style).marginTop ?? 0).toBe(0);
+    expect(scrollTo).not.toHaveBeenCalled();
+    // And it adds no fling handlers of its own.
+    expect(live().props.onMomentumScrollBegin).toBeUndefined();
+    expect(live().props.onMomentumScrollEnd).toBeUndefined();
+    scrollTo.mockRestore();
+    act(() => tree.unmount());
+    // Below an opaque bar (before iOS 26) the scroll view already starts
+    // under the bar: a margin there would only add a blank band.
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: '18.4',
+    });
+    expect(flat(page(true).props.style).marginTop ?? 0).toBe(0);
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    // The band keeps the app's own sticky header.
+    const Sticky = scroll.props.StickyHeaderComponent;
+    expect(Sticky).toBeDefined();
+    // With no bar over the scroll view and no inset, the page rests at 0
+    // and no drag ever starts below it: the band holds as soon as its own
+    // top (16) reaches the scroll view's top, whatever the stale header
+    // height says.
+    const offset = new Animated.Value(0);
+    const root = render(
+      <HeaderHeightContext.Provider value={240}>
+        <PinnedRestContext.Provider value={null}>
+          <PinnedAtTopContext.Provider value>
+            <Sticky scrollAnimatedValue={offset} onLayout={jest.fn()}>
+              <View />
+            </Sticky>
+          </PinnedAtTopContext.Provider>
+        </PinnedRestContext.Provider>
+      </HeaderHeightContext.Provider>,
+    ).root;
+    act(() =>
+      root
+        .find(
+          (n) =>
+            n.props.testID === 'screen-pinned-header' &&
+            typeof n.props.onLayout === 'function',
+        )
+        .props.onLayout({ nativeEvent: { layout: { y: 16, height: 52 } } }),
+    );
+    const at = (y: number) => {
+      act(() => offset.setValue(y));
+      const node = root.find(
+        (n) =>
+          n.props.testID === 'screen-pinned-header' &&
+          typeof n.type === 'string',
+      );
+      return (flat(node.props.style).transform as { translateY: number }[])[0]!
+        .translateY;
+    };
+    expect(at(0)).toBe(0);
+    expect(at(16)).toBe(0);
+    expect(at(16 + 50)).toBe(50);
+    expect(at(16 + 400)).toBe(400);
   });
   test('before iOS 26 the band uses React Native’s own sticky header: the scroll view starts below the opaque bar', () => {
     // BarStickyHeader moves the stick point down by the bar's height, for a

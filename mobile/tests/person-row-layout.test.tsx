@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { PersonRow } from '../src/design/people';
-import { Text } from '../src/design/text';
+import { Text, pixelSlack } from '../src/design/text';
 import { drawnTextClipped } from '../src/design/text-probe.e2e';
 
 jest.mock('expo-constants', () => ({
@@ -84,7 +84,17 @@ test.each([1, 1.786, 2.143, 2.643, 3.143, 3.571])(
   },
 );
 
-test('word-safe text keeps the fractional AX5 final line inside its rounded drawing frame', () => {
+const nativeLines = [
+  { text: 'Anthony ', x: 0, y: 0, width: 200, height: 70.591 },
+  { text: 'Albanese', x: 0, y: 70.591, width: 200, height: 70.591 },
+];
+const oneLine = [
+  { text: 'Anthony Albanese', x: 0, y: 0, width: 280, height: 70.591 },
+];
+const floorOf = (node: TestRenderer.ReactTestInstance) =>
+  StyleSheet.flatten(node.props.style).minHeight;
+
+test('word-safe text keeps the fractional AX5 final line inside its drawing frame, and grows only when it is proven short', () => {
   jest.mocked(useWindowDimensions).mockReturnValue({
     width: 390,
     height: 844,
@@ -102,10 +112,24 @@ test('word-safe text keeps the fractional AX5 final line inside its rounded draw
         nativeEvent: { layout: { x: 0, y: 0, width: 298, height } },
       }),
     );
+  const lines = (value: typeof nativeLines) =>
+    act(() => name().props.onTextLayout({ nativeEvent: { lines: value } }));
+  // A fraction of a pixel is reserved from the first render: Yoga then ceils
+  // the frame's bottom edge instead of flooring it (pixelSlack).
+  expect(StyleSheet.flatten(name().props.style).paddingBottom).toBe(
+    pixelSlack(3),
+  );
+  expect(pixelSlack(3)).toBeGreaterThan(0);
+  // The frame the slack gives holds both lines: nothing grows.
+  layout(141.667);
+  lines(nativeLines);
+  expect(floorOf(name())).toBeUndefined();
+  // A frame proven shorter than its lines (141.182 pt in 141) still takes
+  // the floor, once.
   layout(141);
-  expect(StyleSheet.flatten(name().props.style).minHeight).toBe(142);
+  expect(floorOf(name())).toBe(142);
   layout(142);
-  expect(StyleSheet.flatten(name().props.style).minHeight).toBe(142);
+  expect(floorOf(name())).toBe(142);
   expect(StyleSheet.flatten(name().props.style).height).toBeUndefined();
   expect(StyleSheet.flatten(name().props.style).maxHeight).toBeUndefined();
   // A smaller Dynamic Type setting must measure afresh rather than retain
@@ -121,12 +145,155 @@ test('word-safe text keeps the fractional AX5 final line inside its rounded draw
     fontScale: 1,
   });
   act(() => renderer.update(<Text wordSafe>Anthony Albanese</Text>));
-  expect(StyleSheet.flatten(name().props.style).minHeight).toBeUndefined();
+  expect(floorOf(name())).toBeUndefined();
   layout(141); // A queued AX5 frame cannot establish Large's floor.
-  layout(25);
-  expect(StyleSheet.flatten(name().props.style).minHeight).toBeUndefined();
-  act(() => committed(0, 0, 298, 25));
-  expect(StyleSheet.flatten(name().props.style).minHeight).toBe(26);
+  layout(24);
+  lines([{ text: 'Anthony Albanese', x: 0, y: 0, width: 150, height: 24.5 }]);
+  expect(floorOf(name())).toBeUndefined();
+  // Only the committed view's own measure proves the frame is this size's.
+  act(() => committed(0, 0, 298, 24));
+  expect(floorOf(name())).toBe(25);
+  act(() => renderer.unmount());
+});
+
+test('a dropped final line (fewer characters than the words) takes the floor; a trailing no-break space or extra nested text does not', () => {
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 3.571 });
+  const mount = (words: string) => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(<Text wordSafe>{words}</Text>);
+    });
+    const name = () => renderer.root.findByType(NativeText);
+    act(() =>
+      name().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 298, height: 141 } },
+      }),
+    );
+    return {
+      name,
+      lines: (value: typeof nativeLines) =>
+        act(() => name().props.onTextLayout({ nativeEvent: { lines: value } })),
+      done: () => act(() => renderer.unmount()),
+    };
+  };
+  // TextKit dropped "Albanese": its line fits the frame, the words do not.
+  const dropped = mount('Anthony Albanese');
+  dropped.lines(nativeLines.slice(0, 1));
+  expect(floorOf(dropped.name())).toBe(142);
+  dropped.done();
+  const spaced = mount('divisions ');
+  spaced.lines([{ text: 'divisions', x: 0, y: 0, width: 90, height: 52.157 }]);
+  expect(floorOf(spaced.name())).toBeUndefined();
+  spaced.done();
+  const nested = mount('votes');
+  nested.lines([{ text: '12 votes', x: 0, y: 0, width: 90, height: 52.157 }]);
+  expect(floorOf(nested.name())).toBeUndefined();
+  nested.done();
+});
+
+test('silence takes no floor: a listening Text that hears no line event does not grow later', () => {
+  // Found on the device at AX5: four of Today's word-safe Texts heard no
+  // line event in 250 ms with the JS thread idle, and a floor taken on a
+  // timer moved the electorate's title and Follow down 2 to 5 pt about
+  // 450 ms after they were drawn.
+  jest.useFakeTimers();
+  try {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
+    });
+    const name = () => renderer.root.findByType(NativeText);
+    act(() =>
+      name().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 298, height: 141 } },
+      }),
+    );
+    expect(floorOf(name())).toBeUndefined();
+    act(() => jest.advanceTimersByTime(5000));
+    expect(floorOf(name())).toBeUndefined();
+    expect(jest.getTimerCount()).toBe(0);
+    act(() => renderer.unmount());
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+test('after a rotation the same lines send no event, and the Text takes no floor', () => {
+  jest.useFakeTimers();
+  try {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
+    });
+    const name = () => renderer.root.findByType(NativeText);
+    let committed!: (x: number, y: number, w: number, h: number) => void;
+    name().instance.measure = jest.fn((callback) => {
+      committed = callback;
+    });
+    act(() =>
+      name().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 298, height: 25 } },
+      }),
+    );
+    act(() =>
+      name().props.onTextLayout({
+        nativeEvent: {
+          lines: [
+            { text: 'Anthony Albanese', x: 0, y: 0, width: 150, height: 24 },
+          ],
+        },
+      }),
+    );
+    // Landscape: a new identity, the same one line, and no line event.
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 844, height: 390, scale: 3, fontScale: 1 });
+    act(() => renderer.update(<Text wordSafe>Anthony Albanese</Text>));
+    act(() => committed(0, 0, 298, 25));
+    act(() => jest.advanceTimersByTime(400));
+    expect(floorOf(name())).toBeUndefined();
+    act(() => renderer.unmount());
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+test('an event with no line at all, for words that are there, takes the floor at once, even after earlier lines', () => {
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 3.571 });
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
+  });
+  const name = () => renderer.root.findByType(NativeText);
+  const layout = (height: number) =>
+    act(() =>
+      name().props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 298, height } },
+      }),
+    );
+  const lines = (value: typeof nativeLines) =>
+    act(() => name().props.onTextLayout({ nativeEvent: { lines: value } }));
+  layout(141.667);
+  lines(nativeLines);
+  expect(floorOf(name())).toBeUndefined();
+  // Nothing fitted the frame this time: no timer, no wait.
+  lines([]);
+  expect(floorOf(name())).toBe(143);
+  act(() => renderer.unmount());
+  // Empty words send an empty event too, and that proves nothing.
+  act(() => {
+    renderer = TestRenderer.create(<Text wordSafe>{''}</Text>);
+  });
+  layout(20);
+  lines([]);
+  expect(floorOf(name())).toBeUndefined();
   act(() => renderer.unmount());
 });
 
@@ -139,27 +306,36 @@ test('298 → 320 → 298 → 600 measures afresh without carrying the old floor
     renderer = TestRenderer.create(<Text wordSafe>Anthony Albanese</Text>);
   });
   const name = () => renderer.root.findByType(NativeText);
-  const floor = () => StyleSheet.flatten(name().props.style).minHeight;
+  const floor = () => floorOf(name());
   const layout = (width: number, height: number) =>
     act(() =>
       name().props.onLayout({
         nativeEvent: { layout: { x: 0, y: 0, width, height } },
       }),
     );
+  const lines = (value: typeof nativeLines) =>
+    act(() => name().props.onTextLayout({ nativeEvent: { lines: value } }));
   layout(298, 141);
+  lines(nativeLines);
   expect(floor()).toBe(142);
-  for (const [width, oldHeight, naturalHeight, expected] of [
-    [320, 142, 71, 72],
-    [298, 141, 141, 142],
-    [600, 142, 71, 72],
-  ]) {
-    layout(width!, oldHeight!);
-    expect(floor()).toBeUndefined();
-    layout(width!, naturalHeight!);
-    expect(floor()).toBe(expected);
-    layout(width!, expected!);
-    expect(floor()).toBe(expected);
-  }
+  // Wider: the floor goes, and the old width's lines prove nothing.
+  layout(320, 142);
+  expect(floor()).toBeUndefined();
+  layout(320, 71);
+  expect(floor()).toBeUndefined();
+  lines(oneLine);
+  expect(floor()).toBeUndefined();
+  // Narrow again, short again: this width's own lines set the floor.
+  layout(298, 71);
+  layout(298, 141);
+  expect(floor()).toBeUndefined();
+  lines(nativeLines);
+  expect(floor()).toBe(142);
+  layout(600, 142);
+  expect(floor()).toBeUndefined();
+  layout(600, 71);
+  lines(oneLine);
+  expect(floor()).toBeUndefined();
   act(() => renderer.unmount());
 });
 
@@ -177,46 +353,55 @@ test('a width reset remeasures even when removing the floor emits no onLayout', 
   });
   const name = () => renderer.root.findByType(NativeText);
   name().instance.measure = measure;
-  const floor = () => StyleSheet.flatten(name().props.style).minHeight;
+  const floor = () => floorOf(name());
   const layout = (width: number, height: number) =>
     act(() =>
       name().props.onLayout({ nativeEvent: { layout: { width, height } } }),
     );
+  const lines = (value: typeof nativeLines) =>
+    act(() => name().props.onTextLayout({ nativeEvent: { lines: value } }));
   layout(298, 141);
+  lines(nativeLines);
+  expect(floor()).toBe(142);
   expect(measure).not.toHaveBeenCalled();
   layout(320, 142);
   expect(floor()).toBeUndefined();
   act(() => callbacks.shift()!(0, 0, 320.000001, 71));
-  expect(floor()).toBe(72);
-  // Narrowing already exceeds the old 72pt floor. Removing it leaves 141pt
-  // unchanged, so there is no second layout event to drive the guard.
+  lines(oneLine);
+  expect(floor()).toBeUndefined();
+  // Narrowing already exceeds the old floor. Removing it leaves 141pt
+  // unchanged, so there is no second layout event: the measure supplies the
+  // frame, and this width's lines prove it short.
   layout(298, 141);
   expect(floor()).toBeUndefined();
   act(() => callbacks.shift()!(0, 0, 298, 141));
+  expect(floor()).toBeUndefined();
+  lines(nativeLines);
   expect(floor()).toBe(142);
   layout(600, 142);
   const stale = callbacks.shift()!;
   // A normal layout can settle before the asynchronous native measure returns.
   layout(600, 71);
-  expect(floor()).toBe(72);
+  lines(oneLine);
+  expect(floor()).toBeUndefined();
   act(() => stale(0, 0, 600, 72));
-  expect(floor()).toBe(72);
+  expect(floor()).toBeUndefined();
   expect(measure).toHaveBeenCalledTimes(3);
   act(() => renderer.unmount());
 });
 
-const nativeLines = [
-  { text: 'Anthony ', x: 0, y: 0, width: 200, height: 70.591 },
-  { text: 'Albanese', x: 0, y: 70.591, width: 200, height: 70.591 },
-];
-
 test.each(['body', 'secondary', 'footnote'] as const)(
-  'plain %s text protects its fractional final line',
+  'plain %s text reserves its slack in its measured height and never grows',
   (variant) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {
       renderer = TestRenderer.create(
-        <Text variant={variant}>Anthony Albanese</Text>,
+        <Text variant={variant} style={{ paddingBottom: 4 }}>
+          Anthony Albanese
+        </Text>,
       );
     });
     const text = () => renderer.root.findByType(NativeText);
@@ -226,13 +411,16 @@ test.each(['body', 'secondary', 'footnote'] as const)(
           nativeEvent: { layout: { width: 298, height } },
         }),
       );
+    // The caller's own padding keeps its value and the slack is added to it.
+    expect(StyleSheet.flatten(text().props.style).paddingBottom).toBe(
+      4 + pixelSlack(3),
+    );
     layout(141);
-    // The guard works without any line event, including RN's suppressed first
-    // empty glyph result. Plain text does not request extra line measurement.
+    // Plain text does not request line measurement, and takes no floor.
     expect(text().props.onTextLayout).toBeUndefined();
-    expect(StyleSheet.flatten(text().props.style).minHeight).toBe(142);
-    for (let i = 0; i < 20; i++) layout(142);
-    expect(StyleSheet.flatten(text().props.style).minHeight).toBe(142);
+    expect(floorOf(text())).toBeUndefined();
+    for (let i = 0; i < 20; i++) layout(141);
+    expect(floorOf(text())).toBeUndefined();
     act(() => renderer.unmount());
   },
 );
@@ -399,16 +587,20 @@ test.each([
       );
     expect(commits).toBe(1);
     layout(naturalHeight);
-    expect(commits).toBe(2);
-    expect(StyleSheet.flatten(nodes()[0]!.props.style).minHeight).toBe(minimum);
+    // No settling commit: until b77 every Text rendered again here to take
+    // a floor of ceil(height) + 1 (1.667 pt taller than it first drew).
+    expect(commits).toBe(1);
+    expect(
+      StyleSheet.flatten(nodes()[0]!.props.style).minHeight,
+    ).toBeUndefined();
     expect(minimum - naturalHeight).toBeCloseTo(1.667, 3);
     expect(nodes().every((text) => text.props.onTextLayout === undefined)).toBe(
       true,
     );
-    for (let i = 0; i < 20; i++) layout(minimum);
-    expect(commits).toBe(2);
+    for (let i = 0; i < 20; i++) layout(naturalHeight);
+    expect(commits).toBe(1);
     console.log(
-      `standard-size ${kind} guard cost: 100 texts, ${commits} commits including mount, 20 repeated layouts add 0 commits, Profiler ${duration.toFixed(2)}ms`,
+      `standard-size ${kind} cost: 100 texts, ${commits} commit (the mount), 20 repeated layouts add 0 commits, Profiler ${duration.toFixed(2)}ms`,
     );
     act(() => renderer.unmount());
   },
@@ -453,14 +645,16 @@ test.each([
       );
     expect(commits).toBe(1);
     layout(height);
-    // The rounding guard's one settling commit; the word-safe state records
-    // frames and lines without rendering.
-    expect(commits).toBe(2);
-    const settled = StyleSheet.flatten(nodes()[0]!.props.style).minHeight;
-    for (let i = 0; i < 20; i++) layout(settled);
-    expect(commits).toBe(2);
+    // No settling commit: the word-safe state records frames and lines
+    // without rendering, and a frame that holds its lines takes no floor.
+    expect(commits).toBe(1);
+    expect(
+      StyleSheet.flatten(nodes()[0]!.props.style).minHeight,
+    ).toBeUndefined();
+    for (let i = 0; i < 20; i++) layout(height);
+    expect(commits).toBe(1);
     console.log(
-      `${size} word-safe fitting text: 100 texts, ${commits} commits including mount, 20 repeated layouts add 0 commits`,
+      `${size} word-safe fitting text: 100 texts, ${commits} commit (the mount), 20 repeated layouts add 0 commits`,
     );
     act(() => renderer.unmount());
   },

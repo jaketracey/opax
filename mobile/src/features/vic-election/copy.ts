@@ -9,8 +9,17 @@ export const vicCopy = {
    */
   barShort: 'Vic election',
   placeholder: 'Suburb, postcode or district',
+  /**
+   * The search field's placeholder at accessibility text sizes, where the
+   * full one runs to the field's edge (build 79 sweep, AX3). The system
+   * field takes no inset from the app, so the words are fewer. The field
+   * still finds a district by name.
+   */
+  placeholderShort: 'Suburb or postcode',
   yourDistrict: 'Your district',
-  stateDistrict: 'Your state district',
+  contestIn: (district: string) => `The contest in ${district}`,
+  contestDetail: 'Candidates and the last result',
+  contestDetailEarly: 'The last result in your district',
   findDistrict: 'Find your district',
   findDetail: 'By suburb, postcode or district name',
   dates: 'Key dates',

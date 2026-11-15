@@ -181,6 +181,30 @@ async function renderApp(context = app, location = '/library') {
   await settle();
   return tree;
 }
+/**
+ * Waits until the open record has loaded, so its file is in the cache. The
+ * client does not join two reads of one address that are in flight at the
+ * same moment: a second pane entry opened before the first read finished
+ * made a second request, and under load the response body was still being
+ * read when the test moved on (transport called twice, not once).
+ */
+async function recordLoaded(tree: TestRenderer.ReactTestRenderer) {
+  for (
+    let turn = 0;
+    turn < 400 &&
+    !hosts(tree, 'record-bill').some(
+      (node) => node.props.children !== 'Loading',
+    );
+    turn++
+  )
+    await settle();
+  expect(
+    hosts(tree, 'record-bill').some(
+      (node) => node.props.children !== 'Loading',
+    ),
+  ).toBe(true);
+  await settle();
+}
 const host = (tree: TestRenderer.ReactTestRenderer, id: string) =>
   tree.root.find(
     (node) => typeof node.type === 'string' && node.props.testID === id,
@@ -300,6 +324,7 @@ it('keeps the list mounted and its scroll state across a regular/compact/regular
 
 it('collapses the open record to its route, then pops and selects it on expansion without refetching', async () => {
   const tree = await renderApp(app, `/library?open=${encodeEntry(bill)}`);
+  await recordLoaded(tree);
   const ownerKey = readerStack().routes[0]!.key;
   expect(transport).toHaveBeenCalledTimes(1);
   windowSize(390, compact);
@@ -323,7 +348,8 @@ it('collapses the open record to its route, then pops and selects it on expansio
 });
 
 it('hands off the whole mapped pane stack and restores Back below its open record', async () => {
-  await renderApp(app, `/library?open=${encodeEntry(bill)}`);
+  const tree = await renderApp(app, `/library?open=${encodeEntry(bill)}`);
+  await recordLoaded(tree);
   act(() => pane!.push(text));
   await settle();
   windowSize(390, compact);

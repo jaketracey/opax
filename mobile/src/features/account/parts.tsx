@@ -91,6 +91,11 @@ export function SettingsTile({ symbol }: { symbol: SFSymbol }) {
  * `external` it opens a page or mail (the ↗ glyph). With neither it is an
  * `ActionRow`: a button in the tint, or `danger` for what cannot be undone,
  * with no chevron (1.4).
+ *
+ * `opensPage` is for a row whose `onPress` leads to a page by another way
+ * than a push in this sheet (the guide closes the sheet and opens in the
+ * tab beneath): to the reader it opens a page, so it is drawn and spoken as
+ * one, with the chevron, and not as an action.
  */
 export function SettingsRow({
   title,
@@ -101,6 +106,7 @@ export function SettingsRow({
   href,
   external = false,
   onPress,
+  opensPage = false,
   tone = 'navy',
   busy = false,
   disabled = false,
@@ -116,6 +122,8 @@ export function SettingsRow({
   href?: Href;
   external?: boolean;
   onPress?: () => void;
+  /** `onPress` opens a page: the row is a link with a chevron. */
+  opensPage?: boolean;
   tone?: 'navy' | 'danger' | 'ink';
   busy?: boolean;
   disabled?: boolean;
@@ -126,7 +134,7 @@ export function SettingsRow({
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset(leading ? 68 : tile ? 53 : 16);
-  const action = !href && !external;
+  const action = !href && !external && !opensPage;
   const inactive = disabled || busy;
   const press = href ? () => router.push(href) : onPress;
   const row = (
@@ -165,7 +173,7 @@ export function SettingsRow({
         ) : null}
       </View>
       {busy ? <ActivityIndicator color={colors.inkSoft} /> : null}
-      {href || external ? (
+      {href || external || opensPage ? (
         <Icon
           name={external ? EXTERNAL_GLYPH : symbols.chevron}
           size={13}

@@ -869,6 +869,22 @@ const one = (id: string) =>
         typeof n.props.onChangeText === 'function'),
   )[0]!;
 /** The first string child under any node with this testID. */
+/**
+ * Waits for the status line to read `text`, instead of sleeping a fixed
+ * time. The line holds each status for 600 ms (STATUS_HOLD_MS) from when it was
+ * drawn, measured with Date.now(); a test timer is measured from the event
+ * loop's own clock, which lags under load. A fixed 650 ms sleep could
+ * therefore end before the 600 ms hold it was meant to outlast.
+ */
+// Under Jest's 5 s default, so a real miss reads as expected and received.
+async function statusBecomes(text: string, timeout = 4000) {
+  const end = Date.now() + timeout;
+  while (textOf('ask-status') !== text && Date.now() < end)
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    });
+  expect(textOf('ask-status')).toBe(text);
+}
 const textOf = (id: string) =>
   byId(id)
     .flatMap((n) => [n, ...n.findAll(() => true)])
@@ -1399,25 +1415,38 @@ test('with no seat saved, the one starter is general and asks at once', async ()
   });
 });
 
-test('the sizing stand-ins cover both kinds of name: one with long words, one with none longer than the question’s own', () => {
-  const longestWord = (text: string) =>
-    Math.max(...text.split(/[^A-Za-z]+/).map((word) => word.length));
+test('the sizing stand-ins are the pair the layout sweep chose, and the full-size one is hyphen-aware with no part as long as the question’s own longest word', () => {
+  // Chosen by drawn height (system font, 17 to 53 pt, rows 200 to 330 pt
+  // wide): the taller of the two is never shorter than the question about
+  // any verified member of the House. Jest has no fonts, so the names are
+  // pinned here and the rule that makes them hold is checked below.
+  expect([...SIZING_MEMBERS]).toEqual([
+    'Alexandrina Wetherington',
+    'Annabelle Margaret Lee-Ray',
+  ]);
+  // A word breaks at spaces and at hyphens; each part must fit a line.
+  const parts = (text: string) => text.split(/[\s-]+/).filter(Boolean);
+  const longestPart = (text: string) =>
+    Math.max(...parts(text).map((part) => part.replace(/\W/g, '').length));
   // The question's own longest word, which every real question carries.
-  const template = longestWord(seatStarter(''));
+  const template = longestPart(seatStarter(''));
   expect(template).toBe('parliament'.length);
-  const [long, short] = SIZING_MEMBERS;
-  expect(SIZING_MEMBERS.length).toBe(2);
-  // Each is the roster's longest name (22 characters) plus a small margin.
-  for (const name of SIZING_MEMBERS) {
-    expect(name.length).toBeGreaterThanOrEqual(24);
-    expect(name.length).toBeLessThanOrEqual(26);
-  }
-  // A name with a long word: its question is stepped down at large sizes.
-  expect(longestWord(long)).toBeGreaterThan(template);
-  // A name of short words only: its question is never stepped down further
-  // than a real one, so at large sizes it is the taller candidate.
-  expect(longestWord(short)).toBeLessThanOrEqual(template);
-  expect(longestWord(seatStarter(short))).toBe(template);
+  const [long, full] = SIZING_MEMBERS;
+  // One name with a long word: its question is stepped down at large sizes.
+  expect(longestPart(long)).toBeGreaterThan(template);
+  // The other is drawn at full size. Letter count is not drawn width (a
+  // ten-letter name of wide letters draws wider than "parliament" and is
+  // stepped down), so every part is strictly shorter than that word.
+  expect(longestPart(full)).toBeLessThan(template);
+  expect(longestPart('Bernadette Annabelle Lee')).toBe(template);
+  // The tallest real questions are for hyphenated names, which break at
+  // the hyphen. The full-size stand-in is hyphenated too, and its question
+  // is longer and has more parts than the roster's longest such name's.
+  const hyphenated = 'Elizabeth Watson-Brown';
+  expect(full).toContain('-');
+  expect(full.length).toBeGreaterThan(hyphenated.length);
+  expect(parts(full).length).toBeGreaterThan(parts(hyphenated).length);
+  expect(longestPart(full)).toBeGreaterThanOrEqual(longestPart(hyphenated));
 });
 
 test.each([
@@ -1752,10 +1781,10 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   );
   await act(async () => {
     on!.stage('Searching the record');
-    // Status copy has a minimum dwell time, even for a fast lookup.
-    await new Promise((resolve) => setTimeout(resolve, 650));
   });
-  expect(textOf('ask-status')).toBe('Searching the record');
+  // Status copy has a minimum dwell time, even for a fast lookup: the line
+  // changes once the one before it has been held, however long that takes.
+  await statusBecomes('Searching the record');
   await act(async () => {
     on!.step?.({
       id: 'hearings',
@@ -1763,9 +1792,10 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
       arg: 'housing',
       state: 'running',
     });
-    await new Promise((resolve) => setTimeout(resolve, 650));
   });
-  expect(textOf('ask-status')).toBe('Checking committee hearings: housing');
+  // Held: the step's line never replaces it at once.
+  expect(textOf('ask-status')).toBe('Searching the record');
+  await statusBecomes('Checking committee hearings: housing');
   // An error after text keeps the question with one plain sentence, never
   // the server's words, and Try again.
   await act(async () => {
@@ -2587,6 +2617,130 @@ describe('a prefilled draft is shown from its start (J76-ask3)', () => {
     const tall = caretAfterContent(start, long, 400, 130);
     expect(caretAfterContent(tall, long, 50, 130)).toBe(tall);
   });
+
+  test.each([1, 2.353])(
+    'with options on, the draft is inset from the filled Options button (font scale %s)',
+    (fontScale) => {
+      const window = Dimensions.get('window');
+      act(() => Dimensions.set({ window: { ...window, fontScale } }));
+      const before = askSession.composerOptions();
+      try {
+        act(() =>
+          arriveInAsk({ question: long }, `prefill-inset-${fontScale}`),
+        );
+        const { r } = mount();
+        const wrapper = () =>
+          StyleSheet.flatten(
+            r.root.find(
+              (n) =>
+                typeof n.type === 'string' && n.props.testID === 'ask-field',
+            ).props.style,
+          );
+        const button = () =>
+          r.root.find(
+            (n) =>
+              n.props.testID === 'ask-composer-options' &&
+              n.props.selected !== undefined,
+          );
+        // No options: the glyph sits inside its target; no extra inset.
+        act(() => askSession.options({ ...before, topic: undefined }));
+        if (!button().props.selected)
+          expect(wrapper().marginLeft).toBeUndefined();
+        // An option on: the button is a filled disc, and the text keeps
+        // 8 pt from it (it used to touch).
+        act(() => askSession.options({ ...before, topic: 'housing' }));
+        expect(button().props.selected).toBe(true);
+        expect(wrapper()).toMatchObject({ flex: 1, marginLeft: rhythm.tight });
+        act(() => r.unmount());
+      } finally {
+        act(() => askSession.options(before));
+        act(() => Dimensions.set({ window }));
+      }
+    },
+  );
+
+  test('the fit is judged like for like: the content height includes the field’s padding, as the cap does', () => {
+    // Measured on the iOS 27 simulator: a field of n lines reports
+    // n x 22 + 22 (its 11 pt of padding above and below), which is its
+    // laid-out height until the cap. The cap at the standard size is 130.
+    const cap = composerFieldCap({
+      fontScale: 1,
+      windowHeight: 874,
+      chrome: 2 * rhythm.line,
+    });
+    expect(cap).toBe(5 * textStyles.body.lineHeight + 20);
+    const reported = (lines: number) => lines * textStyles.body.lineHeight + 22;
+    const start = prefilledCaret(long)!;
+    // Four lines (110) fit: the caret goes to the end.
+    expect(caretAfterContent(start, long, reported(4), cap)).toMatchObject({
+      at: 'end',
+    });
+    // Five lines (132) pass the cap by 2 pt, so the field scrolls: the
+    // caret stays at the top.
+    expect(caretAfterContent(start, long, reported(5), cap)).toMatchObject({
+      at: 'start',
+      sized: true,
+    });
+  });
+
+  test('a reader who taps in before the height is judged keeps their caret', () => {
+    const start = prefilledCaret(long)!;
+    // The field took the held start, and the hold is let go.
+    const released = caretAfterSelection(start, long, { start: 0, end: 0 })!;
+    expect(released).toMatchObject({ done: true, sized: false });
+    // The same place again is not the reader's doing: still to be judged.
+    expect(caretAfterSelection(released, long, { start: 0, end: 0 })).toBe(
+      released,
+    );
+    // The reader taps into the draft, or selects a word.
+    for (const selection of [
+      { start: 12, end: 12 },
+      { start: 5, end: 9 },
+    ]) {
+      const theirs = caretAfterSelection(released, long, selection)!;
+      expect(theirs).toMatchObject({ done: true, sized: true, at: 'start' });
+      // The height then says the draft fits: no selection is held again,
+      // so the caret is not pulled to the end.
+      const judged = caretAfterContent(theirs, long, 50, 130);
+      expect(judged).toBe(theirs);
+      expect(caretSelection(judged, long)).toBeUndefined();
+    }
+    // Without a tap the draft that fits still gets its caret at the end.
+    expect(
+      caretSelection(caretAfterContent(released, long, 50, 130), long),
+    ).toEqual({ start: long.length, end: long.length });
+    // Another draft's caret is not this one's business.
+    expect(caretAfterSelection(released, 'another', { start: 2, end: 2 })).toBe(
+      released,
+    );
+  });
+
+  test('in the field: an early tap is not overridden when the content’s height arrives', () => {
+    act(() => arriveInAsk({ question: long }, 'prefill-early-tap'));
+    const { r, field } = mount();
+    expect(field().props.selection).toEqual({ start: 0, end: 0 });
+    // The field reports the held start; the hold ends.
+    act(() =>
+      field().props.onSelectionChange({
+        nativeEvent: { selection: { start: 0, end: 0 } },
+      }),
+    );
+    expect(field().props.selection).toBeUndefined();
+    // The reader taps into the middle of the question.
+    act(() =>
+      field().props.onSelectionChange({
+        nativeEvent: { selection: { start: 20, end: 20 } },
+      }),
+    );
+    // The height arrives and fits: nothing is held, their caret stays.
+    act(() =>
+      field().props.onContentSizeChange({
+        nativeEvent: { contentSize: { width: 300, height: 44 } },
+      }),
+    );
+    expect(field().props.selection).toBeUndefined();
+    act(() => r.unmount());
+  });
 });
 
 describe('the composer at AX5 (ask.md 2.11)', () => {
@@ -2828,7 +2982,7 @@ test.each(
     [1, 2].map((fontScale) => [platform, fontScale] as const),
   ),
 )(
-  '%s font %s: Ask headings clear their groups with unchanged iOS spacing',
+  '%s font %s: Ask headings clear their groups at large text sizes, on both platforms',
   async (platform, fontScale) => {
     const original = Platform.OS;
     const window = Dimensions.get('window');
@@ -2840,7 +2994,11 @@ test.each(
       const heading = idle.findAllByType(SectionHeader)[0];
       const parent = heading.parent!;
       const gap = StyleSheet.flatten(parent.props.style)?.gap ?? 0;
-      if (platform === 'android' && fontScale === 2) {
+      // At accessibility sizes the stacked heading takes back part of its
+      // parent's gap. With no gap the card covers the foot of "Try asking"
+      // (seen on iOS at AX3, build 78 sweep), so both platforms give it.
+      if (fontScale === 2) {
+        expect(gap).toBe(rhythm.block);
         const header = heading.findByType(View);
         const margin = StyleSheet.flatten(header.props.style).marginBottom ?? 0;
         expect(Number(gap) + Number(margin)).toBeGreaterThanOrEqual(
@@ -3588,6 +3746,83 @@ describe('the docked conversation column with nothing asked', () => {
     } finally {
       act(() => Dimensions.set({ window }));
     }
+  });
+
+  test('a shown mark goes as soon as it no longer fits: half a point short hides it, so it never overruns its room', async () => {
+    // A first measurement shows the mark exactly when it fits, so fresh
+    // mounts find the tallest words (to half a point) it still fits beside.
+    const fitsFresh = async (words: number) => {
+      let shown = false;
+      await at(1194, 834, pad, true, async () => {
+        await mount();
+        await layOut(834, 90, words);
+        shown = hosts('ask-empty-mark').length > 0;
+      });
+      return shown;
+    };
+    let fits = 100;
+    let over = 744;
+    expect(await fitsFresh(fits)).toBe(true);
+    expect(await fitsFresh(over)).toBe(false);
+    while (over - fits > 0.5) {
+      const mid = Math.round(fits + over) / 2;
+      if (await fitsFresh(mid)) fits = mid;
+      else over = mid;
+    }
+    expect(over - fits).toBe(0.5);
+    await at(1194, 834, pad, true, async () => {
+      await mount();
+      const markShown = () => hosts('ask-empty-mark').length > 0;
+      // It just fits: shown.
+      await layOut(834, 90, fits);
+      expect(markShown()).toBe(true);
+      // Half a point more and it does not: hidden at once.
+      await layOut(834, 90, over);
+      expect(markShown()).toBe(false);
+      // Back to a bare fit is not room to spare: it stays hidden.
+      await layOut(834, 90, fits);
+      expect(markShown()).toBe(false);
+      // A point to spare brings it back.
+      await layOut(834, 90, fits - 1);
+      expect(markShown()).toBe(true);
+    });
+  });
+
+  test('the mark holds within a point of its threshold: heights half a point apart there change it once, not every time', async () => {
+    await at(1194, 834, pad, true, async () => {
+      await mount();
+      const markShown = () => hosts('ask-empty-mark').length > 0;
+      // Plenty of room: the mark is shown.
+      await layOut(834, 90, 100);
+      expect(markShown()).toBe(true);
+      // Grow the words until the mark goes: coarsely, then by half points.
+      let words = 100;
+      while (markShown() && words < 900) {
+        words += 16;
+        await layOut(834, 90, words);
+      }
+      expect(markShown()).toBe(false);
+      words -= 16;
+      // Well clear of the threshold again, it comes back.
+      await layOut(834, 90, words - 16);
+      expect(markShown()).toBe(true);
+      while (markShown() && words < 900) {
+        words += 0.5;
+        await layOut(834, 90, words);
+      }
+      expect(markShown()).toBe(false);
+      // The words now measure half a point shorter, then taller, and so on,
+      // as recentring them does. The mark stays as it is.
+      const seen: boolean[] = [];
+      for (let i = 0; i < 8; i += 1) {
+        await layOut(834, 90, words - (i % 2 === 0 ? 0.5 : 0));
+        seen.push(markShown());
+      }
+      expect(seen).toEqual(Array(8).fill(false));
+      // A real change, well past the threshold, still brings it back.
+      await layOut(834, 90, words - 4);
+      expect(markShown()).toBe(true);
+    });
   });
 
   test('saved conversations that could not be read: the error stands alone, with the line, and no centred state', async () => {

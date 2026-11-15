@@ -55,6 +55,17 @@ export function resolveSystemPath({
   }
 }
 
+/** What makes a link to the bill list its own list, or another page. */
+const BILL_LIST_PARAMS = [
+  'view',
+  'scope',
+  'status',
+  'sort',
+  'q',
+  'year',
+  'focus',
+] as const;
+
 function redirect(url: URL, native: boolean, initial: boolean): string {
   const route =
     native && url.hostname ? `/${url.hostname}${url.pathname}` : url.pathname;
@@ -67,6 +78,14 @@ function redirect(url: URL, native: boolean, initial: boolean): string {
   if (!communityHome && /^\/community(?:\/|$)/.test(route)) return '/';
   if (native && /^\/bills\/?$/.test(route) && !url.searchParams.has('view'))
     return `/(tabs)/(bills)/bills${suffix}`;
+  // A link to the bill list as it opens (no scope, sort or search of its
+  // own) is the Bills tab itself. Pushed there, the same list sat on the
+  // tab's own, with "Bills" for both its back button and its title.
+  if (
+    /^\/(bills|bill-list)\/?$/.test(route) &&
+    !BILL_LIST_PARAMS.some((name) => url.searchParams.has(name))
+  )
+    return '/(tabs)/(bills)/bills';
   const mapped = fromWebPath(`${route}${suffix}`);
   if (mapped) {
     const params: Record<string, unknown> =

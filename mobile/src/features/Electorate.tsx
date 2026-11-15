@@ -68,7 +68,6 @@ import {
 } from '../navigation/routes';
 import { copyRecordLink, shareRecord } from '../navigation/share';
 import { presentSource } from '../navigation/sheets';
-import { emptyBarTitle } from '../navigation/useTitleOnScroll';
 import { useOpenAsk } from './ask/open';
 import { onElectorateDate } from './directories/ElectorateDateSheet';
 import {
@@ -288,6 +287,8 @@ function ElectorateContent({
         grouped
         column="readable"
         testID="electorate-screen"
+        // The seat's name joins the bar once its heading has scrolled away.
+        barTitle={loaded?.seat.name}
         scrollRef={scroll}
         offline={loaded?.stale ? { savedAt: loaded.savedAt } : null}
         refreshControl={
@@ -363,7 +364,6 @@ function ElectorateBar({
       options={{
         // Route metadata names subsequent Back buttons without drawing a title.
         title: loaded?.seat.name ?? '',
-        headerTitle: emptyBarTitle,
         ...headerItems(
           loaded
             ? pageItems({ name: loaded.seat.name, share, menu })
@@ -977,7 +977,12 @@ function ElectionRow({
                 href={winnerHref}
                 testID={`${testID}-winner`}
               />
-              <View style={styles.party}>
+              {/* The compact party link's touch area reaches 24 pt below
+                  its text, to 44 pt in all. A row with no result reserves
+                  that room. A row with a result has the result line there
+                  instead of an empty band, and the line takes no touches
+                  (below), so the band under the link is still the link's. */}
+              <View style={result ? undefined : styles.party}>
                 <PartyLabel
                   party={summary.winner.party}
                   status="unknown"
@@ -989,9 +994,14 @@ function ElectionRow({
             </>
           ) : null}
           {result ? (
-            <Text wordSafe variant="secondary" testID={`${testID}-result`}>
-              {result}
-            </Text>
+            // A later sibling wins a touch over the party link's reach, so
+            // the result line stands aside: a touch on it lands on the
+            // link where the link reaches, and on the row everywhere else.
+            <View pointerEvents="none" testID={`${testID}-result-frame`}>
+              <Text wordSafe variant="secondary" testID={`${testID}-result`}>
+                {result}
+              </Text>
+            </View>
           ) : null}
         </View>
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />

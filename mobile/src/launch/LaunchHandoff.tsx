@@ -217,7 +217,11 @@ function LaunchCover({
       leaving.current = true;
       setExiting(true);
       exit.set(withTiming(1, { duration, easing: Easing.inOut(Easing.quad) }));
-      later(() => setPageShows(true), duration / 2);
+      // Android's icons turn dark halfway through (coverBarStyle). iOS keeps
+      // its icons light until the cover unmounts, so it sets nothing here:
+      // the state change redrew the cover once in the middle of the fade.
+      if (Platform.OS === 'android')
+        later(() => setPageShows(true), duration / 2);
       if (started.current === 'full') void markFullSplashPlayed();
       later(onDone, duration);
     },

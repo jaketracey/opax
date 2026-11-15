@@ -52,7 +52,9 @@ export function AccountTermsRow() {
 
 /**
  * Account › How Parliament works: the guide is pushed inside the tab beneath
- * the sheet, so the sheet closes first.
+ * the sheet, so the sheet closes first. It still opens a page, so the row
+ * has the chevron its neighbours have. (Replay welcome, beside it, stays an
+ * action: it plays the welcome again, which is not a page.)
  */
 export function AccountGuideRow() {
   return (
@@ -60,6 +62,7 @@ export function AccountGuideRow() {
       title={learnCopy.name}
       tile="text.book.closed"
       onPress={() => closeSheetThen(() => router.push(learnRoute))}
+      opensPage
       testID="account-learn"
     />
   );

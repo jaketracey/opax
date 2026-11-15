@@ -15,7 +15,7 @@ import { ContentUnavailable, SkeletonCrossfade } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading, Text } from '../src/design/text';
 import { Screen, SectionHeader } from '../src/design/layout';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import Members from '../src/features/your-mp/Members';
@@ -36,6 +36,7 @@ import {
   buttonCapsule,
   controlHeight,
   minimumTarget,
+  textStyles,
 } from '../src/design/tokens';
 import {
   RepresentativeRows,
@@ -265,7 +266,7 @@ test('the pending electorate reserves the map, title and member layout with one 
   dimensions.mockRestore();
 });
 
-test('the electorate nav centre stays blank through loading, data arrival and scrolling, with its accessible content heading intact', async () => {
+test('the electorate nav centre is blank while loading, and names the seat once its heading has scrolled away', async () => {
   load('Grayndler');
   // Hold the actual seat read so loading is observed separately from completion.
   const seatResult = result(
@@ -280,11 +281,16 @@ test('the electorate nav centre stays blank through loading, data arrival and sc
   );
   const r = await render(<Electorate />);
   expect(has(r, 'electorate-loading')).toBe(true);
+  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBeUndefined();
   expect(mockOptions.some((options) => options.title === 'Electorate')).toBe(
     false,
   );
+  // The route's own blank title (stack options) stands until the seat loads.
+  for (const options of mockOptions)
+    expect(options.headerTitle).toBeUndefined();
   await act(async () => resolve(seatResult));
-  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBeUndefined();
+  // The seat's name is the bar's title, hidden until its heading is under it.
+  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBe('Grayndler');
   expect(r.root.findByProps({ testID: 'electorate-name' }).props.children).toBe(
     'Grayndler',
   );
@@ -296,23 +302,12 @@ test('the electorate nav centre stays blank through loading, data arrival and sc
         node.props.children === 'Grayndler',
     ),
   ).not.toHaveLength(0);
-  act(() =>
-    r.root
-      .findAllByType(ScrollView)[0]!
-      .props.onScroll({ nativeEvent: { contentOffset: { y: 2000 } } }),
-  );
-  for (const options of mockOptions) {
-    expect(options.title).not.toBe('Electorate');
-    const title = (
-      options.headerTitle as () => ReactElement<{ children?: unknown }>
-    )();
-    expect(title.props).toMatchObject({
-      accessibilityElementsHidden: true,
-      importantForAccessibility: 'no-hide-descendants',
-    });
-    expect(title.props.children).toBeUndefined();
-  }
-  expect(mockOptions.at(-1)!.title).toBe('Grayndler');
+  const last = mockOptions.at(-1)!;
+  expect(last.title).toBe('Grayndler');
+  const bar = (
+    last.headerTitle as () => ReactElement<{ title?: string; shown?: boolean }>
+  )();
+  expect(bar.props).toMatchObject({ title: 'Grayndler', shown: false });
   act(() => r.unmount());
 });
 
@@ -387,10 +382,59 @@ test('election rows push the election screen, newest first', async () => {
   expect(parties[0]!.props.dense).toBeUndefined();
   expect(parties[0]!.props.compact).toBe(true);
   const partyFrame = parentView(parties[0]!);
-  expect(StyleSheet.flatten(partyFrame.props.style).minHeight).toBe(
-    minimumTarget,
-  );
   expect(StyleSheet.flatten(parentView(partyFrame).props.style).gap).toBe(4);
+  // The party link's touch area reaches below its text. A result line
+  // gives it that room; only a row with no result reserves 44 pt for it,
+  // so no row has an empty band above "after preferences".
+  const electionRows = r.root.findAll(
+    (n) =>
+      typeof n.type === 'string' &&
+      /^election-row-\d+$/.test(n.props.testID ?? ''),
+  );
+  const reserved = electionRows.map((row) => {
+    const party = row.findAllByType(PartyLabel)[0];
+    return {
+      result:
+        row.findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.testID === `${row.props.testID}-result`,
+        ).length > 0,
+      minHeight: party
+        ? StyleSheet.flatten(parentView(party).props.style)?.minHeight
+        : 'no party',
+    };
+  });
+  expect(reserved[0]).toEqual({ result: true, minHeight: undefined });
+  for (const row of reserved)
+    if (row.minHeight !== 'no party')
+      expect(row.minHeight).toBe(row.result ? undefined : minimumTarget);
+  // The link's reach is 24 pt below its text, where the result line is.
+  // Jest cannot hit-test, so this checks what guarantees the touch: the
+  // link asks for that reach, and the result line, a later sibling that
+  // would otherwise win the touch there, takes no touches at all.
+  const reach = firstRow
+    .findAll((n) => typeof n.props.hitSlop === 'object' && !!n.props.onPress)
+    .map((n) => n.props.hitSlop.bottom);
+  expect(reach.length).toBeGreaterThan(0);
+  expect(new Set(reach)).toEqual(
+    new Set([minimumTarget - textStyles.secondary.lineHeight]),
+  );
+  for (const row of electionRows) {
+    const result = row.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.testID === `${row.props.testID}-result`,
+    )[0];
+    if (!result) continue;
+    let frame = result.parent!;
+    while (typeof frame.type !== 'string') frame = frame.parent!;
+    expect(frame.props.testID).toBe(`${row.props.testID}-result-frame`);
+    expect(frame.props.pointerEvents).toBe('none');
+    // Still read: the line is hidden from touches, not from VoiceOver.
+    expect(frame.props.accessibilityElementsHidden).toBeUndefined();
+    expect(frame.props.importantForAccessibility).toBeUndefined();
+  }
   // VoiceOver hears the party's name, as drawn, never the file's code.
   expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
   expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);

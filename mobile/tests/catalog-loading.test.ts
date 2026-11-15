@@ -438,3 +438,67 @@ test('Search suggestion snapshots expire daily and concurrent readers share the 
     clock.mockRestore();
   }
 });
+
+describe('the directory as the device saved it', () => {
+  const reader = (
+    missing: string[] = [],
+    change: (raw: unknown) => unknown = (raw) => raw,
+  ) => {
+    const calls: string[] = [];
+    const client: Pick<ApiClient, 'get' | 'saved'> = {
+      async get() {
+        throw new Error('The saved directory makes no request.');
+      },
+      async saved<T>(path: string, decode: (input: unknown) => T) {
+        assertAllowedPath(path);
+        calls.push(path);
+        if (missing.includes(path)) return null;
+        const raw = path === '/api/person-slugs' ? slugs : pinned(path);
+        return {
+          data: decode(path === data.manifest.people_url ? change(raw) : raw),
+          asOf: dataAsOf(raw),
+          stale: true,
+          savedAt: 200,
+        };
+      },
+    };
+    return { catalogs: new Catalogs(client), calls };
+  };
+
+  test('the five saved files answer as the directory read does, with no request', async () => {
+    const { catalogs, calls } = reader();
+    const saved = await catalogs.directorySaved();
+    expect(saved!.electorates.data.meta.release_id).toBe(
+      data.manifest.release_id,
+    );
+    expect(Object.keys(saved!).sort()).toEqual(
+      Object.keys(await loader().catalogs.directory()).sort(),
+    );
+    expect(calls.sort()).toEqual(
+      [
+        '/api/person-slugs',
+        '/electorates/manifest.json',
+        '/parliamentarians.json',
+        data.manifest.index_url,
+        data.manifest.people_url,
+      ].sort(),
+    );
+  });
+
+  test('null when a file is not saved, when the files are not of one release, and for a reader with no saved copies', async () => {
+    await expect(
+      reader(['/parliamentarians.json']).catalogs.directorySaved(),
+    ).resolves.toBeNull();
+    await expect(
+      reader([data.manifest.index_url]).catalogs.directorySaved(),
+    ).resolves.toBeNull();
+    const other = (raw: unknown) => {
+      const file = raw as { meta: Record<string, unknown> };
+      return { ...file, meta: { ...file.meta, release_id: 'another' } };
+    };
+    await expect(
+      reader([], other).catalogs.directorySaved(),
+    ).resolves.toBeNull();
+    await expect(loader().catalogs.directorySaved()).resolves.toBeNull();
+  });
+});

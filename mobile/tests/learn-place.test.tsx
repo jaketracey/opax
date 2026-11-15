@@ -166,7 +166,7 @@ describe('the hub keeps the reader’s place', () => {
     const row = pressable(tree, 'learn-chapter-bill-to-act');
     expect(rowText(tree, 'learn-chapter-bill-to-act')).toContain('Read');
     expect(row.props.accessibilityLabel).toBe(
-      `${bill.title}, Read, ${bill.summary}`,
+      `${bill.title}, Read to the end, ${bill.summary}`,
     );
     act(() => row.props.onPress());
     expect(push).toHaveBeenCalledWith({
@@ -288,16 +288,43 @@ describe('a chapter keeps the idea showing', () => {
     expect(learnPlacesSnapshot()['bill-to-act']).toBeUndefined();
   });
 
-  test('a place past the end of a shorter chapter is its last idea', () => {
+  test('a place at or past the end of a chapter that got shorter is Read, never "4 of 4"', () => {
     expect(chapterProgress({ at: 9, read: false }, 4)).toEqual({
-      kind: 'part',
-      at: 4,
+      kind: 'read',
+    });
+    expect(chapterProgress({ at: 4, read: false }, 4)).toEqual({
+      kind: 'read',
     });
     expect(chapterProgress({ at: 9, read: true }, 4)).toEqual({ kind: 'read' });
+    // Short of the end it is still a place.
+    expect(chapterProgress({ at: 3, read: false }, 4)).toEqual({
+      kind: 'part',
+      at: 3,
+    });
+    expect(chapterProgress({ at: 1, read: false }, 4)).toBeNull();
     expect(chapterProgress(undefined, 4)).toBeNull();
-    expect(chapterPlaceWords({ kind: 'part', at: 4 }, 4)).toEqual({
-      value: '4 of 4',
-      spoken: 'idea 4 of 4',
+    // The hub draws it that way: a place kept past this chapter's end.
+    resetLearnPlacesForTests({ 'bill-to-act': { at: total + 5, read: false } });
+    const tree = render(<LearnHub />);
+    expect(rowText(tree, 'learn-chapter-bill-to-act')).toContain('Read');
+    expect(rowText(tree, 'learn-chapter-bill-to-act').join(' ')).not.toContain(
+      ` of ${total}`,
+    );
+    act(() => pressable(tree, 'learn-chapter-bill-to-act').props.onPress());
+    expect(push).toHaveBeenCalledWith({
+      pathname: '/learn/[chapter]',
+      params: { chapter: 'bill-to-act' },
+    });
+  });
+
+  test('the Read mark is spoken "Read to the end"; the drawn word stays Read', () => {
+    expect(chapterPlaceWords({ kind: 'read' }, 4)).toEqual({
+      value: 'Read',
+      spoken: 'Read to the end',
+    });
+    expect(chapterPlaceWords({ kind: 'part', at: 3 }, 4)).toEqual({
+      value: '3 of 4',
+      spoken: 'idea 3 of 4',
     });
   });
 });
@@ -350,6 +377,48 @@ describe('the last idea points to the chapter that follows', () => {
     expect(pressable(tree, 'learn-next').props.accessibilityLabel).toBe(
       'Back to the guide',
     );
+  });
+
+  test('the next chapter opens where the reader left it, and its kept place is not replaced', async () => {
+    const following = learnChapters[learnChapters.indexOf(bill) + 1]!;
+    const length = following.screens.length;
+    resetLearnPlacesForTests({ [following.slug]: { at: 3, read: false } });
+    mockParams = { chapter: 'bill-to-act', screen: String(total) };
+    const tree = render(<LearnChapter />);
+    act(() => pressable(tree, 'learn-following-row').props.onPress());
+    expect(replace).toHaveBeenCalledWith({
+      pathname: '/learn/[chapter]',
+      params: { chapter: following.slug, screen: '3' },
+    });
+    // Opened there, Next moves on from the kept place: 4, never 2.
+    mockParams = { chapter: following.slug, screen: '3' };
+    act(() => tree.update(<LearnChapter />));
+    await settle();
+    expect(learnPlacesSnapshot()[following.slug]).toEqual({
+      at: 3,
+      read: false,
+    });
+    act(() => pressable(tree, 'learn-next').props.onPress());
+    await settle();
+    expect(learnPlacesSnapshot()[following.slug]).toEqual({
+      at: 4,
+      read: length === 4,
+    });
+  });
+
+  test('a next chapter already read, or not opened, opens at its start', () => {
+    const following = learnChapters[learnChapters.indexOf(bill) + 1]!;
+    for (const places of [{ [following.slug]: { at: 2, read: true } }, {}]) {
+      replace.mockClear();
+      resetLearnPlacesForTests(places);
+      mockParams = { chapter: 'bill-to-act', screen: String(total) };
+      const tree = render(<LearnChapter />);
+      act(() => pressable(tree, 'learn-following-row').props.onPress());
+      expect(replace).toHaveBeenCalledWith({
+        pathname: '/learn/[chapter]',
+        params: { chapter: following.slug },
+      });
+    }
   });
 
   test('no row before the last idea, and none after the last chapter', () => {

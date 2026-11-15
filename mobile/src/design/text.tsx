@@ -7,7 +7,9 @@ import {
 } from 'react';
 import {
   Text as NativeText,
+  PixelRatio,
   Platform,
+  StyleSheet,
   useWindowDimensions,
   type TextLayoutEvent,
   type TextProps,
@@ -99,10 +101,65 @@ export function roleColour(tone: Role | 'link', strong: boolean) {
  * the edge ("party receipts a"). A thousandth of a point with a prime
  * denominator moves the total off the grid for any realistic line count, so
  * the measurement has slack. It is invisible on screen. Yoga can still round
- * the final frame below that measurement; the separate height guard below
- * covers that shortfall. Neither protection replaces the other.
+ * the final frame below that measurement; `pixelSlack` below reserves that
+ * shortfall in the measured height. Neither protection replaces the other.
  */
 export const LINE_HEIGHT_NUDGE = 1 / 997;
+
+/**
+ * A hundredth of a physical pixel under every iOS Text, so its frame is
+ * never shorter than its lines.
+ *
+ * React Native ceils a text's measured height to whole pixels, and Yoga then
+ * rounds a text node whose height is whole pixels by flooring both its top
+ * and its bottom edge (PixelGrid.cpp: `textRounding && !hasFractionalHeight`).
+ * Positions are stored as 32-bit floats, and thirds of a point (a 3x screen)
+ * are not exact: summed down a tall page the bottom edge can land a hair
+ * under its pixel while the top lands on its own, and the floor takes a
+ * whole pixel off the frame (a 141.182 pt AX5 line measured 141.333 and
+ * framed 141). TextKit then drops the last line. About one text in a hundred
+ * at 3x in a model of tall pages; never at 2x, where halves are exact.
+ *
+ * A height with a fractional pixel takes Yoga's other branch: the bottom
+ * edge is ceiled, so the frame is the measured height and a pixel more, from
+ * the first layout. Until b77 every Text was instead given a floor of
+ * `ceil(height) + 1` after its first layout: one more render and layout for
+ * each, and rows that mounted late grew 1 to 2 pt a line on screen.
+ *
+ * The frame is `ceil(top's fraction + slack)` pixels over its measure, so it
+ * still depends on where the text sits: one pixel over, or two when the top
+ * is within the slack of the next pixel. The slack is therefore small (Yoga
+ * counts anything over a ten-thousandth of a pixel as a fraction): half a
+ * pixel gave two pixels at every top past the half, a hundredth only in the
+ * last hundredth. No size removes it, so a measured text height must never
+ * be fed back raw into the text's own position: Today's section header set
+ * its action's margin from its title's height in a centred row, and flipped
+ * between the two frames without end until it ignored changes under a point
+ * (`SectionHeader`).
+ */
+export const pixelSlack = (scale: number) =>
+  Platform.OS === 'ios' && scale > 0 ? 0.01 / scale : 0;
+/** A caller's own bottom padding on a Text, which the slack is added to. */
+function bottomPadding(style: TextProps['style']): number {
+  if (!style) return 0;
+  const flat = StyleSheet.flatten(style);
+  const value = flat?.paddingBottom ?? flat?.paddingVertical ?? flat?.padding;
+  return typeof value === 'number' ? value : 0;
+}
+
+/**
+ * True when the laid-out lines hold all the words. A dropped final line
+ * leaves fewer characters than the words have; lines may hold more (a nested
+ * component's text is not in `content`), and spacing differs (a trailing
+ * no-break space is not in the line's text).
+ */
+const linesCarry = (lines: readonly { text: string }[], content: string) => {
+  const plain = (text: string) => text.replace(/\s/g, '');
+  return (
+    plain(lines.map((line) => line.text).join('')).length >=
+    plain(content).length
+  );
+};
 
 const letter = /[0-9A-Za-zÀ-ÖØ-öø-ɏ]/;
 /** True when a laid-out line ends inside a word that continues on the next line. */
@@ -750,6 +807,8 @@ export function Text({
     verified?: boolean;
     frame?: { width: number; height: number };
     lines?: readonly ProbeLine[];
+    /** Lines kept across a width reset: they may be the old width's. */
+    linesFromBefore?: boolean;
   }>({ key: heightKey, initial: true });
   const currentMeasurement = () => {
     if (measured.current.key !== heightKey)
@@ -762,8 +821,9 @@ export function Text({
     minimum: 0,
   });
   const nativeText = useRef<NativeText>(null);
+  const listensForLines = wordSafe || probe.enabled || !!onTextLayout;
   const guardDrawing = () => {
-    const { frame, lines, verified } = measured.current;
+    const { frame, lines, verified, linesFromBefore } = measured.current;
     if (!frame || frame.height <= 0 || frame.width <= 0) return;
     // The height floor repairs TextKit rounding on iOS. Android measures its
     // own glyph bounds; adding a floor there re-lays out every mounted Text.
@@ -771,23 +831,55 @@ export function Text({
       if (probe.enabled) probe.update(lines, frame);
       return;
     }
-    // One whole point survives Yoga rounding; a physical pixel may round away.
+    // The slack in the measured height (pixelSlack) keeps a frame from
+    // rounding below its lines, so nothing grows after its first layout. The
+    // floor remains only for a Text whose drawing is proven short by its own
+    // line event: lines that do not carry its words, a line that ends below
+    // its frame, or an event with no line at all.
+    // Silence proves nothing. A Text that listens often hears no line event
+    // (on the device, four of Today's at AX5 heard none in 250 ms with the
+    // JS thread idle), so a floor taken on a timer grew healthy text 1 to
+    // 2 pt well after it was drawn. With the slack, a frame cannot round
+    // below even its first line, which is the only way a first line was
+    // ever silently lost.
     // Queued onLayout events carry no identity or font scale. After a new
     // heightKey, only measure() of the committed, unguarded view may set the
     // floor. On first mount there is no previous identity to queue a frame.
     // A guarded frame must never add another point to an established floor.
-    // Guard every content Text, including a completely missing first line:
-    // RN suppresses the initial empty onTextLayout event. A frame callback is
-    // independent of its glyphs. Avoid dispatching no-op updates once settled.
     if (
       verified &&
       !(heightGuard.key === heightKey && heightGuard.minimum > 0)
     ) {
-      setHeightGuard({
-        key: heightKey,
-        width: frame.width,
-        minimum: Math.ceil(frame.height) + 1,
-      });
+      if (lines?.length && linesFromBefore) {
+        // No proof either way until this width's own lines arrive.
+      } else if (lines?.length) {
+        const bottom = Math.max(
+          ...lines.map((line) =>
+            Number.isFinite(line.y) ? line.y + line.height : 0,
+          ),
+        );
+        if (
+          bottom > frame.height + 0.01 ||
+          (content.trim() !== '' &&
+            !given.numberOfLines &&
+            !linesCarry(lines, content))
+        )
+          setHeightGuard({
+            key: heightKey,
+            width: frame.width,
+            // One whole point survives Yoga rounding.
+            minimum: Math.max(Math.ceil(frame.height) + 1, Math.ceil(bottom)),
+          });
+      } else if (lines && !linesFromBefore && content.trim() !== '') {
+        // An event with no line at all, for words that are there: nothing
+        // fitted the frame. This is proof, whether or not the Text has had
+        // lines before.
+        setHeightGuard({
+          key: heightKey,
+          width: frame.width,
+          minimum: Math.ceil(frame.height) + 1,
+        });
+      }
     }
     probe.update(lines, frame);
   };
@@ -849,6 +941,7 @@ export function Text({
         key: heightKey,
         initial: measurement.initial,
         lines: measurement.lines,
+        linesFromBefore: true,
       };
       setHeightGuard({ key: heightKey, width: frame.width, minimum: 0 });
       probe.reset();
@@ -862,7 +955,9 @@ export function Text({
   };
   const onLayoutLines = (event: TextLayoutEvent) => {
     onTextLayout?.(event);
-    currentMeasurement().lines = event.nativeEvent.lines;
+    const measurement = currentMeasurement();
+    measurement.lines = event.nativeEvent.lines;
+    measurement.linesFromBefore = false;
     guardDrawing();
     fitLines();
   };
@@ -899,10 +994,15 @@ export function Text({
     if (measured.current.key !== heightKey)
       measured.current = { key: heightKey };
     const measurement = measured.current;
-    if (!wordSafe && (Platform.OS === 'android' || measurement.initial)) return;
+    if (
+      !wordSafe &&
+      (Platform.OS === 'android' || measurement.initial || !listensForLines)
+    )
+      return;
     // Text/content can change without changing the frame, suppressing onLayout.
-    // Measure every iOS Text after an identity change, including plain text:
-    // its new floor must use the current native size, never a queued frame.
+    // Measure an iOS Text that listens for its lines after an identity
+    // change: a floor must use the current native size, never a queued frame.
+    // (A plain Text takes no floor: its slack is in its measured height.)
     // Its callback is cancelled when another identity/step commits.
     let active = true;
     nativeText.current?.measure((_x, _y, width, height) => {
@@ -911,7 +1011,8 @@ export function Text({
     return () => {
       active = false;
     };
-  }, [heightKey, wordSafe]);
+  }, [heightKey, wordSafe, listensForLines]);
+  const slack = pixelSlack(scale || PixelRatio.get());
   return (
     <NativeText
       // Names and party abbreviations are read with Australian English rules.
@@ -971,6 +1072,9 @@ export function Text({
           ? { minHeight: heightGuard.minimum }
           : null,
         style,
+        // After the caller's style: its own bottom padding keeps its value
+        // and the slack is added to it.
+        slack ? { paddingBottom: bottomPadding(style) + slack } : null,
       ]}
     />
   );

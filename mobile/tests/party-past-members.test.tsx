@@ -557,3 +557,90 @@ test.each(['ios', 'android'] as const)(
     }
   },
 );
+
+describe('while past members load, the block holds the height of what loads in (b79 sweep)', () => {
+  const { Dimensions, StyleSheet } =
+    jest.requireActual<typeof import('react-native')>('react-native');
+  const original = Dimensions.get('window');
+  afterEach(() => act(() => Dimensions.set({ window: original })));
+  type Json = TestRenderer.ReactTestRendererJSON;
+  // What takes part in layout: each node's type and flattened style, its
+  // line limit, and its text with every figure read as one digit wide run
+  // (a count never wraps, so "000" and "96" take the same single line).
+  const shape = (node: Json | string): unknown =>
+    typeof node === 'string'
+      ? node.replace(/\d+/g, '0')
+      : {
+          type: node.type,
+          style: StyleSheet.flatten(node.props.style) ?? {},
+          numberOfLines: node.props.numberOfLines,
+          children: node.children?.map(shape) ?? null,
+        };
+  const draw = (block: Parameters<typeof PastMembers>[0]['block']) => {
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(<PastMembers block={block} retry={jest.fn()} />);
+    });
+    return r;
+  };
+  const base = { stale: false, asAt: null, sources: [] };
+
+  test.each([
+    ['the default size', 1, 96],
+    ['AX3', 2.643, 96],
+    ['AX5', 3.571, 96],
+    ['a party with one past member', 1, 1],
+    ['AX5, one past member', 3.571, 1],
+  ])('%s: the held row is the loaded row', (_name, fontScale, count) => {
+    act(() =>
+      Dimensions.set({ window: { ...original, width: 402, fontScale } }),
+    );
+    const loading = draw({ ...base, status: 'loading', data: null });
+    const held = loading.root.find(
+      (n) => typeof n.type === 'string' && n.props.testID === 'party-past-hold',
+    );
+    // Unseen, untouchable and silent: it only takes up the row's room.
+    expect(StyleSheet.flatten(held.props.style)).toMatchObject({ opacity: 0 });
+    expect(held.props.pointerEvents).toBe('none');
+    expect(held.props.accessibilityElementsHidden).toBe(true);
+    expect(held.props.importantForAccessibility).toBe('no-hide-descendants');
+    const frame = loading.root.find(
+      (n) =>
+        typeof n.type === 'string' && n.props.testID === 'party-past-loading',
+    );
+    expect(StyleSheet.flatten(frame.props.style)).toMatchObject({
+      overflow: 'hidden',
+    });
+    // The loading bar is drawn over it, out of the layout.
+    const [, cover] = frame.children as TestRenderer.ReactTestInstance[];
+    expect(StyleSheet.flatten(cover!.props.style)).toMatchObject({
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+    });
+    expect(
+      loading.root.findAll(
+        (n) => n.props.accessibilityLabel === 'Loading past members',
+      ).length,
+    ).toBeGreaterThan(0);
+
+    const members = Array.from({ length: count }, (_, i) => ({
+      name: `Invented Member ${i}`,
+      slug: `invented-member-${i}`,
+    }));
+    const ready = draw({
+      ...base,
+      status: 'ready',
+      data: members as never,
+    });
+    const heldJson = (loading.toJSON() as Json).children![0] as Json;
+    expect(heldJson.children).toHaveLength(1);
+    expect(shape(heldJson.children![0]!)).toEqual(
+      shape(ready.toJSON() as Json),
+    );
+    act(() => {
+      loading.unmount();
+      ready.unmount();
+    });
+  });
+});

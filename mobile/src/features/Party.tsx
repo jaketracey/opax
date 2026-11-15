@@ -1243,14 +1243,28 @@ export function PastMembers({
   block: NonNullable<View_['past']>;
   retry: () => void;
 }) {
+  // Loading holds exactly what loads in most often: the one closed "Past
+  // members" row, drawn unseen so it takes that row's own height at every
+  // text size. Two skeleton rows stood here before, about 100 pt taller, and
+  // Receipts and everything below jumped up when the row replaced them.
   if (block.status === 'loading')
     return (
-      <Skeleton
-        shape="rows"
-        count={2}
-        label="Loading past members"
-        testID="party-past-loading"
-      />
+      <View style={styles.pastHold} testID="party-past-loading">
+        <View
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={styles.pastUnseen}
+          testID="party-past-hold"
+        >
+          <Disclosure label="Past members" value="000">
+            {() => null}
+          </Disclosure>
+        </View>
+        <View pointerEvents="none" style={styles.pastCover}>
+          <Skeleton shape="text" count={1} label="Loading past members" />
+        </View>
+      </View>
     );
   if (block.status === 'error')
     return (
@@ -1352,6 +1366,16 @@ export function PastMembers({
 }
 
 const styles = StyleSheet.create({
+  pastHold: { overflow: 'hidden' },
+  pastUnseen: { opacity: 0 },
+  pastCover: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    justifyContent: 'center',
+  },
   top: { gap: rhythm.block },
   history: { gap: rhythm.tight },
   faces: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },

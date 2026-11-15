@@ -4,13 +4,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { router } from 'expo-router';
 import { track } from '../../analytics';
 import {
@@ -88,22 +82,30 @@ function useSeatPending(): boolean {
 }
 /**
  * Members' names for sizing the held box, never seen. The roster itself is
- * not on hand while the seat is still being read, so these are constants.
- * Both are 24 characters; the longest verified House name in the roster is
- * 22. There are two because a name sets the question's height in two ways:
+ * not on hand while the seat is still being read, so these are constants,
+ * chosen by drawn height, not by letter count: laid out in the system font
+ * at every text size from 17 to 53 pt and every row width from 200 to
+ * 330 pt, the taller of the two questions is never shorter than the
+ * question about any verified member of the House (worst margin 0 pt).
  *
- * - with long words. At large text sizes the row's type steps down until
- *   its longest word fits the line, so this question is drawn smaller;
- * - with no word longer than "parliament", the longest word in the
- *   question itself. This one is never stepped down further than any real
- *   question, so at large sizes it is the taller of the two, and as tall as
- *   the question about a member whose name is all short words.
+ * A name sets the question's height in two ways, so there are two:
+ *
+ * - one with long words. At large text sizes the row's type steps down
+ *   until its longest word fits the line, so this question is drawn
+ *   smaller, as a real long-worded name's is;
+ * - one whose every part is shorter than "parliament", the longest word in
+ *   the question itself, so it is never stepped down further than a real
+ *   question (a ten-letter name can draw wider than "parliament" and was).
+ *   It is long, and hyphenated, because a hyphen is a place to break: the
+ *   tallest real questions are for hyphenated names.
  *
  * The box takes the tallest of its candidates, so it holds either kind.
+ * Changing a name here means running that layout sweep again:
+ * scripts/ask-standin-sweep (its README says how).
  */
 export const SIZING_MEMBERS = [
   'Alexandrina Wetherington',
-  'Bernadette Annabelle Lee',
+  'Annabelle Margaret Lee-Ray',
 ] as const;
 const noop = () => {};
 // The member the seat starter put in Person, so a starter tapped next does
@@ -147,10 +149,11 @@ export function AskIdle({
   testPrefix?: string;
 }) {
   const stacked = useAccessibilitySize();
-  // The stacked heading borrows space from its parent's gap. These bare
-  // groups have none; restore it on Android without moving the iOS layout.
-  const sectionStyle =
-    Platform.OS === 'android' && stacked ? styles.stackedSection : undefined;
+  // At accessibility sizes the stacked heading takes back part of its
+  // parent's gap (a negative margin under it). These bare groups have no
+  // gap, so the card was drawn over the foot of "Try asking", cutting its
+  // descenders (build 78 sweep, AX3). The gap is given on both platforms.
+  const sectionStyle = stacked ? styles.stackedSection : undefined;
   const saved = useSyncExternalStore(
     subscribeChats,
     chatsSnapshot,
@@ -351,6 +354,8 @@ const centredWords = (() => {
 
 const MARK = 96;
 const MARK_SCALE = 1.5;
+/** The room to spare, past a bare fit, before a hidden mark is shown. */
+const MARK_SLACK = 1;
 
 /**
  * The docked conversation column with nothing asked and nothing saved
@@ -417,7 +422,24 @@ export function AskEmptyState({
     Math.round(MARK * Math.min(Math.max(fontScale, 1), MARK_SCALE)) +
     rhythm.group;
   const wordsFit = !measured || words <= room;
-  const markFits = measured && words + mark <= room;
+  // The mark is shown while there is room for it under the words. Showing
+  // or hiding it recentres the words, which can move their measured height
+  // by a pixel; within a point of the threshold that would flip the mark
+  // back, and so on without end. So the band is one-sided: the mark goes
+  // as soon as it no longer fits, so it never overruns its room, and comes
+  // back only when there is at least `MARK_SLACK` to spare.
+  const [markOn, setMarkOn] = useState<boolean | null>(null);
+  const spare = measured ? room - words - mark : null;
+  const markNext =
+    spare === null
+      ? null
+      : markOn === null
+        ? spare >= 0
+        : markOn
+          ? spare >= 0
+          : spare >= MARK_SLACK;
+  if (markNext !== markOn) setMarkOn(markNext);
+  const markFits = markNext === true;
   useLayoutEffect(() => {
     centredWords.set(!shown || wordsFit);
     return () => centredWords.set(true);

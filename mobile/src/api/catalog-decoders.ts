@@ -18,6 +18,7 @@ import {
   array,
   boolean,
   catalogWarning,
+  tolerated,
   count,
   date,
   dict,
@@ -211,6 +212,12 @@ const electorateFields = {
   // Local follows compare these to notice a new election result without
   // reading each seat's detail file.
   latest_election: optional(nullable(date)),
+  // A state lower house dissolved for an election: the election day while
+  // it is dissolved, null once the post-result roster is loaded, and absent
+  // from an index that predates the field (features/today/dissolution).
+  dissolved_for: (v: unknown) =>
+    // Null and absent are different answers here, so both are kept.
+    v === undefined ? undefined : v === null ? null : date(v),
   election_count: optional(count),
 };
 const electorate = shape(electorateFields);
@@ -419,11 +426,21 @@ const summary = shape({
 // malformed title is dropped, never a reason to reject the bill.
 const divisionTitle = (v: unknown) =>
   typeof v === 'string' && v.trim() ? v.trim() : undefined;
+// A division's question is display text, and readers already treat '' as no
+// question (bill-transforms billStripTitle, bills/divisions divisionQuestion).
+// On 15 Nov 2026, 75 divisions in 64 bill files carried `null` and each
+// whole bill was refused. Null or absent reads as ''; any other type is
+// still malformed.
+const divisionQuestionText: Decoder<string> = (v) => {
+  if (v !== null && v !== undefined) return text(v);
+  tolerated('question', 'Null or absent, read as no question');
+  return '';
+};
 const division = shape({
   key: nonempty,
   date,
   house: nonempty,
-  question: text,
+  question: divisionQuestionText,
   stage: nullable(text),
   title: divisionTitle,
   ayes: count,
@@ -443,13 +460,25 @@ const speech = shape({
   stage_hint: nullable(text),
   brief: nullable(text),
 });
+/**
+ * A bill's own lists (its divisions, speeches, stages, sources, acts and
+ * related bills) decode item by item. A malformed item is dropped and the
+ * bill is marked partial, so its page says some records could not be read
+ * and the client reports the path; the rest of the bill is shown. Twice in
+ * November 2026 one bad sub-record hid whole records in every shipped
+ * version. The bill itself is refused only for its own fields: its key,
+ * title, status and the other `billFields`, its summary, or a list that is
+ * not a list.
+ */
+const billList = <T>(item: Decoder<T>, name: string) =>
+  rows(item, `bill.${name}`, 'tolerant');
 export const decodeBill = shape({
   ...billFields,
   consultation: optional(
     nullable(shape({ url, opens: date, closes: nullable(date), note: text })),
   ),
   related: optional(
-    array(
+    billList(
       shape({
         kind: nonempty,
         key: billKey,
@@ -457,19 +486,22 @@ export const decodeBill = shape({
         title: nonempty,
         note: text,
       }),
+      'related',
     ),
   ),
   became: optional(nullable(billKey)),
   sponsor_person_id: nullable(rosterId),
-  key_dates: array(
+  key_dates: billList(
     shape({ stage: nonempty, date, house: nullable(text), url: nullable(url) }),
+    'key_dates',
   ),
-  sources: array(billSource),
+  sources: billList(billSource, 'sources'),
   summary: nullable(summary),
-  divisions: array(division),
-  speeches: array(speech),
-  acts: array(
+  divisions: billList(division, 'divisions'),
+  speeches: billList(speech, 'speeches'),
+  acts: billList(
     shape({ title: nonempty, frl_uri: url, assent_date: nullable(date) }),
+    'acts',
   ),
 });
 export type BillDetail = Decoded<typeof decodeBill>;

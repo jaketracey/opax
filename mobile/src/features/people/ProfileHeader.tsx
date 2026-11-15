@@ -22,7 +22,7 @@ import { roleTerm } from '../learn/term-map';
 
 /** One row under the header: the party, a seat, the official page. */
 export interface IdentityRow {
-  kind: 'party' | 'seat' | 'official';
+  kind: 'party' | 'seat' | 'official' | 'first-speech' | 'first-division';
   title: string;
   detail?: string;
   /** A row with no `href` and no `external` is static text. */

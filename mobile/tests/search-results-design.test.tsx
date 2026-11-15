@@ -21,6 +21,7 @@ import {
   ResultsHeader,
   sourcesCounted,
 } from '../src/features/search/ResultsHeader';
+import { groups } from '../src/features/search/scopes';
 import { speechSource, type SpeechList } from '../src/features/search/speeches';
 import { SpeechResults } from '../src/features/search/SpeechResults';
 
@@ -211,50 +212,39 @@ describe('the count line', () => {
     renderer.root.find(
       (n) => typeof n.type === 'string' && n.props.testID === testID,
     );
+  const has = (renderer: TestRenderer.ReactTestRenderer, testID: string) =>
+    renderer.root.findAll(
+      (n) => typeof n.type === 'string' && n.props.testID === testID,
+    ).length > 0;
+  const lineStyle = (renderer: TestRenderer.ReactTestRenderer) =>
+    StyleSheet.flatten(host(renderer, 'search-count').props.style);
+  /** The line is drawn (not held unseen). */
+  const shown = (renderer: TestRenderer.ReactTestRenderer) =>
+    lineStyle(renderer).opacity !== 0;
   const said = (renderer: TestRenderer.ReactTestRenderer) =>
     host(renderer, 'search-count')
       .findAllByType(NativeText)
       .flatMap((n) => [n.props.children].flat())
       .filter((v) => typeof v === 'string')
       .join('');
-  // The stand-in as the device lays it out: its box, and its line count.
-  const layStandIn = (
-    renderer: TestRenderer.ReactTestRenderer,
-    box: number,
-    lineCount: number,
-  ) => {
-    const standIn = host(renderer, 'search-count-stand-in');
-    act(() =>
-      standIn.props.onLayout({ nativeEvent: { layout: { height: box } } }),
-    );
-    act(() =>
-      standIn.findByType(Text).props.onTextLayout({
-        nativeEvent: {
-          lines: Array.from({ length: lineCount }, () => ({ height: 56 })),
-        },
-      }),
-    );
-  };
-  // The real line as the device lays it out, in `n` lines.
-  const layLine = (renderer: TestRenderer.ReactTestRenderer, n: number) =>
-    act(() =>
-      renderer.root
-        .find((node) => node.props.testID === 'search-count-text')
-        .props.onTextLayout({
-          nativeEvent: { lines: Array.from({ length: n }, () => ({})) },
-        }),
-    );
+  const layout = (height: number) => ({ nativeEvent: { layout: { height } } });
+  // The stand-in's box and the unseen full line, as the device lays them out.
+  const layBox = (renderer: TestRenderer.ReactTestRenderer, height: number) =>
+    host(renderer, 'search-count-stand-in').props.onLayout(layout(height));
+  const layFull = (renderer: TestRenderer.ReactTestRenderer, height: number) =>
+    host(renderer, 'search-count-probe').props.onLayout(layout(height));
+  const NAME =
+    'Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability';
   const commission = {
     asOf: '2026-09-30',
     citation: [
-      {
-        label:
-          'Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability',
-        title: 'Royal Commission transcripts',
-      },
+      { label: NAME, title: 'Royal Commission transcripts' },
       { label: 'Hansard', title: 'Hansard' },
     ],
   };
+  const draw = (count = '57 results') => (
+    <ResultsHeader count={count} details={commission} />
+  );
   const dimensions = (width: number, fontScale: number) =>
     jest
       .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
@@ -280,9 +270,7 @@ describe('the count line', () => {
       expect(words.props.children).toBe(COUNT_STAND_IN);
     };
     check();
-    expect(
-      renderer.root.findAll((n) => n.props.testID === 'search-count'),
-    ).toHaveLength(0);
+    expect(has(renderer, 'search-count')).toBe(false);
     act(() =>
       renderer.update(<ResultsHeader count="122 results" details={null} />),
     );
@@ -290,110 +278,157 @@ describe('the count line', () => {
     check();
     // The real line lies over it and cannot push anything: out of the flow,
     // exactly the stand-in's box, and nothing it draws leaves that box.
-    layStandIn(renderer, 224, 4);
-    expect(
-      StyleSheet.flatten(host(renderer, 'search-count').props.style),
-    ).toMatchObject({ position: 'absolute', height: 224, overflow: 'hidden' });
-    // The text's row has no height of its own (a fixed height would make the
-    // device measure the text "at most" that tall and hide the lines that do
-    // not fit), only a minimum, and the box clips what overflows.
-    const inner = StyleSheet.flatten(
-      host(renderer, 'search-count-inner').props.style,
-    );
-    expect(inner).toMatchObject({ position: 'absolute', minHeight: 224 });
-    expect(Object.keys(inner)).not.toContain('height');
+    act(() => layBox(renderer, 224));
+    expect(lineStyle(renderer)).toMatchObject({
+      position: 'absolute',
+      height: 224,
+      overflow: 'hidden',
+    });
     // The box is the stand-in's latest layout: it shrinks as well as grows.
-    layStandIn(renderer, 44, 2);
-    expect(
-      StyleSheet.flatten(host(renderer, 'search-count').props.style).height,
-    ).toBe(44);
+    act(() => layBox(renderer, 44));
+    expect(lineStyle(renderer).height).toBe(44);
+    // A line with no source names has nothing to count: no measuring copy,
+    // and it is drawn at once.
+    expect(has(renderer, 'search-count-probe')).toBe(false);
+    expect(shown(renderer)).toBe(true);
   });
 
-  test('a first source with a long name is counted when its name needs more lines than are held (AX5)', () => {
-    dimensions(390, 3.1);
-    let renderer!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      renderer = TestRenderer.create(
-        <ResultsHeader count="57 results" details={commission} />,
-      );
-    });
-    // AX5: the stand-in is five lines tall.
-    layStandIn(renderer, 224, 4);
-    expect(said(renderer)).toContain('Royal Commission into Violence');
-    // The full line needs eight: it is counted instead, never cut short.
-    layLine(renderer, 8);
-    expect(said(renderer)).not.toContain('Royal Commission');
-    expect(said(renderer)).toContain('57 results');
-    expect(said(renderer)).toContain(sourcesCounted(2));
+  test('the stand-in is never shorter than the counted form, whatever is counted', () => {
+    for (const { noun } of Object.values(groups))
+      expect(
+        `9,999+ ${noun} · Updated 30 Sep 2026 · ${sourcesCounted(99)}`.length,
+      ).toBeLessThanOrEqual(COUNT_STAND_IN.length);
+    // "and 3 more" never breaks in the real line, so not in the stand-in.
+    expect(COUNT_STAND_IN).toContain('and\u00a03\u00a0more');
     expect(sourcesCounted(1)).toBe('1 source');
-    expect(
-      renderer.root.findAll((n) => n.props.numberOfLines != null),
-    ).toHaveLength(0);
-    // The names are still spoken, and the line still opens the sources.
-    const button = host(renderer, 'search-count');
-    expect(button.props.accessibilityLabel).toContain(
-      'Source: Royal Commission into Violence',
-    );
-    expect(button.props.accessibilityHint).toBe('Opens the sources');
-    // A line that fits keeps its names.
-    act(() =>
-      renderer.update(
-        <ResultsHeader
-          count="122 results"
-          details={{ asOf: '2026-09-30', citation: ['Hansard'] }}
-        />,
-      ),
-    );
-    layLine(renderer, 4);
-    expect(said(renderer)).toContain('Hansard');
   });
 
-  test('the long name is counted whichever is measured first, the stand-in or the line', () => {
-    dimensions(390, 3.1);
+  test('the names are never drawn and then replaced: the line stays unseen until the full line is measured', () => {
     let renderer!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      renderer = TestRenderer.create(
-        <ResultsHeader count="57 results" details={commission} />,
-      );
-    });
-    // The line's layout arrives before the stand-in's box is known.
-    layLine(renderer, 8);
-    expect(said(renderer)).toContain('Royal Commission into Violence');
-    layStandIn(renderer, 224, 4);
-    expect(said(renderer)).toContain(sourcesCounted(2));
-    // The short form's own layout does not bring the names back.
-    layLine(renderer, 5);
-    expect(said(renderer)).toContain(sourcesCounted(2));
-  });
-
-  test('the held place follows the width and the text size: a rotation or a smaller size asks again', () => {
-    dimensions(390, 3.1);
-    let renderer!: TestRenderer.ReactTestRenderer;
-    const draw = () => (
-      <ResultsHeader count="57 results" details={commission} />
-    );
     act(() => {
       renderer = TestRenderer.create(draw());
     });
-    layStandIn(renderer, 224, 4);
-    layLine(renderer, 8);
+    // Nothing measured: the line is in place but unseen.
+    expect(shown(renderer)).toBe(false);
+    // The measuring copy is the full line, unseen, out of the flow, with no
+    // height of its own, and never spoken or touched.
+    const probe = host(renderer, 'search-count-probe');
+    const probeStyle = StyleSheet.flatten(probe.props.style);
+    expect(probeStyle).toMatchObject({ position: 'absolute', opacity: 0 });
+    expect(Object.keys(probeStyle)).not.toContain('height');
+    expect(Object.keys(probeStyle)).not.toContain('minHeight');
+    expect(probe.props.accessibilityElementsHidden).toBe(true);
+    expect(probe.props.pointerEvents).toBe('none');
+    expect(
+      probe
+        .findAllByType(NativeText)
+        .flatMap((n) => [n.props.children].flat())
+        .join(''),
+    ).toContain(NAME);
+    // Either measurement alone decides nothing.
+    act(() => layBox(renderer, 224));
+    expect(shown(renderer)).toBe(false);
+    // AX5: the full line needs twice the held place. It is counted in the
+    // same render that draws it, so the names were never on screen.
+    act(() => layFull(renderer, 448));
+    expect(shown(renderer)).toBe(true);
+    expect(said(renderer)).not.toContain('Royal Commission');
+    expect(said(renderer)).toContain(`57 results · `);
     expect(said(renderer)).toContain(sourcesCounted(2));
-    // Rotated: the stand-in lays out again, shorter, and the line is tried
-    // in full at the new width. Here it fits.
-    dimensions(844, 3.1);
-    act(() => renderer.update(draw()));
-    layStandIn(renderer, 168, 3);
-    expect(said(renderer)).toContain('Royal Commission into Violence');
-    layLine(renderer, 3);
-    expect(said(renderer)).toContain('Royal Commission into Violence');
-    // A smaller text size: back to one 44 pt target, two footnote lines.
-    dimensions(390, 1);
-    act(() => renderer.update(draw()));
-    layStandIn(renderer, 44, 2);
-    layLine(renderer, 2);
-    expect(said(renderer)).toContain('Royal Commission into Violence');
-    layLine(renderer, 3);
+    expect(
+      renderer.root.findAll((n) => n.props.numberOfLines != null),
+    ).toHaveLength(0);
+    // What is drawn is also said, with the names; the line opens the sources.
+    const button = host(renderer, 'search-count');
+    expect(button.props.accessibilityLabel).toContain('2 sources');
+    expect(button.props.accessibilityLabel).toContain(`Source: ${NAME}`);
+    expect(button.props.accessibilityHint).toBe('Opens the sources');
+    // The other order: the full line is measured before the box.
+    act(() => {
+      renderer = TestRenderer.create(draw());
+    });
+    act(() => layFull(renderer, 448));
+    expect(shown(renderer)).toBe(false);
+    act(() => layBox(renderer, 224));
+    expect(shown(renderer)).toBe(true);
     expect(said(renderer)).toContain(sourcesCounted(2));
+    // New words are measured afresh: unseen again until their copy is in.
+    act(() => renderer.update(draw('58 results')));
+    expect(shown(renderer)).toBe(false);
+    act(() => layFull(renderer, 448));
+    expect(shown(renderer)).toBe(true);
+    expect(said(renderer)).toContain('58 results');
+  });
+
+  test('heights are compared, not line counts: two lines that fit the 44 pt target keep their names', () => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(draw());
+    });
+    // Default size on a wide phone: a one-line stand-in in its 44 pt box,
+    // and a full line of two 18 pt lines.
+    act(() => {
+      layBox(renderer, 44);
+      layFull(renderer, 36);
+    });
+    expect(shown(renderer)).toBe(true);
+    expect(said(renderer)).toContain(NAME);
+    expect(
+      host(renderer, 'search-count').props.accessibilityLabel,
+    ).not.toContain('2 sources');
+    // Three lines do not fit.
+    act(() => layFull(renderer, 54));
+    expect(said(renderer)).toContain(sourcesCounted(2));
+  });
+
+  test('a rotation, a resize or a new text size that lands with its layouts in one render leaves the right form', () => {
+    dimensions(390, 3.1);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(draw());
+    });
+    act(() => {
+      layBox(renderer, 224);
+      layFull(renderer, 448);
+    });
+    expect(said(renderer)).toContain(sourcesCounted(2));
+    // Rotated: the window, the box and the full line all change in one
+    // render. Nothing is keyed by the window, so nothing goes stale.
+    act(() => {
+      dimensions(844, 3.1);
+      renderer.update(draw());
+      layBox(renderer, 168);
+      layFull(renderer, 168);
+    });
+    expect(shown(renderer)).toBe(true);
+    expect(said(renderer)).toContain(NAME);
+    // Back again, the same way: counted, not left clipped in full.
+    act(() => {
+      dimensions(390, 3.1);
+      renderer.update(draw());
+      layBox(renderer, 224);
+      layFull(renderer, 448);
+    });
+    expect(shown(renderer)).toBe(true);
+    expect(said(renderer)).toContain(sourcesCounted(2));
+    expect(said(renderer)).not.toContain('Royal Commission');
+    // A window change that moves neither height changes nothing and needs
+    // no new measurement.
+    act(() => {
+      dimensions(400, 3.1);
+      renderer.update(draw());
+    });
+    expect(shown(renderer)).toBe(true);
+    expect(said(renderer)).toContain(sourcesCounted(2));
+    // A smaller text size: back to one 44 pt target.
+    act(() => {
+      dimensions(390, 1);
+      renderer.update(draw());
+      layBox(renderer, 44);
+      layFull(renderer, 36);
+    });
+    expect(said(renderer)).toContain(NAME);
+    expect(lineStyle(renderer).height).toBe(44);
   });
 });
 

@@ -7,6 +7,11 @@ import { learnChapters, learnExamples } from '../src/features/learn/glossary';
 import LearnChapter from '../src/features/learn/LearnChapter';
 import { LearnCard, WithLearnCard } from '../src/features/learn/LearnCard';
 import LearnHub from '../src/features/learn/LearnHub';
+import { AccountGuideRow } from '../src/features/learn/AccountLearn';
+import { SettingsRow } from '../src/features/account/parts';
+import { Icon } from '../src/design/icon';
+import { symbols } from '../src/design/symbols';
+import { Text } from '../src/design/text';
 import { guideRoute, openGuideLink } from '../src/features/learn/links';
 import {
   learnSettingsSnapshot,
@@ -325,6 +330,44 @@ describe('entry points', () => {
     expect(
       tree.root.findAll((node) => node.props.testID === 'today-learn-open')
         .length,
+    ).toBeGreaterThan(0);
+  });
+});
+
+describe('Account › How Parliament works', () => {
+  test('opens a page, so it is a link with the chevron its neighbours have, in ink', () => {
+    const tree = render(<AccountGuideRow />);
+    const row = host(tree, 'account-learn')[0]!;
+    expect(row.props.accessibilityRole).toBe('link');
+    expect(row.props.accessibilityLabel).toBe('How Parliament works');
+    const chevrons = tree.root.findAll(
+      (node) => node.type === Icon && node.props.name === symbols.chevron,
+    );
+    expect(chevrons).toHaveLength(1);
+    const title = tree.root.find(
+      (node) =>
+        node.type === Text && node.props.children === 'How Parliament works',
+    );
+    expect(title.props.tone).toBe('ink');
+    // An action row beside it (Replay welcome) stays a button, no chevron.
+    const action = render(
+      <SettingsRow
+        title="Replay welcome"
+        tile="hand.wave"
+        onPress={() => {}}
+      />,
+    );
+    expect(
+      action.root.findAll(
+        (node) => node.type === Icon && node.props.name === symbols.chevron,
+      ),
+    ).toHaveLength(0);
+    expect(
+      action.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'button',
+      ).length,
     ).toBeGreaterThan(0);
   });
 });

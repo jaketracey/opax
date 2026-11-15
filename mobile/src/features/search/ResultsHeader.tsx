@@ -3,10 +3,9 @@ import {
   Pressable,
   StyleSheet,
   View,
-  useWindowDimensions,
   type LayoutChangeEvent,
-  type TextLayoutEvent,
 } from 'react-native';
+import { unbroken } from '../../design/format';
 import {
   Icon,
   Text,
@@ -19,14 +18,15 @@ import { presentSource } from '../../navigation/sheets';
 import { FiltersLine } from './FiltersLine';
 
 /**
- * Stands in for the count and source line: an ordinary full line. It is
- * always laid out, unseen, and its height is the line's place at the current
- * width and text size, before the count is known and after.
+ * Stands in for the count and source line: the longest ordinary line (the
+ * longest count noun, and "and 3 more" unbroken as the real line has it),
+ * so it is never shorter than the counted form. It is always laid out,
+ * unseen, and its height is the line's place at the current width and text
+ * size, before the count is known and after.
  */
-export const COUNT_STAND_IN =
-  '0,000+ results · Updated 00 Mmm 0000 · Hansard and 3 more';
+export const COUNT_STAND_IN = `0,000+ government agencies · Updated 00 Mmm 0000 · Hansard ${unbroken('and 3 more')}`;
 
-/** The line without its sources' names: "… · 4 sources". Never longer than the stand-in. */
+/** The line without its sources' names: "… · 4 sources". */
 export const sourcesCounted = (n: number) =>
   `${n} ${n === 1 ? 'source' : 'sources'}`;
 
@@ -40,10 +40,16 @@ export const sourcesCounted = (n: number) =>
  * The line's height never depends on what the search returns. The stand-in
  * holds its place from the first frame; the real line is drawn over it, in
  * the same place. A first source with a long name (a royal commission's) that
- * would need more lines than are held is counted instead ("4 sources"): the
- * names are in the sheet the line opens, and in its spoken label. Because the
- * stand-in is laid out with the page, the held height follows a rotation, a
- * split view or a new text size, and never changes while results load.
+ * would be taller than the held place is counted instead ("4 sources"): the
+ * names are in the sheet the line opens, and in its spoken label.
+ *
+ * Which form fits is measured, not guessed: an unseen copy of the full line
+ * is laid out at the line's own width and its height compared with the held
+ * place. The line is drawn only once that is known, so the names never show
+ * for a frame before the count replaces them. Both measurements are plain
+ * layouts of views that are always mounted, so a rotation, a split view or a
+ * new text size measures again by itself, and nothing changes while results
+ * load.
  */
 export function ResultsHeader({
   count,
@@ -59,10 +65,8 @@ export function ResultsHeader({
   onClearFilters?: () => void;
   onOpenFilters?: () => void;
 }) {
-  // The stand-in's box, and how many text lines it laid out in, as last
-  // laid out. Lines are counted, never derived from heights.
+  // The stand-in's box, as last laid out.
   const [box, setBox] = useState(0);
-  const [lines, setLines] = useState<number | null>(null);
   return (
     <View style={styles.header}>
       <View testID="search-count-slot">
@@ -73,7 +77,7 @@ export function ResultsHeader({
           onLayout={(event: LayoutChangeEvent) =>
             setBox(event.nativeEvent.layout.height)
           }
-          style={[styles.line, styles.standIn]}
+          style={[styles.line, styles.unseen]}
         >
           <View style={styles.glyph}>
             <Icon
@@ -83,20 +87,12 @@ export function ResultsHeader({
               tone="inkSoft"
             />
           </View>
-          <Text
-            variant="footnote"
-            tone="inkSoft"
-            style={styles.text}
-            onTextLayout={(event: TextLayoutEvent) => {
-              const n = event.nativeEvent.lines.length;
-              if (n > 0) setLines(n);
-            }}
-          >
+          <Text variant="footnote" tone="inkSoft" style={styles.text}>
             {COUNT_STAND_IN}
           </Text>
         </View>
         {count !== null || details ? (
-          <CountLine count={count} details={details} lines={lines} box={box} />
+          <CountLine count={count} details={details} box={box} />
         ) : null}
       </View>
       {filters && onClearFilters ? (
@@ -113,96 +109,125 @@ export function ResultsHeader({
 function CountLine({
   count,
   details,
-  lines,
   box,
 }: {
   count: string | null;
   details: SourceDetails | null;
-  /** The text lines the held place has room for; null before it is known. */
-  lines: number | null;
   /** The held place's height (0 before it is laid out). */
   box: number;
 }) {
-  // Out of the flow and exactly the stand-in's box, so it adds no height.
-  const over = [styles.over, box > 0 ? { height: box } : null];
-  // The text sits in a row with no height of its own: a row of fixed height
-  // would measure its text "at most" that tall, and the device would never
-  // report the lines that do not fit. The box clips what overflows.
-  const inner = [styles.inner, { minHeight: box > 0 ? box : minimumTarget }];
-  const { width, fontScale } = useWindowDimensions();
   const parts = details ? sourceLineParts(details) : null;
   const lead = [count, parts?.date].filter(Boolean).join(' · ');
   const tail = parts?.rest.length ? ` · ${parts.rest.join(' · ')}` : '';
-  // How many lines the full line (with its sources' names) last laid out in,
-  // at this width and text size. The decision is derived from it and from the
-  // held box, so it does not depend on which of the two was measured first,
-  // and a new width or size drops it and asks again.
-  const key = `${lead}|${parts?.name ?? ''}|${tail}|${width}|${fontScale}`;
-  const [full, setFull] = useState<{ key: string; lines: number } | null>(null);
-  const counted =
-    !!parts?.name && lines !== null && full?.key === key && full.lines > lines;
+  const named = parts?.name ?? null;
+  // The full line's words: what the unseen copy lays out, and its identity.
+  const fullText = `${lead}${named ? `${lead ? ' · ' : ''}${named}` : ''}${tail}`;
+  // The unseen copy's height, with the words it was measured for. A line
+  // with no source names has nothing to count and is not measured.
+  const [probe, setProbe] = useState<{ text: string; height: number } | null>(
+    null,
+  );
+  const measured = !named || (box > 0 && probe?.text === fullText);
+  const counted = !!named && measured && probe!.height > box + 0.5;
   const spoken = [
     count,
     parts?.date,
-    parts?.name ? `Source: ${parts.name}` : null,
+    counted && parts ? sourcesCounted(parts.sources) : null,
+    named ? `Source: ${named}` : null,
     ...(parts?.rest ?? []),
   ]
     .filter(Boolean)
     .join('. ')
     .replace(/\u00a0/g, ' ');
+  const glyph = details ? (
+    <View style={styles.glyph}>
+      <Icon name={symbols.source} size={13} maxScale={1.5} tone="inkSoft" />
+    </View>
+  ) : null;
+  // The line's words as a text's own children (no wrapper), with `name` as
+  // the source part: the names, or their count.
+  const words = (name: string | null) => [
+    lead,
+    name ? (lead ? ' · ' : '') : '',
+    name ? (
+      <Text key="name" variant="footnote" style={{ color: colors.navy }}>
+        {name}
+      </Text>
+    ) : null,
+    tail,
+  ];
+  // Out of the flow and exactly the stand-in's box, so it adds no height;
+  // unseen until the full line's height is known, so the names never show
+  // and then give way to the count.
+  const over = [
+    styles.line,
+    styles.over,
+    box > 0 ? { height: box } : null,
+    measured ? null : styles.unseen,
+  ];
   const line = (
-    <View style={inner} testID="search-count-inner">
-      {details ? (
-        <View style={styles.glyph}>
-          <Icon name={symbols.source} size={13} maxScale={1.5} tone="inkSoft" />
-        </View>
-      ) : null}
+    <>
+      {glyph}
       <Text
         variant="footnote"
         tone="inkSoft"
         style={styles.text}
         testID="search-count-text"
-        onTextLayout={(event: TextLayoutEvent) => {
-          // Only the full line is measured; once counted, the short form's
-          // layout must not undo the decision.
-          if (!counted) setFull({ key, lines: event.nativeEvent.lines.length });
-        }}
       >
-        {lead}
-        {parts?.name ? (
-          <>
-            {lead ? ' · ' : ''}
-            <Text variant="footnote" style={{ color: colors.navy }}>
-              {counted ? sourcesCounted(parts.sources) : parts.name}
-            </Text>
-          </>
-        ) : null}
-        {tail}
+        {words(counted && parts ? sourcesCounted(parts.sources) : named)}
       </Text>
-    </View>
+    </>
   );
-  if (!details)
-    return (
-      <View
-        accessible
-        accessibilityLabel={spoken}
-        testID="search-count"
-        style={over}
-      >
-        {line}
-      </View>
-    );
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${spoken}.`}
-      accessibilityHint="Opens the sources"
-      testID="search-count"
-      onPress={() => presentSource(details, { testID: 'search-sources' })}
-      style={over}
-    >
-      {line}
-    </Pressable>
+    <>
+      {named ? (
+        // The full line again, unseen and at its natural height, at the
+        // line's own width. Keyed by its words only: new words mount a new
+        // copy, and a new width or text size lays this one out again.
+        <View
+          key={fullText}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          pointerEvents="none"
+          testID="search-count-probe"
+          onLayout={(event: LayoutChangeEvent) => {
+            const { height } = event.nativeEvent.layout;
+            setProbe((was) =>
+              was?.text === fullText && was.height === height
+                ? was
+                : { text: fullText, height },
+            );
+          }}
+          style={[styles.probe, styles.unseen]}
+        >
+          {glyph}
+          <Text variant="footnote" tone="inkSoft" style={styles.text}>
+            {words(named)}
+          </Text>
+        </View>
+      ) : null}
+      {details ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`${spoken}.`}
+          accessibilityHint="Opens the sources"
+          testID="search-count"
+          onPress={() => presentSource(details, { testID: 'search-sources' })}
+          style={over}
+        >
+          {line}
+        </Pressable>
+      ) : (
+        <View
+          accessible
+          accessibilityLabel={spoken}
+          testID="search-count"
+          style={over}
+        >
+          {line}
+        </View>
+      )}
+    </>
   );
 }
 
@@ -214,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
-  standIn: { opacity: 0 },
+  unseen: { opacity: 0 },
   // The real line, over the stand-in's box and never taller than it.
   over: {
     position: 'absolute',
@@ -223,7 +248,8 @@ const styles = StyleSheet.create({
     left: 0,
     overflow: 'hidden',
   },
-  inner: {
+  // The measuring copy: the line's width, whatever height its words need.
+  probe: {
     position: 'absolute',
     top: 0,
     right: 0,

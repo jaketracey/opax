@@ -74,9 +74,16 @@ export function resetFeaturedWidthForTests() {
 export function TodayEditionCard({
   attempt = 0,
   held,
+  heading,
   ...props
 }: React.ComponentProps<typeof EditionCard> & {
   attempt?: number;
+  /**
+   * The heading over the edition's own card. The carousel draws its own
+   * heading, so this draws only when the card stands alone, including a
+   * featured parliamentarian's edition whose people could not be named.
+   */
+  heading?: React.ReactNode;
   /** The roster and slugs already read, when the page has them. */
   held?: {
     roster: RecordResult<Roster>;
@@ -130,7 +137,15 @@ export function TodayEditionCard({
         <View style={styles.pageTarget} />
       </View>
     );
-  if (!people.length || !names) return <EditionCard {...props} />;
+  if (!people.length || !names)
+    return heading ? (
+      <View style={styles.headed}>
+        {heading}
+        <EditionCard {...props} />
+      </View>
+    ) : (
+      <EditionCard {...props} />
+    );
   return (
     <FeaturedPeopleCarousel
       key={`${key}:${people.map((person) => person.slug).join(',')}`}
@@ -142,8 +157,12 @@ export function TodayEditionCard({
   );
 }
 
-/** The carousel's heading and its line of context. */
-function FeaturedHeading() {
+/**
+ * The carousel's heading and its line of context. Today draws it over the
+ * edition's skeleton too when the saved edition is a featured
+ * parliamentarian's, so the two-line heading is there from the first frame.
+ */
+export function FeaturedHeading() {
   return (
     <View style={styles.heading}>
       <SectionHeader
@@ -461,6 +480,8 @@ export function FeaturedPeopleCarousel({
 const styles = StyleSheet.create({
   carousel: { gap: rhythm.heading },
   heading: { gap: 4 },
+  // A heading to the card under it, as Today's other headed blocks (8).
+  headed: { gap: 8 },
   pages: { marginHorizontal: -BLEED },
   // Over the margin only: the selected card starts where this ends.
   before: { position: 'absolute', top: 0, bottom: 0, left: 0, width: BLEED },

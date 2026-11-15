@@ -22,6 +22,8 @@ export const learnCopy = {
   missingChapterBody: 'The link may be old. The guide lists every chapter.',
   /** The hub's mark on a chapter read to its last idea. */
   read: 'Read',
+  /** The same mark, spoken: "Read" alone can be said as "reed". */
+  readSpoken: 'Read to the end',
   /** The header over the chapter that follows, on a chapter's last idea. */
   nextChapter: 'Next chapter',
   /** Account › Glossary terms and its switches. */
@@ -56,7 +58,7 @@ export const chapterPlaceWords = (
   !progress
     ? null
     : progress.kind === 'read'
-      ? { value: learnCopy.read, spoken: learnCopy.read }
+      ? { value: learnCopy.read, spoken: learnCopy.readSpoken }
       : {
           value: `${progress.at} of ${total}`,
           spoken: `idea ${progress.at} of ${total}`,

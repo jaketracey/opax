@@ -18,7 +18,13 @@ import {
 export type LaunchCase = 'A' | 'B' | 'C';
 
 /** What the disk held for the edition at launch. */
-export type CachedEdition = { date: string } | 'missing' | null;
+export type CachedEdition =
+  | {
+      date: string;
+      /** The edition's kind, when the file kept it. */ kind?: string;
+    }
+  | 'missing'
+  | null;
 
 export function launchCase(
   cachedEdition: CachedEdition,

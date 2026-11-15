@@ -35,6 +35,9 @@ const staticPaths = new Set([
   '/pay.json',
   '/expenses.json',
   '/expense-categories.json',
+  // First speech and first division in the record, per roster person: a
+  // static export beside the roster (portal scripts/export_people_firsts.py).
+  '/people/firsts.json',
   '/photos/people.json',
   '/photos/credits.json',
   '/corpus.json',

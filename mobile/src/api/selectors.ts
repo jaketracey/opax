@@ -35,6 +35,7 @@ import type {
   Votes,
 } from './catalog-decoders';
 import { ApiError } from './errors';
+import { isPartialCatalog } from './validation';
 import {
   interestKey,
   nameKey,
@@ -1330,9 +1331,41 @@ export function billFacetsFor(index: BillIndex) {
     [catalogSources.bills],
   );
 }
+/**
+ * What a bill's stages and votes may be read as proving. Its status word
+ * (above, in `billFor`), the event behind its status date and its stage
+ * tracker all read through this one gate, so they always agree. An
+ * incomplete record proves nothing: with a stage or a division dropped
+ * (`evidenceWhole` false) it is empty, and all three rest on the bill's own
+ * status, ending and status date, as a list row does, never "Voted down"
+ * read from what is left.
+ */
+export function billEvidence(view: {
+  identity: { data: { evidenceWhole: boolean } | null };
+  keyDates: { data: BillDetail['key_dates'] | null };
+  divisions: { data: { rawRows: BillDetail['divisions'] } | null };
+}): { stages: BillDetail['key_dates']; divisions: BillDetail['divisions'] } {
+  const whole = view.identity.data?.evidenceWhole ?? true;
+  return {
+    stages: whole ? (view.keyDates.data ?? []) : [],
+    divisions: whole ? (view.divisions.data?.rawRows ?? []) : [],
+  };
+}
 export function billFor(bill: BillDetail, index: BillIndex) {
   const deduped = billDedupeDivisions(bill.divisions, bill);
   const display = billDisplay(bill);
+  // Which of the bill's own lists lost an item (catalog-decoders billList).
+  const partialLists = {
+    stages: isPartialCatalog(bill.key_dates),
+    divisions: isPartialCatalog(bill.divisions),
+    speeches: isPartialCatalog(bill.speeches),
+    sources: isPartialCatalog(bill.sources),
+    acts: isPartialCatalog(bill.acts),
+    related: isPartialCatalog(bill.related),
+  };
+  // Whether the bill's stages and votes are all there to be read as proof
+  // (billEvidence below).
+  const evidenceWhole = !partialLists.stages && !partialLists.divisions;
   return {
     identity: block(
       {
@@ -1343,10 +1376,12 @@ export function billFor(bill: BillDetail, index: BillIndex) {
         // The pill's word, from the bill's own record: the same one the
         // stage tracker stops on (api/bill-status.ts).
         statusLabel: billStatusLabel(bill.status, {
-          stages: bill.key_dates,
-          divisions: bill.divisions,
+          stages: evidenceWhole ? bill.key_dates : [],
+          divisions: evidenceWhole ? bill.divisions : [],
           ...billEnding(bill),
         }),
+        evidenceWhole,
+        partialLists,
         ended: bill.ended ?? null,
         endedLabel: bill.ended_label ?? null,
         statusAsOf: bill.status_as_of,

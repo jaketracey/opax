@@ -1,4 +1,8 @@
-import { useOverview as useElectionOverview } from './vic-election/reads';
+import {
+  ElectionUnavailable,
+  electionReads,
+  useOverview as useElectionOverview,
+} from './vic-election/reads';
 import { useElectionNow } from './vic-election/clock';
 import { todayEligible, todayWindow } from './vic-election/model';
 import VicElectionBlock from './vic-election/TodayBlock';
@@ -8,6 +12,7 @@ import {
   Fragment,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -26,7 +31,7 @@ import {
   welcomeDeclinedThisLaunch,
 } from '../onboarding/state';
 import { EditionSkeleton } from './edition/EditionCard';
-import { TodayEditionCard } from './today/FeaturedPeopleCard';
+import { FeaturedHeading, TodayEditionCard } from './today/FeaturedPeopleCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
 import { AustraliaDots, useTodayDotsScroll } from './today/AustraliaDots';
@@ -47,7 +52,7 @@ import {
   todayFixture,
 } from './today/launch-fixture';
 import { Masthead, useNow } from './today/Masthead';
-import { WideSearch } from './quick-search/WideSearch';
+import { WideSearch, WideSearchBar } from './quick-search/WideSearch';
 import { LearnCard, WithLearnCard } from './learn/LearnCard';
 import { loadLearnSettings } from './learn/settings';
 import { MoreToExplore } from './today/MoreToExplore';
@@ -75,22 +80,33 @@ import {
   type TodaySlot,
 } from './today/order';
 import { editionTier, sydneyDay, type SydneyDate } from './today/rules';
-import { SurfaceGrid } from './today/SurfaceGrid';
 import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { TodayBody } from './today/TodayBody';
 import { VotesBlock } from './today/VotesBlock';
+import { TodayHeading } from './today/RepsGroup';
 import {
-  StateSeatCard,
+  DISSOLVED_STAND_IN,
+  NEUTRAL_STAND_IN,
+  stateForm as stateRowForm,
+} from './today/dissolution';
+import {
+  repsShape,
+  stateLines,
   stateSeatFor,
-  StateSeatPending,
   YourMPCard,
   YourMPPending,
 } from './today/YourMPCard';
+import { useSavedDirectory } from './today/saved-directory';
 import { useProfilePreload } from './people/profile-preload';
 import { keepCatalog } from '../api/kept-catalogs';
 import { saveChoice } from './your-mp/choice-store';
-import { savedSeatDirectory, useSavedChoice, useSeat } from './your-mp/useSeat';
+import {
+  migrateSeatChoice,
+  savedSeatDirectory,
+  useSavedChoice,
+  useSeat,
+} from './your-mp/useSeat';
 
 /**
  * Runs `effect` each time Today's screen gains focus. Unit tests that render
@@ -112,6 +128,8 @@ interface Launch {
   invitation: InvitationDates;
   /** The lead's shape as the last launch left it (shape-store). */
   shape: TodayShape | null;
+  /** The saved edition is a featured parliamentarian's (edition-store). */
+  featured: boolean;
   /** The last visit kept on the device; null on the first ever launch. */
   visit: Visit | null;
   /** The collection record saved on the device, or null with none. */
@@ -137,7 +155,7 @@ function useLaunch(day: SydneyDate): Launch | null {
         const read = await catalogs.todayEdition();
         cached =
           read.status === 'ready' && read.data
-            ? { date: read.data.date.slice(0, 10) }
+            ? { date: read.data.date.slice(0, 10), kind: read.data.kind }
             : read.status === 'missing'
               ? 'missing'
               : null;
@@ -169,6 +187,8 @@ function useLaunch(day: SydneyDate): Launch | null {
           launchCase: launchCase(cached, today),
           invitation,
           shape,
+          featured:
+            !!cached && cached !== 'missing' && cached.kind === 'politician',
           visit,
           collection,
         });
@@ -179,6 +199,7 @@ function useLaunch(day: SydneyDate): Launch | null {
           launchCase: 'C',
           invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
           shape: null,
+          featured: false,
           visit: null,
           collection: null,
         });
@@ -301,7 +322,9 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
  * the disk holds (the launch read and the saved choice), so the page is
  * drawn in its order while the directory is still on its way, with Your MP's
  * skeleton in the tile's place; the launch cover lifts once that order is
- * known. Until then the body draws nothing, never a stand-in of another
+ * known. With no shape kept for the saved choice, the directory the device
+ * saved decides it (the migrated choice, and the group's rows), still with
+ * no request. Until then the body draws nothing, never a stand-in of another
  * shape (it was the edition's outline, and the edition then landed about
  * 450 pt lower, under Your MP and the guide card).
  */
@@ -309,6 +332,8 @@ export default function Today() {
   useTodayRendered();
   const dots = useTodayDotsScroll();
   const offline = useOffline();
+  // Subscribed only: the election block reads the record in its window,
+  // and the state row asks for it through one gated, shared read below.
   const election = useElectionOverview(false);
   const electionNow = useElectionNow();
   const now = useNow();
@@ -355,22 +380,190 @@ export default function Today() {
     savedChoice && launch?.shape?.key === shapeKey(savedChoice)
       ? launch.shape
       : null;
+  const overview = election.record?.data ?? null;
+  // Nothing kept for this choice (the first launch of a build that keeps
+  // the shape, or a new choice): the directory the device saved stands in
+  // for the one on its way, so the choice is migrated before the first
+  // frame. Read from the disk only, beside the launch reads, used only in
+  // this case and let go once the seat has resolved.
+  const preview = useSavedDirectory(
+    !!launch &&
+      !!savedChoice &&
+      !kept &&
+      seat.status === 'loading' &&
+      !seatArriving,
+    seat.status !== 'loading',
+  );
+  const previewSeats = preview?.electorates.data.electorates ?? null;
+  const previewChoice =
+    previewSeats && savedChoice
+      ? migrateSeatChoice(savedChoice, previewSeats)
+      : null;
+  const previewFederal =
+    previewChoice && previewSeats
+      ? previewSeats.find((s) => s.electorate_id === previewChoice.seatId)
+      : undefined;
+  const previewHome =
+    previewFederal && house(previewFederal) ? previewFederal : null;
   // Whether the page leads with Your MP: the seat once the directory has
-  // answered, and until then the kept shape, or with none the choice as the
+  // answered, and until then the kept shape, or with none the migrated
+  // choice from the saved directory, or with neither the choice as the
   // device saved it (null while the disk is being read).
   const seated = seatArriving
     ? true
     : seat.status !== 'loading'
       ? !!home
-      : savedChoice === undefined
+      : savedChoice === undefined || preview === undefined
         ? null
-        : (kept?.house ?? !!savedChoice?.seatId);
-  // The state seat card's place is held while the directory is read.
-  const stateSeatPending = seat.status === 'loading' && !!kept?.state;
-  const stateSeatDrawn =
-    !!home &&
-    !!directory &&
-    !!stateSeatFor(directory, choice?.stateSeatIds ?? [], launch?.today ?? day);
+        : (kept?.house ?? (preview ? !!previewHome : !!savedChoice?.seatId));
+  // The group's rows as the saved directory decides them, by the rules the
+  // loaded group follows: no state row for a seat outside Victoria or a
+  // district with no recorded member, and the state row's own form.
+  const previewReps = (() => {
+    if (!preview || !previewHome || !previewChoice || !previewSeats)
+      return null;
+    const ids = previewChoice.stateSeatIds;
+    const district = stateSeatFor(preview, ids);
+    // The record will be on its way when this row asks for it (below).
+    const reading =
+      !(election.error instanceof ElectionUnavailable) &&
+      (election.loading ||
+        !(
+          todayWindow(electionNow) &&
+          todayEligible(
+            previewChoice,
+            previewSeats,
+            Intl.DateTimeFormat().resolvedOptions().timeZone,
+          )
+        ));
+    const form = district
+      ? stateRowForm(district, { overview, reading }, electionNow, null)
+      : null;
+    const shape = repsShape(previewHome, preview, ids, form);
+    return {
+      state: shape.state,
+      senators: shape.senators,
+      members: shape.members,
+      lines:
+        district && form
+          ? form.kind === 'held'
+            ? (form.lines ?? DISSOLVED_STAND_IN)
+            : stateLines(district, preview, form)
+          : null,
+    };
+  })();
+  // The representatives group's rows, known before the directory answers:
+  // the kept shape, or with none the saved directory's answer, or with
+  // neither the choice as the device saved it (a saved state seat has a
+  // row; every state has senators). A capture's seat on its way says which
+  // seats it will save.
+  const keptRow = kept?.stateRow ?? null;
+  const pendingReps = seatArriving
+    ? {
+        state: todayFixture().seat === 'federal+state',
+        senators: true,
+        lines: DISSOLVED_STAND_IN,
+      }
+    : kept
+      ? {
+          state: kept.state,
+          senators: kept.senators,
+          // The rows' own words, so each held row wraps as its row will.
+          members: kept.members,
+          // A kept member's row holds a member's row; kept lines hold
+          // themselves.
+          lines: keptRow && keptRow.kind !== 'member' ? keptRow.lines : null,
+        }
+      : (previewReps ?? {
+          state: !!savedChoice?.stateSeatIds.length,
+          senators: true,
+          // Nothing kept: the row names no member until the data decides
+          // it. The taller stand-in while an election record is at hand
+          // or on its way, the neutral row's otherwise.
+          lines:
+            election.record || election.loading
+              ? DISSOLVED_STAND_IN
+              : NEUTRAL_STAND_IN,
+        });
+  const stateSeat =
+    home && directory
+      ? stateSeatFor(directory, choice?.stateSeatIds ?? [])
+      : null;
+  // The election block reads the record for this reader while its window
+  // runs; Today never adds a second read beside it.
+  const electionBlockReads =
+    todayWindow(electionNow) &&
+    todayEligible(
+      choice,
+      directory?.electorates.data.electorates ?? [],
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    );
+  // The election the data at hand is about: the record's, or the one the
+  // index says the seat's house is dissolved for.
+  const electionDay =
+    overview?.election_day ?? stateSeat?.dissolved_for?.slice(0, 10) ?? null;
+  // What the last launch kept was decided for one election. Once the data
+  // names another, none of it stands: a new election is decided afresh.
+  const keptStands =
+    !electionDay || !kept?.electionDay || kept.electionDay === electionDay;
+  const keptDecision = keptStands ? keptRow : null;
+  // The record was withdrawn (now, or as the last launch kept for this
+  // election): it is not asked for again.
+  const recordWithdrawn =
+    !overview &&
+    (election.error instanceof ElectionUnavailable ||
+      (keptStands && !!kept?.withdrawn));
+  // The new member is decided (or the record never covered the seat):
+  // nothing more to ask.
+  const rowDecided =
+    keptDecision?.kind === 'member' && keptDecision.until === null;
+  // The one read Today may start: only for the state seat of the migrated
+  // choice (never a stray saved id), only while the electorates index does
+  // not say for itself (`dissolved_for`), only until the row is decided or
+  // the record withdrawn, and only when no read of the block's will answer.
+  const rowUndecided =
+    !!stateSeat &&
+    stateSeat.dissolved_for === undefined &&
+    !overview &&
+    !recordWithdrawn &&
+    !rowDecided;
+  // Kept with the decisions, so the next launch knows which election they
+  // were made for.
+  const decidedFor =
+    electionDay ?? (keptStands ? (kept?.electionDay ?? null) : null);
+  const asksRecord = rowUndecided && !electionBlockReads;
+  useEffect(() => {
+    if (asksRecord) void electionReads.loadOverviewShared();
+  }, [asksRecord]);
+  // The state row's form, from the election record and the seat's own
+  // dates in the electorates index; never a date written here.
+  const stateForm = stateSeat
+    ? stateRowForm(
+        stateSeat,
+        { overview, reading: rowUndecided && election.loading },
+        electionNow,
+        keptDecision,
+      )
+    : null;
+  const stateIdsKey = (choice?.stateSeatIds ?? []).join(',');
+  const stateFormKey = JSON.stringify(stateForm);
+  const drawnReps = useMemo(
+    () =>
+      home && directory
+        ? repsShape(
+            home,
+            directory,
+            stateIdsKey ? stateIdsKey.split(',') : [],
+            JSON.parse(stateFormKey) as typeof stateForm,
+          )
+        : { state: false, senators: false, stateRow: null, members: null },
+    [home, directory, stateIdsKey, stateFormKey],
+  );
+  const stateRowKept = JSON.stringify(drawnReps.stateRow);
+  const membersKept = JSON.stringify(drawnReps.members);
+  const rowHeld = stateForm?.kind === 'held';
+  const stateSeatDrawn = drawnReps.state;
+  const senatorsDrawn = drawnReps.senators;
   const settledKey =
     (seat.status === 'chosen' || seat.status === 'none') &&
     directory &&
@@ -382,19 +575,42 @@ export default function Today() {
   const launched = !!launch;
   const leads = !!home;
   useEffect(() => {
-    if (settledKey === null || !launched) return;
+    // The state row's form is not known until the election record answers.
+    if (settledKey === null || !launched || rowHeld) return;
     if (
       launchShape?.key === settledKey &&
       launchShape.house === leads &&
-      launchShape.state === stateSeatDrawn
+      launchShape.state === stateSeatDrawn &&
+      launchShape.senators === senatorsDrawn &&
+      launchShape.withdrawn === recordWithdrawn &&
+      launchShape.electionDay === decidedFor &&
+      JSON.stringify(launchShape.stateRow) === stateRowKept &&
+      JSON.stringify(launchShape.members) === membersKept
     )
       return;
     void rememberTodayShape({
       key: settledKey,
       house: leads,
       state: stateSeatDrawn,
+      senators: senatorsDrawn,
+      stateRow: JSON.parse(stateRowKept) as TodayShape['stateRow'],
+      members: JSON.parse(membersKept) as TodayShape['members'],
+      withdrawn: recordWithdrawn,
+      electionDay: decidedFor,
     });
-  }, [settledKey, leads, stateSeatDrawn, launched, launchShape]);
+  }, [
+    settledKey,
+    leads,
+    stateSeatDrawn,
+    senatorsDrawn,
+    rowHeld,
+    stateRowKept,
+    membersKept,
+    recordWithdrawn,
+    decidedFor,
+    launched,
+    launchShape,
+  ]);
   const order =
     launch && seated !== null
       ? todayOrder({
@@ -452,14 +668,7 @@ export default function Today() {
   }, [offline, nothingSavedAt, attempt, retry]);
 
   const electionSavedAt =
-    election.record &&
-    todayWindow(electionNow) &&
-    todayEligible(
-      choice,
-      directory?.electorates.data.electorates ?? [],
-      Intl.DateTimeFormat().resolvedOptions().timeZone,
-    ) &&
-    offline
+    election.record && electionBlockReads && offline
       ? election.record.savedAt
       : null;
 
@@ -485,36 +694,25 @@ export default function Today() {
         return <VicElectionBlock key={name} attempt={attempt} />;
       case 'your-mp':
         if (nothingSaved) return null;
-        // The directory is on its way: the tile's skeleton holds its place,
+        // The directory is on its way: the group's rows hold its place,
         // with the guide card under it as on the loaded page.
         if (!home || !directory)
           return seat.status === 'loading' || seatArriving ? (
             <View key={name} style={styles.seats}>
-              <SurfaceGrid testID="today-seat-grid">
-                <YourMPPending />
-                {stateSeatPending ? <StateSeatPending /> : null}
-              </SurfaceGrid>
+              <YourMPPending {...pendingReps} />
               <LearnCard />
             </View>
           ) : null;
         return (
           <View key={name} style={styles.seats}>
-            <SurfaceGrid testID="today-seat-grid">
-              <YourMPCard
-                seat={home}
-                directory={directory}
-                stateSeatIds={choice?.stateSeatIds ?? []}
-                attempt={attempt}
-                onRetry={retry}
-              />
-              {stateSeatFor(directory, choice?.stateSeatIds ?? [], today) ? (
-                <StateSeatCard
-                  directory={directory}
-                  stateSeatIds={choice?.stateSeatIds ?? []}
-                  today={today}
-                />
-              ) : null}
-            </SurfaceGrid>
+            <YourMPCard
+              seat={home}
+              directory={directory}
+              stateSeatIds={choice?.stateSeatIds ?? []}
+              stateForm={stateForm ?? undefined}
+              attempt={attempt}
+              onRetry={retry}
+            />
             <LearnCard />
           </View>
         );
@@ -530,26 +728,57 @@ export default function Today() {
         // The top slot keeps its skeleton until a read answers (cases A
         // and C; case B has no top slot), so the edition is never inserted
         // above the blocks under it.
+        // The heading stands over the skeleton too, so the card under it
+        // never moves when the edition lands.
         if (name === 'edition' && edition.block === null)
           return (
-            <View key={name} testID="today-edition-loading">
-              <EditionSkeleton />
+            <View key={name} style={styles.headed}>
+              {/* The saved edition's kind picks the heading it will land
+                  under: the carousel's two lines on a featured
+                  parliamentarian's day, so the skeleton never moves. */}
+              {launch?.featured ? (
+                <FeaturedHeading />
+              ) : (
+                <TodayHeading testID="today-edition-heading">
+                  {EDITION_HEADING}
+                </TodayHeading>
+              )}
+              <View testID="today-edition-loading">
+                <EditionSkeleton />
+              </View>
             </View>
           );
         if (!edition.block || !editionInSlot(name, order.launchCase, tier))
           return null;
         return (
-          <TodayEditionCard
-            key={name}
-            attempt={attempt}
-            edition={edition.block}
-            tier={tier ?? undefined}
-            today={today}
-            held={directory}
-            // The late slot sits below the fold: its plate is drawn
-            // finished and leaves the timeline's one draw for the story.
-            still={name === 'edition-late'}
-          />
+          <View key={name} style={styles.headed}>
+            {/* A featured parliamentarian's carousel has its own heading;
+                the card standing alone draws this one (`heading`). */}
+            {edition.block.status === 'ready' &&
+            edition.block.data?.kind === 'politician' ? null : (
+              <TodayHeading testID={`today-${name}-heading`}>
+                {EDITION_HEADING}
+              </TodayHeading>
+            )}
+            <TodayEditionCard
+              heading={
+                edition.block.status === 'ready' &&
+                edition.block.data?.kind === 'politician' ? (
+                  <TodayHeading testID={`today-${name}-heading`}>
+                    {EDITION_HEADING}
+                  </TodayHeading>
+                ) : null
+              }
+              attempt={attempt}
+              edition={edition.block}
+              tier={tier ?? undefined}
+              today={today}
+              held={directory}
+              // The late slot sits below the fold: its plate is drawn
+              // finished and leaves the timeline's one draw for the story.
+              still={name === 'edition-late'}
+            />
+          </View>
         );
       }
       case 'pair':
@@ -633,7 +862,12 @@ export default function Today() {
     >
       <Masthead
         now={now}
-        search={<WideSearch />}
+        search={
+          <>
+            <WideSearch />
+            <WideSearchBar />
+          </>
+        }
         offlineSavedAt={offlineAt ?? null}
         sitting={
           <SittingLine
@@ -715,9 +949,18 @@ function useEditionRead(attempt: number) {
   return state;
 }
 
+/**
+ * The heading over the featured edition card. The card's source line names
+ * the "OPAX daily edition"; an edition stays on Today for a few days, so
+ * the heading never says "today's".
+ */
+export const EDITION_HEADING = 'Daily edition';
+
 const styles = StyleSheet.create({
+  // A heading to its card, as the Victorian election block: tight (8).
+  headed: { gap: rhythm.tight },
   // Top-level blocks: section (36).
   column: { gap: rhythm.section },
-  // The state seat block sits 16 pt under the federal block's line.
+  // The guide card sits 16 pt under the representatives' source line.
   seats: { gap: rhythm.block },
 });

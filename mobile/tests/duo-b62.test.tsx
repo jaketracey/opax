@@ -25,7 +25,9 @@ import { PaneMenu } from '../src/features/bills/BillDetail';
 import type { TodayOrder, TodaySlot } from '../src/features/today/order';
 import { SurfaceGrid } from '../src/features/today/SurfaceGrid';
 import { TodayBody } from '../src/features/today/TodayBody';
-import { stateSeatFor } from '../src/features/today/YourMPCard';
+import { EDITION_HEADING } from '../src/features/Today';
+import { TodayHeading } from '../src/features/today/RepsGroup';
+import { stateSeatFor, YourMPPending } from '../src/features/today/YourMPCard';
 import {
   LatestRow,
   REGISTER_TITLE_LINES,
@@ -197,26 +199,78 @@ describe('Today on an unfolded Duo', () => {
     );
     expect(two.root.findAllByType(Grid)).toHaveLength(1);
   });
-  test('a Victorian state seat draws no card (and so holds no cell) from 3 Nov 2026', () => {
+  test('a state member is a row of the one representatives group, only when the roster records them: no second card or cell', () => {
     const seat = {
       electorate_id: 'vic-district-fixture',
       name: 'Fixture District',
       jurisdiction: 'vic',
       state_code: 'VIC',
-      chamber: 'assembly',
-      representatives: [],
+      chamber: 'vic_la',
+      representation_status: 'verified',
+      representatives: [{ person_id: 'p', person: { name: 'A Member' } }],
     } as unknown as Electorate;
-    const directory = {
-      electorates: { data: { electorates: [seat] } },
-    } as unknown as Parameters<typeof stateSeatFor>[0];
-    expect(stateSeatFor(directory, [seat.electorate_id], '2026-11-02')).toBe(
-      seat,
-    );
+    const directoryOf = (s: Electorate) =>
+      ({
+        electorates: { data: { electorates: [s] } },
+      }) as unknown as Parameters<typeof stateSeatFor>[0];
+    expect(stateSeatFor(directoryOf(seat), [seat.electorate_id])).toBe(seat);
+    // No recorded member: no row, and no placeholder in its place.
     expect(
-      stateSeatFor(directory, [seat.electorate_id], '2026-11-13'),
+      stateSeatFor(
+        directoryOf({ ...seat, representatives: [] } as Electorate),
+        [seat.electorate_id],
+      ),
     ).toBeNull();
   });
   // The dot map on the unfolded Duo: tests/today-dots-duo.test.tsx.
+  test('side by side, the edition\u2019s heading and Your representatives are the first line of their columns, in one text style', () => {
+    const headed = (name: TodaySlot) =>
+      name === 'edition' ? (
+        <View key={name} style={{ gap: rhythm.tight }}>
+          <TodayHeading testID="today-edition-heading">
+            {EDITION_HEADING}
+          </TodayHeading>
+          <View testID="slot-edition" />
+        </View>
+      ) : name === 'your-mp' ? (
+        <YourMPPending key={name} state />
+      ) : (
+        slot(name)
+      );
+    const tree = render(
+      <RegionProvider value={{ width: 880, height: 669 }}>
+        <TodayBody order={order} slot={headed} />
+      </RegionProvider>,
+    );
+    const [leading] = hosts(tree, 'today-spread-leading');
+    const [trailing] = hosts(tree, 'today-spread-trailing');
+    const first = (column: typeof leading) =>
+      column!.findAll((n) => (n.type as unknown) === 'Text')[0]!;
+    expect(first(leading).props.testID).toBe('today-edition-heading');
+    expect(first(trailing).props.testID).toBe('today-reps-heading');
+    expect(first(trailing).props.children).toBe('Your representatives');
+    for (const heading of [first(leading), first(trailing)])
+      expect(heading.props.accessibilityRole).toBe('header');
+    expect(StyleSheet.flatten(first(leading).props.style)).toEqual(
+      StyleSheet.flatten(first(trailing).props.style),
+    );
+    // Both columns start at the top of the spread, with nothing above the
+    // heading in either: the two headings share a baseline.
+    let row = leading!.parent;
+    while (row && typeof row.type !== 'string') row = row.parent;
+    expect(StyleSheet.flatten(row!.props.style)).toMatchObject({
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    });
+    for (const column of [leading!, trailing!]) {
+      const style = StyleSheet.flatten(column.props.style);
+      expect(style.paddingTop ?? style.paddingVertical ?? 0).toBe(0);
+      expect(style.marginTop ?? 0).toBe(0);
+    }
+    // Two member rows held from the first frame on the wide layout too.
+    expect(hosts(tree, 'today-rep-federal-loading')).toHaveLength(1);
+    expect(hosts(tree, 'today-rep-state-loading')).toHaveLength(1);
+  });
 });
 
 describe('a register entry’s words', () => {

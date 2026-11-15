@@ -4,7 +4,7 @@
 // is unchanged. The dropdown is the Search tab's own sources, ranking,
 // routes and recents: nothing new is read, ranked, stored or sent.
 import { act } from 'react';
-import { AccessibilityInfo, StyleSheet, TextInput } from 'react-native';
+import { AccessibilityInfo, StyleSheet, TextInput, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { catalogs } from '../src/api/runtime';
@@ -16,7 +16,12 @@ import {
   quickSections,
   suggestionAnnouncement,
 } from '../src/features/quick-search/items';
-import { WideSearch } from '../src/features/quick-search/WideSearch';
+import {
+  WideSearch,
+  WideSearchBar,
+  barSearchWidth,
+} from '../src/features/quick-search/WideSearch';
+import { quickSearch } from '../src/features/quick-search/store';
 import { openSuggestedPerson } from '../src/features/search/navigation';
 import {
   allTopics,
@@ -28,7 +33,10 @@ import { MatchRow } from '../src/features/search/rows';
 import { Masthead } from '../src/features/today/Masthead';
 import { bills, index, manifest, people, roster, slugs } from './pinned';
 
-let mockWidth = 1032;
+// An 11-inch iPad in portrait: regular width, and no room in the bar row,
+// so the field is the masthead's. 1032 (13-inch) has room for the bar item.
+let mockWidth = 834;
+let mockHeight = 1376;
 let mockFontScale = 1;
 jest.mock('react-native', () => {
   const actual = jest.requireActual('react-native');
@@ -37,7 +45,7 @@ jest.mock('react-native', () => {
     useWindowDimensions: {
       value: () => ({
         width: mockWidth,
-        height: 1376,
+        height: mockHeight,
         scale: 2,
         fontScale: mockFontScale,
       }),
@@ -78,6 +86,17 @@ jest.mock('expo-router', () => {
     useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
   };
 });
+let mockBarOptions: { unstable_headerRightItems?: () => any[] } | undefined;
+jest.mock('../src/navigation/preview', () => ({
+  RouteOptions: ({ options }: { options: typeof mockBarOptions }) => {
+    mockBarOptions = options;
+    return null;
+  },
+}));
+jest.mock('../src/features/account/store', () => ({
+  useAccount: () => ({ status: { signedIn: false } }),
+  accountSnapshot: () => ({ status: { signedIn: false } }),
+}));
 const mockOpenAsk = jest.fn();
 const mockAskNow = jest.fn();
 jest.mock('../src/features/ask/open', () => ({
@@ -107,8 +126,11 @@ const sources = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockWidth = 1032;
+  mockWidth = 834;
+  mockHeight = 1376;
   mockFontScale = 1;
+  mockBarOptions = undefined;
+  quickSearch.reset();
   mockReports = null;
   recentSearches.clear();
   jest
@@ -118,7 +140,7 @@ beforeEach(() => {
 
 const ids = (renderer: TestRenderer.ReactTestRenderer) =>
   renderer.root
-    .findAll((node) => typeof node.props.testID === 'string')
+    .findAll((node) => typeof node.props?.testID === 'string')
     .map((node) => node.props.testID as string);
 const input = (renderer: TestRenderer.ReactTestRenderer) =>
   renderer.root.findByType(TextInput);
@@ -130,7 +152,7 @@ const rows = (renderer: TestRenderer.ReactTestRenderer) => {
     .findAll(
       (node) =>
         typeof node.type !== 'string' &&
-        typeof node.props.testID === 'string' &&
+        typeof node.props?.testID === 'string' &&
         node.props.testID.startsWith('today-wide-search-row-') &&
         typeof node.props.onPress === 'function' &&
         node.props.accessibilityRole === 'button',
@@ -444,6 +466,231 @@ describe('hardware keyboard', () => {
     await act(async () => backdrop.props.onPress());
     expect(ids(renderer)).not.toContain('today-wide-search-panel');
     await act(async () => renderer.unmount());
+  });
+});
+
+describe("the field as Today's bar item (iPad, where the bar has room)", () => {
+  test('room: a 13-inch iPad, the same width in both orientations; never an 11-inch, a narrow window or an iPhone', () => {
+    expect(barSearchWidth(1032, 1376, true)).toBe(206);
+    // One width in both orientations: the bar's items never change size
+    // on a rotation (UIKit collapsed them into its overflow button).
+    expect(barSearchWidth(1376, 1032, true)).toBe(206);
+    expect(barSearchWidth(834, 1194, true)).toBe(0);
+    expect(barSearchWidth(1194, 834, true)).toBe(0);
+    expect(barSearchWidth(600, 1376, true)).toBe(0);
+    // The unfolded Duo is an iPhone: its bar items sit on the rail.
+    expect(barSearchWidth(951, 880, false)).toBe(0);
+  });
+
+  async function mountBar() {
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(
+        <>
+          <WideSearch />
+          <WideSearchBar />
+        </>,
+      );
+    });
+    const items = mockBarOptions!.unstable_headerRightItems!();
+    let bar!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      bar = TestRenderer.create(items[0].element);
+    });
+    return { page, bar, items };
+  }
+
+  test('with room the field is the first bar item, before Account, and the masthead draws none', async () => {
+    mockWidth = 1032;
+    const { page, bar, items } = await mountBar();
+    expect(items[0]).toMatchObject({
+      type: 'custom',
+      hidesSharedBackground: true,
+    });
+    expect(items.at(-1)).toMatchObject({ label: 'Account' });
+    expect(ids(bar)).toContain('today-wide-search-input');
+    expect(ids(page)).not.toContain('today-wide-search');
+    expect(ids(page)).not.toContain('today-wide-search-input');
+    expect(catalogs.suggestionSourcesOnFocus).not.toHaveBeenCalled();
+    await act(async () => {
+      bar.unmount();
+      page.unmount();
+    });
+  });
+
+  test('without room Today keeps its root items and the masthead field', async () => {
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(
+        <>
+          <WideSearch />
+          <WideSearchBar />
+        </>,
+      );
+    });
+    const items = mockBarOptions!.unstable_headerRightItems!();
+    expect(items.map((item) => item.type)).not.toContain('custom');
+    expect(items.at(-1)).toMatchObject({ label: 'Account' });
+    expect(ids(page)).toContain('today-wide-search-input');
+    await act(async () => page.unmount());
+  });
+
+  test('the dropdown opens over the page for the bar field: rows, arrows, Return and Cmd-F', async () => {
+    mockWidth = 1032;
+    const focusField = jest
+      .spyOn(TextInput.prototype, 'focus')
+      .mockImplementation(() => undefined);
+    const { page, bar } = await mountBar();
+    await act(async () => void dispatchKeyCommand('find'));
+    expect(focusField).toHaveBeenCalledTimes(1);
+    await focus(bar);
+    await type(bar, 'grayndler');
+    // The panel is on the page, not in the bar.
+    expect(ids(bar)).not.toContain('today-wide-search-panel');
+    expect(ids(page)).toContain('today-wide-search-panel');
+    const expected = quickSections({ q: 'grayndler', sources, recents: [] });
+    expect(rows(page).map((node) => node.props.testID)).toEqual(
+      flatItems(expected).map((item) => `today-wide-search-row-${item.key}`),
+    );
+    await act(async () => void dispatchKeyCommand('list-down'));
+    await act(async () => input(bar).props.onSubmitEditing());
+    const top = matchItem(suggestionList('grayndler', sources).top!, sources);
+    expect(router.push).toHaveBeenCalledWith(
+      (top.action as { route: unknown }).route,
+    );
+    expect(input(bar).props.value).toBe('');
+    focusField.mockRestore();
+    await act(async () => {
+      bar.unmount();
+      page.unmount();
+    });
+  });
+});
+
+describe('the placement switches while Today is open (review of 9dc926978)', () => {
+  // A new element each time: the same object would not render again.
+  const both = () => (
+    <>
+      <WideSearch />
+      <WideSearchBar />
+    </>
+  );
+  async function mountBarPage() {
+    mockWidth = 1032;
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(both());
+    });
+    let bar!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      bar = TestRenderer.create(
+        mockBarOptions!.unstable_headerRightItems!()[0].element,
+      );
+    });
+    return { page, bar };
+  }
+
+  test('bar field to masthead field: the masthead field is the live one, unfocused, and Cmd-F reaches it', async () => {
+    const focusField = jest
+      .spyOn(TextInput.prototype, 'focus')
+      .mockImplementation(() => undefined);
+    const { page, bar } = await mountBarPage();
+    await focus(bar);
+    await type(bar, 'grayndler');
+    expect(ids(page)).toContain('today-wide-search-panel');
+    // The window narrows: the masthead field mounts, then the navigator
+    // drops the bar item.
+    mockWidth = 834;
+    await act(async () => page.update(both()));
+    await act(async () => bar.unmount());
+    expect(ids(page)).toContain('today-wide-search-input');
+    // No field has focus, so no dropdown is drawn under the new one.
+    expect(quickSearch.snapshot().focused).toBe(false);
+    expect(ids(page)).not.toContain('today-wide-search-panel');
+    expect(quickSearch.input.current).not.toBeNull();
+    await act(async () => void dispatchKeyCommand('find'));
+    expect(focusField).toHaveBeenCalledTimes(1);
+    // The masthead field works on: focus, the words kept, a row opens.
+    await focus(page);
+    expect(ids(page)).toContain('today-wide-search-panel');
+    const top = matchItem(suggestionList('grayndler', sources).top!, sources);
+    await act(async () => row(page, top.key).props.onPress());
+    expect(router.push).toHaveBeenCalledWith(
+      (top.action as { route: unknown }).route,
+    );
+    focusField.mockRestore();
+    await act(async () => page.unmount());
+  });
+
+  test('a rotation with the bar dropdown open closes it; the next focus measures its place again', async () => {
+    let fieldAt = { x: 800, y: 30, w: 206, h: 44 };
+    const measure = jest
+      .spyOn(View.prototype, 'measureInWindow')
+      .mockImplementation(function (this: View, callback) {
+        const props = (this as unknown as { props: { testID?: string } }).props;
+        if (props.testID === 'today-bar-search-host') callback(32, 142, 968, 1);
+        else callback(fieldAt.x, fieldAt.y, fieldAt.w, fieldAt.h);
+      });
+    const blur = jest
+      .spyOn(TextInput.prototype, 'blur')
+      .mockImplementation(() => undefined);
+    const { page, bar } = await mountBarPage();
+    const panelStyle = () =>
+      StyleSheet.flatten(
+        page.root.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.testID === 'today-wide-search-panel',
+        )[0]!.props.style,
+      );
+    await focus(bar);
+    await type(bar, 'grayndler');
+    // Under the field: its bottom edge plus the gap, once; trailing edges
+    // together.
+    expect(panelStyle()).toMatchObject({
+      top: 30 + 44 + 6 - 142,
+      left: 800 + 206 - 420 - 32,
+      marginTop: 0,
+    });
+    // Landscape: the field is elsewhere in a wider bar.
+    mockWidth = 1376;
+    mockHeight = 1032;
+    fieldAt = { x: 1104, y: 30, w: 206, h: 44 };
+    await act(async () => page.update(both()));
+    await act(async () =>
+      bar.update(mockBarOptions!.unstable_headerRightItems!()[0].element),
+    );
+    expect(ids(page)).not.toContain('today-wide-search-panel');
+    expect(blur).toHaveBeenCalled();
+    await act(async () => input(bar).props.onBlur());
+    await focus(bar);
+    expect(panelStyle()).toMatchObject({
+      top: 30 + 44 + 6 - 142,
+      left: 1104 + 206 - 420 - 32,
+    });
+    measure.mockRestore();
+    blur.mockRestore();
+    await act(async () => {
+      bar.unmount();
+      page.unmount();
+    });
+  });
+});
+
+test('Today leaving the screen tree clears the field (review of 9dc926978)', async () => {
+  const renderer = await mount();
+  await focus(renderer);
+  await type(renderer, 'housing');
+  expect(quickSearch.snapshot()).toMatchObject({
+    text: 'housing',
+    armed: true,
+  });
+  await act(async () => renderer.unmount());
+  expect(quickSearch.snapshot()).toEqual({
+    text: '',
+    focused: false,
+    armed: false,
+    dismissed: false,
   });
 });
 
