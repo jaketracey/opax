@@ -47,6 +47,19 @@ function browserSources() {
   }
   return out.sort();
 }
+// The files a browser loads that are built or vendored: the bundles, their
+// chunks and the voice worklets. Only the Worker's own code (src/) is left
+// out of both scans: it runs on the server and is never sent to a browser.
+function builtFiles() {
+  const out = [...GENERATED];
+  for (const folder of GENERATED_FOLDERS) {
+    for (const entry of readdirSync(join(root, folder), { recursive: true, withFileTypes: true })) {
+      if (!entry.isFile() || !/\.(?:js|mjs)$/.test(entry.name)) continue;
+      out.push(relative(root, join(entry.parentPath ?? entry.path, entry.name)).split(sep).join('/'));
+    }
+  }
+  return out.sort();
+}
 // "(?<=", "(?<!" and "(?<name>", in a regex literal or in a string given to
 // RegExp. Plain text search: a comment that spells one out fails too, which
 // keeps the rule simple to hold.
@@ -61,6 +74,21 @@ test('no file a browser loads holds a lookbehind or a named group', () => {
     read(file).split('\n').forEach((line, i) => { if (UNPARSEABLE.test(line)) found.push(`${file}:${i + 1}`); });
   }
   assert.deepEqual(found, [], 'Safari before 16.4 cannot parse these; write them without a lookbehind or a named group');
+});
+
+test('no built bundle a browser loads holds a lookbehind or a named group', () => {
+  const files = builtFiles();
+  for (const file of ['public/spa-shell.js', 'public/analytics.js', 'public/money-map.js', 'public/voice.js']) assert.ok(files.includes(file), file);
+  assert.ok(files.some((f) => f.startsWith('public/chunks/')), 'the scan reaches the chunks');
+  assert.ok(!files.some((f) => f.startsWith('src/')) && !browserSources().some((f) => f.startsWith('src/')), 'the Worker is not scanned');
+  // A built file is one long line: it is named, with how many there are, and
+  // never printed.
+  const found = [];
+  for (const file of files) {
+    const count = read(file).match(new RegExp(UNPARSEABLE.source, 'g'))?.length ?? 0;
+    if (count) found.push(`${file}: ${count}`);
+  }
+  assert.deepEqual(found, [], 'Safari before 16.4 cannot parse these; find the construct in what the bundle is built from');
 });
 
 test('the scan would catch each construct', () => {
@@ -249,15 +277,24 @@ test('the speaker-call pattern finds the calls the lookbehind one did', () => {
 
 // --- 2. a module that will not load reloads the page once a build -----------
 
-function entryPage({ stamp = '/app.js?v=build-a', stored = {}, online = true, storage = 'kept' } = {}) {
+function entryPage({ stamp = '/app.js?v=build-a', stored = {}, online = true, storage = 'kept', typed = '', answering = '', search = '' } = {}) {
   const listeners = {};
   const kept = { ...stored };
   let reloads = 0;
+  // The Ask box, and the input events it has been sent.
+  const field = { value: typed, inputs: 0, dispatchEvent(event) { if (event.type === 'input') field.inputs += 1; } };
   const context = {
-    location: { pathname: '/', search: '', reload: () => { reloads += 1; } },
+    Event: class { constructor(type) { this.type = type; } },
+    location: { pathname: '/', search, reload: () => { reloads += 1; } },
     navigator: { onLine: online },
     document: {
-      querySelector: (selector) => (selector === 'script[src^="/app.js"]' && stamp ? { getAttribute: () => stamp } : null),
+      querySelector: (selector) => {
+        if (selector === 'script[src^="/app.js"]') return stamp ? { getAttribute: () => stamp } : null;
+        if (selector === '#ask-input') return field;
+        // The two buttons app.js holds while an answer arrives.
+        if (selector === '#ask-submit[aria-busy="true"], #chat-send:disabled') return answering ? {} : null;
+        throw new Error(`unexpected selector ${selector}`);
+      },
       documentElement: { classList: { add() {}, remove() {}, contains: () => true } },
       addEventListener() {}, removeEventListener() {},
     },
@@ -265,13 +302,13 @@ function entryPage({ stamp = '/app.js?v=build-a', stored = {}, online = true, st
     setTimeout: () => 0,
   };
   const stores = {
-    kept: { getItem: (k) => (k in kept ? kept[k] : null), setItem: (k, v) => { kept[k] = String(v); } },
+    kept: { getItem: (k) => (k in kept ? kept[k] : null), setItem: (k, v) => { kept[k] = String(v); }, removeItem: (k) => { delete kept[k]; } },
     // Every use throws: storage turned off for the site.
-    denied: { getItem() { throw new Error('denied'); }, setItem() { throw new Error('denied'); } },
+    denied: { getItem() { throw new Error('denied'); }, setItem() { throw new Error('denied'); }, removeItem() { throw new Error('denied'); } },
     // Reads, and throws on a write: a full store, or an old private window.
-    full: { getItem: () => null, setItem() { throw new Error('QuotaExceededError'); } },
+    full: { getItem: () => null, setItem() { throw new Error('QuotaExceededError'); }, removeItem() {} },
     // Takes a write and keeps nothing.
-    forgetful: { getItem: () => null, setItem() {} },
+    forgetful: { getItem: () => null, setItem() {}, removeItem() {} },
   };
   if (storage === 'absent') {
     // Reading the property itself throws, as in a sandboxed frame.
@@ -281,10 +318,14 @@ function entryPage({ stamp = '/app.js?v=build-a', stored = {}, online = true, st
   }
   context.window = context;
   context.addEventListener = (type, fn) => { (listeners[type] ??= []).push(fn); };
+  context.removeEventListener = (type, fn) => { listeners[type] = (listeners[type] ?? []).filter((f) => f !== fn); };
   runInNewContext(read('public/spa-entry.js'), context);
-  const fire = (type, event) => { for (const fn of listeners[type] ?? []) fn(event); };
+  const fire = (type, event) => { for (const fn of [...(listeners[type] ?? [])]) fn(event); };
   return {
     kept,
+    field,
+    // app.js has drawn the page; it says so at the end of every route.
+    routed: () => fire('opax:route', { type: 'opax:route' }),
     reloads: () => reloads,
     reject: (reason) => fire('unhandledrejection', { reason }),
     error: (message) => fire('error', { message }),
@@ -384,6 +425,128 @@ test('other errors, no network and no storage never reload', () => {
     sealed.reject(SAFARI);
     assert.equal(sealed.reloads(), 0, storage);
   }
+});
+
+test('a wording a missing or blocked module also gives reloads once for the build, then never', () => {
+  // Chrome says the same of a module that is gone for good. Every load fails.
+  const stored = {};
+  let reloads = 0;
+  for (let load = 0; load < 5; load++) {
+    const page = entryPage({ stored });
+    page.reject(new TypeError('Failed to fetch dynamically imported module: https://example.test/gone.js'));
+    reloads += page.reloads();
+    for (const key of Object.keys(stored)) delete stored[key];
+    Object.assign(stored, page.kept);
+  }
+  assert.equal(reloads, 1);
+});
+
+const DRAFT = 'opax-module-reload-ask';
+const QUESTION = 'What did the minister say about  the bill?\nAnd when';
+
+test('a question being typed in the Ask box is kept across the reload and put back once', () => {
+  const before = entryPage({ typed: QUESTION });
+  before.reject(SAFARI);
+  assert.equal(before.reloads(), 1);
+  assert.equal(before.kept[DRAFT], QUESTION, 'kept as typed, in this tab’s store');
+  assert.deepEqual(Object.keys(before.kept).sort(), ['opax-module-reload', DRAFT].sort(), 'and nowhere else');
+
+  // The page loads again: the question leaves the store as it is read.
+  const after = entryPage({ stored: before.kept });
+  assert.equal(DRAFT in after.kept, false, 'cleared before the page is drawn');
+  assert.equal(after.field.value, '', 'app.js fills the box first');
+  after.routed();
+  assert.equal(after.field.value, QUESTION);
+  assert.equal(after.field.inputs, 1, 'the box is told, so it fits its text');
+  // A later route does not put it back again over what the reader does next.
+  after.field.value = '';
+  after.routed();
+  assert.equal(after.field.value, '');
+  // Nor does a later load in the same tab.
+  const later = entryPage({ stored: after.kept });
+  later.routed();
+  assert.equal(later.field.value, '');
+});
+
+test('the kept question replaces the answered one in the box, not what was typed since', () => {
+  const stored = { 'opax-module-reload': '/app.js?v=build-a', [DRAFT]: QUESTION };
+  // The address still asks the earlier question, and app.js puts it in the box.
+  const answered = entryPage({ stored, search: '?q=An+earlier+question', typed: 'An earlier question' });
+  answered.routed();
+  assert.equal(answered.field.value, QUESTION);
+  // The reader typed again before the page was drawn: that stays.
+  const typedSince = entryPage({ stored, typed: 'Something new' });
+  typedSince.routed();
+  assert.equal(typedSince.field.value, 'Something new');
+  assert.equal(typedSince.field.inputs, 0);
+  assert.equal(DRAFT in typedSince.kept, false, 'and the kept question is gone all the same');
+  // The box already holds it: nothing to do.
+  const same = entryPage({ stored, typed: QUESTION });
+  same.routed();
+  assert.equal(same.field.inputs, 0);
+});
+
+test('an empty Ask box keeps nothing, and clears a question left from before', () => {
+  for (const typed of ['', '  \n ']) {
+    const page = entryPage({ typed, stored: { [DRAFT]: 'left over' } });
+    assert.equal(DRAFT in page.kept, false, 'read out of the store on load');
+    page.kept[DRAFT] = 'left over'; // as if something put it back
+    page.reject(SAFARI);
+    assert.equal(page.reloads(), 1);
+    assert.equal(DRAFT in page.kept, false);
+  }
+});
+
+test('a question is kept only when the page is about to reload', () => {
+  // The same build already reloaded for, another error, no network, an answer arriving.
+  const spent = entryPage({ typed: QUESTION, stored: { 'opax-module-reload': '/app.js?v=build-a' } });
+  spent.reject(SAFARI);
+  const other = entryPage({ typed: QUESTION });
+  other.reject(new TypeError('p.getBBox is not a function'));
+  const offline = entryPage({ typed: QUESTION, online: false });
+  offline.reject(SAFARI);
+  const busy = entryPage({ typed: QUESTION, answering: 'ask' });
+  busy.reject(SAFARI);
+  for (const page of [spent, other, offline, busy]) {
+    assert.equal(page.reloads(), 0);
+    assert.equal(DRAFT in page.kept, false);
+  }
+  // Storage that cannot keep the guard keeps no question either, and a load
+  // with such storage restores nothing and does not throw.
+  for (const storage of ['denied', 'full', 'absent', 'undefined', 'forgetful']) {
+    const sealed = entryPage({ typed: QUESTION, storage });
+    sealed.reject(SAFARI);
+    sealed.routed();
+    assert.equal(sealed.reloads(), 0, storage);
+    assert.equal(sealed.field.value, QUESTION, storage);
+  }
+});
+
+test('the page is never reloaded while an answer is arriving, and the one reload is not spent', () => {
+  const page = entryPage({ typed: QUESTION, answering: 'ask' });
+  page.reject(SAFARI);
+  page.error('Importing a module script failed.');
+  assert.equal(page.reloads(), 0);
+  assert.deepEqual(page.kept, {}, 'nothing is written while the answer arrives');
+  // The answer has ended; the next module that fails gets the reload.
+  const after = entryPage({ typed: QUESTION, stored: page.kept });
+  after.reject(SAFARI);
+  assert.equal(after.reloads(), 1);
+});
+
+test('the buttons the entry script reads are the ones app.js holds through an answer', () => {
+  const app = read('public/app.js');
+  const html = read('public/index.html');
+  for (const id of ['ask-submit', 'chat-send', 'ask-input']) assert.ok(html.includes(`id="${id}"`), `index.html has #${id}`);
+  // runAsk: the Ask button is busy from the question to the end of its answer.
+  const ask = app.slice(app.indexOf('const btn = $("ask-submit");'));
+  assert.ok(ask.indexOf('btn.setAttribute("aria-busy", "true");') > 0, 'runAsk marks the Ask button busy');
+  assert.ok(ask.indexOf('btn.removeAttribute("aria-busy");') > ask.indexOf('btn.setAttribute("aria-busy", "true");'), 'and frees it at the end');
+  // sendChat: the follow-up button is disabled for as long.
+  const off = app.indexOf('$("chat-send").disabled = true;');
+  assert.ok(off > 0 && app.indexOf('$("chat-send").disabled = false;', off) > off, 'sendChat holds and frees the follow-up button');
+  // And app.js says when it has routed, which is when the question goes back.
+  assert.ok(app.includes('dispatchEvent(new Event("opax:route"))'));
 });
 
 // --- 3. the masthead's stars are measured only where they can be ------------
