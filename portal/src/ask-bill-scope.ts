@@ -9,6 +9,15 @@
  * The filter is the union of those, joined to whatever else the request filters on, so retrieval
  * cannot return a record from outside the bill. Explanatory memoranda and Bills Digests are not
  * resources of their own; the memorandum reaches Ask only through the bill record's summary.
+ *
+ * Speeches and divisions carry no bill label (parli/ingest/arag_sync.py, votes_state.py), so they
+ * are reached by slug, and the platform rejects a whole request when one slug is not in the box.
+ * The body therefore carries, under BILL_LABEL_ONLY, the filter to ask again with: the bill label
+ * alone, which cannot be rejected and is still inside the bill (its text). Never the unscoped ask.
+ *
+ * Not reached: the later parts of a division split for the platform's 100-name limit
+ * (`division-<key>-p2`, votes_ingest.py), which the bill file does not record, and speeches past
+ * the 24 a bill file lists.
  */
 export interface BillScopeFile {
   title?: string
@@ -18,7 +27,12 @@ export interface BillScopeFile {
 }
 export interface BillScope { key: string; title: string; slugs: string[] }
 
-const KEY = /^[a-z][a-z0-9-]{1,119}$/
+/** Symbol-keyed, so it is copied with the body on every retry and never serialised to the platform. */
+export const BILL_LABEL_ONLY = Symbol.for('opax.ask.bill-label-only')
+
+// au-federal-r7531, au-federal-alrc-1270, au-nsw-18524, au-federal-ed-<slug>-<year> (docs/BILLS-CONTRACT.md).
+// Nothing else is read as a bill file: not `index`, the 1.9 MB list of every bill.
+const KEY = /^au-[a-z]+-[a-z0-9][a-z0-9-]{0,110}$/
 const SLUG = /^[a-z][a-z0-9-]{1,199}$/
 
 /** The request's bill key, or null: anything else is not a scope and the ask runs as usual. */
@@ -45,9 +59,11 @@ export function billScopedBody(body: Record<string, unknown>, scope: BillScope):
   const existing = (body.filter_expression as { field?: unknown } | undefined)?.field
   const prompt = body.prompt as { system?: string; user?: string } | undefined
   const about = `Every passage belongs to one bill${scope.title ? `, the ${scope.title}` : ''}: its text, its record and summary, and the speeches and divisions on it. “This bill” and “the bill” in the question mean that bill. `
+  const within = (clause: Record<string, unknown>) => ({ field: { and: [...(existing ? [existing] : []), clause] } })
   return {
     ...body,
-    filter_expression: { field: { and: [...(existing ? [existing] : []), billScopeClause(scope)] } },
+    filter_expression: within(billScopeClause(scope)),
+    [BILL_LABEL_ONLY]: within({ prop: 'label', labelset: 'bill_key', label: scope.key }),
     ...(Array.isArray(body.rag_strategies) ? { rag_strategies: (body.rag_strategies as { name?: string }[]).filter(s => s?.name !== 'prequeries') } : {}),
     ...(prompt ? { prompt: { ...prompt, user: about + (prompt.user ?? '') } } : {}),
   }

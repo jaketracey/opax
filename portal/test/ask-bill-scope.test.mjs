@@ -50,8 +50,8 @@ const pool=Object.fromEntries([
   record('division-federal-senate-990002','division',{state:'federal',chamber:'senate'},passage('unrelated division')),
   record(`bill-text-${DEBATED}-first-reps`,'bill_text',{bill_key:DEBATED,state:'federal'},passage('debated bill text')),
   record(`bill-${DEBATED}`,'bill',{state:'federal'},passage('debated bill record')),
-  ...debated.speeches.slice(0,3).map(s=>record(s.slug,'speech',{state:'federal',chamber:'representatives'},passage(`speech ${s.slug} on the debated bill`))),
-  ...debated.divisions.slice(0,3).map(d=>record(`division-${d.key}`,'division',{state:'federal',chamber:d.house},passage(`division ${d.key} on the debated bill`))),
+  ...debated.speeches.map(s=>record(s.slug,'speech',{state:'federal',chamber:'representatives'},passage(`speech ${s.slug} on the debated bill`))),
+  ...debated.divisions.map(d=>record(`division-${d.key}`,'division',{state:'federal',chamber:d.house},passage(`division ${d.key} on the debated bill`))),
 ])
 // The platform's filter, for the clauses Ask sends. An unknown clause fails the test rather than matching.
 const matches=(e,r)=>{
@@ -64,7 +64,12 @@ const matches=(e,r)=>{
   if(e.prop==='field')return false // generated fields; the fixtures have none
   throw new Error('unexpected filter clause '+JSON.stringify(e))
 }
-const kbAsks=[]
+// As NucliaDB's parser does (parse_expression: "Cannot find slug"), a resource clause naming a slug that is not in
+// the box rejects the whole request. `absent` takes records out of the box for one test.
+const absent=new Set()
+const inBox=()=>Object.fromEntries(Object.entries(pool).filter(([,r])=>!absent.has(r.slug)))
+const unknownSlug=e=>e.and?e.and.map(unknownSlug).find(Boolean):e.or?e.or.map(unknownSlug).find(Boolean):e.not?unknownSlug(e.not):e.prop==='resource'&&e.slug&&!Object.values(inBox()).some(r=>r.slug===e.slug)?e.slug:undefined
+const kbAsks=[],rejected=[]
 const kbErrors=[]
 globalThis.fetch=async(input,init)=>{try{return await kb(input,init)}catch(error){kbErrors.push(error);throw error}}
 const kb=async(input,init)=>{
@@ -73,7 +78,9 @@ const kb=async(input,init)=>{
   if(!url.pathname.endsWith('/ask'))return Response.json({resources:{},fulltext:{total:0,facets:{}}})
   const body=JSON.parse(String(init.body));kbAsks.push(body)
   const field=body.filter_expression?.field
-  const found=Object.fromEntries(Object.entries(pool).filter(([,r])=>!field||matches(field,r)).slice(0,body.top_k??20))
+  const unknown=field&&unknownSlug(field)
+  if(unknown){rejected.push(unknown);return Response.json({detail:`Cannot find slug ${unknown}`},{status:412})}
+  const found=Object.fromEntries(Object.entries(inBox()).filter(([,r])=>!field||matches(field,r)))
   const ids=Object.values(found).flatMap(r=>Object.keys(r.fields.body.paragraphs))
   const answer=ids.length?ids.map((_,i)=>`Point ${i+1} from the record.[^${i+1}]`).join(' ')+'\n\n'+ids.map((_,i)=>`[^${i+1}]: block-${i+1}`).join('\n'):''
   const notes=Object.fromEntries(ids.map((id,i)=>[`block-${i+1}`,id]))
@@ -84,7 +91,7 @@ const kb=async(input,init)=>{
 // A research model with nothing to say: the research route, when it runs, fails over to ordinary retrieval.
 const modelCalls=()=>globalThis.__researchModel.doStreamCalls.length+globalThis.__researchModel.doGenerateCalls.length
 const ask=async(input,stream=false)=>{
-  kbAsks.length=0;kbErrors.length=0
+  kbAsks.length=0;kbErrors.length=0;rejected.length=0
   globalThis.__researchModel=new MockLanguageModelV4({doGenerate:[]})
   const realWarn=console.warn,realLog=console.log,realError=console.error;console.warn=console.log=console.error=()=>{}
   try{
@@ -131,9 +138,9 @@ test('a debated bill: the speeches and divisions its file lists are in scope, an
   const run=await ask({question:'What did members say about this bill and how did they vote?',bill:DEBATED})
   onlyTheBill(run,DEBATED,debated,'debated')
   const slugs=run.body.sources.map(s=>s.slug)
-  for(const s of debated.speeches.slice(0,3))assert.ok(slugs.includes(s.slug),`speech ${s.slug}`)
-  for(const d of debated.divisions.slice(0,3))assert.ok(slugs.includes(`division-${d.key}`),`division ${d.key}`)
-  assert.ok(slugs.includes(`bill-text-${DEBATED}-first-reps`)&&slugs.includes(`bill-${DEBATED}`))
+  assert.equal(rejected.length,0,'every listed record is in the box')
+  for(const slug of slugs)assert.ok(slug===`bill-${DEBATED}`||slug===`bill-text-${DEBATED}-first-reps`||debated.speeches.some(s=>s.slug===slug)||debated.divisions.some(d=>`division-${d.key}`===slug),slug)
+  assert.ok(slugs.some(slug=>slug.startsWith('speech-'))&&slugs.some(slug=>slug.startsWith('division-')),'speeches and divisions are retrieved')
 })
 
 test('questions that other routes answer from outside the bill still go to the bill\'s records',async()=>{
@@ -150,14 +157,48 @@ test('a follow-up in a bill conversation stays in the bill and pins no earlier r
 test('the request\'s other filters join the bill filter',async()=>{
   const run=await ask({question:'What did members say about this bill?',bill:DEBATED,kind:'speech'})
   onlyTheBill(run,DEBATED,debated,'speeches')
-  assert.deepEqual(run.body.sources.map(s=>s.slug).sort(),debated.speeches.slice(0,3).map(s=>s.slug).sort())
+  assert.ok(run.body.sources.length>0&&run.body.sources.every(s=>debated.speeches.some(x=>x.slug===s.slug)),'only the bill\'s speeches')
 })
 
-test('a bill with no readable file still scopes to its text and record',async()=>{
-  const run=await ask({question:'What does this bill do?',bill:'au-federal-zz-no-such-bill'})
-  assert.equal(run.status,200);assert.ok(String(run.body.answer??'').trim(),'an answer, never blank')
-  assert.equal(run.body.sources?.length??0,0,'nothing from outside the bill')
-  for(const sent of kbAsks)assert.ok(JSON.stringify(sent.filter_expression).includes(billClause('au-federal-zz-no-such-bill')))
+// The platform rejects a request that names a slug it does not hold. One listed speech or division missing from the
+// box, or a bill record not yet published, must not cost the reader the answer: the ask goes again on the bill label
+// alone, which is still inside the bill.
+for(const stream of [false,true])for(const [name,slug] of [['a listed speech',debated.speeches[5].slug],['a listed division',`division-${debated.divisions[7].key}`],['the bill record',`bill-${DEBATED}`]])
+  test(`${name} missing from the box: the reader still gets an answer from the bill, never an error (${stream?'stream':'json'})`,async()=>{
+    absent.add(slug)
+    try{
+      const run=await ask({question:'What does this bill change?',bill:DEBATED},stream)
+      assert.ok(rejected.includes(slug),'the platform rejected the slug filter')
+      assert.equal(run.status,200,JSON.stringify(run.body).slice(0,200))
+      assert.equal(run.body.error,undefined)
+      assert.ok(String(run.body.answer??'').trim(),'an answer')
+      assert.deepEqual(run.body.sources.map(s=>s.slug),[`bill-text-${DEBATED}-first-reps`],'answered from the bill\'s text')
+      assert.ok(Object.keys(run.body.citations).length>0,'cited')
+      assert.equal(run.body.scope?.bill,DEBATED)
+      for(const sent of kbAsks)assert.ok(JSON.stringify(sent.filter_expression).includes(billClause(DEBATED)),'every request, the second included, is inside the bill')
+      assert.equal(modelCalls(),0)
+    }finally{absent.clear()}
+  })
+
+test('a bill key with no file and no records: an answer with no sources, on JSON and on the stream, never an error',async()=>{
+  for(const stream of [false,true]){
+    const run=await ask({question:'What does this bill do?',bill:'au-federal-zz-no-such-bill'},stream)
+    assert.equal(run.status,200,JSON.stringify(run.body).slice(0,200));assert.equal(run.body.error,undefined)
+    assert.ok(String(run.body.answer??'').trim(),'an answer, never blank')
+    assert.equal(run.body.sources?.length??0,0,'nothing from outside the bill')
+    assert.ok(rejected.includes('bill-au-federal-zz-no-such-bill'))
+    for(const sent of kbAsks)assert.ok(JSON.stringify(sent.filter_expression).includes(billClause('au-federal-zz-no-such-bill')))
+  }
+})
+
+// `index` named /bills/index.json, the 1.9 MB list of every bill, as if it were one bill's file.
+test('only a bill key is a scope: `index` and other asset names are not, and the ask runs as usual',async()=>{
+  for(const bill of ['index','search-catalog','au','au-federal','au-federal-']){
+    const run=await ask({question:'What would this bill change for veterans?',bill})
+    assert.equal(run.status,200);assert.equal(run.body.scope?.bill,undefined,bill)
+    assert.ok(modelCalls()>0,`${bill}: not routed as a bill`)
+    for(const sent of kbAsks)assert.ok(!JSON.stringify(sent.filter_expression??{}).includes('bill_key'),`${bill}: no bill filter`)
+  }
 })
 
 test('without a bill, or with a value that is not a bill key, Ask is as it was',async()=>{
@@ -173,7 +214,8 @@ test('without a bill, or with a value that is not a bill key, Ask is as it was',
 
 test('the key, the clause and the body',()=>{
   assert.equal(askBillKey(' au-federal-s1515 '),VETERANS)
-  for(const bad of [undefined,null,'',42,'S1515','au federal','../bills/index','a'.repeat(200),['au-federal-s1515']])assert.equal(askBillKey(bad),null,String(bad))
+  for(const key of ['au-federal-r7531','au-federal-alrc-1270','au-nsw-18524','au-federal-ed-payday-super-2025'])assert.equal(askBillKey(key),key)
+  for(const bad of [undefined,null,'',42,'S1515','au federal','../bills/index','index','au-federal','au-federal-','federal-r7531','au-'+'a'.repeat(200),['au-federal-s1515']])assert.equal(askBillKey(bad),null,String(bad))
   const scope=billScope(DEBATED,debated)
   assert.equal(scope.slugs.length,1+debated.speeches.length+debated.divisions.length)
   assert.deepEqual(billScopeClause(billScope(VETERANS,veterans)),{or:[{prop:'label',labelset:'bill_key',label:VETERANS},{prop:'resource',slug:`bill-${VETERANS}`}]})
@@ -181,6 +223,10 @@ test('the key, the clause and the body',()=>{
   const body=billScopedBody({query:'q',filter_expression:{field:{and:[news]}},rag_strategies:[{name:'neighbouring_paragraphs'},{name:'prequeries'}],prompt:{system:'s',user:'u'}},billScope(VETERANS,veterans))
   assert.deepEqual(body.filter_expression.field.and[0],{and:[news]},'the request\'s own filter is kept')
   assert.deepEqual(body.rag_strategies,[{name:'neighbouring_paragraphs'}])
+  const labelOnly={field:{and:[{and:[news]},{prop:'label',labelset:'bill_key',label:VETERANS}]}}
+  assert.deepEqual(body[Symbol.for('opax.ask.bill-label-only')],labelOnly,'the filter to ask again with')
+  assert.deepEqual({...body,top_k:12}[Symbol.for('opax.ask.bill-label-only')],labelOnly,'copied onto every retry body')
+  assert.ok(!JSON.stringify(body).includes('label-only'),'never sent to the platform')
   assert.ok(body.prompt.user.startsWith('Every passage belongs to one bill, the Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026'))
   assert.ok(body.prompt.user.endsWith('u'))
   assert.equal(inBillScope({slug:`bill-text-${SIBLING}-first-senate`,href:`/bill/${SIBLING}?text-version=first-senate#bill-full-text`},billScope(VETERANS,veterans)),false)

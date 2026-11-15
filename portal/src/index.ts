@@ -1760,7 +1760,10 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
       const work = async (signal: AbortSignal) => {
-        const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
+        let res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
+        // A bill-scoped filter the platform rejects (a listed record not in the box) is asked on the bill label alone (ask-bill-scope.ts).
+        const labelOnly = [400, 412, 422].includes(res.status) ? (b as Record<symbol, unknown>)[Symbol.for('opax.ask.bill-label-only')] : undefined
+        if (labelOnly) { await res.body?.cancel().catch(() => {}); res = await kbFetch(env, '/ask', { body: { ...b, filter_expression: labelOnly }, headers: { 'x-synchronous': 'true' }, signal }) }
         if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
         if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
         return (await res.json()) as AskAnswer
@@ -2368,14 +2371,18 @@ async function streamAskOnce(
   signal: AbortSignal,
   onProgress?: () => void,
 ): Promise<AskAnswer> {
-  const res = await kbFetch(env, '/ask', {
+  const call = (b: Record<string, unknown>) => kbFetch(env, '/ask', {
     headers: {
       'content-type': 'application/json',
       accept: 'application/x-ndjson',
     },
-    body,
+    body: b,
     signal,
   })
+  let res = await call(body)
+  // As on the synchronous path: a rejected bill-scoped filter is asked on the bill label alone (ask-bill-scope.ts).
+  const labelOnly = [400, 412, 422].includes(res.status) ? (body as Record<symbol, unknown>)[Symbol.for('opax.ask.bill-label-only')] : undefined
+  if (labelOnly) { await res.body?.cancel().catch(() => {}); res = await call({ ...body, filter_expression: labelOnly }) }
   if (!res.ok || !res.body) throw new Error(`ask failed (${res.status})`)
 
   let answer = ''
