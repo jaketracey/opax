@@ -3,7 +3,12 @@
 // Bills list. Invented bills prove the rule; the pinned register proves the
 // row.
 import { act, Profiler } from 'react';
-import { AppState, RefreshControl, useWindowDimensions } from 'react-native';
+import {
+  AppState,
+  RefreshControl,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billName } from '../src/api/bill-transforms';
@@ -11,6 +16,7 @@ import { Catalogs, type Bill } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import BillsList from '../src/features/bills/BillsList';
 import { ON_THIS_DAY_RULE, onThisDay } from '../src/features/bills/on-this-day';
+import { OnThisDayRow } from '../src/features/bills/OnThisDay';
 import { SegmentedPicker } from '../src/design/controls';
 import { formatDate } from '../src/design/format';
 import * as sheets from '../src/navigation/sheets';
@@ -220,6 +226,10 @@ describe('the row on Bills', () => {
     expect(rows(root)).toHaveLength(0);
   });
 
+  const texts = (node: ReactTestInstance): string =>
+    node.children
+      .map((child) => (typeof child === 'string' ? child : texts(child)))
+      .join('');
   const ids = (root: ReactTestInstance) =>
     root
       .findAll(
@@ -310,6 +320,64 @@ describe('the row on Bills', () => {
     );
   });
 
+  test.each([
+    ['the default size', 1],
+    ['AX5', 3.571],
+  ])(
+    'at %s the row whose day has passed lays out exactly as it did: only the hidden line and the date over it differ',
+    (_name, fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width: 402, height: 874, scale: 3, fontScale });
+      const pick = onThisDay(pinnedBills.bills, dayWithBill)!;
+      type Json = TestRenderer.ReactTestRendererJSON;
+      const drawn = (passed: boolean) => {
+        let r!: TestRenderer.ReactTestRenderer;
+        act(() => {
+          r = TestRenderer.create(<OnThisDayRow pick={pick} passed={passed} />);
+        });
+        mounted.push(r);
+        return r.toJSON() as Json;
+      };
+      // What takes part in layout: the date drawn over the line is out of
+      // it (absolute), and the held line differs only by its opacity.
+      const overlays: Json[] = [];
+      const inFlow = (node: Json | string): Json | string | null => {
+        if (typeof node === 'string') return node;
+        if (node.props.testID === 'bills-on-this-day-date') {
+          overlays.push(node);
+          return null;
+        }
+        const { accessibilityLabel: _label, ...props } = node.props;
+        const style = { ...StyleSheet.flatten(props.style) };
+        if (props.testID === 'bills-on-this-day-kicker') delete style.opacity;
+        return {
+          ...node,
+          props: { ...props, style },
+          children:
+            node.children
+              ?.map(inFlow)
+              .filter((child): child is Json | string => child !== null) ??
+            null,
+        };
+      };
+      const fresh = inFlow(drawn(false));
+      expect(overlays).toHaveLength(0);
+      const passed = inFlow(drawn(true));
+      // As text: handlers are new functions on every render.
+      expect(JSON.stringify(passed)).toBe(JSON.stringify(fresh));
+      expect(overlays).toHaveLength(1);
+      expect(StyleSheet.flatten(overlays[0]!.props.style)).toMatchObject({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+      });
+      // The held line is still there to hold the height, unseen.
+      expect(JSON.stringify(passed)).toContain(`On this day in ${pick.year}`);
+    },
+  );
+
   describe('a list left mounted into a new day', () => {
     // A second date the pinned register has a different bill for.
     const other = pinnedBills.bills.find(
@@ -327,12 +395,14 @@ describe('the row on Bills', () => {
     let appHandlers: ((state: string) => void)[];
     let appRemoved: number;
     let removed: number;
+    let focused: boolean;
     // Other parts of the list listen to the app state too: tell them all.
     const appChange = (state: string) =>
       appHandlers.forEach((handler) => handler(state));
     async function renderWatched() {
       listeners = {};
       removed = 0;
+      focused = true;
       appHandlers = [];
       appRemoved = 0;
       jest.spyOn(AppState, 'addEventListener').mockImplementation(((
@@ -349,7 +419,7 @@ describe('the row on Bills', () => {
       const navigation = {
         setOptions: () => {},
         getState: () => ({ index: 0, routes: [{ key: 'r', name: 'index' }] }),
-        isFocused: () => true,
+        isFocused: () => focused,
         addListener: (type: string, handler: () => void) => {
           (listeners[type] ??= []).push(handler);
           return () => {
@@ -377,42 +447,107 @@ describe('the row on Bills', () => {
       expect(labelFor(nextDay)).not.toBe(labelFor(dayWithBill));
     });
 
-    test('in front of the reader it never changes, whatever the clock says', async () => {
-      const r = await renderWatched();
-      expect(label(r.root)).toBe(labelFor(dayWithBill));
-      mockDay = nextDay;
-      await act(async () => {
-        r.root.findByType(RefreshControl).props.onRefresh();
-      });
-      await act(async () => {});
-      // Control Centre over the list: still on screen.
-      act(() => appChange('inactive'));
-      expect(label(r.root)).toBe(labelFor(dayWithBill));
-    });
-
-    test.each([
-      ['the screen blurs', () => emit('blur')],
+    const title = (root: ReactTestInstance) =>
+      label(root)?.replace(/^On this day in \d{4}, /, '');
+    const part = (root: ReactTestInstance, id: string) =>
+      root.findAll(
+        (node) => typeof node.type === 'string' && node.props.testID === id,
+      );
+    // Every way the list hears about the world while it has the focus.
+    const whileFocused: [string, () => void][] = [
+      ['a refresh', () => {}],
       ['the screen takes focus again', () => emit('focus')],
+      ['the app returns', () => act(() => appChange('active'))],
       [
         'the app goes to the background',
         () => act(() => appChange('background')),
       ],
-      ['the app returns', () => act(() => appChange('active'))],
-    ])('when %s on a new day, it chooses again', async (_name, hide) => {
-      const r = await renderWatched();
-      expect(label(r.root)).toBe(labelFor(dayWithBill));
-      // Out of sight on the same day: nothing to change.
-      hide();
-      expect(label(r.root)).toBe(labelFor(dayWithBill));
-      mockDay = nextDay;
-      hide();
-      expect(label(r.root)).toBe(labelFor(nextDay));
-    });
+      ['Control Centre covers it', () => act(() => appChange('inactive'))],
+    ];
 
-    test('a new day with no earlier bill takes the row away while hidden', async () => {
+    test.each(whileFocused)(
+      'in front of the reader, %s on a new day never changes the bill or moves the list',
+      async (_name, event) => {
+        const r = await renderWatched();
+        const before = ids(r.root);
+        const bill = title(r.root);
+        expect(label(r.root)).toBe(labelFor(dayWithBill));
+        mockDay = nextDay;
+        await act(async () => {
+          r.root.findByType(RefreshControl).props.onRefresh();
+        });
+        await act(async () => {});
+        event();
+        // The same bill, in the same place, with the same things around it.
+        expect(title(r.root)).toBe(bill);
+        expect(
+          ids(r.root).filter((id) => id !== 'bills-on-this-day-date'),
+        ).toEqual(before);
+      },
+    );
+
+    test.each(whileFocused)(
+      'in front of the reader, %s on a day with no bill never takes the row away',
+      async (_name, event) => {
+        const r = await renderWatched();
+        mockDay = '2026-01-01';
+        event();
+        expect(rows(r.root)).toHaveLength(1);
+      },
+    );
+
+    test.each([
+      ['the screen takes focus again', () => emit('focus')],
+      ['the app returns', () => act(() => appChange('active'))],
+    ])(
+      'when %s on a new day, the row stops saying "On this day" and gives the bill’s date',
+      async (_name, event) => {
+        const r = await renderWatched();
+        const pick = onThisDay(pinnedBills.bills, dayWithBill)!;
+        expect(part(r.root, 'bills-on-this-day-date')).toHaveLength(0);
+        mockDay = nextDay;
+        event();
+        expect(label(r.root)).toBe(
+          `${billName(pick.bill)}, introduced ${formatDate(pick.date)}`,
+        );
+        const [date] = part(r.root, 'bills-on-this-day-date');
+        expect(texts(date!)).toBe(formatDate(pick.date));
+        // The next blur chooses again, and the row is today's once more.
+        focused = false;
+        emit('blur');
+        expect(label(r.root)).toBe(labelFor(nextDay));
+        expect(part(r.root, 'bills-on-this-day-date')).toHaveLength(0);
+      },
+    );
+
+    test.each([
+      ['the screen blurs', () => emit('blur')],
+      [
+        'the app goes to the background behind another screen',
+        () => act(() => appChange('background')),
+      ],
+      [
+        'the app returns behind another screen',
+        () => act(() => appChange('active')),
+      ],
+    ])(
+      'out of sight, when %s on a new day, it chooses again',
+      async (_name, hide) => {
+        const r = await renderWatched();
+        focused = false;
+        // Out of sight on the same day: nothing to change.
+        hide();
+        expect(label(r.root)).toBe(labelFor(dayWithBill));
+        mockDay = nextDay;
+        hide();
+        expect(label(r.root)).toBe(labelFor(nextDay));
+      },
+    );
+
+    test('out of sight, a new day with no earlier bill takes the row away', async () => {
       const r = await renderWatched();
-      expect(rows(r.root)).toHaveLength(1);
       mockDay = '2026-01-01';
+      focused = false;
       emit('blur');
       expect(rows(r.root)).toHaveLength(0);
     });

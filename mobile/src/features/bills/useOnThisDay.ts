@@ -10,25 +10,40 @@ import { currentSydneyDay } from './sydney-day';
  * the register, so the row is in the list's first frame or not there at
  * all, and it never changes while the list is in front of the reader.
  *
- * Bills is a tab root and stays mounted for days. So the day is read again
- * whenever the list goes out of sight or comes back (the screen blurs or
- * takes focus, the app goes to the background or returns), and a new day
- * chooses again there: yesterday's "On this day" is never shown as today's.
+ * Bills is a tab root and stays mounted for days, so a new day chooses
+ * again, but only where the list cannot be seen: when the screen blurs, or
+ * on an app-state change while another screen has the focus. Never on focus
+ * or on the app's return to this screen: both are heard after the list is
+ * already on screen, and the row changing or leaving would move the bills.
+ *
+ * That leaves one case: the reader comes back to this list on a new day.
+ * The pick stays, and `stale` says its day has passed, so the row can stop
+ * calling it "On this day" without changing size, until the next blur.
  */
-export function useOnThisDay(
-  bills: readonly Bill[] | null | undefined,
-): OnThisDayBill | null {
+export function useOnThisDay(bills: readonly Bill[] | null | undefined): {
+  pick: OnThisDayBill | null;
+  stale: boolean;
+} {
   const navigation = useContext(NavigationContext);
   const [day, setDay] = useState(currentSydneyDay);
+  // The day as last read, whether or not the list could choose again.
+  const [today, setToday] = useState(day);
   useEffect(() => {
-    const check = () => setDay(currentSydneyDay());
+    const read = (hidden: boolean) => {
+      const now = currentSydneyDay();
+      setToday(now);
+      if (hidden) setDay(now);
+    };
+    // No navigation (a test, a preview): treat the list as in view.
+    const unseen = () => !!navigation && !navigation.isFocused();
     const off = [
-      navigation?.addListener?.('blur', check),
-      navigation?.addListener?.('focus', check),
+      // The screen is already hidden when blur is heard.
+      navigation?.addListener?.('blur', () => read(true)),
+      navigation?.addListener?.('focus', () => read(false)),
     ];
     // Not `inactive`: the list is still on screen under Control Centre.
     const app = AppState.addEventListener('change', (state) => {
-      if (state !== 'inactive') check();
+      if (state !== 'inactive') read(unseen());
     });
     return () => {
       off.forEach((remove) => remove?.());
@@ -41,5 +56,8 @@ export function useOnThisDay(
   } | null>(null);
   if (bills && chosen?.day !== day)
     setChosen({ day, pick: onThisDay(bills, day) });
-  return chosen?.pick ?? null;
+  return {
+    pick: chosen?.pick ?? null,
+    stale: !!chosen && chosen.day === day && today !== day,
+  };
 }

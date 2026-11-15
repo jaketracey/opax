@@ -294,7 +294,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   // row is in the list's first frame or not there: nothing is inserted above
   // content the reader can already see. A new day chooses again only while
   // the list is out of sight (useOnThisDay).
-  const dayPick = useOnThisDay(index?.bills);
+  const { pick: dayPick, stale: dayPassed } = useOnThisDay(index?.bills);
   const clear = () => list.store.set(list.store.model.reset(list.state));
   const stacked = useAccessibilitySize();
   const filteredEmpty = !!all && !searching && on > 0 && rows.length === 0;
@@ -349,6 +349,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       {all && dayPick && !searching && !pushed ? (
         <OnThisDayRow
           pick={dayPick}
+          passed={dayPassed}
           onSelect={
             split
               ? ({ bill }) =>
