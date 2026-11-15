@@ -92,8 +92,8 @@
     // Set "false" and deploy to return /mcp to members only (docs/COMMUNITY.md, kill switch).
     "MCP_ANON_ENABLED": "true",
     // The automatic daily guard (src/mcp-access.ts), per UTC day. Two pools: the addresses Claude and ChatGPT
-    // share, and everyone else ("direct"). A pool at either cap pauses the no-account tier for its callers until
-    // the day ends. PROGRESS = actual Progress knowledge-base queries, counted one by one (500 a day in all until
+    // share, and everyone else ("direct"). A pool at its REQUESTS cap pauses the no-account tier for its callers until
+    // the day ends; at its PROGRESS cap only further Progress queries are refused (429), other tools keep answering. PROGRESS = actual Progress knowledge-base queries, counted one by one (500 a day in all until
     // the price per query is measured); REQUESTS = every no-account request. NETWORK = one direct network's own
     // daily allowance (an IPv4 address or an IPv6 /48), so one network cannot spend the direct pool.
     "MCP_ANON_DAILY_PROGRESS_SHARED": "250",

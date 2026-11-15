@@ -101,17 +101,21 @@ async function countToday(env:Env,count:Count,at:Place):Promise<'network'|'pool'
  if(hits===most)console.warn(JSON.stringify({kind:'mcp_anon_daily_cap',level:'alert',count,pool:at.pool,day:today()*DAY,hits}))
  return hits>most?'pool':null
 }
-/** Whether the caller's pool is paused or its network has spent today's allowance, by a read alone. */
+/**
+ * Whether the caller's pool is paused or its network has spent today's request allowance, by a read alone.
+ * Only the request counts pause anything. A spent Progress allowance refuses each further Progress query
+ * (spendProgress, 429 to midnight UTC) and nothing else, so initialize, tools/list and the tools that read
+ * published tables keep answering: a client or a directory health check never sees the tier switch off.
+ */
 async function spentToday(env:Env,at:Place):Promise<'network'|'pool'|null> {
- const counts:Count[]=['progress','requests']
- const keys=[...counts.map(count=>poolKey(count,at.pool)),...(at.wide?await Promise.all(counts.map(count=>networkDayKey(count,at.wide as string))):[])]
+ const keys=[poolKey('requests',at.pool),...(at.wide?[await networkDayKey('requests',at.wide)]:[])]
  const rows=await env.COMMUNITY_DB.prepare(`SELECT key,hits FROM community_limits WHERE key IN (${keys.map(()=>'?').join(',')})`).bind(...keys).all<{key:string,hits:number}>()
  const hits=(key:string)=>rows.results.find(row=>row.key===key)?.hits??0
- if(counts.some((count,i)=>hits(keys[i])>=cap(env,count,at.pool)))return 'pool'
- if(at.wide&&counts.some((count,i)=>hits(keys[2+i])>=cap(env,count,'network')))return 'network'
+ if(hits(keys[0])>=cap(env,'requests',at.pool))return 'pool'
+ if(at.wide&&hits(keys[1])>=cap(env,'requests','network'))return 'network'
  return null
 }
-/** The pools the daily guard has paused today, as "pool:count". */
+/** The daily caps reached today, as "pool:count". A "requests" entry pauses that pool; a "progress" entry refuses only its Progress queries. */
 export async function anonymousPaused(env:Env):Promise<string[]> {
  const all=(['shared','direct'] as Pool[]).flatMap(pool=>(['progress','requests'] as Count[]).map(count=>({pool,count,key:poolKey(count,pool)})))
  const rows=await env.COMMUNITY_DB.prepare(`SELECT key,hits FROM community_limits WHERE key IN (${all.map(()=>'?').join(',')})`).bind(...all.map(one=>one.key)).all<{key:string,hits:number}>()
@@ -120,11 +124,23 @@ export async function anonymousPaused(env:Env):Promise<string[]> {
 const accountLink=(env:Env)=>'Connect with a free OPAX account to keep going: '+env.COMMUNITY_ORIGIN+'/mcp'
 const pausedMessage=(env:Env)=>'OPAX tools are paused for callers without an account until tomorrow (UTC): today\'s shared allowance is used up. '+accountLink(env)
 const networkMessage=(env:Env)=>'This network has used today\'s allowance for callers without an account. It resets at midnight UTC. '+accountLink(env)
+const searchesSpentMessage=(env:Env)=>'Today\'s record searches for callers without an account are used up until midnight UTC. Tools that read published tables keep working. '+accountLink(env)
+const networkSearchesMessage=(env:Env)=>'This network has used today\'s record searches for callers without an account. They reset at midnight UTC; tools that read published tables keep working. '+accountLink(env)
 /** Spend one Progress query for a caller without an account; refuse it once their network or pool has spent today's. */
+/** Whether the caller's network or pool has spent today's Progress queries, by a read alone, so a refused query writes nothing. */
+async function searchesSpent(env:Env,at:Place):Promise<'network'|'pool'|null> {
+ const keys=[poolKey('progress',at.pool),...(at.wide?[await networkDayKey('progress',at.wide)]:[])]
+ const rows=await env.COMMUNITY_DB.prepare(`SELECT key,hits FROM community_limits WHERE key IN (${keys.map(()=>'?').join(',')})`).bind(...keys).all<{key:string,hits:number}>()
+ const hits=(key:string)=>rows.results.find(row=>row.key===key)?.hits??0
+ if(at.wide&&hits(keys[1])>=cap(env,'progress','network'))return 'network'
+ if(hits(keys[0])>=cap(env,'progress',at.pool))return 'pool'
+ return null
+}
 async function spendProgress(req:Request,env:Env):Promise<void> {
- const over=await countToday(env,'progress',place(req,env))
- if(over==='network')throw new McpLimitError(networkMessage(env),untilMidnight())
- if(over==='pool')throw new McpLimitError(pausedMessage(env),untilMidnight())
+ const at=place(req,env)
+ const over=await searchesSpent(env,at)??await countToday(env,'progress',at)
+ if(over==='network')throw new McpLimitError(networkSearchesMessage(env),untilMidnight())
+ if(over==='pool')throw new McpLimitError(searchesSpentMessage(env),untilMidnight())
 }
 
 /** Called just before each Progress query; hedge marks the keyword retry a search starts when its main query is slow or fails. */
@@ -167,8 +183,8 @@ export async function anonymousVolume(env:Env):Promise<{anonymous:boolean,volume
  let run=0,longest=0
  for(const hour of hours){run=over.has(hourKey(hour))?run+1:0;longest=Math.max(longest,run)}
  const paused=anonymousEnabled(env)?await anonymousPaused(env):[]
- // On while either pool is open.
- const closed=new Set(paused.map(entry=>entry.split(':')[0]))
+ // On while either pool is open. Only a spent request count closes a pool; a spent Progress count refuses searches alone.
+ const closed=new Set(paused.filter(entry=>entry.endsWith(':requests')).map(entry=>entry.split(':')[0]))
  return {anonymous:anonymousEnabled(env)&&closed.size<2,volume:longest>=3?'high':'normal',hours_over:over.size,paused_today:paused}
 }
 
@@ -240,7 +256,7 @@ const windowLeft=()=>60-now()%60
  */
 export async function spendAnonymous(req:Request,env:Env,method:unknown):Promise<void> {
  const at=place(req,env),{shared,network}=at
- // The daily guard first, by a read alone: a paused pool or a spent network costs no write.
+ // The daily guard first, by a read alone: a paused pool or a network past its request allowance costs no write.
  const spent=await spentToday(env,at)
  if(spent==='pool')throw new CommunityError(401,pausedMessage(env))
  if(spent==='network')throw new McpLimitError(networkMessage(env),untilMidnight())

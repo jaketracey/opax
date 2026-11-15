@@ -297,7 +297,7 @@ const search=(f,headers={})=>f.mcp(headers,{rpc:{jsonrpc:'2.0',id:7,method:'tool
 const hits=(f,like)=>f.db.prepare('SELECT coalesce(sum(hits),0) n FROM community_limits WHERE key LIKE ?').get(like).n;
 const untilMidnight=()=>86400-Math.floor(Date.now()/1000)%86400;
 const CLAUDE='160.79.104.10';
-test('the daily cap counts Progress queries one by one and pauses only the pool that spent it; members carry on',async()=>{
+test('the daily cap counts Progress queries one by one and refuses only further queries from the pool that spent it; other tools and members carry on',async()=>{
  const f=fixture({MCP_ANON_DAILY_PROGRESS_DIRECT:'3'});
  const warnings=[],warn=console.warn;console.warn=line=>warnings.push(line);
  try{
@@ -315,18 +315,23 @@ test('the daily cap counts Progress queries one by one and pauses only the pool 
   assert.ok(Math.abs(seconds(refused)-untilMidnight())<=2);
   const body=await refused.json();
   assert.equal(body.id,7);assert.equal(body.error.code,-32029);assert.equal(body.error.data.retry_after_seconds,seconds(refused));
-  assert.match(body.error.message,/paused for callers without an account until tomorrow/);
+  assert.match(body.error.message,/record searches for callers without an account are used up/);
  }finally{console.warn=warn}
  assert.equal(warnings.filter(line=>line.includes('mcp_anon_daily_cap')).length,1);
  assert.deepEqual(Object.keys(JSON.parse(warnings.find(line=>line.includes('mcp_anon_daily_cap')))).sort(),['count','day','hits','kind','level','pool']);
- // The direct pool is paused, answered like the kill switch; a paused pool writes nothing more.
- const paused=await f.mcp({'cf-connecting-ip':'198.51.100.20'});
- assert.equal(paused.status,401);
- assert.match(paused.headers.get('www-authenticate'),/resource_metadata=/);
- assert.match((await paused.json()).error,/paused for callers without an account until tomorrow/);
- const before=hits(f,'%');
- await f.mcp();await search(f);
- assert.equal(hits(f,'%'),before);
+ // Only further Progress queries are refused. The handshake, the tool list and the tools that read published
+ // tables keep answering for the whole pool, so a client or a directory health check never sees the tier off.
+ const other={'cf-connecting-ip':'198.51.100.20'};
+ const hello=await f.mcp(other,{rpc:{jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-06-18',capabilities:{},clientInfo:{name:'check',version:'1'}}}});
+ assert.equal(hello.status,200);
+ assert.equal((await f.mcp(other)).status,200);
+ assert.equal((await f.mcp(other,call())).status,200);
+ const spent=await search(f,other);
+ assert.equal(spent.status,429);
+ assert.ok(Math.abs(seconds(spent)-untilMidnight())<=2);
+ assert.match((await spent.json()).error.message,/record searches for callers without an account are used up/);
+ // A refused query is refused by a read: the Progress count stays at the cap.
+ assert.equal(hits(f,'mcp-anon-progress-day:direct:%'),3);
  // Claude's and ChatGPT's users draw on their own pool, so they carry on.
  assert.equal((await search(f,{'cf-connecting-ip':CLAUDE})).status,200);
  assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:0,paused_today:['direct:progress']});
@@ -338,6 +343,7 @@ test('the daily cap counts Progress queries one by one and pauses only the pool 
  // The next UTC day starts clean.
  f.db.prepare("UPDATE community_limits SET key='mcp-anon-progress-day:direct:1' WHERE key LIKE 'mcp-anon-progress-day:direct:%'").run();
  assert.equal((await f.mcp()).status,200);
+ assert.equal((await search(f,{'mcp-session-id':'session-cccc'})).status,200);
  f.db.close();
 });
 
@@ -355,14 +361,14 @@ test('one network cannot pause the no-account tier for everyone, even with a new
  }finally{console.warn=warn}
  assert.equal(refused.status,429);
  assert.ok(Math.abs(seconds(refused)-untilMidnight())<=2);
- assert.match((await refused.json()).error.message,/This network has used today's allowance/);
+ assert.match((await refused.json()).error.message,/This network has used today's record searches/);
  assert.equal(warnings.filter(line=>line.includes('mcp_anon_network_cap')).length,1);
  assert.ok(warnings.every(line=>!line.includes('203.0.113')),'no address is logged');
- // From then on it is refused by a read alone, and the pool holds only the five it made.
- const before=hits(f,'%');
+ // From then on its searches are refused by a read, and the pool holds only the five it made.
  for(let i=6;i<10;i++)assert.equal((await search(f,{'mcp-session-id':'attack-'+i+'-session'})).status,429);
- assert.equal(hits(f,'%'),before);
  assert.equal(hits(f,'mcp-anon-progress-day:direct:%'),5);
+ // The same network can still read published tables: only its searches are spent.
+ assert.equal((await f.mcp({},call())).status,200);
  // Everyone else carries on: another network, an IPv6 site, and Claude's shared addresses.
  assert.equal((await search(f,{'cf-connecting-ip':'198.51.100.30'})).status,200);
  for(const ip of ['2001:db8:1:1::1','2001:db8:1:2::1','2001:db8:1:3::1','2001:db8:1:4::1','2001:db8:1:5::1'])assert.equal((await search(f,{'cf-connecting-ip':ip})).status,200);
@@ -382,12 +388,20 @@ test('by default the no-account tier makes at most 500 Progress queries a day: 1
  for(let i=0;i<150;i++)assert.equal((await one('198.51.100.50')).status,200);
  assert.equal((await one('198.51.100.50')).status,429);
  for(let i=0;i<100;i++)assert.equal((await one('198.51.100.51')).status,200);
- // The direct pool's 250 are spent: the next caller from anywhere direct is paused before it makes a query.
- assert.equal((await one('198.51.100.52')).status,401);
+ // The direct pool's 250 are spent: the next search from anywhere direct is refused at its first query, by a read.
+ assert.equal((await one('198.51.100.52')).status,429);
  for(let i=0;i<250;i++)assert.equal((await one(CLAUDE)).status,200);
- assert.equal((await one(CLAUDE)).status,401);
+ assert.equal((await one(CLAUDE)).status,429);
  assert.equal(hits(f,'mcp-anon-progress-day:%'),500);
  assert.deepEqual((await anonymousVolume(f.env)).paused_today,['shared:progress','direct:progress']);
+ // Both Progress pools spent: the tier is still on, and the handshake, the tool list and table tools answer in both pools.
+ assert.equal((await anonymousVolume(f.env)).anonymous,true);
+ for(const ip of ['198.51.100.52',CLAUDE]){
+  const hello=await f.mcp({'cf-connecting-ip':ip},{rpc:{jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-06-18',capabilities:{},clientInfo:{name:'check',version:'1'}}}});
+  assert.equal(hello.status,200);assert.equal(hello.headers.get('www-authenticate'),null);
+  assert.equal((await f.mcp({'cf-connecting-ip':ip})).status,200);
+  assert.equal((await f.mcp({'cf-connecting-ip':ip},call())).status,200);
+ }
  f.db.close();
 });
 
