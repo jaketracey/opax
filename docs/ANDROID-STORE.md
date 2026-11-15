@@ -76,16 +76,16 @@ Exactly the iOS 1.0 App Privacy label: seven types, all linked to the user, none
 | Search History | App activity: In-app search history | Yes | No | App functionality |
 | Other Diagnostic Data | App info and performance: Diagnostics | Yes | No | App functionality |
 
-- **Not collected:** location (one foreground reading after "Use my location", matched to an electorate on the phone; never sent, saved or logged), contacts, photos, files, calendar, financial info, health, messages, device or advertising IDs, crash logs. Community is not in the 1.0 app.
+- **Not collected by the 1.0 binary:** location (one foreground reading after "Use my location", matched to an electorate on the phone; never sent, saved or logged), contacts, photos, files, calendar, financial info, health, messages, device or advertising IDs, crash logs. Community is not in the 1.0 app. Builds with analytics collect two of these, device IDs and crash logs (below); location and the rest stay not collected.
 - **Microphone:** a runtime permission, not an eighth type. It is declared only by the production voice build and asked for only when the reader starts Talk, after the voice consent and a rationale with the iOS purpose string ("OPAX uses your microphone only during a Talk call you start. Your audio is sent to ElevenLabs, OPAX’s voice provider, to understand and answer you."). Never at launch. Consent is off by default (`mobile/src/voice/README.md`, "Android microphone permission").
 - **Credential:** the account session is kept on the device in the Android Keystore, origin-scoped, and excluded from backup and device transfer.
 - **Encryption in transit:** yes. Cleartext traffic is disabled in every release build (`withAndroidPolicy.js`, verified by `verify-android-build.py`).
 - **Deletion:** in the app (Account and about, Delete account, confirmed by an emailed code) and on opax.com.au. Deletion removes the account and its personal data from the live database at once; recovery history keeps it for up to 30 days.
-- **No advertising, no tracking, and no crash reports sent.** The shared JavaScript bundle includes the `posthog-react-native` analytics SDK, and the build links its native crash plugin (`@posthog/react-native-plugin`, with posthog-android), but Android builds carry no analytics config, so neither ever starts and nothing is sent. `verify-android-build.py` and `verify-play.py` assert that config is absent, and `verify-play.py` refuses any analytics SDK or host other than PostHog through `opax.com.au/ingest`. The answers above are therefore unchanged for this binary (docs/ANALYTICS.md, "iOS and Android app").
+- **No advertising and no tracking.** Android builds before analytics carried no analytics config, so the bundled `posthog-react-native` SDK and its native crash plugin (`@posthog/react-native-plugin`, with posthog-android) never started.
 
-### When Android analytics is turned on
+### Android analytics is on
 
-iOS sends anonymous product analytics from 1.1.1. Turning it on for Android needs three changes together: `app.config.ts` (drop the `!androidBuild` condition), `ANDROID_ANALYTICS_ENABLED` in `verify-play.py` plus the `verify-android-build.py` assertion, and these Data safety answers, saved before that build is submitted:
+Android production builds now send the same anonymous product analytics and crash reports as iOS (from 1.1.1), through `opax.com.au/ingest` (docs/ANALYTICS.md, "iOS and Android app"). `app.config.ts` gives every production build the analytics config; `build-play.sh`, `verify-play.py` and `verify-android-build.py` refuse a production build without it and an e2e build with it, and `verify-play.py` still refuses any analytics SDK or host other than PostHog through `opax.com.au/ingest`. posthog-android adds no permission beyond INTERNET and ACCESS_NETWORK_STATE, and reads neither the Android ID nor the advertising ID. Save these Data safety answers in Play Console before the first such build is submitted:
 
 | Play category and type | Change | Collected | Shared | Optional | Ephemeral | Purpose |
 | --- | --- | --- | --- | --- | --- | --- |

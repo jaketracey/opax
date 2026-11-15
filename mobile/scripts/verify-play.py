@@ -30,12 +30,8 @@ _spec = importlib.util.spec_from_file_location(
 )
 release_policy = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(release_policy)
-# Android sends no analytics until its Play Data safety answers include
-# them (docs/ANDROID-STORE.md, "Data safety"). Turning this on requires the
-# same change in app.config.ts and the Data safety form.
-ANDROID_ANALYTICS_ENABLED = False
-
-from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts, bundled_routes, shipped_source_maps
+from android_release import (configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts,
+                             bundled_routes, shipped_source_maps, verify_crash_symbols, verify_recorded_configs)
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("aab", type=Path)
@@ -287,19 +283,22 @@ with zipfile.ZipFile(apk) as archive:
     )
     packaged_config = json.loads(archive.read("assets/app.config"))
 extra = packaged_config["extra"]
-expected_analytics = (
-    release_policy.ANALYTICS_CONFIG if ANDROID_ANALYTICS_ENABLED else None
-)
-assert extra.get("analytics") == expected_analytics, (
-    "Embedded analytics config must be exactly the opax.com.au/ingest proxy, "
-    "and absent while Android analytics is off"
-)
+# Analytics is on for Android production, as on iOS (docs/ANALYTICS.md): the
+# Expo config build-play.sh recorded before and after Gradle
+# (config.json, config-after.json) and the packaged one all carry exactly the
+# opax.com.au/ingest host and the public project token. E2E and development
+# builds carry none (verify-android-build.py, qa-static.ts).
+recorded_configs = verify_recorded_configs(output, packaged_config)
 evidence_path = args.build_evidence or output / "build-evidence.json"
 build_evidence = verify_evidence(args.aab, evidence_path, args.expected_commit, bundle_voice)
 assert build_evidence.get("version") == expected_version, "Build evidence version mismatch"
 assert build_evidence.get("versionCode") == int(root.attrib[namespace + "versionCode"]), "Build evidence versionCode mismatch"
 with zipfile.ZipFile(args.aab) as archive:
     release_metadata = debug_artifacts(archive, build_evidence, output)
+    # Crash report symbols stay beside the AAB for upload-crash-symbols.sh:
+    # the composed Hermes map, the chunk ID the shipped bundle reports and,
+    # with R8, the mapping the AAB gives Play.
+    js_chunk_id = verify_crash_symbols(output, js, build_evidence, archive)
 ios_commit = None
 if args.ios_release:
     ios_commit = verify_ios_candidate(args.ios_release, build_evidence, expected_version)
@@ -369,6 +368,8 @@ report = {
     "device_apk": apk.name,
     "device_apk_sha256": hashlib.sha256(apk.read_bytes()).hexdigest(),
     "embedded_js_sha256": bundle_sha256,
+    "js_chunk_id": js_chunk_id,
+    "recorded_configs_analytics": recorded_configs,
     "permissions": permissions,
     "checks": {
         "credential_file_modes_600": "passed",
@@ -382,7 +383,9 @@ report = {
         "known_advertising_analytics_namespaces_absent": "passed",
         "no_source_map_in_aab": "passed",
         "analytics_only_posthog_via_opax_ingest": "passed",
-        "analytics_config": "on" if ANDROID_ANALYTICS_ENABLED else "off",
+        "analytics_config": "on",
+        "recorded_build_configs_carry_analytics": "passed",
+        "crash_symbols_kept_beside_aab": "passed",
         "signing_credentials_absent_from_bundle": "passed",
         "universal_apk_generated": "passed",
         "aab_and_apk_embedded_js_identical": "passed",

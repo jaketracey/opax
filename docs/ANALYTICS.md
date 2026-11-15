@@ -78,13 +78,21 @@ and workers.dev previews do not send production analytics.
 ## iOS and Android app
 
 From 1.1.1 the iOS app sends anonymous product analytics to the same PostHog
-project, through the same `https://opax.com.au/ingest` proxy (native requests
+project, and the Android app now does too, through the same
+`https://opax.com.au/ingest` proxy (native requests
 carry no `Origin`, which the proxy already accepts). The SDK is
 `posthog-react-native`, pinned to an exact version, with its native crash
 plugin `@posthog/react-native-plugin` (see "Crash and error reports" below).
 The token and host live in build config (`mobile/app.config.ts`,
-`extra.analytics`), never in `src/`. Only iOS production builds carry that
-config. Development and e2e builds never do, even with `OPAX_ANALYTICS=1`.
+`extra.analytics`), never in `src/`. Only production builds carry that
+config, on iOS and Android alike. Development and e2e builds never do on
+either platform, even with `OPAX_ANALYTICS=1`. `npm run qa-static` checks all
+six platform and variant pairs, and the Android release tooling checks the
+built app: `build-play.sh` refuses a production build whose recorded Expo
+config (`private/play/<versionCode>/config.json` and `config-after.json`) or
+packaged `assets/app.config` lacks the exact host and project token,
+`verify-play.py` checks the same three again, and `verify-android-build.py`
+refuses an e2e APK that carries any analytics config.
 The runtime also refuses to create a client when `__DEV__` or Expo debug mode
 is true, when the execution environment is `storeClient`, when the
 variant or analytics environment is not production, or when the build number
@@ -103,17 +111,17 @@ are preventive gates, not a confirmed explanation of that historical traffic.
 `expo-dev-launcher` is not installed; there is no launcher module probe or
 native-module grant.
 
-Android stays off until its Google Play Data safety answers include analytics.
-Instrumentation and runtime gates are
-shared and tested for both iOS and Android; this lane does not enable Android
-ingestion or change Play Console answers.
+Android sends the same events, crash reports included, under the same
+runtime gates and scrubbers as iOS. Its Google Play Data safety answers must
+say so before an Android build with analytics is submitted
+(`ANDROID-STORE.md`, "Data safety").
 
 `mobile/src/analytics/events.ts` is the app's boundary, the counterpart of
 `analytics/events.js`. `cleanEvent` checks what app code asks to send; the
 SDK's `before_send` runs `scrubEvent`, which drops every event not listed below
 and rebuilds each payload from fixed lists, so SDK enrichment (deep-link URLs,
 screen sizes, locale, device name, flags, person and super properties) never
-leaves the phone. Every event carries `platform` (`ios`, or `android` once enabled), `app` (`opax`),
+leaves the phone. Every event carries `platform` (`ios` or `android`), `app` (`opax`),
 `app_version`, `app_build` and `environment`, with `$process_person_profile`
 false and `$geoip_disable` true. Every event also carries the window as two
 categories, read as it is sent: `layout` (`compact` or `regular`, the size
@@ -144,6 +152,7 @@ native SDK builds without passing through JS, do not carry them.
 | `opax_map_action` | `action` (`open`, `filter`, `zoom`, `open_record` or `search`), `filter_count` (0 to 20) |
 | `opax_edition` | `action` (`open`, `story_open` or `reached_end`) |
 | `opax_first_run` | `step` (`welcome`, `seat` or `state`), `outcome` (`chosen` or `skipped`), and for a choice `method` (`search`, `location` or `browse`) |
+| `opax_section_failed` | `section`: which data block, from a fixed list (`page`, a catalog file family such as `read_roster`, or a page block such as `block_members`); `kind`: `network`, `4xx`, `5xx`, `decode` or `partial`; `route_pattern`: a fixed route-file pattern such as `/party/[slug]` |
 | `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; optional `error_message`: an exact, content-free diagnostic from a fixed allowlist, at most 80 characters |
 | `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, only when Today is the first focused route of a cold JS runtime |
 | `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
@@ -297,11 +306,52 @@ this event still compare: `/welcome`, `/welcome/seat`,
 screen, shown before a reader's first question; it is not part of first run
 and the app has no analytics consent step.
 
+`opax_section_failed` reports a data block that failed to load, or that loaded
+with rows dropped: a party page's Members, the roster, a catalog file. It
+exists because a block can fail on every phone for hours while the page around
+it still draws, and no other event would show it. It carries three values and
+the standard context, nothing else:
+
+- `section`, one key from the fixed list `failedSections`
+  (`mobile/src/analytics/events.ts`). `read_*` is a catalog file family
+  (`read_roster`, `read_people`, `read_money`, `read_bills` and so on). The
+  request path is matched against fixed prefixes to choose the family and is
+  never sent, so a person, bill, seat or search phrase in a path stays on the
+  phone. `block_*` is a block of a loaded page (`block_members`,
+  `block_receipts`, `block_divisions` and so on), chosen from the block's
+  property name; an unlisted block is `block_other`. `page` is a page's whole
+  read.
+- `kind`: `network` (no connection or a timeout), `4xx` or `5xx` (the HTTP
+  status class, never the status), `decode` (the body could not be read) or
+  `partial` (the read succeeded with rows dropped).
+- `route_pattern`: the route template the reader was on, from the same fixed
+  list as `opax_route_error`; anything else is `/other`.
+
+No id, name, title, URL, status code, error message or stack is read into it.
+Two shared places send it, so no screen reports for itself
+(`mobile/src/analytics/sections.ts`): the API client tells it of every catalog
+read that failed (`onFailure`, wired in `mobile/src/api/runtime.ts`), and the
+record hooks (`useCatalogRecord`, `useRead`) tell it of each block in a loaded
+record that is in its error state or marked partial, and of a whole read that
+failed. A cancelled request and a path the app refused to request are not
+failures.
+
+It is sent at most once per section, kind and route for each launch, and at
+most 12 times per kind per launch, so a retry loop, a re-render or an outage
+across every file cannot flood, and a launch with no connection cannot use up
+the room for a `decode` or `5xx`. A read that fails while the phone shows its
+saved copy is reported the same way: the reader sees the record, so the report
+is the only sign of the failure. It uses `track`, the same build-config gate
+(`extra.analytics`) and both scrubbers as every other event; a build without
+the analytics configuration sends nothing. A phone that is offline reports
+`network` once per section and route when it is next online, like any queued
+event.
+
 `opax_route_error` reports once for each error caught by the reporting route
 boundary, including a new failure after Try again. It uses `track`, the same
 build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
 separate analytics consent setting in the app. Voice consent does not enable
-analytics. Android, e2e and all development builds send no report. No
+analytics. E2E and all development builds send no report. No
 identify call or new identifier is added. The same error also goes out once
 as a crash and error report (below).
 
@@ -367,9 +417,9 @@ other events, with no new modules, consent settings or text collection.
 
 ### Crash and error reports
 
-iOS production builds also send anonymous crash and error reports as PostHog
-`$exception` events, behind the same build gate as every other event:
-development, e2e, fixture and Android builds send none, and the app has no
+iOS and Android production builds also send anonymous crash and error
+reports as PostHog `$exception` events, behind the same build gate as every
+other event: development, e2e and fixture builds send none, and the app has no
 analytics opt-out to honour. They appear in PostHog Error tracking once the
 project setting "Enable exception autocapture" is on; until then the SDK
 captures nothing automatically.
@@ -386,7 +436,25 @@ captures nothing automatically.
   and `androidNdkCrashes` on. A crash is written to disk and sent on the next
   launch. Push notification capture, which the plugin turns on by default, is
   off in the options and in Info.plist
-  (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`).
+  (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`). Android needs no
+  such key: before `setup()` the plugin's only hook is a listener for intents
+  that reach a running app, and posthog-android 3.74.2 drops those until it is
+  set up and then whenever the options' `capturePushNotificationOpened` is
+  false. The app has no Firebase messaging either.
+
+- **Test error report.** A hidden control that proves, on a real release
+  build, that error reports arrive and are symbolicated: tap the version line
+  at the foot of Account seven times within four seconds, then confirm Send
+  (`mobile/src/analytics/test-report.ts`). It sends one handled JS exception
+  through the ordinary path (the build gate, `before_send`, the queue) with
+  `captureException`, so it arrives whether or not the project's exception
+  autocapture is on. It is marked as a test three ways, so dashboards can
+  leave it out: the property `opax_test: true`, the type `OpaxTestReport` and
+  the fixed message "OPAX test error report". It holds nothing else beyond
+  what every report holds. A build that sends nothing (development, e2e, or
+  no analytics configuration) says "Test reports are off in this build" and
+  sends nothing. There is no deliberate native crash: neither native SDK nor
+  the plugin exposes one, so it would need new native code.
 
 The native SDK never sees the app's other PostHog settings: posthog-react-native
 passes it only its own options, with feature flag preloading on whenever native
@@ -417,9 +485,15 @@ native event that is not `$exception`. The three copies must stay in step:
 message rules' exact pattern texts, and `tests/native-scrub.test.ts` runs the
 Swift copy, cut from the patch by `scripts/check-native-scrub.sh`, on the
 invented inputs in `tests/fixtures/exception-scrub-cases.json` and expects what
-JS keeps (on a Mac a missing `swift` fails it; only Linux skips it). Kotlin
-is compiled only by the Android build, but Android's `java.util.regex` runs on
-ICU like NSRegularExpression, so the same pattern texts behave the same.
+JS keeps (on a Mac a missing `swift` fails it; only Linux skips it).
+`tests/native-scrub-kotlin.test.ts` does the same for the Kotlin copy, through
+`scripts/check-native-scrub-kotlin.sh` and the Kotlin compiler Gradle caches on
+the Android desktop (it skips where Java 17 is missing, as on the Mac), and
+checks everywhere that the Kotlin field lists match the JS ones. That run uses
+the JVM's `java.util.regex`; Android's runs on ICU like NSRegularExpression, so
+the Swift run covers the pattern texts, and the b71 logcat check in
+`mobile/docs/android-crash-plugin-checks.md` (item 4) confirms they load on a
+device.
 
 | Property | What it may hold |
 | --- | --- |
@@ -427,6 +501,7 @@ ICU like NSRegularExpression, so the same pattern texts behave the same.
 | Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
 | `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
+| `opax_test` | `true` on a test error report (JS only), otherwise absent |
 | Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
 
 Messages keep their shape but lose anything that could be user text, in this
@@ -474,12 +549,33 @@ person running it. It refuses any project but the OPAX one (507367). The key is
 redacted from release logs and never reaches a build step. Releases resolve
 per event from `$app_namespace`, `$app_version` and `$app_build`. For Android
 the script also uploads the R8 mapping under posthog-android's map ID
-(`au.com.opax.app@<versionName>+<versionCode>`); it is not wired into
-`build-play.sh` while Android sends nothing. Gradle writes the Android map to
-`android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`,
-and `verify-play.py` refuses any `.map` an APK would install. R8's mapping
-(`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`) is Play
-metadata that is never installed, so it passes.
+(`au.com.opax.app@<versionName>+<versionCode>`). `scripts/build-play.sh`
+does for Android what `release-ios.sh` does for iOS: it builds with
+`OPAX_SYMBOLS_DIR` set to the evidence folder (`private/play/<versionCode>/`),
+so Metro records `android.chunk-id` there, then copies in the composed map
+Gradle writes
+(`android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`)
+and R8's `mapping.txt`, and logs the chunk ID. It uploads them only when the
+release run sets `OPAX_UPLOAD_SYMBOLS=1` (`ANDROID-PLAY-1.0.md`, "Crash
+symbols"): the default, `0`, uploads nothing even where a key file and
+`posthog-cli` exist, and writes one line to `crash-symbols.log` with the
+command that uploads them, `scripts/upload-crash-symbols.sh android <version>
+<versionCode> <evidence folder> <evidence folder>/mapping.txt`; any other value
+stops the build before it starts. With `1` the upload runs into
+`crash-symbols.log`, logs the one skip line without a key, and is stopped after
+`OPAX_SYMBOL_UPLOAD_TIMEOUT` seconds (600 by default; TERM, so the script
+removes its staged map, then KILL 10 seconds later) so a hung CLI cannot hold
+the desktop native lock; a failed or stopped upload never fails the build. The
+switch and the timeout come from the caller only, and `build-play.sh` unsets
+every `POSTHOG_*` variable before its first step and after each helper it
+sources (`qa-env.sh` loads `mobile/.qa.local.env`), so no key reaches capacity
+checks, the build gate, Expo, Gradle, Metro or the upload, which loads its own
+key file. `verify-play.py` refuses an AAB whose evidence folder
+lacks the composed map, whose recorded chunk ID is not the one in the shipped
+`index.android.bundle`, or whose `mapping.txt` is not the R8 mapping the AAB
+gives Play (`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`,
+Play metadata that is never installed). It also refuses any `.map` an APK
+would install.
 
 The privacy manifest declares Product Interaction and Device ID, not linked,
 not used for tracking, purpose Analytics, and Crash Data and Other Diagnostic

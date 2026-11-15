@@ -247,5 +247,9 @@ export function scrubExceptionProperties(
     .map((image) => pickFields(imageFields, image))
     .filter((image) => Object.keys(image).length > 0);
   if (images.length) clean.$debug_images = images;
+  // The marker of a deliberate test report (sendTestErrorReport): the fixed
+  // flag only, so dashboards can leave test reports out. JavaScript reports
+  // only; a native crash report never carries it.
+  if (raw.opax_test === true) clean.opax_test = true;
   return clean;
 }

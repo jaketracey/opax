@@ -93,6 +93,22 @@ export function coverageSources(corpus: Corpus): CoverageSource[] {
     .sort((a, b) => rank(a.name) - rank(b.name) || words(a.name, b.name));
 }
 
+/**
+ * What a source row shows. A year range or one date sits beside the name; a
+ * longer window ("Registry records; source versions counted separately")
+ * reads under it with the count, because a long trailing value takes the
+ * row's width and leaves the name one letter a line.
+ */
+export const windowBesideLimit = 16;
+export function coverageRow(source: CoverageSource): {
+  value?: string;
+  detail: string;
+} {
+  return source.window.length <= windowBesideLimit
+    ? { value: source.window, detail: source.detail }
+    : { detail: `${source.detail} · ${source.window}` };
+}
+
 /** "NSW Parliament from 2015", for each state parliament the summary holds. */
 export function stateCoverage(corpus: Corpus): string[] {
   return coverageSources(corpus)

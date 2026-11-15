@@ -3,9 +3,10 @@ import { useAccessibilitySize } from '../../design/accessibility';
 import { Card } from '../../design/card';
 import { Icon } from '../../design/icon';
 import type { RowMenuAction } from '../../design/row-link';
-import { Skeleton } from '../../design/states';
+import { LoadingStatus } from '../../design/states';
+import { formatDate, unbroken } from '../../design/format';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { colors, radii, rhythm } from '../../design/tokens';
 import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { presentSheet } from '../../navigation/sheets';
@@ -18,6 +19,7 @@ import { explore } from '../explore/runtime';
 import { archiveYear, questionIndex, type SydneyDate } from './rules';
 import { frontPageSkip } from './archive-review';
 import { rules } from './sources';
+import { QuizArt } from './QuizArt';
 import { SurfaceGrid } from './SurfaceGrid';
 import { useTodayRead } from './TodayBlock';
 
@@ -83,20 +85,49 @@ function Kicker({
 }
 
 /**
+ * The card's label. A photograph from an earlier year is "From the
+ * archive" with its year. One from this year is not an archive piece: it is
+ * "From the record" with its full date ("3 Nov 2026"), or the year when the
+ * photograph carries no whole date.
+ */
+export function archiveLabel(
+  year: number,
+  date: string | null,
+  today?: SydneyDate,
+): { kicker: string; figure: string } {
+  if (!today || today.slice(0, 4) !== String(year))
+    return { kicker: 'From the archive', figure: String(year) };
+  const whole =
+    date && /^\d{4}-\d{2}-\d{2}/.test(date) ? date.slice(0, 10) : '';
+  return {
+    kicker: 'From the record',
+    figure: (whole && formatDate(whole, 'short')) || String(year),
+  };
+}
+
+/**
  * From the archive: the day's photograph fills a 4:3 frame, then the year,
  * the caption up to three lines, expanding at accessibility text sizes,
  * and "Photo: {author} · {licence}", never clamped. One element; it opens
  * the Time machine on that year with that photograph first.
+ *
+ * The frame keeps its 4:3 shape whatever happens to the photograph: a
+ * photo that cannot be loaded leaves the frame with a faint mark. It used to give
+ * the frame back, and everything under the card moved up about 150 pt.
  */
 export function ArchiveCard({
   year,
   picture,
+  today,
 }: {
   year: number;
   picture: YearPicture;
+  /** Today in Sydney: a photograph from this year is not "the archive". */
+  today?: SydneyDate;
 }) {
   const large = useAccessibilitySize();
   const attribution = archiveAttribution(picture);
+  const { kicker, figure } = archiveLabel(year, picture.date, today);
   return (
     <Card
       testID="today-archive"
@@ -106,7 +137,7 @@ export function ArchiveCard({
         photo: picture.file,
       })}
       accessibilityRole="link"
-      accessibilityLabel={`From the archive, ${year}. ${picture.caption}.${attribution ? ` Photo: ${attribution}.` : ''}`}
+      accessibilityLabel={`${kicker}, ${figure}. ${picture.caption}.${attribution ? ` Photo: ${attribution}.` : ''}`}
       accessibilityHint="Opens the Time machine"
       menu={[
         howChosen(rules.archive),
@@ -115,7 +146,7 @@ export function ArchiveCard({
           symbol: 'square.and.arrow.up',
           onPress: () =>
             void shareRecord({
-              title: `From the archive, ${year}`,
+              title: `${kicker}, ${figure}`,
               path: `/explore?game=tm&year=${year}`,
             }),
         },
@@ -127,13 +158,17 @@ export function ArchiveCard({
         ratio={4 / 3}
         rounded={false}
         resizeMode="cover"
-        failure="collapse"
+        failure="mark"
       />
       <View style={styles.words}>
         <Kicker symbol="clock.arrow.circlepath" ink="tint">
-          From the archive
+          {kicker}
         </Kicker>
-        <Text variant="tileFigure">{String(year)}</Text>
+        {/* A date never breaks across lines ("3 Nov / 2026"); the label
+            says the plain words. */}
+        <Text variant="tileFigure" testID="today-archive-figure">
+          {unbroken(figure)}
+        </Text>
         <Text
           wordSafe
           variant="secondary"
@@ -154,14 +189,72 @@ export function ArchiveCard({
   );
 }
 
+/** One line of the archive card while it loads, as tall as the real line. */
+function Bone({
+  variant,
+  width,
+}: {
+  variant: 'footnote' | 'tileFigure' | 'secondary';
+  width: `${number}%`;
+}) {
+  return (
+    <View>
+      <Text variant={variant} numberOfLines={1} style={styles.boneLine}>
+        {'\u00a0'}
+      </Text>
+      <View style={[styles.boneBar, { width }]} />
+    </View>
+  );
+}
+
+/**
+ * The archive card while the day's photograph is looked up, in the card's
+ * own shape: the 4:3 frame, then the kicker, the year, three lines of
+ * caption and the credit. The loaded card lands on it, so the cards under
+ * it do not move (they were pushed down about 150 pt by a shorter stand-in).
+ */
+export function ArchiveSkeleton() {
+  return (
+    <LoadingStatus
+      accessibilityLabel="Loading the archive photograph"
+      testID="today-archive-loading"
+      style={styles.fill}
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        testID="today-archive-loading-shape"
+        style={styles.fill}
+      >
+        <Card padded={false} style={styles.card}>
+          <View testID="today-archive-loading-frame" style={styles.boneFrame} />
+          <View testID="today-archive-loading-words" style={styles.words}>
+            <Bone variant="footnote" width="40%" />
+            <Bone variant="tileFigure" width="25%" />
+            <Bone variant="secondary" width="100%" />
+            <Bone variant="secondary" width="100%" />
+            <Bone variant="secondary" width="60%" />
+            <Bone variant="footnote" width="70%" />
+          </View>
+        </Card>
+      </View>
+    </LoadingStatus>
+  );
+}
+
 /**
  * Today's question (today.md 5.10): the question in OPAX's words, no answer
- * and no options; it opens the quiz on that question.
+ * and no options; it opens the quiz on that question. Its header is the
+ * quiz art in the archive photograph's frame (the card's full width, 4:3,
+ * the card's own corners), so the two cards start alike and, side by side,
+ * end on the same line. The art is decoration: the card is one link, read
+ * as before.
  */
 export function QuestionCard({ question }: { question: FrontPageQuestion }) {
   return (
     <Card
       testID="today-question"
+      padded={false}
       href={exploreQuizRoute(question.id)}
       accessibilityRole="link"
       accessibilityLabel={`Today’s question. ${question.prompt}`}
@@ -169,7 +262,8 @@ export function QuestionCard({ question }: { question: FrontPageQuestion }) {
       menu={[howChosen(rules.question)]}
       style={styles.card}
     >
-      <View style={styles.question}>
+      <QuizArt />
+      <View style={[styles.words, styles.question]}>
         <Kicker symbol="puzzlepiece.extension" ink="votes">
           Today’s question
         </Kicker>
@@ -217,17 +311,16 @@ export function DailyPair({
     <View testID="today-pair" style={styles.pair}>
       <SurfaceGrid testID="today-pair-grid" gap={12}>
         {loading ? (
-          <View style={[styles.cell, styles.loading]}>
-            <Skeleton
-              shape="card"
-              count={1}
-              label="Loading the archive photograph"
-              testID="today-archive-loading"
-            />
+          <View style={styles.cell}>
+            <ArchiveSkeleton />
           </View>
         ) : archive ? (
           <View style={styles.cell}>
-            <ArchiveCard year={archive.year} picture={archive.picture} />
+            <ArchiveCard
+              year={archive.year}
+              picture={archive.picture}
+              today={today}
+            />
           </View>
         ) : null}
         {question ? (
@@ -242,9 +335,28 @@ export function DailyPair({
 
 const styles = StyleSheet.create({
   pair: { gap: 12, alignItems: 'stretch' },
-  cell: { alignSelf: 'stretch' },
-  loading: { minHeight: 200 },
-  card: { flexGrow: 0, flexShrink: 1 },
+  // The skeleton's wrappers pass the row's height on to its card, so beside
+  // a taller question card it ends where the loaded card will.
+  fill: { flexGrow: 1 },
+  // Side by side, each cell is as tall as the row, and its card fills it.
+  cell: { alignSelf: 'stretch', flexGrow: 1 },
+  // The photograph's frame, as Picture draws it before the photo arrives.
+  boneFrame: {
+    width: '100%',
+    aspectRatio: 4 / 3,
+    backgroundColor: colors.sunken,
+  },
+  boneLine: { opacity: 0 },
+  boneBar: {
+    position: 'absolute',
+    left: 0,
+    top: 3,
+    bottom: 3,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
+  card: { flexGrow: 1, flexShrink: 1 },
   words: { padding: 12, gap: rhythm.line },
   question: { gap: rhythm.tight },
   kicker: { flexDirection: 'row', alignItems: 'center', gap: 6 },

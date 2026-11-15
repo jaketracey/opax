@@ -106,6 +106,54 @@ export function barTitleWidth(
   return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
 }
 
+/**
+ * The widest a bar title may be and still sit on the bar's centre line:
+ * the bar less its wider side, twice. `barTitleWidth` is the span between
+ * the items, which is lopsided whenever the trailing items outweigh the back
+ * button; UIKit centres a title view only while it fits this narrower width
+ * and otherwise pushes it against the nearer group (18.4 at AX3: a 184 pt
+ * name ran to 9 pt from Share, 13 pt left of centre).
+ */
+export function barTitleCentredWidth(
+  windowWidth: number,
+  trailing = 2,
+  trailingWidth?: number,
+  backTitle?: string,
+  measuredBackWidth?: number,
+  itemGrowth = 0,
+): number {
+  const items =
+    trailingWidth ??
+    44 + 60 * Math.max(0, trailing - 1) + itemGrowth * Math.max(0, trailing);
+  // The same reserves as barTitleWidth, side by side.
+  const [leading, trailingSide] =
+    backTitle === ''
+      ? [16 + 44 + 8, 16 + items + 8]
+      : backTitle
+        ? [16 + 48 + (measuredBackWidth ?? 0) + 20, 16 + items + 20]
+        : trailingWidth !== undefined
+          ? [100 + 16 + 8, trailingWidth + 16 + 8]
+          : [16 + items + 8, 16 + items + 8];
+  const room = Math.max(0, windowWidth - 2 * Math.max(leading, trailingSide));
+  return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
+}
+
+/**
+ * The width a title above the Large size is drawn in. It may grow with the
+ * text size only while it stays centred; past that it shrinks back towards
+ * its Large width (`large`, as the probes measure it), where it sits exactly
+ * as it does at Large. Never wider than the span between the items (`room`).
+ */
+export function barTitleDrawnWidth(
+  room: number,
+  centred: number,
+  large: number | undefined,
+): number {
+  if (large === undefined) return room;
+  // One point over the measured advance, so the smallest size never clips.
+  return Math.min(room, Math.max(centred, Math.ceil(large) + 1));
+}
+
 /** Useful alternatives, measured by native Text in the bar's own font. */
 export function barTitleCandidates(title: string, person = false): string[] {
   const words = title.trim().split(/\s+/);
@@ -289,9 +337,30 @@ export function BarTitle({
       ? retreat.room
       : namedRoom;
   const shrink = fontScale > 1 && !fallback;
+  const drawn = shown && ready && !fallback ? (retreat.text ?? title) : title;
+  // Above Large the title is drawn larger than the retreat measured it. It
+  // takes that extra size only while it still centres in the bar.
+  const minimal = ready && shown && retreat.mode === 'minimal';
+  const drawnRoom = shrink
+    ? barTitleDrawnWidth(
+        room,
+        Math.max(
+          0,
+          barTitleCentredWidth(
+            safeWidth,
+            trailing,
+            trailingWidth,
+            minimal ? '' : backTitle,
+            minimal ? undefined : backWidth,
+            growth,
+          ) - clearance,
+        ),
+        measured(drawn),
+      )
+    : room;
   return createElement(
     NativeView,
-    { style: { maxWidth: room } },
+    { style: { maxWidth: drawnRoom } },
     createElement(
       Animated.Text,
       {
@@ -314,10 +383,14 @@ export function BarTitle({
         testID: 'bar-title',
         style: [
           style,
-          { color: colors.ink, opacity: fits ? opacity : 0, maxWidth: room },
+          {
+            color: colors.ink,
+            opacity: fits ? opacity : 0,
+            maxWidth: drawnRoom,
+          },
         ],
       },
-      shown && ready && !fallback ? (retreat.text ?? title) : title,
+      drawn,
     ),
     createElement(
       ScrollView,

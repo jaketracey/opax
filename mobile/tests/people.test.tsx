@@ -9,6 +9,7 @@ import * as Native from 'react-native';
 import { FlatList, Platform, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
+import { forgetCatalogs, keepCatalog } from '../src/api/kept-catalogs';
 import { ApiError } from '../src/api/errors';
 import { peopleDepth, catalogs as runtime } from '../src/api/runtime';
 import { PadGrid } from '../src/design/adaptive';
@@ -21,7 +22,7 @@ import {
 import { FixedPage, Screen, Section } from '../src/design/layout';
 import { PaneHost } from '../src/design/split';
 import { useReduceMotion } from '../src/design/accessibility';
-import { SegmentedPicker } from '../src/design/controls';
+import { Button, SegmentedPicker } from '../src/design/controls';
 import { Icon } from '../src/design/icon';
 import { LinkRow, ValueRow } from '../src/design/rows';
 import { rhythm } from '../src/design/tokens';
@@ -248,6 +249,7 @@ async function wong(element = <Person />) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  forgetCatalogs();
   mockHeaderBottom = 103;
   jest.mocked(useReduceMotion).mockReturnValue(false);
   delete mockParams.section;
@@ -839,6 +841,15 @@ describe('profile', () => {
     jest
       .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
       .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    // No directory in memory: the bones of a sitting federal member.
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue(null);
+    // The pay catalog is in memory, so the bones need not wait for it.
+    keepCatalog('/pay.json', catalogs.pay);
     mock.person.mockReturnValue(new Promise(() => {}));
     let r!: TestRenderer.ReactTestRenderer;
     await act(async () => {
@@ -866,8 +877,9 @@ describe('profile', () => {
       'follow',
       'party',
       'seat',
+      'seat-detail',
+      'official',
       'stat-strip',
-      'source',
       'votes-heading',
       'vote-0',
       'vote-1',
@@ -896,6 +908,470 @@ describe('profile', () => {
           node.props.testID?.startsWith('person-loading-stat-divider-'),
       ),
     ).toHaveLength(2);
+  });
+
+  // The parts in the order drawn, bones beside the loaded page's own.
+  const parts: [bone: string, loaded: RegExp][] = [
+    ['name', /^person-screen-title$/],
+    ['role', /^person-(former|role)$/],
+    ['your-mp', /^person-your-mp$/],
+    ['follow', /^person-follow-(on|off)$/],
+    ['party', /^person-party$/],
+    ['seat', /^person-electorate$/],
+    ['seat-1', /^person-seat-1$/],
+    ['official', /^person-official$/],
+    ['stat-strip', /^person-figures$/],
+    ['stat-row', /^person-figure-votes$/],
+    ['votes-heading', /^person-votes-heading$/],
+  ];
+  const order = (
+    r: TestRenderer.ReactTestRenderer,
+    name: (testID: string) => string | undefined,
+  ) => {
+    const seen: string[] = [];
+    for (const node of r.root.findAll((n) => typeof n.type === 'string')) {
+      const part =
+        typeof node.props.testID === 'string'
+          ? name(node.props.testID)
+          : undefined;
+      if (part && !seen.includes(part)) seen.push(part);
+    }
+    return seen;
+  };
+  // The words under a testID and the text style they are drawn in.
+  const words = (r: TestRenderer.ReactTestRenderer, testID: string) => {
+    const texts = host(r, testID).findAll(
+      (n) =>
+        (n.type as unknown) === 'Text' && typeof n.props.children === 'string',
+    );
+    const self = host(r, testID);
+    const node =
+      typeof self.props.children === 'string' ? self : (texts[0] ?? self);
+    const style = Native.StyleSheet.flatten(node.props.style) ?? {};
+    return {
+      text: node.props.children,
+      fontSize: style.fontSize,
+      lineHeight: style.lineHeight,
+      ramp: node.props.dynamicTypeRamp,
+    };
+  };
+  const held = (official: boolean, former: boolean) => {
+    const id = c.joinPerson(
+      'penny-wong',
+      slugs,
+      roster,
+      people,
+      manifest,
+    ).canonicalPersonId;
+    const rosterName = c.joinPerson(
+      'penny-wong',
+      slugs,
+      roster,
+      people,
+      manifest,
+    ).rosterRow!.name;
+    return {
+      ...directory,
+      roster: former
+        ? result({
+            ...roster,
+            people: roster.people.map((p) =>
+              p.name === rosterName
+                ? { ...p, current: false, party_now: undefined }
+                : p,
+            ),
+          })
+        : directory.roster,
+      people: result({
+        ...people,
+        people: people.people.map((p) =>
+          p.person_id !== id
+            ? p
+            : former
+              ? {
+                  ...p,
+                  electorates: p.electorates.map((e) => ({
+                    ...e,
+                    current: false,
+                    periods: [{ start: '2002-07-01', end: '2019-06-30' }],
+                  })),
+                }
+              : official
+                ? {
+                    ...p,
+                    source_url:
+                      'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=00AOU',
+                  }
+                : p,
+        ),
+      }),
+    };
+  };
+  const pair = async (
+    release: ReturnType<typeof held>,
+    options: { yourMP?: boolean; fontScale?: number; large?: boolean } = {},
+  ) => {
+    jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({
+        width: 390,
+        height: 844,
+        scale: 3,
+        fontScale: options.fontScale ?? 1,
+      });
+    if (options.large)
+      jest
+        .spyOn(
+          jest.requireActual('../src/design/accessibility'),
+          'useAccessibilitySize',
+        )
+        .mockReturnValue(true);
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue(release);
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useIsMyMember'),
+        'useIsMyMember',
+      )
+      .mockReturnValue(!!options.yourMP);
+    mock.directory.mockResolvedValue(release as never);
+    mockParams.slug = 'penny-wong';
+    mock.person.mockReturnValue(new Promise(() => {}));
+    let pending!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      pending = TestRenderer.create(<Person />);
+    });
+    const person = c.joinPerson(
+      'penny-wong',
+      release.slugs.data,
+      release.roster.data,
+      release.people.data,
+      manifest,
+    );
+    const profile = c.profileFor(person.canonicalPersonId!, {
+      ...catalogs,
+      interest: c.decodeInterest(pinned('/interests/10678.json')),
+    });
+    const former = person.partyStatus === 'former';
+    mock.person.mockResolvedValue(result(person));
+    mock.profileFor.mockResolvedValue(
+      former
+        ? {
+            ...profile,
+            blocks: {
+              ...profile.blocks,
+              identity: { ...profile.blocks.identity, data: person },
+              interests: { ...profile.blocks.interests, data: null },
+              pay: { ...profile.blocks.pay, data: null },
+            },
+          }
+        : {
+            ...profile,
+            blocks: {
+              ...profile.blocks,
+              identity: { ...profile.blocks.identity, data: person },
+            },
+          },
+    );
+    let loaded!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      loaded = TestRenderer.create(<Person />);
+    });
+    return {
+      pending,
+      loaded,
+      former,
+      bones: order(
+        pending,
+        (id) => parts.find(([bone]) => id === `person-loading-${bone}`)?.[0],
+      ),
+      // A votes tile inside the strip is not the single full-width row.
+      page: order(
+        loaded,
+        (id) => parts.find(([, re]) => re.test(id))?.[0],
+      ).filter(
+        (part, _, all) => part !== 'stat-row' || !all.includes('stat-strip'),
+      ),
+    };
+  };
+
+  test.each([
+    ['a sitting member who is Your MP', { yourMP: true }],
+    ['a sitting member at AX3', { fontScale: 2.353, large: true }],
+  ] as const)(
+    'the bones hold the loaded header’s parts, words and text styles: %s',
+    async (_, options) => {
+      keepCatalog('/pay.json', catalogs.pay);
+      const { pending, loaded, bones, page } = await pair(
+        held(true, false),
+        options,
+      );
+      expect(bones).toEqual(page);
+      expect(bones).toContain('official');
+      expect(bones.includes('your-mp')).toBe(!!options.yourMP);
+      expect(has(pending, 'person-loading-source')).toBe(false);
+      for (const [bone, id] of [
+        ['name', 'person-screen-title'],
+        ['party', 'person-party'],
+        ['seat', 'person-electorate'],
+        ['official', 'person-official'],
+      ] as const) {
+        const drawn = words(loaded, id);
+        expect(words(pending, `person-loading-${bone}`)).toMatchObject({
+          text: drawn.text,
+          fontSize: drawn.fontSize,
+          lineHeight: drawn.lineHeight,
+        });
+      }
+      // The tiles scale as StatTile's own text does, and stack when it does.
+      const figure = words(loaded, 'person-figure-votes');
+      expect(words(pending, 'person-loading-stat-value-0')).toMatchObject({
+        fontSize: figure.fontSize,
+        lineHeight: figure.lineHeight,
+      });
+      expect(
+        Native.StyleSheet.flatten(
+          host(pending, 'person-loading-stat-strip').props.style,
+        ).flexDirection,
+      ).toBe(
+        Native.StyleSheet.flatten(host(loaded, 'person-figures').props.style)
+          .flexDirection,
+      );
+      // A bar over words that hug their own width is pinned to both edges,
+      // never a share of the column.
+      for (const bone of ['name', 'follow']) {
+        const bar = Native.StyleSheet.flatten(
+          host(pending, `person-loading-${bone}`).children.at(-1)!.props.style,
+        );
+        expect(bar).toMatchObject({ position: 'absolute', left: 0, right: 0 });
+        expect(bar.width).toBeUndefined();
+      }
+      // The Follow bone is the button itself, unseen: it grows as it does.
+      expect(
+        host(pending, 'person-loading-follow').findAllByType(Button),
+      ).toHaveLength(1);
+      await act(async () => {
+        pending.unmount();
+        loaded.unmount();
+      });
+    },
+  );
+
+  // One screen from its bones to its page, the read answered on request.
+  const cold = async () => {
+    jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    const release = held(true, false);
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue(release);
+    mock.directory.mockResolvedValue(release as never);
+    mockParams.slug = 'penny-wong';
+    const person = c.joinPerson(
+      'penny-wong',
+      release.slugs.data,
+      release.roster.data,
+      release.people.data,
+      manifest,
+    );
+    const profile = c.profileFor(person.canonicalPersonId!, {
+      ...catalogs,
+      interest: c.decodeInterest(pinned('/interests/10678.json')),
+    });
+    let answer!: () => void;
+    mock.person.mockReturnValue(
+      new Promise((resolve) => {
+        answer = () => resolve(result(person));
+      }),
+    );
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        identity: { ...profile.blocks.identity, data: person },
+      },
+    });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    return {
+      r,
+      bones: () =>
+        order(
+          r,
+          (id) => parts.find(([bone]) => id === `person-loading-${bone}`)?.[0],
+        ),
+      page: () =>
+        order(r, (id) => parts.find(([, re]) => re.test(id))?.[0]).filter(
+          (part, _, all) => part !== 'stat-row' || !all.includes('stat-strip'),
+        ),
+      load: () =>
+        act(async () => {
+          answer();
+        }),
+    };
+  };
+
+  test('with no pay catalog in memory the bones stop at the name, then draw the paid post’s line when it is read', async () => {
+    const { r, bones, page, load } = await cold();
+    // Nothing is drawn where a line not yet known could move it.
+    expect(bones()).toEqual(['name']);
+    expect(has(r, 'person-loading-portrait')).toBe(true);
+    await act(async () => {
+      keepCatalog('/pay.json', catalogs.pay);
+    });
+    const drawn = bones();
+    expect(drawn).toContain('role');
+    await load();
+    expect(page()).toEqual(drawn);
+    await act(async () => r.unmount());
+  });
+
+  test('when the wait for pay runs out the bones are drawn without the paid post’s line, and the page never gains it', async () => {
+    const { POST_HOLD_MS } = jest.requireActual('../src/features/Person');
+    const { r, bones, page, load } = await cold();
+    expect(bones()).toEqual(['name']);
+    await act(async () => {
+      await new Promise((done) => setTimeout(done, POST_HOLD_MS + 50));
+    });
+    const drawn = bones();
+    expect(drawn).toContain('party');
+    expect(drawn).not.toContain('role');
+    // The catalog arriving late changes nothing in this view.
+    await act(async () => {
+      keepCatalog('/pay.json', catalogs.pay);
+    });
+    expect(bones()).toEqual(drawn);
+    await load();
+    expect(has(r, 'person-role')).toBe(false);
+    expect(page()).toEqual(drawn);
+    await act(async () => r.unmount());
+  });
+
+  test('with the pay catalog in memory the bones hold the paid post’s line too', async () => {
+    keepCatalog('/pay.json', catalogs.pay);
+    const { pending, loaded, bones, page } = await pair(held(true, false));
+    expect(page).toContain('role');
+    expect(bones).toEqual(page);
+    // The page's line as it is handed to the text component.
+    expect(words(pending, 'person-loading-role').text).toBe(
+      loaded.root.findAll(
+        (n) =>
+          n.props.testID === 'person-role' &&
+          typeof n.props.children === 'string',
+      )[0]!.props.children,
+    );
+    await act(async () => {
+      pending.unmount();
+      loaded.unmount();
+    });
+  });
+
+  test('a former member’s bones hold the dated line the page draws, one figures row and no seat rows', async () => {
+    const { pending, loaded, former, bones, page } = await pair(
+      held(false, true),
+    );
+    expect(former).toBe(true);
+    expect(page).toContain('role');
+    expect(page).toContain('stat-row');
+    expect(page).not.toContain('seat');
+    expect(bones).toEqual(page);
+    expect(words(pending, 'person-loading-role').text).toBe(
+      host(loaded, 'person-former').props.children,
+    );
+    expect(words(pending, 'person-loading-role').text).toMatch(
+      /^Former .+, 2002 to 2019$/,
+    );
+    await act(async () => {
+      pending.unmount();
+      loaded.unmount();
+    });
+  });
+
+  test('the bones read a person’s header from the directory in memory', async () => {
+    const { profileBones } = jest.requireActual('../src/features/Person');
+    expect(profileBones('penny-wong', null)).toBeNull();
+    expect(profileBones('no-such-person', directory)).toBeNull();
+    const kinds = (bones: { rows: { kind: string }[] }) =>
+      bones.rows.map((row) => row.kind);
+    const sitting = profileBones('penny-wong', directory);
+    expect(sitting).toMatchObject({
+      name: 'Penny Wong',
+      role: null,
+      follow: true,
+      tiles: ['votes', 'interests', 'pay'],
+    });
+    // No official page is held for her in this release, so no row for it.
+    expect(kinds(sitting)).toEqual(['party', 'seat']);
+    expect(kinds(profileBones('penny-wong', held(true, false)))).toEqual([
+      'party',
+      'seat',
+      'official',
+    ]);
+    const gone = profileBones('penny-wong', held(false, true));
+    expect(gone).toMatchObject({ tiles: ['votes'] });
+    expect(kinds(gone)).toEqual(['party']);
+    // With the votes catalog in memory the count is the page's own: a
+    // former member from before the record starts has no figures at all.
+    const noRecords = { ...catalogs.votes!, records: {}, names: {} };
+    expect(
+      profileBones('penny-wong', held(false, true), { votes: noRecords }).tiles,
+    ).toEqual([]);
+    expect(
+      profileBones('penny-wong', held(false, true), { votes: catalogs.votes })
+        .tiles,
+    ).toEqual(['votes']);
+    // A state member: divisions are held for NSW, so one figures row, and
+    // none of the federal register or pay tiles.
+    const state = Object.keys(slugs.slugs).find((slug) => {
+      try {
+        const p = c.joinPerson(slug, slugs, roster, people, manifest);
+        return (
+          p.partyStatus !== 'former' &&
+          [...p.seats, ...(p.rosterRow?.representation ?? [])].some(
+            (s) => s.jurisdiction === 'nsw',
+          )
+        );
+      } catch {
+        return false;
+      }
+    });
+    if (!state) throw new Error('fixture: no sitting NSW member');
+    expect(profileBones(state, directory).tiles).toEqual(['votes']);
+    // A surname stub: no seats and no representation, its parliament only
+    // in the roster row's `states`.
+    const row = c.joinPerson(state, slugs, roster, people, manifest).rosterRow!;
+    const stubbed = {
+      ...directory,
+      roster: result({
+        ...roster,
+        people: roster.people.map((p) =>
+          p === row ? { ...p, representation: [], states: ['nsw'] } : p,
+        ),
+      }),
+    };
+    const stub = c.joinPerson(
+      state,
+      slugs,
+      stubbed.roster.data,
+      people,
+      manifest,
+    );
+    expect(
+      [...stub.seats, ...(stub.rosterRow?.representation ?? [])].some(
+        (s) => s.jurisdiction === 'nsw',
+      ),
+    ).toBe(false);
+    expect(profileBones(state, stubbed).tiles).toEqual(['votes']);
   });
 
   test.each(['votes', 'interests', 'pay'] as const)(
@@ -1487,6 +1963,33 @@ describe('party', () => {
       )
       .map((n) => n.props.testID as string)
       .filter((id, i, all) => all.indexOf(id) === i);
+
+  // The loading state and the loaded page share one Screen. With two, the
+  // second scroll view mounted after the page was on screen, and beside the
+  // Duo's rail UIKit carried it 24 pt past rest as the push ended: the page
+  // was drawn there and then moved (measured in 3 of 6 opens).
+  test('loading and the loaded page are one scroll view, never a second one', async () => {
+    let resolve!: (view: (typeof views)[string]) => void;
+    jest.mocked(runtime.partyPage).mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done as typeof resolve;
+        }) as never,
+    );
+    const r = await party('Labor');
+    const scrollView = () =>
+      r.root.find(
+        (n) => n.type === ScrollView && n.props.testID === 'party-screen',
+      );
+    expect(has(r, 'party-loading')).toBe(true);
+    const loading = scrollView().instance;
+    await act(async () => resolve(views.Labor!));
+    expect(has(r, 'party-loading')).toBe(false);
+    expect(has(r, 'party-end')).toBe(true);
+    // Compared by identity: printing a host instance on failure is not safe.
+    expect(scrollView().instance === loading).toBe(true);
+    await act(async () => r.unmount());
+  });
 
   test('two parties draw the same layout', async () => {
     const labor = await party('Labor');

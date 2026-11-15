@@ -47,9 +47,24 @@ import {
   todayFixture,
 } from './today/launch-fixture';
 import { Masthead, useNow } from './today/Masthead';
+import { WideSearch } from './quick-search/WideSearch';
 import { LearnCard, WithLearnCard } from './learn/LearnCard';
+import { loadLearnSettings } from './learn/settings';
 import { MoreToExplore } from './today/MoreToExplore';
-import { SittingLine, useSittingRead } from './today/SittingLine';
+import {
+  readTodayShape,
+  rememberTodayShape,
+  shapeKey,
+  type TodayShape,
+} from './today/shape-store';
+import {
+  readSavedCollection,
+  SinceLine,
+  useSinceLastVisit,
+  type Collection,
+} from './today/SinceLastVisit';
+import { SittingLine, useSitting } from './today/SittingLine';
+import { readVisit, type Visit } from './today/visit-store';
 import {
   editionInSlot,
   launchCase,
@@ -65,10 +80,17 @@ import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { TodayBody } from './today/TodayBody';
 import { VotesBlock } from './today/VotesBlock';
-import { StateSeatCard, stateSeatFor, YourMPCard } from './today/YourMPCard';
+import {
+  StateSeatCard,
+  stateSeatFor,
+  StateSeatPending,
+  YourMPCard,
+  YourMPPending,
+} from './today/YourMPCard';
 import { useProfilePreload } from './people/profile-preload';
+import { keepCatalog } from '../api/kept-catalogs';
 import { saveChoice } from './your-mp/choice-store';
-import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
+import { savedSeatDirectory, useSavedChoice, useSeat } from './your-mp/useSeat';
 
 /**
  * Runs `effect` each time Today's screen gains focus. Unit tests that render
@@ -88,6 +110,12 @@ interface Launch {
   today: SydneyDate;
   launchCase: LaunchCase;
   invitation: InvitationDates;
+  /** The lead's shape as the last launch left it (shape-store). */
+  shape: TodayShape | null;
+  /** The last visit kept on the device; null on the first ever launch. */
+  visit: Visit | null;
+  /** The collection record saved on the device, or null with none. */
+  collection: Collection | null;
 }
 
 /**
@@ -126,15 +154,33 @@ function useLaunch(day: SydneyDate): Launch | null {
       const declined = fixtureDeclinedAt(fixture, today);
       if (declined !== undefined)
         overrideInvitationDates({ welcomeDeclinedAt: declined });
-      const invitation = await readInvitationDates();
+      // The guide card's setting is read with the dates, so the card is in
+      // the page's first frame and is not inserted above the edition later.
+      const [invitation, shape, visit, collection] = await Promise.all([
+        readInvitationDates(),
+        readTodayShape(),
+        readVisit(),
+        readSavedCollection(),
+        loadLearnSettings().catch(() => undefined),
+      ]);
       if (active)
-        setLaunch({ today, launchCase: launchCase(cached, today), invitation });
+        setLaunch({
+          today,
+          launchCase: launchCase(cached, today),
+          invitation,
+          shape,
+          visit,
+          collection,
+        });
     })().catch(() => {
       if (active)
         setLaunch({
           today: day,
           launchCase: 'C',
           invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
+          shape: null,
+          visit: null,
+          collection: null,
         });
     });
     return () => {
@@ -181,8 +227,13 @@ function useLaunch(day: SydneyDate): Launch | null {
     : launch;
 }
 
-/** E2E captures only: the seat `OPAXSeat` names, chosen once per launch. */
-function useSeatFixture(seat: ReturnType<typeof useSeat>) {
+/**
+ * E2E captures only: the seat `OPAXSeat` names, chosen once per launch.
+ * Answers whether a House seat is still on its way from the launch
+ * arguments, so a capture of a first launch lays the page out for the seat
+ * it is about to have, as a launch with the seat saved does.
+ */
+function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
   const done = useRef(false);
   useEffect(() => {
     const wanted = todayFixture().seat;
@@ -231,6 +282,11 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
       if (district) await seat.chooseState(district);
     })().catch(() => undefined);
   }, [seat]);
+  const wanted = todayFixture().seat;
+  return (
+    (wanted === 'federal' || wanted === 'federal+state') &&
+    (seat.status === 'loading' || seat.status === 'none')
+  );
 }
 
 /**
@@ -240,6 +296,14 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
  * and Ask; then a quiet foot. The order is decided once per launch from the
  * disk, so nothing moves above content the reader can see; each block loads
  * on its own, keeps its saved copy and ends in its own dated line.
+ *
+ * The first frame has the loaded page's layout. The order needs only what
+ * the disk holds (the launch read and the saved choice), so the page is
+ * drawn in its order while the directory is still on its way, with Your MP's
+ * skeleton in the tile's place; the launch cover lifts once that order is
+ * known. Until then the body draws nothing, never a stand-in of another
+ * shape (it was the edition's outline, and the edition then landed about
+ * 450 pt lower, under Your MP and the guide card).
  */
 export default function Today() {
   useTodayRendered();
@@ -251,12 +315,14 @@ export default function Today() {
   const day = sydneyDay(now);
   const launch = useLaunch(day);
   const seat = useSeat();
-  useSeatFixture(seat);
+  const savedChoice = useSavedChoice();
+  const seatArriving = useSeatFixture(seat);
   const directory = savedSeatDirectory();
   const [attempt, setAttempt] = useState(0);
   const [pulled, setPulled] = useState<number | null>(null);
   const reports = useTodayReports();
   const edition = useEditionRead(attempt);
+  const [laidOut, setLaidOut] = useState(false);
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
   const refresh = useCallback(() => {
     setAttempt((n) => {
@@ -279,16 +345,84 @@ export default function Today() {
   useScreenReady('/', ready);
   // Once the body is drawn, the profile catalogs are read from their saved
   // copies in idle time while Today has focus (PF2).
-  useProfilePreload(apiClient, ready, useScreenFocus);
+  useProfilePreload(apiClient, ready, useScreenFocus, keepCatalog);
 
-  const order = launch
-    ? todayOrder({
-        seat: !!home,
-        invitation: launch.invitation,
-        launchCase: launch.launchCase,
-        today: launch.today,
-      })
-    : null;
+  // The lead as the last launch left it for this same saved choice. A
+  // choice kept from 1.0 can name a Senate or a state seat, which is not a
+  // House seat once the directory has migrated it: the kept shape says so
+  // before the directory does, so the page is not reordered each launch.
+  const kept =
+    savedChoice && launch?.shape?.key === shapeKey(savedChoice)
+      ? launch.shape
+      : null;
+  // Whether the page leads with Your MP: the seat once the directory has
+  // answered, and until then the kept shape, or with none the choice as the
+  // device saved it (null while the disk is being read).
+  const seated = seatArriving
+    ? true
+    : seat.status !== 'loading'
+      ? !!home
+      : savedChoice === undefined
+        ? null
+        : (kept?.house ?? !!savedChoice?.seatId);
+  // The state seat card's place is held while the directory is read.
+  const stateSeatPending = seat.status === 'loading' && !!kept?.state;
+  const stateSeatDrawn =
+    !!home &&
+    !!directory &&
+    !!stateSeatFor(directory, choice?.stateSeatIds ?? [], launch?.today ?? day);
+  const settledKey =
+    (seat.status === 'chosen' || seat.status === 'none') &&
+    directory &&
+    // No saved choice needs no shape: the page has no lead to predict.
+    savedChoice
+      ? shapeKey(savedChoice)
+      : null;
+  const launchShape = launch?.shape;
+  const launched = !!launch;
+  const leads = !!home;
+  useEffect(() => {
+    if (settledKey === null || !launched) return;
+    if (
+      launchShape?.key === settledKey &&
+      launchShape.house === leads &&
+      launchShape.state === stateSeatDrawn
+    )
+      return;
+    void rememberTodayShape({
+      key: settledKey,
+      house: leads,
+      state: stateSeatDrawn,
+    });
+  }, [settledKey, leads, stateSeatDrawn, launched, launchShape]);
+  const order =
+    launch && seated !== null
+      ? todayOrder({
+          seat: seated,
+          invitation: launch.invitation,
+          launchCase: launch.launchCase,
+          today: launch.today,
+        })
+      : null;
+  const calendar = useSitting(attempt);
+  const sitting = calendar.read;
+  // A held, empty sitting line is given back while Today is out of view
+  // (another page over it, another tab), where nothing is seen to move.
+  const [visit, setVisit] = useState(0);
+  useScreenFocus(useCallback(() => () => setVisit((n) => n + 1), []));
+  // "Since your last visit": held from the first frame or not at all, and
+  // once drawn it stays for the life of the screen.
+  const since = useSinceLastVisit(
+    launch ? launch.visit : undefined,
+    launch?.collection ?? null,
+    now,
+  );
+  // The cover lifts on the page in its order, not on an empty body, and
+  // with the saved sitting line (or its held place) already under the date.
+  const shaped = order !== null && calendar.settled;
+  useEffect(() => {
+    if (laidOut && shaped) releaseSplash('today');
+  }, [laidOut, shaped]);
   const today = launch?.today ?? day;
   const tier =
     edition.block?.status === 'ready' && edition.block.data
@@ -316,7 +450,6 @@ export default function Today() {
     wasOffline.current = offline;
     if (back && nothingSavedAt === attempt) retry();
   }, [offline, nothingSavedAt, attempt, retry]);
-  const sitting = useSittingRead(attempt);
 
   const electionSavedAt =
     election.record &&
@@ -351,8 +484,19 @@ export default function Today() {
       case 'vic-election':
         return <VicElectionBlock key={name} attempt={attempt} />;
       case 'your-mp':
-        if (!home || !directory) return null;
         if (nothingSaved) return null;
+        // The directory is on its way: the tile's skeleton holds its place,
+        // with the guide card under it as on the loaded page.
+        if (!home || !directory)
+          return seat.status === 'loading' || seatArriving ? (
+            <View key={name} style={styles.seats}>
+              <SurfaceGrid testID="today-seat-grid">
+                <YourMPPending />
+                {stateSeatPending ? <StateSeatPending /> : null}
+              </SurfaceGrid>
+              <LearnCard />
+            </View>
+          ) : null;
         return (
           <View key={name} style={styles.seats}>
             <SurfaceGrid testID="today-seat-grid">
@@ -383,12 +527,10 @@ export default function Today() {
       case 'edition':
       case 'edition-late': {
         if (nothingSaved) return null;
-        // Case C keeps the slot's skeleton until the read answers.
-        if (
-          name === 'edition' &&
-          order.launchCase === 'C' &&
-          edition.block === null
-        )
+        // The top slot keeps its skeleton until a read answers (cases A
+        // and C; case B has no top slot), so the edition is never inserted
+        // above the blocks under it.
+        if (name === 'edition' && edition.block === null)
           return (
             <View key={name} testID="today-edition-loading">
               <EditionSkeleton />
@@ -403,6 +545,7 @@ export default function Today() {
             edition={edition.block}
             tier={tier ?? undefined}
             today={today}
+            held={directory}
             // The late slot sits below the fold: its plate is drawn
             // finished and leaves the timeline's one draw for the story.
             still={name === 'edition-late'}
@@ -475,7 +618,8 @@ export default function Today() {
   return (
     <Screen
       testID="today-screen"
-      onLayout={() => releaseSplash('today')}
+      artUnderTitle
+      onLayout={() => setLaidOut(true)}
       column="wide"
       grouped
       clampScrollOnContentChange
@@ -489,8 +633,17 @@ export default function Today() {
     >
       <Masthead
         now={now}
+        search={<WideSearch />}
         offlineSavedAt={offlineAt ?? null}
-        sitting={<SittingLine now={now} sitting={sitting} />}
+        sitting={
+          <SittingLine
+            key={visit}
+            now={now}
+            sitting={sitting}
+            reserve={calendar.reserve}
+          />
+        }
+        since={<SinceLine since={since} />}
         // From the first frame, neutral until the seat read answers, so the
         // map's clearance never moves the date (sweep 3, item 1).
         mark={
@@ -503,12 +656,10 @@ export default function Today() {
         }
       />
       <TodayReports value={reports}>
-        {order && ready ? (
+        {order ? (
           <TodayBody order={order} slot={slot} />
         ) : (
-          <View testID="today-launching">
-            <EditionSkeleton />
-          </View>
+          <View testID="today-launching" />
         )}
       </TodayReports>
     </Screen>
@@ -538,6 +689,17 @@ function useEditionRead(attempt: number) {
       }));
       void rememberEdition(block);
     };
+    // The copy the device saved answers first, with no request, so the
+    // edition is in the first frame; it is not kept again, and the read
+    // below replaces it.
+    if (attempt === 0)
+      void Promise.resolve()
+        .then(() => catalogs.todayEditionSaved())
+        .then((block) => {
+          if (active && block)
+            setState((shown) => (shown.block ? shown : { ...shown, block }));
+        })
+        .catch(() => undefined);
     void catalogs
       .todayEdition(attempt > 0)
       .then((block) => {

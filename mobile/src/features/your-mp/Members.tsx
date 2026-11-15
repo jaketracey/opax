@@ -200,7 +200,7 @@ export default function Members() {
         }
         testID="members-source"
       />
-      {victoria ? <PageFoot variant="authorised" /> : null}
+      <PageFoot variant="authorised" jurisdiction={seat.jurisdiction} />
     </Screen>
   );
 }

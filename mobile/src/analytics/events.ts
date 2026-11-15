@@ -177,8 +177,75 @@ export const searchScopes = [
   'agencies',
 ] as const;
 
+/**
+ * A data block that failed to load or decoded with rows missing: which one,
+ * from this fixed list. `read_*` is a catalog file family (sections.ts maps
+ * the request path to it; the path never leaves the phone), `block_*` a
+ * block of a loaded page, `page` a whole page's read. Never an id, a name,
+ * a title, a URL or error text.
+ */
+export const failedSections = [
+  'page',
+  'read_roster',
+  'read_slugs',
+  'read_manifest',
+  'read_people',
+  'read_electorates',
+  'read_bills',
+  'read_votes',
+  'read_money',
+  'read_grants',
+  'read_interests',
+  'read_expenses',
+  'read_pay',
+  'read_discovery',
+  'read_evidence',
+  'read_agencies',
+  'read_photos',
+  'read_years',
+  'read_research',
+  'read_search_catalog',
+  'read_reports',
+  'read_search',
+  'read_record',
+  'read_api',
+  'read_other',
+  'block_members',
+  'block_past',
+  'block_receipts',
+  'block_associated',
+  'block_divisions',
+  'block_people',
+  'block_electorates',
+  'block_bills',
+  'block_votes',
+  'block_speeches',
+  'block_interests',
+  'block_expenses',
+  'block_pay',
+  'block_identity',
+  'block_seat',
+  'block_other',
+] as const;
+export type FailedSection = (typeof failedSections)[number];
+/** How it failed: no connection or a timeout, the HTTP status class, a body
+ * that could not be read, or one read with rows dropped. */
+export const sectionFailureKinds = [
+  'network',
+  '4xx',
+  '5xx',
+  'decode',
+  'partial',
+] as const;
+export type SectionFailureKind = (typeof sectionFailureKinds)[number];
+
 /** Custom events: the website's names where they match, with app properties. */
 export const eventFields = {
+  opax_section_failed: {
+    section: oneOf(...failedSections),
+    kind: oneOf(...sectionFailureKinds),
+    route_pattern: routeErrorPattern,
+  },
   opax_route_error: {
     error_class: errorClass,
     route_pattern: routeErrorPattern,
@@ -441,6 +508,7 @@ export function scrubEvent<T extends CaptureEvent>(
   // screen property, which is irrelevant here and may contain a pathname.
   if (
     captured.event === 'opax_route_error' ||
+    captured.event === 'opax_section_failed' ||
     captured.event === 'opax_screen_ready' ||
     captured.event === 'opax_app_start'
   )

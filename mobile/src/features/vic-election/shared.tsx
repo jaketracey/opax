@@ -119,6 +119,7 @@ export function ElectionFoot({ o, testID }: { o?: Overview; testID: string }) {
   return (
     <PageFoot
       variant="authorised"
+      jurisdiction="vic"
       line={o?.authorisation}
       corrections={o?.corrections}
       testID={testID}

@@ -10,6 +10,7 @@ import { hasSourcePreview, isProduction } from '../../design/environment';
 import { communityHome } from '../../features/community/entry';
 import { voiceLinked } from '../../voice/linked';
 import { screen, sheetOptions } from './screen';
+import { sheetSnapListeners } from '../sheet-snap';
 
 export const rootSettings = { anchor: '(tabs)' };
 
@@ -127,15 +128,21 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
       // the modal beneath a route sheet without subscribing in every caller.
       listeners: ({
         navigation,
+        route,
       }: {
         navigation: { getState: () => NavigationState };
+        route: { key: string };
       }) => {
         const update = () => {
           const state = navigation.getState();
           const route = state.routes[state.index];
           if (route) setSheetSegments([route.name]);
         };
-        return { focus: update, state: update };
+        return {
+          focus: update,
+          state: update,
+          ...sheetSnapListeners({ route }),
+        };
       },
     }),
   );

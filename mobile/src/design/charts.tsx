@@ -2,6 +2,7 @@ import { Pressable } from './pressable';
 import { Rect } from '@shopify/react-native-skia';
 import { useState } from 'react';
 import {
+  Animated,
   StyleSheet,
   View,
   useColorScheme,
@@ -26,6 +27,7 @@ import {
   type DateInput,
 } from './format';
 import { dark, darkHighContrast, light, lightHighContrast } from './palette';
+import { useSettle } from './settle';
 import { SourceLine } from './source';
 import { Text } from './text';
 import {
@@ -128,12 +130,17 @@ function useTextMeasurements() {
   return { sizes, measure };
 }
 
-/** A neutral split, with counts beside the bar or below it at AX sizes. */
+/**
+ * A neutral split, with counts beside the bar or below it at AX sizes. With
+ * a `settleKey` (the division's key) the bar fills to the ayes' share once,
+ * the first time that division is drawn; the counts are final throughout.
+ */
 export function VoteSplit({
   ayes,
   noes,
   countsStyle,
   onBand = false,
+  settleKey,
   dateRange,
   citation,
 }: ChartProvenance & {
@@ -141,9 +148,15 @@ export function VoteSplit({
   noes: number;
   countsStyle: 'votes' | 'ayesNoes';
   onBand?: boolean;
+  settleKey?: string;
 }) {
   const large = useAccessibilitySize();
+  const settle = useSettle(settleKey ? `vote:${settleKey}` : null);
   const total = Math.max(0, ayes) + Math.max(0, noes);
+  const ayesBar = {
+    width: `${total ? (Math.max(0, ayes) / total) * 100 : 0}%`,
+    backgroundColor: onBand ? colors.onBand : colors.ink,
+  } as const;
   const words =
     countsStyle === 'votes'
       ? `${formatCount(ayes)} votes to ${formatCount(noes)}`
@@ -164,12 +177,17 @@ export function VoteSplit({
         importantForAccessibility="no-hide-descendants"
         style={[styles.split, large ? styles.splitStacked : styles.splitInline]}
       >
-        <View
-          style={{
-            width: `${total ? (Math.max(0, ayes) / total) * 100 : 0}%`,
-            backgroundColor: onBand ? colors.onBand : colors.ink,
-          }}
-        />
+        {settle ? (
+          <Animated.View
+            testID="vote-split-settle"
+            style={[
+              ayesBar,
+              { transform: [{ scaleX: settle }], transformOrigin: 'left' },
+            ]}
+          />
+        ) : (
+          <View style={ayesBar} />
+        )}
         <View
           style={{
             flex: 1,
@@ -831,7 +849,9 @@ function BarSeriesContent({
                 ];
                 return onSelect ? (
                   <Pressable
-                    feedback="wash"
+                    // An empty target laid over the drawn bar: a wash here
+                    // would cover the bar it selects. The selection redraws.
+                    feedback="none"
                     key={index}
                     {...a11y}
                     accessibilityRole="button"

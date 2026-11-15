@@ -33,6 +33,7 @@ import {
   fyRange,
   matches,
   moneyBar,
+  noMoneyBar,
   moneyCitation,
   readableDates,
   recordSource,
@@ -425,7 +426,10 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <>
-      <RouteOptions options={{ title, ...moneyBar({ name: title }) }} />
+      {/* A seat's grants have no page of their own to share or open. */}
+      <RouteOptions
+        options={{ title, ...moneyBar({ name: title }), ...noMoneyBar() }}
+      />
       <MoneyList
         onScroll={barTitle.onScroll}
         id="grants-seat"

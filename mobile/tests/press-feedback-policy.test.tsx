@@ -19,6 +19,7 @@ import {
 } from '../src/design/pressable';
 import { SurfaceContext } from '../src/design/row-padding';
 import { colors } from '../src/design/tokens';
+import { ScopeChips } from '../src/features/search/ScopeChips';
 
 const originalOS = Platform.OS;
 afterEach(() => {
@@ -212,4 +213,72 @@ test('every touch surface answers a press, with the shared timing', () => {
   expect(raw).toEqual([]);
   // Nothing stays listed once its lane has landed and the file is clean.
   expect(settled).toEqual([]);
+});
+
+describe('the wash only where it can be seen', () => {
+  const read = (path: string) => readFileSync(join(root, path), 'utf8');
+  test('no press target on the black photo ground takes the paper wash', () => {
+    // Release builds are light, so the wash is a paper tone: behind the
+    // white text of the photo viewer and a failed picture it hid the text.
+    for (const path of [
+      'features/explore/PhotoViewer.tsx',
+      'features/explore/Picture.tsx',
+    ]) {
+      const code = read(path);
+      expect(code).toMatch(/colors\.onBand|onBlack/);
+      expect({ path, wash: /feedback="wash"/.test(code) }).toEqual({
+        path,
+        wash: false,
+      });
+    }
+  });
+  test('a target laid over a drawing takes no wash: it would cover what it selects', () => {
+    const charts = read('design/charts.tsx');
+    const target = charts.slice(
+      charts.indexOf('return onSelect ? ('),
+      charts.indexOf('accessible style={style} />'),
+    );
+    expect(target).toMatch(/styles\.barTarget|style=\{style\}/);
+    expect(target).toMatch(/feedback="none"/);
+    expect(target).not.toMatch(/feedback="wash"/);
+  });
+  const pressedGround = (
+    r: ReturnType<typeof render>,
+    testID: string,
+    pressed: boolean,
+  ) => {
+    const node = r.UNSAFE_root.find(
+      (n) =>
+        n.type === (NativePressable as unknown as { type: unknown }).type &&
+        n.props.testID === testID,
+    );
+    return StyleSheet.flatten(node.props.style({ pressed })).backgroundColor;
+  };
+  test('a scope chip shows a press, and the selected chip keeps its navy wash under a finger', () => {
+    Platform.OS = 'ios';
+    const r = render(
+      <ScopeChips
+        options={[
+          { value: 'all', label: 'All', testID: 'chip-all' },
+          { value: 'bills', label: 'Bills', testID: 'chip-bills' },
+        ]}
+        value="bills"
+        onChange={() => undefined}
+        label="Search scope"
+      />,
+    );
+    expect(pressedGround(r, 'chip-all', false)).toBe(colors.paper);
+    expect(pressedGround(r, 'chip-all', true)).toBe(colors.sunken);
+    expect(pressedGround(r, 'chip-bills', false)).toBe(colors.navyWash);
+    expect(pressedGround(r, 'chip-bills', true)).toBe(colors.navyWash);
+  });
+  test("Ask's option chips are filled with the wash colour, so they press to the next tone", () => {
+    const dock = read('features/ask/AskDock.tsx');
+    expect(dock).toMatch(
+      /chipPressed: \{ backgroundColor: colors\.dividerSubtle \}/,
+    );
+    expect(dock).toMatch(/backgroundColor: colors\.sunken/);
+    expect(dock).not.toMatch(/feedback="wash"[^>]*style=\{styles\.chip\}/s);
+    expect(colors.dividerSubtle).not.toEqual(colors.sunken);
+  });
 });

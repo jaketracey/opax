@@ -78,6 +78,9 @@ function initialise() {
       const choice = await loadChoice();
       // A save while the initial read is in flight wins over that read.
       if (rawChoice === undefined) rawChoice = choice;
+      // Told at once: Today lays its page out from the saved choice while
+      // the directory is still being read.
+      emit();
       directory = await catalogs.directory();
       publish(rawChoice);
     } catch {
@@ -204,6 +207,17 @@ export function useSeat(): SeatState & SeatActions {
   const state = useSyncExternalStore(subscribe, () => snapshot);
   useEffect(initialise, []);
   return { ...state, ...actions };
+}
+/**
+ * The choice as the device saved it, before the directory answers (and
+ * before any read migration): undefined until the disk has been read, null
+ * for none. Today orders its page by it, so the first frame already has the
+ * loaded page's layout while the directory is on its way.
+ */
+export function useSavedChoice(): SeatChoice | null | undefined {
+  const choice = useSyncExternalStore(subscribe, () => rawChoice);
+  useEffect(initialise, []);
+  return choice;
 }
 /** Shared directory from useSeat's initial read, with no further request. */
 export function savedSeatDirectory(): Directory | null {

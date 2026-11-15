@@ -35,7 +35,13 @@ import {
 } from './Connections';
 import { money } from './runtime';
 import { organisationHref } from './routes';
-import { MoneyStatus, moneyBar, readableDates, recordSource } from './parts';
+import {
+  MoneyStatus,
+  moneyBar,
+  noMoneyBar,
+  readableDates,
+  recordSource,
+} from './parts';
 import type { Href } from 'expo-router';
 
 /** The excerpt's publisher in words: "Hansard", "Press release". */
@@ -112,7 +118,7 @@ export default function Connection() {
         stableItems
         options={{
           title,
-          ...(missing ? {} : moneyBar({ name: title, path })),
+          ...(missing ? noMoneyBar() : moneyBar({ name: title, path })),
         }}
       />
       <Screen

@@ -88,6 +88,12 @@ export default function Layout() {
     // plays (launch/played.ts). The cover draws either way; motion waits.
     void decideLaunchSequence();
     startAnalytics();
+    // Recent searches are read from the device now, so Search's first frame
+    // already has the Recent group in its place.
+    const { recentSearches } =
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('../features/search/recent') as typeof import('../features/search/recent');
+    void recentSearches.load();
   }, []);
   // The launch decision, once (shell.md 3, first-launch 4.1 L2 and 4.5): the
   // splash holds while it is pending. A plain first launch presents the full

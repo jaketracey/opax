@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { Screen } from '../../design/primitives';
 import { searchTabRole, useFocusRequest } from '../../design/keyboard';
 import { useListSearchBar } from '../../design/search-bar';
@@ -43,6 +44,20 @@ import { useSearchTabReset } from './tab-reset';
 import { useAndroidSearchKeyboard } from './useAndroidSearchKeyboard';
 
 export const SEARCH_PLACEHOLDER = 'People, bills, topics and more';
+/**
+ * iOS at accessibility sizes: the tab bar's resting search pill is a fixed
+ * 48 pt control that draws its prompt at the bar's capped size (21 pt) in
+ * about 238 pt, and the full prompt needs 272 pt, so it ended in an ellipsis
+ * (iOS 26.3, AX3). The pill is UIKit's own stand-in for the field, so the
+ * field's placeholder fitting never reaches it. The shorter prompt fits.
+ */
+export const SEARCH_PLACEHOLDER_SHORT = 'People, bills, topics';
+export function useSearchPlaceholder() {
+  const large = useAccessibilitySize();
+  return Platform.OS === 'ios' && large
+    ? SEARCH_PLACEHOLDER_SHORT
+    : SEARCH_PLACEHOLDER;
+}
 const OWNER = 'search-root';
 
 /** Where the field sits: the tab bar's search role on iOS 26, else the bar. */
@@ -99,7 +114,8 @@ function SearchContent({
   // The same query submitted again keeps its results up; this tells them to
   // report their count again, so Recent moves it to the top.
   const [submission, setSubmission] = useState(0);
-  const { sources, roster, failed, refreshing, retry } = useSearchSources();
+  const { sources, roster, failed, asked, refreshing, retry } =
+    useSearchSources();
   const signedIn = !!useAccount().status?.signedIn;
   const openAsk = useOpenAsk();
   const askNow = useAskNow();
@@ -175,8 +191,9 @@ function SearchContent({
       cancelling.current = false;
     });
   }
+  const placeholder = useSearchPlaceholder();
   const search = useListSearchBar({
-    placeholder: SEARCH_PLACEHOLDER,
+    placeholder,
     onChangeText: type,
     onSearchButtonPress: (value) => submit(value, 'all'),
     onCancelButtonPress: cancel,
@@ -230,7 +247,9 @@ function SearchContent({
     applied.current = key;
     const scope_ = isScope(params.scope) ? params.scope : 'all';
     controls.setFilters(filtersFromParams(params));
-    submit(params.q!, scope_, true);
+    // Typed into Today's wide field (`typed`): submitted as typed here, so
+    // it enters Recent like any other; a link's query never does.
+    submit(capQuery(params.q), scope_, params.typed !== '1');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
@@ -302,7 +321,7 @@ function SearchContent({
           <SearchField
             inputRef={input}
             value={text}
-            placeholder={SEARCH_PLACEHOLDER}
+            placeholder={placeholder}
             onChangeText={type}
             onSubmitEditing={() => submit(text, 'all')}
             testID="search-input"
@@ -313,6 +332,8 @@ function SearchContent({
             onRecent={(item: RecentSearch) => submit(item.q, item.scope)}
             onTry={(words) => submit(words, 'all')}
             bills={sources?.bills ?? null}
+            billsSettled={!!sources || failed}
+            visited={asked}
           />
         ) : phase === 'typing' ? (
           <SearchSuggestions

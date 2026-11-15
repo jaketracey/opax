@@ -31,6 +31,7 @@ import {
   MoneyStatus,
   fy,
   moneyBar,
+  noMoneyBar,
   moneyCitation,
   readableDates,
   recordSource,
@@ -736,7 +737,11 @@ function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
         stableItems
         options={{
           title: name,
-          ...(item?.path ? moneyBar({ name, path: item.path }) : {}),
+          ...(item?.path
+            ? moneyBar({ name, path: item.path })
+            : item
+              ? noMoneyBar()
+              : {}),
         }}
       />
       <Screen

@@ -36,7 +36,30 @@ export interface RecordResult<T> {
   asOf: string | null;
 }
 type Decoder<T> = (value: unknown) => T;
+interface GetOptions {
+  absence?: boolean;
+  background?: boolean;
+  signal?: AbortSignal;
+  retries?: number;
+  timeoutMs?: number;
+  summaryStream?: boolean;
+  /**
+   * False for one screen's bulk read of many files (Votes in parliament
+   * reads every bill with a counted vote, about a thousand): the answer
+   * is used and a saved copy still serves it, but it is not written to
+   * the bounded offline cache. Each write is serialised behind the last
+   * (two file writes a record), and a thousand of them both held the
+   * screen for seconds and evicted every other saved catalog.
+   */
+  persist?: boolean;
+}
 interface ClientOptions {
+  /**
+   * Told of each `get` that failed: the error it threw, the error a saved
+   * copy was served in place of, or 'partial' when rows were dropped.
+   * Diagnostics only (analytics/sections.ts).
+   */
+  onFailure?: (path: string, failure: unknown) => void;
   origin: string;
   version: string;
   build: string;
@@ -123,6 +146,26 @@ export class ApiClient {
     } catch {
       return null;
     }
+  }
+  /**
+   * The paths with a copy saved on this device, newest validation first.
+   * Lists the cache's own index (no body read, no network, nothing
+   * written); `saved` then reads and validates one of them.
+   */
+  async savedPaths(): Promise<
+    readonly { path: string; validatedAt: number }[]
+  > {
+    const origin = new URL(this.options.origin).origin;
+    return (await this.options.cache.saved()).flatMap((entry) =>
+      entry.url.startsWith(`${origin}/`)
+        ? [
+            {
+              path: entry.url.slice(origin.length),
+              validatedAt: entry.validatedAt,
+            },
+          ]
+        : [],
+    );
   }
   forget(path: string): Promise<void> {
     return this.options.cache.remove(allowedURL(this.options.origin, path));
@@ -257,6 +300,29 @@ export class ApiClient {
     path: string,
     decode: Decoder<T>,
     force = false,
+    options: GetOptions = {},
+  ): Promise<RecordResult<T>> {
+    try {
+      const record = await this.read(path, decode, force, options);
+      // A read that dropped rows: the reader may see nothing wrong.
+      if (record.partial) this.failed(path, 'partial');
+      return record;
+    } catch (error) {
+      this.failed(path, error);
+      throw error;
+    }
+  }
+  private failed(path: string, failure: unknown) {
+    try {
+      this.options.onFailure?.(path, failure);
+    } catch {
+      /* A listener never changes a read's outcome. */
+    }
+  }
+  private async read<T>(
+    path: string,
+    decode: Decoder<T>,
+    force = false,
     {
       absence = false,
       background = false,
@@ -264,14 +330,8 @@ export class ApiClient {
       retries = this.options.retries ?? 2,
       timeoutMs = this.options.timeoutMs ?? 8000,
       summaryStream = false,
-    }: {
-      absence?: boolean;
-      background?: boolean;
-      signal?: AbortSignal;
-      retries?: number;
-      timeoutMs?: number;
-      summaryStream?: boolean;
-    } = {},
+      persist = true,
+    }: GetOptions = {},
   ): Promise<RecordResult<T>> {
     if (path.startsWith('/api/community/'))
       throw new ApiError(
@@ -497,6 +557,7 @@ export class ApiClient {
             (response.status === 304 ? cached?.etag : undefined),
         };
         cancelled();
+        if (!persist) return result(entry, false);
         // Persistence failure must not turn a successful network read into an error.
         const retained = await this.options.cache
           .put(entry, {
@@ -566,7 +627,11 @@ export class ApiClient {
         // body this reader cannot use.
       }
     }
-    if (cached)
+    if (cached) {
+      // The read failed and the saved copy stands in for it. The reader sees
+      // the record, so this is the only sign of the failure: an outage on a
+      // file most phones have saved would otherwise never be reported.
+      this.failed(path, lastError);
       return {
         ...result(cached, true),
         ...(lastError.code === 'invalid-data'
@@ -575,6 +640,7 @@ export class ApiClient {
             ? {}
             : { staleReason: 'unavailable' as const }),
       };
+    }
     throw lastError;
   }
   /** Explicit submission only. Bounded Ask recovery, never a disk cache. */

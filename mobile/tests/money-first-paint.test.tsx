@@ -1,16 +1,30 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { AccessibilityInfo, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import * as ReactNative from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { ApiError } from '../src/api/errors';
 import { apiClient } from '../src/api/runtime';
-import { SegmentedPicker } from '../src/design/primitives';
+import {
+  ContentUnavailable,
+  IconButton,
+  SegmentedPicker,
+} from '../src/design/primitives';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { forgetMoneyGraphs } from '../src/features/money/lookup';
+import { BAND_HOLD } from '../src/features/money/map/band';
+import * as measure from '../src/features/money/map/measure';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
+import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
 import MoneyScreen, {
   moneySummary,
   moneySummaryStandIn,
@@ -280,11 +294,12 @@ describe('the first frame', () => {
   });
 
   test('the controls do not move when the card reports its height', async () => {
+    heldRead();
     const r = await render();
     const before = mapFrame(r.root).controls;
-    const top = r.root
-      .findAllByType(View)
-      .find((node) => node.props.onLayout && flat(node).paddingTop === 8)!;
+    // The card's host is the nearest view above it that reports a layout.
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (!top.props.onLayout) top = top.parent!;
     act(() => top.props.onLayout({ nativeEvent: { layout: { height: 212 } } }));
     expect(mapFrame(r.root).controls).toEqual(before);
     await act(async () => r.unmount());
@@ -300,6 +315,7 @@ describe('the first frame', () => {
       expect(space).toBeDefined();
       expect(flat(space).opacity).toBe(0);
       expect(space.props.accessibilityElementsHidden).toBe(true);
+      expect(space.props.importantForAccessibility).toBe('no-hide-descendants');
       expect(byTestID(r.root, 'money-view-summary')).toBeUndefined();
       await act(async () => read.answer());
       expect(byTestID(r.root, 'money-view-summary')).toBeDefined();
@@ -334,6 +350,291 @@ describe('the first frame', () => {
     expect(options.headerTitle).toBe('Money map');
     expect(r.root.findAllByType(MoneyMapPanel)).toHaveLength(0);
     await act(async () => r.unmount());
+  });
+
+  test('an error in the Map’s frame can be pulled to refresh, and offline has Try again', async () => {
+    const read = heldRead();
+    const r = await render();
+    await act(async () => read.fail(new ApiError('offline', 'Offline')));
+    const calls = jest.mocked(apiClient.get).mock.calls.length;
+    const pull = byTestID(r.root, 'money-map-unavailable').props.refreshControl;
+    expect(pull.props.refreshing).toBe(false);
+    await act(async () => pull.props.onRefresh());
+    expect(jest.mocked(apiClient.get).mock.calls.length).toBe(calls + 1);
+    const again = r.root
+      .findAllByType(ContentUnavailable)
+      .find((x) => x.props.testID === 'money-error')!.props.action;
+    expect(again.label).toBe('Try again');
+    await act(async () => again.onPress());
+    expect(jest.mocked(apiClient.get).mock.calls.length).toBe(calls + 2);
+    await act(async () => r.unmount());
+  });
+
+  test.each(['map', 'list'] as const)(
+    'no place is kept for a summary after an error (%s)',
+    async (view) => {
+      mockReader = view === 'list';
+      const read = heldRead();
+      const r = await render();
+      expect(byTestID(r.root, 'money-view-summary-space')).toBeDefined();
+      await act(async () => read.fail(new ApiError('offline', 'Offline')));
+      expect(byTestID(r.root, 'money-error')).toBeDefined();
+      expect(byTestID(r.root, 'money-view-summary-space')).toBeUndefined();
+      await act(async () => r.unmount());
+    },
+  );
+});
+
+describe('the band under the panel', () => {
+  const stageLayout = { nativeEvent: { layout: { width: 402, height: 760 } } };
+  const inset = (height: number) => ({ nativeEvent: { layout: { height } } });
+  const band = (root: ReactTestInstance) =>
+    flat(byTestID(root, 'money-map-band-space')).height;
+  afterEach(() => jest.useRealTimers());
+
+  test('a safe area that drops for a few frames at the end of a push does not move the panel; a lasting drop is followed', async () => {
+    jest.useFakeTimers();
+    const r = await render();
+    const probe = () => byTestID(r.root, 'money-map-band');
+    // The stage and the probe report in one batch, the probe first: the
+    // band owes nothing to the stage's measured height.
+    act(() => {
+      probe().props.onLayout(inset(96));
+      byTestID(r.root, 'money-screen').props.onLayout(stageLayout);
+    });
+    expect(band(r.root)).toBe(96);
+    // The end of the push: the tab bar's share is gone, then back.
+    act(() => probe().props.onLayout(inset(34)));
+    act(() => {
+      jest.advanceTimersByTime(BAND_HOLD - 50);
+    });
+    expect(band(r.root)).toBe(96);
+    act(() => probe().props.onLayout(inset(96)));
+    act(() => {
+      jest.advanceTimersByTime(BAND_HOLD * 2);
+    });
+    expect(band(r.root)).toBe(96);
+    // A drop that holds (a rotation, a tab bar that minimises) is followed.
+    act(() => probe().props.onLayout(inset(34)));
+    act(() => {
+      jest.advanceTimersByTime(BAND_HOLD);
+    });
+    expect(band(r.root)).toBe(34);
+    // A rise is taken at once.
+    act(() => probe().props.onLayout(inset(96)));
+    expect(band(r.root)).toBe(96);
+    // The chrome takes no inset from the system on iOS.
+    expect(byTestID(r.root, 'money-map-chrome').props.edges).toEqual([]);
+    await act(async () => r.unmount());
+  });
+
+  test('Android keeps the system inset on its chrome: no probe, no spacer', async () => {
+    const os = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      const r = await render();
+      expect(byTestID(r.root, 'money-map-band')).toBeUndefined();
+      expect(byTestID(r.root, 'money-map-band-space')).toBeUndefined();
+      expect(byTestID(r.root, 'money-map-chrome').props.edges).toEqual([
+        'bottom',
+      ]);
+      await act(async () => r.unmount());
+    } finally {
+      os.restore();
+    }
+  });
+});
+
+describe('the card at large text', () => {
+  let window: jest.SpyInstance;
+  beforeEach(() => {
+    window = jest
+      .spyOn(ReactNative, 'useWindowDimensions')
+      .mockReturnValue({ width: 402, height: 874, fontScale: 2.3, scale: 3 });
+    // Each case reads the graph itself: an earlier case may have left a
+    // held read behind (clearAllMocks keeps implementations).
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+  });
+  afterEach(() => window.mockRestore());
+
+  test('the jurisdiction and the List | Map picker stay out of the scroll; only the sentence scrolls', async () => {
+    const r = await render();
+    const card = byTestID(r.root, 'money-map-card');
+    const scroll = byTestID(r.root, 'money-map-card-scroll');
+    const within = (root: ReactTestInstance, id: string) =>
+      root.findAll((n) => n.props.testID === id).length > 0;
+    expect(within(scroll, 'money-view-summary')).toBe(true);
+    for (const pinned of ['money-map-card-head', 'money-map-card-picker']) {
+      expect(within(card, pinned)).toBe(true);
+      expect(within(scroll, pinned)).toBe(false);
+    }
+    expect(
+      within(byTestID(r.root, 'money-map-card-picker'), 'money-view-toggle'),
+    ).toBe(true);
+    await act(async () => r.unmount());
+  });
+
+  test('where the pinned parts need more than the cap, the cap is theirs and the panel gives it back', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (flat(top).maxHeight === undefined) top = top.parent!;
+    const cap = flat(top).maxHeight as number;
+    const panelCap = r.root.findByType(MoneyMapPanel).props.maxHeight;
+    // The jurisdiction and the picker, far taller than the cap allows.
+    act(() => {
+      for (const id of ['money-map-card-head', 'money-map-card-picker'])
+        byTestID(r.root, id).props.onLayout({
+          nativeEvent: { layout: { height: 200 } },
+        });
+    });
+    const raised = flat(top).maxHeight as number;
+    expect(raised).toBeGreaterThan(cap);
+    expect(raised).toBeGreaterThanOrEqual(400 + 44);
+    act(() =>
+      top.props.onLayout({ nativeEvent: { layout: { height: raised } } }),
+    );
+    expect(r.root.findByType(MoneyMapPanel).props.maxHeight).toBeLessThan(
+      panelCap,
+    );
+    await act(async () => r.unmount());
+  });
+});
+
+describe('sizes read before the first frame', () => {
+  test('the stage, the card and the band are in state with no layout event', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    // What the host would answer synchronously for each measured view.
+    // Jest's views hand refs their component, so the frames go in by the
+    // view's own props.
+    const frames: Record<string, { width: number; height: number }> = {
+      'money-screen': { width: 402, height: 760 },
+      'money-map-band': { width: 1, height: 96 },
+    };
+    const read = jest.spyOn(measure, 'frameOf').mockImplementation((ref) => {
+      const props = (
+        ref.current as { props?: { testID?: string; style?: unknown } }
+      )?.props;
+      if (!props) return null;
+      if (props.testID && frames[props.testID]) return frames[props.testID]!;
+      const style = StyleSheet.flatten(props.style as never) as
+        | Record<string, unknown>
+        | undefined;
+      // The card's host: the one view with the top's padding.
+      return style?.paddingTop === 8 && style?.width === '100%'
+        ? { width: 402, height: 212 }
+        : null;
+    });
+    const r = await render();
+    // No onLayout has been sent: these come from the synchronous read.
+    expect(r.root.findByType(MoneyMapPanel).props.stageHeight).toBe(760);
+    expect(flat(byTestID(r.root, 'money-map-band-space')).height).toBe(96);
+    const map = jest.mocked(MoneyMap).mock.calls.at(-1)![0];
+    expect(map.insets.top).toBe(212 + 8);
+    await act(async () => r.unmount());
+    read.mockRestore();
+  });
+});
+
+describe('the map while its Search is open', () => {
+  test('keeps its frame: the short search card does not change the map’s insets, open or closed', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    const r = await render();
+    const top = () => {
+      let node = (byTestID(r.root, 'money-map-card') ??
+        byTestID(r.root, 'money-map-search-card'))!.parent!;
+      while (!node.props.onLayout) node = node.parent!;
+      return node;
+    };
+    const report = (height: number) =>
+      act(() => top().props.onLayout({ nativeEvent: { layout: { height } } }));
+    const insets = () => jest.mocked(MoneyMap).mock.calls.at(-1)![0].insets;
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 760 } },
+      }),
+    );
+    report(300);
+    const rest = insets();
+    expect(rest.top).toBe(308);
+    // Search opens: its card is a third of the height.
+    act(() =>
+      r.root
+        .findAllByType(IconButton)
+        .find((b) => b.props.testID === 'money-map-search')!
+        .props.onPress(),
+    );
+    report(90);
+    expect(insets()).toBe(rest);
+    // Search closes; the card is back but has not reported its height yet.
+    await act(async () => r.root.findByType(MoneyMapSearch).props.onClose());
+    expect(insets()).toBe(rest);
+    report(300);
+    expect(insets()).toEqual(rest);
+    await act(async () => r.unmount());
+  });
+});
+
+describe('Android’s band when the tab bar hides for the keyboard', () => {
+  test('is the same before and after, whichever of the stage and the panel host reports first', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    const os = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      const r = await render();
+      const stage = (height: number) =>
+        act(() =>
+          byTestID(r.root, 'money-screen').props.onLayout({
+            nativeEvent: { layout: { width: 411, height } },
+          }),
+        );
+      const host = (y: number) =>
+        act(() =>
+          r.root.findByType(MoneyMapPanel).parent!.props.onLayout({
+            nativeEvent: { layout: { y, height: 100 } },
+          }),
+        );
+      const bottom = () =>
+        jest.mocked(MoneyMap).mock.calls.at(-1)![0].insets.bottom;
+      // At rest: a 104 pt band (the tab bar) under the panel.
+      stage(709);
+      host(505);
+      act(() => r.root.findByType(MoneyMapPanel).props.onPeekHeight(100));
+      const rest = bottom();
+      expect(rest).toBe(104 + 100 + 8);
+      // The keyboard: the tab bar hides and the stage takes its room.
+      stage(813);
+      host(609);
+      // It comes back, and the host reports before the stage does.
+      host(505);
+      stage(709);
+      expect(bottom()).toBe(rest);
+      await act(async () => r.unmount());
+    } finally {
+      os.restore();
+    }
   });
 });
 

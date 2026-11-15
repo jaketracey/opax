@@ -1,7 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { Pressable } from '../../design/pressable';
+import { useSettle } from '../../design/settle';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
@@ -22,6 +23,11 @@ import {
  *
  * The summary line comes first, on screen and for VoiceOver. Each step is a
  * button that opens its stage's explainer in the guide.
+ *
+ * The first time a bill's tracker is drawn (`settleKey`, the bill's key),
+ * the navy rail draws down through the stages the bill has reached, one
+ * length after another. Marks, labels and dates are final from the first
+ * frame, and with Reduce Motion the rail is simply there.
  */
 function spoken(step: TrackerStep): string {
   const when = step.date ? formatDate(step.date) : null;
@@ -95,14 +101,86 @@ function Mark({ state }: { state: TrackerStepState }) {
   return <View style={[styles.mark, styles.markOpen]} />;
 }
 
+/** How long each reached length of rail takes to draw, and the cap. */
+export const RAIL_LENGTH_MS = 90;
+export const RAIL_MAX_MS = 720;
+/** A beat for the page's own crossfade to finish first. */
+export const RAIL_DELAY_MS = 200;
+
+/** The reached lengths of rail, top to bottom: `${step}-above` and `-below`. */
+export function railLengths(steps: readonly TrackerStep[]): string[] {
+  return steps.flatMap((step, i) => [
+    ...(i > 0 && reached(step.state) ? [`${step.id}-above`] : []),
+    ...(i < steps.length - 1 && reached(steps[i + 1]?.state)
+      ? [`${step.id}-below`]
+      : []),
+  ]);
+}
+
+/** One length of rail: plain, reached, or reached and drawing in its turn. */
+function Line({
+  hidden,
+  reached: solid,
+  settle,
+  turn,
+  turns,
+  testID,
+}: {
+  hidden: boolean;
+  reached: boolean;
+  settle: Animated.Value | null;
+  turn: number;
+  turns: number;
+  testID: string;
+}) {
+  if (hidden) return <View style={[styles.line, styles.lineHidden]} />;
+  if (!solid) return <View style={styles.line} />;
+  if (!settle || turn < 0)
+    return <View style={[styles.line, styles.lineReached]} />;
+  return (
+    <View style={styles.line}>
+      <Animated.View
+        testID={testID}
+        style={[
+          StyleSheet.absoluteFill,
+          styles.ink,
+          {
+            transform: [
+              {
+                scaleY: settle.interpolate({
+                  inputRange: [turn / turns, (turn + 1) / turns],
+                  outputRange: [0, 1],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}
+      />
+    </View>
+  );
+}
+
 export function BillStageTracker({
   tracker,
+  settleKey,
   testID = 'bill-tracker',
 }: {
   tracker: Tracker;
+  /** The bill's key: its rail draws once, the first time it is shown. */
+  settleKey?: string | null;
   testID?: string;
 }) {
   const { steps } = tracker;
+  const lengths = railLengths(steps);
+  const settle = useSettle(
+    lengths.length && settleKey ? `rail:${settleKey}` : null,
+    {
+      duration: Math.min(RAIL_MAX_MS, lengths.length * RAIL_LENGTH_MS),
+      delay: RAIL_DELAY_MS,
+      easing: 'linear',
+    },
+  );
   return (
     <View testID={testID} style={styles.card}>
       <Text variant="strong" wordSafe testID={`${testID}-summary`}>
@@ -130,26 +208,22 @@ export function BillStageTracker({
               ]}
             >
               <View style={styles.rail}>
-                <View
-                  style={[
-                    styles.line,
-                    i === 0
-                      ? styles.lineHidden
-                      : reached(step.state)
-                        ? styles.lineReached
-                        : null,
-                  ]}
+                <Line
+                  hidden={i === 0}
+                  reached={reached(step.state)}
+                  settle={settle}
+                  turn={lengths.indexOf(`${step.id}-above`)}
+                  turns={lengths.length}
+                  testID={`${testID}-${step.id}-rail-above`}
                 />
                 <Mark state={step.state} />
-                <View
-                  style={[
-                    styles.line,
-                    i === steps.length - 1
-                      ? styles.lineHidden
-                      : reached(steps[i + 1]?.state)
-                        ? styles.lineReached
-                        : null,
-                  ]}
+                <Line
+                  hidden={i === steps.length - 1}
+                  reached={reached(steps[i + 1]?.state)}
+                  settle={settle}
+                  turn={lengths.indexOf(`${step.id}-below`)}
+                  turns={lengths.length}
+                  testID={`${testID}-${step.id}-rail-below`}
                 />
               </View>
               <View style={styles.words}>
@@ -209,6 +283,8 @@ const styles = StyleSheet.create({
   rail: { width: MARK, alignItems: 'center' },
   line: { flex: 1, width: 2, backgroundColor: colors.dividerSubtle },
   lineReached: { backgroundColor: colors.navy },
+  // The navy drawn over a plain length, from its top edge down.
+  ink: { backgroundColor: colors.navy, transformOrigin: 'top' },
   lineHidden: { backgroundColor: 'transparent' },
   mark: {
     width: MARK,

@@ -5,9 +5,20 @@ from pathlib import Path
 import re
 from datetime import datetime
 
-from release_support import ReleaseError
+from release_support import ANALYTICS_CONFIG, ReleaseError
 
 NS = "{http://schemas.android.com/apk/res/android}"
+# Crash report symbols (docs/ANALYTICS.md) that build-play.sh keeps in the
+# evidence folder beside the AAB, never inside it, for
+# scripts/upload-crash-symbols.sh: the composed Hermes source map Gradle
+# writes, the bundle chunk ID Metro records (metro.config.js) and R8's mapping.
+ANDROID_SOURCE_MAP = "index.android.bundle.map"
+ANDROID_CHUNK_ID = "android.chunk-id"
+R8_MAPPING = "mapping.txt"
+R8_PLAY_MAPPING = "BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map"
+CHUNK_ID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+# The effective Expo config build-play.sh records before and after Gradle.
+RECORDED_CONFIGS = ("config.json", "config-after.json")
 
 
 def require(condition, message):
@@ -104,6 +115,58 @@ def debug_artifacts(archive, evidence, output):
                 target.write_bytes(archive.read(name))
         result[flag] = "passed" if enabled else "not enabled (conditional check skipped)"
     return result
+
+
+def verify_analytics_config(config, variant):
+    """Production builds carry exactly the opax.com.au/ingest host and the
+    public project token, as on iOS; e2e and development builds carry no
+    analytics config at all (docs/ANALYTICS.md). Returns "on" or "off"."""
+    extra = config.get("extra") if isinstance(config, dict) else None
+    require(isinstance(extra, dict) and extra.get("variant") == variant,
+            "Expected a " + variant + " build config")
+    if variant == "production":
+        require(extra.get("analytics") == ANALYTICS_CONFIG,
+                "Production build config must carry the opax.com.au/ingest analytics host and project token")
+        return "on"
+    require("analytics" not in extra, variant + " build config must carry no analytics")
+    return "off"
+
+
+def verify_recorded_configs(output, packaged):
+    """The Expo config build-play.sh recorded before and after Gradle, and the
+    one packaged in the bundle, are all production configs with analytics on."""
+    result = {}
+    for name in RECORDED_CONFIGS:
+        path = Path(output) / name
+        require(path.is_file(), "Missing recorded build config: " + name)
+        result[name] = verify_analytics_config(json.loads(path.read_text()), "production")
+    result["assets/app.config"] = verify_analytics_config(packaged, "production")
+    return result
+
+
+def verify_crash_symbols(output, bundle, evidence, archive):
+    """The composed Hermes map and the chunk ID are kept beside the AAB, and
+    the chunk ID is the one the shipped bundle reports. With R8 on, the kept
+    mapping.txt is the mapping the AAB gives Play. Returns the chunk ID."""
+    path = Path(output) / ANDROID_SOURCE_MAP
+    require(path.is_file(), "Hermes source map kept beside the AAB (" + ANDROID_SOURCE_MAP + ")")
+    try:
+        source_map = json.loads(path.read_bytes())
+    except ValueError:
+        source_map = None
+    require(isinstance(source_map, dict) and source_map.get("version") == 3 and bool(source_map.get("sources")) and
+            bool(source_map.get("mappings")) and "x_hermes_function_offsets" in source_map,
+            "Source map is React Native's composed Hermes map")
+    chunk_path = Path(output) / ANDROID_CHUNK_ID
+    chunk_id = chunk_path.read_text().strip() if chunk_path.is_file() else ""
+    require(bool(re.fullmatch(CHUNK_ID_PATTERN, chunk_id)) and chunk_id.encode() in bundle,
+            "Recorded chunk ID is the one in the shipped bundle")
+    if evidence.get("r8_enabled"):
+        mapping = Path(output) / R8_MAPPING
+        require(mapping.is_file() and mapping.stat().st_size > 0 and
+                R8_PLAY_MAPPING in archive.namelist() and mapping.read_bytes() == archive.read(R8_PLAY_MAPPING),
+                "R8 mapping.txt kept beside the AAB is the mapping the AAB gives Play")
+    return chunk_id
 
 
 def shipped_source_maps(names):

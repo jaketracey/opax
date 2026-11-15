@@ -179,6 +179,8 @@ export function sourceLineParts({
 }: SourceDetails): {
   date: string | null;
   name: string | null;
+  /** How many sources the line names ("Hansard and 3 more" is 4). */
+  sources: number;
   rest: string[];
 } {
   const names = lineNames(citation);
@@ -208,7 +210,7 @@ export function sourceLineParts({
           ? `Saved ${saved}`
           : (updatedText(asOf ?? newestSourceDate(citation)) ??
             'Date not published');
-  return { date, name, rest };
+  return { date, name, sources: names.length, rest };
 }
 
 type SourceRegistry = {

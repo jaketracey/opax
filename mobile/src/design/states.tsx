@@ -1,6 +1,7 @@
 import { ContentUnavailableView, Host } from '@expo/ui/swift-ui';
 import { accessibilityIdentifier } from '@expo/ui/swift-ui/modifiers';
 import { NavigationContext } from 'expo-router/react-navigation';
+import { useMarkPageUnavailable } from '../navigation/page-unavailable';
 import {
   createContext,
   useContext,
@@ -240,18 +241,73 @@ const bar = (
     ]}
   />
 );
+/**
+ * What a profile's header will hold, as far as it is known before the read.
+ * The bones lay out the same words in the same text styles, unseen, under
+ * each bar: they scale and wrap as the page's own words will, at every text
+ * size, so nothing below them moves when the page arrives.
+ */
+export interface ProfileBones {
+  name?: string;
+  /** The line under the name ("Former member for ..."). */
+  role?: string | null;
+  /** The "Your MP" line. */
+  yourMP?: boolean;
+  /** The Follow button. */
+  follow?: boolean;
+  /** The identity rows in order; `detail` is a second line. */
+  rows?: readonly {
+    kind: 'party' | 'seat' | 'official';
+    title: string;
+    detail?: string;
+    /** False for a row that opens nothing: it has no chevron. */
+    link?: boolean;
+  }[];
+  /**
+   * Draw the portrait and the name only. What stands under the name is not
+   * known yet (a paid post's line), so nothing is drawn where it may move.
+   */
+  nameOnly?: boolean;
+  /** The figures under the rows: tiles, one alone as a full-width row. */
+  tiles?: readonly (keyof typeof tileBones)[];
+}
+// Stand-in figures are letters: unseen words must not read as an amount
+// the loading label does not speak.
+const tileBones = {
+  votes: ['nnnnn', 'divisions'],
+  interests: ['nn', 'interests'],
+  pay: ['nnnnnnnn', 'a year in pay'],
+} as const;
+/** A sitting federal member: the party, one seat and the official page. */
+const sittingMemberBones: Required<ProfileBones> = {
+  name: 'Member of Parliament',
+  role: null,
+  yourMP: false,
+  follow: true,
+  nameOnly: false,
+  rows: [
+    { kind: 'party', title: 'Party' },
+    { kind: 'seat', title: 'Member for a seat', detail: 'State, since a date' },
+    { kind: 'official', title: 'Parliament of Australia page' },
+  ],
+  tiles: ['votes', 'interests', 'pay'],
+};
+
 /** Detail placeholders follow the same type, row and spacing tokens as content. */
 function DetailSkeleton({
   person,
+  profile,
   label,
   onSunken,
   testID,
 }: {
   person: boolean;
+  profile?: ProfileBones;
   label: string;
   onSunken: boolean;
   testID?: string;
 }) {
+  const header = { ...sittingMemberBones, ...profile };
   const large = useAccessibilitySize();
   const { regular } = useLayout();
   const { fontScale } = useWindowDimensions();
@@ -344,6 +400,37 @@ function DetailSkeleton({
       style={{ height: hairline, backgroundColor: colors.dividerSubtle }}
     />
   );
+  // The page's own words in its own text style, unseen under the bar.
+  const ghost = (
+    name: string,
+    words: ReactNode,
+    // A share of a row's width. Without one the bar is as wide as the
+    // words: a share of a view that hugs its words is taken from the column.
+    width?: DimensionValue,
+    style?: ViewStyle,
+  ) => (
+    <View testID={part(name)} style={style}>
+      <View style={{ opacity: 0 }} pointerEvents="none">
+        {words}
+      </View>
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          ...(width === undefined ? { right: 0 } : { width }),
+          borderRadius: radii.thumb,
+          borderCurve: 'continuous',
+          backgroundColor: onSunken ? colors.raised : colors.sunken,
+        }}
+      />
+    </View>
+  );
+  // A row's chevron: 13 pt, growing with the text to one and a half times.
+  const chevron = <View style={{ width: 13 * Math.min(1.5, fontScale) }} />;
+  const centred = large ? undefined : ({ textAlign: 'center' } as const);
+  const below = !header.nameOnly;
   const content = person ? (
     <>
       <ReadableColumn style={{ gap: rhythm.block }}>
@@ -355,37 +442,132 @@ function DetailSkeleton({
             }}
           >
             {bone('portrait', 96, 96, true)}
-            {line('name', '70%', 'pageTitle')}
-            {bone('follow', large ? '100%' : 112, controlHeight.default, true)}
+            {ghost(
+              'name',
+              <Heading level={1} kind="page" style={centred}>
+                {header.name}
+              </Heading>,
+            )}
+            {below && header.role
+              ? ghost(
+                  'role',
+                  <Text wordSafe variant="secondary" style={centred}>
+                    {header.role}
+                  </Text>,
+                )
+              : null}
+            {below && header.yourMP
+              ? ghost(
+                  'your-mp',
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: rhythm.line,
+                    }}
+                  >
+                    <Icon
+                      name={symbols.yourMP}
+                      size={15}
+                      maxScale={1.5}
+                      tone="inkSoft"
+                    />
+                    <Text variant="secondary">Your MP</Text>
+                  </View>,
+                )
+              : null}
+            {below && header.follow
+              ? ghost(
+                  'follow',
+                  <Button
+                    hug
+                    variant="secondary"
+                    label="Follow"
+                    symbol={symbols.follow}
+                    size="compact"
+                    disabled
+                    onPress={() => {}}
+                  />,
+                  undefined,
+                  large ? { alignSelf: 'stretch' } : undefined,
+                )
+              : null}
           </View>
-          <View>
-            <View
-              style={{
-                minHeight: minimumTarget,
-                paddingVertical: rhythm.row,
-                justifyContent: 'center',
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: rhythm.tight,
-                }}
-              >
-                {bone('party-dot', 10, 10, true)}
-                {line('party', '40%', 'body')}
-              </View>
+          {below && header.rows.length ? (
+            <View testID={part('identity')}>
+              {header.rows.map((row, index) => {
+                const seats = header.rows
+                  .slice(0, index)
+                  .filter((r) => r.kind === 'seat').length;
+                const name =
+                  row.kind === 'seat' && seats ? `seat-${seats}` : row.kind;
+                return (
+                  <View key={name}>
+                    {index ? divider(`${name}-divider`) : null}
+                    {/* A LinkRow: its padding, its two lines, its chevron. */}
+                    <View
+                      testID={part(`${name}-row`)}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: rhythm.tight,
+                        minHeight: minimumTarget,
+                        paddingVertical: rhythm.row,
+                      }}
+                    >
+                      {row.kind === 'party' ? (
+                        <View style={{ width: Math.min(16, 10 * fontScale) }} />
+                      ) : null}
+                      <View style={{ flex: 1, gap: rhythm.line }}>
+                        {ghost(
+                          name,
+                          <Text wordSafe variant="body">
+                            {row.title}
+                          </Text>,
+                          row.kind === 'party' ? '40%' : '65%',
+                        )}
+                        {row.detail
+                          ? ghost(
+                              `${name}-detail`,
+                              <Text wordSafe variant="secondary">
+                                {row.detail}
+                              </Text>,
+                              '45%',
+                            )
+                          : null}
+                      </View>
+                      {row.link === false ? null : chevron}
+                    </View>
+                  </View>
+                );
+              })}
+              {divider('identity-end')}
             </View>
-            {divider('identity-divider')}
-            <View style={{ gap: rhythm.line, paddingVertical: rhythm.row }}>
-              {line('seat', '65%', 'body')}
-              {line('seat-detail', '45%')}
-            </View>
-            {divider('identity-end')}
-          </View>
+          ) : null}
         </View>
-        <View style={{ gap: rhythm.tight }}>
+        {!below ? null : header.tiles.length === 1 ? (
+          <View
+            testID={part('stat-row')}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: rhythm.tight,
+              minHeight: minimumTarget,
+              paddingVertical: rhythm.row,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              {ghost(
+                'stat-row-title',
+                <Text wordSafe variant="body">
+                  Divisions voted in, year to year
+                </Text>,
+                '65%',
+              )}
+            </View>
+            {chevron}
+          </View>
+        ) : header.tiles.length ? (
           <View
             testID={part('stat-strip')}
             style={{
@@ -393,9 +575,9 @@ function DetailSkeleton({
               gap: rhythm.block,
             }}
           >
-            {[0, 1, 2].map((index) => (
+            {header.tiles.map((tile, index) => (
               <View
-                key={index}
+                key={tile}
                 testID={part(`stat-tile-${index}`)}
                 style={large ? undefined : { flex: 1 }}
               >
@@ -420,48 +602,65 @@ function DetailSkeleton({
                     }
                   />
                 ) : null}
+                {/* A StatTile: the figure, then its label and chevron. */}
                 <View style={{ minHeight: minimumTarget, gap: rhythm.line }}>
-                  {line(`stat-value-${index}`, '85%', 'tileFigure')}
-                  {bone(
+                  {ghost(
+                    `stat-value-${index}`,
+                    <Text wordSafe variant="tileFigure">
+                      {tileBones[tile][0]}
+                    </Text>,
+                    '85%',
+                  )}
+                  {ghost(
                     `stat-label-${index}`,
+                    <Text wordSafe variant="footnote">
+                      {tileBones[tile][1]}
+                      {'\u00a0'}
+                      <Icon
+                        name={symbols.chevron}
+                        size={13}
+                        maxScale={1.5}
+                        tone="inkFaint"
+                      />
+                    </Text>,
                     '90%',
-                    height('footnote') * (large ? 1 : 2),
                   )}
                 </View>
               </View>
             ))}
           </View>
-          {source('source')}
-        </View>
+        ) : null}
       </ReadableColumn>
-      <View style={{ gap: rhythm.heading }}>
-        {heading('votes-heading')}
-        <View style={{ gap: rhythm.tight }}>
-          {line('votes-summary', '70%')}
-          <View>
-            {[0, 1, 2].map((index) => (
-              <View
-                key={index}
-                testID={part(`vote-${index}`)}
-                style={{
-                  paddingVertical: rhythm.row,
-                  gap: rhythm.line,
-                  minHeight: minimumTarget,
-                }}
-              >
-                {bone(
-                  `vote-${index}-position`,
-                  92,
-                  Math.max(28, height('footnote') + rhythm.tight),
-                  true,
-                )}
-                {line(`vote-${index}-title`, '90%', 'rowRecord')}
-                {line(`vote-${index}-date`, '60%')}
-              </View>
-            ))}
+      {below ? (
+        <View style={{ gap: rhythm.heading }}>
+          {heading('votes-heading')}
+          <View style={{ gap: rhythm.tight }}>
+            {line('votes-summary', '70%')}
+            <View>
+              {[0, 1, 2].map((index) => (
+                <View
+                  key={index}
+                  testID={part(`vote-${index}`)}
+                  style={{
+                    paddingVertical: rhythm.row,
+                    gap: rhythm.line,
+                    minHeight: minimumTarget,
+                  }}
+                >
+                  {bone(
+                    `vote-${index}-position`,
+                    92,
+                    Math.max(28, height('footnote') + rhythm.tight),
+                    true,
+                  )}
+                  {line(`vote-${index}-title`, '90%', 'rowRecord')}
+                  {line(`vote-${index}-date`, '60%')}
+                </View>
+              ))}
+            </View>
           </View>
         </View>
-      </View>
+      ) : null}
     </>
   ) : (
     <>
@@ -474,7 +673,19 @@ function DetailSkeleton({
           {line('title', '60%', 'pageTitle')}
           {line('chamber', '90%')}
         </View>
-        {bone('follow', 112, controlHeight.default, true)}
+        {/* Follow keeps its touch target's height, and draws the capsule
+            the button draws inside it: a 48 pt bone stood 16 pt taller
+            than the button, its top 9 pt above where Follow lands. */}
+        {large ? (
+          bone('follow', 112, controlHeight.default, true)
+        ) : (
+          <View
+            testID={part('follow-slot')}
+            style={{ height: controlHeight.default, justifyContent: 'center' }}
+          >
+            {bone('follow', 104, buttonCapsule, true)}
+          </View>
+        )}
       </View>
       <View style={{ gap: rhythm.heading }}>
         {heading('members-heading')}
@@ -518,18 +729,22 @@ export function Skeleton({
   count = 3,
   label = 'Loading',
   onSunken = false,
+  profile,
   testID,
 }: {
   shape?: SkeletonShape;
   count?: number;
   label?: string;
   onSunken?: boolean;
+  /** For `person-profile`: the header's lines and rows, when known. */
+  profile?: ProfileBones;
   testID?: string;
 }) {
   if (shape === 'person-profile' || shape === 'electorate-profile')
     return (
       <DetailSkeleton
         person={shape === 'person-profile'}
+        profile={profile}
         label={label}
         onSunken={onSunken}
         testID={testID}
@@ -909,6 +1124,8 @@ export function ContentUnavailable({
   };
   testID?: string;
 }) {
+  // A whole-page state: the page will have no bar items of its own.
+  useMarkPageUnavailable(!inline);
   useStatusAnnouncement(
     announcement ??
       [phoneCopy(title), body ? phoneCopy(body) : null]

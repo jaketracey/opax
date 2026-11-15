@@ -1,4 +1,12 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  type LayoutChangeEvent,
+  type TextLayoutEvent,
+} from 'react-native';
 import {
   Icon,
   Text,
@@ -11,11 +19,31 @@ import { presentSource } from '../../navigation/sheets';
 import { FiltersLine } from './FiltersLine';
 
 /**
+ * Stands in for the count and source line: an ordinary full line. It is
+ * always laid out, unseen, and its height is the line's place at the current
+ * width and text size, before the count is known and after.
+ */
+export const COUNT_STAND_IN =
+  '0,000+ results · Updated 00 Mmm 0000 · Hansard and 3 more';
+
+/** The line without its sources' names: "… · 4 sources". Never longer than the stand-in. */
+export const sourcesCounted = (n: number) =>
+  `${n} ${n === 1 ? 'source' : 'sources'}`;
+
+/**
  * The results header under the scope control (journeys/search.md 3.4):
  * the count and source line, one footnote line and one 44 pt target that
  * opens `/source` ("42 speeches · Updated 8 Nov 2026 · Hansard and 3
  * more"), then, only when filters are on, the one filter line. This is the
  * results' one `SourceLine`: a paged list has no reachable foot.
+ *
+ * The line's height never depends on what the search returns. The stand-in
+ * holds its place from the first frame; the real line is drawn over it, in
+ * the same place. A first source with a long name (a royal commission's) that
+ * would need more lines than are held is counted instead ("4 sources"): the
+ * names are in the sheet the line opens, and in its spoken label. Because the
+ * stand-in is laid out with the page, the held height follows a rotation, a
+ * split view or a new text size, and never changes while results load.
  */
 export function ResultsHeader({
   count,
@@ -31,11 +59,46 @@ export function ResultsHeader({
   onClearFilters?: () => void;
   onOpenFilters?: () => void;
 }) {
+  // The stand-in's box, and how many text lines it laid out in, as last
+  // laid out. Lines are counted, never derived from heights.
+  const [box, setBox] = useState(0);
+  const [lines, setLines] = useState<number | null>(null);
   return (
     <View style={styles.header}>
-      {count !== null || details ? (
-        <CountLine count={count} details={details} />
-      ) : null}
+      <View testID="search-count-slot">
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          testID="search-count-stand-in"
+          onLayout={(event: LayoutChangeEvent) =>
+            setBox(event.nativeEvent.layout.height)
+          }
+          style={[styles.line, styles.standIn]}
+        >
+          <View style={styles.glyph}>
+            <Icon
+              name={symbols.source}
+              size={13}
+              maxScale={1.5}
+              tone="inkSoft"
+            />
+          </View>
+          <Text
+            variant="footnote"
+            tone="inkSoft"
+            style={styles.text}
+            onTextLayout={(event: TextLayoutEvent) => {
+              const n = event.nativeEvent.lines.length;
+              if (n > 0) setLines(n);
+            }}
+          >
+            {COUNT_STAND_IN}
+          </Text>
+        </View>
+        {count !== null || details ? (
+          <CountLine count={count} details={details} lines={lines} box={box} />
+        ) : null}
+      </View>
       {filters && onClearFilters ? (
         <FiltersLine
           text={filters}
@@ -50,12 +113,34 @@ export function ResultsHeader({
 function CountLine({
   count,
   details,
+  lines,
+  box,
 }: {
   count: string | null;
   details: SourceDetails | null;
+  /** The text lines the held place has room for; null before it is known. */
+  lines: number | null;
+  /** The held place's height (0 before it is laid out). */
+  box: number;
 }) {
+  // Out of the flow and exactly the stand-in's box, so it adds no height.
+  const over = [styles.over, box > 0 ? { height: box } : null];
+  // The text sits in a row with no height of its own: a row of fixed height
+  // would measure its text "at most" that tall, and the device would never
+  // report the lines that do not fit. The box clips what overflows.
+  const inner = [styles.inner, { minHeight: box > 0 ? box : minimumTarget }];
+  const { width, fontScale } = useWindowDimensions();
   const parts = details ? sourceLineParts(details) : null;
   const lead = [count, parts?.date].filter(Boolean).join(' · ');
+  const tail = parts?.rest.length ? ` · ${parts.rest.join(' · ')}` : '';
+  // How many lines the full line (with its sources' names) last laid out in,
+  // at this width and text size. The decision is derived from it and from the
+  // held box, so it does not depend on which of the two was measured first,
+  // and a new width or size drops it and asks again.
+  const key = `${lead}|${parts?.name ?? ''}|${tail}|${width}|${fontScale}`;
+  const [full, setFull] = useState<{ key: string; lines: number } | null>(null);
+  const counted =
+    !!parts?.name && lines !== null && full?.key === key && full.lines > lines;
   const spoken = [
     count,
     parts?.date,
@@ -66,25 +151,35 @@ function CountLine({
     .join('. ')
     .replace(/\u00a0/g, ' ');
   const line = (
-    <>
+    <View style={inner} testID="search-count-inner">
       {details ? (
         <View style={styles.glyph}>
           <Icon name={symbols.source} size={13} maxScale={1.5} tone="inkSoft" />
         </View>
       ) : null}
-      <Text variant="footnote" tone="inkSoft" style={styles.text}>
+      <Text
+        variant="footnote"
+        tone="inkSoft"
+        style={styles.text}
+        testID="search-count-text"
+        onTextLayout={(event: TextLayoutEvent) => {
+          // Only the full line is measured; once counted, the short form's
+          // layout must not undo the decision.
+          if (!counted) setFull({ key, lines: event.nativeEvent.lines.length });
+        }}
+      >
         {lead}
         {parts?.name ? (
           <>
             {lead ? ' · ' : ''}
             <Text variant="footnote" style={{ color: colors.navy }}>
-              {parts.name}
+              {counted ? sourcesCounted(parts.sources) : parts.name}
             </Text>
           </>
         ) : null}
-        {parts?.rest.length ? ` · ${parts.rest.join(' · ')}` : ''}
+        {tail}
       </Text>
-    </>
+    </View>
   );
   if (!details)
     return (
@@ -92,7 +187,7 @@ function CountLine({
         accessible
         accessibilityLabel={spoken}
         testID="search-count"
-        style={styles.line}
+        style={over}
       >
         {line}
       </View>
@@ -104,7 +199,7 @@ function CountLine({
       accessibilityHint="Opens the sources"
       testID="search-count"
       onPress={() => presentSource(details, { testID: 'search-sources' })}
-      style={styles.line}
+      style={over}
     >
       {line}
     </Pressable>
@@ -115,6 +210,24 @@ const styles = StyleSheet.create({
   header: { gap: rhythm.line },
   line: {
     minHeight: minimumTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  standIn: { opacity: 0 },
+  // The real line, over the stand-in's box and never taller than it.
+  over: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    overflow: 'hidden',
+  },
+  inner: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,

@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import { useStackChrome, headerItems } from '../../navigation/chrome';
 import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { sheetOptions } from '../../navigation/stack/screen';
+import { sheetSnapListeners } from '../../navigation/sheet-snap';
 import { colors } from '../../design/tokens';
 import { copy } from '../../design/copy';
 
@@ -45,6 +46,7 @@ export default function TalkStack() {
       />
       <Stack.Screen
         name="sources"
+        listeners={sheetSnapListeners}
         options={{
           ...sheetOptions,
           title: copy.sources,

@@ -20,7 +20,9 @@ import {
   RefreshControl,
   SectionList,
   StyleSheet,
+  useWindowDimensions,
   View,
+  type DimensionValue,
 } from 'react-native';
 import { billFoldText } from '../../api/bill-transforms';
 import { ApiError } from '../../api/errors';
@@ -36,17 +38,24 @@ import {
   LinkRow,
   OfflineLine,
   SidebarSafe,
-  Skeleton,
   SourceLine,
   Text,
+  thisDevice,
   useScreenColumn,
 } from '../../design/primitives';
 import { rowMenus, useRowFollow } from '../../design/row-link';
 import { useListSearchBar } from '../../design/search-bar';
-import { StatePageProvider } from '../../design/states';
+import { LoadingStatus, StatePageProvider } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading } from '../../design/text';
-import { colors, layout, rhythm } from '../../design/tokens';
+import {
+  colors,
+  layout,
+  minimumTarget,
+  radii,
+  rhythm,
+  type TextVariant,
+} from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { trackShare } from '../../navigation/share';
@@ -219,6 +228,108 @@ export const voteInset = (textColumn: number, width: number) =>
   Math.max(0, Math.min(textColumn, width / 3));
 const VoteInset = createContext(0);
 const ReportInset = createContext<((inset: number) => void) | null>(null);
+/** The bill header's symbol, as `Icon` sizes it. */
+const symbolSize = (fontScale: number) =>
+  Math.round(20 * Math.min(Math.max(fontScale, 1), 1.5));
+/**
+ * The inset before any header has been measured: the symbol and the row's
+ * gap, which is what the measurement returns. The votes are drawn inset from
+ * their first frame (they were drawn at 0, then moved in once measured).
+ */
+export const estimatedVoteInset = (fontScale: number) =>
+  symbolSize(fontScale) + rhythm.tight;
+/** The last measured inset, for the next open. */
+let measuredInset: { inset: number; fontScale: number } | null = null;
+
+/** Bills and votes drawn while the list loads. */
+const BONE_SECTIONS = [3, 2];
+/**
+ * The list while it loads, in the loaded list's own shape, so the first
+ * bill lands where its placeholder stood: a bill header (symbol, a two-line
+ * title, its vote count) and its votes inset under it (stage, where and
+ * when, outcome, the vote bar, the counts) with their separators. Each
+ * line of words is a line of type laid out unseen in its own text style
+ * under its bar, so it is the height the words take at the reader's text
+ * size (line height times the font scale ran 6 to 10 pt a line tall at the
+ * accessibility sizes). Rows use `LinkRow` and `DivisionRow`'s tokens.
+ */
+function HistoryBones({ inset }: { inset: number }) {
+  const { fontScale } = useWindowDimensions();
+  const bone = (width: DimensionValue, height: number, round = false) => (
+    <View
+      style={[styles.bone, { width, height }, round ? styles.boneRound : null]}
+    />
+  );
+  const line = (width: DimensionValue, variant: TextVariant) => (
+    <View style={{ width }}>
+      <Text variant={variant} numberOfLines={1} style={styles.unseen}>
+        {'\u00a0'}
+      </Text>
+      <View style={[StyleSheet.absoluteFill, styles.bone]} />
+    </View>
+  );
+  const symbol = symbolSize(fontScale);
+  return (
+    <LoadingStatus
+      accessible
+      accessibilityLabel="Loading votes"
+      testID="division-history-loading"
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        {BONE_SECTIONS.map((count, section) => (
+          <View key={section}>
+            <View
+              style={[styles.billHeader, styles.boneRow]}
+              testID={`division-history-loading-bill-${section}`}
+            >
+              {bone(symbol, symbol)}
+              <View style={styles.boneBillWords}>
+                {line('92%', 'body')}
+                {line('64%', 'body')}
+                {line(56, 'secondary')}
+              </View>
+            </View>
+            {Array.from({ length: count }, (_, index) => (
+              <View key={index}>
+                {index ? (
+                  <View style={[styles.separator, { marginLeft: inset }]} />
+                ) : null}
+                <View
+                  style={[styles.boneRow, { paddingLeft: inset }]}
+                  testID={`division-history-loading-vote-${section}-${index}`}
+                >
+                  <View style={styles.boneVoteWords}>
+                    {line('46%', 'rowRecord')}
+                    {line('78%', 'secondary')}
+                    {/* The outcome capsule: its label, padding and floor. */}
+                    <View style={styles.boneCapsule}>
+                      <Text variant="capsule" style={styles.unseen}>
+                        Not agreed
+                      </Text>
+                      <View
+                        style={[
+                          StyleSheet.absoluteFill,
+                          styles.bone,
+                          styles.boneRound,
+                        ]}
+                      />
+                    </View>
+                    {bone('100%', 8, true)}
+                    {line('40%', 'secondary')}
+                  </View>
+                  {bone(8, 13)}
+                </View>
+              </View>
+            ))}
+          </View>
+        ))}
+      </View>
+    </LoadingStatus>
+  );
+}
 
 /** The bill a run of votes belongs to. */
 const BillHeader = memo(function BillHeader({
@@ -289,7 +400,19 @@ export default function DivisionHistory() {
   const list = useRef<SectionList<Division, HistorySection>>(null);
   const column = useScreenColumn();
   const foot = useFloatingBarFoot();
-  const [inset, setInset] = useState(0);
+  const { fontScale } = useWindowDimensions();
+  const [inset, setInset] = useState(() =>
+    measuredInset?.fontScale === fontScale
+      ? measuredInset.inset
+      : estimatedVoteInset(fontScale),
+  );
+  const reportInset = useCallback(
+    (next: number) => {
+      measuredInset = { inset: next, fontScale };
+      setInset(next);
+    },
+    [fontScale],
+  );
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
   // Android's search view takes the whole bar while it is open, and
@@ -450,6 +573,12 @@ export default function DivisionHistory() {
     />
   ) : null;
 
+  const unavailable =
+    (offline && !record) ||
+    (!!error && !record) ||
+    (!!record && record.total > 0 && record.failed === record.total);
+  // Still loading: the count line's place is held and the rows are bones.
+  const waiting = !loaded && !unavailable;
   const titleRef = useRef<View>(null);
   const scrollTitle = useTitleOnScroll(titleRef, TITLE);
   const header = (
@@ -463,7 +592,7 @@ export default function DivisionHistory() {
           {TITLE}
         </Heading>
       </View>
-      {record?.stale && !record.failed ? (
+      {record?.stale && (!record.failed || record.offline) ? (
         <OfflineLine
           savedAt={record.savedAt}
           testID="division-history-offline"
@@ -483,14 +612,41 @@ export default function DivisionHistory() {
             />
           ) : null}
         </View>
+      ) : waiting ? (
+        // The count line's own height, held from the first frame: it was
+        // inserted when the votes arrived and pushed every row down a line.
+        <View
+          style={styles.count}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          testID="division-history-count-pending"
+        >
+          <View>
+            <Text variant="secondary" tabular style={styles.unseen}>
+              {votes(0)}
+            </Text>
+            <View style={[StyleSheet.absoluteFill, styles.bone]} />
+          </View>
+        </View>
       ) : null}
       {record?.failed && record.loaded ? (
-        <InlineError
-          subject="some votes"
-          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`}
-          onRetry={refresh}
-          testID="division-history-partial"
-        />
+        record.offline ? (
+          // With no connection the rest did not fail: they are not saved.
+          // A note in the saved-date line's words and type, not an error:
+          // no failure is recorded for the page and none is announced.
+          <SavedNote
+            message={`Votes from the ${counted(record.loaded, 'bill', 'bills')} saved on this ${thisDevice()}.`}
+            onRetry={refresh}
+            testID="division-history-partial"
+          />
+        ) : (
+          <InlineError
+            subject="some votes"
+            message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`}
+            onRetry={refresh}
+            testID="division-history-partial"
+          />
+        )
       ) : null}
     </View>
   );
@@ -500,6 +656,12 @@ export default function DivisionHistory() {
         symbol="wifi.slash"
         title={copy.notSaved}
         body={copy.notSavedBody}
+        // A brief drop as the page opens lands here too: one tap reads again.
+        action={{
+          label: copy.tryAgain,
+          onPress: retry,
+          testID: 'division-history-offline-retry',
+        }}
         testID="division-history-offline-uncached"
       />
     ) : (error && !record) ||
@@ -515,12 +677,7 @@ export default function DivisionHistory() {
         testID="division-history-error"
       />
     ) : !loaded ? (
-      <Skeleton
-        shape="rows"
-        count={6}
-        label="Loading votes"
-        testID="division-history-loading"
-      />
+      <HistoryBones inset={inset} />
     ) : searching ? (
       <ContentUnavailable
         symbol="magnifyingglass"
@@ -552,7 +709,11 @@ export default function DivisionHistory() {
       <RouteOptions
         options={{
           title: TITLE,
-          headerTitleAlign: 'center',
+          // Android keeps the toolbar's own title, as every other bar title
+          // there is: a centred title is a view squeezed between Back and
+          // the three bar items with no margin either side, and at font
+          // scale 2.0 it sat hard against Back and was cut against Filters.
+          headerTitleAlign: Platform.OS === 'android' ? 'left' : 'center',
           headerLargeTitleEnabled: false,
           headerSearchBarOptions: {
             ...searchBar,
@@ -615,7 +776,7 @@ export default function DivisionHistory() {
             />
           </View>
         ) : null}
-        <ReportInset.Provider value={setInset}>
+        <ReportInset.Provider value={reportInset}>
           <VoteInset.Provider value={inset}>
             <StatePageProvider refreshing={refreshing}>
               <SectionList
@@ -698,6 +859,44 @@ function Separator() {
   const inset = useContext(VoteInset);
   return <View style={[styles.separator, { marginLeft: inset }]} />;
 }
+/**
+ * What the page is showing while offline: the votes it has saved. It sits
+ * where the partial-read error sits, with the same Try again beside it, in
+ * the offline line's type (`secondary`, soft ink). It is information, so
+ * it has no error mark, registers no failure with the page and is read by
+ * VoiceOver and TalkBack as plain text.
+ */
+function SavedNote({
+  message,
+  onRetry,
+  testID,
+}: {
+  message: string;
+  onRetry: () => void;
+  testID: string;
+}) {
+  return (
+    <View style={styles.note}>
+      <View
+        accessible
+        accessibilityRole="text"
+        accessibilityLabel={message}
+        style={styles.noteWords}
+      >
+        <Text wordSafe variant="secondary" tone="inkSoft" testID={testID}>
+          {message}
+        </Text>
+      </View>
+      <Button
+        label={copy.tryAgain}
+        variant="plain"
+        onPress={onRetry}
+        testID={`${testID}-retry`}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   searchFilters: {
@@ -712,6 +911,15 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section,
   },
   header: { gap: rhythm.tight },
+  // The partial-read error's own row, so the note holds its place.
+  note: {
+    gap: rhythm.heading,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  noteWords: { flexShrink: 1, maxWidth: '100%' },
   count: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -726,4 +934,28 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dividerSubtle,
   },
   footer: { paddingTop: rhythm.heading, gap: rhythm.block },
+  unseen: { opacity: 0 },
+  bone: {
+    backgroundColor: colors.sunken,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+  },
+  boneRound: { borderRadius: radii.capsule, borderCurve: 'continuous' },
+  // `LinkRow` and `DivisionRow`'s own row: target height, padding and gap.
+  boneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.row,
+  },
+  // The header's title starts a gap in from its text column (the probe).
+  boneBillWords: { flex: 1, gap: rhythm.line, paddingLeft: rhythm.tight },
+  boneVoteWords: { flex: 1, gap: rhythm.line },
+  boneCapsule: {
+    alignSelf: 'flex-start',
+    minHeight: 22,
+    paddingHorizontal: rhythm.tight,
+    paddingVertical: rhythm.line,
+  },
 });

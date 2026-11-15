@@ -22,18 +22,25 @@ if (!['0', '1'].includes(e2eMicrophone))
   throw new Error('OPAX_E2E_MICROPHONE must be 0 or 1');
 const microphonePrompt =
   androidBuild && variant === 'e2e' && e2eMicrophone === '1';
-// Anonymous product analytics and crash reports (docs/ANALYTICS.md): iOS
-// production only.
-// Development and e2e never carry analytics, even with OPAX_ANALYTICS=1. Android stays
-// off until its Google Play Data safety answers include analytics (the code is
-// shared; drop the androidBuild condition then). Events go through
+// A measuring build only (src/perf/layout-probe.ts): on-device layout
+// readings for one TestFlight build, shown in Account. Never set for an App
+// Store build. It travels in this configuration, not in the JavaScript:
+// Metro's transform cache is not keyed on environment variables, so a value
+// inlined into the bundle can outlive the build that set it.
+const layoutProbe = process.env.OPAX_LAYOUT_PROBE ?? '0';
+if (!['0', '1'].includes(layoutProbe))
+  throw new Error('OPAX_LAYOUT_PROBE must be 0 or 1');
+// Anonymous product analytics and crash reports (docs/ANALYTICS.md): every
+// production build, iOS and Android (from Android b71, with its Google Play
+// Data safety answers in docs/ANDROID-STORE.md), under the same runtime gates
+// and scrubbers. Development and e2e never carry analytics on either
+// platform, even with OPAX_ANALYTICS=1. Events go through
 // the opax.com.au Worker proxy to PostHog project 507367 (Opax). The token is
 // the website's public, write-only ingestion token, not a personal API key.
 const analyticsSwitch = process.env.OPAX_ANALYTICS ?? '0';
 if (!['0', '1'].includes(analyticsSwitch))
   throw new Error('OPAX_ANALYTICS must be 0 or 1');
 const analytics =
-  !androidBuild &&
   variant === 'production'
     ? {
         host: 'https://opax.com.au/ingest',
@@ -329,6 +336,7 @@ const config: ExpoConfig = {
       ? { productionVoiceEnabled: true, voiceConsentDefault: false }
       : {}),
     ...(microphonePrompt ? { e2eMicrophonePrompt: true } : {}),
+    ...(layoutProbe === '1' ? { layoutProbe: true } : {}),
     apiOrigin: origin,
     webOrigin,
     ...(analytics ? { analytics } : {}),

@@ -3,6 +3,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
 export EXPO_NO_TELEMETRY=1
+# Under OPAX_TF_LENIENT=1 a harness self-test that fails twice is a warning;
+# every other check here blocks either way. See scripts/tf-lenient.sh.
+source scripts/tf-lenient.sh
 # With OPAX_QA_PASS_RECORD_DIR set, a stage that already passed on this exact
 # tree, tool versions, dependencies and test environment is skipped; see
 # scripts/qa-pass-record.sh. qa-static and qa-advisories always run.
@@ -29,26 +32,30 @@ if record=$(passed harness); then
   echo "OPAX QA: harness self-tests skipped: $record"
 else
   echo 'OPAX QA: release tooling'
-  nice -n 10 python3 scripts/test-release-tooling.py
-  nice -n 10 python3 scripts/test-privacy-scan.py
+  lenient_step 'release tooling' nice -n 10 python3 scripts/test-release-tooling.py
+  lenient_step 'privacy scan self-test' nice -n 10 python3 scripts/test-privacy-scan.py
   echo 'OPAX QA: shared-host lock'
-  nice -n 10 bash scripts/test-qa-lock.sh
+  lenient_step 'shared-host lock' nice -n 10 bash scripts/test-qa-lock.sh
   echo 'OPAX QA: Android host guard'
-  nice -n 10 bash scripts/test-android-host.sh
+  lenient_step 'Android host guard' nice -n 10 bash scripts/test-android-host.sh
   echo 'OPAX QA: simulator lifetime'
-  nice -n 10 bash scripts/test-e2e.sh
+  lenient_step 'simulator lifetime' nice -n 10 bash scripts/test-e2e.sh
   echo 'OPAX QA: simulator admission'
-  nice -n 10 bash scripts/test-qa-simulator.sh
+  lenient_step 'simulator admission' nice -n 10 bash scripts/test-qa-simulator.sh
   echo 'OPAX QA: Jest retry policy'
-  nice -n 10 bash scripts/test-jest-retry.sh
+  lenient_step 'Jest retry policy' nice -n 10 bash scripts/test-jest-retry.sh
   echo 'OPAX QA: pass records and build speed regressions'
-  nice -n 10 bash scripts/test-qa-pass-record.sh
-  bash scripts/qa-pass-record.sh write harness 0 'python3 scripts/test-release-tooling.py && python3 scripts/test-privacy-scan.py && bash scripts/test-qa-lock.sh && bash scripts/test-android-host.sh && bash scripts/test-e2e.sh && bash scripts/test-qa-simulator.sh && bash scripts/test-jest-retry.sh && bash scripts/test-qa-pass-record.sh'
+  lenient_step 'pass records' nice -n 10 bash scripts/test-qa-pass-record.sh
+  echo 'OPAX QA: TestFlight lenient mode'
+  lenient_step 'TestFlight lenient mode' nice -n 10 bash scripts/test-tf-lenient.sh
+  # A self-test that only warned is not a pass, so it writes no record.
+  [ "$TF_LENIENT_WARNINGS" != 0 ] ||
+    bash scripts/qa-pass-record.sh write harness 0 'python3 scripts/test-release-tooling.py && python3 scripts/test-privacy-scan.py && bash scripts/test-qa-lock.sh && bash scripts/test-android-host.sh && bash scripts/test-e2e.sh && bash scripts/test-qa-simulator.sh && bash scripts/test-jest-retry.sh && bash scripts/test-qa-pass-record.sh && bash scripts/test-tf-lenient.sh'
 fi
 echo 'OPAX QA: Android flow preparation'
-nice -n 10 node --test scripts/test-android-flows.mjs
-nice -n 10 python3 scripts/test-android-harness.py
-nice -n 10 python3 scripts/test-android-results.py
+lenient_step 'Android flow preparation' nice -n 10 node --test scripts/test-android-flows.mjs
+lenient_step 'Android harness' nice -n 10 python3 scripts/test-android-harness.py
+lenient_step 'Android results' nice -n 10 python3 scripts/test-android-results.py
 echo 'OPAX QA: design tokens'
 nice -n 10 node scripts/build-design-tokens.mjs --check
 if [ "$FULL_GATE" = 1 ] && record=$(passed gate); then

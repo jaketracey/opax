@@ -284,10 +284,11 @@ function MaterialMenuHost() {
                   close();
                   action.onPress();
                 }}
+                // Titles start at the leading edge. Centring the row's main
+                // axis centred one-line titles between wrapped ones.
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 12,
-                  justifyContent: 'center',
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: 12,

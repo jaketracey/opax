@@ -1,3 +1,4 @@
+import { keepCatalog } from './kept-catalogs';
 import { ReadSession } from './read-session';
 import { throwIfAborted } from './abort';
 import { samePartyLabel } from '../design/party';
@@ -105,6 +106,32 @@ function cached<T>(
       : block.savedAt,
   };
 }
+/**
+ * Your MP's view from a directory already read, with no request: what
+ * `Catalogs.yourMP` answers once its directory read does. Today draws the
+ * tile from the directory it holds, so the tile is in the first frame.
+ */
+export function yourMPFromDirectory(
+  directory: {
+    electorates: RecordResult<Parameters<typeof yourMPFor>[1]>;
+    manifest: RecordResult<Parameters<typeof yourMPFor>[2]>;
+  },
+  id: string,
+  chosenStateSeats: readonly string[] = [],
+) {
+  const view = yourMPFor(
+    id,
+    directory.electorates.data,
+    directory.manifest.data,
+    [...chosenStateSeats],
+  );
+  const records = [directory.electorates, directory.manifest];
+  view.seat = cached(view.seat, records);
+  view.members = cached(view.members, records);
+  view.senators = view.senators.map((block) => cached(block, records));
+  view.stateMembers = view.stateMembers.map((block) => cached(block, records));
+  return view;
+}
 export interface PartyPageRecord {
   data: {
     label: string;
@@ -160,7 +187,10 @@ export class Catalogs {
   /** The last bills index read this session, for the bill page's party note. */
   private billIndex?: RecordResult<decode.BillIndex>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
-  constructor(private client: Pick<ApiClient, 'get'>) {}
+  constructor(
+    // `saved` is optional: a reader without saved copies has nothing saved.
+    private client: Pick<ApiClient, 'get'> & Partial<Pick<ApiClient, 'saved'>>,
+  ) {}
   async partyPage(
     input: string,
     refresh = false,
@@ -572,18 +602,40 @@ export class Catalogs {
   billIndexRow(key: string): decode.Bill | null {
     return this.billIndex?.data.bills.find((row) => row.key === key) ?? null;
   }
-  bill(key: string, refresh = false, signal?: AbortSignal) {
+  /**
+   * `persist: false` reads the file without saving it for offline use, and
+   * `retries` bounds the attempts: for a screen that reads every bill at
+   * once (see `ApiClient.get`).
+   */
+  bill(
+    key: string,
+    refresh = false,
+    signal?: AbortSignal,
+    { persist = true, retries }: { persist?: boolean; retries?: number } = {},
+  ) {
     return this.client.get(
       `/bills/${billKey(key)}.json`,
       decode.decodeBill,
       refresh,
-      { signal },
+      { signal, persist, ...(retries === undefined ? {} : { retries }) },
+    );
+  }
+  /** The bill's saved file, or null: never a network read. */
+  async savedBill(key: string) {
+    return (
+      (await this.client.saved?.(
+        `/bills/${billKey(key)}.json`,
+        decode.decodeBill,
+      )) ?? null
     );
   }
   votes(signal?: AbortSignal, refresh = false) {
-    return this.client.get('/votes.json', decode.decodeVotes, refresh, {
-      signal,
-    });
+    return this.client
+      .get('/votes.json', decode.decodeVotes, refresh, { signal })
+      .then((votes) => {
+        keepCatalog('/votes.json', votes.data);
+        return votes;
+      });
   }
   interestIndex(signal?: AbortSignal) {
     return this.client.get(
@@ -610,7 +662,12 @@ export class Catalogs {
     );
   }
   pay(signal?: AbortSignal) {
-    return this.client.get('/pay.json', decode.decodePay, false, { signal });
+    return this.client
+      .get('/pay.json', decode.decodePay, false, { signal })
+      .then((pay) => {
+        keepCatalog('/pay.json', pay.data);
+        return pay;
+      });
   }
   expenses(signal?: AbortSignal) {
     return this.client.get('/expenses.json', decode.decodeExpenses, false, {
@@ -645,6 +702,18 @@ export class Catalogs {
     return this.client.get('/corpus.json', decode.decodeCorpus, false, {
       signal,
     });
+  }
+  /**
+   * The collection record as the device last saved it, with no request, or
+   * null when nothing is saved: Today decides on its first frame whether it
+   * has a dated record to cite. Not marked stale; a read revalidates it.
+   */
+  async corpusSaved(): Promise<RecordResult<decode.Corpus> | null> {
+    const record =
+      (await this.client
+        .saved?.('/corpus.json', decode.decodeCorpus)
+        .catch(() => null)) ?? null;
+    return record ? { ...record, stale: false } : null;
   }
   /** Leads (P1): the static discovery export, decoded whole. */
   discovery(refresh = false, signal?: AbortSignal) {
@@ -1012,6 +1081,45 @@ export class Catalogs {
     }
   }
   /**
+   * The edition as the device last saved it, with no request, for Today's
+   * first frame: the read that follows revalidates it. Null when nothing is
+   * saved. It is not marked stale, since no read has failed.
+   */
+  async todayEditionSaved(): Promise<Block<EditionView> | null> {
+    const record =
+      (await this.client
+        .saved?.(editionPath, decode.decodeEditionRead)
+        .catch(() => null)) ?? null;
+    if (!record) return null;
+    if ('absent' in record.data)
+      return {
+        sources: [],
+        asAt: null,
+        stale: false,
+        savedAt: null,
+        data: null,
+        status: 'missing',
+      };
+    return {
+      ...editionFor(record.data),
+      ...recordFlags([record]),
+      stale: false,
+      savedAt: record.savedAt,
+    };
+  }
+  /**
+   * The sitting calendar as the device last saved it, with no request, so
+   * the line under Today's date is in the first frame. Null when nothing is
+   * saved. Not marked stale: the read that follows revalidates it.
+   */
+  async sittingDaysSaved(): Promise<RecordResult<SittingDays> | null> {
+    const record =
+      (await this.client
+        .saved?.(sittingDaysPath, decodeSittingDays)
+        .catch(() => null)) ?? null;
+    return record ? { ...record, stale: false } : null;
+  }
+  /**
    * Local follows (src/features/follows): the shared catalogs their change
    * markers read. Nothing is read per followed record, so following many
    * items never crowds the bounded cache. `refresh` revalidates each file,
@@ -1156,21 +1264,11 @@ export class Catalogs {
     chosenStateSeats: string[] = [],
     signal?: AbortSignal,
   ) {
-    const directory = await this.directory(undefined, signal);
-    const view = yourMPFor(
+    return yourMPFromDirectory(
+      await this.directory(undefined, signal),
       id,
-      directory.electorates.data,
-      directory.manifest.data,
       chosenStateSeats,
     );
-    const records = [directory.electorates, directory.manifest];
-    view.seat = cached(view.seat, records);
-    view.members = cached(view.members, records);
-    view.senators = view.senators.map((block) => cached(block, records));
-    view.stateMembers = view.stateMembers.map((block) =>
-      cached(block, records),
-    );
-    return view;
   }
   async electorateFor(path: string, signal?: AbortSignal) {
     const result = await this.electorate(path, signal);
