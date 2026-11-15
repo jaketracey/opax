@@ -272,7 +272,7 @@ What is not measured:
 - The general line ("OPAX is on iPhone and iPad. Get the app") on desktop and
   on other pages. Its link is counted, as before, only by `opax_outbound`
   with `host=apps.apple.com`. The worded link sends that event too.
-- "Open this page" (an `opax://` link for readers who have the app) and Dismiss.
+- Dismiss.
 - Apple's Smart App Banner, which Safari on iPhone and iPad draws from the
   `apple-itunes-app` tag on the same pages. It runs no script of ours. Where it
   shows, the worded line does not, so neither event fires there.
@@ -281,8 +281,10 @@ Two values are kept in the browser's local storage and never sent:
 `opax-app-banner-dismissed` (Dismiss was pressed) and `opax-app-prompt-seen`
 (the worded line has been shown once, so later page loads leave it out).
 
-The App Store links carry a campaign token, `ct=web_<page_type>` on the worded
-link and `ct=web_<page_type>_safari` in the Smart App Banner, so App Store
-Connect can report installs by page type. Apple only reports campaigns when the
-link also carries the provider token (`pt`) from App Store Connect; it is not
-set yet (`APP_STORE_PROVIDER` in `app-banner.ts`, `provider` in `app-banner.js`).
+The App Store links carry one fixed campaign token for each page type, never
+one per visitor: `ct=web_<page_type>` on the worded link and
+`ct=web_<page_type>_safari` in the Smart App Banner, so App Store Connect can
+report installs by page type. Apple only reports campaigns when the link also
+carries the provider token (`pt`) from App Store Connect. That is the Worker
+variable `APP_STORE_PROVIDER` (digits only, in `wrangler.jsonc`); until it is
+set, the links carry no `pt` at all.

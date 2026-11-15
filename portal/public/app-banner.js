@@ -8,8 +8,6 @@
 
   // The page-worded prompt (src/app-banner.ts holds the same table and writes
   // the first page's line into the HTML; this one follows in-page navigation).
-  const store = 'https://apps.apple.com/au/app/opax/id6818756305';
-  const provider = ''; // App Store Connect provider token (pt), as in src/app-banner.ts
   const lines = {
     document: 'Read this record in the app',
     supplier: 'See this supplier in the app',
@@ -84,20 +82,21 @@
       else view();
     }
   }
-  // Keep the line, both links and the Smart App Banner's argument on the page
-  // the reader is on now. Before the body is parsed there is nothing to fill,
-  // and the Worker's HTML is already right.
+  // Keep the line, its App Store link and the Smart App Banner's argument on
+  // the page the reader is on now. Before the body is parsed there is nothing
+  // to fill, and the Worker's HTML is already right. The link keeps whatever
+  // provider token (pt) the Worker wrote and takes the page type's campaign token.
   function fill(type, path) {
     const banner = document.getElementById('opax-app-banner');
-    const open = `opax:/${path}`;
-    if (banner && banner.getAttribute('data-app-prompt') !== type) {
+    const get = banner?.querySelector('[data-app-prompt-get]');
+    if (get && banner.getAttribute('data-app-prompt') !== type) {
       banner.setAttribute('data-app-prompt', type);
-      const get = banner.querySelector('[data-app-prompt-get]');
-      if (get) { get.textContent = lines[type]; get.setAttribute('href', `${store}?${provider ? `pt=${provider}&` : ''}ct=web_${type}`); }
+      get.textContent = lines[type];
+      const pt = /[?&]pt=(\d+)/.exec(get.getAttribute('href') || '')?.[1];
+      get.setAttribute('href', `${get.getAttribute('href').split('?')[0]}?${pt ? `pt=${pt}&` : ''}ct=web_${type}`);
     }
-    banner?.querySelector('[data-app-prompt-open]')?.setAttribute('href', open);
     const meta = document.querySelector('meta[name="apple-itunes-app"]');
-    if (meta) meta.setAttribute('content', meta.getAttribute('content').replace(/app-argument=[^,]*/, `app-argument=${open}`).replace(/ct=web_\w+/, `ct=web_${type}_safari`));
+    if (meta) meta.setAttribute('content', meta.getAttribute('content').replace(/app-argument=[^,]*/, `app-argument=opax:/${path}`).replace(/ct=web_\w+/, `ct=web_${type}_safari`));
   }
   // The page type and nothing else: no id, slug, name or search words.
   function measure(event, type) {

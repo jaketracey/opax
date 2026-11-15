@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
-import { APP_BANNER_HTML, APP_PROMPTS, SKIP_LINK_HTML, appBannerHTML, appPromptFor, smartBannerMeta, withAppBanner } from '../src/app-banner.ts';
+import { APP_BANNER_HTML, APP_PROMPTS, SKIP_LINK_HTML, appBannerHTML, appPromptFor, appStoreLink, setAppStoreProvider, smartBannerMeta, withAppBanner } from '../src/app-banner.ts';
 import { cleanEvent } from '../analytics/privacy.mjs';
 import { HTMLRewriter, workerFetch } from './helpers/worker-fetch.mjs';
 
@@ -297,7 +297,7 @@ test('every line is plain, non-partisan copy about the record, with no Android o
   for (const text of [script, css, read('../src/app-banner.ts')]) assert.doesNotMatch(text, /Google Play|play\.google|Android app/i);
 });
 
-test('the Worker writes the worded line, both links and Apple\'s Smart App Banner on a member page, and none of it on other pages', async () => {
+test('the Worker writes the worded line, its App Store link and Apple\'s Smart App Banner on a member page, and none of it on other pages', async () => {
   const response = await workerFetch(PAGES.member);
   assert.equal(response.status, 200);
   const doc = new JSDOM(await response.text()).window.document;
@@ -311,7 +311,9 @@ test('the Worker writes the worded line, both links and Apple\'s Smart App Banne
   const get = banner.querySelector('a[data-app-prompt-get]');
   assert.equal(get.textContent, 'Follow this member in the app');
   assert.equal(get.href, 'https://apps.apple.com/au/app/opax/id6818756305?ct=web_member');
-  assert.equal(banner.querySelector('a[data-app-prompt-open]').getAttribute('href'), 'opax://subject/person/anthony-albanese');
+  // One link, to the App Store: a page cannot know whether the app is installed.
+  assert.equal(banner.querySelectorAll('.opax-app-banner-prompt a').length, 1);
+  assert.doesNotMatch(banner.outerHTML, /opax:\/\//, 'only Apple\'s banner carries the address in the app');
   assert.equal(banner.querySelector('.opax-app-banner-general a').href, 'https://apps.apple.com/au/app/opax/id6818756305');
 
   for (const path of ['/about', '/', '/privacy']) {
@@ -374,11 +376,10 @@ test('desktop keeps the one quiet general line, with no prompt and no events; An
   mac.dom.window.close(); android.dom.window.close();
 });
 
-test('a tap on the App Store link sends one event with the page type; Open this page and Dismiss send none', async () => {
+test('a tap on the App Store link sends one event with the page type; Dismiss sends none', async () => {
   const page = await land({ path: PAGES.document });
   const click = el => { const e = new page.window.MouseEvent('click', { bubbles: true, cancelable: true }); el.addEventListener('click', ev => ev.preventDefault(), { once: true }); el.dispatchEvent(e); };
   click(page.banner.querySelector('[data-app-prompt-get]'));
-  click(page.banner.querySelector('[data-app-prompt-open]'));
   assert.deepEqual(page.events.map(e => [e.event, e.properties]), [
     ['opax_app_prompt_view', { page_type: 'document' }], ['opax_app_prompt_tap', { page_type: 'document' }]]);
   click(page.banner.querySelector('[data-app-banner-dismiss]'));
@@ -399,14 +400,14 @@ test('the two events pass the allowlist with the page type and nothing else', as
   }
 });
 
-test('in-page navigation rewords the line and repoints both links, as the Worker would have written them', async () => {
+test('in-page navigation rewords the line and repoints its link, as the Worker would have written them', async () => {
   const page = await land();
   for (const [type, path] of Object.entries(PAGES)) {
     page.go(path);
     const fresh = new JSDOM(appBannerHTML(path)).window.document;
     assert.equal(page.worded(), true, path);
     assert.equal(page.banner.dataset.appPrompt, type);
-    for (const sel of ['[data-app-prompt-get]', '[data-app-prompt-open]']) {
+    for (const sel of ['[data-app-prompt-get]']) {
       assert.equal(page.banner.querySelector(sel).getAttribute('href'), fresh.querySelector(sel).getAttribute('href'), path);
       assert.equal(page.banner.querySelector(sel).textContent, fresh.querySelector(sel).textContent, path);
     }
@@ -442,14 +443,53 @@ test('Ask never has the line while an answer is being written', async () => {
 
 test('the worded line is a real link and button, reachable by keyboard, with a focus ring and room to wrap', async () => {
   const page = await land();
-  const [get, open] = page.banner.querySelectorAll('.opax-app-banner-prompt a');
+  const [get, ...others] = page.banner.querySelectorAll('.opax-app-banner-prompt a');
+  assert.deepEqual(others, []);
   assert.equal(get.tagName, 'A');
   assert.equal(get.textContent, 'Follow this member in the app', 'the link says what it does without the text around it');
-  assert.equal(open.textContent, 'Open this page');
   assert.equal(page.banner.querySelector('[tabindex], [aria-live], [role="alert"], [autofocus]'), null);
   assert.equal(page.banner.querySelector('button').tabIndex, 0);
   assert.match(css, /\.opax-app-banner-prompt > a \{ white-space: normal; \}/);
   // The line not showing is display: none, so its links are out of the tab order.
   assert.equal(page.window.getComputedStyle(page.banner.querySelector('.opax-app-banner-general')).display, 'none');
   page.dom.window.close();
+});
+
+test('the provider token is absent from every link until the Worker variable is set, and present in all of them after', async () => {
+  const links = path => {
+    const doc = new JSDOM(`<head>${smartBannerMeta(path)}</head>${appBannerHTML(path)}`).window.document;
+    return { get: doc.querySelector('[data-app-prompt-get]').getAttribute('href'), meta: doc.querySelector('meta')?.content ?? '' };
+  };
+  try {
+    // Unset, empty, or anything that is not digits: no pt at all, and one fixed ct per page type.
+    for (const unset of [undefined, '', 'abc', '12 34', '1&ct=x']) {
+      setAppStoreProvider(unset);
+      for (const [type, path] of Object.entries(PAGES)) {
+        const { get, meta } = links(path);
+        assert.equal(get, `https://apps.apple.com/au/app/opax/id6818756305?ct=web_${type}`, String(unset));
+        assert.equal(get, appStoreLink(type));
+        assert.match(meta, new RegExp(`affiliate-data=ct=web_${type}_safari$`));
+        assert.doesNotMatch(get + meta, /pt=/);
+      }
+      assert.equal(links('/about').get, 'https://apps.apple.com/au/app/opax/id6818756305');
+    }
+    setAppStoreProvider('123456789');
+    for (const [type, path] of Object.entries(PAGES)) {
+      const { get, meta } = links(path);
+      assert.equal(get, `https://apps.apple.com/au/app/opax/id6818756305?pt=123456789&ct=web_${type}`);
+      assert.match(meta, new RegExp(`affiliate-data=pt=123456789&ct=web_${type}_safari$`));
+    }
+    // In-page navigation keeps the token the Worker wrote, from a prompt page or any other.
+    for (const start of [PAGES.member, '/about']) {
+      const page = await land({ path: start });
+      page.go(PAGES.bill);
+      assert.equal(page.banner.querySelector('[data-app-prompt-get]').getAttribute('href'), 'https://apps.apple.com/au/app/opax/id6818756305?pt=123456789&ct=web_bill', start);
+      page.dom.window.close();
+    }
+    // The Worker reads the variable on each request.
+    const set = new JSDOM(await (await workerFetch(PAGES.member, { APP_STORE_PROVIDER: '123456789' })).text()).window.document;
+    assert.equal(set.querySelector('[data-app-prompt-get]').getAttribute('href'), 'https://apps.apple.com/au/app/opax/id6818756305?pt=123456789&ct=web_member');
+    const unset = new JSDOM(await (await workerFetch(PAGES.member)).text()).window.document;
+    assert.equal(unset.querySelector('[data-app-prompt-get]').getAttribute('href'), 'https://apps.apple.com/au/app/opax/id6818756305?ct=web_member');
+  } finally { setAppStoreProvider(undefined); }
 });
