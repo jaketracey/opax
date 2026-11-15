@@ -649,11 +649,24 @@ function MenuPicker<T extends string>({
   // At accessibility sizes the button spans the column, so a long value
   // wraps under the title instead of running off the screen.
   const wide = row && large && !inline;
+  // Beside its title the button takes the rest of the row and draws its
+  // value at the trailing edge, so its place comes from the row's own
+  // layout in the first frame. A host that hugs its value has no width
+  // until SwiftUI reports one a frame later: for that frame the value drew
+  // centred on the row's trailing edge, cut in half (Duo outer display,
+  // Bills' "Showing", backlog B83-showing).
+  const fill = row && !large;
   const button = (
     <View
-      testID={testID}
+      // Filling, this box is wider than the value: the native control's own
+      // identifier (below) is the one a tap is aimed at.
+      testID={fill ? undefined : testID}
       style={[
-        wide ? styles.full : styles.hug,
+        fill
+          ? [styles.menuRowFill, { flexBasis: menuValueWidth(current) }]
+          : wide
+            ? styles.full
+            : styles.hug,
         // Bare, the button sits in a text column under a caption or count:
         // pull the system button's own label padding back so its value
         // starts on that column, not 6 pt inside it.
@@ -666,11 +679,13 @@ function MenuPicker<T extends string>({
       }
     >
       <Host
-        matchContents={{ vertical: true, horizontal: !wide }}
+        matchContents={{ vertical: true, horizontal: !wide && !fill }}
         style={
           wide
             ? { width: measuredWidth ?? fallbackWidth, maxWidth: '100%' }
-            : { minHeight: minimumTarget, maxWidth: '100%' }
+            : fill
+              ? styles.menuRowHost
+              : { minHeight: minimumTarget, maxWidth: '100%' }
         }
       >
         <Picker
@@ -689,7 +704,9 @@ function MenuPicker<T extends string>({
             frame({
               minHeight: minimumTarget,
               ...(wide ? { maxWidth: measuredWidth ?? fallbackWidth } : {}),
-              alignment: row ? 'leading' : 'center',
+              // As wide as the host, whatever that is, value trailing.
+              ...(fill ? { maxWidth: menuRowFrameMax } : {}),
+              alignment: fill ? 'trailing' : row ? 'leading' : 'center',
             }),
             nativeLabel(spoken),
             ...(testID ? [accessibilityIdentifier(testID)] : []),
@@ -734,7 +751,7 @@ function MenuPicker<T extends string>({
             ? inline
               ? styles.menuRowInlineTitle
               : null
-            : styles.menuRowTitle
+            : styles.menuRowInlineTitle
         }
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
@@ -759,6 +776,17 @@ function MenuPicker<T extends string>({
  * it so the value aligns with the content's text column.
  */
 export const popUpLabelInset = 6;
+/** Any width past the widest row: SwiftUI clamps the frame to its host. */
+const menuRowFrameMax = 10000;
+/**
+ * About what a menu row's value needs: its label at the body size, the
+ * indicator and the button's own padding. Only the row's wrap decision
+ * reads it (a value too long to sit beside the title goes under it); the
+ * value itself is drawn by SwiftUI at its real width.
+ */
+function menuValueWidth(label: string) {
+  return Math.ceil(estimatedLabelWidth(label, 17)) + 20 + 2 * popUpLabelInset;
+}
 
 export function PopUpButton<T extends string>(props: {
   disabled?: boolean;
@@ -2139,7 +2167,9 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     gap: rhythm.line,
   },
-  menuRowTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+  // The value's box: the rest of the row, from the row's own layout.
+  menuRowFill: { flexGrow: 1, flexShrink: 1, maxWidth: '100%' },
+  menuRowHost: { alignSelf: 'stretch', minHeight: minimumTarget },
   menuRowWrapping: { flexWrap: 'wrap', columnGap: 0, rowGap: 0 },
   // Its own width too, so "Showing:" never breaks inside the word; the
   // value moves under it when the two do not fit.

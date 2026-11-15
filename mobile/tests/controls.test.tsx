@@ -686,14 +686,83 @@ test.each([
       place === 'beside' ? 'row' : 'column',
     );
     // The id sits on the button itself, so a tap by id opens the menu.
+    // Beside its title the button's box fills the row, wider than the
+    // value, so there the id is the native control's alone.
     expect(
       r.root.findAll(
         (node) =>
           node.props.testID === 'state' && typeof node.type === 'string',
       ),
-    ).toHaveLength(1);
+    ).toHaveLength(place === 'beside' ? 0 : 1);
+    expect(r.root.findByType(Picker).props.modifiers).toContainEqual(
+      expect.objectContaining({
+        $type: 'accessibilityIdentifier',
+        identifier: 'state',
+      }),
+    );
   },
 );
+
+/**
+ * Backlog B83-showing (Duo outer display, Bills' "Showing"): the host
+ * hugged its value, so it had no width until SwiftUI reported one a frame
+ * later, and for that frame the value drew cut at the row's trailing edge.
+ * Beside its title the value's box now comes from the row's own layout.
+ */
+test('a titled PopUpButton row places its value from the row layout in the first frame', () => {
+  size(1);
+  const r = render(
+    <PopUpButton
+      row
+      label="Showing"
+      value="all"
+      options={options}
+      onChange={noop}
+      testID="scope"
+    />,
+  );
+  const host = r.root.findByType(Host);
+  // Nothing waits on a width measured from the native content.
+  expect(host.props.matchContents).toEqual({
+    vertical: true,
+    horizontal: false,
+  });
+  expect(RN.StyleSheet.flatten(host.props.style)).toMatchObject({
+    alignSelf: 'stretch',
+  });
+  expect(RN.StyleSheet.flatten(host.props.style).width).toBeUndefined();
+  // Its box takes the rest of the row; the title keeps its own width.
+  const box = RN.StyleSheet.flatten(host.parent!.parent!.props.style);
+  expect(box).toMatchObject({ flexGrow: 1, flexShrink: 1 });
+  expect(box.flexBasis).toBeGreaterThan(0);
+  const title = r.root
+    .findAllByType(Text)
+    .find((node) => node.props.children === 'Showing')!;
+  expect(RN.StyleSheet.flatten(title.props.style).flexGrow).toBeUndefined();
+  expect(RN.StyleSheet.flatten(title.props.style).flexShrink).toBe(0);
+  // The value is drawn at the trailing edge of that box.
+  const frame = r.root
+    .findByType(Picker)
+    .props.modifiers.find(
+      (modifier: { $type: string }) => modifier.$type === 'frame',
+    );
+  expect(frame.alignment).toBe('trailing');
+  expect(frame.maxWidth).toBeGreaterThanOrEqual(2000);
+});
+
+test('a bare PopUpButton still hugs its value', () => {
+  size(1);
+  const r = render(
+    <PopUpButton
+      label="Showing"
+      value="all"
+      options={options}
+      onChange={noop}
+      testID="scope"
+    />,
+  );
+  expect(r.root.findByType(Host).props.matchContents.horizontal).toBe(true);
+});
 
 test.each([false, true])(
   'a PopUpButton with row=%s starts its value on the text column',
@@ -709,9 +778,9 @@ test.each([false, true])(
         testID="state"
       />,
     );
-    const button = r.root.find(
-      (node) => node.props.testID === 'state' && typeof node.type === 'string',
-    );
+    // The button's own box, the host's parent.
+    let button = r.root.findByType(Host).parent!;
+    while (typeof button.type !== 'string') button = button.parent!;
     // Bare, the menu's own label padding is pulled back to the column;
     // in a row the value is trailing and keeps it.
     expect(RN.StyleSheet.flatten(button.props.style).marginLeft).toBe(
