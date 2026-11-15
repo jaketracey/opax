@@ -32,9 +32,12 @@ Cost discipline: a year that already has a brief is NEVER asked again unless
                                                     # from the roster; no network
 
 A voice's party is the label on its retrieved speeches. Most Senate rows and
-ministers' speeches carry none, so a ranked voice with no label takes the
-roster's party, and only where that is certain for the year (roster_party).
-Such a row is marked "party_basis": "roster".
+ministers' speeches carry none. --fill-parties names such a voice's party from
+a reviewed row in scripts/years_party_accept.json, or from the roster's dated
+affiliations where they cover the year (roster_party); never from the roster's
+undated party label. A filled row is marked "party_basis": "roster". A voices
+tally never fills on its own: review its unlabelled voices, then run
+--fill-parties.
 
 Uses ARAG_* from .env for the ask. Voices go through https://opax.com.au so
 the tally is byte-for-byte the endpoint the dialog itself calls.
@@ -68,6 +71,7 @@ OUT_DIR = ROOT / "portal" / "public" / "years"
 TM_JS = ROOT / "portal" / "public" / "timemachine.js"
 SEARCH_BASE = "https://opax.com.au/api/search"
 ROSTER = ROOT / "portal" / "public" / "parliamentarians.json"
+ACCEPT = ROOT / "scripts" / "years_party_accept.json"
 
 YEAR_MIN = 1998
 YEAR_MAX = 2026
@@ -311,43 +315,65 @@ def voices_for(year: int, probes: list[dict]) -> dict:
 
 
 def roster_party(name: str, year: int, people: list[dict]) -> str | None:
-    """The party the roster proves `name` sat for in `year`, or None.
+    """The party the roster's DATED record proves `name` sat for in `year`, or None.
 
-    The roster's `party` is the party most of a person's speeches carry, with
-    no dates, and `party_now` is today's. Neither is the party at the time for
-    someone who changed party, so a person with more than one recorded party
-    (in `party`, `party_now`, `parties`, `recorded_parties` or the dated
-    `affiliations`) is left as the speeches recorded them. One exact roster
-    name, speaking in that year, with a single recorded party: that party was
-    theirs then.
+    The roster's `party` is the label most of a person's speeches carry over
+    their whole record, and `party_now` is today's. Neither is dated, and
+    eras of unlabelled speeches hide a change of party, so a single recorded
+    label is not proof of the party in any one year. A wrong party is worse
+    than none: this never reads `party`, `party_now` or `parties`.
+
+    It answers only from dated `affiliations`, for one exact full roster name
+    (a single-token name is a surname stub, never one person) who spoke in
+    that year, where:
+      - every affiliation that overlaps the year names the same party; and
+      - the affiliations speak for every parliament the row records (each of
+        `states` appears as an affiliation's jurisdiction), so a namesake in
+        another parliament folded into the row is not given this party.
+
+    The apps apply the same rule to the same roster fields (rosterPartyAt in
+    mobile/src/features/explore/model.ts); change them together.
     """
-    rows = [p for p in people if (p.get("name") or "").strip() == name.strip()]
+    wanted = name.strip()
+    if " " not in wanted:
+        return None
+    rows = [p for p in people if (p.get("name") or "").strip() == wanted]
     if len(rows) != 1:
         return None
     row = rows[0]
     if not (row.get("first") or year) <= year <= (row.get("last") or year):
         return None
-    recorded = {
-        str(x).strip()
-        for x in [
-            row.get("party"),
-            row.get("party_now"),
-            *(row.get("parties") or []),
-            *(row.get("recorded_parties") or []),
-            *[a.get("party") for a in row.get("affiliations") or []],
-        ]
-        if x and str(x).strip()
-    }
-    return recorded.pop() if len(recorded) == 1 else None
+    dated = row.get("affiliations") or []
+    states = set(row.get("states") or [])
+    if not dated or not states or not states <= {a.get("jurisdiction") for a in dated}:
+        return None
+
+    def covers(a: dict) -> bool:
+        start, end = a.get("start"), a.get("end")
+        return (not start or int(str(start)[:4]) <= year) and (not end or year <= int(str(end)[:4]))
+
+    parties = {str(a["party"]).strip() for a in dated if covers(a) and str(a.get("party") or "").strip()}
+    return parties.pop() if len(parties) == 1 else None
 
 
-def fill_parties(voices: dict, year: int, people: list[dict]) -> int:
-    """Name the party of each ranked voice whose speeches carry no label."""
+def accepted_parties() -> dict[tuple[int, str], str]:
+    """The reviewed (year, name) -> party rows in scripts/years_party_accept.json."""
+    rows = json.loads(ACCEPT.read_text()).get("rows") or []
+    return {(int(r["year"]), r["name"].strip()): r["party"].strip() for r in rows}
+
+
+def fill_parties(voices: dict, year: int, people: list[dict], accepted: dict[tuple[int, str], str]) -> int:
+    """Name the party of each ranked voice whose speeches carry no label.
+
+    A reviewed row in the accept list comes first; otherwise the roster's
+    dated record (roster_party). Anything else stays as the speeches recorded it.
+    """
     filled = 0
     for speaker in voices.get("speakers") or []:
         if speaker.get("party"):
             continue
-        party = roster_party(speaker.get("name") or "", year, people)
+        name = (speaker.get("name") or "").strip()
+        party = accepted.get((year, name)) or roster_party(name, year, people)
         if party:
             speaker["party"] = party
             speaker["party_basis"] = "roster"
@@ -362,6 +388,7 @@ def roster_people() -> list[dict]:
 def fill_existing(years: list[int]) -> None:
     """--fill-parties: rewrite only the year files a roster party changes."""
     people = roster_people()
+    accepted = accepted_parties()
     for y in years:
         path = OUT_DIR / f"{y}.json"
         if not path.exists():
@@ -369,7 +396,7 @@ def fill_existing(years: list[int]) -> None:
         record = json.loads(path.read_text())
         speakers = (record.get("voices") or {}).get("speakers") or []
         before = sum(1 for s in speakers if not s.get("party"))
-        filled = fill_parties(record.get("voices") or {}, y, people)
+        filled = fill_parties(record.get("voices") or {}, y, people, accepted)
         if filled:
             path.write_text(json.dumps(record, indent=1, ensure_ascii=False))
         print(f"  {y}: {before} unlabelled voice(s), {filled} filled, {before - filled} left")
@@ -413,7 +440,6 @@ def main() -> None:
         return
     topics = year_topics()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    people = roster_people()
 
     plan = []
     for y in years:
@@ -458,7 +484,11 @@ def main() -> None:
         if do_voices:
             record["voices"] = voices_for(y, topics.get(y, []))
             v = record["voices"]
-            fill_parties(v, y, people)
+            unlabelled = sum(1 for s in v["speakers"] if not s.get("party"))
+            if unlabelled:
+                # Never filled here: a new tally's unlabelled voices need review first.
+                print(f"  {unlabelled} ranked voice(s) with no party label: review, add to "
+                      f"{ACCEPT.name}, then run --fill-parties {y}")
             print(f"  voices: {v['unique_speeches']} speeches, top {[s['name'] for s in v['speakers'][:3]]}")
         record["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
         if counters:
