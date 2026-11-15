@@ -2586,6 +2586,130 @@ describe('a prefilled draft is shown from its start (J76-ask3)', () => {
     const tall = caretAfterContent(start, long, 400, 130);
     expect(caretAfterContent(tall, long, 50, 130)).toBe(tall);
   });
+
+  test.each([1, 2.353])(
+    'with options on, the draft is inset from the filled Options button (font scale %s)',
+    (fontScale) => {
+      const window = Dimensions.get('window');
+      act(() => Dimensions.set({ window: { ...window, fontScale } }));
+      const before = askSession.composerOptions();
+      try {
+        act(() =>
+          arriveInAsk({ question: long }, `prefill-inset-${fontScale}`),
+        );
+        const { r } = mount();
+        const wrapper = () =>
+          StyleSheet.flatten(
+            r.root.find(
+              (n) =>
+                typeof n.type === 'string' && n.props.testID === 'ask-field',
+            ).props.style,
+          );
+        const button = () =>
+          r.root.find(
+            (n) =>
+              n.props.testID === 'ask-composer-options' &&
+              n.props.selected !== undefined,
+          );
+        // No options: the glyph sits inside its target; no extra inset.
+        act(() => askSession.options({ ...before, topic: undefined }));
+        if (!button().props.selected)
+          expect(wrapper().marginLeft).toBeUndefined();
+        // An option on: the button is a filled disc, and the text keeps
+        // 8 pt from it (it used to touch).
+        act(() => askSession.options({ ...before, topic: 'housing' }));
+        expect(button().props.selected).toBe(true);
+        expect(wrapper()).toMatchObject({ flex: 1, marginLeft: rhythm.tight });
+        act(() => r.unmount());
+      } finally {
+        act(() => askSession.options(before));
+        act(() => Dimensions.set({ window }));
+      }
+    },
+  );
+
+  test('the fit is judged like for like: the content height includes the field’s padding, as the cap does', () => {
+    // Measured on the iOS 27 simulator: a field of n lines reports
+    // n x 22 + 22 (its 11 pt of padding above and below), which is its
+    // laid-out height until the cap. The cap at the standard size is 130.
+    const cap = composerFieldCap({
+      fontScale: 1,
+      windowHeight: 874,
+      chrome: 2 * rhythm.line,
+    });
+    expect(cap).toBe(5 * textStyles.body.lineHeight + 20);
+    const reported = (lines: number) => lines * textStyles.body.lineHeight + 22;
+    const start = prefilledCaret(long)!;
+    // Four lines (110) fit: the caret goes to the end.
+    expect(caretAfterContent(start, long, reported(4), cap)).toMatchObject({
+      at: 'end',
+    });
+    // Five lines (132) pass the cap by 2 pt, so the field scrolls: the
+    // caret stays at the top.
+    expect(caretAfterContent(start, long, reported(5), cap)).toMatchObject({
+      at: 'start',
+      sized: true,
+    });
+  });
+
+  test('a reader who taps in before the height is judged keeps their caret', () => {
+    const start = prefilledCaret(long)!;
+    // The field took the held start, and the hold is let go.
+    const released = caretAfterSelection(start, long, { start: 0, end: 0 })!;
+    expect(released).toMatchObject({ done: true, sized: false });
+    // The same place again is not the reader's doing: still to be judged.
+    expect(caretAfterSelection(released, long, { start: 0, end: 0 })).toBe(
+      released,
+    );
+    // The reader taps into the draft, or selects a word.
+    for (const selection of [
+      { start: 12, end: 12 },
+      { start: 5, end: 9 },
+    ]) {
+      const theirs = caretAfterSelection(released, long, selection)!;
+      expect(theirs).toMatchObject({ done: true, sized: true, at: 'start' });
+      // The height then says the draft fits: no selection is held again,
+      // so the caret is not pulled to the end.
+      const judged = caretAfterContent(theirs, long, 50, 130);
+      expect(judged).toBe(theirs);
+      expect(caretSelection(judged, long)).toBeUndefined();
+    }
+    // Without a tap the draft that fits still gets its caret at the end.
+    expect(
+      caretSelection(caretAfterContent(released, long, 50, 130), long),
+    ).toEqual({ start: long.length, end: long.length });
+    // Another draft's caret is not this one's business.
+    expect(caretAfterSelection(released, 'another', { start: 2, end: 2 })).toBe(
+      released,
+    );
+  });
+
+  test('in the field: an early tap is not overridden when the content’s height arrives', () => {
+    act(() => arriveInAsk({ question: long }, 'prefill-early-tap'));
+    const { r, field } = mount();
+    expect(field().props.selection).toEqual({ start: 0, end: 0 });
+    // The field reports the held start; the hold ends.
+    act(() =>
+      field().props.onSelectionChange({
+        nativeEvent: { selection: { start: 0, end: 0 } },
+      }),
+    );
+    expect(field().props.selection).toBeUndefined();
+    // The reader taps into the middle of the question.
+    act(() =>
+      field().props.onSelectionChange({
+        nativeEvent: { selection: { start: 20, end: 20 } },
+      }),
+    );
+    // The height arrives and fits: nothing is held, their caret stays.
+    act(() =>
+      field().props.onContentSizeChange({
+        nativeEvent: { contentSize: { width: 300, height: 44 } },
+      }),
+    );
+    expect(field().props.selection).toBeUndefined();
+    act(() => r.unmount());
+  });
 });
 
 describe('the composer at AX5 (ask.md 2.11)', () => {
