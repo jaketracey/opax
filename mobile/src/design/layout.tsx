@@ -161,18 +161,6 @@ export function useScreenColumn(
   return { onLayout, content, inner, bar, breakout, regular };
 }
 
-/**
- * The scroll offset that keeps a scrolled page's rows in place when its
- * scroll view's frame moves down by `delta` (the cut turning on) or up (off);
- * null at the top of the page, where UIKit rests the content itself.
- */
-export function clipOffset(y: number, delta: number): number | null {
-  // Turning on: scrolled past the old top inset's last `delta` points.
-  if (delta > 0) return y > -delta ? Math.max(0, y + delta) : null;
-  // Turning off: scrolled at all (the cut page rests at 0).
-  return y > 0 ? y + delta : null;
-}
-
 /** Half a point of rounding between UIKit's inset and the reported bar. */
 const underBarSlack = 1;
 const stickyFirst = [0];
@@ -585,33 +573,13 @@ export function Screen({
     (nativeRoot && railSolidRoot) || (!glassBar() && !clearExpandedBar);
   // Only where the scroll view runs under the bar: below an opaque bar it
   // already starts under it, and a margin would only add a blank band.
-  const wantClipTop =
-    Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
-  // The cut in force. A change waits for a fling to end: mid-fling the
-  // offset known here is a frame or more behind, and moving it would stop
-  // the list and snap it back.
-  const [clipTop, setClipTop] = useState(wantClipTop);
-  const decelerating = useRef(false);
-  const latestClipTop = useRef(wantClipTop);
-  useLayoutEffect(() => {
-    latestClipTop.current = wantClipTop;
-    if (!decelerating.current) setClipTop(wantClipTop);
-  }, [wantClipTop]);
   // Turning the cut on or off moves the scroll view's frame by `safeTop`.
-  // At the top of the page UIKit puts the content back by itself; further
-  // down it keeps the offset, and every row would jump by that much. The
-  // offset moves with the frame instead, so the rows stay where they are.
-  const lastClipTop = useRef(clipTop);
-  useLayoutEffect(() => {
-    const delta = clipTop - lastClipTop.current;
-    lastClipTop.current = clipTop;
-    const y = scrollY.current;
-    const view =
-      scrollRef && typeof scrollRef === 'object' ? scrollRef.current : null;
-    if (!delta || y === null || !view) return;
-    const next = clipOffset(y, delta);
-    if (next !== null) view.scrollTo({ y: next, animated: false });
-  }, [clipTop, scrollRef]);
+  // The offset needs no correction here: UIKit moves it with the top inset
+  // it gives the scroll view (the inset goes to 0 as the frame drops below
+  // the status bar, and back), so scrolled rows stay where the bar's own
+  // hiding and return leave them (measured on iOS 26.3: 358 → 474 → 358).
+  const clipTop =
+    Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
@@ -734,27 +702,8 @@ export function Screen({
               onScrollEndDrag={
                 clampScrollOnContentChange ? bounds.onScroll : undefined
               }
-              // Only a page that may be cut listens for flings; every other page
-              // keeps the handlers it had.
-              onMomentumScrollBegin={
-                clipAboveSafeTop === undefined
-                  ? undefined
-                  : () => {
-                      decelerating.current = true;
-                    }
-              }
               onMomentumScrollEnd={
-                clipAboveSafeTop === undefined
-                  ? clampScrollOnContentChange
-                    ? bounds.onScroll
-                    : undefined
-                  : (event) => {
-                      decelerating.current = false;
-                      // The offset is final now: a cut held during the fling applies.
-                      scrollY.current = event.nativeEvent.contentOffset.y;
-                      setClipTop(latestClipTop.current);
-                      if (clampScrollOnContentChange) bounds.onScroll(event);
-                    }
+                clampScrollOnContentChange ? bounds.onScroll : undefined
               }
               scrollEventThrottle={16}
               stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}

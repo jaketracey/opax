@@ -20,7 +20,6 @@ import { useScreenReady } from '../src/analytics/timing';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 import { IDLE_HOLD_MS, SearchIdle } from '../src/features/search/SearchIdle';
 import { cutsAtSafeTop } from '../src/features/search/cut';
-import { clipOffset } from '../src/design/layout';
 import { SearchSuggestions } from '../src/features/search/SearchSuggestions';
 import { ResultsView } from '../src/features/search/ResultsView';
 jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
@@ -422,17 +421,4 @@ test('the page is cut only where an active field hides the bar: the iPhone, neve
   expect(cutsAtSafeTop({ ...iPhone, regular: true })).toBe(false);
   // Before iOS 26 the field is stacked in the bar.
   expect(cutsAtSafeTop({ ...iPhone, tabBarField: false })).toBe(false);
-});
-
-test('a scrolled page keeps its rows in place when the cut turns on or off', () => {
-  // On: the frame moves down 62, so the offset moves with it.
-  expect(clipOffset(900, 62)).toBe(962);
-  expect(clipOffset(-20, 62)).toBe(42);
-  // At the top (resting under the bar's inset) UIKit rests the content.
-  expect(clipOffset(-106, 62)).toBeNull();
-  expect(clipOffset(-62, 62)).toBeNull();
-  // Off: back up by the same amount; the cut page's rest (0) is left alone.
-  expect(clipOffset(962, -62)).toBe(900);
-  expect(clipOffset(30, -62)).toBe(-32);
-  expect(clipOffset(0, -62)).toBeNull();
 });
