@@ -7,9 +7,12 @@
  *
  * Only a name whose surname is entirely capitals is changed, and only its
  * all-capital words. A name already in mixed case is returned as it is, so
- * nothing is guessed about "MacDonald" or "van der Berg". Given-name
- * initials of one or two letters ("AJ SMITH") and post-nominals after the
- * surname ("Leo McLEAY AO") stay in capitals. This is for drawing only: the
+ * nothing is guessed about "MacDonald" or "van der Berg". A single
+ * initial, or initials written with full stops ("A.J. SMITH"), have no run
+ * of capitals and stay as they are; a short given name or a particle is a
+ * word like any other ("JO SMITH" is "Jo Smith", "Sarah DE BRUYN" is "Sarah
+ * De Bruyn"). Post-nominals after the surname ("Leo McLEAY AO") stay in
+ * capitals. This is for drawing only: the
  * record's own name is what is matched and published.
  */
 const POST_NOMINALS = new Set('AO AC AM OAM MP QC KC SC PSM CSC'.split(' '));
@@ -32,9 +35,8 @@ export function personDisplayName(name: string): string {
     .map((part) => {
       if (!/\S/.test(part)) return part;
       const index = seen++;
-      // Post-nominals, and a given name's initials, stay as they are.
+      // Post-nominals stay as they are.
       if (index >= count) return part;
-      if (index < count - 1 && lettersOf(part).length <= 2) return part;
       return part.replace(
         /(?<![\p{L}])(Mc|Mac)?(\p{Lu})(\p{Lu}+)(?![\p{Ll}])/gu,
         (_word, prefix: string | undefined, first: string, rest: string) =>

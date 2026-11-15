@@ -25,11 +25,15 @@ test.each([
   ['Ian MacDONALD', 'Ian MacDonald'],
   ['Mary-Anne SMITH', 'Mary-Anne Smith'],
   ['Kim NG', 'Kim Ng'],
-  // A given name's initials of one or two letters stay in capitals.
-  ['AJ SMITH', 'AJ Smith'],
+  // A short given name or a particle is a word like any other.
+  ['JO SMITH', 'Jo Smith'],
+  ['Sarah DE BRUYN', 'Sarah De Bruyn'],
+  ['JO SMITH-JONES', 'Jo Smith-Jones'],
+  ['AJ SMITH', 'Aj Smith'],
+  // A single initial, and initials written with full stops, stay capitals.
   ['A J SMITH', 'A J Smith'],
   ['A.J. SMITH', 'A.J. Smith'],
-  ['JO SMITH-JONES', 'JO Smith-Jones'],
+  ['A. J. SMITH', 'A. J. Smith'],
   // Post-nominals stay as they are, and the surname is the word before.
   ['LEO McLEAY AO', 'Leo McLeay AO'],
   ['Kim SMITH AM MP', 'Kim Smith AM MP'],
@@ -54,6 +58,7 @@ test.each([
   'JJ Smith',
   // A post-nominal is not a surname.
   'Smith AO',
+  'Kim AO',
   'Kim Smith AO',
   'Kim Smith OAM',
   'Kim Smith AC QC',
