@@ -412,7 +412,24 @@ test.each([false, true])(
     }
   },
 );
-test('finder results start at the page top below the header, from a scrolled hub', async () => {
+/**
+ * The iOS version for one test, put back afterwards. The measured rest
+ * (design/scroll-to-top.ts) is iOS 26 and later; before iOS 26 the bars are
+ * opaque and the rest is 0 without measuring.
+ */
+function iosVersion(version: string | number) {
+  const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  Object.defineProperty(Platform, 'Version', {
+    configurable: true,
+    value: version,
+  });
+  return () => {
+    if (descriptor) Object.defineProperty(Platform, 'Version', descriptor);
+  };
+}
+test('iOS 26: finder results start at the page top below the header, from a scrolled hub', async () => {
+  // With no reading, the helper assumes the list runs under the header.
+  const restore = iosVersion(26);
   jest.useFakeTimers();
   try {
     let searchBar!: SearchBarProps;
@@ -472,10 +489,12 @@ test('finder results start at the page top below the header, from a scrolled hub
     expect(scrollTo).toHaveBeenLastCalledWith({ y: 2400, animated: false });
   } finally {
     jest.useRealTimers();
+    restore();
   }
 });
 
-test('finder results start at the resting top of a list below the pushed opaque bar', async () => {
+test('iOS 26: finder results start at the resting top of a list below the pushed opaque bar', async () => {
+  const restore = iosVersion(26);
   // The hub is pushed: react-native-screens lays it out below the stack's
   // opaque bar, so its list starts at the header's bottom (91 in this
   // harness) and rests at 0. The helper measures the list's native scroll
@@ -527,6 +546,62 @@ test('finder results start at the resting top of a list below the pushed opaque 
     expect(scrollTo).toHaveBeenCalledTimes(1);
   } finally {
     jest.useRealTimers();
+    restore();
+  }
+});
+
+test('before iOS 26 finder results rest at 0 without measuring: the hub’s bar is opaque', async () => {
+  // Before iOS 26 every bar over a scroll-to-top caller is opaque, so the
+  // rest is 0 and the helper does not measure (design/scroll-to-top.ts).
+  const restore = iosVersion('18.4');
+  jest.useFakeTimers();
+  try {
+    let searchBar!: SearchBarProps;
+    const observe = (options: Record<string, unknown>) => {
+      searchBar = options.headerSearchBarOptions as SearchBarProps;
+      (searchBar.ref as { current: unknown }).current = { setText: jest.fn() };
+    };
+    mockVic.find.mockImplementation(async (q: string) => ({
+      data: decodeFind(q.startsWith('3350') ? postcode : finder),
+      stale: false,
+    }));
+    const r = renderVic(<Hub />, observe);
+    const list = () => r.root.findByType(SectionList);
+    const scrollTo = jest.fn();
+    // A reading that would say "under the header" on iOS 26 (top 0).
+    const measureInWindow = jest.fn(
+      (callback: (x: number, y: number) => void) => callback(0, 0),
+    );
+    jest
+      .spyOn(list().instance as SectionList, 'getScrollResponder')
+      .mockReturnValue({
+        scrollTo,
+        getNativeScrollRef: () => ({ measureInWindow }),
+      } as never);
+    act(() =>
+      list().props.onScroll({ nativeEvent: { contentOffset: { y: 2400 } } }),
+    );
+    act(() => {
+      searchBar.onChangeText!({ nativeEvent: { text: '3350' } } as never);
+    });
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(words(r)).toContain('Wendouree');
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 0, animated: false });
+    expect(measureInWindow).not.toHaveBeenCalled();
+
+    // Already at that rest, a new query schedules no reset.
+    act(() =>
+      list().props.onScroll({ nativeEvent: { contentOffset: { y: 0 } } }),
+    );
+    act(() => {
+      searchBar.onChangeText!({ nativeEvent: { text: 'St Kilda' } } as never);
+    });
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+  } finally {
+    jest.useRealTimers();
+    restore();
   }
 });
 
