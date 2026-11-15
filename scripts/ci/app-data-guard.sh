@@ -11,6 +11,8 @@
 # all. PINNED_BUILDS lists them, one "label|tag|commit" a line: the tag keeps the commit reachable, and the
 # commit says what the tag must still point at. Each problem names the build, the file and the path inside
 # it: [1.1.3 (57)] bills/au-federal-r7520.json divisions.question
+# Each run must also print which decoders it read, "decoders: <label> <folder>", naming the folder the run
+# was pointed at: a label over another build's decoders fails that build.
 #
 # `export` prints "present=true" when APP_REF carries the guard and "present=false" when it does not (the
 # only case a caller may treat as nothing to check). Anything else that goes wrong (an app line that is not
@@ -65,11 +67,22 @@ case "$command" in
     failed=()
     # One build: its label, then its source tree (empty for the app line's own).
     check() {
-      local label=$1 src=$2 started=$SECONDS rc=0
+      local label=$1 src=$2 started=$SECONDS rc=0 log expected
+      log=$(mktemp "$work/app-data-guard.XXXXXX")
+      # The folder as the module system names it: with every link resolved.
+      expected=$(cd "${src:-$app/src}" && pwd -P)
       echo "::group::app data guard: $label"
       ( cd "$app" && env OPAX_PUBLISHED_DIR="$published" OPAX_DECODERS_LABEL="$label" \
-          ${src:+OPAX_DECODERS_SRC="$src"} npm test -- tests/published-data.test.ts ) || rc=$?
+          ${src:+OPAX_DECODERS_SRC="$src"} npm test -- tests/published-data.test.ts ) 2>&1 | tee "$log" ||
+        rc=${PIPESTATUS[0]}
       echo "::endgroup::"
+      # The label is only a name. The helper prints the folder it loaded the decoders from, and a run that
+      # does not say it read this build's own is no check of this build, whatever its tests did.
+      if ! grep -Fxq "decoders: $label $expected" "$log"; then
+        echo "app-data-guard: $label: the run did not say \"decoders: $label $expected\"" >&2
+        echo "app-data-guard: $label: it said: $(grep '^decoders: ' "$log" | sort -u | tr '\n' ';' || true)" >&2
+        rc=1
+      fi
       echo "app-data-guard: $label: $([ "$rc" = 0 ] && echo passed || echo FAILED) in $((SECONDS - started)) s"
       [ "$rc" = 0 ] || failed+=("$label")
     }
@@ -81,7 +94,7 @@ case "$command" in
       check "$label" "$app/pinned-builds/$(slug "$label")/src"
     done < <(pinned)
     if [ "${#failed[@]}" -gt 0 ]; then
-      echo "app-data-guard: published data does not decode in: ${failed[*]}" >&2
+      echo "app-data-guard: the guard failed for: ${failed[*]}" >&2
       exit 1
     fi
     ;;
