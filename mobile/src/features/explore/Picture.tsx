@@ -142,7 +142,8 @@ export function Picture({
                 {'Photo couldn’t be loaded.'}
               </Text>
               <Pressable
-                feedback="wash"
+                // On the black ground: the paper wash would hide the text.
+                feedback="none"
                 accessibilityRole="button"
                 accessibilityLabel="Try again"
                 onPress={() => setRetry((v) => v + 1)}

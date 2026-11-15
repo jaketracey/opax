@@ -206,14 +206,13 @@ export function AskDock({
             <View style={styles.chips}>
               {s.fresh ? (
                 <Pressable
-                  feedback="wash"
                   ref={waitingLine}
                   accessibilityRole="button"
                   accessibilityLabel={freshLabel}
                   accessibilityHint="Opens Options"
                   onPress={onOptions}
                   android_ripple={{ color: colors.dividerSubtle }}
-                  style={styles.chip}
+                  style={({ pressed }) => chipStyle(pressed)}
                 >
                   <Text variant="footnote" tone="inkSoft">
                     {freshLabel}
@@ -222,7 +221,6 @@ export function AskDock({
               ) : null}
               {tags.map((tag) => (
                 <Pressable
-                  feedback="wash"
                   key={tag.id}
                   accessibilityRole="button"
                   accessibilityLabel={`Remove ${tag.key}, ${tag.value}`}
@@ -230,7 +228,7 @@ export function AskDock({
                   accessibilityState={{ disabled: s.busy && !s.fresh }}
                   onPress={() => askSession.options(clearChip(options, tag.id))}
                   android_ripple={{ color: colors.dividerSubtle }}
-                  style={styles.chip}
+                  style={({ pressed }) => chipStyle(pressed)}
                   testID={`ask-option-remove-${tag.id}`}
                 >
                   <Text variant="footnote">{tag.value}</Text>
@@ -433,7 +431,17 @@ export function AskDock({
     </View>
   );
 }
+/**
+ * A chip is filled with the sunken wash already, so the shared pressed wash
+ * showed nothing on it: pressed, it takes the next step down (iOS; Android
+ * has its ripple in the same colour).
+ */
+const chipStyle = (pressed: boolean) => [
+  styles.chip,
+  pressed && Platform.OS === 'ios' ? styles.chipPressed : null,
+];
 const styles = StyleSheet.create({
+  chipPressed: { backgroundColor: colors.dividerSubtle },
   body: {
     gap: rhythm.line,
     paddingHorizontal: rhythm.line,
