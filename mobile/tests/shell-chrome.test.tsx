@@ -2479,6 +2479,122 @@ describe('scroll edges on every bar shape', () => {
       }
     },
   );
+  // Beside the rail a search field is stacked below the title band, and
+  // UIKit's scroll edge covers the band alone: rows ran through the field
+  // under a covered title (Bills, b73). The band does not fold away while it
+  // holds a field, so that root's bar is solid on the page's own ground.
+  test.each([
+    ['bills', '(bills)', 'trailing'],
+    ['bills', '(bills)', 'leading'],
+    ['search', '(search)', 'trailing'],
+  ] as const)(
+    '%s in %s with a search field beside a %s rail has one solid ground for title and field',
+    (name, segment, edge) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { page, navigation, ground } = fadePage(
+          name,
+          segment,
+          false,
+          false,
+          true,
+        );
+        const renderer = tree(page(82));
+        try {
+          const resolved = Object.assign(
+            {},
+            ...navigation.setOptions.mock.calls.map(([options]) => options),
+          );
+          expect(resolved).toMatchObject({
+            ...opaqueBar(ground),
+            headerTransparent: false,
+          });
+          expect(resolved.scrollEdgeEffects.top).toBe('hidden');
+          // UIKit's own bar background stops short of the top edge there.
+          const backing = resolved.headerBackground() as React.ReactElement<{
+            style: { backgroundColor: unknown };
+          }>;
+          expect(backing.props.style.backgroundColor).toBe(ground);
+          // The native solid sibling is the horizontal bar's, not the rail's.
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
+  test.each([
+    // No field: the root stays clear, and Today runs to the top edge.
+    ['index', '(today)', 'trailing', false],
+    // iPhone, iPad and the unfolded Duo: a field changes nothing.
+    ['bills', '(bills)', 'unspecified', true],
+    ['search', '(search)', 'unspecified', true],
+  ] as const)(
+    '%s in %s beside a %s bar (search field: %s) keeps its clear bar',
+    (name, segment, edge, field) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { page, navigation } = fadePage(
+          name,
+          segment,
+          false,
+          false,
+          field,
+        );
+        const renderer = tree(page(82));
+        try {
+          const resolved = Object.assign(
+            {},
+            ...navigation.setOptions.mock.calls.map(([options]) => options),
+          );
+          expect(resolved.headerTransparent).toBe(true);
+          expect(resolved.headerStyle).toEqual({});
+          expect(resolved.headerBackground).toBeUndefined();
+          if (edge === 'unspecified')
+            expect('headerBackground' in resolved).toBe(false);
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
+  // Screen's pinned band (Search's scope row) holds below a bar the page
+  // runs under. Under the solid rail bar the scroll view starts below the
+  // bar, so React Native's own sticky header is already in the right place;
+  // the offset header never stuck there and the row scrolled away.
+  test.each([
+    ['trailing', false],
+    ['unspecified', true],
+  ] as const)(
+    'beside a %s bar the Search scope row uses the offset sticky header: %s',
+    (edge, offset) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { navigation } = fadePage('search', '(search)');
+        const route = { key: 'search-root', name: 'search' };
+        const renderer = tree(
+          <NavigationContext.Provider value={navigation as never}>
+            <NavigationRouteContext.Provider value={route}>
+              <HeaderHeightContext.Provider value={82}>
+                <RouteOptions
+                  options={{
+                    headerSearchBarOptions: { hideWhenScrolling: false },
+                  }}
+                />
+                <Screen grouped pinned={<View testID="scopes" />}>
+                  <View />
+                </Screen>
+              </HeaderHeightContext.Provider>
+            </NavigationRouteContext.Provider>
+          </NavigationContext.Provider>,
+        );
+        try {
+          const scroll = renderer.root.findByType(Native.ScrollView).props;
+          expect(scroll.stickyHeaderIndices).toEqual([0]);
+          expect(!!scroll.StickyHeaderComponent).toBe(offset);
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
   test('the Search root on the folded rail sets a hard top edge under its search field', () =>
     withGlass(() => {
       mockBarEdge = 'trailing';

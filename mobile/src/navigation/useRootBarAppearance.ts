@@ -30,7 +30,7 @@ const hardEdgeRoots = ['index', 'search', 'ask', 'leads'];
 const searches = new WeakMap<
   object,
   {
-    value: { largeTitle?: boolean; underBar?: boolean };
+    value: { largeTitle?: boolean; underBar?: boolean; search?: boolean };
     listeners: Set<() => void>;
   }
 >();
@@ -80,7 +80,15 @@ export function useRootBarSearchOptions(
     if ('headerLargeTitleEnabled' in options || 'headerLargeTitle' in options)
       value.largeTitle =
         options.headerLargeTitleEnabled ?? options.headerLargeTitle;
-    if (state.value.largeTitle === value.largeTitle) return;
+    // A search field in the bar: beside a vertical bar it sits below the
+    // title band, outside the cover UIKit's hard top edge draws.
+    if ('headerSearchBarOptions' in options)
+      value.search = !!options.headerSearchBarOptions;
+    if (
+      state.value.largeTitle === value.largeTitle &&
+      state.value.search === value.search
+    )
+      return;
     state.value = value;
     state.listeners.forEach((listener) => listener());
   }, [navigation, options]);
@@ -172,6 +180,14 @@ export function useRootBarAppearance(
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
   useRootBarUnderBar(underBar, !!rootKey && owner === 'screen');
   const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
+  // Beside a vertical bar a search field is stacked below the title band,
+  // and UIKit's scroll edge (soft or hard) covers the band alone: the field
+  // had no ground, and rows ran through it under a covered title (Bills,
+  // b73). The band does not fold away while it holds a field, so such a bar
+  // is solid on the page's ground, like the legibility bar: the title and
+  // the field are one surface, and the list ends at the field.
+  const railSearch = verticalBar && !!rootOptions.search;
+  const railSolid = solid || railSearch;
   const hardEdge =
     !!contentUnderBar &&
     Platform.OS === 'ios' &&
@@ -195,14 +211,14 @@ export function useRootBarAppearance(
         : {
             ...scrollBar(
               colour,
-              solid,
+              verticalBar ? railSolid : solid,
               barEdge,
               contentUnderBar === undefined ? undefined : hardEdge,
             ),
             // Beside a vertical bar UIKit's bar background stops short of
             // the top edge, so a solid bar there gets the page's ground.
             ...(verticalBar
-              ? solid
+              ? railSolid
                 ? barBacking(colour)
                 : { headerBackground: undefined }
               : {}),
@@ -221,6 +237,7 @@ export function useRootBarAppearance(
     barEdge,
     hardEdge,
     contentUnderBar,
+    railSolid,
   ]);
   // A coloured UIKit appearance hides large titles on iOS 26. The legibility
   // fallback and Today's AX band use this native sibling. Header-height updates
@@ -291,4 +308,37 @@ export function useRootBarAppearance(
   return !!root;
 }
 
-const emptyOptions: { largeTitle?: boolean; underBar?: boolean } = {};
+/**
+ * Whether a root's bar is solid beside a vertical bar: it holds a search
+ * field, or a legibility setting is on (the `railSolid` rule above). Its
+ * scroll view then starts below the bar instead of running under it, which
+ * Screen's pinned band needs to know. False on every other layout.
+ */
+export function useRailSolidRoot(): boolean {
+  const navigation = useContext(NavigationContext);
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (!navigation) return () => {};
+      const state = searchState(navigation);
+      state.listeners.add(listener);
+      return () => {
+        state.listeners.delete(listener);
+      };
+    },
+    [navigation],
+  );
+  const search = useSyncExternalStore(
+    subscribe,
+    () => (navigation ? !!searchState(navigation).value.search : false),
+    () => false,
+  );
+  const verticalBar = useVerticalBarEdge() !== 'unspecified';
+  const solid = useSolidBar();
+  return verticalBar && glassBar() && (solid || search);
+}
+
+const emptyOptions: {
+  largeTitle?: boolean;
+  underBar?: boolean;
+  search?: boolean;
+} = {};

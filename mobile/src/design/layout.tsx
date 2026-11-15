@@ -45,7 +45,10 @@ import {
   isTabStack,
   useFloatingBarClearance,
 } from '../navigation/floating-bar';
-import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
+import {
+  useRootBarAppearance,
+  useRailSolidRoot,
+} from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
 import {
@@ -520,6 +523,8 @@ export function Screen({
   }, [setOptions, ground, inPane, nativeRoot, backed]);
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
+  const railSolidRoot = useRailSolidRoot();
+  const belowBar = nativeRoot && railSolidRoot;
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
@@ -634,7 +639,11 @@ export function Screen({
             }
             scrollEventThrottle={16}
             stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
-            StickyHeaderComponent={pinnedHere ? BarStickyHeader : undefined}
+            // Under a solid bar the scroll view starts below the bar, and
+            // React Native's own sticky header holds at the right place.
+            StickyHeaderComponent={
+              pinnedHere && !belowBar ? BarStickyHeader : undefined
+            }
           >
             {pinnedHere ? (
               <View
