@@ -122,23 +122,41 @@ export function caretAfterContent(
 ): DraftCaret | null {
   if (!caret || caret.draft !== draft || caret.sized) return caret;
   // Judged once: a later size (a rotation, a wider window) moves nothing.
+  // Like for like: UIKit's content height includes the field's own vertical
+  // padding (measured on iOS 27: three lines report 88 = 3 x 22 + 22, the
+  // laid-out height; ten lines report 242 in a field capped at 130), and
+  // the cap is the field's whole height, padding included.
   return contentHeight <= fieldCap + 1
     ? { draft, at: 'end', done: false, sized: true }
     : { ...caret, sized: true };
 }
-/** The field reported a selection: once it is the one held, let go. */
+/**
+ * The field reported a selection.
+ *
+ * - While a selection is held, the report that matches it means the field
+ *   has it: let go. Any other report then is the field's own (a new value
+ *   puts the caret at the end first), so it changes nothing.
+ * - Once let go, a report somewhere else is the reader's own tap or drag.
+ *   Their caret is theirs from then on: the content's height, if it has not
+ *   been judged yet, moves nothing (it used to pull the caret of a reader
+ *   who tapped in early to the end of the draft).
+ */
 export function caretAfterSelection(
   caret: DraftCaret | null,
   draft: string,
   selection: { start: number; end: number },
 ): DraftCaret | null {
+  if (!caret || caret.draft !== draft) return caret;
   const held = caretSelection(caret, draft);
-  return caret &&
-    held &&
-    selection.start === held.start &&
-    selection.end === held.end
-    ? { ...caret, done: true }
-    : caret;
+  if (held)
+    return selection.start === held.start && selection.end === held.end
+      ? { ...caret, done: true }
+      : caret;
+  if (caret.sized) return caret;
+  const left = caret.at === 'start' ? 0 : draft.length;
+  return selection.start === left && selection.end === left
+    ? caret
+    : { ...caret, sized: true };
 }
 /**
  * Ask's composer, docked above the tab bar (DIRECTION 4.24). Leading,
@@ -399,7 +417,10 @@ export function AskDock({
           onPress={onOptions}
           testID="ask-composer-options"
         />
-        <View style={styles.field}>
+        <View
+          testID="ask-field"
+          style={[styles.field, tags.length > 0 ? styles.fieldInset : null]}
+        >
           <TextInput
             ref={inputRef}
             value={s.draft}
@@ -587,6 +608,10 @@ const styles = StyleSheet.create({
   // One line, empty: the symbols centre on the placeholder's line.
   rowEmpty: { alignItems: 'center' },
   field: { flex: 1 },
+  // With options on, the Options button is a filled disc as wide as its
+  // target, and the draft's first letters touched it. Unselected, the glyph
+  // sits inside its target and leaves its own gap.
+  fieldInset: { marginLeft: rhythm.tight },
   placeholder: {
     position: 'absolute',
     top: 11,
