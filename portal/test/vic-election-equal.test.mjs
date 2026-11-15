@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
+import {VIC_ELECTION_POLLS_CLOSE} from '../public/vic-election.js';
 
 async function compile(entry) {
   const result=await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false});
@@ -58,4 +59,42 @@ test('no vote is featured on a district or region page',()=>{
     assert.equal(doc.querySelectorAll('.vic-votes').length,0,seat?.name??'hub');
     assert.doesNotMatch(doc.body.textContent,/Recent votes?/);
   }
+});
+
+test('no seat page carries a record section for anyone until the polls close; it returns from that instant',()=>{
+  const CLOSE=Date.parse(VIC_ELECTION_POLLS_CLOSE);
+  assert.equal(new Date(CLOSE).toISOString(),'2026-11-28T07:00:00.000Z','6 pm Saturday 28 November 2026 in Melbourne');
+  const district=data.seats.find(s=>s.kind==='district'&&s.name==='Richmond'),region=data.seats.find(s=>s.kind==='region');
+  const render=(s,now)=>{const page=renderVicElection(data,s,{},now);return {page,doc:new JSDOM(page.html).window.document};};
+  for(const now of [new Date('2026-11-16T10:00:00+11:00'),new Date(CLOSE-1)]) {
+    for(const s of data.seats) {
+      const {page,doc}=render(s,now);
+      assert.equal(doc.querySelectorAll('#record, .vic-member, .vic-stats, .vic-speech-search').length,0,s.name);
+      assert.doesNotMatch(page.html+page.description,/has done|have done/,s.name);
+      if(s.kind!=='district') continue;
+      // The previous member is named once on the page, in the dated line, as a plain link to their own page.
+      const m=s.members[0],row=doc.querySelector('.vic-facts > div');
+      assert.equal(row.querySelector('dt').textContent,`Member for ${s.name} until the Assembly expired on 3 November`,s.name);
+      assert.deepEqual([...row.querySelectorAll('dd a')].map(a=>[a.getAttribute('href'),a.textContent]),[[m.href,m.name]],s.name);
+      const elsewhere=doc.querySelector('.vic-hub').cloneNode(true);
+      for(const part of elsewhere.querySelectorAll('.vic-facts > div:first-child, #candidates, #region')) part.remove();
+      assert.ok(!elsewhere.textContent.includes(m.name),s.name);
+      assert.equal(page.description.split(m.name).length,2,s.name);
+    }
+    // A region's previous members are a plain list of links under the dated heading.
+    const {doc}=render(region,now),members=doc.querySelector('#members');
+    assert.equal(members.querySelector('h2').textContent,`Members for ${region.name} Region until the Council expired on 3 November`);
+    assert.deepEqual([...members.querySelectorAll('.vic-people > li > a')].map(a=>[a.getAttribute('href'),a.textContent]),region.members.map(m=>[m.href,m.name]));
+    assert.equal(members.querySelectorAll('a').length,region.members.length);
+  }
+  for(const now of [new Date(CLOSE),new Date('2026-11-29T10:00:00+11:00')]) {
+    const d=render(district,now);
+    assert.equal(d.doc.querySelector('#record h2').textContent,`What ${district.members[0].name} has done`);
+    assert.ok(d.doc.querySelector('#record .vic-speech-search'));
+    assert.equal(d.doc.querySelectorAll('.vic-votes').length,0,'still no featured vote');
+    assert.equal(render(region,now).doc.querySelectorAll('#members .vic-member').length,region.members.length);
+  }
+  // A member the VEC list shows is not standing gets the same treatment: no section during the campaign.
+  const notStanding=data.seats.find(s=>s.name==='Bendigo West');
+  assert.equal(render(notStanding,new Date(CLOSE-1)).doc.querySelector('#record'),null);
 });

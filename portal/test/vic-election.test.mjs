@@ -33,6 +33,8 @@ const fetchPage = (path,enabled,extra={},options={}) => worker.fetch(new Request
 // Content assertions use the SSR renderer; router assertions stub only HTML rewriting.
 globalThis.HTMLRewriter=class {on(){return this;} transform(r){return r;}};
 
+// Seat pages carry no member record section until the polls close; tests of that section render after them.
+const AFTER_POLLS=new Date('2026-11-29T00:00:00+11:00');
 test('publication defaults off, fails closed, and never reads election facts when disabled',async()=>{
   for (const value of [undefined,'false','1','TRUE','yes',' true ']) {
     assert.equal(vicElectionEnabled(value),false);
@@ -84,7 +86,9 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, r
     if(s.kind==='district'){
       const r=s.result.since||s.result.general;
       assert.ok(page.html.includes(`${r.margin.toFixed(1)} points`),s.name);
-      assert.ok(page.html.includes(`name="speaker" value="${s.members[0].name.replace(/'/g,'&#39;')}"`),s.name);
+      // The member's record section, with its speech search, is on the page only after the polls close.
+      assert.doesNotMatch(page.html,/name="speaker"|id="record"/,s.name);
+      assert.ok(renderVicElection(data,s,{},AFTER_POLLS).html.includes(`name="speaker" value="${s.members[0].name.replace(/'/g,'&#39;')}"`),s.name);
     }
     assert.doesNotMatch(page.html,/An association does not prove influence/);
     assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');assert.equal(page.jsonLd['@graph'][1]['@type'],'ItemList');
@@ -194,9 +198,9 @@ test('non-partisan strings, nomination dates and actual speech scope stay explic
   for(const html of pages)assert.doesNotMatch(html,/safe seat|marginal|predictions?|polling|opinion poll|ones to watch|likely winner|projected winner|vote for|rankings?/i);
   assert.match(pages[0],/noon on Monday 9 November 2026/);assert.doesNotMatch(pages[0],/13 November|candidate list[^<]*[A-Z][a-z]+ [A-Z]/);
   const after=renderVicElection(data,null,{},new Date('2026-11-10T00:00:00Z')).html;assert.match(after,/Nominations closed/);assert.doesNotMatch(after,/nominations close at noon/);
-  const lowan=data.seats.find(s=>s.name==='Lowan');assert.ok(lowan.members[0].speeches.within_term);assert.match(renderVicElection(data,lowan).html,/speeches in Parliament, 2023–2026/);
+  const lowan=data.seats.find(s=>s.name==='Lowan');assert.ok(lowan.members[0].speeches.within_term);assert.match(renderVicElection(data,lowan,{},AFTER_POLLS).html,/speeches in Parliament, 2023–2026/);
   // A count the export can't separate from federal records is left out, not explained away.
-  for(const name of ['Mornington','South Barwon']){const seat=data.seats.find(s=>s.name===name);assert.equal(seat.members[0].speeches,null);const html=renderVicElection(data,seat).html;assert.doesNotMatch(html,/speeches in Parliament|cannot isolate/);assert.match(html,/Search [^<]+’s speeches/);}
+  for(const name of ['Mornington','South Barwon']){const seat=data.seats.find(s=>s.name===name);assert.equal(seat.members[0].speeches,null);const html=renderVicElection(data,seat,{},AFTER_POLLS).html;assert.doesNotMatch(html,/speeches in Parliament|cannot isolate/);assert.match(html,/Search [^<]+’s speeches/);}
   for(const name of ['Gippsland South','Malvern','Mill Park','Shepparton'])assert.ok(data.seats.find(s=>s.name===name).members[0].votes,name+' uses the existing apostrophe-normalised name rule');
   assert.match(renderVicElection(data,data.seats.find(s=>s.name==='Eureka')).html,/Called Buninyong before 2022/);
   assert.match(renderVicElection(data,data.seats.find(s=>s.name==='North-Eastern Metropolitan')).html,/Called Eastern Metropolitan Region before 2022/);
@@ -219,18 +223,20 @@ test('page template: shared head and sections, link rows as touch targets, ballo
   }
   assert.match(pages.hub,/<p class="ui-lede">Victorians vote on Saturday 28 November\./);
   assert.match(pages.district,/<p class="ui-page-meta">Lower house district in <a href="\/vic-election-2026\/northern-metropolitan">Northern Metropolitan Region<\/a>\.<\/p>/);
-  assert.match(pages.district,/<ul class="hub-links"><li><a href="\/subject\/person\/[a-z-]+">Full profile<\/a><\/li><li><a href="https:\/\/www\.parliament\.vic\.gov\.au\/[^"]+">Parliament of Victoria profile<\/a><\/li><\/ul><\/article>/);
+  // Record sections return after the polls close (vic-election-equal.test.mjs holds the boundary).
+  const later={district:renderVicElection(data,essendon,{},AFTER_POLLS).html,region:renderVicElection(data,region,{},AFTER_POLLS).html};
+  assert.match(later.district,/<ul class="hub-links"><li><a href="\/subject\/person\/[a-z-]+">Full profile<\/a><\/li><li><a href="https:\/\/www\.parliament\.vic\.gov\.au\/[^"]+">Parliament of Victoria profile<\/a><\/li><\/ul><\/article>/);
   assert.match(pages.district,/<div class="vic-elsewhere"><ul class="hub-links"><li><a [^>]+>District map and profile \(VEC\)<\/a><\/li><li><a href="\/vic-election-2026#find">Find another seat<\/a><\/li><\/ul><\/div>/);
-  assert.match(pages.region,/<li><a [^>]+>Full profile<\/a><\/li><li><a href="\/ask\?[^"]+">Speeches<\/a><\/li>/);
+  assert.match(later.region,/<li><a [^>]+>Full profile<\/a><\/li><li><a href="\/ask\?[^"]+">Speeches<\/a><\/li>/);
   // An absent candidate list omits the section. Published: ballot order, number in its own column.
   assert.doesNotMatch(renderVicElection(data,{...essendon,candidates:null}).html,/id="candidates"/);
   const list=[{name:'Avery Quill',party:'Independent'},{name:'Marisol Featherstonehaugh-Vandersloot',party:'Shooters, Fishers and Farmers Party Victoria'},{name:'Wren Halloway',party:''}];
-  const named=renderVicElection(data,{...essendon,candidates:{published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',list}}).html;
+  const named=renderVicElection(data,{...essendon,candidates:{published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',list}},{},AFTER_POLLS).html;
   const ballot=named.match(/<ol class="vic-candidates" role="list">([\s\S]*?)<\/ol>/)?.[1];assert.ok(ballot);
   assert.deepEqual([...ballot.matchAll(/<li><span class="vic-candidate-no" aria-hidden="true">(\d+)<\/span><span class="vic-candidate"><span class="vic-candidate-name">([^<]+)<\/span>/g)].map(m=>[+m[1],m[2]]),[[1,'Avery Quill'],[2,'Marisol Featherstonehaugh-Vandersloot'],[3,'Wren Halloway']]);
   assert.match(ballot,/Wren Halloway<\/span><\/span><\/li>/);assert.ok(named.indexOf('id="candidates"')<named.indexOf('id="record"'));
   // A member with no speech or vote counts keeps the search and links, with no empty stats list or votes heading.
-  const sparse=renderVicElection(data,data.seats.find(s=>s.name==='Bendigo West')).html;
+  const sparse=renderVicElection(data,data.seats.find(s=>s.name==='Bendigo West'),{},AFTER_POLLS).html;
   assert.doesNotMatch(sparse,/class="vic-stats"|Recent votes/);assert.match(sparse,/class="vic-speech-search"/);
   // The stylesheet keeps the shared touch target and column rules these classes rely on.
   const css=await readFile(new URL('hubs.css',root),'utf8');
