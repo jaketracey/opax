@@ -118,7 +118,9 @@ export default function Hub() {
     }
   };
   const searchBar = useListSearchBar({
-    placeholder: c.placeholder,
+    // The full words fit at default sizes (checked on an iPhone 17 Pro);
+    // at accessibility sizes the shorter ones do.
+    placeholder: accessible ? c.placeholderShort : c.placeholder,
     onChangeText: change,
     onSearchButtonPress: (text) => {
       setSearch((prev) => ({

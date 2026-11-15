@@ -31,7 +31,7 @@ import {
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import type { Directory } from '../your-mp/model';
 import { migratedSeat, useSeat } from '../your-mp/useSeat';
-import { FieldClearance } from './FieldClearance';
+import { FieldClearance, useFieldClearsKeyboard } from './FieldClearance';
 import { LocationRow } from './LocationRow';
 import {
   abolishedLine,
@@ -332,6 +332,9 @@ export function SeatChooser({
   };
   const accessible = useAccessibilitySize();
   const words = vic ? vicCopy : seatCopy;
+  // The clearance ends the list above the keyboard where there is a bottom
+  // field; there the scroll view must not add its own keyboard inset too.
+  const fieldClearsKeyboard = useFieldClearsKeyboard();
   const search = useListSearchBar({
     // Fewer words at accessibility text sizes, as the Victorian hub's field.
     placeholder: accessible ? words.placeholderShort : words.placeholder,
@@ -529,6 +532,7 @@ export function SeatChooser({
       <FieldClearance>
         <Screen
           grouped
+          keyboardInsets={!fieldClearsKeyboard}
           testID={welcome ? 'welcome-seat' : 'seat-sheet'}
           offline={offlineOf(state)}
         >
