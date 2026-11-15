@@ -4,7 +4,9 @@ import {renderNotFound} from './not-found.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=d28448a137';
 import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
 import {partyUrl} from './canonical-urls.js?v=9ce13e7ba5';
-import {nextStepsHTML, recipientNextSteps} from './next-steps.js';
+// "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
+let nextSteps = null;
+const nextStepsReady = import('./next-steps.js').then(module => { nextSteps = module; }, () => {});
 import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=9eb86ce57b';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -152,7 +154,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     root.append(jump);
     // Where this record leads, from the bundle already read: its programs, its agencies, its other jurisdiction.
     // The server's record core carries the same block above its list; an in-app visit has no core, so it is drawn here.
-    if (!coreActive) root.insertAdjacentHTML('beforeend', nextStepsHTML(recipientNextSteps(data, { jurisdiction, programs: index.programs || [],
+    if (!coreActive && nextSteps) root.insertAdjacentHTML('beforeend', nextSteps.nextStepsHTML(nextSteps.recipientNextSteps(data, { jurisdiction, programs: index.programs || [],
       otherHref: jur => JURISDICTIONS[jur] ? grantRecipientUrl(jur, id) : '', jurisdictionName: jur => JURISDICTIONS[jur] }), { pageType: 'recipient', id: 'recipient-next' }));
     const layout = node('div', null, 'grant-recipient-layout'), main = node('div'), aside = node('aside');
     if (!coreActive) {
@@ -259,7 +261,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
   async function load() {
     try {
       if (!JURISDICTIONS[jurisdiction] || !id) throw new Error('not-found');
-      const [index,loadedDonors] = await Promise.all([get(`/graph/grants.${jurisdiction}.json`),loadDonorViewIndex()]);
+      const [index,loadedDonors] = await Promise.all([get(`/graph/grants.${jurisdiction}.json`),loadDonorViewIndex(),nextStepsReady]);
       donorIndex=loadedDonors;
       const entry = index.recipients?.find(recipient => recipient.id === id);
       if (!entry || !Number.isInteger(entry.sh)) throw new Error('not-found');

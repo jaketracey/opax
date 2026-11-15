@@ -1,9 +1,11 @@
-import { vicElectionFooterHTML } from './vic-election.js?v=a2838bb3ae';
+import { vicElectionFooterHTML, VIC_ELECTION_POLLS_CLOSE } from './vic-election.js?v=a2838bb3ae';
 import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { renderNotFound } from './not-found.js';
-import { nextStepsHTML, electorateNextSteps } from './next-steps.js';
+// "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
+let nextSteps = null;
+export const nextStepsReady = import('./next-steps.js').then((module) => { nextSteps = module; }, () => {});
 import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=fcb2a1091c';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
@@ -204,7 +206,7 @@ export function heldSinceLine(detail) {
    side by side; the date control lives in Representation history, a list of
    bylines; the census is one figure and a key/value list; the downloads and
    reference ID sit under ⋯ and in the representation sheet. */
-export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
+export function profileHTML(detail, on = '', { photoUrlFor = () => null, now = new Date() } = {}) {
   const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
   const plural = Math.max(detail.capacity || 1, selected.members.length) > 1;
   const title = on ? `Representation on ${date(on)}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
@@ -220,6 +222,10 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
   const census = sourcesOf(detail, ['demographics']);
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'As at', originals: originalsOf(list), licence: licences(list), ...opts });
   const heldSince = on ? null : heldSinceLine(detail);
+  // The next-steps block names a member, or says a seat "represents you", only where the page can say so of today:
+  // not at a past date, not for a dissolved house (dissolved_for), and not for a Victorian seat before the 2026 polls
+  // close (the Council's rows carry no dissolution field, and its term ended with the Assembly's).
+  const sitting = !on && !detail.dissolved_for && !(detail.jurisdiction === 'vic' && now.getTime() < Date.parse(VIC_ELECTION_POLLS_CLOSE));
   return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1>${heldSince ? `<p class="ui-page-meta el-held-since">${esc(heldSince.text)}</p>` : ''}<p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
@@ -233,7 +239,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
         notes: [selected.status === 'historical' ? 'From dated service records; coverage may be incomplete.' : selected.status === 'partial' ? 'Partial roster; other members may be missing.' : 'Election winners and present-day representation can differ.',
           'Representation is shown only as the dated records give it.'] })}</section>
     ${boundary ? `<section class="ui-section el-outline-block"><h2 class="ui-section-title">Boundary</h2>${outlineHTML(boundary, detail.name)}${line(outline, { source: `${boundary.geometry_kind === 'official' ? 'AEC election boundary' : 'ABS statistical outline'}, ${boundary.vintage}`, notes: [esc(boundary.note), 'Simplified for display.', on ? 'This outline is not a reconstruction of the selected date.' : ''] })}</section>` : ''}</div>
-    ${nextStepsHTML(electorateNextSteps(detail, { members: selected.status === 'conflicting' ? [] : selected.members, personHref: personURL, displayName }), { pageType: 'electorate', id: 'el-next' })}
+    ${nextSteps ? nextSteps.nextStepsHTML(nextSteps.electorateNextSteps(detail, { members: selected.status === 'conflicting' ? [] : selected.members, personHref: personURL, displayName, sitting }), { pageType: 'electorate', id: 'el-next' }) : ''}
     ${detail.elections.length ? `<section id="el-elections" class="ui-section el-section"><h2 class="ui-section-title">Election timeline</h2><ol class="ui-list el-timeline">${detail.elections.map((c) => electionHTML(c, people)).join('')}</ol>
       ${line(contests, { source: 'AEC results', notes: [`${detail.elections.length} ${detail.elections.length === 1 ? 'contest' : 'contests'} recorded; any gaps are missing records.`, 'Percentages use each count’s recorded denominator. “—” means no result for that candidate in that count. TCP and TPP are distinct counts.'] })}</section>` : ''}
     <section id="el-history" class="ui-section el-section"><div class="ui-section-head"><h2>Representation history</h2>
@@ -259,7 +265,7 @@ export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRou
       return;
     }
     // Portraits for the bylines: the photo map in parallel, never blocking the page on it.
-    const [detail, photoUrlFor] = await Promise.all([json(entry.detail_url), loadPhotos ? loadPhotos().catch(() => null) : null]);
+    const [detail, photoUrlFor] = await Promise.all([json(entry.detail_url), loadPhotos ? loadPhotos().catch(() => null) : null, nextStepsReady]);
     if (!isActive()) return;
     if (on && !validDate(on)) { body.innerHTML = `<h1 id="subject-title" tabindex="-1">Invalid date</h1><p><a href="${esc(entry.url)}">Return to ${esc(entry.name)}</a></p>`; return; }
     document.title = `${entry.name} · Electorate · OPAX`;

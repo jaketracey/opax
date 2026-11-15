@@ -5,9 +5,10 @@
    what they have loaded, in the record's own order (newest first, or largest
    recorded value first, as the source lists them).
 
-   Rows have one height (a label, one line of link text, one line of detail), so
-   a page that learns a row later (a member's latest votes) reserves its place
-   with `reserve` and fills it with fillNextSteps: nothing below the block moves. */
+   Text wraps; nothing is cut. A page that learns a row later (a member's latest
+   votes) reserves its place with `reserve` and fills it with fillNextSteps: a held
+   row keeps room for a label, two lines of link text and a line of detail, so a
+   title of up to two lines moves nothing below the block. */
 import { shortDate, shortMoney } from './format.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -37,10 +38,10 @@ export function nextStepRows(items = []) {
   }
   return rows;
 }
-export function nextStepRowHTML(row) {
-  return `<li class="next-steps-row"><span class="next-steps-kind">${esc(row.kind)}</span><a class="next-steps-link" href="${esc(row.href)}" title="${esc(row.text)}">${esc(row.text)}</a><span class="next-steps-meta">${esc(row.meta)}</span></li>`;
+export function nextStepRowHTML(row, held = false) {
+  return `<li class="next-steps-row${held ? ' next-steps-held' : ''}"><span class="next-steps-kind">${esc(row.kind)}</span><a class="next-steps-link" href="${esc(row.href)}" title="${esc(row.text)}">${esc(row.text)}</a><span class="next-steps-meta">${esc(row.meta)}</span></li>`;
 }
-const pendingRowHTML = () => '<li class="next-steps-row next-steps-pending" data-next-pending aria-hidden="true"><span class="next-steps-kind"></span><span class="next-steps-link"></span><span class="next-steps-meta"></span></li>';
+const pendingRowHTML = () => '<li class="next-steps-row next-steps-held next-steps-pending" data-next-pending aria-hidden="true"><span class="next-steps-kind"></span><span class="next-steps-link"></span><span class="next-steps-meta"></span></li>';
 
 /**
  * The block. `pageType` is the page's analytics template word (growth-modules.js moduleAttrs:
@@ -68,7 +69,7 @@ export function fillNextSteps(root, items = [], empty = '') {
   const rows = nextStepRows(items).filter((row) => !taken.has(row.href)).slice(0, pending.length);
   pending.forEach((slot, index) => {
     const row = rows[index];
-    if (row) { slot.outerHTML = nextStepRowHTML(row); return; }
+    if (row) { slot.outerHTML = nextStepRowHTML(row, true); return; }
     slot.removeAttribute('data-next-pending');
     slot.classList.remove('next-steps-pending');
     slot.classList.add('next-steps-spare');
@@ -105,21 +106,23 @@ export function docNextSteps(doc, { personHref = () => '', searchHref = () => ''
   return rows;
 }
 
-/** A supplier: the agency that awards most of its recorded value, its largest contracts, suppliers under the same ABN. */
+/** A supplier: the agency holding the greatest recorded value with it (the figure is stated), its most
+ *  recently started contract at each of two other agencies, and suppliers under the same ABN. */
 export function supplierNextSteps(profile, { agencyHref = () => '', suppliers = [], contractTitle = (c) => c?.title } = {}) {
   const rows = [];
   const agencies = [...(profile?.agencies || [])].sort((a, b) => Number(b.total) - Number(a.total));
   const top = agencies[0];
   if (top?.name) rows.push({ kind: 'Awarding agency', href: agencyHref(top.name), text: top.name,
     meta: `${shortMoney(top.total)} in ${plural(top.count, 'contract')} with this supplier` });
-  const dated = (profile?.contracts || []).filter((c) => Number(c?.amount) > 0 && c.agency)
-    .sort((a, b) => Number(b.amount) - Number(a.amount));
+  // Other agencies' contracts by one stated rule: the most recent recorded start date first.
+  const dated = (profile?.contracts || []).filter((c) => Number(c?.amount) > 0 && c.agency && day(c.start_date))
+    .sort((a, b) => String(b.start_date).localeCompare(String(a.start_date)));
   const seenAgency = new Set(top?.name ? [top.name] : []);
   for (const contract of dated) {
     if (seenAgency.has(contract.agency)) continue;
     seenAgency.add(contract.agency);
-    rows.push({ kind: 'Largest contract elsewhere', href: agencyHref(contract.agency), text: contract.agency,
-      meta: [shortMoney(contract.amount), text(contractTitle(contract)).slice(0, 80), day(contract.start_date)].filter(Boolean).join(' · ') });
+    rows.push({ kind: 'Another contract', href: agencyHref(contract.agency), text: text(contractTitle(contract)) || contract.agency,
+      meta: [shortMoney(contract.amount), contract.agency, `started ${day(contract.start_date)}`].filter(Boolean).join(' · ') });
     if (seenAgency.size >= 3) break;
   }
   const abn = String(profile?.abn || '').replace(/\D/g, '');
@@ -183,30 +186,40 @@ export function memberVoteSteps(votes = []) {
     .map((v) => ({ kind: 'Latest vote', href: v.href, text: v.title, meta: `${v.vote} · ${day(v.date)}` }));
 }
 
-/** An electorate: its member(s), and the way to another electorate. Postcodes are published for Victorian districts only. */
-export function electorateNextSteps(detail, { members = [], personHref = () => '', displayName = (n) => n } = {}) {
+/** An electorate: its member(s), and the way to another electorate. Postcodes are published for Victorian districts only.
+ *  `sitting` is false when the page cannot say who represents the seat today (a dissolved house, a past date,
+ *  a term that has ended): then no person is named and no seat is said to "represent you". */
+export function electorateNextSteps(detail, { members = [], personHref = () => '', displayName = (n) => n, sitting = true } = {}) {
   const rows = [];
-  for (const m of members.slice(0, 3)) {
+  if (sitting) for (const m of members.slice(0, 3)) {
     const person = detail?.people?.[m.person_id] || m.person;
     if (!person?.name) continue;
     rows.push({ kind: detail?.status === 'historical' ? 'Last recorded member' : 'Member', href: personHref(person), text: displayName(person.name),
       meta: [text(m.party), 'Votes, speeches and declared interests'].filter(Boolean).join(' · ') });
   }
-  for (const r of (detail?.relations || []).slice(0, 1)) if (r?.related?.slug) rows.push({ kind: r.kind === 'within_upper_house' ? 'Also represents you' : 'Related electorate',
+  for (const r of (detail?.relations || []).filter((r) => sitting || r?.kind !== 'within_upper_house').slice(0, 1)) if (r?.related?.slug) rows.push({ kind: r.kind === 'within_upper_house' ? 'Also represents you' : 'Related electorate',
     href: `/subject/electorate/${encodeURIComponent(r.related.slug)}`, text: r.related.name, meta: 'Members, results and boundary' });
   if (detail?.jurisdiction === 'vic') rows.push({ kind: 'Find your own MP', href: '/vic-election-2026#find', text: 'Search by suburb or postcode', meta: 'Victorian state districts' });
   rows.push({ kind: 'Find your own MP', href: '/subject/electorate', text: 'Search every electorate by name', meta: 'Federal, state and territory seats' });
   return rows;
 }
 
-/** A Victorian district: its member, its standing electorate record, its upper house region. */
-export function vicDistrictNextSteps(seat, region) {
+/**
+ * A Victorian election district page. Until polls close this block names no person, party or vote
+ * and counts no members: only the seat's previous result at the VEC, how to vote, its region and the
+ * seat finder. After polls close it adds the seat's standing electorate record and the region's member
+ * count. It never names the roster member: how members and candidates are shown is the page's own business.
+ */
+export function vicDistrictNextSteps(seat, region, { closed = false } = {}) {
   const rows = [];
-  const member = seat?.members?.[0];
-  if (member?.href) rows.push({ kind: 'Member', href: member.href, text: member.name, meta: [text(member.party), 'Votes, speeches and profile'].filter(Boolean).join(' · ') });
-  if (seat?.electorate_url) rows.push({ kind: 'Electorate record', href: seat.electorate_url, text: `${seat.name}: past members and results`, meta: 'Election timeline and Census context' });
-  if (region?.path) rows.push({ kind: 'Upper house region', href: region.path, text: `${region.name} Region`, meta: `${plural(region.members?.length, 'member')} and ${plural(region.districts?.length, 'district')}` });
-  rows.push({ kind: 'Another seat', href: '/vic-election-2026#find', text: 'Search by suburb, postcode or district', meta: 'All 88 districts and 8 regions' });
+  const general = seat?.result?.general;
+  if (general?.url && /^\d{4}/.test(String(general.date || ''))) rows.push({ kind: 'Previous result', href: general.url, text: `${seat.name}: ${String(general.date).slice(0, 4)} election result`, meta: 'Victorian Electoral Commission' });
+  if (!closed) rows.push({ kind: 'Voting', href: '#voting', text: 'How and where to vote', meta: 'Voting times and the VEC’s locations' });
+  if (closed && seat?.electorate_url) rows.push({ kind: 'Electorate record', href: seat.electorate_url, text: `${seat.name}: electorate record`, meta: 'Election timeline and Census context' });
+  if (region?.path) rows.push({ kind: 'Upper house region', href: region.path, text: `${region.name} Region`,
+    meta: closed ? `${plural(region.members?.length, 'member')} and ${plural(region.districts?.length, 'district')}` : plural(region.districts?.length, 'district') });
+  rows.push({ kind: 'Districts', href: '/vic-election-2026#districts', text: 'All 88 lower house districts', meta: 'Listed by name' });
+  rows.push({ kind: 'Another seat', href: '/vic-election-2026#find', text: 'Search by suburb, postcode or district', meta: '88 districts and 8 regions' });
   return rows;
 }
 

@@ -10,7 +10,8 @@ import {
   NEXT_STEPS_TITLE, NEXT_STEPS_MAX, nextStepRows, nextStepsHTML, fillNextSteps, docNextSteps, supplierNextSteps,
   recipientNextSteps, billNextSteps, memberNextSteps, memberVoteSteps, electorateNextSteps, vicDistrictNextSteps, seriesNextSteps,
 } from '../public/next-steps.js';
-import { profileHTML } from '../public/electorates.js';
+import { profileHTML, nextStepsReady } from '../public/electorates.js';
+await nextStepsReady;
 import { safePath } from '../analytics/privacy.mjs';
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
@@ -68,6 +69,7 @@ test('reserved rows hold the place of facts still loading, and filling them neve
     assert.equal(nav.hasAttribute('aria-busy'), false);
     assert.equal(nav.querySelectorAll('a').length, 2 + Math.min(2, votes.length));
     for (const li of nav.querySelectorAll('li')) assert.equal(li.children.length, 3, 'every row has its three lines');
+    for (const li of [...nav.querySelectorAll('li')].slice(2)) assert.ok(li.classList.contains('next-steps-held'), 'a held row keeps its reserved room once filled');
     if (!votes.length) assert.match(nav.textContent, /No votes on bills in the record for this member\./);
     // A second settle (the votes section's own exit) changes nothing.
     const settled = nav.innerHTML;
@@ -81,10 +83,14 @@ test('reserved rows hold the place of facts still loading, and filling them neve
   assert.equal(steps[0].meta, 'No · 2 Nov 2026');
 });
 
-test('the stylesheet gives every line of a row a fixed height and one line of text', () => {
+test('the stylesheet wraps every line and cuts none; a held row keeps room for two lines of link', () => {
   const css = read('../public/style.css');
-  assert.match(css, /\.next-steps-row > \* \{[^}]*white-space: nowrap;[^}]*\}/);
-  for (const part of ['kind', 'link', 'meta']) assert.match(css, new RegExp(`\\.next-steps-${part} \\{[^}]*height: [\\d.]+em;`), part);
+  const rules = css.slice(css.indexOf('/* "Next in the record"'), css.indexOf('.growth-ask :is(input, textarea, button)'));
+  assert.ok(rules.length > 500);
+  assert.doesNotMatch(rules, /nowrap|text-overflow|line-clamp|overflow: hidden/);
+  assert.doesNotMatch(rules, /[^-]height: [\d.]+em/, 'no fixed heights: text at 200% still fits');
+  assert.match(rules, /\.next-steps-row > \* \{[^}]*overflow-wrap: anywhere/);
+  assert.match(rules, /\.next-steps-held \.next-steps-link \{ min-height: 3\.1em; \}/);
 });
 
 test('a document leads to its speaker, their speeches and the same debate on the same day; never to an unattributed name', () => {
@@ -105,16 +111,20 @@ test('a document leads to its speaker, their speeches and the same debate on the
   assert.deepEqual(docNextSteps({ labels: { kind: 'division' }, metadata: { date: '2026-10-01' } }, helpers), []);
 });
 
-test('a supplier leads to its agencies in recorded-value order and to suppliers under the same ABN only', () => {
+test('a supplier leads to its agencies and to suppliers under the same ABN only; another contract is chosen by most recent start', () => {
   const profile = { id: 's1', name: 'Acme Pty Ltd', abn: '12 345 678 901', total: 300,
-    agencies: [{ name: 'Small Agency', total: 100, count: 1 }, { name: 'Big Agency', total: 200, count: 2 }],
-    contracts: [{ agency: 'Big Agency', amount: 150, title: 'Big thing', start_date: '2025-02-03' }, { agency: 'Small Agency', amount: 100, title: 'Desks', start_date: '2024-01-05' }, { agency: 'Nil Agency', amount: 0, start_date: '1900-01-01' }] };
+    agencies: [{ name: 'Small Agency', total: 100, count: 1 }, { name: 'Big Agency', total: 200, count: 2 }, { name: 'Old Agency', total: 900, count: 1 }],
+    contracts: [{ agency: 'Big Agency', amount: 150, title: 'Big thing', start_date: '2025-02-03' }, { agency: 'Old Agency', amount: 900, title: 'Old and large', start_date: '2019-03-01' },
+      { agency: 'Small Agency', amount: 100, title: 'Desks', start_date: '2024-01-05' }, { agency: 'Small Agency', amount: 500, title: 'Earlier desks', start_date: '2021-01-05' },
+      { agency: 'Undated Agency', amount: 700, title: 'No date', start_date: '1900-01-01' }, { agency: 'Nil Agency', amount: 0, start_date: '2026-01-01' }] };
   const suppliers = [{ id: 's1', name: 'Acme Pty Ltd', abn: '12345678901' }, { id: 's2', name: 'Acme Trading', abn: '12345678901', total: 50 }, { id: 's3', name: 'Other', abn: '99999999999' }, { id: 's4', name: 'No ABN' }];
   const rows = supplierNextSteps(profile, { agencyHref: (n) => `/subject/agency?q=${encodeURIComponent(n)}`, suppliers, contractTitle: (c) => c.title });
-  assert.deepEqual(rows.map((r) => [r.kind, r.text]), [['Awarding agency', 'Big Agency'], ['Largest contract elsewhere', 'Small Agency'], ['Same ABN', 'Acme Trading'], ['All suppliers', 'Government suppliers']]);
-  assert.equal(rows[0].meta, '$200 in 2 contracts with this supplier');
-  assert.match(rows[1].meta, /^\$100 · Desks · 5 Jan 2024$/);
-  assert.equal(rows[2].href, '/subject/supplier/s2');
+  assert.deepEqual(rows.map((r) => [r.kind, r.text]), [['Awarding agency', 'Old Agency'], ['Another contract', 'Big thing'], ['Another contract', 'Desks'], ['Same ABN', 'Acme Trading'], ['All suppliers', 'Government suppliers']]);
+  assert.equal(rows[0].meta, '$900 in 1 contract with this supplier');
+  // Most recent start date first, one per agency, whatever the amounts; undated and $0 rows are not offered.
+  assert.equal(rows[1].meta, '$150 · Big Agency · started 3 Feb 2025');
+  assert.equal(rows[2].meta, '$100 · Small Agency · started 5 Jan 2024');
+  assert.equal(rows[3].href, '/subject/supplier/s2');
   assert.deepEqual(supplierNextSteps({ id: 'x', name: 'No ABN', agencies: [], contracts: [] }, { suppliers }).map((r) => r.kind), ['All suppliers'], 'no ABN joins nobody');
 });
 
@@ -128,7 +138,7 @@ test('a grant recipient leads to a program only where one catalogue program answ
 });
 
 test('a recipient page carries the block in the server record core, above its awards list, and not on a program page', async () => {
-  const { grantCoreBody } = await import('../public/record-core-content.js');
+  const { grantCoreBody } = await import('../src/seo-record-content.ts');
   const detail = { id: 'abn:12345678901', n: 'Example Institute', k: 'company', t: 900, c: 2, programs: [['Medical Research Future Fund', 400]], agencies: [['Department of Health', 900]],
     grants: [{ id: 'GA1', v: 500, n: 'First', pr: 'Medical Research Future Fund' }, { id: 'GA2', v: 400, n: 'Second' }] };
   const html = grantCoreBody(detail, 'federal', 'https://opax.com.au/money/grants/federal/recipient/abn%3A12345678901', false, undefined, undefined, [{ key: 'c', id: 'go3', n: 'Medical Research Future Fund' }]);
@@ -137,7 +147,7 @@ test('a recipient page carries the block in the server record core, above its aw
   assert.ok(html.indexOf('id="recipient-next"') > html.indexOf('record-core-figures') && html.indexOf('id="recipient-next"') < html.indexOf('<table'));
   assert.doesNotMatch(grantCoreBody({ ...detail, r: 3 }, 'federal', 'https://opax.com.au/money/grants?jur=federal&program=go3', true), /next-steps/);
   // The page's own script leaves the server's block alone and draws its own only without a record core.
-  assert.match(read('../public/grant-recipient.js'), /if \(!coreActive\) root\.insertAdjacentHTML\('beforeend', nextStepsHTML\(recipientNextSteps/);
+  assert.match(read('../public/grant-recipient.js'), /if \(!coreActive && nextSteps\) root\.insertAdjacentHTML\('beforeend', nextSteps\.nextStepsHTML\(nextSteps\.recipientNextSteps/);
 });
 
 test('a bill leads to its newest divisions, a known sponsor and the bills the register relates to it', () => {
@@ -161,38 +171,88 @@ test('an electorate leads to its member and to a way of finding another seat; po
   const vic = electorateNextSteps({ ...detail, jurisdiction: 'vic' }, helpers);
   assert.deepEqual(vic.filter((r) => r.kind === 'Find your own MP').map((r) => r.href), ['/vic-election-2026#find', '/subject/electorate']);
   assert.equal(electorateNextSteps({ ...detail, status: 'historical' }, helpers)[0].kind, 'Last recorded member');
+  // Where the page cannot say who represents the seat today, nobody is named and no seat "represents you".
+  const idle = electorateNextSteps({ ...detail, relations: [...detail.relations, { kind: 'adjacent', related: { slug: 'x', name: 'Elsewhere' } }] }, { ...helpers, sitting: false });
+  assert.deepEqual(idle.map((r) => r.kind), ['Related electorate', 'Find your own MP']);
+});
+
+test('the electorate profile names a member only of today: not at a past date, a dissolved house, or a Victorian seat before polls close', () => {
+  const manifest = json('../public/electorates/manifest.json');
+  const index = json(`../public${manifest.index_url}`);
+  const kinds = (html) => [...dom(html).querySelectorAll('#el-next .next-steps-kind')].map((k) => k.textContent);
+  const people = (html) => [...dom(html).querySelectorAll('#el-next a')].filter((a) => a.getAttribute('href').startsWith('/subject/person/')).length;
+  const federal = json(`../public${index.electorates.find((e) => e.jurisdiction === 'federal' && e.chamber === 'representatives' && e.representatives?.length === 1 && e.status !== 'historical').detail_url}`);
+  assert.equal(people(profileHTML(federal)), 1);
+  assert.ok(kinds(profileHTML(federal)).includes('Member'));
+  assert.equal(people(profileHTML(federal, '2026-09-04')), 0, 'a past date names nobody in the block');
+  assert.ok(!kinds(profileHTML(federal, '2026-09-04')).some((k) => /Member|represents/.test(k)));
+  assert.equal(people(profileHTML({ ...federal, dissolved_for: '2027-05-01' })), 0, 'a dissolved house names nobody');
+  const before = new Date('2026-11-28T17:59:59+11:00'), after = new Date('2026-11-28T18:00:00+11:00');
+  for (const chamber of ['vic_la', 'vic_lc']) {
+    const row = index.electorates.find((e) => e.chamber === chamber && e.representatives?.length);
+    const detail = json(`../public${row.detail_url}`);
+    const early = profileHTML(detail, '', { now: before });
+    assert.equal(people(early), 0, `${chamber} before polls close`);
+    assert.ok(!kinds(early).some((k) => /Member|represents/.test(k)), chamber);
+    assert.ok(kinds(early).includes('Find your own MP'));
+    // After the close a house still published as dissolved stays silent; one that is not names its roster again.
+    assert.equal(people(profileHTML(detail, '', { now: after })) > 0, !detail.dissolved_for, `${chamber} after polls close`);
+    assert.equal(people(profileHTML({ ...detail, dissolved_for: null }, '', { now: after })) > 0, true);
+  }
 });
 
 test('the electorate profile draws the block after the member and boundary, before the timeline', () => {
   const manifest = json('../public/electorates/manifest.json');
   const index = json(`../public${manifest.index_url}`);
   const entry = index.electorates.find((e) => e.jurisdiction === 'federal' && e.chamber === 'representatives' && e.representatives?.length === 1 && e.status !== 'historical');
-  const detail = json(`../public${entry.detail_url}`);
-  const html = profileHTML(detail);
+  const html = profileHTML(json(`../public${entry.detail_url}`));
   const doc = dom(html), nav = doc.getElementById('el-next');
   assert.ok(nav, 'the block is on the page');
   assert.equal(nav.dataset.pageType, 'electorate');
-  const member = detail.people[detail.representatives[0].person_id] || detail.representatives[0].person;
-  assert.ok([...nav.querySelectorAll('a')].some((a) => a.getAttribute('href').startsWith('/subject/person/')), `${member.name} is linked`);
   assert.ok(html.indexOf('id="el-next"') > html.indexOf('id="el-held"'));
   if (html.includes('id="el-elections"')) assert.ok(html.indexOf('id="el-next"') < html.indexOf('id="el-elections"'));
   assert.equal(doc.querySelectorAll('h1').length, 1);
 });
 
-test('a Victorian district page and a sitting week carry the block in the server page', async () => {
+test('a Victorian district page names no person, party or vote in the block until polls close at 6 pm on 28 November 2026', async () => {
   const { renderVicElection } = await compile('../src/vic-election.ts');
   const data = json('../public/hubs/vic-election-2026.json');
-  const seat = data.seats.find((s) => s.kind === 'district');
-  const page = renderVicElection(data, seat, {}, new Date('2026-11-12T10:00:00+11:00'));
-  const nav = dom(page.html).getElementById('vic-next');
-  assert.ok(nav);
-  const hrefs = [...nav.querySelectorAll('a')].map((a) => a.getAttribute('href'));
-  assert.ok(hrefs.includes(seat.members[0].href) && hrefs.includes(seat.electorate_url) && hrefs.includes('/vic-election-2026#find'));
+  const seats = data.seats.filter((s) => s.kind === 'district');
+  const parties = [...new Set(data.seats.flatMap((s) => [...s.members.map((m) => m.party), ...(s.candidates?.list || []).map((c) => c.party), s.result?.general.party, s.result?.general.against]).filter(Boolean))];
+  const names = [...new Set(data.seats.flatMap((s) => [...s.members.map((m) => m.name), ...(s.candidates?.list || []).map((c) => c.name)]))];
+  assert.ok(parties.length > 3 && names.length > 100);
+  const block = (seat, now) => dom(renderVicElection(data, seat, {}, new Date(now)).html).getElementById('vic-next');
+  const BEFORE = '2026-11-28T17:59:59+11:00', AFTER = '2026-11-28T18:00:00+11:00';
+  for (const seat of seats) {
+    for (const now of ['2026-11-16T09:00:00+11:00', BEFORE]) {
+      const nav = block(seat, now);
+      assert.deepEqual([...nav.querySelectorAll('.next-steps-kind')].map((k) => k.textContent),
+        [...(seat.result ? ['Previous result'] : []), 'Voting', 'Upper house region', 'Districts', 'Another seat'], seat.name);
+      const words = nav.textContent;
+      for (const name of names) assert.ok(!words.includes(name), `${seat.name}: no person is named (${name})`);
+      for (const party of parties) assert.ok(!new RegExp(`\\b${party.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}\\b`).test(words) || seat.name.includes(party) || party.length < 4, `${seat.name}: no party is named (${party})`);
+      assert.doesNotMatch(words, /\bmembers?\b|\bvotes?\b|\bvoted\b|\bMP\b|candidate/i, seat.name);
+      for (const a of nav.querySelectorAll('a')) assert.doesNotMatch(a.getAttribute('href'), /^\/subject\/(?:person|party)\//, 'no link to a person or a party');
+    }
+  }
+  const seat = seats.find((s) => s.result), region = data.seats.find((r) => r.kind === 'region' && r.name === seat.region);
+  const early = block(seat, BEFORE), late = block(seat, AFTER);
+  const hrefs = (nav) => [...nav.querySelectorAll('a')].map((a) => a.getAttribute('href'));
+  assert.deepEqual(hrefs(early), [seat.result.general.url, '#voting', region.path, '/vic-election-2026#districts', '/vic-election-2026#find']);
+  // After the close: the standing electorate record and the region's member count; still no roster member by name.
+  assert.deepEqual([...late.querySelectorAll('.next-steps-kind')].map((k) => k.textContent), ['Previous result', 'Electorate record', 'Upper house region', 'Districts', 'Another seat']);
+  assert.ok(hrefs(late).includes(seat.electorate_url) && !hrefs(late).includes('#voting') && !hrefs(late).includes(seat.members[0].href));
+  assert.match(late.textContent, /5 members and 11 districts/);
+  assert.ok(!late.textContent.includes(seat.members[0].name));
+  assert.deepEqual(vicDistrictNextSteps(seat, region).map((r) => r.kind), vicDistrictNextSteps(seat, region, { closed: false }).map((r) => r.kind), 'the neutral block is the default');
+  const page = renderVicElection(data, seat, {}, new Date(BEFORE));
   assert.ok(page.html.indexOf('id="vic-next"') > page.html.indexOf('class="vic-facts"'));
   assert.match(page.html, /Authorised by Jake Tracey/, 'the authorisation line stays');
-  const region = data.seats.find((s) => s.kind === 'region');
-  assert.equal(dom(renderVicElection(data, region, {}, new Date('2026-11-12T10:00:00+11:00')).html).getElementById('vic-next'), null);
+  assert.match(page.html, /id="voting"/, 'the voting link has its section');
+  assert.equal(dom(renderVicElection(data, data.seats.find((s) => s.kind === 'region'), {}, new Date(BEFORE)).html).getElementById('vic-next'), null, 'region pages carry no block');
+});
 
+test('a sitting week carries the weeks either side in the server page', async () => {
   const { renderSittingWeek } = await compile('../src/hubs.ts');
   const hubs = json('../public/hubs/index.json');
   const weeks = [...hubs.weeks].sort((a, b) => a.start.localeCompare(b.start));
@@ -200,6 +260,14 @@ test('a Victorian district page and a sitting week carry the block in the server
   const sitting = dom(renderSittingWeek(hubs, week, [], new Map(), '2026-11-16').html).getElementById('sitting-next');
   assert.deepEqual([...sitting.querySelectorAll('a')].map((a) => a.getAttribute('href')), [`/sitting/${weeks[2].start}`, `/sitting/${weeks[0].start}`, '/sitting']);
   assert.deepEqual(seriesNextSteps({}).length, 0);
+});
+
+test('no page script needs the module to run: it is asked for at load and a failed load leaves the page whole', () => {
+  for (const file of ['suppliers.js', 'electorates.js', 'grant-recipient.js', 'record-core-content.js', 'record-core.js', 'app.js']) {
+    const source = read(`../public/${file}`);
+    assert.doesNotMatch(source, /^import [^;]*next-steps\.js/m, `${file} has no static import of next-steps.js`);
+    if (/next-steps\.js/.test(source)) assert.match(source, /import\(["']\.?\/next-steps\.js["']\)\.then\(\(?module\)? => \{ nextSteps = module; \}, \(\) => \{\}\)/, `${file} survives a failed load`);
+  }
 });
 
 test('the app draws the block on the document, bill and member pages, and waits on nothing new for it', () => {
@@ -225,7 +293,7 @@ test('no row is written with ranking or persuasive words, an em dash, or America
   for (const written of strings) {
     const s = written.replace(/\$\{[^}]*\}/g, ''); // the words, not the code inside a template
     assert.doesNotMatch(s, /—/, s);
-    assert.doesNotMatch(s, /\b(?:top|best|worst|biggest|most important|key|must|should|controversial|popular|trending|recommended)\b/i, s);
+    assert.doesNotMatch(s, /\b(?:top|best|worst|largest|biggest|most|highest|leading|key|must|should|controversial|popular|trending|recommended)\b/i, s);
     assert.doesNotMatch(s, /\b(?:center|organization|favor|color)\b/, s);
   }
 });

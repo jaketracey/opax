@@ -293,8 +293,8 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
       + `<dl class="vic-facts"><div><dt>${closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>${resultFacts(s)}</dl>`
-      // Where the district's record leads: its member, its standing electorate record, its region (next-steps.js).
-      + nextStepsHTML(vicDistrictNextSteps(s,region),{pageType:'vic-election',id:'vic-next'})
+      // Neutral next steps only until polls close: no person, party, vote or member count (next-steps.js).
+      + nextStepsHTML(vicDistrictNextSteps(s,region,{closed}),{pageType:'vic-election',id:'vic-next'})
       + candidates(s)
       + section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''}))
       + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.`)

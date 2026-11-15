@@ -1,6 +1,6 @@
 import type {GrantRecord, GrantDetail, AgencyDetail, TopicCounts, TopicSpeech} from '../src/seo-record-content.ts';
 export function grantSource(jur: string, grant?: GrantRecord): string;
-export function grantCoreBody(detail: GrantDetail, jur: string, canonical: string, program?: boolean, dataPath?: string, recipientIds?: ReadonlySet<string>, programs?: readonly unknown[]): string;
+export function grantCoreBody(detail: GrantDetail, jur: string, canonical: string, program?: boolean, dataPath?: string, recipientIds?: ReadonlySet<string>, lead?: string): string;
 export function firstAgencySuppliers(suppliers: AgencyDetail['suppliers']): AgencyDetail['suppliers'];
 export function agencyCoreBody(profile: AgencyDetail, canonical: string, meta?: {source?: string; source_url?: string}): string;
 export function topicSummary(name: string, counts: TopicCounts): string;
