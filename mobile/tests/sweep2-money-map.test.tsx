@@ -489,7 +489,10 @@ describe('sweep 2 item 5: the money map at every size', () => {
     const cap = flat(topOf(root)).maxHeight as number;
     const instance = scroll.instance as { flashScrollIndicators?: () => void };
     instance.flashScrollIndicators = flash;
-    act(() => scroll.props.onContentSizeChange(300, cap - 20));
+    // The scroll holds the sentence only: its room is the cap less the
+    // jurisdiction and the picker pinned around it.
+    expect(cap).toBeGreaterThan(100);
+    act(() => scroll.props.onContentSizeChange(300, 20));
     expect(flash).not.toHaveBeenCalled();
     act(() => scroll.props.onContentSizeChange(300, 1500));
     act(() => scroll.props.onContentSizeChange(300, 1600));

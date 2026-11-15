@@ -81,6 +81,7 @@ import {
 import { useFirstScreenReader, useMoneyRecord } from './hooks';
 import { loadedMoneyGraph, partyNodeFor } from './lookup';
 import { useHeldInset } from './map/band';
+import { frameOf } from './map/measure';
 import { MoneyMap, type MapCommand, type MapRequest } from './map/MoneyMap';
 import { MoneyMapControls } from './map/MoneyMapControls';
 import { MoneyMapLegend } from './map/MoneyMapLegend';
@@ -92,7 +93,11 @@ import {
 } from './map/MoneyMapPanel';
 import { MoneyMapSearch } from './map/MoneyMapSearch';
 import { MINI_HEIGHT, MINI_WIDTH } from './map/MiniMap';
-import { largeTextLimits, mapControlLayout } from './map/regions';
+import {
+  largeTextLimits,
+  mapControlLayout,
+  phoneSceneFloor,
+} from './map/regions';
 import { buildModel, nextAlongFlows, type MapModel } from './map/model';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
@@ -133,6 +138,8 @@ import {
 import { track } from '../../analytics';
 
 const TOP_DONORS = 20;
+/** Synchronous measuring passes allowed per change of window or state. */
+const SETTLE_PASSES = 8;
 type Mode = MoneyMode;
 
 /** "Money to parties, 1998–99 to 2025–26, and public money to donors on the map". */
@@ -500,14 +507,10 @@ export default function MoneyScreen() {
           params={params}
           write={write}
           options={{ ...options, title }}
-          controls={
-            <>
-              {jurisdictionControl}
-              {summary}
-              {picker}
-              {hooks}
-            </>
-          }
+          head={jurisdictionControl}
+          summary={summary}
+          picker={picker}
+          hooks={hooks}
           offline={offlineLine}
         />
       </ReservedRegionArea>
@@ -581,7 +584,10 @@ function MapMode({
   params,
   write,
   options,
-  controls,
+  head,
+  summary,
+  picker,
+  hooks,
   offline,
 }: {
   data: MapData | null;
@@ -593,7 +599,11 @@ function MapMode({
   params: MoneyParams;
   write: (next: Record<string, string | undefined>) => void;
   options: Record<string, unknown>;
-  controls: React.ReactNode;
+  /** The card's parts: the jurisdiction, the sentence, the List | Map picker. */
+  head: React.ReactNode;
+  summary: React.ReactNode;
+  picker: React.ReactNode;
+  hooks: React.ReactNode;
   offline: React.ReactNode;
 }) {
   const setOptions = useSafeSetOptions();
@@ -741,13 +751,21 @@ function MapMode({
   // safe inset is the floor of that band.
   const band = Math.max(below, managed ? 0 : (safe?.bottom ?? 0));
   const visible = (stage.height || window.height) - band;
+  const bandHeight = controlsHeight || (horizontalControls ? 48 : 190);
+  // On a phone the map shows in the band the controls stand in. A stack is
+  // tall enough to be the map's floor; a row (Android at large text) left
+  // the map a sliver, so there the card and the panel give up the rest of
+  // a floor between them.
+  const phoneFloor = managed
+    ? 0
+    : Math.max(0, phoneSceneFloor(visible) - bandHeight - rhythm.block * 2);
   const largeLimits = (top: number) =>
     largeTextLimits(
       managed ? pose.controls.height : visible,
       top,
-      controlsHeight || (horizontalControls ? 48 : 190),
+      bandHeight,
       searchOpen ? 'search' : expanded ? 'expanded' : 'map',
-      managed ? pose.sceneFloor : 0,
+      managed ? pose.sceneFloor : phoneFloor,
     );
   // Until the card reports its height, a capped card (large text on a
   // compact width) is taken to fill its cap, as it does there. The panel's
@@ -755,7 +773,34 @@ function MapMode({
   // shrank when the height came in.
   const top =
     topHeight || (large && !regular ? largeLimits(0).topMaxHeight : 0);
-  const limits = large && !regular ? largeLimits(top) : null;
+  const caps = large && !regular ? largeLimits(top) : null;
+  // The jurisdiction and the List | Map picker never scroll out of a capped
+  // card: only its sentence does. Where the two alone need more than the
+  // cap (the largest sizes on a small phone) the cap is theirs, and the
+  // panel gives the difference back.
+  const [pinned, setPinned] = useState({ head: 0, picker: 0 });
+  const pinnedNeed =
+    pinned.head && pinned.picker && !searchOpen
+      ? pinned.head +
+        pinned.picker +
+        minimumTarget +
+        rhythm.tight * 3 +
+        rhythm.block * 2 +
+        hairline * 2
+      : 0;
+  const limits = caps
+    ? (() => {
+        const topMaxHeight = Math.max(caps.topMaxHeight, pinnedNeed);
+        const over = Math.max(
+          0,
+          Math.min(top, topMaxHeight) - caps.topMaxHeight,
+        );
+        return {
+          topMaxHeight,
+          panelMaxHeight: Math.max(minimumTarget, caps.panelMaxHeight - over),
+        };
+      })()
+    : null;
   // Below accessibility sizes a phone's panel keeps its own height, unless
   // a focus makes it taller than the room under the controls: then it stops
   // at the controls and scrolls, so all four stay whole (item 5.6).
@@ -985,9 +1030,9 @@ function MapMode({
   // its content first runs past the cap (item 5.3).
   const topScroll = useRef<ScrollView>(null);
   const flashed = useRef(false);
-  const flashOnce = (contentHeight: number) => {
-    if (flashed.current || topMaxHeight === undefined) return;
-    if (contentHeight <= topMaxHeight - rhythm.tight) return;
+  const flashOnce = (contentHeight: number, room = topMaxHeight) => {
+    if (flashed.current || room === undefined) return;
+    if (contentHeight <= room - rhythm.tight) return;
     flashed.current = true;
     topScroll.current?.flashScrollIndicators();
   };
@@ -1006,16 +1051,80 @@ function MapMode({
           setSearchOpen(false);
         }}
       />
-    ) : (
-      <View style={styles.card} testID="money-map-card">
-        {controls}
-        {offline}
-      </View>
-    );
+    ) : null;
+  // The sizes the chrome is worked out from are read before the frame is
+  // painted (map/measure.ts): onLayout brought them a frame or more late,
+  // and at large text the card and the panel then moved after the page had
+  // appeared. Each change of window, text size or state gets a few passes
+  // to settle; onLayout still follows anything later.
+  const stageRef = useRef<View>(null);
+  const topRef = useRef<View>(null);
+  const controlsRef = useRef<View>(null);
+  const headRef = useRef<View>(null);
+  const pickerRef = useRef<View>(null);
+  const probeRef = useRef<View>(null);
+  const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}`;
+  const settle = useRef({ key: '', left: 0 });
+  // Every commit, on purpose: a frame can change without a dependency
+  // changing. It sets state only on a difference, within the budget.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    if (settle.current.key !== settleKey)
+      settle.current = { key: settleKey, left: SETTLE_PASSES };
+    if (settle.current.left <= 0) return;
+    let changed = false;
+    const stageFrame = frameOf(stageRef);
+    if (
+      stageFrame &&
+      stageFrame.height > 0 &&
+      (stageFrame.width !== stage.width || stageFrame.height !== stage.height)
+    ) {
+      setStage(stageFrame);
+      changed = true;
+    }
+    const topFrame = frameOf(topRef);
+    if (topFrame && Math.ceil(topFrame.height) !== topHeight) {
+      setTopHeight(Math.ceil(topFrame.height));
+      changed = true;
+    }
+    const controlsFrame = frameOf(controlsRef);
+    if (controlsFrame) {
+      const next = Math.ceil(controlsFrame.height);
+      if (next !== controlsHeight) {
+        setControlsHeight(next);
+        changed = true;
+      }
+      if (!horizontalControls && next !== stackHeight) setStackHeight(next);
+    }
+    const headFrame = frameOf(headRef);
+    const pickerFrame = frameOf(pickerRef);
+    if (headFrame && pickerFrame) {
+      const next = {
+        head: Math.ceil(headFrame.height),
+        picker: Math.ceil(pickerFrame.height),
+      };
+      if (next.head !== pinned.head || next.picker !== pinned.picker) {
+        setPinned(next);
+        changed = true;
+      }
+    }
+    const probeFrame = probes ? frameOf(probeRef) : null;
+    if (probeFrame) reportInset(Math.round(probeFrame.height));
+    if (changed) settle.current.left -= 1;
+  });
+  const measure =
+    (part: 'head' | 'picker') =>
+    (event: { nativeEvent: { layout: { height: number } } }) => {
+      const height = Math.ceil(event.nativeEvent.layout.height);
+      setPinned((previous) =>
+        previous[part] === height ? previous : { ...previous, [part]: height },
+      );
+    };
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />
       <View
+        ref={stageRef}
         style={styles.root}
         testID="money-screen"
         onLayout={(event) => {
@@ -1069,8 +1178,8 @@ function MapMode({
           // indicator) and draws nothing: a view of no content at the
           // stage's foot, so its height is the system's bottom inset, with
           // nothing taken from the stage's own measured size.
-          <SafeAreaView
-            edges={['bottom']}
+          <View
+            ref={probeRef}
             pointerEvents="none"
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
@@ -1079,7 +1188,9 @@ function MapMode({
             onLayout={(event) =>
               reportInset(Math.round(event.nativeEvent.layout.height))
             }
-          />
+          >
+            <SafeAreaView edges={['bottom']} />
+          </View>
         ) : null}
         <SafeAreaView
           // The stack's opaque bar already sits above the stage: a top
@@ -1106,6 +1217,7 @@ function MapMode({
           testID="money-map-chrome"
         >
           <View
+            ref={topRef}
             style={[
               styles.top,
               cardWidth,
@@ -1116,19 +1228,75 @@ function MapMode({
               setTopHeight(Math.ceil(event.nativeEvent.layout.height))
             }
           >
-            {topMaxHeight !== undefined ? (
-              <ScrollView
-                ref={topScroll}
-                style={styles.topScroll}
-                onContentSizeChange={(_w, h) => flashOnce(h)}
-                keyboardShouldPersistTaps="handled"
-                // Android hides the bar at rest; a capped card shows it has more.
-                persistentScrollbar
+            {topContent ? (
+              topMaxHeight !== undefined ? (
+                <ScrollView
+                  ref={topScroll}
+                  style={styles.topScroll}
+                  onContentSizeChange={(_w, h) => flashOnce(h)}
+                  keyboardShouldPersistTaps="handled"
+                  // Android hides the bar at rest; a capped card shows it has more.
+                  persistentScrollbar
+                >
+                  {topContent}
+                </ScrollView>
+              ) : (
+                topContent
+              )
+            ) : topMaxHeight !== undefined ? (
+              // A capped card: the jurisdiction and the picker hold their
+              // places and the sentence between them scrolls.
+              <View
+                style={[styles.card, styles.cardCapped]}
+                testID="money-map-card"
               >
-                {topContent}
-              </ScrollView>
+                <View
+                  ref={headRef}
+                  onLayout={measure('head')}
+                  testID="money-map-card-head"
+                >
+                  {head}
+                </View>
+                <ScrollView
+                  ref={topScroll}
+                  style={styles.topScroll}
+                  contentContainerStyle={styles.cardScroll}
+                  onContentSizeChange={(_w, h) =>
+                    // The sentence's room: the cap less the pinned parts.
+                    flashOnce(
+                      h,
+                      topMaxHeight -
+                        pinned.head -
+                        pinned.picker -
+                        rhythm.tight * 3 -
+                        rhythm.block * 2,
+                    )
+                  }
+                  keyboardShouldPersistTaps="handled"
+                  // Android hides the bar at rest; a capped card shows it has more.
+                  persistentScrollbar
+                  testID="money-map-card-scroll"
+                >
+                  {summary}
+                  {hooks}
+                  {offline}
+                </ScrollView>
+                <View
+                  ref={pickerRef}
+                  onLayout={measure('picker')}
+                  testID="money-map-card-picker"
+                >
+                  {picker}
+                </View>
+              </View>
             ) : (
-              topContent
+              <View style={styles.card} testID="money-map-card">
+                {head}
+                {summary}
+                {picker}
+                {hooks}
+                {offline}
+              </View>
             )}
           </View>
           {/* The controls hang from the card's foot by layout, not from its
@@ -1152,6 +1320,7 @@ function MapMode({
               </ScrollView>
             ) : searchOpen || expanded ? null : (
               <View
+                ref={controlsRef}
                 style={[
                   styles.controls,
                   horizontalControls
@@ -1545,7 +1714,9 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.tight,
     width: '100%',
   },
-  topScroll: { flexGrow: 0 },
+  topScroll: { flexGrow: 0, flexShrink: 1 },
+  cardCapped: { flexShrink: 1 },
+  cardScroll: { gap: rhythm.tight },
   card: {
     backgroundColor: colors.raised,
     borderRadius: radii.container,
