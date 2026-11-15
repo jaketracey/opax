@@ -99,3 +99,77 @@ for (const {person, role} of personHeadFixtures) {
     }
   });
 }
+
+const {profileHouses} = await import('../public/profile-jurisdictions.js');
+const shape = found => found.rows.map(r => [r.label, r.status]);
+
+test('each house is one fact with its parliament; a sitting member\'s other houses are former, or left out when nothing says which is current', () => {
+  const moved = {current: true, states: ['nsw', 'federal'], chambers: ['nsw_lc', 'senate', 'senate_committee']};
+  // A verified current seat names the house; the other is former and comes last.
+  assert.deepEqual(shape(profileHouses(moved, [{chamber: 'senate', jurisdiction: 'federal', current: true}])),
+    [['Senate, Federal', 'current'], ['Legislative Council, New South Wales', 'former']]);
+  // No verified seat and no dated service: neither house is known to be current, so neither is shown as a house.
+  const unknown = profileHouses(moved);
+  assert.ok(unknown.rows.every(r => r.status === 'unknown'));
+  assert.deepEqual(unknown.parliamentsOnly, ['New South Wales', 'Federal']);
+  // No verified seat, but dated service still open in one house: that house is current, the ended one former.
+  const dated = {current: true, states: ['nsw', 'federal'], chambers: ['nsw_lc', 'representatives'], affiliations: [
+    {jurisdiction: 'federal', chamber: 'representatives', electorate: 'Wattle', start: '1994-01-29', end: '2005-01-21'},
+    {jurisdiction: 'nsw', chamber: 'nsw_lc', electorate: 'New South Wales', start: '2019-03-23', end: '2023-03-02'},
+    {jurisdiction: 'nsw', chamber: 'nsw_lc', electorate: 'New South Wales', start: '2023-03-25'}]};
+  assert.deepEqual(shape(profileHouses(dated)), [['Legislative Council, New South Wales', 'current'], ['House of Representatives, Federal', 'former']]);
+  // Someone the roster does not mark as sitting has no current or former house, whatever a seat list says.
+  assert.deepEqual(shape(profileHouses({...moved, current: false}, [{chamber: 'senate', jurisdiction: 'federal'}])),
+    [['Legislative Council, New South Wales', ''], ['Senate, Federal', '']]);
+  // A sitting member's only house needs no mark; a parliament with no house in the record stays a part by itself.
+  assert.deepEqual(shape(profileHouses({current: true, states: ['federal'], chambers: ['representatives']})), [['House of Representatives, Federal', '']]);
+  assert.deepEqual(profileHouses({states: ['federal'], chambers: ['joint_committee']}), {rows: [], parliamentsOnly: ['Federal']});
+});
+
+test('House to Senate within one parliament, and a territory senator', () => {
+  const crossed = {current: true, states: ['federal'], chambers: ['representatives', 'senate', 'house_committee']};
+  const found = profileHouses(crossed, [{chamber: 'senate', jurisdiction: 'federal', current: true}]);
+  assert.deepEqual(shape(found), [['Senate, Federal', 'current'], ['House of Representatives, Federal', 'former']]);
+  assert.deepEqual(found.parliamentsOnly, []);
+  // A territory senator sits in the federal Senate: the territory is the seat, never a parliament of its own here.
+  const territory = {name: 'Marlo Quoll', current: true, states: ['federal'], chambers: ['senate'],
+    representation: [{electorate: 'Australian Capital Territory', jurisdiction: 'federal', chamber: 'senate', state: 'ACT'}]};
+  const seated = profileHouses(territory, [{chamber: 'senate', jurisdiction: 'federal', current: true, name: 'Australian Capital Territory'}]);
+  assert.deepEqual(shape(seated), [['Senate, Federal', 'current']]);
+  assert.deepEqual(seated.parliamentsOnly, []);
+  const text = header(territory);
+  assert.ok(text.includes('Senator for Australian Capital Territory') && text.includes('Senate, Federal'));
+  assert.doesNotMatch(text, /ACT|formerly|·/);
+});
+
+test('the server head marks a former house, names only the current house\'s seat, and never lists a house it cannot place', () => {
+  const dated = {name: 'Wren Marsh', current: true, states: ['nsw', 'federal'], chambers: ['nsw_lc', 'representatives'],
+    representation: [{electorate: 'New South Wales', jurisdiction: 'nsw', chamber: 'nsw_lc'}, {electorate: 'Wattle', jurisdiction: 'federal', chamber: 'representatives'}],
+    affiliations: [{jurisdiction: 'federal', chamber: 'representatives', electorate: 'Wattle', start: '1994-01-29', end: '2005-01-21'},
+      {jurisdiction: 'nsw', chamber: 'nsw_lc', electorate: 'New South Wales', start: '2023-03-25'}]};
+  const text = header(dated);
+  assert.ok(text.includes('MLC for New South Wales') && text.includes('formerly House of Representatives, Federal'));
+  assert.doesNotMatch(text, /Wattle|Member for|·/);
+  const unplaced = header({...dated, affiliations: undefined});
+  assert.doesNotMatch(unplaced, /Legislative Council|House of Representatives|formerly|MLC for|Member for/);
+  // The state is said once: the seat already names it.
+  const senator = header({name: 'Wren Marsh', current: true, states: ['nsw', 'federal'], chambers: ['nsw_lc', 'senate'],
+    representation: [{electorate: 'New South Wales', jurisdiction: 'federal', chamber: 'senate'}]});
+  assert.equal(senator.match(/New South Wales/g).length, 1);
+});
+
+test('the browser header takes current seats only from a member the roster marks as sitting', () => {
+  let seatsNow;
+  (function find(node) {
+    if (ts.isVariableDeclaration(node) && node.name.getText(app) === 'seatsNow') seatsNow = node.initializer.getText(app);
+    ts.forEachChild(node, find);
+  })(app);
+  assert.ok(seatsNow, 'browser header current-seat expression exists');
+  const electorateReference = {person: {electorates: [{chamber: 'senate', current: true}, {chamber: 'representatives', current: false}]}};
+  const run = roster => runInNewContext(seatsNow, {roster, electorateReference});
+  assert.deepEqual(run({current: true}).map(e => e.chamber), ['senate']);
+  for (const roster of [{current: false}, {}, null]) assert.equal(run(roster).length, 0);
+  assert.equal(runInNewContext(seatsNow, {roster: {current: true}, electorateReference: null}).length, 0);
+  // The stamp script owns the module's address in app.js, so a changed module is a new address.
+  assert.match(source, /import\('\/profile-jurisdictions\.js\?v=[a-f0-9]{10}'\)/);
+});

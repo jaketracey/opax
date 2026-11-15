@@ -64,7 +64,7 @@ new_sandbox() {
   # per-record periods in roster_accept.json among them) and an empty electorate release written below; the fixture DB
   # has no ext_state_roster, which is logged and skipped; scripts/corrections/divisions.json is left out because the
   # fixture DB has none of its records.
-  for f in scripts/vm/nsw_hansard_backfill.sh scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py scripts/roster_fold.py \
+  for f in scripts/vm/nsw_hansard_backfill.sh scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/vm/step_tails.py scripts/export_bills.py scripts/roster_identity.py scripts/roster_fold.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
            scripts/hubs/sitting-2026.json \
@@ -348,6 +348,31 @@ if [ "${FAKE_MODE:-ok}" = race ]; then   # someone else pushes to origin while w
   (cd "$other" && git add -A && git commit -q -m "a human commit" && git push -q origin HEAD:main)
 fi
 if [ "${FAKE_MODE:-ok}" = failsteps ]; then
+  if [ "${FAKE_STEP_LEAK:-0}" = 1 ]; then   # the failed step's own log, by a step that prints every credential it can see
+    set -a; . "$HOME/opax/.env"; set +a     # as daily_refresh.sh loads it: bash's quoting and comments apply
+    { for i in $(seq 1 40); do echo "nsw step line $i"; done
+      echo "config: $(tr '\n' ' ' < "$HOME/opax/.env")"
+      env | grep -E '^(OPAX_R2_|ARAG_|OPENAUSTRALIA_|TVFY_|OA_ALT)'
+      echo "GET https://api.example.gov.au/v1/items?key=$TVFY_API_KEY&token=$ARAG_KB_TOKEN from 203.0.113.7 for ops@example.com.au"
+      echo "retry https://api.example.gov.au/v1/items/$(python3 -c 'import os,urllib.parse; print(urllib.parse.quote(os.environ["OPAX_R2_SECRET_ACCESS_KEY"]))')/x"
+      echo "retry https://api.example.gov.au/v1/items/$(python3 -c 'import os,urllib.parse; import re; print(re.sub("%[0-9A-F]{2}", lambda m: m.group(0).lower(), urllib.parse.quote(os.environ["OPAX_R2_SECRET_ACCESS_KEY"], safe="")))')/y"
+      echo "form field $(python3 -c 'import os; print(os.environ["OPAX_R2_SECRET_ACCESS_KEY"].replace("+", " "))') decoded"
+      echo "Authorization: Bearer $ARAG_KB_TOKEN"
+      echo "boto: access=$OPAX_R2_ACCESS_KEY_ID secret=$OPAX_R2_SECRET_ACCESS_KEY endpoint=$OPAX_R2_ENDPOINT"
+      echo "signing with $OPAX_R2_ACCESS_KEY_ID as the access id"
+      echo "TvfyClient(api_key='$TVFY_API_KEY') failed: invalid key $TVFY_API_KEY"
+      echo "fallback $OA_ALT rejected; proxy https://svc:p@ss$OA_ALT@proxy.example.gov.au/v1"
+      echo "  File \"$HOME/opax/parli/ingest/nsw.py\", line 12, in fetch"
+      echo "requests.exceptions.HTTPError: 503 Server Error for url: https://www.parliament.nsw.gov.au/hansard/api"
+    } > "$PIPE/nsw.log"
+    echo "this other step did not fail: $OPAX_R2_SECRET_ACCESS_KEY" > "$PIPE/vic.log"
+  fi
+  if [ -n "${FAKE_FAILED_STEPS:-}" ]; then   # a night on which very many steps fail, each with a full, wide log
+    for step in $FAKE_FAILED_STEPS; do
+      python3 -c 'import sys; sys.stdout.write("".join("議会の記録 " * 22 + f"line {i}\n" for i in range(40)))' > "$PIPE/$step.log"
+    done
+    echo "$(date '+%F %T') Incomplete refresh: failed steps $FAKE_FAILED_STEPS" >> "$PIPE/daily.log"; exit 1
+  fi
   echo "$(date '+%F %T') Incomplete refresh: failed steps nsw" >> "$PIPE/daily.log"; exit 1
 fi
 exit 0
@@ -746,6 +771,81 @@ check "status branch says failed" status_is failed
 check "status names the failed step" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'failed steps: nsw'"
 check "the API key is nowhere in the published status" bash -c "! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q SECRETVALUE123456"
 check "the key is not in main's new commit either" bash -c "! git --git-dir='$ORIGIN' show main | grep -q SECRETVALUE123456"
+
+echo "== 3b. a failed step's log reaches the public status cut short and with every credential masked"
+new_sandbox s3b
+R2_ID=AKIAIOSFODNN7OPAXKEY; R2_SECRET='wJalrXUtnFEMI/K7MDENG+bPxRfiCYzOPAXSECRET9'; R2_ENDPOINT=https://0f1e2d3c4b5a69788796a5b4c3d2e1f0.r2.cloudflarestorage.com
+KB_TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvcGF4LWtiIn0.c2lnbmF0dXJlLW9wYXgtdGVzdA
+OA_KEY=Ha7QmZpX2vEwRt9LkNcB4sYd
+# two values live only in .env, written the way people write them: quoted with a trailing comment, and exported
+# with one. bash drops the comment and the quotes when the refresh sources the file; a parser that keeps them
+# learns a value that is in no log (review, 16 Nov 2026).
+TVFY_KEY=Wb7Nc3Kd9Fq2; OA_ALT=Zx9Qw8Er7Ty6
+printf 'ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=%s\nOPENAUSTRALIA_API_KEY="%s"\nTVFY_API_KEY="%s" # tvfy\nexport OA_ALT=%s   # the spare\n' "$KB_TOKEN" "$OA_KEY" "$TVFY_KEY" "$OA_ALT" > "$REPO/.env"
+mkdir -p "$HOME/.cache/autoresearch/pipeline/.status.stale1"; echo STALE_SWEEP_FIXTURE > "$HOME/.cache/autoresearch/pipeline/.status.stale1/env0"; echo STALE_SWEEP_FIXTURE > "$SB/stale.marker"
+OPAX_R2_ACCESS_KEY_ID=$R2_ID OPAX_R2_SECRET_ACCESS_KEY=$R2_SECRET OPAX_R2_ENDPOINT=$R2_ENDPOINT FAKE_STEP_LEAK=1 FAKE_MODE=failsteps nightly
+git --git-dir="$ORIGIN" show nightly-status:status.json > "$SB/status.json"
+check "the night still publishes a failed status naming the step" bash -c "[ '$NRC' -eq 1 ] && grep -q 'failed steps: nsw' '$SB/status.json'"
+check "the step really printed the credentials into its log (the fixture leaks)" bash -c "grep -qF '$R2_SECRET' '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF '$KB_TOKEN' '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF '$OA_KEY' '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF '$TVFY_KEY' '$HOME/.cache/autoresearch/pipeline/nsw.log'"
+check "no R2, KB, OpenAustralia or TVFY value is in the status, raw or percent-encoded in any usual way" python3 - "$SB/status.json" "$R2_ID" "$R2_SECRET" "$R2_ENDPOINT" "$KB_TOKEN" "$OA_KEY" "$TVFY_KEY" "$OA_ALT" <<'PYEOF'
+import re, sys, urllib.parse
+text = open(sys.argv[1]).read()
+lower_escapes = lambda q: re.sub("%[0-9A-F]{2}", lambda m: m.group(0).lower(), q)
+for value in sys.argv[2:]:
+    quoted = {urllib.parse.quote(value, safe=""), urllib.parse.quote(value), urllib.parse.quote_plus(value)}
+    for form in {value, value.replace("+", " "), value.split("//")[-1].split(".")[0]} | quoted | {lower_escapes(q) for q in quoted}:
+        assert form not in text, form
+PYEOF
+check "the values that are only in .env, quoted or exported with a trailing comment, were printed by the step and are masked" bash -c "grep -qF \"api_key='$TVFY_KEY'\" '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF 'invalid key $TVFY_KEY' '$HOME/.cache/autoresearch/pipeline/nsw.log' && grep -qF 'fallback $OA_ALT' '$HOME/.cache/autoresearch/pipeline/nsw.log' && ! grep -qF '$TVFY_KEY' '$SB/status.json' && ! grep -qF '$OA_ALT' '$SB/status.json' && ! grep -q 'p@ss' '$SB/status.json'"
+check "a scratch directory an interrupted status build left behind, credential dump and all, was swept at the start" bash -c "[ ! -e '$HOME/.cache/autoresearch/pipeline/.status.stale1' ] && grep -q STALE_SWEEP_FIXTURE '$SB/stale.marker'"
+check "the scratch directory with the environment dump is gone" bash -c "! ls -d '$HOME'/.cache/autoresearch/pipeline/.status.* 2>/dev/null | grep -q ."
+check "no email, IP address, URL query string or home path is in it either" python3 - "$SB/status.json" "$HOME" <<'PYEOF'
+import json, re, sys
+logs = json.load(open(sys.argv[1]))["failed_step_logs"]
+text = "\n".join(line for lines in logs.values() for line in lines)
+assert "ops@example.com.au" not in text and "203.0.113.7" not in text and sys.argv[2] not in text and "/home/" not in text, text
+assert not re.search(r"\?(key|token)=", text) and "Bearer ey" not in text, text
+PYEOF
+check "only the failed step is there, at most 15 lines and 2 KB, and the line that explains the failure survives" python3 - "$SB/status.json" <<'PYEOF'
+import json, sys
+logs = json.load(open(sys.argv[1]))["failed_step_logs"]
+assert list(logs) == ["nsw"], list(logs)
+lines = logs["nsw"]
+assert 1 <= len(lines) <= 15 and sum(len(l.encode()) + 1 for l in lines) <= 2048, (len(lines), lines)
+assert lines[-1] == "requests.exceptions.HTTPError: 503 Server Error for url: https://www.parliament.nsw.gov.au/hansard/api", lines[-1]
+assert any("parli/ingest/nsw.py" in l and "line 12" in l for l in lines), lines
+PYEOF
+new_sandbox s3d
+# 70 failed steps, each with a full log of wide characters: as one environment variable the tails are far over the
+# 128 KiB a single argument or variable may be, the status build could not start, and last night's file went out
+printf '{"date": "2000-01-01", "run": "nightly", "status": "ok", "failures": []}\n' > "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
+FAKE_FAILED_STEPS="$(seq -f 'step%g' 1 70 | tr '\n' ' ')" FAKE_MODE=failsteps nightly
+git --git-dir="$ORIGIN" show nightly-status:status.json > "$SB/status.json" 2>/dev/null
+check "very many failed steps: tonight's status is published, failed, never last night's" python3 - "$SB/status.json" "$TODAY" <<'PYEOF'
+import json, sys
+s = json.load(open(sys.argv[1]))
+assert s["date"] == sys.argv[2] and s["status"] == "failed" and any("failed steps: step1 " in f for f in s["failures"]), s["date"]
+logs = s["failed_step_logs"]
+assert 1 <= len(logs) <= 41 and "_omitted" in logs and "step1" in logs, sorted(logs)[:5]
+assert len(json.dumps(logs)) <= 60000, len(json.dumps(logs))
+PYEOF
+check "and nothing was too long to pass to a program" bash -c "! grep -q 'Argument list too long' '$SB/nightly.out'"
+new_sandbox s3e
+# the status document cannot be built at all (the fixture's python refuses the status build and nothing else)
+printf '{"date": "2000-01-01", "run": "nightly", "status": "ok", "failures": []}\n' > "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
+printf '#!/usr/bin/env bash\n[ -z "${OPAX_STATUS_OUT:-}" ] || exit 9\nexec %q "$@"\n' "$(command -v python3)" > "$REPO/.venv/bin/python"
+FAKE_MODE=ok nightly
+git --git-dir="$ORIGIN" show nightly-status:status.json > "$SB/status.json" 2>/dev/null
+check "a status that cannot be built: a short failed status says so, and last night's green one is not published again" python3 - "$SB/status.json" "$TODAY" <<'PYEOF'
+import json, sys
+s = json.load(open(sys.argv[1]))
+assert s["date"] == sys.argv[2] and s["status"] == "failed", s
+assert any("could not build its status file" in f and "meant to report: ok" in f for f in s["failures"]), s
+PYEOF
+check "the file left on the box is tonight's too" bash -c "grep -q '$TODAY' '$HOME/.cache/autoresearch/pipeline/nightly-last.json' && ! grep -q 2000-01-01 '$HOME/.cache/autoresearch/pipeline/nightly-last.json'"
+new_sandbox s3c
+FAKE_MODE=ok nightly
+check "a night with no failed step publishes no log tails" bash -c "! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q failed_step_logs"
 
 echo "== 4. a bill loses its brief: bills reverted, the rest pushes, status failed"
 new_sandbox s4

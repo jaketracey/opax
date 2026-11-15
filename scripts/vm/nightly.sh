@@ -110,6 +110,8 @@ FAILURES=()
 BACKFILL_FAILURES=()
 COVERAGE_FAILURES=()
 WARNINGS=()
+# the refresh steps reported as failed tonight: write_status publishes the redacted end of each one's log
+FAILED_STEP_NAMES=()
 STAMPED_FILES=()
 COMMIT_SHA=""
 DEPLOY="not pushed"
@@ -149,6 +151,9 @@ if ! flock -n 8; then
 fi
 
 log "===== nightly start $TODAY (repo=$REPO pid=$$) ====="
+# scratch directories of a status build that was interrupted (a TERM during it, a power cut): one may hold a dump
+# of the credentials. This run holds the lock, so none of them is in use.
+rm -rf "$PIPE"/.status.* 2>/dev/null || true
 
 # ---- environment -------------------------------------------------------------------
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
@@ -185,11 +190,55 @@ publish_status() {
   fi
 }
 
+# The status this night publishes. It is built beside $LASTFILE and only then moved over it, so a status that could
+# not be built never leaves last night's file to be published again: a stale status that looks green is worse than
+# none. If the full document fails it is tried without the step log tails, and if that fails too a short one says
+# the status could not be built (and is "failed", whatever the night's outcome was).
 write_status() {
+  local status=$1 scratch tails="" new
+  scratch=$(umask 077; mktemp -d "$PIPE/.status.XXXXXX") || scratch=""
+  new="${scratch:-$PIPE}/status.json"
+  # Why a step failed, without a login to the box: the last lines of each failed step's log, cut short and
+  # redacted (scripts/vm/step_tails.py says how). The status branch is public, so anything doubtful is masked.
+  # The credentials to mask come from bash itself: the env files are sourced in a clean shell and its environment
+  # dumped, so the values are exactly the ones the steps saw. The dump and the tails stay in a private directory
+  # (files, not arguments or environment: one over 128 KiB cannot be passed to a program) that is removed below.
+  if [ -n "$scratch" ] && [ "${#FAILED_STEP_NAMES[@]}" -gt 0 ] && [ -f "$REPO/scripts/vm/step_tails.py" ]; then
+    (umask 077; env -i PATH="$PATH" HOME="$HOME" bash -c 'set -a; for f; do [ -f "$f" ] && . "$f"; done; env -0' _ \
+       "$REPO/.env" "$ENV_FILE" > "$scratch/env0" 2>/dev/null) || true
+    if timeout 60 "$PY" "$REPO/scripts/vm/step_tails.py" --pipe "$PIPE" --env0 "$scratch/env0" \
+         --env-file "$REPO/.env" --env-file "$ENV_FILE" --out "$scratch/tails.json" "${FAILED_STEP_NAMES[@]}" 2>/dev/null; then
+      tails="$scratch/tails.json"
+    fi
+    rm -f "$scratch/env0"   # the credentials are needed no longer: a run stopped after this leaves none behind
+  fi
+  if ! write_status_file "$status" "$new" "$tails" 2>>"$LOGFILE"; then
+    log "WARN: could not build the status with the step log tails; trying without them"
+    if ! write_status_file "$status" "$new" "" 2>>"$LOGFILE"; then
+      log "WARN: could not build the status at all; publishing a short failed status that says so"
+      printf '{"date": "%s", "run": "%s", "status": "failed", "started": "%s", "finished": "%s", "failures": ["the nightly could not build its status file, so this is not its real status (it meant to report: %s); see the log on the box"]}\n' \
+        "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$(date -u +%FT%TZ)" "$status" > "$new" 2>/dev/null
+    fi
+  fi
+  if [ -s "$new" ] && mv -f "$new" "$LASTFILE" 2>/dev/null; then :; else
+    rm -f "$LASTFILE"   # nothing to say tonight is better than saying last night's again
+    log "WARN: no status file could be written; none is published tonight"
+  fi
+  [ -z "$scratch" ] || rm -rf "$scratch"
+}
+
+# One attempt at the status document (defined after write_status: tests/test_backfill_guard.py runs the first
+# Python block that follows it): $1 the status, $2 where to write it, $3 a file of step log tails or "".
+write_status_file() {
   local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
-import json, sys, datetime
+  OPAX_STATUS_OUT="$2" OPAX_STEP_TAILS_FILE="$3" "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF'
+import json, os, sys, datetime
 path, status, day, run, started, sha, deploy, summary, nwarn, nfail, *rest = sys.argv[1:]
+try:
+    failed_step_logs = json.load(open(os.environ["OPAX_STEP_TAILS_FILE"])) if os.environ.get("OPAX_STEP_TAILS_FILE") else {}
+    if not isinstance(failed_step_logs, dict): failed_step_logs = {}
+except (OSError, ValueError):
+    failed_step_logs = {}
 nwarn, nfail = int(nwarn), int(nfail)
 warnings, failures, coverage_alerts = rest[:nwarn], rest[nwarn:nwarn + nfail], rest[nwarn + nfail:]
 from pathlib import Path
@@ -209,9 +258,10 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
+           **({"failed_step_logs": failed_step_logs} if failed_step_logs else {}),
            **backfill_fields,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
-          open(path, "w"), indent=1)
+          open(os.environ.get("OPAX_STATUS_OUT") or path, "w"), indent=1)
 PYEOF
 }
 
@@ -471,6 +521,7 @@ else
   fi
   if [ "$rc" -ne 0 ]; then
     failed_steps=$(grep -E 'Incomplete refresh: failed steps' "$DAILY_LOG" | tail -1 | sed 's/.*failed steps //')
+    read -ra failed_names <<<"$failed_steps"; FAILED_STEP_NAMES+=("${failed_names[@]+"${failed_names[@]}"}")
     fail "daily_refresh.sh reported failed steps: ${failed_steps:-unknown} (rc=$rc); the rest was still published"
   fi
   stale=$(last_run_line "$DAILY_LOG" 'Stale daily refresh:' | sed 's/.*register: //')
@@ -538,6 +589,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
       fail "weekly_refresh.sh ($groups) did not complete a run (rc=$prc); the periodic files were put back to HEAD"
     elif [ "$prc" -ne 0 ]; then
       failed_steps=$(grep -E 'Incomplete weekly refresh: failed steps' "$WEEKLY_LOG" | tail -1 | sed 's/.*failed steps //')
+      read -ra failed_names <<<"$failed_steps"; FAILED_STEP_NAMES+=("${failed_names[@]+"${failed_names[@]}"}")
       fail "weekly_refresh.sh ($groups) reported failed steps: ${failed_steps:-unknown} (rc=$prc); the rest was still published"
     elif [ -n "${OPAX_ONLY:-}" ]; then
       # run_step deliberately returns success for excluded debugging steps.
