@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useCallback,
   useSyncExternalStore,
   type ReactNode,
 } from 'react';
@@ -260,18 +261,12 @@ export function ProfileScreen({
   useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
   const [attempt, setAttempt] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  // A paid post's line ("Prime Minister") is only in the pay catalog. Until
-  // it is read the bones stop at the name; if the wait runs out they are
-  // drawn without the line, and this view then never draws it, so the page
-  // lands where the bones stood. The next open has the catalog in memory.
-  const pay = useSyncExternalStore(subscribeKept, keptPay);
+  // A paid post's line ("Prime Minister") is only in the pay catalog. The
+  // bones wait for it; if their wait ran out they were drawn without the
+  // line, and this view then never draws it, so the page lands where the
+  // bones stood. The next open has the catalog in memory.
   const [postWithheld, setPostWithheld] = useState(false);
-  const awaitingPay = load.status === 'loading' && !pay && !postWithheld;
-  useEffect(() => {
-    if (!awaitingPay) return;
-    const timer = setTimeout(() => setPostWithheld(true), POST_HOLD_MS);
-    return () => clearTimeout(timer);
-  }, [awaitingPay]);
+  const withholdPost = useCallback(() => setPostWithheld(true), []);
   useEffect(() => {
     let active = true;
     loadProfile(slug)
@@ -386,8 +381,7 @@ export function ProfileScreen({
             <PersonSkeleton
               slug={slug}
               name={routeName}
-              pay={pay}
-              postWithheld={postWithheld}
+              onPostWithheld={withholdPost}
             />
           </Screen>
         }
@@ -440,8 +434,7 @@ export function ProfileScreen({
               <PersonSkeleton
                 slug={slug}
                 name={routeName}
-                pay={pay}
-                postWithheld={postWithheld}
+                onPostWithheld={withholdPost}
               />
             )}
           </Screen>
@@ -605,19 +598,19 @@ export const POST_HOLD_MS = 1200;
 function PersonSkeleton({
   slug,
   name,
-  pay,
-  postWithheld,
+  onPostWithheld,
 }: {
   slug: string;
   name?: string;
-  /** The pay catalog once it is in memory. */
-  pay: Kept['pay'];
-  /** The wait for it ran out: these bones never gain a paid post's line. */
-  postWithheld: boolean;
+  /** The wait for the pay catalog ran out: the page omits a paid post too. */
+  onPostWithheld: () => void;
 }) {
   const yourMP = useIsMyMember(slug);
   const directory = savedSeatDirectory();
   const { votes } = keptCatalogs();
+  // Only the bones hear the catalog arrive: a drawn page is not redrawn.
+  const pay = useSyncExternalStore(subscribeKept, keptPay);
+  const [postWithheld, setPostWithheld] = useState(false);
   const known = useMemo(
     () =>
       profileBones(slug, directory, {
@@ -627,6 +620,17 @@ function PersonSkeleton({
     [slug, directory, votes, pay, postWithheld],
   );
   const { postUnknown = !pay, ...bones } = known ?? {};
+  // Where the rows stand depends on a line only pay can give: draw down to
+  // the name until it is read, or the wait runs out.
+  const waiting = postUnknown && !postWithheld;
+  useEffect(() => {
+    if (!waiting) return;
+    const timer = setTimeout(() => {
+      setPostWithheld(true);
+      onPostWithheld();
+    }, POST_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [waiting, onPostWithheld]);
   return (
     <Skeleton
       shape="person-profile"
@@ -634,9 +638,7 @@ function PersonSkeleton({
         ...(name ? { name } : null),
         ...bones,
         yourMP,
-        // Where the rows stand depends on a line only pay can give: draw
-        // down to the name until it is read, or the wait runs out.
-        nameOnly: postUnknown && !postWithheld,
+        nameOnly: waiting,
       }}
       label="Loading the profile"
       testID="person-loading"
