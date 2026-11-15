@@ -831,7 +831,9 @@ function BarSeriesContent({
                 ];
                 return onSelect ? (
                   <Pressable
-                    feedback="wash"
+                    // An empty target laid over the drawn bar: a wash here
+                    // would cover the bar it selects. The selection redraws.
+                    feedback="none"
                     key={index}
                     {...a11y}
                     accessibilityRole="button"

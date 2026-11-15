@@ -232,6 +232,16 @@ describe('the wash only where it can be seen', () => {
       });
     }
   });
+  test('a target laid over a drawing takes no wash: it would cover what it selects', () => {
+    const charts = read('design/charts.tsx');
+    const target = charts.slice(
+      charts.indexOf('return onSelect ? ('),
+      charts.indexOf('accessible style={style} />'),
+    );
+    expect(target).toMatch(/styles\.barTarget|style=\{style\}/);
+    expect(target).toMatch(/feedback="none"/);
+    expect(target).not.toMatch(/feedback="wash"/);
+  });
   const pressedGround = (
     r: ReturnType<typeof render>,
     testID: string,

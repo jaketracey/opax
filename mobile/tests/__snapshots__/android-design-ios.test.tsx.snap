@@ -291,21 +291,17 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           [
-            null,
-            [
-              {
-                "backgroundColor": "transparent",
-                "bottom": 0,
-                "minHeight": 44,
-                "position": "absolute",
-                "top": 0,
-              },
-              {
-                "left": 17,
-                "width": 0,
-              },
-            ],
-            null,
+            {
+              "backgroundColor": "transparent",
+              "bottom": 0,
+              "minHeight": 44,
+              "position": "absolute",
+              "top": 0,
+            },
+            {
+              "left": 17,
+              "width": 0,
+            },
           ]
         }
       />
@@ -7737,21 +7733,17 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           [
-            null,
-            [
-              {
-                "backgroundColor": "transparent",
-                "bottom": 0,
-                "minHeight": 44,
-                "position": "absolute",
-                "top": 0,
-              },
-              {
-                "left": 17,
-                "width": 0,
-              },
-            ],
-            null,
+            {
+              "backgroundColor": "transparent",
+              "bottom": 0,
+              "minHeight": 44,
+              "position": "absolute",
+              "top": 0,
+            },
+            {
+              "left": 17,
+              "width": 0,
+            },
           ]
         }
       />
