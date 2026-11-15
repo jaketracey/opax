@@ -582,6 +582,126 @@ test.each([
   },
 );
 
+// Build 88, iPhone on iOS 27.2: in an open thread UIKit reports the bar with
+// its hidden large-title band (168 pt). Leave the tab and come back, and it
+// reports the bar it draws (116 pt). The band shrinks and the inset with it,
+// but UIKit keeps the offset the old inset gave: the thread came back 52 pt
+// higher, its question behind the bar.
+describe('an open thread when its tab is shown again', () => {
+  const top = 56 + 2 / 3;
+  const open = async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(false);
+    const frames = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation(() => 0);
+    const solidBar = jest
+      .spyOn(accessibility, 'useSolidBar')
+      .mockReturnValue(false);
+    const route = { key: 'ask-root', name: 'ask' };
+    const navigation = {
+      setOptions: jest.fn(),
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    // The tab's stack, as the app has it: the header height is the stack's.
+    const page = (header: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top, bottom: 34, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={header}>
+              <AskScreen />
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    await mount(page(168));
+    await type('A fixture question?');
+    await press('ask-submit');
+    const scroll = () =>
+      view!.root.find(
+        (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+      );
+    const at = (y: number) =>
+      act(() =>
+        scroll().props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    const inset = () => scroll().props.contentInset?.top as number;
+    // The tab is shown again: UIKit reports the bar it draws.
+    const refocus = () =>
+      act(async () =>
+        view!.update(
+          withNavigationOptions(page(116), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+    const restore = () => {
+      solidBar.mockRestore();
+      frames.mockRestore();
+      idiom.mockRestore();
+      platform.restore();
+    };
+    return { at, inset, refocus, restore };
+  };
+
+  test('a thread at rest is at rest again: its top inset and its offset are the first-focus ones for the bar', async () => {
+    const thread = await open();
+    try {
+      // First focus: the band is off the inset, and the thread rests under
+      // the compact bar.
+      const rest = 168 + thread.inset();
+      expect(rest).toBeGreaterThan(top);
+      expect(rest).toBeLessThan(116);
+      thread.at(-rest);
+      scrollTo.mockClear();
+      // UIKit's inset change carries the thread up before the page hears
+      // the new height.
+      thread.at(-rest + 52);
+      await thread.refocus();
+      // The inset is the new band's, so the top the scroll view is given
+      // is the same compact bar as at first focus...
+      expect(116 + thread.inset()).toBeCloseTo(rest);
+      // ...and the thread is put back at that rest, at once.
+      expect(scrollTo).toHaveBeenCalled();
+      const last = scrollTo.mock.lastCall![0] as {
+        y: number;
+        animated: boolean;
+      };
+      expect(last.y).toBeCloseTo(-rest);
+      expect(last.animated).toBe(false);
+    } finally {
+      thread.restore();
+    }
+  });
+
+  test('a thread the reader has scrolled is left where it is', async () => {
+    const thread = await open();
+    try {
+      thread.at(-(168 + thread.inset()));
+      thread.at(300);
+      scrollTo.mockClear();
+      thread.at(352);
+      await thread.refocus();
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      thread.restore();
+    }
+  });
+});
+
 test.each(['before', 'after'] as const)(
   'send pins below the compact bar when fallback frames run %s the turn layout and native height arrives late',
   async (frameOrder) => {
