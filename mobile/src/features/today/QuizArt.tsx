@@ -1,6 +1,7 @@
-import { StyleSheet, View, useColorScheme } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { paletteFor } from '../../design/palette';
+import { useDrawnColour } from '../../design/engraving';
+import { colors } from '../../design/tokens';
 
 /**
  * The quiz card's header: a field of dots with a question mark lit in it,
@@ -73,7 +74,10 @@ export function QuizArt({
 }: {
   testID?: string;
 }) {
-  const palette = paletteFor(useColorScheme() === 'dark' ? 'dark' : 'light');
+  // Hex for the drawing, following the appearance and Increase Contrast as
+  // `colors` does natively; the ground is a view, so it takes the role.
+  const navy = useDrawnColour('navy');
+  const bronze = useDrawnColour('todayDotBronze');
   const paths = artPaths();
   return (
     <View
@@ -82,7 +86,7 @@ export function QuizArt({
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       pointerEvents="none"
-      style={[styles.frame, { backgroundColor: palette.navyWash }]}
+      style={styles.frame}
     >
       <Svg
         width="100%"
@@ -90,8 +94,8 @@ export function QuizArt({
         viewBox={`0 0 ${QUIZ_ART.width} ${QUIZ_ART.height}`}
         preserveAspectRatio="xMidYMid slice"
       >
-        <Path d={paths.field} fill={palette.navy} fillOpacity={0.22} />
-        <Path d={paths.lit} fill={palette.todayDotBronze} />
+        <Path d={paths.field} fill={navy} fillOpacity={0.22} />
+        <Path d={paths.lit} fill={bronze} />
       </Svg>
     </View>
   );
@@ -100,5 +104,10 @@ export function QuizArt({
 const styles = StyleSheet.create({
   // The archive photograph's frame: the card's full width, 4:3, square
   // corners (the card clips its own).
-  frame: { width: '100%', aspectRatio: QUIZ_ART_RATIO, overflow: 'hidden' },
+  frame: {
+    width: '100%',
+    aspectRatio: QUIZ_ART_RATIO,
+    overflow: 'hidden',
+    backgroundColor: colors.navyWash,
+  },
 });

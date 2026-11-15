@@ -15,7 +15,10 @@ import { decodeRoster, decodeSlugs } from '../src/api/catalog-decoders';
 import type { Block, EditionView } from '../src/api/selectors';
 import { catalogs, yearPictures } from '../src/api/runtime';
 import { yearPictureKey } from '../src/api/year-picture-policy';
-import { useReduceMotionSetting } from '../src/design/accessibility';
+import {
+  useIncreaseContrast,
+  useReduceMotionSetting,
+} from '../src/design/accessibility';
 import { Card } from '../src/design/card';
 import { SourceLine } from '../src/design/source';
 import { Text } from '../src/design/text';
@@ -23,7 +26,11 @@ import { colors, radii } from '../src/design/tokens';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { Plate } from '../src/features/edition/Plate';
 import Svg, { Path } from 'react-native-svg';
-import { paletteFor } from '../src/design/palette';
+import {
+  darkHighContrast,
+  lightHighContrast,
+  paletteFor,
+} from '../src/design/palette';
 import { Picture } from '../src/features/explore/Picture';
 import {
   QUIZ_ART_RATIO,
@@ -71,6 +78,7 @@ jest.mock('../src/api/image-policy', () => ({
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useReduceMotionSetting: jest.fn(() => false),
+  useIncreaseContrast: jest.fn(() => false),
 }));
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
@@ -428,12 +436,14 @@ describe('full-width daily cards', () => {
       expect(card.props.children[0].type).toBe(QuizArt);
       const art = host(question, 'today-question-art');
       const palette = paletteFor(scheme);
+      const high = scheme === 'dark' ? darkHighContrast : lightHighContrast;
       // The same slot: the card's full width, 4:3, the card's own corners.
       expect(StyleSheet.flatten(art.props.style)).toEqual({
         width: '100%',
         aspectRatio: 4 / 3,
         overflow: 'hidden',
-        backgroundColor: palette.navyWash,
+        // The role, so the ground follows Increase Contrast natively.
+        backgroundColor: colors.navyWash,
       });
       const archive = root.findByType(ArchiveCard);
       const photo = StyleSheet.flatten(
@@ -465,6 +475,15 @@ describe('full-width daily cards', () => {
       const [field, lit] = art.findAllByType(Path);
       expect(field!.props.fill).toBe(palette.navy);
       expect(lit!.props.fill).toBe(palette.todayDotBronze);
+      // Increase Contrast: the drawing takes the high-contrast hex.
+      jest.mocked(useIncreaseContrast).mockReturnValue(true);
+      const contrast = await render(<QuizArt />);
+      const [highField, highLit] = contrast.root.findAllByType(Path);
+      expect(highField!.props.fill).toBe(high.navy ?? palette.navy);
+      expect(highLit!.props.fill).toBe(
+        high.todayDotBronze ?? palette.todayDotBronze,
+      );
+      jest.mocked(useIncreaseContrast).mockReturnValue(false);
       // Both cards fill their cell, so side by side they end on one line.
       for (const each of [archive, question])
         expect(
@@ -507,8 +526,9 @@ describe('full-width daily cards', () => {
     const words = root.findAllByType(Text).map((node) => node.props.children);
     expect(words).toContain('From the record');
     expect(words).not.toContain('From the archive');
+    // Drawn unbroken, so the date never wraps mid-way at large sizes.
     expect(host(root, 'today-archive-figure').props.children).toBe(
-      '3 Nov 2026',
+      '3\u00a0Nov\u00a02026',
     );
     const link = root
       .findAll(
@@ -520,6 +540,21 @@ describe('full-width daily cards', () => {
     expect(link.props.accessibilityLabel).toMatch(
       /^From the record, 3 Nov 2026\. /,
     );
+  });
+  test('the pair tells the archive card today’s date, so this year’s photograph is labelled from the record', async () => {
+    // 29 January 2026: the day the archive's rotation lands on 2026 itself.
+    const thisYear = '2026-01-29';
+    const year = archiveYear(thisYear);
+    jest.mocked(explore.pictures).mockResolvedValue({
+      data: { [year]: [{ ...picture, date: '2026-01-12' }] },
+    } as never);
+    const { root } = await render(<DailyPair today={thisYear} attempt={0} />);
+    const card = root.findByType(ArchiveCard);
+    expect(card.props.today).toBe(thisYear);
+    expect(year).toBe(2026);
+    expect(
+      card.findAllByType(Text).map((node) => node.props.children),
+    ).toContain('From the record');
   });
   test('a missing archive leaves the full-width question', async () => {
     jest.mocked(explore.pictures).mockRejectedValue(new Error('offline'));
