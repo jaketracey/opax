@@ -1218,6 +1218,40 @@ test('MachinePill is a named button on a navy wash and standalone choices stay c
   expect(choice.findAllByType(ChoiceChip)).toHaveLength(1);
   expect(choice.findAllByType(Pressable)).toHaveLength(0);
 });
+test('on Android the MachinePill hugs its label in a column: its bordered target sits in a row wrapper', () => {
+  const note = { title: 'Machine-written', body: ['From the public record.'] };
+  const os = jest.replaceProperty(Platform, 'OS', 'android');
+  try {
+    const root = render(
+      <View>
+        <MachinePill note={note} testID="machine" />
+      </View>,
+    ).root;
+    // The target carries the border, so it must not be the column's child:
+    // there it stretched to the full width (Ask's answer, the Ask notice).
+    const target = host(root, 'machine');
+    expect(flat(target.props.style).borderWidth).toBe(1);
+    const hosts = root.findAll((node) => typeof node.type === 'string');
+    const wrapper = hosts[hosts.indexOf(target) - 1]!;
+    expect(flat(wrapper.props.style)).toMatchObject({
+      flexDirection: 'row',
+      maxWidth: '100%',
+    });
+    expect(wrapper.findAll((node) => node === target)).toHaveLength(1);
+  } finally {
+    os.restore();
+  }
+  // iOS draws no border on the target and needs no wrapper.
+  const ios = render(
+    <View testID="column">
+      <MachinePill note={note} testID="machine" />
+    </View>,
+  ).root;
+  const iosHosts = ios.findAll((node) => typeof node.type === 'string');
+  expect(
+    iosHosts[iosHosts.indexOf(host(ios, 'machine')) - 1]!.props.testID,
+  ).toBe('column');
+});
 test.each([1, 3.571])(
   'PageFoot lets the address wrap at full size at fontScale %s',
   (scale) => {
