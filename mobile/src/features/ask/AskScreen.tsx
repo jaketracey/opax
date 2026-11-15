@@ -47,7 +47,7 @@ import { colors, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { scrollToTop } from '../../design/scroll-to-top';
 import { askHeaderItems, clearBars, glassBar } from '../../navigation/chrome';
-import { ClearBarFade } from '../../design/bar-fade';
+import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { talkSignInRoute } from '../../navigation/routes/account';
 import { conversationsRoute } from '../../navigation/routes/ask';
 import { voiceLinked } from '../../voice/linked';
@@ -183,8 +183,8 @@ export default function AskScreen() {
   // Ask sits below an opaque bar with its content at 0, and the fade would
   // cover the top of the page.
   const tabRoot = useTabRootRoute();
-  const barFade =
-    clearBars && tabRoot && underBar && Platform.OS === 'ios' && glassBar();
+  const barFade = clearBars && tabRoot && Platform.OS === 'ios' && glassBar();
+  const fadeScroll = useBarFadeScroll(barFade);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
@@ -438,6 +438,7 @@ export default function AskScreen() {
       onMomentumScrollBegin={follow.onMomentumBegin}
       onMomentumScrollEnd={follow.onMomentumEnd}
       onScroll={(event) => {
+        fadeScroll.onScroll(event);
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
         scrollY.current = event.nativeEvent.contentOffset.y;
         follow.onScroll(event.nativeEvent.contentOffset.y);
@@ -562,7 +563,11 @@ export default function AskScreen() {
             </View>
             {/* After the scroll's chain, so UIKit still finds it first. */}
             {barFade ? (
-              <ClearBarFade bottom={headerBottom} ground={ground} />
+              <ClearBarFade
+                y={fadeScroll.y}
+                bottom={headerBottom}
+                ground={ground}
+              />
             ) : null}
           </SidebarSafe>
         </AskRevealContext.Provider>

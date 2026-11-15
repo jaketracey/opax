@@ -21,7 +21,6 @@ import TalkStack from '../src/app/talk/_layout';
 import TabStack from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
-import { BAR_FADE_TAIL } from '../src/design/bar-fade';
 import { Screen } from '../src/design/layout';
 import * as tokens from '../src/design/tokens';
 import {
@@ -1814,24 +1813,26 @@ test.each([
               node.props?.testID === 'bar-fade' &&
               typeof node.type === 'string',
           );
-        expect(fades()).toHaveLength(0);
-        // Under the expanded bar, before the collapse height arrives: no
-        // panel, the page fades into its ground down to the bar's foot.
-        scrollTo(renderer, -expanded + 2);
-        expect(edgeCalls(navigation)).not.toContain('hard');
+        // One layer under the clear bar, mounted with the page and clear at
+        // rest. Its opacity and its foot are Animated nodes, moved by the
+        // scroll view and the bar on the UI thread, never by a render.
         expect(fades()).toHaveLength(1);
         expect(StyleSheet.flatten(fades()[0]!.props.style)).toMatchObject({
           position: 'absolute',
           top: 0,
-          height: expanded + BAR_FADE_TAIL,
+          opacity: 0,
         });
+        // Under the expanded bar, before the collapse height arrives: no
+        // panel, and the edge never turns hard.
+        scrollTo(renderer, -expanded + 2);
+        expect(edgeCalls(navigation)).not.toContain('hard');
+        expect(fades()).toHaveLength(1);
         // Collapsed: text keeps running under the compact bar.
         act(() => renderer.update(page(68)));
         scrollTo(renderer, 0);
         scrollTo(renderer, 400);
         expect(fades()).toHaveLength(1);
-        // The fade switches once each way. Scrolling on under the bar
-        // commits nothing: no render per scroll frame.
+        // Scrolling on under the bar commits nothing: no render per frame.
         let commits = 0;
         act(() =>
           renderer.update(
@@ -1843,16 +1844,15 @@ test.each([
         // The profiler remounts the page: bring it back under the bar.
         scrollTo(renderer, 0);
         scrollTo(renderer, 400);
-        expect(fades()).toHaveLength(1);
         commits = 0;
         for (let y = 401; y < 460; y += 3) scrollTo(renderer, y);
         expect(commits).toBe(0);
         act(() => renderer.update(page(68)));
-        // Back to the top: nothing over the clean ground.
+        // Back to the top.
         scrollTo(renderer, -68);
         act(() => renderer.update(page(expanded)));
         scrollTo(renderer, -expanded);
-        expect(fades()).toHaveLength(0);
+        expect(fades()).toHaveLength(1);
         expect(edgeCalls(navigation)).not.toContain('hard');
         expect(RootBar!.setSolid).not.toHaveBeenCalled();
       } finally {

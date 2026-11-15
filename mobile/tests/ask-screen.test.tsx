@@ -3328,7 +3328,9 @@ test.each([
       scrollTo(-120);
       scrollTo(-121); // Pulling down is still at rest.
       expect(edges()).toEqual([]);
-      expect(byId('bar-fade')).toHaveLength(0);
+      // One fade layer under the clear bar, mounted with the page; its
+      // opacity follows the scroll on the UI thread.
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
       scrollTo(-118); // Before UIKit reports a collapsed header.
       // No panel: the edge never turns hard. The page fades into its own
       // ground behind the title and the bar buttons instead.
@@ -3346,7 +3348,7 @@ test.each([
       expect(edges()).not.toContain('hard');
       expect(byId('bar-fade').length).toBeGreaterThan(0);
       scrollTo(-68);
-      expect(byId('bar-fade')).toHaveLength(0);
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
 
       openSavedConversation();
       scrollTo(400);
@@ -3355,7 +3357,7 @@ test.each([
       await act(async () => barButton('New question')!.onPress());
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
-      expect(byId('bar-fade')).toHaveLength(0);
+      expect(edges()).not.toContain('hard');
       await act(async () =>
         view!.update(
           withNavigationOptions(page(120), (options) => {
@@ -3364,14 +3366,11 @@ test.each([
         ),
       );
       // A new header height must not re-read the previous thread's offset.
-      expect(byId('bar-fade')).toHaveLength(0);
       expect(edges()).not.toContain('hard');
 
       // Ask pushed in another tab (a link, a keyboard shortcut) sits below
       // an opaque bar with its content at 0: no fade over the page's top.
-      scrollTo(400);
       expect(byId('bar-fade').length).toBeGreaterThan(0);
-      scrollTo(-120);
       pushedAsk = true;
       scrollTo(0);
       scrollTo(400);

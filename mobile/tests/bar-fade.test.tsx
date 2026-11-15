@@ -1,87 +1,188 @@
 import TestRenderer, { act } from 'react-test-renderer';
-import { AccessibilityInfo, Platform, StyleSheet } from 'react-native';
-import { BAR_FADE_TAIL, BarFade } from '../src/design/bar-fade';
+import { Animated, StyleSheet } from 'react-native';
+import { AnimatedHeaderHeightContext } from 'expo-router/build/react-navigation/native-stack/utils/useAnimatedHeaderHeight';
+import {
+  BAR_FADE_RAMP,
+  BAR_FADE_TAIL,
+  BarFade,
+  ClearBarFade,
+  useBarFadeScroll,
+} from '../src/design/bar-fade';
 import { clearBars } from '../src/navigation/chrome';
-import { colors } from '../src/design/tokens';
+
+let mockSolid = false;
+jest.mock('../src/design/accessibility', () => ({
+  ...jest.requireActual('../src/design/accessibility'),
+  useSolidBar: () => mockSolid,
+}));
 
 // A page under a clear bar fades into its own ground behind the bar: no
 // blur panel, no fill of another colour and no hairline (Ask and Today on
-// the Duo, b76), and the title no longer prints over the page (Bills, iOS 27).
-const band = (renderer: TestRenderer.ReactTestRenderer) =>
+// the Duo, b76), and the title no longer prints over the page (Bills, iOS
+// 27). The fade is one layer, always mounted, moved and faded by Animated
+// nodes: scrolling renders nothing.
+const layer = (renderer: TestRenderer.ReactTestRenderer) =>
   renderer.root.find(
     (node) => node.props.testID === 'bar-fade' && typeof node.type === 'string',
   );
+const shown = (renderer: TestRenderer.ReactTestRenderer) => {
+  const style = StyleSheet.flatten(layer(renderer).props.style);
+  return {
+    opacity: style.opacity as number,
+    foot:
+      (style.transform as { translateY: number }[])[0]!.translateY +
+      (style.height as number),
+  };
+};
+const attach = jest.spyOn(
+  Animated as unknown as { attachNativeEvent: (...args: unknown[]) => unknown },
+  'attachNativeEvent',
+);
+const detach = jest.fn();
+beforeEach(() => {
+  mockSolid = false;
+  detach.mockClear();
+  attach.mockReset().mockReturnValue({ detach });
+});
+const scrollEvent = (y: number, view: unknown = { tag: 7 }) =>
+  ({ currentTarget: view, nativeEvent: { contentOffset: { y } } }) as never;
 
 test('clear bars are on, as one setting', () => {
   expect(clearBars).toBe(true);
 });
 
-test('the fade is the page ground, opaque behind the title and clear below the bar', async () => {
-  const platform = jest.replaceProperty(Platform, 'OS', 'ios');
-  jest
-    .spyOn(AccessibilityInfo, 'isReduceTransparencyEnabled')
-    .mockResolvedValue(false);
+test('the fade is clear at rest, comes up as content goes under the bar, and ends below its foot', () => {
+  const y = new Animated.Value(-100);
   let renderer!: TestRenderer.ReactTestRenderer;
-  await act(async () => {
-    renderer = TestRenderer.create(<BarFade bottom={100} ground="sunken" />);
+  act(() => {
+    renderer = TestRenderer.create(<BarFade y={y} bottom={100} />);
   });
   try {
-    const view = band(renderer);
+    const view = layer(renderer);
+    expect(view.props.pointerEvents).toBe('none');
     expect(StyleSheet.flatten(view.props.style)).toMatchObject({
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
-      height: 100 + BAR_FADE_TAIL,
     });
-    // Never a target, never read out.
-    expect(view.props.pointerEvents).toBe('none');
-    expect(view.props.accessibilityElementsHidden).toBe(true);
-    const stops = view
-      .findAll((node) => 'stopOpacity' in node.props && 'offset' in node.props)
-      .filter((node) => typeof node.type !== 'string' || true)
-      .map((node) => [Number(node.props.offset), node.props.stopOpacity]);
-    const unique = [...new Map(stops.map((s) => [s[0], s[1]])).entries()];
-    // Opaque from the top to just above the bar's foot, clear at the end.
-    expect(unique[0]).toEqual([0, 1]);
-    expect(unique.at(-1)).toEqual([1, 0]);
-    const hold = unique[1]!;
-    expect(hold[1]).toBe(1);
-    expect(hold[0] * (100 + BAR_FADE_TAIL)).toBeGreaterThan(80);
-    expect(hold[0] * (100 + BAR_FADE_TAIL)).toBeLessThan(100);
-    // No fill of its own: the gradient alone.
-    expect(
-      StyleSheet.flatten(view.props.style).backgroundColor,
-    ).toBeUndefined();
+    // At rest the page's top is at the bar's foot: nothing shows.
+    expect(shown(renderer)).toEqual({ opacity: 0, foot: 100 + BAR_FADE_TAIL });
+    // Pulled down (rubber band): still nothing.
+    act(() => y.setValue(-140));
+    expect(shown(renderer).opacity).toBe(0);
+    // Half the ramp under the bar, then all of it and beyond.
+    act(() => y.setValue(-100 + BAR_FADE_RAMP / 2));
+    expect(shown(renderer).opacity).toBeCloseTo(0.5);
+    act(() => y.setValue(-100 + BAR_FADE_RAMP));
+    expect(shown(renderer).opacity).toBe(1);
+    act(() => y.setValue(900));
+    expect(shown(renderer).opacity).toBe(1);
+    // Opaque down to just above the foot, clear at the end: the page's
+    // ground, held for all but the last 28 pt of the layer.
+    const fade = view.find(
+      (node) => node.props.side === 'top' && 'hold' in node.props,
+    );
+    expect(fade.props.ground).toBe('paper');
+    expect(fade.props.hold).toBeGreaterThan(0.9);
+    expect(fade.props.hold).toBeLessThan(1);
   } finally {
     act(() => renderer.unmount());
-    platform.restore();
-    jest.restoreAllMocks();
   }
 });
 
-test('Reduce Transparency gets a solid band in the page ground', async () => {
-  const platform = jest.replaceProperty(Platform, 'OS', 'ios');
-  jest
-    .spyOn(AccessibilityInfo, 'isReduceTransparencyEnabled')
-    .mockResolvedValue(true);
+test("the fade's foot follows the bar's own height through a large-title collapse", () => {
+  // UIKit reports the bar's height frame by frame (the stack's animated
+  // header height). While the title collapses the page moves with the bar,
+  // so nothing is under it; the debounced height (148 here) is not used.
+  const y = new Animated.Value(-148);
+  const header = new Animated.Value(148);
   let renderer!: TestRenderer.ReactTestRenderer;
-  await act(async () => {
-    renderer = TestRenderer.create(<BarFade bottom={100} ground="sunken" />);
+  act(() => {
+    renderer = TestRenderer.create(
+      <AnimatedHeaderHeightContext.Provider value={header as never}>
+        <BarFade y={y} bottom={148} />
+      </AnimatedHeaderHeightContext.Provider>,
+    );
   });
   try {
-    expect(StyleSheet.flatten(band(renderer).props.style)).toMatchObject({
-      backgroundColor: colors.sunken,
+    expect(shown(renderer)).toEqual({ opacity: 0, foot: 148 + BAR_FADE_TAIL });
+    // Half collapsed: 26 pt scrolled, the bar 26 pt shorter.
+    act(() => {
+      y.setValue(-122);
+      header.setValue(122);
     });
+    expect(shown(renderer)).toEqual({ opacity: 0, foot: 122 + BAR_FADE_TAIL });
+    // Collapsed to the inline bar, then rows go under it.
+    act(() => {
+      y.setValue(-96 + BAR_FADE_RAMP);
+      header.setValue(96);
+    });
+    expect(shown(renderer)).toEqual({ opacity: 1, foot: 96 + BAR_FADE_TAIL });
   } finally {
     act(() => renderer.unmount());
-    platform.restore();
-    jest.restoreAllMocks();
   }
 });
 
-test('no bar to fade under draws nothing', () => {
-  const renderer = TestRenderer.create(<BarFade bottom={0} />);
+test('a pinned band at the foot takes no tail', () => {
+  const y = new Animated.Value(0);
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<BarFade y={y} bottom={100} tail={0} />);
+  });
+  expect(shown(renderer).foot).toBe(100);
+  act(() => renderer.unmount());
+});
+
+test('a solid bar (Reduce Transparency, Increase Contrast) has no fade', () => {
+  mockSolid = true;
+  const y = new Animated.Value(0);
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<ClearBarFade y={y} bottom={100} />);
+  });
   expect(renderer.toJSON()).toBeNull();
   act(() => renderer.unmount());
+});
+
+test('scroll events are bound to the fade on the native side, once, and scrolling renders nothing', () => {
+  let renders = 0;
+  let api!: ReturnType<typeof useBarFadeScroll>;
+  function Owner({ enabled }: { enabled: boolean }) {
+    renders++;
+    api = useBarFadeScroll(enabled);
+    return null;
+  }
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<Owner enabled />);
+  });
+  const view = { tag: 7 };
+  expect(attach).not.toHaveBeenCalled();
+  act(() => api.onScroll(scrollEvent(-98, view)));
+  expect(attach).toHaveBeenCalledTimes(1);
+  expect(attach).toHaveBeenCalledWith(view, 'onScroll', [
+    { nativeEvent: { contentOffset: { y: api.y } } },
+  ]);
+  // The first event seeds the value; later ones go to the native driver.
+  expect((api.y as unknown as { __getValue(): number }).__getValue()).toBe(-98);
+  renders = 0;
+  for (let offset = -90; offset < 600; offset += 7)
+    act(() => api.onScroll(scrollEvent(offset, view)));
+  expect(attach).toHaveBeenCalledTimes(1);
+  expect(renders).toBe(0);
+  // Switched off (a legibility setting, a split pane): unbound and unseen
+  // until the page next reports where it is.
+  act(() => renderer.update(<Owner enabled={false} />));
+  expect(detach).toHaveBeenCalledTimes(1);
+  expect(
+    (api.y as unknown as { __getValue(): number }).__getValue(),
+  ).toBeLessThan(-10000);
+  act(() => api.onScroll(scrollEvent(300, view)));
+  expect(attach).toHaveBeenCalledTimes(1);
+  act(() => renderer.update(<Owner enabled />));
+  act(() => api.onScroll(scrollEvent(300, view)));
+  expect(attach).toHaveBeenCalledTimes(2);
+  act(() => renderer.unmount());
+  expect(detach).toHaveBeenCalledTimes(2);
 });

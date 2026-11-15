@@ -1,5 +1,5 @@
 import { animatedScroll } from '../../design/accessibility';
-import { ClearBarFade } from '../../design/bar-fade';
+import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { RouteOptions } from '../../navigation/preview';
@@ -12,7 +12,6 @@ import {
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -26,8 +25,6 @@ import {
   RefreshControl,
   StyleSheet,
   View,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
   type TextLayoutEvent,
   type ViewToken,
 } from 'react-native';
@@ -275,19 +272,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     !pushed &&
     !adaptive &&
     !onRail;
-  const [underBar, setUnderBar] = useState(false);
-  const barY = useRef<number | null>(null);
-  const checkUnderBar = useCallback(() => {
-    if (barY.current !== null) setUnderBar(barY.current + headerBottom > 1);
-  }, [headerBottom]);
-  useLayoutEffect(checkUnderBar, [checkUnderBar]);
-  const onBarScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      barY.current = event.nativeEvent.contentOffset.y;
-      checkUnderBar();
-    },
-    [checkUnderBar],
-  );
+  const fadeScroll = useBarFadeScroll(fades);
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -606,7 +591,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         {...(Platform.OS === 'android'
           ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
           : fades
-            ? { onScroll: onBarScroll, scrollEventThrottle: 16 }
+            ? { onScroll: fadeScroll.onScroll, scrollEventThrottle: 16 }
             : {})}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={rows.length ? footer : null}
@@ -627,7 +612,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <>
         <RouteOptions options={options} />
         {listView}
-        {fades && underBar ? <ClearBarFade bottom={headerBottom} /> : null}
+        {fades ? <ClearBarFade y={fadeScroll.y} bottom={headerBottom} /> : null}
       </>
     );
   return (
