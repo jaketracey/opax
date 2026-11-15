@@ -11,12 +11,13 @@ import {
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { personRoute, partyRoute } from '../../navigation/routes/people';
 import { CachedPortrait } from '../CachedPortrait';
-import { partyName } from '../reports/model';
 import {
   rosterMatch,
   speechesText,
+  voiceParty,
   voicesDebates,
   voicesNote,
+  type VoiceIdentity,
   type Year,
 } from './model';
 import { yearSource, type YearMeta } from './YearBrief';
@@ -31,6 +32,11 @@ export function yearVoices(data: Year) {
 export interface RosterLookup {
   people: readonly { name: string }[];
   slugs: Readonly<Record<string, string>>;
+  /**
+   * The identity the directory, search and profiles show for a slug. A voice
+   * whose speeches carry no party label takes its party from here.
+   */
+  identity?: (slug: string) => VoiceIdentity | null;
 }
 
 /**
@@ -62,7 +68,11 @@ export function YearVoices({
           const slug = roster
             ? rosterMatch(voice.name, roster.people, roster.slugs)
             : null;
-          const party = voice.party ? partyName(voice.party) : null;
+          const party = voiceParty(
+            voice,
+            data.year,
+            slug ? (roster?.identity?.(slug) ?? null) : null,
+          );
           return slug ? (
             <PersonRow
               key={voice.name}

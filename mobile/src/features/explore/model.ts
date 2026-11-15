@@ -149,6 +149,34 @@ export function rosterMatch(
   const ids = Object.entries(slugs).filter(([, n]) => n.trim() === wanted);
   return ids.length === 1 ? ids[0]![0] : null;
 }
+/** The parts of the shared person identity a voice's party is read from. */
+export interface VoiceIdentity {
+  party: string | null;
+  rosterParty: string | null;
+  rosterRow?: { last?: number };
+}
+/**
+ * A voice's party. The year's own speech labels come first: they are the
+ * party the person spoke for that year. Many speeches carry no label (most
+ * Senate rows, ministers at the table), so a joined parliamentarian then
+ * takes the party every other list shows: the current party in their latest
+ * year on record, and before that the party their speeches are recorded
+ * under, so a later change of party is not read back into an earlier year.
+ */
+export function voiceParty(
+  voice: { party: string | null },
+  year: number,
+  person: VoiceIdentity | null,
+): string | null {
+  const recorded = voice.party?.trim();
+  if (recorded) return partyName(recorded);
+  if (!person) return null;
+  const party =
+    person.rosterRow?.last === year
+      ? (person.party ?? person.rosterParty)
+      : (person.rosterParty ?? person.party);
+  return party?.trim() ? partyName(party) : null;
+}
 /** "Statements by Members", from "Scott Buchholz \u2014 Statements by Members \u2014 2025-02-10". */
 export function cleanSpeechTitle(source: {
   title?: string | null;
