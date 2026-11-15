@@ -34,6 +34,7 @@ import {
 import {
   barBacking,
   clearBarStyle,
+  glassBar,
   opaqueBar,
   useClearRailBar,
   useRailBar,
@@ -404,7 +405,15 @@ export function Screen({
   scrollToOverflowEnabled = false,
   clampScrollOnContentChange = false,
   keyboardInsets = true,
+  artUnderTitle = false,
 }: {
+  /**
+   * The page draws art behind its large title (Today's dot map). Before
+   * iOS 26 the tab root's bar is opaque, so its route runs the page under
+   * the bar instead (navigation/stack/screen.tsx, `artUnderTitle`), and the
+   * bar is clear while the title is expanded and opaque once it collapses.
+   */
+  artUnderTitle?: boolean;
   onLayout?: ViewProps['onLayout'];
   /** The rendered content, rather than the surrounding scroll viewport. */
   onContentLayout?: ViewProps['onLayout'];
@@ -480,6 +489,8 @@ export function Screen({
     disabled: inPane,
     underBar,
   });
+  const clearExpandedBar =
+    artUnderTitle && Platform.OS === 'ios' && !Platform.isPad && !glassBar();
   const backed = useSolidRailBacking();
   const clearRail = useClearRailBar();
   const onRail = useRailBar() !== null;
@@ -493,6 +504,9 @@ export function Screen({
       ...(clearRail
         ? clearBarStyle(opaqueBar(colors[ground]))
         : opaqueBar(colors[ground])),
+      ...(clearExpandedBar
+        ? { headerLargeStyle: { backgroundColor: 'transparent' } }
+        : {}),
       ...(backed
         ? barBacking(colors[ground])
         : wasBacked.current
@@ -513,11 +527,26 @@ export function Screen({
     });
     wasBacked.current = backed;
     wasOnRail.current = onRail;
-  }, [setOptions, ground, inPane, nativeRoot, backed, clearRail, onRail]);
+  }, [
+    setOptions,
+    ground,
+    inPane,
+    nativeRoot,
+    backed,
+    clearRail,
+    onRail,
+    clearExpandedBar,
+  ]);
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();
-  const belowBar = nativeRoot && railSolidRoot;
+  // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
+  // lays the scroll view out below it: React Native's own sticky header
+  // holds at the right place. BarStickyHeader subtracts the bar's height
+  // for a scroll view that runs under the bar, which there held Search's
+  // scope control about 170 pt below the bar, over the rows (iOS 18.4).
+  const belowBar =
+    (nativeRoot && railSolidRoot) || (!glassBar() && !clearExpandedBar);
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);

@@ -83,6 +83,18 @@ import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
+// Ask's resets below describe its scroll view under a translucent root bar,
+// which is iOS 26 and later; before iOS 26 the bar is opaque and the rest
+// is 0 (tests/scroll-to-top.test.tsx).
+const platformVersion = Object.getOwnPropertyDescriptor(Platform, 'Version');
+beforeAll(() => {
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
+});
+afterAll(() => {
+  if (platformVersion)
+    Object.defineProperty(Platform, 'Version', platformVersion);
+});
+
 jest.mock('../src/design/keyboard', () => ({
   ...jest.requireActual('../src/design/keyboard'),
   moveAccessibilityFocus: jest.fn(),
