@@ -1,5 +1,11 @@
-import type { Roster, Slugs } from '../../api/catalog-decoders';
-import { recordedFederalOnly } from '../../api/party-transforms';
+import type { PeopleCatalog, Roster, Slugs } from '../../api/catalog-decoders';
+import {
+  datedPeopleByRosterId,
+  federalServiceStatus,
+  recordedFederalOnly,
+  type PartyStatus,
+} from '../../api/party-transforms';
+import type { Catalogs } from '../../api/catalogs';
 import { rosterPeople, type Answer } from './model';
 
 export type AskPerson = {
@@ -31,7 +37,15 @@ const stateName = (raw: string | null | undefined) =>
  * to tell the two apart, so it names the federal seat alone for anyone the
  * roster also records in a state parliament.
  */
-export function placeLine(person: Roster['people'][number]): string | null {
+export function placeLine(
+  person: Roster['people'][number],
+  /**
+   * What the dated record says of the person's federal service, when Ask
+   * has the people catalogue (`rosterProfiles`). Without it the roster's
+   * flag alone decides, as before.
+   */
+  status?: PartyStatus,
+): string | null {
   const seats = (person.representation ?? []).filter(
     (r) => r.jurisdiction === 'federal',
   );
@@ -40,10 +54,13 @@ export function placeLine(person: Roster['people'][number]): string | null {
   const state = stateName(seat.state ?? person.states?.at(-1));
   // The roster's `current` means sitting in any parliament it covers. For
   // someone it also records in a state parliament, true may be the state
-  // seat, so it claims no federal one: the seat is named alone.
+  // seat, so alone it claims no federal one: the seat is named alone.
   const sits = person.current === true && recordedFederalOnly(person);
+  const known: PartyStatus =
+    status ??
+    (sits ? 'current' : person.current === false ? 'former' : 'unknown');
   const said = (claim: string, former: string, plain: string) =>
-    sits ? claim : person.current === false ? former : plain;
+    known === 'current' ? claim : known === 'former' ? former : plain;
   if (/senate/i.test(seat.chamber))
     return state
       ? said(
@@ -56,9 +73,36 @@ export function placeLine(person: Roster['people'][number]): string | null {
   const where = `${seat.electorate}${state ? `, ${state}` : ''}`;
   return said(`Member for ${where}`, `Former member for ${where}`, where);
 }
+/**
+ * The people catalogue for Ask's place lines: the manifest, then the people
+ * file it names, both through the catalog cache as Search reads them. Any
+ * failure is null: the rows are then drawn from the roster alone.
+ */
+export async function askPeopleCatalog(
+  source: Pick<Catalogs, 'manifest' | 'people'>,
+): Promise<PeopleCatalog | null> {
+  try {
+    const manifest = await source.manifest();
+    return (await source.people(manifest.data)).data;
+  } catch {
+    return null;
+  }
+}
 /** Roster name → the person row's data; the only names People lists. */
-export function rosterProfiles(roster: Roster, slugs: Slugs) {
+/**
+ * With the people catalogue (the read Search already makes), each row's
+ * place line rests on the dated federal seats as well as the roster's flag,
+ * as in Search: a sitting federal member the roster also records in a state
+ * parliament reads "Member for", not the seat alone. Without it (the read
+ * is missing or failed) every line is as the roster alone gives it.
+ */
+export function rosterProfiles(
+  roster: Roster,
+  slugs: Slugs,
+  people?: PeopleCatalog | null,
+) {
   const known = rosterPeople(roster, slugs);
+  const dated = people ? datedPeopleByRosterId(people) : null;
   const out = new Map<string, AskPerson>();
   for (const p of roster.people) {
     const slug = known.get(p.name);
@@ -67,7 +111,16 @@ export function rosterProfiles(roster: Roster, slugs: Slugs) {
       name: p.name,
       slug,
       party: p.party_now || p.party || null,
-      place: placeLine(p),
+      place: placeLine(
+        p,
+        dated
+          ? federalServiceStatus(
+              p,
+              p.pid ? dated.get(p.pid) : undefined,
+              people,
+            )
+          : undefined,
+      ),
     });
   }
   return out;

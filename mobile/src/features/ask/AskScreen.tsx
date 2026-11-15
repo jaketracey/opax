@@ -68,7 +68,7 @@ import { askGround } from './ground';
 import type { Followup } from './model';
 import { useReturnFromAsk } from './open';
 import { openAskOptions, topics } from './Options';
-import { rosterProfiles, type AskPerson } from './people';
+import { askPeopleCatalog, rosterProfiles, type AskPerson } from './people';
 import {
   arriveInAsk,
   askQuestion,
@@ -252,11 +252,16 @@ export default function AskScreen() {
     if (loadingNames.current || names.length) return;
     loadingNames.current = true;
     try {
-      const [roster, slugs] = await Promise.all([
+      const [roster, slugs, people] = await Promise.all([
         catalogs.roster(),
         catalogs.slugs(),
+        // The people catalogue, by the cached read Search already makes
+        // (same address, same decoder: one request between them). It only
+        // sharpens the place lines; without it the rows are as the roster
+        // alone gives them.
+        askPeopleCatalog(catalogs),
       ]);
-      setProfiles(rosterProfiles(roster.data, slugs.data));
+      setProfiles(rosterProfiles(roster.data, slugs.data, people));
       setNames(roster.data.people.map((p) => p.name));
     } catch {
       /* People rows wait for the roster; the answer reads without them. */
