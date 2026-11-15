@@ -17,6 +17,13 @@ export const learnCopy = {
   next: 'Next',
   back: 'Back to the guide',
   more: 'More',
+  /** A link to a chapter the guide does not have (an old link). */
+  missingChapter: 'This chapter isn’t in the guide',
+  missingChapterBody: 'The link may be old. The guide lists every chapter.',
+  /** The hub's mark on a chapter read to its last idea. */
+  read: 'Read',
+  /** The header over the chapter that follows, on a chapter's last idea. */
+  nextChapter: 'Next chapter',
   /** Account › Glossary terms and its switches. */
   termsPage: 'Glossary terms',
   /** The inline tips: a marked word and its short answer (Jake, build 76). */
@@ -37,3 +44,20 @@ export const explainAction = (word: string) => `Explain ${word}`;
 /** "How a bill becomes an Act · 2 of 23". */
 export const chapterKicker = (title: string, at: number, of: number) =>
   `${title} · ${at} of ${of}`;
+/**
+ * The hub's words for the reader's place in a chapter: "4 of 23" beside a
+ * chapter left part-way (spoken "idea 4 of 23"), "Read" beside one read to
+ * its last idea. Nothing for a chapter not opened.
+ */
+export const chapterPlaceWords = (
+  progress: { kind: 'read' } | { kind: 'part'; at: number } | null,
+  total: number,
+): { value: string; spoken: string } | null =>
+  !progress
+    ? null
+    : progress.kind === 'read'
+      ? { value: learnCopy.read, spoken: learnCopy.read }
+      : {
+          value: `${progress.at} of ${total}`,
+          spoken: `idea ${progress.at} of ${total}`,
+        };

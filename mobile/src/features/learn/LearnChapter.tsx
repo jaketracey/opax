@@ -21,7 +21,10 @@ import { RouteOptions } from '../../navigation/preview';
 import type { LearnBlock, LearnInline } from './content-types';
 import { chapterKicker, learnCopy } from './copy';
 import { learnChapters, type TermId } from './glossary';
+import { chapterSymbols } from './LearnHub';
 import { openGuideLink } from './links';
+import { keepLearnPlace } from './place';
+import { learnChapterRoute, learnRoute } from './routes';
 
 const one = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
@@ -102,16 +105,37 @@ function Block({ block, at }: { block: LearnBlock<TermId>; at: number }) {
  * swaps the idea in place: no pager to swipe, so VoiceOver reads one idea
  * and one button, and focus moves to the new heading. The last idea is the
  * guide's "See it in OPAX", real records on the reader's own stack; then
+ * the chapter that follows in the guide's order, as a row that takes this
+ * chapter's place on the stack (Back still returns to the guide), and
  * "Back to the guide".
+ *
+ * Each idea the reader moves to with Next is kept as their place
+ * (place.ts), so the hub can open the chapter where they stopped. Opening a
+ * chapter keeps nothing.
  */
 export default function LearnChapter() {
   const params = useLocalSearchParams<{ chapter?: string; screen?: string }>();
-  const chapter = learnChapters.find((c) => c.slug === one(params.chapter));
-  const total = chapter?.screens.length ?? 0;
-  const start = Math.min(
-    Math.max(Number(one(params.screen)) || 1, 1),
-    Math.max(total, 1),
+  // Keyed by chapter: the next chapter's row replaces this route, and a
+  // route that is reused must start the new chapter at its own first idea.
+  return (
+    <ChapterPage
+      key={one(params.chapter) ?? ''}
+      slug={one(params.chapter)}
+      screen={one(params.screen)}
+    />
   );
+}
+
+function ChapterPage({
+  slug,
+  screen: from,
+}: {
+  slug?: string;
+  screen?: string;
+}) {
+  const chapter = learnChapters.find((c) => c.slug === slug);
+  const total = chapter?.screens.length ?? 0;
+  const start = Math.min(Math.max(Number(from) || 1, 1), Math.max(total, 1));
   const [at, setAt] = useState(start - 1);
   const scroll = useRef<ScrollView>(null);
   const heading = useRef<View>(null);
@@ -131,7 +155,15 @@ export default function LearnChapter() {
       <Screen testID="learn-chapter">
         <ContentUnavailable
           symbol="text.book.closed"
-          title={learnCopy.name}
+          title={learnCopy.missingChapter}
+          body={learnCopy.missingChapterBody}
+          action={{
+            label: learnCopy.openGuide,
+            // The guide takes this page's place, so Back never returns to
+            // a chapter that is not there.
+            onPress: () => router.replace(learnRoute),
+            testID: 'learn-chapter-missing-open',
+          }}
           testID="learn-chapter-missing"
         />
       </Screen>
@@ -139,6 +171,9 @@ export default function LearnChapter() {
   const screen = chapter.screens[at]!;
   const last = at === total - 1;
   const kicker = chapterKicker(chapter.title, at + 1, total);
+  const following = last
+    ? learnChapters[learnChapters.indexOf(chapter) + 1]
+    : undefined;
   return (
     <>
       <RouteOptions options={{ title: chapter.title }} />
@@ -171,6 +206,19 @@ export default function LearnChapter() {
             <Block key={index} block={block} at={at + 1} />
           ))}
         </View>
+        {following ? (
+          <InsetGroup header={learnCopy.nextChapter} testID="learn-following">
+            <LinkRow
+              title={following.title}
+              titleLines={0}
+              detail={following.summary}
+              detailLines={0}
+              symbol={chapterSymbols[following.slug] ?? 'doc.text'}
+              onPress={() => router.replace(learnChapterRoute(following.slug))}
+              testID="learn-following-row"
+            />
+          </InsetGroup>
+        ) : null}
         <Button
           label={last ? learnCopy.back : learnCopy.next}
           accessibilityLabel={
@@ -186,7 +234,15 @@ export default function LearnChapter() {
               if (router.canGoBack()) router.back();
               return;
             }
+            // The place is kept when the reader moves, never on opening:
+            // a link that opens the chapter at its start must not replace a
+            // place kept further in, and one that opens its last idea has
+            // not been read through. Reaching the last idea this way is
+            // what marks the chapter read.
             setAt(at + 1);
+            void keepLearnPlace(chapter.slug, at + 2, total).catch(
+              () => undefined,
+            );
           }}
           testID="learn-next"
         />

@@ -5,8 +5,9 @@ import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { Heading, Text } from '../../design/text';
 import { RouteOptions } from '../../navigation/preview';
-import { learnCopy } from './copy';
+import { chapterPlaceWords, learnCopy } from './copy';
 import { learnChapters } from './glossary';
+import { chapterProgress, useLearnPlaces } from './place';
 import { glossaryRoute, learnChapterRoute, minuteRoute } from './routes';
 import { hideLearnCard } from './settings';
 
@@ -26,11 +27,16 @@ export const chapterSymbols: Record<string, SFSymbol> = {
  * own order, each with its one-line summary, then the A to Z glossary and
  * "Parliament in a minute". A plain list, not a course: nothing to finish,
  * nothing locked. Opening it retires the Home card for good.
+ *
+ * The hub keeps the reader's place (place.ts, on the device only): a
+ * chapter left part-way says where ("4 of 23") and opens there, and one
+ * read to its last idea says "Read" and opens at its start.
  */
 export default function LearnHub() {
   useEffect(() => {
     void hideLearnCard().catch(() => undefined);
   }, []);
+  const places = useLearnPlaces();
   return (
     <>
       <RouteOptions options={{ title: learnCopy.name }} />
@@ -42,17 +48,37 @@ export default function LearnHub() {
           {learnCopy.lead}
         </Text>
         <InsetGroup testID="learn-chapters">
-          {learnChapters.map((chapter) => (
-            <LinkRow
-              key={chapter.slug}
-              title={chapter.title}
-              titleLines={0}
-              detail={chapter.summary}
-              symbol={chapterSymbols[chapter.slug] ?? 'doc.text'}
-              onPress={() => router.push(learnChapterRoute(chapter.slug))}
-              testID={`learn-chapter-${chapter.slug}`}
-            />
-          ))}
+          {learnChapters.map((chapter) => {
+            const total = chapter.screens.length;
+            const progress = chapterProgress(places[chapter.slug], total);
+            const words = chapterPlaceWords(progress, total);
+            return (
+              <LinkRow
+                key={chapter.slug}
+                title={chapter.title}
+                titleLines={0}
+                detail={chapter.summary}
+                value={words?.value}
+                symbol={chapterSymbols[chapter.slug] ?? 'doc.text'}
+                accessibilityLabel={[
+                  chapter.title,
+                  words?.spoken,
+                  chapter.summary,
+                ]
+                  .filter(Boolean)
+                  .join(', ')}
+                onPress={() =>
+                  router.push(
+                    learnChapterRoute(
+                      chapter.slug,
+                      progress?.kind === 'part' ? progress.at : undefined,
+                    ),
+                  )
+                }
+                testID={`learn-chapter-${chapter.slug}`}
+              />
+            );
+          })}
         </InsetGroup>
         <InsetGroup>
           <LinkRow
