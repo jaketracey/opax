@@ -10,6 +10,8 @@ the `nightly-status` branch of a PUBLIC repository, so every line here is treate
 
   * only steps named as failed, only `<pipe>/<step>.log`, and a step name must be a plain identifier;
   * at most the last MAX_LINES lines and MAX_BYTES bytes per step, each line cut at MAX_LINE characters;
+  * both passes read the line as the step wrote it and only mark stretches of it; the marked stretches are
+    merged and replaced in one go, so no pass sees another's placeholder and no order can unmask anything;
   * pass 1 replaces every credential value this run knows: each value the env files give a step (taken from
     `env -0` after bash itself sourced them, so quotes, comments and `export` are read as the steps read them)
     and each environment variable whose name looks like a credential, raw and percent-encoded every usual way;
@@ -162,68 +164,111 @@ def known_secrets(environ: dict, env_files: list[Path], env0_files: list[Path] =
     return sorted(out, key=len, reverse=True)
 
 
-def _mask_base64(match: re.Match) -> str:
-    """Mask the run unless it is plainly a word or a lowercase path (one character class only)."""
-    run = match.group(0)
-    classes = sum(bool(re.search(pattern, run)) for pattern in (r"[a-z]", r"[A-Z]", r"\d"))
-    return "[redacted]" if classes >= 2 else run
+def _is_key_like(run: str) -> bool:
+    """A long base64-like run is masked unless it is plainly a word or a lowercase path (one character class)."""
+    return sum(bool(re.search(pattern, run)) for pattern in (r"[a-z]", r"[A-Z]", r"\d")) >= 2
 
 
 URL_PATH = re.compile(r"(?i)\b[a-z][a-z0-9+.-]*://[^\s?#\"'<>]+")
+MASK = "[redacted]"
 
 
-def _mask_long_runs(line: str) -> str:
-    """Long base64-like runs, masked. `/` is a base64 character, so a URL's host and path would read as one run
-    and the address a step failed on would be lost: inside a URL each path segment is judged on its own."""
-    out, last = [], 0
-    for match in URL_PATH.finditer(line):
-        out.append(LONG_BASE64.sub(_mask_base64, line[last:match.start()]))
-        out.append("/".join(LONG_BASE64.sub(_mask_base64, part) for part in match.group(0).split("/")))
-        last = match.end()
-    out.append(LONG_BASE64.sub(_mask_base64, line[last:]))
-    return "".join(out)
+def _spans(line: str, secrets: list[str], home: str, cut: bool) -> list[tuple[int, int, str]]:
+    """Every stretch of the ORIGINAL line that must not be published, as (start, end, replacement).
 
-
-def redact(line: str, secrets: list[str], home: str = "") -> str:
-    # Cut first: the patterns below are slow on a very long line (64 KiB of `a.b-c_d.` took 84 s, past the
-    # caller's timeout, so no tails at all). The cut may fall inside a known value, and masking earlier text
-    # can pull that half into the published part: if the cut line ends with the start of a known value
-    # (MIN_PREFIX characters or more, so ordinary words are not eaten), that end is masked.
-    if len(line) > PRE_CUT:
-        line = line[:PRE_CUT]
+    Each rule reads the line as the step wrote it and none reads another rule's output, so no order of rules can
+    unmask anything: three rounds of review each fixed one order of rewriting passes and broke another. The
+    spans are merged and replaced in one go by redact()."""
+    spans: list[tuple[int, int, str]] = []
+    # (a) what this run knows to be a credential: every occurrence of every known value and encoded form
+    for secret in secrets:
+        at = line.find(secret)
+        while at != -1:
+            spans.append((at, at + len(secret), MASK))
+            at = line.find(secret, at + 1)
+    if cut:
+        # the line was cut at PRE_CUT, perhaps inside a known value: the start of one at the very end
+        # (MIN_PREFIX characters or more, so ordinary words are not eaten) is masked
         longest = 0
         for secret in secrets:
-            for size in range(min(len(secret) - 1, PRE_CUT), max(MIN_PREFIX, longest + 1) - 1, -1):
+            for size in range(min(len(secret) - 1, len(line)), max(MIN_PREFIX, longest + 1) - 1, -1):
                 if line.endswith(secret[:size]):
                     longest = size
                     break
         if longest:
-            line = line[:-longest] + "[redacted]"
-    line = CONTROL.sub(" ", line)
-    # Pass 1, what this run knows to be a credential, comes first and whole: a value holding a space, a quote or
-    # a symbol would otherwise be masked only up to it by the shapes below. One exception: a match that is the
-    # name of an assignment (directly followed by `=` or `:`) is left for now, or a known value that is itself a
-    # word (GRANT_TYPE=password) would rewrite the name in `password=...` and hide the value from the shapes.
-    for secret in secrets:
-        line = re.sub(re.escape(secret) + r"(?![\"']?\s*[=:])", "[redacted]", line)
-    line = SECRET_ASSIGNMENT.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
-    line = SECRET_WORD_VALUE.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
-    for secret in secrets:                      # and the matches left above, now that their values are masked
-        line = line.replace(secret, "[redacted]")
-    if home and len(home) > 1:                  # pass 2: what is only shaped like one
-        line = line.replace(home, "~")
-    line = HOME_DIR.sub("~", line)
-    line = URL_USERINFO.sub(r"\1[redacted]@", line)
-    line = URL_QUERY.sub(r"\1?[redacted]", line)
-    line = SECRET_ASSIGNMENT.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
-    line = SECRET_WORD_VALUE.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
-    line = AWS_KEY_ID.sub("[redacted]", line)
-    line = AUTH_SCHEME.sub(lambda m: f"{m.group(1)} [redacted]", line)
-    line = EMAIL.sub("[email]", line)
-    line = IPV4.sub("[ip]", line)
-    line = IPV6.sub("[ip]", line)
-    line = LONG_HEX.sub("[redacted]", line)
-    line = _mask_long_runs(line)
+            spans.append((len(line) - longest, len(line), MASK))
+    # (b) what is only shaped like one
+    homes: list[tuple[int, int]] = []
+    if home and len(home) > 1:
+        at = line.find(home)
+        while at != -1:
+            homes.append((at, at + len(home)))
+            at = line.find(home, at + len(home))
+    homes += [m.span() for m in HOME_DIR.finditer(line)]
+    spans += [(start, end, "~") for start, end in homes]
+    userinfo = [(m.end(1), m.end() - 1) for m in URL_USERINFO.finditer(line)]
+    spans += [(start, end, MASK) for start, end in userinfo]
+    spans += [(m.end(1) + 1, m.end(), MASK) for m in URL_QUERY.finditer(line) if m.end() > m.end(1) + 1]
+    spans += [(m.end(2), m.end(), MASK) for m in SECRET_ASSIGNMENT.finditer(line) if m.end() > m.end(2)]
+    spans += [(m.start(3), m.end(3), MASK) for m in SECRET_WORD_VALUE.finditer(line)]
+    spans += [(m.start(), m.end(), MASK) for m in AWS_KEY_ID.finditer(line)]
+    for m in AUTH_SCHEME.finditer(line):
+        value = m.group(0)[len(m.group(1)):]
+        spans.append((m.end() - len(value.lstrip()), m.end(), MASK))
+    for m in EMAIL.finditer(line):
+        # user:pass@host in a URL also reads as an address: the credentials are masked above, the host stays
+        if not any(start < m.end() and m.start() < end + 1 for start, end in userinfo):
+            spans.append((m.start(), m.end(), "[email]"))
+    spans += [(m.start(), m.end(), "[ip]") for m in IPV4.finditer(line)]
+    spans += [(m.start(), m.end(), "[ip]") for m in IPV6.finditer(line)]
+    spans += [(m.start(), m.end(), MASK) for m in LONG_HEX.finditer(line)]
+    # Long base64-like runs. `/` is a base64 character, so a file path or a URL's host and path would read as
+    # one run and the place a step failed would be lost: a home directory ends a run, and inside a URL each
+    # path segment is judged on its own. These only narrow where this one rule looks, in the original line.
+    breaks = sorted(homes)
+    pieces, last = [], 0
+    for start, end in breaks:
+        if start >= last:
+            pieces.append((last, start))
+            last = end
+    pieces.append((last, len(line)))
+    for lo, hi in pieces:
+        text, at = line[lo:hi], 0
+        chunks = []
+        for m in URL_PATH.finditer(text):
+            chunks.append((at, m.start()))
+            seg = m.start()
+            for part in m.group(0).split("/"):
+                chunks.append((seg, seg + len(part)))
+                seg += len(part) + 1
+            at = m.end()
+        chunks.append((at, len(text)))
+        for c0, c1 in chunks:
+            for m in LONG_BASE64.finditer(text[c0:c1]):
+                if _is_key_like(m.group(0)):
+                    spans.append((lo + c0 + m.start(), lo + c0 + m.end(), MASK))
+    return spans
+
+
+def redact(line: str, secrets: list[str], home: str = "") -> str:
+    # Cut first: the patterns are slow on a very long line (64 KiB of `a.b-c_d.` took 84 s, past the caller's
+    # timeout, so no tails at all).
+    cut = len(line) > PRE_CUT
+    line = CONTROL.sub(" ", line[:PRE_CUT])
+    out, at, pending = [], 0, None           # pending: the merged span being built (start, end, replacement)
+    for start, end, text in sorted(_spans(line, secrets, home, cut)):
+        if pending and start <= pending[1]:  # overlapping or touching: one mask, and the plainest label loses
+            pending = (pending[0], max(pending[1], end), pending[2] if pending[2] == text else MASK)
+            continue
+        if pending:
+            out += [line[at:pending[0]], pending[2]]
+            at = pending[1]
+        pending = (start, end, text)
+    if pending:
+        out += [line[at:pending[0]], pending[2]]
+        at = pending[1]
+    out.append(line[at:])
+    line = "".join(out)
     if len(line) > MAX_LINE:
         line = line[:MAX_LINE] + " [cut]"
     return line.rstrip()

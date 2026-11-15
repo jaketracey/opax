@@ -275,6 +275,53 @@ class ThirdReviewFindings(unittest.TestCase):
         self.assertTrue(plain.startswith("word word") and "[redacted]" not in plain)
 
 
+class OneMergeOfSpans(unittest.TestCase):
+    """Fourth review: the passes mark stretches of the original line and one merge masks them, so no order of
+    passes can unmask anything. Every value here is made up."""
+
+    VALUES = ["Wb7Nc3Kd9Fq2!Zx$81", "correct horse battery9", "idAAAA1111", "secBBBB2222", "password",
+              'Kq7"Zm\\4Wd9\'Xp2', "Hd5Jk9Nx3Bz7", "p@ss:w0rd=Qz8/Lm4", "84726153", "Tt6 Yy7=Uu8:Ii9"]
+
+    def setUp(self):
+        self.secrets = st.known_secrets({f"X{i}_SECRET": value for i, value in enumerate(self.VALUES)}, [])
+
+    def test_a_known_value_followed_by_a_colon_or_equals_is_masked_whole(self):
+        for line, leaks in {
+            "invalid key Wb7Nc3Kd9Fq2!Zx$81: denied": ("Zx$81", "Wb7N"),
+            "password=correct horse battery9: rejected": ("horse", "battery9"),
+            "cred idAAAA1111/secBBBB2222: bad": ("idAAAA", "secBBBB", "2222"),
+            "Wb7Nc3Kd9Fq2!Zx$81=1": ("Zx$81",),
+        }.items():
+            out = st.redact(line, self.secrets)
+            for leak in leaks:
+                self.assertNotIn(leak, out, line)
+        self.assertEqual(st.redact("invalid key Wb7Nc3Kd9Fq2!Zx$81: denied", self.secrets), "invalid key [redacted]: denied")
+        self.assertEqual(st.redact("cred idAAAA1111/secBBBB2222: bad", self.secrets), "cred [redacted]/[redacted]: bad")
+
+    def test_a_known_value_that_is_a_key_word_and_the_value_after_it_are_both_masked(self):
+        self.assertEqual(st.redact("login password=Rt5Yh1 sent", self.secrets), "login [redacted]=[redacted] sent")
+
+    def test_no_known_value_nor_six_characters_of_one_survives_any_arrangement(self):
+        import random
+        rng = random.Random(20261116)
+        separators = ["=", ":", " ", '"', "'", "/", "@", ": ", "= ", ", ", "", "&", "?", "(", ")", "[", "]", ";", "//"]
+        filler = ["step", "failed", "for", "url", "https://api.example.gov.au/v1", "key", "token", "password", "secret",
+                  "Authorization", "Bearer", "user", "line 12", "in fetch", "retry", "rc=1", "~", "at", "é", "議会"]
+        long_values = [v for v in self.VALUES if len(v) >= 6]
+        windows = {v[i:i + 6] for v in long_values for i in range(len(v) - 5)}
+        for n in range(3000):
+            parts = []
+            for _ in range(rng.randint(1, 9)):
+                parts.append(rng.choice(self.VALUES) if rng.random() < 0.5 else rng.choice(filler))
+                parts.append(rng.choice(separators))
+            line = "".join(parts)
+            if n % 50 == 0:   # some lines run past the cut, with a value across it
+                line = "x" * (st.PRE_CUT - rng.randint(1, 30)) + line
+            out = st.redact(line, self.secrets)
+            for window in windows:
+                self.assertNotIn(window, out, f"line {n}: {line[-200:]!r}")
+
+
 class Tails(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
