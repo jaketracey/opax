@@ -506,11 +506,14 @@ command that uploads them, `scripts/upload-crash-symbols.sh android <version>
 <versionCode> <evidence folder> <evidence folder>/mapping.txt`; any other value
 stops the build before it starts. With `1` the upload runs into
 `crash-symbols.log`, logs the one skip line without a key, and is stopped after
-`OPAX_SYMBOL_UPLOAD_TIMEOUT` seconds (600 by default) so a hung CLI cannot hold
-the desktop native lock; a failed or stopped upload never fails the build.
-`build-play.sh` unsets every `POSTHOG_*` variable the caller exported before
-its first step, so no key reaches capacity checks, the build gate, Expo,
-Gradle, Metro or the upload, which loads its own key file. `verify-play.py` refuses an AAB whose evidence folder
+`OPAX_SYMBOL_UPLOAD_TIMEOUT` seconds (600 by default; TERM, so the script
+removes its staged map, then KILL 10 seconds later) so a hung CLI cannot hold
+the desktop native lock; a failed or stopped upload never fails the build. The
+switch and the timeout come from the caller only, and `build-play.sh` unsets
+every `POSTHOG_*` variable before its first step and after each helper it
+sources (`qa-env.sh` loads `mobile/.qa.local.env`), so no key reaches capacity
+checks, the build gate, Expo, Gradle, Metro or the upload, which loads its own
+key file. `verify-play.py` refuses an AAB whose evidence folder
 lacks the composed map, whose recorded chunk ID is not the one in the shipped
 `index.android.bundle`, or whose `mapping.txt` is not the R8 mapping the AAB
 gives Play (`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`,

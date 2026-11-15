@@ -7,6 +7,7 @@ import signal
 import stat
 import subprocess
 import threading
+import time
 
 
 PRIVATE_NAMES = ("ASC_KEY_PATH", "ASC_KEY_ID", "ASC_ISSUER_ID", "APPLE_TEAM_ID")
@@ -71,10 +72,12 @@ def redact(text):
                   "[private key redacted]", text, flags=re.S)
 
 
-def run_logged(command, log, *, public_env=False, env=None, timeout=None):
+def run_logged(command, log, *, public_env=False, env=None, timeout=None, grace=10):
     """With `timeout` (seconds), the command runs in its own process group and
     the whole group is stopped when the time runs out, so a hung child (a CLI
-    under a script) cannot hold a lock; the log then ends with one line."""
+    under a script) cannot hold a lock; the log then ends with one line. The
+    group gets TERM first, so a script's EXIT trap can remove what it staged,
+    and KILL `grace` seconds later if any of it is still running."""
     env = (os.environ if env is None else env).copy()
     if public_env:
         for name in (*PRIVATE_NAMES, *UPLOAD_KEY_NAMES, "OPAX_BUNDLE_ID", "OPAX_INTERNAL_TESTER_EMAIL",
@@ -93,6 +96,11 @@ def run_logged(command, log, *, public_env=False, env=None, timeout=None):
             def stop():
                 timed_out.set()
                 try:
+                    os.killpg(process.pid, signal.SIGTERM)
+                    deadline = time.monotonic() + grace
+                    while time.monotonic() < deadline:
+                        time.sleep(0.1)
+                        os.killpg(process.pid, 0)  # raises once the whole group is gone
                     os.killpg(process.pid, signal.SIGKILL)
                 except ProcessLookupError:
                     pass

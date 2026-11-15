@@ -35,13 +35,30 @@ OPAX_ANDROID_VERSION_CODE=<versionCode> OPAX_UPLOAD_SYMBOLS=1 \
   scripts/build-play.sh --expected-commit <full SHA> --expected-voice-mode <0|1>
 ```
 
-The upload runs after the AAB and its evidence are written and is stopped after `OPAX_SYMBOL_UPLOAD_TIMEOUT` seconds (600 by default), so a hung `posthog-cli` cannot hold the desktop native lock. A failed, skipped or stopped upload never fails the build: `crash-symbols.log` in the evidence folder says which, and the build log prints the command to rerun from `mobile/`:
+The upload runs after the AAB and its evidence are written and is stopped after `OPAX_SYMBOL_UPLOAD_TIMEOUT` seconds (600 by default; TERM, so the upload script removes its staged map, then KILL 10 seconds later), so a hung `posthog-cli` cannot hold the desktop native lock. A failed, skipped or stopped upload never fails the build: `crash-symbols.log` in the evidence folder says which, and the build log prints the command to rerun from `mobile/`:
 
 ```sh
 scripts/upload-crash-symbols.sh android <versionName> <versionCode> private/play/<versionCode> private/play/<versionCode>/mapping.txt
 ```
 
-The upload script loads its own key file; `build-play.sh` unsets any `POSTHOG_*` variable the caller exported before its first step. Before b71 goes to Play, run the logcat check in `mobile/docs/android-crash-plugin-checks.md` (item 4, "b71 pre-submit") on its AAB.
+The upload script loads its own key file. `build-play.sh` takes the switch and the timeout from the caller only, and unsets every `POSTHOG_*` variable before its first step and again after each helper it sources, so a line in the ignored `mobile/.qa.local.env` can neither turn the upload on nor bring a key back.
+
+### b71 pre-submit checks
+
+Run both on the desktop for the b71 versionCode, after `build-play.sh` and `verify-play.py`, before its AAB goes to Play, and keep their output in its evidence folder.
+
+1. **The Kotlin scrub on the JVM.** `OPAX_REQUIRE_KOTLIN_SCRUB=1` makes the test fail, not skip, where Java 17 or the cached Kotlin compiler is missing:
+
+   ```sh
+   cd mobile
+   VC=<b71 versionCode>
+   JAVA_HOME=$HOME/opax-work/jdk/jdk-21.0.13+9 OPAX_REQUIRE_KOTLIN_SCRUB=1 \
+     ./node_modules/.bin/jest --verbose --runTestsByPath tests/native-scrub-kotlin.test.ts \
+     > private/play/$VC/kotlin-scrub-jest.txt 2>&1; echo "exit $?"
+   ```
+
+   It passes on `exit 0` with `2 passed, 2 total` in `kotlin-scrub-jest.txt`. It runs on `java.util.regex`, not Android's ICU-based regex, so it does not replace step 2.
+2. **The rules load on Android (logcat).** The commands in `mobile/docs/android-crash-plugin-checks.md`, item 4, on the emulator with the network off; they write `plugin-rules-logcat.txt` to the same folder.
 
 ## Play Console sequence after account creation
 

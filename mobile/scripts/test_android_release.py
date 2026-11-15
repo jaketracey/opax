@@ -149,9 +149,13 @@ class AndroidReleaseTests(unittest.TestCase):
             upload.write_text(UPLOAD_STUB)
         else:
             shutil.copyfile(Path(__file__).parent/'upload-crash-symbols.sh', upload)
-        (scripts/'qa-env.sh').write_text(GATE_STUB)
+        # The real qa-env.sh's .qa.local.env loader (set -a), then the gate stub.
+        real_qa_env = (Path(__file__).parent/'qa-env.sh').read_text()
+        loader = real_qa_env[:real_qa_env.index('build_command() {')]
+        assert '.qa.local.env' in loader and 'set -a' in loader, 'qa-env.sh no longer loads .qa.local.env first'
+        (scripts/'qa-env.sh').write_text(loader + GATE_STUB)
         (scripts/'android-host.sh').write_text('')  # host guard has its own test; keep fixtures host-independent
-        (root/'.gitignore').write_text('mobile/private/\nmobile/android/\nmobile/node_modules/\nnative.lock/\nhome/\ntrace.jsonl\n')
+        (root/'.gitignore').write_text('mobile/private/\nmobile/android/\nmobile/node_modules/\nmobile/.qa.local.env\nnative.lock/\nhome/\ntrace.jsonl\n')
         (mobile/'app.config.ts').write_text("  version: '1.1.0',\n")
         binpath = mobile/'node_modules/.bin'; binpath.mkdir(parents=True)
         expo = binpath/'expo'
@@ -331,9 +335,39 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
             self.assertEqual([call for call in calls if call['posthog']], [])
             log = (mobile/'private/play/2026111001/crash-symbols.log').read_text()
             self.assertNotIn(INVENTED_KEY, result.stdout + result.stderr + log)
-            # They go before the input checks, capacity.sh and the gate, which run untraced.
+            # They go before the input checks, capacity.sh and the gate, which run untraced,
+            # and again after every sourced helper.
             script = (Path(__file__).parent/'build-play.sh').read_text()
-            self.assertLess(script.index("compgen -e | grep '^POSTHOG_'"), script.index('\ncheck_inputs\n'))
+            self.assertLess(script.index("compgen -e | grep '^POSTHOG_'"), script.index('\nupload_settings\n'))
+            self.assertLess(script.index('\nupload_settings\n'), script.index('\ncheck_inputs\n'))
+            sources = [line for line in script.splitlines() if line.lstrip().startswith(('source ', '. '))]
+            self.assertEqual(len(sources), 4)
+            self.assertEqual([line for line in sources if not line.endswith('; upload_settings')], [])
+
+    def test_build_play_qa_local_env_cannot_turn_on_the_upload_or_bring_back_a_key(self):
+        # qa-env.sh loads mobile/.qa.local.env with set -a in both passes.
+        cases = {
+            'switch and key': (f'OPAX_UPLOAD_SYMBOLS=1\nPOSTHOG_CLI_API_KEY={INVENTED_KEY}\n'
+                               'POSTHOG_HOST=https://us.posthog.example\nOPAX_SYMBOL_UPLOAD_TIMEOUT=bad\n', 0),
+            # The captured settings themselves are read-only: assigning one stops the build.
+            'captured names': ('UPLOAD_SYMBOLS=1\n', 1),
+        }
+        for label, (body, code) in cases.items():
+            with self.subTest(label), tempfile.TemporaryDirectory() as d:
+                mobile, commit, env = self.fixture(d)
+                (mobile/'.qa.local.env').write_text(body)
+                result = self.build_play(mobile, commit, env)
+                self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+                calls = self.trace(d)
+                self.assertEqual([call for call in calls if call['tool'] == 'upload'], [])
+                self.assertEqual([call for call in calls if call['posthog']], [])
+                self.assertNotIn(INVENTED_KEY, result.stdout + result.stderr)
+                if code == 0:
+                    self.assertIn(SKIP + self.rerun(mobile/'private/play/2026111001'), result.stdout)
+                    self.assertTrue({'expo config', 'gradle'} <= {call['tool'] for call in calls})
+                else:
+                    self.assertIn('UPLOAD_SYMBOLS: readonly variable', result.stderr)
+                    self.assertFalse((mobile/'private').exists())
 
     def test_build_play_default_uploads_nothing_even_with_a_key_file_and_cli(self):
         # The real upload script, an invented key file in the temporary HOME
@@ -373,6 +407,19 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
             self.assertEqual(log.read_text().splitlines(), ['started', 'Timed out after 1 seconds; the command was stopped.'])
             run_logged(['bash', '-c', 'echo quick'], log, env=plain_env(), timeout=30)
             self.assertEqual(log.read_text(), 'quick\n')
+            # TERM first: a script's EXIT trap removes what it staged, as upload-crash-symbols.sh does.
+            stage = Path(d)/'stage'
+            with self.assertRaisesRegex(ReleaseError, 'timed out after 1 seconds'):
+                run_logged(['bash', '-c', f'mkdir {stage}; trap "/bin/rm -rf {stage}" EXIT; echo staged; sleep 60'],
+                           log, env=plain_env(), timeout=1)
+            self.assertFalse(stage.exists())
+            # KILL after the grace when the group ignores TERM.
+            started = time.monotonic()
+            with self.assertRaisesRegex(ReleaseError, 'timed out after 1 seconds'):
+                run_logged(['bash', '-c', "trap '' TERM; echo stubborn; sleep 60 & wait"], log, env=plain_env(),
+                           timeout=1, grace=1)
+            self.assertLess(time.monotonic() - started, 30)
+            self.assertEqual(log.read_text().splitlines(), ['stubborn', 'Timed out after 1 seconds; the command was stopped.'])
 
     def test_build_play_without_a_key_logs_the_skip_line_and_passes(self):
         # The real upload script, opted in, with no key in the environment and

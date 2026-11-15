@@ -58,13 +58,18 @@ function shared(properties: Record<string, unknown> | undefined) {
   );
 }
 
-const available =
-  spawnSync('bash', [script, '--probe'], { encoding: 'utf8' }).status === 0;
-const kotlinTest =
-  available || process.env.OPAX_REQUIRE_KOTLIN_SCRUB === '1' ? test : test.skip;
+const probe = spawnSync('bash', [script, '--probe'], { encoding: 'utf8' });
+const runs =
+  probe.status === 0 || process.env.OPAX_REQUIRE_KOTLIN_SCRUB === '1';
+// A skip says why, in the test's name and on stderr (which --silent keeps).
+const skipped = runs
+  ? ''
+  : ` (skipped: ${probe.stderr.trim() || `probe exit ${probe.status}`}; OPAX_REQUIRE_KOTLIN_SCRUB=1 fails instead)`;
+if (skipped) process.stderr.write(`native-scrub-kotlin.test.ts${skipped}\n`);
+const kotlinTest = runs ? test : test.skip;
 
 kotlinTest(
-  'the Kotlin scrub in the plugin patch keeps what the JS rules keep',
+  `the Kotlin scrub in the plugin patch keeps what the JS rules keep${skipped}`,
   () => {
     const result = spawnSync('bash', [script, casesPath], {
       encoding: 'utf8',

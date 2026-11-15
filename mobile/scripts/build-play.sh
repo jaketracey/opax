@@ -8,18 +8,26 @@ umask 077
 cd "$(dirname "$0")/.."
 # Release-only opt-in: 0 (the default) keeps the symbols and uploads nothing,
 # even where a key file and posthog-cli exist; only the release run sets 1.
-OPAX_UPLOAD_SYMBOLS=${OPAX_UPLOAD_SYMBOLS-0}
-case "$OPAX_UPLOAD_SYMBOLS" in
-  0|1) export OPAX_UPLOAD_SYMBOLS ;;
-  *) echo 'OPAX_UPLOAD_SYMBOLS must be 0 (keep the symbols, the default) or 1 (upload them; the release run only).' >&2; exit 2 ;;
-esac
-# A hung upload must not hold the native lock: it is stopped after this many seconds.
-UPLOAD_TIMEOUT=${OPAX_SYMBOL_UPLOAD_TIMEOUT-600}
-[[ "$UPLOAD_TIMEOUT" =~ ^[1-9][0-9]{0,4}$ ]] || { echo 'OPAX_SYMBOL_UPLOAD_TIMEOUT must be whole seconds.' >&2; exit 2; }
-# No caller-exported PostHog variable reaches any step: not the input checks,
-# capacity.sh, the build gate, Expo, Gradle, Metro or the upload, which loads
-# its own key file (scripts/upload-crash-symbols.sh, docs/ANALYTICS.md).
-while read -r NAME; do unset "$NAME"; done < <(compgen -e | grep '^POSTHOG_' || true)
+# A hung upload must not hold the native lock: it is stopped after
+# UPLOAD_TIMEOUT seconds (TERM, then KILL 10 seconds later).
+# Both come from the caller only, read once here and read-only from now on.
+readonly UPLOAD_SYMBOLS=${OPAX_UPLOAD_SYMBOLS-0} UPLOAD_TIMEOUT=${OPAX_SYMBOL_UPLOAD_TIMEOUT-600}
+# Run now and after every `source`: qa-env.sh loads the ignored .qa.local.env
+# with `set -a`, which must not switch the upload on, change its timeout or
+# bring back a PostHog variable. No PostHog variable reaches any step: not the
+# input checks, capacity.sh, the build gate, Expo, Gradle, Metro or the upload,
+# which loads its own key file (scripts/upload-crash-symbols.sh, docs/ANALYTICS.md).
+upload_settings() {
+  case "$UPLOAD_SYMBOLS" in
+    0|1) export OPAX_UPLOAD_SYMBOLS=$UPLOAD_SYMBOLS ;;
+    *) echo 'OPAX_UPLOAD_SYMBOLS must be 0 (keep the symbols, the default) or 1 (upload them; the release run only).' >&2; exit 2 ;;
+  esac
+  [[ "$UPLOAD_TIMEOUT" =~ ^[1-9][0-9]{0,4}$ ]] || { echo 'OPAX_SYMBOL_UPLOAD_TIMEOUT must be whole seconds.' >&2; exit 2; }
+  export OPAX_SYMBOL_UPLOAD_TIMEOUT=$UPLOAD_TIMEOUT
+  while read -r NAME; do unset "$NAME"; done < <(compgen -e | grep '^POSTHOG_' || true)
+}
+readonly -f upload_settings
+upload_settings
 EXPECTED_COMMIT= EXPECTED_VOICE_MODE= INSIDE_GATE=0
 CALLER_VOICE_MODE_SET=${OPAX_PRODUCTION_VOICE+x}
 CALLER_VOICE_MODE=${OPAX_PRODUCTION_VOICE-}
@@ -39,10 +47,10 @@ while [ "$#" -gt 0 ]; do
 done
 [[ "$EXPECTED_COMMIT" =~ ^[0-9a-f]{40}$ ]] || { echo 'Release requires --expected-commit with the full QA-approved SHA.' >&2; exit 2; }
 case "$EXPECTED_VOICE_MODE" in 0|1) ;; *) echo 'Release requires --expected-voice-mode 0 or 1.' >&2; exit 2 ;; esac
-source scripts/qa-env.sh
-source scripts/android-host.sh
-source scripts/android-gradle.sh
-source scripts/qa-lock.sh
+source scripts/qa-env.sh; upload_settings
+source scripts/android-host.sh; upload_settings
+source scripts/android-gradle.sh; upload_settings
+source scripts/qa-lock.sh; upload_settings
 if [ "$CALLER_VOICE_MODE_SET" = x ]; then export OPAX_PRODUCTION_VOICE=$CALLER_VOICE_MODE; fi
 export OPAX_PRODUCTION_VOICE=${OPAX_PRODUCTION_VOICE-1}
 export EXPO_NO_DOTENV=1 PYTHONDONTWRITEBYTECODE=1
@@ -170,7 +178,7 @@ VERSION=$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["vers
 MAPPING=()
 [ ! -f "$OUT/mapping.txt" ] || MAPPING=("$OUT/mapping.txt")
 RERUN="scripts/upload-crash-symbols.sh android $VERSION $OPAX_BUILD_NUMBER $OUT${MAPPING[@]+ ${MAPPING[0]}}"
-if [ "$OPAX_UPLOAD_SYMBOLS" != 1 ]; then
+if [ "$UPLOAD_SYMBOLS" != 1 ]; then
   echo "Crash symbols: not uploaded (OPAX_UPLOAD_SYMBOLS=0; only the release run sets 1). To upload them, run from mobile/: $RERUN" |
     tee "$OUT/crash-symbols.log"
 elif python3 - "$OUT/crash-symbols.log" "$UPLOAD_TIMEOUT" "$VERSION" "$OPAX_BUILD_NUMBER" "$OUT" ${MAPPING[@]+"${MAPPING[@]}"} <<'PY'

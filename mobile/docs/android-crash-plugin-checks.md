@@ -58,27 +58,33 @@ and never start it.
      > /tmp/opax-b71-rules-emulator.log 2>&1 & EMU=$!
    adb -s $S wait-for-device
    until [ "$(adb -s $S shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; do sleep 2; done
-   # Network off, then check it: the next line must print "Active default network: none".
+   # Network off, then the guard: nothing is installed unless Android reports
+   # no default network at all (an empty or unexpected answer also stops it).
    adb -s $S shell svc wifi disable
    adb -s $S shell svc data disable
    adb -s $S shell cmd connectivity airplane-mode enable
-   sleep 5; adb -s $S shell dumpsys connectivity | grep 'Active default network'
-   # Only with no network:
-   adb -s $S install private/play/$VC/opax-from-aab.apk
-   adb -s $S logcat -c
-   adb -s $S shell am start -W -n au.com.opax.app/.MainActivity   # Status: ok
-   sleep 30
-   adb -s $S shell pidof au.com.opax.app                           # a PID: still running
-   adb -s $S logcat -d > "$LOG"
-   grep -E 'PatternSyntaxException|ExceptionInInitializerError|NoClassDefFoundError|Method setup, error|FATAL EXCEPTION' "$LOG"
-   # Before anything turns the network back on:
-   adb -s $S uninstall au.com.opax.app
+   sleep 5
+   NET=$(adb -s $S shell dumpsys connectivity | sed -n 's/^ *Active default network: *//p' | tr -d '\r' | head -n 1)
+   if [ "$NET" = none ]; then
+     adb -s $S install private/play/$VC/opax-from-aab.apk
+     adb -s $S logcat -c
+     adb -s $S shell am start -W -n au.com.opax.app/.MainActivity   # Status: ok
+     sleep 30
+     adb -s $S shell pidof au.com.opax.app                           # a PID: still running
+     adb -s $S logcat -d > "$LOG"
+     grep -E 'PatternSyntaxException|ExceptionInInitializerError|NoClassDefFoundError|Method setup, error|FATAL EXCEPTION' "$LOG"
+     # Before anything turns the network back on:
+     adb -s $S uninstall au.com.opax.app
+   else
+     echo "STOP: the emulator still reports a network (${NET:-no answer}); nothing was installed."
+   fi
    adb -s $S emu kill; wait $EMU
    ```
 
-   It passes when the network line says `none`, `am start` reports
+   It passes when no `STOP` line is printed, `am start` reports
    `Status: ok`, `pidof` prints a PID after 30 seconds and the `grep` prints
-   nothing. Keep `plugin-rules-logcat.txt` in the evidence folder.
+   nothing. Keep `plugin-rules-logcat.txt` in the evidence folder. After a
+   `STOP`, find out why the network stayed on before trying again.
 
 5. **The Kotlin scrub matches the JS rules (JVM).**
    `tests/native-scrub-kotlin.test.ts` cuts the Kotlin block from the patch
@@ -89,12 +95,16 @@ and never start it.
    for Swift. A second test, which runs everywhere, checks that the Kotlin
    field lists name the same keys, in the same order, as `frameFields`,
    `mechanismFields`, `imageFields` and `sdkProperties`. The first needs Java
-   17 or later and skips without it (the Mac's Java is 1.8); on the desktop:
+   17 or later and skips without it, saying why in its name and on stderr (the
+   Mac's Java is 1.8). `OPAX_REQUIRE_KOTLIN_SCRUB=1` makes a missing compiler or
+   Java fail instead. For b71 it is a named pre-submit step, with its output in
+   the evidence folder (`docs/ANDROID-PLAY-1.0.md`, "b71 pre-submit checks");
+   on the desktop:
 
    ```sh
    cd mobile
    JAVA_HOME=$HOME/opax-work/jdk/jdk-21.0.13+9 OPAX_REQUIRE_KOTLIN_SCRUB=1 \
-     ./node_modules/.bin/jest --runTestsByPath tests/native-scrub-kotlin.test.ts
+     ./node_modules/.bin/jest --verbose --runTestsByPath tests/native-scrub-kotlin.test.ts
    ```
 
    It runs on the JVM's `java.util.regex`, not Android's ICU-based regex, so it
