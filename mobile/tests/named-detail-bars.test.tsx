@@ -35,6 +35,7 @@ import {
 } from '../src/navigation/useNamedBackOptions';
 import {
   BarTitle,
+  barTitleShift,
   barTitleWidth,
   retreatBarTitle,
   barTitleCandidates,
@@ -1032,120 +1033,110 @@ test.each([
   },
 );
 
-// Where UIKit puts the title view, as the window measures it: its left edge
-// and width. The bar is 402 pt, Share and More start at 282 (the span between
-// the groups ends at 274, where their reserve begins), the back button
-// collapses to its circle (the span starts at 68). The title text is centred
-// in its view.
-describe('a title beside the collapsed back button is centred on the bar by measuring', () => {
-  const place = async (text: number, box: { x: number; width: number }) => {
+// Beside the collapsed back button on iOS 26 the title's text is centred in
+// the span between the bar groups (68 to 274 on a 402 pt phone: the back
+// circle's reserve to where Share's and More's begins), 30 pt left of the
+// bar's centre line. The shift is worked out from those figures, with no
+// measuring.
+describe('a title beside the collapsed back button is moved onto the bar’s centre line on iOS 26', () => {
+  let version$: jest.SpyInstance;
+  const render = (
+    text: number,
+    {
+      version = '26.3',
+      shown = true,
+      trailingWidth,
+    }: { version?: string; shown?: boolean; trailingWidth?: number } = {},
+  ) => {
     const original = Dimensions.get('window');
     act(() =>
       Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
     );
-    const navigation = { setOptions: jest.fn() };
-    const measure = jest
-      .spyOn(View.prototype, 'measureInWindow')
-      .mockImplementation((done) => done(box.x, 0, box.width, 30));
-    jest.useFakeTimers();
-    act(() => {
-      view = TestRenderer.create(
-        <NavigationContext.Provider value={navigation as never}>
-          <BarTitle title="Anthony Albanese" person shown backTitle="Today" />
-        </NavigationContext.Provider>,
-      );
-    });
-    measureBarTitle(view!, { 'Anthony Albanese': text });
-    await act(async () => {
-      jest.runOnlyPendingTimers();
-    });
-    const shift = StyleSheet.flatten(
-      view!.root.findByType(Animated.Text).parent!.props.style,
-    ).transform?.[0]?.translateX as number | undefined;
-    act(() => view!.unmount());
-    measure.mockRestore();
-    jest.useRealTimers();
-    act(() => Dimensions.set({ window: original }));
-    // Where the text ends, once moved.
-    return {
-      shift,
-      right: box.x + box.width / 2 + text / 2 + (shift ?? 0),
-    };
-  };
-  // 26.3 (measured on the device): UIKit stretches the view across the span,
-  // 68 to 274, so the text, centred in it, is at 171, not the bar's 201.
-  const stretched = { x: 68, width: 206 };
-  // 18.4: a hugging view UIKit centres on the bar.
-  const centred = (text: number) => ({ x: 201 - text / 2, width: text });
-
-  test('26.3: a title just too wide to sit beside the back name moves onto the bar’s centre line', async () => {
-    const { shift, right } = await place(144, stretched);
-    expect(shift).toBe(30);
-    expect(right).toBeLessThanOrEqual(274);
-  });
-
-  test('26.3: a title never moves under Share', async () => {
-    // One that fills the span has nowhere to go.
-    expect((await place(206, stretched)).shift).toBeUndefined();
-    // A wide one moves only as far as the span allows.
-    const wide = await place(170, stretched);
-    expect(wide.shift).toBe(18);
-    expect(wide.right).toBeLessThanOrEqual(274);
-  });
-
-  test('18.4: a title UIKit already centres is not moved', async () => {
-    expect((await place(144, centred(144))).shift).toBeUndefined();
-  });
-
-  test('18.4 at AX3: a title UIKit pushed against Share (ends 280) is not moved further', async () => {
-    expect((await place(170, { x: 110, width: 170 })).shift).toBeUndefined();
-  });
-
-  test('the shift never passes the span’s edge by rounding', async () => {
-    const { shift, right } = await place(170, { x: 68.5, width: 206 });
-    expect(shift).toBe(17);
-    expect(right).toBeLessThanOrEqual(274);
-  });
-
-  test('the title keeps its place while it hides', async () => {
-    const original = Dimensions.get('window');
-    act(() =>
-      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
-    );
-    const measure = jest
-      .spyOn(View.prototype, 'measureInWindow')
-      .mockImplementation((done) => done(68, 0, 206, 30));
-    jest.useFakeTimers();
-    const element = (shown: boolean) => (
+    version$ = jest
+      .spyOn(Platform, 'Version', 'get')
+      .mockReturnValue(version as never);
+    const element = (visible: boolean) => (
       <NavigationContext.Provider value={{ setOptions: jest.fn() } as never}>
         <BarTitle
           title="Anthony Albanese"
           person
-          shown={shown}
+          shown={visible}
           backTitle="Today"
+          trailingWidth={trailingWidth}
         />
       </NavigationContext.Provider>
     );
     act(() => {
-      view = TestRenderer.create(element(true));
+      view = TestRenderer.create(element(shown));
     });
-    measureBarTitle(view!, { 'Anthony Albanese': 144 });
-    const text = () => view!.root.findByType(Animated.Text);
+    measureBarTitle(view!, { 'Anthony Albanese': text });
     const box = () =>
-      StyleSheet.flatten(text().parent!.props.style).transform?.[0]?.translateX;
-    // Measured a tick after it appears.
-    expect(box()).toBeUndefined();
-    await act(async () => {
-      jest.runOnlyPendingTimers();
-    });
-    expect(text().props.accessibilityElementsHidden).toBe(false);
-    expect(box()).toBe(30);
-    // Hiding does not move it while it fades out.
-    act(() => view!.update(element(false)));
-    expect(box()).toBe(30);
-    act(() => view!.unmount());
-    measure.mockRestore();
-    jest.useRealTimers();
-    act(() => Dimensions.set({ window: original }));
+      view!.root.findByType(Animated.Text).parent!.props as {
+        pointerEvents?: string;
+        style: object;
+      };
+    const shift = () =>
+      StyleSheet.flatten(box().style).transform?.[0]?.translateX as
+        | number
+        | undefined;
+    return {
+      shift,
+      box,
+      hide: () => act(() => view!.update(element(false))),
+      done: () => {
+        act(() => view!.unmount());
+        version$.mockRestore();
+        act(() => Dimensions.set({ window: original }));
+      },
+    };
+  };
+
+  test('a title just too wide to sit beside the back name moves onto the centre line', () => {
+    const t = render(144);
+    // 201 - (68 + 274) / 2 = 30, and its edge (171 + 72 + 30) stays short of 274.
+    expect(t.shift()).toBe(30);
+    t.done();
+  });
+
+  test('a title never moves under Share', () => {
+    // A wide one moves only as far as keeps its edge at 274.
+    const wide = render(170);
+    expect(wide.shift()).toBe(18);
+    wide.done();
+    // One that fills the span has nowhere to go.
+    const full = render(206);
+    expect(full.shift()).toBeUndefined();
+    full.done();
+  });
+
+  test('18.4 centres a fitting title itself: no shift', () => {
+    const t = render(144, { version: '18.4' });
+    expect(t.shift()).toBeUndefined();
+    t.done();
+  });
+
+  test('the Duo’s rail has no items on the bar: no shift', () => {
+    const t = render(144, { trailingWidth: 0 });
+    expect(t.shift()).toBeUndefined();
+    t.done();
+  });
+
+  test('the title view takes no touches, and the shift goes as it hides', () => {
+    const t = render(144);
+    expect(t.box().pointerEvents).toBe('none');
+    t.hide();
+    expect(t.shift()).toBeUndefined();
+    t.done();
+  });
+
+  test('larger text: the items grow, and the shift follows the same figures', () => {
+    // Share and More grow by 6 pt each: reserve 116, span 68 to 262.
+    expect(
+      barTitleShift({ active: true, width: 402, text: 143, growth: 6 }),
+    ).toBe(25);
+    expect(barTitleShift({ active: false, width: 402, text: 143 })).toBe(0);
+    expect(barTitleShift({ active: true, width: 402, text: undefined })).toBe(
+      0,
+    );
   });
 });

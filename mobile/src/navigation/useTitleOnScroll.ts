@@ -7,7 +7,6 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  type ClassAttributes,
   type RefObject,
 } from 'react';
 import {
@@ -22,7 +21,6 @@ import {
   type NativeSyntheticEvent,
   type Text,
   type View,
-  type ViewProps,
 } from 'react-native';
 import { NavigationRouteContext } from 'expo-router/react-navigation';
 import { useSafeSetOptions } from './preview';
@@ -106,6 +104,42 @@ export function barTitleWidth(
     16 + 44 + 60 * Math.max(0, trailing - 1) + itemGrowth * trailing + 8;
   const room = Math.max(0, windowWidth - 2 * side);
   return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
+}
+
+/**
+ * How far to move a title right so its text sits on the bar's centre line,
+ * when it is centred in the span between the back button's circle (44 pt, 16
+ * pt in, 8 pt gap) and the trailing group's reserve (16 pt in, the items, 8 pt
+ * gap). The span's centre lies left of the bar's by half the difference of
+ * the two reserves; the move stops where the text's edge reaches the
+ * trailing reserve, so a text wider than the centred width moves less, and
+ * one that fills the span not at all.
+ */
+export function barTitleShift({
+  active,
+  width,
+  text,
+  trailing = 2,
+  trailingWidth,
+  growth = 0,
+}: {
+  active: boolean;
+  width: number;
+  text: number | undefined;
+  trailing?: number;
+  trailingWidth?: number;
+  growth?: number;
+}): number {
+  if (!active || !text) return 0;
+  const items =
+    trailingWidth ??
+    44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
+  const start = 16 + 44 + 8;
+  const end = width - (16 + items + 8);
+  const spanCentre = (start + end) / 2;
+  const toCentre = width / 2 - spanCentre;
+  const room = end - (spanCentre + text / 2);
+  return Math.floor(Math.max(0, Math.min(toCentre, room)));
 }
 
 /**
@@ -297,25 +331,6 @@ export function BarTitle({
   const fits = fallback || (ready && retreat.text !== null);
   const drawn = shown && ready && !fallback ? (retreat.text ?? title) : title;
   const minimal = ready && shown && retreat.mode === 'minimal';
-  // Beside the collapsed back button UIKit sets the title view at the leading
-  // end of the span between the bar groups, not on the bar's centre line (26.3;
-  // 18.4 centres a fitting title). Its window position is measured, and it is
-  // moved only as far as puts it on the centre line without passing where the
-  // trailing group's reserve begins. It keeps its place while it fades out,
-  // so it does not jump while visible; on its first frame it can still be
-  // measured a tick late, at the start of its fade-in.
-  const place =
-    Platform.OS === 'ios' &&
-    minimal &&
-    !fallback &&
-    trailingWidth !== 0 &&
-    safeWidth < 600;
-  const placeKey = `${drawn}:${safeWidth}:${fontScale}:${trailing}`;
-  const [placed, setPlaced] = useState<{ key: string; by: number } | null>(
-    null,
-  );
-  const settled = placed?.key === placeKey;
-  const shift = settled ? placed.by : 0;
   const visible = shown && fits;
   const backMode = fallback ? 'default' : retreat.mode;
   const [opacity] = useState(() => new Animated.Value(0));
@@ -379,74 +394,39 @@ export function BarTitle({
         measured(drawn),
       )
     : room;
-  const [box, setBox] = useState<View | null>(null);
-  const [laidOut, setLaidOut] = useState(0);
-  const textWidth = measured(drawn);
-  const applied = useRef(0);
-  useEffect(() => {
-    applied.current = shift;
-  }, [shift]);
-  // The native position is copied back only on a size change or a layout
-  // pass, so measure again after the back button's change has settled.
-  useEffect(() => {
-    const node = box;
-    if (!place || !node || !textWidth) return;
-    const measure = () =>
-      node.measureInWindow((x, _y, boxWidth) => {
-        if (!Number.isFinite(x) || !Number.isFinite(boxWidth) || boxWidth <= 0)
-          return;
-        // Where UIKit put it, before any move of ours. The text is centred in
-        // its view (hugging it, or filling the span), so the view's centre is
-        // the text's, and its edge is half the text's width from it.
-        const left = x - applied.current;
-        const centre = left + boxWidth / 2;
-        const half = Math.min(textWidth, boxWidth) / 2;
-        const items =
-          trailingWidth ??
-          44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
-        // The span ends where the trailing group's reserve begins, as in
-        // barTitleWidth: W - 16 - items - 8. Never move past it.
-        const origin =
-          adaptive || insets?.left !== insets?.right ? (insets?.left ?? 0) : 0;
-        const limit = origin + safeWidth - (16 + items + 8);
-        const next = Math.floor(
-          Math.min(
-            Math.max(0, limit - (centre + half)),
-            Math.max(0, origin + safeWidth / 2 - centre),
-          ),
-        );
-        setPlaced((now) =>
-          now?.key === placeKey && Math.abs(now.by - next) < 1
-            ? now
-            : { key: placeKey, by: next },
-        );
-      });
-    const timers = [0, 200, 600].map((delay) => setTimeout(measure, delay));
-    return () => timers.forEach(clearTimeout);
-  }, [
-    box,
-    place,
-    placeKey,
-    textWidth,
-    safeWidth,
-    laidOut,
+  // Beside the collapsed back button on iOS 26 UIKit stretches the title view
+  // across the span between the bar groups, so the text, centred in it, sits
+  // on the span's centre, not the bar's. The span runs from the circle's end
+  // to where the trailing group's reserve begins (as in barTitleWidth), so the
+  // difference is known from the same figures: no measuring, no timers. The
+  // text is moved onto the bar's centre line only as far as keeps its edge
+  // short of that reserve, so it never goes under Share. It is let go as the
+  // title hides, before the back button expands. 18.4 centres a fitting title
+  // and the Duo's rail has no items on the bar: no shift there.
+  const shift = barTitleShift({
+    active:
+      Platform.OS === 'ios' &&
+      Number.parseInt(String(Platform.Version), 10) >= 26 &&
+      minimal &&
+      !fallback &&
+      trailingWidth !== 0 &&
+      safeWidth < 600,
+    width: safeWidth,
+    text: measured(drawn),
     trailing,
     trailingWidth,
     growth,
-    adaptive,
-    insets?.left,
-    insets?.right,
-  ]);
+  });
   return createElement(
     NativeView,
     {
-      ref: setBox,
-      onLayout: () => setLaidOut((n) => n + 1),
+      // It has no action: where it is shifted it may reach over Share.
+      pointerEvents: 'none',
       style: {
         maxWidth: drawnRoom,
         ...(shift ? { transform: [{ translateX: shift }] } : {}),
       },
-    } as ViewProps & ClassAttributes<View>,
+    },
     createElement(
       Animated.Text,
       {
