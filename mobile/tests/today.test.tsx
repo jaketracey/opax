@@ -48,7 +48,11 @@ import { AustraliaDots } from '../src/features/today/AustraliaDots';
 import { TodayEditionCard } from '../src/features/today/FeaturedPeopleCard';
 import { TodayFoot } from '../src/features/today/Foot';
 import { Masthead, mastheadDate } from '../src/features/today/Masthead';
-import { useOverview as useElectionOverview } from '../src/features/vic-election/reads';
+import {
+  ElectionUnavailable,
+  electionReads,
+  useOverview as useElectionOverview,
+} from '../src/features/vic-election/reads';
 import { decodeOverview } from '../src/features/vic-election/decoders';
 import electionOverview from '../scripts/fixtures/vic-election/overview.json';
 import { readCachedEdition } from '../src/features/today/edition-store';
@@ -56,6 +60,7 @@ import { readInvitationDates } from '../src/features/today/invitation-store';
 import {
   readTodayShape,
   rememberTodayShape,
+  type TodayShape,
   shapeKey,
 } from '../src/features/today/shape-store';
 import { addDays, sydneyDay } from '../src/features/today/rules';
@@ -112,8 +117,9 @@ jest.mock('../src/features/vic-election/reads', () => ({
   ...jest.requireActual('../src/features/vic-election/reads'),
   useOverview: jest.fn(),
 }));
+let mockElectionNow = new Date('2026-11-20T10:00:00+11:00');
 jest.mock('../src/features/vic-election/clock', () => ({
-  useElectionNow: () => new Date('2026-11-20T10:00:00+11:00'),
+  useElectionNow: () => mockElectionNow,
 }));
 jest.mock('../src/features/your-mp/choice-store', () => ({
   loadChoice: jest.fn(),
@@ -837,6 +843,56 @@ describe('the page', () => {
       gap: rhythm.tight,
     });
   });
+  test('a featured parliamentarian’s day: the skeleton stands under the carousel’s own two-line heading, so nothing moves when the carousel lands', async () => {
+    // The last launch kept the edition's kind with its date.
+    setUp({ cached: { date: today, kind: 'politician' } });
+    mock.todayEdition.mockImplementation(() => new Promise(() => {}));
+    const r = await render(<Today />);
+    const ids = r.root
+      .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
+      .map((n) => n.props.testID as string);
+    expect(ids).toContain('today-edition-loading');
+    expect(ids).not.toContain('today-edition-heading');
+    expect(ids.indexOf('today-featured-title')).toBeGreaterThan(-1);
+    expect(ids.indexOf('today-featured-context')).toBeLessThan(
+      ids.indexOf('today-edition-loading'),
+    );
+    // Any other saved edition keeps the one-line heading.
+    setUp({ cached: { date: today, kind: 'bill' } });
+    mock.todayEdition.mockImplementation(() => new Promise(() => {}));
+    const plain = await render(<Today />);
+    const plainIds = plain.root
+      .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
+      .map((n) => n.props.testID as string);
+    expect(plainIds).toContain('today-edition-heading');
+    expect(plainIds).not.toContain('today-featured-title');
+  });
+  test('a featured parliamentarian’s edition whose people cannot be named still has a heading over its card', async () => {
+    const base = editionAged(0);
+    const edition = {
+      ...base,
+      data: { ...base.data!, kind: 'politician', title: 'Nobody By This Name' },
+    } as typeof base;
+    setUp({ seat: true, cached: { date: today }, edition });
+    const r = await render(<Today />);
+    const ids = r.root
+      .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
+      .map((n) => n.props.testID as string);
+    expect(ids).toContain('today-edition-card');
+    expect(ids).not.toContain('today-featured-title');
+    expect(ids.filter((id) => id === 'today-edition-heading')).toHaveLength(1);
+    expect(ids.indexOf('today-edition-heading')).toBeLessThan(
+      ids.indexOf('today-edition-card'),
+    );
+  });
+  test('the saved edition’s kind is kept with its date for the next launch’s heading', async () => {
+    const store = jest.requireActual('../src/features/today/edition-store');
+    await store.rememberEdition(editionAged(0));
+    await expect(store.readCachedEdition()).resolves.toEqual({
+      date: editionAged(0).data!.date.slice(0, 10),
+      kind: editionAged(0).data!.kind,
+    });
+  });
   test('the edition\u2019s heading stands over its skeleton, so the card never moves when the edition lands', async () => {
     setUp({ cached: null });
     mock.todayEdition.mockImplementation(() => new Promise(() => {}));
@@ -1009,7 +1065,8 @@ describe('the first frame has the loaded page’s layout', () => {
       house: false,
       state: false,
       senators: false,
-      dissolved: null,
+      stateRow: null,
+      withdrawn: false,
     });
     // The next launch, the directory still out: no Your MP skeleton and no
     // reorder when the migration runs. It happened on every launch.
@@ -1025,114 +1082,48 @@ describe('the first frame has the loaded page’s layout', () => {
     expect(blocks(next.root)).toEqual(before);
   });
 
-  test('a kept shape for another choice is not used; the kept shape for this choice sets the rows held for the group', async () => {
-    const choice = {
-      version: 1 as const,
-      seatId: grayndler.electorate_id,
-      stateSeatIds: [],
-    };
-    await rememberTodayShape({
-      key: 'another|',
-      house: false,
-      state: true,
-      senators: false,
-      dissolved: null,
-    });
-    setUp({ seat: true, cached: { date: addDays(today, -1) } });
-    mock.directory.mockImplementation(() => new Promise(() => {}));
-    const other = await render(<Today />);
-    expect(blocks(other.root)[0]).toBe('today-your-mp-pending');
-    expect(hosts(other, 'today-rep-state-loading')).toHaveLength(0);
-    expect(hosts(other, 'today-reps-loading-senators')).toHaveLength(1);
-    // The last launch drew a state member's row and no senators row.
-    await rememberTodayShape({
-      key: shapeKey(choice),
-      house: true,
-      state: true,
-      senators: false,
-      dissolved: null,
-    });
-    setUp({ seat: true, cached: { date: addDays(today, -1) } });
-    mock.directory.mockImplementation(() => new Promise(() => {}));
-    const r = await render(<Today />);
-    expect(hosts(r, 'today-rep-federal-loading')).toHaveLength(1);
-    expect(hosts(r, 'today-rep-state-loading')).toHaveLength(1);
-    expect(hosts(r, 'today-reps-loading-senators')).toHaveLength(0);
-    expect(hosts(r, 'today-your-mp-pending')).toHaveLength(1);
-  });
-
-  test('a Victorian reader: two rows from the first frame, before any shape is kept, and the same two when the directory answers', async () => {
-    const federal = index.electorates.find(
+  describe('the representatives group across launches', () => {
+    const maribyrnong = index.electorates.find(
       (s) =>
         s.name === 'Maribyrnong' &&
         s.jurisdiction === 'federal' &&
         s.status !== 'historical',
     )!;
-    const state = index.electorates.find(
+    const essendon = index.electorates.find(
       (s) => s.name === 'Essendon' && s.chamber === 'vic_la',
     )!;
-    const choice = {
+    const victorian = {
       version: 1 as const,
-      seatId: federal.electorate_id,
-      stateSeatIds: [state.electorate_id],
-    };
-    setUp({ cached: { date: addDays(today, -1) } });
-    jest.mocked(loadChoice).mockResolvedValue(choice);
-    const directoryRead = pending<typeof directory>();
-    mock.directory.mockReturnValue(directoryRead.promise as never);
-    const r = await render(<Today />);
-    // Nothing kept yet (a version 1 shape file is not read): the saved
-    // choice alone says a state member's row will draw.
-    await expect(readTodayShape()).resolves.toBeNull();
-    const held = ['today-rep-federal-loading', 'today-rep-state-loading'];
-    for (const id of held) expect(hosts(r, id)).toHaveLength(1);
-    await act(async () => directoryRead.answer(directory));
-    for (const id of held) expect(hosts(r, id)).toHaveLength(0);
-    expect(hosts(r, 'today-rep-federal')).toHaveLength(1);
-    expect(hosts(r, 'today-rep-state')).toHaveLength(1);
-    expect(hosts(r, 'today-reps-senators')).toHaveLength(1);
-    // The old state seat card is gone: one group, not two cards.
-    expect(hosts(r, 'today-state-seat')).toHaveLength(0);
-    await expect(readTodayShape()).resolves.toEqual({
-      key: shapeKey(choice),
-      house: true,
-      state: true,
-      senators: true,
-      dissolved: null,
-    });
-  });
-
-  test('a Victorian reader while the Assembly is dissolved: the four-line row’s place from the first frame, the row when the directory answers, and its lines kept for the next launch', async () => {
-    const federal = index.electorates.find(
-      (s) =>
-        s.name === 'Maribyrnong' &&
-        s.jurisdiction === 'federal' &&
-        s.status !== 'historical',
-    )!;
-    const state = index.electorates.find(
-      (s) => s.name === 'Essendon' && s.chamber === 'vic_la',
-    )!;
-    const choice = {
-      version: 1 as const,
-      seatId: federal.electorate_id,
-      stateSeatIds: [state.electorate_id],
+      seatId: maribyrnong.electorate_id,
+      stateSeatIds: [essendon.electorate_id],
     };
     const overview = decodeOverview(electionOverview);
-    const launch = async () => {
-      setUp({ cached: { date: addDays(today, -1) } });
-      jest.mocked(loadChoice).mockResolvedValue(choice);
-      // The record's caretaker date has passed on the election clock and
-      // the roster's date for Essendon is before its election day.
+    const record = (
+      value: Partial<ReturnType<typeof useElectionOverview>> = {},
+    ) =>
       jest.mocked(useElectionOverview).mockReturnValue({
-        record: { data: overview, stale: false, savedAt: 0, asOf: null },
+        record: null,
         loading: false,
         error: null,
         retry: jest.fn(),
+        ...value,
       });
+    const atHand = { data: overview, stale: false, savedAt: 0, asOf: null };
+    /** A launch for a saved choice, the directory held back until told. */
+    const launch = async (
+      choice: typeof victorian,
+      election: Parameters<typeof record>[0] = {},
+    ) => {
+      setUp({ cached: { date: addDays(today, -1) } });
+      jest.mocked(loadChoice).mockResolvedValue(choice);
+      record(election);
       const directoryRead = pending<typeof directory>();
       mock.directory.mockReturnValue(directoryRead.promise as never);
       const r = await render(<Today />);
-      return { r, directoryRead };
+      return {
+        r,
+        answer: () => act(async () => directoryRead.answer(directory)),
+      };
     };
     const lines = (r: TestRenderer.ReactTestRenderer) =>
       r.root
@@ -1142,34 +1133,208 @@ describe('the first frame has the loaded page’s layout', () => {
             /^today-rep-state-line-/.test(n.props.testID ?? ''),
         )
         .map((n) => n.props.children);
-    const first = await launch();
-    // Nothing kept: the stand-in holds four lines, and no member's row.
-    expect(hosts(first.r, 'today-rep-state-dissolved-loading')).toHaveLength(1);
-    expect(hosts(first.r, 'today-rep-state-loading')).toHaveLength(0);
-    expect(lines(first.r)).toHaveLength(4);
-    await act(async () => first.directoryRead.answer(directory));
-    expect(hosts(first.r, 'today-rep-state-dissolved')).toHaveLength(1);
-    expect(hosts(first.r, 'today-rep-state')).toHaveLength(0);
-    const drawn = lines(first.r);
-    expect(drawn.slice(0, 3)).toEqual([
-      'Victoria · Legislative Assembly',
-      'Essendon',
-      'Assembly dissolved for the 28 November election',
-    ]);
-    expect(drawn[3]).toMatch(/^Last member: /);
-    await expect(readTodayShape()).resolves.toEqual({
-      key: shapeKey(choice),
+    const shared = jest.spyOn(electionReads, 'loadOverviewShared');
+    beforeEach(() => {
+      shared.mockReset();
+      shared.mockResolvedValue(undefined);
+    });
+    const shape = (stateRow: TodayShape['stateRow'], withdrawn = false) => ({
+      key: shapeKey(victorian),
       house: true,
       state: true,
       senators: true,
-      dissolved: { electionDay: overview.election_day, lines: drawn },
+      stateRow,
+      withdrawn,
     });
-    // The next launch holds the very lines it will draw.
-    const next = await launch();
-    expect(hosts(next.r, 'today-rep-state-dissolved-loading')).toHaveLength(1);
-    expect(lines(next.r)).toEqual(drawn);
-    await act(async () => next.directoryRead.answer(directory));
-    expect(lines(next.r)).toEqual(drawn);
+
+    test('a kept shape for another choice is not used; the kept shape for this choice sets the rows held for the group', async () => {
+      const choice = {
+        version: 1 as const,
+        seatId: grayndler.electorate_id,
+        stateSeatIds: [],
+      };
+      await rememberTodayShape({
+        key: 'another|',
+        house: false,
+        state: true,
+        senators: false,
+        stateRow: { kind: 'member', until: null },
+        withdrawn: false,
+      });
+      setUp({ seat: true, cached: { date: addDays(today, -1) } });
+      mock.directory.mockImplementation(() => new Promise(() => {}));
+      const other = await render(<Today />);
+      expect(blocks(other.root)[0]).toBe('today-your-mp-pending');
+      expect(hosts(other, 'today-rep-state-loading')).toHaveLength(0);
+      expect(hosts(other, 'today-reps-loading-senators')).toHaveLength(1);
+      // The last launch drew a state member's row and no senators row.
+      await rememberTodayShape({
+        key: shapeKey(choice),
+        house: true,
+        state: true,
+        senators: false,
+        stateRow: { kind: 'member', until: null },
+        withdrawn: false,
+      });
+      setUp({ seat: true, cached: { date: addDays(today, -1) } });
+      mock.directory.mockImplementation(() => new Promise(() => {}));
+      const r = await render(<Today />);
+      expect(hosts(r, 'today-rep-federal-loading')).toHaveLength(1);
+      expect(hosts(r, 'today-rep-state-loading')).toHaveLength(1);
+      expect(hosts(r, 'today-reps-loading-senators')).toHaveLength(0);
+      expect(hosts(r, 'today-your-mp-pending')).toHaveLength(1);
+    });
+
+    test('dissolved: the four-line row’s place from the first frame, the row when the directory answers, and its lines kept for the next launch', async () => {
+      const first = await launch(victorian, { record: atHand });
+      // Nothing kept: the stand-in holds four lines, and no member's row.
+      expect(hosts(first.r, 'today-rep-state-lines-loading')).toHaveLength(1);
+      expect(hosts(first.r, 'today-rep-state-loading')).toHaveLength(0);
+      expect(lines(first.r)).toHaveLength(4);
+      await first.answer();
+      expect(hosts(first.r, 'today-rep-state-dissolved')).toHaveLength(1);
+      expect(hosts(first.r, 'today-rep-state')).toHaveLength(0);
+      const drawn = lines(first.r);
+      expect(drawn.slice(0, 3)).toEqual([
+        'Victoria · Legislative Assembly',
+        'Essendon',
+        'Assembly dissolved for the 28 November election',
+      ]);
+      expect(drawn[3]).toMatch(/^Last member: /);
+      await expect(readTodayShape()).resolves.toEqual(
+        shape({
+          kind: 'dissolved',
+          electionDay: overview.election_day,
+          lines: drawn,
+        }),
+      );
+      // The next launch holds the very lines it will draw, record or not.
+      for (const election of [{ record: atHand }, {}]) {
+        const next = await launch(victorian, election);
+        expect(hosts(next.r, 'today-rep-state-lines-loading')).toHaveLength(1);
+        expect(lines(next.r)).toEqual(drawn);
+        await next.answer();
+        expect(hosts(next.r, 'today-rep-state-dissolved')).toHaveLength(1);
+        expect(lines(next.r)).toEqual(drawn);
+      }
+    });
+
+    test('a kept member row answers while the record is out: a member’s place, then the member’s row, never the stand-in between', async () => {
+      // The last launch decided the member (the result is loaded).
+      await rememberTodayShape(shape({ kind: 'member', until: null }));
+      const seen: string[][] = [];
+      const forms = (r: TestRenderer.ReactTestRenderer) =>
+        [
+          'today-rep-state-loading',
+          'today-rep-state-lines-loading',
+          'today-rep-state',
+          'today-rep-state-dissolved',
+          'today-rep-state-neutral',
+        ].filter((id) => hosts(r, id).length > 0);
+      // The record is not at hand and is still said to be loading, as
+      // after a withdrawal wipes the saved copy.
+      const next = await launch(victorian, { loading: true });
+      seen.push(forms(next.r));
+      await next.answer();
+      seen.push(forms(next.r));
+      expect(seen).toEqual([['today-rep-state-loading'], ['today-rep-state']]);
+      // Decided: Today asks for nothing more.
+      expect(shared).not.toHaveBeenCalled();
+    });
+
+    test('no record and nothing kept: the neutral row from the first frame, and nobody is drawn as the member', async () => {
+      const first = await launch(victorian);
+      await expect(readTodayShape()).resolves.toBeNull();
+      // The neutral stand-in's three lines hold the place.
+      expect(hosts(first.r, 'today-rep-state-lines-loading')).toHaveLength(1);
+      expect(lines(first.r)).toHaveLength(3);
+      await first.answer();
+      expect(hosts(first.r, 'today-rep-state-neutral')).toHaveLength(1);
+      expect(hosts(first.r, 'today-rep-state')).toHaveLength(0);
+      expect(hosts(first.r, 'today-rep-federal')).toHaveLength(1);
+      expect(hosts(first.r, 'today-reps-senators')).toHaveLength(1);
+      expect(lines(first.r)[2]).toMatch(/^On the roster at 9 Sep 2026: /);
+      expect(strings(hosts(first.r, 'today-your-mp')[0]!)).not.toMatch(
+        /member for|Victorian Legislative Assembly ·/,
+      );
+      // The old state seat card is gone: one group, not two cards.
+      expect(hosts(first.r, 'today-state-seat')).toHaveLength(0);
+      await expect(readTodayShape()).resolves.toEqual(
+        shape({ kind: 'neutral', lines: lines(first.r) }),
+      );
+    });
+
+    describe('the election record is asked for once, only when the row needs it', () => {
+      test('not for a saved choice with no Victorian state seat, whatever stray ids it holds', async () => {
+        // A New South Wales seat saved with a stray state id: the read
+        // migration sets the id aside, and Today asks for nothing.
+        const nsw = index.electorates.find((s) => s.chamber === 'nsw_la')!;
+        const stray = {
+          version: 1 as const,
+          seatId: grayndler.electorate_id,
+          stateSeatIds: [nsw.electorate_id],
+        };
+        const out = await launch(stray, { loading: true });
+        await out.answer();
+        expect(hosts(out.r, 'today-rep-federal')).toHaveLength(1);
+        expect(shared).not.toHaveBeenCalled();
+        expect(jest.mocked(useElectionOverview)).not.toHaveBeenCalledWith(
+          true,
+          expect.anything(),
+        );
+        for (const call of jest.mocked(useElectionOverview).mock.calls)
+          expect(call[0]).toBe(false);
+      });
+
+      test('after the election block retires, an undecided row asks once through the shared, cache-aware read', async () => {
+        const window = mockElectionNow;
+        mockElectionNow = new Date('2026-12-10T10:00:00+11:00');
+        try {
+          const out = await launch(victorian, { loading: true });
+          // Not before the directory names the migrated state seat.
+          expect(shared).not.toHaveBeenCalled();
+          await out.answer();
+          expect(shared).toHaveBeenCalledTimes(1);
+          // Never the forced read, and never the hook's own trigger.
+          for (const call of jest.mocked(useElectionOverview).mock.calls)
+            expect(call[0]).toBe(false);
+          // Held meanwhile: nobody is drawn as the member.
+          expect(hosts(out.r, 'today-rep-state-lines-loading')).toHaveLength(1);
+          expect(hosts(out.r, 'today-rep-state')).toHaveLength(0);
+        } finally {
+          mockElectionNow = window;
+        }
+      });
+
+      test('not beside the election block’s own read, in its window', async () => {
+        // The mocked election clock is inside the block's window.
+        const out = await launch(victorian, { loading: true });
+        await out.answer();
+        expect(hosts(out.r, 'today-rep-state-lines-loading')).toHaveLength(1);
+        expect(shared).not.toHaveBeenCalled();
+      });
+
+      test('not when the record is at hand, and not once it is withdrawn', async () => {
+        const held = await launch(victorian, { record: atHand });
+        await held.answer();
+        expect(shared).not.toHaveBeenCalled();
+        const gone = await launch(victorian, {
+          error: new ElectionUnavailable('not_published'),
+        });
+        await gone.answer();
+        expect(shared).not.toHaveBeenCalled();
+        // Withdrawn is kept, so the next launch does not ask either; the
+        // dissolved row the device kept still stands (no result is loaded).
+        await expect(readTodayShape()).resolves.toMatchObject({
+          withdrawn: true,
+          stateRow: { kind: 'dissolved' },
+        });
+        const next = await launch(victorian, { loading: true });
+        await next.answer();
+        expect(hosts(next.r, 'today-rep-state-dissolved')).toHaveLength(1);
+        expect(shared).not.toHaveBeenCalled();
+      });
+    });
   });
 
   test('a held, empty sitting line is given back once Today is out of view', async () => {

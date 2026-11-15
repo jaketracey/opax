@@ -1,22 +1,35 @@
 import type { Electorate } from '../../api/catalogs';
+import { formatDate } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
 import { partyText, type PartyContext } from '../../design/party';
 import type { Overview } from '../vic-election/decoders';
 
 /**
- * A state lower house dissolved for an election: no one is a member for
- * its districts until the result is declared and the roster is reloaded.
- * Everything here is read from data; no date is written in the app.
+ * The state row's form in "Your representatives". A state lower house
+ * dissolved for an election has no members until the result is declared
+ * and loaded, so the row says a person is the member only when the data at
+ * hand decides it. Everything here is read from data; no date is written
+ * in the app.
+ *
+ * - `member`: the roster's member, drawn as any member. `until` is the
+ *   instant the decision stops holding (the election record's caretaker
+ *   date), or null when nothing ends it.
+ * - `dissolved`: the house is dissolved for the election on `electionDay`.
+ * - `neutral`: it cannot be decided on this device; the row states only
+ *   what the roster recorded and when, and calls nobody the member.
+ * - `held`: the election record is on its way; the row's place is held.
  */
-export interface Dissolved {
-  /** The election the house was dissolved for, from the election record. */
-  electionDay: string;
-  /** The row's four lines, as drawn and (in order) as VoiceOver reads them. */
-  lines: readonly [string, string, string, string];
-}
+export type StateForm =
+  | { kind: 'member'; until: string | null }
+  | { kind: 'dissolved'; electionDay: string }
+  | { kind: 'neutral' }
+  | { kind: 'held'; lines: readonly string[] | null };
 
-/** A dissolved row, none, or not yet known (the election record is out). */
-export type DissolvedState = Dissolved | 'unknown' | null;
+/** What the device keeps of the decision and the drawn lines (shape-store). */
+export type KeptStateRow =
+  | { kind: 'member'; until: string | null }
+  | { kind: 'dissolved'; electionDay: string; lines: readonly string[] }
+  | { kind: 'neutral'; lines: readonly string[] };
 
 /** The record's election day as a day and month, as the row says it. */
 export function electionDayWords(day: string): string {
@@ -35,86 +48,141 @@ const HOUSES: Record<string, string> = {
 function houseName(chamber: string): string {
   return HOUSES[/_(la|ha)$/.exec(chamber.toLowerCase())?.[1] ?? 'la']!;
 }
+/** "Victoria · Legislative Assembly": the row's first line. */
+function houseLine(seat: Pick<Electorate, 'chamber' | 'state_code'>): string {
+  return `${jurisdictionName(seat.state_code) ?? seat.state_code.toUpperCase()} · ${houseName(seat.chamber)}`;
+}
 
-/**
- * Whether the roster's record of this seat is from before that election:
- * `representation_as_of` in the electorates index against the election
- * day. This one comparison is the switch. Once the roster is reloaded with
- * the member declared elected, its date is the election day or later and
- * the row draws that member as any other.
- */
-export function rosterPredates(
-  seat: Pick<Electorate, 'representation_as_of'>,
-  electionDay: string,
-): boolean {
-  return (seat.representation_as_of ?? '').slice(0, 10) < electionDay;
+type Person = {
+  name: string;
+  party: string | null;
+  status: PartyContext['status'];
+};
+/** "Nina Taylor, Labor": the person and their party as the roster has it. */
+function personWords(person: Person): string {
+  const party = person.party
+    ? partyText({ party: person.party, status: person.status }).visible
+    : null;
+  return [person.name, party].filter(Boolean).join(', ');
 }
 
 /**
- * The election day the seat's house is dissolved for, or null. From the
- * election record: the seat is one of its districts, its caretaker period
- * has begun (the `caretaker` key date's `passes_at`, when the Assembly was
- * dissolved), and the roster's record of the seat predates election day.
+ * Whether the electorates index holds the seat's result from that election:
+ * the seat's `latest_election` is the election day or later. This is the
+ * switch from the dissolved row to the new member's row. It is the date of
+ * a result, not of a roster fetch, so reloading the old roster after
+ * election day never draws a last member as sitting.
  */
-export function dissolvedFor(
-  seat: Pick<Electorate, 'url' | 'representation_as_of'>,
+export function resultLoaded(
+  seat: Pick<Electorate, 'latest_election'>,
+  electionDay: string,
+): boolean {
+  return (seat.latest_election ?? '').slice(0, 10) >= electionDay;
+}
+
+type RecordSeat = Pick<Electorate, 'url' | 'latest_election'>;
+
+/** What the election record, at hand, decides for a seat. */
+export function formFromRecord(
+  seat: RecordSeat,
   overview: Pick<Overview, 'election_day' | 'key_dates' | 'districts'>,
   now: Date,
-): string | null {
+): StateForm {
+  // Not one of the record's districts: the record says nothing against it.
   if (!overview.districts.some((d) => d.electorate_url === seat.url))
-    return null;
+    return { kind: 'member', until: null };
+  if (resultLoaded(seat, overview.election_day))
+    return { kind: 'member', until: null };
+  // The caretaker period begins when the Assembly is dissolved.
   const began = overview.key_dates.find((d) => d.id === 'caretaker')?.passes_at;
-  if (!began || now.getTime() < Date.parse(began)) return null;
-  return rosterPredates(seat, overview.election_day)
-    ? overview.election_day
-    : null;
+  if (!began) return { kind: 'neutral' };
+  return now.getTime() >= Date.parse(began)
+    ? { kind: 'dissolved', electionDay: overview.election_day }
+    : { kind: 'member', until: began };
+}
+
+/**
+ * The state row's form, decided without waiting where the device can:
+ * - the election record, when it is at hand, answers;
+ * - with none at hand, what the last launch kept answers while it still
+ *   holds: a dissolved row until the seat's result is loaded, a member's
+ *   row until its `until` instant;
+ * - otherwise it cannot be decided: the row's place is held while the
+ *   record is on its way, and the neutral row is drawn when it is not.
+ */
+export function stateForm(
+  seat: RecordSeat,
+  election: { overview: Overview | null; reading: boolean },
+  now: Date,
+  kept: KeptStateRow | null,
+): StateForm {
+  if (election.overview) return formFromRecord(seat, election.overview, now);
+  if (kept?.kind === 'dissolved')
+    return resultLoaded(seat, kept.electionDay)
+      ? { kind: 'member', until: null }
+      : { kind: 'dissolved', electionDay: kept.electionDay };
+  if (
+    kept?.kind === 'member' &&
+    (kept.until === null || now.getTime() < Date.parse(kept.until))
+  )
+    return kept;
+  return election.reading
+    ? {
+        kind: 'held',
+        lines: kept && kept.kind !== 'member' ? kept.lines : null,
+      }
+    : { kind: 'neutral' };
 }
 
 /** The dissolved row's four lines. Nobody is called a current member. */
 export function dissolvedLines(
   seat: Pick<Electorate, 'name' | 'chamber' | 'state_code'>,
-  last: { name: string; party: string | null; status: PartyContext['status'] },
+  last: Person,
   electionDay: string,
-): Dissolved['lines'] {
-  const party = last.party
-    ? partyText({ party: last.party, status: last.status }).visible
-    : null;
+): readonly string[] {
   return [
-    `${jurisdictionName(seat.state_code) ?? seat.state_code.toUpperCase()} · ${houseName(seat.chamber)}`,
+    houseLine(seat),
     seat.name,
     `Assembly dissolved for the ${electionDayWords(electionDay)} election`,
-    `Last member: ${[last.name, party].filter(Boolean).join(', ')}`,
+    `Last member: ${personWords(last)}`,
   ];
 }
 
 /**
- * The lines that hold a dissolved row's place before the device knows the
- * real ones: the longest district and member names in the roster, so the
- * held row is never shorter than the row that lands on it. Never drawn.
+ * The neutral row's three lines: the house, the district, and what the
+ * roster recorded with its date. A dated record, never a claim that the
+ * person is the member now.
  */
-export const DISSOLVED_STAND_IN: Dissolved['lines'] = [
+export function neutralLines(
+  seat: Pick<
+    Electorate,
+    'name' | 'chamber' | 'state_code' | 'representation_as_of'
+  >,
+  recorded: Person,
+): readonly string[] {
+  const date = seat.representation_as_of
+    ? formatDate(seat.representation_as_of, 'short')
+    : null;
+  return [
+    houseLine(seat),
+    seat.name,
+    `${date ? `On the roster at ${date}` : 'On the roster'}: ${personWords(recorded)}`,
+  ];
+}
+
+/**
+ * The lines that hold a row's place before the device knows the real ones:
+ * the longest district and member names in the roster, so the held row is
+ * never shorter than the row that lands on it. Never drawn or spoken.
+ */
+export const DISSOLVED_STAND_IN: readonly string[] = [
   'Victoria · Legislative Assembly',
   'Narre Warren North',
   'Assembly dissolved for the 00 September election',
   'Last member: Kathleen Matthews-Ward, Independent',
 ];
-
-/**
- * The state row's form, decided without waiting where the device can:
- * - the election record, when it is at hand, answers;
- * - with none at hand, what the last launch kept answers while the roster
- *   still predates that election (offline, or the record retired);
- * - with neither and the record still on its way, not yet known: the row's
- *   place is held, and nobody is drawn as a member meanwhile.
- */
-export function dissolvedState(
-  seat: Pick<Electorate, 'url' | 'representation_as_of'>,
-  election: { overview: Overview | null; loading: boolean },
-  now: Date,
-  kept: { electionDay: string } | null,
-): string | 'unknown' | null {
-  if (election.overview) return dissolvedFor(seat, election.overview, now);
-  if (kept)
-    return rosterPredates(seat, kept.electionDay) ? kept.electionDay : null;
-  return election.loading ? 'unknown' : null;
-}
+export const NEUTRAL_STAND_IN: readonly string[] = [
+  'Victoria · Legislative Assembly',
+  'Narre Warren North',
+  'On the roster at 00 Sep 0000: Kathleen Matthews-Ward, Independent',
+];

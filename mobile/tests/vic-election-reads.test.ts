@@ -176,3 +176,53 @@ test('old disk finder URLs are removed when the catalog index loads', async () =
   expect(entries.has(url)).toBe(false);
   expect(index()).toEqual([]);
 });
+
+describe('the shared read (Today’s state row)', () => {
+  const headers = (transport: jest.Mock, call: number) =>
+    (transport.mock.calls[call]![1] as { headers: Record<string, string> })
+      .headers;
+  test('adds no request beside a read in flight or a record at hand', async () => {
+    const { reads, transport } = setup();
+    transport.mockResolvedValue(reply(overview));
+    // The block's forced read and the shared read, together: one request.
+    await Promise.all([reads.loadOverview(), reads.loadOverviewShared()]);
+    expect(transport).toHaveBeenCalledTimes(1);
+    // The record is at hand: nothing more is asked, mount after mount.
+    await reads.loadOverviewShared();
+    await reads.loadOverviewShared();
+    expect(transport).toHaveBeenCalledTimes(1);
+    expect(reads.overview.record?.data.title).toBe(overview.title);
+  });
+  test('asks through the cache: never no-cache, a fresh saved copy answers, a stale one is revalidated with If-None-Match', async () => {
+    const { client, transport } = setup();
+    transport.mockResolvedValueOnce(
+      new Response(JSON.stringify(overview), {
+        status: 200,
+        headers: { 'cache-control': 'public, max-age=300', etag: '"v1"' },
+      }),
+    );
+    // A cold shared read reaches the origin once, without forcing it.
+    const first = new ElectionReads(client);
+    await first.loadOverviewShared();
+    expect(transport).toHaveBeenCalledTimes(1);
+    expect(headers(transport, 0)['Cache-Control']).toBeUndefined();
+    // A new session with the copy still fresh: the cache answers.
+    const second = new ElectionReads(client);
+    await second.loadOverviewShared();
+    expect(second.overview.record?.data.title).toBe(overview.title);
+    expect(transport).toHaveBeenCalledTimes(1);
+    // The block's own read is the forced one.
+    transport.mockResolvedValueOnce(reply(overview));
+    await second.loadOverview();
+    expect(headers(transport, 1)['Cache-Control']).toBe('no-cache');
+    expect(headers(transport, 1)['If-None-Match']).toBe('"v1"');
+  });
+  test('a withdrawal answers the shared read as it does the block’s', async () => {
+    const { reads, transport } = setup();
+    transport.mockResolvedValueOnce(reply({ error: 'not_published' }, 404));
+    await reads.loadOverviewShared();
+    expect(reads.overview.record).toBeNull();
+    expect(reads.overview.loading).toBe(false);
+    expect(reads.overview.error).toBeInstanceOf(ElectionUnavailable);
+  });
+});

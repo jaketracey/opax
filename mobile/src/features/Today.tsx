@@ -1,4 +1,8 @@
-import { useOverview as useElectionOverview } from './vic-election/reads';
+import {
+  ElectionUnavailable,
+  electionReads,
+  useOverview as useElectionOverview,
+} from './vic-election/reads';
 import { useElectionNow } from './vic-election/clock';
 import { todayEligible, todayWindow } from './vic-election/model';
 import VicElectionBlock from './vic-election/TodayBlock';
@@ -26,7 +30,7 @@ import {
   welcomeDeclinedThisLaunch,
 } from '../onboarding/state';
 import { EditionSkeleton } from './edition/EditionCard';
-import { TodayEditionCard } from './today/FeaturedPeopleCard';
+import { FeaturedHeading, TodayEditionCard } from './today/FeaturedPeopleCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
 import { AustraliaDots, useTodayDotsScroll } from './today/AustraliaDots';
@@ -80,7 +84,11 @@ import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { TodayBody } from './today/TodayBody';
 import { VotesBlock } from './today/VotesBlock';
 import { TodayHeading } from './today/RepsGroup';
-import { dissolvedState } from './today/dissolution';
+import {
+  DISSOLVED_STAND_IN,
+  NEUTRAL_STAND_IN,
+  stateForm as stateRowForm,
+} from './today/dissolution';
 import {
   repsShape,
   stateSeatFor,
@@ -112,6 +120,8 @@ interface Launch {
   invitation: InvitationDates;
   /** The lead's shape as the last launch left it (shape-store). */
   shape: TodayShape | null;
+  /** The saved edition is a featured parliamentarian's (edition-store). */
+  featured: boolean;
   /** The last visit kept on the device; null on the first ever launch. */
   visit: Visit | null;
   /** The collection record saved on the device, or null with none. */
@@ -137,7 +147,7 @@ function useLaunch(day: SydneyDate): Launch | null {
         const read = await catalogs.todayEdition();
         cached =
           read.status === 'ready' && read.data
-            ? { date: read.data.date.slice(0, 10) }
+            ? { date: read.data.date.slice(0, 10), kind: read.data.kind }
             : read.status === 'missing'
               ? 'missing'
               : null;
@@ -169,6 +179,8 @@ function useLaunch(day: SydneyDate): Launch | null {
           launchCase: launchCase(cached, today),
           invitation,
           shape,
+          featured:
+            !!cached && cached !== 'missing' && cached.kind === 'politician',
           visit,
           collection,
         });
@@ -179,6 +191,7 @@ function useLaunch(day: SydneyDate): Launch | null {
           launchCase: 'C',
           invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
           shape: null,
+          featured: false,
           visit: null,
           collection: null,
         });
@@ -309,10 +322,9 @@ export default function Today() {
   useTodayRendered();
   const dots = useTodayDotsScroll();
   const offline = useOffline();
-  // Read for a reader with a saved state seat: the election record says
-  // whether that seat's house is dissolved (today/dissolution).
-  const savedStateSeat = !!useSavedChoice()?.stateSeatIds.length;
-  const election = useElectionOverview(savedStateSeat);
+  // Subscribed only: the election block reads the record in its window,
+  // and the state row asks for it through one gated, shared read below.
+  const election = useElectionOverview(false);
   const electionNow = useElectionNow();
   const now = useNow();
   const day = sydneyDay(now);
@@ -372,55 +384,79 @@ export default function Today() {
   // the kept shape, or with none the choice as the device saved it (a saved
   // state seat has a member's row; every state has senators). A capture's
   // seat on its way says which seats it will save.
+  const keptRow = kept?.stateRow ?? null;
   const pendingReps = seatArriving
     ? {
         state: todayFixture().seat === 'federal+state',
         senators: true,
-        dissolved: true as const,
+        lines: DISSOLVED_STAND_IN,
       }
     : kept
       ? {
           state: kept.state,
           senators: kept.senators,
-          dissolved: kept.dissolved?.lines ?? null,
+          // A kept member's row holds a member's row; kept lines hold
+          // themselves.
+          lines: keptRow && keptRow.kind !== 'member' ? keptRow.lines : null,
         }
       : {
           state: !!savedChoice?.stateSeatIds.length,
           senators: true,
-          // Not known yet: while an election record is at hand or on its
-          // way the taller row's place is held, so nobody is drawn as a
-          // member before it answers.
-          dissolved:
-            election.record || election.loading ? (true as const) : null,
+          // Nothing kept: the row names no member until the data decides
+          // it. The taller stand-in while an election record is at hand
+          // or on its way, the neutral row's otherwise.
+          lines:
+            election.record || election.loading
+              ? DISSOLVED_STAND_IN
+              : NEUTRAL_STAND_IN,
         };
   const stateSeat =
     home && directory
       ? stateSeatFor(directory, choice?.stateSeatIds ?? [])
       : null;
-  // The election day the state seat's house is dissolved for, from the
-  // election record and the roster's date for the seat; never a date
-  // written here.
-  const dissolved = stateSeat
-    ? dissolvedState(
+  const overview = election.record?.data ?? null;
+  // The election block reads the record for this reader while its window
+  // runs; Today never adds a second read beside it.
+  const electionBlockReads =
+    todayWindow(electionNow) &&
+    todayEligible(
+      choice,
+      directory?.electorates.data.electorates ?? [],
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    );
+  // The record was withdrawn (now, or as the last launch kept): it is not
+  // asked for again.
+  const recordWithdrawn =
+    !overview &&
+    (election.error instanceof ElectionUnavailable || !!kept?.withdrawn);
+  // The new member is decided (or the record never covered the seat):
+  // nothing more to ask.
+  const rowDecided = keptRow?.kind === 'member' && keptRow.until === null;
+  // The one read Today may start: only for the state seat of the migrated
+  // choice (never a stray saved id), only until the row is decided or the
+  // record withdrawn, and only when no read of the block's will answer.
+  const rowUndecided =
+    !!stateSeat && !overview && !recordWithdrawn && !rowDecided;
+  const asksRecord = rowUndecided && !electionBlockReads;
+  useEffect(() => {
+    if (asksRecord) void electionReads.loadOverviewShared();
+  }, [asksRecord]);
+  // The state row's form, from the election record and the seat's own
+  // dates in the electorates index; never a date written here.
+  const stateForm = stateSeat
+    ? stateRowForm(
         stateSeat,
-        {
-          overview: election.record?.data ?? null,
-          loading: election.loading,
-        },
+        { overview, reading: rowUndecided && election.loading },
         electionNow,
-        kept?.dissolved ?? null,
+        keptRow,
       )
     : null;
   const drawnReps =
     home && directory
-      ? repsShape(
-          home,
-          directory,
-          choice?.stateSeatIds ?? [],
-          dissolved === 'unknown' ? null : dissolved,
-        )
-      : { state: false, senators: false, dissolved: null };
-  const dissolvedKept = JSON.stringify(drawnReps.dissolved);
+      ? repsShape(home, directory, choice?.stateSeatIds ?? [], stateForm)
+      : { state: false, senators: false, stateRow: null };
+  const stateRowKept = JSON.stringify(drawnReps.stateRow);
+  const rowHeld = stateForm?.kind === 'held';
   const stateSeatDrawn = drawnReps.state;
   const senatorsDrawn = drawnReps.senators;
   const settledKey =
@@ -435,13 +471,14 @@ export default function Today() {
   const leads = !!home;
   useEffect(() => {
     // The state row's form is not known until the election record answers.
-    if (settledKey === null || !launched || dissolved === 'unknown') return;
+    if (settledKey === null || !launched || rowHeld) return;
     if (
       launchShape?.key === settledKey &&
       launchShape.house === leads &&
       launchShape.state === stateSeatDrawn &&
       launchShape.senators === senatorsDrawn &&
-      JSON.stringify(launchShape.dissolved) === dissolvedKept
+      launchShape.withdrawn === recordWithdrawn &&
+      JSON.stringify(launchShape.stateRow) === stateRowKept
     )
       return;
     void rememberTodayShape({
@@ -449,15 +486,17 @@ export default function Today() {
       house: leads,
       state: stateSeatDrawn,
       senators: senatorsDrawn,
-      dissolved: JSON.parse(dissolvedKept) as TodayShape['dissolved'],
+      stateRow: JSON.parse(stateRowKept) as TodayShape['stateRow'],
+      withdrawn: recordWithdrawn,
     });
   }, [
     settledKey,
     leads,
     stateSeatDrawn,
     senatorsDrawn,
-    dissolved,
-    dissolvedKept,
+    rowHeld,
+    stateRowKept,
+    recordWithdrawn,
     launched,
     launchShape,
   ]);
@@ -518,14 +557,7 @@ export default function Today() {
   }, [offline, nothingSavedAt, attempt, retry]);
 
   const electionSavedAt =
-    election.record &&
-    todayWindow(electionNow) &&
-    todayEligible(
-      choice,
-      directory?.electorates.data.electorates ?? [],
-      Intl.DateTimeFormat().resolvedOptions().timeZone,
-    ) &&
-    offline
+    election.record && electionBlockReads && offline
       ? election.record.savedAt
       : null;
 
@@ -566,7 +598,7 @@ export default function Today() {
               seat={home}
               directory={directory}
               stateSeatIds={choice?.stateSeatIds ?? []}
-              dissolved={dissolved}
+              stateForm={stateForm ?? undefined}
               attempt={attempt}
               onRetry={retry}
             />
@@ -590,9 +622,16 @@ export default function Today() {
         if (name === 'edition' && edition.block === null)
           return (
             <View key={name} style={styles.headed}>
-              <TodayHeading testID="today-edition-heading">
-                {EDITION_HEADING}
-              </TodayHeading>
+              {/* The saved edition's kind picks the heading it will land
+                  under: the carousel's two lines on a featured
+                  parliamentarian's day, so the skeleton never moves. */}
+              {launch?.featured ? (
+                <FeaturedHeading />
+              ) : (
+                <TodayHeading testID="today-edition-heading">
+                  {EDITION_HEADING}
+                </TodayHeading>
+              )}
               <View testID="today-edition-loading">
                 <EditionSkeleton />
               </View>
@@ -602,7 +641,8 @@ export default function Today() {
           return null;
         return (
           <View key={name} style={styles.headed}>
-            {/* A featured parliamentarian's carousel has its own heading. */}
+            {/* A featured parliamentarian's carousel has its own heading;
+                the card standing alone draws this one (`heading`). */}
             {edition.block.status === 'ready' &&
             edition.block.data?.kind === 'politician' ? null : (
               <TodayHeading testID={`today-${name}-heading`}>
@@ -610,6 +650,14 @@ export default function Today() {
               </TodayHeading>
             )}
             <TodayEditionCard
+              heading={
+                edition.block.status === 'ready' &&
+                edition.block.data?.kind === 'politician' ? (
+                  <TodayHeading testID={`today-${name}-heading`}>
+                    {EDITION_HEADING}
+                  </TodayHeading>
+                ) : null
+              }
               attempt={attempt}
               edition={edition.block}
               tier={tier ?? undefined}

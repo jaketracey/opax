@@ -34,11 +34,17 @@ import {
   RepsBones,
   RepsRows,
   TodayHeading,
-  type DissolvedRep,
+  type LinesRep,
   type Rep,
   type RepsLink,
 } from './RepsGroup';
-import { dissolvedLines, type Dissolved } from './dissolution';
+import {
+  DISSOLVED_STAND_IN,
+  dissolvedLines,
+  neutralLines,
+  type KeptStateRow,
+  type StateForm,
+} from './dissolution';
 import { oldestDate } from './sources';
 
 type Load<T> =
@@ -167,15 +173,16 @@ function SourceBone() {
 export function YourMPPending({
   state = false,
   senators = true,
-  dissolved = null,
+  lines = null,
 }: {
   /** The state row will draw. */
   state?: boolean;
   /**
-   * The state row is a dissolved house's: the lines the last launch kept,
-   * or `true` for the stand-in sized like the longest real lines.
+   * The state row is not a member's row: the lines that hold its place
+   * (the ones the last launch kept, or a stand-in sized like the longest
+   * real lines). Null holds a member's row.
    */
-  dissolved?: Dissolved['lines'] | true | null;
+  lines?: readonly string[] | null;
   /** The senators link row will draw. */
   senators?: boolean;
 }) {
@@ -197,7 +204,7 @@ export function YourMPPending({
         >
           <RepsBones
             rows={state ? 2 : 1}
-            dissolved={state ? dissolved : null}
+            lines={state ? lines : null}
             link={senators}
           />
           <SourceBone />
@@ -271,46 +278,67 @@ function stateMember(seat: Electorate, directory: Directory) {
   };
 }
 
+/** The state seat's recorded person, as the lines name them. */
+function recordedPerson(seat: Electorate, directory: Directory) {
+  const person = stateMember(seat, directory);
+  return { name: person.name, party: person.party, status: person.partyStatus };
+}
+
 /**
- * The dissolved row's content for a state seat and the election its house
- * was dissolved for: the four lines, kept on the device for the next
- * launch's first frame.
+ * The lines of a state row that is not a member's: the dissolved house's
+ * four, or the neutral row's three. Null for a member's row.
  */
-export function dissolvedRow(
+export function stateLines(
   seat: Electorate,
   directory: Directory,
-  electionDay: string,
-): Dissolved {
-  const last = stateMember(seat, directory);
-  return {
-    electionDay,
-    lines: dissolvedLines(
+  form: StateForm,
+): readonly string[] | null {
+  if (form.kind === 'dissolved')
+    return dissolvedLines(
       seat,
-      { name: last.name, party: last.party, status: last.partyStatus },
-      electionDay,
-    ),
-  };
+      recordedPerson(seat, directory),
+      form.electionDay,
+    );
+  if (form.kind === 'neutral')
+    return neutralLines(seat, recordedPerson(seat, directory));
+  return null;
+}
+
+/** What the device keeps of a decided state row for the next launch. */
+export function keptStateRow(
+  seat: Electorate,
+  directory: Directory,
+  form: StateForm,
+): KeptStateRow | null {
+  const lines = stateLines(seat, directory, form);
+  if (form.kind === 'member') return form;
+  if (form.kind === 'dissolved' && lines)
+    return { kind: 'dissolved', electionDay: form.electionDay, lines };
+  if (form.kind === 'neutral' && lines) return { kind: 'neutral', lines };
+  return null;
 }
 
 /**
  * What the device keeps of the group's shape for the next launch
  * (shape-store): whether the state row and the senators row draw, and the
- * state row's lines when its house is dissolved for `electionDay`.
+ * state row's decided form with its lines.
  */
 export function repsShape(
   home: Electorate,
   directory: Directory,
   stateSeatIds: readonly string[],
-  electionDay: string | null = null,
-): { state: boolean; senators: boolean; dissolved: Dissolved | null } {
+  form: StateForm | null = null,
+): { state: boolean; senators: boolean; stateRow: KeptStateRow | null } {
   const seat = stateSeatFor(directory, stateSeatIds);
   return {
     state: !!seat,
     senators: !!senatorsLink(home, directory),
-    dissolved:
-      seat && electionDay ? dissolvedRow(seat, directory, electionDay) : null,
+    stateRow: seat && form ? keptStateRow(seat, directory, form) : null,
   };
 }
+
+/** A sitting member with nothing to end it: the form with no state seat. */
+const MEMBER: StateForm = { kind: 'member', until: null };
 
 /**
  * The one quiet row for the upper house: the existing list of the state's
@@ -338,7 +366,7 @@ export function YourMPCard({
   seat,
   directory,
   stateSeatIds,
-  dissolved = null,
+  stateForm = MEMBER,
   attempt,
   onRetry,
 }: {
@@ -346,11 +374,10 @@ export function YourMPCard({
   directory: Directory;
   stateSeatIds: readonly string[];
   /**
-   * The election day the state seat's house is dissolved for
-   * (`dissolvedState`): the state row then names no member. `unknown`
-   * while the election record is on its way: the row's place is held.
+   * The state row's form (`stateForm` in today/dissolution): a member's
+   * row only when the data at hand decides the person is the member.
    */
-  dissolved?: string | 'unknown' | null;
+  stateForm?: StateForm;
   attempt: number;
   onRetry: () => void;
 }) {
@@ -373,21 +400,20 @@ export function YourMPCard({
     attempt,
     held,
   );
-  const shape = repsShape(
-    seat,
-    directory,
-    stateSeatIds,
-    dissolved === 'unknown' ? null : dissolved,
-  );
+  const stateSeat = stateSeatFor(directory, stateSeatIds);
+  // The lines of a state row that names no member, or that hold its place.
+  const lines = stateSeat
+    ? stateForm.kind === 'held'
+      ? (stateForm.lines ?? DISSOLVED_STAND_IN)
+      : stateLines(stateSeat, directory, stateForm)
+    : null;
   if (view.status === 'loading')
     return (
       <View testID="today-your-mp">
         <YourMPPending
-          state={shape.state}
-          senators={shape.senators}
-          dissolved={
-            dissolved === 'unknown' ? true : (shape.dissolved?.lines ?? null)
-          }
+          state={!!stateSeat}
+          senators={!!senatorsLink(seat, directory)}
+          lines={lines}
         />
       </View>
     );
@@ -398,13 +424,17 @@ export function YourMPCard({
         <YourMPError seat={seat} onRetry={onRetry} />
       </View>
     );
-  const stateSeat = stateSeatFor(directory, stateSeatIds);
   const federal = federalRep(seat, directory, view.data);
-  // A dissolved house has no member's row: its own row, or its held place.
-  const state = stateSeat && !dissolved ? stateRep(stateSeat, directory) : null;
-  const dissolvedRep =
-    stateSeat && shape.dissolved
-      ? dissolvedRep_(stateSeat, directory, shape.dissolved)
+  // Only a decided member is drawn as one.
+  const state =
+    stateSeat && stateForm.kind === 'member'
+      ? stateRep(stateSeat, directory)
+      : null;
+  const linesRep =
+    stateSeat &&
+    lines &&
+    (stateForm.kind === 'dissolved' || stateForm.kind === 'neutral')
+      ? linesRepFor(stateSeat, directory, stateForm.kind, lines)
       : null;
   return (
     <View testID="today-your-mp" style={styles.section}>
@@ -413,16 +443,19 @@ export function YourMPCard({
         <RepsRows
           reps={[federal, state].filter((rep): rep is Rep => !!rep)}
           vacant={federal ? null : <VacantRow key="vacant" seat={seat} />}
-          dissolved={
-            stateSeat && dissolved === 'unknown' ? 'held' : dissolvedRep
+          lines={
+            linesRep ??
+            (stateSeat && lines && stateForm.kind === 'held'
+              ? { held: lines }
+              : null)
           }
           link={senatorsLink(seat, directory)}
         />
         <SourceLine
           {...yourMPSources(
             view.data,
-            state || dissolvedRep ? stateSeat : null,
-            !!dissolvedRep,
+            state || linesRep ? stateSeat : null,
+            linesRep?.kind ?? 'member',
           )}
           testID="today-your-mp-sources"
         />
@@ -568,19 +601,25 @@ function stateRep(seat: Electorate, directory: Directory): Rep {
   };
 }
 
-/** The dissolved house's row: its lines, and where a tap leads. */
-function dissolvedRep_(
+/** A lines row for the state seat: its lines, and where a tap leads. */
+function linesRepFor(
   seat: Electorate,
   directory: Directory,
-  dissolved: Dissolved,
-): DissolvedRep {
+  kind: LinesRep['kind'],
+  lines: readonly string[],
+): LinesRep {
   const { name, slug } = stateMember(seat, directory);
   return {
-    lines: dissolved.lines,
+    kind,
+    lines,
     href: slug
       ? personRoute(slug, name)
       : electorateRoute(seat.electorate_id, undefined, seat.name),
-    hint: slug ? 'Opens the last member’s profile' : 'Opens the electorate',
+    hint: slug
+      ? kind === 'dissolved'
+        ? 'Opens the last member’s profile'
+        : 'Opens that person’s profile'
+      : 'Opens the electorate',
     menu: seatActions(seat, !!slug),
   };
 }
@@ -612,9 +651,10 @@ function VacantRow({ seat }: { seat: Electorate }) {
 export function yourMPSources(
   view: YourMPView,
   stateSeat?: Electorate | null,
-  /** The state row is a dissolved house's: the election record is cited. */
-  dissolved = false,
+  /** The state row's kind: a dissolved house cites the election record. */
+  stateKind: 'member' | 'dissolved' | 'neutral' = 'member',
 ) {
+  const dissolved = stateKind === 'dissolved';
   const roster = view.members;
   const state = stateSeat
     ? {
@@ -654,7 +694,9 @@ export function yourMPSources(
       stateSeat
         ? dissolved
           ? 'The Assembly is dissolved for the election, so the district has no member until the result is declared. The last member and their party are from the state parliament’s roster; the election day is from the Victorian Electoral Commission.'
-          : 'Your state member, their party and their district from the state parliament’s roster.'
+          : stateKind === 'neutral'
+            ? 'The state row shows what the state parliament’s roster recorded on that date. This device has no election record to say whether the house is sitting, so the row names nobody as the member.'
+            : 'Your state member, their party and their district from the state parliament’s roster.'
         : null,
     ].filter((note): note is string => !!note),
     savedAt: roster.stale ? (roster.savedAt ?? null) : null,

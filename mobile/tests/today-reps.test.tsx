@@ -11,25 +11,28 @@ import {
   Portrait,
   YourMPMark,
 } from '../src/design/people';
+import { Icon } from '../src/design/icon';
 import { LinkRow } from '../src/design/rows';
 import {
-  dissolvedLabel,
+  linesLabel,
   REPS_HEADING,
   repLabel,
 } from '../src/features/today/RepsGroup';
 import {
   DISSOLVED_STAND_IN,
-  dissolvedFor,
-  dissolvedLines,
-  dissolvedState,
   electionDayWords,
-  rosterPredates,
+  formFromRecord,
+  NEUTRAL_STAND_IN,
+  resultLoaded,
+  stateForm,
+  type StateForm,
 } from '../src/features/today/dissolution';
 import { decodeOverview } from '../src/features/vic-election/decoders';
 import electionOverview from '../scripts/fixtures/vic-election/overview.json';
 import {
-  dissolvedRow,
   federalRole,
+  keptStateRow,
+  stateLines,
   repsShape,
   stateRole,
   stateSeatFor,
@@ -121,7 +124,9 @@ const overview = decodeOverview(electionOverview);
 const ELECTION_DAY = overview.election_day;
 /** After the record's caretaker date, before its election day. */
 const DURING = new Date('2026-11-15T12:00:00+11:00');
-const dissolvedEssendon = dissolvedRow(essendon, directory, ELECTION_DAY);
+const DISSOLVED: StateForm = { kind: 'dissolved', electionDay: ELECTION_DAY };
+const NEUTRAL: StateForm = { kind: 'neutral' };
+const dissolvedEssendon = stateLines(essendon, directory, DISSOLVED)!;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -340,23 +345,25 @@ describe('Today’s representatives group', () => {
     await act(async () => renderer.unmount());
   });
 
-  describe('a dissolved Assembly', () => {
+  describe('the state row names a member only when the data decides it', () => {
     const last = memberOf(essendon);
-    const stateLines = (r: TestRenderer.ReactTestRenderer) =>
+    const stateLines_ = (r: TestRenderer.ReactTestRenderer) =>
       r.root
         .findAllByType(NativeText)
         .filter((t) => /^today-rep-state-line-/.test(t.props.testID ?? ''));
-    test('the state row is four lines in order, and calls nobody a member', async () => {
-      const renderer = await card({ dissolved: ELECTION_DAY });
-      const lines = stateLines(renderer).map((t) => t.props.children);
-      expect(lines).toEqual([
+    const words = (r: TestRenderer.ReactTestRenderer) =>
+      stateLines_(r).map((t) => t.props.children);
+
+    test('dissolved: four lines in order, and nobody is called a member', async () => {
+      const renderer = await card({ stateForm: DISSOLVED });
+      expect(words(renderer)).toEqual([
         'Victoria · Legislative Assembly',
         'Essendon',
         'Assembly dissolved for the 28 November election',
         expect.stringMatching(new RegExp(`^Last member: ${last}, \\w+`)),
       ]);
-      expect(lines).toEqual([...dissolvedEssendon.lines]);
-      expect(stateLines(renderer).map((t) => t.props.testID)).toEqual(
+      expect(words(renderer)).toEqual([...dissolvedEssendon]);
+      expect(stateLines_(renderer).map((t) => t.props.testID)).toEqual(
         [1, 2, 3, 4].map((n) => `today-rep-state-line-${n}`),
       );
       expect(strings(renderer).join(' ')).not.toMatch(
@@ -369,15 +376,55 @@ describe('Today’s representatives group', () => {
       await act(async () => renderer.unmount());
     });
 
+    test('neutral: with no election record and nothing kept, the row states the roster’s dated record and makes no current-member claim', async () => {
+      const form = stateForm(
+        essendon,
+        { overview: null, reading: false },
+        DURING,
+        null,
+      );
+      expect(form).toEqual({ kind: 'neutral' });
+      const renderer = await card({ stateForm: form });
+      expect(words(renderer)).toEqual([
+        'Victoria · Legislative Assembly',
+        'Essendon',
+        expect.stringMatching(
+          new RegExp(`^On the roster at 9 Sep 2026: ${last}, \\w+$`),
+        ),
+      ]);
+      expect(ids(renderer)).toContain('today-rep-state-neutral');
+      // Not a member's row, and no word that says the person is the member.
+      expect(rows(renderer).map((row) => row.props.testID)).toEqual([
+        'today-rep-federal',
+      ]);
+      const row = host(renderer, 'today-rep-state-neutral');
+      expect(row.findAllByType(Portrait)).toHaveLength(0);
+      expect(row.findAllByType(PartyLabel)).toHaveLength(0);
+      expect(
+        `${strings(renderer).join(' ')} ${row.props.accessibilityLabel}`,
+      ).not.toMatch(/member for|Your state member|Last member|dissolved/i);
+      expect(row.props.accessibilityLabel).toBe(linesLabel(words(renderer)));
+      // The source note says why, and cites no election record.
+      const line = renderer.root.findAll(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'today-your-mp-sources',
+      )[0]!.props;
+      expect(line.citation.map((c: { label: string }) => c.label)).toEqual([
+        expect.any(String),
+        'Parliament of Victoria',
+      ]);
+      expect(line.notes.join(' ')).toMatch(/names nobody as the member/);
+      await act(async () => renderer.unmount());
+    });
+
     test('the last member is not styled as a current member: no portrait, no party dot or link, no name as the title', async () => {
-      const renderer = await card({ dissolved: ELECTION_DAY });
+      const renderer = await card({ stateForm: DISSOLVED });
       const row = host(renderer, 'today-rep-state-dissolved');
       expect(row.findAllByType(Portrait)).toHaveLength(0);
       expect(row.findAllByType(PartyLabel)).toHaveLength(0);
-      // The title line is the parliament and house; the person is the last
-      // line, in the secondary style the two lines above it have.
       const style = (n: number) =>
-        StyleSheet.flatten(stateLines(renderer)[n]!.props.style);
+        StyleSheet.flatten(stateLines_(renderer)[n]!.props.style);
       expect(style(0).fontSize).toBe(
         StyleSheet.flatten(
           renderer.root
@@ -394,13 +441,11 @@ describe('Today’s representatives group', () => {
     });
 
     test('VoiceOver reads the row as one element, the four lines in order, and a tap opens the last member’s profile', async () => {
-      const renderer = await card({ dissolved: ELECTION_DAY });
+      const renderer = await card({ stateForm: DISSOLVED });
       const row = host(renderer, 'today-rep-state-dissolved');
       expect(row.props.accessible).toBe(true);
       expect(row.props.accessibilityRole).toBe('link');
-      expect(row.props.accessibilityLabel).toBe(
-        dissolvedLabel(dissolvedEssendon.lines),
-      );
+      expect(row.props.accessibilityLabel).toBe(linesLabel(dissolvedEssendon));
       expect(row.props.accessibilityLabel).toMatch(
         new RegExp(
           `^Victoria, Legislative Assembly\\. Essendon\\. Assembly dissolved for the 28 November election\\. Last member: ${last}, \\w+\\.$`,
@@ -409,7 +454,6 @@ describe('Today’s representatives group', () => {
       expect(row.props.accessibilityHint).toBe(
         'Opens the last member’s profile',
       );
-      // Nothing inside the row is its own VoiceOver element.
       expect(
         row.findAll(
           (n) => n !== row && typeof n.type === 'string' && n.props.accessible,
@@ -418,13 +462,20 @@ describe('Today’s representatives group', () => {
       await act(async () => renderer.unmount());
     });
 
-    test('the election record and the roster decide it; no date is written in the app', () => {
-      const seat = essendon;
-      // Before the record's caretaker date the Assembly sits.
+    test('the election record decides it; no date is written in the app', () => {
+      // Before the record's caretaker date the Assembly sits, and the
+      // decision holds only until that instant.
+      const caretaker = overview.key_dates.find(
+        (d) => d.id === 'caretaker',
+      )!.passes_at!;
       expect(
-        dissolvedFor(seat, overview, new Date('2026-11-01T12:00:00+11:00')),
-      ).toBeNull();
-      expect(dissolvedFor(seat, overview, DURING)).toBe(ELECTION_DAY);
+        formFromRecord(
+          essendon,
+          overview,
+          new Date('2026-11-01T12:00:00+11:00'),
+        ),
+      ).toEqual({ kind: 'member', until: caretaker });
+      expect(formFromRecord(essendon, overview, DURING)).toEqual(DISSOLVED);
       // Another election, another day: whatever the record says.
       const later = {
         ...overview,
@@ -435,26 +486,20 @@ describe('Today’s representatives group', () => {
             : d,
         ),
       };
-      expect(dissolvedFor(seat, later, DURING)).toBeNull();
+      expect(formFromRecord(essendon, later, DURING).kind).toBe('member');
       expect(
-        dissolvedFor(seat, later, new Date('2030-11-06T09:00:00+11:00')),
-      ).toBe('2030-11-30');
+        formFromRecord(essendon, later, new Date('2030-11-06T09:00:00+11:00')),
+      ).toEqual({ kind: 'dissolved', electionDay: '2030-11-30' });
       expect(electionDayWords('2030-11-30')).toBe('30 November');
+      // A record with no caretaker date decides nothing: the neutral row.
       expect(
-        dissolvedLines(
-          seat,
-          { name: 'A Person', party: null, status: 'current' },
-          '2030-11-30',
-        ),
-      ).toEqual([
-        'Victoria · Legislative Assembly',
-        'Essendon',
-        'Assembly dissolved for the 30 November election',
-        'Last member: A Person',
-      ]);
-      // A seat that is not one of the record's districts is not dissolved.
-      expect(dissolvedFor(maribyrnong, overview, DURING)).toBeNull();
-      expect(dissolvedFor(districtOf('nsw_la'), overview, DURING)).toBeNull();
+        formFromRecord(essendon, { ...overview, key_dates: [] }, DURING),
+      ).toEqual({ kind: 'neutral' });
+      // A seat that is not one of the record's districts is not its business.
+      expect(formFromRecord(maribyrnong, overview, DURING)).toEqual({
+        kind: 'member',
+        until: null,
+      });
       // No source file names the dissolution or election date.
       for (const file of [
         'dissolution.ts',
@@ -467,34 +512,42 @@ describe('Today’s representatives group', () => {
         );
         expect(source).not.toMatch(/2026-11-\d\d|\b(3|28) November\b/);
       }
+      expect(
+        readFileSync(join(__dirname, '../src/features/Today.tsx'), 'utf8'),
+      ).not.toMatch(/2026-11-\d\d/);
     });
 
-    test('the row switches to the new member when the roster’s date for the district reaches election day', async () => {
-      // The roster reloaded with the declared member: representation_as_of
-      // is election day or later.
-      const declared = { ...essendon, representation_as_of: ELECTION_DAY };
-      expect(rosterPredates(essendon, ELECTION_DAY)).toBe(true);
-      expect(rosterPredates(declared, ELECTION_DAY)).toBe(false);
+    test('the switch to the new member is the seat’s latest_election reaching election day, never the roster’s fetch date', async () => {
       const after = new Date('2026-12-02T12:00:00+11:00');
-      expect(dissolvedFor(essendon, overview, after)).toBe(ELECTION_DAY);
-      expect(dissolvedFor(declared, overview, after)).toBeNull();
-      // With the record out of reach, what the last launch kept answers,
-      // still by the roster's date.
-      const none = { overview: null, loading: false };
-      const kept = { electionDay: ELECTION_DAY };
-      expect(dissolvedState(essendon, none, after, kept)).toBe(ELECTION_DAY);
-      expect(dissolvedState(declared, none, after, kept)).toBeNull();
-      expect(dissolvedState(essendon, none, after, null)).toBeNull();
+      // The roster refetched after election day, with no result loaded:
+      // its date moves, the last member is still not drawn as sitting.
+      const refetched = { ...essendon, representation_as_of: '2026-11-30' };
+      expect(resultLoaded(refetched, ELECTION_DAY)).toBe(false);
+      expect(formFromRecord(refetched, overview, after)).toEqual(DISSOLVED);
+      // The result loaded into the electorates index: the member's row.
+      const declared = { ...essendon, latest_election: ELECTION_DAY };
+      expect(resultLoaded(declared, ELECTION_DAY)).toBe(true);
+      expect(formFromRecord(declared, overview, after)).toEqual({
+        kind: 'member',
+        until: null,
+      });
+      // An earlier election's result is not this one's.
       expect(
-        dissolvedState(
-          essendon,
-          { overview: null, loading: true },
-          after,
-          null,
-        ),
-      ).toBe('unknown');
-      // Not dissolved: the row is the member's, as for any sitting house.
-      const renderer = await card({ dissolved: null });
+        resultLoaded({ latest_election: '2022-11-26' }, ELECTION_DAY),
+      ).toBe(false);
+      // With the record out of reach, a kept dissolved row answers by the
+      // same field.
+      const none = { overview: null, reading: false };
+      const kept = keptStateRow(essendon, directory, DISSOLVED);
+      expect(stateForm(essendon, none, after, kept)).toEqual(DISSOLVED);
+      expect(stateForm(refetched, none, after, kept)).toEqual(DISSOLVED);
+      expect(stateForm(declared, none, after, kept)).toEqual({
+        kind: 'member',
+        until: null,
+      });
+      const renderer = await card({
+        stateForm: stateForm(declared, none, after, kept),
+      });
       expect(rows(renderer)[1]!.props.place).toBe(
         'Victorian Legislative Assembly · Essendon',
       );
@@ -502,8 +555,46 @@ describe('Today’s representatives group', () => {
       await act(async () => renderer.unmount());
     });
 
+    test('a kept member row answers while the record is out, until its caretaker instant', () => {
+      const out = { overview: null, reading: true };
+      const before = new Date('2026-10-20T12:00:00+11:00');
+      const caretaker = overview.key_dates.find(
+        (d) => d.id === 'caretaker',
+      )!.passes_at!;
+      // Decided for good (the new member, or a seat the record never
+      // covered): a member's row, record or no record, reading or not.
+      const decided = { kind: 'member' as const, until: null };
+      expect(stateForm(essendon, out, DURING, decided)).toEqual(decided);
+      // Decided before the caretaker date: holds until that instant only.
+      const sitting = { kind: 'member' as const, until: caretaker };
+      expect(stateForm(essendon, out, before, sitting)).toEqual(sitting);
+      expect(stateForm(essendon, out, DURING, sitting)).toEqual({
+        kind: 'held',
+        lines: null,
+      });
+      expect(
+        stateForm(
+          essendon,
+          { overview: null, reading: false },
+          DURING,
+          sitting,
+        ),
+      ).toEqual({ kind: 'neutral' });
+      // Nothing kept and the record on its way: held, never a member.
+      expect(stateForm(essendon, out, DURING, null)).toEqual({
+        kind: 'held',
+        lines: null,
+      });
+      // Kept lines hold themselves while the record is read again.
+      const neutral = keptStateRow(essendon, directory, { kind: 'neutral' })!;
+      expect(stateForm(essendon, out, DURING, neutral)).toEqual({
+        kind: 'held',
+        lines: (neutral as { lines: readonly string[] }).lines,
+      });
+    });
+
     test('the group cites the Victorian Electoral Commission for the election day, and says why there is no member', async () => {
-      const renderer = await card({ dissolved: ELECTION_DAY });
+      const renderer = await card({ stateForm: DISSOLVED });
       const line = renderer.root.findAll(
         (n) =>
           typeof n.type !== 'string' &&
@@ -520,39 +611,50 @@ describe('Today’s representatives group', () => {
     });
 
     test.each([
-      ['Large', 1],
-      ['AX3', 2.353],
-      ['AX5', 3.571],
+      ['Large', 1, 'dissolved'],
+      ['AX3', 2.353, 'dissolved'],
+      ['AX5', 3.571, 'dissolved'],
+      ['Large', 1, 'neutral'],
+      ['AX5', 3.571, 'neutral'],
     ] as const)(
-      'at %s the held row has the four lines’ height from the first frame: the kept lines, unseen',
-      async (_size, fontScale) => {
+      'at %s (scale %d) the held %s row has its lines’ height from the first frame: the kept lines, unseen, beside the row’s own chevron',
+      async (_size, fontScale, kind) => {
         dimensions.mockReturnValue({
           width: 402,
           height: 874,
           scale: 3,
           fontScale,
         });
-        const held = pendingGroup({
-          state: true,
-          senators: true,
-          dissolved: dissolvedEssendon.lines,
-        });
-        const loaded = await card({ dissolved: ELECTION_DAY });
-        expect(ids(held)).toContain('today-rep-state-dissolved-loading');
+        const form = kind === 'dissolved' ? DISSOLVED : NEUTRAL;
+        const kept = stateLines(essendon, directory, form)!;
+        const held = pendingGroup({ state: true, senators: true, lines: kept });
+        const loaded = await card({ stateForm: form });
+        expect(ids(held)).toContain('today-rep-state-lines-loading');
         expect(ids(held)).not.toContain('today-rep-state-loading');
-        // The same lines in the same text styles, so they wrap alike.
         const drawn = (r: TestRenderer.ReactTestRenderer) =>
-          stateLines(r).map((t) => [
+          stateLines_(r).map((t) => [
             t.props.children,
             StyleSheet.flatten(t.props.style).fontSize,
             StyleSheet.flatten(t.props.style).lineHeight,
           ]);
         expect(drawn(held)).toEqual(drawn(loaded));
+        expect(drawn(held)).toHaveLength(kind === 'dissolved' ? 4 : 3);
         expect(
-          stateLines(held).every(
+          stateLines_(held).every(
             (t) => StyleSheet.flatten(t.props.style).opacity === 0,
           ),
         ).toBe(true);
+        // The chevron is the row's own icon, at the row's own scale, so the
+        // lines have the same width to wrap in at every text size.
+        const chevrons = (r: TestRenderer.ReactTestRenderer, id: string) =>
+          host(r, id)
+            .findAllByType(Icon)
+            .filter((icon) => icon.props.size === 13)
+            .map((icon) => [icon.props.name, icon.props.maxScale]);
+        expect(chevrons(held, 'today-rep-state-lines-loading')).toEqual(
+          chevrons(loaded, `today-rep-state-${kind}`),
+        );
+        expect(chevrons(held, 'today-rep-state-lines-loading')).toHaveLength(1);
         expect(groupHeight(held, 'today-reps-loading-group')).toBe(
           groupHeight(loaded, 'today-reps-group'),
         );
@@ -561,42 +663,53 @@ describe('Today’s representatives group', () => {
       },
     );
 
-    test('with nothing kept, the stand-in is as long as the longest real district and member lines', () => {
+    test('with nothing kept, the stand-ins are as long as the longest real district and member lines', () => {
       const districts = index.electorates.filter((s) => s.chamber === 'vic_la');
-      const longest = (line: 1 | 3) =>
+      const longest = (form: StateForm, line: number) =>
         Math.max(
           ...districts.map(
-            (s) => dissolvedRow(s, directory, ELECTION_DAY).lines[line].length,
+            (s) => stateLines(s, directory, form)![line]!.length,
           ),
         );
-      expect(DISSOLVED_STAND_IN[1].length).toBeGreaterThanOrEqual(longest(1));
-      expect(DISSOLVED_STAND_IN[3].length).toBeGreaterThanOrEqual(longest(3));
-      expect(DISSOLVED_STAND_IN[2].length).toBeGreaterThanOrEqual(
-        dissolvedEssendon.lines[2].length,
+      expect(DISSOLVED_STAND_IN[1]!.length).toBeGreaterThanOrEqual(
+        longest(DISSOLVED, 1),
       );
+      expect(DISSOLVED_STAND_IN[2]!.length).toBeGreaterThanOrEqual(
+        longest(DISSOLVED, 2),
+      );
+      expect(DISSOLVED_STAND_IN[3]!.length).toBeGreaterThanOrEqual(
+        longest(DISSOLVED, 3),
+      );
+      expect(NEUTRAL_STAND_IN[2]!.length).toBeGreaterThanOrEqual(
+        longest(NEUTRAL, 2),
+      );
+      expect(NEUTRAL_STAND_IN).toHaveLength(3);
       const held = pendingGroup({
         state: true,
         senators: true,
-        dissolved: true,
+        lines: DISSOLVED_STAND_IN,
       });
-      expect(stateLines(held).map((t) => t.props.children)).toEqual([
-        ...DISSOLVED_STAND_IN,
-      ]);
       // Unseen and unspoken: the stand-in is never read to anyone.
       expect(
-        host(held, 'today-rep-state-dissolved-loading').props
+        host(held, 'today-rep-state-lines-loading').props
           .importantForAccessibility,
       ).toBe('no-hide-descendants');
       act(() => held.unmount());
     });
 
     test('while the election record is on its way the row’s place is held, and nobody is drawn as a member', async () => {
-      const renderer = await card({ dissolved: 'unknown' });
+      const renderer = await card({
+        stateForm: { kind: 'held', lines: null },
+      });
       expect(rows(renderer).map((row) => row.props.testID)).toEqual([
         'today-rep-federal',
       ]);
-      expect(ids(renderer)).toContain('today-rep-state-dissolved-loading');
-      expect(strings(renderer).join(' ')).not.toMatch(/member for/);
+      expect(ids(renderer)).toContain('today-rep-state-lines-loading');
+      expect(words(renderer)).toEqual([...DISSOLVED_STAND_IN]);
+      expect(
+        host(renderer, 'today-rep-state-lines-loading').props
+          .importantForAccessibility,
+      ).toBe('no-hide-descendants');
       await act(async () => renderer.unmount());
     });
   });
@@ -675,7 +788,7 @@ describe('Today’s representatives group', () => {
       expect(repsShape(seat, directory, saved.stateSeatIds)).toEqual({
         state: false,
         senators: true,
-        dissolved: null,
+        stateRow: null,
       });
       await act(async () => renderer.unmount());
     }
@@ -761,7 +874,7 @@ describe('Today’s representatives group', () => {
   });
 
   test('no authorisation line and no campaign words draw on Today’s group, for a Victorian reader too', async () => {
-    const renderer = await card({ dissolved: ELECTION_DAY });
+    const renderer = await card({ stateForm: DISSOLVED });
     expect(strings(renderer).join(' ')).not.toMatch(
       /authoris|vote for|candidate|—/i,
     );
@@ -822,7 +935,7 @@ describe('Today’s representatives group', () => {
       expect(stateSeatFor(directory, [region.electorate_id])).toBeNull();
       expect(
         repsShape(maribyrnong, directory, [essendon.electorate_id]),
-      ).toEqual({ state: true, senators: true, dissolved: null });
+      ).toEqual({ state: true, senators: true, stateRow: null });
       expect(federalRole(maribyrnong).role).toBe('Federal · Maribyrnong');
     });
 

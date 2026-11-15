@@ -5,12 +5,12 @@ import type { CachedEdition } from './order';
 /**
  * What the last edition read answered, kept on the device so the next cold
  * launch decides Today's order from disk before any request (today.md 5.2):
- * the edition's date, or "missing" for an authoritative 404. Nothing else
- * of the edition is kept here (the catalog cache keeps the record).
+ * the edition's date and kind, or "missing" for an authoritative 404.
+ * Nothing else of the edition is kept here (the catalog cache keeps the record).
  */
 interface EditionFile {
   version: 1;
-  edition: { date: string } | 'missing';
+  edition: { date: string; kind?: string } | 'missing';
 }
 const DAY = /^\d{4}-\d{2}-\d{2}/;
 const store = new TwoSlotStore<EditionFile>(
@@ -20,9 +20,20 @@ const store = new TwoSlotStore<EditionFile>(
     const { version, edition } = raw as Record<string, unknown>;
     if (version !== 1) return null;
     if (edition === 'missing') return { version: 1, edition: 'missing' };
-    const date = (edition as { date?: unknown } | null)?.date;
+    const { date, kind } = (edition ?? {}) as {
+      date?: unknown;
+      kind?: unknown;
+    };
     return typeof date === 'string' && DAY.test(date)
-      ? { version: 1, edition: { date: date.slice(0, 10) } }
+      ? {
+          version: 1,
+          edition: {
+            date: date.slice(0, 10),
+            // Kept so the next launch draws the right heading over the
+            // edition's skeleton; a file from before has none.
+            ...(typeof kind === 'string' && kind.length <= 40 ? { kind } : {}),
+          },
+        }
       : null;
   },
   (value) => value,
@@ -43,7 +54,7 @@ export async function rememberEdition(
     block.status === 'missing'
       ? ('missing' as const)
       : block.status === 'ready' && block.data
-        ? { date: block.data.date.slice(0, 10) }
+        ? { date: block.data.date.slice(0, 10), kind: block.data.kind }
         : null;
   if (!edition) return;
   await store.save({ version: 1, edition }).catch(() => undefined);

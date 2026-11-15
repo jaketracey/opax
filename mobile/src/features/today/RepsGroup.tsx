@@ -21,7 +21,6 @@ import { Text } from '../../design/text';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { CachedPortrait } from '../CachedPortrait';
 import { MyMemberContext } from '../your-mp/MyMemberContext';
-import { DISSOLVED_STAND_IN, type Dissolved } from './dissolution';
 
 /** The heading over the group, in the Victorian election heading's style. */
 export const REPS_HEADING = 'Your representatives';
@@ -108,55 +107,37 @@ function RepRow({ rep }: { rep: Rep }) {
 }
 
 /**
- * The state row while the district's house is dissolved for an election.
- * Nobody is a member then, so the row is not a member's row: no portrait,
- * no party dot and no name as a title. Four plain lines, in this order for
- * the eye and for VoiceOver, which reads the row as one element: the
- * parliament and house, the district, that the house is dissolved for the
- * election, and who the last member was.
+ * The state row when it is not a member's row: a dissolved house (four
+ * lines) or a seat whose member cannot be decided on this device (three).
+ * Nobody is called the member, so the row is not styled as one: no
+ * portrait, no party dot and no name as a title. Plain lines, in the same
+ * order for the eye and for VoiceOver, which reads the row as one element.
  */
-export interface DissolvedRep {
-  lines: Dissolved['lines'];
-  /** The last member's profile, or the electorate. */
+export interface LinesRep {
+  kind: 'dissolved' | 'neutral';
+  lines: readonly string[];
+  /** The named person's profile, or the electorate. */
   href: Href;
   hint: string;
   menu: RowMenuAction[];
 }
 
-/** The four lines as one spoken label, in order. */
-export function dissolvedLabel(lines: Dissolved['lines']): string {
+/** The lines as one spoken label, in order. */
+export function linesLabel(lines: readonly string[]): string {
   return `${lines.map((line) => line.replace(' · ', ', ')).join('. ')}.`;
 }
 
-/** The dissolved row's frame, shared by the row and its held place. */
-function DissolvedFrame({
+/** The lines row's frame, shared by the row and its held place. */
+function LinesFrame({
   lines,
   held = false,
 }: {
-  lines: Dissolved['lines'];
+  lines: readonly string[];
   /** The held place: the same lines, unseen, with a bar over each. */
   held?: boolean;
 }) {
   const stacked = useAccessibilitySize();
   useRowInset(stacked ? 16 : 16 + 44 + rhythm.tight);
-  const line = (
-    index: 0 | 1 | 2 | 3,
-    variant: 'name' | 'secondary',
-    tone?: 'ink',
-  ) => (
-    <View key={index}>
-      <Text
-        wordSafe
-        variant={variant}
-        tone={tone}
-        style={held ? styles.boneLine : undefined}
-        testID={`today-rep-state-line-${index + 1}`}
-      >
-        {lines[index]}
-      </Text>
-      {held ? <View style={[styles.boneBar, styles.boneWide]} /> : null}
-    </View>
-  );
   return (
     <View style={[styles.personMain, stacked && styles.personStacked]}>
       <View style={[styles.mark, held && styles.markHeld]}>
@@ -165,53 +146,72 @@ function DissolvedFrame({
         )}
       </View>
       <View style={[styles.personText, !stacked && styles.personTextInline]}>
-        {line(0, 'name')}
-        {line(1, 'secondary', 'ink')}
-        {line(2, 'secondary')}
-        {line(3, 'secondary')}
+        {lines.map((line, index) => (
+          <View key={index}>
+            <Text
+              wordSafe
+              variant={index === 0 ? 'name' : 'secondary'}
+              tone={index === 1 ? 'ink' : undefined}
+              style={held ? styles.boneLine : undefined}
+              testID={`today-rep-state-line-${index + 1}`}
+            >
+              {line}
+            </Text>
+            {held ? <View style={[styles.boneBar, styles.boneWide]} /> : null}
+          </View>
+        ))}
       </View>
     </View>
   );
 }
 
-function DissolvedRow({ rep }: { rep: DissolvedRep }) {
+/** The row's chevron; unseen in a held row, so the lines wrap alike. */
+function LinesChevron({ held = false }: { held?: boolean }) {
+  return (
+    <View style={held ? styles.boneLine : undefined}>
+      <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
+    </View>
+  );
+}
+
+function LinesRow({ rep }: { rep: LinesRep }) {
   const cell = useRowCellStyle();
   return (
     <RowLink href={rep.href} menu={menuSections(rep.menu)}>
       <Pressable
         accessible
         accessibilityRole="link"
-        accessibilityLabel={dissolvedLabel(rep.lines)}
+        accessibilityLabel={linesLabel(rep.lines)}
         accessibilityHint={rep.hint}
         onPress={() => router.push(rep.href)}
-        testID="today-rep-state-dissolved"
+        testID={`today-rep-state-${rep.kind}`}
         feedback="wash"
         style={[styles.person, cell]}
       >
-        <DissolvedFrame lines={rep.lines} />
-        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
+        <LinesFrame lines={rep.lines} />
+        <LinesChevron />
       </Pressable>
     </RowLink>
   );
 }
 
 /**
- * The dissolved row's held place: the lines the last launch kept, or the
- * stand-in sized like the longest district and member name, laid out
- * unseen in the row's own text styles so the held row wraps as the row
- * that lands on it does.
+ * A lines row's held place: the lines the last launch kept, or a stand-in
+ * sized like the longest district and member name, laid out unseen in the
+ * row's own text styles (and beside the row's own chevron) so the held row
+ * wraps as the row that lands on it does.
  */
-function DissolvedBone({ lines }: { lines?: Dissolved['lines'] | null }) {
+function LinesBone({ lines }: { lines: readonly string[] }) {
   const cell = useRowCellStyle();
   return (
     <View
-      testID="today-rep-state-dissolved-loading"
+      testID="today-rep-state-lines-loading"
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       style={[styles.person, cell]}
     >
-      <DissolvedFrame lines={lines ?? DISSOLVED_STAND_IN} held />
-      <View style={styles.chevronHeld} />
+      <LinesFrame lines={lines} held />
+      <LinesChevron held />
     </View>
   );
 }
@@ -232,17 +232,18 @@ export interface RepsLink {
 export function RepsRows({
   reps,
   vacant,
-  dissolved,
+  lines,
   link,
 }: {
   reps: readonly Rep[];
   /** Drawn in a missing federal member's place. */
   vacant?: ReactNode;
   /**
-   * The state row for a dissolved house, after the members; `held` while
-   * the election record that decides the row's form is still on its way.
+   * The state row when it is not a member's, after the members: the row,
+   * or the lines that hold its place while the election record that
+   * decides its form is still on its way.
    */
-  dissolved?: DissolvedRep | 'held' | null;
+  lines?: LinesRep | { held: readonly string[] } | null;
   link?: RepsLink | null;
 }) {
   return (
@@ -253,10 +254,10 @@ export function RepsRows({
         {reps.map((rep) => (
           <RepRow key={rep.key} rep={rep} />
         ))}
-        {dissolved === 'held' ? (
-          <DissolvedBone key="state" />
-        ) : dissolved ? (
-          <DissolvedRow key="state" rep={dissolved} />
+        {lines && 'held' in lines ? (
+          <LinesBone key="state" lines={lines.held} />
+        ) : lines ? (
+          <LinesRow key="state" rep={lines} />
         ) : null}
         {link ? (
           <LinkRow
@@ -339,23 +340,20 @@ function LinkBone() {
  */
 export function RepsBones({
   rows,
-  dissolved,
+  lines,
   link,
 }: {
   rows: 1 | 2;
-  /** The state row is a dissolved house's: its lines, or `true` for the stand-in. */
-  dissolved?: Dissolved['lines'] | true | null;
+  /** The state row is a lines row: the lines that hold its place. */
+  lines?: readonly string[] | null;
   link: boolean;
 }) {
   return (
     <InsetGroup testID="today-reps-loading-group">
       <RepBone key="federal" testID="today-rep-federal-loading" />
       {rows === 2 ? (
-        dissolved ? (
-          <DissolvedBone
-            key="state"
-            lines={dissolved === true ? null : dissolved}
-          />
+        lines ? (
+          <LinesBone key="state" lines={lines} />
         ) : (
           <RepBone key="state" testID="today-rep-state-loading" />
         )
@@ -424,8 +422,6 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     backgroundColor: colors.sunken,
   },
-  // The chevron's place in a held row, so the lines wrap at the same width.
-  chevronHeld: { width: 13 },
   bonePortrait: {
     width: 44,
     height: 44,
