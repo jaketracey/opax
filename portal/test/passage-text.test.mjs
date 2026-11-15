@@ -15,6 +15,7 @@ import {compareSearchResults} from '../src/search-sort.ts';
 import {isWitness} from '../public/speech-attribution.js';
 import { cacheKeyParams } from '../src/cache-key.ts';
 import { searchFind } from '../src/search-find.ts';
+import { collapseHearings, passageTerms, pickPassage } from '../src/search-passages.ts';
 
 const fixture = JSON.parse(readFileSync(new URL('../../tests/fixtures/passage-text.json', import.meta.url), 'utf8'));
 const {normalizePassage, passageWindow} = passageText;
@@ -94,7 +95,7 @@ test('Worker /api/search repairs stored name joins and bounds both snippet ends'
   const worker = compile(['apiSearch','searchWindow','label','calibrate'], {
     URL, URLSearchParams, Request, Response, isWitness, compareSearchResults, cacheKeyParams, searchFind,
     loadPeople:async()=>people, speakerAttribution:async()=>null, filterExpression:()=>null,
-    stripListingBoilerplate:evidence.stripListingBoilerplate,
+    stripListingBoilerplate:evidence.stripListingBoilerplate, passageTerms, pickPassage,
     SLUG_RE:/^(speech|legal|news)-(\d+)$/, DIVISION_SLUG_RE:/^division-/,
     SEARCH_PER_DEFAULT:20, SEARCH_PER_MAX:200, SEARCH_WINDOW_TOPK:200, SEARCH_TOPK_MAX:200,
     SEARCH_WINDOW_CACHE_TTL:3600, SEARCH_CACHE_TTL:600,

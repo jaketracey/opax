@@ -13,6 +13,7 @@ import ts from 'typescript';
 import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
 import { referenceOnlyPeople } from '../public/roster-party.js';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
+import { collapseHearings, passageTerms, pickPassage } from '../src/search-passages.ts';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const scopedContext = (code,context,opts) => runInNewContext(code,{personNameKey,personIndex,searchFind,...context},opts);
@@ -75,7 +76,7 @@ test('real search code sends own-house filters and drops witness or other-house 
   const calls = [];
   const api = scopedContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
     ...passageText, URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators, SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
-    stripListingBoilerplate: s => s, calibrate: s => s,
+    stripListingBoilerplate: s => s, calibrate: s => s, passageTerms, pickPassage,
     label: (r, key) => r.usermetadata.classifications.find(c => c.labelset === key)?.label,
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
     kbFetch: async (_env, _path, {body}) => { calls.push(body); return Response.json({ resources }); },
@@ -245,7 +246,7 @@ test('own-speaker search expands aliases without admitting another speaker; test
     extra: { metadata: { date: '2024-06-01', person_id: 'qld_stewart' } }, fields: {} };
   const api = scopedContext(ts.transpile(select(['searchWindow', 'filterExpression', 'canonicalSpeaker', 'TOPIC_SLUGS', 'speakerAttribution', 'foldName'])) + ';searchWindow', {
     ...passageText, URL, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators,
-    SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/, stripListingBoilerplate: s=>s, calibrate:s=>s,
+    SLUG_RE: /^speech-(\d+)$/, DIVISION_SLUG_RE: /^division-/, stripListingBoilerplate: s=>s, calibrate:s=>s, passageTerms, pickPassage,
     label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
     loadPeople:async()=>({byFold:new Map(splitSpeakers(person).map(n=>[n.toLowerCase(),person]))}),
     kbFetch:async(_env,_path,{body})=>{calls.push(body);return Response.json({resources:{own,wrong:{...own,slug:'speech-2',origin:{collaborators:['Jana Stewart']}}}});},
