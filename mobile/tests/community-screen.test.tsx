@@ -1,4 +1,5 @@
 import { withNavigationOptions } from './navigation-options';
+import { emptyBarTitle } from '../src/navigation/useTitleOnScroll';
 import { router } from 'expo-router';
 import { useEffect as mockUseEffect } from 'react';
 import { Platform } from 'react-native';
@@ -388,7 +389,12 @@ it('a discussion is titled once, by its heading; a reply is reported from its by
       }),
     );
   });
-  expect(mockOptions).toMatchObject({ title: 'Discussion', headerTitle: '' });
+  // While the page's own heading shows, the bar holds the empty title (on
+  // the Duo's rail a hidden line that keeps the title band open), not ''.
+  expect(mockOptions).toMatchObject({
+    title: 'Discussion',
+    headerTitle: emptyBarTitle,
+  });
   const flag = screen.root.findAll(
     (n) => n.props.testID === 'community-report-reply-reply-a',
   )[0]!;
