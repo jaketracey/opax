@@ -11,6 +11,17 @@ import { spokenFigures } from './format';
 import { rememberMenuAnchor } from './menu-anchor';
 import { accents, border, colors, androidControls, type Role } from './tokens';
 
+/**
+ * iOS: how long a touch rests on a surface before it highlights. Nearly every
+ * surface sits in a scroll view, and with no delay a row lit up under the
+ * finger at the start of each scroll and went dark again as the scroll took
+ * the touch. UIKit holds a scroll view's content touches the same way. A
+ * quick tap still highlights: React Native presses in at release and keeps
+ * the highlight for its minimum press time. Android's ripple is the
+ * platform's own and keeps its timing.
+ */
+export const IOS_PRESS_DELAY = 130;
+
 /** The shared touch surface; keyboard focus adds a layout-neutral outline. */
 export function Pressable({
   ref,
@@ -38,7 +49,13 @@ export function Pressable({
           ? spokenFigures(props.accessibilityLabel)
           : undefined
       }
-      {...(Platform.OS === 'android' ? { ringed } : null)}
+      {...(Platform.OS === 'android'
+        ? { ringed }
+        : {
+            unstable_pressDelay:
+              props.unstable_pressDelay ??
+              (Platform.OS === 'ios' ? IOS_PRESS_DELAY : undefined),
+          })}
       ref={ref}
       onFocus={(event) => {
         setFocused(true);
