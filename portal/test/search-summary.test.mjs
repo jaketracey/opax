@@ -64,7 +64,7 @@ test('listing boilerplate is removed without removing substantive grant data or 
  assert.equal(stripListingBoilerplate('An audit is at https://example.gov.au/report.pdf.'),'An audit is at https://example.gov.au/report.pdf.');
  assert.equal(summary.summarySources([{...rows[0],snippet:`The full listing can be found at ${url}`}]).length,0);
  const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
- const clean=runInNewContext(app.slice(app.indexOf('function cleanPassage('),app.indexOf('\nfunction ',app.indexOf('function cleanPassage(')+1))+';cleanPassage');
+ const clean=runInNewContext(app.slice(app.indexOf('// speaker-label:begin'),app.indexOf('\nfunction ',app.indexOf('function cleanPassage(')+1))+';cleanPassage');
  assert.doesNotMatch(clean(`Grant award: $250,000. The full listing can be found at [${url}](${url})`),/listing|dpmc/);
 });
 test('oversized or malformed model output is discarded',async()=>{

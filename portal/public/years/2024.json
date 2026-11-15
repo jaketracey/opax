@@ -257,8 +257,9 @@
    },
    {
     "name": "Melissa Horne",
-    "party": null,
-    "speeches": 3
+    "party": "Labor",
+    "speeches": 3,
+    "party_basis": "roster"
    },
    {
     "name": "Jim Chalmers",

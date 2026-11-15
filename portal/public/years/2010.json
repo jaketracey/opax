@@ -237,13 +237,15 @@
    },
    {
     "name": "Eric Abetz",
-    "party": null,
-    "speeches": 5
+    "party": "Liberal",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Mathias Cormann",
-    "party": null,
-    "speeches": 5
+    "party": "Liberal",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Anthony Albanese",
@@ -252,8 +254,9 @@
    },
    {
     "name": "Gary Humphries",
-    "party": null,
-    "speeches": 4
+    "party": "Liberal",
+    "speeches": 4,
+    "party_basis": "roster"
    },
    {
     "name": "Bruce Billson",
@@ -262,8 +265,9 @@
    },
    {
     "name": "George Brandis",
-    "party": null,
-    "speeches": 3
+    "party": "Liberal",
+    "speeches": 3,
+    "party_basis": "roster"
    }
   ],
   "parties": [

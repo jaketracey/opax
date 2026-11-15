@@ -244,18 +244,21 @@
    },
    {
     "name": "Helen Coonan",
-    "party": null,
-    "speeches": 5
+    "party": "Liberal",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Steve Fielding",
-    "party": null,
-    "speeches": 5
+    "party": "Family First",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Richard Colbeck",
-    "party": null,
-    "speeches": 5
+    "party": "Liberal",
+    "speeches": 5,
+    "party_basis": "roster"
    }
   ],
   "parties": [

@@ -266,8 +266,9 @@
    },
    {
     "name": "Katy Gallagher",
-    "party": null,
-    "speeches": 3
+    "party": "Labor",
+    "speeches": 3,
+    "party_basis": "roster"
    },
    {
     "name": "Barbara Pocock",

@@ -4801,10 +4801,12 @@ async function subjectMentions(name, container, heading, moneyContext = false, {
       : data.results.slice(0, 5);
     if (!rows.length) return;
     fillDatedMentionParties(rows, roster);
+    // A row with no passage (retrieval matched only the record's speaker
+    // label) says where its words are, as the search view does.
     const items = rows.map((r) => `
       <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(person ? (heldBackHelpers?.mentionTitleCase || String)(mentionTitle(r)) : displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
-        <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p>${excerptNoticeHTML(r)}</li>`).join("");
+        <p class="snippet">${esc(cleanPassage(r.snippet).slice(0, 220) || (r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage."))}</p>${excerptNoticeHTML(r)}</li>`).join("");
     container.insertAdjacentHTML("beforeend",
       `<div class="entry-section-head"><h2 class="subject-section-title">${esc(heading)}</h2>
         <a href="${esc(searchHash(`"${name}"`, {}))}">All mentions</a></div>
@@ -7175,6 +7177,25 @@ function topicTideHTML(data, slug, phrase) {
    on a committee transcript, the hearing's context block and the witness's
    name ("[Legal and Constitutional … Police] Ms Barrett : Thank you"). None
    of that is the speech. Display only; exports and citations quote the record. */
+// speaker-label:begin
+// One definition of a transcript's speaker label, held as a copy in
+// src/search-passages.ts and public/app.js; test/search-quality.test.mjs keeps
+// the two copies identical. A label is a title, at most a name and any number
+// of parentheticals, then a colon: "Senator ADA QUILL:", "The PRESIDENT:",
+// "Mr ALBANESE (Grayndler—Prime Minister) (14:02):", "Dr de Brouwer:".
+const LABEL_TITLES = ['the hon\\.?', 'hon\\.?', 'mr', 'mrs', 'ms', 'miss', 'dr', 'prof\\.?', 'professor', 'senator', 'madam', 'rev\\.?',
+  '(?:deputy |assistant |acting )?commissioner', '(?:lieutenant |major )?general', 'brigadier', '(?:vice |rear )?admiral', 'air (?:chief |vice )?marshal',
+  '(?:the )?(?:acting |deputy )?(?:chair|president|speaker)']
+  .map(title => title.replace(/[a-z]/g, letter => '[' + letter + letter.toUpperCase() + ']').replace(/ /g, '\\s+')).join('|')
+const LABEL_NAME = "(?:\\s+(?:[A-Z][A-Za-z'’.\\-]*|de|van|von|la|le|di|da|du|der|den|del))"
+const LABEL_CORE = '(?:' + LABEL_TITLES + ')' + LABEL_NAME + '{0,5}\\s*(?:\\([^)]{0,80}\\)\\s*)*'
+/** The whole text is a label. */
+const SPEAKER_LABEL = new RegExp('^' + LABEL_CORE + ':$')
+/** A label opens the text; what follows is what the speaker said. */
+const SPEAKER_LABEL_LEAD = new RegExp('^' + LABEL_CORE + ':\\s*')
+/** The "[committee, date, portfolio, agency]" block a committee transcript puts above a turn. */
+const HEARING_HEADER = /^\[[^\]]{0,400}\]\s*/
+// speaker-label:end
 function cleanPassage(text) {
   let raw = String(text || "").replace(/\b(?:the\s+)?full\s+listing\s+can\s+be\s+found\s+at\s*:?\s*(?:\[[^\]\n]*\]\(https?:\/\/[^\s)]+\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>]+)\.?/gi, '');
   // A heading the source glued above the passage: "Gambling\n\nGambling is also…"
@@ -7192,7 +7213,24 @@ function cleanPassage(text) {
   // committee turn: "Ms Barrett : " (a short name, then a colon)
   s = s.replace(/^(?:mr|mrs|ms|miss|dr|prof\.?|senator|chair|the chair)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*)?\s*:\s+/i, "");
   s = s.replace(/^[:;,—–\-\s]+/, "");
+  // A passage that is only the label of who is about to speak ("Senator DAVID
+  // POCOCK:", "The PRESIDENT:") has no words of the record in it; a label that
+  // opens a passage gives way to what was said.
+  if (SPEAKER_LABEL.test(s)) return "";
+  s = s.replace(SPEAKER_LABEL_LEAD, "");
   return s;
+}
+/* A committee record's title in a result list. Estimates get the short form
+   (committeeShortTitle). An inquiry keeps its own name, with the committee
+   said once: older records hold "X Committee - X Committee 27/05/2026 ...". */
+function committeeResultTitle(title) {
+  const t = String(title || "").replace(/\s+/g, " ").trim();
+  const short = committeeShortTitle(t);
+  if (short.includes(" · ")) return short;
+  const m = /^(.+?) - (.+)$/.exec(t);
+  if (!m || !m[2].toLowerCase().startsWith(m[1].toLowerCase())) return t;
+  const rest = m[2].slice(m[1].length).replace(/^[\s:–—-]+/, "");
+  return rest ? `${m[1]} - ${rest}` : m[1];
 }
 
 /* "Legal and Constitutional Affairs Legislation Committee - Legal and … 28/05/2026
@@ -13125,21 +13163,28 @@ function renderResults(results) {
       // Briefs mode: a brief is OPAX's words, in the sans, under the list's one
       // machine label; a row with no brief keeps the record's own passage in
       // the serif. Each says which it is to a screen reader.
+      // A record with no passage to show (retrieval matched only its speaker
+      // label) says where its words are, as the other passage lists do.
+      const passageText = cleanPassage(r.snippet);
       const text = r.kind === "division"
         ? `<div id="search-passage-${index}" class="search-result-text snippet division-markdown">${billNoteHTML(r.snippet)}</div>`
         : searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(brief)}</p>`
-        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="visually-hidden">From the record: </span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
-      const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
+        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" && passageText ? `<span class="visually-hidden">From the record: </span>` : ""}${passageText ? highlightHTML(passageText, lastSearch.query) : esc(r.kind === "speech" ? "Open the speech to read the passage." : "Open the record to read the passage.")}</p>`;
+      const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}`
+        : isCommitteeChamber(r.chamber) ? committeeResultTitle(displayTitle(r)) : displayTitle(r);
       // RecordRow (§5.2): kind · date · place above the title, then who spoke.
       const where = [
         isCommitteeChamber(r.chamber) ? `${esc(committeeHouse(r.chamber))} committee evidence` : "",
         r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
       ].filter(Boolean).join(" · ");
+      // One card stands for every turn of this hearing the search found.
+      const passages = Number(r.hearing_passages) > 1 ? `${Number(r.hearing_passages)} passages from this hearing` : "";
       const meta = [
         recordTypeLink(r.kind, lastSearch.query, lastSearch.filters),
         r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
         where,
+        passages,
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const byline = [
         r.kind === "speech" ? speechIdentityHTML(r) : "",
@@ -13577,7 +13622,8 @@ async function runSearch(page = 1) {
   if (fresh) searchMeaningOpen = null;
   $("panel-search").classList.remove("is-meaning-closed");
   try {
-    const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
+    // fill=1: the reader's own results page may fill a label-only card from its record (src/passage-fill.ts).
+    const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}&fill=1`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
     const suggestions = results.length ? [] : searchRecoverySuggestions(q || f.speaker, data.suggestions);

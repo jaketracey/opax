@@ -14,6 +14,7 @@ import { isWitness } from '../public/speech-attribution.js';
 import { CATALOG_KINDS } from '../src/catalog-search.ts';
 import { tokens as catalogTokens } from '../src/catalog-query.mjs';
 import { noRecordMentions } from '../src/search-mention.ts';
+import { collapseHearings, passageTerms, pickPassage } from '../src/search-passages.ts';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const names = ['apiSearch', 'apiUnifiedSearch', 'searchWindow', 'kbFetch', 'json', 'cacheStore', 'withCacheStatus', 'label', 'calibrate'];
@@ -38,7 +39,7 @@ function fixture(upstream = answer, extra = {}) {
     searchCatalogPaged: async () => ({ stubs: [], total: 0, truncated: false }),
     loadPeople: async () => ({ byFold: new Map() }), speakerAttribution: async () => null,
     filterExpression: () => filters, speakerPrints: async () => null,
-    stripListingBoilerplate: text => text, foldName: text => text.toLowerCase(), personScope: () => null, noRecordMentions,
+    stripListingBoilerplate: text => text, foldName: text => text.toLowerCase(), personScope: () => null, noRecordMentions, collapseHearings, passageTerms, pickPassage, fillSearchPassages: async () => {}, FILL_MAX: 20,
     SLUG_RE: /^(speech|legal)-(\d+)$/, DIVISION_SLUG_RE: /^division-/,
     SEARCH_PER_DEFAULT: 20, SEARCH_PER_MAX: 200, SEARCH_WINDOW_TOPK: 200, SEARCH_TOPK_MAX: 200,
     SEARCH_WINDOW_CACHE_TTL: 3600, SEARCH_FALLBACK_CACHE_TTL: 60, SEARCH_CACHE_TTL: 600,

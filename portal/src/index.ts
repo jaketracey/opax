@@ -100,6 +100,8 @@ import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
 import { cacheKeyParams } from './cache-key'
+import { collapseHearings, passageTerms, pickPassage, type ScoredPassage } from './search-passages'
+import { fillPassages, recordBody, FILL_MAX, type FillRow } from './passage-fill'
 import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
 import { oauthRoute } from './community-oauth'
@@ -113,7 +115,7 @@ import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
-import { networkBlock } from './network-block'
+import { networkBlock, CRAWLER_UA } from './network-block'
 import { openaiAppsChallenge, OPENAI_APPS_CHALLENGE_PATH } from './openai-apps-challenge'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
@@ -535,6 +537,8 @@ interface SearchWindow extends SearchRetrieval {
 }
 
 interface SearchResult {
+  /** On /api/search-all: how many results of one committee hearing this card stands for, when more than one. */
+  hearing_passages?: number
   href?: string
   source?: string
   kind: string
@@ -587,10 +591,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs or word_count.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v5-no-label-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v5-no-label-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k', 'fill'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -623,7 +627,12 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const ordered = [...win.results].sort((a, b) => compareSearchResults(a, b, sort))
   const pageCount = Math.max(1, Math.ceil(ordered.length / per))
   const clamped = Math.min(page, pageCount)
-  const rows = ordered.slice((clamped - 1) * per, clamped * per)
+  let rows = ordered.slice((clamped - 1) * per, clamped * per)
+  // A page a reader sees (never the 200-row window /api/search-all takes, which fills its own page).
+  if (!options.suggest && per <= FILL_MAX) {
+    rows = rows.map(row => ({ ...row }))
+    await fillSearchPassages(rows, request, url, env, ctx)
+  }
   const years: Record<string, number> = {}
   for (const row of win.results) {
     const year = row.date?.match(/^(\d{4})/)?.[1]
@@ -650,6 +659,79 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   if (win.fallback) out.headers.set('cache-control', 'no-store')
   else cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
+}
+
+const PASSAGE_FILL_TTL = 7 * 86400
+const PASSAGE_FILL_EMPTY_TTL = 86400
+const PASSAGE_FILL_DAILY_READS = 200
+/** The day's counter is kept this long, past every community_limits cleanup (they delete by expires_at), so a day the allowance ran out can be read back. */
+const PASSAGE_FILL_COUNTER_DAYS = 120
+/** The UTC day (and the allowance) this isolate last saw spent: later pages that day ask the counter nothing. */
+let passageFillSpent = ''
+/** What PASSAGE_FILL_DAILY_READS allows: unset is the default; anything that is not a whole number of reads ("off", "", "-1") is none. */
+function passageFillAllowance(env: Env): number {
+  if (env.PASSAGE_FILL_DAILY_READS === undefined) return PASSAGE_FILL_DAILY_READS
+  return /^\d{1,6}$/.test(String(env.PASSAGE_FILL_DAILY_READS).trim()) ? Number(env.PASSAGE_FILL_DAILY_READS) : 0
+}
+/**
+ * Fill the label-only cards of one page of a speaker search from each record's
+ * own text (src/passage-fill.ts).
+ *  - Only the search view's own request does this: it says so (fill=1) and it
+ *    filters by speaker, which is where retrieval matches the speaker label
+ *    and nothing else. Person pages, the apps and every other caller get the
+ *    search as it was, and so does a crawler, by Cloudflare's verified-bot
+ *    signal or the crawler user agents the network block already knows.
+ *  - Kept per record in the Cache API, keyed on the passage version alone. A
+ *    record's slug is its row id in the corpus (speech-<id>), which a
+ *    re-ingest keeps, so the nightly cache epoch has no bearing on it.
+ *  - A read is one knowledge-box query (GET /slug, the read hansard_search and
+ *    /api/resource make). A request that would read passes the search limiter
+ *    first, even over a cached window, and the reads are then taken from a
+ *    daily allowance counted in community_limits like the MCP tier's guard.
+ *    With no counter, or once it is spent, no read is made and the card keeps
+ *    its fallback. The day's row counts every read asked for and is kept 120
+ *    days: past the allowance, hits minus the allowance is the reads refused.
+ *  - A metered request (MCP: env.KB_METER) reads nothing new. It is served
+ *    kept passages only, so a fill never spends a caller's Progress allowance
+ *    or turns their search into a limit error.
+ */
+async function fillSearchPassages(rows: FillRow[], request: Request, url: URL, env: Env, ctx: ExecutionContext, limited = false): Promise<void> {
+  if (url.searchParams.get('fill') !== '1' || !url.searchParams.get('speaker')?.trim()) return
+  const cf = (request as Request & { cf?: { botManagement?: { verifiedBot?: boolean }; verifiedBotCategory?: string } }).cf
+  if (cf?.botManagement?.verifiedBot || cf?.verifiedBotCategory || CRAWLER_UA.test(request.headers.get('user-agent') ?? '')) return
+  const key = (slug: string) => cacheRequest('passage-fill-v2', slug)
+  const daily = passageFillAllowance(env)
+  const done = await fillPassages(rows, {
+    signal: request.signal,
+    async cached(slug) {
+      const hit = await caches.default.match(key(slug))
+      return hit ? String((await hit.json() as { passage?: unknown }).passage ?? '') : undefined
+    },
+    keep(slug, passage) { cacheStore(ctx, key(slug), json({ passage }), passage ? PASSAGE_FILL_TTL : PASSAGE_FILL_EMPTY_TTL) },
+    async read(slug, readSignal) {
+      const res = await kbFetch(env, `/slug/${slug}?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text`, { signal: readSignal })
+      if (!res.ok) throw new Error(`record read failed (${res.status})`)
+      return recordBody(await res.json())
+    },
+    ...(env.KB_METER || !env.COMMUNITY_DB || !daily ? {} : {
+      async reserve(n: number) {
+        const day = Math.floor(Date.now() / 86_400_000)
+        if (passageFillSpent === `${day}:${daily}`) return 0
+        // A request about to read counts against the search limiter, cached window or not.
+        if (!limited && await rateLimited(env.SEARCH_LIMITER, request, env.MCP_LIMIT_KEY)) return 0
+        // Taken in one statement before any read, so pages filling at once cannot pass the allowance together.
+        const row = await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET hits=hits+excluded.hits RETURNING hits')
+          .bind(`passage-fill-day:${day}`, n, (day + PASSAGE_FILL_COUNTER_DAYS) * 86400).first<{ hits: number }>()
+        const hits = row?.hits ?? Infinity
+        if (hits >= daily) {
+          passageFillSpent = `${day}:${daily}`
+          if (hits - n < daily) console.warn(JSON.stringify({ kind: 'passage_fill_daily_cap', level: 'warn', day: day * 86400, hits }))
+        }
+        return Math.max(0, Math.min(n, daily - (hits - n)))
+      },
+    }),
+  })
+  if (done.reads) console.log(JSON.stringify({ kind: 'passage_fill', ...done }))
 }
 
 /** Unified public search. Existing /api/search callers retain document-only semantics. */
@@ -728,6 +810,10 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   // Select the same relevance window before sorting, so changing order never
   // replaces matches or changes the count between pages.
   combined.sort((a, b) => compareSearchResults(a, b, 'relevance'))
+  // One card per committee hearing: the best-ranked turn stands for the rest
+  // and carries their count, before the window is cut, so the total, the years
+  // and the pages are those of the cards shown.
+  const cards = options.suggest ? combined : collapseHearings(combined)
   // Suggestions keep different collections visible and avoid sending the same
   // profile repeatedly for several matching records or source variants.
   const seen = new Set<string>(), kinds = new Map<string, number>()
@@ -736,7 +822,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
     if (seen.has(href) || (kinds.get(row.kind) || 0) >= 2) return false
     seen.add(href); kinds.set(row.kind, (kinds.get(row.kind) || 0) + 1)
     return true
-  }) : combined
+  }) : cards
   const rows = diverse.slice(0, options.suggest ? 9 : 200).sort((a, b) => compareSearchResults(a, b, sort))
   const per = Math.min(200, Number(url.searchParams.get('per') || 20))
   const pageCount = Math.max(1, Math.ceil(rows.length / per))
@@ -755,6 +841,9 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       return { ...record, score: row.score, sort_date: record.date || row.sort_date }
     })
   }
+  // Label-only cards on the page shown take their passage from the record's own text.
+  // This request passed the search limiter on its way in.
+  if (!options.suggest) await fillSearchPassages(shown as FillRow[], request, url, env, ctx, true)
   // No record mentions the query (src/search-mention.ts): the page leads with the
   // recovery state, and the meaning-ranked records stay one tap away.
   const noMention = !options.suggest && noRecordMentions({ query: url.searchParams.get('q'), mode: url.searchParams.get('mode'),
@@ -780,10 +869,8 @@ async function searchWindow(
 ): Promise<SearchWindow | null> {
   const { q, mode, kind, topK, url } = opts
   const speakerDirectory = await loadPeople(env)
-  const phrases = [...q.matchAll(/"([^"]{2,})"/g)].map((m) => m[1].toLowerCase().trim())
-  const queryTerms = phrases.length
-    ? phrases
-    : q.toLowerCase().split(/[^\p{L}\p{N}']+/u).filter((w) => w.length >= 3)
+  // A speaker's own name is not what a passage is about (src/search-passages.ts).
+  const queryTerms = passageTerms(q, url.searchParams.get('speaker'))
 
   const body: Record<string, unknown> = {
     query: q,
@@ -848,30 +935,16 @@ async function searchWindow(
     // The snippet, though, should be the passage that actually says what the
     // reader searched for: a quoted phrase, else the most query words. Among
     // hits, the higher calibrated score wins; with no hit, the best paragraph.
-    let bestText = ''
-    let bestScore = 0
-    let bestHits = -1
-    let hitAt = -1
+    // A paragraph that is only the speaker's label is never the passage; a
+    // record with nothing else matched has an empty snippet.
+    const passages: ScoredPassage[] = []
     for (const field of Object.values(resource.fields ?? {})) {
       for (const para of Object.values(field.paragraphs ?? {})) {
-        const cal = calibrate(para.score, para.score_type)
         const passage = stripListingBoilerplate(normalizePassage(para.text))
-        if (!passage) continue
-        const lower = passage.toLowerCase()
-        let hits = 0
-        let at = -1
-        for (const t of queryTerms) {
-          const i = lower.indexOf(t)
-          if (i >= 0) { hits++; if (at < 0 || i < at) at = i }
-        }
-        if (hits > bestHits || (hits === bestHits && cal >= bestScore)) {
-          bestHits = hits
-          bestScore = cal
-          bestText = passage
-          hitAt = at
-        }
+        if (passage) passages.push({ text: passage, score: calibrate(para.score, para.score_type) })
       }
     }
+    const { text: bestText, score: bestScore, at: hitAt } = pickPassage(passages, queryTerms)
     // Window the snippet around the first hit so the relevant sentence shows.
     const windowed = passageWindow(bestText, 600, hitAt > 220 ? hitAt - 200 : 0)
     const division = DIVISION_SLUG_RE.test(slug)
