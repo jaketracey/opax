@@ -9,6 +9,7 @@ import {
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { isPartyLabel, partyText, presidingRole } from '../../design/party';
+import { personDisplayName } from '../../design/person-name';
 import { personRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
 import type { Directory, ElectorateView } from '../your-mp/model';
@@ -53,14 +54,7 @@ export function termSpan(
  * roster ("LEO McLEAY") in title case ("Leo McLeay"), at render. Names
  * already in mixed case are left alone.
  */
-export function rosterName(name: string): string {
-  if (!/\b[A-Z]{3,}\b|\b(Mc|Mac)[A-Z]{2,}\b/.test(name)) return name;
-  return name.replace(
-    /\b(Mc|Mac)?([A-Z])([A-Z]+)\b/g,
-    (_, prefix: string | undefined, first: string, rest: string) =>
-      `${prefix ?? ''}${first}${rest.toLowerCase()}`,
-  );
-}
+export const rosterName = personDisplayName;
 
 function HistoryRow({
   personId,
