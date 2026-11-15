@@ -117,6 +117,7 @@ import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
 import { networkBlock, CRAWLER_UA } from './network-block'
 import { openaiAppsChallenge, OPENAI_APPS_CHALLENGE_PATH } from './openai-apps-challenge'
+import { appSiteAssociationResponse, APP_SITE_ASSOCIATION_PATH } from './app-site-association'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
@@ -3859,7 +3860,7 @@ function ogImageFor(canonical: string, electionState?: VicElectionState): string
 const CARD_QUERY = ['award', 'jur', 'program', 'largest'] as const
 const SITE_TITLE = 'OPAX: ask what Australian politicians actually said'
 const SITE_DESCRIPTION =
-  'Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
+  'Ask questions of Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
 
 // TOPIC_NAMES lives in ./topic-names (shared with the daily post).
 
@@ -3905,7 +3906,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   search: {
     title: 'Search Hansard: every parliamentary speech · OPAX',
-    description: 'Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year. Every result links to the official record.',
+    description: 'Search Australian parliamentary speeches by keyword, speaker, party, state, topic and year. Every result links to the official record.',
     query: true,
   },
   money: {
@@ -5461,6 +5462,8 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   const shardPath = `/grants/${jurisdiction}/shard-${String(recipient.sh).padStart(2, '0')}.json`
   const detail = await timed('recipient-content', () => recordAssetJson<Record<string, GrantDetail>>(env, shardPath)).then(shard=>shard[fileKey]).catch(()=>null)
   if (!detail || detail.id !== id || typeof detail.n !== 'string' || !Number.isFinite(detail.t) || !Number.isInteger(detail.c) || !Array.isArray(detail.grants)) return {title: 'Grant recipient temporarily unavailable · OPAX', description: 'Recipient award records could not be loaded. Please try again.', canonical, ogType: 'website', status: 503, jsonLd: null, prerender: null, card: null}
+  // The catalogue's programs, already in memory with the recipient index: the page's next-steps block links a program by them.
+  const programs = await loadGrantCatalogue(jurisdiction, env).then(c => c.programs || [], () => [])
   const awardId = url.searchParams.get('award')
   if (awardId) {
     // Resolve the source shard, not the rotating publication shortlist: old
@@ -5473,7 +5476,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
     const original = award.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` : `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(award.id)}`
     return { title: `${award.id}: ${recipient.n} · OPAX`, description, canonical: selected, ogType: 'article', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: `${award.id}: ${recipient.n}`, description, url: selected, citation: original },
-      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
+      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath, undefined, programs)), [], recipientMetaLine(jurisdiction, detail.k)),
       card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v!), label: 'published grant award' } } }
   }
   const qld = jurisdiction === 'qld'
@@ -5485,7 +5488,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   return { title: `${recipient.n} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: recipient.n, url: canonical, description,
       mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
-    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
+    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath, undefined, programs)), [], recipientMetaLine(jurisdiction, detail.k)),
     card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
 }
 
@@ -7451,6 +7454,8 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     setAppStoreProvider(env.APP_STORE_PROVIDER)
     const url = new URL(request.url)
+    // Universal links (src/app-site-association.ts): answered first, as Apple's fetcher follows no redirect.
+    if (url.pathname === APP_SITE_ASSOCIATION_PATH) return withSecurityHeaders(appSiteAssociationResponse(request, env.APPLE_TEAM_ID), url)
     if (url.pathname === '/gov-advertising/ready.json') return withSecurityHeaders(await govAdvertisingReady(request,govAdvertisingReader(env.ASSETS)),url)
     if (url.pathname === '/tax-expenditures/ready.json') return withSecurityHeaders(await taxExpendituresReady(request,taxExpendituresReader(env.ASSETS)),url)
     if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
