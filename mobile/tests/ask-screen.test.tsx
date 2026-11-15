@@ -1,5 +1,7 @@
 import { withNavigationOptions } from './navigation-options';
 import { useState } from 'react';
+import * as measure from '../src/features/money/map/measure';
+import { defaultOptions } from '../src/features/ask/model';
 import {
   HeaderHeightContext,
   NavigationContext,
@@ -41,6 +43,9 @@ import {
   caretAfterSelection,
   caretSelection,
   composerFieldCap,
+  composerFieldRoomEstimate,
+  placeholderEms,
+  placeholderFits,
   composerLines,
   prefilledCaret,
 } from '../src/features/ask/AskDock';
@@ -1749,6 +1754,239 @@ test('a later read of the seat keeps the starter that is drawn: Try asking is ne
   expect(byId('ask-starter-0').length).toBeGreaterThan(0);
 });
 
+const FULL = 'Ask about the public record';
+const SHORT = 'Ask about the record';
+const placeholderLine = () =>
+  view!.root.find(
+    (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
+  );
+const askField = () =>
+  view!.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'ask-field',
+  );
+test.each([
+  ['the default size, 402 pt', 1, 402, FULL],
+  ['the default size, 375 pt', 1, 375, FULL],
+  ['xLarge, 402 pt', 1.118, 402, FULL],
+  // 232.5 pt of words in a 231 pt field: cut, so the short line.
+  ['xLarge, 375 pt', 1.118, 375, SHORT],
+  ['xxLarge, 402 pt', 1.235, 402, SHORT],
+  ['xxLarge, 375 pt', 1.235, 375, SHORT],
+  // At the cap the placeholder draws exactly as it does at AX3.
+  ['xxxLarge, 402 pt', 1.353, 402, SHORT],
+  ['xxxLarge, 375 pt', 1.353, 375, SHORT],
+  ['AX1, 402 pt', 1.786, 402, SHORT],
+  ['AX3, 402 pt', 2.643, 402, SHORT],
+  ['AX5, 402 pt', 3.571, 402, SHORT],
+])(
+  '%s: the composer draws the placeholder that fits, and VoiceOver hears the full words',
+  async (_size, fontScale, width, drawn) => {
+    const original = Dimensions.get('window');
+    Dimensions.set({
+      window: { ...original, width, height: 874, fontScale },
+    });
+    try {
+      await mount();
+      expect(placeholderLine().props.children).toBe(drawn);
+      expect(one('ask-question').props.accessibilityHint).toBe(FULL);
+      expect(one('ask-question').props.accessibilityLabel).toBe('Question');
+      // The field's own width decides when it changes later.
+      await act(async () => {
+        askField().props.onLayout({ nativeEvent: { layout: { width: 120 } } });
+      });
+      expect(placeholderLine().props.children).toBe(SHORT);
+      await act(async () => {
+        askField().props.onLayout({ nativeEvent: { layout: { width: 600 } } });
+      });
+      expect(placeholderLine().props.children).toBe(FULL);
+    } finally {
+      Dimensions.set({ window: original });
+    }
+  },
+);
+
+test.each([
+  // Public Sans is wider: about 218 dp of words in a 208 dp field.
+  ['360 dp', 360, SHORT],
+  ['412 dp', 412, FULL],
+])(
+  'Android at the default size, %s: the native hint is the line that fits, and TalkBack keeps the full words',
+  async (_size, width, hint) => {
+    const original = Dimensions.get('window');
+    Dimensions.set({
+      window: { ...original, width, height: 800, fontScale: 1 },
+    });
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      await mount();
+      expect(one('ask-question').props.placeholder).toBe(hint);
+      expect(one('ask-question').props.accessibilityHint).toBe(
+        hint === SHORT ? FULL : undefined,
+      );
+    } finally {
+      platform.restore();
+      Dimensions.set({ window: original });
+    }
+  },
+);
+
+test('with options chips the first frame already has the right line: the field is read before paint, with no onLayout', async () => {
+  const original = Dimensions.get('window');
+  // 402 pt at xLarge with chips: the stand-in says the full words fit
+  // (250 pt of room for 247 pt), the field itself is narrower.
+  Dimensions.set({
+    window: { ...original, width: 402, height: 874, fontScale: 1.118 },
+  });
+  const read = jest
+    .spyOn(measure, 'frameOf')
+    .mockImplementation((ref) =>
+      (ref.current as { props?: { testID?: string } } | null)?.props?.testID ===
+      'ask-field'
+        ? { width: 240, height: 44 }
+        : null,
+    );
+  try {
+    await act(async () => {
+      askSession.options({ ...defaultOptions, kind: 'speech' });
+    });
+    await mount();
+    // The chips are on: the field has its inset.
+    expect(StyleSheet.flatten(askField().props.style).marginLeft).toBe(8);
+    expect(read).toHaveBeenCalled();
+    // No onLayout was sent: the choice came from the read before paint.
+    expect(placeholderLine().props.children).toBe(SHORT);
+    // The stand-in alone would have drawn the full words, then swapped.
+    expect(
+      placeholderFits({
+        fontScale: 1.118,
+        room: composerFieldRoomEstimate(402, true),
+      }),
+    ).toBe(true);
+  } finally {
+    read.mockRestore();
+    await act(async () => {
+      askSession.options({ ...defaultOptions });
+    });
+    Dimensions.set({ window: original });
+  }
+});
+
+test('the fit rule: the full words at their drawn size against the field', () => {
+  // 13 em of the drawn size on iOS; the size stops at the 23 pt cap.
+  expect(placeholderEms()).toBe(13);
+  expect(placeholderFits({ fontScale: 1, room: 221 })).toBe(true);
+  expect(placeholderFits({ fontScale: 1, room: 220 })).toBe(false);
+  expect(placeholderFits({ fontScale: 1.353, room: 299 })).toBe(true);
+  expect(placeholderFits({ fontScale: 1.353, room: 298 })).toBe(false);
+  expect(placeholderFits({ fontScale: 3.571, room: 299 })).toBe(true);
+  // The stand-in for an unmeasured field.
+  expect(composerFieldRoomEstimate(402, false)).toBe(258);
+  expect(composerFieldRoomEstimate(402, true)).toBe(250);
+  const platform = jest.replaceProperty(Platform, 'OS', 'android');
+  try {
+    // 13.5 em on Android, whose hint is not capped, and wider buttons.
+    expect(placeholderEms()).toBe(13.5);
+    expect(composerFieldRoomEstimate(360, false)).toBe(208);
+    expect(placeholderFits({ fontScale: 1, room: 229 })).toBe(false);
+    expect(placeholderFits({ fontScale: 1, room: 230 })).toBe(true);
+    expect(placeholderFits({ fontScale: 2, room: 458 })).toBe(false);
+  } finally {
+    platform.restore();
+  }
+});
+
+describe('the starter box is held from when Try asking is first seen, not first mounted (b80 sweep, AX3)', () => {
+  // Ask is mounted with the tabs at launch, before any seat is read, and
+  // opened later. The navigator says when it is the screen in front.
+  const original = Dimensions.get('window');
+  let focused = false;
+  let onFocus: (() => void)[] = [];
+  const navigation = {
+    setOptions: jest.fn(),
+    getState: () => ({ index: 0, routes: [{ key: 'ask', name: 'ask' }] }),
+    isFocused: () => focused,
+    addListener: (type: string, handler: () => void) => {
+      if (type === 'focus') onFocus.push(handler);
+      return () => {
+        onFocus = onFocus.filter((item) => item !== handler);
+      };
+    },
+  };
+  const mountBehind = async () => {
+    await act(async () => {
+      view = create(
+        <NavigationContext.Provider value={navigation as never}>
+          <AskScreen />
+        </NavigationContext.Provider>,
+      );
+    });
+    return view!;
+  };
+  const redraw = () =>
+    act(async () => {
+      askSession.setDraft(' ');
+      askSession.setDraft('');
+    });
+  const open = () =>
+    act(async () => {
+      focused = true;
+      onFocus.forEach((handler) => handler());
+    });
+  beforeEach(() => {
+    focused = false;
+    onFocus = [];
+    Dimensions.set({
+      window: { ...original, width: 402, height: 874, fontScale: 2.643 },
+    });
+  });
+  afterEach(() => Dimensions.set({ window: original }));
+
+  test('mounted at launch with the seat unread, opened once there is none: the card is its starter, nothing held', async () => {
+    jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(undefined);
+    await mountBehind();
+    // Behind the other tabs the box follows the seat: held while it is
+    // being read.
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    // The device answers that no seat is saved, long before Ask is opened:
+    // the hold is let go, still unseen.
+    jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(null);
+    await redraw();
+    expect(byId('ask-starter-held').length).toBe(0);
+    await open();
+    // The card is the one starter at its own height: no unseen candidates
+    // making it as tall as the longest member's question.
+    expect(byId('ask-starter-held').length).toBe(0);
+    expect(byId('ask-starter-place').length).toBe(0);
+    expect(byId('ask-starter-0').length).toBeGreaterThan(0);
+    // And it stays that way.
+    await redraw();
+    expect(byId('ask-starter-held').length).toBe(0);
+  });
+
+  test('opened while the seat is still being read: held, as before, and for the life of the page', async () => {
+    jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(undefined);
+    await mountBehind();
+    // The tree the tab shows first, before the focus listener has run, is
+    // already the held box: nothing grows in after first sight.
+    const before = byId('ask-starter-place').length;
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    expect(before).toBeGreaterThan(0);
+    await open();
+    expect(byId('ask-starter-place').length).toBe(before);
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    expect(byId('ask-starter-place').length).toBeGreaterThan(0);
+    jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(null);
+    await redraw();
+    // The box does not change size once it has been seen.
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    expect(byId('ask-starter-0').length).toBeGreaterThan(0);
+  });
+});
+
 test('a seat already known when Try asking is first drawn needs no held box', async () => {
   await mount();
   expect(byId('ask-starter-held').length).toBe(0);
@@ -2879,8 +3117,10 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
     const placeholder = r.root.find(
       (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
     );
+    // At accessibility sizes the drawn line is the short one, which fits;
+    // the full words above stay VoiceOver's hint.
     expect(placeholder.props).toMatchObject({
-      children: 'Ask about the public record',
+      children: 'Ask about the record',
       numberOfLines: 1,
       maxFontSizeMultiplier: chromeTextScaleCap,
     });
@@ -2907,7 +3147,11 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
     const platform = jest.replaceProperty(Platform, 'OS', 'android');
     try {
       const { r, field } = dock();
-      expect(field.props.placeholder).toBe('Ask about the public record');
+      // Still the native hint, at the reader's size. At this size the full
+      // words do not fit one line, so it is the short line; TalkBack keeps
+      // the full words.
+      expect(field.props.placeholder).toBe('Ask about the record');
+      expect(field.props.accessibilityHint).toBe('Ask about the public record');
       expect(field.props.maxFontSizeMultiplier).toBeUndefined();
       expect(
         r.root.findAll((n) => n.props.testID === 'ask-placeholder'),

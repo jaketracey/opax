@@ -1,5 +1,11 @@
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
-import { useState, useSyncExternalStore, type Ref } from 'react';
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type Ref,
+} from 'react';
 import {
   Platform,
   ScrollView,
@@ -27,12 +33,15 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
+import { frameOf } from '../money/map/measure';
 import { chips, clearChip, defaultOptions } from './model';
 import { askSession } from './session';
 import { topics } from './topics';
 
 export const composerCopy = {
   placeholder: 'Ask about the public record',
+  /** At accessibility sizes, where the full line is cut on one line. */
+  placeholderShort: 'Ask about the record',
   label: 'Question',
   send: 'Send',
   stop: 'Stop answering',
@@ -43,6 +52,52 @@ export const composerCopy = {
   queued: 'Asks when this answer finishes',
 } as const;
 const MAX = 2000;
+/**
+ * The full placeholder's width in ems of its drawn size, with room to
+ * spare. Measured: 12.34 em at 17 pt, 12.24 em at 19 pt and 11.8 em at
+ * 23 pt in the system font on iOS; 12.84 em in Public Sans on Android.
+ */
+export const placeholderEms = () => (Platform.OS === 'android' ? 13.5 : 13);
+/**
+ * The field's width before it can be read: the window less the composer's
+ * margins and padding and its two buttons (a 402 pt iPhone's field is
+ * 258 pt), less the gap the options chips add and Android's wider 48 dp
+ * buttons. Only a stand-in: the field's own width is read before the first
+ * frame is painted (AskDock), so the choice never changes after it.
+ */
+export function composerFieldRoomEstimate(
+  windowWidth: number,
+  chips: boolean,
+): number {
+  return (
+    windowWidth -
+    144 -
+    (chips ? rhythm.tight : 0) -
+    (Platform.OS === 'android' ? 8 : 0)
+  );
+}
+/**
+ * Whether the full placeholder fits the field on its one line. On iOS its
+ * type stops growing at the chrome cap (23 pt) while the buttons beside it
+ * stay 44 pt, so the full words are cut from xLarge on a narrow phone and
+ * from xxLarge on most, not only at the accessibility sizes. Android's
+ * hint keeps growing with the reader's size.
+ */
+export function placeholderFits({
+  fontScale,
+  room,
+}: {
+  fontScale: number;
+  /** The field's width. */
+  room: number;
+}): boolean {
+  const size =
+    textStyles.body.fontSize *
+    (Platform.OS === 'android'
+      ? fontScale
+      : Math.min(fontScale, chromeTextScaleCap));
+  return placeholderEms() * size <= room;
+}
 /** Lines before the field scrolls inside (journeys/ask.md 4.4a). */
 export function composerLines(fontScale: number) {
   const category = contentSizeCategory(fontScale);
@@ -197,7 +252,11 @@ export function AskDock({
     askSession.snapshot,
     askSession.snapshot,
   );
-  const { fontScale, height: windowHeight } = useWindowDimensions();
+  const {
+    fontScale,
+    height: windowHeight,
+    width: windowWidth,
+  } = useWindowDimensions();
   // The composer's height outside the field, measured: its body less the
   // field. Until both are laid out, the padding and the options line.
   const [bodyHeight, setBodyHeight] = useState<number | null>(null);
@@ -205,6 +264,26 @@ export function AskDock({
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
+  // The drawn placeholder is one capped line. Where the full words do not
+  // fit the field they ended in an ellipsis ("Ask about the public rec…"),
+  // so a shorter line is drawn there. VoiceOver's hint keeps the full words.
+  // The field's width is read in a layout effect, so the frame that is
+  // first painted already has the final choice; onLayout follows later
+  // changes (a rotation, the options chips).
+  const fieldRef = useRef<View>(null);
+  const [fieldWidth, setFieldWidth] = useState<number | null>(null);
+  // Every commit, on purpose: the field's width can change without a
+  // dependency changing. It sets state only on a difference.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    const frame = frameOf(fieldRef);
+    if (frame && frame.width > 0 && frame.width !== fieldWidth)
+      setFieldWidth(frame.width);
+  });
+  const shortPlaceholder = !placeholderFits({
+    fontScale,
+    room: fieldWidth ?? composerFieldRoomEstimate(windowWidth, tags.length > 0),
+  });
   // The draft as the reader last typed it. Any other draft is a prefill, as
   // is one already waiting when the composer mounts (prefilledCaret).
   const [typed, setTyped] = useState(s.draft);
@@ -418,8 +497,10 @@ export function AskDock({
           testID="ask-composer-options"
         />
         <View
+          ref={fieldRef}
           testID="ask-field"
           style={[styles.field, tags.length > 0 ? styles.fieldInset : null]}
+          onLayout={(e) => setFieldWidth(e.nativeEvent.layout.width)}
         >
           <TextInput
             ref={inputRef}
@@ -443,9 +524,21 @@ export function AskDock({
             // multiline placeholder scales without a cap and wraps, so at
             // AX3 the empty composer took three lines (sweep 1, 2.1).
             // Android keeps its native hint and its own field height.
-            placeholder={drawn ? undefined : composerCopy.placeholder}
+            placeholder={
+              drawn
+                ? undefined
+                : shortPlaceholder
+                  ? composerCopy.placeholderShort
+                  : composerCopy.placeholder
+            }
             placeholderTextColor={drawn ? undefined : colors.inkSoft}
-            accessibilityHint={drawn ? composerCopy.placeholder : undefined}
+            // The full words, wherever the drawn or native line is the
+            // short one.
+            accessibilityHint={
+              drawn || (Platform.OS === 'android' && shortPlaceholder)
+                ? composerCopy.placeholder
+                : undefined
+            }
             // Empty, the field sizes its one line to the placeholder; typed
             // text keeps the reader's full size.
             maxFontSizeMultiplier={drawn ? chromeTextScaleCap : undefined}
@@ -493,7 +586,9 @@ export function AskDock({
                 maxFontSizeMultiplier={chromeTextScaleCap}
                 testID="ask-placeholder"
               >
-                {composerCopy.placeholder}
+                {shortPlaceholder
+                  ? composerCopy.placeholderShort
+                  : composerCopy.placeholder}
               </Text>
             </View>
           ) : null}
