@@ -1,3 +1,5 @@
+import { act } from 'react';
+import TestRenderer from 'react-test-renderer';
 import { billsScreens } from '../src/navigation/stack/bills';
 import { exploreScreens } from '../src/navigation/stack/explore';
 import { publicMoneyScreens } from '../src/navigation/stack/public-money';
@@ -34,9 +36,17 @@ test.each([
     expect(options.headerTitle).toBe(title);
   } else {
     expect(typeof options.headerTitle).toBe('function');
-    const view = options.headerTitle();
-    expect(view.props.style.width).toBe(0);
-    expect(view.type).not.toBe(BarTitle);
+    // The empty title: drawn here (iPhone and iPad) it is a 0 pt view.
+    const element = options.headerTitle();
+    expect(element.type).not.toBe(BarTitle);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(element);
+    });
+    const view = renderer.toJSON() as TestRenderer.ReactTestRendererJSON;
+    expect(view.props.style).toEqual({ width: 0, height: 0 });
+    expect(view.children).toBeNull();
+    act(() => renderer.unmount());
   }
   const next = screens.find((screen) => screen.props.name === 'money-item')!;
   if (name !== 'explore/[tool]') {
