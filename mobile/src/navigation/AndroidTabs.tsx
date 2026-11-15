@@ -76,13 +76,16 @@ export function AndroidTabs() {
         <Tabs.Screen
           key={name}
           name={name}
-          listeners={{
+          listeners={({ navigation }) => ({
             // NativeStack already pops a reselected tab to its root. Search
-            // also clears query/focus, matching the iOS trigger's listener.
+            // also clears query/focus then, matching the iOS trigger's
+            // listener: only on a press while Search is in front, never on
+            // the way back from another tab.
             tabPress: () => {
-              if (name === '(search)') requestSearchTabReset();
+              if (name === '(search)' && navigation.isFocused())
+                requestSearchTabReset();
             },
-          }}
+          })}
           options={{
             title,
             tabBarButtonTestID: `tab-${id}`,

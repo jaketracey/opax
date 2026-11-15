@@ -50,49 +50,108 @@ afterEach(() => {
   Object.defineProperty(Platform, 'Version', originalVersion);
 });
 
+// The system's rule for a tab, which Search now follows (build 80 sweep:
+// Members opened in Search, a visit to Bills, then Search again landed on
+// Search's root): a press while the tab is in front goes to its root; a
+// press from another tab returns to where the tab was left.
+const searchStack = (index: number) => ({
+  routes: [
+    { key: 'today', state: { key: 'today-stack', index: 3 } },
+    { key: 'search', state: { key: 'search-stack', index } },
+  ],
+});
+function searchTrigger(version: number, focused: boolean, index = 2) {
+  Platform.OS = 'ios';
+  Object.defineProperty(Platform, 'Version', { get: () => version });
+  const view = mount(<TabsLayout />);
+  const search = view.root.findByProps({ testID: 'tab-search' });
+  const navigation = {
+    dispatch: jest.fn(),
+    // Heard before the tab changes: the tab in front when it was pressed.
+    isFocused: () => focused,
+    getState: () => searchStack(index),
+  };
+  const listener = search.props.listeners({
+    navigation,
+    route: { key: 'search' },
+  });
+  return { view, search, navigation, listener };
+}
+
 test.each([25, 26, 27])(
-  'Search selection and its minimised floating trigger reset only the Search stack on iOS %s',
+  'iOS %s: Search pressed from another tab keeps its stack and its field: Members is still open',
   (version) => {
-    Platform.OS = 'ios';
-    Object.defineProperty(Platform, 'Version', { get: () => version });
-    for (const from of ['(today)', '(search)']) {
-      mockSegments = ['(tabs)', from, 'bill', 'au-federal-example'];
-      const view = mount(<TabsLayout />);
-      const search = view.root.findByProps({ testID: 'tab-search' });
-      expect(search.props.role).toBe(version >= 26 ? 'search' : undefined);
-      const navigation = {
-        dispatch: jest.fn(),
-        getState: () => ({
-          routes: [
-            { key: 'today', state: { key: 'today-stack', index: 3 } },
-            { key: 'search', state: { key: 'search-stack', index: 2 } },
-          ],
-        }),
-      };
-      const listener = search.props.listeners({
-        navigation,
-        route: { key: 'search' },
-      });
-      act(() => listener.tabPress({ data: { isPrevented: false } }));
-      expect(navigation.dispatch).toHaveBeenCalledWith({
-        type: 'POP_TO_TOP',
-        target: 'search-stack',
-      });
-      const reset = jest.fn();
-      const root = mount(<Root reset={reset} />);
-      expect(reset).toHaveBeenCalledTimes(1);
-      act(() => listener.tabPress({ data: { isPrevented: false } }));
-      expect(reset).toHaveBeenCalledTimes(2);
-      act(() => listener.tabPress({ data: { isPrevented: true } }));
-      expect(reset).toHaveBeenCalledTimes(2);
-      expect(navigation.dispatch).toHaveBeenCalledTimes(2);
-      act(() => {
-        root.unmount();
-        view.unmount();
-      });
-    }
+    // Members is open in Search (index 1); the reader is on Bills.
+    mockSegments = ['(tabs)', '(bills)', 'bill-list'];
+    const { view, search, navigation, listener } = searchTrigger(
+      version,
+      false,
+      1,
+    );
+    expect(search.props.role).toBe(version >= 26 ? 'search' : undefined);
+    const reset = jest.fn();
+    const root = mount(<Root reset={reset} />);
+    act(() => listener.tabPress({ data: { isPrevented: false } }));
+    expect(navigation.dispatch).not.toHaveBeenCalled();
+    expect(reset).not.toHaveBeenCalled();
+    act(() => {
+      root.unmount();
+      view.unmount();
+    });
   },
 );
+
+test.each([25, 26, 27])(
+  'iOS %s: a second press of Search while on it, or its floating button on a pushed Search page, pops only the Search stack and clears the field',
+  (version) => {
+    mockSegments = ['(tabs)', '(search)', 'directory'];
+    const { view, navigation, listener } = searchTrigger(version, true);
+    const reset = jest.fn();
+    const root = mount(<Root reset={reset} />);
+    act(() => listener.tabPress({ data: { isPrevented: false } }));
+    expect(navigation.dispatch).toHaveBeenCalledTimes(1);
+    expect(navigation.dispatch).toHaveBeenCalledWith({
+      type: 'POP_TO_TOP',
+      target: 'search-stack',
+    });
+    expect(reset).toHaveBeenCalledTimes(1);
+    // A press the system refused does nothing.
+    act(() => listener.tabPress({ data: { isPrevented: true } }));
+    expect(reset).toHaveBeenCalledTimes(1);
+    expect(navigation.dispatch).toHaveBeenCalledTimes(1);
+    act(() => {
+      root.unmount();
+      view.unmount();
+    });
+  },
+);
+
+test('the two presses in order: away and back keeps Members, then a press on Search itself goes to the root', () => {
+  mockSegments = ['(tabs)', '(bills)', 'bill-list'];
+  let focused = false;
+  Platform.OS = 'ios';
+  const view = mount(<TabsLayout />);
+  const search = view.root.findByProps({ testID: 'tab-search' });
+  const navigation = {
+    dispatch: jest.fn(),
+    isFocused: () => focused,
+    getState: () => searchStack(1),
+  };
+  const listener = search.props.listeners({
+    navigation,
+    route: { key: 'search' },
+  });
+  act(() => listener.tabPress({ data: { isPrevented: false } }));
+  expect(navigation.dispatch).not.toHaveBeenCalled();
+  // The tab has changed: Search is in front, Members on top of it.
+  focused = true;
+  act(() => listener.tabPress({ data: { isPrevented: false } }));
+  expect(navigation.dispatch).toHaveBeenCalledWith({
+    type: 'POP_TO_TOP',
+    target: 'search-stack',
+  });
+  act(() => view.unmount());
+});
 
 test('a request waits for the retained Search root to regain focus after a pop', () => {
   let focused = false;
@@ -123,25 +182,46 @@ test('a request waits for the retained Search root to regain focus after a pop',
   expect(focusListeners.size).toBe(0);
 });
 
-test('first selection and reselect at the Search root reset without a pop action', () => {
+test('a reselect at the Search root clears the field without a pop action; a first selection does neither', () => {
   Platform.OS = 'ios';
   const view = mount(<TabsLayout />);
   const search = view.root.findByProps({ testID: 'tab-search' });
   const reset = jest.fn();
   const root = mount(<Root reset={reset} />);
-  for (const state of [undefined, { key: 'search-stack', index: 0 }]) {
-    const navigation = {
-      dispatch: jest.fn(),
-      getState: () => ({ routes: [{ key: 'search', state }] }),
-    };
-    const listener = search.props.listeners({
-      navigation,
-      route: { key: 'search' },
-    });
-    act(() => listener.tabPress({ data: { isPrevented: false } }));
-    expect(navigation.dispatch).not.toHaveBeenCalled();
-  }
-  expect(reset).toHaveBeenCalledTimes(2);
+  // First selection: Search is not in front and has no stack yet.
+  const first = { dispatch: jest.fn(), isFocused: () => false };
+  act(() =>
+    search.props
+      .listeners({
+        navigation: {
+          ...first,
+          getState: () => ({ routes: [{ key: 'search', state: undefined }] }),
+        },
+        route: { key: 'search' },
+      })
+      .tabPress({ data: { isPrevented: false } }),
+  );
+  expect(first.dispatch).not.toHaveBeenCalled();
+  expect(reset).not.toHaveBeenCalled();
+  // Reselect at the root: nothing to pop, the field is cleared.
+  const again = { dispatch: jest.fn(), isFocused: () => true };
+  act(() =>
+    search.props
+      .listeners({
+        navigation: {
+          ...again,
+          getState: () => ({
+            routes: [
+              { key: 'search', state: { key: 'search-stack', index: 0 } },
+            ],
+          }),
+        },
+        route: { key: 'search' },
+      })
+      .tabPress({ data: { isPrevented: false } }),
+  );
+  expect(again.dispatch).not.toHaveBeenCalled();
+  expect(reset).toHaveBeenCalledTimes(1);
   act(() => {
     root.unmount();
     view.unmount();
