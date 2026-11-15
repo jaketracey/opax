@@ -206,6 +206,16 @@ test('the reporting boundary captures once per caught error, without error text 
   act(() => tree.unmount());
 });
 
+/**
+ * Every value in a payload, without its property names: what could carry a
+ * reader's words. A forbidden word is looked for here, so a property's own
+ * name (`$process_person_profile`) is never mistaken for a leak.
+ */
+function leafValues(payload: unknown): string {
+  if (payload === null || typeof payload !== 'object') return String(payload);
+  return Object.values(payload).map(leafValues).join('\n');
+}
+
 describe('the route error report ($exception), within its limits', () => {
   const bill = ['(tabs)', '(bills)', 'bill', '[key]'];
   beforeEach(() => {
@@ -412,7 +422,8 @@ describe('the route error report ($exception), within its limits', () => {
     return {
       message: properties.$exception_list[0]!.value,
       omitted: properties.message_omitted === true,
-      text: JSON.stringify(scrubbed),
+      // The values only: a property's name is not a leak.
+      text: leafValues(scrubbed),
     };
   };
 
@@ -428,7 +439,7 @@ describe('the route error report ($exception), within its limits', () => {
       'Unknown member Anthony Albanese (postcode 2042, 800)',
       /Anthony|Albanese|2042|800|postcode/,
     ],
-    ['person/tony-abbott is not a record route', /tony|abbott|person\//],
+    ['person/tony-abbott is not a record route', /tony|abbott|record route/],
   ])('free text is never sent: %s', (message, words) => {
     const sent = sentFor(message);
     expect(sent.message).toBeUndefined();

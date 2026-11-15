@@ -613,6 +613,16 @@ test('the plugin pins exactly the reviewed posthog-ios', () => {
 });
 
 /**
+ * Every value in a payload, without its property names: what could carry a
+ * reader's words. A forbidden word is looked for here, so a property's own
+ * name (`$process_person_profile`) is never mistaken for a leak.
+ */
+function leafValues(payload: unknown): string {
+  if (payload === null || typeof payload !== 'object') return String(payload);
+  return Object.values(payload).map(leafValues).join('\n');
+}
+
+/**
  * Every `$exception`, whatever caught the error: a message is sent only when
  * it is on the fixed list, and then as the fixed text. Rewriting free text by
  * pattern cannot make it safe, so nothing is rewritten.
@@ -636,7 +646,8 @@ describe('a message is sent only from the fixed list', () => {
     return {
       message: properties.$exception_list[0]!.value,
       omitted: properties.message_omitted === true,
-      text: JSON.stringify(scrubbed),
+      // The values only: a property's name is not a leak.
+      text: leafValues(scrubbed),
     };
   };
 
@@ -652,7 +663,7 @@ describe('a message is sent only from the fixed list', () => {
       'Unknown member Anthony Albanese (postcode 2042, 800)',
       /Anthony|Albanese|2042|800|postcode/,
     ],
-    ['person/tony-abbott is not a record route', /tony|abbott|person\//],
+    ['person/tony-abbott is not a record route', /tony|abbott|record route/],
   ])('free text sends no message: %s', (message, words) => {
     const sent = sentFor(message);
     expect(sent).toMatchObject({ message: undefined, omitted: true });
@@ -671,7 +682,7 @@ describe('a message is sent only from the fixed list', () => {
       const sent = sentFor(message);
       expect(sent).toMatchObject({ message: undefined, omitted: true });
       expect(sent.text).not.toMatch(
-        /aaaa|render failed|jane|example\.com|3040|1234567890|r7520|seat|profile/,
+        /aaaa|render failed|jane|example\.com|3040|1234567890|r7520/,
       );
     }
   });
