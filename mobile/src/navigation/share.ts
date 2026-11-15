@@ -71,9 +71,16 @@ export async function shareRecord({
   question,
   text,
 }: ShareTarget): Promise<void> {
-  const url = question
-    ? questionShareURL(question.text, question.options)
-    : canonicalUrl(path, anchor);
+  let url: string;
+  try {
+    url = question
+      ? questionShareURL(question.text, question.options)
+      : canonicalUrl(path, anchor);
+  } catch {
+    // Not a page on the public site: say so, rather than doing nothing.
+    Alert.alert('Couldn’t share this link');
+    return;
+  }
   if (question) trackShare('question');
   else trackShare('record', path);
   haptic('light');
@@ -101,6 +108,27 @@ export async function shareSourceLink(url: string, title: string) {
     return;
   }
   await Share.share({ title, url, message: title }).catch(() => undefined);
+}
+
+/**
+ * Shares a cited source. A record with an OPAX page shares that canonical
+ * page, so Messages draws its card. A source with only its publisher's page
+ * (no OPAX path) shares that https address instead of failing.
+ */
+export async function shareSource(
+  source: { href: string; slug?: string | null; url?: string | null },
+  title: string,
+) {
+  const path = source.href || (source.slug ? `/doc/${source.slug}` : '');
+  if (path.startsWith('/')) return shareRecord({ path, title });
+  const url = source.url || path;
+  if (!url.startsWith('https://')) {
+    Alert.alert('Couldn’t share this link');
+    return;
+  }
+  trackShare('record', url);
+  haptic('light');
+  await shareSourceLink(url, title);
 }
 
 export function questionShareURL(text: string, options: AskOptions): string {

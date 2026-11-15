@@ -1,6 +1,7 @@
 import { OpaxShare } from '../modules/opax-share';
 import { defaultOptions } from '../src/features/ask/model';
-import { shareRecord } from '../src/navigation/share';
+import { Alert } from 'react-native';
+import { shareRecord, shareSource } from '../src/navigation/share';
 
 jest.mock('../src/design/environment', () => ({
   ...jest.requireActual('../src/design/environment'),
@@ -68,4 +69,60 @@ test('share preserves a reviewed section anchor', async () => {
     url: 'https://opax.com.au/subject/topic/services#records',
     title: 'Services',
   });
+});
+
+describe('a cited source', () => {
+  test('with an OPAX page shares that canonical page', async () => {
+    await shareSource(
+      { href: '/doc/speech-123', slug: 'speech-123', url: 'https://x.example' },
+      'A speech',
+    );
+    expect(OpaxShare!.share).toHaveBeenCalledWith({
+      url: 'https://opax.com.au/doc/speech-123',
+      title: 'A speech',
+    });
+  });
+
+  test('with only a slug shares its record page', async () => {
+    await shareSource({ href: '', slug: 'speech-9' }, 'A speech');
+    expect(OpaxShare!.share).toHaveBeenCalledWith({
+      url: 'https://opax.com.au/doc/speech-9',
+      title: 'A speech',
+    });
+  });
+
+  test("with only its publisher's page shares that address", async () => {
+    const url = 'https://publisher.example/report';
+    await shareSource({ href: url, slug: '', url }, 'A report');
+    expect(OpaxShare!.share).toHaveBeenCalledWith({
+      url,
+      title: 'A report',
+      text: 'A report',
+      external: true,
+    });
+  });
+
+  test.each([
+    { href: '', slug: '' },
+    { href: 'http://publisher.example/a', slug: '' },
+    { href: 'javascript:alert(1)', slug: '' },
+  ])('with no shareable address says so: %j', async (source) => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    await shareSource(source, 'A report');
+    expect(OpaxShare!.share).not.toHaveBeenCalled();
+    expect(alert).toHaveBeenCalledWith('Couldn’t share this link');
+    alert.mockRestore();
+  });
+});
+
+test('a path that is not on the public site says so instead of doing nothing', async () => {
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  await expect(
+    shareRecord({ path: 'https://publisher.example/a', title: 'A report' }),
+  ).resolves.toBeUndefined();
+  await shareRecord({ path: '', title: 'A report' });
+  expect(OpaxShare!.share).not.toHaveBeenCalled();
+  expect(alert).toHaveBeenCalledTimes(2);
+  expect(alert).toHaveBeenLastCalledWith('Couldn’t share this link');
+  alert.mockRestore();
 });
