@@ -780,7 +780,12 @@ test('search_records pins catalogue slugs to the index version, and read_record 
   assert.equal(found[0].slug, 'catalog-' + version + '-7', 'a catalogue slug names the index it came from');
   assert.equal(found[0].opax_url, 'https://opax.com.au/bill/au-federal-r5960');
   assert.equal(found[1].slug, 'speech-157047', 'other slugs are unchanged');
-  for (const slug of [found[0].slug, 'catalog-7']) {
+  const bare = (await send('tools/call', { name: 'read_record', arguments: { slug: 'catalog-7' } })).result;
+  assert.equal(bare.isError, true, 'a catalogue slug without its index version is refused');
+  assert.match(bare.content[0].text, /no index version.*Search again/);
+  const summary = (await send('tools/call', { name: 'read_record', arguments: { slug: 'pay-291406' } }));
+  assert.match(JSON.stringify(summary), /summary entries.*parliamentary_pay/, 'a summary row slug says where its details are');
+  for (const slug of [found[0].slug]) {
     const read = (await send('tools/call', { name: 'read_record', arguments: { slug } })).result;
     assert.equal(read.isError, undefined, slug + ' reads');
     const record = read.structuredContent;
@@ -793,7 +798,7 @@ test('search_records pins catalogue slugs to the index version, and read_record 
   const stale = (await send('tools/call', { name: 'read_record', arguments: { slug: 'catalog-0000000000000000-7' } })).result;
   assert.equal(stale.isError, true);
   assert.match(stale.content[0].text, /catalogue has changed\. Search again/);
-  const gone = (await send('tools/call', { name: 'read_record', arguments: { slug: 'catalog-99' } })).result.structuredContent;
+  const gone = (await send('tools/call', { name: 'read_record', arguments: { slug: 'catalog-' + version + '-99' } })).result.structuredContent;
   assert.equal(gone.found, false);
   assert.match(gone.message, /not available\. Search again/);
 });
