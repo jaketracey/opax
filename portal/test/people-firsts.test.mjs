@@ -1,7 +1,8 @@
 // Contract for /people/firsts.json (scripts/export_people_firsts.py): each
 // roster person's first speech and first division in the record. The apps
 // decode it with the rules below (mobile/src/api/people-firsts.ts on the app
-// branch, whose own test reads a byte-identical copy of the sample); change
+// branch; its test, mobile/tests/people-firsts.test.ts, reads a byte-identical
+// copy of the sample); change
 // both together, and only ever by adding optional fields.
 //
 // The sample is the export's output for its synthetic database
@@ -44,12 +45,12 @@ function faults(doc) {
     for (const [k, v] of Object.entries(coverage[kind] ?? {}))
       if (!realDate(v)) out.push(`meta.coverage.${kind}.${k} is not a date`)
   }
-  // "First" is a claim: only for a person who entered that chamber on or after the date its record starts.
+  // "First" is a claim: only for a person whose first entry to parliament is on or after the date that
+  // chamber's record starts. A fact in a chamber with no coverage start, or from before it, is an earliest
+  // fact and can never be a first.
   const claim = (at, kind, fact, entry) => {
     const from = coverage[kind]?.[fact.chamber]
     if (typeof fact.chamber !== 'string' || !fact.chamber) out.push(`${at}: no chamber`)
-    else if (!from) out.push(`${at}: no coverage start for ${fact.chamber}`)
-    else if (fact.date < from) out.push(`${at}: before the record of its chamber starts`)
     if (fact.first !== undefined && fact.first !== true) out.push(`${at}: first is not true or absent`)
     if (fact.first === true && !(realDate(entry.service_from) && from && from <= entry.service_from && entry.service_from <= fact.date))
       out.push(`${at}: marked first without an entry date inside the record`)
@@ -103,6 +104,9 @@ test('the contract refuses what the apps would refuse (revert guard)', () => {
   assert.notDeepEqual(broken((d) => { d.meta.coverage.speeches.representatives = '2008-01-01' }), [])
   assert.notDeepEqual(broken((d) => { delete d.meta.coverage.divisions.representatives }), [])
   assert.notDeepEqual(broken((d) => { delete d.by_pid[pid].first_division.chamber }), [])
+  assert.notDeepEqual(broken((d) => { delete d.meta.coverage.speeches.representatives }), [])
+  // An earliest fact needs no coverage start: readers leave it out when there is none.
+  assert.deepEqual(broken((d) => { delete d.meta.coverage.speeches.nsw_la }), [])
   assert.notDeepEqual(broken((d) => { d.by_pid[pid].first_speech.first = false }), [])
   const unnamed = Object.keys(sample.by_name)[0]
   assert.notDeepEqual(broken((d) => { d.by_name[unnamed].first_speech.first = true }), [])
@@ -111,7 +115,7 @@ test('the contract refuses what the apps would refuse (revert guard)', () => {
 })
 
 test('the sample the app branch decodes is this one', () => {
-  // mobile/src/api/__tests__/people-firsts.test.ts pins the same digest.
+  // mobile/tests/people-firsts.test.ts on the app branch pins the same digest.
   assert.equal(
     createHash('sha256').update(sampleText).digest('hex'),
     read('./fixtures/people-firsts.sample.sha256').trim(),

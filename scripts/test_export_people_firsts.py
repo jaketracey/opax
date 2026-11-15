@@ -32,18 +32,42 @@ ROSTER = {"meta": {"generated": "2026-11-14"}, "people": [
     {"name": "Jules Committee", "pid": "aph_jc1", "states": ["federal"], "chambers": ["senate", "senate_committee"]},
     {"name": "Kai Late", "pid": "90011", "states": ["federal"], "chambers": ["representatives"]},
     {"name": "Lou Mover", "pid": "90012", "states": ["federal"], "chambers": ["representatives"]},
-    {"name": "Morgan Undated", "pid": "90013", "states": ["federal"], "chambers": ["representatives"]},
+    {"name": "Morgan Unlisted", "pid": "90013", "states": ["federal"], "chambers": ["representatives"]},
+    {"name": "Noel Returner", "pid": "90014", "states": ["federal"], "chambers": ["representatives"]},
+    {"name": "Oakley Both", "pid": "90015", "states": ["federal"], "chambers": ["senate"]},
+    {"name": "Perry Doubled", "pid": "90016", "states": ["federal"], "chambers": ["representatives"]},
+    {"name": "Quinn Disagree", "pid": "90017", "states": ["federal"], "chambers": ["representatives"]},
 ]}
 
-# (person_id, chamber, entered_house). The record of House speeches starts 1 Jun 1995 here, of Senate speeches
-# 16 Aug 2011, and of divisions 7 Feb 2006 in both houses (the earliest rows below).
+# With the filler rows below, the record of House speeches starts 1 Jun 1995 (one stray speech in 1994 does not
+# move it), of Senate speeches 16 Aug 2011, of NSW Assembly speeches 7 May 2019, and of divisions 7 Feb 2006 in
+# both federal houses (one stray House division in 2004 does not move it). No other chamber has a dense year.
+#
+# The Parliamentary Handbook's service start: the first-ever entry to parliament. (phid, chamber, start, person_id)
+HANDBOOK = [
+    ("h01", "representatives", "2007-11-24", "90001"),   # entered inside the record: firsts
+    ("h02", "senate", "1996-07-01", "90002"),            # entered before the Senate record starts: earliest
+    ("h11", "representatives", "2010-08-21", "90011"),   # inside the record, but no speech held for years after
+    ("h12", "senate", "2012-07-01", "90012"),            # a senator only, by the Handbook; the speech is in the House
+    ("h14", "representatives", "1987-07-11", "90014"),   # left in 1993, returned in 1998: first entry is before the record
+    ("h15", "both", "2013-09-07", "90015"),              # moved from the House to the Senate
+    ("h16", "representatives", "2016-07-02", "90016"),   # two Handbook people matched to one roster id
+    ("h17", "representatives", "2016-07-02", "90016"),
+    ("h18", "representatives", "2016-07-02", "90017"),   # the members table dates the entry earlier
+    ("h19", "senate", "2011-07-01", None),               # matched to nobody
+]
+# The members table: one row per person, the LATEST membership's chamber and entry. Never the source of a first.
 MEMBERS = [
-    ("90001", "representatives", "2007-11-24"),   # entered inside the record: firsts
-    ("90002", "senate", "1996-07-01"),            # entered before the Senate record starts: earliest, not first
-    ("90011", "representatives", "2010-08-21"),   # inside the record, but nothing held for years after
-    ("90012", "senate", "2012-07-01"),            # the entry date is to another chamber
-    ("90013", "representatives", "unknown"),      # no entry date held
-    ("90099", "senate", "2011-07-01"),            # nobody in the roster
+    ("90001", "representatives", "2007-11-24"),
+    ("90002", "senate", "1996-07-01"),
+    ("90011", "representatives", "2010-08-21"),
+    ("90012", "senate", "2012-07-01"),
+    ("90013", "representatives", "2016-07-02"),   # inside the record, but no Handbook person: not enough
+    ("90014", "representatives", "1998-10-03"),   # the return, not the first entry
+    ("90015", "senate", "2019-07-01"),            # the second chamber
+    ("90016", "representatives", "2016-07-02"),
+    ("90017", "representatives", "2010-08-21"),
+    ("90099", "senate", "unknown"),
 ]
 
 SCHEMA = """
@@ -54,6 +78,7 @@ CREATE TABLE divisions (division_id INTEGER PRIMARY KEY, house TEXT, name TEXT, 
                         state TEXT);
 CREATE TABLE votes (division_id INTEGER, person_id TEXT, vote TEXT);
 CREATE TABLE members (person_id TEXT PRIMARY KEY, chamber TEXT, entered_house TEXT);
+CREATE TABLE ext_handbook_people (phid TEXT PRIMARY KEY, chamber TEXT, service_start TEXT, person_id TEXT);
 CREATE TABLE ext_divisions (id TEXT PRIMARY KEY, jurisdiction TEXT, house TEXT, date TEXT, number INTEGER,
                             name TEXT, source TEXT, source_url TEXT);
 CREATE TABLE ext_votes (id INTEGER PRIMARY KEY, division_id TEXT, jurisdiction TEXT, house TEXT, date TEXT,
@@ -93,8 +118,19 @@ SPEECHES = [
     speech(80, "Jules Committee", "2025-02-24", chamber="senate_committee", source="committee_senate"),
     speech(90, "Kai Late", "2013-03-12"),
     speech(91, "Lou Mover", "2012-08-14"),
-    speech(92, "Morgan Undated", "2016-09-13"),
+    speech(92, "Morgan Unlisted", "2016-09-13"),
+    speech(93, "Noel Returner", "1998-11-10"),
+    speech(94, "Oakley Both", "2019-07-23", chamber="senate"),
+    speech(95, "Perry Doubled", "2016-09-01"),
+    speech(96, "Quinn Disagree", "2016-09-01"),
+    # One stray early House speech: it must not move the start of the House record.
+    speech(97, "Filler Member", "1994-05-03"),
 ]
+# Ten sitting days in a year make a chamber's record dense enough to have a start.
+SPEECHES += [speech(1000 + n, "Filler Member", f"1995-06-{n + 1:02d}") for n in range(10)]
+SPEECHES += [speech(1100 + n, "Filler Member", f"2011-08-{n + 16:02d}", chamber="senate") for n in range(10)]
+SPEECHES += [speech(1200 + n, "Filler Member", f"2019-05-{n + 7:02d}", chamber="nsw_la", state="nsw",
+                    source="nsw_hansard") for n in range(10)]
 
 DIVISIONS = [
     (501, "representatives", "A bill", "2008-02-13", 2, "federal"),
@@ -105,7 +141,11 @@ DIVISIONS = [
     (506, "senate", "A bill", "2006-02-07", None, "federal"),
     (507, "representatives", "A bill", "2006-02-07", 1, "federal"),
     (508, "representatives", "A bill", "2010-09-28", 1, "federal"),
+    (509, "representatives", "A stray early division", "2004-03-01", 1, "federal"),
 ]
+DIVISIONS += [(600 + n, house, "A bill", f"2006-02-{n + 7:02d}", 1, "federal")
+              for n in range(10) for house in ("representatives",)]
+DIVISIONS += [(700 + n, "senate", "A bill", f"2006-02-{n + 7:02d}", 1, "federal") for n in range(10)]
 VOTES = [
     (501, "90001", "aye"), (502, "90001", "no"), (503, "90001", "aye"),
     (504, "90002", "no"),
@@ -144,6 +184,7 @@ def database(speeches=SPEECHES):
     db.executemany("INSERT INTO divisions VALUES (?,?,?,?,?,?)", DIVISIONS)
     db.executemany("INSERT INTO votes VALUES (?,?,?)", VOTES)
     db.executemany("INSERT INTO members VALUES (?,?,?)", MEMBERS)
+    db.executemany("INSERT INTO ext_handbook_people VALUES (?,?,?,?)", HANDBOOK)
     db.executemany("INSERT INTO ext_divisions VALUES (?,?,?,?,?,?,?,?)", EXT_DIVISIONS)
     db.executemany("INSERT INTO ext_votes (division_id, jurisdiction, house, date, source, person_name, vote) "
                    "VALUES (?,?,?,?,?,?,?)", EXT_VOTES)
@@ -202,19 +243,26 @@ class FirstsTests(unittest.TestCase):
     def test_a_row_with_a_pid_is_never_under_by_name(self):
         named = {row["name"] for row in ROSTER["people"] if row.get("pid")}
         self.assertFalse(named & set(self.doc["by_name"]))
-        self.assertEqual(set(self.doc["by_pid"]), {"90001", "90002", "90011", "90012", "90013"})
+        self.assertEqual(set(self.doc["by_pid"]), {"90001", "90002", "90011", "90012", "90013", "90014", "90015",
+                                                   "90016", "90017"})
 
     def test_meta_dates_the_record_and_names_the_sources(self):
         meta = self.doc["meta"]
         self.assertEqual((meta["schema"], meta["generated"], meta["roster_generated"]), (1, "2026-11-15", "2026-11-14"))
         self.assertEqual(meta["speeches_since"], "1993-03-13")
-        # Coverage is what the database holds per chamber, never a constant.
+        # Coverage is what the database holds per chamber, never a constant: the first day of the first year with
+        # ten days of rows. The stray 1994 speech and 2004 division do not move the House's starts, and a chamber
+        # with no dense year has no start at all.
         self.assertEqual(meta["coverage"], {
-            "speeches": {"nsw_la": "2019-05-07", "qld_la": "2024-02-13", "representatives": "1995-06-01",
+            "speeches": {"nsw_la": "2019-05-07", "representatives": "1995-06-01", "senate": "2011-08-16"},
+            "divisions": {"representatives": "2006-02-07", "senate": "2006-02-07"}})
+        self.assertEqual(meta["coverage_earliest_row"], {
+            "speeches": {"nsw_la": "2019-05-07", "qld_la": "2024-02-13", "representatives": "1994-05-03",
                          "sa_ha": "2001-03-01", "senate": "2011-08-16", "vic_la": "2015-02-10"},
-            "divisions": {"nsw_la": "2019-05-07", "qld_la": "2024-02-14", "representatives": "2006-02-07",
+            "divisions": {"nsw_la": "2019-05-07", "qld_la": "2024-02-14", "representatives": "2004-03-01",
                           "senate": "2006-02-07", "vic_la": "2015-02-11"}})
-        self.assertEqual((meta["people"], meta["first_speeches"], meta["first_divisions"]), (8, 7, 5))
+        self.assertEqual(meta["coverage_min_days"], 10)
+        self.assertEqual((meta["people"], meta["first_speeches"], meta["first_divisions"]), (12, 11, 5))
         self.assertEqual(meta["marked_first"], {"speeches": 1, "divisions": 2})
         self.assertEqual(meta["first_window_days"], 366)
         self.assertEqual(meta["sources"]["divisions"]["theyvoteforyou"], "They Vote For You")
@@ -255,14 +303,86 @@ class FirstsTests(unittest.TestCase):
         self.assertNotIn("first", person["first_speech"])          # 2013, entered 2010
         self.assertIs(person["first_division"]["first"], True)     # five weeks after entering
 
-    def test_no_entry_date_another_chamber_or_no_roster_id_is_never_a_first(self):
-        self.assertNotIn("first", self.doc["by_pid"]["90012"]["first_speech"])   # entered the Senate, spoke in the House
-        self.assertNotIn("service_from", self.doc["by_pid"]["90013"])            # "unknown"
+    def test_another_chamber_no_handbook_person_or_no_roster_id_is_never_a_first(self):
+        self.assertNotIn("first", self.doc["by_pid"]["90012"]["first_speech"])   # a senator only; spoke in the House
+        # The members table alone dates this entry inside the record. That is not enough: it holds the latest
+        # membership, so only the Handbook's first-ever entry can carry a first.
+        self.assertNotIn("service_from", self.doc["by_pid"]["90013"])
         self.assertNotIn("first", self.doc["by_pid"]["90013"]["first_speech"])
         for person in self.doc["by_name"].values():
             self.assertNotIn("service_from", person)
             for fact in ("first_speech", "first_division"):
                 self.assertNotIn("first", person.get(fact, {}))
+
+    def test_a_member_who_returned_after_service_from_before_the_record_is_never_a_first(self):
+        # Left in 1993, came back in 1998, the House record from 1995: the members table says entered 3 Oct 1998
+        # and the earliest speech held is 10 Nov 1998. The Handbook's first entry, 1987, is before the record.
+        person = self.doc["by_pid"]["90014"]
+        self.assertEqual(person["service_from"], "1987-07-11")
+        self.assertEqual(person["first_speech"], {"date": "1998-11-10", "chamber": "representatives",
+                                                  "slug": "speech-93"})
+
+    def test_a_member_who_moved_chamber_is_never_a_first_in_either(self):
+        person = self.doc["by_pid"]["90015"]
+        self.assertEqual(person["service_from"], "2013-09-07")
+        self.assertNotIn("first", person["first_speech"])     # their first Senate speech, after years in the House
+        self.assertFalse(export.is_first("2013-11-12", "representatives", ("2013-09-07", "both"),
+                                         {"representatives": "1995-06-01"}))
+
+    def test_two_handbook_people_or_sources_that_disagree_give_no_entry_date(self):
+        for pid in ("90016", "90017"):
+            self.assertNotIn("service_from", self.doc["by_pid"][pid])
+            self.assertNotIn("first", self.doc["by_pid"][pid]["first_speech"])
+
+    def test_revert_guard_the_members_table_would_call_the_returner_a_first(self):
+        # What the first version did: entry date and chamber from the members table.
+        self.assertTrue(export.is_first("1998-11-10", "representatives", ("1998-10-03", "representatives"),
+                                        {"representatives": "1995-06-01"}))
+        self.assertFalse(export.is_first("1998-11-10", "representatives", ("1987-07-11", "representatives"),
+                                         {"representatives": "1995-06-01"}))
+
+    def test_coverage_needs_a_dense_year_and_one_stray_row_does_not_move_it(self):
+        year = [f"1998-03-{d:02d}" for d in range(2, 12)]
+        self.assertEqual(export.coverage_start(set(year)), ("1998-03-02", "1998-03-02"))
+        self.assertEqual(export.coverage_start(set(year) | {"1993-05-04"}), ("1998-03-02", "1993-05-04"))
+        self.assertEqual(export.coverage_start(set(year[:9])), (None, "1998-03-02"))        # nine days: no start
+        self.assertEqual(export.coverage_start(set(year[:9]) | {"1999-02-08"}), (None, "1998-03-02"))
+        self.assertEqual(export.coverage_start(set()), (None, None))
+        # Revert guard: the bare earliest row is what the first version used.
+        self.assertNotEqual(export.coverage_start(set(year) | {"1993-05-04"})[0], "1993-05-04")
+
+    def test_a_federal_division_with_no_number_is_not_published(self):
+        # Division 506 has no number: its address would be the sitting day's page.
+        for person in self.doc["by_pid"].values():
+            if "first_division" in person:
+                self.assertRegex(person["first_division"]["url"], r"/\d{4}-\d{2}-\d{2}/\d+$")
+
+    def test_the_coverage_is_printed_per_chamber_for_review(self):
+        import contextlib
+        import io
+        import tempfile
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "parli.db")
+            memory, disk = database(), sqlite3.connect(path)
+            memory.commit()  # a backup waits on an open write
+            memory.backup(disk)
+            memory.close()
+            disk.close()
+            roster = os.path.join(tmp, "roster.json")
+            with open(roster, "w", encoding="utf-8") as f:
+                json.dump(ROSTER, f)
+            out, err = io.StringIO(), io.StringIO()
+            with patch.object(export, "DB", f"file:{path}?mode=ro"), patch.object(export, "ROSTER", roster), \
+                    contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                export.main()
+        self.assertEqual(json.loads(out.getvalue())["by_pid"], self.doc["by_pid"])
+        printed = err.getvalue()
+        self.assertIn("[firsts] coverage speeches representatives: from 1995-06-01; earliest row 1994-05-03", printed)
+        self.assertIn("[firsts] coverage divisions representatives: from 2006-02-07; earliest row 2004-03-01", printed)
+        self.assertIn("[firsts] coverage speeches vic_la: none (no year with 10 days of rows); earliest row 2015-02-10",
+                      printed)
+        self.assertIn("(1 marked first)", printed)
 
     def test_the_first_rule_at_its_edges(self):
         coverage = {"senate": "2006-02-07"}
@@ -275,6 +395,7 @@ class FirstsTests(unittest.TestCase):
         self.assertFalse(first("2008-06-30", "2008-07-01"))         # held before the entry date: not their first entry
         self.assertFalse(first("2008-07-02", "2008-07-01", into="representatives"))
         self.assertFalse(first("2008-07-02", "2008-07-01", chamber="nsw_lc"))   # no coverage known
+        self.assertFalse(export.is_first("2008-07-02", "senate", ("2008-07-01", "senate"), {"senate": None}))
         self.assertFalse(first("2008-07-02", None))
 
     def test_revert_guard_dropping_the_coverage_test_would_call_an_earliest_speech_a_first(self):

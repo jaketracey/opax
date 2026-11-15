@@ -29,32 +29,48 @@ What counts
                   (They Vote For You), joined on the roster row's numeric `pid`.
                   State: ext_votes/ext_divisions, joined on the normalised name
                   with the same parliament-and-chamber and one-claimant rule. A
-                  division with no https source address is not published.
+                  division with no https source address is not published, nor
+                  a federal one with no number (its address would be the whole
+                  sitting day's page, not the division).
 
 "First" is a claim, so it is made only when the record can carry it
 
   Each fact names the chamber it happened in, and meta.coverage gives, per chamber, the date the record of
-  speeches and the record of divisions start: the earliest date the database itself holds for that chamber
-  under the rules above, never a constant. A fact is marked `"first": true` only when ALL of these hold:
+  speeches and the record of divisions start. That date is read from the database, never a constant, with a
+  density floor so one stray early row cannot move it: it is the first date held in the first calendar year
+  that has at least COVERAGE_MIN_DAYS distinct days of rows for that chamber. A chamber with no such year has
+  no coverage start (and so no firsts). meta.coverage_earliest_row gives the bare earliest date beside it, so
+  the two can be compared.
 
-    - the roster row has a `pid` and the members table gives that person an entry date (`service_from`);
-    - that entry is to the same chamber as the fact;
-    - the entry is on or after that chamber's coverage start (the person's whole service is inside the record);
-    - the fact is on or after the entry, and within FIRST_WINDOW_DAYS of it. A first speech or division long
-      after the entry date means the record was thin when they arrived, or the entry date is a later return to
-      parliament, and either way the record cannot say this was their first.
+  A fact is marked `"first": true` only when ALL of these hold:
 
-  Anything else is published without `first`: readers call it the earliest speech or division in the OPAX
-  record and say from when (meta.coverage for the fact's chamber), and never call it a first. Nothing here ranks
-  or compares people.
+    - the roster row has a `pid`, and exactly one Parliamentary Handbook person (ext_handbook_people, loaded by
+      parli/ingest/handbook.py) is matched to it. The Handbook's service history start is the person's
+      first-ever entry to the federal parliament, whichever chamber and however many times they returned. The
+      members table is NOT used for this: it holds one row per person, with the dates and chamber of their
+      latest membership, so a member who returned or changed chamber would look newly arrived;
+    - the Handbook lists that person in one chamber only, the fact's chamber (a person who sat in both is
+      never marked: their first in one chamber is not their first in parliament);
+    - the service start is on or after that chamber's coverage start (their whole service is inside the record);
+    - the members table does not date their entry before the Handbook's start (the two sources must not disagree
+      that way);
+    - the fact is on or after the service start, and within FIRST_WINDOW_DAYS of it. A first speech or division
+      long after the start means the record was thin when they arrived, and it cannot say this was their first.
 
-Output (compact JSON, keys sorted, so an unchanged database writes the same bytes apart from meta.generated):
+  The Handbook table holds people who sat in recent parliaments only, so earlier members, and every state
+  member, are never marked. Anything not marked is published without `first`: readers call it the earliest
+  speech or division in the OPAX record and say from when (meta.coverage for the fact's chamber), or leave it
+  out, and never call it a first. Nothing here ranks or compares people.
+
+Output (compact JSON; by_pid and by_name are written in key order, so an unchanged database writes the same
+bytes apart from meta.generated):
 
   {"meta": {"schema": 1, "generated": "2026-11-15", "roster_generated": "2026-11-14",
             "speeches_since": "1993-03-13",               # the corpus rule's floor
             "coverage": {"speeches": {"representatives": "1998-03-02", "nsw_la": "..."},
                          "divisions": {"representatives": "2006-02-07", "senate": "..."}},
-            "first_window_days": 366,
+            "coverage_earliest_row": {"speeches": {...}, "divisions": {...}},   # the bare earliest date, to compare
+            "coverage_min_days": 10, "first_window_days": 366,
             "people": 1234, "first_speeches": 1200, "first_divisions": 800,   # facts held, first or earliest
             "marked_first": {"speeches": 300, "divisions": 250},
             "sources": {"speech": "Hansard, as held in the OPAX record",
@@ -96,6 +112,8 @@ ROSTER = os.environ.get("OPAX_ROSTER_PREVIOUS") or os.path.join(ROOT, "portal", 
 SCHEMA = 1
 # How long after entering a chamber a speech or division can still be called the person's first (see the docstring).
 FIRST_WINDOW_DAYS = 366
+# A chamber's record starts in the first calendar year with at least this many distinct days of rows.
+COVERAGE_MIN_DAYS = 10
 SPEECH_SOURCE = "Hansard, as held in the OPAX record"
 # ext_divisions.source / the legacy federal tables -> who published the division.
 DIVISION_SOURCES = {
@@ -108,11 +126,22 @@ FEDERAL_HOUSES = ("representatives", "senate")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 URL_RE = re.compile(r"^https://[^\s\"<>]+$")
 NOTES = [
-    "A fact is marked first only when the person entered that chamber on or after the date its record starts.",
+    "A fact is marked first only when the person first entered parliament on or after the date its chamber's record starts.",
     "Any other fact is the earliest the record holds, not a first; coverage gives the date each record starts.",
     "Speeches are those made in a chamber; committee hearings and witness testimony are not counted.",
     "A division counts when the person is recorded voting aye or no.",
 ]
+
+
+def coverage_start(days, floor=None):
+    """(the coverage start, the bare earliest day) for one chamber's set of ISO days; the start is None when no
+    calendar year holds `floor` distinct days. See "First is a claim" in the module docstring."""
+    floor = COVERAGE_MIN_DAYS if floor is None else floor
+    by_year = {}
+    for day in days:
+        by_year.setdefault(day[:4], set()).add(day)
+    dense = sorted(year for year, held in by_year.items() if len(held) >= floor)
+    return (min(by_year[dense[0]]) if dense else None), (min(days) if days else None)
 
 
 def fold(name):
@@ -137,7 +166,7 @@ def claimant(index, roster, name, state, chamber):
 
 
 def first_speeches(db, roster):
-    """({roster index: (date, speech_id, chamber)}, {chamber: earliest speech date held}) under the corpus rule."""
+    """({roster index: (date, speech_id, chamber)}, {chamber: set of days with a speech}) under the corpus rule."""
     stdout, sys.stdout = sys.stdout, sys.stderr  # prepare_dedupe prints its progress line
     try:
         prepare_dedupe(db, DEFAULT_SINCE)
@@ -163,8 +192,7 @@ def first_speeches(db, roster):
     for speaker, pid, party, state, chamber, day, speaker_type, source, electorate, speech_id in rows:
         if not DATE_RE.match(day or ""):
             continue
-        if day < coverage.get(chamber, "9"):
-            coverage[chamber] = day
+        coverage.setdefault(chamber, set()).add(day)
         person = identity_for(dict(speaker_name=speaker, person_id=pid, party=party, state=state, chamber=chamber,
                                    date=day, source=source, electorate=electorate, speaker_type=speaker_type,
                                    witness_name=None))
@@ -185,7 +213,7 @@ def _tables(db):
 
 
 def first_divisions(db, roster):
-    """({roster index: (date, number, id, source, url, house)}, {house: earliest division date held})."""
+    """({roster index: (date, number, id, source, url, house)}, {house: set of days with a division})."""
     best, since = {}, {}
 
     def offer(i, found):
@@ -198,11 +226,10 @@ def first_divisions(db, roster):
                    if "state" in {r[1] for r in db.execute("PRAGMA table_info(divisions)")} else "1")
         by_pid = {row["pid"]: i for i, row in enumerate(roster)
                   if isinstance(row.get("pid"), str) and row["pid"].isdigit()}
-        for house, held in db.execute(f"SELECT d.house, MIN(substr(d.date, 1, 10)) FROM divisions d "
-                                      f"WHERE d.date IS NOT NULL AND {federal} AND d.house IN {FEDERAL_HOUSES!r} "
-                                      "GROUP BY d.house"):
+        for house, held in db.execute(f"SELECT DISTINCT d.house, substr(d.date, 1, 10) FROM divisions d "
+                                      f"WHERE d.date IS NOT NULL AND {federal} AND d.house IN {FEDERAL_HOUSES!r}"):
             if held and DATE_RE.match(held):
-                since[house] = held
+                since.setdefault(house, set()).add(held)
         for pid, day, number, division_id, house in db.execute(f"""
                 SELECT v.person_id, substr(d.date, 1, 10), COALESCE(d.number, 0), d.division_id, d.house
                 FROM votes v JOIN divisions d ON d.division_id = v.division_id
@@ -212,7 +239,9 @@ def first_divisions(db, roster):
             i = by_pid.get(str(pid))
             if i is None:
                 continue
-            url = f"https://theyvoteforyou.org.au/divisions/{house}/{day}" + (f"/{number}" if number else "")
+            if not number:
+                continue  # the address would be the sitting day's page, not this division
+            url = f"https://theyvoteforyou.org.au/divisions/{house}/{day}/{number}"
             offer(i, (day, number, f"{division_id:012d}" if isinstance(division_id, int) else str(division_id),
                       "theyvoteforyou", url, house))
     if {"ext_votes", "ext_divisions"} <= tables:
@@ -225,8 +254,7 @@ def first_divisions(db, roster):
                 GROUP BY v.jurisdiction, v.house, v.person_name, v.date, d.number, d.id"""):
             if not DATE_RE.match(day or ""):
                 continue
-            if day < since.get(house, "9"):
-                since[house] = day
+            since.setdefault(house, set()).add(day)
             if source not in DIVISION_SOURCES or not URL_RE.match(url or ""):
                 continue
             i = claimant(index, roster, name, jurisdiction, house)
@@ -235,29 +263,48 @@ def first_divisions(db, roster):
     return best, since
 
 
+def _iso(value):
+    value = (value or "")[:10]
+    if not DATE_RE.match(value):
+        return None
+    try:
+        date.fromisoformat(value)
+    except ValueError:
+        return None
+    return value
+
+
 def service_starts(db, roster):
-    """{roster index: (entry date, chamber)} from the members table, for roster rows with a `pid` only."""
-    if "members" not in _tables(db):
-        return {}
-    columns = {r[1] for r in db.execute("PRAGMA table_info(members)")}
-    if not {"person_id", "chamber", "entered_house"} <= columns:
+    """{roster index: (first-ever entry to parliament, the one chamber sat in or "both")} from the Parliamentary
+    Handbook table, for roster rows with a `pid` that exactly one Handbook person is matched to. A row whose
+    members-table entry date is earlier than the Handbook's start is left out: the sources disagree."""
+    tables = _tables(db)
+    if "ext_handbook_people" not in tables:
         return {}
     by_pid = {row["pid"]: i for i, row in enumerate(roster) if isinstance(row.get("pid"), str) and row["pid"]}
+    matched = {}
+    for pid, chamber, start in db.execute(
+            "SELECT person_id, chamber, service_start FROM ext_handbook_people WHERE person_id IS NOT NULL"):
+        matched.setdefault(str(pid), []).append((_iso(start), chamber))
+    entered = {}
+    if "members" in tables and {"person_id", "entered_house"} <= {r[1] for r in db.execute("PRAGMA table_info(members)")}:
+        entered = {str(pid): _iso(day) for pid, day in db.execute("SELECT person_id, entered_house FROM members")}
     found = {}
-    for pid, chamber, entered in db.execute("SELECT person_id, chamber, substr(entered_house, 1, 10) FROM members"):
-        i = by_pid.get(str(pid))
-        if i is not None and chamber and DATE_RE.match(entered or ""):
-            try:
-                date.fromisoformat(entered)
-            except ValueError:
-                continue
-            found[i] = (entered, chamber)
+    for pid, people in matched.items():
+        i = by_pid.get(pid)
+        if i is None or len(people) != 1:
+            continue
+        start, chamber = people[0]
+        if not start or not chamber or (entered.get(pid) and entered[pid] < start):
+            continue
+        found[i] = (start, chamber)
     return found
 
 
 def is_first(day, chamber, service, coverage):
-    """Whether the record can call this fact the person's first; see "First is a claim" in the docstring."""
-    if not service or chamber not in coverage:
+    """Whether the record can call this fact the person's first; see "First is a claim" in the docstring.
+    `service` is (first-ever entry, chamber) and `coverage` {chamber: start or None}."""
+    if not service or not coverage.get(chamber):
         return False
     entered, entered_chamber = service
     return (entered_chamber == chamber and coverage[chamber] <= entered <= day
@@ -266,8 +313,12 @@ def is_first(day, chamber, service, coverage):
 
 def build(db, roster_doc, today=None):
     roster = roster_doc["people"]
-    speeches, speech_coverage = first_speeches(db, roster)
-    divisions, division_coverage = first_divisions(db, roster)
+    speeches, speech_days = first_speeches(db, roster)
+    divisions, division_days = first_divisions(db, roster)
+    starts = {kind: {chamber: coverage_start(days) for chamber, days in sorted(held.items())}
+              for kind, held in (("speeches", speech_days), ("divisions", division_days))}
+    speech_coverage = {chamber: start for chamber, (start, _) in starts["speeches"].items() if start}
+    division_coverage = {chamber: start for chamber, (start, _) in starts["divisions"].items() if start}
     service = service_starts(db, roster)
     by_pid, by_name = {}, {}
     marked = {"speeches": 0, "divisions": 0}
@@ -304,8 +355,10 @@ def build(db, roster_doc, today=None):
             "generated": today or date.today().isoformat(),
             "roster_generated": (roster_doc.get("meta") or {}).get("generated"),
             "speeches_since": DEFAULT_SINCE,
-            "coverage": {"speeches": dict(sorted(speech_coverage.items())),
-                         "divisions": dict(sorted(division_coverage.items()))},
+            "coverage": {"speeches": speech_coverage, "divisions": division_coverage},
+            "coverage_earliest_row": {kind: {chamber: earliest for chamber, (_, earliest) in held.items()}
+                                      for kind, held in starts.items()},
+            "coverage_min_days": COVERAGE_MIN_DAYS,
             "first_window_days": FIRST_WINDOW_DAYS,
             "people": len(by_pid) + len(by_name),
             "first_speeches": len(speeches),
@@ -335,8 +388,11 @@ def main() -> None:
           f"speeches ({m['marked_first']['speeches']:,} marked first), {m['first_divisions']:,} first divisions "
           f"({m['marked_first']['divisions']:,} marked first), {len(text.encode()):,} bytes", file=sys.stderr)
     for kind in ("speeches", "divisions"):
-        for chamber, day in m["coverage"][kind].items():
-            print(f"[firsts] coverage {kind} {chamber}: from {day}", file=sys.stderr)
+        for chamber, earliest in m["coverage_earliest_row"][kind].items():
+            start = m["coverage"][kind].get(chamber)
+            print(f"[firsts] coverage {kind} {chamber}: "
+                  + (f"from {start}" if start else f"none (no year with {COVERAGE_MIN_DAYS} days of rows)")
+                  + f"; earliest row {earliest}", file=sys.stderr)
 
 
 if __name__ == "__main__":

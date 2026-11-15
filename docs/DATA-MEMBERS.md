@@ -107,19 +107,30 @@ two rows answer to, a scoped namesake, a division with no source address).
 
 "First" is a claim, so the export makes it only when the record can carry it.
 Each fact names its chamber, and `meta.coverage` gives the date the record of
-speeches and of divisions starts for each chamber, read from the database (the
-earliest date held), never a constant. A fact is marked `"first": true` only
-for a person with a roster id whose entry date in the members table is to that
-chamber, is on or after that chamber's coverage start, and is no more than
-`meta.first_window_days` before the fact. Readers label those "First speech"
-and "First division". Every other fact is the earliest the record holds:
-readers say "Earliest speech in the OPAX record (from 1998)", with the year
-from `meta.coverage`, and never call it a first. Nothing ranks or compares
-people.
+speeches and of divisions starts for each chamber. It is read from the
+database, never a constant, with a density floor: the first date held in the
+first calendar year with at least `meta.coverage_min_days` distinct days of
+rows, so one stray early row cannot move it. A chamber with no such year has
+no start. `meta.coverage_earliest_row` gives the bare earliest date beside it,
+and the export prints both per chamber for review.
 
-Known limit, to check on the first export: the members table holds one entry
-date per person. If that date is a return to parliament after earlier service
-from before the record starts, the rule above cannot see the earlier service.
+A fact is marked `"first": true` only for a person with a roster id that
+exactly one Parliamentary Handbook person (`ext_handbook_people`) is matched
+to, where the Handbook lists them in that one chamber only, their service
+history starts on or after that chamber's coverage start, and the fact falls
+no more than `meta.first_window_days` after it. The Handbook's service start
+is the first-ever entry to the federal parliament. The members table is not
+used: it holds one row per person with the latest membership's chamber and
+dates, so a member who returned or changed chamber would look newly arrived
+(it is read only to withhold a first when it dates the entry earlier than the
+Handbook does). The Handbook table holds recent parliaments only, so earlier
+members and every state member are never marked.
+
+Readers label a marked fact "First speech" or "First division". Every other
+fact is the earliest the record holds: readers say "Earliest speech in the
+OPAX record (from 1998)", with the year from `meta.coverage`, or leave it out
+when the chamber has no start, and never call it a first. Nothing ranks or
+compares people.
 
 A roster row with a `pid` is under `by_pid`; a row without one is under
 `by_name` by its exact roster name. Fields are only ever added.
