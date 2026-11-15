@@ -57,6 +57,7 @@ jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => jest.fn(),
 }));
 jest.mock('expo-router', () => ({

@@ -66,6 +66,7 @@ jest.mock('../src/features/follows/AddedSinceGroup', () => ({
 }));
 const mockOpenAsk = jest.fn();
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => mockOpenAsk,
 }));
 const mockParams: Record<string, string | undefined> = {};

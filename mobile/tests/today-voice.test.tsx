@@ -101,6 +101,7 @@ jest.mock('../src/features/today/MoreToExplore', () => ({
   MoreToExplore: () => null,
 }));
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => jest.fn(),
   useAskNow: () => jest.fn(),
 }));

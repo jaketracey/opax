@@ -95,6 +95,7 @@ const mockParams: { slug?: string; id?: string } = {};
 const mockOptions: Record<string, unknown>[] = [];
 const mockOpenAsk = jest.fn();
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => mockOpenAsk,
 }));
 jest.mock('expo-router', () => ({

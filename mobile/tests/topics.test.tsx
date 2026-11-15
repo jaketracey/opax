@@ -78,6 +78,7 @@ jest.mock('../src/navigation/useTitleOnScroll', () => ({
 }));
 const mockOpenAsk = jest.fn();
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => mockOpenAsk,
 }));
 

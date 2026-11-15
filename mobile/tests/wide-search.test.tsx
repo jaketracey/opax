@@ -81,6 +81,7 @@ jest.mock('expo-router', () => {
 const mockOpenAsk = jest.fn();
 const mockAskNow = jest.fn();
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => mockOpenAsk,
   useAskNow: () => mockAskNow,
 }));

@@ -71,6 +71,7 @@ jest.mock('../src/features/explore/runtime', () => ({
 }));
 jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => jest.fn(),
   useAskNow: () => jest.fn(),
 }));

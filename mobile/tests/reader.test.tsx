@@ -76,6 +76,7 @@ jest.mock('../src/api/runtime', () => ({
 jest.mock('../src/design/menu', () => ({ showMenu: jest.fn() }));
 const mockOpenAsk = jest.fn();
 jest.mock('../src/features/ask/open', () => ({
+  useOpenBillAsk: () => jest.fn(),
   useOpenAsk: () => mockOpenAsk,
 }));
 let mockParams: Record<string, string> = {};
