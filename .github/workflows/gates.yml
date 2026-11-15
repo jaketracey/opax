@@ -103,8 +103,8 @@ jobs:
   # would refuse, or lose a row from, fails here and names the build, the file and the path inside it.
   # main has no mobile tree, so the app tree is exported from APP_REF beside this checkout, with each pinned
   # build's mobile/src beside it, and the guard is pointed at this commit's portal/public once per build.
-  # It runs only when a pull request into main changes a file family the app reads (the paths in the first
-  # step); nightly commits pushed straight to main do not pass through here.
+  # It runs only when a pull request into main changes a file family the app reads, this job or its script
+  # (the paths in the first step); nightly commits pushed straight to main do not pass through here.
   app-data:
     if: ${{ !inputs.senate_only && github.event_name == 'pull_request' && github.base_ref == 'main' }}
     runs-on: ubuntu-latest
@@ -112,13 +112,14 @@ jobs:
     env:
       # The newest app line. Its tree supplies the guard, the Jest config and the one install.
       APP_REF: ios/apple-design
-      # Builds still on readers' phones, checked with their own decoders: "label|commit", one a line.
+      # Builds still on readers' phones, checked with their own decoders: "label|tag|commit", one a line.
+      # The tag keeps the commit in the repository; the job fails if the tag is missing or has moved.
       # Add a build when it ships; remove one only when that build is no longer in use.
       #   1.1.4 (73): in App Review. Retire when 1.1.4 is no longer in use.
       #   1.1.3 (57): the store build live now. Retire when 1.1.3 is no longer in use.
       PINNED_BUILDS: |
-        1.1.4 (73)|ade1bb3fb6e4d49db7ff6657df3f3f4c4f945b2d
-        1.1.3 (57)|eb6fd2dce90364763fb59911205b8910f952fa20
+        1.1.4 (73)|ios-1.1.4-b73|ade1bb3fb6e4d49db7ff6657df3f3f4c4f945b2d
+        1.1.3 (57)|ios-1.1.3-b57|eb6fd2dce90364763fb59911205b8910f952fa20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -133,7 +134,7 @@ jobs:
             portal/public/expenses.json portal/public/expense-categories.json portal/public/photos \
             portal/public/corpus.json portal/public/discovery.json portal/public/graph \
             portal/public/parliament portal/public/divisions \
-            scripts/ci/app-data-guard.sh | head -1)
+            scripts/ci/app-data-guard.sh .github/workflows/gates.yml | head -1)
           if [ -n "$changed" ]; then
             echo 'changed=true' >> "$GITHUB_OUTPUT"
           else
@@ -142,13 +143,27 @@ jobs:
       - name: Export the app tree and the pinned builds
         id: app
         if: steps.data.outputs.changed == 'true'
+        # A failed export (a bad pin, a failed fetch, a missing app line) fails the job. Only the guard
+        # test not being on APP_REF, which the script reports as present=false, is a warning.
         run: |
-          if bash scripts/ci/app-data-guard.sh export "$RUNNER_TEMP" | grep -qx 'present=true'; then
-            echo 'present=true' >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning title=App data guard::The data guard is not on $APP_REF; this change to app-read data was not checked."
-            echo "The data guard is not on $APP_REF yet; nothing was checked." >> "$GITHUB_STEP_SUMMARY"
-          fi
+          git fetch --quiet --tags origin
+          out=$(bash scripts/ci/app-data-guard.sh export "$RUNNER_TEMP") || {
+            echo "::error title=App data guard::The app builds could not be exported; nothing was checked."
+            exit 1
+          }
+          case "$out" in
+            present=true)
+              echo 'present=true' >> "$GITHUB_OUTPUT"
+              ;;
+            present=false)
+              echo "::warning title=App data guard::The data guard is not on $APP_REF; this change to app-read data was not checked."
+              echo "The data guard is not on $APP_REF yet; nothing was checked." >> "$GITHUB_STEP_SUMMARY"
+              ;;
+            *)
+              echo "::error title=App data guard::The export said neither present=true nor present=false: $out"
+              exit 1
+              ;;
+          esac
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         if: steps.app.outputs.present == 'true'
         with:

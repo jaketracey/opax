@@ -8,11 +8,15 @@
 # The guard itself (mobile/tests/published-data.test.ts, its helper, the Jest config and the dependencies)
 # comes from the newest app line, APP_REF. It is run once with that line's own decoders, then once for each
 # pinned build with that build's mobile/src in their place (OPAX_DECODERS_SRC), so one install serves them
-# all. PINNED_BUILDS lists them, one "label|commit" a line. Each problem names the build, the file and the
-# path inside it: [1.1.3 (57)] bills/au-federal-r7520.json divisions.question
+# all. PINNED_BUILDS lists them, one "label|tag|commit" a line: the tag keeps the commit reachable, and the
+# commit says what the tag must still point at. Each problem names the build, the file and the path inside
+# it: [1.1.3 (57)] bills/au-federal-r7520.json divisions.question
 #
-# `export` prints "present=true" when APP_REF carries the guard. Between the two, install the app tree's
-# dependencies (npm ci in <work dir>/app/mobile). The gates workflow's app-data job does exactly this.
+# `export` prints "present=true" when APP_REF carries the guard and "present=false" when it does not (the
+# only case a caller may treat as nothing to check). Anything else that goes wrong (an app line that is not
+# there, a pin whose tag is missing or has moved, a build with no decoders) is an error: it exits non-zero
+# and prints neither. Between the two commands, install the app tree's dependencies (npm ci in
+# <work dir>/app/mobile). The gates workflow's app-data job does exactly this.
 set -euo pipefail
 
 APP_REF=${APP_REF:?the newest app line, for example ios/apple-design}
@@ -29,20 +33,31 @@ pinned() { printf '%s\n' "$PINNED_BUILDS" | sed 's/[[:space:]]*$//' | grep -v '^
 
 case "$command" in
   export)
+    commit=$(app_commit) || { echo "app-data-guard: the app line $APP_REF is not in this checkout" >&2; exit 1; }
     mkdir -p "$work/app"
-    git archive "$(app_commit)" mobile | tar -x -C "$work/app"
+    git archive "$commit" mobile | tar -x -C "$work/app"
     if [ ! -f "$app/tests/published-data.test.ts" ]; then
       echo "app-data-guard: the data guard is not on $APP_REF" >&2
+      echo 'present=false'
       exit 0
     fi
-    pinned | while IFS='|' read -r label commit; do
-      # A full-depth checkout has every branch; a commit on none of them is fetched by name.
-      git cat-file -e "$commit^{commit}" 2>/dev/null || git fetch --quiet origin "$commit"
+    while IFS='|' read -r label tag commit; do
+      [ -n "$label" ] || continue
+      [ -n "$tag" ] && [ -n "$commit" ] || { echo "app-data-guard: $label: a pin is \"label|tag|commit\"" >&2; exit 1; }
+      # A full-depth checkout has every tag; fetch them when this one does not.
+      git rev-parse -q --verify "refs/tags/$tag^{commit}" >/dev/null ||
+        git fetch --quiet --tags origin ||
+        { echo "app-data-guard: $label: the tags could not be fetched" >&2; exit 1; }
+      at=$(git rev-parse -q --verify "refs/tags/$tag^{commit}") ||
+        { echo "app-data-guard: $label: the tag $tag is not in this repository" >&2; exit 1; }
+      [ "$at" = "$commit" ] ||
+        { echo "app-data-guard: $label: the tag $tag is at $at, not the pinned $commit" >&2; exit 1; }
       to="$app/pinned-builds/$(slug "$label")"
       mkdir -p "$to"
       git archive "$commit" mobile/src | tar -x --strip-components=1 -C "$to"
-      [ -f "$to/src/api/catalog-decoders.ts" ] || { echo "app-data-guard: $label ($commit) has no decoders" >&2; exit 1; }
-    done
+      [ -f "$to/src/api/catalog-decoders.ts" ] ||
+        { echo "app-data-guard: $label ($commit) has no decoders" >&2; exit 1; }
+    done < <(pinned)
     echo 'present=true'
     ;;
   run)
@@ -59,8 +74,10 @@ case "$command" in
       [ "$rc" = 0 ] || failed+=("$label")
     }
     check "$APP_REF" ''
-    while IFS='|' read -r label commit; do
+    while IFS='|' read -r label _tag _commit; do
       [ -n "$label" ] || continue
+      [ -d "$app/pinned-builds/$(slug "$label")/src" ] ||
+        { echo "app-data-guard: $label was not exported" >&2; exit 1; }
       check "$label" "$app/pinned-builds/$(slug "$label")/src"
     done < <(pinned)
     if [ "${#failed[@]}" -gt 0 ]; then
