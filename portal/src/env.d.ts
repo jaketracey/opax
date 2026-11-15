@@ -50,6 +50,8 @@ interface Env {
   BSKY_DID?: string
   BSKY_APP_PASSWORD?: string
   BSKY_SERVICE?: string
+  /** The ChatGPT app directory's domain-verification token, served at /.well-known/openai-apps-challenge (secret or var; unset = 404). */
+  OPENAI_APPS_CHALLENGE?: string
 
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code
@@ -84,6 +86,10 @@ interface Env {
   RESEARCH_SHADOW?: boolean
   /** Request-local policy, created only after operatorAuthorized passes. */
   RESEARCH_EVAL?: import('./research-eval').ResearchEvalState
+  /** Request-local: an MCP request's Progress meter (mcp-access.ts), called by kbFetch before each knowledge-base query. */
+  KB_METER?: import('./mcp-access').KbMeter
+  /** Request-local: the key SEARCH_LIMITER counts an MCP request under (mcp-access.ts limitKey). Absent: the client IP. */
+  MCP_LIMIT_KEY?: string
   /** Provisioned by Jake; optional so missing configuration falls back. */
   OPENROUTER_API_KEY?: string
   /** Optional operator-configured token prices, USD per million, for monitoring. */

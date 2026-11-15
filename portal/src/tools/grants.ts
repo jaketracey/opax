@@ -17,6 +17,7 @@ const fyStart = (label: unknown) => {
   const start = Number(label.slice(0, 4))
   return fyLabel(start) === label ? start : undefined
 }
+const COMMON_NAME_WORDS = new Set(['trustee', 'trust', 'limited', 'incorporated', 'association', 'australia', 'australian', 'council', 'university', 'foundation', 'society', 'corporation', 'company', 'group', 'services', 'national', 'community', 'department', 'government', 'state', 'city', 'shire', 'with', 'from'])
 const recipientName = (name: string) => fold(name).replace(/&/g, ' and ').replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
 const fileKey = (id: string) => {
   const colon = id.indexOf(':'), kind = colon < 0 ? 'x' : id.slice(0, colon)
@@ -31,7 +32,18 @@ export async function recipientTotal(env: ToolEnv, args: ToolArgs): Promise<Stru
   const input = String(args.recipient).trim(), normalized = recipientName(input)
   let matches = publicRecipients.filter(r => r.id === input || recipientName(r.n) === normalized)
   if (!matches.length && normalized) matches = publicRecipients.filter(r => recipientName(r.n).includes(normalized))
-  if (!matches.length) return { rows: [], citations: [], notes: ['No public recipient in the published grant recipient index matches that name or ID. The index lists selected recipients, so this does not establish a zero grant total.'] }
+  if (!matches.length) {
+    // Grants are recorded under legal names ("The Trustee for ..."), which often differ from the name people use.
+    // Offer the recipients that share the name's distinctive words; never pick one.
+    const words = [...new Set(normalized.split(' ').filter(word => word.length >= 4 && !COMMON_NAME_WORDS.has(word)))]
+    const names = publicRecipients.map(r => ({ r, words: recipientName(r.n).split(' ') }))
+    const holders = new Map(words.map(word => [word, names.filter(n => n.words.some(held => held === word || word.length >= 6 && held.startsWith(word.slice(0, 5)))).length]))
+    const near = names.map(n => ({ r: n.r, score: words.reduce((sum, word) => sum + (n.words.includes(word) ? (holders.get(word)! <= 40 ? 2 : 1) : word.length >= 6 && n.words.some(held => held.startsWith(word.slice(0, 5))) ? 0.5 : 0), 0) }))
+      .filter(c => c.score >= 2).sort((a, b) => b.score - a.score || a.r.n.localeCompare(b.r.n)).slice(0, 8)
+    return { rows: [], citations: [], ...(near.length ? { candidates: near.map(c => ({ recipient: c.r.n, recipient_id: c.r.id, jurisdiction })) } : {}),
+      notes: ['No public recipient in the published grant recipient index matches that name or ID. The index lists selected recipients, so this does not establish a zero grant total.',
+        ...(near.length ? ['Grants are recorded under legal names, which can differ from a trading or common name. candidates share words with the name given: confirm one, then ask again with its recipient_id.'] : [])] }
+  }
   if (matches.length > 1) return { rows: [], citations: [], candidates: matches.slice(0, 10).map(r => ({ recipient: r.n, recipient_id: r.id, jurisdiction })),
     notes: ['Several public grant recipients match. Choose an exact recipient name or ID before requesting its total.'] }
   const entry = matches[0]

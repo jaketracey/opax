@@ -102,6 +102,8 @@ export const tool: ToolDefinition = {
       person = resolved.candidates[0].person
       aliases = [...new Set([String(person.name), ...splitSpeakers(person), ...printSpeakers(person)])]
     } else if (args.speaker) aliases = [String(args.speaker)]
+    // exclude is for other tools that page this search (records already examined); it is not in the public schema.
+    const skip = new Set(Array.isArray(args.exclude) ? args.exclude.map(String) : [])
     let candidates: RecordRow[]
     if (args.record_id) candidates = [{ slug: args.record_id }]
     else {
@@ -113,8 +115,8 @@ export const tool: ToolDefinition = {
       if (aliases.length) clauses.push({ or: aliases.map(collaborator => ({ prop: 'origin_collaborator', collaborator })) })
       if (args.since || args.until) clauses.push({ prop: 'created', ...(args.since ? { since: args.since + 'T00:00:00Z' } : {}), ...(args.until ? { until: args.until + 'T23:59:59Z' } : {}) })
       if (args.kind === 'speech' && args.venue !== 'all') clauses.push(args.venue === 'committee' ? { or: COMMITTEES.map(c => label('chamber', c)) } : { not: { or: COMMITTEES.map(c => label('chamber', c)) } })
-      const found = await env.kb('/find', { query: args.query ?? '*', top_k: 12, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: { field: { and: clauses } } })
-      candidates = Object.values(object(found.resources)).map(object).filter(r => typeof r.slug === 'string' && SLUG.test(r.slug))
+      const found = await env.kb('/find', { query: args.query ?? '*', top_k: Math.min(12 + skip.size, 48), features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: { field: { and: clauses } } })
+      candidates = Object.values(object(found.resources)).map(object).filter(r => typeof r.slug === 'string' && SLUG.test(r.slug) && !skip.has(r.slug))
     }
     const seen = new Set<string>(), rows: RecordRow[] = []
     let failures = 0
@@ -162,7 +164,7 @@ export const tool: ToolDefinition = {
     }
     return publishedResult(rows, rows.map(r => ({ kind: 'record', url: sourceUrl(r.source_url) ?? String(r.url), text: clip(`${r.speaker ?? 'Source record'}, ${r.date ?? 'undated'}: ${r.title}. ${r.excerpt}`, args.record_id ? 4200 : 1000) })), {
       notes: [note, ...(rows.length ? [] : ['No source passage could be verified for this selection. This does not establish that no such statement exists.']), ...(failures ? ['Some original records were unavailable; the returned sample is incomplete.'] : [])],
-      checked_records: seen.size, partial: failures > 0, truncated: !args.record_id && candidates.length > rows.length,
+      checked_records: seen.size, ...(args.exclude === undefined ? {} : { checked_ids: [...seen] }), partial: failures > 0, truncated: !args.record_id && candidates.length > rows.length,
     })
   },
 }

@@ -14,7 +14,8 @@ export const KEYWORD_SEARCH_MS = 6_000
 
 /** Prefer hybrid/semantic through the cap while preparing a keyword answer. */
 export async function searchFind<T>(
-  read: (body: Record<string, unknown>, signal: AbortSignal) => Promise<Response>,
+  // hedge is true for the keyword retry, so a caller counting queries can tell it from the main one.
+  read: (body: Record<string, unknown>, signal: AbortSignal, hedge: boolean) => Promise<Response>,
   body: Record<string, unknown>,
   requestedMode: string,
   parent?: AbortSignal,
@@ -43,7 +44,7 @@ export async function searchFind<T>(
           features: used === 'hybrid' ? ['keyword', 'semantic'] : [used],
           // Keyword recovery must also survive an unavailable reranker.
           ...(fallback && used === 'keyword' ? { reranker: 'noop' } : {}),
-        }, signal)
+        }, signal, fallback)
         if (!response.ok) throw new Error('Search upstream unavailable')
         const data = await response.json()
         if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Invalid search response')
