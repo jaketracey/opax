@@ -34,6 +34,7 @@ import {
 import {
   barBacking,
   clearBarStyle,
+  glassBar,
   opaqueBar,
   useClearRailBar,
   useRailBar,
@@ -516,7 +517,12 @@ export function Screen({
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();
-  const belowBar = nativeRoot && railSolidRoot;
+  // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
+  // lays the scroll view out below it: React Native's own sticky header
+  // holds at the right place. BarStickyHeader subtracts the bar's height
+  // for a scroll view that runs under the bar, which there held Search's
+  // scope control about 170 pt below the bar, over the rows (iOS 18.4).
+  const belowBar = (nativeRoot && railSolidRoot) || !glassBar();
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);

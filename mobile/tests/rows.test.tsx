@@ -1687,8 +1687,18 @@ describe('Today bill previews at accessibility sizes (sweep 1, 2.3)', () => {
 });
 
 describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
-  const band = (os: 'ios' | 'android') => {
+  const platformVersion = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  afterEach(() => {
+    if (platformVersion)
+      Object.defineProperty(Platform, 'Version', platformVersion);
+  });
+  const band = (os: 'ios' | 'android', version: string | number = 26) => {
     jest.replaceProperty(Platform, 'OS', os);
+    // Under a translucent bar (iOS 26 and later) unless a case says older.
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
     return render(
       <HeaderHeightContext.Provider value={100}>
         <Screen testID="page" pinned={<View testID="scopes" />}>
@@ -1762,6 +1772,21 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     const undragged = sticky(240, null);
     expect(undragged(-123)).toBe(0);
     expect(undragged(300)).toBe(0);
+  });
+  test('before iOS 26 the band uses React Native’s own sticky header: the scroll view starts below the opaque bar', () => {
+    // BarStickyHeader moves the stick point down by the bar's height, for a
+    // scroll view that runs under the bar. Below an opaque bar that held
+    // Search's scope control about 170 pt under the bar, over the rows
+    // (iPhone 16 Pro, iOS 18.4).
+    const older = band('ios', '18.4').find(
+      (node) => node.props.testID === 'page' && node.props.stickyHeaderIndices,
+    );
+    expect(older.props.stickyHeaderIndices).toEqual([0]);
+    expect(older.props.StickyHeaderComponent).toBeUndefined();
+    const newer = band('ios', '26.3').find(
+      (node) => node.props.testID === 'page' && node.props.stickyHeaderIndices,
+    );
+    expect(newer.props.StickyHeaderComponent).toBeDefined();
   });
   test('the first drag from rest sets where the band sticks', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');

@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { liquidGlass } from './glass';
 
 type Measurable = {
   measureInWindow?: (
@@ -51,6 +52,15 @@ export function scrollToTop(
  */
 export function restOffset(scroll: TopScroll | null, headerBottom: number) {
   if (Platform.OS !== 'ios') return 0;
+  // Before iOS 26 these pages' bars are opaque and UIKit lays the scroll
+  // view out below them, so the rest is 0. The measurement below cannot
+  // say so for a tab root: under a large-title bar the scroll view reads
+  // as starting at the window's top (y 0) while it starts at the bar's
+  // bottom edge. Search then reset to minus the bar's height on every
+  // submit and scope change, and scrollToOverflowEnabled held it there:
+  // a blank band as tall as the bar above the results (204 pt at the
+  // default text size, taller at accessibility sizes; iOS 18.4).
+  if (!liquidGlass()) return 0;
   const over = scroll ? headerOver(scroll, headerBottom) : headerBottom;
   return over ? -over : 0;
 }
