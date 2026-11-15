@@ -628,6 +628,13 @@ describe('an open thread when its tab is shown again', () => {
       </NavigationContext.Provider>
     );
     await mount(page(168));
+    // The idle page reports its rest under the large title, as it does on
+    // a device, before the question is sent.
+    act(() =>
+      view!.root
+        .find((n) => n.props.testID === 'ask-screen' && n.type === ScrollView)
+        .props.onScroll({ nativeEvent: { contentOffset: { y: -168 } } }),
+    );
     await type('A fixture question?');
     await press('ask-submit');
     const scroll = () =>
