@@ -1,13 +1,34 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
-import { Button } from '../../design/controls';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/text';
-import { colors, hairline, radii, rhythm } from '../../design/tokens';
+import {
+  colors,
+  hairline,
+  minimumTarget,
+  radii,
+  rhythm,
+  textStyles,
+} from '../../design/tokens';
 import { learnCopy } from './copy';
 import { glossaryTerm, isTermId, termTitle } from './glossary';
 import { termRoute } from './routes';
+
+/** The popover's inset: its text and its action share it. */
+export const TIP_INSET = rhythm.block;
+/**
+ * How far the touch reaches past the "More" label, so the target is at
+ * least the minimum (44 pt) while the label keeps the text's insets. Never
+ * past the popover's own edge: a touch outside it closes the popover.
+ */
+const reach = Math.ceil((minimumTarget - textStyles.strong.lineHeight) / 2);
+export const MORE_SLOP = {
+  top: reach,
+  bottom: Math.min(reach, TIP_INSET),
+  left: minimumTarget,
+  right: Math.min(reach, TIP_INSET - rhythm.tight),
+} as const;
 
 const close = () => {
   if (router.canGoBack()) router.back();
@@ -68,15 +89,22 @@ export default function TermTip() {
         <Text wordSafe variant="body">
           {term.short}
         </Text>
-        <View style={styles.more}>
-          <Button
-            label={learnCopy.more}
-            variant="plain"
-            accessibilityLabel={`${learnCopy.more} about ${term.word}`}
-            onPress={() => router.replace(termRoute(id, over === '1'))}
-            testID={`term-tip-${id}-more`}
-          />
-        </View>
+        <Pressable
+          feedback="wash"
+          accessibilityRole="button"
+          accessibilityLabel={`${learnCopy.more} about ${term.word}`}
+          onPress={() => router.replace(termRoute(id, over === '1'))}
+          // The label sits on the text's own insets; the touch reaches past
+          // it to the 44 pt target.
+          hitSlop={MORE_SLOP}
+          android_ripple={{ color: colors.sunken }}
+          style={styles.more}
+          testID={`term-tip-${id}-more`}
+        >
+          <Text variant="strong" tone="navy">
+            {learnCopy.more}
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -91,9 +119,11 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     borderWidth: hairline,
     borderColor: colors.dividerSubtle,
-    paddingHorizontal: rhythm.block,
+    // One inset on every side the action touches: "More" ends on the text's
+    // trailing edge and sits as far from the foot as from the side.
+    paddingHorizontal: TIP_INSET,
     paddingTop: rhythm.row,
-    paddingBottom: rhythm.line,
+    paddingBottom: TIP_INSET,
     gap: rhythm.line,
     shadowColor: colors.ink,
     shadowOpacity: 0.16,
@@ -101,5 +131,15 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     elevation: 8,
   },
-  more: { alignSelf: 'flex-end', marginRight: -rhythm.tight },
+  // On the text's trailing edge, a line's gap closer than a new block. The
+  // pressed wash bleeds a little past the label on each side, as a quiet
+  // button's does, without moving the label off that edge.
+  more: {
+    alignSelf: 'flex-end',
+    marginTop: rhythm.line,
+    paddingHorizontal: rhythm.tight,
+    marginHorizontal: -rhythm.tight,
+    borderRadius: radii.thumb,
+    borderCurve: 'continuous',
+  },
 });
