@@ -38,6 +38,8 @@ import { createRecentStore } from '../src/features/search/recent';
 import { isLead, moneyDestination } from '../src/features/search/GroupResults';
 import { searchPhase } from '../src/features/search/SearchScreen';
 import { MatchRow } from '../src/features/search/rows';
+import { matchItem } from '../src/features/quick-search/items';
+import { placeLine as askPlaceLine } from '../src/features/ask/people';
 import { allLocal } from '../src/features/search/AllResults';
 import { EmptyResults } from '../src/features/search/EmptyResults';
 import { ApiError } from '../src/api/errors';
@@ -432,5 +434,206 @@ describe('the seat menu', () => {
   test('offers "Set Grayndler as my electorate" unless it is already the reader\'s seat', () => {
     expect(menuOf(true)).toContain('Set Grayndler as my electorate');
     expect(menuOf(false)).not.toContain('Set Grayndler as my electorate');
+  });
+});
+
+/**
+ * A person's row says "Member for" or "Senator for" only of someone the
+ * record says sits now. The roster's `current` flag is absent for most
+ * people, so its absence is not "sitting": the dated seats decide where
+ * they can, and otherwise the row names the seat alone.
+ */
+describe('a person’s place line claims only what the record says', () => {
+  const template = people.people.find((p) =>
+    p.electorates.some(
+      (e) =>
+        !e.current &&
+        e.jurisdiction === 'federal' &&
+        e.chamber === 'representatives',
+    ),
+  )!;
+  const ended = template.electorates.find((e) => !e.current)!;
+  type Seat = (typeof template.electorates)[number];
+  /** A roster row and the people catalogue it is joined to by its ID. */
+  const person = (
+    row: {
+      name: string;
+      current?: boolean;
+      chamber?: string;
+      electorate?: string;
+      state?: string;
+      states?: string[];
+    },
+    seats: Seat[],
+  ) => {
+    const pid = `pid-${row.name}`;
+    const item = {
+      name: row.name,
+      pid,
+      party: 'Labor',
+      speeches: 1,
+      states: row.states ?? ['federal'],
+      chambers: [row.chamber ?? 'representatives'],
+      ...(row.current === undefined ? {} : { current: row.current }),
+      representation: [
+        {
+          jurisdiction: 'federal',
+          chamber: row.chamber ?? 'representatives',
+          electorate: row.electorate ?? 'Watson',
+          state: row.state ?? 'NSW',
+          basis: 'Recorded parliamentary roster',
+        },
+      ],
+    } as unknown as NonNullable<(typeof sources)['roster']>['people'][number];
+    const catalogue = {
+      ...people,
+      people: [
+        {
+          ...template,
+          person_id: `person_${row.name}`,
+          name: row.name,
+          aliases: [],
+          legacy_person_id: pid,
+          electorates: seats,
+        },
+      ],
+    } as typeof people;
+    return { item, sources: { ...sources, people: catalogue } };
+  };
+  const rowOf = ({ item, sources: from }: ReturnType<typeof person>) => {
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <MatchRow
+          match={{ kind: 'people', key: item.name, tier: 0, item }}
+          q={item.name}
+          sources={from}
+          variant="suggestion"
+          testID="row"
+        />,
+      );
+    });
+    const props = r.root.find(
+      (n) => n.props.testID === 'row' && 'place' in n.props,
+    ).props as { place: string | null; partyStatus: string };
+    const quick = matchItem(
+      { kind: 'people', key: item.name, tier: 0, item },
+      from,
+    ).secondary;
+    act(() => r.unmount());
+    return { place: props.place, partyStatus: props.partyStatus, quick };
+  };
+  const watson = (current: boolean): Seat => ({
+    ...ended,
+    name: 'Watson',
+    current,
+    periods: current
+      ? [{ start: '2022-05-21', end: null }]
+      : [{ start: '1979-06-23', end: '2004-10-09' }],
+  });
+
+  test('a former member, whom the roster does not flag, is a former member: the seat ended in the dated record', () => {
+    const row = rowOf(person({ name: 'Leo McLeay' }, [watson(false)]));
+    expect(row.place).toBe('Former member for Watson, New South Wales');
+    expect(row.place).not.toMatch(/^Member for/);
+    expect(row.partyStatus).toBe('former');
+    // The wide quick search draws the same line.
+    expect(row.quick).toBe('Former member for Watson, New South Wales');
+    // The roster saying so is enough, with no dated seat at all.
+    expect(
+      rowOf(person({ name: 'Flagged Former', current: false }, [])).place,
+    ).toBe('Former member for Watson, New South Wales');
+    expect(
+      rowOf(
+        person(
+          {
+            name: 'Former Senator',
+            current: false,
+            chamber: 'senate',
+            electorate: 'Tasmania',
+            state: 'TAS',
+          },
+          [],
+        ),
+      ).place,
+    ).toBe('Former senator for Tasmania');
+  });
+
+  test('a current member’s row is unchanged: the roster’s flag, or a seat held now in the dated record', () => {
+    const flagged = rowOf(
+      person({ name: 'Sitting Member', current: true }, []),
+    );
+    expect(flagged.place).toBe('Member for Watson, New South Wales');
+    expect(flagged.quick).toBe('Member for Watson, New South Wales');
+    const dated = rowOf(person({ name: 'Dated Member' }, [watson(true)]));
+    expect(dated.place).toBe('Member for Watson, New South Wales');
+    expect(dated.partyStatus).toBe('current');
+    expect(
+      rowOf(
+        person(
+          {
+            name: 'Sitting Senator',
+            current: true,
+            chamber: 'senate',
+            electorate: 'Tasmania',
+            state: 'TAS',
+          },
+          [],
+        ),
+      ).place,
+    ).toBe('Senator for Tasmania');
+  });
+
+  test('where the record does not say, the row names the seat alone and claims nothing', () => {
+    // No flag and no dated seat.
+    const bare = rowOf(person({ name: 'Undated Person' }, []));
+    expect(bare.place).toBe('Watson, New South Wales');
+    expect(bare.partyStatus).toBe('unknown');
+    expect(bare.quick).toBe('Watson, New South Wales');
+    // An ended federal seat says nothing about a state parliament the
+    // roster also records, which no dated record covers.
+    const elsewhere = rowOf(
+      person({ name: 'Also State', states: ['federal', 'nsw'] }, [
+        watson(false),
+      ]),
+    );
+    expect(elsewhere.place).toBe('Watson, New South Wales');
+    expect(
+      rowOf(
+        person(
+          {
+            name: 'Undated Senator',
+            chamber: 'senate',
+            electorate: 'Tasmania',
+            state: 'TAS',
+          },
+          [],
+        ),
+      ).place,
+    ).toBe('Senate, Tasmania');
+    for (const line of [bare.place, elsewhere.place])
+      expect(line).not.toMatch(/member|senator/i);
+  });
+
+  test('Ask’s people rows, from the roster alone, say the same three things', () => {
+    const row = (current?: boolean, senate = false) =>
+      askPlaceLine({
+        name: 'A Person',
+        ...(current === undefined ? {} : { current }),
+        representation: [
+          {
+            jurisdiction: 'federal',
+            chamber: senate ? 'senate' : 'representatives',
+            electorate: senate ? 'Tasmania' : 'Watson',
+            state: senate ? 'TAS' : 'NSW',
+          },
+        ],
+      } as never);
+    expect(row(true)).toBe('Member for Watson, New South Wales');
+    expect(row(false)).toBe('Former member for Watson, New South Wales');
+    expect(row()).toBe('Watson, New South Wales');
+    expect(row(true, true)).toBe('Senator for Tasmania');
+    expect(row(false, true)).toBe('Former senator for Tasmania');
+    expect(row(undefined, true)).toBe('Senate, Tasmania');
   });
 });

@@ -5,6 +5,11 @@ import type {
   ElectorateIndex,
   PeopleCatalog,
 } from '../../api/catalog-decoders';
+import {
+  partyStatusFor,
+  partyStatusSeatsFor,
+  type PartyStatus,
+} from '../../api/party-transforms';
 import type { SuggestionRoster } from '../../api/selectors';
 import {
   BillRow,
@@ -54,27 +59,68 @@ const stateName = (code?: string | null) =>
     : null;
 
 /**
+ * Whether the record says a person sits now, sat before, or does not say.
+ * The roster's `current` flag is set only for some people (it comes from
+ * the federal APH list), so its absence proves nothing. In order:
+ * - the roster says so (`current` true or false);
+ * - the dated seats of the people catalogue, joined by the roster's ID: a
+ *   seat held now is sitting, and seats that have all ended are former
+ *   where they cover every parliament the roster records (`partyStatusFor`);
+ * - otherwise unknown, and the row claims neither.
+ */
+export function serviceStatus(
+  person: Person,
+  sources: Pick<RowSources, 'people'> = {},
+): PartyStatus {
+  if (person.current === true) return 'current';
+  const dated = person.pid
+    ? sources.people?.people.find((p) => p.legacy_person_id === person.pid)
+    : undefined;
+  return partyStatusFor(
+    partyStatusSeatsFor(
+      dated?.electorates ?? [],
+      person,
+      sources.people ?? undefined,
+    ),
+    person,
+  );
+}
+
+/**
  * A person's place line (specs/search.md 2.15): "Member for Grayndler, New
  * South Wales", "Senator for Tasmania", "Former member for Grayndler, New
  * South Wales". Never "Recorded representation", never an ISO date, never
  * "Formerly" (reserved for a change of party).
+ *
+ * "Member for" and "Senator for" are said only of someone the record says
+ * sits now (`serviceStatus`). A former member is said to be one. Where the
+ * record does not say, the line names the seat alone ("Watson, New South
+ * Wales", "Senate, Tasmania") and claims nothing about service.
  */
-export function placeLine(person: Person): string | null {
+export function placeLine(
+  person: Person,
+  status: PartyStatus = serviceStatus(person),
+): string | null {
   const seat =
     (person.representation ?? []).find(
       (r) => r.jurisdiction === 'federal' && r.chamber !== 'senate_committee',
     ) ?? person.representation?.[0];
   if (!seat) return null;
   const state = stateName(seat.state);
-  const sitting = person.current !== false;
+  const said = (claim: string, former: string, plain: string | null) =>
+    status === 'current' ? claim : status === 'former' ? former : plain;
   if (seat.chamber === 'senate')
     return state
-      ? `${sitting ? 'Senator' : 'Former senator'} for ${state}`
-      : sitting
-        ? 'Senator'
-        : 'Former senator';
+      ? said(
+          `Senator for ${state}`,
+          `Former senator for ${state}`,
+          `Senate, ${state}`,
+        )
+      : said('Senator', 'Former senator', 'Senate');
   const where = [seat.electorate, state].filter(Boolean).join(', ');
-  return where ? `${sitting ? 'Member' : 'Former member'} for ${where}` : null;
+  return where
+    ? said(`Member for ${where}`, `Former member for ${where}`, where)
+    : null;
 }
 
 /** The canonical person ID the people catalogue holds for a roster row. */
@@ -189,7 +235,11 @@ function PersonMatch({
   };
   // Identity guard: a person not yet joined to the people catalogue shows
   // no party or place (it may be a surname stub or a twin spelling).
-  const place = id ? placeLine(person) : null;
+  const status = useMemo(
+    () => serviceStatus(person, sources),
+    [person, sources],
+  );
+  const place = id ? placeLine(person, status) : null;
   const party = id ? person.party_now || person.party : null;
   const rowID =
     testID ?? `search-suggestion-person-${person.pid ?? person.name}`;
@@ -212,7 +262,9 @@ function PersonMatch({
             <PersonRow
               name={person.name}
               party={party}
-              partyStatus={person.current === false ? 'former' : 'current'}
+              partyStatus={status}
+              // The place line says "Former member for ..." itself.
+              statusShown
               place={place}
               portrait={
                 <CachedPortrait
