@@ -9,6 +9,7 @@ import {
 import {
   AccessibilityInfo,
   FlatList,
+  Platform,
   RefreshControl,
   StyleSheet,
   View,
@@ -38,7 +39,17 @@ import {
   StatePageProvider,
 } from '../../design/states';
 import { colors, hairline, layout, rhythm } from '../../design/tokens';
-import { headerItems, noHeaderItems, pageItems } from '../../navigation/chrome';
+import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
+import {
+  clearBars,
+  glassBar,
+  headerItems,
+  noHeaderItems,
+  pageItems,
+} from '../../navigation/chrome';
+import { useListUnderBar } from '../../navigation/useListUnderBar';
 import { openOnWeb } from '../../navigation/external';
 import { canShare, copyRecordLink, shareRecord } from '../../navigation/share';
 import { useFloatingBarFoot } from '../../navigation/floating-bar';
@@ -438,6 +449,7 @@ export function MoneyList<T>({
   loaded,
   onScroll,
   listRef,
+  largeTitle = false,
 }: {
   rows: T[];
   rowKey: (row: T) => string;
@@ -455,9 +467,41 @@ export function MoneyList<T>({
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   /** The list itself, for a screen that scrolls it (Largest's month). */
   listRef?: Ref<FlatList<T>>;
+  /**
+   * The page has a large title, so the list runs under a clear bar (as a
+   * tab root's does). It fades into the page's ground behind the bar once
+   * rows are under it, and with a legibility setting on it tells the solid
+   * bar when it has left rest. A list under the stack's own solid bar
+   * (every other money list) needs neither.
+   */
+  largeTitle?: boolean;
 }) {
   const column = useScreenColumn('readable');
   const foot = useFloatingBarFoot();
+  // Under the clear bar UIKit's soft edge alone left rows printed through
+  // the clock, the bar buttons and the search field. The fade follows the
+  // list's scroll on the UI thread; beside the Duo's rail the bar is the
+  // rail's own.
+  const headerBottom = useHeaderBottom();
+  const onRail = useVerticalBarEdge() !== 'unspecified';
+  const fades =
+    largeTitle && clearBars && Platform.OS === 'ios' && glassBar() && !onRail;
+  const fadeScroll = useBarFadeScroll(fades);
+  // Reduce Transparency and Increase Contrast: the bar is solid, and takes
+  // its ground only once the list has scrolled under it (useListUnderBar).
+  const underBar = useListUnderBar(largeTitle);
+  // One handler feeds the fade, the solid bar and the page's own listener.
+  const { onScroll: fadeOnScroll } = fadeScroll;
+  const { onScroll: barOnScroll } = underBar;
+  const onListScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      fadeOnScroll(event);
+      barOnScroll(event);
+      onScroll?.(event);
+    },
+    [fadeOnScroll, barOnScroll, onScroll],
+  );
+  const hears = fades || underBar.reports || !!onScroll;
   useRefreshCommand(refresh, refreshing);
   return (
     <SidebarSafe style={styles.screen}>
@@ -470,7 +514,7 @@ export function MoneyList<T>({
           style={styles.screen}
           contentContainerStyle={[styles.content, column.content, foot]}
           onLayout={column.onLayout}
-          onScroll={onScroll}
+          onScroll={hears ? onListScroll : undefined}
           scrollEventThrottle={16}
           contentInsetAdjustmentBehavior="automatic"
           automaticallyAdjustKeyboardInsets
@@ -515,6 +559,7 @@ export function MoneyList<T>({
           }
           renderItem={({ item, index }) => <View>{render(item, index)}</View>}
         />
+        {fades ? <ClearBarFade y={fadeScroll.y} bottom={headerBottom} /> : null}
       </StatePageProvider>
     </SidebarSafe>
   );
