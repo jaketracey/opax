@@ -564,11 +564,14 @@ test.each([
         expect(restTop).toBe(rhythm.heading);
         expect(400 - pinned.y).toBe(rhythm.heading);
       } else {
-        // Under the clear bar, exactly as before.
+        // Under the clear bar the first question rests as before: the
+        // thread's own fade is clear at rest.
         expect(scroll.props.contentInset).toEqual({
           top: estimate - measured,
         });
-        expect(400 - pinned.y).toBe(estimate + rhythm.heading);
+        // A new question is pinned with the thread scrolled, so the fade is
+        // up: it rests below the fade's foot (16 pt under the bar's), whole.
+        expect(400 - pinned.y).toBe(estimate + rhythm.heading + 16);
       }
     } finally {
       solidBar.mockRestore();

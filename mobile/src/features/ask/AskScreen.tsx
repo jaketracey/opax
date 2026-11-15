@@ -288,6 +288,7 @@ export default function AskScreen() {
   useEffect(() => {
     wasBusy.current = s.busy;
   }, [s.busy]);
+  const pinClear = ownFade ? OWN_FADE_COVER : 0;
   // The new question goes just under the bar once its turn is laid out.
   const reveal = useCallback(
     (laidOut = true) => {
@@ -295,13 +296,15 @@ export default function AskScreen() {
       if (laidOut) pin.current = false;
       scroll.current?.scrollTo({
         y: Math.max(
-          turnY.current - headerBottom - rhythm.heading,
+          // Under the thread's own fade the ground is whole to the foot
+          // of the bar's buttons: the new question rests below that.
+          turnY.current - headerBottom - rhythm.heading - pinClear,
           -headerBottom,
         ),
         animated: !reduceMotion,
       });
     },
-    [headerBottom, reduceMotion],
+    [headerBottom, reduceMotion, pinClear],
   );
   const latestReveal = useRef(reveal);
   useLayoutEffect(() => {
