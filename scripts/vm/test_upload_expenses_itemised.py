@@ -244,6 +244,25 @@ class SyncTests(unittest.TestCase):
             self.assertEqual(got, {"OPAX_R2_ACCOUNT_ID": "acct", "OPAX_R2_ACCESS_KEY_ID": "key", "OPAX_R2_SECRET_ACCESS_KEY": "s3cr3t"})
             self.assertEqual(U.read_env_file(Path(d) / "missing", U.CREDENTIALS), {})
 
+    def test_the_tokens_own_file_is_read_before_a_later_env_file(self):
+        import os
+        from unittest import mock
+        seen = {}
+        class Spy:
+            def __init__(self, session, *creds): seen["creds"] = creds
+        with tempfile.TemporaryDirectory() as d, tree(self.FILES) as t:
+            own, other = Path(d) / "r2.env", Path(d) / ".env"
+            own.write_text("OPAX_R2_ACCOUNT_ID=acct\nOPAX_R2_ACCESS_KEY_ID=own-key\n")
+            other.write_text("OPAX_R2_ACCESS_KEY_ID=other-key\nOPAX_R2_SECRET_ACCESS_KEY=other-secret\n")
+            with mock.patch.dict(os.environ, {}, clear=True), mock.patch.object(sys, "stderr"), \
+                    mock.patch.object(U, "R2", Spy), mock.patch.object(U, "sync", return_value=(0, {})):
+                self.assertEqual(U.main(["--tree", t, "--env", str(own), "--env", str(Path(d) / "absent"), "--env", str(other)]), 0)
+            self.assertEqual(seen["creds"], ("acct", "own-key", "other-secret"))
+            with mock.patch.dict(os.environ, {"OPAX_R2_ACCESS_KEY_ID": "env-key"}, clear=True), mock.patch.object(sys, "stderr"), \
+                    mock.patch.object(U, "R2", Spy), mock.patch.object(U, "sync", return_value=(0, {})):
+                U.main(["--tree", t, "--env", str(own), "--env", str(other)])
+            self.assertEqual(seen["creds"][1], "env-key")      # the environment still wins
+
 
 class PublishedCheckTests(unittest.TestCase):
     """--repo: the tree is sent only while HEAD publishes the expenses.json it was exported beside."""
@@ -287,7 +306,9 @@ class PublishedCheckTests(unittest.TestCase):
             err = mock.MagicMock()
             with mock.patch.dict(os.environ, {}, clear=True), mock.patch.object(sys, "stderr", err), \
                     mock.patch.object(U, "sync", side_effect=AssertionError("must not sync")):
-                self.assertEqual(U.main(["--tree", str(t), "--repo", str(repo)]), 0)
+                self.assertEqual(U.main(["--tree", str(t), "--repo", str(repo)]), 4)
+            # the hold is a WARN line in the nightly log, not a silent success
+            self.assertTrue(any("WARN held" in str(call) for call in err.write.call_args_list))
 
 
 if __name__ == "__main__":

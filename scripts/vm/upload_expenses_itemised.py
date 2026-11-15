@@ -5,7 +5,7 @@ serves from `/media/expenses/v1/<person_id>/<year>.json`. The nightly runs it af
 (scripts/vm/nightly.sh, sync_expenses_itemised), every night:
 
   python3 scripts/vm/upload_expenses_itemised.py --tree ~/.cache/autoresearch/pipeline/expenses-itemised \
-      --repo ~/opax --env ~/opax/.env --skip-without-credentials
+      --repo ~/opax --env ~/.config/opax/r2.env --skip-without-credentials
   python3 scripts/vm/upload_expenses_itemised.py --tree ... --dry-run     # list and compare, change nothing
 
 With --repo it first checks that the tree belongs to what is published: the export stamps the sha256 of
@@ -20,14 +20,16 @@ MAX_ORPHAN_RATIO of what is stored, in which case none is deleted and it says so
 data sends nothing. It reads and writes nowhere but BUCKET/PREFIX: both are constants, not options.
 A request that fails with 429, a 5xx or a connection error is tried three times with a pause.
 
-Credentials are an R2 API token scoped to that one bucket (object read and write), in the environment
-(on the box, ~/.config/opax/nightly.env, which nightly.sh exports) or the --env file: OPAX_R2_ACCOUNT_ID,
-OPAX_R2_ACCESS_KEY_ID, OPAX_R2_SECRET_ACCESS_KEY. They are never printed.
+Credentials are an R2 API token scoped to that one bucket (object read and write): OPAX_R2_ACCOUNT_ID,
+OPAX_R2_ACCESS_KEY_ID, OPAX_R2_SECRET_ACCESS_KEY, from an --env file or the environment. On the box they
+live in the token's own file, ~/.config/opax/r2.env, and nowhere else: nightly.sh drops them from its
+environment and passes only that file, so no other step inherits them. They are never printed.
 
-Exit codes: 0 in step, or nothing to do (held, or no credentials with --skip-without-credentials);
-2 usage, no credentials or no tree; 3 refused: the tree has under MIN_RATIO of the files already
-stored (a shrunken export; the stored files are kept); 1 a request failed after its retries (what was
-already sent stays; the next run sends the rest).
+Exit codes: 0 in step, or no credentials with --skip-without-credentials; 2 usage, no credentials or
+no tree; 3 refused: the tree has under MIN_RATIO of the files already stored (a shrunken export; the
+stored files are kept); 4 held: with --repo, HEAD's expenses.json is not the one the tree was exported
+beside, nothing was sent (the nightly reports it as a warning, so a stamp that never matches is seen);
+1 a request failed after its retries (what was already sent stays; the next run sends the rest).
 """
 
 import argparse
@@ -245,7 +247,9 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=f"itemised expenses tree -> r2://{BUCKET}/{PREFIX}")
     ap.add_argument("--tree", required=True, type=Path)
     ap.add_argument("--repo", type=Path, help="send only while this checkout's HEAD publishes the expenses.json the tree was exported beside")
-    ap.add_argument("--env", type=Path, help="a dotenv file to read the OPAX_R2_* credentials from when the environment lacks them")
+    ap.add_argument("--env", type=Path, action="append", default=[],
+                    help="a dotenv file to read the OPAX_R2_* credentials from when the environment lacks them; "
+                         "may be given more than once, the first file that has a value wins")
     ap.add_argument("--skip-without-credentials", action="store_true", help="exit 0, not 2, when there are no credentials")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
@@ -257,9 +261,11 @@ def main(argv=None):
     if args.repo:
         problem = published_problem(tree, args.repo.expanduser())
         if problem:
-            say(f"held, nothing sent: {problem}")
-            return 0
-    from_file = read_env_file(args.env.expanduser(), CREDENTIALS) if args.env else {}
+            say(f"WARN held, nothing sent: {problem}")
+            return 4
+    from_file = {}
+    for path in reversed(args.env):
+        from_file.update(read_env_file(path.expanduser(), CREDENTIALS))
     creds = [os.environ.get(k) or from_file.get(k) for k in CREDENTIALS]
     if not all(creds):
         say("skipped: " + ", ".join(CREDENTIALS) + " are not all set")
