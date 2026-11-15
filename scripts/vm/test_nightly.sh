@@ -1428,6 +1428,7 @@ check "a held group: the night is ok (exit 0)" test "$NRC" -eq 0
 check "the held speakers.json was not published; votes and corpus still went out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member' && git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
 check "status ok, with a warning naming the group, its expiry and the reason" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and any(\"speakers held by review until 2099-01-01\" in w and \"lost speeches\" in w for w in s[\"warnings\"]), s'"
 check "the checkout is left with speakers.json at HEAD" bash -c "cd '$REPO' && git diff --quiet HEAD -- portal/public/speakers.json"
+check "a held export is not a publication: the weekly group stays owed" python3 -c "import json; r=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json'))['groups']['weekly']; assert 'due' in r and 'last_success' not in r, r"
 new_sandbox s27c
 printf 'speakers 2000-01-01 the directory lost speeches, under review\n' > "$REPO/scripts/vm/gate_hold.txt"
 FAKE_MODE=ok OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly

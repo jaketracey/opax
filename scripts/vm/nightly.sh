@@ -603,7 +603,8 @@ fi
 # A reviewed, dated hold: "GROUP EXPIRY(YYYY-MM-DD) REASON" per line. A listed group that changed tonight is put
 # back to HEAD before validation and the portal gate, so the gate's first full run tests only what may be
 # published (15 Nov 2026: one full suite took 2,598 s of the 75 min budget, so the blame search could not start
-# and one held export cost every other group the night). Each hold is a status warning. A hold past its expiry,
+# and one held export cost every other group the night). Each hold is a status warning, and the periodic groups
+# stay owed while one of their exports is held. A hold past its expiry,
 # a malformed line or an unknown group fails the night loudly and the group stays held: a hold never lapses or
 # lingers in silence. Groups with their own acceptance state (bills, votes, divisions, evidence ...) cannot be
 # listed. scripts/vm/test_gate_hold.py checks that no group left to publish reads a held group's files.
@@ -619,17 +620,20 @@ if [ -f "$GATE_HOLD_FILE" ]; then
       fail "gate_hold.txt cannot hold $hold_group (it has its own acceptance state)"; continue ;;
     esac
     if ! [[ "${hold_expiry:-}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || [ -z "${hold_reason:-}" ]; then
-      group_changed "$hold_group" && revert_group "$hold_group"
+      group_changed "$hold_group" && { revert_group "$hold_group"; PERIODIC_ACCEPTED=0; }
       fail "gate_hold.txt: the hold on $hold_group needs an expiry date (YYYY-MM-DD) and a reason; $hold_group stays held"
       continue
     fi
     if [[ "$hold_today" > "$hold_expiry" ]]; then
-      group_changed "$hold_group" && revert_group "$hold_group"
+      group_changed "$hold_group" && { revert_group "$hold_group"; PERIODIC_ACCEPTED=0; }
       fail "the review hold on $hold_group expired on $hold_expiry (scripts/vm/gate_hold.txt: $hold_reason): renew it or remove it; $hold_group stays held"
       continue
     fi
     group_changed "$hold_group" || continue
     revert_group "$hold_group"
+    # A held export is not a publication: the periodic groups that produced it stay owed (periodic_refresh_complete),
+    # so the night after the hold is lifted runs them again instead of waiting for the next Sunday.
+    PERIODIC_ACCEPTED=0
     warn "$hold_group held by review until $hold_expiry (scripts/vm/gate_hold.txt): $hold_reason; put back to HEAD, not published tonight"
   done < "$GATE_HOLD_FILE"
 fi

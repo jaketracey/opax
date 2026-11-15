@@ -147,6 +147,17 @@ class GateHoldList(unittest.TestCase):
         nightly = (VM / "nightly.sh").read_text()
         self.assertLess(nightly.index("gate_hold.txt"), nightly.index("# ---- 4. validate what will be committed"))
         self.assertRegex(nightly, r'if \[\[ "\$hold_today" > "\$hold_expiry" \]\]; then\n[^\n]*revert_group[^\n]*\n\s*fail "the review hold on')
+
+    def test_every_hold_that_puts_a_group_back_keeps_the_periodic_groups_owed(self):
+        # a held export is not a publication: without this a green held night records the weekly and monthly
+        # catch-up as done and the export is not made again until the next Sunday
+        nightly = (VM / "nightly.sh").read_text()
+        step = nightly[nightly.index("# ---- 3z."):nightly.index("# ---- 4. validate what will be committed")]
+        reverts = [m.end() for m in re.finditer(r'revert_group "\$hold_group"', step)]
+        self.assertEqual(len(reverts), 3)
+        for end in reverts:
+            self.assertRegex(step[end:end + 420], r"^[^\n]*(\n\s*#[^\n]*)*\n?\s*;?\s*PERIODIC_ACCEPTED=0|^; PERIODIC_ACCEPTED=0")
+        self.assertLess(nightly.index("PERIODIC_ACCEPTED=1"), nightly.index("# ---- 3z."))
         for group in UNHOLDABLE:
             self.assertRegex(nightly, r"case \"\$hold_group\" in [a-z|-]*\b" + re.escape(group) + r"\b")
 

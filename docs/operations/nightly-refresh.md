@@ -792,7 +792,8 @@ credentials and can run only the public GET preview or an offline captured plan.
 
 **Reviewed holds (`scripts/vm/gate_hold.txt`).** One line per data group: the group, an expiry date (Sydney) and the
 reason. Before validation and the portal gate, the nightly puts each listed group that changed back to HEAD and reports it
-as a status warning, so the gate's first full run tests only what may be published. Use it when an export is known to need
+as a status warning, so the gate's first full run tests only what may be published. A held export is not a publication,
+so the weekly and monthly groups stay owed and run again each night until the hold is lifted. Use it when an export is known to need
 a review: on 15 Nov 2026 the money, interests and speakers exports turned 17 test files red, one full suite took 2,598 s
 of the 75 min budget, the blame search could not start, and every other group (the 2026Q3 expenses among them) was held
 for the night. A hold past its expiry, a line without a date and reason, an unknown group, or a group with its own
