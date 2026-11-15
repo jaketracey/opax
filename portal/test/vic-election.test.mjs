@@ -295,14 +295,26 @@ test('finder matches candidate names from the VEC list: one rule for every candi
   const invented={...data,seats:data.seats.map(s=>s===lowan?{...s,candidates:{...list('QUILL, Victoria','KETCH-O’DEA, Rowan J.','QUILL, Avery'),list:[{name:'QUILL, Victoria',party:'Independent'},{name:'KETCH-O’DEA, Rowan J.',party:'Liberal'},{name:'QUILL, Avery',party:''}]}}
     :s===upper?{...s,candidates:{...list(),list:[{name:'QUILL, Avery',party:'',group:'A',group_name:''}]}}:{...s,candidates:null})};
   const find=q=>findSeats(q,invented,places,{candidates:true});
-  // Whole words in any order; a full name first, then by published name, then seat. No party or roster order.
+  // Whole words in any order; alphabetical by surname, then given name, then seat. No party, roster or closeness order.
   assert.deepEqual(cand(find('quill')),['QUILL, Avery @ Lowan',`QUILL, Avery @ ${upper.name}`,'QUILL, Victoria @ Lowan']);
   assert.deepEqual(cand(find('Avery Quill')),cand(find('QUILL, Avery')));assert.equal(cand(find('avery quill')).length,2);
   assert.deepEqual(cand(find('Victoria Quill')),['QUILL, Victoria @ Lowan']);assert.deepEqual(cand(find('quill victoria')),['QUILL, Victoria @ Lowan']);
   for(const q of ['ketch-o’dea','Ketch O\'Dea','rowan ketch','Rowan J. Ketch-O’Dea','ODEA','rowan j'])assert.deepEqual(cand(find(q)),['KETCH-O’DEA, Rowan J. @ Lowan'],q);
   for(const q of ['qui','j','avery ketch','quill 3350','zzqx'])assert.deepEqual(cand(find(q)),[],q);
-  // Place, seat and member matches are as they were and come first.
-  assert.deepEqual(findSeats('Addison',data,null,{candidates:true}).filter(h=>h.kind!=='Candidate'),findSeats('Addison',data,null));
+  // A full-name match does not jump the queue: "ABBOT, Avery Quill" still precedes "QUILL, Avery".
+  const order={...invented,seats:invented.seats.map(s=>s.name==='Bass'?{...s,candidates:list('QUILL-ABBOT, Avery','ABBOT, Avery Quill','QUILL, Aaron Avery','de QUILL, Avery')}:s)};
+  assert.deepEqual(cand(findSeats('avery quill',order,null,{candidates:true})),['ABBOT, Avery Quill @ Bass','de QUILL, Avery @ Bass','QUILL, Aaron Avery @ Bass','QUILL, Avery @ Lowan',`QUILL, Avery @ ${upper.name}`,'QUILL-ABBOT, Avery @ Bass']);
+  // Once a list is published the web finder matches people as candidates only: no roster "Member" block with a party and margin.
+  const member=lowan.members[0].name;
+  assert.deepEqual(findSeats(member,data,null).map(h=>h.kind),['Member']);
+  for(const d of [data,invented])assert.ok(findSeats(member,d,places,{candidates:true}).every(h=>h.kind!=='Member'));
+  const sitting={...invented,seats:invented.seats.map(s=>s===lowan?s:s.name==='Lowan'?{...s,candidates:list(member.split(' ').at(-1).toUpperCase()+', '+member.split(' ').slice(0,-1).join(' '))}:s)};
+  const own=(await vicElectionPage(null,async path=>path===VIC_ELECTION_ASSET?sitting:read(path),on,member,now)).html.match(/<div class="vic-hits">[\s\S]*?<\/section>/)[0];
+  assert.equal(own.match(/<div class="vic-hit">/g).length,1);assert.match(own,/<span>Candidate<\/span>/);assert.doesNotMatch(own,/<span>Member<\/span>|vic-seat-figure/);
+  // Before any list is published, member names still find their seat.
+  const unlisted={...data,seats:data.seats.map(s=>({...s,candidates:null}))};
+  assert.deepEqual(findSeats(member,unlisted,null,{candidates:true}),findSeats(member,unlisted,null));
+  // Place and seat matches are as they were and come first.
   assert.deepEqual(find('3350').map(h=>h.kind),['Postcode']);assert.deepEqual(find('bass'),findSeats('bass',invented,places));
   const both={...invented,seats:invented.seats.map(s=>s.name==='Bass'?{...s,candidates:list('BASS, Wren')}:s)};
   assert.deepEqual(findSeats('bass',both,places,{candidates:true}).map(h=>`${h.kind}:${h.name}`),['District:Bass','Candidate:BASS, Wren']);
@@ -317,6 +329,10 @@ test('finder matches candidate names from the VEC list: one rule for every candi
   assert.equal(new Set(blocks.map(shape)).size,1);
   for(const b of blocks){assert.doesNotMatch(b,/party-|vic-seat-figure|subject\/person|<img/);for(const m of [...lowan.members,...upper.members])assert.ok(!b.includes(m.name));}
   assert.match(page.html,/<label for="vic-place">Suburb, postcode, district or candidate<\/label>/);
+  // The order is stated where there is an order to state, and the field no longer asks browsers for a suburb.
+  assert.match(page.html,/<\/ul><\/div><p class="hub-meta">Candidates are listed alphabetically by surname, then given name\.<\/p>/);
+  assert.doesNotMatch((await vicElectionPage(null,read2,on,'victoria quill',now)).html,/listed alphabetically/);
+  assert.doesNotMatch(page.html,/autocomplete=/);
   assert.match((await vicElectionPage(null,read2,on,'zzqx',now)).html,/No suburb, postcode, district or candidate matches “zzqx”\. Try a nearby suburb/);
   // Before a list is published the finder's wording is unchanged.
   const none={...data,seats:data.seats.map(s=>({...s,candidates:null}))};
