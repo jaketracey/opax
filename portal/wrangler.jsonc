@@ -88,8 +88,9 @@
     // The public-record MCP tools answer without an account. "false" returns /mcp to members only
     // (keys and connected clients keep working). Limits are per minute; the alert line is per hour.
     // One client gets 60; an address has a ceiling only, higher for the addresses Claude and ChatGPT share.
-    // OFF in production until the tool quality gates pass and the spend guard below is agreed: do not merge this as "true".
-    "MCP_ANON_ENABLED": "false",
+    // ON in production from 15 Nov 2026, after the tool quality gates passed and the spend guard below was agreed.
+    // Set "false" and deploy to return /mcp to members only (docs/COMMUNITY.md, kill switch).
+    "MCP_ANON_ENABLED": "true",
     // The automatic daily guard (src/mcp-access.ts), per UTC day. Two pools: the addresses Claude and ChatGPT
     // share, and everyone else ("direct"). A pool at either cap pauses the no-account tier for its callers until
     // the day ends. PROGRESS = actual Progress knowledge-base queries, counted one by one (500 a day in all until
