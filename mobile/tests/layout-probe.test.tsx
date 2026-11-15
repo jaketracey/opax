@@ -1,5 +1,7 @@
 // The layout probe is a measuring build only (src/perf/layout-probe.ts). It
 // must not exist in any other build: no recorder, no row in Account.
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act } from 'react';
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -51,24 +53,39 @@ test('with the flag off the hook and the row are plain no-ops', () => {
 
 test.each([
   [undefined, false],
-  ['', false],
-  ['0', false],
-  ['true', false],
-  ['1', true],
-] as const)('the flag reads %p as %s', (value, on) => {
-  const before = process.env.EXPO_PUBLIC_OPAX_LAYOUT_PROBE;
-  if (value === undefined) delete process.env.EXPO_PUBLIC_OPAX_LAYOUT_PROBE;
-  else process.env.EXPO_PUBLIC_OPAX_LAYOUT_PROBE = value;
-  try {
+  [{}, false],
+  [{ layoutProbe: false }, false],
+  [{ layoutProbe: '1' }, false],
+  [{ layoutProbe: 1 }, false],
+  [{ layoutProbe: true }, true],
+] as const)(
+  'build configuration extra %p turns the probe on: %s',
+  (extra, on) => {
     jest.isolateModules(() => {
+      jest.doMock('expo-constants', () => ({
+        __esModule: true,
+        default: { expoConfig: extra === undefined ? undefined : { extra } },
+      }));
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const flag = require('../src/perf/layout-probe-flag') as {
         layoutProbeEnabled: boolean;
       };
       expect(flag.layoutProbeEnabled).toBe(on);
     });
-  } finally {
-    if (before === undefined) delete process.env.EXPO_PUBLIC_OPAX_LAYOUT_PROBE;
-    else process.env.EXPO_PUBLIC_OPAX_LAYOUT_PROBE = before;
-  }
+    jest.dontMock('expo-constants');
+  },
+);
+
+test('the flag is read from the build configuration, never from process.env', () => {
+  // Metro's transform cache is not keyed on environment variables: a flag
+  // inlined into the bundle stayed on in the next build without it.
+  const source = readFileSync(
+    join(__dirname, '../src/perf/layout-probe-flag.ts'),
+    'utf8',
+  )
+    .split('\n')
+    .filter((line) => !/^\s*(\/\*|\*|\/\/)/.test(line))
+    .join('\n');
+  expect(source).not.toContain('process.env');
+  expect(source).toContain('expoConfig');
 });

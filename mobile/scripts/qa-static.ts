@@ -125,6 +125,14 @@ for (const variant of ['production', 'e2e', 'development']) {
   }
 }
 assert.equal(release.extra.apiOrigin, 'https://opax.com.au');
+// The layout probe is for one measuring TestFlight build, never by default.
+if (process.env.EXPO_PUBLIC_OPAX_LAYOUT_PROBE !== '1')
+  for (const app of [release, e2e])
+    assert.equal(
+      app.extra.layoutProbe,
+      undefined,
+      'Only a build made with EXPO_PUBLIC_OPAX_LAYOUT_PROBE=1 carries the layout probe',
+    );
 assert.equal(
   release.extra.router.sitemap,
   false,
