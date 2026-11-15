@@ -142,7 +142,12 @@ right after `people` by `validate_data.py firsts`: the shape, people that are
 in the roster on disk, no fewer people than HEAD's by more than a tenth, and no
 fact marked first without an entry date inside its chamber's record. The
 weekly refresh writes it in step `x_firsts`, after `x_people`, and logs the
-coverage the export printed. The nightly publishes only paths HEAD already
+coverage the export printed. The speeches are scanned and deduped once a
+night: the roster export's own pass also writes each speaker's earliest
+speech (`export_parliamentarians.py --speech-facts`), and `x_firsts` reads
+that file instead of the table; with no facts the step is skipped and the
+shipped file kept. An export holds at least 500 people, so a broken first
+export fails validation instead of publishing an empty file. The nightly publishes only paths HEAD already
 has, so the committed file starts as an empty seed (no people, and a note
 saying so); the first gated weekly run replaces it. It is never exported by
 hand.

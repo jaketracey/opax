@@ -259,7 +259,7 @@ class PeriodicExportsAreOwned(unittest.TestCase):
         # the nightly publishes only paths HEAD already has (tracked_data_paths): the seed makes the first export publishable
         self.assertTrue((ROOT / path).is_file(), f"{path} must exist in HEAD to be a group path")
         weekly = (ROOT / "scripts/weekly_refresh.sh").read_text()
-        step = f'run_step x_firsts "" "$EXPORT" json {path} "$PY" scripts/export_people_firsts.py'
+        step = f'run_step x_firsts "" "$EXPORT" json {path} \\\n      "$PY" scripts/export_people_firsts.py --speech-facts'
         self.assertIn(step, weekly)
         self.assertLess(weekly.index("run_step x_people "), weekly.index(step), "the export reads the roster x_people left")
         self.assertIn(path, self.named("scripts/weekly_refresh.sh"))

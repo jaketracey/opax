@@ -215,6 +215,8 @@ def main(argv=()) -> None:
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--defer-check',action='store_true',help='export_people.sh checks the enriched output')
     ap.add_argument('--check-directory',type=str,help='check a final enriched roster against the shipped one')
+    ap.add_argument('--speech-facts',type=str,help='also write, from this same pass, the earliest speech per speaker '
+                    'and chamber that export_people_firsts.py reads, so the speeches are scanned and deduped once')
     args=ap.parse_args(argv)
     if args.check_directory:
         check_roster(json.load(open(args.check_directory))['people'])
@@ -234,12 +236,13 @@ def main(argv=()) -> None:
     speaker_type = 'speaker_type' if 'speaker_type' in columns else 'NULL'
     source_field = 'source' if 'source' in columns else 'NULL'
     electorate_field = 'electorate' if 'electorate' in columns else 'NULL'
+    first_id = 'MIN(speech_id)' if 'speech_id' in columns else 'NULL'
     rows = db.execute(f"""
         SELECT speaker_name, person_id, party, party_canonical, state, chamber,
                substr(date, 1, 10) AS speech_date,
                ((witness_name IS NOT NULL AND witness_name != '') {witness_type}) AS is_witness,
                COUNT(*) AS n, {speaker_type} AS speaker_type,
-               {source_field} AS source, {electorate_field} AS electorate
+               {source_field} AS source, {electorate_field} AS electorate, {first_id} AS first_id
         FROM speeches WHERE {where}
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12""").fetchall()
     members = {r[0]: {"name": r[1], "party": member_party(*r[:6]), "state": r[2] or "federal",
@@ -262,7 +265,13 @@ def main(argv=()) -> None:
     print(f"[export] {len(rows):,} speaker groups ({time.time() - t0:.0f}s)", file=sys.stderr)
 
     people = {}
-    for speaker, pid, party, canonical, state, chamber, speech_date, is_witness, n, row_type, source, electorate in rows:
+    if args.speech_facts:
+        # The firsts side file (scripts/export_people_firsts.py) needs each speaker's earliest speech under this
+        # same corpus rule; these rows already hold it, so it is written here and not read from the table again.
+        from scripts.export_people_firsts import speech_facts
+        with open(args.speech_facts, 'w', encoding='utf-8') as f:
+            json.dump(speech_facts((r[0], r[1], r[2], r[4], r[5], r[6], r[9], r[10], r[11], r[7], r[12]) for r in rows), f)
+    for speaker, pid, party, canonical, state, chamber, speech_date, is_witness, n, row_type, source, electorate, _first in rows:
         yr = (speech_date or '')[:4]
         # Group by original seat as well: a namesake's seat must never leak
         # through an aggregate that happened to share a print, id and date.

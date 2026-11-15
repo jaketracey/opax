@@ -86,6 +86,7 @@ FITS_MIN_RATIO = 0.80          # by_entity, people
 SPEAKERS_MIN_RATIO = 0.95      # speakers
 PEOPLE_MIN_RATIO = 0.95        # people in parliamentarians.json
 FIRSTS_MIN_RATIO = 0.90        # people in people/firsts.json
+FIRSTS_MIN_PEOPLE = 500        # ... and never fewer than this in an export (the roster holds about 1,560)
 PAY_MIN_RATIO = 0.80           # base, offices, current, names, people
 DISCOVERY_MIN_RATIO = 0.80     # signals, methodology
 TAXCHARITY_MIN_RATIO = 0.90    # ABNs written, charity/AIS/ATO matches, by_name keys, and the shard files
@@ -840,7 +841,8 @@ def check_people() -> list[str]:
 def check_firsts() -> list[str]:
     """people/firsts.json (scripts/export_people_firsts.py): the shape the apps decode, people that are in the
     roster on disk, no fewer people than HEAD's by FIRSTS_MIN_RATIO, and no fact marked first without an entry
-    date inside its chamber's record. A file that is neither on disk nor in HEAD is not an error."""
+    date inside its chamber's record. An export (any file that is not HEAD's bytes) holds at least FIRSTS_MIN_PEOPLE,
+    so the empty seed passes only while it is the seed. A file neither on disk nor in HEAD is not an error."""
     rel = f"{PUBLIC}/people/firsts.json"
     if not (ROOT / rel).exists() and head_bytes(rel) is None:
         return []
@@ -858,6 +860,10 @@ def check_firsts() -> list[str]:
         errs.append(f"{rel}: meta.people is {meta.get('people')!r} but the file holds {total}")
     head = _head_doc(rel)
     before = (len(head.get("by_pid") or {}) + len(head.get("by_name") or {})) if isinstance(head, dict) else 0
+    # The committed seed holds nobody, so a ratio alone would let a broken first export publish an empty file: any
+    # file that is not HEAD's own bytes is an export, and an export holds at least FIRSTS_MIN_PEOPLE.
+    if total < FIRSTS_MIN_PEOPLE and (ROOT / rel).read_bytes() != head_bytes(rel):
+        errs.append(f"{rel}: {total} people, under the floor of {FIRSTS_MIN_PEOPLE} for an export")
     if total < FIRSTS_MIN_RATIO * before:
         errs.append(f"{rel}: {total} people, under {FIRSTS_MIN_RATIO:.0%} of HEAD's {before}")
     coverage = meta.get("coverage") if isinstance(meta.get("coverage"), dict) else {}

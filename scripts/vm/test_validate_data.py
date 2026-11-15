@@ -485,6 +485,13 @@ class FirstsTests(Base):
     """people/firsts.json: the side file of first speeches and divisions the firsts group owns."""
     REL = f"{P}/people/firsts.json"
 
+    def setUp(self):
+        super().setUp()
+        # the three-person fixture is under the real floor; the floor has its own test below
+        floor = mock.patch.object(vd, "FIRSTS_MIN_PEOPLE", 3)
+        floor.start()
+        self.addCleanup(floor.stop)
+
     def doc(self, **people):
         roster = {"meta": {"people": 3}, "people": [{"name": "Avery Example", "pid": "90001"},
                                                     {"name": "Blair Sample", "pid": "90002"},
@@ -526,13 +533,35 @@ class FirstsTests(Base):
         self.write(self.REL, doc)
         self.assertOk("firsts")
 
+    def test_an_export_under_the_floor_fails_and_the_untouched_seed_passes(self):
+        _, doc = self.doc()
+        seed = {**doc, "meta": {**doc["meta"], "people": 0}, "by_pid": {}, "by_name": {}}
+        self.publish(seed)
+        self.assertEqual(vd.FIRSTS_MIN_PEOPLE, 3)
+        self.assertOk("firsts")                                   # the seed, byte for byte HEAD's
+        # A broken first export: valid, empty, and not the seed's bytes.
+        self.write(self.REL, {**seed, "meta": {**seed["meta"], "generated": "2026-11-17"}})
+        self.assertFails("firsts", "0 people, under the floor of 3 for an export")
+        del doc["by_pid"]["90002"]
+        doc["meta"]["people"] = 2
+        self.write(self.REL, doc)
+        self.assertFails("firsts", "2 people, under the floor of 3 for an export")
+        with mock.patch.object(vd, "FIRSTS_MIN_PEOPLE", 500):
+            _, doc = self.doc()
+            self.write(self.REL, doc)
+            self.assertFails("firsts", "3 people, under the floor of 500 for an export")
+
+    def test_the_real_floor_is_a_third_of_the_roster(self):
+        self.assertEqual(SCRIPT.read_text().count("FIRSTS_MIN_PEOPLE = 500"), 1)
+
     def test_people_may_not_shrink_under_the_ratio(self):
         self.publish()
         _, doc = self.doc()
         del doc["by_pid"]["90002"]
         doc["meta"]["people"] = 2
         self.write(self.REL, doc)
-        self.assertFails("firsts", "2 people, under 90% of HEAD's 3")
+        with mock.patch.object(vd, "FIRSTS_MIN_PEOPLE", 2):
+            self.assertFails("firsts", "2 people, under 90% of HEAD's 3")
 
     def test_a_first_needs_an_entry_date_inside_its_chambers_record(self):
         self.publish()

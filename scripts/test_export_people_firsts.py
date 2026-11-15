@@ -73,11 +73,12 @@ MEMBERS = [
 SCHEMA = """
 CREATE TABLE speeches (speech_id INTEGER PRIMARY KEY, person_id TEXT, speaker_name TEXT, party TEXT, electorate TEXT,
                        chamber TEXT, date TEXT, topic TEXT, text TEXT, source TEXT, state TEXT, witness_name TEXT,
-                       speaker_type TEXT);
+                       speaker_type TEXT, party_canonical TEXT);
 CREATE TABLE divisions (division_id INTEGER PRIMARY KEY, house TEXT, name TEXT, date TEXT, number INTEGER,
                         state TEXT);
 CREATE TABLE votes (division_id INTEGER, person_id TEXT, vote TEXT);
-CREATE TABLE members (person_id TEXT PRIMARY KEY, chamber TEXT, entered_house TEXT);
+CREATE TABLE members (person_id TEXT PRIMARY KEY, chamber TEXT, entered_house TEXT, full_name TEXT, state TEXT,
+                      party TEXT, party_canonical TEXT, left_house TEXT, first_name TEXT, last_name TEXT);
 CREATE TABLE ext_handbook_people (phid TEXT PRIMARY KEY, chamber TEXT, service_start TEXT, person_id TEXT);
 CREATE TABLE ext_divisions (id TEXT PRIMARY KEY, jurisdiction TEXT, house TEXT, date TEXT, number INTEGER,
                             name TEXT, source TEXT, source_url TEXT);
@@ -182,10 +183,10 @@ EXT_VOTES = [
 def database(speeches=SPEECHES):
     db = sqlite3.connect(":memory:")
     db.executescript(SCHEMA)
-    db.executemany("INSERT INTO speeches VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", speeches)
+    db.executemany("INSERT INTO speeches VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,NULL)", speeches)
     db.executemany("INSERT INTO divisions VALUES (?,?,?,?,?,?)", DIVISIONS)
     db.executemany("INSERT INTO votes VALUES (?,?,?)", VOTES)
-    db.executemany("INSERT INTO members VALUES (?,?,?)", MEMBERS)
+    db.executemany("INSERT INTO members (person_id, chamber, entered_house) VALUES (?,?,?)", MEMBERS)
     db.executemany("INSERT INTO ext_handbook_people VALUES (?,?,?,?)", HANDBOOK)
     db.executemany("INSERT INTO ext_divisions VALUES (?,?,?,?,?,?,?,?)", EXT_DIVISIONS)
     db.executemany("INSERT INTO ext_votes (division_id, jurisdiction, house, date, source, person_name, vote) "
@@ -362,25 +363,94 @@ class FirstsTests(unittest.TestCase):
             if "first_division" in person:
                 self.assertRegex(person["first_division"]["url"], r"/\d{4}-\d{2}-\d{2}/\d+$")
 
+    def on_disk(self):
+        """(path of the synthetic database as a file, path of the roster): what the two exports open."""
+        import tempfile
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = os.path.join(tmp.name, "parli.db")
+        memory, disk = database(), sqlite3.connect(path)
+        memory.commit()  # a backup waits on an open write
+        memory.backup(disk)
+        memory.close()
+        disk.close()
+        roster = os.path.join(tmp.name, "roster.json")
+        with open(roster, "w", encoding="utf-8") as f:
+            json.dump(ROSTER, f)
+        return path, roster
+
+    def test_the_weekly_refresh_dedupes_once_the_people_pass_writes_the_facts_the_firsts_read(self):
+        import contextlib
+        import io
+        from unittest.mock import patch
+        from scripts import export_parliamentarians as people
+        path, roster = self.on_disk()
+        facts = os.path.join(os.path.dirname(path), "speech-facts.json")
+        calls = []
+        real = export.prepare_dedupe
+
+        def counted(db, since, *more):
+            calls.append(since)
+            return real(db, since, *more)
+
+        uri = f"file:{path}?mode=ro"
+        with patch.object(people, "prepare_dedupe", counted), patch.object(export, "prepare_dedupe", counted), \
+                patch.object(people, "DB", uri), patch.object(export, "DB", uri), patch.object(export, "ROSTER", roster), \
+                patch.object(people, "PREVIOUS", os.path.join(os.path.dirname(path), "no-shipped-roster.json")), \
+                patch.dict(os.environ, {"OPAX_ROSTER_ACCEPT": "1"}):
+            # x_people: the roster export's own pass, as scripts/vm/export_people.sh runs it
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                people.main(["--defer-check", "--speech-facts", facts])
+            self.assertEqual(len(calls), 1)
+            # x_firsts: reads those facts, and must not build the dedupe tables again
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+                export.main(["--speech-facts", facts])
+            self.assertEqual(len(calls), 1, "the firsts export deduped the speeches a second time")
+            reused = json.loads(out.getvalue())
+            # On its own (no facts) the export makes the pass itself: that is the second dedupe the reuse avoids.
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                export.main([])
+            self.assertEqual(len(calls), 2)
+        # The same file either way, apart from the day it was written.
+        expected = json.loads(export.dumps(self.doc))
+        for doc in (reused, expected):
+            doc["meta"].pop("generated")
+        self.assertEqual(reused, expected)
+
+    def test_facts_from_another_version_or_corpus_floor_are_refused(self):
+        path, _ = self.on_disk()
+        bad = os.path.join(os.path.dirname(path), "facts.json")
+        for facts in ({"schema": 2, "since": "1993-03-13", "earliest": [], "days": {}},
+                      {"schema": 1, "since": "1998-01-01", "earliest": [], "days": {}},
+                      {"schema": 1, "since": "1993-03-13"}, []):
+            with open(bad, "w", encoding="utf-8") as f:
+                json.dump(facts, f)
+            with self.assertRaises(SystemExit):
+                export.read_speech_facts(bad)
+
+    def test_the_weekly_steps_share_the_facts_and_never_run_the_firsts_export_without_them(self):
+        root = os.path.dirname(HERE)
+        with open(os.path.join(root, "scripts", "weekly_refresh.sh"), encoding="utf-8") as f:
+            weekly = f.read()
+        with open(os.path.join(root, "scripts", "vm", "export_people.sh"), encoding="utf-8") as f:
+            people = f.read()
+        self.assertIn('export OPAX_SPEECH_FACTS="$TMP/speech-facts.json"', weekly)
+        self.assertIn('${OPAX_SPEECH_FACTS:+--speech-facts "$OPAX_SPEECH_FACTS"}', people)
+        calls = [line for line in weekly.splitlines() if "export_people_firsts.py" in line and not line.lstrip().startswith("#")]
+        self.assertEqual(len(calls), 1)
+        self.assertIn('--speech-facts "$TMP/speech-facts.json"', calls[0])
+        self.assertLess(weekly.index("export OPAX_SPEECH_FACTS"), weekly.index("run_step x_firsts"))
+
     def test_the_coverage_is_printed_per_chamber_for_review(self):
         import contextlib
         import io
-        import tempfile
         from unittest.mock import patch
-        with tempfile.TemporaryDirectory() as tmp:
-            path = os.path.join(tmp, "parli.db")
-            memory, disk = database(), sqlite3.connect(path)
-            memory.commit()  # a backup waits on an open write
-            memory.backup(disk)
-            memory.close()
-            disk.close()
-            roster = os.path.join(tmp, "roster.json")
-            with open(roster, "w", encoding="utf-8") as f:
-                json.dump(ROSTER, f)
-            out, err = io.StringIO(), io.StringIO()
-            with patch.object(export, "DB", f"file:{path}?mode=ro"), patch.object(export, "ROSTER", roster), \
-                    contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-                export.main()
+        path, roster = self.on_disk()
+        out, err = io.StringIO(), io.StringIO()
+        with patch.object(export, "DB", f"file:{path}?mode=ro"), patch.object(export, "ROSTER", roster), \
+                contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            export.main([])
         self.assertEqual(json.loads(out.getvalue())["by_pid"], self.doc["by_pid"])
         printed = err.getvalue()
         self.assertIn("[firsts] coverage speeches representatives: from 1995-06-01; earliest row 1994-05-03", printed)

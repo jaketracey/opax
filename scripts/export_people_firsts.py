@@ -6,6 +6,12 @@ the record holds for them, each with its date and its source.
 
   OPAX_DB=~/.cache/autoresearch/parli.db python3 scripts/export_people_firsts.py > portal/public/people/firsts.json
 
+The weekly refresh does not read the speeches twice: the people step's own
+pass writes the earliest speech per speaker and chamber
+(export_parliamentarians.py --speech-facts), and step x_firsts reads that with
+--speech-facts, so the dedupe tables are built once a night. Run on its own,
+as above, this export makes that pass itself.
+
 Read-only: parli.db is opened with mode=ro and never written, and the roster is
 read, never rewritten. The roster's bytes and the curated roster scripts are not
 touched; this is a side file the roster's readers never see.
@@ -171,8 +177,38 @@ def claimant(index, roster, name, state, chamber):
     return found[0] if len(found) == 1 else None
 
 
-def first_speeches(db, roster):
-    """({roster index: (date, speech_id, chamber)}, {chamber: set of days with a speech}) under the corpus rule."""
+FACTS_SCHEMA = 1
+
+
+def speech_facts(rows):
+    """The earliest speech per speaker, parliament and chamber, and the days each chamber has a speech, from rows
+    of (speaker_name, person_id, party, state, chamber, day, speaker_type, source, electorate, is_witness,
+    first speech_id) already under the corpus rule. Roster-free and JSON-ready, so the pass that built the dedupe
+    can write it once (export_parliamentarians.py --speech-facts) and this export read it back."""
+    earliest, days = {}, {}
+    for speaker, pid, party, state, chamber, day, speaker_type, source, electorate, is_witness, speech_id in rows:
+        state = state or "federal"
+        if (is_witness or speaker_type == "witness" or not chamber or "committee" in chamber
+                or speech_id is None or not DATE_RE.match(day or "")):
+            continue
+        days.setdefault(chamber, set()).add(day)
+        person = identity_for(dict(speaker_name=speaker, person_id=pid, party=party, state=state, chamber=chamber,
+                                   date=day, source=source, electorate=electorate, speaker_type=speaker_type,
+                                   witness_name=None))
+        name = person["name"] if person else normalize_speaker(speaker)
+        if not name:
+            continue
+        key, found = (name, state, chamber), (day, speech_id)
+        if key not in earliest or found < earliest[key]:
+            earliest[key] = found
+    return {"schema": FACTS_SCHEMA, "since": DEFAULT_SINCE,
+            "earliest": sorted([*key, *found] for key, found in earliest.items()),
+            "days": {chamber: sorted(held) for chamber, held in sorted(days.items())}}
+
+
+def query_speech_facts(db):
+    """speech_facts() from this export's own pass over the speeches: it builds the dedupe tables, so it is for a
+    run on its own. The weekly refresh reads the facts the people step wrote instead (--speech-facts)."""
     stdout, sys.stdout = sys.stdout, sys.stderr  # prepare_dedupe prints its progress line
     try:
         prepare_dedupe(db, DEFAULT_SINCE)
@@ -187,31 +223,36 @@ def first_speeches(db, roster):
     where = (f"text IS NOT NULL AND LENGTH(text) >= {MIN_SPEECH_CHARS} AND date >= {DEFAULT_SINCE!r} "
              f"{JUNK_PREDICATES} {DEDUPE_PREDICATES} AND NOT ({witness}) "
              "AND COALESCE(chamber, '') != '' AND COALESCE(chamber, '') NOT LIKE '%committee%'")
-    rows = db.execute(f"""
+    return speech_facts(db.execute(f"""
         SELECT speaker_name, person_id, party, COALESCE(state, 'federal'), chamber, substr(date, 1, 10),
-               {opt('speaker_type')}, {opt('source')}, {opt('electorate')}, MIN(speech_id)
+               {opt('speaker_type')}, {opt('source')}, {opt('electorate')}, 0, MIN(speech_id)
         FROM speeches WHERE {where}
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9""")
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9"""))
+
+
+def read_speech_facts(path):
+    """The facts a people export wrote, refused unless they are this version's and under this corpus floor."""
+    with open(path, encoding="utf-8") as f:
+        facts = json.load(f)
+    if not (isinstance(facts, dict) and facts.get("schema") == FACTS_SCHEMA and facts.get("since") == DEFAULT_SINCE
+            and isinstance(facts.get("earliest"), list) and isinstance(facts.get("days"), dict)):
+        raise SystemExit(f"{path}: not speech facts this export can read")
+    return facts
+
+
+def first_speeches(facts, roster):
+    """({roster index: (date, speech_id, chamber)}, {chamber: set of days with a speech}) from speech_facts()."""
     index = claims(roster)
     barred = {i for i, row in enumerate(roster) if row.get("speech_scope") or row.get("roster_only")}
-    best, coverage = {}, {}
-    for speaker, pid, party, state, chamber, day, speaker_type, source, electorate, speech_id in rows:
-        if not DATE_RE.match(day or ""):
-            continue
-        coverage.setdefault(chamber, set()).add(day)
-        person = identity_for(dict(speaker_name=speaker, person_id=pid, party=party, state=state, chamber=chamber,
-                                   date=day, source=source, electorate=electorate, speaker_type=speaker_type,
-                                   witness_name=None))
-        name = person["name"] if person else normalize_speaker(speaker)
-        if not name:
-            continue
+    best = {}
+    for name, state, chamber, day, speech_id in facts["earliest"]:
         i = claimant(index, roster, name, state, chamber)
         if i is None or i in barred:
             continue
         found = (day, speech_id, chamber)
         if i not in best or found < best[i]:
             best[i] = found
-    return best, coverage
+    return best, {chamber: set(held) for chamber, held in facts["days"].items()}
 
 
 def _tables(db):
@@ -317,9 +358,11 @@ def is_first(day, chamber, service, coverage):
             and (date.fromisoformat(day) - date.fromisoformat(entered)).days <= FIRST_WINDOW_DAYS)
 
 
-def build(db, roster_doc, today=None):
+def build(db, roster_doc, today=None, facts=None):
+    """The document. `facts` are speech_facts() a people export already wrote; without them this export makes its
+    own pass over the speeches (and builds the dedupe tables to do it)."""
     roster = roster_doc["people"]
-    speeches, speech_days = first_speeches(db, roster)
+    speeches, speech_days = first_speeches(facts if facts is not None else query_speech_facts(db), roster)
     divisions, division_days = first_divisions(db, roster)
     starts = {kind: {chamber: coverage_start(days) for chamber, days in sorted(held.items())}
               for kind, held in (("speeches", speech_days), ("divisions", division_days))}
@@ -382,11 +425,17 @@ def dumps(doc):
     return json.dumps(doc, ensure_ascii=False, separators=(",", ":")) + "\n"
 
 
-def main() -> None:
+def main(argv=None) -> None:
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--speech-facts", help="the earliest-speech facts the people export wrote in its own pass "
+                    "(export_parliamentarians.py --speech-facts); with it the speeches are not read again")
+    args = ap.parse_args(argv)
     with open(ROSTER, encoding="utf-8") as f:
         roster_doc = json.load(f)
+    facts = read_speech_facts(args.speech_facts) if args.speech_facts else None
     db = sqlite3.connect(DB, uri=True)
-    doc = build(db, roster_doc)
+    doc = build(db, roster_doc, facts=facts)
     text = dumps(doc)
     sys.stdout.write(text)
     m = doc["meta"]
