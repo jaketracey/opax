@@ -1,10 +1,12 @@
-import { act, useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { act, type ReactElement } from 'react';
 import { FlatList, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import {
   HeaderHeightContext,
+  NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
+import * as accessibility from '../src/design/accessibility';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import { ClearBarRest, FixedPage, Screen } from '../src/design/layout';
 
@@ -147,69 +149,223 @@ describe('a late scroll view under the clear bar', () => {
   );
 });
 
-// The people lists set their route options as they render (RouteOptions
-// with inline options), and every setOptions gives the stack new
-// descriptors. A page that read the descriptors itself re-rendered without
-// end: "Maximum update depth exceeded" on Voting record, Declared interests,
-// Speeches and Largest sources (b71 review, caught on the simulator).
-test('a list under ClearBarRest does not re-render its page when options change', () => {
-  jest.replaceProperty(Platform, 'OS', 'ios');
-  mockBarEdge = 'trailing';
-  let pageRenders = 0;
-  let listProps: object | null = null;
-  function Options({
-    options,
-    set,
-  }: {
-    options: object;
-    set: (value: object) => void;
-  }) {
-    // As RouteOptions does: a new options object is a new setOptions.
-    useLayoutEffect(() => set(options), [options, set]);
-    return null;
-  }
-  function Page({ set }: { set: (value: object) => void }) {
-    pageRenders += 1;
-    return (
-      <>
-        <Options options={{ title: 'Voting record' }} set={set} />
-        <ClearBarRest>
-          {(list) => {
-            listProps = list;
-            return <FlatList data={[]} renderItem={() => null} {...list} />;
-          }}
-        </ClearBarRest>
-      </>
-    );
-  }
-  function Stack() {
-    const [descriptors, setDescriptors] = useState({
-      [route.key]: { options: { headerTransparent: true } },
+// The rest check is for a view still settling after it mounts. It must not
+// undo the reader: a VoiceOver scroll begins no drag, and a reader who
+// scrolls a few points, opens a page and comes back was put back at rest.
+describe('the rest check ends with the settling', () => {
+  const listeners: Record<string, () => void> = {};
+  const navigation = {
+    addListener: (name: string, listener: () => void) => {
+      listeners[name] = listener;
+      return () => delete listeners[name];
+    },
+    setOptions: () => undefined,
+    getState: () => ({ index: 1, routes: [], routeNames: [] }),
+    isFocused: () => true,
+  };
+  function page() {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route as never}>
+            <DescriptorsContext.Provider
+              value={
+                {
+                  [route.key]: { options: { headerTransparent: true } },
+                } as never
+              }
+            >
+              <HeaderHeightContext.Provider value={82}>
+                <Screen testID="page">
+                  <View />
+                </Screen>
+              </HeaderHeightContext.Provider>
+            </DescriptorsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
     });
-    const set = useCallback(
-      (options: object) =>
-        setDescriptors({
-          [route.key]: { options: { headerTransparent: true, ...options } },
-        }),
-      [],
-    );
-    const page = useMemo(() => <Page set={set} />, [set]);
-    return (
-      <NavigationRouteContext.Provider value={route as never}>
-        <DescriptorsContext.Provider value={descriptors as never}>
-          <HeaderHeightContext.Provider value={82}>
-            {page}
-          </HeaderHeightContext.Provider>
-        </DescriptorsContext.Provider>
-      </NavigationRouteContext.Provider>
-    );
+    const scroll = () => renderer.root.findByType(ScrollView);
+    const at = (y: number) =>
+      act(() =>
+        scroll().props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    return { renderer, scroll, at };
   }
-  let renderer!: TestRenderer.ReactTestRenderer;
-  act(() => {
-    renderer = TestRenderer.create(<Stack />);
+  beforeEach(() => {
+    jest.useFakeTimers();
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    mockBarEdge = 'trailing';
   });
-  expect(pageRenders).toBe(1);
-  // Under the clear bar the list still gets the rest check's props.
-  expect(listProps).toMatchObject({ scrollEventThrottle: 16 });
-  act(() => renderer.unmount());
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  test('a push that ends with the view past rest corrects it at once', () => {
+    const view = page();
+    view.at(-58);
+    act(() => listeners.transitionEnd!());
+    expect(view.scroll().props.contentOffset).toEqual({ x: 0, y: -82 });
+    act(() => view.renderer.unmount());
+  });
+
+  test('seen at rest, then moved without a drag (VoiceOver), it is left alone', () => {
+    const view = page();
+    view.at(-82);
+    view.at(-60);
+    act(() => jest.advanceTimersByTime(1000));
+    act(() => listeners.transitionEnd!());
+    expect(view.scroll().props.contentOffset).toBeUndefined();
+    act(() => view.renderer.unmount());
+  });
+
+  test('after the settling time, coming back from another page corrects nothing', () => {
+    const view = page();
+    act(() => jest.advanceTimersByTime(1000));
+    view.at(-40);
+    act(() => listeners.transitionEnd!());
+    act(() => jest.advanceTimersByTime(1000));
+    expect(view.scroll().props.contentOffset).toBeUndefined();
+    act(() => view.renderer.unmount());
+  });
+
+  test('it corrects once: the reader may then scroll back into the range', () => {
+    const view = page();
+    view.at(-58);
+    act(() => jest.advanceTimersByTime(450));
+    const corrected = view.scroll().props.contentOffset;
+    expect(corrected).toEqual({ x: 0, y: -82 });
+    view.at(-30);
+    act(() => jest.advanceTimersByTime(1000));
+    expect(view.scroll().props.contentOffset).toBe(corrected);
+    act(() => view.renderer.unmount());
+  });
+});
+
+// A page's own list takes the rest check through ClearBarRest, which adds
+// its props to the element the page made: the page's row functions keep
+// their identity, so a change in the stack's options rebuilds no row.
+test.each([
+  ['trailing', true],
+  ['unspecified', false],
+] as const)(
+  'ClearBarRest beside a %s bar keeps the list element and adds props: %s',
+  (edge, adds) => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    mockBarEdge = edge;
+    const renderItem = () => null;
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationRouteContext.Provider value={route as never}>
+          <DescriptorsContext.Provider
+            value={
+              { [route.key]: { options: { headerTransparent: true } } } as never
+            }
+          >
+            <HeaderHeightContext.Provider value={82}>
+              <ClearBarRest>
+                <FlatList data={[]} renderItem={renderItem} testID="list" />
+              </ClearBarRest>
+            </HeaderHeightContext.Provider>
+          </DescriptorsContext.Provider>
+        </NavigationRouteContext.Provider>,
+      );
+    });
+    const list = renderer.root.findByType(FlatList).props;
+    expect(list.renderItem).toBe(renderItem);
+    expect(list.testID).toBe('list');
+    expect(list.scrollEventThrottle).toBe(adds ? 16 : undefined);
+    expect(typeof list.onScrollBeginDrag).toBe(adds ? 'function' : 'undefined');
+    act(() => renderer.unmount());
+  },
+);
+
+// Reduce Transparency or Increase Contrast beside a vertical bar: the pushed
+// page keeps the solid bar, on its own ground. UIKit's bar background stops
+// short of the top edge there, and the strip above showed the system's grey.
+describe('a solid bar beside a vertical bar', () => {
+  function page(routeNames: string[], presentation?: string) {
+    const options: Record<string, unknown>[] = [];
+    const navigation = {
+      addListener: () => () => undefined,
+      setOptions: (value: Record<string, unknown>) => options.push(value),
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'root' }, { key: route.key }],
+        routeNames,
+      }),
+      isFocused: () => true,
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route as never}>
+            <DescriptorsContext.Provider
+              value={
+                {
+                  [route.key]: {
+                    options: { headerTransparent: false, presentation },
+                  },
+                } as never
+              }
+            >
+              <Screen grouped testID="page">
+                <View />
+              </Screen>
+            </DescriptorsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    act(() => renderer.unmount());
+    return Object.assign({}, ...options) as Record<string, unknown>;
+  }
+  const tabStack = ['index', 'bill/[key]', 'explore/[tool]'];
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  let solid: jest.SpyInstance;
+  beforeEach(() => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 27,
+    });
+    solid = jest.spyOn(accessibility, 'useSolidBar').mockReturnValue(true);
+  });
+  afterEach(() => {
+    solid.mockRestore();
+    if (version) Object.defineProperty(Platform, 'Version', version);
+  });
+
+  test('a pushed page in a tab stack backs its bar in its own ground', () => {
+    mockBarEdge = 'trailing';
+    const options = page(tabStack);
+    const backing = (
+      options.headerBackground as () => ReactElement<{
+        style: { backgroundColor: unknown };
+      }>
+    )();
+    expect(backing.props.style.backgroundColor).toBe(
+      (options.headerStyle as { backgroundColor: unknown }).backgroundColor,
+    );
+  });
+
+  test.each([
+    ['a sheet in the tab stack', 'trailing', tabStack, 'formSheet', true],
+    [
+      'a page in a modal stack',
+      'trailing',
+      ['index', 'about'],
+      undefined,
+      true,
+    ],
+    ['an iPhone page', 'unspecified', tabStack, undefined, true],
+    ['a page with no setting on', 'trailing', tabStack, undefined, false],
+  ] as const)('%s is not backed', (_name, edge, names, presentation, on) => {
+    mockBarEdge = edge;
+    solid.mockReturnValue(on);
+    expect('headerBackground' in page([...names], presentation)).toBe(false);
+  });
 });

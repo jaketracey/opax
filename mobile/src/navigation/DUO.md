@@ -41,7 +41,10 @@ ran to the top edge (b69, captured on the outer display). Pages pushed in a
 tab's stack now run under a clear bar beside a vertical bar
 (`useStackChrome({ tabStack: true })`), with a soft top edge: UIKit insets the
 scroll view below the band at rest (adjusted top 82, then 24). Reduce Transparency and
-Increase Contrast keep the solid bar, as on the tab roots (`useUnderRailBar`).
+Increase Contrast keep the solid bar, as on the tab roots (`useRailBar`), and
+that bar is backed with the page's ground on pushed pages and tab roots alike,
+so the grey strip does not return. The 24 pt strip over scrolled content does:
+it is what a solid bar is.
 
 Pages that keep a solid, backed bar on the rail (`solidRailBar`, `barBacking`):
 the directory and Just declared, whose search field holds the band open and
@@ -56,7 +59,11 @@ A scroll view that mounts after its page is on screen (the party page swaps a
 skeleton `Screen` for the loaded one) is a race with the push under the clear
 bar: about one open in six from a scrolled page it was left 24 pt past rest,
 its heading under the band's edge. `useClearBarRest` (in `Screen`, and the
-people lists) puts such a view back at rest until the reader drags. A fixed
+people lists through `ClearBarRest`) puts such a view back at rest, once,
+while it settles (under a second from mount) and before the reader moves it.
+Only a page beside a vertical bar reads the stack's options for this
+(`use(DescriptorsContext)` after the bar check): on iPhone and iPad a page
+neither subscribes to them nor re-renders when another page sets options. A fixed
 state in a plain View uses `FixedPage`, which clears the band.
 
 Toolbar items use the native item API with both `label` and symbol. Expo's

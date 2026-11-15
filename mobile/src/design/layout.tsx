@@ -12,6 +12,7 @@ import {
   createContext,
   isValidElement,
   useCallback,
+  use,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -36,11 +37,14 @@ import {
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
-import { opaqueBar } from '../navigation/chrome';
+import { barBacking, opaqueBar, useRailBar } from '../navigation/chrome';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
-import { useFloatingBarClearance } from '../navigation/floating-bar';
+import {
+  isTabStack,
+  useFloatingBarClearance,
+} from '../navigation/floating-bar';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
@@ -252,12 +256,32 @@ const stickyDebounce = 64;
  */
 export function useClearBarTop(): number {
   const route = useContext(NavigationRouteContext);
-  const descriptors = useContext(DescriptorsContext);
   const bottom = useHeaderBottom();
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
-  const clear =
-    !!route && descriptors[route.key]?.options.headerTransparent === true;
-  return verticalBar && clear ? bottom : 0;
+  // The stack's descriptors change on every setOptions of every page in it
+  // (a bar title fading in, say). Only a page beside a vertical bar reads
+  // them, so an iPhone or iPad page neither subscribes nor re-renders.
+  if (!verticalBar || !route) return 0;
+  const descriptors = use(DescriptorsContext);
+  return descriptors[route.key]?.options.headerTransparent === true
+    ? bottom
+    : 0;
+}
+
+/**
+ * A pushed page in a tab's stack beside a vertical bar, with Reduce
+ * Transparency or Increase Contrast on: it keeps the solid bar, and that bar
+ * needs the page's ground behind it (`barBacking`), or the top 14 pt shows the
+ * system's grey. Not a sheet: a backing view reserved a band in sheets.
+ */
+function useSolidRailBacking(): boolean {
+  const rail = useRailBar();
+  const route = useContext(NavigationRouteContext);
+  const navigation = useContext(NavigationContext);
+  if (rail !== 'solid' || !route || !isTabStack(navigation?.getState()))
+    return false;
+  const presentation = use(DescriptorsContext)[route.key]?.options.presentation;
+  return !presentation || presentation === 'card';
 }
 
 /** How long after mount a late scroll view may still be settling (ms). */
@@ -271,8 +295,9 @@ const restChecks = [400, 900];
  * under the title band, and UIKit's two inset steps (the 24 pt safe area,
  * then the band) are a race with the push: it has been left 24 pt past rest,
  * its heading under the band's edge (party page, b71 review).
- * This watches the offset and, until the reader drags, puts a view found
- * between rest and 0 back at rest. `contentOffset` is the command: the prop
+ * This watches the offset and, once, while it settles (under a second from
+ * mount) and before the reader moves it, puts a view found between rest and
+ * 0 back at rest. `contentOffset` is the command: the prop
  * sets the native offset unclamped, where `scrollTo` needs overflow enabled.
  * Spread `props` on the scroll view; inert under an opaque bar.
  */
@@ -280,16 +305,27 @@ export function useClearBarRest() {
   const top = useClearBarTop();
   const navigation = useContext(NavigationContext);
   const y = useRef<number | null>(null);
-  const dragged = useRef(false);
+  // The check is over: the view was seen at rest, the reader moved it, the
+  // correction was made, or the settling time passed. Nothing after that is
+  // this hook's business, a VoiceOver scroll (which begins no drag) and a
+  // return from another page included.
+  const done = useRef(false);
   const [offset, setOffset] = useState<{ x: number; y: number } | undefined>();
   const check = useCallback(() => {
-    if (!top || dragged.current || y.current === null) return;
-    if (y.current > -top + underBarSlack && y.current <= 0)
-      setOffset((now) => (now?.y === -top ? now : { x: 0, y: -top }));
+    if (!top || done.current || y.current === null) return;
+    if (y.current > -top + underBarSlack && y.current <= 0) {
+      done.current = true;
+      setOffset({ x: 0, y: -top });
+    }
   }, [top]);
   useEffect(() => {
     if (!top) return;
-    const timers = restChecks.map((ms) => setTimeout(check, ms));
+    const timers = restChecks.map((ms, index) =>
+      setTimeout(() => {
+        check();
+        if (index === restChecks.length - 1) done.current = true;
+      }, ms),
+    );
     const end = (
       navigation as
         | {
@@ -302,44 +338,52 @@ export function useClearBarRest() {
       end?.();
     };
   }, [top, check, navigation]);
-  return {
-    track: (offsetY: number) => {
+  const track = useCallback(
+    (offsetY: number) => {
+      if (done.current) return;
       y.current = offsetY;
+      // At rest: UIKit placed it, and any later offset is the reader's.
+      if (top && offsetY <= -top + underBarSlack) done.current = true;
     },
-    drag: () => {
-      dragged.current = true;
-    },
+    [top],
+  );
+  const drag = useCallback(() => {
+    done.current = true;
+  }, []);
+  const list = useMemo(
+    () =>
+      top
+        ? {
+            contentOffset: offset,
+            scrollEventThrottle: 16,
+            onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
+              track(event.nativeEvent.contentOffset.y),
+            onScrollBeginDrag: drag,
+          }
+        : null,
+    [top, offset, track, drag],
+  );
+  return {
+    track,
+    drag,
     contentOffset: top ? offset : undefined,
     /** For a list with no scroll handlers of its own. */
-    list: top
-      ? {
-          contentOffset: offset,
-          scrollEventThrottle: 16,
-          onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-            y.current = event.nativeEvent.contentOffset.y;
-          },
-          onScrollBeginDrag: () => {
-            dragged.current = true;
-          },
-        }
-      : null,
+    list,
   };
 }
 
 /**
- * `useClearBarRest` for a page's own list. The hook reads the stack's
- * descriptors, which change on every `setOptions`; a page that sets options
- * as it renders (`RouteOptions` with inline options) and read them itself
- * re-rendered without end ("Maximum update depth exceeded", the people lists
- * in the b71 review). Only this child subscribes: it calls `children` again
- * with the props to spread on the list, and the page does not re-render.
+ * `useClearBarRest` for a page's own list, which it wraps. The hook reads the
+ * stack's descriptors, which change on every `setOptions`; a page that sets
+ * options as it renders (`RouteOptions` with inline options) and read them
+ * itself re-rendered without end ("Maximum update depth exceeded", the people
+ * lists in the b71 review). Only this child subscribes, and only beside a
+ * vertical bar. It adds its props to the list element the page made, so the
+ * page's row functions keep their identity and no row is rebuilt.
  */
-export function ClearBarRest({
-  children,
-}: {
-  children: (list: ReturnType<typeof useClearBarRest>['list']) => ReactElement;
-}) {
-  return children(useClearBarRest().list);
+export function ClearBarRest({ children }: { children: ReactElement<object> }) {
+  const { list } = useClearBarRest();
+  return list ? cloneElement(children, list) : children;
 }
 
 /**
@@ -453,10 +497,21 @@ export function Screen({
     disabled: inPane,
     underBar,
   });
+  const backed = useSolidRailBacking();
+  const wasBacked = useRef(false);
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
-    if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
-  }, [setOptions, ground, inPane, nativeRoot]);
+    if (inPane || nativeRoot) return;
+    setOptions({
+      ...opaqueBar(colors[ground]),
+      ...(backed
+        ? barBacking(colors[ground])
+        : wasBacked.current
+          ? { headerBackground: undefined }
+          : {}),
+    });
+    wasBacked.current = backed;
+  }, [setOptions, ground, inPane, nativeRoot, backed]);
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);

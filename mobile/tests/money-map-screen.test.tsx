@@ -539,12 +539,14 @@ test('with a legibility setting on, the map and list keep the solid bar beside a
     renderer = await render(undefined, (value) => {
       options = value;
     });
+    // Solid, and backed: UIKit's bar background stops short of the top edge.
     expect(options).toMatchObject({ headerTransparent: false });
-    expect(options.headerBackground).toBeUndefined();
+    expect(typeof options.headerBackground).toBe('function');
     await act(async () =>
       renderer!.root.findByType(SegmentedPicker).props.onChange('list'),
     );
     expect(options).toMatchObject({ headerTransparent: false });
+    expect(typeof options.headerBackground).toBe('function');
   } finally {
     if (renderer) act(() => renderer!.unmount());
     solid.mockRestore();

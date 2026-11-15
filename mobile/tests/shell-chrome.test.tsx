@@ -376,6 +376,11 @@ test.each([
       const solid = view.root.findByType(Stack).props.screenOptions;
       expect(solid.headerTransparent).toBe(false);
       expect(solid.scrollEdgeEffects.top).toBe('hard');
+      // On the rail that solid bar is backed (UIKit's own background stops
+      // short of the top edge); elsewhere it is the b70 bar, untouched.
+      expect('headerBackground' in solid).toBe(
+        edge !== 'unspecified' && version >= 26,
+      );
       mockSolidBar = false;
       act(() => view!.unmount());
       view = tree(<TalkStack />);

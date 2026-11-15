@@ -68,7 +68,7 @@ import {
   headerItems,
   opaqueBar,
   pageItems,
-  useUnderRailBar,
+  useRailBar,
 } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -505,7 +505,7 @@ function MapMode({
   // beside a vertical bar (the closed Duo), where the other pushed pages run
   // under a clear one. That bar needs its own ground there; the list sets the
   // stack's bar again when the map hands over to it (ListMode).
-  const rail = useUnderRailBar();
+  const rail = useRailBar() !== null;
   useLayoutEffect(() => {
     setOptions({
       ...opaqueBar(colors.paper),
@@ -1070,10 +1070,16 @@ function ListMode({
   // The map set a solid, backed bar on this route. The list takes the tab
   // stack's bar again, from the same check, so a fold or unfold after the
   // map still follows the other pushed pages.
-  const rail = useUnderRailBar();
+  const rail = useRailBar();
   const setOptions = useSafeSetOptions();
   useLayoutEffect(() => {
-    setOptions({ headerTransparent: rail, headerBackground: undefined });
+    setOptions({
+      headerTransparent: rail === 'clear',
+      // Screen below sets the solid bar's ground; this runs after it.
+      ...(rail === 'solid'
+        ? barBacking(colors.paper)
+        : { headerBackground: undefined }),
+    });
   }, [setOptions, rail]);
   return (
     <GestureHandlerRootView style={styles.root}>

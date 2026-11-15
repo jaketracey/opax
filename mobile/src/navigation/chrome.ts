@@ -187,9 +187,20 @@ export const barBacking = (ground: ColorValue = colors.paper) => ({
  * asks for a solid bar, as it does of the tab roots.
  */
 export function useUnderRailBar(): boolean {
+  return useRailBar() === 'clear';
+}
+
+/**
+ * The bar of a tab stack's pushed pages beside a vertical bar (iOS 26 and
+ * later): `clear`, or `solid` when Reduce Transparency or Increase Contrast
+ * asks for a solid bar. A solid bar there needs its own ground (`barBacking`):
+ * UIKit's bar background stops short of the top edge. Null everywhere else.
+ */
+export function useRailBar(): 'clear' | 'solid' | null {
   const edge = useVerticalBarEdge();
   const solid = useSolidBar();
-  return edge !== 'unspecified' && glassBar() && !solid;
+  if (edge === 'unspecified' || !glassBar()) return null;
+  return solid ? 'solid' : 'clear';
 }
 
 /**
@@ -228,8 +239,8 @@ export function useStackChrome({
   // Bar titles resolve in the app's appearance, not the bar's (11b-3).
   const titleInk = schemeColour('ink', useColorScheme());
   const barEdge = useVerticalBarEdge();
-  const underBar = useUnderRailBar();
-  const rail = tabStack && underBar;
+  const railBar = useRailBar();
+  const rail = tabStack && railBar === 'clear';
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],
@@ -245,6 +256,9 @@ export function useStackChrome({
     // Beside a vertical bar a tab stack's pushed pages run under the bar.
     headerTransparent: rail,
     ...opaqueBar(),
+    // A legibility setting keeps the solid bar on the rail too. Pages with
+    // their own ground (Screen) replace this backing with one in that colour.
+    ...(tabStack && railBar === 'solid' ? barBacking() : {}),
     headerTitleStyle: {
       fontFamily: textStyles.inlineTitle.fontFamily,
       fontWeight: textStyles.inlineTitle.fontWeight,

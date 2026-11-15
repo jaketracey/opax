@@ -14,7 +14,13 @@ import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { colors, isAccessibilityCategory } from '../design/tokens';
-import { glassBar, largeTitleBar, scrollBar, tabRootGround } from './chrome';
+import {
+  barBacking,
+  glassBar,
+  largeTitleBar,
+  scrollBar,
+  tabRootGround,
+} from './chrome';
 import { isTabStack } from './floating-bar';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
@@ -186,12 +192,21 @@ export function useRootBarAppearance(
             headerLargeTitleEnabled: true,
             unstable_nativeProps: { testID: identifier },
           }
-        : scrollBar(
-            colour,
-            solid,
-            barEdge,
-            contentUnderBar === undefined ? undefined : hardEdge,
-          ),
+        : {
+            ...scrollBar(
+              colour,
+              solid,
+              barEdge,
+              contentUnderBar === undefined ? undefined : hardEdge,
+            ),
+            // Beside a vertical bar UIKit's bar background stops short of
+            // the top edge, so a solid bar there gets the page's ground.
+            ...(verticalBar
+              ? solid
+                ? barBacking(colour)
+                : { headerBackground: undefined }
+              : {}),
+          },
     );
   }, [
     rootKey,

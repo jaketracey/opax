@@ -283,123 +283,120 @@ export default function RecordList({
       ) : (
         <StatePageProvider refreshing={false}>
           <ClearBarRest>
-            {(list) => (
-              <FlatList
-                testID="record-list-screen"
-                style={styles.page}
-                contentInsetAdjustmentBehavior="automatic"
-                {...list}
-                onLayout={onLayout}
-                contentContainerStyle={[styles.content, content, foot]}
-                data={ready?.rows ?? []}
-                keyExtractor={(r, i) => `${r.slug}-${i}`}
-                onEndReached={() => next()}
-                onEndReachedThreshold={0.5}
-                ListHeaderComponent={
-                  briefsShown ? (
-                    <MachinePill
-                      note={{
-                        title: 'How this was written',
-                        body: [
-                          'An automated summary written by a model; not the record.',
-                        ],
-                      }}
+            <FlatList
+              testID="record-list-screen"
+              style={styles.page}
+              contentInsetAdjustmentBehavior="automatic"
+              onLayout={onLayout}
+              contentContainerStyle={[styles.content, content, foot]}
+              data={ready?.rows ?? []}
+              keyExtractor={(r, i) => `${r.slug}-${i}`}
+              onEndReached={() => next()}
+              onEndReachedThreshold={0.5}
+              ListHeaderComponent={
+                briefsShown ? (
+                  <MachinePill
+                    note={{
+                      title: 'How this was written',
+                      body: [
+                        'An automated summary written by a model; not the record.',
+                      ],
+                    }}
+                  />
+                ) : null
+              }
+              ListEmptyComponent={
+                load.status === 'loading' ? (
+                  <Skeleton
+                    shape="rows"
+                    count={8}
+                    label={`Loading ${title.toLowerCase()}`}
+                    testID="record-list-loading"
+                  />
+                ) : (
+                  <ContentUnavailable
+                    symbol="quote.bubble"
+                    title={
+                      kind === 'speeches'
+                        ? 'No speeches in the record'
+                        : 'No mentions in the record'
+                    }
+                    testID="record-list-empty"
+                  />
+                )
+              }
+              renderItem={({ item: r, index }) => {
+                const brief = ready?.briefs[r.resource ?? ''];
+                const path = '/doc/' + encodeURIComponent(r.slug);
+                const native = fromWebPath(path);
+                const passage =
+                  kind === 'speeches'
+                    ? cleanPassage(r.snippet)
+                    : serverPassage(r.snippet, { max: 220 });
+                return (
+                  <RecordRow
+                    title={displayedRecordTitle(r)}
+                    speaker={kind === 'speeches' ? speakerFor(r) : undefined}
+                    meta={[
+                      kind === 'speeches' ? 'Speech' : r.speaker || 'Mention',
+                      chamberName(r.chamber, r.state),
+                      r.date ? formatDate(r.date, 'short') : 'Undated',
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
+                    excerpt={
+                      brief || passage ? { text: (brief || passage)! } : null
+                    }
+                    href={native ?? undefined}
+                    external={
+                      native
+                        ? undefined
+                        : {
+                            url: canonicalUrl(path),
+                            label: displayedRecordTitle(r),
+                          }
+                    }
+                    testID={`record-list-row-${index}`}
+                  />
+                );
+              }}
+              ListFooterComponent={
+                ready && ready.rows.length ? (
+                  ready.pageError ? (
+                    <InlineError
+                      subject={`More ${title.toLowerCase()}`}
+                      onRetry={() => next(true)}
+                      testID="record-list-page-error"
                     />
-                  ) : null
-                }
-                ListEmptyComponent={
-                  load.status === 'loading' ? (
+                  ) : ready.paging ? (
                     <Skeleton
                       shape="rows"
-                      count={8}
-                      label={`Loading ${title.toLowerCase()}`}
-                      testID="record-list-loading"
+                      count={2}
+                      label={`Loading more ${title.toLowerCase()}`}
+                      testID="record-list-more"
                     />
                   ) : (
-                    <ContentUnavailable
-                      symbol="quote.bubble"
-                      title={
-                        kind === 'speeches'
-                          ? 'No speeches in the record'
-                          : 'No mentions in the record'
-                      }
-                      testID="record-list-empty"
-                    />
+                    <View style={styles.foot}>
+                      <SourceLine
+                        title={title}
+                        {...source}
+                        testID="record-list-source"
+                      />
+                      <Text
+                        wordSafe
+                        variant="footnote"
+                        testID="record-list-count"
+                      >
+                        {noun(
+                          kind as 'speeches' | 'mentions',
+                          ready.rows.length,
+                        )}
+                      </Text>
+                    </View>
                   )
-                }
-                renderItem={({ item: r, index }) => {
-                  const brief = ready?.briefs[r.resource ?? ''];
-                  const path = '/doc/' + encodeURIComponent(r.slug);
-                  const native = fromWebPath(path);
-                  const passage =
-                    kind === 'speeches'
-                      ? cleanPassage(r.snippet)
-                      : serverPassage(r.snippet, { max: 220 });
-                  return (
-                    <RecordRow
-                      title={displayedRecordTitle(r)}
-                      speaker={kind === 'speeches' ? speakerFor(r) : undefined}
-                      meta={[
-                        kind === 'speeches' ? 'Speech' : r.speaker || 'Mention',
-                        chamberName(r.chamber, r.state),
-                        r.date ? formatDate(r.date, 'short') : 'Undated',
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                      excerpt={
-                        brief || passage ? { text: (brief || passage)! } : null
-                      }
-                      href={native ?? undefined}
-                      external={
-                        native
-                          ? undefined
-                          : {
-                              url: canonicalUrl(path),
-                              label: displayedRecordTitle(r),
-                            }
-                      }
-                      testID={`record-list-row-${index}`}
-                    />
-                  );
-                }}
-                ListFooterComponent={
-                  ready && ready.rows.length ? (
-                    ready.pageError ? (
-                      <InlineError
-                        subject={`More ${title.toLowerCase()}`}
-                        onRetry={() => next(true)}
-                        testID="record-list-page-error"
-                      />
-                    ) : ready.paging ? (
-                      <Skeleton
-                        shape="rows"
-                        count={2}
-                        label={`Loading more ${title.toLowerCase()}`}
-                        testID="record-list-more"
-                      />
-                    ) : (
-                      <View style={styles.foot}>
-                        <SourceLine
-                          title={title}
-                          {...source}
-                          testID="record-list-source"
-                        />
-                        <Text
-                          wordSafe
-                          variant="footnote"
-                          testID="record-list-count"
-                        >
-                          {noun(
-                            kind as 'speeches' | 'mentions',
-                            ready.rows.length,
-                          )}
-                        </Text>
-                      </View>
-                    )
-                  ) : null
-                }
-              />
-            )}
+                ) : null
+              }
+            />
           </ClearBarRest>
         </StatePageProvider>
       )}
