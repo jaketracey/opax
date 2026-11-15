@@ -265,10 +265,12 @@ export interface ProfileBones {
   /** The figures under the rows: tiles, one alone as a full-width row. */
   tiles?: readonly (keyof typeof tileBones)[];
 }
+// Stand-in figures are letters: unseen words must not read as an amount
+// the loading label does not speak.
 const tileBones = {
-  votes: ['0,000', 'divisions'],
-  interests: ['00', 'interests'],
-  pay: ['$000,000', 'a year in pay'],
+  votes: ['nnnnn', 'divisions'],
+  interests: ['nn', 'interests'],
+  pay: ['nnnnnnnn', 'a year in pay'],
 } as const;
 /** A sitting federal member: the party, one seat and the official page. */
 const sittingMemberBones: Required<ProfileBones> = {
@@ -278,7 +280,7 @@ const sittingMemberBones: Required<ProfileBones> = {
   follow: true,
   rows: [
     { kind: 'party', title: 'Party' },
-    { kind: 'seat', title: 'Member for a seat', detail: 'State, since 2020' },
+    { kind: 'seat', title: 'Member for a seat', detail: 'State, since a date' },
     { kind: 'official', title: 'Parliament of Australia page' },
   ],
   tiles: ['votes', 'interests', 'pay'],
@@ -548,7 +550,7 @@ function DetailSkeleton({
               {ghost(
                 'stat-row-title',
                 <Text wordSafe variant="body">
-                  0,000 divisions, 2000 to 2020
+                  Divisions voted in, year to year
                 </Text>,
                 '65%',
               )}
