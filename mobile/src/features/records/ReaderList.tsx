@@ -199,7 +199,7 @@ export function ReaderList({
     <SidebarSafe style={styles.screen}>
       <StatePageProvider refreshing={false}>
         {/* The reader restores its own place: the bar's fade alone. */}
-        <ClearBarRest rest={false}>
+        <ClearBarRest rest={false} ground="paper">
           <FlatList
             ref={list}
             testID={testID}

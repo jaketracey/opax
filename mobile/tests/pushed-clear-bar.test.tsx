@@ -216,7 +216,9 @@ describe('no pushed page has a clear bar without a fade', () => {
     if (kind === 'fade') {
       // Under the stack's clear bar, with the fade from ClearBarRest.
       expect('headerTransparent' in options).toBe(false);
-      expect(feature(file)).toMatch(/<ClearBarRest\b/);
+      // Its ground is named, the list's own: no default is relied on.
+      expect(feature(file)).toMatch(/<ClearBarRest\b[^>]*\bground="paper"/);
+      expect(feature(file)).toMatch(/backgroundColor: colors\.paper/);
     } else if (kind === 'solid') {
       expect(options.headerTransparent).toBe(false);
       expect(options.headerStyle).toHaveProperty('backgroundColor');
