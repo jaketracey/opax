@@ -2556,6 +2556,76 @@ describe('scroll edges on every bar shape', () => {
         }
       }),
   );
+  // Leads is a large-title list on the darker grouped ground. RouteOptions
+  // owns its bar and knows no ground, so the solid rail bar was backed in
+  // paper: a paper strip over the darker page at rest. The page's Screen
+  // shares its ground with the bar's owner.
+  test.each(['leading', 'trailing'] as const)(
+    'Leads beside a %s rail backs its solid bar in the page ground, not paper',
+    (edge) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { page, navigation, ground } = fadePage(
+          'leads',
+          '(today)',
+          true,
+          true,
+          true,
+        );
+        expect(ground).toBe(colors.sunken);
+        const renderer = tree(page(82));
+        try {
+          const resolved = Object.assign(
+            {},
+            ...navigation.setOptions.mock.calls.map(([options]) => options),
+          );
+          expect(resolved).toMatchObject({
+            ...opaqueBar(colors.sunken),
+            headerTransparent: false,
+          });
+          const backing = resolved.headerBackground() as React.ReactElement<{
+            style: { backgroundColor: unknown };
+          }>;
+          expect(backing.props.style.backgroundColor).toBe(colors.sunken);
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
+  test('Leads on an iPhone keeps its clear large-title bar, option for option', () =>
+    withGlass(() => {
+      mockBarEdge = 'unspecified';
+      const { page, navigation } = fadePage(
+        'leads',
+        '(today)',
+        true,
+        true,
+        true,
+      );
+      const renderer = tree(page(116));
+      try {
+        const calls = navigation.setOptions.mock.calls.map(
+          ([options]) => options,
+        );
+        const resolved = Object.assign({}, ...calls);
+        expect(resolved.headerTransparent).toBe(true);
+        expect('headerBackground' in resolved).toBe(false);
+        // The shared ground is for the rail alone: the owner's own options
+        // are the ones it set before (paper, under a clear bar).
+        const owned = calls.filter(
+          (options) => options.headerLargeTitleEnabled === true,
+        );
+        expect(owned.length).toBeGreaterThan(0);
+        for (const options of owned)
+          expect(options).toEqual({
+            ...largeTitleBar(colors.paper),
+            headerLargeTitleEnabled: true,
+            unstable_nativeProps: { testID: 'opax-root-bar-leads-root' },
+          });
+      } finally {
+        act(() => renderer.unmount());
+      }
+    }));
   // Screen's pinned band (Search's scope row) holds below a bar the page
   // runs under. Under the solid rail bar the scroll view starts below the
   // bar, so React Native's own sticky header is already in the right place;

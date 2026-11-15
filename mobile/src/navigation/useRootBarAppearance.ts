@@ -30,7 +30,13 @@ const hardEdgeRoots = ['index', 'search', 'ask', 'leads'];
 const searches = new WeakMap<
   object,
   {
-    value: { largeTitle?: boolean; underBar?: boolean; search?: boolean };
+    value: {
+      largeTitle?: boolean;
+      underBar?: boolean;
+      search?: boolean;
+      /** The page's own ground, from its Screen. */
+      ground?: ColorValue;
+    };
     listeners: Set<() => void>;
   }
 >();
@@ -170,8 +176,15 @@ export function useRootBarAppearance(
       largeTitleEnabled &&
       name === 'index' &&
       isAccessibilityCategory(fontScale));
+  // RouteOptions owns the bar of a large-title list (Leads) but knows no
+  // ground; the page's Screen does, and shares it. Beside a vertical bar the
+  // bar can be solid and backed, and in paper over the darker grouped page
+  // it was a strip at the top at rest. Other layouts keep the colour they
+  // had: there the bar is clear and the page shows through.
   const colour =
-    ground ?? (roots.includes(name) ? tabRootGround(name) : colors.paper);
+    ground ??
+    (verticalBar ? rootOptions.ground : undefined) ??
+    (roots.includes(name) ? tabRootGround(name) : colors.paper);
   const ownsBar =
     owner === 'options' ||
     rootOptions.largeTitle === undefined ||
@@ -179,6 +192,13 @@ export function useRootBarAppearance(
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
   useRootBarUnderBar(underBar, !!rootKey && owner === 'screen');
+  useLayoutEffect(() => {
+    if (!navigation || !rootKey || owner !== 'screen' || !ground) return;
+    const state = searchState(navigation);
+    if (state.value.ground === ground) return;
+    state.value = { ...state.value, ground };
+    state.listeners.forEach((listener) => listener());
+  }, [navigation, rootKey, owner, ground]);
   const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
   // Beside a vertical bar a search field is stacked below the title band,
   // and UIKit's scroll edge (soft or hard) covers the band alone: the field
@@ -341,4 +361,5 @@ const emptyOptions: {
   largeTitle?: boolean;
   underBar?: boolean;
   search?: boolean;
+  ground?: ColorValue;
 } = {};

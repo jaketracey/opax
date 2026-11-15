@@ -79,6 +79,15 @@ below it. Pushed pages need nothing: once their band folds the field sits in
 the bar, which covers it. iPhone and iPad are unchanged, and so is Android,
 whose toolbar is opaque with the field inside it.
 
+The solid bar and its backing take the page's own ground. A large-title list
+on the darker grouped ground (Leads) has its bar owned by `RouteOptions`,
+which knows no ground, so its Screen shares the ground with the owner; in
+paper it was a strip over the darker page at rest.
+
+Known, not fixed: a pushed page that sets a paper bar over the darker ground
+(the glossary, Methods, Datasets, Portraits, Photo credits) shows a paper
+title band with 14 pt of the page above it at rest beside the rail.
+
 Known, not fixed: Search opened by a link from a page in another tab draws
 its title over the field on the rail (captured before and after this change).
 
