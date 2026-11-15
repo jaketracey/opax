@@ -287,50 +287,68 @@ describe('Search scroll region on iOS', () => {
     ).toBe(true);
   });
 
-  test('with the field active nothing scrolls above the safe area: a clip, never a fill, and the same scroll view', async () => {
-    let renderer!: TestRenderer.ReactTestRenderer;
-    await act(async () => {
-      renderer = TestRenderer.create(
-        <SafeAreaInsetsContext.Provider
-          value={{ top: 62, bottom: 34, left: 0, right: 0 }}
-        >
-          {withNavigationOptions(<Search />, (options) => {
-            if (options.headerSearchBarOptions) mockBar.options = options;
-          })}
-        </SafeAreaInsetsContext.Provider>,
-      );
+  test('with the field active nothing scrolls above the safe area; results that keep the bar are not cut', async () => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
     });
-    const frame = () =>
-      StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style);
-    // Browse, under the large title: the bar is there, nothing is cut.
-    const scroll = renderer.root.findByType(ScrollView);
-    expect(frame().marginTop ?? 0).toBe(0);
-    // Typing: the bar is gone (iOS 26). The scroll view starts at the status
-    // bar's lower edge and clips to its own frame, so no row is drawn above
-    // it whatever the bar's background is.
-    await type('hous');
-    expect(frame().marginTop).toBe(62);
-    expect(frame().overflow).not.toBe('hidden');
-    // The same scroll view: the page was not remounted, and nothing is laid
-    // over it to hide the rows.
-    expect(renderer.root.findByType(ScrollView)).toBe(scroll);
-    expectScrollRegion(renderer);
-    // Results: still cut, with the scope control pinned.
-    await act(async () =>
-      renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
-    );
-    expect(frame().marginTop).toBe(62);
-    expect(frame().overflow).not.toBe('hidden');
-    const results = renderer.root.findByType(ScrollView);
-    expect(results).toBe(scroll);
-    expect(results.props.stickyHeaderIndices).toEqual([0]);
-    // Back to Browse: the bar returns and the page runs under it again.
-    await type('');
-    await act(async () =>
-      mockBar.options!.headerSearchBarOptions.onCancelButtonPress(),
-    );
-    expect(frame().marginTop ?? 0).toBe(0);
-    act(() => renderer.unmount());
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      await act(async () => {
+        renderer = TestRenderer.create(
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+          >
+            {withNavigationOptions(<Search />, (options) => {
+              if (options.headerSearchBarOptions) mockBar.options = options;
+            })}
+          </SafeAreaInsetsContext.Provider>,
+        );
+      });
+      const frame = () =>
+        StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style);
+      const top = () => frame().marginTop ?? 0;
+      const bar = () => mockBar.options!.headerSearchBarOptions;
+      const scroll = renderer.root.findByType(ScrollView);
+      // Browse, under the large title: the bar is there, nothing is cut.
+      expect(top()).toBe(0);
+      // Results opened without the field taking focus (a link, a Try row):
+      // the bar is still showing. Cutting the page here would put UIKit's
+      // large title in the space and pin the scope control behind the bar.
+      await type('zzzzzz');
+      await act(async () =>
+        renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
+      );
+      expect(renderer.root.findAllByType(ResultsView)).toHaveLength(1);
+      expect(top()).toBe(0);
+      // The field takes focus: the bar is gone (iOS 26). The scroll view
+      // starts at the status bar's lower edge, so no row is drawn above it
+      // whatever the bar's background is. It keeps its own overflow.
+      await act(async () => bar().onFocus());
+      expect(top()).toBe(62);
+      expect(frame().overflow).not.toBe('hidden');
+      // Typing, and the results after it, with the keyboard down: the field
+      // is still active and the page still cut. The same scroll view
+      // throughout: nothing is remounted or laid over it.
+      await type('hous');
+      expect(top()).toBe(62);
+      await act(async () =>
+        renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
+      );
+      expect(top()).toBe(62);
+      const results = renderer.root.findByType(ScrollView);
+      expect(results).toBe(scroll);
+      expect(results.props.stickyHeaderIndices).toEqual([0]);
+      // Cancel with a query submitted: the results return under the bar,
+      // uncut.
+      await act(async () => bar().onCancelButtonPress());
+      expect(renderer.root.findAllByType(ResultsView)).toHaveLength(1);
+      expect(top()).toBe(0);
+    } finally {
+      if (renderer) act(() => renderer.unmount());
+      if (version) Object.defineProperty(Platform, 'Version', version);
+    }
   });
 
   test('typing, short results and returning to Browse keep the same unobscured scroll region', async () => {

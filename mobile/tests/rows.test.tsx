@@ -1888,6 +1888,17 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     // children out as in a box of fixed height, and the pinned band 0 pt
     // tall, with no background and the content over it (iOS 26.3).
     expect(flat(scroll.props.style).overflow).not.toBe('hidden');
+    // Below an opaque bar (before iOS 26) the scroll view already starts
+    // under the bar: a margin there would only add a blank band.
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: '18.4',
+    });
+    expect(flat(page(true).props.style).marginTop ?? 0).toBe(0);
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
     // The band keeps the app's own sticky header.
     const Sticky = scroll.props.StickyHeaderComponent;
     expect(Sticky).toBeDefined();

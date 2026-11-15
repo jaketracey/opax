@@ -466,7 +466,9 @@ export function Screen({
    * (the status bar's lower edge), whatever the bar's background is. For a
    * page whose bar is hidden while it scrolls (Search with its field
    * active on iOS 26): rows otherwise run up through the clock, above the
-   * pinned band. The scroll view itself starts at that edge and clips to
+   * pinned band. Ask for it only while the bar is hidden: under a bar that
+   * is showing, UIKit would draw its large title in the space and the
+   * pinned band would hold behind the bar. The scroll view itself starts at that edge and clips to
    * its own frame; nothing is painted over the content. UIKit then gives it
    * no top inset, so the content rests where it did, and a pinned band
    * holds at the scroll view's own top (BarStickyHeader is told so).
@@ -560,7 +562,6 @@ export function Screen({
   ]);
   const rest = useClearBarRest();
   const safeTop = useContext(SafeAreaInsetsContext)?.top ?? 0;
-  const clipTop = Platform.OS === 'ios' && clipAboveSafeTop ? safeTop : 0;
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
@@ -570,6 +571,10 @@ export function Screen({
   // scope control about 170 pt below the bar, over the rows (iOS 18.4).
   const belowBar =
     (nativeRoot && railSolidRoot) || (!glassBar() && !clearExpandedBar);
+  // Only where the scroll view runs under the bar: below an opaque bar it
+  // already starts under it, and a margin would only add a blank band.
+  const clipTop =
+    Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
