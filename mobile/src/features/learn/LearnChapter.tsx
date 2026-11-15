@@ -109,8 +109,9 @@ function Block({ block, at }: { block: LearnBlock<TermId>; at: number }) {
  * chapter's place on the stack (Back still returns to the guide), and
  * "Back to the guide".
  *
- * Each idea shown is kept as the reader's place (place.ts), so the hub can
- * open the chapter where they stopped.
+ * Each idea the reader moves to with Next is kept as their place
+ * (place.ts), so the hub can open the chapter where they stopped. Opening a
+ * chapter keeps nothing.
  */
 export default function LearnChapter() {
   const params = useLocalSearchParams<{ chapter?: string; screen?: string }>();
@@ -149,10 +150,6 @@ function ChapterPage({
     const node = heading.current && findNodeHandle(heading.current);
     if (node) AccessibilityInfo.setAccessibilityFocus(node);
   }, [at, headerBottom]);
-  const kept = chapter?.slug;
-  useEffect(() => {
-    if (kept) void keepLearnPlace(kept, at + 1, total).catch(() => undefined);
-  }, [kept, at, total]);
   if (!chapter)
     return (
       <Screen testID="learn-chapter">
@@ -237,7 +234,15 @@ function ChapterPage({
               if (router.canGoBack()) router.back();
               return;
             }
+            // The place is kept when the reader moves, never on opening:
+            // a link that opens the chapter at its start must not replace a
+            // place kept further in, and one that opens its last idea has
+            // not been read through. Reaching the last idea this way is
+            // what marks the chapter read.
             setAt(at + 1);
+            void keepLearnPlace(chapter.slug, at + 2, total).catch(
+              () => undefined,
+            );
           }}
           testID="learn-next"
         />

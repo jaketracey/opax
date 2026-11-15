@@ -200,10 +200,8 @@ describe('a chapter keeps the idea showing', () => {
     mockParams = { chapter: 'bill-to-act', screen: String(total - 1) };
     const tree = render(<LearnChapter />);
     await settle();
-    expect(learnPlacesSnapshot()['bill-to-act']).toEqual({
-      at: total - 1,
-      read: false,
-    });
+    // Opening keeps nothing; the place moves when the reader does.
+    expect(learnPlacesSnapshot()['bill-to-act']).toBeUndefined();
     act(() => pressable(tree, 'learn-next').props.onPress());
     await settle();
     expect(learnPlacesSnapshot()['bill-to-act']).toEqual({
@@ -215,6 +213,42 @@ describe('a chapter keeps the idea showing', () => {
       await keepLearnPlace('bill-to-act', 1, total);
     });
     expect(learnPlacesSnapshot()['bill-to-act']).toEqual({ at: 1, read: true });
+  });
+
+  test('opening a chapter at its start keeps a place kept further in, until the reader moves', async () => {
+    resetLearnPlacesForTests({ 'bill-to-act': { at: 4, read: false } });
+    // A link with no place of its own (a deep link, a glossary row).
+    mockParams = { chapter: 'bill-to-act' };
+    const tree = render(<LearnChapter />);
+    await settle();
+    expect(textOf(host(tree, 'learn-kicker')[0]!)).toBe(
+      `${bill.title} · 1 of ${total}`,
+    );
+    expect(learnPlacesSnapshot()['bill-to-act']).toEqual({
+      at: 4,
+      read: false,
+    });
+    expect(mockFiles.size).toBe(0);
+    // The reader moves on from the opening idea: that is their place now.
+    act(() => pressable(tree, 'learn-next').props.onPress());
+    await settle();
+    expect(learnPlacesSnapshot()['bill-to-act']).toEqual({
+      at: 2,
+      read: false,
+    });
+  });
+
+  test('a link straight to the last idea does not mark the chapter read', async () => {
+    mockParams = { chapter: 'bill-to-act', screen: String(total) };
+    const tree = render(<LearnChapter />);
+    await settle();
+    expect(textOf(host(tree, 'learn-heading')[0]!)).toBe('See it in OPAX');
+    expect(learnPlacesSnapshot()['bill-to-act']).toBeUndefined();
+    // Back to the guide is not a move through the chapter.
+    act(() => pressable(tree, 'learn-next').props.onPress());
+    await settle();
+    expect(learnPlacesSnapshot()['bill-to-act']).toBeUndefined();
+    expect(mockFiles.size).toBe(0);
   });
 
   test('the place is written to the device and read back', async () => {
