@@ -139,6 +139,31 @@ test('the first caller leaving does not cancel a request others joined', async (
   expect(transport).toHaveBeenCalledTimes(1);
 });
 
+test('when every waiter has gone the request is cancelled, and the next read starts again', async () => {
+  const { client, transport, calls } = held();
+  const one = new AbortController();
+  const two = new AbortController();
+  const first = client.get(path, same, false, { signal: one.signal });
+  const second = client.get(path, same, false, { signal: two.signal });
+  await reached(calls, 1);
+  await quiet();
+  one.abort();
+  await expect(first).rejects.toMatchObject({ name: 'AbortError' });
+  expect(calls[0]!.signal.aborted).toBe(false);
+  two.abort();
+  await expect(second).rejects.toMatchObject({ name: 'AbortError' });
+  // No one is waiting: the download stops, as a lone read's always did.
+  expect(calls[0]!.signal.aborted).toBe(true);
+  calls[0]!.fail(Object.assign(new Error('Aborted'), { name: 'AbortError' }));
+  await quiet();
+  expect(transport).toHaveBeenCalledTimes(1);
+  const again = client.get(path, same);
+  await reached(calls, 2);
+  expect(transport).toHaveBeenCalledTimes(2);
+  calls[1]!.answer(ok());
+  expect((await again).data).toEqual(body);
+});
+
 test('a forced read does not join a plain one; a second plain read does', async () => {
   const { client, transport, calls } = held();
   const plain = client.get(path, same);

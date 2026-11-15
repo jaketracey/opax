@@ -280,10 +280,13 @@ export class ApiClient {
   private decoded = new WeakMap<object, Map<Decoder<unknown>, unknown>>();
   private decodeBody<T>(body: unknown, decode: Decoder<T>): T {
     if (body === null || typeof body !== 'object') return decode(body);
-    let versions = this.decoded.get(body);
-    if (versions?.has(decode)) return versions.get(decode) as T;
+    const held = this.decoded.get(body);
+    if (held?.has(decode)) return held.get(decode) as T;
     const value = decode(body); // Never retain a failed validation.
     if (this.freezeSnapshots) freezeSnapshot(body, value);
+    // Read again: a body check (bodyCheck) decodes inside this call, and its
+    // memo must not be replaced by a new map.
+    let versions = this.decoded.get(body);
     if (!versions) this.decoded.set(body, (versions = new Map()));
     versions.set(decode, value);
     return value;
@@ -339,14 +342,23 @@ export class ApiClient {
    * came down two to five times.
    *
    * Only the network leg is shared; each caller decodes the body itself.
-   * The shared request belongs to no caller: a caller that aborts stops
-   * waiting and the request carries on for the others (and for the cache).
-   * Its outcome, a record or an error, reaches every waiter, and the entry
-   * goes when it settles, so a later read asks again. Only plain reads
-   * join: a forced, background, absence, summary or unsaved read, or one
-   * with its own retries or timeout, runs alone as before.
+   * The shared request belongs to no one caller: a caller that aborts stops
+   * waiting and the request carries on for the others. Only when every
+   * waiter has gone is it cancelled, as a lone read's abort always was (it
+   * is then neither retried nor saved). Its outcome, a record or an error,
+   * reaches every waiter, and the entry goes when it settles, so a later
+   * read asks again. Only plain reads join: a forced, background, absence,
+   * summary or unsaved read, or one with its own retries or timeout, runs
+   * alone as before.
    */
-  private flights = new Map<string, Promise<RecordResult<unknown>>>();
+  private flights = new Map<
+    string,
+    {
+      promise: Promise<RecordResult<unknown>>;
+      controller: AbortController;
+      waiters: number;
+    }
+  >();
   // One body check per decoder, so a saved body's decode memo stays small.
   private bodyChecks = new WeakMap<Decoder<unknown>, Decoder<unknown>>();
   private bodyCheck<T>(decode: Decoder<T>): Decoder<unknown> {
@@ -381,31 +393,47 @@ export class ApiClient {
     if (signal?.aborted) throw cancelled();
     let flight = this.flights.get(path);
     if (!flight) {
+      const controller = new AbortController();
       // The first caller's decoder checks the body before it is saved, as a
       // read alone does; the record carries the body itself.
-      const started = this.readOnce(path, this.bodyCheck(decode), false, {
+      const promise = this.readOnce(path, this.bodyCheck(decode), false, {
         ...options,
-        signal: undefined,
+        signal: controller.signal,
       }).finally(() => {
         if (this.flights.get(path) === started) this.flights.delete(path);
       });
       // A waiter that left must not leave an unhandled rejection behind.
-      started.catch(() => undefined);
+      promise.catch(() => undefined);
+      const started = { promise, controller, waiters: 0 };
       this.flights.set(path, started);
       flight = started;
     }
-    let abort: (() => void) | undefined;
-    const shared = await (signal
-      ? Promise.race([
-          flight,
-          new Promise<never>((_resolve, reject) => {
-            abort = () => reject(cancelled());
-            signal.addEventListener('abort', abort, { once: true });
-          }),
-        ]).finally(() => {
-          if (abort) signal.removeEventListener('abort', abort);
-        })
-      : flight);
+    const joined = flight;
+    joined.waiters++;
+    let leave: (() => void) | undefined;
+    let shared: RecordResult<unknown>;
+    try {
+      shared = await (signal
+        ? Promise.race([
+            joined.promise,
+            new Promise<never>((_resolve, reject) => {
+              leave = () => {
+                // The last waiter to go takes the request with it.
+                if (joined.waiters === 1) {
+                  if (this.flights.get(path) === joined)
+                    this.flights.delete(path);
+                  joined.controller.abort();
+                }
+                reject(cancelled());
+              };
+              signal.addEventListener('abort', leave, { once: true });
+            }),
+          ])
+        : joined.promise);
+    } finally {
+      joined.waiters--;
+      if (leave) signal?.removeEventListener('abort', leave);
+    }
     let data: T;
     try {
       data = this.decodeBody(shared.data, decode);
