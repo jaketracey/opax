@@ -75,8 +75,9 @@ def overdue_dissolutions(out_dir: Path, as_of: str, days: int = OVERDUE_DAYS) ->
     post-result roster is exported (parli.electorates.dissolved_for), so a forgotten record would
     leave the app drawing "Assembly dissolved" for good."""
     manifest = json.loads((out_dir / "manifest.json").read_text())
-    release = out_dir / "releases" / manifest["release_id"]
-    rows = json.loads((release / "index.json").read_text())["electorates"]
+    # The index is read by the pointer every release carries, so a release with no bundle of its own
+    # (republish leaves those alone too) is read the same way: it has no dissolved rows to report.
+    rows = json.loads((out_dir.parent / manifest["index_url"].lstrip("/")).read_text())["electorates"]
     today = date.fromisoformat(as_of)
     lines = []
     for day in sorted({row["dissolved_for"] for row in rows if row.get("dissolved_for")}):
