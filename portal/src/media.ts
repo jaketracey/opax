@@ -17,7 +17,8 @@ export async function serveMedia(request: Request, bucket: R2Bucket | undefined,
   try {
     object = request.method === 'HEAD' ? await bucket.head(name) : await bucket.get(name, wanted ? { range: request.headers } : {})
   } catch {
-    // R2 refuses a range it cannot satisfy; the size comes from a metadata read.
+    // R2 refuses a range it cannot satisfy; the size comes from a metadata read. Any other failure is the store's, not the request's.
+    if (!wanted) return new Response('Media is unavailable just now.', { status: 503, headers: { 'retry-after': '60' } })
     const head = await bucket.head(name)
     return head ? new Response(null, { status: 416, headers: { 'content-range': `bytes */${head.size}` } }) : new Response('Not found', { status: 404 })
   }

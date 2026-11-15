@@ -66,4 +66,6 @@ test('/media HEAD gives the size without a body; other names and methods are ref
   assert.equal((await get('/media/demo.mp4', {}, 'POST')).status, 405)
   assert.equal((await get('/media/missing.mp4')).status, 404)
   assert.equal((await serveMedia(new Request('https://opax.com.au/media/demo.mp4'), undefined, '/media/demo.mp4')).status, 404, 'no bucket bound')
+  const down = { head: async () => { throw new Error('R2 down') }, get: async () => { throw new Error('R2 down') } }
+  assert.equal((await serveMedia(new Request('https://opax.com.au/media/demo.mp4'), down, '/media/demo.mp4')).status, 503, 'a store failure on a plain GET is a 503, not a 416')
 })
