@@ -16,6 +16,7 @@ import { ContentUnavailable, SegmentedPicker } from '../src/design/primitives';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { forgetMoneyGraphs } from '../src/features/money/lookup';
 import { BAND_HOLD } from '../src/features/money/map/band';
+import * as measure from '../src/features/money/map/measure';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
@@ -500,6 +501,46 @@ describe('the card at large text', () => {
       panelCap,
     );
     await act(async () => r.unmount());
+  });
+});
+
+describe('sizes read before the first frame', () => {
+  test('the stage, the card and the band are in state with no layout event', async () => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    // What the host would answer synchronously for each measured view.
+    // Jest's views hand refs their component, so the frames go in by the
+    // view's own props.
+    const frames: Record<string, { width: number; height: number }> = {
+      'money-screen': { width: 402, height: 760 },
+      'money-map-band': { width: 1, height: 96 },
+    };
+    const read = jest.spyOn(measure, 'frameOf').mockImplementation((ref) => {
+      const props = (
+        ref.current as { props?: { testID?: string; style?: unknown } }
+      )?.props;
+      if (!props) return null;
+      if (props.testID && frames[props.testID]) return frames[props.testID]!;
+      const style = StyleSheet.flatten(props.style as never) as
+        | Record<string, unknown>
+        | undefined;
+      // The card's host: the one view with the top's padding.
+      return style?.paddingTop === 8 && style?.width === '100%'
+        ? { width: 402, height: 212 }
+        : null;
+    });
+    const r = await render();
+    // No onLayout has been sent: these come from the synchronous read.
+    expect(r.root.findByType(MoneyMapPanel).props.stageHeight).toBe(760);
+    expect(flat(byTestID(r.root, 'money-map-band-space')).height).toBe(96);
+    const map = jest.mocked(MoneyMap).mock.calls.at(-1)![0];
+    expect(map.insets.top).toBe(212 + 8);
+    await act(async () => r.unmount());
+    read.mockRestore();
   });
 });
 

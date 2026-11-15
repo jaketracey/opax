@@ -81,6 +81,7 @@ import {
 import { useFirstScreenReader, useMoneyRecord } from './hooks';
 import { loadedMoneyGraph, partyNodeFor } from './lookup';
 import { useHeldInset } from './map/band';
+import { frameOf } from './map/measure';
 import { MoneyMap, type MapCommand, type MapRequest } from './map/MoneyMap';
 import { MoneyMapControls } from './map/MoneyMapControls';
 import { MoneyMapLegend } from './map/MoneyMapLegend';
@@ -137,6 +138,8 @@ import {
 import { track } from '../../analytics';
 
 const TOP_DONORS = 20;
+/** Synchronous measuring passes allowed per change of window or state. */
+const SETTLE_PASSES = 8;
 type Mode = MoneyMode;
 
 /** "Money to parties, 1998–99 to 2025–26, and public money to donors on the map". */
@@ -1049,6 +1052,66 @@ function MapMode({
         }}
       />
     ) : null;
+  // The sizes the chrome is worked out from are read before the frame is
+  // painted (map/measure.ts): onLayout brought them a frame or more late,
+  // and at large text the card and the panel then moved after the page had
+  // appeared. Each change of window, text size or state gets a few passes
+  // to settle; onLayout still follows anything later.
+  const stageRef = useRef<View>(null);
+  const topRef = useRef<View>(null);
+  const controlsRef = useRef<View>(null);
+  const headRef = useRef<View>(null);
+  const pickerRef = useRef<View>(null);
+  const probeRef = useRef<View>(null);
+  const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}`;
+  const settle = useRef({ key: '', left: 0 });
+  useLayoutEffect(() => {
+    if (settle.current.key !== settleKey)
+      settle.current = { key: settleKey, left: SETTLE_PASSES };
+    if (settle.current.left <= 0) return;
+    let changed = false;
+    const stageFrame = frameOf(stageRef);
+    if (
+      stageFrame &&
+      stageFrame.height > 0 &&
+      (stageFrame.width !== stage.width || stageFrame.height !== stage.height)
+    ) {
+      setStage(stageFrame);
+      changed = true;
+    }
+    const topFrame = frameOf(topRef);
+    if (topFrame && Math.ceil(topFrame.height) !== topHeight) {
+      setTopHeight(Math.ceil(topFrame.height));
+      changed = true;
+    }
+    const controlsFrame = frameOf(controlsRef);
+    if (controlsFrame) {
+      const next = Math.ceil(controlsFrame.height);
+      if (next !== controlsHeight) {
+        setControlsHeight(next);
+        changed = true;
+      }
+      if (!horizontalControls && next !== stackHeight) setStackHeight(next);
+    }
+    const headFrame = frameOf(headRef);
+    const pickerFrame = frameOf(pickerRef);
+    if (headFrame && pickerFrame) {
+      const next = {
+        head: Math.ceil(headFrame.height),
+        picker: Math.ceil(pickerFrame.height),
+      };
+      if (next.head !== pinned.head || next.picker !== pinned.picker) {
+        setPinned(next);
+        changed = true;
+      }
+    }
+    const probeFrame = probes ? frameOf(probeRef) : null;
+    if (probeFrame) reportInset(Math.round(probeFrame.height));
+    if (changed) settle.current.left -= 1;
+    // Every commit, on purpose: a frame can change without a dependency
+    // changing. It sets state only on a difference, within the budget.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
   const measure =
     (part: 'head' | 'picker') =>
     (event: { nativeEvent: { layout: { height: number } } }) => {
@@ -1061,6 +1124,7 @@ function MapMode({
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />
       <View
+        ref={stageRef}
         style={styles.root}
         testID="money-screen"
         onLayout={(event) => {
@@ -1114,8 +1178,8 @@ function MapMode({
           // indicator) and draws nothing: a view of no content at the
           // stage's foot, so its height is the system's bottom inset, with
           // nothing taken from the stage's own measured size.
-          <SafeAreaView
-            edges={['bottom']}
+          <View
+            ref={probeRef}
             pointerEvents="none"
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
@@ -1124,7 +1188,9 @@ function MapMode({
             onLayout={(event) =>
               reportInset(Math.round(event.nativeEvent.layout.height))
             }
-          />
+          >
+            <SafeAreaView edges={['bottom']} />
+          </View>
         ) : null}
         <SafeAreaView
           // The stack's opaque bar already sits above the stage: a top
@@ -1151,6 +1217,7 @@ function MapMode({
           testID="money-map-chrome"
         >
           <View
+            ref={topRef}
             style={[
               styles.top,
               cardWidth,
@@ -1183,7 +1250,11 @@ function MapMode({
                 style={[styles.card, styles.cardCapped]}
                 testID="money-map-card"
               >
-                <View onLayout={measure('head')} testID="money-map-card-head">
+                <View
+                  ref={headRef}
+                  onLayout={measure('head')}
+                  testID="money-map-card-head"
+                >
                   {head}
                 </View>
                 <ScrollView
@@ -1211,6 +1282,7 @@ function MapMode({
                   {offline}
                 </ScrollView>
                 <View
+                  ref={pickerRef}
                   onLayout={measure('picker')}
                   testID="money-map-card-picker"
                 >
@@ -1248,6 +1320,7 @@ function MapMode({
               </ScrollView>
             ) : searchOpen || expanded ? null : (
               <View
+                ref={controlsRef}
                 style={[
                   styles.controls,
                   horizontalControls
