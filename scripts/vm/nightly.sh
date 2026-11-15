@@ -326,8 +326,12 @@ if [ "${OPAX_NIGHTLY_REEXEC:-0}" != 1 ] && [ -n "$PRE_SYNC_HEAD" ] \
   if bash -n "$REPO/scripts/vm/nightly.sh" 2>>"$LOGFILE" && bash -n "$REPO/scripts/vm/data_groups.sh" 2>>"$LOGFILE"; then
     log "the sync changed nightly.sh or data_groups.sh ($(git rev-parse --short "$PRE_SYNC_HEAD") -> $(git rev-parse --short HEAD)): restarting once with the new copy"
     export OPAX_NIGHTLY_REEXEC=1 OPAX_NIGHTLY_STARTED_AT="$STARTED_AT" OPAX_NIGHTLY_STARTED="${OPAX_NIGHTLY_STARTED:-$START_EPOCH}"
+    # OPAX_NIGHTLY_SHELL exists for the tests, and nightly.env is sourced with set -a, so only a bash may restart
+    # this bash script: any other value (sh would die at `set -o pipefail` and publish nothing) falls back to bash.
+    nightly_shell=${OPAX_NIGHTLY_SHELL:-bash}
+    case "$nightly_shell" in bash|*/bash) ;; *) nightly_shell=bash ;; esac
     shopt -s execfail
-    exec "${OPAX_NIGHTLY_SHELL:-bash}" "$REPO/scripts/vm/nightly.sh" "$@"
+    exec "$nightly_shell" "$REPO/scripts/vm/nightly.sh" "$@"
     shopt -u execfail
     unset OPAX_NIGHTLY_REEXEC OPAX_NIGHTLY_STARTED_AT
     fail "could not restart with the nightly.sh pulled from origin/$BRANCH (exec failed): tonight runs with the copy already loaded"

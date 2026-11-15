@@ -722,6 +722,10 @@ new_sandbox s2c6
 push_nightly_change scripts/vm/nightly.sh 's|^log "checkout at |log "NEWCOPY the pulled nightly.sh is running"\n&|'
 OPAX_NIGHTLY_SHELL=/nonexistent/bash FAKE_MODE=ok nightly
 check "a restart whose exec fails does not end the night in silence: the loaded copy finishes it, publishes, and the failed status says the restart failed" bash -c "[ '$NRC' -eq 1 ] && [ \$(grep -c 'restarting once with the new copy' '$SB/nightly.out') -eq 1 ] && ! grep -q NEWCOPY '$SB/nightly.out' && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh' && [ \$(grep -c 'published status to origin/' '$SB/nightly.out') -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"failed\" and any(\"could not restart with the nightly.sh pulled\" in f for f in s[\"failures\"]), s'"
+new_sandbox s2c7
+push_nightly_change scripts/vm/nightly.sh 's|^log "checkout at |log "NEWCOPY the pulled nightly.sh is running"\n&|'
+OPAX_NIGHTLY_SHELL=sh FAKE_MODE=ok nightly
+check "a shell that is not bash (nightly.env sets OPAX_NIGHTLY_SHELL=sh) is ignored: the restart runs under bash, and the night runs the new copy and publishes ok" bash -c "[ '$NRC' -eq 0 ] && [ \$(grep -c 'restarting once with the new copy' '$SB/nightly.out') -eq 1 ] && grep -q NEWCOPY '$SB/nightly.out' && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh' && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q '\"status\": *\"ok\"'"
 new_sandbox s2c4
 other=$(mktemp -d); git clone -q "$ORIGIN" "$other"; echo hi > "$other/HUMAN.txt"; (cd "$other" && git add -A && git commit -q -m "a human commit" && git push -q origin HEAD:main)
 FAKE_MODE=ok nightly
