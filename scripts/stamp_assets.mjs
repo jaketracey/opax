@@ -220,6 +220,8 @@ const ASSET_STAMPS = [
   ['../src/app-banner.ts', 'app-banner.js'], ['../src/app-banner.ts', 'app-banner.css'],
   ['money-explain.js', 'money-explain.css'], ['money-explain.js', 'format.js'], ['app.js', 'money-explain.css'],
   ['wombat.js', 'loader.css'],
+  // A member page reached inside the app links the Victorian gifts section's stylesheet itself.
+  ['app.js', 'vic-gifts.css'],
 ]
 
 /** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale.
