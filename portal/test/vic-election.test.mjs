@@ -366,6 +366,48 @@ test('Council headings retain group order, distinguish unnamed groups and Ungrou
   assert.match(escaped,/Group A, &lt;img/);assert.doesNotMatch(escaped,/<img src=x/);
 });
 
+test('until the polls close, seat heads name no person; every person in a seat’s structured data has the same fields',async()=>{
+  const richmond=data.seats.find(s=>s.name==='Richmond'),region=data.seats.find(s=>s.kind==='region'&&s.name===richmond.region);
+  const before=new Date('2026-11-16T10:00:00+11:00'),lastSecond=new Date('2026-11-28T17:59:59+11:00'),after=new Date('2026-11-28T18:00:00+11:00');
+  const page=renderVicElection(data,richmond,{},before);
+  assert.equal(page.title,'Richmond candidates · 2026 Victorian election');assert.equal(page.card.title,page.title);
+  assert.ok(page.description.startsWith(`The ${richmond.candidates.list.length} candidates for Richmond at the Victorian election on 28 November 2026, in ballot paper order, with the 2022 election result and winning margin, voting dates and the seat’s parliamentary records. Victorians vote on Saturday 28 November.`),page.description);
+  const upper=renderVicElection(data,region,{},before);
+  assert.equal(upper.title,`${region.name} Region candidates · 2026 Victorian election`);
+  assert.ok(upper.description.startsWith(`The ${region.candidates.list.length} candidates for ${region.name} Region at the Victorian election on 28 November 2026, in ballot paper order, with its 11 districts, voting dates and the region’s parliamentary records. `),upper.description);
+  const listed=x=>({'@type':'ListItem',position:x.i+1,item:{'@type':'Person',name:x.name}});
+  for(const now of [before,lastSecond])for(const s of data.seats) {
+    const p=renderVicElection(data,s,{},now),head=[p.title,p.description,...p.card.lines].join(' ');
+    // No person and no office in the head: not the roster member, not any candidate.
+    assert.doesNotMatch(head,/\b(?:members?|MPs?|holds?|held|incumbent|sitting)\b/i,s.name);
+    for(const name of [...s.members.map(m=>m.name),...s.candidates.list.map(c=>c.name)])assert.ok(!head.includes(name),`${s.name}: ${name}`);
+    assert.ok(p.title.endsWith(' candidates · 2026 Victorian election'),s.name);
+    assert.ok(p.description.includes(`${s.candidates.list.length} candidates for ${s.name}${s.kind==='region'?' Region':''} at the Victorian election on 28 November 2026`),s.name);
+    // One list of people: the candidates in ballot paper order, a position and the published name for each.
+    const graph=p.jsonLd['@graph'];assert.deepEqual(graph.map(x=>x['@type']),['Event','ItemList'],s.name);
+    assert.equal(graph[1]['@id'],`https://opax.com.au${s.path}#candidates`);assert.equal(graph[1].numberOfItems,s.candidates.list.length);
+    assert.deepEqual(graph[1].itemListElement,s.candidates.list.map((c,i)=>listed({i,name:c.name})),s.name);
+    assert.doesNotMatch(JSON.stringify(graph[1]),/subject\/person|"url"|sameAs|jobTitle|affiliation|memberOf/);assert.doesNotMatch(JSON.stringify(graph),/subject\/person/);
+    for(const person of graph[1].itemListElement)assert.deepEqual(Object.keys(person.item),['@type','name']);
+  }
+  // No published list: the same neutral head without a count, and the roster names in the same shape as candidates.
+  for(const s of [richmond,region]) {
+    const bare=renderVicElection(data,{...s,candidates:null},{},before),name=s.kind==='region'?`${s.name} Region`:s.name;
+    assert.equal(bare.title,s.kind==='region'?`${s.name} Region · Victorian election 2026`:'Richmond district · Victorian election 2026');
+    assert.ok(bare.description.startsWith(`${name} at the Victorian election on 28 November 2026: `),bare.description);
+    for(const m of s.members)assert.ok(!bare.description.includes(m.name));
+    assert.deepEqual(bare.jsonLd['@graph'][1],{'@type':'ItemList','@id':`https://opax.com.au${s.path}#records`,numberOfItems:s.members.length,itemListElement:s.members.map((m,i)=>listed({i,name:m.name}))});
+    assert.equal(bare.jsonLd['@graph'].length,2);
+  }
+  // At 6 pm the reviewed post-poll head returns; the candidate list stays as the record of who stood.
+  const closed=renderVicElection(data,richmond,{},after);
+  assert.equal(closed.title,'Richmond district · Victorian election 2026');assert.ok(closed.description.startsWith('Published member records for Richmond, '));
+  assert.equal(renderVicElection(data,region,{},after).title,`${region.name} Region · Victorian election 2026`);
+  assert.deepEqual(closed.jsonLd['@graph'][1],renderVicElection(data,richmond,{},lastSecond).jsonLd['@graph'][1]);
+  // The hub lists seat pages, not people.
+  const hub=renderVicElection(data,null,{},before).jsonLd['@graph'];assert.equal(hub.length,2);
+  assert.deepEqual(hub[1].itemListElement[0],{'@type':'ListItem',position:1,name:data.seats[0].name,url:'https://opax.com.au'+data.seats[0].path});
+});
 test('election detection identifies state election copy without treating federal records in Victoria as state electoral copy',()=>{
   for(const text of ['Victorian election 2026','2026 Victorian state election','Victoria’s election','State election in Victoria','VIC election 2026','https://opax.com.au/vic-election-2026/lowan'])assert.ok(vicElectionMaterial(text),text);
   for(const text of ['Federal election in Victoria','Federal election grants in Victoria','Gippsland, Vic. Held at the 2025 federal election.','Victorian Hansard speeches','Time to the next federal election'])assert.equal(vicElectionMaterial(text),false,text);
