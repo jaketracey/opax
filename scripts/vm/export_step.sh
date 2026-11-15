@@ -3,6 +3,12 @@
 #
 #   export_step.sh json DEST CMD...       CMD writes JSON to stdout; DEST (repo-relative) is replaced only if the
 #                                         content differs from HEAD's apart from generated*/*_at stamps
+#   export_step.sh json DEST --also DEST2 TMP2 [--also ...] CMD...
+#                                         CMD also writes companion files to TMP2... (an --out flag each); every
+#                                         file is installed by the same rule, and only after CMD succeeded and
+#                                         wrote them all, so a failed export never leaves one file of the set new
+#                                         beside the others' old copies (15 Nov 2026: the money export wrote
+#                                         money-receipts.json in place)
 #   export_step.sh file DEST TMP CMD...   CMD writes its JSON to TMP itself (an --out flag); same rule
 #   export_step.sh dir PATH... -- CMD...  CMD writes into the tree in place (PATH = the directories and files it
 #                                         owns); every tracked .json under them that differs from HEAD only by
@@ -18,9 +24,21 @@ mode=$1; shift
 case "$mode" in
   json)
     dest=$1; shift
+    also_dest=(); also_tmp=()
+    while [ "${1:-}" = --also ]; do
+      [ "$#" -ge 3 ] || { echo "usage: export_step.sh json DEST [--also DEST TMP]... CMD..." >&2; exit 64; }
+      also_dest+=("$2"); also_tmp+=("$3"); shift 3
+    done
     tmp=$(mktemp "${TMPDIR:-/tmp}/export.XXXXXX")
-    trap 'rm -f "$tmp"' EXIT
+    trap 'rm -f "$tmp" "${also_tmp[@]+"${also_tmp[@]}"}"' EXIT
+    rm -f "${also_tmp[@]+"${also_tmp[@]}"}"
     "$@" > "$tmp"
+    for t in "${also_tmp[@]+"${also_tmp[@]}"}"; do
+      [ -s "$t" ] || { echo "export_step.sh: the export did not write $t; nothing installed" >&2; exit 2; }
+    done
+    for i in "${!also_dest[@]}"; do
+      "$PY" scripts/vm/keep_if_unchanged.py "${also_dest[$i]}" "${also_tmp[$i]}"
+    done
     "$PY" scripts/vm/keep_if_unchanged.py "$dest" "$tmp"
     ;;
   file)
