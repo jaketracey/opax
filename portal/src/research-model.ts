@@ -4,6 +4,7 @@
 // provider preferences as JSON, e.g. {"sort":"throughput"} or
 // {"order":["fireworks","together"],"allow_fallbacks":true}. Operator-authorised
 // eval requests may pick another model from RESEARCH_LOOP_MODEL_ALLOW per request.
+// Whatever is configured here, openrouter.ts adds data_collection "deny" and zdr true to every request.
 
 export const DEFAULT_RESEARCH_MODEL = '@preset/opax-pro'
 const SORTS = new Set(['throughput', 'latency', 'price'])
