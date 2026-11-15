@@ -7,7 +7,7 @@ import {partyUrl} from './canonical-urls.js?v=9ce13e7ba5';
 // "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
 let nextSteps = null;
 const nextStepsReady = import('./next-steps.js').then(module => { nextSteps = module; }, () => {});
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=9eb86ce57b';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=946660940b';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');

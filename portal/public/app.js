@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=07eea0e196").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=958ed46f1a").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -1660,7 +1660,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=75af96af86');
+    const mod = await import('/grant-recipient.js?v=3a86956c2f');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1913,7 +1913,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=959b972a5e");
+    const module = await import("/suppliers.js?v=fc9613105d");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -7830,7 +7830,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f24cadf4b1").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=438209252b").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
