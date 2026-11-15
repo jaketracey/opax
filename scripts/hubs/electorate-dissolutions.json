@@ -1,12 +1,13 @@
 {
-  "about": "Reviewed record of lower houses dissolved for an election. scripts/export_electorates.py reads it and writes dissolved_for on that house's rows of the electorates index; the app draws no member for a dissolved seat. The election day and the source link come from the named election file, so they are stated once.",
+  "about": "Reviewed record of lower houses dissolved for an election. scripts/export_electorates.py reads it and writes dissolved_for on that house's rows of the electorates index; the app draws no member for a dissolved seat. The election day and the source link come from the named election file, so they are stated once. seated_on is set by hand after the result is declared: the day from which the parliament's own member list is the new house. dissolved_for clears on the first export whose roster for the seat is dated that day or later; until then, and while it is null, the house stays dissolved. The nightly warns when a house is still dissolved four weeks after its election day.",
   "dissolutions": [
     {
       "jurisdiction": "vic",
       "chamber": "vic_la",
       "dissolved_on": "2026-11-03",
       "election": "vic-election-2026.json",
-      "source": "caretaker"
+      "source": "caretaker",
+      "seated_on": null
     }
   ]
 }

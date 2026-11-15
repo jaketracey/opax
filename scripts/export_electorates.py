@@ -39,9 +39,14 @@ def load_dissolutions(path: Path) -> list[dict]:
     records = []
     for row in json.loads(path.read_text())["dissolutions"]:
         election = json.loads((path.parent / row["election"]).read_text())
-        records.append({"jurisdiction": row["jurisdiction"], "chamber": row["chamber"],
-                        "dissolved_on": row["dissolved_on"], "election_day": election["election_day"],
-                        "source_url": election["sources"][row["source"]]})
+        record = {"jurisdiction": row["jurisdiction"], "chamber": row["chamber"],
+                  "dissolved_on": row["dissolved_on"], "election_day": election["election_day"],
+                  "source_url": election["sources"][row["source"]]}
+        # Reviewed, set by hand after the declaration: the day the parliament's member list is the new
+        # house. Carried only once set, so a record without it publishes exactly as before.
+        if row.get("seated_on"):
+            record["seated_on"] = row["seated_on"]
+        records.append(record)
     return sorted(records, key=lambda r: (r["jurisdiction"], r["chamber"], r["election_day"]))
 
 
@@ -58,6 +63,32 @@ def expected_dissolved_for(bundle: dict, on: str) -> dict[str, str | None]:
                          key=lambda r: (r["as_of"], r.get("priority", 0)), reverse=True)
         out[eid] = dissolved_for(e, bundle["dissolutions"], contests, rosters[0] if rosters else None, on)
     return out
+
+
+OVERDUE_DAYS = 28
+
+
+def overdue_dissolutions(out_dir: Path, as_of: str, days: int = OVERDUE_DAYS) -> list[str]:
+    """Houses still published as dissolved more than `days` after their election day: one line each.
+
+    A reminder, never a failure. A state house clears only when a person records `seated_on` and the
+    post-result roster is exported (parli.electorates.dissolved_for), so a forgotten record would
+    leave the app drawing "Assembly dissolved" for good."""
+    manifest = json.loads((out_dir / "manifest.json").read_text())
+    release = out_dir / "releases" / manifest["release_id"]
+    rows = json.loads((release / "index.json").read_text())["electorates"]
+    today = date.fromisoformat(as_of)
+    lines = []
+    for day in sorted({row["dissolved_for"] for row in rows if row.get("dissolved_for")}):
+        late = (today - date.fromisoformat(day)).days
+        if late <= days:
+            continue
+        seats = [row for row in rows if row.get("dissolved_for") == day]
+        houses = sorted({row["chamber"] for row in seats})
+        lines.append(f"{len(seats)} seats of {', '.join(houses)} are still published as dissolved {late} days after the "
+                     f"{day} election: record seated_on in scripts/hubs/electorate-dissolutions.json and export the "
+                     "post-result roster")
+    return lines
 
 
 def republish(out_dir: Path, dissolutions: list[dict], as_of: str, gold: Path | None = None) -> dict | None:
@@ -86,11 +117,17 @@ def main():
     p.add_argument("--bundle", type=Path)
     p.add_argument("--db", type=Path)
     p.add_argument("--republish", action="store_true")
+    p.add_argument("--overdue", action="store_true",
+                   help="print a line for each house still published as dissolved four weeks after its election day")
     p.add_argument("--dissolutions", type=Path, default=DISSOLUTIONS)
     p.add_argument("--out-dir", type=Path, default=Path("portal/public/electorates"))
     p.add_argument("--as-of", default=date.today().isoformat())
     args = p.parse_args()
     dissolutions = load_dissolutions(args.dissolutions) if args.dissolutions.is_file() else []
+    if args.overdue:
+        for line in overdue_dissolutions(args.out_dir, args.as_of):
+            print(line)
+        return
     if args.republish:
         if args.bundle or args.db:
             p.error("--republish reads the published release; it takes no --bundle or --db")

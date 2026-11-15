@@ -609,6 +609,11 @@ if [ "${OPAX_ELECTORATES_REPUBLISH:-1}" != 0 ] && [ -f portal/public/electorates
     revert_group electorates
     fail "electorate republish failed: previous release kept"
   fi
+  # A reminder, never a failure: a state house clears only once a person records seated_on in
+  # scripts/hubs/electorate-dissolutions.json and the post-result roster is exported.
+  while IFS= read -r overdue; do
+    [ -z "$overdue" ] || warn "$overdue"
+  done < <("$PY" scripts/export_electorates.py --overdue --as-of "${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}" 2>>"$LOGFILE" || true)
 fi
 
 # ---- 3z. groups held by review (scripts/vm/gate_hold.txt) ----------------------------------------

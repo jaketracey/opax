@@ -7,7 +7,8 @@ from pathlib import Path
 import pytest
 
 from parli.electorates import TABLES, dissolved_for, export_bundle, validate
-from scripts.export_electorates import DISSOLUTIONS, expected_dissolved_for, load_dissolutions, republish
+from scripts.export_electorates import (DISSOLUTIONS, OVERDUE_DAYS, expected_dissolved_for, load_dissolutions,
+                                       overdue_dissolutions, republish)
 
 ROOT = Path(__file__).resolve().parents[1]
 DAY = "2026-11-28"
@@ -201,3 +202,142 @@ def test_the_data_check_refuses_a_row_that_differs_from_its_bundle(bundle, tmp_p
     detail = json.loads((release / "seat.json").read_text()); detail.pop("dissolved_for")
     (release / "seat.json").write_text(json.dumps(detail))
     assert any("seat.json" in e for e in vd._dissolved_for_errors(release, manifest, reference))
+
+
+# ---- the reviewed seated_on record: how a state house clears (the bundle has no state contests) ----
+
+SEATED = dict(RECORD, seated_on="2026-12-15")
+
+
+def seated(on, held, record=SEATED, contests=()):
+    return dissolved_for(SEAT, [record], list(contests), held, on)
+
+
+def test_seated_on_with_the_post_result_roster_clears_it_without_any_contest():
+    # The reviewed day has come and the roster exported after it is complete: cleared, with no result in the bundle.
+    assert seated("2026-12-16", roster("2026-12-15", person="new")) is None
+    assert seated("2027-02-01", roster("2026-12-20", person="old")) is None  # a re-elected member
+
+
+def test_seated_on_alone_or_a_refetch_before_it_keeps_the_field():
+    # Recorded, but the roster in the bundle is still the pre-election one.
+    assert seated("2026-12-16", roster("2026-09-09")) == DAY
+    # A refetch between election day and the seating day is not the post-result reload.
+    assert seated("2026-12-16", roster("2026-11-30")) == DAY
+    assert seated("2026-12-16", roster("2026-12-14")) == DAY
+    # An incomplete roster, or none at all, clears nothing.
+    assert seated("2026-12-16", roster("2026-12-15", complete=False)) == DAY
+    assert seated("2026-12-16", None) == DAY
+    # Before the reviewed day itself, even with a later-dated roster in hand.
+    assert seated("2026-12-14", roster("2026-12-15")) == DAY
+    # No seated_on (as shipped today): a post-election roster alone never clears.
+    assert seated("2027-03-01", roster("2026-12-20"), record=RECORD) == DAY
+    assert seated("2027-03-01", roster("2026-12-20"), record=dict(RECORD, seated_on=None)) == DAY
+
+
+def test_seated_on_is_validated_and_read_from_the_reviewed_file(bundle, tmp_path):
+    for bad, message in ((dict(SEATED, seated_on="2026-11-27"), "on or after election day"),
+                         (dict(SEATED, seated_on=20261215), "is a date")):
+        with pytest.raises(ValueError, match=message):
+            validate({**bundle, "dissolutions": [bad]})
+    validate({**bundle, "dissolutions": [SEATED]})
+    # The shipped record has it unset, so it is not carried and the published release is unchanged.
+    assert all("seated_on" not in record for record in load_dissolutions(DISSOLUTIONS))
+    reviewed = json.loads(DISSOLUTIONS.read_text())
+    assert reviewed["dissolutions"][0]["seated_on"] is None
+    # Set by hand, it is carried into the bundle.
+    reviewed["dissolutions"][0]["seated_on"] = "2026-12-15"
+    path = tmp_path / "electorate-dissolutions.json"
+    path.write_text(json.dumps(reviewed))
+    for name in {row["election"] for row in reviewed["dissolutions"]}:
+        (tmp_path / name).write_text((DISSOLUTIONS.parent / name).read_text())
+    assert [record["seated_on"] for record in load_dissolutions(path)] == ["2026-12-15"]
+
+
+def test_the_published_victorian_bundle_can_clear():
+    """The real release: no Victorian contests or terms, so the result path can never clear it.
+
+    With the reviewed seated_on and the post-result roster exported, every Assembly district clears."""
+    manifest = json.loads((ROOT / "portal/public/electorates/manifest.json").read_text())
+    release = ROOT / "portal/public/electorates/releases" / manifest["release_id"]
+    published = json.loads((release / "reference.json").read_text())
+    districts = {e["electorate_id"] for e in published["electorates"] if e["chamber"] == "vic_la"}
+    assert len(districts) == 88
+    # Why the result path is closed for Victoria: the bundle holds no contest for any district.
+    assert not [c for c in published.get("contests", []) if c["electorate_id"] in districts]
+    record = dict(load_dissolutions(DISSOLUTIONS)[0], seated_on="2026-12-15")
+    # The post-result reload: the hand export writes each district a complete roster dated after seated_on.
+    reloaded = copy.deepcopy(published)
+    for held in reloaded["rosters"]:
+        if held["electorate_id"] in districts:
+            held["as_of"] = "2026-12-16"
+    reloaded["dissolutions"] = [record]
+    cleared = expected_dissolved_for(reloaded, "2026-12-17")
+    assert set(cleared) == districts and set(cleared.values()) == {None}
+    # The record alone, with the published (pre-election) roster, clears nothing.
+    waiting = expected_dissolved_for({**published, "dissolutions": [record]}, "2026-12-17")
+    assert set(waiting.values()) == {DAY}
+
+
+def test_republish_clears_on_the_night_the_seated_on_roster_is_in_the_bundle(bundle, tmp_path):
+    export_bundle(bundle, tmp_path, generated="2026-11-15")
+    assert rows(tmp_path)[2]["seat"]["dissolved_for"] == DAY
+    # seated_on recorded, the roster not yet reloaded: the records changed, so one new release, still dissolved.
+    assert republish(tmp_path, [SEATED], "2026-12-16")
+    assert rows(tmp_path)[2]["seat"]["dissolved_for"] == DAY
+    assert republish(tmp_path, [SEATED], "2026-12-17") is None
+    # The hand export of the post-result roster: cleared, and it stays cleared.
+    reloaded = json.loads((rows(tmp_path)[1] / "reference.json").read_text())
+    reloaded["rosters"] = [roster("2026-12-18", person="new")]
+    export_bundle(reloaded, tmp_path, generated="2026-12-18")
+    assert rows(tmp_path)[2]["seat"]["dissolved_for"] is None
+    assert republish(tmp_path, [SEATED], "2026-12-19") is None
+
+
+# ---- the nightly's reminder: still dissolved four weeks after election day ----
+
+def test_overdue_is_silent_until_four_weeks_after_election_day_then_names_the_house(bundle, tmp_path):
+    export_bundle(bundle, tmp_path, generated="2026-11-15")
+    for night in ("2026-11-15", DAY, "2026-12-26"):  # up to and including day 28
+        assert overdue_dissolutions(tmp_path, night) == []
+    late = overdue_dissolutions(tmp_path, "2026-12-27")
+    assert len(late) == 1
+    assert "1 seats of vic_la" in late[0] and "29 days after the 2026-11-28 election" in late[0]
+    assert "seated_on" in late[0] and "electorate-dissolutions.json" in late[0]
+    assert OVERDUE_DAYS == 28
+
+
+def test_overdue_stops_once_the_field_clears_and_never_speaks_for_other_houses(bundle, tmp_path):
+    reloaded = copy.deepcopy(bundle)
+    reloaded["dissolutions"] = [SEATED]
+    reloaded["rosters"] = [roster("2026-12-18", person="new")]
+    export_bundle(reloaded, tmp_path, generated="2026-12-18")
+    assert rows(tmp_path)[2]["seat"]["dissolved_for"] is None
+    assert overdue_dissolutions(tmp_path, "2027-06-01") == []
+    # A release with no dissolution records at all.
+    plain = copy.deepcopy(bundle); plain.pop("dissolutions")
+    other = tmp_path / "plain"
+    export_bundle(plain, other, generated="2026-10-01")
+    assert overdue_dissolutions(other, "2027-06-01") == []
+
+
+def test_overdue_on_the_published_release_and_from_the_command_line(capsys, monkeypatch):
+    out = ROOT / "portal/public/electorates"
+    assert overdue_dissolutions(out, "2026-12-26") == []
+    late = overdue_dissolutions(out, "2027-01-10")
+    assert len(late) == 1 and late[0].startswith("88 seats of vic_la are still published as dissolved 43 days")
+    # The nightly reads the lines from --overdue: one a line, and nothing (exit 0) when none is late.
+    from scripts import export_electorates
+    for night, count in (("2026-12-01", 0), ("2027-01-10", 1)):
+        monkeypatch.setattr("sys.argv", ["export_electorates.py", "--overdue", "--as-of", night, "--out-dir", str(out)])
+        export_electorates.main()
+        assert len(capsys.readouterr().out.splitlines()) == count
+
+
+def test_the_nightly_turns_each_overdue_line_into_a_warning_never_a_failure():
+    script = (ROOT / "scripts/vm/nightly.sh").read_text()
+    step = script[script.index("# ---- 3e. electorate release"):script.index("# ---- 3z.")]
+    assert "--overdue" in step and 'warn "$overdue"' in step
+    # After the republish, inside the same guard, and no fail on its account.
+    assert step.index("--republish") < step.index("--overdue")
+    assert step.count("fail ") == 1 and "|| true" in step

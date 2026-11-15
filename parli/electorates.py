@@ -128,6 +128,12 @@ def validate(bundle: dict) -> None:
             raise ValueError("A house is dissolved before its election day")
         if not str(record.get("source_url", "")).startswith("https://"):
             raise ValueError("Dissolution needs an https source_url")
+        if record.get("seated_on") is not None:
+            if not isinstance(record["seated_on"], str):
+                raise ValueError("Dissolution seated_on is a date")
+            _iso(record["seated_on"])
+            if record["seated_on"] < record["election_day"]:
+                raise ValueError("Members are seated on or after election day")
     slugs = set()
     for e in maps["electorates"].values():
         if not isinstance(e.get("capacity", 1), int) or e.get("capacity", 1) < 1:
@@ -290,9 +296,18 @@ def dissolved_for(electorate: dict, dissolutions: list, contests: list, roster: 
     Written when a reviewed dissolution record (bundle["dissolutions"]) names the seat's jurisdiction
     and chamber and `on` is its `dissolved_on` or later.
 
-    Cleared only by the post-result roster reload, which the bundle shows as all three together:
+    Cleared only by the post-result roster reload. The bundle can show that in two ways.
+
+    By the reviewed record (the way a state house clears today: the bundle carries no state contests,
+    so the pipeline cannot see a state result for itself). After the result is declared a person adds
+    `seated_on` to the dissolution record: the day from which the parliament's own member list is the
+    new house. The field clears once the seat's newest roster observation is complete and dated
+    `seated_on` or later. A roster refetched before that day, or a `seated_on` with no reload after
+    it, keeps the field.
+
+    By the result itself, where the bundle has it, as all three together:
       1. the seat has a contest at that election (its poll_date is the record's `election_day`)
-         with a candidate marked elected: the result is declared and imported;
+         with a candidate marked elected and linked to a person: the result is declared and imported;
       2. the seat's newest roster observation is complete and dated `election_day` or later;
       3. that roster seats every elected candidate.
     A roster refetched after election day with no declared result fails (1), and one that still
@@ -305,7 +320,11 @@ def dissolved_for(electorate: dict, dissolutions: list, contests: list, roster: 
             continue
         elected = {c["person_id"] for contest in contests if contest["election"]["poll_date"] == record["election_day"]
                    for c in contest.get("candidates", []) if c.get("elected")}
-        reloaded = bool(roster) and bool(roster.get("complete")) and roster["as_of"] >= record["election_day"]
+        complete = bool(roster) and bool(roster.get("complete"))
+        seated_on = record.get("seated_on")
+        if seated_on and on >= seated_on and complete and roster["as_of"] >= seated_on:
+            continue
+        reloaded = complete and roster["as_of"] >= record["election_day"]
         if elected and None not in elected and reloaded and elected <= {m["person_id"] for m in roster["members"]}:
             continue
         return record["election_day"]
