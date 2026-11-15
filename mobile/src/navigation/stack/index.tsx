@@ -72,7 +72,9 @@ export function sharedScreens(
         underBar && railSearchRoutes.has(screen.props.name)
           ? withSolidRailBar(screen, underBar)
           : underBar === 'plain'
-            ? withPresentedBelowBar(screen)
+            ? plainSolidRoutes.has(screen.props.name)
+              ? withSolidRailBar(screen, underBar)
+              : withPresentedBelowBar(screen)
             : screen,
       ),
   ];
@@ -94,6 +96,21 @@ const railSearchRoutes = new Set([
   'grant-program',
   'agencies',
   'learn/glossary',
+]);
+
+/**
+ * Pushed pages that keep the solid bar under the clear bar of a layout
+ * without a vertical bar (iOS 26). The clear bar ships only with a fade
+ * under it, and these cannot take one yet: React Native pins their sticky
+ * section headers at the list's top edge, under a clear bar (Declared
+ * interests, Largest sources by year), or their bar holds a search field
+ * (the Victorian election, which says so itself once it has rendered; here
+ * from the stack's first layout). The rail's own rule is unchanged.
+ */
+export const plainSolidRoutes = new Set([
+  'person/[slug]/interests',
+  'party-sources',
+  'vic-election/index',
 ]);
 
 type StackScreen = ReactElement<{

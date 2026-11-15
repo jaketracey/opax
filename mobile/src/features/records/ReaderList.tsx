@@ -14,6 +14,7 @@ import {
   useReduceMotion,
   useScreenColumn,
 } from '../../design/primitives';
+import { ClearBarRest } from '../../design/layout';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { entityMatches } from './find';
@@ -197,78 +198,81 @@ export function ReaderList({
   return (
     <SidebarSafe style={styles.screen}>
       <StatePageProvider refreshing={false}>
-        <FlatList
-          ref={list}
-          testID={testID}
-          data={parts}
-          extraData={marks}
-          keyExtractor={(part) => part.id}
-          style={styles.screen}
-          contentContainerStyle={[
-            styles.content,
-            column.content,
-            centred ? styles.centred : null,
-            foot,
-          ]}
-          onLayout={column.onLayout}
-          contentInsetAdjustmentBehavior="automatic"
-          // In the iPad split pane the list's search keyboard may still be
-          // up; the pane's Back and actions take the first tap.
-          keyboardShouldPersistTaps="handled"
-          initialNumToRender={Platform.OS === 'android' ? 1 : 4}
-          maxToRenderPerBatch={Platform.OS === 'android' ? 2 : 4}
-          windowSize={7}
-          removeClippedSubviews={false}
-          onScroll={onScroll}
-          scrollEventThrottle={onScroll ? 16 : undefined}
-          ListHeaderComponent={
-            <RegionProvider value={column.inner}>
-              {column.bar}
-              <View>{header}</View>
-            </RegionProvider>
-          }
-          ListFooterComponent={footer ? <View>{footer}</View> : null}
-          onScrollToIndexFailed={({ index, averageItemLength }) => {
-            list.current?.scrollToOffset({
-              offset: averageItemLength * index,
-              animated: false,
-            });
-            if (timer.current) clearTimeout(timer.current);
-            timer.current = setTimeout(() => {
-              if (pending.current === index)
-                list.current?.scrollToIndex({
-                  index,
-                  animated: false,
-                  viewPosition: jumpTo?.position ?? 0,
-                });
-            }, 150);
-          }}
-          renderItem={({ item, index }) => (
-            <View style={styles.part}>
-              {item.title ? (
+        {/* The reader restores its own place: the bar's fade alone. */}
+        <ClearBarRest rest={false}>
+          <FlatList
+            ref={list}
+            testID={testID}
+            data={parts}
+            extraData={marks}
+            keyExtractor={(part) => part.id}
+            style={styles.screen}
+            contentContainerStyle={[
+              styles.content,
+              column.content,
+              centred ? styles.centred : null,
+              foot,
+            ]}
+            onLayout={column.onLayout}
+            contentInsetAdjustmentBehavior="automatic"
+            // In the iPad split pane the list's search keyboard may still be
+            // up; the pane's Back and actions take the first tap.
+            keyboardShouldPersistTaps="handled"
+            initialNumToRender={Platform.OS === 'android' ? 1 : 4}
+            maxToRenderPerBatch={Platform.OS === 'android' ? 2 : 4}
+            windowSize={7}
+            removeClippedSubviews={false}
+            onScroll={onScroll}
+            scrollEventThrottle={onScroll ? 16 : undefined}
+            ListHeaderComponent={
+              <RegionProvider value={column.inner}>
+                {column.bar}
+                <View>{header}</View>
+              </RegionProvider>
+            }
+            ListFooterComponent={footer ? <View>{footer}</View> : null}
+            onScrollToIndexFailed={({ index, averageItemLength }) => {
+              list.current?.scrollToOffset({
+                offset: averageItemLength * index,
+                animated: false,
+              });
+              if (timer.current) clearTimeout(timer.current);
+              timer.current = setTimeout(() => {
+                if (pending.current === index)
+                  list.current?.scrollToIndex({
+                    index,
+                    animated: false,
+                    viewPosition: jumpTo?.position ?? 0,
+                  });
+              }, 150);
+            }}
+            renderItem={({ item, index }) => (
+              <View style={styles.part}>
+                {item.title ? (
+                  <Text
+                    variant="rowRecord"
+                    wordSafe
+                    accessibilityRole="header"
+                    testID={`reader-part-title-${index}`}
+                  >
+                    {item.title}
+                  </Text>
+                ) : null}
                 <Text
-                  variant="rowRecord"
-                  wordSafe
-                  accessibilityRole="header"
-                  testID={`reader-part-title-${index}`}
+                  variant="recordText"
+                  selectable
+                  testID={`reader-text-${index}`}
                 >
-                  {item.title}
+                  {find?.query.trim() ? (
+                    <Marked text={item.text} index={index} find={marks} />
+                  ) : (
+                    item.text
+                  )}
                 </Text>
-              ) : null}
-              <Text
-                variant="recordText"
-                selectable
-                testID={`reader-text-${index}`}
-              >
-                {find?.query.trim() ? (
-                  <Marked text={item.text} index={index} find={marks} />
-                ) : (
-                  item.text
-                )}
-              </Text>
-            </View>
-          )}
-        />
+              </View>
+            )}
+          />
+        </ClearBarRest>
       </StatePageProvider>
     </SidebarSafe>
   );
