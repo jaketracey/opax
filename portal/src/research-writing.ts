@@ -410,7 +410,11 @@ function factList(input:WritingInput,note?:string,leads:string[]=[]):Qualitative
 const EMPTY_ANSWERS=new Set(['OPAX cannot establish the requested answer from the selected records.','The selected evidence does not establish the requested answer.','The selected evidence does not establish the requested financial answer.','The selected records do not establish the requested answer.','The available records do not establish an answer to this question.'])
 export const emptyAnswer=(answer:string)=>!answer.trim()||EMPTY_ANSWERS.has(answer.trim())
 /** Never return the original block, even when the provider is unavailable or the wall cap is spent. */
+/** The found facts as prose, in their own words: no model writes any of it. */
 export function proseFallback(input: WritingInput): QualitativeAnswer {
+  return { ...factsProse(input), machine_written: false }
+}
+function factsProse(input: WritingInput): QualitativeAnswer {
   input=transcriptWritingInput(moneyWritingInput(input))
   // Context records are retrieval aids, never selected calculation facts.
   input={...input,facts:input.facts.filter(f=>!/^USER_CONTEXT_/i.test(f.source.resource))}
@@ -614,7 +618,7 @@ export function draftWrittenAnswer(raw:unknown,input:WritingInput):QualitativeAn
   if(!raw||typeof raw!=='object'||!Array.isArray((raw as {sentences?:unknown}).sentences))return null
   const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,facts:Array.isArray(s.facts)?s.facts:[]}))
   const decision=answerDecision(raw)
-  return {...assemble(lines,input,!!decision&&decision!=='answer'),...(decision?{answer_decision:decision}:{})}
+  return {...assemble(lines,input,!!decision&&decision!=='answer'),...(decision?{answer_decision:decision}:{}),machine_written:true}
 }
 /** The writer's sentences are the answer. Each cites the facts it lists; the writer may format, reorder the headline
  * first and move one record limitation to the coverage note, and never swaps the answer for a limitation. Raw tool rows
@@ -658,7 +662,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   if(primary&&!containsHeadline(lines[0])){const found=lines.findIndex(containsHeadline);if(found>0)lines.unshift(...lines.splice(found,1))}
   if(input.facts.some(f=>/2021 Census \(ABS\)/.test(f.text))&&!lines.some(l=>l.text.includes('2021 Census (ABS)')))lines.push({text:'The figures come from the 2021 Census (ABS).',facts:input.facts.filter(f=>/2021 Census \(ABS\)/.test(f.text)).map(f=>f.id)})
   if (!coverage) {const limit=coverageSentence(input);if(limit)lines.push(limit)}
-  return {...assemble(lines,input),answer_decision:declared??'answer'}
+  return {...assemble(lines,input),answer_decision:declared??'answer',machine_written:true}
 }
 export function writingPrompt(input: WritingInput): string {
   const hearing=input.facts.some(f=>f.transcript||f.text.includes(TRANSCRIPT_LABEL))
@@ -671,6 +675,11 @@ export function writingPrompt(input: WritingInput): string {
 }
 
 /** Keep already checked passage points (including loose uncited survivors) beside the written record answer. */
+/** Two answers joined: model-written when either part is, not when neither is, unset when that is not known. */
+export function eitherMachineWritten(a:{machine_written?:unknown},b:{machine_written?:unknown}):{machine_written?:boolean} {
+  if(a.machine_written===true||b.machine_written===true)return {machine_written:true}
+  return a.machine_written===false&&b.machine_written===false?{machine_written:false}:{machine_written:undefined}
+}
 export function appendWrittenPoints(written: QualitativeAnswer, points: QualitativeAnswer): QualitativeAnswer {
   const emptyRecordRefusal=!!written.answer.trim()&&emptyAnswer(written.answer)&&points.answer.trim()&&points.sources.some(s=>s.cited&&s.kind==='speech')
   let answer=emptyRecordRefusal?'':written.answer
@@ -726,5 +735,5 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
   }
   const used=points.sources.filter(s=>Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))),sources=new Map<string,WritingFact['source']>()
   for(const source of [...written.sources,...used]){const prior=sources.get(source.resource);sources.set(source.resource,{...(prior??source),cited:Object.keys(citations).some(id=>id===source.resource||id.startsWith(source.resource+'/')),snippet:[...new Set([prior?.snippet,source.snippet].filter(Boolean))].join('\n')})}
-  return distinctSummary({...written,...(emptyRecordRefusal?{answer_decision:'answer' as const}:{}),answer,citations,sources:[...sources.values()],...(points.answer_status?{answer_status:written.sources.length?'partly_cited' as const:points.answer_status}:{})})
+  return distinctSummary({...written,...eitherMachineWritten(written,points),...(emptyRecordRefusal?{answer_decision:'answer' as const}:{}),answer,citations,sources:[...sources.values()],...(points.answer_status?{answer_status:written.sources.length?'partly_cited' as const:points.answer_status}:{})})
 }

@@ -92,10 +92,11 @@ test('a standalone message, a message with no conversation, and a failed call se
 
 test('the clarify payload is a free answer that reads on its own in older apps', () => {
   const plain = clarifyPayload('High');
-  assert.deepEqual(plain, { answer: '“High” doesn’t say enough to search the record on. Ask a full question, naming the person, party or topic you mean.', citations: {}, sources: [], answer_status: 'needs_question' });
+  assert.deepEqual(plain, { answer: '“High” doesn’t say enough to search the record on. Ask a full question, naming the person, party or topic you mean.', citations: {}, sources: [], answer_status: 'needs_question', machine_written: false });
   const guess = 'Has David Pocock said housing prices are too high?';
   const offered = clarifyPayload('High', guess);
   assert.equal(offered.suggested_question, guess);
+  assert.equal(offered.machine_written, true);
   assert.equal(offered.answer, `“High” doesn’t say enough to search the record on. Did you mean: ${guess}`);
   assert.equal(clarifyPayload('?').answer.startsWith('That doesn’t say enough'), true);
   assert.equal('asked_as' in offered, false);
