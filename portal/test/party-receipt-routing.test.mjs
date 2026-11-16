@@ -260,7 +260,8 @@ test('six review regressions retain ordinary Ask on JSON and SSE',async()=>{
    }else{
     assert.equal(response.headers.get('x-opax-cache'),'HIT',question)
     const p=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
-    assert.deepEqual(p,cached,question)
+    // The stored answer, untouched but for the error notice a machine-written answer gains as it is served.
+    assert.deepEqual(p,{...cached,machine_notice:'Machine-written answers can contain errors. Check the original record before relying on one.'},question)
    }
   }
   assert.equal(reads,(regressions.length-2)*2);assert.equal(outbound.length,before)

@@ -91,11 +91,13 @@ let saDisplayHelpers;
 let transcriptNoteHelpers;
 let machineNoticeHelpers;
 let saFullTextFlag = 'false';
+/** Starts the error notice's module loading without waiting on it, so the line is there for the first streamed words. */
+function loadMachineNotice() { if (!machineNoticeHelpers) import('/machine-notice.js?v=d28b077381').then(module => { machineNoticeHelpers = module; }).catch(() => {}); }
 const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
   // The transcript line for a conversation saved before every answer citing a hearing transcript carried it.
   import('/transcript-note.js?v=c1bfeff62c').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
-  // The fixed error notice under a machine-written answer, for the first streamed words and for a saved turn.
+  // The fixed error notice under a machine-written answer, for a live turn and for a saved one.
   import('/machine-notice.js?v=d28b077381').then(module => { machineNoticeHelpers = module; }).catch(() => {}),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]));
@@ -10751,6 +10753,7 @@ async function runAsk(question) {
   $("ask-again").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
   renderAnswerNotice($("ask-notice"), "");
+  loadMachineNotice();
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
   $("ask-money").hidden = true;
