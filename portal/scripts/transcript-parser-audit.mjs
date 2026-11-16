@@ -24,7 +24,7 @@ import { readFile } from 'node:fs/promises'
 import { build } from 'esbuild'
 
 const root = new URL('../', import.meta.url)
-const built = await build({ stdin: { contents: "export {excerpt, pageTurns, tokens} from './src/tools/transcript-text'; export {transcriptRoles, answeredQuestion, SHORT_ANSWER_WORDS} from './src/tools/transcript-roles'", resolveDir: root.pathname }, bundle: true, write: false, platform: 'neutral', format: 'esm', logLevel: 'silent' })
+const built = await build({ stdin: { contents: "export {excerpt, pageTurns, tokens} from './src/tools/transcript-text'; export {transcriptRoles, answeredQuestion, mismarkedPages, SHORT_ANSWER_WORDS} from './src/tools/transcript-roles'", resolveDir: root.pathname }, bundle: true, write: false, platform: 'neutral', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const json = async path => JSON.parse(await readFile(new URL('public' + path, root), 'utf8'))
 const index = await json('/transcripts/index.json'), stop = new Set(index.stopwords ?? [])
@@ -35,17 +35,20 @@ const REVIEW_PAGES = { 'transcript-2024-09-17-80b238a4a479': [48, 50], 'transcri
 const out = {}, sample = []
 for (const [d, row] of index.docs.entries()) {
   if (row.quote_policy !== 'quote') continue
-  const doc = await json(row.file), roleFor = api.transcriptRoles(doc.pages, row.key)
+  const doc = await json(row.file), roleFor = api.transcriptRoles(doc.pages, row.key), listed = api.mismarkedPages(row.key)
   const c = out[row.commission] ??= { transcripts: 0, pages: 0, turns: { confident: 0, uncertain: 0, page_top: 0 }, characters: { confident: 0, uncertain: 0, page_top: 0 }, roles: {},
-    excerpts: { total: 0, with_role: 0, no_role: 0, empty: 0 }, notes: { examination: 0, other: 0 }, possible_label_slips: 0, replies_under_counsel: 0, named_headings_no_role: 0, short_answers: { total: 0, with_question: 0 } }
+    excerpts: { total: 0, with_role: 0, no_role: 0, empty: 0 }, notes: { examination: 0, other: 0 }, possible_label_slips: 0, replies_under_counsel: 0, named_headings_no_role: 0, short_answers: { total: 0, with_question: 0 }, same_mark_runs: 0, listed_pages: 0 }
   c.transcripts++
   for (const page of doc.pages) {
     if (typeof page.text !== 'string') continue
     c.pages++
     const parsed = { ...api.pageTurns(page.text, page.n), pdfPage: page.n }
+    if (listed.has(page.n)) c.listed_pages++
     for (const [i, t] of parsed.turns.entries()) {
       if (t.opens === 'note') c.notes[/EXAMINATION BY/i.test(parsed.text.slice(t.from, t.start)) ? 'examination' : 'other']++
       if (t.opens === 'heading' && parsed.turns[i - 1]?.opens === 'heading' && parsed.turns[i - 1].heading === t.heading) c.possible_label_slips++
+      // Two bare marks of the same letter running: the publisher's slip that a page shows. Neither has a role.
+      if (t.opens === 'mark' && !t.heading && parsed.turns[i - 1]?.opens === 'mark' && !parsed.turns[i - 1].heading && parsed.turns[i - 1].mark === t.mark) c.same_mark_runs++
       if (t.end <= t.start) continue
       const role = roleFor(parsed, t), basis = role ? 'confident' : t.opens === 'page' ? 'page_top' : 'uncertain'
       c.turns[basis]++; c.characters[basis] += t.end - t.start
@@ -89,6 +92,8 @@ else {
   }
   console.log('\nConfident turns by role:')
   for (const [id, c] of Object.entries(out).sort()) console.log(`- ${id}: ${Object.entries(c.roles).sort((a, b) => b[1] - a[1]).map(([r, v]) => `${r} ${n(v)}`).join(', ')}`)
+  console.log('\nPublisher mark slips. Same-mark runs (a bare "Q." straight after a bare "Q.", or "A." after "A."; neither turn has a role) and pages on the mis-marked list (no role on any turn). A wrong or missing mark in the middle of a line cannot be seen by any parser; a page found that way goes on the list:')
+  for (const [id, c] of Object.entries(out).sort()) console.log(`- ${id}: ${n(c.same_mark_runs)} same-mark runs, ${n(c.listed_pages)} listed pages`)
   console.log('\nTurns under a person\'s heading with no role (quoted with "the transcript records"; mostly witnesses who speak under their own names):')
   for (const [id, c] of Object.entries(out).sort()) console.log(`- ${id}: ${n(c.named_headings_no_role)}`)
   console.log('\nOne-line answers (an "A." of at most six words), and how many come with the question straight before them on the page:')
