@@ -3,6 +3,8 @@ import { clip, fold, siteUrl } from './record-common'
 import { object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 import { dayWords, pageHits, spanWords, textIndex, textMatches, type TextHits } from './transcript-text'
+import { POLICY, NOTICE } from '../source-policy'
+import { redactCommission } from '../../../parli/ingest/source_policy.mjs'
 
 const VIEWS = ['list', 'profile', 'recommendations', 'transcripts'] as const
 const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
@@ -27,7 +29,8 @@ type Index = Awaited<ReturnType<typeof index>>
 /** Commissions matching an id or words in the name; an exact id or name wins. */
 function match(ix: Index, query: unknown, jurisdiction: unknown): RecordRow[] {
   const code = jurisdictionCode(jurisdiction)
-  const pool = ix.commissions.filter(c => !code || c.jurisdiction === code)
+  // A hidden commission is not listed, matched or counted.
+  const pool = ix.commissions.filter(c => (!code || c.jurisdiction === code) && POLICY.withheld({ sources: [String(c.id)] })?.mode !== 'hide')
   if (!query) return pool
   const q = fold(query).replace(/^the\s+/, '')
   const exact = pool.filter(c => c.id === query || fold(c.name).replace(/^the\s+/, '') === q)
@@ -39,8 +42,14 @@ async function full(env: ToolEnv, row: RecordRow): Promise<RecordRow> {
   if (!/^\/royal-commissions\/commission-[a-z0-9-]+\.json$/.test(file)) throw new Error('Royal commission file unavailable')
   const c = object(object(await readToolAsset(env, file)).commission)
   if (c.id !== row.id) throw new Error('Royal commission file unavailable')
-  return c
+  // The source policy is applied to the record as read, so a withheld document is a neutral listing row (or is
+  // left out) and a document below the quoting tiers carries no quotation, whatever the published file held.
+  const record = redactCommission(c, POLICY)
+  if (!record) throw new Error('Royal commission file unavailable')
+  return record
 }
+/** The one neutral notice a withheld document or commission carries; null when it is not withheld. */
+const held = (d: RecordRow): string | null => d.unavailable ? NOTICE : null
 
 const people = (c: RecordRow) => records(c.commissioners).map(x => `${x.name} (${x.role})`).join('; ')
 const dated = (label: string, v: unknown) => v ? `${label} ${dayWords(v)}` : null
@@ -70,11 +79,14 @@ const latest = (c: RecordRow) => byDate(records(c.transcripts))
 function transcriptSummary(c: RecordRow): RecordRow {
   const all = latest(c), dates = all.map(d => d.date).filter(Boolean).map(String).sort()
   return { label: TRANSCRIPT_LABEL, count: all.length, first_date: dates[0] ?? null, last_date: dates.at(-1) ?? null,
-    newest: all.slice(0, 3).map(d => ({ key: d.key, title: d.title, date: d.date ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(object(records(d.files)[0]).url) })),
+    newest: all.slice(0, 3).map(d => held(d) ? { key: d.key, title: d.title, date: d.date ?? null, page_url: sourceUrl(d.page_url), unavailable: held(d) }
+      : { key: d.key, title: d.title, date: d.date ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(object(records(d.files)[0]).url) }),
     ...(all.length ? { follow_up: { view: 'transcripts', commission: c.id } } : {}) }
 }
 
 function transcriptOut(env: ToolEnv, c: RecordRow, d: RecordRow): RecordRow {
+  // Withheld: the listing row only, with its label and the publisher's page.
+  if (held(d)) return { commission: c.name, commission_id: c.id, label: TRANSCRIPT_LABEL, key: d.key, title: d.title, date: d.date ?? null, page_url: sourceUrl(d.page_url), unavailable: held(d) }
   const file = object(records(d.files)[0])
   return { commission: c.name, commission_id: c.id, label: TRANSCRIPT_LABEL, key: d.key, title: d.title, date: d.date ?? null, date_basis: BASIS[String(d.date_basis)] ?? d.date_basis ?? null,
     hearing: d.hearing ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(file.url), pages: file.pages ?? null, rights: d.rights ?? null,
@@ -88,6 +100,7 @@ const orderNotes = (c: RecordRow) => (Array.isArray(c.notes) ? c.notes as unknow
 const fromThe = (name: string) => /^the\s/i.test(name) ? name : `the ${name}`
 
 function transcriptCite(t: RecordRow): ToolCitation {
+  if (t.unavailable) return { kind: 'record', url: String(t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}. ${t.unavailable} ${TRANSCRIPT_LABEL}.`, 400) }
   const text = t.text_matches as TextHits | undefined
   if (text?.hits.length) {
     const where = (h: TextHits['hits'][number]) => `transcript page ${h.transcript_page ?? '?'} (PDF page ${h.pdf_page})`
@@ -105,7 +118,8 @@ function transcriptCite(t: RecordRow): ToolCitation {
  * quote, cited to its page, so an accountability question can lead with what the commission found rather than with
  * its dates and counts. Empty when the record or its quotes are not built. */
 async function findingCites(env: ToolEnv, c: RecordRow): Promise<ToolCitation[]> {
-  if (!ID.test(String(c.id))) return []
+  // No quotation from a source that is withheld or not quotable, or from a commission with a withheld report.
+  if (!ID.test(String(c.id)) || !POLICY.can('quote', { sources: [String(c.id)] }) || records(c.reports).some(r => r.unavailable) || !!c.unavailable) return []
   const record = object(await readToolAsset(env, `/report-records/royal-commission-${c.id}.json`).catch(() => null))
   return records(object(object(record.summary).quotes).items).slice(0, 4).flatMap(q => {
     const cite = object(q.cite), url = sourceUrl(cite.url), quote = String(q.quote ?? '').trim()
@@ -162,7 +176,7 @@ export const tool: ToolDefinition = {
     if (args.view === 'list') {
       const rows = matched.slice(offset, offset + limit).map(summaryOut)
       // One commission named: its findings travel with its line, so a list call alone can answer what it found.
-      const findings = args.commission && matched.length === 1 ? await findingCites(env, matched[0]) : []
+      const findings = args.commission && matched.length === 1 ? await findingCites(env, await full(env, matched[0])) : []
       return publishedResult(rows, [{ kind: 'count', url: ix.url, text: coverage }, ...matched.slice(offset, offset + limit).map(c => summaryCite(env, c)), ...findings],
         { view: 'list', total: matched.length, offset, next_offset: offset + rows.length < matched.length ? offset + rows.length : null, snapshot, notes: [NOTE] })
     }
@@ -170,7 +184,7 @@ export const tool: ToolDefinition = {
       const c = await full(env, matched[0])
       const doc = (d: RecordRow) => ({ key: d.key, kind: d.kind, title: d.title, date: d.date ?? null, date_basis: BASIS[String(d.date_basis)] ?? d.date_basis ?? null, page_url: sourceUrl(d.page_url),
         pdf_urls: records(d.files).map(f => sourceUrl(f.url)).filter(Boolean), acquisition: d.acquisition ?? null, ...(d.hearing ? { hearing: d.hearing } : {}),
-        ...(d.kind === 'hearing_transcript' ? {} : { recommendations: d.recommendations ?? null, recommendations_status: d.recommendations_status ?? null }),
+        ...(held(d) ? { unavailable: held(d) } : d.kind === 'hearing_transcript' ? {} : { recommendations: d.recommendations ?? null, recommendations_status: d.recommendations_status ?? null }),
         ...(courtFor(c, d.key).length ? { court_context: courtFor(c, d.key) } : {}) })
       const est = c.established ? object(c.established) : null
       const row: RecordRow = { id: c.id, name: c.name, inquiry_type: TYPES[String(c.inquiry_type)] ?? c.inquiry_type, jurisdiction: c.jurisdiction_name, site: c.site ?? null,
@@ -178,15 +192,15 @@ export const tool: ToolDefinition = {
         commissioners: records(c.commissioners).map(x => ({ name: x.name, role: x.role, source_url: sourceUrl(object(x.cite).url), page: object(x.cite).page ?? null })),
         reports: records(c.reports).map(doc), responses: records(c.responses).map(doc), transcripts: transcriptSummary(c),
         reference_pages: records(c.reference_pages).map(x => ({ title: x.title, url: sourceUrl(x.url) })), status_source: c.status_source ?? null,
-        recommendations: records(c.recommendations).length, notes: c.notes, gaps: c.gaps, follow_up: { view: 'recommendations', commission: c.id } }
+        recommendations: records(c.recommendations).length, notes: c.notes, gaps: c.gaps, ...(POLICY.listed(String(c.id)) ? { use: POLICY.use(String(c.id)) } : {}), ...(held(c) ? { unavailable: held(c) } : {}), follow_up: { view: 'recommendations', commission: c.id } }
       const citations: ToolCitation[] = [summaryCite(env, matched[0]), ...await findingCites(env, c)]
       // The record's own notes (whether it has reported, how its recommendations are counted, publication orders)
       // travel as facts, so a sitting commission is described as sitting rather than inferred from other sources.
       for (const n of (Array.isArray(c.notes) ? c.notes as unknown[] : []).map(String).slice(0, 3)) citations.push({ kind: 'record', url: siteUrl(env, String(matched[0].file)), text: clip(`${c.name} (OPAX note): ${n}`, 600) })
-      if (est) citations.push({ kind: 'record', url: String(object(est.cite).url), text: clip(`${c.name}: "${est.quote}" (${object(est.cite).document}, page ${object(est.cite).page}).`, 600) })
+      if (est) citations.push({ kind: 'record', url: String(object(est.cite).url), text: clip(est.quote ? `${c.name}: "${est.quote}" (${object(est.cite).document}, page ${object(est.cite).page}).` : `${c.name}: established ${dayWords(est.date)} (${object(est.cite).document}, page ${object(est.cite).page}).`, 600) })
       for (const x of records(c.court_context)) citations.push({ kind: 'record', url: String(object(x.cite).url), text: clip(`Court context for ${c.name}, as ${object(x.cite).document} states it: "${x.text}"`, 900) })
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as ${object(records(c.commissioners)[0].cite).document ?? 'the cited document'} names them: ${people(c)}.`, 600) })
-      for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${dayWords(d.date)})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
+      for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${dayWords(d.date)})` : ''}${held(d) ? `. ${NOTICE.replace(/\.$/, '')}` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
       const span = transcriptSummary(c)
       if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `OPAX lists ${span.count} hearing transcript${span.count === 1 ? '' : 's'} from ${fromThe(String(c.name))}, dated ${spanWords(span.first_date, span.last_date)}. ${TRANSCRIPT_LABEL}.` })
       return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE, ...(span.count ? ['view=transcripts lists the hearing transcripts, newest first.'] : [])] })
@@ -209,6 +223,7 @@ export const tool: ToolDefinition = {
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
           notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(found ? [`Words are matched in the title, date and, for this commission, the transcript text (CC BY 4.0). Excerpts are the publisher's words; a transcript recording a non-publication order or a pseudonymous witness is pointed to by page, not quoted.`] : []),
             ...(ix && args.words && !found && object(ix.commissions[String(c.id)]).name ? ['Those words are too common to search the transcript text; add a more specific word.'] : []),
+            ...(POLICY.use(String(c.id)) === 'quote_and_cite' ? ['OPAX quotes this inquiry\'s transcripts with the speaker and page, and does not summarise them.'] : []),
             ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
     }
 

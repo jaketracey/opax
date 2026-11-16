@@ -1,3 +1,4 @@
+import { guardKbRequest, guardKbResponse, guardKbGeneration, hiddenKbRead, fieldReadRid, closedRead, closedRefs, POLICY as SOURCE_POLICY, guardSearchRows } from '../src/source-policy.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -56,7 +57,7 @@ function fixture(upstream = answer, extra = {}) {
         cache.set(key.url, { response, expires: Date.now() + seconds * 1000 });
       },
     } },
-    ragBase: () => 'https://fake-upstream.test', sourceIdentity: { user_agent: 'opax-test' },
+    ragBase: () => 'https://fake-upstream.test', sourceIdentity: { user_agent: 'opax-test' }, guardKbRequest, guardKbResponse, guardKbGeneration, hiddenKbRead, fieldReadRid, closedRead, closedRefs, SOURCE_POLICY, guardSearchRows,
     fetch: async (input, init) => {
       assert.equal(new URL(input).pathname, '/find');
       const call = { body: JSON.parse(init.body), signal: init.signal };

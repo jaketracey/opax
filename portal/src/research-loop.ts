@@ -23,6 +23,7 @@ import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
 import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL } from './transcript-answer'
+import { POLICY as SOURCE_POLICY } from './source-policy'
 import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
@@ -501,6 +502,14 @@ export function createResearch(options: ResearchOptions): Research {
       if (constraints.listIntroductions && !focus) { why('Fetch the complete introduction list with count_records include_records, preserving the requested date and originating chamber'); return null }
       let facts = focus ? factLines(focus, why) : args.facts == null ? [] : idList(args.facts).length ? factLines(idList(args.facts).slice(0, 15), why) : (why('invalid fact ids'), [])
       const hearing = hearingEvidenceQuestion(question)
+      // A quote_and_cite source (source policy) is answered with its own passages. A point that quotes one selects
+      // that record fact, and the model's own points are not used beside it (research-writer.ts shows the passages).
+      if (Array.isArray(args.points)) {
+        const closed = recordFacts().all.filter(f => SOURCE_POLICY.passageOnly(f))
+        const quoted = closed.filter(f => (args.points as unknown[]).some(raw => { const quote = String(object(raw).quote ?? '').trim(); return quote.length >= 20 && f.text.includes(quote) })).map(f => f.id)
+        if (quoted.length) facts = [...facts, ...factLines(quoted.filter(id => !facts.some(line => line.fact.id === id)).slice(0, 15), why)]
+      }
+      const passageOnly = () => facts.some(line => SOURCE_POLICY.passageOnly(line.fact))
       if (hearing) {
         const { all, tools } = recordFacts()
         const eligible = all.filter(f => ['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && f.text.includes(TRANSCRIPT_LABEL) && /\btranscript page\b/.test(f.text))
@@ -526,7 +535,7 @@ export function createResearch(options: ResearchOptions): Research {
       const tally = stats.answer = emptyTally()
       const { named } = context
       const recordPassages = factPassages(), citable = new Map([...recordPassages, ...passages])
-      const written = focus || hearing ? null : Array.isArray(args.points) && args.points.length ? verifyResearchPoints(citeRecordFacts(overview ? args.points.slice(0,8-facts.length) : args.points, recordPassages), citable, question, named, options.positionQuery, roster, why, tally)
+      const written = focus || hearing || passageOnly() ? null : Array.isArray(args.points) && args.points.length ? verifyResearchPoints(citeRecordFacts(overview ? args.points.slice(0,8-facts.length) : args.points, recordPassages), citable, question, named, options.positionQuery, roster, why, tally)
         : typeof args.text === 'string' && args.text.trim() ? verifyResearchAnswer({ text: args.text, citations: Array.isArray(args.citations) ? args.citations as AnswerDraft['citations'] : [] }, citable, question, named) : null
       // A chamber named for a cited speaker is the one their passage records (ask-chamber-phrases.ts).
       const points = written && withRecordedChambers(written, id => { const p = passages.get(id); return p ? { chamber: p.chamber ?? null, speaker: p.speaker } : undefined })

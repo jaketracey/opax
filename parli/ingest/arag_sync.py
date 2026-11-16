@@ -36,6 +36,7 @@ from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 from parli.ingest import nsw_publication, backfill_guard as growth
+from parli import source_policy
 from itertools import groupby
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
 from parli.ingest import senate_backfill_policy as senate_policy
@@ -453,7 +454,56 @@ def _push_pool(kb, bodies, tstate, guard=None, deadline=None):
                 tstate['failed'].pop(slug, None)
 
 
-def _push_batch(kb, bodies, tstate, publication=None):
+# The most resources one purge may delete without the operator raising the ceiling by hand.
+PURGE_CEILING = 25
+
+
+class PurgeRefused(SystemExit):
+    """A purge that was not run. The message is counts only: it never names an entry."""
+
+
+def purge_withheld(kb, policy=None, apply=False, ceiling=PURGE_CEILING) -> dict:
+    """Delete withheld documents from the knowledge base. An explicit operator command, never part of a sync.
+
+    * A dry run unless ``apply`` is set: it deletes nothing and reports how many of the listed documents
+      the knowledge base holds.
+    * Only documents the list names one by one are deleted, by slug. A source-wide entry is never purged:
+      one mistaken id there could delete a whole corpus (``opax-parli`` is the origin of every speech).
+      Such entries are counted and left for the Workers and the push guard to enforce.
+    * Above ``ceiling`` documents nothing runs, dry or not, until the operator passes a higher ceiling.
+
+    Everything returned or raised is a count. Safe to re-run: an absent resource counts as absent."""
+    policy = policy or source_policy.load()
+    slugs = sorted(d for d in policy.withheld_documents if "/" not in d)
+    skipped = len(policy.withheld_sources)
+    if len(slugs) > ceiling:
+        raise PurgeRefused(f"purge refused: {len(slugs)} documents is above the ceiling of {ceiling}; nothing was deleted "
+                           f"(--purge-ceiling {len(slugs)} to allow it)")
+    present = absent = 0
+    for slug in slugs:
+        try:
+            if apply:
+                kb.delete_resource_by_slug(slug)
+            else:
+                kb.get_resource_by_slug(slug, show="basic")
+            present += 1
+        except AragError as e:
+            if e.status != 404:
+                raise
+            absent += 1
+    return {("deleted" if apply else "would_delete"): present, "absent": absent, "source_entries_not_purged": skipped,
+            **({} if apply else {"dry_run": True})}
+
+
+def _push_batch(kb, bodies, tstate, publication=None, policy=None):
+    # A withheld resource, or one whose tier keeps it out of the knowledge base, is never pushed and never queued
+    # for retry. Nothing is printed: a log line must not mark an item as withheld.
+    policy = policy or source_policy.load()
+    refused = [b for b in bodies if policy.kb_refusal(b)]
+    if refused:
+        for body in refused:
+            tstate['failed'].pop(body['slug'], None)
+        bodies = [b for b in bodies if not policy.kb_refusal(b)]
     publication = publication or BackfillPublication(kb)
     def cohort(body):
         stage = growth.stage_for(body)
@@ -944,6 +994,12 @@ def main() -> None:
                         help=f"maximum resource PATCHes this run (hard cap {MAX_SPEECH_REPAIRS_PER_RUN})")
     parser.add_argument("--repair-batch-size", type=int, default=100)
     parser.add_argument("--repair-state", default=str(SPEECH_REPAIR_STATE_PATH))
+    parser.add_argument("--purge-withheld", action="store_true",
+                        help="count the withheld documents the knowledge base holds, then exit; a dry run "
+                             "unless --apply is given. Never run by a sync")
+    parser.add_argument("--apply", action="store_true", help="with --purge-withheld: delete them")
+    parser.add_argument("--purge-ceiling", type=int, default=PURGE_CEILING,
+                        help=f"refuse a purge of more documents than this (default {PURGE_CEILING})")
     args = parser.parse_args()
 
     if args.repair_limit < 1 or args.repair_limit > MAX_SPEECH_REPAIRS_PER_RUN:
@@ -958,6 +1014,19 @@ def main() -> None:
     if not args.dry_run and not cfg.kb_configured:
         sys.exit("ARAG_KB_ID / ARAG_KB_TOKEN not set — run scripts/arag_provision.py create")
 
+    # The takedown list is honoured before anything is read or pushed: what it names is deleted if present.
+    # --purge-withheld needs only the knowledge base credentials, not the corpus database.
+    # A sync never purges. --purge-withheld is the operator's own command: a dry run unless --apply is given,
+    # refused above the ceiling, and it prints counts only.
+    if args.purge_withheld:
+        if not cfg.kb_configured:
+            sys.exit("ARAG_KB_ID / ARAG_KB_TOKEN not set")
+        print(json.dumps(purge_withheld(KbClient(cfg), source_policy.load(), apply=args.apply, ceiling=args.purge_ceiling)))
+        return
+    if args.apply:
+        parser.error("--apply belongs to --purge-withheld")
+    kb = None if args.dry_run else KbClient(cfg)
+
     limit = 10**12 if args.full else args.limit
     if not args.full and args.limit > SAFETY_LIMIT:
         sys.exit(f"--limit above {SAFETY_LIMIT} needs --full (cost guard: a full corpus "
@@ -970,8 +1039,6 @@ def main() -> None:
         new_only = not args.repair_speech_text and not args.retry_failed
         checkpoint = load_state()["tables"].get("speeches", {}).get("after", 0) if new_only else None
         prepare_dedupe(db, args.since, checkpoint)
-    kb = None if args.dry_run else KbClient(cfg)
-
     if args.repair_speech_text:
         result = repair_speech_texts(
             kb,

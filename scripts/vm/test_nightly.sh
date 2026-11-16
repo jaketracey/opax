@@ -78,7 +78,7 @@ new_sandbox() {
            parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            scripts/coverage_watchdog.py \
-           parli/__init__.py parli/arag.py parli/ingest/backfill_guard.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
+           parli/__init__.py parli/arag.py parli/source_policy.py parli/ingest/source_policy.json parli/ingest/backfill_guard.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"
     cp "$SRC/$f" "$seed/$f" || { bad "cannot copy fixture dependency: $f"; exit 1; }

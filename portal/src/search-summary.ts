@@ -1,3 +1,4 @@
+import { openForKbGeneration } from './source-policy'
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import { unsupportedQuotes, stripListingBoilerplate } from './ask-evidence'
 import {resolvedParticipants} from '../public/speech-attribution.js'
@@ -37,6 +38,9 @@ export function quotedInOrder(quote: string, text: string): boolean {
 
 /** Only server-retrieved passages enter the prompt; briefs and client prose do not. */
 export function summarySources(rows: Record<string, unknown>[], snippetLimit = 1800): SummarySource[] {
+  // Every summary and position prompt is generated through the knowledge base: a record from a source closed to
+  // that path is not summarised and is not in the prompt (source-policy.ts).
+  rows = openForKbGeneration(rows)
   const sources: SummarySource[] = [], seen = new Set<string>()
   for (const row of rows) {
     const slug = typeof row.slug === 'string' ? row.slug : ''

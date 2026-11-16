@@ -15,6 +15,7 @@ import { payPersonRecord, payPersonOrder, payGeneralRecords, payOfficeRecord, pa
 import { reportsPublished } from './reports_flag.mjs';
 import { pageSearchRecords } from './search_catalog_pages.mjs';
 import { buildReportCatalog } from './build_report_catalog.mjs';
+import { POLICY, NOTICE, loadWithheld } from '../parli/ingest/source_policy.mjs';
 import {programKey, resolveProgram} from '../portal/public/facts/grant-programs.js';
 export {programKey};
 import { interestHolder } from '../portal/public/interest-holder.js';
@@ -33,8 +34,20 @@ const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);
 const year = d => Number(String(d || '').slice(0,4)) || 0;
 const period = (a,b) => a && b ? (a===b?String(a):`${a}–${b}`) : '';
 const party = p => normalize(p).replace(/australian labor party|australian labour party/g,'labor').replace(/liberal party of australia/g,'liberal').replace(/the nationals/g,'nationals').replace(/\bliberal democratic party\b|\bliberal democrats\b/g,'libertarian party');
+/** How a catalogue row is withheld ({ mode }), by its slug, record id or (for an inquiry's report row) commission
+ * id; null when the row may be searched as usual. */
+export function catalogWithheld(key, extra={}, policy=POLICY) {
+  const ok = v => typeof v === 'string' && /^[a-z0-9][a-z0-9._-]{0,199}$/.test(v);
+  const documents = [extra.slug, extra.record_id, String(key).replace(/^[a-z-]+:/,'')].filter(ok);
+  return policy.withheld({documents, sources:[...documents, ...documents.map(d=>d.replace(/^royal-commission-/,''))]});
+}
 function add(key, kind, title, href, text, extra={}) {
   if(ids.has(key)) return; ids.add(key);
+  // A withheld record is left out (hide), or keeps its title, date and the one neutral notice: nothing of it is
+  // searchable text, and nothing says why.
+  const held = catalogWithheld(key, extra);
+  if(held?.mode==='hide') return;
+  if(held) { text=''; extra={snippet:NOTICE, ...(extra.slug?{slug:extra.slug}:{}), ...(extra.date?{date:extra.date}:{}), ...(extra.state?{state:extra.state}:{}), unavailable:NOTICE}; }
   const { aliases='', from=year(extra.date), to=year(extra.date), state='', parties=[], speakers=[], topics=[], slug='', ...rest }=extra;
   const record={kind,title,href,snippet:String(text || ''),...rest};
   record.slug=slug||'catalog-'+docs.length; record.resource='';
@@ -125,6 +138,8 @@ export function renamedPartyRecords(renames=PARTY_RENAMES) {
 }
 
 async function main() {
+ // The Deploy workflow's secret, or nothing. A store that is set and unreadable stops the build without repeating it.
+ loadWithheld(process.env.OPAX_WITHHELD_JSON);
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); peopleIndex=identity; canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.addresses].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:[...new Set([p.name,...(p.aliases||[]),...(Object.hasOwn(PERSON_SEARCH_ALIASES,p.name)?PERSON_SEARCH_ALIASES[p.name]:[])])].join(' '),from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.roster_only?'Recorded service: ':p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
@@ -276,6 +291,7 @@ async function main() {
   const id=docs.length;
   add('official-report:'+row.slug,'report',row.title,row.href,row.snippet,
    {...row,aliases:aliases.join(' '),state,from:year,to:year});
+  if(docs.length===id) continue;
   for(const name of [row.title,...aliases.filter(a=>typeof a==='string' && !/^\d/.test(a))]) {
    const key=tokens(name).sort().join(' ');
    if(key && !(reportNames[key]||[]).includes(id))(reportNames[key]??=[]).push(id);

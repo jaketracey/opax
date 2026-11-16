@@ -13,6 +13,7 @@
 
 import { readConfig, type Env } from './env.ts'
 import { Kb } from './kb.ts'
+import { policyKb, withheldReady, withheldDigest } from './policy.ts'
 import { parseCanaryBody, runCanary } from './canary.ts'
 import { buildStatus, bearerOk } from './status.ts'
 import { runTick } from './tick.ts'
@@ -24,10 +25,13 @@ const json = (body: unknown, status = 200): Response =>
 
 export default {
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    // The withheld list comes from this Worker's own secret. If it is set and cannot be read, nothing is
+    // summarised or labelled this tick: the Worker never works from an older or empty list.
+    if (!withheldReady(env.OPAX_WITHHELD_JSON)) { console.log(JSON.stringify({ evt: 'tick-skipped', error: 'source policy unavailable' })); return }
     ctx.waitUntil(
       runTick({
         db: env.DB,
-        kb: new Kb(env),
+        kb: policyKb(new Kb(env)),
         ai: { run: (model, body) => (env.AI as unknown as { run(m: string, b: unknown): Promise<unknown> }).run(model, body) },
         cfg: readConfig(env),
         now: () => Date.now(),
@@ -43,14 +47,17 @@ export default {
     const url = new URL(request.url)
     const route = `${request.method} ${url.pathname}`
     const batchRoute = ['GET /backfill/batch', 'GET /backfill/batch/reservations', 'POST /backfill/batch/reserve', 'POST /backfill/batch/result', 'POST /backfill/batch/cancel'].includes(route)
-    if (!batchRoute && route !== 'GET /status' && route !== 'POST /canary' && route !== 'POST /backfill/reconcile' && route !== 'POST /backfill/release') return new Response('Not found', { status: 404 })
+    if (!batchRoute && route !== 'GET /status' && route !== 'GET /withheld-digest' && route !== 'POST /canary' && route !== 'POST /backfill/reconcile' && route !== 'POST /backfill/release') return new Response('Not found', { status: 404 })
     if (!bearerOk(request.headers.get('authorization'), env.ENRICH_ADMIN_TOKEN)) {
       return new Response('Unauthorized', { status: 401, headers: { 'www-authenticate': 'Bearer' } })
     }
     if (route === 'GET /status') return json(await buildStatus(env.DB, readConfig(env), Date.now()))
+    if (!withheldReady(env.OPAX_WITHHELD_JSON)) return json({ error: 'source policy unavailable' }, 503)
+    // For the operator only, to compare this Worker's list with the others (docs/TAKEDOWN.md). Never part of /status.
+    if (route === 'GET /withheld-digest') return json({ digest: await withheldDigest(env.OPAX_WITHHELD_JSON) })
 
     if (batchRoute) {
-      const d = { db: env.DB, kb: new Kb(env), now: () => Date.now(), live: readConfig(env).live }
+      const d = { db: env.DB, kb: policyKb(new Kb(env)), now: () => Date.now(), live: readConfig(env).live }
       try {
         if (route === 'GET /backfill/batch/reservations') {
           const run = url.searchParams.get('run_id') ?? '', limit = Number(url.searchParams.get('limit') ?? 200), after = url.searchParams.get('after') ?? ''
@@ -85,7 +92,7 @@ export default {
       if ('error' in parsed) return json({ error: parsed.error }, 400)
       try {
         const action = route === 'POST /backfill/release' ? releaseHistoric : reconcileHistoric
-        return json(await action({ db: env.DB, kb: new Kb(env), now: () => Date.now(), historicHold: readConfig(env).historicHold }, parsed.slugs))
+        return json(await action({ db: env.DB, kb: policyKb(new Kb(env)), now: () => Date.now(), historicHold: readConfig(env).historicHold }, parsed.slugs))
       } catch {
         // KB errors can contain slug or metadata text; return only a generic retry instruction.
         return json({ error: 'backfill operation incomplete; verify historic push-log entries and retry' }, 503)
@@ -95,7 +102,7 @@ export default {
     const parsed = parseCanaryBody(await request.json().catch(() => null))
     if ('error' in parsed) return json({ error: parsed.error }, 400)
     const out = await runCanary(
-      { db: env.DB, kb: new Kb(env), historicHold: readConfig(env).historicHold, now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
+      { db: env.DB, kb: policyKb(new Kb(env)), historicHold: readConfig(env).historicHold, now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
       parsed.rids,
     )
     return json(out)

@@ -1,0 +1,47 @@
+{
+  "schema": 2,
+  "sources": {
+    "cth-antisemitism": {
+      "use": "full",
+      "summaries": "allowed",
+      "kb_generation": "allowed",
+      "hosts": [
+        "asc.royalcommission.gov.au"
+      ],
+      "names": [
+        "Royal Commission on Antisemitism and Social Cohesion"
+      ]
+    },
+    "cth-robodebt": {
+      "use": "full",
+      "summaries": "allowed",
+      "kb_generation": "allowed",
+      "hosts": [
+        "robodebt.royalcommission.gov.au"
+      ],
+      "names": [
+        "Royal Commission into the Robodebt Scheme"
+      ]
+    },
+    "nsw-healthcare-funding": {
+      "use": "full",
+      "summaries": "allowed",
+      "kb_generation": "allowed",
+      "hosts": [
+        "healthcarefunding.specialcommission.nsw.gov.au"
+      ],
+      "names": [
+        "Special Commission of Inquiry into Healthcare Funding"
+      ]
+    },
+    "vic-major-infrastructure": {
+      "use": "documents_only",
+      "hosts": [
+        "rcimcp.vic.gov.au"
+      ],
+      "names": [
+        "Integrity of Major Public and Civil Infrastructure Construction Projects"
+      ]
+    }
+  }
+}

@@ -35,6 +35,9 @@ import sys
 import unicodedata
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from parli import source_policy  # noqa: E402
+
 REGISTRY = ROOT / "parli" / "ingest" / "royal_commissions.json"
 OUT = ROOT / "portal" / "public" / "transcripts"
 CACHE = Path(os.environ.get("OPAX_RC_CACHE", Path.home() / ".cache" / "autoresearch" / "royal-commissions")) / "manual"
@@ -140,12 +143,18 @@ def extract(pdf: Path):
         return [clean_page(p.get_text("words"), p.rect.width, p.rect.height) for p in doc]
 
 
-def transcripts(registry):
+def transcripts(registry, policy=None):
+    """Transcripts whose text may be published: the commission is in COMMISSIONS (CC BY 4.0) and listed at the
+    full tier in the source policy. Anything else has no text file, no index row and no postings. A withheld
+    transcript is taken out at deploy and at request time (scripts/apply_source_policy.mjs), never here."""
+    # The tiers alone: this output is committed, and the withheld list never shapes a committed file.
+    policy = policy or source_policy.load(private=False)
     for c in registry["commissions"]:
-        if c["id"] in COMMISSIONS:
-            for d in c["documents"]:
-                if d["kind"] == "hearing_transcript":
-                    yield c, d
+        if c["id"] not in COMMISSIONS or not policy.listed(c["id"]):
+            continue
+        for d in c["documents"]:
+            if d["kind"] == "hearing_transcript" and policy.can("narrative", documents=[f"{c['id']}/{d['key']}"]):
+                yield c, d
 
 
 def build_doc(c, d, pages):

@@ -22,7 +22,7 @@ import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-31-each-fact-once'
+export const ANSWER_WRITING_VERSION = 'written-answer-32-transcript-attribution'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
@@ -30,6 +30,15 @@ export interface WritingInput { question: string; period: Period; facts: Writing
 /** Added to the writer's contract only when the answer already holds points of its own. */
 export const EACH_FACT_ONCE_RULE = ' The answer already contains the sentences in "said", which follow yours. Each fact appears once across both: write the facts those sentences leave out, and leave to them what they already say.'
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
+/** What the writer is told about a fact taken from a hearing transcript: it is evidence, who gave it and where.
+ * It travels with the fact in the writer's typed facts, so every claim from a transcript is planned as an
+ * attributed claim before a word is written. */
+export interface TranscriptAttribution { source: 'hearing_transcript'; status: 'evidence_not_finding'; attributed: true; speaker: string; role?: TranscriptTurn['role']; transcript_page: string; hearing_day?: string; date?: string }
+export const transcriptAttribution = (f: Pick<WritingFact, 'transcript'>): TranscriptAttribution | undefined => f.transcript ? {
+  source: 'hearing_transcript', status: 'evidence_not_finding', attributed: true, speaker: f.transcript.speaker, ...(f.transcript.role ? { role: f.transcript.role } : {}),
+  transcript_page: f.transcript.page, ...(f.transcript.day ? { hearing_day: f.transcript.day } : {}), ...(f.transcript.date ? { date: f.transcript.date } : {}) } : undefined
+/** Added to the writer's contract when any fact comes from a hearing transcript. */
+export const TRANSCRIPT_ATTRIBUTION_RULE = ' A fact with an attribution field is evidence given at a hearing, not a finding. Every sentence that uses one says who said it and where, taken from that field: the speaker, their role when the field records one, the hearing day or date, and the transcript page, as in "a witness told the Commission (transcript page N) that …" or "counsel assisting put to the witness that …". Never state what was said at a hearing as established fact, and never describe evidence, an allegation, a question or a submission as something the inquiry found.'
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
 const signedKey = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}−+-]+/gu, ' ').trim()
@@ -324,7 +333,7 @@ function transcriptLines(input: WritingInput): WrittenSentence[] | null {
   const seen = new Set<string>()
   const lines = turns.filter(f => { const t = f.transcript!, id = t.speaker + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, 4).map(f => {
     const t = f.transcript!, verb = /\?\s*$/.test(t.excerpt) ? 'asked' : 'said'
-    return { text: `${t.speaker} ${verb}${t.day ? ` on hearing day ${t.day}` : ''}${t.date ? ` (${t.date})` : ''}: “${shortTranscriptQuote(t.excerpt, input.question)}”`, facts: [f.id] }
+    return { text: `${t.speaker} ${verb}${t.day ? ` on hearing day ${t.day}` : ''}${t.date ? ` (${t.date})` : ''}, transcript page ${t.page}: “${shortTranscriptQuote(t.excerpt, input.question)}”`, facts: [f.id] }
   })
   return [...lines, { text: TRANSCRIPT_NOTE, facts: turns.map(f => f.id) }]
 }
@@ -656,12 +665,13 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   return {...assemble(lines,input),answer_decision:declared??'answer',machine_written:true}
 }
 export function writingPrompt(input: WritingInput): string {
-  return JSON.stringify({question:input.question,period:input.period,facts:input.facts.map(f=>({...f,source:undefined,speaker:f.source.speaker,...(f.source.chamber?{chamber:f.source.chamber}:{}),...(f.source.receipt?{receipt:f.source.receipt}:{}),atoms:f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)})),contract: ASK_EVIDENCE_RULES + RECEIPTS_WRITING_RULE + ' ' +
+  const hearing=input.facts.some(f=>f.transcript||f.text.includes(TRANSCRIPT_LABEL))
+  return JSON.stringify({question:input.question,period:input.period,facts:input.facts.map(f=>({...f,source:undefined,speaker:f.source.speaker,...(f.transcript?{attribution:transcriptAttribution(f)}:{}),...(f.source.chamber?{chamber:f.source.chamber}:{}),...(f.source.receipt?{receipt:f.source.receipt}:{}),atoms:f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)})),contract: ASK_EVIDENCE_RULES + RECEIPTS_WRITING_RULE + ' ' +
     'Answer the question directly and fully from these facts, and use general knowledge for context. The first sentence must answer the question with the requested name, figure, date or outcome. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. ' + ASK_ATTRIBUTION_RULE + 'Name the chamber a fact records in its chamber field (senate is the Senate, representatives the House of Representatives). Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Use complete sentences in your own words. For counts, start with the count, what was counted, chamber and period. For comparisons, retain every side, named term, value and supported direction. Keep every requested year or month group and its count; record totals retain their snapshot date. Each claim keeps its structured entity, metric, unit, chamber, period and supporting fact id together. Equal values belonging to different entities remain distinct claims. ' +
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
     'Hearing excerpts name the recorded speaker and hearing day/date, with a short literal quotation and fact id. A question by counsel or a commissioner is a question; identify each witness answer explicitly. Use recorded names and roles. Identify the material once as hearing evidence; licence details belong in the source card. ' +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
-    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
+    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (hearing ? TRANSCRIPT_ATTRIBUTION_RULE : '') + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
 }
 
 /** Keep already checked passage points (including loose uncited survivors) beside the written record answer. */

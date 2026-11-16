@@ -250,6 +250,10 @@ jobs:
           uv run --frozen bash scripts/vm/test_nsw_hansard_backfill.sh
       - name: Test that a documents-only royal commission holds no extract
         run: uv run --frozen --with pytest pytest -q tests/test_rc_no_extracts.py tests/test_royal_commissions.py
+      - name: Test the source policy and the takedown list
+        run: >-
+          uv run --frozen --with pytest pytest -q -p no:cacheprovider
+          tests/test_source_policy.py tests/test_transcript_fulltext.py
 
   senate-refresh:
     runs-on: ubuntu-latest
@@ -333,6 +337,9 @@ jobs:
       - name: Test portal
         # Equivalent to npm test, with Node's shard option before the file list.
         run: nice -n 10 node --test --test-concurrency=4 --test-shard=${{ matrix.shard }}/4 test/*.test.mjs
+      - name: Test the enrichment Worker's source policy
+        if: matrix.shard == 1
+        run: node --test ../enrich/test/policy.test.ts
       - name: Test portal Python loaders
         if: matrix.shard == 1
         working-directory: .

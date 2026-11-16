@@ -100,6 +100,8 @@ interface Env {
   MCP_LIMIT_KEY?: string
   /** Provisioned by Jake; optional so missing configuration falls back. */
   OPENROUTER_API_KEY?: string
+  /** The withheld list: { "schema": 1, "withheld": [...] }. A secret, never a var: its contents are not public (docs/TAKEDOWN.md). */
+  OPAX_WITHHELD_JSON?: string
   /** Optional operator-configured token prices, USD per million, for monitoring. */
   AGENTIC_INPUT_USD_PER_MILLION?: string
   AGENTIC_OUTPUT_USD_PER_MILLION?: string

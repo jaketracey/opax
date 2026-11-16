@@ -698,7 +698,7 @@ test('/privacy and /support are served whole, from their panels, with canonical 
 
 test('/terms and /security are served whole as HTML, with canonical links and no drafting marks',async()=>{
   for(const [path,name,title,facts] of [
-    ['/terms','terms','Terms of use · OPAX',['Using OPAX','Last updated 14 November 2026','Noice Pty Ltd (ABN 91 634 536 360)','the law of Victoria, Australia','You keep the rights in what you write','support@opax.com.au','href="/security"','Australian Consumer Law']],
+    ['/terms','terms','Terms of use · OPAX',['Using OPAX','Last updated 16 November 2026','Takedown: changed, withdrawn or restricted documents','and acts on them the same day.','Noice Pty Ltd (ABN 91 634 536 360)','the law of Victoria, Australia','You keep the rights in what you write','support@opax.com.au','href="/security"','Australian Consumer Law']],
     ['/security','security','Security · OPAX',['Reporting a security problem','Last updated 14 November 2026','https://github.com/jaketracey/opax/security/advisories/new','mailto:support@opax.com.au?subject=Security','within 5 working days','Testing in good faith','href="/terms"']]]){
     const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
     assert.equal(r.status,200,path);

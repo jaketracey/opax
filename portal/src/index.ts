@@ -12,6 +12,7 @@ import {offMapDonorNote,donorDisclosure,donorLabelHTML,receiptTypeLine,hasPartyR
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
+import { guardKbRequest, guardKbResponse, guardKbGeneration, openForKbGeneration, hiddenKbRead, fieldReadRid, closedRead, closedRefs, withoutWithheldHistory, guardSearchRows, withheldDigest, withheldReady, dependsOnWithheld, withheldUnavailable, POLICY as SOURCE_POLICY } from './source-policy'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
@@ -332,11 +333,24 @@ async function kbFetch(
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal; hedge?: boolean },
 ): Promise<Response> {
   if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
-  const call = async (target: string, body: unknown = init?.body, headers = init?.headers) => {
+  const call = async (path: string, sent: unknown = init?.body, headers = init?.headers) => {
     // An MCP request counts (and, without an account, spends) each query just before it goes (mcp-access.ts).
-    await env.KB_METER?.(target, init?.hedge)
+    await env.KB_METER?.(path, init?.hedge)
+    // The source policy: a query never asks for a withheld source or document (source-policy.ts).
+    // ... and a generation request carries nothing of a source closed to knowledge base generation.
+    const { target, body } = guardKbRequest(path, guardKbGeneration(path, sent))
+    const hidden = hiddenKbRead(path)
+    if (hidden) return hidden
+    // One field of a resource, asked for by its id (the machine summary behind /api/brief): the path names no
+    // slug or source, so with a list in force the resource itself is read and checked first.
+    const fieldOf = SOURCE_POLICY.withheldCount ? fieldReadRid(path) : null
+    if (fieldOf) {
+      const basic = await call(`/resource/${fieldOf}?show=basic&show=origin`, undefined, headers)
+      // Unreadable counts as closed: the field is not served on a guess.
+      if (!basic.ok || closedRead(await basic.json().catch(() => ({ hidden: true })))) return new Response(JSON.stringify({ detail: 'Resource does not exist' }), { status: 404, headers: { 'content-type': 'application/json' } })
+    }
     const generation = env.RESEARCH_EVAL && (target === '/predict/chat' || target === '/ask' && (body as Record<string, unknown> | undefined)?.generate_answer !== false)
-    const response = await fetch(`${ragBase(env)}${target}`, {
+    const answered = await fetch(`${ragBase(env)}${target}`, {
       method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
       headers: {
         'content-type': 'application/json',
@@ -348,6 +362,8 @@ async function kbFetch(
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: init?.signal,
     })
+    // ... and no response carries the text of a resource that is withheld or not quotable.
+    const response = guardKbResponse(path, answered)
     return generation ? observeEvalModelResponse(response, env.RESEARCH_EVAL!, researchPrices(env.AGENTIC_INPUT_USD_PER_MILLION, env.AGENTIC_OUTPUT_USD_PER_MILLION), headers?.accept === 'application/x-ndjson') : response
   }
   if (path === '/ask' && init?.body && typeof init.body === 'object') return saGenerationResponse(init.body as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT, (target, body, stream) => {
@@ -858,7 +874,8 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const noMention = !options.suggest && noRecordMentions({ query: url.searchParams.get('q'), mode: url.searchParams.get('mode'),
     catalogTotal: catalog?.total || 0, documents: documents?.results || [] })
   const out = json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
-    results: shown, count: shown.length,
+    // The withheld list has the last word on a search row, whatever the built catalogue holds (source-policy.ts).
+    results: guardSearchRows(shown), count: guardSearchRows(shown).length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
     ...(catalog?.matched_query ? { matched_query: catalog.matched_query } : {}),
@@ -1068,7 +1085,8 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
     max_tokens: 1800,
     reranker: 'predict',
     show: ['basic', 'origin', 'extra'],
-    extra_context: recordContext(records.records),
+    // Catalogue records and earlier answers from a source closed to knowledge base generation stay out (source-policy.ts).
+    extra_context: recordContext(openForKbGeneration(records.records)),
     rag_strategies: [
       { name: 'neighbouring_paragraphs', before: 1, after: 1 },
       // Index speaker metadata is unsafe for debates containing several speakers.
@@ -1095,7 +1113,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
   if (Array.isArray(context) && context.length > 0) {
     turns.push(
       ...context
-        .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
+        .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0 && (t.author !== 'answer' || !SOURCE_POLICY.kbGenerationExcluded(t)))
         .slice(-(24 - turns.length))
         .map((t) => ({
           author: t.author === 'answer' ? 'NUCLIA' : 'USER',
@@ -1512,6 +1530,8 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
  * costs the answer nothing but the timeout.
  */
 async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext, request: Request): Promise<{ overview: string; why: string }> {
+  // Figures that name a source closed to knowledge base generation go out without a written paragraph.
+  if (SOURCE_POLICY.kbGenerationExcluded(facts)) return { overview: '', why: 'source-policy' }
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
@@ -2282,7 +2302,8 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
   const graph = (await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
-  if (!context) return json({error:'Journey not available'},404)
+  // A journey that names a source closed to knowledge base generation has no generated story.
+  if (!context || SOURCE_POLICY.kbGenerationExcluded(context)) return json({error:'Journey not available'},404)
   const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
   const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(cached,'HIT',false)
@@ -2808,7 +2829,13 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
-  const inputPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
+  // Suggestions are generated through the knowledge base. An answer drawn from a source closed to that path gets
+  // none, and a passage from one is not put in the request (source-policy.ts).
+  if (SOURCE_POLICY.kbGenerationExcluded(answer)) return json({ questions: [] })
+  // A passage the client holds from a record that is now withheld is checked server-side and left out.
+  const sentPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
+  const closedPassage = await closedRefs(sentPassages, async rid => { const res = await kbFetch(env, `/resource/${rid}?show=basic&show=origin`); return res.ok ? res.json() : res.status === 404 ? {} : { hidden: true } })
+  const inputPassages = openForKbGeneration(sentPassages.filter(p => !closedPassage(p)))
   const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
   // Older clients may send a previous answer containing full source quotations.
   const priorAnswer = restricted ? saEvidenceText({},answer,env.SA_HANSARD_FULL_TEXT,'',true) : answer
@@ -2965,6 +2992,21 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     }
     extra?: { metadata?: Record<string, unknown> }
     data?: { texts?: Record<string, { value?: { body?: string } }> }
+    unavailable?: string
+    hidden?: boolean
+  }
+  // A hidden record is answered exactly as one that does not exist.
+  if (r.hidden) return json({ error: 'not found' }, 404)
+  // A withheld record, or one whose tier keeps it out of the knowledge base, is a listing row: its title, date,
+  // one neutral notice and the publisher's link. kbFetch has already removed everything else (source-policy.ts).
+  if (r.unavailable) {
+    const kind = r.usermetadata?.classifications?.find(c => c.labelset === 'kind')?.label
+    const listed = json({ slug, title: r.title ?? slug, speaker: null, speaker_attribution: null,
+      url: r.origin?.url ?? (typeof r.extra?.metadata?.source_url === 'string' ? r.extra.metadata.source_url : null),
+      labels: kind ? { kind } : {}, topics: [], metadata: typeof r.extra?.metadata?.date === 'string' ? { date: r.extra.metadata.date } : {},
+      summary: null, unavailable: r.unavailable, text: '' })
+    cacheStore(ctx, cacheKey, listed, RESOURCE_CACHE_TTL)
+    return withCacheStatus(listed, bypass ? 'BYPASS' : 'MISS')
   }
   // Source publishers use body or t-body. Prefer the standard family when
   // both exist, and never include generated summary fields in the source text.
@@ -3269,7 +3311,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
     .slice(0, BRIEF_MAX)
   if (!rids.length) return json({ briefs: {} })
   const cache = caches.default
-  const cacheKey = new Request(`https://opax.com.au/api/brief?v=${BRIEF_CACHE_VERSION}&rids=${rids.join(',')}`)
+  // Keyed by the cache epoch, so a bump retires every cached brief (a takedown's first step).
+  const cacheKey = new Request(`https://opax.com.au/api/brief?v=${BRIEF_CACHE_VERSION}&epoch=${encodeURIComponent(env.CACHE_EPOCH)}&rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
   if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const briefs: Record<string, string> = {}
@@ -3287,7 +3330,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
     }),
   )
   const out = json({ briefs })
-  out.headers.set('cache-control', 'public, max-age=3600')
+  // Five minutes in a browser: a copy there cannot be recalled, so it is kept short. The edge copy lasts the hour.
+  out.headers.set('cache-control', 'public, max-age=300')
   await cache.put(cacheKey, await Promise.resolve(out.clone()))
   return withCacheStatus(await Promise.resolve(out), 'MISS')
 }
@@ -6963,6 +7007,10 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     answerQuestion=question;routedInput=body.value
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
+    // What the client sends back from earlier turns is checked against the withheld list before any request is
+    // built from it: an answer that cited a withheld record, and a withheld record in prior_resources, are dropped.
+    const checked = await withoutWithheldHistory(body.value, async rid => { const res = await kbFetch(selected, `/resource/${rid}?show=basic&show=origin`, { signal: request.signal }); return res.ok ? res.json() : res.status === 404 ? {} : { hidden: true } })
+    if (checked !== body.value) { body.value = checked; body.text = JSON.stringify(checked); routedInput = checked }
     const identity = await identityAnswer(body.value as AskInput, agenticToolDeps(selected, request.signal, ctx))
     if (identity) return identityResponse(identity, request)
     const money=await federalPartyMoneyAnswer(body.value as AskInput,selected.ASSETS)
@@ -7280,6 +7328,14 @@ async function route(
         response.headers.set('cache-control', 'no-store')
         return response
       }
+      if (url.pathname === '/api/ops/withheld-digest' && request.method === 'GET') {
+        // For the operator only: a digest of this Worker's withheld list, to compare with the build's and the
+        // refresh box's (docs/TAKEDOWN.md). It shows no entry and no count, and is never cached or logged.
+        if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
+        const digest = json({ digest: await withheldDigest(env.OPAX_WITHHELD_JSON) })
+        digest.headers.set('cache-control', 'no-store')
+        return digest
+      }
       if (url.pathname === '/api/daily-post/engagement' && request.method === 'GET') {
         // An operator's read of what the platforms report for the account and
         // the latest editions (docs/INSIGHTS.md). Bearer-guarded like the run
@@ -7481,6 +7537,9 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     setAppStoreProvider(env.APP_STORE_PROVIDER)
     const url = new URL(request.url)
+    // The withheld list is read from its private store on every request. If the store is set and cannot be read,
+    // the routes that read records, search or answer are refused rather than served without it (source-policy.ts).
+    if (!withheldReady(env.OPAX_WITHHELD_JSON) && dependsOnWithheld(url.pathname)) return withSecurityHeaders(withheldUnavailable(url.pathname), url)
     // Universal links (src/app-site-association.ts): answered first, as Apple's fetcher follows no redirect.
     if (url.pathname === APP_SITE_ASSOCIATION_PATH) return withSecurityHeaders(appSiteAssociationResponse(request, env.APPLE_TEAM_ID), url)
     if (url.pathname === '/gov-advertising/ready.json') return withSecurityHeaders(await govAdvertisingReady(request,govAdvertisingReader(env.ASSETS)),url)

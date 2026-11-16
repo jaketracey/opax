@@ -33,6 +33,7 @@ from typing import Any, Optional
 
 import requests
 from parli.ingest.http import honest_headers
+from parli import source_policy
 
 DEFAULT_ZONE = "aws-ap-southeast-2-1"
 
@@ -325,11 +326,28 @@ class KbClient:
                 or (body.get("origin") or {}).get("source_id") == "news"
                 or any(c.get("labelset") == "kind" and c.get("label") == "news" for c in labels)):
             raise ValueError("News articles are excluded from the OPAX corpus")
+        if self._closed(body):
+            return {}
         return _request(
             "POST", self._rag("/resources"), self._headers, body, max_retries=max_retries
         )
 
+    def _closed(self, body: dict) -> bool:
+        """Every push path ends here. True when the resource is on the withheld list: the write is skipped
+        without a word, and the caller sees an ordinary result, so no log line or error ever marks an item as
+        withheld. A source whose tier keeps it out of the knowledge base raises instead; tiers are public.
+        The policy and this machine's private withheld list are read once per client (parli/source_policy.py)."""
+        policy = getattr(self, "_source_policy", None)
+        if policy is None:
+            policy = self._source_policy = source_policy.load()
+        reason = policy.kb_refusal(body)
+        if reason == "tier":
+            raise source_policy.Withheld("not written: the source's tier keeps it out of the knowledge base")
+        return reason == "withheld"
+
     def patch_resource_by_slug(self, slug: str, body: dict) -> Any:
+        if self._closed({**body, "slug": slug}):
+            return {}
         return _request("PATCH", self._rag(f"/slug/{slug}"), self._headers, body)
 
     def delete_resource_by_slug(self, slug: str) -> None:

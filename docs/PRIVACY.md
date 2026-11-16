@@ -51,6 +51,8 @@ The page states facts about the live system. Change it in the same commit as any
 - the voice allowance, monthly budget, concurrency, reservation accounting or provider settings ([VOICE-ASSISTANT.md](VOICE-ASSISTANT.md));
 - what the iPhone, iPad and Android app stores, sends or asks permission for, its App Store privacy label (`release/1.0/app-privacy.json`, `mobile/voice-production-policy.json`) or its Google Play Data safety answers (`docs/ANDROID-STORE.md`).
 
+- the withheld list, the use tiers or the takedown steps ([TAKEDOWN.md](TAKEDOWN.md)), which `/terms` describes.
+
 Then update the "Last updated" date. The page's history is this repository's history.
 
 ## Claims and their sources

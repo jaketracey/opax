@@ -51,8 +51,9 @@ def test_word_index_pages_are_detected():
 @pytest.mark.skipif(not (OUT / "index.json").exists(), reason="full text not built")
 def test_published_files_honour_the_quote_policy():
     ix = json.loads((OUT / "index.json").read_text(encoding="utf-8"))
-    assert {d["commission"] for d in ix["docs"]} == set(ft.COMMISSIONS)
-    for d in ix["docs"]:
+    docs = [d for d in ix["docs"] if not d.get("withheld")]  # a transcript withheld after the build leaves an empty row
+    assert {d["commission"] for d in docs} == set(ft.COMMISSIONS)
+    for d in docs:
         doc = json.loads((OUT / d["file"].removeprefix("/transcripts/")).read_text(encoding="utf-8"))
         assert doc["label"] == ft.LABEL and doc["licence"] == "CC BY 4.0" and doc["quote_policy"] == d["quote_policy"]
         text = " ".join(re.sub(r"\s+", " ", p.get("text", "")) for p in doc["pages"])

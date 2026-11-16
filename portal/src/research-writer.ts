@@ -2,7 +2,8 @@ import { generateResearchText, answerEntryScanner, researchPreviewGuard } from '
 import { routingRefused } from './research-model'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, appendWrittenPoints, type WritingInput } from './research-writing'
+import { POLICY as SOURCE_POLICY } from './source-policy'
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
@@ -16,7 +17,7 @@ import {moneyWritingInput,receiptWritingLines,completeMoneySelection} from './re
 
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
-  return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number, preview?: AnswerPreview): Promise<QualitativeAnswer> => {
+  const write = async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number, preview?: AnswerPreview): Promise<QualitativeAnswer> => {
     // Leave the enclosing bounded() race time to receive this writer's checked stopped-draft result.
     const deadline=Date.now()+Math.max(0,remainingMs-50)
     input=moneyWritingInput({...input,facts:dedupeWritingFacts(input.facts)})
@@ -26,6 +27,16 @@ export function createAnswerWriter(options: ResearchOptions) {
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // A chamber named for a cited speaker is the one their source records (ask-chamber-phrases.ts).
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question,releasedDraft?.answer);return checked as unknown as QualitativeAnswer}
+    // A quote_and_cite source (source policy) is answered with its own passages: each quotation attributed to its
+    // speaker and page, then the fixed transcript line. Those facts never reach the model, so nothing is written
+    // about the evidence in the model's words; any other facts are written as usual and the passages follow.
+    const passageOnly=input.facts.filter(f=>!f.coverage&&SOURCE_POLICY.passageOnly({text:f.text,source:f.source}))
+    if(passageOnly.length){
+      const passages=ground(proseFallback({...input,said:undefined,facts:passageOnly}))
+      const rest=input.facts.filter(f=>!passageOnly.includes(f))
+      if(!rest.some(f=>!f.coverage&&!f.metadata))return passages
+      return appendWrittenPoints(await write({...input,facts:rest},stats,signal,remainingMs),passages)
+    }
     // Exact record findings have a complete prose answer without a writing turn, unless that prose is only a limit.
     if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input)){const exact=proseFallback(input);if(exact.answer_decision!=='limitation')return ground(exact)}
     // No receipt is ever said to be lent (A34 review): the AEC types none as a loan, and OPAX matches none to a
@@ -142,4 +153,5 @@ export function createAnswerWriter(options: ResearchOptions) {
     }
     return fallback()
   }
+  return write
 }

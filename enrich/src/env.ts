@@ -14,6 +14,8 @@ export interface Env {
   ARAG_KB_ID: string
   ARAG_KB_TOKEN: string
   ENRICH_ADMIN_TOKEN: string
+  /** The withheld list, as text: { "schema": 1, "withheld": [...] }. A secret; its contents are never public. */
+  OPAX_WITHHELD_JSON?: string
   // Vars
   ARAG_ZONE: string
   PRIMARY_MODEL?: string

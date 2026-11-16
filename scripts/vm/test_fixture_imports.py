@@ -55,6 +55,7 @@ class FixtureImportTests(unittest.TestCase):
                   "scripts/roster_identity.py", "scripts/enrich_profile_jurisdictions.py",
                   "scripts/roster_accept.py",
                   "scripts/bills_registry/bills_stages.py", "parli/__init__.py", "parli/arag.py",
+                  "parli/source_policy.py", "parli/ingest/source_policy.json",
                   "scripts/vote_parties.py", "scripts/division_rules.py",
                   "scripts/corrections/__init__.py", "scripts/corrections/apply.py",
                   "parli/ingest/federal_affiliations.py", "parli/ingest/tvfy_refresh.py",

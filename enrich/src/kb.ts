@@ -49,6 +49,8 @@ export interface KbResource {
 
 export interface CatalogRow {
   rid: string
+  /** The resource's slug, for the source policy's document entries. */
+  slug?: string
   created: string | null
   usermetadata?: KbResource['usermetadata']
 }
@@ -166,7 +168,7 @@ export class Kb implements KbApi {
       sort: { field: 'created', order: 'asc' },
     }, false, timeoutMs)
     const resources = (r?.resources ?? {}) as Record<string, KbResource>
-    const rows = Object.entries(resources).map(([rid, v]) => ({ rid, created: typeof v?.created === 'string' ? v.created : null, usermetadata: v.usermetadata }))
+    const rows = Object.entries(resources).map(([rid, v]) => ({ rid, ...(typeof v?.slug === 'string' ? { slug: v.slug } : {}), created: typeof v?.created === 'string' ? v.created : null, usermetadata: v.usermetadata }))
     return { rows, hasNext: Boolean(r?.fulltext?.next_page) && rows.length > 0 }
   }
 }

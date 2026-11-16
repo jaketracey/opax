@@ -14411,6 +14411,12 @@ function docAskQuestion(doc, debate, isRecord) {
 
 // Preserve the source verbatim, including whitespace. Only presentation changes.
 function renderDocText(doc) {
+  // A record OPAX does not show carries one neutral notice and the publisher's link, and no text.
+  if (doc.unavailable) {
+    const note = document.createElement('p'); note.className = 'doc-unavailable'; note.textContent = String(doc.unavailable) + ' ';
+    if (/^https:\/\//.test(String(doc.url || ''))) { const link = document.createElement('a'); link.href = doc.url; link.rel = 'noopener'; link.textContent = "The publisher's copy"; note.append(link, '.'); }
+    $('doc-text').replaceChildren(note); return;
+  }
   let text = String(doc.text || "(no text)");
   if ((doc.labels?.kind || doc.kind) === 'bill_text') {
     const body = document.createElement('div'); body.className = 'bill-text-source'; body.textContent = text;

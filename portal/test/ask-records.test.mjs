@@ -1,3 +1,4 @@
+import { openForKbGeneration, POLICY as SOURCE_POLICY } from '../src/source-policy.ts';
 import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
 const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
@@ -22,7 +23,7 @@ const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import
 const scopeHelpers=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
 const payBundle=await build({entryPoints:[new URL('../src/ask-pay.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const payHelpers=await import('data:text/javascript;base64,'+Buffer.from(payBundle.outputFiles[0].text).toString('base64'));
-const worker={...passageText,isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay,mentionsOfficePay:payHelpers.mentionsOfficePay};
+const worker={openForKbGeneration,SOURCE_POLICY,...passageText,isWitness,...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay,mentionsOfficePay:payHelpers.mentionsOfficePay};
 runInNewContext(ts.transpile(code),worker);
 const plain=value=>JSON.parse(JSON.stringify(value));
 
