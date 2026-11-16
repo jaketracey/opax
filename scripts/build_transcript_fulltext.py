@@ -145,9 +145,10 @@ def extract(pdf: Path):
 
 def transcripts(registry, policy=None):
     """Transcripts whose text may be published: the commission is in COMMISSIONS (CC BY 4.0) and listed at the
-    full tier in the source policy, and neither it nor the transcript is withheld. Anything else has no text file, no
-    index row and no postings."""
-    policy = policy or source_policy.load()
+    full tier in the source policy. Anything else has no text file, no index row and no postings. A withheld
+    transcript is taken out at deploy and at request time (scripts/apply_source_policy.mjs), never here."""
+    # The tiers alone: this output is committed, and the withheld list never shapes a committed file.
+    policy = policy or source_policy.load(private=False)
     for c in registry["commissions"]:
         if c["id"] not in COMMISSIONS or not policy.listed(c["id"]):
             continue

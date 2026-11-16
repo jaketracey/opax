@@ -164,6 +164,26 @@ jobs:
                 state: 'in_progress', log_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`});
             } catch (error) { core.warning(`Could not record deployment: ${error.message}`); }
 
+      # The withheld list (docs/TAKEDOWN.md) is private: it lives in the OPAX_WITHHELD_JSON secret, never in the
+      # repository. It is applied to the built files here, after the tests have run on the public build, and the
+      # same value is given to the Worker, so the files and the Worker deployed by one run always agree. With no
+      # secret this step does nothing. It prints one fixed line; a failure stops the deploy without detail.
+      - name: Apply the withheld list
+        if: steps.duplicate.outputs.skip != 'true'
+        working-directory: .
+        run: |
+          bash scripts/withheld_overlay.sh apply
+          if [ -n "${OPAX_WITHHELD_JSON:-}" ]; then
+            (cd portal && printf '%s' "$OPAX_WITHHELD_JSON" | npx wrangler secret put OPAX_WITHHELD_JSON >/dev/null 2>&1) \
+              || { echo "::error::the release could not be prepared; nothing was deployed"; exit 1; }
+          fi
+        env:
+          OPAX_WITHHELD_JSON: ${{ secrets.OPAX_WITHHELD_JSON }}
+          OPAX_TABLE_METADATA_ONLY: '1'
+          OPAX_RELEASE_CACHE_DIR: .cache/release-build
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: Deploy
         id: production
         if: steps.duplicate.outputs.skip != 'true'
@@ -219,6 +239,13 @@ jobs:
                 state: deployed && tables !== 'failure' && tables !== 'cancelled' ? 'success' : 'failure',
                 description: deployed && (tables === 'failure' || tables === 'cancelled') ? 'Worker deployed; D1 table reload failed' : undefined});
             } catch (error) { core.warning(`Could not record deployment outcome: ${error.message}`); }
+
+      # Before anything is committed back: the working tree returns to the public build, so no commit and no
+      # notice can show what the withheld list changed.
+      - name: Return to the public build
+        if: ${{ !cancelled() && steps.duplicate.outputs.skip != 'true' }}
+        working-directory: .
+        run: bash scripts/withheld_overlay.sh restore
 
       - name: Commit restamped assets back to main
         # also after a failed table reload: the Worker carrying these stamps is live.

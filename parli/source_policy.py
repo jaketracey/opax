@@ -26,16 +26,24 @@ may also be a document id (a knowledge base slug such as ``speech-123``, or
 is not listed is governed by its own pipeline's rules and is treated as full with both flags on;
 hearing transcript text is published only for a source listed as full.
 
-``withheld`` is the takedown list. Each entry names one source or one document, a reason
-class and the date it was withheld, and nothing else: no free text, so the list cannot
-itself disclose what was suppressed. A withheld document is a listing row with its label
-and a link to the publisher; it is never pushed to the knowledge base, indexed, quoted,
-excerpted, summarised or labelled.
+The withheld list (the takedown list) is never in this repository: an entry, or an id that
+resolves to a document, can itself disclose that an order exists. ``withheld.example.json``
+is its empty shape. Python reads the real list from a private store on the machine that runs
+it: the ``OPAX_WITHHELD_JSON`` environment variable, else the file named by
+``OPAX_WITHHELD_FILE``, else ``~/.config/opax/withheld.json``, which must be readable by its
+owner only (mode 600). No store is "nothing withheld". A store that is there and cannot be
+read or validated is an error, and the job stops rather than push.
+
+Each entry names one source or one document, a reason class, the date and an optional
+``mode`` (``list_only``, the default, or ``hide``), and nothing else. Only the mode ever
+leaves this loader. No message, log line or exception here repeats an entry.
 """
 from __future__ import annotations
 
 from datetime import date
+import hashlib
 import json
+import os
 from pathlib import Path
 import re
 
@@ -54,19 +62,14 @@ CAPABILITIES = {
 # Never sent on a path where the knowledge base generates text, whatever its tier or flags say.
 KB_GENERATION_NEVER = ("vic-major-infrastructure",)
 REASONS = ("publisher_request", "legal_order", "withdrawn", "amended_pending")
-LABELS = {
-    "publisher_request": "Withheld at the publisher's request",
-    "legal_order": "Withheld: subject to a legal order",
-    "withdrawn": "Withheld: withdrawn by the publisher",
-    "amended_pending": "Withheld: an amended version is pending",
-}
+MODES = ("list_only", "hide")
+# The only wording a reader sees for a withheld item, whatever the reason.
+NOTICE = "Not available on OPAX. Open the publisher's copy."
+PRIVATE_SCHEMA = 1
 SOURCE_ID = re.compile(r"^[a-z0-9][a-z0-9._-]{0,199}$")
 DOCUMENT_ID = re.compile(r"^[a-z0-9][a-z0-9._-]{0,199}(?:/[a-z0-9][a-z0-9._-]{0,199})?$")
 HOST = re.compile(r"^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$")
 SOURCE_KEYS = ("use", "summaries", "kb_generation", "hosts", "names")
-# What a document whose tier allows no quotation may never carry in a public record.
-TEXT_KEYS = ("date_quote", "full_text")
-
 
 def allows(use, capability) -> bool:
     return capability in CAPABILITIES.get(use, [])
@@ -92,10 +95,10 @@ def _source_of(document):
 
 
 class Policy:
-    def __init__(self, data):
-        if not isinstance(data, dict) or set(data) != {"schema", "sources", "withheld"} or data["schema"] != SCHEMA:
-            raise PolicyError("source policy must hold exactly schema, sources and withheld")
-        if not isinstance(data["sources"], dict) or not isinstance(data["withheld"], list):
+    def __init__(self, data, withheld=()):
+        if not isinstance(data, dict) or set(data) != {"schema", "sources"} or data["schema"] != SCHEMA:
+            raise PolicyError("source policy must hold exactly schema and sources")
+        if not isinstance(data["sources"], dict) or not isinstance(withheld, (list, tuple)):
             raise PolicyError("source policy sources must be an object and withheld a list")
         self._records = {}
         for key, record in data["sources"].items():
@@ -120,19 +123,22 @@ class Policy:
                 raise PolicyError("a quote_and_cite source needs hosts or names")
             self._records[key] = dict(record)
         self._sources, self._documents = {}, {}
-        for entry in data["withheld"]:
-            if not isinstance(entry, dict) or set(entry) not in ({"source", "reason", "date"}, {"document", "reason", "date"}):
-                raise PolicyError("a withheld entry holds exactly source or document, reason and date")
-            if entry["reason"] not in REASONS or not _real_date(entry["date"]):
-                raise PolicyError("a withheld entry needs a known reason class and an ISO date")
+        self._entries = [dict(e) for e in withheld if isinstance(e, dict)]
+        # Messages here never repeat an entry: an error line must not name what is withheld.
+        for entry in withheld:
+            if not isinstance(entry, dict) or set(entry) - {"mode"} not in ({"source", "reason", "date"}, {"document", "reason", "date"}):
+                raise PolicyError("a withheld entry holds exactly source or document, reason, date and an optional mode")
+            if entry["reason"] not in REASONS or not _real_date(entry["date"]) or entry.get("mode", "list_only") not in MODES:
+                raise PolicyError("a withheld entry needs a known reason class, an ISO date and a known mode")
             kind = "source" if "source" in entry else "document"
             ident = entry[kind]
             if not isinstance(ident, str) or not (SOURCE_ID if kind == "source" else DOCUMENT_ID).match(ident):
-                raise PolicyError(f"a withheld {kind} id is not well formed")
+                raise PolicyError("a withheld id is not well formed")
             held = self._sources if kind == "source" else self._documents
             if ident in held:
-                raise PolicyError(f"withheld {kind} {ident} is listed twice")
-            held[ident] = {"reason": entry["reason"], "date": entry["date"], "label": LABELS[entry["reason"]]}
+                raise PolicyError("a withheld id is listed twice")
+            # Only the mode leaves this loader. The reason and date stay in the private store.
+            held[ident] = {"mode": entry.get("mode", "list_only")}
 
     @property
     def withheld_sources(self):
@@ -152,7 +158,7 @@ class Policy:
         return self._records.get(source, {}).get("use", "full")
 
     def withheld(self, sources=(), documents=()):
-        """The withheld entry ({reason, date, label}) covering any of these ids, or None."""
+        """How any of these ids is withheld ({"mode": "list_only" | "hide"}), or None."""
         for ident in documents:
             if ident in self._documents:
                 return dict(self._documents[ident])
@@ -185,14 +191,17 @@ class Policy:
                 and allows(self.use(source), "narrative") and self._flag("kb_generation", source))
 
     def kb_refusal(self, body) -> str | None:
-        """Why a knowledge base resource may not be pushed or changed, or None when it may."""
+        """Why a knowledge base resource may not be pushed or changed: "withheld", "tier", or None when it may."""
         sources, documents = kb_ids(body)
-        entry = self.withheld(sources, documents)
-        if entry:
-            return entry["label"]
-        if not self.can("kb", sources, documents):
-            return "the source's tier does not allow its text in the knowledge base"
-        return None
+        if self.withheld(sources, documents):
+            return "withheld"
+        return None if self.can("kb", sources, documents) else "tier"
+
+    def digest(self) -> str:
+        """A short digest of the withheld entries, the same as withheldDigest() in the JavaScript loader, so
+        the copies held by the Workers, the build and this machine can be compared without showing one."""
+        canonical = sorted(json.dumps({"mode": "list_only", **e}, sort_keys=True, separators=(",", ":"), ensure_ascii=False) for e in self._entries)
+        return hashlib.sha256(("[" + ",".join(canonical) + "]").encode()).hexdigest()[:16]
 
 
 def kb_ids(body) -> tuple[list[str], list[str]]:
@@ -207,66 +216,39 @@ def kb_ids(body) -> tuple[list[str], list[str]]:
     return sources, [str(slug)] if slug else []
 
 
-def load(path: Path = PATH) -> Policy:
+def private_entries() -> list:
+    """The withheld entries from this machine's private store; [] when there is none."""
+    raw = os.environ.get("OPAX_WITHHELD_JSON", "").strip()
+    if not raw:
+        path = Path(os.environ.get("OPAX_WITHHELD_FILE") or "~/.config/opax/withheld.json").expanduser()
+        if not path.exists():
+            return []
+        try:
+            if path.stat().st_mode & 0o077:
+                raise PolicyError("the withheld store must be readable by its owner only (chmod 600)")
+            raw = path.read_text(encoding="utf-8").strip()
+        except OSError as exc:
+            raise PolicyError("the withheld store is unreadable") from exc
+        if not raw:
+            return []
+    try:
+        store = json.loads(raw)
+    except ValueError:
+        raise PolicyError("the withheld store is unreadable") from None
+    if not isinstance(store, dict) or set(store) != {"schema", "withheld"} or store["schema"] != PRIVATE_SCHEMA or not isinstance(store["withheld"], list):
+        raise PolicyError("the withheld store is unreadable")
+    return store["withheld"]
+
+
+def load(path: Path = PATH, private: bool = True) -> Policy:
+    """The public tiers with this machine's private withheld list (private=False: the tiers alone)."""
     try:
         data = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise PolicyError(f"source policy unreadable: {exc}") from exc
-    return Policy(data)
+    return Policy(data, private_entries() if private else ())
 
 
-def listing_row(commission, doc, entry):
-    """What a withheld document shows: title, date, its label and the publisher's page."""
-    # The publisher's own page for the document; never the file itself where a page or the site is known.
-    files = {f.get("url") for f in doc.get("files") or []}
-    page = next((u for u in (doc.get("page_url"), commission.get("site")) if u and u not in files), None) or doc.get("page_url")
-    return {"key": doc["key"], "kind": doc["kind"], "title": doc["title"], "date": doc.get("date"),
-            "date_basis": doc.get("date_basis"), "page_url": page, "files": [],
-            "cite": {"url": page, "document": doc["title"]}, "acquisition": doc.get("acquisition"),
-            "withheld": entry}
-
-
-def redact_commission(c, policy: Policy):
-    """One commission's public record with the policy applied (same rules as redactCommission in
-    parli/ingest/source_policy.mjs). Withheld documents become listing rows; a document whose
-    tier allows no quotation carries no quotation or text pointer; recommendations and court context drawn from
-    either are removed, and so is a fact read from a withheld document."""
-    cid, out = c["id"], dict(c)
-    quotable = lambda key: allows(policy.use(cid, f"{cid}/{key}"), "quote")  # noqa: E731
-    source_entry = policy.withheld(sources=[cid])
-    withheld_keys, withheld_urls, held_urls = set(), set(), set()
-    for group in ("reports", "responses", "transcripts"):
-        rows = []
-        for d in c.get(group) or []:
-            ident = f"{cid}/{d['key']}"
-            entry = policy.withheld(sources=[cid], documents=[ident])
-            if entry:
-                withheld_keys.add(d["key"])
-                withheld_urls.update(f.get("url") for f in d.get("files") or [])
-                rows.append(listing_row(c, d, entry))
-            elif not quotable(d["key"]):
-                held_urls.update(f.get("url") for f in d.get("files") or [])
-                rows.append({k: v for k, v in d.items() if k not in TEXT_KEYS})
-            else:
-                rows.append(d)
-        out[group] = rows
-    out["recommendations"] = [r for r in c.get("recommendations") or []
-                              if r.get("report") not in withheld_keys and quotable(r.get("report"))]
-    out["court_context"] = [x for x in c.get("court_context") or [] if x.get("applies_to") not in withheld_keys]
-
-    def fact(f):
-        """A fact read from a withheld document goes; one read from a document that is not quotable keeps
-        its value and page and loses its quotation."""
-        url = ((f or {}).get("cite") or {}).get("url")
-        if not f or url in withheld_urls or (source_entry and "quote" in f):
-            return None
-        return {k: v for k, v in f.items() if k != "quote"} if url in held_urls else f
-
-    out["established"] = fact(c.get("established"))
-    out["commissioners"] = [f for f in map(fact, c.get("commissioners") or []) if f]
-    if policy.listed(cid):
-        out["use"] = policy.use(cid)
-    if source_entry:
-        out["notes"] = []
-        out["withheld"] = source_entry
-    return out
+if __name__ == "__main__":
+    # The digest only: compare it with the Workers' and the build's. Never prints an entry or a count.
+    print(load().digest())

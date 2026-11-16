@@ -23,16 +23,16 @@ const VIC = 'vic-major-infrastructure', ROBODEBT = 'cth-robodebt';
 const PUBLISHED = json('../../parli/ingest/source_policy.json');
 const entry = (id, reason = 'publisher_request') => ({ ...id, reason, date: '2026-11-16' });
 /** The published policy with one source moved to another tier (its flags go with the full tier). */
-const withTier = (id, use, withheld = []) => {
+const withTier = (id, use) => {
   const sources = structuredClone(PUBLISHED.sources), { hosts, names } = sources[id];
   sources[id] = use === 'full' ? PUBLISHED.sources[id] : { use, hosts, names };
-  return { schema: 2, sources, withheld };
+  return { schema: 2, sources };
 };
 const withPolicy = data => ({ name: 'source-policy-fixture', setup(b) { b.onLoad({ filter: /source_policy\.json$/ }, () => ({ contents: JSON.stringify(data), loader: 'json' })); } });
 async function ask(data) {
   const built = await build({ stdin: { contents: ["export {callTool} from './src/tools/index'", "export {textIndex, textMatches, pageHits} from './src/tools/transcript-text'",
     "export {writingFacts, writingPrompt, proseFallback, transcriptAttribution, TRANSCRIPT_ATTRIBUTION_RULE, ANSWER_WRITING_VERSION} from './src/research-writing'",
-    "export {createAnswerWriter} from './src/research-writer'", "export {withTranscriptNote, transcriptTurns, TRANSCRIPT_NOTE, TRANSCRIPT_LABEL} from './src/transcript-answer'"].join(';'),
+    "export {createAnswerWriter} from './src/research-writer'", "export {withTranscriptNote, transcriptTurns, TRANSCRIPT_NOTE, TRANSCRIPT_LABEL} from './src/transcript-answer'", "export {loadWithheld} from '../parli/ingest/source_policy.mjs'"].join(';'),
     resolveDir: new URL('../', import.meta.url).pathname, loader: 'ts' }, bundle: true, format: 'esm', platform: 'browser', write: false, logLevel: 'silent', plugins: [withPolicy(data)] });
   return importBundle(built.outputFiles[0].text, 'source-tiers');
 }
@@ -65,7 +65,7 @@ test('one table defines the four tiers and what each allows', () => {
   for (const file of ['../src/source-policy.ts', '../src/tools/transcript-text.ts', '../src/research-writer.ts', '../src/research-loop.ts', '../../enrich/src/policy.ts', '../../scripts/apply_source_policy.mjs', '../../scripts/build_report_catalog.mjs'])
     assert.doesNotMatch(source(file), /['"](?:documents_only|search_only|full)['"]/, file);
   assert.equal(PUBLISHED.sources[VIC].use, 'documents_only');
-  assert.deepEqual(PUBLISHED.withheld, []);
+  assert.deepEqual(Object.keys(PUBLISHED), ['schema', 'sources'], 'the withheld list is not in the repository');
 });
 
 for (const use of USES) test(`${use}: the indexer, quoting tools, search, MCP read, summaries and knowledge base generation each honour it`, async () => {
@@ -198,8 +198,8 @@ test('the commission is closed to knowledge base generation in every tier, and a
   assert.deepEqual(POLICY.kbGenerationClosed, [VIC]);
   for (const use of USES) {
     const sources = { ...PUBLISHED.sources, [VIC]: { ...PUBLISHED.sources[VIC], use } };
-    assert.equal(sourcePolicy({ schema: 2, sources, withheld: [] }).kbGeneration(VIC), false, use);
-    assert.throws(() => sourcePolicy({ schema: 2, sources: { ...sources, [VIC]: { ...sources[VIC], kb_generation: 'allowed' } }, withheld: [] }), /source policy/, use);
+    assert.equal(sourcePolicy({ schema: 2, sources }).kbGeneration(VIC), false, use);
+    assert.throws(() => sourcePolicy({ schema: 2, sources: { ...sources, [VIC]: { ...sources[VIC], kb_generation: 'allowed' } } }), /source policy/, use);
   }
   const unflagged = structuredClone(PUBLISHED); delete unflagged.sources[ROBODEBT].kb_generation;
   assert.equal(sourcePolicy(unflagged).kbGeneration(ROBODEBT), false);
@@ -392,16 +392,19 @@ test('a transcript that records an order is never quoted: no text is held for it
   assert.deepEqual(api.transcriptTurns(`Royal Commission, Transcript (1 March 2023), the words appear on transcript page P-1 (PDF page 2). Not quoted: the publisher's transcript records a non-publication order. ${api.TRANSCRIPT_LABEL}.`), []);
 });
 
-test('a legal_order entry withholds the whole transcript: no text, excerpt, page pointer or file link, only the label and the publisher page', async () => {
+test('a legal_order entry withholds the whole transcript: no text, excerpt, page pointer or file link, only the neutral notice and the publisher page', async () => {
   const ix = json('transcripts/index.json'), row = ix.docs.find(d => d.commission === ROBODEBT && d.quote_policy === 'quote'), doc = json(row.file.slice(1));
   const word = Object.keys(doc.terms).find(t => /^[a-z]{8,}$/.test(t) && !ix.common_terms.includes(t));
-  const api = await ask(withTier(ROBODEBT, 'full', [entry({ document: `${ROBODEBT}/${row.key}` }, 'legal_order')]));
+  // The entry arrives the way the Worker receives it, from the private store; a reader is told only that it is not available.
+  const api = await ask(PUBLISHED);
+  api.loadWithheld(JSON.stringify({ schema: 1, withheld: [entry({ document: `${ROBODEBT}/${row.key}` }, 'legal_order')] }));
   const index = await api.textIndex(env);
   assert.equal(await api.pageHits(env, index, row.key, [word]), null);
   assert.ok(!(await api.textMatches(env, index, ROBODEBT, word))?.keys.has(row.key));
   const out = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: row.date, limit: 8 });
   const listed = out.rows.find(r => r.key === row.key);
-  assert.deepEqual(Object.keys(listed).sort(), ['commission', 'commission_id', 'date', 'key', 'label', 'page_url', 'title', 'withheld']);
-  assert.equal(listed.withheld, 'Withheld: subject to a legal order');
+  assert.deepEqual(Object.keys(listed).sort(), ['commission', 'commission_id', 'date', 'key', 'label', 'page_url', 'title', 'unavailable']);
+  assert.equal(listed.unavailable, "Not available on OPAX. Open the publisher's copy.");
+  assert.doesNotMatch(JSON.stringify(listed), /legal|order|withheld/i);
   assert.ok(!JSON.stringify(out).includes(row.pdf_url));
 });

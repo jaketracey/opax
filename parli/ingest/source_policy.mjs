@@ -1,7 +1,9 @@
-// Source policy: how each source's text may be used, and the withheld list. One file
-// (source_policy.json), read here for the Workers and the Node builds and by
-// parli/source_policy.py for Python; the two loaders apply the same rules and are tested
-// against each other. The rules are set out in parli/source_policy.py and docs/TAKEDOWN.md.
+// Source policy: how each source's text may be used (source_policy.json, public), and the withheld list.
+// The withheld list's real contents are never in this repository: an entry, or an id that resolves to a
+// document, can itself disclose that an order exists. The list is handed to loadWithheld() from a private
+// store (a Worker secret, an Actions secret, a private file on the refresh box); withheld.example.json is the
+// empty shape. This loader serves the Workers and the Node builds, parli/source_policy.py serves Python, and
+// the two are tested against each other. The rules are set out there and in docs/TAKEDOWN.md.
 import file from './source_policy.json' with { type: 'json' }
 
 /** The four use tiers, least to most. What each allows is CAPABILITIES, and nowhere else. */
@@ -22,12 +24,10 @@ export const allows = (use, capability) => (CAPABILITIES[use] ?? []).includes(ca
 /** Never sent on a path where the knowledge base generates text, whatever its tier or flags say. */
 export const KB_GENERATION_NEVER = ['vic-major-infrastructure']
 export const REASONS = ['publisher_request', 'legal_order', 'withdrawn', 'amended_pending']
-export const LABELS = {
-  publisher_request: "Withheld at the publisher's request",
-  legal_order: 'Withheld: subject to a legal order',
-  withdrawn: 'Withheld: withdrawn by the publisher',
-  amended_pending: 'Withheld: an amended version is pending',
-}
+/** How a withheld item is shown: one neutral line with the publisher's link, or not at all. */
+export const MODES = ['list_only', 'hide']
+/** The only wording a reader sees for a withheld item, whatever the reason. The reason is never public. */
+export const NOTICE = "Not available on OPAX. Open the publisher's copy."
 const SOURCE_ID = /^[a-z0-9][a-z0-9._-]{0,199}$/
 const DOCUMENT_ID = /^[a-z0-9][a-z0-9._-]{0,199}(?:\/[a-z0-9][a-z0-9._-]{0,199})?$/
 const HOST = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$/
@@ -46,9 +46,9 @@ const strings = (value, out = []) => {
 }
 
 /** A validated policy. Every reader fails closed on a malformed file. */
-export function sourcePolicy(data = file) {
-  if (!plain(data) || keys(data) !== 'schema,sources,withheld' || data.schema !== 2) fail('must hold exactly schema, sources and withheld')
-  if (!plain(data.sources) || !Array.isArray(data.withheld)) fail('sources must be an object and withheld a list')
+export function sourcePolicy(data = file, withheldEntries = []) {
+  if (!plain(data) || keys(data) !== 'schema,sources' || data.schema !== 2) fail('must hold exactly schema and sources')
+  if (!plain(data.sources) || !Array.isArray(withheldEntries)) fail('sources must be an object and withheld a list')
   const records = new Map(), sources = new Map(), documents = new Map()
   for (const [id, record] of Object.entries(data.sources)) {
     if (!DOCUMENT_ID.test(id) || !plain(record) || !USES.includes(record.use)) fail('a source entry is not a source or document id with a known use')
@@ -63,13 +63,15 @@ export function sourcePolicy(data = file) {
     if (record.use === 'quote_and_cite' && !record.hosts && !record.names) fail('a quote_and_cite source needs hosts or names')
     records.set(id, record)
   }
-  for (const entry of data.withheld) {
-    if (!plain(entry) || !['date,reason,source', 'date,document,reason'].includes(keys(entry))) fail('a withheld entry holds exactly source or document, reason and date')
-    if (!REASONS.includes(entry.reason) || !realDate(entry.date)) fail('a withheld entry needs a known reason class and an ISO date')
+  // Messages here never repeat an entry: an error line must not name what is withheld.
+  for (const entry of withheldEntries) {
+    if (!plain(entry) || !['date,reason,source', 'date,document,reason', 'date,mode,reason,source', 'date,document,mode,reason'].includes(keys(entry))) fail('a withheld entry holds exactly source or document, reason, date and an optional mode')
+    if (!REASONS.includes(entry.reason) || !realDate(entry.date) || ('mode' in entry && !MODES.includes(entry.mode))) fail('a withheld entry needs a known reason class, an ISO date and a known mode')
     const kind = 'source' in entry ? 'source' : 'document', id = entry[kind], held = kind === 'source' ? sources : documents
     if (typeof id !== 'string' || !(kind === 'source' ? SOURCE_ID : DOCUMENT_ID).test(id)) fail('a withheld id is not well formed')
     if (held.has(id)) fail('a withheld id is listed twice')
-    held.set(id, { reason: entry.reason, date: entry.date, label: LABELS[entry.reason] })
+    // Only the mode leaves this loader. The reason and date stay in the private store.
+    held.set(id, { mode: entry.mode ?? 'list_only' })
   }
   const sourceOf = document => typeof document === 'string' && document.includes('/') ? document.split('/')[0] : undefined
   const use = (source, document) => (document != null && records.get(document)?.use) || records.get(source)?.use || 'full'
@@ -100,7 +102,7 @@ export function sourcePolicy(data = file) {
   /** Ids of the listed sources that any string in the value names: by id, by one of its hosts or by its name. */
   const sourcesIn = value => { const all = strings(value); return matchers.filter(m => all.some(text => m.test(text))).map(m => m.id) }
   return {
-    use, withheld, can, summaries, kbGeneration, sourcesIn, listed: source => records.has(source),
+    use, withheld, can, summaries, kbGeneration, sourcesIn, listed: source => records.has(source), withheldCount: sources.size + documents.size,
     withheldSources: [...sources.keys()], withheldDocuments: [...documents.keys()],
     /** Listed sources that may never reach a path where the knowledge base generates text. */
     kbGenerationClosed: [...new Set([...listed, ...KB_GENERATION_NEVER, ...sources.keys()])].filter(id => !kbGeneration(id)),
@@ -115,7 +117,37 @@ export function sourcePolicy(data = file) {
   }
 }
 
-export const POLICY = sourcePolicy(file)
+/** The policy in force: the public tiers, and the withheld list once a private store has been loaded. A live
+ * binding, so every importer sees the list loadWithheld() last accepted. */
+export let POLICY = sourcePolicy(file)
+let loaded
+
+/** Read a private store's contents ({ "schema": 1, "withheld": [...] } as text) into the policy in force.
+ * Nothing, or an empty string, is "nothing withheld". Anything else that does not parse and validate throws,
+ * with a message that never repeats the store, and the caller must not serve from the old list. */
+export function loadWithheld(raw) {
+  const text = raw == null ? '' : String(raw).trim()
+  if (text === loaded) return POLICY
+  let entries = []
+  if (text) {
+    let store
+    try { store = JSON.parse(text) } catch { fail('the withheld store is unreadable') }
+    if (!plain(store) || keys(store) !== 'schema,withheld' || store.schema !== 1 || !Array.isArray(store.withheld)) fail('the withheld store is unreadable')
+    entries = store.withheld
+  }
+  POLICY = sourcePolicy(file, entries)
+  loaded = text
+  return POLICY
+}
+
+/** A short digest of a store's entries, the same from this loader and the Python one, so the copies held by
+ * the Workers, the build and the refresh box can be compared without showing an entry. */
+export async function withheldDigest(raw) {
+  const text = raw == null ? '' : String(raw).trim(), entries = text ? JSON.parse(text).withheld : []
+  const canonical = entries.map(e => JSON.stringify(Object.fromEntries(Object.entries({ mode: 'list_only', ...e }).sort(([a], [b]) => a < b ? -1 : 1)))).sort()
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('[' + canonical.join(',') + ']'))
+  return [...new Uint8Array(hash)].slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('')
+}
 
 /** { sources, documents } of a knowledge base resource: its source label, origin source id and slug. */
 export function kbIds(resource) {
@@ -125,45 +157,46 @@ export function kbIds(resource) {
   return { sources, documents: resource?.slug ? [String(resource.slug)] : [] }
 }
 
-/** Why a knowledge base resource's text may not be read, quoted, summarised or labelled: its withheld
- * entry, or { label } when its tier keeps it out of the knowledge base; null when it may. */
+/** Why a knowledge base resource's text may not be read, quoted, summarised or labelled: { mode } when it
+ * is withheld (hide: it is not shown at all) or its tier keeps it out of the knowledge base; null when it may. */
 export function kbRefusal(resource, policy = POLICY) {
   const ids = kbIds(resource)
-  return policy.withheld(ids) ?? (policy.can('kb', ids) ? null : { label: 'Listed only: the source policy does not allow this text to be used' })
+  return policy.withheld(ids) ?? (policy.can('kb', ids) ? null : { mode: 'list_only' })
 }
 
-/** What a withheld document shows: title, date, its label and the publisher's page. */
-export function listingRow(commission, doc, entry) {
+/** What a withheld document shows in list_only mode: title, date, the neutral notice and the publisher's page. */
+export function listingRow(commission, doc) {
   // The publisher's own page for the document; never the file itself where a page or the site is known.
   const files = new Set((doc.files ?? []).map(f => f.url))
   const page = [doc.page_url, commission.site].find(u => u && !files.has(u)) ?? doc.page_url ?? null
   return { key: doc.key, kind: doc.kind, title: doc.title, date: doc.date ?? null, date_basis: doc.date_basis ?? null, page_url: page, files: [],
-    cite: { url: page, document: doc.title }, acquisition: doc.acquisition ?? null, withheld: entry }
+    cite: { url: page, document: doc.title }, acquisition: doc.acquisition ?? null, unavailable: NOTICE }
 }
 
 const without = (row, drop) => Object.fromEntries(Object.entries(row).filter(([k]) => !drop.includes(k)))
 
-/** One commission's public record with the policy applied (same rules as redact_commission in
- * parli/source_policy.py). Withheld documents become listing rows; a document whose tier allows no quotation
- * carries no quotation or text pointer; recommendations and court context drawn from either go, and so does a
- * fact read from a withheld document. */
+/** One commission's public record with the policy applied, or null when the whole commission is hidden. A
+ * withheld document becomes a neutral listing row, or is left out in hide mode; a document whose tier allows
+ * no quotation carries no quotation or text pointer; recommendations and court context drawn from either go,
+ * and so does a fact read from a withheld document. Nothing in the result says why. */
 export function redactCommission(c, policy = POLICY) {
   const cid = c.id, out = { ...c }, sourceEntry = policy.withheld({ sources: [cid] })
+  if (sourceEntry?.mode === 'hide') return null
   const quotable = key => allows(policy.use(cid, `${cid}/${key}`), 'quote')
   const withheldKeys = new Set(), withheldUrls = new Set(), heldUrls = new Set()
   for (const group of ['reports', 'responses', 'transcripts']) {
-    out[group] = (c[group] ?? []).map(d => {
+    out[group] = (c[group] ?? []).flatMap(d => {
       const entry = policy.withheld({ sources: [cid], documents: [`${cid}/${d.key}`] })
       if (entry) {
         withheldKeys.add(d.key)
         for (const f of d.files ?? []) withheldUrls.add(f.url)
-        return listingRow(c, d, entry)
+        return entry.mode === 'hide' ? [] : [listingRow(c, d)]
       }
       if (!quotable(d.key)) {
         for (const f of d.files ?? []) heldUrls.add(f.url)
-        return without(d, TEXT_KEYS)
+        return [without(d, TEXT_KEYS)]
       }
-      return d
+      return [d]
     })
   }
   out.recommendations = (c.recommendations ?? []).filter(r => !withheldKeys.has(r.report) && quotable(r.report))
@@ -173,7 +206,6 @@ export function redactCommission(c, policy = POLICY) {
   const fact = f => !f || withheldUrls.has(f.cite?.url) || (sourceEntry && 'quote' in f) ? null : heldUrls.has(f.cite?.url) ? without(f, ['quote']) : f
   out.established = fact(c.established ?? null)
   out.commissioners = (c.commissioners ?? []).map(fact).filter(Boolean)
-  if (policy.listed(cid)) out.use = policy.use(cid)
-  if (sourceEntry) { out.notes = []; out.withheld = sourceEntry }
+  if (sourceEntry) { out.notes = []; out.unavailable = NOTICE }
   return out
 }

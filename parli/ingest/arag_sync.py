@@ -454,11 +454,12 @@ def _push_pool(kb, bodies, tstate, guard=None, deadline=None):
                 tstate['failed'].pop(slug, None)
 
 
-def purge_withheld(kb, policy=None) -> dict:
+def purge_withheld(kb, policy=None, dry_run=False) -> dict:
     """Delete every withheld document and every resource of a withheld source from the knowledge base.
 
     Documents are deleted by slug; a source's resources are found by its ``source`` label or origin
-    source id, listed in full, then deleted. Safe to re-run: an absent resource counts as done."""
+    source id, listed in full, then deleted. Safe to re-run: an absent resource counts as done. A dry
+    run deletes nothing and returns the slugs it would delete, for the operator's own terminal only."""
     policy = policy or source_policy.load()
     slugs = {d for d in policy.withheld_documents if "/" not in d}
     for source in policy.withheld_sources:
@@ -475,6 +476,8 @@ def purge_withheld(kb, policy=None) -> dict:
             if not (res.get("fulltext") or {}).get("next_page"):
                 break
             page += 1
+    if dry_run:
+        return {"would_delete": sorted(slugs)}
     deleted = absent = 0
     for slug in sorted(slugs):
         try:
@@ -488,13 +491,13 @@ def purge_withheld(kb, policy=None) -> dict:
 
 
 def _push_batch(kb, bodies, tstate, publication=None, policy=None):
-    # A withheld or non-quotable source or document is never pushed and never queued for retry.
+    # A withheld resource, or one whose tier keeps it out of the knowledge base, is never pushed and never queued
+    # for retry. Nothing is printed: a log line must not mark an item as withheld.
     policy = policy or source_policy.load()
     refused = [b for b in bodies if policy.kb_refusal(b)]
     if refused:
         for body in refused:
             tstate['failed'].pop(body['slug'], None)
-        print(f'  WITHHELD {len(refused)} resources not pushed (source policy)', file=sys.stderr)
         bodies = [b for b in bodies if not policy.kb_refusal(b)]
     publication = publication or BackfillPublication(kb)
     def cohort(body):
@@ -987,7 +990,8 @@ def main() -> None:
     parser.add_argument("--repair-batch-size", type=int, default=100)
     parser.add_argument("--repair-state", default=str(SPEECH_REPAIR_STATE_PATH))
     parser.add_argument("--purge-withheld", action="store_true",
-                        help="delete withheld sources and documents from the knowledge base, then exit")
+                        help="delete withheld sources and documents from the knowledge base, then exit; "
+                             "with --dry-run, list what would be deleted and delete nothing")
     args = parser.parse_args()
 
     if args.repair_limit < 1 or args.repair_limit > MAX_SPEECH_REPAIRS_PER_RUN:
@@ -1004,12 +1008,17 @@ def main() -> None:
 
     # The takedown list is honoured before anything is read or pushed: what it names is deleted if present.
     # --purge-withheld needs only the knowledge base credentials, not the corpus database.
+    # A normal run purges without output. --purge-withheld is the operator's own command: it prints what it did
+    # (with --dry-run, the slugs it would delete) to the operator's terminal and exits.
     policy = source_policy.load()
+    if args.purge_withheld:
+        if not cfg.kb_configured:
+            sys.exit("ARAG_KB_ID / ARAG_KB_TOKEN not set")
+        print(json.dumps(purge_withheld(KbClient(cfg), policy, dry_run=args.dry_run)))
+        return
     kb = None if args.dry_run else KbClient(cfg)
     if kb is not None and (policy.withheld_sources or policy.withheld_documents):
-        print(f"[withheld] {json.dumps(purge_withheld(kb, policy))}")
-    if args.purge_withheld:
-        return
+        purge_withheld(kb, policy)
 
     limit = 10**12 if args.full else args.limit
     if not args.full and args.limit > SAFETY_LIMIT:

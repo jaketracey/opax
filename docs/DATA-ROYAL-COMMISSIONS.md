@@ -206,6 +206,19 @@ transcript listing rows is given in the tool's own lines rather than rewritten.
 * The Antisemitism interim report's recommendations 8 to 12 say they are contained in
   the confidential interim report; their text is loaded exactly as published.
 
+## Use tiers and takedown
+
+`parli/ingest/source_policy.json` records a use tier for each listed commission
+(`documents_only`, `search_only`, `quote_and_cite`, `full`) and whether machine summaries and
+knowledge base generation are allowed. A test keeps it in agreement with each commission's `use`
+in the registry. The withheld list is separate and private. [TAKEDOWN.md](TAKEDOWN.md) sets out
+both, every consumer that honours them and the steps a maintainer takes.
+
+In Ask, every claim taken from a hearing transcript is attributed to who said it and where: each
+transcript fact reaches the writer with a typed attribution (speaker, hearing day or date,
+transcript page, evidence not finding), and the writer's contract carries the attribution rule
+(`TRANSCRIPT_ATTRIBUTION_RULE` in `portal/src/research-writing.ts`).
+
 ## Loader and export
 
 * `parli/ingest/royal_commissions.py fetch|build|refresh`, with the registry

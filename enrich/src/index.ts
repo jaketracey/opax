@@ -13,7 +13,7 @@
 
 import { readConfig, type Env } from './env.ts'
 import { Kb } from './kb.ts'
-import { policyKb } from './policy.ts'
+import { policyKb, withheldReady, withheldDigest } from './policy.ts'
 import { parseCanaryBody, runCanary } from './canary.ts'
 import { buildStatus, bearerOk } from './status.ts'
 import { runTick } from './tick.ts'
@@ -25,6 +25,9 @@ const json = (body: unknown, status = 200): Response =>
 
 export default {
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    // The withheld list comes from this Worker's own secret. If it is set and cannot be read, nothing is
+    // summarised or labelled this tick: the Worker never works from an older or empty list.
+    if (!withheldReady(env.OPAX_WITHHELD_JSON)) { console.log(JSON.stringify({ evt: 'tick-skipped', error: 'source policy unavailable' })); return }
     ctx.waitUntil(
       runTick({
         db: env.DB,
@@ -44,11 +47,14 @@ export default {
     const url = new URL(request.url)
     const route = `${request.method} ${url.pathname}`
     const batchRoute = ['GET /backfill/batch', 'GET /backfill/batch/reservations', 'POST /backfill/batch/reserve', 'POST /backfill/batch/result', 'POST /backfill/batch/cancel'].includes(route)
-    if (!batchRoute && route !== 'GET /status' && route !== 'POST /canary' && route !== 'POST /backfill/reconcile' && route !== 'POST /backfill/release') return new Response('Not found', { status: 404 })
+    if (!batchRoute && route !== 'GET /status' && route !== 'GET /withheld-digest' && route !== 'POST /canary' && route !== 'POST /backfill/reconcile' && route !== 'POST /backfill/release') return new Response('Not found', { status: 404 })
     if (!bearerOk(request.headers.get('authorization'), env.ENRICH_ADMIN_TOKEN)) {
       return new Response('Unauthorized', { status: 401, headers: { 'www-authenticate': 'Bearer' } })
     }
     if (route === 'GET /status') return json(await buildStatus(env.DB, readConfig(env), Date.now()))
+    if (!withheldReady(env.OPAX_WITHHELD_JSON)) return json({ error: 'source policy unavailable' }, 503)
+    // For the operator only, to compare this Worker's list with the others (docs/TAKEDOWN.md). Never part of /status.
+    if (route === 'GET /withheld-digest') return json({ digest: await withheldDigest(env.OPAX_WITHHELD_JSON) })
 
     if (batchRoute) {
       const d = { db: env.DB, kb: policyKb(new Kb(env)), now: () => Date.now(), live: readConfig(env).live }

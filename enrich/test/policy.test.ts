@@ -1,18 +1,20 @@
-// The source policy in the enrichment Worker: a withheld or non-quotable resource is never queued, never sent to
-// a model and never written to. Each test adds an entry to a policy and asserts nothing gets through.
+// The source policy in the enrichment Worker: a withheld resource, or one its tier or record closes, is never
+// queued, never sent to a model and never written to. The withheld list is private: it reaches this Worker in
+// its OPAX_WITHHELD_JSON secret, and nothing the Worker logs or stores names an entry.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { discover } from '../src/discover.ts'
 import { enqueue } from '../src/db.ts'
 import type { CatalogPage } from '../src/kb.ts'
-import { POLICY, SourceWithheld, closedResource, policyKb } from '../src/policy.ts'
+import { POLICY, SourceWithheld, closedResource, policyKb, withheldReady } from '../src/policy.ts'
+import worker from '../src/index.ts'
 import { runTick } from '../src/tick.ts'
 import { sourcePolicy } from '../../parli/ingest/source_policy.mjs'
 import { FakeAi, FakeKb, GOOD_SUMMARY, makeD1, makeDeps, rows, speechText } from './helpers.ts'
 
 const START = Date.parse('2026-10-13T00:00:00Z'), HOUR = 3600_000
 const entry = (id: Record<string, string>, reason = 'publisher_request') => ({ ...id, reason, date: '2026-11-16' })
-const policy = (withheld: unknown[] = [], sources: Record<string, Record<string, unknown>> = {}) => sourcePolicy({ schema: 2, sources, withheld })
+const policy = (withheld: unknown[] = [], sources: Record<string, Record<string, unknown>> = {}) => sourcePolicy({ schema: 2, sources }, withheld)
 const both = JSON.stringify({ summary: GOOD_SUMMARY, topics: ['housing'] })
 /** The real client's catalog rows carry the slug; the shared fake's do not. */
 class SlugKb extends FakeKb {
@@ -32,6 +34,7 @@ function box() {
 const CLOSED = {
   'a withheld source': policy([entry({ source: 'vic_hansard' }, 'legal_order')]),
   'a withheld document': policy([entry({ document: 'speech-held' })]),
+  'a hidden document': policy([{ ...entry({ document: 'speech-held' }, 'legal_order'), mode: 'hide' }]),
   'a search-only source': policy([], { vic_hansard: { use: 'search_only' } }),
   'a documents-only source': policy([], { vic_hansard: { use: 'documents_only' } }),
   'a quote-and-cite source': policy([], { vic_hansard: { use: 'quote_and_cite', names: ['A Name For This Source'] } }),
@@ -46,6 +49,28 @@ test('a full source whose record says summaries: allowed is summarised and label
   assert.ok(await guarded.getResource('held'))
   await guarded.patchSummary('held', 'A brief.')
   assert.deepEqual(kb.writes(), ['PATCH summary held'])
+})
+
+test('the list arrives in the Worker secret; an unreadable one stops the tick and names nothing', async () => {
+  const secret = JSON.stringify({ schema: 1, withheld: [entry({ document: 'speech-held' }, 'legal_order')] })
+  assert.equal(withheldReady(secret), true)
+  assert.equal(closedResource({ slug: 'speech-held', usermetadata: { classifications: [] } }), true, 'in force for every importer')
+  assert.equal(withheldReady(undefined), true)
+  assert.equal(closedResource({ slug: 'speech-held', usermetadata: { classifications: [] } }), false, 'no secret is nothing withheld')
+  const lines: string[] = [], saved = console.log
+  console.log = (...args: unknown[]) => { lines.push(args.map(String).join(' ')) }
+  try {
+    let scheduled = 0
+    const env = { OPAX_WITHHELD_JSON: '{"schema":1,"withheld":[{"document":"speech-held","reason":"legal_order","date":"soon"}]}', ENRICH_ADMIN_TOKEN: 'fixture-admin-token-0001' } as never
+    await worker.scheduled({} as never, env, { waitUntil: () => { scheduled++ } } as never)
+    assert.equal(scheduled, 0, 'no tick runs from an unread list')
+    const res = await worker.fetch(new Request('https://enrich.test/backfill/batch', { headers: { authorization: 'Bearer fixture-admin-token-0001' } }), env)
+    assert.equal(res.status, 503)
+    const said = lines.join('\n') + await res.text()
+    assert.match(said, /source policy unavailable/)
+    for (const secretWord of ['speech-held', 'legal_order', 'soon']) assert.ok(!said.includes(secretWord), secretWord)
+  } finally { console.log = saved; withheldReady(undefined) }
+  assert.equal(new SourceWithheld('0123456789abcdef').message, 'source policy: nothing is written to this resource')
 })
 
 test('the published policy withholds nothing', () => {

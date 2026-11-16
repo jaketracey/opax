@@ -2,10 +2,16 @@
 // parli/ingest/source_policy.mjs). A resource that is withheld, or whose source is not quotable, is never
 // summarised or labelled: discovery does not queue it, and every read through policyKb sees it as absent, so
 // no caller can put its text in a prompt or write a brief or topic back to it.
-import { POLICY, kbIds, kbRefusal, type SourcePolicy } from '../../parli/ingest/source_policy.mjs'
+import { POLICY, kbIds, kbRefusal, loadWithheld, withheldDigest, type SourcePolicy } from '../../parli/ingest/source_policy.mjs'
 import type { KbApi, KbResource } from './kb.ts'
 
-export { POLICY }
+export { POLICY, withheldDigest }
+
+/** Load this Worker's private withheld list (the OPAX_WITHHELD_JSON secret; never in the repository). False
+ * when the secret is set and cannot be read. No secret is "nothing withheld". Nothing about the list is logged. */
+export function withheldReady(raw: string | undefined): boolean {
+  try { loadWithheld(raw); return true } catch { return false }
+}
 export type { SourcePolicy }
 
 /** True when this resource may not be summarised or labelled: it is withheld, its tier keeps it out of the
@@ -14,8 +20,9 @@ export const closedResource = (resource: Pick<KbResource, 'slug' | 'usermetadata
   !!resource && (kbRefusal(resource, policy) !== null || !policy.summaries(kbIds(resource)))
 
 export class SourceWithheld extends Error {
-  constructor(rid: string) {
-    super(`source policy: ${rid.slice(0, 8)} is withheld or not quotable; nothing is written to it`)
+  // The message names nothing: an error line must not mark a resource as withheld.
+  constructor(_rid?: string) {
+    super('source policy: nothing is written to this resource')
     this.name = 'SourceWithheld'
   }
 }

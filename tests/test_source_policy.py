@@ -1,113 +1,202 @@
-"""The source policy: one file, honoured by every Python consumer.
+"""The source policy for Python: the public tiers, and the withheld list from this machine's private store.
 
-Each consumer is given a policy with an entry added and must let nothing through. The published file itself
-holds no withheld entry.
+The withheld list's real contents are never in the repository. Every test here supplies a fake entry through
+the private path (the environment variable or a mode 600 file), the way the refresh box does, and asserts that
+nothing gets through and that no output, log line or error names the entry.
 """
 from __future__ import annotations
 
-import hashlib
 import json
+import os
 from pathlib import Path
 
 import pytest
 
 from parli import arag, source_policy as sp
 from parli.ingest import arag_sync, royal_commissions as rc
-from scripts import build_transcript_fulltext as ft, export_royal_commissions as export
-from tests.test_royal_commissions import make_pdf
+from scripts import build_transcript_fulltext as ft
 
 ROOT = Path(__file__).resolve().parents[1]
-PUBLIC = ROOT / "portal" / "public"
 VIC = "vic-major-infrastructure"
+# A made-up item. Nothing a test prints, raises or logs may contain any of these.
+FAKE = {"document": "speech-424242", "source": "fake-withheld-source", "reason": "legal_order", "date": "2026-11-16"}
+SECRETS = (FAKE["document"], FAKE["source"], "424242", "legal_order", "2026-11-16", "Withheld", "withheld at", "legal order")
 
 
 def policy(use=None, withheld=()):
     """use: source or document id -> a tier name, or a whole record."""
     sources = {k: (v if isinstance(v, dict) else {"use": v, **({"names": ["A Name For This Source"]} if v == "quote_and_cite" else {})}) for k, v in (use or {}).items()}
-    return sp.Policy({"schema": 2, "sources": sources, "withheld": list(withheld)})
+    return sp.Policy({"schema": 2, "sources": sources}, list(withheld))
 
 
-def entry(reason="publisher_request", **ident):
-    return {**ident, "reason": reason, "date": "2026-11-16"}
+def entry(reason="publisher_request", mode=None, **ident):
+    return {**ident, "reason": reason, "date": "2026-11-16", **({"mode": mode} if mode else {})}
 
 
-# ---- the file and its loader
+def store(*entries):
+    return json.dumps({"schema": 1, "withheld": list(entries)})
 
-def test_published_policy_holds_no_withheld_entry_and_lists_the_commission_as_documents_only():
+
+@pytest.fixture(autouse=True)
+def no_private_store(monkeypatch, tmp_path):
+    """Tests never read the developer's own private store."""
+    monkeypatch.delenv("OPAX_WITHHELD_JSON", raising=False)
+    monkeypatch.setenv("OPAX_WITHHELD_FILE", str(tmp_path / "absent.json"))
+
+
+def quiet(capsys, caplog):
+    out = capsys.readouterr()
+    text = out.out + out.err + caplog.text
+    for secret in SECRETS:
+        assert secret not in text, secret
+    return text
+
+
+# ---- the public file, the tiers and the empty example
+
+def test_the_repository_holds_the_tiers_and_an_empty_example_and_no_withheld_entry():
     data = json.loads(sp.PATH.read_text())
-    assert data["withheld"] == []
+    assert set(data) == {"schema", "sources"}, "the public policy has no withheld list at all"
+    assert json.loads((sp.PATH.parent / "withheld.example.json").read_text()) == {"schema": 1, "withheld": []}
     p = sp.load()
-    assert p.use(VIC) == "documents_only" and p.listed(VIC)
-    assert not p.can("index", documents=[f"{VIC}/transcript-2026-11-09"]) and not p.can("quote", sources=[VIC])
-    assert not p.summaries(sources=[VIC]) and not p.kb_generation(VIC)
+    assert p.withheld_sources == {} and p.withheld_documents == {}
+    assert p.use(VIC) == "documents_only" and not p.can("index", sources=[VIC]) and not p.summaries(sources=[VIC]) and not p.kb_generation(VIC)
     assert {k for k, v in data["sources"].items() if v["use"] == "full"} == set(ft.COMMISSIONS)
-    assert set(data["sources"][VIC]) == {"use", "hosts", "names"}
+    # No tracked file other than the example and the loaders' own documentation is a withheld store.
+    tracked = [p for p in ROOT.glob("**/withheld*.json") if ".venv" not in p.parts and "node_modules" not in p.parts]
+    assert [p.name for p in tracked] == ["withheld.example.json"]
+
+
+def test_the_registry_and_the_policy_agree_on_each_commissions_tier():
+    p = sp.load(private=False)
+    for c in rc.registry()["commissions"]:
+        if c.get("use"):
+            assert p.listed(c["id"]) and p.use(c["id"]) == c["use"], c["id"]
+        elif p.listed(c["id"]):
+            assert sp.allows(p.use(c["id"]), "quote"), c["id"]
 
 
 def test_one_table_defines_the_four_tiers():
     assert sp.USES == ("documents_only", "search_only", "quote_and_cite", "full")
     assert sp.CAPABILITIES == {"documents_only": [], "search_only": ["index"], "quote_and_cite": ["index", "quote"],
                                "full": ["index", "quote", "narrative", "kb"]}
-    tiers = {"a": "documents_only", "b": "search_only", "c": "quote_and_cite", "d": "full"}
-    p = policy(use=tiers)
-    # indexed; quoted; written about by a model; pushed to the knowledge base
+    p = policy(use={"a": "documents_only", "b": "search_only", "c": "quote_and_cite", "d": "full"})
     assert [[p.can(cap, sources=[s]) for cap in ("index", "quote", "narrative", "kb")] for s in "abcd"] == [
         [False, False, False, False], [True, False, False, False], [True, True, False, False], [True, True, True, True]]
-    # Summaries and knowledge base generation are off for every listed source until its record allows them.
     assert [p.summaries(sources=[s]) for s in "abcd"] == [False] * 4 and [p.kb_generation(s) for s in "abcd"] == [False] * 4
     allowed = policy(use={"d": {"use": "full", "summaries": "allowed", "kb_generation": "allowed"}})
     assert allowed.summaries(sources=["d"]) and allowed.kb_generation("d")
-    # A source with no record is governed by its own pipeline, as before.
     assert p.can("kb", sources=["openaustralia"]) and p.summaries(sources=["openaustralia"]) and p.kb_generation("openaustralia")
-    # The commission can never reach knowledge base generation, and a withheld source cannot either.
     assert sp.KB_GENERATION_NEVER == (VIC,) and not policy().kb_generation(VIC)
     assert not policy(use={"d": {"use": "full", "kb_generation": "allowed"}}, withheld=[entry(source="d")]).kb_generation("d")
+    q = policy(use={"a-source": "documents_only", "a-source/final": "full"})
+    assert q.can("quote", documents=["a-source/final"]) and not q.can("quote", documents=["a-source/day-1"])
 
 
 @pytest.mark.parametrize("bad", [
-    {"schema": 2, "sources": {}},  # no withheld list
-    {"schema": 2, "sources": {}, "withheld": [], "notes": "free text"},
-    {"schema": 2, "sources": {"a-source": {"use": "summarise"}}, "withheld": []},
-    {"schema": 2, "sources": {"a-source": "full"}, "withheld": []},  # a record, not a bare tier
-    {"schema": 1, "use": {"a-source": "quotable"}, "withheld": []},  # the first schema
-    {"schema": 2, "sources": {"a-source": {"use": "full", "note": "free text"}}, "withheld": []},
-    {"schema": 2, "sources": {"a-source": {"use": "full", "summaries": "yes"}}, "withheld": []},
-    {"schema": 2, "sources": {"a-source": {"use": "quote_and_cite", "names": ["A Name For This Source"], "summaries": "allowed"}}, "withheld": []},
-    {"schema": 2, "sources": {"a-source": {"use": "search_only", "kb_generation": "allowed"}}, "withheld": []},
-    {"schema": 2, "sources": {"vic-major-infrastructure": {"use": "full", "kb_generation": "allowed"}}, "withheld": []},
-    {"schema": 2, "sources": {"a-source": {"use": "quote_and_cite"}}, "withheld": []},  # nothing to recognise its facts by
-    {"schema": 2, "sources": {"a-source": {"use": "full", "hosts": ["https://example.org/path"]}}, "withheld": []},
-    {"schema": 2, "sources": {"a-source/doc": {"use": "full", "summaries": "allowed"}}, "withheld": []},
-    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "publisher_request", "date": "2026-11-16", "note": "why"}]},
-    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "because", "date": "2026-11-16"}]},
-    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "legal_order", "date": "16 November 2026"}]},
-    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "legal_order", "date": "2026-02-30"}]},
-    {"schema": 2, "sources": {}, "withheld": [{"source": "A source with words", "reason": "legal_order", "date": "2026-11-16"}]},
-    {"schema": 2, "sources": {}, "withheld": [{"source": "a", "document": "b", "reason": "legal_order", "date": "2026-11-16"}]},
-    {"schema": 2, "sources": {}, "withheld": [entry(source="a-source"), entry(source="a-source")]},
+    {"schema": 2}, {"schema": 2, "sources": {}, "withheld": []}, {"schema": 2, "sources": {}, "notes": "free text"},
+    {"schema": 2, "sources": {"a-source": {"use": "summarise"}}}, {"schema": 2, "sources": {"a-source": "full"}},
+    {"schema": 1, "use": {"a-source": "quotable"}}, {"schema": 2, "sources": {"a-source": {"use": "full", "note": "free text"}}},
+    {"schema": 2, "sources": {"a-source": {"use": "full", "summaries": "yes"}}},
+    {"schema": 2, "sources": {"a-source": {"use": "quote_and_cite", "names": ["A Name For This Source"], "summaries": "allowed"}}},
+    {"schema": 2, "sources": {"a-source": {"use": "search_only", "kb_generation": "allowed"}}},
+    {"schema": 2, "sources": {VIC: {"use": "full", "kb_generation": "allowed"}}},
+    {"schema": 2, "sources": {"a-source": {"use": "quote_and_cite"}}},
+    {"schema": 2, "sources": {"a-source": {"use": "full", "hosts": ["https://example.org/path"]}}},
+    {"schema": 2, "sources": {"a-source/doc": {"use": "full", "summaries": "allowed"}}},
 ])
-def test_a_malformed_policy_is_refused(bad):
+def test_a_malformed_public_policy_is_refused(bad):
     with pytest.raises(sp.PolicyError):
         sp.Policy(bad)
 
 
-def test_an_entry_is_only_an_id_a_reason_class_and_a_date_and_carries_its_label():
-    p = policy(withheld=[entry("legal_order", source="a-source"), entry(document="speech-12")])
-    assert p.withheld(sources=["a-source"]) == {"reason": "legal_order", "date": "2026-11-16", "label": "Withheld: subject to a legal order"}
-    assert p.withheld(documents=["speech-12"])["label"] == "Withheld at the publisher's request"
-    assert p.withheld(documents=["a-source/any-key"])["reason"] == "legal_order"  # a source covers its documents
+BAD_ENTRIES = [
+    [{"source": "a-source", "reason": "publisher_request", "date": "2026-11-16", "note": "why"}],
+    [{"source": "a-source", "reason": "because", "date": "2026-11-16"}],
+    [{"source": "a-source", "reason": "legal_order", "date": "16 November 2026"}],
+    [{"source": "a-source", "reason": "legal_order", "date": "2026-02-30"}],
+    [{"source": "A source with words", "reason": "legal_order", "date": "2026-11-16"}],
+    [{"source": "a", "document": "b", "reason": "legal_order", "date": "2026-11-16"}],
+    [{"document": "speech-1", "reason": "legal_order", "date": "2026-11-16", "mode": "redact"}],
+    [entry(source="a-source"), entry(source="a-source")],
+]
+
+
+@pytest.mark.parametrize("entries", BAD_ENTRIES)
+def test_a_malformed_entry_is_refused_without_repeating_it(entries):
+    with pytest.raises(sp.PolicyError) as error:
+        policy(withheld=entries)
+    for e in entries:
+        for value in e.values():
+            assert len(str(value)) < 4 or str(value) not in str(error.value)
+
+
+def test_only_the_mode_of_an_entry_ever_leaves_the_loader():
+    p = policy(withheld=[entry("legal_order", source="a-source"), entry(document="speech-12", mode="hide")])
+    assert p.withheld(sources=["a-source"]) == {"mode": "list_only"}
+    assert p.withheld(documents=["speech-12"]) == {"mode": "hide"}
+    assert p.withheld(documents=["a-source/any-key"]) == {"mode": "list_only"}  # a source covers its documents
     assert p.withheld(sources=["other"], documents=["speech-13"]) is None
-    assert set(sp.LABELS) == set(sp.REASONS)
+    assert sp.MODES == ("list_only", "hide") and sp.NOTICE == "Not available on OPAX. Open the publisher's copy."
+    assert not hasattr(sp, "LABELS"), "there is no public wording per reason class"
 
 
-def test_a_document_use_overrides_its_source():
-    p = policy(use={"a-source": "documents_only", "a-source/final": "full"})
-    assert p.use("a-source", "a-source/final") == "full" and p.use("a-source", "a-source/day-1") == "documents_only"
-    assert p.can("quote", documents=["a-source/final"]) and not p.can("quote", documents=["a-source/day-1"])
-    assert policy(use={"a-source": "search_only"}).can("quote", sources=["a-source"]) is False
+# ---- the private store
+
+def test_no_store_is_nothing_withheld_and_the_environment_or_a_private_file_supplies_one(monkeypatch, tmp_path):
+    assert sp.private_entries() == [] and sp.load().withheld_documents == {}
+    monkeypatch.setenv("OPAX_WITHHELD_JSON", store(FAKE and entry("legal_order", document=FAKE["document"])))
+    assert sp.load().withheld(documents=[FAKE["document"]]) == {"mode": "list_only"}
+    assert sp.load(private=False).withheld(documents=[FAKE["document"]]) is None, "committed outputs are built from the tiers alone"
+    monkeypatch.delenv("OPAX_WITHHELD_JSON")
+    path = tmp_path / "withheld.json"
+    path.write_text(store(entry("legal_order", "hide", source=FAKE["source"])))
+    path.chmod(0o600)
+    monkeypatch.setenv("OPAX_WITHHELD_FILE", str(path))
+    assert sp.load().withheld(sources=[FAKE["source"]]) == {"mode": "hide"}
+    path.write_text("")
+    assert sp.private_entries() == [], "an empty file is nothing withheld"
 
 
-# ---- the knowledge base: refuse to push, delete if present
+@pytest.mark.parametrize("content", ["{not json", '{"schema": 2, "withheld": []}', '{"schema": 1}', '{"schema": 1, "withheld": {}}',
+                                     json.dumps({"schema": 1, "withheld": [{"document": "speech-424242", "reason": "legal_order", "date": "soon"}]})])
+def test_a_store_that_is_there_and_cannot_be_read_stops_the_job_without_repeating_it(content, monkeypatch, tmp_path, capsys, caplog):
+    for supply in ("env", "file"):
+        if supply == "env":
+            monkeypatch.setenv("OPAX_WITHHELD_JSON", content)
+        else:
+            monkeypatch.delenv("OPAX_WITHHELD_JSON")
+            path = tmp_path / "withheld.json"
+            path.write_text(content)
+            path.chmod(0o600)
+            monkeypatch.setenv("OPAX_WITHHELD_FILE", str(path))
+        with pytest.raises(sp.PolicyError) as error:
+            sp.load()
+        assert "424242" not in str(error.value) and "legal_order" not in str(error.value) and content[:12] not in str(error.value)
+        # Every knowledge base client refuses to start, so nothing is pushed from an unread list.
+        kb = arag.KbClient(arag.AragConfig(zone="z", account="a", nua_key="n", kb_id="k", kb_token="t"))
+        with pytest.raises(sp.PolicyError):
+            kb.create_resource(body("speech-1"))
+    quiet(capsys, caplog)
+
+
+def test_a_store_other_users_can_read_is_refused(monkeypatch, tmp_path):
+    path = tmp_path / "withheld.json"
+    path.write_text(store())
+    path.chmod(0o644)
+    monkeypatch.setenv("OPAX_WITHHELD_FILE", str(path))
+    with pytest.raises(sp.PolicyError, match="chmod 600"):
+        sp.load()
+
+
+def test_the_digest_names_nothing_and_changes_with_the_list():
+    empty, one = policy().digest(), policy(withheld=[entry("legal_order", document=FAKE["document"])]).digest()
+    assert empty == "4f53cda18c2baa0c" and one != empty and len(one) == 16
+    assert policy(withheld=[entry("legal_order", document=FAKE["document"], mode="list_only")]).digest() == one, "the default mode is the same entry"
+    assert FAKE["document"] not in one
+
+
+# ---- the knowledge base: never pushed, deleted if present, and never named
 
 class FakeKb:
     def __init__(self, catalog=()):
@@ -126,36 +215,46 @@ class FakeKb:
         self.deleted.append(slug)
 
 
-def body(slug, source="openaustralia", origin="opax-parli"):
+def body(slug, source="openaustralia", origin="opax-parli", kind="speech"):
     return {"slug": slug, "title": "t", "texts": {"body": {"body": "words", "format": "PLAIN"}}, "origin": {"source_id": origin},
-            "usermetadata": {"classifications": [{"labelset": "kind", "label": "speech"}, {"labelset": "source", "label": source}]}}
+            "usermetadata": {"classifications": [{"labelset": "kind", "label": kind}, {"labelset": "source", "label": source}]}}
 
 
-def kb_client(p, monkeypatch):
+def kb_client(monkeypatch, entries=(), use=None):
     sent = []
-    monkeypatch.setattr(arag, "_request", lambda method, url, headers, body=None, **kw: sent.append((method, url)) or {})
+    monkeypatch.setattr(arag, "_request", lambda method, url, headers, body=None, **kw: sent.append((method, url)) or {"uuid": "x"})
     kb = arag.KbClient(arag.AragConfig(zone="z", account="a", nua_key="n", kb_id="k", kb_token="t"))
-    kb._source_policy = p
+    kb._source_policy = policy(use=use, withheld=entries)
     return kb, sent
 
 
-@pytest.mark.parametrize("p, refused", [
-    (policy(withheld=[entry(source="openaustralia")]), body("speech-1")),
-    (policy(withheld=[entry(source="opax-parli")]), body("speech-1")),
-    (policy(withheld=[entry("withdrawn", document="speech-1")]), body("speech-1")),
-    (policy(use={"openaustralia": "search_only"}), body("speech-1")),
-    (policy(use={"openaustralia": "documents_only"}), body("speech-1")),
-    (policy(use={"openaustralia": "quote_and_cite"}), body("speech-1")),  # quoted by the transcript tools, never held in the knowledge base
-])
-def test_the_client_every_push_path_uses_refuses_a_closed_source_or_document(p, refused, monkeypatch):
-    kb, sent = kb_client(p, monkeypatch)
-    with pytest.raises(sp.Withheld):
-        kb.create_resource(refused)
-    with pytest.raises(sp.Withheld):
-        kb.patch_resource_by_slug(refused["slug"], {k: v for k, v in refused.items() if k != "slug"})
+# Any knowledge base resource by its id: a speech, a release, a bill text, a research note.
+@pytest.mark.parametrize("slug, kind", [(FAKE["document"], "speech"), ("press-pmt-424242", "press_release"),
+                                        ("bill-text-au-federal-424242", "bill_text"), ("grant-site-evidence-ga424242", "research_report")])
+def test_a_withheld_resource_of_any_kind_is_skipped_by_every_push_path_without_a_word(slug, kind, monkeypatch, capsys, caplog):
+    kb, sent = kb_client(monkeypatch, [entry("legal_order", document=slug)])
+    # The caller sees an ordinary result: no exception or log line can mark the item as withheld.
+    assert kb.create_resource(body(slug, kind=kind)) == {}
+    assert kb.patch_resource_by_slug(slug, {"texts": {"body": {"body": "new", "format": "PLAIN"}}}) == {}
     assert sent == []
-    kb.create_resource(body("speech-2", source="nsw_hansard", origin="other"))
+    kb.create_resource(body("speech-2"))
     assert [m for m, _ in sent] == ["POST"]
+    quiet(capsys, caplog)
+
+
+def test_a_withheld_source_is_skipped_the_same_way(monkeypatch, capsys, caplog):
+    kb, sent = kb_client(monkeypatch, [entry(source=FAKE["source"], mode="hide")])
+    assert kb.create_resource(body("speech-9", source=FAKE["source"])) == {} and kb.create_resource(body("speech-9", origin=FAKE["source"])) == {}
+    assert sent == []
+    quiet(capsys, caplog)
+
+
+@pytest.mark.parametrize("tier", ["documents_only", "search_only", "quote_and_cite"])
+def test_a_source_below_the_full_tier_is_refused_aloud_because_tiers_are_public(tier, monkeypatch):
+    kb, sent = kb_client(monkeypatch, use={"openaustralia": tier})
+    with pytest.raises(sp.Withheld) as error:
+        kb.create_resource(body("speech-1"))
+    assert "speech-1" not in str(error.value) and sent == []
 
 
 def test_every_push_path_goes_through_the_guarded_client():
@@ -168,24 +267,39 @@ def test_every_push_path_goes_through_the_guarded_client():
     assert offenders == []
 
 
-def test_sync_does_not_push_or_queue_a_closed_resource():
-    p = policy(withheld=[entry(document="speech-1")], use={"committee_x": "search_only"})
-    kb, state = FakeKb(), {"pushed": 0, "failed": {"speech-1": "500: earlier"}}
-    arag_sync._push_batch(kb, [body("speech-1"), body("speech-2"), body("speech-3", source="committee_x")], state, policy=p)
+def test_sync_does_not_push_queue_or_mention_a_withheld_resource(capsys, caplog):
+    p = policy(withheld=[entry("legal_order", document=FAKE["document"])], use={"committee_x": "search_only"})
+    kb, state = FakeKb(), {"pushed": 0, "failed": {FAKE["document"]: "500: earlier"}}
+    arag_sync._push_batch(kb, [body(FAKE["document"]), body("speech-2"), body("speech-3", source="committee_x")], state, policy=p)
     assert kb.pushed == ["speech-2"] and state["failed"] == {} and state["pushed"] == 1
+    quiet(capsys, caplog)
 
 
-def test_purge_deletes_withheld_documents_and_every_resource_of_a_withheld_source():
-    p = policy(withheld=[entry(document="speech-1"), entry(document="speech-gone"), entry(document="a-commission/day-1"), entry("legal_order", source="a-source")])
-    kb = FakeKb(catalog=[{"resources": {"r1": {"slug": "speech-7"}, "r2": {"slug": "speech-8"}}, "fulltext": {"next_page": True}},
-                         {"resources": {"r3": {"slug": "speech-9"}}, "fulltext": {"next_page": False}}])
-    assert arag_sync.purge_withheld(kb, p) == {"deleted": 4, "absent": 1}
-    assert kb.deleted == ["speech-1", "speech-7", "speech-8", "speech-9"]
-    assert kb.asked["filter_expression"]["resource"]["or"] == [{"prop": "label", "labelset": "source", "label": "a-source"}, {"prop": "origin_source", "id": "a-source"}]
+def test_purge_deletes_withheld_documents_and_every_resource_of_a_withheld_source(capsys, caplog):
+    p = policy(withheld=[entry(document=FAKE["document"]), entry(document="speech-gone"), entry(document="a-commission/day-1"),
+                         entry(document="integrity-report-fake-424242"), entry("legal_order", source=FAKE["source"])])
+    pages = lambda: [{"resources": {"r1": {"slug": "speech-7"}, "r2": {"slug": "speech-8"}}, "fulltext": {"next_page": True}},  # noqa: E731
+                     {"resources": {"r3": {"slug": "speech-9"}}, "fulltext": {"next_page": False}}]
+    dry = FakeKb(catalog=pages())
+    # The dry run lists what it would delete, for the operator's own terminal, and deletes nothing.
+    assert arag_sync.purge_withheld(dry, p, dry_run=True) == {"would_delete": ["integrity-report-fake-424242", "speech-424242", "speech-7", "speech-8", "speech-9", "speech-gone"]}
+    assert dry.deleted == []
+    kb = FakeKb(catalog=pages())
+    assert arag_sync.purge_withheld(kb, p) == {"deleted": 5, "absent": 1}
+    assert kb.deleted == ["integrity-report-fake-424242", "speech-424242", "speech-7", "speech-8", "speech-9"]
+    assert kb.asked["filter_expression"]["resource"]["or"] == [{"prop": "label", "labelset": "source", "label": FAKE["source"]}, {"prop": "origin_source", "id": FAKE["source"]}]
     assert arag_sync.purge_withheld(FakeKb(), policy()) == {"deleted": 0, "absent": 0}
+    quiet(capsys, caplog)  # the function itself prints nothing; only the operator's command prints its return value
 
 
-# ---- transcript full text
+def test_the_nightly_sync_purges_silently_and_only_the_operators_command_prints(monkeypatch, capsys):
+    source = (ROOT / "parli" / "ingest" / "arag_sync.py").read_text()
+    assert "print(json.dumps(purge_withheld(KbClient(cfg), policy, dry_run=args.dry_run)))" in source
+    assert "    if kb is not None and (policy.withheld_sources or policy.withheld_documents):\n        purge_withheld(kb, policy)\n" in source
+    assert "WITHHELD" not in source and "[withheld]" not in source
+
+
+# ---- transcript full text: a committed output, built from the tiers alone
 
 REG = {"commissions": [{"id": "cth-robodebt", "name": "R", "documents": [
     {"key": "day-1", "kind": "hearing_transcript"}, {"key": "day-2", "kind": "hearing_transcript"}, {"key": "final", "kind": "final_report"}]},
@@ -196,187 +310,28 @@ def keys(p):
     return [(c["id"], d["key"]) for c, d in ft.transcripts(REG, p)]
 
 
-def test_transcript_text_is_published_only_for_a_listed_full_source_and_never_for_a_withheld_one():
-    quotable = {"cth-robodebt": "full"}
-    assert keys(policy(use=quotable)) == [("cth-robodebt", "day-1"), ("cth-robodebt", "day-2")]
-    assert keys(policy(use=quotable, withheld=[entry(document="cth-robodebt/day-2")])) == [("cth-robodebt", "day-1")]
-    assert keys(policy(use=quotable, withheld=[entry("legal_order", source="cth-robodebt")])) == []
-    for tier in ("documents_only", "search_only", "quote_and_cite"):  # public text files are for CC BY sources at the full tier only
+def test_transcript_text_is_published_only_for_a_listed_full_source():
+    assert keys(policy(use={"cth-robodebt": "full"})) == [("cth-robodebt", "day-1"), ("cth-robodebt", "day-2")]
+    for tier in ("documents_only", "search_only", "quote_and_cite"):
         assert keys(policy(use={"cth-robodebt": tier})) == []
     assert keys(policy()) == []  # not listed: no text
-    assert all(c["id"] != VIC for c, _ in ft.transcripts(json.loads(ft.REGISTRY.read_text()), sp.load()))
+    assert all(c["id"] != VIC for c, _ in ft.transcripts(json.loads(ft.REGISTRY.read_text())))
 
 
-# ---- the public commission record
-
-def commission():
-    pdf, held = "https://publisher.example/final.pdf", "https://publisher.example/day-1.pdf"
-    doc = lambda key, kind, url: {"key": key, "kind": kind, "title": f"Title {key}", "date": "2026-11-09", "date_basis": "stated",  # noqa: E731
-                                  "page_url": "https://publisher.example/hearings", "files": [{"url": url, "pages": 9, "sha256": "a" * 64}],
-                                  "cite": {"url": "https://publisher.example/hearings", "document": f"Title {key}"}, "acquisition": "fetched by OPAXBot",
-                                  "rights": "No notice.", "date_quote": "On Monday", "full_text": {"url": "/transcripts/x.json"}, "hearing": "Block 1"}
-    return {"id": "a-commission", "name": "A Commission", "site": "https://publisher.example/",
-            "established": {"date": "2020-01-01", "quote": "Letters Patent dated 1 January 2020", "cite": {"url": pdf, "document": "Final", "page": 2}},
-            "commissioners": [{"name": "A Person", "role": "Commissioner", "quote": "Commissioner: A Person", "cite": {"url": held, "document": "Day 1", "page": 1}}],
-            "reports": [doc("final", "final_report", pdf)], "responses": [], "transcripts": [doc("day-1", "hearing_transcript", held)],
-            "recommendations": [{"number": "1", "report": "final", "text": "Do the thing.", "cite": {"url": pdf, "document": "Final", "page": 3}}],
-            "court_context": [{"text": "The Court ruled.", "applies_to": "final", "cite": {"url": "https://court.example/", "document": "Page"}}],
-            "notes": ["An OPAX note."], "gaps": []}
+def test_a_committed_build_never_reads_the_private_store(monkeypatch):
+    """The transcript text files are committed. A withheld transcript is taken out at deploy, never here, so the
+    repository's history cannot show one being removed."""
+    monkeypatch.setenv("OPAX_WITHHELD_JSON", store(entry("legal_order", document="cth-robodebt/day-2")))
+    registry = {"commissions": [{**REG["commissions"][0]}]}
+    monkeypatch.setattr(ft.source_policy, "PATH", _policy_file(monkeypatch, {"cth-robodebt": {"use": "full"}}))
+    assert [(c["id"], d["key"]) for c, d in ft.transcripts(registry)] == [("cth-robodebt", "day-1"), ("cth-robodebt", "day-2")]
+    source = (ROOT / "scripts" / "build_transcript_fulltext.py").read_text()
+    assert "source_policy.load(private=False)" in source and "source_policy.load()" not in source
 
 
-LISTING = {"key", "kind", "title", "date", "date_basis", "page_url", "files", "cite", "acquisition", "withheld"}
-
-
-def test_a_withheld_document_is_a_listing_row_with_its_label_and_the_publishers_page_only():
-    out = sp.redact_commission(commission(), policy(withheld=[entry("legal_order", document="a-commission/day-1")]))
-    row = out["transcripts"][0]
-    assert set(row) == LISTING and row["files"] == [] and row["page_url"] == "https://publisher.example/hearings"
-    assert row["withheld"] == {"reason": "legal_order", "date": "2026-11-16", "label": "Withheld: subject to a legal order"}
-    assert out["commissioners"] == []  # the fact was read from the withheld transcript
-    assert "day-1.pdf" not in json.dumps(out)
-    # the report beside it is untouched
-    assert out["reports"][0] == commission()["reports"][0] and len(out["recommendations"]) == 1 and out["established"]["quote"]
-
-
-def test_a_withheld_source_keeps_only_listing_rows():
-    out = sp.redact_commission(commission(), policy(withheld=[entry(source="a-commission")]))
-    assert all(set(d) == LISTING for d in out["reports"] + out["transcripts"])
-    assert out["recommendations"] == [] and out["court_context"] == [] and out["notes"] == []
-    assert out["withheld"]["label"] == "Withheld at the publisher's request"
-    assert out["established"] is None and out["commissioners"] == []
-    text = json.dumps(out)
-    for leaked in ("Do the thing", "The Court ruled", "Letters Patent dated", "Commissioner: A Person", "On Monday", "An OPAX note", ".pdf", "/transcripts/"):
-        assert leaked not in text
-
-
-def test_a_quote_and_cite_source_keeps_its_quotations_and_page_pointers():
-    out = sp.redact_commission(commission(), policy(use={"a-commission": "quote_and_cite"}))
-    assert {**out, "use": None} == {**commission(), "use": None} and out["use"] == "quote_and_cite"
-
-
-@pytest.mark.parametrize("use", ["documents_only", "search_only"])
-def test_a_source_that_is_not_quotable_carries_no_quotation_or_text_pointer(use):
-    out = sp.redact_commission(commission(), policy(use={"a-commission": use}))
-    assert out["use"] == use and out["recommendations"] == []
-    for d in out["reports"] + out["transcripts"]:
-        assert "date_quote" not in d and "full_text" not in d and d["files"]
-    assert "quote" not in out["established"] and "quote" not in out["commissioners"][0]
-    assert sp.redact_commission(commission(), policy()) == commission()  # an unlisted source is unchanged
-
-
-def test_export_holds_a_record_that_carries_text_its_policy_does_not_allow(capsys):
-    p = policy(use={"a-commission": "documents_only"})
-    c = {**sp.redact_commission(commission(), p), "inquiry_type": "royal_commission", "jurisdiction": "Vic"}
-    export.check(c, p)
-    with pytest.raises(SystemExit):
-        export.check({**c, "transcripts": [{**c["transcripts"][0], "date_quote": "On Monday"}]}, p)
-    with pytest.raises(SystemExit):
-        export.check({**c, "commissioners": [{**c["commissioners"][0], "quote": "Commissioner: A Person"}]}, p)
-
-
-# ---- building a documents-only source: facts are checked on the page, and no wording is held
-
-def documents_only_entry(sha, **changes):
-    doc = {"key": "day-1", "kind": "hearing_transcript", "source": "manual", "url": "https://publisher.example.gov.au/day-1.pdf", "sha256": sha,
-           "title": "Public hearing transcript, Monday 2 March 2026", "document_kind": "public hearing transcript",
-           "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026", "rights": "No notice.",
-           "date": "2026-03-02", "date_page": 1}
-    return {"id": "test-sitting", "name": "Royal Commission into Sitting", "inquiry_type": "royal_commission", "jurisdiction": "Vic",
-            "documents": [{**doc, **changes.pop("doc", {})}], "notes": ["OPAX lists the transcripts only."],
-            "facts": [{"field": "commissioner", "value": "The Honourable A Person", "role": "Commissioner", "doc": "day-1", "page": 1}], **changes}
-
-
-@pytest.fixture
-def sitting(tmp_path):
-    data = make_pdf([[("TRANSCRIPT OF PROCEEDINGS", 14), ("Presiding: The Honourable A Person", 10), ("On Monday, 2 March 2026 at 9.30 am", 10)],
-                     [("MR SMITH: Evidence that must not be held.", 10)]])
-    sha = hashlib.sha256(data).hexdigest()
-    (tmp_path / "manual").mkdir()
-    (tmp_path / "manual" / (sha + ".pdf")).write_bytes(data)
-    run = tmp_path / "raw" / "r"
-    run.mkdir(parents=True)
-    return sha, run, rc.Texts(tmp_path)
-
-
-def test_a_documents_only_source_is_built_with_checked_facts_and_no_document_wording(sitting):
-    sha, run, texts = sitting
-    p = policy(use={"test-sitting": "documents_only"})
-    out = rc.build_commission(documents_only_entry(sha), run, texts, {}, p)
-    t = out["transcripts"][0]
-    assert t["date"] == "2026-03-02" and t["date_basis"] == "stated" and t["date_cite"]["page"] == 1 and "date_quote" not in t
-    assert out["commissioners"] == [{"name": "The Honourable A Person", "role": "Commissioner",
-                                     "cite": {"url": "https://publisher.example.gov.au/day-1.pdf", "document": t["title"], "page": 1}}]
-    assert t["files"][0]["pages"] == 2 and t["files"][0]["sha256"] == sha
-    blob = json.dumps(out)
-    assert "Evidence that must not be held" not in blob and "9.30 am" not in blob and "Presiding:" not in blob
-    # ... and the build keeps no extracted text of the document on disk either
-    assert not (texts.cache / "text").exists()
-
-
-@pytest.mark.parametrize("changes", [
-    {"doc": {"date_quote": "On Monday, 2 March 2026 at 9.30 am"}},  # a held date line
-    {"doc": {"date": "2026-03-03"}},  # a date the page does not print
-    {"facts": [{"field": "commissioner", "value": "The Honourable A Person", "doc": "day-1", "page": 1, "quote": "Presiding: The Honourable A Person"}]},
-    {"facts": [{"field": "commissioner", "value": "Someone Else", "doc": "day-1", "page": 1}]},  # a name the page does not print
-    {"notes": ['The commission said "Orders may follow".']},  # a quotation in a note
-])
-def test_a_documents_only_source_holds_on_a_quotation_or_an_unchecked_fact(sitting, changes):
-    sha, run, texts = sitting
-    with pytest.raises(SystemExit):
-        rc.build_commission(documents_only_entry(sha, **changes), run, texts, {}, policy(use={"test-sitting": "documents_only"}))
-
-
-# ---- item 1: the commission's record as published
-
-QUOTE_MARKS = '"“”‘’'
-
-
-def strings(value):
-    if isinstance(value, dict):
-        for v in value.values():
-            yield from strings(v)
-    elif isinstance(value, list):
-        for v in value:
-            yield from strings(v)
-    elif isinstance(value, str):
-        yield value
-
-
-def test_the_registry_holds_no_extract_from_the_commissions_transcripts():
-    reg = next(c for c in rc.registry()["commissions"] if c["id"] == VIC)
-    assert set(reg) == {"id", "name", "inquiry_type", "jurisdiction", "site", "documents", "reference_pages", "facts", "notes", "gaps"}
-    for d in reg["documents"]:
-        assert set(d) == {"key", "kind", "source", "url", "sha256", "title", "document_kind", "acquisition", "rights", "page", "date", "date_page", "hearing"}
-    assert reg["facts"] == [{"field": "commissioner", "value": reg["facts"][0]["value"], "role": "Commissioner", "doc": "transcript-2026-11-09", "page": 1}]
-    for s in strings(reg):
-        assert not any(q in s.replace("commission's", "").replace("publisher's", "") for q in QUOTE_MARKS), s
-
-
-def test_the_published_record_carries_listing_fields_and_opax_worded_notes_only():
-    c = json.loads((PUBLIC / "royal-commissions" / f"commission-{VIC}.json").read_text())["commission"]
-    assert c["use"] == "documents_only" and c["established"] is None
-    assert c["reports"] == [] and c["responses"] == [] and c["recommendations"] == [] and c["court_context"] == []
-    assert [set(x) for x in c["commissioners"]] == [{"name", "role", "cite"}] and c["commissioners"][0]["cite"]["page"] == 1
-    assert len(c["transcripts"]) == 2
-    for t in c["transcripts"]:
-        # title, date, publisher links, page count, hash, rights note; nothing read from the text
-        assert set(t) == {"key", "kind", "title", "date", "date_basis", "page_url", "files", "cite", "acquisition", "document_kind", "rights", "date_cite", "hearing"}
-        assert [set(f) for f in t["files"]] == [{"url", "name", "pages", "bytes", "sha256"}]
-        assert t["date_cite"]["page"] == 1 and set(t["date_cite"]) == {"url", "document", "page"}
-    assert len(c["notes"]) == 3 and all(len(n) < 300 for n in c["notes"])
-    for s in strings(c):
-        assert not any(q in s.replace("commission's", "").replace("publisher's", "") for q in QUOTE_MARKS), s
-    # the same record is what the registry would rebuild
-    reg = next(x for x in rc.registry()["commissions"] if x["id"] == VIC)
-    assert c["notes"] == reg["notes"] and c["commissioners"][0]["name"] == reg["facts"][0]["value"]
-    assert sp.redact_commission(c, sp.load()) == c
-
-
-def test_no_text_of_the_commissions_transcripts_is_published_or_indexed():
-    ix = json.loads((PUBLIC / "transcripts" / "index.json").read_text())
-    assert VIC not in ix["commissions"] and not any(d.get("commission") == VIC for d in ix["docs"])
-    assert not (PUBLIC / "transcripts" / VIC).exists()
-    hashes = {t["files"][0]["sha256"] for t in json.loads((PUBLIC / "royal-commissions" / f"commission-{VIC}.json").read_text())["commission"]["transcripts"]}
-    assert not any(d.get("sha256") in hashes for d in ix["docs"])
-    row = next(r for r in json.loads((PUBLIC / "royal-commissions" / "index.json").read_text())["commissions"] if r["id"] == VIC)
-    assert row["use"] == "documents_only" and row["counts"]["recommendations"] == 0 and row["counts"]["transcripts"] == 2
+def _policy_file(monkeypatch, sources):
+    path = Path(os.environ["OPAX_WITHHELD_FILE"]).parent / "policy.json"
+    path.write_text(json.dumps({"schema": 2, "sources": sources}))
+    real = sp.load
+    monkeypatch.setattr(sp, "load", lambda p=path, private=True: real(p, private))
+    return path

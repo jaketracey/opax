@@ -1,5 +1,5 @@
 // Offline projection of the four published datasets. Never fetches source sites.
-import { POLICY } from '../parli/ingest/source_policy.mjs';
+import { POLICY, NOTICE } from '../parli/ingest/source_policy.mjs';
 import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
@@ -115,12 +115,25 @@ export async function projectReports(read, policy = POLICY) {
         'Coverage is the documents in OPAX\'s intake so far, not every agency in each jurisdiction.',
       ] });
   }
+  // The withheld list, by report slug: a hidden report has no record, index row or search row; otherwise the record
+  // keeps its title, date and publisher link with the one neutral notice, and nothing read from the document.
+  for (let i = out.length - 1; i >= 0; i--) {
+    const { row, detail } = out[i], entry = policy.withheld({ documents: [row.slug] });
+    if (!entry) continue;
+    if (entry.mode === 'hide') { out.splice(i, 1); continue; }
+    out[i] = { ...out[i], aliases: [], row: { kind: 'report', report_type: row.report_type, title: row.title, body: row.body, jurisdiction: row.jurisdiction, date: row.date, year: row.year,
+        href: row.href, slug: row.slug, snippet: NOTICE, citation: row.citation, source_url: row.source_url, source: row.source, resource: '', unavailable: NOTICE },
+      detail: { schema: 1, kind: 'report', report_type: detail.report_type, slug: detail.slug, title: detail.title, body: detail.body, jurisdiction: detail.jurisdiction, date: detail.date,
+        date_basis: detail.date_basis, year: detail.year, snippet: NOTICE, citation: detail.citation, snapshot_at: detail.snapshot_at, caveats: [NOTICE], publisher: detail.publisher,
+        record: {}, facts: [], tables: [], headline: null } };
+  }
   if (new Set(out.map(r => r.row.slug)).size !== out.length) throw new Error('Duplicate report slug');
   const summaries = await readSummaries();
   const bySlug = new Map(out.map(r => [r.row.slug, r.detail]));
   for (const [slug, s] of summaries) {
     const detail = bySlug.get(slug);
-    if (!detail) throw new Error(`Report summary has no record: ${slug}`);
+    // A summary with no record is an error, unless its report is hidden: that is not an error and is not named.
+    if (!detail) { if (policy.withheld({ documents: [slug] }) || policy.withheld({ sources: [slug.replace(/^royal-commission-/, '')] })) continue; throw new Error(`Report summary has no record: ${slug}`); }
     // A summary describes one file. If the record no longer holds that file, the summary is stale and is left off.
     // ... and a listed source carries a machine summary only when its record says summaries: allowed (source policy).
     if (shas(detail.record).has(s.sha256) && (detail.report_type !== 'royal_commission' || policy.summaries({ sources: [detail.record.id] }))) detail.summary = s.summary;

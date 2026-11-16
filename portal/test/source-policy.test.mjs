@@ -1,449 +1,487 @@
-// The source policy (parli/ingest/source_policy.json): the takedown list and the per-source use, honoured by
-// every consumer in the Worker and the Node builds. Each consumer is bundled or called with a policy that has an
-// entry added, and nothing of the closed record may come out. The published file holds no withheld entry.
-// The Python consumers are covered by tests/test_source_policy.py, the enrichment Worker by enrich/test/policy.test.ts.
+// The withheld list. Its real contents are never in the repository: an entry, or an id that resolves to a
+// document, can itself disclose that an order exists. Every test here supplies a FAKE entry through the private
+// path (the store text handed to loadWithheld, or the Worker's OPAX_WITHHELD_JSON secret) and asserts two
+// things for each consumer: nothing of the item gets out, and nothing that comes out (a row, a response, a
+// log line, an error) names the item or says why. The tiers are covered by source-tiers.test.mjs, the Python
+// consumers by tests/test_source_policy.py and the enrichment Worker by enrich/test/policy.test.ts.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { build } from 'esbuild';
 import { importBundle } from './fixtures/import-bundle.mjs';
-import { loadWorker } from './worker-harness.mjs';
+import { loadWorker, offline } from './worker-harness.mjs';
 import { runPython, pythonSkip } from './helpers/python.mjs';
-import { POLICY, LABELS, REASONS, USES, CAPABILITIES, KB_GENERATION_NEVER, sourcePolicy, redactCommission, kbRefusal } from '../../parli/ingest/source_policy.mjs';
-import { guardKbRequest, guardKbResponse, scrubKbPayload, guardToolResult } from '../src/source-policy.ts';
-import { applySourcePolicy } from '../../scripts/apply_source_policy.mjs';
+import { POLICY, NOTICE, MODES, REASONS, sourcePolicy, loadWithheld, withheldDigest, redactCommission, kbRefusal } from '../../parli/ingest/source_policy.mjs';
+import { guardKbRequest, guardKbResponse, scrubKbPayload, guardToolResult, guardSearchRows, hiddenKbRead, withheldReady, dependsOnWithheld, withheldUnavailable } from '../src/source-policy.ts';
+import { applySourcePolicy, slugPart } from '../../scripts/apply_source_policy.mjs';
 import { catalogWithheld } from '../../scripts/build_search_catalog.mjs';
 import { projectReports } from '../../scripts/build_report_catalog.mjs';
 
 const PUBLIC = new URL('../public/', import.meta.url).pathname;
 const json = path => JSON.parse(readFileSync(join(PUBLIC, path), 'utf8'));
-const VIC = 'vic-major-infrastructure', ROBODEBT = 'cth-robodebt';
-const entry = (id, reason = 'publisher_request') => ({ ...id, reason, date: '2026-11-16' });
-/** The published policy with tiers changed: id -> tier name. A source moved off the full tier loses its flags. */
-const policyData = (withheld = [], tiers = {}) => {
-  const sources = structuredClone(json('../../parli/ingest/source_policy.json').sources);
-  for (const [id, use] of Object.entries(tiers)) {
-    const { hosts, names } = sources[id] ?? {};
-    sources[id] = id.includes('/') ? { use } : { use, ...(hosts ? { hosts } : {}), ...(names ? { names } : use === 'quote_and_cite' ? { names: ['A Name For This Source'] } : {}) };
-  }
-  return { schema: 2, sources, withheld };
-};
-const policyOf = (withheld, use) => sourcePolicy(policyData(withheld, use));
-/** Bundles read the policy from one file; a test swaps that file's contents. */
-const withPolicy = data => ({ name: 'source-policy-fixture', setup(b) { b.onLoad({ filter: /source_policy\.json$/ }, () => ({ contents: JSON.stringify(data), loader: 'json' })); } });
-
+const source = path => readFileSync(new URL(path, import.meta.url), 'utf8');
+const TIERS = json('../../parli/ingest/source_policy.json');
+const ROBODEBT = 'cth-robodebt';
+const entry = (id, reason = 'legal_order', mode) => ({ ...id, reason, date: '2026-11-16', ...(mode ? { mode } : {}) });
+const store = (...entries) => JSON.stringify({ schema: 1, withheld: entries });
+const policyOf = (...entries) => sourcePolicy(TIERS, entries);
+/** What may never appear in anything public: why an item is withheld, when, or that a reason exists. */
+const REASON_WORDS = /legal_order|publisher_request|amended_pending|withdrawn|2026-11-16|legal order|\border\b(?! notes)|withheld|suppress/i;
+const silent = (value, label) => assert.doesNotMatch(typeof value === 'string' ? value : JSON.stringify(value), REASON_WORDS, label);
+const absent = (value, ids, label) => { const text = typeof value === 'string' ? value : JSON.stringify(value); for (const id of ids) assert.ok(!text.includes(id), `${label}: ${id}`); };
 const savedFetch = globalThis.fetch;
-test.after(() => { globalThis.fetch = savedFetch; });
+test.after(() => { globalThis.fetch = savedFetch; loadWithheld(''); });
 
-// ---- the file and its two loaders
+// ---- the repository holds the shape and nothing else
 
-test('the published policy withholds nothing and lists the commission as documents only', () => {
-  const file = json('../../parli/ingest/source_policy.json');
-  assert.deepEqual(file.withheld, []);
-  assert.deepEqual([POLICY.withheldSources, POLICY.withheldDocuments], [[], []]);
-  assert.equal(POLICY.use(VIC), 'documents_only');
-  for (const capability of ['index', 'quote', 'narrative', 'kb']) assert.equal(POLICY.can(capability, { documents: [`${VIC}/transcript-2026-11-09`] }), false, capability);
-  assert.equal(POLICY.summaries({ sources: [VIC] }), false);
-  assert.equal(POLICY.kbGeneration(VIC), false);
-  assert.deepEqual(Object.keys(LABELS), REASONS);
-  assert.equal(LABELS.publisher_request, "Withheld at the publisher's request");
-  assert.equal(LABELS.legal_order, 'Withheld: subject to a legal order');
+test('the repository holds the tiers, the loader and an empty example; no entry, and no public wording per reason', () => {
+  assert.deepEqual(Object.keys(TIERS), ['schema', 'sources']);
+  assert.deepEqual(json('../../parli/ingest/withheld.example.json'), { schema: 1, withheld: [] });
+  assert.deepEqual([POLICY.withheldCount, POLICY.withheldSources, POLICY.withheldDocuments], [0, [], []]);
+  assert.deepEqual(MODES, ['list_only', 'hide']);
+  assert.equal(NOTICE, "Not available on OPAX. Open the publisher's copy.");
+  silent(NOTICE, 'the notice');
+  // The loader exports nothing that words a reason, and the reason classes never reach a consumer.
+  assert.doesNotMatch(source('../../parli/ingest/source_policy.mjs'), /Withheld at|subject to a legal order|LABELS/);
+  for (const file of ['../src/source-policy.ts', '../src/tools/royal-commissions.ts', '../src/report-records.ts', '../../enrich/src/policy.ts', '../../scripts/apply_source_policy.mjs', '../../scripts/build_search_catalog.mjs', '../../scripts/build_report_catalog.mjs'])
+    for (const reason of REASONS) assert.ok(!source(file).includes(reason), `${file} names ${reason}`);
 });
 
-const BAD = [
-  { schema: 2, sources: {} },
-  { schema: 2, sources: {}, withheld: [], notes: 'free text' },
-  { schema: 2, sources: { 'a-source': { use: 'summarise' } }, withheld: [] },
-  { schema: 2, sources: { 'a-source': 'full' }, withheld: [] },
-  { schema: 1, use: { 'a-source': 'quotable' }, withheld: [] },
-  { schema: 2, sources: { 'a-source': { use: 'full', note: 'free text' } }, withheld: [] },
-  { schema: 2, sources: { 'a-source': { use: 'full', summaries: 'yes' } }, withheld: [] },
-  { schema: 2, sources: { 'a-source': { use: 'quote_and_cite', names: ['A Name For This Source'], summaries: 'allowed' } }, withheld: [] },
-  { schema: 2, sources: { 'a-source': { use: 'search_only', kb_generation: 'allowed' } }, withheld: [] },
-  { schema: 2, sources: { 'vic-major-infrastructure': { use: 'full', kb_generation: 'allowed' } }, withheld: [] },
-  { schema: 2, sources: { 'a-source': { use: 'quote_and_cite' } }, withheld: [] },
-  { schema: 2, sources: { 'a-source': { use: 'full', hosts: ['https://example.org/path'] } }, withheld: [] },
-  { schema: 2, sources: { 'a-source/doc': { use: 'full', summaries: 'allowed' } }, withheld: [] },
-  { schema: 2, sources: {}, withheld: [{ source: 'a-source', reason: 'publisher_request', date: '2026-11-16', note: 'why' }] },
-  { schema: 2, sources: {}, withheld: [{ source: 'a-source', reason: 'because', date: '2026-11-16' }] },
-  { schema: 2, sources: {}, withheld: [{ source: 'a-source', reason: 'legal_order', date: '2026-02-30' }] },
-  { schema: 2, sources: {}, withheld: [{ source: 'A source with words', reason: 'legal_order', date: '2026-11-16' }] },
-  { schema: 2, sources: {}, withheld: [entry({ source: 'a-source' }), entry({ source: 'a-source' })] },
+const BAD_ENTRIES = [
+  [{ source: 'fake-source', reason: 'publisher_request', date: '2026-11-16', note: 'why it is withheld' }],
+  [{ source: 'fake-source', reason: 'because', date: '2026-11-16' }],
+  [{ source: 'fake-source', reason: 'legal_order', date: '2026-02-30' }],
+  [{ source: 'A source with words', reason: 'legal_order', date: '2026-11-16' }],
+  [{ document: 'speech-424242', reason: 'legal_order', date: '2026-11-16', mode: 'redact' }],
+  [entry({ source: 'fake-source' }), entry({ source: 'fake-source' })],
 ];
-test('a malformed policy is refused: an entry is an id, a reason class and a date, with no free text', () => {
-  for (const bad of BAD) assert.throws(() => sourcePolicy(bad), /source policy/, JSON.stringify(bad));
+test('a store that cannot be read is refused, and the error never repeats it', () => {
+  for (const raw of ['{not json', '{"schema":2,"withheld":[]}', '{"schema":1}', '{"schema":1,"withheld":{}}', ...BAD_ENTRIES.map(e => store(...e))]) {
+    let message = '';
+    assert.throws(() => loadWithheld(raw), error => { message = error.message; return /^source policy: /.test(message); }, raw.slice(0, 20));
+    absent(message, ['fake-source', '424242', 'why it is', raw.slice(0, 12)], 'error message');
+    assert.equal(withheldReady(raw), false);
+  }
+  // Nothing, or an empty string, is "nothing withheld"; a valid store is in force for every importer at once.
+  for (const none of [undefined, null, '', '  ', store()]) { assert.equal(withheldReady(none), true); assert.equal(POLICY.withheldCount, 0); }
+  assert.equal(withheldReady(store(entry({ document: 'speech-424242' }, 'legal_order', 'hide'))), true);
+  assert.deepEqual(POLICY.withheld({ documents: ['speech-424242'] }), { mode: 'hide' }, 'only the mode leaves the loader');
+  loadWithheld('');
 });
 
-const COMMISSION = () => {
-  const c = structuredClone(json(`royal-commissions/commission-${ROBODEBT}.json`).commission);
-  return { ...c, transcripts: c.transcripts.slice(0, 4), recommendations: c.recommendations.slice(0, 5) };
-};
-const POLICIES = () => {
-  const c = COMMISSION(), key = c.transcripts[0].key;
-  return {
-    published: policyData(),
-    'a withheld transcript': policyData([entry({ document: `${ROBODEBT}/${key}` })]),
-    'a withheld report': policyData([entry({ document: `${ROBODEBT}/${c.reports[0].key}` }, 'amended_pending')]),
-    'a withheld source': policyData([entry({ source: ROBODEBT }, 'legal_order')]),
-    'search only': policyData([], { [ROBODEBT]: 'search_only' }),
-    'documents only': policyData([], { [ROBODEBT]: 'documents_only' }),
-    'a quotable report in a documents-only source': policyData([], { [ROBODEBT]: 'documents_only', [`${ROBODEBT}/${c.reports[0].key}`]: 'full' }),
-    'quote and cite': policyData([], { [ROBODEBT]: 'quote_and_cite' }),
-  };
-};
-
-test('the Python and JavaScript loaders redact a commission identically', { skip: pythonSkip([]) }, () => {
-  const input = JSON.stringify({ commission: COMMISSION(), policies: POLICIES(), bad: BAD });
-  const out = JSON.parse(runPython(['-c', `
-import json, sys
-from parli import source_policy as sp
-data = json.load(sys.stdin)
-def refused(bad):
-    try:
-        sp.Policy(bad)
-    except sp.PolicyError:
-        return True
-    return False
-print(json.dumps({"redacted": {k: sp.redact_commission(data["commission"], sp.Policy(v)) for k, v in data["policies"].items()}, "refused": [refused(b) for b in data["bad"]],
-    "tiers": {"uses": list(sp.USES), "capabilities": sp.CAPABILITIES, "never": list(sp.KB_GENERATION_NEVER), "reasons": list(sp.REASONS), "labels": sp.LABELS}}))
-`], { input, maxBuffer: 64 * 1024 * 1024 }));
-  for (const [name, data] of Object.entries(POLICIES())) assert.deepEqual(redactCommission(COMMISSION(), sourcePolicy(data)), out.redacted[name], name);
-  assert.deepEqual(out.refused, BAD.map(() => true));
-  // One definition of the tiers, the same in both languages.
-  assert.deepEqual(out.tiers, { uses: USES, capabilities: CAPABILITIES, never: KB_GENERATION_NEVER, reasons: REASONS, labels: LABELS });
+test('the Python and JavaScript loaders give the same digest, which names nothing', { skip: pythonSkip([]) }, async () => {
+  const stores = ['', store(), store(entry({ document: 'speech-424242' })), store(entry({ document: 'speech-424242' }, 'legal_order', 'list_only')),
+    store(entry({ source: 'fake-source' }, 'withdrawn', 'hide'), entry({ document: 'integrity-report-fake-424242' }, 'amended_pending'))];
+  const python = raw => runPython(['-m', 'parli.source_policy'], { env: { ...process.env, OPAX_WITHHELD_JSON: raw, OPAX_WITHHELD_FILE: '/nonexistent/withheld.json' } }).trim();
+  const digests = [];
+  for (const raw of stores) { const digest = await withheldDigest(raw); assert.equal(python(raw), digest, raw.slice(0, 40)); digests.push(digest); assert.match(digest, /^[0-9a-f]{16}$/); }
+  assert.equal(digests[0], digests[1]);
+  assert.equal(digests[2], digests[3], 'the default mode is the same entry');
+  assert.equal(new Set(digests).size, 3);
 });
 
-// ---- the commission record: what a withheld document shows
+// ---- the commission record: one neutral line, or nothing
 
-const LISTING = ['acquisition', 'cite', 'date', 'date_basis', 'files', 'key', 'kind', 'page_url', 'title', 'withheld'];
-test('a withheld document is a listing row: title, date, its label and the publisher page, nothing else', () => {
+const COMMISSION = () => { const c = structuredClone(json(`royal-commissions/commission-${ROBODEBT}.json`).commission); return { ...c, transcripts: c.transcripts.slice(0, 4), recommendations: c.recommendations.slice(0, 5) }; };
+const LISTING = ['acquisition', 'cite', 'date', 'date_basis', 'files', 'key', 'kind', 'page_url', 'title', 'unavailable'];
+
+test('list_only: a withheld document is its title, date, the one notice and the publisher page; the reason is nowhere', () => {
   const c = COMMISSION(), key = c.transcripts[0].key, pdf = c.transcripts[0].files[0].url;
-  const out = redactCommission(c, policyOf([entry({ document: `${ROBODEBT}/${key}` })]));
-  const row = out.transcripts[0];
-  assert.deepEqual(Object.keys(row).sort(), LISTING);
-  assert.deepEqual(row.files, []);
-  assert.deepEqual(row.withheld, { reason: 'publisher_request', date: '2026-11-16', label: "Withheld at the publisher's request" });
-  assert.match(row.page_url, /^https:\/\//);
-  assert.ok(!JSON.stringify(out).includes(pdf), 'the file link, page count and hash are gone');
-  assert.deepEqual(out.transcripts[1], c.transcripts[1]);
-  assert.equal(out.recommendations.length, c.recommendations.length);
+  for (const reason of REASONS) {
+    const out = redactCommission(c, policyOf(entry({ document: `${ROBODEBT}/${key}` }, reason)));
+    const row = out.transcripts[0];
+    assert.deepEqual(Object.keys(row).sort(), LISTING);
+    assert.deepEqual([row.files, row.unavailable], [[], NOTICE], 'the same wording for every reason class');
+    assert.ok(!JSON.stringify(out).includes(pdf), 'the file link, page count and hash are gone');
+    silent({ ...out, notes: [], gaps: [], transcripts: [row], reports: [], recommendations: [] }, reason);
+    assert.deepEqual(out.transcripts[1], c.transcripts[1]);
+  }
 });
 
-test('a withheld source keeps listing rows only: no recommendation, quotation, note, text pointer or file', () => {
-  const c = COMMISSION(), out = redactCommission(c, policyOf([entry({ source: ROBODEBT }, 'legal_order')]));
-  for (const d of [...out.reports, ...out.transcripts]) { assert.deepEqual(Object.keys(d).sort(), LISTING); assert.equal(d.withheld.label, 'Withheld: subject to a legal order'); }
-  assert.deepEqual([out.recommendations, out.court_context, out.notes, out.commissioners, out.established], [[], [], [], [], null]);
-  const text = JSON.stringify(out);
-  for (const leaked of [c.recommendations[0].text, c.established.quote, '/transcripts/', '.pdf', 'sha256']) assert.ok(!text.includes(leaked), leaked);
+test('hide: the document is not listed at all, and a hidden commission has no record', () => {
+  const c = COMMISSION(), t = c.transcripts[0];
+  const out = redactCommission(c, policyOf(entry({ document: `${ROBODEBT}/${t.key}` }, 'legal_order', 'hide')));
+  assert.equal(out.transcripts.length, c.transcripts.length - 1);
+  absent(out, [t.key, t.title, t.files[0].url, t.files[0].sha256], 'hidden transcript');
+  assert.equal(redactCommission(c, policyOf(entry({ source: ROBODEBT }, 'legal_order', 'hide'))), null);
+  const listed = redactCommission(c, policyOf(entry({ source: ROBODEBT })));
+  for (const d of [...listed.reports, ...listed.transcripts]) assert.deepEqual(Object.keys(d).sort(), LISTING);
+  assert.deepEqual([listed.recommendations, listed.court_context, listed.notes, listed.commissioners, listed.established, listed.unavailable], [[], [], [], [], null, NOTICE]);
+  absent(listed, [c.recommendations[0].text, c.established.quote, '/transcripts/', '.pdf', 'sha256'], 'withheld source');
 });
 
-for (const use of ['search_only', 'documents_only']) test(`a ${use} source carries no quotation, recommendation or text pointer`, () => {
-  const out = redactCommission(COMMISSION(), policyOf([], { [ROBODEBT]: use }));
-  assert.equal(out.use, use);
-  assert.deepEqual(out.recommendations, []);
-  for (const d of [...out.reports, ...out.transcripts]) { assert.equal(d.full_text, undefined); assert.equal(d.date_quote, undefined); assert.ok(d.files.length); }
-  assert.equal(out.established.quote, undefined);
-  assert.equal(out.established.date, COMMISSION().established.date);
-});
+// ---- quoting tools, Ask and the MCP, with the list supplied the way the Worker receives it
 
-// ---- quoting and excerpt tools: royal_commissions, transcript text, and what Ask is handed
-
-async function tools(data) {
-  const built = await build({ stdin: { contents: "export {callTool, askToolSpecs} from './src/tools/index'; export {textIndex, textMatches, pageHits} from './src/tools/transcript-text';", resolveDir: new URL('../', import.meta.url).pathname, loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', write: false, plugins: [withPolicy(data)] });
-  return importBundle(built.outputFiles[0].text, 'source-policy-tools');
+async function tools(raw) {
+  const built = await build({ stdin: { contents: "export {callTool, askToolSpecs} from './src/tools/index'; export {textIndex, textMatches, pageHits} from './src/tools/transcript-text'; export {loadWithheld} from '../parli/ingest/source_policy.mjs'",
+    resolveDir: new URL('../', import.meta.url).pathname, loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', write: false, logLevel: 'silent' });
+  const api = await importBundle(built.outputFiles[0].text, 'source-policy-tools');
+  api.loadWithheld(raw);
+  return api;
 }
 const cache = new Map();
-async function asset(path) {
-  if (path.startsWith('/report-records/')) return existsSync(join(PUBLIC, path)) ? json(path) : null;
-  if (!cache.has(path)) cache.set(path, json(path));
-  return cache.get(path);
-}
+const asset = async path => { if (path.startsWith('/report-records/') && !existsSync(join(PUBLIC, path))) return null; if (!cache.has(path)) cache.set(path, json(path)); return cache.get(path); };
 const env = { asset, origin: 'https://opax.test' };
-/** A transcript the published policy quotes, and a word that finds it. */
+/** A transcript the published policy quotes, and a word no other transcript holds. */
 const SUBJECT = (() => {
   const ix = json('transcripts/index.json'), row = ix.docs.find(d => d.commission === ROBODEBT && d.quote_policy === 'quote');
   const doc = json(row.file.slice(1)), common = new Set(ix.common_terms);
-  // A word no other transcript holds, so the search result is this transcript alone.
   const shard = term => { let h = 0x811c9dc5; for (const byte of new TextEncoder().encode(term)) h = Math.imul(h ^ byte, 0x01000193) >>> 0; return String(h % ix.shards).padStart(2, '0'); };
   const word = Object.keys(doc.terms).find(t => /^[a-z]{7,}$/.test(t) && !common.has(t) && doc.terms[t].length === 1 && json(`transcripts/terms/${shard(t)}.json`)[t]?.length === 1);
   const page = doc.pages.find(p => p.n === doc.terms[word][0]);
-  return { key: row.key, date: row.date, word, pdf: row.pdf_url, phrase: page.text.replace(/\s+/g, ' ').split(' ').slice(3, 9).join(' ') };
+  return { key: row.key, title: row.title, date: row.date, word, pdf: row.pdf_url, phrase: page.text.replace(/\s+/g, ' ').split(' ').slice(3, 9).join(' ') };
 })();
-const everyView = async (api, commission, ask) => {
+const everyView = async (api, ask) => {
   const out = [];
-  for (const args of [{ view: 'list', commission }, { view: 'profile', commission }, { view: 'transcripts', commission, limit: 8 }, { view: 'transcripts', commission, words: SUBJECT.word, limit: 8 },
-    { view: 'recommendations', commission }, { view: 'recommendations', commission, words: 'debt' }, { view: 'transcripts', commission, words: SUBJECT.date, limit: 8 }]) out.push(await api.callTool(env, 'royal_commissions', args, ask));
+  for (const args of [{ view: 'list', commission: ROBODEBT }, { view: 'profile', commission: ROBODEBT }, { view: 'transcripts', commission: ROBODEBT, limit: 8 }, { view: 'transcripts', commission: ROBODEBT, words: SUBJECT.word, limit: 8 },
+    { view: 'recommendations', commission: ROBODEBT }, { view: 'transcripts', commission: ROBODEBT, words: SUBJECT.date, limit: 8 }]) out.push(await api.callTool(env, 'royal_commissions', args, ask));
   return out;
 };
 
-test('with the published policy the tool quotes the transcript (the control for the tests below)', async () => {
-  const api = await tools(policyData());
+test('with nothing withheld the tool quotes the transcript (the control for the tests below)', async () => {
+  const api = await tools('');
   const out = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: ROBODEBT, words: SUBJECT.word, limit: 8 });
-  const row = out.rows.find(r => r.key === SUBJECT.key);
-  assert.ok(row?.text_matches?.hits[0].excerpt, JSON.stringify(out).slice(0, 400));
-  assert.ok((await api.textMatches(env, await api.textIndex(env), ROBODEBT, SUBJECT.word)).keys.has(SUBJECT.key));
+  assert.ok(out.rows.find(r => r.key === SUBJECT.key)?.text_matches?.hits[0].excerpt);
 });
 
-test('a withheld transcript: the tool, the text search and Ask show the listing row with its label and no text', async () => {
-  const api = await tools(policyData([entry({ document: `${ROBODEBT}/${SUBJECT.key}` })]));
+test('list_only transcript: the tool, the text search and Ask show the neutral row and no text; nothing says why', async () => {
+  const api = await tools(store(entry({ document: `${ROBODEBT}/${SUBJECT.key}` })));
   const ix = await api.textIndex(env);
   assert.ok(!(await api.textMatches(env, ix, ROBODEBT, SUBJECT.word))?.keys.has(SUBJECT.key));
   assert.equal(await api.pageHits(env, ix, SUBJECT.key, [SUBJECT.word]), null);
   for (const ask of [false, true]) {
-    const results = await everyView(api, ROBODEBT, ask), text = JSON.stringify(results);
-    assert.ok(!text.includes(SUBJECT.pdf) && !text.includes(SUBJECT.phrase), 'no file link and no words of the transcript');
+    const results = await everyView(api, ask);
+    absent(results, [SUBJECT.pdf, SUBJECT.phrase], 'tool output');
     const rows = results.flatMap(r => r.rows).filter(r => r.key === SUBJECT.key);
     assert.ok(rows.length);
-    for (const row of rows) assert.deepEqual(Object.keys(row).sort(), ['commission', 'commission_id', 'date', 'key', 'label', 'page_url', 'title', 'withheld']);
-    assert.equal(rows[0].withheld, "Withheld at the publisher's request");
-    assert.ok(results.flatMap(r => r.citations).some(c => c.text.includes("Withheld at the publisher's request") && !/"/.test(c.text)));
+    for (const row of rows) assert.deepEqual(Object.keys(row).sort(), ['commission', 'commission_id', 'date', 'key', 'label', 'page_url', 'title', 'unavailable']);
+    assert.equal(rows[0].unavailable, NOTICE);
+    assert.ok(results.flatMap(r => r.citations).some(c => c.text.includes(NOTICE)));
+    for (const r of results) for (const text of [...r.rows.filter(x => x.key === SUBJECT.key), ...r.citations.filter(c => c.text.includes(SUBJECT.title))]) silent({ ...text, label: '', text: String(text.text ?? '').replace(/Hearing transcript: evidence, not findings\.?/, '') }, 'row and citation');
   }
-  // What Ask's writer is handed is the same citations: none carries the transcript's words.
-  const spec = api.askToolSpecs.find(s => s.name === 'royal_commissions');
-  const handed = await spec.run({ asset, origin: env.origin, toolEnv: {} }, { view: 'transcripts', commission: ROBODEBT, words: SUBJECT.word, limit: 8 });
-  assert.ok(!JSON.stringify(handed).includes(SUBJECT.phrase) && !JSON.stringify(handed).includes(SUBJECT.pdf));
+  const handed = await api.askToolSpecs.find(s => s.name === 'royal_commissions').run({ asset, origin: env.origin, toolEnv: {} }, { view: 'transcripts', commission: ROBODEBT, words: SUBJECT.word, limit: 8 });
+  absent(handed, [SUBJECT.phrase, SUBJECT.pdf], 'what Ask is handed');
 });
 
-test('a withheld source: every view is listing rows and the label; no recommendation, finding, note or excerpt', async () => {
-  const c = json(`royal-commissions/commission-${ROBODEBT}.json`).commission;
-  const api = await tools(policyData([entry({ source: ROBODEBT }, 'legal_order')]));
-  assert.equal(await api.textMatches(env, await api.textIndex(env), ROBODEBT, SUBJECT.word), null);
+test('hide transcript: no row, count, citation or text mentions it', async () => {
+  const api = await tools(store(entry({ document: `${ROBODEBT}/${SUBJECT.key}` }, 'legal_order', 'hide'))), open = await tools('');
   for (const ask of [false, true]) {
-    const results = await everyView(api, ROBODEBT, ask), text = JSON.stringify(results);
-    for (const leaked of [c.recommendations[0].text.slice(0, 60), c.recommendations.at(-1).text.slice(0, 60), SUBJECT.phrase, '.pdf', "in the commission's own words", 'text_matches', 'text_url']) assert.ok(!text.includes(leaked), leaked);
-    assert.ok(text.includes('Withheld: subject to a legal order'));
+    const results = await everyView(api, ask);
+    absent(results, [SUBJECT.key, SUBJECT.title, SUBJECT.pdf, SUBJECT.phrase, NOTICE], 'hidden transcript');
+    assert.equal(results[1].rows[0].transcripts.count, (await everyView(open, ask))[1].rows[0].transcripts.count - 1);
+    assert.deepEqual(results[5].rows, []);
+  }
+});
+
+test('a withheld commission: neutral rows only in list_only; in hide it is not found, listed or counted', async () => {
+  const c = json(`royal-commissions/commission-${ROBODEBT}.json`).commission;
+  const listed = await tools(store(entry({ source: ROBODEBT })));
+  assert.equal(await listed.textMatches(env, await listed.textIndex(env), ROBODEBT, SUBJECT.word), null);
+  for (const ask of [false, true]) {
+    const results = await everyView(listed, ask);
+    absent(results, [c.recommendations[0].text.slice(0, 60), SUBJECT.phrase, '.pdf', "in the commission's own words", 'text_matches', 'text_url'], 'withheld source');
     const profile = results[1].rows[0];
-    assert.deepEqual([profile.recommendations, profile.notes, profile.withheld], [0, [], 'Withheld: subject to a legal order']);
-    assert.ok(results[2].rows.length && results[2].rows.every(r => r.withheld && !r.pdf_url && !r.pages));
+    assert.deepEqual([profile.recommendations, profile.notes, profile.unavailable], [0, [], NOTICE]);
+    assert.ok(results[2].rows.length && results[2].rows.every(r => r.unavailable === NOTICE && !r.pdf_url && !r.pages));
     assert.deepEqual(results[4].rows, []);
   }
+  const hidden = await tools(store(entry({ source: ROBODEBT }, 'legal_order', 'hide')));
+  const all = await hidden.callTool(env, 'royal_commissions', { view: 'list' }), open = await (await tools('')).callTool(env, 'royal_commissions', { view: 'list' });
+  assert.equal(all.total, open.total - 1);
+  for (const args of [{ view: 'list', limit: 8 }, { view: 'list', commission: ROBODEBT }, { view: 'profile', commission: 'robodebt' }, { view: 'transcripts', commission: ROBODEBT }, { view: 'recommendations', words: 'income averaging' }])
+    absent(await hidden.callTool(env, 'royal_commissions', args), [ROBODEBT, c.name, SUBJECT.pdf], JSON.stringify(args));
 });
 
-for (const use of ['search_only', 'documents_only']) test(`a ${use} source is never excerpted, quoted or handed to Ask as text`, async () => {
-  const c = json(`royal-commissions/commission-${ROBODEBT}.json`).commission;
-  const api = await tools(policyData([], { [ROBODEBT]: use }));
-  const ix = await api.textIndex(env);
-  assert.equal(await api.textMatches(env, ix, ROBODEBT, SUBJECT.word), null);
-  assert.equal(await api.pageHits(env, ix, SUBJECT.key, [SUBJECT.word]), null);
-  for (const ask of [false, true]) {
-    const results = await everyView(api, ROBODEBT, ask), text = JSON.stringify(results);
-    for (const leaked of [c.recommendations[0].text.slice(0, 60), SUBJECT.phrase, "in the commission's own words", 'text_matches', 'text_url', 'hearing turn']) assert.ok(!text.includes(leaked), leaked);
-    assert.equal(results[1].rows[0].use, use);
-    assert.ok(results[3].rows.every(r => !r.text_matches));
+// ---- any knowledge base resource by its id: speeches, releases, bill texts, anything
+
+const resource = (slug, kind, label, extra = {}) => ({ id: createHash('md5').update(slug).digest('hex'), slug, title: `Title of ${slug}`, origin: { url: `https://publisher.example/${slug}`, source_id: 'opax-parli', collaborators: ['A Speaker'] },
+  usermetadata: { classifications: [{ labelset: 'kind', label: kind }, { labelset: 'source', label }, { labelset: 'party', label: 'Party' }] },
+  extra: { metadata: { date: '2026-11-09', person_id: '9', word_count: 400 } }, summary: 'SECRET SUMMARY',
+  data: { texts: { body: { value: { body: 'SECRET BODY TEXT of the record.' } }, 'da-summary-t-body': { value: { body: 'SECRET BRIEF' } } } }, ...extra });
+const KINDS = [['speech-424242', 'speech'], ['press-pmt-424242', 'press_release'], ['bill-text-au-federal-fake-424242', 'bill_text'], ['grant-site-evidence-ga424242', 'research_report']];
+
+for (const [slug, kind] of KINDS) test(`a withheld ${kind} (${kind === 'speech' ? 'a non-transcript resource' : 'by its id'}): search, retrieval, a generated answer and a read`, async () => {
+  const open = resource('speech-1', 'speech', 'nsw_hansard'), held = resource(slug, kind, 'openaustralia');
+  for (const mode of MODES) {
+    const policy = policyOf(entry({ document: slug }, 'legal_order', mode));
+    for (const path of ['/find', '/search', '/catalog']) {
+      const out = scrubKbPayload(path, { resources: { r1: open, r2: held }, best_matches: ['r1/t/body/0-10', 'r2/t/body/0-10'] }, policy);
+      assert.deepEqual([Object.keys(out.resources), out.best_matches], [['r1'], ['r1/t/body/0-10']]);
+      absent(out, [slug], path);
+    }
+    const asked = scrubKbPayload('/ask', { answer: 'An answer quoting SECRET BODY TEXT.', citations: { 'r2/t/body/0-10': [[0, 5]] }, retrieval_results: { resources: { r1: open, r2: held } } }, policy);
+    assert.deepEqual([asked.answer, asked.citations], ['', {}]);
+    absent(asked, [slug], '/ask');
+    for (const path of ['/find', '/ask', '/search']) assert.deepEqual(guardKbRequest(path, { query: 'q' }, policy).body.filter_expression, { field: { not: { prop: 'resource', slug } } });
+    const read = await guardKbResponse(`/slug/${slug}?show=basic&show=values`, Response.json(held), policy);
+    const row = await read.json();
+    if (mode === 'hide') {
+      assert.deepEqual(row, { hidden: true });
+      assert.equal(hiddenKbRead(`/slug/${slug}?show=basic`, policy).status, 404, 'a hidden record is not even asked for');
+    } else {
+      assert.deepEqual(Object.keys(row).sort(), ['extra', 'id', 'origin', 'slug', 'title', 'unavailable', 'usermetadata']);
+      assert.equal(row.unavailable, NOTICE);
+      absent(row, ['SECRET', 'A Speaker'], 'listing row');
+      silent(row, 'listing row');
+      assert.equal(guardKbRequest(`/slug/${slug}?show=basic&show=values&show=extracted&extracted=text`, undefined, policy).target, `/slug/${slug}?show=basic&show=origin&show=extra`, 'the text is never requested');
+    }
   }
 });
 
-// ---- the knowledge base boundary: Ask retrieval, search, the resource API and MCP read_record
+test('a withheld source: every resource carrying its label or origin id is closed, and queries exclude it', () => {
+  const policy = policyOf(entry({ source: 'fake-source' }, 'publisher_request'));
+  assert.deepEqual(kbRefusal(resource('speech-5', 'speech', 'fake-source'), policy), { mode: 'list_only' });
+  assert.deepEqual(kbRefusal({ slug: 'speech-5', origin: { source_id: 'fake-source' } }, policy), { mode: 'list_only' });
+  assert.equal(kbRefusal(resource('speech-5', 'speech', 'openaustralia'), policy), null);
+  const nots = [{ not: { prop: 'label', labelset: 'source', label: 'fake-source' } }, { not: { prop: 'origin_source', id: 'fake-source' } }];
+  assert.deepEqual(guardKbRequest('/catalog', { filter_expression: { resource: { prop: 'label', labelset: 'kind', label: 'speech' } } }, policy).body.filter_expression,
+    { resource: { and: [{ prop: 'label', labelset: 'kind', label: 'speech' }, ...nots] } });
+  const body = { query: 'q' };
+  assert.equal(guardKbRequest('/find', body, policyOf()).body, body, 'with nothing withheld no query changes');
+});
 
-const resource = (slug, source, extra = {}) => ({ id: slug.replace(/\D/g, '').padStart(32, '0'), slug, title: `Title of ${slug}`, origin: { url: `https://publisher.example/${slug}`, source_id: 'opax-parli', collaborators: ['A Speaker'] },
-  usermetadata: { classifications: [{ labelset: 'kind', label: 'speech' }, { labelset: 'source', label: source }, { labelset: 'party', label: 'Party' }] },
-  extra: { metadata: { date: '2026-11-09', person_id: '9', word_count: 400 } }, summary: 'SECRET SUMMARY',
-  data: { texts: { body: { value: { body: 'SECRET BODY TEXT of the record.' } }, 'da-summary-t-body': { value: { body: 'SECRET BRIEF' } } } },
-  fields: { '/t/body': { paragraphs: { p1: { text: 'SECRET PARAGRAPH' } } } }, ...extra });
-const CLOSED = {
-  'a withheld source': policyOf([entry({ source: 'vic_hansard' }, 'legal_order')]),
-  'a withheld document': policyOf([entry({ document: 'speech-2' })]),
-  'a search-only source': policyOf([], { vic_hansard: 'search_only' }),
-  'a documents-only source': policyOf([], { vic_hansard: 'documents_only' }),
-};
-const found = () => ({ resources: { r1: resource('speech-1', 'nsw_hansard'), r2: resource('speech-2', 'vic_hansard') }, best_matches: ['r1/t/body/0-10', 'r2/t/body/0-10'] });
+/** A report record from each dataset the reply calls "any document". */
+const REPORTS = (() => {
+  const integrity = json('integrity-reports/index.json').reports[0], agency = json('agency-reports/index.json').documents[0];
+  const body = json('annual-reports/index.json').bodies.find(b => Object.values(b.reports ?? {}).some(r => r.url)), year = Object.entries(body.reports).find(([, r]) => r.url)[0];
+  return { integrity: { slug: `integrity-report-${slugPart(integrity.id)}`, id: integrity.id, title: integrity.title }, agency: { slug: `agency-report-${slugPart(agency.id)}`, id: agency.id, title: agency.agency },
+    annual: { slug: `annual-report-${slugPart(`${body.id}-${year}`)}`, id: body.id, year, title: body.reports[year].title } };
+})();
 
-for (const [name, policy] of Object.entries(CLOSED)) {
-  test(`${name}: a search or retrieval response loses the resource and its matches`, () => {
-    for (const path of ['/find', '/search', '/catalog']) {
-      const out = scrubKbPayload(path, found(), policy);
-      assert.deepEqual(Object.keys(out.resources), ['r1']);
-      assert.deepEqual(out.best_matches, ['r1/t/body/0-10']);
-      assert.ok(!JSON.stringify(out).includes('speech-2'));
+test('a tool row, citation or search row naming a withheld record is left out or reduced to its title and the notice', () => {
+  for (const mode of MODES) {
+    const policy = policyOf(entry({ document: 'speech-424242' }, 'withdrawn', mode), entry({ document: REPORTS.integrity.slug }, 'legal_order', mode));
+    const out = guardToolResult({ rows: [{ slug: 'speech-1', excerpt: 'kept' }, { record_id: 'speech-424242', title: 'A title', excerpt: 'SECRET', speaker: 'A Speaker' }],
+      items: [{ id: REPORTS.integrity.id, title: REPORTS.integrity.title, findings: ['SECRET'] }, { id: 'another-report', title: 'kept' }],
+      citations: [{ url: 'https://opax.test/doc/speech-1', text: 'kept' }, { url: 'https://opax.test/doc/speech-424242', text: 'SECRET' }, { url: `https://opax.test/report/${REPORTS.integrity.slug}`, text: 'SECRET' }], notes: [] }, policy);
+    assert.deepEqual(out.citations, [{ url: 'https://opax.test/doc/speech-1', text: 'kept' }]);
+    absent(out, ['SECRET', 'A Speaker'], mode);
+    silent(out, mode);
+    const search = guardSearchRows([{ kind: 'speech', slug: 'speech-424242', title: 'A title', href: '/doc/speech-424242', snippet: 'SECRET' }, { kind: 'report', title: REPORTS.integrity.title, href: `/report/${REPORTS.integrity.slug}`, slug: 'catalog-9', snippet: 'SECRET' }, { kind: 'speech', slug: 'speech-1', snippet: 'kept' }], policy);
+    absent(search, ['SECRET'], mode);
+    if (mode === 'hide') {
+      assert.deepEqual([out.rows, out.items, search], [[{ slug: 'speech-1', excerpt: 'kept' }], [{ id: 'another-report', title: 'kept' }], [{ kind: 'speech', slug: 'speech-1', snippet: 'kept' }]]);
+    } else {
+      assert.deepEqual(out.rows[1], { record_id: 'speech-424242', title: 'A title', unavailable: NOTICE });
+      assert.deepEqual(out.items[0], { id: REPORTS.integrity.id, title: REPORTS.integrity.title, unavailable: NOTICE });
+      assert.deepEqual(search.map(r => r.snippet), [NOTICE, NOTICE, 'kept']);
     }
-  });
+  }
+  const untouched = { rows: [{ slug: 'speech-424242', excerpt: 'x' }], citations: [] };
+  assert.equal(guardToolResult(untouched, policyOf()), untouched);
+});
 
-  test(`${name}: a generated answer that drew on the resource is not passed on`, () => {
-    const out = scrubKbPayload('/ask', { answer: 'An answer quoting SECRET BODY TEXT.', citations: { 'r2/t/body/0-10': [[0, 5]] }, retrieval_results: found() }, policy);
-    assert.equal(out.answer, '');
-    assert.deepEqual(out.citations, {});
-    assert.ok(!JSON.stringify(out).includes('speech-2') && !out.answer.includes('SECRET'));
-    const open = scrubKbPayload('/ask', { answer: 'A fine answer.', retrieval_results: { resources: { r1: resource('speech-1', 'nsw_hansard') } } }, policy);
-    assert.equal(open.answer, 'A fine answer.');
-  });
+// ---- the Worker, with the list in its secret
 
-  test(`${name}: a record read is a listing row, through the Worker's own response guard`, async () => {
-    const res = await guardKbResponse('/slug/speech-2?show=basic&show=values', Response.json(resource('speech-2', 'vic_hansard')), policy);
-    const row = await res.json();
-    assert.deepEqual(Object.keys(row).sort(), ['extra', 'id', 'origin', 'slug', 'title', 'usermetadata', 'withheld']);
-    assert.ok(!JSON.stringify(row).includes('SECRET') && !JSON.stringify(row).includes('A Speaker'));
-    assert.deepEqual(row.origin, { url: 'https://publisher.example/speech-2', source_id: 'opax-parli' });
-    assert.ok(row.withheld.label);
-    const open = await (await guardKbResponse('/slug/speech-1?show=basic', Response.json(resource('speech-1', 'nsw_hansard')), policy)).json();
-    assert.equal(open.data.texts.body.value.body, 'SECRET BODY TEXT of the record.');
-  });
+async function withWorker(raw, run) {
+  const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, PUBLIC);
+  if (raw !== undefined) worker.env.OPAX_WITHHELD_JSON = raw;
+  const restore = offline(), savedCaches = globalThis.caches, logs = [], saved = { log: console.log, warn: console.warn, error: console.error };
+  globalThis.caches = { default: { match: async () => undefined, put: async () => {} } };
+  for (const level of Object.keys(saved)) console[level] = (...args) => logs.push(args.map(a => typeof a === 'string' ? a : JSON.stringify(a)).join(' '));
+  const asked = [];
+  globalThis.fetch = async input => {
+    const url = String(input.url ?? input), slug = /\/slug\/([^?]+)/.exec(url)?.[1];
+    asked.push(url);
+    return slug ? Response.json(resource(slug, 'speech', 'openaustralia')) : Response.json({ resources: {}, fulltext: { total: 0, facets: {} } });
+  };
+  try { return await run(worker, { logs, asked }); }
+  finally { restore(); globalThis.caches = savedCaches; globalThis.fetch = savedFetch; Object.assign(console, saved); }
 }
 
-test('a query never asks for a withheld source or document, and a withheld read never asks for text', () => {
-  const policy = policyOf([entry({ source: 'vic_hansard' }, 'legal_order'), entry({ document: 'speech-2' }), entry({ document: `${ROBODEBT}/day-1` })]);
-  const nots = [{ not: { prop: 'label', labelset: 'source', label: 'vic_hansard' } }, { not: { prop: 'origin_source', id: 'vic_hansard' } }, { not: { prop: 'resource', slug: 'speech-2' } }];
-  const kind = { prop: 'label', labelset: 'kind', label: 'speech' };
-  for (const path of ['/find', '/ask', '/search']) {
-    assert.deepEqual(guardKbRequest(path, { query: 'q', filter_expression: { field: kind } }, policy).body.filter_expression, { field: { and: [kind, ...nots] } });
-    assert.deepEqual(guardKbRequest(path, { query: 'q' }, policy).body.filter_expression, { field: { and: nots } });
-  }
-  assert.deepEqual(guardKbRequest('/catalog', { filter_expression: { resource: kind } }, policy).body.filter_expression, { resource: { and: [kind, ...nots] } });
-  assert.equal(guardKbRequest('/slug/speech-2?show=basic&show=values&show=extracted&extracted=text', undefined, policy).target, '/slug/speech-2?show=basic&show=origin&show=extra');
-  assert.equal(guardKbRequest('/slug/speech-3?show=values', undefined, policy).target, '/slug/speech-3?show=values');
-  // The published policy withholds nothing, so no query changes today.
-  const body = { query: 'q', filter_expression: { field: kind } };
-  assert.equal(guardKbRequest('/find', body).body, body);
-});
-
-test('a tool row or citation naming a withheld record is reduced to its title and label', () => {
-  const policy = policyOf([entry({ document: 'speech-2' }, 'withdrawn')]);
-  const out = guardToolResult({ rows: [{ slug: 'speech-1', excerpt: 'kept' }, { record_id: 'speech-2', title: 'A title', excerpt: 'SECRET', speaker: 'A Speaker' }],
-    citations: [{ url: 'https://opax.test/doc/speech-1', text: 'kept' }, { url: 'https://opax.test/doc/speech-2', text: 'SECRET' }], notes: [] }, policy);
-  assert.deepEqual(out.rows, [{ slug: 'speech-1', excerpt: 'kept' }, { record_id: 'speech-2', title: 'A title', withheld: 'Withheld: withdrawn by the publisher' }]);
-  assert.deepEqual(out.citations, [{ url: 'https://opax.test/doc/speech-1', text: 'kept' }]);
-});
-
-test('the resource API, which MCP read_record and the record page read, serves a closed record as a listing row', async () => {
-  assert.match(readFileSync(new URL('../src/community-mcp.ts', import.meta.url), 'utf8'), /read_record[^\n]+\/api\/resource\//, 'read_record reads the resource API');
-  for (const [name, data] of Object.entries({ 'a withheld document': policyData([entry({ document: 'speech-2' })]), 'a withheld source': policyData([entry({ source: 'vic_hansard' }, 'legal_order')]),
-    'a search-only source': policyData([], { vic_hansard: 'search_only' }) })) {
-    const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, PUBLIC, { plugins: [withPolicy(data)] });
-    globalThis.caches = { default: { match: async () => undefined, put: async () => {} } };
-    const asked = [];
-    globalThis.fetch = async input => { const url = String(input.url ?? input); asked.push(url); return Response.json(resource(/speech-\d/.exec(url)[0], 'vic_hansard')); };
-    const res = await worker.fetch('/api/resource/speech-2?nocache=1');
-    assert.equal(res.status, 200, name);
-    const row = await res.json();
-    assert.deepEqual(Object.keys(row).sort(), ['labels', 'metadata', 'slug', 'speaker', 'speaker_attribution', 'summary', 'text', 'title', 'topics', 'url', 'withheld'], name);
-    assert.deepEqual([row.text, row.summary, row.speaker, row.topics, row.labels, row.metadata], ['', null, null, [], { kind: 'speech' }, { date: '2026-11-09' }], name);
-    assert.equal(row.url, 'https://publisher.example/speech-2');
-    assert.ok(row.withheld.label && !JSON.stringify(row).includes('SECRET'), name);
-    if (name === 'a withheld document') assert.ok(asked.every(u => !/show=values|extracted/.test(u)), 'the text is never requested');
+test('the resource API, which MCP read_record and the record page read: list_only is the neutral row; hide is a record that does not exist', async () => {
+  assert.match(source('../src/community-mcp.ts'), /read_record[^\n]+\/api\/resource\//, 'read_record reads the resource API');
+  const missing = await withWorker(undefined, async w => { globalThis.fetch = async () => Response.json({ detail: 'x' }, { status: 404 }); const r = await w.fetch('/api/resource/speech-999?nocache=1'); return [r.status, await r.text()]; });
+  for (const [slug] of KINDS.slice(0, 3)) {
+    await withWorker(store(entry({ document: slug })), async (w, { logs, asked }) => {
+      const res = await w.fetch(`/api/resource/${slug}?nocache=1`), row = await res.json();
+      assert.equal(res.status, 200);
+      assert.deepEqual(Object.keys(row).sort(), ['labels', 'metadata', 'slug', 'speaker', 'speaker_attribution', 'summary', 'text', 'title', 'topics', 'unavailable', 'url']);
+      assert.deepEqual([row.text, row.summary, row.speaker, row.topics, row.unavailable], ['', null, null, [], NOTICE]);
+      assert.equal(row.url, `https://publisher.example/${slug}`);
+      absent(row, ['SECRET', 'A Speaker'], slug); silent(row, slug);
+      assert.ok(asked.length && asked.every(u => !/show=values|extracted/.test(u)), 'the text is never requested');
+      absent(logs.join('\n'), [slug, '424242'], 'log lines'); silent(logs.join('\n'), 'log lines');
+    });
+    await withWorker(store(entry({ document: slug }, 'legal_order', 'hide')), async (w, { logs, asked }) => {
+      const res = await w.fetch(`/api/resource/${slug}?nocache=1`);
+      assert.deepEqual([res.status, await res.text()], missing, 'indistinguishable from a slug OPAX never held');
+      assert.deepEqual(asked, [], 'and the knowledge base is not asked');
+      absent(logs.join('\n'), [slug, '424242'], 'log lines'); silent(logs.join('\n'), 'log lines');
+    });
   }
 });
 
-// ---- the builds: published files, transcript text, the search catalogue and report records
+test('report records (integrity, agency and annual reports): the API and page give the neutral record, or not found when hidden', { skip: !existsSync(join(PUBLIC, 'report-records', `${REPORTS.integrity.slug}.json`)) && 'report records are not built' }, async () => {
+  for (const report of Object.values(REPORTS)) {
+    const open = await withWorker(undefined, async w => (await w.fetch(`/api/report/${report.slug}`)).json());
+    assert.equal(open.slug, report.slug, 'the control: the record is served');
+    await withWorker(store(entry({ document: report.slug }, 'amended_pending')), async (w, { logs }) => {
+      const res = await w.fetch(`/api/report/${report.slug}`), body = await res.json();
+      assert.equal(res.status, 200);
+      assert.deepEqual([body.title, body.citation, body.snippet, body.caveats, body.record, body.facts, body.tables, body.headline, body.summary], [open.title, open.citation, NOTICE, [NOTICE], {}, [], [], null, undefined]);
+      silent(body, report.slug);
+      const page = await w.fetch(`/report/${report.slug}`);
+      assert.equal(page.status, 200);
+      // The whole page, shell included: no reason class, date or mention of an order.
+      assert.doesNotMatch(await page.text(), /legal_order|publisher_request|amended_pending|2026-11-16|legal order|subject to an? order/i, 'page');
+      absent(logs.join('\n'), [report.slug], 'log lines'); silent(logs.join('\n'), 'log lines');
+    });
+    await withWorker(store(entry({ document: report.slug }, 'legal_order', 'hide')), async (w, { logs }) => {
+      const absentRecord = await w.fetch('/api/report/integrity-report-no-such-record');
+      const res = await w.fetch(`/api/report/${report.slug}`);
+      assert.deepEqual([res.status, await res.text()], [absentRecord.status, await absentRecord.text()]);
+      assert.equal((await w.fetch(`/report/${report.slug}`)).status, (await w.fetch('/report/integrity-report-no-such-record')).status);
+      absent(logs.join('\n'), [report.slug], 'log lines');
+    });
+  }
+});
 
-test('the published files already honour the policy (what `npm run check` asserts)', () => {
+test('an unreadable store fails closed: record, search, Ask, MCP and report routes are refused with one plain message; other pages are served', async () => {
+  for (const raw of ['{not json', store({ document: 'speech-424242', reason: 'legal_order', date: 'soon' })]) {
+    await withWorker(raw, async (w, { logs, asked }) => {
+      for (const [path, init] of [['/api/resource/speech-1'], ['/api/search-all?q=housing'], ['/api/search?q=housing'], ['/api/ask', { method: 'POST', body: '{"question":"What was said about housing?"}' }],
+        ['/api/followups', { method: 'POST', body: '{}' }], ['/api/search-summary?q=housing'], ['/api/report/x'], ['/report/royal-commission-cth-robodebt'], ['/doc/speech-1'], ['/mcp', { method: 'POST', body: '{}' }], ['/official-reports']]) {
+        const res = await w.fetch(path, init), body = await res.text();
+        assert.equal(res.status, 503, path);
+        assert.equal(res.headers.get('retry-after'), '300');
+        assert.ok(body === 'OPAX is temporarily unavailable. Please try again shortly.' || body === '{"error":"OPAX is temporarily unavailable. Please try again shortly."}', path + ': ' + body.slice(0, 80));
+        silent(body, path);
+      }
+      assert.deepEqual(asked, [], 'nothing is read from the knowledge base');
+      for (const path of ['/', '/terms', '/privacy']) assert.equal((await w.fetch(path)).status, 200, path);
+      absent(logs.join('\n'), ['424242', 'speech-424242', 'soon'], 'log lines'); silent(logs.join('\n'), 'log lines');
+    });
+  }
+  assert.deepEqual(['/api/x', '/mcp', '/doc/speech-1', '/report/x', '/official-reports', '/', '/terms', '/vic-election-2026', '/royal-commissions/index.json'].map(dependsOnWithheld), [true, true, true, true, true, false, false, false, false]);
+  silent(await withheldUnavailable('/api/x').text(), 'message');
+  // No secret at all is "nothing withheld": the routes are served.
+  await withWorker(undefined, async w => assert.equal((await w.fetch('/api/resource/speech-1?nocache=1')).status, 200));
+});
+
+// ---- the builds: applied at deploy from the Actions secret, never committed, never logged
+
+test('the committed files carry the public tiers only, and the build steps read the list from the environment, not from a file', () => {
   assert.deepEqual(applySourcePolicy({ check: true }), []);
+  const apply = source('../../scripts/apply_source_policy.mjs'), catalogue = source('../../scripts/build_search_catalog.mjs');
+  assert.match(apply, /if \(!check\) loadWithheld\(process\.env\.OPAX_WITHHELD_JSON\)/);
+  assert.match(catalogue, /loadWithheld\(process\.env\.OPAX_WITHHELD_JSON\);/);
+  for (const text of [apply, catalogue]) assert.doesNotMatch(text, /\.config\/opax|OPAX_WITHHELD_FILE/, 'a developer build cannot write a withheld item into the working tree');
+  // What the apply step prints is the same whatever the list holds: no count and no path.
+  assert.match(apply, /console\.log\(`\[apply_source_policy\] \$\{check \? 'checked' : 'applied'\}`\)/);
+  assert.equal((apply.match(/console\.(?:log|error)\(/g) ?? []).length, 2);
 });
 
-test('applying a takedown rewrites the public record and removes the transcript text, index row and postings', () => {
+test('the build commands: no store is nothing withheld; an unreadable one stops the build and prints none of it', () => {
+  const run = (script, args, secret) => spawnSync(process.execPath, [new URL(script, import.meta.url).pathname, ...args],
+    { encoding: 'utf8', env: { ...process.env, ...(secret === undefined ? { OPAX_WITHHELD_JSON: '' } : { OPAX_WITHHELD_JSON: secret }) } });
+  for (const none of [undefined, '', store()]) {
+    const applied = run('../../scripts/apply_source_policy.mjs', [], none);
+    assert.deepEqual([applied.status, applied.stdout.trim(), applied.stderr], [0, '[apply_source_policy] applied', '']);
+  }
+  assert.deepEqual(applySourcePolicy({ check: true }), [], 'and the committed files are untouched');
+  const bad = store({ document: 'speech-424242', reason: 'legal_order', date: 'soon' });
+  for (const script of ['../../scripts/apply_source_policy.mjs', '../../scripts/build_search_catalog.mjs']) {
+    const failed = run(script, [], bad);
+    assert.notEqual(failed.status, 0, script);
+    absent(failed.stdout + failed.stderr, ['424242', 'legal_order', 'soon'], script);
+    assert.match(failed.stderr, /source policy: a withheld entry needs a known reason class, an ISO date and a known mode/);
+  }
+  // The Deploy overlay with no secret does nothing and says the one fixed line.
+  const overlay = spawnSync('bash', [new URL('../../scripts/withheld_overlay.sh', import.meta.url).pathname, 'apply'], { encoding: 'utf8', cwd: new URL('../../', import.meta.url).pathname, env: { ...process.env, OPAX_WITHHELD_JSON: '' } });
+  assert.deepEqual([overlay.status, overlay.stdout.trim()], [0, '[withheld_overlay] ready']);
+});
+
+test('applying the list at deploy: transcripts, commissions and the three report datasets, in both modes, with nothing left that names the item', () => {
   const root = mkdtempSync(join(tmpdir(), 'opax-policy-'));
+  const copy = () => { for (const dir of ['royal-commissions', 'transcripts', 'integrity-reports', 'agency-reports', 'annual-reports']) { rmSync(join(root, dir), { recursive: true, force: true }); cpSync(join(PUBLIC, dir), join(root, dir), { recursive: true }); } };
+  const read = path => JSON.parse(readFileSync(join(root, path), 'utf8'));
+  const everything = () => ['royal-commissions', 'integrity-reports', 'agency-reports', 'annual-reports'].flatMap(dir => readdirSync(join(root, dir)).map(n => readFileSync(join(root, dir, n), 'utf8'))).join('\n') + readFileSync(join(root, 'transcripts/index.json'), 'utf8');
   try {
-    for (const dir of ['royal-commissions', 'transcripts']) cpSync(join(PUBLIC, dir), join(root, dir), { recursive: true });
-    const read = path => JSON.parse(readFileSync(join(root, path), 'utf8'));
-    const before = read('transcripts/index.json'), row = before.docs.find(d => d.key === SUBJECT.key);
+    const ix = json('transcripts/index.json'), row = ix.docs.find(d => d.key === SUBJECT.key);
+    const integrity = json('integrity-reports/index.json').reports.find(r => r.id === REPORTS.integrity.id);
+    const entries = mode => [entry({ document: `${ROBODEBT}/${SUBJECT.key}` }, 'legal_order', mode), entry({ document: REPORTS.integrity.slug }, 'publisher_request', mode),
+      entry({ document: REPORTS.agency.slug }, 'withdrawn', mode), entry({ document: REPORTS.annual.slug }, 'amended_pending', mode)];
+    // list_only
+    copy();
+    // The published data mentions some of these words itself; applying the list must add none.
+    const reasons = text => (text.match(/legal_order|publisher_request|amended_pending|"withdrawn"|2026-11-16/g) ?? []).length, baseline = reasons(everything());
     const postings = () => readdirSync(join(root, 'transcripts/terms')).flatMap(n => Object.values(read('transcripts/terms/' + n))).flat();
     assert.ok(postings().includes(row.i));
-    const policy = policyOf([entry({ document: `${ROBODEBT}/${SUBJECT.key}` }, 'legal_order')]);
-    const changed = applySourcePolicy({ root, policy, check: true });
-    assert.ok(changed.includes(row.file.slice(1)) && changed.includes(`royal-commissions/commission-${ROBODEBT}.json`));
-    assert.ok(existsSync(join(root, row.file.slice(1))), '--check writes nothing');
+    const policy = policyOf(...entries('list_only'));
+    assert.ok(applySourcePolicy({ root, policy, check: true }).includes(row.file.slice(1)) && existsSync(join(root, row.file.slice(1))), '--check writes nothing');
     applySourcePolicy({ root, policy });
-    assert.ok(!existsSync(join(root, row.file.slice(1))));
-    const after = read('transcripts/index.json');
-    assert.deepEqual(after.docs[row.i], { i: row.i, withheld: true });
-    assert.equal(after.docs.length, before.docs.length);
-    assert.ok(!postings().includes(row.i));
-    assert.equal(after.commissions[ROBODEBT].counts.transcripts, before.commissions[ROBODEBT].counts.transcripts - 1);
-    const c = read(`royal-commissions/commission-${ROBODEBT}.json`).commission, held = c.transcripts.find(t => t.key === SUBJECT.key);
-    assert.deepEqual(Object.keys(held).sort(), LISTING);
-    assert.equal(held.withheld.label, 'Withheld: subject to a legal order');
+    assert.ok(!existsSync(join(root, row.file.slice(1))) && !postings().includes(row.i));
+    assert.deepEqual(read('transcripts/index.json').docs[row.i], { i: row.i, withheld: true });
+    const held = read(`royal-commissions/commission-${ROBODEBT}.json`).commission.transcripts.find(t => t.key === SUBJECT.key);
+    assert.deepEqual([Object.keys(held).sort(), held.unavailable], [LISTING, NOTICE]);
     const manifest = read('royal-commissions/manifest.json');
     for (const [name, f] of Object.entries(manifest.files)) assert.equal(createHash('sha256').update(readFileSync(join(root, 'royal-commissions', name))).digest('hex'), f.sha256, name);
+    const report = read('integrity-reports/index.json').reports.find(r => r.id === REPORTS.integrity.id);
+    assert.deepEqual([report.title, report.unavailable, report.findings, report.documents, report.summary, report.pdf_url], [integrity.title, NOTICE, undefined, undefined, undefined, undefined]);
+    const bodyFile = readdirSync(join(root, 'integrity-reports')).filter(n => n.startsWith('reports-')).map(n => read('integrity-reports/' + n)).find(f => f.records.some(r => r.id === REPORTS.integrity.id));
+    assert.equal(bodyFile.records.find(r => r.id === REPORTS.integrity.id).unavailable, NOTICE);
+    const doc = read('agency-reports/index.json').documents.find(d => d.id === REPORTS.agency.id);
+    assert.deepEqual([doc.unavailable, doc.sha256, doc.pages], [NOTICE, undefined, undefined]);
+    assert.ok(!readdirSync(join(root, 'agency-reports')).filter(n => n.startsWith('facts-')).some(n => read('agency-reports/' + n).facts.some(f => f.report_id === REPORTS.agency.id)));
+    const annual = read('annual-reports/index.json');
+    assert.equal(annual.bodies.find(b => b.id === REPORTS.annual.id).reports[REPORTS.annual.year].unavailable, NOTICE);
+    assert.ok(!annual.headline.some(h => h.body_id === REPORTS.annual.id && h.year === REPORTS.annual.year));
+    for (const name of readdirSync(join(root, 'annual-reports')).filter(n => n.includes(REPORTS.annual.year) && /^(?:remuneration|suppliers)-/.test(n)))
+      assert.ok(!Object.values(read('annual-reports/' + name).tables).some(t => t.body_id === REPORTS.annual.id), name);
     assert.deepEqual(applySourcePolicy({ root, policy, check: true }), [], 'applying twice changes nothing');
-    // A whole source: its text directory and its index entry go too.
-    applySourcePolicy({ root, policy: policyOf([entry({ source: ROBODEBT })]) });
-    const gone = read('transcripts/index.json');
-    assert.ok(!existsSync(join(root, 'transcripts', ROBODEBT)) && !(ROBODEBT in gone.commissions) && !gone.docs.some(d => d.commission === ROBODEBT));
-    assert.equal(read('royal-commissions/index.json').commissions.find(r => r.id === ROBODEBT).withheld.reason, 'publisher_request');
+    assert.ok(reasons(everything()) <= baseline, 'no reason class or entry date was written into any applied file');
+    // hide
+    copy();
+    // A whole commission, too: one with transcripts that no fixed caveat names.
+    const rcIndex = json('royal-commissions/index.json'), fixed = JSON.stringify(rcIndex.meta);
+    const whole = rcIndex.commissions.find(c => c.counts.transcripts && !fixed.includes(c.name) && c.id !== ROBODEBT);
+    applySourcePolicy({ root, policy: policyOf(...entries('hide'), entry({ source: whole.id }, 'legal_order', 'hide')) });
+    const after = everything();
+    absent(after, [SUBJECT.key, SUBJECT.title, REPORTS.integrity.id, integrity.title, REPORTS.agency.id, whole.id, whole.name], 'hidden items');
+    assert.ok(!(REPORTS.annual.year in read('annual-reports/index.json').bodies.find(b => b.id === REPORTS.annual.id).reports));
+    assert.ok(!existsSync(join(root, `royal-commissions/commission-${whole.id}.json`)) && !existsSync(join(root, 'transcripts', whole.id)));
+    assert.ok(!after.includes(NOTICE), 'a hidden item has no notice either');
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
-test('the search catalogue keeps a withheld record as a title and label, with nothing searchable', () => {
-  const policy = policyOf([entry({ document: 'bill-text-au-federal-example' }), entry({ source: ROBODEBT }, 'legal_order')]);
-  assert.equal(catalogWithheld('bill-text:x', { slug: 'bill-text-au-federal-example' }, policy).label, "Withheld at the publisher's request");
-  assert.equal(catalogWithheld(`official-report:royal-commission-${ROBODEBT}`, { slug: `royal-commission-${ROBODEBT}` }, policy).label, 'Withheld: subject to a legal order');
-  assert.equal(catalogWithheld('person:Example', { slug: '' }, policy), null);
-  assert.equal(catalogWithheld(`official-report:royal-commission-${VIC}`, { slug: `royal-commission-${VIC}` }), null);
-  const source = readFileSync(new URL('../../scripts/build_search_catalog.mjs', import.meta.url), 'utf8');
-  assert.match(source, /const held = catalogWithheld\(key, extra\);\s+if\(held\) \{ text=''; extra=\{[^\n]+withheld:held\.label\}; \}/, 'add() blanks the snippet, aliases and every other field');
-});
-
-test('a report record built from a withheld report has no summary, quotation or recommendation', async () => {
+test('the search catalogue and the report records: the neutral row, or no row', async () => {
   const report = json(`royal-commissions/commission-${ROBODEBT}.json`).commission.reports[0];
-  const policy = policyOf([entry({ document: `${ROBODEBT}/${report.key}` })]);
-  const read = async path => { const data = json(path.slice(1)); return path === `/royal-commissions/commission-${ROBODEBT}.json` ? { ...data, commission: redactCommission(data.commission, policy) } : data; };
-  const all = await projectReports(read), built = all.find(r => r.row.slug === `royal-commission-${ROBODEBT}`), open = (await projectReports(async path => json(path.slice(1)))).find(r => r.row.slug === `royal-commission-${ROBODEBT}`);
-  assert.ok(open.detail.summary && open.detail.record.recommendations.length, 'the control: the published record has a summary and recommendations');
-  assert.equal(built.detail.summary, undefined);
-  assert.deepEqual(built.detail.record.recommendations, []);
-  assert.equal(built.detail.record.reports[0].withheld.label, "Withheld at the publisher's request");
-  // This report has no landing page and its commission no site on record, so the publisher link is the file's own address; nothing else of the file is kept.
-  assert.deepEqual(built.detail.record.reports[0].files, []);
-  assert.ok(!JSON.stringify(built.detail).includes(report.files[0].sha256));
+  assert.deepEqual(catalogWithheld('bill-text:x', { slug: 'bill-text-au-federal-fake-424242' }, policyOf(entry({ document: 'bill-text-au-federal-fake-424242' }))), { mode: 'list_only' });
+  assert.deepEqual(catalogWithheld(`official-report:${REPORTS.integrity.slug}`, { slug: REPORTS.integrity.slug }, policyOf(entry({ document: REPORTS.integrity.slug }, 'legal_order', 'hide'))), { mode: 'hide' });
+  assert.equal(catalogWithheld('person:Example', { slug: '' }, policyOf(entry({ document: 'speech-424242' }))), null);
+  const add = /function add\([\s\S]*?\n}/.exec(source('../../scripts/build_search_catalog.mjs'))[0];
+  assert.match(add, /if\(held\?\.mode==='hide'\) return;\n\s+if\(held\) \{ text=''; extra=\{snippet:NOTICE, [^\n]+unavailable:NOTICE\}; \}/, 'hide leaves the row out; list_only keeps the title with the notice and no searchable text');
+  const read = async path => json(path.slice(1)), find = (all, slug) => all.find(r => r.row.slug === slug);
+  const open = await projectReports(read);
+  for (const item of [REPORTS.integrity, REPORTS.agency, REPORTS.annual, { slug: `royal-commission-${ROBODEBT}` }]) {
+    const before = find(open, item.slug);
+    assert.ok(before, 'the control: ' + item.slug);
+    const listed = find(await projectReports(read, policyOf(entry({ document: item.slug }, 'withdrawn'))), item.slug);
+    assert.deepEqual([listed.row.title, listed.row.snippet, listed.row.unavailable, listed.aliases, listed.detail.record, listed.detail.facts, listed.detail.tables, listed.detail.summary, listed.detail.caveats],
+      [before.row.title, NOTICE, NOTICE, [], {}, [], [], undefined, [NOTICE]]);
+    silent({ row: listed.row, detail: { ...listed.detail, publisher: null } }, item.slug);
+    assert.equal(find(await projectReports(read, policyOf(entry({ document: item.slug }, 'legal_order', 'hide'))), item.slug), undefined);
+  }
+  // A withheld report inside a commission: its record has no summary, quotation or recommendation.
+  const built = find(await projectReports(async path => { const data = json(path.slice(1)); return path === `/royal-commissions/commission-${ROBODEBT}.json` ? { ...data, commission: redactCommission(data.commission, policyOf(entry({ document: `${ROBODEBT}/${report.key}` }))) } : data; }), `royal-commission-${ROBODEBT}`);
+  assert.deepEqual([built.detail.summary, built.detail.record.recommendations, built.detail.record.reports[0].unavailable, built.detail.record.reports[0].files], [undefined, [], NOTICE, []]);
 });
 
-// ---- item 1: nothing of this commission's transcripts is reachable
-
-const QUOTES = /["“”]/;
-const strings = (value, out = []) => { if (typeof value === 'string') out.push(value); else if (value && typeof value === 'object') for (const v of Object.values(value)) strings(v, out); return out; };
-
-test('the tool, in Ask and in the MCP, returns only listing fields and OPAX-worded notes for the commission', async () => {
-  const api = await tools(policyData());
-  const c = json(`royal-commissions/commission-${VIC}.json`).commission;
-  // Every string the record holds: titles, dates, links, the rights note and OPAX's notes. Anything else would be new text.
-  const known = new Set(strings(c));
-  for (const ask of [false, true]) {
-    const results = await everyView(api, VIC, ask);
-    for (const r of results) assert.equal(r.error, undefined);
-    assert.equal(results[2].rows.length, 2);
-    for (const row of results[2].rows) {
-      assert.deepEqual(Object.keys(row).sort(), ['commission', 'commission_id', 'date', 'date_basis', 'hearing', 'key', 'label', 'order_notes', 'page_url', 'pages', 'pdf_url', 'publisher_redacted', 'rights', 'title']);
-      for (const s of strings({ ...row, label: '', date_basis: '' })) assert.ok(known.has(s) || s === c.id || c.notes.some(n => n.startsWith(s.replace(/…$/, ''))), s);
-    }
-    assert.deepEqual(results[3].rows, [], 'a word search finds no text: none is indexed');
-    assert.equal(results[1].rows[0].use, 'documents_only');
-    assert.equal(results[1].rows[0].recommendations, 0);
-    assert.deepEqual(results[1].rows[0].commissioners, [{ name: c.commissioners[0].name, role: 'Commissioner', source_url: c.commissioners[0].cite.url, page: 1 }]);
-    const said = strings(results.map(r => ({ rows: r.rows, citations: r.citations })));
-    for (const s of said) assert.ok(!QUOTES.test(s), 'no quotation: ' + s);
-    assert.ok(!said.some(s => /text_matches|hearing turn|transcript page \S+ \(PDF page/.test(s)));
-  }
-});
-
-test('no file under public holds text of the commission\'s transcripts', () => {
-  const c = json(`royal-commissions/commission-${VIC}.json`).commission;
-  assert.equal(c.use, 'documents_only');
-  for (const s of strings(c)) assert.ok(!QUOTES.test(s), s);
-  for (const t of c.transcripts) { assert.equal(t.date_quote, undefined); assert.equal(t.full_text, undefined); }
-  assert.ok(c.commissioners.every(p => p.quote === undefined));
-  const ix = json('transcripts/index.json');
-  assert.ok(!(VIC in ix.commissions) && !ix.docs.some(d => d.commission === VIC) && !existsSync(join(PUBLIC, 'transcripts', VIC)));
-  // Built outputs (present after `npm run build:release`): the report record and the search catalogue rows for the commission.
-  const record = join(PUBLIC, 'report-records', `royal-commission-${VIC}.json`);
-  if (existsSync(record)) {
-    const detail = JSON.parse(readFileSync(record, 'utf8'));
-    assert.equal(detail.summary, undefined);
-    assert.deepEqual(detail.facts, []);
-    assert.deepEqual(detail.record, c, 'the report record is the public record, unchanged');
-    for (const s of strings({ ...detail, record: null, caveats: null })) assert.ok(!QUOTES.test(s), s);
-  }
-  const manifest = join(PUBLIC, 'search-catalog', 'manifest.json');
-  const version = existsSync(manifest) ? JSON.parse(readFileSync(manifest, 'utf8')).version : '', dir = join(PUBLIC, 'search-catalog', version);
-  if (version && existsSync(dir)) {
-    const rows = readdirSync(dir).filter(n => /^records-\d+\.json$/.test(n)).flatMap(n => { const shard = JSON.parse(readFileSync(join(dir, n), 'utf8')); return Array.isArray(shard) ? shard : shard.records; }).filter(r => r && (JSON.stringify(r).includes(VIC) || String(r.title).includes('Major Public and Civil Infrastructure')));
-    assert.equal(rows.length, 1);
-    assert.deepEqual([rows[0].title, rows[0].snippet, rows[0].href], [c.name, c.name, `/report/royal-commission-${VIC}`]);
-  }
-});
-
-test('the knowledge base cannot hold the commission: every push path refuses it, and its use excludes it from model calls', () => {
-  assert.ok(kbRefusal({ slug: 'any', usermetadata: { classifications: [{ labelset: 'source', label: VIC }] } }));
-  assert.ok(kbRefusal({ slug: 'any', origin: { source_id: VIC } }));
-  assert.equal(kbRefusal({ slug: 'speech-1', origin: { source_id: 'opax-parli' }, usermetadata: { classifications: [{ labelset: 'source', label: 'openaustralia' }] } }), null);
+test('the Deploy workflow applies the list after the tests and returns to the public build before anything is committed', () => {
+  const workflow = source('../../.github/workflows/deploy.yml'), overlay = source('../../scripts/withheld_overlay.sh');
+  const order = ['- name: Build all release assets', '- name: Test\n', '- name: Apply the withheld list', '- name: Deploy\n', '- name: Reload D1 tables', '- name: Return to the public build', '- name: Commit restamped assets back to main'].map(step => workflow.indexOf(step));
+  assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), order.join(','));
+  assert.equal((workflow.match(/secrets\.OPAX_WITHHELD_JSON/g) ?? []).length, 1, 'only the apply step sees the secret; the tests never do');
+  assert.match(workflow, /npx wrangler secret put OPAX_WITHHELD_JSON >\/dev\/null 2>&1/, 'the same value goes to the Worker in the same run');
+  // The script prints one fixed line, hides every build log and restores the data it changed.
+  assert.deepEqual([...overlay.matchAll(/^\s*echo "([^"]+)"/gm)].map(m => m[1]), ['::error::the release could not be prepared; nothing was deployed', '[withheld_overlay] ready', '[withheld_overlay] ready']);
+  assert.match(overlay, /\) >\/dev\/null 2>&1; then/);
+  assert.match(overlay, /git checkout -- "\$\{data\[@\]\}" >\/dev\/null 2>&1/);
+  for (const dir of ['royal-commissions', 'transcripts', 'integrity-reports', 'agency-reports', 'annual-reports']) assert.ok(overlay.includes(`portal/public/${dir}`), dir);
+  assert.doesNotMatch(source('../wrangler.jsonc'), /OPAX_WITHHELD_JSON"\s*:/, 'never a var: vars are public in the repository');
 });

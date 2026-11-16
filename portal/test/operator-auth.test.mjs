@@ -20,6 +20,7 @@ const routes=[
  {label:'daily-post engagement',path:'/api/daily-post/engagement',method:'GET'},
  {label:'daily-post run',path:'/api/daily-post/run',method:'POST'},
  {label:'Ask gold',path:'/api/ops/ask-gold',method:'POST',handler:'apiAgenticGold',status:409},
+ {label:'withheld digest',path:'/api/ops/withheld-digest',method:'GET'},
 ];
 const cachedEngagement={at:'test-only',accounts:{},posts:[],errors:{}};
 
@@ -123,7 +124,7 @@ test('the constant-time comparator result governs authorization without a raw st
 // /api/ask accepts an operator-only x-opax-research engine override (eval); unauthenticated requests ignore the header
 // instead of getting 401, so it is not an operator route, but it must still use the shared guard (checked below).
 function insideAskEvalOverride(node){let p=node.parent;while(p&&!ts.isFunctionDeclaration(p))p=p.parent;return p?.name?.text==='apiAskRouted';}
-test('all four operator routes use the shared constant-time guard and contain no inline credential reads',()=>{
+test('all five operator routes use the shared constant-time guard and contain no inline credential reads',()=>{
  const helper=readFileSync(new URL('../src/operator-auth.ts',import.meta.url),'utf8');
  assert.match(helper,/crypto\.subtle\.timingSafeEqual\(/);
  assert.doesNotMatch(helper,/===|!==|==|!=/,'operator guard must not compare raw strings');

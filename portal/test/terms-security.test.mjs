@@ -31,8 +31,11 @@ test('the takedown section says who to contact, what OPAX does and what it canno
   assert.ok(at > 0);
   const section = text(html.slice(at, html.indexOf('<h2', at + 10)));
   for (const fact of ['support@opax.com.au', 'A person reads these requests and acts on them the same day.',
-    "adding it to OPAX's withheld list", '"Withheld at the publisher\'s request"', '"Withheld: subject to a legal order"', 'a link to the publisher',
-    'OPAX shows no text, excerpt or summary of it', 'Removes it from the knowledge base that Ask and search read.',
+    "adding it to OPAX's withheld list", 'any document OPAX holds: a speech, a release, a bill text, a report or a hearing transcript',
+    'removed from OPAX\'s lists altogether', '"Not available on OPAX. Open the publisher\'s copy."', 'a link to the publisher',
+    'OPAX uses the same words whatever the reason and does not publish the reason or the list.',
+    'OPAX shows no text, excerpt or summary of the document', 'Removes it from the knowledge base that Ask and search read, so it cannot enter a new answer.',
+    "A conversation a signed-in member has saved to their account is on OPAX's server, and OPAX can remove that copy.",
     'starting a new cache period and publishing the site again', 'IndexNow',
     "Remove a copy of an answer or a conversation that is already saved on a reader's own device.",
     'Change the copies held by other sites or by search engines.',
@@ -44,9 +47,12 @@ test('the takedown section says who to contact, what OPAX does and what it canno
   assert.doesNotMatch(section, /\b(?:monitors?|detects?|automatically (?:checks|removes|withholds))\b/i);
   // The labels the page quotes are the labels the code shows, and the contact is the one /support gives.
   const policy = read('../../parli/ingest/source_policy.mjs');
-  for (const label of ["Withheld at the publisher's request", 'Withheld: subject to a legal order']) assert.ok(policy.includes(label), label);
+  assert.ok(policy.includes(`export const NOTICE = "Not available on OPAX. Open the publisher's copy."`), 'the page quotes the one notice the code shows');
+  // The page never words a reason as a label: a reader cannot tell from OPAX why a document is not shown.
+  assert.doesNotMatch(section, /Withheld at|Withheld:|subject to a legal order"/);
   for (const name of ['terms', 'privacy', 'support']) assert.doesNotMatch(text(panel(name)), /non-?\s?commercial/i, name);
   assert.match(read('../../docs/TAKEDOWN.md'), /support@opax\.com\.au\*\*\. A person reads the request and acts on it the same day\./);
+  assert.match(read('../../docs/TAKEDOWN.md'), /Never write an identifier/);
 });
 
 test('the published text keeps no drafting marks, em dashes or questions', () => {

@@ -12,7 +12,7 @@ import {offMapDonorNote,donorDisclosure,donorLabelHTML,receiptTypeLine,hasPartyR
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
-import { guardKbRequest, guardKbResponse, guardKbGeneration, openForKbGeneration, POLICY as SOURCE_POLICY } from './source-policy'
+import { guardKbRequest, guardKbResponse, guardKbGeneration, openForKbGeneration, hiddenKbRead, guardSearchRows, withheldDigest, withheldReady, dependsOnWithheld, withheldUnavailable, POLICY as SOURCE_POLICY } from './source-policy'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
@@ -333,6 +333,8 @@ async function kbFetch(
     // The source policy: a query never asks for a withheld source or document (source-policy.ts).
     // ... and a generation request carries nothing of a source closed to knowledge base generation.
     const { target, body } = guardKbRequest(path, guardKbGeneration(path, sent))
+    const hidden = hiddenKbRead(path)
+    if (hidden) return hidden
     const generation = env.RESEARCH_EVAL && (target === '/predict/chat' || target === '/ask' && (body as Record<string, unknown> | undefined)?.generate_answer !== false)
     const answered = await fetch(`${ragBase(env)}${target}`, {
       method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
@@ -858,7 +860,8 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const noMention = !options.suggest && noRecordMentions({ query: url.searchParams.get('q'), mode: url.searchParams.get('mode'),
     catalogTotal: catalog?.total || 0, documents: documents?.results || [] })
   const out = json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
-    results: shown, count: shown.length,
+    // The withheld list has the last word on a search row, whatever the built catalogue holds (source-policy.ts).
+    results: guardSearchRows(shown), count: guardSearchRows(shown).length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
     ...(catalog?.matched_query ? { matched_query: catalog.matched_query } : {}),
@@ -2969,16 +2972,19 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     }
     extra?: { metadata?: Record<string, unknown> }
     data?: { texts?: Record<string, { value?: { body?: string } }> }
-    withheld?: { reason?: string; date?: string; label: string }
+    unavailable?: string
+    hidden?: boolean
   }
-  // A withheld record, or one whose source is not quotable, is a listing row: its title, date, the label and
-  // the publisher's link. kbFetch has already removed everything else (source-policy.ts).
-  if (r.withheld) {
+  // A hidden record is answered exactly as one that does not exist.
+  if (r.hidden) return json({ error: 'not found' }, 404)
+  // A withheld record, or one whose tier keeps it out of the knowledge base, is a listing row: its title, date,
+  // one neutral notice and the publisher's link. kbFetch has already removed everything else (source-policy.ts).
+  if (r.unavailable) {
     const kind = r.usermetadata?.classifications?.find(c => c.labelset === 'kind')?.label
     const listed = json({ slug, title: r.title ?? slug, speaker: null, speaker_attribution: null,
       url: r.origin?.url ?? (typeof r.extra?.metadata?.source_url === 'string' ? r.extra.metadata.source_url : null),
       labels: kind ? { kind } : {}, topics: [], metadata: typeof r.extra?.metadata?.date === 'string' ? { date: r.extra.metadata.date } : {},
-      summary: null, withheld: r.withheld, text: '' })
+      summary: null, unavailable: r.unavailable, text: '' })
     cacheStore(ctx, cacheKey, listed, RESOURCE_CACHE_TTL)
     return withCacheStatus(listed, bypass ? 'BYPASS' : 'MISS')
   }
@@ -7293,6 +7299,14 @@ async function route(
         response.headers.set('cache-control', 'no-store')
         return response
       }
+      if (url.pathname === '/api/ops/withheld-digest' && request.method === 'GET') {
+        // For the operator only: a digest of this Worker's withheld list, to compare with the build's and the
+        // refresh box's (docs/TAKEDOWN.md). It shows no entry and no count, and is never cached or logged.
+        if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
+        const digest = json({ digest: await withheldDigest(env.OPAX_WITHHELD_JSON) })
+        digest.headers.set('cache-control', 'no-store')
+        return digest
+      }
       if (url.pathname === '/api/daily-post/engagement' && request.method === 'GET') {
         // An operator's read of what the platforms report for the account and
         // the latest editions (docs/INSIGHTS.md). Bearer-guarded like the run
@@ -7494,6 +7508,9 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     setAppStoreProvider(env.APP_STORE_PROVIDER)
     const url = new URL(request.url)
+    // The withheld list is read from its private store on every request. If the store is set and cannot be read,
+    // the routes that read records, search or answer are refused rather than served without it (source-policy.ts).
+    if (!withheldReady(env.OPAX_WITHHELD_JSON) && dependsOnWithheld(url.pathname)) return withSecurityHeaders(withheldUnavailable(url.pathname), url)
     // Universal links (src/app-site-association.ts): answered first, as Apple's fetcher follows no redirect.
     if (url.pathname === APP_SITE_ASSOCIATION_PATH) return withSecurityHeaders(appSiteAssociationResponse(request, env.APPLE_TEAM_ID), url)
     if (url.pathname === '/gov-advertising/ready.json') return withSecurityHeaders(await govAdvertisingReady(request,govAdvertisingReader(env.ASSETS)),url)

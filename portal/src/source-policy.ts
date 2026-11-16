@@ -1,12 +1,38 @@
-/** The source policy at the knowledge base boundary (parli/ingest/source_policy.json, one loader in
- * parli/ingest/source_policy.mjs). kbFetch is the only way this Worker reaches the knowledge base, so Ask
- * retrieval, search, the resource API, MCP read_record and every tool's lookup pass through these two steps:
- * a query never asks for a withheld source or document, and a response never carries the text of a resource
- * that is withheld or whose source is not quotable. */
-import { POLICY, kbRefusal, type SourcePolicy, type WithheldEntry } from '../../parli/ingest/source_policy.mjs'
+/** The source policy in the Worker (one loader, parli/ingest/source_policy.mjs). The tiers are public and
+ * bundled. The withheld list is private: it arrives in the OPAX_WITHHELD_JSON secret and is never in the
+ * repository, a log line, an error or a response. kbFetch is the only way this Worker reaches the knowledge
+ * base, so Ask retrieval, search, the resource API, MCP read_record and every tool's lookup pass through two
+ * steps here: a query never asks for a withheld source or document, and a response never carries the text of a
+ * resource that is withheld or whose tier keeps it out of the knowledge base. A reader sees one neutral notice
+ * for a withheld item, or nothing at all in hide mode; never a reason. */
+import { POLICY, NOTICE, kbRefusal, loadWithheld, withheldDigest, type SourcePolicy, type WithheldEntry } from '../../parli/ingest/source_policy.mjs'
 
-export { POLICY, kbRefusal }
+export { POLICY, NOTICE, kbRefusal, withheldDigest }
 export type { SourcePolicy, WithheldEntry }
+
+/** Load the private store for this request. False when the secret is set and cannot be read: the caller then
+ * refuses the routes that depend on the list rather than serve them from an older or empty one. No secret is
+ * "nothing withheld". */
+export function withheldReady(raw: string | undefined): boolean {
+  try { loadWithheld(raw); return true } catch { return false }
+}
+/** Routes that read records, search or answer: with an unreadable store they are refused, not served. */
+export const dependsOnWithheld = (pathname: string): boolean => /^\/(?:api|mcp|doc|report|official-reports)(?:\/|$)/.test(pathname)
+/** What a reader gets from those routes while the store cannot be read. It says nothing about the list. */
+export function withheldUnavailable(pathname: string): Response {
+  const headers = { 'retry-after': '300', 'cache-control': 'no-store' }
+  return pathname.startsWith('/api/') || pathname.startsWith('/mcp')
+    ? new Response(JSON.stringify({ error: 'OPAX is temporarily unavailable. Please try again shortly.' }), { status: 503, headers: { ...headers, 'content-type': 'application/json; charset=utf-8' } })
+    : new Response('OPAX is temporarily unavailable. Please try again shortly.', { status: 503, headers: { ...headers, 'content-type': 'text/plain; charset=utf-8' } })
+}
+/** A hidden document read by its slug is answered as a record that does not exist, without asking for it. */
+export function hiddenKbRead(target: string, policy: SourcePolicy = POLICY): Response | null {
+  const read = READ.exec(target)
+  if (!read || !target.startsWith('/slug/')) return null
+  let slug = read[1]
+  try { slug = decodeURIComponent(slug) } catch { /* matched as sent */ }
+  return policy.withheld({ documents: [slug] })?.mode === 'hide' ? new Response(JSON.stringify({ detail: 'Resource does not exist' }), { status: 404, headers: { 'content-type': 'application/json' } }) : null
+}
 type Row = Record<string, unknown>
 const object = (v: unknown): Row => v && typeof v === 'object' && !Array.isArray(v) ? v as Row : {}
 const QUERY_PATHS = new Set(['/find', '/ask', '/search', '/catalog'])
@@ -66,14 +92,14 @@ export function guardKbGeneration(target: string, body: unknown, policy: SourceP
   return out
 }
 
-/** What a closed resource shows: its title, date and publisher link with the label, and no text, summary,
+/** What a closed resource shows: its title, date and publisher link with the neutral notice, and no text, summary,
  * speaker or computed labels. */
-export function listedKbResource(resource: Row, refusal: WithheldEntry | { label: string }): Row {
+export function listedKbResource(resource: Row): Row {
   const origin = object(resource.origin), metadata = object(object(resource.extra).metadata)
   const kept = Object.fromEntries(['date', 'source_url'].filter(k => typeof metadata[k] === 'string').map(k => [k, metadata[k]]))
   const kind = (Array.isArray(object(resource.usermetadata).classifications) ? object(resource.usermetadata).classifications as Row[] : []).filter(c => c.labelset === 'kind' || c.labelset === 'source')
   return { id: resource.id, slug: resource.slug, title: resource.title, origin: { ...(origin.url ? { url: origin.url } : {}), ...(origin.source_id ? { source_id: origin.source_id } : {}) },
-    usermetadata: { classifications: kind }, extra: { metadata: kept }, withheld: refusal }
+    usermetadata: { classifications: kind }, extra: { metadata: kept }, unavailable: NOTICE }
 }
 
 function scrubMap(holder: Row, key: string, policy: SourcePolicy): string[] {
@@ -90,7 +116,8 @@ export function scrubKbPayload(target: string, data: unknown, policy: SourcePoli
   const out = { ...data as Row }
   if (READ.test(target)) {
     const refusal = kbRefusal(out, policy)
-    return refusal ? listedKbResource(out, refusal) : out
+    // Hidden: nothing of the resource, not even that it is there. The resource API answers it as not found.
+    return !refusal ? out : refusal.mode === 'hide' ? { hidden: true } : listedKbResource(out)
   }
   const gone = scrubMap(out, 'resources', policy)
   if (out.retrieval_results && typeof out.retrieval_results === 'object') {
@@ -145,16 +172,34 @@ export function guardKbResponse(target: string, response: Response, policy: Sour
   return new Response(body, { status: response.status, statusText: response.statusText, headers })
 }
 
+const slugPart = (value: unknown) => String(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+/** The document ids a tool row may be withheld under: its slug or record id, or its id as a report slug. */
+const rowDocuments = (r: Row): string[] => [r.slug, r.record_id, r.id, ...(typeof r.id === 'string' ? ['integrity-report', 'agency-report', 'annual-report', 'royal-commission'].map(type => `${type}-${slugPart(r.id)}`) : [])]
+  .filter((v): v is string => typeof v === 'string' && /^[a-z0-9][a-z0-9._-]{0,199}$/.test(v))
+
+/** Search rows as they leave the Worker, whatever the built catalogue holds: a withheld record (a slug, or a
+ * report by the slug in its link) is left out, or keeps its title and link with the one neutral notice. */
+export function guardSearchRows<T>(rows: readonly T[], policy: SourcePolicy = POLICY): T[] {
+  if (!policy.withheldCount) return rows as T[]
+  return rows.flatMap(row => {
+    const r = object(row), report = /^\/report\/([a-z0-9-]+)/.exec(String(r.href ?? ''))?.[1]
+    const held = policy.withheld({ documents: [...rowDocuments(r), ...(report ? [report] : [])], sources: report?.startsWith('royal-commission-') ? [report.replace('royal-commission-', '')] : [] })
+    if (!held) return [row]
+    return held.mode === 'hide' ? [] : [{ kind: r.kind, title: r.title, href: r.href, slug: r.slug, snippet: NOTICE, resource: '', unavailable: NOTICE } as T]
+  })
+}
+
 /** The last step before a tool's result reaches Ask's citations or an MCP client: a row or citation that names a
- * withheld record by its slug is reduced to its title and label, whatever the tool read. */
+ * withheld record (a knowledge base slug, or a report by its slug) is left out, or reduced to its title and the
+ * neutral notice, whatever the tool read. */
 export function guardToolResult<T extends { rows?: unknown[], items?: unknown[], citations?: { url: string, text: string }[] }>(result: T, policy: SourcePolicy = POLICY): T {
-  if (!policy.withheldDocuments.length) return result
-  const entry = (slug: unknown) => typeof slug === 'string' ? policy.withheld({ documents: [slug] }) : null
-  const listed = (row: unknown) => {
-    const r = object(row), held = entry(r.slug) ?? entry(r.record_id)
-    return held ? { ...(r.slug ? { slug: r.slug } : {}), ...(r.record_id ? { record_id: r.record_id } : {}), ...(r.title ? { title: r.title } : {}), withheld: held.label } : row
+  if (!policy.withheldCount) return result
+  const listed = (row: unknown): unknown[] => {
+    const r = object(row), held = policy.withheld({ documents: rowDocuments(r) })
+    if (!held) return [row]
+    return held.mode === 'hide' ? [] : [{ ...(r.slug ? { slug: r.slug } : {}), ...(r.record_id ? { record_id: r.record_id } : {}), ...(r.id ? { id: r.id } : {}), ...(r.title ? { title: r.title } : {}), unavailable: NOTICE }]
   }
-  const slugOf = (url: unknown) => { try { return decodeURIComponent(/\/doc\/([^/?#]+)/.exec(String(url ?? ''))?.[1] ?? '') } catch { return '' } }
-  return { ...result, ...(Array.isArray(result.rows) ? { rows: result.rows.map(listed) } : {}), ...(Array.isArray(result.items) ? { items: result.items.map(listed) } : {}),
-    ...(Array.isArray(result.citations) ? { citations: result.citations.filter(c => !entry(slugOf(c?.url))) } : {}) }
+  const slugOf = (url: unknown) => { try { return decodeURIComponent(/\/(?:doc|report)\/([^/?#]+)/.exec(String(url ?? ''))?.[1] ?? '') } catch { return '' } }
+  return { ...result, ...(Array.isArray(result.rows) ? { rows: result.rows.flatMap(listed) } : {}), ...(Array.isArray(result.items) ? { items: result.items.flatMap(listed) } : {}),
+    ...(Array.isArray(result.citations) ? { citations: result.citations.filter(c => !policy.withheld({ documents: [slugOf(c?.url)].filter(Boolean) })) } : {}) }
 }

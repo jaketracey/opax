@@ -381,15 +381,6 @@ function partyChipHTML(party, opts) { return uiLabels.partyLabelHTML(party, opts
 function statusLabelHTML(word, tone) { return uiLabels.statusLabelHTML(word, tone); }
 function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
-/** Answers a language model did not write: a calculation from the records, a list of passages, a note that the
- *  records do not cover the question, or a prompt to narrow it. Everything else Ask shows is model-written. */
-const NOT_MODEL_WRITTEN = new Set(["calculated", "evidence_only", "evidence_gap", "needs_scope", "needs_period", "needs_question"]);
-/** True when Ask's answer was written by a language model, so it carries the Machine-written label. A written
- *  overview paragraph (money_overview) counts even above a calculated answer. */
-function modelWrittenAnswer(data, text) {
-  if (!data || data.answered === false) return false;
-  return !!data.money_overview || (!!String(text || "").trim() && !NOT_MODEL_WRITTEN.has(data.answer_status));
-}
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
 /** A chamber code's reader name (labels.js); '' for a code it does not know, never the code. */
@@ -10873,8 +10864,7 @@ async function runAsk(question) {
     $("ask-stamp").hidden = needsClarification || noAnswer;
     $("ask-result").querySelector(".kicker").textContent = noAnswer ? "Records found" : needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
-    // Every answer a language model wrote carries the label, above any overview paragraph it also wrote.
-    if (modelWrittenAnswer(data, answerText)) { $("ask-overview").insertAdjacentHTML("afterbegin", machineLabelHTML()); $("ask-overview").hidden = false; }
+    if (data.is_overview_intent && !noAnswer) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
     if (noAnswer) {
       $("ask-overview").hidden = true;
       renderNoAnswer($("ask-answer"), data);
@@ -12120,7 +12110,7 @@ function chatAnswerEl(msg) {
     wrap.appendChild(line);
     renderAskStepsLine(line, msg.agentic);
   }
-  if (modelWrittenAnswer(msg, msg.text)) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
+  if (msg.is_overview_intent && msg.answered !== false) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
   if (msg.money_overview) {
     const overview = document.createElement("div");
     overview.className = "answer-overview";
@@ -14398,10 +14388,10 @@ function docAskQuestion(doc, debate, isRecord) {
 
 // Preserve the source verbatim, including whitespace. Only presentation changes.
 function renderDocText(doc) {
-  // A withheld record shows its label and the publisher's link, and no text (parli/ingest/source_policy.json).
-  if (doc.withheld) {
-    const note = document.createElement('p'); note.className = 'doc-withheld'; note.textContent = String(doc.withheld.label || 'Withheld') + '. ';
-    if (/^https:\/\//.test(String(doc.url || ''))) { const link = document.createElement('a'); link.href = doc.url; link.rel = 'noopener'; link.textContent = 'Read it at the publisher'; note.append(link, '.'); }
+  // A record OPAX does not show carries one neutral notice and the publisher's link, and no text.
+  if (doc.unavailable) {
+    const note = document.createElement('p'); note.className = 'doc-unavailable'; note.textContent = String(doc.unavailable) + ' ';
+    if (/^https:\/\//.test(String(doc.url || ''))) { const link = document.createElement('a'); link.href = doc.url; link.rel = 'noopener'; link.textContent = "The publisher's copy"; note.append(link, '.'); }
     $('doc-text').replaceChildren(note); return;
   }
   let text = String(doc.text || "(no text)");

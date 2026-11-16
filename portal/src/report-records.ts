@@ -1,3 +1,5 @@
+import { POLICY, NOTICE, type SourcePolicy } from './source-policy.ts'
+import { redactCommission } from '../../parli/ingest/source_policy.mjs'
 import type { RecordRow } from './tools/published-records'
 
 const object = (value: unknown): RecordRow => value && typeof value === 'object' && !Array.isArray(value) ? value as RecordRow : {}
@@ -34,7 +36,21 @@ export async function readReport(assets: Fetcher, slug: string): Promise<ReportD
   if (!response.ok) throw new Error('Report record unavailable')
   const data = await response.json<ReportDetail>()
   if (data.schema !== 1 || data.kind !== 'report' || data.slug !== slug) throw new Error('Invalid report record')
-  return data
+  return withheldReport(data)
+}
+/** The withheld list applied to a report record as it is read, whatever the built file holds: a hidden report is
+ * not found; otherwise it keeps its title, date and publisher link with the one neutral notice. A royal
+ * commission's record has the list applied to each of its documents. */
+export function withheldReport(data: ReportDetail, policy: SourcePolicy = POLICY): ReportDetail | null {
+  const commission = data.report_type === 'royal_commission' ? data.slug.replace(/^royal-commission-/, '') : null
+  const entry = policy.withheld({ documents: [data.slug], sources: commission ? [commission] : [] })
+  if (entry?.mode === 'hide') return null
+  if (entry) return { schema: 1, kind: 'report', report_type: data.report_type, slug: data.slug, title: data.title, body: data.body, jurisdiction: data.jurisdiction, date: data.date,
+    date_basis: data.date_basis, year: data.year, snippet: NOTICE, citation: data.citation, snapshot_at: data.snapshot_at, caveats: [NOTICE], publisher: data.publisher,
+    record: {}, facts: [], tables: [], headline: null }
+  if (!commission || !policy.withheldCount || typeof data.record.id !== 'string') return data
+  const record = redactCommission(data.record, policy)
+  return record ? { ...data, record } : null
 }
 
 // ---- formatting. Everything here is presentation of values the record holds;
@@ -256,8 +272,8 @@ export function reportTranscripts(r: Pick<ReportDetail, 'report_type' | 'record'
 const ORDER_NOTE = /non-publication|suppression|publication order/i
 /** One transcript in the app's envelope: the publisher's PDF as `url`, the hearing date, notes (including any
  * publication restrictions the publisher or commission records) and order links. */
-/** A withheld document's label (parli/ingest/source_policy.json): the row shows it and links the publisher only. */
-const withheldNote = (d: RecordRow): string[] => d.withheld && object(d.withheld).label ? [`${object(d.withheld).label}.`] : []
+/** A withheld document's one neutral notice: the row shows it and links the publisher only. */
+const withheldNote = (d: RecordRow): string[] => typeof d.unavailable === 'string' && d.unavailable ? [d.unavailable] : []
 export function transcriptItem(r: Pick<ReportDetail, 'record'>, t: RecordRow): RecordRow {
   const file = object(records(t.files)[0])
   const pdf = url(t.url) || url(file.url) || url(t.page_url)

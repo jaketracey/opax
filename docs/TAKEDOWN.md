@@ -11,154 +11,256 @@ OPAX acts when it is told, or when a maintainer sees that a publisher has change
 or restricted a document. **There is no automatic check of a publisher's site yet**: the weekly
 refresh does not detect an amended or withdrawn document.
 
-OPAX can withhold the document on its own site, app and MCP service, clear its own caches and
-remove the document from its knowledge base. It cannot recall a copy of an answer already saved
-on a reader's own device, and it cannot change another site's or a search engine's copy. Search
-engines that take part in IndexNow are notified of the changed pages after the deploy.
+Stated plainly:
 
-## One file
+* **The exclusion works at retrieval.** Once an item is on the list and deployed, searches and
+  Ask's lookups cannot return it, so it cannot enter a new answer.
+* **Streamed answers are not filtered on the way out.** Nothing inspects the words of an answer
+  as it streams. The protection is that the item was never retrieved.
+* **Cached answers are cleared by the cache epoch bump.** Until the bump is deployed, a cached
+  answer, search or record can still be served for up to seven days.
+* **Copies saved in a reader's browser or on their phone cannot be recalled.**
+* **Copies saved to a member's account on OPAX's server can be removed** (step 6).
+* Other sites' and search engines' copies are theirs. The engines that take part in IndexNow
+  are told which pages changed after the deploy.
 
-`parli/ingest/source_policy.json` holds two things.
+## The list is private
 
-* `sources`: one record for each listed source, keyed by its id (a commission id such as
-  `vic-major-infrastructure`, or a knowledge base `source` label or origin source id).
-  * `use`: one of four tiers. `CAPABILITIES` in the two loaders is the only place that says what
-    a tier allows; no other code names a tier.
+**The withheld list's real contents are never public.** This repository is public, and an
+entry that names a document, or an id that resolves to one, can itself disclose that an order
+exists. So the repository holds the schema, the loaders and an empty example
+(`parli/ingest/withheld.example.json`), and nothing else.
 
-    | Tier | Indexed | Quoted | Model writes about it | In the knowledge base |
-    | --- | --- | --- | --- | --- |
-    | `documents_only` | no | no | no | no |
-    | `search_only` | privately, to point to a hearing and page | no | no | no |
-    | `quote_and_cite` | yes | yes, short and attributed | no | no |
-    | `full` | yes | yes | yes | yes |
+**Never write an identifier** of a withheld item (its id, slug, title, link or the reason) in a
+tracked file, a commit message, a pull request, an issue, a ticket, a chat or a cache epoch
+name. Work in a terminal on the maintainer's own machine.
 
-    `quote_and_cite`: Ask may find and show passages, each with its speaker, page and citation,
-    followed by the line "These are from hearing transcripts: evidence, not findings." The
-    writer model is never given the passages, so no account of the evidence is written in a
-    model's words. `search_only`: no private index is built yet, so today it behaves as
-    `documents_only` wherever a reader or a model could see text.
-  * `summaries: "allowed"`: machine summaries and topic labels (the enrichment Worker, report
-    summaries). Off for every listed source unless its record says so; needs the `full` tier.
-    Only the three CC BY commissions have it.
-  * `kb_generation: "allowed"`: the source may reach a path where the knowledge base itself
-    generates text (see below). Off unless the record says so; needs the `full` tier.
-    `vic-major-infrastructure` can never have it (`KB_GENERATION_NEVER`): the loader refuses a
-    file that sets it, in every tier.
-  * `hosts`, `names`: the publisher's host names and the source's own name, so that a record, a
-    fact, a link or an earlier answer can be recognised as the source's wherever a request is
-    assembled. Required for `quote_and_cite`.
+The store is one small JSON text, the same in every place:
 
-  A key may also be a document id holding only `use`, which overrides its source. A source that
-  is not listed is governed by its own pipeline's rules and treated as `full` with both flags
-  on. Public transcript text files are built only for a CC BY source listed as `full`.
-* `withheld`: the takedown list. Each entry is exactly a `source` or a `document`, a `reason`
-  (`publisher_request`, `legal_order`, `withdrawn` or `amended_pending`) and a `date`. No other
-  field is accepted, so the list cannot itself disclose what was suppressed. A document id is a
-  knowledge base slug (`speech-123`) or `<source id>/<document key>`
-  (`vic-major-infrastructure/transcript-2026-11-09`). A `legal_order` entry withholds the whole
-  transcript, as every reason does.
+```json
+{ "schema": 1, "withheld": [ { "document": "<id>", "reason": "legal_order", "date": "2026-11-16", "mode": "hide" } ] }
+```
 
-A withheld document shows as a listing row: its title, date, the label ("Withheld at the
-publisher's request", "Withheld: subject to a legal order", "Withheld: withdrawn by the
-publisher" or "Withheld: an amended version is pending") and a link to the publisher. No text,
-snippet, summary, page count, hash or file link.
+Each entry is exactly a `source` or a `document`, a `reason` (`publisher_request`,
+`legal_order`, `withdrawn`, `amended_pending`), a `date` and an optional `mode`. No other field
+is accepted. A `document` is any knowledge base slug (`speech-…`, `press-…`,
+`bill-text-…`, anything), a report slug (`integrity-report-…`, `agency-report-…`,
+`annual-report-…`, `royal-commission-…`) or `<commission id>/<document key>`. A `source` is a
+commission id, or a knowledge base `source` label or origin source id.
 
-Loaders: `parli/source_policy.py` (Python) and `parli/ingest/source_policy.mjs` (the Workers
-and the Node builds). They apply the same rules and are tested against each other. A malformed
-file stops every reader.
+`mode` decides what a reader sees. The reason never does.
 
-## What honours it
+* `list_only` (the default): the item keeps its title and date with one neutral line, the same
+  for every reason, **"Not available on OPAX. Open the publisher's copy."**, and a link to the
+  publisher. No text, snippet, summary, page count, hash or file link.
+* `hide`: the item is not listed at all, and a request for it is answered exactly as one for an
+  item OPAX never held. Use it when the document's existence is itself the subject of an order.
+
+Only the mode leaves the loaders. The reason and date stay in the store, for the maintainer's
+record. No log line, status field, error message or response repeats an entry; errors about the
+store say only that it is unreadable.
+
+### Where the store lives, and who can change it
+
+A Worker secret is the simplest thing that works for the Workers (no new binding, it takes
+effect when it is set, and staging has its own); an Actions secret reaches the build; a private
+file serves the Python jobs that run on one machine. Only the maintainer, who holds the GitHub
+repository's secrets, the Cloudflare account and the refresh box, can add an entry.
+
+| Place | Read by | Set with |
+| --- | --- | --- |
+| GitHub Actions secret `OPAX_WITHHELD_JSON` | The Deploy workflow: applies the list to the built files, and puts the same value into the portal Worker's secret, in one run | `gh secret set OPAX_WITHHELD_JSON < withheld.json` |
+| Portal Worker secret `OPAX_WITHHELD_JSON` | Every request: search, Ask retrieval, the resource and report APIs and pages, MCP tools | Set by the Deploy workflow. For effect within seconds, also `npx wrangler secret put OPAX_WITHHELD_JSON` in `portal/` (add `--env staging` for staging) |
+| Enrichment Worker secret `OPAX_WITHHELD_JSON` | Summaries and topic labels | `npx wrangler secret put OPAX_WITHHELD_JSON` in `enrich/` |
+| `~/.config/opax/withheld.json` on the refresh box, mode 600 | Every Python knowledge base job: the nightly sync, the purge | Edit the file; `chmod 600` |
+
+They are kept in step by hand, from one file on the maintainer's machine, and checked by
+digest: a 16-character hash of the entries that shows no entry and no count.
+
+```
+python3 -m parli.source_policy                                    # the refresh box (and your own file)
+curl -s -H "authorization: Bearer $DAILY_POST_OPERATOR_SECRET" https://opax.com.au/api/ops/withheld-digest
+curl -s -H "authorization: Bearer $ENRICH_ADMIN_TOKEN" https://<enrich worker>/withheld-digest
+```
+
+All three must print the same digest. The build has no digest of its own: it receives the
+Actions secret, and the same run sets the portal Worker's secret from it.
+
+What happens when one is behind or broken:
+
+| Consumer | No store | Store set but unreadable | Behind the others |
+| --- | --- | --- | --- |
+| Portal Worker | Nothing withheld | **Fails closed.** `/api/*`, `/mcp`, `/doc/*`, `/report/*` and `/official-reports` answer 503 "OPAX is temporarily unavailable. Please try again shortly." Other pages are served | Serves the item through search, Ask and the record routes until its secret is set |
+| Enrichment Worker | Nothing withheld | **Fails closed.** No tick runs; admin routes answer 503 | May summarise or label the item until its secret is set |
+| Deploy build | Nothing withheld | **Fails closed.** The apply step fails and nothing is deployed | Static files (`/royal-commissions/`, `/transcripts/`, `/integrity-reports/`, `/agency-reports/`, `/annual-reports/`, report records, the search catalogue) still hold the item until the next deploy. The Worker cannot filter a static file |
+| Python jobs on the refresh box | Nothing withheld | **Fails closed.** Every knowledge base client refuses to start | The nightly could push the item back into the knowledge base. The Workers would still not return it |
+
+So: the portal Worker's secret protects everything served through code at once; only a deploy
+changes static files; and the refresh box file is what stops the item being pushed again.
+
+## What honours the list
 
 | Consumer | Where | What it does |
 | --- | --- | --- |
-| Knowledge base pushes (every path) | `KbClient.create_resource`, `patch_resource_by_slug` in `parli/arag.py` | Refuses to write a withheld source or document, or one below the `full` tier |
-| Knowledge base sync | `parli/ingest/arag_sync.py` | Deletes what the list names before any push (`purge_withheld`), and never pushes or queues it |
-| Transcript full text | `scripts/build_transcript_fulltext.py` | Builds public text only for a CC BY source listed `full`; skips a withheld transcript |
-| Published files | `scripts/apply_source_policy.mjs` (first step of `npm run build:search`; `--check` in `npm run check`) | Rewrites the royal commission records and removes transcript text, index rows and postings, with no PDFs needed |
-| Royal commission build and export | `parli/ingest/royal_commissions.py`, `scripts/export_royal_commissions.py` | Holds if a source whose tier allows no quotation carries one; checks dates and names on the page without keeping its words |
-| Report summaries | `scripts/report_summaries/prepare.py`, `scripts/build_report_catalog.mjs` | Prepares and shows a summary only where the record says `summaries: allowed`; a summary whose file is withheld is left off |
-| Search catalogue | `scripts/build_search_catalog.mjs` | A withheld record keeps its title and label; nothing of it is searchable |
-| Ask retrieval, search, the resource API, MCP `read_record`, corpus tools | `portal/src/source-policy.ts`, called by `kbFetch` and `corpusKb` | A query excludes withheld sources and documents; a response loses any closed resource; a record read is a listing row |
-| `royal_commissions` tool and transcript text | `portal/src/tools/royal-commissions.ts`, `transcript-text.ts` | Applies the policy to the record as read; an excerpt, finding or recommendation only where the tier allows quotation |
-| Ask's writer | `portal/src/research-writer.ts`, `research-writing.ts`, `research-loop.ts` | A `quote_and_cite` fact never reaches the writer model: its passages are shown as they stand, attributed, with the fixed line. Every transcript fact carries a typed attribution (speaker, page, evidence not finding) and the writer's contract carries the attribution rule |
-| Knowledge base generation paths | `guardKbGeneration` and `openForKbGeneration` in `portal/src/source-policy.ts`; `buildAskBody`, `apiFollowups`, `moneyOverview`, `apiJourneyStory` in `src/index.ts`; `summarySources` in `src/search-summary.ts`; `rewriteFollowUp` in `src/ask-rewrite.ts` | See "Knowledge base generation" below |
-| Tool results handed to Ask and MCP clients | `callTool` in `portal/src/tools/index.ts` | A row or citation naming a withheld record is reduced to its title and label |
-| Enrichment (summaries and topic labels) | `enrich/src/policy.ts`, `discover.ts` | Never queues, reads or writes to a resource that is withheld, below the `full` tier, or from a listed source without `summaries: allowed` |
+| Knowledge base pushes (every path) | `KbClient.create_resource`, `patch_resource_by_slug` in `parli/arag.py` | Skips a withheld item without a word and returns an ordinary result, so no log or error marks it |
+| Knowledge base sync | `parli/ingest/arag_sync.py` | Deletes what the list names before any push, silently; `--purge-withheld` is the operator's command |
+| Published files at deploy | `scripts/apply_source_policy.mjs`, run by `scripts/withheld_overlay.sh` in the Deploy workflow | Rewrites royal commission records, transcript text, and integrity, agency and annual report data; never committed |
+| Report records and the search catalogue | `scripts/build_report_catalog.mjs`, `scripts/build_search_catalog.mjs` | The neutral row, or no row |
+| Search, Ask retrieval, the resource API, MCP `read_record`, corpus tools | `portal/src/source-policy.ts`, called by `kbFetch`, `corpusKb`, `apiUnifiedSearch` | A query excludes the item; a response loses it; a read is the neutral row or "not found" |
+| Report API and pages | `withheldReport` in `portal/src/report-records.ts` | The neutral record, or "not found" |
+| Tools (`royal_commissions`, the report tools, all others) | `callTool` in `portal/src/tools/index.ts`; `royal-commissions.ts`, `transcript-text.ts` | A row or citation naming the item is dropped or reduced to its title and the notice |
+| Enrichment | `enrich/src/policy.ts`, `discover.ts` | Never queues, reads or writes to it |
 
-Tests: `tests/test_source_policy.py`, `portal/test/source-policy.test.mjs`,
-`portal/test/source-tiers.test.mjs`, `enrich/test/policy.test.ts`. Each adds an entry or moves a
-source between tiers and asserts nothing leaks.
+Committed outputs (the commission export, transcript text files) are built from the public tiers
+alone and never read the store, so the repository's history cannot show an item being removed.
+The use tiers are a separate, public part of the policy: see "Use tiers" below.
 
-## Knowledge base generation
-
-Several features ask the Progress knowledge base to generate text: the older Ask engine
-(blocking and streamed, and the reasoned position answer), its planner, follow-up rewriting,
-suggested follow-ups, search summaries and their repair, position recovery, journey stories and
-the money overview. That generation reaches a model through an OpenRouter preset whose routing
-this code cannot set, so a source reaches those paths only at the `full` tier with
-`kb_generation: allowed`, and `vic-major-infrastructure` never does. It is kept out twice:
-
-* **At retrieval.** `kbFetch` adds a filter to every generation request, so the knowledge base's
-  own retrieval for that request cannot return a resource labelled with a closed source.
-* **Where the request is assembled.** Catalogue records, passages, facts and earlier answers that
-  name a closed source (by id, host or name) are dropped before the prompt is built. An answer
-  drawn from a closed source gets no suggested follow-ups. The reader's own question and earlier
-  turns are theirs and are sent as typed. `kbFetch` checks supplied context and earlier answers
-  once more as the request leaves.
-
-The Ask research loop and its writer call OpenRouter directly with no-train routing (PR #458) and
-are governed by the tier, not by this flag.
-
-## Election guard, until 6pm on 28 November 2026 (Melbourne)
-
-Nothing from `vic-major-infrastructure` may appear on, or be linked from, the Victorian election
-hub, seat and region pages, candidate content or share cards. OPAX sends no newsletter.
-`portal/test/source-tiers.test.mjs` renders the hub and all 96 seat and region pages, reads the
-election data and sources and three share cards, and fails on any reference to the commission's
-id, host or name. The test is the rule; it may be removed after the polls close.
+Tests supply a fake entry through the private path and assert that nothing gets out and that
+no row, response, log line or error names it: `tests/test_source_policy.py`,
+`portal/test/source-policy.test.mjs`, `enrich/test/policy.test.ts`.
 
 ## Runbook
 
-1. Add the entry to `withheld` in `parli/ingest/source_policy.json`. Use the id, a reason class
-   and today's date; write nothing else about the document anywhere in the repository, the
-   commit message included.
-2. `node scripts/apply_source_policy.mjs`, then commit the changed files.
-3. On the machine with the knowledge base credentials:
-   `uv run python -m parli.ingest.arag_sync --purge-withheld`. This deletes the document, or
-   every resource of the source, from the knowledge base. Every later sync does the same before
-   it pushes anything.
-4. Bump `CACHE_EPOCH` and `INDEXNOW_EPOCH_VERSION` in `portal/wrangler.jsonc` and run
-   `npm run deploy` in `portal/`. The deploy rebuilds the search catalogue, report records and
-   crawl pages from the applied files. The new epoch retires OPAX's cached answers, searches,
-   record bodies and share cards, and starts an IndexNow run for the pages that changed.
-5. Run `npm run deploy` in `enrich/` so the enrichment Worker carries the new list.
-6. Check: the document's row shows the label and the publisher link only; Ask, search and
-   `read_record` return no text from it.
+A takedown is **not done until the epoch bump and the deploy have both run and been checked**
+(steps 3 and 4).
+
+1. **Private stores first.** Add the entry to your `withheld.json`. Then, in this order:
+   * `npx wrangler secret put OPAX_WITHHELD_JSON < withheld.json` in `portal/`. From this moment
+     search, Ask, `read_record` and the record pages stop returning the item.
+   * `gh secret set OPAX_WITHHELD_JSON < withheld.json`
+   * `npx wrangler secret put OPAX_WITHHELD_JSON < withheld.json` in `enrich/`
+   * copy the file to the refresh box as `~/.config/opax/withheld.json`, `chmod 600`
+2. On the refresh box: `uv run python -m parli.ingest.arag_sync --purge-withheld --dry-run`,
+   read what it would delete, then run it without `--dry-run`. This deletes the document, or
+   every resource of the source, from the knowledge base. Do not paste its output anywhere.
+3. **Bump the cache epoch.** `python3 scripts/bump_cache_epoch.py <date>-refresh` (a neutral
+   name), commit ("Cache epoch") and merge. The new epoch retires OPAX's cached answers,
+   searches, record bodies and share cards, and starts an IndexNow run for the pages that changed.
+4. **Deploy.** The Deploy workflow is dispatched on the merged commit:
+   `gh workflow run deploy.yml --ref main`. It builds, tests the public build, applies the list
+   to the built files, sets the Worker secret, deploys, reloads the tables and returns the
+   working tree to the public build before committing the restamp.
+5. **Check**, all of them:
+   * the three digests match;
+   * the item's page shows the neutral line and the publisher link only, or "not found" in
+     `hide` mode;
+   * search, Ask and `read_record` return no text from it;
+   * `curl -s https://opax.com.au/api/display-policy` answers (the Worker is serving) and the
+     Deploy run is green.
+6. **Member copies on OPAX's server.** A signed-in member's saved conversations are rows in
+   `member_chats` in the `opax-community` D1 database. Count, then delete, the rows whose stored
+   sources cite the item:
+   `npx wrangler d1 execute opax-community --remote --command "SELECT COUNT(*) FROM member_chats WHERE instr(data, '<the item's link or slug>') > 0"`,
+   then the same with `DELETE FROM member_chats WHERE …`. This removes the whole saved
+   conversation for those members. Copies on their own devices are not reached.
 7. Reply to the person who asked, saying what was done and what OPAX cannot reach.
 
-Known limits, stated plainly:
+To lift a takedown, remove the entry and repeat steps 1, 3 and 4. To clear the list, store
+`{"schema":1,"withheld":[]}` rather than deleting the secrets.
+
+## Live test on staging (hub-approved; not yet run)
+
+Run once after #461 is deployed to staging, with a throwaway resource of harmless test text.
+Nothing here is committed: the entry goes into the staging Worker's secret only. Staging reads the
+same knowledge base as production, so the probe is also visible to production search until step 5
+deletes it; never leave it in place.
+
+```
+# 0. names for this run (a new slug every time; never reuse another lane's probe)
+# The slug must be one the resource API and read_record accept, so it borrows the speech-<number> form with a
+# number far above any real speech; its labels say it is a test.
+SLUG="speech-99$(date -u +%s)"; S=https://staging.opax.com.au
+PHRASE="opax takedown probe $(date -u +%s) lorem ipsum test sentence"
+# 1. create the resource (refresh box, knowledge base credentials in .env)
+time uv run python - <<PY
+from parli.arag import AragConfig, KbClient, load_dotenv
+load_dotenv(); kb = KbClient(AragConfig.from_env())
+kb.create_resource({"slug": "$SLUG", "title": "OPAX takedown probe (test record)",
+  "texts": {"body": {"body": "$PHRASE. This is a test record with no meaning. " * 8, "format": "PLAIN"}},
+  "origin": {"source_id": "opax-test"},
+  "usermetadata": {"classifications": [{"labelset": "kind", "label": "research_report"}, {"labelset": "source", "label": "opax-test"}]}})
+PY
+# 2. confirm staging returns it (repeat until indexed; note the time taken)
+time curl -s "$S/api/resource/$SLUG?nocache=1" | head -c 300
+time curl -s "$S/api/search-all?nocache=1&q=$(printf %s "$PHRASE" | jq -sRr @uri)" | head -c 400
+time curl -s -X POST "$S/api/ask" -H 'content-type: application/json' -d "{\"question\":\"What does the record say about: $PHRASE?\"}" | head -c 600
+#    read_record: call the MCP tool at $S/mcp with {"slug": "$SLUG"}
+# 3. withhold it on staging only
+printf '{"schema":1,"withheld":[{"document":"%s","reason":"publisher_request","date":"%s"}]}' "$SLUG" "$(date -u +%F)" > /tmp/withheld-staging.json
+(cd portal && time npx wrangler secret put OPAX_WITHHELD_JSON --env staging < /tmp/withheld-staging.json)
+# 4. confirm it is gone (the three commands of step 2, and read_record); time each
+# 5. purge: dry run, then real, with the same store on the refresh box for this command only
+time OPAX_WITHHELD_JSON="$(cat /tmp/withheld-staging.json)" uv run python -m parli.ingest.arag_sync --purge-withheld --dry-run   # must list exactly $SLUG
+time OPAX_WITHHELD_JSON="$(cat /tmp/withheld-staging.json)" uv run python -m parli.ingest.arag_sync --purge-withheld             # {"deleted": 1, "absent": 0}
+uv run python - <<PY
+from parli.arag import AragConfig, AragError, KbClient, load_dotenv
+load_dotenv(); kb = KbClient(AragConfig.from_env())
+try: kb.get_resource_by_slug("$SLUG"); print("STILL THERE")
+except AragError as e: print("gone", e.status)
+PY
+# 6. clean up: clear the staging secret and the temporary file
+printf '{"schema":1,"withheld":[]}' | (cd portal && npx wrangler secret put OPAX_WITHHELD_JSON --env staging); rm /tmp/withheld-staging.json
+```
+
+Measured times: **to be written here after the run** (create to searchable; secret set to
+excluded in search, Ask and `read_record`; purge dry run; purge).
+
+## Use tiers (public)
+
+`parli/ingest/source_policy.json` gives each listed source a record. `CAPABILITIES` in the two
+loaders is the only place that says what a tier allows.
+
+| Tier | Indexed | Quoted | Model writes about it | In the knowledge base |
+| --- | --- | --- | --- | --- |
+| `documents_only` | no | no | no | no |
+| `search_only` | privately, to point to a hearing and page | no | no | no |
+| `quote_and_cite` | yes | yes, short and attributed | no | no |
+| `full` | yes | yes | yes | yes |
+
+* `quote_and_cite`: Ask shows the passages, each with its speaker, page and citation, then
+  "These are from hearing transcripts: evidence, not findings." The writer model is never given
+  them. `search_only`: no private index is built yet, so it behaves as `documents_only`.
+* `summaries: "allowed"`: machine summaries and topic labels. Off for every listed source
+  unless its record says so; needs `full`. Only the three CC BY commissions have it.
+* `kb_generation: "allowed"`: the source may reach a path where the knowledge base itself
+  generates text. Off unless the record says so; needs `full`.
+  `vic-major-infrastructure` can never have it.
+* `hosts`, `names`: how a record, fact, link or earlier answer is recognised as the source's.
+
+A commission's own `use` field is written by its build (`parli/ingest/royal_commissions.py`),
+and a test keeps the registry and this file in agreement. A source that is not listed is
+governed by its own pipeline's rules and treated as `full` with both flags on.
+
+### Knowledge base generation
+
+The older Ask engine, its planner, follow-up rewriting, suggested follow-ups, search summaries,
+position recovery, journey stories, the money overview and the South Australian `/predict/chat`
+path ask the Progress knowledge base to generate text, through an OpenRouter preset this code
+cannot set. A source reaches them only at `full` with `kb_generation: allowed`. It is kept out
+twice: `kbFetch` filters the knowledge base's own retrieval on every `/ask`, and records,
+passages, facts and earlier answers that name a closed source are dropped where each request is
+assembled. The reader's own question and turns are sent as typed.
+
+### Election guard, until 6pm on 28 November 2026 (Melbourne)
+
+Nothing from `vic-major-infrastructure` may appear on, or be linked from, the Victorian election
+hub, seat and region pages, candidate content or share cards. OPAX sends no newsletter.
+`portal/test/source-tiers.test.mjs` is the rule; it may be removed after the polls close.
+
+## Known limits
 
 * The query filters for a withheld knowledge base source (`origin_source`) and document
-  (`resource` by slug) follow Progress's published filter syntax and have not yet been used
-  against the live knowledge base, because the list has had no entry. Step 3 does not depend on
-  them: once a resource is deleted it cannot be retrieved.
-* A streamed answer generated by Progress is not inspected on its way through; it relies on the
-  query filter and on step 3.
-* A model in the Ask research loop reads tool results in order to choose passages. For a
-  `quote_and_cite` source the writer never sees them, a point that quotes one becomes a record
-  selection and the model's own points are dropped; a stray uncited sentence by the loop model is
-  not caught by a test.
-* The only text index for transcripts is the public files under `/transcripts/`, built for CC BY
-  sources. A source that is not CC BY needs a private index before it can be `search_only`,
-  `quote_and_cite` or `full`; moving its tier alone publishes and indexes nothing.
-* The integrity, annual and agency report datasets are not keyed by this list yet. To withhold
-  one of those documents, remove it in its own ingest and follow steps 4 to 7.
-* Withholding a commission that has loaded recommendations removes them from its file. The
-  refresh's shrink guards (`scripts/vm/validate_data.py`, `--allow-shrink` on the build and
-  export) will hold the next refresh until a maintainer accepts the drop.
-* The build machine keeps the publisher PDFs it was given (`<cache>/manual/`), to count pages
-  and check hashes. For a source whose tier allows no quotation the build stores no extracted text. Text
-  cached before 16 November 2026 (`<cache>/text/<sha256>.json`) and the PDF of a withheld
-  document have to be deleted there by hand.
-* Until step 4 is deployed, cached copies of an answer or a record can still be served for up to
-  seven days.
+  (`resource` by slug) follow Progress's published filter syntax and have not yet run against
+  the live knowledge base. The staging test above is where they first will.
+* The Deploy workflow steps that apply the list and set the Worker secret have not run: no
+  secret exists yet. With a list in force a deploy takes longer, which is visible in the public
+  run; nothing else about the list is.
+* Withholding a whole commission in `hide` mode leaves fixed caveat wording that names the three
+  CC BY commissions.
+* The crawl pages and sitemaps follow the report records and the catalogue; a knowledge base
+  document's own crawl entry, if it has one, is not separately checked.
+* For `quote_and_cite`, a stray uncited sentence by the research loop model is not caught by a test.
+* The only transcript text index is the public files under `/transcripts/`, built for CC BY
+  sources. A source that is not CC BY needs a private index before it can leave `documents_only`.
+* The build machine keeps the publisher PDFs it was given. A withheld document's PDF, and any
+  text cached before 16 November 2026, are deleted there by hand.

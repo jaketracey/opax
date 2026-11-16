@@ -1,4 +1,4 @@
-import { guardKbRequest, guardKbResponse, guardKbGeneration, openForKbGeneration, POLICY as SOURCE_POLICY } from '../src/source-policy.ts';
+import { guardKbRequest, guardKbResponse, guardKbGeneration, hiddenKbRead, guardSearchRows, openForKbGeneration, POLICY as SOURCE_POLICY } from '../src/source-policy.ts';
 import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
 const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
@@ -162,7 +162,7 @@ test('the shared KB call retrieves without generation and caps SA before the aut
   const fn=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='kbFetch').getText(ast);
   const calls=[];
   const kb=runInNewContext(ts.transpile(fn)+';kbFetch',{
-    sourceIdentity,saGenerationResponse,guardKbRequest,guardKbResponse,guardKbGeneration,modelBudgetSpent:async()=>false,ragBase:()=> 'https://fixture.test/kb',
+    sourceIdentity,saGenerationResponse,guardKbRequest,guardKbResponse,guardKbGeneration,hiddenKbRead,guardSearchRows,modelBudgetSpent:async()=>false,ragBase:()=> 'https://fixture.test/kb',
     fetch:async(url,init)=>{calls.push({url,...init,body:JSON.parse(init.body)});return url.endsWith('/ask')?Response.json(retrieval()):new Response(bytes({type:'text',text:'Generated words.'}));},
   });
   const response=await kb({SA_HANSARD_FULL_TEXT:'false',ARAG_KB_TOKEN:'fixture'},'/ask',{body:{query:'statement 30'},headers:{accept:'application/x-ndjson'}});

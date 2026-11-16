@@ -2106,12 +2106,9 @@
 
       <h2 id="support-answers">Answers from Ask and Talk to OPAX</h2>
       <p>Ask and Talk to OPAX use AI language models. Their answers are written from records
-      OPAX finds in the public record and link the records they draw on. On the website, each
-      finished answer that a language model wrote in Ask or in a conversation carries the label
-      "Machine-written"; an answer OPAX works out from the records without a model, such as a
-      total or a ranking, is headed by where its figures come from instead. The voice panel says
-      that it is an AI voice. These answers are not the record, and they can be wrong: check the
-      linked records before you rely on one.</p>
+      OPAX finds in the public record, are labelled as machine-written, and link the records they
+      draw on. They are not the record, and they can be wrong: check the linked records before you
+      rely on one.</p>
       <ul class="about-list">
         <li><strong>In the app</strong>, choose Report this answer after an answer in Ask, or
         under More in Talk to OPAX. It opens this page with the record you chose, and sends
@@ -2263,11 +2260,14 @@
       <p>What OPAX does:</p>
       <ul class="about-list">
         <li>Withholds the document, or the whole source, by adding it to OPAX's withheld list.
-        A withheld document stays as one line with its title and date, a label such as
-        "Withheld at the publisher's request" or "Withheld: subject to a legal order", and a link
-        to the publisher. OPAX shows no text, excerpt or summary of it, and Ask, search and the
-        research tools do not use it.</li>
-        <li>Removes it from the knowledge base that Ask and search read.</li>
+        This applies to any document OPAX holds: a speech, a release, a bill text, a report or a
+        hearing transcript. The document is then either removed from OPAX's lists altogether, or
+        kept as one line with its title and date, the words "Not available on OPAX. Open the
+        publisher's copy." and a link to the publisher. OPAX uses the same words whatever the
+        reason and does not publish the reason or the list. OPAX shows no text, excerpt or
+        summary of the document, and Ask, search and the research tools do not use it.</li>
+        <li>Removes it from the knowledge base that Ask and search read, so it cannot enter a new
+        answer.</li>
         <li>Clears OPAX's own stored copies of answers, searches and pages, by starting a new
         cache period and publishing the site again.</li>
         <li>Tells the search engines that take part in IndexNow which pages changed.</li>
@@ -2275,7 +2275,8 @@
       <p>What OPAX cannot do:</p>
       <ul class="about-list">
         <li>Remove a copy of an answer or a conversation that is already saved on a reader's own
-        device.</li>
+        device. A conversation a signed-in member has saved to their account is on OPAX's server,
+        and OPAX can remove that copy.</li>
         <li>Change the copies held by other sites or by search engines. OPAX notifies the search
         engines that use IndexNow; when they update is up to them.</li>
       </ul>
@@ -2410,11 +2411,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=f0de65bcb6" defer></script>
+<script src="/spa-shell.js?v=f3bd6556c7" defer></script>
 <script src="/navigation.js?v=eac2c03e68" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=296add75d8" defer></script>
+<script src="/app.js?v=bbced11299" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=74cbe557c0" defer></script>
 </body>
