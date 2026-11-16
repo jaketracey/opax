@@ -51,7 +51,7 @@
 /* Phones: the three head figures stay on one row at the compact size. */
 @media (max-width: 540px) {
   .supplier-totals.ui-stats { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: var(--space-block); }
-  .supplier-totals .ui-stat-value { font: var(--weight-strong) var(--text-22)/var(--leading-tight) var(--serif); }
+  .supplier-totals .ui-stat-value { font: var(--type-tile-figure); }
   .agency-directory-controls > .ui-field:last-child { max-width: none; }
   /* The map fits its height, so a tall narrow box left it clipped at the sides
      under an empty band; a landscape box frames the whole graph. */
