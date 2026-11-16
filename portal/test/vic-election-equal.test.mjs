@@ -17,7 +17,10 @@ const data=JSON.parse(await readFile(new URL('../public/hubs/vic-election-2026.j
 const pages=[null,...data.seats].map(s=>({seat:s,doc:new JSDOM(renderVicElection(data,s).html).window.document}));
 // A row's shape with its own words taken out. The party label's inside is the shared label's: a party
 // with a common short name ("Labor") carries its long name for screen readers, the rest are printed in full.
+// A party label links to that party's register view (vic-election-parties.ts): the address is the party's own
+// too, so it is taken out with the label's words. Every party has the link, so the shape still has it.
 const shape=li=>{const row=li.cloneNode(true);for(const label of row.querySelectorAll('.ui-party')){label.removeAttribute('title');label.innerHTML='<i></i>';}
+  for(const a of row.querySelectorAll('a.party-link'))a.removeAttribute('href');
   return row.outerHTML.replace(/>[^<]+</g,'><');};
 
 test('every party label on every election page has the same grey dot',()=>{
@@ -39,8 +42,10 @@ test('every candidate in a seat is drawn by the same row, in the VEC’s ballot 
     const withParty=new Set(),without=new Set();
     for(const [i,li] of rows.entries()) (seat.candidates.list[i].party&&seat.candidates.list[i].party.toLowerCase()!=='independent'?withParty:without).add(shape(li));
     assert.ok(withParty.size<=1&&without.size<=1,seat.name);
-    // No portrait and no link for anyone: no verified candidate records are loaded yet.
-    assert.equal(section.querySelectorAll('img, picture, .subject-portrait, .vic-candidates a').length,0,seat.name);
+    // No portrait, and no link to a candidate's record for anyone: no verified candidate records are loaded yet.
+    // The one link a row may carry is its party label's, to the register view, the same for every party.
+    assert.equal(section.querySelectorAll('img, picture, .subject-portrait, .vic-candidates a:not(.party-link)').length,0,seat.name);
+    assert.equal(section.querySelectorAll('.vic-candidates a.party-link').length,section.querySelectorAll('.vic-candidates .ui-party').length,seat.name);
   }
 });
 

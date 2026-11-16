@@ -163,7 +163,9 @@ def test_registry_is_well_formed():
             if "recommendations" in d:
                 assert d["kind"] in rc.REPORT_KINDS and d["recommendations"]["count"] > 0
         for f in c.get("facts", []):
-            assert f["field"] in ("established", "commissioner") and f["quote"] and f["page"] >= 1
+            assert f["field"] in ("established", "commissioner") and f["page"] >= 1
+            # A fact from a documents-only commission holds no quotation; every other fact holds one.
+            assert bool(f.get("quote")) != rc.documents_only(c), c["id"]
 
 
 def manual_entry(sha):
@@ -228,9 +230,14 @@ def test_registry_transcripts_are_manual_dated_and_carry_rights():
     reg = json.loads(REGISTRY.read_text())
     transcripts = [d for c in reg["commissions"] for d in c["documents"] if d["kind"] == "hearing_transcript"]
     assert len(transcripts) >= 218
+    for c in reg["commissions"]:
+        for d in c["documents"]:
+            if d["kind"] == "hearing_transcript":
+                # The date line is held unless the commission is documents only.
+                assert bool(d.get("date_quote")) != rc.documents_only(c), (c["id"], d["key"])
     for d in transcripts:
         assert d["source"] == "manual" and len(d["sha256"]) == 64
-        assert d["date_quote"] and d["date_page"] == 1 and d["rights"]
+        assert d["date"] and d["date_page"] == 1 and d["rights"]
         assert "(PDF" not in d["title"] and not d["title"].lower().startswith("download")
 
 
