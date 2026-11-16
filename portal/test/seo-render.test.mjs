@@ -247,7 +247,7 @@ test('report transcripts API: the app envelope, top level and paged, newest firs
     const past=await fetchJson(`/api/report/${slug}/transcripts?offset=500`);assert.equal(past.items.length,0);assert.equal(past.next_offset,null);assert.equal(past.count,count);
   }
   const last=await fetchJson('/api/report/royal-commission-nsw-healthcare-funding/transcripts?offset=60&limit=20');assert.equal(last.items.length,11);assert.equal(last.next_offset,null);
-  const vic=(await fetchJson('/api/report/royal-commission-vic-major-infrastructure')).transcripts;assert.ok(vic.items.every(i=>i.notes.some(n=>/Non-publication orders/.test(n))));
+  const vic=(await fetchJson('/api/report/royal-commission-vic-major-infrastructure')).transcripts;assert.ok(vic.items.every(i=>i.notes.some(n=>/may make non-publication orders/.test(n))&&!i.notes.some(n=>/["\u201c\u201d]/.test(n))));
   const ibacIndex=await read('/integrity-reports/reports-vic-ibac.json');const glo=ibacIndex.records.find(r=>r.transcripts);
   const ibac=(await fetchJson('/api/report/integrity-report-'+glo.id)).transcripts;assert.equal(ibac.count,17);assert.equal(ibac.first_date,'2019-02-04');assert.equal(ibac.last_date,'2019-03-01');
   ibac.items.forEach(checkItem);assert.ok(ibac.items.some(i=>i.orders.length&&i.case==='Operation Gloucester'));
@@ -258,6 +258,34 @@ test('report transcripts API: the app envelope, top level and paged, newest firs
   await fetchJson('/api/report/royal-commission-unknown/transcripts',404);
 });
 const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
+test('documents-only commission: its page, report API, transcripts API, search rows and sitemaps hold no transcript extract',async()=>{
+  // The extracts once held are pinned by hash in held-extracts.mjs; see rc-no-extracts.test.mjs for the record and the tools.
+  const {SLUG,COMMISSION,heldExtracts,liftedRuns,assertNoExtract,textFields}=await import('./held-extracts.mjs');
+  const text=async path=>{const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();};
+  const html=await text('/report/'+SLUG);
+  assert.deepEqual(heldExtracts(html),[]);assert.deepEqual(heldExtracts(stripTags(html)),[]);assert.deepEqual(liftedRuns(prerenderBody(html)),[]);
+  assert.ok(!/<q>|<blockquote|Printed as|Date as printed/.test(prerenderBody(html)),'no quotation block');
+  assert.ok(html.includes('The Honourable Chris Kourakis AC SC'));assert.ok(html.includes('final report is due on or before 20 August 2027'));
+  const api=JSON.parse(await text('/api/report/'+SLUG));
+  assert.deepEqual(heldExtracts(JSON.stringify(api)),[]);assert.deepEqual(liftedRuns(JSON.stringify(api)),[]);assertNoExtract(assert,api.record,'the report API record');
+  assert.equal(api.record.use,'documents_only');assert.deepEqual(textFields(api.transcripts),[]);
+  const paged=JSON.parse(await text('/api/report/'+SLUG+'/transcripts'));
+  assert.equal(paged.count,2);assertNoExtract(assert,paged,'the transcripts API');
+  // What the site search and the MCP search_records tool return for this commission.
+  for(const q of ['Integrity of Major Public and Civil Infrastructure Construction Projects','Kourakis','non-publication orders']){
+    const found=await text('/api/search-all?'+new URLSearchParams({q,kind:'report',per:'50'}));
+    assert.deepEqual(heldExtracts(found),[],q);
+    for(const row of JSON.parse(found).results.filter(r=>r.slug===SLUG))assert.deepEqual(textFields(row).filter(k=>k!=='/snippet'),[],q);
+  }
+  assert.ok(JSON.parse(await text('/api/search-all?'+new URLSearchParams({q:'Integrity of Major Public and Civil Infrastructure Construction Projects',kind:'report'}))).results.some(r=>r.slug===SLUG));
+  const index=await text('/sitemap.xml');assert.deepEqual(heldExtracts(index),[]);
+  let listed=false;
+  for(const loc of index.match(/<loc>[^<]+<\/loc>/g).map(l=>new URL(l.slice(5,-6)).pathname).filter(p=>/report|inquir|commission/.test(p))){
+    const xml=await text(loc);assert.deepEqual(heldExtracts(xml),[],loc);listed||=xml.includes('/report/'+SLUG);
+  }
+  assert.ok(listed,'the commission page is in a sitemap');assert.ok(COMMISSION);
+});
+
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
 
 test('independents are a parliamentary collection in server HTML and structured data', async () => {

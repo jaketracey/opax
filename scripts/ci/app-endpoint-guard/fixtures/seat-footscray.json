@@ -1,0 +1,211 @@
+{
+ "schema_version": 1,
+ "state": "pre_poll",
+ "current_result": null,
+ "updated": "2026-11-16",
+ "kind": "district",
+ "slug": "footscray",
+ "name": "Footscray",
+ "web_url": "https://opax.com.au/vic-election-2026/footscray",
+ "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/footscray-district",
+ "electorate_url": "/subject/electorate/vic-vic-la-vic-footscray",
+ "roster_date": "2026-09-09",
+ "formerly": null,
+ "created": false,
+ "boundary_note": null,
+ "region": {
+  "slug": "western-metropolitan",
+  "name": "Western Metropolitan",
+  "members": [
+   {
+    "name": "Lizzie Blandthorn",
+    "party": "Labor",
+    "slug": "lizzie-blandthorn",
+    "href": "/subject/person/lizzie-blandthorn"
+   },
+   {
+    "name": "Moira Deeming",
+    "party": "Independent",
+    "slug": "moira-deeming",
+    "href": "/subject/person/moira-deeming"
+   },
+   {
+    "name": "David Ettershank",
+    "party": "Legalise Cannabis Victoria",
+    "slug": "david-ettershank",
+    "href": "/subject/person/david-ettershank"
+   },
+   {
+    "name": "Trung Luu",
+    "party": "Liberal",
+    "slug": "trung-luu",
+    "href": "/subject/person/trung-luu"
+   },
+   {
+    "name": "Ingrid Stitt",
+    "party": "Labor",
+    "slug": "ingrid-stitt",
+    "href": "/subject/person/ingrid-stitt"
+   }
+  ]
+ },
+ "districts": [],
+ "result": {
+  "general": {
+   "date": "2022-11-26",
+   "kind": "general",
+   "party": "Labor",
+   "share": 54.24,
+   "against": "Greens",
+   "against_share": 45.76,
+   "margin": 4.24,
+   "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/footscray-district-results"
+  },
+  "since": null
+ },
+ "candidates": {
+  "published": "2026-11-11",
+  "url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/footscray-district/nominations",
+  "list": [
+   {
+    "name": "DINH, Hai",
+    "party": null,
+    "candidate_name": "DINH, Hai",
+    "party_name": null,
+    "party_path": null
+   },
+   {
+    "name": "PEREYRA, Elena\nAustralian Greens Victoria",
+    "party": null,
+    "candidate_name": "PEREYRA, Elena",
+    "party_name": "Australian Greens Victoria",
+    "party_path": "/vic-election-2026/party-australian-greens-victoria"
+   },
+   {
+    "name": "NGUYEN, Minh Quan\nThe West Party",
+    "party": null,
+    "candidate_name": "NGUYEN, Minh Quan",
+    "party_name": "The West Party",
+    "party_path": "/vic-election-2026/party-the-west-party"
+   },
+   {
+    "name": "FELATE, Andualem\nThe Republican Make Australia Great Again",
+    "party": null,
+    "candidate_name": "FELATE, Andualem",
+    "party_name": "The Republican Make Australia Great Again",
+    "party_path": "/vic-election-2026/party-the-republican-make-australia-great-again"
+   },
+   {
+    "name": "HESS, Kristina\nI'm Voting to Avoid the Fine",
+    "party": null,
+    "candidate_name": "HESS, Kristina",
+    "party_name": "I'm Voting to Avoid the Fine",
+    "party_path": "/vic-election-2026/party-im-voting-to-avoid-the-fine"
+   },
+   {
+    "name": "LOPEZ, Alexander\nOne Nation Victoria",
+    "party": null,
+    "candidate_name": "LOPEZ, Alexander",
+    "party_name": "One Nation Victoria",
+    "party_path": "/vic-election-2026/party-one-nation-victoria"
+   },
+   {
+    "name": "LEWIS, Daniel\nFree Palestine",
+    "party": null,
+    "candidate_name": "LEWIS, Daniel",
+    "party_name": "Free Palestine",
+    "party_path": "/vic-election-2026/party-free-palestine"
+   },
+   {
+    "name": "IBRAHIM, Marcus",
+    "party": null,
+    "candidate_name": "IBRAHIM, Marcus",
+    "party_name": null,
+    "party_path": null
+   },
+   {
+    "name": "FLORES, Ana\nFamily First Victoria",
+    "party": null,
+    "candidate_name": "FLORES, Ana",
+    "party_name": "Family First Victoria",
+    "party_path": "/vic-election-2026/party-family-first-victoria"
+   },
+   {
+    "name": "HALL, Katie\nAustralian Labor Party - Victorian Branch",
+    "party": null,
+    "candidate_name": "HALL, Katie",
+    "party_name": "Australian Labor Party - Victorian Branch",
+    "party_path": "/vic-election-2026/party-australian-labor-party-victorian-branch"
+   },
+   {
+    "name": "MARSH, Jess",
+    "party": null,
+    "candidate_name": "MARSH, Jess",
+    "party_name": null,
+    "party_path": null
+   },
+   {
+    "name": "CALDER, Daryle\nClimate Action Now",
+    "party": null,
+    "candidate_name": "CALDER, Daryle",
+    "party_name": "Climate Action Now",
+    "party_path": "/vic-election-2026/party-climate-action-now"
+   },
+   {
+    "name": "CUMMING, Catherine",
+    "party": null,
+    "candidate_name": "CUMMING, Catherine",
+    "party_name": null,
+    "party_path": null
+   },
+   {
+    "name": "CHANG, Tim\nLiberal Party of Australia - Victorian Division",
+    "party": null,
+    "candidate_name": "CHANG, Tim",
+    "party_name": "Liberal Party of Australia - Victorian Division",
+    "party_path": "/vic-election-2026/party-liberal-party-of-australia-victorian-division"
+   },
+   {
+    "name": "DUFF, Jasmine\nVictorian Socialists",
+    "party": null,
+    "candidate_name": "DUFF, Jasmine",
+    "party_name": "Victorian Socialists",
+    "party_path": "/vic-election-2026/party-victorian-socialists"
+   }
+  ]
+ },
+ "members": [
+  {
+   "name": "Katie Hall",
+   "party": "Labor",
+   "slug": "katie-hall",
+   "href": "/subject/person/katie-hall",
+   "source_url": "https://www.parliament.vic.gov.au/members/katie-hall/",
+   "speeches": {
+    "count": 159,
+    "first": 2023,
+    "last": 2026,
+    "within_term": true
+   },
+   "speech_gap": null,
+   "votes": {
+    "count": 15,
+    "ayes": 12,
+    "noes": 3
+   },
+   "recent_votes": [
+    {
+     "date": "2026-09-10",
+     "title": "That the following words be inserted to the end of the motion: ‘while noting the impact of $15 billion of corruption on services for Victorians’.",
+     "href": "/doc/division-vic-la-2026-09-10-3",
+     "vote": "no",
+     "source_url": "https://www.parliament.vic.gov.au/4a70cc/globalassets/hansard-daily-pdfs/hansard-2145855009-37384/hansard-2145855009-37384.pdf"
+    }
+   ]
+  }
+ ],
+ "results_fetched": "2026-10-13",
+ "speech_updated": "2026-11-14",
+ "division_start": "2026-08-14",
+ "division_end": "2026-09-24"
+}
