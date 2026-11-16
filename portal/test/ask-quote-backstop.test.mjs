@@ -230,3 +230,30 @@ test('a term quoted from a transcript row\'s own header is held by that row', ()
   const out = ground(payload([['The hearing was held by the “Example Royal Commission”.', 'fact-1']], [heard]))
   assert.match(out.answer, /“Example Royal Commission”/)
 })
+
+// ---- Re-review at 2e1b20158: a transcript's own words often hold quotation marks ----
+test('a word-for-word quotation is kept when the excerpt itself holds quotation marks, paired or not, in the code-quoted and the writer\'s form', () => {
+  const excerpts = [
+    // A real shape (transcript page P-4905): a straight mark opens reported speech and a curly one closes it.
+    'saying "Oh my God, my son has just got a scholarship.” So how he got that scholarship, I don\'t know',
+    'he said “leave it with me” and nothing happened',
+    'leave it with me.” And nothing happened after that',
+    'telling him, "Why don\'t you quit?',
+    'and by "board member" I mean an engaged member of the board',
+  ]
+  for (const words of excerpts) {
+    const row = { ...heard, snippet: heard.snippet.replace(EXCERPT, words) }
+    for (const sentence of [`The hearing transcript records on hearing day 46 (10 March 2023): “${words}”`, `On the same day the transcript records: "${words}"`]) {
+      const out = ground(payload([[SAID, 'speech-7'], [sentence, 'fact-1'], [TAIL]], [row, speech], '\n'))
+      assert.equal(out.answer, `${SAID}\n${sentence}\n${TAIL}`, sentence); rangesHold(out)
+    }
+    // The same excerpt quoted with a word changed still goes.
+    const changed = `The transcript records: “${words.replace(/scholarship|leave|quit|engaged/, 'WRONG')}”`
+    assert.notEqual(changed, `The transcript records: “${words}”`)
+    assert.equal(ground(payload([[SAID, 'speech-7'], [changed, 'fact-1'], [TAIL]], [row, speech], '\n')).answer, `${SAID}\n${TAIL}`, changed)
+  }
+  // A verbatim quotation beside an invented one in the same sentence: the sentence goes.
+  const row = { ...heard, snippet: heard.snippet.replace(EXCERPT, excerpts[1]) }
+  const mixed = 'The transcript records “he said “leave it with me” and nothing happened” and “Mr Placeholder then shredded it”.'
+  assert.equal(ground(payload([[SAID, 'speech-7'], [mixed, 'fact-1']], [row, speech], '\n')).answer, SAID)
+})

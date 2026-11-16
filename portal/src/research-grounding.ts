@@ -222,6 +222,13 @@ function withCheckedQuotes(payload:Record<string,unknown>,partial=false):Record<
       const evidence=against.map(s=>String(s.snippet??'')).join('\n')
       // The title is read for a transcript row only: its header can hold the quoted words (a commission's name).
       const held=evidence+'\n'+against.filter(hearingTranscript).map(s=>String((s as {title?:unknown}).title??'')).join('\n')
+      // A transcript's own words often hold quotation marks (reported speech), paired or not. So the whole stretch
+      // from the sentence's first opening mark to its last closing mark (to the sentence's end when none closes it)
+      // is read first: when what the sentence cites holds that stretch word for word, the quotation is verbatim, and
+      // the marks inside it are the source's. The sentence is kept as it stands.
+      const opens=sentence.search(/["“‘]/),closes=Math.max(sentence.lastIndexOf('"'),sentence.lastIndexOf('”'),sentence.lastIndexOf('’'))
+      const stretch=opens<0?'':sentence.slice(opens+1,closes>opens?closes:sentence.length)
+      if(hearing&&cited.some(hearingTranscript)&&/[\p{L}\p{N}]/u.test(stretch)&&holdsQuotation(stretch,held))continue
       const failed=quotationSpans(sentence).map(q=>q.value).filter(inner=>/[\p{L}\p{N}]/u.test(inner)&&!holdsQuotation(inner,held))
       const goes=!hearing?false:cited.some(hearingTranscript)?failed.length>0||open:!!heard&&failed.some(inner=>looseQuotationOf(inner,heard))
       if(goes){
