@@ -6,7 +6,8 @@ import { build } from 'esbuild'
 const built = await build({ stdin: { contents: [
   "export {excerpt, speakerName, dayWords, spanWords} from './src/tools/transcript-text'",
   "export {callTool} from './src/tools/index'",
-  "export {transcriptListingOnly, withTranscriptNote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
+  "export {transcriptListingOnly, withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
+  "export {askOpaxResult} from './src/voice-sources'",
   "export {groundAnswerPayload} from './src/research-grounding'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
@@ -110,6 +111,11 @@ test('a royal commission transcript count opens the way the integrity count does
   assert.ok(profile.notes.some(n => n.startsWith('view=transcripts')), 'the hint is a tool note')
 })
 
+const REPORT = { resource: 'fact-2', kind: 'record', url: 'https://opax.test/report/robodebt', title: 'Final report, page 3', snippet: 'Final report, page 3: "a finding".', cited: true }
+const SPEECH = { resource: 'a'.repeat(32), kind: 'speech', url: 'https://opax.test/doc/speech-1', title: 'Social Services Legislation Amendment Bill', snippet: 'I rise to speak about the royal commission hearing transcript.', cited: true }
+const turnSource = (n, cited = true) => { const text = `Royal Commission into the Robodebt Scheme, Day ${n} (1 November 2022), transcript page 12${n} (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}. CC BY 4.0.`; return { resource: `fact-t${n}`, kind: 'record', url: `https://robodebt.royalcommission.gov.au/t${n}.pdf`, title: text, snippet: text, cited } }
+const COVERAGE = { resource: 'coverage', kind: 'record', url: 'https://opax.test/methods', title: 'Coverage', snippet: 'Transcripts as the commission published them.', cited: true, coverage: true }
+
 test('an answer citing only hearing transcripts says they are evidence, not findings', async () => {
   const turn = `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}. CC BY 4.0.`
   const answer = 'Witnesses described how income averaging was applied to each debt.'
@@ -121,11 +127,109 @@ test('an answer citing only hearing transcripts says they are evidence, not find
   assert.equal(api.TRANSCRIPT_NOTE, 'These are from hearing transcripts: evidence, not findings.')
   assert.deepEqual(out.citations, payload.citations, 'existing citation ranges are unchanged')
   assert.equal(api.withTranscriptNote(out).answer, out.answer, 'added once')
-  const mixed = { ...payload, sources: [...payload.sources, { resource: 'fact-2', kind: 'record', url: 'https://opax.test/report/robodebt', title: 'Final report, page 3', snippet: 'Final report, page 3: "a finding".', cited: true }] }
-  assert.equal(api.withTranscriptNote(mixed).answer, answer, 'a non-transcript source: no note')
-  const uncited = { ...mixed, sources: mixed.sources.map(s => s.resource === 'fact-2' ? { ...s, cited: false } : s) }
+  const uncited = { ...payload, sources: [...payload.sources, { ...REPORT, cited: false }] }
   assert.equal(api.withTranscriptNote(uncited).answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`, 'only cited sources count')
-  for (const over of [{ answer_decision: 'limitation' }, { answered: false }, { answer: '' }]) assert.deepEqual(api.withTranscriptNote({ ...payload, ...over }), { ...payload, ...over })
-  assert.equal(api.withTranscriptNote(listing()).answer, listing().answer, 'a listing already carries the label')
+  for (const over of [{ answer_decision: 'refusal' }, { answer_decision: 'clarification' }, { answered: false }, { answer: '' }]) assert.deepEqual(api.withTranscriptNote({ ...payload, ...over }), { ...payload, ...over })
+  assert.equal(api.withTranscriptNote({ ...payload, answer_decision: 'limitation' }).answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`, 'a limited answer still draws on the transcript')
+  const listed = api.withTranscriptNote(listing())
+  assert.equal(listed.answer, `${listing().answer.trimEnd()}\n\n${api.TRANSCRIPT_NOTE}`, 'a listing carries the label on its rows and ends with the line as well')
+  assert.equal(api.withTranscriptNote(listed), listed)
+  const written = { ...payload, answer: `Ms Smith said on hearing day 12 (1 November 2022): “income averaging” ${api.TRANSCRIPT_NOTE}` }
+  assert.equal(api.withTranscriptNote(written), written, "the transcript writer's own line is not repeated")
   assert.match(await readFile(new URL('../src/index.ts', import.meta.url), 'utf8'), /linkAskSources\(withTranscriptNote\(/, 'applied to the final Ask payload')
+})
+
+test('a mixed answer names which cited sources are hearing transcripts, by the number the reader sees', () => {
+  const answer = 'The report found the scheme unlawful. A witness described income averaging.'
+  const mixed = sources => api.withTranscriptNote({ answered: true, answer_decision: 'answer', answer, citations: {}, sources })
+  // Numbers are places among the cited rows (the web page and the app number citations that way): an uncited row takes none.
+  const two = mixed([REPORT, turnSource(1), { ...turnSource(9), cited: false }, SPEECH, turnSource(2)])
+  assert.equal(two.answer, `${answer}\n\nSources 2 and 4 are hearing transcripts: evidence, not findings.`)
+  assert.equal(mixed([COVERAGE, REPORT, turnSource(1)]).answer, `${answer}\n\nSource 3 is a hearing transcript: evidence, not findings.`, 'a cited coverage row keeps its number')
+  assert.equal(mixed([turnSource(1), REPORT, turnSource(2), turnSource(3)]).answer, `${answer}\n\nSources 1, 3 and 4 are hearing transcripts: evidence, not findings.`)
+  assert.equal(mixed([COVERAGE, turnSource(1), turnSource(2)]).answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`, 'coverage beside transcripts only: the unnumbered line')
+  for (const out of [two, api.withTranscriptNote(two), api.withTranscriptNote(api.withTranscriptNote(two))]) assert.equal(out.answer.match(/evidence, not findings/g).length, 1, 'never twice')
+  assert.equal(api.withTranscriptNote(two), two)
+  assert.ok(!/[—–]/.test(two.answer))
+})
+
+test('no hearing transcript cited: no line, and a Hansard speech about a transcript is not one', () => {
+  for (const sources of [[REPORT], [SPEECH], [REPORT, SPEECH, { ...turnSource(1), cited: false }], [COVERAGE], []]) {
+    const payload = { answered: true, answer_decision: 'answer', answer: 'The Senate debated the bill.', citations: {}, sources }
+    assert.equal(api.withTranscriptNote(payload), payload)
+  }
+})
+
+const sse = events => events.map(([event, data]) => `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`).join('')
+const doneOf = wire => JSON.parse(/^event: done\ndata: (.+)$/m.exec(wire)[1])
+/** A stream delivered in pieces that cut frames, and a multi-byte character, in half. */
+function chunked(wire, size) {
+  const bytes = new TextEncoder().encode(wire)
+  return new Response(new ReadableStream({ start(c) { for (let i = 0; i < bytes.length; i += size) c.enqueue(bytes.slice(i, i + size)); c.close() } }), { headers: { 'content-type': 'text/event-stream', 'x-opax-cache': 'HIT' } })
+}
+
+test('every Ask reply gains the line on its way out: blocking and streamed, and an answer cached before the rule', async () => {
+  const answer = 'The report found the scheme unlawful. A witness said “income averaging” was used.'
+  // What the cache held before this change: a mixed answer with no line.
+  const stored = { answered: true, answer_decision: 'answer', answer, citations: { 'fact-2/t/body/0': [[0, 37]] }, sources: [REPORT, turnSource(1)] }
+  const want = `${answer}\n\nSource 2 is a hearing transcript: evidence, not findings.`
+  const blocking = await api.transcriptNoteResponse(Response.json(stored, { headers: { 'x-opax-cache': 'HIT', 'x-opax-cached-at': '2026-11-14T00:00:00Z' } }))
+  assert.equal(blocking.headers.get('x-opax-cache'), 'HIT'); assert.equal(blocking.headers.get('x-opax-cached-at'), '2026-11-14T00:00:00Z')
+  const body = await blocking.json()
+  assert.equal(body.answer, want); assert.deepEqual(body.citations, stored.citations); assert.deepEqual(body.sources, stored.sources)
+  // The cached replay and a live stream speak the same frames: status, deltas, then the payload as `done`.
+  const wire = sse([['status', { phase: 'cached' }], ['delta', { text: answer.slice(0, 30) }], ['delta', { text: answer.slice(30) }], ['done', stored]])
+  for (const size of [1, 7, 64, 100_000]) {
+    const out = await (await api.transcriptNoteResponse(chunked(wire, size))).text()
+    assert.equal(doneOf(out).answer, want, `chunks of ${size}`)
+    assert.equal(out.replace(/^event: done\ndata: .+$/m, ''), wire.replace(/^event: done\ndata: .+$/m, ''), 'every other frame is untouched')
+    assert.equal(out.match(/hearing transcript: evidence, not findings\./g).length, 1)
+  }
+  // An answer stored after the change already ends with the line: served as it is, byte for byte.
+  const fresh = { ...stored, answer: want }, text = JSON.stringify(fresh)
+  assert.equal(await (await api.transcriptNoteResponse(new Response(text, { headers: { 'content-type': 'application/json' } }))).text(), text)
+  assert.equal(await (await api.transcriptNoteResponse(chunked(sse([['done', fresh]]), 5))).text(), sse([['done', fresh]]))
+  // All transcripts: the line as written to the commission.
+  const all = { ...stored, sources: [turnSource(1), turnSource(2)] }
+  assert.equal((await (await api.transcriptNoteResponse(Response.json(all))).json()).answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`)
+  assert.equal(doneOf(await (await api.transcriptNoteResponse(chunked(sse([['delta', { text: answer }], ['done', all]]), 9))).text()).answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`)
+  // No transcript, an error, or a body that is not what it claims: out as it came, never emptied or blocked.
+  const plain = { ...stored, sources: [REPORT] }
+  assert.deepEqual(await (await api.transcriptNoteResponse(Response.json(plain))).json(), plain)
+  assert.equal(await (await api.transcriptNoteResponse(chunked(sse([['done', plain]]), 11))).text(), sse([['done', plain]]))
+  const failed = await api.transcriptNoteResponse(Response.json({ error: 'The answer took too long. Please try again.' }, { status: 504 }))
+  assert.equal(failed.status, 504)
+  assert.equal(await (await api.transcriptNoteResponse(new Response('not json', { headers: { 'content-type': 'application/json' } }))).text(), 'not json')
+  const broken = 'event: done\ndata: {"answer": \n\n'
+  assert.equal(await (await api.transcriptNoteResponse(chunked(broken, 4))).text(), broken)
+  const index = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8')
+  assert.match(index, /async function apiAskReply\([^)]*\): Promise<Response> \{\n[^\n]*\n  return transcriptNoteResponse\(await apiAskRouted\(/)
+  assert.equal(index.match(/\bapiAskRouted\(/g).length, 2, 'the route and voice reach Ask only through the wrapped entry point')
+  assert.equal(index.match(/\bapiAskReply\(/g).length, 3)
+})
+
+test('voice: the caller hears the line last, without source numbers', () => {
+  const long = 'The commission heard about income averaging. It was applied to each debt. Officers raised concerns. The department continued. A fifth sentence follows. And a sixth.'
+  const said = sources => api.askOpaxResult(api.withTranscriptNote({ answered: true, answer: long, citations: {}, sources }), 'https://opax.test').spoken_answer
+  assert.ok(said([turnSource(1)]).endsWith(' And a sixth.') === false && said([turnSource(1)]).endsWith(` ${api.TRANSCRIPT_NOTE}`), said([turnSource(1)]))
+  assert.ok(said([REPORT, turnSource(1)]).endsWith(' Some of these sources are hearing transcripts: evidence, not findings.'), said([REPORT, turnSource(1)]))
+  assert.ok(!/Source \d/.test(said([REPORT, turnSource(1)])))
+  assert.ok(said([REPORT, turnSource(1)]).startsWith('The commission heard about income averaging.'))
+  assert.ok(!/evidence, not findings/.test(said([REPORT])))
+})
+
+test('a conversation saved before the rule gains the line when it is restored', async () => {
+  const { withTranscriptNote } = await import('../public/transcript-note.js')
+  const app = await readFile(new URL('../public/app.js', import.meta.url), 'utf8')
+  assert.match(app, /import\('\/transcript-note\.js\?v=[^']+'\)\.then\(module => \{ transcriptNoteHelpers = module; \}\)\.catch/)
+  assert.match(app, /function renderChatThread[\s\S]{0,600}transcriptNoteHelpers\.withTranscriptNote\(\{answer:msg\.text, sources:msg\.sources, answered:msg\.answered\}, true\)/)
+  // trimTurn keeps 240 characters of each source field, so a long excerpt loses its label; its page pointer remains.
+  const cut = v => typeof v === 'string' && v.length > 240 ? `${v.slice(0, 239)}…` : v
+  const long = turnSource(1), excerpt = { ...long, title: long.title.replace('income averaging', 'income averaging '.repeat(30)), snippet: long.snippet.replace('income averaging', 'income averaging '.repeat(30)) }
+  const saved = [REPORT, excerpt].map(s => Object.fromEntries(Object.entries(s).map(([k, v]) => [k, k === 'url' ? v : cut(v)])))
+  assert.ok(!saved[1].snippet.includes(LABEL) && saved[1].snippet.endsWith('…'))
+  const turn = { answer: 'A saved answer.', sources: saved, answered: true }
+  assert.equal(withTranscriptNote(turn, true).answer, 'A saved answer.\n\nSource 2 is a hearing transcript: evidence, not findings.')
+  assert.equal(withTranscriptNote(turn).answer, 'A saved answer.', 'the Worker never reads a cut field this way')
+  assert.equal(withTranscriptNote({ ...turn, sources: [REPORT, { ...SPEECH, snippet: `${'word '.repeat(60)}…` }] }, true).answer, 'A saved answer.')
 })

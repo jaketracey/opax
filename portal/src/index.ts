@@ -165,7 +165,7 @@ import { MONEY_GRAPH_PATHS, MONEY_PARTIES_PATH } from '../public/money-parties.j
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
-import { withTranscriptNote } from './transcript-answer'
+import { withTranscriptNote, transcriptNoteResponse } from './transcript-answer'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
 import { serveMedia } from './media'
@@ -6937,12 +6937,16 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
   const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
-  return json(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN))
+  return json(linkAskSources(withTranscriptNote(agenticAskPayload(run, q)), run.source_links, SITE_ORIGIN))
 }
 /** Requests whose answers apiAsk must not store in the shared cache: fallbacks run within a shortened caller budget. */
 const UNSHARED_ASK_REQUESTS = new WeakSet<Request>()
 /** `caller` is an internal caller's deadline (voice's ask_opax in this Worker); otherwise only the staging hop's
  * budget header with ASK_INTERNAL_SECRET sets one, counted from now. A public budget header is ignored. */
+async function apiAskReply(request: Request, url: URL, env: Env, ctx: ExecutionContext, caller?: AskCaller): Promise<Response> {
+  // The one way out for every Ask reply (readers, the app and voice's ask_opax): the transcript line goes on here.
+  return transcriptNoteResponse(await apiAskRouted(request, url, env, ctx, caller))
+}
 async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext, caller?: AskCaller): Promise<Response> {
   caller ??= await trustedCaller(request, env.ASK_INTERNAL_SECRET)
   const override = request.headers.get('x-opax-research')
@@ -7244,7 +7248,7 @@ async function route(
         return await apiSearchSummary(request, url, env, ctx)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
-        return await apiAskRouted(request, url, env, ctx)
+        return await apiAskReply(request, url, env, ctx)
       }
       if (url.pathname === '/api/journey-story' && request.method === 'POST') {
         const body = await readJsonBody(request)
@@ -7617,7 +7621,7 @@ export default {
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
-    }, voiceAsk(env, (ask, caller) => apiAskRouted(ask, new URL(ask.url), env, ctx, caller))))
+    }, voiceAsk(env, (ask, caller) => apiAskReply(ask, new URL(ask.url), env, ctx, caller))))
     // Sign in to connect: metadata, registration, consent, tokens (community-oauth.ts).
     const oauth = await oauthRoute(request, env)
     if (oauth) return communityResponse(oauth)
