@@ -141,7 +141,7 @@ test('the app\'s bill page says "Bill progress as at" the export\'s Sydney day, 
   assert.equal(line.textContent, 'Bill progress as at 5 Oct 2026');
   assert.equal(line.nextElementSibling.id, 'bill-title');
   // The status keeps its own date beside it, as before.
-  assert.match(status.textContent, /Status as at 17 Sep 2026/);
+  assert.match(status.textContent, /Status recorded 17 Sep 2026/);
   // The page keeps the Sydney day as bill.exportedAt, which its "Updated" source lines also read: one day on the page.
   assert.equal(opened.at(-1).exportedAt, '2026-10-05');
   assert.match(appSource, /bill\.exportedAt = billsAsAtIso\(billsDate\) \|\| billsDate \|\| "";/);
@@ -169,14 +169,14 @@ async function appPeek(exportedAt, entry) {
 
 test('the /bills peek says "Bill progress as at" after the bill\'s dated status, with or without a summary', async () => {
   const bare = await appPeek(EXPORTED, { ...peekEntry, has_summary: false });
-  assert.equal(bare.querySelector('.bill-peek-line').textContent, 'Passed, status as at 26 Aug 2026. Bill progress as at 5 Oct 2026. No summary yet.');
+  assert.equal(bare.querySelector('.bill-peek-line').textContent, 'Passed, status recorded 26 Aug 2026. Bill progress as at 5 Oct 2026. No summary yet.');
   const summarised = await appPeek(EXPORTED, { ...peekEntry, has_summary: true });
-  assert.equal(summarised.querySelector('.fineprint').textContent, 'Passed, status as at 26 Aug 2026. Bill progress as at 5 Oct 2026.');
+  assert.equal(summarised.querySelector('.fineprint').textContent, 'Passed, status recorded 26 Aug 2026. Bill progress as at 5 Oct 2026.');
   assert.equal((await appPeek(FRESH, { ...peekEntry, has_summary: false })).querySelector('.bill-peek-line').textContent,
-    'Passed, status as at 26 Aug 2026. Bill progress as at 20 Nov 2026. No summary yet.');
+    'Passed, status recorded 26 Aug 2026. Bill progress as at 20 Nov 2026. No summary yet.');
   // No export date, or a record newer than the export: the dated status alone, as before.
   for (const [at, entry] of [['', peekEntry], [EXPORTED, { ...peekEntry, status_as_of: '2026-11-01' }]])
-    assert.match((await appPeek(at, { ...entry, has_summary: true })).querySelector('.fineprint').textContent, /^Passed, status as at \d+ \w+ 2026\.$/);
+    assert.match((await appPeek(at, { ...entry, has_summary: true })).querySelector('.fineprint').textContent, /^Passed, status recorded \d+ \w+ 2026\.$/);
 });
 
 /** renderDocBillPanel as app.js has it: "The bill" panel on a speech page whose debate is a bill. */
@@ -192,7 +192,7 @@ test('a speech page\'s "The bill" panel says "Bill progress as at" under the bil
   const panel = await appDocPanel(EXPORTED, { ...peekEntry, has_summary: false });
   assert.equal(panel.hidden, false);
   const status = panel.querySelector('.doc-bill-status');
-  assert.equal(status.textContent, 'Passed, status as at 26 Aug 2026');
+  assert.equal(status.textContent, 'Passed, status recorded 26 Aug 2026');
   assert.equal(status.nextElementSibling.className, 'bill-progress-as-at');
   assert.equal(status.nextElementSibling.textContent, 'Bill progress as at 5 Oct 2026');
   assert.equal((await appDocPanel(FRESH, { ...peekEntry, has_summary: false })).querySelector('.bill-progress-as-at').textContent, 'Bill progress as at 20 Nov 2026');

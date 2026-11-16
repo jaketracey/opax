@@ -9239,10 +9239,12 @@ function billOutcomeLabelHTML(outcome) {
  *  names one ("Removed from the Notice Paper", `ended_label`), else the status. */
 const billStatusWord = (b) => String(b?.ended_label || "").trim() || sentenceCase(b?.status);
 
-/** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
+/** "Passed, status recorded 12 Feb 2022": the status is never shown undated. The date is the bill's latest recorded
+ *  event (status_as_of), which is not always the day the status changed, so it is "recorded", not "changed"; how old
+ *  the whole record is follows as "Bill progress as at" (billProgressAsAt). */
 function billStatusLine(b) {
   const status = billStatusWord(b) || "Status not recorded";
-  const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
+  const as = b?.status_as_of ? `, status recorded ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
 
@@ -10010,7 +10012,7 @@ async function openBill(key, manageFocus) {
   body.innerHTML = `
     <div class="ui-page-head bill-head">
       <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
-        bill.status_as_of ? `<span class="bill-status-as">Status as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
+        bill.status_as_of ? `<span class="bill-status-as">Status recorded ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
       ${progressAsAt ? `<p class="bill-progress-as-at">${esc(progressAsAt)}</p>` : ""}
       <h1 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h1>
       ${bill.short_title && bill.short_title !== title

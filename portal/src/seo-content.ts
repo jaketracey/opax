@@ -453,7 +453,9 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const party = b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : null
   // A private member's "(s) ..." sponsor print is not a portfolio (bills-007).
   const portfolio = b.portfolio && !/^\s*\(s\)/.test(b.portfolio) ? b.portfolio : ''
-  const description = `${billStatusText(b, 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
+  // status_as_of is the bill's latest recorded event, not always the day its status changed: "status recorded", with
+  // how old the whole record is in the "Bill progress as at" line under it.
+  const description = `${billStatusText(b, 'Status not recorded')}${b.status_as_of ? `, status recorded ${shortDate(b.status_as_of)}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
   const coSponsors = (b.sponsors || []).slice(1).map(s=>{
     const person = sponsorPerson(s.name, s.person_id ?? undefined, people) as Person | null
     return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party && sponsorParties.includes(s.party) ? ` (${escapeHtml(s.party)})` : '')
