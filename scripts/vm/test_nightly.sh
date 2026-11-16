@@ -147,6 +147,23 @@ PYEOF
   ;;
 esac
 DREOF
+  # The nightly Federal Register request and the held-sources overlay are offline stubs here: this suite never
+  # asks the register anything. scripts/vm/test_bills_held_sources_step.py and tests/test_frl_acts_recent.py cover them.
+  cp "$SRC/scripts/vm/bills_held_sources.sh" "$seed/scripts/vm/bills_held_sources.sh" || { bad "cannot copy fixture dependency: scripts/vm/bills_held_sources.sh"; exit 1; }
+  cat > "$seed/parli/ingest/words_parlinfo.py" <<'FREOF'
+import pathlib, sys
+assert sys.argv[1:][-1] == 'frl-acts-recent', sys.argv
+with open(pathlib.Path.home() / 'held.calls', 'a') as out:
+    out.write('frl\n')
+FREOF
+  cat > "$seed/scripts/bills_held_sources.py" <<'HSEOF'
+import json, pathlib, sys
+args = sys.argv[1:]
+with open(pathlib.Path.home() / 'held.calls', 'a') as out:
+    out.write('overlay\n')
+pathlib.Path(args[args.index('--summary-out') + 1]).write_text(
+    json.dumps({'run_date': args[args.index('--today') + 1], 'assents_added': [], 'stages_added': 0}) + '\n')
+HSEOF
   cp "$SRC/tests/fixtures/evidence-nightly/export_stub.py" "$seed/scripts/export_evidence_layers.py"
   cp "$SRC/tests/fixtures/evidence-nightly/audit_stub.py" "$seed/scripts/audit_evidence_export.py"
   python3 "$SRC/tests/fixtures/evidence-nightly/seed.py" "$seed/portal/public/evidence"
@@ -668,6 +685,8 @@ check "status branch is a single parentless commit holding only status.json" bas
 check "local status file says ok" grep -q '"status": "ok"' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
 check "the real coverage check ran in the refresh and raised no coverage alert" bash -c "test -s '$HOME/.cache/autoresearch/pipeline/coverage-report-v1.json' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"coverage_alerts\"]==[], s'"
 check "log file written" test -s "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
+check "one Federal Register request before the refresh, the held-sources overlay after the bills" bash -c "[ \"\$(tr '\n' ' ' < '$HOME/held.calls')\" = 'frl overlay ' ]"
+check "status carries tonight's held-sources summary" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"bills_held_sources\"][\"run_date\"]==\"$TODAY\", s'"
 # The electorate release is republished from its own bundle (dissolved_for); the fixture release carries none,
 # so the step runs and changes nothing.
 check "electorate republish ran and left an unchanged release alone" grep -q 'Electorate references unchanged' "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"

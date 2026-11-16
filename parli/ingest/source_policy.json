@@ -1,0 +1,32 @@
+{
+ "_note": "Per-source access policy for requests the nightly makes outside the shared defaults. Each entry states host, paths, identity, rate, retry, window, budget, licence and answer_mode. tests/test_source_policy.py holds the code to these values. Approved 16 Nov 2026 (bill sources hub ruling b); see docs/SOURCES-ACCESS.md.",
+ "frl_acts": {
+  "host": "api.prod.legislation.gov.au",
+  "paths": ["/v1/titles"],
+  "never": ["/v1/documents"],
+  "identity": "parli/ingest/user-agent.json",
+  "rate": {"min_spacing_seconds": 10, "serial": true, "basis": "www.legislation.gov.au robots.txt Crawl-delay 10; the API host has no robots file"},
+  "retry": {"nightly_attempts": 1, "weekly_attempts": 5, "stop_after_429_or_503": 2, "honour_retry_after": true, "refusal": "pause (exit 4), keep the last good rows"},
+  "window": {"busy_hours": [8, 20], "zones": ["UTC+10", "Australia/Melbourne"], "rule": "requests only 20:00 to 08:00 in both zones; never retried inside busy hours"},
+  "budget": {"nightly_requests": 1, "nightly_query": "$filter=collection eq 'Act', $orderby=id desc, $top=100", "weekly_full_sweep_requests": 140},
+  "licence": "CC BY 4.0",
+  "attribution": "Based on content from the Federal Register of Legislation at {full date of download}. For the latest information on Australian Government legislation please go to https://www.legislation.gov.au.",
+  "attribution_where": "wherever an FRL-sourced date appears: the bill page, the bill edition, Ask and MCP record text",
+  "excluded": "the Commonwealth Coat of Arms",
+  "answer_mode": "paraphrase"
+ },
+ "oa_hansard_xml": {
+  "host": "data.openaustralia.org.au",
+  "paths": ["/scrapedxml/representatives_debates/", "/scrapedxml/senate_debates/", "/members/"],
+  "identity": "parli/ingest/user-agent.json",
+  "rate": {"min_spacing_seconds": 1, "serial": true, "basis": "robots honoured; a 404 robots file means no rules"},
+  "retry": {"refusal": "pause, keep the caches"},
+  "attribution": "Commonwealth of Australia (Hansard) and the OpenAustralia Foundation; link the XML file and the original ParlInfo URL",
+  "use": "bill readings by the exact <bills> official id only; an exact title match goes to review, never to a page",
+  "answer_mode": "paraphrase"
+ },
+ "tvfy": {
+  "host": "theyvoteforyou.org.au",
+  "note": "help pages served a Cloudflare challenge to the identifying agent on 16 Nov 2026; the API was not tested. Fallback only; no challenge is ever solved."
+ }
+}

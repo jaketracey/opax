@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=ebc7ce515a").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=d59af7e7f8").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=7387ae1ecd").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=e71fa76b58").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -64,9 +64,9 @@ const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => {
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=6d5140fb7a').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=029587c6a5').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=3d4c26573f').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=dd3e8d7571').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1661,7 +1661,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=bb5d7f71db' : '/ledger.js?v=e0ce508ae7');
+    const mod = await import(grants ? '/grants.js?v=23230c61f0' : '/ledger.js?v=f04f3a557b');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1692,7 +1692,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=4177dc6736');
+    const mod = await import('/money-explain.js?v=68323c7744');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1711,7 +1711,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=fe78c87882');
+    const mod = await import('/grant-recipient.js?v=fb1920f050');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1964,7 +1964,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=0bb132407f");
+    const module = await import("/suppliers.js?v=6f3e7d3a8f");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5689,7 +5689,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e8d40213b9'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=646a240d01'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -7875,7 +7875,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f2f0d19ae5").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=d612bfd1c7").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9480,6 +9480,10 @@ function billTimelineHTML(bill) {
     .slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
   const sponsorMissing = !bill.sponsor && !billSponsorFromPortfolio(bill.portfolio) && bill.status !== "exposure_draft";
   const home = billOriginals((bill.sources || []).filter((s) => s.kind === "billhome"));
+  // Stages read while the register (ParlInfo) was unavailable say where they came from
+  // (scripts/bills_held_sources.py): readings from Hansard, Royal Assent from the Federal Register.
+  const fromHansard = dates.some((d) => d.source === "hansard");
+  const fromRegister = dates.some((d) => uiLabels.isFrlStage(d));
   const source = (folded) => sourceLineHTML({
     updated: bill.exportedAt || "", source: "Parliament of Australia",
     originals: home,
@@ -9488,9 +9492,14 @@ function billTimelineHTML(bill) {
         folded.runs} entries carry ${folded.dates} such dates: a stage that ran across sitting days is one
         entry with its span. Every date is a tick on the ruler.` : "",
       sponsorMissing ? "The register records no sponsor for this bill." : "",
+      fromHansard ? `Readings dated after the register's last record come from Hansard (Commonwealth of
+        Australia), as the OpenAustralia Foundation publishes it. Each links to that day's Hansard file.` : "",
+      fromRegister ? `Royal Assent dated after the register's last record is the Act's making date on the
+        Federal Register of Legislation. ${esc(uiLabels.billFrlAttribution(bill, bill.exportedAt))}` : "",
       BILL_REGISTER_NOTE,
     ],
-    licence: billLicence(bill),
+    licence: [billLicence(bill), fromRegister ? `Federal Register of Legislation content, ${uiLabels.FRL_LICENCE}.` : ""]
+      .filter(Boolean).join(" "),
   });
   if (!dates.length) {
     return `<section class="ui-section bill-section" data-accent="bills"><h2 class="ui-section-title">How it moved</h2>
@@ -9825,7 +9834,8 @@ function billActsHTML(bill) {
     <ul class="ui-list bill-acts" role="list">${rows}</ul>
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "Federal Register of Legislation",
-      notes: ["The Act as made, linked to its page on the Federal Register of Legislation."],
+      notes: ["The Act as made, linked to its page on the Federal Register of Legislation.",
+        esc(uiLabels.billFrlAttribution(bill, bill.exportedAt))],
       licence: "Act text: Federal Register of Legislation, CC BY 4.0.",
     })}
   </section>`;
@@ -10317,7 +10327,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=4177dc6736"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=68323c7744"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10333,14 +10343,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=1b592c7eb6", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=0db7463496", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=e0ce508ae7", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bb5d7f71db", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=f04f3a557b", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=23230c61f0", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=9df8165583", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ba63e97245", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {

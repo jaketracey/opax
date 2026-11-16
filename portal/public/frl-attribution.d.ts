@@ -1,0 +1,10 @@
+export const FRL_SITE: string;
+export const FRL_NAME: string;
+export const FRL_LICENCE: string;
+export function frlFullDate(value: unknown): string;
+export function frlAttribution(day: unknown): string;
+export function isFrlStage(row: unknown): boolean;
+type FrlBill = { acts?: unknown[] | null; key_dates?: unknown[] | null; sources?: unknown[] | null } | null | undefined;
+export function frlRetrieved(bill: FrlBill, fallback?: string | null): string;
+export function billHasFrlDates(bill: FrlBill): boolean;
+export function billFrlAttribution(bill: FrlBill, fallback?: string | null): string;

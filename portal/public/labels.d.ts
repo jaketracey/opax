@@ -19,3 +19,4 @@ export function partyNameForPeriod(label: string, lastFy: number | undefined): {
 export function partyNames(party: string): [string, string];
 export const CHAMBER_LABELS: Record<string, string>;
 export function chamberLabel(code: string | null | undefined): string;
+export { frlAttribution, frlRetrieved, billFrlAttribution, isFrlStage, FRL_LICENCE } from './frl-attribution.js';

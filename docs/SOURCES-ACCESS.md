@@ -166,6 +166,32 @@ supplied by the OPAX maintainer, 11 Nov 2026", distinct from OPAXBot fetches, ci
 to the publisher's URL, kept outside git and never fetched by the refresh. No source
 setting changed. The list is in [royal commissions data](DATA-ROYAL-COMMISSIONS.md).
 
+## Bill progress from held sources, 16 November 2026
+
+While ParlInfo is paused, the nightly moves bills we already publish forward from
+sources OPAX already holds (`scripts/bills_held_sources.py`, run after the bills
+export and under the same bill guard). Nothing is fetched from APH or ParlInfo,
+and a bill we do not hold never gets a page from these sources.
+
+- Royal Assent comes from the Federal Register of Legislation, matched only by an
+  Act's `originatingBillUri` naming the bill's own ParlInfo id.
+- First, second and third readings come from the OpenAustralia Foundation's
+  Hansard XML for days after the bills export, only where the Hansard section names
+  the bill's official id. A section matched by title alone goes to a review list
+  with its basis and is never published.
+- Division links come from the OpenAustralia-sourced divisions with an exact
+  official id join, and only to a published division page.
+
+The Federal Register is asked once a night at about 03:15 Sydney time (one
+`/v1/titles` request for the newest 100 Acts, 10 seconds' spacing, never in the
+busy hours of 08:00 to 20:00 AEST, no retry). Any 429, 5xx or other failure skips
+the night; a 401, 403 or challenge pauses the source with a receipt, and the next
+night asks once again. Each source's host, paths, identity, spacing, window,
+budget, licence and attribution are in `parli/ingest/source_policy.json`. Every
+date read from the register carries its CC BY 4.0 attribution in the register's
+dated wording, on the bill page, in the daily edition and in Ask and MCP record
+text.
+
 ## Review correction and rollback
 
 The review correction removes the remaining contact-log browser path, tightens

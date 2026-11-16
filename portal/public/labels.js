@@ -9,6 +9,9 @@
    growth-modules.js) never carries it. */
 import { shortDate } from './format.js';
 import { MACHINE_NOTICE, MACHINE_NOTICE_STORED } from './machine-notice.js?v=5ecefd2bcd';
+// The Federal Register's dated CC BY 4.0 attribution: the bill page reads it here, the Worker from the file itself.
+// Unstamped like format.js: a new stamped module would take _headers past Workers Assets' 100 rules.
+export { frlAttribution, frlRetrieved, billFrlAttribution, isFrlStage, FRL_LICENCE } from './frl-attribution.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);

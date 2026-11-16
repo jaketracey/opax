@@ -43,6 +43,7 @@ Usage:
   python3 -m parli.ingest.words_parlinfo display --dataset billsdgs --limit 20
   python3 -m parli.ingest.words_parlinfo bill-sections --limit 10   # text of 10 bills
   python3 -m parli.ingest.words_parlinfo frl-acts                               # all 13.7K Acts, honest UA
+  python3 -m parli.ingest.words_parlinfo frl-acts-recent                        # newest 100 Acts, one request (nightly)
   python3 -m parli.ingest.words_parlinfo link-bills
   python3 -m parli.ingest.words_parlinfo stats
   python3 -m parli.ingest.words_parlinfo map --limit 3 [--dataset bills]
@@ -497,7 +498,7 @@ def run_frl_acts(args) -> None:
     db = connect_db(args.db)
     ensure_table(db, ACTS_TABLE, ACTS_DDL, ACTS_INDEXES)
     skip, total, stored = args.skip, None, 0
-    select = "id,name,makingDate,year,number,isPrincipal,isInForce,status,originatingBillUri"
+    select = FRL_ACT_SELECT
     while True:
         # $orderby is required: $skip over the default order duplicates/misses rows
         params = {"$filter": "collection eq 'Act'", "$orderby": "id", "$top": 100, "$skip": skip,
@@ -507,13 +508,7 @@ def run_frl_acts(args) -> None:
         data = session.json(params)
         total = total or data.get("@odata.count")
         vals = data.get("value", [])
-        rows = [{
-            "act_id": v["id"], "name": v.get("name"), "making_date": parse_date(v.get("makingDate")),
-            "year": v.get("year"), "number": v.get("number"),
-            "is_principal": int(bool(v.get("isPrincipal"))), "is_in_force": int(bool(v.get("isInForce"))),
-            "status": v.get("status"), "bill_uri": v.get("originatingBillUri"),
-            "bill_code": bill_code_from_uri(v.get("originatingBillUri")), "fetched_at": now_iso(),
-        } for v in vals]
+        rows = frl_act_rows(vals)
         stored += upsert(db, ACTS_TABLE, rows)
         log(f"  skip={skip}: {len(vals)} titles (register total {total}); stored {stored}")
         skip += len(vals)
@@ -524,6 +519,48 @@ def run_frl_acts(args) -> None:
         f"SUM(bill_code IN (SELECT bill_code FROM {TABLE} WHERE dataset='billhome')) FROM {ACTS_TABLE}").fetchone()
     log(f"[frl-acts] {n:,} Acts stored; {with_bill or 0:,} carry a bill code; "
         f"{joined or 0:,} join a stored billhome row ({session.requests} requests)")
+
+
+FRL_ACT_SELECT = "id,name,makingDate,year,number,isPrincipal,isInForce,status,originatingBillUri"
+RECENT_ACTS = 100
+
+
+def frl_act_rows(values: list) -> list[dict]:
+    return [{
+        "act_id": v["id"], "name": v.get("name"), "making_date": parse_date(v.get("makingDate")),
+        "year": v.get("year"), "number": v.get("number"),
+        "is_principal": int(bool(v.get("isPrincipal"))), "is_in_force": int(bool(v.get("isInForce"))),
+        "status": v.get("status"), "bill_uri": v.get("originatingBillUri"),
+        "bill_code": bill_code_from_uri(v.get("originatingBillUri")), "fetched_at": now_iso(),
+    } for v in values]
+
+
+def run_frl_acts_recent(args, session=None) -> int:
+    """The newest Acts on the register, in ONE request, for the nightly bills
+    overlay (scripts/bills_held_sources.py): Royal Assent while ParlInfo is
+    paused. The weekly `frl-acts` sweep stays the complete read.
+
+    Policy (parli/ingest/source_policy.json, frl_acts): the shared OPAXBot
+    identity, the publisher's quiet window only, the 10-second spacing, one
+    attempt. A throttle (429/503), any other non-200 answer or a window that
+    has closed raises Held: the night is skipped, nothing is retried and the
+    stored rows stay. A 401/403 or challenge pauses the source (exit 4)."""
+    session = session or FRLSession(max_requests=1, attempts=1)
+    session.check_window()  # Before any request or DB access.
+    params = {"$filter": "collection eq 'Act'", "$orderby": "id desc", "$top": RECENT_ACTS,
+              "$select": FRL_ACT_SELECT}
+    data = session.json(params)
+    values = data.get("value") if isinstance(data, dict) else None
+    if not isinstance(values, list) or not all(isinstance(v, dict) and v.get("id") for v in values):
+        raise Held("FRL answered without an Act title list; stored rows kept")
+    rows = frl_act_rows(values)
+    db = connect_db(args.db)
+    ensure_table(db, ACTS_TABLE, ACTS_DDL, ACTS_INDEXES)
+    stored = upsert(db, ACTS_TABLE, rows)
+    newest = max((r["making_date"] for r in rows if r["making_date"]), default=None)
+    log(f"[frl-acts-recent] {len(rows)} newest Act titles in 1 request; stored {stored}; "
+        f"newest making date {newest or 'none'}; {sum(bool(r['bill_code']) for r in rows)} carry a bill code")
+    return stored
 
 
 def _norm_title(t: str) -> str:
@@ -732,6 +769,9 @@ def main() -> None:
     s.add_argument("--skip", type=int, default=0)
     s.add_argument("--limit", type=int, default=None)
     s.set_defaults(func=run_frl_acts)
+
+    s = sub.add_parser("frl-acts-recent", help="the newest 100 Act titles in one request (nightly bills overlay)")
+    s.set_defaults(func=run_frl_acts_recent)
 
     s = sub.add_parser("link-bills")
     s.set_defaults(func=run_link_bills)

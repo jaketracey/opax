@@ -299,3 +299,22 @@ test('the donor reference is printed once when an edition stored in main\'s form
   // And an edition composed now is stable when authorised twice.
   assert.deepEqual(authoriseVicPost(now), now);
 });
+
+test('a Royal Assent day read from the Federal Register names the register, and the long copy and the slides carry its dated attribution', async () => {
+  const words = 'Based on content from the Federal Register of Legislation at 17 November 2026. For the latest information on Australian Government legislation please go to https://www.legislation.gov.au.';
+  const bill = { key: 'au-federal-x4', title: 'Example Register Bill 2026', introduced: '2026-09-07', status: 'passed', status_as_of: '2026-11-12', sponsor: '', portfolio: 'Treasury', has_summary: true };
+  const file = { summary: { sentences: [S1, S2] }, key_dates: [{ stage: 'introduced', date: '2026-09-07', house: 'representatives' },
+    { stage: 'third_reading', date: '2026-10-28', house: 'representatives', source: 'hansard' },
+    { stage: 'royal_assent', date: '2026-11-12', house: null, url: 'https://www.legislation.gov.au/C2026A00101', source: 'frl', retrieved: '2026-11-17' }],
+    acts: [{ assent_date: '2026-11-12', retrieved: '2026-11-17' }], sources: [{ kind: 'frl_act', licence: 'CC BY 4.0', retrieved: '2026-11-17' }] };
+  assert.equal(billStanding(bill, file), 'Royal Assent 12 Nov 2026 (Federal Register of Legislation).');
+  // The register's assent day in a record the export kept from ParlInfo is ParlInfo's, and says nothing more.
+  assert.equal(billStanding(index.bills[2], files['au-federal-x3']), 'Royal Assent 27 Aug 2026.');
+  const post = await composeDailyPost('2026-11-17', { async asset(path) { return path === '/bills/index.json' ? { bills: [bill] } : path === '/bills/au-federal-x4.json' ? file : null; },
+    personTopics: async () => [], recent: async () => [] }, 'bill');
+  assert.ok(post.record_text.includes('Royal Assent 12 Nov 2026 (Federal Register of Legislation).'));
+  for (const text of [post.caption, post.channel_caption]) assert.ok(text.includes(words));
+  const slide = post.slides.find(s => s.type === 'source');
+  assert.equal(slide.rows[0], 'Based on content from the Federal Register of Legislation at 17 November 2026.');
+  assert.ok(slide.alt.endsWith(words));
+});
