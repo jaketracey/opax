@@ -12,7 +12,8 @@ const built = await build({ stdin: { contents: [
   "export {groundAnswerPayload, withoutMachineLabels} from './src/research-grounding'",
   "export {NO_SUPPORTED_ANSWER, MACHINE_LABELS, unescapedQuotes} from './src/research-evidence'",
   "export {ASK_SELF_REFERENCE_RULE} from './src/ask-writing-rules'",
-  "export {writingFacts, writingPrompt, verifyWrittenAnswer, draftWrittenAnswer} from './src/research-writing'",
+  "export {writingFacts, writingPrompt, verifyWrittenAnswer, draftWrittenAnswer, TRANSCRIPT_COVERAGE_RULE} from './src/research-writing'",
+  "export {createAnswerWriter} from './src/research-writer'",
   "export {createResearch, NO_EXCERPT_HELD} from './src/research-loop'",
   "export {runAgentic} from './src/agentic-ask'",
   "export {createResearchCreditCooldown} from './src/research-credit'",
@@ -172,4 +173,30 @@ test('every registered commission is matched by its name and its aliases, as a w
     assert.equal(api.namesRegisteredCommission(phrase), true, phrase)
   for (const phrase of ['What did the Senate inquiry hear about consulting?', 'Who gave evidence to the committee inquiry into consulting services?', 'Was there an inquiry into the scheme?', 'What did the funding inquiry of the Senate find?', 'What is healthcare funding in NSW?'])
     assert.equal(api.quotedOrNothing(phrase), false, phrase)
+})
+
+test('the writer is asked to cover each transcript excerpt once, only when it is given one; its left-out sentences are counted by reason', async () => {
+  // Run 4a: the writer was handed a median of 9 facts and cited 6. Its contract said "under 180 words", written for a
+  // writer that only added to the research model's own points, which no longer word hearing evidence.
+  assert.equal(api.TRANSCRIPT_COVERAGE_RULE, ' With hearing transcript excerpts among the facts the answer may run to 400 words: give each excerpt you are given one sentence of its own, once, with its fact id.')
+  const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
+  const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=15', label: text } }])
+  const withExcerpt = JSON.parse(api.writingPrompt({ question: hearingQuestion, period, facts })).contract
+  assert.ok(withExcerpt.includes('under 180 words unless a requested annual or monthly series needs more.' + api.TRANSCRIPT_COVERAGE_RULE))
+  // No transcript fact: the contract is as it was.
+  const grant = api.writingFacts(undefined, [{ id: 1, text: 'Example Health Ltd was awarded a grant of $120,000 by the Department of Health in 2023-24.', cite: { kind: 'record', url: 'https://opax.test/grants/example', label: 'Example Health grant' } }])
+  const plain = JSON.parse(api.writingPrompt({ question: 'Which grants did Example Health receive?', period, facts: grant })).contract
+  assert.ok(plain.endsWith('under 180 words unless a requested annual or monthly series needs more.')); assert.equal(plain.includes('400 words'), false)
+  // The count: one near-quotation of the transcript, one sentence said twice, one kept.
+  const leftOut = {}
+  const good = 'The transcript records: “The executive minute was prepared in the department and went to the committee in March.”'
+  const out = api.verifyWrittenAnswer({ answer_decision: 'answer', sentences: [{ text: good, facts: [1] }, { text: good, facts: [1] }, { text: 'The transcript records that “the executive minute was prepared by the department and went to the committee in March”.', facts: [1] }] }, { question: hearingQuestion, period, facts }, leftOut)
+  assert.equal(out.answer, good); assert.deepEqual(leftOut, { repeated: 1, transcript_quotation: 1 })
+  // Through the writer, the count lands in the run's record (coherence.left_out), not in the answer.
+  const usage = { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }
+  const model = new MockLanguageModelV4({ doGenerate: async () => ({ content: [{ type: 'text', text: JSON.stringify({ answer_decision: 'answer', sentences: [{ text: good, facts: [1] }, { text: 'The transcript records that “the executive minute was prepared by the department”.', facts: [1] }] }) }], finishReason: { unified: 'stop', raw: 'stop' }, usage, warnings: [] }) })
+  const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+  const written = await api.createAnswerWriter({ model, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, modelBudgetSpent: async () => false })({ question: hearingQuestion, period, facts }, stats, undefined, 20000)
+  assert.equal(written.answer, good); assert.deepEqual(stats.coherence.left_out, { transcript_quotation: 1 })
+  assert.doesNotMatch(JSON.stringify(written.answer), /left_out/)
 })

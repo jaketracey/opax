@@ -119,7 +119,9 @@ export function createAnswerWriter(options: ResearchOptions) {
         if(stats.tokens.input+stats.tokens.output>Math.min(ASK_MAX_TOKENS,Number(options.tokens ?? ASK_DEFAULT_TOKENS)))return fallback()
         let raw;try{raw=JSON.parse(result.text.replace(/^```(?:json)?\s*|\s*```$/g,''))}catch{return fallback()}
         lastDraft=draftWrittenAnswer(raw,activeInput)
-        const verified=verifyWrittenAnswer(raw,activeInput)
+        const leftOut:Record<string,number>={};const verified=verifyWrittenAnswer(raw,activeInput,leftOut)
+        // How many of the writer's sentences each test left out, for the research record only.
+        if(Object.keys(leftOut).length)stats.coherence={...stats.coherence,left_out:leftOut}
         researchTrace('writer.verify', {question:input.question,raw,verified})
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
         researchTrace('writer.audit',{question:input.question,counts:auditPayload(input.question,verified).counts})
