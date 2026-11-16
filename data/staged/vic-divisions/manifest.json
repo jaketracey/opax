@@ -7,23 +7,193 @@
  "sitting_days_parsed": 377,
  "sitting_days_missing": [],
  "divisions_found": 1113,
- "reconciled": 998,
- "mismatch_list": 115,
+ "reconciled": 997,
+ "mismatch_list": 116,
  "mismatch_divisions_by_reason": {
   "numbering-differs-from-published": 3,
+  "question-lead-not-a-motion": 1,
+  "question-reads-as-speech": 1,
+  "question-too-long": 1,
   "result-contradicts-tally": 3,
   "unresolved-name": 109
  },
- "votes": 51992,
+ "votes": 51952,
  "member_lists_short": [],
+ "service_dates": {
+  "vic_la": {
+   "date": "2026-09-24",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1a3/globalassets/hansard-daily-pdfs/hansard-2145855009-37599/hansard-2145855009-37599.pdf",
+   "members": 93,
+   "dated": [
+    {
+     "surname": "Andrews",
+     "given": "Daniel",
+     "seat": "Mulgrave",
+     "start": null,
+     "end": "2023-09-27",
+     "notes": [
+      "Resigned 27 September 2023"
+     ]
+    },
+    {
+     "surname": "Marsh",
+     "given": "Anthony",
+     "seat": "Nepean",
+     "start": "2026-06-02",
+     "end": null,
+     "notes": [
+      "Sworn in 2 June 2026"
+     ]
+    },
+    {
+     "surname": "Pallas",
+     "given": "Tim",
+     "seat": "Werribee",
+     "start": null,
+     "end": "2025-01-06",
+     "notes": [
+      "Resigned 6 January 2025"
+     ]
+    },
+    {
+     "surname": "Read",
+     "given": "Tim",
+     "seat": "Brunswick",
+     "start": null,
+     "end": "2026-09-19",
+     "notes": [
+      "Died 19 September 2026"
+     ]
+    },
+    {
+     "surname": "Smith",
+     "given": "Ryan",
+     "seat": "Warrandyte",
+     "start": null,
+     "end": "2023-07-07",
+     "notes": [
+      "Resigned 7 July 2023"
+     ]
+    },
+    {
+     "surname": "Foster",
+     "given": "Eden",
+     "seat": "Mulgrave",
+     "start": "2024-02-06",
+     "end": null,
+     "notes": [
+      "Sworn in 6 February 2024"
+     ]
+    },
+    {
+     "surname": "Groth",
+     "given": "Sam",
+     "seat": "Nepean",
+     "start": null,
+     "end": "2026-02-13",
+     "notes": [
+      "Resigned 13 February 2026"
+     ]
+    },
+    {
+     "surname": "Hibbins",
+     "given": "Sam",
+     "seat": "Prahran",
+     "start": null,
+     "end": "2024-11-23",
+     "notes": [
+      "Greens until 1 November 2024",
+      "Resigned 23 November 2024"
+     ]
+    },
+    {
+     "surname": "Werner",
+     "given": "Nicole",
+     "seat": "Warrandyte",
+     "start": "2023-10-03",
+     "end": null,
+     "notes": [
+      "Sworn in 3 October 2023"
+     ]
+    },
+    {
+     "surname": "Westaway",
+     "given": "Rachel",
+     "seat": "Prahran",
+     "start": "2025-03-04",
+     "end": null,
+     "notes": [
+      "Sworn in 4 March 2025"
+     ]
+    },
+    {
+     "surname": "Lister",
+     "given": "John",
+     "seat": "Werribee",
+     "start": "2025-03-04",
+     "end": null,
+     "notes": [
+      "Sworn in 4 March 2025"
+     ]
+    }
+   ]
+  },
+  "vic_lc": {
+   "date": "2026-09-24",
+   "source_url": "https://www.parliament.vic.gov.au/4aa28a/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf",
+   "members": 42,
+   "dated": [
+    {
+     "surname": "Bach",
+     "given": "Matthew",
+     "seat": "North-Eastern Metropolitan",
+     "start": null,
+     "end": "2023-12-07",
+     "notes": [
+      "Resigned 7 Dec 2023"
+     ]
+    },
+    {
+     "surname": "Ratnam",
+     "given": "Samantha",
+     "seat": "Northern Metropolitan",
+     "start": null,
+     "end": "2024-11-08",
+     "notes": [
+      "Resigned 8 Nov 2024"
+     ]
+    },
+    {
+     "surname": "Gray-Barberio",
+     "given": "Anasina",
+     "seat": "Northern Metropolitan",
+     "start": "2024-11-14",
+     "end": null,
+     "notes": [
+      "Appointed 14 Nov 2024"
+     ]
+    },
+    {
+     "surname": "Welch",
+     "given": "Richard",
+     "seat": "North-Eastern Metropolitan",
+     "start": "2024-02-07",
+     "end": null,
+     "notes": [
+      "Appointed 7 Feb 2024"
+     ]
+    }
+   ]
+  }
+ },
  "name_basis": {
   "people-directory": 832,
-  "release-roster": 51160
+  "release-roster": 51120
  },
  "question_basis": {
-  "division-line": 775,
+  "division-line": 758,
   "printed-before-amendment-division": 1,
-  "printed-before-division": 222
+  "printed-before-division": 238
  },
  "requests_made": 406,
  "files": [
@@ -2325,7 +2495,7 @@
    "source_url": "https://www.parliament.vic.gov.au/4a9ddc/globalassets/hansard-daily-pdfs/hansard-974425065-30876/hansard-974425065-30876.pdf",
    "sha256": "440043037a4a1deadda520c31cfca503ddde2fc778d16e142f9a764cf0bbee52",
    "divisions": 7,
-   "reconciled": 7
+   "reconciled": 6
   },
   {
    "date": "2025-05-20",

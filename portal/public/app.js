@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=a753ff1406").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=11b27173e8").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -6055,7 +6055,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   // Divisions held back from the record that name this member (public/data/vote-coverage.json): said with the counts.
   const coverage = await fetch(voteTables.VOTE_COVERAGE_PATH).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   if (currentSubjectKey !== key || !slot.isConnected) return;
-  const coverageNotes = voteTables.voteCoverageNotes(coverage, name);
+  const coverageNotes = voteTables.voteCoverageNotes(coverage, name, years);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
   nextSteps?.fillNextSteps($("person-next"), nextSteps.memberVoteSteps(rows), "No votes on bills in the record for this member.");
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
@@ -6088,6 +6088,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
       notes: [
         "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
         "This list covers the votes OPAX holds. A bill missing here was not necessarily unvoted on.",
+        ...(jurs.includes("vic") ? ["Victorian Hansard lists the members who voted aye or no. It does not record pairs, tellers or absences, so a division missing from this record does not mean the member was absent or abstained."] : []),
         "Party position is shown only when this vote's source records it. Open a division for the question and the party tallies.",
       ],
       licence: "They Vote For You (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.",
@@ -14124,6 +14125,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
     ${questionHTML}
+    <div id="division-reading-notes"></div>
     ${divisionBillsHTML(bills)}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
@@ -14133,6 +14135,12 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       ], "More about this division")}
     </div>`;
   $("doc-bill").hidden = false;
+  // How to read this record (vote-tables.js divisionReadingNotes): a "stand part" question, a record with no
+  // motion text, and what Victorian Hansard's lists leave out. The module loads lazily, so the lines follow it.
+  voteTablesReady.then(() => {
+    const slot = currentDocSlug === slug && document.getElementById("division-reading-notes");
+    if (slot) slot.innerHTML = voteTables.divisionReadingNotes(d).map((note) => `<p class="result-meta division-reading-note">${esc(note)}</p>`).join("");
+  });
   pageMenusReady.then(() => {
     if (currentDocSlug !== slug) return;
     $("doc-bill").querySelector('[data-more-action="copy-division"]')?.addEventListener("click", (e) => copyText(siteUrl(`/doc/${slug}`), e.currentTarget));
