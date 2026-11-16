@@ -7,7 +7,8 @@ import { createHash } from 'node:crypto'
 const built = await build({ stdin: { contents: [
   "export {excerpt, pageTurns, pageHits, dayWords, spanWords} from './src/tools/transcript-text'",
   "export {callTool} from './src/tools/index'",
-  "export {transcriptListingOnly, withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
+  "export {transcriptListingOnly, withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION} from './src/transcript-answer'",
+  "export {writingPrompt, ANSWER_WRITING_VERSION} from './src/research-writing'",
   "export {askOpaxResult} from './src/voice-sources'",
   "export {groundAnswerPayload} from './src/research-grounding'",
   "export {linkAskSources} from './src/ask-source-links'",
@@ -56,6 +57,18 @@ test('empty list markers never ship', () => {
     assert.ok(!/^[ \t]*(?:[-*•]|\d+[.)])[ \t]*(?:\[\d+\][ \t]*)?$/m.test(out.answer), JSON.stringify(tail) + ' ' + JSON.stringify(out.answer.slice(-60)))
     assert.ok(out.answer.endsWith('as redacted by the publisher.'))
   }
+})
+
+test('people named in hearing evidence appear only inside a quotation: one fixed rule, given to the writer in every prompt', () => {
+  const RULE = 'For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words. Outside a quotation, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page; never infer a role. This covers everyone named in the evidence, commissioners and counsel included.'
+  assert.equal(api.TRANSCRIPT_NAMED_PEOPLE_RULE, RULE); assert.doesNotMatch(RULE, /—/)
+  assert.equal(api.NAMED_PEOPLE_EXCEPTION, 'except people named in hearing transcript evidence')
+  const contract = JSON.parse(api.writingPrompt({ question: 'What did the commission hear?', period: { kind: 'all', label: 'All time' }, facts: [] })).contract
+  assert.ok(contract.includes(`licence details belong in the source card. ${RULE} `), 'the rule sits with the hearing excerpt sentence')
+  // The writer's standing "name the people" sentence carries the exception, so it does not pull against the rule.
+  assert.ok(contract.includes('For a who question, name the people and their roles first, then what the inquiry or record found about each, except people named in hearing transcript evidence; for why, give the reason'))
+  // Stored answers written before the rule are retired.
+  assert.equal(api.ANSWER_WRITING_VERSION, 'written-answer-32-named-people-in-quotes')
 })
 
 test('the writer is skipped only when every fact is a transcript listing row', async () => {

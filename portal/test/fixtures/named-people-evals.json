@@ -1,0 +1,126 @@
+{
+ "schema": 1,
+ "about": "People named in hearing evidence (the named-people prompt rule). Twenty Ask questions, ten on the Robodebt Royal Commission and ten on the NSW Healthcare Funding inquiry, worded to surface people named in the evidence. For scripts/research_eval.mjs --questions. Pass: reading each answer in full, no person is named outside quotation marks. The report's named-people count helps the reader; a count of 0 is not proof.",
+ "questions": [
+  {
+   "id": "NP-RBD-01",
+   "kind": "qualitative",
+   "question": "Who approved the use of income averaging, according to evidence at the Robodebt Royal Commission?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-02",
+   "kind": "qualitative",
+   "question": "What did the Robodebt Royal Commission hear about who was told of the legal advice on income averaging?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-03",
+   "kind": "qualitative",
+   "question": "What evidence did the Robodebt Royal Commission hear about what ministers were told about the scheme's lawfulness?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-04",
+   "kind": "qualitative",
+   "question": "What did witnesses tell the Robodebt Royal Commission about the department's chief counsel and the 2014 legal advice?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-05",
+   "kind": "qualitative",
+   "question": "What did the Robodebt Royal Commission hear about the Ombudsman's 2017 investigation and who dealt with it?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-06",
+   "kind": "qualitative",
+   "question": "Who decided to release recipients' personal information to the media, according to evidence at the Robodebt Royal Commission?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-07",
+   "kind": "qualitative",
+   "question": "What did the Robodebt Royal Commission hear about who read the Administrative Appeals Tribunal decisions on averaging?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-08",
+   "kind": "qualitative",
+   "question": "What evidence was given at the Robodebt Royal Commission about the 2015 budget measure and who prepared the executive minute?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-09",
+   "kind": "qualitative",
+   "question": "What did the Robodebt Royal Commission hear about the decision to stop income averaging in 2019 and who made it?",
+   "must": []
+  },
+  {
+   "id": "NP-RBD-10",
+   "kind": "qualitative",
+   "question": "What did witnesses say at the Robodebt Royal Commission about a staff member who raised concerns about the scheme?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-01",
+   "kind": "qualitative",
+   "question": "Who decides locum rates in rural hospitals, according to evidence at the NSW Healthcare Funding inquiry?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-02",
+   "kind": "qualitative",
+   "question": "What did the NSW Healthcare Funding inquiry hear from local health district chief executives about their budgets?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-03",
+   "kind": "qualitative",
+   "question": "What did the NSW Healthcare Funding inquiry hear about who leads the Agency for Clinical Innovation and how it makes decisions?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-04",
+   "kind": "qualitative",
+   "question": "What evidence did the NSW Healthcare Funding inquiry hear about duress alarms and who was told they did not work?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-05",
+   "kind": "qualitative",
+   "question": "What did the NSW Healthcare Funding inquiry hear about intern recruitment at Tweed Valley Hospital and who raised it?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-06",
+   "kind": "qualitative",
+   "question": "What did the NSW Healthcare Funding inquiry hear about HealthShare procurement and who is responsible for it?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-07",
+   "kind": "qualitative",
+   "question": "What evidence was given at the NSW Healthcare Funding inquiry about Northern Beaches Hospital and who administers the contract?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-08",
+   "kind": "qualitative",
+   "question": "What did the NSW Healthcare Funding inquiry hear about the secretary of NSW Health and decisions on workforce funding?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-09",
+   "kind": "qualitative",
+   "question": "Who gave evidence to the NSW Healthcare Funding inquiry about general practice training, and what did they say?",
+   "must": []
+  },
+  {
+   "id": "NP-NSW-10",
+   "kind": "qualitative",
+   "question": "What did the NSW Healthcare Funding inquiry hear about a doctor who left for Queensland and why?",
+   "must": []
+  }
+ ]
+}

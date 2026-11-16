@@ -332,6 +332,56 @@ function requiredComponents(q,answer,ev) {
 const axisOf = (counts) => counts.fail ? 'fail' : counts.partial ? 'partial' : 'pass'
 
 /** Grade one payload against one question. `roster` is a list of names; `parties` maps folded name → party. */
+const TRANSCRIPT_SOURCE = 'Hearing transcript: evidence, not findings'
+const PERSON_TITLE = String.raw`(?:Mr|Ms|Mrs|Miss|Mx|Dr|Prof|Professor|Senator|Commissioner|Justice|Judge|Minister|Hon|Sir|Dame|Uncle|Aunty|MR|MS|MRS|MISS|MX|DR|PROF|PROFESSOR|SENATOR|COMMISSIONER|JUSTICE)\.?`
+// A name word in ordinary or all capitals: "Surname", "O'Surname", "SURNAME".
+const NAME_WORD = String.raw`\p{Lu}[\p{L}'’-]+`
+// Capitalised words that open or sit in the names of bodies, laws, places and dates, not people. A word here still
+// counts as a surname when a cited excerpt or title prints it straight after a title ("Mr Page", "Ms May").
+const NOT_A_PERSON = /^(?:Royal|Commission|Commissioner|Special|Inquiry|Board|Department|Services|Australia|Australian|Commonwealth|Government|Minister|Ministry|Office|Act|Scheme|Robodebt|Health|Healthcare|Funding|Hospital|District|Local|New|South|Wales|Victoria|Queensland|Sydney|Tribunal|Court|Federal|National|State|Council|Counsel|Assisting|Senior|Hearing|Transcript|Day|Page|Exhibit|Income|Social|Security|Human|Tax|Taxation|Ombudsman|Parliament|Senate|House|University|Agency|Authority|Centrelink|January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|The|This|That|These|Those|And|But|When|What|Who|Which|Did|Does|Was|Were|Yes|Not|Well|Thank|Asked|It|In|On|At|An|He|She|They|We|You|If|As|For|No|So|Evidence|Witness|Question|Antisemitism|Cohesion|OPAX|NSW|ATO|DHS|DSS|AAT)$/i
+const foldQuote = (s) => String(s ?? '').replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\.{3}|…/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase()
+const plain = (name) => name.replace(/['’]s$/i, '')
+/** People named in an answer's own words, for an answer that cites a hearing transcript. The rule for both prose
+ * models is that a person named in the evidence appears only inside a verbatim quotation. Counted, outside
+ * quotation marks and inside any quotation that is not word for word in a cited excerpt:
+ *   - a title and a name ("Ms Surname", "MR SURNAME", "Dr Surname's")
+ *   - a bare surname that a cited excerpt or source title prints after a title or inside a full name
+ *   - a full name ("First Surname"), whether or not the excerpts hold it
+ * Each is returned with the words around it, for a person to read. This is a report for the eval, target zero. It is
+ * rough both ways (a place or a body can read as a name; a name it has never seen spelt can pass), so A COUNT OF 0 IS
+ * NOT PROOF: the answers are still read in full. It gates nothing and is never run on the way to a reader. */
+export function namedPeopleOutsideQuotes(answer, payload) {
+  const cited = (Array.isArray(payload?.sources) ? payload.sources : []).filter((s) => s && s.cited === true && `${s.snippet ?? ''} ${s.title ?? ''}`.includes(TRANSCRIPT_SOURCE))
+  if (!cited.length) return { applies: false, count: 0, names: [], spans: [], quotations: { total: 0, not_verbatim: 0 } }
+  const text = String(answer ?? ''), evidence = cited.map((s) => `${s.snippet ?? ''}\n${s.title ?? ''}`).join('\n'), held = foldQuote(evidence)
+  // Quotations: verbatim ones are blanked out; one that is not word for word in a cited excerpt is read as prose.
+  let prose = text, total = 0, loose = 0
+  for (const m of text.matchAll(/“([^”]*)”|"([^"]*)"/g)) {
+    total++
+    const words = foldQuote(m[1] ?? m[2]).replace(/[.,;:!?]+$/, '')
+    if (words && held.includes(words)) prose = prose.slice(0, m.index) + ' '.repeat(m[0].length) + prose.slice(m.index + m[0].length)
+    else loose++
+  }
+  // Surnames the evidence prints: after a title, or the last word of a full name.
+  const surnames = new Set()
+  for (const m of evidence.matchAll(new RegExp(String.raw`(?<![\p{L}])${PERSON_TITLE} (${NAME_WORD})(?: (${NAME_WORD}))?`, 'gu'))) for (const w of [m[2] ?? m[1]]) if (!/^(?:SC|KC|QC|AM|AO|AC)$/.test(w)) surnames.add(plain(w).toLowerCase())
+  for (const m of evidence.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?: ${NAME_WORD}){1,2}(?![\p{L}])`, 'gu'))) { const words = m[0].split(' '); if (!words.some((w) => NOT_A_PERSON.test(plain(w)))) surnames.add(plain(words.at(-1)).toLowerCase()) }
+  const found = new Map()
+  const add = (name, at, length) => { const key = plain(name).toLowerCase(); if (!found.has(key)) found.set(key, { name: plain(name), text: text.slice(Math.max(0, at - 50), at + length + 50).replace(/\s+/g, ' ').trim() }) }
+  for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${PERSON_TITLE} ${NAME_WORD}(?: ${NAME_WORD})?`, 'gu'))) {
+    const [title, ...rest] = m[0].split(' '), words = rest.filter((w, i) => !NOT_A_PERSON.test(plain(w)) || (i === 0 && surnames.has(plain(w).toLowerCase())))
+    if (words.length) add(`${title} ${words.join(' ')}`, m.index, m[0].length)
+  }
+  for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?: ${NAME_WORD}){1,2}(?![\p{L}])`, 'gu'))) {
+    const words = m[0].split(' ')
+    if (!words.some((w) => NOT_A_PERSON.test(plain(w))) && !new RegExp(String.raw`^${PERSON_TITLE}$`, 'u').test(words[0])) add(m[0], m.index, m[0].length)
+  }
+  for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?![\p{L}])`, 'gu'))) if (surnames.has(plain(m[0]).toLowerCase())) add(m[0], m.index, m[0].length)
+  // One person, one line: a bare surname gives way to the title-and-surname or full name that holds it.
+  const spans = [...found].filter(([key]) => ![...found.keys()].some((k) => k !== key && k.endsWith(' ' + key))).map(([, span]) => span)
+  return { applies: true, count: spans.length, names: spans.map((s) => s.name), spans, quotations: { total, not_verbatim: loose } }
+}
+
 export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) {
   const answer = String(payload?.answer ?? '')
   const answered = payload?.answered !== false && answer.trim().length > 0
@@ -403,6 +453,10 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
     ...causal.map((s) => `causal wording: ${s.slice(0, 80)}`),
     ...cit.unresolved.map((k) => `citation key without a cited source: ${k}`),
   ]
+  const named = namedPeopleOutsideQuotes(answer, payload)
+  // Reported, never graded: it does not move any axis or the overall grade.
+  for (const n of named.names) flags.push(`named person outside a quotation: ${n}`)
+  if (named.quotations.not_verbatim) flags.push(`${named.quotations.not_verbatim} quotation${named.quotations.not_verbatim === 1 ? '' : 's'} not word for word in a cited transcript excerpt`)
   if (!refusal && !cit.cited_sources) flags.push('no cited source')
   if (refusal && !expectsDecline) flags.push('refused or declined')
   return {
@@ -410,7 +464,7 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
     checks: checks.map(({ part, type, status, detail, why }) => ({ part: part ?? null, type, status, detail, why: why ?? null })),
     figures: { total: figures.figures.length, unbound: figures.unbound.map((f) => f.value), unbound_uncited: figures.unbound_uncited.map((f) => f.value) },
     names, quotes, citations: { keys: cit.keys, unresolved: cit.unresolved, cited_sources: cit.cited_sources, figure_sentences: cit.figure_sentences, figure_sentences_cited: cit.figure_sentences_cited },
-    coherence, causal, tools, gold: gold ? { pass: gold.pass, checks: gold.checks } : null, evidence_complete: ev.complete, flags,
+    coherence, causal, tools, gold: gold ? { pass: gold.pass, checks: gold.checks } : null, evidence_complete: ev.complete, named_people: named, flags,
   }
 }
 
@@ -476,6 +530,7 @@ export function renderMarkdown(report) {
   L.push('', '| mode | no tool echo P/p/F | no duplicates P/p/F | coherence P/p/F | direct first sentence P/p/F | required components P/p/F | date checks P/p/F | declines P/p/F |', '|---|---|---|---|---|---|---|')
   for(const [mode,s] of Object.entries(report.summary))L.push(`| ${mode} | ${grades(s.no_tool_echo)} | ${grades(s.no_duplicates)} | ${grades(s.coherence)} | ${grades(s.direct_first_sentence)} | ${grades(s.required_components)} | ${grades(s.constraints)} | ${grades(s.decline)} |`)
   L.push('', 'P/p/F = pass / partial / fail counts. Grades are structural (facts, citations, quotations, invented figures and names); the judge reads the answers below for usefulness.', '')
+  if (report.questions.some((q) => report.modes.some((m) => q.by_mode[m]?.grade?.named_people?.applies))) L.push('**Named people outside quotations.** For each answer that cites a hearing transcript the report counts people named in the answer\'s own words and prints each one with the words around it. The count is rough: it can miss a name and it can flag a place or a body. A count of 0 is not proof; read each transcript answer in full.', '')
   L.push('## Side by side', '')
   for (const q of report.questions) {
     L.push(`### ${q.id} · ${q.kind}${q.shape ? ' · ' + q.shape : ''}`, '', `**Q:** ${q.question}`, '')
@@ -491,7 +546,10 @@ export function renderMarkdown(report) {
     L.push(`| tokens / cost | ${modes.map((m) => cell(m, (r) => `${fmtN(r.usage?.total)} / ${fmtUsd(r.usage?.cost_usd)} (${r.usage?.cost_source ?? 'missing'})`)).join(' | ')} |`)
     L.push(`| tools (mode, rounds) | ${modes.map((m) => cell(m, (r) => `${r.grade.tools.used.join(' → ') || '–'} → ${r.grade.tools.status}${r.grade.tools.mode ? ` (${r.grade.tools.mode}${r.grade.tools.rounds != null ? ', ' + r.grade.tools.rounds : ''})` : ''}`)).join(' | ')} |`)
     L.push(`| cited sources / quotes | ${modes.map((m) => cell(m, (r) => `${r.grade.citations.cited_sources} / ${r.grade.quotes.found}/${r.grade.quotes.total}`)).join(' | ')} |`)
+    if (modes.some((m) => row(m)?.grade?.named_people?.applies)) L.push(`| named people outside quotations (transcript answers; target 0; 0 is not proof) | ${modes.map((m) => cell(m, (r) => r.grade.named_people?.applies ? String(r.grade.named_people.count) : 'n/a')).join(' | ')} |`)
     L.push(`| flags | ${modes.map((m) => cell(m, (r) => r.grade.flags.join('; ') || '–')).join(' | ')} |`, '')
+    for (const m of modes) for (const span of row(m)?.grade?.named_people?.spans ?? []) L.push(`- ${m}, named outside a quotation, **${span.name}**: …${span.text}…`)
+    if (modes.some((m) => row(m)?.grade?.named_people?.spans?.length)) L.push('')
     for (const m of modes) {
       const r = row(m); if (!r || r.error) continue
       L.push(`**${m} answer**`, '', `> ${clip(r.answer)}`, '')

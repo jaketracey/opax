@@ -160,6 +160,7 @@ test('a failed tool call at round 3 with passages held still gives a real answer
   const prompt=JSON.stringify(m.doGenerateCalls[3].prompt)
   assert.ok(prompt.includes('ten times its value'),'the final call is given the passages research held')
   assert.match(prompt,/For a who question, name the people and their roles first/)
+  assert.match(prompt,/found about each, except people named in hearing transcript evidence; for why/)
 })
 
 test('a count run that fails late keeps the facts it gathered, with no budget line',async()=>{
