@@ -25,6 +25,7 @@ export const OG_HEIGHT = 630
 export const OG_VERSION = '9'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
+import { fontFamily, light } from './tokens.generated'
 
 /** The faces the card sets, as served from /fonts/og/ (static instances of the
  *  same two OFL families the site self-hosts; satori cannot read a variable
@@ -62,14 +63,19 @@ export interface OgCard {
   sourceNotice?: { label: string; url: string | null }
 }
 
-// --- palette: style.css :root, the navy band's values --------------------------
-const NAVY = '#142A43'
-const WHITE = '#FFFFFF'
-const SOFT = '#B7C6D9' // --on-navy-soft
-const BRONZE_BRIGHT = '#D9A84A' // --bronze-bright, legible on navy
-const BRONZE = '#A0761B' // --bronze, the rule the masthead ends on
-const SERIF = 'Merriweather'
-const SANS = 'Public Sans'
+// --- palette: the token source's roles (docs/design/design-tokens.json) ---------
+const NAVY = light.navy
+const WHITE = light.onNavy
+const SOFT = light.onNavySoft
+const BRONZE_BRIGHT = light.bronzeBright // legible on navy
+const BRONZE = light.bronze // the rule the masthead ends on
+const SERIF = fontFamily.serif
+const SANS = fontFamily.sans
+/** A token colour (opaque hex) at an opacity, as the compact rgba() string satori reads. */
+function alpha(hex: string, opacity: number): string {
+  if (!/^#[0-9A-F]{6}$/i.test(hex)) throw new Error(`alpha() takes an opaque hex colour, not ${hex}`)
+  return `rgba(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(',')},${opacity})`
+}
 
 // --- the mark: index.html's .logo-mark paths, viewBox 0 0 176 160 ----------------
 const LAND =
@@ -231,7 +237,7 @@ export function cardTree(card: OgCard): El {
     ),
   )
 
-  const rule = h('div', { style: { height: 1, margin: `24px ${PAD}px 0 ${PAD}px`, background: 'rgba(217,168,74,0.45)' } })
+  const rule = h('div', { style: { height: 1, margin: `24px ${PAD}px 0 ${PAD}px`, background: alpha(BRONZE_BRIGHT, 0.45) } })
 
   const kicker = card.kicker
     ? h(
@@ -289,7 +295,7 @@ export function cardTree(card: OgCard): El {
         { style: { display: 'flex', flexDirection: 'column', alignItems: card.stat ? 'center' : 'flex-end', justifyContent: 'center', width: artWidth, marginLeft: gutter } },
         h(
           'div',
-          { style: { display: 'flex', padding: 6, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 4 } },
+          { style: { display: 'flex', padding: 6, border: `1px solid ${alpha(BRONZE_BRIGHT, 0.7)}`, borderRadius: 4 } },
           h('img', { src: card.portrait as string, width: photoSize, height: photoSize, style: { borderRadius: 2, objectFit: 'cover' } }),
         ),
         statistic,
@@ -362,7 +368,7 @@ const P_PAD = 72
 const P_TEXT_WIDTH = PORTRAIT_WIDTH - P_PAD * 2
 const P_TITLE_SIZES = [128, 116, 104, 92, 84, 76, 68, 60, 54]
 const P_LINE_SIZE = 34
-const P_RULE = 'rgba(217,168,74,0.45)'
+const P_RULE = alpha(BRONZE_BRIGHT, 0.45)
 
 export function portraitTree(card: OgCard): El {
   if (!card.authorisation && vicElectionMaterial([card.kicker, card.title, ...card.lines].join(' '))) card = {...card, authorisation: VIC_ELECTION_AUTHORISATION_LINE}
@@ -396,7 +402,7 @@ export function portraitTree(card: OgCard): El {
         { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: P_TEXT_WIDTH } },
         h(
           'div',
-          { style: { display: 'flex', padding: 8, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 6 } },
+          { style: { display: 'flex', padding: 8, border: `1px solid ${alpha(BRONZE_BRIGHT, 0.7)}`, borderRadius: 6 } },
           h('img', { src: card.portrait as string, width: photoSize, height: photoSize, style: { borderRadius: 3, objectFit: 'cover' } }),
         ),
         card.credit
@@ -531,9 +537,9 @@ export interface StoryImages {
 }
 
 const S_TITLE_SIZES = [140, 128, 116, 104, 92, 84, 76, 68, 60]
-const S_SOFT_RULE = 'rgba(183,198,217,0.18)'
-const S_BRONZE_RULE = 'rgba(217,168,74,0.6)'
-const S_BRONZE_RING = 'rgba(217,168,74,0.75)'
+const S_SOFT_RULE = alpha(SOFT, 0.18)
+const S_BRONZE_RULE = alpha(BRONZE_BRIGHT, 0.6)
+const S_BRONZE_RING = alpha(BRONZE_BRIGHT, 0.75)
 /** The cover's photograph runs this deep before its mask has feathered it into the navy. */
 const S_PHOTO_BAND = 960
 
@@ -655,7 +661,7 @@ function storyFrame(g: StoryGeometry, children: (El | null)[]): El {
 function storyMedallion(src: string, size = 300): El {
   return h(
     'div',
-    { style: { display: 'flex', padding: 10, border: `1px solid ${S_BRONZE_RING}`, borderRadius: size, background: 'rgba(20,42,67,0.55)', marginBottom: 40 } },
+    { style: { display: 'flex', padding: 10, border: `1px solid ${S_BRONZE_RING}`, borderRadius: size, background: alpha(NAVY, 0.55), marginBottom: 40 } },
     h('img', { src, width: size, height: size, style: { borderRadius: size / 2, objectFit: 'cover' } }),
   )
 }
@@ -695,7 +701,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
     src: photo, width: PORTRAIT_WIDTH, height: g.band,
     style: { position: 'absolute', left: 0, top: 0, objectFit: 'cover', maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 56%, rgba(0,0,0,0) 100%)' },
   })
-  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: g.band, backgroundImage: 'linear-gradient(to bottom, rgba(20,42,67,0.6) 0%, rgba(20,42,67,0.14) 24%, rgba(20,42,67,0.14) 58%, rgba(20,42,67,0.7) 100%)' } })
+  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: g.band, backgroundImage: `linear-gradient(to bottom, ${alpha(NAVY, 0.6)} 0%, ${alpha(NAVY, 0.14)} 24%, ${alpha(NAVY, 0.14)} 58%, ${alpha(NAVY, 0.7)} 100%)` } })
   return storyFrame(g, [
     band,
     wash,
@@ -845,7 +851,7 @@ function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images:
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 104, 3),
       ...storyLines(slide.lines, false, 3),
-      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 16, borderLeft: '2px solid rgba(217,168,74,0.5)', paddingLeft: 46 } }, ...events),
+      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 16, borderLeft: `2px solid ${alpha(BRONZE_BRIGHT, 0.5)}`, paddingLeft: 46 } }, ...events),
     ]),
     storyFooter(null, false, slide.authorisation),
   ])
@@ -881,7 +887,7 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images:
         'div',
         { style: { display: 'flex', height: 18, width: P_TEXT_WIDTH, marginTop: 40 } },
         h('div', { style: { width: ayeWidth, height: 18, background: BRONZE_BRIGHT } }),
-        h('div', { style: { width: P_TEXT_WIDTH - 4 - ayeWidth, height: 18, marginLeft: 4, background: 'rgba(183,198,217,0.45)' } }),
+        h('div', { style: { width: P_TEXT_WIDTH - 4 - ayeWidth, height: 18, marginLeft: 4, background: alpha(SOFT, 0.45) } }),
       ),
       ...storyLines([slide.line], false, 2, 30, 36),
     ]),
