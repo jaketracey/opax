@@ -311,6 +311,11 @@
    app lays them out, so the app fills the head in place. */
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head { display: block; }
 @media (min-width: 701px) { .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head:has(.subject-portrait) { display: grid; } }
+/* Under it, the ask block and "Next in the record" (seo-content.ts personBootBlocks): the app
+   keeps these nodes, so the first paint already has the page's top at its final height. The
+   field takes its text's height, as fitQueryField sets it once the app runs. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender.subject-person > :is(.growth-ask, .next-steps) { display: block; }
+#prerender .growth-ask-form textarea { field-sizing: content; }
 /* On a phone the routed page sits under its crumb line (nav.css): no top
    padding, and a small margin over the portrait. The boot head does the same. */
 @media (width < 700px) {
@@ -323,8 +328,12 @@
   content: attr(data-boot-field); display: grid; place-items: center; height: min(72vh, 720px); min-height: 440px;
   margin-top: var(--space-group); border-radius: var(--radius-md); background: var(--paper-sunken); font: var(--type-fine); color: var(--ink-soft);
 }
-/* A person's record stays unseen while its head settles (app.js revealGrid). */
-.subject-grid.is-settling { visibility: hidden; }
+/* A person's record stays out of the layout while the blocks above it settle (app.js
+   settleGrid, revealGrid). Not visibility: Chrome counts a hidden box that moves as a layout
+   shift; a box that is not drawn at all has nothing to shift. The page holds a screen's height
+   meanwhile, so the footer stays below the fold and the reveal moves nothing on screen. */
+.subject-grid.is-settling { display: none; }
+#subject-body:has(> .subject-grid.is-settling) { min-height: 100vh; }
 #prerender { padding-bottom: var(--sp-24); }
 /* The server table is the interactive record list. Hydration attaches controls
    in place, retaining the painted rows and their geometry. */
@@ -5285,6 +5294,8 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
    and the gap to the next one stays the list's own. The link's title and its href both carry the whole question. */
 .growth-questions { display: flex; flex-wrap: wrap; gap: var(--space-tight); list-style: none; margin: var(--space-row) 0 0; padding: 0; }
 .growth-questions:empty { display: none; }
+/* A question pill's room, held until the page's first question arrives (growth-modules.js HELD_QUESTION_HTML). */
+.growth-question-held { visibility: hidden; }
 .growth-questions li { min-width: 0; max-width: min(100%, 26rem); }
 .growth-questions a {
   display: block; box-sizing: border-box; max-width: 100%;

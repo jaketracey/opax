@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=7387ae1ecd").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=59feb5d9ef").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -1964,7 +1964,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=0bb132407f");
+    const module = await import("/suppliers.js?v=09b1043efa");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -6239,6 +6239,68 @@ async function renderPersonTopics(name, sections, onRecord = () => {}, years = {
 }
 
 
+/* The Worker's first paint of a member (src/seo-content.ts personHeadPrerender and
+   personBootBlocks) already has the head's meta line and source line, the ask block and "Next in
+   the record", in this page's own markup. The page the reader landed on keeps those nodes rather
+   than drawing them again, so the top of the page is painted once, at its final height, and the
+   record under it never moves. Looked for once, by the first person opened; another person's
+   page drops them. */
+let bootPerson; // undefined: not looked for yet; null: none to keep
+function takeBootPerson(segment) {
+  if (bootPerson === undefined) {
+    bootPerson = null;
+    const pre = document.querySelector("#prerender.subject-person");
+    let landed = "";
+    try { landed = decodeURIComponent(location.pathname.split("/")[3] || ""); } catch {}
+    // Out of the hidden crawler block either way: their ids (person-next, growth-ask-input)
+    // must name the app's blocks, not copies left in #prerender.
+    const blocks = pre ? [...pre.querySelectorAll(":scope > .growth-ask, :scope > .next-steps")] : [];
+    for (const block of blocks) block.remove();
+    if (pre && location.pathname.startsWith("/subject/person/") && landed === segment) {
+      const head = pre.querySelector(":scope > .subject-head");
+      bootPerson = {
+        segment,
+        title: head?.querySelector("h1")?.textContent || "",
+        tag: head?.querySelector(".subject-tag")?.innerHTML || "",
+        source: head?.querySelector(":scope > .ui-source") || null,
+        blocks,
+      };
+    }
+  }
+  if (bootPerson && bootPerson.segment !== segment) bootPerson = null;
+  return bootPerson;
+}
+/** A reader typing in the member's ask field as the page is redrawn round it: moving the field
+ *  drops the focus, so seatBootPerson gives it back, the caret where it was. Read before the move. */
+function typingIn() {
+  const field = document.activeElement;
+  return field?.id === "growth-ask-input" ? { field, caret: [field.selectionStart, field.selectionEnd] } : null;
+}
+/** Put the landed member's kept nodes into a fresh person skeleton (subjectSkeleton). */
+function seatBootPerson(body, segment, { title = false, typing = typingIn() } = {}) {
+  const boot = takeBootPerson(segment);
+  const head = body.querySelector(".subject-head");
+  if (!boot || !head) return;
+  if (title && boot.title) $("subject-title").textContent = boot.title;
+  const tag = head.querySelector(".subject-tag");
+  if (boot.tag && tag) tag.innerHTML = boot.tag;
+  if (boot.source) (tag || head).after(boot.source);
+  head.after(...boot.blocks);
+  if (typing?.field.isConnected && document.activeElement !== typing.field) {
+    typing.field.focus({ preventScroll: true });
+    typing.field.setSelectionRange(...typing.caret);
+  }
+  wireGrowthAsk(body); // the field takes its text's height before this frame is drawn
+}
+/** A person's record stays out of the layout until the blocks above it are final (style.css
+ *  .subject-grid.is-settling): from the skeleton's first frame, or a record drawn there would
+ *  be pushed down by them. Shown by revealGrid, or after four seconds at the latest. */
+function settleGrid(body) {
+  const grid = body.querySelector(".subject-grid");
+  if (!grid) return;
+  grid.classList.add("is-settling");
+  setTimeout(() => grid.classList.remove("is-settling"), 4000);
+}
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
   if (kind === "person") {
     // The address may be a slug or a name; the page works from the name, and
@@ -6259,6 +6321,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       body.innerHTML = subjectSkeleton("Parliamentarian", "", `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`, true);
       $("subject-title").innerHTML = `<span class="visually-hidden">Loading parliamentarian</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>`;
       $("subject-infobox")?.classList.add("entry-rail");
+      settleGrid(body);
+      seatBootPerson(body, segment, { title: true });
     }
     // Never wait long on the map: a name opens without it.
     // Load the portrait lookup alongside the slug map so a known portrait
@@ -6311,6 +6375,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
+  const typing = kind === "person" ? typingIn() : null; // before the skeleton takes the field out
   body.classList.toggle("subject-person", kind === "person");
   body.classList.toggle("subject-party", kind === "party" || kind === "donor");
   const SUBJECT_LABELS = {
@@ -6327,7 +6392,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // Reserve the map in the skeleton's first frame, before a lazy helper yields.
   if (kind === "donor" || kind === "party") reserveSubjectMap(true);
   // A person's aside is the "On this page" rail, not a Quick facts card.
-  if (kind === "person") $("subject-infobox")?.classList.add("entry-rail");
+  if (kind === "person") {
+    $("subject-infobox")?.classList.add("entry-rail");
+    settleGrid(body);
+    seatBootPerson(body, subjectSegment, { typing });
+  }
   // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
   // its name, so the title is a bar until the index says what the place is.
   // An electorate's or a party's address is a slug ("vic-vic-la-vic-berwick",
@@ -6790,6 +6859,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // Who they are, dated: the identity block's one source line. Its sheet holds
   // what Quick facts held beyond the meta line, so every fact stays one tap away.
   const rosterChecked = verified || rosterData?.meta?.representation?.updated || rosterData?.meta?.generated || "";
+  // The Worker's source line (kept by seatBootPerson) gives way to this one: the same line, with its facts.
+  head.querySelector(":scope > .ui-source")?.remove();
   head.insertAdjacentHTML("beforeend", sourceLineHTML({
     updated: rosterChecked,
     dateLabel: "As at",
@@ -6818,13 +6889,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     </div>`);
   const promptName = roster?.full || name;
   if (currentSubjectKey !== key) return;
-  head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`}));
+  // One question pill's room is held: the record's questions arrive with the record. The page
+  // the reader landed on already has this block and the next one (seatBootPerson).
+  if (!body.querySelector(":scope > .growth-ask")) head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`, held: 1}));
   // Where this member's record leads: the seat and the party are known now; two rows are held
   // for their newest recorded votes, which renderPersonVotes fills (the block's height is set here).
-  const seatSteps = ((electorateReference?.person?.electorates || []).filter((e) => e.current).length
-    ? electorateReference.person.electorates.filter((e) => e.current) : electorateReference?.person?.electorates || [])
-    .map((e) => ({ name: e.name, href: e.url, chamber: electorateReference.module.CHAMBERS?.[e.chamber] || "" }));
-  body.querySelector(".growth-ask")?.insertAdjacentHTML("afterend", nextSteps?.nextStepsHTML(nextSteps.memberNextSteps({
+  const seatSteps = electorateReference?.module.memberSeats(electorateReference.person) || [];
+  if (!$("person-next")) body.querySelector(".growth-ask")?.insertAdjacentHTML("afterend", nextSteps?.nextStepsHTML(nextSteps.memberNextSteps({
     seats: seatSteps, party: party ? { name: party, href: subjectHash("party", party) || "" } : null,
   }), { pageType: "person", id: "person-next", reserve: 2 }) || "");
   const askRecord = {name: promptName};
@@ -6854,7 +6925,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
   renderPersonVicAuthorisation(roster, sections);
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
-    if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
+    if (currentSubjectKey !== key) return;
+    const ask = body.querySelector(".growth-ask");
+    ask?.setAttribute("data-questions-ready", "true");
+    // No question came: the held pill's room goes (growth-modules.js HELD_QUESTION_HTML).
+    for (const held of ask?.querySelectorAll(".growth-question-held") || []) held.remove();
   });
   renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope, notes: speechNotes, current: roster?.current === true }).then(() => refreshEntryRail(sections));
   renderPersonFirstSpeech(name, sections, roster).then(() => refreshEntryRail(sections));
@@ -6908,19 +6983,23 @@ function appendGrowthQuestions(root, questions, pageType) {
   if (!list) return;
   const field = root.querySelector('#growth-ask-input');
   const key = value => String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
-  const seen = new Set([...list.querySelectorAll("a")].map(a => key(new URL(a.href).searchParams.get("q"))));
+  const seen = new Set([...list.querySelectorAll("a[href]")].map(a => key(new URL(a.href).searchParams.get("q"))));
   seen.add(key(field?.value));
   // Full questions identify links; shortened labels never replace a focused link.
   for (const question of questions) {
     if (seen.has(key(question.question))) continue;
     seen.add(key(question.question));
+    // The first question takes the held pill's place, in the same frame (HELD_QUESTION_HTML).
+    list.querySelector(".growth-question-held")?.remove();
     list.insertAdjacentHTML("beforeend", growthModules.questionsHTML([question], pageType,""));
   }
 }
 
 function wireGrowthAsk(root) {
   const form = root.querySelector(".growth-ask-form");
-  if (!form) return;
+  // Once per form: a member's kept block is wired as its skeleton is drawn (seatBootPerson).
+  if (!form || form.dataset.wired) return;
+  form.dataset.wired = "true";
   const field = form.querySelector('[name="q"]');
   const fit = () => fitQueryField(field);
   for (const event of ["focus", "input", "blur"]) field.addEventListener(event, fit);
@@ -6953,6 +7032,9 @@ function wireGrowthAsk(root) {
     fit();
   });
   form?.addEventListener("submit", event => {
+    // A member's kept form is wired before this module has loaded: until then it submits as
+    // the Worker drew it, a GET to /ask with the question and the page type.
+    if (!growthModules) return;
     event.preventDefault();
     const question = form.querySelector('[name="q"]').value.trim();
     if (question) {
@@ -7875,7 +7957,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f2f0d19ae5").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=d23e065f59").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

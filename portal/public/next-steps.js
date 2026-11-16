@@ -44,19 +44,30 @@ export function nextStepRowHTML(row, held = false) {
 }
 const pendingRowHTML = () => '<li class="next-steps-row next-steps-held next-steps-pending" data-next-pending aria-hidden="true"><span class="next-steps-kind"></span><span class="next-steps-link"></span><span class="next-steps-meta"></span></li>';
 
+const spareRowHTML = (empty = '') => empty
+  ? `<li class="next-steps-row next-steps-held next-steps-spare"><span class="next-steps-kind"></span><span class="next-steps-link">${esc(empty)}</span><span class="next-steps-meta"></span></li>`
+  : '<li class="next-steps-row next-steps-held next-steps-spare" aria-hidden="true"><span class="next-steps-kind"></span><span class="next-steps-link"></span><span class="next-steps-meta"></span></li>';
+
 /**
  * The block. `pageType` is the page's analytics template word (growth-modules.js moduleAttrs:
  * a click is counted as opax_module_click {module: "next", page_type}), never a record's name.
  * `reserve` holds that many rows' space for facts still loading. Empty with nothing to show.
+ * `fill`, when the reserved facts are already known (the Worker's first paint of a member,
+ * src/seo-content.ts), draws the block as fillNextSteps(root, fill, empty) leaves it.
  */
-export function nextStepsHTML(items = [], { pageType = 'page', id = 'next-steps', reserve = 0, level = 2 } = {}) {
+export function nextStepsHTML(items = [], { pageType = 'page', id = 'next-steps', reserve = 0, level = 2, fill = null, empty = '' } = {}) {
   const rows = nextStepRows(items).slice(0, NEXT_STEPS_MAX);
   const held = Math.max(0, Math.min(Number(reserve) || 0, NEXT_STEPS_MAX - rows.length));
   if (!rows.length && !held) return '';
   const h = `h${Math.min(6, Math.max(2, Number(level) || 2))}`;
-  return `<nav class="next-steps" id="${esc(id)}" aria-labelledby="${esc(id)}-title" data-module="next" data-page-type="${esc(pageType)}" data-module-position="1"${held ? ' aria-busy="true"' : ''}>`
+  const taken = new Set(rows.map((row) => row.href));
+  const filled = Array.isArray(fill) ? nextStepRows(fill).filter((row) => !taken.has(row.href)).slice(0, held) : null;
+  const heldHTML = filled
+    ? Array.from({ length: held }, (_, index) => filled[index] ? nextStepRowHTML(filled[index], true) : spareRowHTML(!filled.length && index === 0 ? empty : '')).join('')
+    : pendingRowHTML().repeat(held);
+  return `<nav class="next-steps" id="${esc(id)}" aria-labelledby="${esc(id)}-title" data-module="next" data-page-type="${esc(pageType)}" data-module-position="1"${held && !filled ? ' aria-busy="true"' : ''}>`
     + `<${h} class="next-steps-title" id="${esc(id)}-title">${NEXT_STEPS_TITLE}</${h}>`
-    + `<ul class="next-steps-list" role="list">${rows.map(nextStepRowHTML).join('')}${pendingRowHTML().repeat(held)}</ul></nav>`;
+    + `<ul class="next-steps-list" role="list">${rows.map(nextStepRowHTML).join('')}${heldHTML}</ul></nav>`;
 }
 
 /**
