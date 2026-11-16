@@ -17,14 +17,16 @@ import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './researc
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
-import {quotationFails,failedQuotations,looseQuotationOf,unescapedQuotes,withoutGivenFactLabels} from './research-evidence'
+import {quotationFails,failedQuotations,looseQuotationOf,unescapedQuotes,withoutGivenFactLabels,otherScript,withSourceEllipses} from './research-evidence'
 import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-34-named-people-fact-labels'
-export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
+export const ANSWER_WRITING_VERSION = 'written-answer-35-excerpts-selected'
+/** `bears_on`: for a hearing transcript excerpt, the words of the question the research model selected it for. It
+ * is given to the writer and never shown to a reader. */
+export interface WritingFact { bears_on?: string; evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
   said?: string[] }
@@ -322,13 +324,16 @@ function factLine(text:string):string {
   if(rawToolEcho(text))return ''
   return text&&finish(text.replace(/[:;,\s]+$/,''))
 }
+/** When no model words the excerpts (a stopped or failed writer, a stopped run), up to this many are quoted, each
+ * whole as the tool cut it (280 characters at most). Cutting one to a single sentence left stubs like “Alright.” */
+const QUOTED_AS_RECORDED = 6
 function transcriptLines(input: WritingInput): WrittenSentence[] | null {
   const turns = input.facts.filter(f => f.transcript && !f.coverage)
   if (!turns.length) return null
   const seen = new Set<string>()
-  const lines = turns.filter(f => { const t = f.transcript!, id = (t.speaker ?? '') + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, 4).map(f => {
+  const lines = turns.filter(f => { const t = f.transcript!, id = (t.speaker ?? '') + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, QUOTED_AS_RECORDED).map(f => {
     const t = f.transcript!, verb = /\?\s*$/.test(t.excerpt) ? 'asked' : 'said'
-    return { text: `${t.speaker ? `${t.speaker} ${verb}` : 'The hearing transcript records'}${t.day ? ` on hearing day ${t.day}` : ''}${t.date ? ` (${t.date})` : ''}: “${shortTranscriptQuote(t.excerpt, input.question)}”`, facts: [f.id] }
+    return { text: `${t.speaker ? `${t.speaker} ${verb}` : 'The hearing transcript records'}${t.day ? ` on hearing day ${t.day}` : ''}${t.date ? ` (${t.date})` : ''}: “${t.excerpt}”`, facts: [f.id] }
   })
   // The evidence, not findings line is not written here: the way out of /api/ask adds it, once, in the form the
   // final cited sources call for (public/transcript-note.js).
@@ -624,16 +629,21 @@ function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingI
   const held=words(input.facts.filter(hearing))
   return !!held&&failedQuotations(text,held).some(inner=>looseQuotationOf(inner,held))
 }
-/** Added to the writer's contract only when it is given hearing transcript excerpts. Since the research model no
- * longer words them in its own points, the whole of a transcript answer is the writer's, and the 180-word line was
- * written for a writer that only added to those points. 400 words is about the length such answers reached on main. */
-export const TRANSCRIPT_COVERAGE_RULE = ' With hearing transcript excerpts among the facts the answer may run to 400 words: give each excerpt you are given one sentence of its own, once.'
+/** Added to the writer's contract only when it is given hearing transcript excerpts. The research model selects the
+ * excerpts and no longer words them, so the whole of a transcript answer is the writer's: it is told which excerpts to
+ * lead with and may leave out one that does not bear on the question. 300 words, where other answers have 180. */
+export const TRANSCRIPT_COVERAGE_RULE = ' With hearing transcript excerpts among the facts the answer may run to 300 words. Lead with the excerpts that answer the question, in the order of the question\'s parts: a fact\'s bears_on field gives the words of the question it was selected for. Give each excerpt you use one sentence, once, and leave out an excerpt that has no bearing on the question.'
+/** A quotation of a cited hearing excerpt keeps the excerpt's own "..." where the excerpt was cut. */
+function cutEnds(text:string,ids:number[],input:WritingInput):string {
+  const excerpts=ids.flatMap(id=>input.facts.filter(f=>f.id===id&&f.transcript).map(f=>f.transcript!.excerpt))
+  return excerpts.length?withSourceEllipses(text,excerpts):text
+}
 /** The writer's raw sentences, assembled as written, less any with a quotation a hearing transcript does not hold. */
 export function draftWrittenAnswer(raw:unknown,input:WritingInput):QualitativeAnswer|null {
   if(!raw||typeof raw!=='object'||!Array.isArray((raw as {sentences?:unknown}).sentences))return null
   // The ids the writer was given: its own "(fact 7)" after a sentence is a label, not prose (research-evidence.ts).
   const given=new Set(input.facts.map(f=>f.id))
-  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,text:withoutGivenFactLabels(unescapedQuotes(s.text),given),facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
+  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,text:withoutGivenFactLabels(unescapedQuotes(s.text),given),facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!otherScript(s.text)).map(s=>({...s,text:cutEnds(s.text,s.facts,input)})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
   const decision=answerDecision(raw)
   return {...assemble(lines,input,!!decision&&decision!=='answer'),...(decision?{answer_decision:decision}:{}),machine_written:true}
 }
@@ -660,6 +670,9 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput, leftOut?:
     // those given) and holds a quotation those facts do not hold word for word is left out, words and all. Taking only
     // the marks off would leave the words, and any name in them, standing as the writer's own prose.
     if (looseTranscriptQuotation(line.text,facts,input)) {left('transcript_quotation');continue}
+    // A sentence in another script (a count of its characters outside quotations) is left out.
+    if (otherScript(line.text)) {left('other_script');continue}
+    line.text=cutEnds(line.text,ids,input)
     const metadata=(f:WritingFact)=>f.metadata||/^(?:Period|Financial years):/i.test(f.text)
     const isLimit=line.coverage===true || facts.length>0 && facts.every(f=>f.coverage&&!metadata(f))
     if (isLimit && coverage) {left('repeated');continue}

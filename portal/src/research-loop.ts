@@ -22,7 +22,7 @@ import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agenti
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
-import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, TRANSCRIPT_POINT_RULE, transcriptPassage } from './transcript-answer'
+import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, TRANSCRIPT_POINT_RULE, transcriptPassage, hearingWorded } from './transcript-answer'
 import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, failedQuotations, looseQuotationOf, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
@@ -53,8 +53,8 @@ const ANSWER_DESCRIPTION = 'Finish with the answer. Answer the exact question in
  * tool call's arguments in one piece at the end of the call. A qualitative run does not offer the answer tool
  * (replyModel), so the answer fields are described here; a call to it is still checked the same way. */
 const REPLY_ANSWER_RULE = 'Other answers end with your reply text, with no tool call: one JSON object, {"points":[{"claim":"…","id":"…","quote":"…"}],"facts":[1]}, with nothing before or after it, selecting record fact ids and/or complete cited passage points. ' + ANSWER_FIELDS + ANSWER_CHAMBER + 'Give facts, points or both. '
-type AnswerArgs = { points?: AnswerPoint[]; facts?: number[] } & Partial<AnswerDraft>
-const ANSWER_SCHEMA = jsonSchema<AnswerArgs>({ type: 'object', properties: { facts: { type: 'array', minItems: 1, maxItems: 30, items: { type: 'integer', minimum: 1 } }, points: { type: 'array', minItems: 1, maxItems: 8, items: { type: 'object', properties: { claim: { type: 'string', minLength: 1, maxLength: 1200 }, id: { type: 'string', minLength: 1, maxLength: 240 }, quote: { type: 'string', minLength: 1, maxLength: 1200 } }, required: ['claim'], additionalProperties: false } } }, additionalProperties: false })
+type AnswerArgs = { points?: AnswerPoint[]; facts?: number[]; bears_on?: Record<string, string> } & Partial<AnswerDraft>
+const ANSWER_SCHEMA = jsonSchema<AnswerArgs>({ type: 'object', properties: { facts: { type: 'array', minItems: 1, maxItems: 30, items: { type: 'integer', minimum: 1 } }, bears_on: { type: 'object', additionalProperties: { type: 'string', maxLength: 120 } }, points: { type: 'array', minItems: 1, maxItems: 8, items: { type: 'object', properties: { claim: { type: 'string', minLength: 1, maxLength: 1200 }, id: { type: 'string', minLength: 1, maxLength: 240 }, quote: { type: 'string', minLength: 1, maxLength: 1200 } }, required: ['claim'], additionalProperties: false } } }, additionalProperties: false })
 /** Where an answer object starts in reply text. A model can say a line about its research before the object. */
 export const REPLY_OBJECT = /\{\s*"(?:points|facts)"\s*:/
 /** Reply text read this far without an answer object is prose, not an answer. */
@@ -71,6 +71,20 @@ export function replyAnswer(text: string): AnswerArgs | null {
   } catch { return null }
 }
 /** Said to the research model when it answers a hearing-evidence question while holding no transcript excerpt. */
+/** Said with the result of a transcript text search until four such searches have been made. The search lists the
+ * newest matching hearing days first, four at a time, so one general word returns recent days whatever was asked. */
+export const SEARCH_TRANSCRIPTS_FURTHER = 'Transcript searches list the newest matching hearing days first, four at a time. Search each specific word or two-word phrase of the question in its own search before answering, then select only the excerpts that answer the question.'
+const TRANSCRIPT_SEARCHES_WANTED = 4
+/** How the research model says what a selected excerpt is for. Fixed words in its instructions. */
+export const BEARS_ON_RULE = 'Select only the transcript excerpts that answer the question, and say what each is for in "bears_on": {"<fact id>": "<the words of the question that excerpt answers>"}, using words from the question only. '
+/** A label is kept only when every word of it is a word of the question, so it cannot carry a name or a claim the
+ * question did not. Anything else is dropped; the excerpt it was on is kept. */
+export function bearsOn(label: unknown, question: string): string | undefined {
+  if (typeof label !== 'string') return undefined
+  const words = (text: string) => text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []
+  const asked = new Set(words(question)), said = words(label)
+  return said.length > 0 && said.length <= 16 && said.every(word => asked.has(word)) ? label.trim().replace(/\s+/g, ' ') : undefined
+}
 export const NO_EXCERPT_HELD = 'no hearing transcript excerpt is held: search the transcript text with one or two specific words (royal_commissions view=transcripts with words), then answer'
 /** Said with every lookup result on a hearing-evidence question until a transcript excerpt is held, so the model
  * learns it in its first round and not from a refused answer in its last. Everyday words ("minute", "budget",
@@ -177,7 +191,8 @@ export function createResearch(options: ResearchOptions): Research {
     const inFlight = new Set<Promise<unknown>>()
     // SDK tool throws become tool-error parts; retain failure for stopWhen/check.
     // A run that stops keeps the transcript excerpts it held, so a fallback can quote them by code (ask-hearing-fallback.ts).
-    const keepHeld = () => { const held = factSheet(results).facts.filter(f => f.cite.url && transcriptPassage(f.text)).slice(0, 8).map(f => ({ text: f.text, url: f.cite.url })); if (held.length) stats.heldTranscripts = held }
+    // An empty list records that the run searched hearing transcripts and nothing quotable came back.
+    const keepHeld = () => { const held = factSheet(results).facts.filter(f => f.cite.url && transcriptPassage(f.text)).slice(0, 8).map(f => ({ text: f.text, url: f.cite.url })); if (held.length || steps.some(s => s.tool === 'royal_commissions' && s.args.view === 'transcripts')) stats.heldTranscripts = held }
     const fail = (reason: ResearchStop): never => { failed = reason; keepHeld(); throw new ResearchError(reason, stats) }
     const check = () => {
       if (controller.signal.aborted) fail(context.signal.aborted ? 'aborted' : 'timeout')
@@ -192,6 +207,8 @@ export function createResearch(options: ResearchOptions): Research {
       const { all, tools } = recordFacts()
       return !all.some(f => ['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && f.text.includes(TRANSCRIPT_LABEL) && /\btranscript page\b/.test(f.text))
     }
+    const textSearch = (step: PlanStep | undefined) => step?.tool === 'royal_commissions' && step.args.view === 'transcripts' && typeof step.args.words === 'string' && !!step.args.words.trim()
+    const searchFurther = (result: ToolResult) => { const at = results.lastIndexOf(result); return at >= 0 && textSearch(steps[at]) && steps.filter(textSearch).length < TRANSCRIPT_SEARCHES_WANTED }
     const output = (result: ToolResult) => {
       const index = results.lastIndexOf(result)
       const offset = results.slice(0, Math.max(0, index)).reduce((n, r) => n + factSheet([r]).facts.length, 0)
@@ -201,7 +218,7 @@ export function createResearch(options: ResearchOptions): Research {
       if (data && result.tool === 'count_records') delete data.rows
       if (data && getAskTool(result.tool)?.evidenceKind === 'passages' && Array.isArray(data.rows) && Array.isArray(data.passages)) data.rows = data.rows.map(raw => { const { excerpt: _excerpt, ...row } = object(raw); return row })
       const { cite: _cite, query: _query, ...shown } = result
-      const value = { ...shown, ...(data ? { data } : {}), research_state: { remaining_calls: RESEARCH_MAX_CALLS - calls, remaining_rounds: limits.rounds - round, remaining_ms: Math.max(0, limits.wallMs - (Date.now() - started)), recovery_required: recoveryOwed(), answer_target_reached: Date.now() - started >= ASK_ANSWER_TARGET_MS, ...(excerptOwed() ? { hearing_evidence: NO_EXCERPT_YET } : {}) }, facts: index < 0 ? [] : factSheet([result]).facts.map(f => ({ id: f.id + offset, text: f.text })) }
+      const value = { ...shown, ...(data ? { data } : {}), research_state: { remaining_calls: RESEARCH_MAX_CALLS - calls, remaining_rounds: limits.rounds - round, remaining_ms: Math.max(0, limits.wallMs - (Date.now() - started)), recovery_required: recoveryOwed(), answer_target_reached: Date.now() - started >= ASK_ANSWER_TARGET_MS, ...(excerptOwed() ? { hearing_evidence: NO_EXCERPT_YET } : {}), ...(searchFurther(result) ? { transcript_search: SEARCH_TRANSCRIPTS_FURTHER } : {}) }, facts: index < 0 ? [] : factSheet([result]).facts.map(f => ({ id: f.id + offset, text: f.text })) }
       if (bytes(value) > RESEARCH_RESULT_BYTES) fail('result_size')
       return value
     }
@@ -462,6 +479,12 @@ export function createResearch(options: ResearchOptions): Research {
       return fact ? { ...point, id: fact.id } : raw
     })
     const compose = (facts: ReturnType<typeof factLines>, points: QualitativeAnswer | null): QualitativeAnswer => {
+      const composed = composeAnswer(facts, points), notes = Object.fromEntries(facts.flatMap(f => { const label = bearsOn(labels[String(f.fact.id)], question); return label ? [[String(f.fact.id), label]] : [] }))
+      return Object.keys(notes).length ? { ...composed, fact_notes: notes } : composed
+    }
+    // What the research model said each selected fact is for (its last answer call), keyed by fact id.
+    let labels: Record<string, unknown> = {}
+    const composeAnswer = (facts: ReturnType<typeof factLines>, points: QualitativeAnswer | null): QualitativeAnswer => {
       selectedPoints = points ?? undefined
       const calculated = facts.length === 1 && !points ? results.find(r => r.data?.calculated_answer && r.cite.some(c => c.label === facts[0].fact.text)) : undefined
       if (calculated) {
@@ -511,6 +534,7 @@ export function createResearch(options: ResearchOptions): Research {
     // One answer call, checked: cited points, uncited points that failed only soft checks, record facts; else, with
     // nothing usable written, the best verified passages in their own words. Null when none of those exists.
     const draftAnswer = (args: Record<string, unknown>, roster: unknown, why: (reason: string) => void): QualitativeAnswer | null => {
+      labels = args.bears_on && typeof args.bears_on === 'object' && !Array.isArray(args.bears_on) ? args.bears_on as Record<string, unknown> : {}
       // Up to 15 record facts are rendered, in the order chosen.
       const focus = focussedIds()
       if (constraints.listIntroductions && !focus) { why('Fetch the complete introduction list with count_records include_records, preserving the requested date and originating chamber'); return null }
@@ -647,6 +671,8 @@ export function createResearch(options: ResearchOptions): Research {
         stats.rejections!.push(...reasons.slice(0, 24 - stats.rejections!.length))
         if (answer) { qualitative = answer; finished = true; return { tool: 'answer', ok: true, data: { passages: answer.sources }, cite: [], notes: [] } }
         if (limits.wallMs - (Date.now() - started) < REPAIR_MIN_MS) fail('grounding')
+        // A hearing-evidence question with no excerpt held needs a search, not another answer: say only that.
+        if (reasons.includes(NO_EXCERPT_HELD)) return errorResult('answer', `the answer was not accepted (${NO_EXCERPT_HELD})`)
         return errorResult('answer', `the answer was empty (${reasons.join('; ') || 'no points, text or facts'}); answer again with points or facts`)
       }, true)
     }
@@ -664,7 +690,7 @@ export function createResearch(options: ResearchOptions): Research {
       'For any how-many, number-of, more-or-fewer or count comparison about divisions or bills, use count_records with record_type divisions or bills, the requested jurisdiction and chamber, and one date, month, year, financial_year or federal term, or inclusive since/until dates. Use group_by year or month for a series; retain every requested group. Pass bill for divisions linked to a named bill, and include_records true when the question asks which bills were introduced on a date. Use the returned status denominator and share for bill passage rates. Use count_records for totals and returned rates with their denominators. For speech counts use count_speeches, and for speech trends use speech_trend. Select the count facts and snapshot/coverage facts that answer the requested scope. ' +
       'For one party vote select its division fact and lead with the party aye/no side. Division outcomes need the result and ayes/noes; floor crossing needs named dissenters and is mentioned only when asked. Use vote records for votes and lifecycle records for bill status. For bill sponsors or introducing members lead with that person; for introduction dates lead with the first introduction; for status/passage select the recorded status and date. For busiest years retain maxima and ties, and for passage shares retain numerator, denominator and share once. Debate prominence needs topic-specific Hansard, with the requested topic scope. For which bills were introduced retain titles and the count. ' +
       'Speech-count rankings and trends end with finish (fact ids). ' + (qualitativeRun ? REPLY_ANSWER_RULE : 'Other answers end with answer, selecting record fact ids and/or complete cited passage points. ') + 'For a broad overview give 4 to 8 short points when records exist, otherwise 2 to 6. Name each passage speaker and date as recorded. The first point directly answers the question with the requested name, date or outcome; use a complete sentence about the finding. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each, ' + NAMED_PEOPLE_EXCEPTION + '; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. ' + ASK_ATTRIBUTION_RULE + 'Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Select each fact once across facts and points. Each figure comes from one selected fact with its supporting citation. Use quotation marks only around words copied exactly from a cited record. Lead with the answer; a record limitation goes in a short note after it, never in its place. ' +
-      'Select numeric record fact ids for transcript excerpts. ' + TRANSCRIPT_POINT_RULE + TRANSCRIPT_NAMED_PEOPLE_RULE + ' ' + ASK_SELF_REFERENCE_RULE +
+      'Select numeric record fact ids for transcript excerpts. ' + BEARS_ON_RULE + TRANSCRIPT_POINT_RULE + TRANSCRIPT_NAMED_PEOPLE_RULE + ' ' + ASK_SELF_REFERENCE_RULE +
       'The question constraints are mandatory: preserve years, ranges, jurisdiction, chamber, party, person and place. Historical questions use the recorded period. Coverage-only facts explain a data limit, not a ranking result. Pay has two sources. paid_answer gives the rate the Remuneration Tribunal sets: parliamentarians, departmental secretaries, agency heads, statutory offices and Principal Executive Office bands; use it for what an office or post is paid. annual_reports gives the total remuneration each body reported for a reporting year; use it for what a named person or body actually paid, or a year’s reported figures, and select each body’s named office holder and remuneration amount rather than matching-row counts. For summed federal receipts use money_totals: party or donor filters for totals, group_by party or donor for rankings by total, and group_by year for annual trends. Pass financial_year as YYYY-YY or from_year/to_year as financial-year starting years. State the total first with its period. Use party_receipts for donor breakdowns or industry breakdowns, and ranked_money for individual money records, state registers and other money overviews. Who gives, donates, funds or is a donor ranks donations only (measure=donations, AEC Donation Received); money from, receipts, received or paid uses measure=all_types. Other receipt types come back as labelled lines: give them after the ranking in their own words, as other receipts. Public funding is election funding, listed apart from donors. For complete calculated answers select a single fact only if it fully answers the question as asked. Tools are evidence for you to decide, not automatic responses. Answer every question about a person, event, policy, party, money or institution directly and fully: who was responsible and their roles, what was decided or found, what happened and why. Name the people the records name, including private individuals, ' + NAMED_PEOPLE_EXCEPTION + '. State the findings of royal commissions, inquiries, courts and audits as their findings, and attribute contested claims to whoever made them. Use general knowledge for context and to fill gaps the records leave, and cite the records wherever they support a point. When a name could mean more than one person, answer about the most likely one (a current office holder first, then the one with the most records) and name the other in one closing line so the reader can ask again. Decline only a question with nothing to do with Australian public life. ' +
       'Verify the exact person, bill, division and date. Correct a wrong premise with the recorded fact first. After an empty lookup, try one distinct recovery, then answer from what was found and what you know. For future events give the latest recorded date and explain that the future result is not yet recorded. ' +
       'Count with the complete scoped counting tools. Preserve attribution, dates, uncertainty and policy limits. Keep retrieval-method and coverage caveats out of answer points; the response coverage note carries relevant limitations, only when the answer depends on them. For speaker rankings check committee coverage when relevant. Finish within the remaining turns. ' +
@@ -693,7 +719,11 @@ export function createResearch(options: ResearchOptions): Research {
       if (constraints.listIntroductions) return null
       if (isBillSpeechQuestion(question)) return null
       // Records were found but no answer call landed: the facts themselves are the answer.
-      const lines = factLines([...recordFacts().tools.keys()].slice(0, 15), () => {})
+      // Hearing transcript rows (excerpts, listings and their count) stand as the answer only to a question about a
+      // hearing or its evidence (as in the fallback, ask-hearing-fallback.ts): for any other question they are left
+      // out of this last resort.
+      const gathered = recordFacts(), aboutHearing = hearingEvidenceQuestion(question) || hearingWorded(question)
+      const lines = factLines([...gathered.tools.keys()].filter(id => aboutHearing || !(gathered.all.find(f => f.id === id)?.text ?? '').includes(TRANSCRIPT_LABEL)).slice(0, 15), () => {})
       if (!lines.some(line => !line.coverage)) return null
       stats.answer = { ...emptyTally(), mode: 'facts' }
       return compose(lines, null)

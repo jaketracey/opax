@@ -653,6 +653,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // An exact-lookup correction is prepended after research; its opening cannot be streamed past.
   loopProgress.answer=lookup?undefined:progress.answer
   const writeRun = async (run: AgenticPayload) => {
+    // The research model's labels for its selected facts are for the writer only: they leave the answer here.
+    const factNotes = run.qualitative?.fact_notes ?? {}
+    if (run.qualitative?.fact_notes) { const { fact_notes: _notes, ...rest } = run.qualitative; run.qualitative = rest }
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
@@ -661,6 +664,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
     const sheet = writingFacts(recordAnswer, facts, run.notes)
+    for (const f of sheet) { const label = factNotes[/^fact-(\d+)/.exec(f.source.resource)?.[1] ?? '']; if (label && f.transcript) f.bears_on = label }
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).

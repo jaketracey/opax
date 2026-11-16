@@ -7,8 +7,18 @@
 import {sentenceSpans} from './sentence-bounds.mjs'
 import {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd} from '../public/transcript-note.js'
 export {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd}
+/** A question about Parliament's own record: a Senate or House committee inquiry, estimates, Hansard. */
+const PARLIAMENTARY = /\b(?:senate|house of representatives|parliament|parliamentary|committee|estimates|hansard)\b/i
+const COMMISSION_WORDS = /\broyal commission\b|\b(?:special )?commission of inquiry\b|\bboard of inquiry\b/i
+/** Whether a question names Parliament or one of its bodies. Such a question is about Hansard unless it also names a
+ * commission; "the Senate inquiry into ..." is a committee inquiry, whose evidence is Committee Hansard. */
+export const parliamentaryQuestion = (question: string): boolean => PARLIAMENTARY.test(question.slice(0, 2000))
+/** Whether a question uses a word for a hearing or its evidence. */
+export const hearingWorded = (question: string): boolean => /\b(?:hear|hears|heard|hearings?|evidence|witness(?:es)?|testif\w*|testimony|transcripts?|counsel assisting)\b/i.test(question.slice(0, 2000))
 /** Evidence before an inquiry is a different record from parliamentary discussion about its topic. */
 export function hearingEvidenceQuestion(question: string): boolean {
+  // A parliamentary inquiry in hearing-style wording is answered from Committee Hansard, as any Hansard question is.
+  if (parliamentaryQuestion(question) && !COMMISSION_WORDS.test(question.slice(0, 2000))) return false
   // Reader text is bounded before tokenisation. Inspect a fixed word window rather than backtracking
   // through variable-length commission names and whitespace.
   const words = question.slice(0, 2000).toLowerCase().match(/[\p{L}'’-]+/gu) ?? []
