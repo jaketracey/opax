@@ -745,6 +745,11 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       const keep=parts.slice(0,ABOVE_BLOCK_PARTS).join('\n\n').length,trimmed=above.answer.slice(keep).trim()
       if(run.research)run.research.above_block_trimmed={paragraphs:parts.length-ABOVE_BLOCK_PARTS,characters:Array.from(trimmed).length}
       researchTrace('quotes_only.above_block_trimmed',{question,trimmed})
+      // For an operator's eval run only: the writer's coherence record is what an operator response carries
+      // (research-eval.ts researchEvalUsage) and no public response does, so the trimmed words are put there, on the
+      // object the eval already holds.
+      const record=(stats as {coherence?:Record<string,unknown>}).coherence
+      if(record)Object.assign(record,{above_block_trimmed_text:trimmed})
       return rewriteAnswerPayload(above as unknown as Record<string,unknown>,replace=>replace(new RegExp(`(?<=^[\\s\\S]{${keep}})[\\s\\S]*$`,'g'),'')) as unknown as QualitativeAnswer
     }
     const complete=block?joinWritten(nothingToWord&&!run.passage_answer?written:capped(combine(written)),block):combine(written)

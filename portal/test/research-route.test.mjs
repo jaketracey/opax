@@ -175,6 +175,35 @@ test('a parliamentary question in hearing-style wording, or one that only mentio
   await flush();
  }
 });
+test('quotes only: what the cap above the block trimmed is in an operator eval response and in no public response',async()=>{
+ h.env.RESEARCH_LOOP='route';h.env.DAILY_POST_OPERATOR_SECRET='fixture-operator';h.env.ASK_TRANSCRIPT_QUOTES_ONLY='on';
+ const question='What did the Robodebt Royal Commission recommend about debts, and what did it hear about income averaging?';
+ const five=['The Royal Commission made a recommendation about debts.','The recommendation is in its report.','It concerns how debts are raised.','It was made in 2023.','It is addressed to the Commonwealth.'];
+ const model=()=>{let n=0;return new MockLanguageModelV4({doGenerate:async options=>{n++;
+  if(n===1)return reply([call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1})]);
+  if(n===2)return reply([call('royal_commissions',{view:'recommendations',commission:'robodebt',words:'debts',limit:1})]);
+  if(n===3)return reply([call('answer',{facts:[2,3,4,5]})]);
+  const given=JSON.parse(options.prompt.at(-1).content.map(part=>part.text??'').join('')).facts;
+  return {...reply([]),content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:five.map(text=>({text,facts:[given[0].id]}))})}],finishReason:{unified:'stop',raw:'stop'}};}})};
+ try{
+  globalThis.__researchModel=model();
+  const operator=await evalPost('loop',false,question,'Bearer fixture-operator',{kind:'all'}),seen=await operator.json();await flush();
+  assert.equal(operator.status,200,JSON.stringify(seen).slice(0,300));
+  assert.ok(seen.research.above_block_trimmed?.paragraphs>=1,JSON.stringify(seen.research.above_block_trimmed));
+  const text=JSON.stringify(seen.research.coherence??{});
+  assert.ok(text.includes('above_block_trimmed_text')&&text.includes('addressed to the Commonwealth'),text.slice(0,400));
+  assert.equal(seen.answer.includes('addressed to the Commonwealth'),false,'trimmed from the answer');
+  // The same question with no operator header: the count is there, the trimmed words are nowhere in the response.
+  globalThis.__researchModel=model();
+  const open=await post(question,false,{kind:'all'}),body=await open.json();await flush();
+  assert.equal(open.status,200);assert.ok(body.research.above_block_trimmed?.paragraphs>=1);
+  assert.equal(JSON.stringify(body).includes('addressed to the Commonwealth'),false);assert.equal(JSON.stringify(body).includes('above_block_trimmed_text'),false);
+  // A wrong operator secret is a public request.
+  globalThis.__researchModel=model();
+  const wrong=await evalPost('loop',false,question,'Bearer not-the-secret',{kind:'all'}),wrongText=await wrong.text();await flush();
+  assert.equal(wrongText.includes('addressed to the Commonwealth'),false);
+ }finally{delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;}
+});
 test('ordinary and non-speech questions go through qualitative search/answer in route mode',async()=>{
  h.env.RESEARCH_LOOP='route';for(const kind of ['speech','all','bill'])for(const stream of [false,true]){globalThis.__researchModel=qualitative();const before=ordinaryCalls,response=await post('What does the record say about housing affordability?',stream,{kind}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answer,text);assert.deepEqual(body.citations,{[id]:[[0,text.length]]});assert.equal(body.sources[0].resource,resource);assert.equal(body.research.sources[0].kind,'speech');assert.equal(body.research.sources[0].date,'2023-05-01');assert.equal(ordinaryCalls,before);await flush();}
 });
