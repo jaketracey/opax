@@ -621,7 +621,8 @@ function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingI
   const hearing=(f:WritingFact)=>!!f.transcript||f.text.includes(TRANSCRIPT_LABEL)
   const words=(list:WritingFact[])=>list.map(f=>`${f.text}\n${f.source.snippet}`).join('\n')
   if(facts.length)return facts.some(hearing)&&quotationFails(text,words(facts))
-  const held=words(input.facts.filter(hearing))
+  // The quoted words only: a fact's header (the commission's name, the hearing day) is not hearing evidence.
+  const held=input.facts.filter(hearing).flatMap(f=>f.transcript?[f.transcript.excerpt]:transcriptTurns(f.text).map(t=>t.excerpt)).join('\n')
   return !!held&&failedQuotations(text,held).some(inner=>looseQuotationOf(inner,held))
 }
 /** Added to the writer's contract only when it is given hearing transcript excerpts. Since the research model no

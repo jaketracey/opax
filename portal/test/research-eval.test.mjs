@@ -327,6 +327,11 @@ test('the eval counts people named outside quotation marks in an answer that cit
   assert.deepEqual(count('Robin Example moved a motion in the Senate, the transcript records.', [...sources, { resource: 'speech-8', cited: true, kind: 'speech', speaker: 'Robin Example', title: 'Senate', snippet: 'I move the motion.' }]).names, [])
   // Programs, bodies and places are not people (run 2 flagged seven of these and no person).
   assert.deepEqual(count('The transcript records evidence about the Online Compliance Intervention program, the Agency for Clinical Innovation and the Tweed Valley Hospital at 771 Example Road.').names, [])
+  // A first name that is also an ordinary word, and a full name ending in a street word, are still names when a
+  // cited excerpt holds those exact words.
+  const streets = [{ resource: 'fact-2', cited: true, kind: 'record', title: snippet, snippet: 'Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4900 (PDF page 16), hearing turn: "Bill Sample and Jordan Street were both in the room." Hearing transcript: evidence, not findings.' }]
+  assert.deepEqual(count('The transcript records that Bill Sample and Jordan Street were in the room.', streets).names, ['Bill Sample', 'Jordan Street'])
+  assert.deepEqual(count('The transcript records evidence about the Tweed Valley Hospital.', streets).names, [])
   const both = count('Senator Example asked the minister about the scheme, and the transcript records that Ms Placeholder had the advice.', mixed)
   assert.deepEqual(both.names, ['Ms Placeholder']); assert.deepEqual(both.from_other_records, ['Senator Example'])
   // An answer that cites no hearing transcript is not measured.

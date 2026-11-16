@@ -155,6 +155,9 @@ test('the research model does not word hearing evidence: a point that cites or q
   const cases = [
     ['cites the fact', [{ id: 'fact-2', claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
     ['quotes the excerpt', [{ id: 'unknown-document', quote: turn.excerpt, claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
+    // The excerpt's link as the id, with a quote field the excerpt does not hold (the delta review reproduced a name
+    // in prose this way: a link only matched when the quote was in the fact).
+    ['cites the excerpt by its link, with a quote it does not hold', [{ id: records.citations[1].url, quote: 'the department knew averaging was unlawful all along', claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
     ['an uncited near-quotation of the excerpt beside a cited fact', [{ id: 'fact-2', claim: 'A witness gave evidence about averaging.' }, { claim: `Ms Quellworth said “${turn.excerpt.replace(/^\.\.\./, '').split(' ').slice(2, 14).filter((_, i) => i !== 5).join(' ')}”.` }]],
   ]
   for (const [name, points] of cases) {
@@ -204,6 +207,10 @@ test('with transcript excerpts held, a quotation is checked against what its poi
   // A quoted term from general knowledge in a point that cites nothing is not a near-quotation of the hearing: it stays.
   const term = await run([{ id, quote: exact, claim: `The Royal Commission recommended that “${exact}”.` }, { claim: 'The scheme became known as “robodebt” in the press.' }])
   assert.match(term.answer, /became known as/)
+  // The commission's own name in quotation marks is not a near-quotation of evidence: the five-word test reads the
+  // excerpts' quoted words, not a fact's header.
+  const titled = await run([{ id, quote: exact, claim: `The Royal Commission recommended that “${exact}”.` }, { claim: 'Its full title is the “Royal Commission into the Robodebt Scheme”.' }])
+  assert.match(titled.answer, /Its full title is the/)
 })
 
 test('repeated final grounding of an unsplit transcript record never restores the tool block, and a fabricated quotation cited to it is removed with its words',()=>{

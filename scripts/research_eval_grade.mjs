@@ -338,7 +338,7 @@ const PERSON_TITLE = String.raw`(?:Mr|Ms|Mrs|Miss|Mx|Dr|Prof|Professor|Senator|C
 const NAME_WORD = String.raw`\p{Lu}[\p{L}'’-]+`
 // Capitalised words that open or sit in the names of bodies, laws, places and dates, not people. A word here still
 // counts as a surname when a cited excerpt or title prints it straight after a title ("Mr Page", "Ms May").
-const NOT_A_PERSON = /^(?:Royal|Commission|Commissioner|Special|Inquiry|Board|Department|Services|Australia|Australian|Commonwealth|Government|Minister|Ministry|Office|Act|Scheme|Robodebt|Health|Healthcare|Funding|Hospital|District|Local|New|South|Wales|Victoria|Queensland|Sydney|Tribunal|Court|Federal|National|State|Council|Counsel|Assisting|Senior|Hearing|Transcript|Day|Page|Exhibit|Income|Social|Security|Human|Tax|Taxation|Ombudsman|Parliament|Senate|House|University|Agency|Authority|Centrelink|January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|The|This|That|These|Those|And|But|When|What|Who|Which|Did|Does|Was|Were|Yes|Not|Well|Thank|Asked|It|In|On|At|An|He|She|They|We|You|If|As|For|No|So|Evidence|Witness|Question|Antisemitism|Cohesion|OPAX|NSW|ATO|DHS|DSS|AAT|Online|Compliance|Intervention|Program|Programme|Clinical|Innovation|Road|Street|Valley|Heads|Letters|Patent|Legal|Advice|Budget|Review|Report|Committee|Estimates|Question|Time|Bill)$/i
+const NOT_A_PERSON = /^(?:Royal|Commission|Commissioner|Special|Inquiry|Board|Department|Services|Australia|Australian|Commonwealth|Government|Minister|Ministry|Office|Act|Scheme|Robodebt|Health|Healthcare|Funding|Hospital|District|Local|New|South|Wales|Victoria|Queensland|Sydney|Tribunal|Court|Federal|National|State|Council|Counsel|Assisting|Senior|Hearing|Transcript|Day|Page|Exhibit|Income|Social|Security|Human|Tax|Taxation|Ombudsman|Parliament|Senate|House|University|Agency|Authority|Centrelink|January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|The|This|That|These|Those|And|But|When|What|Who|Which|Did|Does|Was|Were|Yes|Not|Well|Thank|Asked|It|In|On|At|An|He|She|They|We|You|If|As|For|No|So|Evidence|Witness|Question|Antisemitism|Cohesion|OPAX|NSW|ATO|DHS|DSS|AAT|Online|Compliance|Intervention|Program|Programme|Clinical|Innovation|Road|Street|Valley|Heads|Letters|Patent|Legal|Advice|Budget|Review|Report|Committee|Estimates|Question|Time)$/i
 const foldQuote = (s) => String(s ?? '').replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\.{3}|…/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase()
 const plain = (name) => name.replace(/['’]s$/i, '')
 /** People named in an answer's own words, for an answer that cites a hearing transcript. The rule for both prose
@@ -371,6 +371,8 @@ export function namedPeopleOutsideQuotes(answer, payload) {
   const surnames = new Set()
   for (const m of evidence.matchAll(new RegExp(String.raw`(?<![\p{L}])${PERSON_TITLE} (${NAME_WORD})(?: (${NAME_WORD}))?`, 'gu'))) for (const w of [m[2] ?? m[1]]) if (!/^(?:SC|KC|QC|AM|AO|AC)$/.test(w)) surnames.add(plain(w).toLowerCase())
   for (const m of evidence.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?: ${NAME_WORD}){1,2}(?![\p{L}])`, 'gu'))) { const words = m[0].split(' '); if (!words.some((w) => NOT_A_PERSON.test(plain(w)))) surnames.add(plain(words.at(-1)).toLowerCase()) }
+  const quoted = [...evidence.matchAll(/hearing turn[^:]*: "([\s\S]*?)"(?= transcript page | \[answer to| Hearing transcript:|$)/g)].map((q) => q[1]).join('\n')
+  const excerptsHold = (name) => new RegExp(String.raw`(?<![\p{L}])${plain(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\p{L}])`, 'u').test(quoted || evidence)
   const found = new Map()
   const add = (name, at, length) => { const key = plain(name).toLowerCase(); if (!found.has(key)) found.set(key, { name: plain(name), text: text.slice(Math.max(0, at - 50), at + length + 50).replace(/\s+/g, ' ').trim() }) }
   for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${PERSON_TITLE} ${NAME_WORD}(?: ${NAME_WORD})?`, 'gu'))) {
@@ -379,7 +381,11 @@ export function namedPeopleOutsideQuotes(answer, payload) {
   }
   for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?: ${NAME_WORD}){1,2}(?![\p{L}])`, 'gu'))) {
     const words = m[0].split(' ')
-    if (!words.some((w) => NOT_A_PERSON.test(plain(w))) && !new RegExp(String.raw`^${PERSON_TITLE}$`, 'u').test(words[0])) add(m[0], m.index, m[0].length)
+    if (new RegExp(String.raw`^${PERSON_TITLE}$`, 'u').test(words[0])) continue
+    // A full name whose exact words a cited excerpt holds counts whatever its last word is ("Jordan Street"); only a
+    // listed word before the last one rules it out ("Tweed Valley Hospital").
+    const listed = words.map((w) => NOT_A_PERSON.test(plain(w)))
+    if (!listed.some(Boolean) || (!listed.slice(0, -1).some(Boolean) && excerptsHold(m[0]))) add(m[0], m.index, m[0].length)
   }
   for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?![\p{L}])`, 'gu'))) if (surnames.has(plain(m[0]).toLowerCase())) add(m[0], m.index, m[0].length)
   // One person, one line: a bare surname gives way to the title-and-surname or full name that holds it.

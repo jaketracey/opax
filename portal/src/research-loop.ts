@@ -535,11 +535,16 @@ export function createResearch(options: ResearchOptions): Research {
         if (held.size) {
           const ids = new Set<number>()
           let quoteDrops = 0
-          const heldText = [...held.values()].map(f => f.text).join('\n'), sourceFacts = factPassages()
+          // The quoted words only: a fact's header (the commission's name, the hearing day) is not hearing evidence.
+          const heldText = [...held.values()].flatMap(f => transcriptTurns(f.text).map(turn => turn.excerpt)).join('\n'), sourceFacts = factPassages()
           pointArgs = (args.points as unknown[]).filter(raw => {
             const quote = object(raw).quote
             const cited = object(citeRecordFacts([raw], held)[0]).id
-            const fact = typeof cited === 'string' && held.has(cited) ? held.get(cited) : typeof quote === 'string' && quote.trim().length >= 20 ? [...held.values()].find(f => transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim()))) : undefined
+            // A point that gives a held excerpt's link as its id cites that excerpt, whatever its quote field says:
+            // a quote the excerpt does not hold is the loose quotation this routing exists to catch.
+            const link = typeof object(raw).id === 'string' ? String(object(raw).id).trim().split('#')[0] : ''
+            const linked = link && /^https?:/i.test(link) ? [...held.values()].find(f => f.url.split('#')[0] === link) : undefined
+            const fact = linked ?? (typeof cited === 'string' && held.has(cited) ? held.get(cited) : typeof quote === 'string' && quote.trim().length >= 20 ? [...held.values()].find(f => transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim()))) : undefined)
             if (fact) ids.add(Number(fact.id.slice(5)))
             if (fact) return false
             // Each quotation is checked against the source its point cites, whatever kind of record that is, and
