@@ -10,11 +10,11 @@ import { MockLanguageModelV4 } from 'ai/test'
 const built = await build({ stdin: { contents: [
   "export {quotedOrNothing, namesRegisteredCommission, hearingFallbackPayload} from './src/ask-hearing-fallback'",
   "export {groundAnswerPayload, withoutMachineLabels} from './src/research-grounding'",
-  "export {NO_SUPPORTED_ANSWER, MACHINE_LABELS, unescapedQuotes} from './src/research-evidence'",
+  "export {NO_SUPPORTED_ANSWER, MACHINE_LABELS, unescapedQuotes, withoutGivenFactLabels} from './src/research-evidence'",
   "export {ASK_SELF_REFERENCE_RULE} from './src/ask-writing-rules'",
   "export {writingFacts, writingPrompt, verifyWrittenAnswer, draftWrittenAnswer, TRANSCRIPT_COVERAGE_RULE} from './src/research-writing'",
   "export {createAnswerWriter} from './src/research-writer'",
-  "export {createResearch, NO_EXCERPT_HELD} from './src/research-loop'",
+  "export {createResearch, NO_EXCERPT_HELD, NO_EXCERPT_YET} from './src/research-loop'",
   "export {runAgentic} from './src/agentic-ask'",
   "export {createResearchCreditCooldown} from './src/research-credit'",
   "export {callTool} from './src/tools/index'",
@@ -178,7 +178,7 @@ test('every registered commission is matched by its name and its aliases, as a w
 test('the writer is asked to cover each transcript excerpt once, only when it is given one; its left-out sentences are counted by reason', async () => {
   // Run 4a: the writer was handed a median of 9 facts and cited 6. Its contract said "under 180 words", written for a
   // writer that only added to the research model's own points, which no longer word hearing evidence.
-  assert.equal(api.TRANSCRIPT_COVERAGE_RULE, ' With hearing transcript excerpts among the facts the answer may run to 400 words: give each excerpt you are given one sentence of its own, once, with its fact id.')
+  assert.equal(api.TRANSCRIPT_COVERAGE_RULE, ' With hearing transcript excerpts among the facts the answer may run to 400 words: give each excerpt you are given one sentence of its own, once.')
   const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
   const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=15', label: text } }])
   const withExcerpt = JSON.parse(api.writingPrompt({ question: hearingQuestion, period, facts })).contract
@@ -199,4 +199,70 @@ test('the writer is asked to cover each transcript excerpt once, only when it is
   const written = await api.createAnswerWriter({ model, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, modelBudgetSpent: async () => false })({ question: hearingQuestion, period, facts }, stats, undefined, 20000)
   assert.equal(written.answer, good); assert.deepEqual(stats.coherence.left_out, { transcript_quotation: 1 })
   assert.doesNotMatch(JSON.stringify(written.answer), /left_out/)
+})
+
+test('the writer is not asked for a fact id in its prose, and its own "(fact N)" after a sentence is taken out; the same words in ordinary prose stay', async () => {
+  // The gating run on 16 November: two answers showed "(fact 1)" to "(fact 8)" after every sentence. The coverage line
+  // had asked for "its fact id", and the label strip leaves the parenthesised form alone as ordinary prose.
+  assert.doesNotMatch(api.TRANSCRIPT_COVERAGE_RULE, /fact id/)
+  const given = new Set([1, 2, 3])
+  // The two answers' own text.
+  assert.equal(api.withoutGivenFactLabels('The report concluded that "The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield" (fact 1).', given),
+    'The report concluded that "The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield".')
+  assert.equal(api.withoutGivenFactLabels('On hearing day 46 (10 March 2023), transcript page P-4951, the transcript records: "Were you aware at this time that the Ombudsman was investigating the Online Compliance Intervention program carried out by the Department?" (fact 2).', given),
+    'On hearing day 46 (10 March 2023), transcript page P-4951, the transcript records: "Were you aware at this time that the Ombudsman was investigating the Online Compliance Intervention program carried out by the Department?"')
+  assert.equal(api.withoutGivenFactLabels('At transcript page P-2940 the transcript reads: "...Do you recall having those allegations drawn to your attention?" (fact 1).', given), 'At transcript page P-2940 the transcript reads: "...Do you recall having those allegations drawn to your attention?"')
+  assert.equal(api.withoutGivenFactLabels('The transcript records: “It went in March.” (facts 2 and 3)', given), 'The transcript records: “It went in March.”')
+  assert.equal(api.withoutGivenFactLabels('The minute went to the committee in March. (fact 3)', given), 'The minute went to the committee in March.')
+  // Ordinary prose: a number the writer was not given, or the words in the middle of a sentence.
+  for (const prose of ['The report sets this out in its summary. (fact 7)', 'The submission lists three facts. (Facts 2 and 9) are disputed.', 'The second point (fact 2) was not disputed by the department.', 'It is a fact 2 of the three were late.'])
+    assert.equal(api.withoutGivenFactLabels(prose, given), prose)
+  assert.equal(api.withoutGivenFactLabels('The report sets this out in its summary. (fact 2)', new Set()), 'The report sets this out in its summary. (fact 2)')
+  // Through the writer's checks: the answer comes out clean, verified and as a stopped draft alike, still cited.
+  const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
+  const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=15', label: text } }])
+  const raw = { answer_decision: 'answer', sentences: [{ text: 'On hearing day 46 the transcript records: “The executive minute was prepared in the department and went to the committee in March.” (fact 1).', facts: [1] }, { text: 'An earlier review is described in the report. (fact 7)', facts: [] }] }
+  const input = { question: hearingQuestion, period, facts }
+  for (const out of [api.verifyWrittenAnswer(raw, input), api.draftWrittenAnswer(raw, input)]) {
+    const [first, second] = out.answer.split('\n\n')
+    assert.equal(first, 'On hearing day 46 the transcript records: “The executive minute was prepared in the department and went to the committee in March.”')
+    assert.ok(second.startsWith('An earlier review is described in the report. (fact 7)'), second)
+    assert.ok(Object.values(out.citations).flat().length >= 1)
+  }
+})
+
+test('a hearing-evidence question with no excerpt held is told to search the transcript text with every lookup result, from the first round', async () => {
+  // The gating run on 16 November: every word of "the 2015 budget measure and who prepared the executive minute" is too
+  // common for the transcript word index, the model searched recommendations instead, and it first heard that an
+  // excerpt was needed when its answer was refused in round 7 of 8.
+  assert.equal(api.NO_EXCERPT_YET, 'This question asks what was said in evidence, and no hearing transcript excerpt is held yet. Search the transcript text now (royal_commissions view=transcripts with words). Everyday words are too common to match: search one rarer word from the subject by itself, then another, until excerpts come back. An answer needs at least one excerpt.')
+  const asset = async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))
+  const deps = { origin: 'https://offline.test', asset, kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }) }
+  const usage = { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }
+  const reply = (toolName, args) => ({ content: [{ type: 'tool-call', toolName, toolCallId: toolName + Math.random(), input: JSON.stringify(args) }], finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage, warnings: [] })
+  const named = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
+  const run = async question => {
+    let call = 0
+    // The recorded shape: words too common to match, then a recommendations search, then a rarer word, then the answer.
+    const model = new MockLanguageModelV4({ doGenerate: async () => { call++
+      return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'executive minute' })
+        : call === 2 ? reply('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'Cabinet' })
+        : call === 3 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 1 })
+        : call === 4 ? reply('answer', { facts: [] }) : { content: [{ type: 'text', text: 'not json' }], finishReason: { unified: 'stop', raw: 'stop' }, usage, warnings: [] } } })
+    const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+    const out = await api.runAgentic(question, { ...deps, research }, async () => {}, 40000, undefined, {}, named)
+    // What the model was shown before each of its calls.
+    return { out, shown: model.doGenerateCalls.map(c => JSON.stringify(c.prompt)) }
+  }
+  const told = 'no hearing transcript excerpt is held yet. Search the transcript text now'
+  const { out, shown } = await run('What evidence was given at the Robodebt Royal Commission about the 2015 budget measure and who prepared the executive minute?')
+  assert.equal(shown[0].includes(told), false, 'nothing has been looked up yet')
+  assert.ok(shown[1].includes(told), 'after the first lookup, which matched nothing')
+  assert.ok(shown[2].split(told).length > shown[1].split(told).length, 'again after the recommendations lookup, which gives no excerpt')
+  // Once an excerpt is held it is not said again, and the question is answered from the transcript.
+  assert.equal(shown[3].split(told).length, shown[2].split(told).length, 'not said with the result that brought excerpts')
+  assert.equal(out.answered, true); assert.match(out.answer, /transcript page/)
+  // Another kind of question is never told this.
+  const other = await run('What did the Robodebt Royal Commission recommend about debts?')
+  assert.ok(other.shown.every(prompt => !prompt.includes(told)))
 })

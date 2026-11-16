@@ -105,6 +105,13 @@ export const MACHINE_LABELS = [
   /[ \t]*(?<![\p{L}\p{N}-])\(?\bfact ids? (?:fact-\d+(?:\/[\w-]+)*|\d+(?:(?:, ?| and )\d+)*)\)?/giu,
   /[ \t]*(?<![\p{L}\p{N}-])\(?\bfact-\d+(?:\/turn\/\d+(?:\/t\/body\/\d+(?:-\d+)?)?|\/t\/body\/\d+(?:-\d+)?)\)?/giu,
 ]
+/** The writer's own "(fact 7)" or "(facts 2 and 3)", straight after a sentence end or a closing quotation mark, where
+ * every number is the id of a fact the writer was given in that call. The label goes; the sentence keeps one full
+ * stop. The same words anywhere else, or with a number the writer was not given, are ordinary prose and stay. */
+export function withoutGivenFactLabels(text:string,given:ReadonlySet<number>):string {
+  return text.replace(/(?<=[.!?"”’])[ \t]*\(facts? (\d+(?:(?:, ?| and )\d+)*)\)(\.?)/giu,(all:string,ids:string,stop:string,at:number,whole:string)=>
+    (ids.match(/\d+/g)??[]).every(n=>given.has(Number(n)))?(/[.!?]["”’]?$/.test(whole.slice(0,at))?'':stop):all)
+}
 /** Words that say nothing by themselves: a sentence left with only these once its labels are gone is dropped. */
 export const EMPTY_WORDS = /^(?:see|also|and|or|the|a|an|at|in|on|of|for|as|it|is|are|was|were|to|by|with|from|this|that|these|those|recorded|quoted|cited|details?|more|words?|here|there|both)$/i
 

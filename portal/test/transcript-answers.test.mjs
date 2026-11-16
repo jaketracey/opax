@@ -73,7 +73,7 @@ test('people named in hearing evidence appear only inside a quotation: one fixed
   // The research model's rule for excerpts: fixed text.
   assert.equal(api.TRANSCRIPT_POINT_RULE, 'Leave what a record labelled "Hearing transcript: evidence, not findings" (a royal commission, integrity commission or inquiry transcript) says out of your points and reply text, in your own words or quoted: select the excerpt\'s numeric record fact id, and the writer words it from the record. Hansard and parliamentary committee hearings stay in your points. ')
   // Stored answers written before the rule are retired.
-  assert.equal(api.ANSWER_WRITING_VERSION, 'written-answer-33-named-people-quotes-removed')
+  assert.equal(api.ANSWER_WRITING_VERSION, 'written-answer-34-named-people-fact-labels')
 })
 
 test('the writer is skipped only when every fact is a transcript listing row', async () => {

@@ -17,13 +17,13 @@ import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './researc
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
-import {quotationFails,failedQuotations,looseQuotationOf,unescapedQuotes} from './research-evidence'
+import {quotationFails,failedQuotations,looseQuotationOf,unescapedQuotes,withoutGivenFactLabels} from './research-evidence'
 import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-33-named-people-quotes-removed'
+export const ANSWER_WRITING_VERSION = 'written-answer-34-named-people-fact-labels'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
@@ -627,11 +627,13 @@ function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingI
 /** Added to the writer's contract only when it is given hearing transcript excerpts. Since the research model no
  * longer words them in its own points, the whole of a transcript answer is the writer's, and the 180-word line was
  * written for a writer that only added to those points. 400 words is about the length such answers reached on main. */
-export const TRANSCRIPT_COVERAGE_RULE = ' With hearing transcript excerpts among the facts the answer may run to 400 words: give each excerpt you are given one sentence of its own, once, with its fact id.'
+export const TRANSCRIPT_COVERAGE_RULE = ' With hearing transcript excerpts among the facts the answer may run to 400 words: give each excerpt you are given one sentence of its own, once.'
 /** The writer's raw sentences, assembled as written, less any with a quotation a hearing transcript does not hold. */
 export function draftWrittenAnswer(raw:unknown,input:WritingInput):QualitativeAnswer|null {
   if(!raw||typeof raw!=='object'||!Array.isArray((raw as {sentences?:unknown}).sentences))return null
-  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,text:unescapedQuotes(s.text),facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
+  // The ids the writer was given: its own "(fact 7)" after a sentence is a label, not prose (research-evidence.ts).
+  const given=new Set(input.facts.map(f=>f.id))
+  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,text:withoutGivenFactLabels(unescapedQuotes(s.text),given),facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
   const decision=answerDecision(raw)
   return {...assemble(lines,input,!!decision&&decision!=='answer'),...(decision?{answer_decision:decision}:{}),machine_written:true}
 }
@@ -647,9 +649,10 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput, leftOut?:
   if (!Array.isArray(obj.sentences)) return null
   const declared=answerDecision(obj)
   const lines: WrittenSentence[]=[], seen=new Map<string,WrittenSentence>(), claims=new Set<string>(),figuresSeen=new Set<string>(); let coverage=false
+  const given=new Set(input.facts.map(f=>f.id))
   for (const value of obj.sentences.slice(0,16)) {
     const read=value as WrittenSentence
-    const line=typeof read?.text==='string'?{...read,text:unescapedQuotes(read.text)}:read
+    const line=typeof read?.text==='string'?{...read,text:withoutGivenFactLabels(unescapedQuotes(read.text),given)}:read
     if (typeof line?.text!=='string' || !line.text.trim() || rawToolEcho(line.text)) {left('tool_echo_or_empty');continue}
     const ids=[...new Set(Array.isArray(line.facts)?line.facts:[])].filter(id=>Number.isInteger(id) && input.facts.some(f=>f.id===id))
     const facts=ids.map(id=>input.facts.find(f=>f.id===id)!)
