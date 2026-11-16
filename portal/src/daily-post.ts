@@ -544,6 +544,10 @@ const PASSED_STAGES = new Set(['passed', 'passed_both', 'passed_both_houses'])
  * Where a passed bill stands, in the record's own terms: "Passed <the day it passed>." when the record holds a
  * passing stage; "Royal Assent <day>." when it holds only the assent; and when it holds neither stage, the date the
  * status was recorded, named as that. Never an assent date under the word "Passed". null for a bill that has not passed.
+ *
+ * This rests on how the bills export writes the record: one `passed` stage per bill, dated the day the bill finally
+ * passed both houses (after any return of amendments). If the export ever wrote a `passed` stage for each house, the
+ * latest one would still be the right day only while nothing later is recorded under another name.
  */
 export function billStanding(bill: BillIndexItem, record: BillFile | null): string | null {
   if (bill.status !== 'passed') return null

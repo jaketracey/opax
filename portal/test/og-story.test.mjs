@@ -127,6 +127,9 @@ test('a long cover sentence gives way to the bill\'s standing: the status and it
   // A line that fits is drawn whole, exactly as before.
   const short = { ...slides.cover, line: 'It would move the reporting date. Passed 19 Aug 2026.', note: 'Machine-written summary' };
   assert.ok(texts(storySlideTree(short, { photo, credit })).includes(short.line));
+  // A blank note draws no note line, so the cover is clipped the old way too: the switch follows what is drawn.
+  const blank = texts(storySlideTree({ ...slides.cover, line: `${sentence} Passed 1 Apr 2026.`, note: '  ' }, { photo, credit })).find(t => t.startsWith('This bill is part'));
+  assert.ok(blank.endsWith('…') && !blank.includes('Passed'), blank);
   // A cover with no note (every other kind of edition) is clipped from the end, as it always was.
   const plainLong = { ...slides.cover, line: `${sentence} ${sentence}` };
   const end = texts(storySlideTree(plainLong, { photo, credit })).find(t => t.startsWith('This bill is part'));

@@ -681,7 +681,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
         inset,
         firm(storyKicker(slide.kicker)),
         firm(storyHeadline(slide.title, 128, 2)),
-        ...storyLines([slide.line], false, 3, 30, S_LINE, !!slide.note).map(firm),
+        ...storyLines([slide.line], false, 3, 30, S_LINE, !!coverNote(slide.note)).map(firm),
         firm(coverNote(slide.note)),
         h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: engraving.top, ...(noted ? { flexShrink: 1, minHeight: 0, overflow: 'hidden' } : {}) } }, h('img', { src: ENGRAVING_URI, width: engraving.width, height: engraving.height, style: { opacity: 0.9 } })),
       ]),
@@ -706,7 +706,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
       inset,
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 140, 2),
-      ...storyLines([slide.line], false, 3, 30, S_LINE, !!slide.note),
+      ...storyLines([slide.line], false, 3, 30, S_LINE, !!coverNote(slide.note)),
       coverNote(slide.note),
     ),
     storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
