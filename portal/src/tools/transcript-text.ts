@@ -9,7 +9,7 @@ const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null }
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker?: string, speaker_label?: string }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -68,31 +68,51 @@ export function speakerName(label: string): string {
     : word.replace(/^Mc(?=[A-Z])/, 'Mc\u0000').toLowerCase().replace(/(^|[-'’\u0000])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase()).replace('\u0000', '')).join(' ')
 }
 
-/** A verbatim excerpt around the first query word, cut at the capital labels either side so no label sits in the
- * text. No speaker is returned: the last label before the words does not always name who said them (a "Q." or
- * "A." turn, a sworn line or a page break can lie between), and a wrong name is worse than none. */
-export function excerpt(text: string, terms: string[]): { excerpt: string } {
-  const flat = text.replace(/\s+/g, ' ').trim()
+// "Q." and "A." open turns that carry no label: the words after one are not the last label's. So too after a note,
+// a line the publisher opens with "<" ("<NAME, sworn:", "<THE WITNESS WITHDREW").
+const MARK = /(?<=^|\s)[QA]\.(?=\s)/g
+
+/** A verbatim excerpt around the first query word, kept inside one turn: it is cut at the capital labels, the "Q."
+ * and "A." marks and the note lines either side, and none of those sits in the text. The speaker is returned only when their
+ * label opens that turn on this page with no mark between the label and the words. A turn that began on an earlier
+ * page, or that follows a mark, has no speaker: a wrong name is worse than none. */
+export function excerpt(text: string, terms: string[]): { excerpt: string, speaker?: string, speaker_label?: string } {
+  // The page on one line, as text.replace(/\s+/g, ' ').trim() gives, and a copy with each note line blanked: a
+  // note is not a turn heading, so no label is read from one ("<EXAMINATION BY MR SMITH" above "COMMISSIONER:").
+  let flat = '', plain = ''
+  const notes: { at: number, end: number }[] = []
+  for (const raw of text.split('\n')) {
+    const line = raw.replace(/\s+/g, ' ').trim()
+    if (!line) continue
+    if (flat) { flat += ' '; plain += ' ' }
+    if (line[0] === '<') notes.push({ at: flat.length, end: flat.length + line.length })
+    flat += line; plain += line[0] === '<' ? ' '.repeat(line.length) : line
+  }
   let at = -1
   for (const t of terms) {
     const m = new RegExp(`\\b${t.replace(/[^a-z0-9]/g, '')}`, 'i').exec(flat)
     if (m && (at < 0 || m.index < at)) at = m.index
   }
-  const labels = [...flat.matchAll(LABEL)].map(m => ({ at: m.index!, end: m.index! + m[0].length, label: m[1] }))
-  // A query word found inside a label (a surname) points at the turn that label opens, so the label is still cut.
-  const inside = labels.find(l => l.at <= at && at < l.end)
-  const point = at < 0 ? 0 : inside ? inside.end : at
-  const turn = labels.filter(l => l.end <= point).at(-1) ?? (at < 0 ? labels.find(l => l.at === 0) : undefined)
-  let from = turn ? turn.end : 0
+  const labels = [...plain.matchAll(LABEL)].map(m => ({ at: m.index!, end: m.index! + m[0].length, label: m[1] }))
+  // A query word found inside a label (a surname) or a note points at the first words after it, so it is still cut.
+  let point = at < 0 ? 0 : at
+  for (let inside; (inside = [...labels, ...notes].find(l => l.at <= point && point < l.end));) { point = inside.end; while (flat[point] === ' ') point++ }
+  const label = labels.filter(l => l.end <= point).at(-1) ?? (at < 0 ? labels.find(l => l.at === 0) : undefined)
+  let from = label ? label.end : 0
   while (flat[from] === ' ') from++
-  const until = labels.find(l => l.at >= Math.max(from, point))?.at ?? flat.length
+  const marks = [...[...plain.matchAll(MARK)].map(m => ({ at: m.index!, end: m.index! + m[0].length })), ...notes].sort((a, b) => a.at - b.at)
+  const mark = marks.filter(m => m.at >= (label?.end ?? 0) && m.at <= Math.max(from, point)).at(-1)
+  const turn = mark ? undefined : label
+  if (mark) { from = mark.end; while (flat[from] === ' ') from++ }
+  const until = Math.min(labels.find(l => l.at >= Math.max(from, point))?.at ?? flat.length, marks.find(m => m.at > from && m.at >= point)?.at ?? flat.length)
   let start = Math.max(from, point - 100)
   if (start > from) { const space = flat.indexOf(' ', start); if (space >= 0 && space < until) start = space + 1 }
   while (flat[start] === ' ') start++
   let end = Math.min(until, start + EXCERPT)
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
   const body = flat.slice(start, end).trim()
-  return { excerpt: `${start > from ? '...' : ''}${body}${end < flat.length && end < until ? '...' : ''}` }
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < flat.length && end < until ? '...' : ''}`,
+    ...(turn ? { speaker: speakerName(turn.label), speaker_label: turn.label } : {}) }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
@@ -112,7 +132,8 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
     const page = pages.find(p => p.n === n) ?? {}
     return { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
       ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms) : { excerpt: null }) }
-  })
+  // A page whose only match is a label with no words after it has nothing to quote.
+  }).filter(h => h.excerpt === null || /[^.\s]/.test(h.excerpt))
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),
     ...(quote ? {} : { order_notice: String(doc.order_notice) }), hits }
 }
