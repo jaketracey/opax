@@ -137,8 +137,8 @@ def test_the_published_release_carries_the_reviewed_records_and_changes_no_other
         assert len(row["representatives"]) == (0 if key in vacant else row["capacity"]), row["name"]
     assert sum(len(r["representatives"]) for r in assembly) == 87 and sum(len(r["representatives"]) for r in council) == 40
     # Against the release before the record: every row of every parliament is unchanged except the vacant seat's.
-    before = PUBLIC / "releases" / "db4a3cd54d53c143"
-    old = {r["electorate_id"]: r for r in json.loads((before / "index.json").read_text().replace("db4a3cd54d53c143", manifest["release_id"]))["electorates"]}
+    before = PUBLIC / "releases" / "449ad8b79adf8b91"
+    old = {r["electorate_id"]: r for r in json.loads((before / "index.json").read_text().replace("449ad8b79adf8b91", manifest["release_id"]))["electorates"]}
     changed = [index[eid]["name"] for eid in index if index[eid] != old.get(eid)]
     assert set(old) == set(index) and changed == ["Brunswick"]
     row = next(r for r in assembly if r["name"] == "Brunswick")
@@ -148,7 +148,7 @@ def test_the_published_release_carries_the_reviewed_records_and_changes_no_other
     people = read("people.json")["people"]
     holders = [(p["name"], e["current"], e["periods"]) for p in people for e in p["electorates"] if e["electorate_id"] == row["electorate_id"]]
     assert holders == [("Tim Read", False, [{"start": "2018-11-24", "end": "2026-09-19"}])]
-    old_people = {p["person_id"]: p for p in json.loads((before / "people.json").read_text().replace("db4a3cd54d53c143", manifest["release_id"]))["people"]}
+    old_people = {p["person_id"]: p for p in json.loads((before / "people.json").read_text().replace("449ad8b79adf8b91", manifest["release_id"]))["people"]}
     assert [p["name"] for p in people if p != old_people.get(p["person_id"])] == ["Tim Read"]
     # Plain facts only: no cause and no tribute wording in the record or the release rows it writes.
     text = VACANCIES.read_text() + json.dumps(read(row["electorate_id"] + ".json")["terms"])
