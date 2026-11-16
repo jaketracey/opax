@@ -161,6 +161,29 @@ test('Ask page, calculated answer under a written overview paragraph: the paragr
   await f.w.__ask({ ...NOT_WRITTEN['calculated money answer'], money_overview: 'A written paragraph about the table.' });
   assertLabelledOnce(f, f.result, f.doc.querySelector('#ask-overview > p'));
   assert.equal(f.doc.querySelector('#ask-overview > p').textContent, 'A written paragraph about the table.');
+  assert.equal(f.doc.querySelector('#ask-overview .ui-machine'), null, 'the label sits above the panel, not in it');
+});
+
+// The sunken, bronze-edged panel is for a written overview paragraph. A written answer with no such paragraph shows
+// the pill on its own line; it never draws the panel around the pill alone (Jake, 17 Nov: "just show the pill").
+for (const [kind, payload] of Object.entries(WRITTEN)) {
+  test(`Ask page, ${kind}: the label is a pill on its own line, with no empty overview panel`, async t => {
+    const f = fixture(t);
+    await f.w.__ask(payload);
+    assert.equal(f.doc.getElementById('ask-overview').hidden, true, 'no overview paragraph, so no panel');
+    assert.equal(f.doc.querySelector('.answer-overview .ui-machine'), null, 'no label inside an overview panel');
+    assert.equal(f.doc.getElementById('ask-machine').hidden, false);
+    assert.equal(f.doc.querySelectorAll('#ask-machine .ui-machine').length, 1);
+  });
+}
+
+test('Ask page, while streaming: the pill has its own line from the first words, with no panel around it', async t => {
+  const f = fixture(t);
+  let during;
+  await f.w.__ask(WRITTEN['normal researched answer'], ['A researched '], () => {
+    during = { panel: f.doc.getElementById('ask-overview').hidden, inPanel: !!f.doc.querySelector('#ask-overview .ui-machine'), line: f.doc.getElementById('ask-machine').hidden };
+  });
+  assert.deepEqual(during, { panel: true, inPanel: false, line: false });
 });
 
 test('Ask page, while streaming: the label is there with the first words, and goes if the answer ends as passages', async t => {
