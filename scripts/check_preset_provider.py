@@ -22,7 +22,7 @@ import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
 from parli.ingest import http as source_http
-import argparse, json, os, time, urllib.error, urllib.parse
+import argparse, json, os, sys, time, urllib.error, urllib.parse
 
 OPENROUTER = "https://openrouter.ai/api/v1"
 PROMPT = "Reply with the single word: ok"

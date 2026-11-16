@@ -92,6 +92,14 @@ class PresetProviderCheck(unittest.TestCase):
         self.assertEqual(run(argv=["--kb"], env=env, config=slot("deepseek/deepseek-v4-pro-0813"))[0], 1)
         self.assertEqual(run(argv=["--kb"])[0], 2)
 
+    def test_runs_as_a_script(self):
+        import subprocess
+        import sys
+        from pathlib import Path
+        script = Path(check.__file__)
+        done = subprocess.run([sys.executable, str(script), "--help"], capture_output=True, text=True, cwd=script.parents[1])
+        self.assertEqual(done.returncode, 0, done.stderr[-300:])
+
 
 if __name__ == "__main__":
     unittest.main()
