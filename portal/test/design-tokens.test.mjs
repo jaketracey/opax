@@ -165,7 +165,7 @@ const TYPE_BASELINE = {
   'public/stages.js': 2,
   'public/style.css': 8,
   'public/thenvsnow.js': 2,
-  'public/timemachine.js': 15,
+  'public/timemachine.js': 14,
   'public/ui-controls.css': 2,
   'public/ui-source.css': 1,
   'public/ui-workbench.css': 8,

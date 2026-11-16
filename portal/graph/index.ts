@@ -613,7 +613,7 @@ const CSS = `
   border: 0; background: none; cursor: pointer; color: var(--bronze-ink); align-items: center; justify-content: center; }
 .mm-cpi-info:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -4px; }
 .mm-cpi-info span { display: grid; place-items: center; box-sizing: border-box; width: 22px; height: 22px; border-radius: var(--radius-round);
-  border: var(--border-hairline) solid currentColor; font: italic 700 0.8125rem/1 var(--serif); }
+  border: var(--border-hairline) solid currentColor; font: italic 700 0.8125rem/1 var(--sans); }
 .mm-cpi-info[aria-expanded='true'] span { background: var(--bronze-ink); color: var(--paper); }
 .mm-cpi-pop { position: absolute; top: calc(100% + 6px); left: 0; z-index: 6; width: min(300px, 100%);
   padding: var(--space-tight) var(--space-row); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle);
