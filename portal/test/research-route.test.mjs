@@ -461,6 +461,38 @@ test('408, 429, 5xx, an overloaded provider and a plain error are not refusals: 
   assert.equal(logs.slice(logged).filter(r=>r.kind==='research_provider_refused').length,0,label);
  }
 });
+test('a refused final-answer call fails closed whatever stopped the loop first',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const scripted=errors=>{const state={calls:0};state.model=new MockLanguageModelV4({doGenerate:async()=>{const error=errors[state.calls++];if(!error)throw Error('unexpected extra model call');throw error}});return state};
+ for(const [label,second] of [['404',()=>refusal(404)],['403',()=>refusal(403)],['503 untyped',()=>refusal(503)]])for(const question of [q,'What does the record say about scrutiny?'])for(const stream of [false,true]){
+  // The first turn fails with a 500 (not a refusal), so the loop asks for a final answer; that request is refused.
+  const state=scripted([refusal(500),second()]);globalThis.__researchModel=state.model;
+  const planner=plannerCalls,ordinary=ordinaryCalls,logged=logs.length,where=`${label} / ${question} / stream=${stream}`;
+  const response=await post(question,stream),raw=await response.text();await flush();
+  assert.equal(state.calls,2,where+': the failed turn, then the refused final-answer call, and nothing after');
+  assert.equal(plannerCalls,planner,where+': no planner generation');assert.equal(ordinaryCalls,ordinary,where+': no older-engine generation');
+  if(stream){assert.match(raw,/^event: error\r?$/m,where);assert.doesNotMatch(raw,/^event: done\r?$/m,where);assert.match(raw,/Please try again/,where)}
+  else{assert.equal(response.status,503,where);assert.equal(JSON.parse(raw).research.failure,'provider_refused',where)}
+  assert.equal(logs.slice(logged).filter(r=>r.kind==='research_provider_refused').length,1,where);
+  assert.equal(logs.slice(logged).filter(r=>r.kind==='research_loop_fallback').length,0,where);
+ }
+ // Control: when the final-answer call fails with a 500 instead, the older engine still answers.
+ const state=scripted([refusal(500),refusal(500)]);globalThis.__researchModel=state.model;const before=plannerCalls+ordinaryCalls;
+ const response=await post(q),body=await response.json();await flush();
+ assert.equal(response.status,200);assert.ok(body.answer);assert.ok(plannerCalls+ordinaryCalls>before);
+});
+test('a refusal after progress has streamed ends the stream with the error event and builds no other request',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ for(const status of [403,404]){
+  const state=refusing(refusal(status),1);globalThis.__researchModel=state.model;const planner=plannerCalls,ordinary=ordinaryCalls;
+  const raw=await(await post(q,true)).text();await flush();
+  const events=[...raw.matchAll(/^event: (\S+)\r?$/gm)].map(m=>m[1]);
+  assert.ok(events.indexOf('error')>0&&raw.indexOf('"phase":"step"')>=0&&raw.indexOf('"phase":"step"')<raw.indexOf('event: error'),'a step was streamed before the error');
+  assert.equal(events.at(-1),'error');assert.equal(events.filter(e=>e==='error').length,1);assert.ok(!events.includes('done'));
+  assert.match(raw,/"final":true/);
+  assert.equal(state.calls,2);assert.equal(plannerCalls,planner);assert.equal(ordinaryCalls,ordinary);
+ }
+});
 test('402 fails closed at once, then the credit cooldown short-circuits the next loop to the planner',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
  {const before=plannerCalls+ordinaryCalls,response=await evalPost('loop',false),body=await response.json();assert.equal(response.status,503);assert.equal(body.research.failure,'provider_refused');assert.match(body.error,/Please try again/);assert.equal(plannerCalls+ordinaryCalls,before,'the refused request builds no other generation');await flush();}

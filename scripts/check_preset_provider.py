@@ -22,10 +22,13 @@ import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
 from parli.ingest import http as source_http
-import argparse, json, os, sys, time, urllib.error, urllib.parse
+import argparse, json, os, re, sys, time, urllib.error, urllib.parse
 
 OPENROUTER = "https://openrouter.ai/api/v1"
 PROMPT = "Reply with the single word: ok"
+# A zone is a plain label such as aws-ap-southeast-2-1. Anything else (a dot, slash, colon, @) could point the
+# request, and the knowledge-box token with it, at another host, so it is refused before any request is built.
+ZONE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+){1,7}")
 
 
 def _json(request, timeout=60):
@@ -81,6 +84,9 @@ def main(argv=None, environ=None):
         zone, kb, token = env.get("ARAG_ZONE"), env.get("ARAG_KB_ID"), env.get("ARAG_KB_TOKEN")
         if not (zone and kb and token):
             print("--kb needs ARAG_ZONE, ARAG_KB_ID and ARAG_KB_TOKEN")
+            return 2
+        if not ZONE.fullmatch(zone) or not re.fullmatch(r"[0-9a-fA-F-]{8,64}", kb):
+            print("--kb refused: ARAG_ZONE or ARAG_KB_ID is not in the expected form; no request was made")
             return 2
         status, generative, url, model_id = kb_slot(zone, kb, token)
         ok = status == 200 and generative == "openai-compatible" and url == OPENROUTER and model_id == args.preset

@@ -686,6 +686,13 @@ export function createResearch(options: ResearchOptions): Research {
         stats.costUsd = (stats.costUsd ?? 0) + (receipt ?? (input * inputPrice + output * outputPrice) / 1e6)
         stats.turns!.push({ round: stats.rounds + 1, input, output, cached_input: result.usage.inputTokenDetails?.cacheReadTokens ?? 0, cached: result.usage.inputTokenDetails?.cacheReadTokens ?? 0, provider: '', reasoning: result.usage.outputTokenDetails?.reasoningTokens ?? 0, input_reserve: inputTokens, ms: Date.now() - callStarted, cost_usd: receipt ?? null })
       } catch (error) {
+        // A refused final-answer request fails closed like a refused turn: whatever stopped the loop first, no
+        // other generation request is built for this question (the planner and older engine would be next).
+        if (routingRefused(error) || isResearchCreditError(error)) {
+          if (isResearchCreditError(error)) credits.exhaust()
+          failed = 'provider_refused'
+          throw new ResearchError('provider_refused', stats)
+        }
         // Asked for the answer tool, the model may still reply in prose; that prose can be the answer.
         if (ToolChoiceViolationError.isInstance(error)) heardProse(error.content)
         return null
