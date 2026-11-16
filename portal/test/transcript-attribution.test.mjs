@@ -66,9 +66,9 @@ const NSW_LATER = [
   { n: 6, folio: '605', text: 'THE COMMISSIONER: Thank you both.\n<THE WITNESSES WITHDREW\n<ROWAN JOHN PROXY, VIA VIDEO-CONFERENCE, SWORN [12.02 pm]\n<EXAMINATION BY MR SAMPLE:\nMR SAMPLE: Q. What is your role at the pathology service?\nA. I am the director of the pathology service and have been since the merger.\nQ. When did the merger take effect?\nA. The merger took effect in the winter of that year.' },
   { n: 7, folio: '606', text: 'THE COMMISSIONER: We will take the next witness.\n<THE WITNESS WITHDREW\n<SAM DUMMY, BY TELEPHONE FROM THE REGIONAL OFFICE\nMR SAMPLE: Q. Can you hear us on the telephone line?\nA. I can hear you clearly on the telephone line.' },
 ]
-const hit = (pages, n, words) => api.excerpt(pages.find(p => p.n === n).text, words, api.transcriptRoles(pages))
+const hit = (pages, n, words) => api.excerpt(pages.find(p => p.n === n).text, words, n, api.transcriptRoles(pages))
 // Each turn of a page that has words, as its role or, with no role, what opens it.
-const turnsOf = (pages, n) => { const parsed = api.pageTurns(pages.find(p => p.n === n).text), roleFor = api.transcriptRoles(pages); return parsed.turns.filter(t => t.end > t.start).map(t => roleFor(parsed, t) ?? `no role (${t.opens})`) }
+const turnsOf = (pages, n) => { const parsed = api.pageTurns(pages.find(p => p.n === n).text, n), roleFor = api.transcriptRoles(pages); return parsed.turns.filter(t => t.end > t.start).map(t => roleFor(parsed, t) ?? `no role (${t.opens})`) }
 const NAMES = /Specimen|Sample|Placeholder|Standin|Fixture|Mockup|Template|Dummy|Proxy|Example/
 
 test('Robodebt layout: the commissioner by the role word, counsel by the cover page; a witness under their own name has no role', () => {
@@ -199,7 +199,7 @@ test('coverage of the published text: every quotable page has a page number; the
     const doc = await asset(row.file), roleFor = api.transcriptRoles(doc.pages), c = seen[row.commission] ??= { pages: 0, unpaged: 0, turns: 0, roles: 0, carried: 0 }
     for (const page of doc.pages) {
       c.pages++; if (!page.folio) c.unpaged++
-      const parsed = api.pageTurns(String(page.text))
+      const parsed = api.pageTurns(String(page.text), page.n)
       for (const t of parsed.turns) {
         if (t.end <= t.start) continue
         const role = roleFor(parsed, t)

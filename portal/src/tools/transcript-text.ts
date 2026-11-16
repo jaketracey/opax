@@ -82,8 +82,8 @@ function headingOf(line: string): { heading: string, length: number } | null {
 // "Q." and "A." open turns that carry no heading of their own; the publisher also prints "Q --".
 const MARK = /^([QA])(?:[.:]| --)(?=\s|$)/
 // A line of the publisher's that is nobody's words: one opened with "<", or in capitals an examination line, an
-// adjournment or resumption, or an exhibit line ("EXHIBIT #A1 JOINT REPORT OF ...").
-const NOTE = /^(?:(?:FURTHER |CROSS[- ]|RE[- ])*EXAMINATION BY|(?:[A-Z]+ )?ADJOURNMENT\b|ADJOURNED\b|UPON RESUM|EXHIBIT #?[A-Z0-9])/
+// adjournment or resumption, or an exhibit or marked-for-identification line ("EXHIBIT #A1 JOINT REPORT OF ...", "MFI #2 ...").
+const NOTE = /^(?:(?:FURTHER |CROSS[- ]|RE[- ])*EXAMINATION BY|(?:[A-Z]+ )?ADJOURNMENT\b|ADJOURNED\b|UPON RESUM|EXHIBIT #?[A-Z0-9]|MFI ?#)/
 /** No lower-case words: bracketed times and "am"/"pm" after a figure aside. */
 const allCapitals = (line: string) => !/[a-z]/.test(line.replace(/\[[^\]]*\]|(?<=\d ?)[ap]m\b/g, ''))
 const noteLine = (line: string) => line[0] === '<' || (NOTE.test(line) && allCapitals(line))
@@ -104,15 +104,18 @@ export type PageTurn = { from: number, start: number, end: number,
  * are read one line at a time from the start of the line, never across a line break. A heading read with its
  * colon somewhere on the page, or a role in capitals, also opens a turn where the publisher dropped the colon
  * ("MR SURNAME I noticed ...", "THE WITNESS. Yes."). A note is a line of the publisher's with any capitals-only
- * lines it wraps onto; its text belongs to no turn. A word-index page or an exhibit list has no turns. Pure: the
- * same page always gives the same turns.
+ * lines it wraps onto; its text belongs to no turn. A word-index page or an exhibit list has no turns, nor does
+ * PDF page 1 when `pdfPage` says so (the cover: appearances with counsel's full names). Pure: the same page always
+ * gives the same turns.
  *
  * For a reader of the turns (roles): only a heading prints a speaker. A mark turn with no heading prints none:
  * an "A." is a witness's answer, but not which witness; a bare "Q." is a question, and the last headed "Q." must
  * not be carried forward to it (the Commissioner may have gone on, or counsel resumed). A turn that opens the page
  * or follows a note has no printed speaker either. "MR SURNAME: ." with the "Q." on the next line gives a heading
- * turn holding "." and then a bare mark turn. The heading is the publisher's, slips included. */
-export function pageTurns(page: string): { text: string, turns: PageTurn[] } {
+ * turn holding "." and then a bare mark turn. The heading is the publisher's, slips included. A heading is not
+ * always a person ("RE:" in a quoted email): take a role only from a heading that starts with a title or is a role
+ * word. */
+export function pageTurns(page: string, pdfPage?: number): { text: string, turns: PageTurn[] } {
   const lines = page.split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean)
   // Headings the page prints with a colon: the same words open a turn when the colon is missing.
   const printed = [...new Set(lines.flatMap(l => { const h = noteLine(l) || MARK.test(l) ? null : headingOf(l); return h && TITLE.test(h.heading.split(' ')[0]) ? [h.heading] : [] }))]
@@ -140,7 +143,8 @@ export function pageTurns(page: string): { text: string, turns: PageTurn[] } {
   }
   for (const t of turns) { while (t.start < t.end && text[t.start] === ' ') t.start++; if (t.start >= t.end) t.start = t.end = Math.max(t.start, t.end) }
   const listed = (pattern: RegExp) => lines.filter(l => pattern.test(l)).length
-  if (listed(REFERENCE) * 5 >= lines.length * 2 || (listed(DOCUMENT) >= 4 && listed(DOCUMENT) * 3 >= lines.length)) return { text, turns: [] }
+  const exhibits = /^Exhibit (?:List$|Document ID\b)/.test(`${lines[0] ?? ''} ${lines[1] ?? ''}`.trim()) || lines[0] === 'Exhibit List'
+  if (pdfPage === 1 || exhibits || listed(REFERENCE) * 5 >= lines.length * 2 || (listed(DOCUMENT) >= 4 && listed(DOCUMENT) * 3 >= lines.length)) return { text, turns: [] }
   return { text, turns: turns.filter((t, i) => i > 0 || t.end > t.start) }
 }
 
@@ -148,8 +152,8 @@ export function pageTurns(page: string): { text: string, turns: PageTurn[] } {
  * heading, mark or note sits in the text. A word found only in headings, marks or notes gives the words its first
  * opener is followed by, which may be none. No speaker is returned: Ask prose and citations name no one. */
 // With the transcript's roles (transcript-roles.ts), the turn's role is returned where the page makes it certain.
-export function excerpt(text: string, terms: string[], roleFor?: RoleFor): { excerpt: string, speaker_role?: SpeakerRole } {
-  const { text: flat, turns } = pageTurns(text)
+export function excerpt(text: string, terms: string[], pdfPage?: number, roleFor?: RoleFor): { excerpt: string, speaker_role?: SpeakerRole } {
+  const { text: flat, turns } = pageTurns(text, pdfPage)
   // The first place a query word is spoken wins; failing that, the first opener one is printed in.
   let spoken = -1, printed = -1
   for (const t of terms) {
@@ -193,7 +197,7 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
     if (hits.length >= max) break
     const page = pages.find(p => p.n === n) ?? {}
     const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
-      ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, roleFor) : { excerpt: null }) }
+      ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, n, roleFor) : { excerpt: null }) }
     if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) hits.push(hit)
   }
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),

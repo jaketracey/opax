@@ -128,6 +128,14 @@ test('a page is read into turns one line at a time, each with its heading as pri
   const index = ['ability [3] - 1023:4,', '1031:12, 1040:7', 'able [2] - 1011:30,', '1012:2', 'about [41] - 1001:9,'].join('\n')
   const exhibits = ['12. ABC.0001.0002.0003 Letter to the board', 'RE: the request', '13. ABC.0001.0002.0004 Reply from the board', 'FW: the reply', 'dated 1 February 2020', '14. ABC.0001.0002.0005 Minute', '15. ABC.0001.0002.0006 Email'].join('\n')
   for (const page of [index, exhibits]) { assert.deepEqual(api.pageTurns(page).turns, []); assert.deepEqual(api.excerpt(page, ['board', 'able']), { excerpt: '' }) }
+  // An exhibit list is also known by how it opens, whatever its rows hold.
+  for (const top of ['Exhibit List', 'Exhibit\nDocument ID Document title Date', 'Exhibit Document ID Document title Date']) assert.deepEqual(api.pageTurns(`${top}\n12. Letter to the board\nMS QUELLWORTH: wrote on 1 February.`).turns, [])
+  assert.equal(api.pageTurns('Exhibit 12 is the letter.\nMS QUELLWORTH: Thank you.').turns.length, 2, 'evidence that opens with the word is still read')
+  // A line marking a document for identification is a note.
+  assert.deepEqual(read('MS QUELLWORTH: I ask that it be marked.\nMFI #4 OUTLINE OF EVIDENCE OF ALEX EXAMPLE\nTHE COMMISSIONER: Yes.'), [['heading', 'MS QUELLWORTH', 'I ask that it be marked.'], ['note', null, ''], ['heading', 'THE COMMISSIONER', 'Yes.']])
+  // PDF page 1 is the cover: appearances, not evidence.
+  const cover = 'Before: The Commissioner\nMS ALEX QUELLWORTH SC, Senior Counsel Assisting\nMR SAM VANTERPOOL, for the board'
+  assert.deepEqual(api.pageTurns(cover, 1).turns, []); assert.deepEqual(api.excerpt(cover, ['counsel'], 1), { excerpt: '' }); assert.equal(api.pageTurns(cover, 2).turns.length, 1)
 })
 
 test('an excerpt is the words of one turn: no heading, mark or note in it, and no speaker', () => {
@@ -166,6 +174,9 @@ test('a page with nothing to quote is not offered as a hit', async () => {
   const three = { ...doc, terms: { vanterpool: [1, 2, 3] }, pages: [...doc.pages, { n: 3, folio: '12', text: 'MR VANTERPOOL: No questions.' }] }
   const both = await api.pageHits({ origin: 'https://opax.test', asset: async () => three }, { docs: [{ key: 'k1', file: '/transcripts/cth-example/transcript-k1.json' }] }, 'k1', ['vanterpool'])
   assert.deepEqual(both.hits.map(h => [h.pdf_page, h.excerpt]), [[2, 'Thank you.'], [3, 'No questions.']])
+  const covered = { ...doc, terms: { vanterpool: [1, 2] }, pages: [{ n: 1, folio: null, text: 'MR SAM VANTERPOOL, for the board' }, doc.pages[1]] }
+  const inside = await api.pageHits({ origin: 'https://opax.test', asset: async () => covered }, { docs: [{ key: 'k1', file: '/transcripts/cth-example/transcript-k1.json' }] }, 'k1', ['vanterpool'])
+  assert.deepEqual(inside.hits.map(h => h.pdf_page), [2], 'the cover page is never quoted')
 })
 
 /** What opens a line, read without the parser's own patterns: a note, a "Q."/"A." mark, or a heading. A heading is

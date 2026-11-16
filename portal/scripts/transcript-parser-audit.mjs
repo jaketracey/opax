@@ -42,7 +42,7 @@ for (const [d, row] of index.docs.entries()) {
   for (const page of doc.pages) {
     if (typeof page.text !== 'string') continue
     c.pages++
-    const parsed = api.pageTurns(page.text)
+    const parsed = api.pageTurns(page.text, page.n)
     for (const [i, t] of parsed.turns.entries()) {
       if (t.opens === 'note') c.notes[/EXAMINATION BY/i.test(parsed.text.slice(t.from, t.start)) ? 'examination' : 'other']++
       if (t.opens === 'heading' && parsed.turns[i - 1]?.opens === 'heading' && parsed.turns[i - 1].heading === t.heading) c.possible_label_slips++
@@ -55,7 +55,7 @@ for (const [d, row] of index.docs.entries()) {
     }
     const words = api.tokens(page.text, stop)
     if (!words.length) continue
-    const word = words[Math.floor(words.length / 2)], hit = api.excerpt(page.text, [word], roleFor)
+    const word = words[Math.floor(words.length / 2)], hit = api.excerpt(page.text, [word], page.n, roleFor)
     c.excerpts.total++
     if (!/[^.\s]/.test(hit.excerpt)) c.excerpts.empty++
     else c.excerpts[hit.speaker_role ? 'with_role' : 'no_role']++
