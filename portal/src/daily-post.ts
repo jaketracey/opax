@@ -595,7 +595,8 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
     // The line opens with the summary's first sentence: the slide says who wrote it, in a small line under it.
     note: MACHINE_SUMMARY_LABEL, photo: takePhoto(billPhotos, ids, 0),
-    alt: `${bill.title}. ${sentences[0]} ${words.statusShort}` }
+    // The alt text says who wrote the sentence, as the image now does and as the share card's alt does.
+    alt: `${bill.title}. ${MACHINE_SUMMARY_PREFIX}${sentences[0]} ${words.statusShort}` }
   const what: StorySlide = { type: 'list', kicker: 'What it does', title: `In ${dayWords(Math.min(3, sentences.length)).toLowerCase()} sentence${sentences.length > 1 ? 's' : ''}`,
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',
     alt: `What it does: ${sentences.slice(0, 3).join(' ')}` }

@@ -126,7 +126,7 @@ test('every string that states it says the same true sentence: the short text, t
   assert.equal(post.caption, [S1, 'Example Customs Bill 2026', 'Passed 19 Aug 2026. Introduced 1 Mar 2026 (Home Affairs portfolio).', `What else is in the bill?\n• ${S2}`,
     'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', 'https://opax.com.au/bill/au-federal-x2'].join('\n\n'));
   assert.equal(cover.line, `${S1} Passed 19 Aug 2026.`);
-  assert.ok(cover.alt.endsWith(`${S1} Passed 19 Aug 2026.`));
+  assert.equal(cover.alt, `Example Customs Bill 2026. Machine-written summary: ${S1} Passed 19 Aug 2026.`, 'the alt text says who wrote the sentence');
   // Main wrote the assent day under "Passed" in all four; swapping that one sentence back gives main's strings exactly.
   const asMain = v => v.replaceAll('Passed 19 Aug 2026.', 'Passed 26 Aug 2026.');
   assert.equal(asMain(post.text), `${S1}\n\nPassed 26 Aug 2026.\n\nExample Customs Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x2`);
