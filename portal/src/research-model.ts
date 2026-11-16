@@ -95,12 +95,12 @@ export function researchModelKey(model: unknown, provider: unknown, reasoning?: 
 }
 
 /**
- * True when OpenRouter answered a request by refusing to route it. OpenRouter documents no error code that
- * is specific to the privacy fields, so this takes the two statuses it documents for "no provider meets the
- * routing requirements" (https://openrouter.ai/docs/api-reference/errors, read 16 November 2026): 404, and
- * 503 unless the body's typed code says the provider was only overloaded. Ask then fails closed: no other
- * generation request is made for that question (hub ruling, 16 November 2026). Timeouts, aborts, 429 and
- * other statuses are not refusals.
+ * True when OpenRouter refused a request as sent. Ask then fails closed: no other generation request is made
+ * for that question (hub rulings, 16 November 2026). OpenRouter documents no error code specific to the privacy
+ * fields (https://openrouter.ai/docs/api-reference/errors, read 16 November 2026), so every 4xx counts except
+ * 408 (timed out) and 429 (rate limited), plus 503, the status documented for "no available model provider
+ * that meets your routing requirements", unless its typed code says the provider was only overloaded.
+ * Timeouts, aborts, 408, 429 and other 5xx are not refusals.
  */
 export function routingRefused(error: unknown): boolean {
   const seen = new Set<unknown>()
@@ -108,7 +108,7 @@ export function routingRefused(error: unknown): boolean {
     if (!value || typeof value !== 'object' || seen.has(value) || depth > 6) return false
     seen.add(value)
     const e = value as { statusCode?: unknown; responseBody?: unknown; cause?: unknown; lastError?: unknown; error?: unknown; errors?: unknown }
-    if (e.statusCode === 404) return true
+    if (typeof e.statusCode === 'number' && e.statusCode >= 400 && e.statusCode < 500) return e.statusCode !== 408 && e.statusCode !== 429
     if (e.statusCode === 503) {
       let type: unknown
       try { type = (JSON.parse(String(e.responseBody ?? '')) as { error?: { metadata?: { error_type?: unknown } } }).error?.metadata?.error_type } catch { /* no typed code */ }

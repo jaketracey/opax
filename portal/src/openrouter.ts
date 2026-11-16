@@ -6,8 +6,8 @@
 // and https://openrouter.ai/docs/features/zdr (read 16 November 2026). The
 // provider pin and allow_fallbacks come from RESEARCH_LOOP_PROVIDER as before;
 // if no pinned provider satisfies both fields, OpenRouter refuses the request
-// instead of routing it elsewhere, and Ask then fails closed with a retryable
-// error: no other generation request is built (routingRefused in
+// instead of routing it elsewhere. On any refusal (every 4xx except 408 and
+// 429, or an untyped 503) Ask fails closed with a retryable error: no other generation request is built (routingRefused in
 // research-model.ts; test/research-route.test.mjs). test/openrouter-privacy.test.mjs reads the
 // request bodies this module produces and fails if either field is missing,
 // and fails if any other module imports the OpenRouter client.

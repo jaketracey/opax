@@ -437,7 +437,7 @@ const refusal=(statusCode,type)=>Object.assign(new Error('provider returned an e
 const refusing=(error,after=0)=>{const state={calls:0};state.model=new MockLanguageModelV4({doGenerate:async()=>{state.calls++;if(state.calls<=after)return reply([call('count_speeches',countArgs)]);throw error}});return state};
 test('a refused OpenRouter route fails closed: a retryable error and no other generation request',async()=>{
  h.env.RESEARCH_LOOP='route';
- const cases=[['404',()=>refusal(404),0],['503 untyped',()=>refusal(503),0],['404 wrapped by the SDK retry error',()=>Object.assign(new Error('retry'),{lastError:refusal(404),errors:[refusal(404)]}),0],['404 on the second turn',()=>refusal(404),1]];
+ const cases=[['400',()=>refusal(400),0],['403',()=>refusal(403),0],['404',()=>refusal(404),0],['422',()=>refusal(422),0],['503 untyped',()=>refusal(503),0],['404 wrapped by the SDK retry error',()=>Object.assign(new Error('retry'),{lastError:refusal(404),errors:[refusal(404)]}),0],['404 on the second turn',()=>refusal(404),1]];
  for(const [label,make,after] of cases)for(const question of [q,'What does the record say about scrutiny?'])for(const stream of [false,true]){
   const state=refusing(make(),after);globalThis.__researchModel=state.model;
   const planner=plannerCalls,ordinary=ordinaryCalls,logged=logs.length,where=`${label} / ${question} / stream=${stream}`;
@@ -452,21 +452,23 @@ test('a refused OpenRouter route fails closed: a retryable error and no other ge
   assert.equal(logs.slice(logged).filter(r=>r.kind==='research_loop_fallback').length,0,where);
  }
 });
-test('an overloaded provider, a server error and a rate limit are not refusals: the older engine still answers',async()=>{
+test('408, 429, 5xx, an overloaded provider and a plain error are not refusals: the older engine still answers',async()=>{
  h.env.RESEARCH_LOOP='route';
- for(const [label,error] of [['503 provider_overloaded',refusal(503,'provider_overloaded')],['500',refusal(500)],['429',refusal(429)],['plain error',new Error('socket closed')]]){
+ for(const [label,error] of [['503 provider_overloaded',refusal(503,'provider_overloaded')],['500',refusal(500)],['502',refusal(502)],['504',refusal(504)],['408',refusal(408)],['429',refusal(429)],['plain error',new Error('socket closed')]]){
   const state=refusing(error);globalThis.__researchModel=state.model;const before=plannerCalls+ordinaryCalls,logged=logs.length;
   const response=await post(q),body=await response.json();await flush();
   assert.equal(response.status,200,label);assert.ok(body.answer,label);assert.ok(plannerCalls+ordinaryCalls>before,label+': fell back');
   assert.equal(logs.slice(logged).filter(r=>r.kind==='research_provider_refused').length,0,label);
  }
 });
-test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
+test('402 fails closed at once, then the credit cooldown short-circuits the next loop to the planner',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
+ {const before=plannerCalls+ordinaryCalls,response=await evalPost('loop',false),body=await response.json();assert.equal(response.status,503);assert.equal(body.research.failure,'provider_refused');assert.match(body.error,/Please try again/);assert.equal(plannerCalls+ordinaryCalls,before,'the refused request builds no other generation');await flush();}
+ // No request is sent during the cooldown, so nothing is refused: the planner answers as before.
  for(const stream of [false,true]){
   const before=plannerCalls,response=await evalPost('loop',stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);
   assert.equal(body.research.mode,'planner');assert.deepEqual(body.research.tokens,{input:11,output:6});assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(plannerCalls,before+1);await flush();
  }
- assert.equal(fake.doGenerateCalls.length,1);assert.ok(logs.filter(r=>r.reason==='research_credit_exhausted').length>=2);assert.doesNotMatch(JSON.stringify(logs),/private provider credit error|fixture-operator/);
+ assert.equal(fake.doGenerateCalls.length,1);assert.ok(logs.filter(r=>r.reason==='research_credit_exhausted').length>=2);assert.ok(logs.some(r=>r.kind==='research_provider_refused'));assert.doesNotMatch(JSON.stringify(logs),/private provider credit error|fixture-operator/);
 });
 test.after(async()=>{await flush();daily.close();crypto.subtle.timingSafeEqual=previousComparator;console.log=oldLog;delete globalThis.__researchModel;restore();});
