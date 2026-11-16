@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises'
 import { build } from 'esbuild'
 
 const built = await build({ stdin: { contents: [
-  "export {excerpt, pageTurns, pageHits, speakerName, dayWords, spanWords} from './src/tools/transcript-text'",
+  "export {excerpt, pageTurns, pageHits, dayWords, spanWords} from './src/tools/transcript-text'",
   "export {callTool} from './src/tools/index'",
   "export {transcriptListingOnly, withTranscriptNote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
   "export {groundAnswerPayload} from './src/research-grounding'",
@@ -105,9 +105,24 @@ test('a page is read into turns one line at a time, each with its heading as pri
   // A heading is read from the start of a line only, and never joins the line above.
   assert.deepEqual(api.pageTurns('<EXHIBIT 3 STATEMENT OF\nALEX EXAMPLE\nMS QUELLWORTH: Thank you.').turns.map(t => [t.opens, t.heading ?? null]), [['note', null], ['heading', 'MS QUELLWORTH']])
   assert.deepEqual(api.pageTurns('We wrote to the CE: no reply came.').turns.map(t => t.opens), ['page'])
+  const read = page => { const { text, turns } = api.pageTurns(page); return turns.map(t => [t.opens, t.heading ?? t.mark ?? null, text.slice(t.start, t.end)]) }
+  // A heading or a mark printed without its colon or full stop still opens a turn: a heading the page prints
+  // elsewhere with its colon, or a role in capitals, then a space, ".", ";" or "--".
+  assert.deepEqual(read('and that was all.\nMS QUELLWORTH I noticed before that you paused.\nA. Yes.\nQ -- "You look tired."\nTHE WITNESS thank you.\nMS QUELLWORTH: Nothing further.\nTHE COMMISSIONER; no.\nMS QUELLWORTH. Yes.\nTHE COMMISSIONER -- between the two.'), [
+    ['page', null, 'and that was all.'], ['heading', 'MS QUELLWORTH', 'I noticed before that you paused.'], ['mark', 'A', 'Yes.'], ['mark', 'Q', '"You look tired."'],
+    ['heading', 'THE WITNESS', 'thank you.'], ['heading', 'MS QUELLWORTH', 'Nothing further.'], ['heading', 'THE COMMISSIONER', 'no.'], ['heading', 'MS QUELLWORTH', 'Yes.'], ['heading', 'THE COMMISSIONER', 'between the two.']])
+  // Capital words at a line start are otherwise text, as is a name the page never prints as a heading.
+  assert.deepEqual(read('MS QUELLWORTH: I spoke to\nTHE NSW Government and to\nMR VANTERPOOL about it, and to\nMS QUELLWORTH SC and others.'), [['heading', 'MS QUELLWORTH', 'I spoke to THE NSW Government and to MR VANTERPOOL about it, and to MS QUELLWORTH SC and others.']])
+  // Title case is counsel addressing a witness, not a heading; a role word alone is one.
+  assert.deepEqual(read('MS QUELLWORTH: Thank you.\nDr Thrupple: at the time you were in charge?\nCommissioner: Go on.'), [['heading', 'MS QUELLWORTH', 'Thank you. Dr Thrupple: at the time you were in charge?'], ['heading', 'Commissioner', 'Go on.']])
+  // A run holding a digit or a quote mark, or a long run of capitals with no title, is not a speaker's heading.
+  assert.deepEqual(read('MS QUELLWORTH: I tender these.\nABC.0001.0002.0003_R RE: the request\n‘RE: the reply\nA SYSTEM ON THE BRINK OF COLLAPSE: a report\nAND We: so declare.').map(t => t[0]), ['heading'])
+  // An examination line, an adjournment and an exhibit line are notes with or without the "<".
+  assert.deepEqual(read('MS QUELLWORTH: Thank you.\nSHORT ADJOURNMENT\nTHE COMMISSIONER: Yes.\nEXHIBIT #A1 JOINT REPORT OF ALEX EXAMPLE\nAND ANOTHER [ABC.0001.0002.0003]\nFURTHER EXAMINATION BY MS QUELLWORTH:\nMS QUELLWORTH: Q. One more matter.\nADJOURNED TO THURSDAY AT 10AM'), [
+    ['heading', 'MS QUELLWORTH', 'Thank you.'], ['note', null, ''], ['heading', 'THE COMMISSIONER', 'Yes.'], ['note', null, ''], ['mark', 'MS QUELLWORTH', 'One more matter.'], ['note', null, '']])
   // A word index and an exhibit list are not hearing turns.
   const index = ['ability [3] - 1023:4,', '1031:12, 1040:7', 'able [2] - 1011:30,', '1012:2', 'about [41] - 1001:9,'].join('\n')
-  const exhibits = ['12. ABC.0001.0002.0003 Letter to the board', '13. ABC.0001.0002.0004 Reply from the board', 'dated 1 February 2020', '14. ABC.0001.0002.0005 Minute', '15. ABC.0001.0002.0006 Email'].join('\n')
+  const exhibits = ['12. ABC.0001.0002.0003 Letter to the board', 'RE: the request', '13. ABC.0001.0002.0004 Reply from the board', 'FW: the reply', 'dated 1 February 2020', '14. ABC.0001.0002.0005 Minute', '15. ABC.0001.0002.0006 Email'].join('\n')
   for (const page of [index, exhibits]) { assert.deepEqual(api.pageTurns(page).turns, []); assert.deepEqual(api.excerpt(page, ['board', 'able']), { excerpt: '' }) }
 })
 
@@ -125,6 +140,9 @@ test('an excerpt is the words of one turn: no heading, mark or note in it, and n
   assert.deepEqual(quote('vanterpool'), { excerpt: 'Nor from me.' })
   assert.deepEqual(quote('senator'), { excerpt: 'May I add a point.' })
   assert.deepEqual(quote('exhibit'), { excerpt: '' })
+  // A word printed in a note or a heading and spoken later on the page is quoted where it is spoken.
+  assert.deepEqual(api.excerpt('<EXHIBIT 4 STATEMENT ON AVERAGING\nMS QUELLWORTH: I tender it.\nA. The averaging was wrong.', ['averaging']), { excerpt: 'The averaging was wrong.' })
+  assert.deepEqual(api.excerpt('MS QUELLWORTH: Thank you.\nTHE COMMISSIONER: Ms Quellworth, go on.', ['quellworth']), { excerpt: 'Ms Quellworth, go on.' })
   assert.deepEqual(quote('withdrew'), { excerpt: '' })
   // A page of headings only, as before.
   const page = 'that is the position.\nMS QUELLWORTH: Thank you, Commissioner. I want to ask about income averaging and how\nthe scheme applied it to each debt.\nCOMMISSIONER: Yes.\nMR VANTERPOOL SC: Income averaging was raised later.'
@@ -133,8 +151,6 @@ test('an excerpt is the words of one turn: no heading, mark or note in it, and n
   // A long turn is cut at words, inside the turn.
   const long = api.excerpt(`MS QUELLWORTH: ${'word '.repeat(40)}averaging ${'more '.repeat(80)}\nCOMMISSIONER: Yes.`, ['averaging'])
   assert.match(long.excerpt, /^\.\.\.word .*averaging more .* more\.\.\.$/); assert.ok(long.excerpt.length < 300)
-  assert.equal(api.speakerName('MS HOGAN-DORAN'), 'Ms Hogan-Doran'); assert.equal(api.speakerName('MR LANCASTER SC'), 'Mr Lancaster SC')
-  assert.equal(api.speakerName('McLEOD'), 'McLeod'); assert.equal(api.speakerName("MR O'BRIEN"), "Mr O'Brien"); assert.equal(api.speakerName('THE COMMISSIONER'), 'The Commissioner')
 })
 
 test('a page with nothing to quote is not offered as a hit', async () => {
@@ -142,17 +158,39 @@ test('a page with nothing to quote is not offered as a hit', async () => {
     pages: [{ n: 1, folio: '10', text: 'The evidence closed.\nMR VANTERPOOL:' }, { n: 2, folio: '11', text: 'MR VANTERPOOL: Thank you.' }] }
   const found = await api.pageHits({ origin: 'https://opax.test', asset: async () => doc }, { docs: [{ key: 'k1', file: '/transcripts/cth-example/transcript-k1.json' }] }, 'k1', ['vanterpool'])
   assert.deepEqual(found.hits, [{ pdf_page: 2, transcript_page: '11', url: 'https://example.test/day-1.pdf#page=2', excerpt: 'Thank you.' }])
+  // The best two pages are chosen among those with something to quote: an empty page does not cost a place.
+  const three = { ...doc, terms: { vanterpool: [1, 2, 3] }, pages: [...doc.pages, { n: 3, folio: '12', text: 'MR VANTERPOOL: No questions.' }] }
+  const both = await api.pageHits({ origin: 'https://opax.test', asset: async () => three }, { docs: [{ key: 'k1', file: '/transcripts/cth-example/transcript-k1.json' }] }, 'k1', ['vanterpool'])
+  assert.deepEqual(both.hits.map(h => [h.pdf_page, h.excerpt]), [[2, 'Thank you.'], [3, 'No questions.']])
 })
 
-/** What opens a line, read without the parser's own patterns: a note, a "Q."/"A." mark, or a heading (a short
- * run before a colon that is mostly capital letters, or a role word alone). */
-function opener(line, afterNote) {
-  if (line[0] === '<') return 'note'
-  if ((line[0] === 'Q' || line[0] === 'A') && (line[1] === '.' || line[1] === ':') && (line.length === 2 || line[2] === ' ')) return 'mark'
+/** What opens a line, read without the parser's own patterns: a note, a "Q."/"A." mark, or a heading. A heading is
+ * a short run before a colon that is nearly all capital letters with no digit or quote mark, or a role word alone;
+ * or, with no colon, a role in capitals or a run the page heads another line with, then a space, ".", ";" or "--".
+ * `heads` is every such colon heading on the page. */
+const hasLower = line => [...line.replace(/\[[^\]]*\]/g, '').replace(/(\d ?)[ap]m\b/g, '$1')].some(ch => ch !== ch.toUpperCase())
+function colonHeading(line) {
   const colon = line.indexOf(':'), head = colon > 0 && colon <= 70 && (colon + 1 === line.length || ' :'.includes(line[colon + 1])) ? line.slice(0, colon).trim() : ''
-  const letters = [...head].filter(ch => ch.toLowerCase() !== ch.toUpperCase()), capitals = letters.filter(ch => ch === ch.toUpperCase()).length
-  if (head && head.split(' ').length <= 8 && ((capitals >= 2 && capitals >= 0.7 * letters.length) || ['commissioner', 'the commissioner', 'the witness', 'chair'].includes(head.toLowerCase()))) return 'heading'
-  return afterNote && ![...line.replace(/\[[^\]]*\]/g, '')].some(ch => ch !== ch.toUpperCase()) ? 'note' : null
+  if (!head) return null
+  if (['commissioner', 'the commissioner', 'the witness', 'chair'].includes(head.toLowerCase())) return head
+  const letters = [...head].filter(ch => ch.toLowerCase() !== ch.toUpperCase()), lower = letters.filter(ch => ch !== ch.toUpperCase()).length, count = head.split(' ').length
+  const titled = ['THE', 'MR', 'MS', 'MRS', 'DR', 'PROFESSOR', 'PROF', 'A/PROFESSOR', 'A/PROF', 'ASSOCIATE', 'SENATOR', 'COMMISSIONER'].includes(head.split(' ')[0])
+  return letters.length - lower >= 2 && lower * 5 < letters.length && !/[\d"“”‘]/.test(head) && (count <= 4 || (titled && count <= 8)) ? head : null
+}
+function opener(line, afterNote, heads) {
+  const words = line.split(' ')
+  if (line[0] === '<') return 'note'
+  if (!hasLower(line) && (line.includes('EXAMINATION BY') && line.indexOf('EXAMINATION BY') <= 14 || words[0] === 'ADJOURNMENT' || words[1] === 'ADJOURNMENT' || words[0] === 'ADJOURNED' || line.startsWith('UPON RESUM') || (words[0] === 'EXHIBIT' && words.length > 1))) return 'note'
+  if ((line[0] === 'Q' || line[0] === 'A') && (line[1] === '.' || line[1] === ':' || line.slice(1, 4) === ' --') && (line.length === 2 || line[2] === ' ' || line.slice(1, 4) === ' --')) return 'mark'
+  if (colonHeading(line)) return 'heading'
+  for (const head of ['THE COMMISSIONER', 'THE WITNESS', 'COMMISSIONER', ...heads]) {
+    const rest = line.startsWith(head) ? line.slice(head.length) : null
+    if (rest === null) continue
+    if (rest === '.' || rest === ';' || rest.startsWith('. ') || rest.startsWith('; ') || rest.startsWith(' -- ')) return 'heading'
+    const next = rest[0] === ' ' ? rest.slice(1).split(' ')[0] : null
+    if (next && !(next.length > 1 && next === next.toUpperCase() && /[A-Z]$/.test(next.replace(/[^A-Za-z]/g, '') || 'a') && /^[A-Z]/.test(next))) return 'heading'
+  }
+  return afterNote && !hasLower(line) ? 'note' : null
 }
 
 test('over every quotable page: no excerpt holds a heading, a mark or a note line, and nothing names a speaker', async () => {
@@ -181,15 +219,16 @@ test('over every quotable page: no excerpt holds a heading, a mark or a note lin
       // Where each opening line starts, and the stretch no excerpt may touch: a whole note line, or the first
       // character of a heading or mark line (an excerpt that held it would hold the heading or the mark).
       const barred = [], search = new Set()
+      const heads = [...new Set(lines.map(l => l[0] === '<' ? null : colonHeading(l)).filter(h => h && h === h.toUpperCase() && h.includes(' ')))].sort((a, b) => b.length - a.length)
       let at = 0, kind = null
       const found = flat.toLowerCase().match(/[a-z]{5,}/g) ?? []
       if (found.length) search.add(found[found.length >> 1])
       for (const [i, line] of lines.entries()) {
-        kind = opener(line, kind === 'note')
+        kind = opener(line, kind === 'note', heads)
         if (kind) {
           barred.push([at, kind === 'note' ? at + line.length : at + 1])
           // Search for the words of the opener itself, the word before it and the first long word after it.
-          const own = (kind === 'heading' ? line.slice(0, line.indexOf(':')) : kind === 'note' ? line : '').toLowerCase().match(/[a-z0-9]{2,}/g) ?? []
+          const own = (kind === 'heading' ? line.slice(0, line.includes(':') ? line.indexOf(':') : 30) : kind === 'note' ? line : '').toLowerCase().match(/[a-z0-9]{2,}/g) ?? []
           for (const w of [...own.slice(0, 5), (lines[i - 1] ?? '').toLowerCase().match(/[a-z]{3,}/g)?.at(-1), line.slice(line.indexOf(':') + 1).toLowerCase().match(/[a-z]{4,}/)?.[0]]) if (w) search.add(w)
         }
         at += line.length + 1

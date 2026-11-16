@@ -86,26 +86,26 @@ test('catalogue filters discard the wrong chamber and period before ranking; leg
   assert.equal(api.matchesCatalogFilters(meta,new URLSearchParams({since:'2027-01-01'})),false)
   assert.equal(api.matchesCatalogFilters(meta.slice(0,7),new URLSearchParams({chamber:'senate'})),false)
 })
-const text=`Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 10 March 2023 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Preston: "Income averaging did not make sense to me." transcript page P-4933 (PDF page 49), hearing turn by Mr Scott: "Do you agree that this approach described income averaging?" ${api.TRANSCRIPT_LABEL}. © Commonwealth of Australia, licensed under CC BY 4.0.`
+const text=`Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 10 March 2023 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Quellworth: "Income averaging did not make sense to me." transcript page P-4933 (PDF page 49), hearing turn by Mr Vanterpool: "Do you agree that this approach described income averaging?" ${api.TRANSCRIPT_LABEL}. © Commonwealth of Australia, licensed under CC BY 4.0.`
 const facts=()=>api.writingFacts(undefined,[{id:1,text,kind:'record',cite:{kind:'record',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',label:text}}])
 const input=()=>({question:'What did witnesses at the Robodebt Royal Commission say about income averaging?',period:{kind:'all',label:'All time'},facts:facts()})
 function validRanges(payload){for(const [id,ranges]of Object.entries(payload.citations)){assert.ok(payload.sources.some(s=>id===s.resource||id.startsWith(s.resource+'/')));for(const [a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(payload.answer).length)}}
 test('transcript writing uses separate attributed turns, preserves licence in cards, and fallback is short cited prose',()=>{
-  const f=facts();assert.equal(f.length,2);assert.equal(f[0].source.speaker,'Ms Preston');assert.equal(f[1].source.speaker,'Mr Scott')
+  const f=facts();assert.equal(f.length,2);assert.equal(f[0].source.speaker,'Ms Quellworth');assert.equal(f[1].source.speaker,'Mr Vanterpool')
   assert.equal(api.transcriptListingOnly(f),false,'attributed excerpt facts still reach the writer');assert.equal(f[0].transcript.day,'46');assert.equal(f[0].transcript.page,'P-4899')
   assert.doesNotMatch(f[0].text,/©|CC BY/);assert.match(f[0].source.snippet,/CC BY 4.0/)
-  const out=api.proseFallback(input());assert.match(out.answer,/Ms Preston said on hearing day 46 \(10 March 2023\)/);assert.match(out.answer,/Mr Scott asked/)
+  const out=api.proseFallback(input());assert.match(out.answer,/Ms Quellworth said on hearing day 46 \(10 March 2023\)/);assert.match(out.answer,/Mr Vanterpool asked/)
   assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
-  const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/Ms Preston/);validRanges(grounded)
+  const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/Ms Quellworth/);validRanges(grounded)
   assert.match(api.writingPrompt(input()),/names no speaker is attributed to the transcript, never to a named person/)
 })
 test('writer accepts a named, dated transcript summary; an unverified quotation stays as paraphrase',()=>{
-  const raw={answer_decision:'answer',sentences:[{text:'Ms Preston said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1]}]}
-  const out=api.verifyWrittenAnswer(raw,input());assert.ok(out);assert.match(out.answer,/Ms Preston/);validRanges(out)
-  const bad=api.verifyWrittenAnswer({...raw,sentences:[{...raw.sentences[0],text:'Ms Preston said on hearing day 46 that “A fabricated quote.”'}]},input())
+  const raw={answer_decision:'answer',sentences:[{text:'Ms Quellworth said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1]}]}
+  const out=api.verifyWrittenAnswer(raw,input());assert.ok(out);assert.match(out.answer,/Ms Quellworth/);validRanges(out)
+  const bad=api.verifyWrittenAnswer({...raw,sentences:[{...raw.sentences[0],text:'Ms Quellworth said on hearing day 46 that “A fabricated quote.”'}]},input())
   const grounded=api.groundAnswerPayload(bad,input().question)
-  assert.match(grounded.answer,/Ms Preston said on hearing day 46 that A fabricated quote/);assert.doesNotMatch(grounded.answer,/“A fabricated/)
+  assert.match(grounded.answer,/Ms Quellworth said on hearing day 46 that A fabricated quote/);assert.doesNotMatch(grounded.answer,/“A fabricated/)
 })
 test('suppression, non-publication and pseudonymous records never provide quote facts',()=>{
   for(const reason of ['suppression order','non-publication order','pseudonymous witness']){
@@ -139,7 +139,7 @@ test('repeated final grounding of an unsplit transcript record never restores th
   const source={resource:'fact-1',slug:'',kind:'record',title:text,snippet:text,url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',href:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',cited:true}
   const fallback=api.proseFallback({...input(),facts:[{id:1,text,source}]})
   assert.doesNotMatch(fallback.answer,/PDF page|CC BY|transcript page|©/)
-  assert.match(fallback.answer,/Ms Preston said on hearing day 46/)
+  assert.match(fallback.answer,/Ms Quellworth said on hearing day 46/)
   validRanges(fallback)
   const draft='Invented Witness said “A fabricated quote.” on hearing day 99.'
   let out={answer:draft,answer_decision:'answer',citations:{'fact-1/t/body/0':[[0,Array.from(draft).length]]},sources:[source]}
