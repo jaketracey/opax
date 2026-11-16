@@ -102,7 +102,7 @@ test('a parliamentary question in hearing-style wording, or one that only mentio
  h.env.RESEARCH_LOOP='route';
  const failing=first=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(first&&n++===0)return reply([first]);throw new Error('provider went away')}})};
  const FIXED='OPAX cannot establish the requested answer from the selected records.';
- for(const question of ['What did witnesses tell the Senate inquiry into consulting services?','Did Labor promise a royal commission into veterans suicide in Parliament?','What did the Senate inquiry into healthcare funding hear?'])for(const stream of [false,true]){
+ for(const question of ['What did witnesses tell the Senate inquiry into consulting services?','Did Labor promise a royal commission into veterans suicide in Parliament?','What did the Senate inquiry into healthcare funding hear?','What did witnesses tell the inquiry into supermarket prices?','Which senators called for a royal commission into banking?'])for(const stream of [false,true]){
   globalThis.__researchModel=failing(null);const ordinary=ordinaryCalls;
   const response=await post(question,stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
   assert.equal(response.status,200,raw.slice(0,300));assert.equal(body.research.mode,'planner',question);assert.ok(ordinaryCalls>ordinary,'the older engine answered: '+question);assert.notEqual(body.answer,FIXED,question);

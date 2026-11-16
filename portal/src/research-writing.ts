@@ -329,6 +329,11 @@ function factLine(text:string):string {
   if(rawToolEcho(text))return ''
   return text&&finish(text.replace(/[:;,\s]+$/,''))
 }
+/** The one place this rule is switched: where the research model labelled its selection, a code-quoted fallback shows
+ * only the excerpts whose label was kept, and the fixed line NO_PASSAGE_SELECTED when none was. `selected` is set
+ * only when the model's answer call carried labels (research-loop.ts); a call with none, or a stopped run, quotes the
+ * held excerpts as before. */
+const LABELLED_EXCERPTS_ONLY = true
 /** When no model words the excerpts (a stopped or failed writer, a stopped run), up to this many are quoted, each
  * whole as the tool cut it (280 characters at most). Cutting one to a single sentence left stubs like “Alright.” */
 const QUOTED_AS_RECORDED = 6
@@ -339,8 +344,8 @@ function transcriptLines(input: WritingInput): WrittenSentence[] | null {
   // with none labelled the reader gets one fixed line, never a block of passages nobody judged to be on point.
   // A stopped run made no selection: its held excerpts are quoted as before.
   const labelled = held.filter(f => f.bears_on)
-  if (input.selected && !labelled.length && aboutHearing(input.question)) return [{ text: NO_PASSAGE_SELECTED, facts: [] }]
-  const turns = labelled.length ? labelled : held
+  if (LABELLED_EXCERPTS_ONLY && input.selected && !labelled.length && aboutHearing(input.question)) return [{ text: NO_PASSAGE_SELECTED, facts: [] }]
+  const turns = LABELLED_EXCERPTS_ONLY && labelled.length ? labelled : held
   const seen = new Set<string>()
   const lines = turns.filter(f => { const t = f.transcript!, id = (t.speaker ?? '') + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, QUOTED_AS_RECORDED).map(f => {
     const t = f.transcript!, verb = /\?\s*$/.test(t.excerpt) ? 'asked' : 'said'

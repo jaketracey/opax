@@ -25,6 +25,9 @@ export interface ResearchPayload {
   reserved_cost_usd?: number
   /** Hearing transcript excerpts a stopped run held, for the code-quoted fallback; taken off before a reply is sent. */
   held_transcripts?: { text: string; url: string }[]
+  /** Hearing excerpts handed to the writer: how many, how many carry a label the research model gave that was kept,
+   * and whether its answer call sent labels at all. For reports; not shown to readers. */
+  excerpt_labels?: { held: number; labelled: number; sent: boolean }
   mode: 'loop' | 'planner' | 'hearing_fallback'
   rounds: number
   trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]

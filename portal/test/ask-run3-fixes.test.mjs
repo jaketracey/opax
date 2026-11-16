@@ -476,3 +476,101 @@ test('every call that writes prose is told what it may say about a gap: that the
   assert.ok(model.doGenerateCalls.length >= 2)
   for (const made of model.doGenerateCalls) assert.ok(JSON.stringify(made.prompt).includes('say \\"the passages found don\'t address this\\" and stop there.'), JSON.stringify(made.prompt).slice(0, 200))
 })
+
+// ---- Delta review at f026725a4 ----
+test('the bare word "inquiry" is not a commission: a hearing-style question about an unnamed inquiry is a Hansard question', () => {
+  for (const q of ['What did witnesses tell the inquiry into supermarket prices?', 'What evidence was given at the inquiry into consulting services?', 'Which senators called for a royal commission into banking?', 'What did MPs tell the inquiry about aged care?']) {
+    assert.equal(api.hearingEvidenceQuestion(q), false, q); assert.equal(api.quotedOrNothing(q), false, q)
+  }
+  // An inquiry that is named as a commission, by a commission phrase or a registered name, is one.
+  for (const q of ['What did witnesses tell the Special Commission of Inquiry into Healthcare Funding about locums?', 'What evidence was given at the NSW Healthcare Funding inquiry about duress alarms?', 'What evidence was given at the Robodebt Royal Commission about income averaging?'])
+    assert.equal(api.hearingEvidenceQuestion(q), true, q)
+})
+
+test('a hearing answer that cites none of the excerpts its writer was given is not used: the labelled excerpts are quoted, or one fixed line', async () => {
+  const q = 'What evidence was given at the Example Royal Commission about the executive minute?'
+  const texts = [excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.'), excerpt('P-4901', 'Nobody raised the legal advice at that meeting.')]
+  const facts = labels => api.writingFacts(undefined, texts.map((text, i) => ({ id: i + 1, text, cite: { kind: 'record', url: `https://commission.example/day46.pdf#page=${i + 1}`, label: text } }))).map((f, i) => labels[i] ? { ...f, bears_on: labels[i] } : f)
+  // The reviewer's case: one general-knowledge sentence naming a person, with an empty facts list.
+  const uncited = () => new MockLanguageModelV4({ doGenerate: async () => says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: 'Mr Placeholder approved income averaging in 2015 and the scheme was later found unlawful.', facts: [] }] })) })
+  const run = async input => { const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }; const out = await writerWith(uncited())(input, stats, undefined, 20000); return { out, stats } }
+  // The research model labelled one excerpt: that one is quoted, the other is not.
+  const one = await run({ question: q, period, facts: facts(['the executive minute', undefined]), selected: true })
+  assert.equal(one.stats.coherence.fallback_reason, 'check_failed'); assert.equal(one.out.machine_written, false)
+  assert.equal(one.out.answer, 'The hearing transcript records on hearing day 46 (10 March 2023): “The executive minute was prepared in the department and went to the committee in March.”')
+  // It sent labels and none was usable: the fixed line, never a block of passages nobody judged to be on point.
+  const none = await run({ question: q, period, facts: facts([]), selected: true })
+  assert.equal(none.out.answer, 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.')
+  assert.equal(none.out.machine_written, false); assert.deepEqual(none.out.citations, {}); assert.doesNotMatch(none.out.answer, /Placeholder/)
+  // It sent no labels at all (or the run stopped before any answer call): the held excerpts are quoted, as before.
+  const unlabelled = await run({ question: q, period, facts: facts([]) })
+  assert.equal(unlabelled.out.answer.split('\n\n').length, 2); assert.doesNotMatch(unlabelled.out.answer, /Placeholder|OPAX found passages/)
+  // A sentence that does cite an excerpt keeps the writer's answer.
+  const good = 'The transcript records: “Nobody raised the legal advice at that meeting.”'
+  const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+  const kept = await writerWith(new MockLanguageModelV4({ doGenerate: async () => says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: good, facts: [2] }] })) }))({ question: q, period, facts: facts([]), selected: true }, stats, undefined, 20000)
+  assert.equal(kept.answer, good); assert.equal(stats.coherence.fallback, undefined)
+  // Another kind of question may be answered whole from other records with an excerpt among its facts.
+  const grant = { id: 3, text: 'Example Health Ltd was awarded a grant of $120,000 by the Department of Health in 2023-24.', cite: { kind: 'record', url: 'https://opax.test/grants/example', label: 'Example Health grant' } }
+  const mixed = api.writingFacts(undefined, [{ id: 1, text: texts[0], cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=1', label: texts[0] } }, grant])
+  const other = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+  const answered = await writerWith(new MockLanguageModelV4({ doGenerate: async () => says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: 'Example Health Ltd was awarded a grant of $120,000 in 2023-24.', facts: [mixed.find(f => !f.transcript).id] }] })) }))({ question: 'Which grants did Example Health receive?', period, facts: mixed }, other, undefined, 20000)
+  assert.match(answered.answer, /\$120,000/); assert.equal(other.coherence.fallback, undefined)
+})
+
+test('the run records how many excerpts carried a kept label, and the labelled ones are what a failed writer falls back to', async () => {
+  const q = 'What evidence was given at the Robodebt Royal Commission about income averaging?'
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async () => { call++
+    if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 2 })
+    if (call === 2) return calls('answer', { facts: [2, 3], bears_on: { 2: 'income averaging', 3: 'somebody said averaging was unlawful' } })
+    return says('I am unable to produce JSON today.') } })
+  const research = api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() })
+  const out = await api.runAgentic(q, { ...offline, research }, async () => {}, 40000, undefined, {}, nobody)
+  assert.equal(out.answered, true)
+  const { held, labelled, sent } = out.research.excerpt_labels
+  assert.equal(sent, true); assert.ok(held >= labelled && labelled >= 1, JSON.stringify(out.research.excerpt_labels))
+  // Only the labelled excerpts (fact 2's) are quoted.
+  const lines = out.answer.split('\n\n').filter(line => /^The hearing transcript records/.test(line))
+  assert.equal(lines.length, Math.min(6, labelled), out.answer)
+})
+
+test('the last resort of a stopped run keeps a transcript listing and its count for a question they can answer, and leaves out only excerpts', async () => {
+  // The reviewer's case: a listing lookup, then the provider fails.
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async () => { call++; if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', limit: 3 }); throw new Error('provider went away') } })
+  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+  const out = await api.runAgentic('How long did the Robodebt Royal Commission sit?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody)
+  assert.equal(out.answered, true); assert.match(out.answer, /OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023/)
+})
+
+test('unreadable writer output: escapes are read as JSON reads them, and a sentence with no facts list is passed over, not merged', () => {
+  const broken = '{"sentences":[{"text":"The transcript records: \\u201cIt went in "March" that year.\\u201d","facts":[1]},{"text":"A sentence with no facts list."},{"text":"A third sentence.","facts":[2],"coverage":false}]}'
+  assert.throws(() => JSON.parse(broken))
+  assert.deepEqual(api.writtenSentences(broken).sentences, [{ text: 'The transcript records: “It went in "March" that year.”', facts: [1] }, { text: 'A third sentence.', facts: [2], coverage: false }])
+})
+
+test('prose the research model returns in another script is left out, and the text form in another script is not used', async () => {
+  const run = async answer => {
+    let call = 0
+    const model = new MockLanguageModelV4({ doGenerate: async () => { call++; return call === 1 ? calls('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 }) : answer } })
+    const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+    return api.runAgentic('What did the Robodebt Royal Commission recommend about debts?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => ({ answer: '' }))
+  }
+  const prose = await run(says('The Royal Commission made recommendations about the recovery of debts and how they are raised.\n委员会的最终报告发现，该计划在没有所需立法修改的情况下被内阁批准并继续进行。'))
+  assert.doesNotMatch(String(prose.answer), /委员会/)
+  const text = await run(calls('answer', { text: '委员会的最终报告发现，该计划在没有所需立法修改的情况下被内阁批准并继续进行。', citations: [] }))
+  assert.doesNotMatch(String(text.answer), /委员会/)
+})
+
+test('the search-further line is for questions about a hearing or its evidence only', async () => {
+  const shown = async question => {
+    let call = 0
+    const model = new MockLanguageModelV4({ doGenerate: async () => { call++; return call === 1 ? calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 1 }) : says('not json') } })
+    const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+    await api.runAgentic(question, { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
+    return JSON.stringify(model.doGenerateCalls[1].prompt).includes('Transcript searches list the newest matching hearing days first')
+  }
+  assert.equal(await shown('What did the Robodebt Royal Commission hear about income averaging?'), true)
+  assert.equal(await shown('What did the Robodebt Royal Commission recommend about debts?'), false)
+})

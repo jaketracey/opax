@@ -665,6 +665,10 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
     const sheet = writingFacts(recordAnswer, facts, run.notes)
     for (const f of sheet) { const label = factNotes[/^fact-(\d+)/.exec(f.source.resource)?.[1] ?? '']; if (label && f.transcript) f.bears_on = label }
+    // For the run's record only: how many of the excerpts handed to the writer carry a kept label, and whether the
+    // research model sent labels at all. Shows how reliable the labels are.
+    const excerpts = sheet.filter(f => f.transcript && !f.coverage)
+    if (run.research && excerpts.length) run.research.excerpt_labels = { held: excerpts.length, labelled: excerpts.filter(f => f.bears_on).length, sent: selected }
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
