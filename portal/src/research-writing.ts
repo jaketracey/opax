@@ -335,7 +335,7 @@ function factLine(text:string):string {
 /** A fact from a hearing transcript: a quotable turn, or any other row carrying the transcript label. */
 export const hearingFact = (f: WritingFact): boolean => !!f.transcript || f.text.includes(TRANSCRIPT_LABEL)
 /** The fixed line the quotation block opens with. The evidence, not findings line stays the one the way out adds. */
-export const QUOTES_LEAD = 'Here is what the hearing transcripts record on this, in the order it was heard.'
+export const QUOTES_LEAD = 'These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.'
 const QUOTES_SHOWN = 6
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
 const heardOn = (date?: string): number => { const m = /^(\d{1,2}) ([A-Za-z]+) (\d{4})$/.exec(date ?? ''); return m ? Date.UTC(Number(m[3]), Math.max(0, MONTHS.indexOf(m[2].toLowerCase())), Number(m[1])) : Number.MAX_SAFE_INTEGER }
@@ -348,7 +348,13 @@ const pageNumber = (page: string): number => { const digits = page.replace(/\D+/
  * one commission, each line opens with its commission's name. */
 function transcriptBlock(input: WritingInput): WrittenSentence[] | null {
   const seen = new Set<string>()
-  const chosen = input.facts.filter(f => f.transcript && !f.coverage).filter(f => { const t = f.transcript!, id = `${t.date ?? ''}|${t.page}|${t.excerpt}`; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, QUOTES_SHOWN)
+  const held = input.facts.filter(f => f.transcript && !f.coverage)
+  if (!held.length) return null
+  // The relevance floor: where the research model labelled its selection, only the excerpts whose label was kept are
+  // shown; with none kept, one fixed line stands where the block would, never passages nobody judged to be on point.
+  const labelled = held.filter(f => f.bears_on)
+  if (LABELLED_EXCERPTS_ONLY && input.selected && !labelled.length) return [{ text: NO_PASSAGE_SELECTED, facts: [] }]
+  const chosen = (LABELLED_EXCERPTS_ONLY && labelled.length ? labelled : held).filter(f => { const t = f.transcript!, id = `${t.date ?? ''}|${t.page}|${t.excerpt}`; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, QUOTES_SHOWN)
   if (!chosen.length) return null
   const ordered = chosen.map((f, i) => ({ f, i })).sort((a, b) => heardOn(a.f.transcript!.date) - heardOn(b.f.transcript!.date) || pageNumber(a.f.transcript!.page) - pageNumber(b.f.transcript!.page) || a.i - b.i).map(o => o.f)
   const body = (f: WritingFact) => /^The transcript of (.+?)(?: on hearing day \d+| \(\d{1,2} [A-Z][a-z]+ \d{4}\)|, transcript page )/.exec(f.text)?.[1] ?? ''
@@ -472,6 +478,8 @@ export function quotationBlock(input: WritingInput): QualitativeAnswer | null {
   const lines = transcriptBlock(input)
   return lines ? { ...assemble(lines, input), answer_decision: 'answer', machine_written: false } : null
 }
+/** One fixed line as an answer part, with nothing cited (transcript quotes-only switch). */
+export const fixedLine = (text: string): QualitativeAnswer => ({ answer: text, citations: {}, sources: [], answer_decision: 'answer', machine_written: false })
 /** One answer after another: the second's text, citations and sources follow the first's, with nothing reworded. */
 export function joinWritten(first: QualitativeAnswer, second: QualitativeAnswer): QualitativeAnswer {
   if (!first.answer.trim()) return second

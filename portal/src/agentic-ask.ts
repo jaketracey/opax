@@ -31,7 +31,8 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
-import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION, quotationBlock, joinWritten, hearingFact } from './research-writing'
+import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION, quotationBlock, joinWritten, hearingFact, fixedLine } from './research-writing'
+import { commissionHearingQuestion, NO_PASSAGE_FOUND } from './transcript-answer'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
@@ -682,8 +683,14 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // no hearing transcript fact is in the writer's prompt. The writer words the other records, above the block.
     const quotesOnly=!!deps.research.transcriptQuotesOnly
     if(quotesOnly&&run.research)run.research.transcript_quotes_only=true
-    const block=quotesOnly?quotationBlock({question,period,facts:sheet}):null
-    const writerFacts=block?sheet.filter(f=>!hearingFact(f)):sheet
+    // A hearing question under the switch (transcript-answer.ts commissionHearingQuestion): no model sentence may say
+    // what the transcripts record or lack, so the writer is given no transcript-labelled row of any kind (an
+    // excerpt, a listing, a count, a not-quoted pointer). Where the quotations would stand with no excerpt held,
+    // one fixed line says what OPAX did.
+    const hearingAsked=quotesOnly&&commissionHearingQuestion(question)
+    const searched=run.steps.some(s=>s.tool==='royal_commissions'&&(s.args as {view?:unknown}|undefined)?.view==='transcripts')
+    const block=!quotesOnly?null:quotationBlock({question,period,facts:sheet,...(selected?{selected:true}:{})})??(hearingAsked&&searched?fixedLine(NO_PASSAGE_FOUND):null)
+    const writerFacts=block||hearingAsked?sheet.filter(f=>!hearingFact(f)):sheet
     const said=(run.passage_answer?.answer??'').split(/\n+/).map(line=>line.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
     const input={question,period,facts:writerFacts,...(quotesOnly?{quotesOnly:true}:{}),...(selected?{selected:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written

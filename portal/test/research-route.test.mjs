@@ -101,7 +101,7 @@ test('a failed loop on a hearing-evidence question never reaches the older engin
 test('transcript quotes only, through the handler: off by default; on, a hearing answer is the code-quoted block in JSON and SSE, says so in its record, and has its own cache entry',async()=>{
  h.env.RESEARCH_LOOP='route';
  const hearing='What evidence was given at the Robodebt Royal Commission about income averaging?';
- const LEAD='Here is what the hearing transcripts record on this, in the order it was heard.',LINE=/^Hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+(?:, the (?:question put|reply))?: “[^”]+”$/;
+ const LEAD='These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.',LINE=/^Hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+(?:, the (?:question put|reply))?: “[^”]+”$/;
  const robodebt=call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1});
  // Research searches the transcript text, then selects the excerpts; a third call would be the writer.
  const answered=()=>new MockLanguageModelV4({doGenerate:[reply([robodebt]),reply([call('answer',{facts:[2]})]),{...reply([]),content:[{type:'text',text:JSON.stringify({sentences:[{text:'A sentence a model wrote about the hearing.',facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'}}]});
@@ -112,7 +112,7 @@ test('transcript quotes only, through the handler: off by default; on, a hearing
    // Off (no variable, no key): the writer words the answer and the record carries no switch field.
    delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;
    const offModel=answered(),off=await ask(stream,offModel);
-   assert.equal(off.research.mode,'loop');assert.equal('transcript_quotes_only' in off.research,false);assert.doesNotMatch(off.answer,/Here is what the hearing transcripts record/);
+   assert.equal(off.research.mode,'loop');assert.equal('transcript_quotes_only' in off.research,false);assert.doesNotMatch(off.answer,/These passages from the hearing transcripts matched your question/);
    assert.equal(offModel.doGenerateCalls.length,3,'the writer was called');
    // On: the block, no writer call, one closing evidence line, and the record says which state it ran under.
    h.env.ASK_TRANSCRIPT_QUOTES_ONLY='on';
@@ -128,7 +128,7 @@ test('transcript quotes only, through the handler: off by default; on, a hearing
    assert.equal(stopped.answer.split('\n\n')[0],LEAD,stopped.answer);assert.equal(stopped.research.transcript_quotes_only,true);assert.equal(stopped.machine_written,false);
    // "off" in the variable is off, whatever the key says.
    h.env.ASK_TRANSCRIPT_QUOTES_ONLY='off';
-   const forced=await ask(stream,answered());assert.equal('transcript_quotes_only' in forced.research,false);assert.doesNotMatch(forced.answer,/Here is what the hearing transcripts record/);
+   const forced=await ask(stream,answered());assert.equal('transcript_quotes_only' in forced.research,false);assert.doesNotMatch(forced.answer,/These passages from the hearing transcripts matched your question/);
   }
   // The answer cache: an answer written under one state is never served under the other.
   const previousCaches=globalThis.caches,edge=new Map(),shared=new Map();globalThis.caches={default:{match:async k=>edge.get(k.url)?.clone(),put:async(k,r)=>edge.set(k.url,new Response(await r.text(),r))}};

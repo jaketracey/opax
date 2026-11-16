@@ -26,7 +26,7 @@ globalThis.fetch = async () => { throw Error('These tests must not make network 
 test.after(() => { globalThis.fetch = savedFetch })
 
 const LABEL = 'Hearing transcript: evidence, not findings'
-const LEAD = 'Here is what the hearing transcripts record on this, in the order it was heard.'
+const LEAD = 'These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.'
 const period = { kind: 'all', label: 'All time' }
 const named = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
 const hearingQuestion = 'What evidence was given at the Example Royal Commission about the executive minute?'
@@ -204,7 +204,7 @@ test('a hearing-evidence question with the switch on: the answer is the block an
   assert.doesNotMatch(on.out.answer, /Quellworth|A written sentence/)
   // Off: the writer is called and words the excerpts, as before this change, and the record carries no switch field.
   const off = await run(false)
-  assert.equal(off.calls, 3); assert.doesNotMatch(off.out.answer, /Here is what the hearing transcripts record/); assert.equal('transcript_quotes_only' in off.out.research, false)
+  assert.equal(off.calls, 3); assert.doesNotMatch(off.out.answer, /These passages from the hearing transcripts matched your question/); assert.equal('transcript_quotes_only' in off.out.research, false)
 })
 
 test('a mixed answer with the switch on: the writer is given no transcript fact and words the other records above the block; uncited points and the text form are not shown', async () => {
@@ -248,5 +248,5 @@ test('a mixed answer with the switch on: the writer is given no transcript fact 
   assert.ok(legacy.out.answer.split('\n\n').includes(LEAD), legacy.out.answer)
   // Off, the same text form is the answer the stack gives today.
   const before = await run({ text: 'Ms Quellworth told the commission the department knew averaging was unlawful.', citations: [] }, false)
-  assert.doesNotMatch(before.out.answer, /Here is what the hearing transcripts record/)
+  assert.doesNotMatch(before.out.answer, /These passages from the hearing transcripts matched your question/)
 })

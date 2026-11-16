@@ -24,7 +24,7 @@ import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agenti
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
-import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, TRANSCRIPT_POINT_RULE, transcriptPassage, hearingWorded } from './transcript-answer'
+import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, TRANSCRIPT_POINT_RULE, transcriptPassage, hearingWorded, commissionHearingQuestion } from './transcript-answer'
 import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, failedQuotations, looseQuotationOf, otherScript, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
@@ -471,7 +471,7 @@ export function createResearch(options: ResearchOptions): Research {
     const factPassages = (): Map<string, Passage> => {
       const { all, tools, coverage } = recordFacts(), out = new Map<string, Passage>()
       // A hearing transcript excerpt is never a point's passage: it is read from its record, and the writer words it.
-      for (const f of all) if (tools.has(f.id) && !coverage.has(f.id) && f.cite.url && !transcriptPassage(f.text)) out.set(`fact-${f.id}`, { id: `fact-${f.id}`, resource: `fact-${f.id}`, slug: '', title: f.cite.label, text: f.text, url: f.cite.url, kind: f.cite.kind })
+      for (const f of all) if (tools.has(f.id) && !coverage.has(f.id) && f.cite.url && !transcriptPassage(f.text) && !(options.transcriptQuotesOnly && f.text.includes(TRANSCRIPT_LABEL))) out.set(`fact-${f.id}`, { id: `fact-${f.id}`, resource: `fact-${f.id}`, slug: '', title: f.cite.label, text: f.text, url: f.cite.url, kind: f.cite.kind })
       return out
     }
     const citeRecordFacts = (points: unknown[], facts: Map<string, Passage>): unknown[] => points.map(raw => {
@@ -611,7 +611,7 @@ export function createResearch(options: ResearchOptions): Research {
       // own prose is shown only where a point cites a record that is not a hearing transcript. A point that cites
       // nothing, and the legacy text form, could word the evidence with no citation to check it against, so neither
       // is shown; the excerpts are quoted by code instead.
-      const quotesOnly = !!options.transcriptQuotesOnly && !hearing && holdsExcerpt()
+      const quotesOnly = !!options.transcriptQuotesOnly && !hearing && (holdsExcerpt() || commissionHearingQuestion(question))
       if (quotesOnly && Array.isArray(pointArgs)) {
         const offered = pointArgs as unknown[], before = offered.length
         pointArgs = offered.filter(raw => { const id = object(citeRecordFacts([raw], recordPassages)[0]).id; return typeof id === 'string' && citable.has(id) })
@@ -814,7 +814,7 @@ export function createResearch(options: ResearchOptions): Research {
       if (!text) return null
       // Transcript quotes only: prose that cites nothing is not shown on a hearing-evidence question or once an
       // excerpt is held. The answer is then the next thing the run has: its answer call, or the excerpts quoted by code.
-      if (options.transcriptQuotesOnly && (hearingEvidenceQuestion(question) || holdsExcerpt())) return null
+      if (options.transcriptQuotesOnly && (commissionHearingQuestion(question) || holdsExcerpt())) return null
       const held = passagesAnswer(passages, question)
       const offset = held ? Array.from(text).length + 2 : 0
       const points: QualitativeAnswer = held

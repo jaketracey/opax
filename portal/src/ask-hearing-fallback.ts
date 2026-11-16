@@ -2,7 +2,7 @@
  * Never model prose from another engine: the older engine answers from unrelated passages and general knowledge,
  * and a hearing-evidence answer with no hearing source must not be shown. The reader gets the transcript excerpts
  * research did hold, quoted by code as recorded, or else one fixed line. */
-import { hearingEvidenceQuestion, transcriptPassage, TRANSCRIPT_LABEL, parliamentaryQuestion, hearingWorded, namesRegisteredCommission } from './transcript-answer'
+import { hearingEvidenceQuestion, transcriptPassage, TRANSCRIPT_LABEL, parliamentaryQuestion, hearingWorded, namesRegisteredCommission, NO_PASSAGE_FOUND } from './transcript-answer'
 export { namesRegisteredCommission }
 import { proseFallback, writingFacts } from './research-writing'
 import { NO_SUPPORTED_ANSWER } from './research-evidence'
@@ -54,5 +54,7 @@ export function hearingFallbackPayload(question: string, found: { sources?: unkn
     const quoted = proseFallback({ question, period: inferPeriod(question), facts, ...(quotesOnly ? { quotesOnly: true } : {}) })
     if (/[\p{L}\p{N}]/u.test(quoted.answer)) return { answered: true, ...quoted, answer_decision: 'answer', machine_written: false, followups: [], research }
   }
-  return { answered: true, answer: NO_SUPPORTED_ANSWER, answer_decision: 'limitation', citations: {}, sources: [], machine_written: false, followups: [], research }
+  // With the quotes-only switch on, a run that searched the transcripts and holds nothing says so in the fixed words.
+  const searchedNothing = quotesOnly && Array.isArray(found?.held_transcripts) && !held.length
+  return { answered: true, answer: searchedNothing ? NO_PASSAGE_FOUND : NO_SUPPORTED_ANSWER, answer_decision: 'limitation', citations: {}, sources: [], machine_written: false, followups: [], research }
 }

@@ -16,6 +16,15 @@ const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flat
 /** Whether a question names a registered commission or inquiry, as a whole phrase, whatever the case or punctuation
  * (commission-names.json, built from the registry). */
 export const namesRegisteredCommission = (question: string): boolean => { const q = squashed(question); return REGISTERED.some(name => q.includes(name)) }
+/** The fixed line where a hearing answer's quotations would stand, when the run searched the hearing transcripts and
+ * holds no excerpt (transcript quotes-only switch). It says what OPAX did, not what the record holds. */
+export const NO_PASSAGE_FOUND = 'OPAX searched the hearing transcripts for this question and found no matching passage.'
+/** With the transcript quotes-only switch on, a question that names a commission (by a commission phrase or a
+ * registered name), uses a word for a hearing or its evidence and does not name Parliament is a hearing question,
+ * whether or not it is worded as the narrow hearingEvidenceQuestion wants ("Who gave evidence to the ... inquiry
+ * about ..." is not). For such a question no model sentence may say what the transcripts record or lack. */
+export const commissionHearingQuestion = (question: string): boolean => hearingEvidenceQuestion(question) ||
+  hearingWorded(question) && !parliamentaryQuestion(question) && (COMMISSION_WORDS.test(question.slice(0, 2000)) || namesRegisteredCommission(question.slice(0, 2000)))
 /** The fixed line for a hearing answer whose excerpts were found but none was selected as answering the question. */
 export const NO_PASSAGE_SELECTED = 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.'
 /** Whether a question names Parliament or one of its bodies. Such a question is about Hansard unless it also names a
