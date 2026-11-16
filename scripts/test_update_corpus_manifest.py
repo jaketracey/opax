@@ -452,8 +452,12 @@ class CommittedManifest(unittest.TestCase):
         counts = self.corpus["refresh"]["resource_counts"]
         live = {"resources": self.corpus["expected_resources"], "kinds": dict(counts),
                 "sources": {s: 0 for s in ucm.SOURCES}}
-        new, res = ucm.compute(copy.deepcopy(self.corpus), live, {"complete": False, "steps": {}, "newest": {}},
-                               {}, None, date(2026, 9, 29), NOW)
+        # A night that runs a weekly or monthly group switches the Senate backfill off (nightly.sh) and the
+        # manifest records it; an unchanged box keeps whatever the committed file says.
+        backfill = "1" if self.corpus["refresh"].get("senate_backfill_enabled", True) else "0"
+        with patch.dict('os.environ', {"OPAX_SENATE_BACKFILL": backfill}):
+            new, res = ucm.compute(copy.deepcopy(self.corpus), live, {"complete": False, "steps": {}, "newest": {}},
+                                   {}, None, date(2026, 9, 29), NOW)
         self.assertFalse(res["changed"])
         self.assertEqual(new, self.corpus)
 
