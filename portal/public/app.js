@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=db8977e3ec").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=f1aaa3b6f2").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=0f8215c3cf").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=c17f5c9889").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -64,9 +64,9 @@ const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => {
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=f264a22cd2').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=eacf49b0b1').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=ffd32d5678').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=bde9ce7b53').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -389,6 +389,18 @@ function partyChipHTML(party, opts) { return uiLabels.partyLabelHTML(party, opts
 function statusLabelHTML(word, tone) { return uiLabels.statusLabelHTML(word, tone); }
 function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
+/** The error notice under stored machine-written text (labels.js MachineNotice): one grey line directly under a
+ *  brief, a summary or a list of briefs. `notice` is the Worker's `machine_notice` where the response had one. */
+function machineNoticeHTML(opts) { return uiLabels.machineNoticeHTML(opts); }
+// The words /api/brief last sent with its briefs; the lists of briefs print them under the list.
+let briefNotice = "";
+/** Puts the notice beside a list of briefs that filled in after the list was drawn; once, never twice. A short
+ *  list takes it directly under ("afterend"); a long one at its head ("beforebegin"), where it is seen. */
+function ensureListNotice(list, where = "afterend", notice = briefNotice) {
+  const beside = where === "beforebegin" ? list?.previousElementSibling : list?.nextElementSibling;
+  if (!list || beside?.matches?.(".answer-notice")) return;
+  list.insertAdjacentHTML(where, machineNoticeHTML({ notice }));
+}
 /** Answers a language model did not write: a calculation from the records, a list of passages, a note that the
  *  records do not cover the question, or a prompt to narrow it. Everything else Ask shows is model-written. */
 const NOT_MODEL_WRITTEN = new Set(["calculated", "evidence_only", "evidence_gap", "needs_scope", "needs_period", "needs_question"]);
@@ -637,7 +649,9 @@ async function fetchBriefMap(resources) {
   for (let i = 0; i < rids.length; i += 24) {
     const query = new URLSearchParams({ rids: rids.slice(i, i + 24).join(",") });
     try {
-      Object.assign(briefs, (await api(`/api/brief?${query}`)).briefs || {});
+      const data = await api(`/api/brief?${query}`);
+      if (typeof data.machine_notice === "string" && data.machine_notice) briefNotice = data.machine_notice;
+      Object.assign(briefs, data.briefs || {});
     } catch { /* missing briefs leave their passages in place */ }
   }
   return briefs;
@@ -1645,7 +1659,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=ddab2e7d34' : '/ledger.js?v=a4c0381c59');
+    const mod = await import(grants ? '/grants.js?v=62edfbfc9f' : '/ledger.js?v=80ef285ef6');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1676,7 +1690,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=50379b7794');
+    const mod = await import('/money-explain.js?v=dfbb422c7e');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1695,7 +1709,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=b0970d1145');
+    const mod = await import('/grant-recipient.js?v=24190110f1');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1948,7 +1962,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=5582d9243b");
+    const module = await import("/suppliers.js?v=12b6555906");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5673,7 +5687,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=7ededa022f'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=94a695b9ef'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -6016,7 +6030,7 @@ async function renderPartyMentions(label, sections, key) {
           return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(result.slug)}`)} class="source-title doc-title">${esc(displayTitle(result))}</a>
             <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
             <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? machineLabelHTML({ inline: true, className: "party-brief-label" }) : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p>${excerptNoticeHTML(result)}</li>`;
-        }).join("")}</ul>`;
+        }).join("")}</ul>${results.some((result) => briefs[result.resource]) ? machineNoticeHTML({ notice: briefNotice }) : ""}`;
     };
     paint({});
     const briefs = await fetchBriefMap(results);
@@ -7094,7 +7108,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
           </span></a>${isMultiSpeaker(r) ? speechIdentityHTML(r) : ""}${excerptNoticeHTML(r)}</li>`;
-      }).join("")}</ul>
+      }).join("")}</ul>${any ? machineNoticeHTML({ notice: briefNotice }) : ""}
       ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun}</a></p>`}
       ${opts.notes || ""}
       ${sourceLineHTML({
@@ -7121,6 +7135,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   });
   const headRow = slot.querySelector(".person-section-head");
   if (headRow && !headRow.querySelector(".ui-machine")) headRow.insertAdjacentHTML("beforeend", machine());
+  ensureListNotice(slot.querySelector(".speech-rows"));
 }
 
 function splitSpeechSearch(speaker) {
@@ -7493,6 +7508,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
               passage.replaceWith(p, open);
             }
           }
+          if (results.some((r) => briefs[r.resource])) ensureListNotice(mount.querySelector('.topic-arc-list'), 'beforebegin');
           const counts = mount.querySelector('.topic-arc-counts');
           if (counts) {
             const n = results.filter((r) => briefs[r.resource]).length;
@@ -7522,7 +7538,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
           <button type="button" class="ui-button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
         </div></div>
         ${topicArcVoicesHTML(results, briefCount)}
-        <ol class="topic-arc-list">${rowsHTML(items)}</ol>
+        ${briefCount ? machineNoticeHTML({ notice: briefNotice }) : ""}<ol class="topic-arc-list">${rowsHTML(items)}</ol>
         <p class="fineprint topic-arc-note">Machine briefs are automated summaries and stand in for the passage where one exists; passages are extracts from the record, opened by the title. This view shows the newest labelled matches, not the whole debate.</p>
         <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
         ${items.length < results.length ? `<button type="button" class="ui-button" data-ui-size="compact" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
@@ -7857,7 +7873,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=2a3385c4ab").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=72d3d92c4d").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8988,9 +9004,11 @@ async function openBillText(bill) {
   const generation = billTextGeneration;
   const slot = $('bill-text-slot');
   try {
-    const module = await import('/bill-text.js?v=p3f-20261010');
+    const module = await import('/bill-text.js?v=p3f-20261116');
     if (generation !== billTextGeneration || billView !== `bill:${bill.key}` || !slot?.isConnected) return;
     const handle = billTextHandle = module.mountBillText(slot, { bill,
+      // The error notice under the model's overview of a version, in the shared wording (labels.js).
+      machineNotice: uiLabels.machineNoticeText(),
       requestedVersion: new URLSearchParams(location.search).get('text-version'),
       open: location.hash === '#bill-full-text',
       onVersion(id) {
@@ -9775,7 +9793,7 @@ function billSpeechesHTML(bill) {
   return `<section class="ui-section bill-section">
     <div class="ui-section-head bill-section-head"><h2 class="ui-section-title">What was said</h2>${
       briefs ? machineLabelHTML({ note: BILL_SPEECH_BRIEF_NOTE }) : ""}</div>
-    <ul class="ui-list bill-speeches" role="list">${rows}</ul>
+    <ul class="ui-list bill-speeches" role="list">${rows}</ul>${briefs ? machineNoticeHTML() : ""}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "Parliamentary Hansard",
       notes: [`Speeches the record attaches to this bill${speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}.
@@ -9833,6 +9851,7 @@ function billSummaryHTML(bill) {
     ${changes.length ? `<h3 class="bill-sub">What it changes</h3>
       <ul class="bill-changes">${changes.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>` : ""}
     ${s.affected ? `<h3 class="bill-sub">Who is affected</h3><p class="bill-affected">${esc(s.affected)}</p>` : ""}
+    ${machineNoticeHTML()}
     ${sourceLineHTML({
       // The day the summary was written; the material's own date is in the sheet.
       updated: String(s.generated_at || "").slice(0, 10), dateLabel: "Summary written", source: basis, originals,
@@ -10073,6 +10092,7 @@ async function fillBillPeek(details, entry) {
       || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
     ${growthModules.summaryWrittenHTML(summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
+    ${machineNoticeHTML()}
     <p class="fineprint">${esc(billStatusLine(entry))}.</p>
     ${foot}`;
 }
@@ -10267,6 +10287,7 @@ async function renderDocBillPanel(doc, slug) {
     ? `<div class="doc-bill-machine">${machineLabelHTML({ notRecord: true, note: `${bill.summary.attribution
          || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
        <p class="doc-bill-sentence">${esc(first)}</p>
+       ${machineNoticeHTML()}
        ${growthModules.summaryWrittenHTML(bill.summary)}`
     : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
 }
@@ -10294,7 +10315,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=50379b7794"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=dfbb422c7e"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10310,14 +10331,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=5f1b3fb8c5", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=09ee665884", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=a4c0381c59", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ddab2e7d34", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=80ef285ef6", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=62edfbfc9f", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ecea1859b2", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=05ceb3ffc0", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -13239,6 +13260,7 @@ function clearSearchResults() {
     briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
+  syncSearchBriefsNotice();
   $("results-bar").hidden = true;
   $("search-date-ruler").hidden = true;
   $("search-date-ruler").replaceChildren();
@@ -13306,6 +13328,16 @@ function syncSearchReadBar() {
     // briefs say what they are in words, the same in either mode.
     status.textContent = `${count} ${count === 1 ? "has a machine-written brief" : "have machine-written briefs"}; the rest show the record's own text.`;
   }
+}
+
+/** One error notice at the head of the results while any row shows machine-written text: a bill row whose text
+ *  is its summary (`machine`), or, in Briefs mode, a record's brief. Gone otherwise. The Worker's words. */
+function syncSearchBriefsNotice(results = []) {
+  const list = $("search-results");
+  if (list.previousElementSibling?.matches(".search-machine-notice")) list.previousElementSibling.remove();
+  const shown = results.some((r) => Object.hasOwn(r, "href") ? r.machine === true
+    : searchReadMode === "briefs" && r.kind !== "division" && !!lastSearch.briefs[r.resource]);
+  if (shown) list.insertAdjacentHTML("beforebegin", machineNoticeHTML({ notice: lastSearch.machine_notice || briefNotice, className: "search-machine-notice" }));
 }
 
 function setSearchReadMode(mode) {
@@ -13389,6 +13421,9 @@ function renderResults(results) {
       return li;
     }),
   );
+  // Rows that carry machine-written text (a bill's summary, or a brief in Briefs mode): one error notice at the
+  // head of the list, never one per row.
+  syncSearchBriefsNotice(results);
   decorateMetaPortraits($("search-results"));
   requestAnimationFrame(refreshSearchPassageFolds);
 }
@@ -13831,6 +13866,8 @@ async function runSearch(page = 1) {
       years: data.years || {},
       briefs: {},
       briefsLoading: true,
+      // The Worker's error notice for rows that carry a bill's machine-written summary.
+      machine_notice: typeof data.machine_notice === "string" ? data.machine_notice : "",
     };
     if (!data.count) {
       hideLoader("search-wombat");
@@ -14380,8 +14417,11 @@ async function openDocPage(slug, manageFocus) {
     }), { pageType: "doc", id: "doc-next-steps" }) || "";
     $("doc-next").innerHTML = nextHTML;
     $("doc-next").hidden = !nextHTML;
+    // The error notice sits directly under the brief, in the Worker's words (machine_notice).
+    $("doc-brief").querySelector(".answer-notice")?.remove();
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
+      $("doc-brief-text").insertAdjacentHTML("afterend", machineNoticeHTML({ notice: doc.machine_notice }));
       $("doc-brief").hidden = false;
     }
     // The pill says what wrote the brief; its sheet says from what.
@@ -14556,7 +14596,7 @@ async function renderDocSimilar(doc) {
           <p class="doc-related-meta">${esc([label === row.speaker ? "" : row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
           <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>${excerptNoticeHTML(row)}
           <p class="doc-related-meta">${brief ? machineLabelHTML({ inline: true }) : "Passage from the record"}</p></li>`;
-      }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
+      }).join("")}</ul>${rows.some((row) => briefs[row.resource]) ? machineNoticeHTML({ notice: briefNotice }) : ""}` : '<p>No related speeches found for this subject.</p>') +
       `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
         <button type="button" class="ui-button" data-doc-close="doc-similar">Close similar</button></div>`;
   } catch {
@@ -15843,6 +15883,8 @@ function renderReportV2(report, slug) {
     const sources = Array.isArray(report.lede.sources) ? report.lede.sources : [];
     reportRenderProse(lede, report.lede.text, sources);
     head.appendChild(lede);
+    // The error notice for the whole report, directly under its opening and above the opening's sources.
+    head.insertAdjacentHTML("beforeend", machineNoticeHTML({ className: "report-notice" }));
     if (sources.length) head.appendChild(reportSourcesFold(sources, "Sources for this opening"));
     reportWireCitations(head, sources);
   }

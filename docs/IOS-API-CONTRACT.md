@@ -168,7 +168,22 @@ A client must not match on the wording or keep its own copy: it prints whatever 
 
 `/api/ask` sets it at its single exit (`apiAskReply` in `portal/src/index.ts`, with `portal/src/machine-notice.ts`), so both engines, blocking JSON, the streamed `done` frame, a cached answer and a cached replay all carry it; an answer cached before the field existed gains it as it is served. `delta` frames never carry it: only a model's words stream, so a client may hold the line's place from the first `delta` and fill it from `done`. `/api/search-summary` (JSON and its `done` frame) and `/api/journey-story` carry the default wording on every written overview or story. `/api/followups` returns suggested questions, not answers, and has no notice. Voice `ask_opax` results do not carry the field (the spoken form is not built).
 
-The field is additive. The shipped Ask decoders (`decodeAnswer` in `mobile/src/features/ask/model.ts` at tags `ios-1.1.3-b57` and `ios-1.1.4-b73`, the same JavaScript on Android) copy a fixed list of known keys out of the payload and never reject or enumerate unknown ones, and the stream reader hands the `done` payload to the same decoder, so shipped builds ignore the field. The apps read and print it from version 1.1.6.
+The field is additive. The shipped Ask decoders (`decodeAnswer` in `mobile/src/features/ask/model.ts` at tags `ios-1.1.3-b57` and `ios-1.1.4-b73`, the same JavaScript on Android) copy a fixed list of known keys out of the payload and never reject or enumerate unknown ones, and the stream reader hands the `done` payload to the same decoder, so shipped builds ignore the field. The apps will read and print it from version 1.1.6.
+
+#### `machine_notice` on stored machine-written text
+
+Text a model wrote earlier, which OPAX stores and shows under the "Machine-written" label, carries the same field with the default wording, and a client prints it the same way: directly under that text, or once under a list of briefs. It is set as the response leaves for a reader (`storedNoticeResponse` in `portal/src/machine-notice.ts`, at the public exit in `portal/src/index.ts`), after every cache, so cached copies and the Worker's own reads of these routes (Ask research, the MCP tools, voice) are unchanged.
+
+| Response | Carries `machine_notice` when | Absent when |
+| --- | --- | --- |
+| GET `/api/resource/:slug` | `summary` (the stored brief) is a non-empty string | `summary` is null: no brief written, or a short speech turn |
+| GET `/api/brief` | `briefs` holds at least one brief | `briefs` is empty |
+| GET `/api/search`, GET `/api/search-all` | a row in `results` has `machine: true` (a bill row whose `snippet` is its summary sentences) | no such row |
+| GET `/bill-texts/<key>/<version>.json` | `enrichment.brief` (a model's overview of that version) is a non-empty string | no overview; the `index.json` file |
+
+The field is a top-level sibling of `summary`, `briefs` and `results`, never inside them. None of this text is a summary of a hearing transcript, so the transcript wording is not used here. Static files a model's text is read from (`/bills/<key>.json` `summary` and `speeches[].brief`, `/years/<year>.json` `brief`, `/reports/<slug>.json`) are files, not API responses, and carry no field; the web prints the same fixed words from `portal/public/machine-notice.js`. `/api/suggest` and `/api/app/v1/edition/latest` are unchanged: the edition decoder in shipped apps rejects any key it does not name.
+
+Shipped decoders at tag `ios-1.1.4-b73` read named keys through `shape` (`mobile/src/api/validation.ts`) and drop unknown top-level keys: `decodeDocument` (`mobile/src/features/records/model.ts`) for the record, the `{briefs}` shape in `mobile/src/features/people/model.ts` for briefs, and the search page decoders in `mobile/src/features/search/decoders.ts` and `mobile/src/api/catalog-decoders.ts` for search, and `decodeBillText` (`mobile/src/features/records/model.ts`) for a bill text version. So shipped builds ignore the field.
 
 | Method and path | Input and output | Source / cost class | Auth; internal cache; limits; blocks |
 | --- | --- | --- | --- |

@@ -1,4 +1,5 @@
 import type { RecordRow } from './tools/published-records'
+import { machineNoticeHTML } from '../public/party-page.js'
 
 const object = (value: unknown): RecordRow => value && typeof value === 'object' && !Array.isArray(value) ? value as RecordRow : {}
 const records = (value: unknown): RecordRow[] => Array.isArray(value) ? value.filter(v => v && typeof v === 'object' && !Array.isArray(v)) : []
@@ -203,7 +204,7 @@ function summaryPart(r: ReportDetail, mainDocument: string): Part | null {
   const own = s.own_summary && url(s.own_summary.url) ? `<p class="rr-record-text rr-own-summary">${esc(s.own_summary.label)}: ${link(s.own_summary.url,
     [s.own_summary.heading, pages(s.own_summary.first_page, s.own_summary.last_page)].filter(Boolean).join(', '))}</p>` : ''
   const generated = `<div class="rr-generated"><p class="ui-section-note rr-generated-label">${esc(s.generated.label)}</p><ul class="rr-summary-lines" role="list">` +
-    lines.map(x => `<li><p class="rr-record-text">${esc(x.text)}</p><p class="rr-cite-line">${x.cites.map(c => citeLink(c, mainDocument)).filter(Boolean).join(' · ')}</p></li>`).join('') + `</ul></div>`
+    lines.map(x => `<li><p class="rr-record-text">${esc(x.text)}</p><p class="rr-cite-line">${x.cites.map(c => citeLink(c, mainDocument)).filter(Boolean).join(' · ')}</p></li>`).join('') + `</ul>${machineNoticeHTML()}</div>`
   const quotes = s.quotes.items.length ? `<h3 class="ui-subsection-title">${esc(s.quotes.label)}</h3><ol class="rr-items" role="list">` +
     s.quotes.items.map(q => `<li class="rr-item"><div class="rr-item-head"><span class="ui-status rr-kind">${esc(human(q.kind))}</span></div><blockquote class="rr-quote">${prose(q.quote, 'rr-item-text')}</blockquote>${citeLine(q.cite, mainDocument)}</li>`).join('') + `</ol>` : ''
   return { id: 'summary', title: 'Summary', html: own + generated + quotes }

@@ -5,18 +5,30 @@ import { MACHINE_NOTICE, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten 
 import { transcriptNote } from '../public/transcript-note.js'
 export { MACHINE_NOTICE, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten }
 
+type Row = Record<string, unknown>
+const row = (payload: unknown): Row | null => payload && typeof payload === 'object' && !Array.isArray(payload) ? payload as Row : null
+/** The payload carrying exactly this notice: added or corrected when there is one, and a notice left on a payload
+ * no model wrote (a stale key from an older copy) taken off. Unchanged payloads come back as the same object. */
+function carrying<T>(payload: T, notice: string | null): T {
+  const p = row(payload)
+  if (!p) return payload
+  if (notice === null) {
+    if (!('machine_notice' in p)) return payload
+    const { machine_notice: _stale, ...rest } = p
+    return rest as T
+  }
+  return p.machine_notice === notice ? payload : { ...payload, machine_notice: notice }
+}
+
 /** The payload with its notice. The transcript wording goes by the test the evidence line uses: a cited source
  * row that is a hearing transcript. The answer itself is never read or changed. */
 export function withMachineNotice<T>(payload: T): T {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return payload
-  const notice = machineNotice(payload, transcriptNote((payload as { sources?: unknown }).sources) !== null)
-  if (notice === null || (payload as { machine_notice?: unknown }).machine_notice === notice) return payload
-  return { ...payload, machine_notice: notice }
+  const p = row(payload)
+  return p ? carrying(payload, machineNotice(p, transcriptNote(p.sources) !== null)) : payload
 }
 
-type Row = Record<string, unknown>
-const row = (payload: unknown): Row | null => payload && typeof payload === 'object' && !Array.isArray(payload) ? payload as Row : null
-const noticed = <T>(payload: T, written: boolean): T => written && (payload as Row).machine_notice !== MACHINE_NOTICE ? { ...payload, machine_notice: MACHINE_NOTICE } : payload
+const noticed = <T>(payload: T, written: boolean): T => row(payload) ? carrying(payload, written ? MACHINE_NOTICE : null) : payload
+const words = (value: unknown): boolean => typeof value === 'string' && value.trim() !== ''
 
 /** A search overview ("Summarise these records", /api/search-summary): a model writes every point it holds. An
  * empty result set has no points and no notice. */
@@ -29,6 +41,51 @@ export function withSummaryNotice<T>(payload: T): T {
 export function withStoryNotice<T>(payload: T): T {
   const p = row(payload)
   return noticed(payload, !!p && p.generated === true && Array.isArray(p.steps) && p.steps.length > 0)
+}
+
+/* Stored machine-written text: text a model wrote earlier, which OPAX keeps and shows under the Machine-written
+ * label. The same line goes under it, in the default wording. None of it is a summary of a hearing transcript:
+ * briefs are written for the speeches, releases and documents /api/resource serves, and bill summaries for bills. */
+
+/** A record (/api/resource/<slug>): its brief, `summary`, is written by a model from the record's own text. */
+export function withRecordNotice<T>(payload: T): T {
+  return noticed(payload, words(row(payload)?.summary))
+}
+
+/** Briefs by resource id (/api/brief): every value is a brief a model wrote. No briefs, no notice. */
+export function withBriefsNotice<T>(payload: T): T {
+  const briefs = row(row(payload)?.briefs)
+  return noticed(payload, !!briefs && Object.values(briefs).some(words))
+}
+
+/** Search results (/api/search, /api/search-all): a row marked `machine` carries a bill's summary sentences in its
+ * snippet (scripts/build_search_catalog.mjs). /api/suggest is left as it is: its rows are shown by title only. */
+export function withResultsNotice<T>(payload: T): T {
+  const results = row(payload)?.results
+  return noticed(payload, Array.isArray(results) && results.some(r => row(r)?.machine === true && words(row(r)?.snippet)))
+}
+
+/** A bill text version (/bill-texts/<key>/<version>.json): `enrichment.brief` is a model's overview of that
+ * version, shown as "In this version". The index file and a version with no overview carry no notice. */
+export function withBillTextNotice<T>(payload: T): T {
+  return noticed(payload, words(row(row(payload)?.enrichment)?.brief))
+}
+
+/** The map for a public API path that serves stored machine-written text, or null. */
+export function storedNoticeMap(pathname: string): (<T>(payload: T) => T) | null {
+  if (pathname === '/api/brief') return withBriefsNotice
+  if (/^\/bill-texts\/[^/]+\/[^/]+\.json$/.test(pathname) && !pathname.endsWith('/index.json')) return withBillTextNotice
+  if (/^\/api\/resource\/[^/]+$/.test(pathname)) return withRecordNotice
+  if (pathname === '/api/search' || pathname === '/api/search-all') return withResultsNotice
+  return null
+}
+
+/** A public reply with the notice for the stored machine-written text it carries. It is added as the reply leaves
+ * for a reader, after every cache and after the display rules, so cached copies and the Worker's own reads of
+ * these routes (Ask research, the MCP tools, voice) are as they were. */
+export function storedNoticeResponse(response: Response, pathname: string): Promise<Response> {
+  const map = storedNoticeMap(pathname)
+  return map ? mapAnswerPayload(response, map) : Promise.resolve(response)
 }
 
 /** A JSON reply, or the `done` frame of a streamed one, with its payload passed through `map`. Every other frame

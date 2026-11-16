@@ -345,7 +345,12 @@ test('recent-vote answers only use the separate OPAX export and omit an empty vo
 });
 test('raw bill labels its summary machine-written, with stages, sponsor/portfolio, divisions and source links',async()=>{
   const html=await get('/bill/au-federal-r7534');const graph=checkHtml(html);
-  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.match(html,/<h2>Plain-language summary<\/h2><p><span class="ui-machine-pill"[^>]*>.*?Machine-written/);assert.ok(!html.includes(`<p>${escapeHtml(bill.summary.attribution)}`));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.match(html,/data-label="Ayes"[^>]*>[\s\S]*?class="dt-value">11<\/span>/);assert.match(html,/data-label="Noes"[^>]*>[\s\S]*?class="dt-value">24<\/span>/);assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
+  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.match(html,/<h2>Plain-language summary<\/h2><p><span class="ui-machine-pill"[^>]*>.*?Machine-written/);assert.ok(!html.includes(`<p>${escapeHtml(bill.summary.attribution)}`));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));
+  // The error notice: once, after the last of the summary's text and before the next block.
+  {const NOTICE='<p class="answer-notice">Machine-written answers can contain errors. Check the original record before relying on one.</p>',from=html.indexOf('<h2>Plain-language summary</h2>'),at=html.indexOf(NOTICE,from),next=html.indexOf('<h2',from+10);
+  assert.equal(html.split(NOTICE).length,2);assert.ok(at>from&&at<next,'inside the summary block');
+  for(const text of [...bill.summary.sentences,...(bill.summary.changes||[]),bill.summary.affected].filter(Boolean)){const i=html.indexOf(escapeHtml(text),from);assert.ok(i<0||i<at,'summary text, then the line');}}
+  assert.match(html,/data-label="Ayes"[^>]*>[\s\S]*?class="dt-value">11<\/span>/);assert.match(html,/data-label="Noes"[^>]*>[\s\S]*?class="dt-value">24<\/span>/);assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
   const sponsored=await get('/bill/au-federal-s1517');assert.match(sponsored,/href="\/subject\/person\/david-pocock"/);
 });
 test('raw division names and links every recorded member, with question/date/tally/bills',async()=>{
@@ -790,7 +795,7 @@ test('bill answers name every sponsor, show the source stage wording and never b
 });
 test('server pages leave out empty sections, heading and all',async()=>{
   const bill=renderBillAnswer({title:'Example Bill 2026',key:'x',sponsor:'Example Member',portfolio:'Example Portfolio',divisions:[]},[],new Map(),[]).html;
-  for(const gone of ['Plain-language summary','Other bills from this sponsor','Other bills in this portfolio','in this export','in the export'])assert.ok(!bill.includes(gone),gone);
+  for(const gone of ['Plain-language summary','answer-notice','Other bills from this sponsor','Other bills in this portfolio','in this export','in the export'])assert.ok(!bill.includes(gone),gone);
   const withRows=renderBillAnswer({title:'Example Bill 2026',key:'x',sponsor:'Example Member',portfolio:'Example Portfolio',divisions:[],summary:{sentences:['It does a thing.']}},[],new Map(),[{key:'y',title:'Other Example Bill 2026',sponsor:'Example Member',portfolio:'Other'}]).html;
   assert.match(withRows,/<h2>Plain-language summary<\/h2>/);assert.match(withRows,/<h2>Other bills from this sponsor<\/h2>/);assert.ok(!withRows.includes('Other bills in this portfolio'));
   const p={name:'Example Member',pid:'123',party:'Independent',chambers:['senate'],current:true};
