@@ -18,10 +18,11 @@ export const OG_HEIGHT = 630
 /** Bump when the drawing changes, or when a card's portrait or name was wrong: it is
  *  folded into every og:image URL and the Worker's card cache key, so the social
  *  crawlers (which cache by URL, some for weeks) and the edge fetch the new card.
+ *  9: a bill card whose headline is a summary sentence says "Machine-written summary.".
  *  8: Jake's 13 October address on electoral cards.
  *  7: full electoral authorisation on landscape and portrait hub cards.
  *  6: portraits taken off people they did not show (docs/PHOTOS.md, "Identity check"). */
-export const OG_VERSION = '8'
+export const OG_VERSION = '9'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
 
