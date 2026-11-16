@@ -25,18 +25,21 @@ export function hearingEvidenceQuestion(question: string): boolean {
 
 
 const EXCERPT = /\btranscript page \S+/
-export interface TranscriptTurn { speaker: string; day?: string; date?: string; page: string; excerpt: string }
+/** A turn carries a speaker only when its source line names one; the transcript tools name none. */
+export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string }
 /** Split a published citation into attributed turns before writing. Restricted transcripts never supply
  * quotations, even if malformed input happens to contain quotation marks. */
 export function transcriptTurns(text: string): TranscriptTurn[] {
   if (!text.includes(TRANSCRIPT_LABEL) || /Not quoted:|non-publication order|suppression order|pseudonymous witness/i.test(text)) return []
   const day = /\b(?:Hearing )?Day (\d+)\b/i.exec(text)?.[1]
   const date = /\((\d{1,2} [A-Z][a-z]+ \d{4})\)/.exec(text)?.[1]
-  const turns = [...text.matchAll(/transcript page (\S+) \(PDF page \d+\), hearing turn by ([^:]+): "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)]
-    .map(m => ({ speaker: m[2], page: m[1], excerpt: m[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }))
+  const turns = [...text.matchAll(/transcript page (\S+) \(PDF page \d+\), hearing turn(?: by ([^:]+))?: "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)]
+    .map(m => ({ ...(m[2] ? { speaker: m[2] } : {}), page: m[1], excerpt: m[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }))
   if (turns.length) return turns
   const written = /^(.+?) said at .+?, transcript page (\S+): "([\s\S]+)"\. Hearing transcript:/.exec(text)
-  return written ? [{ speaker: written[1], page: written[2], excerpt: written[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }] : []
+  if (written) return [{ speaker: written[1], page: written[2], excerpt: written[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }]
+  const unnamed = /^The transcript of .+?, transcript page (\S+), records: "([\s\S]+)"\. Hearing transcript:/.exec(text)
+  return unnamed ? [{ page: unnamed[1], excerpt: unnamed[2], ...(day ? { day } : {}), ...(date ? { date } : {}) }] : []
 }
 
 /** Keep at most 32 source words, without adding an ellipsis inside a quotation. */
