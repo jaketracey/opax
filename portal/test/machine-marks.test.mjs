@@ -271,35 +271,159 @@ test('bill_detail: the summary it already attributes now comes with the notice; 
   assert.equal(concise.record_text_notice, api.RECORD_TEXT_NOTICE);
 });
 
-test('every MCP tool, walked on its own examples: a mark appears only where the tool returns stored model text', async () => {
+// ---------------------------------------------------------------- every tool, against every published summary
+/** The opening of every sentence of every published bill summary (sentences, changes, who is affected) and of every
+ *  year in brief: the stored model-written text that sits in published files. */
+async function publishedModelText() {
+  const { readdir } = await import('node:fs/promises');
+  // Keyed by a sentence's first 40 characters; the whole sentence is kept, because many summaries open with the
+  // bill's own title, which record text (a citation, a stage line) opens with too.
+  const starts = new Map(), add = text => { for (const part of String(text ?? '').split(/(?<=[.!?])\s+/)) { const t = part.trim(); if (t.length >= 40) starts.set(t.slice(0, 40), [...(starts.get(t.slice(0, 40)) ?? []), t]); } };
+  for (const name of await readdir(new URL('../public/bills/', import.meta.url))) {
+    if (!name.endsWith('.json') || name === 'index.json') continue;
+    const bill = await asset('/bills/' + name);
+    for (const text of [...(bill?.summary?.sentences ?? []), ...(bill?.summary?.changes ?? []), bill?.summary?.affected]) add(text);
+    for (const speech of bill?.speeches ?? []) add(speech?.brief);
+  }
+  for (const name of await readdir(new URL('../public/years/', import.meta.url)).catch(() => [])) if (/^\d{4}\.json$/.test(name)) add((await asset('/years/' + name))?.brief?.answer);
+  return starts;
+}
+/** Every string in a result that opens a sentence with published model text, unless an object it sits in is marked
+ *  (a row or record with machine or machine_written true, or a summary that names its writer). */
+/** True when this piece of output is a published model sentence, whole or cut short: it agrees with one from its
+ *  first character to the end of whichever is shorter. Sharing only an opening (a bill's title) is not a match. */
+function modelSentence(part, starts) {
+  const text = part.trim().replace(/…( \[excerpt shortened; open source for full text\])?$/, '');
+  if (text.length < 40) return false;
+  return (starts.get(text.slice(0, 40)) ?? []).some(sentence => { const n = Math.min(text.length, sentence.length); return text.slice(0, n) === sentence.slice(0, n); });
+}
+function unmarkedModelText(value, starts, marked = false, path = '$', out = []) {
+  if (typeof value === 'string') { if (!marked) for (const part of value.split(/(?<=[.!?])\s+/)) if (modelSentence(part, starts)) { out.push(path + ': ' + part.trim().slice(0, 60)); break; } }
+  else if (Array.isArray(value)) value.forEach((v, i) => unmarkedModelText(v, starts, marked, `${path}[${i}]`, out));
+  else if (value && typeof value === 'object') {
+    const here = marked || value.machine === true || value.machine_written === true || (typeof value.written_by === 'string' && value.written_by.trim() !== '');
+    for (const [k, v] of Object.entries(value)) unmarkedModelText(v, starts, here, `${path}.${k}`, out);
+  }
+  return out;
+}
+
+test('every MCP tool and every register: no output holds published model-written text unless the item that holds it is marked', async () => {
+  const starts = await publishedModelText();
+  assert.ok(starts.size > 2000, 'published summaries were read: ' + starts.size);
   const send = mcp('/mcp', publicReader, { ASSETS });
   const listed = (await send('tools/list')).result.tools.map(t => t.name);
-  // The tools that can return stored model-written text. Every other tool must return no mark at all.
-  const MAY_MARK = new Set(['search_records', 'read_record', 'bill_detail', 'query_register']);
-  // Each tool is called with its own first published example, so the walk follows the tools as they are listed.
   const example = name => api.MCP_EXAMPLES[name]?.[0] ?? api.getTool(name)?.inputSchema.examples?.[0];
+  const index = await asset('/bills/index.json'), summarised = index.bills.filter(b => b.has_summary).slice(0, 6);
+  assert.ok(summarised.length >= 3);
+  const grants = await asset('/graph/grants.federal.json');
+  // Every register query_register lists, on every example its own guide publishes: a register added later is walked
+  // from the day it is listed, and one with no example fails here until it has one.
+  const registerCalls = [], noExample = [];
+  for (const register of Object.keys(api.MCP_REGISTERS)) {
+    const guide = (await send('tools/call', { name: 'register_guide', arguments: { register } })).result.structuredContent;
+    if (!guide.examples.length) noExample.push(register);
+    for (const call of guide.examples) registerCalls.push(['query_register', call]);
+  }
+  // The two speech-count registers publish no example and read the speech corpus, which tests do not have; they
+  // return counts. Any other register without an example fails here until it has one.
+  assert.deepEqual(noExample, ['count_speeches', 'speech_trend']);
+  for (const register of noExample) registerCalls.push(['query_register', { register, arguments: { topic: 'climate' } }]);
+  // Every listed tool, on its own published example and on calls aimed at bills that have a stored summary.
   const calls = [
-    ['find_connections', { query: 'union' }], ['corpus_coverage', {}], ['register_guide', { register: 'find_records' }],
-    ...['member_profile', 'member_interests', 'member_voting_record', 'division_votes', 'bill_search', 'money_receipts'].map(name => [name, example(name)]),
-    // Hearing transcripts and report records are verbatim record text, never marked machine; the other registers hold figures.
-    ...['royal_commissions', 'integrity_reports', 'annual_reports', 'agency_reports', 'count_records', 'parliamentary_pay', 'declared_interests', 'grants', 'contracts', 'entity_profile', 'campaign_spend']
-      .map(register => ['query_register', { register, arguments: example(register) }]),
+    ['find_connections', { query: 'union' }], ['corpus_coverage', {}], ['search_records', { query: 'reporting' }], ['read_record', { slug: 'speech-157047' }], ['read_record', { slug: `catalog-${VERSION}-7` }],
+    ...(grants?.recipients?.[0] ? [['read_grant_recipient', { jurisdiction: 'federal', id: String(grants.recipients[0].id) }]] : []),
+    ...(grants?.programs?.[0] ? [['read_grant_program', { jurisdiction: 'federal', id: String(grants.programs[0].id) }]] : []),
+    ...['member_profile', 'member_interests', 'member_voting_record', 'division_votes', 'bill_search', 'bill_detail', 'money_receipts', 'hansard_search'].map(name => [name, example(name)]),
+    ...summarised.flatMap(b => [['bill_detail', { bill_id: b.key, detail: 'full' }], ['bill_detail', { bill_id: b.key }], ['bill_search', { query: b.title.split(' ').slice(0, 3).join(' '), limit: 10 }], ['division_votes', { bill: b.key, limit: 3 }],
+      ['query_register', { register: 'find_records', arguments: { query: b.title.replace(/\bBill\b.*$/, '').trim().split(' ').slice(0, 4).join(' ') || 'housing', kind: 'bill' } }]]),
+    ['register_guide', { register: 'find_records' }],
+    // Every register query_register lists, each on its own example: a register added later is walked from the day it is listed.
+    ...registerCalls,
   ];
-  for (const [name, args] of calls) assert.ok(args && (name !== 'query_register' || args.arguments), name + ' has an example: ' + JSON.stringify(args));
-  const seen = new Set();
+  const called = new Set(), answered = new Set();
+  let marked = 0;
   for (const [name, args] of calls) {
     assert.ok(listed.includes(name), name);
+    assert.ok(args, name + ' has an example');
     const { result } = await send('tools/call', { name, arguments: args });
-    assert.ok(result && result.structuredContent, name + ': ' + JSON.stringify(result).slice(0, 300));
-    const out = result.structuredContent, register = name === 'query_register' ? args.register : name;
-    seen.add(name);
-    assert.deepEqual(marksIn(out), [], register + ' returned a mark: ' + marksIn(out).join(', '));
-    assert.ok(!JSON.stringify(out).includes(NOTICE), register);
-    assert.ok(!JSON.stringify(out).includes('written by a model'), register);
-    if ('record_text_notice' in out) assert.equal(out.record_text_notice, api.RECORD_TEXT_NOTICE, register);
+    const label = name === 'query_register' ? 'query_register ' + args.register : name;
+    assert.ok(result, label);
+    called.add(name);
+    // Both forms a client may read: the structured result and the text that mirrors it.
+    const parsed = text => { try { return JSON.parse(text); } catch { return text; } };
+    const out = result.structuredContent ?? parsed(result.content[0].text);
+    if (!result.isError) answered.add(label);
+    assert.deepEqual(unmarkedModelText(out, starts), [], label + ' returns published model-written text on an unmarked item');
+    assert.deepEqual(unmarkedModelText(parsed(result.content[0].text), starts), [], label + ' (text content)');
+    const found = typeof out === 'string' ? [] : marksIn(out);
+    if (found.length) {
+      marked++;
+      // A marked result carries the notice once, in the module's words, and the record-text notice that allows for it.
+      assert.equal(out.machine_notice, NOTICE, label);
+      assert.deepEqual(pathsOf(out, NOTICE), ['$.machine_notice'], label);
+      assert.equal(out.record_text_notice, api.marks.RECORD_TEXT_NOTICE_WITH_MODEL_TEXT, label);
+    } else {
+      assert.ok(!JSON.stringify(out).includes(NOTICE), label);
+      if (typeof out === 'object' && 'record_text_notice' in out) assert.equal(out.record_text_notice, api.RECORD_TEXT_NOTICE, label);
+    }
   }
-  // Every listed tool is either walked above with no mark, or is one of the four covered by the tests before this.
-  for (const name of listed) assert.ok(seen.has(name) || MAY_MARK.has(name) || ['read_grant_recipient', 'read_grant_program', 'hansard_search'].includes(name), name + ' is not covered');
+  for (const name of listed) assert.ok(called.has(name), name + ' was not walked');
+  assert.ok(marked >= summarised.length, 'the walk met marked results: ' + marked);
+  // Registers that read the speech corpus cannot answer here (no corpus in tests); the rest must.
+  const silent = Object.keys(api.MCP_REGISTERS).filter(r => !answered.has('query_register ' + r));
+  assert.ok(silent.every(r => ['count_speeches', 'speech_trend', 'corpus_records', 'legislation', 'division'].includes(r)), 'registers that did not answer: ' + silent.join(', '));
+
+  // The check itself: the same outputs with their marks taken off are caught, on each tool that returns model text.
+  const strip = value => Array.isArray(value) ? value.map(strip) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).filter(([k]) => !['machine', 'machine_written', 'written_by'].includes(k)).map(([k, v]) => [k, strip(v)])) : value;
+  const bill = summarised[0];
+  const full = (await send('tools/call', { name: 'bill_detail', arguments: { bill_id: bill.key, detail: 'full' } })).result.structuredContent;
+  assert.ok(unmarkedModelText(strip(full), starts).length, 'an unmarked bill summary is caught');
+  // A summary sentence slipped into a tool that should hold none (the reviewer's probe) is caught too.
+  const search = (await send('tools/call', { name: 'bill_search', arguments: example('bill_search') })).result.structuredContent;
+  const sentence = (await asset('/bills/' + bill.key + '.json')).summary.sentences[0];
+  assert.ok(unmarkedModelText({ ...search, items: [{ ...(search.items[0] ?? {}), summary: sentence }] }, starts).length, 'a summary on an unmarked item is caught');
+  assert.deepEqual(unmarkedModelText({ ...search, items: [{ ...(search.items[0] ?? {}), summary: sentence, machine: true }] }, starts), []);
+});
+
+test('the marks cannot be overridden by what a record or row arrives with', async () => {
+  // A record that already carries the marks' names with other values: ours stand.
+  const hostile = marks.markRecordSummary({ slug: 'speech-1', summary: 'A brief.', machine_written: false, machine: false, summary_written_by: 'The Hansard reporter', machine_notice: 'Nothing to see.', text: 'The record.' });
+  assert.equal(hostile.machine_written, true);
+  assert.equal(hostile.summary_written_by, WRITTEN_BY);
+  assert.equal(hostile.machine_notice, NOTICE);
+  assert.ok(!('machine' in hostile));
+  assert.deepEqual(Object.keys(hostile).slice(0, 3), ['machine_written', 'summary', 'summary_written_by']);
+  const catalogRecord = marks.markCatalogRecord({ kind: 'bill', snippet: 'x', machine: true, machine_written: false, machine_notice: 'Other words.' });
+  assert.equal(catalogRecord.machine_written, true);
+  assert.equal(catalogRecord.machine_notice, NOTICE);
+  assert.deepEqual(Object.keys(catalogRecord).slice(0, 2), ['machine', 'machine_written']);
+  // Through the tool: /api/resource answering with those keys set against the mark.
+  const send = mcp('/mcp', async () => Response.json({ ...speech, machine_written: false, summary_written_by: 'The Hansard reporter', machine_notice: 'Nothing to see.' }));
+  const record = await tool(send, 'read_record', { slug: 'speech-157047' });
+  assert.deepEqual([record.machine_written, record.summary_written_by, record.machine_notice], [true, WRITTEN_BY, NOTICE]);
+  // A search reply that arrives with a notice but no summary row leaves with the plain record-text notice and no notice.
+  const plain = await tool(mcp('/mcp', async () => Response.json({ ...searchPage([personRow, speechRow]), machine_notice: 'Left over.' })), 'search_records', { query: 'plain' });
+  assert.ok(!('machine_notice' in plain));
+  assert.equal(plain.record_text_notice, api.RECORD_TEXT_NOTICE);
+  // notes that is one string, not a list, is kept.
+  assert.deepEqual(marks.markMachineRows({ rows: [{ machine: true }], notes: 'Kept.' }).notes, ['Kept.', ROWS_NOTE]);
+  // In a marked row the flag comes first, ahead of the text it is about.
+  const flagged = marks.markMachineRows({ results: [{ kind: 'person', snippet: 'a' }, { kind: 'bill', snippet: 'b', machine: true }] });
+  assert.deepEqual(Object.keys(flagged.results[1]), ['machine', 'kind', 'snippet']);
+  assert.deepEqual(Object.keys(flagged.results[0]), ['kind', 'snippet']);
+});
+
+test('bill_detail: an empty or blank attribution falls back to the default, so the notice is never lost', async () => {
+  const index = await asset('/bills/index.json'), bill = index.bills.find(b => b.has_summary);
+  const real = await asset('/bills/' + bill.key + '.json');
+  for (const attribution of ['', '   ', null, undefined, 7]) {
+    const env = { asset: async path => path === '/bills/' + bill.key + '.json' ? { ...real, summary: { ...real.summary, attribution } } : asset(path), ASSETS, origin: 'https://opax.com.au' };
+    const out = await api.callTool(env, 'bill_detail', { bill_id: bill.key, detail: 'full' });
+    assert.equal(out.bill.summary.written_by, WRITTEN_BY, JSON.stringify(attribution));
+    assert.equal(marks.markToolResult(out).machine_notice, NOTICE, JSON.stringify(attribution));
+  }
+  const own = await api.callTool({ asset, ASSETS, origin: 'https://opax.com.au' }, 'bill_detail', { bill_id: bill.key, detail: 'full' });
+  assert.equal(own.bill.summary.written_by, String(real.summary.attribution).slice(0, 200), 'a real attribution is kept');
 });
 
 test('grant reads and hansard_search return record text only: no mark', async () => {
@@ -342,7 +466,7 @@ test('the helper marks only what holds model text, never twice, and leaves an un
 });
 
 // ---------------------------------------------------------------- the voice tool
-test('voice read_record: a stored brief is introduced as machine-written, and the marks survive the size budget', async () => {
+test('voice read_record: the tool result marks a stored brief ahead of the summary, and the marks survive the size budget', async () => {
   const env = { ASSETS: catalogue, COMMUNITY_ORIGIN: 'https://opax.com.au' };
   const out = await api.runVoiceTool('read_record', { slug: 'speech-157047' }, env, publicReader);
   assert.equal(out.machine_notice, NOTICE);
@@ -383,6 +507,21 @@ test('voice read_record on a catalogue record and voice search_records reuse the
   assert.equal(found.data.results[4].snippet, transcriptRow.snippet);
   const plain = await api.runVoiceTool('search_records', { query: 'plain' }, env, publicReader);
   assert.ok(!('machine_notice' in plain) && !('notes' in plain.data));
+});
+
+test('voice search_records under the size budget: a row never keeps its summary text and loses its machine flag', async () => {
+  const env = { ASSETS: catalogue, COMMUNITY_ORIGIN: 'https://opax.com.au' };
+  // Six bill rows whose text alone outruns the 15,000 character budget, so the last rows are cut part-way.
+  const big = Array.from({ length: 6 }, (_, i) => ({ slug: 'catalog-' + (20 + i), kind: 'bill', title: 'Example Bill ' + i, href: '/bill/au-federal-x' + i, detail: 'd'.repeat(2500), snippet: `Summary ${i}. ` + 's'.repeat(3400), machine: true }));
+  const out = await api.runVoiceTool('search_records', { query: 'reporting annual date' }, env, async () => Response.json(searchPage(big)));
+  assert.equal(out.machine_notice, NOTICE, 'the notice stands outside the budget');
+  const rows = out.data.results;
+  assert.ok(rows.length >= 3);
+  assert.ok(rows.some(r => !('snippet' in r)) || rows.length < 6, 'the budget did run out inside the rows');
+  for (const row of rows) {
+    assert.equal(Object.keys(row)[0], 'machine', 'the flag leads the row');
+    if ('snippet' in row) assert.equal(row.machine, true, 'a snippet without its flag');
+  }
 });
 
 test('the voice agent config is not touched by this change', async () => {

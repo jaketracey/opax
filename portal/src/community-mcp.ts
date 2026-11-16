@@ -114,9 +114,10 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
    if(Array.isArray(data.results))data.results=data.results.map((row:Record<string,unknown>)=>'slug' in row?{...row,slug:versionedCatalogSlug(row.slug,data.index_version)}:row)
    // Record text is quoted source material: say so in the result itself, not only in the server instructions.
    // A response that also holds model-written text carries the notice that allows for it, set with the marks.
-   if(typeof data.machine_notice!=='string')data.record_text_notice=RECORD_TEXT_NOTICE
-   // Search rows whose text is a bill's summary say machine: true; the result says what that means, once.
-   if(!resource)data=markMachineRows(data)
+   if(resource){if(typeof data.machine_notice!=='string')data.record_text_notice=RECORD_TEXT_NOTICE}
+   // Search rows whose text is a bill's summary say machine: true; the result says what that means, once. A notice
+   // the search reply arrived with is not taken on trust: the plain notice is set, then the rows decide.
+   else{delete data.machine_notice;data.record_text_notice=RECORD_TEXT_NOTICE;data=markMachineRows(data)}
    return {content:[{type:'text' as const,text:JSON.stringify(data)}],structuredContent:data,isError:false}
   }
   const readOnly={readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}

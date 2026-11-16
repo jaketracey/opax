@@ -244,7 +244,7 @@ export const billDetail: ToolDefinition = {
       linked_divisions: divisions.length,
       ...(full(args) ? {
         divisions: divisions.slice(0, 40).map(d => ({ division_id: d.key, date: d.date ?? null, chamber: d.house ?? null, stage: d.stage ?? null, question: clip(d.question, 240), ayes: d.ayes ?? null, noes: d.noes ?? null, outcome: d.outcome === 'affirmative' ? 'passed' : d.outcome === 'negative' ? 'defeated' : null, url: siteUrl(env, '/doc/division-' + d.key) })),
-        summary: Array.isArray(summary.sentences) && summary.sentences.length ? { text: clip(summary.sentences.join(' '), 1500), written_by: clip(summary.attribution ?? WRITTEN_BY_MODEL, 200), as_of: summary.as_of ?? null } : null,
+        summary: Array.isArray(summary.sentences) && summary.sentences.length ? { text: clip(summary.sentences.join(' '), 1500), written_by: clip(typeof summary.attribution === 'string' && summary.attribution.trim() ? summary.attribution : WRITTEN_BY_MODEL, 200), as_of: summary.as_of ?? null } : null,
       } : {}) }
     return result({ ...page('bill_detail', args, stages, 50), bill, url, notes: [
       ...(stages.length ? [] : ['No dated stage is recorded for this bill.']),

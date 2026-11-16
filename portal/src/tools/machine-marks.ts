@@ -42,7 +42,9 @@ const noted = (existing: unknown, note: string): string => words(existing) ? (ex
  */
 export function markRecordSummary<T extends Data>(record: T): T {
   if (!words(record.summary)) return record
-  const { summary, ...rest } = record
+  // Whatever the record arrived with under the marks' own names is set aside: a stored `machine_written: false`
+  // or another writer's name must never stand in for the mark.
+  const { summary, machine_written: _a, machine: _b, summary_written_by: _c, machine_notice: _d, ...rest } = record
   // The marks sit directly before and after the summary, ahead of the long text, so a client that cuts a long
   // record short still has them.
   return noticed({ machine_written: true, summary, summary_written_by: WRITTEN_BY_MODEL, ...rest, record_note: noted(rest.record_note, SUMMARY_NOTE) }) as unknown as T
@@ -54,7 +56,9 @@ export const machineRow = (row: unknown): boolean => object(row)?.machine === tr
 /** A record read from the published search catalogue. A bill's record carries its summary sentences in `snippet`. */
 export function markCatalogRecord<T extends Data>(record: T): T {
   if (!machineRow(record)) return record
-  return noticed({ ...record, machine_written: true, record_note: noted(record.record_note, SNIPPET_NOTE) }) as unknown as T
+  const { machine: _a, machine_written: _b, machine_notice: _c, ...rest } = record
+  // The flags lead the record, ahead of its snippet, so a client that cuts it short keeps them.
+  return noticed({ machine: true, machine_written: true, ...rest, record_note: noted(rest.record_note, SNIPPET_NOTE) }) as unknown as T
 }
 
 /**
@@ -63,10 +67,13 @@ export function markCatalogRecord<T extends Data>(record: T): T {
  * with no such row comes back as the same object.
  */
 export function markMachineRows<T extends Data>(data: T): T {
-  const marked = (['results', 'rows', 'items'] as const).some(key => Array.isArray(data[key]) && (data[key] as unknown[]).some(machineRow))
-  if (!marked) return data
-  const notes = Array.isArray(data.notes) ? data.notes.filter(note => note !== MACHINE_ROWS_NOTE) : []
-  return noticed({ ...data, notes: [...notes, MACHINE_ROWS_NOTE] }) as unknown as T
+  const lists = (['results', 'rows', 'items'] as const).filter(key => Array.isArray(data[key]) && (data[key] as unknown[]).some(machineRow))
+  if (!lists.length) return data
+  const notes = Array.isArray(data.notes) ? data.notes.filter(note => note !== MACHINE_ROWS_NOTE) : words(data.notes) ? [data.notes] : []
+  // In a marked row the flag comes first, ahead of the text it is about: a client that keeps only the start of a
+  // row (the voice tool's size budget does) can then never hold the summary without its flag.
+  const flagged = Object.fromEntries(lists.map(key => [key, (data[key] as unknown[]).map(row => machineRow(row) ? { machine: true, ...row as Data } : row)]))
+  return noticed({ ...data, ...flagged, notes: [...notes, MACHINE_ROWS_NOTE] }) as unknown as T
 }
 
 /** bill_detail with detail=full: its summary already names its writer; the result gains the notice to go with it. */
