@@ -175,6 +175,33 @@ test('a guillotined bill\'s own readings count, though the export files them und
   assert.equal(divisionReading(exported({ question: 'The question is that the remaining stages of the Tax Laws Amendment (2013 Measures No. 2) Bill 2013 be agreed to and the bill be now passed.' })), 'third');
 });
 
+test('9818: under a guillotine, a Senate vote named only "Limitation of Debate - Pass the bill" is the bill\'s third reading', () => {
+  // r7421 passed the House on 20 Jan 2026 (9809) and the Senate the same day under a limitation of debate. The
+  // Senate's passing vote (9818, 38 to 26) has no text but its name, in the bill export and in its division file.
+  const r7421 = bill('r7421');
+  const d9818 = division(r7421, 'federal-senate-9818');
+  assert.match(d9818.question, / Bill 2026 - Limitation of Debate - Pass the bill$/);
+  assert.equal(divisionReading(d9818), 'third');
+  assert.equal(divisionReading(RECORDS.divisions['federal-senate-9818']), 'third');
+  // So the second house's third reading decides, not the House's.
+  const { line, contradicted } = decided(r7421);
+  assert.equal(line, 'federal-senate-9818 third Passed 38-26');
+  assert.deepEqual(contradicted, []);
+  // The other divisions under the same guillotine stay out: the allotment of time, the amendments, the report.
+  for (const key of ['9812', '9813', '9814', '9815', '9816', '9817']) assert.equal(divisionReading(division(r7421, `federal-senate-${key}`)), null, key);
+  // Only "Pass the bill(s)" as the last part of a name: any other last part, or the words with more after them, decide nothing.
+  for (const question of [
+    'Example Bill 2026 - Limitation of Debate - Nationals amendments',
+    'Example Bill 2026 - Limitation of Debate - Agree to the motion',
+    'Example Bill 2026 - Limitation of Debate - Pass the bill. Senator Example I move that the question be now put.',
+    'Example Bill 2026 - Limitation of Debate - Pass the bill to committee',
+  ]) assert.equal(divisionReading({ stage: 'Limitation of debate', question, outcome: 'affirmative' }), null, question);
+  // Two bills under one guillotine (federal-senate-10042) read the same; a lost passing vote is "Not agreed".
+  const pair = { key: 'federal-senate-10042', date: '2026-03-25', house: 'senate', stage: 'Limitation of debate', outcome: 'negative', ayes: 22, noes: 33, question: 'Example Bill 2026 and another - Limitation of Debate - Pass the bills' };
+  assert.equal(divisionReading(pair), 'third');
+  assert.equal(decidingDivision([pair])?.outcome, 'Not agreed');
+});
+
 test('amendments and motions to decline the bill are not its reading', () => {
   const amendments = [
     ['Second reading', 'Family Assistance Bill 2014 - Second Reading - Decline to read a second time'],
