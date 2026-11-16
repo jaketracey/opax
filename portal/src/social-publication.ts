@@ -1,7 +1,7 @@
 /** One frozen edition per Melbourne day, independent delivery receipts per channel.
  * Claims are atomic in D1. An uncertain write is held for review, never blindly retried.
  */
-import { authoriseVicPost, clip, composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, xLength, type DailyPost, type DailyPostKind } from './daily-post'
+import { authoriseVicPost, clip, composeDailyPost, labelBillCover, envSources, melbourneDate, oauth1Header, postToX, xCredentials, xLength, type DailyPost, type DailyPostKind } from './daily-post'
 import { OG_VERSION } from './og'
 import { STORY_VERSION, storyFrames, validStory } from './story'
 import { reportsEnabled, reportsPath } from './reports-gate'
@@ -250,7 +250,8 @@ export function operatorRunDates(now: number = Date.now()): [string, string] {
 export async function previewPublication(env: SocialEnv, date: string, personTopics: (name: string) => Promise<Response>, kind?: DailyPostKind, subject?: string): Promise<DailyPost | null> {
   if (!kind && !subject) {
     const existing = await env.COMMUNITY_DB.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
-    if (existing) return authoriseVicPost((JSON.parse(existing.post_json)) as DailyPost)
+    // A stored bill edition's cover says its line is machine-written, as the cover drawn today does (/og/story).
+    if (existing) return labelBillCover(authoriseVicPost((JSON.parse(existing.post_json)) as DailyPost))
   }
   const sources = envSources(env, personTopics)
   const since = new Date(Date.parse(date + 'T12:00:00Z') - 90 * 86400000).toISOString().slice(0, 10)

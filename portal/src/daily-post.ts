@@ -1114,6 +1114,18 @@ export async function composeDailyPost(date: string, sources: DailyPostSources, 
   return null
 }
 
+/**
+ * A bill edition's cover line opens with its summary's first sentence, which a model wrote. Editions stored before
+ * the cover carried its note (#479) say so nowhere on the cover, so a bill edition's cover is drawn with the note
+ * whatever the stored edition holds. This runs as a stored edition is read: nothing stored changes. Every other
+ * kind of edition is drawn as stored.
+ */
+export function labelBillCover(post: DailyPost): DailyPost {
+  const [cover, ...rest] = post.kind === 'bill' && Array.isArray(post.slides) ? post.slides : []
+  if (cover?.type !== 'cover' || cover.note === MACHINE_SUMMARY_LABEL) return post
+  return { ...post, slides: [{ ...cover, note: MACHINE_SUMMARY_LABEL }, ...rest] }
+}
+
 /** Apply after composition so fitting optional copy can never drop the approved line. */
 export function authoriseVicPost(post: DailyPost, victorianMember = false): DailyPost {
   if(post.donor){
