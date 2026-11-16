@@ -10,7 +10,10 @@ export function supplierNextSteps(profile: unknown, helpers?: { agencyHref?: (na
 export function recipientNextSteps(data: unknown, helpers?: { jurisdiction?: string; programs?: readonly unknown[]; money?: (value: number) => string; otherHref?: (jurisdiction: string) => string; jurisdictionName?: (jurisdiction: string) => string }): NextStep[];
 export function billNextSteps(bill: unknown, helpers?: { divisions?: readonly unknown[]; sponsor?: { name: string; href: string; party?: string | null } | null }): NextStep[];
 export function memberNextSteps(record?: { seats?: readonly { name: string; href: string; chamber?: string }[]; party?: { name: string; href: string } | null }): NextStep[];
-export function memberVoteSteps(votes?: readonly unknown[]): NextStep[];
+export const MEMBER_VOTES_DRAWN: number;
+export function divisionMotion(question: unknown): string;
+export function memberVoteSteps(votes?: readonly unknown[], options?: { questions?: Readonly<Record<string, string>> }): NextStep[];
+export function votesToTellApart(votes?: readonly unknown[]): string[];
 export function electorateNextSteps(detail: unknown, helpers?: { members?: readonly unknown[]; personHref?: (person: any) => string; displayName?: (name: string) => string; sitting?: boolean }): NextStep[];
 export function vicDistrictNextSteps(seat: unknown, region: unknown, options?: { closed?: boolean }): NextStep[];
 export function seriesNextSteps(steps?: { newer?: Partial<NextStep> | null; older?: Partial<NextStep> | null; index?: Partial<NextStep> | null }): NextStep[];

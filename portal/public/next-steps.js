@@ -170,13 +170,82 @@ export function recipientNextSteps(data, { jurisdiction = 'federal', programs = 
   return rows;
 }
 
-/** A bill: its sponsor, and its most recent divisions (how members voted). `divisions` are vote-tables.js divisionRows. */
+// ---- divisions that read alike ---------------------------------------------------------
+/* Two divisions can be drawn with the same words: one stage on one day. Examples are two amendments
+   in detail, or a Senate message's amendments and then its reasons, each 90 to 43. Each such row then
+   says what was put to the vote, in the record's own words. That is the question as the chair put it
+   ("The question is that …"), or else the motion as moved ("I move: That …"), from the division's
+   recorded question. The rest of a question is whoever was speaking, so it never names a row. A
+   question with neither gives the division's own number, and a row with neither stays as it is. Each
+   row keeps its own address. */
+const MOTION_MAX = 100;
+const plainQuestion = (question) => text(String(question ?? '').replace(/\[([^\]\n]+)\]\([^)\s]*\)/g, '$1').replace(/[*_]+/g, ''));
+/** "that the amendments be disagreed to", from a division's recorded question; '' when it states no motion. */
+export function divisionMotion(question) {
+  const plain = plainQuestion(question);
+  const put = [...plain.matchAll(/\bThe question (?:now )?(?:is|being|was) that\s+|\bThe question (?:now )?is\s+(?=the\b[^.?!]*\bbe\b)/gi)].at(-1);
+  const moved = [...plain.matchAll(/\bI (?:now )?move:?\s+(?=that\b)/gi)].at(-1);
+  const at = put || moved;
+  if (!at) return '';
+  const rest = plain.slice(at.index + at[0].length);
+  // To the sentence's end: a stop before a capital or the end, so "(Tax Reform No. 3)" stays whole.
+  const end = /[.?!](?=\s+["'‘“(]?[A-Z]|\s*$)/.exec(rest);
+  const clause = text((end ? rest.slice(0, end.index) : rest).replace(/^that\s+/i, ''));
+  if (!clause) return '';
+  const motion = `that ${clause}`;
+  if (motion.length <= MOTION_MAX) return motion;
+  const cut = motion.slice(0, MOTION_MAX);
+  return `${cut.slice(0, cut.lastIndexOf(' ')).replace(/[\s,;:(]+$/, '')}…`;
+}
+/** The division's number on its sitting day, from its record's address ("…/2026-07-01/13", "…-2026-10-29-22"). */
+const divisionNumber = (...addresses) => {
+  for (const value of addresses) {
+    const n = /(?:\/divisions\/[a-z_]+\/\d{4}-\d{2}-\d{2}\/|-\d{4}-\d{2}-\d{2}-)(\d{1,3})(?:\.json)?$/.exec(String(value || ''))?.[1];
+    if (n) return String(Number(n));
+  }
+  return '';
+};
+const alikeKey = (row) => `${row.text}\u0000${row.date || ''}`;
+/** Rows among `rows` drawn with the same words on the same day as another. */
+function alike(rows) {
+  const counts = new Map();
+  for (const row of rows) counts.set(alikeKey(row), (counts.get(alikeKey(row)) || 0) + 1);
+  return rows.filter((row) => counts.get(alikeKey(row)) > 1);
+}
+/**
+ * What tells each row that reads like another apart. `said(row)` gives {motion, number}; the result maps
+ * such a row to its motion and, where there is no motion or two rows share one, its division number.
+ */
+function tellApart(rows, said) {
+  const twins = alike(rows).map((row) => ({ row, key: alikeKey(row), ...said(row) }));
+  return new Map(twins.map(({ row, key, motion, number }) => {
+    const same = motion && twins.some((other) => other.row !== row && other.key === key && other.motion === motion);
+    return [row, { motion, number: !motion || same ? number : '' }];
+  }));
+}
+const capital = (value) => value.charAt(0).toUpperCase() + value.slice(1);
+
+/** A bill: its sponsor, and its most recent divisions (how members voted). `divisions` are vote-tables.js divisionRows;
+ *  two that read alike take their questions from the bill's own `divisions`, matched by address. */
 export function billNextSteps(bill, { divisions = [], sponsor = null } = {}) {
   const rows = [];
   const voted = [...divisions].filter((d) => /^\/doc\//.test(String(d?.href || '')))
     .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
-  for (const d of voted.slice(0, 2)) rows.push({ kind: 'How members voted', href: d.href, text: d.title,
-    meta: [d.chamber, `Ayes ${d.ayes}, noes ${d.noes}`, d.outcome].map(text).filter(Boolean).join(' · ') });
+  const recorded = (href) => (bill?.divisions || []).find((d) => {
+    const id = String(d?.slug || d?.key || '');
+    return id && `/doc/${id.startsWith('division-') ? id : `division-${id}`}` === href;
+  });
+  const drawn = voted.slice(0, 2).map((d) => ({ ...d, text: d.title }));
+  const told = tellApart(drawn, (d) => {
+    const record = recorded(d.href);
+    return { motion: divisionMotion(record?.question), number: divisionNumber(record?.url, record?.source_url, d.href) };
+  });
+  // A row here is drawn whole, so what was put follows the stage and date.
+  for (const d of drawn) {
+    const { motion = '', number = '' } = told.get(d) || {};
+    rows.push({ kind: 'How members voted', href: d.href, text: `${d.title}${motion ? `: ${motion}` : ''}${number ? ` (division ${number})` : ''}`,
+      meta: [d.chamber, `Ayes ${d.ayes}, noes ${d.noes}`, d.outcome].map(text).filter(Boolean).join(' · ') });
+  }
   if (sponsor?.href && sponsor.name) rows.push({ kind: 'Sponsor', href: sponsor.href, text: sponsor.name, meta: text(sponsor.party) || 'Votes, speeches and other bills' });
   for (const r of (bill?.related || []).slice(0, 2)) if (r?.key && r?.title) rows.push({ kind: 'Related bill', href: `/bill/${encodeURIComponent(r.key)}`, text: r.title,
     meta: text(r.relation === 'predecessor' ? 'Earlier bill this one builds on' : r.relation || 'Related in the bill register') });
@@ -192,11 +261,30 @@ export function memberNextSteps({ seats = [], party = null } = {}) {
   if (party?.href && party.name) rows.push({ kind: 'Party', href: party.href, text: party.name, meta: 'Members and disclosed receipts' });
   return rows;
 }
-/** A member's newest recorded votes on bills. `votes` are vote-tables.js votingRows. */
-export function memberVoteSteps(votes = []) {
-  return [...votes].filter((v) => !v?.procedural && day(v.date) && /^\/(?:doc|bill)\//.test(String(v.href || '')))
-    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
-    .map((v) => ({ kind: 'Latest vote', href: v.href, text: v.title, meta: `${v.vote} · ${day(v.date)}` }));
+/** How many of a member's votes the block draws: the places it reserves (app.js, src/seo-content.ts). */
+export const MEMBER_VOTES_DRAWN = 2;
+const memberVotes = (votes) => [...votes].filter((v) => !v?.procedural && day(v.date) && /^\/(?:doc|bill)\//.test(String(v.href || '')))
+  .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+/**
+ * A member's newest recorded votes on bills. `votes` are vote-tables.js votingRows. Two drawn votes that
+ * read alike (one bill, one stage, one day) say what was put: `questions` holds their divisions' recorded
+ * questions by address (votesToTellApart names them), and a vote without one gives its division's number.
+ * These rows are held to two lines of link (the places reserved for them), where a long bill's title
+ * fills both. So what was put is the link's text, and the bill and stage follow the vote and date.
+ */
+export function memberVoteSteps(votes = [], { questions = {} } = {}) {
+  const rows = memberVotes(votes).map((v) => ({ href: v.href, text: v.title, date: String(v.date).slice(0, 10), vote: v.vote }));
+  const told = tellApart(rows.slice(0, MEMBER_VOTES_DRAWN), (row) => ({ motion: divisionMotion(questions[row.href]), number: divisionNumber(row.href) }));
+  return rows.map((row) => {
+    const { motion = '', number = '' } = told.get(row) || {};
+    return { kind: 'Latest vote', href: row.href, text: motion ? capital(motion) : row.text,
+      meta: [row.vote, day(row.date), number ? `division ${number}` : '', motion ? row.text : ''].filter(Boolean).join(' · ') };
+  });
+}
+/** The division pages whose questions memberVoteSteps needs: drawn votes that read alike, with a division page. */
+export function votesToTellApart(votes = []) {
+  const drawn = memberVotes(votes).slice(0, MEMBER_VOTES_DRAWN).map((v) => ({ href: v.href, text: v.title, date: String(v.date).slice(0, 10) }));
+  return alike(drawn).map((row) => row.href).filter((href) => /^\/doc\/division-[a-z0-9-]+$/.test(href));
 }
 
 /** An electorate: its member(s), and the way to another electorate. Postcodes are published for Victorian districts only.

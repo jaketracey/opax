@@ -6104,7 +6104,14 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   if (currentSubjectKey !== key || !slot.isConnected) return;
   const recent = voteTables.personVoteRecords(keys, votes, recentData);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
-  nextSteps?.fillNextSteps($("person-next"), nextSteps.memberVoteSteps(rows), "No votes on bills in the record for this member.");
+  // Two drawn votes that read alike (one stage, one day) say what was put: their divisions' recorded questions.
+  // next-steps.js is not stamped, so a cached copy from before this rule may lack votesToTellApart.
+  const questions = Object.fromEntries(await Promise.all((nextSteps?.votesToTellApart?.(rows) || []).map(async (href) => {
+    const division = await fetch(`/divisions/${href.slice("/doc/".length)}.json`).then((res) => (res.ok ? res.json() : null)).catch(() => null);
+    return [href, typeof division?.question === "string" ? division.question : ""];
+  })));
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  nextSteps?.fillNextSteps($("person-next"), nextSteps.memberVoteSteps(rows, { questions }), "No votes on bills in the record for this member.");
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
   const total = sum("divisions_total");
   const ayes = sum("ayes");

@@ -6,7 +6,7 @@ import {donorDisclosure,donorLabelHTML,receiptGraph,type DonorDisclosureRecord} 
 import { shortDate, shortMoney } from '../public/format.js'
 import { profileHouses, profileAffiliations } from '../public/profile-jurisdictions.js'
 import { askBlockHTML } from '../public/growth-modules.js'
-import { nextStepsHTML, memberNextSteps, memberVoteSteps } from '../public/next-steps.js'
+import { nextStepsHTML, memberNextSteps, memberVoteSteps, votesToTellApart } from '../public/next-steps.js'
 import { sourceLineHTML } from '../public/party-page.js' // labels.js, through its stamped re-export: one copy in the bundle
 import { memberSeats, type ElectoratePersonSeat } from '../public/member-seats.js'
 import { receiptHeadline } from '../public/money-explain.js'
@@ -33,7 +33,7 @@ import {readPartyPages, partyPageCoverage} from '../public/party-page.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
-export interface RenderedContent { html: string; description?: string; prev?: string; next?: string; page?: number; party?: string; voteRows?: readonly object[] }
+export interface RenderedContent { html: string; description?: string; prev?: string; next?: string; page?: number; party?: string; voteRows?: readonly object[]; voteQuestions?: Readonly<Record<string, string>> }
 interface Person {
   name: string; full?: string; pid?: string; party?: string | null; party_now?: string | null;
   current?: boolean; states: string[]; chambers: string[]; speeches?: number | null;
@@ -290,11 +290,17 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   // The rows "Next in the record" takes its latest votes from (personBootBlocks); none read for a scoped speaker.
   let voteRows: ReturnType<typeof votingRows> | undefined
+  let voteQuestions: Record<string, string> | undefined
   if (!p.speech_scope) {
     const {keys, voteData} = await personVotesFor(read,p)
     const {rows, recorded: hasRecent} = personVoteRecords(keys,voteData,await recentVotesFor(read,keys))
     const votes = (rows as Vote[]).sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     voteRows = votingRows(votes,bills?.bills || [])
+    // Two drawn votes that read alike (one stage, one day) say what was put: their divisions' recorded questions.
+    voteQuestions = Object.fromEntries(await Promise.all(votesToTellApart(voteRows).map(async href => {
+      const question = (await optional<{question?: unknown}>(read,`/divisions/${href.slice('/doc/'.length)}.json`))?.question
+      return [href, typeof question === 'string' ? question : ''] as const
+    })))
     if (votes.length) {
       const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest bill votes')
       config.id += '-ssr'
@@ -332,7 +338,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
   if (owned.length) body += `<h2>Bills sponsored</h2><ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>`
-  return {html:answerBlock(display,description,body),description,party:party || undefined,voteRows}
+  return {html:answerBlock(display,description,body),description,party:party || undefined,voteRows,voteQuestions}
 }
 
 /**
@@ -386,7 +392,7 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
  * holds only the originals; the app redraws it in place, on the same one line, with its facts.
  * A scoped speaker's votes are not read here: their two rows are held for the app to fill.
  */
-export function personBootBlocks(p: Pick<Person,'name'|'full'|'states'>, opts: {party?: string; voteRows?: readonly object[]; seatPerson?: {electorates?: readonly ElectoratePersonSeat[]} | null; rosterUpdated?: string}): {source: string; blocks: string} {
+export function personBootBlocks(p: Pick<Person,'name'|'full'|'states'>, opts: {party?: string; voteRows?: readonly object[]; voteQuestions?: Readonly<Record<string, string>>; seatPerson?: {electorates?: readonly ElectoratePersonSeat[]} | null; rosterUpdated?: string}): {source: string; blocks: string} {
   const {seatPerson} = opts
   const source = sourceLineHTML({
     updated: seatPerson?.electorates?.find(e => e.current)?.as_of || opts.rosterUpdated || '',
@@ -401,7 +407,7 @@ export function personBootBlocks(p: Pick<Person,'name'|'full'|'states'>, opts: {
   const ask = askBlockHTML({name: promptName, pageType: 'person', seed: `What has ${promptName} said in parliament?`, held: 1})
   const next = nextStepsHTML(memberNextSteps({seats: memberSeats(seatPerson), party: opts.party ? {name: opts.party, href: partyUrl(opts.party)} : null}), {
     pageType: 'person', id: 'person-next', reserve: 2,
-    fill: opts.voteRows ? memberVoteSteps(opts.voteRows) : null, empty: 'No votes on bills in the record for this member.',
+    fill: opts.voteRows ? memberVoteSteps(opts.voteRows,{questions: opts.voteQuestions}) : null, empty: 'No votes on bills in the record for this member.',
   })
   return {source, blocks: ask + next}
 }
