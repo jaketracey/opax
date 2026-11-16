@@ -327,6 +327,78 @@ def member_list(path: Path) -> list[tuple[str, str | None]]:
     return out
 
 
+SERVICE_NOTE_RE = re.compile(r"\b(Sworn in|Appointed|Elected|Resigned|Died|Retired)\b[^0-9]*?(\d{1,2} [A-Z][a-z]+ \d{4})")
+_MONTHS = {m: i for i, m in enumerate(("January February March April May June July August September October "
+                                       "November December").split(), 1)}
+
+
+def _iso_day(text: str) -> str:
+    """ISO date of "7 Dec 2023" / "27 September 2023". A month it cannot read raises: a service date is never guessed."""
+    d, month, year = text.split()
+    number = next(i for name, i in _MONTHS.items() if name.startswith(month.rstrip(".")[:3]))   # "Dec", "Sept."
+    return f"{int(year):04d}-{number:02d}-{int(d):02d}"
+
+
+def member_service(path: Path) -> list[dict]:
+    """Each member on the list at the front of a Hansard PDF, with the service dates its footnotes give.
+
+    The list names every member of that house in the Parliament so far; a member who
+    joined or left during it carries a footnote ("Sworn in 4 March 2025", "Resigned
+    27 September 2023"). Returns {surname, given, seat, start, end, notes}: `start`
+    from a sworn-in, appointed or elected note, `end` from a resigned, died or
+    retired note, None where the list gives none (the member sat from the general
+    election, or still sits). A footnote that is not about service ("ALP until 29
+    April 2024") is kept in `notes` and dates nothing."""
+    try:
+        import pymupdf  # type: ignore
+    except ImportError as e:  # pragma: no cover
+        raise SystemExit("parse needs PyMuPDF: pip install pymupdf") from e
+    out = []
+    with pymupdf.open(path) as doc:
+        for page in list(doc)[:8]:
+            spans = [(s["bbox"][0], s["bbox"][1], s["bbox"][2], s["text"].strip(), s["size"])
+                     for b in page.get_text("dict")["blocks"] for ln in b.get("lines", []) for s in ln["spans"]
+                     if s["text"].strip()]
+            seats = sorted(x for x, _, _, t, _ in spans if t in ("District", "Region"))
+            top = min((y for _, y, _, t, _ in spans if t == "Member"), default=None)
+            if top is None or not seats:
+                continue
+            marks = [(x, y, t) for x, y, _, t, size in spans if size < 7 and re.fullmatch(r"\d+(?:\s*,\s*\d+)*", t)]
+            # Two cells can arrive as one piece of text ("Greens  Payne, Rachel"): split on the gap, as member_list does.
+            body = []
+            for x, y, x1, t, size in spans:
+                if size < 7:
+                    continue
+                width = (x1 - x) / max(len(t), 1)
+                for piece in re.finditer(r"\S+(?: \S+)*", t):
+                    body.append((x + width * piece.start(), y, x + width * piece.end(), piece.group()))
+            # A footnote: its number at the start of a line, its text beside it.
+            notes = {}
+            for x, y, t in marks:
+                text = sorted((bx, bt) for bx, by, _, bt in body if -1 <= bx - x < 14 and abs(by - y) < 6)
+                if text and not MEMBER_CELL_RE.match(text[0][1]):
+                    notes[t] = text[0][1]
+            for x, y, x1, text in body:
+                column = next((k for k, sx in enumerate(seats) if x < sx and (k == 0 or x > seats[k - 1] + 40)), None)
+                if column is None or y <= top or not MEMBER_CELL_RE.match(text):
+                    continue
+                near = sorted((abs(sy - y), t) for sx, sy, _, t in body if abs(sx - seats[column]) < 12 and abs(sy - y) < 7)
+                # The member's own footnote numbers: the small figures set just after the name.
+                own = [n.strip() for mx, my, t in marks if -3 <= mx - x1 < 8 and abs(my - y) < 8 for n in t.split(",")]
+                texts = [notes[n] for n in own if n in notes]
+                start = end = None
+                for note in texts:
+                    m = SERVICE_NOTE_RE.search(note)
+                    if m and m.group(1) in ("Sworn in", "Appointed", "Elected"):
+                        start = _iso_day(m.group(2))
+                    elif m:
+                        end = _iso_day(m.group(2))
+                surname, _, given = text.partition(",")
+                out.append({"surname": surname.strip(), "given": given.strip(), "seat": near[0][1] if near else None,
+                            "start": start, "end": end, "notes": texts, "marks": own})
+    return out
+
+
 def _heading(lines: list[dict], i: int) -> tuple[str | None, str | None]:
     """(heading, stage) the line at i sits under: the nearest centred bold heading above it, with the lines
     of a heading set over two or three joined, and the centred italic stage line below it ("Third reading")."""
@@ -346,6 +418,63 @@ def _heading(lines: list[dict], i: int) -> tuple[str | None, str | None]:
             return " ".join(parts), stage
         b -= 1
     return None, None
+
+
+# What may introduce a motion as put: a member moving it, the Chair stating the question, or Hansard's own
+# "Debate resumed on motion of ...:" / "And ...'s amendment:". Nothing else does: "incorporated the following:"
+# introduces a speech set in the same small type.
+MOTION_LEAD_RE = re.compile(r"(?:\bmove(?:, by leave)?|\bquestion is(?: therefore)?|\bmotion of [^:]+|\bamendments?):$",
+                            re.I)
+QUESTION_MAX = 2000        # characters; a longer "question" is checked by a person before it is published
+# Speech, not a motion: an incorporated speech, a speaker's turn ("Jane CITIZEN (Seat) (10:02):"), the first person.
+SPEECH_RE = re.compile(r"\bincorporated\b|\b[A-Z][a-z]+ [A-Z]{3,}[A-Z’'-]*(?: \([^)]*\))*:"
+                       r"|\bI (?:rise|thank|want|think|believe|am|was|will|would|have|commend|acknowledge)\b"
+                       r"|\b(?:[Ww]e (?:are|have|will)|[Mm]y|[Oo]ur)\b")
+# A procedural report line, not the heading a division sits under.
+PROCEDURAL_NAME_RE = re.compile(r"\b(?:agreed to|negatived|defeated|not agreed to|reported to (?:the )?house)\b|[;:.]$", re.I)
+
+
+def text_faults(record: dict) -> list[str]:
+    """Why a division's printed text may not be what was voted on. Used twice: the parser sends a division with
+    any of these to the mismatch list, and tests/test_vic_divisions.py runs it over the committed data.
+
+      question-lead-not-a-motion    text taken from a block no motion lead introduces
+      question-too-long             over QUESTION_MAX characters
+      question-reads-as-speech      a speaker's turn, an incorporated speech or the first person inside it
+      heading-is-a-procedural-line  `name` is a report line ("Amendments agreed to; ..."), not a heading
+
+    A `question` that is the division line itself ("Council divided on amendment") is exempt from the first
+    three: it claims no motion text."""
+    extra = record.get("extra") or {}
+    faults = []
+    question = record.get("question") or ""
+    if extra.get("question_basis") != "division-line":
+        if not MOTION_LEAD_RE.search(extra.get("question_lead") or ""):
+            faults.append("question-lead-not-a-motion")
+        if SPEECH_RE.search(question):
+            faults.append("question-reads-as-speech")
+    if len(question) > QUESTION_MAX:
+        faults.append("question-too-long")
+    name = record.get("name") or ""
+    if name != (extra.get("division_line") or "").rstrip(":") and PROCEDURAL_NAME_RE.search(name):
+        faults.append("heading-is-a-procedural-line")
+    return faults
+
+
+def shared_question_faults(records: list[dict]) -> list[tuple[str, str]]:
+    """(id, id) pairs that print one motion text for two different things: an amendment and the motion it amends,
+    under one heading on one chamber-day. The standing forms ("That the question be now put.") repeat by nature
+    and are not faults; this is the case of an amendment's text published on the vote for the motion."""
+    kind = lambda r: "amendment" if "amendment" in (r["extra"].get("divided_on") or "") else "motion"
+    seen, pairs = {}, []
+    for r in records:
+        if r["extra"].get("question_basis") == "division-line":
+            continue
+        key = (r["house"], r["date"], r["name"], re.sub(r"\s+", " ", r["question"]).strip().casefold())
+        other = seen.setdefault(key, r)
+        if other is not r and kind(other) != kind(r):
+            pairs.append((other["id"], r["id"]))
+    return pairs
 
 
 def question_before(lines: list[dict], i: int, tail_allowed: bool = True) -> tuple[str | None, str | None, int]:
@@ -487,8 +616,31 @@ def _has_surname(name_key: str, surname: str) -> bool:
     return bool(s) and (name_key == s or name_key.endswith(" " + s))
 
 
-def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[str, str | None]]
-              ) -> tuple[list[dict], list[dict]]:
+def service_fault(printed: str, day: str, service: list[dict] | None) -> str | None:
+    """Why a member listed in a division on `day` cannot have voted then, by the House's own member list, or None.
+
+    `service` is member_service() of the Parliament's last sitting day for that house: every member of the
+    Parliament, with the day a member who joined during it was sworn in and the day one who left resigned.
+    A name is matched by surname, and by the first letter of the given name where two members share one
+    ("Josh Bull", "Tim Bull"). No list (None) checks nothing; a name not on it, or not one member of it, is a fault."""
+    if service is None:
+        return None
+    key = person_key(printed) or ""
+    hits = [m for m in service if _has_surname(key, m["surname"])]
+    if len(hits) > 1:
+        hits = [m for m in hits if (person_key(m["given"]) or " ")[0] == key[:1]]
+    if not hits:
+        return "name-not-on-hansard-member-list"
+    if len(hits) > 1:
+        return "member-list-name-ambiguous"
+    start, end = hits[0]["start"], hits[0]["end"]
+    if (start and day < start) or (end and day > end):
+        return "vote-outside-service-dates"
+    return None
+
+
+def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[str, str | None]],
+              service: list[dict] | None = None) -> tuple[list[dict], list[dict]]:
     """(reconciled divisions, mismatches) for one chamber-day. Every division line takes a number, so the
     ids do not move when a mismatch is later resolved."""
     good, bad = [], []
@@ -549,13 +701,16 @@ def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[
             a, n = stated.get("ayes"), stated.get("noes")
             if a is not None and n is not None and a != n and (a > n) != (result == "affirmative"):
                 reasons.append("result-contradicts-tally")
-        votes, unresolved, seen = [], [], Counter()
+        votes, unresolved, outside, seen = [], [], [], Counter()
         for side, vote in (("ayes", "aye"), ("noes", "no")):
             for raw in names.get(side, []):
                 who = roster.resolve(day["house"], raw, members)
                 seen[person_key(raw)] += 1
                 if not who:
                     unresolved.append(raw)
+                fault = service_fault(raw, day["date"], service)
+                if fault:
+                    outside.append((fault, raw))
                 # The printed name is kept unless Hansard printed another form of it than the roster holds.
                 listed_form = bool(who) and who["basis"].startswith("hansard-member-list")
                 votes.append({"person_raw": raw, "person_name": who["name"] if listed_form else normalize_speaker(raw),
@@ -563,6 +718,7 @@ def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[
                               "roster_basis": who and who["basis"]})
         if unresolved:
             reasons.append("unresolved-name")
+        reasons += sorted({fault for fault, _ in outside})
         if any(count > 1 for count in seen.values()):
             reasons.append("name-listed-twice")
         heading, stage = _heading(lines, start)
@@ -585,12 +741,16 @@ def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[
                       "question_lead": lead, "result_text": result_text, "members_listed": parsed},
             "votes": votes,
         }
+        reasons += text_faults(record)
         if reasons:
             bad.append({"id": div_id, "date": day["date"], "house": day["house"], "source_url": url,
                         "online_url": day.get("online"), "division_line": printed_line,
                         "stated": {"ayes": stated.get("ayes"), "noes": stated.get("noes")},
                         "parsed": {"ayes": parsed.get("ayes"), "noes": parsed.get("noes")},
                         "reasons": reasons, "unresolved_names": sorted(set(unresolved)),
+                        "service_faults": sorted({f"{raw}: {fault}" for fault, raw in outside}),
+                        "name": record["name"], "question_lead": lead,
+                        "question_start": (question or "")[:300] if "division-line" != basis else None,
                         # Whose vote counts lack this division while it is held: the members it names.
                         "members": sorted({v["person_name"] for v in votes if v["roster_basis"]})})
         else:
@@ -623,6 +783,17 @@ def run_parse(args) -> None:
     days = [d for house in ("la", "lc") for d in listing(None, cache, house, args.start, args.end)]
     days = sorted((d for d in days if not only or d["date"] in only), key=lambda d: (d["date"], d["house"]))
     good, bad, files, missing, members_short = [], [], [], [], []
+    # Service dates: the member list of each house's last sitting day in the cache, which names every member
+    # of the Parliament and footnotes those who joined or left during it.
+    service, service_sources = {}, {}
+    for house in ("vic_la", "vic_lc"):
+        last = max((d for d in days if d["house"] == house and pdf_path(cache, d).is_file()),
+                   key=lambda d: d["date"], default=None)
+        if last and not only:
+            service[house] = member_service(pdf_path(cache, last))
+            service_sources[house] = {"date": last["date"], "source_url": last["pdf"], "members": len(service[house]),
+                                      "dated": [{k: m[k] for k in ("surname", "given", "seat", "start", "end", "notes")}
+                                                for m in service[house] if m["start"] or m["end"]]}
     for day in days:
         path = pdf_path(cache, day)
         if not path.is_file():
@@ -631,7 +802,7 @@ def run_parse(args) -> None:
         members = member_list(path)
         if len(members) < (80 if day["house"] == "vic_la" else 38):
             members_short.append({"date": day["date"], "house": day["house"], "listed": len(members)})
-        g, b = parse_day(pdf_lines(path), day, roster, members)
+        g, b = parse_day(pdf_lines(path), day, roster, members, service.get(day["house"]))
         good += g
         bad += b
         files.append({"date": day["date"], "house": day["house"], "id": day["id"], "status": day["status"],
@@ -651,6 +822,7 @@ def run_parse(args) -> None:
         "mismatch_list": len(bad), "mismatch_divisions_by_reason": dict(sorted(reasons.items())),
         "votes": sum(len(g["votes"]) for g in good),
         "member_lists_short": members_short,
+        "service_dates": service_sources,
         "name_basis": dict(sorted(Counter(v["roster_basis"] for g in good for v in g["votes"]).items())),
         "question_basis": dict(sorted(Counter(g["extra"]["question_basis"] for g in good).items())),
         "requests_made": sum(1 for _ in log.open(encoding="utf-8")) if log.is_file() else None,
