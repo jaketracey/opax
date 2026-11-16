@@ -141,14 +141,16 @@
 
   "font": {
     "serif": {
-      "web": "\"Merriweather\", Georgia, \"Times New Roman\", serif",
+      "web": "\"Merriweather\", \"Merriweather Fallback\", Georgia, \"Times New Roman\", serif",
       "app": { "400": "serif", "700": "serifBold" },
-      "$description": "Titles, headings, record text, display figures. The app registers static Merriweather Regular and Bold; Bold stands in for the web's 600."
+      "$description": "Titles, headings, record text, display figures. The app registers static Merriweather Regular and Bold; Bold stands in for the web's 600.",
+      "webFallback": { "family": "Merriweather Fallback", "ascent": "90%", "descent": "25%", "lineGap": "0%", "faces": [{ "weight": 400, "local": ["Georgia"], "sizeAdjust": "107.1%" }, { "weight": 700, "local": ["Georgia Bold", "Georgia-Bold"], "sizeAdjust": "94.8%" }] }
     },
     "sans": {
-      "web": "\"Public Sans\", -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "web": "-apple-system, BlinkMacSystemFont, \"Public Sans\", \"Public Sans Fallback\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
       "app": { "400": "sans", "600": "sansSemiBold", "700": "sansBold" },
-      "$description": "Interface, body, metadata, labels, controls."
+      "$description": "Interface, body, metadata, labels, controls. On the web: the system face on Apple devices (SF, as the iOS app), Public Sans elsewhere (as the Android app). The share images keep Public Sans.",
+      "webFallback": { "family": "Public Sans Fallback", "ascent": "90.3%", "descent": "21.4%", "lineGap": "0%", "faces": [{ "weight": 400, "local": ["Arial", "ArialMT"], "sizeAdjust": "105.2%" }, { "weight": 600, "local": ["Arial Bold", "Arial-BoldMT"], "sizeAdjust": "98.8%" }, { "weight": 700, "local": ["Arial Bold", "Arial-BoldMT"], "sizeAdjust": "100.1%" }] }
     },
     "appFaces": {
       "$description": "The app's registered font names (app/_layout.tsx).",
@@ -182,18 +184,20 @@
   },
 
   "webRoles": {
-    "$description": "The web's eleven type roles. Each follows an app role in `type` and lists beside it only the family, weight, size or line height where today's web differs, so the web renders as it did before the app roles joined this file. A later pass deletes a field to move a web role onto its app role. Web sizes are rem (px / 16); a line height of 3 or less is a ratio. Today's web uses six sizes, 32, 24, 17, 16, 15 and 13, plus the fluid title (32 to 48). Sentence case everywhere: no uppercase or letter-spaced labels. Figures and tables use tabular numbers.",
-    "title": { "follows": "largeTitle", "family": "serif", "weight": 400, "size": "clamp(2rem, 1.25rem + 2.2vw, 3rem)", "lineHeight": 1.15, "$description": "The page's one title: a person's name, a bill title, a screen name." },
-    "display": { "follows": "figure", "family": "serif", "weight": 600, "size": 32, "lineHeight": 1.2, "$description": "The one number a block is about. Serif, because large Public Sans tabular digits read as monospace. May take the view's accent ink." },
-    "heading": { "follows": "sectionTitle", "family": "serif", "weight": 600, "size": 24, "lineHeight": 1.25, "$description": "Section heading." },
-    "subheading": { "follows": "rowRecord", "weight": 600, "lineHeight": 1.4, "$description": "A row title that leads a block: a bill in a list, a division, a report card." },
-    "record": { "follows": "recordText", "lineHeight": 1.7, "$description": "The words of the record and long reading: speeches, report essays, In short." },
-    "body": { "follows": "body", "size": 16, "lineHeight": 1.55, "$description": "Interface and OPAX's own sentences." },
-    "strong": { "follows": "strong", "size": 16, "lineHeight": 1.55, "$description": "Names in rows, values in key-value lists, inline figures (with tabular)." },
-    "metadata": { "follows": "secondary", "lineHeight": 1.45, "$description": "The one meta line under a title: kind · date · place." },
-    "fine": { "follows": "footnote", "lineHeight": 1.45, "$description": "Source lines, saved-copy notices, one short caveat. Never below 13." },
-    "label": { "follows": "capsule", "size": 13, "lineHeight": 1.45, "$description": "Tags, status labels, party labels, field labels. Replaces kicker, tag and chip." },
-    "control": { "follows": "strong", "size": 16, "lineHeight": 1.25, "$description": "Button, chip and segment labels." }
+    "$description": "The web's type roles. Each follows an app role in `type` and lists beside it only the family, weight, size or line height where the web differs. Since 17 Nov 2026 the web follows the app roles, with two deliberate differences: text that wraps into paragraphs keeps a reading line (body 26px, metadata 22px, fine 19px, where the app's rows are mostly one line), and label holds the web's 13px floor. Web sizes are rem (px / 16); a line height of 3 or less is a ratio. Sizes: 34, 28, 22, 17, 15 and 13. Sentence case everywhere: no uppercase or letter-spaced labels. Figures and tables use tabular numbers.",
+    "title": { "follows": "largeTitle", "$description": "A screen's one title: a person's name, a hub, a page. A record's title is recordTitle." },
+    "recordTitle": { "follows": "recordTitle", "$description": "A record's own title: a bill, a division, a speech. Serif, because it is the record's words." },
+    "display": { "follows": "figure", "$description": "The one number a block is about, in tabular figures. May take the view's accent ink. Figures set side by side in a fixed grid are tileFigure." },
+    "tileFigure": { "follows": "tileFigure", "$description": "A figure in a fixed grid of figures (the app's stat tiles): smaller than display, so each fits its column on a phone." },
+    "heading": { "follows": "sectionTitle", "$description": "Section heading." },
+    "subheading": { "follows": "rowRecord", "$description": "A row title that leads a block: a bill in a list, a division, a report card." },
+    "record": { "follows": "recordText", "$description": "The words of the record and long reading: speeches, report essays, In short." },
+    "body": { "follows": "body", "lineHeight": 26, "$description": "Interface and OPAX's own sentences. Paragraphs keep a 26px line." },
+    "strong": { "follows": "strong", "$description": "Names in rows, values in key-value lists, inline figures (with tabular)." },
+    "metadata": { "follows": "secondary", "lineHeight": 22, "$description": "The meta line under a title (kind · date · place), and the web's short secondary paragraphs: a machine-written brief, a card's description. Keeps a 22px line because it wraps." },
+    "fine": { "follows": "footnote", "lineHeight": 19, "$description": "Source lines, saved-copy notices, one short caveat. Never below 13. Keeps a 19px line because notices wrap to two lines." },
+    "label": { "follows": "capsule", "size": 13, "lineHeight": 18, "$description": "Tags, status labels, party labels, field labels. Replaces kicker, tag and chip. Held at 13, the web's smallest text." },
+    "control": { "follows": "strong", "$description": "Button, chip and segment labels." }
   },
 
   "space": {
@@ -210,9 +214,9 @@
   },
 
   "webScale": {
-    "$description": "Web-only primitives (12 Oct 2026 uplift): the steps the roles are built from, for component internals that have no role of their own. Written as --sp-<px>, --text-<px>, --weight-*, --leading-* and --ring-*; never in the app. Prefer a role where one fits.",
+    "$description": "Web-only primitives (12 Oct 2026 uplift; text steps follow the app roles from 17 Nov 2026): the steps the roles are built from, for component internals that have no role of their own. Written as --sp-<px>, --text-<px>, --weight-*, --leading-* and --ring-*; never in the app. Prefer a role where one fits.",
     "space": [2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80],
-    "text": [13, 15, 16, 17, 24, 32],
+    "text": [13, 15, 17, 22, 28, 34],
     "weight": { "regular": 400, "strong": 600, "bold": 700 },
     "leading": { "none": 1, "tight": 1.15, "snug": 1.3, "normal": 1.45, "body": 1.55, "loose": 1.7 },
     "ring": { "hairline": "0 0 0 var(--border-hairline)", "focus": "0 0 0 var(--border-focus)", "insetHairline": "inset 0 0 0 var(--border-hairline)" }
@@ -342,7 +346,10 @@
       "--space-7": { "alias": "--space-section" },
       "--row-gap": { "alias": "--space-row" },
       "--sub-gap": { "value": "var(--sp-48)", "compact": "var(--sp-32)", "use": "--sp-48 (--sp-32 under 701px)", "change": "none" },
-      "--section-gap": { "alias": "--space-section" }
+      "--section-gap": { "alias": "--space-section" },
+      "--text-16": { "alias": "--text-17" },
+      "--text-24": { "alias": "--text-22" },
+      "--text-32": { "alias": "--text-34" }
     },
     "app": {
       "roles": {
