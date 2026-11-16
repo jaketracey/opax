@@ -79,12 +79,20 @@ allowance reconciled from 90 to 88 seconds. There were no CSP violations or
 uncaught browser errors. The browser context was fully closed before account
 cleanup. No email was sent.
 
-## Agent prompt and tools (`agent-config.json`, `agent-sync.mjs`)
+## Agent prompt, opening message and tools (`agent-config.json`, `agent-sync.mjs`)
 
 The ElevenLabs agent's prompt and its eight webhook tools are kept in
 `agent-config.json`. `{{origin}}` becomes the agent's OPAX origin (from the
 `agents` table) and `{{voice_tool_secret_id}}` the provider secret that holds
 `VOICE_TOOL_SECRET`. The sync script only reads the provider until `--apply`.
+
+`first_message` in the same file is the opening message the agent speaks when a
+call connects (`conversation_config.agent.first_message` at the provider). It
+carries the greeting, then the error notice sentence, then the opening question.
+The dry run prints the live and the configured wording when they differ;
+`--apply` sends it with the prompt and checks it on read-back; a restore puts
+the backed-up wording back. A language preset with its own opening message is
+named in the plan and not changed.
 
 ```sh
 cd portal

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Sync the ElevenLabs voice agent's prompt and server tools from voice/agent-config.json. See voice/README.md.
+// Sync the ElevenLabs voice agent's prompt, opening message and server tools from voice/agent-config.json. See voice/README.md.
 //
 //   npm run voice:agent -- --agent <agent_id>                    # dry run: print the plan, change nothing
 //   npm run voice:agent -- --agent <agent_id> --apply            # back up, write tools, then the agent; re-check
@@ -38,6 +38,19 @@ export function renderTools(config, {origin, secretId}) {
 export const promptText = config => Array.isArray(config.prompt) ? config.prompt.join('\n') : String(config.prompt)
 /** Prompts compare equal when only line-end and trailing whitespace differ (the provider may normalise them). */
 export const samePrompt = (a, b) => typeof a === 'string' && typeof b === 'string' && a.replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '').trim() === b.replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '').trim()
+
+/**
+ * The opening message the agent speaks when a call connects: `first_message` in the config, a string or a list of
+ * sentences joined by one space. It is conversation_config.agent.first_message at the provider (agents/get and
+ * agents/update). null when the config does not set it: the sync then leaves the provider's value alone.
+ */
+export const openingMessage = config => Array.isArray(config.first_message) ? config.first_message.join(' ') : typeof config.first_message === 'string' ? config.first_message : null
+const sameOpening = (a, b) => typeof a === 'string' && typeof b === 'string' && a.trim() === b.trim()
+/** Languages whose preset replaces the opening message; the sync does not write presets, so the plan names them. */
+function presetOpenings(agent) {
+  const presets = agent?.conversation_config?.language_presets
+  return Object.entries(presets && typeof presets === 'object' ? presets : {}).filter(([, preset]) => typeof preset?.overrides?.agent?.first_message === 'string' || preset?.first_message_translation).map(([language]) => language)
+}
 
 /** The origin a webhook tool posts to, or null. */
 export function toolOrigin(tool) {
@@ -99,9 +112,11 @@ export function planSync(config, agent, attached, {origin, secretId, workspace =
   const inlineOnly = inline.filter(t => !covered(t) && !names.has(t?.name)).map(t => t?.name ?? '(unnamed)')
   const want = promptText(config)
   const changed = !samePrompt(prompt.prompt, want)
+  const opening = openingMessage(config), spoken = agent?.conversation_config?.agent?.first_message
   return {
     agent_id: agent?.agent_id, origin, secret_id: secret, tools, kept, inline_replaced: inlineReplaced, inline_matched: inlineMatched,
     prompt: {changed, diff: changed ? lineDiff(prompt.prompt, want) : [], text: want},
+    opening: {configured: opening !== null, changed: opening !== null && !sameOpening(spoken, opening), have: typeof spoken === 'string' ? spoken : null, want: opening, presets: opening !== null ? presetOpenings(agent) : []},
     problems: [
       // An attached tool of a configured name that posts elsewhere may be shared with another environment's agent:
       // updating it would repoint that agent too. Detach or replace it in the dashboard first.
@@ -114,8 +129,8 @@ export function planSync(config, agent, attached, {origin, secretId, workspace =
   }
 }
 
-/** Everything the agent should end with is already there: every tool `same` and attached, the prompt unchanged. */
-export const inSync = plan => !plan.problems.length && !plan.prompt.changed && !plan.inline_replaced.length && plan.tools.every(t => t.action === 'same' && t.attached)
+/** Everything the agent should end with is already there: every tool `same` and attached, the prompt and the opening message unchanged. */
+export const inSync = plan => !plan.problems.length && !plan.prompt.changed && !plan.opening?.changed && !plan.inline_replaced.length && plan.tools.every(t => t.action === 'same' && t.attached)
 
 export function formatPlan(plan) {
   const out = [`Agent ${plan.agent_id ?? '(unknown)'} -> ${plan.origin}`, `Tool secret: ${plan.secret_id ? 'provider secret ' + plan.secret_id : 'MISSING'}`]
@@ -129,6 +144,10 @@ export function formatPlan(plan) {
   if (plan.inline_matched?.length) out.push(`inline ${plan.inline_matched.join(', ')}: deprecated prompt.tools entries that match attached tools; the agent update sends tool_ids only`)
   out.push(plan.prompt.changed ? 'prompt changes:' : 'prompt unchanged')
   out.push(...plan.prompt.diff.map(line => '  ' + line))
+  const opening = plan.opening
+  if (opening?.changed) out.push('opening message changes:', '  - ' + (opening.have === null ? '(none)' : JSON.stringify(opening.have)), '  + ' + JSON.stringify(opening.want))
+  else out.push(opening?.configured ? 'opening message unchanged' : 'opening message not in agent-config.json; left as it is')
+  for (const language of opening?.presets ?? []) out.push(`note   the ${language} language preset has its own opening message; this sync does not change presets`)
   out.push(...plan.problems.map(problem => 'PROBLEM ' + problem))
   return out.join('\n')
 }
@@ -181,11 +200,12 @@ export function saveBackup(dir, agentId, state, now = new Date()) {
 /**
  * The agent PATCH body: the fetched prompt with `changes`, without the deprecated prompt.tools. The provider refused
  * it next to tool_ids (staging, 13 Nov), and its deprecation guide says POST and PATCH reject any request carrying
- * it, so the key is left out rather than sent as an empty list.
+ * it, so the key is left out rather than sent as an empty list. `firstMessage`, when a string, is sent beside the
+ * prompt as agent.first_message; otherwise the key is left out and the provider keeps what it has.
  */
-export function agentUpdate(fetchedPrompt, changes) {
+export function agentUpdate(fetchedPrompt, changes, firstMessage) {
   const {tools: _deprecated, ...prompt} = {...fetchedPrompt, ...changes}
-  return {conversation_config: {agent: {prompt}}}
+  return {conversation_config: {agent: {...(typeof firstMessage === 'string' ? {first_message: firstMessage} : {}), prompt}}}
 }
 
 /** Tools first, then one agent PATCH that attaches them with the prompt. On a failed agent update, say what is left. */
@@ -197,25 +217,29 @@ export async function applyPlan(call, agentId, plan, agent) {
   }
   const toolIds = [...ids, ...plan.kept.map(t => t.id)]
   try {
-    await call('PATCH', `/v1/convai/agents/${encodeURIComponent(agentId)}`, agentUpdate(agent.conversation_config.agent.prompt, {prompt: plan.prompt.text, tool_ids: toolIds}))
+    await call('PATCH', `/v1/convai/agents/${encodeURIComponent(agentId)}`, agentUpdate(agent.conversation_config.agent.prompt, {prompt: plan.prompt.text, tool_ids: toolIds}, plan.opening?.changed ? plan.opening.want : undefined))
   } catch (error) {
-    throw new Error([`Agent update failed: ${error.message}`, 'The agent itself is unchanged (prompt and tool_ids as before).',
+    throw new Error([`Agent update failed: ${error.message}`, 'The agent itself is unchanged (prompt, opening message and tool_ids as before).',
       `Created, not attached: ${created.join('; ') || 'none'}.`, `Updated in place (already attached tools now carry the new config): ${updated.join('; ') || 'none'}.`,
       'Re-running --apply reuses the created tools. To undo the updates, run --restore with the backup above.'].join('\n'))
   }
-  const after = (await call('GET', `/v1/convai/agents/${encodeURIComponent(agentId)}`)).conversation_config?.agent?.prompt ?? {}
+  const read = (await call('GET', `/v1/convai/agents/${encodeURIComponent(agentId)}`)).conversation_config?.agent ?? {}, after = read.prompt ?? {}
   const missing = toolIds.filter(id => !(after.tool_ids ?? []).includes(id))
-  if (!samePrompt(after.prompt, plan.prompt.text) || missing.length) throw new Error(`Read-back mismatch: prompt ${samePrompt(after.prompt, plan.prompt.text) ? 'ok' : 'differs'}, missing tool ids ${missing.join(', ') || 'none'}`)
+  const openingOk = !plan.opening?.configured || sameOpening(read.first_message, plan.opening.want)
+  if (!samePrompt(after.prompt, plan.prompt.text) || missing.length || !openingOk) throw new Error(`Read-back mismatch: prompt ${samePrompt(after.prompt, plan.prompt.text) ? 'ok' : 'differs'}, opening message ${openingOk ? 'ok' : 'differs'}, missing tool ids ${missing.join(', ') || 'none'}`)
   return {toolIds, created, updated}
 }
 
-/** Put the agent's prompt and tool_ids, and each saved tool's config, back as the backup recorded them. */
+/** Put the agent's prompt, opening message and tool_ids, and each saved tool's config, back as the backup recorded them. */
 export function restorePlan(backup, current) {
   const saved = backup.agent?.conversation_config?.agent?.prompt ?? {}
   const now = current.agent?.conversation_config?.agent?.prompt ?? {}
   const tools = (backup.attached ?? []).map(t => ({id: t.id, name: t.tool_config?.name, tool_config: t.tool_config, changes: differences(t.tool_config, current.byId.get(t.id))}))
   const added = (now.tool_ids ?? []).filter(id => !(saved.tool_ids ?? []).includes(id))
-  return {prompt: saved, promptChanged: !samePrompt(now.prompt, saved.prompt) || !isDeepStrictEqual(now.tool_ids ?? [], saved.tool_ids ?? []), tools, detach: added}
+  // A backup made before the opening message was synced has none recorded: the opening message is then left alone.
+  const opening = backup.agent?.conversation_config?.agent?.first_message
+  const openingChanged = typeof opening === 'string' && !sameOpening(current.agent?.conversation_config?.agent?.first_message, opening)
+  return {prompt: saved, promptChanged: !samePrompt(now.prompt, saved.prompt) || !isDeepStrictEqual(now.tool_ids ?? [], saved.tool_ids ?? []), opening: typeof opening === 'string' ? opening : null, openingChanged, tools, detach: added}
 }
 
 export function parseArgs(argv) {
@@ -264,6 +288,7 @@ async function restore(args, state, {call, log, backupDir}) {
   const plan = restorePlan(backup, {agent: state.agent, byId: new Map(state.attached.map(t => [t.id, t.tool_config]))})
   log(`Restore ${args.agent} to the backup saved ${backup.saved_at}:`)
   log(`  prompt and tool_ids: ${plan.promptChanged ? 'restore' : 'already as saved'}`)
+  log(`  opening message: ${plan.opening === null ? 'not in the backup; left as it is' : plan.openingChanged ? 'restore' : 'already as saved'}`)
   for (const tool of plan.tools) log(`  ${tool.changes.length ? 'restore' : 'same   '} ${tool.name} (${tool.id})${tool.changes.length ? ': ' + tool.changes.map(c => c.path).join(', ') : ''}`)
   if (plan.detach.length) log(`  detach ${plan.detach.join(', ')} (left in the workspace; delete in the ElevenLabs dashboard if unwanted)`)
   if (plan.prompt.tools?.length) log('  prompt.tools in the backup is not sent: the provider takes tool_ids only')
@@ -271,9 +296,9 @@ async function restore(args, state, {call, log, backupDir}) {
   const file = saveBackup(backupDir, args.agent, state)
   log(`\nBackup of the current state before restoring: ${file}`)
   for (const tool of plan.tools) if (tool.changes.length) await call('PATCH', `/v1/convai/tools/${encodeURIComponent(tool.id)}`, {tool_config: tool.tool_config})
-  if (plan.promptChanged) await call('PATCH', `/v1/convai/agents/${encodeURIComponent(args.agent)}`, agentUpdate(state.agent.conversation_config.agent.prompt, {prompt: plan.prompt.prompt, tool_ids: plan.prompt.tool_ids ?? []}))
-  const after = (await call('GET', `/v1/convai/agents/${encodeURIComponent(args.agent)}`)).conversation_config?.agent?.prompt ?? {}
-  const ok = samePrompt(after.prompt, plan.prompt.prompt) && isDeepStrictEqual(after.tool_ids ?? [], plan.prompt.tool_ids ?? [])
+  if (plan.promptChanged || plan.openingChanged) await call('PATCH', `/v1/convai/agents/${encodeURIComponent(args.agent)}`, agentUpdate(state.agent.conversation_config.agent.prompt, {prompt: plan.prompt.prompt, tool_ids: plan.prompt.tool_ids ?? []}, plan.openingChanged ? plan.opening : undefined))
+  const read = (await call('GET', `/v1/convai/agents/${encodeURIComponent(args.agent)}`)).conversation_config?.agent ?? {}, after = read.prompt ?? {}
+  const ok = samePrompt(after.prompt, plan.prompt.prompt) && isDeepStrictEqual(after.tool_ids ?? [], plan.prompt.tool_ids ?? []) && (plan.opening === null || sameOpening(read.first_message, plan.opening))
   log(ok ? 'Restored.' : 'Restore read-back differs: check the agent in the dashboard.')
   return ok ? 0 : 1
 }
