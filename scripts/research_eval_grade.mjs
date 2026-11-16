@@ -332,6 +332,34 @@ function requiredComponents(q,answer,ev) {
 const axisOf = (counts) => counts.fail ? 'fail' : counts.partial ? 'partial' : 'pass'
 
 /** Grade one payload against one question. `roster` is a list of names; `parties` maps folded name → party. */
+const TRANSCRIPT_SOURCE = 'Hearing transcript: evidence, not findings'
+const PERSON_TITLE = String.raw`(?:Mr|Ms|Mrs|Miss|Mx|Dr|Prof|Professor|Senator|Commissioner|Justice|Judge|Minister|Hon|Sir|Dame|Uncle|Aunty)\.?`
+const NAME_WORD = String.raw`\p{Lu}[\p{L}'’-]*\p{Ll}[\p{L}'’-]*`
+// Capitalised words that open or sit in the names of bodies, laws and places, not people.
+const NOT_A_PERSON = /^(?:Royal|Commission|Commissioner|Special|Inquiry|Board|Department|Services|Australia|Australian|Commonwealth|Government|Minister|Ministry|Office|Act|Scheme|Robodebt|Health|Hospital|District|Local|New|South|Wales|Victoria|Queensland|Sydney|Tribunal|Court|Federal|National|State|Council|Counsel|Assisting|Senior|Hearing|Transcript|Day|Page|Exhibit|Income|Social|Security|Human|Tax|Taxation|Ombudsman|Parliament|Senate|House|University|Agency|Authority|Centrelink|January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|The|This|That|These|Those|And|But|When|What|Who|Which|Did|Does|Was|Were|Yes|Not|Well|Thank)$/
+/** People named in an answer's own words, for an answer that cites a hearing transcript: a title and a capitalised
+ * surname ("Ms Surname"), or a full name that the cited excerpts hold ("First Surname"), outside “ ” or " ". The
+ * rule for both prose models is that such a name appears only inside a verbatim quotation. This is a count for the
+ * eval report, target zero. It is rough (a place or a body can read as a name), it gates nothing and it is never
+ * run on the way to a reader. */
+export function namedPeopleOutsideQuotes(answer, payload) {
+  const cited = (Array.isArray(payload?.sources) ? payload.sources : []).filter((s) => s && s.cited === true && `${s.snippet ?? ''} ${s.title ?? ''}`.includes(TRANSCRIPT_SOURCE))
+  if (!cited.length) return { applies: false, count: 0, names: [] }
+  const prose = String(answer ?? '').replace(/“[^”]*”/g, ' ').replace(/"[^"]*"/g, ' ')
+  const found = new Set()
+  for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${PERSON_TITLE} ${NAME_WORD}(?: ${NAME_WORD})?`, 'gu'))) {
+    const words = m[0].split(' ').slice(1).filter((w) => !NOT_A_PERSON.test(w))
+    if (words.length) found.add(m[0].split(' ')[0] + ' ' + words.join(' '))
+  }
+  const excerpts = cited.map((s) => String(s.snippet ?? '')).join('\n')
+  for (const m of excerpts.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?: ${NAME_WORD}){1,2}(?![\p{L}])`, 'gu'))) {
+    const words = m[0].split(' ')
+    if (words.some((w) => NOT_A_PERSON.test(w))) continue
+    if (new RegExp(String.raw`(?<![\p{L}])${m[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\p{L}])`, 'u').test(prose) && ![...found].some((f) => f.endsWith(words.at(-1)))) found.add(m[0])
+  }
+  return { applies: true, count: found.size, names: [...found] }
+}
+
 export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) {
   const answer = String(payload?.answer ?? '')
   const answered = payload?.answered !== false && answer.trim().length > 0
@@ -403,6 +431,9 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
     ...causal.map((s) => `causal wording: ${s.slice(0, 80)}`),
     ...cit.unresolved.map((k) => `citation key without a cited source: ${k}`),
   ]
+  const named = namedPeopleOutsideQuotes(answer, payload)
+  // Reported, never graded: it does not move any axis or the overall grade.
+  for (const n of named.names) flags.push(`named person outside a quotation: ${n}`)
   if (!refusal && !cit.cited_sources) flags.push('no cited source')
   if (refusal && !expectsDecline) flags.push('refused or declined')
   return {
@@ -410,7 +441,7 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
     checks: checks.map(({ part, type, status, detail, why }) => ({ part: part ?? null, type, status, detail, why: why ?? null })),
     figures: { total: figures.figures.length, unbound: figures.unbound.map((f) => f.value), unbound_uncited: figures.unbound_uncited.map((f) => f.value) },
     names, quotes, citations: { keys: cit.keys, unresolved: cit.unresolved, cited_sources: cit.cited_sources, figure_sentences: cit.figure_sentences, figure_sentences_cited: cit.figure_sentences_cited },
-    coherence, causal, tools, gold: gold ? { pass: gold.pass, checks: gold.checks } : null, evidence_complete: ev.complete, flags,
+    coherence, causal, tools, gold: gold ? { pass: gold.pass, checks: gold.checks } : null, evidence_complete: ev.complete, named_people: named, flags,
   }
 }
 
@@ -491,6 +522,7 @@ export function renderMarkdown(report) {
     L.push(`| tokens / cost | ${modes.map((m) => cell(m, (r) => `${fmtN(r.usage?.total)} / ${fmtUsd(r.usage?.cost_usd)} (${r.usage?.cost_source ?? 'missing'})`)).join(' | ')} |`)
     L.push(`| tools (mode, rounds) | ${modes.map((m) => cell(m, (r) => `${r.grade.tools.used.join(' → ') || '–'} → ${r.grade.tools.status}${r.grade.tools.mode ? ` (${r.grade.tools.mode}${r.grade.tools.rounds != null ? ', ' + r.grade.tools.rounds : ''})` : ''}`)).join(' | ')} |`)
     L.push(`| cited sources / quotes | ${modes.map((m) => cell(m, (r) => `${r.grade.citations.cited_sources} / ${r.grade.quotes.found}/${r.grade.quotes.total}`)).join(' | ')} |`)
+    if (modes.some((m) => row(m)?.grade?.named_people?.applies)) L.push(`| named people outside quotations (transcript answers; target 0) | ${modes.map((m) => cell(m, (r) => r.grade.named_people?.applies ? String(r.grade.named_people.count) : 'n/a')).join(' | ')} |`)
     L.push(`| flags | ${modes.map((m) => cell(m, (r) => r.grade.flags.join('; ') || '–')).join(' | ')} |`, '')
     for (const m of modes) {
       const r = row(m); if (!r || r.error) continue
