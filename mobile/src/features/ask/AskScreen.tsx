@@ -625,6 +625,10 @@ export default function AskScreen() {
             {/* After the scroll's chain, so UIKit still finds it first. */}
             {barFade ? (
               <ClearBarFade
+                // Its own layer for a thread, not the idle page's reused: the
+                // natively driven values of a reused one stayed as the idle
+                // page left them, and the ground covered the question.
+                key={idle ? 'idle' : 'thread'}
                 y={fadeScroll.y}
                 bottom={headerBottom}
                 hidden={hiddenBand}

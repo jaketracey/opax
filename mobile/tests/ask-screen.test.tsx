@@ -156,6 +156,21 @@ jest.mock('../src/features/account/store', () => ({
   accountSnapshot: () => mockAccount,
 }));
 jest.mock('../src/voice/linked', () => ({ voiceLinked: true }));
+// The ground under a bar fade, counted each time a fade layer is mounted.
+const mockFadeLayers = { mounted: 0 };
+jest.mock('../src/design/ground-fade', () => {
+  const actual = jest.requireActual('../src/design/ground-fade');
+  const { createElement, useEffect } = jest.requireActual('react');
+  return {
+    ...actual,
+    GroundFade: (props: object) => {
+      useEffect(() => {
+        mockFadeLayers.mounted += 1;
+      }, []);
+      return createElement(actual.GroundFade, props);
+    },
+  };
+});
 jest.mock('../src/features/ask/store', () => {
   const saved = { v: 1, active: null, chats: [] };
   return {
@@ -4298,7 +4313,14 @@ test.each([
       scrollTo(-68);
       expect(byId('bar-fade').length).toBeGreaterThan(0);
 
+      // A saved conversation opened from the idle page. The idle page's
+      // fade layer was reused for the thread, and its natively driven
+      // values stayed as the idle page left them: the ground covered the
+      // question, which was laid out under the bar and not seen (builds 82
+      // to 88). The thread gets a fade layer of its own.
+      const layersBeforeOpening = mockFadeLayers.mounted;
       openSavedConversation();
+      expect(mockFadeLayers.mounted).toBe(layersBeforeOpening + 1);
       scrollTo(400);
       expect(edges()).not.toContain('hard');
       expect(byId('bar-fade').length).toBeGreaterThan(0);
@@ -4337,8 +4359,10 @@ test.each([
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
       expect(edges()).not.toContain('hard');
-      // Back on the idle page the native soft edge returns.
+      // Back on the idle page the native soft edge returns, and the idle
+      // page has its own layer again.
       expect(edges().at(-1)).toBe('soft');
+      expect(mockFadeLayers.mounted).toBeGreaterThan(layersBeforeOpening + 1);
       await act(async () =>
         view!.update(
           withNavigationOptions(page(120), (options) => {
