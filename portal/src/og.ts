@@ -607,6 +607,12 @@ function storyNote(text: string | null | undefined, centred = false): El | null 
   return t ? h('div', { style: { fontFamily: SANS, fontSize: S_NOTE, lineHeight: 1.4, color: SOFT, opacity: 0.85, marginTop: 40, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, S_NOTE, SANS_EM, 3)) : null
 }
 
+/** The cover's small line under its cover line: who wrote the sentence above it. One row, quieter than the line. */
+function coverNote(text: string | null | undefined): El | null {
+  const t = text ? storyText(text) : ''
+  return t ? h('div', { style: { display: 'flex', fontFamily: SANS, fontSize: S_NOTE, lineHeight: 1.3, color: SOFT, opacity: 0.85, marginTop: 14, width: P_TEXT_WIDTH } }, clipToLines(t, P_TEXT_WIDTH, S_NOTE, SANS_EM, 1)) : null
+}
+
 /** The engraving as a watermark in the lower right, behind the type; `bottom` clears the footer unless a slide has none. */
 const storyEngraving = (width: number, opacity: number, g: StoryGeometry, bottom = 124): El =>
   h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: bottom + g.padBottom, opacity } })
@@ -646,6 +652,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
         storyKicker(slide.kicker),
         storyHeadline(slide.title, 128, 2),
         ...storyLines([slide.line], false, 3),
+        coverNote(slide.note),
         h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 520, height: 474, style: { opacity: 0.9 } })),
       ]),
       storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
@@ -670,6 +677,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 140, 2),
       ...storyLines([slide.line], false, 3),
+      coverNote(slide.note),
     ),
     storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
   ])

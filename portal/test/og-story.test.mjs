@@ -88,6 +88,28 @@ test('the cover draws the photograph as a full-width band with the credit and a 
   assert.ok(texts(withInset).some(t => t.includes('Portrait: Parliament of Australia')), 'both credits');
 });
 
+test('a cover whose line is a summary sentence draws one small "Machine-written summary" line directly under it, at both export sizes', async () => {
+  const noted = { ...slides.cover, line: 'This bill would create a legal framework for regulating cash distribution services in Australia. Introduced 2 Jul 2026; before parliament.', note: 'Machine-written summary' };
+  for (const [format, images] of [['feed', { photo, credit }], ['story', { photo, credit }], ['feed', {}]]) {
+    const tree = storySlideTree(noted, images, format), nodes = walk(tree);
+    const lines = nodes.filter(n => n.props?.children === 'Machine-written summary');
+    assert.equal(lines.length, 1, format + ': drawn once');
+    // It is the node straight after the cover line, among the same parent's children: under the line, above the footer.
+    const parent = nodes.find(n => Array.isArray(n.props?.children) && n.props.children.includes(lines[0]));
+    const kids = parent.props.children.filter(Boolean), at = kids.indexOf(lines[0]);
+    assert.ok(at > 0 && typeof kids[at - 1].props.children === 'string' && kids[at - 1].props.children.startsWith('This bill would create'), format + ': directly under the cover line');
+    // Smaller and quieter than the line it sits under, in the same column, one row.
+    assert.ok(lines[0].props.style.fontSize < kids[at - 1].props.style.fontSize, format);
+    assert.equal(lines[0].props.style.width, kids[at - 1].props.style.width);
+    assert.ok(lines[0].props.style.marginTop <= 16);
+    // The whole slide still renders at the real export size.
+    if (format === 'feed') { const jpeg = decode(await renderJpeg(noted, images)); assert.deepEqual([jpeg.width, jpeg.height], [1080, 1350]); }
+  }
+  // A cover with no note (a member, a grant, an edition stored before this) draws no such line.
+  for (const slide of [slides.cover, slides.coverInset, slides.coverBare, { ...slides.cover, note: null }, { ...slides.cover, note: '  ' }]) assert.ok(!texts(storySlideTree(slide, { photo, credit })).some(t => t.includes('Machine-written')), slide.title);
+  assert.ok(validStory([noted, slides.number, slides.source]), 'a noted cover is a valid story');
+});
+
 test('the number slide sets the figure at the card statistic size; the ledger clips long text on a word', () => {
   const number = storySlideTree(slides.number);
   const value = walk(number).find(n => n.props?.children === '$11.3m');
@@ -129,7 +151,7 @@ test('the closing slide is the page address alone: no path line under it, no wor
 
 test('the Victorian CTA keeps the address-only design and the exact small authorisation outside its clipped body', () => {
   const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
-  assert.equal(STORY_VERSION, 4, 'changed electoral drawings invalidate the version 3 cache');
+  assert.equal(STORY_VERSION, 5, 'a changed cover drawing invalidates the version 4 cache');
   const slide = {...slides.source, path: 'legacy path must not be drawn', authorisation: line};
   for (const format of ['feed', 'story']) {
     const tree = storySlideTree(slide, {}, format);
