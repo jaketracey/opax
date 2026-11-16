@@ -6,11 +6,17 @@ commissions in ``COMMISSIONS`` from the verified manual cache (``<cache>/manual/
 no source requests) and writes ``portal/public/transcripts/``:
 
   index.json               the transcripts, attribution and licence per commission, the
-                           tokeniser's stopwords and the terms too common to post
+                           tokeniser's stopwords and the everyday terms (in more than half the
+                           transcripts), which a long search leaves out first
+  term-pages.json          term -> pages holding it across all transcripts; read only by a search
+                           of more than six specific words, to leave out the most frequent
   terms/<nn>.json          term -> [transcripts containing it (index into index.json docs),
                            the number of pages of each that hold it], sharded by FNV-1a of the
                            term. The page counts let a word search put the transcripts that
                            dwell on a word ahead of ones that mention it once (schema 2).
+                           Every term is posted, the everyday ones too (schema 3): before, a
+                           search made only of everyday words ("executive minute", "general
+                           practice training") could match no text at all.
   <commission>/<key>.json  one transcript: its pages with the publisher's own transcript page
                            number, the cleaned text of each page, and term -> pages
 
@@ -45,7 +51,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "parli" / "ingest" / "royal_commissions.json"
 OUT = ROOT / "portal" / "public" / "transcripts"
 CACHE = Path(os.environ.get("OPAX_RC_CACHE", Path.home() / ".cache" / "autoresearch" / "royal-commissions")) / "manual"
-SCHEMA = 2  # the index and its postings; a transcript file keeps DOC_SCHEMA
+SCHEMA = 3  # the index and its postings; a transcript file keeps DOC_SCHEMA
 DOC_SCHEMA = 1
 SHARDS = 64
 LABEL = "Hearing transcript: evidence, not findings"
@@ -188,12 +194,15 @@ def write(path: Path, value):
 def shard_files(postings, total_docs):
     """(common terms, the shard dicts) for term -> [(transcript, pages holding the term)]."""
     common = sorted(t for t, ds in postings.items() if len(ds) > total_docs // 2)
-    held = set(common)
+    # How common each everyday term is: the pages holding it across all transcripts. A long search keeps the least
+    # common of them.
+    common_pages = [sum(n for _, n in postings[t]) for t in common]
     shards: list[dict] = [{} for _ in range(SHARDS)]
     for t, ds in sorted(postings.items()):
-        if t not in held:
-            shards[shard(t)][t] = [[i for i, _ in ds], [n for _, n in ds]]
-    return common, shards
+        shards[shard(t)][t] = [[i for i, _ in ds], [n for _, n in ds]]
+    # Every term's page total, for the rare search of more than six specific words (which drops the most frequent).
+    term_pages = {t: sum(n for _, n in ds) for t, ds in sorted(postings.items())}
+    return common, common_pages, shards, term_pages
 
 
 def postings_only(out: Path, check: bool) -> int:
@@ -204,18 +213,21 @@ def postings_only(out: Path, check: bool) -> int:
         doc = json.loads((out.parent / d["file"].lstrip("/")).read_text(encoding="utf-8"))
         for t, pages in doc["terms"].items():
             postings[t].append((d["i"], len(pages)))
-    common, shards = shard_files(postings, len(index["docs"]))
+    common, common_pages, shards, term_pages = shard_files(postings, len(index["docs"]))
     if common != index["common_terms"]:
         print("[build_transcript_fulltext] HELD: the published transcripts give a different common-term list", file=sys.stderr)
         return 3
     if check:
-        same = index.get("schema") == SCHEMA and all(
+        pages_file = out / "term-pages.json"
+        same = index.get("schema") == SCHEMA and index.get("common_pages") == common_pages and pages_file.exists() and json.loads(pages_file.read_text(encoding="utf-8")) == term_pages and all(
             json.loads((out / "terms" / f"{n:02d}.json").read_text(encoding="utf-8")) == s for n, s in enumerate(shards))
         print(f"[build_transcript_fulltext] postings {'agree with' if same else 'DIFFER from'} the published transcripts", flush=True)
         return 0 if same else 1
     for n, s in enumerate(shards):
         write(out / "terms" / f"{n:02d}.json", s)
-    write(out / "index.json", {**index, "schema": SCHEMA})
+    write(out / "term-pages.json", term_pages)
+    write(out / "index.json", {**{k: v for k, v in index.items() if k not in ("docs", "caveats", "common_pages")}, "schema": SCHEMA,
+                               "common_pages": common_pages, "docs": index["docs"], "caveats": index["caveats"]})
     print(f"[build_transcript_fulltext] postings rebuilt: terms={len(postings)} common={len(common)}", flush=True)
     return 0
 
@@ -247,9 +259,10 @@ def main(argv=None):
         docs.append({"i": i, "commission": c["id"], "key": d["key"], "title": d["title"], "date": d.get("date"),
                      "file": f"/transcripts/{file}", "pdf_url": d["url"], "pages": len(doc["pages"]),
                      "quote_policy": doc["quote_policy"]})
-    common, shards = shard_files(postings, len(docs))
+    common, common_pages, shards, term_pages = shard_files(postings, len(docs))
     for n, s in enumerate(shards):
         write(tmp / "terms" / f"{n:02d}.json", s)
+    write(tmp / "term-pages.json", term_pages)
     counts = {cid: {"transcripts": sum(1 for x in docs if x["commission"] == cid),
                     "quote": sum(1 for x in docs if x["commission"] == cid and x["quote_policy"] == "quote"),
                     "no_quotes": sum(1 for x in docs if x["commission"] == cid and x["quote_policy"] == "no_quotes")}
@@ -260,7 +273,7 @@ def main(argv=None):
         "commissions": {c["id"]: {"name": c["name"], "attribution": f"{COMMISSIONS[c['id']]['attribution']}, {c['name']}, licensed under CC BY 4.0",
                                  "copyright_url": COMMISSIONS[c["id"]]["copyright_url"], "counts": counts[c["id"]]}
                         for c in registry["commissions"] if c["id"] in COMMISSIONS},
-        "order_notice": ORDER_NOTICE, "shards": SHARDS, "stopwords": STOPWORDS, "common_terms": common, "docs": docs,
+        "order_notice": ORDER_NOTICE, "shards": SHARDS, "stopwords": STOPWORDS, "common_terms": common, "common_pages": common_pages, "docs": docs,
         "caveats": [
             "Hearing transcripts are evidence and submissions, not findings of the commission.",
             "Text is the publisher's own text layer with margin line numbers, headers and footers removed. Redactions are the publisher's.",
