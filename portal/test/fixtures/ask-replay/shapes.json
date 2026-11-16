@@ -29,6 +29,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -117,6 +118,7 @@
    "note": "string"
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -263,6 +265,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -314,6 +317,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -369,6 +373,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -433,6 +438,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -484,6 +490,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -535,6 +542,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -586,6 +594,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -637,6 +646,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -687,6 +697,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -751,6 +762,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
@@ -802,6 +814,7 @@
    ]
   },
   "followups": [],
+  "machine_notice": "string",
   "machine_written": "boolean",
   "research": {
    "answer_stats": "object",

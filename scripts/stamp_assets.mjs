@@ -203,6 +203,8 @@ export const MODULE_STAMPS = [
   ['app.js', 'sa-hansard.js'],
   // The transcript line for a restored conversation: the Worker runs the same file, so the page must not run an old one.
   ['app.js', 'transcript-note.js'],
+  // The error notice for a streamed or restored answer: the same file the Worker reads its wording from.
+  ['app.js', 'machine-notice.js'],
   ['app.js', 'held-back-transcripts.js'],
   ['app.js', 'money-map.js'], ['app.js', 'grant-recipient.js'],
   // /money/explain: the explainer, its stylesheet and the modules it reads.
@@ -320,7 +322,7 @@ const HEADER_RULE_LIMIT = 100
 // Stamped so a changed file is a new URL, but left on the default module cache:
 // _headers is at the 100 rules Workers Assets allows, and an immutable rule each
 // would pass it. A small module that is cheap to revalidate belongs here.
-const STAMPED_DEFAULT_CACHE = new Set(['profile-jurisdictions.js', 'vic-term.js', 'transcript-note.js'])
+const STAMPED_DEFAULT_CACHE = new Set(['profile-jurisdictions.js', 'vic-term.js', 'transcript-note.js', 'machine-notice.js'])
 const DEV_ONLY = /(?:^|\/)(?:[a-z]+-test\.html|ui-workbench\.[a-z]+|datatable-workbench[\w.-]*)$/
 
 const walkFiles = (dir) => readdirSync(dir, { withFileTypes: true })

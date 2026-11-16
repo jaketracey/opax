@@ -729,6 +729,8 @@ export function mountThenVsNow (container, opts = {}) {
     }
     if (answerText) {
       renderAnswer(panel.bodyEl, answerText)
+      // The error notice the Worker sent with a machine-written answer: under it, above its speeches.
+      if (typeof data.machine_notice === 'string' && data.machine_notice) panel.bodyEl.appendChild(el('p', 'answer-notice', data.machine_notice))
     } else {
       panel.bodyEl.appendChild(el('p', 'tvn-thin',
         'The record was searched and the speeches below came back, but no written answer arrived this time.'))

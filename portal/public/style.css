@@ -1036,6 +1036,8 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   font: var(--type-metadata); color: var(--ink);
 }
 .ask-register-note a { color: var(--bronze-ink); }
+/* The error notice on a machine-written answer: one small grey line under the answer, above its sources. */
+.answer-notice { font: var(--type-fine); color: var(--ink-soft); max-width: var(--size-readable); margin: var(--sp-8) 0 0; }
 .answer-stamp { color: var(--ink-faint); font-size: var(--text-13); margin: var(--sp-12) 0 0; }
 .action-row { display: flex; flex-wrap: wrap; gap: var(--sp-8) var(--sp-12); margin: var(--sp-8) 0 0; font-size: var(--text-15); }
 /* Keep asking, inline under an answer: the next questions as a list, then
@@ -4327,7 +4329,7 @@ html[data-panel="chat"] footer { display: none; }
 .journey-party-link:hover { text-decoration-color:currentColor; }
 .journey-party-link:focus-visible { outline:var(--border-focus) solid var(--bronze); outline-offset:3px; border-radius:var(--radius-sm); }
 .journey-story-status { margin:var(--sp-12) 0 0; font:var(--type-fine); color:var(--ink-soft); }
-.journey-story-status:empty { display:none; }
+.journey-story-status:empty, .journey-notice:empty { display:none; }
 
 /* Mobile and tablet controls share a comfortable text size and tap area.
    A 16px field also avoids Safari zooming the page when it receives focus. */

@@ -166,6 +166,7 @@ import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote, transcriptNoteResponse } from './transcript-answer'
+import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice } from './machine-notice'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
 import { serveMedia } from './media'
@@ -6940,7 +6941,7 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
   const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
-  return json(withTranscriptNote(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN)))
+  return json(withMachineNotice(withTranscriptNote(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN))))
 }
 /** Requests whose answers apiAsk must not store in the shared cache: fallbacks run within a shortened caller budget. */
 const UNSHARED_ASK_REQUESTS = new WeakSet<Request>()
@@ -6948,7 +6949,7 @@ const UNSHARED_ASK_REQUESTS = new WeakSet<Request>()
  * budget header with ASK_INTERNAL_SECRET sets one, counted from now. A public budget header is ignored. */
 async function apiAskReply(request: Request, url: URL, env: Env, ctx: ExecutionContext, caller?: AskCaller): Promise<Response> {
   // The one way out for every Ask reply (readers, the app and voice's ask_opax): the transcript line goes on here.
-  return transcriptNoteResponse(await apiAskRouted(request, url, env, ctx, caller))
+  return transcriptNoteResponse(await apiAskRouted(request, url, env, ctx, caller)).then(machineNoticeResponse) // and the error notice, as `machine_notice` (machine-notice.ts)
 }
 async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext, caller?: AskCaller): Promise<Response> {
   caller ??= await trustedCaller(request, env.ASK_INTERNAL_SECRET)
@@ -7249,7 +7250,7 @@ async function route(
         return validateSearchQuery(url) ?? (await apiSearch(request, url, env, ctx))
       }
       if (url.pathname === '/api/search-summary' && request.method === 'GET') {
-        return await apiSearchSummary(request, url, env, ctx)
+        return await mapAnswerPayload(await apiSearchSummary(request, url, env, ctx), withSummaryNotice)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
         return await apiAskReply(request, url, env, ctx)
@@ -7257,7 +7258,7 @@ async function route(
       if (url.pathname === '/api/journey-story' && request.method === 'POST') {
         const body = await readJsonBody(request)
         if (body instanceof Response) return body
-        return await apiJourneyStory(request,body.value,env,ctx)
+        return await mapAnswerPayload(await apiJourneyStory(request,body.value,env,ctx), withStoryNotice)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
         // The answer plus up to eight passages outgrows the 16 KB ask cap (413 on 13 Oct).
