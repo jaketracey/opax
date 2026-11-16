@@ -14,7 +14,7 @@ shell replaced by a vanilla adapter.
 | `map3d-engine.ts` | The ported engine: three.js scene, camera, orbit/pan/pinch gestures, DOM label overlay, selection dimming, fog, reduced motion |
 | `force3d.ts` | Dependency-free 3D force simulation (d3-force semantics, one more axis); extended with a `centralGroup` so the parties sit at the origin |
 | `map-types.ts` | The types/helpers the engine needs (extracted from corpuskit's `KnowledgeMap.tsx`; the 2D map was not ported) |
-| `palette.ts` | The map's colours, read from the design token source (`docs/design/design-tokens.json`: `chart.industry`, `party`, `color`) at build time; no colour of its own |
+| `palette.ts` | The map's colours, read at build time from the design token source: the web's colour roles and chart mark through `src/tokens.generated.ts` (web overrides applied), the industry hues and party dots from `docs/design/design-tokens.json`; no colour of its own |
 | `words.ts` | The words layer: `/api/matrix` (lazy, cached, silent on failure) joined to donor industries; "In parliament" / "What they talk about" card blocks and the bronze halo toggle |
 | `smoke-test.mjs` | Node test: imports the built bundle, builds the graph from `money.json`, runs the force sim headlessly |
 

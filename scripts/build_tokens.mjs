@@ -5,20 +5,31 @@
  *
  *   node scripts/build_tokens.mjs                 # write every target present
  *   node scripts/build_tokens.mjs --check         # exit 1 if a target is stale
- *   node scripts/build_tokens.mjs --only web      # web | app | docs
+ *   node scripts/build_tokens.mjs --only web      # web | share | docs
  *
- * Targets (each is skipped when its package is not in this checkout, so the
- * script runs on main, which has no mobile/, and on ios/app, whose portal/
- * predates the token region):
- *   web   portal/public/tokens.css, and the same rules inlined into the
- *         marked region at the top of portal/public/style.css, so a page
- *         needs no second request
- *   app   mobile/src/design/tokens.generated.ts, re-exported by palette.ts
- *         and tokens.ts
- *   docs  the generated tables in docs/design/TOKENS.md
+ * Targets (each is skipped when its file's folder is not in this checkout, so
+ * the script also runs on the app branches, whose portal/ may predate the
+ * token region):
+ *   web     portal/public/tokens.css, and the same rules inlined into the
+ *           marked region at the top of portal/public/style.css, so a page
+ *           needs no second request
+ *   share   portal/src/tokens.generated.ts: the colours (as the web draws
+ *           them), chart colours and family names that the share images
+ *           (og.ts, story slides) and the money map (portal/graph/palette.ts)
+ *           draw with
+ *   docs    the generated tables in docs/design/TOKENS.md
  *
- * The source keeps old names as aliases for one release; see `deprecated` in
- * the JSON. The token tests on both sides run `--check`.
+ * The app's file, mobile/src/design/tokens.generated.ts, is not a target
+ * here: the app branches build it with mobile/scripts/build-design-tokens.mjs,
+ * which calls buildTs below, leaves out the retired aliases and adds the
+ * app's four photo roles.
+ *
+ * One file serves the web, the app and the share images. A token's base value
+ * is the app's; a `web` block holds where the web differs today, and
+ * `web.omit` keeps an app-only token off the web. `type` holds the app's
+ * roles; `webRoles` holds the web's role names, each following an app role
+ * and listing only the fields where the web still differs. The token tests on
+ * both sides run `--check`.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
@@ -28,7 +39,7 @@ export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 export const SOURCE = join(ROOT, 'docs', 'design', 'design-tokens.json')
 const TOKENS_CSS = join(ROOT, 'portal', 'public', 'tokens.css')
 const STYLE_CSS = join(ROOT, 'portal', 'public', 'style.css')
-const APP_TS = join(ROOT, 'mobile', 'src', 'design', 'tokens.generated.ts')
+const SHARE_TS = join(ROOT, 'portal', 'src', 'tokens.generated.ts')
 const DOCS = join(ROOT, 'docs', 'design', 'TOKENS.md')
 
 export const STYLE_BEGIN = '/* tokens:begin'
@@ -41,6 +52,10 @@ const REF = /^\{([A-Za-z]+)\}$/
 const HEX = /^#[0-9A-F]{6}$/
 
 const own = (object) => Object.entries(object).filter(([key]) => !key.startsWith('$'))
+/** Tokens the web draws: an app-only token says `web: { omit: true }`. */
+const onWeb = (entries) => entries.filter(([, token]) => token.web?.omit !== true)
+/** The note a token carries on the web: its own web note, else the shared one. */
+const webNote = (token) => token.web?.$description ?? token.$description ?? ''
 const kebab = (name) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)
 const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 const rem = (px) => `${+(px / 16).toFixed(4)}rem`
@@ -63,8 +78,10 @@ export function colourRoles(source) {
         group,
         token,
         web: token.web?.name ?? `--${kebab(name)}`,
+        onWeb: token.web?.omit !== true,
         app: !token.app?.omit,
         description: token.$description ?? '',
+        webDescription: webNote(token),
       })
     }
   const names = new Set()
@@ -120,6 +137,37 @@ export function palettes(source) {
   return out
 }
 
+/**
+ * The light colour roles as the web draws them: every role on the web, at its
+ * `web.value` where it has one, else its resolved light value. tokens.css and
+ * portal/src/tokens.generated.ts both read this, so a web override reaches the
+ * pages, the share images and the money map together.
+ */
+export function webLight(source) {
+  const { light } = palettes(source)
+  return Object.fromEntries(
+    colourRoles(source)
+      .filter((role) => role.onWeb)
+      .map((role) => [role.name, role.token.web?.value ?? light[role.name]]),
+  )
+}
+
+const CHART_ROLES = ['mark', 'baseline', 'contrast']
+/** The colour role a chart line draws on the web: its `web.role`, else its role. */
+const webChartRole = (source, key) => source.chart[key].web?.role ?? source.chart[key].role
+
+/** The chart's mark, baseline and contrast colours as the web draws them. */
+export function webChart(source) {
+  const light = webLight(source)
+  return Object.fromEntries(
+    CHART_ROLES.map((key) => {
+      const role = webChartRole(source, key)
+      if (!(role in light)) throw new Error(`chart.${key} uses ${role}, which is not drawn on the web`)
+      return [key, light[role]]
+    }),
+  )
+}
+
 /** Party dots and washes per theme, in source order. */
 export function parties(source) {
   const list = own(source.party).map(([key, party]) => ({ key, ...party }))
@@ -147,7 +195,7 @@ export function contrastPairs(source) {
 function typeRole(role, platform) {
   const web = platform === 'web' ? role.web ?? {} : {}
   return {
-    family: role.family,
+    family: web.family ?? (platform === 'web' && role.family === 'heading' ? 'sans' : role.family),
     weight: web.weight ?? role.weight,
     size: web.size ?? role.size,
     lineHeight: web.lineHeight ?? role.lineHeight,
@@ -155,6 +203,26 @@ function typeRole(role, platform) {
     color: role.color,
     tabular: role.tabular === true,
   }
+}
+
+const WEB_ROLE_FIELDS = ['family', 'weight', 'size', 'lineHeight']
+
+/**
+ * The web's type roles in source order. Each names the app role it follows
+ * and lists beside it only the family, weight, size or line height where the
+ * web still differs; deleting a field moves the web role onto the app's.
+ */
+export function webTypeRoles(source) {
+  return own(source.webRoles ?? {}).map(([name, entry]) => {
+    const app = source.type[entry.follows]
+    if (!app) throw new Error(`webRoles.${name} follows unknown type role ${entry.follows}`)
+    for (const key of own(entry).map(([key]) => key))
+      if (key !== 'follows' && !WEB_ROLE_FIELDS.includes(key))
+        throw new Error(`webRoles.${name}.${key}: only ${WEB_ROLE_FIELDS.join(', ')} may differ from the app role`)
+    const overrides = WEB_ROLE_FIELDS.filter((key) => key in entry)
+    const web = Object.fromEntries(overrides.map((key) => [key, entry[key]]))
+    return { name, follows: entry.follows, overrides, role: typeRole({ ...app, web }, 'web'), description: entry.$description ?? '' }
+  })
 }
 
 function deprecationNote(entry) {
@@ -175,21 +243,26 @@ function deprecatedDoc(entry) {
 function webDeclarations(source) {
   const roles = colourRoles(source)
   const themes = palettes(source)
+  const light = webLight(source)
   const groups = []
   const push = (title, lines) => groups.push({ title, lines })
   const decl = (name, value, note) => `  ${name}: ${value};${note ? ` /* ${note} */` : ''}`
 
-  for (const group of [...new Set(roles.map((role) => role.group))])
+  const drawn = roles.filter((role) => role.onWeb)
+  for (const group of [...new Set(drawn.map((role) => role.group))])
     push(
       `colour: ${group}`,
-      roles
+      drawn
         .filter((role) => role.group === group)
         .map((role) =>
-          decl(role.web, role.token.web?.value ?? themes.light[role.name], firstSentence(role.description)),
+          decl(role.web, light[role.name], firstSentence(role.webDescription)),
         ),
     )
-  const webName = new Map(roles.map((role) => [role.name, role.web]))
-  const ref = (name) => `var(${webName.get(name)})`
+  const webName = new Map(drawn.map((role) => [role.name, role.web]))
+  const ref = (name) => {
+    if (!webName.has(name)) throw new Error(`${name} is not drawn on the web`)
+    return `var(${webName.get(name)})`
+  }
   push(
     'status tones',
     own(source.status).flatMap(([tone, { ink, wash }]) => [
@@ -198,8 +271,8 @@ function webDeclarations(source) {
     ]),
   )
   push('chart', [
-    ...['mark', 'baseline', 'contrast'].map((key) =>
-      decl(`--chart-${key}`, ref(source.chart[key].role), firstSentence(source.chart[key].$description)),
+    ...CHART_ROLES.map((key) =>
+      decl(`--chart-${key}`, ref(webChartRole(source, key)), firstSentence(webNote(source.chart[key]))),
     ),
     ...own(source.chart.industry).flatMap(([cluster, { colour, ink }]) => [
       decl(`--chart-industry-${slug(cluster)}`, colour),
@@ -223,16 +296,14 @@ function webDeclarations(source) {
   push('type: eleven roles; serif speaks for the record, sans for OPAX', [
     decl('--serif', families.serif),
     decl('--sans', families.sans),
-    ...own(source.type).map(([name, role]) =>
-      decl(`--type-${kebab(name)}`, font(typeRole(role, 'web')), firstSentence(role.$description)),
-    ),
+    ...webTypeRoles(source).map(({ name, role, description }) => decl(`--type-${kebab(name)}`, font(role), firstSentence(description))),
   ])
-  const space = own(source.space)
+  const space = onWeb(own(source.space))
   const webSpace = (value) => (typeof value === 'number' ? rem(value) : value)
   push(
     'space: one rhythm',
     space.map(([name, token]) =>
-      decl(`--space-${kebab(name)}`, webSpace(token.web?.value ?? token.$value), firstSentence(token.$description)),
+      decl(`--space-${kebab(name)}`, webSpace(token.web?.value ?? token.$value), firstSentence(webNote(token))),
     ),
   )
   // Web-only primitives: the steps the roles are built from, for component
@@ -249,9 +320,10 @@ function webDeclarations(source) {
   }
   push(
     'radius: press = pill, read = sm, hold = md',
-    own(source.radius).map(([name, token]) =>
-      decl(`--radius-${kebab(name)}`, typeof token.$value === 'number' ? `${token.$value}px` : token.$value),
-    ),
+    onWeb(own(source.radius)).map(([name, token]) => {
+      const value = token.web?.value ?? token.$value
+      return decl(`--radius-${kebab(name)}`, typeof value === 'number' ? `${value}px` : value)
+    }),
   )
   push(
     'border',
@@ -263,7 +335,7 @@ function webDeclarations(source) {
     decl('--shadow-overlay', `${shadow.x} ${shadow.y}px ${shadow.blur}px rgba(${r}, ${g}, ${b}, ${shadow.alpha})`),
   ])
   push('motion: three durations, one curve', [
-    ...own(source.motion.duration).map(([name, token]) => decl(`--duration-${kebab(name)}`, `${token.$value}ms`)),
+    ...onWeb(own(source.motion.duration)).map(([name, token]) => decl(`--duration-${kebab(name)}`, `${token.$value}ms`)),
     decl('--ease-standard', `cubic-bezier(${source.motion.easing.standard.$value.join(', ')})`),
     decl('--ambient-loop', `${source.motion.ambientLoop.$value / 1000}s`),
   ])
@@ -301,7 +373,7 @@ function webDeclarations(source) {
     .map(([name, token]) => decl(`--space-${kebab(name)}`, webSpace(token.web.wide)))
   const compact = deprecated.filter(([, entry]) => entry.compact).map(([name, entry]) => decl(name, entry.compact))
   const highContrast = source.themes.web.prefersContrast
-    ? roles
+    ? drawn
         .filter((role) => role.token.highContrast !== undefined && !role.token.web?.value)
         .map((role) => decl(role.web, themes.lightHighContrast[role.name]))
     : []
@@ -386,6 +458,7 @@ const exportConst = (name, value, { type = '', tail = '', doc = '' } = {}) => {
 const documented = (value, doc) => (doc ? { $doc: doc, value } : value)
 
 export function buildTs(source) {
+  if (!['system', 'serif'].includes(source.headingFace)) throw new Error('headingFace must be system or serif')
   const roles = colourRoles(source).filter((role) => role.app)
   const themes = palettes(source)
   const deprecatedRoles = own(source.deprecated.app.roles)
@@ -407,7 +480,8 @@ export function buildTs(source) {
     return key
   }
   const appType = (role) => ({
-    font: faceKey(role.family, String(role.weight)),
+    font: role.family === 'heading' ? 'heading' : faceKey(role.family, String(role.weight)),
+    fontWeight: String(role.weight),
     fontSize: role.size,
     lineHeight: role.lineHeight,
     dynamicTypeRamp: role.ramp,
@@ -417,12 +491,16 @@ export function buildTs(source) {
   const typeRoles = {}
   for (const [name, role] of own(source.type)) typeRoles[name] = documented(appType(typeRole(role, 'app')), firstSentence(role.$description))
   for (const [name, entry] of own(source.deprecated.app.textStyles)) {
-    const role = entry.alias ? { ...source.type[entry.alias], $description: '' } : entry
+    const role = entry.alias ? { ...source.type[entry.alias], ...entry, $description: '' } : entry
     typeRoles[name] = documented(appType(typeRole(role, 'app')), deprecatedDoc(entry))
   }
   const typeRegular = Object.fromEntries(own(source.type).filter(([, role]) => role.regular).map(([name, role]) => [name, { fontSize: role.regular.size, lineHeight: role.regular.lineHeight }]))
+  for (const [name, entry] of own(source.deprecated.app.typeRolesRegular ?? {})) {
+    const role = source.type[entry.alias]
+    if (!role) throw new Error(`unknown regular type alias ${entry.alias}`)
+    typeRegular[name] = documented({ fontSize: role.size, lineHeight: role.lineHeight }, deprecatedDoc(entry))
+  }
   const space = own(source.space)
-  const shadow = source.elevation.overlay
   const categories = Object.fromEntries(own(source.category).map(([name, pair]) => [name, { ink: pair.ink, wash: pair.wash }]))
   for (const [name, entry] of own(source.deprecated.app.accents)) categories[name] = documented(categories[entry.alias], `@deprecated Use \`${entry.alias}\`.`)
   const pairs = contrastPairs(source)
@@ -453,15 +531,16 @@ export function buildTs(source) {
     exportConst('chartRoles', Object.fromEntries(['mark', 'baseline', 'contrast'].map((key) => [key, documented(source.chart[key].role, firstSentence(source.chart[key].$description))])), { tail: ' as const satisfies Record<string, Role>' }),
     exportConst('chartIndustry', own(source.chart.industry).map(([cluster, { colour, ink }]) => [cluster, { colour, ink }]), { type: 'readonly (readonly [string, ClusterColour])[]', doc: "The money map's industry clusters in legend order: a hue and a text-safe ink. Light only." }),
     exportConst('fonts', Object.fromEntries(faces), { tail: ' as const', doc: 'Registered font names (app/_layout.tsx).' }),
-    exportConst('typeRoles', typeRoles, { tail: ' as const', doc: 'Type roles: eleven in use, then the deprecated ones.' }),
+    exportConst('headingFace', source.headingFace, { type: "'system' | 'serif'", doc: 'D1: one face switch for OPAX headings. Record text is always Merriweather.' }),
+    exportConst('typeRoles', typeRoles, { tail: ' as const', doc: 'Eighteen text roles, followed by deprecated aliases.' }),
     exportConst('typeRolesRegular', typeRegular, { tail: ' as const', doc: 'Type steps at regular width (iPad).' }),
     exportConst('rhythm', Object.fromEntries(space.map(([name, token]) => [name, documented(token.$value, firstSentence(token.$description))])), { tail: ' as const', doc: 'One vertical rhythm, applied everywhere.' }),
     exportConst('rhythmRegular', Object.fromEntries(space.filter(([, token]) => token.regular !== undefined).map(([name, token]) => [name, token.regular])), { tail: ' as const', doc: 'Rhythm steps that grow at regular width (iPad).' }),
     exportConst('spacing', Object.fromEntries(own(source.deprecated.app.spacing).map(([name, entry]) => [name, documented(entry.alias ? spaceStep(entry.alias) : entry.value, deprecatedDoc(entry))])), { tail: ' as const', doc: "@deprecated The web's old phone scale: use `rhythm`." }),
-    exportConst('radii', Object.fromEntries(own(source.radius).filter(([, token]) => !token.app?.omit).map(([name, token]) => [name, documented(token.$value, firstSentence(token.$description))])), { tail: ' as const', doc: 'Shape says what a thing is: press = pill, read = sm, hold = md.' }),
+    exportConst('radii', Object.fromEntries(own(source.radius).filter(([, token]) => !token.app?.omit).map(([name, token]) => [name, documented(token.$value, token.alias ? `@deprecated Use radii.${token.alias}.` : firstSentence(token.$description))])), { tail: ' as const', doc: 'Continuous corners by purpose, with deprecated aliases.' }),
     exportConst('border', Object.fromEntries(own(source.border).map(([name, token]) => [name, token.$value])), { tail: ' as const' }),
-    exportConst('elevation', { overlay: { shadowColor: shadow.color, shadowOpacity: shadow.alpha, shadowRadius: shadow.blur / 2, shadowOffset: { width: shadow.x, height: shadow.y }, elevation: shadow.y } }, { tail: ' as const', doc: 'One shadow, for things that float (native sheets and menus draw their own).' }),
-    exportConst('motion', { duration: Object.fromEntries(own(source.motion.duration).map(([name, token]) => [name, token.$value])), easing: { standard: source.motion.easing.standard.$value }, ambientLoop: source.motion.ambientLoop.$value }, { tail: ' as const', doc: 'Three durations (ms) and one curve (cubic-bezier control points); under Reduce Motion nothing moves.' }),
+    exportConst('elevation', Object.fromEntries(own(source.elevation).map(([name, value]) => [name, { shadowColor: value.color, shadowOpacity: value.alpha, shadowRadius: value.blur / 2, shadowOffset: { width: value.x, height: value.y }, elevation: value.y, ...(name === 'edition' ? { dark: null } : {}) }])), { tail: ' as const', doc: 'Legacy overlay shadow and the light-only edition shadow; native sheets and menus draw their own.' }),
+    exportConst('motion', { duration: Object.fromEntries(own(source.motion.duration).map(([name, token]) => [name, token.$value])), easing: { standard: source.motion.easing.standard.$value }, ambientLoop: source.motion.ambientLoop.$value }, { tail: ' as const', doc: 'Durations in ms and one curve (cubic-bezier control points); under Reduce Motion nothing moves.' }),
     exportConst('size', Object.fromEntries(own(source.size).flatMap(([name, token]) => [[name, token.$value], ...(token.android ? [[`${name}Android`, token.android]] : [])])), { tail: ' as const' }),
     exportConst('breakpoints', { regular: source.layout.regular.$value, wide: source.layout.wide.$value }, { tail: ' as const' }),
     exportConst('splitPane', { width: source.layout.splitPane.$value, min: source.layout.splitPane.min, max: source.layout.splitPane.max }, { tail: ' as const' }),
@@ -481,33 +560,51 @@ export function buildDocsTables(source) {
   for (const role of roles) {
     const value = role.token.web?.value ? `${themes.light[role.name]} (web ${code(role.token.web.value)})` : themes.light[role.name]
     const ic = themes.lightHighContrast[role.name] ? `${themes.lightHighContrast[role.name]} / ${themes.darkHighContrast[role.name]}` : ''
-    lines.push(`| ${role.group} | ${code(role.web)} | ${role.app ? code(role.name) : 'none'} | ${value} | ${themes.dark[role.name]} | ${ic} | ${firstSentence(role.description)} |`)
+    // A role the web draws with its own note shows the web's note first, then the app's.
+    const use =
+      role.onWeb && role.app && role.webDescription !== role.description
+        ? `${firstSentence(role.webDescription)} App: ${firstSentence(role.description)}`
+        : firstSentence(role.onWeb ? role.webDescription : role.description)
+    lines.push(`| ${role.group} | ${role.onWeb ? code(role.web) : 'none'} | ${role.app ? code(role.name) : 'none'} | ${value} | ${themes.dark[role.name]} | ${ic} | ${use} |`)
   }
-  const counts = {
-    roles: roles.length,
-    groups: new Set(roles.map((role) => role.group)).size,
-    type: own(source.type).length,
-    sizes: new Set(own(source.type).map(([, role]) => role.size)).size,
-    radii: own(source.radius).length,
+  lines.push('', '### Type roles', '', `Heading face: ${code(source.headingFace)}. iOS interface families are unset; Android uses Public Sans.`, '', '| Role | Face | Weight | Size / leading | Dynamic Type | Colour | Tabular |', '|---|---|---|---|---|---|---|')
+  for (const [name, role] of own(source.type)) lines.push(`| ${code(name)} | ${role.family} | ${role.weight} | ${role.size} / ${role.lineHeight} | ${role.ramp} | ${role.color} | ${role.tabular ? 'yes' : ''} |`)
+  lines.push('', '### Web type roles', '', 'Each web role follows an app role; the web column is what the web draws today. An override listed here is where the web still differs from the app role.', '', '| Web role | Follows | Web | Overrides |', '|---|---|---|---|')
+  for (const { name, follows, overrides, role } of webTypeRoles(source)) {
+    const lineHeight = role.lineHeight > 3 ? role.lineHeight : `${role.lineHeight} (ratio)`
+    lines.push(`| ${code(`--type-${kebab(name)}`)} | ${code(follows)} | ${role.family} ${role.weight} ${role.size} / ${lineHeight} | ${overrides.length ? overrides.join(', ') : 'none'} |`)
   }
+  // The app's counts are what mobile/scripts/build-design-tokens.mjs exports:
+  // it leaves out the alias radii and adds four photo roles of its own.
+  const appRoles = roles.filter((role) => role.app)
+  const appRadii = own(source.radius).filter(([, token]) => !token.alias)
+  const webRoleList = roles.filter((role) => role.onWeb)
+  const webRadii = onWeb(own(source.radius))
+  const names = (entries) => entries.map(([name]) => name).join(', ')
+  const groupCount = (list) => new Set(list.map((role) => role.group)).size
   lines.push(
     '',
-    `${counts.roles} colour roles in ${counts.groups} groups; ${own(source.category).length} categories, ${own(source.status).length} status tones, ${own(source.chart.industry).length} industry hues, ${own(source.party).length} parties (dot + wash); ${counts.type} type roles over ${counts.sizes} sizes; ${own(source.space).length} rhythm steps; ${counts.radii} radii (${own(source.radius).map(([name]) => name).join(', ')}); ${own(source.motion.duration).length} durations and 1 curve; 1 shadow.`,
+    `Shared: ${own(source.category).length} categories, ${own(source.status).length} status tones, ${own(source.chart.industry).length} industry hues, ${own(source.party).length} parties (dot + wash).`,
+    '',
+    `App: ${appRoles.length} colour roles in ${groupCount(appRoles)} groups, plus 4 photo roles added by mobile/scripts/build-design-tokens.mjs; ${own(source.type).length} type roles over ${new Set(own(source.type).map(([, role]) => role.size)).size} sizes; ${own(source.space).length} rhythm steps; ${appRadii.length} radii (${names(appRadii)}); ${own(source.motion.duration).length} durations and 1 curve; ${own(source.elevation).length} shadows (${names(own(source.elevation))}).`,
+    '',
+    `Web: ${webRoleList.length} colour roles in ${groupCount(webRoleList)} groups; ${own(source.webRoles ?? {}).length} type roles; ${onWeb(own(source.space)).length} rhythm steps; ${webRadii.length} radii (${names(webRadii)}); ${onWeb(own(source.motion.duration)).length} durations and 1 curve; 1 shadow (overlay).`,
   )
-  const table = (title, rows) => {
-    lines.push('', `### ${title}`, '', '| Old name | Kind | Use instead | Moving changes |', '|---|---|---|---|')
+  const table = (title, rows, note) => {
+    lines.push('', `### ${title}`, '', ...(note ? [note, ''] : []), '| Old name | Kind | Use instead | Moving changes |', '|---|---|---|---|')
     for (const [name, entry] of rows)
       lines.push(`| ${code(name)} | ${entry.alias ? 'alias (same value)' : `legacy value ${code(String(entry.value ?? ''))}`} | ${code(entry.alias ?? entry.use)} | ${entry.alias || !entry.change || entry.change === 'none' ? 'nothing' : entry.change} |`)
   }
   table('Deprecated web names', own(source.deprecated.web))
   const app = source.deprecated.app
-  table('Deprecated app names', [
+  table('Retired app names', [
     ...own(app.roles).map(([name, entry]) => [`light.${name}`, { alias: `light.${entry.alias}` }]),
     ...own(app.accents).map(([name, entry]) => [`accents.${name}`, { alias: `accents.${entry.alias}` }]),
     ['radius', app.radius],
+    ...own(app.typeRolesRegular ?? {}).map(([name, entry]) => [`typeRolesRegular.${name}`, { alias: `textStyles.${entry.alias}` }]),
     ...own(app.spacing).map(([name, entry]) => [`spacing.${name}`, entry]),
     ...own(app.textStyles).map(([name, entry]) => [`textStyles.${name}`, entry.alias ? { alias: `textStyles.${entry.alias}` } : { ...entry, value: `${entry.size}/${entry.lineHeight}` }]),
-  ])
+  ], 'The shipped app no longer exports these: mobile/scripts/build-design-tokens.mjs leaves them out of its build. They are listed so an old name met in a branch can be traced to its replacement.')
   return lines.join('\n')
 }
 
@@ -516,6 +613,24 @@ export function docsWithTables(docs, source) {
   const end = docs.indexOf(DOCS_END)
   if (begin < 0 || end < begin) throw new Error('TOKENS.md has no tokens:begin / tokens:end region')
   return `${docs.slice(0, begin)}${DOCS_BEGIN}\n\n${buildDocsTables(source)}\n\n${docs.slice(end)}`
+}
+
+// --- share images and the money map -------------------------------------------
+
+/** The first family in a CSS font stack: '"Merriweather", Georgia' gives Merriweather. */
+const firstFamily = (stack) => /^\s*"?([^",]+)"?/.exec(stack)[1].trim()
+
+/** The web's palette, chart colours and families for code that draws without CSS (portal/src/tokens.generated.ts). */
+export function buildShareTs(source) {
+  return [
+    '// OPAX design tokens for what the web draws without its stylesheet: the share\n' +
+      '// images (og.ts and the story slides) and the money map (graph/palette.ts).\n' +
+      '// Generated by scripts/build_tokens.mjs from docs/design/design-tokens.json:\n' +
+      '// edit the JSON and run the script, never this file.\n',
+    exportConst('light', webLight(source), { tail: ' as const', doc: "The web's colour roles in the light theme, the values tokens.css draws (satori and WebGL read no custom properties)." }),
+    exportConst('chart', webChart(source), { tail: ' as const', doc: "The chart's mark, baseline and contrast colours on the web (--chart-*)." }),
+    exportConst('fontFamily', { serif: firstFamily(source.font.serif.web), sans: firstFamily(source.font.sans.web) }, { tail: ' as const', doc: 'The family names og.ts registers with satori (OG_FONT_FILES).' }),
+  ].join('\n')
 }
 
 // --- targets -----------------------------------------------------------------
@@ -528,7 +643,7 @@ export function targets(source = loadSource()) {
     list.push({ kind: 'web', file: TOKENS_CSS, content: () => tokensCss(source) })
     list.push({ kind: 'web', file: STYLE_CSS, content: () => styleWithTokens(readFileSync(STYLE_CSS, 'utf8'), source) })
   }
-  if (existsSync(dirname(APP_TS))) list.push({ kind: 'app', file: APP_TS, content: () => buildTs(source) })
+  if (existsSync(join(dirname(SHARE_TS), 'og.ts'))) list.push({ kind: 'share', file: SHARE_TS, content: () => buildShareTs(source) })
   if (existsSync(DOCS)) list.push({ kind: 'docs', file: DOCS, content: () => docsWithTables(readFileSync(DOCS, 'utf8'), source) })
   return list
 }
@@ -544,7 +659,8 @@ export function staleTargets(kinds) {
 function main(argv) {
   const check = argv.includes('--check')
   const only = argv.includes('--only') ? argv[argv.indexOf('--only') + 1]?.split(',') : null
-  if (only?.some((kind) => !['web', 'app', 'docs'].includes(kind))) throw new Error('--only takes web, app or docs')
+  if (only?.some((kind) => !['web', 'share', 'docs'].includes(kind)))
+    throw new Error('--only takes web, share or docs (the app builds its file with mobile/scripts/build-design-tokens.mjs)')
   const chosen = targets().filter((target) => !only || only.includes(target.kind))
   if (!chosen.length) throw new Error(`no ${only?.join('/') ?? ''} target in this checkout`)
   let stale = 0
