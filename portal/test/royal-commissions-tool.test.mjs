@@ -316,18 +316,22 @@ test('the whole order of a word search is the stated rule, ties included: least,
 });
 
 test('a title or date match comes first even when a text match fits better', async () => {
-  // "March" is in the date of nine Robodebt transcripts and in the text of others.
-  const out = await call({ view: 'transcripts', commission: 'robodebt', words: 'March', limit: 8 }); cited(out);
+  // "Melbourne" is in the title of ten antisemitism transcripts and in the text of others.
   const ix = await asset('/transcripts/index.json');
-  const named = out.rows.filter(r => /march/i.test(`${r.title} ${r.date_words ?? ''}`) || /-03-/.test(String(r.date)));
-  assert.ok(named.length >= 1 && /-03-/.test(String(out.rows[0].date)), JSON.stringify(out.rows.map(r => r.date)));
-  // Some transcript not dated in March holds the word on more pages than the first row does, and still comes later.
-  const first = await fitOf(out.rows[0].key, ['march']);
-  let better = 0;
-  for (const d of ix.docs.filter(d => d.commission === 'cth-robodebt' && !/-03-/.test(String(d.date)))) { const doc = await asset(d.file); if ((doc.terms.march ?? []).length > first.least) better++; }
-  assert.ok(better >= 1, 'a text match with a higher page count exists');
-  const dates = out.rows.map(r => String(r.date)), lastMarch = dates.map(d => /-03-/.test(d)).lastIndexOf(true), firstOther = dates.findIndex(d => !/-03-/.test(d));
-  assert.ok(firstOther < 0 || firstOther > lastMarch, 'every March transcript is listed before any other');
+  const rows = [];
+  for (let offset = 0, turns = 0; offset !== null && turns < 60; turns++) { const page = await call({ view: 'transcripts', commission: 'antisemitism', words: 'Melbourne', limit: 8, offset }); rows.push(...page.rows); offset = page.next_offset ?? null; }
+  const titled = rows.map(r => /melbourne/i.test(String(r.title)));
+  const named = titled.filter(Boolean).length;
+  assert.ok(named >= 2 && named < rows.length, `${named} of ${rows.length}`);
+  // Every transcript titled with the word is listed before any other,
+  assert.deepEqual(titled, [...Array(named).fill(true), ...Array(rows.length - named).fill(false)]);
+  // though some other transcript holds the word on more pages than a titled one does.
+  const count = async key => ((await asset(ix.docs.find(d => d.key === key).file)).terms.melbourne ?? []).length;
+  const namedCounts = await Promise.all(rows.slice(0, named).map(r => count(r.key))), otherCounts = await Promise.all(rows.slice(named).map(r => count(r.key)));
+  assert.ok(Math.max(...otherCounts) > Math.min(...namedCounts), `${Math.max(...otherCounts)} against ${Math.min(...namedCounts)}`);
+  // And among themselves the titled ones are newest first, as a listing always was.
+  const dates = rows.slice(0, named).map(r => String(r.date));
+  assert.deepEqual(dates, [...dates].sort().reverse());
 });
 
 test('a transcript whose title or date holds the words still comes first, and a listing with no words is newest first as before', async () => {
