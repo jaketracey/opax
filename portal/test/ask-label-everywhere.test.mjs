@@ -54,7 +54,7 @@ function fixture(t, { url = 'https://offline.invalid/ask', docked = false } = {}
     const sourceItem = s => Object.assign(document.createElement('li'), { textContent: s.title });
     // A failure inside the real code must fail the test, not pass as an unlabelled answer.
     const setStatus = (_el, message, failed) => { if (failed) window.__failed = String(message); };
-    let chatThread = [], chatKind = 'all', chatSpeaker = '', chatBusy = false, chatAbort = null, saDisplayHelpers = null;
+    let chatThread = [], chatKind = 'all', chatSpeaker = '', chatBusy = false, chatAbort = null, saDisplayHelpers = null, transcriptNoteHelpers = null;
     let askAbort = null, askSteps = null, lastAsk = null;
     const store = { active: null, chats: [] };
     const activeChat = make => store.chats.find(c => c.id === store.active) || (make ? (store.chats.push({ id: 'new', thread: [] }), store.active = 'new', store.chats.at(-1)) : undefined);

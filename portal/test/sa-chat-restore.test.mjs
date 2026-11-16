@@ -28,7 +28,7 @@ function fixture(t,surface='docked') {
   w.eval(`
     const $ = id=>document.getElementById(id);
     let routeRequest=1, chatRestoreRequest=0, chatThread=[], chatKind='all',chatSpeaker='',chatAskOnArrival=null;
-    let saDisplayHelpers,saFullTextFlag='false',chatBusy=false,chatAbort=null,chatFollowAbort=null,chatTimer=0;
+    let saDisplayHelpers,transcriptNoteHelpers,saFullTextFlag='false',chatBusy=false,chatAbort=null,chatFollowAbort=null,chatTimer=0;
     let dockOpen=${surface==='docked'},voiceAssistant=null;
     const chatFollower={stop(){},start(){},nudge(){},moved(){return false}};
     const chatIsPage=()=>document.documentElement.dataset.panel==='chat';

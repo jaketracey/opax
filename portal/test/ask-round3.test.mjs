@@ -96,7 +96,7 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   assert.doesNotMatch(f[0].text,/©|CC BY/);assert.match(f[0].source.snippet,/CC BY 4.0/)
   // This fixture's turns carry no role, so each is quoted with "The transcript records", the date and the page.
   const out=api.proseFallback(input());assert.match(out.answer,/^A witness said on 10 March 2023 \(page P-4899\): “Income averaging/);assert.match(out.answer,/Counsel assisting asked on 10 March 2023 \(page P-4933\)/)
-  assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
+  assert.doesNotMatch(out.answer,/evidence, not findings/,'the way out of /api/ask adds the line, not the writer');assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
   const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/^A witness said/);validRanges(grounded)
   assert.match(api.writingPrompt(input()),/names no speaker is attributed to the transcript, never to a named person/)
@@ -132,7 +132,7 @@ test('a transcript document id with an exact quote selects the record for writin
   const research=api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown()})
   const out=await api.runAgentic(input().question,{...deps,research},async()=>{},40000,undefined,{},named)
   assert.equal(out.answered,true);assert.match(out.answer,/^The transcript records on 10 March 2023 \(page P-4899\): “/)
-  assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/fabricated|CC BY|©|PDF page|OPAX lists/)
+  assert.doesNotMatch(out.answer,/evidence, not findings/,'the way out of /api/ask adds the line, not the writer');assert.doesNotMatch(out.answer,/fabricated|CC BY|©|PDF page|OPAX lists/)
   validRanges(out.qualitative)
 })
 

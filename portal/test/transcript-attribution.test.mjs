@@ -376,8 +376,7 @@ test('with no model, each passage is quoted with its role, date and page; no rol
     'Counsel assisting asked on 10 March 2023 (page P-4933): “Do you agree that this approach described income averaging?”',
     'The Commissioner asked on 1 July 2026 (page P-180): “What does the platform do when a report of abuse is made?”',
     'Counsel for a party said on 1 July 2026 (page P-181): “The State does not oppose the tender of the report.”',
-    'These are from hearing transcripts: evidence, not findings.',
-  ].join('\n\n'))
+  ].join('\n\n'), 'the evidence, not findings line is added on the way out of /api/ask, not here')
   const nsw = api.proseFallback({ question, period, facts: api.writingFacts(undefined, [fact(1, NSW_CITE, 'https://healthcarefunding.specialcommission.nsw.gov.au/TRA.0006.pdf#page=3')]) })
   assert.equal(nsw.answer.split('\n\n')[0], 'A witness said on 20 February 2024 (page 601): “The duress alarms did not work reliably when we first tested them.”')
   assert.equal(nsw.answer.split('\n\n')[1], 'The transcript records on 20 February 2024 (page 640): “The roster was changed without notice to the ward.”')
