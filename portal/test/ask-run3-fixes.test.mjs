@@ -643,14 +643,26 @@ test('on a hearing question an uncited writer sentence is left out even beside a
   assert.match(noExcerpt.out.answer, /Grants of this kind/)
 })
 
-test('"members" and "MPs" are Parliament only in a question that names no commission; witnesses to a named inquiry are not', () => {
+test('"senators", "members" and "MPs" are Parliament\'s unless the question names a commission and asks what witnesses or evidence said', () => {
   // The review's wordings: true on f026725a4, false at 204406e7c, true again.
   for (const q of ['What did family members tell the NSW Healthcare Funding inquiry about duress alarms?', 'What did staff members tell the NSW Healthcare Funding inquiry about rosters?',
     'Who told the NSW Healthcare Funding inquiry that members of the board were not consulted?', 'What did a local MP tell the NSW Healthcare Funding inquiry about duress alarms?']) {
     assert.equal(api.parliamentaryQuestion(q), false, q); assert.equal(api.hearingEvidenceQuestion(q), true, q); assert.equal(api.quotedOrNothing(q), true, q)
   }
   assert.equal(api.quotedOrNothing('What did members of the Stolen Generations tell the Yoorrook Justice Commission?'), true)
-  // With no commission named they are Parliament's, and "senators" and the bodies of Parliament always are.
+  // The hub's guard (16 Nov 2026): a named inquiry and a question about what witnesses said make a hearing question,
+  // whatever people word is in it.
+  const senators = 'What did senators hear from witnesses at the NSW Healthcare Funding inquiry about hospital staffing?'
+  assert.equal(api.parliamentaryQuestion(senators), false); assert.equal(api.hearingEvidenceQuestion(senators), true)
+  assert.equal(api.quotedOrNothing(senators), true); assert.equal(api.commissionHearingQuestion(senators), true)
+  // Not asking what witnesses or evidence said, they stay Parliament's though a commission is named: senators calling for
+  // one, and MPs speaking about a commission's report (a report is the commission's finding, not hearing evidence, and
+  // what MPs said about it is in Hansard). And the guard is for people words only: a Senate inquiry is Parliament's.
+  for (const q of ['Which senators called for a royal commission into banking?', 'What did MPs say about the Robodebt Royal Commission\'s report?', 'What did witnesses tell the Senate inquiry into healthcare funding?']) {
+    assert.equal(api.parliamentaryQuestion(q), true, q); assert.equal(api.hearingEvidenceQuestion(q), false, q)
+    assert.equal(api.quotedOrNothing(q), false, q); assert.equal(api.commissionHearingQuestion(q), false, q)
+  }
+  // With no commission named they are Parliament's, and the bodies of Parliament always are.
   for (const q of ['What did MPs tell the inquiry about aged care?', 'Which members voted against the bill?', 'Which senators called for a royal commission into banking?', 'What did the Senate inquiry into healthcare funding hear?', 'What did members of the Senate committee tell the Robodebt Royal Commission?'])
     assert.equal(api.parliamentaryQuestion(q), true, q)
   for (const q of ['What did MPs tell the inquiry about aged care?', 'Which senators called for a royal commission into banking?', 'What did the Senate inquiry into healthcare funding hear?']) {

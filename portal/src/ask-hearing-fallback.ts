@@ -20,8 +20,9 @@ import type { Fact } from './agentic-ask'
  *  (d) the question names a registered commission or inquiry by its name or an alias (commission-names.json, built
  *      from the registry, so a newly registered one is covered with no change here).
  * (c) and (d) are for a run that failed before any tool was called. A question that names Parliament or one of its
- * bodies (Senate, House of Representatives, Parliament, parliamentary, committee, estimates, Hansard), or senators, is
- * a Hansard question, as is one about MPs or members that names no commission (parliamentaryQuestion), and falls back
+ * bodies (Senate, House of Representatives, Parliament, parliamentary, committee, estimates, Hansard) is a Hansard
+ * question, as is one about senators, MPs or members unless it names a commission and asks what witnesses or evidence
+ * said (parliamentaryQuestion), and falls back
  * as on main: (d) never applies to it, and (c) only when it also uses a word for a hearing
  * or its evidence ("what did the Royal Commission hear ..., and what was said in Parliament"). So "Did a party
  * promise a royal commission in Parliament?" and "the Senate inquiry into healthcare funding" are not covered. The
