@@ -1,4 +1,6 @@
-import {ASK_ATTRIBUTION_RULE,ASK_EVIDENCE_RULES,ASK_SELF_REFERENCE_RULE} from './ask-writing-rules'
+import {ASK_ATTRIBUTION_RULE,ASK_EVIDENCE_RULES,ASK_SELF_REFERENCE_RULE as SELF_REFERENCE,ASK_ABSENCE_RULE} from './ask-writing-rules'
+/** The two fixed lines about what an answer may say of itself and of what the record lacks, always together. */
+const ASK_SELF_REFERENCE_RULE = SELF_REFERENCE + ASK_ABSENCE_RULE
 import {RECEIPTS_WRITING_RULE,industryModifier} from './receipt-copy'
 /** Tools supply evidence; only checked, newly written prose reaches an Ask reader. */
 import type { Fact, Period } from './agentic-ask'

@@ -454,3 +454,21 @@ test('a quotation that ends where its excerpt was cut keeps the excerpt\'s "..."
   const out = api.verifyWrittenAnswer({ answer_decision: 'answer', sentences: [{ text: 'The transcript records: “has been some criticism of the way the budget is set and whether the districts are told early enough that they.”', facts: [1] }] }, { question: hearingQuestion, period, facts })
   assert.ok(out.answer.includes('“...has been some criticism of the way the budget is set and whether the districts are told early enough that they...”'), out.answer)
 })
+
+test('every call that writes prose is told what it may say about a gap: that the passages found do not address it, nothing about what the record lacks', async () => {
+  const { ASK_ABSENCE_RULE } = await import('data:text/javascript;base64,' + Buffer.from((await build({ stdin: { contents: "export {ASK_ABSENCE_RULE} from './src/ask-writing-rules'", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, format: 'esm', logLevel: 'silent' })).outputFiles[0].text).toString('base64'))
+  assert.equal(ASK_ABSENCE_RULE, 'Where the passages you hold leave part of the question unanswered, say only that "the passages found don\'t address this"; what the transcripts, the hearing or the record as a whole hold or lack is left unsaid. ')
+  // Worded as what to do: none of the words the prompt cap counts.
+  assert.doesNotMatch(ASK_ABSENCE_RULE, /\b(?:do not|never|must not|cannot)\b/i)
+  const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
+  const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=15', label: text } }])
+  // The writer.
+  assert.ok(JSON.parse(api.writingPrompt({ question: hearingQuestion, period, facts })).contract.includes(api.ASK_SELF_REFERENCE_RULE + ASK_ABSENCE_RULE))
+  // The research model's turns, and its final answer call (reached when the provider stops mid-run).
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async () => { call++; if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 }); throw new Error('provider went away') } })
+  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+  await api.runAgentic('What did the Robodebt Royal Commission hear about income averaging?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
+  assert.ok(model.doGenerateCalls.length >= 2)
+  for (const made of model.doGenerateCalls) assert.ok(JSON.stringify(made.prompt).includes('say only that \\"the passages found don\'t address this\\"'), JSON.stringify(made.prompt).slice(0, 200))
+})
