@@ -187,6 +187,18 @@ export async function socialStatus(env: SocialEnv, date = melbourneDate()): Prom
   return { date, schedule: '08:00 AEST / 09:00 AEDT; pending Instagram containers checked at +5 and +10 minutes', channels: readiness(env), deliveries: deliveries.results }
 }
 
+/**
+ * The journal dates an operator's run may post under without the explicit
+ * override: today's Melbourne date (the one the cron uses) and the day before.
+ * An older date would resume a container that has long expired, or post a stale
+ * edition afresh to a channel with no receipt for it; a later one would take
+ * that day's journal row before its cron.
+ */
+export function operatorRunDates(now: number = Date.now()): [string, string] {
+  const today = melbourneDate(now)
+  return [today, new Date(Date.parse(today + 'T12:00:00Z') - 86400000).toISOString().slice(0, 10)]
+}
+
 export async function previewPublication(env: SocialEnv, date: string, personTopics: (name: string) => Promise<Response>, kind?: DailyPostKind, subject?: string): Promise<DailyPost | null> {
   if (!kind && !subject) {
     const existing = await env.COMMUNITY_DB.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
