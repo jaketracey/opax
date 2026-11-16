@@ -4364,6 +4364,18 @@ async function renderDeclaredPage(params, manageFocus) {
 // CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
 // members by a name slug the index resolves. The slot is placed synchronously
 // so the section keeps its position however long the fetches take.
+/* A Victorian member's page carries the election authorisation under its sections until the polls
+   close (vic-election.js decides by the clock), in the block the seat pages use. */
+async function renderPersonVicAuthorisation(roster, sections) {
+  if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
+  const key = currentSubjectKey;
+  const module = await loadElectorateModule().catch(() => null);
+  if (currentSubjectKey !== key || !sections.isConnected) return;
+  const html = module?.vicMemberAuthorisationHTML?.(roster) || '';
+  const main = sections.parentElement;
+  main.querySelector(':scope > .authorisation')?.remove();
+  if (html) sections.insertAdjacentHTML('afterend', html);
+}
 async function renderPersonVicGifts(name, sections, roster) {
   if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
   const styled = vicGiftsStyles();
@@ -6710,6 +6722,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // said only of a sitting member in one house, where the roster says so; otherwise the seat.
   const seatWord = roster?.current && electorateLinks
     ? (house === "Senate" ? "Senator for " : /council/i.test(house) ? "MLC for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
+  const termLine = roster && electorateReference ? electorateReference.module.personTermLineHTML?.(roster, electorateReference.data.electorates) || "" : "";
   // One meta line (principle 3): party, seat, house, parliament. The Quick
   // facts box said each of these again; its other facts are in the source
   // sheet under this line.
@@ -6718,7 +6731,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // A roster party is dated beside the chip, as the server's person answer dates it.
     seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
-    electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
+    // A member of an expired Victorian house keeps the server's line ("Member for X until the Assembly
+    // expired on 3 November") instead of the bare seat name.
+    termLine ? `<span>${termLine}</span>` : electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     // Each house with its parliament as one part, so the pair wraps together; a former
     // house says so and comes last.
     ...housesHeld.rows.filter((r) => r.status === "current" || r.status === "").map((r) => `<span>${esc(r.label)}</span>`),
@@ -6795,6 +6810,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   voteQuestions.catch(() => {}).then(() => { if (currentSubjectKey === key) nextSteps?.fillNextSteps($("person-next"), [], "No votes on bills in the record for this member."); });
   const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
+  renderPersonVicAuthorisation(roster, sections);
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });
@@ -7815,7 +7831,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=c2b14d5af4").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=e279073942").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

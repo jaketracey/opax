@@ -9,7 +9,7 @@
  *
  * test/vic-term.test.mjs checks the rule over every Victorian seat in the published roster and index.
  */
-import { VIC_ASSEMBLY_EXPIRED_AT, vicAssemblyEnded, vicCouncilEnded, vicAssemblyExpiredPhrase, vicCouncilExpiredPhrase } from './vic-election.js?v=a412e65c49';
+import { VIC_ASSEMBLY_EXPIRED_AT, vicAssemblyEnded, vicCouncilEnded, vicAssemblyExpiredPhrase, vicCouncilExpiredPhrase } from './vic-election.js?v=df44efa398';
 import { rosterFold, rosterIsPerson } from './roster-party.js';
 
 /** Whether a seat row's representative is this person. The state roster's own ID decides where the person
