@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from bills_registry.bills_stages import BILL_STAGE_ORDER, lifecycle, stage_signature  # noqa: E402
+from bills_registry.held_rows import OVERLAY_SOURCES, export_holds  # noqa: E402
 
 BILLS = "portal/public/bills"
 SCRIPTS = Path(__file__).resolve().parents[1]
@@ -124,8 +125,26 @@ def untexted_questions(doc: dict) -> int:
     return sum("question" in d and not isinstance(d["question"], str) for d in doc.get("divisions", []))
 
 
+def superseded(old: dict, new: dict) -> list[dict]:
+    """Rows the held-sources overlay (scripts/bills_held_sources.py) published at
+    HEAD that the new copy has dropped because the export's own record now holds
+    the same event (held_rows.export_holds, the rule the overlay retires by).
+    Any other overlay row that disappears is a regression, whatever its date."""
+    rows = new.get("key_dates", [])
+    return [s for s in old.get("key_dates", [])
+            if s.get("source") in OVERLAY_SOURCES and s.get("date") and s not in rows and export_holds(rows, s)]
+
+
 def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset()) -> list[str]:
     reasons = []
+    if gone := superseded(old, new):
+        # Judge the newer export against HEAD without the overlay rows it covers.
+        # A status_as_of only an overlay row supported is no record to hold it to.
+        kept = [s for s in old.get("key_dates", []) if s not in gone]
+        old = {**old, "key_dates": kept}
+        if old.get("status_as_of") in {s["date"] for s in gone} \
+                and all(s.get("date") != old["status_as_of"] for s in kept):
+            old["status_as_of"] = None
     if faults := untexted_questions(new):
         reasons.append(f"{faults} division questions are not text")
     for name, was, now in (

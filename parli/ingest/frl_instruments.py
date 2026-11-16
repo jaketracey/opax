@@ -377,8 +377,11 @@ class PoliteSession:
     Capture subprocess output; never log command lines or arguments. curl's
     implicit retry/redirect behaviour is disabled so every request is counted.
     """
-    def __init__(self, max_requests=None, initial_requests=0, sleep=time.sleep, clock=time.monotonic, now=utc_now):
+    def __init__(self, max_requests=None, initial_requests=0, sleep=time.sleep, clock=time.monotonic, now=utc_now,
+                 attempts=5):
         self.requested_cap = max_requests
+        # attempts=1 is the nightly single request: any non-200 answer holds the night, no retry or backoff.
+        self.attempts = max(1, int(attempts))
         self.max_requests = min(MAX_REQUESTS, max_requests) if max_requests is not None else MAX_REQUESTS
         self.requests = initial_requests
         self.sleep, self.clock = sleep, clock
@@ -407,7 +410,7 @@ class PoliteSession:
             raise Held("Publisher robots policy disallows this metadata path")
         delay = max(MIN_SPACING, self.delay,
                     (policy.crawl_delay(UA) or policy.crawl_delay("*") or MIN_SPACING) if policy else MIN_SPACING)
-        for attempt in range(5):
+        for attempt in range(self.attempts):
             if publisher: self.check_window()
             if self.requests >= self.max_requests:
                 raise Held("Request budget reached; resume from the checkpoint")
@@ -432,8 +435,9 @@ class PoliteSession:
                 return raw if code == 200 else b""
             if code not in (0, 429) and code < 500:
                 raise Held(f"Metadata request refused (HTTP {code}); checkpoint kept")
-            if attempt == 4:
-                raise Held(f"Metadata request failed after backoff (HTTP {code})")
+            if attempt == self.attempts - 1:
+                raise Held(f"Metadata request failed after backoff (HTTP {code})" if attempt
+                           else f"Metadata request failed (HTTP {code}); single attempt, no retry")
             print(f"[frl-instruments] backoff after HTTP {code}, transport code {result.returncode}", flush=True)
             retry = headers.get("retry-after")
             pause = max(delay, 5 * 2 ** attempt)

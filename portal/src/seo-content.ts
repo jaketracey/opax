@@ -25,6 +25,7 @@ import {recentVotesBucket, recentVotesBucketPath, votesBucketPath, VOTES_NAMES_P
 import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
 import {SUPPLIER_ID_RE, supplierRowsPath, SUPPLIERS_META_PATH} from '../public/supplier-row-buckets.js'
 import {BILL_TITLES_PATH} from '../public/bill-titles.js'
+import {billFrlAttribution, isFrlStage, HELD_READINGS_NOTE, HELD_ASSENT_NOTE} from '../public/frl-attribution.js'
 import {readPartyPages, partyPageCoverage} from '../public/party-page.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
@@ -49,8 +50,14 @@ interface Bill {
   ended_label?: string;
   sponsor?: string; sponsor_person_id?: string; sponsor_party?: string; portfolio?: string; introduced?: string;
   sponsors?: { name: string; person_id?: string | null; party?: string | null }[];
-  sources?: { kind: string; url: string }[];
-  key_dates?: { stage: string; date: string; house: string | null; url: string; event_raw?: string; negatived?: boolean }[];
+  sources?: { kind: string; url: string; retrieved?: string }[];
+  /** `source` marks a stage read from held sources while ParlInfo was unavailable (scripts/bills_held_sources.py):
+   *  "hansard" for a reading, "frl" for Royal Assent from the Federal Register, which also carries `retrieved`. */
+  key_dates?: { stage: string; date: string; house: string | null; url: string; event_raw?: string; negatived?: boolean; source?: string; retrieved?: string }[];
+  acts?: { title?: string; frl_uri?: string; assent_date?: string; retrieved?: string }[];
+  /** The bills export's generated_at (/bills/index.json): dates the register's attribution for Acts read before
+   *  the overlay kept a download day. */
+  exported_at?: string;
   divisions?: Division[];
   division_titles?: Record<string,string>;
   summary?: { attribution?: string; sentences?: string[]; changes?: string[]; affected?: string; as_of?: string };
@@ -458,7 +465,15 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   })
   let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}${coSponsors.length ? `<dt>Co-sponsors</dt><dd>${coSponsors.join(', ')}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(portfolio || 'Not recorded')}</dd></dl>`
   const stages = billStageLines(b.key_dates || []).map(d=>`<li>${escapeHtml(d.label)} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`)
-  if (stages.length) body += `<h2>Recorded stages</h2><ul>${stages.join('')}</ul>`
+  // Dates from the Federal Register carry its dated CC BY 4.0 wording, and stages read from held sources say where
+  // they came from: the same text the app's bill page shows (public/frl-attribution.js).
+  const frlCredit = billFrlAttribution(b, b.exported_at)
+  const heldNotes = [
+    (b.key_dates || []).some(d => d.source === 'hansard') ? HELD_READINGS_NOTE : '',
+    (b.key_dates || []).some(d => isFrlStage(d)) ? HELD_ASSENT_NOTE : '',
+    frlCredit,
+  ].filter(Boolean)
+  if (stages.length) body += `<h2>Recorded stages</h2><ul>${stages.join('')}</ul>${heldNotes.length ? `<p class="bill-held-sources">${escapeHtml(heldNotes.join(' '))}</p>` : ''}`
   const divisions = b.divisions || []
   const divisionSlot = '<!--bill-divisions-->'
   body += divisionSlot
@@ -470,7 +485,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
     if (rows.length) body += `<h2>${label}</h2><ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(billStatusText(r, 'status not recorded'))}</li>`).join('')}</ul>`
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural vote does not establish support for the bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
-  body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
+  body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}${frlCredit && (b.sources || []).some(s => s.kind === 'frl_act') ? `<p class="bill-frl-attribution">${escapeHtml(frlCredit)}</p>` : ''}`
   const block = () => divisions.length ? billDivisionTablesHTML(divisions,b.division_titles,tableQuery,'-ssr',proceduralQuery) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
   return {html:output()}

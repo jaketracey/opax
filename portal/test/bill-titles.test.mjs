@@ -89,7 +89,10 @@ test('bills date: the index date and nothing else', () => {
   assert.equal(BILLS_DATE_PATH, '/growth/bills-date.json');
   assert.deepEqual(billsDateFile({generated_at: '2026-11-11T19:00:00+00:00', count: 2, bills: [{key: 'a'}]}), {generated_at: '2026-11-11T19:00:00+00:00'});
   assert.throws(() => billsDateFile({bills: []}));
-  if (existsSync(new URL('bills/index.json', pub))) assert.deepEqual(billsDateFile(readFile('/bills/index.json')), {generated_at: readFile('/bills/index.json').generated_at});
+  // The held-sources progress day rides along; anything but a plain day is dropped.
+  assert.deepEqual(billsDateFile({generated_at: '2026-10-04T16:27:54+00:00', progress_as_at: '2026-11-17', bills: []}), {generated_at: '2026-10-04T16:27:54+00:00', progress_as_at: '2026-11-17'});
+  assert.deepEqual(billsDateFile({generated_at: '2026-10-04T16:27:54+00:00', progress_as_at: '17 Nov', bills: []}), {generated_at: '2026-10-04T16:27:54+00:00'});
+  if (existsSync(new URL('bills/index.json', pub))) assert.equal(billsDateFile(readFile('/bills/index.json')).generated_at, readFile('/bills/index.json').generated_at);
 });
 
 test('bills date: the app reads the date file for a bill page, the whole index without it or once loaded', async () => {

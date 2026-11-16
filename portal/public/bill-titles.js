@@ -18,10 +18,13 @@ export function billTitlesFile(index) {
 /** The bill export's date, /bills/index.json generated_at: all a bill page reads from the index
  *  (the "updated" line under each of its blocks). scripts/build_growth_modules.mjs writes it at release. */
 export const BILLS_DATE_PATH = '/growth/bills-date.json';
-/** /bills/index.json -> the file bill pages read. */
+/** /bills/index.json -> the file bill pages read. `progress_as_at` (YYYY-MM-DD) rides along when the export has one:
+ *  the newest day the held sources were read for (scripts/bills_held_sources.py), which the bill progress line
+ *  states in place of generated_at's day. */
 export function billsDateFile(index) {
   if (typeof index?.generated_at !== 'string') throw new Error('bills date: no generated_at');
-  return {generated_at: index.generated_at};
+  const progress = typeof index.progress_as_at === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(index.progress_as_at) ? index.progress_as_at : null;
+  return {generated_at: index.generated_at, ...(progress ? {progress_as_at: progress} : {})};
 }
 /** The bills with recorded divisions, in index order, with the fields a party page sorts them by:
  *  the party page's "Bills they divided on" picks its newest candidates from these (app.js

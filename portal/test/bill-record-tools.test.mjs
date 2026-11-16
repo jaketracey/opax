@@ -328,3 +328,22 @@ test('a malformed bill link cannot choose an asset outside the bill directory', 
   assert.equal(result.rows[0].lifecycle_available, false);
   assert.equal(result.rows[0].introduced, null);
 });
+
+test('a Royal Assent read from the Federal Register carries its dated CC BY 4.0 attribution in record text', async () => {
+  const frl = 'https://www.legislation.gov.au/C2026A00101';
+  const assented = { ...complete, status_as_of: '2026-11-12',
+    key_dates: [...complete.key_dates.filter(row => !['passed', 'royal_assent'].includes(row.stage)),
+      { stage: 'royal_assent', date: '2026-11-12', house: null, url: frl, source: 'frl', retrieved: '2026-11-17' }],
+    acts: [{ title: 'Sample Estuary Protection Act 2026', frl_uri: frl, assent_date: '2026-11-12', retrieved: '2026-11-17' }] };
+  const f = fixture(assented);
+  const result = await callTool(f.env, 'find_records', { query: title, kind: 'bill' });
+  const words = 'Based on content from the Federal Register of Legislation at 17 November 2026. For the latest information on Australian Government legislation please go to https://www.legislation.gov.au.';
+  const texts = result.citations.map(citation => citation.text);
+  for (const opening of ['On 12 November 2026, the ' + title + ' received royal assent.', 'The ' + title + ' is linked to Sample Estuary Protection Act 2026, with royal assent on 12 November 2026.', 'The ' + title + ' has these recorded lifecycle stages:'])
+    assert.ok(texts.some(text => text.startsWith(opening) && text.endsWith(words)), opening);
+  assert.equal(result.rows[0].frl_attribution, words);
+  assert.deepEqual(f.paths, ['/bills/index.json', '/bills/' + key + '.json']);
+  // An Act exported before download days were kept is dated only when a caller gives the export's day.
+  const legacy = await callTool(fixture(complete).env, 'find_records', { query: title, kind: 'bill' });
+  assert.ok(!legacy.citations.some(citation => citation.text.includes('Federal Register of Legislation at')));
+});

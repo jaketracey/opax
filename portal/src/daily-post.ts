@@ -12,6 +12,7 @@ import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
+import { FRL_NAME, frlAttribution, frlRetrieved } from '../public/frl-attribution.js'
 import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
 import { photosFor, photoFor, billPhotosFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 import { coverTitleFits } from './og'
@@ -606,14 +607,15 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   // The channels' own copy carries no em dash, including one that came in a stored summary sentence.
   const plainDash = (text: string) => text.replace(/\s*\u2014\s*/g, ', ')
   const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${plainDash(s)}`).join('\n')}` : ''
+  const credit = billRegisterCredit(record)
   const post: DailyPost = {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
     // What the apps show under their own label.
     text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
     record_text: billPostText(bill, sentences[0], statusShort, by, url),
     // Facebook and Instagram: the caption opens by saying a model wrote the summary, once.
-    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${plainDash(sentences[0])}`, bill.title, status, more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
-    caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
+    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${plainDash(sentences[0])}`, bill.title, status, more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', credit, url].filter(Boolean).join('\n\n'),
+    caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', credit, url].filter(Boolean).join('\n\n'),
   }
   const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort })
   return told(post, story.slides, story.photos)
@@ -640,8 +642,20 @@ export function billStanding(bill: BillIndexItem, record: BillFile | null): stri
   const last = (stages: (stage: string) => boolean) => (record?.key_dates ?? []).filter(k => k.stage && stages(k.stage) && /^\d{4}-\d{2}-\d{2}/.test(k.date ?? '')).map(k => (k.date as string).slice(0, 10)).sort().at(-1)
   const passed = last(stage => PASSED_STAGES.has(stage)), assent = last(stage => stage === 'royal_assent')
   if (passed) return `Passed ${formatDate(passed)}.`
-  if (assent) return `Royal Assent ${formatDate(assent)}.`
+  // An assent day read from the Federal Register (bills_held_sources.py) names the register in the same line.
+  if (assent) return `Royal Assent ${formatDate(assent)}${registerAssent(record) === assent ? ` (${FRL_NAME})` : ''}.`
   return bill.status_as_of ? `Recorded as passed, as at ${formatDate(bill.status_as_of)}.` : null
+}
+
+/** The day of a Royal Assent stage the bills export read from the Federal Register (source "frl"), or null. */
+export function registerAssent(record: BillFile | null): string | null {
+  const days = (record?.key_dates ?? []).filter(k => k.stage === 'royal_assent' && k.source === 'frl' && /^\d{4}-\d{2}-\d{2}/.test(k.date ?? ''))
+    .map(k => (k.date as string).slice(0, 10)).sort()
+  return days.at(-1) ?? null
+}
+/** The register's dated CC BY 4.0 attribution when the edition states a day read from it (its Royal Assent stage), else ''. */
+export function billRegisterCredit(record: BillFile | null): string {
+  return registerAssent(record) ? frlAttribution(frlRetrieved(record)) : ''
 }
 
 /**
@@ -664,10 +678,12 @@ interface BillFile {
   status?: string | null
   originating_house?: string | null
   summary?: { sentences?: string[]; affected?: string | null; attribution?: string | null }
-  key_dates?: { stage?: string; date?: string; house?: string }[]
+  /** `source` "frl" or "hansard": a stage read from a held source while ParlInfo was paused; `retrieved` dates an frl one. */
+  key_dates?: { stage?: string; date?: string; house?: string; source?: string; retrieved?: string }[]
   divisions?: BillDivision[]
   speeches?: { speaker?: string; date?: string }[]
-  sources?: { kind?: string; licence?: string | null }[]
+  acts?: { assent_date?: string; retrieved?: string }[]
+  sources?: { kind?: string; licence?: string | null; retrieved?: string }[]
 }
 
 const HOUSE_NAMES: Record<string, string> = { senate: 'Senate', representatives: 'House of Representatives' }
@@ -715,8 +731,11 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
     alt: `Who it touches: ${affected}${speeches.length ? ` Speeches in the record: ${speeches.length}.` : ''}` } : null
   const rows = [...new Map((record?.sources ?? []).filter(src => src.kind && SOURCE_LABELS[src.kind]).map(src => [SOURCE_LABELS[src.kind as string], `${SOURCE_LABELS[src.kind as string]}${src.licence ? `, ${src.licence}` : ''}`])).values()].slice(0, 3)
   if (division) rows.push('Division record: theyvoteforyou.org.au')
+  // A Royal Assent day from the Federal Register: its dated sentence leads the rows, the full wording is in the alt text.
+  const credit = billRegisterCredit(record)
+  if (credit) rows.unshift(credit.split('. ')[0] + '.')
   const source = sourceSlide('Read the bill', 'The bill, its progress and the source documents', rows.length ? rows : ['Bill documents on ParlInfo, Commonwealth copyright'],
-    `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`, `Read the bill at opax.com.au/bill/${bill.key}.`)
+    `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`, `Read the bill at opax.com.au/bill/${bill.key}.${credit ? ' ' + credit : ''}`)
   return { slides: [cover, what, timeline, division, touches, source], photos: billPhotos }
 }
 

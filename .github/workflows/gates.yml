@@ -250,6 +250,8 @@ jobs:
           uv run --frozen bash scripts/vm/test_nsw_hansard_backfill.sh
       - name: Test that a documents-only royal commission holds no extract
         run: uv run --frozen --with pytest pytest -q tests/test_rc_no_extracts.py tests/test_royal_commissions.py
+      - name: Test the nightly Federal Register request and the source policy
+        run: uv run --frozen --with pytest pytest -q -p no:cacheprovider tests/test_frl_acts_recent.py tests/test_source_policy.py
 
   senate-refresh:
     runs-on: ubuntu-latest

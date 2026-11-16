@@ -163,7 +163,8 @@ class WrapperTests(unittest.TestCase):
         self.home = self.root / "home"; self.home.mkdir()
         self.calls = self.root / "calls"
         for name in ("scripts/refresh_divisions.sh", "scripts/vm/divisions_refresh.sh", "scripts/vm/divisions_guard.py",
-                     "scripts/hubs/sitting-2026.json", "scripts/vm/bills_guard.py", "scripts/vm/mobile_votes_contract.py", "scripts/vm/keep_if_unchanged.py", "scripts/bills_registry/bills_stages.py"):
+                     "scripts/hubs/sitting-2026.json", "scripts/vm/bills_guard.py", "scripts/vm/mobile_votes_contract.py", "scripts/vm/keep_if_unchanged.py", "scripts/bills_registry/bills_stages.py",
+                     "scripts/bills_registry/held_rows.py"):
             dest = self.root / name; dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, dest)
         for name in ("parli/ingest/federal_feed.py", "parli/ingest/tvfy_bill_links.py", "scripts/export_votes.py"):

@@ -294,13 +294,20 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
     try:
         paused_sources.update({k:v for k,v in json.loads(receipt.read_text()).items() if v.get('status') == 'paused'})
     except (OSError, ValueError): pass
+# tonight's held-sources overlay (scripts/bills_held_sources.py): counts, the FRL Acts applied, the review count
+try:
+    held_sources = json.loads((Path(path).parent / 'bills-held-sources.json').read_text())
+    if not isinstance(held_sources, dict) or held_sources.get('run_date') != day: held_sources = None
+except (OSError, ValueError):
+    held_sources = None
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
            **({"failed_step_logs": failed_step_logs} if failed_step_logs else {}),
            **({"stale_step_logs": stale_step_logs} if stale_step_logs else {}),
            **backfill_fields,
-           "paused_sources": paused_sources, "periodic_state": periodic_state},
+           "paused_sources": paused_sources, "periodic_state": periodic_state,
+           **({"bills_held_sources": held_sources} if held_sources else {})},
           open(os.environ.get("OPAX_STATUS_OUT") or path, "w"), indent=1)
 PYEOF
 }
@@ -544,6 +551,12 @@ else
 fi
 log "backfill cutoff $(date -d "@$OPAX_BACKFILL_NOT_AFTER" '+%F %T' 2>/dev/null) (limit ${OPAX_NIGHTLY_LIMIT:-6h} less ${backfill_reserve}s reserve)"
 
+# ---- 1y. one Federal Register request near the 03:15 boot: the newest Acts for bill Royal Assent -------------
+# One attempt inside the publisher's quiet window; a throttle, refusal or error skips the night and keeps the rows.
+# shellcheck source=scripts/vm/bills_held_sources.sh
+. "$REPO/scripts/vm/bills_held_sources.sh"
+bills_frl_recent
+
 # ---- 2. the refresh -------------------------------------------------------------------------
 if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}" = 1 ]; then
   log "OPAX_NIGHTLY_SKIP_REFRESH/SKIP_DAILY=1: not running daily_refresh.sh"
@@ -672,6 +685,10 @@ evidence_refresh
 
 # ---- 3. bills: put the speech briefs back, prove no brief or bill was lost ------------------------
 bills_fill_and_verify
+
+# ---- 3a. bills: progress from held sources (FRL assent, Hansard readings, exact division links) -------------------
+# Before the division pages so their bill backlinks include tonight's exact links.
+bills_held_sources
 
 # ---- 3b. Worker-only vote/division projections from the refreshed OPAX DB -------------------------
 # After bill verification so division backlinks use the retained, publishable bills.

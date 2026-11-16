@@ -6,7 +6,7 @@ import { renderNotFound } from './not-found.js';
 // "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
 let nextSteps = null;
 export const nextStepsReady = import('./next-steps.js').then((module) => { nextSteps = module; }, () => {});
-import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=3d4c26573f';
+import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=e8d40839ee';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
 export { rosterSeatParty, rosterListParty } from './roster-party.js';

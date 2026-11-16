@@ -235,12 +235,15 @@ export const billDetail: ToolDefinition = {
     const life = await billFields({ ...env, asset: p => p === path ? Promise.resolve(raw) : readToolAsset(env, p) }, key)
     const source_url = records(raw.sources).map(s => sourceUrl(s.url)).find(Boolean) ?? null
     const stages = life.key_dates.map(event => ({ stage: stageName(event.stage), date: event.date, chamber: ['passed', 'passed_both', 'passed_both_houses', 'royal_assent', 'assent', 'assented'].includes(event.stage) ? null : event.house,
-      url, source_url: sourceUrl(event.url), ...(event.event_raw ? { source_wording: clip(event.event_raw, 300) } : {}) }))
+      url, source_url: sourceUrl(event.url), ...(event.event_raw ? { source_wording: clip(event.event_raw, 300) } : {}),
+      // A stage read from the Federal Register carries the register's dated CC BY 4.0 attribution.
+      ...(event.source === 'frl' && life.frl_attribution ? { attribution: life.frl_attribution } : {}) }))
     const summary = object(raw.summary), divisions = records(raw.divisions)
     const bill = { bill_id: key, title: raw.title, status: life.status, status_as_of: life.status_as_of, introduced: life.introduced, chamber: life.originating_house,
       sponsors: life.sponsors.map((name, i) => ({ name, party: life.sponsor_parties[i] ?? (life.sponsors.length === 1 ? life.sponsor_party : null) })), portfolio: life.portfolio,
       passed_both_houses: life.passed_both_houses === true, passed_both_houses_date: life.passed_both_houses_date, royal_assent: life.royal_assent, act_number: life.act_number,
-      acts: life.acts.map(act => ({ title: act.title, act_number: act.act_number, assent_date: act.assent_date, source_url: sourceUrl(act.frl_uri) })), url, source_url,
+      acts: life.acts.map(act => ({ title: act.title, act_number: act.act_number, assent_date: act.assent_date, source_url: sourceUrl(act.frl_uri),
+        ...(act.assent_date && life.frl_attribution ? { attribution: life.frl_attribution } : {}) })), url, source_url,
       linked_divisions: divisions.length,
       ...(full(args) ? {
         divisions: divisions.slice(0, 40).map(d => ({ division_id: d.key, date: d.date ?? null, chamber: d.house ?? null, stage: d.stage ?? null, question: clip(d.question, 240), ayes: d.ayes ?? null, noes: d.noes ?? null, outcome: d.outcome === 'affirmative' ? 'passed' : d.outcome === 'negative' ? 'defeated' : null, url: siteUrl(env, '/doc/division-' + d.key) })),

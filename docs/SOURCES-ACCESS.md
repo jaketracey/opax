@@ -166,6 +166,48 @@ supplied by the OPAX maintainer, 11 Nov 2026", distinct from OPAXBot fetches, ci
 to the publisher's URL, kept outside git and never fetched by the refresh. No source
 setting changed. The list is in [royal commissions data](DATA-ROYAL-COMMISSIONS.md).
 
+## Bill progress from held sources, 16 November 2026
+
+While ParlInfo is paused, the nightly moves bills we already publish forward from
+sources OPAX already holds (`scripts/bills_held_sources.py`, run after the bills
+export and under the same bill guard). Nothing is fetched from APH or ParlInfo,
+and a bill we do not hold never gets a page from these sources.
+
+- Royal Assent comes from the Federal Register of Legislation, matched only by an
+  Act's `originatingBillUri` naming the bill's own ParlInfo id.
+- First, second and third readings come from the OpenAustralia Foundation's
+  Hansard XML for days after the bills export, only where the Hansard section names
+  the bill's official id. A section matched by title alone goes to a review list
+  with its basis and is never published. A third reading is published only when the
+  bill is recorded read a third time with nothing negatived; a second reading
+  section with a negatived question is reviewed unless the bill is recorded read a
+  second time. Nothing dated on or after a chamber-day that could not be read is
+  published until that day reads.
+- Division links come from the OpenAustralia-sourced divisions with an exact
+  official id join, and only to a published division page.
+- The index's `progress_as_at` claims only what both sources cover: the earlier of
+  the last Hansard chamber-day read without a gap and the day the register was last
+  read, never earlier than the export's own Sydney day. A bill's `status_as_of`
+  stays its latest recorded event.
+- When ParlInfo returns, a row is replaced only when the newer bills export records
+  the same event: the same stage, house and date, or, for a Royal Assent from the
+  register, any Royal Assent, so one is never added beside the export's own. The
+  bills guard allows exactly those removals. Every other row stays, whatever its
+  date, and a row the export still lacks more than 14 days after its date goes on
+  the review list for a person to check while it stays published.
+- The step is information only: if it fails, the bills go back to HEAD and the
+  night records a warning, not a failure.
+
+The Federal Register is asked once a night at about 03:15 Sydney time (one
+`/v1/titles` request for the newest 100 Acts, 10 seconds' spacing, never in the
+busy hours of 08:00 to 20:00 AEST, no retry). Any 429, 5xx or other failure skips
+the night; a 401, 403 or challenge pauses the source with a receipt, and the next
+night asks once again. Each source's host, paths, identity, spacing, window,
+budget, licence and attribution are in `parli/ingest/source_policy.json`. Every
+date read from the register carries its CC BY 4.0 attribution in the register's
+dated wording, on the bill page, in the daily edition and in Ask and MCP record
+text.
+
 ## Review correction and rollback
 
 The review correction removes the remaining contact-log browser path, tightens
