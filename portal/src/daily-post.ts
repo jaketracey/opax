@@ -374,13 +374,28 @@ export function partyName(raw: string | null | undefined): string {
 }
 
 /**
- * Who holds the seat now: the member whose term has no end, latest first. The export lists every member the seat
- * has had, oldest first, and an old member's end is often missing, so the first entry can be a member of 1901.
+ * Who holds the seat now: the roster's current federal member for that House seat (parliamentarians.json). No one
+ * for a seat with no current member, such as a seat abolished in 2025 (North Sydney, Stirling, Higgins), or when
+ * the roster names two different people. The grants export's own list of members is not read: it holds every
+ * member the seat has had, its 2025 winners have no dates, and an old member's end is often missing.
  */
-export function seatHolder(mps: [string, string | null, string | null, string | null][] | null | undefined): { name: string; party: string } | null {
-  const open = (mps ?? []).filter(m => m?.[0] && !m[3]).sort((a, b) => (b[2] ?? '').localeCompare(a[2] ?? ''))[0]
-  return open ? { name: open[0], party: partyName(open[1]) } : null
+export function seatHolder(people: SeatPerson[] | null | undefined, seat: string | null | undefined): { name: string; party: string } | null {
+  const fold = (text: string | null | undefined) => (text ?? '').replace(/\s+/g, ' ').trim().toLowerCase()
+  if (!fold(seat)) return null
+  // One person can be listed under two spellings (O'Connor and O’Connor): the same person once, by the spelling
+  // with more speeches.
+  const held = new Map<string, SeatPerson>()
+  for (const p of people ?? []) {
+    if (p?.current !== true || typeof p.name !== 'string' || !p.name.trim()) continue
+    if (!(p.representation ?? []).some(r => r?.jurisdiction === 'federal' && r.chamber === 'representatives' && fold(r.electorate) === fold(seat))) continue
+    const key = fold(p.name.replace(/[‘’ʼ`]/g, "'"))
+    const had = held.get(key)
+    if (!had || (p.speeches ?? 0) > (had.speeches ?? 0)) held.set(key, p)
+  }
+  const [one, ...more] = held.values()
+  return one && !more.length ? { name: one.name, party: partyName(one.party_now) } : null
 }
+type SeatPerson = Pick<Person, 'name' | 'speeches' | 'current' | 'party_now' | 'representation'>
 
 /**
  * The seat's margin, always with the election it is from ("At the 2022 election it was a fairly safe Liberal seat,
@@ -396,12 +411,12 @@ export function seatMargin(margin: Record<string, [number, string, string]> | nu
   return words ? ` At the ${year} election it was ${/^[aeiou]/i.test(words) ? 'an' : 'a'} ${words} seat, margin ${pct}%.` : ` At the ${year} election the margin was ${pct}%.`
 }
 
-/** The electorate slide: the seat's federal awards in the record, and who holds it. */
-function electorateSlide(kicker: string, graph: GrantsGraph | null, name: string | null | undefined, line?: string): StorySlide | null {
+/** The electorate slide: the seat's federal awards in the record, and who holds it now (from the roster, `people`). */
+function electorateSlide(kicker: string, graph: GrantsGraph | null, name: string | null | undefined, line?: string, people?: SeatPerson[] | null): StorySlide | null {
   if (!name) return null
   const seat = graph?.electorates?.find(e => e.n === name)
   if (!seat || !Number.isFinite(seat.t) || !seat.t || !seat.c) return null
-  const mp = seatHolder(seat.mps)
+  const mp = line ? null : seatHolder(people, name)
   const held = mp ? `Held by ${mp.name}${mp.party ? `, ${mp.party}` : ''}.${seatMargin(seat.margin, mp.party)}` : ''
   const label = `in federal grant awards in the record: ${formatNumber(seat.c)} awards${seat.r ? ` to ${formatNumber(seat.r)} recipients` : ''}`
   return { type: 'number', kicker, title: name, lines: [line ?? held].filter(Boolean), value: shortMoney(seat.t as number), label,
@@ -646,6 +661,7 @@ export function billPostText(bill: BillIndexItem, sentence: string, statusShort:
 
 interface BillDivision { key?: string; date?: string; house?: string; stage?: string; question?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }
 interface BillFile {
+  status?: string | null
   originating_house?: string | null
   summary?: { sentences?: string[]; affected?: string | null; attribution?: string | null }
   key_dates?: { stage?: string; date?: string; house?: string }[]
@@ -667,7 +683,11 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   // The vote that decided the bill, never a vote on how the debate ran; with none, no division slide.
   const procedural = divisions.length ? await sources.asset(PROCEDURAL_TITLES_PATH).catch(() => null) as Record<string, string> | null : null
   const house = billHouse(bill, record)
-  const decided = decidingDivision(divisions, { proceduralTitles: procedural, originatingHouse: house })
+  const decided = decidingDivision(divisions, { proceduralTitles: procedural, originatingHouse: house,
+    // A bill that passed lost none of its readings, nor did one that went on in that house: such a "Not agreed" is
+    // a misread record. No slide, and the log names it.
+    bill: { status: record?.status ?? bill.status ?? null, key_dates: record?.key_dates ?? null },
+    onContradicted: ({ division: d, reading }) => console.warn(`daily-post: no vote slide for ${bill.key}: ${d.key ?? 'a division'} reads as a lost ${reading} reading, which the bill's record contradicts`) })
   // The bill's own chamber: a House bill shows the House, a Senate bill the Senate, and never the other one.
   const ids = billPhotosFor(catalogue, `bill:${bill.key}`, house)
   const kicker = words.sponsor ? `Bill · ${words.sponsor}${words.party ? ` (${words.party})` : ''}` : bill.portfolio ? `Bill · ${bill.portfolio} portfolio` : 'Bill'
@@ -868,7 +888,8 @@ async function grantSlides(grant: GrantPublicationRecord, { sources, graph, reci
     alt: `The purpose as published: ${grant.purpose}` } : null
   const selection = award ? selectionSlide(award, graph) : null
   const siblings = siblingsSlide(recipient)
-  const electorate = electorateSlide('The electorate', graph, seat)
+  const roster = seat ? await sources.asset('/parliamentarians.json').catch(() => null) as { people?: SeatPerson[] } | null : null
+  const electorate = electorateSlide('The electorate', graph, seat, undefined, roster?.people)
   const source = sourceSlide('Check it', 'Every figure links to its record',
     [`GrantConnect award ${grant.id}, Department of Finance, CC BY 3.0 AU`, 'A published award value, not evidence of payments received', 'Program and electorate totals: GrantConnect awards as collected by OPAX'],
     url, `Check it: GrantConnect award ${grant.id}. Every figure links to its record at opax.com.au/money/grants.`)

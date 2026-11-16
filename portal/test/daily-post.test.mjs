@@ -355,7 +355,10 @@ test('every kind tells a valid story from the same records, and X stays exactly 
 function grantSources(opts = {}) {
   const grant = { id: 'GA34203', recipientId: 'abn:97694995462', recipient: 'The Trustee for the Qantas Foundation Memorial Trust', amount: 11300000, start: '2026-08-27', purpose: 'Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld', agency: 'Department of Infrastructure, Transport, Regional Development, Communications and the Arts', program: 'Community Development Grants', category: 'Regional Development', sourceUrl: 'https://www.grants.gov.au/Ga/Show/verified-guid' };
   const base = sources([], opts);
-  return { ...base, async asset(path) { return path === '/social/grants.json' ? { grants: [grant] } : base.asset(path); } };
+  // The seat's holder comes from the roster: Kennedy's current member.
+  const katter = { name: 'Bob Katter', speeches: 3000, current: true, party_now: "Katter's Australian Party", representation: [{ jurisdiction: 'federal', chamber: 'representatives', electorate: 'Kennedy', state: 'QLD' }] };
+  const people = opts.people ?? [...roster.people, katter];
+  return { ...base, async asset(path) { return path === '/social/grants.json' ? { grants: [grant] } : path === '/parliamentarians.json' ? { people } : base.asset(path); } };
 }
 
 test('the grant story carries the selection, the same recipient and the electorate when the shard and graph do', async () => {
@@ -381,6 +384,12 @@ test('the grant story carries the selection, the same recipient and the electora
   assert.equal(electorate.value, '$1.45bn');
   // The margin with its election and its class in words, never as stored ("fairly_safe"); the holder's own party is not repeated.
   assert.match(electorate.lines[0], /Held by Bob Katter, Katter's Australian Party\. At the 2022 election it was a safe seat, margin 13\.1%\./);
+  // With no current member for the seat in the roster (a seat abolished at the election), no "Held by" line and no
+  // margin: the seat's awards only. The grants export's own member list is never read for it.
+  const vacant = await composeDailyPost('2026-09-14', grantSources({ people: roster.people }), 'grant');
+  const seat = vacant.slides.find(s => s.title === 'Kennedy');
+  assert.deepEqual(seat.lines, []);
+  assert.doesNotMatch(JSON.stringify(vacant), /Held by|margin/);
   assert.equal(source.url, 'opax.com.au/money/grants/federal/recipient/abn:97694995462?award=GA34203');
   assert.match(post.caption, /\n\nPhotos: Kgbo, CC BY-SA 4\.0, via Wikimedia Commons\.\n\nhttps:\/\/opax\.com\.au\//, 'the credit sits before the URL');
   const thin = await composeDailyPost('2026-09-14', grantSources({ extras: false }), 'grant');

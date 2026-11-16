@@ -118,6 +118,9 @@
    "senate-chamber",
    "house-chamber"
   ],
+  "bill:building": [
+   "parliament-house-front"
+  ],
   "politician": [
    "parliament-house-flagpole",
    "parliament-house-forecourt"

@@ -137,13 +137,16 @@ export function photosFor(catalogue: PhotoCatalogue | null | undefined, subject:
  * A bill's photographs: its own, then the kind's, without any of the other chamber. A chamber photograph is
  * marked with its chamber (photos.json); a bill shows only its own house's, and a bill whose house is not known
  * (an exposure draft) shows neither. A photograph that shows no chamber belongs to no house and is kept. With
- * nothing left the cover is drawn without a photograph.
+ * none of its own chamber left, the building (`bill:building`), never the other chamber; with nothing at all,
+ * the cover is drawn without a photograph.
  */
 export function billPhotosFor(catalogue: PhotoCatalogue | null | undefined, subject: string, house: 'senate' | 'representatives' | null): string[] {
-  return photosFor(catalogue, subject, 'bill', house).filter(id => {
+  const noOtherChamber = (id: string) => {
     const chamber = catalogue?.photos?.[id]?.chamber
     return !chamber || chamber === house
-  })
+  }
+  const own = photosFor(catalogue, subject, 'bill', house).filter(noOtherChamber)
+  return own.length ? own : photosFor(catalogue, subject, 'bill:building').filter(id => !catalogue?.photos?.[id]?.chamber)
 }
 
 export function photoFor(catalogue: PhotoCatalogue | null | undefined, id: string | null | undefined): StoryPhoto | null {
