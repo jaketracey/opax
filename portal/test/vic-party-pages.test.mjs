@@ -184,7 +184,9 @@ test('every seat page: each candidate\'s party label is unchanged and links to i
       assert.equal(link.getAttribute('href'), candidatePartyPath(c.party), `${c.name} (${seat.name})`);
       assert.match(link.getAttribute('href'), /^\/vic-election-2026\/party-[a-z0-9-]+$/);
       assert.equal(label.parentElement, link);
-      assert.equal(label.textContent, JSDOM.fragment(partyLabelHTML(c.party)).textContent, c.name);
+      // The label is the party exactly as the VEC publishes it, with the grey dot every party has.
+      assert.equal(label.textContent, c.party, c.name);
+      assert.deepEqual([...label.classList].filter(name => name.startsWith('party-')), ['party-grey'], c.name);
     }
     // No election page links to a party page.
     assert.equal(doc.querySelectorAll('a[href^="/subject/party"]').length, 0, seat.name);

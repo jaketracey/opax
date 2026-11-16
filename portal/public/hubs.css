@@ -135,6 +135,8 @@ div.hub-coverage { margin-top: var(--space-group); }
 .vic-date-link { display: block; font: var(--type-metadata); }
 .vic-date-link a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 /* Ballot order: the number in its own tabular column, the rule across the row. */
+/* Election pages give every party the same neutral grey dot: the tertiary ink, not a party colour. */
+.vic-hub .party-grey { --pc: var(--ink-faint); }
 .vic-candidates { max-width: 46rem; margin: 0; padding: 0; list-style: none; }
 .vic-candidates > li { display: grid; grid-template-columns: 2.5ch minmax(0, 1fr); align-items: baseline; gap: var(--space-tight); min-height: var(--size-target); box-sizing: border-box; padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .vic-candidate-no { color: var(--ink-soft); font: var(--type-metadata); font-variant-numeric: tabular-nums; text-align: right; }
