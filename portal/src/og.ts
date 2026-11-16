@@ -25,6 +25,7 @@ export const OG_HEIGHT = 630
 export const OG_VERSION = '9'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
+import { fontFamily, light } from './tokens.generated'
 
 /** The faces the card sets, as served from /fonts/og/ (static instances of the
  *  same two OFL families the site self-hosts; satori cannot read a variable
@@ -62,14 +63,14 @@ export interface OgCard {
   sourceNotice?: { label: string; url: string | null }
 }
 
-// --- palette: style.css :root, the navy band's values --------------------------
-const NAVY = '#142A43'
-const WHITE = '#FFFFFF'
-const SOFT = '#B7C6D9' // --on-navy-soft
-const BRONZE_BRIGHT = '#D9A84A' // --bronze-bright, legible on navy
-const BRONZE = '#A0761B' // --bronze, the rule the masthead ends on
-const SERIF = 'Merriweather'
-const SANS = 'Public Sans'
+// --- palette: the token source's roles (docs/design/design-tokens.json) ---------
+const NAVY = light.navy
+const WHITE = light.onNavy
+const SOFT = light.onNavySoft
+const BRONZE_BRIGHT = light.bronzeBright // legible on navy
+const BRONZE = light.bronze // the rule the masthead ends on
+const SERIF = fontFamily.serif
+const SANS = fontFamily.sans
 
 // --- the mark: index.html's .logo-mark paths, viewBox 0 0 176 160 ----------------
 const LAND =

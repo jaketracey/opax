@@ -14,6 +14,7 @@ import {
   palettes,
   parties,
   staleTargets,
+  webTypeRoles,
 } from '../../scripts/build_tokens.mjs';
 import { census } from './helpers/css-census.mjs';
 
@@ -22,7 +23,7 @@ const source = loadSource();
 const style = readFileSync(join(PORTAL, 'public/style.css'), 'utf8');
 
 test('generated token files match docs/design/design-tokens.json', () => {
-  assert.deepEqual(staleTargets(['web', 'docs']), [], 'run `node scripts/build_tokens.mjs` and commit the result');
+  assert.deepEqual(staleTargets(['web', 'social', 'docs']), [], 'run `node scripts/build_tokens.mjs` and commit the result');
   const begin = style.indexOf(STYLE_BEGIN);
   assert.ok(begin >= 0 && style.includes(STYLE_END), 'style.css keeps its tokens:begin / tokens:end region');
   assert.ok(begin < style.indexOf(':root { --header-h'), 'the token region opens style.css');
@@ -217,6 +218,30 @@ function onlyDown(t, label, counts, baseline, fix) {
 
 test('no new raw hex colours outside the tokens', (t) => {
   onlyDown(t, 'raw hex colours', rawHexCounts(), HEX_BASELINE, 'use a token from tokens.css');
+});
+
+// One source for the web, the app and the share images (17 Nov 2026): the
+// app's roles are the base, each web type role follows one of them, and a
+// token marked web.omit is the app's alone.
+test('web type roles follow app roles, and app-only tokens stay off the web', () => {
+  const roles = webTypeRoles(source);
+  assert.deepEqual(roles.map((role) => role.name), ['title', 'display', 'heading', 'subheading', 'record', 'body', 'strong', 'metadata', 'fine', 'label', 'control']);
+  for (const { name, follows } of roles) assert.ok(source.type[follows], `webRoles.${name} follows ${follows}`);
+  const css = readFileSync(join(PORTAL, 'public/tokens.css'), 'utf8');
+  const kebab = (name) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+  const omitted = [
+    ...Object.values(source.color).flatMap((group) => Object.entries(group).filter(([name, token]) => !name.startsWith('$') && token.web?.omit).map(([name, token]) => token.web?.name ?? `--${kebab(name)}`)),
+    ...Object.entries(source.space).filter(([, token]) => token.web?.omit).map(([name]) => `--space-${kebab(name)}`),
+    ...Object.entries(source.radius).filter(([, token]) => token.web?.omit).map(([name]) => `--radius-${kebab(name)}`),
+    ...Object.entries(source.motion.duration).filter(([, token]) => token.web?.omit).map(([name]) => `--duration-${kebab(name)}`),
+  ];
+  assert.ok(omitted.length > 0);
+  for (const name of omitted) assert.ok(!css.includes(`${name}:`), `${name} is app-only but reached tokens.css`);
+});
+
+test('the share images take their colours from the token source', () => {
+  for (const file of ['src/og.ts', 'src/story.ts'])
+    assert.deepEqual(readFileSync(join(PORTAL, file), 'utf8').match(HEX) ?? [], [], `${file}: use light.* from src/tokens.generated.ts`);
 });
 
 // --- raw type values and deprecated token names ------------------------------

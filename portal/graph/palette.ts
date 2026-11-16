@@ -32,8 +32,8 @@ function role(name: string): string {
 
 /** The paper the scene is drawn on: the clear colour and the fog. */
 export const SURFACE = role('paper')
-/** The selection accent: the chart mark (bronze), for rings, paths and the scrub. */
-export const ACCENT = role(chart.mark.role)
+/** The selection accent: the web's chart mark (bronze), for rings, paths and the scrub. */
+export const ACCENT = role(chart.mark.web?.role ?? chart.mark.role)
 /** Bronze ink: the explain scene's guides, rules and gauge tracks. */
 export const BRONZE_INK = role('bronzeInk')
 /** The grants hub and its flows: public money, in the money accent's ink. */
