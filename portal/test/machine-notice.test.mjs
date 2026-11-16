@@ -32,7 +32,7 @@ const exit = response => api.transcriptNoteResponse(response).then(api.machineNo
 test('the two wordings are fixed strings', () => {
   assert.equal(api.MACHINE_NOTICE, DEFAULT)
   assert.equal(api.MACHINE_NOTICE_TRANSCRIPT, TRANSCRIPT)
-  for (const text of [DEFAULT, TRANSCRIPT]) assert.ok(!/[–—]/.test(text))
+  for (const text of [DEFAULT, TRANSCRIPT]) assert.ok(!/[\u2013\u2014]/.test(text))
 })
 
 test('every machine-written payload carries the notice; the wording follows the transcript test', () => {
