@@ -225,6 +225,22 @@ export default function AskScreen() {
     const frame = requestAnimationFrame(() => scroll.current?.scrollTo(rest));
     return () => cancelAnimationFrame(frame);
   }, [hiddenBand, headerBottom, idle]);
+  // A saved conversation opens with no send, so nothing places it: it took
+  // whatever offset the idle page had. From a scrolled idle page the thread
+  // opened part-way down, its answer behind the bar; from one at rest it
+  // sat a large title's height low (iPad). A thread that opens without a
+  // send starts at rest, as a sent one does once its question is pinned.
+  const wasIdle = useRef(idle);
+  useLayoutEffect(() => {
+    const opened = wasIdle.current && !idle;
+    wasIdle.current = idle;
+    if (!opened || pin.current || Platform.OS !== 'ios') return;
+    const rest = { y: -headerBottom, animated: false };
+    scroll.current?.scrollTo(rest);
+    // Again once the thread's inset has landed on the native side.
+    const frame = requestAnimationFrame(() => scroll.current?.scrollTo(rest));
+    return () => cancelAnimationFrame(frame);
+  }, [idle, headerBottom]);
   useRootBarUnderBar(underBar);
   // Under the clear bar the page fades into its ground behind the title and
   // the bar buttons, from the first point of scroll (at accessibility sizes

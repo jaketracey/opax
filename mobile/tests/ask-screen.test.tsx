@@ -739,6 +739,69 @@ describe('an open thread when its tab is shown again', () => {
     }
   });
 
+  test('a saved conversation opened from a scrolled idle page starts at rest under the bar', async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(false);
+    const frames = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation(() => 0);
+    const solidBar = jest
+      .spyOn(accessibility, 'useSolidBar')
+      .mockReturnValue(false);
+    const route = { key: 'ask-root', name: 'ask' };
+    const navigation = {
+      setOptions: jest.fn(),
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    try {
+      await mount(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <SafeAreaInsetsContext.Provider
+              value={{ top, bottom: 34, left: 0, right: 0 }}
+            >
+              <HeaderHeightContext.Provider value={168}>
+                <AskScreen />
+              </HeaderHeightContext.Provider>
+            </SafeAreaInsetsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      const scroll = () =>
+        view!.root.find(
+          (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+        );
+      // The idle page, scrolled down to its Conversations rows.
+      act(() =>
+        scroll().props.onScroll({ nativeEvent: { contentOffset: { y: 140 } } }),
+      );
+      scrollTo.mockClear();
+      // No send: the conversation is restored, and nothing pins a question.
+      openSavedConversation();
+      const rest = 168 + (scroll().props.contentInset?.top as number);
+      expect(rest).toBeGreaterThan(top);
+      expect(scrollTo).toHaveBeenCalled();
+      const last = scrollTo.mock.lastCall![0] as {
+        y: number;
+        animated: boolean;
+      };
+      // The first question's place: just under the compact bar's foot.
+      expect(last.y).toBeCloseTo(-rest);
+      expect(last.animated).toBe(false);
+    } finally {
+      solidBar.mockRestore();
+      frames.mockRestore();
+      idiom.mockRestore();
+      platform.restore();
+    }
+  });
+
   test('a thread the reader has scrolled is left where it is', async () => {
     const thread = await open();
     try {
