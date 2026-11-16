@@ -152,7 +152,7 @@ test('a royal commission transcript count opens the way the integrity count does
 
 const REPORT = { resource: 'fact-2', kind: 'record', url: 'https://opax.test/report/robodebt', title: 'Final report, page 3', snippet: 'Final report, page 3: "a finding".', cited: true }
 const SPEECH = { resource: 'a'.repeat(32), kind: 'speech', url: 'https://opax.test/doc/speech-1', title: 'Social Services Legislation Amendment Bill', snippet: 'I rise to speak about the royal commission hearing transcript.', cited: true }
-const turnSource = (n, cited = true) => { const text = `Royal Commission into the Robodebt Scheme, Day ${n} (1 November 2022), transcript page 12${n} (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}. CC BY 4.0.`; return { resource: `fact-t${n}`, kind: 'record', url: `https://robodebt.royalcommission.gov.au/t${n}.pdf`, title: text, snippet: text, cited } }
+const turnSource = (n, cited = true) => { const text = `Royal Commission into the Robodebt Scheme, Day ${n} (1 November 2022), transcript page 12${n} (PDF page 9), hearing turn by Ms Quellworth: "income averaging". ${LABEL}. CC BY 4.0.`; return { resource: `fact-t${n}`, kind: 'record', url: `https://robodebt.royalcommission.gov.au/t${n}.pdf`, title: text, snippet: text, cited } }
 const COVERAGE = { resource: 'coverage', kind: 'record', url: 'https://opax.test/methods', title: 'Coverage', snippet: 'Transcripts as the commission published them.', cited: true, coverage: true }
 
 test('an answer citing only hearing transcripts says they are evidence, not findings', async () => {
@@ -173,7 +173,7 @@ test('an answer citing only hearing transcripts says they are evidence, not find
   const listed = api.withTranscriptNote(listing())
   assert.equal(listed.answer, `${listing().answer.trimEnd()}\n\n${api.TRANSCRIPT_NOTE}`, 'a listing carries the label on its rows and ends with the line as well')
   assert.equal(api.withTranscriptNote(listed), listed)
-  const written = { ...payload, answer: `Ms Smith said on hearing day 12 (1 November 2022): “income averaging” ${api.TRANSCRIPT_NOTE}` }
+  const written = { ...payload, answer: `Ms Quellworth said on hearing day 12 (1 November 2022): “income averaging” ${api.TRANSCRIPT_NOTE}` }
   assert.equal(api.withTranscriptNote(written), written, "the transcript writer's own line is not repeated")
   const index = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8')
   assert.equal(index.match(/withTranscriptNote\(linkAskSources\(/g).length, 2, 'applied to the final Ask payload, after its source rows are linked')
@@ -248,13 +248,13 @@ test('a count of transcripts is not a transcript, and a coverage row by any name
 test('the answer ends with the line, in the form its sources call for', () => {
   const base = { answered: true, answer_decision: 'answer', citations: {} }
   // A line with text after it does not end the answer.
-  const mid = { ...base, answer: `Ms Smith said: “income averaging” ${api.TRANSCRIPT_NOTE}\n\nThe department continued the scheme.`, sources: [turnSource(1)] }
+  const mid = { ...base, answer: `Ms Quellworth said: “income averaging” ${api.TRANSCRIPT_NOTE}\n\nThe department continued the scheme.`, sources: [turnSource(1)] }
   const ended = api.withTranscriptNote(mid)
   assert.equal(ended.answer, `${mid.answer}\n\n${api.TRANSCRIPT_NOTE}`)
   assert.ok(ended.answer.startsWith(mid.answer), 'the text before it is as it was')
   assert.equal(api.withTranscriptNote(ended), ended)
   // The transcript writer's all-transcripts sentence under a mixed set of sources: that sentence alone becomes the numbered form.
-  const prose = 'The report found the scheme unlawful.\n\nMs Smith said on hearing day 1 (1 November 2022): “income averaging”\n\n'
+  const prose = 'The report found the scheme unlawful.\n\nMs Quellworth said on hearing day 1 (1 November 2022): “income averaging”\n\n'
   const at = Array.from(prose).length, end = at + api.TRANSCRIPT_NOTE.length
   const written = { ...base, answer: prose + api.TRANSCRIPT_NOTE, citations: { 'fact-2/t/body/0': [[0, 37]], 'fact-t1/t/body/0': [[39, at - 2], [at, end]] }, sources: [REPORT, turnSource(1)] }
   const mixed = api.withTranscriptNote(written), line = 'Source 2 is a hearing transcript: evidence, not findings.'
@@ -291,9 +291,9 @@ test('the fixed words closing a sentence of the answer are prose: left as writte
 })
 
 test('the writer leaves the line to the way out: one line, at the end, after anything added under the turns', () => {
-  const turn = `Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Preston: "Income averaging did not make sense to me." ${LABEL}. © Commonwealth of Australia, Royal Commission into the Robodebt Scheme, licensed under CC BY 4.0.`
+  const turn = `Royal Commission into the Robodebt Scheme, Transcript Hearing Day 71 (9 June 2023), transcript page P-9127 (PDF page 4), hearing turn by Ms Vanterpool: "The averaging method was set out in the second schedule." ${LABEL}. © Commonwealth of Australia, Royal Commission into the Robodebt Scheme, licensed under CC BY 4.0.`
   const question = 'What has Example Member said about income averaging?'
-  const facts = api.writingFacts(undefined, [{ id: 1, text: turn, kind: 'record', cite: { kind: 'record', url: 'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15', label: turn } }])
+  const facts = api.writingFacts(undefined, [{ id: 1, text: turn, kind: 'record', cite: { kind: 'record', url: 'https://robodebt.royalcommission.gov.au/transcript.pdf#page=4', label: turn } }])
   const written = api.proseFallback({ question, period: { kind: 'all', label: 'All time' }, facts })
   assert.ok(written.answer.length > 0)
   assert.ok(!/evidence, not findings/.test(written.answer), written.answer)
