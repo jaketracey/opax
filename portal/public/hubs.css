@@ -4,7 +4,9 @@
    ui-toc list and ui-disclosure rows. What is left here is layout. */
 .hub-page { padding-top: var(--space-group); padding-bottom: var(--space-section); }
 .hub-page h1 { text-wrap: balance; }
-.hub-page h3 { font: var(--type-subheading); margin: 0; }
+.hub-page h3 { margin: 0; }
+/* A heading on a hub is sans; a record's name in a row (.ui-row-title: a bill, a transcript) keeps its serif. */
+.hub-page h3:not(.ui-row-title) { font: var(--type-subheading); }
 .hub-page h3.ui-subsection-title { margin: var(--space-group) 0 var(--space-tight); }
 .hub-page h4 { font: var(--type-strong); margin: 0; }
 .hub-page h5 { font: var(--type-label); color: var(--ink-soft); margin: var(--space-block) 0 var(--space-tight); }
