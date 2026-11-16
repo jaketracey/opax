@@ -35,7 +35,10 @@ function validSeat(s: Seat): boolean {
     && text(s.electorate_url) && s.electorate_url.startsWith('/subject/electorate/') && validDate(s.roster_date)
     && nullableText(s.region) && nullableText(s.formerly) && nullableText(s.boundary_note) && typeof s.created === 'boolean'
     && Array.isArray(s.districts) && s.districts.every(text)
-    && Array.isArray(s.members) && s.members.length === (s.kind === 'district' ? 1 : 5) && s.members.every(validMember)
+    && (s.vacancy == null || s.kind === 'district' && object(s.vacancy) && s.vacancy.at === 'expiry' && validDate(s.vacancy.on)
+      && s.vacancy.on === s.roster_date && validDate(s.vacancy.to) && s.vacancy.to <= s.vacancy.on && validMember(s.vacancy.last))
+    // A vacant district has no member; its last member is in `vacancy`, never in `members`.
+    && Array.isArray(s.members) && s.members.length === (s.kind === 'district' ? (s.vacancy ? 0 : 1) : 5) && s.members.every(validMember)
     && (s.result === null || s.kind === 'district' && object(s.result) && validContest(s.result.general) && (s.result.since === null || validContest(s.result.since)))
     && (s.candidates === null || object(s.candidates) && validDate(s.candidates.published) && https(s.candidates.url)
       && Array.isArray(s.candidates.list) && s.candidates.list.every(c=>fields(c,['name','party'],text)

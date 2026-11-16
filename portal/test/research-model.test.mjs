@@ -40,3 +40,16 @@ test('reasoning preferences keep only known keys',()=>{
   assert.equal(m.researchReasoning('{"effort":"ludicrous"}'),undefined);
   assert.notEqual(m.researchModelKey('a/b',undefined,'{"enabled":false}'),m.researchModelKey('a/b',undefined,undefined));
 });
+test('refusal: every 4xx except 408 and 429, or 503 without the overloaded code; nothing else',()=>{
+  const e=(statusCode,type)=>({statusCode,responseBody:JSON.stringify({error:{code:statusCode,...(type?{metadata:{error_type:type}}:{})}})});
+  for(const status of [400,401,402,403,404,405,409,410,412,413,415,422,451,499]) assert.equal(m.routingRefused(e(status)),true,String(status));
+  assert.equal(m.routingRefused(e(503)),true);
+  assert.equal(m.routingRefused({statusCode:503,responseBody:'not json'}),true);
+  assert.equal(m.routingRefused(e(503,'provider_overloaded')),false);
+  for(const status of [200,302,399,408,429,500,502,504]) assert.equal(m.routingRefused(e(status)),false,String(status));
+  assert.equal(m.routingRefused({cause:{lastError:e(404)}}),true);
+  assert.equal(m.routingRefused({errors:[e(429),e(404)]}),true);
+  assert.equal(m.routingRefused({statusCode:500,cause:e(404)}),false,'the outer status decides');
+  for(const value of [null,undefined,'404',new Error('timeout'),Object.assign(new Error('x'),{name:'TimeoutError'})]) assert.equal(m.routingRefused(value),false);
+  const loop={};loop.cause=loop;assert.equal(m.routingRefused(loop),false);
+});
