@@ -1017,7 +1017,7 @@
   {
    "id": "cth-robodebt",
    "name": "Royal Commission into the Robodebt Scheme",
-   "aliases": ["Robodebt Royal Commission", "Royal Commission into Robodebt"],
+   "aliases": ["Robodebt Royal Commission", "Royal Commission into Robodebt", "Inquiry into the Robodebt Scheme"],
    "inquiry_type": "royal_commission",
    "jurisdiction": "Cth",
    "documents": [
