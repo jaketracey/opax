@@ -55,7 +55,7 @@ export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetche
 /** Internal overview facts never enter the emitted payload. No prose is edited. */
 export function publicPartyMoneyAnswer(payload:PartyMoneyAnswer) {
  const {money_facts:_facts,...out}=payload as PartyMoneyAnswer&{money_facts?:unknown}
- return out
+ return {...out,machine_written:false}
 }
 export function federalPartyMoneyResponse(payload:PartyMoneyAnswer,request:Request):Response {
  const out=publicPartyMoneyAnswer(payload),stream=new URL(request.url).searchParams.get('stream')==='1'||request.headers.get('accept')?.includes('text/event-stream')

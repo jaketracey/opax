@@ -1172,7 +1172,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData, verifiedOnly = false): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData, verifiedOnly = false): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[]; machine_written?: boolean } {
   const resources = Object.fromEntries(Object.entries(verifiedOnly ? {} : answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
@@ -1271,6 +1271,8 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
     ...(scope ? { scope } : {}),
     citations,
     sources: [...recordSources(records.records, citations), ...sources],
+    // The generated answer: a language model wrote it. Steps that swap in excerpts or fixed wording say so.
+    machine_written: true,
   }
 }
 
@@ -1381,7 +1383,7 @@ function evidenceOnlyAnswer(payload: AskPayload, raw: AskAnswer, question: strin
     citations[excerpt.id] = [[end - 1, end]]
   }
   const used = new Set(Object.keys(citations).map(id => id.split('/')[0]))
-  return { ...payload, answer, citations, answer_status: 'evidence_only',
+  return { ...payload, answer, citations, answer_status: 'evidence_only', machine_written: false,
     evidence_excerpts: selected.map(({ resource, text }) => ({ resource, text })),
     sources: sources.map(s => ({ ...s, cited: used.has(s.resource),
       ...(used.has(s.resource) ? { snippet: candidates.get(s.resource)!.text } : {}) })) }
@@ -1601,14 +1603,15 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
       // The sheet is for writing the opening, never for the reader: it leaves
       // with the answer only as the paragraph it produced.
       const { money_facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }
-      if (!money_facts) return timed(json(payload))
+      // A calculated answer is not model-written; the opening paragraph, when there is one, is.
+      if (!money_facts) return timed(json({ ...payload, machine_written: false }))
       const { overview, why } = await moneyOverview(money_facts, env, ctx, request)
       mark('overview')
       // Why an answer has no opening is worth being able to see from outside
       // (a rejected paragraph and an unavailable model read the same to a
       // reader); the paragraph itself, and nothing about the reader, is all
       // that goes in the body.
-      const res = timed(json(overview ? { ...payload, money_overview: overview } : payload))
+      const res = timed(json(overview ? { ...payload, money_overview: overview, machine_written: true } : { ...payload, machine_written: false }))
       res.headers.set('x-opax-overview', why)
       return res
     }
@@ -1949,7 +1952,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   }))
   const sources = reads.flatMap(r => r.status === 'fulfilled' && r.value ? [r.value] : [])
   if (!sources.length && reads.some(r => r.status === 'rejected')) throw new Error('Original speeches unavailable')
-  const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap'}
+  const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap',machine_written:false}
   if (!sources.length) return gap
   const payload: AskPayload = {...gap,sources}
   // A paraphrase must not invent who qualifies. Quote the recorded criteria
@@ -2030,7 +2033,7 @@ function quotedPositionAnswer(payload: AskPayload, query: string, question = '')
       answer += '\n\n'
     }
   }
-  return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',sources:sources.map(source => ({
+  return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',machine_written:false,sources:sources.map(source => ({
     ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quotes.join(' … '),cited:true,
   }))}
 }
@@ -2121,7 +2124,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
         }))]
         text += '- ' + point.text + (dates.length ? ' (' + dates.map(shortDate).join('; ') + ')' : '') + '\n'
       }
-      return {answer:text.trim(),citations:{},scope:payload.scope,answer_status:'uncited',sources:sources.map(source => ({...sourceRows.find(s => s.href === source.href)!,resource:source.id,cited:false}))}
+      return {answer:text.trim(),citations:{},scope:payload.scope,answer_status:'uncited',machine_written:true,sources:sources.map(source => ({...sourceRows.find(s => s.href === source.href)!,resource:source.id,cited:false}))}
     }
     if (!summary?.points.length && drafted.length) {
       await progress?.('status', { phase: 'writing', attempt: 2 })

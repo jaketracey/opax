@@ -6,7 +6,7 @@
 // the real index.html and the real pill (labels.js). Everything else they reach for is a do-nothing stand-in.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 import ts from 'typescript';
 import { machineLabelHTML } from '../public/labels.js';
@@ -85,6 +85,7 @@ function fixture(t, { url = 'https://offline.invalid/ask', docked = false } = {}
       await sendChat('Fixture follow-up');
     };
     window.__modelWritten = modelWrittenAnswer;
+    window.__saved = () => chatThread;
   }`);
   const doc = w.document;
   /** Each "Machine-written" label under a root that is not hidden within it, as the words a screen reader meets. */
@@ -109,6 +110,9 @@ const WRITTEN = {
   'partly cited answer': { answer: 'A partly cited answer.', answer_status: 'partly_cited', sources: [speech] },
   'uncited answer': { answer: 'An answer with no citations.', answer_status: 'uncited', sources: [speech] },
   'answer from an older payload with no status': { answer: 'An answer.', sources: [speech] },
+  'answer the Worker marks model-written': { answer: 'A written answer.', answer_status: 'answered', machine_written: true, sources: [speech] },
+  'clarify prompt with a suggested question': { answer: '“and him?” doesn’t say enough to search the record on. Did you mean: What has Alex Example said about housing?', answer_status: 'needs_question', suggested_question: 'What has Alex Example said about housing?', machine_written: true, sources: [] },
+  'older clarify prompt with a suggested question and no word from the Worker': { answer: 'That doesn’t say enough to search the record on. Did you mean: What has Alex Example said about housing?', answer_status: 'needs_question', suggested_question: 'What has Alex Example said about housing?', sources: [] },
 };
 const NOT_WRITTEN = {
   'decline': { answer: '', answered: false, reason: 'no_support', sources: [speech] },
@@ -119,6 +123,12 @@ const NOT_WRITTEN = {
   'choose the scope': { answer: 'Which donor do you mean?', answer_status: 'needs_scope', money_ranking: { rows: [] }, sources: [] },
   'choose the period': { answer: 'Which year do you mean?', answer_status: 'needs_period', sources: [] },
   'blank answer': { answer: '   ', answer_status: 'answered', sources: [speech] },
+  'clarify prompt with no suggestion': { answer: 'That doesn’t say enough to search the record on. Ask a full question, naming the person, party or topic you mean.', answer_status: 'needs_question', machine_written: false, sources: [] },
+  'identity fact from the roster': { answer: 'Jacqui Lambie is a senator for Tasmania.', answer_status: 'answered', identity_fact: true, machine_written: false, sources: [speech] },
+  'party clarification': { answer: 'Which party do you mean? Please name the party directly so I can check the records for your question.', answer_status: 'uncited', machine_written: false, sources: [] },
+  'transcript quote lines': { answer: 'Alex Example said on hearing day 3 (5 March 2024): “We did not know.”\n\nThese are from hearing transcripts: evidence, not findings.', answer_status: 'answered', machine_written: false, sources: [speech] },
+  'record-summary fallback': { answer: 'Here is what the record shows.\n- Second reading speech, 5 March 2024.', answered: true, fallback: 'record_summary', machine_written: false, sources: [speech] },
+  'no-record fallback': { answer: 'OPAX searched Hansard speeches and found no record that answers this question.', answered: true, fallback: 'no_record', machine_written: false, sources: [] },
 };
 
 for (const [kind, payload] of Object.entries(WRITTEN)) {
@@ -175,6 +185,8 @@ const savedThread = () => [
   { role: 'user', text: 'Fifth question' }, turn(NOT_WRITTEN['decline']),
   { role: 'user', text: 'Sixth question' }, turn(NOT_WRITTEN['blank answer']),
   { role: 'user', text: 'Seventh question' }, turn(WRITTEN['normal researched answer']),
+  { role: 'user', text: 'and him?' }, turn(WRITTEN['older clarify prompt with a suggested question and no word from the Worker']),
+  { role: 'user', text: 'Ninth question' }, turn(NOT_WRITTEN['identity fact from the roster']),
 ];
 
 for (const docked of [false, true]) {
@@ -183,8 +195,8 @@ for (const docked of [false, true]) {
     const f = fixture(t, { docked });
     f.w.__restore(JSON.parse(JSON.stringify(savedThread())));
     const turns = [...f.thread.querySelectorAll('.chat-turn-answer')];
-    assert.equal(turns.length, 7);
-    assert.deepEqual(turns.map(el => f.labels(el).length), [1, 1, 0, 0, 0, 0, 1]);
+    assert.equal(turns.length, 9);
+    assert.deepEqual(turns.map(el => f.labels(el).length), [1, 1, 0, 0, 0, 0, 1, 1, 0]);
     for (const el of turns.filter(el => f.labels(el).length)) assertLabelledOnce(f, el, el.querySelector('.answer'));
   });
 
@@ -197,19 +209,34 @@ for (const docked of [false, true]) {
     assert.equal(landed.length, 1);
     assertLabelledOnce(f, landed[0], landed[0].querySelector('.answer'));
     await f.w.__send(NOT_WRITTEN['calculated money answer']);
-    assert.deepEqual([...f.thread.querySelectorAll('.chat-turn-answer')].map(el => f.labels(el).length), [1, 0]);
+    await f.w.__send(WRITTEN['clarify prompt with a suggested question']);
+    await f.w.__send(NOT_WRITTEN['identity fact from the roster']);
+    assert.deepEqual([...f.thread.querySelectorAll('.chat-turn-answer')].map(el => f.labels(el).length), [1, 0, 1, 0]);
+    // What was saved carries the Worker's word and the suggestion, so the conversation reopens labelled the same way.
+    const saved = JSON.parse(JSON.stringify(f.w.__saved()));
+    assert.deepEqual(saved.filter(m => m.role === 'answer').map(m => [m.machine_written, m.suggested_question]), [[undefined, undefined], [undefined, undefined], [true, 'What has Alex Example said about housing?'], [false, undefined]]);
+    f.w.__restore(saved);
+    assert.deepEqual([...f.thread.querySelectorAll('.chat-turn-answer')].map(el => f.labels(el).length), [1, 0, 1, 0]);
   });
 }
 
-test('the condition: answered, and either a written overview paragraph or text whose status is not a fixed-wording one', t => {
+test('the condition: the Worker’s word when it gives one, else answered and a written overview, a suggested question or a status that is not fixed wording', t => {
   const { w } = fixture(t);
   for (const [kind, payload] of Object.entries(WRITTEN)) assert.equal(w.__modelWritten(payload, payload.answer), true, kind);
   for (const [kind, payload] of Object.entries(NOT_WRITTEN)) assert.equal(w.__modelWritten(payload, payload.answer), false, kind);
-  // Every status the Worker sends is classified here, so a new one cannot pass unlabelled or mislabelled by default.
+  // Every status the Worker can send is classified, from every file that sets one and every branch of the expression
+  // that sets it (a ternary's two arms, a type's alternatives), so a new one cannot pass unclassified.
   const sent = new Set();
-  for (const file of ['index.ts', 'ask-money.ts', 'ask-money-followup.ts', 'ask-money-routing.ts', 'ask-money-industry.ts', 'ask-money-family.ts', 'ask-pay.ts', 'ask-pay-offices.ts', 'ask-rewrite.ts', 'ask-identity.ts', 'agentic-ask.ts', 'research-loop.ts', 'research-response.ts'])
-    for (const m of read('../src/' + file).matchAll(/answer_status\s*[:=]\s*'([a-z_]+)'/g)) sent.add(m[1]);
-  const known = ['answered', 'partly_cited', 'uncited', 'calculated', 'evidence_only', 'evidence_gap', 'needs_scope', 'needs_period', 'needs_question'];
-  assert.deepEqual([...sent].filter(status => !known.includes(status)), []);
-  assert.ok(sent.size >= 8);
+  for (const file of readdirSync(new URL('../src/', import.meta.url)).filter(name => /\.(?:ts|mjs)$/.test(name) && !name.endsWith('.d.ts')))
+    for (const m of read('../src/' + file).matchAll(/answer_status\??\s*[:=]([^,;{}\n]*)/g))
+      for (const literal of m[1].matchAll(/'([a-z_]+)'/g)) sent.add(literal[1]);
+  const labelled = ['answered', 'partly_cited', 'uncited', 'reasoned'], unlabelled = ['calculated', 'evidence_only', 'evidence_gap', 'needs_scope', 'needs_period', 'needs_question'];
+  assert.deepEqual([...sent].filter(status => !labelled.includes(status) && !unlabelled.includes(status)), []);
+  for (const status of ['reasoned', 'answered', 'needs_question', 'evidence_gap']) assert.ok(sent.has(status), status);
+  for (const status of labelled) assert.equal(w.__modelWritten({ answer_status: status }, 'Text.'), true, status);
+  for (const status of unlabelled) assert.equal(w.__modelWritten({ answer_status: status }, 'Text.'), false, status);
+  // The Worker's word wins over the status, either way.
+  assert.equal(w.__modelWritten({ answer_status: 'answered', machine_written: false }, 'Text.'), false);
+  assert.equal(w.__modelWritten({ answer_status: 'needs_question', machine_written: true }, 'Text.'), true);
+  assert.equal(w.__modelWritten({ answered: false, machine_written: true }, 'Text.'), false);
 });

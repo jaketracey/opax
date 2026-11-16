@@ -29,6 +29,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -64,6 +65,7 @@
    ]
   },
   "identity_fact": "boolean",
+  "machine_written": "boolean",
   "sources": [
    {
     "answer_ranges": [
@@ -115,6 +117,7 @@
    "note": "string"
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -173,6 +176,7 @@
   "answered": "boolean",
   "citations": {},
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "claim_audit": "object",
    "mode": "string",
@@ -198,6 +202,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "money_context": "string",
   "pay_answer": "boolean",
   "pay_next": [
@@ -258,6 +263,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -308,6 +314,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -362,6 +369,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -425,6 +433,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -475,6 +484,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -525,6 +535,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -575,6 +586,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -625,6 +637,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -674,6 +687,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -737,6 +751,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",
@@ -787,6 +802,7 @@
    ]
   },
   "followups": [],
+  "machine_written": "boolean",
   "research": {
    "answer_stats": "object",
    "claim_audit": "object",

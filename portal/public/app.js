@@ -384,11 +384,15 @@ function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
 /** Answers a language model did not write: a calculation from the records, a list of passages, a note that the
  *  records do not cover the question, or a prompt to narrow it. Everything else Ask shows is model-written. */
 const NOT_MODEL_WRITTEN = new Set(["calculated", "evidence_only", "evidence_gap", "needs_scope", "needs_period", "needs_question"]);
-/** True when Ask's answer was written by a language model, so it carries the Machine-written label. A written
- *  overview paragraph (money_overview) counts even above a calculated answer. */
+/** True when Ask's answer was written by a language model, so it carries the Machine-written label. The Worker says
+ *  so (machine_written). A saved turn or cached answer from before it did goes by its status: a written overview
+ *  paragraph (money_overview) counts even above a calculated answer, and so does a suggested question, which the
+ *  rewrite model wrote. */
 function modelWrittenAnswer(data, text) {
   if (!data || data.answered === false) return false;
-  return !!data.money_overview || (!!String(text || "").trim() && !NOT_MODEL_WRITTEN.has(data.answer_status));
+  const shown = !!data.money_overview || !!String(text || "").trim();
+  if (typeof data.machine_written === "boolean") return data.machine_written && shown;
+  return !!data.money_overview || (shown && (!!data.suggested_question || !NOT_MODEL_WRITTEN.has(data.answer_status)));
 }
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
@@ -10854,7 +10858,7 @@ async function runAsk(question) {
     if (askSteps) liveSteps = askSteps.steps();
     const research = researchOf(data, liveSteps);
     const researchExtras = researchSourceExtras(research, sources);
-    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, machine_written: data.machine_written, suggested_question: data.suggested_question };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
@@ -11802,7 +11806,7 @@ async function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next, machine_written: seed.machine_written, suggested_question: seed.suggested_question },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -12513,6 +12517,9 @@ async function sendChat(question, carry) {
       reason: data.reason,
       next_step: data.next_step,
       answer_status: data.answer_status,
+      // Whether a model wrote this turn, kept so a reopened conversation labels it the same way.
+      machine_written: data.machine_written,
+      suggested_question: data.suggested_question,
       money_ranking: data.money_ranking,
       money_context: data.money_context,
       money_overview: data.money_overview,

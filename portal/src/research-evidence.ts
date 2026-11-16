@@ -93,7 +93,7 @@ export function verifyResearchAnswer(draft:AnswerDraft,passages:Map<string,Passa
   ;(citations[c.id]??=[]).push([c.start,c.end]);used.push(p)
  }
  const status=answerCitationStatus(draft.text,citations)
- return {answer:draft.text,citations,sources:sourcesOf(used),...(status?{answer_status:status}:{})}
+ return {answer:draft.text,citations,sources:sourcesOf(used),...(status?{answer_status:status}:{}),machine_written:true}
 }
 export function verifyResearchPoints(points:unknown,passages:Map<string,Passage>,question:string,named:NamedScope,positionQuery?:string,roster?:unknown,why?:(reason:string)=>void,tally:AnswerTally=emptyTally()):(QualitativeAnswer&{dropped:number})|null {
  if(!Array.isArray(points))return null
@@ -143,5 +143,5 @@ export function passagesAnswer(passages:Map<string,Passage>,question:string,limi
  if(!chosen.length)return null
  const points=chosen.map(({p,excerpt})=>{const quote=excerpt!.text.trim(),d=p.date?readableDate(p.date):'',lead=d?(/^\d{4}$/.test(d)?`In ${d}, `:`On ${d}, `):'',who=p.speaker?.trim()
   return {claim:`${lead}${who?`${who} said`:'the record says'} “${quote}”`.replace(/^the/,'The'),id:p.id,quote}})
- return verifyResearchAnswer(pointsDraft(points),passages)
+ return {...verifyResearchAnswer(pointsDraft(points),passages),machine_written:false}
 }
