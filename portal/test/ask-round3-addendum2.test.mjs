@@ -95,10 +95,13 @@ test('when every writer sentence holds a near-quotation of the transcript, the r
     assert.equal(out.answer.replace(/“[^”]*”/g,'').includes('Placeholder'),false)
     assert.ok(out.answer.trim().length>0);validRanges(out)
   }
-  // A sentence that cites nothing and quotes something that is not the transcript's words keeps the standing rule.
+  // A sentence that cites nothing, beside a cited one: on a hearing question it is left out, words and all (hub ruling,
+  // 17 Nov 2026), and its text goes on the writer's operator record. The cited verbatim quotation stays.
   const model=new MockLanguageModelV4({doGenerate:async()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:[{text:'The scheme became known in the press as “robodebt”.',facts:[]},{text:'The transcript records: “Mr Placeholder had approved the use of income averaging in that year.”',facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})})
-  const out=await api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})({question:questions[1],period:api.inferPeriod(questions[1]),facts},{rounds:0,tokens:{input:0,output:0},turns:[]},undefined,20000)
-  assert.match(out.answer,/became known in the press as/);assert.match(out.answer,/“Mr Placeholder had approved the use of income averaging in that year\.”/)
+  const stats={rounds:0,tokens:{input:0,output:0},turns:[]}
+  const out=await api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})({question:questions[1],period:api.inferPeriod(questions[1]),facts},stats,undefined,20000)
+  assert.doesNotMatch(out.answer,/became known in the press as|robodebt”/);assert.match(out.answer,/“Mr Placeholder had approved the use of income averaging in that year\.”/)
+  assert.deepEqual(stats.coherence?.uncited_left_out,['The scheme became known in the press as “robodebt”.'])
 })
 
 test('a written sentence whose quotation is not in the transcript is left out, words and all; a verbatim one stays, in one pass',async()=>{
