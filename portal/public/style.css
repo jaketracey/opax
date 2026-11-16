@@ -983,7 +983,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 .answer > * { margin: 0 0 var(--sp-20); }
 .answer > *:last-child { margin-bottom: 0; }
 .answer h3 { font: var(--type-subheading); margin-top: var(--sp-32); }
-.answer h4 { font: var(--weight-strong) var(--text-17)/var(--leading-snug) var(--serif); margin-top: var(--sp-16); }
+.answer h4 { font: var(--type-strong); margin-top: var(--sp-16); }
 /* Bulleted answers read as record prose: a dash sits inline and wrapped lines
    return flush to the text column — no indented block hanging off a marker. */
 .answer ul { padding-left: 0; list-style: none; }
@@ -1402,7 +1402,7 @@ html[data-chat="page"] .chat-head {
 .date-ruler { margin: var(--sp-24) 0 var(--sp-16); max-width: 920px; }
 .date-ruler-heading {
   margin: 0 0 var(--sp-8); color: var(--ink);
-  font: var(--weight-strong) var(--text-17)/var(--leading-normal) var(--serif);  text-transform: none;
+  font: var(--type-subheading);  text-transform: none;
 }
 .date-ruler-frame { position: relative; width: 100%; }
 .date-ruler-svg { display: block; width: 100%; height: auto; min-height: 82px; }
@@ -1434,7 +1434,7 @@ html[data-chat="page"] .chat-head {
 .coverage-rule { margin: var(--sp-16) 0 var(--sp-8); max-width: 920px; }
 .coverage-rule figcaption {
   margin-bottom: var(--sp-8); color: var(--ink-soft);
-  font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--serif); text-transform: none;
+  font: var(--type-subheading); text-transform: none;
 }
 .coverage-bands { display: flex; gap: var(--sp-4); width: 100%; }
 .coverage-band {
@@ -1677,7 +1677,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .barrow-value small { display: block; color: var(--ink-faint); font-size: var(--text-13); line-height: var(--leading-snug); }
 .topic-parliaments .barrow { min-height: 44px; }
 .topic-parliaments figcaption {
-  color: var(--ink); font: var(--weight-strong) var(--text-17)/var(--leading-snug) var(--serif);  text-transform: none;
+  color: var(--ink); font: var(--type-subheading);  text-transform: none;
 }
 
 /* ---- money & words (daily topic panel) ---------------------------------- */
@@ -2393,7 +2393,7 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .person-topics-head h2 span { color: var(--ink-faint); font: var(--type-fine); }
 .person-topic-bars { margin-top: var(--sp-16); }
 .person-topic-bars figcaption {
-  color: var(--ink); font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--serif);  text-transform: none;
+  color: var(--ink); font: var(--type-subheading);  text-transform: none;
 }
 .person-topic-bars .barrow { min-height: 44px; }
 .person-topic-legend {
@@ -2908,7 +2908,7 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
   .ask-research-source-meta { margin-top: var(--space-line); white-space: normal; }
 }
 #ask-date-ruler { margin: var(--sp-8) 0 var(--sp-20); }
-#ask-date-ruler .date-ruler-heading { font: var(--weight-strong) var(--text-17)/var(--leading-normal) var(--serif); text-transform: none;  }
+#ask-date-ruler .date-ruler-heading { font: var(--type-subheading); text-transform: none;  }
 #panel-chat .chat-turn-user { justify-content: flex-start; margin: var(--sp-32) 0 var(--sp-20); }
 #panel-chat .chat-turn-user p { font: var(--type-strong); border-radius: var(--radius-sm); }
 #panel-chat .chat-turn-answer { padding-bottom: var(--sp-20); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
@@ -3023,7 +3023,7 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
 #panel-doc .doc-head:has(.doc-topic-long) > .doc-portrait { grid-row: 2 / span 2; }
 #panel-doc #doc-cite-panel { background: none; border: 0; border-top: var(--border-hairline) solid var(--divider-subtle); border-radius: 0; padding: var(--sp-16) 0; max-width: 72ch; }
 #panel-doc #doc-cite-panel pre { background: none; border-radius: 0; padding: var(--sp-8) 0; }
-#panel-doc #doc-cite-panel h3 { font: var(--weight-strong) var(--text-17)/var(--leading-normal) var(--serif); text-transform: none;  }
+#panel-doc #doc-cite-panel h3 { font: var(--type-subheading); text-transform: none;  }
 
 #panel-doc .doc-text .doc-source-byline,
 #panel-doc .doc-text .doc-source-context { font: var(--type-metadata); color: var(--ink-soft); margin-bottom: var(--sp-20); font-variant-numeric: tabular-nums; }
@@ -3198,7 +3198,7 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
   .subject-person .person-topics-skel { gap: var(--sp-64); }
 }
 .subject-person #subject-ask-form:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-8); }
-.subject-person #subject-ask-form label { grid-column: 1 / -1; font: var(--weight-strong) var(--text-17)/var(--leading-normal) var(--serif); }
+.subject-person #subject-ask-form label { grid-column: 1 / -1; font: var(--type-subheading); }
 .subject-person #subject-ask-form input { min-width: 0; }
 .subject-person #subject-sections [id] { scroll-margin-top: calc(var(--sp-80) + var(--sp-8)); }
 .subject-person .person-topics-head { gap: var(--sp-8); }
