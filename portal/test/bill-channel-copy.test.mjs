@@ -117,8 +117,35 @@ test('"Passed <date>" is the day the record says the bill passed; an assent date
   assert.equal(billStanding(passed, null), 'Recorded as passed, as at 26 Aug 2026.');
   assert.equal(billStanding({ ...passed, status_as_of: null }, null), null);
   assert.equal(billStanding(index.bills[0], files['au-federal-x1']), null, 'a bill that has not passed');
-  // What the apps read keeps main's wording for now: this PR leaves their strings alone.
-  assert.ok(post.text.includes('Passed 26 Aug 2026.'));
+});
+
+test('every string that states it says the same true sentence: the short text, the caption, the cover line and the cover alt', async () => {
+  // Passed, with a passing day in the record: each app-facing string is main's string with the one sentence corrected.
+  const post = await compose('au-federal-x2'), cover = post.slides[0];
+  assert.equal(post.text, `${S1}\n\nPassed 19 Aug 2026.\n\nExample Customs Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x2`);
+  assert.equal(post.caption, [S1, 'Example Customs Bill 2026', 'Passed 19 Aug 2026. Introduced 1 Mar 2026 (Home Affairs portfolio).', `What else is in the bill?\n• ${S2}`,
+    'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', 'https://opax.com.au/bill/au-federal-x2'].join('\n\n'));
+  assert.equal(cover.line, `${S1} Passed 19 Aug 2026.`);
+  assert.equal(cover.alt, `Example Customs Bill 2026. Machine-written summary: ${S1} Passed 19 Aug 2026.`, 'the alt text says who wrote the sentence');
+  // Main wrote the assent day under "Passed" in all four; swapping that one sentence back gives main's strings exactly.
+  const asMain = v => v.replaceAll('Passed 19 Aug 2026.', 'Passed 26 Aug 2026.');
+  assert.equal(asMain(post.text), `${S1}\n\nPassed 26 Aug 2026.\n\nExample Customs Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x2`);
+  for (const text of [post.text, post.caption, cover.line, cover.alt, JSON.stringify(post.slides), post.record_text, post.channel_caption]) assert.ok(!text.includes('Passed 26 Aug'), 'the assent day is nowhere called the day it passed');
+  // Only the assent in the record: "Royal Assent", in the same four places.
+  const assent = await compose('au-federal-x3'), assentCover = assent.slides[0];
+  assert.equal(assent.text, `${S1}\n\nRoyal Assent 27 Aug 2026.\n\nExample Levy Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x3`);
+  assert.ok(assent.caption.includes('\n\nRoyal Assent 27 Aug 2026. Introduced 2 Mar 2026 (Treasury portfolio).\n\n'));
+  assert.equal(assentCover.line, `${S1} Royal Assent 27 Aug 2026.`);
+  assert.ok(assentCover.alt.endsWith('Royal Assent 27 Aug 2026.'));
+  for (const text of [assent.text, assent.caption, JSON.stringify(assent.slides)]) assert.doesNotMatch(text, /Passed \d/);
+  // A bill before parliament: nothing changes at all.
+  const before = await compose('au-federal-x1');
+  assert.ok(before.text.includes('Introduced 7 Sep 2026; before parliament.') && before.slides[0].line.endsWith('Introduced 7 Sep 2026; before parliament.'));
+  // The widget reads the cover line and the first paragraph together: the sentence is still printed once.
+  const widget = widgetEdition(assent, null);
+  assert.ok(widget && !String(widget.line ?? '').includes('It would move'));
+  // An edition already posted is found by its date and subject, which the wording plays no part in.
+  assert.equal(post.subject, 'bill:au-federal-x2'); assert.equal(post.date, '2026-11-17');
 });
 
 test('the marked fallback is a guard: reachable only for a bill with no dated fact, which the daily post never chooses', async () => {
@@ -218,20 +245,22 @@ test('a bill\'s slides are what main draws from: the stored cover, list and sour
   assert.deepEqual({ type: cover.type, kicker: cover.kicker, title: cover.title, line: cover.line, photo: cover.photo, alt: cover.alt }, {
     type: 'cover', kicker: 'Bill · Alex Example (Independent)', title: 'Example Reporting Amendment',
     line: `${S1} Introduced 7 Sep 2026; before parliament.`, photo: 'senate',
-    alt: `Example Reporting Amendment Bill 2026. ${S1} Introduced 7 Sep 2026; before parliament.` });
+    // The cover's alt says who wrote the sentence (this branch's third commit); everything else is as main stores it.
+    alt: `Example Reporting Amendment Bill 2026. Machine-written summary: ${S1} Introduced 7 Sep 2026; before parliament.` });
   assert.deepEqual(list, { type: 'list', kicker: 'What it does', title: 'In three sentences', items: [S1, S2, S3], note: 'Written by a model from the explanatory memorandum; not the record.', alt: `What it does: ${S1} ${S2} ${S3}` });
   // The slides do not depend on the channel copies: the same with them taken off.
   assert.deepEqual(without(post).slides, post.slides);
-  // A passed bill: the stored cover is what main stores, built from the app-facing status sentence, which on this
-  // branch still gives the status date (26 Aug). The record's passing day (19 Aug) is on the channel copies only.
-  // If billSlides were handed the channel wording instead, this fails.
+  // A passed bill. On this branch the status sentence itself is corrected, so the stored cover says the day the bill
+  // passed (19 Aug), not the assent day main stores (26 Aug), and its alt says who wrote the sentence. The cover and
+  // the channel copy read the one sentence: if billSlides were handed anything else, this fails.
   const passed = await composeDailyPost('2026-11-17', pictured('au-federal-x2'), 'bill'), passedCover = passed.slides[0];
   assert.equal(passedCover.type, 'cover');
   assert.ok(passedCover.photo, 'the passed bill\'s cover has its photograph');
-  assert.ok(passedCover.line.endsWith(' Passed 26 Aug 2026.'), passedCover.line);
-  assert.equal(passedCover.line, `${S1} Passed 26 Aug 2026.`);
-  assert.equal(passedCover.alt, `Example Customs Bill 2026. ${S1} Passed 26 Aug 2026.`);
-  assert.ok(passed.record_text.includes('Passed 19 Aug 2026.'), 'while the channel copy has the passing day');
+  assert.ok(passedCover.line.endsWith(' Passed 19 Aug 2026.'), passedCover.line);
+  assert.equal(passedCover.line, `${S1} Passed 19 Aug 2026.`);
+  assert.equal(passedCover.alt, `Example Customs Bill 2026. Machine-written summary: ${S1} Passed 19 Aug 2026.`);
+  assert.ok(!JSON.stringify(passedCover).includes('26 Aug'), 'the assent day is not on the cover');
+  assert.ok(passed.record_text.includes('Passed 19 Aug 2026.') && passed.text.includes('Passed 19 Aug 2026.'), 'the same sentence as the channel copy and the short text');
 });
 
 test('an em dash inside a stored summary sentence does not reach the channels\' caption; the app-facing strings keep the sentence as stored', async () => {

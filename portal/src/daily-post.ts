@@ -505,29 +505,28 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   const sponsor = prettySponsor(bill.sponsor)
   const party = prettyParty(bill.sponsor_party)
   const by = sponsor ? ` by ${sponsor}${party ? ` (${party})` : ''}` : (bill.portfolio ? ` (${bill.portfolio} portfolio)` : '')
+  // The day a bill passed is the day the record says it passed. `status_as_of` on a passed bill is the day of Royal
+  // Assent, usually some days later, so it is named as that and only when the record holds no passing day
+  // (billStanding). Every string that states it, on a channel, a slide or in an app, reads the same sentence.
+  const standing = billStanding(bill, record) ?? `Passed ${formatDate(bill.status_as_of)}.`
   const status = bill.status === 'exposure_draft'
     ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Not yet introduced to parliament.`
     : bill.status === 'passed'
-    ? `Passed ${formatDate(bill.status_as_of)}. Introduced ${formatDate(bill.introduced)}${by}.`
+    ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.`
     : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
   const statusShort = bill.status === 'exposure_draft' ? `Draft released ${formatDate(bill.introduced)}; not introduced.`
-    : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : `Introduced ${formatDate(bill.introduced)}; before parliament.`
-  // For the channels, the day a bill passed is the day the record says it passed. `status_as_of` on a passed bill is
-  // the day of Royal Assent, usually some days later, so it is named as that and only when no passing day is recorded.
-  const standing = billStanding(bill, record)
+    : bill.status === 'passed' ? standing : `Introduced ${formatDate(bill.introduced)}; before parliament.`
   // The channels' own copy carries no em dash, including one that came in a stored summary sentence.
   const plainDash = (text: string) => text.replace(/\s*\u2014\s*/g, ', ')
   const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${plainDash(s)}`).join('\n')}` : ''
   const post: DailyPost = {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
-    // What the apps show under their own label: unchanged.
+    // What the apps show under their own label.
     text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
-    record_text: billPostText(bill, sentences[0], standing ?? statusShort, by, url),
+    record_text: billPostText(bill, sentences[0], statusShort, by, url),
     // Facebook and Instagram: the caption opens by saying a model wrote the summary, once.
-    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${plainDash(sentences[0])}`, bill.title,
-      bill.status === 'passed' && standing ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.` : status,
-      more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
+    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${plainDash(sentences[0])}`, bill.title, status, more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
     caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
   }
   const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort })
@@ -545,6 +544,10 @@ const PASSED_STAGES = new Set(['passed', 'passed_both', 'passed_both_houses'])
  * Where a passed bill stands, in the record's own terms: "Passed <the day it passed>." when the record holds a
  * passing stage; "Royal Assent <day>." when it holds only the assent; and when it holds neither stage, the date the
  * status was recorded, named as that. Never an assent date under the word "Passed". null for a bill that has not passed.
+ *
+ * This rests on how the bills export writes the record: one `passed` stage per bill, dated the day the bill finally
+ * passed both houses (after any return of amendments). If the export ever wrote a `passed` stage for each house, the
+ * latest one would still be the right day only while nothing later is recorded under another name.
  */
 export function billStanding(bill: BillIndexItem, record: BillFile | null): string | null {
   if (bill.status !== 'passed') return null
@@ -601,7 +604,8 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
     // The line opens with the summary's first sentence: the slide says who wrote it, in a small line under it.
     note: MACHINE_SUMMARY_LABEL, photo: takePhoto(billPhotos, ids, 0),
-    alt: `${bill.title}. ${sentences[0]} ${words.statusShort}` }
+    // The alt text says who wrote the sentence, as the image now does and as the share card's alt does.
+    alt: `${bill.title}. ${MACHINE_SUMMARY_PREFIX}${sentences[0]} ${words.statusShort}` }
   const what: StorySlide = { type: 'list', kicker: 'What it does', title: `In ${dayWords(Math.min(3, sentences.length)).toLowerCase()} sentence${sentences.length > 1 ? 's' : ''}`,
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',
     alt: `What it does: ${sentences.slice(0, 3).join(' ')}` }
