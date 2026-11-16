@@ -5,13 +5,13 @@
  * item that holds the text: the record that carries a brief, the row whose text is a bill's summary. bill_detail
  * already said who wrote its summary (`summary.written_by`); the other tools now say it the same way.
  *
- * One helper for every tool and one source for the wording: the error notice is machine-notice.ts's, in its default
- * wording. Nothing here reads, cuts or rewrites the record text, and nothing here marks record text: a transcript
+ * One helper for every tool and one source for the wording: the error notice is machine-notice.ts's, in the wording
+ * for stored text (MACHINE_NOTICE_STORED). Nothing here reads, cuts or rewrites the record text, and nothing here marks record text: a transcript
  * excerpt, a speech passage and a report's own summary are the record's words and stay unmarked.
  *
  * Output only. No tool name, listing, description or declared schema changes.
  */
-import { MACHINE_NOTICE } from '../machine-notice'
+import { MACHINE_NOTICE_STORED } from '../machine-notice'
 import { RECORD_TEXT_NOTICE } from './mcp-common'
 
 type Data = Record<string, unknown>
@@ -32,7 +32,7 @@ const words = (value: unknown): value is string => typeof value === 'string' && 
 
 /** The result-level marks every marked response carries: the notice once, and a record-text notice that allows for it. */
 function noticed(data: Data): Data {
-  return { ...data, machine_notice: MACHINE_NOTICE, ...(data.record_text_notice === undefined || data.record_text_notice === RECORD_TEXT_NOTICE ? { record_text_notice: RECORD_TEXT_NOTICE_WITH_MODEL_TEXT } : {}) }
+  return { ...data, machine_notice: MACHINE_NOTICE_STORED, ...(data.record_text_notice === undefined || data.record_text_notice === RECORD_TEXT_NOTICE ? { record_text_notice: RECORD_TEXT_NOTICE_WITH_MODEL_TEXT } : {}) }
 }
 const noted = (existing: unknown, note: string): string => words(existing) ? (existing.includes(note) ? existing : `${existing} ${note}`) : note
 

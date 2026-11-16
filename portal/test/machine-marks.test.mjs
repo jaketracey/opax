@@ -276,18 +276,16 @@ test('every MCP tool, walked on its own examples: a mark appears only where the 
   const listed = (await send('tools/list')).result.tools.map(t => t.name);
   // The tools that can return stored model-written text. Every other tool must return no mark at all.
   const MAY_MARK = new Set(['search_records', 'read_record', 'bill_detail', 'query_register']);
+  // Each tool is called with its own first published example, so the walk follows the tools as they are listed.
+  const example = name => api.MCP_EXAMPLES[name]?.[0] ?? api.getTool(name)?.inputSchema.examples?.[0];
   const calls = [
-    ['find_connections', { query: 'union' }], ['corpus_coverage', {}],
-    ['member_profile', { name: 'Penny Wong' }], ['member_interests', { name: 'Penny Wong' }], ['member_voting_record', { name: 'Penny Wong', limit: 3 }],
-    ['division_votes', { query: 'climate', limit: 2 }], ['bill_search', { query: 'housing', limit: 5 }], ['money_receipts', { party: 'Greens', limit: 3 }],
-    ['register_guide', { register: 'find_records' }],
-    // Hearing transcripts and report records: verbatim record text, never marked machine.
-    ['query_register', { register: 'royal_commissions', arguments: { view: 'list' } }],
-    ['query_register', { register: 'integrity_reports', arguments: { view: 'list' } }],
-    ['query_register', { register: 'count_records', arguments: { record_type: 'bills', year: 2026 } }],
-    ['query_register', { register: 'parliamentary_pay', arguments: { office: 'Prime Minister' } }],
-    ['query_register', { register: 'declared_interests', arguments: { category: 'shareholdings', limit: 2 } }],
+    ['find_connections', { query: 'union' }], ['corpus_coverage', {}], ['register_guide', { register: 'find_records' }],
+    ...['member_profile', 'member_interests', 'member_voting_record', 'division_votes', 'bill_search', 'money_receipts'].map(name => [name, example(name)]),
+    // Hearing transcripts and report records are verbatim record text, never marked machine; the other registers hold figures.
+    ...['royal_commissions', 'integrity_reports', 'annual_reports', 'agency_reports', 'count_records', 'parliamentary_pay', 'declared_interests', 'grants', 'contracts', 'entity_profile', 'campaign_spend']
+      .map(register => ['query_register', { register, arguments: example(register) }]),
   ];
+  for (const [name, args] of calls) assert.ok(args && (name !== 'query_register' || args.arguments), name + ' has an example: ' + JSON.stringify(args));
   const seen = new Set();
   for (const [name, args] of calls) {
     assert.ok(listed.includes(name), name);
