@@ -1,4 +1,4 @@
-import { hydrateCollections, hydrateLatest, hydrateMostDivided, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=4eadfad4f6';
+import { hydrateCollections, hydrateLatest, hydrateMostDivided, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=9f37973c4c';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
