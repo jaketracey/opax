@@ -65,7 +65,7 @@
 <link rel="stylesheet" href="/register-tables.css?v=525e539093">
 <script type="module" src="/register-tables-entry.js?v=edce771392"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=ecb830d395">
-<link rel="stylesheet" href="/style.css?v=08dc97e504">
+<link rel="stylesheet" href="/style.css?v=a35f39156d">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -259,6 +259,8 @@
       <div id="ask-result" hidden>
         <p class="kicker">Answer</p>
         <div id="ask-steps" hidden></div>
+        <!-- The Machine-written label on a line of its own; the sunken panel below is for a written overview only. -->
+        <div id="ask-machine" class="answer-machine" hidden></div>
         <div id="ask-overview" class="answer-overview" hidden></div>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-notice" id="ask-notice" hidden></p>
@@ -2392,11 +2394,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=183df9699d" defer></script>
+<script src="/spa-shell.js?v=c5e18d09e2" defer></script>
 <script src="/navigation.js?v=eac2c03e68" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=ade51bf279" defer></script>
+<script src="/app.js?v=4e80bed6f0" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=74cbe557c0" defer></script>
 </body>
