@@ -12,7 +12,7 @@ const built = await build({ stdin: { contents: [
   "export {publicationCopy} from './src/social-publication'",
   "export {widgetEdition} from './src/app-widget'",
   "export {storedEdition} from './src/app-edition'",
-  "export {OG_VERSION} from './src/og'",
+  "export {OG_VERSION, storySlideTree} from './src/og'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' });
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const { composeDailyPost, publicationCopy, widgetEdition, storedEdition, billStanding, billPostText, authoriseVicPost, xLength, X_LIMIT } = api;
@@ -370,3 +370,39 @@ test('a bill edition says "Bill progress as at" the export\'s day wherever it st
   assert.equal(JSON.stringify(await composeAt(early, 'au-federal-x1')), JSON.stringify(await compose('au-federal-x1')));
   assert.ok((await composeAt(early, 'au-federal-x2')).text.includes('\n\nPassed 19 Aug 2026. Bill progress as at 1 Sep 2026.\n\n'));
 });
+
+// Hub ruling, 17 Nov 2026: the apps' `text` keeps its 280-character budget, so with "Bill progress as at" in it some
+// bills' names no longer fit there (the app card shows the title on its own). Everything that goes out to the
+// channels must still name the bill: proved here over every bill the edition can feature on 17 Nov.
+test('every bill an edition can feature: the captions, the X and Bluesky posts and the cover image name it, including bills whose apps\' text has no room left for the name', async () => {
+  const read = path => { try { return JSON.parse(readFileSync(new URL('../public' + path, import.meta.url), 'utf8')); } catch { return null; } };
+  const published = read('/bills/index.json'), date = '2026-11-17';
+  const age = day => (Date.parse(date) - Date.parse(String(day).slice(0, 10))) / 864e5;
+  const pool = published.bills.filter(b => { const day = b.status === 'passed' ? b.status_as_of : b.introduced;
+    return b.has_summary && b.key && b.title && api.EDITION_BILL_STATUSES.includes(b.status) && day && age(day) >= 0 && age(day) <= 365; });
+  assert.ok(pool.length > 50, `the pool has ${pool.length} bills`);
+  // A bill is named by its title or short title, or by its title cut on a word with "…" where a channel is short.
+  const names = (text, bill) => [bill.title, bill.short_title].filter(Boolean).some(name => text.includes(name))
+    || text.split('\n').some(line => { const cut = /^(.{40,})…$/.exec(line.trim()); return !!cut && bill.title.startsWith(cut[1]); });
+  const texts = el => !el || typeof el !== 'object' ? [] : [...(typeof el.props?.children === 'string' ? [el.props.children] : []),
+    ...[el.props?.children].flat().filter(c => c && typeof c === 'object').flatMap(texts)];
+  const noRoom = [];
+  for (const bill of pool) {
+    const post = await composeDailyPost(date, { asset: async path => path === '/bills/index.json' ? { ...published, bills: [bill] } : read(path), personTopics: async () => [], recent: async () => [] }, 'bill');
+    assert.equal(post?.subject, 'bill:' + bill.key);
+    assert.match(post.text, /Bill progress as at /, bill.key);
+    if (!names(post.text, bill)) noRoom.push(bill.key);
+    for (const [where, text] of [['caption', post.caption], ['channel_caption', post.channel_caption], ['record_text', post.record_text],
+      ...['facebook', 'instagram', 'x', 'bluesky'].map(channel => [channel, publicationCopy(post, channel).text])])
+      assert.ok(names(text, bill), `${bill.key} ${where}: ${text.slice(0, 160)}`);
+    // The share image: the cover slide's headline is the bill's name, drawn on the image, and its alt text is the full title.
+    const cover = post.slides[0], headline = cover.title.replace(/…$/, '');
+    // (The headline drops the trailing "Bill 2026": "Copyright Amendment" for the Copyright Amendment Bill 2026.)
+    assert.ok(headline.length > 0 && (bill.short_title || bill.title).startsWith(headline), `${bill.key} cover: ${cover.title}`);
+    assert.ok(cover.alt.startsWith(`${bill.title}. `), `${bill.key} cover alt`);
+    assert.ok(texts(api.storySlideTree(cover, {})).some(t => t.length >= Math.min(20, headline.length) && headline.startsWith(t.replace(/…$/, ''))), `${bill.key}: the headline is drawn`);
+  }
+  // The case this proves: bills whose apps' text has no room for the name are still named everywhere else.
+  assert.ok(noRoom.length > 0, 'some bills have no room for the name in the apps\' text');
+});
+
