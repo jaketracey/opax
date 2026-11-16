@@ -437,6 +437,11 @@ export function grantPrograms(programs) {
       total: rounds.reduce((s, p) => s + yearMoney(p)[0], 0),
       count: rounds.reduce((s, p) => s + yearMoney(p)[1], 0),
       c: rounds.reduce((s, p) => s + (p.c ?? 0), 0),
+      // The date the files its figures are read from were written.
+      generated: rounds
+        .map((p) => (p.generated ?? '').slice(0, 10))
+        .sort()
+        .at(-1),
     };
   });
 }
@@ -466,6 +471,7 @@ const programRecord = (g) => ({
     id: g.main.id,
     n: g.n,
     ag: g.ag,
+    generated: g.generated,
     [`by.${GRANT_YEAR}`]: [g.total, g.count],
     // Every round with this name and grants in GRANT_YEAR.
     rounds: g.rounds.map((p) => ({
@@ -497,7 +503,8 @@ function programAgency(g, agencies) {
     g.main.id,
   );
   if (!options) return null;
-  const awarded = `${grouped(g.count)} grants worth ${moneyWords(g.total)} in ${GRANT_YEAR}`;
+  const awarded = `${grouped(g.count)} grants worth ${moneyWords(g.total)}`;
+  const published = `as published on GrantConnect by ${longDate(g.generated)}`;
   return {
     template: 'grant-program-agency',
     deck: 'money',
@@ -507,8 +514,8 @@ function programAgency(g, agencies) {
     fact: g.ag,
     explanation:
       g.rounds.length > 1
-        ? `Across its ${g.rounds.length} funding rounds on GrantConnect, the program awarded ${awarded}.`
-        : `The program awarded ${awarded}.`,
+        ? `Across ${g.rounds.length} funding rounds with grants in ${GRANT_YEAR}, the program awarded ${awarded}, ${published}.`
+        : `The program awarded ${awarded} in ${GRANT_YEAR}, ${published}.`,
     source: 'GrantConnect grant awards',
     link: programLink(g),
     record: programRecord(g),
@@ -533,7 +540,7 @@ function programYearTotal(g) {
     scale: 'log',
     format: 'money',
     fact: `${moneyWords(g.total)} across ${grouped(g.count)} grants`,
-    explanation: `${capital(the(g.ag))} runs it. The figure counts grants published on GrantConnect for the ${GRANT_YEAR} financial year.`,
+    explanation: `${capital(the(g.ag))} runs it. The figure counts grants published on GrantConnect by ${longDate(g.generated)} for the ${GRANT_YEAR} financial year.`,
     source: 'GrantConnect grant awards',
     link: programLink(g),
     record: programRecord(g),
@@ -656,7 +663,7 @@ export function largestContract(department) {
   };
 }
 
-const contractRecord = (department, largest, optionNames) => ({
+const contractRecord = (department, largest, optionNames, asOf) => ({
   path: `agencies/${largest.top.listed.id}.json`,
   fields: {
     agency: largest.top.listed.id,
@@ -670,24 +677,79 @@ const contractRecord = (department, largest, optionNames) => ({
       supplier_id: largest.top.supplier_id,
       supplier_kind:
         supplierOf(largest.top.listed, largest.top)?.identity?.kind ?? null,
+      // The supplier entry on the same record, and the ABN's legal name.
+      supplier_entry_name:
+        supplierOf(largest.top.listed, largest.top)?.name ?? null,
+      abn: supplierOf(largest.top.listed, largest.top)?.abn ?? null,
+      legal_name:
+        supplierOf(largest.top.listed, largest.top)?.identity?.legal_name ??
+        null,
       amount: largest.top.amount,
       start_date: largest.top.start_date,
       end_date: largest.top.end_date,
     },
     runner_up_amount: largest.runnerUp,
+    // Internal: contracts starting in CONTRACT_YEAR in this export.
     contracts_starting: largest.count,
+    export_date: asOf,
     suppliers: optionNames,
   },
 });
+/** "DT GLOBAL ASIA PACIFIC PTY LTD" as "DT Global Asia Pacific Pty Ltd". */
+const SUFFIX_CASE = { PTY: 'Pty', LTD: 'Ltd', LIMITED: 'Limited', INC: 'Inc' };
+const legalCase = (name) =>
+  name
+    .split(/\s+/)
+    .map(
+      (w) =>
+        SUFFIX_CASE[w.replace(/\W/g, '')] ??
+        (w.length <= 3 || /\d/.test(w)
+          ? w
+          : w.charAt(0) + w.slice(1).toLowerCase()),
+    )
+    .join(' ');
+const sameName = (a, b) => {
+  const key = (s) =>
+    s
+      .toUpperCase()
+      .replace(/\bLIMITED\b/g, 'LTD')
+      .replace(/\bPROPRIETARY\b/g, 'PTY')
+      .replace(/&/g, 'AND')
+      .replace(/^THE\s+/, '')
+      .replace(/[^A-Z0-9]/g, '');
+  return key(a) === key(b);
+};
+/**
+ * The supplier as the record the link opens names it: its contract row and
+ * its supplier entry must agree, or the question is left out. When the ABN's
+ * current legal name differs, the reveal says so.
+ */
+function namedSupplier(top) {
+  const entry = supplierOf(top.listed, top);
+  if (!isCompany(entry) || entry.name !== top.supplier) return null;
+  const legal = entry.identity?.legal_name;
+  return {
+    entry,
+    now:
+      legal && !sameName(legal, entry.name)
+        ? ` ${top.supplier} is now ${legalCase(legal)} (same ABN).`
+        : '',
+  };
+}
+/** The largest as at the export: more 2026 contracts may be published later. */
+const largestAsOf = (asOf) =>
+  ` Of the contracts starting in ${CONTRACT_YEAR} that AusTender had published by ${longDate(asOf)}, it is the largest.`;
+
 /** Where the contract is listed, when that is not the department's own name. */
 const listedUnder = (department, top) =>
   top.listed.name === department.name
     ? ''
     : ` AusTender lists it under ${the(top.listed.name)}.`;
 
-function contractSupplier(department, largest) {
+function contractSupplier(department, largest, asOf) {
   const { top } = largest;
-  if (!isCompany(supplierOf(top.listed, top))) return null;
+  const named = namedSupplier(top);
+  if (!named) return null;
   const others = (department.suppliers ?? [])
     .filter(
       (s) =>
@@ -711,21 +773,23 @@ function contractSupplier(department, largest) {
     prompt: `Which company holds the largest ${department.name} contract that starts in ${CONTRACT_YEAR}? It is worth ${moneyWords(top.amount)}.`,
     options,
     fact: top.supplier,
-    explanation: `Contract ${top.id} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}.${listedUnder(department, top)} The other companies are among the agency's largest suppliers.`,
+    explanation: `Contract ${top.id} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}.${listedUnder(department, top)}${named.now}${largestAsOf(asOf)} The other companies are among the agency's largest suppliers.`,
     source: 'AusTender contract notices',
     link: contractsLink(top.listed, top),
     record: contractRecord(
       department,
       largest,
       options.map((o) => o.label),
+      asOf,
     ),
     uses: [`agency:${department.name}`, top.id],
   };
 }
 
-function contractValue(department, largest) {
+function contractValue(department, largest, asOf) {
   const { top } = largest;
-  if (!isCompany(supplierOf(top.listed, top))) return null;
+  const named = namedSupplier(top);
+  if (!named) return null;
   return {
     template: 'contract-largest-value',
     deck: 'money',
@@ -737,10 +801,10 @@ function contractValue(department, largest) {
     scale: 'log',
     format: 'money',
     fact: moneyWords(top.amount),
-    explanation: `Contract ${top.id} with ${top.supplier} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}.${listedUnder(department, top)} Values are contract awards published on AusTender, not money spent.`,
+    explanation: `Contract ${top.id} with ${top.supplier} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}.${listedUnder(department, top)}${named.now}${largestAsOf(asOf)} Values are contract awards, not money spent.`,
     source: 'AusTender contract notices',
     link: contractsLink(top.listed, top),
-    record: contractRecord(department, largest, []),
+    record: contractRecord(department, largest, [], asOf),
     uses: [`agency:${department.name}`, top.id],
   };
 }
@@ -848,10 +912,10 @@ export function buildTodayDeck(inputs) {
     ].map((g) => programAgency(g, programAgencies)),
     'grant-program-year-total': yearPrograms.map(programYearTotal),
     'contract-largest-supplier': largest.map((x) =>
-      contractSupplier(x.department, x.largest),
+      contractSupplier(x.department, x.largest, inputs.contractsAsOf),
     ),
     'contract-largest-value': largest.map((x) =>
-      contractValue(x.department, x.largest),
+      contractValue(x.department, x.largest, inputs.contractsAsOf),
     ),
   };
 

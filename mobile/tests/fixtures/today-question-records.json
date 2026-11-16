@@ -20,6 +20,7 @@
       "id": "GO7748",
       "n": "Jobs, Land and the Economy",
       "ag": "National Indigenous Australians Agency",
+      "generated": "2026-11-11",
       "by.2025-26": [1712525821, 562],
       "rounds": [
         {
@@ -95,12 +96,16 @@
         "supplier": "Austal Defence Shipbuilding Australia Pty Ltd",
         "supplier_id": "s-8c51cb6dbbb63f8e3757",
         "supplier_kind": "company",
+        "supplier_entry_name": "Austal Defence Shipbuilding Australia Pty Ltd",
+        "abn": "86689561797",
+        "legal_name": "AUSTAL DEFENCE SHIPBUILDING AUSTRALIA PTY LTD",
         "amount": 5231621478,
         "start_date": "2026-03-12",
         "end_date": "2038-12-30"
       },
       "runner_up_amount": 3796564163,
       "contracts_starting": 20176,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Austal Defence Shipbuilding Australia Pty Ltd",
         "Ventia Australia Pty Ltd",
@@ -130,6 +135,7 @@
       "id": "GO7466",
       "n": "Commonwealth Home Support Program",
       "ag": "Department of Health, Disability and Ageing",
+      "generated": "2026-11-11",
       "by.2025-26": [7497189963, 5773],
       "rounds": [
         {
@@ -194,12 +200,16 @@
         "supplier": "Metrea Australia Pty Ltd",
         "supplier_id": "s-ef4e3fc94ca94a57765e",
         "supplier_kind": "company",
+        "supplier_entry_name": "Metrea Australia Pty Ltd",
+        "abn": "88673072976",
+        "legal_name": "METREA AUSTRALIA PTY LTD",
         "amount": 4319144779.88,
         "start_date": "2026-04-30",
         "end_date": "2039-12-30"
       },
       "runner_up_amount": 297457923.41,
       "contracts_starting": 957,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -224,6 +234,7 @@
       "id": "GO7575",
       "n": "Discovery Projects",
       "ag": "Australian Research Council",
+      "generated": "2026-11-11",
       "by.2025-26": [465104681, 669],
       "rounds": [
         {
@@ -295,12 +306,16 @@
         "supplier": "State Street Australia Ltd",
         "supplier_id": "s-c51fd9a6c5672d752b6f",
         "supplier_kind": "company",
+        "supplier_entry_name": "State Street Australia Ltd",
+        "abn": "21002965200",
+        "legal_name": "STATE STREET AUSTRALIA LTD",
         "amount": 430920812,
         "start_date": "2026-05-24",
         "end_date": "2026-11-23"
       },
       "runner_up_amount": 104006581,
       "contracts_starting": 1425,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Aware Water Group Pty Ltd",
         "State Street Australia Ltd",
@@ -330,6 +345,7 @@
       "id": "GO5667",
       "n": "Australian Apprenticeships Incentive System",
       "ag": "Department of Employment and Workplace Relations",
+      "generated": "2026-11-11",
       "by.2025-26": [950644698, 31],
       "rounds": [
         {
@@ -379,12 +395,16 @@
         "supplier": "Glaxosmithkline Australia Pty Ltd",
         "supplier_id": "s-3a526e2d700c22013a71",
         "supplier_kind": "company",
+        "supplier_entry_name": "Glaxosmithkline Australia Pty Ltd",
+        "abn": "47100162481",
+        "legal_name": "GLAXOSMITHKLINE AUSTRALIA PTY LTD",
         "amount": 415000000,
         "start_date": "2026-06-30",
         "end_date": "2027-06-29"
       },
       "runner_up_amount": 311569341.84,
       "contracts_starting": 1451,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -409,6 +429,7 @@
       "id": "GO7020",
       "n": "Investigator Grants",
       "ag": "National Health and Medical Research Council (NHMRC)",
+      "generated": "2026-11-11",
       "by.2025-26": [422840245, 227],
       "rounds": [
         {
@@ -466,12 +487,16 @@
         "supplier": "DT Global Asia Pacific Pty Ltd",
         "supplier_id": "s-ea1286d8a2b718dc184a",
         "supplier_kind": "company",
+        "supplier_entry_name": "DT Global Asia Pacific Pty Ltd",
+        "abn": "23006170869",
+        "legal_name": "DT GLOBAL ASIA PACIFIC PTY LTD",
         "amount": 232100000,
         "start_date": "2026-04-12",
         "end_date": "2031-02-27"
       },
       "runner_up_amount": 166650000,
       "contracts_starting": 2078,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Tetra Tech International Development Pty Ltd",
         "Johnstaff International Development Pty Ltd",
@@ -501,6 +526,7 @@
       "id": "GO7846",
       "n": "Medicare Urgent Care Clinics",
       "ag": "Department of Health, Disability and Ageing",
+      "generated": "2026-11-11",
       "by.2025-26": [839080119, 31],
       "rounds": [
         {
@@ -542,12 +568,16 @@
         "supplier": "Accenture Australia Pty Limited",
         "supplier_id": "s-8f22c19d3fc22a56c78a",
         "supplier_kind": "company",
+        "supplier_entry_name": "Accenture Australia Pty Limited",
+        "abn": "49096776895",
+        "legal_name": "ACCENTURE AUSTRALIA PTY LIMITED",
         "amount": 161556494.6,
         "start_date": "2026-08-27",
         "end_date": "2029-08-26"
       },
       "runner_up_amount": 157164606.01,
       "contracts_starting": 124,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -572,6 +602,7 @@
       "id": "GO7599",
       "n": "Ideas Grants",
       "ag": "National Health and Medical Research Council (NHMRC)",
+      "generated": "2026-11-11",
       "by.2025-26": [293210251, 195],
       "rounds": [
         {
@@ -632,12 +663,16 @@
         "supplier": "ResMed Asia Pacific Limited",
         "supplier_id": "s-5b065ad19e68f9e2a3a1",
         "supplier_kind": "company",
+        "supplier_entry_name": "ResMed Asia Pacific Limited",
+        "abn": "86070076470",
+        "legal_name": "RESMED ASIA PACIFIC LIMITED",
         "amount": 145309715.02,
         "start_date": "2026-07-31",
         "end_date": "2029-07-30"
       },
       "runner_up_amount": 55500701.88,
       "contracts_starting": 1676,
+      "export_date": "2026-11-15",
       "suppliers": [
         "CBRE (V) Pty Limited",
         "ResMed Asia Pacific Limited",
@@ -667,6 +702,7 @@
       "id": "GO7242",
       "n": "Emergency Relief",
       "ag": "Department of Social Services",
+      "generated": "2026-11-11",
       "by.2025-26": [333503032, 191],
       "rounds": [
         {
@@ -721,12 +757,16 @@
         "supplier": "Microsoft Pty Ltd",
         "supplier_id": "s-6c52a6bfc2fcee4ab010",
         "supplier_kind": "company",
+        "supplier_entry_name": "Microsoft Pty Ltd",
+        "abn": "29002589460",
+        "legal_name": "MICROSOFT PTY LTD",
         "amount": 101739820.85,
         "start_date": "2026-05-31",
         "end_date": "2029-06-29"
       },
       "runner_up_amount": 8250000,
       "contracts_starting": 89,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -751,6 +791,7 @@
       "id": "GO7700",
       "n": "Cooperative Research Centres Programme",
       "ag": "Department of Industry, Science and Resources",
+      "generated": "2026-11-11",
       "by.2025-26": [143990993, 28],
       "rounds": [
         {
@@ -806,12 +847,16 @@
         "supplier": "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
         "supplier_id": "s-6e720147af21faac9ceb",
         "supplier_kind": "company",
+        "supplier_entry_name": "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
+        "abn": "36003420460",
+        "legal_name": "CHARTER HALL REAL ESTATE MANAGEMENT SERVICES (NSW) PTY LIMITED",
         "amount": 64831011.6,
         "start_date": "2026-09-30",
         "end_date": "2033-09-29"
       },
       "runner_up_amount": 11366076.66,
       "contracts_starting": 238,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Hunter Mason (VIC) Pty Ltd",
         "HAYS Specialist Recruitment (Australia) PTY Limited",
@@ -841,6 +886,7 @@
       "id": "GO6633",
       "n": "Industry Growth Program",
       "ag": "Department of Industry, Science and Resources",
+      "generated": "2026-11-11",
       "by.2025-26": [125021434, 53],
       "rounds": [
         {
@@ -888,12 +934,16 @@
         "supplier": "Datacom Systems (AU) Pty Ltd",
         "supplier_id": "s-828d512472eedc897c04",
         "supplier_kind": "company",
+        "supplier_entry_name": "Datacom Systems (AU) Pty Ltd",
+        "abn": "39135427075",
+        "legal_name": "DATACOM SYSTEMS (AU) PTY LTD",
         "amount": 25177606.2,
         "start_date": "2026-02-02",
         "end_date": "2029-02-01"
       },
       "runner_up_amount": 24494748.51,
       "contracts_starting": 535,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -918,6 +968,7 @@
       "id": "GO6639",
       "n": "Linkage Projects",
       "ag": "Australian Research Council",
+      "generated": "2026-11-11",
       "by.2025-26": [88937172, 166],
       "rounds": [
         {
@@ -995,12 +1046,16 @@
         "supplier": "NTT Australia PTY LTD",
         "supplier_id": "s-7051cdfc41d7d3c8624e",
         "supplier_kind": "company",
+        "supplier_entry_name": "NTT Australia PTY LTD",
+        "abn": "65003371239",
+        "legal_name": "NTT AUSTRALIA PTY LTD",
         "amount": 15792699.2,
         "start_date": "2026-07-30",
         "end_date": "2029-07-29"
       },
       "runner_up_amount": 15681834,
       "contracts_starting": 505,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Leidos Australia Pty Limited",
         "Ventia Property Pty Ltd",
@@ -1030,6 +1085,7 @@
       "id": "GO8040",
       "n": "Supporting Multicultural Communities Infrastructure",
       "ag": "Department of Home Affairs",
+      "generated": "2026-11-11",
       "by.2025-26": [113837300, 35],
       "rounds": [
         {
@@ -1079,12 +1135,16 @@
         "supplier": "Accenture Australia Pty Limited",
         "supplier_id": "s-8f22c19d3fc22a56c78a",
         "supplier_kind": "company",
+        "supplier_entry_name": "Accenture Australia Pty Limited",
+        "abn": "49096776895",
+        "legal_name": "ACCENTURE AUSTRALIA PTY LIMITED",
         "amount": 14557259.05,
         "start_date": "2026-08-09",
         "end_date": "2029-06-29"
       },
       "runner_up_amount": 13087401.76,
       "contracts_starting": 131,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -1109,6 +1169,7 @@
       "id": "GO7241",
       "n": "Commonwealth Financial Counselling and Financial Capability",
       "ag": "Department of Social Services",
+      "generated": "2026-11-11",
       "by.2025-26": [110463617, 57],
       "rounds": [
         {
@@ -1159,12 +1220,16 @@
         "supplier": "Cirrus Networks (ACT) Pty Ltd",
         "supplier_id": "s-224c9eeedaa6913df323",
         "supplier_kind": "company",
+        "supplier_entry_name": "Cirrus Networks (ACT) Pty Ltd",
+        "abn": "85143561291",
+        "legal_name": "CIRRUS NETWORKS (ACT) PTY LTD",
         "amount": 14229091.5,
         "start_date": "2026-06-29",
         "end_date": "2028-06-29"
       },
       "runner_up_amount": 10649513.79,
       "contracts_starting": 309,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Evolve FM Pty Ltd",
         "Cirrus Networks (ACT) Pty Ltd",
@@ -1194,6 +1259,7 @@
       "id": "GO7867",
       "n": "Major and Local Community Infrastructure Program",
       "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+      "generated": "2026-11-11",
       "by.2025-26": [110980000, 33],
       "rounds": [
         {
@@ -1218,12 +1284,16 @@
         "supplier": "SFDC Australia Pty Limited",
         "supplier_id": "s-d73e743fbedc610a1b73",
         "supplier_kind": "company",
+        "supplier_entry_name": "SFDC Australia Pty Limited",
+        "abn": "91109182989",
+        "legal_name": "SFDC Australia Pty Limited",
         "amount": 10913456.13,
         "start_date": "2026-01-28",
         "end_date": "2028-01-27"
       },
       "runner_up_amount": 7223040,
       "contracts_starting": 528,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -1248,6 +1318,7 @@
       "id": "GO7587",
       "n": "Community Legal Services Program",
       "ag": "Attorney-General's Department",
+      "generated": "2026-11-11",
       "by.2025-26": [78435654, 14],
       "rounds": [
         {
@@ -1272,12 +1343,16 @@
         "supplier": "Redhill Partners Investment Pty Ltd",
         "supplier_id": "s-e9c9ff4b55530b4d2b97",
         "supplier_kind": "company",
+        "supplier_entry_name": "Redhill Partners Investment Pty Ltd",
+        "abn": "54635176984",
+        "legal_name": "REDHILL PARTNERS INVESTMENT PTY LTD",
         "amount": 10486488,
         "start_date": "2026-03-15",
         "end_date": "2036-03-14"
       },
       "runner_up_amount": 6156052.09,
       "contracts_starting": 147,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Sureway Employment and Training Pty Ltd",
         "Karingal St Laurence Limited",
@@ -1307,6 +1382,7 @@
       "id": "GO7976",
       "n": "News Media Assistance Program",
       "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+      "generated": "2026-11-11",
       "by.2025-26": [74713604, 185],
       "rounds": [
         {
@@ -1331,12 +1407,16 @@
         "supplier": "Mediabrands Australia Pty Ltd",
         "supplier_id": "s-7eb16e70c806b9718d65",
         "supplier_kind": "company",
+        "supplier_entry_name": "Mediabrands Australia Pty Ltd",
+        "abn": "19002966001",
+        "legal_name": "MEDIABRANDS AUSTRALIA PTY LTD",
         "amount": 6904954.42,
         "start_date": "2026-05-14",
         "end_date": "2026-12-30"
       },
       "runner_up_amount": 5134126,
       "contracts_starting": 108,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -1361,6 +1441,7 @@
       "id": "GO7209",
       "n": "Support Plantation Establishment",
       "ag": "Department of Agriculture, Fisheries and Forestry",
+      "generated": "2026-11-11",
       "by.2025-26": [49533061, 40],
       "rounds": [
         {
@@ -1385,12 +1466,16 @@
         "supplier": "CPD Live Pty Ltd",
         "supplier_id": "s-35ca8075f86eb2d403c4",
         "supplier_kind": "company",
+        "supplier_entry_name": "CPD Live Pty Ltd",
+        "abn": "27131637468",
+        "legal_name": "CPD LIVE PTY LTD",
         "amount": 4142050,
         "start_date": "2026-01-04",
         "end_date": "2028-01-03"
       },
       "runner_up_amount": 3586317.08,
       "contracts_starting": 62,
+      "export_date": "2026-11-15",
       "suppliers": [
         "CPD Live Pty Ltd",
         "Compass Group B&I Hospitality Services Pty Ltd",
@@ -1420,6 +1505,7 @@
       "id": "GO7781",
       "n": "Local Environmental Projects",
       "ag": "Department of Climate Change, Energy, the Environment and Water",
+      "generated": "2026-11-11",
       "by.2025-26": [58943666, 34],
       "rounds": [
         {
@@ -1444,12 +1530,16 @@
         "supplier": "Jones Lang LaSalle (ACT) Pty Limited",
         "supplier_id": "s-bcc757e4b693412cb4a6",
         "supplier_kind": "company",
+        "supplier_entry_name": "Jones Lang LaSalle (ACT) Pty Limited",
+        "abn": "69008585260",
+        "legal_name": "JONES LANG LASALLE (ACT) PTY LIMITED",
         "amount": 3397982.02,
         "start_date": "2026-06-30",
         "end_date": "2027-06-29"
       },
       "runner_up_amount": 422400,
       "contracts_starting": 64,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   },
@@ -1474,6 +1564,7 @@
       "id": "GO7108",
       "n": "Export Market Development",
       "ag": "Australian Trade and Investment Commission (Austrade)",
+      "generated": "2026-11-11",
       "by.2025-26": [48350981, 533],
       "rounds": [
         {
@@ -1498,12 +1589,16 @@
         "supplier": "Corporate Travel Management Group Pty Ltd",
         "supplier_id": "s-0640b3118bf07d0c66d2",
         "supplier_kind": "company",
+        "supplier_entry_name": "Corporate Travel Management Group Pty Ltd",
+        "abn": "52005000895",
+        "legal_name": "CORPORATE TRAVEL MANAGEMENT GROUP PTY LTD",
         "amount": 2759434.27,
         "start_date": "2026-06-30",
         "end_date": "2027-06-29"
       },
       "runner_up_amount": 2257841.4,
       "contracts_starting": 122,
+      "export_date": "2026-11-15",
       "suppliers": [
         "Synechron Data Australia Pty Ltd",
         "HAYS Specialist Recruitment (Australia) PTY Limited",
@@ -1533,6 +1628,7 @@
       "id": "GO6763",
       "n": "Play Our Way Participation and Equipment Stream",
       "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+      "generated": "2026-11-11",
       "by.2025-26": [12006518, 15],
       "rounds": [
         {
@@ -1557,12 +1653,16 @@
         "supplier": "MediaMonks Australia Pty Ltd",
         "supplier_id": "s-d3057210d079143c3af8",
         "supplier_kind": "company",
+        "supplier_entry_name": "MediaMonks Australia Pty Ltd",
+        "abn": "86636603015",
+        "legal_name": "MEDIAMONKS AUSTRALIA PTY LTD",
         "amount": 2399155,
         "start_date": "2026-01-06",
         "end_date": "2027-11-30"
       },
       "runner_up_amount": 2183500,
       "contracts_starting": 51,
+      "export_date": "2026-11-15",
       "suppliers": []
     }
   }

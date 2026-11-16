@@ -133,9 +133,11 @@ npx prettier --write src/features/explore/quiz-front-page.json src/features/expl
     not edit the helper here: it changes in the social lane's copy.
   - `grant-program-agency` and `grant-program-year-total`: a GrantConnect
     program is every round (GO id) that carries its name, under one agency.
-    The agency question sums all rounds and says how many it adds up. The
-    year total is asked only of a one-round program, so the figure is the one
-    its page shows. Agency names AusTender lists with no 2026 contract (a
+    The agency question sums the rounds with grants in 2025-26 and says so
+    ("Across 2 funding rounds with grants in 2025-26"). The year total is
+    asked only of a one-round program, so the figure is the one its page
+    shows. Both say "published on GrantConnect by" the date of the files the
+    figures come from (`generated`). Agency names AusTender lists with no 2026 contract (a
     renamed department) are never an answer or a wrong option, and of twin
     names ("Incentive System", "Incentives Programme") one is asked.
   - `contract-largest-supplier` and `contract-largest-value`: each
@@ -143,7 +145,15 @@ npx prettier --write src/features/explore/quiz-front-page.json src/features/expl
     counted across all its AusTender records ("Department of Foreign Affairs
     and Trade" and "... - Australian Aid Program"). The link opens the record
     that lists the contract. Only suppliers the record calls a company are
-    named, never a person or a trust.
+    named, never a person or a trust. The name is the one that record shows:
+    its contract row and its supplier entry must agree, or there is no
+    question. When the ABN's legal name differs, the reveal adds "X is now Y
+    (same ABN)". "Largest" is as at the export: the reveal says "AusTender had
+    published by" the `agencies.json` date, since more 2026 contracts appear
+    later.
+  - Regenerate from main's exports, never this repo's `portal/public` copy:
+    that copy is an older export (21 September 2026 at the time of writing)
+    with older supplier names and fewer contracts.
 - Left out: royal commissions (and RC acronyms), the Victorian Big Build
   commission, class actions, hearings and transcripts, anything Victorian,
   private members' bills, and any text with "OPAX", "report" or "speeches".

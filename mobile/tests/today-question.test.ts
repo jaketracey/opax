@@ -226,17 +226,24 @@ test("every answer is its record's field", () => {
         expect(q.link.href).toBe(`/money/grants?program=${f.id}`);
         expect(q.prompt).toContain(f.n as string);
         const grants = `${count.toLocaleString('en-AU')} grants`;
+        // Dated by the files its figures come from, as the source line is.
+        expect(f.generated).toBe(
+          (sources.asOf as Record<string, string>)[q.template],
+        );
+        expect(q.explanation).toContain(
+          `published on GrantConnect by ${longDate(f.generated as string)}`,
+        );
         if (q.template === 'grant-program-agency') {
           expect(right(q)).toBe(f.ag);
           expect(q.fact).toBe(f.ag);
           expect(q.explanation).toContain(grants);
-          expect(q.explanation.startsWith('Across its ')).toBe(
-            rounds.length > 1,
-          );
+          // Says what it sums: the rounds with grants this year, not all.
+          expect(q.explanation.startsWith('Across ')).toBe(rounds.length > 1);
           if (rounds.length > 1)
             expect(q.explanation).toContain(
-              `Across its ${rounds.length} funding rounds`,
+              `Across ${rounds.length} funding rounds with grants in 2025-26,`,
             );
+          expect(q.explanation).not.toMatch(/\bits \d+ funding rounds\b/);
         } else {
           // The slider asks only of a one-round program: its page's figure.
           expect(rounds).toHaveLength(1);
@@ -260,6 +267,24 @@ test("every answer is its record's field", () => {
         );
         expect(c.start_date).toMatch(/^2026-/);
         expect(c.supplier_kind).toBe('company');
+        // The name the record the link opens shows, in its contract row and
+        // its supplier entry; the legal name only when the ABN's differs.
+        expect(c.supplier_entry_name).toBe(c.supplier);
+        const plain = (name: string) =>
+          name
+            .toUpperCase()
+            .replace(/\bLIMITED\b/g, 'LTD')
+            .replace(/[^A-Z0-9]/g, '');
+        expect(q.explanation.includes(' (same ABN).')).toBe(
+          !!c.legal_name && plain(c.legal_name) !== plain(c.supplier!),
+        );
+        // "Largest" as at the export the figures come from.
+        expect(f.export_date).toBe(
+          (sources.asOf as Record<string, string>)[q.template],
+        );
+        expect(q.explanation).toContain(
+          `Of the contracts starting in 2026 that AusTender had published by ${longDate(f.export_date as string)}, it is the largest.`,
+        );
         expect(Number(c.amount)).toBeGreaterThan(f.runner_up_amount as number);
         expect(q.link.href).toBe(
           `/subject/agency/${f.agency}?section=contracts&supplier=${c.supplier_id}`,
@@ -838,7 +863,7 @@ test('a grant program counts every round with its name (review P1, Ideas Grants)
   expect(q!.template).toBe('grant-program-agency');
   expect(right(q!)).toBe(RIVERS);
   expect(q!.explanation).toBe(
-    'Across its 2 funding rounds on GrantConnect, the program awarded 80 grants worth $140 million in 2025-26.',
+    'Across 2 funding rounds with grants in 2025-26, the program awarded 80 grants worth $140 million, as published on GrantConnect by 11 November 2026.',
   );
   // A one-round program's total is its own round's.
   const total = deck.find((x) => x.template === 'grant-program-year-total')!;
@@ -1004,4 +1029,63 @@ test('a vote question asks about the third reading, never the closure moved on i
       ),
     ).toBe(false);
   }
+});
+
+test('a supplier is named as the record the link opens names it, with its current legal name (hub check)', () => {
+  const inputs = world();
+  const contracts = (
+    prefix: string,
+    top: number,
+    supplier: string,
+    id: string,
+  ) =>
+    Array.from({ length: 60 }, (_, i) => ({
+      id: `${prefix}${i}`,
+      amount: String(i === 59 ? top : 1_000_000 + i),
+      start_date: '2026-03-01',
+      end_date: '2027-03-01',
+      supplier: i === 59 ? supplier : 'Alpha Pty Ltd',
+      supplier_id: i === 59 ? id : 's-Alpha',
+    }));
+  const others = ['Alpha', 'Beta', 'Gamma', 'Delta'].map((n) =>
+    company(`${n} Pty Ltd`),
+  );
+  inputs.agencies.push(
+    {
+      // The record still shows the old name; the ABN's legal name is new.
+      id: 'a-names',
+      name: 'Department of Names',
+      suppliers: [
+        {
+          id: 's-old',
+          name: 'Oldname Pty Ltd',
+          identity: { kind: 'company', legal_name: 'NEWNAME HOLDINGS PTY LTD' },
+          total: 9,
+        } as never,
+        ...others,
+      ],
+      contracts: contracts('CNN', 9_000_000, 'Oldname Pty Ltd', 's-old'),
+    },
+    {
+      // Its contract row and supplier entry disagree: no question.
+      id: 'a-mismatch',
+      name: 'Department of Mismatch',
+      suppliers: [company('Entryname Pty Ltd'), ...others],
+      contracts: contracts('CNM', 8_000_000, 'Rowname Pty Ltd', 's-Entryname'),
+    },
+  );
+  const { deck } = buildDeck(inputs);
+  const named = deck.find((q) => q.prompt.includes('Department of Names'))!;
+  expect(named.explanation).toContain(
+    'Oldname Pty Ltd is now Newname Holdings Pty Ltd (same ABN).',
+  );
+  if (named.template === 'contract-largest-supplier')
+    expect(right(named)).toBe('Oldname Pty Ltd');
+  expect(deck.some((q) => q.prompt.includes('Department of Mismatch'))).toBe(
+    false,
+  );
+  // A legal name that differs only in case or "Limited" adds nothing.
+  for (const q of deck.filter((x) => x.template.startsWith('contract-')))
+    if (!q.prompt.includes('Department of Names'))
+      expect(q.explanation).not.toContain('(same ABN)');
 });
