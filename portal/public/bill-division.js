@@ -124,7 +124,8 @@ export function divisionReading(d, proceduralTitles = null) {
   }
   // With no question quoted, a They Vote For You summary says what was voted on in its first sentence (later
   // sentences explain the bill and may mention amendments); a Hansard extract or a division's name is read whole.
-  const text = /^the majority\b/i.test(all) ? all.split(/(?<=[.!?]["'”’]?)\s*(?=[A-Z(#])/)[0] : all;
+  // (No lookbehind: this file is in public/, and Safari before 16.4 cannot parse one; see browser-errors.test.mjs.)
+  const text = /^the majority\b/i.test(all) ? (/^[\s\S]*?[.!?]["'”’]?(?=\s*[A-Z(#])/.exec(all)?.[0] ?? all) : all;
   if (!text || NOT_A_READING.test(stage) || PROCEDURAL.test(stage) && !/limitation of debate/i.test(stage)) return null;
   if (PROCEDURAL.test(text) || AMENDMENT.test(text)) return null;
   const third = THIRD.test(text), second = SECOND.test(text);
