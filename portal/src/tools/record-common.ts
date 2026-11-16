@@ -68,6 +68,15 @@ export function billKey(href: string, slug: string): string | null {
 }
 
 /**
+ * Ask states a bill's status as at the bills export's day ("as at 5 Oct 2026", the bill page's "Bill progress as
+ * at") in the citations of find_records, sponsored_bills and count_records. The public MCP output keeps those
+ * citations' earlier wording while its directory reviews are pending, as member-expenses.ts statesCoverage does: to
+ * switch MCP on, make this return true (only the citation text changes; the tool list, names and schemas do not).
+ * MCP's bill_search and bill_detail already say the day, in a note of their own.
+ */
+export const statesProgress = (env: ToolEnv) => env.ask === true
+
+/**
  * The bills export's generated_at: the day every bill status and stage these tools report is as at, the date the bill
  * page shows as "Bill progress as at". Read from the release's small date file, else from the bill index itself;
  * null when neither gives a date. Status text says "as at" this day (billCitations), never the stage's own date.
@@ -157,7 +166,7 @@ export function billCitations(bill: BillFields, title: string, url: string, quer
     return party ? `${name} (${party})` : name
   })
   if (named.length) add('sponsor', `${named.join('; ')} ${named.length === 1 ? 'is the recorded sponsor' : 'are the recorded sponsors'} of the ${title}.`)
-  const asAt = billsAsAtDay(exportedAt)
+  const asAt = billsAsAtDay(exportedAt, bill)
   if (bill.status) add('status', `The ${title} has recorded status ${bill.status.replaceAll('_', ' ')}${bill.ended_label ? ` (${bill.ended_label})` : ''}${asAt ? ' as at ' + asAt : bill.status_as_of ? ' as at ' + displayDate(bill.status_as_of) : ''}.`)
   if (bill.portfolio && !/^\(s\)/i.test(bill.portfolio)) add('portfolio', `The ${title} is recorded under the ${bill.portfolio} portfolio.`)
   const stages: string[] = []

@@ -8,7 +8,8 @@
 #
 # Steps, each one stopping the run on failure:
 #   store      store_reviewed.py: backup, then insert the accepted rows as review_state ok
-#   export     export_bills.py (registry mode) into a fresh directory, rsync --delete into portal/public/bills
+#   export     export_bills.py (registry mode) into a fresh directory, keep the published index's generated_at,
+#              rsync --delete into portal/public/bills
 #   guard      scripts/vm/bills_guard.py --apply-holds: a regressed bill keeps its HEAD copy (nightly's rule)
 #   briefs     export_bills.py --fill-briefs, then verify_bill_briefs.py proves no speech brief was lost
 #   tidy       keep_if_unchanged.py --sweep: unchanged files keep HEAD's bytes, so the diff is only real changes
@@ -34,6 +35,23 @@ echo "== store"
 echo "== export"
 OUT=/tmp/bills-export-$STAMP
 "$PY" scripts/export_bills.py --out "$OUT"
+# The index's generated_at is the day every bill page, edition and Ask or MCP answer gives as "Bill progress as at".
+# A wave adds summaries, not progress: no stage or status was read again. A fresh directory has no earlier stamp for
+# write_index to keep, so the export would stamp the wave's own run time and move that day with no new progress
+# data. Keep the published stamp instead (same layout as write_index). The nightly refresh, which does read
+# progress, is what moves it.
+"$PY" - "$OUT/index.json" portal/public/bills/index.json <<'PY'
+import json, sys
+from pathlib import Path
+new_path, published_path = Path(sys.argv[1]), Path(sys.argv[2])
+stamp = json.loads(published_path.read_text()).get("generated_at")
+if not isinstance(stamp, str) or not stamp:
+    sys.exit("publish_wave: the published bills index has no generated_at to keep")
+index = json.loads(new_path.read_text())
+print(f"generated_at: kept {stamp} (export wrote {index.get('generated_at')})")
+index["generated_at"] = stamp
+new_path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
+PY
 rsync -a --delete "$OUT/" portal/public/bills/
 rm -rf "$OUT"
 

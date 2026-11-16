@@ -3943,6 +3943,8 @@ html[data-panel="chat"] footer { display: none; }
 .doc-bill .doc-brief-head { margin-bottom: var(--sp-8); }
 .doc-bill-title { margin: 0; font: var(--type-subheading); color: var(--ink); }
 .doc-bill-status { margin: var(--sp-4) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+/* "Bill progress as at" under the bill's status on a speech page: the status line's spacing, the bill page's fine print. */
+.doc-bill .bill-progress-as-at { margin: var(--sp-4) 0 0; }
 .doc-bill-sentence { margin: var(--sp-12) 0 0; font: var(--weight-regular) var(--text-15)/var(--leading-body) var(--serif); color: var(--ink); }
 .doc-bill-none { margin-top: var(--sp-8); }
 .doc-bill-machine { margin: var(--space-row) 0 0; }

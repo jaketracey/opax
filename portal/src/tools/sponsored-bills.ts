@@ -1,6 +1,6 @@
 /** Complete published sponsor metadata, rather than the six-row growth summaries. */
 import { sponsorNamesAgree, sponsorPerson } from '../../public/sponsor-person.js'
-import { billEnding as ending, billFields, clip, fold, siteUrl } from './record-common'
+import { billEnding as ending, billFields, clip, fold, siteUrl, statesProgress } from './record-common'
 import { memberResolutionNotes, resolveMember } from './member-records'
 import { boundedValue, inWindow, object, publishedResult, records, sourceUrl, validWindow, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition } from './types'
@@ -38,14 +38,15 @@ export const tool: ToolDefinition = {
         (!args.status || b.status === args.status) && inWindow(b.introduced, args) && (!args.query || wordsMatch(args.query, [b.title, b.short_title]))
     }).sort((a, b) => String(b.introduced ?? '').localeCompare(String(a.introduced ?? '')) || String(a.key).localeCompare(String(b.key)))
     const offset = Number(args.offset) || 0, rows: RecordRow[] = [], citations: ToolCitation[] = []
-    // A status is stated as at the bills export's day (the bill page's "Bill progress as at"), not the stage's own date.
-    const asAt = billsAsAtDay(index.generated_at)
+    // For Ask, a status is stated as at the bills export's day (the bill page's "Bill progress as at"), not the stage's
+    // own date; MCP's citation keeps its earlier wording (statesProgress).
+    const exportedAt = statesProgress(env) ? index.generated_at : null
     for (const b of matches.slice(offset, offset + (args.bill_id ? 1 : Number(args.limit) || 5))) {
       const path = `/bills/${b.key}.json`, raw = object(await readToolAsset(env, path))
       if (raw.key !== b.key || !['sponsor', 'sponsor_person_id', 'introduced', 'status', 'status_as_of', 'originating_house'].every(k => (raw[k] ?? null) === (b[k] ?? null))) throw new Error('Bill sponsor detail inconsistent with index')
       const lifecycle = args.bill_id ? await billFields({ ...env, asset: p => p === path ? Promise.resolve(raw) : readToolAsset(env, p) }, String(b.key)) : null
       const source_url = records(raw.sources).map(s => sourceUrl(s.url)).find(Boolean) ?? null
-      const url = siteUrl(env, '/bill/' + b.key)
+      const url = siteUrl(env, '/bill/' + b.key), asAt = billsAsAtDay(exportedAt, raw)
       rows.push({ bill_id: b.key, title: b.title, sponsor: person.name, sponsor_as_published: b.sponsor, introduced: b.introduced ?? null,
         originating_house: b.originating_house ?? null, status: raw.status ?? null, ...ending(raw), status_as_of: raw.status_as_of ?? null,
         source_url, source_status: source_url ? 'original bill source' : 'original URL not recorded; cite published OPAX bill', url, full_record_url: url,

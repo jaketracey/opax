@@ -7,7 +7,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { z } from 'zod';
 import { resource, speeches } from './fixtures/ask-person.mjs';
-import { shortDate } from '../public/format.js';
+import { billsAsAtDay } from '../public/bill-titles.js';
 
 const compiled = await build({ stdin: { contents: "export {callTool, askToolSpecs, listTools, getTool, tools, ToolInputError} from './src/tools/index'; export {communityMcp} from './src/community-mcp';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' });
 const api = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
@@ -414,10 +414,11 @@ test('bill_detail returns the dated stage history in order, and keeps the model 
   assert.deepEqual([...paged.items, ...rest.items], out.items);
 });
 // How old a bill's status is (hub ruling (c), 16 Nov 2026): a note of its own in the bill page's words, from the bills
-// export's generated_at. The listing, the schemas and every other note are as they were.
+// export's generated_at as a Sydney day. The listing, the schemas and every other note are as they were.
 test('bill_search and bill_detail say "Bill progress as at" the export\'s day in a note, and a fresher export moves it', async () => {
   const index = await asset('/bills/index.json');
-  const day = shortDate(index.generated_at), line = `Bill progress as at ${day}.`;
+  const day = billsAsAtDay(index.generated_at), line = `Bill progress as at ${day}.`;
+  assert.ok(day, 'the published export has a date');
   const STATUS_NOTE = 'status is the latest recorded status; status_as_of is when it was observed, not a passage or assent date. Open bill_detail for dated stages.';
   const found = await run('bill_search', { query: 'interactive gambling', limit: 3 });
   assert.deepEqual(found.notes, [STATUS_NOTE, line]);
@@ -426,6 +427,8 @@ test('bill_search and bill_detail say "Bill progress as at" the export\'s day in
   const bySponsor = await run('bill_search', { sponsor: 'David Pocock', limit: 3 });
   assert.equal(bySponsor.notes.at(-1), line);
   assert.equal(bySponsor.notes.filter(n => n.startsWith('Bill progress as at')).length, 1);
+  // No member resolved: no bills, so no note about how old their progress is.
+  assert.ok(!(await run('bill_search', { sponsor: 'Zebedee Quillfeather' })).notes.some(n => n.startsWith('Bill progress')));
   for (const args of [{ bill_id: 'au-federal-r7534' }, { title: (await asset('/bills/au-federal-r7534.json')).title }]) {
     const out = await run('bill_detail', args);
     const status = out.notes.findIndex(n => /^Status .*status_as_of is not an introduction, passage or assent date\.$/.test(n));
@@ -444,6 +447,11 @@ test('bill_search and bill_detail say "Bill progress as at" the export\'s day in
   const undated = { ...env, asset: async path => path === '/bills/index.json' ? { ...index, generated_at: undefined } : path === '/growth/bills-date.json' ? null : asset(path) };
   assert.deepEqual((await run('bill_search', { query: 'interactive gambling', limit: 3 }, undated)).notes, [STATUS_NOTE]);
   assert.ok(!(await run('bill_detail', { bill_id: 'au-federal-r7534' }, undated)).notes.some(n => n.startsWith('Bill progress')));
+  // A bill whose own record is newer than the export (a draft merged in after it) gets no note, not a day before it.
+  const raw = await asset('/bills/au-federal-r7534.json'), early = '2026-01-01T00:00:00+00:00';
+  assert.ok(raw.introduced > '2026-01-01');
+  const older = { ...env, asset: async path => path === '/bills/index.json' ? { ...index, generated_at: early } : path === '/growth/bills-date.json' ? { generated_at: early } : asset(path) };
+  assert.ok(!(await run('bill_detail', { bill_id: 'au-federal-r7534' }, older)).notes.some(n => n.startsWith('Bill progress')));
 });
 test('bill_detail asks for a choice when a title matches several bills, and reports an unknown id', async () => {
   const many = await run('bill_detail', { title: 'interactive gambling' });

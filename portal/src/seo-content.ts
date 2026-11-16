@@ -459,7 +459,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
     return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party && sponsorParties.includes(s.party) ? ` (${escapeHtml(s.party)})` : '')
   })
   // How old the status and stages are: the bills export's day, under the status line (public/bill-titles.js).
-  const asAt = billProgressAsAt(b.exported_at)
+  const asAt = billProgressAsAt(b.exported_at, b)
   let body = `${asAt ? `<p class="bill-progress-as-at">${escapeHtml(asAt)}</p>` : ''}<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}${coSponsors.length ? `<dt>Co-sponsors</dt><dd>${coSponsors.join(', ')}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(portfolio || 'Not recorded')}</dd></dl>`
   const stages = billStageLines(b.key_dates || []).map(d=>`<li>${escapeHtml(d.label)} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`)
   if (stages.length) body += `<h2>Recorded stages</h2><ul>${stages.join('')}</ul>`

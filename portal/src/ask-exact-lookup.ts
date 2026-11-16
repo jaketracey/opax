@@ -118,7 +118,7 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
       }
       const bill = matches[0]
       // A status is said with how old it is: the bills export's day, as the bill page says it.
-      const progress = billProgressAsAt(object(index).generated_at), asAt = progress ? ` ${progress}.` : ''
+      const progress = billProgressAsAt(object(index).generated_at, bill), asAt = progress ? ` ${progress}.` : ''
       if (bill && matches.every(b => b.status === 'passed') && /\b(?:rejected|defeated|voted down|failed to pass)\b/i.test(question)) return decision(`${bill.title} passed parliament; it was not rejected.${asAt}`, '/bill/' + encodeURIComponent(String(bill.key)), deps, true, `${bill.title}: passed.${asAt}`)
       if (bill && /\bintroduc\w*\s+on\b/i.test(question) && period.since === period.until && day(bill.introduced) && day(bill.introduced) !== period.since) return decision(`${bill.title} was introduced on ${day(bill.introduced)}, not ${period.since}.`, '/bill/' + encodeURIComponent(String(bill.key)), deps)
     }

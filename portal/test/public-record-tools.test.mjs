@@ -228,7 +228,16 @@ test('shared data tools and moved Ask capabilities have identical schemas and pa
       const rpc = await send('tools/call', { name, arguments: args });
       assert.equal(rpc.error, undefined, JSON.stringify(rpc));
       const ask = await api.askToolSpecs.find(t => t.name === name).run({ ...fixture.env, origin: 'https://opax.com.au' }, args);
-      assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data, name);
+      // One deliberate difference: Ask states a sponsored bill's status as at the bills export's day, where MCP keeps
+      // main's citation (the status's own date) while its directory reviews are pending (record-common statesProgress).
+      const sponsorStatus = /^(.+ is the recorded sponsor of .+; status [^;]+?) as at [^;]+\.$/;
+      const statusAt = data => ({ ...data, citations: data.citations?.map(c => sponsorStatus.test(c?.text) ? { ...c, text: sponsorStatus.exec(c.text)[1] } : c) });
+      if (name === 'person_overview') {
+        const mcpTexts = rpc.result.structuredContent.citations.map(c => c.text).filter(t => sponsorStatus.test(t)), askTexts = ask.data.citations.map(c => c.text).filter(t => sponsorStatus.test(t));
+        assert.ok(mcpTexts.length && mcpTexts.every(t => / as at \d{4}-\d{2}-\d{2}\.$/.test(t)), mcpTexts.join('\n'));
+        assert.ok(askTexts.length === mcpTexts.length && askTexts.every(t => / as at \d{1,2} [A-Z][a-z]{2} \d{4}\.$/.test(t)), askTexts.join('\n'));
+      }
+      assert.deepEqual(statusAt(mcpOnly(rpc.result.structuredContent)), statusAt(ask.data), name);
       assert.equal(ask.ok, true, JSON.stringify(ask));
       assert.ok(Array.isArray(ask.data.rows));
       if (['legislation', 'public_finances', 'entity_profile', 'corpus_records'].includes(name)) cited(ask.data);

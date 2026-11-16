@@ -54,9 +54,11 @@ const memberFinding = (finding: NonNullable<ReturnType<typeof divisionFinding>>,
 const endingClause = (label: string) => /^lapsed\b/i.test(label) ? 'it lapsed'
   : /^not\b/i.test(label) ? `it is recorded as ${label[0].toLowerCase()}${label.slice(1)}`
   : `it was ${label[0].toLowerCase()}${label.slice(1)}`
+// "had passed, as at <day>": the day is when the record was read (the bills export's day, or the status's own date),
+// not the day it passed, so it is set off from the verb.
 const statusFinding = (m: RegExpExecArray) => {
   const ended = /^(lapsed|negatived) \((.+)\)$/.exec(m[2])
-  return `The ${m[1]} ${m[2] === 'passed' ? 'passed' : ended ? `did not pass; ${endingClause(ended[2])}` : m[2] === 'lapsed' ? 'did not pass; it lapsed' : 'has recorded status ' + m[2]} as at ${m[3]}`
+  return `The ${m[1]} ${m[2] === 'passed' ? 'had passed,' : ended ? `did not pass; ${endingClause(ended[2])}` : m[2] === 'lapsed' ? 'did not pass; it lapsed' : 'has recorded status ' + m[2]} as at ${m[3]}`
 }
 const statusPattern = /^The (.+) has recorded status (.+?) as at (.+)\.$/
 

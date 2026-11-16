@@ -187,7 +187,7 @@ export const billSearch: ToolDefinition = {
       const rows = records(data.rows), total = Number(data.total) || 0, end = offset + rows.length
       return result({ items: rows.map(row => item(byKey.get(String(row.bill_id)) ?? { key: row.bill_id, title: row.title, introduced: row.introduced, originating_house: row.originating_house, status: row.status, status_as_of: row.status_as_of }, data.person)),
         total, next_cursor: rows.length && end < total ? writeCursor('bill_search', args, { o: end }) : null, as_at, url: siteUrl(env, '/bills'),
-        ...(data.candidates ? { candidates: data.candidates } : {}), notes: [...data.notes as string[], ...progressNote] })
+        ...(data.candidates ? { candidates: data.candidates } : {}), notes: [...data.notes as string[], ...(data.person ? progressNote : [])] })
     }
     const query = typeof args.query === 'string' ? args.query : '', exact = query ? byKey.get(query) : undefined, seen = new Set<string>()
     const matches = (exact ? [exact] : records(index.bills).filter(b => {
@@ -238,7 +238,7 @@ export const billDetail: ToolDefinition = {
     // The same lifecycle reading as the bill page and Ask; the file is not fetched twice.
     const life = await billFields({ ...env, asset: p => p === path ? Promise.resolve(raw) : readToolAsset(env, p) }, key)
     const source_url = records(raw.sources).map(s => sourceUrl(s.url)).find(Boolean) ?? null
-    const progress = billProgressAsAt(exportedAt ?? await billsExportedAt(env))
+    const progress = billProgressAsAt(exportedAt ?? await billsExportedAt(env), life)
     const stages = life.key_dates.map(event => ({ stage: stageName(event.stage), date: event.date, chamber: ['passed', 'passed_both', 'passed_both_houses', 'royal_assent', 'assent', 'assented'].includes(event.stage) ? null : event.house,
       url, source_url: sourceUrl(event.url), ...(event.event_raw ? { source_wording: clip(event.event_raw, 300) } : {}) }))
     const summary = object(raw.summary), divisions = records(raw.divisions)

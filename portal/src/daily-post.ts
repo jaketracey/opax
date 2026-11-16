@@ -519,7 +519,8 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   const standing = billStanding(bill, record) ?? `Passed ${formatDate(bill.status_as_of)}.`
   // How old that standing is: the bills export's day, as the bill page says it (public/bill-titles.js). It follows
   // every sentence that says where the bill stands, so no copy of the edition states a status without its date.
-  const asAt = billProgressAsAt(index?.generated_at)
+  // A bill whose own record is newer than the export (a draft merged in after it) gets no line.
+  const asAt = billProgressAsAt(index?.generated_at, bill)
   const progress = asAt ? ` ${asAt}.` : ''
   const status = (bill.status === 'exposure_draft'
     ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Not yet introduced to parliament.`

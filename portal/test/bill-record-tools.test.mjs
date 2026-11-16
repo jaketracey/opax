@@ -320,8 +320,7 @@ test('non-bill catalogue rows remain discovery hits without bill lifecycle field
   const result = await callTool(f.env, 'find_records', { query: 'Sample Estuary' });
   assert.deepEqual(result.rows[0], { kind: 'person', title: person.title, summary: person.snippet, url: 'https://opax.com.au' + person.href });
   assert.equal(result.rows[1].introduced, complete.introduced);
-  // A bill hit reads how old bill statuses are: the release's date file, then the index when it has none.
-  assert.deepEqual(f.paths, ['/growth/bills-date.json', '/bills/index.json', '/bills/' + key + '.json']);
+  assert.deepEqual(f.paths, ['/bills/' + key + '.json']);
 });
 
 test('a malformed bill link cannot choose an asset outside the bill directory', async () => {
@@ -332,27 +331,43 @@ test('a malformed bill link cannot choose an asset outside the bill directory', 
   assert.equal(result.rows[0].introduced, null);
 });
 
-// Hub ruling (c), 16 Nov 2026: the bills source has been paused since 10 Oct, so a bill's status is said with the day
-// the bills export was made (its generated_at), as the bill page says it, never the day of the bill's last stage.
-test('a bill status is stated as at the bills export day, read from the date file; a fresher export moves it on its own', async () => {
-  for (const [exported, day] of [['2026-10-04T16:27:54+00:00', '4 Oct 2026'], ['2026-11-20T02:00:00+00:00', '20 Nov 2026']]) {
+// Hub ruling (c), 16 Nov 2026: the bills source has been paused since 10 Oct, so Ask says a bill's status with the day
+// the bills export was made (its generated_at, as a Sydney day), as the bill page says it, never the day of the bill's
+// last stage. The public MCP output keeps its earlier citation text while its directory reviews are pending.
+const ask = (f, args) => callTool(f.env, 'find_records', args, true);
+const statusText = result => result.citations.find(c => /has recorded status/.test(c.text)).text;
+
+test('for Ask a bill status is stated as at the bills export\'s Sydney day, read from the date file; a fresher export moves it on its own', async () => {
+  // 2026-10-14T16:27:54Z is 03:27 on 15 Oct in Sydney (AEDT).
+  for (const [exported, day] of [['2026-10-14T16:27:54+00:00', '15 Oct 2026'], ['2026-11-20T02:00:00+00:00', '20 Nov 2026']]) {
     const f = fixture(complete, [catalogueBill], { [key]: complete }, { exported });
-    const result = await callTool(f.env, 'find_records', { query: 'Sample Estuary' });
-    const status = result.citations.find(c => /has recorded status/.test(c.text));
-    assert.equal(status.text, `The ${title} has recorded status passed as at ${day}.`);
+    assert.equal(statusText(await ask(f, { query: 'Sample Estuary' })), `The ${title} has recorded status passed as at ${day}.`);
     assert.deepEqual(f.paths, ['/growth/bills-date.json', '/bills/' + key + '.json'], 'the small date file, never the whole index');
   }
 });
 
-test('a bill named by title states its status as at the day of the index it was found in, without a second read', async () => {
-  const f = fixture(complete, [catalogueBill], { [key]: complete }, { exported: '2026-11-20T02:00:00+00:00', index: { generated_at: '2026-10-04T16:27:54+00:00', bills: [{ key, title, short_title: title, jurisdiction: 'federal' }] } });
-  const result = await callTool(f.env, 'find_records', { query: title, kind: 'bill' });
-  assert.equal(result.citations.find(c => /has recorded status/.test(c.text)).text, `The ${title} has recorded status passed as at 4 Oct 2026.`);
+test('for Ask a bill named by title states its status as at the day of the index it was found in, without a second read', async () => {
+  const f = fixture(complete, [catalogueBill], { [key]: complete }, { exported: '2026-11-20T02:00:00+00:00', index: { generated_at: '2026-10-14T16:27:54+00:00', bills: [{ key, title, short_title: title, jurisdiction: 'federal' }] } });
+  assert.equal(statusText(await ask(f, { query: title, kind: 'bill' })), `The ${title} has recorded status passed as at 15 Oct 2026.`);
   assert.deepEqual(f.paths, ['/bills/index.json', '/bills/' + key + '.json']);
 });
 
-test('with no readable export date a status keeps the date it had: the bill\'s own status date', async () => {
-  const f = fixture(complete, [catalogueBill]);
-  const result = await callTool(f.env, 'find_records', { query: 'Sample Estuary' });
-  assert.equal(result.citations.find(c => /has recorded status/.test(c.text)).text, `The ${title} has recorded status passed as at 9 October 2026.`);
+test('for Ask a status keeps its own date when there is no export date, or when the bill\'s record is newer than the export', async () => {
+  assert.equal(statusText(await ask(fixture(complete, [catalogueBill]), { query: 'Sample Estuary' })), `The ${title} has recorded status passed as at 9 October 2026.`);
+  // The bill's status date (9 Oct) is after the export's day (5 Oct in Sydney): "as at 5 Oct" would be older than the record.
+  const newer = fixture(complete, [catalogueBill], { [key]: complete }, { exported: '2026-10-04T16:27:54+00:00' });
+  assert.equal(statusText(await ask(newer, { query: 'Sample Estuary' })), `The ${title} has recorded status passed as at 9 October 2026.`);
+});
+
+test('MCP\'s find_records citations are main\'s, byte for byte, with no extra read, whatever the export date', async () => {
+  const plain = fixture(complete, [catalogueBill]);
+  const before = await callTool(plain.env, 'find_records', { query: 'Sample Estuary' });
+  assert.equal(statusText(before), `The ${title} has recorded status passed as at 9 October 2026.`);
+  for (const exported of ['2026-10-14T16:27:54+00:00', '2026-11-20T02:00:00+00:00']) {
+    const f = fixture(complete, [catalogueBill], { [key]: complete }, { exported });
+    const result = await callTool(f.env, 'find_records', { query: 'Sample Estuary' });
+    assert.equal(JSON.stringify(result.citations), JSON.stringify(before.citations));
+    assert.ok(!JSON.stringify(result).includes('Bill progress') && !JSON.stringify(result).includes('Oct 2026'));
+    assert.deepEqual(f.paths, ['/bills/' + key + '.json'], 'no date read');
+  }
 });

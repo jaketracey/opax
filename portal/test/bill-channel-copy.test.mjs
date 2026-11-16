@@ -330,7 +330,8 @@ test('the daily post never features a bill the snapshot records as before parlia
 
 test('a bill edition says "Bill progress as at" the export\'s day wherever it states the bill\'s standing, and a fresher export moves it', async () => {
   const post = await composeAt(EXPORTED, 'au-federal-x2');
-  const line = 'Bill progress as at 4 Oct 2026.';
+  // 2026-10-04T16:27:54Z is 03:27 on 5 Oct in Sydney (AEDT): the line names the Sydney day.
+  const line = 'Bill progress as at 5 Oct 2026.';
   assert.equal(post.text, `${S1}\n\nPassed 19 Aug 2026. ${line}\n\nExample Customs Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x2`);
   assert.equal(post.record_text, `Example Customs Bill 2026\n\nPassed 19 Aug 2026. ${line}\n\nHome Affairs portfolio.\n\nhttps://opax.com.au/bill/au-federal-x2`);
   for (const caption of [post.caption, post.channel_caption]) assert.ok(caption.includes(`\n\nPassed 19 Aug 2026. Introduced 1 Mar 2026 (Home Affairs portfolio). ${line}\n\n`), caption);
@@ -354,13 +355,18 @@ test('a bill edition says "Bill progress as at" the export\'s day wherever it st
   const draft = await composeAt(EXPORTED, 'au-federal-x1');
   assert.ok(draft.text.includes(`\n\nDraft released 7 Sep 2026; not introduced. ${line}\n\n`));
   assert.ok(draft.caption.includes(`Not yet introduced to parliament. ${line}\n\n`));
-  assert.equal(widgetEdition(draft, null).line, 'Draft released 7 Sep 2026; not introduced. Bill progress as at 4 Oct 2026');
+  assert.equal(widgetEdition(draft, null).line, 'Draft released 7 Sep 2026; not introduced. Bill progress as at 5 Oct 2026');
   // The app's edition response keeps its keys; only the strings carry the line.
   assert.deepEqual(Object.keys(storedEdition(row(post))), ['date', 'kind', 'subject', 'title', 'text', 'url', 'caption', 'slides']);
   // A fresher export moves every line with no other change.
   const fresh = await composeAt(FRESHER, 'au-federal-x2');
-  assert.equal(JSON.stringify(fresh).split('Bill progress as at 4 Oct 2026').length - 1, 0);
-  assert.equal(JSON.stringify(fresh), JSON.stringify(post).replaceAll('Bill progress as at 4 Oct 2026', 'Bill progress as at 20 Nov 2026'));
+  assert.equal(JSON.stringify(fresh).split('Bill progress as at 5 Oct 2026').length - 1, 0);
+  assert.equal(JSON.stringify(fresh), JSON.stringify(post).replaceAll('Bill progress as at 5 Oct 2026', 'Bill progress as at 20 Nov 2026'));
   // No export date: no line, and the edition is exactly what the undated index gives.
   assert.equal(JSON.stringify(await composeAt('not a date', 'au-federal-x2')), JSON.stringify(await compose('au-federal-x2')));
+  // An exposure draft released after the export (merged in with the index's old generated_at) says no line, rather
+  // than an as-at day before its own release; a bill whose record the export covers still does.
+  const early = '2026-09-01T00:00:00+00:00';
+  assert.equal(JSON.stringify(await composeAt(early, 'au-federal-x1')), JSON.stringify(await compose('au-federal-x1')));
+  assert.ok((await composeAt(early, 'au-federal-x2')).text.includes('\n\nPassed 19 Aug 2026. Bill progress as at 1 Sep 2026.\n\n'));
 });
