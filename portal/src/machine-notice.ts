@@ -1,9 +1,9 @@
 /** The error notice on every machine-written answer (public/machine-notice.js holds the two fixed wordings).
  * The Worker sets it as one additive string field, `machine_notice`, and every client prints that string under
  * the answer and above its sources. A payload no model wrote any part of carries no such field. */
-import { MACHINE_NOTICE, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten } from '../public/machine-notice.js'
+import { MACHINE_NOTICE, MACHINE_NOTICE_STORED, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten } from '../public/machine-notice.js'
 import { transcriptNote } from '../public/transcript-note.js'
-export { MACHINE_NOTICE, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten }
+export { MACHINE_NOTICE, MACHINE_NOTICE_STORED, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten }
 
 type Row = Record<string, unknown>
 const row = (payload: unknown): Row | null => payload && typeof payload === 'object' && !Array.isArray(payload) ? payload as Row : null
@@ -27,7 +27,10 @@ export function withMachineNotice<T>(payload: T): T {
   return p ? carrying(payload, machineNotice(p, transcriptNote(p.sources) !== null)) : payload
 }
 
+/** An answer written for this request (a search overview, a journey story): the answers wording. */
 const noticed = <T>(payload: T, written: boolean): T => row(payload) ? carrying(payload, written ? MACHINE_NOTICE : null) : payload
+/** Stored text a model wrote earlier (a brief, a bill summary, a bill text overview): the summaries wording. */
+const stored = <T>(payload: T, written: boolean): T => row(payload) ? carrying(payload, written ? MACHINE_NOTICE_STORED : null) : payload
 const words = (value: unknown): boolean => typeof value === 'string' && value.trim() !== ''
 
 /** A search overview ("Summarise these records", /api/search-summary): a model writes every point it holds. An
@@ -49,26 +52,26 @@ export function withStoryNotice<T>(payload: T): T {
 
 /** A record (/api/resource/<slug>): its brief, `summary`, is written by a model from the record's own text. */
 export function withRecordNotice<T>(payload: T): T {
-  return noticed(payload, words(row(payload)?.summary))
+  return stored(payload, words(row(payload)?.summary))
 }
 
 /** Briefs by resource id (/api/brief): every value is a brief a model wrote. No briefs, no notice. */
 export function withBriefsNotice<T>(payload: T): T {
   const briefs = row(row(payload)?.briefs)
-  return noticed(payload, !!briefs && Object.values(briefs).some(words))
+  return stored(payload, !!briefs && Object.values(briefs).some(words))
 }
 
 /** Search results (/api/search, /api/search-all): a row marked `machine` carries a bill's summary sentences in its
  * snippet (scripts/build_search_catalog.mjs). /api/suggest is left as it is: its rows are shown by title only. */
 export function withResultsNotice<T>(payload: T): T {
   const results = row(payload)?.results
-  return noticed(payload, Array.isArray(results) && results.some(r => row(r)?.machine === true && words(row(r)?.snippet)))
+  return stored(payload, Array.isArray(results) && results.some(r => row(r)?.machine === true && words(row(r)?.snippet)))
 }
 
 /** A bill text version (/bill-texts/<key>/<version>.json): `enrichment.brief` is a model's overview of that
  * version, shown as "In this version". The index file and a version with no overview carry no notice. */
 export function withBillTextNotice<T>(payload: T): T {
-  return noticed(payload, words(row(row(payload)?.enrichment)?.brief))
+  return stored(payload, words(row(row(payload)?.enrichment)?.brief))
 }
 
 /** The map for a public API path that serves stored machine-written text, or null. */
