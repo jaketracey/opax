@@ -9,10 +9,14 @@ import NAMES from './commission-names.json'
 import {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd} from '../public/transcript-note.js'
 export {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd}
 /** A question about Parliament's own record: a Senate or House committee inquiry, estimates, Hansard. */
-const PARLIAMENTARY = /\b(?:senate|senators?|house of representatives|parliament|parliamentary|committee|estimates|hansard)\b/i
-/** People words that are about Parliament only in a question that names no commission: "family members", "staff
- * members", "members of the board" or "a local MP" giving evidence to a named inquiry are witnesses, not Parliament. */
-const PARLIAMENT_PEOPLE = /\b(?:mps?|members)\b/i
+const PARLIAMENTARY = /\b(?:senate|house of representatives|parliament|parliamentary|committee|estimates|hansard)\b/i
+/** People words that make a question Parliament's unless it names a commission and asks what witnesses or evidence
+ * said (EVIDENCE_ASKED): "family members", "a local MP" or "senators" hearing from witnesses at a named inquiry are
+ * about its hearings, while "Which senators called for a royal commission ...?" and "What did MPs say about the ...
+ * Royal Commission's report?" are about Parliament. The bodies of Parliament (PARLIAMENTARY) always are. */
+const PARLIAMENT_PEOPLE = /\b(?:senators?|mps?|members)\b/i
+/** Words that ask what witnesses or evidence said. */
+const EVIDENCE_ASKED = /\b(?:witness(?:es)?|evidence|testimony|testif\w*|(?:tell|told) the|hear(?:d)? from|said at the hearings?)\b/i
 const COMMISSION_WORDS = /\broyal commission\b|\b(?:special )?commission of inquiry\b|\bboard of inquiry\b/i
 const squashed = (text: string) => ` ${text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()} `
 const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flatMap(c => c.names.map(squashed))
@@ -28,7 +32,7 @@ export const NO_PASSAGE_SELECTED = 'OPAX found passages in the hearing transcrip
  * commission; "the Senate inquiry into ..." is a committee inquiry, whose evidence is Committee Hansard. */
 export const parliamentaryQuestion = (question: string): boolean => {
   const q = question.slice(0, 2000)
-  return PARLIAMENTARY.test(q) || PARLIAMENT_PEOPLE.test(q) && !COMMISSION_WORDS.test(q) && !namesRegisteredCommission(q)
+  return PARLIAMENTARY.test(q) || PARLIAMENT_PEOPLE.test(q) && !(EVIDENCE_ASKED.test(q) && (COMMISSION_WORDS.test(q) || namesRegisteredCommission(q)))
 }
 /** Whether a question uses a word for a hearing or its evidence. */
 export const hearingWorded = (question: string): boolean => /\b(?:hear|hears|heard|hearings?|evidence|witness(?:es)?|testif\w*|testimony|transcripts?|counsel assisting)\b/i.test(question.slice(0, 2000))
