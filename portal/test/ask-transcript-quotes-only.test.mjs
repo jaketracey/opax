@@ -405,3 +405,28 @@ test('headed transcripts: a turn that ends in a question is shown with the turn 
     'The next turn in the transcript, hearing day 46 (10 March 2023), transcript page P-4900: “Yes, I was.”',
   ])
 })
+
+test('above a block the model\'s text is kept to three paragraphs, the writer is told so, and the run records what was trimmed', async () => {
+  const q = 'What did the Robodebt Royal Commission recommend about debts, and what did it hear about income averaging?'
+  const heard = await api.callTool(deps(true), 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 })
+  const recs = await api.callTool(deps(true), 'royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 })
+  const at = recs.citations.findIndex(c => /recommendation \d/.test(c.text)), recFact = heard.citations.length + at + 1, excerptFact = heard.citations.findIndex(c => api.transcriptTurns(c.text).length) + 1
+  const five = ['The Royal Commission made a recommendation about debts.', 'The recommendation is in its report.', 'It concerns how debts are raised.', 'It was made in 2023.', 'It is addressed to the Commonwealth.']
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async options => { call++
+    if (call === 1) return reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 })
+    if (call === 2) return reply('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 })
+    if (call === 3) return reply('answer', { facts: [excerptFact, recFact] })
+    const given = JSON.parse(options.prompt.at(-1).content.map(part => part.text ?? '').join('')).facts
+    return said(JSON.stringify({ answer_decision: 'answer', sentences: five.map(text => ({ text, facts: [given[0].id] })) })) } })
+  const out = await api.runAgentic(q, { ...deps(true), research: research(model, true) }, async () => {}, 40000, undefined, {}, named)
+  const lines = out.answer.split('\n\n'), lead = lines.indexOf(LEAD)
+  assert.ok(lead >= 1 && lead <= 3, out.answer)
+  assert.ok(lines.slice(lead + 1).every(line => BLOCK_LINE.test(line)), out.answer)
+  const trimmed = out.research.above_block_trimmed
+  assert.ok(trimmed && trimmed.paragraphs >= 1 && trimmed.characters > 0, JSON.stringify(out.research.above_block_trimmed))
+  assert.equal(JSON.stringify(out.research).includes('addressed to the Commonwealth'), false, 'the trimmed words are not kept on the record')
+  validRanges(out.qualitative)
+  const contract = JSON.parse(model.doGenerateCalls.at(-1).prompt.at(-1).content.map(part => part.text ?? '').join('')).contract
+  assert.ok(contract.endsWith(' Passages from hearing transcripts are quoted separately, after your text: write three sentences at most, about the other records you were given.') || contract.includes('write three sentences at most, about the other records you were given.'))
+})

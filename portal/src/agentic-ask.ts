@@ -33,6 +33,10 @@ import { ResearchError, researchSources, type Research, type ResearchPayload, ty
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION, quotationBlock, joinWritten, hearingFact, fixedLine } from './research-writing'
 import { commissionHearingQuestion, NO_PASSAGE_FOUND, transcriptPassage, TRANSCRIPT_LABEL } from './transcript-answer'
+import {rewriteAnswerPayload} from './research-language'
+/** How many paragraphs of model text may stand above a quotation block (transcript quotes-only switch). */
+export const ABOVE_BLOCK_PARTS = 3
+import {researchTrace} from './research-trace'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
@@ -732,7 +736,18 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const nothingToWord=!!block&&!writerFacts.some(f=>!f.coverage&&!f.metadata)
     const written = nothingToWord?{answer:'',citations:{},sources:[],machine_written:false} as QualitativeAnswer:await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
     // The block goes last, after the written sentences and the model's own points, so nothing is worded between quotations.
-    const complete=block?joinWritten(nothingToWord&&!run.passage_answer?written:combine(written),block):combine(written)
+    // Above a block the model's text is kept short: its first ABOVE_BLOCK_PARTS paragraphs (the writer writes one
+    // sentence to a paragraph, so this is a short paragraph's worth). A count of paragraphs, never a reading of them.
+    // How much was trimmed goes on the run's record; the trimmed words go to the trace only, not into any response.
+    const capped=(above:QualitativeAnswer):QualitativeAnswer=>{
+      const parts=above.answer.split('\n\n')
+      if(parts.length<=ABOVE_BLOCK_PARTS)return above
+      const keep=parts.slice(0,ABOVE_BLOCK_PARTS).join('\n\n').length,trimmed=above.answer.slice(keep).trim()
+      if(run.research)run.research.above_block_trimmed={paragraphs:parts.length-ABOVE_BLOCK_PARTS,characters:Array.from(trimmed).length}
+      researchTrace('quotes_only.above_block_trimmed',{question,trimmed})
+      return rewriteAnswerPayload(above as unknown as Record<string,unknown>,replace=>replace(new RegExp(`(?<=^[\\s\\S]{${keep}})[\\s\\S]*$`,'g'),'')) as unknown as QualitativeAnswer
+    }
+    const complete=block?joinWritten(nothingToWord&&!run.passage_answer?written:capped(combine(written)),block):combine(written)
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started
