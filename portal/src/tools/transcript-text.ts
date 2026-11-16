@@ -82,8 +82,9 @@ function headingOf(line: string): { heading: string, length: number } | null {
 // "Q." and "A." open turns that carry no heading of their own; the publisher also prints "Q --".
 const MARK = /^([QA])(?:[.:]| --)(?=\s|$)/
 // A line of the publisher's that is nobody's words: one opened with "<", or in capitals an examination line, an
-// adjournment or resumption, or an exhibit or marked-for-identification line ("EXHIBIT #A1 JOINT REPORT OF ...", "MFI #2 ...").
-const NOTE = /^(?:(?:FURTHER |CROSS[- ]|RE[- ])*EXAMINATION BY|(?:[A-Z]+ )?ADJOURNMENT\b|ADJOURNED\b|UPON RESUM|EXHIBIT #?[A-Z0-9]|MFI ?#)/
+// adjournment or resumption ("AT 4.08PM THE COMMISSION WAS ADJOURNED TO ..."), or an exhibit or marked-for-identification
+// line ("EXHIBIT #A1 JOINT REPORT OF ...", "MFI #2 ...").
+const NOTE = /^(?:(?:FURTHER |CROSS[- ]|RE[- ])*EXAMINATION BY|(?:[A-Z]+ )?ADJOURNMENT\b|ADJOURNED\b|UPON RESUM|EXHIBIT #?[A-Z0-9]|MFI ?#|(?:AT \d{1,2}(?:[.:]\d{2})? ?[AP]M )?THE (?:SPECIAL )?(?:COMMISSION|INQUIRY|HEARING)(?: OF INQUIRY)? WAS ADJOURNED\b)/
 /** No lower-case words: bracketed times and "am"/"pm" after a figure aside. */
 const allCapitals = (line: string) => !/[a-z]/.test(line.replace(/\[[^\]]*\]|(?<=\d ?)[ap]m\b/g, ''))
 const noteLine = (line: string) => line[0] === '<' || (NOTE.test(line) && allCapitals(line))

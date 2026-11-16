@@ -52,18 +52,22 @@ function coverRoles(pages: RecordRow[]): (heading: string) => SpeakerRole | unde
       // The rest of the heading's name (a given name, an initial) is in the same entry.
       const entry = nameWords(line)
       if (!words.slice(0, -1).every(w => entry.includes(w) || (w.length === 1 && entry.some(e => e.startsWith(w))))) continue
-      // The entry runs on to the next line only while it reads as a list of names (a comma, "and", "with") or the
-      // role opens that line; a bare name above an unrelated line takes no role from it.
+      // The entry runs on to the next line only when this line ends in a comma, "and" or "with", when the role
+      // word opens the next line, or when the role word is split over the break ("..., COUNSEL / ASSISTING"). A
+      // name above another person's line takes no role from it. An entry that says "solicitor" before its role
+      // word is not counsel, and has no role.
       let tail = line.slice(m.index + m[0].length), last = tail
       const previous = cover.slice(0, n).reverse().map(l => [...l.matchAll(new RegExp(ROLE_WORD, 'gi'))].at(-1)?.[1]).find(Boolean)
       const wrapped = !(previous && /for$/i.test(previous)) || OPENS_ENTRY.test(line)
       for (const next of [...cover.slice(n + 1, n + 4), '']) {
         const closes = ROLE_WORD.exec(tail)
-        if (closes) { if (!/[0-9:]/.test(tail.slice(0, closes.index))) found.add(role(closes[1])); break }
+        if (closes) { if (!/[0-9:]/.test(tail.slice(0, closes.index)) && !/\bsolicitors?\b/i.test(tail.slice(0, closes.index))) found.add(role(closes[1])); break }
         if (!next || !wrapped || /[0-9:]/.test(tail)) break
         const joined = `${tail} ${next}`, ahead = ROLE_WORD.exec(joined)
         const lastWord = tail.trimEnd().lastIndexOf(' ') + 1
-        if (!/,|\b(?:and|with)\b/i.test(last) && !(ahead && ahead.index >= lastWord)) break
+        const runsOn = /(?:,|\b(?:and|with))\s*$/i.test(last), opens = new RegExp(`^\\W*${ROLE_WORD.source}`, 'i').test(next)
+        const split = !!ahead && ahead.index >= lastWord && ahead.index < tail.trimEnd().length
+        if (!runsOn && !opens && !split) break
         tail = joined; last = next
       }
     }
@@ -72,6 +76,10 @@ function coverRoles(pages: RecordRow[]): (heading: string) => SpeakerRole | unde
   return heading => { if (!cache.has(heading)) cache.set(heading, find(heading)); return cache.get(heading) }
 }
 
+/** One switch: whether a "Q." or an "A." has a role at all. Where the publisher printed a wrong or missing mark in the
+ * middle of a line, no parser can see it and the role is wrong; false gives every mark turn "the transcript records". */
+const MARK_ROLES = true
+
 /** The roles of one transcript's turns. Nothing is carried from one turn to another.
  *  - A heading turn: the heading is a role word, or the cover gives the whole heading a role. Never from a heading
  *    that holds a digit or a quote mark, or that is not in capitals unless it is a bare role word ("Commissioner"):
@@ -79,6 +87,8 @@ function coverRoles(pages: RecordRow[]): (heading: string) => SpeakerRole | unde
  *    heading are left without a role: one of them may be the publisher's slip.
  *  - "HEADING: Q." is that heading's question, with its role; with no role for the heading, a question.
  *  - A bare "Q." is a question. Who asked it is not printed, and the last headed "Q." is not carried to it.
+ *  - Two bare marks of the same letter running ("A." straight after "A.") are the publisher's slip that a page
+ *    shows: one of them is the other speaker's turn, so neither has a role.
  *  - An "A." is a witness's answer: a witness, never which one. Only in a transcript printed as questions and
  *    answers (three or more of each; the other two commissions' transcripts have none): elsewhere a line that
  *    opens "A." is a list item, not an answer.
@@ -101,7 +111,8 @@ export function transcriptRoles(pages: RecordRow[]): RoleFor {
       return turn.heading ? headingRole(turn.heading) : undefined
     }
     const role = turn.heading ? headingRole(turn.heading) : undefined
-    if (!examined) return undefined
+    if (!examined || !MARK_ROLES) return undefined
+    if (!turn.heading && [page.turns[i - 1], page.turns[i + 1]].some(t => t?.opens === 'mark' && !t.heading && t.mark === turn.mark)) return undefined
     if (turn.mark === 'Q') return role && role !== 'witness' ? role : 'question'
     return !role || role === 'witness' ? 'witness' : undefined
   }
