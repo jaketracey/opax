@@ -1,3 +1,4 @@
+import { markCatalogRecord, markMachineRows, markRecordSummary } from './tools/machine-marks'
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
 import {CATALOG_SLUG, CatalogRecordError, readCatalogRecord, versionedCatalogSlug, type CatalogRead} from './catalog-record'
@@ -151,6 +152,8 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     const params = new URLSearchParams({q: query, kind, per: '6', page: '1'})
     data = await boundedJson(await readPublic('/api/search-all?' + params))
     data.results = rows(data, 'results').slice(0, 6).map(row => ({...row, slug: versionedCatalogSlug(row.slug, data.index_version), opax_url: safeLink(origin, row)}))
+    // A row whose text is a bill's summary says machine: true; the result says what that means (machine-marks.ts).
+    data = markMachineRows(data)
     url = origin + '/ask?view=search&' + params
   } else if (name === 'read_record') {
     const slug = text(args.slug, 1, 180, 'Record identifier')
@@ -168,11 +171,12 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
       const read: CatalogRead = async (path, maxBytes, records) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), maxBytes, records)
       const {record, coverage} = await readCatalogRecord(slug, read).catch(error => { throw error instanceof CatalogRecordError ? new CommunityError(error.status, error.message) : error })
       url = safeLink(origin, record) ?? origin + '/search'
-      data = {...record, opax_url:url, coverage, record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.'}
+      data = markCatalogRecord({...record, opax_url:url, coverage, record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.'})
     } else {
       if (!/^(?:speech-\d+|legal-\d+|news-\d+|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/.test(slug)) throw new CommunityError(400, 'Use the record identifier returned by search.')
       url = origin + '/doc/' + slug
-      data = {...await boundedJson(await readPublic('/api/resource/' + slug)), opax_url: url}
+      // A stored brief is introduced as a model's words: the marks lead the record, ahead of its long text.
+      data = markRecordSummary({...await boundedJson(await readPublic('/api/resource/' + slug)), opax_url: url})
     }
   } else if (name === 'find_connections') {
     const query = text(args.query, 2, 120, 'Search').toLowerCase()
@@ -202,5 +206,6 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
   const linked = ['results','connections','recipients','programs'].flatMap(key => rows(data,key)).filter(row => typeof row.opax_url === 'string' && row.opax_url.startsWith(origin + '/')).slice(0,6)
   const labelled = voiceSources(linked, origin, 6)
   const sources = labelled.length ? labelled : voiceSources([{...data, opax_url: url, title: data.title ?? 'OPAX public records'}], origin, 1)
-  return {source_notice: evidenceNotice, source_url: url, sources, data: compact(data)}
+  // The notice also stands outside the compacted data, so a long record cannot crowd it out.
+  return {source_notice: evidenceNotice, ...(typeof data.machine_notice === 'string' ? {machine_notice: data.machine_notice} : {}), source_url: url, sources, data: compact(data)}
 }

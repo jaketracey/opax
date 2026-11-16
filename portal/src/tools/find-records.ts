@@ -59,7 +59,8 @@ export const tool: ToolDefinition = {
     const number = /\bno\.?\s*(\d+)\b/i.exec(query)?.[1]
     const hits = (found.results as CatalogRecord[]).filter(r => r.kind !== 'bill' || !number || /\bno\.?\s*(\d+)\b/i.exec(r.title)?.[1] === number).slice(0, 8)
     const enriched = await Promise.all(hits.map(async r => {
-      const row = { kind: r.kind, title: r.kind === 'bill' ? r.title : clip(r.title, 120), summary: clip(r.snippet, 200), url: siteUrl(env, r.href || '/doc/' + r.slug), ...(r.dateLabel || r.date ? { period: r.dateLabel || r.date } : {}) }
+      // `machine`: the catalogue's own flag for a row whose text carries a bill's model-written summary sentences.
+      const row = { kind: r.kind, title: r.kind === 'bill' ? r.title : clip(r.title, 120), summary: clip(r.snippet, 200), url: siteUrl(env, r.href || '/doc/' + r.slug), ...(r.dateLabel || r.date ? { period: r.dateLabel || r.date } : {}), ...(r.machine === true && r.snippet ? { machine: true } : {}) }
       const recipient = r.kind === 'grant' && /across [\d,]+ grant records/.test(r.snippet) ? /^\/money\/grants\/(federal|qld)\/recipient\/([^?#]+)/.exec(r.href) : null
       if (recipient) {
         try {
