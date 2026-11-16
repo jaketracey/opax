@@ -322,6 +322,9 @@
 .record-core-ready #money-records-head > :is(h1,h2) { display: none; }
 .record-core-tools { flex-wrap: wrap; }
 .record-core-pages { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-8); }
+/* A link's one-supplier view of an agency's contracts, and the way back to all of them (agencies.js). */
+.record-scope { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-8) var(--sp-16); margin-block: var(--sp-16); }
+.record-scope > p { margin: 0; }
 .record-core-scroll small { display: block; color: var(--ink-soft); }
 .record-core-scroll { overflow-x: auto; margin-block: var(--sp-16); }
 .record-core-scroll table { width: 100%; border-collapse: collapse; text-align: left; font: var(--type-metadata); }

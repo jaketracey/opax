@@ -150,7 +150,14 @@ async function run() {
     await Promise.allSettled([...pending]);
     // An entry page keeps filling its later blocks after the first row appears.
     await new Promise(resolve => setTimeout(resolve, workerData.settleMs || 20));
-    return {
+    // workerData.click: press one control once the page has settled; `before` is the page it pressed it on.
+    let before;
+    if (workerData.click) {
+      before = { html: body.innerHTML, search: window.location.search };
+      window.document.querySelector(workerData.click)?.click();
+      await new Promise(resolve => setTimeout(resolve, workerData.settleMs || 20));
+    }
+    return { before, focused: window.document.activeElement?.outerHTML?.slice(0, 200),
       rows: body.querySelectorAll(selector).length, failed: failed || failure.test(body.innerHTML),
       html: workerData.html ? body.innerHTML : undefined, emptiedCore, location: window.location.pathname, search: window.location.search,
       honestFailure: body.textContent.includes('The directory could not be loaded. Try again shortly.'),

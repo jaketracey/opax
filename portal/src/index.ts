@@ -56,7 +56,7 @@ import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import {resolveProgram, programKey, type GrantProgram} from '../public/facts/grant-programs.js'
-import {grantCoreBody, recipientMetaLine, agencyCoreBody, firstAgencySuppliers, topicCoreBody, topicSummary, type GrantDetail, type AgencyDetail, type TopicCounts, type TopicSpeech} from './seo-record-content'
+import {grantCoreBody, recipientMetaLine, agencyCoreBody, agencySupplierScope, scopeKeeps, firstAgencySuppliers, topicCoreBody, topicSummary, type GrantDetail, type AgencyDetail, type TopicCounts, type TopicSpeech} from './seo-record-content'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
@@ -5609,14 +5609,14 @@ async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     description: data ? 'Browse the government agency directory for available contract records.' : 'Agency records could not be loaded. Please try again.',
     canonical: canonicalFor(url, false), ogType: 'website', status: data ? 404 : 503, jsonLd: null, prerender: null, card: null }
   const canonical = `${SITE_ORIGIN}/subject/agency/${agency.id}`
-  const profile = await timed('agency-content', () => recordAssetJson<AgencyDetail>(env, `/agencies/${agency.id}.json`)).catch(()=>null)
+  const profile = await timed('agency-content', () => recordAssetJson<AgencyDetail>(env, `/agencies/${agency.id}.json`, url.searchParams.get('supplier'))).catch(()=>null)
   if (!profile || profile.id !== agency.id || !Array.isArray(profile.contracts) || !Array.isArray(profile.suppliers)) return {title: 'Agency temporarily unavailable · OPAX', description: 'Agency source records could not be loaded. Please try again.', canonical, ogType: 'website', status: 503, jsonLd: null, prerender: null, card: null}
   const facts = `${agency.name}: ${money(agency.total)} in recorded contract commitments across ${num(agency.count)} contracts and ${num(agency.supplier_count)} suppliers.`
   const description = facts
   return { title: `${agency.name} · Government agency · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: agency.name, url: canonical, description,
       mainEntity: { '@type': 'GovernmentOrganization', name: agency.name } },
-    prerender: prerenderBlock(agency.name, facts, timedSync('agency-html', () => agencyCoreBody(profile, canonical, data?.meta))),
+    prerender: prerenderBlock(agency.name, facts, timedSync('agency-html', () => agencyCoreBody(profile, canonical, data?.meta, profile.scope))),
     card: { kicker: 'Government agency', title: agency.name, lines: [`${money(agency.total)} in recorded commitments`, `${num(agency.count)} contracts · ${num(agency.supplier_count)} suppliers`, 'Recorded awards, not expenditure.'] } }
 }
 
@@ -5638,18 +5638,26 @@ function keptAssetJson<T>(memo: Map<string, Promise<unknown>>, limit: number, en
 }
 const recordFileMemo = new Map<string, Promise<unknown>>()
 const agencyFileMemo = new Map<string, Promise<unknown>>()
-function recordAssetJson<T>(env: Env, path: string): Promise<T> {
+function recordAssetJson<T>(env: Env, path: string, supplier?: string | null): Promise<T> {
   if (!path.startsWith('/agencies/')) return keptAssetJson<T>(recordFileMemo, 4, env, path)
   // The largest agency file is 16 MB. Keep only the preview, not its parsed
   // lifetime contract list; the browser continues to read the original file.
-  let pending = agencyFileMemo.get(path)
+  // A link can name one supplier (?supplier=s-…): that preview keeps the supplier's
+  // first contracts instead, read from the whole file, so a supplier outside the
+  // newest twenty still has its rows.
+  const id = supplier && SUPPLIER_ID_RE.test(supplier) ? supplier : ''
+  const key = id ? `${path}#${id}` : path
+  let pending = agencyFileMemo.get(key)
   if (!pending) {
     if (agencyFileMemo.size >= 8) agencyFileMemo.delete(agencyFileMemo.keys().next().value!)
-    pending = assetJson<AgencyDetail>(env,path).then(profile=>({id:profile.id,name:profile.name,total:profile.total,count:profile.count,
-      supplier_count:profile.suppliers.length,suppliers:firstAgencySuppliers(profile.suppliers),
-      contracts:profile.contracts.filter(c=> !((!c.start_date || !/^\d{4}-\d{2}-\d{2}/.test(c.start_date) || Number(c.start_date.slice(0,4))<=1900) && !(Number(c.amount)>0))).slice(0,20)}))
-    agencyFileMemo.set(path,pending)
-    pending.catch(()=>{if(agencyFileMemo.get(path)===pending)agencyFileMemo.delete(path)})
+    pending = assetJson<AgencyDetail>(env,path).then(profile=>{
+      const scope = agencySupplierScope(profile, id)
+      return {id:profile.id,name:profile.name,total:profile.total,count:profile.count,
+        supplier_count:profile.suppliers.length,suppliers:firstAgencySuppliers(profile.suppliers),scope,
+        contracts:profile.contracts.filter(c=> !((!c.start_date || !/^\d{4}-\d{2}-\d{2}/.test(c.start_date) || Number(c.start_date.slice(0,4))<=1900) && !(Number(c.amount)>0)) && (!scope || scopeKeeps(scope)(c))).slice(0,20)}
+    })
+    agencyFileMemo.set(key,pending)
+    pending.catch(()=>{if(agencyFileMemo.get(key)===pending)agencyFileMemo.delete(key)})
   }
   return pending as Promise<T>
 }
