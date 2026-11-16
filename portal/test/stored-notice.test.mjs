@@ -10,14 +10,15 @@ import { runInNewContext } from 'node:vm'
 import { JSDOM } from 'jsdom'
 import ts from 'typescript'
 import { machineNoticeHTML, machineNoticeText, machineLabelHTML } from '../public/labels.js'
-import { MACHINE_NOTICE } from '../public/machine-notice.js'
+import { MACHINE_NOTICE, MACHINE_NOTICE_STORED } from '../public/machine-notice.js'
 import { answerBlock } from '../src/seo-content.ts'
 
 const built = await build({ stdin: { contents: "export * from './src/machine-notice'", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const read = path => readFile(new URL(path, import.meta.url), 'utf8')
 
-const DEFAULT = 'Machine-written answers can contain errors. Check the original record before relying on one.'
+const ANSWERS = 'Machine-written answers can contain errors. Check the original record before relying on one.'
+const DEFAULT = 'Machine-written summaries can contain errors. Check the original record before relying on one.'
 const LINE = `<p class="answer-notice">${DEFAULT}</p>`
 const RID = 'a'.repeat(32), RID2 = 'b'.repeat(32)
 const record = { slug: 'speech-example-1', title: 'Second reading', speaker: 'Alex Example', labels: { kind: 'speech' }, topics: [], metadata: {}, summary: 'Alex Example backs the bill and asks for a review after two years.', text: 'I rise to support the bill.' }
@@ -25,9 +26,35 @@ const billRow = { kind: 'bill', title: 'Example Amendment Bill 2026', href: '/bi
 const speechRow = { kind: 'speech', title: 'Morgan Sample: Budget', slug: 'speech-example-2', resource: RID, snippet: 'The budget papers show the figure.' }
 const json = (payload, headers = {}) => new Response(JSON.stringify(payload), { headers: { 'content-type': 'application/json', 'cache-control': 'public, max-age=3600', ...headers } })
 
-test('the stored-text line uses the one fixed wording', () => {
-  assert.equal(MACHINE_NOTICE, DEFAULT)
-  assert.equal(api.MACHINE_NOTICE, DEFAULT)
+test('stored text reads "summaries", an Ask answer reads "answers", and both strings live in the one module', async () => {
+  assert.equal(MACHINE_NOTICE, ANSWERS)
+  assert.equal(api.MACHINE_NOTICE, ANSWERS)
+  assert.equal(MACHINE_NOTICE_STORED, DEFAULT)
+  assert.equal(api.MACHINE_NOTICE_STORED, DEFAULT)
+  assert.equal(api.MACHINE_NOTICE_TRANSCRIPT, 'Machine-written answers can contain errors. Check the original transcript before relying on it.')
+  assert.ok(!/[\u2013\u2014]/.test(DEFAULT))
+  // Only the first noun differs between the two.
+  assert.equal(DEFAULT.replace('summaries', 'answers'), ANSWERS)
+  const module = await read('../public/machine-notice.js')
+  assert.equal(module.split('can contain errors').length - 1, 3, 'three wordings, all here')
+  // What an Ask surface carries is unchanged: a written answer, a search overview and a journey story say "answers".
+  assert.equal(api.withMachineNotice({ answered: true, answer: 'Alex Example said the bill would pass.', machine_written: true, sources: [] }).machine_notice, ANSWERS)
+  assert.equal(api.withSummaryNotice({ status: 'ready', points: [{ text: 'A point.', source_ids: ['s1'] }], sources: [] }).machine_notice, ANSWERS)
+  assert.equal(api.withStoryNotice({ generated: true, steps: [{ title: 'A step', body: 'A body.', evidence: [] }] }).machine_notice, ANSWERS)
+})
+
+test('a response cached with the old wording still prints in the present words at a stored-text site', () => {
+  // /api/resource, /api/brief and a bill text version may sit in a browser or edge cache for up to an hour.
+  assert.equal(machineNoticeText(ANSWERS), DEFAULT)
+  assert.equal(machineNoticeText('  ' + ANSWERS + ' '), DEFAULT)
+  assert.equal(machineNoticeHTML({ notice: ANSWERS }), LINE)
+  assert.equal(machineNoticeText(DEFAULT), DEFAULT)
+  // Any other string the Worker sends is printed as it arrives, the transcript wording included.
+  assert.equal(machineNoticeText('Words the Worker sent.'), 'Words the Worker sent.')
+  assert.equal(machineNoticeText(api.MACHINE_NOTICE_TRANSCRIPT), api.MACHINE_NOTICE_TRANSCRIPT)
+  // The Worker corrects a payload that already carries the old string, as it leaves.
+  assert.equal(api.withRecordNotice({ ...record, machine_notice: ANSWERS }).machine_notice, DEFAULT)
+  assert.equal(api.withBriefsNotice({ briefs: { [RID]: 'A brief.' }, machine_notice: ANSWERS }).machine_notice, DEFAULT)
 })
 
 test('a record with a brief carries the field; a record without one does not', () => {
@@ -72,7 +99,7 @@ test('a notice left on a payload no model wrote is taken off, here and on an Ask
   assert.equal(api.withRecordNotice(stale).text, record.text)
   assert.ok(!('machine_notice' in api.withBriefsNotice({ briefs: {}, machine_notice: DEFAULT })))
   // The #470 review's note: a calculated answer that somehow still carried the key loses it.
-  const calculated = { answered: true, answer: '12 grants worth $3.4 million.', answer_status: 'calculated', machine_written: false, machine_notice: DEFAULT, sources: [] }
+  const calculated = { answered: true, answer: '12 grants worth $3.4 million.', answer_status: 'calculated', machine_written: false, machine_notice: ANSWERS, sources: [] }
   const cleaned = api.withMachineNotice(calculated)
   assert.ok(!('machine_notice' in cleaned))
   assert.deepEqual(cleaned, { answered: true, answer: calculated.answer, answer_status: 'calculated', machine_written: false, sources: [] })
@@ -81,8 +108,8 @@ test('a notice left on a payload no model wrote is taken off, here and on an Ask
   assert.equal(api.withMachineNotice(plain), plain)
   // A wrong wording is corrected, a right one left alone.
   const written = { answered: true, answer: 'Alex Example said the bill would pass.', machine_written: true, sources: [] }
-  assert.equal(api.withMachineNotice({ ...written, machine_notice: 'Old words.' }).machine_notice, DEFAULT)
-  const right = { ...written, machine_notice: DEFAULT }
+  assert.equal(api.withMachineNotice({ ...written, machine_notice: 'Old words.' }).machine_notice, ANSWERS)
+  const right = { ...written, machine_notice: ANSWERS }
   assert.equal(api.withMachineNotice(right), right)
 })
 
@@ -142,7 +169,7 @@ test('the line is real text in the class of the Ask line, escaped, with the Work
 test('the wording lives in machine-notice.js alone; the pages reach it through the label module', async () => {
   const files = ['../public/app.js', '../public/labels.js', '../public/timemachine.js', '../public/thenvsnow.js', '../public/money-journeys.js', '../src/hubs.ts', '../src/seo-content.ts', '../src/machine-notice.ts', '../src/index.ts']
   for (const file of files) assert.ok(!(await read(file)).includes('can contain errors'), file)
-  assert.match(await read('../public/labels.js'), /import \{ MACHINE_NOTICE \} from '\.\/machine-notice\.js\?v=[0-9a-f]{10}'/)
+  assert.match(await read('../public/labels.js'), /import \{ MACHINE_NOTICE, MACHINE_NOTICE_STORED \} from '\.\/machine-notice\.js\?v=[0-9a-f]{10}'/)
   assert.match(await read('../../scripts/stamp_assets.mjs'), /\['labels\.js', 'machine-notice\.js'\]/)
   const css = await read('../public/style.css')
   assert.match(css, /\.answer-notice \{ font: var\(--type-fine\); color: var\(--ink-soft\);/)

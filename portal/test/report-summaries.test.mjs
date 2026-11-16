@@ -49,7 +49,7 @@ test('quotes naming a person are shown word for word, with their pages, now the 
     const api = JSON.stringify(reportApiBody(detail));
     const html = renderReport(detail);
     // The error notice: once, directly under the generated sentences and inside their block, before the quotes.
-    {const NOTICE = '<p class="answer-notice">Machine-written answers can contain errors. Check the original record before relying on one.</p>';
+    {const NOTICE = '<p class="answer-notice">Machine-written summaries can contain errors. Check the original record before relying on one.</p>';
       assert.equal(html.split(NOTICE).length, 2, detail.slug);
       assert.ok(html.includes('</ul>' + NOTICE + '</div>'), detail.slug);
       assert.ok(html.indexOf('rr-summary-lines') < html.indexOf(NOTICE), detail.slug);}

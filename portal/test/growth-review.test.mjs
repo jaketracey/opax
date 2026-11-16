@@ -37,7 +37,7 @@ test('model previews expose the written date separately from bill status',async(
  const {fillBillPeek}=runInNewContext(code+';({fillBillPeek})',{growthModules:{...growthModules,loadModulePrivacy:async()=>()=>false},loadBill:async()=>bill,billHash:k=>'/bill/'+k,entityHrefAttr:h=>`href="${h}"`,iconSvg:()=>'',esc:String,billStatusLine:()=> 'Passed, status as at 9 Oct 2026',machineLabelHTML:()=>'<span>Machine-written</span>',machineNoticeHTML});
  await fillBillPeek({querySelector:()=>body},{key:'test',has_summary:true});
  // The error notice: once, directly under the model's sentences and before the status line.
- {const html=body.innerHTML,text=html.indexOf('Fixture model text.'),line=html.indexOf('<p class="answer-notice">Machine-written answers can contain errors. Check the original record before relying on one.</p>');
+ {const html=body.innerHTML,text=html.indexOf('Fixture model text.'),line=html.indexOf('<p class="answer-notice">Machine-written summaries can contain errors. Check the original record before relying on one.</p>');
  assert.ok(text>0&&line>text&&line<html.indexOf('status as at 9 Oct 2026'));assert.equal(html.split('answer-notice').length,2);assert.match(html.slice(text,line),/^Fixture model text\.<\/p><\/div>\s*$/);}
  assert.match(body.innerHTML,/Machine-written/);assert.match(body.innerHTML,/Summary written <time datetime="2026-10-08">8 Oct 2026/);assert.match(body.innerHTML,/status as at 9 Oct 2026/);
 });
