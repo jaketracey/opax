@@ -263,6 +263,8 @@ through to another, never silently repeats an excluded subject.
   it, so use the override only after reading that date's receipts. A dry run takes any
   date because it only reads and composes. The cron is not affected: it always posts
   under the Melbourne date of its scheduled time.
+  Outside 22:00 to 22:10 UTC (or for any other date), an Instagram container that is still processing or
+  refused as not ready is held as `review_required` (never retried), not left `preparing` for another run.
 - Status: `/api/daily-post/status` (configuration readiness and today's receipts;
   no credentials or raw provider error bodies).
 - Logs: `npx wrangler tail --env=''`; look for `daily-post`.
