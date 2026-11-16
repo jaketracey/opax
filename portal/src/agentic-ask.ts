@@ -665,16 +665,17 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
     const sheet = writingFacts(recordAnswer, facts, run.notes)
     for (const f of sheet) { const label = factNotes[/^fact-(\d+)/.exec(f.source.resource)?.[1] ?? '']; if (label && f.transcript) f.bears_on = label }
-    // For the run's record only: how many of the excerpts handed to the writer carry a kept label, and whether the
-    // research model sent labels at all. Shows how reliable the labels are.
+    // How many of the excerpts handed to the writer carry a kept label, and whether the research model sent labels at
+    // all: shows how reliable the labels are. On the writer's coherence record (stats below), which only an
+    // operator's eval response carries (research-eval.ts researchEvalUsage), never a public one.
     const excerpts = sheet.filter(f => f.transcript && !f.coverage)
-    if (run.research && excerpts.length) run.research.excerpt_labels = { held: excerpts.length, labelled: excerpts.filter(f => f.bears_on).length, sent: selected }
+    const excerptLabels = excerpts.length ? { held: excerpts.length, labelled: excerpts.filter(f => f.bears_on).length, sent: selected } : undefined
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
     if (transcriptListingOnly(sheet)) return run
     await progress('status', {phase:'writing'})
-    const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
+    const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [],...(excerptLabels?{coherence:{excerpt_labels:excerptLabels}}:{}) }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // The model's own points follow the written sentences in the answer (combine below). The writer is told what they
     // say, so a fact one of them states is not written a second time.

@@ -9,7 +9,10 @@ import NAMES from './commission-names.json'
 import {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd} from '../public/transcript-note.js'
 export {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd}
 /** A question about Parliament's own record: a Senate or House committee inquiry, estimates, Hansard. */
-const PARLIAMENTARY = /\b(?:senate|senators?|house of representatives|parliament|parliamentary|committee|estimates|hansard|mps?|members)\b/i
+const PARLIAMENTARY = /\b(?:senate|senators?|house of representatives|parliament|parliamentary|committee|estimates|hansard)\b/i
+/** People words that are about Parliament only in a question that names no commission: "family members", "staff
+ * members", "members of the board" or "a local MP" giving evidence to a named inquiry are witnesses, not Parliament. */
+const PARLIAMENT_PEOPLE = /\b(?:mps?|members)\b/i
 const COMMISSION_WORDS = /\broyal commission\b|\b(?:special )?commission of inquiry\b|\bboard of inquiry\b/i
 const squashed = (text: string) => ` ${text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()} `
 const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flatMap(c => c.names.map(squashed))
@@ -20,7 +23,10 @@ export const namesRegisteredCommission = (question: string): boolean => { const 
 export const NO_PASSAGE_SELECTED = 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.'
 /** Whether a question names Parliament or one of its bodies. Such a question is about Hansard unless it also names a
  * commission; "the Senate inquiry into ..." is a committee inquiry, whose evidence is Committee Hansard. */
-export const parliamentaryQuestion = (question: string): boolean => PARLIAMENTARY.test(question.slice(0, 2000))
+export const parliamentaryQuestion = (question: string): boolean => {
+  const q = question.slice(0, 2000)
+  return PARLIAMENTARY.test(q) || PARLIAMENT_PEOPLE.test(q) && !COMMISSION_WORDS.test(q) && !namesRegisteredCommission(q)
+}
 /** Whether a question uses a word for a hearing or its evidence. */
 export const hearingWorded = (question: string): boolean => /\b(?:hear|hears|heard|hearings?|evidence|witness(?:es)?|testif\w*|testimony|transcripts?|counsel assisting)\b/i.test(question.slice(0, 2000))
 /** Evidence before an inquiry is a different record from parliamentary discussion about its topic. */
@@ -45,6 +51,12 @@ export function hearingEvidenceQuestion(question: string): boolean {
   })
 }
 
+
+/** A hearing question: hearingEvidenceQuestion, or a question that names a commission (by a commission phrase
+ * or a registered name), uses a word for a hearing or its evidence and does not name Parliament ("Who gave evidence to
+ * the ... inquiry about ...?"). Hansard and committee questions are never hearing questions. */
+export const commissionHearingQuestion = (question: string): boolean => hearingEvidenceQuestion(question) ||
+  hearingWorded(question) && !parliamentaryQuestion(question) && (COMMISSION_WORDS.test(question.slice(0, 2000)) || namesRegisteredCommission(question.slice(0, 2000)))
 
 /** People named in hearing evidence. One fixed text for every call that writes Ask prose from records: the research
  * model's turns and its final answer call, the writer, and the follow-up questions. It is tied to the record's own

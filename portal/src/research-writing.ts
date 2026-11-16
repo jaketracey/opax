@@ -1,6 +1,7 @@
 import {ASK_ATTRIBUTION_RULE,ASK_EVIDENCE_RULES,ASK_SELF_REFERENCE_RULE as SELF_REFERENCE,ASK_ABSENCE_RULE} from './ask-writing-rules'
-/** The two fixed lines about what an answer may say of itself and of what the record lacks, always together. */
-const ASK_SELF_REFERENCE_RULE = SELF_REFERENCE + ASK_ABSENCE_RULE
+/** The fixed line about what an answer may say of itself, and on a hearing question the one about what the passages
+ * leave unanswered. Other questions keep main's general-knowledge behaviour (the hub, 16 Nov). */
+const selfReference = (question: string): string => SELF_REFERENCE + (commissionHearingQuestion(question) ? ASK_ABSENCE_RULE : '')
 import {RECEIPTS_WRITING_RULE,industryModifier} from './receipt-copy'
 /** Tools supply evidence; only checked, newly written prose reaches an Ask reader. */
 import type { Fact, Period } from './agentic-ask'
@@ -20,7 +21,7 @@ import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
 import {quotationFails,failedQuotations,looseQuotationOf,unescapedQuotes,withoutGivenFactLabels,otherScript,withSourceEllipses} from './research-evidence'
-import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage, NO_PASSAGE_SELECTED, hearingEvidenceQuestion, hearingWorded } from './transcript-answer'
+import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage, NO_PASSAGE_SELECTED, hearingEvidenceQuestion, hearingWorded, commissionHearingQuestion } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
@@ -441,7 +442,8 @@ function factsProse(input: WritingInput): QualitativeAnswer {
   const lending=input.facts.filter(f=>f.source.receipt?.measure==='declared_debts')
   if(lending.length)input={...input,facts:[...lending,...input.facts.filter(f=>!lending.includes(f))]}
   const transcript = transcriptLines(input)
-  if (transcript) return { ...assemble(transcript, input), answer_decision: 'answer' }
+  // The fixed line for excerpts none of which was selected is a limitation, like the other fixed lines.
+  if (transcript) return { ...assemble(transcript, input), answer_decision: transcript.length === 1 && transcript[0].text === NO_PASSAGE_SELECTED ? 'limitation' : 'answer' }
   // A page pointer under an order is not a listing or a quotation to paste into prose.
   const restricted = input.facts.filter(f => f.text.includes(TRANSCRIPT_LABEL) && /Not quoted:/i.test(f.text))
   if (restricted.length) return { ...assemble([{ text: 'The matching hearing transcript pages are not quoted because the published transcript records a non-publication order, a direction not to publish or a pseudonymous witness.', facts: restricted.map(f => f.id) }], input), answer_decision: 'limitation' }
@@ -651,6 +653,10 @@ function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingI
 export const TRANSCRIPT_COVERAGE_RULE = ' With hearing transcript excerpts among the facts the answer may run to 300 words. Lead with the excerpts that answer the question, in the order of the question\'s parts: a fact\'s bears_on field gives the words of the question it was selected for. Give each excerpt you use one sentence, once, and leave out an excerpt that has no bearing on the question.'
 /** A question about a hearing or its evidence, by its wording. */
 const aboutHearing=(question:string)=>hearingEvidenceQuestion(question)||hearingWorded(question)
+/** On a hearing question whose writer was given hearing excerpts, a sentence that cites no fact is left out, even beside
+ * cited ones (the hub, 16 Nov): there a general-knowledge sentence can name a person in the model's own words. A count
+ * of citations, not a reading of prose. Other questions keep their uncited context sentences. */
+const uncitedOnHearing=(ids:readonly number[],input:WritingInput)=>!ids.length&&aboutHearing(input.question)&&input.facts.some(f=>f.transcript&&!f.coverage)
 /** Whether an answer to a hearing question cites at least one of the hearing excerpts its writer was given. True
  * when it was given none, and for any other kind of question (which other records may answer whole). */
 export function citesGivenExcerpt(answer:QualitativeAnswer,input:WritingInput):boolean {
@@ -669,7 +675,7 @@ export function draftWrittenAnswer(raw:unknown,input:WritingInput):QualitativeAn
   if(!raw||typeof raw!=='object'||!Array.isArray((raw as {sentences?:unknown}).sentences))return null
   // The ids the writer was given: its own "(fact 7)" after a sentence is a label, not prose (research-evidence.ts).
   const given=new Set(input.facts.map(f=>f.id))
-  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,text:withoutGivenFactLabels(unescapedQuotes(s.text),given),facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!otherScript(s.text)).map(s=>({...s,text:cutEnds(s.text,s.facts,input)})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
+  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,text:withoutGivenFactLabels(unescapedQuotes(s.text),given),facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!otherScript(s.text)).filter(s=>!uncitedOnHearing(s.facts.filter(id=>Number.isInteger(id)&&given.has(id)),input)).map(s=>({...s,text:cutEnds(s.text,s.facts,input)})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
   const decision=answerDecision(raw)
   return {...assemble(lines,input,!!decision&&decision!=='answer'),...(decision?{answer_decision:decision}:{}),machine_written:true}
 }
@@ -678,8 +684,9 @@ export function draftWrittenAnswer(raw:unknown,input:WritingInput):QualitativeAn
  * and repeated sentences are left out. Null only when nothing was written. */
 /** `leftOut`, when given, is filled with how many of the writer's sentences were left out, by reason, for the
  * research record (never shown to a reader): a quotation a hearing transcript does not hold; an echo of the tool's
- * own block or an empty sentence; a sentence that repeats one already kept. */
-export function verifyWrittenAnswer(raw: unknown, input: WritingInput, leftOut?: Record<string, number>): QualitativeAnswer | null {
+ * own block or an empty sentence; a sentence that repeats one already kept; an uncited sentence in a hearing answer,
+ * whose words `uncited`, when given, receives (for the operator-only record). */
+export function verifyWrittenAnswer(raw: unknown, input: WritingInput, leftOut?: Record<string, number>, uncited?: string[]): QualitativeAnswer | null {
   const left=(reason:string)=>{if(leftOut)leftOut[reason]=(leftOut[reason]??0)+1}
   const obj=raw && typeof raw==='object' ? raw as {sentences?:unknown;answer_decision?:unknown} : {}
   if (!Array.isArray(obj.sentences)) return null
@@ -698,6 +705,8 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput, leftOut?:
     if (looseTranscriptQuotation(line.text,facts,input)) {left('transcript_quotation');continue}
     // A sentence in another script (a count of its characters outside quotations) is left out.
     if (otherScript(line.text)) {left('other_script');continue}
+    // A hearing answer keeps only cited sentences (uncitedOnHearing); the words go to `uncited` for the run's record.
+    if (uncitedOnHearing(ids,input)) {left('uncited_on_hearing');uncited?.push(line.text);continue}
     line.text=cutEnds(line.text,ids,input)
     const metadata=(f:WritingFact)=>f.metadata||/^(?:Period|Financial years):/i.test(f.text)
     const isLimit=line.coverage===true || facts.length>0 && facts.every(f=>f.coverage&&!metadata(f))
@@ -734,7 +743,7 @@ export function writingPrompt(input: WritingInput): string {
   return JSON.stringify({question:input.question,period:input.period,facts:input.facts.map(f=>({...f,source:undefined,speaker:f.source.speaker,...(f.source.chamber?{chamber:f.source.chamber}:{}),...(f.source.receipt?{receipt:f.source.receipt}:{}),atoms:f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)})),contract: ASK_EVIDENCE_RULES + RECEIPTS_WRITING_RULE + ' ' +
     'Answer the question directly and fully from these facts, and use general knowledge for context. The first sentence must answer the question with the requested name, figure, date or outcome. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each, ' + NAMED_PEOPLE_EXCEPTION + '; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. ' + ASK_ATTRIBUTION_RULE + 'Name the chamber a fact records in its chamber field (senate is the Senate, representatives the House of Representatives). Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Use complete sentences in your own words. For counts, start with the count, what was counted, chamber and period. For comparisons, retain every side, named term, value and supported direction. Keep every requested year or month group and its count; record totals retain their snapshot date. Each claim keeps its structured entity, metric, unit, chamber, period and supporting fact id together. Equal values belonging to different entities remain distinct claims. ' +
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
-    'Hearing excerpts give the hearing day/date and transcript page, with a short literal quotation and fact id. An excerpt that names no speaker is attributed to the transcript, never to a named person, a witness or counsel. Identify the material once as hearing evidence; licence details belong in the source card. ' + TRANSCRIPT_NAMED_PEOPLE_RULE + ' ' + ASK_SELF_REFERENCE_RULE +
+    'Hearing excerpts give the hearing day/date and transcript page, with a short literal quotation and fact id. An excerpt that names no speaker is attributed to the transcript, never to a named person, a witness or counsel. Identify the material once as hearing evidence; licence details belong in the source card. ' + TRANSCRIPT_NAMED_PEOPLE_RULE + ' ' + selfReference(input.question) +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
     'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.facts.some(f=>f.transcript&&!f.coverage) ? TRANSCRIPT_COVERAGE_RULE : '') + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
 }
