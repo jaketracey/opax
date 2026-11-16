@@ -16,13 +16,18 @@ const text = value => typeof value === 'string' ? value : ''
 function isTranscript(source, saved) {
   return [text(source.snippet), text(source.title)].some(value => value.includes(TRANSCRIPT_LABEL) || saved && CUT_EXCERPT.test(value))
 }
+// The coverage row the research loop flags, and the one the older engine and the source linker know by resource.
+const isCoverage = source => source.coverage === true || source.resource === 'coverage' || text(source.resource).startsWith('coverage-')
+// "OPAX lists 47 hearing transcripts ..." carries the label but is a count of transcripts, not one of them.
+const isCount = source => source.kind === 'count'
 
 /** The line for these source rows, or null when no cited row is a hearing transcript. Numbers are a row's place
- * among the cited rows, which is the number the web page and the app print beside it. */
+ * among the cited rows, which is the number the web page and the app print beside it. A coverage row and a count
+ * of transcripts keep their numbers and are counted neither as transcripts nor against them. */
 export function transcriptNote(sources, saved = false) {
   const cited = (Array.isArray(sources) ? sources : []).filter(s => s && typeof s === 'object' && s.cited === true)
-  const rows = cited.map((s, i) => ({ s, n: i + 1 })).filter(r => !r.s.coverage)
-  const numbers = rows.filter(r => isTranscript(r.s, saved)).map(r => r.n)
+  const rows = cited.map((s, i) => ({ s, n: i + 1, transcript: isTranscript(s, saved) })).filter(r => !isCoverage(r.s) && !(isCount(r.s) && r.transcript))
+  const numbers = rows.filter(r => r.transcript).map(r => r.n)
   if (!numbers.length) return null
   if (numbers.length === rows.length) return TRANSCRIPT_NOTE
   if (numbers.length === 1) return `Source ${numbers[0]} is a hearing transcript: evidence, not findings.`
@@ -40,16 +45,31 @@ export function transcriptNoteEnd(answer) {
   return end ? end.index + end[0].length - end[0].trimStart().length : null
 }
 
+const points = value => Array.from(value).length
+/** Citation ranges (code points) after the fixed line from `at` is swapped for one of another length: a range that
+ * reached into the old line now ends with the new one. Ranges over the prose are not touched. */
+function movedCitations(citations, at, end) {
+  if (!citations || typeof citations !== 'object' || Array.isArray(citations)) return citations
+  return Object.fromEntries(Object.entries(citations).map(([key, ranges]) => [key, Array.isArray(ranges)
+    ? ranges.map(r => Array.isArray(r) && r.length === 2 && r[1] > at ? [Math.min(r[0], at), end] : r) : ranges]))
+}
+
 /** The payload with its answer ending in the line, once. Fixed text after the prose: the prose is never read for
- * meaning or changed, and citation ranges (offsets into the answer) stay where they are. */
+ * meaning or changed, and citation ranges over it (offsets into the answer) stay where they are. */
 export function withTranscriptNote(payload, saved = false) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return payload
   const answer = text(payload.answer).trimEnd()
   // A refusal or a request to clarify draws on nothing. A limited answer still says what a transcript holds.
   if (!answer || payload.answered === false || payload.answer_decision === 'refusal' || payload.answer_decision === 'clarification') return payload
   const note = transcriptNote(payload.sources, saved)
-  // Already ended by the line, in either form (the transcript writer adds its own under the turns it quotes), or
-  // carrying the writer's line with something after it: said once, and left where it is.
-  if (!note || FIXED_END.test(answer) || note === TRANSCRIPT_NOTE && answer.includes(TRANSCRIPT_NOTE)) return payload
-  return { ...payload, answer: `${answer}\n\n${note}` }
+  if (!note) return payload
+  const at = transcriptNoteEnd(answer)
+  // The answer must end with the line: one earlier in the text does not count.
+  if (at === null) return { ...payload, answer: `${answer}\n\n${note}` }
+  // Already ended by the right line, or a saved turn whose clipped rows cannot be trusted over the line it kept.
+  if (saved || answer.slice(at) === note) return payload
+  // Ended by the fixed line in another form (the transcript writer adds the all-transcripts sentence under the
+  // turns it quotes; the source linker can add rows after a line was set): that line alone is swapped.
+  const next = answer.slice(0, at) + note
+  return { ...payload, answer: next, ...('citations' in payload ? { citations: movedCitations(payload.citations, points(answer.slice(0, at)), points(next)) } : {}) }
 }

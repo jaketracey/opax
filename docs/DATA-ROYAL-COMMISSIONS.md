@@ -146,7 +146,10 @@ by the Worker after the answer text and added once (`portal/public/transcript-no
 A hearing transcript here is a cited source row carrying the label above, which only the
 `royal_commissions` and `integrity_reports` tools write: hearing transcripts of royal
 commissions, commissions of inquiry and integrity commissions. A Hansard speech or a
-committee's Hansard is not one. Coverage rows are not counted either way. The line goes on
+committee's Hansard is not one. The definition, as ruled on 16 November 2026: a hearing
+transcript is the transcript of a hearing of a royal commission, an integrity body or an
+inquiry, and not Hansard, committee Hansard or estimates Hansard. A row that counts
+transcripts is not one either. Coverage rows are not counted either way. The line goes on
 where every `/api/ask` reply leaves the Worker, so it covers the research loop and the
 older engine, blocking and streamed replies, and an answer cached before 16 November 2026,
 which gains the line as it is served. A refusal or a request to clarify gets no line.

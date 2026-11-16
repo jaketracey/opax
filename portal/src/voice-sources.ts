@@ -225,5 +225,8 @@ export function askOpaxResult(payload: Row, origin: string): AskOpaxResult {
   const opening = noteAt === null ? spokenAnswer(answer) : answer.slice(0, noteAt).trim() ? spokenAnswer(answer.slice(0, noteAt)) : ''
   const spoken = written ? [opening, note].filter(Boolean).join(' ') : gathered ?? fallback
   const url = sources[0]?.url ?? origin + '/ask'
-  return { answered, spoken_answer: spoken, answer: written.slice(0, 4_000), sources, source_url: url, source_notice: NOTICE }
+  // A long answer is cut in its prose, never in the transcript line that ends it.
+  const line = noteAt === null ? '' : plainAnswer(answer.slice(noteAt))
+  const text = line && written.length > 4_000 ? `${plainAnswer(answer.slice(0, noteAt!)).slice(0, 4_000 - line.length - 1).trimEnd()}\n${line}` : written.slice(0, 4_000)
+  return { answered, spoken_answer: spoken, answer: text, sources, source_url: url, source_notice: NOTICE }
 }
