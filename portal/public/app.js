@@ -4763,6 +4763,15 @@ function subjectTag(body) {
 function tagLineHTML(parts) {
   return parts.filter(Boolean).map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join("");
 }
+/** A party's sitting count in its meta line (renderPartyMembers; the landed page's from the Worker),
+ *  taken out before the line is redrawn and put back beside the years by restoreSitting, so the line
+ *  never drops it and gains it again. */
+function keptSitting(tag) {
+  return tag?.querySelector(".party-sitting")?.closest(".subject-tag-next") || null;
+}
+function restoreSitting(tag, part) {
+  if (part) tag?.querySelector(".entry-active")?.closest(".subject-tag-next")?.before(part);
+}
 
 function infoboxHTML(rows, funfact, actions) {
   return `<p class="kicker" style="margin-top:0">Quick facts</p>
@@ -4787,6 +4796,19 @@ function reserveSubjectMap(on) {
   if (hint) hint.hidden = !on;
 }
 
+function subjectMapCardHTML(nodeId, label = "") {
+  return `<a class="subject-map-card" id="subject-map" href="/money?${new URLSearchParams({ focus: nodeId })}">
+      <span class="subject-map-card-title">${label ? `${esc(label)} on the money map` : "Open the money map"}</span>
+      <span class="subject-map-card-line">Who gave to whom, by industry and year</span></a>`;
+}
+/** A party's map card on a phone, drawn with the record rather than after it: a card that arrived
+ *  last pushed the whole record down. mountSubjectMap takes it away if the map does not draw the party. */
+function showSubjectMapCard(nodeId, label) {
+  const el = $("subject-map");
+  if (!el || el.classList.contains("subject-map-card") || !window.matchMedia(SUBJECT_MAP_CARD).matches) return;
+  el.outerHTML = subjectMapCardHTML(nodeId, label);
+}
+
 async function mountSubjectMap(nodeId, label = "") {
   const key = currentSubjectKey;
   const el = $("subject-map");
@@ -4795,9 +4817,7 @@ async function mountSubjectMap(nodeId, label = "") {
   if (currentSubjectKey !== key) return;
   if (!drawing?.nodes?.some(node => node.id === nodeId)) { reserveSubjectMap(false); return; }
   if (window.matchMedia(SUBJECT_MAP_CARD).matches) {
-    el.outerHTML = `<a class="subject-map-card" id="subject-map" href="/money?${new URLSearchParams({ focus: nodeId })}">
-      <span class="subject-map-card-title">${label ? `${esc(label)} on the money map` : "Open the money map"}</span>
-      <span class="subject-map-card-line">Who gave to whom, by industry and year</span></a>`;
+    el.outerHTML = subjectMapCardHTML(nodeId, label);
     $("subject-map-hint").hidden = true;
     return;
   }
@@ -5690,7 +5710,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e8d40213b9'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=8b94c2fcc1'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5875,9 +5895,17 @@ async function renderPartyMembers(label, body, key) {
   const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
     .find((party) => party && samePartyLabel(party, label)) || label;
   // Its own part of the tag line, before the years (tagLineHTML: the dot travels with the part).
+  // The landed party's head already has it (seatBootParty): it is brought up to date in place.
   const active = body.querySelector(".subject-tag .entry-active");
-  if (sitting.size) (active?.closest(".subject-tag-next") || active)?.insertAdjacentHTML("beforebegin",
-    `<span class="subject-tag-next"><a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} marked current in the directory</a></span>`);
+  const href = directoryHash("person", { party: directoryParty });
+  const line = `${sitting.size.toLocaleString()} marked current in the directory`;
+  const kept = body.querySelector(".subject-tag .party-sitting");
+  if (kept && sitting.size) {
+    if (kept.textContent !== line) kept.textContent = line;
+    if (kept.getAttribute("href") !== href) kept.setAttribute("href", href);
+  } else if (kept) kept.closest(".subject-tag-next")?.remove();
+  else if (sitting.size) (active?.closest(".subject-tag-next") || active)?.insertAdjacentHTML("beforebegin",
+    `<span class="subject-tag-next"><a class="party-sitting" href="${esc(href)}">${esc(line)}</a></span>`);
   body.querySelector("#entry-flows .ui-sheet-facts")?.insertAdjacentHTML("beforeend",
     `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} marked current in the directory; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
       data.meta?.generated ? ` (directory, ${esc(fmtDate(data.meta.generated))})` : ""}. Sitting members use their current party; member IDs counted once.</dd></div>`);
@@ -5971,14 +5999,20 @@ async function renderRosterParty(segment, key, body) {
   const everyone = [...members.current, ...members.former];
   const first = Math.min(...everyone.map((m) => m.first || 9999));
   const last = Math.max(0, ...everyone.map((m) => m.last || 0));
-  subjectTag(body).innerHTML = tagLineHTML([
+  const tag = subjectTag(body);
+  const sitting = keptSitting(tag);
+  tag.innerHTML = tagLineHTML([
     independent ? `<span>${esc(partyPage.INDEPENDENTS_DESCRIPTION)}</span>` : partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
     first < 9999 ? `<span class="entry-active">${independent ? 'Parliamentarians' : 'Members'} in the record ${esc(yearSpan(first, last))}</span>` : "",
   ].filter(Boolean));
+  restoreSitting(tag, sitting);
+  const head = body.querySelector(".subject-head");
   // A renamed party: its name history, from the registers' notices (labels.js PARTY_RENAMES).
   const history = partyPage.partyHistoryHTML(label, partyPageHelpers());
-  if (history) body.querySelector(".subject-head").insertAdjacentHTML("beforeend", history);
-  body.querySelector(".subject-head").insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
+  if (history && !head.querySelector(":scope > .party-history")) head.insertAdjacentHTML("beforeend", history);
+  // The landed party's head already has its actions (seatBootParty): these take their place.
+  const seatedActions = head.querySelector(":scope > .entry-actions");
+  (seatedActions || head).insertAdjacentHTML(seatedActions ? "beforebegin" : "beforeend", `<div class="page-actions entry-actions">
     ${speeches ? actionBtn("search", partySpeechSearch(speeches.label), "Their speeches", { primary: true }) : ""}
     ${moreMenuHTML([
       { href: askHash(`What has parliament said about ${partyAskName(label)}?`), label: "Ask what parliament said about them" },
@@ -5986,20 +6020,25 @@ async function renderRosterParty(segment, key, body) {
       { href: "/subject/party", label: "All parties" },
     ], independent ? "More about independents" : "More about this party")}
   </div>`);
+  seatedActions?.remove();
   box.classList.add("entry-rail");
   box.innerHTML = entryRailHTML();
   sections.innerHTML = "";
   const settle = (p) => Promise.resolve(p).then(() => refreshEntryRail(sections, PARTY_RAIL));
-  settle(renderPartyMembers(label, body, key));
-  await settle(renderPartyMemberList(label, sections, key, { speechesLink: false })); // the head's button says it
-  if (currentSubjectKey !== key) return;
-  settle(renderPartySponsoredBills(label, sections, key));
+  const blocks = [settle(renderPartyMembers(label, body, key))];
+  const memberList = settle(renderPartyMemberList(label, sections, key, { speechesLink: false })); // the head's button says it
+  // The rail in the record's first frame: the blocks the Worker named for the landed party (expectRail).
+  refreshEntryRail(sections, PARTY_RAIL);
+  await memberList;
+  if (currentSubjectKey !== key) { releaseRail(sections, PARTY_RAIL); return; }
+  blocks.push(settle(renderPartySponsoredBills(label, sections, key)));
   const stateMoney = partyPage.partyStateMoneyHTML(label, states.map((jur, i) => [jur, stateFiles[i]]), partyPageHelpers());
   if (stateMoney) sections.insertAdjacentHTML("beforeend", stateMoney);
-  settle(renderPartyDebts(label, sections));
-  settle(renderPartyBillDivisions(label, sections, key));
+  blocks.push(settle(renderPartyDebts(label, sections)), settle(renderPartyBillDivisions(label, sections, key)));
   settle(renderDonorAccess(label, sections));
-  await settle(renderPartyMentions(label, sections, key));
+  const mentions = settle(renderPartyMentions(label, sections, key));
+  Promise.allSettled([...blocks, mentions]).then(() => releaseRail(sections, PARTY_RAIL));
+  await mentions;
   if (currentSubjectKey !== key) return;
   const news = Object.assign(document.createElement("section"), { id: "entry-news" });
   sections.appendChild(news);
@@ -6239,6 +6278,59 @@ async function renderPersonTopics(name, sections, onRecord = () => {}, years = {
   }
 }
 
+/* The Worker's first paint of a party (src/index.ts partyHeadPrerender) already has the head as this
+   page draws it: the meta line with how many sit for the party and its years, the money line, the name
+   history and the actions, each from a file this page would otherwise wait on. The page the reader landed
+   on draws that head in its skeleton's first frame, so the record under it is never pushed down as those
+   files arrive; the renders below redraw its parts in place. The Worker also names the blocks the "On this
+   page" rail will list (data-rail) and the party's money-map node (data-node). Read once, by the first
+   party opened; another party's page goes without. */
+let bootParty; // undefined: not looked for yet; null: none to use
+function takeBootParty(segment) {
+  if (bootParty === undefined) {
+    bootParty = null;
+    const pre = document.querySelector("#prerender.subject-party");
+    const head = pre?.querySelector(":scope > .subject-head");
+    let landed = "";
+    try { landed = decodeURIComponent(location.pathname.split("/")[3] || ""); } catch {}
+    if (head && location.pathname.startsWith("/subject/party/") && landed === segment) {
+      const tag = head.querySelector(":scope > .subject-tag");
+      bootParty = {
+        segment,
+        title: head.querySelector("h1")?.textContent || "",
+        tag: tag?.innerHTML || "",
+        // The money line, the history and the actions, after the meta line in that order.
+        after: tag ? [...head.children].slice([...head.children].indexOf(tag) + 1).map((el) => el.outerHTML).join("") : "",
+        rail: (pre.dataset.rail || "").split(/\s+/).filter(Boolean),
+        node: pre.dataset.node || "",
+      };
+      // Out of the hidden crawler block: the menu's ids name the head on the page, not a copy.
+      head.remove();
+    }
+  }
+  if (bootParty && bootParty.segment !== segment) bootParty = null;
+  return bootParty;
+}
+/** Draw the landed party's head, rail and map card into a fresh skeleton (subjectSkeleton). */
+function seatBootParty(body, segment) {
+  const boot = takeBootParty(segment);
+  const head = body.querySelector(".subject-head");
+  const tag = head?.querySelector(".subject-tag");
+  if (!boot || !tag) return null;
+  $("subject-title").textContent = boot.title;
+  tag.innerHTML = boot.tag;
+  tag.insertAdjacentHTML("afterend", boot.after);
+  const sections = $("subject-sections");
+  const box = $("subject-infobox");
+  if (sections && box && boot.rail.length) {
+    box.classList.add("entry-rail");
+    box.innerHTML = entryRailHTML();
+    expectRail(sections, boot.rail);
+  }
+  // A party with no money-map node has no map: its place is not held. One with a node gets its card now on a phone.
+  if (boot.node) showSubjectMapCard(boot.node, boot.title);
+  return boot;
+}
 
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
   if (kind === "person") {
@@ -6335,6 +6427,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // "labor"), not its name, so the title is a bar until the record says what
   // it is.
   if (kind === "electorate" || kind === "party") $("subject-title").innerHTML = `<span class="visually-hidden">Loading ${kind === "party" ? "party" : "electorate"}</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>`;
+  // The party the reader landed on: its head, rail and map card as the Worker drew them (seatBootParty).
+  const bootHead = kind === "party" ? seatBootParty(body, name) : null;
+  if (bootHead && !bootHead.node) reserveSubjectMap(false);
   if (manageFocus) $("subject-title")?.focus();
   await Promise.allSettled([growthModulesReady,voteTablesReady,nextStepsReady]);
   if (currentSubjectKey !== key) return;
@@ -6472,11 +6567,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // party's own dot and full name (or the donor's industry) and its years.
     // Quick facts became the head's source sheet and the "On this page" rail;
     // its four buttons became one pill and ⋯ (principle 5).
-    subjectTag(body).innerHTML = tagLineHTML([
+    const tag = subjectTag(body);
+    const sitting = keptSitting(tag);
+    tag.innerHTML = tagLineHTML([
       isParty ? partyChipHTML(node.label, { full: true })
         : `<span>${esc(sentenceCase(industryLabel(node.industry || "")) || "Receipt source")}</span>`,
       (own?.firstYear ?? node.firstYear) ? `<span class="entry-active">${esc(returnsSpan(own?.firstYear ?? node.firstYear, own?.lastYear ?? node.lastYear))}</span>` : "",
     ].filter(Boolean));
+    restoreSitting(tag, sitting);
     const head = body.querySelector(".subject-head");
     const aliasRow = !isParty && (node.aliases || []).length > 0 && ["Also disclosed as", (() => {
       // The registers spell one donor many ways; the totals cover them all.
@@ -6519,13 +6617,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     }));
     // A renamed party: its name history from the registers' notices, as on the roster-only page.
     const history = isParty ? partyPage.partyHistoryHTML(node.label, partyPageHelpers()) : "";
-    if (history) head.insertAdjacentHTML("beforeend", history);
+    if (history && !head.querySelector(":scope > .party-history")) head.insertAdjacentHTML("beforeend", history);
     const askAbout = isParty
       ? { href: askHash(`What has parliament said about ${partyAskName(node.label)}?`), label: "Ask what parliament said about them" }
       : ["individual", "other", ""].includes(String(node.industry || "").toLowerCase())
         ? { href: askHash(`What has parliament said about ${node.label}?`), label: "Ask what parliament said about this receipt source" }
         : { href: askHash(`What has parliament said about ${industryLabel(node.industry)}?`), label: "Ask what parliament said about this industry" };
-    head.insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
+    // The landed party's head already has its actions (seatBootParty): these take their place.
+    const seatedActions = head.querySelector(":scope > .entry-actions");
+    (seatedActions || head).insertAdjacentHTML(seatedActions ? "beforebegin" : "beforeend", `<div class="page-actions entry-actions">
       ${reported ? explainBtn(isParty ? { to: node.id } : { from: node.id },
         isParty ? "Explain where the money comes from" : "Explain this money") : "" /* nothing a party listed to explain: no $0 page */}
       ${moreMenuHTML([
@@ -6535,9 +6635,12 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         { href: "/graph/money-receipts.json", label: "Download receipt data", detail: "JSON, uncapped party receipts" },
       ], isParty ? "More about this party" : "More about this donor")}
     </div>`);
+    seatedActions?.remove();
     box.classList.add("entry-rail");
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
+    // A party's map card on a phone comes with its record, never after it (showSubjectMapCard).
+    if (isParty) showSubjectMapCard(node.id, node.label);
     sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${reported ? esc(fmtMoney((own ? own.total : node.total) || 0)) : ""}">
       ${isParty ? `<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(registerTables.partyTableScope(partyMoney.scope, moneyData?.meta))}</p>` : ""}${partyTable}`
         : !reported ? `<figure class="chart donor-flow-bars"><figcaption>Where the money went</figcaption><p class="entry-scope">${esc(declaredOnlyLine)}.</p></figure>` : barList(flowRows, {
@@ -6578,16 +6681,21 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (!isParty) settle(renderDonorInterests(node.label, sections));
     if (!isParty) settle(renderDonorStateMoney(node.label, sections));
     if (!isParty) settle(renderDonorTaxCharity(node.label, sections));
-    if (isParty) {
-      settle(renderPartyMembers(node.label, body, key));
-      settle(renderPartyMemberList(node.label, sections, key));
-      settle(renderPartySponsoredBills(node.label, sections, key));
-      settle(renderPartyDebts(node.label, sections));
-      settle(renderPartyBillDivisions(node.label, sections, key));
-    }
+    const partyBlocks = isParty ? [
+      settle(renderPartyMembers(node.label, body, key)),
+      settle(renderPartyMemberList(node.label, sections, key)),
+      settle(renderPartySponsoredBills(node.label, sections, key)),
+      settle(renderPartyDebts(node.label, sections)),
+      settle(renderPartyBillDivisions(node.label, sections, key)),
+    ] : [];
     settle(renderDonorAccess(node.label, sections));
-    if (isParty) await settle(renderPartyMentions(node.label, sections, key));
-    else {
+    if (isParty) {
+      const mentions = settle(renderPartyMentions(node.label, sections, key));
+      // The rail in the record's first frame: the blocks placed so far and the ones the Worker named.
+      refreshEntryRail(sections, rail);
+      Promise.allSettled([...partyBlocks, mentions]).then(() => releaseRail(sections, rail));
+      await mentions;
+    } else {
       const mentions = Object.assign(document.createElement("section"), { id: "entry-mentions" });
       sections.appendChild(mentions);
       await subjectMentions(node.label, mentions, "In parliament");
@@ -7192,13 +7300,28 @@ function settleOn(target, { smooth = false, ms = 10000 } = {}) {
   settleOn.stop = stop;
 }
 
+/* The blocks a page's rail will list before they arrive (a party's, from the Worker: seatBootParty).
+   The rail names them at once, so on a phone, where it sits above the record, the record is not pushed
+   down a row at a time as the blocks come in. Released when the page's blocks have all settled. */
+let railExpected = null; // { sections, ids }
+function expectRail(sections, ids) {
+  railExpected = { sections, ids: new Set(ids) };
+  refreshEntryRail(sections, PARTY_RAIL);
+}
+/** The page's blocks have settled: the rail lists only the blocks that are there. */
+function releaseRail(sections, rail) {
+  if (railExpected?.sections !== sections) return;
+  railExpected = null;
+  refreshEntryRail(sections, rail);
+}
 function refreshEntryRail(sections, rail = PERSON_RAIL) {
   if (!sections.isConnected) return;
   const list = $("subject-infobox")?.querySelector(".entry-rail-list");
   if (!list) return;
   const nav = list.closest("nav");
+  const expected = railExpected?.sections === sections ? railExpected.ids : null;
   const markup = rail.map(([id, label]) => [id, label, sections.querySelector(`#${id}`)])
-    .filter(([, , el]) => el?.textContent.trim())
+    .filter(([id, , el]) => el?.textContent.trim() || expected?.has(id))
     // Block names only: each block's figure is the first thing the block
     // itself says, so the rail does not say it a second time (principle 3).
     .map(([id, label]) => `<li><a href="#${id}" data-entry-jump="${id}"><span class="entry-rail-label">${esc(label)}</span></a></li>`).join("");

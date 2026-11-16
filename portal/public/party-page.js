@@ -483,6 +483,78 @@ export function latestReturnLine(rows, money = n => `$${Math.round(n).toLocaleSt
   return {year: latest.year, receipts: latest.receipts,
     text: `On its ${year} annual return: ${money(latest.receipts)} in receipts${latest.branches > 1 ? `, ${latest.branches} branches summed` : ''}.`};
 }
+/** A party's own annual-return rows, as the receipts block reads them (app.js renderPartyDebts): under
+ *  every name it lodged as when it was renamed, else its single entry's. `entry` carries the debts,
+ *  benefits and associated entities, which are never summed across names. */
+export function partyReturnRows(label, parties, same = (a, b) => identity(a) === identity(b)) {
+  const lodged = partyReturns(label, parties, same);
+  const entry = parties?.[label] || lodged.entry;
+  return {lodged, entry, rows: lodged.names.length > 1 ? lodged.rows : entry?.returns || []};
+}
+
+// --- the party head, drawn once ---------------------------------------------------------------
+/* The head under a party's title: its meta line, its money line and its actions. The Worker draws
+   them into the page's first paint (src/index.ts partyHeadPrerender) and app.js keeps them, so the
+   record under the head never moves as the files behind those lines arrive. One markup for both. */
+
+/** How many people the roster marks current for the party, each counted once (person ID where held),
+ *  and the roster's own spelling of the party, which the directory filters by. `people` is the roster
+ *  app.js loadParliamentarians reads, with the seat holders it adds (canonical-urls.js withSeatHolders). */
+export function partySitting(label, people, same = (a, b) => identity(a) === identity(b)) {
+  const key = p => p.pid ? `pid:${p.pid}` : `name:${String(p.full || p.name).trim().toLowerCase()}`;
+  const sitting = new Set();
+  for (const p of people || []) if (p.current && same(p.party_now || p.party, label)) sitting.add(key(p));
+  const party = (people || []).flatMap(p => [p.party, ...(p.parties || [])]).find(l => l && same(l, label)) || label;
+  return {count: sitting.size, party};
+}
+/** The meta line's parts in order: the party's chip (or what independents are), how many sit for it
+ *  now, and its years in the record. Each part after the first carries its dot (app.js tagLineHTML).
+ *  The sitting count is said only beside the years. `sitting` is partySitting's, or null. */
+export function partyTagLineHTML({lead, sitting = null, active = ''}, h) {
+  const now = active && sitting?.count
+    ? `<a class="party-sitting" href="/subject/person?${new URLSearchParams({party: sitting.party})}">${h.esc(`${sitting.count.toLocaleString('en-AU')} marked current in the directory`)}</a>` : '';
+  return [lead, now, active ? `<span class="entry-active">${h.esc(active)}</span>` : '']
+    .filter(Boolean).map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join('');
+}
+/** The meta line's years. A party on the money map: its own returns' years, as app.js returnsSpan says
+ *  them ("Returns 1998–99 to 2024–25"); any other: its members' years in the record, as app.js
+ *  renderRosterParty says them with yearSpan. Empty when there are none. */
+export function partyYearsText({first = null, last = null, returns = false, independent = false} = {}) {
+  if (returns) {
+    if (!first && !last) return '';
+    const year = value => fy(`${value}-${String((Number(value) + 1) % 100).padStart(2, '0')}`);
+    return first === last || !last || !first ? `Returns in ${year(first || last)}` : `Returns ${year(first)} to ${year(last)}`;
+  }
+  if (!first || first >= 9999) return '';
+  return `${independent ? 'Parliamentarians' : 'Members'} in the record ${first === last || !last ? String(first) : `${first}–${last}`}`;
+}
+/** The head's money line (latestReturnLine), linked to the receipts block it leads. */
+export function partyReturnLineHTML(line, h) {
+  return line?.text ? `<p class="party-return-line"><a href="#party-receipts">${h.esc(line.text)}</a></p>` : '';
+}
+/** The two icons the head's one drawn action uses, as app.js ICONS draws them (a test holds them equal). */
+export const HEAD_ICONS = {
+  search: '<circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/>',
+  map: '<circle cx="6" cy="7" r="2.2"/><circle cx="14" cy="5.5" r="1.7"/><circle cx="12" cy="13.5" r="2.6"/><path d="M7.9 8.1l2.4 3.3M13.3 7.1l-.7 4"/>',
+};
+/** The head's actions: one drawn action, then ⋯ (page-actions-menu.js pageMenuHTML). */
+export function partyActionsHTML(primary, menu) {
+  return `<div class="page-actions entry-actions">${primary || ''}${menu || ''}</div>`;
+}
+/** The blocks of a party's page that the "On this page" rail will list, in app.js PARTY_RAIL's
+ *  terms, as far as the page's own files say: the rail is drawn at that length at once, so on a
+ *  phone, where it sits above the record, the record is not pushed down as the blocks arrive.
+ *  "Bills they divided on" and "In parliament" hold their places from the start; the news is
+ *  never assumed. */
+export function partyRailBlocks({money = false, members = false, sponsored = false, state = false, returns = null} = {}) {
+  const entry = returns?.entry;
+  return [
+    money && 'entry-flows', members && 'party-members', sponsored && 'party-sponsored-bills', state && 'party-state-money',
+    (returns?.rows || []).some(r => String(r?.[0] || '') && Number(r?.[1]) > 0) && 'party-receipts',
+    (entry?.debts || entry?.benefits) && 'party-debts', (entry?.associated_entities || []).length > 0 && 'party-entities',
+    'party-bills', 'entry-mentions',
+  ].filter(Boolean);
+}
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
 export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and other people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
