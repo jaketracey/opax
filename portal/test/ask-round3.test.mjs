@@ -206,7 +206,7 @@ test('with transcript excerpts held, a quotation is checked against what its poi
   assert.match(term.answer, /became known as/)
 })
 
-test('repeated final grounding of an unsplit transcript record never restores the tool block, and keeps the draft as paraphrase',()=>{
+test('repeated final grounding of an unsplit transcript record never restores the tool block, and a fabricated quotation cited to it is removed with its words',()=>{
   const source={resource:'fact-1',slug:'',kind:'record',title:text,snippet:text,url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',href:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',cited:true}
   const fallback=api.proseFallback({...input(),facts:[{id:1,text,source}]})
   assert.doesNotMatch(fallback.answer,/PDF page|CC BY|transcript page|©/)
@@ -216,7 +216,9 @@ test('repeated final grounding of an unsplit transcript record never restores th
   let out={answer:draft,answer_decision:'answer',citations:{'fact-1/t/body/0':[[0,Array.from(draft).length]]},sources:[source]}
   for(let i=0;i<3;i++)out=api.groundAnswerPayload(out,input().question)
   assert.doesNotMatch(out.answer,/PDF page|CC BY|transcript page|©|“/)
-  assert.match(out.answer,/^Invented Witness said A fabricated quote/);validRanges(out)
+  // The only sentence went (before 16 Nov 2026 its marks came off and the words stayed): the fixed line, uncited,
+  // and the same on every later pass.
+  assert.equal(out.answer,'OPAX cannot establish the requested answer from the selected records.');assert.deepEqual(out.citations,{});validRanges(out)
 })
 
 test('Victorian ministerial gifts also filter chamber and register period before pagination',async()=>{

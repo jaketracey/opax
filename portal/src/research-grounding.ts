@@ -9,7 +9,9 @@ import {passageExcerpt} from './research-evidence'
 import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
-import {repairQuotes,MACHINE_LABELS,EMPTY_WORDS} from './research-evidence'
+import {repairQuotes,MACHINE_LABELS,EMPTY_WORDS,quotationFails,NO_SUPPORTED_ANSWER} from './research-evidence'
+import {TRANSCRIPT_LABEL} from './transcript-answer'
+export {NO_SUPPORTED_ANSWER}
 import {distinctSummary} from './research-writing'
 import {leadWithWho} from './research-who-lead'
 type SelectedSource=WritingInput['facts'][number]['source']
@@ -157,18 +159,45 @@ export function withoutMachineLabels<T extends Record<string,unknown>>(payload:T
   const out=cleaned(true)
   return /[\p{L}\p{N}]/u.test(String(out.answer??''))?out:cleaned(false)
 }
-/** Quoted words stay quoted only when a source the sentence cites (or, for an uncited sentence, any source of the
- * answer) holds them verbatim; otherwise the marks come off and the words stand as paraphrase. */
+const hearingTranscript=(s:SelectedSource)=>`${String(s.snippet??'')} ${String((s as {title?:unknown}).title??'')}`.includes(TRANSCRIPT_LABEL)
+/** The final check on quotations, for every answer on its way out (written, the research model's own, salvaged, and
+ * each streamed preview before it is shown).
+ * - A sentence checked against a hearing transcript (it cites one, or cites nothing while a transcript is among the
+ *   answer's sources) whose quotation those sources do not hold word for word is removed, words and all. Taking only
+ *   the marks off would leave the words, and any name in them, standing as the answer's own prose. If nothing is left,
+ *   the answer is the fixed line NO_SUPPORTED_ANSWER, with no citation.
+ * - Any other sentence keeps the rule of 13 November 2026: quoted words stay quoted only when a source the sentence
+ *   cites (or, for an uncited sentence, any source of the answer) holds them verbatim; otherwise the marks come off
+ *   and the words stand as paraphrase. */
 function withCheckedQuotes(payload:Record<string,unknown>):Record<string,unknown> {
   const text=String(payload.answer??''),sources=(Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]
-  return rewriteAnswerPayload(payload,replace=>{
+  let removed=0
+  const out=rewriteAnswerPayload(payload,replace=>{
     for(const part of sentenceParts(text).reverse()){
       const from=Array.from(text.slice(0,part.at)).length,until=from+Array.from(part.text).length
       const ids=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<until&&r[1]>from)).map(([id])=>id)
       const cited=sources.filter(s=>ids.some(id=>id===s.resource||id.startsWith(s.resource+'/')))
-      const evidence=(cited.length?cited:sources).map(s=>String(s.snippet??'')).join('\n')
+      const against=cited.length?cited:sources
+      const evidence=against.map(s=>String(s.snippet??'')).join('\n')
+      if(against.some(hearingTranscript)&&quotationFails(part.text,evidence)){
+        // The sentence goes with the list marker and spacing that led it, and its line when it was alone on one.
+        const line=text.lastIndexOf('\n',part.at-1)+1,led=/^\s*(?:[-*]\s*)?$/.test(text.slice(line,part.at))
+        let start=led?line:part.at,end=part.at+part.text.length
+        while(text[end]===' '||text[end]==='\t')end++
+        if(led&&text[end]==='\n')end++
+        else if(!led&&(end===text.length||text[end]==='\n'))while(start>line&&/[ \t]/.test(text[start-1]))start--
+        replace(new RegExp(`(?<=^[\\s\\S]{${start}})[\\s\\S]{${end-start}}`,'g'),'')
+        removed++
+        continue
+      }
       const checked=repairQuotes(part.text,evidence,()=>{})
       if(checked!==part.text)replace(new RegExp(`(?<=^[\\s\\S]{${part.at}})[\\s\\S]{${part.text.length}}`,'g'),checked)
     }
   })
+  if(!removed)return out
+  researchTrace('grounding.transcript_quote_removed',{removed})
+  // Blank lines and trailing space left where a sentence stood are closed up, with the citations kept in step.
+  if(/[\p{L}\p{N}]/u.test(String(out.answer??'')))return rewriteAnswerPayload(out,replace=>{replace(/\n{3,}/g,'\n\n');replace(/\s+$/g,'')})
+  // Nothing is left: the fixed line, with nothing cited. Never an empty answer, and no second attempt into the same shape.
+  return {...out,answer:NO_SUPPORTED_ANSWER,citations:{},sources:sources.map(s=>(s as {cited?:unknown}).cited===true?{...s,cited:false}:s)}
 }
