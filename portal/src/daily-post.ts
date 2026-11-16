@@ -281,7 +281,10 @@ function withCredits(caption: string | undefined, url: string, used: StoryPhoto[
 function told(post: DailyPost, slides: (StorySlide | null)[], photos: StoryPhotos): DailyPost {
   const kept = slides.filter((s): s is StorySlide => !!s)
   if (!validStory(kept)) return post
-  return { ...post, caption: withCredits(post.caption, post.url, photos.used), slides: kept }
+  // Every caption that goes out with a photograph carries its credit: the licence requires the attribution, and the
+  // caption is where it is printed. That is the app-facing caption and the channels' own.
+  return { ...post, caption: withCredits(post.caption, post.url, photos.used),
+    ...(post.channel_caption ? { channel_caption: withCredits(post.channel_caption, post.url, photos.used) } : {}), slides: kept }
 }
 
 /** Takes the n-th approved photograph for the edition, remembering it for the credit line. */
@@ -513,14 +516,16 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   // For the channels, the day a bill passed is the day the record says it passed. `status_as_of` on a passed bill is
   // the day of Royal Assent, usually some days later, so it is named as that and only when no passing day is recorded.
   const standing = billStanding(bill, record)
-  const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : ''
+  // The channels' own copy carries no em dash, including one that came in a stored summary sentence.
+  const plainDash = (text: string) => text.replace(/\s*\u2014\s*/g, ', ')
+  const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${plainDash(s)}`).join('\n')}` : ''
   const post: DailyPost = {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
     // What the apps show under their own label: unchanged.
     text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
     record_text: billPostText(bill, sentences[0], standing ?? statusShort, by, url),
     // Facebook and Instagram: the caption opens by saying a model wrote the summary, once.
-    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${sentences[0]}`, bill.title,
+    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${plainDash(sentences[0])}`, bill.title,
       bill.status === 'passed' && standing ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.` : status,
       more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
     caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
@@ -1107,23 +1112,27 @@ export async function composeDailyPost(date: string, sources: DailyPostSources, 
 export function authoriseVicPost(post: DailyPost, victorianMember = false): DailyPost {
   if(post.donor){
     const donor=donorDisclosure(post.donor)
-    const reference=`${post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor'}: ${donor.name}, ${returnReference(donor.returns[0] || {}) || donor.reference}`
+    const label=post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor', where=returnReference(donor.returns[0] || {}) || donor.reference
+    const reference=`${label}: ${donor.name}, ${where}`
+    // An edition stored before the dash was replaced carries the same reference spelled with it. It is the same
+    // reference: found either way, it is not added a second time.
+    const stated=(text:string)=>text.includes(reference) || text.includes(`${label}: ${donor.name} \u2014 ${where}`)
     // A source-only reference is no donation: its post points at the source, not at its page.
     const nameLink=donor.href && post.donor.kind!=='reference' ? new URL(donor.href,ORIGIN).href : null
     const source=post.donor.returnReferences?.[0]?.url || `${ORIGIN}/money/receipts`
     const url=/\/subject\/(?:donor|person|organisation)\//.test(post.url) ? nameLink || source : post.url
-    const append=(text:string)=>text.includes(reference) ? text : [reference,text].filter(Boolean).join('. ')
+    const append=(text:string)=>stated(text) ? text : [reference,text].filter(Boolean).join('. ')
     const slides=post.slides?.map(slide=>{
       const shown=slide.type==='cover' || slide.type==='division' ? {...slide,line:append(slide.line || '')}
-        : slide.type==='source' ? {...slide,rows:slide.rows.includes(reference) ? slide.rows : [reference,...slide.rows],url}
+        : slide.type==='source' ? {...slide,rows:slide.rows.some(stated) ? slide.rows : [reference,...slide.rows],url}
         : slide.type==='list' ? {...slide,note:append(slide.note || '')}
-        : {...slide,lines:slide.lines.includes(reference) ? slide.lines : [reference,...slide.lines]}
+        : {...slide,lines:slide.lines.some(stated) ? slide.lines : [reference,...slide.lines]}
       return {...shown,alt:append(slide.alt)} as StorySlide
     })
     const caption=post.caption || post.text
-    const text=post.text.includes(reference) ? post.text : fit([reference],[post.text.replaceAll(post.url,'').trim()],url)
+    const text=stated(post.text) ? post.text : fit([reference],[post.text.replaceAll(post.url,'').trim()],url)
     post={...post,donor:{...post.donor,match:post.donor.match ? {...post.donor.match,href:donor.href} : undefined},url,text,
-      caption:caption.includes(reference)?caption:caption+'\n\n'+reference,slides}
+      caption:stated(caption)?caption:caption+'\n\n'+reference,slides}
   }
   const material = [post.title, post.text, post.caption, post.record_text, post.channel_caption, post.url, JSON.stringify(post.slides ?? [])].join(' ')
   if (!victorianMember && !post.authorisation && !vicElectionMaterial(material)) return post

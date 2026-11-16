@@ -159,3 +159,87 @@ test('the share image is redrawn for links already shared, its alt text says who
     assert.deepEqual(strings.filter(s => /\u2014/.test(s)), [], file);
   }
 });
+
+// ---------------------------------------------------------------- with photographs
+const catalogue = { photos: {
+  senate: { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://example.test/senate', author: 'Jo Sample', licence: 'CC BY-SA 3.0', credit: 'Photo: Jo Sample, CC BY-SA 3.0, via Wikimedia Commons' },
+  house: { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://example.test/house', author: 'Kim Sample', licence: 'CC BY-SA 4.0', credit: 'Photo: Kim Sample, CC BY-SA 4.0, via Wikimedia Commons' },
+}, subjects: {}, kinds: { 'bill:senate': ['senate', 'house'], 'bill:representatives': ['house', 'senate'], bill: ['senate', 'house'] } };
+const pictured = key => { const base = sources(key); return { ...base, asset: async path => path === '/social/photos.json' ? catalogue : base.asset(path) }; };
+
+test('every caption that goes out with a photograph carries its credit paragraph', async () => {
+  for (const key of ['au-federal-x1', 'au-federal-x2', 'au-federal-x3']) {
+    const post = await composeDailyPost('2026-11-17', pictured(key), 'bill');
+    assert.ok(post.slides?.length >= 3 && post.slides[0].photo, key + ': the story has a photograph');
+    const credit = /Photos?: (?:Jo|Kim) Sample, CC BY-SA \d\.0, via Wikimedia Commons\./;
+    // The app-facing caption, as on main, and the channels' own caption: the credit is the paragraph before the link.
+    for (const [name, text] of [['caption', post.caption], ['channel_caption', post.channel_caption]]) {
+      const paragraphs = text.split('\n\n');
+      assert.match(paragraphs.at(-2), credit, `${key} ${name}: the credit paragraph`);
+      assert.equal(paragraphs.at(-1), post.url, `${key} ${name}: the link closes the caption`);
+      assert.equal(text.split('via Wikimedia Commons').length - 1, paragraphs.at(-2).split('via Wikimedia Commons').length - 1, 'said once');
+    }
+    // What Facebook and Instagram are actually sent, with the slides they carry.
+    for (const channel of ['facebook', 'instagram']) {
+      const copy = publicationCopy(post, channel);
+      assert.ok(copy.slides?.length >= 3, `${key} ${channel}: posts the photographs`);
+      assert.match(copy.text, credit, `${key} ${channel}: the photo credit is in the caption`);
+      assert.ok(copy.text.startsWith('Machine-written summary: '), channel);
+    }
+    // X and Bluesky post the single card with no slide photographs, and their text carries no credit, as on main.
+    assert.doesNotMatch(publicationCopy(post, 'x').text, /Wikimedia/);
+  }
+  // No photograph, no credit paragraph: nothing is invented.
+  const bare = await compose('au-federal-x1');
+  assert.doesNotMatch(bare.channel_caption, /Photo/);
+});
+
+test('a bill\'s slides are what main draws from: the stored cover, list and source, with their photographs', async () => {
+  const post = await composeDailyPost('2026-11-17', pictured('au-federal-x1'), 'bill');
+  assert.deepEqual(post.slides.map(s => s.type), ['cover', 'list', 'source']);
+  const [cover, list] = post.slides;
+  assert.deepEqual({ type: cover.type, kicker: cover.kicker, title: cover.title, line: cover.line, photo: cover.photo, alt: cover.alt }, {
+    type: 'cover', kicker: 'Bill · Alex Example (Independent)', title: 'Example Reporting Amendment',
+    line: `${S1} Introduced 7 Sep 2026; before parliament.`, photo: 'senate',
+    alt: `Example Reporting Amendment Bill 2026. ${S1} Introduced 7 Sep 2026; before parliament.` });
+  assert.deepEqual(list, { type: 'list', kicker: 'What it does', title: 'In three sentences', items: [S1, S2, S3], note: 'Written by a model from the explanatory memorandum; not the record.', alt: `What it does: ${S1} ${S2} ${S3}` });
+  // The slides do not depend on the channel copies: the same with them taken off.
+  assert.deepEqual(without(post).slides, post.slides);
+});
+
+test('an em dash inside a stored summary sentence does not reach the channels\' caption; the app-facing strings keep the sentence as stored', async () => {
+  const dashed = 'It would be run by three independent commissioners—including a First Nations commissioner.';
+  const src = { ...sources('au-federal-x1'), asset: async path => path === '/bills/index.json' ? { bills: [index.bills[0]] } : path === '/bills/au-federal-x1.json' ? { ...files['au-federal-x1'], summary: { sentences: [dashed, 'It would report each year — to both houses.'] } } : null };
+  const post = await composeDailyPost('2026-11-17', src, 'bill');
+  assert.ok(post.channel_caption.startsWith('Machine-written summary: It would be run by three independent commissioners, including a First Nations commissioner.'));
+  assert.ok(post.channel_caption.includes('• It would report each year, to both houses.'));
+  for (const channel of ['facebook', 'instagram', 'x', 'bluesky']) assert.doesNotMatch(publicationCopy(post, channel).text, /[–—]/, channel);
+  assert.ok(post.caption.startsWith(dashed), 'the app-facing caption is as stored');
+  assert.ok(post.text.startsWith(dashed));
+});
+
+test('the donor reference is printed once when an edition stored in main\'s form is authorised by this code', async () => {
+  const source = { id: 'donor:source-only', kind: 'reference', label: 'SOURCE, GRAHAM', source_name: 'SOURCE, GRAHAM', match: { confidence: 0, method: 'unresolved', href: null }, returnReferences: [{ return_type: 'GrantConnect source record; electoral identity unconfirmed', year: '2024-25', transaction_id: 'GA-FIXTURE-7', url: 'https://example.test/grant/7' }] };
+  const fresh = { date: '2026-10-13', kind: 'grant', subject: 'fixture', title: source.label, text: 'A recorded grant award.', url: 'https://opax.test/subject/donor/SOURCE', donor: source,
+    slides: [{ type: 'cover', kicker: 'Source', title: source.label, line: 'A grant award.', photo: null, alt: source.label }, { type: 'number', kicker: 'The award', title: 'What the record says', lines: ['One line.'], value: '$1', label: 'x', alt: 'x' }, { type: 'source', kicker: 'Check it', title: 'x', rows: ['A row.'], url: 'opax.com.au', alt: 'x' }] };
+  // As this code writes it today: the reference with a comma, once in each place.
+  const now = authoriseVicPost(fresh);
+  const reference = /Source reference: SOURCE, GRAHAM, [^\n]*GA-FIXTURE-7[^\n.]*/.exec(now.text)[0];
+  const count = (text, part) => text.split(part).length - 1;
+  // The same edition as main stored it: every comma-form reference spelled with main's dash, joined with main's dash.
+  const mainForm = reference.replace('SOURCE, GRAHAM, ', 'SOURCE, GRAHAM — ');
+  const asMain = JSON.parse(JSON.stringify(now).replaceAll(JSON.stringify(reference).slice(1, -1) + '. ', JSON.stringify(mainForm).slice(1, -1) + ' — ').replaceAll(JSON.stringify(reference).slice(1, -1), JSON.stringify(mainForm).slice(1, -1)));
+  assert.ok(asMain.text.includes(mainForm) && !asMain.text.includes(reference), 'the stored copy is in main\'s spelling');
+  // Published after the deploy: authorised again by this code, as every publish does.
+  const again = authoriseVicPost(asMain);
+  for (const [name, text] of [['text', again.text], ['caption', again.caption], ['cover line', again.slides[0].line], ['cover alt', again.slides[0].alt], ['source rows', again.slides[2].rows.join('\n')], ['number lines', again.slides[1].lines.join('\n')]]) {
+    assert.equal(count(text, 'GA-FIXTURE-7'), 1, name + ': the reference is there once: ' + text.slice(0, 200));
+  }
+  // The stored text keeps its fact and is not rebuilt around a second reference.
+  assert.equal(again.text, asMain.text);
+  assert.equal(again.caption, asMain.caption);
+  assert.deepEqual(again.slides, asMain.slides);
+  assert.ok(again.text.includes('A recorded grant award.'), 'the fact is still in the X text');
+  // And an edition composed now is stable when authorised twice.
+  assert.deepEqual(authoriseVicPost(now), now);
+});
