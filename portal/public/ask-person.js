@@ -1,4 +1,4 @@
-import {machineLabelHTML} from './labels.js?v=089e313b8b';
+import {machineLabelHTML} from './labels.js?v=322a0b7d4b';
 
 // Suggestions use only this answer and its public-record context. No model call.
 export function personFollowups(answer, sources = [], context) {

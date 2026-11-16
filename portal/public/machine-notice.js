@@ -5,6 +5,9 @@ export const MACHINE_NOTICE = 'Machine-written answers can contain errors. Check
 // For stored machine-written text (a record's brief, a bill's summary, the year in brief, a report's generated
 // summary): text a model wrote earlier, which is a summary and not an answer to anyone's question.
 export const MACHINE_NOTICE_STORED = 'Machine-written summaries can contain errors. Check the original record before relying on one.'
+// The two words that go with a stored summary where there is no room for the line and no label can be drawn: a
+// share image, the text of a social post.
+export const MACHINE_SUMMARY_WORDS = 'Machine-written summary.'
 // For an answer that cites a hearing transcript (public/transcript-note.js decides which answers do).
 export const MACHINE_NOTICE_TRANSCRIPT = 'Machine-written answers can contain errors. Check the original transcript before relying on it.'
 

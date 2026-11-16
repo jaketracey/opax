@@ -8,7 +8,7 @@
    module's graph so the analytics bundle (events.js reaches labels.js through
    growth-modules.js) never carries it. */
 import { shortDate } from './format.js';
-import { MACHINE_NOTICE, MACHINE_NOTICE_STORED } from './machine-notice.js?v=d1b3e4edf1';
+import { MACHINE_NOTICE, MACHINE_NOTICE_STORED } from './machine-notice.js?v=82d9411d51';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);

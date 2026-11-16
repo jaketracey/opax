@@ -12,6 +12,7 @@ import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
+import { MACHINE_SUMMARY_WORDS } from './machine-notice'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
@@ -502,11 +503,26 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
     : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : `Introduced ${formatDate(bill.introduced)}; before parliament.`
   const post: DailyPost = {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
-    text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
+    text: billPostText(bill, sentences[0], statusShort, by, url),
     caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
   }
   const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort })
   return told(post, story.slides, story.photos)
+}
+
+/**
+ * The short post text for a bill (X, Bluesky, the app's edition card). It is written from the record: the bill's
+ * name, where it stands and on what date, and its sponsor or portfolio. A model's summary sentence is used only when
+ * the record gives no dated fact to state, and then it follows the words "Machine-written summary.".
+ */
+export function billPostText(bill: BillIndexItem, sentence: string, statusShort: string, by: string, url: string): string {
+  const name = clip(bill.short_title || bill.title, 110)
+  const dated = bill.status === 'passed' ? bill.status_as_of : bill.introduced
+  if (dated) {
+    const who = by.trim().replace(/^by\s+/, 'Sponsor: ').replace(/^\((.+) portfolio\)$/, '$1 portfolio')
+    return fit([name, statusShort], [who ? `${who.replace(/\.$/, '')}.` : ''], url)
+  }
+  return fit([`${MACHINE_SUMMARY_WORDS} ${clip(sentence, 120)}`], [name], url)
 }
 
 interface BillDivision { key?: string; date?: string; house?: string; stage?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }

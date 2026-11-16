@@ -166,7 +166,7 @@ import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote, transcriptNoteResponse } from './transcript-answer'
-import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse } from './machine-notice'
+import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse, MACHINE_SUMMARY_WORDS } from './machine-notice'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
 import { serveMedia } from './media'
@@ -5156,7 +5156,8 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       publisher,
     },
     prerender: prerenderBlock(name, `${facts} ${tail}`),
-    card: { kicker: summary ? 'Bill summary' : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
+    // A card whose headline is the summary's first sentence says who wrote it, in the image itself (machine-notice.js).
+    card: { kicker: summary ? `Bill · ${MACHINE_SUMMARY_WORDS}` : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
   }
 }
 

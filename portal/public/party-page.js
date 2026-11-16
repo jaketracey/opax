@@ -6,7 +6,7 @@ import {fy} from './money-scope.js';
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=089e313b8b';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=322a0b7d4b';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=9ce13e7ba5';
 // sponsor-party-aliases:begin
 // Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
@@ -56,7 +56,7 @@ const SPONSOR_PARTY_ALIASES = {
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=089e313b8b';
+export * from './labels.js?v=322a0b7d4b';
 export * from './canonical-urls.js?v=9ce13e7ba5';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();

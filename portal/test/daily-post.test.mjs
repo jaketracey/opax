@@ -6,7 +6,7 @@ const built = await build({ entryPoints: [new URL('../src/daily-post.ts', import
 const dailyPost = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const {
   kindFor, seededPick, fit, xLength, prettySponsor, prettyParty, formatDate, joinList,
-  composeDailyPost, oauth1Header, X_LIMIT, clip, grantPostFor, shortMoney, dayWords, creditParagraph,
+  composeDailyPost, billPostText, oauth1Header, X_LIMIT, clip, grantPostFor, shortMoney, dayWords, creditParagraph,
   WEEK, programEraFor, grantHook, purposePhrase, selectionLine, wholePercents, programUrl, largestUrl, programSplit,
 } = dailyPost;
 const { validStory, storyFrames } = await import('../src/story.ts');
@@ -214,38 +214,65 @@ test('politician publisher keeps a colliding roster row at its distinct canonica
   assert.equal(post.slides.find(s=>s.type==='source').url,post.url.replace(/^https:\/\//,''));
 });
 
-test('bill post uses the summary sentences and a readable sponsor', async () => {
+test('bill post text is written from the record; the summary sentences stay in the caption under their marker', async () => {
   const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(post.kind, 'bill');
   assert.equal(post.subject, 'bill:au-federal-r7537');
-  assert.ok(post.text.startsWith('This bill would require providers'));
-  assert.ok(post.text.includes('before parliament.'));
+  // The short text (X, Bluesky, the app's edition card): the bill's name, where it stands and its sponsor. No model sentence.
+  assert.equal(post.text, 'AI Kill Switch and Data Centre Control Bill 2026\n\nIntroduced 7 Sep 2026; before parliament.\n\nSponsor: Andrew Gee (Independent).\n\nhttps://opax.com.au/bill/au-federal-r7537');
+  assert.ok(!post.text.includes('This bill would require providers'));
+  assert.ok(!post.text.includes('Machine-written'), 'nothing a model wrote is in it, so no marker is needed');
   assert.ok(post.caption.includes('Introduced 7 Sep 2026 by Andrew Gee (Independent).'));
+  // The long caption keeps the summary, under the marker it already carried.
   assert.ok(post.caption.includes('Machine-written summary;'));
-  assert.ok(post.text.includes('This bill would require providers'));
+  assert.ok(post.caption.startsWith('This bill would require providers'));
   assert.ok(!post.text.includes('A third sentence'));
   assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-r7537'));
   assert.ok(xLength(post.text) <= X_LIMIT);
   const passed = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7537', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(passed.subject, 'bill:au-federal-r7400', 'lapsed bills are never featured; a recent passed bill is');
   assert.ok(passed.caption.includes('Passed 20 Aug 2026. Introduced 1 Mar 2026 (Treasury portfolio).'));
+  assert.equal(passed.text, 'Recently Passed Bill 2026\n\nPassed 20 Aug 2026.\n\nTreasury portfolio.\n\nhttps://opax.com.au/bill/au-federal-r7400');
+});
+
+test('bill post text: with no dated fact in the record, the summary sentence follows the words "Machine-written summary."', () => {
+  const url = 'https://opax.com.au/bill/example-1', sentence = 'It would move the annual reporting date to 1 July.';
+  // No introduction date recorded: nothing dated to state, so the summary stands in, marked.
+  const undated = billPostText({ key: 'example-1', title: 'Example Reporting Amendment Bill 2026', status: 'before_parliament' }, sentence, 'Introduced ; before parliament.', '', url);
+  assert.equal(undated, 'Machine-written summary. It would move the annual reporting date to 1 July.\n\nExample Reporting Amendment Bill 2026\n\n' + url);
+  assert.ok(xLength(undated) <= X_LIMIT);
+  // A passed bill with no passage date recorded is the same case.
+  assert.ok(billPostText({ key: 'example-1', title: 'Example Bill 2026', status: 'passed', introduced: '2026-03-01' }, sentence, 'Passed .', '', url).startsWith('Machine-written summary. '));
+  // With a date, the record speaks, and a long name or sponsor never pushes the text over the limit.
+  const long = billPostText({ key: 'example-1', title: 'An Example Bill With A Very Long Official Name '.repeat(6).trim() + ' 2026', status: 'before_parliament', introduced: '2026-03-01' }, sentence, 'Introduced 1 Mar 2026; before parliament.', ' by Alex Example (Independent)', url);
+  assert.ok(xLength(long) <= X_LIMIT);
+  assert.ok(!long.includes('Machine-written') && !long.includes(sentence));
+  assert.ok(long.includes('Introduced 1 Mar 2026; before parliament.') && long.endsWith(url));
+  assert.doesNotMatch(undated + long, /[\u2013\u2014]/);
 });
 
 test('an exposure draft is a bill candidate and says it is a draft', async () => {
   const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-r7537']), 'bill');
   assert.equal(post.subject, 'bill:au-federal-ed-draft-2026');
   assert.ok(post.caption.includes('Exposure draft released 8 Sep 2026 (Communications portfolio). Not yet introduced to parliament.'), post.text);
-  assert.ok(post.text.includes('It would impose a duty of care on covered digital platforms.'));
-  assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-ed-draft-2026'));
+  // The short text states the draft's status from the record; the summary sentence is in the caption only.
+  assert.equal(post.text, 'Draft Bill 2026\n\nDraft released 8 Sep 2026; not introduced.\n\nCommunications portfolio.\n\nhttps://opax.com.au/bill/au-federal-ed-draft-2026');
+  assert.ok(post.caption.startsWith('It would impose a duty of care on covered digital platforms.'));
+  assert.ok(post.caption.includes('Machine-written summary;'));
 });
 
-test('a long first summary sentence is clipped to fit rather than dropped', async () => {
+test('a long first summary sentence stays out of the short text, and a marked one is clipped to fit rather than dropped', async () => {
   const long = { ...billFiles, 'au-federal-r7537': { summary: { sentences: ['This bill changes the Customs Tariff Act 1995 to remove customs duties on goods brought in under the Geelong Treaty, a nuclear submarine partnership agreement with the United Kingdom signed on 26 July 2025, and it goes on and on well past the character budget.'] } } };
   const src = { ...sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), async asset(path) { const m = path.match(/^\/bills\/(.+)\.json$/); return m && m[1] !== 'index' ? long[decodeURIComponent(m[1])] : sources().asset(path); } };
   const post = await composeDailyPost('2026-09-10', src, 'bill');
-  assert.ok(post.text.includes('This bill changes the Customs Tariff Act 1995'), post.text);
-  assert.ok(post.text.includes('…'));
+  assert.ok(!post.text.includes('This bill changes the Customs Tariff Act 1995'), post.text);
+  assert.ok(post.caption.startsWith('This bill changes the Customs Tariff Act 1995'));
   assert.ok(xLength(post.text) <= X_LIMIT);
+  // Where the record has no dated fact, the same long sentence is marked, then clipped to fit.
+  const marked = billPostText({ key: 'au-federal-r7537', title: 'AI Kill Switch and Data Centre Control Bill 2026', status: 'before_parliament' }, long['au-federal-r7537'].summary.sentences[0], '', '', 'https://opax.com.au/bill/au-federal-r7537');
+  assert.ok(marked.startsWith('Machine-written summary. This bill changes the Customs Tariff Act 1995'), marked);
+  assert.ok(marked.includes('…'));
+  assert.ok(xLength(marked) <= X_LIMIT);
   assert.equal(clip('short', 10), 'short');
   assert.equal(clip('the quick brown fox jumps', 16), 'the quick brown…');
 });
@@ -291,7 +318,8 @@ test('bill publication skips future dates and missing summaries', async () => {
   } };
   const post=await composeDailyPost('2026-09-14',src,'bill');
   assert.equal(post.subject,'bill:au-federal-r7537');
-  assert.ok(post.text.startsWith('This bill would require'));
+  assert.ok(post.text.startsWith('AI Kill Switch and Data Centre Control Bill 2026'));
+  assert.ok(post.caption.startsWith('This bill would require'));
 });
 
 test('OAuth 1.0a signature matches the reference vector from the X docs', async () => {

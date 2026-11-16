@@ -26,6 +26,17 @@ test('financial result links stay on the current site while exports use canonica
  assert.equal(context.searchResultUrl(row),'https://opax.com.au'+row.href);
  const csv=context.sourcesCSV([row],[]);assert.match(csv,/https:\/\/opax.com.au\/subject\/supplier\/s-123\?contract=CN42/);assert.doesNotMatch(csv,/\/doc\/catalog/);
 });
+test('the CSV export says which rows carry model-written text, in a machine_written column',()=>{
+ const rows=[{slug:'catalog-7',href:'/bill/example-1',kind:'bill',title:'Example Reporting Amendment Bill 2026',snippet:'Before the Senate. Moves the reporting date.',machine:true},
+  {slug:'catalog-8',href:'/bill/example-2',kind:'bill',title:'Example Customs Bill 2026',snippet:'Before the House.'},
+  {slug:'speech-42',kind:'speech',title:'Alex Example: Budget',speaker:'Alex Example',snippet:'The papers show the figure.',machine:'true'}];
+ const lines=context.sourcesCSV(rows,[]).trimEnd().split('\n').filter(line=>!line.startsWith('#'));
+ assert.equal(lines[0],'slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url,excerpt_label,machine_written');
+ // The new column is last, so a reader of the old columns by position is undisturbed; only the flag itself counts.
+ assert.deepEqual(lines.slice(1).map(line=>line.split(',').at(-1)),['true','false','false']);
+ assert.equal(lines.length,4);
+ for(const line of lines) assert.equal(line.split(',').length,13,line);
+});
 test('official external links retain their origin and unsafe links are rejected',()=>{
  assert.equal(context.searchResultHref({href:'https://foreigninfluence.ag.gov.au/Profile/42'}),'https://foreigninfluence.ag.gov.au/Profile/42');
  assert.equal(context.searchResultHref({href:'javascript:alert(1)',slug:'speech-42'}),'/doc/speech-42');
