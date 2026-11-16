@@ -32,6 +32,9 @@ export interface WritingFact { bears_on?: string; evidenceId?: string; id: numbe
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
   said?: string[]
+  /** The transcript quotes-only switch is on (ask-flags.ts): hearing transcript excerpts are quoted by code, in the
+   * quotation block, and no model words them. */
+  quotesOnly?: boolean
   /** The research model's own answer call selected these facts (so an excerpt it gave no usable `bears_on` label was
    * not selected for any part of the question). Unset for a stopped run, where no selection was made. */
   selected?: boolean }
@@ -329,6 +332,53 @@ function factLine(text:string):string {
   if(rawToolEcho(text))return ''
   return text&&finish(text.replace(/[:;,\s]+$/,''))
 }
+/** A fact from a hearing transcript: a quotable turn, or any other row carrying the transcript label. */
+export const hearingFact = (f: WritingFact): boolean => !!f.transcript || f.text.includes(TRANSCRIPT_LABEL)
+/** Added to the writer's contract with the quotes-only switch on: its text stands above passages quoted by code. */
+export const ABOVE_BLOCK_RULE = ' Passages from hearing transcripts are quoted separately, after your text: write three sentences at most, about the other records you were given.'
+/** The fixed line the quotation block opens with. The evidence, not findings line stays the one the way out adds. */
+export const QUOTES_LEAD = 'These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.'
+const QUOTES_SHOWN = 6
+/** The label of the second quotation of a pair in a transcript that prints headings and no Q. and A. marks. */
+export const NEXT_TURN = 'The next turn in the transcript'
+const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+const heardOn = (date?: string): number => { const m = /^(\d{1,2}) ([A-Za-z]+) (\d{4})$/.exec(date ?? ''); return m ? Date.UTC(Number(m[3]), Math.max(0, MONTHS.indexOf(m[2].toLowerCase())), Number(m[1])) : Number.MAX_SAFE_INTEGER }
+const pageNumber = (page: string): number => { const digits = page.replace(/\D+/g, ''); return digits ? Number(digits) : Number.MAX_SAFE_INTEGER }
+/** The quotation block (transcript quotes-only switch): every line is built here from the published transcript text;
+ * no model words, orders or shortens any of it. Up to six excerpts in the order research selected them, duplicates
+ * removed, then shown in hearing date and page order. Each line gives the hearing day, date and transcript page and
+ * the whole excerpt in quotation marks. A short reply is preceded by the question it answered, quoted the same way
+ * with its own page. No speaker, role or name is written outside the quotation marks. With excerpts from more than
+ * one commission, each line opens with its commission's name. */
+function transcriptBlock(input: WritingInput): WrittenSentence[] | null {
+  const seen = new Set<string>()
+  const held = input.facts.filter(f => f.transcript && !f.coverage)
+  if (!held.length) return null
+  // The relevance floor: where the research model labelled its selection, only the excerpts whose label was kept are
+  // shown; with none kept, one fixed line stands where the block would, never passages nobody judged to be on point.
+  const labelled = held.filter(f => f.bears_on)
+  if (LABELLED_EXCERPTS_ONLY && input.selected && !labelled.length) return [{ text: NO_PASSAGE_SELECTED, facts: [] }]
+  const chosen = (LABELLED_EXCERPTS_ONLY && labelled.length ? labelled : held).filter(f => { const t = f.transcript!, id = `${t.date ?? ''}|${t.page}|${t.excerpt}`; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, QUOTES_SHOWN)
+  if (!chosen.length) return null
+  const ordered = chosen.map((f, i) => ({ f, i })).sort((a, b) => heardOn(a.f.transcript!.date) - heardOn(b.f.transcript!.date) || pageNumber(a.f.transcript!.page) - pageNumber(b.f.transcript!.page) || a.i - b.i).map(o => o.f)
+  const body = (f: WritingFact) => /^The transcript of (.+?)(?: on hearing day \d+| \(\d{1,2} [A-Z][a-z]+ \d{4}\)|, transcript page )/.exec(f.text)?.[1] ?? ''
+  const several = new Set(ordered.map(body)).size > 1
+  const lines: WrittenSentence[] = [{ text: QUOTES_LEAD, facts: [] }]
+  for (const f of ordered) {
+    const t = f.transcript!, name = several && body(f) ? `${body(f)}, hearing` : 'hearing'
+    const when = `${t.day ? `${name} day ${t.day}` : `${name} transcript`}${t.date ? ` (${t.date})` : ''}, transcript page `
+    const line = (label: string, page: string, words: string): WrittenSentence => { const head = `${label ? `${label}, ` : ''}${when}${page}`; return { text: `${head.replace(/^./, c => c.toUpperCase())}: “${words}”`, facts: [f.id] } }
+    // A marked question-and-reply pair is two quotations, each with its own page, under code-made labels.
+    if (t.question) lines.push(line('Question put', t.question.page, t.question.excerpt), line('Reply', t.page, t.excerpt))
+    else if (t.reply) lines.push(line('Question put', t.page, t.excerpt), line('Reply', t.reply.page, t.reply.excerpt))
+    // Headed turns, no marks: the turn that ends in a question, then the turn printed after it, under a label that
+    // says only that. Who speaks next is not read.
+    else if (t.next) lines.push(line('', t.page, t.excerpt), line(NEXT_TURN, t.next.page, t.next.excerpt))
+    else if (t.before) lines.push(line('', t.before.page, t.before.excerpt), line(NEXT_TURN, t.page, t.excerpt))
+    else lines.push(line('', t.page, t.excerpt))
+  }
+  return lines
+}
 /** The one place this rule is switched: where the research model labelled its selection, a code-quoted fallback shows
  * only the excerpts whose label was kept, and the fixed line NO_PASSAGE_SELECTED when none was. `selected` is set
  * only when the model's answer call carried labels (research-loop.ts); a call with none, or a stopped run, quotes the
@@ -338,6 +388,7 @@ const LABELLED_EXCERPTS_ONLY = true
  * whole as the tool cut it (280 characters at most). Cutting one to a single sentence left stubs like “Alright.” */
 const QUOTED_AS_RECORDED = 6
 function transcriptLines(input: WritingInput): WrittenSentence[] | null {
+  if (input.quotesOnly) return transcriptBlock(input)
   const held = input.facts.filter(f => f.transcript && !f.coverage)
   if (!held.length) return null
   // Where the research model made a selection, only the excerpts it labelled as answering the question are quoted;
@@ -432,6 +483,23 @@ export const emptyAnswer=(answer:string)=>!answer.trim()||EMPTY_ANSWERS.has(answ
 export function proseFallback(input: WritingInput): QualitativeAnswer {
   return { ...factsProse(input), machine_written: false }
 }
+/** The quotation block as an answer of its own (transcript quotes-only switch), or null with no quotable excerpt. */
+export function quotationBlock(input: WritingInput): QualitativeAnswer | null {
+  input = transcriptWritingInput({ ...input, quotesOnly: true })
+  const lines = transcriptBlock(input)
+  return lines ? { ...assemble(lines, input), answer_decision: 'answer', machine_written: false } : null
+}
+/** One fixed line as an answer part, with nothing cited (transcript quotes-only switch). */
+export const fixedLine = (text: string): QualitativeAnswer => ({ answer: text, citations: {}, sources: [], answer_decision: 'answer', machine_written: false })
+/** One answer after another: the second's text, citations and sources follow the first's, with nothing reworded. */
+export function joinWritten(first: QualitativeAnswer, second: QualitativeAnswer): QualitativeAnswer {
+  if (!first.answer.trim()) return second
+  const offset = Array.from(first.answer).length + 2, citations: QualitativeAnswer['citations'] = Object.fromEntries(Object.entries(first.citations).map(([id, ranges]) => [id, [...ranges]]))
+  for (const [id, ranges] of Object.entries(second.citations)) (citations[id] ??= []).push(...ranges.map(([a, b]): [number, number] => [a + offset, b + offset]))
+  const sources = [...first.sources]
+  for (const s of second.sources) { const at = sources.findIndex(o => o.resource === s.resource); if (at < 0) sources.push(s); else sources[at] = { ...sources[at], cited: sources[at].cited || s.cited, snippet: [...new Set([sources[at].snippet, s.snippet].filter(Boolean))].join('\n') } }
+  return { ...first, answer: `${first.answer}\n\n${second.answer}`, citations, sources, answer_decision: 'answer', ...eitherMachineWritten(first, second) }
+}
 function factsProse(input: WritingInput): QualitativeAnswer {
   input=transcriptWritingInput(moneyWritingInput(input))
   // Context records are retrieval aids, never selected calculation facts.
@@ -441,6 +509,13 @@ function factsProse(input: WritingInput): QualitativeAnswer {
   const lending=input.facts.filter(f=>f.source.receipt?.measure==='declared_debts')
   if(lending.length)input={...input,facts:[...lending,...input.facts.filter(f=>!lending.includes(f))]}
   const transcript = transcriptLines(input)
+  if (transcript && input.quotesOnly) {
+    // The other records as recorded, above the quotation block; a bare "cannot establish" is not put above quotations.
+    const block: QualitativeAnswer = { ...assemble(transcript, input), answer_decision: 'answer' }
+    const rest = input.facts.filter(f => !hearingFact(f))
+    const above = rest.some(f => !f.coverage && !f.metadata) ? factsProse({ ...input, facts: rest }) : null
+    return above && !emptyAnswer(above.answer) && above.answer_decision !== 'limitation' ? joinWritten(above, block) : block
+  }
   if (transcript) return { ...assemble(transcript, input), answer_decision: 'answer' }
   // A page pointer under an order is not a listing or a quotation to paste into prose.
   const restricted = input.facts.filter(f => f.text.includes(TRANSCRIPT_LABEL) && /Not quoted:/i.test(f.text))
@@ -737,7 +812,7 @@ export function writingPrompt(input: WritingInput): string {
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
     'Hearing excerpts give the hearing day/date and transcript page, with a short literal quotation and fact id. An excerpt that names no speaker is attributed to the transcript, never to a named person, a witness or counsel. Identify the material once as hearing evidence; licence details belong in the source card. ' + TRANSCRIPT_NAMED_PEOPLE_RULE + ' ' + ASK_SELF_REFERENCE_RULE +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
-    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.facts.some(f=>f.transcript&&!f.coverage) ? TRANSCRIPT_COVERAGE_RULE : '') + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
+    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.facts.some(f=>f.transcript&&!f.coverage) ? TRANSCRIPT_COVERAGE_RULE : '') + (input.quotesOnly ? ABOVE_BLOCK_RULE : '') + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
 }
 
 /** Keep already checked passage points (including loose uncited survivors) beside the written record answer. */

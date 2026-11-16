@@ -16,6 +16,15 @@ const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flat
 /** Whether a question names a registered commission or inquiry, as a whole phrase, whatever the case or punctuation
  * (commission-names.json, built from the registry). */
 export const namesRegisteredCommission = (question: string): boolean => { const q = squashed(question); return REGISTERED.some(name => q.includes(name)) }
+/** The fixed line where a hearing answer's quotations would stand, when the run searched the hearing transcripts and
+ * holds no excerpt (transcript quotes-only switch). It says what OPAX did, not what the record holds. */
+export const NO_PASSAGE_FOUND = 'OPAX searched the hearing transcripts for this question and found no matching passage.'
+/** With the transcript quotes-only switch on, a question that names a commission (by a commission phrase or a
+ * registered name), uses a word for a hearing or its evidence and does not name Parliament is a hearing question,
+ * whether or not it is worded as the narrow hearingEvidenceQuestion wants ("Who gave evidence to the ... inquiry
+ * about ..." is not). For such a question no model sentence may say what the transcripts record or lack. */
+export const commissionHearingQuestion = (question: string): boolean => hearingEvidenceQuestion(question) ||
+  hearingWorded(question) && !parliamentaryQuestion(question) && (COMMISSION_WORDS.test(question.slice(0, 2000)) || namesRegisteredCommission(question.slice(0, 2000)))
 /** The fixed line for a hearing answer whose excerpts were found but none was selected as answering the question. */
 export const NO_PASSAGE_SELECTED = 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.'
 /** Whether a question names Parliament or one of its bodies. Such a question is about Hansard unless it also names a
@@ -61,15 +70,29 @@ export const TRANSCRIPT_POINT_RULE = 'Leave what a record labelled "Hearing tran
 export const transcriptPassage = (text: string): boolean => transcriptTurns(text).length > 0
 const EXCERPT = /\btranscript page \S+/
 /** A turn carries a speaker only when its source line names one; the transcript tools name none. */
-export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string }
+/** `question` or `reply`: the other half of a marked question-and-reply pair, with its own page (only with the
+ * transcript quotes-only switch on). With `reply`, the turn itself is the question. */
+export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string; question?: { page: string; excerpt: string }; reply?: { page: string; excerpt: string }
+  /** In a transcript of headed turns: the turn printed before this one, which ends in a question, or the one printed after this one when this one does. */
+  before?: { page: string; excerpt: string }; next?: { page: string; excerpt: string } }
 /** Split a published citation into attributed turns before writing. Restricted transcripts never supply
  * quotations, even if malformed input happens to contain quotation marks. */
 export function transcriptTurns(text: string): TranscriptTurn[] {
   if (!text.includes(TRANSCRIPT_LABEL) || /Not quoted:|non-publication order|suppression order|pseudonymous witness/i.test(text)) return []
   const day = /\b(?:Hearing )?Day (\d+)\b/i.exec(text)?.[1]
   const date = /\((\d{1,2} [A-Z][a-z]+ \d{4})\)/.exec(text)?.[1]
-  const turns = [...text.matchAll(/transcript page (\S+) \(PDF page \d+\), hearing turn(?: by ([^:]+))?: "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)]
-    .map(m => ({ ...(m[2] ? { speaker: m[2] } : {}), page: m[1], excerpt: m[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }))
+  // A "question put" entry belongs to the hearing turn it is followed by, and a "reply given" entry to the hearing turn
+  // before it; alone neither is a turn.
+  let put: { page: string; excerpt: string } | undefined, prior: { page: string; excerpt: string } | undefined
+  const turns: TranscriptTurn[] = []
+  for (const m of text.matchAll(/transcript page (\S+) \(PDF page \d+\), (hearing turn|question put|reply given|turn before|next turn)(?: by ([^:]+))?: "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)) {
+    const beside = { page: m[1], excerpt: m[4] }
+    if (m[2] === 'question put') { put = beside; continue }
+    if (m[2] === 'turn before') { prior = beside; continue }
+    if (m[2] === 'reply given' || m[2] === 'next turn') { const last = turns.at(-1); if (last && !last.question && !last.before && !last.reply && !last.next) last[m[2] === 'reply given' ? 'reply' : 'next'] = beside; continue }
+    turns.push({ ...(m[3] ? { speaker: m[3] } : {}), page: m[1], excerpt: m[4], ...(day ? { day } : {}), ...(date ? { date } : {}), ...(put ? { question: put } : prior ? { before: prior } : {}) })
+    put = prior = undefined
+  }
   if (turns.length) return turns
   const written = /^(.+?) said at .+?, transcript page (\S+): "([\s\S]+)"\. Hearing transcript:/.exec(text)
   if (written) return [{ speaker: written[1], page: written[2], excerpt: written[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }]

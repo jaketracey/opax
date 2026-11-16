@@ -31,7 +31,12 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
-import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
+import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION, quotationBlock, joinWritten, hearingFact, fixedLine } from './research-writing'
+import { commissionHearingQuestion, NO_PASSAGE_FOUND, transcriptPassage, TRANSCRIPT_LABEL } from './transcript-answer'
+import {rewriteAnswerPayload} from './research-language'
+/** How many paragraphs of model text may stand above a quotation block (transcript quotes-only switch). */
+export const ABOVE_BLOCK_PARTS = 3
+import {researchTrace} from './research-trace'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
@@ -657,6 +662,16 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const factNotes = run.qualitative?.fact_notes ?? {}, selected = run.qualitative?.fact_notes !== undefined
     if (run.qualitative?.fact_notes) { const { fact_notes: _notes, ...rest } = run.qualitative; run.qualitative = rest }
     if (!run.answered || !deps.research?.write) return run
+    // Quotes only, a hearing question whose run searched the transcript text and holds neither an excerpt nor any
+    // record that is not a transcript row: the answer is the fixed line saying what OPAX did, never the tool's count
+    // row or model prose about what the record lacks. (Before the exits below: such a run reads as a limitation.)
+    if (deps.research.transcriptQuotesOnly && commissionHearingQuestion(question) && !run.passage_answer && !(run.qualitative?.sources ?? []).some(s => !s.coverage && s.resource !== 'coverage' && (!`${s.snippet} ${s.title}`.includes(TRANSCRIPT_LABEL) || s.snippet.split('\n').some(transcriptPassage) || transcriptPassage(s.title)))
+      && run.steps.some(s => { const a = s.args as { view?: unknown; words?: unknown } | undefined; return s.tool === 'royal_commissions' && a?.view === 'transcripts' && typeof a.words === 'string' && !!a.words.trim() })) {
+      const line = fixedLine(NO_PASSAGE_FOUND)
+      run.answer = line.answer; run.qualitative = { ...line, answer_decision: 'limitation' }; run.answer_source = 'template'
+      if (run.research) { run.research.transcript_quotes_only = true; run.research.sources = [] }
+      return run
+    }
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
     const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind as Fact['cite']['kind'],url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{}),...(f.entities?.length?{entities:f.entities}:{}),...(f.member?{member:f.member}:{})}))
@@ -672,14 +687,29 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
-    if (transcriptListingOnly(sheet)) return run
+    // (Under the quotes-only switch a hearing question goes on: a listing is not an answer to what was heard.)
+    if (transcriptListingOnly(sheet) && !(deps.research.transcriptQuotesOnly && commissionHearingQuestion(question))) return run
     await progress('status', {phase:'writing'})
     const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // The model's own points follow the written sentences in the answer (combine below). The writer is told what they
     // say, so a fact one of them states is not written a second time.
+    // Transcript quotes only (ask-flags.ts): the excerpts are quoted by code in one block that closes the answer, and
+    // no hearing transcript fact is in the writer's prompt. The writer words the other records, above the block.
+    const quotesOnly=!!deps.research.transcriptQuotesOnly
+    if(quotesOnly&&run.research)run.research.transcript_quotes_only=true
+    // A hearing question under the switch (transcript-answer.ts commissionHearingQuestion): no model sentence may say
+    // what the transcripts record or lack, so the writer is given no transcript-labelled row of any kind (an
+    // excerpt, a listing, a count, a not-quoted pointer). Where the quotations would stand with no excerpt held,
+    // one fixed line says what OPAX did.
+    const hearingAsked=quotesOnly&&commissionHearingQuestion(question)
+    const searched=run.steps.some(s=>{const a=s.args as {view?:unknown;words?:unknown}|undefined;return s.tool==='royal_commissions'&&a?.view==='transcripts'&&typeof a.words==='string'&&!!a.words.trim()})
+    const block=!quotesOnly?null:quotationBlock({question,period,facts:sheet,...(selected?{selected:true}:{})})??(hearingAsked&&searched?fixedLine(NO_PASSAGE_FOUND):null)
+    const writerFacts=block||hearingAsked?sheet.filter(f=>!hearingFact(f)):sheet
+    // A hearing question whose run made no text search and holds nothing else keeps the tool's own listing lines.
+    if(hearingAsked&&!block&&!writerFacts.some(f=>!f.coverage&&!f.metadata))return run
     const said=(run.passage_answer?.answer??'').split(/\n+/).map(line=>line.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
-    const input={question,period,facts:sheet,...(selected?{selected:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
+    const input={question,period,facts:writerFacts,...(quotesOnly?{quotesOnly:true}:{}),...(selected?{selected:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
     let active=true,checkedPartial:QualitativeAnswer|undefined
     // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.
@@ -702,8 +732,27 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       })
     }
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
-    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
-    const complete=combine(written)
+    // With only transcript excerpts to show there is nothing for a model to word: no writing call is made.
+    const nothingToWord=!!block&&!writerFacts.some(f=>!f.coverage&&!f.metadata)
+    const written = nothingToWord?{answer:'',citations:{},sources:[],machine_written:false} as QualitativeAnswer:await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
+    // The block goes last, after the written sentences and the model's own points, so nothing is worded between quotations.
+    // Above a block the model's text is kept short: its first ABOVE_BLOCK_PARTS paragraphs (the writer writes one
+    // sentence to a paragraph, so this is a short paragraph's worth). A count of paragraphs, never a reading of them.
+    // How much was trimmed goes on the run's record; the trimmed words go to the trace only, not into any response.
+    const capped=(above:QualitativeAnswer):QualitativeAnswer=>{
+      const parts=above.answer.split('\n\n')
+      if(parts.length<=ABOVE_BLOCK_PARTS)return above
+      const keep=parts.slice(0,ABOVE_BLOCK_PARTS).join('\n\n').length,trimmed=above.answer.slice(keep).trim()
+      if(run.research)run.research.above_block_trimmed={paragraphs:parts.length-ABOVE_BLOCK_PARTS,characters:Array.from(trimmed).length}
+      researchTrace('quotes_only.above_block_trimmed',{question,trimmed})
+      // For an operator's eval run only: the writer's coherence record is what an operator response carries
+      // (research-eval.ts researchEvalUsage) and no public response does, so the trimmed words are put there, on the
+      // object the eval already holds.
+      const record=(stats as {coherence?:Record<string,unknown>}).coherence
+      if(record)Object.assign(record,{above_block_trimmed_text:trimmed})
+      return rewriteAnswerPayload(above as unknown as Record<string,unknown>,replace=>replace(new RegExp(`(?<=^[\\s\\S]{${keep}})[\\s\\S]*$`,'g'),'')) as unknown as QualitativeAnswer
+    }
+    const complete=block?joinWritten(nothingToWord&&!run.passage_answer?written:capped(combine(written)),block):combine(written)
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started

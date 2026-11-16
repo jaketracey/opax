@@ -14,7 +14,8 @@ interface SlideBase { kicker: string; title: string; alt: string; authorisation?
 
 export type StorySlide =
   /** The opening photograph, headline over its lower edge. `photo` is a catalogue id; `inset` a portrait id from /photos/jpg. */
-  | (SlideBase & { type: 'cover'; line: string; photo: string | null; inset?: string | null; insetCredit?: string | null })
+  // `note`: one small line under the cover line, for a cover whose line is a model's summary sentence.
+  | (SlideBase & { type: 'cover'; line: string; note?: string | null; photo: string | null; inset?: string | null; insetCredit?: string | null })
   /** The one figure the edition leads with. */
   | (SlideBase & { type: 'number'; lines: string[]; value: string; label: string })
   /** A framed photograph with a fact, or a quotation, beneath it. */
@@ -43,8 +44,10 @@ export const STORY_MAX_SLIDES = 10
 /** Bump when a slide's drawing changes so cached renders are not reused. It keys
  *  the slide cache and the slide URLs only; the landscape and portrait cards keep theirs.
  *  3: the source slide closes on the page's address alone (no path line, no wordmark).
- *  4: adds the authorisation line on Victorian electoral slides. */
-export const STORY_VERSION = 4
+ *  4: adds the authorisation line on Victorian electoral slides.
+ *  5: a cover whose line is a summary sentence carries a small "Machine-written summary" line under it.
+ *  6: a bill's cover says "Passed" with the day it passed, or "Royal Assent" with that day; never the one as the other. */
+export const STORY_VERSION = 6
 
 /** Where a slide is drawn: the feed carousel at 4:5, or a story frame at 9:16. */
 export type StoryFormat = 'feed' | 'story'

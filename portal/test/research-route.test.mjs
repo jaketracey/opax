@@ -98,6 +98,58 @@ test('a failed loop on a hearing-evidence question never reaches the older engin
   await flush();
  }
 });
+test('transcript quotes only, through the handler: off by default; on, a hearing answer is the code-quoted block in JSON and SSE, says so in its record, and has its own cache entry',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const hearing='What evidence was given at the Robodebt Royal Commission about income averaging?';
+ const LEAD='These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.',LINE=/^(?:Hearing|Question put, hearing|Reply, hearing|The next turn in the transcript, hearing) day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+: “[\s\S]+”$/;
+ const robodebt=call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1});
+ // Research searches the transcript text, then selects the excerpts; a third call would be the writer.
+ const answered=()=>new MockLanguageModelV4({doGenerate:[reply([robodebt]),reply([call('answer',{facts:[2]})]),{...reply([]),content:[{type:'text',text:JSON.stringify({sentences:[{text:'A sentence a model wrote about the hearing.',facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'}}]});
+ const failing=()=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(n++===0)return reply([robodebt]);throw new Error('provider went away')}})};
+ const ask=async(stream,model)=>{globalThis.__researchModel=model;const response=await post(hearing,stream,{kind:'all'}),raw=await response.text();assert.equal(response.status,200,raw.slice(0,300));await flush();return stream?decodeStream(raw):JSON.parse(raw)};
+ try{
+  for(const stream of [false,true]){
+   // Off (no variable, no key): the writer words the answer and the record carries no switch field.
+   delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;
+   const offModel=answered(),off=await ask(stream,offModel);
+   assert.equal(off.research.mode,'loop');assert.equal('transcript_quotes_only' in off.research,false);assert.doesNotMatch(off.answer,/These passages from the hearing transcripts matched your question/);
+   assert.equal(offModel.doGenerateCalls.length,3,'the writer was called');
+   // On: the block, no writer call, one closing evidence line, and the record says which state it ran under.
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='on';
+   const onModel=answered(),on=await ask(stream,onModel),lines=on.answer.split('\n\n');
+   assert.equal(lines[0],LEAD,on.answer);
+   const quoted=lines.slice(1).filter(line=>!/evidence, not findings/.test(line));
+   assert.ok(quoted.length&&quoted.every(line=>LINE.test(line)),on.answer);
+   assert.equal(on.answer.match(/evidence, not findings/g)?.length,1,on.answer);
+   assert.equal(on.research.transcript_quotes_only,true);assert.equal(on.research.mode,'loop');assert.equal(on.machine_written,false);
+   assert.equal(onModel.doGenerateCalls.length,2,'no writing call');native(on);
+   // A run that stops with excerpts held gives the same form.
+   const stopped=await ask(stream,failing());
+   assert.equal(stopped.answer.split('\n\n')[0],LEAD,stopped.answer);assert.equal(stopped.research.transcript_quotes_only,true);assert.equal(stopped.machine_written,false);
+   // "off" in the variable is off, whatever the key says.
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='off';
+   const forced=await ask(stream,answered());assert.equal('transcript_quotes_only' in forced.research,false);assert.doesNotMatch(forced.answer,/These passages from the hearing transcripts matched your question/);
+  }
+  // The answer cache: an answer written under one state is never served under the other.
+  const previousCaches=globalThis.caches,edge=new Map(),shared=new Map();globalThis.caches={default:{match:async k=>edge.get(k.url)?.clone(),put:async(k,r)=>edge.set(k.url,new Response(await r.text(),r))}};
+  h.env.GENERATION_CACHE={get:async k=>shared.get(k)??null,put:async(k,v)=>shared.set(k,JSON.parse(v))};
+  // (The counted speech question of the cache test above: its answer is the same in both states, so only the key differs.)
+  const cached=async()=>{const response=await h.fetch('/api/ask',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:q,kind:'speech'})}),body=await response.json();await flush();return {hit:response.headers.get('x-opax-cache'),body}};
+  try{
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='off';globalThis.__researchModel=counted();
+   const first=await cached();assert.notEqual(first.hit,'HIT');assert.equal('transcript_quotes_only' in first.body.research,false);
+   assert.equal((await cached()).hit,'HIT','the off answer replays while off');
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='on';const onModel=counted();globalThis.__researchModel=onModel;
+   const flipped=await cached();assert.notEqual(flipped.hit,'HIT','the off answer is not served with the switch on');assert.ok(onModel.doGenerateCalls.length>0);assert.equal(flipped.body.research.transcript_quotes_only,true);
+   const replay=await cached();assert.equal(replay.hit,'HIT');assert.equal(replay.body.research.transcript_quotes_only,true);
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='off';
+   const back=await cached();assert.equal(back.hit,'HIT');assert.equal('transcript_quotes_only' in back.body.research,false,'flipping back serves the off answer again');
+   // No variable: the KV key decides, and no key is off (the same entry as "off").
+   delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;
+   const unset=await cached();assert.equal(unset.hit,'HIT');assert.deepEqual(unset.body,back.body);
+  }finally{globalThis.caches=previousCaches;delete h.env.GENERATION_CACHE;}
+ }finally{delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;}
+});
 test('a parliamentary question in hearing-style wording, or one that only mentions a royal commission, falls back to the older engine as on main; a stopped recommendations question is not answered with hearing excerpts',async()=>{
  h.env.RESEARCH_LOOP='route';
  const failing=first=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(first&&n++===0)return reply([first]);throw new Error('provider went away')}})};
@@ -122,6 +174,35 @@ test('a parliamentary question in hearing-style wording, or one that only mentio
   assert.equal(JSON.stringify(heardBody).includes('bears_on'),false);assert.equal(JSON.stringify(heardBody).includes('fact_notes'),false);
   await flush();
  }
+});
+test('quotes only: what the cap above the block trimmed is in an operator eval response and in no public response',async()=>{
+ h.env.RESEARCH_LOOP='route';h.env.DAILY_POST_OPERATOR_SECRET='fixture-operator';h.env.ASK_TRANSCRIPT_QUOTES_ONLY='on';
+ const question='What did the Robodebt Royal Commission recommend about debts, and what did it hear about income averaging?';
+ const five=['The Royal Commission made a recommendation about debts.','The recommendation is in its report.','It concerns how debts are raised.','It was made in 2023.','It is addressed to the Commonwealth.'];
+ const model=()=>{let n=0;return new MockLanguageModelV4({doGenerate:async options=>{n++;
+  if(n===1)return reply([call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1})]);
+  if(n===2)return reply([call('royal_commissions',{view:'recommendations',commission:'robodebt',words:'debts',limit:1})]);
+  if(n===3)return reply([call('answer',{facts:[2,3,4,5]})]);
+  const given=JSON.parse(options.prompt.at(-1).content.map(part=>part.text??'').join('')).facts;
+  return {...reply([]),content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:five.map(text=>({text,facts:[given[0].id]}))})}],finishReason:{unified:'stop',raw:'stop'}};}})};
+ try{
+  globalThis.__researchModel=model();
+  const operator=await evalPost('loop',false,question,'Bearer fixture-operator',{kind:'all'}),seen=await operator.json();await flush();
+  assert.equal(operator.status,200,JSON.stringify(seen).slice(0,300));
+  assert.ok(seen.research.above_block_trimmed?.paragraphs>=1,JSON.stringify(seen.research.above_block_trimmed));
+  const text=JSON.stringify(seen.research.coherence??{});
+  assert.ok(text.includes('above_block_trimmed_text')&&text.includes('addressed to the Commonwealth'),text.slice(0,400));
+  assert.equal(seen.answer.includes('addressed to the Commonwealth'),false,'trimmed from the answer');
+  // The same question with no operator header: the count is there, the trimmed words are nowhere in the response.
+  globalThis.__researchModel=model();
+  const open=await post(question,false,{kind:'all'}),body=await open.json();await flush();
+  assert.equal(open.status,200);assert.ok(body.research.above_block_trimmed?.paragraphs>=1);
+  assert.equal(JSON.stringify(body).includes('addressed to the Commonwealth'),false);assert.equal(JSON.stringify(body).includes('above_block_trimmed_text'),false);
+  // A wrong operator secret is a public request.
+  globalThis.__researchModel=model();
+  const wrong=await evalPost('loop',false,question,'Bearer not-the-secret',{kind:'all'}),wrongText=await wrong.text();await flush();
+  assert.equal(wrongText.includes('addressed to the Commonwealth'),false);
+ }finally{delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;}
 });
 test('ordinary and non-speech questions go through qualitative search/answer in route mode',async()=>{
  h.env.RESEARCH_LOOP='route';for(const kind of ['speech','all','bill'])for(const stream of [false,true]){globalThis.__researchModel=qualitative();const before=ordinaryCalls,response=await post('What does the record say about housing affordability?',stream,{kind}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answer,text);assert.deepEqual(body.citations,{[id]:[[0,text.length]]});assert.equal(body.sources[0].resource,resource);assert.equal(body.research.sources[0].kind,'speech');assert.equal(body.research.sources[0].date,'2023-05-01');assert.equal(ordinaryCalls,before);await flush();}
@@ -161,7 +242,8 @@ test('authenticated loop and old overrides serve JSON/SSE with usage and never r
  h.env.RESEARCH_LOOP='shadow';h.env.DAILY_POST_OPERATOR_SECRET='fixture-operator';
  const previousCaches=globalThis.caches,reads=[],writes=[],answerKey=k=>/https:\/\/cache\.opax\.internal\/ask(?:-agentic)?\//.test(k.url);
  globalThis.caches={default:{match:async k=>{if(answerKey(k)){reads.push(k.url);return Response.json({answer:'POISONED SHARED ANSWER'})}},put:async(k,r)=>{if(answerKey(k))writes.push(k.url)}}};
- h.env.GENERATION_CACHE={get:async k=>{reads.push(k);return null},put:async(k,v)=>writes.push(k)};
+ // The transcript quotes-only switch is one KV key read per request (ask-flags.ts); it is not an answer cache.
+ h.env.GENERATION_CACHE={get:async k=>{if(k!=='flag:ask-transcript-quotes-only')reads.push(k);return null},put:async(k,v)=>writes.push(k)};
  try{
   for(const override of ['loop','old'])for(const stream of [false,true]){
    const fake=counted();globalThis.__researchModel=fake;const before=plannerCalls,shadowRecords=logs.filter(r=>r.kind==='research_loop_shadow').length;

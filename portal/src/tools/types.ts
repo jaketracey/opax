@@ -12,6 +12,8 @@ export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'MEDIA' | 'COMMU
   ask?: boolean
   /** Read-only reader of one published JSON object in the media bucket, by key; null when it is not there. */
   media?: (key: string) => Promise<unknown>
+  /** The transcript quotes-only switch (ask-flags.ts) is on for this request. */
+  transcriptQuotesOnly?: boolean
   /** Read-only KB adapter; credentials remain outside tool handlers. */
   kb?: (path: string, body?: unknown) => Promise<Record<string, unknown>>
 }

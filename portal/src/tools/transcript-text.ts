@@ -3,19 +3,25 @@
  * suppression order or a pseudonymous witness carries no text: only the pages a word appears on. */
 import { object, records, type RecordRow } from './published-records'
 import { readToolAsset, type ToolEnv } from './types'
+import { sentenceSpans } from '../sentence-bounds.mjs'
 
 const SHARD = /^\/transcripts\/terms\/\d{2}\.json$/
 const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
-export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null }
+/** `commonPages`: for each everyday word, the pages holding it across all transcripts (how common it is). */
+export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, commonPages: Map<string, number>, shards: number, commissions: RecordRow }
+/** `question` and `reply`: only with the transcript quotes-only switch on, the other half of a marked question-and-reply
+ * pair, with its own page. `before` and `next`: in a transcript of headed turns, the turn printed before a hit when that
+ * turn ends in a question, or the turn printed after a hit that ends in one. A hit has at most one of the four. */
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, question?: { pdf_page: number, transcript_page: string | null, text: string }, reply?: { pdf_page: number, transcript_page: string | null, text: string }, before?: { pdf_page: number, transcript_page: string | null, text: string }, next?: { pdf_page: number, transcript_page: string | null, text: string } }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
   const data = object(await readToolAsset(env, '/transcripts/index.json'))
-  if (data.schema !== 1 || !Array.isArray(data.docs)) return null
-  return { docs: records(data.docs), stop: new Set((data.stopwords as string[]) ?? []), common: new Set((data.common_terms as string[]) ?? []),
+  if (data.schema !== 3 || !Array.isArray(data.docs)) return null
+  const common = (data.common_terms as string[]) ?? [], pages = (data.common_pages as number[]) ?? []
+  return { docs: records(data.docs), stop: new Set((data.stopwords as string[]) ?? []), common: new Set(common), commonPages: new Map(common.map((t, at) => [t, Number(pages[at]) || 0])),
     shards: Number(data.shards) || 64, commissions: object(data.commissions) }
 }
 
@@ -31,26 +37,74 @@ export function shardOf(term: string, shards: number): number {
   return h % shards
 }
 
-/** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
- * public text or every word is too common to narrow the search. */
-export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[] } | null> {
+/** A word search reads one postings file for each searched word, so the words are capped. Specific words (those not
+ * in ix.common) are kept first; everyday words fill what is left. In both kinds the least frequent are kept and the
+ * most frequent left out, by the number of pages holding the word across all transcripts (carried in the index for
+ * everyday words; in term-pages.json for the rest, read only when there are more specific words than the cap). The
+ * caller says which words were left out. */
+export const TEXT_SEARCH_WORDS = 6
+/** How well a transcript fits a word search, from the postings alone (no transcript is opened), each part most first:
+ * `least` is the page count of the required word that is on the fewest of its pages; `everyday` is the same for the
+ * everyday words that only rank (zero when the transcript lacks one of them, or when there are none); `pages` is the
+ * sum of every searched word's page count. A hearing day that discusses every searched word at length comes before
+ * one where a word appears once. */
+export type TextFit = { least: number, everyday: number, pages: number }
+/** The transcripts of a commission that match a word search, with each one's fit.
+ * - With a specific word in the search, a transcript must hold every specific word. Everyday words (in more than half
+ *   the transcripts) then only rank: they never remove a transcript, so the set is the one the specific words give.
+ * - With only everyday words ("executive minute", "general practice training"), a transcript must hold every one.
+ * `skipped` are the words past the cap, which took no part. Null when the words hold nothing to search (stopwords, or
+ * years alone). */
+export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[], fit: Map<string, TextFit>, skipped: string[] } | null> {
   if (!object(ix.commissions[commission]).name) return null
   const terms = [...new Set(tokens(words, ix.stop))]
-  const narrow = terms.filter(t => !ix.common.has(t))
-  if (!narrow.length) return null
-  let docs = new Set<number>(ix.docs.filter(d => d.commission === commission).map(d => Number(d.i)))
-  for (const t of narrow) {
+  const specific = terms.filter(t => !ix.common.has(t))
+  const everyday = terms.filter(t => ix.common.has(t)).map((t, at) => ({ t, at })).sort((a, b) => (ix.commonPages.get(a.t) ?? 0) - (ix.commonPages.get(b.t) ?? 0) || a.at - b.at).map(o => o.t)
+  // More specific words than the cap (rare): the least frequent are kept, by the pages holding each across all
+  // transcripts. That needs one small file of page totals, read only in this case; no postings file is read for a
+  // word that is then left out. Ties keep the order given.
+  let kept = specific
+  if (specific.length > TEXT_SEARCH_WORDS) {
+    const totals = object(await readToolAsset(env, '/transcripts/term-pages.json'))
+    const pages = (t: string) => Object.hasOwn(totals, t) ? Number(totals[t]) || 0 : 0
+    kept = specific.map((t, at) => ({ t, at })).sort((a, b) => pages(a.t) - pages(b.t) || a.at - b.at).slice(0, TEXT_SEARCH_WORDS).sort((a, b) => a.at - b.at).map(o => o.t)
+  }
+  const required = kept, ranking = everyday.slice(0, TEXT_SEARCH_WORDS - required.length)
+  const skipped = [...specific.filter(t => !kept.includes(t)), ...everyday.slice(ranking.length)]
+  // A search with no specific word, made only of everyday date words (a month name, a year that is in more than half
+  // the transcripts: "2023-03", "10 March 2023", "February 2024") is a date lookup, answered from titles and dates
+  // exactly as before. A year that is a specific word ("2014", "2016") searches the text like any other, as before.
+  if (!required.length && ranking.every(t => /^\d{4}$/.test(t) || DATE_WORDS.has(t))) return null
+  const posting = async (t: string): Promise<Map<number, number> | null> => {
     const path = `/transcripts/terms/${String(shardOf(t, ix.shards)).padStart(2, '0')}.json`
     if (!SHARD.test(path)) return null
-    const posting = new Set<number>((object(await readToolAsset(env, path))[t] as number[]) ?? [])
-    docs = new Set<number>([...docs].filter(i => posting.has(i)))
+    // A posting is [transcripts, pages of each holding the word].
+    const shard = object(await readToolAsset(env, path)), held = Object.hasOwn(shard, t) ? shard[t] as [number[], number[]] : undefined
+    return new Map<number, number>((held?.[0] ?? []).map((i, at) => [i, Number(held?.[1]?.[at]) || 1]))
+  }
+  // With no specific word the everyday words are the required ones.
+  const must = required.length ? required : ranking, rank = required.length ? ranking : []
+  let docs = new Map<number, TextFit>(ix.docs.filter(d => d.commission === commission).map(d => [Number(d.i), { least: Number.MAX_SAFE_INTEGER, everyday: 0, pages: 0 }]))
+  for (const t of must) {
+    const held = await posting(t)
+    if (!held) return null
+    docs = new Map([...docs].flatMap(([i, fit]): [number, TextFit][] => { const n = held.get(i); return n ? [[i, { ...fit, least: Math.min(fit.least, n), pages: fit.pages + n }]] : [] }))
     if (!docs.size) break
   }
-  const keys = new Set(ix.docs.filter(d => docs.has(Number(d.i))).map(d => String(d.key)))
-  return { keys, terms }
+  if (docs.size && rank.length) {
+    for (const fit of docs.values()) fit.everyday = Number.MAX_SAFE_INTEGER
+    for (const t of rank) {
+      const held = await posting(t)
+      if (!held) return null
+      for (const [i, fit] of docs) { const n = held.get(i) ?? 0; fit.everyday = Math.min(fit.everyday, n); fit.pages += n }
+    }
+  }
+  const matched = ix.docs.filter(d => docs.has(Number(d.i)))
+  return { keys: new Set(matched.map(d => String(d.key))), terms, fit: new Map(matched.map(d => [String(d.key), docs.get(Number(d.i))!])), skipped }
 }
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const DATE_WORDS = new Set(MONTHS.map(m => m.toLowerCase()))
 /** "2022-09-27" as "27 September 2022"; anything else unchanged. */
 export function dayWords(iso: unknown): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso ?? ''))
@@ -151,6 +205,86 @@ export function pageTurns(page: string, pdfPage?: number): { text: string, turns
  * heading, mark or note sits in the text. A word found only in headings, marks or notes gives the words its first
  * opener is followed by, which may be none. No speaker is returned: Ask prose and citations name no one. */
 export function excerpt(text: string, terms: string[], pdfPage?: number): { excerpt: string } {
+  return { excerpt: excerptTurn(text, terms, pdfPage).excerpt }
+}
+/** A passage of one turn as whole sentences, at most EXCERPT (280) characters, verbatim (transcript quotes-only
+ * switch). `near` says which sentences: a position in the page text (the sentence holding it, then the ones after
+ * while they fit), 'start' (from the turn's first sentence) or 'end' (back from its last). A sentence that will not
+ * fit by itself is cut at a word and the cut is marked with "...", so a cut is never hidden; whole sentences left
+ * out before or after are not a cut. */
+function wholeSentences(flat: string, from: number, until: number, near: number | 'start' | 'end'): string {
+  const spans = sentenceSpans(flat.slice(from, until)) as { text: string, at: number }[]
+  if (!spans.length) return ''
+  const slice = (first: number, last: number) => flat.slice(from + spans[first].at, from + spans[last].at + spans[last].text.length)
+  if (near === 'end') {
+    let first = spans.length - 1
+    const only = spans[first].text
+    if (only.length > EXCERPT) { const cut = only.indexOf(' ', only.length - EXCERPT); return `...${only.slice(cut >= 0 ? cut + 1 : only.length - EXCERPT)}` }
+    while (first > 0 && slice(first - 1, spans.length - 1).length <= EXCERPT) first--
+    return slice(first, spans.length - 1)
+  }
+  let first = 0
+  if (near !== 'start') for (let i = 0; i < spans.length; i++) if (spans[i].at <= near - from) first = i
+  const only = spans[first].text
+  if (only.length > EXCERPT) {
+    // The searched word may sit past the first 280 characters of a long sentence: the window then starts before it.
+    const point = near === 'start' ? 0 : Math.max(0, near - from - spans[first].at)
+    let start = point < EXCERPT - 60 ? 0 : Math.max(0, point - 100)
+    if (start > 0) { const space = only.indexOf(' ', start); if (space >= 0) start = space + 1 }
+    let end = Math.min(only.length, start + EXCERPT)
+    if (end < only.length) end = Math.max(start + 40, only.lastIndexOf(' ', end))
+    return `${start > 0 ? '...' : ''}${only.slice(start, end).trim()}${end < only.length ? '...' : ''}`
+  }
+  let last = first
+  while (last + 1 < spans.length && slice(first, last + 1).length <= EXCERPT) last++
+  return slice(first, last)
+}
+type Beside = NonNullable<PageHit['question']>
+/** A hit as the quotes-only block shows it: the matched turn as whole sentences, and, where the transcript marks
+ * turns "Q." and "A.", the other half of the pair with its own page: the question put before a reply, or the reply
+ * given to a question. Pure page structure (pageTurns): a pair is a "Q." turn and the bare "A." turn straight after
+ * it, on one page or across a page break; no speaker and no role is read, and with any other turn beside it the hit
+ * stands alone. */
+function pairedPassage(pages: RecordRow[], n: number, terms: string[]): { excerpt: string, question?: Beside, reply?: Beside, before?: Beside, next?: Beside } | undefined {
+  const page = pages.find(p => p.n === n)
+  if (typeof page?.text !== 'string') return undefined
+  const { flat, turns, turn, at } = excerptTurn(page.text, terms, n)
+  if (!turn || at === undefined) return undefined
+  const excerpt = wholeSentences(flat, turn.start, turn.end, Math.max(at, turn.start))
+  if (!/[^.\s]/.test(excerpt)) return undefined
+  const here = turns.indexOf(turn)
+  const other = (step: -1 | 1): { page: RecordRow, flat: string, turn: PageTurn } | undefined => {
+    const beside = turns[here + step]
+    if (beside) return { page, flat, turn: beside }
+    const next = pages.find(p => p.n === n + step)
+    if (typeof next?.text !== 'string') return undefined
+    const read = pageTurns(next.text, n + step), found = step < 0 ? read.turns.at(-1) : read.turns[0]
+    return found ? { page: next, flat: read.text, turn: found } : undefined
+  }
+  const side = (found: ReturnType<typeof other>, near: 'start' | 'end'): Beside | undefined => {
+    if (!found || found.turn.end <= found.turn.start) return undefined
+    const text = wholeSentences(found.flat, found.turn.start, found.turn.end, near)
+    return /[^.\s]/.test(text) ? { pdf_page: Number(found.page.n), transcript_page: (found.page.folio as string) ?? null, text } : undefined
+  }
+  const bareReply = (t: PageTurn | undefined) => !!t && t.opens === 'mark' && t.mark === 'A' && !t.heading
+  if (bareReply(turn)) { const before = other(-1); const question = before?.turn.mark === 'Q' ? side(before, 'end') : undefined; return question ? { excerpt, question } : { excerpt } }
+  if (turn.mark === 'Q') { const after = other(1); const reply = bareReply(after?.turn) ? side(after, 'start') : undefined; return reply ? { excerpt, reply } : { excerpt } }
+  // A transcript that prints a speaker heading on every turn and no marks: a turn that ends with a question mark is
+  // shown with the turn printed straight after it, called only "the next turn" (who speaks next is not read: it may
+  // be the witness, the Commissioner or other counsel). Both turns must open with a heading; the heading's own text
+  // is not part of either passage. The pair is given whichever of the two holds the searched word.
+  // A heading is not always a speaker ("RE:" in a quoted email, a document id): only one that starts with a title or
+  // is a role word opens a turn for this purpose. The test is of the heading's form; who it names is not read.
+  const headed = (t: PageTurn | undefined) => !!t && t.opens === 'heading' && !t.mark && !!t.heading && (TITLE.test(t.heading.split(' ')[0]) || ROLE.test(t.heading))
+  const asks = (found: { flat: string, turn: PageTurn } | undefined) => !!found && headed(found.turn) && /\?["”’')\]]*$/.test(found.flat.slice(found.turn.start, found.turn.end).trimEnd())
+  if (headed(turn)) {
+    if (asks({ flat, turn }) && /\?["”’')\]]*$/.test(excerpt)) { const after = other(1); const next = headed(after?.turn) ? side(after, 'start') : undefined; if (next) return { excerpt, next } }
+    const prior = other(-1)
+    if (asks(prior) && Math.max(at, turn.start) - turn.start < EXCERPT) { const before = side(prior, 'end'); const opening = wholeSentences(flat, turn.start, turn.end, 'start'); if (before && opening.includes(excerpt.replace(/^\.\.\.|\.\.\.$/g, '').slice(0, 40))) return { excerpt: opening, before } }
+  }
+  return { excerpt }
+}
+function excerptTurn(text: string, terms: string[], pdfPage?: number): { excerpt: string, flat: string, turns: PageTurn[], turn?: PageTurn, at?: number } {
   const { text: flat, turns } = pageTurns(text, pdfPage)
   // The first place a query word is spoken wins; failing that, the first opener one is printed in.
   let spoken = -1, printed = -1
@@ -164,7 +298,7 @@ export function excerpt(text: string, terms: string[], pdfPage?: number): { exce
   }
   const at = spoken >= 0 ? spoken : printed
   const turn = at < 0 ? turns.find(t => t.end > t.start) : turns.filter(t => t.from <= at).at(-1)
-  if (!turn || turn.end <= turn.start || at >= turn.end) return { excerpt: '' }
+  if (!turn || turn.end <= turn.start || at >= turn.end) return { excerpt: '', flat, turns }
   const from = turn.start, until = turn.end, point = Math.max(at, from)
   let start = Math.max(from, point - 100)
   if (start > from) { const space = flat.indexOf(' ', start); if (space >= 0 && space < until) start = space + 1 }
@@ -172,7 +306,7 @@ export function excerpt(text: string, terms: string[], pdfPage?: number): { exce
   let end = Math.min(until, start + EXCERPT)
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
   const body = flat.slice(start, Math.min(end, until)).trim()
-  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}` }
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}`, flat, turns, turn, at }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
@@ -195,7 +329,11 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
     const page = pages.find(p => p.n === n) ?? {}
     const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
       ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, n) : { excerpt: null }) }
-    if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) hits.push(hit)
+    if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) {
+      // Quotes only: the passage as whole sentences, with the other half of a marked question-and-reply pair.
+      const paired = env.transcriptQuotesOnly && hit.excerpt !== null ? pairedPassage(pages, n, terms) : undefined
+      hits.push(paired ? { ...hit, ...paired } : hit)
+    }
   }
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),
     ...(quote ? {} : { order_notice: String(doc.order_notice) }), hits }

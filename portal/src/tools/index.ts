@@ -137,7 +137,8 @@ const REGISTER_PAGES: Record<string, string> = { contracts: '/money/contracts', 
 export const askToolSpecs: ToolSpec[] = tools.filter(tool => !tool.mcpOnly).map(tool => ({
   name: tool.askName ?? tool.name, description: tool.description, input: inputSchemaOf(tool, true),
   async run(deps: ToolDeps, args: ToolArgs) {
-    const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal }, tool.name, args, true)
+    // The transcript quotes-only switch travels with the Ask run's dependencies (index.ts agenticToolDeps).
+    const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal, ...((deps as { transcriptQuotesOnly?: boolean }).transcriptQuotesOnly ? { transcriptQuotesOnly: true } : {}) }, tool.name, args, true)
     return { tool: tool.askName ?? tool.name, ok: !data.error, ...(data.error ? { error: data.error === 'Published tool data is temporarily unavailable.' ? 'lookup timed out or unavailable' : data.error } : {}), ...(data.list ? { list: String(data.list) } : {}), data,
       cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }), ...(c.related ? { related: c.related } : {}), ...(c.remuneration ? { remuneration: c.remuneration } : {}) })),
       ...(data.coverage ? { coverage: data.coverage as ToolResult['coverage'] } : {}),
