@@ -228,13 +228,20 @@ through to another, never silently repeats an excluded subject.
   copy when available and per-platform captions/image URLs).
 - Optional `&kind=bill`, `politician`, `topic`, `grant`, `program` or `largest` previews that category.
 - Operator run: `POST /api/daily-post/run` with `Authorization: Bearer $DAILY_POST_OPERATOR_SECRET`
-  and a JSON body `{date, kind?, subject?, channels?, dry_run?}` composes a chosen edition
+  and a JSON body `{date, kind?, subject?, channels?, dry_run?, allow_any_date?}` composes a chosen edition
   under the given journal date (default today) and delivers it to the named channels
   (default every ready channel). `subject` may name one award as
   `grant:GA34203@abn:97694995462`, read from the recipient's source shard whatever its age.
   The journal still rules: an edition stored under that date is reused and a delivered
   channel is never posted twice, so use a date with no edition for a test post.
   `dry_run: true` returns the composed edition and per-channel copy without posting.
+  A posting run accepts only today's or yesterday's Melbourne date. Any other date
+  gets a 400 naming the allowed dates, with nothing written and no channel called,
+  unless the body carries `allow_any_date: true`. An old date would resume an expired
+  Instagram container or post a stale edition afresh to a channel with no receipt for
+  it, so use the override only after reading that date's receipts. A dry run takes any
+  date because it only reads and composes. The cron is not affected: it always posts
+  under the Melbourne date of its scheduled time.
 - Status: `/api/daily-post/status` (configuration readiness and today's receipts;
   no credentials or raw provider error bodies).
 - Logs: `npx wrangler tail --env=''`; look for `daily-post`.
