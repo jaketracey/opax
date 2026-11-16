@@ -1,5 +1,5 @@
 import { claimClauses, proseClaimKeys, standaloneClauseTail } from './research-claims'
-import { appendWrittenPoints, proseFallback, rawToolEcho, tokens, writingFacts, type WritingFact } from './research-writing'
+import { appendWrittenPoints, eitherMachineWritten, proseFallback, rawToolEcho, tokens, writingFacts, type WritingFact } from './research-writing'
 import { readableDate } from './tools/record-common'
 import { plainAnswerPayload, rewriteAnswerPayload, displayAnswerPayload } from './research-language'
 import { groundAnswerPayload } from './research-grounding'
@@ -55,7 +55,7 @@ function recordsAnswer(payload: Record<string, unknown>, question: string): Reco
   const held = passagesAnswer(passages, question)
   if (!held?.answer.trim()) return null
   const cited = new Set(Object.keys(held.citations).map(id => id.split('/')[0]))
-  return { ...payload, answer: held.answer, citations: held.citations, sources: sources.map(s => ({ ...s, cited: cited.has(String(s.resource)) })) }
+  return { ...payload, answer: held.answer, citations: held.citations, sources: sources.map(s => ({ ...s, cited: cited.has(String(s.resource)) })), machine_written: false }
 }
 
 /** Opens an answer made of the record lines a run found when nothing else could be written from them. */
@@ -113,7 +113,7 @@ export function recordSummaryAnswer(payload: Record<string, unknown>, facts: Wri
   }
   const cited = new Set(lines.map(l => l.resource))
   const sources = [...rows, ...added].map(row => ({ ...row, cited: cited.has(text(row.resource)) }))
-  return { ...payload, answer, citations, sources, answered: true, answer_decision: 'answer', fallback: 'record_summary' satisfies AnswerFallback }
+  return { ...payload, answer, citations, sources, answered: true, answer_decision: 'answer', fallback: 'record_summary' satisfies AnswerFallback, machine_written: false }
 }
 
 const SEARCHED: [RegExp, string][] = [
@@ -141,7 +141,7 @@ export function noRecordAnswer(payload: Record<string, unknown>): Record<string,
   const decision = protectedDecision(payload) ? payload.answer_decision : 'limitation'
   // No line cites anything, so no source is marked cited.
   const sources = sourceRows(payload).map(row => ({ ...row, cited: false }))
-  return { ...payload, answer, citations: {}, sources, answered: true, answer_decision: decision, fallback: 'no_record' satisfies AnswerFallback }
+  return { ...payload, answer, citations: {}, sources, answered: true, answer_decision: decision, fallback: 'no_record' satisfies AnswerFallback, machine_written: false }
 }
 
 /** An answer written from an evidence-only payload's excerpts is an ordinary cited answer: the web shows an
@@ -162,7 +162,7 @@ function joinAnswers(first: Record<string, unknown>, second: Record<string, unkn
     const key = text(row.resource) || `#${i}`, prior = rows.get(key)
     rows.set(key, prior ? { ...prior, cited: prior.cited === true || row.cited === true } : row)
   }
-  return { ...first, answer: head + '\n\n' + String(second.answer ?? ''), citations, sources: [...rows.values()], answered: true }
+  return { ...first, ...eitherMachineWritten(first, second), answer: head + '\n\n' + String(second.answer ?? ''), citations, sources: [...rows.values()], answered: true }
 }
 
 /** An answer with no text is written from what the response holds (old cached and streamed payloads included): the facts
