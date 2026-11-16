@@ -14,6 +14,15 @@
 # Each run must also print which decoders it read, "decoders: <label> <folder>", naming the folder the run
 # was pointed at: a label over another build's decoders fails that build.
 #
+# The same run also checks one endpoint the Worker builds at request time, which no static file shows:
+# /api/app/v1/vic-election. scripts/ci/app-endpoint-guard/vic-election-candidates.test.tsx is copied into the
+# app tree and run once per build against the committed answers in app-endpoint-guard/fixtures (generated
+# from the built hub data by scripts/ci/app-endpoint-fixtures.mjs). A build with election screens must decode
+# them and draw every candidate and party with no party link; a build without must not read the endpoint.
+# Each run prints "endpoint: <label> <folder> ...", checked the same way as the decoders line. A pinned
+# build's rows import its native module shims and launch fixtures from beside mobile/src, so `export` lays
+# out mobile/modules and mobile/scripts/fixtures with it where the build has them.
+#
 # `export` prints "present=true" when APP_REF carries the guard and "present=false" when it does not (the
 # only case a caller may treat as nothing to check). Anything else that goes wrong (an app line that is not
 # there, a pin whose tag is missing or has moved, a build with no decoders) is an error: it exits non-zero
@@ -63,6 +72,12 @@ case "$command" in
       to="$app/pinned-builds/$(slug "$label")"
       mkdir -p "$to"
       git archive "$commit" mobile/src | tar -x --strip-components=1 -C "$to"
+      # Beside src, as that build's own files import them (the endpoint check draws its candidate rows).
+      for beside in mobile/modules mobile/scripts/fixtures; do
+        if git cat-file -e "$commit:$beside" 2>/dev/null; then
+          git archive "$commit" "$beside" | tar -x --strip-components=1 -C "$to"
+        fi
+      done
       [ -f "$to/src/api/catalog-decoders.ts" ] ||
         { echo "app-data-guard: $label ($commit) has no decoders" >&2; exit 1; }
     done < <(pinned)
@@ -71,6 +86,11 @@ case "$command" in
   run)
     published=$(cd "${3:?the published folder (portal/public)}" && pwd)
     failed=()
+    # The endpoint check and its fixtures come from this checkout, not from the app line.
+    endpoint="$(cd "$(dirname "$0")" && pwd)/app-endpoint-guard"
+    [ -f "$endpoint/vic-election-candidates.test.tsx" ] && [ -f "$endpoint/fixtures/overview.json" ] ||
+      { echo "app-data-guard: the endpoint check or its fixtures are missing from $endpoint" >&2; exit 1; }
+    cp "$endpoint/vic-election-candidates.test.tsx" "$app/tests/app-endpoint-vic-election-candidates.test.tsx"
     # One build: its label, then its source tree (empty for the app line's own).
     check() {
       local label=$1 src=$2 started=$SECONDS rc=0 log expected
@@ -88,6 +108,18 @@ case "$command" in
         echo "app-data-guard: $label: the run did not say \"decoders: $label $expected\"" >&2
         echo "app-data-guard: $label: it said: $(grep '^decoders: ' "$log" | sort -u | tr '\n' ';' || true)" >&2
         rc=1
+      fi
+      # The endpoint, read and drawn by this build's own source.
+      echo "::group::app endpoint guard: $label"
+      ( cd "$app" && env OPAX_ENDPOINT_FIXTURES="$endpoint/fixtures" OPAX_DECODERS_LABEL="$label" \
+          ${src:+OPAX_DECODERS_SRC="$src"} npm test -- tests/app-endpoint-vic-election-candidates.test.tsx ) 2>&1 | tee "$log" ||
+        rc=${PIPESTATUS[0]}
+      echo "::endgroup::"
+      if ! grep -Fq "endpoint: $label $expected " "$log"; then
+        echo "app-data-guard: $label: the endpoint run did not say \"endpoint: $label $expected\"" >&2
+        rc=1
+      else
+        grep -F "endpoint: $label $expected " "$log" | head -1 | sed 's/^ *//'
       fi
       echo "app-data-guard: $label: $([ "$rc" = 0 ] && echo passed || echo FAILED) in $((SECONDS - started)) s"
       [ "$rc" = 0 ] || failed+=("$label")

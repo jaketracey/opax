@@ -41,7 +41,7 @@ test('every registered VEC name resolves through the shared party map, with read
     ['Legalise Cannabis Victoria','Legalise Cannabis','oth','LCP'],
     ['Animal Justice Party','Animal Justice','oth','AJP'],
     ['Democratic Labour Party (DLP)','DLP','oth','DLP'],
-    ['Family First Victoria','Family First','oth','FF'],
+    ['Family First Victoria','Family First Victoria','oth','FFV'],
     ["I'm Voting to Avoid the Fine","I'm Voting to Avoid the Fine",'oth','FINE'],
   ]){
     assert.deepEqual(PARTY_MAP[registered.toLowerCase()],[colour,code]);
