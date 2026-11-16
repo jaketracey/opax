@@ -238,7 +238,7 @@ test('a hearing-evidence question with no excerpt held is told to search the tra
   // The gating run on 16 November: every word of "the 2015 budget measure and who prepared the executive minute" is too
   // common for the transcript word index, the model searched recommendations instead, and it first heard that an
   // excerpt was needed when its answer was refused in round 7 of 8.
-  assert.equal(api.NO_EXCERPT_YET, 'This question asks what was said in evidence, and no hearing transcript excerpt is held yet. Search the transcript text now (royal_commissions view=transcripts with words). Everyday words are too common to match: search one rarer word from the subject by itself, then another, until excerpts come back. An answer needs at least one excerpt.')
+  assert.equal(api.NO_EXCERPT_YET, 'This question asks what was said in evidence, and no hearing transcript excerpt is held yet. Search the transcript text now (royal_commissions view=transcripts with words): search the specific words or short phrases of the question, one search each, until excerpts come back. An answer needs at least one excerpt.')
   const asset = async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))
   const deps = { origin: 'https://offline.test', asset, kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }) }
   const usage = { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }
@@ -335,9 +335,13 @@ test('a refused answer on a hearing-evidence question is told to search, not to 
 test('the research model says what each selected excerpt is for, in the question\'s own words; the writer is given it and no reader is', async () => {
   const q = 'What evidence was given at the Robodebt Royal Commission about income averaging?'
   assert.equal(api.bearsOn('income averaging', q), 'income averaging')
-  assert.equal(api.bearsOn('  Evidence   about income AVERAGING ', q), 'Evidence about income AVERAGING')
+  assert.equal(api.bearsOn('  About   income AVERAGING ', q), 'About income AVERAGING')
   // A word that is not in the question (a name, a claim) drops the label; so does an empty one or one that is not text.
   for (const label of ['Ms Quellworth on income averaging', 'income averaging was unlawful', '', '   ', 7, null, undefined, ['income']]) assert.equal(api.bearsOn(label, q), undefined, String(label))
+  // The question's words out of their order can turn what was asked into a claim: only a run of consecutive words stays.
+  const asked = 'What did the commission hear about income averaging? Did Jordan Sample know?'
+  assert.equal(api.bearsOn('Did Jordan Sample know', asked), 'Did Jordan Sample know')
+  for (const label of ['Jordan Sample did know', 'Jordan Sample income averaging', 'evidence income averaging']) assert.equal(api.bearsOn(label, asked) ?? api.bearsOn(label, q), undefined, label)
   let call = 0
   const model = new MockLanguageModelV4({ doGenerate: async options => { call++
     if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 2 })

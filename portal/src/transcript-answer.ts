@@ -5,11 +5,19 @@
  * a listing row, the transcript tool's own lines are the answer. Excerpts from transcript text still go to
  * the writer, which quotes or paraphrases them. */
 import {sentenceSpans} from './sentence-bounds.mjs'
+import NAMES from './commission-names.json'
 import {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd} from '../public/transcript-note.js'
 export {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd}
 /** A question about Parliament's own record: a Senate or House committee inquiry, estimates, Hansard. */
-const PARLIAMENTARY = /\b(?:senate|house of representatives|parliament|parliamentary|committee|estimates|hansard)\b/i
+const PARLIAMENTARY = /\b(?:senate|senators?|house of representatives|parliament|parliamentary|committee|estimates|hansard|mps?|members)\b/i
 const COMMISSION_WORDS = /\broyal commission\b|\b(?:special )?commission of inquiry\b|\bboard of inquiry\b/i
+const squashed = (text: string) => ` ${text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()} `
+const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flatMap(c => c.names.map(squashed))
+/** Whether a question names a registered commission or inquiry, as a whole phrase, whatever the case or punctuation
+ * (commission-names.json, built from the registry). */
+export const namesRegisteredCommission = (question: string): boolean => { const q = squashed(question); return REGISTERED.some(name => q.includes(name)) }
+/** The fixed line for a hearing answer whose excerpts were found but none was selected as answering the question. */
+export const NO_PASSAGE_SELECTED = 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.'
 /** Whether a question names Parliament or one of its bodies. Such a question is about Hansard unless it also names a
  * commission; "the Senate inquiry into ..." is a committee inquiry, whose evidence is Committee Hansard. */
 export const parliamentaryQuestion = (question: string): boolean => PARLIAMENTARY.test(question.slice(0, 2000))
@@ -23,8 +31,12 @@ export function hearingEvidenceQuestion(question: string): boolean {
   // through variable-length commission names and whitespace.
   const words = question.slice(0, 2000).toLowerCase().match(/[\p{L}'’-]+/gu) ?? []
   if (!words.some(w => /^(?:said|say|tell|told|evidence|witness(?:es)?|counsel|testif\w*)$/.test(w))) return false
+  // The bare word "inquiry" is not enough: most inquiries are parliamentary committee inquiries, whose evidence is
+  // Committee Hansard ("What did witnesses tell the inquiry into supermarket prices?"). It counts only in a question
+  // that also names a commission, by a commission phrase or a registered name.
+  const commission = COMMISSION_WORDS.test(question.slice(0, 2000)) || namesRegisteredCommission(question.slice(0, 2000))
   return words.some((word, i) => {
-    if (word !== 'inquiry' && !(word === 'royal' && words[i + 1] === 'commission')) return false
+    if (!(word === 'inquiry' && commission) && !(word === 'royal' && words[i + 1] === 'commission')) return false
     const before = words.slice(Math.max(0, i - 10), i)
     if (before.some(w => w === 'at' || w === 'before')) return true
     return before.some((w, n) =>

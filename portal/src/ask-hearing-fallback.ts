@@ -2,12 +2,12 @@
  * Never model prose from another engine: the older engine answers from unrelated passages and general knowledge,
  * and a hearing-evidence answer with no hearing source must not be shown. The reader gets the transcript excerpts
  * research did hold, quoted by code as recorded, or else one fixed line. */
-import { hearingEvidenceQuestion, transcriptPassage, TRANSCRIPT_LABEL, parliamentaryQuestion, hearingWorded } from './transcript-answer'
+import { hearingEvidenceQuestion, transcriptPassage, TRANSCRIPT_LABEL, parliamentaryQuestion, hearingWorded, namesRegisteredCommission } from './transcript-answer'
+export { namesRegisteredCommission }
 import { proseFallback, writingFacts } from './research-writing'
 import { NO_SUPPORTED_ANSWER } from './research-evidence'
 import { inferPeriod } from './ask-period'
 import type { Fact } from './agentic-ask'
-import NAMES from './commission-names.json'
 
 /** The one predicate: for which failed runs the answer may never fall to the older engine's prose. Returning true here
  * would apply it to every question. Today, any of:
@@ -26,10 +26,6 @@ import NAMES from './commission-names.json'
  * promise a royal commission in Parliament?" and "the Senate inquiry into healthcare funding" are not covered. The
  * bare words "inquiry", "Senate inquiry" or "inquiry into" are never enough. */
 const NAMES_A_COMMISSION = /\broyal commission\b|\b(?:special )?commission of inquiry\b|\bboard of inquiry\b/i
-const squashed = (text: string) => ` ${text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()} `
-const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flatMap(c => c.names.map(squashed))
-/** Whether a question names a registered commission or inquiry, as a whole phrase, whatever the case or punctuation. */
-export const namesRegisteredCommission = (question: string): boolean => { const q = squashed(question); return REGISTERED.some(name => q.includes(name)) }
 type Run = { sources?: unknown[]; trail?: unknown[] } | undefined
 export function quotedOrNothing(question: string, research?: Run): boolean {
   if (hearingEvidenceQuestion(question)) return true

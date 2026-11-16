@@ -113,7 +113,8 @@ test('a parliamentary question in hearing-style wording, or one that only mentio
   globalThis.__researchModel=failing(call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}));const ordinary=ordinaryCalls;
   const response=await post('What did the Robodebt Royal Commission recommend?',stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
   assert.equal(response.status,200);assert.equal(ordinaryCalls,ordinary,'no older-engine prose on a commission question');
-  assert.equal(body.answer,FIXED,body.answer);assert.equal(body.machine_written,false);assert.deepEqual(body.citations,{});
+  // No excerpt is quoted to it. (What it does get is main's last resort: the transcript count row and the tool's notes.)
+  assert.doesNotMatch(body.answer,/The hearing transcript records|“/,body.answer);assert.equal(body.machine_written,false);assert.ok((body.answer.match(/evidence, not findings\.(?:\n|$)/g)??[]).length<=2,body.answer);
   // The same stop on a question about what was heard gives the excerpts, with the evidence line once, at the end.
   globalThis.__researchModel=failing(call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}));
   const heard=await post('What did the Robodebt Royal Commission hear about income averaging?',stream,{kind:'all'}),heardRaw=await heard.text(),heardBody=stream?decodeStream(heardRaw):JSON.parse(heardRaw);

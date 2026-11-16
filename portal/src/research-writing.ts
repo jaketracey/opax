@@ -20,7 +20,7 @@ import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
 import {quotationFails,failedQuotations,looseQuotationOf,unescapedQuotes,withoutGivenFactLabels,otherScript,withSourceEllipses} from './research-evidence'
-import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage } from './transcript-answer'
+import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage, NO_PASSAGE_SELECTED, hearingEvidenceQuestion, hearingWorded } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
@@ -31,7 +31,10 @@ export const ANSWER_WRITING_VERSION = 'written-answer-35-excerpts-selected'
 export interface WritingFact { bears_on?: string; evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
-  said?: string[] }
+  said?: string[]
+  /** The research model's own answer call selected these facts (so an excerpt it gave no usable `bears_on` label was
+   * not selected for any part of the question). Unset for a stopped run, where no selection was made. */
+  selected?: boolean }
 /** Added to the writer's contract only when the answer already holds points of its own. */
 export const EACH_FACT_ONCE_RULE = ' The answer already contains the sentences in "said", which follow yours. Each fact appears once across both: write the facts those sentences leave out, and leave to them what they already say.'
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -330,8 +333,14 @@ function factLine(text:string):string {
  * whole as the tool cut it (280 characters at most). Cutting one to a single sentence left stubs like “Alright.” */
 const QUOTED_AS_RECORDED = 6
 function transcriptLines(input: WritingInput): WrittenSentence[] | null {
-  const turns = input.facts.filter(f => f.transcript && !f.coverage)
-  if (!turns.length) return null
+  const held = input.facts.filter(f => f.transcript && !f.coverage)
+  if (!held.length) return null
+  // Where the research model made a selection, only the excerpts it labelled as answering the question are quoted;
+  // with none labelled the reader gets one fixed line, never a block of passages nobody judged to be on point.
+  // A stopped run made no selection: its held excerpts are quoted as before.
+  const labelled = held.filter(f => f.bears_on)
+  if (input.selected && !labelled.length && aboutHearing(input.question)) return [{ text: NO_PASSAGE_SELECTED, facts: [] }]
+  const turns = labelled.length ? labelled : held
   const seen = new Set<string>()
   const lines = turns.filter(f => { const t = f.transcript!, id = (t.speaker ?? '') + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, QUOTED_AS_RECORDED).map(f => {
     const t = f.transcript!, verb = /\?\s*$/.test(t.excerpt) ? 'asked' : 'said'
@@ -635,6 +644,16 @@ function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingI
  * excerpts and no longer words them, so the whole of a transcript answer is the writer's: it is told which excerpts to
  * lead with and may leave out one that does not bear on the question. 300 words, where other answers have 180. */
 export const TRANSCRIPT_COVERAGE_RULE = ' With hearing transcript excerpts among the facts the answer may run to 300 words. Lead with the excerpts that answer the question, in the order of the question\'s parts: a fact\'s bears_on field gives the words of the question it was selected for. Give each excerpt you use one sentence, once, and leave out an excerpt that has no bearing on the question.'
+/** A question about a hearing or its evidence, by its wording. */
+const aboutHearing=(question:string)=>hearingEvidenceQuestion(question)||hearingWorded(question)
+/** Whether an answer to a hearing question cites at least one of the hearing excerpts its writer was given. True
+ * when it was given none, and for any other kind of question (which other records may answer whole). */
+export function citesGivenExcerpt(answer:QualitativeAnswer,input:WritingInput):boolean {
+  const excerpts=input.facts.filter(f=>f.transcript&&!f.coverage)
+  if(!excerpts.length||!aboutHearing(input.question))return true
+  const keys=new Set(excerpts.map(f=>f.evidenceId??(f.source.resource.includes('/t/')?f.source.resource:f.source.resource+'/t/body/0')))
+  return Object.keys(answer.citations).some(key=>keys.has(key))
+}
 /** A quotation of a cited hearing excerpt keeps the excerpt's own "..." where the excerpt was cut. */
 function cutEnds(text:string,ids:number[],input:WritingInput):string {
   const excerpts=ids.flatMap(id=>input.facts.filter(f=>f.id===id&&f.transcript).map(f=>f.transcript!.excerpt))

@@ -2,7 +2,7 @@ import { generateResearchText, answerEntryScanner, researchPreviewGuard } from '
 import { routingRefused } from './research-model'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, citesGivenExcerpt, type WritingInput } from './research-writing'
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
@@ -21,8 +21,10 @@ export type WriterFallback='not_called'|'timeout'|'budget'|'provider'|'unparseab
  * unescaped. Each sentence is the text between `"text":"` and the `","facts":[...]` that closes it, so marks inside
  * it are kept as written. Null when no sentence can be read that way. */
 export function writtenSentences(text:string):{answer_decision?:string;sentences:{text:string;facts:number[];coverage?:boolean}[]}|null {
-  const sentences=[...text.matchAll(/\{\s*"text"\s*:\s*"([\s\S]*?)"\s*,\s*"facts"\s*:\s*\[([\d,\s]*)\]\s*(?:,\s*"coverage"\s*:\s*(true|false)\s*)?\}/g)]
-    .map(m=>({text:m[1].replace(/\\n/g,' ').replace(/\\(["\\\/])/g,'$1'),facts:(m[2].match(/\d+/g)??[]).map(Number),...(m[3]?{coverage:m[3]==='true'}:{})}))
+  // A sentence's text never runs past the start of the next sentence object, so an object with no facts list is
+  // passed over, not merged into the one after it. Escapes are read as JSON reads them (\u201c is a quotation mark).
+  const sentences=[...text.matchAll(/\{\s*"text"\s*:\s*"((?:(?!"\s*\}?\s*,?\s*\{\s*"text"\s*:)[\s\S])*?)"\s*,\s*"facts"\s*:\s*\[([\d,\s]*)\]\s*(?:,\s*"coverage"\s*:\s*(true|false)\s*)?\}/g)]
+    .map(m=>({text:m[1].replace(/\\u([0-9a-fA-F]{4})/g,(_,hex:string)=>String.fromCharCode(parseInt(hex,16))).replace(/\\n/g,' ').replace(/\\(["\\\/])/g,'$1'),facts:(m[2].match(/\d+/g)??[]).map(Number),...(m[3]?{coverage:m[3]==='true'}:{})}))
   if(!sentences.length)return null
   const decision=/"answer_decision"\s*:\s*"(\w+)"/.exec(text)?.[1]
   return {...(decision?{answer_decision:decision}:{}),sentences}
@@ -52,7 +54,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     const fallback=(reason:WriterFallback):QualitativeAnswer=>{
       stats.coherence={...stats.coherence,fallback:true,fallback_reason:reason}
       if(releasedDraft)return {...releasedDraft,coherence:{...releasedDraft.coherence,fallback:true}}
-      if(lastDraft&&lastDraft.answer.trim()&&!saysLent(lastDraft.answer)){const checked=requiredDraft(ground(lastDraft));return {...checked,coherence:{...checked.coherence,fallback:true}}}
+      if(lastDraft&&lastDraft.answer.trim()&&!saysLent(lastDraft.answer)&&citesGivenExcerpt(lastDraft,input)){const checked=requiredDraft(ground(lastDraft));return {...checked,coherence:{...checked.coherence,fallback:true}}}
       const facts=proseFallback(input)
       return ground({...facts,coherence:{...facts.coherence,fallback:true}})
     }, credits=options.creditCooldown ?? researchCreditCooldown
@@ -139,6 +141,10 @@ export function createAnswerWriter(options: ResearchOptions) {
         // How many of the writer's sentences each test left out, for the research record only.
         if(Object.keys(leftOut).length)stats.coherence={...stats.coherence,left_out:leftOut}
         researchTrace('writer.verify', {question:input.question,raw,verified})
+        // A count, not a reading of prose: given hearing excerpts, an answer none of whose sentences cites one is
+        // not used (a general-knowledge sentence would stand as the whole answer to a hearing question). The
+        // excerpts are quoted by code instead (research-writing.ts transcriptLines).
+        if(verified&&!citesGivenExcerpt(verified,activeInput)){lastDraft=null;return fallback('check_failed')}
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback('check_failed')}
         researchTrace('writer.audit',{question:input.question,counts:auditPayload(input.question,verified).counts})
         // Checked on the draft as written: grounding may drop the sentence and leave nothing in its place.

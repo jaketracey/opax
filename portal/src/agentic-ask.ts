@@ -654,7 +654,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   loopProgress.answer=lookup?undefined:progress.answer
   const writeRun = async (run: AgenticPayload) => {
     // The research model's labels for its selected facts are for the writer only: they leave the answer here.
-    const factNotes = run.qualitative?.fact_notes ?? {}
+    const factNotes = run.qualitative?.fact_notes ?? {}, selected = run.qualitative?.fact_notes !== undefined
     if (run.qualitative?.fact_notes) { const { fact_notes: _notes, ...rest } = run.qualitative; run.qualitative = rest }
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
@@ -675,7 +675,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // The model's own points follow the written sentences in the answer (combine below). The writer is told what they
     // say, so a fact one of them states is not written a second time.
     const said=(run.passage_answer?.answer??'').split(/\n+/).map(line=>line.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
-    const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
+    const input={question,period,facts:sheet,...(selected?{selected:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
     let active=true,checkedPartial:QualitativeAnswer|undefined
     // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.
