@@ -12,6 +12,8 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
   } })
   if (run.qualitative) return {
     answered: run.answered, ...(run.reason ? { reason: run.reason } : {}),
+    // What wrote the answer, unless the answer itself says (a writer's facts-only fallback is not model-written).
+    machine_written: run.answer_source === 'model',
     ...run.qualitative, followups: [], agentic: { steps: run.events, ms: run.timings.total_ms },
     ...researchFor(run.qualitative.sources),
   }
@@ -62,6 +64,7 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
     answered: run.answered,
     ...(run.reason ? { reason: run.reason } : {}),
     answer: run.answered ? answer : '',
+    machine_written: run.answer_source === 'model',
     citations: run.answered ? citations : {},
     sources: run.answered ? sources.filter(s => s.cited) : [],
     followups: run.answered && followup && !isElectorateDataQuestion(question) ? [{ label: followup, question: followup, kind: 'speech' }] : [],
