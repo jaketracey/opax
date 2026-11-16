@@ -22,7 +22,10 @@ the `nightly-status` branch of a PUBLIC repository, so every line here is treate
     a value a step wraps across two log lines or transforms (hashes, base64s, truncates) before printing;
   * pass 2 masks whatever is merely shaped like one: Authorization and key=value secrets (quoted or bare), a
     token after a secret word, AWS key ids, URL credentials and query strings, email addresses, IP addresses,
-    home directories, and long hex or base64 runs;
+    home directories (the prefix becomes `~`), internal host names (`<host>`: an EC2 `ip-172-31-5-12` or
+    `ec2-...` name with or without its domain, any name under .internal, .local, .lan or .localdomain, and this
+    machine's own name unless it is a plain word), and long hex or base64 runs. The public hosts the steps
+    fetch from (data.gov.au and the like) are left: they are what a reader needs;
   * a log is read only if it is a regular file (no symlink, device or FIFO), never more than its last 64 KiB,
     and all tails together stay under MAX_TOTAL bytes and MAX_STEPS steps.
 
@@ -36,6 +39,7 @@ import json
 import os
 import re
 import shlex
+import socket
 import stat
 import sys
 import urllib.parse
@@ -74,6 +78,11 @@ URL_QUERY = re.compile(r"(?i)(\b[a-z][a-z0-9+.-]*://[^\s?#\"'<>]+)\?[^\s\"'<>]*"
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
 IPV4 = re.compile(r"(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?![\d.])")
 IPV6 = re.compile(r"(?<![0-9A-Fa-f:])(?:[0-9A-Fa-f]{1,4}:){3,7}[0-9A-Fa-f]{0,4}(?![0-9A-Fa-f:])")
+# a host inside the network: EC2's own names (they spell the address), and any name under a private suffix
+INTERNAL_HOST = re.compile(
+    r"(?i)(?<![A-Za-z0-9.-])(?:(?:ip|ec2)-\d{1,3}(?:-\d{1,3}){3}(?:\.[A-Za-z0-9-]+)*"
+    r"|(?:[A-Za-z0-9-]+\.)+(?:internal|local|lan|localdomain))(?![A-Za-z0-9-])")
+HOST_MASK = "<host>"
 HOME_DIR = re.compile(r"(?:/home|/Users)/[^/\s\"':]+")
 LONG_HEX = re.compile(r"(?<![0-9A-Za-z])[0-9A-Fa-f]{16,}(?![0-9A-Za-z])")
 # a base64 or URL-safe base64 run: long, and mixed enough not to be a word or a path segment
@@ -175,7 +184,7 @@ URL_PATH = re.compile(r"(?i)\b[a-z][a-z0-9+.-]*://[^\s?#\"'<>]+")
 MASK = "[redacted]"
 
 
-def _spans(line: str, secrets: list[str], home: str, cut: bool) -> list[tuple[int, int, str]]:
+def _spans(line: str, secrets: list[str], home: str, cut: bool, host: str = "") -> list[tuple[int, int, str]]:
     """Every stretch of the ORIGINAL line that must not be published, as (start, end, replacement).
 
     Each rule reads the line as the step wrote it and none reads another rule's output, so no order of rules can
@@ -221,6 +230,10 @@ def _spans(line: str, secrets: list[str], home: str, cut: bool) -> list[tuple[in
         # user:pass@host in a URL also reads as an address: the credentials are masked above, the host stays
         if not any(start < m.end() and m.start() < end + 1 for start, end in userinfo):
             spans.append((m.start(), m.end(), "[email]"))
+    spans += [(m.start(), m.end(), HOST_MASK) for m in INTERNAL_HOST.finditer(line)]
+    if host:
+        spans += [(m.start(), m.end(), HOST_MASK)
+                  for m in re.finditer(r"(?i)(?<![A-Za-z0-9-])" + re.escape(host) + r"(?![A-Za-z0-9-])", line)]
     spans += [(m.start(), m.end(), "[ip]") for m in IPV4.finditer(line)]
     spans += [(m.start(), m.end(), "[ip]") for m in IPV6.finditer(line)]
     spans += [(m.start(), m.end(), MASK) for m in LONG_HEX.finditer(line)]
@@ -252,13 +265,23 @@ def _spans(line: str, secrets: list[str], home: str, cut: bool) -> list[tuple[in
     return spans
 
 
-def redact(line: str, secrets: list[str], home: str = "") -> str:
+def own_host(name: str | None = None) -> str:
+    """This machine's name, if it is worth masking: one with a digit, a hyphen or a dot. A plain word (`desktop`)
+    is left, since masking it would eat the same word wherever a log uses it."""
+    try:
+        name = socket.gethostname() if name is None else name
+    except OSError:
+        return ""
+    return name if len(name) >= 4 and re.search(r"[\d.-]", name) else ""
+
+
+def redact(line: str, secrets: list[str], home: str = "", host: str = "") -> str:
     # Cut first: the patterns are slow on a very long line (64 KiB of `a.b-c_d.` took 84 s, past the caller's
     # timeout, so no tails at all).
     cut = len(line) > PRE_CUT
     line = CONTROL.sub(" ", line[:PRE_CUT])
     out, at, pending = [], 0, None           # pending: the merged span being built (start, end, replacement)
-    for start, end, text in sorted(_spans(line, secrets, home, cut)):
+    for start, end, text in sorted(_spans(line, secrets, home, cut, host)):
         if pending and start <= pending[1]:  # overlapping or touching: one mask, and the plainest label loses
             pending = (pending[0], max(pending[1], end), pending[2] if pending[2] == text else MASK)
             continue
@@ -276,7 +299,7 @@ def redact(line: str, secrets: list[str], home: str = "") -> str:
     return line.rstrip()
 
 
-def tail(path: Path, secrets: list[str], home: str = "") -> list[str]:
+def tail(path: Path, secrets: list[str], home: str = "", host: str = "") -> list[str]:
     # A step log is a regular file the refresh wrote. Anything else (a symlink to another file or to a device
     # that never ends, a FIFO that never opens) is not read, and no read is longer than READ_BYTES.
     try:
@@ -297,21 +320,22 @@ def tail(path: Path, secrets: list[str], home: str = "") -> list[str]:
     lines = [line for line in raw.splitlines() if line.strip()]
     if size > READ_BYTES and lines:
         lines = lines[1:]                       # the first line of a partial read may start mid-line
-    lines = [redact(line, secrets, home) for line in lines[-MAX_LINES:]]
+    lines = [redact(line, secrets, home, host) for line in lines[-MAX_LINES:]]
     while lines and sum(len(line.encode()) + 1 for line in lines) > MAX_BYTES:
         lines = lines[1:]                       # the end of the log is what explains the failure
     return lines
 
 
 def step_tails(pipe: Path, steps: list[str], environ: dict, env_files: list[Path],
-               env0_files: list[Path] = ()) -> dict[str, list[str]]:
+               env0_files: list[Path] = (), host: str | None = None) -> dict[str, list[str]]:
     secrets = known_secrets(environ, env_files, env0_files)
     home = environ.get("HOME", "")
+    host = own_host(host)
     out, omitted, used = {}, 0, 2
     for step in steps:
         if not STEP_NAME.fullmatch(step) or step in out:
             continue
-        lines = tail(pipe / f"{step}.log", secrets, home)
+        lines = tail(pipe / f"{step}.log", secrets, home, host)
         if not lines:
             continue
         cost = len(json.dumps({step: lines})) + 2

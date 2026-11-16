@@ -865,12 +865,54 @@ PYEOF
 new_sandbox s3g
 FAKE_MODE=ok OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=failsteps FAKE_WEEKLY_LOG_STEP=x_fits FAKE_WEEKLY_LOG_LINE="KeyError: 'activities'" nightly
 check "a failed periodic step is published as periodic_<step>, so it cannot be read as the daily step of that name" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"failed_step_logs\"] == {\"periodic_x_fits\": [\"KeyError: \\x27activities\\x27\"]}, s.get(\"failed_step_logs\")'"
+# The stale tails and the validation lines are new text on the public branch (review, 16 Nov 2026): each is fed a
+# log that carries a secret every way a step may print one, and the classes that must not be published at all.
+LEAK_SECRET='wJalr/K7+bPx=Z9q&OPAXleak'   # only in .env, and it needs encoding in a URL
+leak_lines() {   # $1: the line that explains the failure, printed last
+  python3 - "$LEAK_SECRET" "$1" <<'PYEOF'
+import sys, urllib.parse as u
+s, last = sys.argv[1], sys.argv[2]
+print(f"retry https://api.example.gov.au/v1/items/{u.quote(s, safe='')}/x")
+print(f"sent [{s}] as it is")
+print(f"posted {u.quote_plus(s)} as a form field")
+print(f"decoded field {s.replace('+', ' ')} end")
+print(f"proxy https://svc:{u.quote(s, safe='')}@proxy.example.gov.au/v1 and https://svc:hunter2pass@mirror.example.gov.au/v1")
+print("GET https://bucket.example.gov.au/obj?X-Amz-Credential=AKIAIOSFODNN7OPAXKEY&X-Amz-Signature=0123abcd4567ef890123abcd4567ef89")
+print("Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcGF4In0.c2lnbmF0dXJlLW9wYXg")
+print("lock held on ip-172-31-5-12 via http://kb-proxy.opax.internal:8080/v1")
+print('  File "/home/ubuntu/opax/scripts/x.py", line 3; cache /Users/someone/.cache/y.json')
+print("notify ops@example.com.au")
+print("source https://data.gov.au/data/api/3/action/package_search answered 503")
+print(last)
+PYEOF
+}
+leak_free() {   # $1 status.json, $2 the field, $3 the step, $4 the last line expected
+  python3 - "$LEAK_SECRET" "$@" <<'PYEOF'
+import json, re, sys, urllib.parse as u
+s, path, field, step, last = sys.argv[1:6]
+lines = json.load(open(path))[field][step]
+text = "\n".join(lines)
+lower = lambda q: re.sub("%[0-9A-F]{2}", lambda m: m.group(0).lower(), q)
+forms = {s, s.replace("+", " "), u.quote(s, safe=""), u.quote(s), u.quote_plus(s)}
+for form in forms | {lower(f) for f in forms}:
+    assert form not in text, ("secret", form)
+for leak in ("hunter2pass", "svc:", "AKIAIOSFODNN7OPAXKEY", "X-Amz-Signature=0123", "0123abcd4567ef89", "eyJhbGci", "c2lnbmF0dXJl",
+             "ip-172-31-5-12", "opax.internal", "kb-proxy", "/home/ubuntu", "/Users/someone", "ops@example.com.au"):
+    assert leak not in text, (leak, text)
+assert "<host>" in text and "~/opax/scripts/x.py" in text and "[email]" in text, text
+assert "https://data.gov.au/data/api/3/action/package_search answered 503" in text, text   # a public source host stays
+assert lines[-1] == last, lines[-1]
+PYEOF
+}
 new_sandbox s3h
 # what keeps the frl group owed: the crawl exits 3 and says why on the last line of its log, which only the box had
-mkdir -p "$SB/leak"; printf 'ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=Qp4Lm8Rs2Vt6Hd5Jk9Nx\n' > "$REPO/.env"
+printf "ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=Qp4Lm8Rs2Vt6Hd5Jk9Nx\nTVFY_API_KEY='%s'\n" "$LEAK_SECRET" > "$REPO/.env"
 FAKE_MODE=ok OPAX_FORCE_GROUPS=frl FAKE_WEEKLY_MODE=stale FAKE_STALE_STEPS=frl_instruments FAKE_WEEKLY_LOG_STEP=frl_instruments \
-  FAKE_WEEKLY_LOG_LINE="$(printf 'token=Qp4Lm8Rs2Vt6Hd5Jk9Nx in %s/opax\nFRL HELD: Quiet window ending; checkpoint kept for the next quiet window' "$HOME")" nightly
+  FAKE_WEEKLY_LOG_LINE="$(printf 'token=Qp4Lm8Rs2Vt6Hd5Jk9Nx in %s/opax\n' "$HOME"; leak_lines 'FRL HELD: Quiet window ending; checkpoint kept for the next quiet window')" nightly
 status_json > "$SB/status.json"
+check "the stale step's log on the box really carries every form of the secret" bash -c "grep -qF '$LEAK_SECRET' '$HOME/.cache/autoresearch/pipeline/frl_instruments.log' && grep -q 'ip-172-31-5-12' '$HOME/.cache/autoresearch/pipeline/frl_instruments.log'"
+check "a stale tail carries no secret (raw, percent- or form-encoded, URL userinfo, signed query, bearer), internal host, home path or email; the public source host stays" \
+  leak_free "$SB/status.json" stale_step_logs periodic_frl_instruments 'FRL HELD: Quiet window ending; checkpoint kept for the next quiet window'
 check "a stale step: the night is ok, and the status carries what the source said under stale_step_logs, redacted" python3 - "$SB/status.json" "$HOME" <<'PYEOF'
 import json, sys
 s = json.load(open(sys.argv[1]))
@@ -1510,6 +1552,28 @@ check "exit 1" test "$NRC" -eq 1
 check "the shrunken speakers.json was not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 check "votes and corpus still went out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member' && git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
 check "status says which group failed validation" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'validation failed for speakers'"
+new_sandbox s25leak
+# a validator that prints what it should not before its FAIL line (the fixture's python answers for validate_data.py speakers)
+printf "ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=Qp4Lm8Rs2Vt6Hd5Jk9Nx\nTVFY_API_KEY='%s'\n" "$LEAK_SECRET" > "$REPO/.env"
+leak_lines 'FAIL speakers: 10 speakers, expected at least 98 of the 100 in HEAD' > "$SB/validator.out"
+printf '#!/usr/bin/env bash\ncase " $* " in *"validate_data.py speakers "*) cat %q; exit 1 ;; esac\nexec %q "$@"\n' "$SB/validator.out" "$(command -v python3)" > "$REPO/.venv/bin/python"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+status_json > "$SB/status.json"
+check "the validator's output really reached the box log with the secret in it" bash -c "grep -qF '$LEAK_SECRET' '$HOME/.cache/autoresearch/pipeline/validate_speakers.log' && [ '$NRC' -eq 1 ]"
+check "a validation tail carries no secret in any form, internal host, home path or email; the FAIL line and the public source host stay" \
+  leak_free "$SB/status.json" failed_step_logs validate_speakers 'FAIL speakers: 10 speakers, expected at least 98 of the 100 in HEAD'
+new_sandbox s25log
+# the validation log cannot be written (something is in its place; a full disk fails the same write): the validator runs all the same
+mkdir -p "$HOME/.cache/autoresearch/pipeline/validate_speakers.log"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+check "an unwritable validation log does not hold a valid group: it is validated and published, the night is ok" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && grep -q '^ok   speakers' '$SB/nightly.out'"
+check "and the status says so in a warning" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"could not write the validation log of speakers\" in w for w in s[\"warnings\"]), s[\"warnings\"]'"
+new_sandbox s25log2
+mkdir -p "$HOME/.cache/autoresearch/pipeline/validate_speakers.log"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=shrink nightly
+check "an unwritable validation log and a group that really fails: still put back on the validator's verdict, with the warning and no tail" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert any(\"validation failed for speakers\" in f for f in s[\"failures\"]) and any(\"could not write the validation log of speakers\" in w for w in s[\"warnings\"]) and \"validate_speakers\" not in s.get(\"failed_step_logs\", {}), s'"
+new_sandbox s25why
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=shrink nightly
 check "and why: the validator's own FAIL line is published like a failed step's log" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; l=json.load(sys.stdin)[\"failed_step_logs\"][\"validate_speakers\"]; assert any(x.startswith(\"FAIL speakers: \") for x in l), l'"
 new_sandbox s25b
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=failsteps nightly

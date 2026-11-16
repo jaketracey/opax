@@ -799,12 +799,17 @@ fi
 for group in "${DATA_GROUPS[@]}"; do
   case $group in corpus|wrangler) continue ;; esac
   if [ "$group" != bills ] && [ "$group" != votes ] && ! group_changed "$group"; then continue; fi
-  # the validator's own lines ("FAIL <group>: <what>") are kept like a failed step's log, so the status says why
+  # The validator's own lines ("FAIL <group>: <what>") are kept like a failed step's log, so the status says why.
+  # The validator runs first and its verdict stands whatever happens to that log: one that cannot be written (a
+  # full disk, something in its place) is a warning and no tail, never a group put back unvalidated.
   vstep="validate_${group//-/_}"
-  run "$PY" scripts/vm/validate_data.py "$group" > "$PIPE/$vstep.log"; vrc=$?
-  cat "$PIPE/$vstep.log" 2>/dev/null
+  vout=$(run "$PY" scripts/vm/validate_data.py "$group"); vrc=$?
+  [ -z "$vout" ] || printf '%s\n' "$vout"
+  vlogged=1
+  { printf '%s\n' "$vout" > "$PIPE/$vstep.log"; } 2>/dev/null || vlogged=0
+  [ "$vlogged" = 1 ] || warn "could not write the validation log of $group (pipeline/$vstep.log): it was validated all the same, but a failure would publish no reason"
   if [ "$vrc" -ne 0 ]; then
-    keep_step_logs failed "" "$vstep"
+    [ "$vlogged" != 1 ] || keep_step_logs failed "" "$vstep"
     revert_group "$group"
     fail "validation failed for $group: reverted to HEAD and not published tonight"
   fi
