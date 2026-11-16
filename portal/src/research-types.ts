@@ -58,7 +58,9 @@ export interface QualitativeAnswer {
   /** Resolved question constraints survive writing and cached response boundaries. */
   answer_scope?: Partial<import('./ask-constraints').AskConstraints> & {entity_type?:string}
   citations: Record<string, [number, number][]>
-  sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; chamber?: string; kind: string; remuneration?: RemunerationRecord; claim_atoms?: (ClaimAtom & {periodEvidenceId?:string})[]; receipt?: ReceiptFact; coverage?: boolean; entities?: string[]; member?: import('./ask-member-label').CountedMember }[]
+  sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; chamber?: string; kind: string; remuneration?: RemunerationRecord; claim_atoms?: (ClaimAtom & {periodEvidenceId?:string})[]; receipt?: ReceiptFact; coverage?: boolean; entities?: string[]; member?: import('./ask-member-label').CountedMember
+    /** A hearing transcript passage's typed facts: speaker role, commission, hearing date and page (transcript-answer.ts). */
+    transcript?: import('./transcript-answer').TranscriptAttribution }[]
   /** Some or all of the answer's points could not be matched to a passage and carry no citation. */
   answer_status?: 'uncited' | 'partly_cited'
   /** Whether a language model wrote the answer text a reader sees: true for a writer's or the loop's own words, false

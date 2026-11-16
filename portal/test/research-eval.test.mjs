@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { build } from 'esbuild'
-import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck, answerStyleChecks } from '../../scripts/research_eval_grade.mjs'
+import { namedPeopleOutsideQuotes, plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck, answerStyleChecks } from '../../scripts/research_eval_grade.mjs'
 import { parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -295,3 +295,26 @@ test('direct prose can use rose or cited while a raw numeric row cannot',()=>{
  assert.equal(answerStyleChecks('What was the salary?','Robin Example is the highest paid: $100,000 a year.').direct_first_sentence,'pass');
  assert.equal(answerStyleChecks('Who spoke most and what did the funding cost?','Robin Example led with 9 speeches. The funding cost $10,000.').direct_first_sentence,'pass');
 });
+
+test('the eval counts people named outside quotation marks in an answer that cites a hearing transcript; it grades nothing', () => {
+  const snippet = 'Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn (witness): "I told Jordan Sample that Ms Placeholder had the Services Australia advice." Hearing transcript: evidence, not findings.'
+  const sources = [{ resource: 'fact-1', cited: true, kind: 'record', title: snippet, snippet }]
+  const count = (answer, s = sources) => namedPeopleOutsideQuotes(answer, { sources: s })
+  // Inside a verbatim quotation a name is the evidence itself.
+  assert.deepEqual(count('A witness said on 10 March 2023 (page P-4899): “I told Jordan Sample that Ms Placeholder had the Services Australia advice.”'), { applies: true, count: 0, names: [] })
+  assert.equal(count('A witness said on 10 March 2023 (page P-4899) that "Ms Placeholder had the advice".').count, 0)
+  // In the model's own words: a title and surname, and a full name the cited excerpt holds.
+  assert.deepEqual(count('A witness said on 10 March 2023 (page P-4899) that Ms Placeholder had the advice and that Jordan Sample was told.').names, ['Ms Placeholder', 'Jordan Sample'])
+  // Roles, bodies and places are not people.
+  assert.equal(count('A witness told the Royal Commission on 10 March 2023 (page P-4899) that an officer had the Services Australia advice; the Commissioner asked when.').count, 0)
+  // An answer that cites no hearing transcript is not measured.
+  assert.deepEqual(count('Ms Placeholder spoke in the Senate.', [{ resource: 'speech-1', cited: true, kind: 'speech', title: 'Senate', snippet: 'Ms Placeholder: I rise.' }]), { applies: false, count: 0, names: [] })
+  // The grade carries the count and a flag, and no axis moves.
+  const q = evals.questions.find((x) => x.kind === 'qualitative') ?? evals.questions[0]
+  const named = { answered: true, answer: 'A witness said that Ms Placeholder had the advice.', citations: { 'fact-1/t/body/0': [[0, 49]] }, sources }
+  const clean = { ...named, answer: 'A witness said that an officer had the advice....'.slice(0, 49) }
+  const a = gradeRow(q, named, { roster, parties }), b = gradeRow(q, clean, { roster, parties })
+  assert.equal(a.named_people.count, 1); assert.equal(b.named_people.count, 0)
+  assert.ok(a.flags.includes('named person outside a quotation: Ms Placeholder'))
+  assert.deepEqual(a.axes, b.axes); assert.equal(a.overall, b.overall)
+})

@@ -3,13 +3,15 @@
  * suppression order or a pseudonymous witness carries no text: only the pages a word appears on. */
 import { object, records, type RecordRow } from './published-records'
 import { readToolAsset, type ToolEnv } from './types'
+import { answeredQuestion, transcriptRoles, type RoleFor, type SpeakerRole } from './transcript-roles'
+import { transcriptUse } from '../transcript-answer'
 
 const SHARD = /^\/transcripts\/terms\/\d{2}\.json$/
 const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null }
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker_role?: SpeakerRole, question?: { text: string, role?: SpeakerRole } }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -81,8 +83,9 @@ function headingOf(line: string): { heading: string, length: number } | null {
 // "Q." and "A." open turns that carry no heading of their own; the publisher also prints "Q --".
 const MARK = /^([QA])(?:[.:]| --)(?=\s|$)/
 // A line of the publisher's that is nobody's words: one opened with "<", or in capitals an examination line, an
-// adjournment or resumption, or an exhibit or marked-for-identification line ("EXHIBIT #A1 JOINT REPORT OF ...", "MFI #2 ...").
-const NOTE = /^(?:(?:FURTHER |CROSS[- ]|RE[- ])*EXAMINATION BY|(?:[A-Z]+ )?ADJOURNMENT\b|ADJOURNED\b|UPON RESUM|EXHIBIT #?[A-Z0-9]|MFI ?#)/
+// adjournment or resumption ("AT 4.08PM THE COMMISSION WAS ADJOURNED TO ..."), or an exhibit or marked-for-identification
+// line ("EXHIBIT #A1 JOINT REPORT OF ...", "MFI #2 ...").
+const NOTE = /^(?:(?:FURTHER |CROSS[- ]|RE[- ])*EXAMINATION BY|(?:[A-Z]+ )?ADJOURNMENT\b|ADJOURNED\b|UPON RESUM|EXHIBIT #?[A-Z0-9]|MFI ?#|(?:AT \d{1,2}(?:[.:]\d{2})? ?[AP]M )?THE (?:SPECIAL )?(?:COMMISSION|INQUIRY|HEARING)(?: OF INQUIRY)? WAS ADJOURNED\b)/
 /** No lower-case words: bracketed times and "am"/"pm" after a figure aside. */
 const allCapitals = (line: string) => !/[a-z]/.test(line.replace(/\[[^\]]*\]|(?<=\d ?)[ap]m\b/g, ''))
 const noteLine = (line: string) => line[0] === '<' || (NOTE.test(line) && allCapitals(line))
@@ -142,7 +145,9 @@ export function pageTurns(page: string, pdfPage?: number): { text: string, turns
   }
   for (const t of turns) { while (t.start < t.end && text[t.start] === ' ') t.start++; if (t.start >= t.end) t.start = t.end = Math.max(t.start, t.end) }
   const listed = (pattern: RegExp) => lines.filter(l => pattern.test(l)).length
-  const exhibits = /^Exhibit (?:List$|Document ID\b)/.test(`${lines[0] ?? ''} ${lines[1] ?? ''}`.trim()) || lines[0] === 'Exhibit List'
+  // An exhibit table can also open with the exhibit's own title on the same line as the column heads
+  // ("Exhibit 1 - Letter ... Document ID Exhibit number").
+  const exhibits = /^Exhibit (?:List$|Document ID\b)/.test(`${lines[0] ?? ''} ${lines[1] ?? ''}`.trim()) || lines[0] === 'Exhibit List' || /^Exhibit\b.*\bDocument ID\b/.test(lines[0] ?? '')
   if (pdfPage === 1 || exhibits || listed(REFERENCE) * 5 >= lines.length * 2 || (listed(DOCUMENT) >= 4 && listed(DOCUMENT) * 3 >= lines.length)) return { text, turns: [] }
   return { text, turns: turns.filter((t, i) => i > 0 || t.end > t.start) }
 }
@@ -150,7 +155,8 @@ export function pageTurns(page: string, pdfPage?: number): { text: string, turns
 /** A verbatim excerpt around the first query word spoken on the page, kept inside the one turn the word is in: no
  * heading, mark or note sits in the text. A word found only in headings, marks or notes gives the words its first
  * opener is followed by, which may be none. No speaker is returned: Ask prose and citations name no one. */
-export function excerpt(text: string, terms: string[], pdfPage?: number): { excerpt: string } {
+// With the transcript's roles (transcript-roles.ts), the turn's role is returned where the page makes it certain.
+export function excerpt(text: string, terms: string[], pdfPage?: number, roleFor?: RoleFor): { excerpt: string, speaker_role?: SpeakerRole, question?: { text: string, role?: SpeakerRole } } {
   const { text: flat, turns } = pageTurns(text, pdfPage)
   // The first place a query word is spoken wins; failing that, the first opener one is printed in.
   let spoken = -1, printed = -1
@@ -172,7 +178,10 @@ export function excerpt(text: string, terms: string[], pdfPage?: number): { exce
   let end = Math.min(until, start + EXCERPT)
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
   const body = flat.slice(start, Math.min(end, until)).trim()
-  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}` }
+  const role = body ? roleFor?.({ text: flat, turns, pdfPage }, turn) : undefined
+  // A one-line answer shown whole comes with the question it replied to (transcript-roles.ts), inside the same cap.
+  const question = roleFor && role && start === from && end >= until ? answeredQuestion({ text: flat, turns, pdfPage }, turn, roleFor, EXCERPT - body.length) : undefined
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}`, ...(role ? { speaker_role: role } : {}), ...(question ? { question } : {}) }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
@@ -186,15 +195,18 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
   const index = object(doc.terms), pages = records(doc.pages)
   const score = new Map<number, number>()
   for (const t of terms) for (const n of (index[t] as number[]) ?? []) score.set(n, (score.get(n) ?? 0) + 1)
-  const quote = doc.quote_policy === 'quote'
+  const quote = doc.quote_policy === 'quote', roleFor = quote ? transcriptRoles(pages, key) : undefined
+  // A one-line answer's question is attached only for a source whose passages the writer may word.
+  const wordable = transcriptUse(typeof row?.commission === 'string' ? row.commission : undefined) === 'writer'
   // The best pages first; a page whose match leaves nothing to quote (a heading with no words after it, a word
   // index) is passed over for the next best.
   const hits: PageHit[] = []
   for (const [n] of [...score].sort((a, b) => b[1] - a[1] || a[0] - b[0])) {
     if (hits.length >= max) break
     const page = pages.find(p => p.n === n) ?? {}
-    const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
-      ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, n) : { excerpt: null }) }
+    const found: { excerpt: string | null, speaker_role?: SpeakerRole, question?: { text: string, role?: SpeakerRole } } = quote && typeof page.text === 'string' ? excerpt(page.text, terms, n, roleFor) : { excerpt: null }
+    if (!wordable) delete found.question
+    const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`, ...found }
     if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) hits.push(hit)
   }
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),

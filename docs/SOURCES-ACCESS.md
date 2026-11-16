@@ -166,6 +166,16 @@ supplied by the OPAX maintainer, 11 Nov 2026", distinct from OPAXBot fetches, ci
 to the publisher's URL, kept outside git and never fetched by the refresh. No source
 setting changed. The list is in [royal commissions data](DATA-ROYAL-COMMISSIONS.md).
 
+### Speaker roles on hearing transcript passages, 16 November 2026
+
+Where OPAX quotes a hearing transcript it says what role the speaker had (the
+Commissioner, counsel assisting, a witness, a lawyer appearing at the hearing, or that a
+question was put) and never who they were. Roles come from the transcript's own "Q." and
+"A." marks and headings. Where the publisher mis-printed a mark, a role can be wrong. Tell
+us at corrections@opax.com.au and we fix it the same day: the page is listed and its
+passages are then quoted with "the transcript records" and no role. The rules, the known
+pages and the counts are in [royal commissions data](DATA-ROYAL-COMMISSIONS.md).
+
 ## Review correction and rollback
 
 The review correction removes the remaining contact-log browser path, tightens

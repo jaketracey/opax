@@ -140,7 +140,10 @@ function evidenceRows(payload){
  const rows=[]
  for(const source of Array.isArray(payload.sources)?payload.sources:[]){
   if(!source||typeof source!=='object'||typeof source.resource!=='string')continue
-  const text=String(source.snippet??''),base={remuneration:source.remuneration,id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
+  const text=String(source.snippet??''),base={remuneration:source.remuneration,id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber,
+   // A hearing transcript passage: its typed attribution when the writer's claim plan carried one, and whether the
+   // source holds a quoted turn at all (the transcript tool's own line format, not answer prose).
+   transcript:source.transcript,transcriptExcerpt:/\btranscript page \S+ \(PDF page \d+\), hearing turn\b/.test(text)}
   const receipt=source.receipt
   // The tool's own association, read as data: both sides own the amount, for its period.
   if(receipt)rows.push({...base,text:`${receipt.party} ${receipt.source} $${receipt.amount.toLocaleString('en-AU')}`,entity:receipt.source,donor:receipt.source,period:periods(receipt.period),figures:figures('$'+receipt.amount.toLocaleString('en-AU')).map(f=>({...f,owner:receipt.party,owners:[receipt.source,receipt.party],period:periods(receipt.period)}))})
@@ -301,6 +304,14 @@ export function auditPayload(question,payload,{roster=[]}={}){
    if(context&&!candidates.length&&question.includes(p.raw)){claims.push({type:'request_period',entity:'request',metric:'requested period',value:p.value,period:[p.value],text,evidence_ids:['request'],status:'supported'});continue}
    add({type:'period',entity,metric:'period',value:p.value,period:[p.value],text,offset:sentenceAt+p.at},candidates,'period is not in the associated selected evidence')
   }
+  // A sentence that cites a hearing transcript passage is an attributed claim. It is supported when the cited
+  // source carries the typed attribution (speaker role, hearing date, page) the writer was given, whose claim is
+  // "attributed" only where the passage's source lets the writer word it (transcript-answer.ts writerMayWord); a
+  // passage cited without one, or one that is quote-only, is recorded as any unsupported claim is.
+  if(citedIds.length)for(const id of new Set(selected.filter(r=>r.transcript||r.transcriptExcerpt).map(r=>r.id))){
+   const rows=selected.filter(r=>r.id===id),typed=rows.find(r=>r.transcript)?.transcript
+   add({type:'attribution',entity:typed?.speaker_role??'',metric:'transcript attribution',value:typed?.transcript_page??'',period:typed?.hearing_date?[typed.hearing_date]:[],text,offset:sentenceAt},typed?.claim==='attributed'?rows.slice(0,1):[],'hearing transcript passage is cited without its speaker role, date and page, or its source is quoted only')
+  }
   if(unclosedQuoteOffset(text)>=0){
    const at=unclosedQuoteOffset(text);add({type:'quote',entity:speaker??'',metric:'literal quote',value:'unbalanced quotation',quote:text.slice(at),period:[],text,offset:sentenceAt+at},[],'quotation is malformed and cannot be verified literally')
   }
@@ -310,7 +321,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
    add({type:'quote',entity,metric:'literal quote',value:q.value,quote:q.value,period:dates.map(p=>p.value),text,offset:sentenceAt+q.at},candidates,'quotation/owner/figure/period is not one literal selected evidence atom')
   }
  }
- return {claims,findings,counts:{claims:claims.length,figures:claims.filter(c=>c.type==='figure').length,entities:claims.filter(c=>c.type==='entity').length,periods:claims.filter(c=>c.type==='period').length,quotes:claims.filter(c=>c.type==='quote').length,unverified:findings.length}}
+ return {claims,findings,counts:{claims:claims.length,figures:claims.filter(c=>c.type==='figure').length,entities:claims.filter(c=>c.type==='entity').length,periods:claims.filter(c=>c.type==='period').length,quotes:claims.filter(c=>c.type==='quote').length,...(claims.some(c=>c.type==='attribution')?{attributions:claims.filter(c=>c.type==='attribution').length}:{}),unverified:findings.length}}
 }
 /** The one audit rule that changes answer text. A sentence giving a dollar figure to a named donor, recipient or
  * contract holder, where the cited money record holds that amount for a different party or period, is corrected from

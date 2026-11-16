@@ -2,7 +2,7 @@ import { generateResearchText, answerEntryScanner, researchPreviewGuard } from '
 import { routingRefused } from './research-model'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, transcriptWritingInput, unattributedTranscriptSentences, wordedTranscriptFact, type WritingInput } from './research-writing'
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
@@ -19,13 +19,16 @@ export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number, preview?: AnswerPreview): Promise<QualitativeAnswer> => {
     // Leave the enclosing bounded() race time to receive this writer's checked stopped-draft result.
     const deadline=Date.now()+Math.max(0,remainingMs-50)
-    input=moneyWritingInput({...input,facts:dedupeWritingFacts(input.facts)})
+    // Hearing transcript excerpts reach the prompt as typed turns (speaker role, date, page), never as a tool block.
+    input=transcriptWritingInput(moneyWritingInput({...input,facts:dedupeWritingFacts(input.facts)}))
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     let releasedDraft:QualitativeAnswer|undefined
     const previewCheck=researchPreviewGuard('writer')
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // A chamber named for a cited speaker is the one their source records (ask-chamber-phrases.ts).
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question,releasedDraft?.answer);return checked as unknown as QualitativeAnswer}
+    // Transcript passages no model may word, with nothing else found: they are quoted as recorded, with no writing turn.
+    if(input.facts.some(f=>f.transcript)&&!input.facts.some(f=>!f.coverage&&(!f.transcript||wordedTranscriptFact(f))))return ground(proseFallback(input))
     // Exact record findings have a complete prose answer without a writing turn, unless that prose is only a limit.
     if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input)){const exact=proseFallback(input);if(exact.answer_decision!=='limitation')return ground(exact)}
     // No receipt is ever said to be lent (A34 review): the AEC types none as a loan, and OPAX matches none to a
@@ -104,7 +107,8 @@ export function createAnswerWriter(options: ResearchOptions) {
             const checked=verifyWrittenAnswer({sentences},activeInput)
             // A receipt's lending check and the required headline/vote split can replace the complete draft.
             // Retain that affected tail until its decision is known; no weaker per-sentence variant is substituted.
-            if(!checked||input.facts.some(f=>f.source.receipt))return
+            // So can the transcript attribution repair pass (below), so a transcript answer is held the same way.
+            if(!checked||input.facts.some(f=>f.source.receipt||wordedTranscriptFact(f)))return
             const released=await preview({...withRecordedChambers(checked),research:{pre_writer_sources:found}} as QualitativeAnswer,keepsAll)
             if(released)releasedDraft=released
           })
@@ -121,6 +125,9 @@ export function createAnswerWriter(options: ResearchOptions) {
         lastDraft=draftWrittenAnswer(raw,activeInput)
         const verified=verifyWrittenAnswer(raw,activeInput)
         researchTrace('writer.verify', {question:input.question,raw,verified})
+        // A hearing transcript sentence without the writer's attributed mark is an unsupported one: one repair pass,
+        // then that sentence alone is left out (verifyWrittenAnswer); with nothing left, the passages are quoted as recorded.
+        if(pass===0&&unattributedTranscriptSentences(raw,activeInput)>0&&remainingMs-(Date.now()-startedWriting)>=500){researchTrace('writer.transcript_repair',{question:input.question,unattributed:unattributedTranscriptSentences(raw,activeInput)});prompt=writingPrompt(input,true);continue}
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
         researchTrace('writer.audit',{question:input.question,counts:auditPayload(input.question,verified).counts})
         // Checked on the draft as written: grounding may drop the sentence and leave nothing in its place.

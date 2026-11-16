@@ -129,7 +129,7 @@ test('a page is read into turns one line at a time, each with its heading as pri
   const exhibits = ['12. ABC.0001.0002.0003 Letter to the board', 'RE: the request', '13. ABC.0001.0002.0004 Reply from the board', 'FW: the reply', 'dated 1 February 2020', '14. ABC.0001.0002.0005 Minute', '15. ABC.0001.0002.0006 Email'].join('\n')
   for (const page of [index, exhibits]) { assert.deepEqual(api.pageTurns(page).turns, []); assert.deepEqual(api.excerpt(page, ['board', 'able']), { excerpt: '' }) }
   // An exhibit list is also known by how it opens, whatever its rows hold.
-  for (const top of ['Exhibit List', 'Exhibit\nDocument ID Document title Date', 'Exhibit Document ID Document title Date']) assert.deepEqual(api.pageTurns(`${top}\n12. Letter to the board\nMS QUELLWORTH: wrote on 1 February.`).turns, [])
+  for (const top of ['Exhibit List', 'Exhibit\nDocument ID Document title Date', 'Exhibit Document ID Document title Date', 'Exhibit 1 – Letter from the agency with 5 enclosures Document ID Exhibit number']) assert.deepEqual(api.pageTurns(`${top}\n12. Letter to the board\nMS QUELLWORTH: wrote on 1 February.`).turns, [])
   assert.equal(api.pageTurns('Exhibit 12 is the letter.\nMS QUELLWORTH: Thank you.').turns.length, 2, 'evidence that opens with the word is still read')
   // A line marking a document for identification is a note.
   assert.deepEqual(read('MS QUELLWORTH: I ask that it be marked.\nMFI #4 OUTLINE OF EVIDENCE OF ALEX EXAMPLE\nTHE COMMISSIONER: Yes.'), [['heading', 'MS QUELLWORTH', 'I ask that it be marked.'], ['note', null, ''], ['heading', 'THE COMMISSIONER', 'Yes.']])
@@ -215,10 +215,11 @@ test('over every quotable page: no excerpt holds a heading, a mark or a note lin
     assert.ok(!/"speaker(?:_label)?"/.test(JSON.stringify(out)), `${commission}: a speaker field in the tool output`)
     for (const c of out.citations) assert.ok(!/hearing turn by /.test(c.text), c.text)
     for (const [i, r] of out.rows.entries()) for (const h of r.text_matches?.hits ?? []) {
-      assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', 'transcript_page', 'url'], `${commission} ${r.key} page ${h.pdf_page}`)
+      assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', ...(h.question ? ['question'] : []), ...(h.speaker_role ? ['speaker_role'] : []), 'transcript_page', 'url'], `${commission} ${r.key} page ${h.pdf_page}`)
       if (h.excerpt === null) continue
       assert.ok(/[^.\s]/.test(h.excerpt), 'no empty quotation')
-      quoted++; assert.ok(out.citations[i + 1].text.includes(`(PDF page ${h.pdf_page}), hearing turn: "${h.excerpt}"`))
+      quoted++; assert.ok(out.citations[i + 1].text.includes(`(PDF page ${h.pdf_page}), hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`))
+      if (h.question) assert.ok((h.excerpt + h.question.text).length <= 280 && Object.keys(h.question).every(k => k === 'text' || k === 'role'))
     }
   }
   assert.ok(quoted > 0)
@@ -240,6 +241,9 @@ test('over every quotable page: no excerpt holds a heading, a mark or a note lin
       if (found.length) search.add(found[found.length >> 1])
       for (const [i, line] of lines.entries()) {
         kind = opener(line, kind === 'note', heads)
+        // Page 1 is the cover and is never quoted. A transcript that opens its evidence there would be silently
+        // unquotable, so it fails here instead.
+        assert.ok(p.n !== 1 || !kind || kind === 'note', `${d.key}: page 1 holds a ${kind} line ("${line.slice(0, 12)}..."), so it is not only a cover`)
         if (kind) {
           barred.push([at, kind === 'note' ? at + line.length : at + 1])
           // Search for the words of the opener itself, the word before it and the first long word after it.

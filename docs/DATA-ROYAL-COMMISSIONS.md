@@ -195,12 +195,128 @@ page only; every citation links the publisher's PDF at that page and ends with t
 and the CC BY attribution. Every other commission's transcripts stay listed with a link to
 the publisher.
 
-An excerpt stays inside one speaker's turn. The turn's label ("MS HOGAN-DORAN:") is taken
-out of the quoted words and given as `speaker` ("Ms Hogan-Doran", with the label as printed
-in `speaker_label`), and the citation reads "hearing turn by Ms Hogan-Doran". A turn that
-began on an earlier page has no speaker on that hit. Counts and dates in the tool's text
-use words ("27 September 2022 to 10 March 2023"). In Ask, an answer whose facts are only
-transcript listing rows is given in the tool's own lines rather than rewritten.
+An excerpt stays inside one speaker's turn. The turn's label ("MS EXAMPLE:") is taken out
+of the quoted words, and no excerpt names its speaker: a wrong name is worse than none.
+Counts and dates in the tool's text use words ("27 September 2022 to 10 March 2023"). In
+Ask, an answer whose facts are only transcript listing rows is given in the tool's own
+lines rather than rewritten.
+
+#### Speaker role, date and page in Ask, 16 November 2026
+
+"Hearing transcript" here means royal commission, integrity-body and inquiry hearings. It
+does not cover Hansard or committee and estimates Hansard.
+
+A quoted passage carries `speaker_role` only where the transcript's own marks and headings
+make the role certain: `commissioner`, `counsel assisting`, `witness`, `lawyer appearing at
+the hearing`, or `question` (a question was put; who asked it is not printed). The citation
+reads "hearing turn (counsel assisting)". Roles are built in
+`portal/src/tools/transcript-roles.ts`, only on the turns `pageTurns`
+(`portal/src/tools/transcript-text.ts`) reads from a page, and only the role leaves that
+file: a heading's text, and so anyone's name, never does.
+
+- A turn under a heading has a role when the heading is a role word ("THE COMMISSIONER",
+  "THE WITNESS") or when the cover page gives the whole heading a role. The cover is PDF
+  page 1 of the transcript, not the cited page: its list of appearances says who is
+  counsel assisting ("Senior Counsel Assisting") and who appears for someone ("for the
+  Commonwealth", "solicitor for ..."). Everyone who appears for a party or a witness,
+  counsel or solicitor, is "a lawyer appearing at the hearing": the covers do not always
+  say which they are. A cover entry is read on its own line, and onto the next only when
+  the line ends in a comma, "and" or "with", when the role word opens the next line, or
+  when the role word is split over the break; a name above another person's line takes
+  nothing from it. A name after "for" is a party someone appears for. A heading with a
+  digit or a quote mark, or in title case other than a bare role word, gives no role ("Dr
+  Surname: at the time you were ..." is counsel addressing a witness). A surname that a
+  "<" line also prints may be a witness of the same name and takes no role from the
+  cover. No "<" line is read for a name, so a witness who speaks under their own name has
+  no role.
+- "HEADING: Q." is that heading's question. A bare "Q." is a question with no asker; the
+  last headed "Q." is not carried to it. An "A." is a witness's answer, never which
+  witness, and only in a transcript printed as questions and answers.
+- Text at the top of a page that runs on from the page before, and text after a "<" line
+  or an end-of-day line ("AT 4.08PM THE COMMISSION WAS ADJOURNED TO ..."), have no role.
+  Nothing is carried across a page break.
+- Two turns running under the same heading, and two bare marks of the same letter running
+  ("A." straight after "A."), have no role: one of the pair is the publisher's slip.
+- No turn on a page listed in `portal/src/tools/transcript-mismarked-pages.json` has a role.
+
+**The limit, in plain words.** Roles come from the transcript's own "Q." and "A." marks and
+headings. Where the publisher mis-printed a mark or a heading, a role can be wrong: a
+witness's answer can sit under "a question was put", a question under "a witness", or an
+answer under counsel's heading. When the wrong or missing mark is in the middle of a line,
+no parser can see it. Tell us (corrections@opax.com.au) and we fix it the same day: the
+page goes on the mis-marked list, one line of transcript key and PDF page, and from then
+every passage on it is quoted with "the transcript records" and no role.
+
+Known pages, all on the list:
+- NSW Healthcare Funding, mark missing in the middle of a line: 22 February 2024 PDF page
+  76; 31 July 2024 PDF page 98; 10 December 2024 PDF page 47.
+- NSW Healthcare Funding, two marks of the same letter running (the rule above also clears
+  these): 15 April 2024 PDF pages 36 and 92; 13 June 2024 PDF page 38; 25 July 2024 PDF
+  page 75; 1 August 2024 PDF page 15.
+- Robodebt, an answer printed under counsel's heading: 30 January 2023 PDF page 100.
+
+More will exist that no pattern shows. The audit counts what a page does show: two turns
+under one heading (no role given), same-mark runs (no role given: 12 in NSW Healthcare
+Funding, none elsewhere), and a one-to-three-word reply ("Yes.", "Correct.") under a
+counsel heading straight after a question (counted only, since counsel answering the
+Commissioner looks the same).
+
+`portal/scripts/transcript-parser-audit.mjs` counts all of this over the published text
+(run from `portal/`, no network). 16 November 2026:
+
+| Commission | Transcripts | Pages | Confident turns (a role) | Uncertain turns (no role) | Page-top continuations (no role) | Excerpts, one a page, with a role | "<" lines: examination / other | Possible label slips (no role given) | Replies under a counsel heading (counted only) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| cth-antisemitism | 16 | 1,288 | 5,369 (39.2%) | 7,880 (57.5%) | 459 (3.3%) | 435 of 1,267 (34.3%) | 2 / 193 | 0 | 35 |
+| cth-robodebt | 29 | 3,138 | 22,130 (50.2%) | 21,330 (48.4%) | 619 (1.4%) | 1,696 of 3,050 (55.6%) | 95 / 252 | 61 | 199 |
+| nsw-healthcare-funding | 62 | 6,230 | 45,356 (79.5%) | 7,526 (13.2%) | 4,178 (7.3%) | 3,919 of 6,139 (63.8%) | 174 / 355 | 18 | 182 |
+
+Every quotable page carries the transcript's own page number. A passage with no role is
+quoted with "the transcript records", the date and the page.
+
+Known limit, shipped on purpose: a witness who speaks under their own name ("MR SURNAME:")
+has no role, because no "<" line is read for a name. The same audit counts the turns under
+a person's heading with no role: 21,329 in Robodebt, 7,880 in Antisemitism and 7,433 in NSW
+Healthcare Funding. Most are witnesses. Giving them the witness role from the sworn line is
+a later, separate change with its own sample.
+
+A one-line answer ("Correct.") is no evidence without its question. When a quoted turn is a
+bare "A." of at most six words, shown whole, and the turn straight before it on the same
+page is a "Q.", the hit carries that question in the transcript's own words (cut from the
+front so the answer and the question together stay inside 280 characters), with the
+question's role where its heading gives one. The audit finds 7,095 of 7,582 one-line
+answers in NSW Healthcare Funding come with their question; the rest follow another
+speaker or open a page. The citation carries the question only for a source whose passages
+the writer may word, and the writer is told to use the answer only together with the
+question and to give the question only in its own words inside quotation marks, never
+paraphrased. Code-rendered quotes and the source card show the answer, not the question.
+
+Each citation ends with the commission's record id ("Commission record: cth-robodebt."),
+and one predicate, `writerMayWord` in `portal/src/transcript-answer.ts`, decides by that
+id whether a model may word a source's passages. The three indexed commissions are listed
+as wordable. A source that is not listed, and a passage with no record id, is quote-only:
+its passages are never in the writer's prompt, a sentence that cites one is left out, and
+with nothing else found they are quoted by code with role, date and page. Nothing here
+decides how any other commission's transcripts would be used.
+
+For a transcript whose source allows the writer to word it, Ask hands the writer each
+passage as typed facts (speaker role, commission, hearing date, page, and never the
+speaker's name) under one fixed rule (`TRANSCRIPT_ATTRIBUTION_RULE`): attribute every
+statement to the role of who said it and where, give the role only and never a person's
+name, never state evidence, an allegation or a question as fact, do not characterise
+credibility, draw no conclusion the commission has not published as a finding, and carry
+nothing said at a hearing in a sentence with no fact id. A passage with no role is quoted
+only, introduced by "the transcript records" with the date and page; a `question` is
+written as a question that was put, with no asker. The source card is
+built from the typed facts ("Royal Commission into the Robodebt Scheme, hearing
+transcript, 10 March 2023, page P-4899: A witness."), so its date, page and role do not
+depend on the answer's wording. The writer marks each sentence that uses a transcript
+passage as attributed; an unmarked one gets one repair pass and is then left out, that
+sentence only. With no model, the passages are quoted in the same form. The research loop
+is told in fixed words (`TRANSCRIPT_POINT_RULE`) never to word hearing evidence in a
+point, and for any transcript a point that cites or quotes a passage is dropped and the
+passage is read from its record instead. `portal/test/transcript-attribution.test.mjs`
+pins all of this without a model call; the words a live model writes under the two rules
+are not pinned by any test.
 
 ### Particular care
 

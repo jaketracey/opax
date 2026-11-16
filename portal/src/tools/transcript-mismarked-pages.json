@@ -1,0 +1,41 @@
+{
+ "about": "Pages of published hearing transcripts where the publisher printed a wrong or missing \"Q.\", \"A.\" or heading, so a role read from the page would be wrong. No turn on a listed page is given a role: its words are quoted with \"the transcript records\". To add a page, add one line with the transcript key and the PDF page. No names here.",
+ "pages": [
+  {
+   "transcript": "transcript-2024-02-22-f87a92c05dbc",
+   "pdf_page": 76
+  },
+  {
+   "transcript": "transcript-2024-07-31-60def19ffda9",
+   "pdf_page": 98
+  },
+  {
+   "transcript": "transcript-2024-12-10-bca5c686150f",
+   "pdf_page": 47
+  },
+  {
+   "transcript": "transcript-2023-01-30-0168dded9fba",
+   "pdf_page": 100
+  },
+  {
+   "transcript": "transcript-2024-06-13-2bed8dbda0ef",
+   "pdf_page": 38
+  },
+  {
+   "transcript": "transcript-2024-07-25-231f603fd65d",
+   "pdf_page": 75
+  },
+  {
+   "transcript": "transcript-2024-04-15-93758ae1ba45",
+   "pdf_page": 36
+  },
+  {
+   "transcript": "transcript-2024-04-15-93758ae1ba45",
+   "pdf_page": 92
+  },
+  {
+   "transcript": "transcript-2024-08-01-762049da3818",
+   "pdf_page": 15
+  }
+ ]
+}

@@ -91,11 +91,14 @@ function transcriptCite(t: RecordRow): ToolCitation {
   const text = t.text_matches as TextHits | undefined
   if (text?.hits.length) {
     const where = (h: TextHits['hits'][number]) => `transcript page ${h.transcript_page ?? '?'} (PDF page ${h.pdf_page})`
-    // The quoted words carry the date and page only: no speaker is named (see excerpt()).
+    // A speaker's label leaves the quoted words and no speaker is named; the hearing turn gives, where the page
+    // itself settles it, the speaker's role at the hearing. The commission's record id closes the line, so Ask can
+    // decide per source how a passage may be used (transcript-answer.ts reads role and id back as typed facts).
+    // A one-line answer carries the question it replied to (pageHits attaches it only for a wordable source).
     const body = text.quote_policy === 'quote'
-      ? text.hits.map(h => `${where(h)}, hearing turn: "${h.excerpt}"`).join(' ')
+      ? text.hits.map(h => `${where(h)}, hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"${h.question ? ` [answer to${h.question.role ? ` (${h.question.role})` : ''}: "${h.question.text}"]` : ''}`).join(' ')
       : `the words appear on ${text.hits.map(where).join(' and ')}. Not quoted: the publisher's transcript records a non-publication order, a direction not to publish or a pseudonymous witness; read the publisher's edition.`
-    return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
+    return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.${t.commission_id ? ` Commission record: ${t.commission_id}.` : ''}` }
   }
   return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
 }
