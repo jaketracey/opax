@@ -7,5 +7,6 @@ export const ASK_ATTRIBUTION_RULE = 'A claim that comes only from a speech, ques
 /** For every call that writes Ask prose: the answer is about the records, not about itself. Worded as what to do. */
 export const ASK_SELF_REFERENCE_RULE = 'Write about the records only: leave out any mention of your own answer, your points, your search, the material you were given or yourself ("I", "my points", "as summarised earlier", "the excerpts provided here", "returned by the search"). '
 /** What the record lacks is not for a model to state: it has seen a few passages, not the record. The one thing it may
- * say is that the passages found do not address a point. For every call that writes Ask prose; worded as what to do. */
+ * say is that the passages found do not address a point. Given to the calls that write Ask prose on a hearing question
+ * (commissionHearingQuestion) only; other answers keep the general behaviour. Worded as what to do. */
 export const ASK_ABSENCE_RULE = 'Describe only what the cited passages say. Where they leave part of the question unanswered, say "the passages found don\'t address this" and stop there. '

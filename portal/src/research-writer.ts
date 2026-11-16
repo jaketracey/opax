@@ -120,7 +120,10 @@ export function createAnswerWriter(options: ResearchOptions) {
             const checked=verifyWrittenAnswer({sentences},activeInput)
             // A receipt's lending check and the required headline/vote split can replace the complete draft.
             // Retain that affected tail until its decision is known; no weaker per-sentence variant is substituted.
-            if(!checked||input.facts.some(f=>f.source.receipt))return
+            // On a hearing question nothing is released until a sentence cites one of the excerpts given: the
+            // completed answer is held to the same count (citesGivenExcerpt below), and a released draft is what a
+            // stopped writer returns.
+            if(!checked||input.facts.some(f=>f.source.receipt)||!citesGivenExcerpt(checked,activeInput))return
             const released=await preview({...withRecordedChambers(checked),research:{pre_writer_sources:found}} as QualitativeAnswer,keepsAll)
             if(released)releasedDraft=released
           })
@@ -137,9 +140,12 @@ export function createAnswerWriter(options: ResearchOptions) {
         // sentences are then read one by one (writtenSentences) before the output is given up as unparseable.
         let raw;try{raw=JSON.parse(result.text.replace(/^```(?:json)?\s*|\s*```$/g,''))}catch{raw=writtenSentences(result.text);if(!raw)return fallback('unparseable')}
         lastDraft=draftWrittenAnswer(raw,activeInput)
-        const leftOut:Record<string,number>={};const verified=verifyWrittenAnswer(raw,activeInput,leftOut)
-        // How many of the writer's sentences each test left out, for the research record only.
+        const leftOut:Record<string,number>={},uncited:string[]=[];const verified=verifyWrittenAnswer(raw,activeInput,leftOut,uncited)
+        // How many of the writer's sentences each test left out, for the research record only. The words of an
+        // uncited sentence left out of a hearing answer are kept on this record too, which only an operator's eval
+        // response carries (research-eval.ts researchEvalUsage), never a public one.
         if(Object.keys(leftOut).length)stats.coherence={...stats.coherence,left_out:leftOut}
+        if(uncited.length)stats.coherence={...stats.coherence,uncited_left_out:uncited}
         researchTrace('writer.verify', {question:input.question,raw,verified})
         // A count, not a reading of prose: given hearing excerpts, an answer none of whose sentences cites one is
         // not used (a general-knowledge sentence would stand as the whole answer to a hearing question). The

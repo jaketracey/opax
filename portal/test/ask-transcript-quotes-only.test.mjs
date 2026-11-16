@@ -311,7 +311,10 @@ test('the relevance floor: with labels sent, only labelled excerpts are shown, a
   assert.deepEqual(api.quotationBlock({ question: hearingQuestion, period, facts: labelled, selected: true }).answer.split('\n\n'), [LEAD, 'Hearing day 44 (8 March 2023), transcript page P-4698: “Was legal advice sought on averaging?”'])
   const none = api.quotationBlock({ question: hearingQuestion, period, facts: held, selected: true })
   assert.equal(none.answer, 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.'); assert.equal(none.answer, api.NO_PASSAGE_SELECTED)
-  assert.deepEqual(none.citations, {}); assert.equal(none.machine_written, false)
+  assert.deepEqual(none.citations, {}); assert.equal(none.machine_written, false); assert.equal(none.answer_decision, 'limitation')
+  // The same line through the writer's fallback, and a labelled block is an answer.
+  assert.equal(api.proseFallback({ question: hearingQuestion, period, facts: held, selected: true, quotesOnly: true }).answer_decision, 'limitation')
+  assert.equal(api.quotationBlock({ question: hearingQuestion, period, facts: labelled, selected: true }).answer_decision, 'answer')
   // No labels sent (or a stopped run): every held excerpt, as before.
   assert.equal(api.quotationBlock({ question: hearingQuestion, period, facts: held }).answer.split('\n\n').length, 3)
 })
