@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // research:local: run the Ask research loop on this Mac against real services, no deploy.
 //
-//   npm run research:local -- [questionIds...] [--model slug] [--port 8967] [--keep] [--json out.json]
+//   npm run research:local -- [questionIds...] [--model slug] [--port 8967] [--keep] [--json out.json] [--var ASK_TRANSCRIPT_QUOTES_ONLY=on]
 //
 // --prior-turn PATH carries one saved {q,payload} turn; question sets can use followup_of.
 // --trace PATH saves local model requests/results, tool results and grounding decisions.
@@ -48,9 +48,21 @@ const traceOut = flag('--trace', null);
 const priorFile = flag('--prior-turn', null);
 const legacyContext = args.includes('--legacy-context');
 const streamed = args.includes('--stream');
+// --var NAME=value (repeatable) sets a plain variable in the generated config. Only the names listed here are taken,
+// so the option cannot stand in for, or override, a secret from .dev.vars. ASK_TRANSCRIPT_QUOTES_ONLY (ask-flags.ts)
+// is always set, "off" unless given: with it set the Worker never reads the production KV switch key, so a local run
+// neither depends on that key nor follows a change to it.
+const SETTABLE_VARS = {ASK_TRANSCRIPT_QUOTES_ONLY: ['on', 'off']};
+const setVars = {ASK_TRANSCRIPT_QUOTES_ONLY: 'off'};
+args.forEach((a, i) => {
+  if (a !== '--var') return;
+  const [name, value] = String(args[i + 1] ?? '').split('=');
+  if (!SETTABLE_VARS[name]?.includes(value)) { console.error(`--var takes ${Object.entries(SETTABLE_VARS).map(([k, v]) => `${k}=${v.join('|')}`).join(', ')}; got "${args[i + 1] ?? ''}"`); process.exit(2); }
+  setVars[name] = value;
+});
 const traceEvents = [];
 let activeQuestion;
-const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal', '--questions', '--trace', '--prior-turn'].includes(args[i - 1]));
+const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal', '--questions', '--trace', '--prior-turn', '--var'].includes(args[i - 1]));
 const available = JSON.parse(readFileSync(flag('--questions', new URL('research_local_questions.json', import.meta.url)), 'utf8'));
 const questions = serveOnly ? [] : ids.length ? ids.map((id, i) => {
   const known = available.find(q => q.id === id);
@@ -132,7 +144,8 @@ export default { ...worker, fetch(request, env, ctx) {
   // and stop here with a clear message if it would still be too large.
   const {files} = slimAssets();
   console.error(`Research asset folder: ${files} files.`);
-  cfg.vars = {...cfg.vars, INDEXNOW_ENABLED: 'false', INDEXNOW_DRY_RUN: 'true'};
+  cfg.vars = {...cfg.vars, INDEXNOW_ENABLED: 'false', INDEXNOW_DRY_RUN: 'true', ...setVars};
+  console.error(`Variables set for this Worker: ${Object.entries(setVars).map(([k, v]) => `${k}=${v}`).join(', ')}.`);
   cfg.assets = {...cfg.assets, directory: './.research-assets'};
   // Lives in portal/ (gitignored) so relative paths and .dev.vars resolve as for the real config.
   const path = portal + 'research-local.wrangler.jsonc';
