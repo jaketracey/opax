@@ -462,6 +462,22 @@ test('everyday words rank and never filter: with a specific word in the search, 
     if (ea !== eb) decided++;
   }
   assert.ok(decided >= 1, 'at least one tie on the specific word is decided by the everyday words');
+  // The whole order, worked out here from the transcript files: the specific word's pages, then the weaker of the
+  // two everyday words (zero when one is absent), then the sum of all three, then newest. "cabinet legal advice" is
+  // a search where the everyday part decides: with it left out (the sum straight after the specific word) the order
+  // is a different one.
+  for (const [specific, decides] of [['averaging', false], ['cabinet', true]]) {
+    const ranked = [];
+    for (const d of ix.docs.filter(d => d.commission === 'cth-robodebt')) {
+      const doc = await asset(d.file); if (!doc.terms[specific]) continue;
+      const n = t => (doc.terms[t] ?? []).length;
+      ranked.push({ key: d.key, date: String(d.date), least: n(specific), everyday: Math.min(n('legal'), n('advice')), pages: n(specific) + n('legal') + n('advice') });
+    }
+    ranked.sort((a, b) => b.least - a.least || b.everyday - a.everyday || b.pages - a.pages || b.date.localeCompare(a.date) || a.key.localeCompare(b.key));
+    assert.deepEqual(await allKeys('robodebt', `legal advice ${specific}`), ranked.map(r => r.key), specific);
+    const without = [...ranked].sort((a, b) => b.least - a.least || b.pages - a.pages || b.date.localeCompare(a.date) || a.key.localeCompare(b.key));
+    assert.equal(JSON.stringify(without.map(r => r.key)) !== JSON.stringify(ranked.map(r => r.key)), decides, specific);
+  }
   // The property, over many searches: one to three specific words, with and without everyday words mixed in.
   const specific = ['averaging', 'ombudsman', 'whistleblower', 'cabinet', 'drafted', 'duress', 'alarm', 'locum', 'queensland', 'neurosurgery'].filter(t => !common.has(t));
   const everyday = ['legal', 'advice', 'general', 'practice', 'budget', 'minister', 'evidence'].filter(t => common.has(t));
@@ -512,4 +528,23 @@ test('more than six specific words: the most frequent are left out, the note nam
   // Every word of every transcript has its total.
   let posted = 0; for (let n = 0; n < ix.shards; n++) for (const [term, [, pages]] of Object.entries(await asset(`/transcripts/terms/${String(n).padStart(2, '0')}.json`))) { posted++; assert.equal(totals[term], pages.reduce((a, b) => a + b, 0), term); }
   assert.equal(posted, Object.keys(totals).length);
+});
+
+test('a year that is a specific word searches the text as before; only everyday date words make a date lookup', async () => {
+  const ix = await asset('/transcripts/index.json'), common = new Set(ix.common_terms);
+  // Main's rows for each (the review's cases): the first version of the date guard returned none.
+  for (const [words, total] of [['2014', 40], ['2016', 45], ['5000', 7]]) {
+    assert.equal(common.has(words), false, words);
+    const out = await call({ view: 'transcripts', commission: 'robodebt', words, limit: 4 }); cited(out);
+    assert.equal(out.total, total, words); assert.ok(out.rows.every(r => r.text_matches?.hits.length), words);
+    assert.equal(out.notes.some(n => /too common to search/.test(n)), false, words);
+  }
+  // Everyday date words alone are still a date lookup, with the note main gives.
+  for (const words of ['2023', 'March', '2023-03', 'February 2024']) {
+    assert.ok(words.toLowerCase().match(/[a-z]+|\d{4}/g).every(t => common.has(t)), words);
+    const out = await call({ view: 'transcripts', commission: 'robodebt', words, limit: 4 }); cited(out, false);
+    assert.ok(out.rows.every(r => !r.text_matches), words); assert.ok(out.notes.some(n => /too common to search/.test(n)), words);
+  }
+  // A specific year beside everyday date words is a required word like any other.
+  assert.deepEqual([...await allKeys('robodebt', 'March 2014')].sort(), [...await allKeys('robodebt', '2014')].sort());
 });

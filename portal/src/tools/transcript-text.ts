@@ -33,8 +33,6 @@ export function shardOf(term: string, shards: number): number {
   return h % shards
 }
 
-/** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
- * public text or every word is too common to narrow the search. */
 /** A word search reads one postings file for each searched word, so the words are capped. Specific words (those not
  * in ix.common) are kept first; everyday words fill what is left. In both kinds the least frequent are kept and the
  * most frequent left out, by the number of pages holding the word across all transcripts (carried in the index for
@@ -69,10 +67,10 @@ export async function textMatches(env: ToolEnv, ix: TextIndex, commission: strin
   }
   const required = kept, ranking = everyday.slice(0, TEXT_SEARCH_WORDS - required.length)
   const skipped = [...specific.filter(t => !kept.includes(t)), ...everyday.slice(ranking.length)]
-  // A search made only of date words (a year, a month name: "2023-03", "10 March 2023", "February 2024") is a date
-  // lookup, answered from titles and dates exactly as before. With any other word beside them, every word searches
-  // the text.
-  if ([...required, ...ranking].every(t => /^\d{4}$/.test(t) || DATE_WORDS.has(t))) return null
+  // A search with no specific word, made only of everyday date words (a month name, a year that is in more than half
+  // the transcripts: "2023-03", "10 March 2023", "February 2024") is a date lookup, answered from titles and dates
+  // exactly as before. A year that is a specific word ("2014", "2016") searches the text like any other, as before.
+  if (!required.length && ranking.every(t => /^\d{4}$/.test(t) || DATE_WORDS.has(t))) return null
   const posting = async (t: string): Promise<Map<number, number> | null> => {
     const path = `/transcripts/terms/${String(shardOf(t, ix.shards)).padStart(2, '0')}.json`
     if (!SHARD.test(path)) return null
