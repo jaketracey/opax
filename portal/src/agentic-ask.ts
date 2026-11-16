@@ -32,7 +32,7 @@ import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION, quotationBlock, joinWritten, hearingFact, fixedLine } from './research-writing'
-import { commissionHearingQuestion, NO_PASSAGE_FOUND } from './transcript-answer'
+import { commissionHearingQuestion, NO_PASSAGE_FOUND, transcriptPassage, TRANSCRIPT_LABEL } from './transcript-answer'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
@@ -658,6 +658,16 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const factNotes = run.qualitative?.fact_notes ?? {}, selected = run.qualitative?.fact_notes !== undefined
     if (run.qualitative?.fact_notes) { const { fact_notes: _notes, ...rest } = run.qualitative; run.qualitative = rest }
     if (!run.answered || !deps.research?.write) return run
+    // Quotes only, a hearing question whose run searched the transcript text and holds neither an excerpt nor any
+    // record that is not a transcript row: the answer is the fixed line saying what OPAX did, never the tool's count
+    // row or model prose about what the record lacks. (Before the exits below: such a run reads as a limitation.)
+    if (deps.research.transcriptQuotesOnly && commissionHearingQuestion(question) && !run.passage_answer && !(run.qualitative?.sources ?? []).some(s => !s.coverage && s.resource !== 'coverage' && (!`${s.snippet} ${s.title}`.includes(TRANSCRIPT_LABEL) || s.snippet.split('\n').some(transcriptPassage) || transcriptPassage(s.title)))
+      && run.steps.some(s => { const a = s.args as { view?: unknown; words?: unknown } | undefined; return s.tool === 'royal_commissions' && a?.view === 'transcripts' && typeof a.words === 'string' && !!a.words.trim() })) {
+      const line = fixedLine(NO_PASSAGE_FOUND)
+      run.answer = line.answer; run.qualitative = { ...line, answer_decision: 'limitation' }; run.answer_source = 'template'
+      if (run.research) { run.research.transcript_quotes_only = true; run.research.sources = [] }
+      return run
+    }
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
     const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind as Fact['cite']['kind'],url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{}),...(f.entities?.length?{entities:f.entities}:{}),...(f.member?{member:f.member}:{})}))
@@ -673,7 +683,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
-    if (transcriptListingOnly(sheet)) return run
+    // (Under the quotes-only switch a hearing question goes on: a listing is not an answer to what was heard.)
+    if (transcriptListingOnly(sheet) && !(deps.research.transcriptQuotesOnly && commissionHearingQuestion(question))) return run
     await progress('status', {phase:'writing'})
     const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
@@ -688,9 +699,11 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // excerpt, a listing, a count, a not-quoted pointer). Where the quotations would stand with no excerpt held,
     // one fixed line says what OPAX did.
     const hearingAsked=quotesOnly&&commissionHearingQuestion(question)
-    const searched=run.steps.some(s=>s.tool==='royal_commissions'&&(s.args as {view?:unknown}|undefined)?.view==='transcripts')
+    const searched=run.steps.some(s=>{const a=s.args as {view?:unknown;words?:unknown}|undefined;return s.tool==='royal_commissions'&&a?.view==='transcripts'&&typeof a.words==='string'&&!!a.words.trim()})
     const block=!quotesOnly?null:quotationBlock({question,period,facts:sheet,...(selected?{selected:true}:{})})??(hearingAsked&&searched?fixedLine(NO_PASSAGE_FOUND):null)
     const writerFacts=block||hearingAsked?sheet.filter(f=>!hearingFact(f)):sheet
+    // A hearing question whose run made no text search and holds nothing else keeps the tool's own listing lines.
+    if(hearingAsked&&!block&&!writerFacts.some(f=>!f.coverage&&!f.metadata))return run
     const said=(run.passage_answer?.answer??'').split(/\n+/).map(line=>line.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
     const input={question,period,facts:writerFacts,...(quotesOnly?{quotesOnly:true}:{}),...(selected?{selected:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written

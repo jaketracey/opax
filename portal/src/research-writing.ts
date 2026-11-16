@@ -361,10 +361,13 @@ function transcriptBlock(input: WritingInput): WrittenSentence[] | null {
   const several = new Set(ordered.map(body)).size > 1
   const lines: WrittenSentence[] = [{ text: QUOTES_LEAD, facts: [] }]
   for (const f of ordered) {
-    const t = f.transcript!, name = several && body(f) ? `${body(f).replace(/^./, c => c.toUpperCase())}, hearing` : 'Hearing'
+    const t = f.transcript!, name = several && body(f) ? `${body(f)}, hearing` : 'hearing'
     const when = `${t.day ? `${name} day ${t.day}` : `${name} transcript`}${t.date ? ` (${t.date})` : ''}, transcript page `
-    if (t.question) lines.push({ text: `${when}${t.question.page}, the question put: “${t.question.excerpt}”`, facts: [f.id] })
-    lines.push({ text: `${when}${t.page}${t.question ? ', the reply' : ''}: “${t.excerpt}”`, facts: [f.id] })
+    const line = (label: string, page: string, words: string): WrittenSentence => { const head = `${label ? `${label}, ` : ''}${when}${page}`; return { text: `${head.replace(/^./, c => c.toUpperCase())}: “${words}”`, facts: [f.id] } }
+    // A marked question-and-reply pair is two quotations, each with its own page, under code-made labels.
+    if (t.question) lines.push(line('Question put', t.question.page, t.question.excerpt), line('Reply', t.page, t.excerpt))
+    else if (t.reply) lines.push(line('Question put', t.page, t.excerpt), line('Reply', t.reply.page, t.reply.excerpt))
+    else lines.push(line('', t.page, t.excerpt))
   }
   return lines
 }
