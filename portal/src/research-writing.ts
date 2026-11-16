@@ -62,9 +62,10 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     if (turns.length) {
       for (const [i, turn] of turns.entries()) {
         const resource = `${source.resource.replace(/\/turn\/\d+$/, '')}/turn/${i + 1}`
-        const line = `${turn.speaker} said at ${text.split(',')[0]}${turn.day ? ` on hearing day ${turn.day}` : ''}${turn.date ? ` (${turn.date})` : ''}, transcript page ${turn.page}: "${turn.excerpt}". ${TRANSCRIPT_LABEL}.`
+        const when = `${turn.day ? ` on hearing day ${turn.day}` : ''}${turn.date ? ` (${turn.date})` : ''}, transcript page ${turn.page}`
+        const line = `${turn.speaker ? `${turn.speaker} said at ${text.split(',')[0]}${when}:` : `The transcript of ${/^the\s/i.test(text) ? '' : 'the '}${text.split(',')[0]}${when}, records:`} "${turn.excerpt}". ${TRANSCRIPT_LABEL}.`
         const before = out.length
-        add(line, { ...source, resource, speaker: turn.speaker, snippet: source.snippet + '\n' + line }, coverage, turn)
+        add(line, { ...source, resource, ...(turn.speaker ? { speaker: turn.speaker } : {}), snippet: source.snippet + '\n' + line }, coverage, turn)
         if (out.length > before) out[out.length - 1].transcript = turn
       }
       return
@@ -322,9 +323,9 @@ function transcriptLines(input: WritingInput): WrittenSentence[] | null {
   const turns = input.facts.filter(f => f.transcript && !f.coverage)
   if (!turns.length) return null
   const seen = new Set<string>()
-  const lines = turns.filter(f => { const t = f.transcript!, id = t.speaker + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, 4).map(f => {
+  const lines = turns.filter(f => { const t = f.transcript!, id = (t.speaker ?? '') + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, 4).map(f => {
     const t = f.transcript!, verb = /\?\s*$/.test(t.excerpt) ? 'asked' : 'said'
-    return { text: `${t.speaker} ${verb}${t.day ? ` on hearing day ${t.day}` : ''}${t.date ? ` (${t.date})` : ''}: “${shortTranscriptQuote(t.excerpt, input.question)}”`, facts: [f.id] }
+    return { text: `${t.speaker ? `${t.speaker} ${verb}` : 'The hearing transcript records'}${t.day ? ` on hearing day ${t.day}` : ''}${t.date ? ` (${t.date})` : ''}: “${shortTranscriptQuote(t.excerpt, input.question)}”`, facts: [f.id] }
   })
   return [...lines, { text: TRANSCRIPT_NOTE, facts: turns.map(f => f.id) }]
 }
@@ -659,7 +660,7 @@ export function writingPrompt(input: WritingInput): string {
   return JSON.stringify({question:input.question,period:input.period,facts:input.facts.map(f=>({...f,source:undefined,speaker:f.source.speaker,...(f.source.chamber?{chamber:f.source.chamber}:{}),...(f.source.receipt?{receipt:f.source.receipt}:{}),atoms:f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)})),contract: ASK_EVIDENCE_RULES + RECEIPTS_WRITING_RULE + ' ' +
     'Answer the question directly and fully from these facts, and use general knowledge for context. The first sentence must answer the question with the requested name, figure, date or outcome. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. ' + ASK_ATTRIBUTION_RULE + 'Name the chamber a fact records in its chamber field (senate is the Senate, representatives the House of Representatives). Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Use complete sentences in your own words. For counts, start with the count, what was counted, chamber and period. For comparisons, retain every side, named term, value and supported direction. Keep every requested year or month group and its count; record totals retain their snapshot date. Each claim keeps its structured entity, metric, unit, chamber, period and supporting fact id together. Equal values belonging to different entities remain distinct claims. ' +
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
-    'Hearing excerpts name the recorded speaker and hearing day/date, with a short literal quotation and fact id. A question by counsel or a commissioner is a question; identify each witness answer explicitly. Use recorded names and roles. Identify the material once as hearing evidence; licence details belong in the source card. ' +
+    'Hearing excerpts give the hearing day/date and transcript page, with a short literal quotation and fact id. An excerpt that names no speaker is attributed to the transcript, never to a named person, a witness or counsel. Identify the material once as hearing evidence; licence details belong in the source card. ' +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
     'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
 }
