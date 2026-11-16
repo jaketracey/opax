@@ -5223,6 +5223,11 @@ html[data-chat="docked"] #panel-chat .chat-composer {
    not among them. It takes the panel this site uses wherever a model wrote
    something (.doc-brief, .bill-summary): sunken, with a bronze edge, so the
    reader can tell the record from prose about it without being told twice. */
+/* The Ask page's Machine-written label: the pill alone on its line, above the
+   answer (and above an overview paragraph when there is one), never inside the
+   sunken panel. */
+.answer-machine { margin: 0 0 var(--sp-12); }
+.answer-machine[hidden] { display: none; }
 .answer-overview {
   margin: 0 0 var(--sp-16); max-width: 68ch;
   background: var(--paper-sunken); border-left: 3px solid var(--bronze);
