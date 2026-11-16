@@ -9,7 +9,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
-import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences,run,samePrompt,inSync,saveBackup,openingMessage,agentUpdate,restorePlan} from '../voice/agent-sync.mjs';
+import {loadConfig,renderTools,planSync,formatPlan,parseArgs,differences,run,samePrompt,inSync,saveBackup,openingMessage,agentUpdate,restorePlan,openingUpdate,openingOnly} from '../voice/agent-sync.mjs';
 
 crypto.subtle.timingSafeEqual ??= timingSafeEqual;
 const folder=mkdtempSync(join(tmpdir(),'opax-voice-ask-test-'));
@@ -256,11 +256,19 @@ test('a caller budget only shortens Ask, and when it runs short Ask returns what
 // A stand-in for the ElevenLabs agents and tools API, in memory. Like the provider, it refuses an agent update that
 // carries the deprecated prompt.tools: with tool_ids it is the 400 staging returned on 13 Nov. `mirror` makes the
 // agent read return prompt.tools as a view of the attached tools, as the provider may.
-function provider({prompt='Old prompt',failAgentPatches=0,padPrompt=false,extraTools=[],mirror=false,firstMessage='Hello from the example agent.'}={}){
+function provider({prompt='Old prompt',failAgentPatches=0,padPrompt=false,extraTools=[],mirror=false,firstMessage='Hello from the example agent.',matching=false}={}){
   const config=loadConfig(),origin='https://staging.opax.com.au';
   const [search]=renderTools(config,{origin,secretId:'secret_live'}).filter(t=>t.name==='search_records');
   const tools=new Map([['tool_search',{...search,description:'Old description'}],['tool_end',{name:'end_call',type:'system'}],...extraTools]);
-  const agent={agent_id:'agent_x',conversation_config:{agent:{first_message:firstMessage,language:'en',prompt:{prompt,llm:'example-llm',tool_ids:['tool_search','tool_end']}}}};
+  const agent={agent_id:'agent_x',conversation_config:{agent:{...(firstMessage===null?{}:{first_message:firstMessage}),language:'en',prompt:{prompt,llm:'example-llm',tool_ids:['tool_search','tool_end']}}}};
+  // `matching`: the agent already has the configured prompt and every configured tool, as staging and production do.
+  if(matching){
+    tools.delete('tool_search');agent.conversation_config.agent.prompt.prompt=config.prompt.join('\n');
+    const rendered=renderTools(config,{origin,secretId:'secret_live'});
+    rendered.forEach((tool,i)=>tools.set('tool_cfg_'+i,{...tool,provider_default:1}));
+    // The provider's own order, which is not the config's: end_call first.
+    agent.conversation_config.agent.prompt.tool_ids=['tool_end',...rendered.map((_,i)=>'tool_cfg_'+i).reverse()];
+  }
   const calls=[],patches=[];let next=1;
   const call=async(method,path,body)=>{
     calls.push(method+' '+path);
@@ -273,6 +281,8 @@ function provider({prompt='Old prompt',failAgentPatches=0,padPrompt=false,extraT
     if(url.pathname==='/v1/convai/agents/agent_x'&&method==='PATCH'){
       patches.push(structuredClone(body));
       if(failAgentPatches-->0) throw new Error('PATCH /v1/convai/agents/agent_x -> 500: unavailable');
+      // An update with no prompt object leaves the prompt, its text and its tool ids exactly as they are.
+      if(!('prompt' in body.conversation_config.agent)){if('first_message' in body.conversation_config.agent) agent.conversation_config.agent.first_message=body.conversation_config.agent.first_message;return {}}
       const p=structuredClone(body.conversation_config.agent.prompt);
       if('tools' in p&&'tool_ids' in p) throw new Error('PATCH /v1/convai/agents/agent_x -> 400: {"detail":{"status":"both_tools_and_tool_ids_provided","message":"Cannot specify both tools and tool IDs - please provide only one of these options."}}');
       if('tools' in p) throw new Error('PATCH /v1/convai/agents/agent_x -> 400: {"detail":{"status":"tools_deprecated","message":"prompt.tools is no longer accepted; use tool_ids."}}');
@@ -512,7 +522,7 @@ test('agent sync --apply sends the opening message with the prompt, checks it on
   // Restore from the backup taken before the apply.
   const [file]=readdirSync(dir),undo=quiet();
   assert.equal(await run({agent:'agent_x',origin:p.origin,restore:join(dir,file),apply:true},{call:p.call,log:undo.log,backupDir:dir}),0,undo.lines.join('\n'));
-  assert.match(undo.lines.join('\n'),/opening message: restore/);
+  assert.ok(undo.lines.join('\n').includes('  opening message: restore\n    - '+JSON.stringify(openingMessage(loadConfig()))+'\n    + '+JSON.stringify(GREETING_BEFORE)),'the restore plan prints the live wording and the backed-up one');
   assert.equal(p.agent.conversation_config.agent.first_message,GREETING_BEFORE);
   // A backup from before the opening message was synced records none: restore leaves the live one alone.
   const old=restorePlan({agent:{conversation_config:{agent:{prompt:{prompt:'x',tool_ids:[]}}}},attached:[]},{agent:p.agent,byId:new Map()});
@@ -525,5 +535,59 @@ test('agent sync: a provider that keeps the old opening message fails the read-b
     if(method==='PATCH'&&path==='/v1/convai/agents/agent_x'){const {first_message:_dropped,...agent}=body.conversation_config.agent;return p.call(method,path,{conversation_config:{agent}})}
     return p.call(method,path,body);
   };
-  await assert.rejects(run({agent:'agent_x',origin:p.origin,apply:true},{call,log:()=>{},backupDir:dir}),/Read-back mismatch: prompt ok, opening message differs/);
+  await assert.rejects(run({agent:'agent_x',origin:p.origin,apply:true},{call,log:()=>{},backupDir:dir}),error=>{
+    assert.match(error.message,/Read-back mismatch: prompt ok, opening message differs/);
+    // The error says the agent was written and how to put it back, naming the backup taken before the apply.
+    const [file]=readdirSync(dir);
+    assert.ok(error.message.includes('The agent was already written before this check. To put it back: npm run voice:agent -- --agent agent_x --restore '+join(dir,file)+' --apply'),error.message);
+    return true;
+  });
+});
+
+test('agent sync: when the opening message is the only difference, the agent update carries that one key and nothing else',async()=>{
+  const p=provider({matching:true,firstMessage:GREETING_BEFORE}),out=quiet(),dir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+  const before=structuredClone(p.agent.conversation_config.agent.prompt),opening=openingMessage(loadConfig());
+  assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:out.log,backupDir:dir}),0,out.lines.join('\n'));
+  // Exactly one write, and its whole body is the opening message: no prompt object, prompt text or tool_ids.
+  assert.deepEqual(p.calls.filter(c=>!c.startsWith('GET ')),['PATCH /v1/convai/agents/agent_x']);
+  assert.deepEqual(p.patches,[{conversation_config:{agent:{first_message:opening}}}]);
+  assert.deepEqual(p.patches[0],openingUpdate(opening));
+  // So the prompt and the provider's own tool order are untouched.
+  assert.deepEqual(p.agent.conversation_config.agent.prompt,before);
+  assert.equal(p.agent.conversation_config.agent.first_message,opening);
+  assert.match(out.lines.join('\n'),/Applied\. Created: none\. Updated: none\.[\s\S]*opening message unchanged[\s\S]*In sync\./);
+  // Restoring it is as narrow: the opening message alone.
+  const [file]=readdirSync(dir),dry=quiet(),undo=quiet();
+  assert.equal(await run({agent:'agent_x',origin:p.origin,restore:join(dir,file)},{call:p.call,log:dry.log,backupDir:dir}),0);
+  assert.match(dry.lines.join('\n'),/prompt and tool_ids: already as saved\n  opening message: restore\n    - "Hi, [^\n]*Before we start[^\n]*"\n    \+ "Hi, I'm Opax, your AI guide to the public record\. What would you like to explore\?"/);
+  assert.equal(p.patches.length,1,'a restore dry run writes nothing');
+  assert.equal(await run({agent:'agent_x',origin:p.origin,restore:join(dir,file),apply:true},{call:p.call,log:undo.log,backupDir:dir}),0,undo.lines.join('\n'));
+  assert.deepEqual(p.patches[1],{conversation_config:{agent:{first_message:GREETING_BEFORE}}});
+  assert.deepEqual(p.agent.conversation_config.agent.prompt,before);
+  // When anything else differs too, the update is the full one, as before.
+  const config=loadConfig(),m=matching(config,GREETING_BEFORE);
+  assert.ok(openingOnly(planSync(config,m.agent,m.attached,{origin:m.origin})));
+  const prompted=structuredClone(m.agent);prompted.conversation_config.agent.prompt.prompt='Old prompt';
+  assert.ok(!openingOnly(planSync(config,prompted,m.attached,{origin:m.origin})));
+  assert.ok(!openingOnly(planSync(config,m.agent,m.attached.slice(1),{origin:m.origin})),'a tool to create');
+  assert.ok(!openingOnly(planSync(config,matching(config,openingMessage(config)).agent,m.attached,{origin:m.origin})),'nothing to send');
+});
+
+test('agent sync: a restore that the provider does not take for the opening message ends 1',async()=>{
+  const p=provider({matching:true,firstMessage:GREETING_BEFORE}),dir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+  assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:p.call,log:()=>{},backupDir:dir}),0);
+  const [file]=readdirSync(dir),out=quiet();
+  const call=async(method,path,body)=>method==='PATCH'&&path==='/v1/convai/agents/agent_x'?{}:p.call(method,path,body);
+  assert.equal(await run({agent:'agent_x',origin:p.origin,restore:join(dir,file),apply:true},{call,log:out.log,backupDir:dir}),1);
+  assert.match(out.lines.join('\n'),/Restore read-back differs/);
+});
+
+test('agent sync: an agent with no opening message today is said plainly to be beyond the script to roll back',async()=>{
+  const p=provider({matching:true,firstMessage:null}),out=quiet(),dir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+  assert.equal(await run({agent:'agent_x',origin:p.origin},{call:p.call,log:out.log,backupDir:dir}),0);
+  assert.match(out.lines.join('\n'),/opening message changes:\n  - \(none\)\n  \+ "Hi, [^\n]*\nnote   the agent has no opening message today, so a backup will hold none and --restore cannot take this one off again/);
+  // With an opening message there today, no such line.
+  const q=provider({matching:true,firstMessage:GREETING_BEFORE}),plain=quiet();
+  await run({agent:'agent_x',origin:q.origin},{call:q.call,log:plain.log,backupDir:dir});
+  assert.doesNotMatch(plain.lines.join('\n'),/cannot take this one off/);
 });

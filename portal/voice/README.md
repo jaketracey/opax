@@ -90,8 +90,14 @@ The ElevenLabs agent's prompt and its eight webhook tools are kept in
 call connects (`conversation_config.agent.first_message` at the provider). It
 carries the greeting, then the error notice sentence, then the opening question.
 The dry run prints the live and the configured wording when they differ;
-`--apply` sends it with the prompt and checks it on read-back; a restore puts
-the backed-up wording back. A language preset with its own opening message is
+`--apply` sends it and checks it on read-back. When it is the only difference,
+the agent update carries `first_message` alone (no prompt object, prompt text or
+`tool_ids`); when the prompt or tools differ too, it goes with them. A restore
+puts the backed-up wording back, and its dry run prints the live and the
+backed-up wording: every backup holds the opening message as it was then, so
+restoring one made before the notice sentence takes the sentence off again.
+An agent with no opening message at all leaves none in its backup; the dry run
+says so, because the script could not then take a new one off. A language preset with its own opening message is
 named in the plan and not changed.
 
 ```sh

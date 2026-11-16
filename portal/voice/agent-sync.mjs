@@ -147,6 +147,7 @@ export function formatPlan(plan) {
   const opening = plan.opening
   if (opening?.changed) out.push('opening message changes:', '  - ' + (opening.have === null ? '(none)' : JSON.stringify(opening.have)), '  + ' + JSON.stringify(opening.want))
   else out.push(opening?.configured ? 'opening message unchanged' : 'opening message not in agent-config.json; left as it is')
+  if (opening?.changed && opening.have === null) out.push('note   the agent has no opening message today, so a backup will hold none and --restore cannot take this one off again; that would need the ElevenLabs dashboard')
   for (const language of opening?.presets ?? []) out.push(`note   the ${language} language preset has its own opening message; this sync does not change presets`)
   out.push(...plan.problems.map(problem => 'PROBLEM ' + problem))
   return out.join('\n')
@@ -202,14 +203,19 @@ export function saveBackup(dir, agentId, state, now = new Date()) {
  * it next to tool_ids (staging, 13 Nov), and its deprecation guide says POST and PATCH reject any request carrying
  * it, so the key is left out rather than sent as an empty list. `firstMessage`, when a string, is sent beside the
  * prompt as agent.first_message; otherwise the key is left out and the provider keeps what it has.
+ * `openingUpdate` is the narrower body for a run where the opening message is the only difference: that one key,
+ * with no prompt object, prompt text or tool_ids, so nothing else of the agent can be rewritten or reordered.
  */
+export const openingUpdate = firstMessage => ({conversation_config: {agent: {first_message: firstMessage}}})
+/** The opening message is all that differs: every tool the same and attached, the prompt unchanged, no inline entry to replace. */
+export const openingOnly = plan => !!plan.opening?.changed && !plan.prompt.changed && !plan.inline_replaced.length && plan.tools.every(t => t.action === 'same' && t.attached)
 export function agentUpdate(fetchedPrompt, changes, firstMessage) {
   const {tools: _deprecated, ...prompt} = {...fetchedPrompt, ...changes}
   return {conversation_config: {agent: {...(typeof firstMessage === 'string' ? {first_message: firstMessage} : {}), prompt}}}
 }
 
 /** Tools first, then one agent PATCH that attaches them with the prompt. On a failed agent update, say what is left. */
-export async function applyPlan(call, agentId, plan, agent) {
+export async function applyPlan(call, agentId, plan, agent, backupFile) {
   const ids = [], created = [], updated = []
   for (const tool of plan.tools) {
     if (tool.action === 'create') { const id = (await call('POST', '/v1/convai/tools', {tool_config: tool.tool})).id; ids.push(id); created.push(`${tool.name} ${id}`) }
@@ -217,7 +223,8 @@ export async function applyPlan(call, agentId, plan, agent) {
   }
   const toolIds = [...ids, ...plan.kept.map(t => t.id)]
   try {
-    await call('PATCH', `/v1/convai/agents/${encodeURIComponent(agentId)}`, agentUpdate(agent.conversation_config.agent.prompt, {prompt: plan.prompt.text, tool_ids: toolIds}, plan.opening?.changed ? plan.opening.want : undefined))
+    await call('PATCH', `/v1/convai/agents/${encodeURIComponent(agentId)}`, openingOnly(plan) ? openingUpdate(plan.opening.want)
+      : agentUpdate(agent.conversation_config.agent.prompt, {prompt: plan.prompt.text, tool_ids: toolIds}, plan.opening?.changed ? plan.opening.want : undefined))
   } catch (error) {
     throw new Error([`Agent update failed: ${error.message}`, 'The agent itself is unchanged (prompt, opening message and tool_ids as before).',
       `Created, not attached: ${created.join('; ') || 'none'}.`, `Updated in place (already attached tools now carry the new config): ${updated.join('; ') || 'none'}.`,
@@ -226,7 +233,7 @@ export async function applyPlan(call, agentId, plan, agent) {
   const read = (await call('GET', `/v1/convai/agents/${encodeURIComponent(agentId)}`)).conversation_config?.agent ?? {}, after = read.prompt ?? {}
   const missing = toolIds.filter(id => !(after.tool_ids ?? []).includes(id))
   const openingOk = !plan.opening?.configured || sameOpening(read.first_message, plan.opening.want)
-  if (!samePrompt(after.prompt, plan.prompt.text) || missing.length || !openingOk) throw new Error(`Read-back mismatch: prompt ${samePrompt(after.prompt, plan.prompt.text) ? 'ok' : 'differs'}, opening message ${openingOk ? 'ok' : 'differs'}, missing tool ids ${missing.join(', ') || 'none'}`)
+  if (!samePrompt(after.prompt, plan.prompt.text) || missing.length || !openingOk) throw new Error(`Read-back mismatch: prompt ${samePrompt(after.prompt, plan.prompt.text) ? 'ok' : 'differs'}, opening message ${openingOk ? 'ok' : 'differs'}, missing tool ids ${missing.join(', ') || 'none'}.\nThe agent was already written before this check. ${backupFile ? `To put it back: npm run voice:agent -- --agent ${agentId} --restore ${backupFile} --apply` : 'Restore it from the backup taken before the apply.'}`)
   return {toolIds, created, updated}
 }
 
@@ -236,10 +243,12 @@ export function restorePlan(backup, current) {
   const now = current.agent?.conversation_config?.agent?.prompt ?? {}
   const tools = (backup.attached ?? []).map(t => ({id: t.id, name: t.tool_config?.name, tool_config: t.tool_config, changes: differences(t.tool_config, current.byId.get(t.id))}))
   const added = (now.tool_ids ?? []).filter(id => !(saved.tool_ids ?? []).includes(id))
-  // A backup made before the opening message was synced has none recorded: the opening message is then left alone.
-  const opening = backup.agent?.conversation_config?.agent?.first_message
-  const openingChanged = typeof opening === 'string' && !sameOpening(current.agent?.conversation_config?.agent?.first_message, opening)
-  return {prompt: saved, promptChanged: !samePrompt(now.prompt, saved.prompt) || !isDeepStrictEqual(now.tool_ids ?? [], saved.tool_ids ?? []), opening: typeof opening === 'string' ? opening : null, openingChanged, tools, detach: added}
+  // Every backup holds the whole agent, so also the opening message as it was then: restoring one made before the
+  // notice sentence was added takes the sentence off again, and the dry run prints both wordings so that shows.
+  // Only an agent that had no opening message at all leaves none in its backup; the live one is then left alone.
+  const opening = backup.agent?.conversation_config?.agent?.first_message, live = current.agent?.conversation_config?.agent?.first_message
+  const openingChanged = typeof opening === 'string' && !sameOpening(live, opening)
+  return {openingLive: typeof live === 'string' ? live : null, prompt: saved, promptChanged: !samePrompt(now.prompt, saved.prompt) || !isDeepStrictEqual(now.tool_ids ?? [], saved.tool_ids ?? []), opening: typeof opening === 'string' ? opening : null, openingChanged, tools, detach: added}
 }
 
 export function parseArgs(argv) {
@@ -271,7 +280,7 @@ export async function run(args, {call, log = console.log, backupDir = BACKUP_DIR
   const file = saveBackup(args.backupDir ?? backupDir, args.agent, state)
   log(`\nBackup of the agent and its tools before any change: ${file}`)
   log(`Restore with: npm run voice:agent -- --agent ${args.agent} --restore ${file} --apply`)
-  const result = await applyPlan(call, args.agent, plan, state.agent)
+  const result = await applyPlan(call, args.agent, plan, state.agent, file)
   log(`Applied. Created: ${result.created.join('; ') || 'none'}. Updated: ${result.updated.join('; ') || 'none'}.`)
   // The check is the same dry run, read fresh from the provider.
   const after = await readAgent(call, args.agent, names)
@@ -288,7 +297,8 @@ async function restore(args, state, {call, log, backupDir}) {
   const plan = restorePlan(backup, {agent: state.agent, byId: new Map(state.attached.map(t => [t.id, t.tool_config]))})
   log(`Restore ${args.agent} to the backup saved ${backup.saved_at}:`)
   log(`  prompt and tool_ids: ${plan.promptChanged ? 'restore' : 'already as saved'}`)
-  log(`  opening message: ${plan.opening === null ? 'not in the backup; left as it is' : plan.openingChanged ? 'restore' : 'already as saved'}`)
+  log(`  opening message: ${plan.opening === null ? 'none in the backup; the live one is left as it is' : plan.openingChanged ? 'restore' : 'already as saved'}`)
+  if (plan.openingChanged) { log('    - ' + (plan.openingLive === null ? '(none)' : JSON.stringify(plan.openingLive))); log('    + ' + JSON.stringify(plan.opening)) }
   for (const tool of plan.tools) log(`  ${tool.changes.length ? 'restore' : 'same   '} ${tool.name} (${tool.id})${tool.changes.length ? ': ' + tool.changes.map(c => c.path).join(', ') : ''}`)
   if (plan.detach.length) log(`  detach ${plan.detach.join(', ')} (left in the workspace; delete in the ElevenLabs dashboard if unwanted)`)
   if (plan.prompt.tools?.length) log('  prompt.tools in the backup is not sent: the provider takes tool_ids only')
@@ -296,7 +306,8 @@ async function restore(args, state, {call, log, backupDir}) {
   const file = saveBackup(backupDir, args.agent, state)
   log(`\nBackup of the current state before restoring: ${file}`)
   for (const tool of plan.tools) if (tool.changes.length) await call('PATCH', `/v1/convai/tools/${encodeURIComponent(tool.id)}`, {tool_config: tool.tool_config})
-  if (plan.promptChanged || plan.openingChanged) await call('PATCH', `/v1/convai/agents/${encodeURIComponent(args.agent)}`, agentUpdate(state.agent.conversation_config.agent.prompt, {prompt: plan.prompt.prompt, tool_ids: plan.prompt.tool_ids ?? []}, plan.openingChanged ? plan.opening : undefined))
+  if (plan.openingChanged && !plan.promptChanged) await call('PATCH', `/v1/convai/agents/${encodeURIComponent(args.agent)}`, openingUpdate(plan.opening))
+  else if (plan.promptChanged) await call('PATCH', `/v1/convai/agents/${encodeURIComponent(args.agent)}`, agentUpdate(state.agent.conversation_config.agent.prompt, {prompt: plan.prompt.prompt, tool_ids: plan.prompt.tool_ids ?? []}, plan.openingChanged ? plan.opening : undefined))
   const read = (await call('GET', `/v1/convai/agents/${encodeURIComponent(args.agent)}`)).conversation_config?.agent ?? {}, after = read.prompt ?? {}
   const ok = samePrompt(after.prompt, plan.prompt.prompt) && isDeepStrictEqual(after.tool_ids ?? [], plan.prompt.tool_ids ?? []) && (plan.opening === null || sameOpening(read.first_message, plan.opening))
   log(ok ? 'Restored.' : 'Restore read-back differs: check the agent in the dashboard.')
