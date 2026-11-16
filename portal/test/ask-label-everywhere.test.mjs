@@ -10,6 +10,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 import ts from 'typescript';
 import { machineLabelHTML } from '../public/labels.js';
+import * as machineNoticeModule from '../public/machine-notice.js';
+import * as transcriptNoteModule from '../public/transcript-note.js';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const app = read('../public/app.js');
@@ -40,6 +42,7 @@ function fixture(t, { url = 'https://offline.invalid/ask', docked = false } = {}
     set: (_t, key, value) => { held[key] = value; return true; },
   });
   w.__label = machineLabelHTML;
+  w.__notice = machineNoticeModule;
   w.eval(`with (__scope) {
     const spare = {};
     const $ = id => document.getElementById(id) || (spare[id] ||= document.createElement('div'));
@@ -56,10 +59,11 @@ function fixture(t, { url = 'https://offline.invalid/ask', docked = false } = {}
     const setStatus = (_el, message, failed) => { if (failed) window.__failed = String(message); };
     let chatThread = [], chatKind = 'all', chatSpeaker = '', chatBusy = false, chatAbort = null, saDisplayHelpers = null, transcriptNoteHelpers = null;
     let askAbort = null, askSteps = null, lastAsk = null;
+    let machineNoticeHelpers = window.__notice;
     const store = { active: null, chats: [] };
     const activeChat = make => store.chats.find(c => c.id === store.active) || (make ? (store.chats.push({ id: 'new', thread: [] }), store.active = 'new', store.chats.at(-1)) : undefined);
     ${constant('NOT_MODEL_WRITTEN')}
-    ${['modelWrittenAnswer', 'renderAnswerOverview', 'streamRenderer', 'revealAskResult', 'runAsk', 'chatAnswerEl', 'renderChatThread', 'trimUnanswered', 'loadChatSession', 'saveChatSession', 'sendChat']
+    ${['modelWrittenAnswer', 'answerNoticeText', 'renderAnswerNotice', 'renderAnswerOverview', 'streamRenderer', 'revealAskResult', 'runAsk', 'chatAnswerEl', 'renderChatThread', 'trimUnanswered', 'loadChatSession', 'saveChatSession', 'sendChat']
       .map(fn).join('\n').replace(/import\(/g, 'fixtureImport(')}
     window.__ask = async (payload, deltas, during) => {
       askRecord = async (_body, _signal, on) => {
@@ -86,6 +90,7 @@ function fixture(t, { url = 'https://offline.invalid/ask', docked = false } = {}
     };
     window.__modelWritten = modelWrittenAnswer;
     window.__saved = () => chatThread;
+    window.__helpers = (notice, transcript) => { machineNoticeHelpers = notice; transcriptNoteHelpers = transcript; };
   }`);
   const doc = w.document;
   /** Each "Machine-written" label under a root that is not hidden within it, as the words a screen reader meets. */
@@ -239,4 +244,101 @@ test('the condition: the Worker’s word when it gives one, else answered and a 
   assert.equal(w.__modelWritten({ answer_status: 'answered', machine_written: false }, 'Text.'), false);
   assert.equal(w.__modelWritten({ answer_status: 'needs_question', machine_written: true }, 'Text.'), true);
   assert.equal(w.__modelWritten({ answered: false, machine_written: true }, 'Text.'), false);
+});
+
+// ---- The error notice: one line under every machine-written answer, above its sources (machine_notice) ----
+const DEFAULT_NOTICE = 'Machine-written answers can contain errors. Check the original record before relying on one.';
+const TRANSCRIPT_NOTICE = 'Machine-written answers can contain errors. Check the original transcript before relying on it.';
+const hearing = { resource: 'fact-2', title: 'An invented commission, hearing day 2. Hearing transcript: evidence, not findings.', snippet: 'Morgan Sample said: “We did not know.” Hearing transcript: evidence, not findings.', cited: true };
+const before = (f, a, b) => !!(a.compareDocumentPosition(b) & f.w.Node.DOCUMENT_POSITION_FOLLOWING);
+/** The notice lines a reader meets under a root: real text, shown, and not kept from a screen reader. */
+const notices = (f, root) => [...root.querySelectorAll('.answer-notice')].filter(el => !root.contains(el.closest('[hidden]')) && !el.closest('[aria-hidden="true"]') && el.textContent);
+
+test('Ask page: the Worker’s notice is one line under the answer and above the sources, in either wording', async t => {
+  for (const [notice, sources] of [[DEFAULT_NOTICE, [speech]], [TRANSCRIPT_NOTICE, [speech, hearing]]]) {
+    const f = fixture(t);
+    await f.w.__ask({ answer: 'A written answer.', answer_status: 'answered', machine_written: true, machine_notice: notice, sources });
+    const lines = notices(f, f.result);
+    assert.deepEqual(lines.map(el => el.textContent), [notice]);
+    const line = lines[0];
+    assert.equal(line.id, 'ask-notice'); assert.equal(line.tagName, 'P');
+    assert.ok(before(f, f.doc.getElementById('ask-answer'), line), 'under the answer');
+    assert.ok(before(f, line, f.doc.getElementById('ask-sources')), 'above the sources');
+    assert.equal(f.doc.getElementById('ask-sources').hidden, false);
+    assert.equal(f.doc.getElementById('ask-answer').nextElementSibling, line, 'directly under the answer text');
+    assertLabelledOnce(f, f.result, f.doc.getElementById('ask-answer'));
+  }
+});
+
+test('Ask page: an answer no model wrote shows no notice, and a new question clears the last one', async t => {
+  const f = fixture(t);
+  await f.w.__ask({ answer: 'A written answer.', answer_status: 'answered', machine_written: true, machine_notice: DEFAULT_NOTICE, sources: [speech] });
+  assert.equal(notices(f, f.result).length, 1);
+  for (const [kind, payload] of Object.entries(NOT_WRITTEN)) {
+    await f.w.__ask(payload);
+    assert.deepEqual(notices(f, f.result), [], kind);
+    assert.equal(f.doc.getElementById('ask-notice').hidden, true, kind);
+  }
+});
+
+test('Ask page, while streaming: the line holds its place from the first words, then takes the Worker’s wording', async t => {
+  const f = fixture(t);
+  let during;
+  await f.w.__ask({ answer: 'A streamed answer.', answer_status: 'answered', machine_written: true, machine_notice: TRANSCRIPT_NOTICE, sources: [speech, hearing] }, ['A streamed', ' answer.'],
+    () => { during = notices(f, f.result).map(el => el.textContent); });
+  assert.deepEqual(during, [DEFAULT_NOTICE], 'there with the first words, so the finished answer moves nothing');
+  assert.deepEqual(notices(f, f.result).map(el => el.textContent), [TRANSCRIPT_NOTICE]);
+  // Words streamed, but the answer ended as passages from the record: the line goes with the label.
+  await f.w.__ask({ answer: 'Passages from the record.', answer_status: 'evidence_only', machine_written: false, sources: [speech] }, ['A draft']);
+  assert.deepEqual(notices(f, f.result), []);
+});
+
+test('conversation: a follow-up answer and a "Did you mean" suggestion carry the notice between the answer and its sources, and keep it when saved', async t => {
+  const f = fixture(t);
+  let during;
+  await f.w.__send({ answer: 'A follow-up answer.', answer_status: 'answered', machine_written: true, machine_notice: TRANSCRIPT_NOTICE, sources: [speech, hearing] }, ['A follow-up', ' answer.'],
+    () => { during = notices(f, f.thread).map(el => el.textContent); });
+  assert.deepEqual(during, [DEFAULT_NOTICE], 'the live turn holds the line while the words arrive');
+  const turn = f.thread.querySelector('.chat-turn-answer');
+  const lines = notices(f, turn);
+  assert.deepEqual(lines.map(el => el.textContent), [TRANSCRIPT_NOTICE]);
+  assert.ok(before(f, turn.querySelector('.answer'), lines[0]) && before(f, lines[0], turn.querySelector('details.chat-sources')));
+  assert.equal(f.w.__saved().at(-1).machine_notice, TRANSCRIPT_NOTICE, 'kept on the saved turn');
+  await f.w.__send(WRITTEN['clarify prompt with a suggested question'] && { ...WRITTEN['clarify prompt with a suggested question'], machine_notice: DEFAULT_NOTICE });
+  const turns = [...f.thread.querySelectorAll('.chat-turn-answer')];
+  assert.deepEqual(notices(f, turns.at(-1)).map(el => el.textContent), [DEFAULT_NOTICE]);
+  await f.w.__send(NOT_WRITTEN['calculated money answer']);
+  assert.deepEqual(notices(f, [...f.thread.querySelectorAll('.chat-turn-answer')].at(-1)), []);
+});
+
+test('a reopened conversation: a saved turn replays the Worker’s notice, and a turn saved before the field gets the same fixed words', async t => {
+  const f = fixture(t);
+  f.w.__helpers(machineNoticeModule, transcriptNoteModule);
+  f.w.__restore([
+    { role: 'user', text: 'First' }, { role: 'answer', text: 'Saved with its notice.', answer_status: 'answered', machine_written: true, machine_notice: DEFAULT_NOTICE, sources: [speech] },
+    { role: 'user', text: 'Second' }, { role: 'answer', text: 'Saved before the field.', answer_status: 'answered', sources: [speech] },
+    { role: 'user', text: 'Third' }, { role: 'answer', text: 'Saved before the field, citing a hearing.', answer_status: 'answered', machine_written: true, sources: [speech, hearing] },
+    { role: 'user', text: 'Fourth' }, { role: 'answer', text: '| Donor | Total |', answer_status: 'calculated', money_ranking: true, sources: [speech] },
+    { role: 'user', text: 'Fifth' }, { role: 'answer', text: '(no answer)', answer_status: 'answered', sources: [speech] },
+  ]);
+  const turns = [...f.thread.querySelectorAll('.chat-turn-answer')];
+  assert.deepEqual(turns.map(turn => notices(f, turn).map(el => el.textContent)), [[DEFAULT_NOTICE], [DEFAULT_NOTICE], [TRANSCRIPT_NOTICE], [], []]);
+  for (const turn of turns.slice(0, 3)) {
+    const line = notices(f, turn)[0];
+    assert.ok(before(f, turn.querySelector('.answer'), line) && before(f, line, turn.querySelector('details.chat-sources')));
+  }
+  // Without the helper module (it failed to load), a saved turn's own notice still shows and nothing breaks.
+  const g = fixture(t);
+  g.w.__helpers(undefined, null);
+  g.w.__restore([{ role: 'user', text: 'First' }, { role: 'answer', text: 'Saved with its notice.', machine_written: true, machine_notice: DEFAULT_NOTICE, sources: [speech] }, { role: 'user', text: 'Second' }, { role: 'answer', text: 'Saved before the field.', sources: [speech] }]);
+  assert.deepEqual([...g.thread.querySelectorAll('.chat-turn-answer')].map(turn => notices(g, turn).length), [1, 0]);
+});
+
+test('the page and the Worker decide who wrote an answer by one rule', t => {
+  const f = fixture(t);
+  for (const [kind, payload] of Object.entries({ ...WRITTEN, ...NOT_WRITTEN })) {
+    assert.equal(machineNoticeModule.modelWritten(payload), f.w.__modelWritten(payload, payload.answer), kind);
+    assert.equal(machineNoticeModule.machineNotice(payload) !== null, kind in WRITTEN, kind);
+  }
+  assert.match(app, /import\('\/machine-notice\.js\?v=[^']+'\)\.then\(module => \{ machineNoticeHelpers = module; \}\)\.catch/);
 });

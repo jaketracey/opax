@@ -65,7 +65,7 @@
 <link rel="stylesheet" href="/register-tables.css?v=525e539093">
 <script type="module" src="/register-tables-entry.js?v=11ffb3aee7"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=ecb830d395">
-<link rel="stylesheet" href="/style.css?v=ed0d07659d">
+<link rel="stylesheet" href="/style.css?v=35cdd2fa5b">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -261,6 +261,7 @@
         <div id="ask-steps" hidden></div>
         <div id="ask-overview" class="answer-overview" hidden></div>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
+        <p class="answer-notice" id="ask-notice" hidden></p>
         <p class="answer-stamp" id="ask-stamp"></p>
         <!-- A question the speeches cannot answer (a count or total of donors,
              donations, grants or contracts) points at the registers that can. -->
@@ -535,6 +536,7 @@
         <div class="search-summary-open">
           <p class="search-summary-status" id="search-answer-status" role="status" aria-live="polite"></p>
           <div class="answer answer-compact" id="search-answer-body"></div>
+          <p class="answer-notice" id="search-answer-notice" hidden></p>
           <details id="search-answer-fold" class="chat-sources" hidden>
             <summary id="search-answer-sum">Sources</summary>
             <ol class="source-list" id="search-answer-sources"></ol>
@@ -2390,11 +2392,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=0da325c1af" defer></script>
+<script src="/spa-shell.js?v=21c137f05a" defer></script>
 <script src="/navigation.js?v=eac2c03e68" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=3d8a64defe" defer></script>
+<script src="/app.js?v=ffc4374921" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=74cbe557c0" defer></script>
 </body>

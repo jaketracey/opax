@@ -89,11 +89,14 @@ const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=1ac63b
 
 let saDisplayHelpers;
 let transcriptNoteHelpers;
+let machineNoticeHelpers;
 let saFullTextFlag = 'false';
 const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
   // The transcript line for a conversation saved before every answer citing a hearing transcript carried it.
   import('/transcript-note.js?v=transcript-line-1').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
+  // The fixed error notice under a machine-written answer, for the first streamed words and for a saved turn.
+  import('/machine-notice.js?v=machine-notice-1').then(module => { machineNoticeHelpers = module; }).catch(() => {}),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]));
 
@@ -396,6 +399,20 @@ function modelWrittenAnswer(data, text) {
   const shown = !!data.money_overview || !!String(text || "").trim();
   if (typeof data.machine_written === "boolean") return data.machine_written && shown;
   return !!data.money_overview || (shown && (!!data.suggested_question || !NOT_MODEL_WRITTEN.has(data.answer_status)));
+}
+/** The error notice under a machine-written answer and above its sources: the Worker's own words (machine_notice).
+ *  A turn saved before the Worker sent them gets the same fixed words wherever it carries the label. */
+function answerNoticeText(data, text) {
+  if (typeof data?.machine_notice === "string") return data.machine_notice;
+  if (!modelWrittenAnswer(data, text)) return "";
+  const notice = machineNoticeHelpers?.machineNotice({ ...data, answer: text }, !!transcriptNoteHelpers?.transcriptNote?.(data.sources, true));
+  return typeof notice === "string" ? notice : "";
+}
+/** Draws the notice in its line, or hides the line when there is none. Plain text a screen reader meets in order. */
+function renderAnswerNotice(el, notice) {
+  if (!el) return;
+  el.textContent = typeof notice === "string" ? notice : "";
+  el.hidden = !el.textContent;
 }
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
@@ -1786,7 +1803,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.classList.remove("show-key");
   root.innerHTML = MAP_DRAWING_HTML;
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=9fd4185a50"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=ca1a4d9f0b"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=9fd4185a50"), loadMoneyFile(jur), import("/money-journeys.js?v=machine-notice-20261116"), import("/map-research.js?v=ca1a4d9f0b"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -10298,7 +10315,7 @@ const GAMES = {
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ddab2e7d34", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ac411bee7b", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ecea1859b2", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -10733,6 +10750,7 @@ async function runAsk(question) {
   $("ask-keep").hidden = true;
   $("ask-again").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
+  renderAnswerNotice($("ask-notice"), "");
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
   $("ask-money").hidden = true;
@@ -10814,6 +10832,8 @@ async function runAsk(question) {
           $("ask-result").querySelector(".kicker").textContent = "Answer";
           // Only a model's words stream, so they are labelled from the first of them.
           $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false;
+          // Their notice holds its line from the first words, so nothing moves when the answer completes.
+          renderAnswerNotice($("ask-notice"), machineNoticeHelpers?.MACHINE_NOTICE);
           $("ask-stamp").textContent = "";
           $("ask-sources").hidden = true;
           $("ask-result").querySelector(".action-row").hidden = true;
@@ -10861,7 +10881,7 @@ async function runAsk(question) {
     if (askSteps) liveSteps = askSteps.steps();
     const research = researchOf(data, liveSteps);
     const researchExtras = researchSourceExtras(research, sources);
-    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, machine_written: data.machine_written, suggested_question: data.suggested_question };
+    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, machine_written: data.machine_written, machine_notice: data.machine_notice, suggested_question: data.suggested_question };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
@@ -10884,6 +10904,7 @@ async function runAsk(question) {
     renderAnswerOverview($("ask-overview"), data.money_overview);
     // Every answer a language model wrote carries the label, above any overview paragraph it also wrote.
     if (modelWrittenAnswer(data, answerText)) { $("ask-overview").insertAdjacentHTML("afterbegin", machineLabelHTML()); $("ask-overview").hidden = false; }
+    renderAnswerNotice($("ask-notice"), noAnswer ? "" : answerNoticeText(data, answerText));
     if (noAnswer) {
       $("ask-overview").hidden = true;
       renderNoAnswer($("ask-answer"), data);
@@ -11809,7 +11830,7 @@ async function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next, machine_written: seed.machine_written, suggested_question: seed.suggested_question },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next, machine_written: seed.machine_written, machine_notice: seed.machine_notice, suggested_question: seed.suggested_question },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -12150,6 +12171,14 @@ function chatAnswerEl(msg) {
   renderAnswer(body, msg.text || "(no answer)", msg);
   if (msg.pay_answer) renderPayNextSteps(body, msg.pay_next);
   wrap.appendChild(body);
+  // The error notice: one line under the answer, above its sources, wherever the label is.
+  const notice = wrap.querySelector(".ui-machine") ? answerNoticeText(msg, msg.text) : "";
+  if (notice) {
+    const line = document.createElement("p");
+    line.className = "answer-notice";
+    renderAnswerNotice(line, notice);
+    wrap.appendChild(line);
+  }
   const sources = msg.sources || [];
   const researchExtras = researchSourceExtras(msg.research, sources);
   if (sources.length || researchExtras.length) {
@@ -12474,6 +12503,12 @@ async function sendChat(question, carry) {
           dots.setAttribute("aria-hidden", "true");
           dots.append(document.createElement("i"), document.createElement("i"), document.createElement("i"));
           liveWrap.append(body, dots);
+          if (typeof machineNoticeHelpers?.MACHINE_NOTICE === "string") {
+            const line = document.createElement("p");
+            line.className = "answer-notice";
+            renderAnswerNotice(line, machineNoticeHelpers.MACHINE_NOTICE);
+            liveWrap.append(line);
+          }
           // Only a model's words stream, so they are labelled from the first of them.
           liveWrap.insertAdjacentHTML("afterbegin", machineLabelHTML());
           slot.insertAdjacentElement("afterend", liveWrap);
@@ -12527,6 +12562,7 @@ async function sendChat(question, carry) {
       answer_status: data.answer_status,
       // Whether a model wrote this turn, kept so a reopened conversation labels it the same way.
       machine_written: data.machine_written,
+      machine_notice: data.machine_notice,
       suggested_question: data.suggested_question,
       money_ranking: data.money_ranking,
       money_context: data.money_context,
@@ -13562,6 +13598,7 @@ function resetSearchAnswer(show) {
   box.classList.remove("is-loading");
   $("search-answer-body").replaceChildren();
   $("search-answer-sources").replaceChildren();
+  renderAnswerNotice($("search-answer-notice"), "");
   $("search-answer-fold").hidden = true;
   $("search-answer-more").textContent = "";
   $("search-answer-retry").hidden = true;
@@ -13647,6 +13684,7 @@ async function runSearchAnswer(q, f, key) {
   body.setAttribute("aria-busy", "true");
   body.innerHTML = '<div class="answer-skeleton" aria-hidden="true"><i style="width:94%"></i><i style="width:86%"></i><i style="width:68%"></i></div>';
   $("search-answer-sources").replaceChildren();
+  renderAnswerNotice($("search-answer-notice"), "");
   $("search-answer-fold").hidden = true;
   $("search-answer-fold").open = false;
   $("search-answer-more").textContent = "";
@@ -13704,6 +13742,8 @@ async function runSearchAnswer(q, f, key) {
       }
       return li;
     }));
+    // The error notice the Worker sent with the overview: under its points, above its sources.
+    renderAnswerNotice($("search-answer-notice"), data.machine_notice);
     $("search-answer-sum").textContent = `Sources (${sources.size})`;
     $("search-answer-fold").hidden = false;
     $("search-answer-more").textContent = `Drawn from ${data.reviewed_count} matching records.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
@@ -13712,6 +13752,7 @@ async function runSearchAnswer(q, f, key) {
   } catch (err) {
     if (!mine()) return;
     body.replaceChildren();
+    renderAnswerNotice($("search-answer-notice"), "");
     setStatus($("search-answer-status"), "The summary could not be written. Your matching records are below.");
     $("search-answer-retry").hidden = false;
   } finally {
