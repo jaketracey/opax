@@ -157,7 +157,15 @@ same container at the next check without recreating the children. Facebook's
 photos are uploaded unpublished and attached to one feed post, so an interrupted
 run leaves nothing visible. A Meta write that carries an image URL is answered only
 after Meta has fetched the image, so those calls are given 90 seconds (reads keep
-20); a call that still runs out is recorded as `Provider timeout`.
+20); a call that still runs out is recorded as `Provider timeout`. A container still
+processing is read again after 10 and then 20 seconds before the run leaves it for
+the next tick (Meta advises reading a status about once a minute, for at most five
+minutes). When Meta refuses a publish as not ready (`Provider HTTP 400 code
+9007/2207027`, "The media is not ready for publishing") even though the container
+read `FINISHED`, nothing was published: the delivery keeps the container and stays
+`preparing` for the next tick, at most twice and only before the 22:10 UTC tick. A
+refusal at 22:10, a third one, or one in an operator's run at any other time goes to
+`review_required` as before, so nothing carries into the next day.
 
 ## Source selection and refresh
 
@@ -246,7 +254,8 @@ through to another, never silently repeats an excluded subject.
   no credentials or raw provider error bodies).
 - Logs: `npx wrangler tail --env=''`; look for `daily-post`.
 - Tests: `node --test test/daily-post.test.mjs test/social-publication.test.mjs
-  test/bill-social-card.test.mjs test/og-story.test.mjs test/social-grants-catalog.test.mjs` from portal/.
+  test/bill-social-card.test.mjs test/og-story.test.mjs test/social-grants-catalog.test.mjs
+  test/social-subrequests.test.mjs` from portal/.
 
 `posted` requires a provider post ID. A timeout or malformed success after a write
 becomes `review_required`; do not retry it without reading the platform's actual
@@ -254,6 +263,20 @@ posts. `sending` after a crash also needs reconciliation. Preflight errors are
 `failed`, and are not automatically retried that day. Check the target account,
 repair the connection, then reconcile/reset only that channel's row if confirmed
 unsent. No public endpoint can trigger posting or reset these receipts.
+
+A receipt's `detail` says why it failed or is held. The runner's own reasons are kept
+as thrown (`Story slide unavailable`, `Provider timeout`, `Provider HTTP 400 code
+100/33` with Meta's numeric code, never its message). Any other error is recorded as
+a fixed category and the error's class, never its text: `Network error (TypeError)`
+for a request that got no HTTP answer (or the runtime's "Network connection lost."),
+`Timeout (DOMException)`, `Database error (Error)` for D1's documented `D1_` and `D1
+DB` messages, `Worker limit (subrequests)` for the Workers subrequest limit, and
+`Unexpected error (<class>)` for anything else. The log line keeps the message.
+
+One run of the publisher makes about 160 to 300 subrequests with every channel on,
+and about 370 at most (a ten-slide story with composition), against the 10,000 per
+invocation of the Workers Paid plan. `test/social-subrequests.test.mjs` counts them
+through the real scheduled handler and fails above a tenth of the limit.
 
 Before publishing, the runner checks that the source page and matching JPEG return
 success. A generic fallback image or mismatched route prevents posting. PNG cards

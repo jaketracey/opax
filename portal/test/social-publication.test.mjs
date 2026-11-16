@@ -5,7 +5,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';
 const built = await build({ entryPoints: [new URL('../src/social-publication.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication, socialEngagement, todayRedirect, tagFacets, instagramTags } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication, socialEngagement, todayRedirect, tagFacets, instagramTags, failureDetail, beforeLastTick, CONTAINER_WAITS } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const storyBuilt = await build({ entryPoints: [new URL('../src/story.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { STORY_VERSION, storyFrames } = await import('data:text/javascript;base64,' + Buffer.from(storyBuilt.outputFiles[0].text).toString('base64'));
 const post = { date: '2026-09-13', subject: 'person:Test Member', kind: 'politician', title: 'Test Member', text: 'Check the parliamentary record.\n\nhttps://opax.com.au/subject/person/Test%20Member', caption: 'The longer source-qualified caption.\n\nhttps://opax.com.au/subject/person/Test%20Member', url: 'https://opax.com.au/subject/person/Test%20Member' };
@@ -54,8 +54,10 @@ function harness(overrides = {}, handler) {
   if(url.endsWith('/789/media_publish'))return Response.json({id:JSON.parse(init.body).creation_id==='999'||JSON.parse(init.body).creation_id.startsWith('9')?'1003':'1'+JSON.parse(init.body).creation_id});
   throw Error('Unexpected request '+url);
  };
- const run=()=>runSocialPublication(env,{now,personTopics:async()=>Response.json({}),fetchImpl});
- return {env,db,sqlite,calls,run,fetchImpl};
+ // The waits between container status reads are recorded, not slept.
+ const sleeps=[];
+ const run=(at=now)=>runSocialPublication(env,{now:at,personTopics:async()=>Response.json({}),fetchImpl,sleep:async ms=>{sleeps.push(ms)}});
+ return {env,db,sqlite,calls,run,fetchImpl,sleeps};
 }
 test('platform copy uses attribution, real JPEG, a portrait card and a bio CTA for Instagram',()=>{
  for(const channel of ['x','facebook','instagram']) {
@@ -242,10 +244,12 @@ test('a story posts its frames one by one as Instagram and Page stories, in orde
 });
 test('a story frame still processing is resumed from that frame, without repeating the frames already in the tray',async()=>{
  let polls=0;
- const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async(url)=>{ if(url.endsWith('/803?fields=status_code')&&polls++===0)return Response.json({status_code:'IN_PROGRESS'}); return null; });
+ const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async(url)=>{ if(url.endsWith('/803?fields=status_code')&&polls++<=CONTAINER_WAITS.length)return Response.json({status_code:'IN_PROGRESS'}); return null; });
  h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
  const first=await h.run();
  assert.equal(first.channels.instagram_story,'preparing');
+ assert.deepEqual(h.sleeps,CONTAINER_WAITS,'the run read the frame again after each wait before leaving it');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/803?fields=status_code')).length,1+CONTAINER_WAITS.length);
  const mid=h.sqlite.prepare("SELECT status,progress FROM social_deliveries WHERE channel='instagram_story'").get();
  assert.equal(mid.status,'preparing');const p=JSON.parse(mid.progress);assert.equal(p.done.length,2);assert.equal(p.at,2);assert.equal(p.container,'803');
  const second=await h.run();
@@ -406,4 +410,130 @@ test('all six electoral channel templates retain the exact line even after capti
  for(const slide of frozen.slides)assert.equal(slide.authorisation,line);
  assert.equal(h.calls.length,0,'preview and copy do not send requests');
  h.sqlite.close();
+});
+
+test('a failure outside the known reasons is journalled as a category and the error class, never its text',()=>{
+ // Every known reason is kept exactly as thrown.
+ for(const m of ['Provider HTTP 500','Provider timeout','Provider omitted post id','X identity HTTP 401','X API HTTP 403','X account mismatch','X did not return a post id','Facebook Page token mismatch','Instagram account mismatch','Instagram container not publishable','Source page or matching image unavailable','Grant award image mismatch','Portrait image unavailable','Story slide unavailable','Meta API version not configured','Bluesky session HTTP 401','Bluesky API HTTP 400','Bluesky account mismatch','Bluesky did not return a post uri'])assert.equal(failureDetail(new Error(m)),m);
+ // Meta's numeric code rides on the status, digits only.
+ assert.equal(failureDetail(new Error('Provider HTTP 400 code 9007/2207027')),'Provider HTTP 400 code 9007/2207027');
+ assert.equal(failureDetail(new Error('Provider HTTP 403 code 10')),'Provider HTTP 403 code 10');
+ assert.equal(failureDetail(new Error('Provider HTTP 400 code 10 and the token ig-token')),'Unexpected error (Error)');
+ // The Workers subrequest limit, by the word Cloudflare names it with: the docs give the limit, not the message.
+ assert.equal(failureDetail(new Error('Too many subrequests.'),true),'Worker limit (subrequests)');
+ assert.equal(failureDetail(new Error('Too many subrequests by single Worker invocation.')),'Worker limit (subrequests)');
+ // D1's documented messages.
+ assert.equal(failureDetail(new Error('D1_ERROR: database is locked')),'Database error (Error)');
+ assert.equal(failureDetail(new Error('D1_EXEC_ERROR: Error in line 1: near "X": syntax error')),'Database error (Error)');
+ assert.equal(failureDetail(new Error('D1 DB is overloaded. Too many requests queued.')),'Database error (Error)');
+ // A request that got no HTTP answer, and the runtime's documented connection failure.
+ assert.equal(failureDetail(new TypeError('fetch failed'),true),'Network error (TypeError)');
+ assert.equal(failureDetail(new Error('Network connection lost.')),'Network error (Error)');
+ assert.equal(failureDetail(new DOMException('The operation was aborted due to timeout','TimeoutError'),true),'Timeout (DOMException)');
+ // Anything else: the class alone.
+ assert.equal(failureDetail(new TypeError("Cannot read properties of undefined (reading 'alt')")),'Unexpected error (TypeError)','a TypeError from the code is not a network error');
+ assert.equal(failureDetail(new SyntaxError('Unexpected token < in JSON')),'Unexpected error (SyntaxError)');
+ assert.equal(failureDetail('a thrown string with ig-token'),'Unexpected error (string)');
+ assert.equal(failureDetail(undefined),'Unexpected error (undefined)');
+ class Odd extends Error {} Object.defineProperty(Odd,'name',{value:'Odd name with page-token'});
+ assert.equal(failureDetail(new Odd('x')),'Unexpected error (unknown)');
+});
+test('a story publish that fails without an HTTP answer is held for review under its category, never its text, and is not tried again',async()=>{
+ const only={...storyEnv,FACEBOOK_STORY_ENABLED:'false',FACEBOOK_POST_ENABLED:'false',INSTAGRAM_POST_ENABLED:'false',DAILY_POST_ENABLED:'false'};
+ const cases=[
+  ['no answer',()=>{throw new TypeError('fetch failed for ig-token')},'Network error (TypeError)'],
+  ['subrequest limit',()=>{throw new Error('Too many subrequests.')},'Worker limit (subrequests)'],
+  ['not JSON',()=>new Response('<html>ig-token</html>'),'Unexpected error (SyntaxError)'],
+ ];
+ for(const [label,answer,detail] of cases){
+  const h=harness(only,async url=>url.endsWith('/789/media_publish')?answer():null);
+  h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+  assert.equal((await h.run()).channels.instagram_story,'review_required',label);
+  const row=h.sqlite.prepare("SELECT status,detail,progress FROM social_deliveries WHERE channel='instagram_story'").get();
+  assert.equal(row.status,'review_required',label);assert.equal(row.detail,detail,label);assert.doesNotMatch(JSON.stringify(row),/ig-token/,label);
+  assert.equal(JSON.parse(row.progress).container,'801',label+': the frame keeps its container');
+  await h.run();assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length,1,label+': held, never repeated');
+ }
+ // The journal write after a frame is published fails: the frame may be in the tray, so it is held for review.
+ const h=harness(only);h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const db=h.env.COMMUNITY_DB;
+ h.env.COMMUNITY_DB={prepare(sql){const st=db.prepare(sql);if(!sql.startsWith('UPDATE social_deliveries SET progress'))return st;let args=[];return {bind(...a){args=a;st.bind(...a);return this},first:()=>st.first(),all:()=>st.all(),async run(){if(JSON.parse(args[0]).done.length)throw new Error('D1_ERROR: Network connection lost.');return st.run()}}}};
+ assert.equal((await h.run()).channels.instagram_story,'review_required');
+ assert.deepEqual({...h.sqlite.prepare("SELECT status,detail FROM social_deliveries WHERE channel='instagram_story'").get()},{status:'review_required',detail:'Database error (Error)'});
+});
+test('a Meta refusal keeps its numeric code in the journal',async()=>{
+ const h=harness({},async url=>url.endsWith('/789/media_publish')?Response.json({error:{message:'secret text',code:100,error_subcode:33}},{status:400}):null);
+ await h.run();
+ assert.deepEqual({...h.sqlite.prepare("SELECT status,detail FROM social_deliveries WHERE channel='instagram'").get()},{status:'review_required',detail:'Provider HTTP 400 code 100/33'});
+ const h2=harness({},async url=>url.endsWith('/me?fields=id')?Response.json({error:{message:'secret text',code:190}},{status:401}):null);
+ await h2.run();
+ assert.deepEqual({...h2.sqlite.prepare("SELECT status,detail FROM social_deliveries WHERE channel='facebook'").get()},{status:'failed',detail:'Provider HTTP 401 code 190'});
+ assert.doesNotMatch(JSON.stringify([...h.sqlite.prepare('SELECT * FROM social_deliveries').all(),...h2.sqlite.prepare('SELECT * FROM social_deliveries').all()]),/secret text/);
+});
+
+// Meta's "The media is not ready for publishing, please wait for a moment".
+const notReady=()=>Response.json({error:{message:'The media is not ready for publishing, please wait for a moment',code:9007,error_subcode:2207027}},{status:400});
+const tick=minutes=>now+minutes*60000; // the harness's `now` is 22:00 UTC
+test('the not-ready wait ends at the last of the cron\'s three ticks',()=>{
+ const crons=/"crons":\s*\[([^\]]*)\]/.exec(readFileSync(new URL('../wrangler.jsonc',import.meta.url),'utf8'))[1];
+ assert.match(crons,/"0,5,10 22 \* \* \*"/,'the daily ticks are 22:00, 22:05 and 22:10 UTC');
+ assert.deepEqual([0,5,9,10,15].map(m=>beforeLastTick(tick(m))),[true,true,true,false,false]);
+ assert.equal(beforeLastTick(tick(-1)),false);
+});
+test('a container still processing is read again within the run, and published when it finishes',async()=>{
+ let reads=0;const h=harness({},async url=>url.endsWith('/999?fields=status_code')?Response.json({status_code:reads++<1?'IN_PROGRESS':'FINISHED'}):null);
+ assert.equal((await h.run()).channels.instagram,'posted');
+ assert.equal(reads,2);assert.deepEqual(h.sleeps,[CONTAINER_WAITS[0]]);
+});
+test('a carousel Meta calls not ready waits for the next tick with the same container, then posts once',async()=>{
+ let refusals=1;const h=harness({},async url=>url.endsWith('/789/media_publish')&&refusals-->0?notReady():null);
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify(story));
+ const first=await h.run(tick(0));
+ assert.equal(first.channels.instagram,'preparing');assert.equal(first.channels.x,'posted');assert.equal(first.channels.facebook,'posted');
+ const row=h.sqlite.prepare("SELECT status,container_id,detail,progress FROM social_deliveries WHERE channel='instagram'").get();
+ assert.equal(row.status,'preparing');assert.equal(row.container_id,'999');assert.equal(row.detail,null);assert.equal(JSON.parse(row.progress).refused,1);
+ assert.equal((await h.run(tick(5))).channels.instagram,'posted');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media')).length,4,'children and parent created once');
+ assert.deepEqual(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).map(c=>c.body.creation_id),['999','999']);
+ assert.equal(h.sqlite.prepare("SELECT post_id FROM social_deliveries WHERE channel='instagram'").get().post_id,'1003');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/2/tweets')).length,1);assert.equal(h.calls.filter(c=>c.url.endsWith('/456/feed')).length,1);
+});
+test('a story frame Meta calls not ready keeps its container and is published at the next tick, no frame repeated',async()=>{
+ let refusals=1;const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async(url,init)=>url.endsWith('/789/media_publish')&&JSON.parse(init.body).creation_id==='803'&&refusals-->0?notReady():null);
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ assert.equal((await h.run(tick(0))).channels.instagram_story,'preparing');
+ const mid=h.sqlite.prepare("SELECT status,detail,progress FROM social_deliveries WHERE channel='instagram_story'").get();
+ assert.equal(mid.status,'preparing');assert.equal(mid.detail,null);
+ const p=JSON.parse(mid.progress);assert.equal(p.done.length,2);assert.equal(p.at,2);assert.equal(p.container,'803');assert.equal(p.refused,1);
+ assert.equal((await h.run(tick(5))).channels.instagram_story,'posted');
+ assert.equal(h.calls.filter(c=>c.body?.media_type==='STORIES').length,5,'the third frame keeps its container');
+ assert.deepEqual(h.calls.filter(c=>c.url.endsWith('/789/media_publish')&&c.body.creation_id.startsWith('8')).map(c=>c.body.creation_id),['801','802','803','803','804','805']);
+ const done=h.sqlite.prepare("SELECT status,post_id FROM social_deliveries WHERE channel='instagram_story'").get();
+ assert.equal(done.status,'posted');assert.equal(done.post_id.split(',').length,5);
+});
+test('not ready on every tick ends in review after 22:10, and nothing is tried again',async()=>{
+ const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async url=>url.endsWith('/789/media_publish')?notReady():null);
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const states=[];
+ for(const m of [0,5,10]){const r=await h.run(tick(m));states.push([r.channels.instagram,r.channels.instagram_story])}
+ assert.deepEqual(states,[['preparing','preparing'],['preparing','preparing'],['review_required','review_required']]);
+ for(const channel of ['instagram','instagram_story'])assert.deepEqual({...h.sqlite.prepare('SELECT status,detail FROM social_deliveries WHERE channel=?').get(channel)},{status:'review_required',detail:'Provider HTTP 400 code 9007/2207027'},channel);
+ const publishes=h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length;
+ assert.equal(publishes,6,'one refusal a tick for each channel');
+ // A later run under the same date (a stray tick, an operator's run) tries nothing more.
+ await h.run(tick(15));await h.run(tick(60));
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length,publishes);
+ assert.equal(JSON.parse(h.sqlite.prepare("SELECT progress FROM social_deliveries WHERE channel='instagram_story'").get().progress).done.length,0,'no frame reached the tray');
+});
+test('the not-ready wait is capped at two, holds only before the last tick, and only for that refusal',async()=>{
+ const h=harness({},async url=>url.endsWith('/789/media_publish')?notReady():null);
+ const out=[];for(const m of [0,1,2])out.push((await h.run(tick(m))).channels.instagram);
+ assert.deepEqual(out,['preparing','preparing','review_required'],'a third refusal goes to review even before 22:10');
+ // An operator's run outside the cron's window: review at once, as before.
+ const h2=harness({},async url=>url.endsWith('/789/media_publish')?notReady():null);
+ assert.equal((await h2.run(Date.UTC(2026,8,13,3))).channels.instagram,'review_required');
+ // Any other refusal of a publish, an expired container among them, goes to review at once.
+ const h3=harness({},async url=>url.endsWith('/789/media_publish')?Response.json({error:{code:24,error_subcode:2207008}},{status:400}):null);
+ assert.equal((await h3.run(tick(0))).channels.instagram,'review_required');
+ assert.equal(h3.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram'").get().detail,'Provider HTTP 400 code 24/2207008');
 });
