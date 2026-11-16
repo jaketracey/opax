@@ -123,6 +123,26 @@ test('a lost reading the bill\'s own record contradicts is dropped, never shown 
   }
 });
 
+test('They Vote For You\'s usual second-reading wordings count: "the bill\'s main idea", "the main idea of the bill"', () => {
+  // s1470, Senate, 24 Jun 2026: "voted against a motion to agree with the bill's main idea".
+  assert.equal(decided(bill('s1470')).line, 'federal-senate-10327 second Not agreed 27-34');
+  // r7408, House, 10 Feb 2026: "voted in favour of a motion to agree with the main idea of the bill".
+  assert.equal(decided(bill('r7408')).line, 'federal-representatives-9906 second Agreed 97-38');
+  // s1430: the 2026 vote (9890, "- Second Reading - Agree with bill's main idea") is the latest, not the 2024 one (9176).
+  const s1430 = bill('s1430');
+  assert.equal(divisionReading(division(s1430, 'federal-senate-9890')), 'second');
+  assert.equal(decided(s1430).line, 'federal-senate-9890 second Not agreed 12-29');
+  for (const question of [
+    'The majority voted in favour of agreeing with the main idea of the bill.',
+    'The majority voted in favour of the main idea of the bills.',
+    'Example Bill 2026 - Second Reading - Agree with the bills\' main idea',
+  ]) assert.equal(divisionReading({ stage: 'Second reading', outcome: 'affirmative', question }), 'second', question);
+  // Their negations are motions against the bill, not its reading.
+  for (const question of [
+    'Example Bill 2026 - Second Reading - Don\'t agree with the main idea of the bill',
+    'Example Bill 2026 - Second Reading - Don\'t agree with the bill\'s main idea',
+  ]) assert.equal(divisionReading({ stage: 'Second reading', outcome: 'negative', question }), null, question);
+});
 
 test('procedural questions are never the bill\'s division, whatever stage they sit under', () => {
   const procedural = [

@@ -81,7 +81,7 @@ const AMENDMENT = new RegExp([
   String.raw`\bwords proposed to be omitted\b`, String.raw`\ball words after\b`, String.raw`\b(?:add(?:ing)?|omit(?:ting)?) (?:the following |additional |some |these )?words\b`,
   String.raw`\badd(?:s|ed|ing)?\b`, String.raw`\bproviso\b`, String.raw`\b(?:text|words) below\b`,
   String.raw`\bunchanged\b`, String.raw`\b[Dd]eclin(?:e|es|ed|ing) to (?:give|read)\b`, String.raw`\b[Dd]on'?t read\b`,
-  String.raw`\b[Dd]on'?t agree with (?:the )?bills?'? main idea\b`, String.raw`\bmain idea\s*\(`, String.raw`\bin committee\b`,
+  String.raw`\b[Dd]on'?t agree with (?:the )?(?:bill(?:'s|s'|s)? main idea|main idea of the bills?)\b`, String.raw`\bmain idea\s*\(`, String.raw`\bin committee\b`,
   String.raw`\bwithdrawn\b`, String.raw`\bredrafted\b`, String.raw`\breferred to\b`, String.raw`\breference to\b`, String.raw`\bdeferred\b`,
 ].join('|'));
 const THIRD = new RegExp([
@@ -97,7 +97,9 @@ const DIVISION_NAME = /\s-\s(?:second|third) reading\s-\s/i;
 const SUMMARY = /^(?:this division relates to[^.]*\.\s*)?(the majority\b[\s\S]*)$/i;
 const SECOND = new RegExp([
   String.raw`\bread (?:the bills? |this bill |these bills |it |them )?(?:for )?a second time\b`,
-  String.raw`\bagree with (?:the )?bills?'? main idea\b`, String.raw`\bsecond reading - agree with the bills?\b`,
+  // They Vote For You's usual wordings: "agree with the bill's main idea", "agree with the main idea of the bill".
+  String.raw`\bagree with (?:the )?bill(?:'s|s'|s)? main idea\b`, String.raw`\b(?:agree(?:ing)? with|in favour of) the main idea of the bills?\b`,
+  String.raw`\bsecond reading - agree with the bills?\b`,
 ].join('|'), 'i');
 
 /**
