@@ -91,6 +91,45 @@ class Redaction(unittest.TestCase):
         self.assertLessEqual(len(self.red("word " * 200)), st.MAX_LINE + len(" [cut]"))
 
 
+class HostsAndHomes(unittest.TestCase):
+    """Review of the stale and validation tails, 16 Nov 2026: internal host names and home paths, in every tail."""
+
+    def test_internal_hosts_are_masked_and_public_source_hosts_are_kept(self):
+        cases = {
+            "connect to ip-172-31-5-12 failed": "connect to <host> failed",
+            "host=ip-172-31-5-12.ap-southeast-2.compute.internal port 5432": "host=<host> port 5432",
+            "GET http://kb-proxy.opax.internal:8080/v1/counters 502": "GET http://<host>:8080/v1/counters 502",
+            "from ec2-13-54-1-2.ap-southeast-2.compute.amazonaws.com": "from <host>",
+            "resolver nas.local and printer.lan and db1.localdomain": "resolver <host> and <host> and <host>",
+        }
+        for line, want in cases.items():
+            self.assertEqual(st.redact(line, [], "/home/ubuntu"), want)
+        for line in ("503 Server Error for url: https://data.gov.au/data/api/3/action/package_search",
+                     "GET https://api.prod.legislation.gov.au/v1/titles 429",
+                     "https://www.parliament.nsw.gov.au/hansard/api timed out",
+                     "an internal error; the local copy is kept"):
+            self.assertEqual(st.redact(line, [], "/home/ubuntu"), line)
+
+    def test_this_machines_own_name_is_masked_unless_it_is_a_plain_word(self):
+        self.assertEqual(st.own_host("opax-refresh-1"), "opax-refresh-1")
+        self.assertEqual(st.own_host("desktop"), "")
+        self.assertEqual(st.redact("lock held by opax-refresh-1 (pid 12)", [], "", "opax-refresh-1"), "lock held by <host> (pid 12)")
+        self.assertEqual(st.redact("the opax-refresh-10 queue", [], "", "opax-refresh-1"), "the opax-refresh-10 queue")
+
+    def test_home_paths_and_addresses(self):
+        self.assertEqual(st.redact('File "/home/ubuntu/opax/scripts/vm/validate_data.py", line 9', [], ""),
+                         'File "~/opax/scripts/vm/validate_data.py", line 9')
+        self.assertEqual(st.redact("cache /Users/someone/.cache/autoresearch/x.json unreadable", [], ""),
+                         "cache ~/.cache/autoresearch/x.json unreadable")
+        self.assertEqual(st.redact("notify ops@example.com.au", [], ""), "notify [email]")
+
+    def test_a_tail_file_gets_the_host_mask_too(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "x.log").write_text("FRL HELD: proxy opax-refresh-1 refused; ip-10-0-0-7 kept\n")
+            out = st.step_tails(Path(tmp), ["x"], {"HOME": "/home/ubuntu"}, [], host="opax-refresh-1")
+        self.assertEqual(out, {"x": ["FRL HELD: proxy <host> refused; <host> kept"]})
+
+
 class ReviewFindings(unittest.TestCase):
     """One test per finding of the 16 Nov 2026 review; every value here is made up."""
 
