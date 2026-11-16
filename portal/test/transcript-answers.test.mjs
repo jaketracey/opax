@@ -11,6 +11,7 @@ const built = await build({ stdin: { contents: [
   "export {askOpaxResult} from './src/voice-sources'",
   "export {groundAnswerPayload} from './src/research-grounding'",
   "export {linkAskSources} from './src/ask-source-links'",
+  "export {writingFacts, proseFallback} from './src/research-writing'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const savedFetch = globalThis.fetch
@@ -229,6 +230,59 @@ test('the answer ends with the line, in the form its sources call for', () => {
   // A saved turn's rows are clipped, so the line it was saved with stands.
   const saved = { ...base, answer: `A witness spoke.\n\n${line}`, sources: [turnSource(1)] }
   assert.equal(api.withTranscriptNote(saved, true), saved)
+})
+
+test('the fixed words closing a sentence of the answer are prose: left as written, the right line after them', () => {
+  const base = { answered: true, answer_decision: 'answer', citations: { 'fact-t1/t/body/0': [[0, 20]] } }
+  for (const [said, sources, line] of [
+    ['A witness spoke. In short, Sources 1 and 2 are hearing transcripts: evidence, not findings.', [turnSource(1), turnSource(2)], api.TRANSCRIPT_NOTE],
+    ['The report made a finding. Note: These are from hearing transcripts: evidence, not findings.', [REPORT, turnSource(1)], 'Source 2 is a hearing transcript: evidence, not findings.'],
+    ['Witnesses agreed that These are from hearing transcripts: evidence, not findings.', [REPORT, turnSource(1)], 'Source 2 is a hearing transcript: evidence, not findings.'],
+  ]) {
+    const payload = { ...base, answer: said, sources }, out = api.withTranscriptNote(payload)
+    assert.equal(out.answer, `${said}\n\n${line}`)
+    assert.deepEqual(out.citations, payload.citations)
+    assert.equal(api.withTranscriptNote(out), out, 'settled in one pass')
+  }
+  // The right form inside a sentence already ends the answer with the words: nothing to add.
+  const right = { ...base, answer: 'In short, Source 2 is a hearing transcript: evidence, not findings.', sources: [REPORT, turnSource(1)] }
+  assert.equal(api.withTranscriptNote(right), right)
+  // A line of its own is still swapped, whatever ends the sentence before it.
+  for (const before of ['', 'A witness spoke.\n\n', 'She said “no.”\n\n', 'Was it lawful?\n\n', 'It was (as found).\n\n', 'It was (as found)\n\n']) {
+    const out = api.withTranscriptNote({ ...base, citations: {}, answer: before + api.TRANSCRIPT_NOTE, sources: [REPORT, turnSource(1)] })
+    assert.equal(out.answer, `${before}Source 2 is a hearing transcript: evidence, not findings.`)
+  }
+})
+
+test('the writer leaves the line to the way out: one line, at the end, after anything added under the turns', () => {
+  const turn = `Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Preston: "Income averaging did not make sense to me." ${LABEL}. © Commonwealth of Australia, Royal Commission into the Robodebt Scheme, licensed under CC BY 4.0.`
+  const question = 'What has Example Member said about income averaging?'
+  const facts = api.writingFacts(undefined, [{ id: 1, text: turn, kind: 'record', cite: { kind: 'record', url: 'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15', label: turn } }])
+  const written = api.proseFallback({ question, period: { kind: 'all', label: 'All time' }, facts })
+  assert.ok(written.answer.length > 0)
+  assert.ok(!/evidence, not findings/.test(written.answer), written.answer)
+  // One hearing turn, then a speech by the person in scope that the person overview adds as a bullet.
+  const heard = { ...turnSource(1), resource: 'fact-1' }
+  const speech = { resource: 'speech-7', slug: 'speech-7', kind: 'speech', speaker: 'Example Member', title: 'Social services statement', date: '2023-03-20', url: 'https://opax.test/doc/speech-7', href: 'https://opax.test/doc/speech-7', snippet: 'Income averaging was applied to every debt raised under the scheme.', cited: false }
+  const answer = written.answer.trim()
+  const payload = { answered: true, answer, answer_decision: 'answer', research: { mode: 'loop' }, answer_scope: { people: ['Example Member'] }, sources: [heard, speech], citations: { 'fact-1/t/body/0': [[0, Array.from(answer).length]] } }
+  const checked = api.groundAnswerPayload(payload, question)
+  assert.match(checked.answer, /\n- On 20 March 2023, Example Member said “Income averaging was applied/, checked.answer)
+  const out = api.withTranscriptNote(api.linkAskSources(checked, undefined, 'https://opax.test'))
+  assert.deepEqual(out.sources.filter(s => s.cited).map(s => s.resource), ['fact-1', 'speech-7'])
+  assert.equal(out.answer.match(/evidence, not findings/g).length, 1)
+  assert.ok(out.answer.endsWith('\n\nSource 1 is a hearing transcript: evidence, not findings.'), out.answer)
+  assert.ok(out.answer.startsWith(checked.answer.trimEnd()), 'nothing before the line is changed')
+})
+
+test('division rows hung off a coverage row are sources like any other', () => {
+  const answer = 'The member voted for the bill twice. A witness described income averaging.'
+  const { coverage: _flag, ...row } = { ...COVERAGE, resource: 'coverage-divisions', url: 'https://opax.test/coverage/divisions' }
+  const links = { lists: [], related: { [row.url]: VOTE_LINKS.related[VOTES.url] } }
+  const linked = api.linkAskSources({ answered: true, answer_decision: 'answer', answer, citations: {}, sources: [row, turnSource(1)] }, links, 'https://opax.test')
+  assert.deepEqual(linked.sources.map(s => s.resource), ['coverage-divisions', 'coverage-divisions-record-1', 'coverage-divisions-record-2', 'fact-t1'])
+  assert.equal(api.withTranscriptNote(linked).answer, `${answer}\n\nSource 4 is a hearing transcript: evidence, not findings.`)
+  assert.equal(api.withTranscriptNote({ ...linked, sources: linked.sources.filter(s => !/-record-/.test(s.resource)) }).answer, `${answer}\n\n${api.TRANSCRIPT_NOTE}`, 'the coverage row alone still is not one')
 })
 
 test('voice: a written answer past 4,000 characters is cut in its prose and still ends with the line', () => {

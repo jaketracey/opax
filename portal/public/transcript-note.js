@@ -12,12 +12,15 @@ const FIXED_END = /(?:^|\s)(?:These are from hearing transcripts|Source \d+ is a
 // tools' own page pointer, which only a transcript excerpt has, stands in for it.
 const CUT_EXCERPT = /\btranscript page \S+[\s\S]*…$/
 
+// What may come before a fixed line that stands as its own sentence: nothing, or the end of another sentence.
+const OWN_SENTENCE = /(?:^|[.!?”"’)])\s*$/
 const text = value => typeof value === 'string' ? value : ''
 function isTranscript(source, saved) {
   return [text(source.snippet), text(source.title)].some(value => value.includes(TRANSCRIPT_LABEL) || saved && CUT_EXCERPT.test(value))
 }
 // The coverage row the research loop flags, and the one the older engine and the source linker know by resource.
-const isCoverage = source => source.coverage === true || source.resource === 'coverage' || text(source.resource).startsWith('coverage-')
+// A record row the linker hangs off a coverage row (coverage-<name>-record-N) is a source like any other.
+const isCoverage = source => source.coverage === true || source.resource === 'coverage' || /^coverage-/.test(text(source.resource)) && !/-record-\d+$/.test(text(source.resource))
 // "OPAX lists 47 hearing transcripts ..." carries the label but is a count of transcripts, not one of them.
 const isCount = source => source.kind === 'count'
 
@@ -68,8 +71,11 @@ export function withTranscriptNote(payload, saved = false) {
   if (at === null) return { ...payload, answer: `${answer}\n\n${note}` }
   // Already ended by the right line, or a saved turn whose clipped rows cannot be trusted over the line it kept.
   if (saved || answer.slice(at) === note) return payload
-  // Ended by the fixed line in another form (the transcript writer adds the all-transcripts sentence under the
-  // turns it quotes; the source linker can add rows after a line was set): that line alone is swapped.
+  // The fixed words closing a sentence of the answer's own ("In short, Sources 1 and 2 are ...") are prose, and
+  // prose is never changed: the right line goes on after it.
+  if (!OWN_SENTENCE.test(answer.slice(0, at))) return { ...payload, answer: `${answer}\n\n${note}` }
+  // Ended by the fixed line in another form (an answer cached when the transcript writer still added the
+  // all-transcripts sentence itself): that line alone is swapped.
   const next = answer.slice(0, at) + note
   return { ...payload, answer: next, ...('citations' in payload ? { citations: movedCitations(payload.citations, points(answer.slice(0, at)), points(next)) } : {}) }
 }
