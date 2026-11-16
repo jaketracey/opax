@@ -166,11 +166,15 @@ transcripts. `scripts/build_transcript_fulltext.py` reads the verified manual PD
 writes `portal/public/transcripts/`:
 
 - `index.json`: the transcripts, the attribution and copyright page for each commission,
-  the tokeniser's stopwords and the terms too common to post;
+  the tokeniser's stopwords, the everyday terms (in more than half the transcripts) and,
+  for each, the pages holding it across all transcripts;
 - `terms/<nn>.json`: term to the transcripts holding it and, for each, the number of its
-  pages holding the term (index schema 2), sharded by FNV-1a of the term. A word search
-  lists transcripts by those page counts, not by date. `--postings-only` rebuilds these
-  files from the published transcript files with no PDF read;
+  pages holding the term, sharded by FNV-1a of the term. Every term is posted, everyday
+  ones included (index schema 3). A word search lists transcripts by those page counts,
+  not by date; everyday terms order the result and are required only when the search
+  has no other word; a search reads at most six terms and its notes say which were left
+  out. `--postings-only` rebuilds these files from the published transcript files with
+  no PDF read;
 - `<commission>/<key>.json`: one transcript, with each PDF page's own transcript page
   number (for example "P-4899" or "6189"), its text, and term to pages.
 
