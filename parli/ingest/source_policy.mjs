@@ -36,6 +36,8 @@ const TEXT_KEYS = ['date_quote', 'full_text']
 const keys = value => Object.keys(value).sort().join(',')
 const realDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value + 'T00:00:00Z')) && new Date(value + 'T00:00:00Z').toISOString().slice(0, 10) === value
 const fail = message => { throw new Error('source policy: ' + message) }
+/** A string as a literal inside a regular expression. */
+const literal = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const plain = value => value && typeof value === 'object' && !Array.isArray(value)
 const strings = (value, out = []) => {
   if (typeof value === 'string') out.push(value)
@@ -90,8 +92,8 @@ export function sourcePolicy(data = file) {
   const kbGeneration = id => !KB_GENERATION_NEVER.includes(id) && !sources.has(id) && allows(use(id), 'narrative') && flag('kb_generation', id)
   const listed = [...records.keys()].filter(id => !id.includes('/'))
   const matchers = listed.map(id => {
-    const record = records.get(id), token = new RegExp(`(?:^|[^a-z0-9])${id.replace(/[.]/g, '\\.')}(?:$|[^a-z0-9-])`)
-    const hosts = (record.hosts ?? []).map(h => new RegExp(`(?:^|[/.@])${h.replace(/[.]/g, '\\.')}(?:$|[/:?#"'\\s])`, 'i'))
+    const record = records.get(id), token = new RegExp(`(?:^|[^a-z0-9])${literal(id)}(?:$|[^a-z0-9-])`)
+    const hosts = (record.hosts ?? []).map(h => new RegExp(`(?:^|[/.@])${literal(h)}(?:$|[/:?#"'\\s])`, 'i'))
     const names = (record.names ?? []).map(n => n.toLowerCase())
     return { id, test: text => token.test(text) || hosts.some(h => h.test(text)) || (names.length && names.some(n => text.toLowerCase().includes(n))) }
   })
