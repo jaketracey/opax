@@ -65,7 +65,11 @@ def has_cite(c):
     return bool(c) and str(c.get("url", "")).startswith("https://") and bool(c.get("document"))
 
 
-def check(c):
+def check(c, use=None):
+    """Guards on one commission. ``use`` is the registry's use for it: the registry decides, and a
+    snapshot built before the registry changed (one that may still hold extracts) stops the export."""
+    if c.get("use") != use:
+        raise Held(f"commission {c.get('id')} has use {c.get('use')!r} in the snapshot and {use!r} in the registry; rebuild the snapshot")
     for key in ("id", "name", "inquiry_type", "jurisdiction", "reports", "recommendations", "responses", "transcripts", "court_context"):
         if key not in c:
             raise Held(f"commission {c.get('id')} lacks {key}")
@@ -83,9 +87,18 @@ def check(c):
             raise Held(f"commission {c['id']} recommendation {r.get('number')} lacks text or a page citation")
         if r.get("status") and not has_cite(r["status"].get("cite")):
             raise Held(f"commission {c['id']} recommendation {r['number']} has a status without a citation")
+    bare = use == rc.DOCUMENTS_ONLY
     for fact in ([c["established"]] if c.get("established") else []) + c.get("commissioners", []):
-        if not has_cite(fact.get("cite")) or not fact.get("quote"):
-            raise Held(f"commission {c['id']} has a fact without a quote and citation")
+        # A fact from a documents-only commission is cited to its page and holds no quotation.
+        if not has_cite(fact.get("cite")) or (bool(fact.get("quote")) == bare) or (bare and not fact["cite"].get("page")):
+            raise Held(f"commission {c['id']} has a fact without a citation, or without the quote its use requires")
+    if bare:
+        # Documents only: no extracted text on any document, no recommendations, no quotation in a note.
+        held = list(rc.held_text({k: c.get(k) for k in ("reports", "responses", "transcripts", "commissioners", "established")}))
+        if held:
+            raise Held(f"commission {c['id']} carries text at {held[0]} but is documents only")
+        if c["recommendations"] or rc.quotation(c.get("notes", []) + c.get("gaps", [])):
+            raise Held(f"commission {c['id']} carries extracted text or a quotation but is documents only")
 
 
 def summary(c, file):
@@ -104,6 +117,7 @@ def summary(c, file):
         "status_as_published": dict(sorted(statuses.items())),
         "recommendations_status": c["recommendations_status"],
         "status_source": c["status_source"], "file": "/royal-commissions/" + file,
+        **({"use": c["use"]} if c.get("use") else {}),
     }
 
 
@@ -132,8 +146,9 @@ def main(argv=None):
     ids = [c["id"] for c in commissions]
     if not commissions or len(ids) != len(set(ids)):
         raise Held("no commissions, or duplicate commission ids")
+    uses = {r["id"]: r.get("use") for r in rc.registry()["commissions"]}
     for c in commissions:
-        check(c)
+        check(c, uses.get(c["id"]))
     old = json.loads((out / "manifest.json").read_text()) if (out / "manifest.json").exists() else {}
     total = sum(len(c["recommendations"]) for c in commissions)
     prev = (old.get("counts") or {}).get("recommendations")
@@ -145,7 +160,7 @@ def main(argv=None):
     text = full_text()
     for c in commissions:
         for t in c["transcripts"]:
-            if (c["id"], t["key"]) in text:
+            if (c["id"], t["key"]) in text and uses.get(c["id"]) != rc.DOCUMENTS_ONLY:
                 t["full_text"] = text[(c["id"], t["key"])]
     files, rows = {}, []
     for c in commissions:

@@ -90,10 +90,27 @@ export const PARTY_NAMES = {
   SFF: ['Shooters, Fishers and Farmers', 'Shooters, Fishers and Farmers Party'],
   SAL: ['Socialist Alliance', 'Socialist Alliance'], REP: ['The Republican', 'The Republican Make Australia Great Again'],
   WEST: ['The West Party', 'The West Party'], VS: ['Victorian Socialists', 'Victorian Socialists'],
+  PAF: ['Put Australia First', 'Put Australia First, Save the Environment'],
+  // Registered with the VEC on 6 October 2022. Its own code, so the name never joins the page of the
+  // federal Family First (FF), whose record is of an earlier party: no source ties the two (HUBS.md).
+  FFV: ['Family First Victoria', 'Family First Victoria'],
 };
 /** Registered VEC names and nominations-page variants, used by browser labels
  *  and Worker-rendered pages. The source data keeps its full names.
- *  Minor parties use the site's existing neutral `oth` dot. */
+ *  Minor parties use the site's existing neutral `oth` dot.
+ *
+ *  Every Victorian entry is a registered name or a registered abbreviated name on
+ *  the VEC's register of political parties
+ *  (https://www.vec.vic.gov.au/candidates-and-parties/registered-political-parties/currently-registered-parties,
+ *  read 16 November 2026; snapshot in scripts/hubs/vic-registered-parties-2026.json,
+ *  rebuilt by scripts/fetch_vec_parties.py), in the register's spelling and in the
+ *  candidate lists' where their dashes differ. No entry is inferred from a
+ *  similar name; test/vic-party-pages.test.mjs checks the map against the snapshot.
+ *
+ *  A code here gives a label its short name and dot. It is not a finding that a
+ *  registered Victorian party and a party in the parliamentary or money record are
+ *  one organisation: election material links a registered name to its register
+ *  view (src/vic-election-parties.ts), never to a party page. */
 export const PARTY_ALIASES = {
   'Affordable Housing Now – Sustainable Australia Party': 'SAP',
   'Animal Justice Party': 'AJP',
@@ -104,7 +121,7 @@ export const PARTY_ALIASES = {
   'Christian Alliance Party – Reform AU': 'CAP',
   'Climate Action Now': 'CAN',
   'Democratic Labour Party (DLP)': 'DLP',
-  'Family First Victoria': 'FF',
+  'Family First Victoria': 'FFV',
   'Free Palestine': 'FP',
   "I'm Voting to Avoid the Fine": 'FINE',
   'Legalise Cannabis Victoria': 'LCP',
@@ -121,6 +138,10 @@ export const PARTY_ALIASES = {
   'The Greens': 'GRN', 'The Nationals': 'NAT', 'Labour DLP': 'DLP',
   'Libertarian (formerly Liberal Democrats)': 'LDP',
   'Christian Alliance Party - Reform AU': 'CAP',
+  'Liberal Party of Australia – Victorian Division': 'LIB',
+  'Safety Victoria - Violent Crime Prevention': 'SAFE',
+  'Put Australia First, Save the Environment': 'PAF',
+  'Sustainable Australia Party': 'SAP', 'Christian Alliance Party': 'CAP', 'Shooters, Fishers & Farmers Vic': 'SFF',
 };
 /** A party that changed its name: one party, one page, one code. Its former names join
  *  the code (one identity: the party page, its address, Ask and search) but a record

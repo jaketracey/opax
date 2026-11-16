@@ -16,7 +16,10 @@ The data is static JSON at `/royal-commissions/`. Ask and the MCP read it throug
 * `established` and `commissioners`: each carries a quote from an official document
   and the page it is on. The build checks every quote is verbatim on that page, that a
   commissioner's name is in the quote and that an establishment date is the date in
-  the quote. Roles are as the document gives them.
+  the quote. Roles are as the document gives them. A commission listed by its documents
+  only (`use: documents_only`, below) carries no quote: the build checks that the name,
+  or the date in words, is printed on the cited page and keeps the page reference and
+  link only.
 * `reports`: interim, final and progress reports, with the PDF files, their SHA-256,
   and a date with its basis: `tabled_vic` (tabled in the Parliament of Victoria),
   `stated` (dated on the document itself, checked verbatim on the cited page),
@@ -116,7 +119,8 @@ keeps the acquisition and rights notes recorded for it in the intake.
 | Scientific Inquiry into Hydraulic Fracturing in the Northern Territory | 5 | hearing excerpts; review before republication |
 
 Each transcript's date is the one printed on it, checked verbatim on page 1
-(`date_quote`). One Antisemitism transcript prints "THURSDAY, AUGUST 2026" on its
+(`date_quote`). A documents-only commission holds no `date_quote`: the build checks that
+the date is printed on page 1 and records the page (`date_cite`). One Antisemitism transcript prints "THURSDAY, AUGUST 2026" on its
 cover; its date is read from the page header "13/08/2026". Titles are the publisher's,
 with file-size suffixes such as "(PDF, 840KB)" removed and generic link text
 ("Download transcript") replaced by "Hearing transcript, <date>".
@@ -185,9 +189,18 @@ transcript listing rows is given in the tool's own lines rather than rewritten.
   the Final Report." The full passage is in `court_context`, exactly as the page states
   it, and OPAX presents no finding from the report without it. No findings or
   recommendations are extracted from the report yet.
-* The Victorian major infrastructure royal commission is still sitting. Its transcripts
-  note that non-publication orders may be made; OPAX reproduces no evidence and links
-  only the commission's published copies.
+* The Victorian major infrastructure royal commission is still sitting and the commission
+  has said it may make non-publication orders. OPAX reproduces no evidence and links only
+  the commission's published copies. Its registry entry has `use: documents_only`: the
+  record holds no quotation from the transcripts, only each transcript's title, date,
+  publisher links, page count, hash and rights note, the commissioner's name with its
+  page reference, and notes in OPAX's own words with page references. The build holds
+  (exit 3) if such an entry carries a quote, a date line, an extraction rule or a note
+  with quotation marks (double, single or typographic), reads its PDFs without caching
+  their text, and drops any extract, at any depth, from a record it carries forward. The
+  export takes `use` from the registry and stops if a snapshot disagrees, so a snapshot
+  built before the entry was marked cannot be published. `tests/test_rc_no_extracts.py` and
+  `portal/test/rc-no-extracts.test.mjs` pin the extracts once held by hash, whole and in runs of five words.
 * Robodebt: the report refers to 57 recommendations; 56 are numbered. The unnumbered
   one, in the closing observations, is noted on the record and not loaded as numbered.
 * The Antisemitism interim report's recommendations 8 to 12 say they are contained in

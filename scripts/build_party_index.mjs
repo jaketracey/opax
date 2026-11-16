@@ -124,6 +124,24 @@ export function recordedElections(manifest,hubsDir=join(SCRIPTS,'hubs')) {
   return Object.fromEntries(Object.entries(out).map(([jur,days])=>[jur,[...days].sort()]));
 }
 
+/** Houses whose term ended before their election day. From that day nobody is a member of the house, so a
+ *  roster dated before it no longer says who sits, although the election has not been held. The Victorian
+ *  Legislative Assembly expired on 3 November 2026 (recorded in scripts/hubs/electorate-dissolutions.json), and
+ *  the Legislative Council's members hold their seats only until the Assembly ends (Constitution Act 1975
+ *  (Vic) s 28). Reviewed by hand: add a house only on a dated source. */
+export const ENDED_HOUSES=[{jurisdiction:'vic',chambers:['vic_la','vic_lc'],ended:'2026-11-03'}];
+
+/** Each seat-roster entry gains `house_ended` when its house ended after the roster's date: the party pages
+ *  stop listing the member as sitting from that day (party-page.js partyMembers), not from the election day. */
+export function withEndedHouses(seats,ended=ENDED_HOUSES) {
+  const out={};
+  for(const [party,members] of Object.entries(seats))out[party]=members.map(m=>{
+    const end=ended.find(h=>h.jurisdiction===m.jurisdiction && h.chambers.includes(m.chamber) && ISO_DAY.test(String(m.as_of || '')) && m.as_of<h.ended);
+    return end ? {...m,house_ended:end.ended} : m;
+  });
+  return out;
+}
+
 function seatRosters(publicRoot) {
   const people=JSON.parse(readFileSync(join(publicRoot,'parliamentarians.json'),'utf8')).people;
   const manifest=JSON.parse(readFileSync(join(publicRoot,'electorates','manifest.json'),'utf8'));
@@ -132,7 +150,7 @@ function seatRosters(publicRoot) {
   const seats=seatRosterMembers(people,asset(manifest.index_url).electorates,elections,asset(manifest.people_url).people);
   const lists=JSON.parse(readFileSync(join(publicRoot,'data','roster-list-parties.json'),'utf8')).observations;
   const windows=JSON.parse(readFileSync(join(SCRIPTS,'roster_service.json'),'utf8')).snapshot_party_windows;
-  return officialListMembers(people,lists,windows,elections,seats);
+  return withEndedHouses(officialListMembers(people,lists,windows,elections,seats));
 }
 
 /** Party -> the bills the federal bills register records a sponsor of that party for, newest first: key, title,
