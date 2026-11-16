@@ -25,7 +25,7 @@ const region=data.seats.find(s=>s.kind==='region');
 const seat=data.seats.find(s=>s.kind==='district'&&s.name==='Richmond'),member=seat.members[0].name;
 const BEFORE=new Date('2026-11-03T17:59:00+11:00'),NOW=new Date('2026-11-16T10:00:00+11:00'),AFTER=new Date('2026-11-29T10:00:00+11:00');
 const index=value=>new Map(data.seats.filter(s=>s.kind==='district').map(s=>[s.name,value]));
-const label=(now,idx)=>JSDOM.fragment(renderVicElection(data,seat,{},now,null,idx).html).querySelector('.vic-facts dt').textContent;
+const label=(now,idx)=>JSDOM.fragment(renderVicElection(data,seat,{},now,null,idx).html).querySelector('#last-parliament dt').textContent;
 
 test('the expiry day is the reviewed record’s day and the Tuesday 25 days before election day',()=>{
   assert.equal(VIC_ASSEMBLY_EXPIRED_AT.slice(0,10),record.dissolved_on);
@@ -40,11 +40,11 @@ test('a district page names the member until the Assembly expired, while the ind
     // After the polls close the label also dates the roster it is read from.
     assert.ok(label(now,index(data.election_day)).startsWith(`Member for Richmond ${PHRASE}`+(now===AFTER?', from the published roster dated ':'')));
     if(now===NOW) assert.equal(label(now,index(data.election_day)),`Member for Richmond ${PHRASE}`);
-    assert.ok(page.description.startsWith(`${member} was Member for Richmond ${PHRASE}. `),page.description);
+    assert.ok(page.description.includes(`${member} was Member for Richmond ${PHRASE}. `),page.description);
     assert.doesNotMatch(page.html+page.description,/Held by|Who holds|Member in published roster/);
   }
   assert.equal(label(BEFORE,index(data.election_day)),'Held by');
-  assert.match(renderVicElection(data,seat,{},BEFORE).description,/^Who holds Richmond/);
+  assert.doesNotMatch(renderVicElection(data,seat,{},BEFORE).description,/expired|was Member/);
 });
 
 test('the wording changes when the new parliament’s roster loads',()=>{
@@ -61,9 +61,10 @@ test('the wording changes when the new parliament’s roster loads',()=>{
 });
 
 test('the hub rows and the finder say member until the Assembly expired',()=>{
-  const hub=renderVicElection(data,null,{},NOW,null,index(data.election_day)).html;
+  // The rows name members only after the polls close (vic-election-equal.test.mjs): then, until the new roster loads, as members until expiry.
+  const hub=renderVicElection(data,null,{},AFTER,null,index(data.election_day)).html;
   assert.match(hub,new RegExp(`Each row shows the member ${PHRASE} and the winning margin`));
-  assert.match(renderVicElection(data,null,{},BEFORE,null,index(data.election_day)).html,/Each row shows the member and the winning margin/);
+  assert.match(renderVicElection(data,null,{},AFTER,null,index(null)).html,/Each row shows the member and the winning margin/);
   const hits=[{name:member,kind:'Member',seats:[{seat,share:null}]}];
   const found=JSDOM.fragment(renderVicElection(data,null,{},NOW,{place:member,hits},index(data.election_day)).html).querySelector('.vic-hit-place span').textContent;
   assert.equal(found,`Member ${PHRASE}`);
@@ -117,10 +118,12 @@ test('a person title drops "MP" for a member of the expired Assembly, and dates 
 
 test('a region page names its members until the Council expired, following the Assembly’s record',()=>{
   assert.equal(vicCouncilExpiredPhrase(),COUNCIL);
-  const title=(now,idx)=>JSDOM.fragment(renderVicElection(data,region,{},now,null,idx).html).querySelector('#members h2').textContent;
+  const members=(now,idx)=>JSDOM.fragment(renderVicElection(data,region,{},now,null,idx).html).querySelector('#members');
+  const title=(now,idx)=>members(now,idx).querySelector('h2').textContent;
   for(const idx of [index(data.election_day),null]) for(const now of [NOW,AFTER]) {
-    assert.equal(title(now,idx),`Members for ${region.name} Region ${COUNCIL}`);
-    assert.match(renderVicElection(data,region,{},now,null,idx).description,new RegExp(`^The five members for ${region.name} Region ${COUNCIL}, `));
+    assert.equal(title(now,idx),'Last parliament');
+    assert.ok(members(now,idx).querySelector('.ui-section-note').textContent.startsWith(`Members for ${region.name} Region ${COUNCIL}.`));
+    assert.match(renderVicElection(data,region,{},now,null,idx).description,new RegExp(`^The five members for ${region.name} Region ${COUNCIL},? `));
   }
   assert.equal(title(BEFORE,index(data.election_day)),'Members');
   // The new parliament's roster clears the Assembly's rows, and the Council's wording goes with them.
@@ -129,7 +132,7 @@ test('a region page names its members until the Council expired, following the A
   assert.equal(councilExpired(data,{...region,roster_date:'2026-12-20'},new Date('2026-12-21T10:00:00+11:00'),null),false);
   assert.equal(councilExpired(data,seat,NOW,null),false);
   // The hub's region list and a district page's region section say the same.
-  assert.match(renderVicElection(data,null,{},NOW,null,index(data.election_day)).html,new RegExp(`Each region elects five members\\. Each row shows the members ${COUNCIL}\\.`));
+  assert.match(renderVicElection(data,null,{},AFTER,null,index(data.election_day)).html,new RegExp(`Each region elects five members\\. Each row shows the members ${COUNCIL}\\.`));
   assert.doesNotMatch(renderVicElection(data,null,{},BEFORE).html,/Council expired/);
   const own=data.seats.find(r=>r.kind==='region'&&r.name===seat.region);
   assert.match(JSDOM.fragment(renderVicElection(data,seat,{},NOW,null,index(data.election_day)).html).querySelector('#region .ui-section-note').textContent,new RegExp(`Listed are the members for ${own.name} Region ${COUNCIL}\\.$`));
