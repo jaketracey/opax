@@ -126,7 +126,7 @@ test('a bill whose divisions are all procedural or amendments has no deciding di
   assert.equal(decidingDivision(bill, { originatingHouse: 'representatives' }), null);
   assert.equal(decidingDivision(bill), null);
   // The same divisions as division files give them: a name and a result, no stage.
-  const files = bill.map(({ stage, outcome, ...d }) => ({ ...d, name: `Bills — Example Payments Bill 2026; ${stage}`, result: outcome }));
+  const files = bill.map(({ stage, outcome, ...d }) => ({ ...d, name: `Bills \u2014 Example Payments Bill 2026; ${stage}`, result: outcome }));
   assert.equal(decidingDivision(files), null);
 });
 
