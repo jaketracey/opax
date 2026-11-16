@@ -250,16 +250,17 @@ test('a bill\'s slides are what main draws from: the stored cover, list and sour
   assert.deepEqual(list, { type: 'list', kicker: 'What it does', title: 'In three sentences', items: [S1, S2, S3], note: 'Written by a model from the explanatory memorandum; not the record.', alt: `What it does: ${S1} ${S2} ${S3}` });
   // The slides do not depend on the channel copies: the same with them taken off.
   assert.deepEqual(without(post).slides, post.slides);
-  // A passed bill: the stored cover is what main stores, built from the app-facing status sentence, which on this
-  // branch still gives the status date (26 Aug). The record's passing day (19 Aug) is on the channel copies only.
-  // If billSlides were handed the channel wording instead, this fails.
+  // A passed bill. On this branch the status sentence itself is corrected, so the stored cover says the day the bill
+  // passed (19 Aug), not the assent day main stores (26 Aug), and its alt says who wrote the sentence. The cover and
+  // the channel copy read the one sentence: if billSlides were handed anything else, this fails.
   const passed = await composeDailyPost('2026-11-17', pictured('au-federal-x2'), 'bill'), passedCover = passed.slides[0];
   assert.equal(passedCover.type, 'cover');
   assert.ok(passedCover.photo, 'the passed bill\'s cover has its photograph');
-  assert.ok(passedCover.line.endsWith(' Passed 26 Aug 2026.'), passedCover.line);
-  assert.equal(passedCover.line, `${S1} Passed 26 Aug 2026.`);
-  assert.equal(passedCover.alt, `Example Customs Bill 2026. ${S1} Passed 26 Aug 2026.`);
-  assert.ok(passed.record_text.includes('Passed 19 Aug 2026.'), 'while the channel copy has the passing day');
+  assert.ok(passedCover.line.endsWith(' Passed 19 Aug 2026.'), passedCover.line);
+  assert.equal(passedCover.line, `${S1} Passed 19 Aug 2026.`);
+  assert.equal(passedCover.alt, `Example Customs Bill 2026. Machine-written summary: ${S1} Passed 19 Aug 2026.`);
+  assert.ok(!JSON.stringify(passedCover).includes('26 Aug'), 'the assent day is not on the cover');
+  assert.ok(passed.record_text.includes('Passed 19 Aug 2026.') && passed.text.includes('Passed 19 Aug 2026.'), 'the same sentence as the channel copy and the short text');
 });
 
 test('an em dash inside a stored summary sentence does not reach the channels\' caption; the app-facing strings keep the sentence as stored', async () => {
