@@ -107,6 +107,8 @@ const stable = (value: unknown): string => JSON.stringify(value, (_key, v) => v 
 const bytes = (value: unknown) => new TextEncoder().encode(JSON.stringify(value)).length
 
 export interface ResearchOptions {
+  /** The transcript quotes-only switch (ask-flags.ts): hearing transcript evidence is quoted by code and never worded. */
+  transcriptQuotesOnly?: boolean
   model?: LanguageModel
   steps?: unknown; wallMs?: unknown; tokens?: unknown
   modelBudgetSpent: () => Promise<boolean>
@@ -510,6 +512,9 @@ export function createResearch(options: ResearchOptions): Research {
     }
     // One answer call, checked: cited points, uncited points that failed only soft checks, record facts; else, with
     // nothing usable written, the best verified passages in their own words. Null when none of those exists.
+    /** The ids of the quotable hearing transcript excerpts this run holds. */
+    const heldExcerpts = (): number[] => { const { all, tools } = recordFacts(); return all.filter(f => ['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && !!f.cite.url && transcriptPassage(f.text)).map(f => f.id) }
+    const holdsExcerpt = (): boolean => heldExcerpts().length > 0
     const draftAnswer = (args: Record<string, unknown>, roster: unknown, why: (reason: string) => void): QualitativeAnswer | null => {
       // Up to 15 record facts are rendered, in the order chosen.
       const focus = focussedIds()
@@ -569,6 +574,19 @@ export function createResearch(options: ResearchOptions): Research {
       const tally = stats.answer = emptyTally()
       const { named } = context
       const recordPassages = factPassages(), citable = new Map([...recordPassages, ...passages])
+      // Transcript quotes only (ask-flags.ts): once the run holds a hearing transcript excerpt, the research model's
+      // own prose is shown only where a point cites a record that is not a hearing transcript. A point that cites
+      // nothing, and the legacy text form, could word the evidence with no citation to check it against, so neither
+      // is shown; the excerpts are quoted by code instead.
+      const quotesOnly = !!options.transcriptQuotesOnly && !hearing && holdsExcerpt()
+      if (quotesOnly && Array.isArray(pointArgs)) {
+        const offered = pointArgs as unknown[], before = offered.length
+        pointArgs = offered.filter(raw => { const id = object(citeRecordFacts([raw], recordPassages)[0]).id; return typeof id === 'string' && citable.has(id) })
+        if (before > (pointArgs as unknown[]).length) researchTrace('loop.quotes_only_uncited_points', { question, dropped: before - (pointArgs as unknown[]).length })
+      }
+      if (quotesOnly && typeof args.text === 'string' && args.text.trim()) args = { ...args, text: '' }
+      // With nothing else selected, the excerpts the run holds are the answer, as for a hearing-evidence question.
+      if (quotesOnly && !facts.length && !(Array.isArray(pointArgs) && pointArgs.length)) facts = factLines(heldExcerpts().slice(0, 8), why)
       const written = focus || hearing ? null : Array.isArray(pointArgs) && pointArgs.length ? verifyResearchPoints(citeRecordFacts(overview ? (pointArgs as unknown[]).slice(0,8-facts.length) : pointArgs as unknown[], recordPassages), citable, question, named, options.positionQuery, roster, why, tally)
         : typeof args.text === 'string' && args.text.trim() ? verifyResearchAnswer({ text: args.text, citations: Array.isArray(args.citations) ? args.citations as AnswerDraft['citations'] : [] }, citable, question, named) : null
       // A chamber named for a cited speaker is the one their passage records (ask-chamber-phrases.ts).
@@ -754,6 +772,9 @@ export function createResearch(options: ResearchOptions): Research {
     const proseAnswer = (): QualitativeAnswer | null => {
       const text = usableProse(prose)
       if (!text) return null
+      // Transcript quotes only: prose that cites nothing is not shown on a hearing-evidence question or once an
+      // excerpt is held. The answer is then the next thing the run has: its answer call, or the excerpts quoted by code.
+      if (options.transcriptQuotesOnly && (hearingEvidenceQuestion(question) || holdsExcerpt())) return null
       const held = passagesAnswer(passages, question)
       const offset = held ? Array.from(text).length + 2 : 0
       const points: QualitativeAnswer = held
@@ -1009,5 +1030,5 @@ export function createResearch(options: ResearchOptions): Research {
       clearTimeout(timer); context.signal.removeEventListener('abort', abortParent); controller.signal.removeEventListener('abort', rejectAbort)
     }
   }
-  return Object.assign(research, { write: createAnswerWriter(options), writingWallMs: researchLimits(options).wallMs })
+  return Object.assign(research, { write: createAnswerWriter(options), writingWallMs: researchLimits(options).wallMs, ...(options.transcriptQuotesOnly ? { transcriptQuotesOnly: true } : {}) })
 }

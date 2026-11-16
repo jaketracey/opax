@@ -9,7 +9,8 @@ const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null }
+/** `question`: only with the transcript quotes-only switch on, the question a short reply answered, with its own page. */
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, question?: { pdf_page: number, transcript_page: string | null, text: string } }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -151,6 +152,35 @@ export function pageTurns(page: string, pdfPage?: number): { text: string, turns
  * heading, mark or note sits in the text. A word found only in headings, marks or notes gives the words its first
  * opener is followed by, which may be none. No speaker is returned: Ask prose and citations name no one. */
 export function excerpt(text: string, terms: string[], pdfPage?: number): { excerpt: string } {
+  return { excerpt: excerptTurn(text, terms, pdfPage).excerpt }
+}
+/** A reply this short ("Yes.", "No, I did not.") says nothing without the question it answered. */
+const SHORT_REPLY_WORDS = 6
+/** The question put before a short reply, as the transcript prints it: the "Q." turn straight before a bare "A." turn
+ * of a few words, on the same page, or closing the page before when the reply opens its page. Verbatim, the last 280
+ * characters of a longer question. Pure page structure (pageTurns): no speaker and no role is read. None when the
+ * turn before is anything but a "Q." turn. */
+function questionPut(pages: RecordRow[], n: number, terms: string[]): PageHit['question'] | undefined {
+  const page = pages.find(p => p.n === n)
+  if (typeof page?.text !== 'string') return undefined
+  const { flat, turns, turn } = excerptTurn(page.text, terms, n)
+  if (!turn || turn.opens !== 'mark' || turn.mark !== 'A' || turn.heading || flat.slice(turn.start, turn.end).trim().split(/\s+/).length > SHORT_REPLY_WORDS) return undefined
+  const at = turns.indexOf(turn)
+  const before = at > 0 ? { page, flat, turn: turns[at - 1] } : (() => {
+    const prior = pages.find(p => p.n === n - 1)
+    if (typeof prior?.text !== 'string') return undefined
+    const read = pageTurns(prior.text, n - 1)
+    return read.turns.length ? { page: prior, flat: read.text, turn: read.turns[read.turns.length - 1] } : undefined
+  })()
+  if (!before || before.turn.mark !== 'Q' || before.turn.end <= before.turn.start) return undefined
+  let start = before.turn.start
+  const until = before.turn.end
+  if (until - start > EXCERPT) { start = until - EXCERPT; const space = before.flat.indexOf(' ', start); if (space >= 0 && space < until) start = space + 1 }
+  const body = before.flat.slice(start, until).trim()
+  if (!/[^.\s]/.test(body)) return undefined
+  return { pdf_page: Number(before.page.n), transcript_page: (before.page.folio as string) ?? null, text: `${start > before.turn.start ? '...' : ''}${body}` }
+}
+function excerptTurn(text: string, terms: string[], pdfPage?: number): { excerpt: string, flat: string, turns: PageTurn[], turn?: PageTurn } {
   const { text: flat, turns } = pageTurns(text, pdfPage)
   // The first place a query word is spoken wins; failing that, the first opener one is printed in.
   let spoken = -1, printed = -1
@@ -164,7 +194,7 @@ export function excerpt(text: string, terms: string[], pdfPage?: number): { exce
   }
   const at = spoken >= 0 ? spoken : printed
   const turn = at < 0 ? turns.find(t => t.end > t.start) : turns.filter(t => t.from <= at).at(-1)
-  if (!turn || turn.end <= turn.start || at >= turn.end) return { excerpt: '' }
+  if (!turn || turn.end <= turn.start || at >= turn.end) return { excerpt: '', flat, turns }
   const from = turn.start, until = turn.end, point = Math.max(at, from)
   let start = Math.max(from, point - 100)
   if (start > from) { const space = flat.indexOf(' ', start); if (space >= 0 && space < until) start = space + 1 }
@@ -172,7 +202,7 @@ export function excerpt(text: string, terms: string[], pdfPage?: number): { exce
   let end = Math.min(until, start + EXCERPT)
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
   const body = flat.slice(start, Math.min(end, until)).trim()
-  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}` }
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}`, flat, turns, turn }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
@@ -195,7 +225,10 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
     const page = pages.find(p => p.n === n) ?? {}
     const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
       ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, n) : { excerpt: null }) }
-    if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) hits.push(hit)
+    if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) {
+      const question = env.transcriptQuotesOnly && hit.excerpt !== null ? questionPut(pages, n, terms) : undefined
+      hits.push(question ? { ...hit, question } : hit)
+    }
   }
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),
     ...(quote ? {} : { order_notice: String(doc.order_notice) }), hits }

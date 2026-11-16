@@ -39,15 +39,22 @@ export const TRANSCRIPT_POINT_RULE = 'Leave what a record labelled "Hearing tran
 export const transcriptPassage = (text: string): boolean => transcriptTurns(text).length > 0
 const EXCERPT = /\btranscript page \S+/
 /** A turn carries a speaker only when its source line names one; the transcript tools name none. */
-export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string }
+/** `question`: the question a short reply answered, with its own page (only with the transcript quotes-only switch on). */
+export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string; question?: { page: string; excerpt: string } }
 /** Split a published citation into attributed turns before writing. Restricted transcripts never supply
  * quotations, even if malformed input happens to contain quotation marks. */
 export function transcriptTurns(text: string): TranscriptTurn[] {
   if (!text.includes(TRANSCRIPT_LABEL) || /Not quoted:|non-publication order|suppression order|pseudonymous witness/i.test(text)) return []
   const day = /\b(?:Hearing )?Day (\d+)\b/i.exec(text)?.[1]
   const date = /\((\d{1,2} [A-Z][a-z]+ \d{4})\)/.exec(text)?.[1]
-  const turns = [...text.matchAll(/transcript page (\S+) \(PDF page \d+\), hearing turn(?: by ([^:]+))?: "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)]
-    .map(m => ({ ...(m[2] ? { speaker: m[2] } : {}), page: m[1], excerpt: m[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }))
+  // A "question put" entry belongs to the hearing turn it is followed by; alone it is not a turn.
+  let put: { page: string; excerpt: string } | undefined
+  const turns = [...text.matchAll(/transcript page (\S+) \(PDF page \d+\), (hearing turn|question put)(?: by ([^:]+))?: "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)]
+    .flatMap((m): TranscriptTurn[] => {
+      if (m[2] === 'question put') { put = { page: m[1], excerpt: m[4] }; return [] }
+      const question = put; put = undefined
+      return [{ ...(m[3] ? { speaker: m[3] } : {}), page: m[1], excerpt: m[4], ...(day ? { day } : {}), ...(date ? { date } : {}), ...(question ? { question } : {}) }]
+    })
   if (turns.length) return turns
   const written = /^(.+?) said at .+?, transcript page (\S+): "([\s\S]+)"\. Hearing transcript:/.exec(text)
   if (written) return [{ speaker: written[1], page: written[2], excerpt: written[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }]

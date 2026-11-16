@@ -34,10 +34,10 @@ export function quotedOrNothing(question: string, research?: Run): boolean {
 }
 
 type Found = { title?: unknown; url?: unknown; snippet?: unknown }
-export function hearingFallbackPayload(question: string, found: { sources?: unknown[]; held_transcripts?: unknown } | undefined): Record<string, unknown> {
+export function hearingFallbackPayload(question: string, found: { sources?: unknown[]; held_transcripts?: unknown } | undefined, quotesOnly = false): Record<string, unknown> {
   // Neither engine wrote this answer, so the run is recorded under its own mode, with the loop's failure reason.
   const { held_transcripts: _held, ...record } = found ?? {}
-  const research = { rounds: 0, trail: [], sources: [], ...record, mode: 'hearing_fallback' }
+  const research = { rounds: 0, trail: [], sources: [], ...record, mode: 'hearing_fallback', ...(quotesOnly ? { transcript_quotes_only: true } : {}) }
   // The excerpts the stopped run held (research-loop.ts keepHeld), then any transcript source its record lists.
   const kept = (Array.isArray(found?.held_transcripts) ? found.held_transcripts : []) as { text?: unknown; url?: unknown }[]
   const held = [...kept.map((k): Found => ({ snippet: k?.text, url: k?.url })), ...((research?.sources ?? []) as Found[])].flatMap(s => {
@@ -46,7 +46,7 @@ export function hearingFallbackPayload(question: string, found: { sources?: unkn
   }).filter((s, i, all) => all.findIndex(o => o.text === s.text) === i).slice(0, 8)
   if (held.length) {
     const facts = writingFacts(undefined, held.map((s, i): Fact => ({ id: i + 1, text: s.text, cite: { kind: 'record', url: s.url, label: s.text } })))
-    const quoted = proseFallback({ question, period: inferPeriod(question), facts })
+    const quoted = proseFallback({ question, period: inferPeriod(question), facts, ...(quotesOnly ? { quotesOnly: true } : {}) })
     if (/[\p{L}\p{N}]/u.test(quoted.answer)) return { answered: true, ...quoted, answer_decision: 'answer', machine_written: false, followups: [], research }
   }
   return { answered: true, answer: NO_SUPPORTED_ANSWER, answer_decision: 'limitation', citations: {}, sources: [], machine_written: false, followups: [], research }

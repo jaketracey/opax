@@ -98,6 +98,58 @@ test('a failed loop on a hearing-evidence question never reaches the older engin
   await flush();
  }
 });
+test('transcript quotes only, through the handler: off by default; on, a hearing answer is the code-quoted block in JSON and SSE, says so in its record, and has its own cache entry',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const hearing='What evidence was given at the Robodebt Royal Commission about income averaging?';
+ const LEAD='Here is what the hearing transcripts record on this, in the order it was heard.',LINE=/^Hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+(?:, the (?:question put|reply))?: “[^”]+”$/;
+ const robodebt=call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1});
+ // Research searches the transcript text, then selects the excerpts; a third call would be the writer.
+ const answered=()=>new MockLanguageModelV4({doGenerate:[reply([robodebt]),reply([call('answer',{facts:[2]})]),{...reply([]),content:[{type:'text',text:JSON.stringify({sentences:[{text:'A sentence a model wrote about the hearing.',facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'}}]});
+ const failing=()=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(n++===0)return reply([robodebt]);throw new Error('provider went away')}})};
+ const ask=async(stream,model)=>{globalThis.__researchModel=model;const response=await post(hearing,stream,{kind:'all'}),raw=await response.text();assert.equal(response.status,200,raw.slice(0,300));await flush();return stream?decodeStream(raw):JSON.parse(raw)};
+ try{
+  for(const stream of [false,true]){
+   // Off (no variable, no key): the writer words the answer and the record carries no switch field.
+   delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;
+   const offModel=answered(),off=await ask(stream,offModel);
+   assert.equal(off.research.mode,'loop');assert.equal('transcript_quotes_only' in off.research,false);assert.doesNotMatch(off.answer,/Here is what the hearing transcripts record/);
+   assert.equal(offModel.doGenerateCalls.length,3,'the writer was called');
+   // On: the block, no writer call, one closing evidence line, and the record says which state it ran under.
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='on';
+   const onModel=answered(),on=await ask(stream,onModel),lines=on.answer.split('\n\n');
+   assert.equal(lines[0],LEAD,on.answer);
+   const quoted=lines.slice(1).filter(line=>!/evidence, not findings/.test(line));
+   assert.ok(quoted.length&&quoted.every(line=>LINE.test(line)),on.answer);
+   assert.equal(on.answer.match(/evidence, not findings/g)?.length,1,on.answer);
+   assert.equal(on.research.transcript_quotes_only,true);assert.equal(on.research.mode,'loop');assert.equal(on.machine_written,false);
+   assert.equal(onModel.doGenerateCalls.length,2,'no writing call');native(on);
+   // A run that stops with excerpts held gives the same form.
+   const stopped=await ask(stream,failing());
+   assert.equal(stopped.answer.split('\n\n')[0],LEAD,stopped.answer);assert.equal(stopped.research.transcript_quotes_only,true);assert.equal(stopped.machine_written,false);
+   // "off" in the variable is off, whatever the key says.
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='off';
+   const forced=await ask(stream,answered());assert.equal('transcript_quotes_only' in forced.research,false);assert.doesNotMatch(forced.answer,/Here is what the hearing transcripts record/);
+  }
+  // The answer cache: an answer written under one state is never served under the other.
+  const previousCaches=globalThis.caches,edge=new Map(),shared=new Map();globalThis.caches={default:{match:async k=>edge.get(k.url)?.clone(),put:async(k,r)=>edge.set(k.url,new Response(await r.text(),r))}};
+  h.env.GENERATION_CACHE={get:async k=>shared.get(k)??null,put:async(k,v)=>shared.set(k,JSON.parse(v))};
+  // (The counted speech question of the cache test above: its answer is the same in both states, so only the key differs.)
+  const cached=async()=>{const response=await h.fetch('/api/ask',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:q,kind:'speech'})}),body=await response.json();await flush();return {hit:response.headers.get('x-opax-cache'),body}};
+  try{
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='off';globalThis.__researchModel=counted();
+   const first=await cached();assert.notEqual(first.hit,'HIT');assert.equal('transcript_quotes_only' in first.body.research,false);
+   assert.equal((await cached()).hit,'HIT','the off answer replays while off');
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='on';const onModel=counted();globalThis.__researchModel=onModel;
+   const flipped=await cached();assert.notEqual(flipped.hit,'HIT','the off answer is not served with the switch on');assert.ok(onModel.doGenerateCalls.length>0);assert.equal(flipped.body.research.transcript_quotes_only,true);
+   const replay=await cached();assert.equal(replay.hit,'HIT');assert.equal(replay.body.research.transcript_quotes_only,true);
+   h.env.ASK_TRANSCRIPT_QUOTES_ONLY='off';
+   const back=await cached();assert.equal(back.hit,'HIT');assert.equal('transcript_quotes_only' in back.body.research,false,'flipping back serves the off answer again');
+   // No variable: the KV key decides, and no key is off (the same entry as "off").
+   delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;
+   const unset=await cached();assert.equal(unset.hit,'HIT');assert.deepEqual(unset.body,back.body);
+  }finally{globalThis.caches=previousCaches;delete h.env.GENERATION_CACHE;}
+ }finally{delete h.env.ASK_TRANSCRIPT_QUOTES_ONLY;}
+});
 test('ordinary and non-speech questions go through qualitative search/answer in route mode',async()=>{
  h.env.RESEARCH_LOOP='route';for(const kind of ['speech','all','bill'])for(const stream of [false,true]){globalThis.__researchModel=qualitative();const before=ordinaryCalls,response=await post('What does the record say about housing affordability?',stream,{kind}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answer,text);assert.deepEqual(body.citations,{[id]:[[0,text.length]]});assert.equal(body.sources[0].resource,resource);assert.equal(body.research.sources[0].kind,'speech');assert.equal(body.research.sources[0].date,'2023-05-01');assert.equal(ordinaryCalls,before);await flush();}
 });
@@ -136,7 +188,8 @@ test('authenticated loop and old overrides serve JSON/SSE with usage and never r
  h.env.RESEARCH_LOOP='shadow';h.env.DAILY_POST_OPERATOR_SECRET='fixture-operator';
  const previousCaches=globalThis.caches,reads=[],writes=[],answerKey=k=>/https:\/\/cache\.opax\.internal\/ask(?:-agentic)?\//.test(k.url);
  globalThis.caches={default:{match:async k=>{if(answerKey(k)){reads.push(k.url);return Response.json({answer:'POISONED SHARED ANSWER'})}},put:async(k,r)=>{if(answerKey(k))writes.push(k.url)}}};
- h.env.GENERATION_CACHE={get:async k=>{reads.push(k);return null},put:async(k,v)=>writes.push(k)};
+ // The transcript quotes-only switch is one KV key read per request (ask-flags.ts); it is not an answer cache.
+ h.env.GENERATION_CACHE={get:async k=>{if(k!=='flag:ask-transcript-quotes-only')reads.push(k);return null},put:async(k,v)=>writes.push(k)};
  try{
   for(const override of ['loop','old'])for(const stream of [false,true]){
    const fake=counted();globalThis.__researchModel=fake;const before=plannerCalls,shadowRecords=logs.filter(r=>r.kind==='research_loop_shadow').length;

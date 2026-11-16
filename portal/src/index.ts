@@ -17,6 +17,7 @@ import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
 import { repairQuotes } from './research-evidence'
 import { quotedOrNothing, hearingFallbackPayload } from './ask-hearing-fallback'
+import { refreshTranscriptQuotesOnly, transcriptQuotesOnly } from './ask-flags'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { votedAgainstParty } from '../public/division-against-party.js'
@@ -6809,6 +6810,7 @@ const replayPost = (request: Request, body: string) =>
 function agenticToolDeps(env: Env, signal?: AbortSignal, ctx?: ExecutionContext): ToolDeps {
   return {
     origin: SITE_ORIGIN, signal,
+    ...(transcriptQuotesOnly(env) ? { transcriptQuotesOnly: true } : {}),
     withSignal: signal => agenticToolDeps(env, signal, ctx),
     kb: async (path, body) => {
       signal?.throwIfAborted()
@@ -6838,6 +6840,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
     plannerTrail: true,
     ...(env.RESEARCH_LOOP === 'route' ? {
       research: createResearch({
+        ...(transcriptQuotesOnly(env) ? { transcriptQuotesOnly: true } : {}),
         model: openRouterModel(env),
         steps: env.RESEARCH_LOOP_STEPS, wallMs: researchLimits({ wallMs: env.RESEARCH_LOOP_MS }).wallMs, tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
@@ -6996,6 +6999,8 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
 }
 async function apiAskRoutedCore(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void, caller?: AskCaller): Promise<Response> {
   const started = Date.now()
+  // The quotes-only switch is read once, here; everything this request builds sees the same state.
+  await refreshTranscriptQuotesOnly(env)
   let question = String(input.question).trim()
   let quotaTaken = false
   const unshared = (r: Request) => { if (shortenedCaller(caller)) UNSHARED_ASK_REQUESTS.add(r); return r }
@@ -7075,7 +7080,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     if (research?.failure === 'provider_refused') return providerRefusedResponse(research)
     // A hearing-evidence question never falls to the older engine's prose (unrelated passages, general knowledge and
     // process notes): the excerpts research held, quoted by code, or one fixed line (ask-hearing-fallback.ts).
-    if (loopRoute && !request.signal.aborted && quotedOrNothing(question, research)) return json(withTranscriptNote(withoutMachineLabels(hearingFallbackPayload(question, research))))
+    if (loopRoute && !request.signal.aborted && quotedOrNothing(question, research)) return json(withTranscriptNote(withoutMachineLabels(hearingFallbackPayload(question, research, transcriptQuotesOnly(env)))))
     if (loopRoute && !research?.failure) {
       const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
       research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }
@@ -7126,7 +7131,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
     const loopLimits = researchLimits({ steps: env.RESEARCH_LOOP_STEPS, tokens: env.RESEARCH_LOOP_TOKENS, wallMs: env.RESEARCH_LOOP_MS })
     // ASK_ANSWER_CACHE_VERSION retires answers stored under earlier answer checks.
-    const loopVersion = loopRoute ? `${ASK_ANSWER_CACHE_VERSION}/${AGENTIC_TOOLS_VERSION}/${ANSWER_WRITING_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${loopLimits.rounds}/${loopLimits.tokens}/${loopLimits.wallMs}/${String(input.kind ?? 'all')}` : `${ASK_ANSWER_CACHE_VERSION}/${AGENTIC_TOOLS_VERSION}`
+    const loopVersion = loopRoute ? `${ASK_ANSWER_CACHE_VERSION}/${AGENTIC_TOOLS_VERSION}/${ANSWER_WRITING_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${loopLimits.rounds}/${loopLimits.tokens}/${loopLimits.wallMs}/${String(input.kind ?? 'all')}${transcriptQuotesOnly(env) ? '/transcript-quotes-only' : ''}` : `${ASK_ANSWER_CACHE_VERSION}/${AGENTIC_TOOLS_VERSION}${transcriptQuotesOnly(env) ? '/transcript-quotes-only' : ''}`
     const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input, loopRoute), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {
@@ -7161,7 +7166,9 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
       // The transcript line goes on after linking, so its source numbers are the ones the reader sees.
-      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):withoutMachineLabels(payload),run.source_links,SITE_ORIGIN))
+      // The run's record says when the quotes-only switch was on (absent when off), for reports; a reader never sees it.
+      const stated=transcriptQuotesOnly(env)&&payload.research&&typeof payload.research==='object'?{...payload,research:{...payload.research,transcript_quotes_only:true}}:payload
+      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(stated)?groundAnswerPayload(stated,question,releasedResearchPrefix):withoutMachineLabels(stated),run.source_links,SITE_ORIGIN))
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)

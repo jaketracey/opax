@@ -30,6 +30,8 @@ export interface ResearchPayload {
   trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
   sources: { title: string; url: string; date?: string; kind: string; speaker?: string }[]
   pre_writer_sources?: QualitativeAnswer['sources']
+  /** Present, and true, only when the run was made with the transcript quotes-only switch on (ask-flags.ts). For reports; not shown to readers. */
+  transcript_quotes_only?: boolean
   ms?: number
   tokens?: { input: number; output: number } | null
   cost_usd?: number | null
@@ -98,6 +100,8 @@ export interface ResearchResult {
 export type Research = ((question: string, context: ResearchContext) => Promise<ResearchResult>) & {
   write?: ReturnType<typeof import('./research-writer').createAnswerWriter>
   writingWallMs?: number
+  /** The transcript quotes-only switch was on when this research was built (ask-flags.ts). */
+  transcriptQuotesOnly?: boolean
 }
 import type { AnswerTally } from './research-evidence'
 export interface ResearchStats {

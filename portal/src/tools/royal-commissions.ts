@@ -93,9 +93,9 @@ function transcriptCite(t: RecordRow): ToolCitation {
     const where = (h: TextHits['hits'][number]) => `transcript page ${h.transcript_page ?? '?'} (PDF page ${h.pdf_page})`
     // The quoted words carry the date and page only: no speaker is named (see excerpt()).
     const body = text.quote_policy === 'quote'
-      ? text.hits.map(h => `${where(h)}, hearing turn: "${h.excerpt}"`).join(' ')
+      ? text.hits.map(h => `${h.question ? `transcript page ${h.question.transcript_page ?? '?'} (PDF page ${h.question.pdf_page}), question put: "${h.question.text}" ` : ''}${where(h)}, hearing turn: "${h.excerpt}"`).join(' ')
       : `the words appear on ${text.hits.map(where).join(' and ')}. Not quoted: the publisher's transcript records a non-publication order, a direction not to publish or a pseudonymous witness; read the publisher's edition.`
-    return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
+    return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, text.hits.some(h => h.question) ? 1600 : 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
   }
   return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
 }

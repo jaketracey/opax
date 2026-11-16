@@ -31,7 +31,7 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
-import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
+import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION, quotationBlock, joinWritten, hearingFact } from './research-writing'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
@@ -670,8 +670,14 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // The model's own points follow the written sentences in the answer (combine below). The writer is told what they
     // say, so a fact one of them states is not written a second time.
+    // Transcript quotes only (ask-flags.ts): the excerpts are quoted by code in one block that closes the answer, and
+    // no hearing transcript fact is in the writer's prompt. The writer words the other records, above the block.
+    const quotesOnly=!!deps.research.transcriptQuotesOnly
+    if(quotesOnly&&run.research)run.research.transcript_quotes_only=true
+    const block=quotesOnly?quotationBlock({question,period,facts:sheet}):null
+    const writerFacts=block?sheet.filter(f=>!hearingFact(f)):sheet
     const said=(run.passage_answer?.answer??'').split(/\n+/).map(line=>line.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
-    const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
+    const input={question,period,facts:writerFacts,...(quotesOnly?{quotesOnly:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
     let active=true,checkedPartial:QualitativeAnswer|undefined
     // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.
@@ -694,8 +700,11 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       })
     }
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
-    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
-    const complete=combine(written)
+    // With only transcript excerpts to show there is nothing for a model to word: no writing call is made.
+    const nothingToWord=!!block&&!writerFacts.some(f=>!f.coverage&&!f.metadata)
+    const written = nothingToWord?{answer:'',citations:{},sources:[],machine_written:false} as QualitativeAnswer:await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
+    // The block goes last, after the written sentences and the model's own points, so nothing is worded between quotations.
+    const complete=block?joinWritten(nothingToWord&&!run.passage_answer?written:combine(written),block):combine(written)
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started
