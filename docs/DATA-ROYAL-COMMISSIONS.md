@@ -240,9 +240,9 @@ answering the Commissioner looks the same).
 
 | Commission | Transcripts | Pages | Confident turns (a role) | Uncertain turns (no role) | Page-top continuations (no role) | Excerpts, one a page, with a role | "<" lines: examination / other | Possible label slips (no role given) | Replies under a counsel heading (counted only) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| cth-antisemitism | 16 | 1,288 | 5,742 (41.8%) | 7,507 (54.7%) | 475 (3.5%) | 454 of 1,280 (35.5%) | 2 / 193 | 0 | 38 |
-| cth-robodebt | 29 | 3,138 | 22,136 (50.0%) | 21,464 (48.5%) | 688 (1.6%) | 1,656 of 3,116 (53.1%) | 94 / 252 | 95 | 200 |
-| nsw-healthcare-funding | 62 | 6,230 | 45,306 (79.3%) | 7,573 (13.3%) | 4,250 (7.4%) | 3,913 of 6,204 (63.1%) | 174 / 189 | 93 | 183 |
+| cth-antisemitism | 16 | 1,288 | 5,742 (41.8%) | 7,507 (54.7%) | 475 (3.5%) | 462 of 1,283 (36.0%) | 2 / 193 | 0 | 38 |
+| cth-robodebt | 29 | 3,138 | 22,136 (50.1%) | 21,362 (48.4%) | 671 (1.5%) | 1,697 of 3,102 (54.7%) | 95 / 252 | 79 | 200 |
+| nsw-healthcare-funding | 62 | 6,230 | 45,452 (79.6%) | 7,430 (13.0%) | 4,241 (7.4%) | 3,925 of 6,202 (63.3%) | 174 / 290 | 23 | 183 |
 
 Every quotable page carries the transcript's own page number. A passage with no role is
 quoted with "the transcript records", the date and the page. In Robodebt and Antisemitism

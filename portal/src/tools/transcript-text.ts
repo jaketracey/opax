@@ -60,37 +60,34 @@ export function dayWords(iso: unknown): string {
 /** A hearing date range in words: "27 September 2022 to 10 March 2023", or one day. */
 export const spanWords = (first: unknown, last: unknown) => first === last ? dayWords(first) : `${dayWords(first)} to ${dayWords(last)}`
 
-const KEEP = new Set(['SC', 'KC', 'QC', 'AM', 'AO', 'AC', 'OAM', 'PSM', 'APM'])
-/** The label as a name: "MS HOGAN-DORAN" as "Ms Hogan-Doran", "McLEOD" as "McLeod". */
-export function speakerName(label: string): string {
-  return label.split(' ').map(word => KEEP.has(word) ? word
-    : word.replace(/^Mc(?=[A-Z])/, 'Mc\u0000').toLowerCase().replace(/(^|[-'’\u0000])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase()).replace('\u0000', '')).join(' ')
-}
-
 // A heading is printed at the start of a line and ends in a colon: "MS HOGAN-DORAN:", "THE COMMISSIONER:",
 // "MR LANCASTER SC:", "MS L SURNAME:", "A/PROFESSOR SURNAME:", "SENATOR THE HON. FIRST SURNAME:", "MR De SURNAME:".
-// Its words are capitals (with a surname particle or a "Mc" allowed), or a title and capitalised names, or a role
-// word alone in any case ("Commissioner:"). The shape is wide on purpose: a heading that is not recognised would
-// hand its words to the turn before, while a line wrongly read as a heading only ends an excerpt early.
+// Its words are capitals (a surname particle or a "Mc" allowed), or it is a role word alone in any case
+// ("Commissioner:"). Title case is not a heading ("Dr Surname: at the time ..." is counsel addressing a witness),
+// nor is a run holding a digit or a quote mark (a document id, a quoted title), nor a long run of capitals with
+// no title (a document's title). A heading that is not recognised would hand its words to the turn before, while
+// a line wrongly read as a heading only ends an excerpt early.
 const PARTICLE = /^(?:de|di|du|da|del|della|le|la|van|von|der|den|ter|bin|al|el|st)$/i
-const TITLE = /^(?:the|mr|ms|mrs|miss|mx|dr|prof|professor|a\/prof|a\/professor|associate|adjunct|emeritus|senator|hon|justice|judge|commissioner|deputy|chief|counsel|uncle|aunty|rabbi|reverend|rev|sir|dame|cr|councillor|minister|detective|sergeant|inspector|superintendent)\.?$/i
+const TITLE = /^(?:THE|MR|MS|MRS|MISS|MX|DR|PROF|PROFESSOR|A\/PROF|A\/PROFESSOR|ASSOCIATE|ADJUNCT|EMERITUS|SENATOR|HON|JUSTICE|JUDGE|COMMISSIONER|DEPUTY|CHIEF|COUNSEL|UNCLE|AUNTY|RABBI|REVEREND|REV|SIR|DAME|CR|COUNCILLOR|MINISTER|DETECTIVE|SERGEANT|INSPECTOR|SUPERINTENDENT)\.?$/
 const ROLE = /^(?:the )?(?:(?:deputy |chief |assistant )?commissioner|chair|chairperson|witness|witnesses|associate|interpreter|speaker|operator|registrar|counsel assisting|presiding member)$/i
-const capitalWord = (w: string) => /^["“‘'(]?[A-Z0-9][A-Z0-9'’.\/()_"”-]*$/.test(w) || /^[A-Z][A-Za-z'’.-]*[A-Z]$/.test(w) || PARTICLE.test(w)
-const nameWord = (w: string) => /^\p{Lu}[\p{L}'’.-]*$/u.test(w) || PARTICLE.test(w)
+const capitalWord = (w: string) => /^[A-Z][A-Z'’.\/()-]*$/.test(w) || /^[A-Z][A-Za-z'’.-]*[A-Z]$/.test(w) || PARTICLE.test(w)
 /** The heading a line opens with, as printed and without its colon, or null. */
 function headingOf(line: string): { heading: string, length: number } | null {
   const m = /^([^:]{1,70}?)\s?:+(?=\s|$)/.exec(line)
   if (!m) return null
   const words = m[1].split(' ')
-  if (words.length > 8) return null
-  const letters = m[1].replace(/[^A-Za-z]/g, ''), upper = letters.replace(/[a-z]/g, '').length
-  const capitals = (words.every(capitalWord) && /[A-Z]{2}/.test(letters)) || (upper >= 3 && upper * 4 >= letters.length * 3)
-  const titled = words.length > 1 && TITLE.test(words[0]) && words.slice(1).every(w => nameWord(w) || TITLE.test(w))
-  return capitals || titled || ROLE.test(m[1]) ? { heading: m[1], length: m[0].length } : null
+  const capitals = words.every(capitalWord) && /[A-Z]{2}/.test(m[1].replace(/[^A-Za-z]/g, '')) && (words.length <= 4 || (words.length <= 8 && TITLE.test(words[0])))
+  return capitals || ROLE.test(m[1]) ? { heading: m[1], length: m[0].length } : null
 }
-// "Q." and "A." open turns that carry no heading of their own.
-const MARK = /^([QA])[.:](?=\s|$)/
-// A word index ("word [2] - 1477:37, 1479:4") or an exhibit list (document ids, no heading) is not a hearing turn.
+// "Q." and "A." open turns that carry no heading of their own; the publisher also prints "Q --".
+const MARK = /^([QA])(?:[.:]| --)(?=\s|$)/
+// A line of the publisher's that is nobody's words: one opened with "<", or in capitals an examination line, an
+// adjournment or resumption, or an exhibit line ("EXHIBIT #A1 JOINT REPORT OF ...").
+const NOTE = /^(?:(?:FURTHER |CROSS[- ]|RE[- ])*EXAMINATION BY|(?:[A-Z]+ )?ADJOURNMENT\b|ADJOURNED\b|UPON RESUM|EXHIBIT #?[A-Z0-9])/
+/** No lower-case words: bracketed times and "am"/"pm" after a figure aside. */
+const allCapitals = (line: string) => !/[a-z]/.test(line.replace(/\[[^\]]*\]|(?<=\d ?)[ap]m\b/g, ''))
+const noteLine = (line: string) => line[0] === '<' || (NOTE.test(line) && allCapitals(line))
+// A word index ("word [2] - 1477:37, 1479:4") and an exhibit list (rows of document ids) are not hearing turns.
 const REFERENCE = /\b\d{2,5}:\d{1,2}\b/, DOCUMENT = /\b[A-Z]{2,5}\.\d{4}\.\d{4}\.\d{4}/
 
 /** Where one turn sits in a page's one-line text. `from` is where its opener begins (the heading, the mark or the
@@ -104,43 +101,66 @@ export type PageTurn = { from: number, start: number, end: number,
   heading?: string, mark?: 'Q' | 'A' }
 
 /** A page as one line (text.replace(/\s+/g, ' ').trim()) and its turns in page order. Headings, marks and notes
- * are read one line at a time from the start of the line, never across a line break. A note is a line the
- * publisher opens with "<", with any capitals-only lines it wraps onto; its text belongs to no turn. A word-index
- * page or an exhibit list has no turns. Pure: the same page always gives the same turns. */
+ * are read one line at a time from the start of the line, never across a line break. A heading read with its
+ * colon somewhere on the page, or a role in capitals, also opens a turn where the publisher dropped the colon
+ * ("MR SURNAME I noticed ...", "THE WITNESS. Yes."). A note is a line of the publisher's with any capitals-only
+ * lines it wraps onto; its text belongs to no turn. A word-index page or an exhibit list has no turns. Pure: the
+ * same page always gives the same turns.
+ *
+ * For a reader of the turns (roles): only a heading prints a speaker. A mark turn with no heading prints none:
+ * an "A." is a witness's answer, but not which witness; a bare "Q." is a question, and the last headed "Q." must
+ * not be carried forward to it (the Commissioner may have gone on, or counsel resumed). A turn that opens the page
+ * or follows a note has no printed speaker either. "MR SURNAME: ." with the "Q." on the next line gives a heading
+ * turn holding "." and then a bare mark turn. The heading is the publisher's, slips included. */
 export function pageTurns(page: string): { text: string, turns: PageTurn[] } {
   const lines = page.split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean)
+  // Headings the page prints with a colon: the same words open a turn when the colon is missing.
+  const printed = [...new Set(lines.flatMap(l => { const h = noteLine(l) || MARK.test(l) ? null : headingOf(l); return h && TITLE.test(h.heading.split(' ')[0]) ? [h.heading] : [] }))]
+    .sort((a, b) => b.length - a.length)
+  const bare = (line: string) => {
+    const heading = /^(?:THE COMMISSIONER|THE WITNESS|THE CHAIR|COMMISSIONER)\b/.exec(line)?.[0] ?? printed.find(h => line.startsWith(h))
+    const gap = heading === undefined ? null : /^(?:[.;](?= |$)| -- | )/.exec(line.slice(heading.length))
+    // After a bare space the next word must not be more capitals: that is a longer name or a title, not a turn.
+    return heading === undefined || !gap || (gap[0] === ' ' && /^[A-Z][A-Z'’.\/-]*[A-Z]\b/.test(line.slice(heading.length + 1))) ? null : { heading, length: heading.length + gap[0].length }
+  }
   const turns: PageTurn[] = [{ from: 0, start: 0, end: 0, opens: 'page' }]
-  let text = '', note = false, headings = 0
+  let text = '', note = false
   for (const line of lines) {
     if (text) text += ' '
     const at = text.length, last = turns[turns.length - 1]
-    const head = line[0] === '<' || MARK.test(line) ? null : headingOf(line), mark = MARK.exec(head ? line.slice(head.length).trimStart() : line)
-    note = line[0] === '<' || (note && !head && !mark && !/[a-z]/.test(line.replace(/\[[^\]]*\]/g, '')))
+    const opener = noteLine(line), lone = !opener && MARK.test(line)
+    const head = opener || lone ? null : headingOf(line) ?? bare(line), mark = opener ? null : MARK.exec(head ? line.slice(head.length).trimStart() : line)
+    note = opener || (note && !head && !mark && allCapitals(line))
     text += line
     if (note) { if (last.opens !== 'note' || last.end > last.start) turns.push({ from: at, start: text.length, end: text.length, opens: 'note' }); else last.start = last.end = text.length; continue }
     if (!head && !mark) { last.end = text.length; continue }
-    headings++
     const start = at + (head ? head.length : 0) + (mark ? line.slice(head ? head.length : 0).search(/\S/) + mark[0].length : 0)
     turns.push({ from: at, start: Math.min(text.length, start), end: text.length, opens: mark ? 'mark' : 'heading',
       ...(head ? { heading: head.heading } : {}), ...(mark ? { mark: mark[1] as 'Q' | 'A' } : {}) })
   }
   for (const t of turns) { while (t.start < t.end && text[t.start] === ' ') t.start++; if (t.start >= t.end) t.start = t.end = Math.max(t.start, t.end) }
   const listed = (pattern: RegExp) => lines.filter(l => pattern.test(l)).length
-  if (listed(REFERENCE) * 5 >= lines.length * 2 || (!headings && listed(DOCUMENT) >= 4)) return { text, turns: [] }
+  if (listed(REFERENCE) * 5 >= lines.length * 2 || (listed(DOCUMENT) >= 4 && listed(DOCUMENT) * 3 >= lines.length)) return { text, turns: [] }
   return { text, turns: turns.filter((t, i) => i > 0 || t.end > t.start) }
 }
 
-/** A verbatim excerpt around the first query word, kept inside the one turn the word is in: no heading, mark or
- * note sits in the text. A word found in a heading, a mark or a note gives the words that follow it, which may be
- * none. No speaker is returned: Ask prose and citations name no one (see pageTurns for the headings). With the
- * transcript's roles (transcript-roles.ts), the turn's role is returned where the page makes it certain. */
+/** A verbatim excerpt around the first query word spoken on the page, kept inside the one turn the word is in: no
+ * heading, mark or note sits in the text. A word found only in headings, marks or notes gives the words its first
+ * opener is followed by, which may be none. No speaker is returned: Ask prose and citations name no one. */
+// With the transcript's roles (transcript-roles.ts), the turn's role is returned where the page makes it certain.
 export function excerpt(text: string, terms: string[], roleFor?: RoleFor): { excerpt: string, speaker_role?: SpeakerRole } {
   const { text: flat, turns } = pageTurns(text)
-  let at = -1
+  // The first place a query word is spoken wins; failing that, the first opener one is printed in.
+  let spoken = -1, printed = -1
   for (const t of terms) {
-    const m = new RegExp(`\\b${t.replace(/[^a-z0-9]/g, '')}`, 'i').exec(flat)
-    if (m && (at < 0 || m.index < at)) at = m.index
+    const word = t.replace(/[^a-z0-9]/g, '')
+    if (!word) continue
+    for (const m of flat.matchAll(new RegExp(`\\b${word}`, 'gi'))) {
+      if (turns.some(u => u.start <= m.index! && m.index! < u.end)) { if (spoken < 0 || m.index! < spoken) spoken = m.index!; break }
+      if (printed < 0 || m.index! < printed) printed = m.index!
+    }
   }
+  const at = spoken >= 0 ? spoken : printed
   const turn = at < 0 ? turns.find(t => t.end > t.start) : turns.filter(t => t.from <= at).at(-1)
   if (!turn || turn.end <= turn.start || at >= turn.end) return { excerpt: '' }
   const from = turn.start, until = turn.end, point = Math.max(at, from)
@@ -165,14 +185,17 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
   const index = object(doc.terms), pages = records(doc.pages)
   const score = new Map<number, number>()
   for (const t of terms) for (const n of (index[t] as number[]) ?? []) score.set(n, (score.get(n) ?? 0) + 1)
-  const best = [...score].sort((a, b) => b[1] - a[1] || a[0] - b[0]).slice(0, max)
   const quote = doc.quote_policy === 'quote', roleFor = quote ? transcriptRoles(pages) : undefined
-  const hits = best.map(([n]) => {
+  // The best pages first; a page whose match leaves nothing to quote (a heading with no words after it, a word
+  // index) is passed over for the next best.
+  const hits: PageHit[] = []
+  for (const [n] of [...score].sort((a, b) => b[1] - a[1] || a[0] - b[0])) {
+    if (hits.length >= max) break
     const page = pages.find(p => p.n === n) ?? {}
-    return { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
+    const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
       ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, roleFor) : { excerpt: null }) }
-  // A page whose match leaves nothing to quote (a heading with no words after it, a word index) is not offered.
-  }).filter(h => h.excerpt === null || /[^.\s]/.test(h.excerpt))
+    if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) hits.push(hit)
+  }
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),
     ...(quote ? {} : { order_notice: String(doc.order_notice) }), hits }
 }
