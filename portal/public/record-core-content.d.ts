@@ -2,7 +2,11 @@ import type {GrantRecord, GrantDetail, AgencyDetail, TopicCounts, TopicSpeech} f
 export function grantSource(jur: string, grant?: GrantRecord): string;
 export function grantCoreBody(detail: GrantDetail, jur: string, canonical: string, program?: boolean, dataPath?: string, recipientIds?: ReadonlySet<string>, lead?: string): string;
 export function firstAgencySuppliers(suppliers: AgencyDetail['suppliers']): AgencyDetail['suppliers'];
-export function agencyCoreBody(profile: AgencyDetail, canonical: string, meta?: {source?: string; source_url?: string}): string;
+export function agencyCoreBody(profile: AgencyDetail, canonical: string, meta?: {source?: string; source_url?: string}, scope?: AgencySupplierScope | null): string;
+export interface AgencySupplierScope {id: string; name: string}
+export function agencySupplierScope(profile: AgencyDetail, id?: string | null): AgencySupplierScope | null;
+export function scopeKeeps(scope: AgencySupplierScope): (contract: AgencyDetail['contracts'][number]) => boolean;
+export function agencyScopeHTML(scope: AgencySupplierScope, agencyId: string): string;
 export function topicSummary(name: string, counts: TopicCounts): string;
 export function topicCoreBody(slug: string, counts: TopicCounts, speeches: TopicSpeech[], dataPath?: string): string;
 export function kindLabel(k?: string): string;

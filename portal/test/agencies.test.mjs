@@ -7,6 +7,7 @@ import { filterMoneyEdges, moneyTotals } from '../public/money-records.js';
 import { buildGraph } from '../public/money-map.js';
 import { shortDate, shortMoney } from '../public/format.js';
 import { sourceLineHTML } from '../public/labels.js';
+import { agencyScopeHTML, agencySupplierScope, scopeKeeps } from '../public/record-core-content.js';
 
 const source = readFileSync(new URL('../public/agencies.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
 const shared = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
@@ -21,7 +22,7 @@ function node() {
 function harness(fetch) {
   // This unit harness covers the ordinary SPA path. server-html.test.mjs runs
   // the real imported adoption helper and DOM against server-rendered pages.
-  const context = { hydrateRecordCore: () => false, fetch, AbortController, URLSearchParams, setTimeout, clearTimeout, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
+  const context = { hydrateRecordCore: () => false, narrowRecordList() {}, agencyScopeHTML, agencySupplierScope, scopeKeeps, fetch, AbortController, URLSearchParams, setTimeout, clearTimeout, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
   runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML }; })());`, context);
   runInNewContext(source, context); return context;
 }

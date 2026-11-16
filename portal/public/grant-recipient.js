@@ -1,5 +1,5 @@
-import {hydrateRecordCore} from './record-core.js';
-import {recipientMetaLine} from './record-core-content.js';
+import {hydrateRecordCore} from './record-core.js?v=4d08079fe1';
+import {recipientMetaLine} from './record-core-content.js?v=429365685a';
 import {renderNotFound} from './not-found.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=d28448a137';
 import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
@@ -7,7 +7,7 @@ import {partyUrl} from './canonical-urls.js?v=9ce13e7ba5';
 // "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
 let nextSteps = null;
 const nextStepsReady = import('./next-steps.js').then(module => { nextSteps = module; }, () => {});
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=bb5d7f71db';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=95fb5fa3b8';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');

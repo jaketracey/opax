@@ -143,6 +143,10 @@ export const MODULE_STAMPS = [
   ['money-receipts.js','donor-disclosure.js'],
   ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js','suppliers.js','map-research.js'].map(file=>[file,'donor-disclosure.js']),
   ['donor-disclosure.js','donor-entity.js'],
+  // The server-table helpers: an agency link's supplier filter calls exports a cached old copy lacks.
+  ['record-core.js','record-core-content.js'],
+  ...['agencies.js','grants.js','grant-recipient.js'].flatMap(file=>[[file,'record-core.js'],[file,'record-core-content.js']]),
+  ['app.js','record-core.js'],
   ['money-journeys-data.js','donor-views.js'],
   ['canonical-urls.js', 'person-paths.js'],
   ['party-page.js', 'canonical-urls.js'], ['party-page.js', 'labels.js'],
@@ -324,7 +328,7 @@ const HEADER_RULE_LIMIT = 100
 // Stamped so a changed file is a new URL, but left on the default module cache:
 // _headers is at the 100 rules Workers Assets allows, and an immutable rule each
 // would pass it. A small module that is cheap to revalidate belongs here.
-const STAMPED_DEFAULT_CACHE = new Set(['profile-jurisdictions.js', 'vic-term.js', 'transcript-note.js', 'machine-notice.js'])
+const STAMPED_DEFAULT_CACHE = new Set(['profile-jurisdictions.js', 'vic-term.js', 'transcript-note.js', 'machine-notice.js', 'record-core.js', 'record-core-content.js'])
 const DEV_ONLY = /(?:^|\/)(?:[a-z]+-test\.html|ui-workbench\.[a-z]+|datatable-workbench[\w.-]*)$/
 
 const walkFiles = (dir) => readdirSync(dir, { withFileTypes: true })

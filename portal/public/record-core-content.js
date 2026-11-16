@@ -25,12 +25,12 @@ const options = {
   topic: ['Find a speech', 'topic-record-query'],
 };
 const supplierSorts = [['value_desc','Highest value'],['value_asc','Lowest value'],['count_desc','Most contracts'],['count_asc','Fewest contracts'],['name_asc','Name A–Z'],['name_desc','Name Z–A']];
-const table = (kind, id, caption, headings, rows) => {
+const table = (kind, id, caption, headings, rows, lead = '') => {
   const [label, name] = options[kind];
   const sorts = kind === 'topic' ? [['newest','Newest'],['oldest','Oldest']] : kind === 'agency-suppliers' ? supplierSorts : [];
   return `<section data-record-list="${kind}" data-record-id="${esc(id)}" id="${kind === 'recipient' ? 'recipient-records' : kind === 'program' ? 'program-records' : kind === 'topic' ? 'topic-records' : kind}">
     <div class="ui-toolbar record-core-tools"><label class="ui-field">${label}<input class="ui-input" name="${name}" type="search" disabled></label>${sorts.length ? `<label class="ui-field">Sort by<select class="ui-input" disabled>${sorts.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label>` : ''}
-    <nav aria-label="${esc(caption)} pages" class="record-core-pages"><button class="ui-button" type="button" data-record-previous disabled>Previous</button><span role="status">Showing ${rows.length ? '1–'+rows.length : '0'} listed records</span><button class="ui-button" type="button" data-record-next disabled>Next</button></nav></div>
+    <nav aria-label="${esc(caption)} pages" class="record-core-pages"><button class="ui-button" type="button" data-record-previous disabled>Previous</button><span role="status">Showing ${rows.length ? '1–'+rows.length : '0'} listed records</span><button class="ui-button" type="button" data-record-next disabled>Next</button></nav></div>${lead}
     <div class="record-core-scroll"><table><caption>${esc(caption)}</caption><thead><tr>${headings.map(h=>`<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rowsHTML(rows)}</tbody></table></div></section>`;
 };
 // These row builders run on the Worker and after a reader filters or pages the
@@ -86,14 +86,31 @@ function grantCoreBody(detail, jur, canonical, program = false, dataPath, recipi
   body += `<p class="source-line">Source: ${link(grantSource(jur), jur === "qld" ? "Queensland Government Investment Portal" : "GrantConnect, Department of Finance")}. ${jur === "qld" ? "A multi-year funding agreement can appear in several financial years; rows are not distinct grants." : "Published award values do not establish payments received."}</p>`;
   return body;
 }
+/**
+ * A link can name one of an agency's suppliers (`?supplier=s-…`, as Today's question does).
+ * The contract record then lists that supplier's contracts only, as the app's Contracts tab
+ * does. An id the agency does not record leaves the whole record showing.
+ */
+function agencySupplierScope(profile, id) {
+  if (typeof id !== "string" || !/^s-[a-f0-9]{20}$/.test(id)) return null;
+  const name = profile.suppliers.find((s) => s.id === id)?.name || profile.contracts.find((c) => c.supplier_id === id)?.supplier;
+  return name ? { id, name } : null;
+}
+/** A contract without a supplier id is matched by the recorded supplier name, as in the app. */
+const scopeKeeps = (scope) => (c) => c.supplier_id ? c.supplier_id === scope.id : c.supplier === scope.name;
+/** The filtered view says whose contracts these are and links back to the whole record. */
+function agencyScopeHTML(scope, agencyId) {
+  return `<div class="record-scope" data-record-scope="${esc(scope.id)}"><p>Showing only contracts with <strong>${esc(scope.name)}</strong>.</p><a class="ui-button" data-variant="quiet" data-ui-size="compact" href="/subject/agency/${encodeURIComponent(agencyId)}#agency-contracts">Show all contracts</a></div>`;
+}
 const supplierNames = new Intl.Collator("en-AU", { sensitivity: "base", numeric: true });
 function firstAgencySuppliers(suppliers) {
   return [...suppliers].sort((a, b) => b.total - a.total || supplierNames.compare(a.name, b.name) || a.id.localeCompare(b.id)).slice(0, 20);
 }
-function agencyCoreBody(profile, canonical, meta) {
+/** `scope` is the one supplier a link names (agencySupplierScope), or null for the whole record. */
+function agencyCoreBody(profile, canonical, meta, scope = null) {
   const suppliers = firstAgencySuppliers(profile.suppliers);
-  const contracts = profile.contracts.filter((c) => !((!c.start_date || !/^\d{4}-\d{2}-\d{2}/.test(c.start_date) || Number(c.start_date.slice(0, 4)) <= 1900) && !(Number(c.amount) > 0))).slice(0, 20);
-  return figures([["Recorded contract value", dollars(profile.total)], ["Contracts", number(profile.count)], ["Suppliers", number(profile.supplier_count ?? profile.suppliers.length)]]) + table('agency-suppliers',profile.id,'Who receives the contracts',['Supplier','Recorded value','Contracts'],supplierRows(suppliers)) + table('agency-contracts',profile.id,'The contract record',['Contract','Supplier','Value','Start date','Source'],contractRows(contracts)) + `<p>${link(`/agencies/${profile.id}.json`, "Read the full exported lists (JSON)")}</p><p>${link(localPath(canonical) + "#agency-suppliers", "Explore all suppliers")} \xB7 ${link(localPath(canonical) + "#agency-contracts", "Explore the full contract list")}</p><p class="source-line">Source: ${link(meta?.source_url || "https://www.tenders.gov.au/", meta?.source || "AusTender, Department of Finance")}. Award values are not expenditure. Agency names remain separate as recorded.</p>`;
+  const contracts = profile.contracts.filter((c) => !((!c.start_date || !/^\d{4}-\d{2}-\d{2}/.test(c.start_date) || Number(c.start_date.slice(0, 4)) <= 1900) && !(Number(c.amount) > 0)) && (!scope || scopeKeeps(scope)(c))).slice(0, 20);
+  return figures([["Recorded contract value", dollars(profile.total)], ["Contracts", number(profile.count)], ["Suppliers", number(profile.supplier_count ?? profile.suppliers.length)]]) + table('agency-suppliers',profile.id,'Who receives the contracts',['Supplier','Recorded value','Contracts'],supplierRows(suppliers)) + table('agency-contracts',profile.id,'The contract record',['Contract','Supplier','Value','Start date','Source'],contractRows(contracts),scope ? agencyScopeHTML(scope, profile.id) : '') + `<p>${link(`/agencies/${profile.id}.json`, "Read the full exported lists (JSON)")}</p><p>${link(localPath(canonical) + "#agency-suppliers", "Explore all suppliers")} \xB7 ${link(localPath(canonical) + "#agency-contracts", "Explore the full contract list")}</p><p class="source-line">Source: ${link(meta?.source_url || "https://www.tenders.gov.au/", meta?.source || "AusTender, Department of Finance")}. Award values are not expenditure. Agency names remain separate as recorded.</p>`;
 }
 function topicSummary(name, counts) {
   return `${name}: ${number(counts.count)} speeches carry this label so far, of ${number(counts.labelled)} speeches labelled to date. Not every speech has a topic label yet, so this count is a floor.`;
@@ -105,6 +122,9 @@ function topicCoreBody(slug, counts, speeches, dataPath) {
 }
 export {
   agencyCoreBody,
+  agencyScopeHTML,
+  agencySupplierScope,
+  scopeKeeps,
   firstAgencySuppliers,
   grantCoreBody,
   grantSource,

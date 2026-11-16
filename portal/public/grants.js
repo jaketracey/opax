@@ -1,9 +1,9 @@
-import {hydrateRecordCore} from './record-core.js';
+import {hydrateRecordCore} from './record-core.js?v=4d08079fe1';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=d28448a137';
 import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
 import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
 import {programKey, resolveProgram, resolveProgramId} from './facts/grant-programs.js?v=5b8dddc342';
-import { kindLabel } from './record-core-content.js'
+import { kindLabel } from './record-core-content.js?v=429365685a'
 export {programKey, resolveProgram, resolveProgramId};
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the

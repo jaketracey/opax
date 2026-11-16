@@ -10,6 +10,8 @@ export interface AgencyDetail {
   id: string; name: string; total: number; count: number; supplier_count?: number
   suppliers: {id: string; name: string; total: number; count: number}[]
   contracts: {id: string; title?: string; supplier?: string; supplier_id?: string; amount?: number; start_date?: string; url?: string}[]
+  /** The Worker's preview for a link that names one supplier (`?supplier=`): whose contracts it holds. */
+  scope?: {id: string; name: string} | null
 }
 export interface TopicCounts {count: number; labelled: number; parties?: [string, number][]}
 export interface TopicSpeech {slug: string; title?: string; speaker?: string; date?: string; url?: string; source_url?: string}
@@ -29,4 +31,4 @@ export function grantCoreBody(detail: GrantDetail, jur: string, canonical: strin
 }
 
 // The browser enhances these same tables in place after its existing data loads.
-export {recipientMetaLine, grantSource, firstAgencySuppliers, agencyCoreBody, topicSummary, topicCoreBody} from '../public/record-core-content.js'
+export {recipientMetaLine, grantSource, firstAgencySuppliers, agencyCoreBody, agencySupplierScope, scopeKeeps, topicSummary, topicCoreBody} from '../public/record-core-content.js'
