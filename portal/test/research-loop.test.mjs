@@ -26,8 +26,8 @@ test('loop answer instructions require a direct first point, unique facts and se
  assert.match(instructions,/For a who question, name the people and their roles first, then what the inquiry or record found about each/);assert.match(instructions,/never how OPAX loaded or stored them/);
  // People named in hearing transcript evidence: the fixed rule is in the research model's instructions, and the
  // standing sentences that tell it to name people carry the exception, so nothing pulls against the rule.
- assert.match(instructions,/Select numeric record fact ids for transcript excerpts\. For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words\./);
- assert.match(instructions,/never infer a role\. This covers everyone named in the evidence, commissioners and counsel included\./);
+ assert.match(instructions,/Select numeric record fact ids for transcript excerpts\. For hearing transcripts, name a person from the evidence only inside a verbatim quotation\. In your own words, refer to them by a neutral description/);
+ assert.match(instructions,/a role is stated there, not inferred\. This covers everyone named in the evidence, commissioners and counsel included\./);
  assert.match(instructions,/found about each, except people named in hearing transcript evidence; for why/);
  assert.match(instructions,/Name each passage speaker and date as recorded, except people named in hearing transcript evidence\./);
  assert.match(instructions,/Name the people the records name, including private individuals, except people named in hearing transcript evidence\./);

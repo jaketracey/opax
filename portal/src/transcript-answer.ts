@@ -25,8 +25,9 @@ export function hearingEvidenceQuestion(question: string): boolean {
 
 
 /** People named in hearing evidence, for both models that write Ask prose (the research model and the writer). Fixed
- * text. Prompt text only: nothing reads, blocks or edits the prose. */
-export const TRANSCRIPT_NAMED_PEOPLE_RULE = 'For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words. Outside a quotation, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page; never infer a role. This covers everyone named in the evidence, commissioners and counsel included.'
+ * text, worded as what to do (test/ask-positive-prompts.test.mjs holds every prompt to that). Prompt text only:
+ * nothing reads, blocks or edits the prose. */
+export const TRANSCRIPT_NAMED_PEOPLE_RULE = 'For hearing transcripts, name a person from the evidence only inside a verbatim quotation. In your own words, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page: a role is stated there, not inferred. This covers everyone named in the evidence, commissioners and counsel included.'
 /** The exception the standing "name the people" sentences carry, so they do not pull against the rule. */
 export const NAMED_PEOPLE_EXCEPTION = 'except people named in hearing transcript evidence'
 const EXCERPT = /\btranscript page \S+/

@@ -60,7 +60,7 @@ test('empty list markers never ship', () => {
 })
 
 test('people named in hearing evidence appear only inside a quotation: one fixed rule, given to the writer in every prompt', () => {
-  const RULE = 'For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words. Outside a quotation, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page; never infer a role. This covers everyone named in the evidence, commissioners and counsel included.'
+  const RULE = 'For hearing transcripts, name a person from the evidence only inside a verbatim quotation. In your own words, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page: a role is stated there, not inferred. This covers everyone named in the evidence, commissioners and counsel included.'
   assert.equal(api.TRANSCRIPT_NAMED_PEOPLE_RULE, RULE); assert.doesNotMatch(RULE, /—/)
   assert.equal(api.NAMED_PEOPLE_EXCEPTION, 'except people named in hearing transcript evidence')
   const contract = JSON.parse(api.writingPrompt({ question: 'What did the commission hear?', period: { kind: 'all', label: 'All time' }, facts: [] })).contract
