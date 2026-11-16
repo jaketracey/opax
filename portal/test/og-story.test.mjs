@@ -110,6 +110,32 @@ test('a cover whose line is a summary sentence draws one small "Machine-written 
   assert.ok(validStory([noted, slides.number, slides.source]), 'a noted cover is a valid story');
 });
 
+test('a long cover sentence gives way to the bill\'s standing: the status and its date stay on the slide', async () => {
+  const sentence = 'This bill is part of a package that creates the Australian Tertiary Education Commission as the main oversight body for the higher education system.';
+  for (const status of ['Passed 1 Apr 2026.', 'Royal Assent 27 Aug 2026.', 'Introduced 7 Sep 2026; before parliament.']) {
+    const long = { ...slides.cover, line: `${sentence} ${status}`, note: 'Machine-written summary' };
+    for (const [format, images] of [['feed', { photo, credit }], ['story', { photo, credit }], ['feed', {}]]) {
+      const drawn = texts(storySlideTree(long, images, format)).find(t => t.startsWith('This bill is part'));
+      assert.ok(drawn, format);
+      assert.ok(drawn.endsWith(' ' + status), `${format}: the standing is whole and last: ${drawn}`);
+      assert.ok(drawn.includes('… ' + status), 'the sentence is the part that is cut');
+      assert.ok(drawn.length < long.line.length);
+      assert.ok(sentence.startsWith(drawn.slice(0, drawn.indexOf('…'))), 'cut on a word, nothing reordered');
+    }
+    const jpeg = decode(await renderJpeg(long, { photo, credit })); assert.deepEqual([jpeg.width, jpeg.height], [1080, 1350]);
+  }
+  // A line that fits is drawn whole, exactly as before.
+  const short = { ...slides.cover, line: 'It would move the reporting date. Passed 19 Aug 2026.', note: 'Machine-written summary' };
+  assert.ok(texts(storySlideTree(short, { photo, credit })).includes(short.line));
+  // A blank note draws no note line, so the cover is clipped the old way too: the switch follows what is drawn.
+  const blank = texts(storySlideTree({ ...slides.cover, line: `${sentence} Passed 1 Apr 2026.`, note: '  ' }, { photo, credit })).find(t => t.startsWith('This bill is part'));
+  assert.ok(blank.endsWith('…') && !blank.includes('Passed'), blank);
+  // A cover with no note (every other kind of edition) is clipped from the end, as it always was.
+  const plainLong = { ...slides.cover, line: `${sentence} ${sentence}` };
+  const end = texts(storySlideTree(plainLong, { photo, credit })).find(t => t.startsWith('This bill is part'));
+  assert.ok(end.endsWith('…'));
+});
+
 test('the engraving cover with a note holds every row of words at its height: a two-row title at its largest over a three-row line does not press the note into the line', async () => {
   // No photograph, a title that sets at 128 px on two rows, a kicker on two rows and a line on three: the tallest cover.
   const tall = { type: 'cover', kicker: 'Bill · Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio', title: 'Combatting Illicit Tobacco',
@@ -181,7 +207,7 @@ test('the closing slide is the page address alone: no path line under it, no wor
 
 test('the Victorian CTA keeps the address-only design and the exact small authorisation outside its clipped body', () => {
   const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
-  assert.equal(STORY_VERSION, 5, 'a changed cover drawing invalidates the version 4 cache');
+  assert.equal(STORY_VERSION, 6, 'a changed cover wording invalidates the version 5 cache');
   const slide = {...slides.source, path: 'legacy path must not be drawn', authorisation: line};
   for (const format of ['feed', 'story']) {
     const tree = storySlideTree(slide, {}, format);

@@ -154,6 +154,26 @@ function clipToLines(text: string, width: number, size: number, em: number, maxL
   return t
 }
 
+/**
+ * As clipToLines, but the text's last sentence is kept whole and the words before it give way. A bill's cover line is
+ * its summary sentence followed by where the bill stands ("Passed 19 Aug 2026."): when the two run past the rows
+ * there are, the sentence is cut, never the standing and its date. Text with one sentence is clipped as usual.
+ */
+function clipKeepingLast(text: string, width: number, size: number, em: number, maxLines: number): string {
+  const t = text.trim()
+  if (wrapLines(t, width, size, em) <= maxLines) return t
+  const cut = Math.max(t.lastIndexOf('. '), t.lastIndexOf('… '), t.lastIndexOf('? '), t.lastIndexOf('! '))
+  const tail = cut > 0 ? t.slice(cut + 2).trim() : ''
+  // A last sentence that could not share the rows with any of the text before it is not kept at that cost.
+  if (!tail || wrapLines(tail, width, size, em) >= maxLines) return clipToLines(t, width, size, em, maxLines)
+  let head = t.slice(0, cut + 1).trim()
+  while (wrapLines(`${head} ${tail}`, width, size, em) > maxLines && head.length > 12) {
+    const at = head.lastIndexOf(' ', head.length - 2)
+    head = `${head.slice(0, at > 0 ? at : head.length - 8).replace(/[\s,;:.…]+$/, '')}…`
+  }
+  return `${head} ${tail}`
+}
+
 const SERIF_EM = 0.52
 const SANS_EM = 0.47
 const TITLE_SIZES = [84, 76, 68, 60, 54, 48, 42, 38]
@@ -595,10 +615,11 @@ function storyHeadline(text: string, maxSize: number, maxLines: number, centred 
 }
 
 /** Public Sans lines under a headline, each held to `rows` lines; the first stands `first` px clear of the headline. */
-function storyLines(lines: string[], centred = false, rows = 3, first = 30, size = S_LINE): El[] {
+function storyLines(lines: string[], centred = false, rows = 3, first = 30, size = S_LINE, keepLast = false): El[] {
+  const clipped = keepLast ? clipKeepingLast : clipToLines
   return lines.map(plain).filter(Boolean).slice(0, 3).map((l, i) =>
     h('div', { style: { display: 'flex', justifyContent: centred ? 'center' : 'flex-start', fontFamily: SANS, fontSize: size, lineHeight: 1.35, color: SOFT, marginTop: i === 0 ? first : 10, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } },
-      clipToLines(l, P_TEXT_WIDTH, size, SANS_EM, rows)),
+      clipped(l, P_TEXT_WIDTH, size, SANS_EM, rows)),
   )
 }
 
@@ -639,6 +660,8 @@ function storyMedallion(src: string, size = 300): El {
   )
 }
 
+// A cover that carries a note (a bill's) has a summary sentence then the bill's standing as its line: the standing and
+// its date stay on the slide when the line is too long for its rows (clipKeepingLast).
 function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: StoryImages, g: StoryGeometry): El {
   const photo = images.photo ?? null
   const inset = images.inset ? storyMedallion(images.inset) : null
@@ -658,7 +681,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
         inset,
         firm(storyKicker(slide.kicker)),
         firm(storyHeadline(slide.title, 128, 2)),
-        ...storyLines([slide.line], false, 3).map(firm),
+        ...storyLines([slide.line], false, 3, 30, S_LINE, !!coverNote(slide.note)).map(firm),
         firm(coverNote(slide.note)),
         h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: engraving.top, ...(noted ? { flexShrink: 1, minHeight: 0, overflow: 'hidden' } : {}) } }, h('img', { src: ENGRAVING_URI, width: engraving.width, height: engraving.height, style: { opacity: 0.9 } })),
       ]),
@@ -683,7 +706,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
       inset,
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 140, 2),
-      ...storyLines([slide.line], false, 3),
+      ...storyLines([slide.line], false, 3, 30, S_LINE, !!coverNote(slide.note)),
       coverNote(slide.note),
     ),
     storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
