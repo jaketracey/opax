@@ -42,7 +42,7 @@ const EXACT = 'The transcript records: “Mr Placeholder had approved the use of
 const SAID = 'On 20 March 2023 Robin Example said income averaging was applied to every debt.'
 
 test('a near-verbatim quotation of a transcript goes with its words: no name is left in prose', () => {
-  const out = ground(payload([[NEAR, 'fact-1'], [SAID, 'speech-7']], [heard, speech]))
+  const out = ground(payload([[NEAR, 'fact-1'], [SAID, 'speech-7']], [heard, speech], '\n'))
   assert.doesNotMatch(out.answer, /Placeholder|a witness saying/)
   assert.match(out.answer, /Robin Example said income averaging was applied to every debt\./)
   rangesHold(out)
@@ -55,7 +55,7 @@ test('a near-verbatim quotation of a transcript goes with its words: no name is 
 
 test('a quotation with "..." inside is not word for word, and goes; an exact one is untouched', () => {
   const elided = 'The transcript records: “Mr Placeholder had approved ... in that year”.'
-  const out = ground(payload([[elided, 'fact-1'], [EXACT, 'fact-1'], [SAID, 'speech-7']], [heard, speech]))
+  const out = ground(payload([[elided, 'fact-1'], [EXACT, 'fact-1'], [SAID, 'speech-7']], [heard, speech], '\n'))
   assert.doesNotMatch(out.answer, /\.\.\./)
   assert.ok(out.answer.includes(EXACT), out.answer)
   assert.equal(out.answer.replace(/“[^”]*”/g, '').includes('Placeholder'), false, 'the name is only inside the verbatim quotation')
@@ -70,8 +70,9 @@ test('the whole sentence goes, so nothing is left broken; list markers and blank
   // (The answer's later shaping may drop the list markers of a two-line list; the lines themselves are what matter.)
   assert.deepEqual(out.answer.split('\n').map(l => l.replace(/^- /, '')), [SAID, 'The commission reported in July 2023.'])
   rangesHold(out)
+  // In one paragraph the sentences after it go too (the next test).
   const mid = ground(payload([[SAID, 'speech-7'], [NEAR, 'fact-1'], ['The commission reported in July 2023.']], [heard, speech]))
-  assert.equal(mid.answer, `${SAID} The commission reported in July 2023.`)
+  assert.equal(mid.answer, SAID)
   const last = ground(payload([[SAID, 'speech-7'], [NEAR, 'fact-1']], [heard, speech]))
   assert.equal(last.answer, SAID); rangesHold(last)
   const paragraphs = ground(payload([[SAID, 'speech-7'], [NEAR, 'fact-1'], ['The commission reported in July 2023.']], [heard, speech], '\n\n'))
@@ -213,8 +214,8 @@ test('a sentence released to a streamed reader is never removed afterwards, and 
 
 test('marks that do not pair take only their own sentence, and a mark never closed only its own line', () => {
   for (const row of ['A witness said "Mr Placeholder approved all of it”.', 'A witness said “Mr Placeholder approved all of it".']) {
-    const out = ground(payload([[SAID, 'speech-7'], [row, 'fact-1'], [TAIL]], [heard, speech]))
-    assert.equal(out.answer, `${SAID} ${TAIL}`, row); rangesHold(out)
+    const out = ground(payload([[SAID, 'speech-7'], [row, 'fact-1'], [TAIL]], [heard, speech], '\n'))
+    assert.equal(out.answer, `${SAID}\n${TAIL}`, row); rangesHold(out)
   }
   const open = ground(payload([[SAID, 'speech-7'], ['A witness said “Mr Placeholder approved all of it.', 'fact-1'], [TAIL]], [heard, speech], '\n'))
   assert.equal(open.answer, `${SAID}\n${TAIL}`); rangesHold(open)
@@ -256,4 +257,36 @@ test('a word-for-word quotation is kept when the excerpt itself holds quotation 
   const row = { ...heard, snippet: heard.snippet.replace(EXCERPT, excerpts[1]) }
   const mixed = 'The transcript records “he said “leave it with me” and nothing happened” and “Mr Placeholder then shredded it”.'
   assert.equal(ground(payload([[SAID, 'speech-7'], [mixed, 'fact-1']], [row, speech], '\n')).answer, SAID)
+})
+
+test('a removed sentence that cited a transcript takes the rest of its paragraph or list item, and the run record counts it', () => {
+  const HE = 'He denied this the next day.', MORE = 'The denial was not challenged.'
+  // Left behind, "He" would point at the member named in the sentence before.
+  const out = ground(payload([[SAID, 'speech-7'], [NEAR, 'fact-1'], [HE], [MORE]], [heard, speech]))
+  assert.equal(out.answer, SAID); rangesHold(out)
+  assert.deepEqual(out.research.quote_paragraphs_removed, { paragraphs: 1, sentences: 2 })
+  // The paragraph before and the paragraph after are untouched.
+  const two = ground(payload([[`${SAID}`, 'speech-7'], [`${NEAR} ${HE}`, 'fact-1'], [TAIL]], [heard, speech], '\n\n'))
+  assert.equal(two.answer, `${SAID}\n\n${TAIL}`); assert.deepEqual(two.research.quote_paragraphs_removed, { paragraphs: 1, sentences: 1 })
+  // A list item is its own paragraph.
+  const list = ground(payload([[`- ${SAID}`, 'speech-7'], [`- ${NEAR} ${HE}`, 'fact-1'], [`- ${TAIL}`]], [heard, speech], '\n'))
+  assert.deepEqual(list.answer.split('\n').map(l => l.replace(/^- /, '')), [SAID, TAIL])
+  // Two failing sentences in one paragraph: counted once, from the first.
+  const both = ground(payload([[SAID, 'speech-7'], [NEAR, 'fact-1'], [HE], ['A witness said “Mr Placeholder approved all of it”.', 'fact-1'], [MORE]], [heard, speech]))
+  assert.equal(both.answer, SAID); assert.deepEqual(both.research.quote_paragraphs_removed, { paragraphs: 1, sentences: 3 })
+  // A lead-in is not left with nothing under it only when it is in the same paragraph; a sentence before the removed one stays.
+  // A sentence that cites no transcript and goes under the five-word rule takes only itself.
+  const loose = ground(payload([[SAID, 'speech-7'], ['One account was that “Mr Placeholder approved the use of income averaging in that year”.'], [HE]], [heard, speech]))
+  assert.equal(loose.answer, `${SAID} ${HE}`); assert.equal(loose.research.quote_paragraphs_removed, undefined)
+  // A streamed preview is checked the same way, so a sentence that follows the removed one in its paragraph is never
+  // released and then taken back.
+  assert.equal(ground(payload([[SAID, 'speech-7'], [NEAR, 'fact-1'], [HE]], [heard, speech]), true).answer, SAID)
+})
+
+test('streaming with the paragraph rule: what follows a removed sentence in its paragraph is never released', async () => {
+  const HE = 'He denied this the next day.'
+  const points = (parts, sources) => ({ ...payload(parts, sources, ' '), machine_written: true })
+  const run = await streamed([points([[SAID, 'speech-7']], [speech]), points([[SAID, 'speech-7'], [NEAR, 'fact-1']], [speech, heard]), points([[SAID, 'speech-7'], [NEAR, 'fact-1'], [HE]], [speech, heard])], points([[SAID, 'speech-7'], [NEAR, 'fact-1'], [HE]], [speech, heard]))
+  assert.ok(run.sent.every(text => !text.includes('He denied') && !text.includes('Placeholder')), JSON.stringify(run.sent))
+  assert.ok(String(run.done.answer).startsWith(run.released)); assert.equal(run.done.answer, SAID)
 })
