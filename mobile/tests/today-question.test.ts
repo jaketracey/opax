@@ -19,10 +19,15 @@ import {
   type FrontPageQuestion,
 } from '../src/features/explore/quiz-model';
 import { quizPublisher } from '../src/features/explore/quiz-source';
-import { frontPageDeck, questionAsOf } from '../src/features/explore/quiz/data';
+import {
+  frontPageDeck,
+  questionAsOf,
+  quizAsOf,
+} from '../src/features/explore/quiz/data';
 import { questionIndex } from '../src/features/today/rules';
 import { fromWebPath } from '../src/navigation/routes';
 import records from './fixtures/today-question-records.json';
+import closurePair from './fixtures/today-question-9971-9972.json';
 
 const deck = frontPage as FrontPageQuestion[];
 type Excerpt = { path: string; fields: Record<string, unknown> };
@@ -178,36 +183,81 @@ test("every answer is its record's field", () => {
         break;
       case 'division-third-reading':
         expect(path).toBe(`divisions/division-${f.key}.json`);
-        expect(f.name).toMatch(/; Third Reading$/);
-        expect(f.bill_lists_division).toBe(true);
+        expect(f.bill_divisions).toContain(f.key);
+        // The Chair's last question, when the record quotes one, is the
+        // bill's reading, not a closure moved on it.
+        const chair = [
+          ...String(f.question ?? '').matchAll(
+            /question (?:now )?is(?: now)?,? that ([^.]*)/gi,
+          ),
+        ].at(-1)?.[1];
+        if (chair) {
+          expect(chair).not.toMatch(/\bbe (now )?put\b|closure|guillotine/i);
+          expect(chair).toMatch(/third time|be now passed/i);
+        }
+        expect(['Passed', 'Not agreed']).toContain(f.outcome);
+        expect(f.outcome === 'Passed').toBe(f.result === 'affirmative');
         expect(q.answer).toBe(Number(f.ayes));
-        expect(q.fact).toBe(`${f.ayes} for, ${f.noes} against`);
+        expect(q.fact).toBe(`${f.outcome}: ${f.ayes} for, ${f.noes} against`);
         expect(q.prompt).toContain(longDate(f.date as string));
+        expect(q.prompt).toContain(
+          f.outcome === 'Passed' ? ' passed the ' : ' was not agreed to ',
+        );
         expect(q.max).toBe(f.house === 'senate' ? 76 : 150);
         expect(q.link.href).toBe(
           `/bill/${f.bill}?section=divisions&division=${f.key}`,
         );
         break;
       case 'grant-program-agency':
-        expect(right(q)).toBe(f.ag);
-        expect(q.fact).toBe(f.ag);
-        expect(f.agencies).toBe(1);
+      case 'grant-program-year-total': {
+        // The program is every round with its name: one agency, summed.
+        const rounds = f.rounds as Record<string, unknown>[];
+        const [total, count] = f['by.2025-26'] as [number, number];
+        expect(rounds[0]!.id).toBe(f.id);
+        expect(path).toBe(rounds[0]!.path);
+        for (const r of rounds) {
+          expect(r.ag).toBe(f.ag);
+          expect(r.agencies).toBe(1);
+        }
+        const sum = (i: number) =>
+          rounds.reduce((s, r) => s + (r['by.2025-26'] as number[])[i]!, 0);
+        expect(total).toBeCloseTo(sum(0), 2);
+        expect(count).toBe(sum(1));
         expect(q.link.href).toBe(`/money/grants?program=${f.id}`);
         expect(q.prompt).toContain(f.n as string);
-        break;
-      case 'grant-program-year-total': {
-        const [total, count] = f['by.2025-26'] as [number, number];
-        expect(q.answer).toBe(Math.round(total));
-        expect(q.fact).toMatch(
-          new RegExp(` across ${count.toLocaleString('en-AU')} grants$`),
-        );
-        expect(q.link.href).toBe(`/money/grants?program=${f.id}`);
+        const grants = `${count.toLocaleString('en-AU')} grants`;
+        if (q.template === 'grant-program-agency') {
+          expect(right(q)).toBe(f.ag);
+          expect(q.fact).toBe(f.ag);
+          expect(q.explanation).toContain(grants);
+          expect(q.explanation.startsWith('Across its ')).toBe(
+            rounds.length > 1,
+          );
+          if (rounds.length > 1)
+            expect(q.explanation).toContain(
+              `Across its ${rounds.length} funding rounds`,
+            );
+        } else {
+          // The slider asks only of a one-round program: its page's figure.
+          expect(rounds).toHaveLength(1);
+          expect(q.answer).toBe(Math.round(total));
+          expect(q.fact).toMatch(new RegExp(` across ${grants}$`));
+        }
         break;
       }
       case 'contract-largest-supplier':
       case 'contract-largest-value': {
         const c = f.contract as Record<string, string>;
         expect(path).toBe(`agencies/${f.agency}.json`);
+        // Named for the department, across all its AusTender records.
+        expect(f.department_records).toContain(f.agency);
+        expect(q.prompt).toContain(`largest ${f.department} contract`);
+        expect(
+          (f.agency_name as string).startsWith(f.department as string),
+        ).toBe(true);
+        expect(q.explanation.includes('AusTender lists it under')).toBe(
+          f.agency_name !== f.department,
+        );
         expect(c.start_date).toMatch(/^2026-/);
         expect(c.supplier_kind).toBe('company');
         expect(Number(c.amount)).toBeGreaterThan(f.runner_up_amount as number);
@@ -295,8 +345,15 @@ test("each question's record opens natively, named, from the reveal's source she
     expect(fromWebPath(destination.original.url)).toEqual(destination.route());
     const family = q.template.split('-')[0]!;
     expect(quizPublisher(q)).toBe(publishers[family]);
+    // Keyed by the template's own name, not its prefix.
     expect(questionAsOf(q)).toBe(
-      (sources.asOf as Record<string, string>)[family],
+      (sources.asOf as Record<string, string>)[q.template],
+    );
+  }
+  for (const template of ['bill-later', 'grant-other', 'contract-x']) {
+    expect(questionAsOf({ template })).toBe(quizAsOf);
+    expect(quizPublisher({ template, source: '' } as never)).not.toMatch(
+      /GrantConnect|AusTender|They Vote For You/,
     );
   }
   const vote = deck.find((q) => q.template === 'division-third-reading')!;
@@ -348,6 +405,27 @@ const runNode = (code: string) =>
     execFileSync(process.execPath, ['--input-type=module', '-e', code], {
       encoding: 'utf8',
     }),
+  );
+
+/** Each family's export date, as the generator test inputs give them. */
+const EXPORT_DATES: Record<string, string> = {
+  bill: '2026-10-04',
+  division: '',
+  grant: '2026-11-11',
+  contract: '2026-11-15',
+};
+/** The sources file keys each date by template name. */
+const byTemplate = (dates: Record<string, string>) =>
+  Object.fromEntries(
+    [
+      'bill-became-law',
+      'bill-portfolio',
+      'division-third-reading',
+      'grant-program-agency',
+      'grant-program-year-total',
+      'contract-largest-supplier',
+      'contract-largest-value',
+    ].map((t) => [t, dates[t.split('-')[0]!]]),
   );
 
 const bill = (key: string, extra: Record<string, unknown>) => ({
@@ -495,12 +573,7 @@ test('the generator leaves out royal commissions, class actions, private members
     'True',
     'False',
   ]);
-  expect(out.asOf).toEqual({
-    bill: '2026-10-04',
-    division: '',
-    grant: '2026-11-11',
-    contract: '2026-11-15',
-  });
+  expect(out.asOf).toEqual(byTemplate(EXPORT_DATES));
   const families = out.deck.map(
     (q: FrontPageQuestion) => q.template.split('-')[0],
   );
@@ -574,12 +647,7 @@ test('the generator reads a portal checkout and names only company suppliers', (
       'divisions',
       'grants',
     ]);
-    expect(out.asOf).toEqual({
-      bill: '2026-10-04',
-      division: '',
-      grant: '2026-11-11',
-      contract: '2026-11-15',
-    });
+    expect(out.asOf).toEqual(byTemplate(EXPORT_DATES));
     const supplier = out.deck.find(
       (q: FrontPageQuestion) => q.template === 'contract-largest-supplier',
     );
@@ -599,5 +667,341 @@ test('the generator reads a portal checkout and names only company suppliers', (
     expect(grant.fact).toBe('$12.5 million across 40 grants');
   } finally {
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+// ---------- regressions from the #485 review, on generator inputs ----------
+// Each case feeds buildTodayDeck the records that produced a wrong question
+// and checks the answer against what the records say, not against the
+// excerpt the generator writes.
+const TITLE_WORDS = [
+  'Harbour',
+  'Meadow',
+  'Lantern',
+  'Orchard',
+  'Granite',
+  'Willow',
+  'Copper',
+  'Falcon',
+  'Juniper',
+  'Marble',
+  'Nectar',
+  'Pebble',
+  'Quartz',
+  'Saffron',
+  'Timber',
+  'Velvet',
+  'Walnut',
+  'Birch',
+  'Cedar',
+  'Glacier',
+  'Hazel',
+  'Kestrel',
+  'Lupin',
+  'Mallee',
+  'Opal',
+];
+const company = (name: string) => ({
+  id: `s-${name.split(' ')[0]}`,
+  name,
+  identity: { kind: 'company' },
+  total: 1,
+});
+const department = (
+  id: string,
+  name: string,
+  contracts: { id: string; amount: number; supplier: string }[],
+  suppliers = [
+    'Alpha Pty Ltd',
+    'Beta Pty Ltd',
+    'Gamma Pty Ltd',
+    'Delta Pty Ltd',
+  ],
+) => ({
+  id,
+  name,
+  suppliers: suppliers.map(company),
+  contracts: contracts.map((c) => ({
+    ...c,
+    amount: String(c.amount),
+    start_date: '2026-03-01',
+    end_date: '2027-03-01',
+    supplier_id: `s-${c.supplier.split(' ')[0]}`,
+  })),
+});
+const sixty = (prefix: string, top = 5_000_000) =>
+  Array.from({ length: 60 }, (_, i) => ({
+    id: `${prefix}${i}`,
+    amount: i === 59 ? top : 1_000_000 + i,
+    supplier: 'Alpha Pty Ltd',
+  }));
+const program = (
+  id: string,
+  n: string,
+  ag: string,
+  total: number,
+  count: number,
+) => ({
+  id,
+  key: id.toLowerCase(),
+  n,
+  ag,
+  agencies: [[ag, total]],
+  c: count,
+  by: { '2025-26': [total, count] },
+  generated: '2026-11-11T01:05:18Z',
+});
+const RIVERS = 'Department of Rivers';
+const AGENCIES = [
+  RIVERS,
+  'Department of Hills',
+  'Department of Plains',
+  'Department of Deserts',
+];
+/** Enough bills, programs and contracts for every family to take turns. */
+function world() {
+  const portfolios = [
+    'Treasury',
+    'Attorney-General',
+    'Home Affairs',
+    'Education',
+    'Finance',
+  ];
+  return {
+    bills: [
+      ...portfolios.flatMap((portfolio, p) =>
+        [0, 1, 2, 3, 4].map((i) =>
+          bill(`P${p}${i}`, {
+            title: `${TITLE_WORDS[p * 5 + i]} Amendment Bill 2026`,
+            portfolio,
+          }),
+        ),
+      ),
+      ...[1, 2, 3, 4].map((n) =>
+        bill(`Off${n}`, {
+          title: `Off${n} Amendment Bill 2025`,
+          introduced: `2025-0${n}-10`,
+          status: 'lapsed',
+          ended: 'discharged',
+          status_as_of: `2025-11-1${n}`,
+          key_dates: [{ stage: 'other', date: `2025-11-1${n}` }],
+        }),
+      ),
+    ],
+    billsAsOf: '2026-10-04',
+    divisions: [] as unknown[],
+    programs: [
+      'Bright',
+      'Clean',
+      'Strong',
+      'Green',
+      'Safe',
+      'Smart',
+      'Open',
+      'Fair',
+    ].map((word, i) =>
+      program(
+        `GO${100 + i}`,
+        `${word} Futures Grants`,
+        AGENCIES[i % 4]!,
+        5_000_000 + i,
+        20,
+      ),
+    ),
+    agencies: [
+      department('a-lakes', 'Department of Lakes', sixty('CNL')),
+      department('a-forests', 'Department of Forests', sixty('CNF')),
+      department('a-coasts', 'Department of Coasts', sixty('CNC')),
+    ],
+    contractsAsOf: '2026-11-15',
+  };
+}
+const buildDeck = (inputs: unknown): { deck: FrontPageQuestion[] } =>
+  runNode(
+    `import { buildTodayDeck } from ${JSON.stringify(library)};
+     console.log(JSON.stringify(buildTodayDeck(${JSON.stringify(inputs)})));`,
+  );
+
+test('a grant program counts every round with its name (review P1, Ideas Grants)', () => {
+  const inputs = world();
+  inputs.programs.push(
+    // One program, two GrantConnect rounds: $140 million across 80 grants.
+    program('GO1', 'Example Research Grants', RIVERS, 100_000_000, 60),
+    program('GO2', 'Example Research Grants', RIVERS, 40_000_000, 20),
+  );
+  const { deck } = buildDeck(inputs);
+  const named = deck.filter((q) =>
+    q.prompt.includes('Example Research Grants'),
+  );
+  expect(named).toHaveLength(1);
+  const [q] = named;
+  expect(q!.template).toBe('grant-program-agency');
+  expect(right(q!)).toBe(RIVERS);
+  expect(q!.explanation).toBe(
+    'Across its 2 funding rounds on GrantConnect, the program awarded 80 grants worth $140 million in 2025-26.',
+  );
+  // A one-round program's total is its own round's.
+  const total = deck.find((x) => x.template === 'grant-program-year-total')!;
+  const source = inputs.programs.find((p) => total.prompt.includes(p.n))!;
+  expect(total.answer).toBe(source.by['2025-26'][0]);
+});
+
+test("a department's largest contract counts all its AusTender records (review P1, DFAT)", () => {
+  const inputs = world();
+  inputs.agencies = [
+    department('a-ex', 'Department of Examples', sixty('CNE')),
+    // The aid program's own record holds the department's largest contract.
+    department(
+      'a-ex-aid',
+      'Department of Examples - Aid Program',
+      [{ id: 'CN9', amount: 9_000_000, supplier: 'Omega Pty Ltd' }],
+      ['Omega Pty Ltd'],
+    ),
+    department('a-lakes', 'Department of Lakes', sixty('CNL')),
+  ];
+  const { deck } = buildDeck(inputs);
+  const q = deck.find((x) => x.prompt.includes('Department of Examples'))!;
+  expect(q.prompt).toMatch(/largest Department of Examples contract/);
+  expect(q.link.href).toBe(
+    '/subject/agency/a-ex-aid?section=contracts&supplier=s-Omega',
+  );
+  expect(q.explanation).toContain(
+    'AusTender lists it under the Department of Examples - Aid Program.',
+  );
+  if (q.template === 'contract-largest-value') expect(q.answer).toBe(9_000_000);
+  else {
+    expect(q.template).toBe('contract-largest-supplier');
+    expect(right(q)).toBe('Omega Pty Ltd');
+  }
+  expect(deck.some((x) => x.prompt.includes('- Aid Program'))).toBe(false);
+});
+
+test('no "did not become law" when a sibling passed that day (review P2, Build to Rent)', () => {
+  const inputs = world();
+  // The newest bill dropped: the first False question, but for its sibling.
+  const pkg = { portfolio: 'Treasury', introduced: '2025-06-05' };
+  inputs.bills.push(
+    bill('Rent', {
+      ...pkg,
+      title: 'Rent Amendment Bill 2025',
+      status: 'lapsed',
+      ended: 'discharged',
+      status_as_of: '2025-12-01',
+      key_dates: [{ stage: 'other', date: '2025-12-01' }],
+    }),
+    bill('RentTax', {
+      ...pkg,
+      title: 'Rent Tax Bill 2025',
+      status_as_of: '2025-12-10',
+      key_dates: [
+        { stage: 'passed', date: '2025-12-01' },
+        { stage: 'royal_assent', date: '2025-12-10' },
+      ],
+    }),
+  );
+  const { deck } = buildDeck(inputs);
+  const tf = deck.filter((q) => q.kind === 'tf');
+  expect(tf.some((q) => right(q) === 'False')).toBe(true);
+  expect(tf.some((q) => q.prompt.includes('Rent Amendment'))).toBe(false);
+  // Without the sibling, it is asked.
+  inputs.bills.pop();
+  expect(
+    buildDeck(inputs).deck.some((q) => q.prompt.includes('Rent Amendment')),
+  ).toBe(true);
+});
+
+test('former department names are never an answer or a wrong option', () => {
+  const inputs = world();
+  const old = 'Department of Old Things';
+  // AusTender still lists it, with no contract starting in 2026.
+  inputs.agencies.push({
+    ...department('a-old', old, []),
+    contracts: [
+      {
+        id: 'CN1',
+        amount: '1000',
+        start_date: '2024-01-01',
+        end_date: '2025-01-01',
+        supplier: 'Alpha Pty Ltd',
+        supplier_id: 's-Alpha',
+      },
+    ],
+  });
+  inputs.programs.push(
+    program('GO9', 'Heritage Futures Grants', old, 9_000_000, 20),
+  );
+  const { deck } = buildDeck(inputs);
+  const grants = deck.filter((q) => q.template.startsWith('grant-'));
+  expect(grants.length).toBeGreaterThan(2);
+  for (const q of deck) expect(texts(q).join(' ')).not.toContain(old);
+});
+
+test("a portfolio is never in its bill's title, even as another form of the word", () => {
+  const inputs = world();
+  inputs.bills.push(
+    bill('Sport', {
+      title: 'Sporting Venues Amendment Bill 2026',
+      portfolio:
+        'Infrastructure, Transport, Regional Development, Communications, Sport and the Arts',
+      status: 'lapsed',
+      ended: 'lapsed',
+      status_as_of: '2026-09-30',
+      key_dates: [{ stage: 'introduced', date: '2026-09-30' }],
+    }),
+    // Dated a year after its introduction: reads as an error, never asked.
+    bill('Later', {
+      title: 'Later Amendment Bill 2027',
+      key_dates: [{ stage: 'royal_assent', date: '2026-09-29' }],
+    }),
+  );
+  const { deck } = buildDeck(inputs);
+  expect(deck.some((q) => q.prompt.includes('Sporting Venues'))).toBe(false);
+  expect(deck.some((q) => q.prompt.includes('Later Amendment'))).toBe(false);
+  const ag = deck.filter(
+    (q) => q.template === 'bill-portfolio' && right(q) === 'Attorney-General',
+  );
+  expect(ag.length).toBeGreaterThan(0);
+  for (const q of ag)
+    expect(q.explanation).toContain("from the Attorney-General's portfolio");
+  const words = (s: string) => s.toLowerCase().match(/[a-z]{5,}/g) ?? [];
+  for (const q of deck.filter((x) => x.template === 'bill-portfolio'))
+    for (const w of words(right(q)!))
+      expect(words(q.prompt).some((v) => v.includes(w) || w.includes(v))).toBe(
+        false,
+      );
+});
+
+test('a vote question asks about the third reading, never the closure moved on it (review P1, 9971/9972)', () => {
+  // The real bill and division records: both divisions are filed as
+  // "…; Third Reading" on 4 March 2026; 9971 (29 to 18) is the closure.
+  const inputs = world();
+  inputs.bills.push(closurePair.bill as never);
+  inputs.divisions = closurePair.divisions;
+  const { deck } = buildDeck(inputs);
+  const votes = deck.filter((q) => q.template === 'division-third-reading');
+  expect(votes).toHaveLength(1);
+  const [q] = votes;
+  expect(q!.answer).toBe(30);
+  expect(q!.fact).toBe('Passed: 30 for, 18 against');
+  expect(q!.prompt).toBe(
+    'The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 passed the Senate at its third reading on 4 March 2026. How many senators voted for it?',
+  );
+  expect(q!.link.href).toBe(
+    '/bill/au-federal-r7378?section=divisions&division=federal-senate-9972',
+  );
+  // A bill whose divisions are only amendments and the closure, or that
+  // reached only a second reading, gets no vote question: no fallback.
+  const r7378 = inputs.bills.at(-1) as { divisions: { key: string }[] };
+  const keys = (...ends: string[]) =>
+    closurePair.bill.divisions.filter((d) =>
+      ends.some((e) => d.key.endsWith(e)),
+    );
+  for (const listed of [keys('9900', '9901', '9951', '9971'), keys('9899')]) {
+    r7378.divisions = listed;
+    expect(
+      buildDeck(inputs).deck.some(
+        (x) => x.template === 'division-third-reading',
+      ),
+    ).toBe(false);
   }
 });

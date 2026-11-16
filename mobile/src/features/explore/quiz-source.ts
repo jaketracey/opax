@@ -34,6 +34,17 @@ const opaxTemplates = new Set([
   'words-record-true-false',
 ]);
 
+/** Today's question templates (scripts/today-question.mjs), by name. */
+const recordTemplates = new Map<string, QuizPublisher>([
+  ['bill-became-law', 'ParlInfo'],
+  ['bill-portfolio', 'ParlInfo'],
+  ['division-third-reading', 'They Vote For You'],
+  ['grant-program-agency', 'GrantConnect'],
+  ['grant-program-year-total', 'GrantConnect'],
+  ['contract-largest-supplier', 'AusTender'],
+  ['contract-largest-value', 'AusTender'],
+]);
+
 /**
  * The E4 table, applied where the engine has not set `publisher`: by
  * template first, then by source. Machine text and topic counts are never
@@ -51,10 +62,9 @@ export function quizPublisher(q: Question): QuizPublisher {
   if (t.startsWith('money-')) return 'AEC annual returns';
   if (topicTemplates.has(t)) return 'OPAX topics';
   if (opaxTemplates.has(t)) return 'OPAX';
+  const record = recordTemplates.get(t);
+  if (record) return record;
   if (t.startsWith('bill-')) return 'ParlInfo';
-  if (t.startsWith('division-')) return 'They Vote For You';
-  if (t.startsWith('grant-')) return 'GrantConnect';
-  if (t.startsWith('contract-')) return 'AusTender';
   if (t.startsWith('speech-')) return 'Hansard';
   if (t.startsWith('photo-')) return 'Wikimedia Commons';
   if (/^AEC\b/.test(q.source)) return 'AEC annual returns';

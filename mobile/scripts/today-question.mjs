@@ -6,6 +6,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { decidingDivision } from '../../portal/public/bill-division.js';
 import { questionId } from './explore-engine.mjs';
 
 /** The grants year the money questions ask about: the last complete one. */
@@ -68,7 +69,8 @@ const grouped = (n) =>
 /** "$5.23 billion", "$431 million", "$1.3 million", "$950,000". */
 export function moneyWords(value) {
   const v = Number(value);
-  const trim = (s) => s.replace(/\.0+$/, '');
+  // "7.50" reads "7.5", "10.0" reads "10".
+  const trim = (s) => s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
   if (v >= 1e9) return `$${trim((v / 1e9).toFixed(v >= 1e10 ? 1 : 2))} billion`;
   if (v >= 1e6) return `$${trim((v / 1e6).toFixed(v >= 1e8 ? 0 : 1))} million`;
   return `$${grouped(v)}`;
@@ -134,20 +136,43 @@ const words = (s) =>
     .replace(/[^a-z ]/g, ' ')
     .split(/\s+/)
     .filter((w) => w.length > 2 && !STOP.has(w));
-const shareWord = (a, b) => words(a).some((w) => words(b).includes(w));
+/**
+ * One word inside the other ("Sport" in "Sporting", "Communications" in
+ * "Telecommunications") or a shared stem ("Financial", "Finance").
+ */
+function sameStem(a, b) {
+  if (a === b) return true;
+  const [short, long] = a.length <= b.length ? [a, b] : [b, a];
+  if (short.length >= 5 && long.includes(short)) return true;
+  let i = 0;
+  while (i < short.length && short[i] === long[i]) i++;
+  return i >= 6;
+}
+export const shareWord = (a, b) =>
+  words(a).some((w) => words(b).some((v) => sameStem(w, v)));
 
 // ---------- bills ----------
 const billTitle = (b) => (b.short_title || b.title || '').trim();
 /** A government bill's portfolio; a private member's bill names its member. */
 const govPortfolio = (b) =>
   b.portfolio && !/^\(|\bMP\b|Senator/.test(b.portfolio) ? b.portfolio : null;
+/** The year in a bill's title ("… Bill (No. 2) 2026"), or null. */
+const titleYear = (b) => {
+  const years = billTitle(b).match(/\b(?:19|20)\d{2}\b/g);
+  return years ? Number(years.at(-1)) : null;
+};
 const usableBill = (b) =>
   b.jurisdiction === 'federal' &&
   !!govPortfolio(b) &&
   billTitle(b).length > 0 &&
   billTitle(b).length <= 90 &&
   !BLOCKED.test(billTitle(b)) &&
-  !BANNED.test(billTitle(b));
+  !BANNED.test(billTitle(b)) &&
+  // A title dated after the bill's introduction reads as an error.
+  !(b.introduced && titleYear(b) > Number(b.introduced.slice(0, 4)));
+/** "the Treasury portfolio", "the Attorney-General's portfolio". */
+const portfolioPhrase = (p) =>
+  `the ${p === 'Attorney-General' ? "Attorney-General's" : p} portfolio`;
 const assentDate = (b) =>
   (b.key_dates ?? []).find((k) => k.stage === 'royal_assent')?.date ?? null;
 const latestDate = (b) =>
@@ -271,7 +296,7 @@ function billPortfolio(b, portfolios) {
     prompt: `Which government portfolio is responsible for the ${title}?`,
     options,
     fact: answer,
-    explanation: `The ${title} is a government bill from the ${answer} portfolio, introduced on ${longDate(b.introduced)}.`,
+    explanation: `The ${title} is a government bill from ${portfolioPhrase(answer)}, introduced on ${longDate(b.introduced)}.`,
     source: 'ParlInfo bill record',
     link: { href: `/bill/${b.key}`, label: title },
     record: billRecord(b),
@@ -280,35 +305,59 @@ function billPortfolio(b, portfolios) {
 }
 
 // ---------- third-reading votes ----------
-/** "Bills — X Bill 2026; Third Reading" → "X Bill 2026", or null. */
-export function thirdReadingBill(name) {
-  if (!/; Third Reading$/i.test(name ?? '')) return null;
-  const title = name
-    .replace(/^bills\s*[-—–]\s*/i, '')
-    .replace(/; Third Reading$/i, '')
-    .trim();
-  // A package of bills voted together names more than one.
-  return title.includes(',') ? null : title;
+const HOUSES = {
+  senate: { name: 'Senate', members: 'senators' },
+  representatives: {
+    name: 'House of Representatives',
+    members: 'members of the House',
+  },
+};
+
+/**
+ * The vote that decided a bill, by the shared rule (portal/public/
+ * bill-division.js, also behind the daily post's vote slide): the third
+ * reading in the second house, else its latest third reading, read from the
+ * question the Chair put, never a closure or other procedural motion filed
+ * under the same name. Null when that is not a third reading, when its
+ * division file is missing, or when it decided a package of bills at once.
+ */
+export function billThirdReading(bill, divisionFiles) {
+  const listed = (bill.divisions ?? []).map((d) => ({
+    ...d,
+    ...(divisionFiles.get(d.key) ?? {}),
+  }));
+  const deciding = decidingDivision(listed, {
+    originatingHouse: bill.originating_house ?? null,
+  });
+  if (!deciding || deciding.reading !== 'third') return null;
+  const d = divisionFiles.get(deciding.division.key);
+  if (!d || !HOUSES[d.house]) return null;
+  // "Bills — A Bill 2026, B Bill 2026; Third Reading" is a package vote.
+  if ((d.name ?? '').match(/\bBill\b/g)?.length > 1) return null;
+  return { d, outcome: deciding.outcome };
 }
 
-function divisionVote(d, bill) {
+function divisionVote({ d, outcome }, bill) {
   const title = billTitle(bill);
-  const senate = d.house === 'senate';
+  const house = HOUSES[d.house];
   const ayes = Number(d.ayes);
   const noes = Number(d.noes);
-  const agreed = d.result === 'affirmative';
+  const on = longDate(d.date);
   return {
     template: 'division-third-reading',
     deck: 'words',
     kind: 'slider',
-    prompt: `How many ${senate ? 'senators' : 'members of the House'} voted for the third reading of the ${title} on ${longDate(d.date)}?`,
+    prompt:
+      outcome === 'Passed'
+        ? `The ${title} passed the ${house.name} at its third reading on ${on}. How many ${house.members} voted for it?`
+        : `The third reading of the ${title} was not agreed to in the ${house.name} on ${on}. How many ${house.members} voted for it?`,
     answer: ayes,
     min: 0,
-    max: senate ? 76 : 150,
+    max: d.house === 'senate' ? 76 : 150,
     scale: 'linear',
     format: 'count',
-    fact: `${grouped(ayes)} for, ${grouped(noes)} against`,
-    explanation: `The third reading is the final vote on a bill in each house. It was ${agreed ? 'agreed to' : 'not agreed to'}, ${ayes} votes to ${noes}.`,
+    fact: `${outcome}: ${grouped(ayes)} for, ${grouped(noes)} against`,
+    explanation: `The third reading is the final vote on a bill in each house. ${grouped(ayes)} ${house.members} voted for it and ${grouped(noes)} against.`,
     source: 'Division record from They Vote For You',
     link: {
       href: `/bill/${bill.key}?section=divisions&division=${d.key}`,
@@ -319,13 +368,17 @@ function divisionVote(d, bill) {
       fields: {
         key: d.key,
         name: d.name,
+        question: d.question ?? null,
         house: d.house,
         date: d.date,
         ayes: d.ayes,
         noes: d.noes,
         result: d.result,
+        outcome,
         bill: bill.key,
         bill_lists_division: true,
+        // Every division the bill lists, which the rule chose from.
+        bill_divisions: (bill.divisions ?? []).map((x) => x.key),
       },
     },
     uses: [d.key, bill.key, `${d.house}:${d.date}`],
@@ -333,84 +386,158 @@ function divisionVote(d, bill) {
 }
 
 // ---------- grant programs ----------
+// GrantConnect publishes each funding round (a GO id) as its own record and
+// reuses a program's name across its rounds. A question names a program, so
+// it counts every round with that name: rounds with the same name and agency
+// are one program here.
+const nameKey = (n) => n.toLowerCase().replace(/\s+/g, ' ').trim();
+const GENERIC = new Set([
+  'program',
+  'programme',
+  'system',
+  'scheme',
+  'grant',
+  'initiative',
+  'the',
+  'and',
+  'for',
+]);
 /**
- * A program a reader can name: a GrantConnect GO id, a real name with no
- * acronyms, numbers or one-off projects, one agency and enough grants.
+ * Twin names ("Incentive System", "Incentives Programme") share this key, so
+ * the deck asks about one of them.
  */
-const usableProgram = (p) =>
-  /^GO\d+$/.test(p.id) &&
-  p.n &&
-  p.n !== p.id &&
-  p.n.length <= 70 &&
-  !/\s-\s|\(|\b[A-Z]{2,}\b|\d|\bSppt\b|\bProject\b/.test(p.n) &&
-  !BLOCKED.test(p.n) &&
-  p.ag &&
-  (p.agencies ?? []).length === 1 &&
-  p.c >= 10 &&
-  Array.isArray(p.by?.[GRANT_YEAR]) &&
-  p.by[GRANT_YEAR][1] >= 5;
+const twinKey = (n) =>
+  (n.toLowerCase().match(/[a-z]+/g) ?? [])
+    .map((w) => (w.length > 3 && w.endsWith('s') ? w.slice(0, -1) : w))
+    .filter((w) => !GENERIC.has(w))
+    .join(' ');
+const yearMoney = (p) => p.by?.[GRANT_YEAR] ?? null;
+
+/**
+ * Programs with grants in GRANT_YEAR: every round that carries the name,
+ * the largest first, with their summed total and count. The agency is the
+ * one every round names, or null when the rounds disagree.
+ */
+export function grantPrograms(programs) {
+  const byName = new Map();
+  for (const p of programs)
+    if (p.n && Array.isArray(yearMoney(p)))
+      byName.set(nameKey(p.n), [...(byName.get(nameKey(p.n)) ?? []), p]);
+  return [...byName.values()].map((list) => {
+    const rounds = [...list].sort(
+      (a, b) => yearMoney(b)[0] - yearMoney(a)[0] || a.id.localeCompare(b.id),
+    );
+    const agencies = new Set(rounds.map((p) => p.ag));
+    const sole = rounds.every((p) => (p.agencies ?? []).length === 1);
+    return {
+      n: rounds[0].n,
+      ag: agencies.size === 1 && sole ? rounds[0].ag : null,
+      main: rounds[0],
+      rounds,
+      total: rounds.reduce((s, p) => s + yearMoney(p)[0], 0),
+      count: rounds.reduce((s, p) => s + yearMoney(p)[1], 0),
+      c: rounds.reduce((s, p) => s + (p.c ?? 0), 0),
+    };
+  });
+}
+
+/**
+ * A program a reader can name: GrantConnect GO ids, a real name with no
+ * acronyms, numbers or one-off projects, one current agency and enough
+ * grants.
+ */
+const usableProgram = (g, former) =>
+  g.rounds.every((p) => /^GO\d+$/.test(p.id) && p.n !== p.id) &&
+  g.n.length <= 70 &&
+  !/\s-\s|\(|\b[A-Z]{2,}\b|\d|\bSppt\b|\bProject\b/.test(g.n) &&
+  !BLOCKED.test(g.n) &&
+  !!g.ag &&
+  !former.has(g.ag) &&
+  g.c >= 10 &&
+  g.count >= 5;
 /** "the Medicare Urgent Care Clinics program", "the Industry Growth Program". */
 const programName = (n) =>
-  /\b(program|programme|fund|scheme|initiative)$/i.test(n)
+  /\b(program|programme|fund|scheme|initiative|system)$/i.test(n)
     ? `the ${n}`
     : `the ${n} program`;
-const programRecord = (p) => ({
-  path: `grants/federal/programs/${p.key}.json`,
+const programRecord = (g) => ({
+  path: `grants/federal/programs/${g.main.key}.json`,
   fields: {
-    id: p.id,
-    n: p.n,
-    ag: p.ag,
-    agencies: (p.agencies ?? []).length,
-    [`by.${GRANT_YEAR}`]: p.by[GRANT_YEAR],
+    id: g.main.id,
+    n: g.n,
+    ag: g.ag,
+    [`by.${GRANT_YEAR}`]: [g.total, g.count],
+    // Every round with this name and grants in GRANT_YEAR.
+    rounds: g.rounds.map((p) => ({
+      path: `grants/federal/programs/${p.key}.json`,
+      id: p.id,
+      ag: p.ag,
+      agencies: (p.agencies ?? []).length,
+      [`by.${GRANT_YEAR}`]: yearMoney(p),
+    })),
   },
 });
+const programLink = (g) => ({
+  href: `/money/grants?program=${g.main.id}`,
+  label: g.n,
+});
+// One question per program, and one of a pair of twin names.
+const programUses = (g) => [
+  ...g.rounds.map((p) => p.id),
+  `program:${twinKey(g.n)}`,
+];
 
-function programAgency(p, agencies) {
-  if (shareWord(p.ag, p.n)) return null;
+function programAgency(g, agencies) {
+  if (shareWord(g.ag, g.n)) return null;
   const options = choices(
-    p.ag,
+    g.ag,
     agencies.filter(
-      (a) => a !== p.ag && !shareWord(a, p.ag) && !shareWord(a, p.n),
+      (a) => a !== g.ag && !shareWord(a, g.ag) && !shareWord(a, g.n),
     ),
-    p.id,
+    g.main.id,
   );
   if (!options) return null;
-  const [total, count] = p.by[GRANT_YEAR];
+  const awarded = `${grouped(g.count)} grants worth ${moneyWords(g.total)} in ${GRANT_YEAR}`;
   return {
     template: 'grant-program-agency',
     deck: 'money',
     kind: 'mc',
-    prompt: `Which agency runs ${programName(p.n)}?`,
+    prompt: `Which agency runs ${programName(g.n)}?`,
     options,
-    fact: p.ag,
-    explanation: `The program awarded ${grouped(count)} grants worth ${moneyWords(total)} in ${GRANT_YEAR}.`,
+    fact: g.ag,
+    explanation:
+      g.rounds.length > 1
+        ? `Across its ${g.rounds.length} funding rounds on GrantConnect, the program awarded ${awarded}.`
+        : `The program awarded ${awarded}.`,
     source: 'GrantConnect grant awards',
-    link: { href: `/money/grants?program=${p.id}`, label: p.n },
-    record: programRecord(p),
-    // One question per program name: GrantConnect repeats some names.
-    uses: [p.id, `program:${p.n.toLowerCase()}`],
+    link: programLink(g),
+    record: programRecord(g),
+    uses: programUses(g),
   };
 }
 
-function programYearTotal(p) {
-  const [total, count] = p.by[GRANT_YEAR];
+/**
+ * A program's GRANT_YEAR total. Asked only of a program with one round, so
+ * the figure is the one its page shows.
+ */
+function programYearTotal(g) {
+  if (g.rounds.length !== 1) return null;
   return {
     template: 'grant-program-year-total',
     deck: 'money',
     kind: 'slider',
-    prompt: `How much did ${programName(p.n)} award in grants in ${GRANT_YEAR}?`,
-    answer: Math.round(total),
+    prompt: `How much did ${programName(g.n)} award in grants in ${GRANT_YEAR}?`,
+    answer: Math.round(g.total),
     min: 1_000_000,
     max: 10_000_000_000,
     scale: 'log',
     format: 'money',
-    fact: `${moneyWords(total)} across ${grouped(count)} grants`,
-    explanation: `${capital(the(p.ag))} runs it. The figure counts grants published on GrantConnect for the ${GRANT_YEAR} financial year.`,
+    fact: `${moneyWords(g.total)} across ${grouped(g.count)} grants`,
+    explanation: `${capital(the(g.ag))} runs it. The figure counts grants published on GrantConnect for the ${GRANT_YEAR} financial year.`,
     source: 'GrantConnect grant awards',
-    link: { href: `/money/grants?program=${p.id}`, label: p.n },
-    record: programRecord(p),
-    // One question per program name: GrantConnect repeats some names.
-    uses: [p.id, `program:${p.n.toLowerCase()}`],
+    link: programLink(g),
+    record: programRecord(g),
+    uses: programUses(g),
   };
 }
 
@@ -448,9 +575,71 @@ const contractsLink = (agency, contract) => ({
   label: agency.name,
 });
 
-/** Each agency's largest contract that starts in CONTRACT_YEAR, or null. */
-export function largestContract(agency) {
-  const starts = (agency.contracts ?? []).filter((c) =>
+/** "Department of Foreign Affairs and Trade - Australian Aid Program" → its department. */
+const departmentName = (name) => name.split(' - ')[0].trim();
+
+/**
+ * AusTender lists some departments under more than one agency record
+ * ("Department of Foreign Affairs and Trade" and "Department of Foreign
+ * Affairs and Trade - Australian Aid Program"). A reader takes them as one
+ * department, so a department's contracts and suppliers are those of all its
+ * records. Each contract keeps the record it is `listed` under.
+ */
+export function departments(agencies) {
+  const byName = new Map();
+  for (const a of agencies)
+    byName.set(departmentName(a.name), [
+      ...(byName.get(departmentName(a.name)) ?? []),
+      a,
+    ]);
+  return [...byName].map(([name, records]) => {
+    const suppliers = new Map();
+    for (const s of records.flatMap((a) => a.suppliers ?? []))
+      suppliers.set(
+        s.id,
+        suppliers.has(s.id)
+          ? { ...s, total: suppliers.get(s.id).total + s.total }
+          : s,
+      );
+    return {
+      name,
+      records,
+      contracts: records.flatMap((a) =>
+        (a.contracts ?? []).map((c) => ({ ...c, listed: a })),
+      ),
+      // The largest first, as each record lists them.
+      suppliers:
+        records.length === 1
+          ? (records[0].suppliers ?? [])
+          : [...suppliers.values()].sort(
+              (a, b) => Number(b.total) - Number(a.total),
+            ),
+    };
+  });
+}
+
+/**
+ * Agency names AusTender still lists with past contracts but none starting
+ * in CONTRACT_YEAR: departments since renamed, such as the Department of
+ * Health and Aged Care. Never an answer or a wrong option.
+ */
+export function formerAgencyNames(agencies) {
+  return new Set(
+    agencies
+      .filter(
+        (a) =>
+          (a.contracts ?? []).length > 0 &&
+          !a.contracts.some((c) =>
+            (c.start_date ?? '').startsWith(CONTRACT_YEAR),
+          ),
+      )
+      .map((a) => a.name),
+  );
+}
+
+/** A department's largest contract that starts in CONTRACT_YEAR, or null. */
+export function largestContract(department) {
+  const starts = (department.contracts ?? []).filter((c) =>
     (c.start_date ?? '').startsWith(CONTRACT_YEAR),
   );
   if (starts.length < 50) return null;
@@ -467,16 +656,20 @@ export function largestContract(agency) {
   };
 }
 
-const contractRecord = (agency, largest, optionNames) => ({
-  path: `agencies/${agency.id}.json`,
+const contractRecord = (department, largest, optionNames) => ({
+  path: `agencies/${largest.top.listed.id}.json`,
   fields: {
-    agency: agency.id,
-    agency_name: agency.name,
+    agency: largest.top.listed.id,
+    agency_name: largest.top.listed.name,
+    department: department.name,
+    // Every AusTender record of the department, largest counted across all.
+    department_records: department.records.map((a) => a.id),
     contract: {
       id: largest.top.id,
       supplier: largest.top.supplier,
       supplier_id: largest.top.supplier_id,
-      supplier_kind: supplierOf(agency, largest.top)?.identity?.kind ?? null,
+      supplier_kind:
+        supplierOf(largest.top.listed, largest.top)?.identity?.kind ?? null,
       amount: largest.top.amount,
       start_date: largest.top.start_date,
       end_date: largest.top.end_date,
@@ -486,11 +679,16 @@ const contractRecord = (agency, largest, optionNames) => ({
     suppliers: optionNames,
   },
 });
+/** Where the contract is listed, when that is not the department's own name. */
+const listedUnder = (department, top) =>
+  top.listed.name === department.name
+    ? ''
+    : ` AusTender lists it under ${the(top.listed.name)}.`;
 
-function contractSupplier(agency, largest) {
+function contractSupplier(department, largest) {
   const { top } = largest;
-  if (!isCompany(supplierOf(agency, top))) return null;
-  const others = (agency.suppliers ?? [])
+  if (!isCompany(supplierOf(top.listed, top))) return null;
+  const others = (department.suppliers ?? [])
     .filter(
       (s) =>
         s.name !== top.supplier &&
@@ -510,40 +708,40 @@ function contractSupplier(agency, largest) {
     template: 'contract-largest-supplier',
     deck: 'money',
     kind: 'mc',
-    prompt: `Which company holds the largest ${agency.name} contract that starts in ${CONTRACT_YEAR}? It is worth ${moneyWords(top.amount)}.`,
+    prompt: `Which company holds the largest ${department.name} contract that starts in ${CONTRACT_YEAR}? It is worth ${moneyWords(top.amount)}.`,
     options,
     fact: top.supplier,
-    explanation: `Contract ${top.id} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}. The other companies are among the agency's largest suppliers.`,
+    explanation: `Contract ${top.id} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}.${listedUnder(department, top)} The other companies are among the agency's largest suppliers.`,
     source: 'AusTender contract notices',
-    link: contractsLink(agency, top),
+    link: contractsLink(top.listed, top),
     record: contractRecord(
-      agency,
+      department,
       largest,
       options.map((o) => o.label),
     ),
-    uses: [agency.id, top.id],
+    uses: [`agency:${department.name}`, top.id],
   };
 }
 
-function contractValue(agency, largest) {
+function contractValue(department, largest) {
   const { top } = largest;
-  if (!isCompany(supplierOf(agency, top))) return null;
+  if (!isCompany(supplierOf(top.listed, top))) return null;
   return {
     template: 'contract-largest-value',
     deck: 'money',
     kind: 'slider',
-    prompt: `How much is the largest ${agency.name} contract that starts in ${CONTRACT_YEAR} worth?`,
+    prompt: `How much is the largest ${department.name} contract that starts in ${CONTRACT_YEAR} worth?`,
     answer: Math.round(Number(top.amount)),
     min: 1_000_000,
     max: 10_000_000_000,
     scale: 'log',
     format: 'money',
     fact: moneyWords(top.amount),
-    explanation: `Contract ${top.id} with ${top.supplier} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}. Values are contract awards published on AusTender, not money spent.`,
+    explanation: `Contract ${top.id} with ${top.supplier} runs from ${longDate(top.start_date)} to ${longDate(top.end_date)}.${listedUnder(department, top)} Values are contract awards published on AusTender, not money spent.`,
     source: 'AusTender contract notices',
-    link: contractsLink(agency, top),
-    record: contractRecord(agency, largest, []),
-    uses: [agency.id, top.id],
+    link: contractsLink(top.listed, top),
+    record: contractRecord(department, largest, []),
+    uses: [`agency:${department.name}`, top.id],
   };
 }
 
@@ -584,42 +782,49 @@ export function buildTodayDeck(inputs) {
     .map(([p]) => p);
 
   const passed = current.filter((b) => b.status === 'passed').sort(newestFirst);
+  // A package's bills share a portfolio and an introduction date. When a
+  // sibling passed on the day a bill was dropped, the measure may have gone
+  // through in the sibling (the Build to Rent bill, 28 November 2024), so
+  // "it did not become law" misleads: no question.
+  const packageOf = (b) => `${b.portfolio}|${b.introduced}`;
+  const laws = new Map();
+  for (const b of bills)
+    if (b.status === 'passed' && assentDate(b) && b.introduced)
+      laws.set(packageOf(b), [...(laws.get(packageOf(b)) ?? []), b]);
+  const siblingPassedThatDay = (b) =>
+    (laws.get(packageOf(b)) ?? []).some((s) =>
+      (s.key_dates ?? []).some((k) => k.date === endingDate(b)),
+    );
   const ended = bills
-    .filter((b) => usableBill(b) && billEnding(b))
+    .filter((b) => usableBill(b) && billEnding(b) && !siblingPassedThatDay(b))
     .sort(newestFirst);
 
-  const billsByTitle = new Map(
-    current.map((b) => [billTitle(b).toLowerCase(), b]),
-  );
-  const votes = divisions
-    .map((d) => {
-      const title = thirdReadingBill(d.name);
-      const bill = title && billsByTitle.get(title.toLowerCase());
-      return bill && (bill.divisions ?? []).some((x) => x.key === d.key)
-        ? { d, bill }
-        : null;
-    })
-    .filter(Boolean)
+  const divisionFiles = new Map(divisions.map((d) => [d.key, d]));
+  const votes = current
+    .map((bill) => ({ bill, vote: billThirdReading(bill, divisionFiles) }))
+    .filter((x) => x.vote)
     .sort(
       (x, y) =>
-        y.d.date.localeCompare(x.d.date) || x.d.key.localeCompare(y.d.key),
+        y.vote.d.date.localeCompare(x.vote.d.date) ||
+        x.vote.d.key.localeCompare(y.vote.d.key),
     );
 
-  const yearPrograms = programs
-    .filter(usableProgram)
-    .sort(
-      (a, b) =>
-        b.by[GRANT_YEAR][0] - a.by[GRANT_YEAR][0] || a.id.localeCompare(b.id),
-    );
+  const former = formerAgencyNames(agencies);
+  const yearPrograms = grantPrograms(programs)
+    .filter((g) => usableProgram(g, former))
+    .sort((a, b) => b.total - a.total || a.main.id.localeCompare(b.main.id));
+  // Wrong options: agencies with grants this year, under a current name.
   const programAgencies = [
     ...new Set(
-      programs.filter((p) => p.by?.[GRANT_YEAR] && p.ag).map((p) => p.ag),
+      programs
+        .filter((p) => yearMoney(p) && p.ag && !former.has(p.ag))
+        .map((p) => p.ag),
     ),
   ].sort();
 
-  const largest = agencies
-    .filter((a) => !BLOCKED.test(a.name))
-    .map((a) => ({ agency: a, largest: largestContract(a) }))
+  const largest = departments(agencies)
+    .filter((d) => !d.records.some((a) => BLOCKED.test(a.name)))
+    .map((d) => ({ department: d, largest: largestContract(d) }))
     .filter((x) => x.largest)
     .sort(
       (x, y) => Number(y.largest.top.amount) - Number(x.largest.top.amount),
@@ -632,16 +837,21 @@ export function buildTodayDeck(inputs) {
     'bill-portfolio': [...current]
       .sort(newestFirst)
       .map((b) => billPortfolio(b, portfolios)),
-    'division-third-reading': votes.map(({ d, bill }) => divisionVote(d, bill)),
-    'grant-program-agency': yearPrograms.map((p) =>
-      programAgency(p, programAgencies),
+    'division-third-reading': votes.map(({ vote, bill }) =>
+      divisionVote(vote, bill),
     ),
+    // A program with several rounds goes to the agency question, whose
+    // answer does not hang on one round's total.
+    'grant-program-agency': [
+      ...yearPrograms.filter((g) => g.rounds.length > 1),
+      ...yearPrograms.filter((g) => g.rounds.length === 1),
+    ].map((g) => programAgency(g, programAgencies)),
     'grant-program-year-total': yearPrograms.map(programYearTotal),
     'contract-largest-supplier': largest.map((x) =>
-      contractSupplier(x.agency, x.largest),
+      contractSupplier(x.department, x.largest),
     ),
     'contract-largest-value': largest.map((x) =>
-      contractValue(x.agency, x.largest),
+      contractValue(x.department, x.largest),
     ),
   };
 
@@ -695,7 +905,8 @@ export function buildTodayDeck(inputs) {
   )
     delete records[deck.pop().id];
 
-  const asOf = {
+  // Each template's source date, by the template's own name.
+  const exported = {
     bill: inputs.billsAsOf,
     division: divisions.reduce((m, d) => (d.date > m ? d.date : m), ''),
     grant: programs
@@ -703,6 +914,9 @@ export function buildTodayDeck(inputs) {
       .slice(0, 10),
     contract: inputs.contractsAsOf,
   };
+  const asOf = Object.fromEntries(
+    [...new Set(ROTATION)].map((t) => [t, exported[family(t)]]),
+  );
   return { deck, records, asOf };
 }
 
@@ -746,9 +960,11 @@ export function loadTodayInputs(publicRoot) {
     (f) => at('divisions', f),
   )
     .filter((d) => d.jurisdiction === 'federal')
-    .map(({ key, name, house, date, ayes, noes, result }) => ({
+    .map(({ key, name, question, bills, house, date, ayes, noes, result }) => ({
       key,
       name,
+      question,
+      bills,
       house,
       date,
       ayes,

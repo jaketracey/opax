@@ -224,7 +224,7 @@ export function sliderStart(q: Question): number {
 /** "votes" for a vote count, "speeches" where the prompt counts speeches. */
 export function guessUnit(q: Question): string {
   if (q.format !== 'count') return '';
-  if (q.template.startsWith('division-')) return 'votes';
+  if (q.template === 'division-third-reading') return 'votes';
   return /\bspeech(es)?\b/i.test(q.prompt) ? 'speeches' : '';
 }
 /** The readout: "$930,000", "24,000 speeches", "2013". */

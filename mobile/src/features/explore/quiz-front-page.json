@@ -24,54 +24,54 @@
     }
   },
   {
-    "id": "qea99a668",
+    "id": "qa4167c0f",
     "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which agency runs the Commonwealth Home Support Program?",
+    "prompt": "Which agency runs the Jobs, Land and the Economy program?",
     "options": [
       {
         "label": "National Indigenous Australians Agency",
-        "correct": false
-      },
-      {
-        "label": "Department of Education",
-        "correct": false
-      },
-      {
-        "label": "Department of Health, Disability and Ageing",
         "correct": true
       },
       {
-        "label": "Australian Research Council",
+        "label": "Department of Employment and Workplace Relations",
+        "correct": false
+      },
+      {
+        "label": "Attorney-General's Department",
+        "correct": false
+      },
+      {
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
         "correct": false
       }
     ],
-    "fact": "Department of Health, Disability and Ageing",
-    "explanation": "The program awarded 5,773 grants worth $7.50 billion in 2025-26.",
+    "fact": "National Indigenous Australians Agency",
+    "explanation": "Across its 5 funding rounds on GrantConnect, the program awarded 562 grants worth $1.71 billion in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7466",
-      "label": "Commonwealth Home Support Program"
+      "href": "/money/grants?program=GO7748",
+      "label": "Jobs, Land and the Economy"
     }
   },
   {
-    "id": "q649950c6",
+    "id": "q925aec13",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "How many members of the House voted for the third reading of the Interactive Gambling Amendment (Gambling Reform) Bill 2026 on 18 August 2026?",
-    "answer": 103,
+    "prompt": "The Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026 passed the Senate at its third reading on 20 August 2026. How many senators voted for it?",
+    "answer": 33,
     "min": 0,
-    "max": 150,
+    "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "103 for, 14 against",
-    "explanation": "The third reading is the final vote on a bill in each house. It was agreed to, 103 votes to 14.",
+    "fact": "Passed: 33 for, 9 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 33 senators voted for it and 9 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7520?section=divisions&division=federal-representatives-10611",
-      "label": "Interactive Gambling Amendment (Gambling Reform) Bill 2026, third reading"
+      "href": "/bill/au-federal-r7449?section=divisions&division=federal-senate-10729",
+      "label": "Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026, third reading"
     }
   },
   {
@@ -114,19 +114,19 @@
     "prompt": "Which government portfolio is responsible for the Regulatory Reform Omnibus Bill 2026?",
     "options": [
       {
-        "label": "Finance",
-        "correct": true
-      },
-      {
         "label": "Home Affairs",
         "correct": false
+      },
+      {
+        "label": "Finance",
+        "correct": true
       },
       {
         "label": "Treasury",
         "correct": false
       },
       {
-        "label": "Education",
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
         "correct": false
       }
     ],
@@ -139,41 +139,41 @@
     }
   },
   {
-    "id": "q5c9fa9b2",
+    "id": "qaabc3515",
     "template": "grant-program-year-total",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much did the Jobs, Land and the Economy program award in grants in 2025-26?",
-    "answer": 1266600251,
+    "prompt": "How much did the Commonwealth Home Support Program award in grants in 2025-26?",
+    "answer": 7497189963,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$1.27 billion across 70 grants",
-    "explanation": "The National Indigenous Australians Agency runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "$7.5 billion across 5,773 grants",
+    "explanation": "The Department of Health, Disability and Ageing runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7748",
-      "label": "Jobs, Land and the Economy"
+      "href": "/money/grants?program=GO7466",
+      "label": "Commonwealth Home Support Program"
     }
   },
   {
-    "id": "q81d3e113",
+    "id": "q41681f98",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "How many senators voted for the third reading of the Northern Australia Infrastructure Facility Amendment Bill 2026 on 30 June 2026?",
-    "answer": 29,
+    "prompt": "The Interactive Gambling Amendment (Gambling Reform) Bill 2026 passed the House of Representatives at its third reading on 18 August 2026. How many members of the House voted for it?",
+    "answer": 103,
     "min": 0,
-    "max": 76,
+    "max": 150,
     "scale": "linear",
     "format": "count",
-    "fact": "29 for, 10 against",
-    "explanation": "The third reading is the final vote on a bill in each house. It was agreed to, 29 votes to 10.",
+    "fact": "Passed: 103 for, 14 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 103 members of the House voted for it and 14 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7445?section=divisions&division=federal-senate-10516",
-      "label": "Northern Australia Infrastructure Facility Amendment Bill 2026, third reading"
+      "href": "/bill/au-federal-r7520?section=divisions&division=federal-representatives-10611",
+      "label": "Interactive Gambling Amendment (Gambling Reform) Bill 2026, third reading"
     }
   },
   {
@@ -220,54 +220,54 @@
     }
   },
   {
-    "id": "qcfff6420",
+    "id": "q1342ef12",
     "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which agency runs the Australian Apprenticeships Incentive System program?",
+    "prompt": "Which agency runs the Discovery Projects program?",
     "options": [
       {
-        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-        "correct": false
+        "label": "Australian Research Council",
+        "correct": true
       },
       {
-        "label": "Department of Agriculture, Fisheries and Forestry",
+        "label": "National Indigenous Australians Agency",
         "correct": false
       },
       {
         "label": "Department of Employment and Workplace Relations",
-        "correct": true
+        "correct": false
       },
       {
-        "label": "Australian Research Council",
+        "label": "Department of Climate Change, Energy, the Environment and Water",
         "correct": false
       }
     ],
-    "fact": "Department of Employment and Workplace Relations",
-    "explanation": "The program awarded 31 grants worth $951 million in 2025-26.",
+    "fact": "Australian Research Council",
+    "explanation": "Across its 4 funding rounds on GrantConnect, the program awarded 669 grants worth $465 million in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO5667",
-      "label": "Australian Apprenticeships Incentive System"
+      "href": "/money/grants?program=GO7575",
+      "label": "Discovery Projects"
     }
   },
   {
-    "id": "qd50a614b",
+    "id": "q4fab4c70",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "How many members of the House voted for the third reading of the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026 on 4 June 2026?",
-    "answer": 94,
+    "prompt": "The Northern Australia Infrastructure Facility Amendment Bill 2026 passed the Senate at its third reading on 30 June 2026. How many senators voted for it?",
+    "answer": 29,
     "min": 0,
-    "max": 150,
+    "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "94 for, 49 against",
-    "explanation": "The third reading is the final vote on a bill in each house. It was agreed to, 94 votes to 49.",
+    "fact": "Passed: 29 for, 10 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 29 senators voted for it and 10 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7493?section=divisions&division=federal-representatives-10262",
-      "label": "Treasury Laws Amendment (Tax Reform No. 1) Bill 2026, third reading"
+      "href": "/bill/au-federal-r7445?section=divisions&division=federal-senate-10516",
+      "label": "Northern Australia Infrastructure Facility Amendment Bill 2026, third reading"
     }
   },
   {
@@ -303,73 +303,73 @@
     }
   },
   {
-    "id": "q2edd231e",
+    "id": "qbbf4f486",
     "template": "bill-portfolio",
     "deck": "words",
     "kind": "mc",
-    "prompt": "Which government portfolio is responsible for the Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026?",
+    "prompt": "Which government portfolio is responsible for the Universities Accord (Opening the Doors of Opportunity) Bill 2026?",
     "options": [
       {
-        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "label": "Education",
         "correct": true
       },
       {
-        "label": "Attorney-General",
+        "label": "Treasury",
         "correct": false
       },
       {
-        "label": "Education",
+        "label": "Home Affairs",
         "correct": false
       },
       {
-        "label": "Finance",
+        "label": "Climate Change, Energy, the Environment and Water",
         "correct": false
       }
     ],
-    "fact": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-    "explanation": "The Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026 is a government bill from the Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio, introduced on 25 June 2026.",
+    "fact": "Education",
+    "explanation": "The Universities Accord (Opening the Doors of Opportunity) Bill 2026 is a government bill from the Education portfolio, introduced on 25 June 2026.",
     "source": "ParlInfo bill record",
     "link": {
-      "href": "/bill/au-federal-r7499",
-      "label": "Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026"
+      "href": "/bill/au-federal-r7501",
+      "label": "Universities Accord (Opening the Doors of Opportunity) Bill 2026"
     }
   },
   {
-    "id": "q2e5b886a",
+    "id": "q17235701",
     "template": "grant-program-year-total",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much did the Medicare Urgent Care Clinics program award in grants in 2025-26?",
-    "answer": 839080119,
+    "prompt": "How much did the Australian Apprenticeships Incentive System award in grants in 2025-26?",
+    "answer": 950644698,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$839 million across 31 grants",
-    "explanation": "The Department of Health, Disability and Ageing runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "$951 million across 31 grants",
+    "explanation": "The Department of Employment and Workplace Relations runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7846",
-      "label": "Medicare Urgent Care Clinics"
+      "href": "/money/grants?program=GO5667",
+      "label": "Australian Apprenticeships Incentive System"
     }
   },
   {
-    "id": "q757e3a5a",
+    "id": "q164d5174",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "How many senators voted for the third reading of the Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 on 4 March 2026?",
-    "answer": 29,
+    "prompt": "The Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026 passed the Senate at its third reading on 29 June 2026. How many senators voted for it?",
+    "answer": 33,
     "min": 0,
     "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "29 for, 18 against",
-    "explanation": "The third reading is the final vote on a bill in each house. It was agreed to, 29 votes to 18.",
+    "fact": "Passed: 33 for, 24 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 33 senators voted for it and 24 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7378?section=divisions&division=federal-senate-9971",
-      "label": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025, third reading"
+      "href": "/bill/au-federal-r7436?section=divisions&division=federal-senate-10639",
+      "label": "Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026, third reading"
     }
   },
   {
@@ -392,11 +392,11 @@
     }
   },
   {
-    "id": "q3d198eba",
+    "id": "qb5c7526b",
     "template": "bill-became-law",
     "deck": "words",
     "kind": "tf",
-    "prompt": "True or false: The Biosecurity Amendment (Improving Operational Efficiency) Bill 2026 became law.",
+    "prompt": "True or false: The Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026 became law.",
     "options": [
       {
         "label": "True",
@@ -407,12 +407,12 @@
         "correct": false
       }
     ],
-    "fact": "True. It received Royal Assent on 15 September 2026.",
+    "fact": "True. It received Royal Assent on 18 September 2026.",
     "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
     "source": "ParlInfo bill record",
     "link": {
-      "href": "/bill/au-federal-r7518",
-      "label": "Biosecurity Amendment (Improving Operational Efficiency) Bill 2026"
+      "href": "/bill/au-federal-r7499",
+      "label": "Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026"
     }
   },
   {
@@ -423,11 +423,7 @@
     "prompt": "Which agency runs the Investigator Grants program?",
     "options": [
       {
-        "label": "Department of Industry, Science and Resources",
-        "correct": false
-      },
-      {
-        "label": "Department of Defence",
+        "label": "Department of Social Services",
         "correct": false
       },
       {
@@ -435,12 +431,16 @@
         "correct": true
       },
       {
+        "label": "Department of Climate Change, Energy, the Environment and Water",
+        "correct": false
+      },
+      {
         "label": "Attorney-General's Department",
         "correct": false
       }
     ],
     "fact": "National Health and Medical Research Council (NHMRC)",
-    "explanation": "The program awarded 196 grants worth $360 million in 2025-26.",
+    "explanation": "Across its 2 funding rounds on GrantConnect, the program awarded 227 grants worth $423 million in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
       "href": "/money/grants?program=GO7020",
@@ -448,18 +448,37 @@
     }
   },
   {
-    "id": "qd52ae489",
+    "id": "qa7ee2f58",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026 passed the Senate at its third reading on 14 May 2026. How many senators voted for it?",
+    "answer": 34,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 34 for, 27 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 34 senators voted for it and 27 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-s1493?section=divisions&division=federal-senate-10220",
+      "label": "Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "q759c4d3a",
     "template": "contract-largest-supplier",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which company holds the largest Department of Foreign Affairs and Trade - Australian Aid Program contract that starts in 2026? It is worth $232 million.",
+    "prompt": "Which company holds the largest Department of Foreign Affairs and Trade contract that starts in 2026? It is worth $232 million.",
     "options": [
       {
         "label": "Tetra Tech International Development Pty Ltd",
         "correct": false
       },
       {
-        "label": "Adam Smith International (Australia) Pty Ltd",
+        "label": "Johnstaff International Development Pty Ltd",
         "correct": false
       },
       {
@@ -472,7 +491,7 @@
       }
     ],
     "fact": "DT Global Asia Pacific Pty Ltd",
-    "explanation": "Contract CN4233163 runs from 12 April 2026 to 27 February 2031. The other companies are among the agency's largest suppliers.",
+    "explanation": "Contract CN4233163 runs from 12 April 2026 to 27 February 2031. AusTender lists it under the Department of Foreign Affairs and Trade - Australian Aid Program. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
       "href": "/subject/agency/a-3a413b064b4b6ded113e?section=contracts&supplier=s-ea1286d8a2b718dc184a",
@@ -480,22 +499,22 @@
     }
   },
   {
-    "id": "qbbf4f486",
+    "id": "q13d310ac",
     "template": "bill-portfolio",
     "deck": "words",
     "kind": "mc",
-    "prompt": "Which government portfolio is responsible for the Universities Accord (Opening the Doors of Opportunity) Bill 2026?",
+    "prompt": "Which government portfolio is responsible for the Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026?",
     "options": [
       {
-        "label": "Education",
-        "correct": true
-      },
-      {
-        "label": "Treasury",
+        "label": "Health, Disability and Ageing",
         "correct": false
       },
       {
         "label": "Climate Change, Energy, the Environment and Water",
+        "correct": true
+      },
+      {
+        "label": "Home Affairs",
         "correct": false
       },
       {
@@ -503,50 +522,69 @@
         "correct": false
       }
     ],
-    "fact": "Education",
-    "explanation": "The Universities Accord (Opening the Doors of Opportunity) Bill 2026 is a government bill from the Education portfolio, introduced on 25 June 2026.",
+    "fact": "Climate Change, Energy, the Environment and Water",
+    "explanation": "The Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026 is a government bill from the Climate Change, Energy, the Environment and Water portfolio, introduced on 20 August 2026.",
     "source": "ParlInfo bill record",
     "link": {
-      "href": "/bill/au-federal-r7501",
-      "label": "Universities Accord (Opening the Doors of Opportunity) Bill 2026"
+      "href": "/bill/au-federal-r7532",
+      "label": "Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026"
     }
   },
   {
-    "id": "qcfbf28f7",
+    "id": "q2e5b886a",
     "template": "grant-program-year-total",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much did the Emergency Relief program award in grants in 2025-26?",
-    "answer": 333503032,
+    "prompt": "How much did the Medicare Urgent Care Clinics program award in grants in 2025-26?",
+    "answer": 839080119,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$334 million across 191 grants",
-    "explanation": "The Department of Social Services runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "$839 million across 31 grants",
+    "explanation": "The Department of Health, Disability and Ageing runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7242",
-      "label": "Emergency Relief"
+      "href": "/money/grants?program=GO7846",
+      "label": "Medicare Urgent Care Clinics"
     }
   },
   {
-    "id": "q138a45a4",
+    "id": "q45c36704",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The National Health Amendment (Passive Immunological Products) Bill 2026 passed the Senate at its third reading on 1 April 2026. How many senators voted for it?",
+    "answer": 39,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 39 for, 5 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 39 senators voted for it and 5 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7423?section=divisions&division=federal-senate-10189",
+      "label": "National Health Amendment (Passive Immunological Products) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "q3fd6cc9f",
     "template": "contract-largest-value",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much is the largest Department of Foreign Affairs and Trade contract that starts in 2026 worth?",
-    "answer": 166650000,
+    "prompt": "How much is the largest Australian Digital Health Agency contract that starts in 2026 worth?",
+    "answer": 161556495,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$167 million",
-    "explanation": "Contract CN4274352 with Palladium International Pty Ltd runs from 15 June 2026 to 29 June 2029. Values are contract awards published on AusTender, not money spent.",
+    "fact": "$162 million",
+    "explanation": "Contract CN4273297 with Accenture Australia Pty Limited runs from 27 August 2026 to 26 August 2029. Values are contract awards published on AusTender, not money spent.",
     "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/agency/a-e764ee177692c8ad23a4?section=contracts&supplier=s-2a3311c508c76ed30cca",
-      "label": "Department of Foreign Affairs and Trade"
+      "href": "/subject/agency/a-0e4ebbaef2e28dc387bc?section=contracts&supplier=s-8f22c19d3fc22a56c78a",
+      "label": "Australian Digital Health Agency"
     }
   },
   {
@@ -574,114 +612,31 @@
     }
   },
   {
-    "id": "q1342ef12",
+    "id": "qae2c980f",
     "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which agency runs the Discovery Projects program?",
+    "prompt": "Which agency runs the Ideas Grants program?",
     "options": [
       {
-        "label": "Department of Education",
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
         "correct": false
       },
       {
-        "label": "Australian Research Council",
-        "correct": true
+        "label": "Department of Industry, Science and Resources",
+        "correct": false
       },
       {
         "label": "Organ and Tissue Authority",
         "correct": false
       },
       {
-        "label": "Department of Home Affairs",
-        "correct": false
-      }
-    ],
-    "fact": "Australian Research Council",
-    "explanation": "The program awarded 451 grants worth $323 million in 2025-26.",
-    "source": "GrantConnect grant awards",
-    "link": {
-      "href": "/money/grants?program=GO7575",
-      "label": "Discovery Projects"
-    }
-  },
-  {
-    "id": "qa64097d1",
-    "template": "contract-largest-supplier",
-    "deck": "money",
-    "kind": "mc",
-    "prompt": "Which company holds the largest Australian Digital Health Agency contract that starts in 2026? It is worth $162 million.",
-    "options": [
-      {
-        "label": "Pinpoint Talent Pty Ltd",
-        "correct": false
-      },
-      {
-        "label": "Oracle Corporation Australia Pty Limited",
-        "correct": false
-      },
-      {
-        "label": "Accenture Australia Pty Limited",
+        "label": "National Health and Medical Research Council (NHMRC)",
         "correct": true
-      },
-      {
-        "label": "Amazon Web Services Australia Pty Ltd",
-        "correct": false
       }
     ],
-    "fact": "Accenture Australia Pty Limited",
-    "explanation": "Contract CN4273297 runs from 27 August 2026 to 26 August 2029. The other companies are among the agency's largest suppliers.",
-    "source": "AusTender contract notices",
-    "link": {
-      "href": "/subject/agency/a-0e4ebbaef2e28dc387bc?section=contracts&supplier=s-8f22c19d3fc22a56c78a",
-      "label": "Australian Digital Health Agency"
-    }
-  },
-  {
-    "id": "q13d310ac",
-    "template": "bill-portfolio",
-    "deck": "words",
-    "kind": "mc",
-    "prompt": "Which government portfolio is responsible for the Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026?",
-    "options": [
-      {
-        "label": "Climate Change, Energy, the Environment and Water",
-        "correct": true
-      },
-      {
-        "label": "Education",
-        "correct": false
-      },
-      {
-        "label": "Finance",
-        "correct": false
-      },
-      {
-        "label": "Health, Disability and Ageing",
-        "correct": false
-      }
-    ],
-    "fact": "Climate Change, Energy, the Environment and Water",
-    "explanation": "The Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026 is a government bill from the Climate Change, Energy, the Environment and Water portfolio, introduced on 20 August 2026.",
-    "source": "ParlInfo bill record",
-    "link": {
-      "href": "/bill/au-federal-r7532",
-      "label": "Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026"
-    }
-  },
-  {
-    "id": "qa0e0638a",
-    "template": "grant-program-year-total",
-    "deck": "money",
-    "kind": "slider",
-    "prompt": "How much did the Ideas Grants program award in grants in 2025-26?",
-    "answer": 276207932,
-    "min": 1000000,
-    "max": 10000000000,
-    "scale": "log",
-    "format": "money",
-    "fact": "$276 million across 184 grants",
-    "explanation": "The National Health and Medical Research Council (NHMRC) runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "National Health and Medical Research Council (NHMRC)",
+    "explanation": "Across its 2 funding rounds on GrantConnect, the program awarded 195 grants worth $293 million in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
       "href": "/money/grants?program=GO7599",
@@ -689,18 +644,50 @@
     }
   },
   {
-    "id": "qfb4d04ea",
-    "template": "contract-largest-value",
-    "deck": "money",
+    "id": "qa5e5a86f",
+    "template": "division-third-reading",
+    "deck": "words",
     "kind": "slider",
-    "prompt": "How much is the largest Department of Veterans' Affairs contract that starts in 2026 worth?",
-    "answer": 145309715,
-    "min": 1000000,
-    "max": 10000000000,
-    "scale": "log",
-    "format": "money",
-    "fact": "$145 million",
-    "explanation": "Contract CN4280784 with ResMed Asia Pacific Limited runs from 31 July 2026 to 30 July 2029. Values are contract awards published on AusTender, not money spent.",
+    "prompt": "The Universities Accord (Australian Tertiary Education Commission) Bill 2025 passed the Senate at its third reading on 30 March 2026. How many senators voted for it?",
+    "answer": 36,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 36 for, 27 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 36 senators voted for it and 27 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7416?section=divisions&division=federal-senate-10151",
+      "label": "Universities Accord (Australian Tertiary Education Commission) Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "qff37c19d",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Department of Veterans' Affairs contract that starts in 2026? It is worth $145 million.",
+    "options": [
+      {
+        "label": "CBRE (V) Pty Limited",
+        "correct": false
+      },
+      {
+        "label": "ResMed Asia Pacific Limited",
+        "correct": true
+      },
+      {
+        "label": "Family First Home Care Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "MedHealth Pty Limited",
+        "correct": false
+      }
+    ],
+    "fact": "ResMed Asia Pacific Limited",
+    "explanation": "Contract CN4280784 runs from 31 July 2026 to 30 July 2029. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
       "href": "/subject/agency/a-7261205f59a3b96c292c?section=contracts&supplier=s-5b065ad19e68f9e2a3a1",
@@ -708,11 +695,100 @@
     }
   },
   {
-    "id": "q26516f48",
+    "id": "q339d9e58",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026?",
+    "options": [
+      {
+        "label": "Attorney-General",
+        "correct": false
+      },
+      {
+        "label": "Education",
+        "correct": false
+      },
+      {
+        "label": "Treasury",
+        "correct": false
+      },
+      {
+        "label": "Home Affairs",
+        "correct": true
+      }
+    ],
+    "fact": "Home Affairs",
+    "explanation": "The Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026 is a government bill from the Home Affairs portfolio, introduced on 12 March 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7448",
+      "label": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026"
+    }
+  },
+  {
+    "id": "qcfbf28f7",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Emergency Relief program award in grants in 2025-26?",
+    "answer": 333503032,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$334 million across 191 grants",
+    "explanation": "The Department of Social Services runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7242",
+      "label": "Emergency Relief"
+    }
+  },
+  {
+    "id": "qf5a7e3a3",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Migration Amendment (2026 Measures No. 1) Bill 2026 passed the Senate at its third reading on 12 March 2026. How many senators voted for it?",
+    "answer": 26,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 26 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 26 senators voted for it and 11 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7447?section=divisions&division=federal-senate-10082",
+      "label": "Migration Amendment (2026 Measures No. 1) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "qe0adee3e",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Digital Transformation Agency contract that starts in 2026 worth?",
+    "answer": 101739821,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$102 million",
+    "explanation": "Contract CN4253616 with Microsoft Pty Ltd runs from 31 May 2026 to 29 June 2029. Values are contract awards published on AusTender, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-7431f054588d4251c0b4?section=contracts&supplier=s-6c52a6bfc2fcee4ab010",
+      "label": "Digital Transformation Agency"
+    }
+  },
+  {
+    "id": "q3d198eba",
     "template": "bill-became-law",
     "deck": "words",
     "kind": "tf",
-    "prompt": "True or false: The Wine and Other Legislation Amendment Bill 2026 became law.",
+    "prompt": "True or false: The Biosecurity Amendment (Improving Operational Efficiency) Bill 2026 became law.",
     "options": [
       {
         "label": "True",
@@ -727,104 +803,123 @@
     "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
     "source": "ParlInfo bill record",
     "link": {
-      "href": "/bill/au-federal-r7519",
-      "label": "Wine and Other Legislation Amendment Bill 2026"
+      "href": "/bill/au-federal-r7518",
+      "label": "Biosecurity Amendment (Improving Operational Efficiency) Bill 2026"
     }
   },
   {
-    "id": "qa6d0303e",
+    "id": "qf69b2424",
     "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which agency runs the Supporting Multicultural Communities Infrastructure program?",
+    "prompt": "Which agency runs the Cooperative Research Centres Programme?",
     "options": [
       {
-        "label": "Australian Trade and Investment Commission (Austrade)",
+        "label": "Department of Defence",
         "correct": false
       },
       {
-        "label": "Department of Employment and Workplace Relations",
-        "correct": false
-      },
-      {
-        "label": "Department of Home Affairs",
+        "label": "Department of Industry, Science and Resources",
         "correct": true
       },
       {
-        "label": "Australian Research Council",
+        "label": "Australian Renewable Energy Agency",
+        "correct": false
+      },
+      {
+        "label": "Department of Education",
         "correct": false
       }
     ],
-    "fact": "Department of Home Affairs",
-    "explanation": "The program awarded 35 grants worth $114 million in 2025-26.",
+    "fact": "Department of Industry, Science and Resources",
+    "explanation": "Across its 2 funding rounds on GrantConnect, the program awarded 28 grants worth $144 million in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO8040",
-      "label": "Supporting Multicultural Communities Infrastructure"
+      "href": "/money/grants?program=GO7700",
+      "label": "Cooperative Research Centres Programme"
     }
   },
   {
-    "id": "q8811b8d6",
+    "id": "q52a6017b",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 passed the Senate at its third reading on 4 March 2026. How many senators voted for it?",
+    "answer": 30,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 30 for, 18 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 30 senators voted for it and 18 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7378?section=divisions&division=federal-senate-9972",
+      "label": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "q54beac9e",
     "template": "contract-largest-supplier",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which company holds the largest Digital Transformation Agency contract that starts in 2026? It is worth $102 million.",
+    "prompt": "Which company holds the largest Australian Prudential Regulation Authority contract that starts in 2026? It is worth $64.8 million.",
     "options": [
       {
-        "label": "Capgemini Australia Pty Limited",
+        "label": "Hunter Mason (VIC) Pty Ltd",
         "correct": false
       },
       {
-        "label": "Oracle Corporation Australia Pty Limited",
+        "label": "HAYS Specialist Recruitment (Australia) PTY Limited",
         "correct": false
       },
       {
-        "label": "Microsoft Pty Ltd",
+        "label": "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
         "correct": true
       },
       {
-        "label": "Telstra Corporation Limited",
+        "label": "DXC Technology Australia Pty Limited",
         "correct": false
       }
     ],
-    "fact": "Microsoft Pty Ltd",
-    "explanation": "Contract CN4253616 runs from 31 May 2026 to 29 June 2029. The other companies are among the agency's largest suppliers.",
+    "fact": "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
+    "explanation": "Contract CN4159115 runs from 30 September 2026 to 29 September 2033. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/agency/a-7431f054588d4251c0b4?section=contracts&supplier=s-6c52a6bfc2fcee4ab010",
-      "label": "Digital Transformation Agency"
+      "href": "/subject/agency/a-5231d6c038e044c36237?section=contracts&supplier=s-6e720147af21faac9ceb",
+      "label": "Australian Prudential Regulation Authority"
     }
   },
   {
-    "id": "q339d9e58",
+    "id": "q7018c6a4",
     "template": "bill-portfolio",
     "deck": "words",
     "kind": "mc",
-    "prompt": "Which government portfolio is responsible for the Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026?",
+    "prompt": "Which government portfolio is responsible for the National Student Ombudsman Levy Bill 2026?",
     "options": [
-      {
-        "label": "Treasury",
-        "correct": false
-      },
       {
         "label": "Climate Change, Energy, the Environment and Water",
         "correct": false
       },
       {
-        "label": "Finance",
+        "label": "Education",
+        "correct": true
+      },
+      {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
         "correct": false
       },
       {
         "label": "Home Affairs",
-        "correct": true
+        "correct": false
       }
     ],
-    "fact": "Home Affairs",
-    "explanation": "The Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026 is a government bill from the Home Affairs portfolio, introduced on 12 March 2026.",
+    "fact": "Education",
+    "explanation": "The National Student Ombudsman Levy Bill 2026 is a government bill from the Education portfolio, introduced on 10 September 2026.",
     "source": "ParlInfo bill record",
     "link": {
-      "href": "/bill/au-federal-r7448",
-      "label": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026"
+      "href": "/bill/au-federal-r7541",
+      "label": "National Student Ombudsman Levy Bill 2026"
     }
   },
   {
@@ -847,22 +942,41 @@
     }
   },
   {
-    "id": "q9df2c395",
+    "id": "q95e982cc",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Administrative Review Tribunal and Other Legislation Amendment Bill 2025 passed the Senate at its third reading on 5 February 2026. How many senators voted for it?",
+    "answer": 32,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 32 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 32 senators voted for it and 11 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7365?section=divisions&division=federal-senate-9892",
+      "label": "Administrative Review Tribunal and Other Legislation Amendment Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "q6b71beb1",
     "template": "contract-largest-value",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much is the largest Australian Prudential Regulation Authority contract that starts in 2026 worth?",
-    "answer": 64831012,
+    "prompt": "How much is the largest Australian Competition and Consumer Commission contract that starts in 2026 worth?",
+    "answer": 25177606,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$64.8 million",
-    "explanation": "Contract CN4159115 with Charter HALL REAL Estate Management Services (NSW) Pty Limited runs from 30 September 2026 to 29 September 2033. Values are contract awards published on AusTender, not money spent.",
+    "fact": "$25.2 million",
+    "explanation": "Contract CN4219569 with Datacom Systems (AU) Pty Ltd runs from 2 February 2026 to 1 February 2029. Values are contract awards published on AusTender, not money spent.",
     "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/agency/a-5231d6c038e044c36237?section=contracts&supplier=s-6e720147af21faac9ceb",
-      "label": "Australian Prudential Regulation Authority"
+      "href": "/subject/agency/a-32a10e56bd708fd30db5?section=contracts&supplier=s-828d512472eedc897c04",
+      "label": "Australian Competition and Consumer Commission"
     }
   },
   {
@@ -890,137 +1004,175 @@
     }
   },
   {
-    "id": "q0ea9b7b8",
+    "id": "q6014e7f3",
     "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which agency runs the Commonwealth Financial Counselling and Financial Capability program?",
+    "prompt": "Which agency runs the Linkage Projects program?",
     "options": [
       {
-        "label": "Department of Health and Aged Care",
+        "label": "Attorney-General's Department",
         "correct": false
       },
       {
-        "label": "National Indigenous Australians Agency",
+        "label": "Organ and Tissue Authority",
         "correct": false
       },
       {
-        "label": "Department of the Prime Minister and Cabinet",
+        "label": "Department of Home Affairs",
         "correct": false
       },
       {
-        "label": "Department of Social Services",
+        "label": "Australian Research Council",
         "correct": true
       }
     ],
-    "fact": "Department of Social Services",
-    "explanation": "The program awarded 57 grants worth $110 million in 2025-26.",
+    "fact": "Australian Research Council",
+    "explanation": "Across its 4 funding rounds on GrantConnect, the program awarded 166 grants worth $88.9 million in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7241",
-      "label": "Commonwealth Financial Counselling and Financial Capability"
+      "href": "/money/grants?program=GO6639",
+      "label": "Linkage Projects"
     }
   },
   {
-    "id": "qf381a8e9",
+    "id": "q7360b831",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 passed the House of Representatives at its third reading on 20 January 2026. How many members of the House voted for it?",
+    "answer": 96,
+    "min": 0,
+    "max": 150,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 96 for, 45 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 96 members of the House voted for it and 45 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7421?section=divisions&division=federal-representatives-9809",
+      "label": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "q8ccd6d12",
     "template": "contract-largest-supplier",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which company holds the largest Australian Competition and Consumer Commission contract that starts in 2026? It is worth $25.2 million.",
+    "prompt": "Which company holds the largest Bureau of Meteorology contract that starts in 2026? It is worth $15.8 million.",
     "options": [
       {
-        "label": "Davidson Technology (Aust) Pty Ltd",
+        "label": "Leidos Australia Pty Limited",
         "correct": false
       },
       {
-        "label": "Ignite Limited",
+        "label": "Ventia Property Pty Ltd",
         "correct": false
       },
       {
-        "label": "Randstad PTY LIMITED",
-        "correct": false
-      },
-      {
-        "label": "Datacom Systems (AU) Pty Ltd",
+        "label": "NTT Australia PTY LTD",
         "correct": true
+      },
+      {
+        "label": "Unisys Australia Pty Limited",
+        "correct": false
       }
     ],
-    "fact": "Datacom Systems (AU) Pty Ltd",
-    "explanation": "Contract CN4219569 runs from 2 February 2026 to 1 February 2029. The other companies are among the agency's largest suppliers.",
+    "fact": "NTT Australia PTY LTD",
+    "explanation": "Contract CN4269260 runs from 30 July 2026 to 29 July 2029. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/agency/a-32a10e56bd708fd30db5?section=contracts&supplier=s-828d512472eedc897c04",
-      "label": "Australian Competition and Consumer Commission"
+      "href": "/subject/agency/a-c241462e1470c73a4c4e?section=contracts&supplier=s-7051cdfc41d7d3c8624e",
+      "label": "Bureau of Meteorology"
     }
   },
   {
-    "id": "q7018c6a4",
+    "id": "q4a6e6241",
     "template": "bill-portfolio",
     "deck": "words",
     "kind": "mc",
-    "prompt": "Which government portfolio is responsible for the National Student Ombudsman Levy Bill 2026?",
+    "prompt": "Which government portfolio is responsible for the Wine and Other Legislation Amendment Bill 2026?",
     "options": [
+      {
+        "label": "Agriculture, Fisheries and Forestry",
+        "correct": true
+      },
+      {
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      },
       {
         "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
         "correct": false
       },
       {
-        "label": "Treasury",
-        "correct": false
-      },
-      {
-        "label": "Education",
-        "correct": true
-      },
-      {
-        "label": "Finance",
+        "label": "Climate Change, Energy, the Environment and Water",
         "correct": false
       }
     ],
-    "fact": "Education",
-    "explanation": "The National Student Ombudsman Levy Bill 2026 is a government bill from the Education portfolio, introduced on 10 September 2026.",
+    "fact": "Agriculture, Fisheries and Forestry",
+    "explanation": "The Wine and Other Legislation Amendment Bill 2026 is a government bill from the Agriculture, Fisheries and Forestry portfolio, introduced on 1 July 2026.",
     "source": "ParlInfo bill record",
     "link": {
-      "href": "/bill/au-federal-r7541",
-      "label": "National Student Ombudsman Levy Bill 2026"
+      "href": "/bill/au-federal-r7519",
+      "label": "Wine and Other Legislation Amendment Bill 2026"
     }
   },
   {
-    "id": "q41ef01e8",
+    "id": "q22099d77",
     "template": "grant-program-year-total",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much did the Major and Local Community Infrastructure Program award in grants in 2025-26?",
-    "answer": 110980000,
+    "prompt": "How much did the Supporting Multicultural Communities Infrastructure program award in grants in 2025-26?",
+    "answer": 113837300,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$111 million across 33 grants",
-    "explanation": "The Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "$114 million across 35 grants",
+    "explanation": "The Department of Home Affairs runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7867",
-      "label": "Major and Local Community Infrastructure Program"
+      "href": "/money/grants?program=GO8040",
+      "label": "Supporting Multicultural Communities Infrastructure"
     }
   },
   {
-    "id": "q62223c1d",
+    "id": "q153f89f0",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Defence Housing Australia Amendment Bill 2025 passed the Senate at its third reading on 25 August 2025. How many senators voted for it?",
+    "answer": 29,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 29 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 29 senators voted for it and 11 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7337?section=divisions&division=federal-senate-9696",
+      "label": "Defence Housing Australia Amendment Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "q038310e9",
     "template": "contract-largest-value",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much is the largest Bureau of Meteorology contract that starts in 2026 worth?",
-    "answer": 15792699,
+    "prompt": "How much is the largest Australian Submarine Agency contract that starts in 2026 worth?",
+    "answer": 14557259,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$15.8 million",
-    "explanation": "Contract CN4269260 with NTT Australia PTY LTD runs from 30 July 2026 to 29 July 2029. Values are contract awards published on AusTender, not money spent.",
+    "fact": "$14.6 million",
+    "explanation": "Contract CN4268271 with Accenture Australia Pty Limited runs from 9 August 2026 to 29 June 2029. Values are contract awards published on AusTender, not money spent.",
     "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/agency/a-c241462e1470c73a4c4e?section=contracts&supplier=s-7051cdfc41d7d3c8624e",
-      "label": "Bureau of Meteorology"
+      "href": "/subject/agency/a-5e7f6cdc53a9dd00fbdb?section=contracts&supplier=s-8f22c19d3fc22a56c78a",
+      "label": "Australian Submarine Agency"
     }
   },
   {
@@ -1048,79 +1200,102 @@
     }
   },
   {
-    "id": "q15cf02de",
+    "id": "q0ea9b7b8",
     "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which agency runs the Australian Apprenticeships Incentives Programme?",
+    "prompt": "Which agency runs the Commonwealth Financial Counselling and Financial Capability program?",
     "options": [
       {
-        "label": "Department of Home Affairs",
-        "correct": false
-      },
-      {
-        "label": "National Health and Medical Research Council (NHMRC)",
-        "correct": false
-      },
-      {
-        "label": "Department of Infrastructure, Transport, Regional Development, Communications and the Arts",
-        "correct": false
-      },
-      {
         "label": "Department of Employment and Workplace Relations",
+        "correct": false
+      },
+      {
+        "label": "Department of Education",
+        "correct": false
+      },
+      {
+        "label": "Department of Social Services",
         "correct": true
+      },
+      {
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
       }
     ],
-    "fact": "Department of Employment and Workplace Relations",
-    "explanation": "The program awarded 32 grants worth $108 million in 2025-26.",
+    "fact": "Department of Social Services",
+    "explanation": "The program awarded 57 grants worth $110 million in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO90",
-      "label": "Australian Apprenticeships Incentives Programme"
+      "href": "/money/grants?program=GO7241",
+      "label": "Commonwealth Financial Counselling and Financial Capability"
     }
   },
   {
-    "id": "q7bd4fbd1",
+    "id": "q1db92341",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Universities Accord (Cutting Student Debt by 20 Per Cent) Bill 2025 passed the Senate at its third reading on 31 July 2025. How many senators voted for it?",
+    "answer": 36,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 36 for, 3 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 36 senators voted for it and 3 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7342?section=divisions&division=federal-senate-9672",
+      "label": "Universities Accord (Cutting Student Debt by 20 Per Cent) Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "qed5d862d",
     "template": "contract-largest-supplier",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which company holds the largest Australian Submarine Agency contract that starts in 2026? It is worth $14.6 million.",
+    "prompt": "Which company holds the largest Geoscience Australia contract that starts in 2026? It is worth $14.2 million.",
     "options": [
       {
-        "label": "Synergy Group OpCo Pty Ltd",
+        "label": "Evolve FM Pty Ltd",
         "correct": false
       },
       {
-        "label": "SME Gateway Pty Ltd",
-        "correct": false
-      },
-      {
-        "label": "Accenture Australia Pty Limited",
+        "label": "Cirrus Networks (ACT) Pty Ltd",
         "correct": true
       },
       {
-        "label": "Aurecon Australasia Pty Ltd",
+        "label": "Geoplex Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "Onneer Pty Ltd",
         "correct": false
       }
     ],
-    "fact": "Accenture Australia Pty Limited",
-    "explanation": "Contract CN4268271 runs from 9 August 2026 to 29 June 2029. The other companies are among the agency's largest suppliers.",
+    "fact": "Cirrus Networks (ACT) Pty Ltd",
+    "explanation": "Contract CN4264846 runs from 29 June 2026 to 29 June 2028. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/agency/a-5e7f6cdc53a9dd00fbdb?section=contracts&supplier=s-8f22c19d3fc22a56c78a",
-      "label": "Australian Submarine Agency"
+      "href": "/subject/agency/a-2aceed43d5eed08e7dc1?section=contracts&supplier=s-224c9eeedaa6913df323",
+      "label": "Geoscience Australia"
     }
   },
   {
-    "id": "q80e2fc32",
+    "id": "qb4b98e64",
     "template": "bill-portfolio",
     "deck": "words",
     "kind": "mc",
-    "prompt": "Which government portfolio is responsible for the Telecommunications Legislation Amendment (Universal Outdoor Mobile Obligation) Bill 2026?",
+    "prompt": "Which government portfolio is responsible for the Statute Update Bill 2026?",
     "options": [
       {
-        "label": "Employment and Workplace Relations",
+        "label": "Climate Change, Energy, the Environment and Water",
         "correct": false
+      },
+      {
+        "label": "Attorney-General",
+        "correct": true
       },
       {
         "label": "Finance",
@@ -1129,56 +1304,52 @@
       {
         "label": "Health, Disability and Ageing",
         "correct": false
-      },
-      {
-        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-        "correct": true
       }
     ],
-    "fact": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-    "explanation": "The Telecommunications Legislation Amendment (Universal Outdoor Mobile Obligation) Bill 2026 is a government bill from the Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio, introduced on 27 November 2025.",
+    "fact": "Attorney-General",
+    "explanation": "The Statute Update Bill 2026 is a government bill from the Attorney-General's portfolio, introduced on 25 June 2026.",
     "source": "ParlInfo bill record",
     "link": {
-      "href": "/bill/au-federal-r7414",
-      "label": "Telecommunications Legislation Amendment (Universal Outdoor Mobile Obligation) Bill 2026"
+      "href": "/bill/au-federal-r7500",
+      "label": "Statute Update Bill 2026"
     }
   },
   {
-    "id": "q8dab8284",
+    "id": "q41ef01e8",
     "template": "grant-program-year-total",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much did the Clinical Trials and Cohort Studies program award in grants in 2025-26?",
-    "answer": 81772200,
+    "prompt": "How much did the Major and Local Community Infrastructure Program award in grants in 2025-26?",
+    "answer": 110980000,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$81.8 million across 22 grants",
-    "explanation": "The National Health and Medical Research Council (NHMRC) runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "$111 million across 33 grants",
+    "explanation": "The Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7022",
-      "label": "Clinical Trials and Cohort Studies"
+      "href": "/money/grants?program=GO7867",
+      "label": "Major and Local Community Infrastructure Program"
     }
   },
   {
-    "id": "q164c04d5",
+    "id": "qb9d81d43",
     "template": "contract-largest-value",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much is the largest Geoscience Australia contract that starts in 2026 worth?",
-    "answer": 14229092,
+    "prompt": "How much is the largest Australian Signals Directorate contract that starts in 2026 worth?",
+    "answer": 10913456,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$14.2 million",
-    "explanation": "Contract CN4264846 with Cirrus Networks (ACT) Pty Ltd runs from 29 June 2026 to 29 June 2028. Values are contract awards published on AusTender, not money spent.",
+    "fact": "$10.9 million",
+    "explanation": "Contract CN4215599 with SFDC Australia Pty Limited runs from 28 January 2026 to 27 January 2028. Values are contract awards published on AusTender, not money spent.",
     "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/agency/a-2aceed43d5eed08e7dc1?section=contracts&supplier=s-224c9eeedaa6913df323",
-      "label": "Geoscience Australia"
+      "href": "/subject/agency/a-f797be002809b666b887?section=contracts&supplier=s-d73e743fbedc610a1b73",
+      "label": "Australian Signals Directorate"
     }
   },
   {
@@ -1206,114 +1377,31 @@
     }
   },
   {
-    "id": "q9eb63bc4",
+    "id": "q3c0aacc6",
     "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which agency runs the Medical Research Future Fund?",
+    "prompt": "Which agency runs the Community Legal Services Program?",
     "options": [
+      {
+        "label": "Department of Education",
+        "correct": false
+      },
       {
         "label": "Department of Employment and Workplace Relations",
         "correct": false
       },
       {
-        "label": "Department of Health, Disability and Ageing",
+        "label": "Attorney-General's Department",
         "correct": true
       },
       {
-        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-        "correct": false
-      },
-      {
-        "label": "Department of Social Services",
+        "label": "National Indigenous Australians Agency",
         "correct": false
       }
     ],
-    "fact": "Department of Health, Disability and Ageing",
-    "explanation": "The program awarded 21 grants worth $80.3 million in 2025-26.",
-    "source": "GrantConnect grant awards",
-    "link": {
-      "href": "/money/grants?program=GO7080",
-      "label": "Medical Research Future Fund"
-    }
-  },
-  {
-    "id": "qadf3a4ac",
-    "template": "contract-largest-supplier",
-    "deck": "money",
-    "kind": "mc",
-    "prompt": "Which company holds the largest Australian Signals Directorate contract that starts in 2026? It is worth $10.9 million.",
-    "options": [
-      {
-        "label": "Whizdom Pty Ltd",
-        "correct": false
-      },
-      {
-        "label": "DXC Technology Australia Pty Limited",
-        "correct": false
-      },
-      {
-        "label": "SFDC Australia Pty Limited",
-        "correct": true
-      },
-      {
-        "label": "Leidos Australia Pty Limited",
-        "correct": false
-      }
-    ],
-    "fact": "SFDC Australia Pty Limited",
-    "explanation": "Contract CN4215599 runs from 28 January 2026 to 27 January 2028. The other companies are among the agency's largest suppliers.",
-    "source": "AusTender contract notices",
-    "link": {
-      "href": "/subject/agency/a-f797be002809b666b887?section=contracts&supplier=s-d73e743fbedc610a1b73",
-      "label": "Australian Signals Directorate"
-    }
-  },
-  {
-    "id": "qb4b98e64",
-    "template": "bill-portfolio",
-    "deck": "words",
-    "kind": "mc",
-    "prompt": "Which government portfolio is responsible for the Statute Update Bill 2026?",
-    "options": [
-      {
-        "label": "Attorney-General",
-        "correct": true
-      },
-      {
-        "label": "Health, Disability and Ageing",
-        "correct": false
-      },
-      {
-        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-        "correct": false
-      },
-      {
-        "label": "Finance",
-        "correct": false
-      }
-    ],
-    "fact": "Attorney-General",
-    "explanation": "The Statute Update Bill 2026 is a government bill from the Attorney-General portfolio, introduced on 25 June 2026.",
-    "source": "ParlInfo bill record",
-    "link": {
-      "href": "/bill/au-federal-r7500",
-      "label": "Statute Update Bill 2026"
-    }
-  },
-  {
-    "id": "q95585d15",
-    "template": "grant-program-year-total",
-    "deck": "money",
-    "kind": "slider",
-    "prompt": "How much did the Community Legal Services Program award in grants in 2025-26?",
-    "answer": 78435654,
-    "min": 1000000,
-    "max": 10000000000,
-    "scale": "log",
-    "format": "money",
-    "fact": "$78.4 million across 14 grants",
-    "explanation": "The Attorney-General's Department runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "Attorney-General's Department",
+    "explanation": "The program awarded 14 grants worth $78.4 million in 2025-26.",
     "source": "GrantConnect grant awards",
     "link": {
       "href": "/money/grants?program=GO7587",
@@ -1321,110 +1409,35 @@
     }
   },
   {
-    "id": "q0f965f60",
-    "template": "contract-largest-value",
+    "id": "q2c887dd9",
+    "template": "contract-largest-supplier",
     "deck": "money",
-    "kind": "slider",
-    "prompt": "How much is the largest Department of Social Services contract that starts in 2026 worth?",
-    "answer": 10486488,
-    "min": 1000000,
-    "max": 10000000000,
-    "scale": "log",
-    "format": "money",
-    "fact": "$10.5 million",
-    "explanation": "Contract CN4202016 with Redhill Partners Investment Pty Ltd runs from 15 March 2026 to 14 March 2036. Values are contract awards published on AusTender, not money spent.",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Department of Social Services contract that starts in 2026? It is worth $10.5 million.",
+    "options": [
+      {
+        "label": "Sureway Employment and Training Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "Karingal St Laurence Limited",
+        "correct": false
+      },
+      {
+        "label": "Redhill Partners Investment Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Job Futures Ltd",
+        "correct": false
+      }
+    ],
+    "fact": "Redhill Partners Investment Pty Ltd",
+    "explanation": "Contract CN4202016 runs from 15 March 2026 to 14 March 2036. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
       "href": "/subject/agency/a-1b123f8e6c5ba22fa727?section=contracts&supplier=s-e9c9ff4b55530b4d2b97",
       "label": "Department of Social Services"
-    }
-  },
-  {
-    "id": "qbe66c2f6",
-    "template": "bill-became-law",
-    "deck": "words",
-    "kind": "tf",
-    "prompt": "True or false: The Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026 became law.",
-    "options": [
-      {
-        "label": "True",
-        "correct": true
-      },
-      {
-        "label": "False",
-        "correct": false
-      }
-    ],
-    "fact": "True. It received Royal Assent on 26 August 2026.",
-    "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
-    "source": "ParlInfo bill record",
-    "link": {
-      "href": "/bill/au-federal-r7449",
-      "label": "Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026"
-    }
-  },
-  {
-    "id": "q8a31e0ec",
-    "template": "grant-program-agency",
-    "deck": "money",
-    "kind": "mc",
-    "prompt": "Which agency runs the Discovery Early Career Researcher Award program?",
-    "options": [
-      {
-        "label": "Australian Trade and Investment Commission (Austrade)",
-        "correct": false
-      },
-      {
-        "label": "Department of Health, Disability and Ageing",
-        "correct": false
-      },
-      {
-        "label": "Department of Employment and Workplace Relations",
-        "correct": false
-      },
-      {
-        "label": "Australian Research Council",
-        "correct": true
-      }
-    ],
-    "fact": "Australian Research Council",
-    "explanation": "The program awarded 153 grants worth $78.2 million in 2025-26.",
-    "source": "GrantConnect grant awards",
-    "link": {
-      "href": "/money/grants?program=GO7423",
-      "label": "Discovery Early Career Researcher Award"
-    }
-  },
-  {
-    "id": "q044068a5",
-    "template": "contract-largest-supplier",
-    "deck": "money",
-    "kind": "mc",
-    "prompt": "Which company holds the largest National Emergency Management Agency contract that starts in 2026? It is worth $6.9 million.",
-    "options": [
-      {
-        "label": "Evolve FM Pty Ltd",
-        "correct": false
-      },
-      {
-        "label": "Mediabrands Australia Pty Ltd",
-        "correct": true
-      },
-      {
-        "label": "Veritec Pty Ltd",
-        "correct": false
-      },
-      {
-        "label": "Cushman & Wakefield Pty Ltd",
-        "correct": false
-      }
-    ],
-    "fact": "Mediabrands Australia Pty Ltd",
-    "explanation": "Contract CN4247050 runs from 14 May 2026 to 30 December 2026. The other companies are among the agency's largest suppliers.",
-    "source": "AusTender contract notices",
-    "link": {
-      "href": "/subject/agency/a-2623b1d75f1e96ed31f0?section=contracts&supplier=s-7eb16e70c806b9718d65",
-      "label": "National Emergency Management Agency"
     }
   },
   {
@@ -1435,24 +1448,24 @@
     "prompt": "Which government portfolio is responsible for the Criminal Code Amendment (National Sport Integrity Offences) Bill 2026?",
     "options": [
       {
-        "label": "Health, Disability and Ageing",
-        "correct": false
-      },
-      {
         "label": "Attorney-General",
         "correct": true
       },
       {
-        "label": "Climate Change, Energy, the Environment and Water",
+        "label": "Treasury",
         "correct": false
       },
       {
-        "label": "Finance",
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      },
+      {
+        "label": "Education",
         "correct": false
       }
     ],
     "fact": "Attorney-General",
-    "explanation": "The Criminal Code Amendment (National Sport Integrity Offences) Bill 2026 is a government bill from the Attorney-General portfolio, introduced on 20 August 2026.",
+    "explanation": "The Criminal Code Amendment (National Sport Integrity Offences) Bill 2026 is a government bill from the Attorney-General's portfolio, introduced on 20 August 2026.",
     "source": "ParlInfo bill record",
     "link": {
       "href": "/bill/au-federal-r7531",
@@ -1479,110 +1492,110 @@
     }
   },
   {
-    "id": "qc6828c4d",
+    "id": "qb64b55e3",
     "template": "contract-largest-value",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much is the largest Australian Public Service Commission contract that starts in 2026 worth?",
-    "answer": 4142050,
+    "prompt": "How much is the largest National Emergency Management Agency contract that starts in 2026 worth?",
+    "answer": 6904954,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$4.1 million",
-    "explanation": "Contract CN4216707 with CPD Live Pty Ltd runs from 4 January 2026 to 3 January 2028. Values are contract awards published on AusTender, not money spent.",
+    "fact": "$6.9 million",
+    "explanation": "Contract CN4247050 with Mediabrands Australia Pty Ltd runs from 14 May 2026 to 30 December 2026. Values are contract awards published on AusTender, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-2623b1d75f1e96ed31f0?section=contracts&supplier=s-7eb16e70c806b9718d65",
+      "label": "National Emergency Management Agency"
+    }
+  },
+  {
+    "id": "q09695865",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Combatting Illicit Tobacco Bill 2026 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": true
+      },
+      {
+        "label": "False",
+        "correct": false
+      }
+    ],
+    "fact": "True. It received Royal Assent on 26 August 2026.",
+    "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7458",
+      "label": "Combatting Illicit Tobacco Bill 2026"
+    }
+  },
+  {
+    "id": "q863ffb6e",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Support Plantation Establishment program?",
+    "options": [
+      {
+        "label": "Department of Agriculture, Fisheries and Forestry",
+        "correct": true
+      },
+      {
+        "label": "Department of the Prime Minister and Cabinet",
+        "correct": false
+      },
+      {
+        "label": "Organ and Tissue Authority",
+        "correct": false
+      },
+      {
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
+      }
+    ],
+    "fact": "Department of Agriculture, Fisheries and Forestry",
+    "explanation": "The program awarded 40 grants worth $49.5 million in 2025-26.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7209",
+      "label": "Support Plantation Establishment"
+    }
+  },
+  {
+    "id": "q433698ad",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Australian Public Service Commission contract that starts in 2026? It is worth $4.1 million.",
+    "options": [
+      {
+        "label": "CPD Live Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Compass Group B&I Hospitality Services Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "SFDC Australia Pty Limited",
+        "correct": false
+      },
+      {
+        "label": "Accenture Australia Pty Limited",
+        "correct": false
+      }
+    ],
+    "fact": "CPD Live Pty Ltd",
+    "explanation": "Contract CN4216707 runs from 4 January 2026 to 3 January 2028. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
       "href": "/subject/agency/a-fa94b561079ff33e8041?section=contracts&supplier=s-35ca8075f86eb2d403c4",
       "label": "Australian Public Service Commission"
-    }
-  },
-  {
-    "id": "q9c66368c",
-    "template": "bill-became-law",
-    "deck": "words",
-    "kind": "tf",
-    "prompt": "True or false: The Treasury Laws Amendment (Build to Rent) Bill 2024 became law.",
-    "options": [
-      {
-        "label": "True",
-        "correct": false
-      },
-      {
-        "label": "False",
-        "correct": true
-      }
-    ],
-    "fact": "False. It was discharged from the Notice Paper on 28 November 2024.",
-    "explanation": "That took it off parliament's list of business before it passed both houses, so it did not become law.",
-    "source": "ParlInfo bill record",
-    "link": {
-      "href": "/bill/au-federal-r7225",
-      "label": "Treasury Laws Amendment (Build to Rent) Bill 2024"
-    }
-  },
-  {
-    "id": "qf69b2424",
-    "template": "grant-program-agency",
-    "deck": "money",
-    "kind": "mc",
-    "prompt": "Which agency runs the Cooperative Research Centres Programme?",
-    "options": [
-      {
-        "label": "Department of Employment and Workplace Relations",
-        "correct": false
-      },
-      {
-        "label": "Department of Education",
-        "correct": false
-      },
-      {
-        "label": "Department of Agriculture, Fisheries and Forestry",
-        "correct": false
-      },
-      {
-        "label": "Department of Industry, Science and Resources",
-        "correct": true
-      }
-    ],
-    "fact": "Department of Industry, Science and Resources",
-    "explanation": "The program awarded 27 grants worth $72.5 million in 2025-26.",
-    "source": "GrantConnect grant awards",
-    "link": {
-      "href": "/money/grants?program=GO7700",
-      "label": "Cooperative Research Centres Programme"
-    }
-  },
-  {
-    "id": "qf1645aa6",
-    "template": "contract-largest-supplier",
-    "deck": "money",
-    "kind": "mc",
-    "prompt": "Which company holds the largest Australian Skills Quality Authority contract that starts in 2026? It is worth $3.4 million.",
-    "options": [
-      {
-        "label": "Publicis Sapient Australia Pty Ltd",
-        "correct": false
-      },
-      {
-        "label": "APIS Group Pty Limited",
-        "correct": false
-      },
-      {
-        "label": "Jones Lang LaSalle (ACT) Pty Limited",
-        "correct": true
-      },
-      {
-        "label": "Peoplebank Australia Ltd",
-        "correct": false
-      }
-    ],
-    "fact": "Jones Lang LaSalle (ACT) Pty Limited",
-    "explanation": "Contract CN4265754 runs from 30 June 2026 to 29 June 2027. The other companies are among the agency's largest suppliers.",
-    "source": "AusTender contract notices",
-    "link": {
-      "href": "/subject/agency/a-d32a68a9a1c0d3539a6e?section=contracts&supplier=s-bcc757e4b693412cb4a6",
-      "label": "Australian Skills Quality Authority"
     }
   },
   {
@@ -1597,16 +1610,16 @@
         "correct": false
       },
       {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
+      },
+      {
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      },
+      {
         "label": "Home Affairs",
         "correct": true
-      },
-      {
-        "label": "Treasury",
-        "correct": false
-      },
-      {
-        "label": "Finance",
-        "correct": false
       }
     ],
     "fact": "Home Affairs",
@@ -1618,41 +1631,199 @@
     }
   },
   {
-    "id": "q64e9e695",
+    "id": "q62a8f0b6",
     "template": "grant-program-year-total",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much did the Centres of Research Excellence program award in grants in 2025-26?",
-    "answer": 67026000,
+    "prompt": "How much did the Local Environmental Projects program award in grants in 2025-26?",
+    "answer": 58943666,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$67 million across 22 grants",
-    "explanation": "The National Health and Medical Research Council (NHMRC) runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "fact": "$58.9 million across 34 grants",
+    "explanation": "The Department of Climate Change, Energy, the Environment and Water runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
     "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money/grants?program=GO7245",
-      "label": "Centres of Research Excellence"
+      "href": "/money/grants?program=GO7781",
+      "label": "Local Environmental Projects"
     }
   },
   {
-    "id": "qaf665ae3",
+    "id": "q36979dcc",
     "template": "contract-largest-value",
     "deck": "money",
     "kind": "slider",
-    "prompt": "How much is the largest Aged Care Quality and Safety Commission contract that starts in 2026 worth?",
-    "answer": 2759434,
+    "prompt": "How much is the largest Australian Skills Quality Authority contract that starts in 2026 worth?",
+    "answer": 3397982,
     "min": 1000000,
     "max": 10000000000,
     "scale": "log",
     "format": "money",
-    "fact": "$2.8 million",
-    "explanation": "Contract CN4270747 with Corporate Travel Management Group Pty Ltd runs from 30 June 2026 to 29 June 2027. Values are contract awards published on AusTender, not money spent.",
+    "fact": "$3.4 million",
+    "explanation": "Contract CN4265754 with Jones Lang LaSalle (ACT) Pty Limited runs from 30 June 2026 to 29 June 2027. Values are contract awards published on AusTender, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-d32a68a9a1c0d3539a6e?section=contracts&supplier=s-bcc757e4b693412cb4a6",
+      "label": "Australian Skills Quality Authority"
+    }
+  },
+  {
+    "id": "q84af3159",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False. It was voted down on 4 July 2024.",
+    "explanation": "A vote in parliament went against the bill, so it did not become law.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7201",
+      "label": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024"
+    }
+  },
+  {
+    "id": "qf98d18f5",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Export Market Development program?",
+    "options": [
+      {
+        "label": "Department of Health, Disability and Ageing",
+        "correct": false
+      },
+      {
+        "label": "Australian Renewable Energy Agency",
+        "correct": false
+      },
+      {
+        "label": "Department of Home Affairs",
+        "correct": false
+      },
+      {
+        "label": "Australian Trade and Investment Commission (Austrade)",
+        "correct": true
+      }
+    ],
+    "fact": "Australian Trade and Investment Commission (Austrade)",
+    "explanation": "The program awarded 533 grants worth $48.4 million in 2025-26.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7108",
+      "label": "Export Market Development"
+    }
+  },
+  {
+    "id": "qe8e1e5f8",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Aged Care Quality and Safety Commission contract that starts in 2026? It is worth $2.8 million.",
+    "options": [
+      {
+        "label": "Synechron Data Australia Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "HAYS Specialist Recruitment (Australia) PTY Limited",
+        "correct": false
+      },
+      {
+        "label": "Corporate Travel Management Group Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Hudson Global Resources (AUST) Pty Limited",
+        "correct": false
+      }
+    ],
+    "fact": "Corporate Travel Management Group Pty Ltd",
+    "explanation": "Contract CN4270747 runs from 30 June 2026 to 29 June 2027. The other companies are among the agency's largest suppliers.",
     "source": "AusTender contract notices",
     "link": {
       "href": "/subject/agency/a-69d355cb0ebc6b4b4e5f?section=contracts&supplier=s-0640b3118bf07d0c66d2",
       "label": "Aged Care Quality and Safety Commission"
+    }
+  },
+  {
+    "id": "qc5f83597",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the National Self-exclusion Register (Cost Recovery Levy) Amendment Bill 2026?",
+    "options": [
+      {
+        "label": "Education",
+        "correct": false
+      },
+      {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": true
+      },
+      {
+        "label": "Home Affairs",
+        "correct": false
+      },
+      {
+        "label": "Finance",
+        "correct": false
+      }
+    ],
+    "fact": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+    "explanation": "The National Self-exclusion Register (Cost Recovery Levy) Amendment Bill 2026 is a government bill from the Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio, introduced on 2 July 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7521",
+      "label": "National Self-exclusion Register (Cost Recovery Levy) Amendment Bill 2026"
+    }
+  },
+  {
+    "id": "qf4613188",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Play Our Way Participation and Equipment Stream program award in grants in 2025-26?",
+    "answer": 12006518,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$12 million across 15 grants",
+    "explanation": "The Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts runs it. The figure counts grants published on GrantConnect for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO6763",
+      "label": "Play Our Way Participation and Equipment Stream"
+    }
+  },
+  {
+    "id": "qf78bc237",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Tertiary Education Quality and Standards Agency contract that starts in 2026 worth?",
+    "answer": 2399155,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$2.4 million",
+    "explanation": "Contract CN4220264 with MediaMonks Australia Pty Ltd runs from 6 January 2026 to 30 November 2027. Values are contract awards published on AusTender, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-5ae8149297b124ae470b?section=contracts&supplier=s-d3057210d079143c3af8",
+      "label": "Tertiary Education Quality and Standards Agency"
     }
   }
 ]

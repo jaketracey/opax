@@ -14,28 +14,73 @@
       "last_key_date": "2026-09-28"
     }
   },
-  "qea99a668": {
-    "path": "grants/federal/programs/go7466.json",
+  "qa4167c0f": {
+    "path": "grants/federal/programs/go7748.json",
     "fields": {
-      "id": "GO7466",
-      "n": "Commonwealth Home Support Program",
-      "ag": "Department of Health, Disability and Ageing",
-      "agencies": 1,
-      "by.2025-26": [7497189963, 5773]
+      "id": "GO7748",
+      "n": "Jobs, Land and the Economy",
+      "ag": "National Indigenous Australians Agency",
+      "by.2025-26": [1712525821, 562],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7748.json",
+          "id": "GO7748",
+          "ag": "National Indigenous Australians Agency",
+          "agencies": 1,
+          "by.2025-26": [1266600251, 70]
+        },
+        {
+          "path": "grants/federal/programs/go7656.json",
+          "id": "GO7656",
+          "ag": "National Indigenous Australians Agency",
+          "agencies": 1,
+          "by.2025-26": [203171926, 82]
+        },
+        {
+          "path": "grants/federal/programs/go7525.json",
+          "id": "GO7525",
+          "ag": "National Indigenous Australians Agency",
+          "agencies": 1,
+          "by.2025-26": [142333205, 281]
+        },
+        {
+          "path": "grants/federal/programs/go7389.json",
+          "id": "GO7389",
+          "ag": "National Indigenous Australians Agency",
+          "agencies": 1,
+          "by.2025-26": [90933494, 123]
+        },
+        {
+          "path": "grants/federal/programs/go6660.json",
+          "id": "GO6660",
+          "ag": "National Indigenous Australians Agency",
+          "agencies": 1,
+          "by.2025-26": [9486945, 6]
+        }
+      ]
     }
   },
-  "q649950c6": {
-    "path": "divisions/division-federal-representatives-10611.json",
+  "q925aec13": {
+    "path": "divisions/division-federal-senate-10729.json",
     "fields": {
-      "key": "federal-representatives-10611",
-      "name": "Bills — Interactive Gambling Amendment (Gambling Reform) Bill 2026; Third Reading",
-      "house": "representatives",
-      "date": "2026-08-18",
-      "ayes": 103,
-      "noes": 14,
+      "key": "federal-senate-10729",
+      "name": "Bills — Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026; Limitation of Debate",
+      "question": "Sue Lines As that matter was resolved in the affirmative, the consequential amendment on sheet 3791 will not be put. The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+      "house": "senate",
+      "date": "2026-08-20",
+      "ayes": 33,
+      "noes": 9,
       "result": "affirmative",
-      "bill": "au-federal-r7520",
-      "bill_lists_division": true
+      "outcome": "Passed",
+      "bill": "au-federal-r7449",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-senate-10656",
+        "federal-senate-10726",
+        "federal-senate-10727",
+        "federal-senate-10728",
+        "federal-senate-10729"
+      ]
     }
   },
   "q2aa6ac61": {
@@ -43,6 +88,8 @@
     "fields": {
       "agency": "a-aaa167b0097858604254",
       "agency_name": "Department of Defence",
+      "department": "Department of Defence",
+      "department_records": ["a-aaa167b0097858604254"],
       "contract": {
         "id": "CN4227142",
         "supplier": "Austal Defence Shipbuilding Australia Pty Ltd",
@@ -77,28 +124,62 @@
       "last_key_date": "2026-09-18"
     }
   },
-  "q5c9fa9b2": {
-    "path": "grants/federal/programs/go7748.json",
+  "qaabc3515": {
+    "path": "grants/federal/programs/go7466.json",
     "fields": {
-      "id": "GO7748",
-      "n": "Jobs, Land and the Economy",
-      "ag": "National Indigenous Australians Agency",
-      "agencies": 1,
-      "by.2025-26": [1266600251, 70]
+      "id": "GO7466",
+      "n": "Commonwealth Home Support Program",
+      "ag": "Department of Health, Disability and Ageing",
+      "by.2025-26": [7497189963, 5773],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7466.json",
+          "id": "GO7466",
+          "ag": "Department of Health, Disability and Ageing",
+          "agencies": 1,
+          "by.2025-26": [7497189963, 5773]
+        }
+      ]
     }
   },
-  "q81d3e113": {
-    "path": "divisions/division-federal-senate-10516.json",
+  "q41681f98": {
+    "path": "divisions/division-federal-representatives-10611.json",
     "fields": {
-      "key": "federal-senate-10516",
-      "name": "Bills — Northern Australia Infrastructure Facility Amendment Bill 2026; Third Reading",
-      "house": "senate",
-      "date": "2026-06-30",
-      "ayes": 29,
-      "noes": 10,
+      "key": "federal-representatives-10611",
+      "name": "Bills — Interactive Gambling Amendment (Gambling Reform) Bill 2026; Third Reading",
+      "question": "Steve Georganas The question now is that the bill be read a third time.",
+      "house": "representatives",
+      "date": "2026-08-18",
+      "ayes": 103,
+      "noes": 14,
       "result": "affirmative",
-      "bill": "au-federal-r7445",
-      "bill_lists_division": true
+      "outcome": "Passed",
+      "bill": "au-federal-r7520",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-representatives-10602",
+        "federal-representatives-10603",
+        "federal-representatives-10604",
+        "federal-representatives-10605",
+        "federal-representatives-10606",
+        "federal-representatives-10607",
+        "federal-representatives-10608",
+        "federal-representatives-10609",
+        "federal-representatives-10610",
+        "federal-representatives-10611",
+        "federal-senate-10701",
+        "federal-senate-10702",
+        "federal-senate-10703",
+        "federal-senate-10704",
+        "federal-senate-10705",
+        "federal-senate-10706",
+        "federal-senate-10707",
+        "federal-senate-10708",
+        "federal-senate-10709",
+        "federal-senate-10710",
+        "federal-senate-10711",
+        "federal-senate-10712"
+      ]
     }
   },
   "qbd8922de": {
@@ -106,6 +187,8 @@
     "fields": {
       "agency": "a-7d43ef20eda15f18fe8c",
       "agency_name": "Department of Home Affairs",
+      "department": "Department of Home Affairs",
+      "department_records": ["a-7d43ef20eda15f18fe8c"],
       "contract": {
         "id": "CN4239669",
         "supplier": "Metrea Australia Pty Ltd",
@@ -135,28 +218,69 @@
       "last_key_date": "2026-03-05"
     }
   },
-  "qcfff6420": {
-    "path": "grants/federal/programs/go5667.json",
+  "q1342ef12": {
+    "path": "grants/federal/programs/go7575.json",
     "fields": {
-      "id": "GO5667",
-      "n": "Australian Apprenticeships Incentive System",
-      "ag": "Department of Employment and Workplace Relations",
-      "agencies": 1,
-      "by.2025-26": [950644698, 31]
+      "id": "GO7575",
+      "n": "Discovery Projects",
+      "ag": "Australian Research Council",
+      "by.2025-26": [465104681, 669],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7575.json",
+          "id": "GO7575",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [322510557, 451]
+        },
+        {
+          "path": "grants/federal/programs/go6873.json",
+          "id": "GO6873",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [140832582, 215]
+        },
+        {
+          "path": "grants/federal/programs/go5904.json",
+          "id": "GO5904",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [1219724, 2]
+        },
+        {
+          "path": "grants/federal/programs/go5528.json",
+          "id": "GO5528",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [541818, 1]
+        }
+      ]
     }
   },
-  "qd50a614b": {
-    "path": "divisions/division-federal-representatives-10262.json",
+  "q4fab4c70": {
+    "path": "divisions/division-federal-senate-10516.json",
     "fields": {
-      "key": "federal-representatives-10262",
-      "name": "Bills — Treasury Laws Amendment (Tax Reform No. 1) Bill 2026; Third Reading",
-      "house": "representatives",
-      "date": "2026-06-04",
-      "ayes": 94,
-      "noes": 49,
+      "key": "federal-senate-10516",
+      "name": "Bills — Northern Australia Infrastructure Facility Amendment Bill 2026; Third Reading",
+      "question": "Nita Green I move: That this bill be now read a third time. Slade Brockman The question is that the bill be read a third time.",
+      "house": "senate",
+      "date": "2026-06-30",
+      "ayes": 29,
+      "noes": 10,
       "result": "affirmative",
-      "bill": "au-federal-r7493",
-      "bill_lists_division": true
+      "outcome": "Passed",
+      "bill": "au-federal-r7445",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-representatives-10047",
+        "federal-representatives-10048",
+        "federal-senate-10511",
+        "federal-senate-10512",
+        "federal-senate-10513",
+        "federal-senate-10514",
+        "federal-senate-10515",
+        "federal-senate-10516"
+      ]
     }
   },
   "q89dd3091": {
@@ -164,6 +288,8 @@
     "fields": {
       "agency": "a-a5e4384bbb1bc8c02dfc",
       "agency_name": "Department of Climate Change, Energy, the Environment and Water",
+      "department": "Department of Climate Change, Energy, the Environment and Water",
+      "department_records": ["a-a5e4384bbb1bc8c02dfc"],
       "contract": {
         "id": "CN4250371",
         "supplier": "State Street Australia Ltd",
@@ -183,113 +309,6 @@
       ]
     }
   },
-  "q2edd231e": {
-    "path": "bills/au-federal-r7499.json",
-    "fields": {
-      "key": "au-federal-r7499",
-      "status": "passed",
-      "ended": null,
-      "ended_label": null,
-      "parliament": 48,
-      "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-      "introduced": "2026-06-25",
-      "royal_assent": "2026-09-18",
-      "status_as_of": "2026-09-18",
-      "last_key_date": "2026-09-18"
-    }
-  },
-  "q2e5b886a": {
-    "path": "grants/federal/programs/go7846.json",
-    "fields": {
-      "id": "GO7846",
-      "n": "Medicare Urgent Care Clinics",
-      "ag": "Department of Health, Disability and Ageing",
-      "agencies": 1,
-      "by.2025-26": [839080119, 31]
-    }
-  },
-  "q757e3a5a": {
-    "path": "divisions/division-federal-senate-9971.json",
-    "fields": {
-      "key": "federal-senate-9971",
-      "name": "Bills — Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025; Third Reading",
-      "house": "senate",
-      "date": "2026-03-04",
-      "ayes": 29,
-      "noes": 18,
-      "result": "affirmative",
-      "bill": "au-federal-r7378",
-      "bill_lists_division": true
-    }
-  },
-  "q531c915f": {
-    "path": "agencies/a-991bfa422634e5c478f8.json",
-    "fields": {
-      "agency": "a-991bfa422634e5c478f8",
-      "agency_name": "Department of Health, Disability and Ageing",
-      "contract": {
-        "id": "CN4257170",
-        "supplier": "Glaxosmithkline Australia Pty Ltd",
-        "supplier_id": "s-3a526e2d700c22013a71",
-        "supplier_kind": "company",
-        "amount": 415000000,
-        "start_date": "2026-06-30",
-        "end_date": "2027-06-29"
-      },
-      "runner_up_amount": 311569341.84,
-      "contracts_starting": 1451,
-      "suppliers": []
-    }
-  },
-  "q3d198eba": {
-    "path": "bills/au-federal-r7518.json",
-    "fields": {
-      "key": "au-federal-r7518",
-      "status": "passed",
-      "ended": null,
-      "ended_label": null,
-      "parliament": 48,
-      "portfolio": "Agriculture, Fisheries and Forestry",
-      "introduced": "2026-07-01",
-      "royal_assent": "2026-09-15",
-      "status_as_of": "2026-09-15",
-      "last_key_date": "2026-09-15"
-    }
-  },
-  "qd919a214": {
-    "path": "grants/federal/programs/go7020.json",
-    "fields": {
-      "id": "GO7020",
-      "n": "Investigator Grants",
-      "ag": "National Health and Medical Research Council (NHMRC)",
-      "agencies": 1,
-      "by.2025-26": [360443902, 196]
-    }
-  },
-  "qd52ae489": {
-    "path": "agencies/a-3a413b064b4b6ded113e.json",
-    "fields": {
-      "agency": "a-3a413b064b4b6ded113e",
-      "agency_name": "Department of Foreign Affairs and Trade - Australian Aid Program",
-      "contract": {
-        "id": "CN4233163",
-        "supplier": "DT Global Asia Pacific Pty Ltd",
-        "supplier_id": "s-ea1286d8a2b718dc184a",
-        "supplier_kind": "company",
-        "amount": 232100000,
-        "start_date": "2026-04-12",
-        "end_date": "2031-02-27"
-      },
-      "runner_up_amount": 150700000,
-      "contracts_starting": 225,
-      "suppliers": [
-        "Tetra Tech International Development Pty Ltd",
-        "Adam Smith International (Australia) Pty Ltd",
-        "DT Global Asia Pacific Pty Ltd",
-        "Palladium International Pty Ltd"
-      ]
-    }
-  },
   "qbbf4f486": {
     "path": "bills/au-federal-r7501.json",
     "fields": {
@@ -305,81 +324,159 @@
       "last_key_date": "2026-09-17"
     }
   },
-  "qcfbf28f7": {
-    "path": "grants/federal/programs/go7242.json",
+  "q17235701": {
+    "path": "grants/federal/programs/go5667.json",
     "fields": {
-      "id": "GO7242",
-      "n": "Emergency Relief",
-      "ag": "Department of Social Services",
-      "agencies": 1,
-      "by.2025-26": [333503032, 191]
+      "id": "GO5667",
+      "n": "Australian Apprenticeships Incentive System",
+      "ag": "Department of Employment and Workplace Relations",
+      "by.2025-26": [950644698, 31],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go5667.json",
+          "id": "GO5667",
+          "ag": "Department of Employment and Workplace Relations",
+          "agencies": 1,
+          "by.2025-26": [950644698, 31]
+        }
+      ]
     }
   },
-  "q138a45a4": {
-    "path": "agencies/a-e764ee177692c8ad23a4.json",
+  "q164d5174": {
+    "path": "divisions/division-federal-senate-10639.json",
     "fields": {
-      "agency": "a-e764ee177692c8ad23a4",
-      "agency_name": "Department of Foreign Affairs and Trade",
+      "key": "federal-senate-10639",
+      "name": "Bills — Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026; Limitation of Debate",
+      "question": "Sue Lines The question is that the remaining stages of the bill be agreed to and the bill be now passed.",
+      "house": "senate",
+      "date": "2026-06-29",
+      "ayes": 33,
+      "noes": 24,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7436",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-representatives-10009",
+        "federal-senate-10636",
+        "federal-senate-10637",
+        "federal-senate-10638",
+        "federal-senate-10639",
+        "federal-representatives-10508",
+        "federal-representatives-10509"
+      ]
+    }
+  },
+  "q531c915f": {
+    "path": "agencies/a-991bfa422634e5c478f8.json",
+    "fields": {
+      "agency": "a-991bfa422634e5c478f8",
+      "agency_name": "Department of Health, Disability and Ageing",
+      "department": "Department of Health, Disability and Ageing",
+      "department_records": ["a-991bfa422634e5c478f8"],
       "contract": {
-        "id": "CN4274352",
-        "supplier": "Palladium International Pty Ltd",
-        "supplier_id": "s-2a3311c508c76ed30cca",
+        "id": "CN4257170",
+        "supplier": "Glaxosmithkline Australia Pty Ltd",
+        "supplier_id": "s-3a526e2d700c22013a71",
         "supplier_kind": "company",
-        "amount": 166650000,
-        "start_date": "2026-06-15",
-        "end_date": "2029-06-29"
+        "amount": 415000000,
+        "start_date": "2026-06-30",
+        "end_date": "2027-06-29"
       },
-      "runner_up_amount": 133799857.51,
-      "contracts_starting": 1853,
+      "runner_up_amount": 311569341.84,
+      "contracts_starting": 1451,
       "suppliers": []
     }
   },
-  "q98bf004b": {
-    "path": "bills/au-federal-r7359.json",
+  "qb5c7526b": {
+    "path": "bills/au-federal-r7499.json",
     "fields": {
-      "key": "au-federal-r7359",
-      "status": "lapsed",
-      "ended": "discharged",
-      "ended_label": "Discharged from the Notice Paper",
+      "key": "au-federal-r7499",
+      "status": "passed",
+      "ended": null,
+      "ended_label": null,
       "parliament": 48,
-      "portfolio": "Defence",
-      "introduced": "2025-08-28",
-      "royal_assent": null,
-      "status_as_of": "2025-11-24",
-      "last_key_date": "2025-11-24"
+      "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+      "introduced": "2026-06-25",
+      "royal_assent": "2026-09-18",
+      "status_as_of": "2026-09-18",
+      "last_key_date": "2026-09-18"
     }
   },
-  "q1342ef12": {
-    "path": "grants/federal/programs/go7575.json",
+  "qd919a214": {
+    "path": "grants/federal/programs/go7020.json",
     "fields": {
-      "id": "GO7575",
-      "n": "Discovery Projects",
-      "ag": "Australian Research Council",
-      "agencies": 1,
-      "by.2025-26": [322510557, 451]
+      "id": "GO7020",
+      "n": "Investigator Grants",
+      "ag": "National Health and Medical Research Council (NHMRC)",
+      "by.2025-26": [422840245, 227],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7020.json",
+          "id": "GO7020",
+          "ag": "National Health and Medical Research Council (NHMRC)",
+          "agencies": 1,
+          "by.2025-26": [360443902, 196]
+        },
+        {
+          "path": "grants/federal/programs/go6477.json",
+          "id": "GO6477",
+          "ag": "National Health and Medical Research Council (NHMRC)",
+          "agencies": 1,
+          "by.2025-26": [62396343, 31]
+        }
+      ]
     }
   },
-  "qa64097d1": {
-    "path": "agencies/a-0e4ebbaef2e28dc387bc.json",
+  "qa7ee2f58": {
+    "path": "divisions/division-federal-senate-10220.json",
     "fields": {
-      "agency": "a-0e4ebbaef2e28dc387bc",
-      "agency_name": "Australian Digital Health Agency",
+      "key": "federal-senate-10220",
+      "name": "Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026 - Limitation of Debate - Pass the bill",
+      "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-05-14.21.6) to agree with the remaining stages of the bill so it can now pass. In other words, they voted to read it for a third time. This means the bill will now be sent to the House of Representatives for their consideration. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd064), which is a document prepared by the parliamentary library: > *The Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026 would amend the Competition and Consumer Act 2010 (the CCA) to introduce a new power for the Minister to make exceptional circumstances declarations, and to allow the Australian Competition and Consumer Commission (ACCC) to grant an authorisation or declare a class exemption in relation to conduct that might otherwise breach competition law, when this would assist in responding to the exceptional circumstances. The Bill would also increase the maximum penalties that could apply for breaches of the Oil Code of Conduct for the petroleum marketing industry.* > > *The ACCC currently has powers to authorise specified conduct on application, or classes of conduct generally, that might otherwise breach some competition laws, where it is in the public interest to do so. This power includes authorising conduct in response to a declared national emergency under the National Emergency Declaration Act 2020 (NEDA).* > > * *the amendments would provide an additional basis for the ACCC to authorise conduct in circumstances which may not meet the NEDA’s national emergency criteria.* > > *Ministerial declarations would be open to disallowance by the Parliament. As a result of a Senate amendment introduced by the Greens, class exemptions would also be subject to disallowance.* > > *Ministerial declarations, and ACCC authorisations and class exemptions may commence retrospectiv",
+      "house": "senate",
+      "date": "2026-05-14",
+      "ayes": 34,
+      "noes": 27,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-s1493",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-senate-10218",
+        "federal-senate-10219",
+        "federal-senate-10220",
+        "federal-representatives-10231",
+        "federal-representatives-10233"
+      ]
+    }
+  },
+  "q759c4d3a": {
+    "path": "agencies/a-3a413b064b4b6ded113e.json",
+    "fields": {
+      "agency": "a-3a413b064b4b6ded113e",
+      "agency_name": "Department of Foreign Affairs and Trade - Australian Aid Program",
+      "department": "Department of Foreign Affairs and Trade",
+      "department_records": [
+        "a-3a413b064b4b6ded113e",
+        "a-e764ee177692c8ad23a4"
+      ],
       "contract": {
-        "id": "CN4273297",
-        "supplier": "Accenture Australia Pty Limited",
-        "supplier_id": "s-8f22c19d3fc22a56c78a",
+        "id": "CN4233163",
+        "supplier": "DT Global Asia Pacific Pty Ltd",
+        "supplier_id": "s-ea1286d8a2b718dc184a",
         "supplier_kind": "company",
-        "amount": 161556494.6,
-        "start_date": "2026-08-27",
-        "end_date": "2029-08-26"
+        "amount": 232100000,
+        "start_date": "2026-04-12",
+        "end_date": "2031-02-27"
       },
-      "runner_up_amount": 157164606.01,
-      "contracts_starting": 124,
+      "runner_up_amount": 166650000,
+      "contracts_starting": 2078,
       "suppliers": [
-        "Pinpoint Talent Pty Ltd",
-        "Oracle Corporation Australia Pty Limited",
-        "Accenture Australia Pty Limited",
-        "Amazon Web Services Australia Pty Ltd"
+        "Tetra Tech International Development Pty Ltd",
+        "Johnstaff International Development Pty Ltd",
+        "DT Global Asia Pacific Pty Ltd",
+        "Palladium International Pty Ltd"
       ]
     }
   },
@@ -398,21 +495,138 @@
       "last_key_date": "2026-09-17"
     }
   },
-  "qa0e0638a": {
+  "q2e5b886a": {
+    "path": "grants/federal/programs/go7846.json",
+    "fields": {
+      "id": "GO7846",
+      "n": "Medicare Urgent Care Clinics",
+      "ag": "Department of Health, Disability and Ageing",
+      "by.2025-26": [839080119, 31],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7846.json",
+          "id": "GO7846",
+          "ag": "Department of Health, Disability and Ageing",
+          "agencies": 1,
+          "by.2025-26": [839080119, 31]
+        }
+      ]
+    }
+  },
+  "q45c36704": {
+    "path": "divisions/division-federal-senate-10189.json",
+    "fields": {
+      "key": "federal-senate-10189",
+      "name": "National Health Amendment (Passive Immunological Products) Bill 2026 - Limitation of Debate - Pass the bill",
+      "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-04-01.39.1) to agree with the remaining stages of the bill (parliamentary jargon for reading the bill a third time), meaning it will now be passed in the Senate. Since the bill has already passed in the House of Representatives, it now becomes law. #### Rebellion South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (Liberal) crossed the floor to vote \"No\" against the rest of the Liberal Party. ### What does this bill do? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7423_ems_e29ebb18-af07-40f6-831e-45dc849ce5ce%22;rec=0), which a document prepared by the Government (the party that introduced the bill): > *The purpose of the National Health Amendment (Passive Immunological Products) Bill 2026 (the Bill) is to amend the definition of ‘vaccine’ in the National Health Act 1953 (the Act) to enable new and emerging technologies to be listed on the National Immunisation Program (the NIP).* > > *The NIP provides free vaccines to eligible individuals in Australia to reduce the incidence and severity of vaccine-preventable diseases. It is an established collaborative program involving the Australian Government and state and territory governments.* > > *The NIP relies on section 9B of the Act, which enables a vaccine to be specified as a ‘designated vaccine’ by legislative instrument. The legislative instrument can only specify vaccines if they are defined within the meaning of ‘vaccine’ under section 4 of the Act. There is no scope to designate another product that is not a vaccine as defined in the Act.* > > *The current definition of ‘vaccine’ in the Act supports the technical meaning of ‘vaccine’ being a substance administered to elicit an immune response – that is a mode of active immunisation. Immunisa",
+      "house": "senate",
+      "date": "2026-04-01",
+      "ayes": 39,
+      "noes": 5,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7423",
+      "bill_lists_division": true,
+      "bill_divisions": ["federal-senate-10188", "federal-senate-10189"]
+    }
+  },
+  "q3fd6cc9f": {
+    "path": "agencies/a-0e4ebbaef2e28dc387bc.json",
+    "fields": {
+      "agency": "a-0e4ebbaef2e28dc387bc",
+      "agency_name": "Australian Digital Health Agency",
+      "department": "Australian Digital Health Agency",
+      "department_records": ["a-0e4ebbaef2e28dc387bc"],
+      "contract": {
+        "id": "CN4273297",
+        "supplier": "Accenture Australia Pty Limited",
+        "supplier_id": "s-8f22c19d3fc22a56c78a",
+        "supplier_kind": "company",
+        "amount": 161556494.6,
+        "start_date": "2026-08-27",
+        "end_date": "2029-08-26"
+      },
+      "runner_up_amount": 157164606.01,
+      "contracts_starting": 124,
+      "suppliers": []
+    }
+  },
+  "q98bf004b": {
+    "path": "bills/au-federal-r7359.json",
+    "fields": {
+      "key": "au-federal-r7359",
+      "status": "lapsed",
+      "ended": "discharged",
+      "ended_label": "Discharged from the Notice Paper",
+      "parliament": 48,
+      "portfolio": "Defence",
+      "introduced": "2025-08-28",
+      "royal_assent": null,
+      "status_as_of": "2025-11-24",
+      "last_key_date": "2025-11-24"
+    }
+  },
+  "qae2c980f": {
     "path": "grants/federal/programs/go7599.json",
     "fields": {
       "id": "GO7599",
       "n": "Ideas Grants",
       "ag": "National Health and Medical Research Council (NHMRC)",
-      "agencies": 1,
-      "by.2025-26": [276207932, 184]
+      "by.2025-26": [293210251, 195],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7599.json",
+          "id": "GO7599",
+          "ag": "National Health and Medical Research Council (NHMRC)",
+          "agencies": 1,
+          "by.2025-26": [276207932, 184]
+        },
+        {
+          "path": "grants/federal/programs/go6844.json",
+          "id": "GO6844",
+          "ag": "National Health and Medical Research Council (NHMRC)",
+          "agencies": 1,
+          "by.2025-26": [17002319, 11]
+        }
+      ]
     }
   },
-  "qfb4d04ea": {
+  "qa5e5a86f": {
+    "path": "divisions/division-federal-senate-10151.json",
+    "fields": {
+      "key": "federal-senate-10151",
+      "name": "Universities Accord (Australian Tertiary Education Commission) Bill 2025 and another - Third Reading - Pass the bills",
+      "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-03-30.211.5) to pass the bills in Senate. The Universities Accord (Australian Tertiary Education Commission) Bill 2025 will now return to the House of Representatives, where our MPs will decide on whether they agree with the Senate amendments. Because the Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Bill 2025 has been passed in its final form in both houses of parliament, so it will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd038), which is a document prepared by the parliamentary library: > *The Universities Accord (Australian Tertiary Education Commission) Bill 2025 (the Bill) provides for the establishment of the Australian Tertiary Education Commission (ATEC) to provide stewardship of the higher education system.* > > *The Bill enshrines a National Tertiary Education Objective (NTEO), to which ATEC must have regard in performing its functions.* > > *The Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Bill 2025 (the C&T Bill) amends related legislation to implement the Bill, including transferring responsibilities for the Higher Education Standards Framework to Australian Tertiary Education Commission (ATEC), and enabling information sharing between the Department of Education and ATEC.* > > *Establishing ATEC was a recommendation of the Australian Universities Accord, although not all components of the recommendations are included in the Bill. The Minister would appoint three commissioners, including a First Nations Commissioner. At least one must have experience with vocational education and training (VET). ATEC will be assisted by the Department of Education.* > > *As well as the NTEO, and specific criteria in the Bill, ATEC must have regard ",
+      "house": "senate",
+      "date": "2026-03-30",
+      "ayes": 36,
+      "noes": 27,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7416",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-representatives-9903",
+        "federal-representatives-9904",
+        "federal-representatives-9905",
+        "federal-senate-10145",
+        "federal-senate-10146",
+        "federal-senate-10147",
+        "federal-senate-10148",
+        "federal-senate-10149",
+        "federal-senate-10150",
+        "federal-senate-10151",
+        "federal-representatives-10153"
+      ]
+    }
+  },
+  "qff37c19d": {
     "path": "agencies/a-7261205f59a3b96c292c.json",
     "fields": {
       "agency": "a-7261205f59a3b96c292c",
       "agency_name": "Department of Veterans' Affairs",
+      "department": "Department of Veterans' Affairs",
+      "department_records": ["a-7261205f59a3b96c292c"],
       "contract": {
         "id": "CN4280784",
         "supplier": "ResMed Asia Pacific Limited",
@@ -424,55 +638,11 @@
       },
       "runner_up_amount": 55500701.88,
       "contracts_starting": 1676,
-      "suppliers": []
-    }
-  },
-  "q26516f48": {
-    "path": "bills/au-federal-r7519.json",
-    "fields": {
-      "key": "au-federal-r7519",
-      "status": "passed",
-      "ended": null,
-      "ended_label": null,
-      "parliament": 48,
-      "portfolio": "Agriculture, Fisheries and Forestry",
-      "introduced": "2026-07-01",
-      "royal_assent": "2026-09-15",
-      "status_as_of": "2026-09-15",
-      "last_key_date": "2026-09-15"
-    }
-  },
-  "qa6d0303e": {
-    "path": "grants/federal/programs/go8040.json",
-    "fields": {
-      "id": "GO8040",
-      "n": "Supporting Multicultural Communities Infrastructure",
-      "ag": "Department of Home Affairs",
-      "agencies": 1,
-      "by.2025-26": [113837300, 35]
-    }
-  },
-  "q8811b8d6": {
-    "path": "agencies/a-7431f054588d4251c0b4.json",
-    "fields": {
-      "agency": "a-7431f054588d4251c0b4",
-      "agency_name": "Digital Transformation Agency",
-      "contract": {
-        "id": "CN4253616",
-        "supplier": "Microsoft Pty Ltd",
-        "supplier_id": "s-6c52a6bfc2fcee4ab010",
-        "supplier_kind": "company",
-        "amount": 101739820.85,
-        "start_date": "2026-05-31",
-        "end_date": "2029-06-29"
-      },
-      "runner_up_amount": 8250000,
-      "contracts_starting": 89,
       "suppliers": [
-        "Capgemini Australia Pty Limited",
-        "Oracle Corporation Australia Pty Limited",
-        "Microsoft Pty Ltd",
-        "Telstra Corporation Limited"
+        "CBRE (V) Pty Limited",
+        "ResMed Asia Pacific Limited",
+        "Family First Home Care Pty Ltd",
+        "MedHealth Pty Limited"
       ]
     }
   },
@@ -491,21 +661,146 @@
       "last_key_date": "2026-09-16"
     }
   },
-  "q6905e3b8": {
-    "path": "grants/federal/programs/go6633.json",
+  "qcfbf28f7": {
+    "path": "grants/federal/programs/go7242.json",
     "fields": {
-      "id": "GO6633",
-      "n": "Industry Growth Program",
-      "ag": "Department of Industry, Science and Resources",
-      "agencies": 1,
-      "by.2025-26": [125021434, 53]
+      "id": "GO7242",
+      "n": "Emergency Relief",
+      "ag": "Department of Social Services",
+      "by.2025-26": [333503032, 191],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7242.json",
+          "id": "GO7242",
+          "ag": "Department of Social Services",
+          "agencies": 1,
+          "by.2025-26": [333503032, 191]
+        }
+      ]
     }
   },
-  "q9df2c395": {
+  "qf5a7e3a3": {
+    "path": "divisions/division-federal-senate-10082.json",
+    "fields": {
+      "key": "federal-senate-10082",
+      "name": "Migration Amendment (2026 Measures No. 1) Bill 2026 - Limitation of Debate - Pass the bill",
+      "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-03-12.177.1) *that the remaining stages of the bill be agreed to and the bill now be passed.* Because the bill already passed in the House of Representatives it will now become law. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7447), the bill: > *Amends the Migration Act 1958 to enable temporary restrictions on the arrival of certain classes of temporary visa holders in Australia, including when events or circumstances outside Australia mean that there is an increased risk that certain classes of temporary visa holders will not depart Australia when their visas cease to be in effect.* The [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7447_ems_3693e0bf-117f-408a-bcc6-8abfdf540b86%22;rec=0) (which is a document prepared by the party introducing the bill, which is the Government in this case) explains that: > *Currently, the Migration Act does not contain a general power to prevent cohorts of non-citizens who hold visas that are in effect from traveling to Australia, including in circumstances where that travel may present a risk to Australia’s national interest,. Although there are powers under the Migration Act to cancel a non-citizen’s visa in those circumstances, those powers are only capable of being exercised in relation to individual non-citizens. The existing powers are therefore resource intensive, and are not suited to responding at scale to events occurring overseas where it is appropriate and in the national interest to limit or prevent travel to Australia for current holders of a temporary visa who are outside of Australia.* > > *This may include during periods of international conflict or other rapid international developments that place",
+      "house": "senate",
+      "date": "2026-03-12",
+      "ayes": 26,
+      "noes": 11,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7447",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-representatives-10043",
+        "federal-representatives-10044",
+        "federal-representatives-10045",
+        "federal-representatives-10046",
+        "federal-senate-10055",
+        "federal-senate-10056",
+        "federal-senate-10077",
+        "federal-senate-10078",
+        "federal-senate-10079",
+        "federal-senate-10080",
+        "federal-senate-10081",
+        "federal-senate-10082"
+      ]
+    }
+  },
+  "qe0adee3e": {
+    "path": "agencies/a-7431f054588d4251c0b4.json",
+    "fields": {
+      "agency": "a-7431f054588d4251c0b4",
+      "agency_name": "Digital Transformation Agency",
+      "department": "Digital Transformation Agency",
+      "department_records": ["a-7431f054588d4251c0b4"],
+      "contract": {
+        "id": "CN4253616",
+        "supplier": "Microsoft Pty Ltd",
+        "supplier_id": "s-6c52a6bfc2fcee4ab010",
+        "supplier_kind": "company",
+        "amount": 101739820.85,
+        "start_date": "2026-05-31",
+        "end_date": "2029-06-29"
+      },
+      "runner_up_amount": 8250000,
+      "contracts_starting": 89,
+      "suppliers": []
+    }
+  },
+  "q3d198eba": {
+    "path": "bills/au-federal-r7518.json",
+    "fields": {
+      "key": "au-federal-r7518",
+      "status": "passed",
+      "ended": null,
+      "ended_label": null,
+      "parliament": 48,
+      "portfolio": "Agriculture, Fisheries and Forestry",
+      "introduced": "2026-07-01",
+      "royal_assent": "2026-09-15",
+      "status_as_of": "2026-09-15",
+      "last_key_date": "2026-09-15"
+    }
+  },
+  "qf69b2424": {
+    "path": "grants/federal/programs/go7700.json",
+    "fields": {
+      "id": "GO7700",
+      "n": "Cooperative Research Centres Programme",
+      "ag": "Department of Industry, Science and Resources",
+      "by.2025-26": [143990993, 28],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7700.json",
+          "id": "GO7700",
+          "ag": "Department of Industry, Science and Resources",
+          "agencies": 1,
+          "by.2025-26": [72490993, 27]
+        },
+        {
+          "path": "grants/federal/programs/go6517.json",
+          "id": "GO6517",
+          "ag": "Department of Industry, Science and Resources",
+          "agencies": 1,
+          "by.2025-26": [71500000, 1]
+        }
+      ]
+    }
+  },
+  "q52a6017b": {
+    "path": "divisions/division-federal-senate-9972.json",
+    "fields": {
+      "key": "federal-senate-9972",
+      "name": "Bills — Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025; Third Reading",
+      "question": "Steph Hodgins-May The question now is that the bill be read a third time.",
+      "house": "senate",
+      "date": "2026-03-04",
+      "ayes": 30,
+      "noes": 18,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7378",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-senate-9899",
+        "federal-senate-9900",
+        "federal-senate-9901",
+        "federal-senate-9951",
+        "federal-senate-9971",
+        "federal-senate-9972"
+      ]
+    }
+  },
+  "q54beac9e": {
     "path": "agencies/a-5231d6c038e044c36237.json",
     "fields": {
       "agency": "a-5231d6c038e044c36237",
       "agency_name": "Australian Prudential Regulation Authority",
+      "department": "Australian Prudential Regulation Authority",
+      "department_records": ["a-5231d6c038e044c36237"],
       "contract": {
         "id": "CN4159115",
         "supplier": "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
@@ -517,55 +812,11 @@
       },
       "runner_up_amount": 11366076.66,
       "contracts_starting": 238,
-      "suppliers": []
-    }
-  },
-  "qff21bfe2": {
-    "path": "bills/au-federal-r7157.json",
-    "fields": {
-      "key": "au-federal-r7157",
-      "status": "lapsed",
-      "ended": "discharged",
-      "ended_label": "Discharged from the Notice Paper",
-      "parliament": 47,
-      "portfolio": "Agriculture, Fisheries and Forestry",
-      "introduced": "2024-02-28",
-      "royal_assent": null,
-      "status_as_of": "2025-02-12",
-      "last_key_date": "2025-02-12"
-    }
-  },
-  "q0ea9b7b8": {
-    "path": "grants/federal/programs/go7241.json",
-    "fields": {
-      "id": "GO7241",
-      "n": "Commonwealth Financial Counselling and Financial Capability",
-      "ag": "Department of Social Services",
-      "agencies": 1,
-      "by.2025-26": [110463617, 57]
-    }
-  },
-  "qf381a8e9": {
-    "path": "agencies/a-32a10e56bd708fd30db5.json",
-    "fields": {
-      "agency": "a-32a10e56bd708fd30db5",
-      "agency_name": "Australian Competition and Consumer Commission",
-      "contract": {
-        "id": "CN4219569",
-        "supplier": "Datacom Systems (AU) Pty Ltd",
-        "supplier_id": "s-828d512472eedc897c04",
-        "supplier_kind": "company",
-        "amount": 25177606.2,
-        "start_date": "2026-02-02",
-        "end_date": "2029-02-01"
-      },
-      "runner_up_amount": 24494748.51,
-      "contracts_starting": 535,
       "suppliers": [
-        "Davidson Technology (Aust) Pty Ltd",
-        "Ignite Limited",
-        "Randstad PTY LIMITED",
-        "Datacom Systems (AU) Pty Ltd"
+        "Hunter Mason (VIC) Pty Ltd",
+        "HAYS Specialist Recruitment (Australia) PTY Limited",
+        "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
+        "DXC Technology Australia Pty Limited"
       ]
     }
   },
@@ -584,21 +835,161 @@
       "last_key_date": "2026-09-16"
     }
   },
-  "q41ef01e8": {
-    "path": "grants/federal/programs/go7867.json",
+  "q6905e3b8": {
+    "path": "grants/federal/programs/go6633.json",
     "fields": {
-      "id": "GO7867",
-      "n": "Major and Local Community Infrastructure Program",
-      "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-      "agencies": 1,
-      "by.2025-26": [110980000, 33]
+      "id": "GO6633",
+      "n": "Industry Growth Program",
+      "ag": "Department of Industry, Science and Resources",
+      "by.2025-26": [125021434, 53],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go6633.json",
+          "id": "GO6633",
+          "ag": "Department of Industry, Science and Resources",
+          "agencies": 1,
+          "by.2025-26": [125021434, 53]
+        }
+      ]
     }
   },
-  "q62223c1d": {
+  "q95e982cc": {
+    "path": "divisions/division-federal-senate-9892.json",
+    "fields": {
+      "key": "federal-senate-9892",
+      "name": "Administrative Review Tribunal and Other Legislation Amendment Bill 2025 - Third Reading - Pass the bill",
+      "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2026-02-05.15.1) to pass the bill in the Senate. The bill will now return to the House of Representatives, where our MPs will decide on whether they agree with the Senate amendments so the bill can become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd018), which is a document prepared by the parliamentary library: > *The Administrative Review Tribunal and Other Legislation Amendment Bill 2025 (the Bill) amends the Administrative Review Tribunal Act 2024 (ART Act) and the Migration Act 1958 (Migration Act) regarding certain decisions which may be made without holding an oral hearing.* > > *The Bill amends the ART Act to expand the circumstances in which the Administrative Review Tribunal (the Tribunal) may make a decision based on written materials and without holding an oral hearing.* > > *The Bill amends the Migration Act to require that the Tribunal make certain decisions regarding reviewable migration decisions ‘on the papers’ instead of conducting an oral hearing. For this purpose, the Bill specifies reviews of decisions to refuse to grant a student visa, and provides that regulations may prescribe reviews of decisions relating to other kinds of temporary visa, whether refusals to grant or to cancel a visa.* > > *The requirement for the Tribunal to make certain decisions on the papers will not apply to decisions regarding permanent visas and reviewable protection decisions. However, the Tribunal will retain discretion to dispense with oral hearings for these matters, including in expanded circumstances set out in the Bill.* > > *Proposed Division 4A of Part 5 of the Migration Act provides for a new process for the conduct of applications to be reviewed on the papers. The process includes requirements that the Tribunal must invite the applicant to provide written submissions concerni",
+      "house": "senate",
+      "date": "2026-02-05",
+      "ayes": 32,
+      "noes": 11,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7365",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-senate-9854",
+        "federal-senate-9855",
+        "federal-senate-9856",
+        "federal-senate-9891",
+        "federal-senate-9892"
+      ]
+    }
+  },
+  "q6b71beb1": {
+    "path": "agencies/a-32a10e56bd708fd30db5.json",
+    "fields": {
+      "agency": "a-32a10e56bd708fd30db5",
+      "agency_name": "Australian Competition and Consumer Commission",
+      "department": "Australian Competition and Consumer Commission",
+      "department_records": ["a-32a10e56bd708fd30db5"],
+      "contract": {
+        "id": "CN4219569",
+        "supplier": "Datacom Systems (AU) Pty Ltd",
+        "supplier_id": "s-828d512472eedc897c04",
+        "supplier_kind": "company",
+        "amount": 25177606.2,
+        "start_date": "2026-02-02",
+        "end_date": "2029-02-01"
+      },
+      "runner_up_amount": 24494748.51,
+      "contracts_starting": 535,
+      "suppliers": []
+    }
+  },
+  "qff21bfe2": {
+    "path": "bills/au-federal-r7157.json",
+    "fields": {
+      "key": "au-federal-r7157",
+      "status": "lapsed",
+      "ended": "discharged",
+      "ended_label": "Discharged from the Notice Paper",
+      "parliament": 47,
+      "portfolio": "Agriculture, Fisheries and Forestry",
+      "introduced": "2024-02-28",
+      "royal_assent": null,
+      "status_as_of": "2025-02-12",
+      "last_key_date": "2025-02-12"
+    }
+  },
+  "q6014e7f3": {
+    "path": "grants/federal/programs/go6639.json",
+    "fields": {
+      "id": "GO6639",
+      "n": "Linkage Projects",
+      "ag": "Australian Research Council",
+      "by.2025-26": [88937172, 166],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go6639.json",
+          "id": "GO6639",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [54649067, 95]
+        },
+        {
+          "path": "grants/federal/programs/go7368.json",
+          "id": "GO7368",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [21071260, 43]
+        },
+        {
+          "path": "grants/federal/programs/go5936.json",
+          "id": "GO5936",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [12928588, 27]
+        },
+        {
+          "path": "grants/federal/programs/go5578.json",
+          "id": "GO5578",
+          "ag": "Australian Research Council",
+          "agencies": 1,
+          "by.2025-26": [288257, 1]
+        }
+      ]
+    }
+  },
+  "q7360b831": {
+    "path": "divisions/division-federal-representatives-9809.json",
+    "fields": {
+      "key": "federal-representatives-9809",
+      "name": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 - Third Reading - Pass the bill",
+      "question": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 - Third Reading - Pass the bill",
+      "house": "representatives",
+      "date": "2026-01-20",
+      "ayes": 96,
+      "noes": 45,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7421",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-representatives-9807",
+        "federal-representatives-9808",
+        "federal-representatives-9809",
+        "federal-senate-9812",
+        "federal-senate-9813",
+        "federal-senate-9814",
+        "federal-senate-9815",
+        "federal-senate-9816",
+        "federal-senate-9817",
+        "federal-senate-9818",
+        "federal-senate-9983",
+        "federal-senate-9984",
+        "federal-senate-10094",
+        "federal-senate-10095"
+      ]
+    }
+  },
+  "q8ccd6d12": {
     "path": "agencies/a-c241462e1470c73a4c4e.json",
     "fields": {
       "agency": "a-c241462e1470c73a4c4e",
       "agency_name": "Bureau of Meteorology",
+      "department": "Bureau of Meteorology",
+      "department_records": ["a-c241462e1470c73a4c4e"],
       "contract": {
         "id": "CN4269260",
         "supplier": "NTT Australia PTY LTD",
@@ -610,6 +1001,90 @@
       },
       "runner_up_amount": 15681834,
       "contracts_starting": 505,
+      "suppliers": [
+        "Leidos Australia Pty Limited",
+        "Ventia Property Pty Ltd",
+        "NTT Australia PTY LTD",
+        "Unisys Australia Pty Limited"
+      ]
+    }
+  },
+  "q4a6e6241": {
+    "path": "bills/au-federal-r7519.json",
+    "fields": {
+      "key": "au-federal-r7519",
+      "status": "passed",
+      "ended": null,
+      "ended_label": null,
+      "parliament": 48,
+      "portfolio": "Agriculture, Fisheries and Forestry",
+      "introduced": "2026-07-01",
+      "royal_assent": "2026-09-15",
+      "status_as_of": "2026-09-15",
+      "last_key_date": "2026-09-15"
+    }
+  },
+  "q22099d77": {
+    "path": "grants/federal/programs/go8040.json",
+    "fields": {
+      "id": "GO8040",
+      "n": "Supporting Multicultural Communities Infrastructure",
+      "ag": "Department of Home Affairs",
+      "by.2025-26": [113837300, 35],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go8040.json",
+          "id": "GO8040",
+          "ag": "Department of Home Affairs",
+          "agencies": 1,
+          "by.2025-26": [113837300, 35]
+        }
+      ]
+    }
+  },
+  "q153f89f0": {
+    "path": "divisions/division-federal-senate-9696.json",
+    "fields": {
+      "key": "federal-senate-9696",
+      "name": "Defence Housing Australia Amendment Bill 2025 - Third Reading - Pass the bill",
+      "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2025-08-25.239.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill a third time. Since the bill has already passed in the House of the Representatives, it will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd007), which is a document created by the parliamentary library: > *Australia is hosting an increasing number of foreign military personnel as a result of expanding defence cooperation with allies.* > > *Key initiatives include Submarine Rotational Force-West (SRF-West), the US Force Posture Initiatives, the Australia-Japan Reciprocal Access Agreement, and the Australia – Singapore Military Training Initiative.* > > *The Bill will amend the Defence Housing Australia Act 1987 to expand Defence Housing Australia’s (DHA) main function to include the ability to provide housing and housing-related services to foreign government and defence personnel, and philanthropic organisations assisting the Australian Defence Force, to meet Defence’s current and future operational requirements.* > > *At the time of writing, the Bill had not been referred to or reported on by any parliamentary committees.*",
+      "house": "senate",
+      "date": "2025-08-25",
+      "ayes": 29,
+      "noes": 11,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7337",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-representatives-9654",
+        "federal-senate-9683",
+        "federal-senate-9684",
+        "federal-senate-9685",
+        "federal-senate-9686",
+        "federal-senate-9687",
+        "federal-senate-9696"
+      ]
+    }
+  },
+  "q038310e9": {
+    "path": "agencies/a-5e7f6cdc53a9dd00fbdb.json",
+    "fields": {
+      "agency": "a-5e7f6cdc53a9dd00fbdb",
+      "agency_name": "Australian Submarine Agency",
+      "department": "Australian Submarine Agency",
+      "department_records": ["a-5e7f6cdc53a9dd00fbdb"],
+      "contract": {
+        "id": "CN4268271",
+        "supplier": "Accenture Australia Pty Limited",
+        "supplier_id": "s-8f22c19d3fc22a56c78a",
+        "supplier_kind": "company",
+        "amount": 14557259.05,
+        "start_date": "2026-08-09",
+        "end_date": "2029-06-29"
+      },
+      "runner_up_amount": 13087401.76,
+      "contracts_starting": 131,
       "suppliers": []
     }
   },
@@ -628,70 +1103,57 @@
       "last_key_date": "2026-08-26"
     }
   },
-  "q15cf02de": {
-    "path": "grants/federal/programs/go90.json",
+  "q0ea9b7b8": {
+    "path": "grants/federal/programs/go7241.json",
     "fields": {
-      "id": "GO90",
-      "n": "Australian Apprenticeships Incentives Programme",
-      "ag": "Department of Employment and Workplace Relations",
-      "agencies": 1,
-      "by.2025-26": [108417238, 32]
-    }
-  },
-  "q7bd4fbd1": {
-    "path": "agencies/a-5e7f6cdc53a9dd00fbdb.json",
-    "fields": {
-      "agency": "a-5e7f6cdc53a9dd00fbdb",
-      "agency_name": "Australian Submarine Agency",
-      "contract": {
-        "id": "CN4268271",
-        "supplier": "Accenture Australia Pty Limited",
-        "supplier_id": "s-8f22c19d3fc22a56c78a",
-        "supplier_kind": "company",
-        "amount": 14557259.05,
-        "start_date": "2026-08-09",
-        "end_date": "2029-06-29"
-      },
-      "runner_up_amount": 13087401.76,
-      "contracts_starting": 131,
-      "suppliers": [
-        "Synergy Group OpCo Pty Ltd",
-        "SME Gateway Pty Ltd",
-        "Accenture Australia Pty Limited",
-        "Aurecon Australasia Pty Ltd"
+      "id": "GO7241",
+      "n": "Commonwealth Financial Counselling and Financial Capability",
+      "ag": "Department of Social Services",
+      "by.2025-26": [110463617, 57],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7241.json",
+          "id": "GO7241",
+          "ag": "Department of Social Services",
+          "agencies": 1,
+          "by.2025-26": [110463617, 57]
+        }
       ]
     }
   },
-  "q80e2fc32": {
-    "path": "bills/au-federal-r7414.json",
+  "q1db92341": {
+    "path": "divisions/division-federal-senate-9672.json",
     "fields": {
-      "key": "au-federal-r7414",
-      "status": "before_parliament",
-      "ended": null,
-      "ended_label": null,
-      "parliament": 48,
-      "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-      "introduced": "2025-11-27",
-      "royal_assent": null,
-      "status_as_of": "2026-09-14",
-      "last_key_date": "2026-09-14"
+      "key": "federal-senate-9672",
+      "name": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - Third Reading - Pass the bill",
+      "question": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - Third Reading - Pass the bill",
+      "house": "senate",
+      "date": "2025-07-31",
+      "ayes": 36,
+      "noes": 3,
+      "result": "affirmative",
+      "outcome": "Passed",
+      "bill": "au-federal-r7342",
+      "bill_lists_division": true,
+      "bill_divisions": [
+        "federal-senate-9655",
+        "federal-senate-9656",
+        "federal-senate-9657",
+        "federal-senate-9658",
+        "federal-senate-9659",
+        "federal-senate-9670",
+        "federal-senate-9671",
+        "federal-senate-9672"
+      ]
     }
   },
-  "q8dab8284": {
-    "path": "grants/federal/programs/go7022.json",
-    "fields": {
-      "id": "GO7022",
-      "n": "Clinical Trials and Cohort Studies",
-      "ag": "National Health and Medical Research Council (NHMRC)",
-      "agencies": 1,
-      "by.2025-26": [81772200, 22]
-    }
-  },
-  "q164c04d5": {
+  "qed5d862d": {
     "path": "agencies/a-2aceed43d5eed08e7dc1.json",
     "fields": {
       "agency": "a-2aceed43d5eed08e7dc1",
       "agency_name": "Geoscience Australia",
+      "department": "Geoscience Australia",
+      "department_records": ["a-2aceed43d5eed08e7dc1"],
       "contract": {
         "id": "CN4264846",
         "supplier": "Cirrus Networks (ACT) Pty Ltd",
@@ -703,55 +1165,11 @@
       },
       "runner_up_amount": 10649513.79,
       "contracts_starting": 309,
-      "suppliers": []
-    }
-  },
-  "q2268d3c1": {
-    "path": "bills/au-federal-r7192.json",
-    "fields": {
-      "key": "au-federal-r7192",
-      "status": "lapsed",
-      "ended": "discharged",
-      "ended_label": "Discharged from the Notice Paper",
-      "parliament": 47,
-      "portfolio": "Climate Change, Energy, the Environment and Water",
-      "introduced": "2024-05-29",
-      "royal_assent": null,
-      "status_as_of": "2025-02-05",
-      "last_key_date": "2025-02-05"
-    }
-  },
-  "q9eb63bc4": {
-    "path": "grants/federal/programs/go7080.json",
-    "fields": {
-      "id": "GO7080",
-      "n": "Medical Research Future Fund",
-      "ag": "Department of Health, Disability and Ageing",
-      "agencies": 1,
-      "by.2025-26": [80316304, 21]
-    }
-  },
-  "qadf3a4ac": {
-    "path": "agencies/a-f797be002809b666b887.json",
-    "fields": {
-      "agency": "a-f797be002809b666b887",
-      "agency_name": "Australian Signals Directorate",
-      "contract": {
-        "id": "CN4215599",
-        "supplier": "SFDC Australia Pty Limited",
-        "supplier_id": "s-d73e743fbedc610a1b73",
-        "supplier_kind": "company",
-        "amount": 10913456.13,
-        "start_date": "2026-01-28",
-        "end_date": "2028-01-27"
-      },
-      "runner_up_amount": 7223040,
-      "contracts_starting": 528,
       "suppliers": [
-        "Whizdom Pty Ltd",
-        "DXC Technology Australia Pty Limited",
-        "SFDC Australia Pty Limited",
-        "Leidos Australia Pty Limited"
+        "Evolve FM Pty Ltd",
+        "Cirrus Networks (ACT) Pty Ltd",
+        "Geoplex Pty Ltd",
+        "Onneer Pty Ltd"
       ]
     }
   },
@@ -770,21 +1188,85 @@
       "last_key_date": "2026-09-14"
     }
   },
-  "q95585d15": {
+  "q41ef01e8": {
+    "path": "grants/federal/programs/go7867.json",
+    "fields": {
+      "id": "GO7867",
+      "n": "Major and Local Community Infrastructure Program",
+      "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+      "by.2025-26": [110980000, 33],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7867.json",
+          "id": "GO7867",
+          "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+          "agencies": 1,
+          "by.2025-26": [110980000, 33]
+        }
+      ]
+    }
+  },
+  "qb9d81d43": {
+    "path": "agencies/a-f797be002809b666b887.json",
+    "fields": {
+      "agency": "a-f797be002809b666b887",
+      "agency_name": "Australian Signals Directorate",
+      "department": "Australian Signals Directorate",
+      "department_records": ["a-f797be002809b666b887"],
+      "contract": {
+        "id": "CN4215599",
+        "supplier": "SFDC Australia Pty Limited",
+        "supplier_id": "s-d73e743fbedc610a1b73",
+        "supplier_kind": "company",
+        "amount": 10913456.13,
+        "start_date": "2026-01-28",
+        "end_date": "2028-01-27"
+      },
+      "runner_up_amount": 7223040,
+      "contracts_starting": 528,
+      "suppliers": []
+    }
+  },
+  "q2268d3c1": {
+    "path": "bills/au-federal-r7192.json",
+    "fields": {
+      "key": "au-federal-r7192",
+      "status": "lapsed",
+      "ended": "discharged",
+      "ended_label": "Discharged from the Notice Paper",
+      "parliament": 47,
+      "portfolio": "Climate Change, Energy, the Environment and Water",
+      "introduced": "2024-05-29",
+      "royal_assent": null,
+      "status_as_of": "2025-02-05",
+      "last_key_date": "2025-02-05"
+    }
+  },
+  "q3c0aacc6": {
     "path": "grants/federal/programs/go7587.json",
     "fields": {
       "id": "GO7587",
       "n": "Community Legal Services Program",
       "ag": "Attorney-General's Department",
-      "agencies": 1,
-      "by.2025-26": [78435654, 14]
+      "by.2025-26": [78435654, 14],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7587.json",
+          "id": "GO7587",
+          "ag": "Attorney-General's Department",
+          "agencies": 1,
+          "by.2025-26": [78435654, 14]
+        }
+      ]
     }
   },
-  "q0f965f60": {
+  "q2c887dd9": {
     "path": "agencies/a-1b123f8e6c5ba22fa727.json",
     "fields": {
       "agency": "a-1b123f8e6c5ba22fa727",
       "agency_name": "Department of Social Services",
+      "department": "Department of Social Services",
+      "department_records": ["a-1b123f8e6c5ba22fa727"],
       "contract": {
         "id": "CN4202016",
         "supplier": "Redhill Partners Investment Pty Ltd",
@@ -796,55 +1278,11 @@
       },
       "runner_up_amount": 6156052.09,
       "contracts_starting": 147,
-      "suppliers": []
-    }
-  },
-  "qbe66c2f6": {
-    "path": "bills/au-federal-r7449.json",
-    "fields": {
-      "key": "au-federal-r7449",
-      "status": "passed",
-      "ended": null,
-      "ended_label": null,
-      "parliament": 48,
-      "portfolio": "Attorney-General",
-      "introduced": "2026-03-11",
-      "royal_assent": "2026-08-26",
-      "status_as_of": "2026-08-26",
-      "last_key_date": "2026-08-26"
-    }
-  },
-  "q8a31e0ec": {
-    "path": "grants/federal/programs/go7423.json",
-    "fields": {
-      "id": "GO7423",
-      "n": "Discovery Early Career Researcher Award",
-      "ag": "Australian Research Council",
-      "agencies": 1,
-      "by.2025-26": [78200835, 153]
-    }
-  },
-  "q044068a5": {
-    "path": "agencies/a-2623b1d75f1e96ed31f0.json",
-    "fields": {
-      "agency": "a-2623b1d75f1e96ed31f0",
-      "agency_name": "National Emergency Management Agency",
-      "contract": {
-        "id": "CN4247050",
-        "supplier": "Mediabrands Australia Pty Ltd",
-        "supplier_id": "s-7eb16e70c806b9718d65",
-        "supplier_kind": "company",
-        "amount": 6904954.42,
-        "start_date": "2026-05-14",
-        "end_date": "2026-12-30"
-      },
-      "runner_up_amount": 5134126,
-      "contracts_starting": 108,
       "suppliers": [
-        "Evolve FM Pty Ltd",
-        "Mediabrands Australia Pty Ltd",
-        "Veritec Pty Ltd",
-        "Cushman & Wakefield Pty Ltd"
+        "Sureway Employment and Training Pty Ltd",
+        "Karingal St Laurence Limited",
+        "Redhill Partners Investment Pty Ltd",
+        "Job Futures Ltd"
       ]
     }
   },
@@ -869,15 +1307,79 @@
       "id": "GO7976",
       "n": "News Media Assistance Program",
       "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-      "agencies": 1,
-      "by.2025-26": [74713604, 185]
+      "by.2025-26": [74713604, 185],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7976.json",
+          "id": "GO7976",
+          "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+          "agencies": 1,
+          "by.2025-26": [74713604, 185]
+        }
+      ]
     }
   },
-  "qc6828c4d": {
+  "qb64b55e3": {
+    "path": "agencies/a-2623b1d75f1e96ed31f0.json",
+    "fields": {
+      "agency": "a-2623b1d75f1e96ed31f0",
+      "agency_name": "National Emergency Management Agency",
+      "department": "National Emergency Management Agency",
+      "department_records": ["a-2623b1d75f1e96ed31f0"],
+      "contract": {
+        "id": "CN4247050",
+        "supplier": "Mediabrands Australia Pty Ltd",
+        "supplier_id": "s-7eb16e70c806b9718d65",
+        "supplier_kind": "company",
+        "amount": 6904954.42,
+        "start_date": "2026-05-14",
+        "end_date": "2026-12-30"
+      },
+      "runner_up_amount": 5134126,
+      "contracts_starting": 108,
+      "suppliers": []
+    }
+  },
+  "q09695865": {
+    "path": "bills/au-federal-r7458.json",
+    "fields": {
+      "key": "au-federal-r7458",
+      "status": "passed",
+      "ended": null,
+      "ended_label": null,
+      "parliament": 48,
+      "portfolio": "Home Affairs",
+      "introduced": "2026-03-26",
+      "royal_assent": "2026-08-26",
+      "status_as_of": "2026-08-26",
+      "last_key_date": "2026-08-26"
+    }
+  },
+  "q863ffb6e": {
+    "path": "grants/federal/programs/go7209.json",
+    "fields": {
+      "id": "GO7209",
+      "n": "Support Plantation Establishment",
+      "ag": "Department of Agriculture, Fisheries and Forestry",
+      "by.2025-26": [49533061, 40],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7209.json",
+          "id": "GO7209",
+          "ag": "Department of Agriculture, Fisheries and Forestry",
+          "agencies": 1,
+          "by.2025-26": [49533061, 40]
+        }
+      ]
+    }
+  },
+  "q433698ad": {
     "path": "agencies/a-fa94b561079ff33e8041.json",
     "fields": {
       "agency": "a-fa94b561079ff33e8041",
       "agency_name": "Australian Public Service Commission",
+      "department": "Australian Public Service Commission",
+      "department_records": ["a-fa94b561079ff33e8041"],
       "contract": {
         "id": "CN4216707",
         "supplier": "CPD Live Pty Ltd",
@@ -889,55 +1391,11 @@
       },
       "runner_up_amount": 3586317.08,
       "contracts_starting": 62,
-      "suppliers": []
-    }
-  },
-  "q9c66368c": {
-    "path": "bills/au-federal-r7225.json",
-    "fields": {
-      "key": "au-federal-r7225",
-      "status": "lapsed",
-      "ended": "discharged",
-      "ended_label": "Discharged from the Notice Paper",
-      "parliament": 47,
-      "portfolio": "Treasury",
-      "introduced": "2024-06-05",
-      "royal_assent": null,
-      "status_as_of": "2024-11-28",
-      "last_key_date": "2024-11-28"
-    }
-  },
-  "qf69b2424": {
-    "path": "grants/federal/programs/go7700.json",
-    "fields": {
-      "id": "GO7700",
-      "n": "Cooperative Research Centres Programme",
-      "ag": "Department of Industry, Science and Resources",
-      "agencies": 1,
-      "by.2025-26": [72490993, 27]
-    }
-  },
-  "qf1645aa6": {
-    "path": "agencies/a-d32a68a9a1c0d3539a6e.json",
-    "fields": {
-      "agency": "a-d32a68a9a1c0d3539a6e",
-      "agency_name": "Australian Skills Quality Authority",
-      "contract": {
-        "id": "CN4265754",
-        "supplier": "Jones Lang LaSalle (ACT) Pty Limited",
-        "supplier_id": "s-bcc757e4b693412cb4a6",
-        "supplier_kind": "company",
-        "amount": 3397982.02,
-        "start_date": "2026-06-30",
-        "end_date": "2027-06-29"
-      },
-      "runner_up_amount": 422400,
-      "contracts_starting": 64,
       "suppliers": [
-        "Publicis Sapient Australia Pty Ltd",
-        "APIS Group Pty Limited",
-        "Jones Lang LaSalle (ACT) Pty Limited",
-        "Peoplebank Australia Ltd"
+        "CPD Live Pty Ltd",
+        "Compass Group B&I Hospitality Services Pty Ltd",
+        "SFDC Australia Pty Limited",
+        "Accenture Australia Pty Limited"
       ]
     }
   },
@@ -956,21 +1414,85 @@
       "last_key_date": "2026-09-10"
     }
   },
-  "q64e9e695": {
-    "path": "grants/federal/programs/go7245.json",
+  "q62a8f0b6": {
+    "path": "grants/federal/programs/go7781.json",
     "fields": {
-      "id": "GO7245",
-      "n": "Centres of Research Excellence",
-      "ag": "National Health and Medical Research Council (NHMRC)",
-      "agencies": 1,
-      "by.2025-26": [67026000, 22]
+      "id": "GO7781",
+      "n": "Local Environmental Projects",
+      "ag": "Department of Climate Change, Energy, the Environment and Water",
+      "by.2025-26": [58943666, 34],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7781.json",
+          "id": "GO7781",
+          "ag": "Department of Climate Change, Energy, the Environment and Water",
+          "agencies": 1,
+          "by.2025-26": [58943666, 34]
+        }
+      ]
     }
   },
-  "qaf665ae3": {
+  "q36979dcc": {
+    "path": "agencies/a-d32a68a9a1c0d3539a6e.json",
+    "fields": {
+      "agency": "a-d32a68a9a1c0d3539a6e",
+      "agency_name": "Australian Skills Quality Authority",
+      "department": "Australian Skills Quality Authority",
+      "department_records": ["a-d32a68a9a1c0d3539a6e"],
+      "contract": {
+        "id": "CN4265754",
+        "supplier": "Jones Lang LaSalle (ACT) Pty Limited",
+        "supplier_id": "s-bcc757e4b693412cb4a6",
+        "supplier_kind": "company",
+        "amount": 3397982.02,
+        "start_date": "2026-06-30",
+        "end_date": "2027-06-29"
+      },
+      "runner_up_amount": 422400,
+      "contracts_starting": 64,
+      "suppliers": []
+    }
+  },
+  "q84af3159": {
+    "path": "bills/au-federal-r7201.json",
+    "fields": {
+      "key": "au-federal-r7201",
+      "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
+      "parliament": 47,
+      "portfolio": "Defence",
+      "introduced": "2024-05-30",
+      "royal_assent": null,
+      "status_as_of": "2024-07-04",
+      "last_key_date": "2024-07-04"
+    }
+  },
+  "qf98d18f5": {
+    "path": "grants/federal/programs/go7108.json",
+    "fields": {
+      "id": "GO7108",
+      "n": "Export Market Development",
+      "ag": "Australian Trade and Investment Commission (Austrade)",
+      "by.2025-26": [48350981, 533],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go7108.json",
+          "id": "GO7108",
+          "ag": "Australian Trade and Investment Commission (Austrade)",
+          "agencies": 1,
+          "by.2025-26": [48350981, 533]
+        }
+      ]
+    }
+  },
+  "qe8e1e5f8": {
     "path": "agencies/a-69d355cb0ebc6b4b4e5f.json",
     "fields": {
       "agency": "a-69d355cb0ebc6b4b4e5f",
       "agency_name": "Aged Care Quality and Safety Commission",
+      "department": "Aged Care Quality and Safety Commission",
+      "department_records": ["a-69d355cb0ebc6b4b4e5f"],
       "contract": {
         "id": "CN4270747",
         "supplier": "Corporate Travel Management Group Pty Ltd",
@@ -982,6 +1504,65 @@
       },
       "runner_up_amount": 2257841.4,
       "contracts_starting": 122,
+      "suppliers": [
+        "Synechron Data Australia Pty Ltd",
+        "HAYS Specialist Recruitment (Australia) PTY Limited",
+        "Corporate Travel Management Group Pty Ltd",
+        "Hudson Global Resources (AUST) Pty Limited"
+      ]
+    }
+  },
+  "qc5f83597": {
+    "path": "bills/au-federal-r7521.json",
+    "fields": {
+      "key": "au-federal-r7521",
+      "status": "passed",
+      "ended": null,
+      "ended_label": null,
+      "parliament": 48,
+      "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+      "introduced": "2026-07-02",
+      "royal_assent": "2026-08-26",
+      "status_as_of": "2026-08-26",
+      "last_key_date": "2026-08-26"
+    }
+  },
+  "qf4613188": {
+    "path": "grants/federal/programs/go6763.json",
+    "fields": {
+      "id": "GO6763",
+      "n": "Play Our Way Participation and Equipment Stream",
+      "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+      "by.2025-26": [12006518, 15],
+      "rounds": [
+        {
+          "path": "grants/federal/programs/go6763.json",
+          "id": "GO6763",
+          "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+          "agencies": 1,
+          "by.2025-26": [12006518, 15]
+        }
+      ]
+    }
+  },
+  "qf78bc237": {
+    "path": "agencies/a-5ae8149297b124ae470b.json",
+    "fields": {
+      "agency": "a-5ae8149297b124ae470b",
+      "agency_name": "Tertiary Education Quality and Standards Agency",
+      "department": "Tertiary Education Quality and Standards Agency",
+      "department_records": ["a-5ae8149297b124ae470b"],
+      "contract": {
+        "id": "CN4220264",
+        "supplier": "MediaMonks Australia Pty Ltd",
+        "supplier_id": "s-d3057210d079143c3af8",
+        "supplier_kind": "company",
+        "amount": 2399155,
+        "start_date": "2026-01-06",
+        "end_date": "2027-11-30"
+      },
+      "runner_up_amount": 2183500,
+      "contracts_starting": 51,
       "suppliers": []
     }
   }

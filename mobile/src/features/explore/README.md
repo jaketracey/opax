@@ -115,18 +115,35 @@ npx prettier --write src/features/explore/quiz-front-page.json src/features/expl
     False: a government bill whose ending the record dates (`ended` of
     negatived, discharged, removed or not proceeding, with `status_as_of`
     equal to its last key date). A lapse is never asked: the record does not
-    date it. True and False take turns, so neither is a safe guess.
+    date it. Nor is a bill dropped on the day a sibling from its package
+    (same portfolio and introduction date) passed, as the Build to Rent bill
+    was: the measure may have gone through in the sibling. True and False
+    take turns, so neither is a safe guess.
   - `bill-portfolio`: `portfolio`; the wrong options are other portfolios
-    with five or more bills this parliament.
-  - `division-third-reading`: a third reading's `ayes`, on a bill whose record
-    lists the division. The slider runs to 76 (Senate) or 150 (House) and
-    reads in votes.
+    with five or more bills this parliament. Never when a word of the
+    portfolio, in any form ("Sport", "Sporting"), is in the title. Bills whose
+    title year is later than their introduction are left out.
+  - `division-third-reading`: the `ayes` of the division that decided the
+    bill at its third reading, chosen by the shared rule in
+    `portal/public/bill-division.js` (`decidingDivision`, also behind the
+    daily post's vote slide) from the question the Chair put, so never a
+    closure filed under the same name (Senate 9971 and 9972). No question
+    when the rule finds no third reading: no fallback to another division.
+    The slider runs to 76 (Senate) or 150 (House) and reads in votes. Do
+    not edit the helper here: it changes in the social lane's copy.
   - `grant-program-agency` and `grant-program-year-total`: a GrantConnect
-    program's `ag` and its 2025-26 total (`by`), for programs with one
-    agency, a plain name and at least ten grants.
-  - `contract-largest-supplier` and `contract-largest-value`: each agency's
-    largest contract starting in 2026 (`supplier`, `amount`). Only suppliers
-    the record calls a company are named, never a person or a trust.
+    program is every round (GO id) that carries its name, under one agency.
+    The agency question sums all rounds and says how many it adds up. The
+    year total is asked only of a one-round program, so the figure is the one
+    its page shows. Agency names AusTender lists with no 2026 contract (a
+    renamed department) are never an answer or a wrong option, and of twin
+    names ("Incentive System", "Incentives Programme") one is asked.
+  - `contract-largest-supplier` and `contract-largest-value`: each
+    department's largest contract starting in 2026 (`supplier`, `amount`),
+    counted across all its AusTender records ("Department of Foreign Affairs
+    and Trade" and "... - Australian Aid Program"). The link opens the record
+    that lists the contract. Only suppliers the record calls a company are
+    named, never a person or a trust.
 - Left out: royal commissions (and RC acronyms), the Victorian Big Build
   commission, class actions, hearings and transcripts, anything Victorian,
   private members' bills, and any text with "OPAX", "report" or "speeches".
@@ -135,17 +152,25 @@ npx prettier --write src/features/explore/quiz-front-page.json src/features/expl
 - Order: a fixed rotation (bill, grant, vote, contract, portfolio, grant
   total, vote, contract value) in which no family follows itself, even
   across the wrap from the last day to the first. Each record is asked once.
-- `quiz-front-page-sources.json` holds each source's as-at date (bills:
-  the bills index; votes: the latest division; grants and contracts: their
-  exports) and input hashes. `questionAsOf` in `quiz/data.ts` dates each
-  record question's source line from it; the rounds keep `quizAsOf`.
+- `quiz-front-page-sources.json` holds each template's as-at date, keyed by
+  template name (bills: the bills index; votes: the latest division; grants
+  and contracts: their exports), and input hashes. `questionAsOf` in
+  `quiz/data.ts` dates each record question's source line from it by its
+  exact template; the rounds keep `quizAsOf`.
 - Each link opens its record natively from the reveal's source sheet
   (`quizDestination`): a bill, a bill's division, a grant program, or an
   agency's Contracts filtered to the supplier. Publishers: ParlInfo, They
   Vote For You, GrantConnect and AusTender.
 - `tests/fixtures/today-question-records.json` holds each question's record
   excerpt; `tests/today-question.test.ts` checks every answer against it, the
-  stored shape against build 57's, the banned words and the balance.
+  stored shape against build 57's, the banned words and the balance. It also
+  feeds the generator small records that reproduce each wrong question the
+  #485 review found (a closure on the third reading, a program split across
+  rounds, a department split across records, a sibling bill that passed) and
+  checks the answers against those records. `tests/quiz.test.tsx` opens new
+  questions through the reveal and checks the source line.
+- A person reviews the deck before it ships: write it out as a table
+  (question, answer, figure, record) for that review.
 - Today picks index = (days since 1 January 2026, Sydney) mod the deck's
   length, shows `prompt`, and links to `exploreQuizRoute(id)`
   (`/explore/quiz?q=<id>`). Read it through `frontPageDeck` and

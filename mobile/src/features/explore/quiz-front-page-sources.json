@@ -1,9 +1,12 @@
 {
   "asOf": {
-    "bill": "2026-10-04",
-    "division": "2026-10-29",
-    "grant": "2026-11-11",
-    "contract": "2026-11-15"
+    "bill-became-law": "2026-10-04",
+    "grant-program-agency": "2026-11-11",
+    "division-third-reading": "2026-10-29",
+    "contract-largest-supplier": "2026-11-15",
+    "bill-portfolio": "2026-10-04",
+    "grant-program-year-total": "2026-11-11",
+    "contract-largest-value": "2026-11-15"
   },
   "hashes": {
     "bills": "59b53ffd3828e78ec42cf05b8f959d560ac39b670d6f67d8a8cca795f9150193",

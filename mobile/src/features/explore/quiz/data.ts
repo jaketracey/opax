@@ -14,16 +14,12 @@ import frontPageSources from '../quiz-front-page-sources.json';
 export const quizAsOf: string = snapshot.generated;
 
 /**
- * A question's source date. Today's record questions (bill-, division-,
- * grant-, contract-) carry their own export's date; the rest are the
- * rounds'.
+ * A question's source date. Today's record questions carry their own
+ * export's date, keyed by template name; the rest are the rounds'.
  */
 export function questionAsOf(q: Pick<Question, 'template'>): string {
-  const family = q.template.split('-')[0] as string;
-  return (
-    (frontPageSources.asOf as Record<string, string | undefined>)[family] ??
-    quizAsOf
-  );
+  const asOf: Record<string, string> = frontPageSources.asOf;
+  return Object.hasOwn(asOf, q.template) ? asOf[q.template]! : quizAsOf;
 }
 
 const rounds = Object.fromEntries(
