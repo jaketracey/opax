@@ -14,7 +14,7 @@ export type TextHits = { file: string, quote_policy: string, attribution: string
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
   const data = object(await readToolAsset(env, '/transcripts/index.json'))
-  if (data.schema !== 1 || !Array.isArray(data.docs)) return null
+  if (data.schema !== 2 || !Array.isArray(data.docs)) return null
   return { docs: records(data.docs), stop: new Set((data.stopwords as string[]) ?? []), common: new Set((data.common_terms as string[]) ?? []),
     shards: Number(data.shards) || 64, commissions: object(data.commissions) }
 }
@@ -33,21 +33,30 @@ export function shardOf(term: string, shards: number): number {
 
 /** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
  * public text or every word is too common to narrow the search. */
-export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[] } | null> {
+/** How well a transcript fits a word search, from the postings alone (no transcript is opened): `least` is the page
+ * count of the searched word that is on the fewest of its pages, and transcripts are listed most first by it;
+ * `pages` is the sum of the searched words' page counts, most first among equals. A hearing day that discusses every
+ * searched word at length comes before one where a word appears once. Words too common to be posted (ix.common) take
+ * no part. */
+export type TextFit = { least: number, pages: number }
+/** The transcripts of a commission whose text holds every searched word, with each one's fit. */
+export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[], fit: Map<string, TextFit> } | null> {
   if (!object(ix.commissions[commission]).name) return null
   const terms = [...new Set(tokens(words, ix.stop))]
   const narrow = terms.filter(t => !ix.common.has(t))
   if (!narrow.length) return null
-  let docs = new Set<number>(ix.docs.filter(d => d.commission === commission).map(d => Number(d.i)))
+  let docs = new Map<number, TextFit>(ix.docs.filter(d => d.commission === commission).map(d => [Number(d.i), { least: Number.MAX_SAFE_INTEGER, pages: 0 }]))
   for (const t of narrow) {
     const path = `/transcripts/terms/${String(shardOf(t, ix.shards)).padStart(2, '0')}.json`
     if (!SHARD.test(path)) return null
-    const posting = new Set<number>((object(await readToolAsset(env, path))[t] as number[]) ?? [])
-    docs = new Set<number>([...docs].filter(i => posting.has(i)))
+    // A posting is [transcripts, pages of each holding the word].
+    const posting = object(await readToolAsset(env, path))[t] as [number[], number[]] | undefined
+    const held = new Map<number, number>((posting?.[0] ?? []).map((i, at) => [i, Number(posting?.[1]?.[at]) || 1]))
+    docs = new Map([...docs].flatMap(([i, fit]): [number, TextFit][] => { const n = held.get(i); return n ? [[i, { least: Math.min(fit.least, n), pages: fit.pages + n }]] : [] }))
     if (!docs.size) break
   }
-  const keys = new Set(ix.docs.filter(d => docs.has(Number(d.i))).map(d => String(d.key)))
-  return { keys, terms }
+  const matched = ix.docs.filter(d => docs.has(Number(d.i)))
+  return { keys: new Set(matched.map(d => String(d.key))), terms, fit: new Map(matched.map(d => [String(d.key), docs.get(Number(d.i))!])) }
 }
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']

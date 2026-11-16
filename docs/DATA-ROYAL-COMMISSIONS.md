@@ -167,7 +167,10 @@ writes `portal/public/transcripts/`:
 
 - `index.json`: the transcripts, the attribution and copyright page for each commission,
   the tokeniser's stopwords and the terms too common to post;
-- `terms/<nn>.json`: term to transcripts, sharded by FNV-1a of the term;
+- `terms/<nn>.json`: term to the transcripts holding it and, for each, the number of its
+  pages holding the term (index schema 2), sharded by FNV-1a of the term. A word search
+  lists transcripts by those page counts, not by date. `--postings-only` rebuilds these
+  files from the published transcript files with no PDF read;
 - `<commission>/<key>.json`: one transcript, with each PDF page's own transcript page
   number (for example "P-4899" or "6189"), its text, and term to pages.
 
