@@ -236,7 +236,7 @@ test('CC BY transcripts are searchable by their text: verbatim excerpts with pag
   for (const [i, r] of out.rows.entries()) {
     const t = r.text_matches; assert.ok(t?.hits.length, r.key);
     const doc = await asset(t.file); const cite = out.citations[i + 1];
-    assert.match(cite.text, /Hearing transcript: evidence, not findings\. © Commonwealth of Australia, Royal Commission into the Robodebt Scheme, licensed under CC BY 4\.0\.$/);
+    assert.match(cite.text, /Hearing transcript: evidence, not findings\. © Commonwealth of Australia, Royal Commission into the Robodebt Scheme, licensed under CC BY 4\.0\. Commission record: cth-robodebt\.$/);
     assert.match(cite.url, /^https:\/\/robodebt\.royalcommission\.gov\.au\/.+\.pdf#page=\d+$/);
     assert.equal(r.text_url, `https://opax.test${t.file}`); assert.equal(r.quote_policy, doc.quote_policy);
     for (const h of t.hits) {

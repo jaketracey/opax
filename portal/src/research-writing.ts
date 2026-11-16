@@ -17,12 +17,12 @@ import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './researc
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
-import { transcriptTurns, shortTranscriptQuote, transcriptFactLine, transcriptCitation, transcriptAttribution, transcriptLead, TRANSCRIPT_ATTRIBUTION_RULE, TRANSCRIPT_REPAIR_NOTE, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, type TranscriptTurn } from './transcript-answer'
+import { transcriptTurns, shortTranscriptQuote, transcriptFactLine, transcriptCitation, transcriptAttribution, transcriptLead, writerMayWord, transcriptPassage, TRANSCRIPT_ATTRIBUTION_RULE, TRANSCRIPT_REPAIR_NOTE, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, type TranscriptTurn } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-32-transcript-attribution'
+export const ANSWER_WRITING_VERSION = 'written-answer-33-transcript-roles'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
@@ -67,9 +67,10 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
         const line = transcriptFactLine(turn)
         // The source card is built here from the typed facts (commission, hearing date, page, speaker role), and its
         // link opens the passage's own page, so the citation is right however the sentence that cites it is worded.
+        // No speaker is named, on the card or to the writer.
         const page = turn.pdf_page && /#page=\d+$/.test(source.url) ? source.url.replace(/#page=\d+$/, `#page=${turn.pdf_page}`) : source.url
         const before = out.length
-        add(line, { ...source, resource, title: transcriptCitation(turn), url: page, href: source.href === source.url ? page : source.href, ...(turn.speaker ? { speaker: turn.speaker } : {}), transcript: transcriptAttribution(turn), snippet: source.snippet + '\n' + line }, coverage, turn)
+        add(line, { ...source, resource, title: transcriptCitation(turn), url: page, href: source.href === source.url ? page : source.href, speaker: undefined, transcript: transcriptAttribution(turn), snippet: source.snippet + '\n' + line }, coverage, turn)
         if (out.length > before) out[out.length - 1].transcript = turn
       }
       return
@@ -118,9 +119,9 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     // other spans are the same fact again: the writer is given it once, as recorded.
     const recorded = cited && cited.length > 1 ? singleStatement(source) : null
     const own = recorded ? cited!.find(span => signedKey(span.replace(/^[-*•]\s*/, '')) === signedKey(recorded)) : undefined
-    // A hearing transcript excerpt is read from its record, never from the wording of a point that cited it: the
-    // writer needs its typed speaker role, date and page (TRANSCRIPT_ATTRIBUTION_RULE).
-    const excerpts = source.snippet.split(/\n+/).some(line => transcriptTurns(line).length > 0)
+    // A hearing transcript excerpt is read from its record, never from the wording of a point that cited it,
+    // whatever its source: its speaker role, date and page are typed there (TRANSCRIPT_ATTRIBUTION_RULE).
+    const excerpts = source.snippet.split(/\n+/).some(transcriptPassage)
     const text = own ?? (cited && !excerpts ? cited.join('\n') : source.snippet)
     for (const part of text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
       const before=out.length;add(part, source, !!source.coverage || isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
@@ -330,7 +331,7 @@ function transcriptLines(input: WritingInput): WrittenSentence[] | null {
   const turns = input.facts.filter(f => f.transcript && !f.coverage)
   if (!turns.length) return null
   const seen = new Set<string>()
-  const lines = turns.filter(f => { const t = f.transcript!, id = t.speaker + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, 4).map(f => {
+  const lines = turns.filter(f => { const t = f.transcript!, id = t.page + ':' + t.excerpt; if (seen.has(id)) return false; seen.add(id); return true }).slice(0, 4).map(f => {
     const t = f.transcript!
     return { text: `${transcriptLead(t)}: “${shortTranscriptQuote(t.excerpt, input.question)}”`, facts: [f.id], attributed: true }
   })
@@ -339,8 +340,8 @@ function transcriptLines(input: WritingInput): WrittenSentence[] | null {
 /** Final-boundary and provider-failure fallbacks also accept unsplit record facts. Keep the same
  * attributed-turn representation there, rather than rendering the original tool block as a record. */
 export function transcriptWritingInput(input: WritingInput): WritingInput {
-  if (!input.facts.some(f => !f.transcript && transcriptTurns(f.text).length)) return input
-  const facts = input.facts.flatMap(f => f.transcript || !transcriptTurns(f.text).length ? [f] :
+  if (!input.facts.some(f => !f.transcript && transcriptPassage(f.text))) return input
+  const facts = input.facts.flatMap(f => f.transcript || !transcriptPassage(f.text) ? [f] :
     writingFacts({ answer: '', citations: {}, sources: [{ ...f.source, snippet: f.text, cited: true, ...(f.coverage ? { coverage: true } : {}) }] }))
   return { ...input, facts: facts.map((f, i) => ({ ...f, id: i + 1 })) }
 }
@@ -616,8 +617,11 @@ function factsProse(input: WritingInput): QualitativeAnswer {
  * and the writer marks each sentence that uses one "attributed":true once it gives the role, date and page. A
  * sentence that uses a transcript fact without the mark is unattributed, and is handled as an unsupported one: the
  * writer gets one repair pass, then that sentence alone is left out. The mark is the writer's own structured
- * statement; no check here reads the sentence's wording. */
-const unattributed=(line:{facts?:unknown;attributed?:unknown}|null|undefined,input:WritingInput)=>line?.attributed!==true&&Array.isArray(line?.facts)&&line.facts.some(id=>input.facts.some(f=>f.id===id&&!!f.transcript&&!f.coverage))
+ * statement; no check here reads the sentence's wording. A passage whose source the writer may not word
+ * (writerMayWord) is never in the prompt, and a sentence that cites one is left out, marked or not. */
+/** A transcript fact the writer is given to word. Every other transcript fact is quoted by code only. */
+export const wordedTranscriptFact=(f:WritingFact)=>!!f.transcript&&writerMayWord(f.transcript)
+const unattributed=(line:{facts?:unknown;attributed?:unknown}|null|undefined,input:WritingInput)=>Array.isArray(line?.facts)&&line.facts.some(id=>input.facts.some(f=>f.id===id&&!!f.transcript&&!f.coverage&&(line?.attributed!==true||!wordedTranscriptFact(f))))
 /** How many of the writer's sentences use a hearing transcript fact without the attributed mark. */
 export function unattributedTranscriptSentences(raw:unknown,input:WritingInput):number {
   const sentences=raw&&typeof raw==='object'?(raw as {sentences?:unknown}).sentences:undefined
@@ -676,8 +680,9 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
 }
 export function writingPrompt(input: WritingInput, repair = false): string {
   // Only an answer with a hearing transcript fact carries the transcript rule; every other prompt is unchanged.
-  const hearing=input.facts.some(f=>f.transcript)
-  return JSON.stringify({question:input.question,period:input.period,facts:input.facts.map(f=>({...f,source:undefined,transcript:undefined,speaker:f.source.speaker,...(f.transcript?{attribution:transcriptAttribution(f.transcript)}:{}),...(f.source.chamber?{chamber:f.source.chamber}:{}),...(f.source.receipt?{receipt:f.source.receipt}:{}),atoms:f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)})),contract: ASK_EVIDENCE_RULES + RECEIPTS_WRITING_RULE + ' ' +
+  // Only the passages whose source allows it are in the prompt, each with its role, date and page and no name.
+  const hearing=input.facts.some(wordedTranscriptFact)
+  return JSON.stringify({question:input.question,period:input.period,facts:input.facts.filter(f=>!f.transcript||wordedTranscriptFact(f)).map(f=>({...f,source:undefined,transcript:undefined,speaker:f.transcript?undefined:f.source.speaker,...(f.transcript?{attribution:transcriptAttribution(f.transcript)}:{}),...(f.source.chamber?{chamber:f.source.chamber}:{}),...(f.source.receipt?{receipt:f.source.receipt}:{}),atoms:f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)})),contract: ASK_EVIDENCE_RULES + RECEIPTS_WRITING_RULE + ' ' +
     'Answer the question directly and fully from these facts, and use general knowledge for context. The first sentence must answer the question with the requested name, figure, date or outcome. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. ' + ASK_ATTRIBUTION_RULE + 'Name the chamber a fact records in its chamber field (senate is the Senate, representatives the House of Representatives). Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Use complete sentences in your own words. For counts, start with the count, what was counted, chamber and period. For comparisons, retain every side, named term, value and supported direction. Keep every requested year or month group and its count; record totals retain their snapshot date. Each claim keeps its structured entity, metric, unit, chamber, period and supporting fact id together. Equal values belonging to different entities remain distinct claims. ' +
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
     'Hearing excerpts name the recorded speaker and hearing day/date, with a short literal quotation and fact id. A question by counsel or a commissioner is a question; identify each witness answer explicitly. Use recorded names and roles. Identify the material once as hearing evidence; licence details belong in the source card. ' +

@@ -40,7 +40,7 @@ function validRanges(payload) {
   }
 }
 function hearingAnswer(out) {
-  assert.match(out.answer,/^A witness, Ms Preston, said on 10 March 2023 \(page P-4899\): “/)
+  assert.match(out.answer,/^A witness said on 10 March 2023 \(page P-4899\): “/)
   assert.match(out.answer,/evidence, not findings/)
   assert.doesNotMatch(out.answer,/startup|founders|fabricated|PDF page|©|CC BY|^-/m)
   assert.ok(out.sources.filter(s=>s.cited&&!s.coverage).every(s=>s.url.startsWith('https://robodebt.royalcommission.gov.au/')))
@@ -79,18 +79,18 @@ test('a caveat is kept as written, and typed refusals and clarifications survive
   }
 })
 test('a written quotation not in the transcript loses its quote marks; a verbatim one keeps them, in one pass',async()=>{
-  const text='Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Preston: "Income averaging did not make sense to me." transcript page P-4933 (PDF page 49), hearing turn by Mr Scott: "Do you agree that this approach described income averaging?" Hearing transcript: evidence, not findings.'
+  const text='Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn (witness): "Income averaging did not make sense to me." transcript page P-4933 (PDF page 49), hearing turn (counsel assisting): "Do you agree that this approach described income averaging?" Hearing transcript: evidence, not findings. Commission record: cth-robodebt.'
   const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',label:text}}])
   let turn=0
   const model=new MockLanguageModelV4({doGenerate:async()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:[
-    ...(turn++===0?[{text:'Ms Preston said “A fabricated quotation about averaging.”',facts:[1],attributed:true}]:[]),
-    {text:'Mr Scott asked on hearing day 46 (10 March 2023): “Do you agree that this approach described income averaging?”',facts:[2],attributed:true},
+    ...(turn++===0?[{text:'A witness said “A fabricated quotation about averaging.”',facts:[1],attributed:true}]:[]),
+    {text:'Counsel assisting asked on hearing day 46 (10 March 2023): “Do you agree that this approach described income averaging?”',facts:[2],attributed:true},
   ]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})})
   const stats={rounds:0,tokens:{input:0,output:0},turns:[]}
   const write=api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})
   const out=await write({question:questions[1],period:api.inferPeriod(questions[1]),facts},stats,undefined,20000)
   assert.equal(model.doGenerateCalls.length,1)
-  assert.match(out.answer,/^Ms Preston said A fabricated quotation about averaging/);assert.doesNotMatch(out.answer,/“A fabricated/)
-  assert.match(out.answer,/Mr Scott asked on hearing day 46 \(10 March 2023\): “Do you agree that this approach described income averaging/)
+  assert.match(out.answer,/^A witness said A fabricated quotation about averaging/);assert.doesNotMatch(out.answer,/“A fabricated/)
+  assert.match(out.answer,/Counsel assisting asked on hearing day 46 \(10 March 2023\): “Do you agree that this approach described income averaging/)
   validRanges(out)
 })

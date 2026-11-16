@@ -305,11 +305,12 @@ export function auditPayload(question,payload,{roster=[]}={}){
    add({type:'period',entity,metric:'period',value:p.value,period:[p.value],text,offset:sentenceAt+p.at},candidates,'period is not in the associated selected evidence')
   }
   // A sentence that cites a hearing transcript passage is an attributed claim. It is supported when the cited
-  // source carries the typed attribution (speaker role, hearing date, page) the writer was given; a passage cited
-  // without one is unattributed, and is recorded as any unsupported claim is.
+  // source carries the typed attribution (speaker role, hearing date, page) the writer was given, whose claim is
+  // "attributed" only where the passage's source lets the writer word it (transcript-answer.ts writerMayWord); a
+  // passage cited without one, or one that is quote-only, is recorded as any unsupported claim is.
   if(citedIds.length)for(const id of new Set(selected.filter(r=>r.transcript||r.transcriptExcerpt).map(r=>r.id))){
    const rows=selected.filter(r=>r.id===id),typed=rows.find(r=>r.transcript)?.transcript
-   add({type:'attribution',entity:typed?.speaker??typed?.speaker_role??'',metric:'transcript attribution',value:typed?.transcript_page??'',period:typed?.hearing_date?[typed.hearing_date]:[],text,offset:sentenceAt},typed?.claim==='attributed'?rows.slice(0,1):[],'hearing transcript passage is cited without its speaker role, date and page')
+   add({type:'attribution',entity:typed?.speaker_role??'',metric:'transcript attribution',value:typed?.transcript_page??'',period:typed?.hearing_date?[typed.hearing_date]:[],text,offset:sentenceAt},typed?.claim==='attributed'?rows.slice(0,1):[],'hearing transcript passage is cited without its speaker role, date and page, or its source is quoted only')
   }
   if(unclosedQuoteOffset(text)>=0){
    const at=unclosedQuoteOffset(text);add({type:'quote',entity:speaker??'',metric:'literal quote',value:'unbalanced quotation',quote:text.slice(at),period:[],text,offset:sentenceAt+at},[],'quotation is malformed and cannot be verified literally')

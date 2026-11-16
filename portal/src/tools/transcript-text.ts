@@ -9,7 +9,7 @@ const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker?: string, speaker_label?: string, speaker_role?: SpeakerRole }
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker_role?: SpeakerRole }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -59,26 +59,34 @@ export function dayWords(iso: unknown): string {
 /** A hearing date range in words: "27 September 2022 to 10 March 2023", or one day. */
 export const spanWords = (first: unknown, last: unknown) => first === last ? dayWords(first) : `${dayWords(first)} to ${dayWords(last)}`
 
-// A turn opens with the speaker's label in capitals: "MS HOGAN-DORAN:", "THE COMMISSIONER:", "MR LANCASTER SC:".
+// A turn opens with the speaker's label in capitals: "MS EXAMPLE-SAMPLE:", "THE COMMISSIONER:", "MR STANDIN SC:".
 const LABEL = /(?<=^|\s)((?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}):(?=\s)/g
 const KEEP = new Set(['SC', 'KC', 'QC', 'AM', 'AO', 'AC', 'OAM', 'PSM', 'APM'])
-/** The label as a name: "MS HOGAN-DORAN" as "Ms Hogan-Doran", "McLEOD" as "McLeod". */
-export function speakerName(label: string): string {
-  return label.split(' ').map(word => KEEP.has(word) ? word
-    : word.replace(/^Mc(?=[A-Z])/, 'Mc\u0000').toLowerCase().replace(/(^|[-'’\u0000])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase()).replace('\u0000', '')).join(' ')
-}
 
 /** What a speaker is at the hearing, as the transcript itself gives it: its cover page lists the commissioner,
  * counsel assisting and who appears for a party; a "<NAME, SWORN" or "<NAME, AFFIRMED" line marks a witness; and
- * "THE COMMISSIONER", "THE WITNESS" and an "A." answer are roles in the label. Never inferred from what was said. */
+ * "THE COMMISSIONER", "THE WITNESS" and an "A." answer are roles in the label. Never inferred from what was said.
+ * An excerpt carries the role only, never the person's name: a wrong name is worse than none. */
 export const SPEAKER_ROLES = ['commissioner', 'counsel assisting', 'witness', 'counsel for a party'] as const
 export type SpeakerRole = typeof SPEAKER_ROLES[number]
 export type RoleOf = (label: string) => SpeakerRole | undefined
 
 const TITLES = new Set(['THE', 'HON', 'HONOURABLE', 'MR', 'MS', 'MRS', 'MISS', 'DR', 'PROF', 'PROFESSOR', 'UNCLE', 'AUNTY', 'SENATOR', 'COMMISSIONER', 'JUSTICE'])
 const surname = (name: string) => name.toUpperCase().replace(/[.,]/g, '').split(/\s+/).filter(w => w && !KEEP.has(w) && !TITLES.has(w)).at(-1) ?? ''
-// "<MATTHEW JAMES FLAVEL, SWORN", "<ALFA D'AMATO, sworn: [10.03am]", "<DEBORAH WILLCOX, on former affirmation:".
-const SWORN = /^<\s*([A-Z][A-Za-z'’. -]{2,70}?),?\s+(?:on former (?:oath|affirmation)|(?:re-?)?sworn|(?:re-?)?affirmed|recalled)\b/i
+// A witness line: "<TAYLOR JAMIE SPECIMEN, SWORN", "<DREW D'MOCKUP,sworn: [10.03am]", "<QUINN TEMPLATE, on former
+// affirmation:", "<RILEY JOHN PROXY, VIA VIDEO-CONFERENCE, SWORN [12.02 pm]", "<SAM ÉXAMPLE, affirmed:", "<X, CALLED".
+const SWORN = /^<\s*(?!THE\b|WITNESS)(\p{L}[\p{L}'’. -]{2,70}?)\s*(?:,[^,[<]{1,40})?(?:,\s*|\s+)(?:on former (?:oath|affirmation)|(?:re-?)?sworn|(?:re-?)?affirmed|recalled|called)(?![\p{L}-])/iu
+// A witness leaving: "<THE WITNESS WITHDREW", "<THE WITNESSES WERE RELEASED", "<WITNESSES EXCUSED", "<MS SPECIMEN WITHDREW".
+const LEFT = /\b(?:WITHDREW|RELEASED|EXCUSED|ST(?:OOD|ANDS) DOWN)\b/i
+// Lines about the sitting, an examination or an exhibit, which say nothing about who is giving evidence.
+const PROCEDURAL = /^<\s*(?:(?:(?:FURTHER|RE|CROSS)[- ]?)*EXAMINATION\b|EXHI?BITS?\b|(?:THE )?(?:OPENING )?HEARING\b|(?:SHORT |LUNCHEON )?ADJOURN(?:ED|MENT)\b|RESUMED\b|COMMENCED?\b|TRANSCRIPT OF\b)/i
+/** What one "<" line of a transcript is. "unrecognised" is a line none of the patterns place: it may be a witness
+ * line in a form not seen before, so nothing is read from it (portal/scripts/transcript-parser-audit.mjs counts them). */
+export type NoteKind = 'sworn' | 'left' | 'procedural' | 'unrecognised'
+export function noteKind(line: string): NoteKind {
+  const l = line.trim()
+  return SWORN.test(l) ? 'sworn' : LEFT.test(l) ? 'left' : PROCEDURAL.test(l) ? 'procedural' : 'unrecognised'
+}
 const MARKER_LINE = /^[ \t]*<[^\n]*$/gm
 const ROLE_WORD = /(?<![a-z])(counsel assisting|counsel for|for|commissioner)(?![a-z])/i
 const OPENS_ENTRY = /^(?:MR|MS|MRS|MISS|DR|PROF|PROFESSOR|THE HON)\b/i
@@ -130,65 +138,58 @@ export function speakerRoles(pages: RecordRow[]): RoleOf {
 }
 
 // One turn boundary on a page: a speaker label, a "Q." or "A." of an examination, or a "<" procedural line.
-type Mark = { at: number, end: number, kind: 'label' | 'q' | 'a' | 'note', label?: string, sworn?: string }
-/** What earlier pages leave open at the top of a page: the turn still running, who is examining, who is sworn. */
-export type Carry = { turn?: Mark, examiner?: string, witnesses?: string[] }
+type Mark = { at: number, end: number, kind: 'label' | 'q' | 'a' | 'note', label?: string }
 
 const flatten = (text: string) => text.replace(MARKER_LINE, m => `\u0002${m.trim()}\u0003`).replace(/(^[ \t]*|[A-Z]:[ \t]+)(Q|A)\.(?=\s)/gm, '$1\u0001$2.').replace(/\s+/g, ' ').trim()
-function marksIn(flat: string, carry?: Carry): Mark[] {
-  const notes: Mark[] = [...flat.matchAll(/\u0002([^\u0003]*)\u0003/g)].map(m => ({ at: m.index!, end: m.index! + m[0].length, kind: 'note', sworn: SWORN.exec(m[1])?.[1] }))
+/** Every "Q." and "A." at the start of a line is a boundary, so no excerpt runs from one turn into the next. */
+function marksIn(flat: string): Mark[] {
+  const notes: Mark[] = [...flat.matchAll(/\u0002([^\u0003]*)\u0003/g)].map(m => ({ at: m.index!, end: m.index! + m[0].length, kind: 'note' }))
   const labels: Mark[] = [...flat.matchAll(LABEL)].map(m => ({ at: m.index!, end: m.index! + m[0].length, kind: 'label' as const, label: m[1] })).filter(l => !notes.some(n => l.at >= n.at && l.at < n.end))
-  let qa: Mark[] = [...flat.matchAll(/\u0001([QA])\./g)].map(m => ({ at: m.index!, end: m.index! + m[0].length, kind: m[1] === 'Q' ? 'q' as const : 'a' as const }))
-  // A lone line that happens to open "A." is not an examination: both letters, or one already under way.
-  if (!(qa.some(m => m.kind === 'q') && qa.some(m => m.kind === 'a')) && !['q', 'a'].includes(carry?.turn?.kind ?? '')) qa = []
+  const qa: Mark[] = [...flat.matchAll(/\u0001([QA])\./g)].map(m => ({ at: m.index!, end: m.index! + m[0].length, kind: m[1] === 'Q' ? 'q' as const : 'a' as const }))
   return [...notes, ...labels, ...qa].sort((a, b) => a.at - b.at)
 }
 const lastIndex = (marks: Mark[], test: (m: Mark) => boolean) => { for (let i = marks.length - 1; i >= 0; i--) if (test(marks[i])) return i; return -1 }
-/** The sworn names in the unbroken run of witness lines that ends at marks[i]. */
-function swornRun(marks: Mark[], i: number): string[] {
-  const run: string[] = []
-  for (let j = i; j >= 0 && marks[j].kind === 'note' && marks[j].sworn; j--) run.unshift(marks[j].sworn!)
-  return run
-}
-/** Who holds the turn a mark opens. An answer is a witness's, named only when one witness is sworn; a question is
- * the examiner's, the last labelled speaker, unless that label is a witness's. */
-function speakerAt(marks: Mark[], i: number, carry: Carry | undefined, roleOf: RoleOf | undefined): { speaker?: string, speaker_label?: string, speaker_role?: SpeakerRole } {
-  const mark = i < 0 ? carry?.turn : marks[i]
-  if (!mark || mark.kind === 'note') return {}
-  const named = (label: string) => { const role = roleOf?.(label); return { speaker: speakerName(label), speaker_label: label, ...(role ? { speaker_role: role } : {}) } }
-  if (mark.kind === 'label') return named(mark.label!)
-  const before = i < 0 ? [] : marks.slice(0, i)
-  if (mark.kind === 'q') {
-    const examiner = before.filter(m => m.kind === 'label').at(-1)?.label ?? carry?.examiner
-    return examiner && roleOf?.(examiner) !== 'witness' ? named(examiner) : {}
+
+/** How sure the page itself makes the speaker of one stretch of text.
+ *  confident: the turn opens on this page with the transcript's own heading, a speaker label ("MR SAMPLE:", also
+ *    "MR SAMPLE: Q."), or with an "A." on a page that is plainly an examination (it has "Q." and "A." both).
+ *  uncertain: the turn opens on this page, but who holds it would have to be carried from somewhere else: a bare
+ *    "Q." (the examiner was named earlier), a lone "A." or "Q.", or text after a "<" procedural line.
+ *  page_top: the text runs on from the page before. Nothing is carried across a page break. */
+export type TurnBasis = 'confident' | 'uncertain' | 'page_top'
+/** The role of whoever holds the turn marks[i] opens, and how sure the page makes it. Only a confident turn can
+ * have a role, and no turn has a name. A label the transcript gives no role is confident with no role. */
+function speakerAt(flat: string, marks: Mark[], i: number, roleOf: RoleOf | undefined): { basis: TurnBasis, speaker_role?: SpeakerRole } {
+  if (i < 0) return { basis: 'page_top' }
+  const mark = marks[i]
+  const labelled = (label: string): { basis: TurnBasis, speaker_role?: SpeakerRole } => { const role = roleOf?.(label); return { basis: 'confident', ...(role ? { speaker_role: role } : {}) } }
+  if (mark.kind === 'label') return labelled(mark.label!)
+  if (mark.kind === 'note') return { basis: 'uncertain' }
+  // "MR SAMPLE: Q." is that speaker's question: the label and the letter are one heading.
+  const heading = marks[i - 1]
+  if (heading?.kind === 'label' && !flat.slice(heading.end, mark.at).trim()) {
+    const role = roleOf?.(heading.label!)
+    return mark.kind === 'q' && role === 'witness' ? { basis: 'uncertain' } : labelled(heading.label!)
   }
-  const at = lastIndex(before, m => m.kind === 'note' && !!m.sworn)
-  const witnesses = at >= 0 ? swornRun(before, at) : carry?.witnesses ?? []
-  return { ...(witnesses.length === 1 ? { speaker: speakerName(witnesses[0].toUpperCase()) } : {}), speaker_role: 'witness' }
-}
-/** What the pages before page n leave open, read back from the nearest. */
-export function carryInto(pages: RecordRow[], n: number): Carry {
-  const carry: Carry = {}
-  const earlier = pages.filter(p => Number(p.n) < n && typeof p.text === 'string').sort((a, b) => Number(b.n) - Number(a.n)).slice(0, 40)
-  for (const page of earlier) {
-    // Read as an examination whenever the page has both letters; the pages before it settle a lone one.
-    const marks = marksIn(flatten(String(page.text)))
-    for (let i = marks.length - 1; i >= 0; i--) {
-      const m = marks[i]
-      if (!carry.turn) carry.turn = m
-      if (!carry.examiner && m.kind === 'label') carry.examiner = m.label
-      if (!carry.witnesses && m.kind === 'note' && m.sworn) carry.witnesses = swornRun(marks, i)
-    }
-    if (carry.turn && carry.examiner && carry.witnesses) break
-  }
-  return carry
+  if (mark.kind === 'a' && marks.some(m => m.kind === 'q')) return { basis: 'confident', speaker_role: 'witness' }
+  return { basis: 'uncertain' }
 }
 
-/** A verbatim excerpt around the first query word, kept within one speaker's turn. The turn's label is returned
- * as the speaker rather than left in the text. Without the pages before it (carry), a turn that began on an
- * earlier page has no speaker here; with them, it keeps the speaker who was already speaking. */
-export function excerpt(text: string, terms: string[], context: { carry?: Carry, roleOf?: RoleOf } = {}): { excerpt: string, speaker?: string, speaker_label?: string, speaker_role?: SpeakerRole } {
-  const flat = flatten(text), marks = marksIn(flat, context.carry)
+/** Every stretch of text on a page with how sure its speaker is, for the parser audit. */
+export function pageTurns(text: string, roleOf?: RoleOf): { basis: TurnBasis, speaker_role?: SpeakerRole, length: number }[] {
+  const flat = flatten(text), marks = marksIn(flat), out: { basis: TurnBasis, speaker_role?: SpeakerRole, length: number }[] = []
+  const add = (i: number, from: number, to: number) => { const length = flat.slice(from, to).trim().length; if (length) out.push({ ...speakerAt(flat, marks, i, roleOf), length }) }
+  add(-1, 0, marks[0]?.at ?? flat.length)
+  // A label that only heads a "Q." or "A." has no text of its own; the letter's stretch is the turn.
+  for (const [i, m] of marks.entries()) add(i, m.end, marks[i + 1]?.at ?? flat.length)
+  return out
+}
+
+/** A verbatim excerpt around the first query word, kept within one speaker's turn. The turn's label is never left
+ * in the text and no speaker is named: with the document's roles (roleOf), a turn that opens on this page under
+ * the transcript's own heading carries that speaker's role. A turn that began on an earlier page has none. */
+export function excerpt(text: string, terms: string[], context: { roleOf?: RoleOf } = {}): { excerpt: string, speaker_role?: SpeakerRole } {
+  const flat = flatten(text), marks = marksIn(flat)
   const inside = (n: number) => marks.find(m => n >= m.at && n < m.end)
   let at = -1, label: Mark | undefined
   for (const t of terms) for (const m of flat.matchAll(new RegExp(`\\b${t.replace(/[^a-z0-9]/g, '')}`, 'gi'))) {
@@ -211,8 +212,10 @@ export function excerpt(text: string, terms: string[], context: { carry?: Carry,
   while (flat[start] === ' ') start++
   let end = Math.min(until, start + EXCERPT)
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
-  const body = flat.slice(start, end).trim()
-  return { excerpt: `${start > from ? '...' : ''}${body}${end < flat.length && end < until ? '...' : ''}`, ...speakerAt(marks, i, context.carry, context.roleOf) }
+  // The marks' own control characters never reach the quoted words.
+  const body = flat.slice(start, end).replace(/[\u0001-\u0003]/g, '').trim()
+  const role = context.roleOf ? speakerAt(flat, marks, i, context.roleOf).speaker_role : undefined
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < flat.length && end < until ? '...' : ''}`, ...(role ? { speaker_role: role } : {}) }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
@@ -231,7 +234,7 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
   const hits = best.map(([n]) => {
     const page = pages.find(p => p.n === n) ?? {}
     return { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
-      ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, { carry: carryInto(pages, n), roleOf }) : { excerpt: null }) }
+      ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, { roleOf }) : { excerpt: null }) }
   })
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),
     ...(quote ? {} : { order_notice: String(doc.order_notice) }), hits }

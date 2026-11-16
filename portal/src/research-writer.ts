@@ -2,7 +2,7 @@ import { generateResearchText, answerEntryScanner, researchPreviewGuard } from '
 import { routingRefused } from './research-model'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, transcriptWritingInput, unattributedTranscriptSentences, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, transcriptWritingInput, unattributedTranscriptSentences, wordedTranscriptFact, type WritingInput } from './research-writing'
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
@@ -27,6 +27,8 @@ export function createAnswerWriter(options: ResearchOptions) {
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // A chamber named for a cited speaker is the one their source records (ask-chamber-phrases.ts).
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question,releasedDraft?.answer);return checked as unknown as QualitativeAnswer}
+    // Transcript passages no model may word, with nothing else found: they are quoted as recorded, with no writing turn.
+    if(input.facts.some(f=>f.transcript)&&!input.facts.some(f=>!f.coverage&&(!f.transcript||wordedTranscriptFact(f))))return ground(proseFallback(input))
     // Exact record findings have a complete prose answer without a writing turn, unless that prose is only a limit.
     if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input)){const exact=proseFallback(input);if(exact.answer_decision!=='limitation')return ground(exact)}
     // No receipt is ever said to be lent (A34 review): the AEC types none as a loan, and OPAX matches none to a
@@ -106,7 +108,7 @@ export function createAnswerWriter(options: ResearchOptions) {
             // A receipt's lending check and the required headline/vote split can replace the complete draft.
             // Retain that affected tail until its decision is known; no weaker per-sentence variant is substituted.
             // So can the transcript attribution repair pass (below), so a transcript answer is held the same way.
-            if(!checked||input.facts.some(f=>f.source.receipt||f.transcript))return
+            if(!checked||input.facts.some(f=>f.source.receipt||wordedTranscriptFact(f)))return
             const released=await preview({...withRecordedChambers(checked),research:{pre_writer_sources:found}} as QualitativeAnswer,keepsAll)
             if(released)releasedDraft=released
           })

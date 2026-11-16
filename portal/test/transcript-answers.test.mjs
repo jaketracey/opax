@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises'
 import { build } from 'esbuild'
 
 const built = await build({ stdin: { contents: [
-  "export {excerpt, speakerName, dayWords, spanWords} from './src/tools/transcript-text'",
+  "export {excerpt, dayWords, spanWords} from './src/tools/transcript-text'",
   "export {callTool} from './src/tools/index'",
   "export {transcriptListingOnly, withTranscriptNote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
   "export {groundAnswerPayload} from './src/research-grounding'",
@@ -60,7 +60,7 @@ test('the writer is skipped only when every fact is a transcript listing row', a
   assert.equal(api.transcriptListingOnly([row, coverage]), true)
   assert.equal(api.transcriptListingOnly([coverage]), false)
   assert.equal(api.transcriptListingOnly([row, { text: 'NSW ICAC, Operation Wyvern report, page 12: "a finding".' }]), false)
-  assert.equal(api.transcriptListingOnly([{ text: `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}.` }]), false, 'excerpts go to the writer')
+  assert.equal(api.transcriptListingOnly([{ text: `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn (witness): "income averaging". ${LABEL}.` }]), false, 'excerpts go to the writer')
   for (const file of ['royal-commissions', 'integrity-reports']) assert.match(await readFile(new URL(`../src/tools/${file}.ts`, import.meta.url), 'utf8'), new RegExp(`TRANSCRIPT_LABEL = '${api.TRANSCRIPT_LABEL}'`))
 })
 
@@ -76,26 +76,26 @@ test('transcript counts give their dates in words', async () => {
   assert.match(ibac.citations[0].text, /, dated 4 February 2019 to 1 March 2019, newest first\./)
 })
 
-test('an excerpt stays inside one speaker turn, with the label moved to a speaker field', () => {
-  const page = 'that is the position.\nMS PRESTON: Thank you, Commissioner. I want to ask about income averaging and how\nthe scheme applied it to each debt.\nCOMMISSIONER: Yes.\nMR SMITH SC: Income averaging was raised later.'
+test('an excerpt stays inside one speaker turn; the label leaves the words and no speaker is named', () => {
+  const page = 'that is the position.\nMS SPECIMEN: Thank you, Commissioner. I want to ask about income averaging and how\nthe scheme applied it to each debt.\nCOMMISSIONER: Yes.\nMR SAMPLE SC: Income averaging was raised later.'
   const one = api.excerpt(page, ['income', 'averaging'])
-  assert.deepEqual(one, { excerpt: 'Thank you, Commissioner. I want to ask about income averaging and how the scheme applied it to each debt.', speaker: 'Ms Preston', speaker_label: 'MS PRESTON' })
+  assert.deepEqual(one, { excerpt: 'Thank you, Commissioner. I want to ask about income averaging and how the scheme applied it to each debt.' })
   const carried = api.excerpt('averaging continued from the last page, said the witness. THE COMMISSIONER: Noted.', ['averaging'])
   assert.deepEqual(carried, { excerpt: 'averaging continued from the last page, said the witness.' }, 'a turn begun on an earlier page has no speaker here')
-  assert.equal(api.speakerName('MS HOGAN-DORAN'), 'Ms Hogan-Doran'); assert.equal(api.speakerName('MR LANCASTER SC'), 'Mr Lancaster SC')
-  assert.equal(api.speakerName('McLEOD'), 'McLeod'); assert.equal(api.speakerName("MR O'BRIEN"), "Mr O'Brien"); assert.equal(api.speakerName('THE COMMISSIONER'), 'The Commissioner')
 })
 
-test('quoted CC BY excerpts carry no speaker labels, and a hearing turn supports "said"', async () => {
+test('quoted CC BY excerpts carry no speaker labels and name no speaker; the hearing turn gives a role where the page settles it', async () => {
   const out = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 8 })
-  let named = 0
+  let roles = 0
   for (const [i, r] of out.rows.entries()) for (const h of r.text_matches?.hits ?? []) {
     if (h.excerpt === null) continue
     assert.ok(!/(?:^|\s)(?:THE |MR |MS |DR )?[A-Z][A-Za-z'’.-]*[A-Z]:\s/.test(h.excerpt), h.excerpt)
-    if (!h.speaker) continue
-    named++; assert.ok(out.citations[i + 1].text.includes(`hearing turn by ${h.speaker}${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`))
+    assert.equal('speaker' in h || 'speaker_label' in h, false)
+    assert.ok(out.citations[i + 1].text.includes(`hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`))
+    assert.doesNotMatch(out.citations[i + 1].text, /hearing turn by /)
+    if (h.speaker_role) roles++
   }
-  assert.ok(named > 0)
+  assert.ok(roles > 0)
 })
 
 test('a royal commission transcript count opens the way the integrity count does', async () => {
@@ -111,7 +111,7 @@ test('a royal commission transcript count opens the way the integrity count does
 })
 
 test('an answer citing only hearing transcripts says they are evidence, not findings', async () => {
-  const turn = `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}. CC BY 4.0.`
+  const turn = `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn (witness): "income averaging". ${LABEL}. CC BY 4.0.`
   const answer = 'Witnesses described how income averaging was applied to each debt.'
   const payload = { answered: true, answer_decision: 'answer', answer, citations: { 'fact-1/t/body/0': [[0, answer.length]] },
     sources: [{ resource: 'fact-1', kind: 'record', url: 'https://robodebt.royalcommission.gov.au/t12.pdf', title: turn, snippet: turn, cited: true },
