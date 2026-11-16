@@ -48,11 +48,19 @@ test('no verified roster, a surname print, an own party or a former member: noth
 test('the shipped index gives the three minor state parties their sitting members', () => {
   const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
   const roster = read('/parliamentarians.json'), divisions = read('/graph/party-members.json');
-  const names = label => partyMembers(label, {roster, divisions, today: '2026-11-13'}).current.map(m => m.name);
+  const on = today => label => partyMembers(label, {roster, divisions, today}).current.map(m => m.name);
   // Victorian members from the seat roster; NSW Council members from the dated official list (A17).
+  // The day before the Victorian houses ended (3 November 2026) the Victorian members sit.
+  const names = on('2026-11-02');
   assert.deepEqual(names('Animal Justice Party'), ['Emma Hurst', 'Georgie Purcell']);
   assert.deepEqual(names('Legalise Cannabis'), ['David Ettershank', 'Jeremy Buckingham', 'Rachel Payne']);
   assert.deepEqual(names('Shooters, Fishers and Farmers'), ['Jeff Bourman', 'Mark Banasiak', 'Robert Borsak']);
+  // After it, only the NSW members are sitting: a Victorian member is on the roster of its date, not sitting
+  // (test/party-ended-house.test.mjs).
+  const after = on('2026-11-13');
+  assert.deepEqual(after('Animal Justice Party'), ['Emma Hurst']);
+  assert.deepEqual(after('Legalise Cannabis'), ['Jeremy Buckingham']);
+  assert.deepEqual(after('Shooters, Fishers and Farmers'), ['Mark Banasiak', 'Robert Borsak']);
 });
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
