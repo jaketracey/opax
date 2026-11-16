@@ -25,7 +25,7 @@ import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndepend
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
-import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
+import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, operatorRunDates, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { fundingResearchFollowUp, rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay, mentionsOfficePay } from './ask-pay'
@@ -167,7 +167,7 @@ import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_NAMED_PEOPLE_RULE } from './transcript-answer'
-import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse } from './machine-notice'
+import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse, MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX } from './machine-notice'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
 import { serveMedia } from './media'
@@ -5159,7 +5159,8 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       publisher,
     },
     prerender: prerenderBlock(name, `${facts} ${tail}`),
-    card: { kicker: summary ? 'Bill summary' : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
+    // A card whose headline is the summary's first sentence says who wrote it, in the image itself (machine-notice.js).
+    card: { kicker: summary ? `Bill · ${MACHINE_SUMMARY_WORDS}` : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
   }
 }
 
@@ -6236,7 +6237,9 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
   const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical,meta.electionState) : OG_IMAGE
-  const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
+  // A card whose headline is a bill's summary sentence (its kicker says so) is described the same way in words.
+  const summaryCard = !!meta.card?.kicker?.includes(MACHINE_SUMMARY_WORDS)
+  const imageAlt = meta.card && meta.status < 400 ? clip(`${summaryCard ? MACHINE_SUMMARY_PREFIX : ''}${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
   const gates = navGates(env)
   const rewriter = new HTMLRewriter()
     .on('html', { element(el) { if (gates) el.setAttribute('data-nav-gates', gates) } })
@@ -7319,6 +7322,10 @@ async function route(
         // subject such as grant:GA34203@abn:97694995462) under a journal date
         // and deliver it to chosen channels, or dry-run it. Bearer-guarded by
         // DAILY_POST_OPERATOR_SECRET; the journal prevents double delivery.
+        // A posting run takes only today's or yesterday's Melbourne date unless
+        // the body carries allow_any_date: true. A dry run reads and composes
+        // only (no journal write, no channel call), so it takes any date, like
+        // the public preview route.
         if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
         const body = await readJsonBody(request)
         if (body instanceof Response) return body
@@ -7331,6 +7338,12 @@ async function route(
         if (v.dry_run) {
           const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind, subject)
           const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
+          response.headers.set('cache-control', 'no-store')
+          return response
+        }
+        const allowedDates = operatorRunDates()
+        if (v.allow_any_date !== true && !allowedDates.includes(date)) {
+          const response = json({ error: `date ${date} is outside the allowed dates (${allowedDates.join(', ')}); nothing was posted. Send allow_any_date: true to post under another date.`, date, allowed_dates: allowedDates, override: 'allow_any_date' }, 400)
           response.headers.set('cache-control', 'no-store')
           return response
         }

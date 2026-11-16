@@ -134,7 +134,7 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-11-16-transcript-names-off",
+    "CACHE_EPOCH": "2026-11-16-transcript-search-words",
     "INDEXNOW_EPOCH_VERSION": "1794805258936",
     "INDEXNOW_ENABLED": "true",
     "INDEXNOW_DRY_RUN": "false",
@@ -245,7 +245,7 @@
         { "name": "MODEL_LIMITER", "namespace_id": "2005", "simple": { "limit": 60, "period": 60 } },
         { "name": "MCP_ANON_LIMITER", "namespace_id": "2006", "simple": { "limit": 300, "period": 60 } }
       ],
-      "vars": { "PASSAGE_FILL_DAILY_READS":"40", "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "MCP_ANON_ENABLED":"true", "MCP_ANON_DAILY_PROGRESS_SHARED":"250", "MCP_ANON_DAILY_PROGRESS_DIRECT":"250", "MCP_ANON_DAILY_PROGRESS_NETWORK":"150", "MCP_ANON_DAILY_REQUESTS_SHARED":"100000", "MCP_ANON_DAILY_REQUESTS_DIRECT":"100000", "MCP_ANON_DAILY_REQUESTS_NETWORK":"20000", "MCP_PROGRESS_REPORT":"true", "MCP_ANON_PER_CLIENT_MINUTE":"60", "MCP_ANON_PER_IP_MINUTE":"300", "MCP_ANON_SHARED_IP_MINUTE":"1500", "MCP_ANON_GLOBAL_MINUTE":"3000", "MCP_ANON_ALERT_HOURLY":"20000", "MCP_ANON_SHARED_RANGES":"", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-11-16-transcript-names-off",
+      "vars": { "PASSAGE_FILL_DAILY_READS":"40", "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "MCP_ANON_ENABLED":"true", "MCP_ANON_DAILY_PROGRESS_SHARED":"250", "MCP_ANON_DAILY_PROGRESS_DIRECT":"250", "MCP_ANON_DAILY_PROGRESS_NETWORK":"150", "MCP_ANON_DAILY_REQUESTS_SHARED":"100000", "MCP_ANON_DAILY_REQUESTS_DIRECT":"100000", "MCP_ANON_DAILY_REQUESTS_NETWORK":"20000", "MCP_PROGRESS_REPORT":"true", "MCP_ANON_PER_CLIENT_MINUTE":"60", "MCP_ANON_PER_IP_MINUTE":"300", "MCP_ANON_SHARED_IP_MINUTE":"1500", "MCP_ANON_GLOBAL_MINUTE":"3000", "MCP_ANON_ALERT_HOURLY":"20000", "MCP_ANON_SHARED_RANGES":"", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-11-16-transcript-search-words",
         "VIC_ELECTION_HUB_ENABLED": "false",
         "VIC_ELECTION_APP_ENABLED": "false",
         "REPORTS_ENABLED": "false",
