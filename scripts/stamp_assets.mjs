@@ -175,7 +175,10 @@ export const MODULE_STAMPS = [
   ['map-research.js','money-connections.js'],
   ['electorates.js', 'canonical-urls.js'],
   // The electoral authorisation: a cached old vic-election.js would draw the old block.
-  ['vic-election.js', 'authorisation.js'], ['electorates.js', 'vic-election.js'],
+  ['vic-election.js', 'authorisation.js'],
+  // The term-end rule reads vic-election.js's dates: both importers must name the same copy of it, or a
+  // browser loads two (vic-term.js was hand-versioned and went stale when vic-election.js next changed).
+  ['vic-term.js', 'vic-election.js'], ['electorates.js', 'vic-election.js'], ['electorates.js', 'vic-term.js'],
   ['evidence.js', 'canonical-urls.js'], ['evidence-date.js', 'labels.js'],
   ['grants.js', 'donor-views.js'], ['grant-recipient.js', 'donor-views.js'],
   ['grants.js', 'canonical-urls.js'], ['grants.js', 'labels.js'],
@@ -315,7 +318,7 @@ const HEADER_RULE_LIMIT = 100
 // Stamped so a changed file is a new URL, but left on the default module cache:
 // _headers is at the 100 rules Workers Assets allows, and an immutable rule each
 // would pass it. A small module that is cheap to revalidate belongs here.
-const STAMPED_DEFAULT_CACHE = new Set(['profile-jurisdictions.js'])
+const STAMPED_DEFAULT_CACHE = new Set(['profile-jurisdictions.js', 'vic-term.js'])
 const DEV_ONLY = /(?:^|\/)(?:[a-z]+-test\.html|ui-workbench\.[a-z]+|datatable-workbench[\w.-]*)$/
 
 const walkFiles = (dir) => readdirSync(dir, { withFileTypes: true })

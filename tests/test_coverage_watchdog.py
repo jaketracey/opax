@@ -496,7 +496,7 @@ warn() { echo "REPORT $*"; }
         today = wd.completed_day(datetime.now(timezone.utc)) + timedelta(days=1)
         functions = ''.join(shell_function(name) for name in (
             'fail', 'coverage_fail', 'warn', 'coverage_status', 'periodic_refresh_complete',
-            'write_status', 'finish', 'nightly_exit'))
+            'write_status', 'write_status_file', 'finish', 'nightly_exit'))
         for ordinary_failure in (False, True):
             state_path = self.root / 'periodic-refresh-v1.json'
             state = periodic_state.read_state(state_path, today)
@@ -510,10 +510,10 @@ warn() { echo "REPORT $*"; }
 set -uo pipefail
 PY=$1; REPO=$2; PIPE=$3; TODAY=$4
 cd "$REPO"
-FAILURES=(); COVERAGE_FAILURES=(); WARNINGS=()
+FAILURES=(); COVERAGE_FAILURES=(); WARNINGS=(); FAILED_STEP_NAMES=(); STALE_STEP_NAMES=()
 log() { echo "$*"; }
 publish_status() { echo STATUS_PUBLISHED; }
-MARK="$PIPE/mark"; LASTFILE="$PIPE/nightly-last.json"
+MARK="$PIPE/mark"; LASTFILE="$PIPE/nightly-last.json"; LOGFILE="$PIPE/nightly.log"; ENV_FILE="$PIPE/nightly.env"; STEP_LOG_KEEP="$PIPE/step-logs-kept"
 STARTED_AT=2026-11-14T00:00:00Z; COMMIT_SHA=abcdef0123456789
 DEPLOY=published; RESULT_SUMMARY=""
 PERIODIC_ACCEPTED=1; PERIODIC_DATE=$TODAY
