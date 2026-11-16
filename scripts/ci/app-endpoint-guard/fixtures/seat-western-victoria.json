@@ -1,0 +1,766 @@
+{
+ "schema_version": 1,
+ "state": "pre_poll",
+ "current_result": null,
+ "updated": "2026-11-16",
+ "kind": "region",
+ "slug": "western-victoria",
+ "name": "Western Victoria",
+ "web_url": "https://opax.com.au/vic-election-2026/western-victoria",
+ "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/western-victoria-region",
+ "electorate_url": "/subject/electorate/vic-vic-lc-vic-western-victoria",
+ "roster_date": "2026-09-09",
+ "formerly": null,
+ "created": false,
+ "boundary_note": null,
+ "region": null,
+ "districts": [
+  {
+   "kind": "district",
+   "slug": "bellarine",
+   "name": "Bellarine",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-bellarine",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Alison Marchant",
+    "party": "Labor"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 8.46
+   },
+   "candidates": 8
+  },
+  {
+   "kind": "district",
+   "slug": "eureka",
+   "name": "Eureka",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-eureka",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Michaela Settle",
+    "party": "Labor"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 7.17
+   },
+   "candidates": 9
+  },
+  {
+   "kind": "district",
+   "slug": "geelong",
+   "name": "Geelong",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-geelong",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Chris Couzens",
+    "party": "Labor"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 14.71
+   },
+   "candidates": 8
+  },
+  {
+   "kind": "district",
+   "slug": "lara",
+   "name": "Lara",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-lara",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Ella George",
+    "party": "Labor"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 16.15
+   },
+   "candidates": 8
+  },
+  {
+   "kind": "district",
+   "slug": "lowan",
+   "name": "Lowan",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-lowan",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Emma Kealy",
+    "party": "Nationals"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Nationals",
+    "margin": 21.61
+   },
+   "candidates": 8
+  },
+  {
+   "kind": "district",
+   "slug": "melton",
+   "name": "Melton",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-melton",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Steve McGhie",
+    "party": "Labor"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 4.59
+   },
+   "candidates": 11
+  },
+  {
+   "kind": "district",
+   "slug": "polwarth",
+   "name": "Polwarth",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-polwarth",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Richard Riordan",
+    "party": "Liberal"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Liberal",
+    "margin": 1.79
+   },
+   "candidates": 7
+  },
+  {
+   "kind": "district",
+   "slug": "ripon",
+   "name": "Ripon",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-ripon",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Martha Haylett",
+    "party": "Labor"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 2.99
+   },
+   "candidates": 12
+  },
+  {
+   "kind": "district",
+   "slug": "south-barwon",
+   "name": "South Barwon",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-south-barwon",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Darren Cheeseman",
+    "party": "Independent"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 9.8
+   },
+   "candidates": 8
+  },
+  {
+   "kind": "district",
+   "slug": "south-west-coast",
+   "name": "South-West Coast",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-south-west-coast",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Roma Britnell",
+    "party": "Liberal"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Liberal",
+    "margin": 8.05
+   },
+   "candidates": 6
+  },
+  {
+   "kind": "district",
+   "slug": "wendouree",
+   "name": "Wendouree",
+   "electorate_url": "/subject/electorate/vic-vic-la-vic-wendouree",
+   "region": "Western Victoria",
+   "member": {
+    "name": "Juliana Addison",
+    "party": "Labor"
+   },
+   "result": {
+    "date": "2022-11-26",
+    "kind": "general",
+    "party": "Labor",
+    "margin": 13.46
+   },
+   "candidates": 7
+  }
+ ],
+ "result": null,
+ "candidates": {
+  "published": "2026-11-11",
+  "url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/western-victoria-region/nominations",
+  "list": [
+   {
+    "name": "MANSFIELD, Sarah\nAustralian Greens Victoria",
+    "party": null,
+    "candidate_name": "MANSFIELD, Sarah",
+    "party_name": "Australian Greens Victoria",
+    "party_path": "/vic-election-2026/party-australian-greens-victoria",
+    "group": "A",
+    "group_name": "The Greens"
+   },
+   {
+    "name": "COATES, Belinda\nAustralian Greens Victoria",
+    "party": null,
+    "candidate_name": "COATES, Belinda",
+    "party_name": "Australian Greens Victoria",
+    "party_path": "/vic-election-2026/party-australian-greens-victoria",
+    "group": "A",
+    "group_name": "The Greens"
+   },
+   {
+    "name": "VEALE, Steve\nAustralian Greens Victoria",
+    "party": null,
+    "candidate_name": "VEALE, Steve",
+    "party_name": "Australian Greens Victoria",
+    "party_path": "/vic-election-2026/party-australian-greens-victoria",
+    "group": "A",
+    "group_name": "The Greens"
+   },
+   {
+    "name": "SMITH, Aleisha\nAustralian Greens Victoria",
+    "party": null,
+    "candidate_name": "SMITH, Aleisha",
+    "party_name": "Australian Greens Victoria",
+    "party_path": "/vic-election-2026/party-australian-greens-victoria",
+    "group": "A",
+    "group_name": "The Greens"
+   },
+   {
+    "name": "VAN ASPEREN, Heaven\nAustralian Greens Victoria",
+    "party": null,
+    "candidate_name": "VAN ASPEREN, Heaven",
+    "party_name": "Australian Greens Victoria",
+    "party_path": "/vic-election-2026/party-australian-greens-victoria",
+    "group": "A",
+    "group_name": "The Greens"
+   },
+   {
+    "name": "WEARNE, Madeleine\nAffordable Housing Now – Sustainable Australia Party",
+    "party": null,
+    "candidate_name": "WEARNE, Madeleine",
+    "party_name": "Affordable Housing Now – Sustainable Australia Party",
+    "party_path": "/vic-election-2026/party-affordable-housing-now-sustainable-australia-party",
+    "group": "B",
+    "group_name": "Affordable Housing Now – Sustainable Australia Party"
+   },
+   {
+    "name": "CHIVERS, Ian\nAffordable Housing Now – Sustainable Australia Party",
+    "party": null,
+    "candidate_name": "CHIVERS, Ian",
+    "party_name": "Affordable Housing Now – Sustainable Australia Party",
+    "party_path": "/vic-election-2026/party-affordable-housing-now-sustainable-australia-party",
+    "group": "B",
+    "group_name": "Affordable Housing Now – Sustainable Australia Party"
+   },
+   {
+    "name": "MAXFIELD, Kate\nAustralian Labor Party - Victorian Branch",
+    "party": null,
+    "candidate_name": "MAXFIELD, Kate",
+    "party_name": "Australian Labor Party - Victorian Branch",
+    "party_path": "/vic-election-2026/party-australian-labor-party-victorian-branch",
+    "group": "C",
+    "group_name": "Australian Labor Party"
+   },
+   {
+    "name": "ERMACORA, Jacinta\nAustralian Labor Party - Victorian Branch",
+    "party": null,
+    "candidate_name": "ERMACORA, Jacinta",
+    "party_name": "Australian Labor Party - Victorian Branch",
+    "party_path": "/vic-election-2026/party-australian-labor-party-victorian-branch",
+    "group": "C",
+    "group_name": "Australian Labor Party"
+   },
+   {
+    "name": "ANWARI, Sam\nAustralian Labor Party - Victorian Branch",
+    "party": null,
+    "candidate_name": "ANWARI, Sam",
+    "party_name": "Australian Labor Party - Victorian Branch",
+    "party_path": "/vic-election-2026/party-australian-labor-party-victorian-branch",
+    "group": "C",
+    "group_name": "Australian Labor Party"
+   },
+   {
+    "name": "HANDRECK, Kaitlyn\nAustralian Labor Party - Victorian Branch",
+    "party": null,
+    "candidate_name": "HANDRECK, Kaitlyn",
+    "party_name": "Australian Labor Party - Victorian Branch",
+    "party_path": "/vic-election-2026/party-australian-labor-party-victorian-branch",
+    "group": "C",
+    "group_name": "Australian Labor Party"
+   },
+   {
+    "name": "MACKENZIE, Fiona\nAustralian Labor Party - Victorian Branch",
+    "party": null,
+    "candidate_name": "MACKENZIE, Fiona",
+    "party_name": "Australian Labor Party - Victorian Branch",
+    "party_path": "/vic-election-2026/party-australian-labor-party-victorian-branch",
+    "group": "C",
+    "group_name": "Australian Labor Party"
+   },
+   {
+    "name": "MITCHELL, Peter\nLegalise Cannabis Victoria",
+    "party": null,
+    "candidate_name": "MITCHELL, Peter",
+    "party_name": "Legalise Cannabis Victoria",
+    "party_path": "/vic-election-2026/party-legalise-cannabis-victoria",
+    "group": "D",
+    "group_name": "Legalise Cannabis Victoria"
+   },
+   {
+    "name": "DAVY, Alice\nLegalise Cannabis Victoria",
+    "party": null,
+    "candidate_name": "DAVY, Alice",
+    "party_name": "Legalise Cannabis Victoria",
+    "party_path": "/vic-election-2026/party-legalise-cannabis-victoria",
+    "group": "D",
+    "group_name": "Legalise Cannabis Victoria"
+   },
+   {
+    "name": "MEDDICK, Andy\nAustralian Democrats",
+    "party": null,
+    "candidate_name": "MEDDICK, Andy",
+    "party_name": "Australian Democrats",
+    "party_path": "/vic-election-2026/party-australian-democrats",
+    "group": "E",
+    "group_name": "Australian Democrats"
+   },
+   {
+    "name": "KELLY, Peter\nAustralian Democrats",
+    "party": null,
+    "candidate_name": "KELLY, Peter",
+    "party_name": "Australian Democrats",
+    "party_path": "/vic-election-2026/party-australian-democrats",
+    "group": "E",
+    "group_name": "Australian Democrats"
+   },
+   {
+    "name": "MCARTHUR, Bev\nLiberal Party of Australia - Victorian Division",
+    "party": null,
+    "candidate_name": "MCARTHUR, Bev",
+    "party_name": "Liberal Party of Australia - Victorian Division",
+    "party_path": "/vic-election-2026/party-liberal-party-of-australia-victorian-division",
+    "group": "F",
+    "group_name": "Liberal / The Nationals"
+   },
+   {
+    "name": "WATT, Graham\nLiberal Party of Australia - Victorian Division",
+    "party": null,
+    "candidate_name": "WATT, Graham",
+    "party_name": "Liberal Party of Australia - Victorian Division",
+    "party_path": "/vic-election-2026/party-liberal-party-of-australia-victorian-division",
+    "group": "F",
+    "group_name": "Liberal / The Nationals"
+   },
+   {
+    "name": "LETTS, Robert\nNational Party of Australia - Victoria",
+    "party": null,
+    "candidate_name": "LETTS, Robert",
+    "party_name": "National Party of Australia - Victoria",
+    "party_path": "/vic-election-2026/party-national-party-of-australia-victoria",
+    "group": "F",
+    "group_name": "Liberal / The Nationals"
+   },
+   {
+    "name": "READ, Ellie\nLiberal Party of Australia - Victorian Division",
+    "party": null,
+    "candidate_name": "READ, Ellie",
+    "party_name": "Liberal Party of Australia - Victorian Division",
+    "party_path": "/vic-election-2026/party-liberal-party-of-australia-victorian-division",
+    "group": "F",
+    "group_name": "Liberal / The Nationals"
+   },
+   {
+    "name": "STEED, Melody\nNational Party of Australia - Victoria",
+    "party": null,
+    "candidate_name": "STEED, Melody",
+    "party_name": "National Party of Australia - Victoria",
+    "party_path": "/vic-election-2026/party-national-party-of-australia-victoria",
+    "group": "F",
+    "group_name": "Liberal / The Nationals"
+   },
+   {
+    "name": "NUNQUAM, Ben\nVictorian Socialists",
+    "party": null,
+    "candidate_name": "NUNQUAM, Ben",
+    "party_name": "Victorian Socialists",
+    "party_path": "/vic-election-2026/party-victorian-socialists",
+    "group": "G",
+    "group_name": "Victorian Socialists"
+   },
+   {
+    "name": "HOUZET, Dominique\nVictorian Socialists",
+    "party": null,
+    "candidate_name": "HOUZET, Dominique",
+    "party_name": "Victorian Socialists",
+    "party_path": "/vic-election-2026/party-victorian-socialists",
+    "group": "G",
+    "group_name": "Victorian Socialists"
+   },
+   {
+    "name": "MORIARTY, Aleta",
+    "party": null,
+    "candidate_name": "MORIARTY, Aleta",
+    "party_name": null,
+    "party_path": null,
+    "group": "H",
+    "group_name": null
+   },
+   {
+    "name": "DENTON, Timothy",
+    "party": null,
+    "candidate_name": "DENTON, Timothy",
+    "party_name": null,
+    "party_path": null,
+    "group": "H",
+    "group_name": null
+   },
+   {
+    "name": "BARKER, Paul\nLibertarian Party (formerly Liberal Democrats)",
+    "party": null,
+    "candidate_name": "BARKER, Paul",
+    "party_name": "Libertarian Party (formerly Liberal Democrats)",
+    "party_path": "/vic-election-2026/party-libertarian-party-formerly-liberal-democrats",
+    "group": "I",
+    "group_name": "Libertarian (formerly Liberal Democrats)"
+   },
+   {
+    "name": "SCHIEMER, Phill\nLibertarian Party (formerly Liberal Democrats)",
+    "party": null,
+    "candidate_name": "SCHIEMER, Phill",
+    "party_name": "Libertarian Party (formerly Liberal Democrats)",
+    "party_path": "/vic-election-2026/party-libertarian-party-formerly-liberal-democrats",
+    "group": "I",
+    "group_name": "Libertarian (formerly Liberal Democrats)"
+   },
+   {
+    "name": "GOODEN, Timothy\nSocialist Alliance",
+    "party": null,
+    "candidate_name": "GOODEN, Timothy",
+    "party_name": "Socialist Alliance",
+    "party_path": "/vic-election-2026/party-socialist-alliance",
+    "group": "J",
+    "group_name": "Socialist Alliance"
+   },
+   {
+    "name": "BULL, Sue\nSocialist Alliance",
+    "party": null,
+    "candidate_name": "BULL, Sue",
+    "party_name": "Socialist Alliance",
+    "party_path": "/vic-election-2026/party-socialist-alliance",
+    "group": "J",
+    "group_name": "Socialist Alliance"
+   },
+   {
+    "name": "SMITH, Ross\nSocialist Alliance",
+    "party": null,
+    "candidate_name": "SMITH, Ross",
+    "party_name": "Socialist Alliance",
+    "party_path": "/vic-election-2026/party-socialist-alliance",
+    "group": "J",
+    "group_name": "Socialist Alliance"
+   },
+   {
+    "name": "BURSON, Chris\nOne Nation Victoria",
+    "party": null,
+    "candidate_name": "BURSON, Chris",
+    "party_name": "One Nation Victoria",
+    "party_path": "/vic-election-2026/party-one-nation-victoria",
+    "group": "K",
+    "group_name": "One Nation Victoria"
+   },
+   {
+    "name": "WILLIAMS, Vaughan\nOne Nation Victoria",
+    "party": null,
+    "candidate_name": "WILLIAMS, Vaughan",
+    "party_name": "One Nation Victoria",
+    "party_path": "/vic-election-2026/party-one-nation-victoria",
+    "group": "K",
+    "group_name": "One Nation Victoria"
+   },
+   {
+    "name": "OOSTHUIZEN, Jason\nOne Nation Victoria",
+    "party": null,
+    "candidate_name": "OOSTHUIZEN, Jason",
+    "party_name": "One Nation Victoria",
+    "party_path": "/vic-election-2026/party-one-nation-victoria",
+    "group": "K",
+    "group_name": "One Nation Victoria"
+   },
+   {
+    "name": "DI BIASE, Costa\nDemocratic Labour Party (DLP)",
+    "party": null,
+    "candidate_name": "DI BIASE, Costa",
+    "party_name": "Democratic Labour Party (DLP)",
+    "party_path": "/vic-election-2026/party-democratic-labour-party-dlp",
+    "group": "L",
+    "group_name": "Labour DLP"
+   },
+   {
+    "name": "BOWDEN, Jennifer\nDemocratic Labour Party (DLP)",
+    "party": null,
+    "candidate_name": "BOWDEN, Jennifer",
+    "party_name": "Democratic Labour Party (DLP)",
+    "party_path": "/vic-election-2026/party-democratic-labour-party-dlp",
+    "group": "L",
+    "group_name": "Labour DLP"
+   },
+   {
+    "name": "COLLYER, Ben\nShooters, Fishers and Farmers Party Victoria",
+    "party": null,
+    "candidate_name": "COLLYER, Ben",
+    "party_name": "Shooters, Fishers and Farmers Party Victoria",
+    "party_path": "/vic-election-2026/party-shooters-fishers-and-farmers-party-victoria",
+    "group": "M",
+    "group_name": "Shooters, Fishers and Farmers Party Victoria"
+   },
+   {
+    "name": "VICKERS, Ken\nShooters, Fishers and Farmers Party Victoria",
+    "party": null,
+    "candidate_name": "VICKERS, Ken",
+    "party_name": "Shooters, Fishers and Farmers Party Victoria",
+    "party_path": "/vic-election-2026/party-shooters-fishers-and-farmers-party-victoria",
+    "group": "M",
+    "group_name": "Shooters, Fishers and Farmers Party Victoria"
+   },
+   {
+    "name": "COLBERT, Dianne\nFamily First Victoria",
+    "party": null,
+    "candidate_name": "COLBERT, Dianne",
+    "party_name": "Family First Victoria",
+    "party_path": "/vic-election-2026/party-family-first-victoria",
+    "group": "N",
+    "group_name": "Family First"
+   },
+   {
+    "name": "MOLONEY, Anne\nFamily First Victoria",
+    "party": null,
+    "candidate_name": "MOLONEY, Anne",
+    "party_name": "Family First Victoria",
+    "party_path": "/vic-election-2026/party-family-first-victoria",
+    "group": "N",
+    "group_name": "Family First"
+   },
+   {
+    "name": "VEERAPPAGOUNDER, Senthil\nFamily First Victoria",
+    "party": null,
+    "candidate_name": "VEERAPPAGOUNDER, Senthil",
+    "party_name": "Family First Victoria",
+    "party_path": "/vic-election-2026/party-family-first-victoria",
+    "group": "N",
+    "group_name": "Family First"
+   },
+   {
+    "name": "THOMAS, Brendan William\nFamily First Victoria",
+    "party": null,
+    "candidate_name": "THOMAS, Brendan William",
+    "party_name": "Family First Victoria",
+    "party_path": "/vic-election-2026/party-family-first-victoria",
+    "group": "N",
+    "group_name": "Family First"
+   },
+   {
+    "name": "SAMA, Sindhu\nThe Republican Make Australia Great Again",
+    "party": null,
+    "candidate_name": "SAMA, Sindhu",
+    "party_name": "The Republican Make Australia Great Again",
+    "party_path": "/vic-election-2026/party-the-republican-make-australia-great-again",
+    "group": "O",
+    "group_name": "The Republican"
+   },
+   {
+    "name": "KAUR, Akwinder\nThe Republican Make Australia Great Again",
+    "party": null,
+    "candidate_name": "KAUR, Akwinder",
+    "party_name": "The Republican Make Australia Great Again",
+    "party_path": "/vic-election-2026/party-the-republican-make-australia-great-again",
+    "group": "O",
+    "group_name": "The Republican"
+   },
+   {
+    "name": "FISHER, Eve",
+    "party": null,
+    "candidate_name": "FISHER, Eve",
+    "party_name": null,
+    "party_path": null,
+    "group": null,
+    "group_name": null
+   }
+  ]
+ },
+ "members": [
+  {
+   "name": "Jacinta Ermacora",
+   "party": "Labor",
+   "slug": "jacinta-ermacora",
+   "href": "/subject/person/jacinta-ermacora",
+   "source_url": "https://www.parliament.vic.gov.au/members/jacinta-ermacora/",
+   "speeches": {
+    "count": 315,
+    "first": 2024,
+    "last": 2026,
+    "within_term": true
+   },
+   "speech_gap": null,
+   "votes": {
+    "count": 59,
+    "ayes": 19,
+    "noes": 40
+   },
+   "recent_votes": [
+    {
+     "date": "2026-09-24",
+     "title": "That this house:",
+     "href": "/doc/division-vic-lc-2026-09-24-1",
+     "vote": "no",
+     "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+    }
+   ]
+  },
+  {
+   "name": "Sarah Mansfield",
+   "party": "Greens",
+   "slug": "sarah-mansfield",
+   "href": "/subject/person/sarah-mansfield",
+   "source_url": "https://www.parliament.vic.gov.au/members/sarah-mansfield/",
+   "speeches": {
+    "count": 423,
+    "first": 2024,
+    "last": 2026,
+    "within_term": true
+   },
+   "speech_gap": null,
+   "votes": {
+    "count": 59,
+    "ayes": 25,
+    "noes": 34
+   },
+   "recent_votes": [
+    {
+     "date": "2026-09-24",
+     "title": "That this house:",
+     "href": "/doc/division-vic-lc-2026-09-24-1",
+     "vote": "aye",
+     "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+    }
+   ]
+  },
+  {
+   "name": "Bev McArthur",
+   "party": "Liberal",
+   "slug": "bev-mcarthur",
+   "href": "/subject/person/bev-mcarthur",
+   "source_url": "https://www.parliament.vic.gov.au/members/bev-mcarthur/",
+   "speeches": {
+    "count": 473,
+    "first": 2024,
+    "last": 2026,
+    "within_term": true
+   },
+   "speech_gap": null,
+   "votes": {
+    "count": 59,
+    "ayes": 39,
+    "noes": 20
+   },
+   "recent_votes": [
+    {
+     "date": "2026-09-24",
+     "title": "That this house:",
+     "href": "/doc/division-vic-lc-2026-09-24-1",
+     "vote": "aye",
+     "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+    }
+   ]
+  },
+  {
+   "name": "Joe McCracken",
+   "party": "Liberal",
+   "slug": "joe-mccracken",
+   "href": "/subject/person/joe-mccracken",
+   "source_url": "https://www.parliament.vic.gov.au/members/joe-mccracken/",
+   "speeches": {
+    "count": 246,
+    "first": 2024,
+    "last": 2026,
+    "within_term": true
+   },
+   "speech_gap": null,
+   "votes": {
+    "count": 45,
+    "ayes": 35,
+    "noes": 10
+   },
+   "recent_votes": [
+    {
+     "date": "2026-09-24",
+     "title": "That this house:",
+     "href": "/doc/division-vic-lc-2026-09-24-1",
+     "vote": "aye",
+     "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+    }
+   ]
+  },
+  {
+   "name": "Gayle Tierney",
+   "party": "Labor",
+   "slug": "gayle-tierney",
+   "href": "/subject/person/gayle-tierney",
+   "source_url": "https://www.parliament.vic.gov.au/members/gayle-tierney/",
+   "speeches": {
+    "count": 231,
+    "first": 2024,
+    "last": 2026,
+    "within_term": true
+   },
+   "speech_gap": null,
+   "votes": {
+    "count": 57,
+    "ayes": 18,
+    "noes": 39
+   },
+   "recent_votes": [
+    {
+     "date": "2026-09-24",
+     "title": "That this house:",
+     "href": "/doc/division-vic-lc-2026-09-24-1",
+     "vote": "no",
+     "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+    }
+   ]
+  }
+ ],
+ "results_fetched": "2026-10-13",
+ "speech_updated": "2026-11-14",
+ "division_start": "2026-08-14",
+ "division_end": "2026-09-24"
+}

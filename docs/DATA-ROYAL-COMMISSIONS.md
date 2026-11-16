@@ -16,10 +16,10 @@ The data is static JSON at `/royal-commissions/`. Ask and the MCP read it throug
 * `established` and `commissioners`: each carries a quote from an official document
   and the page it is on. The build checks every quote is verbatim on that page, that a
   commissioner's name is in the quote and that an establishment date is the date in
-  the quote. Roles are as the document gives them. Where the source's tier allows no quotation
-  (see "Source policy and takedown"), the fact carries no quote: the build checks that
-  the name, or the date in words, is printed on the cited page and keeps the page
-  reference and link only.
+  the quote. Roles are as the document gives them. A commission listed by its documents
+  only (`use: documents_only`, below) carries no quote: the build checks that the name,
+  or the date in words, is printed on the cited page and keeps the page reference and
+  link only.
 * `reports`: interim, final and progress reports, with the PDF files, their SHA-256,
   and a date with its basis: `tabled_vic` (tabled in the Parliament of Victoria),
   `stated` (dated on the document itself, checked verbatim on the cited page),
@@ -36,10 +36,6 @@ The data is static JSON at `/royal-commissions/`. Ask and the MCP read it throug
   Elsewhere the status is `null`: unknown, not unimplemented.
 * `responses`: government responses and implementation reports, listed as documents.
   OPAX does not grade acceptance or implementation.
-* `use`: on a commission listed in the source policy, how its text may be used:
-  `documents_only`, `search_only`, `quote_and_cite` or `full`.
-* `withheld`: on a document (or a whole commission) in the takedown list: the reason
-  class, the date and the label. The document is then a listing row only.
 * `transcripts`: hearing transcripts of a commission that is still sitting. They are
   evidence given to the commission, not its findings. OPAX lists them as documents
   with their date and hearing block, links the commission's own hearing page and
@@ -123,7 +119,7 @@ keeps the acquisition and rights notes recorded for it in the intake.
 | Scientific Inquiry into Hydraulic Fracturing in the Northern Territory | 5 | hearing excerpts; review before republication |
 
 Each transcript's date is the one printed on it, checked verbatim on page 1
-(`date_quote`). A `documents_only` source holds no `date_quote`: the build checks that
+(`date_quote`). A documents-only commission holds no `date_quote`: the build checks that
 the date is printed on page 1 and records the page (`date_cite`). One Antisemitism transcript prints "THURSDAY, AUGUST 2026" on its
 cover; its date is read from the page header "13/08/2026". Titles are the publisher's,
 with file-size suffixes such as "(PDF, 840KB)" removed and generic link text
@@ -177,15 +173,6 @@ page only; every citation links the publisher's PDF at that page and ends with t
 and the CC BY attribution. Every other commission's transcripts stay listed with a link to
 the publisher.
 
-In Ask, every claim taken from a hearing transcript is attributed to who said it and where. Each
-transcript fact reaches the writer with a typed attribution (speaker, the role where the
-transcript's own label records one, hearing day or date, transcript page, and "evidence, not
-finding"), and the writer's contract says to name the speaker and page for every sentence and
-never to state evidence, an allegation or a question as fact or as a finding
-(`TRANSCRIPT_ATTRIBUTION_RULE` in `portal/src/research-writing.ts`). Where no model writes, the
-fixed lines read "Ms Preston said on hearing day 46 (10 March 2023), transcript page P-4899:
-“…”". This shapes what the model is asked to write; it is not a check on what it wrote.
-
 An excerpt stays inside one speaker's turn. The turn's label ("MS HOGAN-DORAN:") is taken
 out of the quoted words and given as `speaker` ("Ms Hogan-Doran", with the label as printed
 in `speaker_label`), and the citation reads "hearing turn by Ms Hogan-Doran". A turn that
@@ -202,38 +189,22 @@ transcript listing rows is given in the tool's own lines rather than rewritten.
   the Final Report." The full passage is in `court_context`, exactly as the page states
   it, and OPAX presents no finding from the report without it. No findings or
   recommendations are extracted from the report yet.
-* The Victorian major infrastructure royal commission is still sitting. Its transcripts
-  note that non-publication orders may be made; OPAX reproduces no evidence and links
-  only the commission's published copies. Its use is `documents_only`: since
-  16 November 2026 its record holds no quotation from the transcripts, only each
-  transcript's title, date, publisher links, page count, hash and rights note, the
-  commissioner's name with its page reference, and three notes in OPAX's own words.
+* The Victorian major infrastructure royal commission is still sitting and the commission
+  has said it may make non-publication orders. OPAX reproduces no evidence and links only
+  the commission's published copies. Its registry entry has `use: documents_only`: the
+  record holds no quotation from the transcripts, only each transcript's title, date,
+  publisher links, page count, hash and rights note, the commissioner's name with its
+  page reference, and notes in OPAX's own words with page references. The build holds
+  (exit 3) if such an entry carries a quote, a date line, an extraction rule or a note
+  with quotation marks (double, single or typographic), reads its PDFs without caching
+  their text, and drops any extract, at any depth, from a record it carries forward. The
+  export takes `use` from the registry and stops if a snapshot disagrees, so a snapshot
+  built before the entry was marked cannot be published. `tests/test_rc_no_extracts.py` and
+  `portal/test/rc-no-extracts.test.mjs` pin the extracts once held by hash, whole and in runs of five words.
 * Robodebt: the report refers to 57 recommendations; 56 are numbered. The unnumbered
   one, in the closing observations, is noted on the record and not loaded as numbered.
 * The Antisemitism interim report's recommendations 8 to 12 say they are contained in
   the confidential interim report; their text is loaded exactly as published.
-
-## Source policy and takedown
-
-`parli/ingest/source_policy.json` records the use of each listed source and the list of
-withheld sources and documents. [TAKEDOWN.md](TAKEDOWN.md) sets out the fields, every
-consumer that honours them and the steps a maintainer takes. In short:
-
-* `full`, with `summaries` and `kb_generation` allowed: the Antisemitism, Robodebt and NSW
-  Healthcare Funding commissions (CC BY 4.0). Transcript text is built only for these.
-* `documents_only`: the Victorian major infrastructure royal commission. The build holds
-  (exit 3) if its record carries a quotation, a date line, an extraction rule or a note
-  with quotation marks.
-* `quote_and_cite` (passages shown as they stand, attributed, with no model-written account)
-  and `search_only` (no text reaches a model, a summary or an excerpt) are defined and enforced,
-  but no source uses them and no private index is built.
-* The other commissions listed by their transcripts only have no entry yet. They keep the
-  date line read from page 1 of each transcript and no other text; give each a `use` when
-  its terms are settled.
-
-`node scripts/apply_source_policy.mjs` applies the policy to the published files without
-the PDFs; it runs first in `npm run build:search`, and `npm run check` fails if a file
-does not honour it.
 
 ## Loader and export
 

@@ -141,9 +141,8 @@ test('a sitting commission lists hearing transcripts as documents, with no recom
   assert.match(row.notes.join(' '), /evidence given to the commission, not findings/);
   // The notes are OPAX's own words with a page reference: no extract from a transcript is held (documents only).
   assert.match(row.notes.join(' '), /may make non-publication orders \(transcript of 9 November 2026, page 30/);
-  assert.match(row.notes.join(' '), /final report by 20 August 2027/);
-  assert.ok(!/["\u201c\u201d]/.test(row.notes.join(' ')));
-  assert.equal(row.use, 'documents_only');
+  assert.match(row.notes.join(' '), /final report is due on or before 20 August 2027/);
+  assert.ok(!/["\u201c\u201d]|(?<![A-Za-z0-9])['\u2018\u2019](?=\w)/.test(row.notes.join(' ')));
 });
 
 test('court rulings on a report travel with it, quoted from the official page', async () => {

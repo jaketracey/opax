@@ -136,6 +136,8 @@ jobs:
             portal/public/expenses.json portal/public/expense-categories.json portal/public/photos \
             portal/public/corpus.json portal/public/discovery.json portal/public/graph \
             portal/public/parliament portal/public/divisions portal/public/people \
+            portal/src/app-vic-election.ts portal/src/vic-election-parties.ts \
+            scripts/ci/app-endpoint-guard scripts/ci/app-endpoint-fixtures.mjs \
             scripts/ci/app-data-guard.sh .github/workflows/gates.yml | head -1)
           if [ -n "$changed" ]; then
             echo 'changed=true' >> "$GITHUB_OUTPUT"
@@ -246,10 +248,12 @@ jobs:
           uv run --frozen --with pytest pytest -q tests/test_nsw_backfill.py tests/test_nsw_publication.py tests/test_backfill_guard.py
           bash -n scripts/vm/nightly.sh scripts/vm/nsw_hansard_backfill.sh
           uv run --frozen bash scripts/vm/test_nsw_hansard_backfill.sh
+      - name: Test that a documents-only royal commission holds no extract
+        run: uv run --frozen --with pytest pytest -q tests/test_rc_no_extracts.py tests/test_royal_commissions.py
       - name: Test the source policy and the takedown list
         run: >-
           uv run --frozen --with pytest pytest -q -p no:cacheprovider
-          tests/test_source_policy.py tests/test_royal_commissions.py tests/test_transcript_fulltext.py
+          tests/test_source_policy.py tests/test_transcript_fulltext.py
 
   senate-refresh:
     runs-on: ubuntu-latest
