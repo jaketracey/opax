@@ -3,6 +3,7 @@ import { clip, fold, siteUrl } from './record-common'
 import { object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 import { dayWords, pageHits, spanWords, textIndex, textMatches, type TextHits } from './transcript-text'
+import { transcriptUse } from '../transcript-answer'
 
 const VIEWS = ['list', 'profile', 'recommendations', 'transcripts'] as const
 const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
@@ -94,8 +95,10 @@ function transcriptCite(t: RecordRow): ToolCitation {
     // A speaker's label leaves the quoted words and no speaker is named; the hearing turn gives, where the page
     // itself settles it, the speaker's role at the hearing. The commission's record id closes the line, so Ask can
     // decide per source how a passage may be used (transcript-answer.ts reads role and id back as typed facts).
+    // A one-line answer carries the question it replied to, only for a source whose passages the writer may word.
+    const wordable = transcriptUse(typeof t.commission_id === 'string' ? t.commission_id : undefined) === 'writer'
     const body = text.quote_policy === 'quote'
-      ? text.hits.map(h => `${where(h)}, hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`).join(' ')
+      ? text.hits.map(h => `${where(h)}, hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"${h.question && wordable ? ` [answer to${h.question.role ? ` (${h.question.role})` : ''}: "${h.question.text}"]` : ''}`).join(' ')
       : `the words appear on ${text.hits.map(where).join(' and ')}. Not quoted: the publisher's transcript records a non-publication order, a direction not to publish or a pseudonymous witness; read the publisher's edition.`
     return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.${t.commission_id ? ` Commission record: ${t.commission_id}.` : ''}` }
   }

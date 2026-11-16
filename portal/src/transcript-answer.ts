@@ -32,16 +32,18 @@ export type TranscriptRole = typeof TRANSCRIPT_ROLES[number]
 /** One passage of hearing evidence as typed facts: the speaker's role where the page itself settles it, the
  * commission (its name and its record id), the hearing date and the transcript page. No passage carries a person's
  * name: a wrong name is worse than none, so the speaker is a role or is not given. */
-export interface TranscriptTurn { role?: TranscriptRole; commission?: string; source?: string; day?: string; date?: string; page: string; pdf_page?: number; excerpt: string }
+export interface TranscriptTurn { role?: TranscriptRole; commission?: string; source?: string; day?: string; date?: string; page: string; pdf_page?: number; excerpt: string
+  /** For a one-line answer: the question it replied to, in the transcript's own words, and that question's role. */
+  question?: { text: string; role?: TranscriptRole } }
 const ROLE = `(?: \\((${TRANSCRIPT_ROLES.join('|')})\\))?`
 // "by <name>" is the form before 16 November 2026; the name is read past and never kept.
-const TOOL_TURN = new RegExp(`transcript page (\\S+) \\(PDF page (\\d+)\\), hearing turn(?: by [^:(]+?)?${ROLE}: "([\\s\\S]*?)"(?= transcript page | Hearing transcript:|$)`, 'g')
+const TOOL_TURN = new RegExp(`transcript page (\\S+) \\(PDF page (\\d+)\\), hearing turn(?: by [^:(]+?)?${ROLE}: "([\\s\\S]*?)"(?: \\[answer to${ROLE}: "([\\s\\S]*?)"\\])?(?= transcript page | Hearing transcript:|$)`, 'g')
 const ROLE_WORDS: Record<TranscriptRole, string> = { commissioner: 'the Commissioner', 'counsel assisting': 'counsel assisting', witness: 'a witness', 'counsel for a party': 'counsel for a party', question: 'a question was put' }
 /** How a fact line opens for a role: "A witness said", "A question was put". */
 const opening = (role: TranscriptRole) => role === 'question' ? upper(ROLE_WORDS.question) : `${upper(ROLE_WORDS[role])} said`
 const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 const SAID = new Map(TRANSCRIPT_ROLES.map(role => [opening(role), role]))
-const WRITTEN_TURN = new RegExp(`^(The transcript records|${[...SAID.keys()].join('|')}|.+?${ROLE} said) at (.+?)(?: on hearing day \\d+)?(?: \\(\\d{1,2} [A-Z][a-z]+ \\d{4}\\))?, transcript page (\\S+): "([\\s\\S]+)"\\. Hearing transcript:`)
+const WRITTEN_TURN = new RegExp(`^(The transcript records|${[...SAID.keys()].join('|')}|.+?${ROLE} said) at (.+?)(?: on hearing day \\d+)?(?: \\(\\d{1,2} [A-Z][a-z]+ \\d{4}\\))?, transcript page (\\S+): "([\\s\\S]+?)"(?: in answer to a question${ROLE}: "([\\s\\S]+)")?\\. Hearing transcript:`)
 // The line form of the 16 November 2026 names-off release: "The transcript of <commission> ..., records: ...".
 const RECORDS_TURN = /^The transcript of (.+?)(?: on hearing day \d+)?(?: \(\d{1,2} [A-Z][a-z]+ \d{4}\))?, transcript page (\S+), records: "([\s\S]+)"\. Hearing transcript:/
 const SOURCE = /\bCommission record: ([a-z0-9]+(?:-[a-z0-9]+)*)\./
@@ -57,12 +59,12 @@ export function transcriptTurns(text: string): TranscriptTurn[] {
   const shared = { ...(source ? { source } : {}), ...(day ? { day } : {}), ...(date ? { date } : {}) }
   const commission = text.split(',')[0].trim()
   const turns = [...text.matchAll(TOOL_TURN)]
-    .map(m => ({ ...(m[3] ? { role: m[3] as TranscriptRole } : {}), ...(commission ? { commission } : {}), page: m[1], pdf_page: Number(m[2]), excerpt: m[4], ...shared }))
+    .map(m => ({ ...(m[3] ? { role: m[3] as TranscriptRole } : {}), ...(commission ? { commission } : {}), page: m[1], pdf_page: Number(m[2]), excerpt: m[4], ...(m[6] ? { question: { text: m[6], ...(m[5] ? { role: m[5] as TranscriptRole } : {}) } } : {}), ...shared }))
   if (turns.length) return turns
   const written = WRITTEN_TURN.exec(text)
   if (written) {
     const role = SAID.get(written[1]) ?? (written[2] as TranscriptRole | undefined)
-    return [{ ...(role ? { role } : {}), commission: written[3], page: written[4], excerpt: written[5], ...shared }]
+    return [{ ...(role ? { role } : {}), commission: written[3], page: written[4], excerpt: written[5], ...(written[7] ? { question: { text: written[7], ...(written[6] ? { role: written[6] as TranscriptRole } : {}) } } : {}), ...shared }]
   }
   const records = RECORDS_TURN.exec(text)
   return records ? [{ commission: records[1], page: records[2], excerpt: records[3], ...shared }] : []
@@ -70,7 +72,7 @@ export function transcriptTurns(text: string): TranscriptTurn[] {
 /** One turn as the single line the writer, the fallbacks and the final boundary all read back with transcriptTurns. */
 export function transcriptFactLine(turn: TranscriptTurn): string {
   const who = turn.role ? opening(turn.role) : 'The transcript records'
-  return `${who} at ${turn.commission ?? 'the hearing'}${turn.day ? ` on hearing day ${turn.day}` : ''}${turn.date ? ` (${turn.date})` : ''}, transcript page ${turn.page}: "${turn.excerpt}". ${TRANSCRIPT_LABEL}.${turn.source ? ` Commission record: ${turn.source}.` : ''}`
+  return `${who} at ${turn.commission ?? 'the hearing'}${turn.day ? ` on hearing day ${turn.day}` : ''}${turn.date ? ` (${turn.date})` : ''}, transcript page ${turn.page}: "${turn.excerpt}"${turn.question ? ` in answer to a question${turn.question.role ? ` (${turn.question.role})` : ''}: "${turn.question.text}"` : ''}. ${TRANSCRIPT_LABEL}.${turn.source ? ` Commission record: ${turn.source}.` : ''}`
 }
 
 /** How Ask may use one source's hearing transcript passages. "writer": the writer may word them, under
@@ -91,9 +93,12 @@ export const transcriptPassage = (text: string): boolean => transcriptTurns(text
  * A passage the writer may word is planned as an attributed claim before a word is written; any other is quoted by
  * code only. A role the page does not settle is "not recorded": that passage is quoted with "the transcript
  * records". There is no speaker's name here, by design. */
-export interface TranscriptAttribution { source: 'hearing_transcript'; status: 'evidence_not_finding'; claim: 'attributed' | 'quoted'; speaker_role: TranscriptRole | 'not recorded'; commission?: string; commission_id?: string; hearing_date?: string; hearing_day?: string; transcript_page: string }
+export interface TranscriptAttribution { source: 'hearing_transcript'; status: 'evidence_not_finding'; claim: 'attributed' | 'quoted'; speaker_role: TranscriptRole | 'not recorded'; commission?: string; commission_id?: string; hearing_date?: string; hearing_day?: string; transcript_page: string
+  /** A one-line answer's question, to be quoted and never paraphrased; only for a passage the writer may word. */
+  question_quoted?: string; question_role?: TranscriptRole }
 export const transcriptAttribution = (t: TranscriptTurn): TranscriptAttribution => ({ source: 'hearing_transcript', status: 'evidence_not_finding', claim: writerMayWord(t) ? 'attributed' : 'quoted', speaker_role: t.role ?? 'not recorded',
-  ...(t.commission ? { commission: t.commission } : {}), ...(t.source ? { commission_id: t.source } : {}), ...(t.date ? { hearing_date: t.date } : {}), ...(t.day ? { hearing_day: t.day } : {}), transcript_page: t.page })
+  ...(t.commission ? { commission: t.commission } : {}), ...(t.source ? { commission_id: t.source } : {}), ...(t.date ? { hearing_date: t.date } : {}), ...(t.day ? { hearing_day: t.day } : {}), transcript_page: t.page,
+  ...(t.question && writerMayWord(t) ? { question_quoted: t.question.text, ...(t.question.role ? { question_role: t.question.role } : {}) } : {}) })
 
 /** Who a passage is attributed to: the role alone ("counsel assisting", "a witness"). Null when the page does not
  * settle the role. */
@@ -118,7 +123,7 @@ export function transcriptLead(t: TranscriptTurn): string {
  * text, kept on its own so it can ship apart from the attribution rule. Prompt text only: nothing reads the prose. */
 export const TRANSCRIPT_NAMED_PEOPLE_RULE = 'For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words. Outside a quotation, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page; never infer a role. This covers everyone named in the evidence, commissioners and counsel included.'
 /** The writer's fixed rule for hearing transcript facts. Tested as text (test/transcript-attribution.test.mjs). */
-export const TRANSCRIPT_ATTRIBUTION_RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + TRANSCRIPT_NAMED_PEOPLE_RULE
+export const TRANSCRIPT_ATTRIBUTION_RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. A fact whose attribution has question_quoted is a short answer, and question_quoted is the question it replied to: use the answer only together with that question, and give the question only in its own words inside quotation marks, as a question that was put (by question_role where given), never paraphrased. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + TRANSCRIPT_NAMED_PEOPLE_RULE
 /** The research model's rule, beside its instruction to select transcript excerpts by record fact id. That model
  * writes the answer itself (points or reply text) when the question is not a hearing-evidence question, and it reads
  * the tool's rows and citation text, which carry a role and never a name. */

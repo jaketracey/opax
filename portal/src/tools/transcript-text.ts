@@ -3,14 +3,14 @@
  * suppression order or a pseudonymous witness carries no text: only the pages a word appears on. */
 import { object, records, type RecordRow } from './published-records'
 import { readToolAsset, type ToolEnv } from './types'
-import { transcriptRoles, type RoleFor, type SpeakerRole } from './transcript-roles'
+import { answeredQuestion, transcriptRoles, type RoleFor, type SpeakerRole } from './transcript-roles'
 
 const SHARD = /^\/transcripts\/terms\/\d{2}\.json$/
 const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker_role?: SpeakerRole }
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker_role?: SpeakerRole, question?: { text: string, role?: SpeakerRole } }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -154,7 +154,7 @@ export function pageTurns(page: string, pdfPage?: number): { text: string, turns
  * heading, mark or note sits in the text. A word found only in headings, marks or notes gives the words its first
  * opener is followed by, which may be none. No speaker is returned: Ask prose and citations name no one. */
 // With the transcript's roles (transcript-roles.ts), the turn's role is returned where the page makes it certain.
-export function excerpt(text: string, terms: string[], pdfPage?: number, roleFor?: RoleFor): { excerpt: string, speaker_role?: SpeakerRole } {
+export function excerpt(text: string, terms: string[], pdfPage?: number, roleFor?: RoleFor): { excerpt: string, speaker_role?: SpeakerRole, question?: { text: string, role?: SpeakerRole } } {
   const { text: flat, turns } = pageTurns(text, pdfPage)
   // The first place a query word is spoken wins; failing that, the first opener one is printed in.
   let spoken = -1, printed = -1
@@ -177,7 +177,9 @@ export function excerpt(text: string, terms: string[], pdfPage?: number, roleFor
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
   const body = flat.slice(start, Math.min(end, until)).trim()
   const role = body ? roleFor?.({ text: flat, turns }, turn) : undefined
-  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}`, ...(role ? { speaker_role: role } : {}) }
+  // A one-line answer shown whole comes with the question it replied to (transcript-roles.ts), inside the same cap.
+  const question = roleFor && role && start === from && end >= until ? answeredQuestion({ text: flat, turns }, turn, roleFor, EXCERPT - body.length) : undefined
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}`, ...(role ? { speaker_role: role } : {}), ...(question ? { question } : {}) }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where

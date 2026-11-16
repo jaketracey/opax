@@ -14,7 +14,7 @@ import { MockLanguageModelV4 } from 'ai/test'
 
 const built = await build({ stdin: { contents: [
   "export {excerpt, pageTurns, pageHits, textIndex} from './src/tools/transcript-text'",
-  "export {transcriptRoles} from './src/tools/transcript-roles'",
+  "export {transcriptRoles, answeredQuestion} from './src/tools/transcript-roles'",
   "export {callTool} from './src/tools/index'",
   "export * from './src/transcript-answer'",
   "export {writingFacts, writingPrompt, verifyWrittenAnswer, draftWrittenAnswer, unattributedTranscriptSentences, wordedTranscriptFact, proseFallback, ANSWER_WRITING_VERSION} from './src/research-writing'",
@@ -181,7 +181,10 @@ test('the three indexed commissions: every quoted passage has a page, a date and
         const t = turns[n]
         assert.deepEqual({ role: t.role, page: t.page, pdf_page: t.pdf_page, commission: t.commission, source: t.source, excerpt: t.excerpt },
           { role: h.speaker_role, page: h.transcript_page, pdf_page: h.pdf_page, commission: row.commission, source: id, excerpt: h.excerpt })
-        assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', 'transcript_page', 'url', ...(h.speaker_role ? ['speaker_role'] : [])].sort(), 'a hit carries its words, its page and at most a role')
+        assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', 'transcript_page', 'url', ...(h.speaker_role ? ['speaker_role'] : []), ...(h.question ? ['question'] : [])].sort(), 'a hit carries its words, its page, at most a role and, for a one-line answer, its question')
+        // Hub ruling: the source title that reaches the follow-ups model (and the card) is commission, hearing,
+        // date, page and a role from a fixed list. No heading text, so no name, can be in it.
+        for (const f of api.writingFacts(undefined, [fact(1, out.citations[i + 1].text, h.url)])) assert.match(f.source.title, new RegExp(`^${row.commission.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}, hearing transcript, \\d{1,2} [A-Z][a-z]+ \\d{4}, page \\S+: (?:A witness|Counsel assisting|The Commissioner|Counsel for a party|A question was put|speaker's role not recorded)\\. ${LABEL}\\.$`))
         assert.doesNotMatch(h.excerpt, /[\u0000-\u0008]/); assert.equal(api.writerMayWord(t), true)
         assert.match(t.date, /^\d{1,2} [A-Z][a-z]+ \d{4}$/)
       }
@@ -245,7 +248,7 @@ const plainFacts = () => api.writingFacts(undefined, [fact(1, GRANT, 'https://op
 const question = 'What was said about income averaging at the Robodebt Royal Commission?'
 
 const NAMED = 'For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words. Outside a quotation, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page; never infer a role. This covers everyone named in the evidence, commissioners and counsel included.'
-const RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + NAMED
+const RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. A fact whose attribution has question_quoted is a short answer, and question_quoted is the question it replied to: use the answer only together with that question, and give the question only in its own words inside quotation marks, as a question that was put (by question_role where given), never paraphrased. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + NAMED
 const POINT_RULE = 'Never word what was said, asked or put at a royal commission, integrity or inquiry hearing in a point or in reply text, in your own words or quoted, never state it as fact and never name who spoke: select the transcript excerpt\'s numeric record fact id instead, and the writer attributes it with the speaker\'s role, hearing date and page. ' + NAMED + ' '
 
 test('the writer rule for transcript sources is fixed text', () => {
@@ -485,6 +488,64 @@ test('a marked transcript answer is written in one pass, and no transcript-free 
   const plain = await write([[{ text: 'Example Health Ltd was awarded a grant of $120,000 by the Department of Health in 2023-24.', facts: [1] }]], plainFacts())
   assert.equal(plain.prompts.length <= 1, true)
   assert.ok(plain.prompts.every(p => !p.includes('attribution field')))
+})
+
+// ---- a one-line answer and the question it replied to
+
+test('hub ruling: a one-line "A." comes with the question straight before it, quoted and never paraphrased; not for a quote-only source', async () => {
+  const SHORT = [NSW[0], { n: 2, folio: '720', text: 'MR SAMPLE: Q. You are the director of the unit; is that right?\nA. Correct.\nQ. And Mr Standin reported to you?\nA. Yes, he did.\nQ. What did the review find?\nA. It found that the alarms on the ward were not tested in the first year.\nTHE COMMISSIONER: Thank you.\nA. Yes.' },
+    { n: 3, folio: '721', text: 'A. Correct.\nQ. Was that in the spring?' }]
+  // When: a bare "A." of at most six words, shown whole, with a "Q." straight before it on the same page.
+  assert.deepEqual(hit(SHORT, 2, ['correct']), { excerpt: 'Correct.', speaker_role: 'witness', question: { text: 'You are the director of the unit; is that right?', role: 'counsel assisting' } })
+  assert.deepEqual(hit(SHORT, 2, ['did']), { excerpt: 'Yes, he did.', speaker_role: 'witness', question: { text: 'And Mr Standin reported to you?' } })
+  // Not for a longer answer, not when another speaker's turn lies between, and never from the page before.
+  assert.equal('question' in hit(SHORT, 2, ['tested']), false)
+  assert.deepEqual(api.excerpt(SHORT[1].text, ['yes'], 2, api.transcriptRoles(SHORT)).question?.text, 'And Mr Standin reported to you?')
+  const last = api.pageTurns(SHORT[1].text, 2), yes = last.turns.at(-1)
+  assert.equal(api.answeredQuestion(last, yes, api.transcriptRoles(SHORT), 280), undefined, 'the Commissioner spoke between the question and this answer')
+  assert.deepEqual(hit(SHORT, 3, ['correct']), { excerpt: 'Correct.', speaker_role: 'witness' })
+  // A long question is cut from the front, so the end the witness answered is kept, inside the 280 cap with the answer.
+  const long = [NSW[0], { n: 2, folio: '722', text: `MR SAMPLE: Q. ${'The board met in each quarter of that year and received a report on the alarms from the district. '.repeat(4)}Is that right?\nA. Correct.\nQ. In each year?\nA. In each of the three years I was there.\nQ. Thank you.\nA. Thank you.` }]
+  const cut = hit(long, 2, ['correct'])
+  assert.match(cut.question.text, /^\.\.\..* Is that right\?$/); assert.ok((cut.excerpt + cut.question.text).length <= 280)
+
+  // The citation carries it; it reads back typed; the writer is given it as a question to quote.
+  const at = (record, answer, question) => cite('Special Commission of Inquiry into Healthcare Funding', 'Day 006 – 20 February 2024', '20 February 2024', [['720', 2, ' (witness)', `${answer}" [answer to${question[0]}: "${question[1]}`]], record).replace(`${question[1]}"`, `${question[1]}"]`)
+  const wordable = at('nsw-healthcare-funding', 'Yes, he did.', ['', 'And Mr Standin reported to you?'])
+  const [turn] = api.transcriptTurns(wordable)
+  assert.deepEqual(turn.question, { text: 'And Mr Standin reported to you?' }); assert.equal(turn.excerpt, 'Yes, he did.')
+  assert.deepEqual(api.transcriptTurns(at('nsw-healthcare-funding', 'Correct.', [' (counsel assisting)', 'You are the director; is that right?']))[0].question, { text: 'You are the director; is that right?', role: 'counsel assisting' })
+  const facts = api.writingFacts(undefined, [fact(1, wordable, 'https://healthcarefunding.specialcommission.nsw.gov.au/TRA.0006.pdf#page=2')])
+  assert.equal(facts[0].text, `A witness said at Special Commission of Inquiry into Healthcare Funding on hearing day 006 (20 February 2024), transcript page 720: "Yes, he did." in answer to a question: "And Mr Standin reported to you?". ${LABEL}. Commission record: nsw-healthcare-funding.`)
+  assert.deepEqual(api.transcriptTurns(facts[0].text)[0].question, { text: 'And Mr Standin reported to you?' })
+  const prompt = JSON.parse(api.writingPrompt({ question, period, facts }))
+  assert.equal(prompt.facts[0].attribution.question_quoted, 'And Mr Standin reported to you?')
+  assert.match(prompt.contract, /question_quoted is the question it replied to: use the answer only together with that question, and give the question only in its own words inside quotation marks, as a question that was put \(by question_role where given\), never paraphrased\./)
+  // The question names a person. The name reaches the writer only as the question's own quoted words (the fact's
+  // line and question_quoted); no instruction holds it, and none invites a paraphrase of the question.
+  const whole = api.writingPrompt({ question, period, facts })
+  assert.equal(whole.split('Standin').length - 1, 2); assert.doesNotMatch(prompt.contract, /Standin/)
+  assert.doesNotMatch(JSON.stringify({ ...prompt.facts[0], text: '', attribution: { ...prompt.facts[0].attribution, question_quoted: '' } }), /Standin/)
+  // The card and the quoted fallback show the answer, not the question: a reader sees the question only where an
+  // answer cites it in words.
+  assert.doesNotMatch(facts[0].source.title, /Standin|reported/)
+  assert.doesNotMatch(api.proseFallback({ question, period, facts }).answer, /reported to you/)
+
+  // A source the writer may not word: the question is never handed over as something to write from.
+  for (const record of ['example-board-of-inquiry', undefined]) {
+    const held = at(record, 'Yes, he did.', ['', 'And Mr Standin reported to you?'])
+    const quoteOnly = api.transcriptTurns(held)[0]
+    assert.equal(api.writerMayWord(quoteOnly), false)
+    assert.equal('question_quoted' in api.transcriptAttribution(quoteOnly), false)
+    const text = api.writingPrompt({ question, period, facts: api.writingFacts(undefined, [fact(1, held, 'https://inquiry.example/day2.pdf#page=2')]) })
+    assert.doesNotMatch(text, /Standin|question_quoted|Yes, he did/)
+  }
+  // The tool attaches the question only for a wordable source, and every published one-line answer keeps to the cap.
+  const out = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'nsw-healthcare-funding', words: 'correct', limit: 8 })
+  for (const [i, row] of out.rows.entries()) for (const h of row.text_matches?.hits ?? []) if (h.question) {
+    assert.ok(out.citations[i + 1].text.includes(`"${h.excerpt}" [answer to${h.question.role ? ` (${h.question.role})` : ''}: "${h.question.text}"]`))
+    assert.ok(h.excerpt.split(/\s+/).length <= 6 && (h.excerpt + h.question.text).length <= 280)
+  }
 })
 
 // ---- the research loop: a point never words a transcript passage itself

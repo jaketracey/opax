@@ -215,10 +215,11 @@ test('over every quotable page: no excerpt holds a heading, a mark or a note lin
     assert.ok(!/"speaker(?:_label)?"/.test(JSON.stringify(out)), `${commission}: a speaker field in the tool output`)
     for (const c of out.citations) assert.ok(!/hearing turn by /.test(c.text), c.text)
     for (const [i, r] of out.rows.entries()) for (const h of r.text_matches?.hits ?? []) {
-      assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', ...(h.speaker_role ? ['speaker_role'] : []), 'transcript_page', 'url'], `${commission} ${r.key} page ${h.pdf_page}`)
+      assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', ...(h.question ? ['question'] : []), ...(h.speaker_role ? ['speaker_role'] : []), 'transcript_page', 'url'], `${commission} ${r.key} page ${h.pdf_page}`)
       if (h.excerpt === null) continue
       assert.ok(/[^.\s]/.test(h.excerpt), 'no empty quotation')
       quoted++; assert.ok(out.citations[i + 1].text.includes(`(PDF page ${h.pdf_page}), hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`))
+      if (h.question) assert.ok((h.excerpt + h.question.text).length <= 280 && Object.keys(h.question).every(k => k === 'text' || k === 'role'))
     }
   }
   assert.ok(quoted > 0)

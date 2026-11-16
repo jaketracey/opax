@@ -241,12 +241,28 @@ answering the Commissioner looks the same).
 | Commission | Transcripts | Pages | Confident turns (a role) | Uncertain turns (no role) | Page-top continuations (no role) | Excerpts, one a page, with a role | "<" lines: examination / other | Possible label slips (no role given) | Replies under a counsel heading (counted only) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | cth-antisemitism | 16 | 1,288 | 5,742 (41.9%) | 7,507 (54.8%) | 459 (3.3%) | 462 of 1,267 (36.5%) | 2 / 193 | 0 | 38 |
-| cth-robodebt | 29 | 3,138 | 22,136 (50.2%) | 21,324 (48.4%) | 620 (1.4%) | 1,697 of 3,051 (55.6%) | 95 / 252 | 61 | 200 |
+| cth-robodebt | 29 | 3,138 | 22,136 (50.2%) | 21,324 (48.4%) | 619 (1.4%) | 1,697 of 3,050 (55.6%) | 95 / 252 | 61 | 200 |
 | nsw-healthcare-funding | 62 | 6,230 | 45,460 (79.7%) | 7,422 (13.0%) | 4,179 (7.3%) | 3,927 of 6,140 (64.0%) | 174 / 303 | 18 | 183 |
 
 Every quotable page carries the transcript's own page number. A passage with no role is
-quoted with "the transcript records", the date and the page. In Robodebt and Antisemitism
-that is mostly witnesses, who speak under their own names.
+quoted with "the transcript records", the date and the page.
+
+Known limit, shipped on purpose: a witness who speaks under their own name ("MR SURNAME:")
+has no role, because no "<" line is read for a name. The same audit counts the turns under
+a person's heading with no role: 21,323 in Robodebt, 7,507 in Antisemitism and 7,422 in NSW
+Healthcare Funding. Most are witnesses. Giving them the witness role from the sworn line is
+a later, separate change with its own sample.
+
+A one-line answer ("Correct.") is no evidence without its question. When a quoted turn is a
+bare "A." of at most six words, shown whole, and the turn straight before it on the same
+page is a "Q.", the hit carries that question in the transcript's own words (cut from the
+front so the answer and the question together stay inside 280 characters), with the
+question's role where its heading gives one. The audit finds 7,112 of 7,604 one-line
+answers in NSW Healthcare Funding come with their question; the rest follow another
+speaker or open a page. The citation carries the question only for a source whose passages
+the writer may word, and the writer is told to use the answer only together with the
+question and to give the question only in its own words inside quotation marks, never
+paraphrased. Code-rendered quotes and the source card show the answer, not the question.
 
 Each citation ends with the commission's record id ("Commission record: cth-robodebt."),
 and one predicate, `writerMayWord` in `portal/src/transcript-answer.ts`, decides by that

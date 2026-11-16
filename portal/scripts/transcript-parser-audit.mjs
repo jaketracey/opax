@@ -24,7 +24,7 @@ import { readFile } from 'node:fs/promises'
 import { build } from 'esbuild'
 
 const root = new URL('../', import.meta.url)
-const built = await build({ stdin: { contents: "export {excerpt, pageTurns, tokens} from './src/tools/transcript-text'; export {transcriptRoles} from './src/tools/transcript-roles'", resolveDir: root.pathname }, bundle: true, write: false, platform: 'neutral', format: 'esm', logLevel: 'silent' })
+const built = await build({ stdin: { contents: "export {excerpt, pageTurns, tokens} from './src/tools/transcript-text'; export {transcriptRoles, answeredQuestion, SHORT_ANSWER_WORDS} from './src/tools/transcript-roles'", resolveDir: root.pathname }, bundle: true, write: false, platform: 'neutral', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const json = async path => JSON.parse(await readFile(new URL('public' + path, root), 'utf8'))
 const index = await json('/transcripts/index.json'), stop = new Set(index.stopwords ?? [])
@@ -37,7 +37,7 @@ for (const [d, row] of index.docs.entries()) {
   if (row.quote_policy !== 'quote') continue
   const doc = await json(row.file), roleFor = api.transcriptRoles(doc.pages)
   const c = out[row.commission] ??= { transcripts: 0, pages: 0, turns: { confident: 0, uncertain: 0, page_top: 0 }, characters: { confident: 0, uncertain: 0, page_top: 0 }, roles: {},
-    excerpts: { total: 0, with_role: 0, no_role: 0, empty: 0 }, notes: { examination: 0, other: 0 }, possible_label_slips: 0, replies_under_counsel: 0 }
+    excerpts: { total: 0, with_role: 0, no_role: 0, empty: 0 }, notes: { examination: 0, other: 0 }, possible_label_slips: 0, replies_under_counsel: 0, named_headings_no_role: 0, short_answers: { total: 0, with_question: 0 } }
   c.transcripts++
   for (const page of doc.pages) {
     if (typeof page.text !== 'string') continue
@@ -50,6 +50,9 @@ for (const [d, row] of index.docs.entries()) {
       const role = roleFor(parsed, t), basis = role ? 'confident' : t.opens === 'page' ? 'page_top' : 'uncertain'
       c.turns[basis]++; c.characters[basis] += t.end - t.start
       if (role) c.roles[role] = (c.roles[role] ?? 0) + 1
+      // A turn under a heading that is not a role word and has no role: mostly witnesses under their own names.
+      if (!role && t.heading) c.named_headings_no_role++
+      if (role === 'witness' && t.opens === 'mark' && parsed.text.slice(t.start, t.end).trim().split(/\s+/).length <= api.SHORT_ANSWER_WORDS) { c.short_answers.total++; if (api.answeredQuestion(parsed, t, roleFor, 280 - (t.end - t.start))) c.short_answers.with_question++ }
       const words = parsed.text.slice(t.start, t.end), prior = parsed.turns[i - 1]
       if (t.opens === 'heading' && /^counsel/.test(role ?? '') && words.split(' ').length <= 3 && REPLY.test(words) && prior && /\?\s*$/.test(parsed.text.slice(prior.start, prior.end))) c.replies_under_counsel++
     }
@@ -60,7 +63,8 @@ for (const [d, row] of index.docs.entries()) {
     if (!/[^.\s]/.test(hit.excerpt)) c.excerpts.empty++
     else c.excerpts[hit.speaker_role ? 'with_role' : 'no_role']++
     if (/[\u0000-\u0008]/.test(hit.excerpt)) throw Error(`${row.key} page ${page.n}: control character in an excerpt`)
-    if (Object.keys(hit).some(k => k !== 'excerpt' && k !== 'speaker_role')) throw Error(`${row.key} page ${page.n}: an excerpt carries more than its words and a role`)
+    if (Object.keys(hit).some(k => k !== 'excerpt' && k !== 'speaker_role' && k !== 'question')) throw Error(`${row.key} page ${page.n}: an excerpt carries more than its words, a role and a one-line answer's question`)
+    if (hit.question && (Object.keys(hit.question).some(k => k !== 'text' && k !== 'role') || (hit.excerpt + hit.question.text).length > 280)) throw Error(`${row.key} page ${page.n}: a question past the cap or with more than its words and a role`)
     const review = REVIEW_PAGES[row.key]?.includes(page.n)
     if (hit.speaker_role && (review || (d * 31 + page.n) % 61 === 0)) sample.push({ commission: row.commission, key: row.key, date: row.key.slice(11, 21), pdf_page: page.n, folio: page.folio, role: hit.speaker_role, excerpt: hit.excerpt, page: page.text, review })
     if (review && !hit.speaker_role) sample.push({ commission: row.commission, key: row.key, date: row.key.slice(11, 21), pdf_page: page.n, folio: page.folio, role: null, excerpt: hit.excerpt, page: page.text, review })
@@ -85,7 +89,11 @@ else {
   }
   console.log('\nConfident turns by role:')
   for (const [id, c] of Object.entries(out).sort()) console.log(`- ${id}: ${Object.entries(c.roles).sort((a, b) => b[1] - a[1]).map(([r, v]) => `${r} ${n(v)}`).join(', ')}`)
+  console.log('\nTurns under a person\'s heading with no role (quoted with "the transcript records"; mostly witnesses who speak under their own names):')
+  for (const [id, c] of Object.entries(out).sort()) console.log(`- ${id}: ${n(c.named_headings_no_role)}`)
+  console.log('\nOne-line answers (an "A." of at most six words), and how many come with the question straight before them on the page:')
+  for (const [id, c] of Object.entries(out).sort()) console.log(`- ${id}: ${n(c.short_answers.with_question)} of ${n(c.short_answers.total)}`)
   console.log('\nShare of quotable text by characters (confident / uncertain / page-top):')
   for (const [id, c] of Object.entries(out).sort()) { const all = c.characters.confident + c.characters.uncertain + c.characters.page_top; console.log(`- ${id}: ${pct(c.characters.confident, all)} / ${pct(c.characters.uncertain, all)} / ${pct(c.characters.page_top, all)}`) }
-  console.log('\nNo excerpt carries a control character or anything beyond its words and a role (the script fails if one does).')
+  console.log('\nNo excerpt carries a control character or anything beyond its words, a role and, for a one-line answer, its question inside the 280-character cap (the script fails if one does).')
 }

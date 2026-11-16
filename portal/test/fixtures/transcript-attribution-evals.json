@@ -1,0 +1,146 @@
+{
+ "schema": 1,
+ "about": "Hearing transcript attribution eval (PR #468). Twenty Ask questions on the three indexed commissions, for scripts/research_eval.mjs --questions. Read each answer against the PDF page for: the role or \"the transcript records\", the hearing date and the page on every transcript statement; nothing from evidence stated as fact; no person named outside quotation marks (the report's named-people count, target 0).",
+ "questions": [
+  {
+   "id": "TA-NSW-01",
+   "kind": "qualitative",
+   "question": "What did the NSW Healthcare Funding inquiry hear about intern positions being offered in Queensland before New South Wales?",
+   "note": "NSW 17 September 2024, PDF page 50: text at the top of the page runs on from the page before.",
+   "must": []
+  },
+  {
+   "id": "TA-NSW-02",
+   "kind": "qualitative",
+   "question": "What evidence did the Healthcare Funding inquiry hear from the director of emergency medicine at Tweed Valley Hospital?",
+   "note": "NSW 17 September 2024, PDF page 48: one-line answers; the witness states their own name in the quoted words. The answer must say a witness.",
+   "must": []
+  },
+  {
+   "id": "TA-NSW-03",
+   "kind": "qualitative",
+   "question": "What was said at the Healthcare Funding inquiry about the Agency for Clinical Innovation and low-value care?",
+   "note": "NSW 26 February 2024, PDF page 45: a bare Q. after THE COMMISSIONER: Q. has no asker.",
+   "must": []
+  },
+  {
+   "id": "TA-NSW-04",
+   "kind": "qualitative",
+   "question": "What did the Healthcare Funding inquiry hear about how the Agency for Clinical Innovation makes its decisions?",
+   "note": "NSW 26 February 2024, PDF page 7: the page top is a continuing question.",
+   "must": []
+  },
+  {
+   "id": "TA-NSW-05",
+   "kind": "qualitative",
+   "question": "What did witnesses tell the Healthcare Funding inquiry about duress alarms?",
+   "note": "Witness answers in a question-and-answer layout.",
+   "must": []
+  },
+  {
+   "id": "TA-RBD-01",
+   "kind": "qualitative",
+   "question": "What did witnesses say about income averaging at the Robodebt Royal Commission?",
+   "note": "Witnesses speak under their own names: the transcript records.",
+   "must": []
+  },
+  {
+   "id": "TA-RBD-02",
+   "kind": "qualitative",
+   "question": "What did counsel assisting put to witnesses at the Robodebt Royal Commission about legal advice on income averaging?",
+   "note": "Counsel assisting; a question is not a fact.",
+   "must": []
+  },
+  {
+   "id": "TA-RBD-03",
+   "kind": "qualitative",
+   "question": "What did the Commissioner ask at the Robodebt Royal Commission about Administrative Appeals Tribunal decisions?",
+   "note": "The Commissioner.",
+   "must": []
+  },
+  {
+   "id": "TA-RBD-04",
+   "kind": "qualitative",
+   "question": "What did the Robodebt Royal Commission find about income averaging, and what evidence did it hear?",
+   "note": "Findings beside evidence.",
+   "must": []
+  },
+  {
+   "id": "TA-RBD-05",
+   "kind": "qualitative",
+   "question": "What was said at the Robodebt Royal Commission hearing on 31 October 2022?",
+   "note": "A transcript that records a non-publication order: pointed to by page, never quoted.",
+   "must": []
+  },
+  {
+   "id": "TA-ASC-01",
+   "kind": "qualitative",
+   "question": "What evidence has the Royal Commission on Antisemitism and Social Cohesion heard about the school curriculum?",
+   "note": "Witness evidence.",
+   "must": []
+  },
+  {
+   "id": "TA-ASC-02",
+   "kind": "qualitative",
+   "question": "What has the Royal Commission on Antisemitism and Social Cohesion heard about online abuse on social media platforms?",
+   "note": "Witness evidence and counsel's questions.",
+   "must": []
+  },
+  {
+   "id": "TA-ASC-03",
+   "kind": "qualitative",
+   "question": "What was said at the Royal Commission on Antisemitism and Social Cohesion hearing on 27 May 2026?",
+   "note": "A day where most turns have no role: the transcript records.",
+   "must": []
+  },
+  {
+   "id": "TA-ASC-04",
+   "kind": "qualitative",
+   "question": "What did counsel for the Commonwealth say at the Royal Commission on Antisemitism and Social Cohesion?",
+   "note": "Counsel for a party.",
+   "must": []
+  },
+  {
+   "id": "TA-MIX-01",
+   "kind": "qualitative",
+   "question": "What did the Robodebt Royal Commission hear about debt collection contractors, and what contracts did Services Australia award to debt collectors?",
+   "note": "Transcript beside contracts.",
+   "must": []
+  },
+  {
+   "id": "TA-MIX-02",
+   "kind": "qualitative",
+   "question": "What grants has the federal government made for social cohesion programs, and what has the royal commission heard about them?",
+   "note": "Transcript beside grants.",
+   "must": []
+  },
+  {
+   "id": "TA-SURF-01",
+   "kind": "qualitative",
+   "question": "What is on the record about income averaging in the Robodebt scheme?",
+   "note": "Not asked as a hearing question; the research model writes.",
+   "must": []
+  },
+  {
+   "id": "TA-SURF-02",
+   "kind": "qualitative",
+   "question": "What has been said about duress alarms in NSW hospitals?",
+   "note": "Not asked as a hearing question; the research model writes.",
+   "must": []
+  },
+  {
+   "id": "TA-CTRL-01",
+   "kind": "qualitative",
+   "question": "Which donors gave the most to the Liberal Party in 2022-23?",
+   "note": "Control: no transcript. Must match main.",
+   "must": []
+  },
+  {
+   "id": "TA-CTRL-02",
+   "kind": "qualitative",
+   "question": "How many divisions were there in the Senate in 2024?",
+   "note": "Control: no transcript. Must match main.",
+   "must": []
+  }
+ ]
+}

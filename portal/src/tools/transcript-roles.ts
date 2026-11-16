@@ -106,3 +106,20 @@ export function transcriptRoles(pages: RecordRow[]): RoleFor {
     return !role || role === 'witness' ? 'witness' : undefined
   }
 }
+
+/** A short answer is no evidence without its question ("Correct."). When the turn is a bare "A." of at most
+ * SHORT_ANSWER_WORDS words, shown whole, and the turn straight before it on the same page is a "Q." (bare or under a
+ * heading) with words, this is that question: its own words, cut from the front to fit `room` characters so the end
+ * the witness answered is kept, and its role. Otherwise undefined. Nothing is carried from another page. */
+export const SHORT_ANSWER_WORDS = 6
+export function answeredQuestion(page: ParsedPage, turn: PageTurn, roleFor: RoleFor, room: number): { text: string, role?: SpeakerRole } | undefined {
+  const i = page.turns.indexOf(turn), before = page.turns[i - 1]
+  if (i < 1 || turn.opens !== 'mark' || turn.mark !== 'A' || turn.heading || roleFor(page, turn) !== 'witness') return undefined
+  if (page.text.slice(turn.start, turn.end).trim().split(/\s+/).length > SHORT_ANSWER_WORDS) return undefined
+  if (before.opens !== 'mark' || before.mark !== 'Q' || before.end <= before.start) return undefined
+  const words = page.text.slice(before.start, before.end).trim(), role = roleFor(page, before)
+  let text = words
+  if (words.length > room) { const cut = words.indexOf(' ', words.length - room + 3); if (cut < 0) return undefined; text = `...${words.slice(cut + 1)}` }
+  // A bare "Q." has no asker, so its role ("question") adds nothing here.
+  return text.replace(/[.\s]/g, '') ? { text, ...(role && role !== 'question' ? { role } : {}) } : undefined
+}
