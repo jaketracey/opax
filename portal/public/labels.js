@@ -65,6 +65,8 @@ export const PARTY_MAP = {
   'united australia party': ['oth', 'UAP'], 'australian democrats': ['oth', 'AD'],
   'family first': ['oth', 'FF'], 'dlp': ['oth', 'DLP'], 'jln': ['oth', 'JLN'],
   'democratic labor party': ['oth', 'DLP'],
+  // Registered with the AEC on 2 October 2026; its registered abbreviation is "Community Strong".
+  'community strong australia': ['oth', 'CSA'], 'community strong': ['oth', 'CSA'],
   // The division records spell two of these out in full.
   'jacqui lambie network': ['oth', 'JLN'], "pauline hanson's one nation party": ['onp', 'ONP'],
 };
@@ -79,7 +81,7 @@ export const PARTY_NAMES = {
   CA: ['Centre Alliance', 'Centre Alliance'], KAP: ['KAP', "Katter's Australian Party"],
   UAP: ['UAP', 'United Australia Party'], AD: ['Democrats', 'Australian Democrats'],
   FF: ['Family First', 'Family First'], DLP: ['DLP', 'Democratic Labour Party'],
-  JLN: ['JLN', 'Jacqui Lambie Network'],
+  JLN: ['JLN', 'Jacqui Lambie Network'], CSA: ['Community Strong Australia', 'Community Strong Australia'],
   SAP: ['Sustainable Australia', 'Affordable Housing Now - Sustainable Australia Party'], AJP: ['Animal Justice', 'Animal Justice Party'],
   ACP: ['Citizens Party', 'Australian Citizens Party'], CAP: ['Christian Alliance', 'Christian Alliance Party - Reform AU'],
   CAN: ['Climate Action Now', 'Climate Action Now'], FP: ['Free Palestine', 'Free Palestine'],

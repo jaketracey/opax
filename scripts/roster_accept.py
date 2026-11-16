@@ -37,6 +37,10 @@ A field absent from a record is written null (the roster never holds a JSON null
     A linked person's dated service there (official-list-service evidence, list_service) may then add `current`,
     the list's party as `party_now` and `affiliations` (the Handbook's dated Senate periods, then the list seat from a
     reviewed term start): the one group allowed to write a dated party, and only when it rebuilds exactly.
+    A sitting federal member's change of party (sitting-party evidence, scripts/roster_sitting_party.py) may write
+    `party_now` on a folded person (and add the label it replaces to `parties`, where the evidence says the person
+    keeps it): the evidence names the person, their id and both parties, and cites two dated public sources on two
+    sites. Every other protection still holds it.
   - A dropped row is a shipped record that is not a person (parli.ingest.speaker_names.non_person_name: a group
     label such as 'Government members', a bare title, a parse fragment), carries no identity value, still is exactly
     the reviewed row, and is absent from the export (drop_problem). Nothing else is ever removed: the overlay keeps
@@ -194,6 +198,9 @@ def protected(row, curated):
 # write the dated fields the protections above otherwise pin.
 LIST_SERVICE = "official-list-service"
 LIST_SERVICE_FIELDS = {"current", "party_now", "affiliations"}
+# A sitting federal member's change of party, on two dated public sources (scripts/roster_sitting_party.py): the
+# one group that may write party_now on a folded person (and add the label it replaces to parties).
+SITTING_PARTY = "sitting-party"
 
 
 def _own_dates(row, group):
@@ -370,6 +377,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         why = list_problem(name, group, row, root, link="service")
         if why:
             return why
+    if ev.get("rule") == SITTING_PARTY:
+        from scripts.roster_sitting_party import group_problem as sitting_party_problem
+        why = sitting_party_problem(name, group, row if roster else None, ev)
+        if why:
+            return why
     if ev.get("rule") == "state-party-snapshot":
         from scripts.roster_state_parties import group_problem as state_party_problem
         why = state_party_problem(name, group, row, root)
@@ -386,6 +398,10 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         # profile. The rule above rechecks the dated official evidence; weak
         # names, witnesses, split identities and other protections still hold.
         if why == "a neutral namesake" and ev.get("rule") == "state-party-snapshot":
+            continue
+        # A verified change of party by a sitting federal member writes party_now (and may add the label it
+        # replaces to parties), checked above; the fold pins those only against an export's surname-print values.
+        if why == "a folded person" and ev.get("rule") == SITTING_PARTY and set(fields) <= {"party_now", "parties"}:
             continue
         # A verified list service is the dated party: the pin it trips on is the value it wrote itself.
         if why == "a dated party" and ev.get("rule") == LIST_SERVICE and _own_dates(row, group):

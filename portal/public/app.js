@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=8f9719f009").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=8e57d7d220").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=a5ff31b9ba").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=4ee4bb8063").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -64,9 +64,9 @@ const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => {
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=979fb796e0').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=73435700a9').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=edef476377').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=e6cfb1af2d').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1610,7 +1610,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=3bc8cdd805' : '/ledger.js?v=0e74c44fcb');
+    const mod = await import(grants ? '/grants.js?v=5bfd1f1bc9' : '/ledger.js?v=cb72e8c441');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1641,7 +1641,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=e3c02396af');
+    const mod = await import('/money-explain.js?v=2272ef5ef7');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1660,7 +1660,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=7406777676');
+    const mod = await import('/grant-recipient.js?v=1e067b6697');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1913,7 +1913,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=80b54980bf");
+    const module = await import("/suppliers.js?v=5bb7c51d8c");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5626,7 +5626,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=69ad8951a1'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=313f458310'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -7806,7 +7806,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=e925a18936").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=c2b14d5af4").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8193,6 +8193,21 @@ const byName = (a, b) => a._sortName.localeCompare(b._sortName);
 /** A select option carrying its count: ["Labor", "Labor (383)"]. */
 const countOpt = (value, label, n) => [value, `${label} (${Number(n || 0).toLocaleString()})`];
 
+/** The people directory's party filter: who each party lists, and how many, from one rule, so an
+ *  option's count is the length of its list.
+ *  A person is listed under the party their speeches carry (`party`) and any other they are recorded
+ *  under (`parties`). A party that no speech row carries yet, and is only someone's party now
+ *  (`party_now`), is offered too and lists those people: a new party's page links here. `party_now`
+ *  never adds a person to a party that speech rows already carry. */
+function directoryParties(items) {
+  const spoken = new Set(items.map((p) => p.party).filter(Boolean));
+  const nowOnly = new Set(items.map((p) => p.party_now).filter((party) => party && !spoken.has(party)));
+  const member = (p, party) => p.party === party || (p.parties || []).includes(party) || (nowOnly.has(party) && p.party_now === party);
+  const counts = new Map();
+  for (const party of [...spoken, ...nowOnly]) counts.set(party, items.filter((p) => member(p, party)).length);
+  return { counts, member };
+}
+
 /** Parliamentarians: parliamentarians.json joined to portraits and votes by lowercased name. */
 async function buildPeopleDirectory() {
   const [data] = await Promise.all([loadParliamentarians(), loadPhotoMap(), loadVotes()]);
@@ -8205,15 +8220,15 @@ async function buildPeopleDirectory() {
     p._divisions = keys.reduce((a, k) => a + (Number(votesData?.[k]?.divisions_total) || 0), 0);
     p._sortName = `${lname.split(" ").pop()} ${lname}`;
   }
-  const partyCounts = new Map();
   const chamberCounts = new Map();
   const stateCounts = new Map();
   for (const p of items) {
-    if (p.party) partyCounts.set(p.party, (partyCounts.get(p.party) || 0) + 1);
     for (const c of p.chambers || []) chamberCounts.set(c, (chamberCounts.get(c) || 0) + 1);
     for (const s of p.states || []) stateCounts.set(s, (stateCounts.get(s) || 0) + 1);
   }
-  const partyOptions = [...partyCounts.entries()].sort((a, b) => b[1] - a[1])
+  // The parties to filter by, each with the number of people its filter lists (directoryParties).
+  const parties = directoryParties(items);
+  const partyOptions = [...parties.counts.entries()].sort((a, b) => b[1] - a[1])
     .map(([party, n]) => countOpt(party, party, n));
   partyOptions.push(countOpt("none", "No party recorded", items.filter((p) => !p.party).length));
   const speeches = items.reduce((a, p) => a + (p.speeches || 0), 0);
@@ -8252,7 +8267,7 @@ async function buildPeopleDirectory() {
     text: (p) => `${p.name} ${p.full || ""} ${p.party || ""} ${(p.states || []).map((s) => STATE_NAMES[s] || s).join(" ")}`,
     filters: [
       { key: "party", label: "Party", options: partyOptions,
-        test: (p, v) => v === "none" ? !p.party : (p.party === v || (p.parties || []).includes(v)) },
+        test: (p, v) => v === "none" ? !p.party : parties.member(p, v) },
       { key: "state", label: "Parliament",
         options: Object.keys(STATE_NAMES).filter((s) => stateCounts.has(s)).map((s) => countOpt(s, STATE_NAMES[s], stateCounts.get(s))),
         test: (p, v) => (p.states || []).includes(v) },
@@ -10228,7 +10243,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=e3c02396af"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=2272ef5ef7"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10244,14 +10259,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=7fa681bddc", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8ebc029b59", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=0e74c44fcb", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=3bc8cdd805", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=cb72e8c441", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=5bfd1f1bc9", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=7d2e9f451c", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=17f948089c", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
