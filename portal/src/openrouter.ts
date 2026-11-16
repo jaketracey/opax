@@ -1,12 +1,14 @@
 // The only place the Worker builds an OpenRouter model. Every request it sends
 // carries two provider routing fields, whatever the operator configured:
-//   data_collection: "deny"  only providers that do not store or train on prompts
-//   zdr: true                only zero-data-retention endpoints
+//   data_collection: "deny"  no provider that collects prompts (the training exclusion)
+//   zdr: true                only zero-data-retention endpoints (the retention exclusion)
 // Field names and meaning: https://openrouter.ai/docs/features/provider-routing
 // and https://openrouter.ai/docs/features/zdr (read 16 November 2026). The
 // provider pin and allow_fallbacks come from RESEARCH_LOOP_PROVIDER as before;
 // if no pinned provider satisfies both fields, OpenRouter refuses the request
-// instead of routing it elsewhere. test/openrouter-privacy.test.mjs reads the
+// instead of routing it elsewhere, and Ask then fails closed with a retryable
+// error: no other generation request is built (routingRefused in
+// research-model.ts; test/research-route.test.mjs). test/openrouter-privacy.test.mjs reads the
 // request bodies this module produces and fails if either field is missing,
 // and fails if any other module imports the OpenRouter client.
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'

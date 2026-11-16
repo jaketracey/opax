@@ -93,3 +93,29 @@ export function researchModelKey(model: unknown, provider: unknown, reasoning?: 
   const p = researchProvider(provider), r = researchReasoning(reasoning)
   return researchModelId(model) + (p ? '+' + JSON.stringify(p) : '') + (r ? '~' + JSON.stringify(r) : '')
 }
+
+/**
+ * True when OpenRouter answered a request by refusing to route it. OpenRouter documents no error code that
+ * is specific to the privacy fields, so this takes the two statuses it documents for "no provider meets the
+ * routing requirements" (https://openrouter.ai/docs/api-reference/errors, read 16 November 2026): 404, and
+ * 503 unless the body's typed code says the provider was only overloaded. Ask then fails closed: no other
+ * generation request is made for that question (hub ruling, 16 November 2026). Timeouts, aborts, 429 and
+ * other statuses are not refusals.
+ */
+export function routingRefused(error: unknown): boolean {
+  const seen = new Set<unknown>()
+  const visit = (value: unknown, depth: number): boolean => {
+    if (!value || typeof value !== 'object' || seen.has(value) || depth > 6) return false
+    seen.add(value)
+    const e = value as { statusCode?: unknown; responseBody?: unknown; cause?: unknown; lastError?: unknown; error?: unknown; errors?: unknown }
+    if (e.statusCode === 404) return true
+    if (e.statusCode === 503) {
+      let type: unknown
+      try { type = (JSON.parse(String(e.responseBody ?? '')) as { error?: { metadata?: { error_type?: unknown } } }).error?.metadata?.error_type } catch { /* no typed code */ }
+      return type !== 'provider_overloaded'
+    }
+    if (typeof e.statusCode === 'number') return false
+    return visit(e.cause, depth + 1) || visit(e.lastError, depth + 1) || visit(e.error, depth + 1) || (Array.isArray(e.errors) && e.errors.some(inner => visit(inner, depth + 1)))
+  }
+  return visit(error, 0)
+}

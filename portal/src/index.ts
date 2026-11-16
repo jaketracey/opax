@@ -310,6 +310,12 @@ async function modelBudgetSpent(env: Env): Promise<boolean> {
   }
 }
 const MODEL_BUDGET_HEADER = 'x-opax-model-budget'
+/** Ask fails closed when OpenRouter refuses the privacy-flagged route (hub ruling, 16 November 2026). */
+const providerRefusedResponse = (research?: unknown): Response => {
+  const res = json({ error: 'OPAX could not answer just now. Please try again.', ...(research ? { research } : {}) }, 503)
+  res.headers.set('retry-after', '60')
+  return res
+}
 const modelBudgetResponse = (): Response => new Response(JSON.stringify({ error: 'The model call budget for this minute is spent.' }), {
   status: 429, headers: { 'content-type': 'application/json; charset=utf-8', 'retry-after': '60', [MODEL_BUDGET_HEADER]: 'spent' },
 })
@@ -7044,6 +7050,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   let lastResearch: ResearchPayload | undefined, failureLogged = false
   const trackRun = (run: AgenticPayload) => { lastResearch = run.research; failureLogged ||= !!run.research_failure; onRun?.(run) }
   const routedFallback = async (research?: ResearchPayload) => {
+    // OpenRouter refused the no-train, zero-retention route: a retryable error, never the older engine (which generates on another route).
+    if (research?.failure === 'provider_refused') return providerRefusedResponse(research)
     if (loopRoute && !research?.failure) {
       const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
       research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }

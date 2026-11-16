@@ -430,6 +430,37 @@ test('a reader that disconnects mid-answer aborts the model call, with no unhand
  }finally{process.off('unhandledRejection',onRejection);await flush()}
 });
 
+// Hub ruling, 16 November 2026: when OpenRouter refuses the no-train, zero-retention route, Ask fails closed.
+// A retryable error goes out and no other generation request is built: not the planner, not the older engine,
+// not a second OpenRouter call.
+const refusal=(statusCode,type)=>Object.assign(new Error('provider returned an error'),{statusCode,responseBody:JSON.stringify({error:{code:statusCode,message:'x',...(type?{metadata:{error_type:type}}:{})}})});
+const refusing=(error,after=0)=>{const state={calls:0};state.model=new MockLanguageModelV4({doGenerate:async()=>{state.calls++;if(state.calls<=after)return reply([call('count_speeches',countArgs)]);throw error}});return state};
+test('a refused OpenRouter route fails closed: a retryable error and no other generation request',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const cases=[['404',()=>refusal(404),0],['503 untyped',()=>refusal(503),0],['404 wrapped by the SDK retry error',()=>Object.assign(new Error('retry'),{lastError:refusal(404),errors:[refusal(404)]}),0],['404 on the second turn',()=>refusal(404),1]];
+ for(const [label,make,after] of cases)for(const question of [q,'What does the record say about scrutiny?'])for(const stream of [false,true]){
+  const state=refusing(make(),after);globalThis.__researchModel=state.model;
+  const planner=plannerCalls,ordinary=ordinaryCalls,logged=logs.length,where=`${label} / ${question} / stream=${stream}`;
+  const response=await post(question,stream),raw=await response.text();await flush();
+  assert.equal(plannerCalls,planner,where+': no planner generation');assert.equal(ordinaryCalls,ordinary,where+': no older-engine generation');
+  assert.equal(state.calls,after+1,where+': no further OpenRouter request after the refusal');
+  if(stream){assert.match(raw,/^event: error\r?$/m,where);assert.doesNotMatch(raw,/^event: done\r?$/m,where);assert.match(raw,/Please try again/,where);assert.match(raw,/"final":true/,where)}
+  else{assert.equal(response.status,503,where);assert.equal(response.headers.get('retry-after'),'60');const body=JSON.parse(raw);assert.match(body.error,/Please try again/);assert.equal(body.answer,undefined);assert.equal(body.research.failure,'provider_refused')}
+  const records=logs.slice(logged).filter(r=>r.kind==='research_provider_refused');
+  assert.equal(records.length,1,where+': one distinct log record');assert.equal(records[0].reason,'provider_refused');
+  assert.match(records[0].question_hash,/^[0-9a-f]+$/);assert.ok(!JSON.stringify(records[0]).includes(question.slice(0,12)),'hash and counts only');
+  assert.equal(logs.slice(logged).filter(r=>r.kind==='research_loop_fallback').length,0,where);
+ }
+});
+test('an overloaded provider, a server error and a rate limit are not refusals: the older engine still answers',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ for(const [label,error] of [['503 provider_overloaded',refusal(503,'provider_overloaded')],['500',refusal(500)],['429',refusal(429)],['plain error',new Error('socket closed')]]){
+  const state=refusing(error);globalThis.__researchModel=state.model;const before=plannerCalls+ordinaryCalls,logged=logs.length;
+  const response=await post(q),body=await response.json();await flush();
+  assert.equal(response.status,200,label);assert.ok(body.answer,label);assert.ok(plannerCalls+ordinaryCalls>before,label+': fell back');
+  assert.equal(logs.slice(logged).filter(r=>r.kind==='research_provider_refused').length,0,label);
+ }
+});
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
  for(const stream of [false,true]){
