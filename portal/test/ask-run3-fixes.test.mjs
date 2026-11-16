@@ -10,11 +10,12 @@ import { MockLanguageModelV4 } from 'ai/test'
 const built = await build({ stdin: { contents: [
   "export {quotedOrNothing, namesRegisteredCommission, hearingFallbackPayload} from './src/ask-hearing-fallback'",
   "export {groundAnswerPayload, withoutMachineLabels} from './src/research-grounding'",
-  "export {NO_SUPPORTED_ANSWER, MACHINE_LABELS, unescapedQuotes, withoutGivenFactLabels} from './src/research-evidence'",
+  "export {NO_SUPPORTED_ANSWER, MACHINE_LABELS, unescapedQuotes, withoutGivenFactLabels, otherScript, withSourceEllipses, verifyResearchPoints, emptyTally} from './src/research-evidence'",
+  "export {hearingEvidenceQuestion} from './src/transcript-answer'",
   "export {ASK_SELF_REFERENCE_RULE} from './src/ask-writing-rules'",
   "export {writingFacts, writingPrompt, verifyWrittenAnswer, draftWrittenAnswer, TRANSCRIPT_COVERAGE_RULE} from './src/research-writing'",
-  "export {createAnswerWriter} from './src/research-writer'",
-  "export {createResearch, NO_EXCERPT_HELD, NO_EXCERPT_YET} from './src/research-loop'",
+  "export {createAnswerWriter, writtenSentences} from './src/research-writer'",
+  "export {createResearch, NO_EXCERPT_HELD, NO_EXCERPT_YET, SEARCH_TRANSCRIPTS_FURTHER, BEARS_ON_RULE, bearsOn} from './src/research-loop'",
   "export {runAgentic} from './src/agentic-ask'",
   "export {createResearchCreditCooldown} from './src/research-credit'",
   "export {callTool} from './src/tools/index'",
@@ -36,10 +37,12 @@ test('a hearing-evidence question whose research ends without an answer never sh
   assert.equal(api.quotedOrNothing('What happened with the Leppington Triangle purchase?'), false)
   assert.equal(api.quotedOrNothing('Which donors gave the most to the Liberal Party in 2022-23?'), false)
   // Most questions about what an inquiry heard are not worded as "evidence at": the run's own state decides. A run
-  // that called the commissions tool, or holds a transcript source, is covered; so is a question naming a commission.
-  const called = { trail: [{ tool: 'royal_commissions', round: 1 }], sources: [] }
+  // that searched hearing transcripts (held_transcripts, empty when nothing quotable came back), or holds a transcript
+  // source, is covered; so is a question naming a commission. A commissions lookup of another kind (a list, a
+  // profile, recommendations) or an integrity report lookup is not enough.
   assert.equal(api.quotedOrNothing('What did the hearings hear about duress alarms?'), false, 'wording alone does not catch it')
-  assert.equal(api.quotedOrNothing('What did the hearings hear about duress alarms?', called), true)
+  assert.equal(api.quotedOrNothing('What did the hearings hear about duress alarms?', { trail: [{ tool: 'royal_commissions', round: 1 }], sources: [], held_transcripts: [] }), true)
+  assert.equal(api.quotedOrNothing('What did the hearings hear about duress alarms?', { trail: [{ tool: 'royal_commissions', round: 1 }, { tool: 'integrity_reports', round: 2 }], sources: [] }), false)
   assert.equal(api.quotedOrNothing('What did the inquiry hear?', { trail: [], sources: [{ title: `A transcript. ${LABEL}.`, url: 'https://commission.example/a.pdf' }] }), true)
   assert.equal(api.quotedOrNothing('What did the Robodebt Royal Commission hear about who was told of the legal advice?'), true)
   // A parliamentary committee inquiry is Hansard, and a run that used only other tools is not covered.
@@ -131,7 +134,7 @@ test('the model\'s echoed input labels are taken out of every answer, with citat
 })
 
 test('every call that writes prose is told to write about the records, not about itself', () => {
-  assert.equal(api.ASK_SELF_REFERENCE_RULE, 'Write about the records only: leave out any mention of your own answer, your points, your search or yourself ("I", "my points", "as summarised earlier"). ')
+  assert.equal(api.ASK_SELF_REFERENCE_RULE, 'Write about the records only: leave out any mention of your own answer, your points, your search, the material you were given or yourself ("I", "my points", "as summarised earlier", "the excerpts provided here", "returned by the search"). ')
   const contract = JSON.parse(api.writingPrompt({ question: 'What did the commission hear?', period, facts: [] })).contract
   assert.ok(contract.includes(api.ASK_SELF_REFERENCE_RULE))
 })
@@ -144,7 +147,7 @@ test('the 20 transcript questions of the named-people eval are all covered by wo
   assert.deepEqual(transcript.filter(q => !api.quotedOrNothing(q.question)).map(q => q.id), [])
   assert.deepEqual(transcript.filter(q => !api.namesRegisteredCommission(q.question) && !/royal commission/i.test(q.question)).map(q => q.id), [])
   // By state as well: any run that called the commissions tool.
-  assert.ok(transcript.every(q => api.quotedOrNothing(q.question, { trail: [{ tool: 'royal_commissions' }], sources: [] })))
+  assert.ok(transcript.every(q => api.quotedOrNothing(q.question, { trail: [{ tool: 'royal_commissions' }], sources: [], held_transcripts: [] })))
   // Controls that name no commission are not covered, with or without a run of other tools.
   for (const id of ['NP-CTRL-01', 'NP-CTRL-02', 'NP-CTRL-03', 'NP-CTRL-04', 'NP-CTRL-05']) for (const run of [undefined, { trail: [{ tool: 'corpus_records' }, { tool: 'money_totals' }], sources: [] }])
     assert.equal(api.quotedOrNothing(fixture.questions.find(q => q.id === id).question, run), false, id)  // All 27 questions of the fixture, as a table. The recommendation control and the mixed question name the Robodebt
@@ -178,7 +181,7 @@ test('every registered commission is matched by its name and its aliases, as a w
 test('the writer is asked to cover each transcript excerpt once, only when it is given one; its left-out sentences are counted by reason', async () => {
   // Run 4a: the writer was handed a median of 9 facts and cited 6. Its contract said "under 180 words", written for a
   // writer that only added to the research model's own points, which no longer word hearing evidence.
-  assert.equal(api.TRANSCRIPT_COVERAGE_RULE, ' With hearing transcript excerpts among the facts the answer may run to 400 words: give each excerpt you are given one sentence of its own, once.')
+  assert.equal(api.TRANSCRIPT_COVERAGE_RULE, " With hearing transcript excerpts among the facts the answer may run to 300 words. Lead with the excerpts that answer the question, in the order of the question's parts: a fact's bears_on field gives the words of the question it was selected for. Give each excerpt you use one sentence, once, and leave out an excerpt that has no bearing on the question.")
   const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
   const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=15', label: text } }])
   const withExcerpt = JSON.parse(api.writingPrompt({ question: hearingQuestion, period, facts })).contract
@@ -186,7 +189,7 @@ test('the writer is asked to cover each transcript excerpt once, only when it is
   // No transcript fact: the contract is as it was.
   const grant = api.writingFacts(undefined, [{ id: 1, text: 'Example Health Ltd was awarded a grant of $120,000 by the Department of Health in 2023-24.', cite: { kind: 'record', url: 'https://opax.test/grants/example', label: 'Example Health grant' } }])
   const plain = JSON.parse(api.writingPrompt({ question: 'Which grants did Example Health receive?', period, facts: grant })).contract
-  assert.ok(plain.endsWith('under 180 words unless a requested annual or monthly series needs more.')); assert.equal(plain.includes('400 words'), false)
+  assert.ok(plain.endsWith('under 180 words unless a requested annual or monthly series needs more.')); assert.equal(plain.includes('300 words'), false)
   // The count: one near-quotation of the transcript, one sentence said twice, one kept.
   const leftOut = {}
   const good = 'The transcript records: “The executive minute was prepared in the department and went to the committee in March.”'
@@ -232,10 +235,10 @@ test('the writer is not asked for a fact id in its prose, and its own "(fact N)"
 })
 
 test('a hearing-evidence question with no excerpt held is told to search the transcript text with every lookup result, from the first round', async () => {
-  // The gating run on 16 November: every word of "the 2015 budget measure and who prepared the executive minute" is too
-  // common for the transcript word index, the model searched recommendations instead, and it first heard that an
-  // excerpt was needed when its answer was refused in round 7 of 8.
-  assert.equal(api.NO_EXCERPT_YET, 'This question asks what was said in evidence, and no hearing transcript excerpt is held yet. Search the transcript text now (royal_commissions view=transcripts with words). Everyday words are too common to match: search one rarer word from the subject by itself, then another, until excerpts come back. An answer needs at least one excerpt.')
+  // The gating run on 16 November: the model's transcript searches matched nothing (every word of the question was
+  // then left out of the word index), it searched recommendations instead, and it first heard that an excerpt was
+  // needed when its answer was refused in round 7 of 8.
+  assert.equal(api.NO_EXCERPT_YET, 'This question asks what was said in evidence, and no hearing transcript excerpt is held yet. Search the transcript text now (royal_commissions view=transcripts with words): search the specific words or short phrases of the question, one search each, until excerpts come back. An answer needs at least one excerpt.')
   const asset = async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))
   const deps = { origin: 'https://offline.test', asset, kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }) }
   const usage = { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }
@@ -243,9 +246,9 @@ test('a hearing-evidence question with no excerpt held is told to search the tra
   const named = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
   const run = async question => {
     let call = 0
-    // The recorded shape: words too common to match, then a recommendations search, then a rarer word, then the answer.
+    // The recorded shape: a search that matches nothing, then a recommendations search, then one that does, then the answer.
     const model = new MockLanguageModelV4({ doGenerate: async () => { call++
-      return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'executive minute' })
+      return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'xylophonist' })
         : call === 2 ? reply('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'Cabinet' })
         : call === 3 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 1 })
         : call === 4 ? reply('answer', { facts: [] }) : { content: [{ type: 'text', text: 'not json' }], finishReason: { unified: 'stop', raw: 'stop' }, usage, warnings: [] } } })
@@ -265,4 +268,309 @@ test('a hearing-evidence question with no excerpt held is told to search the tra
   // Another kind of question is never told this.
   const other = await run('What did the Robodebt Royal Commission recommend about debts?')
   assert.ok(other.shown.every(prompt => !prompt.includes(told)))
+})
+
+// ---- Delta review at 0fdfcdf3b and the blind read of 16 November 2026 ----
+const usage0 = { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }
+const says = text => ({ content: [{ type: 'text', text }], finishReason: { unified: 'stop', raw: 'stop' }, usage: usage0, warnings: [] })
+const calls = (toolName, args) => ({ content: [{ type: 'tool-call', toolName, toolCallId: toolName + Math.random(), input: JSON.stringify(args) }], finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage: usage0, warnings: [] })
+const offline = { origin: 'https://offline.test', asset: async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8')), kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }) }
+const nobody = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
+const writerWith = model => api.createAnswerWriter({ model, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, modelBudgetSpent: async () => false })
+
+test('a parliamentary inquiry in hearing-style wording is a Hansard question: it is not treated as commission evidence and falls back as on main', () => {
+  const senate = 'What did witnesses tell the Senate inquiry into consulting services?'
+  // Before: the bare word "inquiry" made this a hearing-evidence question, its Hansard point was refused and the reader
+  // got the fixed line.
+  assert.equal(api.hearingEvidenceQuestion(senate), false)
+  for (const q of [senate, 'What evidence did the Senate Community Affairs committee hear about Centrelink debt recovery?', 'What did the parliamentary inquiry into the Optus outage hear from witnesses?', 'Who gave evidence at Senate estimates about Robodebt in 2023?',
+    'Did Labor promise a royal commission into veterans suicide in Parliament?', 'What did the Senate inquiry into healthcare funding hear?']) {
+    assert.equal(api.hearingEvidenceQuestion(q), false, q)
+    for (const run of [undefined, { trail: [{ tool: 'corpus_records' }], sources: [] }, { trail: [{ tool: 'royal_commissions' }, { tool: 'integrity_reports' }], sources: [] }]) assert.equal(api.quotedOrNothing(q, run), false, q)
+  }
+  // A commission's own hearings are still covered, with a parliamentary word in the question or not.
+  for (const q of ['What evidence was given at the Robodebt Royal Commission about income averaging?', 'What evidence was given at the Robodebt Royal Commission about what the Minister told Parliament?',
+    'What did the Robodebt Royal Commission hear about income averaging, and what did the Minister for Government Services say in Parliament about the scheme?', 'What did the inquiry into healthcare funding hear about locums?', 'What did the Robodebt Royal Commission recommend?'])
+    assert.equal(api.quotedOrNothing(q), true, q)
+  assert.equal(api.hearingEvidenceQuestion('What evidence was given at the Robodebt Royal Commission about what the Minister told Parliament?'), true)
+  // Any question whose run searched hearing transcripts is covered, whatever its wording.
+  assert.equal(api.quotedOrNothing(senate, { trail: [], sources: [], held_transcripts: [] }), true)
+})
+
+test('held excerpts answer only a question about a hearing or its evidence; any other question that stops gets the fixed line', () => {
+  const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
+  const research = { mode: 'loop', failure: 'steps', rounds: 8, trail: [], sources: [], held_transcripts: [{ text, url: 'https://commission.example/day46.pdf#page=15' }] }
+  // Before: four hearing excerpts were given as the answer to a question about recommendations.
+  const recommend = api.hearingFallbackPayload('What did the Example Royal Commission recommend?', research)
+  assert.equal(recommend.answer, api.NO_SUPPORTED_ANSWER); assert.deepEqual(recommend.citations, {}); assert.equal(recommend.answer_decision, 'limitation')
+  for (const q of [hearingQuestion, 'What did the Example Royal Commission hear about the executive minute?', 'What did witnesses say to the Example Royal Commission?']) {
+    const out = api.hearingFallbackPayload(q, research)
+    assert.match(out.answer, /“The executive minute was prepared in the department and went to the committee in March\.”/, q)
+  }
+})
+
+test('the writer\'s own fact label goes before a closing full stop too, and never from inside a quotation', () => {
+  const given = new Set([1, 2, 3])
+  assert.equal(api.withoutGivenFactLabels('The measure began in 2023 (fact 3).', given), 'The measure began in 2023.')
+  assert.equal(api.withoutGivenFactLabels('The measure began in 2023 (facts 2 and 3). It ended in 2024 (fact 1).', given), 'The measure began in 2023. It ended in 2024.')
+  assert.equal(api.withoutGivenFactLabels('Did the measure begin in 2023 (fact 3)?', given), 'Did the measure begin in 2023?')
+  // Not given, or in the middle of a sentence: prose.
+  for (const prose of ['The measure began in 2023 (fact 7).', 'The second point (fact 2), which was not disputed, stands.']) assert.equal(api.withoutGivenFactLabels(prose, given), prose)
+  // Inside a quotation the words are the source's own: a word-for-word quotation must stay word for word.
+  const quoted = 'The transcript records: “It was agreed. (fact 3) Then we left the room (fact 2).”'
+  assert.equal(api.withoutGivenFactLabels(quoted, given), quoted)
+  assert.equal(api.withoutGivenFactLabels(quoted + ' (fact 1).', given), quoted)
+})
+
+test('a refused answer on a hearing-evidence question is told to search, not to answer again', async () => {
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async () => { call++; return call === 1 ? calls('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 }) : call <= 3 ? calls('answer', { facts: [1] }) : says('not json') } })
+  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+  await api.runAgentic('What evidence was given at the Robodebt Royal Commission about income averaging?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
+  const shown = JSON.stringify(model.doGenerateCalls.at(-1).prompt)
+  assert.ok(shown.includes('the answer was not accepted (no hearing transcript excerpt is held: search the transcript text'), shown.slice(-600))
+  assert.equal(shown.includes('then answer); answer again with points or facts'), false)
+})
+
+test('the research model says what each selected excerpt is for, in the question\'s own words; the writer is given it and no reader is', async () => {
+  const q = 'What evidence was given at the Robodebt Royal Commission about income averaging?'
+  assert.equal(api.bearsOn('income averaging', q), 'income averaging')
+  assert.equal(api.bearsOn('  About   income AVERAGING ', q), 'About income AVERAGING')
+  // A word that is not in the question (a name, a claim) drops the label; so does an empty one or one that is not text.
+  for (const label of ['Ms Quellworth on income averaging', 'income averaging was unlawful', '', '   ', 7, null, undefined, ['income']]) assert.equal(api.bearsOn(label, q), undefined, String(label))
+  // The question's words out of their order can turn what was asked into a claim: only a run of consecutive words stays.
+  const asked = 'What did the commission hear about income averaging? Did Jordan Sample know?'
+  assert.equal(api.bearsOn('Did Jordan Sample know', asked), 'Did Jordan Sample know')
+  for (const label of ['Jordan Sample did know', 'Jordan Sample income averaging', 'evidence income averaging']) assert.equal(api.bearsOn(label, asked) ?? api.bearsOn(label, q), undefined, label)
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async options => { call++
+    if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 2 })
+    if (call === 2) return calls('answer', { facts: [2, 3], bears_on: { 2: 'income averaging', 3: 'Ms Quellworth said averaging was unlawful' } })
+    const given = JSON.parse(options.prompt.at(-1).content.map(part => part.text ?? '').join('')).facts
+    return says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: 'The transcript holds evidence about income averaging.', facts: [given[0].id] }] })) } })
+  const research = api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() })
+  const out = await api.runAgentic(q, { ...offline, research }, async () => {}, 40000, undefined, {}, nobody)
+  assert.equal(out.answered, true)
+  // The research model was asked for it in fixed words.
+  assert.equal(api.BEARS_ON_RULE, 'Select only the transcript excerpts that answer the question, and say what each is for in "bears_on": {"<fact id>": "<the words of the question that excerpt answers>"}, using words from the question only. ')
+  assert.ok(JSON.stringify(model.doGenerateCalls[0].prompt).includes('using words from the question only.'))
+  // The writer got the label that uses the question's words, on each excerpt of fact 2, and no label for fact 3.
+  const prompt = JSON.parse(model.doGenerateCalls.at(-1).prompt.at(-1).content.map(part => part.text ?? '').join(''))
+  const labelled = prompt.facts.filter(f => f.bears_on)
+  assert.ok(labelled.length >= 1 && labelled.every(f => f.bears_on === 'income averaging' && f.transcript), JSON.stringify(prompt.facts.map(f => [f.id, f.bears_on])))
+  assert.ok(prompt.facts.every(f => f.bears_on === undefined || f.bears_on === 'income averaging'), 'the refused label is given to nobody')
+  assert.equal(JSON.stringify(prompt).includes('Quellworth said averaging was unlawful'), false)
+  assert.ok(prompt.contract.includes('Lead with the excerpts that answer the question'))
+  // Nothing of it is in what comes back.
+  // (The run's internal step log keeps the model's own call arguments; the answer, its sources and its record do not.)
+  const whole = JSON.stringify([out.answer, out.qualitative, out.research])
+  assert.equal(whole.includes('fact_notes'), false); assert.equal(whole.includes('bears_on'), false); assert.equal(whole.includes('Quellworth'), false)
+})
+
+test('a transcript text search says to search further, until four have been made', async () => {
+  assert.equal(api.SEARCH_TRANSCRIPTS_FURTHER, 'Transcript searches list the newest matching hearing days first, four at a time. Search each specific word or two-word phrase of the question in its own search before answering, then select only the excerpts that answer the question.')
+  const run = async steps => {
+    let call = 0
+    const model = new MockLanguageModelV4({ doGenerate: async () => { const step = steps[call++]; return step ? calls('royal_commissions', step) : says('not json') } })
+    const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+    await api.runAgentic('What did the Robodebt Royal Commission hear about income averaging?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
+    return model.doGenerateCalls.map(c => JSON.stringify(c.prompt).split('Transcript searches list the newest matching hearing days first').length - 1)
+  }
+  const search = words => ({ view: 'transcripts', commission: 'robodebt', words, limit: 1 })
+  // Before each of the model's calls: said with the results of text searches 1, 2 and 3.
+  assert.deepEqual((await run([search('averaging'), search('cabinet'), search('drafted')])).slice(0, 4), [0, 1, 2, 3])
+  // Another view of the same tool, or a transcript listing with no words, does not carry it.
+  assert.deepEqual((await run([{ view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 }, { view: 'transcripts', commission: 'robodebt', limit: 1 }])).slice(0, 3), [0, 0, 0])
+})
+
+test('writer output with unescaped quotation marks inside a sentence is read, not thrown away', async () => {
+  // An excerpt that holds straight quotation marks, as hearing transcripts often do. A model writes them into its JSON
+  // without escaping; the output was then unparseable and the reader got the fallback.
+  const words = 'I had often heard comments coming from the department about, "Well, the tribunal is merits review" and nothing more.'
+  const text = excerpt('P-4708', words)
+  const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day44.pdf#page=9', label: text } }])
+  const sentence = `The transcript records: “${words}”`
+  const broken = `{"answer_decision":"answer","sentences":[{"text":"The transcript records: “${words}”","facts":[1],"coverage":false},{"text":"A second line.","facts":[]}]}`
+  assert.throws(() => JSON.parse(broken))
+  assert.deepEqual(api.writtenSentences(broken), { answer_decision: 'answer', sentences: [{ text: sentence, facts: [1], coverage: false }, { text: 'A second line.', facts: [] }] })
+  assert.equal(api.writtenSentences('I could not write an answer.'), null)
+  const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+  const out = await writerWith(new MockLanguageModelV4({ doGenerate: async () => says(broken) }))({ question: hearingQuestion, period, facts }, stats, undefined, 20000)
+  assert.ok(out.answer.includes(sentence), out.answer); assert.equal(stats.coherence.fallback, undefined); assert.equal(out.machine_written, true)
+})
+
+test('when the writer\'s sentences cannot be used the excerpts are quoted whole, the reason is recorded, and the answer is not marked machine-written', async () => {
+  const long = 'Alright. The adviser then set out for the committee, over several pages, how the department had arrived at the figure and why the earlier advice had not been put to the minister before the measure was announced in the budget.'
+  const texts = [excerpt('P-4899', long), ...[1, 2, 3, 4, 5, 6].map(n => excerpt(`P-49${n}0`, `Excerpt number ${n} about the executive minute and the committee.`))]
+  const facts = api.writingFacts(undefined, texts.map((text, i) => ({ id: i + 1, text, cite: { kind: 'record', url: `https://commission.example/day46.pdf#page=${i + 1}`, label: text } })))
+  const run = async model => { const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }; const out = await writerWith(model)({ question: hearingQuestion, period, facts }, stats, undefined, 20000); return { out, stats } }
+  // Output that cannot be read at all.
+  const unread = await run(new MockLanguageModelV4({ doGenerate: async () => says('I am unable to produce JSON today.') }))
+  assert.equal(unread.stats.coherence.fallback, true); assert.equal(unread.stats.coherence.fallback_reason, 'unparseable')
+  const lines = unread.out.answer.split('\n\n')
+  // Six excerpts, each whole: before, four, each cut to one sentence of at most 32 words (this one to “Alright.”).
+  assert.equal(lines.length, 6); assert.equal(lines[0], `The hearing transcript records on hearing day 46 (10 March 2023): “${long}”`)
+  assert.equal(unread.out.machine_written, false)
+  // Every sentence fails the checks, twice.
+  const failing = await run(new MockLanguageModelV4({ doGenerate: async () => says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: 'The transcript records that “the adviser never set out anything for the committee at all”.', facts: [1] }] })) }))
+  assert.equal(failing.stats.coherence.fallback_reason, 'check_failed'); assert.equal(failing.out.machine_written, false)
+  // The provider fails.
+  const down = await run(new MockLanguageModelV4({ doGenerate: async () => { throw new Error('provider went away') } }))
+  assert.equal(down.stats.coherence.fallback_reason, 'provider')
+  // No model at all.
+  const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+  await api.createAnswerWriter({ dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, modelBudgetSpent: async () => false })({ question: hearingQuestion, period, facts }, stats, undefined, 20000)
+  assert.equal(stats.coherence.fallback_reason, 'not_called')
+})
+
+test('a sentence in another script is left out and counted; a quotation in another script inside an English sentence is not', () => {
+  assert.equal(api.otherScript('委员会的最终报告发现，该计划在没有其部门表示所需立法修改的情况下被内阁批准并继续进行。'), true)
+  assert.equal(api.otherScript('The report found that the scheme went ahead without the legislative change.'), false)
+  assert.equal(api.otherScript('The witness wrote “该计划被批准” on the page.'), false)
+  assert.equal(api.otherScript('Доклад комиссии был опубликован в 2023 году.'), true)
+  assert.equal(api.otherScript('2023.'), false)
+  const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
+  const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=15', label: text } }])
+  const good = 'The transcript records: “The executive minute was prepared in the department and went to the committee in March.”'
+  const leftOut = {}
+  const raw = { answer_decision: 'answer', sentences: [{ text: good, facts: [1] }, { text: '报告得出的结论是，这是一次代价高昂的公共行政失败。', facts: [] }] }
+  const out = api.verifyWrittenAnswer(raw, { question: hearingQuestion, period, facts }, leftOut)
+  assert.equal(out.answer, good); assert.deepEqual(leftOut, { other_script: 1 })
+  assert.equal(api.draftWrittenAnswer(raw, { question: hearingQuestion, period, facts }).answer, good)
+  // The research model's own points are checked the same way.
+  const tally = api.emptyTally()
+  const points = api.verifyResearchPoints([{ claim: 'The commission reported in July 2023.' }, { claim: '委员会的最终报告发现，该计划被内阁批准并继续进行。' }], new Map(), 'What did the commission report?', nobody, undefined, undefined, undefined, tally)
+  assert.match(points.answer, /The commission reported in July 2023\./); assert.doesNotMatch(points.answer, /委员会/); assert.equal(tally.drops.other_script, 1)
+})
+
+test('a quotation that ends where its excerpt was cut keeps the excerpt\'s "...", not a full stop', () => {
+  const cut = '...has been some criticism of the way the budget is set and whether the districts are told early enough that they...'
+  assert.equal(api.withSourceEllipses('The transcript records: “has been some criticism of the way the budget is set and whether the districts are told early enough that they.”', [cut]),
+    'The transcript records: “...has been some criticism of the way the budget is set and whether the districts are told early enough that they...”')
+  // Already as the source has it, quoted from the middle, or an excerpt that was not cut: unchanged.
+  for (const kept of ['The transcript records: “...has been some criticism of the way the budget is set and whether the districts are told early enough that they...”', 'The transcript records: “some criticism of the way the budget is set”.'])
+    assert.equal(api.withSourceEllipses(kept, [cut]), kept)
+  const whole = 'The executive minute was prepared in the department.'
+  assert.equal(api.withSourceEllipses(`The transcript records: “${whole}”`, [whole]), `The transcript records: “${whole}”`)
+  // Through the writer's check, for the excerpt the sentence cites.
+  const text = excerpt('6527', cut)
+  const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day64.pdf#page=20', label: text } }])
+  const out = api.verifyWrittenAnswer({ answer_decision: 'answer', sentences: [{ text: 'The transcript records: “has been some criticism of the way the budget is set and whether the districts are told early enough that they.”', facts: [1] }] }, { question: hearingQuestion, period, facts })
+  assert.ok(out.answer.includes('“...has been some criticism of the way the budget is set and whether the districts are told early enough that they...”'), out.answer)
+})
+
+test('every call that writes prose is told what it may say about a gap: that the passages found do not address it, nothing about what the record lacks', async () => {
+  const { ASK_ABSENCE_RULE } = await import('data:text/javascript;base64,' + Buffer.from((await build({ stdin: { contents: "export {ASK_ABSENCE_RULE} from './src/ask-writing-rules'", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, format: 'esm', logLevel: 'silent' })).outputFiles[0].text).toString('base64'))
+  assert.equal(ASK_ABSENCE_RULE, 'Describe only what the cited passages say. Where they leave part of the question unanswered, say "the passages found don\'t address this" and stop there. ')
+  // Worded as what to do: none of the words the prompt cap counts.
+  assert.doesNotMatch(ASK_ABSENCE_RULE, /\b(?:do not|never|must not|cannot)\b/i)
+  const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
+  const facts = api.writingFacts(undefined, [{ id: 1, text, cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=15', label: text } }])
+  // The writer.
+  assert.ok(JSON.parse(api.writingPrompt({ question: hearingQuestion, period, facts })).contract.includes(api.ASK_SELF_REFERENCE_RULE + ASK_ABSENCE_RULE))
+  // The research model's turns, and its final answer call (reached when the provider stops mid-run).
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async () => { call++; if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 }); throw new Error('provider went away') } })
+  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+  await api.runAgentic('What did the Robodebt Royal Commission hear about income averaging?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
+  assert.ok(model.doGenerateCalls.length >= 2)
+  for (const made of model.doGenerateCalls) assert.ok(JSON.stringify(made.prompt).includes('say \\"the passages found don\'t address this\\" and stop there.'), JSON.stringify(made.prompt).slice(0, 200))
+})
+
+// ---- Delta review at f026725a4 ----
+test('the bare word "inquiry" is not a commission: a hearing-style question about an unnamed inquiry is a Hansard question', () => {
+  for (const q of ['What did witnesses tell the inquiry into supermarket prices?', 'What evidence was given at the inquiry into consulting services?', 'Which senators called for a royal commission into banking?', 'What did MPs tell the inquiry about aged care?']) {
+    assert.equal(api.hearingEvidenceQuestion(q), false, q); assert.equal(api.quotedOrNothing(q), false, q)
+  }
+  // An inquiry that is named as a commission, by a commission phrase or a registered name, is one.
+  for (const q of ['What did witnesses tell the Special Commission of Inquiry into Healthcare Funding about locums?', 'What evidence was given at the NSW Healthcare Funding inquiry about duress alarms?', 'What evidence was given at the Robodebt Royal Commission about income averaging?'])
+    assert.equal(api.hearingEvidenceQuestion(q), true, q)
+})
+
+test('a hearing answer that cites none of the excerpts its writer was given is not used: the labelled excerpts are quoted, or one fixed line', async () => {
+  const q = 'What evidence was given at the Example Royal Commission about the executive minute?'
+  const texts = [excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.'), excerpt('P-4901', 'Nobody raised the legal advice at that meeting.')]
+  const facts = labels => api.writingFacts(undefined, texts.map((text, i) => ({ id: i + 1, text, cite: { kind: 'record', url: `https://commission.example/day46.pdf#page=${i + 1}`, label: text } }))).map((f, i) => labels[i] ? { ...f, bears_on: labels[i] } : f)
+  // The reviewer's case: one general-knowledge sentence naming a person, with an empty facts list.
+  const uncited = () => new MockLanguageModelV4({ doGenerate: async () => says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: 'Mr Placeholder approved income averaging in 2015 and the scheme was later found unlawful.', facts: [] }] })) })
+  const run = async input => { const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }; const out = await writerWith(uncited())(input, stats, undefined, 20000); return { out, stats } }
+  // The research model labelled one excerpt: that one is quoted, the other is not.
+  const one = await run({ question: q, period, facts: facts(['the executive minute', undefined]), selected: true })
+  assert.equal(one.stats.coherence.fallback_reason, 'check_failed'); assert.equal(one.out.machine_written, false)
+  assert.equal(one.out.answer, 'The hearing transcript records on hearing day 46 (10 March 2023): “The executive minute was prepared in the department and went to the committee in March.”')
+  // It sent labels and none was usable: the fixed line, never a block of passages nobody judged to be on point.
+  const none = await run({ question: q, period, facts: facts([]), selected: true })
+  assert.equal(none.out.answer, 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.')
+  assert.equal(none.out.machine_written, false); assert.deepEqual(none.out.citations, {}); assert.doesNotMatch(none.out.answer, /Placeholder/)
+  // It sent no labels at all (or the run stopped before any answer call): the held excerpts are quoted, as before.
+  const unlabelled = await run({ question: q, period, facts: facts([]) })
+  assert.equal(unlabelled.out.answer.split('\n\n').length, 2); assert.doesNotMatch(unlabelled.out.answer, /Placeholder|OPAX found passages/)
+  // A sentence that does cite an excerpt keeps the writer's answer.
+  const good = 'The transcript records: “Nobody raised the legal advice at that meeting.”'
+  const stats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+  const kept = await writerWith(new MockLanguageModelV4({ doGenerate: async () => says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: good, facts: [2] }] })) }))({ question: q, period, facts: facts([]), selected: true }, stats, undefined, 20000)
+  assert.equal(kept.answer, good); assert.equal(stats.coherence.fallback, undefined)
+  // Another kind of question may be answered whole from other records with an excerpt among its facts.
+  const grant = { id: 3, text: 'Example Health Ltd was awarded a grant of $120,000 by the Department of Health in 2023-24.', cite: { kind: 'record', url: 'https://opax.test/grants/example', label: 'Example Health grant' } }
+  const mixed = api.writingFacts(undefined, [{ id: 1, text: texts[0], cite: { kind: 'record', url: 'https://commission.example/day46.pdf#page=1', label: texts[0] } }, grant])
+  const other = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+  const answered = await writerWith(new MockLanguageModelV4({ doGenerate: async () => says(JSON.stringify({ answer_decision: 'answer', sentences: [{ text: 'Example Health Ltd was awarded a grant of $120,000 in 2023-24.', facts: [mixed.find(f => !f.transcript).id] }] })) }))({ question: 'Which grants did Example Health receive?', period, facts: mixed }, other, undefined, 20000)
+  assert.match(answered.answer, /\$120,000/); assert.equal(other.coherence.fallback, undefined)
+})
+
+test('the run records how many excerpts carried a kept label, and the labelled ones are what a failed writer falls back to', async () => {
+  const q = 'What evidence was given at the Robodebt Royal Commission about income averaging?'
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async () => { call++
+    if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 2 })
+    if (call === 2) return calls('answer', { facts: [2, 3], bears_on: { 2: 'income averaging', 3: 'somebody said averaging was unlawful' } })
+    return says('I am unable to produce JSON today.') } })
+  const research = api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() })
+  const out = await api.runAgentic(q, { ...offline, research }, async () => {}, 40000, undefined, {}, nobody)
+  assert.equal(out.answered, true)
+  const { held, labelled, sent } = out.research.excerpt_labels
+  assert.equal(sent, true); assert.ok(held >= labelled && labelled >= 1, JSON.stringify(out.research.excerpt_labels))
+  // Only the labelled excerpts (fact 2's) are quoted.
+  const lines = out.answer.split('\n\n').filter(line => /^The hearing transcript records/.test(line))
+  assert.equal(lines.length, Math.min(6, labelled), out.answer)
+})
+
+test('the last resort of a stopped run keeps a transcript listing and its count for a question they can answer, and leaves out only excerpts', async () => {
+  // The reviewer's case: a listing lookup, then the provider fails.
+  let call = 0
+  const model = new MockLanguageModelV4({ doGenerate: async () => { call++; if (call === 1) return calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', limit: 3 }); throw new Error('provider went away') } })
+  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+  const out = await api.runAgentic('How long did the Robodebt Royal Commission sit?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody)
+  assert.equal(out.answered, true); assert.match(out.answer, /OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023/)
+})
+
+test('unreadable writer output: escapes are read as JSON reads them, and a sentence with no facts list is passed over, not merged', () => {
+  const broken = '{"sentences":[{"text":"The transcript records: \\u201cIt went in "March" that year.\\u201d","facts":[1]},{"text":"A sentence with no facts list."},{"text":"A third sentence.","facts":[2],"coverage":false}]}'
+  assert.throws(() => JSON.parse(broken))
+  assert.deepEqual(api.writtenSentences(broken).sentences, [{ text: 'The transcript records: “It went in "March" that year.”', facts: [1] }, { text: 'A third sentence.', facts: [2], coverage: false }])
+})
+
+test('prose the research model returns in another script is left out, and the text form in another script is not used', async () => {
+  const run = async answer => {
+    let call = 0
+    const model = new MockLanguageModelV4({ doGenerate: async () => { call++; return call === 1 ? calls('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 }) : answer } })
+    const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+    return api.runAgentic('What did the Robodebt Royal Commission recommend about debts?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => ({ answer: '' }))
+  }
+  const prose = await run(says('The Royal Commission made recommendations about the recovery of debts and how they are raised.\n委员会的最终报告发现，该计划在没有所需立法修改的情况下被内阁批准并继续进行。'))
+  assert.doesNotMatch(String(prose.answer), /委员会/)
+  const text = await run(calls('answer', { text: '委员会的最终报告发现，该计划在没有所需立法修改的情况下被内阁批准并继续进行。', citations: [] }))
+  assert.doesNotMatch(String(text.answer), /委员会/)
+})
+
+test('the search-further line is for questions about a hearing or its evidence only', async () => {
+  const shown = async question => {
+    let call = 0
+    const model = new MockLanguageModelV4({ doGenerate: async () => { call++; return call === 1 ? calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 1 }) : says('not json') } })
+    const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
+    await api.runAgentic(question, { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
+    return JSON.stringify(model.doGenerateCalls[1].prompt).includes('Transcript searches list the newest matching hearing days first')
+  }
+  assert.equal(await shown('What did the Robodebt Royal Commission hear about income averaging?'), true)
+  assert.equal(await shown('What did the Robodebt Royal Commission recommend about debts?'), false)
 })

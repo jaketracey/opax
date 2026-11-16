@@ -11,6 +11,7 @@ import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
 import {repairQuotes,MACHINE_LABELS,EMPTY_WORDS,holdsQuotation,looseQuotationOf,NO_SUPPORTED_ANSWER} from './research-evidence'
 import {TRANSCRIPT_LABEL,transcriptTurns} from './transcript-answer'
+import {transcriptNoteEnd} from '../public/transcript-note.js'
 export {NO_SUPPORTED_ANSWER}
 import {distinctSummary} from './research-writing'
 import {leadWithWho} from './research-who-lead'
@@ -97,7 +98,7 @@ function completePersonOverview(original:Record<string,unknown>,result:Record<st
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string,fixedPrefix='',partial=false):Record<string,unknown> {
   // Recovery runs every normal shape check. A necessary correction uses retry, never a prefix exemption.
   if((payload.research as {answer_stats?:{salvaged?:unknown}}|undefined)?.answer_stats?.salvaged)fixedPrefix=''
-  let out=withoutMachineLabels(plainAnswerPayload(payload))
+  let out=withoutMachineLabels(plainAnswerPayload(withoutTranscriptNote(payload)))
   const audit=auditPayload(question,out)
   researchTrace('grounding.audit',{question,counts:audit.counts,findings:audit.findings})
   const edits=moneySentenceEdits(out)
@@ -130,6 +131,15 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   if(!partial)out=completePersonOverview(payload,out,question)
   const research=out.research&&typeof out.research==='object'?out.research as Record<string,unknown>:undefined
   return {...out,...(research?{research:{...research,claim_audit:audit.counts}}:{})}
+}
+/** An answer that already ends with the fixed hearing-transcript line (it has been through the way out once) is
+ * checked without it: the line is not prose, and the lead shaping could move it to the front, after which the way out
+ * (transcript-answer.ts transcriptNoteResponse, on every /api/ask reply) added it a second time. The way out puts it
+ * back, once, in the form the final cited sources call for. Left alone when it is all the answer holds. */
+function withoutTranscriptNote<T extends Record<string,unknown>>(payload:T):T {
+  const text=typeof payload.answer==='string'?payload.answer:'',at=transcriptNoteEnd(text.trimEnd())
+  if(at===null||!/[\p{L}\p{N}]/u.test(text.slice(0,at))||!/(?:^|\n)\s*$/.test(text.slice(0,at)))return payload
+  return rewriteAnswerPayload(payload,replace=>replace(new RegExp(`(?<=^[\\s\\S]{${text.slice(0,at).trimEnd().length}})[\\s\\S]*$`,'g'),''))
 }
 /** An answer with the model's echoed input labels taken out (research-evidence.ts MACHINE_LABELS), citations kept in
  * step. A sentence that held a label and is left with no word that says anything ("See also and.") goes whole. For

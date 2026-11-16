@@ -2,7 +2,7 @@ import { generateResearchText, answerEntryScanner, researchPreviewGuard } from '
 import { routingRefused } from './research-model'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, citesGivenExcerpt, type WritingInput } from './research-writing'
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
@@ -14,6 +14,21 @@ import type { QualitativeAnswer, ResearchStats, AnswerPreview } from './research
 import {recordAnswerLines} from './research-record-answer'
 import {moneyWritingInput,receiptWritingLines,completeMoneySelection} from './research-money-writing'
 
+/** Why the writer's own sentences were not used: it was not called, it ran out of time, its budget or credit ran out,
+ * the provider failed, its output could not be read, or none of its sentences passed the checks. */
+export type WriterFallback='not_called'|'timeout'|'budget'|'provider'|'unparseable'|'check_failed'
+/** The writer's sentences read from output that is not valid JSON because a quotation mark inside a sentence was left
+ * unescaped. Each sentence is the text between `"text":"` and the `","facts":[...]` that closes it, so marks inside
+ * it are kept as written. Null when no sentence can be read that way. */
+export function writtenSentences(text:string):{answer_decision?:string;sentences:{text:string;facts:number[];coverage?:boolean}[]}|null {
+  // A sentence's text never runs past the start of the next sentence object, so an object with no facts list is
+  // passed over, not merged into the one after it. Escapes are read as JSON reads them (\u201c is a quotation mark).
+  const sentences=[...text.matchAll(/\{\s*"text"\s*:\s*"((?:(?!"\s*\}?\s*,?\s*\{\s*"text"\s*:)[\s\S])*?)"\s*,\s*"facts"\s*:\s*\[([\d,\s]*)\]\s*(?:,\s*"coverage"\s*:\s*(true|false)\s*)?\}/g)]
+    .map(m=>({text:m[1].replace(/\\u([0-9a-fA-F]{4})/g,(_,hex:string)=>String.fromCharCode(parseInt(hex,16))).replace(/\\n/g,' ').replace(/\\(["\\\/])/g,'$1'),facts:(m[2].match(/\d+/g)??[]).map(Number),...(m[3]?{coverage:m[3]==='true'}:{})}))
+  if(!sentences.length)return null
+  const decision=/"answer_decision"\s*:\s*"(\w+)"/.exec(text)?.[1]
+  return {...(decision?{answer_decision:decision}:{}),sentences}
+}
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number, preview?: AnswerPreview): Promise<QualitativeAnswer> => {
@@ -35,14 +50,15 @@ export function createAnswerWriter(options: ResearchOptions) {
     let lastDraft:QualitativeAnswer|null=null
     let requiredDraft=(draft:QualitativeAnswer)=>draft
     // A stopped writer keeps what it wrote; with nothing written, the facts are rendered as recorded.
-    const fallback=():QualitativeAnswer=>{
-      stats.coherence={...stats.coherence,fallback:true}
+    // `reason` goes on the research record (never shown), so a run's numbers show how often and why this happens.
+    const fallback=(reason:WriterFallback):QualitativeAnswer=>{
+      stats.coherence={...stats.coherence,fallback:true,fallback_reason:reason}
       if(releasedDraft)return {...releasedDraft,coherence:{...releasedDraft.coherence,fallback:true}}
-      if(lastDraft&&lastDraft.answer.trim()&&!saysLent(lastDraft.answer)){const checked=requiredDraft(ground(lastDraft));return {...checked,coherence:{...checked.coherence,fallback:true}}}
+      if(lastDraft&&lastDraft.answer.trim()&&!saysLent(lastDraft.answer)&&citesGivenExcerpt(lastDraft,input)){const checked=requiredDraft(ground(lastDraft));return {...checked,coherence:{...checked.coherence,fallback:true}}}
       const facts=proseFallback(input)
       return ground({...facts,coherence:{...facts.coherence,fallback:true}})
     }, credits=options.creditCooldown ?? researchCreditCooldown
-    if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
+    if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback(!input.facts.length||!options.model?'not_called':credits.blocked()?'budget':'timeout')
     const required=proseFallback(input),lead=required.answer.split('\n')[0]
     const headlineRequired=/highest|most|top|largest|biggest|how much/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
     const ownerFigure=(fact:WritingInput['facts'][number])=>{
@@ -70,24 +86,24 @@ export function createAnswerWriter(options: ResearchOptions) {
     let prompt=writingPrompt(input)
     const startedWriting=Date.now()
     const inputReserve=Math.ceil(prompt.length/3)+1024, outputReserve=Math.min(1400,Math.min(ASK_MAX_TOKENS,Number(options.tokens ?? ASK_DEFAULT_TOKENS))-stats.tokens.input-stats.tokens.output-inputReserve)
-    if (outputReserve<=0) return fallback()
+    if (outputReserve<=0) return fallback('budget')
     for(let pass=0;pass<2;pass++){
-      if(credits.blocked())return fallback()
-      if(pass&&remainingMs-(Date.now()-startedWriting)<250)return fallback()
+      if(credits.blocked())return fallback('budget')
+      if(pass&&remainingMs-(Date.now()-startedWriting)<250)return fallback('check_failed')
       const currentPrompt=prompt
-      if (outputReserve<=0) return fallback()
-      try {if(await options.modelBudgetSpent())return fallback()}catch{return fallback()}
-      if(signal?.aborted||stats.tokens.input+stats.tokens.output+Math.ceil(currentPrompt.length/3)+1024+outputReserve>Math.min(ASK_MAX_TOKENS,Number(options.tokens??ASK_DEFAULT_TOKENS)))return fallback()
+      if (outputReserve<=0) return fallback('budget')
+      try {if(await options.modelBudgetSpent())return fallback('budget')}catch{return fallback('budget')}
+      if(signal?.aborted||stats.tokens.input+stats.tokens.output+Math.ceil(currentPrompt.length/3)+1024+outputReserve>Math.min(ASK_MAX_TOKENS,Number(options.tokens??ASK_DEFAULT_TOKENS)))return fallback(signal?.aborted?'timeout':'budget')
       const inPrice=options.inputPrice ?? 1, outPrice=options.outputPrice ?? 3
-      let reservation;try {reservation=await reserveQuestionTurn(stats,researchTurnReservationUsd(inputReserve,outputReserve,inPrice,outPrice),options.dailyBudget)}catch{return fallback()}
-      if(!reservation)return fallback()
+      let reservation;try {reservation=await reserveQuestionTurn(stats,researchTurnReservationUsd(inputReserve,outputReserve,inPrice,outPrice),options.dailyBudget)}catch{return fallback('budget')}
+      if(!reservation)return fallback('budget')
       const controller=new AbortController(), abort=()=>controller.abort(signal?.reason)
       signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort()
       const timer=setTimeout(()=>controller.abort(new DOMException('Answer writing wall cap','TimeoutError')),Math.max(0,Math.min(8000,deadline-Date.now())))
       let receipt: number|undefined, turn: NonNullable<ResearchStats['turns']>[number]|undefined
       const started=Date.now()
       try {
-        if(controller.signal.aborted||signal?.aborted||Date.now()-startedWriting>=remainingMs)return fallback()
+        if(controller.signal.aborted||signal?.aborted||Date.now()-startedWriting>=remainingMs)return fallback('timeout')
         stats.coherence={...stats.coherence,writer_passes:pass+1,second_passes:pass}
         stats.usageUnknown=true
         turn={round:stats.rounds+1,input:null,output:null,cached_input:null,input_reserve:inputReserve,ms:0,cost_usd:null}
@@ -116,14 +132,20 @@ export function createAnswerWriter(options: ResearchOptions) {
         const cost=receipt ?? (inputTokens*inPrice+outputTokens*outPrice)/1e6
         stats.tokens.input+=inputTokens;stats.tokens.output+=outputTokens;stats.costUsd=(stats.costUsd??0)+cost
         Object.assign(turn,{input:inputTokens,output:outputTokens,cached_input:result.usage.inputTokenDetails?.cacheReadTokens??0,cost_usd:cost,provider:meta?.provider??'',ms:Date.now()-started})
-        if(stats.tokens.input+stats.tokens.output>Math.min(ASK_MAX_TOKENS,Number(options.tokens ?? ASK_DEFAULT_TOKENS)))return fallback()
-        let raw;try{raw=JSON.parse(result.text.replace(/^```(?:json)?\s*|\s*```$/g,''))}catch{return fallback()}
+        if(stats.tokens.input+stats.tokens.output>Math.min(ASK_MAX_TOKENS,Number(options.tokens ?? ASK_DEFAULT_TOKENS)))return fallback('budget')
+        // A quotation with quotation marks inside it is often written without escaping them, which is not JSON: the
+        // sentences are then read one by one (writtenSentences) before the output is given up as unparseable.
+        let raw;try{raw=JSON.parse(result.text.replace(/^```(?:json)?\s*|\s*```$/g,''))}catch{raw=writtenSentences(result.text);if(!raw)return fallback('unparseable')}
         lastDraft=draftWrittenAnswer(raw,activeInput)
         const leftOut:Record<string,number>={};const verified=verifyWrittenAnswer(raw,activeInput,leftOut)
         // How many of the writer's sentences each test left out, for the research record only.
         if(Object.keys(leftOut).length)stats.coherence={...stats.coherence,left_out:leftOut}
         researchTrace('writer.verify', {question:input.question,raw,verified})
-        if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
+        // A count, not a reading of prose: given hearing excerpts, an answer none of whose sentences cites one is
+        // not used (a general-knowledge sentence would stand as the whole answer to a hearing question). The
+        // excerpts are quoted by code instead (research-writing.ts transcriptLines).
+        if(verified&&!citesGivenExcerpt(verified,activeInput)){lastDraft=null;return fallback('check_failed')}
+        if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback('check_failed')}
         researchTrace('writer.audit',{question:input.question,counts:auditPayload(input.question,verified).counts})
         // Checked on the draft as written: grounding may drop the sentence and leave nothing in its place.
         if(lastDraft&&saysLent(lastDraft.answer)&&!saysLent(required.answer))return ground(required)
@@ -132,7 +154,7 @@ export function createAnswerWriter(options: ResearchOptions) {
         // The writer makes no further request after a refusal (the answer is assembled from the gathered facts); count it.
         if(routingRefused(error)||isResearchCreditError(error))console.log(JSON.stringify({kind:'research_provider_refused',stage:'writer',reason:'provider_refused',count:1}))
         if(isResearchCreditError(error)){credits.exhaust();receipt=0;stats.usageUnknown=false;if(turn)Object.assign(turn,{input:0,output:0,cost_usd:0})}
-        return fallback()
+        return fallback(controller.signal.aborted||signal?.aborted||(error instanceof Error&&error.name==='TimeoutError')?'timeout':'provider')
       }finally{
         if(turn)turn.ms=Date.now()-started
         clearTimeout(timer);signal?.removeEventListener('abort',abort)
@@ -142,6 +164,6 @@ export function createAnswerWriter(options: ResearchOptions) {
         stats.cachedByTurn=stats.turns?.map(t=>t.cached_input);options.onUsage?.(stats)
       }
     }
-    return fallback()
+    return fallback('check_failed')
   }
 }

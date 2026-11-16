@@ -653,6 +653,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // An exact-lookup correction is prepended after research; its opening cannot be streamed past.
   loopProgress.answer=lookup?undefined:progress.answer
   const writeRun = async (run: AgenticPayload) => {
+    // The research model's labels for its selected facts are for the writer only: they leave the answer here.
+    const factNotes = run.qualitative?.fact_notes ?? {}, selected = run.qualitative?.fact_notes !== undefined
+    if (run.qualitative?.fact_notes) { const { fact_notes: _notes, ...rest } = run.qualitative; run.qualitative = rest }
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
@@ -661,6 +664,11 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
     const sheet = writingFacts(recordAnswer, facts, run.notes)
+    for (const f of sheet) { const label = factNotes[/^fact-(\d+)/.exec(f.source.resource)?.[1] ?? '']; if (label && f.transcript) f.bears_on = label }
+    // For the run's record only: how many of the excerpts handed to the writer carry a kept label, and whether the
+    // research model sent labels at all. Shows how reliable the labels are.
+    const excerpts = sheet.filter(f => f.transcript && !f.coverage)
+    if (run.research && excerpts.length) run.research.excerpt_labels = { held: excerpts.length, labelled: excerpts.filter(f => f.bears_on).length, sent: selected }
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
@@ -671,7 +679,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // The model's own points follow the written sentences in the answer (combine below). The writer is told what they
     // say, so a fact one of them states is not written a second time.
     const said=(run.passage_answer?.answer??'').split(/\n+/).map(line=>line.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
-    const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
+    const input={question,period,facts:sheet,...(selected?{selected:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
     let active=true,checkedPartial:QualitativeAnswer|undefined
     // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.

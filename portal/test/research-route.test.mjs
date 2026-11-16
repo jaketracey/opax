@@ -64,7 +64,7 @@ test('a failed loop on a hearing-evidence question never reaches the older engin
  const hearing='What evidence was given at the Robodebt Royal Commission about income averaging?',named='What did the Robodebt Royal Commission hear about who was told of the legal advice?',nsw='What did the NSW Healthcare Funding inquiry hear about duress alarms?',other='What does the record say about housing affordability?';
  // The model makes its first call (or none), then the provider fails on every later call.
  const failing=first=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(first&&n++===0)return reply([first]);throw new Error('provider went away')}})};
- const robodebt=call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}),alarms=call('royal_commissions',{view:'transcripts',commission:'nsw-healthcare-funding',words:'duress alarms',limit:1});
+ const robodebt=call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}),alarms=call('royal_commissions',{view:'transcripts',commission:'nsw-healthcare-funding',words:'duress alarms',limit:4});
  const QUOTED=/^The hearing transcript records on hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\): “[^”]+”$/,FIXED='OPAX cannot establish the requested answer from the selected records.';
  // [question, the model's one call, what the reader must get]
  const cases=[[hearing,robodebt,'quoted'],[named,robodebt,'quoted'],[nsw,alarms,'quoted'],[hearing,null,'fixed'],[named,null,'fixed'],[nsw,null,'fixed']];
@@ -95,6 +95,31 @@ test('a failed loop on a hearing-evidence question never reaches the older engin
   const response=await post(other,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
   assert.equal(body.research.mode,'planner');assert.equal(ordinaryCalls,ordinary+1,'the older engine answered');
   assert.notEqual(body.answer,FIXED);
+  await flush();
+ }
+});
+test('a parliamentary question in hearing-style wording, or one that only mentions a royal commission, falls back to the older engine as on main; a stopped recommendations question is not answered with hearing excerpts',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const failing=first=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(first&&n++===0)return reply([first]);throw new Error('provider went away')}})};
+ const FIXED='OPAX cannot establish the requested answer from the selected records.';
+ for(const question of ['What did witnesses tell the Senate inquiry into consulting services?','Did Labor promise a royal commission into veterans suicide in Parliament?','What did the Senate inquiry into healthcare funding hear?','What did witnesses tell the inquiry into supermarket prices?','Which senators called for a royal commission into banking?'])for(const stream of [false,true]){
+  globalThis.__researchModel=failing(null);const ordinary=ordinaryCalls;
+  const response=await post(question,stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
+  assert.equal(response.status,200,raw.slice(0,300));assert.equal(body.research.mode,'planner',question);assert.ok(ordinaryCalls>ordinary,'the older engine answered: '+question);assert.notEqual(body.answer,FIXED,question);
+  await flush();
+ }
+ // A recommendations question whose provider fails after a transcripts lookup: hearing excerpts are not its answer.
+ for(const stream of [false,true]){
+  globalThis.__researchModel=failing(call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}));const ordinary=ordinaryCalls;
+  const response=await post('What did the Robodebt Royal Commission recommend?',stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
+  assert.equal(response.status,200);assert.equal(ordinaryCalls,ordinary,'no older-engine prose on a commission question');
+  // No excerpt is quoted to it. (What it does get is main's last resort: the transcript count row and the tool's notes.)
+  assert.doesNotMatch(body.answer,/The hearing transcript records|“/,body.answer);assert.equal(body.machine_written,false);assert.ok((body.answer.match(/evidence, not findings\.(?:\n|$)/g)??[]).length<=2,body.answer);
+  // The same stop on a question about what was heard gives the excerpts, with the evidence line once, at the end.
+  globalThis.__researchModel=failing(call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}));
+  const heard=await post('What did the Robodebt Royal Commission hear about income averaging?',stream,{kind:'all'}),heardRaw=await heard.text(),heardBody=stream?decodeStream(heardRaw):JSON.parse(heardRaw);
+  assert.match(heardBody.answer,/^The hearing transcript records on hearing day \d+ \(\d{1,2} [A-Z][a-z]+ 202[23]\)/);assert.equal(heardBody.answer.match(/evidence, not findings/g)?.length,1,heardBody.answer);assert.ok(heardBody.answer.trimEnd().endsWith('evidence, not findings.'));
+  assert.equal(JSON.stringify(heardBody).includes('bears_on'),false);assert.equal(JSON.stringify(heardBody).includes('fact_notes'),false);
   await flush();
  }
 });
