@@ -155,6 +155,9 @@ test('the research model does not word hearing evidence: a point that cites or q
   const cases = [
     ['cites the fact', [{ id: 'fact-2', claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
     ['quotes the excerpt', [{ id: 'unknown-document', quote: turn.excerpt, claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
+    // The excerpt's link as the id, with a quote field the excerpt does not hold (the delta review reproduced a name
+    // in prose this way: a link only matched when the quote was in the fact).
+    ['cites the excerpt by its link, with a quote it does not hold', [{ id: records.citations[1].url, quote: 'the department knew averaging was unlawful all along', claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
     ['an uncited near-quotation of the excerpt beside a cited fact', [{ id: 'fact-2', claim: 'A witness gave evidence about averaging.' }, { claim: `Ms Quellworth said “${turn.excerpt.replace(/^\.\.\./, '').split(' ').slice(2, 14).filter((_, i) => i !== 5).join(' ')}”.` }]],
   ]
   for (const [name, points] of cases) {
@@ -191,7 +194,7 @@ test('with transcript excerpts held, a quotation is checked against what its poi
   const run = async points => {
     let call = 0
     const model = new MockLanguageModelV4({ doGenerate: async () => { call++; return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 })
-      : call === 2 ? reply('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 }) : reply('answer', { points }) } })
+      : call === 2 ? reply('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 }) : reply('answer', Array.isArray(points) ? { points } : points) } })
     const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
     return api.runAgentic(q, { ...deps, research }, async () => {}, 40000, undefined, {}, named)
   }
@@ -204,9 +207,36 @@ test('with transcript excerpts held, a quotation is checked against what its poi
   // A quoted term from general knowledge in a point that cites nothing is not a near-quotation of the hearing: it stays.
   const term = await run([{ id, quote: exact, claim: `The Royal Commission recommended that “${exact}”.` }, { claim: 'The scheme became known as “robodebt” in the press.' }])
   assert.match(term.answer, /became known as/)
+  // The commission's own name in quotation marks is not a near-quotation of evidence: the five-word test reads the
+  // excerpts' quoted words, not a fact's header.
+  const titled = await run([{ id, quote: exact, claim: `The Royal Commission recommended that “${exact}”.` }, { claim: 'Its full title is the “Royal Commission into the Robodebt Scheme”.' }])
+  assert.match(titled.answer, /Its full title is the/)
+  // The same with words the header does not hold word for word (this one was dropped before the five-word test read
+  // the excerpts only): it is not a quotation of evidence, so it stays, marks off.
+  const called = await run([{ id, quote: exact, claim: `The Royal Commission recommended that “${exact}”.` }, { claim: 'It is often called the “Royal Commission into the Robodebt Scheme inquiry”.' }])
+  assert.match(called.answer, /It is often called the Royal Commission into the Robodebt Scheme inquiry/)
+  // A point that cites the report but loosely quotes the held transcript excerpt: the citation does not save it.
+  const at2 = heard.citations.findIndex(c => api.transcriptTurns(c.text).length), excerpt = api.transcriptTurns(heard.citations[at2].text)[0].excerpt
+  const near = excerpt.replace(/^\.\.\./, '').split(' ').slice(2, 14).filter((_, i) => i !== 5).join(' ')
+  const borrowed = await run([{ id, quote: exact, claim: `The Royal Commission recommended that “${exact}”.` }, { id, claim: `Ms Quellworth said “${near}”.` }])
+  assert.equal(borrowed.answered, true); assert.doesNotMatch(borrowed.answer, /Quellworth/); assert.ok(!borrowed.answer.includes(near), borrowed.answer)
+  assert.ok(borrowed.answer.includes(`“${exact}”`), 'the point quoting the report exactly is untouched')
+  // The text form cannot cite an excerpt: with the same loose quotation it is not used, and the excerpt's record is.
+  const text = await run({ text: `Ms Quellworth said “${near}”. That is the evidence on the record about income averaging in the scheme.`, citations: [] })
+  assert.equal(text.answered, true); assert.doesNotMatch(text.answer, /Quellworth|That is the evidence on the record/)
+  assert.ok(text.qualitative.sources.some(s => `${s.snippet} ${s.title}`.includes('Hearing transcript: evidence, not findings')), 'the excerpt is the answer')
+  // A text form with no quotation of the hearing is used as before.
+  const plain = await run({ text: 'The scheme became known as “robodebt” in the press.', citations: [] })
+  assert.match(plain.answer, /became known as/)
+  // A point that gives the excerpt's link in another form still cites that excerpt: the record is used, not its words.
+  const link = heard.citations[at2].url, page = new URL(link)
+  for (const form of [link.replace(/^https:/, 'http:'), link.replace(page.hostname, page.hostname.toUpperCase()), `<${link}>`, `[transcript](${link})`, link.replace('#', '?utm=1#'), `${link}.`]) {
+    const out = await run([{ id: form, claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }])
+    assert.equal(out.answered, true, form); assert.doesNotMatch(out.answer, /Quellworth|knew averaging was unlawful/, form)
+  }
 })
 
-test('repeated final grounding of an unsplit transcript record never restores the tool block, and keeps the draft as paraphrase',()=>{
+test('repeated final grounding of an unsplit transcript record never restores the tool block, and a fabricated quotation cited to it is removed with its words',()=>{
   const source={resource:'fact-1',slug:'',kind:'record',title:text,snippet:text,url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',href:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',cited:true}
   const fallback=api.proseFallback({...input(),facts:[{id:1,text,source}]})
   assert.doesNotMatch(fallback.answer,/PDF page|CC BY|transcript page|©/)
@@ -216,7 +246,9 @@ test('repeated final grounding of an unsplit transcript record never restores th
   let out={answer:draft,answer_decision:'answer',citations:{'fact-1/t/body/0':[[0,Array.from(draft).length]]},sources:[source]}
   for(let i=0;i<3;i++)out=api.groundAnswerPayload(out,input().question)
   assert.doesNotMatch(out.answer,/PDF page|CC BY|transcript page|©|“/)
-  assert.match(out.answer,/^Invented Witness said A fabricated quote/);validRanges(out)
+  // The only sentence went (before 16 Nov 2026 its marks came off and the words stayed): the fixed line, uncited,
+  // and the same on every later pass.
+  assert.equal(out.answer,'OPAX cannot establish the requested answer from the selected records.');assert.deepEqual(out.citations,{});validRanges(out)
 })
 
 test('Victorian ministerial gifts also filter chamber and register period before pagination',async()=>{

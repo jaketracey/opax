@@ -26,7 +26,7 @@ import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
 import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, TRANSCRIPT_POINT_RULE, transcriptPassage, hearingWorded, commissionHearingQuestion } from './transcript-answer'
-import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, failedQuotations, looseQuotationOf, otherScript, type AnswerDraft, type AnswerPoint } from './research-evidence'
+import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, failedQuotations, looseQuotationOf, holdsQuotation, otherScript, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
 import { researchReservationUsd, researchTurnReservationUsd } from './research-budget'
@@ -74,6 +74,18 @@ export function replyAnswer(text: string): AnswerArgs | null {
   } catch { return null }
 }
 /** Said to the research model when it answers a hearing-evidence question while holding no transcript excerpt. */
+/** A link as its host and path: lower-case host, decoded path, no scheme, query, fragment, wrapping brackets or closing
+ * punctuation. Empty when the text is not an http(s) link. */
+export function linkKey(value: string): string {
+  const text = value.trim(), inner = /\]\((https?:[^)\s]+)\)/i.exec(text)?.[1] ?? text.replace(/^[<(\[]+|[>)\].,;]+$/g, '')
+  try {
+    const url = new URL(inner)
+    if (!/^https?:$/.test(url.protocol)) return ''
+    let path = url.pathname
+    try { path = decodeURIComponent(path) } catch { /* the path as written */ }
+    return `${url.hostname.toLowerCase()}${path.replace(/\/+$/, '')}`
+  } catch { return '' }
+}
 /** Said with the result of a transcript text search on a hearing question until four such searches have been made.
  * Each search returns only a few hearing days, so one search rarely holds every excerpt the question needs. */
 export const SEARCH_TRANSCRIPTS_FURTHER = 'Each transcript search returns only a few hearing days. Search each specific word or two-word phrase of the question in its own search before answering, then select only the excerpts that answer the question.'
@@ -571,17 +583,39 @@ export function createResearch(options: ResearchOptions): Research {
       // writer as recorded, and the point is not used beside it. The point goes even when its fact is then refused
       // (scope, the 15-fact limit): kept, it would word hearing evidence itself. Restricted transcripts have no turns.
       let pointArgs = args.points
+      // The text form (text and citations in place of points) cannot cite an excerpt at all: when it holds a
+      // quotation no held excerpt has word for word, sharing a run of five or more words with one, the text is not
+      // used and that excerpt's record fact is selected, as for a point.
+      if (!hearing && !Array.isArray(args.points) && typeof args.text === 'string' && args.text.trim()) {
+        const { all, tools } = recordFacts()
+        const held = all.filter(f => ['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && f.cite.url && transcriptPassage(f.text))
+        const excerpts = (f: { text: string }) => transcriptTurns(f.text).map(turn => turn.excerpt).join('\n'), heldText = held.map(excerpts).join('\n')
+        const loose = heldText ? failedQuotations(args.text, heldText).filter(inner => looseQuotationOf(inner, heldText)) : []
+        if (loose.length) {
+          const added = held.filter(f => loose.some(inner => looseQuotationOf(inner, excerpts(f)))).map(f => f.id).filter(id => !facts.some(f => f.fact.id === id))
+          facts = [...facts, ...factLines(added, why)].slice(0, 15)
+          args = { ...args, text: '' }
+          researchTrace('loop.transcript_quote_drop', { question, dropped: 1, form: 'text' })
+        }
+      }
       if (!hearing && Array.isArray(args.points)) {
         const { all, tools } = recordFacts(), held = new Map<string, Passage>()
         for (const f of all) if (['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && f.cite.url && transcriptPassage(f.text)) held.set(`fact-${f.id}`, { id: `fact-${f.id}`, resource: `fact-${f.id}`, slug: '', title: f.cite.label, text: f.text, url: f.cite.url, kind: f.cite.kind })
         if (held.size) {
           const ids = new Set<number>()
           let quoteDrops = 0
-          const heldText = [...held.values()].map(f => f.text).join('\n'), sourceFacts = factPassages()
+          // The quoted words only: a fact's header (the commission's name, the hearing day) is not hearing evidence.
+          const heldText = [...held.values()].flatMap(f => transcriptTurns(f.text).map(turn => turn.excerpt)).join('\n'), sourceFacts = factPassages()
           pointArgs = (args.points as unknown[]).filter(raw => {
             const quote = object(raw).quote
             const cited = object(citeRecordFacts([raw], held)[0]).id
-            const fact = typeof cited === 'string' && held.has(cited) ? held.get(cited) : typeof quote === 'string' && quote.trim().length >= 20 ? [...held.values()].find(f => transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim()))) : undefined
+            // A point that gives a held excerpt's link as its id cites that excerpt, whatever its quote field says:
+            // a quote the excerpt does not hold is the loose quotation this routing exists to catch.
+            // The link is compared by host and path, so http for https, capitals in the host, a query string, another
+            // fragment, percent-encoding, or brackets a model wraps a link in do not hide which page it names.
+            const link = typeof object(raw).id === 'string' ? linkKey(String(object(raw).id)) : ''
+            const linked = link ? [...held.values()].find(f => linkKey(f.url) === link) : undefined
+            const fact = linked ?? (typeof cited === 'string' && held.has(cited) ? held.get(cited) : typeof quote === 'string' && quote.trim().length >= 20 ? [...held.values()].find(f => transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim()))) : undefined)
             if (fact) ids.add(Number(fact.id.slice(5)))
             if (fact) return false
             // Each quotation is checked against the source its point cites, whatever kind of record that is, and
@@ -592,7 +626,11 @@ export function createResearch(options: ResearchOptions): Research {
             // would leave the words, and any name in them, as the model's own prose.
             const claim = object(raw).claim, id = object(citeRecordFacts([raw], sourceFacts)[0]).id
             const cites = typeof id === 'string' && (passages.has(id) || sourceFacts.has(id))
-            if (!cites && typeof claim === 'string' && failedQuotations(claim, heldText).some(inner => looseQuotationOf(inner, heldText))) { quoteDrops++; return false }
+            // A point that cites another record is checked against that record: a quotation it does not hold, which
+            // shares such a run with a held excerpt, is the same loose quotation of the hearing under another
+            // citation, and goes the same way. A loose quotation of the cited record itself keeps today's rule.
+            const against = cites ? (passages.get(id as string) ?? sourceFacts.get(id as string))!.text : heldText
+            if (typeof claim === 'string' && failedQuotations(claim, against).some(inner => !holdsQuotation(inner, heldText) && looseQuotationOf(inner, heldText))) { quoteDrops++; return false }
             return true
           })
           const added = [...ids].filter(id => !facts.some(f => f.fact.id === id))

@@ -85,6 +85,12 @@ export function failedQuotations(claim: string, evidence: string): string[] {
   })
   return failed
 }
+/** Whether a text holds quoted words word for word (case, spacing and punctuation apart). */
+export const holdsQuotation = (inner: string, evidence: string): boolean => {
+  if (inner.trim() && normal(evidence).includes(normal(inner))) return true
+  const exact = passageSpan(evidence, inner, Number.MAX_SAFE_INTEGER)
+  return !!exact && words(exact).length === words(inner).length
+}
 /** Whether quoted words share a run of at least five words with a text: a loose quotation of it, not of something else. */
 export const looseQuotationOf = (inner: string, text: string): boolean => !!passageSpan(text, inner, 5) && words(inner).length >= 5
 

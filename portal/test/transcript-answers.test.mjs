@@ -73,7 +73,7 @@ test('people named in hearing evidence appear only inside a quotation: one fixed
   // The research model's rule for excerpts: fixed text.
   assert.equal(api.TRANSCRIPT_POINT_RULE, 'Leave what a record labelled "Hearing transcript: evidence, not findings" (a royal commission, integrity commission or inquiry transcript) says out of your points and reply text, in your own words or quoted: select the excerpt\'s numeric record fact id, and the writer words it from the record. Hansard and parliamentary committee hearings stay in your points. ')
   // Stored answers written before the rule are retired.
-  assert.equal(api.ANSWER_WRITING_VERSION, 'written-answer-35-excerpts-selected')
+  assert.equal(api.ANSWER_WRITING_VERSION, 'written-answer-36-transcript-quotes-checked')
 })
 
 test('the writer is skipped only when every fact is a transcript listing row', async () => {
@@ -441,7 +441,8 @@ test('the writer leaves the line to the way out: one line, at the end, after any
   assert.ok(written.answer.length > 0)
   assert.ok(!/evidence, not findings/.test(written.answer), written.answer)
   // One hearing turn, then a speech by the person in scope that the person overview adds as a bullet.
-  const heard = { ...turnSource(1), resource: 'fact-1' }
+  // The source the fallback cites holds the words it quotes, as it does in a real answer.
+  const heard = { ...turnSource(1), resource: 'fact-1', title: turn, snippet: turn }
   const speech = { resource: 'speech-7', slug: 'speech-7', kind: 'speech', speaker: 'Example Member', title: 'Social services statement', date: '2023-03-20', url: 'https://opax.test/doc/speech-7', href: 'https://opax.test/doc/speech-7', snippet: 'Income averaging was applied to every debt raised under the scheme.', cited: false }
   const answer = written.answer.trim()
   const payload = { answered: true, answer, answer_decision: 'answer', research: { mode: 'loop' }, answer_scope: { people: ['Example Member'] }, sources: [heard, speech], citations: { 'fact-1/t/body/0': [[0, Array.from(answer).length]] } }

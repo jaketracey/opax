@@ -1,4 +1,4 @@
-import {auditPayload,sentenceParts,moneySentenceEdits} from './research-claim-audit.mjs'
+import {auditPayload,sentenceParts,moneySentenceEdits,quotationSpans,unclosedQuoteOffset} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {ACCOUNTABILITY_QUESTION,attributeSpokenFindings,leadWithFinding} from './research-answer-shape'
 import {citationHasSentence,protectedDecision} from './research-coherence.mjs'
@@ -9,8 +9,10 @@ import {passageExcerpt} from './research-evidence'
 import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
-import {repairQuotes,MACHINE_LABELS,EMPTY_WORDS} from './research-evidence'
+import {repairQuotes,MACHINE_LABELS,EMPTY_WORDS,holdsQuotation,looseQuotationOf,NO_SUPPORTED_ANSWER} from './research-evidence'
+import {TRANSCRIPT_LABEL,transcriptTurns} from './transcript-answer'
 import {transcriptNoteEnd} from '../public/transcript-note.js'
+export {NO_SUPPORTED_ANSWER}
 import {distinctSummary} from './research-writing'
 import {leadWithWho} from './research-who-lead'
 type SelectedSource=WritingInput['facts'][number]['source']
@@ -105,7 +107,7 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
     for(const edit of edits)replace(new RegExp(`(?<=^[\\s\\S]{${edit.at}})[\\s\\S]{${edit.text.length}}`,'g'),edit.replacement)
     if(edits.some(edit=>!edit.replacement))replace(/[ \t]{2,}/g,' ')
   })
-  out=withCheckedQuotes(out)
+  out=withCheckedQuotes(out,partial)
   // A typed limitation, refusal or clarification (a lookup correction, a scope decline) keeps its own order.
   // The who shape selects supported subjects first; its authority fallback handles unnamed findings.
   // A body's finding cited only to one member's speech is that member's claim, and says so (ASK_ATTRIBUTION_RULE).
@@ -167,18 +169,120 @@ export function withoutMachineLabels<T extends Record<string,unknown>>(payload:T
   const out=cleaned(true)
   return /[\p{L}\p{N}]/u.test(String(out.answer??''))?out:cleaned(false)
 }
-/** Quoted words stay quoted only when a source the sentence cites (or, for an uncited sentence, any source of the
- * answer) holds them verbatim; otherwise the marks come off and the words stand as paraphrase. */
-function withCheckedQuotes(payload:Record<string,unknown>):Record<string,unknown> {
-  const text=String(payload.answer??''),sources=(Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]
-  return rewriteAnswerPayload(payload,replace=>{
-    for(const part of sentenceParts(text).reverse()){
-      const from=Array.from(text.slice(0,part.at)).length,until=from+Array.from(part.text).length
-      const ids=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<until&&r[1]>from)).map(([id])=>id)
-      const cited=sources.filter(s=>ids.some(id=>id===s.resource||id.startsWith(s.resource+'/')))
-      const evidence=(cited.length?cited:sources).map(s=>String(s.snippet??'')).join('\n')
-      const checked=repairQuotes(part.text,evidence,()=>{})
-      if(checked!==part.text)replace(new RegExp(`(?<=^[\\s\\S]{${part.at}})[\\s\\S]{${part.text.length}}`,'g'),checked)
+/** A source row that is a hearing transcript's text. A listing or count row carries the label and holds no evidence. */
+const hearingTranscript=(s:SelectedSource)=>(s as {kind?:unknown}).kind!=='count'&&`${String(s.snippet??'')} ${String((s as {title?:unknown}).title??'')}`.includes(TRANSCRIPT_LABEL)
+/** The words of the hearing transcript excerpts among some source rows: only what the transcript prints, not the row's
+ * header, date or label. */
+const excerptWords=(rows:SelectedSource[])=>rows.filter(hearingTranscript).flatMap(s=>[s.snippet,(s as {title?:unknown}).title]).flatMap(v=>String(v??'').split('\n')).flatMap(line=>transcriptTurns(line).map(turn=>turn.excerpt)).join('\n')
+/** Quotation marks that do not pair ("... ”, or “ ... " with no closing curly mark before the paragraph ends) are
+ * read as a pair, so one stray mark does not make the rest of the answer one sentence. Same length as the text. */
+function pairedMarks(text:string):string {
+  const out=text.split('')
+  for(let i=0;i<out.length;i++){
+    if(out[i]!=='"'&&out[i]!=='“')continue
+    const stop=(()=>{const end=text.indexOf('\n\n',i);return end<0?text.length:end})()
+    if(out[i]==='"'){
+      const straight=text.indexOf('"',i+1),curly=text.indexOf('”',i+1)
+      if(curly>=0&&curly<stop&&(straight<0||curly<straight)){out[i]='“';i=curly;continue}
+      if(straight>=0)i=straight
+      continue
     }
+    const curly=text.indexOf('”',i+1)
+    if(curly>=0&&curly<stop){i=curly;continue}
+    const straight=text.indexOf('"',i+1)
+    if(straight>=0&&straight<stop){out[straight]='”';i=straight}
+  }
+  return out.join('')
+}
+/** The final check on quotations, for every answer on its way out (written, the research model's own, salvaged, and
+ * each streamed preview before it is shown).
+ * - A sentence that cites a hearing transcript and holds a quotation its cited sources do not hold word for word, or a
+ *   quotation mark that is never closed, is removed, words and all. Taking only the marks off would leave the words,
+ *   and any name in them, standing as the answer's own prose. Every form of quotation is read (quotationSpans: single
+ *   marks around an apostrophe, a quotation over a line break, marks inside marks). A sentence citing a transcript
+ *   and another record is checked this way too.
+ * - A sentence that cites no hearing transcript (it cites nothing, or another record) is removed only when a
+ *   quotation it holds fails against what it is checked with AND shares a run of five or more words with a hearing
+ *   transcript excerpt held for this answer: a loose quotation of the hearing under another citation or none. The
+ *   excerpts are those of the answer's sources and of the facts given to the writer (research.pre_writer_sources),
+ *   a set that is fixed for the run, so a sentence shown in a stream is never removed later because a later sentence
+ *   added a source.
+ * - Anything else keeps the rule of 13 November 2026, exactly as on main: quoted words stay quoted only when a source
+ *   the sentence cites (or, for an uncited sentence, any source of the answer) holds them verbatim; otherwise the
+ *   marks come off and the words stand as paraphrase. Hansard, committee Hansard and every other record are here.
+ * If nothing is left, the answer is the fixed line NO_SUPPORTED_ANSWER, as a limitation with nothing cited; a streamed
+ * preview is left empty instead, so the fixed line is never shown and then replaced. */
+function withCheckedQuotes(payload:Record<string,unknown>,partial=false):Record<string,unknown> {
+  const text=String(payload.answer??''),sources=(Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]
+  const given=(payload.research as {pre_writer_sources?:unknown}|undefined)?.pre_writer_sources
+  const heard=excerptWords([...sources,...(Array.isArray(given)?given as SelectedSource[]:[])])
+  // With no hearing transcript in play nothing here differs from main: the text is read as it stands.
+  const hearing=!!heard||sources.some(hearingTranscript)
+  const read=hearing?pairedMarks(text):text
+  // Decided first, on the text as it stands, then applied from the end back so every offset holds.
+  type Planned={start:number;end:number;replacement:string;removal:boolean;sentences:number}
+  const planned:Planned[]=[],parts=sentenceParts(read)
+  let removed=0,paragraphs=0,taken=0
+  for(const part of [...parts].reverse()){
+    // A mark that is never closed makes the rest of the answer one part: only its own line is judged.
+    const open=hearing&&unclosedQuoteOffset(part.text)>=0,cut=open?part.text.indexOf('\n'):-1
+    const sentence=cut>=0?part.text.slice(0,cut).trimEnd():part.text
+    const from=Array.from(text.slice(0,part.at)).length,until=from+Array.from(sentence).length
+    const ids=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<until&&r[1]>from)).map(([id])=>id)
+    const cited=sources.filter(s=>ids.some(id=>id===s.resource||id.startsWith(s.resource+'/')))
+    const against=cited.length?cited:sources
+    const evidence=against.map(s=>String(s.snippet??'')).join('\n')
+    // The title is read for a transcript row only: its header can hold the quoted words (a commission's name).
+    const held=evidence+'\n'+against.filter(hearingTranscript).map(s=>String((s as {title?:unknown}).title??'')).join('\n')
+    // A transcript's own words often hold quotation marks (reported speech), paired or not. So the whole stretch
+    // from the sentence's first opening mark to its last closing mark (to the sentence's end when none closes it)
+    // is read first: when what the sentence cites holds that stretch word for word, the quotation is verbatim, and
+    // the marks inside it are the source's. The sentence is kept as it stands.
+    const citesHearing=hearing&&cited.some(hearingTranscript)
+    const opens=sentence.search(/["“‘]/),closes=Math.max(sentence.lastIndexOf('"'),sentence.lastIndexOf('”'),sentence.lastIndexOf('’'))
+    const stretch=opens<0?'':sentence.slice(opens+1,closes>opens?closes:sentence.length)
+    if(citesHearing&&/[\p{L}\p{N}]/u.test(stretch)&&holdsQuotation(stretch,held))continue
+    const failed=quotationSpans(sentence).map(q=>q.value).filter(inner=>/[\p{L}\p{N}]/u.test(inner)&&!holdsQuotation(inner,held))
+    const goes=!hearing?false:citesHearing?failed.length>0||open:!!heard&&failed.some(inner=>looseQuotationOf(inner,heard))
+    if(goes){
+      // The sentence goes with the list marker and spacing that led it, and its line when it was alone on one.
+      const line=text.lastIndexOf('\n',part.at-1)+1,led=/^\s*(?:[-*]\s*)?$/.test(text.slice(line,part.at))
+      let start=led?line:part.at,end=part.at+sentence.length
+      // A removed sentence that cited a hearing transcript takes the rest of its paragraph (or list item) with it: a
+      // sentence left behind can lean on it ("He denied this the next day." would then point at someone else).
+      const rest=text.indexOf('\n',part.at)
+      // The same in a streamed preview: whatever follows it in its paragraph is never released, so nothing is taken back.
+      const tail=citesHearing?(rest<0?text.length:rest):end
+      const sentences=citesHearing?parts.filter(other=>other.at>part.at&&other.at<tail).length:0
+      if(tail>end){end=tail;paragraphs++;taken+=sentences}
+      while(text[end]===' '||text[end]==='\t')end++
+      if(led&&text[end]==='\n')end++
+      else if(!led&&(end===text.length||text[end]==='\n'))while(start>line&&/[ \t]/.test(text[start-1]))start--
+      // Anything planned inside this stretch goes with it.
+      for(let i=planned.length-1;i>=0;i--)if(planned[i].start>=start&&planned[i].start<end){if(planned[i].removal){removed--;if(planned[i].sentences){paragraphs--;taken-=planned[i].sentences}}planned.splice(i,1)}
+      planned.push({start,end,replacement:'',removal:true,sentences:tail>part.at+sentence.length?sentences:0})
+      removed++
+      continue
+    }
+    const original=text.slice(part.at,part.at+part.text.length)
+    const checked=repairQuotes(original,evidence,()=>{})
+    if(checked!==original)planned.push({start:part.at,end:part.at+part.text.length,replacement:checked,removal:false,sentences:0})
+  }
+  let out=rewriteAnswerPayload(payload,replace=>{
+    for(const edit of planned.sort((x,y)=>y.start-x.start))replace(new RegExp(`(?<=^[\\s\\S]{${edit.start}})[\\s\\S]{${edit.end-edit.start}}`,'g'),edit.replacement)
   })
+  // For the run's record (never shown): how often a removal took the rest of a paragraph, and how many sentences.
+  if(paragraphs&&out.research&&typeof out.research==='object')out={...out,research:{...out.research as object,quote_paragraphs_removed:{paragraphs,sentences:taken}}}
+  if(!removed)return out
+  researchTrace('grounding.transcript_quote_removed',{removed})
+  // Removing the line of a mark that was never closed can free the sentences after it: they are checked in their turn.
+  const again=(next:Record<string,unknown>)=>unclosedQuoteOffset(read)>=0&&String(next.answer??'')!==text?withCheckedQuotes(next,partial):next
+  // Blank lines and trailing space left where a sentence stood are closed up, with the citations kept in step.
+  if(/[\p{L}\p{N}]/u.test(String(out.answer??'')))return again(rewriteAnswerPayload(out,replace=>{replace(/\n{3,}/g,'\n\n');replace(/\s+$/g,'')}))
+  const uncited=sources.map(s=>(s as {cited?:unknown}).cited===true?{...s,cited:false}:s)
+  // A preview with nothing left shows nothing yet.
+  if(partial)return {...out,answer:'',citations:{},sources:uncited}
+  // Nothing is left: the fixed line, written by code, as a limitation with nothing cited. Never an empty answer, and no
+  // second attempt into the same shape.
+  return {...out,answer:NO_SUPPORTED_ANSWER,answer_decision:'limitation',machine_written:false,citations:{},sources:uncited}
 }

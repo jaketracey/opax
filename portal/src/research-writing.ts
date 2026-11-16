@@ -26,7 +26,7 @@ import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-35-excerpts-selected'
+export const ANSWER_WRITING_VERSION = 'written-answer-36-transcript-quotes-checked'
 /** `bears_on`: for a hearing transcript excerpt, the words of the question the research model selected it for. It
  * is given to the writer and never shown to a reader. */
 export interface WritingFact { bears_on?: string; evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
@@ -721,7 +721,8 @@ function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingI
   const hearing=(f:WritingFact)=>!!f.transcript||f.text.includes(TRANSCRIPT_LABEL)
   const words=(list:WritingFact[])=>list.map(f=>`${f.text}\n${f.source.snippet}`).join('\n')
   if(facts.length)return facts.some(hearing)&&quotationFails(text,words(facts))
-  const held=words(input.facts.filter(hearing))
+  // The quoted words only: a fact's header (the commission's name, the hearing day) is not hearing evidence.
+  const held=input.facts.filter(hearing).flatMap(f=>f.transcript?[f.transcript.excerpt]:transcriptTurns(f.text).map(t=>t.excerpt)).join('\n')
   return !!held&&failedQuotations(text,held).some(inner=>looseQuotationOf(inner,held))
 }
 /** Added to the writer's contract only when it is given hearing transcript excerpts. The research model selects the
