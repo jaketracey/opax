@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=76942228e3").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=8e57d7d220").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,13 +56,17 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=07eea0e196").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=4ee4bb8063").then(module => { growthModules = module; }));
+// "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
+// waiting on, never ahead of it. A failed load leaves the page whole, without the block.
+let nextSteps = null;
+const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => { nextSteps = module; }, () => {}));
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=73435700a9').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=e6cfb1af2d').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1606,7 +1610,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=9eb86ce57b' : '/ledger.js?v=06503ff262');
+    const mod = await import(grants ? '/grants.js?v=5bfd1f1bc9' : '/ledger.js?v=cb72e8c441');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1637,7 +1641,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=0e937c8404');
+    const mod = await import('/money-explain.js?v=2272ef5ef7');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1656,7 +1660,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=43775fa359');
+    const mod = await import('/grant-recipient.js?v=1e067b6697');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1909,7 +1913,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=164cd28997");
+    const module = await import("/suppliers.js?v=5bb7c51d8c");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4702,7 +4706,8 @@ function subjectTag(body) {
 }
 
 /** A tag line from its parts, each dot bound to the part after it (style.css
- *  .subject-tag-next), so a line that wraps never ends in a dot. */
+ *  .subject-tag-next), so a line that wraps never ends in a dot; the dot of a
+ *  part that starts a line is clipped away, so no line starts with one either. */
 function tagLineHTML(parts) {
   return parts.filter(Boolean).map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join("");
 }
@@ -5633,7 +5638,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=8be817cd12'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=313f458310'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5817,8 +5822,10 @@ async function renderPartyMembers(label, body, key) {
   }
   const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
     .find((party) => party && samePartyLabel(party, label)) || label;
-  if (sitting.size) body.querySelector(".subject-tag .entry-active")?.insertAdjacentHTML("beforebegin",
-    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} marked current in the directory</a> · `);
+  // Its own part of the tag line, before the years (tagLineHTML: the dot travels with the part).
+  const active = body.querySelector(".subject-tag .entry-active");
+  if (sitting.size) (active?.closest(".subject-tag-next") || active)?.insertAdjacentHTML("beforebegin",
+    `<span class="subject-tag-next"><a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} marked current in the directory</a></span>`);
   body.querySelector("#entry-flows .ui-sheet-facts")?.insertAdjacentHTML("beforeend",
     `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} marked current in the directory; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
       data.meta?.generated ? ` (directory, ${esc(fmtDate(data.meta.generated))})` : ""}. Sitting members use their current party; member IDs counted once.</dd></div>`);
@@ -5912,10 +5919,10 @@ async function renderRosterParty(segment, key, body) {
   const everyone = [...members.current, ...members.former];
   const first = Math.min(...everyone.map((m) => m.first || 9999));
   const last = Math.max(0, ...everyone.map((m) => m.last || 0));
-  subjectTag(body).innerHTML = [
+  subjectTag(body).innerHTML = tagLineHTML([
     independent ? `<span>${esc(partyPage.INDEPENDENTS_DESCRIPTION)}</span>` : partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
     first < 9999 ? `<span class="entry-active">${independent ? 'Parliamentarians' : 'Members'} in the record ${esc(yearSpan(first, last))}</span>` : "",
-  ].filter(Boolean).join(" · ");
+  ].filter(Boolean));
   // A renamed party: its name history, from the registers' notices (labels.js PARTY_RENAMES).
   const history = partyPage.partyHistoryHTML(label, partyPageHelpers());
   if (history) body.querySelector(".subject-head").insertAdjacentHTML("beforeend", history);
@@ -6046,6 +6053,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   if (currentSubjectKey !== key || !slot.isConnected) return;
   const recent = voteTables.personVoteRecords(keys, votes, recentData);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
+  nextSteps?.fillNextSteps($("person-next"), nextSteps.memberVoteSteps(rows), "No votes on bills in the record for this member.");
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
   const total = sum("divisions_total");
   const ayes = sum("ayes");
@@ -6276,7 +6284,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // it is.
   if (kind === "electorate" || kind === "party") $("subject-title").innerHTML = `<span class="visually-hidden">Loading ${kind === "party" ? "party" : "electorate"}</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>`;
   if (manageFocus) $("subject-title")?.focus();
-  await Promise.allSettled([growthModulesReady,voteTablesReady]);
+  await Promise.allSettled([growthModulesReady,voteTablesReady,nextStepsReady]);
   if (currentSubjectKey !== key) return;
 
   if (kind === "electorate") {
@@ -6343,10 +6351,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       const reference = record?.kind === "reference";
       const ownFile = record?.jurisdiction ? await loadMoneyFile(record.jurisdiction) : null;
       if (currentSubjectKey !== key) return;
-      subjectTag(body).innerHTML = reference ? "<span>Source reference; electoral donation not established.</span>" : [
+      subjectTag(body).innerHTML = reference ? "<span>Source reference; electoral donation not established.</span>" : tagLineHTML([
         `<span>${esc(sentenceCase(industryLabel(record?.industry || "")) || "Receipt source")}</span>`,
         record?.firstYear ? `<span class="entry-active">${esc(returnsSpan(record.firstYear, record.lastYear))}</span>` : "",
-      ].filter(Boolean).join(" · ");
+      ].filter(Boolean));
       // State figures appear once in their labelled commission rows below; the
       // page keeps the same off-map note as the server page, without figures.
       sections.innerHTML = record?.jurisdiction === "federal" || reference ? donorRecordHTML(record, ownFile?.meta)
@@ -6412,11 +6420,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // party's own dot and full name (or the donor's industry) and its years.
     // Quick facts became the head's source sheet and the "On this page" rail;
     // its four buttons became one pill and ⋯ (principle 5).
-    subjectTag(body).innerHTML = [
+    subjectTag(body).innerHTML = tagLineHTML([
       isParty ? partyChipHTML(node.label, { full: true })
         : `<span>${esc(sentenceCase(industryLabel(node.industry || "")) || "Receipt source")}</span>`,
       (own?.firstYear ?? node.firstYear) ? `<span class="entry-active">${esc(returnsSpan(own?.firstYear ?? node.firstYear, own?.lastYear ?? node.lastYear))}</span>` : "",
-    ].filter(Boolean).join(" · ");
+    ].filter(Boolean));
     const head = body.querySelector(".subject-head");
     const aliasRow = !isParty && (node.aliases || []).length > 0 && ["Also disclosed as", (() => {
       // The registers spell one donor many ways; the totals cover them all.
@@ -6599,7 +6607,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // party they spoke for, so a defector reads "One Nation · formerly Nationals".
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
-  const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261016-1');
+  const { profileJurisdictions, profileAffiliations, profileHouses } = await import('/profile-jurisdictions.js?v=253a7152bb');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
   let party = partyNow || roster?.party || spokeAs;
@@ -6687,14 +6695,25 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       ? electorateReference.module.rosterListParty?.(roster, rosterLists.observations) || null : null);
   if (seatParty) party = seatParty.party;
   const partyOnMap = Boolean(party && findMoneyNode("party", party));
+  // The house a sitting member sits in now, from their verified current seats or, without
+  // one, an open dated service record (profileHouses). Any other house in the record reads
+  // "formerly"; where nothing says which house is current, the houses are left out.
+  const seatsNow = roster?.current ? (electorateReference?.person?.electorates || []).filter((e) => e.current) : [];
+  const housesHeld = profileHouses(roster, seatsNow);
+  const housesNow = housesHeld.rows.filter((r) => r.status === "current");
+  const house = housesNow.length ? (housesNow.length === 1 ? housesNow[0].house : "")
+    : representation.chambers.length === 1 ? representation.chambers[0] : "";
+  // Recorded seats may include past ones: beside a known current house, only its seats are named.
+  const seatsRecorded = housesNow.length
+    ? representation.representations.filter((r) => housesNow.some((h) => h.chamber === r.chamber)) : representation.representations;
   const electorateLinks = electorateReference
-    ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
-    : representation.representations.map((r) => esc(r.electorate)).join(', ');
+    ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, seatsRecorded, electorateReference.data.electorates)
+    : seatsRecorded.map((r) => esc(r.electorate)).join(', ');
   // "Member for Grayndler", "Senator for South Australia", "MLC for South Australia":
   // said only of a sitting member in one house, where the roster says so; otherwise the seat.
-  const house = representation.chambers.length === 1 ? representation.chambers[0] : "";
   const seatWord = roster?.current && electorateLinks
     ? (house === "Senate" ? "Senator for " : /council/i.test(house) ? "MLC for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
+  const termLine = roster && electorateReference ? electorateReference.module.personTermLineHTML?.(roster, electorateReference.data.electorates) || "" : "";
   // One meta line (principle 3): party, seat, house, parliament. The Quick
   // facts box said each of these again; its other facts are in the source
   // sheet under this line.
@@ -6703,9 +6722,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // A roster party is dated beside the chip, as the server's person answer dates it.
     seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
-    electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
-    representation.chambers.length ? `<span>${esc(representation.chambers.join(" ·\u00a0"))}</span>` : "",
-    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" ·\u00a0"))}</span>` : "",
+    // A member of an expired Victorian house keeps the server's line ("Member for X until the Assembly
+    // expired on 3 November") instead of the bare seat name.
+    termLine ? `<span>${termLine}</span>` : electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
+    // Each house with its parliament as one part, so the pair wraps together; a former
+    // house says so and comes last.
+    ...housesHeld.rows.filter((r) => r.status === "current" || r.status === "").map((r) => `<span>${esc(r.label)}</span>`),
+    ...housesHeld.parliamentsOnly.map((label) => `<span>${esc(label)}</span>`),
+    ...housesHeld.rows.filter((r) => r.status === "former").map((r) => `<span>formerly ${esc(r.label)}</span>`),
   ]) || "<span>From the parliamentary record</span>";
   const electorateRows = electorateReference
     ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
@@ -6744,6 +6768,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const promptName = roster?.full || name;
   if (currentSubjectKey !== key) return;
   head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`}));
+  // Where this member's record leads: the seat and the party are known now; two rows are held
+  // for their newest recorded votes, which renderPersonVotes fills (the block's height is set here).
+  const seatSteps = ((electorateReference?.person?.electorates || []).filter((e) => e.current).length
+    ? electorateReference.person.electorates.filter((e) => e.current) : electorateReference?.person?.electorates || [])
+    .map((e) => ({ name: e.name, href: e.url, chamber: electorateReference.module.CHAMBERS?.[e.chamber] || "" }));
+  body.querySelector(".growth-ask")?.insertAdjacentHTML("afterend", nextSteps?.nextStepsHTML(nextSteps.memberNextSteps({
+    seats: seatSteps, party: party ? { name: party, href: subjectHash("party", party) || "" } : null,
+  }), { pageType: "person", id: "person-next", reserve: 2 }) || "");
   const askRecord = {name: promptName};
   const updateQuestions = (record) => {
     if (currentSubjectKey !== key) return;
@@ -6765,6 +6797,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const topicQuestions = renderPersonTopics(name, sections, updateQuestions, { first: roster?.first, last: roster?.last }).then(() => refreshEntryRail(sections));
   // Records by the roster's verified pid (none for a print that holds more than one person).
   const voteQuestions = renderPersonVotes(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  // Every way the votes can end (none held, a failed read) settles the two rows held for them.
+  voteQuestions.catch(() => {}).then(() => { if (currentSubjectKey === key) nextSteps?.fillNextSteps($("person-next"), [], "No votes on bills in the record for this member."); });
   const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
   renderPersonVicAuthorisation(roster, sections);
@@ -7788,7 +7822,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=015b9517ec").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=e279073942").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8175,6 +8209,21 @@ const byName = (a, b) => a._sortName.localeCompare(b._sortName);
 /** A select option carrying its count: ["Labor", "Labor (383)"]. */
 const countOpt = (value, label, n) => [value, `${label} (${Number(n || 0).toLocaleString()})`];
 
+/** The people directory's party filter: who each party lists, and how many, from one rule, so an
+ *  option's count is the length of its list.
+ *  A person is listed under the party their speeches carry (`party`) and any other they are recorded
+ *  under (`parties`). A party that no speech row carries yet, and is only someone's party now
+ *  (`party_now`), is offered too and lists those people: a new party's page links here. `party_now`
+ *  never adds a person to a party that speech rows already carry. */
+function directoryParties(items) {
+  const spoken = new Set(items.map((p) => p.party).filter(Boolean));
+  const nowOnly = new Set(items.map((p) => p.party_now).filter((party) => party && !spoken.has(party)));
+  const member = (p, party) => p.party === party || (p.parties || []).includes(party) || (nowOnly.has(party) && p.party_now === party);
+  const counts = new Map();
+  for (const party of [...spoken, ...nowOnly]) counts.set(party, items.filter((p) => member(p, party)).length);
+  return { counts, member };
+}
+
 /** Parliamentarians: parliamentarians.json joined to portraits and votes by lowercased name. */
 async function buildPeopleDirectory() {
   const [data] = await Promise.all([loadParliamentarians(), loadPhotoMap(), loadVotes()]);
@@ -8187,15 +8236,15 @@ async function buildPeopleDirectory() {
     p._divisions = keys.reduce((a, k) => a + (Number(votesData?.[k]?.divisions_total) || 0), 0);
     p._sortName = `${lname.split(" ").pop()} ${lname}`;
   }
-  const partyCounts = new Map();
   const chamberCounts = new Map();
   const stateCounts = new Map();
   for (const p of items) {
-    if (p.party) partyCounts.set(p.party, (partyCounts.get(p.party) || 0) + 1);
     for (const c of p.chambers || []) chamberCounts.set(c, (chamberCounts.get(c) || 0) + 1);
     for (const s of p.states || []) stateCounts.set(s, (stateCounts.get(s) || 0) + 1);
   }
-  const partyOptions = [...partyCounts.entries()].sort((a, b) => b[1] - a[1])
+  // The parties to filter by, each with the number of people its filter lists (directoryParties).
+  const parties = directoryParties(items);
+  const partyOptions = [...parties.counts.entries()].sort((a, b) => b[1] - a[1])
     .map(([party, n]) => countOpt(party, party, n));
   partyOptions.push(countOpt("none", "No party recorded", items.filter((p) => !p.party).length));
   const speeches = items.reduce((a, p) => a + (p.speeches || 0), 0);
@@ -8234,7 +8283,7 @@ async function buildPeopleDirectory() {
     text: (p) => `${p.name} ${p.full || ""} ${p.party || ""} ${(p.states || []).map((s) => STATE_NAMES[s] || s).join(" ")}`,
     filters: [
       { key: "party", label: "Party", options: partyOptions,
-        test: (p, v) => v === "none" ? !p.party : (p.party === v || (p.parties || []).includes(v)) },
+        test: (p, v) => v === "none" ? !p.party : parties.member(p, v) },
       { key: "state", label: "Parliament",
         options: Object.keys(STATE_NAMES).filter((s) => stateCounts.has(s)).map((s) => countOpt(s, STATE_NAMES[s], stateCounts.get(s))),
         test: (p, v) => (p.states || []).includes(v) },
@@ -9800,7 +9849,7 @@ async function openBill(key, manageFocus) {
   // index carries it; the release build copies it to a small file (loadBillsDate),
   // fetched alongside the bill itself.
   // The ask block's privacy file is keyed by the bill, so it is read with it, not after it.
-  await Promise.all([growthModulesReady,voteTablesReady]);
+  await Promise.all([growthModulesReady,voteTablesReady,nextStepsReady]);
   if (generation !== billTextGeneration) return;
   let bill, billsDate;
   try {
@@ -9883,6 +9932,10 @@ async function openBill(key, manageFocus) {
       ${actions}
     </div>
     ${growthModules.askBlockHTML({bill, pageType: "bill", questions: growthModules.billQuestions(bill,[]),})}
+    ${nextSteps?.nextStepsHTML(nextSteps.billNextSteps(bill, {
+      divisions: voteTables.divisionRows(bill.divisions || [], true).filter((d) => !d.procedural),
+      sponsor: !bill.sponsor && members?.length === 1 ? { name: members[0].name, href: subjectHash("person", members[0].name) || "" } : null,
+    }), { pageType: "bill", id: "bill-next" }) || ""}
     ${billSummaryHTML(bill)}
     <div id="bill-text-slot"><div class="answer-skeleton bill-text-skeleton" aria-hidden="true"><i style="width:65%"></i><i style="width:95%"></i><i style="width:78%"></i></div><p class="visually-hidden" role="status">Checking published bill text</p></div>
     ${billTimelineHTML(bill)}
@@ -10206,7 +10259,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=0e937c8404"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=2272ef5ef7"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10222,14 +10275,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=526db913ca", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8ebc029b59", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=06503ff262", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9eb86ce57b", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=cb72e8c441", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=5bfd1f1bc9", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ec4ba2c237", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=17f948089c", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -10645,7 +10698,14 @@ function bringAskIntoView() {
   heading.focus({ preventScroll: true });
 }
 
+/** Every way of asking (the box, the builder, a suggested question, a changed
+ * filter, a question in the address, Try again) comes through runAsk, which
+ * says so: "start" before anything is written and "end" when the answer is
+ * complete, has failed or was cancelled. The app banner leaves on "start". */
+const announceAsk = (state) => dispatchEvent(new CustomEvent("opax:ask", { detail: { state } }));
+
 async function runAsk(question) {
+  announceAsk("start");
   renderRegisterNote(question);
   setAskQuestion(question);
   if (askAbort) askAbort.abort();
@@ -10890,6 +10950,7 @@ async function runAsk(question) {
       btn.disabled = false;
       btn.removeAttribute("aria-busy");
       btn.textContent = "Ask the record";
+      announceAsk("end");
     }
   }
 }
@@ -14130,6 +14191,8 @@ async function openDocPage(slug, manageFocus) {
   $("doc-similar-panel").replaceChildren();
   $("doc-similar-panel").removeAttribute("aria-busy");
   $("doc-similar").setAttribute("aria-expanded", "false");
+  $("doc-next").hidden = true;
+  $("doc-next").replaceChildren();
   setStatus($("doc-status"), "Fetching the document…");
   // A division reads from the published exports, as the Worker's own page does.
   if (/^division-[a-z0-9-]+$/.test(slug)) {
@@ -14138,7 +14201,8 @@ async function openDocPage(slug, manageFocus) {
     if (division) { renderDivisionDoc(division, slug, manageFocus); return; }
   }
   try {
-    const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
+    // The next-steps module rides the document's own request: it adds no wait of its own.
+    const [doc] = await Promise.all([api(`/api/resource/${encodeURIComponent(slug)}`), nextStepsReady]);
     // Older browser-cached resources can outlive the corpus text repair.
     if (typeof doc.text === "string") doc.text = doc.text.replace(/[ \t]*View the PC OA website[ \t]*$/gm, "").trimEnd();
     if (currentDocSlug !== slug) return; // user navigated away while fetching
@@ -14232,6 +14296,15 @@ async function openDocPage(slug, manageFocus) {
       ].join(" · ");
       speakerLinks.hidden = false;
     }
+    // Drawn in the same pass as the headline and byline, from the document just read.
+    const nextHTML = (doc.labels?.kind || doc.kind) === "division" ? "" : nextSteps?.nextStepsHTML(nextSteps.docNextSteps(doc, {
+      personHref: (speaker) => subjectHash("person", speaker) || "",
+      searchHref: (q, filters, sort) => searchHash(q, filters, 1, sort),
+      subject: doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc),
+      attributed: !isMultiSpeaker(doc) && !docWitness && doc.speaker_attribution !== "unattributed" && !isBillText,
+    }), { pageType: "doc", id: "doc-next-steps" }) || "";
+    $("doc-next").innerHTML = nextHTML;
+    $("doc-next").hidden = !nextHTML;
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
@@ -16221,7 +16294,7 @@ function bootTitleHere() {
 // and the title/description on the view now showing.
 const VIEW_DESCRIPTIONS = {
   discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
-  search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
+  search: "Search Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Follow the money in Australian politics: who donates to which party, by industry and year, and the contracts and grants that flow back, from federal and state records.",
   connections: "Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
@@ -16266,7 +16339,7 @@ function syncPathMeta() {
       ? VIEW_DESCRIPTIONS.discover
     : view && view !== "ask"
       ? (VIEW_DESCRIPTIONS[view] || VIEW_DESCRIPTIONS.subject)
-      : "Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";
+      : "Ask questions of Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";
   document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
   document.querySelector('meta[property="og:url"]')?.setAttribute("content", url);
   for (const sel of ['meta[name="description"]', 'meta[property="og:description"]', 'meta[name="twitter:description"]']) {

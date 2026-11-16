@@ -3,10 +3,13 @@ import {mountContractsTable} from './contracts-table.js?v=9ce0addeb6';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=7cbc68f1bd";
-import { sourceLineHTML } from "./labels.js?v=fcb2a1091c";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=26dbe4af39";
+import { sourceLineHTML } from "./labels.js?v=e6cfb1af2d";
 import { partyUrl } from "./canonical-urls.js?v=9ce13e7ba5";
 import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=d28448a137";
+// "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
+let nextSteps = null;
+const nextStepsReady = import("./next-steps.js").then((module) => { nextSteps = module; }, () => {});
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -216,7 +219,7 @@ export function withheldHTML(rows, ids, sectionId = "supplier-withheld") {
 }
 
 async function renderProfile(root, profile, meta, helpers, life, suppliers) {
-  const ids = await agencyIds(life.signal);
+  const [ids] = await Promise.all([agencyIds(life.signal), nextStepsReady]);
   if (!life.alive()) return;
   const agencies = [...(profile.agencies || [])].sort((a, b) => Number(b.total) - Number(a.total));
   const years = profile.years || [];
@@ -244,7 +247,7 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   root.innerHTML = `<div class="supplier-page supplier-entry"><div class="ui-page-head supplier-head"><h1 id="subject-title" tabindex="-1">${esc(profile.name)}</h1><p class="ui-page-meta">Commonwealth supplier${profile.abn ? ` · ABN ${esc(profile.abn)}` : ""}</p>
     <p class="ui-lede supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown for this supplier."}</p>
     ${statsHTML([[shortMoney(profile.total), "Recorded contract value", currency(profile.total)], [number(profile.count), "Contracts"], [number(agencies.length), "Agencies"]])}</div>
-    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="ui-section supplier-section" id="supplier-connections"><h2 class="ui-section-title">Agency connections</h2><p class="ui-section-note">Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="ui-section supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="ui-section supplier-section supplier-evidence" hidden></section><section class="ui-section supplier-section supplier-taxcharity" hidden></section><section class="ui-section supplier-section supplier-mentions"></section>
+    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}${nextSteps ? nextSteps.nextStepsHTML(nextSteps.supplierNextSteps(profile, { agencyHref: (name) => agencyUrl(name, ids), suppliers: suppliers || [], contractTitle }), { pageType: "supplier", id: "supplier-next" }) : ""}<section class="ui-section supplier-section" id="supplier-connections"><h2 class="ui-section-title">Agency connections</h2><p class="ui-section-note">Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="ui-section supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="ui-section supplier-section supplier-evidence" hidden></section><section class="ui-section supplier-section supplier-taxcharity" hidden></section><section class="ui-section supplier-section supplier-mentions"></section>
       <section class="ui-section supplier-section" id="supplier-contracts"><div data-contracts-table></div>${procurementSourceHTML(meta, profile.caveats || [])}</section>
       ${withheldHTML(profile.withheld, ids)}
       ${identity || aliases ? `<section class="ui-section supplier-section" id="supplier-identity"><h2 class="ui-section-title">Identity</h2>${identity ? `<dl class="ui-kv supplier-identity">${identity}</dl>` : ""}${aliases}</section>` : ""}

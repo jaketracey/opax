@@ -1,8 +1,10 @@
 import {financialYear, fy} from '../public/money-scope.js'
+import type {EndedSeat} from './seo-titles'
 import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,receiptGraph,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate, shortMoney } from '../public/format.js'
+import { profileHouses } from '../public/profile-jurisdictions.js'
 import { receiptHeadline } from '../public/money-explain.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
@@ -334,21 +336,30 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
  * name does not drop down the page when the portrait arrives. The answer's
  * summary sentence stays as the paragraph after the head.
  */
-const PARLIAMENT_NAMES: Record<string,string> = {federal:'Federal', nsw:'New South Wales', vic:'Victoria', qld:'Queensland', sa:'South Australia', wa:'Western Australia', tas:'Tasmania', act:'ACT', nt:'Northern Territory'}
-export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'current'|'states'|'chambers'|'representation'|'speech_scope'>, opts: {party?: string; portraitId?: string | null}): string {
+export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'current'|'states'|'chambers'|'representation'|'speech_scope'>, opts: {party?: string; portraitId?: string | null; ended?: EndedSeat}): string {
   const display = p.full && p.speech_scope ? p.full : p.name
   const portrait = opts.portraitId
     ? `<img class="subject-portrait" src="/photos/${encodeURIComponent(opts.portraitId)}.webp" alt="${/^\d+$/.test(opts.portraitId) ? 'Official portrait' : 'Portrait'} of ${escapeHtml(display)}" width="112" height="112">`
     : '<span class="subject-portrait subject-portrait-blank" aria-hidden="true"></span>'
-  const seats = [...new Set((p.representation || []).map(r => r.electorate).filter(Boolean))]
-  const house = p.chambers.length === 1 ? chamberLabel(p.chambers[0]) : ''
-  const word = p.current && seats.length ? (house === 'Senate' ? 'Senator for ' : /council/i.test(house) ? 'MLC for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
-  const parliament = p.states.map(s => PARLIAMENT_NAMES[s] || '').filter(Boolean)
+  // The app's own rule (profileHouses): a house the roster shows a sitting member in now,
+  // "formerly" for any other, and none where nothing says which is current. The server
+  // reads no seat roster, so only an open dated service record makes a house current here.
+  const held = profileHouses(p)
+  const nowHouses = held.rows.filter(r => r.status === 'current')
+  const recorded = (p.representation || []).filter(r => !nowHouses.length || nowHouses.some(h => h.chamber === r.chamber))
+  const seats = [...new Set(recorded.map(r => r.electorate).filter(Boolean))]
+  const house = nowHouses.length ? (nowHouses.length === 1 ? nowHouses[0].house : '') : p.chambers.length === 1 ? chamberLabel(p.chambers[0]) : ''
+  // A member of a house whose term has ended is named as its member until then, never as a sitting one.
+  const term = opts.ended?.member
+  const word = opts.ended ? '' : p.current && seats.length ? (house === 'Senate' ? 'Senator for ' : /council/i.test(house) ? 'MLC for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
   const parts = [
     opts.party ? partyLabelHTML(opts.party, {full: true}) : '',
-    seats.length ? `<span>${escapeHtml(word + seats.join(', '))}</span>` : '',
-    p.chambers.length ? `<span>${escapeHtml(p.chambers.map(c => chamberLabel(c) || c).join(' ·\u00a0'))}</span>` : '',
-    parliament.length ? `<span>${escapeHtml(parliament.join(' ·\u00a0'))}</span>` : '',
+    term ? `<span>${escapeHtml(`${term.role} ${term.until.phrase}`)}</span>` : seats.length ? `<span>${escapeHtml(word + seats.join(', '))}</span>` : '',
+    // Each house with its parliament as one part, as the app writes them.
+    ...held.rows.filter(r => r.status === 'current' || r.status === '').map(r => `<span>${escapeHtml(r.label)}</span>`),
+    // A parliament with no house shown, unless the seat already names it (a senator's state).
+    ...held.parliamentsOnly.filter(label => !seats.includes(label)).map(label => `<span>${escapeHtml(label)}</span>`),
+    ...held.rows.filter(r => r.status === 'former').map(r => `<span>formerly ${escapeHtml(r.label)}</span>`),
   ].filter(Boolean)
   const tag = parts.map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join('') || '<span>From the parliamentary record</span>'
   const head = `<div class="subject-head">${portrait}<h1>${escapeHtml(display)}</h1><p class="subject-tag">${tag}</p></div>`

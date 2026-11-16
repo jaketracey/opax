@@ -15,6 +15,8 @@ const fields = {
   opax_source_open: ['from_section', 'placement'],
   opax_share: ['kind', 'record_type'],
   opax_press: ['action'],
+  opax_app_prompt_view: ['page_type'],
+  opax_app_prompt_tap: ['page_type'],
   opax_ask_started: ['from_section', 'page_type'],
   opax_module_click: ['module', 'page_type', 'position'],
   opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer', 'is_overview_intent'],
@@ -27,12 +29,16 @@ const fields = {
   table_filter: ['table_id', 'page_type'],
   table_export: ['table_id', 'page_type'],
 };
+const APP_PROMPT_PAGES = ['document', 'supplier', 'grant_recipient', 'ask', 'vic_district', 'member', 'electorate', 'bill', 'donor'];
 // Properties that take one of a fixed set of words; anything else is dropped.
 // A shared link says what sort of record it was (record_type), never which.
 const CHOICES = {
   opax_source_open: { placement: ['inline', 'sources_pane', 'talk_sources', 'other'] },
   opax_share: { kind: ['record', 'question', 'answer', 'copy_link'], record_type: ['person', 'party', 'bill', 'electorate', 'doc', 'money', 'other'] },
   opax_press: { action: ['asset_download', 'boilerplate_copy'] },
+  // The app prompt (public/app-banner.js): which kind of page it was on, never which record.
+  opax_app_prompt_view: { page_type: APP_PROMPT_PAGES },
+  opax_app_prompt_tap: { page_type: APP_PROMPT_PAGES },
 };
 // Pages with no record in their address are counted by name, and only as
 // themselves: any extra segment ("/ask/<words>") is a typed or shared address,
@@ -58,7 +64,9 @@ export function safePath(value) {
 // against a browser's cookie ID, so a full path is a history of who someone
 // looked up. The app does the same with $screen_name ("/person/[slug]").
 const SUBJECT_KINDS = new Set(['person', 'party', 'donor', 'supplier', 'agency', 'campaigner', 'electorate', 'topic', 'recipient']);
-const MONEY_VIEW = /^[a-z][a-z-]{0,23}$/;
+// The money section's own views (the Worker's /money/<view> pages and the app's money router). Any other
+// second segment is a typed address: it was sent as written ("/money/<word>"), so it is /other now.
+const MONEY_VIEWS = new Set(['receipts', 'grants', 'contracts', 'explain']);
 function recordTemplate(path) {
   const [first, second, third, fourth] = path.split('/').filter(Boolean);
   if (first === 'subject') {
@@ -70,7 +78,7 @@ function recordTemplate(path) {
   if (first === 'doc') return second === undefined ? '/doc' : '/doc/[slug]';
   if (first === 'money') {
     if (second === undefined) return '/money';
-    if (!MONEY_VIEW.test(second)) return '/other';
+    if (!MONEY_VIEWS.has(second)) return '/other';
     if (third === undefined) return `/money/${second}`;
     if (second === 'grants' && fourth === 'recipient') return '/money/grants/[jurisdiction]/recipient/[id]';
     return `/money/${second}/[id]`;

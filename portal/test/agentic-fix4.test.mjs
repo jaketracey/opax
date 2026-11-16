@@ -77,7 +77,9 @@ test('P2 actual JSON and SSE answer the ten gold questions and six ranking phras
 });
 
 test('P2 parsed index preserves core main scripts and the route-loaded vote tables',()=>{
- const main=execFileSync('git',['show','origin/main:portal/public/index.html'],{cwd:root,encoding:'utf8'});
+ // The site description lost its fixed speech count; main's structured data is compared in the new wording.
+ const main=execFileSync('git',['show','origin/main:portal/public/index.html'],{cwd:root,encoding:'utf8'})
+  .replaceAll('half a million Australian parliamentary speeches','Australian parliamentary speeches');
  const current=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
  const scripts=html=>{
   const dom=new JSDOM(html,{url:'https://offline.invalid'});

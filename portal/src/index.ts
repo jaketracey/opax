@@ -1,7 +1,7 @@
 import {industryName, fy} from '../public/money-scope.js'
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {federalPartyMoneyAnswer,federalPartyMoneyResponse} from './ask-money-routing'
-import { withAppBanner } from './app-banner'
+import { setAppStoreProvider, withAppBanner } from './app-banner'
 import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
@@ -63,6 +63,8 @@ import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type Estim
 import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML, vicMemberAuthorisationHTML } from '../public/vic-election.js'
+import { vicExpiredPhrase, vicMembersAtExpiry, vicSeatEnded, vicSeatVacantAtExpiry, vicVacantSentence } from '../public/vic-term.js'
+import { vicEndedSeat } from './vic-term-role'
 import { vicElectionPage, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP, VIC_ELECTION_CACHE } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
@@ -117,6 +119,7 @@ import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
 import { networkBlock, CRAWLER_UA } from './network-block'
 import { openaiAppsChallenge, OPENAI_APPS_CHALLENGE_PATH } from './openai-apps-challenge'
+import { appSiteAssociationResponse, APP_SITE_ASSOCIATION_PATH } from './app-site-association'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
@@ -3859,7 +3862,7 @@ function ogImageFor(canonical: string, electionState?: VicElectionState): string
 const CARD_QUERY = ['award', 'jur', 'program', 'largest'] as const
 const SITE_TITLE = 'OPAX: ask what Australian politicians actually said'
 const SITE_DESCRIPTION =
-  'Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
+  'Ask questions of Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
 
 // TOPIC_NAMES lives in ./topic-names (shared with the daily post).
 
@@ -3905,7 +3908,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   search: {
     title: 'Search Hansard: every parliamentary speech · OPAX',
-    description: 'Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year. Every result links to the official record.',
+    description: 'Search Australian parliamentary speeches by keyword, speaker, party, state, topic and year. Every result links to the official record.',
     query: true,
   },
   money: {
@@ -4941,7 +4944,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name)})
+        const vicRows=p.representation?.some(r=>r.jurisdiction==='vic') ? (await loadElectorates(env).catch(()=>null))?.electorates ?? null : null
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicRows)})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5142,7 +5146,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
 interface ElectorateSummary {
   electorate_id: string; slug: string; name: string; jurisdiction: string; chamber: string;
   state_code: string; status: string; url: string; detail_url: string;
-  representation_as_of: string | null; election_count: number;
+  representation_as_of: string | null; election_count: number; dissolved_for?: string | null;
   representatives: { person_id: string; party?: string; person: { name: string } }[];
 }
 interface ElectoratePerson {
@@ -5169,8 +5173,14 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
     description: 'Browse the OPAX electorate directory.', canonical: canonicalFor(url, true), ogType: 'website',
     status: data ? 404 : 503, jsonLd: null, prerender: null,
   }
-  const representation = e.representatives.length
-    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
+  // A Victorian seat whose house has expired names its members until then, with no roster date and no
+  // claim that anyone holds it now; a seat that was vacant says so and names nobody (public/vic-term.js).
+  const named = (members: ElectorateSummary['representatives']) => members.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')
+  const representation = vicSeatEnded(e, data!.electorates)
+    ? vicSeatVacantAtExpiry(e) ? vicVacantSentence(e)
+      : `${e.chamber === 'vic_lc' ? 'Members' : 'Member'} ${vicExpiredPhrase(e)}: ${named(vicMembersAtExpiry(e, data!.electorates))}.`
+    : e.representatives.length
+    ? `${named(e.representatives)}. Verified ${e.representation_as_of}.`
     : 'No verified representative for this electorate yet.'
   const house = chamberLabel(e.chamber)
   const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} election ${e.election_count === 1 ? 'contest' : 'contests'} on record.`
@@ -5389,8 +5399,12 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
+  const vicRows = p.representation?.some(r => r.jurisdiction === 'vic') ? (await loadElectorates(env).catch(() => null))?.electorates ?? null : null
+  const vicEnded = vicEndedSeat(p, vicRows)
   if (p.rosterOnly) {
-    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
+    const description = clip(vicEnded
+      ? `${display}, ${vicEnded.member ? `${vicEnded.member.role} ${vicEnded.member.until.phrase}` : `former representative for ${p.rosterOnly.seats.join(', ')}`}${p.party ? ` (${p.party})` : ''}. No speech count for them yet.`
+      : `${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
       prerender: prerenderBlock(display, description, indexLinks() + vicMemberAuthorisationHTML(p)),
@@ -5399,7 +5413,9 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const federal = p.states.includes('federal')
   // The title a search result shows: their role and seat as the parliament
   // names them, then what the page holds (see seo-titles.ts).
-  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
+  // A Victorian member whose house has expired is titled by the seat row that names them, never as a sitting
+  // MP; anyone else recorded in that house is a former member (public/vic-term.js).
+  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear(), vicEnded)
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
   const count = p.roster_only ? NO_HANSARD_HELD : p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
@@ -5461,6 +5477,8 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   const shardPath = `/grants/${jurisdiction}/shard-${String(recipient.sh).padStart(2, '0')}.json`
   const detail = await timed('recipient-content', () => recordAssetJson<Record<string, GrantDetail>>(env, shardPath)).then(shard=>shard[fileKey]).catch(()=>null)
   if (!detail || detail.id !== id || typeof detail.n !== 'string' || !Number.isFinite(detail.t) || !Number.isInteger(detail.c) || !Array.isArray(detail.grants)) return {title: 'Grant recipient temporarily unavailable · OPAX', description: 'Recipient award records could not be loaded. Please try again.', canonical, ogType: 'website', status: 503, jsonLd: null, prerender: null, card: null}
+  // The catalogue's programs, already in memory with the recipient index: the page's next-steps block links a program by them.
+  const programs = await loadGrantCatalogue(jurisdiction, env).then(c => c.programs || [], () => [])
   const awardId = url.searchParams.get('award')
   if (awardId) {
     // Resolve the source shard, not the rotating publication shortlist: old
@@ -5473,7 +5491,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
     const original = award.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` : `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(award.id)}`
     return { title: `${award.id}: ${recipient.n} · OPAX`, description, canonical: selected, ogType: 'article', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: `${award.id}: ${recipient.n}`, description, url: selected, citation: original },
-      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
+      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath, undefined, programs)), [], recipientMetaLine(jurisdiction, detail.k)),
       card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v!), label: 'published grant award' } } }
   }
   const qld = jurisdiction === 'qld'
@@ -5485,7 +5503,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   return { title: `${recipient.n} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: recipient.n, url: canonical, description,
       mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
-    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
+    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath, undefined, programs)), [], recipientMetaLine(jurisdiction, detail.k)),
     card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
 }
 
@@ -7449,7 +7467,10 @@ function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
+    setAppStoreProvider(env.APP_STORE_PROVIDER)
     const url = new URL(request.url)
+    // Universal links (src/app-site-association.ts): answered first, as Apple's fetcher follows no redirect.
+    if (url.pathname === APP_SITE_ASSOCIATION_PATH) return withSecurityHeaders(appSiteAssociationResponse(request, env.APPLE_TEAM_ID), url)
     if (url.pathname === '/gov-advertising/ready.json') return withSecurityHeaders(await govAdvertisingReady(request,govAdvertisingReader(env.ASSETS)),url)
     if (url.pathname === '/tax-expenditures/ready.json') return withSecurityHeaders(await taxExpendituresReady(request,taxExpendituresReader(env.ASSETS)),url)
     if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)

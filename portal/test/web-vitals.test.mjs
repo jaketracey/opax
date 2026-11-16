@@ -64,7 +64,7 @@ test('party and donor skeletons reserve their map before waiting for route helpe
     const gate = new Promise(resolve => {release = resolve;});
     const pending = runInNewContext(`(async()=>{${app.slice(start,end)}})()`, {
       kind, name:'Fixture Entity', params:new URLSearchParams(), manageFocus:false,
-      currentSubjectKey:'fixture',key:'fixture', growthModulesReady:gate,voteTablesReady:gate,
+      currentSubjectKey:'fixture',key:'fixture', growthModulesReady:gate,voteTablesReady:gate,nextStepsReady:gate,
       $:id=>id === 'subject-body' ? element : {classList:{add(){}}},
       subjectSkeleton:()=>'<fixture>',reserveSubjectMap:()=>events.push('map-space'),
     });

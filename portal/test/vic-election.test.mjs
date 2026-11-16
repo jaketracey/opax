@@ -77,14 +77,15 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, r
     // Visible text only: the speech search's example words are an input attribute.
     assert.equal(page.status,200,s.name);assert.doesNotMatch(page.html.replace(/<[^>]+>/g,' '),/loading|opening|placeholder/i);
     assert.ok(page.html.includes(s.source_url));
-    for(const m of s.members){assert.ok(paths.has(m.href),m.name);assert.ok(page.html.includes(m.href));assert.ok(m.party,m.name);assert.ok(page.html.includes(partyLabelHTML(m.party)),`${s.name}: ${m.party}`);}
+    // A seat that was vacant when the term ended names and links nobody (vic-term.test.mjs).
+    for(const m of s.members){assert.ok(paths.has(m.href),m.name);if(s.name==='Brunswick'){assert.ok(!page.html.includes(m.href));continue;}assert.ok(page.html.includes(m.href));assert.ok(m.party,m.name);assert.ok(page.html.includes(partyLabelHTML(m.party)),`${s.name}: ${m.party}`);}
     for(const text of ['8 pm Tuesday 3 November 2026','18–27 November 2026','Saturday 28 November 2026','href="/methods#vic-election"'])assert.ok(page.html.includes(text),`${s.name}: ${text}`);
     // Jake, 13 Oct: sections OPAX can't fill are dropped; the caveats live on Methods.
     assert.doesNotMatch(page.html,/Not available|What OPAX holds|Grants by state electorate|Declared interests|Electoral boundaries|annual aggregate|snapshot|vote export|export/i,s.name);
     if(s.kind==='district'){
       const r=s.result.since||s.result.general;
       assert.ok(page.html.includes(`${r.margin.toFixed(1)} points`),s.name);
-      assert.ok(page.html.includes(`name="speaker" value="${s.members[0].name.replace(/'/g,'&#39;')}"`),s.name);
+      if(s.name!=='Brunswick') assert.ok(page.html.includes(`name="speaker" value="${s.members[0].name.replace(/'/g,'&#39;')}"`),s.name);
     }
     assert.doesNotMatch(page.html,/An association does not prove influence/);
     assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');assert.equal(page.jsonLd['@graph'][1]['@type'],'ItemList');

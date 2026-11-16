@@ -155,6 +155,9 @@
     // domain, which only our DNS can claim. There is no Opax account yet; until
     // there is, the engagement read reports "Profile not found" and nothing posts.
     "BSKY_HANDLE": "opax.com.au",
+    // The app banner's App Store links carry Apple's provider token (pt) once
+    // "APP_STORE_PROVIDER" is set here to the digits from App Store Connect.
+    // Left out, the links carry the campaign token (ct) alone.
     // @opax.com.au on Bluesky is verified over HTTP: /.well-known/atproto-did returns this
     // DID (account created 2026-09-25 as opaxaustralia.bsky.social). No DNS record needed.
     "BSKY_DID": "did:plc:gxhxwtkoml3bmj7gljcjkn5o",
