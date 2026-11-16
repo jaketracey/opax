@@ -71,7 +71,7 @@ const BEFORE = {
   '--sans': SANS,
   '--heading-page': `700 2.125rem/1.206 ${SANS}`,
   '--heading-section': `700 1.375rem/1.273 ${SANS}`,
-  '--heading-subsection': `700 1.0625rem/1.353 ${SERIF}`,
+  '--heading-subsection': `600 1.0625rem/1.294 ${SANS}`,
   '--heading-tracking': '0',
   '--space-1': '0.25rem', '--space-2': '0.5rem', '--space-3': '0.75rem', '--space-4': '1rem',
   '--space-5': '1.5rem', '--space-6': ['3rem', '2rem'], '--space-7': ['5rem', '3rem'],
@@ -230,7 +230,7 @@ test('no new raw hex colours outside the tokens', (t) => {
 // token marked web.omit is the app's alone.
 test('web type roles follow app roles, and app-only tokens stay off the web', () => {
   const roles = webTypeRoles(source);
-  assert.deepEqual(roles.map((role) => role.name), ['title', 'recordTitle', 'display', 'tileFigure', 'heading', 'subheading', 'record', 'body', 'strong', 'metadata', 'fine', 'label', 'control']);
+  assert.deepEqual(roles.map((role) => role.name), ['title', 'recordTitle', 'display', 'tileFigure', 'heading', 'subheading', 'rowRecord', 'record', 'body', 'strong', 'metadata', 'fine', 'label', 'control']);
   for (const { name, follows } of roles) assert.ok(source.type[follows], `webRoles.${name} follows ${follows}`);
   const css = readFileSync(join(PORTAL, 'public/tokens.css'), 'utf8');
   const kebab = (name) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);

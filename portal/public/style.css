@@ -131,7 +131,8 @@
   --type-display: 700 2.125rem/1.206 var(--sans); /* The one number a block is about, in tabular figures. */
   --type-tile-figure: 600 1.375rem/1.273 var(--sans); /* A figure in a fixed grid of figures (the app's stat tiles): smaller than display, so each fits its column on a phone. */
   --type-heading: 700 1.375rem/1.273 var(--sans); /* Section heading. */
-  --type-subheading: 700 1.0625rem/1.353 var(--serif); /* A row title that leads a block: a bill in a list, a division, a report card. */
+  --type-subheading: 600 1.0625rem/1.294 var(--sans); /* A heading inside a section, a card title, a name in a list: Next in the record, Topics in N speeches, Ask about this bill. */
+  --type-row-record: 700 1.0625rem/1.353 var(--serif); /* A record's name in a row: a bill, a division, a speech, a report or an article in a list. */
   --type-record: 400 1.0625rem/1.529 var(--serif); /* The words of the record and long reading: speeches, report essays, In short. */
   --type-body: 400 1.0625rem/1.529 var(--sans); /* Interface and OPAX's own sentences. */
   --type-strong: 600 1.0625rem/1.294 var(--sans); /* Names in rows, values in key-value lists, inline figures (with tabular). */
@@ -351,7 +352,7 @@
 .audit-content > .ui-filter-bar:first-child, .instrument-content > .ui-filter-bar:first-child { margin-top: 0; }
 .audit-list, .instrument-list { list-style: none; padding: 0; margin: var(--space-tight) 0 0; }
 .audit-list > li, .instrument-list > li { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-block) 0; }
-.audit-list h2, .instrument-list h2 { font: var(--type-subheading); margin: 0 0 var(--space-line); overflow-wrap: anywhere; }
+.audit-list h2, .instrument-list h2 { font: var(--type-row-record); margin: 0 0 var(--space-line); overflow-wrap: anywhere; }
 .audit-list p, .instrument-list p { margin: var(--space-line) 0; }
 .audit-meta, .instrument-meta { font: var(--type-metadata); color: var(--ink-soft); overflow-wrap: anywhere; }
 .audit-tags { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin: var(--space-tight) 0; }
@@ -534,7 +535,7 @@ a.visually-hidden:focus-visible {
 .ui-list[data-density="airy"] > li { padding-block: var(--sp-16); }
 .ui-list[data-rule="none"] > li + li { border-top: 0; }
 .ui-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-line) var(--space-block); align-items: baseline; }
-.ui-row-title { margin: 0; font: var(--type-subheading); color: var(--ink); overflow-wrap: anywhere; }
+.ui-row-title { margin: 0; font: var(--type-row-record); color: var(--ink); overflow-wrap: anywhere; }
 .ui-row-name { margin: 0; font: var(--type-strong); color: var(--ink); }
 .ui-row-title a, .ui-row-name a, a.ui-byline-name { color: inherit; }
 /* A row's link keeps the link's bronze underline (a phone never hovers), and
@@ -1456,7 +1457,7 @@ html[data-chat="page"] .chat-head {
    link as the page loads, and the answer below must not jump when it does. */
 #ask-filter-chips.is-reserved:empty { display: flex; min-height: 30px; }
 .results { margin-top: var(--space-tight); }
-button.link.result-title { font: var(--type-subheading); text-decoration: none; }
+button.link.result-title { font: var(--type-row-record); text-decoration: none; }
 button.link.result-title:hover { color: var(--bronze-ink); }
 .snippet {
   margin: var(--sp-8) 0 0; color: var(--ink-soft); font-size: var(--text-15); max-width: 88ch;
@@ -1966,7 +1967,7 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .news-list { list-style: none; margin: 0; padding: 0; }
 .news-list li { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-row) 0; }
 .news-list li:first-child { border-top: 0; padding-top: var(--sp-4); }
-.news-headline { font: var(--type-subheading); text-decoration: none; }
+.news-headline { font: var(--type-row-record); text-decoration: none; }
 .news-headline:hover { color: var(--bronze-ink); }
 .news-meta { display: block; margin-top: var(--sp-4); color: var(--ink-faint); font-size: var(--text-13); }
 .news-source { font: var(--type-label); color: var(--ink-soft); }
@@ -2775,7 +2776,7 @@ mark.privacy-confirm {
 .topic-arc-name a:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
 .topic-arc-witness { font: var(--type-label); color: var(--ink-soft); }
 .topic-arc-when { font: var(--type-fine); color: var(--ink-soft); }
-.topic-arc-source { position: relative; display: block; margin-top: var(--space-heading); font: var(--type-subheading); color: var(--ink); text-decoration: none; }
+.topic-arc-source { position: relative; display: block; margin-top: var(--space-heading); font: var(--type-row-record); color: var(--ink); text-decoration: none; }
 .topic-arc-source::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) 0; }
 .topic-arc-source:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
 .topic-arc-passage {
@@ -3355,7 +3356,7 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
 /* In parliament: the record's words, in the record's serif. */
 #panel-subject .party-mentions .snippet, #panel-subject .party-mention-brief { display: block; margin: var(--space-tight) 0 0; max-width: var(--size-readable); font: var(--type-record); color: var(--ink); -webkit-line-clamp: unset; overflow: visible; }
 #panel-subject .party-mention-brief { font: var(--type-body); }
-#panel-subject .party-mentions .source-title { display: block; margin: 0; font: var(--type-subheading); }
+#panel-subject .party-mentions .source-title { display: block; margin: 0; font: var(--type-row-record); }
 #panel-subject .party-mentions .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sp-4); margin: var(--space-line) 0 0; font: var(--type-fine); }
 #panel-subject .party-mentions .subject-list li { padding: var(--space-block) 0; }
 #panel-subject .party-mentions .subject-list li:first-child { padding-top: 0; }
@@ -3893,7 +3894,7 @@ html[data-panel="chat"] footer { display: none; }
 
 /* ---- the /bills index --------------------------------------------------- */
 
-.bill-row-title { font: var(--type-subheading); }
+.bill-row-title { font: var(--type-row-record); }
 .bill-row-long {
   margin: var(--sp-4) 0 0; font: var(--type-fine); color: var(--ink-faint); max-width: 62ch;
 }
@@ -3950,7 +3951,7 @@ html[data-panel="chat"] footer { display: none; }
 }
 .doc-bill .subject-section-title { margin: 0; font-size: var(--text-17); }
 .doc-bill .doc-brief-head { margin-bottom: var(--sp-8); }
-.doc-bill-title { margin: 0; font: var(--type-subheading); color: var(--ink); }
+.doc-bill-title { margin: 0; font: var(--type-row-record); color: var(--ink); }
 .doc-bill-status { margin: var(--sp-4) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
 .doc-bill-sentence { margin: var(--sp-12) 0 0; font: var(--weight-regular) var(--text-15)/var(--leading-body) var(--serif); color: var(--ink); }
 .doc-bill-none { margin-top: var(--sp-8); }

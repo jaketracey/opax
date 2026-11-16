@@ -26,7 +26,7 @@ node scripts/build_tokens.mjs --only web # or share or docs
 ## One file, base values and web overrides
 
 - **A token's base value is the app's.** Where the web draws something different today, the token carries a `web` block: `web.value` (a colour, space step or radius), `web.role` (the chart mark), `web.$description` (the web's own note). `web.omit` keeps an app-only token (the edition bands, the chamber inks, the app's launch timings, the app's new radius names) off the web.
-- **Type.** `type` holds the app's eighteen roles. `webRoles` holds the web's thirteen role names (`--type-title`, `--type-record-title`, `--type-tile-figure`, `--type-body`, ...). Each follows an app role and lists beside `follows` only the fields where the web differs: family, weight, size or line height. Deleting a field moves that web role onto its app role's value; the generated table below shows what each web role draws and what it still overrides.
+- **Type.** `type` holds the app's eighteen roles. `webRoles` holds the web's fourteen role names (`--type-title`, `--type-record-title`, `--type-row-record`, `--type-tile-figure`, `--type-body`, ...). Each follows an app role and lists beside `follows` only the fields where the web differs: family, weight, size or line height. Deleting a field moves that web role onto its app role's value; the generated table below shows what each web role draws and what it still overrides.
 - **Faces.** The web's sans stack starts with the system face, so Apple devices draw SF, as the iOS app does, and other devices draw Public Sans, as the Android app does; only the serif face is preloaded. Each webfont is followed in its stack by a metric-matched local fallback (`font.*.webFallback`, written as `@font-face` rules at the top of `tokens.css`), so text keeps its place while a webfont loads. The fallback has one face per weight the web sets (Georgia and Georgia Bold; Arial and Arial Bold, at 400, 600 and 700), each sized so a line wraps where the webfont's line will: a bold drawn from a regular face is the wrong width. The share images keep Public Sans.
 - **What the web draws without CSS.** The share images and the money map cannot read custom properties, so the generator writes the web's light colours to `portal/src/tokens.generated.ts`, from the same map (`webLight`) that writes `tokens.css`. A `web.value` reaches the pages, the share images and the money map together.
 - **The app branches read this file.** When an app branch (`ad/b78-int` and later) next merges main, it takes `docs/design/design-tokens.json`, `scripts/build_tokens.mjs` and this page from main as they are: with them, `mobile/scripts/build-design-tokens.mjs --check` reproduces the branch's `tokens.generated.ts` byte for byte, so the merge changes nothing in the app. From then on a token change lands on main once and reaches the web, the app and the share images from the same line.
@@ -131,7 +131,8 @@ Each web role follows an app role; the web column is what the web draws today. A
 | `--type-display` | `figure` | sans 700 34 / 41 | none |
 | `--type-tile-figure` | `tileFigure` | sans 600 22 / 28 | none |
 | `--type-heading` | `sectionTitle` | sans 700 22 / 28 | none |
-| `--type-subheading` | `rowRecord` | serif 700 17 / 23 | none |
+| `--type-subheading` | `subsectionTitle` | sans 600 17 / 22 | none |
+| `--type-row-record` | `rowRecord` | serif 700 17 / 23 | none |
 | `--type-record` | `recordText` | serif 400 17 / 26 | none |
 | `--type-body` | `body` | sans 400 17 / 26 | lineHeight |
 | `--type-strong` | `strong` | sans 600 17 / 22 | none |
@@ -144,7 +145,7 @@ Shared: 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash).
 
 App: 39 colour roles in 8 groups, plus 4 photo roles added by mobile/scripts/build-design-tokens.mjs; 18 type roles over 7 sizes; 9 rhythm steps; 6 radii (container, tile, thumb, bar, capsule, round); 6 durations and 1 curve; 2 shadows (overlay, edition).
 
-Web: 29 colour roles in 6 groups; 13 type roles; 8 rhythm steps; 4 radii (sm, md, pill, round); 3 durations and 1 curve; 1 shadow (overlay).
+Web: 29 colour roles in 6 groups; 14 type roles; 8 rhythm steps; 4 radii (sm, md, pill, round); 3 durations and 1 curve; 1 shadow (overlay).
 
 ### Deprecated web names
 

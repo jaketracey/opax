@@ -113,7 +113,7 @@
 .hp-rows { border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .hp-row { padding-block: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-subtle); }
 .hp-row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); }
-.hp-page :where(main) .hp-row-title { font: var(--type-subheading); margin-top: var(--space-line); }
+.hp-page :where(main) .hp-row-title { font: var(--type-row-record); margin-top: var(--space-line); }
 .hp-row-title a, .hp-row-name a { color: var(--ink); text-decoration: none; }
 .hp-row-title a:hover, .hp-row-name a:hover { color: var(--bronze-ink); text-decoration: underline; }
 .hp-row-detail { margin-top: var(--space-line); font: var(--type-metadata); color: var(--ink-soft); }
@@ -139,7 +139,7 @@
   transition: border-color var(--duration-quick) var(--ease-standard);
 }
 .hp-report:hover { border-color: var(--line-control); }
-.hp-page :where(main) .hp-report h3 { font: var(--type-subheading); }
+.hp-page :where(main) .hp-report h3 { font: var(--type-row-record); }
 .hp-report h3 a { color: var(--ink); text-decoration: none; }
 .hp-report h3 a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .hp-report:hover h3 a { color: var(--bronze-ink); text-decoration: underline; }
