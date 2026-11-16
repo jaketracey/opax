@@ -567,6 +567,16 @@ function fitStoryTitle(text: string, maxSize: number, maxLines: number): { size:
   return { size, text: clipToLines(text, P_TEXT_WIDTH, size, SERIF_EM, maxLines) }
 }
 
+/**
+ * Whether a cover's title is set whole, at feed and at story size, or would be cut short with "…". The composer
+ * asks before it writes the title, so a long bill name is shortened where its words matter least (daily-post.ts
+ * shortTitle), not at its end. It measures only: nothing here changes how a slide is drawn.
+ */
+export function coverTitleFits(title: string): boolean {
+  const text = storyText(title)
+  return [140, 128].every(max => fitStoryTitle(text, max, 2).text === text)
+}
+
 /** A small chevron for the cover's "Swipe" cue: the sans has no arrow glyph. */
 const ARROW_URI = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 12h16M13 6l6 6-6 6" fill="none" stroke="${SOFT}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`)
 

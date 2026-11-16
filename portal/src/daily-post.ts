@@ -14,6 +14,7 @@ import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
 import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
 import { photosFor, photoFor, billPhotosFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
+import { coverTitleFits } from './og'
 import { PROCEDURAL_TITLES_PATH } from '../public/vote-tables.js'
 import { decidingDivision, type BillReading, type DivisionOutcomeWord } from '../public/bill-division.js'
 
@@ -175,6 +176,41 @@ export function clip(text: string, limit: number): string {
   const cut = chars.slice(0, Math.max(0, limit - 1)).join('')
   const atWord = cut.replace(/\s+\S*$/, '')
   return (atWord.length >= limit * 0.6 ? atWord : cut).replace(/[\s,;:]+$/, '') + '…'
+}
+
+/**
+ * A bill's name cut to fit, keeping the words in its brackets. An amending bill's name says what it is about only
+ * there: "Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026" gives way
+ * before its brackets ("Military Rehabilitation… (Veterans’ Allied Health Care) Bill 2026"), then sheds its
+ * "Bill 2026", then keeps the bracketed words alone, and only when even they cannot fit is it cut at its end. A
+ * "(No. 2)" is a number, not those words. `fits` is the room: a character count, or the slide's own measure.
+ */
+export function shortTitle(title: string, fits: (text: string) => boolean): string {
+  const t = title.replace(/\s+/g, ' ').trim()
+  if (fits(t)) return t
+  // A cut name ends on a word that carries meaning, not on "and" or "of".
+  const cut = (words: string[], n: number) => {
+    const kept = words.slice(0, n)
+    while (kept.length > 1 && /^(?:and|or|of|the|for|to|in|on|with|a|an|&)$/i.test(kept[kept.length - 1])) kept.pop()
+    return `${kept.join(' ').replace(/[\s,;:]+$/, '')}…`
+  }
+  const bracket = /\((?!No\.?\s*\d+\))([^()]*[A-Za-z][^()]*)\)/.exec(t)
+  if (bracket && bracket.index > 0) {
+    const open = bracket.index
+    const head = t.slice(0, open).trim().split(' ')
+    const close = t.lastIndexOf(')')
+    const tails = [t.slice(open), ...(close + 1 < t.length ? [t.slice(open, close + 1)] : [])]
+    // More of the name before "Bill 2026": each length of the head is tried with the tail, then without it.
+    for (let n = head.length - 1; n >= 1; n--) for (const tail of tails) {
+      const s = `${cut(head, n)} ${tail}`
+      if (fits(s)) return s
+    }
+    // Room for the bracketed words and nothing else: they are what the bill is about.
+    if (fits(bracket[1].trim())) return bracket[1].trim()
+  }
+  const words = t.split(' ')
+  for (let n = words.length - 1; n >= 1; n--) if (fits(cut(words, n))) return cut(words, n)
+  return cut(words, 1)
 }
 
 export function formatDate(iso: string | null | undefined): string {
@@ -566,7 +602,7 @@ export function billStanding(bill: BillIndexItem, record: BillFile | null): stri
  * loosened, or if this function is called for a bill chosen some other way.
  */
 export function billPostText(bill: BillIndexItem, sentence: string, statusShort: string, by: string, url: string): string {
-  const name = clip(bill.short_title || bill.title, 110)
+  const name = shortTitle(bill.short_title || bill.title, text => [...text].length <= 110)
   const dated = bill.status === 'passed' ? bill.status_as_of : bill.introduced
   if (dated) {
     const who = by.trim().replace(/^by\s+/, 'Sponsor: ').replace(/^\((.+) portfolio\)$/, '$1 portfolio')
@@ -605,7 +641,8 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   // The headline is the bill's own name without its "Bill 2026" tail: always
   // grammatical, where a clipped summary sentence is not. The sentence is the line.
   const headline = (bill.short_title || bill.title).replace(/\s+Bill\s+(?:\(No\.?\s*\d+\)\s+)?\d{4}(?:\s+\[.*\])?$/i, '').replace(/\s+/g, ' ').trim() || bill.title
-  const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
+  // A long name gives way before its brackets, which say what an amending bill is about; the slide's own measure is the room.
+  const cover: StorySlide = { type: 'cover', kicker, title: shortTitle(headline, coverTitleFits), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
     // The line opens with the summary's first sentence: the slide says who wrote it, in a small line under it.
     note: MACHINE_SUMMARY_LABEL, photo: takePhoto(billPhotos, ids, 0),
     // The alt text says who wrote the sentence, as the image now does and as the share card's alt does.
