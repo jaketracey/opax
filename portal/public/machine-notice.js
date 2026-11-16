@@ -2,6 +2,9 @@
 // Code adds it, never a model. The Worker puts it on the response as `machine_notice` (src/machine-notice.ts)
 // and the page prints that field; a conversation saved before the field existed gets the same words here.
 export const MACHINE_NOTICE = 'Machine-written answers can contain errors. Check the original record before relying on one.'
+// For stored machine-written text (a record's brief, a bill's summary, the year in brief, a report's generated
+// summary): text a model wrote earlier, which is a summary and not an answer to anyone's question.
+export const MACHINE_NOTICE_STORED = 'Machine-written summaries can contain errors. Check the original record before relying on one.'
 // For an answer that cites a hearing transcript (public/transcript-note.js decides which answers do).
 export const MACHINE_NOTICE_TRANSCRIPT = 'Machine-written answers can contain errors. Check the original transcript before relying on it.'
 
