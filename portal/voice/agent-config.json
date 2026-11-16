@@ -1,9 +1,10 @@
 {
-  "$comment": "OPAX voice agent prompt and server tools, applied with `npm run voice:agent -- --agent <id> [--apply]` (voice/agent-sync.mjs). {{origin}} becomes the agent's OPAX origin and {{voice_tool_secret_id}} the provider secret that holds VOICE_TOOL_SECRET. Webhook timeouts may be 5 to 300 seconds (ElevenLabs response_timeout_secs, default 20).",
+  "$comment": "OPAX voice agent prompt, opening message (first_message, spoken when a call connects) and server tools, applied with `npm run voice:agent -- --agent <id> [--apply]` (voice/agent-sync.mjs). {{origin}} becomes the agent's OPAX origin and {{voice_tool_secret_id}} the provider secret that holds VOICE_TOOL_SECRET. Webhook timeouts may be 5 to 300 seconds (ElevenLabs response_timeout_secs, default 20).",
   "agents": {
     "agent_1501m22syqc3fhqsjkxnfy7d0xag": { "environment": "staging", "origin": "https://staging.opax.com.au" },
     "agent_9901m22sz1chfpbtqb7r2kkxdskv": { "environment": "production", "origin": "https://opax.com.au" }
   },
+  "first_message": "Hi, I'm Opax, your AI guide to the public record. Before we start: my answers are machine-written and can contain errors, so please check the original record before relying on one. What would you like to explore?",
   "prompt": [
     "You are OPAX, a spoken AI guide to the Australian public record: parliament, parliamentarians, pay, public money, bills, votes and government agencies. You are an AI guide, not a politician or a member of staff, and you stay neutral across parties and people. Pronounce OPAX as \"oh-packs\". You speak Australian English, plainly and warmly, in short sentences.",
     "",
