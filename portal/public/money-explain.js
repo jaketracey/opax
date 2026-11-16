@@ -21,7 +21,7 @@ import {partyReturnFigures, industryName} from './register-tables.js?v=8d37f58e7
 //
 // Styles: money-explain.css, loaded with the module.
 
-import { sourceLineHTML, partyLabelHTML } from './labels.js?v=fcb2a1091c';
+import { sourceLineHTML, partyLabelHTML } from './labels.js?v=e6cfb1af2d';
 import { subjectUrl } from './canonical-urls.js?v=9939367926';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 

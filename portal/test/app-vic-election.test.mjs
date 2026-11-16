@@ -29,6 +29,7 @@ async function compile(entry) {
   return import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
 }
 const {appVicElection} = await compile('../src/app-vic-election.ts');
+const {vicSeatVacantAtExpiry} = await import('../public/vic-term.js');
 const {renderVicElection,findSeats,titledVotes,contestName,vicElectionPage} = await compile('../src/vic-election.ts');
 const {default:worker} = await compile('../src/index.ts');
 const slug = s=>s.path.split('/').at(-1);
@@ -103,9 +104,9 @@ test('the app endpoint has its own gate, so it can outlive the web hub',async()=
 });
 
 // The app's Today reads this endpoint, after the hub's own Today block retires, to know the Legislative
-// Assembly is dissolved. It must keep answering until the flag is turned off: nothing may retire, gate
+// Assembly has expired. It must keep answering until the flag is turned off: nothing may retire, gate
 // or empty it by date.
-test('the endpoint serves the dissolved Assembly\'s record long after the election: no date retires it',async t=>{
+test('the endpoint serves the expired Assembly\'s record long after the election: no date retires it',async t=>{
   for(const at of ['2026-12-06T00:00:00+11:00','2026-12-29T00:00:00+11:00','2027-03-01T10:00:00+11:00','2027-11-28T10:00:00+11:00']) {
     t.mock.timers.setTime(Date.parse(at));
     // Through the Worker, on its own clock, and through the handler with the clock passed in.
@@ -115,7 +116,7 @@ test('the endpoint serves the dissolved Assembly\'s record long after the electi
       assert.equal(r.status,200,at);
       const d=await r.json();
       assert.equal(d.schema_version,1);
-      // What the app's dissolved row reads: the election day, the caretaker instant and each district.
+      // What the app's row for the expired Assembly reads: the election day, the caretaker instant and each district.
       assert.equal(d.election_day,'2026-11-28');
       assert.ok(Date.parse(d.key_dates.find(k=>k.id==='caretaker').passes_at)<Date.parse(at),at);
       assert.equal(d.districts.length,88);
@@ -480,7 +481,14 @@ async function liveParity(election,index) {
     assert.equal(row.candidates,seat.candidates?.list.length??0);
     if(seat.kind==='district') {
       const page=JSDOM.fragment(renderVicElection(election,seat).html);
-      assert.deepEqual(detail.members[0].recent_votes.map(v=>v.title),[...page.querySelectorAll('.vic-votes a')].map(a=>a.textContent));
+      const listed=[...page.querySelectorAll('.vic-votes a')].map(a=>a.textContent);
+      // A seat vacant when the Assembly expired shows no member record on its page (Brunswick), so no votes
+      // list either; the app still carries the last member's titled votes. Any other page lists the same titles.
+      if(page.querySelector('.vic-member'))assert.deepEqual(detail.members[0].recent_votes.map(v=>v.title),listed);
+      else {
+        assert.equal(vicSeatVacantAtExpiry({jurisdiction:'vic',chamber:'vic_la',name:seat.name}),true,seat.name);
+        assert.deepEqual(listed,[]);
+      }
     } else assert.deepEqual(detail.districts.map(s=>s.name),seat.districts);
   }
   for(const q of ['3350','St Kilda','Bass','allan','9999']) {
