@@ -33,11 +33,15 @@ export function useHeaderBottom(inline = false): number {
     // Native-stack reports large-title heights asynchronously (and debounces
     // them). Use its compact root-bar calculation in the send render, before
     // the first turn layout or fallback frame can consume the expanded height.
-    const compact = getDefaultHeaderHeight(
-      frame,
-      false,
-      frame.width > frame.height ? 0 : top,
-    );
+    const landscape = frame.width > frame.height;
+    const compact = getDefaultHeaderHeight(frame, false, landscape ? 0 : top);
+    // In landscape an iPhone shows no large title, and iOS 27.2 draws a
+    // 78 pt bar where the estimate is the bar alone (32 pt): an Ask thread
+    // rested 46 pt under it, its question behind the bar's buttons. A height
+    // within one large-title band of the estimate is the bar on screen; a
+    // taller one is portrait's, not yet replaced.
+    if (landscape && header && header > compact && header <= compact + 52)
+      return header;
     return Math.min(header || compact, compact);
   }
   return header || top + 44;

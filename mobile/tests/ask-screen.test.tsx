@@ -670,14 +670,112 @@ describe('an open thread when its tab is shown again', () => {
           }),
         ),
       );
+    // The window turns: its size changes, and UIKit reports the bar it
+    // draws for it (in steps on the way back to portrait).
+    const window = Dimensions.get('window');
+    const turn = (landscape: boolean, header: number) =>
+      act(async () => {
+        Dimensions.set({
+          window: landscape
+            ? { ...window, width: 874, height: 402 }
+            : { ...window, width: 402, height: 874 },
+        });
+        view!.update(
+          withNavigationOptions(page(header), (options) => {
+            mockBar.options = options;
+          }),
+        );
+      });
+    const bar = (header: number) =>
+      act(async () =>
+        view!.update(
+          withNavigationOptions(page(header), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
     const restore = () => {
+      Dimensions.set({ window });
       solidBar.mockRestore();
       frames.mockRestore();
       idiom.mockRestore();
       platform.restore();
     };
-    return { at, inset, refocus, restore };
+    return { at, inset, refocus, turn, bar, restore };
   };
+
+  const last = () =>
+    scrollTo.mock.lastCall![0] as { y: number; animated: boolean };
+
+  test('a thread at rest turned to landscape and back is at rest each time, under the bar as drawn', async () => {
+    const thread = await open();
+    try {
+      await thread.turn(false, 168);
+      const rest = 168 + thread.inset();
+      thread.at(-rest);
+      scrollTo.mockClear();
+      // Landscape: no large title, and the bar is the 78 pt UIKit reports,
+      // not the 32 pt estimate.
+      await thread.turn(true, 78);
+      expect(thread.inset() ?? 0).toBeCloseTo(0);
+      expect(last()).toEqual({ y: -78, animated: false });
+      thread.at(-78);
+      // Back to portrait: the bar comes in steps, the scroll view carried
+      // by each. The thread ends at the portrait rest.
+      await thread.turn(false, 78);
+      thread.at(-78);
+      await thread.bar(rest + 34);
+      thread.at(-78);
+      await thread.bar(116);
+      expect(116 + thread.inset()).toBeCloseTo(rest);
+      expect(last().y).toBeCloseTo(-rest);
+      expect(last().animated).toBe(false);
+    } finally {
+      thread.restore();
+    }
+  });
+
+  test('a reader who had scrolled keeps their place through a turn and back: nothing is re-seated', async () => {
+    const thread = await open();
+    try {
+      await thread.turn(false, 168);
+      const rest = 168 + thread.inset();
+      thread.at(-rest);
+      // A little way in, as on the device: 18 2/3 pt past rest.
+      const read = -rest + 56 / 3;
+      thread.at(read);
+      scrollTo.mockClear();
+      await thread.turn(true, 78);
+      thread.at(-60);
+      await thread.turn(false, 78);
+      await thread.bar(rest + 34);
+      thread.at(read);
+      // The band shrinks by exactly the reader's distance past rest: the
+      // tab-return rule would take that for UIKit's carry.
+      await thread.bar(rest + 34 - 56 / 3);
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      thread.restore();
+    }
+  });
+
+  test('a first send after the window has turned and turned back is placed by its animated scroll alone', async () => {
+    const window = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({ window: { ...window, width: 874, height: 402 } }),
+    );
+    act(() => Dimensions.set({ window }));
+    const thread = await open();
+    try {
+      expect(thread.inset()).toBeLessThan(0);
+      const unanimated = scrollTo.mock.calls.filter(
+        ([to]) => (to as { animated?: boolean }).animated === false,
+      );
+      expect(unanimated).toEqual([]);
+    } finally {
+      thread.restore();
+    }
+  });
 
   test('a thread at rest is at rest again: its top inset and its offset are the first-focus ones for the bar', async () => {
     const thread = await open();

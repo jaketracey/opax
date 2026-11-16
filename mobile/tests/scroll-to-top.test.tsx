@@ -207,6 +207,12 @@ test.each([
       expect(bottom).toBeCloseTo(compact);
       act(() => renderer.update(page(false)));
       expect(bottom).toBe(143);
+      // iOS 27.2 draws a 78 pt bar in landscape: an inline iPhone there
+      // takes the bar as reported, and nowhere else.
+      act(() => renderer.update(page(true, 78)));
+      expect(bottom).toBeCloseTo(
+        width > height && os === 'ios' && !pad ? 78 : Math.min(78, compact),
+      );
     } finally {
       act(() => {
         renderer?.unmount();

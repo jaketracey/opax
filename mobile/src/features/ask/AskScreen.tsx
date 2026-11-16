@@ -128,7 +128,7 @@ export default function AskScreen() {
   const params =
     useLocalSearchParams<Partial<Record<keyof AskScope | 'entry', string>>>();
   const reduceMotion = useReduceMotion();
-  const { height: windowHeight } = useWindowDimensions();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const [readFailed, setReadFailed] = useState(false);
   const [inputError, setInputError] = useState('');
   const [profiles, setProfiles] = useState<Map<string, AskPerson>>(new Map());
@@ -211,10 +211,13 @@ export default function AskScreen() {
   // appears is the thread opening, which `reveal` places with its own
   // animation. And only a thread found at rest or carried exactly that far:
   // one the reader has scrolled is left where it is.
+  const turning = useRef(false);
   const band = useRef(hiddenBand);
   useLayoutEffect(() => {
     const before = band.current;
     band.current = hiddenBand;
+    // A turning window moves the band too; that is the effect below's.
+    if (turning.current) return;
     if (hiddenBand >= before || idle || scrollY.current === null) return;
     const above = scrollY.current + headerBottom;
     const carried = before - hiddenBand;
@@ -225,6 +228,39 @@ export default function AskScreen() {
     const frame = requestAnimationFrame(() => scroll.current?.scrollTo(rest));
     return () => cancelAnimationFrame(frame);
   }, [hiddenBand, headerBottom, idle]);
+  // The window turns (an iPhone rotated either way). UIKit then reports the
+  // bar's height in steps, the band and the inset follow each one, and the
+  // offset is left wherever the steps carried it: a thread at rest came
+  // back with its question behind the bar or out of view (builds 86 to
+  // 89). The turn is known by the window's size changing, not by time. A
+  // thread that was at rest when the window turned is kept at rest through
+  // every step, until the reader drags; one the reader had scrolled is
+  // left to UIKit, which keeps its place.
+  const turned = useRef<{ w: number; h: number; rest: number } | null>(null);
+  const lastRest = useRef(-headerBottom);
+  const held = useRef(false);
+  useLayoutEffect(() => {
+    const before = turned.current;
+    const restBefore = lastRest.current;
+    turned.current = { w: windowWidth, h: windowHeight, rest: -headerBottom };
+    lastRest.current = -headerBottom;
+    if (Platform.OS !== 'ios' || idle) {
+      held.current = false;
+      return;
+    }
+    const windowTurned =
+      !!before && (before.w !== windowWidth || before.h !== windowHeight);
+    if (windowTurned) {
+      turning.current = true;
+      held.current =
+        scrollY.current !== null && scrollY.current <= restBefore + 1;
+    }
+    if (!held.current) return;
+    const rest = { y: -headerBottom, animated: false };
+    scroll.current?.scrollTo(rest);
+    const frame = requestAnimationFrame(() => scroll.current?.scrollTo(rest));
+    return () => cancelAnimationFrame(frame);
+  }, [windowWidth, windowHeight, headerBottom, hiddenBand, idle]);
   // A saved conversation opens with no send, so nothing places it: it took
   // whatever offset the idle page had. From a scrolled idle page the thread
   // opened part-way down, its answer behind the bar; from one at rest it
@@ -506,7 +542,12 @@ export default function AskScreen() {
         follow.onViewport(event.nativeEvent.layout.height);
       }}
       onContentSizeChange={onContentSizeChange}
-      onScrollBeginDrag={follow.onDrag}
+      onScrollBeginDrag={() => {
+        // The reader has taken the thread: nothing re-seats it now.
+        held.current = false;
+        turning.current = false;
+        follow.onDrag();
+      }}
       onScrollEndDrag={(event) =>
         follow.onDragEnd(event.nativeEvent.velocity?.y ?? 0)
       }
@@ -516,6 +557,8 @@ export default function AskScreen() {
         fadeScroll.onScroll(event);
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
         scrollY.current = event.nativeEvent.contentOffset.y;
+        // Back at rest for the bar as it now is: the turn has settled.
+        if (scrollY.current <= -headerBottom + 1) turning.current = false;
         follow.onScroll(event.nativeEvent.contentOffset.y);
         checkUnderBar();
         if (Platform.OS === 'android') androidRoot.onScroll(event);
