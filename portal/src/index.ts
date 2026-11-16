@@ -4976,12 +4976,12 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     } else if (route.kind === 'bill') {
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
       if(bill){
-        const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
+        const related=await read<{generated_at?:string;bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
           const query = guardTableURL(divisionTableConfig({bill:bill.key}),url).query
         const titles = bill.divisions?.length ? await read<Record<string,string>>(PROCEDURAL_TITLES_PATH).catch(() => ({})) : {}
         const proceduralConfig = {...divisionTableConfig(), urlKey:'pv'}
         const proceduralQuery = guardTableURL(proceduralConfig,url).query
-        meta.prerender=renderBillAnswer({...bill,division_titles:titles},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status,statusLabel:bill.ended_label}}
+        meta.prerender=renderBillAnswer({...bill,division_titles:titles,exported_at:related.generated_at},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status,statusLabel:bill.ended_label}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,sharedAgencyTopSuppliers(env))
       if(content) meta.prerender=content.html

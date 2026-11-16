@@ -14,7 +14,7 @@ const { billStatusWord, billStatusLine } = runInNewContext(`${code};({billStatus
 test('the bill status word is the exact ending when the export names one', () => {
   const removed = { status: 'lapsed', status_as_of: '2018-06-26', ended: 'removed', ended_label: 'Removed from the Notice Paper' };
   assert.equal(billStatusWord(removed), 'Removed from the Notice Paper');
-  assert.equal(billStatusLine(removed), 'Removed from the Notice Paper, status as at on 2018-06-26');
+  assert.equal(billStatusLine(removed), 'Removed from the Notice Paper, status recorded on 2018-06-26');
   assert.equal(billStatusWord({ status: 'lapsed' }), 'Lapsed');
   assert.equal(billStatusWord({ status: 'before_parliament', ended_label: '  ' }), 'Before parliament');
   assert.equal(billStatusLine({}), 'Status not recorded');

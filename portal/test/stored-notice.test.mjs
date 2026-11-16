@@ -192,7 +192,7 @@ test('web, one text: the line is directly under a record\'s brief, a bill\'s sum
   follows(app, '<p class="bill-affected">${esc(s.affected)}</p>` : ""}', '${machineNoticeHTML()}', 8)
   follows(app, '<p class="bill-affected">${esc(s.affected)}</p>` : ""}\n    ${machineNoticeHTML()}', '${sourceLineHTML({', 8)
   // Bill peek and the bill panel on a record page.
-  assert.ok(app.includes('<div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>\n    ${machineNoticeHTML()}\n    <p class="fineprint">${esc(billStatusLine(entry))}.</p>'))
+  assert.ok(app.includes('<div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>\n    ${machineNoticeHTML()}\n    <p class="fineprint">${esc(status)}</p>'))
   follows(app, '<p class="doc-bill-sentence">${esc(first)}</p>', '${machineNoticeHTML()}', 10)
   // The search page keeps the Worker's words for its results (drawn once at the head of the list: see the rendered test).
   assert.match(app, /machine_notice: typeof data\.machine_notice === "string" \? data\.machine_notice : "",/)

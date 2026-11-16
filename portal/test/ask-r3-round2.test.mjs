@@ -77,7 +77,7 @@ test('NP-INTR-007: the unqualified question uses the named Queensland register; 
   assert.match(federal.notes.join(' '), /outside the requested jurisdiction/);
 });
 
-for (const [id, key, expected] of [['BL-STAT-001', 'au-federal-r5842', /^The ASIC Supervisory Cost Recovery Levy Bill 2017 passed/], ['BL-ASNT-004', 'au-federal-s1349', /^On 5 December 2022, the Maritime Legislation Amendment Bill 2022 received royal assent/]]) test(id + ': exact lifecycle evidence answers the requested field before neighbouring speech text', async () => {
+for (const [id, key, expected] of [['BL-STAT-001', 'au-federal-r5842', /^The ASIC Supervisory Cost Recovery Levy Bill 2017 had passed, as at /], ['BL-ASNT-004', 'au-federal-s1349', /^On 5 December 2022, the Maritime Legislation Amendment Bill 2022 received royal assent/]]) test(id + ': exact lifecycle evidence answers the requested field before neighbouring speech text', async () => {
   const fields = await api.billFields({ asset, origin: 'https://opax.test' }, key);
   assert.ok(fields);
   const bill = await asset('/bills/' + key + '.json');

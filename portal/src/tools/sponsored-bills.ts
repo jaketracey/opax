@@ -1,9 +1,10 @@
 /** Complete published sponsor metadata, rather than the six-row growth summaries. */
 import { sponsorNamesAgree, sponsorPerson } from '../../public/sponsor-person.js'
-import { billEnding as ending, billFields, clip, fold, siteUrl } from './record-common'
+import { billEnding as ending, billFields, clip, fold, siteUrl, statesProgress } from './record-common'
 import { memberResolutionNotes, resolveMember } from './member-records'
 import { boundedValue, inWindow, object, publishedResult, records, sourceUrl, validWindow, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition } from './types'
+import { billsAsAtDay } from '../../public/bill-titles.js'
 
 export const tool: ToolDefinition = {
   name: 'sponsored_bills',
@@ -37,18 +38,21 @@ export const tool: ToolDefinition = {
         (!args.status || b.status === args.status) && inWindow(b.introduced, args) && (!args.query || wordsMatch(args.query, [b.title, b.short_title]))
     }).sort((a, b) => String(b.introduced ?? '').localeCompare(String(a.introduced ?? '')) || String(a.key).localeCompare(String(b.key)))
     const offset = Number(args.offset) || 0, rows: RecordRow[] = [], citations: ToolCitation[] = []
+    // For Ask, a status is stated as at the bills export's day (the bill page's "Bill progress as at"), not the stage's
+    // own date; MCP's citation keeps its earlier wording (statesProgress).
+    const exportedAt = statesProgress(env) ? index.generated_at : null
     for (const b of matches.slice(offset, offset + (args.bill_id ? 1 : Number(args.limit) || 5))) {
       const path = `/bills/${b.key}.json`, raw = object(await readToolAsset(env, path))
       if (raw.key !== b.key || !['sponsor', 'sponsor_person_id', 'introduced', 'status', 'status_as_of', 'originating_house'].every(k => (raw[k] ?? null) === (b[k] ?? null))) throw new Error('Bill sponsor detail inconsistent with index')
       const lifecycle = args.bill_id ? await billFields({ ...env, asset: p => p === path ? Promise.resolve(raw) : readToolAsset(env, p) }, String(b.key)) : null
       const source_url = records(raw.sources).map(s => sourceUrl(s.url)).find(Boolean) ?? null
-      const url = siteUrl(env, '/bill/' + b.key)
+      const url = siteUrl(env, '/bill/' + b.key), asAt = billsAsAtDay(exportedAt, raw)
       rows.push({ bill_id: b.key, title: b.title, sponsor: person.name, sponsor_as_published: b.sponsor, introduced: b.introduced ?? null,
         originating_house: b.originating_house ?? null, status: raw.status ?? null, ...ending(raw), status_as_of: raw.status_as_of ?? null,
         source_url, source_status: source_url ? 'original bill source' : 'original URL not recorded; cite published OPAX bill', url, full_record_url: url,
         follow_up: { person: person.name, bill_id: b.key },
         ...(lifecycle ? { lifecycle: boundedValue(lifecycle), lifecycle_truncated: lifecycle.key_dates.length > 20 || lifecycle.acts.length > 20 } : {}) })
-      citations.push({ kind: 'record', url: source_url ?? url, text: clip(`${person.name} is the recorded sponsor of ${b.title}; introduced ${b.introduced ?? 'date not recorded'}${b.originating_house ? ' in ' + b.originating_house : ''}; status ${raw.status ?? 'not recorded'}${ending(raw).ended_label ? ` (${ending(raw).ended_label})` : ''}${raw.status_as_of ? ' as at ' + raw.status_as_of : ''}.` + (lifecycle ? ` Recorded stages: ${lifecycle.key_dates.map(s => `${s.date ?? 'undated'} ${s.stage} (${s.house ?? 'house not recorded'})`).join('; ')}.` : ''), 2200) })
+      citations.push({ kind: 'record', url: source_url ?? url, text: clip(`${person.name} is the recorded sponsor of ${b.title}; introduced ${b.introduced ?? 'date not recorded'}${b.originating_house ? ' in ' + b.originating_house : ''}; status ${raw.status ?? 'not recorded'}${ending(raw).ended_label ? ` (${ending(raw).ended_label})` : ''}${asAt ? ' as at ' + asAt : raw.status_as_of ? ' as at ' + raw.status_as_of : ''}.` + (lifecycle ? ` Recorded stages: ${lifecycle.key_dates.map(s => `${s.date ?? 'undated'} ${s.stage} (${s.house ?? 'house not recorded'})`).join('; ')}.` : ''), 2200) })
     }
     const countCitation: ToolCitation = { kind: 'count', url: siteUrl(env, '/bills/index.json'), value: matches.length, text: `${person.name}: ${matches.length} attributable sponsored federal bills in the published index${args.since ? ' introduced since ' + args.since : ''}${args.until ? ' introduced until ' + args.until : ''}${args.query ? ' with title words ' + args.query : ''}${args.status ? ' with status ' + args.status : ''}${args.chamber ? ' originating in ' + args.chamber : ''}. Missing sponsor metadata can undercount introductions.` }
     return publishedResult(rows, [countCitation, ...citations], { total: matches.length, count: matches.length, count_complete_for_index: true, person: person.name,

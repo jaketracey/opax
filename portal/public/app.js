@@ -9074,6 +9074,33 @@ function loadBillsDate() {
   return billsDatePromise;
 }
 
+/** "2026-10-05": the bills export's day in Sydney from its generated_at (2026-10-04T16:27:54Z is 03:27 on 5 Oct
+ *  AEDT), never the viewer's zone; a bare date is its own day, a stamp with no offset is UTC; "" when it is not a
+ *  date. The bill page keeps this day as bill.exportedAt, for its "Bill progress as at" and "Updated" lines. A copy of
+ *  billsAsAtIso in /bill-titles.js (this is a classic script and cannot import it), held to it by
+ *  test/bill-progress-asat.test.mjs. */
+const BILLS_SYDNEY_DAY = new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Sydney", year: "numeric", month: "2-digit", day: "2-digit" });
+function billsAsAtIso(generatedAt) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?)?$/i.exec(typeof generatedAt === "string" ? generatedAt.trim() : "");
+  if (!m) return "";
+  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])], date = new Date(Date.UTC(y, mo - 1, d));
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== mo - 1 || date.getUTCDate() !== d) return "";
+  if (m[4] === undefined) return `${m[1]}-${m[2]}-${m[3]}`;
+  const zone = !m[8] || /^z$/i.test(m[8]) ? "Z" : m[8].includes(":") ? m[8] : `${m[8].slice(0, 3)}:${m[8].slice(3)}`;
+  const at = Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6] ?? "00"}${m[7] ?? ""}${zone}`);
+  if (!Number.isFinite(at) || Number(m[4]) > 23 || Number(m[5]) > 59 || Number(m[6] ?? 0) > 59) return "";
+  const part = Object.fromEntries(BILLS_SYDNEY_DAY.formatToParts(new Date(at)).map((p) => [p.type, p.value]));
+  return `${part.year}-${part.month}-${part.day}`;
+}
+/** "Bill progress as at 5 Oct 2026", shown under a bill's status; "" without an export day, or when the bill's own
+ *  record (introduced, status_as_of) is newer than the export. A copy of billProgressAsAt in /bill-titles.js. */
+function billProgressAsAt(generatedAt, bill = null) {
+  const day = billsAsAtIso(generatedAt);
+  if (!day) return "";
+  const own = [bill?.introduced, bill?.status_as_of].map((v) => (typeof v === "string" ? v.slice(0, 10) : "")).filter((v) => /^\d{4}-\d{2}-\d{2}$/.test(v));
+  return own.some((v) => v > day) ? "" : `Bill progress as at ${fmtDate(day)}`;
+}
+
 /** One bill's full record; null when the projection has no such file (404). Any other
  *  failure rejects and is not kept, so the bill page can say so and a retry fetches again. */
 function fetchBill(key) {
@@ -9212,10 +9239,12 @@ function billOutcomeLabelHTML(outcome) {
  *  names one ("Removed from the Notice Paper", `ended_label`), else the status. */
 const billStatusWord = (b) => String(b?.ended_label || "").trim() || sentenceCase(b?.status);
 
-/** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
+/** "Passed, status recorded 12 Feb 2022": the status is never shown undated. The date is the bill's latest recorded
+ *  event (status_as_of), which is not always the day the status changed, so it is "recorded", not "changed"; how old
+ *  the whole record is follows as "Bill progress as at" (billProgressAsAt). */
 function billStatusLine(b) {
   const status = billStatusWord(b) || "Status not recorded";
-  const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
+  const as = b?.status_as_of ? `, status recorded ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
 
@@ -9931,7 +9960,9 @@ async function openBill(key, manageFocus) {
       isActive: () => billView === view && generation === billTextGeneration });
     return;
   }
-  bill.exportedAt = billsDate || "";
+  // The export's Sydney day ("2026-10-05" for 2026-10-04T16:27:54Z): the "Bill progress as at" line and every
+  // "Updated" line on the page give the same day.
+  bill.exportedAt = billsAsAtIso(billsDate) || billsDate || "";
   if (billView !== view || generation !== billTextGeneration) return;
   const title = bill.title || bill.short_title || key;
   // Landed here from outside: keep the Worker's search title (see BOOT_META).
@@ -9967,6 +9998,8 @@ async function openBill(key, manageFocus) {
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
   const statusWord = billStatusWord(bill) || "Status not recorded";
+  // How old the status and the stages under it are: the bills export's day, one plain line under the status.
+  const progressAsAt = billProgressAsAt(bill.exportedAt, bill);
   // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
   // repeat of the same three buttons is gone.
   const actions = `<div class="page-actions bill-actions">
@@ -9979,7 +10012,8 @@ async function openBill(key, manageFocus) {
   body.innerHTML = `
     <div class="ui-page-head bill-head">
       <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
-        bill.status_as_of ? `<span class="bill-status-as">Status as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
+        bill.status_as_of ? `<span class="bill-status-as">Status recorded ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
+      ${progressAsAt ? `<p class="bill-progress-as-at">${esc(progressAsAt)}</p>` : ""}
       <h1 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h1>
       ${bill.short_title && bill.short_title !== title
         ? `<p class="ui-page-meta bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
@@ -10075,18 +10109,21 @@ async function fillBillPeek(details, entry) {
   const box = details.querySelector(".bill-peek-body");
   const foot = `<p class="bill-peek-link"><a class="ui-button" ${entityHrefAttr(billHash(entry.key))}>${
     iconSvg("entry")}<span>Bill page</span></a></p>`;
+  // The dated status, then how old the record is ("Bill progress as at"), as the bill page says them.
+  const progress = billProgressAsAt(await loadBillsDate(), entry);
+  if (!box.isConnected) return;
+  const status = `${billStatusLine(entry)}.${progress ? ` ${progress}.` : ""}`;
   // No summary written: the dated status is the honest thing to show instead.
   if (!entry.has_summary) {
-    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
+    box.innerHTML = `<p class="bill-peek-line">${esc(status)} No summary yet.</p>${foot}`;
     return;
   }
   const bill = await loadBill(entry.key);
   if (!box.isConnected) return;
-  if (!box.isConnected) return;
   const summary = growthModules.approvedBillSummary(bill?.summary);
   const sentences = summary?.sentences || [];
   if (!sentences.length) {
-    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
+    box.innerHTML = `<p class="bill-peek-line">${esc(status)} No summary yet.</p>${foot}`;
     return;
   }
   box.innerHTML = `
@@ -10095,7 +10132,7 @@ async function fillBillPeek(details, entry) {
     ${growthModules.summaryWrittenHTML(summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
     ${machineNoticeHTML()}
-    <p class="fineprint">${esc(billStatusLine(entry))}.</p>
+    <p class="fineprint">${esc(status)}</p>
     ${foot}`;
 }
 
@@ -10258,6 +10295,9 @@ async function renderDocBillPanel(doc, slug) {
   const subject = doc.metadata?.bill_ref || doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc);
   const entry = await billForTitle(subject);
   if (!entry || currentDocSlug !== slug) return;
+  // How old the record is, under its dated status, as the bill page says it.
+  const progress = billProgressAsAt(await loadBillsDate(), entry);
+  if (currentDocSlug !== slug) return;
   // The speech's own header is often the bill's title; printing it again
   // directly beneath says nothing twice. Under a named speaker the headline is
   // the speaker and the bill's title is the subject line under it, so the
@@ -10266,7 +10306,8 @@ async function renderDocBillPanel(doc, slug) {
   const above = [$("doc-title")?.textContent, $("doc-topic")?.textContent]
     .map((t) => titleKey(t || "")).filter(Boolean);
   const repeats = above.some((h) => h === titleKey(entry.title) || h === titleKey(billName(entry)));
-  const line = `<p class="doc-bill-status">${esc(billStatusLine(entry))}</p>`;
+  const line = `<p class="doc-bill-status">${esc(billStatusLine(entry))}</p>${
+    progress ? `<p class="bill-progress-as-at">${esc(progress)}</p>` : ""}`;
   const link = `<p class="doc-bill-link"><a ${entityHrefAttr(billHash(entry.key))}>Bill page</a></p>`;
   const head = `<div class="doc-brief-head">
       <h2 class="subject-section-title" id="doc-bill-head">The bill</h2>

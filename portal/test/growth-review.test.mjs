@@ -34,7 +34,7 @@ test('model previews expose the written date separately from bill status',async(
  const code=app.slice(app.indexOf('async function fillBillPeek('),app.indexOf('/* --- bills on the party page'));
  const body={isConnected:true};
  const bill={summary:{generated_at:'2026-10-08T12:00:00Z',sentences:['Fixture model text.']}};
- const {fillBillPeek}=runInNewContext(code+';({fillBillPeek})',{growthModules:{...growthModules,loadModulePrivacy:async()=>()=>false},loadBill:async()=>bill,billHash:k=>'/bill/'+k,entityHrefAttr:h=>`href="${h}"`,iconSvg:()=>'',esc:String,billStatusLine:()=> 'Passed, status as at 9 Oct 2026',machineLabelHTML:()=>'<span>Machine-written</span>',machineNoticeHTML});
+ const {fillBillPeek}=runInNewContext(code+';({fillBillPeek})',{growthModules:{...growthModules,loadModulePrivacy:async()=>()=>false},loadBill:async()=>bill,billHash:k=>'/bill/'+k,entityHrefAttr:h=>`href="${h}"`,iconSvg:()=>'',esc:String,billStatusLine:()=> 'Passed, status as at 9 Oct 2026',loadBillsDate:async()=>'',billProgressAsAt:()=>'',machineLabelHTML:()=>'<span>Machine-written</span>',machineNoticeHTML});
  await fillBillPeek({querySelector:()=>body},{key:'test',has_summary:true});
  // The error notice: once, directly under the model's sentences and before the status line.
  {const html=body.innerHTML,text=html.indexOf('Fixture model text.'),line=html.indexOf('<p class="answer-notice">Machine-written summaries can contain errors. Check the original record before relying on one.</p>');

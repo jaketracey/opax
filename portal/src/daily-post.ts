@@ -13,6 +13,7 @@ import { TOPIC_NAMES } from './topic-names.mjs'
 import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
 import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
+import { billProgressAsAt } from '../public/bill-titles.js'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
@@ -479,14 +480,21 @@ function daysBetween(a: string, b: string): number {
   return toDay(b) - toDay(a)
 }
 
+/**
+ * The statuses a bill edition may feature. A bill the snapshot records as before parliament is not one: its progress
+ * can have moved since the export was made, and the edition would say it is still before parliament (hub ruling,
+ * 16 Nov 2026). A passed bill's standing is settled, and an exposure draft is not yet in parliament's record.
+ */
+export const EDITION_BILL_STATUSES: readonly string[] = ['exposure_draft', 'passed']
+
 async function billPost(date: string, sources: DailyPostSources, exclude: string[]): Promise<DailyPost | null> {
-  const index = await sources.asset('/bills/index.json') as { bills?: BillIndexItem[] } | null
+  const index = await sources.asset('/bills/index.json') as { generated_at?: string; bills?: BillIndexItem[] } | null
   const relevantDate = (b: BillIndexItem) => b.status === 'passed' ? b.status_as_of : b.introduced
   const bills = (index?.bills ?? []).filter(b => {
     const at = relevantDate(b)
     return b.has_summary && b.key && b.title && at && /^\d{4}-\d{2}-\d{2}$/.test(at.slice(0, 10)) &&
       daysBetween(at, date) >= 0 && daysBetween(at, date) <= 365 &&
-      ['before_parliament', 'exposure_draft', 'passed'].includes(b.status ?? '') && !exclude.includes(`bill:${b.key}`)
+      EDITION_BILL_STATUSES.includes(b.status ?? '') && !exclude.includes(`bill:${b.key}`)
   }).sort((a, b) => (relevantDate(b) ?? '').localeCompare(relevantDate(a) ?? '') || a.key.localeCompare(b.key)).slice(0, 14)
   let bill: BillIndexItem | null = null
   let record: BillFile | null = null
@@ -509,14 +517,19 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   // Assent, usually some days later, so it is named as that and only when the record holds no passing day
   // (billStanding). Every string that states it, on a channel, a slide or in an app, reads the same sentence.
   const standing = billStanding(bill, record) ?? `Passed ${formatDate(bill.status_as_of)}.`
-  const status = bill.status === 'exposure_draft'
+  // How old that standing is: the bills export's day, as the bill page says it (public/bill-titles.js). It follows
+  // every sentence that says where the bill stands, so no copy of the edition states a status without its date.
+  // A bill whose own record is newer than the export (a draft merged in after it) gets no line.
+  const asAt = billProgressAsAt(index?.generated_at, bill)
+  const progress = asAt ? ` ${asAt}.` : ''
+  const status = (bill.status === 'exposure_draft'
     ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Not yet introduced to parliament.`
     : bill.status === 'passed'
     ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.`
-    : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
+    : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`) + progress
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
-  const statusShort = bill.status === 'exposure_draft' ? `Draft released ${formatDate(bill.introduced)}; not introduced.`
-    : bill.status === 'passed' ? standing : `Introduced ${formatDate(bill.introduced)}; before parliament.`
+  const statusShort = (bill.status === 'exposure_draft' ? `Draft released ${formatDate(bill.introduced)}; not introduced.`
+    : bill.status === 'passed' ? standing : `Introduced ${formatDate(bill.introduced)}; before parliament.`) + progress
   // The channels' own copy carries no em dash, including one that came in a stored summary sentence.
   const plainDash = (text: string) => text.replace(/\s*\u2014\s*/g, ', ')
   const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${plainDash(s)}`).join('\n')}` : ''
@@ -529,7 +542,7 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
     channel_caption: [`${MACHINE_SUMMARY_PREFIX}${plainDash(sentences[0])}`, bill.title, status, more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
     caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
   }
-  const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort })
+  const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort, asAt })
   return told(post, story.slides, story.photos)
 }
 
@@ -590,7 +603,7 @@ const SOURCE_LABELS: Record<string, string> = {
   billhome: 'Bill home page on ParlInfo', frl_act: 'The Act on the Federal Register of Legislation', frl: 'The Federal Register of Legislation',
 }
 
-async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record: BillFile | null, sentences: string[], words: { sponsor: string; party: string; statusShort: string }): Promise<{ slides: (StorySlide | null)[]; photos: StoryPhotos }> {
+async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record: BillFile | null, sentences: string[], words: { sponsor: string; party: string; statusShort: string; asAt: string }): Promise<{ slides: (StorySlide | null)[]; photos: StoryPhotos }> {
   const catalogue = await photoCatalogue(sources)
   const billPhotos: StoryPhotos = { catalogue, used: [] }
   const divisions = (record?.divisions ?? []).filter(d => Number.isFinite(d.ayes) && Number.isFinite(d.noes) && d.date)
@@ -609,7 +622,7 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const what: StorySlide = { type: 'list', kicker: 'What it does', title: `In ${dayWords(Math.min(3, sentences.length)).toLowerCase()} sentence${sentences.length > 1 ? 's' : ''}`,
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',
     alt: `What it does: ${sentences.slice(0, 3).join(' ')}` }
-  const timeline = billTimeline(record)
+  const timeline = billTimeline(record, words.asAt)
   const division = latest ? divisionSlide(latest, divisions.length) : null
   const affected = (record?.summary?.affected ?? '').trim()
   const speeches = record?.speeches ?? []
@@ -625,8 +638,8 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   return { slides: [cover, what, timeline, division, touches, source], photos: billPhotos }
 }
 
-/** The passage of the bill in at most five dated stages. */
-function billTimeline(record: BillFile | null): StorySlide | null {
+/** The passage of the bill in at most five dated stages, with how old they are (`asAt`) as the line under the title. */
+function billTimeline(record: BillFile | null, asAt = ''): StorySlide | null {
   const dates = (record?.key_dates ?? []).filter(d => d.stage && /^\d{4}-\d{2}-\d{2}$/.test(d.date ?? ''))
   if (dates.length < 2) return null
   const houseOf = (h?: string) => HOUSE_NAMES[h ?? ''] ?? ''
@@ -648,8 +661,8 @@ function billTimeline(record: BillFile | null): StorySlide | null {
   const sorted = [...dates].map(d => d.date as string).sort()
   const days = daysBetween(sorted[0], sorted[sorted.length - 1])
   const title = days > 0 ? `${dayWords(days)} day${days === 1 ? '' : 's'}` : 'One sitting day'
-  return { type: 'timeline', kicker: 'How it moved', title, lines: [], events: events.slice(0, 5),
-    alt: `How it moved: ${events.map(e => `${e.text.toLowerCase()} ${e.date}`).join(', ')}.` }
+  return { type: 'timeline', kicker: 'How it moved', title, lines: asAt ? [`${asAt}.`] : [], events: events.slice(0, 5),
+    alt: `How it moved: ${events.map(e => `${e.text.toLowerCase()} ${e.date}`).join(', ')}.${asAt ? ` ${asAt}.` : ''}` }
 }
 
 function divisionSlide(d: BillDivision, count: number): StorySlide | null {

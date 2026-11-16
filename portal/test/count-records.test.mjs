@@ -233,6 +233,28 @@ test('status counts expose the unfiltered denominator and the share for the same
   assert.equal(empty.share_percent, null);
 });
 
+// For Ask a status share is said as at the bills export's Sydney day (the bill page's "Bill progress as at"); the public
+// MCP output keeps its earlier citation while its directory reviews are pending.
+test('for Ask a status share is said as at the bills export\'s Sydney day, a fresher export moves it, and MCP\'s citation is unchanged', async () => {
+  const cohortText = result => result.citations.find(c => /introduction cohort/.test(c.text)).text;
+  const askCount = (args, f = fixture()) => callTool(f.env, 'count_records', args, true);
+  const main = '3 bill records in the introduction cohort in federal parliament on 2024-02-29; 1 have snapshot status passed (33.33%)';
+  // 2026-10-04T16:27:54Z is 03:27 on 5 Oct in Sydney (AEDT).
+  assert.equal(cohortText(await askCount({ record_type: 'bills', date: '2024-02-29', status: 'passed' })), `${main}, as at 5 Oct 2026`);
+  const fresher = fixture({ '/bills/index.json': { generated_at: '2026-11-20T03:00:00+00:00', count: bills.length, meta: { mode: 'registry', parliament_floor: '1998-11-10' }, bills } });
+  assert.equal(cohortText(await askCount({ record_type: 'bills', date: '2024-02-29', status: 'passed' }, fresher)), `${main}, as at 20 Nov 2026`);
+  // An empty cohort has no share to date; an export with no date gives the share alone.
+  assert.match(cohortText(await askCount({ record_type: 'bills', date: '2024-04-01', status: 'passed' })), /; a share cannot be calculated for an empty cohort$/);
+  const undated = fixture({ '/bills/index.json': { count: bills.length, meta: { mode: 'registry', parliament_floor: '1998-11-10' }, bills } });
+  assert.equal(cohortText(await askCount({ record_type: 'bills', date: '2024-02-29', status: 'passed' }, undated)), main);
+  // MCP (no Ask flag): main's citation, byte for byte, whatever the export date.
+  for (const f of [fixture(), fresher]) {
+    const result = await count({ record_type: 'bills', date: '2024-02-29', status: 'passed' }, f);
+    assert.equal(cohortText(result), main);
+    assert.ok(!JSON.stringify(result.citations).includes('as at'));
+  }
+});
+
 test('including bill titles has a presentation cap while the total retains every matching bill', async () => {
   const manyBills = Array.from({ length: 61 }, (_, i) => ({ ...bills[0], key: `au-federal-many-${i}`, title: `Fixture Bill ${i}` }));
   const f = fixture({ '/bills/index.json': { generated_at: GENERATED_AT, count: manyBills.length, bills: manyBills } });

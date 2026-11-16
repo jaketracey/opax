@@ -1,7 +1,7 @@
 /** Discovery over the site-wide record catalog: which register holds a name or subject. No speeches. */
 import { searchCatalog, CATALOG_KINDS, type CatalogRecord } from '../catalog-search'
 import { tokens } from '../catalog-query.mjs'
-import { billCitations, billFields, billKey, clip, siteUrl } from './record-common'
+import { billCitations, billFields, billKey, billsExportedAt, clip, siteUrl, statesProgress } from './record-common'
 import type { ToolDefinition } from './types'
 import { recipientTotal } from './grants'
 import { campaignSpend } from './campaign-spend'
@@ -40,11 +40,14 @@ export const tool: ToolDefinition = {
     // The ranked catalogue omits single-character tokens. Resolve explicit bill
     // titles and keys in the published index before numbers can be discarded.
     let exact: CatalogRecord[] = []
+    // The bill index read here also says how old every bill status is (its generated_at); it is not read twice.
+    let indexAt: string | null = null
     if (['all', 'bill'].includes(kind) && (!args.jurisdiction || args.jurisdiction === 'federal')) {
       const title = requestedBillTitle(query) ?? query
       if (/\bbill\b/i.test(title) || /^au-[a-z0-9-]+$/.test(query)) {
         try {
-          const index = await readToolAsset(env, '/bills/index.json') as { bills?: { key: string; title: string; short_title?: string; jurisdiction?: string }[] } | null
+          const index = await readToolAsset(env, '/bills/index.json') as { generated_at?: unknown; bills?: { key: string; title: string; short_title?: string; jurisdiction?: string }[] } | null
+          indexAt = typeof index?.generated_at === 'string' ? index.generated_at : null
           exact = (index?.bills ?? []).filter(b => b.key === query || [b.title, b.short_title].some(t => billTitleMatches(t, title)))
             .map(b => ({ kind: 'bill', title: b.title, href: '/bill/' + b.key, slug: 'bill-' + b.key, resource: b.key, snippet: '', state: b.jurisdiction }))
         } catch { env.signal?.throwIfAborted() }
@@ -58,6 +61,9 @@ export const tool: ToolDefinition = {
     }
     const number = /\bno\.?\s*(\d+)\b/i.exec(query)?.[1]
     const hits = (found.results as CatalogRecord[]).filter(r => r.kind !== 'bill' || !number || /\bno\.?\s*(\d+)\b/i.exec(r.title)?.[1] === number).slice(0, 8)
+    // For Ask, a bill's status is stated as at the bills export's day (statesProgress): from the index read above, else
+    // read once for every bill hit. MCP's citations keep their earlier wording and make no extra read.
+    const exportedAt = statesProgress(env) && hits.some(r => r.kind === 'bill') ? indexAt ?? await billsExportedAt(env) : null
     const enriched = await Promise.all(hits.map(async r => {
       // `machine`: the catalogue's own flag for a row whose text carries a bill's model-written summary sentences.
       const row = { kind: r.kind, title: r.kind === 'bill' ? r.title : clip(r.title, 120), summary: clip(r.snippet, 200), url: siteUrl(env, r.href || '/doc/' + r.slug), ...(r.dateLabel || r.date ? { period: r.dateLabel || r.date } : {}), ...(r.machine === true && r.snippet ? { machine: true } : {}) }
@@ -70,7 +76,7 @@ export const tool: ToolDefinition = {
       }
       if (r.kind !== 'bill') return { row, citations: [{ kind: 'record' as const, text: `${LABEL[r.kind] ?? r.kind[0].toUpperCase() + r.kind.slice(1)}: ${row.title}${row.summary ? ' — ' + row.summary : ''}`, url: row.url }] }
       const lifecycle = await billFields(env, billKey(r.href, r.slug))
-      return { row: { ...row, ...lifecycle }, citations: billCitations(lifecycle, row.title, row.url, query) }
+      return { row: { ...row, ...lifecycle }, citations: billCitations(lifecycle, row.title, row.url, query, exportedAt) }
     }))
     let sizeLimited = false
     const result = () => ({

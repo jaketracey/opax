@@ -2,6 +2,7 @@
 import { tableApi } from '../table-api'
 import { readToolAsset, type ToolEnv, type ToolCitation } from './types'
 import { billQuestionFocus } from '../research-record-answer'
+import { BILLS_DATE_PATH, billsAsAtDay } from '../../public/bill-titles.js'
 
 export const fold = (s: unknown) => String(s ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase().replace(/\s+/g, ' ').trim()
 export const aud = (n: unknown) => '$' + Math.round(Number(n)).toLocaleString('en-AU')
@@ -66,6 +67,30 @@ export function billKey(href: string, slug: string): string | null {
   return key && /^au-[a-z0-9-]{1,180}$/.test(key) ? key : null
 }
 
+/**
+ * Ask states a bill's status as at the bills export's day ("as at 5 Oct 2026", the bill page's "Bill progress as
+ * at") in the citations of find_records, sponsored_bills and count_records. The public MCP output keeps those
+ * citations' earlier wording while its directory reviews are pending, as member-expenses.ts statesCoverage does: to
+ * switch MCP on, make this return true (only the citation text changes; the tool list, names and schemas do not).
+ * MCP's bill_search and bill_detail already say the day, in a note of their own.
+ */
+export const statesProgress = (env: ToolEnv) => env.ask === true
+
+/**
+ * The bills export's generated_at: the day every bill status and stage these tools report is as at, the date the bill
+ * page shows as "Bill progress as at". Read from the release's small date file, else from the bill index itself;
+ * null when neither gives a date. Status text says "as at" this day (billCitations), never the stage's own date.
+ */
+export async function billsExportedAt(env: ToolEnv): Promise<string | null> {
+  for (const path of [BILLS_DATE_PATH, '/bills/index.json']) {
+    let file: unknown
+    try { file = await readToolAsset(env, path) } catch { env.signal?.throwIfAborted(); continue }
+    const at = objectField(file)?.generated_at
+    if (typeof at === 'string' && billsAsAtDay(at)) return at
+  }
+  return null
+}
+
 /** Read the same lifecycle as the bill page; missing evidence stays missing. */
 export async function billFields(env: ToolEnv, key: string | null): Promise<BillFields> {
   const empty: BillFields = { key, lifecycle_available: false, introduced: null, originating_house: null, key_dates: [], passed_both_houses: null, passed_both_houses_date: null,
@@ -120,8 +145,9 @@ const sponsorName = (raw: string) => {
   const suffix = parts.slice(2).filter(part => !/^(?:MP|Senator|Sen\.?)$/i.test(part)).join(' ')
   return [parts[1].replace(/^(?:(?:Sen|Senator|Hon|Dr|Mr|Mrs|Ms)\.?\s+)+/i, ''), titleCaseName(parts[0]), suffix].filter(Boolean).join(' ')
 }
-/** Citations become the writer's facts. Row fields alone never reach its fact sheet. */
-export function billCitations(bill: BillFields, title: string, url: string, query: string): ToolCitation[] {
+/** Citations become the writer's facts. Row fields alone never reach its fact sheet. `exportedAt` is the bills
+ *  export's generated_at (billsExportedAt): a status is stated as at that day, the day the record was last read. */
+export function billCitations(bill: BillFields, title: string, url: string, query: string, exportedAt: string | null = null): ToolCitation[] {
   if (!bill.lifecycle_available) return [{ kind: 'record', text: `OPAX lists ${title}, but its lifecycle record is unavailable.`, url }]
   const facts: { topic: string; text: string; url: string }[] = []
   const add = (topic: string, text: string, source = url) => facts.push({ topic, text, url: source })
@@ -140,7 +166,8 @@ export function billCitations(bill: BillFields, title: string, url: string, quer
     return party ? `${name} (${party})` : name
   })
   if (named.length) add('sponsor', `${named.join('; ')} ${named.length === 1 ? 'is the recorded sponsor' : 'are the recorded sponsors'} of the ${title}.`)
-  if (bill.status) add('status', `The ${title} has recorded status ${bill.status.replaceAll('_', ' ')}${bill.ended_label ? ` (${bill.ended_label})` : ''}${bill.status_as_of ? ' as at ' + displayDate(bill.status_as_of) : ''}.`)
+  const asAt = billsAsAtDay(exportedAt, bill)
+  if (bill.status) add('status', `The ${title} has recorded status ${bill.status.replaceAll('_', ' ')}${bill.ended_label ? ` (${bill.ended_label})` : ''}${asAt ? ' as at ' + asAt : bill.status_as_of ? ' as at ' + displayDate(bill.status_as_of) : ''}.`)
   if (bill.portfolio && !/^\(s\)/i.test(bill.portfolio)) add('portfolio', `The ${title} is recorded under the ${bill.portfolio} portfolio.`)
   const stages: string[] = []
   for (const event of bill.key_dates) {

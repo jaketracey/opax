@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { build } from 'esbuild'
+import { billsAsAtDay } from '../public/bill-titles.js'
 
 const built = await build({ stdin: { contents: "export * from './src/ask-exact-lookup'; export * from './src/ask-constraints'; export {runAgentic, inferPeriod, extractNamedScope} from './src/agentic-ask'; export {agenticAskPayload} from './src/agentic-response'; export {groundAnswerPayload} from './src/research-grounding';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'browser', format: 'esm', external: ['node:*'] })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
@@ -34,7 +35,9 @@ test('bill title matching preserves the year and accepts an unambiguous title wi
 
 test('a rejected-bill premise is corrected with the exact recorded status first', async () => {
   const q = `Why was the ${passed.title} rejected by parliament?`, out = await lookup(q)
-  assert.equal(out.answer.answer, `${passed.title} passed parliament; it was not rejected.`)
+  // The status is as at the bills export's Sydney day, from the index the lookup read (it moves with the data).
+  assert.ok(billsAsAtDay(bills.generated_at))
+  assert.equal(out.answer.answer, `${passed.title} passed parliament; it was not rejected. Bill progress as at ${billsAsAtDay(bills.generated_at)}.`)
   assert.match(out.answer.sources[0].url, new RegExp('/bill/' + passed.key + '$'))
 })
 

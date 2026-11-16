@@ -1,3 +1,4 @@
+import {shortDate} from './format.js';
 /**
  * The bill fields the app and profiles read from /bills/index.json (1.8 MB), in index order:
  * - key, titles, aliases and jurisdiction: the server-rendered profile links recorded votes to
@@ -22,6 +23,46 @@ export const BILLS_DATE_PATH = '/growth/bills-date.json';
 export function billsDateFile(index) {
   if (typeof index?.generated_at !== 'string') throw new Error('bills date: no generated_at');
   return {generated_at: index.generated_at};
+}
+/** How old a bill's recorded status and stages are: the bills export's day, from its generated_at. The words are
+ *  one line wherever a bill's status is shown (the bill page, the daily edition, Ask and MCP results), and the
+ *  story cover keeps the line with the bill's standing when it clips (og.ts). */
+export const BILL_PROGRESS_WORDS = 'Bill progress as at';
+const SYDNEY_DAY = new Intl.DateTimeFormat('en-AU', {timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit'});
+/**
+ * "2026-10-05": the export's day in Sydney (hub ruling, 17 Nov 2026). generated_at is a UTC stamp, and
+ * 2026-10-04T16:27:54Z is 03:27 on 5 Oct AEDT, so its day is 5 Oct; the conversion names Australia/Sydney, so AEST
+ * and AEDT both hold and no viewer's own zone moves it. A bare date is its own day; a stamp with no offset is UTC.
+ * '' when it is not a real date and time.
+ */
+export function billsAsAtIso(generatedAt) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?)?$/i.exec(typeof generatedAt === 'string' ? generatedAt.trim() : '');
+  if (!m) return '';
+  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])], date = new Date(Date.UTC(y, mo - 1, d));
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== mo - 1 || date.getUTCDate() !== d) return '';
+  if (m[4] === undefined) return `${m[1]}-${m[2]}-${m[3]}`;
+  const zone = !m[8] || /^z$/i.test(m[8]) ? 'Z' : m[8].includes(':') ? m[8] : `${m[8].slice(0, 3)}:${m[8].slice(3)}`;
+  const at = Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6] ?? '00'}${m[7] ?? ''}${zone}`);
+  if (!Number.isFinite(at) || Number(m[4]) > 23 || Number(m[5]) > 59 || Number(m[6] ?? 0) > 59) return '';
+  const part = Object.fromEntries(SYDNEY_DAY.formatToParts(new Date(at)).map(p => [p.type, p.value]));
+  return `${part.year}-${part.month}-${part.day}`;
+}
+/**
+ * "5 Oct 2026": the export's Sydney day in the site's short form, or '' when there is none. Given a bill, also ''
+ * when the bill's own record is newer than the export: an exposure draft merged in after it (export_bills.py
+ * --merge-drafts keeps the index's generated_at) would otherwise say its progress is as at a day before its release.
+ */
+export function billsAsAtDay(generatedAt, bill = null) {
+  const day = billsAsAtIso(generatedAt);
+  if (!day) return '';
+  const own = [bill?.introduced, bill?.status_as_of].map(v => typeof v === 'string' ? v.slice(0, 10) : '').filter(v => /^\d{4}-\d{2}-\d{2}$/.test(v));
+  return own.some(v => v > day) ? '' : shortDate(day);
+}
+/** "Bill progress as at 5 Oct 2026", or '' when the export's generated_at is missing or not a date (or, given a
+ *  bill, when the bill's own record is newer than the export). */
+export function billProgressAsAt(generatedAt, bill = null) {
+  const day = billsAsAtDay(generatedAt, bill);
+  return day ? `${BILL_PROGRESS_WORDS} ${day}` : '';
 }
 /** The bills with recorded divisions, in index order, with the fields a party page sorts them by:
  *  the party page's "Bills they divided on" picks its newest candidates from these (app.js

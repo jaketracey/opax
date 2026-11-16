@@ -12,7 +12,7 @@ const built = await build({ stdin: { contents: [
   "export {publicationCopy} from './src/social-publication'",
   "export {widgetEdition} from './src/app-widget'",
   "export {storedEdition} from './src/app-edition'",
-  "export {OG_VERSION} from './src/og'",
+  "export {OG_VERSION, storySlideTree} from './src/og'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' });
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const { composeDailyPost, publicationCopy, widgetEdition, storedEdition, billStanding, billPostText, authoriseVicPost, xLength, X_LIMIT } = api;
@@ -21,8 +21,9 @@ const S1 = 'It would move the annual reporting date for registered entities to 1
 const S2 = 'It would let the regulator grant a one-off extension.';
 const S3 = 'It would commence on Royal Assent.';
 const index = { bills: [
-  // Introduced, no stage rail (one dated stage): the widget and the app's plate show the status alone.
-  { key: 'au-federal-x1', title: 'Example Reporting Amendment Bill 2026', introduced: '2026-09-07', status: 'before_parliament', sponsor: 'EXAMPLE, Alex, MP', sponsor_party: 'Independent Members', has_summary: true },
+  // An exposure draft, no stage rail (one dated stage): the widget and the app's plate show the status alone. A bill
+  // the snapshot records as before parliament is never featured (hub ruling, 16 Nov 2026), so the draft stands in.
+  { key: 'au-federal-x1', title: 'Example Reporting Amendment Bill 2026', introduced: '2026-09-07', status: 'exposure_draft', sponsor: 'EXAMPLE, Alex, MP', sponsor_party: 'Independent Members', has_summary: true },
   // Passed: the record holds the day it passed (19 Aug) and the day of assent (26 Aug), which is its status date.
   { key: 'au-federal-x2', title: 'Example Customs Bill 2026', introduced: '2026-03-01', status: 'passed', status_as_of: '2026-08-26', sponsor: '', portfolio: 'Home Affairs', has_summary: true },
   // Passed, but the record holds only the assent.
@@ -42,9 +43,9 @@ test('what the apps read is what main wrote: text, caption and slides, and the a
   const post = await compose('au-federal-x1');
   assert.equal(post.subject, 'bill:au-federal-x1');
   // Main's short text: the summary sentence, the status, the bill's name, the link.
-  assert.equal(post.text, `${S1}\n\nIntroduced 7 Sep 2026; before parliament.\n\nExample Reporting Amendment Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x1`);
+  assert.equal(post.text, `${S1}\n\nDraft released 7 Sep 2026; not introduced.\n\nExample Reporting Amendment Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x1`);
   // Main's caption: the sentence first, the marker in its last paragraph before the link.
-  assert.equal(post.caption, [S1, 'Example Reporting Amendment Bill 2026', 'Introduced 7 Sep 2026 by Alex Example (Independent). Still before parliament.',
+  assert.equal(post.caption, [S1, 'Example Reporting Amendment Bill 2026', 'Exposure draft released 7 Sep 2026 by Alex Example (Independent). Not yet introduced to parliament.',
     `What else is in the bill?\n• ${S2}\n• ${S3}`, 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', 'https://opax.com.au/bill/au-federal-x1'].join('\n\n'));
   // /api/app/v1/edition/latest is built from the stored post field by field (app-edition.ts): the same keys as before, and
   // the same value for each, whether or not the stored post carries the channel copies.
@@ -58,16 +59,16 @@ test('what the apps read is what main wrote: text, caption and slides, and the a
   const widget = widgetEdition(post, null);
   assert.deepEqual(widget, widgetEdition(without(post), null));
   // A bill with no stage rail: the summary sentence is printed in the body under its label, so the plate line is the status alone.
-  assert.equal(widget.line, 'Introduced 7 Sep 2026; before parliament');
+  assert.equal(widget.line, 'Draft released 7 Sep 2026; not introduced');
   assert.ok(!widget.line.includes('It would move'));
 });
 
 test('X and Bluesky post the record: the bill\'s name, where it stands and its sponsor, with no model sentence', async () => {
   const post = await compose('au-federal-x1');
-  assert.equal(post.record_text, 'Example Reporting Amendment Bill 2026\n\nIntroduced 7 Sep 2026; before parliament.\n\nSponsor: Alex Example (Independent).\n\nhttps://opax.com.au/bill/au-federal-x1');
+  assert.equal(post.record_text, 'Example Reporting Amendment Bill 2026\n\nDraft released 7 Sep 2026; not introduced.\n\nSponsor: Alex Example (Independent).\n\nhttps://opax.com.au/bill/au-federal-x1');
   const x = publicationCopy(post, 'x').text, bluesky = publicationCopy(post, 'bluesky').text;
-  assert.ok(x.startsWith('Example Reporting Amendment Bill 2026\n\nIntroduced 7 Sep 2026; before parliament.\n\nSponsor: Alex Example (Independent).\n\nhttps://opax.com.au/bill/au-federal-x1?utm_source=x'), x);
-  assert.equal(bluesky, 'Example Reporting Amendment Bill 2026\n\nIntroduced 7 Sep 2026; before parliament.\n\nSponsor: Alex Example (Independent).\n\n#auspol');
+  assert.ok(x.startsWith('Example Reporting Amendment Bill 2026\n\nDraft released 7 Sep 2026; not introduced.\n\nSponsor: Alex Example (Independent).\n\nhttps://opax.com.au/bill/au-federal-x1?utm_source=x'), x);
+  assert.equal(bluesky, 'Example Reporting Amendment Bill 2026\n\nDraft released 7 Sep 2026; not introduced.\n\nSponsor: Alex Example (Independent).\n\n#auspol');
   for (const text of [x, bluesky]) { assert.ok(!text.includes('It would move') && !text.includes('Machine-written')); assert.doesNotMatch(text, /[–—]/); }
   assert.ok(xLength(x) <= X_LIMIT);
   assert.ok([...bluesky].length <= 300, 'Bluesky allows 300 graphemes');
@@ -80,7 +81,7 @@ test('X and Bluesky post the record: the bill\'s name, where it stands and its s
 
 test('Facebook and Instagram captions open "Machine-written summary: <sentence>" and say it once', async () => {
   const post = await compose('au-federal-x1');
-  assert.equal(post.channel_caption, [`Machine-written summary: ${S1}`, 'Example Reporting Amendment Bill 2026', 'Introduced 7 Sep 2026 by Alex Example (Independent). Still before parliament.',
+  assert.equal(post.channel_caption, [`Machine-written summary: ${S1}`, 'Example Reporting Amendment Bill 2026', 'Exposure draft released 7 Sep 2026 by Alex Example (Independent). Not yet introduced to parliament.',
     `What else is in the bill?\n• ${S2}\n• ${S3}`, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', 'https://opax.com.au/bill/au-federal-x1'].join('\n\n'));
   for (const [channel, limit] of [['facebook', 4900 + 20], ['instagram', 2200]]) {
     const text = publicationCopy(post, channel).text;
@@ -138,9 +139,9 @@ test('every string that states it says the same true sentence: the short text, t
   assert.equal(assentCover.line, `${S1} Royal Assent 27 Aug 2026.`);
   assert.ok(assentCover.alt.endsWith('Royal Assent 27 Aug 2026.'));
   for (const text of [assent.text, assent.caption, JSON.stringify(assent.slides)]) assert.doesNotMatch(text, /Passed \d/);
-  // A bill before parliament: nothing changes at all.
+  // An exposure draft: nothing changes at all.
   const before = await compose('au-federal-x1');
-  assert.ok(before.text.includes('Introduced 7 Sep 2026; before parliament.') && before.slides[0].line.endsWith('Introduced 7 Sep 2026; before parliament.'));
+  assert.ok(before.text.includes('Draft released 7 Sep 2026; not introduced.') && before.slides[0].line.endsWith('Draft released 7 Sep 2026; not introduced.'));
   // The widget reads the cover line and the first paragraph together: the sentence is still printed once.
   const widget = widgetEdition(assent, null);
   assert.ok(widget && !String(widget.line ?? '').includes('It would move'));
@@ -194,7 +195,7 @@ test('a bill edition\'s cover slide carries the small "Machine-written summary" 
   assert.equal(cover.note, 'Machine-written summary');
   for (const slide of post.slides.slice(1)) assert.ok(!('note' in slide) || slide.type === 'list', slide.type);
   // What the widget and the app's plate read off the cover is unchanged: the line, and nothing of the note.
-  assert.equal(widgetEdition(post, null).line, 'Introduced 7 Sep 2026; before parliament');
+  assert.equal(widgetEdition(post, null).line, 'Draft released 7 Sep 2026; not introduced');
   assert.ok(!JSON.stringify(widgetEdition(post, null)).includes('Machine-written'));
   // The app edition carries the slides as stored, so the cover has the one new key and every other value as before.
   const stored = storedEdition(row(post)).slides[0];
@@ -244,9 +245,9 @@ test('a bill\'s slides are what main draws from: the stored cover, list and sour
   const [cover, list] = post.slides;
   assert.deepEqual({ type: cover.type, kicker: cover.kicker, title: cover.title, line: cover.line, photo: cover.photo, alt: cover.alt }, {
     type: 'cover', kicker: 'Bill · Alex Example (Independent)', title: 'Example Reporting Amendment',
-    line: `${S1} Introduced 7 Sep 2026; before parliament.`, photo: 'senate',
+    line: `${S1} Draft released 7 Sep 2026; not introduced.`, photo: 'senate',
     // The cover's alt says who wrote the sentence (this branch's third commit); everything else is as main stores it.
-    alt: `Example Reporting Amendment Bill 2026. Machine-written summary: ${S1} Introduced 7 Sep 2026; before parliament.` });
+    alt: `Example Reporting Amendment Bill 2026. Machine-written summary: ${S1} Draft released 7 Sep 2026; not introduced.` });
   assert.deepEqual(list, { type: 'list', kicker: 'What it does', title: 'In three sentences', items: [S1, S2, S3], note: 'Written by a model from the explanatory memorandum; not the record.', alt: `What it does: ${S1} ${S2} ${S3}` });
   // The slides do not depend on the channel copies: the same with them taken off.
   assert.deepEqual(without(post).slides, post.slides);
@@ -299,3 +300,109 @@ test('the donor reference is printed once when an edition stored in main\'s form
   // And an edition composed now is stable when authorised twice.
   assert.deepEqual(authoriseVicPost(now), now);
 });
+
+// How old the bill's progress is (hub ruling (c), 16 Nov 2026): wherever an edition states a bill's standing it says
+// "Bill progress as at <day>", the day of the bills export's generated_at. The fixtures above carry no generated_at, so
+// their text is as it was; these give the index one.
+const dated = (generated_at, key) => ({ ...sources(key), async asset(path) { if (path === '/bills/index.json') return { generated_at, bills: index.bills.filter(b => b.key === key) }; return sources(key).asset(path); } });
+const composeAt = (generated_at, key) => composeDailyPost('2026-11-17', dated(generated_at, key), 'bill');
+const EXPORTED = '2026-10-04T16:27:54+00:00', FRESHER = '2026-11-20T03:00:00+00:00';
+
+test('the daily post never features a bill the snapshot records as before parliament', async () => {
+  assert.deepEqual([...api.EDITION_BILL_STATUSES], ['exposure_draft', 'passed']);
+  const waiting = { key: 'au-federal-x0', title: 'Example Waiting Bill 2026', introduced: '2026-11-10', status: 'before_parliament', status_as_of: '2026-11-10', sponsor: '', portfolio: 'Finance', has_summary: true };
+  const all = [waiting, ...index.bills];
+  const src = list => ({ ...sources(''), async asset(path) { if (path === '/bills/index.json') return { generated_at: EXPORTED, bills: list }; if (path === '/bills/au-federal-x0.json') return files['au-federal-x1']; return sources('').asset(path); } });
+  // The newest bill with a summary, over two months of days: the pick goes to the others every day.
+  const picked = new Set();
+  for (let day = 1; day <= 60; day++) {
+    const date = new Date(Date.UTC(2026, 10, 10 + day)).toISOString().slice(0, 10);
+    const post = await composeDailyPost(date, src(all), 'bill');
+    assert.ok(post?.subject.startsWith('bill:'), date);
+    assert.notEqual(post.subject, 'bill:au-federal-x0', date);
+    picked.add(post.subject);
+  }
+  assert.ok(picked.size > 1, 'the pick still rotates among the bills it may feature');
+  // With only a bill before parliament to choose from there is no bill edition.
+  const alone = await composeDailyPost('2026-11-17', src([waiting]), 'bill');
+  assert.ok(alone === null || !alone.subject.startsWith('bill:'), alone?.subject);
+});
+
+test('a bill edition says "Bill progress as at" the export\'s day wherever it states the bill\'s standing, and a fresher export moves it', async () => {
+  const post = await composeAt(EXPORTED, 'au-federal-x2');
+  // 2026-10-04T16:27:54Z is 03:27 on 5 Oct in Sydney (AEDT): the line names the Sydney day.
+  const line = 'Bill progress as at 5 Oct 2026.';
+  assert.equal(post.text, `${S1}\n\nPassed 19 Aug 2026. ${line}\n\nExample Customs Bill 2026\n\nhttps://opax.com.au/bill/au-federal-x2`);
+  assert.equal(post.record_text, `Example Customs Bill 2026\n\nPassed 19 Aug 2026. ${line}\n\nHome Affairs portfolio.\n\nhttps://opax.com.au/bill/au-federal-x2`);
+  for (const caption of [post.caption, post.channel_caption]) assert.ok(caption.includes(`\n\nPassed 19 Aug 2026. Introduced 1 Mar 2026 (Home Affairs portfolio). ${line}\n\n`), caption);
+  const [cover, , timeline] = post.slides;
+  assert.equal(cover.line, `${S1} Passed 19 Aug 2026. ${line}`);
+  assert.ok(cover.alt.endsWith(`Passed 19 Aug 2026. ${line}`), cover.alt);
+  assert.equal(timeline.type, 'timeline');
+  assert.deepEqual(timeline.lines, [line]);
+  assert.ok(timeline.alt.endsWith(` ${line}`), timeline.alt);
+  // Said once per string, never with an em dash, and within each channel's length.
+  for (const text of [post.text, post.record_text, post.caption, post.channel_caption, cover.line, cover.alt, timeline.alt]) {
+    assert.equal(text.split('Bill progress as at').length - 1, 1, text);
+    assert.doesNotMatch(text, /[–—]/);
+  }
+  const x = publicationCopy(post, 'x').text, bluesky = publicationCopy(post, 'bluesky').text;
+  assert.ok(x.includes(line) && bluesky.includes(line));
+  assert.ok(xLength(x) <= X_LIMIT);
+  assert.ok([...bluesky].length <= 300, 'Bluesky allows 300 graphemes');
+  // An assent with no passing day, and an exposure draft (the widget states its status, so the line is there too).
+  assert.ok((await composeAt(EXPORTED, 'au-federal-x3')).text.includes(`\n\nRoyal Assent 27 Aug 2026. ${line}\n\n`));
+  const draft = await composeAt(EXPORTED, 'au-federal-x1');
+  assert.ok(draft.text.includes(`\n\nDraft released 7 Sep 2026; not introduced. ${line}\n\n`));
+  assert.ok(draft.caption.includes(`Not yet introduced to parliament. ${line}\n\n`));
+  assert.equal(widgetEdition(draft, null).line, 'Draft released 7 Sep 2026; not introduced. Bill progress as at 5 Oct 2026');
+  // The app's edition response keeps its keys; only the strings carry the line.
+  assert.deepEqual(Object.keys(storedEdition(row(post))), ['date', 'kind', 'subject', 'title', 'text', 'url', 'caption', 'slides']);
+  // A fresher export moves every line with no other change.
+  const fresh = await composeAt(FRESHER, 'au-federal-x2');
+  assert.equal(JSON.stringify(fresh).split('Bill progress as at 5 Oct 2026').length - 1, 0);
+  assert.equal(JSON.stringify(fresh), JSON.stringify(post).replaceAll('Bill progress as at 5 Oct 2026', 'Bill progress as at 20 Nov 2026'));
+  // No export date: no line, and the edition is exactly what the undated index gives.
+  assert.equal(JSON.stringify(await composeAt('not a date', 'au-federal-x2')), JSON.stringify(await compose('au-federal-x2')));
+  // An exposure draft released after the export (merged in with the index's old generated_at) says no line, rather
+  // than an as-at day before its own release; a bill whose record the export covers still does.
+  const early = '2026-09-01T00:00:00+00:00';
+  assert.equal(JSON.stringify(await composeAt(early, 'au-federal-x1')), JSON.stringify(await compose('au-federal-x1')));
+  assert.ok((await composeAt(early, 'au-federal-x2')).text.includes('\n\nPassed 19 Aug 2026. Bill progress as at 1 Sep 2026.\n\n'));
+});
+
+// Hub ruling, 17 Nov 2026: the apps' `text` keeps its 280-character budget, so with "Bill progress as at" in it some
+// bills' names no longer fit there (the app card shows the title on its own). Everything that goes out to the
+// channels must still name the bill: proved here over every bill the edition can feature on 17 Nov.
+test('every bill an edition can feature: the captions, the X and Bluesky posts and the cover image name it, including bills whose apps\' text has no room left for the name', async () => {
+  const read = path => { try { return JSON.parse(readFileSync(new URL('../public' + path, import.meta.url), 'utf8')); } catch { return null; } };
+  const published = read('/bills/index.json'), date = '2026-11-17';
+  const age = day => (Date.parse(date) - Date.parse(String(day).slice(0, 10))) / 864e5;
+  const pool = published.bills.filter(b => { const day = b.status === 'passed' ? b.status_as_of : b.introduced;
+    return b.has_summary && b.key && b.title && api.EDITION_BILL_STATUSES.includes(b.status) && day && age(day) >= 0 && age(day) <= 365; });
+  assert.ok(pool.length > 50, `the pool has ${pool.length} bills`);
+  // A bill is named by its title or short title, or by its title cut on a word with "…" where a channel is short.
+  const names = (text, bill) => [bill.title, bill.short_title].filter(Boolean).some(name => text.includes(name))
+    || text.split('\n').some(line => { const cut = /^(.{40,})…$/.exec(line.trim()); return !!cut && bill.title.startsWith(cut[1]); });
+  const texts = el => !el || typeof el !== 'object' ? [] : [...(typeof el.props?.children === 'string' ? [el.props.children] : []),
+    ...[el.props?.children].flat().filter(c => c && typeof c === 'object').flatMap(texts)];
+  const noRoom = [];
+  for (const bill of pool) {
+    const post = await composeDailyPost(date, { asset: async path => path === '/bills/index.json' ? { ...published, bills: [bill] } : read(path), personTopics: async () => [], recent: async () => [] }, 'bill');
+    assert.equal(post?.subject, 'bill:' + bill.key);
+    assert.match(post.text, /Bill progress as at /, bill.key);
+    if (!names(post.text, bill)) noRoom.push(bill.key);
+    for (const [where, text] of [['caption', post.caption], ['channel_caption', post.channel_caption], ['record_text', post.record_text],
+      ...['facebook', 'instagram', 'x', 'bluesky'].map(channel => [channel, publicationCopy(post, channel).text])])
+      assert.ok(names(text, bill), `${bill.key} ${where}: ${text.slice(0, 160)}`);
+    // The share image: the cover slide's headline is the bill's name, drawn on the image, and its alt text is the full title.
+    const cover = post.slides[0], headline = cover.title.replace(/…$/, '');
+    // (The headline drops the trailing "Bill 2026": "Copyright Amendment" for the Copyright Amendment Bill 2026.)
+    assert.ok(headline.length > 0 && (bill.short_title || bill.title).startsWith(headline), `${bill.key} cover: ${cover.title}`);
+    assert.ok(cover.alt.startsWith(`${bill.title}. `), `${bill.key} cover alt`);
+    assert.ok(texts(api.storySlideTree(cover, {})).some(t => t.length >= Math.min(20, headline.length) && headline.startsWith(t.replace(/…$/, ''))), `${bill.key}: the headline is drawn`);
+  }
+  // The case this proves: bills whose apps' text has no room for the name are still named everywhere else.
+  assert.ok(noRoom.length > 0, 'some bills have no room for the name in the apps\' text');
+});
+

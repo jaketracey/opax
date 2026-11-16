@@ -1,4 +1,5 @@
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionMaterial } from '../public/vic-election.js'
+import { BILL_PROGRESS_WORDS } from '../public/bill-titles.js'
 // Open Graph cards: the element tree for one 1200x630 share image.
 //
 // Pure: no I/O, no wasm, no environment. The Worker (src/og-render.ts) and the
@@ -163,12 +164,16 @@ function clipToLines(text: string, width: number, size: number, em: number, maxL
 /**
  * As clipToLines, but the text's last sentence is kept whole and the words before it give way. A bill's cover line is
  * its summary sentence followed by where the bill stands ("Passed 19 Aug 2026."): when the two run past the rows
- * there are, the sentence is cut, never the standing and its date. Text with one sentence is clipped as usual.
+ * there are, the sentence is cut, never the standing and its date. When the standing is followed by how old it is
+ * ("Passed 19 Aug 2026. Bill progress as at 4 Oct 2026."), the two are kept whole together. Text with one sentence is
+ * clipped as usual.
  */
 function clipKeepingLast(text: string, width: number, size: number, em: number, maxLines: number): string {
   const t = text.trim()
   if (wrapLines(t, width, size, em) <= maxLines) return t
-  const cut = Math.max(t.lastIndexOf('. '), t.lastIndexOf('… '), t.lastIndexOf('? '), t.lastIndexOf('! '))
+  const boundary = (s: string) => Math.max(s.lastIndexOf('. '), s.lastIndexOf('… '), s.lastIndexOf('? '), s.lastIndexOf('! '))
+  let cut = boundary(t)
+  if (cut > 0 && t.slice(cut + 2).trim().startsWith(BILL_PROGRESS_WORDS)) cut = boundary(t.slice(0, cut))
   const tail = cut > 0 ? t.slice(cut + 2).trim() : ''
   // A last sentence that could not share the rows with any of the text before it is not kept at that cost.
   if (!tail || wrapLines(tail, width, size, em) >= maxLines) return clipToLines(t, width, size, em, maxLines)

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
+import { billsAsAtDay } from '../public/bill-titles.js';
 // MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
 const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
@@ -154,6 +155,20 @@ test('sponsored bills use the complete index with real status, dates, source cit
   const detail = await api.callTool(env, 'sponsored_bills', out.rows[0].follow_up); cited(detail); assert.ok(detail.rows[0].lifecycle.key_dates.length);
   assert.ok(out.rows[0].source_url); assert.equal(out.citations[1].url, out.rows[0].source_url);
 });
+test('for Ask a sponsored bill\'s status is stated as at the bills export\'s Sydney day, a fresher export moves it, and MCP\'s citation is unchanged', async () => {
+  const index = await asset('/bills/index.json');
+  const statusText = out => out.citations.find(c => c.kind === 'record' && /is the recorded sponsor of/.test(c.text)).text;
+  const args = { person: 'Katy Gallagher', limit: 1 };
+  const out = await api.callTool(env, 'sponsored_bills', args, true);
+  assert.match(statusText(out), new RegExp(`; status lapsed(?: \\([^)]+\\))? as at ${billsAsAtDay(index.generated_at)}\\.`));
+  const raw = { ...index, generated_at: '2026-11-20T03:00:00+00:00' };
+  const fresherEnv = { ...env, asset: path => path === '/bills/index.json' ? Promise.resolve(raw) : asset(path) };
+  assert.match(statusText(await api.callTool(fresherEnv, 'sponsored_bills', args, true)), /; status lapsed(?: \([^)]+\))? as at 20 Nov 2026\./);
+  // MCP (no Ask flag): the status keeps its own date, as on main, whatever the export date.
+  const mcp = await api.callTool(env, 'sponsored_bills', args), row = mcp.rows[0];
+  assert.match(statusText(mcp), new RegExp(`; status lapsed(?: \\([^)]+\\))? as at ${row.status_as_of}\\.`));
+  assert.equal(JSON.stringify((await api.callTool(fresherEnv, 'sponsored_bills', args)).citations), JSON.stringify(mcp.citations));
+});
 test('sponsored bill counts exceed growth limits and pagination does not change them', async () => {
   const all = await api.callTool(env, 'sponsored_bills', { person: 'Sarah Hanson-Young', limit: 8 }); cited(all);
   assert.ok(all.count > 6); const next = await api.callTool(env, 'sponsored_bills', { person: 'Sarah Hanson-Young', limit: 8, offset: all.next_offset }); cited(next);
@@ -195,7 +210,16 @@ test('all three tools are shared by authenticated MCP and Ask with matching sche
     assert.equal(listed.find(t => t.name === 'query_register').inputSchema.properties.register.enum.includes(name), name === 'access_registers');
     const rpc = await send('tools/call', { name, arguments: args }); assert.equal(rpc.error, undefined, JSON.stringify(rpc));
     const ask = await api.askToolSpecs.find(t => t.name === name).run({ ...env, origin: 'https://opax.com.au' }, args);
-    assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data); cited(ask.data);
+    // One deliberate difference: Ask states a sponsored bill's status as at the bills export's day, where MCP keeps
+    // main's citation (the status's own date) while its directory reviews are pending (record-common statesProgress).
+    const sponsorStatus = /^(.+ is the recorded sponsor of .+; status [^;]+?) as at [^;]+\.$/;
+    const statusAt = data => ({ ...data, citations: data.citations?.map(c => sponsorStatus.test(c.text) ? { ...c, text: sponsorStatus.exec(c.text)[1] } : c) });
+    if (name === 'sponsored_bills') {
+      const mcpText = rpc.result.structuredContent.citations.find(c => sponsorStatus.test(c.text)).text, askText = ask.data.citations.find(c => sponsorStatus.test(c.text)).text;
+      assert.ok(mcpText.endsWith(` as at ${rpc.result.structuredContent.rows[0].status_as_of}.`), mcpText);
+      assert.ok(askText.endsWith(` as at ${billsAsAtDay((await asset('/bills/index.json')).generated_at)}.`), askText);
+    }
+    assert.deepEqual(statusAt(mcpOnly(rpc.result.structuredContent)), statusAt(ask.data)); cited(ask.data);
     assert.equal((await send('tools/call', { name, arguments: { extra: true } })).result.isError, true);
   }
 });

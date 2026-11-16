@@ -1,7 +1,8 @@
 /** Exact counts over the full published page exports, never ranked search hits. */
 import { readToolAsset, type ToolArgs, type ToolCitation, type ToolDefinition } from './types'
-import { billEnding as ending, fold, siteUrl } from './record-common'
+import { billEnding as ending, fold, siteUrl, statesProgress } from './record-common'
 import { recordCount } from '../research-record-answer'
+import { billsAsAtDay } from '../../public/bill-titles.js'
 
 type Row = Record<string, unknown>
 type Window = { since?: string; until?: string; label: string }
@@ -194,7 +195,10 @@ export const tool: ToolDefinition = {
     if (args.group_by) citations.push({ kind: 'count', text: `${total} ${metric} ${where} ${window.label}`, value: total, url })
     if (!aggregate.length) citations.push({ kind: 'count', text: `${total} ${metric} ${where} ${window.label}`, value: total, url })
     const share = cohort.length ? Math.round(total / cohort.length * 10000) / 100 : null
-    if (args.status) citations.push({ kind: 'count', text: `${cohort.length} bill records in the introduction cohort ${where} ${window.label}; ${total} have snapshot status ${args.status}${share === null ? '; a share cannot be calculated for an empty cohort' : ` (${share}%)`}`, value: cohort.length, url })
+    // For Ask, the share is of statuses as at the bills export's day (the bill page's "Bill progress as at"), said with
+    // it. MCP's citation keeps its earlier wording (statesProgress).
+    const asAt = statesProgress(env) && kind === 'bills' ? billsAsAtDay(snapshot.generated_at) : ''
+    if (args.status) citations.push({ kind: 'count', text: `${cohort.length} bill records in the introduction cohort ${where} ${window.label}; ${total} have snapshot status ${args.status}${share === null ? '; a share cannot be calculated for an empty cohort' : ` (${share}%)${asAt ? `, as at ${asAt}` : ''}`}`, value: cohort.length, url })
     const records = args.include_records ? selected.slice(0, 50).map(row => ({ key: row.key, title: row.title, introduced: row.introduced, chamber: row.originating_house, status: row.status, ...ending(row), url: siteUrl(env, `/bill/${row.key}`) })) : undefined
     if (records) {
       citations.push(...records.map(row => ({ kind: 'record' as const, text: `${row.title}: ${row.status === 'exposure_draft' ? 'exposure draft released' : 'introduced'} ${row.introduced ?? 'date not recorded'}${row.chamber ? ` in the ${CHAMBERS[String(row.chamber)]?.label ?? row.chamber}` : ''}`, url: row.url })))
