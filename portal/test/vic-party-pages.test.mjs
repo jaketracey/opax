@@ -220,3 +220,24 @@ test('the Worker serves all 24 register views behind the election flag, and part
   for (const name of ['Victorian Socialists', 'The West Party', 'Family First Victoria'])
     assert.equal(resolvePartyPage(name, pages), null, name);
 });
+
+// The app data guard draws these answers with each app build still in use (scripts/ci/app-data-guard.sh,
+// scripts/ci/app-endpoint-guard). They are generated from the built hub data; here their candidates are
+// held to the committed VEC lists, so a fixture cannot drift from what the endpoint sends.
+test('the app guard\'s endpoint fixtures carry the VEC lists as the endpoint sends them', async () => {
+  const {readdir} = await import('node:fs/promises');
+  const dir = new URL('../../scripts/ci/app-endpoint-guard/fixtures/', import.meta.url);
+  const files = (await readdir(dir)).filter(f => /^seat-.+\.json$/.test(f)).sort();
+  assert.ok(files.length >= 2);
+  const names = new Set(); let unendorsed = 0;
+  for (const file of files) {
+    const seat = JSON.parse(await readFile(new URL(file, dir), 'utf8'));
+    const list = lists[seat.kind === 'region' ? 'regions' : 'districts'][seat.name];
+    assert.ok(list, seat.name);
+    assert.deepEqual(seat.candidates.list.map(c => [c.name, c.party, c.candidate_name, c.party_name, c.party_path]),
+      list.map(c => [hasParty(c) ? `${c.name}\n${c.party}` : c.name, null, c.name, c.party || null, candidatePartyPath(c.party)]), seat.name);
+    for (const c of list) { if (hasParty(c)) names.add(c.party); else unendorsed++; }
+  }
+  assert.ok(names.size >= 10 && unendorsed >= 2, 'many parties, and candidates nominated without one');
+  assert.equal(JSON.parse(await readFile(new URL('overview.json', dir), 'utf8')).schema_version, 1);
+});

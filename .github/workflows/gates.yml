@@ -136,6 +136,8 @@ jobs:
             portal/public/expenses.json portal/public/expense-categories.json portal/public/photos \
             portal/public/corpus.json portal/public/discovery.json portal/public/graph \
             portal/public/parliament portal/public/divisions portal/public/people \
+            portal/src/app-vic-election.ts portal/src/vic-election-parties.ts \
+            scripts/ci/app-endpoint-guard scripts/ci/app-endpoint-fixtures.mjs \
             scripts/ci/app-data-guard.sh .github/workflows/gates.yml | head -1)
           if [ -n "$changed" ]; then
             echo 'changed=true' >> "$GITHUB_OUTPUT"
