@@ -100,12 +100,19 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/Ms Quellworth/);validRanges(grounded)
   assert.match(api.writingPrompt(input()),/names no speaker is attributed to the transcript, never to a named person/)
 })
-test('writer accepts a named, dated transcript summary; an unverified quotation stays as paraphrase',()=>{
+test('writer accepts a named, dated transcript summary; a sentence with an unverified quotation is left out',()=>{
   const raw={answer_decision:'answer',sentences:[{text:'Ms Quellworth said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1]}]}
   const out=api.verifyWrittenAnswer(raw,input());assert.ok(out);assert.match(out.answer,/Ms Quellworth/);validRanges(out)
   const bad=api.verifyWrittenAnswer({...raw,sentences:[{...raw.sentences[0],text:'Ms Quellworth said on hearing day 46 that “A fabricated quote.”'}]},input())
-  const grounded=api.groundAnswerPayload(bad,input().question)
-  assert.match(grounded.answer,/Ms Quellworth said on hearing day 46 that A fabricated quote/);assert.doesNotMatch(grounded.answer,/“A fabricated/)
+  // Nothing is verified, so the writer falls back to the passages as recorded: the fabricated words never stand as prose.
+  assert.equal(bad,null)
+  const near={...raw,sentences:[{...raw.sentences[0],text:'Ms Quellworth said that “Income averaging just did not make sense to me.”'},{text:'The transcript records a question on hearing day 46: “Do you agree that this approach described income averaging?”',facts:[2]}]}
+  const kept=api.verifyWrittenAnswer(near,input());assert.doesNotMatch(kept.answer,/Quellworth|just did not/);assert.match(kept.answer,/^The transcript records a question on hearing day 46/);validRanges(kept)
+  // A quotation with "..." inside is not word for word either.
+  assert.equal(api.verifyWrittenAnswer({...raw,sentences:[{...raw.sentences[0],text:'Ms Quellworth said that “Income averaging ... make sense to me.”'}]},input()),null)
+  // A sentence that rests on no transcript fact keeps today's rule: marks off, words stay (the backstop is unchanged).
+  const plain={question:'Which grants did Example Health receive?',period:input().period,facts:api.writingFacts(undefined,[{id:1,text:'Example Health Ltd was awarded a grant of $120,000 by the Department of Health in 2023-24.',cite:{kind:'record',url:'https://opax.test/grants/example',label:'Example Health grant'}}])}
+  assert.match(api.verifyWrittenAnswer({answer_decision:'answer',sentences:[{text:'Example Health Ltd was awarded what the department called a “landmark” grant of $120,000 in 2023-24.',facts:[1]}]},plain).answer,/landmark/)
 })
 test('suppression, non-publication and pseudonymous records never provide quote facts',()=>{
   for(const reason of ['suppression order','non-publication order','pseudonymous witness']){
@@ -133,6 +140,38 @@ test('a transcript document id with an exact quote selects the record for writin
   assert.equal(out.answered,true);assert.match(out.answer,/^The hearing transcript records on hearing day 46/);assert.doesNotMatch(out.answer,/\b(?:Mr|Ms|Mrs|Dr) \p{Lu}\p{L}+ (?:said|asked)\b/u)
   assert.doesNotMatch(out.answer,/evidence, not findings/,'the way out of /api/ask adds the line, not the writer');assert.doesNotMatch(out.answer,/fabricated|CC BY|©|PDF page|OPAX lists/)
   validRanges(out.qualitative)
+})
+
+test('the research model does not word hearing evidence: a point that cites or quotes an excerpt gives way to the record, and a loose quotation goes with its words', async () => {
+  // Not a hearing-worded question, so the research model's own points would otherwise be the answer. Run 1 of the
+  // named-people eval found 21 of 25 named people in such points.
+  const q = 'What is on the record about income averaging in the Robodebt scheme?'
+  const asset = async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))
+  const deps = { origin: 'https://offline.test', asset, kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }) }
+  const records = await api.callTool(deps, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 })
+  const turn = api.transcriptTurns(records.citations[1].text)[0]; assert.ok(turn)
+  const usage = { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }
+  const reply = (toolName, args) => ({ content: [{ type: 'tool-call', toolName, toolCallId: toolName, input: JSON.stringify(args) }], finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage, warnings: [] })
+  const cases = [
+    ['cites the fact', [{ id: 'fact-2', claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
+    ['quotes the excerpt', [{ id: 'unknown-document', quote: turn.excerpt, claim: 'Ms Quellworth told the commission the department knew averaging was unlawful.' }]],
+    ['a loose quotation beside a cited fact', [{ id: 'fact-2', claim: 'A witness gave evidence about averaging.' }, { claim: 'Ms Quellworth said the scheme “plainly made no sense to anyone at all”.' }]],
+  ]
+  for (const [name, points] of cases) {
+    let call = 0
+    const model = new MockLanguageModelV4({ doGenerate: async () => call++ === 0 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 })
+      : call === 2 ? reply('answer', { points }) : { content: [{ type: 'text', text: 'not json' }], finishReason: { unified: 'stop', raw: 'stop' }, usage, warnings: [] } })
+    const research = api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() })
+    const out = await api.runAgentic(q, { ...deps, research }, async () => {}, 40000, undefined, {}, named)
+    assert.equal(out.answered, true, name)
+    assert.doesNotMatch(out.answer, /Quellworth|knew averaging was unlawful|plainly made no sense|gave evidence about averaging/, name)
+    // The excerpt is given as recorded, inside quotation marks.
+    assert.match(out.answer, /^The hearing transcript records on hearing day 46 \(10 March 2023\): “/, name)
+    // The research model was told, in fixed words, to leave hearing evidence to the writer and how people are named.
+    const told = JSON.stringify(model.doGenerateCalls[0].prompt)
+    assert.ok(told.includes('Leave what was said, asked or put at a royal commission, integrity commission or inquiry hearing out of your points and reply text'), name)
+    assert.ok(told.includes('name a person only inside quotation marks, in words copied exactly from the cited excerpt'), name)
+  }
 })
 
 test('repeated final grounding of an unsplit transcript record never restores the tool block, and keeps the draft as paraphrase',()=>{

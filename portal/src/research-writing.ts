@@ -17,12 +17,13 @@ import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './researc
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
-import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION } from './transcript-answer'
+import {quotationFails} from './research-evidence'
+import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-32-named-people-in-quotes'
+export const ANSWER_WRITING_VERSION = 'written-answer-33-named-people-quotes-removed'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
   /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
@@ -114,7 +115,9 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     // other spans are the same fact again: the writer is given it once, as recorded.
     const recorded = cited && cited.length > 1 ? singleStatement(source) : null
     const own = recorded ? cited!.find(span => signedKey(span.replace(/^[-*•]\s*/, '')) === signedKey(recorded)) : undefined
-    const text = own ?? (cited ? cited.join('\n') : source.snippet)
+    // A hearing transcript excerpt is read from its record, never from the wording of a point that cited it.
+    const excerpts = source.snippet.split(/\n+/).some(transcriptPassage)
+    const text = own ?? (cited && !excerpts ? cited.join('\n') : source.snippet)
     for (const part of text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
       const before=out.length;add(part, source, !!source.coverage || isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
       if(out.length>before){const f=out[out.length-1];if(!f.transcript)f.evidenceId=Object.keys(answer.citations).find(id=>id===source.resource || id.startsWith(source.resource+'/'))??f.evidenceId;f.atoms=f.atoms?.map(a=>({...a,evidenceId:f.evidenceId!}))??atomsFromText(f.text,f.evidenceId!,source)}
@@ -627,6 +630,11 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
     if (typeof line?.text!=='string' || !line.text.trim() || rawToolEcho(line.text)) continue
     const ids=[...new Set(Array.isArray(line.facts)?line.facts:[])].filter(id=>Number.isInteger(id) && input.facts.some(f=>f.id===id))
     const facts=ids.map(id=>input.facts.find(f=>f.id===id)!)
+    // Hearing transcripts: a sentence that cites a transcript fact (or cites nothing while a transcript fact is among
+    // those given) and holds a quotation those facts do not hold word for word is left out, words and all. Taking only
+    // the marks off would leave the words, and any name in them, standing as the writer's own prose.
+    const checkedAgainst=facts.length?facts:input.facts
+    if (checkedAgainst.some(f=>f.transcript||f.text.includes(TRANSCRIPT_LABEL)) && quotationFails(line.text,checkedAgainst.map(f=>`${f.text}\n${f.source.snippet}`).join('\n'))) continue
     const metadata=(f:WritingFact)=>f.metadata||/^(?:Period|Financial years):/i.test(f.text)
     const isLimit=line.coverage===true || facts.length>0 && facts.every(f=>f.coverage&&!metadata(f))
     if (isLimit && coverage) continue

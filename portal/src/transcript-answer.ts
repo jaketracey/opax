@@ -24,12 +24,19 @@ export function hearingEvidenceQuestion(question: string): boolean {
 }
 
 
-/** People named in hearing evidence, for both models that write Ask prose (the research model and the writer). Fixed
- * text, worded as what to do (test/ask-positive-prompts.test.mjs holds every prompt to that). Prompt text only:
- * nothing reads, blocks or edits the prose. */
-export const TRANSCRIPT_NAMED_PEOPLE_RULE = 'For hearing transcripts, name a person from the evidence only inside a verbatim quotation. In your own words, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page: a role is stated there, not inferred. This covers everyone named in the evidence, commissioners and counsel included.'
+/** People named in hearing evidence. One fixed text for every call that writes Ask prose from records: the research
+ * model's turns and its final answer call, the writer, and the follow-up questions. It is tied to the record's own
+ * label so it cannot be read as covering Hansard or committee hearings, and it says it comes before the other naming
+ * instructions. Prompt text only: nothing here reads, blocks or edits prose. */
+export const TRANSCRIPT_NAMED_PEOPLE_RULE = 'For a record labelled "Hearing transcript: evidence, not findings" (royal commission, integrity commission and inquiry hearings), name a person only inside quotation marks, in words copied exactly from the cited excerpt with nothing left out or added, never in your own words. In your own words, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the cited transcript page states that role; with no role stated there, use the neutral description. This covers everyone named in the evidence: witnesses, people they discuss, commissioners and counsel. It comes before every other instruction here about naming people or saying who said something. Hansard speeches, committee hearings and every other record keep their names.'
 /** The exception the standing "name the people" sentences carry, so they do not pull against the rule. */
 export const NAMED_PEOPLE_EXCEPTION = 'except people named in hearing transcript evidence'
+/** The research model's rule for hearing transcript excerpts, beside its instruction to select them by record fact
+ * id. That model writes the answer itself (points or reply text) when the question is not a hearing-evidence question.
+ * A point that cites or quotes an excerpt is dropped in code and the excerpt's fact goes to the writer. */
+export const TRANSCRIPT_POINT_RULE = 'Leave what was said, asked or put at a royal commission, integrity commission or inquiry hearing out of your points and reply text, in your own words or quoted: select the transcript excerpt\'s numeric record fact id, and the writer words it from the record. '
+/** Whether a record fact holds quotable transcript passages. A research point never words one: it is read from its record. */
+export const transcriptPassage = (text: string): boolean => transcriptTurns(text).length > 0
 const EXCERPT = /\btranscript page \S+/
 /** A turn carries a speaker only when its source line names one; the transcript tools name none. */
 export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string }

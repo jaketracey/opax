@@ -78,7 +78,7 @@ test('a caveat is kept as written, and typed refusals and clarifications survive
     assert.deepEqual(api.groundAnswerPayload(p,questions[0]),p)
   }
 })
-test('a written quotation not in the transcript loses its quote marks; a verbatim one keeps them, in one pass',async()=>{
+test('a written sentence whose quotation is not in the transcript is left out, words and all; a verbatim one stays, in one pass',async()=>{
   const text='Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Quellworth: "Income averaging did not make sense to me." transcript page P-4933 (PDF page 49), hearing turn by Mr Vanterpool: "Do you agree that this approach described income averaging?" Hearing transcript: evidence, not findings.'
   const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',label:text}}])
   let turn=0
@@ -90,7 +90,8 @@ test('a written quotation not in the transcript loses its quote marks; a verbati
   const write=api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})
   const out=await write({question:questions[1],period:api.inferPeriod(questions[1]),facts},stats,undefined,20000)
   assert.equal(model.doGenerateCalls.length,1)
-  assert.match(out.answer,/^Ms Quellworth said A fabricated quotation about averaging/);assert.doesNotMatch(out.answer,/“A fabricated/)
+  // The fabricated words do not stay as the writer's own prose (they did, with the marks taken off, before 16 Nov 2026).
+  assert.doesNotMatch(out.answer,/fabricated|Quellworth/);assert.match(out.answer,/^Mr Vanterpool asked on hearing day 46/)
   assert.match(out.answer,/Mr Vanterpool asked on hearing day 46 \(10 March 2023\): “Do you agree that this approach described income averaging/)
   validRanges(out)
 })

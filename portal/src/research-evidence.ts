@@ -49,7 +49,9 @@ export function passageExcerpt(text: string, about: string, max = 25): { text: s
 }
 const QUOTED = /["“]([^"”\n]+)["”]|‘([^’\n]+)’|(^|[\s(])'([^'\n]+)'(?=$|[\s.,;:!?)])/g
 /** Quoted text in a claim stays quoted only when it is verbatim in the cited passage (re-cased to the passage);
- * otherwise its quotation marks go and it stands as paraphrase. */
+ * otherwise its quotation marks go and it stands as paraphrase. Where hearing transcripts are in play the rule is
+ * stricter (quotationFails): a research point or a writer sentence whose quotation no source holds word for word
+ * is left out whole, so the words do not stay as prose. */
 export function repairQuotes(claim: string, evidence: string, note: (label: string) => void): string {
   return claim.replace(QUOTED, (match, dq?: string, sq?: string, lead?: string, aq?: string, offset?: number, whole?: string) => {
     const inner = dq ?? sq ?? aq ?? ''
@@ -65,6 +67,14 @@ export function repairQuotes(claim: string, evidence: string, note: (label: stri
     const next = typeof whole === 'string' && typeof offset === 'number' ? whole[offset + match.length] : undefined
     return `${lead ?? ''}${next === '.' ? inner.replace(/[.!?]+$/, '') : inner}`
   })
+}
+
+/** Whether a claim holds a quotation that its evidence does not hold word for word (repairQuotes would take the marks
+ * off). The claim is then left out whole: cutting the quoted words out of a sentence would leave a fragment. */
+export function quotationFails(claim: string, evidence: string): boolean {
+  let failed = false
+  repairQuotes(claim, evidence, label => { if (label === 'unquoted') failed = true })
+  return failed
 }
 
 export interface AnswerTally { points_in:number;points_kept:number;points_uncited:number;repairs:Record<string,number>;drops:Record<string,number>;uncited:Record<string,number>;mode?:'points'|'record_list'|'facts'|'uncited';salvaged?:string }

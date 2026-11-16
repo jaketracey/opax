@@ -8,7 +8,10 @@ const prompts={overview:api.moneyOverviewPrompt(facts),records:api.RECORD_GROUND
 for(const [name,prompt]of Object.entries(prompts))test(name+' carries one shared contract and positive answer instructions',()=>{
  assert.equal(prompt.split(api.ASK_EVIDENCE_RULES).length-1,1)
  const outside=prompt.replace(api.ASK_EVIDENCE_RULES,'')
- assert.ok((outside.match(/\b(?:do not|never|must not|cannot)\b/gi)??[]).length<=3)
+ // The cap is 4 since 16 November 2026: the hub ruled that the rule for people named in hearing evidence says
+ // "never in your own words" once (the positive wording did not hold in a 20-question run).
+ assert.ok((outside.match(/\b(?:do not|never|must not|cannot)\b/gi)??[]).length<=4)
  assert.match(prompt,/Arithmetic belongs to the calculator/)
- assert.match(prompt,/name the people they name/)
+ assert.match(prompt,/Name the people the records name, except in hearing transcripts, where a person is named only inside a verbatim quotation\./)
+ assert.doesNotMatch(prompt,/name the people they name/)
 })

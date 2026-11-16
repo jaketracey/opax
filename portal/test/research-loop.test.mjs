@@ -24,14 +24,17 @@ test('loop answer instructions require a direct first point, unique facts and se
  assert.match(instructions,/first point directly answers the question with the requested name, date or outcome/);
  assert.match(instructions,/use a complete sentence about the finding/);
  assert.match(instructions,/For a who question, name the people and their roles first, then what the inquiry or record found about each/);assert.match(instructions,/never how OPAX loaded or stored them/);
- // People named in hearing transcript evidence: the fixed rule is in the research model's instructions, and the
- // standing sentences that tell it to name people carry the exception, so nothing pulls against the rule.
- assert.match(instructions,/Select numeric record fact ids for transcript excerpts\. For hearing transcripts, name a person from the evidence only inside a verbatim quotation\. In your own words, refer to them by a neutral description/);
- assert.match(instructions,/a role is stated there, not inferred\. This covers everyone named in the evidence, commissioners and counsel included\./);
+ // People named in hearing transcript evidence: the fixed rule is in the research model's instructions, after the
+ // rule that keeps hearing evidence out of its own points. The naming sentences that could pull against it carry
+ // the exception; "Name each passage speaker" does not, because passages are Hansard and keep their names.
+ assert.match(instructions,/Select numeric record fact ids for transcript excerpts\. Leave what was said, asked or put at a royal commission, integrity commission or inquiry hearing out of your points and reply text/);
+ assert.match(instructions,/the writer words it from the record\. For a record labelled .{1,6}Hearing transcript: evidence, not findings.{1,6} \(royal commission, integrity commission and inquiry hearings\), name a person only inside quotation marks, in words copied exactly from the cited excerpt with nothing left out or added, never in your own words\./);
+ assert.match(instructions,/It comes before every other instruction here about naming people or saying who said something\. Hansard speeches, committee hearings and every other record keep their names\./);
+ assert.match(instructions,/Name the people the records name, except in hearing transcripts, where a person is named only inside a verbatim quotation\./);
  assert.match(instructions,/found about each, except people named in hearing transcript evidence; for why/);
- assert.match(instructions,/Name each passage speaker and date as recorded, except people named in hearing transcript evidence\./);
+ assert.match(instructions,/Name each passage speaker and date as recorded\. /);
  assert.match(instructions,/Name the people the records name, including private individuals, except people named in hearing transcript evidence\./);
- assert.doesNotMatch(instructions,/Name each passage speaker and date as recorded\.|including private individuals\.|found about each; for why/);
+ assert.doesNotMatch(instructions,/including private individuals\.|found about each; for why|name the people they name/);
  assert.match(instructions,/say who said it/);assert.match(instructions,/by the name on the record/);
  assert.match(instructions,/Select each fact once/);
  assert.match(instructions,/Each figure comes from one selected fact with its supporting citation/);

@@ -165,7 +165,7 @@ import { MONEY_GRAPH_PATHS, MONEY_PARTIES_PATH } from '../public/money-parties.j
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
-import { withTranscriptNote, transcriptNoteResponse } from './transcript-answer'
+import { withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_NAMED_PEOPLE_RULE } from './transcript-answer'
 import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse } from './machine-notice'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
@@ -2857,6 +2857,8 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const prompt = [
     `Write ${asked} follow-up questions for a reader who has just been given the answer below.`,
     ASK_EVIDENCE_RULES,
+    // A follow-up question is prose a reader sees: it follows the same rule for people named in hearing evidence.
+    TRANSCRIPT_NAMED_PEOPLE_RULE,
     'Use the retrieved passages to explore details beyond the answer already given.',
     '',
     `QUESTION ALREADY ASKED: ${clipText(question, 500)}`,
