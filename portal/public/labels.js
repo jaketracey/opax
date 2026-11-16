@@ -8,7 +8,7 @@
    module's graph so the analytics bundle (events.js reaches labels.js through
    growth-modules.js) never carries it. */
 import { shortDate } from './format.js';
-import { MACHINE_NOTICE } from './machine-notice.js?v=d28b077381';
+import { MACHINE_NOTICE, MACHINE_NOTICE_STORED } from './machine-notice.js?v=d1b3e4edf1';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -267,7 +267,10 @@ export function machineLabelHTML({ note = MACHINE_NOTE, inline = false, pill = f
  *  machine-notice.js and nowhere else. Printed once under a block or a list,
  *  never once per row. */
 export function machineNoticeText(notice) {
-  return typeof notice === 'string' && notice.trim() ? notice.trim() : MACHINE_NOTICE;
+  const sent = typeof notice === 'string' ? notice.trim() : '';
+  // Stored text reads "summaries". A response a browser or an edge cached before the wording changed still
+  // carries the answers wording for up to an hour: it is the same notice, so it prints in the present words.
+  return sent && sent !== MACHINE_NOTICE ? sent : MACHINE_NOTICE_STORED;
 }
 export function machineNoticeHTML({ notice = '', className = '' } = {}) {
   return `<p class="answer-notice${className ? ` ${esc(className)}` : ''}">${esc(machineNoticeText(notice))}</p>`;

@@ -47,7 +47,7 @@ test('SSR week uses the validated sponsor, dated Machine-written label and 2D ti
   assert.match(page.html,/data-label="Noes"[^>]*>[\s\S]*?class="dt-value">80<\/span>/);
   assert.doesNotMatch(page.html,/Fallback title/);
   // The error notice: once, directly under the list that holds the machine-written summary, before the source line.
-  const NOTICE='<p class="answer-notice">Machine-written answers can contain errors. Check the original record before relying on one.</p>';
+  const NOTICE='<p class="answer-notice">Machine-written summaries can contain errors. Check the original record before relying on one.</p>';
   assert.equal(page.html.split(NOTICE).length,2);
   assert.ok(page.html.indexOf('A model summary.')<page.html.indexOf('</ul>'+NOTICE),'the summary, then the line');
   assert.ok(page.html.indexOf(NOTICE)<page.html.indexOf('ParlInfo bill records'));

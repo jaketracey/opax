@@ -172,7 +172,7 @@ The field is additive. The shipped Ask decoders (`decodeAnswer` in `mobile/src/f
 
 #### `machine_notice` on stored machine-written text
 
-Text a model wrote earlier, which OPAX stores and shows under the "Machine-written" label, carries the same field with the default wording, and a client prints it the same way: directly under that text, or once under a list of briefs. It is set as the response leaves for a reader (`storedNoticeResponse` in `portal/src/machine-notice.ts`, at the public exit in `portal/src/index.ts`), after every cache, so cached copies and the Worker's own reads of these routes (Ask research, the MCP tools, voice) are unchanged.
+Text a model wrote earlier, which OPAX stores and shows under the "Machine-written" label, carries the same field in its own wording, "Machine-written summaries can contain errors. Check the original record before relying on one." (`MACHINE_NOTICE_STORED` in `portal/public/machine-notice.js`, beside the two answer wordings), and a client prints it the same way: directly under that text, or once under a list of briefs. It is set as the response leaves for a reader (`storedNoticeResponse` in `portal/src/machine-notice.ts`, at the public exit in `portal/src/index.ts`), after every cache, so cached copies and the Worker's own reads of these routes (Ask research, the MCP tools, voice) are unchanged.
 
 | Response | Carries `machine_notice` when | Absent when |
 | --- | --- | --- |
