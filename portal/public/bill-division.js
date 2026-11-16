@@ -93,6 +93,10 @@ const THIRD = new RegExp([
 const NOT_A_READING = /\b(?:in committee|committee of the whole|consideration in detail|consideration of (?:senate|house(?: of representatives)?) messages?|first reading|reference to committee|adoption of report|documents|business motion|committee motion|declaration of urgency)\b/i;
 // A division's name as They Vote For You files it: "X Bill 2014 - Second Reading - Read a second time".
 const DIVISION_NAME = /\s-\s(?:second|third) reading\s-\s/i;
+// Under a guillotine, They Vote For You names the bill's passing "X Bill 2026 - Limitation of Debate - Pass the bill"
+// (federal-senate-9818, the Senate's vote passing r7421): the middle part is the procedure it ran under, and the
+// last part what was put, which is the third reading. A name and nothing else, so it ends there.
+const GUILLOTINE_PASS = /\s-\slimitation of debate\s-\spass the bills?$/i;
 // A They Vote For You summary: "The majority voted ...", at times after a sentence naming the policy.
 const SUMMARY = /^(?:this division relates to[^.]*\.\s*)?(the majority\b[\s\S]*)$/i;
 const SECOND = new RegExp([
@@ -146,6 +150,7 @@ export function divisionReading(d, proceduralTitles = null) {
   // time") and the speech after it, whatever the division was on: it decides nothing.
   // (No lookbehind: this file is in public/, and Safari before 16.4 cannot parse one; see browser-errors.test.mjs.)
   const summary = SUMMARY.exec(all);
+  if (!summary && GUILLOTINE_PASS.test(all)) return NOT_A_READING.test(stage) ? null : 'third';
   const text = summary ? (/^[\s\S]*?[.!?]["'”’]?(?=\s*[A-Z(#])/.exec(summary[1])?.[0] ?? summary[1]) : DIVISION_NAME.test(all) ? all : '';
   if (!text || NOT_A_READING.test(stage) || PROCEDURAL.test(stage) && !/limitation of debate/i.test(stage)) return null;
   if (PROCEDURAL.test(text) || AMENDMENT.test(text)) return null;
