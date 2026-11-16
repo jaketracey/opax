@@ -389,6 +389,6 @@ export async function vicElectionPage(id: string | null, read: ReadAsset, config
   const s = d.seats.find(s=>s.path === `${VIC_ELECTION_PATH}/${id}`)
   if (s) return {...renderVicElection(d,s,config,now,null,index),status:200}
   // Not a seat: a registered party's register view (vic-election-parties.ts), or nothing.
-  const view = registerView(id,d)
+  const view = registerView(id,d,now)
   return view ? {title:view.title,description:view.description,html:hubShell(view.body,approvedFooter(config),trail(VIC_ELECTION_PATH,view.party.name)),jsonLd:null,status:200} : missing
 }
