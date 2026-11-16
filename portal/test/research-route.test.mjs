@@ -101,7 +101,7 @@ test('a failed loop on a hearing-evidence question never reaches the older engin
 test('transcript quotes only, through the handler: off by default; on, a hearing answer is the code-quoted block in JSON and SSE, says so in its record, and has its own cache entry',async()=>{
  h.env.RESEARCH_LOOP='route';
  const hearing='What evidence was given at the Robodebt Royal Commission about income averaging?';
- const LEAD='These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.',LINE=/^Hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+(?:, the (?:question put|reply))?: “[^”]+”$/;
+ const LEAD='These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.',LINE=/^(?:Hearing|Question put, hearing|Reply, hearing|The next turn in the transcript, hearing) day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+: “[\s\S]+”$/;
  const robodebt=call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1});
  // Research searches the transcript text, then selects the excerpts; a third call would be the writer.
  const answered=()=>new MockLanguageModelV4({doGenerate:[reply([robodebt]),reply([call('answer',{facts:[2]})]),{...reply([]),content:[{type:'text',text:JSON.stringify({sentences:[{text:'A sentence a model wrote about the hearing.',facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'}}]});

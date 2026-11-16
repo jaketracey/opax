@@ -337,6 +337,8 @@ export const hearingFact = (f: WritingFact): boolean => !!f.transcript || f.text
 /** The fixed line the quotation block opens with. The evidence, not findings line stays the one the way out adds. */
 export const QUOTES_LEAD = 'These passages from the hearing transcripts matched your question. They are in the order they were heard and may not answer it directly.'
 const QUOTES_SHOWN = 6
+/** The label of the second quotation of a pair in a transcript that prints headings and no Q. and A. marks. */
+export const NEXT_TURN = 'The next turn in the transcript'
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
 const heardOn = (date?: string): number => { const m = /^(\d{1,2}) ([A-Za-z]+) (\d{4})$/.exec(date ?? ''); return m ? Date.UTC(Number(m[3]), Math.max(0, MONTHS.indexOf(m[2].toLowerCase())), Number(m[1])) : Number.MAX_SAFE_INTEGER }
 const pageNumber = (page: string): number => { const digits = page.replace(/\D+/g, ''); return digits ? Number(digits) : Number.MAX_SAFE_INTEGER }
@@ -367,6 +369,10 @@ function transcriptBlock(input: WritingInput): WrittenSentence[] | null {
     // A marked question-and-reply pair is two quotations, each with its own page, under code-made labels.
     if (t.question) lines.push(line('Question put', t.question.page, t.question.excerpt), line('Reply', t.page, t.excerpt))
     else if (t.reply) lines.push(line('Question put', t.page, t.excerpt), line('Reply', t.reply.page, t.reply.excerpt))
+    // Headed turns, no marks: the turn that ends in a question, then the turn printed after it, under a label that
+    // says only that. Who speaks next is not read.
+    else if (t.next) lines.push(line('', t.page, t.excerpt), line(NEXT_TURN, t.next.page, t.next.excerpt))
+    else if (t.before) lines.push(line('', t.before.page, t.before.excerpt), line(NEXT_TURN, t.page, t.excerpt))
     else lines.push(line('', t.page, t.excerpt))
   }
   return lines

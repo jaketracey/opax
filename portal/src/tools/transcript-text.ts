@@ -11,8 +11,9 @@ const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
 /** `question` and `reply`: only with the transcript quotes-only switch on, the other half of a marked question-and-reply
- * pair, with its own page. A hit has at most one of them. */
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, question?: { pdf_page: number, transcript_page: string | null, text: string }, reply?: { pdf_page: number, transcript_page: string | null, text: string } }
+ * pair, with its own page. `before` and `next`: in a transcript of headed turns, the turn printed before a hit when that
+ * turn ends in a question, or the turn printed after a hit that ends in one. A hit has at most one of the four. */
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, question?: { pdf_page: number, transcript_page: string | null, text: string }, reply?: { pdf_page: number, transcript_page: string | null, text: string }, before?: { pdf_page: number, transcript_page: string | null, text: string }, next?: { pdf_page: number, transcript_page: string | null, text: string } }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -194,7 +195,7 @@ type Beside = NonNullable<PageHit['question']>
  * given to a question. Pure page structure (pageTurns): a pair is a "Q." turn and the bare "A." turn straight after
  * it, on one page or across a page break; no speaker and no role is read, and with any other turn beside it the hit
  * stands alone. */
-function pairedPassage(pages: RecordRow[], n: number, terms: string[]): { excerpt: string, question?: Beside, reply?: Beside } | undefined {
+function pairedPassage(pages: RecordRow[], n: number, terms: string[]): { excerpt: string, question?: Beside, reply?: Beside, before?: Beside, next?: Beside } | undefined {
   const page = pages.find(p => p.n === n)
   if (typeof page?.text !== 'string') return undefined
   const { flat, turns, turn, at } = excerptTurn(page.text, terms, n)
@@ -218,6 +219,17 @@ function pairedPassage(pages: RecordRow[], n: number, terms: string[]): { excerp
   const bareReply = (t: PageTurn | undefined) => !!t && t.opens === 'mark' && t.mark === 'A' && !t.heading
   if (bareReply(turn)) { const before = other(-1); const question = before?.turn.mark === 'Q' ? side(before, 'end') : undefined; return question ? { excerpt, question } : { excerpt } }
   if (turn.mark === 'Q') { const after = other(1); const reply = bareReply(after?.turn) ? side(after, 'start') : undefined; return reply ? { excerpt, reply } : { excerpt } }
+  // A transcript that prints a speaker heading on every turn and no marks: a turn that ends with a question mark is
+  // shown with the turn printed straight after it, called only "the next turn" (who speaks next is not read: it may
+  // be the witness, the Commissioner or other counsel). Both turns must open with a heading; the heading's own text
+  // is not part of either passage. The pair is given whichever of the two holds the searched word.
+  const headed = (t: PageTurn | undefined) => !!t && t.opens === 'heading' && !t.mark
+  const asks = (found: { flat: string, turn: PageTurn } | undefined) => !!found && headed(found.turn) && /\?["”’')\]]*$/.test(found.flat.slice(found.turn.start, found.turn.end).trimEnd())
+  if (headed(turn)) {
+    if (asks({ flat, turn }) && /\?["”’')\]]*$/.test(excerpt)) { const after = other(1); const next = headed(after?.turn) ? side(after, 'start') : undefined; if (next) return { excerpt, next } }
+    const prior = other(-1)
+    if (asks(prior) && Math.max(at, turn.start) - turn.start < EXCERPT) { const before = side(prior, 'end'); const opening = wholeSentences(flat, turn.start, turn.end, 'start'); if (before && opening.includes(excerpt.replace(/^\.\.\.|\.\.\.$/g, '').slice(0, 40))) return { excerpt: opening, before } }
+  }
   return { excerpt }
 }
 function excerptTurn(text: string, terms: string[], pdfPage?: number): { excerpt: string, flat: string, turns: PageTurn[], turn?: PageTurn, at?: number } {

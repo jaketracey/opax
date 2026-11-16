@@ -72,7 +72,9 @@ const EXCERPT = /\btranscript page \S+/
 /** A turn carries a speaker only when its source line names one; the transcript tools name none. */
 /** `question` or `reply`: the other half of a marked question-and-reply pair, with its own page (only with the
  * transcript quotes-only switch on). With `reply`, the turn itself is the question. */
-export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string; question?: { page: string; excerpt: string }; reply?: { page: string; excerpt: string } }
+export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string; question?: { page: string; excerpt: string }; reply?: { page: string; excerpt: string }
+  /** In a transcript of headed turns: the turn printed before this one, which ends in a question, or the one printed after this one when this one does. */
+  before?: { page: string; excerpt: string }; next?: { page: string; excerpt: string } }
 /** Split a published citation into attributed turns before writing. Restricted transcripts never supply
  * quotations, even if malformed input happens to contain quotation marks. */
 export function transcriptTurns(text: string): TranscriptTurn[] {
@@ -81,13 +83,15 @@ export function transcriptTurns(text: string): TranscriptTurn[] {
   const date = /\((\d{1,2} [A-Z][a-z]+ \d{4})\)/.exec(text)?.[1]
   // A "question put" entry belongs to the hearing turn it is followed by, and a "reply given" entry to the hearing turn
   // before it; alone neither is a turn.
-  let put: { page: string; excerpt: string } | undefined
+  let put: { page: string; excerpt: string } | undefined, prior: { page: string; excerpt: string } | undefined
   const turns: TranscriptTurn[] = []
-  for (const m of text.matchAll(/transcript page (\S+) \(PDF page \d+\), (hearing turn|question put|reply given)(?: by ([^:]+))?: "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)) {
-    if (m[2] === 'question put') { put = { page: m[1], excerpt: m[4] }; continue }
-    if (m[2] === 'reply given') { const last = turns.at(-1); if (last && !last.question) last.reply = { page: m[1], excerpt: m[4] }; continue }
-    turns.push({ ...(m[3] ? { speaker: m[3] } : {}), page: m[1], excerpt: m[4], ...(day ? { day } : {}), ...(date ? { date } : {}), ...(put ? { question: put } : {}) })
-    put = undefined
+  for (const m of text.matchAll(/transcript page (\S+) \(PDF page \d+\), (hearing turn|question put|reply given|turn before|next turn)(?: by ([^:]+))?: "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)) {
+    const beside = { page: m[1], excerpt: m[4] }
+    if (m[2] === 'question put') { put = beside; continue }
+    if (m[2] === 'turn before') { prior = beside; continue }
+    if (m[2] === 'reply given' || m[2] === 'next turn') { const last = turns.at(-1); if (last && !last.question && !last.before && !last.reply && !last.next) last[m[2] === 'reply given' ? 'reply' : 'next'] = beside; continue }
+    turns.push({ ...(m[3] ? { speaker: m[3] } : {}), page: m[1], excerpt: m[4], ...(day ? { day } : {}), ...(date ? { date } : {}), ...(put ? { question: put } : prior ? { before: prior } : {}) })
+    put = prior = undefined
   }
   if (turns.length) return turns
   const written = /^(.+?) said at .+?, transcript page (\S+): "([\s\S]+)"\. Hearing transcript:/.exec(text)

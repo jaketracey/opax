@@ -10,7 +10,7 @@ import { MockLanguageModelV4 } from 'ai/test'
 
 const built = await build({ stdin: { contents: [
   "export {refreshTranscriptQuotesOnly, transcriptQuotesOnly, forgetTranscriptQuotesOnly, QUOTES_ONLY_KEY} from './src/ask-flags'",
-  "export {pageHits} from './src/tools/transcript-text'",
+  "export {pageHits, pageTurns, textIndex} from './src/tools/transcript-text'",
   "export {transcriptTurns, withTranscriptNote} from './src/transcript-answer'",
   "export {writingFacts, writingPrompt, proseFallback, quotationBlock, joinWritten, QUOTES_LEAD} from './src/research-writing'",
   "export {hearingFallbackPayload} from './src/ask-hearing-fallback'",
@@ -184,7 +184,7 @@ test('a stopped run on a hearing question: the held excerpts in the block form w
 const asset = async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))
 const reply = (toolName, args) => ({ content: [{ type: 'tool-call', toolName, toolCallId: toolName, input: JSON.stringify(args) }], finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage, warnings: [] })
 const said = text => ({ content: [{ type: 'text', text }], finishReason: { unified: 'stop', raw: 'stop' }, usage, warnings: [] })
-const BLOCK_LINE = /^(?:Hearing|Question put, hearing|Reply, hearing) day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+: “[\s\S]+”$/
+const BLOCK_LINE = /^(?:Hearing|Question put, hearing|Reply, hearing|The next turn in the transcript, hearing) day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\), transcript page \S+: “[\s\S]+”$/
 const research = (model, on) => api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown(), ...(on ? { transcriptQuotesOnly: true } : {}) })
 const deps = on => ({ origin: 'https://offline.test', asset, kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }), ...(on ? { transcriptQuotesOnly: true } : {}) })
 
@@ -344,4 +344,57 @@ test('a hearing question under the switch, by commission and hearing word; and w
   // Off: the writer is called with the count row, as before this change.
   const off = await run(false, selected)
   assert.equal(off.model.doGenerateCalls.length, 3); assert.doesNotMatch(off.out.answer, /OPAX searched the hearing transcripts/)
+})
+
+test('headed transcripts: a turn that ends in a question is shown with the turn printed after it, labelled only as the next turn; no heading is in a quotation or a label', async () => {
+  const env = { origin: 'https://offline.test', asset, transcriptQuotesOnly: true }
+  const ix = await api.textIndex(env)
+  const found = { commissioner: 0, acrossPages: 0, pairs: 0 }
+  for (const commission of ['cth-robodebt', 'cth-antisemitism']) {
+    let checked = 0
+    for (const d of ix.docs.filter(d => d.commission === commission && d.quote_policy === 'quote').slice(0, 14)) {
+      const doc = await asset(d.file)
+      for (const page of doc.pages) {
+        if (typeof page.text !== 'string') continue
+        const { text: flat, turns } = api.pageTurns(page.text, page.n)
+        for (const [i, turn] of turns.entries()) {
+          if (turn.opens !== 'heading' || turn.mark || !/\?$/.test(flat.slice(turn.start, turn.end).trimEnd())) continue
+          // A word that is first spoken on this page inside this turn's last sentence, so the hit lands on it.
+          const body = flat.slice(turn.start, turn.end), last = body.slice(Math.max(0, body.length - 200))
+          const word = (last.toLowerCase().match(/[a-z]{6,}/g) ?? []).find(w => doc.terms[w]?.includes(page.n) && flat.toLowerCase().search(new RegExp(`\\b${w}`)) >= turn.start + body.length - last.length)
+          if (!word) continue
+          const hit = (await api.pageHits(env, ix, d.key, [word], 400)).hits.find(h => h.pdf_page === page.n)
+          if (!hit) continue
+          const nextOnPage = turns[i + 1], nextPage = doc.pages.find(p => p.n === page.n + 1)
+          const after = nextOnPage ? { turn: nextOnPage, flat, folio: page.folio } : typeof nextPage?.text === 'string' ? (() => { const read = api.pageTurns(nextPage.text, nextPage.n); return read.turns[0] ? { turn: read.turns[0], flat: read.text, folio: nextPage.folio } : null })() : null
+          if (!after || after.turn.opens !== 'heading' || after.turn.mark || after.turn.end <= after.turn.start) { assert.equal(hit.next, undefined, `${d.key} page ${page.n}: nothing headed follows`); continue }
+          if (!/\?["”’')\]]*$/.test(hit.excerpt)) continue
+          assert.ok(hit.next, `${d.key} page ${page.n}: ${word}`)
+          checked++; found.pairs++
+          // The next turn's own page, and its words from the start of the turn, verbatim.
+          assert.equal(hit.next.transcript_page, after.folio ?? null)
+          const spoken = after.flat.slice(after.turn.start, after.turn.end)
+          assert.ok(spoken.startsWith(hit.next.text.replace(/\.\.\.$/, '')), `${d.key} page ${page.n}`); assert.ok(hit.next.text.length <= 283)
+          // The speaker headings are in neither quotation.
+          for (const heading of [turn.heading, after.turn.heading]) { assert.ok(heading); assert.equal(hit.excerpt.includes(heading), false, heading); assert.equal(hit.next.text.startsWith(heading), false, heading) }
+          if (/COMMISSIONER/.test(after.turn.heading)) found.commissioner++
+          if (!nextOnPage) found.acrossPages++
+        }
+      }
+    }
+    assert.ok(checked >= 5, `${commission}: ${checked} pairs checked`)
+  }
+  // Among them: a question followed by the Commissioner, and a question at the foot of a page whose next turn opens the next page.
+  assert.ok(found.commissioner >= 1, JSON.stringify(found)); assert.ok(found.acrossPages >= 1, JSON.stringify(found))
+  // In the block the second quotation carries the fixed label and its own page, and no name.
+  const row = `Example Royal Commission, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn: "Were you raising those concerns?" transcript page P-4900 (PDF page 16), next turn: "Yes, I was." ${LABEL}. © Example, licensed under CC BY 4.0.`
+  assert.deepEqual(api.quotationBlock({ question: hearingQuestion, period, facts: facts([row]) }).answer.split('\n\n').slice(1), [
+    'Hearing day 46 (10 March 2023), transcript page P-4899: “Were you raising those concerns?”',
+    'The next turn in the transcript, hearing day 46 (10 March 2023), transcript page P-4900: “Yes, I was.”',
+  ])
+  const prior = `Example Royal Commission, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), turn before: "Were you raising those concerns?" transcript page P-4900 (PDF page 16), hearing turn: "Yes, I was." ${LABEL}. © Example, licensed under CC BY 4.0.`
+  assert.deepEqual(api.quotationBlock({ question: hearingQuestion, period, facts: facts([prior]) }).answer.split('\n\n').slice(1), [
+    'Hearing day 46 (10 March 2023), transcript page P-4899: “Were you raising those concerns?”',
+    'The next turn in the transcript, hearing day 46 (10 March 2023), transcript page P-4900: “Yes, I was.”',
+  ])
 })
