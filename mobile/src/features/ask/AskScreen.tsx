@@ -202,6 +202,45 @@ export default function AskScreen() {
     setUnderBar(scrollY.current + headerBottom > 1);
   }, [headerBottom]);
   useLayoutEffect(checkUnderBar, [checkUnderBar]);
+  // The hidden band is only there while UIKit keeps the large-title frame.
+  // When the tab is left and shown again UIKit reports the bar it draws (116
+  // pt for 168 on iOS 27.2), the band shrinks, and so does the inset above.
+  // UIKit carries a thread at rest up by the difference and leaves it there,
+  // its question behind the bar's title and buttons (build 88). Such a
+  // thread is put back at rest. Only for a band that shrinks: a band that
+  // appears is the thread opening, which `reveal` places with its own
+  // animation. And only a thread found at rest or carried exactly that far:
+  // one the reader has scrolled is left where it is.
+  const band = useRef(hiddenBand);
+  useLayoutEffect(() => {
+    const before = band.current;
+    band.current = hiddenBand;
+    if (hiddenBand >= before || idle || scrollY.current === null) return;
+    const above = scrollY.current + headerBottom;
+    const carried = before - hiddenBand;
+    if (above > 1 && Math.abs(above - carried) > 1) return;
+    const rest = { y: -headerBottom, animated: false };
+    scroll.current?.scrollTo(rest);
+    // Once more when the native inset has landed: it can follow this commit.
+    const frame = requestAnimationFrame(() => scroll.current?.scrollTo(rest));
+    return () => cancelAnimationFrame(frame);
+  }, [hiddenBand, headerBottom, idle]);
+  // A saved conversation opens with no send, so nothing places it: it took
+  // whatever offset the idle page had. From a scrolled idle page the thread
+  // opened part-way down, its answer behind the bar; from one at rest it
+  // sat a large title's height low (iPad). A thread that opens without a
+  // send starts at rest, as a sent one does once its question is pinned.
+  const wasIdle = useRef(idle);
+  useLayoutEffect(() => {
+    const opened = wasIdle.current && !idle;
+    wasIdle.current = idle;
+    if (!opened || pin.current || Platform.OS !== 'ios') return;
+    const rest = { y: -headerBottom, animated: false };
+    scroll.current?.scrollTo(rest);
+    // Again once the thread's inset has landed on the native side.
+    const frame = requestAnimationFrame(() => scroll.current?.scrollTo(rest));
+    return () => cancelAnimationFrame(frame);
+  }, [idle, headerBottom]);
   useRootBarUnderBar(underBar);
   // Under the clear bar the page fades into its ground behind the title and
   // the bar buttons, from the first point of scroll (at accessibility sizes
@@ -602,6 +641,10 @@ export default function AskScreen() {
             {/* After the scroll's chain, so UIKit still finds it first. */}
             {barFade ? (
               <ClearBarFade
+                // Its own layer for a thread, not the idle page's reused: the
+                // natively driven values of a reused one stayed as the idle
+                // page left them, and the ground covered the question.
+                key={idle ? 'idle' : 'thread'}
                 y={fadeScroll.y}
                 bottom={headerBottom}
                 hidden={hiddenBand}

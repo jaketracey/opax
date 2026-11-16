@@ -156,6 +156,21 @@ jest.mock('../src/features/account/store', () => ({
   accountSnapshot: () => mockAccount,
 }));
 jest.mock('../src/voice/linked', () => ({ voiceLinked: true }));
+// The ground under a bar fade, counted each time a fade layer is mounted.
+const mockFadeLayers = { mounted: 0 };
+jest.mock('../src/design/ground-fade', () => {
+  const actual = jest.requireActual('../src/design/ground-fade');
+  const { createElement, useEffect } = jest.requireActual('react');
+  return {
+    ...actual,
+    GroundFade: (props: object) => {
+      useEffect(() => {
+        mockFadeLayers.mounted += 1;
+      }, []);
+      return createElement(actual.GroundFade, props);
+    },
+  };
+});
 jest.mock('../src/features/ask/store', () => {
   const saved = { v: 1, active: null, chats: [] };
   return {
@@ -581,6 +596,226 @@ test.each([
     }
   },
 );
+
+// Build 88, iPhone on iOS 27.2: in an open thread UIKit reports the bar with
+// its hidden large-title band (168 pt). Leave the tab and come back, and it
+// reports the bar it draws (116 pt). The band shrinks and the inset with it,
+// but UIKit keeps the offset the old inset gave: the thread came back 52 pt
+// higher, its question behind the bar.
+describe('an open thread when its tab is shown again', () => {
+  const top = 56 + 2 / 3;
+  const open = async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(false);
+    const frames = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation(() => 0);
+    const solidBar = jest
+      .spyOn(accessibility, 'useSolidBar')
+      .mockReturnValue(false);
+    const route = { key: 'ask-root', name: 'ask' };
+    const navigation = {
+      setOptions: jest.fn(),
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    // The tab's stack, as the app has it: the header height is the stack's.
+    const page = (header: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top, bottom: 34, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={header}>
+              <AskScreen />
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    await mount(page(168));
+    // The idle page reports its rest under the large title, as it does on
+    // a device, before the question is sent.
+    act(() =>
+      view!.root
+        .find((n) => n.props.testID === 'ask-screen' && n.type === ScrollView)
+        .props.onScroll({ nativeEvent: { contentOffset: { y: -168 } } }),
+    );
+    await type('A fixture question?');
+    await press('ask-submit');
+    const scroll = () =>
+      view!.root.find(
+        (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+      );
+    const at = (y: number) =>
+      act(() =>
+        scroll().props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    const inset = () => scroll().props.contentInset?.top as number;
+    // The tab is shown again: UIKit reports the bar it draws.
+    const refocus = () =>
+      act(async () =>
+        view!.update(
+          withNavigationOptions(page(116), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+    const restore = () => {
+      solidBar.mockRestore();
+      frames.mockRestore();
+      idiom.mockRestore();
+      platform.restore();
+    };
+    return { at, inset, refocus, restore };
+  };
+
+  test('a thread at rest is at rest again: its top inset and its offset are the first-focus ones for the bar', async () => {
+    const thread = await open();
+    try {
+      // First focus: the band is off the inset, and the thread rests under
+      // the compact bar.
+      const rest = 168 + thread.inset();
+      expect(rest).toBeGreaterThan(top);
+      expect(rest).toBeLessThan(116);
+      thread.at(-rest);
+      scrollTo.mockClear();
+      // UIKit's inset change carries the thread up before the page hears
+      // the new height.
+      thread.at(-rest + 52);
+      await thread.refocus();
+      // The inset is the new band's, so the top the scroll view is given
+      // is the same compact bar as at first focus...
+      expect(116 + thread.inset()).toBeCloseTo(rest);
+      // ...and the thread is put back at that rest, at once.
+      expect(scrollTo).toHaveBeenCalled();
+      const last = scrollTo.mock.lastCall![0] as {
+        y: number;
+        animated: boolean;
+      };
+      expect(last.y).toBeCloseTo(-rest);
+      expect(last.animated).toBe(false);
+    } finally {
+      thread.restore();
+    }
+  });
+
+  test('the band appearing as a thread opens does not move it: the send is placed by its own animated scroll', async () => {
+    const thread = await open();
+    try {
+      // `open` sent the first question from the idle page at rest: the band
+      // went from 0 to its full depth. Nothing unanimated ran for it.
+      expect(thread.inset()).toBeLessThan(0);
+      const unanimated = scrollTo.mock.calls.filter(
+        ([to]) => (to as { animated?: boolean }).animated === false,
+      );
+      expect(unanimated).toEqual([]);
+    } finally {
+      thread.restore();
+    }
+  });
+
+  test('a reader a little way past rest is left alone, as is one further on', async () => {
+    const thread = await open();
+    try {
+      const rest = 168 + thread.inset();
+      thread.at(-rest);
+      // 30 pt into the thread: neither at rest nor carried by the band.
+      thread.at(-rest + 30);
+      scrollTo.mockClear();
+      await thread.refocus();
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      thread.restore();
+    }
+  });
+
+  test('a saved conversation opened from a scrolled idle page starts at rest under the bar', async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(false);
+    const frames = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation(() => 0);
+    const solidBar = jest
+      .spyOn(accessibility, 'useSolidBar')
+      .mockReturnValue(false);
+    const route = { key: 'ask-root', name: 'ask' };
+    const navigation = {
+      setOptions: jest.fn(),
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    try {
+      await mount(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <SafeAreaInsetsContext.Provider
+              value={{ top, bottom: 34, left: 0, right: 0 }}
+            >
+              <HeaderHeightContext.Provider value={168}>
+                <AskScreen />
+              </HeaderHeightContext.Provider>
+            </SafeAreaInsetsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      const scroll = () =>
+        view!.root.find(
+          (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+        );
+      // The idle page, scrolled down to its Conversations rows.
+      act(() =>
+        scroll().props.onScroll({ nativeEvent: { contentOffset: { y: 140 } } }),
+      );
+      scrollTo.mockClear();
+      // No send: the conversation is restored, and nothing pins a question.
+      openSavedConversation();
+      const rest = 168 + (scroll().props.contentInset?.top as number);
+      expect(rest).toBeGreaterThan(top);
+      expect(scrollTo).toHaveBeenCalled();
+      const last = scrollTo.mock.lastCall![0] as {
+        y: number;
+        animated: boolean;
+      };
+      // The first question's place: just under the compact bar's foot.
+      expect(last.y).toBeCloseTo(-rest);
+      expect(last.animated).toBe(false);
+    } finally {
+      solidBar.mockRestore();
+      frames.mockRestore();
+      idiom.mockRestore();
+      platform.restore();
+    }
+  });
+
+  test('a thread the reader has scrolled is left where it is', async () => {
+    const thread = await open();
+    try {
+      thread.at(-(168 + thread.inset()));
+      thread.at(300);
+      scrollTo.mockClear();
+      thread.at(352);
+      await thread.refocus();
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      thread.restore();
+    }
+  });
+});
 
 test.each(['before', 'after'] as const)(
   'send pins below the compact bar when fallback frames run %s the turn layout and native height arrives late',
@@ -4141,7 +4376,14 @@ test.each([
       scrollTo(-68);
       expect(byId('bar-fade').length).toBeGreaterThan(0);
 
+      // A saved conversation opened from the idle page. The idle page's
+      // fade layer was reused for the thread, and its natively driven
+      // values stayed as the idle page left them: the ground covered the
+      // question, which was laid out under the bar and not seen (builds 82
+      // to 88). The thread gets a fade layer of its own.
+      const layersBeforeOpening = mockFadeLayers.mounted;
       openSavedConversation();
+      expect(mockFadeLayers.mounted).toBe(layersBeforeOpening + 1);
       scrollTo(400);
       expect(edges()).not.toContain('hard');
       expect(byId('bar-fade').length).toBeGreaterThan(0);
@@ -4180,8 +4422,10 @@ test.each([
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
       expect(edges()).not.toContain('hard');
-      // Back on the idle page the native soft edge returns.
+      // Back on the idle page the native soft edge returns, and the idle
+      // page has its own layer again.
       expect(edges().at(-1)).toBe('soft');
+      expect(mockFadeLayers.mounted).toBeGreaterThan(layersBeforeOpening + 1);
       await act(async () =>
         view!.update(
           withNavigationOptions(page(120), (options) => {
