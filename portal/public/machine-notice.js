@@ -7,6 +7,8 @@ export const MACHINE_NOTICE = 'Machine-written answers can contain errors. Check
 export const MACHINE_NOTICE_STORED = 'Machine-written summaries can contain errors. Check the original record before relying on one.'
 // The two words that go with a stored summary where there is no room for the line and no label can be drawn: a
 // share image, the text of a social post.
+// As a small line of its own under text in an image (the story's cover slide): a label, so no full stop.
+export const MACHINE_SUMMARY_LABEL = 'Machine-written summary'
 export const MACHINE_SUMMARY_WORDS = 'Machine-written summary.'
 // The same words leading the summary sentence they introduce: a caption's opening, an image's alt text.
 export const MACHINE_SUMMARY_PREFIX = 'Machine-written summary: '

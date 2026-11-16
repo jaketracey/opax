@@ -12,7 +12,7 @@ import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
-import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX } from './machine-notice'
+import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
@@ -598,7 +598,9 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   // The headline is the bill's own name without its "Bill 2026" tail: always
   // grammatical, where a clipped summary sentence is not. The sentence is the line.
   const headline = (bill.short_title || bill.title).replace(/\s+Bill\s+(?:\(No\.?\s*\d+\)\s+)?\d{4}(?:\s+\[.*\])?$/i, '').replace(/\s+/g, ' ').trim() || bill.title
-  const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`, photo: takePhoto(billPhotos, ids, 0),
+  const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
+    // The line opens with the summary's first sentence: the slide says who wrote it, in a small line under it.
+    note: MACHINE_SUMMARY_LABEL, photo: takePhoto(billPhotos, ids, 0),
     alt: `${bill.title}. ${sentences[0]} ${words.statusShort}` }
   const what: StorySlide = { type: 'list', kicker: 'What it does', title: `In ${dayWords(Math.min(3, sentences.length)).toLowerCase()} sentence${sentences.length > 1 ? 's' : ''}`,
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',

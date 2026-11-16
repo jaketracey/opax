@@ -88,6 +88,58 @@ test('the cover draws the photograph as a full-width band with the credit and a 
   assert.ok(texts(withInset).some(t => t.includes('Portrait: Parliament of Australia')), 'both credits');
 });
 
+test('a cover whose line is a summary sentence draws one small "Machine-written summary" line directly under it, at both export sizes', async () => {
+  const noted = { ...slides.cover, line: 'This bill would create a legal framework for regulating cash distribution services in Australia. Introduced 2 Jul 2026; before parliament.', note: 'Machine-written summary' };
+  for (const [format, images] of [['feed', { photo, credit }], ['story', { photo, credit }], ['feed', {}]]) {
+    const tree = storySlideTree(noted, images, format), nodes = walk(tree);
+    const lines = nodes.filter(n => n.props?.children === 'Machine-written summary');
+    assert.equal(lines.length, 1, format + ': drawn once');
+    // It is the node straight after the cover line, among the same parent's children: under the line, above the footer.
+    const parent = nodes.find(n => Array.isArray(n.props?.children) && n.props.children.includes(lines[0]));
+    const kids = parent.props.children.filter(Boolean), at = kids.indexOf(lines[0]);
+    assert.ok(at > 0 && typeof kids[at - 1].props.children === 'string' && kids[at - 1].props.children.startsWith('This bill would create'), format + ': directly under the cover line');
+    // Smaller and quieter than the line it sits under, in the same column, one row.
+    assert.ok(lines[0].props.style.fontSize < kids[at - 1].props.style.fontSize, format);
+    assert.equal(lines[0].props.style.width, kids[at - 1].props.style.width);
+    assert.ok(lines[0].props.style.marginTop <= 16);
+    // The whole slide still renders at the real export size.
+    if (format === 'feed') { const jpeg = decode(await renderJpeg(noted, images)); assert.deepEqual([jpeg.width, jpeg.height], [1080, 1350]); }
+  }
+  // A cover with no note (a member, a grant, an edition stored before this) draws no such line.
+  for (const slide of [slides.cover, slides.coverInset, slides.coverBare, { ...slides.cover, note: null }, { ...slides.cover, note: '  ' }]) assert.ok(!texts(storySlideTree(slide, { photo, credit })).some(t => t.includes('Machine-written')), slide.title);
+  assert.ok(validStory([noted, slides.number, slides.source]), 'a noted cover is a valid story');
+});
+
+test('the engraving cover with a note holds every row of words at its height: a two-row title at its largest over a three-row line does not press the note into the line', async () => {
+  // No photograph, a title that sets at 128 px on two rows, a kicker on two rows and a line on three: the tallest cover.
+  const tall = { type: 'cover', kicker: 'Bill · Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio', title: 'Combatting Illicit Tobacco',
+    line: 'This bill is part of a package that creates the Australian Tertiary Education Commission as the main oversight body for the higher education system. Passed 31 Mar 2026.', note: 'Machine-written summary', photo: null, alt: 'x' };
+  const tree = storySlideTree(tall, {}), nodes = walk(tree);
+  const headline = nodes.find(n => n.props?.children === 'Combatting Illicit Tobacco');
+  const titleSize = headline.props.style.fontSize;
+  assert.ok(titleSize >= 112 && titleSize <= 128, 'the case the fix is for: the title at the engraving cover\'s largest size, on two rows (' + titleSize + ' px)');
+  const words = [nodes.find(n => typeof n.props?.children === 'string' && n.props.children.startsWith('Bill ·')), headline,
+    nodes.find(n => typeof n.props?.children === 'string' && n.props.children.startsWith('This bill is part')), nodes.find(n => n.props?.children === 'Machine-written summary')];
+  for (const node of words) { assert.ok(node); assert.equal(node.props.style.flexShrink, 0, 'a row of words is never squeezed: ' + String(node.props.children).slice(0, 30)); }
+  // The engraving is drawn smaller, and its box is what gives way and is clipped if the rows run long.
+  const engraving = images(tree).find(n => n.props.height === 364);
+  assert.ok(engraving, 'the smaller engraving'); assert.equal(engraving.props.width, 400);
+  const box = nodes.find(n => n.props?.children === engraving);
+  assert.deepEqual([box.props.style.flexShrink, box.props.style.minHeight, box.props.style.overflow, box.props.style.marginTop], [1, 0, 'hidden', 40]);
+  // The rows fit the body at the feed size with room to spare: their heights by the drawing's own measures.
+  const rows = { kicker: 2, title: 2, line: 3 };
+  const needed = rows.kicker * 32 * 1.35 + 22 + rows.title * titleSize * 1.08 + 30 + rows.line * 40 * 1.35 + 14 + 30 * 1.3 + 40 + 364;
+  assert.ok(needed < 1017, 'about ' + Math.round(needed) + ' px of rows and engraving in a body of about 1,017 px');
+  const jpeg = decode(await renderJpeg(tall, {})); assert.deepEqual([jpeg.width, jpeg.height], [1080, 1350]);
+  // The same cover with no note is drawn exactly as it was: the full engraving and no held heights.
+  const { note, ...bare } = tall;
+  const plain = storySlideTree(bare, {});
+  assert.ok(images(plain).some(n => n.props.width === 520 && n.props.height === 474));
+  assert.ok(!walk(plain).some(n => n.props?.style?.flexShrink === 0), 'nothing held on a cover with no note');
+  // And the photograph cover is untouched by this: its column has the room.
+  assert.ok(!walk(storySlideTree(tall, { photo, credit })).some(n => n.props?.style?.flexShrink === 0));
+});
+
 test('the number slide sets the figure at the card statistic size; the ledger clips long text on a word', () => {
   const number = storySlideTree(slides.number);
   const value = walk(number).find(n => n.props?.children === '$11.3m');
@@ -129,7 +181,7 @@ test('the closing slide is the page address alone: no path line under it, no wor
 
 test('the Victorian CTA keeps the address-only design and the exact small authorisation outside its clipped body', () => {
   const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
-  assert.equal(STORY_VERSION, 4, 'changed electoral drawings invalidate the version 3 cache');
+  assert.equal(STORY_VERSION, 5, 'a changed cover drawing invalidates the version 4 cache');
   const slide = {...slides.source, path: 'legacy path must not be drawn', authorisation: line};
   for (const format of ['feed', 'story']) {
     const tree = storySlideTree(slide, {}, format);
