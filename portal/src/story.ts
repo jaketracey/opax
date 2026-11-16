@@ -94,6 +94,8 @@ export interface StoryPhoto {
   licence_url?: string
   /** The line drawn on the slide and repeated in the caption. */
   credit: string
+  /** Set on a photograph of a chamber: which one. A bill's slides show only its own house's chamber (billPhotosFor). */
+  chamber?: 'senate' | 'representatives'
 }
 
 export interface PhotoCatalogue {
@@ -129,6 +131,22 @@ export function photosFor(catalogue: PhotoCatalogue | null | undefined, subject:
   ]
   const seen = new Set<string>()
   return ids.filter(id => typeof id === 'string' && /^[a-z0-9-]+$/.test(id) && !seen.has(id) && (seen.add(id), photoAllowed(catalogue.photos?.[id])))
+}
+
+/**
+ * A bill's photographs: its own, then the kind's, without any of the other chamber. A chamber photograph is
+ * marked with its chamber (photos.json); a bill shows only its own house's, and a bill whose house is not known
+ * (an exposure draft) shows neither. A photograph that shows no chamber belongs to no house and is kept. With
+ * none of its own chamber left, the building (`bill:building`), never the other chamber; with nothing at all,
+ * the cover is drawn without a photograph.
+ */
+export function billPhotosFor(catalogue: PhotoCatalogue | null | undefined, subject: string, house: 'senate' | 'representatives' | null): string[] {
+  const noOtherChamber = (id: string) => {
+    const chamber = catalogue?.photos?.[id]?.chamber
+    return !chamber || chamber === house
+  }
+  const own = photosFor(catalogue, subject, 'bill', house).filter(noOtherChamber)
+  return own.length ? own : photosFor(catalogue, subject, 'bill:building').filter(id => !catalogue?.photos?.[id]?.chamber)
 }
 
 export function photoFor(catalogue: PhotoCatalogue | null | undefined, id: string | null | undefined): StoryPhoto | null {

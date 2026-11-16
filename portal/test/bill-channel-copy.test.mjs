@@ -206,8 +206,8 @@ test('a bill edition\'s cover slide carries the small "Machine-written summary" 
 
 // ---------------------------------------------------------------- with photographs
 const catalogue = { photos: {
-  senate: { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://example.test/senate', author: 'Jo Sample', licence: 'CC BY-SA 3.0', credit: 'Photo: Jo Sample, CC BY-SA 3.0, via Wikimedia Commons' },
-  house: { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://example.test/house', author: 'Kim Sample', licence: 'CC BY-SA 4.0', credit: 'Photo: Kim Sample, CC BY-SA 4.0, via Wikimedia Commons' },
+  senate: { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://example.test/senate', author: 'Jo Sample', licence: 'CC BY-SA 3.0', credit: 'Photo: Jo Sample, CC BY-SA 3.0, via Wikimedia Commons', chamber: 'senate' },
+  house: { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://example.test/house', author: 'Kim Sample', licence: 'CC BY-SA 4.0', credit: 'Photo: Kim Sample, CC BY-SA 4.0, via Wikimedia Commons', chamber: 'representatives' },
 }, subjects: {}, kinds: { 'bill:senate': ['senate', 'house'], 'bill:representatives': ['house', 'senate'], bill: ['senate', 'house'] } };
 const pictured = key => { const base = sources(key); return { ...base, asset: async path => path === '/social/photos.json' ? catalogue : base.asset(path) }; };
 
@@ -244,7 +244,8 @@ test('a bill\'s slides are what main draws from: the stored cover, list and sour
   const [cover, list] = post.slides;
   assert.deepEqual({ type: cover.type, kicker: cover.kicker, title: cover.title, line: cover.line, photo: cover.photo, alt: cover.alt }, {
     type: 'cover', kicker: 'Bill · Alex Example (Independent)', title: 'Example Reporting Amendment',
-    line: `${S1} Introduced 7 Sep 2026; before parliament.`, photo: 'senate',
+    // Introduced in the House: the House chamber, never the Senate's.
+    line: `${S1} Introduced 7 Sep 2026; before parliament.`, photo: 'house',
     // The cover's alt says who wrote the sentence (this branch's third commit); everything else is as main stores it.
     alt: `Example Reporting Amendment Bill 2026. Machine-written summary: ${S1} Introduced 7 Sep 2026; before parliament.` });
   assert.deepEqual(list, { type: 'list', kicker: 'What it does', title: 'In three sentences', items: [S1, S2, S3], note: 'Written by a model from the explanatory memorandum; not the record.', alt: `What it does: ${S1} ${S2} ${S3}` });
