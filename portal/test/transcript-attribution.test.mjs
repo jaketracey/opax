@@ -248,7 +248,7 @@ const plainFacts = () => api.writingFacts(undefined, [fact(1, GRANT, 'https://op
 const question = 'What was said about income averaging at the Robodebt Royal Commission?'
 
 const RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.'
-const POINT_RULE = 'Never word what was said, asked or put at a royal commission, integrity or inquiry hearing in a point, in your own words or quoted: select the transcript excerpt\'s numeric record fact id instead, and the writer attributes it with the speaker\'s role, hearing date and page. '
+const POINT_RULE = 'Never word what was said, asked or put at a royal commission, integrity or inquiry hearing in a point or in reply text, in your own words or quoted, never state it as fact and never name who spoke: select the transcript excerpt\'s numeric record fact id instead, and the writer attributes it with the speaker\'s role, hearing date and page. '
 
 test('the writer rule for transcript sources is fixed text', () => {
   assert.equal(api.TRANSCRIPT_ATTRIBUTION_RULE, RULE)
@@ -495,6 +495,8 @@ test('a point that cites a transcript excerpt selects the record for the writer;
     assert.equal(out.answered, true, JSON.stringify(out.research?.rejections ?? []))
     // Review P1-3: the loop is told, in fixed words, never to word hearing evidence in a point.
     assert.ok(JSON.stringify(model.doGenerateCalls[0].prompt).includes(POINT_RULE.trim()))
+    // What the research model reads back from the tool (rows and citation text) names no speaker.
+    for (const c of model.doGenerateCalls) { const seen = JSON.stringify(c.prompt); assert.doesNotMatch(seen, /hearing turn by |speaker_label|\\"speaker\\"/) }
     assert.doesNotMatch(out.answer, /knew income averaging was unlawful/, JSON.stringify(point))
     assert.match(out.answer, /^(?:A witness|Counsel assisting|The Commissioner|Counsel for a party|The transcript records)[^\n]* on 10 March 2023 \(page P-\d+\): “/)
     const cards = out.qualitative.sources.filter(s => s.cited && !s.coverage)
