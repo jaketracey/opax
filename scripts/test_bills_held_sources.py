@@ -270,8 +270,12 @@ class HeldSourcesFixture(unittest.TestCase):
         self.assertEqual(index["generated_at"], old_index["generated_at"])
         self.assertEqual(list(index)[:2], ["generated_at", "progress_as_at"])
         read = [p.stem for p in self.stage.glob("raw/*/*.xml") if p.stem > self.snapshot]
-        made = [a["assent_date"] for a in result["summary"]["assents_added"]]
-        self.assertEqual(index["progress_as_at"], max(read + made))
+        floor = H.sydney_day(old_index["generated_at"])
+        self.assertEqual(floor, "2026-10-05")  # the export's Sydney day, as the site's "as at" line shows it
+        # Only what both sources cover: the earlier of Hansard read and the register's read day.
+        self.assertEqual(index["progress_as_at"], max(floor, min(max(read), "2026-11-17")))
+        self.assertEqual((index["meta"]["held_sources"]["hansard_latest"], index["meta"]["held_sources"]["frl_read"]),
+                         (max(read), "2026-11-17"))
         self.assertEqual(index["meta"]["held_sources"]["since"], self.snapshot)
         changed = {p.name for p in self.bills.glob("*.json") if p.read_bytes() != self.before[p.name]}
         self.assertEqual(len(changed) - 1, result["summary"]["bills_changed"])
@@ -300,13 +304,105 @@ class HeldSourcesFixture(unittest.TestCase):
         self.assertEqual(bills_guard.regressions(head[key], doc), [])
 
     def test_an_unreadable_day_goes_to_review_and_holds_the_progress_date(self):
-        days = sorted(self.stage.glob("raw/*/*.xml"))
-        late = [p for p in days if p.stem > self.snapshot]
-        late[0].write_text("<debates><minor-heading>")
+        # An unreadable chamber-day in the other house on the last reading day: readings
+        # before it publish, readings on or after it are held back until it reads.
+        days = sorted({day for *_, day in self.plan})
+        self.assertGreaterEqual(len(days), 2)
+        houses = {house for _, _, house, day in self.plan if day == days[-1]}
+        gap = self.stage / "raw" / H.FOLDERS["senate" if "representatives" in houses else "representatives"] / f"{days[-1]}.xml"
+        gap.parent.mkdir(parents=True, exist_ok=True)
+        gap.write_text("<debates><minor-heading>")
         result = self.run_overlay()
-        self.assertIn("unreadable_day", result["summary"]["review_kinds"])
+        kinds = result["summary"]["review_kinds"]
+        self.assertIn("unreadable_day", kinds)
         index = json.loads((self.bills / "index.json").read_text())
-        self.assertLess(index["meta"]["held_sources"]["hansard_latest"] or "", late[0].stem)
+        self.assertLess(index["meta"]["held_sources"]["hansard_latest"] or "", gap.stem)
+        self.assertLess(index["progress_as_at"], gap.stem)
+        published = [r["date"] for k in {p[0] for p in self.plan} for r in self.doc(k)["key_dates"]
+                     if r.get("source") == "hansard"]
+        self.assertTrue(published and all(d < gap.stem for d in published))
+        held_back = [e for e in result["review"] if e["kind"] == "held_after_unreadable_day"]
+        self.assertTrue(held_back and all(e["date"] >= gap.stem for e in held_back))
+        # One review entry per reading, though the fixture writes a section per division.
+        self.assertEqual(len(published) + len(held_back), len(self.plan))
+
+    def test_with_no_hansard_read_progress_stays_at_the_export_day(self):
+        shutil.rmtree(self.stage / "raw")
+        result = self.run_overlay()
+        self.assertEqual(len(result["summary"]["assents_added"]), 10)  # the register still adds its Acts
+        index = json.loads((self.bills / "index.json").read_text())
+        self.assertEqual(index["progress_as_at"], "2026-10-05")  # not the newest Act's day (2026-10-25)
+        with sqlite3.connect(self.db_path) as db:
+            db.execute("DELETE FROM ext_frl_acts")
+        self.run_overlay()
+        self.assertEqual(json.loads((self.bills / "index.json").read_text())["progress_as_at"], "2026-10-05")
+
+    def test_a_negatived_second_reading_is_reviewed_not_published(self):
+        key = self.assented[5]
+        ref, title = key.rsplit("-", 1)[1], self.doc(key)["title"]
+        bills = (f'<bills><bill id="{ref}" url="https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;'
+                 f'query=Id%3A%22legislation%2Fbillhome%2F{ref}%22">{escape(title)}</bill></bills>')
+        def section(words, division=""):
+            return (f'<minor-heading id="n">{escape(title)}; Second Reading</minor-heading>{bills}{division}'
+                    f'<speech nospeaker="true"><p>{words}</p></speech>')
+        lost = '<division id="d"><divisioncount ayes="30" noes="35"/></division>'
+        cases = {
+            "2026-11-03": section("Question negatived.", lost),                        # the bill voted down: review
+            "2026-11-04": section("Question negatived. Bill read a second time.", lost),  # an amendment lost, then agreed
+            "2026-11-05": section("That this bill be now read a second time. Question negatived."),  # the motion is not the record
+        }
+        for day, body in cases.items():
+            path = self.stage / "raw" / H.FOLDERS["senate"] / f"{day}.xml"
+            path.write_text(f'<debates><major-heading id="m">BILLS</major-heading>{body}</debates>\n')
+        result = self.run_overlay()
+        rows = {r["date"] for r in self.doc(key)["key_dates"] if r.get("source") == "hansard" and r["stage"] == "second_reading"}
+        self.assertEqual(rows, {"2026-11-04"})
+        reviewed = {e["date"]: e for e in result["review"] if e["kind"] == "second_reading_not_published"}
+        self.assertEqual(set(reviewed), {"2026-11-03", "2026-11-05"})
+        self.assertTrue(all(e["bill"] == key and "negatived" in e["basis"] for e in reviewed.values()))
+        self.assertFalse(any(r.get("negatived") for r in self.doc(key)["key_dates"] if r.get("source") == "hansard"))
+
+    def test_a_newer_export_retires_overlay_rows_and_never_duplicates_royal_assent(self):
+        self.run_overlay()
+        assent_key = self.assented[0]
+        reading_key = next(k for k, *_ in sorted(self.plan) if k != assent_key)
+        head = {k: self.doc(k) for k in (assent_key, reading_key)}
+        made = next(r["date"] for r in head[assent_key]["key_dates"] if r.get("source") == "frl")
+        parlinfo = ("https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;"
+                    f"query=Id%3A%22legislation/billhome/{assent_key.rsplit('-', 1)[1]}%22")
+
+        def full_export(assent_day: str, generated_at: str):
+            """ParlInfo is back: its own copies, its own assent row (with a house), a new export day."""
+            for key in head:
+                doc = json.loads(self.before[f"{key}.json"])
+                if key == assent_key:
+                    doc["key_dates"].append({"stage": "royal_assent", "date": assent_day, "house": "senate", "url": parlinfo})
+                    doc["status"], doc["status_as_of"] = "passed", assent_day
+                (self.bills / f"{key}.json").write_text(eb.same_layout(self.before[f"{key}.json"].decode(), doc))
+            index = json.loads(self.before["index.json"])
+            index["generated_at"] = generated_at
+            (self.bills / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
+
+        for assent_day, generated_at, retires in ((made, self.index["generated_at"], False),
+                                                  (made, "2026-12-01T16:00:00+00:00", True),
+                                                  (f"{made[:8]}{int(made[8:]) - 1:02d}", "2026-12-01T16:00:00+00:00", True)):
+            with self.subTest(assent_day=assent_day, generated_at=generated_at):
+                full_export(assent_day, generated_at)
+                result = self.run_overlay(head)
+                doc = self.doc(assent_key)
+                assent = [r for r in doc["key_dates"] if r["stage"] == "royal_assent"]
+                self.assertEqual([(r["date"], r["house"]) for r in assent], [(assent_day, "senate")])
+                self.assertEqual(len([a for a in doc["acts"] if a["frl_uri"].endswith(head[assent_key]["acts"][-1]["frl_uri"][-11:])]),
+                                 1 if not retires else 0)
+                readings = [r for r in self.doc(reading_key)["key_dates"] if r.get("source") == "hansard"]
+                self.assertEqual(bool(readings), not retires)
+                self.assertGreater(result["summary"]["rows_retired"], 0)
+                cutoff = generated_at[:10]
+                for key in head:
+                    self.assertEqual(bills_guard.regressions(head[key], self.doc(key), cutoff=cutoff), [], key)
+                if retires:  # the allowance is what lets them go, and only for rows the export's day covers
+                    self.assertTrue(bills_guard.regressions(head[reading_key], self.doc(reading_key)))
+                    self.assertTrue(bills_guard.regressions(head[reading_key], self.doc(reading_key), cutoff=self.snapshot))
 
     def test_heading_stage_reads_only_the_last_segment(self):
         self.assertEqual(H.heading_stage("Example Bill 2026; Second Reading"), "second_reading")

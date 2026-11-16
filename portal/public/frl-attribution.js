@@ -2,7 +2,9 @@
    from the register appears: an Act's assent date (the register's making date, linked to the Act as made) and a
    Royal Assent stage read from the register while ParlInfo was paused (a key_dates row with source "frl", written
    by scripts/bills_held_sources.py). The date is the day OPAX downloaded the register's record (`retrieved`), else
-   the day the bills export read it. Policy: parli/ingest/source_policy.json, frl_acts.
+   the day the bills export read it (its generated_at as a Sydney day). Policy: parli/ingest/source_policy.json,
+   frl_acts. It also holds the two notes a bill page shows for stages read from held sources, so the server page
+   (seo-content.ts) and the app page (app.js) say the same thing.
    No imports: the Worker (Ask and MCP record text, the daily edition) and the browser (the bill page, through
    labels.js) share it. */
 export const FRL_SITE = 'https://www.legislation.gov.au';
@@ -25,17 +27,33 @@ export function frlAttribution(day) {
   return full ? `Based on content from the Federal Register of Legislation at ${full}. For the latest information on Australian Government legislation please go to https://www.legislation.gov.au.` : '';
 }
 
+/** Stages read from held sources while ParlInfo, the Parliament's bills database, was unavailable. Each names its
+ *  own source: Hansard for readings, the Federal Register for Royal Assent. */
+export const HELD_READINGS_NOTE = 'Readings dated after ParlInfo, the Parliament\'s bills database, was last read come from Hansard (Commonwealth of Australia), as the OpenAustralia Foundation publishes it. Each links to that day\'s Hansard file.';
+export const HELD_ASSENT_NOTE = 'Royal Assent dated after ParlInfo was last read is the Act\'s making date on the Federal Register of Legislation.';
+
+const SYDNEY_DAY = new Intl.DateTimeFormat('en-AU', { timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit' });
+/** "2026-10-05" for 2026-10-04T16:27:54+00:00: a timestamp's Sydney day (a bare date is its own day); '' otherwise. */
+export function sydneyDay(value) {
+  const text = typeof value === 'string' ? value.trim() : '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return frlFullDate(text) ? text : '';
+  if (!/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(text)) return '';
+  const at = Date.parse(/(?:Z|[+-]\d{2}:?\d{2})$/i.test(text) ? text.replace(' ', 'T') : `${text.replace(' ', 'T')}Z`);
+  if (!Number.isFinite(at)) return '';
+  const part = Object.fromEntries(SYDNEY_DAY.formatToParts(new Date(at)).map((p) => [p.type, p.value]));
+  return `${part.year}-${part.month}-${part.day}`;
+}
+
 /** A key_dates row read from the register. */
 export const isFrlStage = (row) => row?.source === 'frl';
 
 /** The day to date a bill's register facts by: the newest `retrieved` on its Acts, its register stages and its
- *  register sources; else `fallback` (the bills export's day); '' when neither is a date. */
+ *  register sources; else `fallback`, the bills export's generated_at (its Sydney day); '' when neither is a date. */
 export function frlRetrieved(bill, fallback = '') {
   const days = [...(bill?.acts || []), ...(bill?.key_dates || []).filter(isFrlStage), ...(bill?.sources || []).filter((s) => s?.kind === 'frl_act')]
     .map((row) => String(row?.retrieved || '')).filter((day) => /^\d{4}-\d{2}-\d{2}$/.test(day) && frlFullDate(day)).sort();
   if (days.length) return days[days.length - 1];
-  const day = String(fallback || '').slice(0, 10);
-  return frlFullDate(day) ? day : '';
+  return sydneyDay(String(fallback || ''));
 }
 
 /** Does the bill show a date from the register: an Act with an assent date, or a Royal Assent stage read from it? */

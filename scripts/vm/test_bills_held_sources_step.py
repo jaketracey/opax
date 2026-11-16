@@ -150,15 +150,23 @@ class HeldSourcesStepTests(unittest.TestCase):
         self.assertEqual(self.git("diff", "--name-only").split(), ["portal/public/bills/au-federal-t1.json", "portal/public/bills/index.json"])
         self.assertEqual(json.loads((self.pipe / "bills-held-sources.json").read_text())["run_date"], "2026-11-17")
 
-    def test_a_failed_or_refused_overlay_leaves_the_bills_at_head(self):
-        for mode, reason in (("fail", "held-sources overlay failed"), ("regress", "bill guard refused the held-sources overlay")):
+    def test_a_failed_or_refused_overlay_leaves_the_bills_at_head_as_a_warning(self):
+        # Information only: the bills go back to HEAD and the night is not failed, so the
+        # periodic groups and backfills are not held back by it (review P2-4).
+        for mode, reason in (("fail", "bills held-sources overlay failed or timed out"),
+                             ("regress", "bill guard refused the held-sources overlay")):
             with self.subTest(mode=mode):
                 output = self.run_steps(HELD_TEST_MODE=mode)
-                self.assertIn("held rc=1 failures=1", output)
-                self.assertIn(f"FAIL: bills {reason}" if mode == "fail" else f"FAIL: {reason}", output)
-                self.assertIn("reverted to HEAD", output)
+                self.assertIn("held rc=0 failures=0 warnings=1", output)
+                self.assertIn(f"WARN: {reason}; bills reverted to HEAD", output)
+                self.assertNotIn("FAIL:", output)
                 self.assertEqual(self.git("status", "--porcelain", "--", "portal/public/bills"), "")
                 self.assertFalse((self.pipe / "bills-held-sources.json").exists())
+
+    def test_the_overlay_runs_under_a_timeout(self):
+        step = (ROOT / "scripts/vm/bills_held_sources.sh").read_text()
+        self.assertRegex(step, r'run timeout --kill-after=60 "\$\{OPAX_BILLS_HELD_TIMEOUT:-20m\}" \\\n\s+"\$PY" scripts/bills_held_sources.py')
+        self.assertNotIn("fail ", step.split("bills_held_sources() {", 1)[1])
 
     def test_frl_request_skips_the_night_on_any_failure_and_keeps_a_pause_receipt(self):
         receipt = self.pipe / "source-access/frl-acts-recent.json"

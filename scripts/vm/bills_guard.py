@@ -124,8 +124,31 @@ def untexted_questions(doc: dict) -> int:
     return sum("question" in d and not isinstance(d["question"], str) for d in doc.get("divisions", []))
 
 
-def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset()) -> list[str]:
+# Rows the held-sources overlay (scripts/bills_held_sources.py) adds while ParlInfo
+# is paused. It only adds them for days after the export's generated_at day.
+OVERLAY_SOURCES = ("hansard", "frl")
+
+
+def superseded(doc: dict, cutoff: str | None) -> list[dict]:
+    """Overlay rows dated on or before `cutoff`, a newer export's own day: that
+    export's record covers those days and replaces them."""
+    if not cutoff:
+        return []
+    return [s for s in doc.get("key_dates", [])
+            if s.get("source") in OVERLAY_SOURCES and s.get("date") and s["date"] <= cutoff]
+
+
+def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset(),
+                cutoff: str | None = None) -> list[str]:
     reasons = []
+    if gone := superseded(old, cutoff):
+        # Judge the newer export against HEAD without the overlay rows it covers.
+        # A status_as_of only an overlay row supported is no record to hold it to.
+        kept = [s for s in old.get("key_dates", []) if s not in gone]
+        old = {**old, "key_dates": kept}
+        if old.get("status_as_of") in {s["date"] for s in gone} \
+                and all(s.get("date") != old["status_as_of"] for s in kept):
+            old["status_as_of"] = None
     if faults := untexted_questions(new):
         reasons.append(f"{faults} division questions are not text")
     for name, was, now in (
@@ -181,7 +204,8 @@ def check(apply_holds: bool = False, held_report: Path | None = None) -> str:
     if unreadable:
         raise ValueError(f"new bills with a division question that is not text: {', '.join(unreadable[:10])}")
     moved = reviewed_moves()
-    held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key], moved))}
+    cutoff = str(new_index.get("generated_at") or "")[:10] or None
+    held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key], moved, cutoff))}
     if held_report is not None:
         held_report.write_text(json.dumps(held, indent=1) + "\n")
     for key, reasons in held.items():

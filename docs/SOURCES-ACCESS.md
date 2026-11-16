@@ -178,9 +178,22 @@ and a bill we do not hold never gets a page from these sources.
 - First, second and third readings come from the OpenAustralia Foundation's
   Hansard XML for days after the bills export, only where the Hansard section names
   the bill's official id. A section matched by title alone goes to a review list
-  with its basis and is never published.
+  with its basis and is never published. A third reading is published only when the
+  bill is recorded read a third time with nothing negatived; a second reading
+  section with a negatived question is reviewed unless the bill is recorded read a
+  second time. Nothing dated on or after a chamber-day that could not be read is
+  published until that day reads.
 - Division links come from the OpenAustralia-sourced divisions with an exact
   official id join, and only to a published division page.
+- The index's `progress_as_at` claims only what both sources cover: the earlier of
+  the last Hansard chamber-day read without a gap and the day the register was last
+  read, never earlier than the export's own Sydney day. A bill's `status_as_of`
+  stays its latest recorded event.
+- When ParlInfo returns, a newer bills export replaces these rows for the days it
+  covers (the bills guard allows exactly those to go), and an FRL Royal Assent is
+  never added beside the export's own.
+- The step is information only: if it fails, the bills go back to HEAD and the
+  night records a warning, not a failure.
 
 The Federal Register is asked once a night at about 03:15 Sydney time (one
 `/v1/titles` request for the newest 100 Acts, 10 seconds' spacing, never in the

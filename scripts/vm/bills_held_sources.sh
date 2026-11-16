@@ -6,7 +6,9 @@
 #   bills_held_sources   the field-only overlay scripts/bills_held_sources.py on the retained bills:
 #                        Royal Assent by exact originatingBillUri, Hansard readings by exact bill id,
 #                        exact division links. Information only, under the bills guard; any failure
-#                        puts the bills back to HEAD, the way a bad bills export is reverted.
+#                        puts the bills back to HEAD, the way a bad bills export is reverted, and is
+#                        a warning, not a failed night: nothing else in the night depends on it, so
+#                        the periodic groups and backfills are not held back by it.
 # Uses nightly's PY, PIPE, run/log/warn/fail/revert and bills_refresh.sh's bills_apply_guard.
 # shellcheck shell=bash
 
@@ -40,25 +42,27 @@ bills_held_sources() {
     return 0
   fi
   log "bills held sources: Royal Assent (FRL), Hansard readings (OpenAustralia XML) and exact division links on the retained bills"
-  if ! OPAX_DB="$HOME/.cache/autoresearch/parli.db" run "$PY" scripts/bills_held_sources.py \
+  if ! OPAX_DB="$HOME/.cache/autoresearch/parli.db" run timeout --kill-after=60 "${OPAX_BILLS_HELD_TIMEOUT:-20m}" \
+      "$PY" scripts/bills_held_sources.py \
       --oa-stage "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}" \
       --today "${TODAY:-$(TZ=Australia/Sydney date +%F)}" \
       --review-out "$BILLS_HELD_REVIEW" --summary-out "$BILLS_HELD_SUMMARY"; then
-    rm -f "$BILLS_HELD_SUMMARY"
-    fail "bills held-sources overlay failed; bills reverted to HEAD"
-    revert portal/public/bills
-    return 1
+    bills_held_revert "bills held-sources overlay failed or timed out"
+    return 0
   fi
   if ! bills_apply_guard; then
-    rm -f "$BILLS_HELD_SUMMARY"
-    fail "bill guard refused the held-sources overlay; bills reverted to HEAD"
-    revert portal/public/bills
-    return 1
+    bills_held_revert "bill guard refused the held-sources overlay"
+    return 0
   fi
   if ! run "$PY" scripts/vm/keep_if_unchanged.py --sweep portal/public/bills; then
-    rm -f "$BILLS_HELD_SUMMARY"
-    fail "bills keep-if-unchanged failed after the held-sources overlay; bills reverted to HEAD"
-    revert portal/public/bills
-    return 1
+    bills_held_revert "bills keep-if-unchanged failed after the held-sources overlay"
+    return 0
   fi
+}
+
+# Information only: put the bills back to HEAD and say so, without failing the night.
+bills_held_revert() {
+  rm -f "$BILLS_HELD_SUMMARY"
+  revert portal/public/bills
+  warn "$1; bills reverted to HEAD (tonight's bills changes are not published; the rest of the night is unaffected)"
 }

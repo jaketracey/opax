@@ -39,8 +39,9 @@ export interface BillFields {
   key_dates: BillStage[]; passed_both_houses: true | null; passed_both_houses_date: string | null
   royal_assent: string | null; act_number: string | null; acts: BillAct[]
   /** The Federal Register's dated CC BY 4.0 attribution when the record shows a date from it (an Act's assent date or a
-   *  Royal Assent stage read from the register) and dates its download, else null. Record text stating such a date carries it. */
-  frl_attribution: string | null
+   *  Royal Assent stage read from the register) and dates its download. Absent otherwise, so every other record's
+   *  fields (find_records rows, sponsored_bills lifecycle) stay exactly as they were. Record text stating such a date carries it. */
+  frl_attribution?: string
   sponsor: string | null; sponsors: string[]; sponsor_parties: (string | null)[]; sponsor_party: string | null; sponsor_person_id: string | null
   portfolio: string | null; status: string | null; status_as_of: string | null
   /** A dead bill's exact ending ("removed") and its words ("Removed from the Notice Paper"), only when the export names one. */
@@ -74,7 +75,7 @@ export function billKey(href: string, slug: string): string | null {
 /** Read the same lifecycle as the bill page; missing evidence stays missing. */
 export async function billFields(env: ToolEnv, key: string | null): Promise<BillFields> {
   const empty: BillFields = { key, lifecycle_available: false, introduced: null, originating_house: null, key_dates: [], passed_both_houses: null, passed_both_houses_date: null,
-    royal_assent: null, act_number: null, acts: [], frl_attribution: null, sponsor: null, sponsors: [], sponsor_parties: [], sponsor_party: null, sponsor_person_id: null, portfolio: null, status: null, status_as_of: null }
+    royal_assent: null, act_number: null, acts: [], sponsor: null, sponsors: [], sponsor_parties: [], sponsor_party: null, sponsor_person_id: null, portfolio: null, status: null, status_as_of: null }
   if (!key) return empty
   let doc: Record<string, unknown> | null
   try { doc = objectField(await readToolAsset(env, '/bills/' + key + '.json')) }
@@ -92,7 +93,7 @@ export async function billFields(env: ToolEnv, key: string | null): Promise<Bill
   })
   // Dated by the day the register's record was downloaded (`retrieved`, on every row the held-sources export adds).
   // An Act exported before that carries no day here; billCitations dates it by the bills export's day when given one.
-  const frl_attribution = billFrlAttribution({ acts, key_dates, sources: objects(doc.sources) }) || null
+  const frl_attribution = billFrlAttribution({ acts, key_dates, sources: objects(doc.sources) })
   const passed = key_dates.filter(event => ['passed', 'passed_both', 'passed_both_houses'].includes(event.stage))
   const actNumbers = [...new Set(acts.map(act => act.act_number).filter((number): number is string => !!number))]
   const portfolio = textField(doc.portfolio), privatePortfolio = !!portfolio && /^\(s\)/i.test(portfolio)
@@ -116,7 +117,7 @@ export async function billFields(env: ToolEnv, key: string | null): Promise<Bill
     passed_both_houses: passed.length || doc.passed_both_houses === true ? true : null,
     passed_both_houses_date: dateField(doc.passed_both_houses_date) ?? sameDate(passed.map(event => event.date)),
     royal_assent: dateField(doc.royal_assent) ?? dateField(doc.assent) ?? sameDate([...key_dates.filter(event => ['royal_assent', 'assent', 'assented'].includes(event.stage)).map(event => event.date), ...acts.map(act => act.assent_date)]),
-    act_number: textField(doc.act_number) ?? (actNumbers.length === 1 ? actNumbers[0] : null), acts, frl_attribution,
+    act_number: textField(doc.act_number) ?? (actNumbers.length === 1 ? actNumbers[0] : null), acts, ...(frl_attribution ? { frl_attribution } : {}),
     sponsor, sponsors, sponsor_parties, sponsor_party: textField(doc.sponsor_party), sponsor_person_id: textField(doc.sponsor_person_id),
     portfolio: privatePortfolio ? null : portfolio, status: textField(doc.status), status_as_of: dateField(doc.status_as_of),
     ...billEnding(doc) }
@@ -144,7 +145,7 @@ export function billCitations(bill: BillFields, title: string, url: string, quer
     ? `On ${displayDate(bill.introduced)}, the ${title} was released as an exposure draft for consultation.`
     : `On ${displayDate(bill.introduced)}, the ${title} was first introduced${bill.originating_house ? ' in the ' + houseName(bill.originating_house) : ''}.`)
   // A date the Federal Register supplied carries the register's dated attribution in the same sentence's citation.
-  const attribution = bill.frl_attribution ?? (billFrlAttribution(bill, exportedAt) || null)
+  const attribution = bill.frl_attribution || billFrlAttribution(bill, exportedAt) || null
   const fromRegister = (date: string | null) => !!date && !!attribution && (bill.acts.some(act => act.assent_date === date) || bill.key_dates.some(event => isFrlStage(event) && event.date === date))
   const credit = (date: string | null) => fromRegister(date) ? ' ' + attribution : ''
   if (bill.royal_assent) add('assent', `On ${displayDate(bill.royal_assent)}, the ${title} received royal assent${bill.act_number ? ' as Act No. ' + bill.act_number : ''}.${credit(bill.royal_assent)}`)

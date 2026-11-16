@@ -19,17 +19,25 @@ nothing and never joins on a title for publication. It adds, for bills we hold:
 
 Everything it does not publish goes to a review list outside git: official ids
 we do not hold, exact-title matches (each flagged with its basis, never
-published), a third reading that was negatived or not recorded as read, an Act
+published), a third reading that was negatived or not recorded as read, a second
+reading section with a negatived question and no record of the bill read a
+second time, readings on or after a chamber-day that could not be read, an Act
 for a bill recorded dead.
 
 Rows it adds carry `source` ("hansard" or "frl"). FRL rows also carry
 `retrieved`, the day (Sydney) the Act's metadata was downloaded, which the CC BY
-4.0 attribution states. The index gains `progress_as_at` (the newest date these
-held sources were read for) and `meta.held_sources`; `generated_at` never moves.
+4.0 attribution states. The index gains `progress_as_at` and
+`meta.held_sources`; `generated_at` never moves. `progress_as_at` claims only
+what both held sources cover: the earlier of the last OpenAustralia chamber-day
+read without a gap and the day the register was last read, and never earlier
+than the Sydney day of `generated_at`. It is the progress date only. A bill's
+`status_as_of` stays its latest recorded event.
 
 When a full export has run (ParlInfo back), rows this overlay published at HEAD
-and the new export lacks are carried forward, so the bills guard never sees a
-stage this overlay published disappear.
+and the new export lacks are carried forward while they are newer than the
+export's own day. Rows the export's day covers are retired (the export's record
+replaces them, and bills_guard allows exactly those to go), and an FRL Royal
+Assent is never carried onto a bill whose export already records one.
 
 Read-only on the database. Writes only the bill files whose content changed, in
 their own layout, then the index if it changed.
@@ -164,26 +172,53 @@ def hansard_sections(raw: bytes, house: str, day: str) -> list[dict]:
 
 
 def bill_ref(bill_id: str | None, url: str | None) -> str | None:
-    """The official id both the element id and its URL agree on, or None."""
+    """The one official id a <bills> element names, or None. Either its id or its
+    URL is enough on its own; when both name an official id they must be the
+    same one, or the element goes to review."""
     refs = {official_ref(bill_id), official_ref(url)} - {None}
     return next(iter(refs)) if len(refs) == 1 else None
 
 
-def third_reading_problem(section: dict) -> str | None:
-    """Why a third-reading section is not published as the house passing it."""
+# The clerk's record after the question is agreed ("Bill read a second time."),
+# never the motion itself ("That this bill be now read a second time").
+READ_AGAIN = {
+    "second_reading": re.compile(r"\bbills? (?:was |were )?read a second time\b"),
+    "third_reading": re.compile(r"\bbills? (?:was |were )?read a third time\b"),
+}
+
+
+def reading_problem(section: dict) -> str | None:
+    """Why a second or third reading section is not published as a reading.
+
+    A third reading is published only as the house passing the bill: recorded
+    read a third time, with nothing negatived. A second reading section is a day
+    of the second reading debate, as ParlInfo records it, unless a question in
+    it was negatived and the section does not record the bill read a second
+    time: that may be the second reading itself voted down, so it is reviewed."""
+    stage = section["stage"]
+    if stage not in READ_AGAIN:
+        return None
     text = " ".join(section["text"]).casefold()
-    if section["lost_division"] or "negatived" in text or "resolved in the negative" in text:
-        return "a question in the third reading section was negatived"
-    if "read a third time" not in text:
-        return "the section does not record the bill read a third time"
+    negatived = section["lost_division"] or "negatived" in text or "resolved in the negative" in text
+    agreed = READ_AGAIN[stage].search(text)
+    if stage == "third_reading":
+        if negatived:
+            return "a question in the third reading section was negatived"
+        if not agreed:
+            return "the section does not record the bill read a third time"
+        return None
+    if negatived and not agreed:
+        return ("a question in the second reading section was negatived and the section does not "
+                "record the bill read a second time")
     return None
 
 
 def hansard_events(stage_dir: Path, since: str, held: dict[str, dict]) -> tuple[list[dict], list[dict], list[str]]:
     """(stage rows by bill, review entries, chamber-days read) for days after `since`.
 
-    A chamber-day whose XML does not parse goes to review, and the days read
-    stop before it, so the progress date never passes a day that was not read."""
+    A chamber-day whose XML does not parse goes to review. Rows dated on or after
+    the first such day are held back (to review, until the day reads) and the
+    days read stop before it, so nothing is published past a gap in the read."""
     rows, review, days, failed = [], [], [], []
     by_title = collections.defaultdict(list)
     for key, title in held.items():
@@ -223,7 +258,7 @@ def hansard_events(stage_dir: Path, since: str, held: dict[str, dict]) -> tuple[
                         review.append({**base, "kind": "title_only", "title": section["title"], "candidates": titled,
                                        "basis": "exact normalised title; the Hansard section names no official bill id"})
                     continue
-                problem = third_reading_problem(section) if section["stage"] == "third_reading" else None
+                problem = reading_problem(section)
                 for ref, title in sorted(refs.items()):
                     key = f"au-federal-{ref}"
                     if key not in held:
@@ -233,11 +268,21 @@ def hansard_events(stage_dir: Path, since: str, held: dict[str, dict]) -> tuple[
                                        "basis": "official id not among the held bills"
                                        + ("; exact normalised title matches a held bill" if candidates else "")})
                     elif problem:
-                        review.append({**base, "kind": "third_reading_not_published", "bill": key, "basis": problem})
+                        review.append({**base, "kind": f"{section['stage']}_not_published", "bill": key, "basis": problem})
                     else:
                         rows.append({"bill": key, "stage": section["stage"], "date": day, "house": house, "url": url})
     if failed:
-        days = [d for d in days if d < min(failed)]
+        gap = min(failed)
+        seen = set()
+        for row in rows:
+            if row["date"] >= gap and (sig := (row["bill"], row["stage"], row["house"], row["date"])) not in seen:
+                seen.add(sig)
+                review.append({"source": "hansard", "kind": "held_after_unreadable_day", "bill": row["bill"],
+                               "stage": row["stage"], "house": row["house"], "date": row["date"], "url": row["url"],
+                               "basis": f"dated on or after {gap}, a chamber-day that did not read; "
+                                        "published once that day reads"})
+        rows = [r for r in rows if r["date"] < gap]
+        days = [d for d in days if d < gap]
     return rows, review, days
 
 
@@ -264,6 +309,15 @@ def frl_acts(db, since: str) -> list[dict]:
     if entries:
         apply_corrections("bill_acts", acts, key="act_id", entries=entries)
     return [a for a in acts if valid_day(a["assent_date"]) and re.fullmatch(r"[rs]\d+", a["bill_code"])]
+
+
+def frl_read_day(db) -> str | None:
+    """The Sydney day the register was last read: every answered request
+    rewrites its Acts' fetched_at (INSERT OR REPLACE), nightly or weekly."""
+    if db is None or not eb.has_table(db, "ext_frl_acts"):
+        return None
+    row = db.execute("SELECT MAX(fetched_at) FROM ext_frl_acts").fetchone()
+    return sydney_day(row[0]) if row else None
 
 
 def exact_division_links(db) -> dict[str, list[str]]:
@@ -306,28 +360,41 @@ def own_rows(doc: dict) -> list[dict]:
     return [r for r in doc.get("key_dates") or [] if r.get("source") in OWN_SOURCES]
 
 
-def carry_forward(doc: dict, head: dict | None) -> int:
+def carry_forward(doc: dict, head: dict | None, since: str) -> tuple[int, int]:
     """Re-add the rows, Acts and FRL sources this overlay published at HEAD and
-    the current file lacks (a full export rewrote it). Returns rows carried."""
+    the current file lacks (a full export rewrote it). (rows carried, retired).
+
+    A row dated on or before `since`, the export's own day, is retired: the
+    export now covers that day and its record replaces ours. An FRL Royal Assent
+    is never carried onto a bill whose file already records one, whatever its
+    house or day (the register's making date can be a day off ParlInfo's)."""
     if not head:
-        return 0
-    carried = 0
+        return 0, 0
+    carried = retired = 0
     rows = doc.setdefault("key_dates", [])
     have = {signature(r) for r in rows}
+    assented = any(r.get("stage") == "royal_assent" for r in rows)
     for row in own_rows(head):
-        if signature(row) not in have and row.get("date"):
-            insert_row(rows, dict(row))
-            have.add(signature(row))
-            carried += 1
+        if not row.get("date") or signature(row) in have:
+            continue
+        if row["date"] <= since or (row.get("stage") == "royal_assent" and assented):
+            retired += 1
+            continue
+        insert_row(rows, dict(row))
+        have.add(signature(row))
+        assented = assented or row.get("stage") == "royal_assent"
+        carried += 1
     acts = doc.setdefault("acts", [])
     for act in head.get("acts") or []:
-        if act.get("retrieved") and act.get("frl_uri") and all(a.get("frl_uri") != act["frl_uri"] for a in acts):
+        if act.get("retrieved") and act.get("frl_uri") and (act.get("assent_date") or "") > since \
+                and all(a.get("frl_uri") != act["frl_uri"] for a in acts):
             acts.append(dict(act))
     sources = doc.setdefault("sources", [])
     for source in head.get("sources") or []:
-        if source.get("retrieved") and all(s.get("url") != source.get("url") for s in sources):
+        if source.get("retrieved") and (source.get("document_date") or "") > since \
+                and all(s.get("url") != source.get("url") for s in sources):
             sources.append(dict(source))
-    return carried
+    return carried, retired
 
 
 def apply_assent(doc: dict, act: dict) -> str | None:
@@ -398,6 +465,10 @@ def overlay(directory: Path, divisions_dir: Path, db, stage_dir: Path, today: st
     snapshot = valid_day(index.get("generated_at"))
     if not snapshot:
         raise ValueError("the bills index has no generated_at day")
+    # Events after `snapshot` (generated_at's own date) are new to the export.
+    # The progress date never reads earlier than the export's Sydney day, the
+    # day the site's "as at" line shows for it.
+    floor = sydney_day(index["generated_at"]) or snapshot
     by_key = {d["key"]: d for d in docs}
     held = {k: d.get("title") for k, d in by_key.items() if HELD_KEY.match(k)}
     review: list[dict] = []
@@ -405,7 +476,9 @@ def overlay(directory: Path, divisions_dir: Path, db, stage_dir: Path, today: st
 
     head = head or {}
     for doc in docs:
-        counts["rows_carried"] += carry_forward(doc, head.get(doc["key"]))
+        carried, retired = carry_forward(doc, head.get(doc["key"]), snapshot)
+        counts["rows_carried"] += carried
+        counts["rows_retired"] += retired
 
     # Royal Assent from FRL, by exact originatingBillUri bill code.
     applied_acts = []
@@ -488,8 +561,11 @@ def overlay(directory: Path, divisions_dir: Path, db, stage_dir: Path, today: st
                              ("divisions", len(doc.get("divisions") or [])), ("acts", len(doc.get("acts") or []))):
             if field in row:
                 row[field] = value
-    applied_dates = [a["assent_date"] for a in applied_acts] + [r["date"] for d in docs for r in own_rows(d)]
-    progress = max([snapshot, *days, *[d for d in applied_dates if d]])
+    # Only what both sources cover: the earlier of Hansard read without a gap and
+    # the register's last read, never before the export's own day.
+    hansard_latest = max(days) if days else None
+    frl_read = frl_read_day(db)
+    progress = max(floor, min(hansard_latest or floor, frl_read or floor))
     # Straight after generated_at, which it never replaces.
     ordered = {}
     for field, value in index.items():
@@ -505,18 +581,20 @@ def overlay(directory: Path, divisions_dir: Path, db, stage_dir: Path, today: st
                 "Hansard first, second and third readings by the exact bill id in OpenAustralia's XML; "
                 "divisions by the exact official-id link. Title matches are never published.",
         "hansard_days": len(days),
-        "hansard_latest": max(days) if days else None,
+        "hansard_latest": hansard_latest,
+        "frl_read": frl_read,
         "frl_licence": "CC BY 4.0",
     }
     if index_path.read_text() != (new_index := eb.same_layout(index_text, index)):
         index_path.write_text(new_index)
     summary = {
         "run_date": today, "since": snapshot, "progress_as_at": progress, "bills_changed": changed,
-        "hansard_days": len(days), "stages_added": counts["stages_added"],
+        "hansard_days": len(days), "hansard_latest": hansard_latest, "frl_read": frl_read,
+        "stages_added": counts["stages_added"],
         "assents_added": applied_acts, "division_links_added": counts["division_links_added"],
         "division_links_unpublished": counts["division_links_unpublished"],
         "division_links_without_record": counts["division_links_without_record"],
-        "rows_carried": counts["rows_carried"],
+        "rows_carried": counts["rows_carried"], "rows_retired": counts["rows_retired"],
         "review": len(review), "review_kinds": dict(collections.Counter(r["kind"] for r in review)),
     }
     return {"summary": summary, "review": review}
@@ -549,9 +627,11 @@ def main() -> int:
         args.summary_out.write_text(json.dumps(summary, ensure_ascii=False, indent=1) + "\n")
     acts = ", ".join(f"{a['act_id']} ({a['bill']}, {a['assent_date']})" for a in summary["assents_added"]) or "none"
     print(f"bills held sources: {len(summary['assents_added'])} Royal Assents, {summary['stages_added']} Hansard stages, "
-          f"{summary['division_links_added']} division links, {summary['rows_carried']} rows carried; "
+          f"{summary['division_links_added']} division links, {summary['rows_carried']} rows carried, "
+          f"{summary['rows_retired']} retired; "
           f"{summary['bills_changed']} bill files changed; {summary['review']} for review; "
-          f"progress as at {summary['progress_as_at']} (since {summary['since']}, {summary['hansard_days']} chamber-days read)")
+          f"progress as at {summary['progress_as_at']} (since {summary['since']}, {summary['hansard_days']} chamber-days read, "
+          f"Hansard to {summary['hansard_latest'] or 'none'}, register read {summary['frl_read'] or 'never'})")
     print(f"bills held sources: FRL Acts applied: {acts}")
     return 0
 
