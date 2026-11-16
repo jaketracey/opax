@@ -7,34 +7,34 @@ One source for the web, the app and the share images. [`design-tokens.json`](des
 ```sh
 node scripts/build_tokens.mjs            # write every target in this checkout
 node scripts/build_tokens.mjs --check    # exit 1 if any target is stale
-node scripts/build_tokens.mjs --only app # or web, social or docs
+node scripts/build_tokens.mjs --only web # or share or docs
 ```
 
 | Target | Written from the JSON | Read by |
 |---|---|---|
 | `portal/public/tokens.css` | `:root` custom properties, then the deprecated names | Pages and modules that need the tokens without `style.css` |
 | `portal/public/style.css`, the `tokens:begin` / `tokens:end` region | The same rules as `tokens.css`, inlined so a page needs no second request | Every page |
-| `portal/src/tokens.generated.ts` | The light palette as hex and the two family names | `og.ts`: the share cards and story slides |
-| `mobile/src/design/tokens.generated.ts` (app branches) | Palettes for four themes, party colours, type roles, rhythm, radii, motion, sizes, contrast rules | `palette.ts` and `tokens.ts`, which re-export it |
+| `portal/src/tokens.generated.ts` | The web's light colours (the values `tokens.css` draws), the chart colours and the two family names | `og.ts` (the share cards and story slides) and `graph/palette.ts` (the money map) |
 | This page, the `tokens:begin` / `tokens:end` region | The role and alias tables below | People |
 
 - **Web:** `npm run build:tokens` runs the generator, and `npm run build:search` (which the deploy and the GitHub deploy job run first) runs it before the catalogs. `npm run check` runs `--check`. `test/design-tokens.test.mjs` fails while a generated file is stale.
-- **App:** `npm run tokens` runs `mobile/scripts/build-design-tokens.mjs`, which calls this generator's `buildTs` and leaves out the retired aliases; `tests/design-tokens.test.ts` fails while `tokens.generated.ts` is stale.
-- **Share images:** `npm run build:tokens` also writes `portal/src/tokens.generated.ts`; `test/design-tokens.test.mjs` fails while it is stale or while `og.ts` or `story.ts` holds a raw hex colour.
-- A checkout without `mobile/` (`main`) skips the app target; one without `portal/` skips the web and social targets.
-- **The money map** imports `chart`, `color` and `party` from the JSON at build time (`portal/graph/palette.ts`); its selection accent is `chart.mark.web.role`.
+- **App:** the app's file, `mobile/src/design/tokens.generated.ts` (palettes for four themes, party colours, type roles, rhythm, radii, motion, sizes, contrast rules), is not a target of this script. On the app branches `npm run tokens` runs `mobile/scripts/build-design-tokens.mjs`, which calls this generator's `buildTs`, leaves out the retired aliases and adds the app's four photo roles; `tests/design-tokens.test.ts` fails while the file is stale.
+- **Share images:** `npm run build:tokens` also writes `portal/src/tokens.generated.ts`; `test/design-tokens.test.mjs` fails while it is stale, or while `og.ts` or `story.ts` writes out a colour of its own (hex, or rgb channels: a translucent token colour is `alpha(light.*, opacity)`).
+- A checkout without `portal/` skips the web and share targets.
+- **The money map** (`portal/graph/palette.ts`) takes its colours and its selection accent (the web's chart mark) from `portal/src/tokens.generated.ts`, and its industry hues and party dots from the JSON, at build time.
 
 ## One file, base values and web overrides
 
 - **A token's base value is the app's.** Where the web draws something different today, the token carries a `web` block: `web.value` (a colour, space step or radius), `web.role` (the chart mark), `web.$description` (the web's own note). `web.omit` keeps an app-only token (the edition bands, the chamber inks, the app's launch timings, the app's new radius names) off the web.
-- **Type.** `type` holds the app's eighteen roles. `webRoles` holds the web's eleven role names (`--type-title`, `--type-body`, ...). Each follows an app role and lists, under `web`, only where the web differs: family, weight, size or line height. Removing an override moves that web role onto its app role; the generated table below shows what each web role draws and what it still overrides.
-- **The app branches read this file.** When an app branch (`ad/b78-int` and later) next merges main, it takes `docs/design/design-tokens.json` and `scripts/build_tokens.mjs` from main as they are: with them, `mobile/scripts/build-design-tokens.mjs --check` reproduces the branch's `tokens.generated.ts` byte for byte, so the merge changes nothing in the app. From then on a token change lands on main once and reaches the web, the app and the share images from the same line.
+- **Type.** `type` holds the app's eighteen roles. `webRoles` holds the web's eleven role names (`--type-title`, `--type-body`, ...). Each follows an app role and lists beside `follows` only the fields where the web differs: family, weight, size or line height. Deleting a field moves that web role onto its app role's value; the generated table below shows what each web role draws and what it still overrides.
+- **What the web draws without CSS.** The share images and the money map cannot read custom properties, so the generator writes the web's light colours to `portal/src/tokens.generated.ts`, from the same map (`webLight`) that writes `tokens.css`. A `web.value` reaches the pages, the share images and the money map together.
+- **The app branches read this file.** When an app branch (`ad/b78-int` and later) next merges main, it takes `docs/design/design-tokens.json`, `scripts/build_tokens.mjs` and this page from main as they are: with them, `mobile/scripts/build-design-tokens.mjs --check` reproduces the branch's `tokens.generated.ts` byte for byte, so the merge changes nothing in the app. From then on a token change lands on main once and reaches the web, the app and the share images from the same line.
 
 ## Rules the generator keeps
 
 - **Same names, same values.** Every colour role keeps today's hex value. Web names stay as they were (`--paper-raised`, `--party-alp`); a role's web name is `--` plus its app name in kebab case unless the JSON gives one.
-- **Old names keep working for one release.** An *alias* has its replacement's value and points at it (`--line: var(--divider-subtle)`, `light.line`). A *legacy value* keeps the old look until a later pass moves its uses (`--space-3`, `textStyles.caption`). Both carry a deprecation comment: `/* deprecated: use ... */` in CSS, `@deprecated` in TypeScript, so editors strike them through.
-- **Dark values exist but are not drawn.** The web sets `color-scheme: light` and the app is light-only (decision 2). Every role carries a dark value held to the same contrast rules, so a dark theme is wiring, not a design pass. The generated app file exports `dark` and `darkHighContrast`; `tokens.ts` still resolves dark to light.
+- **Old web names keep working for one release.** An *alias* has its replacement's value and points at it (`--line: var(--divider-subtle)`). A *legacy value* keeps the old look until a later pass moves its uses (`--space-6`). Both carry a `/* deprecated: use ... */` comment in CSS. The shipped app has retired its old names; the last table below lists them.
+- **Dark values are ready but not shipped.** The web sets `color-scheme: light`, and the app's release builds are light through `app.config.ts` (decision 2). On iOS, `tokens.ts` hands each role's dark value to the system, so only a non-production build set to follow the system draws dark. Every role carries a dark value held to the same contrast rules, so a dark theme is wiring, not a design pass.
 - **Increase Contrast** is live in the app (`lightHighContrast`). The web's `prefers-contrast: more` block is ready in the source and is written only when `themes.web.prefersContrast` is true.
 - **Raw colours are counted.** `portal/test/design-tokens.test.mjs` counts hex colour literals in web sources outside the generated tokens, and `mobile/tests/design-tokens.test.ts` counts colour literals in app sources outside `tokens.generated.ts`. Each file has a baseline; a file may go down, never up, and a new file starts at zero. When a pass removes some, lower the baseline in the test so the count cannot creep back.
 
@@ -64,13 +64,13 @@ node scripts/build_tokens.mjs --only app # or web, social or docs
 | text | none | `link` | #142A43 | #9CB9DB |  | Semantic link tone, always the single navy tint. |
 | brand | `--navy` | `navy` | #142A43 | #9CB9DB |  | Structure and the one primary action per view. |
 | brand | `--navy-raised` | `navyRaised` | #1D3A5C | #B9CDE6 |  | Pressed and hover on navy. |
-| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D | #D3D9DF / #2E3C4C | Secondary button fill; the people accent's wash; the selected row in a split list. |
-| brand | `--bronze` | `bronze` | #A0761B | #A87D2A |  | Brand artwork only: mark, icon and launch screen. |
+| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D | #D3D9DF / #2E3C4C | Secondary button fill; the people accent's wash. App: Secondary button fill; the people accent's wash; the selected row in a split list. |
+| brand | `--bronze` | `bronze` | #A0761B | #A87D2A |  | Rules, chart marks and the masthead rule. App: Brand artwork only: mark, icon and launch screen. |
 | brand | none | `todayDotBronze` | #C08F2C | #C08F2C |  | Today's decorative dot map highlight, at 76 percent opacity over a navy base at 23 percent. |
-| brand | `--bronze-ink` | `bronzeInk` | #8A5A12 | #D9A84A | #5C4318 / #EBC57F | Brand artwork only: mark, icon and launch screen. |
-| brand | `--bronze-wash` | `bronzeWash` | #ECE4D3 (web `rgba(160, 118, 27, 0.16)`) | #332A1B |  | Brand artwork only: mark, icon and launch screen. |
+| brand | `--bronze-ink` | `bronzeInk` | #8A5A12 | #D9A84A | #5C4318 / #EBC57F | Record links, tags, the focus ring on paper. App: Brand artwork only: mark, icon and launch screen. |
+| brand | `--bronze-wash` | `bronzeWash` | #ECE4D3 (web `rgba(160, 118, 27, 0.16)`) | #332A1B |  | Tag fill, search highlight. App: Brand artwork only: mark, icon and launch screen. |
 | brand | `--bronze-rule` | none | rgba(160, 118, 27, 0.55) | rgba(217, 168, 74, 0.55) |  | Link underlines on the web: present, not heavy. |
-| brand | `--bronze-bright` | `bronzeBright` | #D9A84A | #5E400B |  | Brand artwork only: mark, icon and launch screen. |
+| brand | `--bronze-bright` | `bronzeBright` | #D9A84A | #5E400B |  | Bronze legible on navy: the mark, the focus ring on navy. App: Brand artwork only: mark, icon and launch screen. |
 | line | `--divider-default` | `dividerDefault` | #B8B4A8 | #4C5047 |  | The top rule of a section; major content boundaries. |
 | line | `--divider-subtle` | `dividerSubtle` | #DFDCD2 (web `#E7E4DD`) | #30342D | #B8B4A8 / #4C5047 | Between rows, under subheadings, card outlines. |
 | line | `--line-control` | `lineControl` | #8D897B | #7E8378 |  | Field and segmented-control boundaries only (3.33:1). |
@@ -137,7 +137,11 @@ Each web role follows an app role; the web column is what the web draws today. A
 | `--type-label` | `capsule` | sans 600 13 / 1.45 (ratio) | size, lineHeight |
 | `--type-control` | `strong` | sans 600 16 / 1.25 (ratio) | size, lineHeight |
 
-40 colour roles in 8 groups; 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash); 18 type roles over 7 sizes; 9 rhythm steps; 9 radii (sm, md, pill, container, tile, thumb, bar, capsule, round); 6 durations and 1 curve; 2 shadows (overlay, edition); 11 web type roles.
+Shared: 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash).
+
+App: 39 colour roles in 8 groups, plus 4 photo roles added by mobile/scripts/build-design-tokens.mjs; 18 type roles over 7 sizes; 9 rhythm steps; 6 radii (container, tile, thumb, bar, capsule, round); 6 durations and 1 curve; 2 shadows (overlay, edition).
+
+Web: 29 colour roles in 6 groups; 11 type roles; 8 rhythm steps; 4 radii (sm, md, pill, round); 3 durations and 1 curve; 1 shadow (overlay).
 
 ### Deprecated web names
 
@@ -160,7 +164,9 @@ Each web role follows an app role; the web column is what the web draws today. A
 | `--sub-gap` | legacy value `var(--sp-48)` | `--sp-48 (--sp-32 under 701px)` | nothing |
 | `--section-gap` | alias (same value) | `--space-section` | nothing |
 
-### Deprecated app names
+### Retired app names
+
+The shipped app no longer exports these: mobile/scripts/build-design-tokens.mjs leaves them out of its build. They are listed so an old name met in a branch can be traced to its replacement.
 
 | Old name | Kind | Use instead | Moving changes |
 |---|---|---|---|

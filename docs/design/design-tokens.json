@@ -1,5 +1,5 @@
 {
-  "$description": "OPAX design tokens: the one source for the web (portal/public/tokens.css and the generated :root region of style.css), the app (mobile/src/design/tokens.generated.ts on the app branches, re-exported by palette.ts and tokens.ts) and the share images (portal/src/tokens.generated.ts, read by og.ts). Edit this file, then run `node scripts/build_tokens.mjs`; tests fail while a generated file is stale. A token's base value is the app's; a `web` block holds where the web differs today (`web.value`, `web.role`, `web.$description`), and `web.omit` keeps an app-only token off the web. Type: `type` holds the app's roles; `webRoles` holds the web's role names, each following an app role with overrides. Values are CSS px on the web and points on iOS (dp on Android): one CSS pixel is one point. Names: a colour role's key is its app name; its web name is `--` plus the key in kebab case unless `web.name` says otherwise. References like {inkSoft} name another colour role and resolve in the same theme. Rules for using these: docs/design/DESIGN-REVIEW-2026-10.md section 2. Names, aliases and deprecations: docs/design/TOKENS.md.",
+  "$description": "OPAX design tokens: the one source for the web (portal/public/tokens.css and the generated :root region of style.css), the app (mobile/src/design/tokens.generated.ts on the app branches, built by mobile/scripts/build-design-tokens.mjs and re-exported by palette.ts and tokens.ts) and what the web draws without CSS (portal/src/tokens.generated.ts, read by og.ts for the share images and graph/palette.ts for the money map). Edit this file, then run `node scripts/build_tokens.mjs`; tests fail while a generated file is stale. A token's base value is the app's; a `web` block holds where the web differs today (`web.value`, `web.role`, `web.$description`), and `web.omit` keeps an app-only token off the web. Type: `type` holds the app's roles; `webRoles` holds the web's role names, each following an app role and listing only the fields where the web still differs. Values are CSS px on the web and points on iOS (dp on Android): one CSS pixel is one point. Names: a colour role's key is its app name; its web name is `--` plus the key in kebab case unless `web.name` says otherwise. References like {inkSoft} name another colour role and resolve in the same theme. Rules for using these: docs/design/DESIGN-REVIEW-2026-10.md section 2. Names, aliases and deprecations: docs/design/TOKENS.md.",
   "$extensions": {
     "opax.version": "2026-11-17",
     "opax.rules": [
@@ -182,18 +182,18 @@
   },
 
   "webRoles": {
-    "$description": "The web's eleven type roles. Each follows an app role in `type`; `web` holds where today's web differs, so the web renders as it did before the app roles joined this file. A later pass removes an override to move a web role onto its app role. Web sizes are rem (px / 16); a line height of 3 or less is a ratio. Today's web uses six sizes, 32, 24, 17, 16, 15 and 13, plus the fluid title (32 to 48). Sentence case everywhere: no uppercase or letter-spaced labels. Figures and tables use tabular numbers.",
-    "title": { "follows": "largeTitle", "web": { "family": "serif", "weight": 400, "size": "clamp(2rem, 1.25rem + 2.2vw, 3rem)", "lineHeight": 1.15 }, "$description": "The page's one title: a person's name, a bill title, a screen name." },
-    "display": { "follows": "figure", "web": { "family": "serif", "weight": 600, "size": 32, "lineHeight": 1.2 }, "$description": "The one number a block is about. Serif, because large Public Sans tabular digits read as monospace. May take the view's accent ink." },
-    "heading": { "follows": "sectionTitle", "web": { "family": "serif", "weight": 600, "size": 24, "lineHeight": 1.25 }, "$description": "Section heading." },
-    "subheading": { "follows": "rowRecord", "web": { "weight": 600, "lineHeight": 1.4 }, "$description": "A row title that leads a block: a bill in a list, a division, a report card." },
-    "record": { "follows": "recordText", "web": { "lineHeight": 1.7 }, "$description": "The words of the record and long reading: speeches, report essays, In short." },
-    "body": { "follows": "body", "web": { "size": 16, "lineHeight": 1.55 }, "$description": "Interface and OPAX's own sentences." },
-    "strong": { "follows": "strong", "web": { "size": 16, "lineHeight": 1.55 }, "$description": "Names in rows, values in key-value lists, inline figures (with tabular)." },
-    "metadata": { "follows": "secondary", "web": { "lineHeight": 1.45 }, "$description": "The one meta line under a title: kind · date · place." },
-    "fine": { "follows": "footnote", "web": { "lineHeight": 1.45 }, "$description": "Source lines, saved-copy notices, one short caveat. Never below 13." },
-    "label": { "follows": "capsule", "web": { "size": 13, "lineHeight": 1.45 }, "$description": "Tags, status labels, party labels, field labels. Replaces kicker, tag and chip." },
-    "control": { "follows": "strong", "web": { "size": 16, "lineHeight": 1.25 }, "$description": "Button, chip and segment labels." }
+    "$description": "The web's eleven type roles. Each follows an app role in `type` and lists beside it only the family, weight, size or line height where today's web differs, so the web renders as it did before the app roles joined this file. A later pass deletes a field to move a web role onto its app role. Web sizes are rem (px / 16); a line height of 3 or less is a ratio. Today's web uses six sizes, 32, 24, 17, 16, 15 and 13, plus the fluid title (32 to 48). Sentence case everywhere: no uppercase or letter-spaced labels. Figures and tables use tabular numbers.",
+    "title": { "follows": "largeTitle", "family": "serif", "weight": 400, "size": "clamp(2rem, 1.25rem + 2.2vw, 3rem)", "lineHeight": 1.15, "$description": "The page's one title: a person's name, a bill title, a screen name." },
+    "display": { "follows": "figure", "family": "serif", "weight": 600, "size": 32, "lineHeight": 1.2, "$description": "The one number a block is about. Serif, because large Public Sans tabular digits read as monospace. May take the view's accent ink." },
+    "heading": { "follows": "sectionTitle", "family": "serif", "weight": 600, "size": 24, "lineHeight": 1.25, "$description": "Section heading." },
+    "subheading": { "follows": "rowRecord", "weight": 600, "lineHeight": 1.4, "$description": "A row title that leads a block: a bill in a list, a division, a report card." },
+    "record": { "follows": "recordText", "lineHeight": 1.7, "$description": "The words of the record and long reading: speeches, report essays, In short." },
+    "body": { "follows": "body", "size": 16, "lineHeight": 1.55, "$description": "Interface and OPAX's own sentences." },
+    "strong": { "follows": "strong", "size": 16, "lineHeight": 1.55, "$description": "Names in rows, values in key-value lists, inline figures (with tabular)." },
+    "metadata": { "follows": "secondary", "lineHeight": 1.45, "$description": "The one meta line under a title: kind · date · place." },
+    "fine": { "follows": "footnote", "lineHeight": 1.45, "$description": "Source lines, saved-copy notices, one short caveat. Never below 13." },
+    "label": { "follows": "capsule", "size": 13, "lineHeight": 1.45, "$description": "Tags, status labels, party labels, field labels. Replaces kicker, tag and chip." },
+    "control": { "follows": "strong", "size": 16, "lineHeight": 1.25, "$description": "Button, chip and segment labels." }
   },
 
   "space": {
