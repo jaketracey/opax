@@ -168,6 +168,8 @@ writes `portal/public/transcripts/`:
 - `index.json`: the transcripts, the attribution and copyright page for each commission,
   the tokeniser's stopwords, the everyday terms (in more than half the transcripts) and,
   for each, the pages holding it across all transcripts;
+- `term-pages.json`: term to the pages holding it across all transcripts, read only by a
+  search of more than six specific terms, which leaves out the most frequent;
 - `terms/<nn>.json`: term to the transcripts holding it and, for each, the number of its
   pages holding the term, sharded by FNV-1a of the term. Every term is posted, everyday
   ones included (index schema 3). A word search lists transcripts by those page counts,

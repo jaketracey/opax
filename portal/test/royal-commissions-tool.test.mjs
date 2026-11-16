@@ -14,7 +14,7 @@ const { projectSummary } = await import(new URL('../../scripts/build_report_cata
 const reportRecord = { summary: projectSummary(JSON.parse(await readFile(new URL('../../data/report-summaries/royal-commission-cth-robodebt.json', import.meta.url), 'utf8'))) };
 async function asset(path) {
   if (path.startsWith('/report-records/')) { if (path === '/report-records/royal-commission-cth-robodebt.json') return reportRecord; throw Error('Not built: ' + path); }
-  assert.match(path, /^\/(royal-commissions\/[a-z0-9-]+|transcripts\/(index|terms\/\d{2}|[a-z0-9-]+\/transcript-[a-z0-9-]+))\.json$/);
+  assert.match(path, /^\/(royal-commissions\/[a-z0-9-]+|transcripts\/(index|term-pages|terms\/\d{2}|[a-z0-9-]+\/transcript-[a-z0-9-]+))\.json$/);
   if (!cache.has(path)) cache.set(path, JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8')));
   return cache.get(path);
 }
@@ -474,4 +474,42 @@ test('everyday words rank and never filter: with a specific word in the search, 
     }
   }
   assert.ok(checked >= 100, `${checked} searches`);
+});
+
+test('a search made only of date words is a date lookup exactly as before: titles and dates, never the text', async () => {
+  // No hearing of the NSW inquiry sat on 10 March 2023: none is listed (the text of 34 transcripts holds both words).
+  const none = await call({ view: 'transcripts', commission: 'nsw-healthcare-funding', words: '10 March 2023', limit: 8 }); cited(none, false);
+  assert.equal(none.total, 0); assert.equal(none.rows.length, 0);
+  const day = await call({ view: 'transcripts', commission: 'robodebt', words: '10 March 2023', limit: 8 }); cited(day);
+  assert.equal(day.total, 1); assert.equal(day.rows[0].date, '2023-03-10'); assert.equal(day.rows[0].text_matches, undefined);
+  const month = await call({ view: 'transcripts', commission: 'nsw-healthcare-funding', words: 'February 2024', limit: 8 }); cited(month);
+  assert.equal(month.total, 6); assert.ok(month.rows.every(r => /^2024-02-/.test(String(r.date)) && !r.text_matches));
+  const bare = await call({ view: 'transcripts', commission: 'robodebt', words: 'March', limit: 8 }); cited(bare);
+  assert.equal(bare.total, 8); assert.ok(bare.rows.every(r => /-03-/.test(String(r.date))));
+  // With another word beside the date words, every word searches the text. "March budget" found nothing before
+  // (both were unsearchable and no title holds both); now it finds the transcripts whose text holds both.
+  const mixed = await call({ view: 'transcripts', commission: 'robodebt', words: 'March budget', limit: 4 }); cited(mixed);
+  assert.ok(mixed.total >= 1 && mixed.rows.every(r => r.text_matches?.hits.length));
+  // With a specific word the set is that word's set, as on the order-only change: the date words only rank.
+  assert.deepEqual([...await allKeys('robodebt', '10 March 2023 averaging')].sort(), [...await allKeys('robodebt', 'averaging')].sort());
+});
+
+test('more than six specific words: the most frequent are left out, the note names them, and still at most six postings files are read', async () => {
+  const ix = await asset('/transcripts/index.json'), common = new Set(ix.common_terms), totals = await asset('/transcripts/term-pages.json');
+  const nine = ['averaging', 'ombudsman', 'whistleblower', 'cabinet', 'drafted', 'centrelink', 'overpayment', 'payslips', 'reconciliation'];
+  assert.ok(nine.every(t => !common.has(t) && totals[t] > 0), JSON.stringify(nine.map(t => [t, common.has(t), totals[t]])));
+  const reads = []; const counting = { ...env, asset: async path => { reads.push(path); return asset(path); } };
+  const out = await api.callTool(counting, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: nine.join(' '), limit: 4 });
+  const note = out.notes.find(n => n.startsWith('A transcript text search reads at most 6 words. Not searched: '));
+  assert.ok(note, JSON.stringify(out.notes));
+  const skipped = note.replace(/^.*Not searched: /, '').replace(/\.$/, '').split(', ');
+  assert.deepEqual([...skipped].sort(), [...nine].sort((a, b) => totals[b] - totals[a]).slice(0, 3).sort(), note);
+  assert.ok(reads.filter(p => /^\/transcripts\/terms\//.test(p)).length <= 6);
+  assert.equal(reads.filter(p => p === '/transcripts/term-pages.json').length, 1);
+  // The page totals are read only then: a search within the cap does not open the file.
+  const few = []; await api.callTool({ ...env, asset: async path => { few.push(path); return asset(path); } }, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: nine.slice(0, 6).join(' '), limit: 4 });
+  assert.equal(few.includes('/transcripts/term-pages.json'), false);
+  // Every word of every transcript has its total.
+  let posted = 0; for (let n = 0; n < ix.shards; n++) for (const [term, [, pages]] of Object.entries(await asset(`/transcripts/terms/${String(n).padStart(2, '0')}.json`))) { posted++; assert.equal(totals[term], pages.reduce((a, b) => a + b, 0), term); }
+  assert.equal(posted, Object.keys(totals).length);
 });

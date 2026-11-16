@@ -36,9 +36,10 @@ export function shardOf(term: string, shards: number): number {
 /** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
  * public text or every word is too common to narrow the search. */
 /** A word search reads one postings file for each searched word, so the words are capped. Specific words (those not
- * in ix.common) are kept first, in the order given. Everyday words fill what is left, least common first (by the
- * number of pages holding the word across all transcripts, carried in the index), so the commonest are the ones left
- * out; the caller says which words were left out. */
+ * in ix.common) are kept first; everyday words fill what is left. In both kinds the least frequent are kept and the
+ * most frequent left out, by the number of pages holding the word across all transcripts (carried in the index for
+ * everyday words; in term-pages.json for the rest, read only when there are more specific words than the cap). The
+ * caller says which words were left out. */
 export const TEXT_SEARCH_WORDS = 6
 /** How well a transcript fits a word search, from the postings alone (no transcript is opened), each part most first:
  * `least` is the page count of the required word that is on the fewest of its pages; `everyday` is the same for the
@@ -57,10 +58,21 @@ export async function textMatches(env: ToolEnv, ix: TextIndex, commission: strin
   const terms = [...new Set(tokens(words, ix.stop))]
   const specific = terms.filter(t => !ix.common.has(t))
   const everyday = terms.filter(t => ix.common.has(t)).map((t, at) => ({ t, at })).sort((a, b) => (ix.commonPages.get(a.t) ?? 0) - (ix.commonPages.get(b.t) ?? 0) || a.at - b.at).map(o => o.t)
-  const required = specific.slice(0, TEXT_SEARCH_WORDS), ranking = everyday.slice(0, TEXT_SEARCH_WORDS - required.length)
-  const skipped = [...specific.slice(TEXT_SEARCH_WORDS), ...everyday.slice(ranking.length)]
-  // A year by itself ("2023-03", "10 March 2023") is a date lookup, answered from titles and dates as before.
-  if (![...required, ...ranking].some(t => /[a-z]/.test(t))) return null
+  // More specific words than the cap (rare): the least frequent are kept, by the pages holding each across all
+  // transcripts. That needs one small file of page totals, read only in this case; no postings file is read for a
+  // word that is then left out. Ties keep the order given.
+  let kept = specific
+  if (specific.length > TEXT_SEARCH_WORDS) {
+    const totals = object(await readToolAsset(env, '/transcripts/term-pages.json'))
+    const pages = (t: string) => Object.hasOwn(totals, t) ? Number(totals[t]) || 0 : 0
+    kept = specific.map((t, at) => ({ t, at })).sort((a, b) => pages(a.t) - pages(b.t) || a.at - b.at).slice(0, TEXT_SEARCH_WORDS).sort((a, b) => a.at - b.at).map(o => o.t)
+  }
+  const required = kept, ranking = everyday.slice(0, TEXT_SEARCH_WORDS - required.length)
+  const skipped = [...specific.filter(t => !kept.includes(t)), ...everyday.slice(ranking.length)]
+  // A search made only of date words (a year, a month name: "2023-03", "10 March 2023", "February 2024") is a date
+  // lookup, answered from titles and dates exactly as before. With any other word beside them, every word searches
+  // the text.
+  if ([...required, ...ranking].every(t => /^\d{4}$/.test(t) || DATE_WORDS.has(t))) return null
   const posting = async (t: string): Promise<Map<number, number> | null> => {
     const path = `/transcripts/terms/${String(shardOf(t, ix.shards)).padStart(2, '0')}.json`
     if (!SHARD.test(path)) return null
@@ -90,6 +102,7 @@ export async function textMatches(env: ToolEnv, ix: TextIndex, commission: strin
 }
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const DATE_WORDS = new Set(MONTHS.map(m => m.toLowerCase()))
 /** "2022-09-27" as "27 September 2022"; anything else unchanged. */
 export function dayWords(iso: unknown): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso ?? ''))

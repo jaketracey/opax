@@ -8,6 +8,8 @@ no source requests) and writes ``portal/public/transcripts/``:
   index.json               the transcripts, attribution and licence per commission, the
                            tokeniser's stopwords and the everyday terms (in more than half the
                            transcripts), which a long search leaves out first
+  term-pages.json          term -> pages holding it across all transcripts; read only by a search
+                           of more than six specific words, to leave out the most frequent
   terms/<nn>.json          term -> [transcripts containing it (index into index.json docs),
                            the number of pages of each that hold it], sharded by FNV-1a of the
                            term. The page counts let a word search put the transcripts that
@@ -198,7 +200,9 @@ def shard_files(postings, total_docs):
     shards: list[dict] = [{} for _ in range(SHARDS)]
     for t, ds in sorted(postings.items()):
         shards[shard(t)][t] = [[i for i, _ in ds], [n for _, n in ds]]
-    return common, common_pages, shards
+    # Every term's page total, for the rare search of more than six specific words (which drops the most frequent).
+    term_pages = {t: sum(n for _, n in ds) for t, ds in sorted(postings.items())}
+    return common, common_pages, shards, term_pages
 
 
 def postings_only(out: Path, check: bool) -> int:
@@ -209,17 +213,19 @@ def postings_only(out: Path, check: bool) -> int:
         doc = json.loads((out.parent / d["file"].lstrip("/")).read_text(encoding="utf-8"))
         for t, pages in doc["terms"].items():
             postings[t].append((d["i"], len(pages)))
-    common, common_pages, shards = shard_files(postings, len(index["docs"]))
+    common, common_pages, shards, term_pages = shard_files(postings, len(index["docs"]))
     if common != index["common_terms"]:
         print("[build_transcript_fulltext] HELD: the published transcripts give a different common-term list", file=sys.stderr)
         return 3
     if check:
-        same = index.get("schema") == SCHEMA and index.get("common_pages") == common_pages and all(
+        pages_file = out / "term-pages.json"
+        same = index.get("schema") == SCHEMA and index.get("common_pages") == common_pages and pages_file.exists() and json.loads(pages_file.read_text(encoding="utf-8")) == term_pages and all(
             json.loads((out / "terms" / f"{n:02d}.json").read_text(encoding="utf-8")) == s for n, s in enumerate(shards))
         print(f"[build_transcript_fulltext] postings {'agree with' if same else 'DIFFER from'} the published transcripts", flush=True)
         return 0 if same else 1
     for n, s in enumerate(shards):
         write(out / "terms" / f"{n:02d}.json", s)
+    write(out / "term-pages.json", term_pages)
     write(out / "index.json", {**{k: v for k, v in index.items() if k not in ("docs", "caveats", "common_pages")}, "schema": SCHEMA,
                                "common_pages": common_pages, "docs": index["docs"], "caveats": index["caveats"]})
     print(f"[build_transcript_fulltext] postings rebuilt: terms={len(postings)} common={len(common)}", flush=True)
@@ -253,9 +259,10 @@ def main(argv=None):
         docs.append({"i": i, "commission": c["id"], "key": d["key"], "title": d["title"], "date": d.get("date"),
                      "file": f"/transcripts/{file}", "pdf_url": d["url"], "pages": len(doc["pages"]),
                      "quote_policy": doc["quote_policy"]})
-    common, common_pages, shards = shard_files(postings, len(docs))
+    common, common_pages, shards, term_pages = shard_files(postings, len(docs))
     for n, s in enumerate(shards):
         write(tmp / "terms" / f"{n:02d}.json", s)
+    write(tmp / "term-pages.json", term_pages)
     counts = {cid: {"transcripts": sum(1 for x in docs if x["commission"] == cid),
                     "quote": sum(1 for x in docs if x["commission"] == cid and x["quote_policy"] == "quote"),
                     "no_quotes": sum(1 for x in docs if x["commission"] == cid and x["quote_policy"] == "no_quotes")}
