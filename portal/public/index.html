@@ -9,7 +9,7 @@
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
 <script src="/spa-entry.js?v=554b9e8d5c"></script>
-<script src="/events.js?v=7350555964" defer></script>
+<script src="/events.js?v=c5bd10d843" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -65,7 +65,7 @@
 <link rel="stylesheet" href="/register-tables.css?v=525e539093">
 <script type="module" src="/register-tables-entry.js?v=1e107eb2ea"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=ecb830d395">
-<link rel="stylesheet" href="/style.css?v=a6093d9ab4">
+<link rel="stylesheet" href="/style.css?v=ed0d07659d">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -694,6 +694,9 @@
         <!-- injected -->
       </div>
       <section id="doc-similar-panel" aria-label="Similar speeches" hidden></section>
+      <!-- Where this document leads (next-steps.js): its speaker, their speeches,
+           the same debate on the same day. Filled with the document, in one pass. -->
+      <div id="doc-next" hidden></div>
       <hr class="ledger-rule doc-rule">
       <div id="doc-status" class="status" role="status"></div>
       <!-- The summary is OPAX's writing, the record below is parliament's. They
@@ -2366,12 +2369,12 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=a81021a0a5" defer></script>
+<script src="/spa-shell.js?v=6919c20692" defer></script>
 <script src="/navigation.js?v=eac2c03e68" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=653d1b470f" defer></script>
+<script src="/app.js?v=bbff00f00f" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
-<script src="/analytics.js?v=55f6b85000" defer></script>
+<script src="/analytics.js?v=74cbe557c0" defer></script>
 </body>
 </html>

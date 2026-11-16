@@ -5,8 +5,8 @@
  * members and is marked `vacant_at`, and its last member with a closed, dated service record.
  * Nothing here names a seat or a person: every reader goes through these functions.
  *
- * Added by the Brunswick hotfix (im/brunswick-vacant) as the smallest vacancy concept; the seat
- * wording work (pull request 441) should absorb this module rather than add a second one.
+ * Added by the Brunswick hotfix (im/brunswick-vacant). The vacancy sentence and the rules for the ended
+ * houses are in vic-term.js; this module adds what only the release knows: the last member and dates.
  *
  * Shared by the election hub (scripts/build_vic_election.mjs, src/vic-election.ts), the electorate
  * page (public/electorates.js, src/index.ts) and the person page (public/app.js, src/seo-content.ts);

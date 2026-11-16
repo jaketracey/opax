@@ -173,7 +173,7 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
     loadPeople: async()=>({people:roster.people,byFold:new Map(roster.people.map(p=>[p.name.toLowerCase(),p]))}),
     loadMoney: async()=>null, loadMoneyParties: async()=>null, loadPhotos: async()=>({}),
     foldName:s=>s.toLowerCase(), slugIndex:()=>({slugOf:new Map()}),
-    personTitle:(name)=>name, hasInterestsRegister:async()=>false, personRole:()=>null,
+    personTitle:(name)=>name, hasInterestsRegister:async()=>false, personRole:()=>null, vicEndedSeat:()=>null,
     num:n=>String(n), years:(a,b)=>`${a}–${b}`, andList:a=>a.join(', '),
     withTail:(a,b)=>a+' '+b, prerenderBlock:()=>'', partyColour:()=>null,
   });

@@ -8,6 +8,7 @@ import { escapeHtml as esc, safeHref, crumbsHTML, type Crumb, type ReadAsset } f
 import { trail } from './nav-model.mjs'
 import { authorisationHTML } from '../public/authorisation.js'
 import { sittingVideos, videoSectionHTML } from '../public/video-card.js'
+import { nextStepsHTML, seriesNextSteps } from '../public/next-steps.js'
 
 interface Bill {
   key: string; title: string; introduced: string; originating_house: string; sponsor?: string; sponsor_person_id?: string; portfolio?: string;
@@ -89,6 +90,13 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
   if (week.estimates) head += `<p class="ui-lede">${link(`/estimates/${week.estimates}`,'Senate Supplementary Budget Estimates')} takes place alongside this House sitting week.</p>`
   head += `<p class="ui-lede">Bill details update when Parliament's site allows our crawler</p>`
   let body = header(title,week.houses.map(houseName).join(' and '),'meta',head)
+  // The weeks either side in the published calendar, then the calendar itself (next-steps.js).
+  const calendar = [...data.weeks].sort((a,b) => a.start.localeCompare(b.start))
+  const at = calendar.findIndex(w => w.start === week.start)
+  const step = (w?: Week) => w ? {href:`/sitting/${w.start}`,text:`Sitting week: ${range(w.start,w.end)}`,
+    meta:today < w.start ? w.houses.map(houseName).join(' and ') : `${count(w.bills.length)} ${w.bills.length === 1 ? 'bill' : 'bills'} introduced, ${count(w.divisions.length)} ${w.divisions.length === 1 ? 'division' : 'divisions'} held`} : null
+  body += nextStepsHTML(seriesNextSteps({newer:step(calendar[at+1]),older:step(calendar[at-1]),
+    index:{href:'/sitting',text:'Federal sitting weeks',meta:`${count(calendar.length)} weeks in the published calendar`}}),{pageType:'sitting',id:'sitting-next'})
   const rows: {href:string;name:string}[] = []
   if (!week.bills.length) body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records'})
   if (week.bills.length) {

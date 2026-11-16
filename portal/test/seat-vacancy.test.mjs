@@ -63,19 +63,20 @@ test('the Brunswick election page says vacant and names nobody as holding the se
   assert.deepEqual(seat.members, []);
   const page = renderVicElection(hub, seat, {}, new Date());
   const body = text(page.html);
-  assert.ok(body.includes(`Seat${VACANT} ${LAST}`), body.slice(0, 600));
+  assert.ok(body.includes(`Member${VACANT} ${LAST}`), body.slice(0, 600));
   assert.match(page.html, /Last member: <a href="\/subject\/person\/tim-read">Tim Read<\/a>, to 19 September 2026\./);
   assert.doesNotMatch(body, /Held by|Who holds|Tim Read MP|Member for Brunswick(?!,)/);
-  assert.match(page.html, /<h2 class="ui-section-title">Last member: Tim Read<\/h2>/);
-  assert.doesNotMatch(body, /What Tim Read has done/);
+  // He is named once, as the last member; the page has no record section for a member of the seat.
+  assert.equal(page.html.split('Tim Read').length - 1, 1);
+  assert.equal(new JSDOM(page.html).window.document.querySelector('#record'), null);
   // The meta description, the share card and the structured data name no holder.
-  assert.ok(page.description.startsWith('Brunswick was vacant when the Assembly expired on 3 November. The 2022 election result and winning margin.'));
+  assert.ok(page.description.startsWith('Brunswick was vacant when the Assembly expired on 3 November. See the 2022 election result and winning margin.'));
   for (const outward of [page.description, JSON.stringify(page.card), JSON.stringify(page.jsonLd), page.title]) assert.doesNotMatch(outward, /Tim Read/);
   assert.equal(page.jsonLd['@graph'].find(n => n['@type'] === 'ItemList').numberOfItems, 0);
   assert.doesNotMatch(page.html, FORBIDDEN);
   // After the polls close the wording is the same: no "Member in published roster" line for this seat.
   const closed = renderVicElection(hub, seat, {}, new Date('2026-11-28T19:00:00+11:00'));
-  assert.ok(text(closed.html).includes(`Seat${VACANT} ${LAST}`));
+  assert.ok(text(closed.html).includes(`Member${VACANT} ${LAST}`));
   assert.doesNotMatch(text(closed.html), /Member in published roster dated/);
 });
 
@@ -112,8 +113,8 @@ test('no other Victorian seat changes: 87 districts and 8 regions keep their mem
   }
   // The roster date the pages and the app quote is still the roster's, not the vacancy's.
   assert.equal(rosterDate(hub), '2026-09-09');
-  // Snapshot: with Brunswick given back its former member, the same code renders the hub as it did
-  // before this change. Every other seat's page is byte-identical either way, before and after the polls close.
+  // Snapshot: with Brunswick given back its former member (the hub as built before the vacancy record),
+  // every other seat's page is byte-identical, before and after the polls close.
   const before = structuredClone(hub);
   const old = before.seats.find(s => s.name === 'Brunswick');
   old.members = [old.vacancy.last]; old.roster_date = '2026-09-09'; delete old.vacancy;
@@ -134,9 +135,10 @@ test('no other Victorian seat changes: 87 districts and 8 regions keep their mem
       const pick = d => path ? d.seats.find(s => s.path === path) : null;
       const a = rows(renderVicElection(hub, pick(hub), {}, now).html), b = rows(renderVicElection(before, pick(before), {}, now).html);
       assert.equal(a.length, b.length);
-      const changed = a.map((t, i) => [t, b[i]]).filter(([x, y]) => x !== y);
-      assert.equal(changed.length, 1);
-      assert.match(changed[0][0], /^Brunswick.*Vacant/); assert.match(changed[0][1], /^Brunswick.*Tim Read/);
+      // Brunswick's row reads Vacant either way (the page rule already said so); no row names him.
+      assert.deepEqual(a, b);
+      assert.match(a.find(t => t.startsWith('Brunswick')), /^Brunswick.*Vacant/);
+      assert.ok(!a.some(t => t.includes('Tim Read')));
     }
   }
 });
@@ -153,7 +155,7 @@ test('the electorate page says vacant with the last member, and the directory ro
   // Any other seat keeps its heading and member.
   const other = index.electorates.find(e => e.chamber === 'vic_la' && e.name === 'Northcote');
   const otherHeld = new JSDOM(profileHTML(json(other.detail_url))).window.document.querySelector('#el-held');
-  assert.equal(otherHeld.querySelector('h2').textContent, 'Current member');
+  assert.equal(otherHeld.querySelector('h2').textContent, 'Member until the Assembly expired on 3 November');
   assert.ok(otherHeld.textContent.includes(other.representatives[0].person.name));
   // The directory: one Vacant row, no member named on it.
   const realFetch = globalThis.fetch;
