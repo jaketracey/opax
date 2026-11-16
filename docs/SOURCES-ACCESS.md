@@ -189,9 +189,12 @@ and a bill we do not hold never gets a page from these sources.
   the last Hansard chamber-day read without a gap and the day the register was last
   read, never earlier than the export's own Sydney day. A bill's `status_as_of`
   stays its latest recorded event.
-- When ParlInfo returns, a newer bills export replaces these rows for the days it
-  covers (the bills guard allows exactly those to go), and an FRL Royal Assent is
-  never added beside the export's own.
+- When ParlInfo returns, a row is replaced only when the newer bills export records
+  the same event: the same stage, house and date, or, for a Royal Assent from the
+  register, any Royal Assent, so one is never added beside the export's own. The
+  bills guard allows exactly those removals. Every other row stays, whatever its
+  date, and a row the export still lacks more than 14 days after its date goes on
+  the review list for a person to check while it stays published.
 - The step is information only: if it fails, the bills go back to HEAD and the
   night records a warning, not a failure.
 

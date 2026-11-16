@@ -261,7 +261,7 @@ class BillStepTests(unittest.TestCase):
         Path(self.env["HOME"]).mkdir()
         for name in ("scripts/hubs/sitting-2026.json", "scripts/vm/bills_refresh.sh", "scripts/vm/bills_guard.py",
                      "scripts/vm/keep_if_unchanged.py", "scripts/refresh_bills.sh", "scripts/verify_bill_briefs.py",
-                     "scripts/bills_registry/bills_stages.py"):
+                     "scripts/bills_registry/bills_stages.py", "scripts/bills_registry/held_rows.py"):
             dest = self.repo / name
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, dest)

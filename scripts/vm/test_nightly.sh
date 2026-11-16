@@ -70,7 +70,7 @@ new_sandbox() {
            scripts/hubs/sitting-2026.json \
            scripts/export_electorates.py parli/electorates.py scripts/hubs/electorate-dissolutions.json scripts/hubs/vic-election-2026.json \
            scripts/vm/evidence_refresh.sh scripts/vm/evidence_guard.py scripts/vm/evidence_inputs.py scripts/vm/evidence_bundle_state.py \
-           scripts/bills_registry/bills_stages.py \
+           scripts/bills_registry/bills_stages.py scripts/bills_registry/held_rows.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/division_rules.py scripts/corrections/__init__.py scripts/corrections/apply.py parli/ingest/federal_affiliations.py \
            scripts/vote_parties.py scripts/general_elections.json scripts/roster_state_evidence.json scripts/roster_service.json \

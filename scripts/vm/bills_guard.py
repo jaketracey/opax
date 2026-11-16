@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from bills_registry.bills_stages import BILL_STAGE_ORDER, lifecycle, stage_signature  # noqa: E402
+from bills_registry.held_rows import OVERLAY_SOURCES, export_holds  # noqa: E402
 
 BILLS = "portal/public/bills"
 SCRIPTS = Path(__file__).resolve().parents[1]
@@ -124,24 +125,19 @@ def untexted_questions(doc: dict) -> int:
     return sum("question" in d and not isinstance(d["question"], str) for d in doc.get("divisions", []))
 
 
-# Rows the held-sources overlay (scripts/bills_held_sources.py) adds while ParlInfo
-# is paused. It only adds them for days after the export's generated_at day.
-OVERLAY_SOURCES = ("hansard", "frl")
+def superseded(old: dict, new: dict) -> list[dict]:
+    """Rows the held-sources overlay (scripts/bills_held_sources.py) published at
+    HEAD that the new copy has dropped because the export's own record now holds
+    the same event (held_rows.export_holds, the rule the overlay retires by).
+    Any other overlay row that disappears is a regression, whatever its date."""
+    rows = new.get("key_dates", [])
+    return [s for s in old.get("key_dates", [])
+            if s.get("source") in OVERLAY_SOURCES and s.get("date") and s not in rows and export_holds(rows, s)]
 
 
-def superseded(doc: dict, cutoff: str | None) -> list[dict]:
-    """Overlay rows dated on or before `cutoff`, a newer export's own day: that
-    export's record covers those days and replaces them."""
-    if not cutoff:
-        return []
-    return [s for s in doc.get("key_dates", [])
-            if s.get("source") in OVERLAY_SOURCES and s.get("date") and s["date"] <= cutoff]
-
-
-def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset(),
-                cutoff: str | None = None) -> list[str]:
+def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset()) -> list[str]:
     reasons = []
-    if gone := superseded(old, cutoff):
+    if gone := superseded(old, new):
         # Judge the newer export against HEAD without the overlay rows it covers.
         # A status_as_of only an overlay row supported is no record to hold it to.
         kept = [s for s in old.get("key_dates", []) if s not in gone]
@@ -204,8 +200,7 @@ def check(apply_holds: bool = False, held_report: Path | None = None) -> str:
     if unreadable:
         raise ValueError(f"new bills with a division question that is not text: {', '.join(unreadable[:10])}")
     moved = reviewed_moves()
-    cutoff = str(new_index.get("generated_at") or "")[:10] or None
-    held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key], moved, cutoff))}
+    held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key], moved))}
     if held_report is not None:
         held_report.write_text(json.dumps(held, indent=1) + "\n")
     for key, reasons in held.items():

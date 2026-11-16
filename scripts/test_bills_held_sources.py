@@ -362,47 +362,121 @@ class HeldSourcesFixture(unittest.TestCase):
         self.assertTrue(all(e["bill"] == key and "negatived" in e["basis"] for e in reviewed.values()))
         self.assertFalse(any(r.get("negatived") for r in self.doc(key)["key_dates"] if r.get("source") == "hansard"))
 
-    def test_a_newer_export_retires_overlay_rows_and_never_duplicates_royal_assent(self):
+    # --- ParlInfo back: a full export rewrites the files under a newer export day ---
+
+    def head_after_overlay(self):
+        """HEAD after tonight's overlay: an assented bill and both bills with a reading."""
         self.run_overlay()
-        assent_key = self.assented[0]
-        reading_key = next(k for k, *_ in sorted(self.plan) if k != assent_key)
-        head = {k: self.doc(k) for k in (assent_key, reading_key)}
-        made = next(r["date"] for r in head[assent_key]["key_dates"] if r.get("source") == "frl")
-        parlinfo = ("https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;"
-                    f"query=Id%3A%22legislation/billhome/{assent_key.rsplit('-', 1)[1]}%22")
+        self.assent_key = self.assented[0]
+        self.reading_keys = sorted({k for k, *_ in self.plan} - {self.assent_key})
+        self.assertEqual(len(self.reading_keys), 2)
+        head = {k: self.doc(k) for k in [self.assent_key, *self.reading_keys]}
+        self.made = next(r["date"] for r in head[self.assent_key]["key_dates"] if r.get("source") == "frl")
+        return head
 
-        def full_export(assent_day: str, generated_at: str):
-            """ParlInfo is back: its own copies, its own assent row (with a house), a new export day."""
-            for key in head:
-                doc = json.loads(self.before[f"{key}.json"])
-                if key == assent_key:
-                    doc["key_dates"].append({"stage": "royal_assent", "date": assent_day, "house": "senate", "url": parlinfo})
-                    doc["status"], doc["status_as_of"] = "passed", assent_day
-                (self.bills / f"{key}.json").write_text(eb.same_layout(self.before[f"{key}.json"].decode(), doc))
-            index = json.loads(self.before["index.json"])
-            index["generated_at"] = generated_at
-            (self.bills / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
+    def full_export(self, head, generated_at, assent_day=None, holds=()):
+        """ParlInfo's own copies of the HEAD bills under a new export day: its own
+        Royal Assent row (with a house) when `assent_day` is set, and its own rows
+        for the overlay readings named in `holds` (same stage, house and date)."""
+        def billhome(key):
+            return ("https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;"
+                    f"query=Id%3A%22legislation/billhome/{key.rsplit('-', 1)[1]}%22")
+        for key in head:
+            doc = json.loads(self.before[f"{key}.json"])
+            if key == self.assent_key and assent_day:
+                doc["key_dates"].append({"stage": "royal_assent", "date": assent_day, "house": "senate", "url": billhome(key)})
+                doc["status"], doc["status_as_of"] = "passed", assent_day
+            for row in H.own_rows(head[key]):
+                if row.get("source") == "hansard" and (key, row["stage"], row["house"], row["date"]) in holds:
+                    H.insert_row(doc["key_dates"], {"stage": row["stage"], "date": row["date"], "house": row["house"],
+                                                    "url": billhome(key)})
+            (self.bills / f"{key}.json").write_text(eb.same_layout(self.before[f"{key}.json"].decode(), doc))
+        index = json.loads(self.before["index.json"])
+        index["generated_at"] = generated_at
+        (self.bills / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
 
-        for assent_day, generated_at, retires in ((made, self.index["generated_at"], False),
-                                                  (made, "2026-12-01T16:00:00+00:00", True),
-                                                  (f"{made[:8]}{int(made[8:]) - 1:02d}", "2026-12-01T16:00:00+00:00", True)):
-            with self.subTest(assent_day=assent_day, generated_at=generated_at):
-                full_export(assent_day, generated_at)
+    def without_overlay_rows(self, key, source):
+        doc = self.doc(key)
+        doc["key_dates"] = [r for r in doc["key_dates"] if r.get("source") != source]
+        return doc
+
+    def test_a_newer_export_that_lacks_the_readings_carries_them(self):
+        head = self.head_after_overlay()
+        newest = max(r["date"] for k in head for r in H.own_rows(head[k]))
+        generated_at = f"{newest}T16:00:00+00:00"  # ParlInfo read the day after the overlay's newest row
+        a_day_off = f"{self.made[:8]}{int(self.made[8:]) - 1:02d}"
+        for assent_day in (None, self.made, a_day_off):
+            with self.subTest(assent_day=assent_day):
+                self.full_export(head, generated_at, assent_day)
                 result = self.run_overlay(head)
-                doc = self.doc(assent_key)
-                assent = [r for r in doc["key_dates"] if r["stage"] == "royal_assent"]
-                self.assertEqual([(r["date"], r["house"]) for r in assent], [(assent_day, "senate")])
-                self.assertEqual(len([a for a in doc["acts"] if a["frl_uri"].endswith(head[assent_key]["acts"][-1]["frl_uri"][-11:])]),
-                                 1 if not retires else 0)
-                readings = [r for r in self.doc(reading_key)["key_dates"] if r.get("source") == "hansard"]
-                self.assertEqual(bool(readings), not retires)
-                self.assertGreater(result["summary"]["rows_retired"], 0)
-                cutoff = generated_at[:10]
+                for key in self.reading_keys:  # the export lacks them: they stay, whatever the export's day
+                    self.assertEqual(H.own_rows(self.doc(key)), H.own_rows(head[key]), key)
+                doc = self.doc(self.assent_key)
+                assent = [(r["date"], r["house"], r.get("source")) for r in doc["key_dates"] if r["stage"] == "royal_assent"]
+                act = head[self.assent_key]["acts"][-1]
+                self.assertEqual([a["frl_uri"] for a in doc["acts"]].count(act["frl_uri"]), 1)
+                if assent_day:  # ParlInfo records it: its row replaces ours, never both
+                    self.assertEqual(assent, [(assent_day, "senate", None)])
+                    self.assertEqual(result["summary"]["rows_retired"], 1)
+                else:  # the register's record carries, and so does the passed status
+                    self.assertEqual(assent, [(self.made, None, "frl")])
+                    self.assertEqual((doc["status"], doc["status_as_of"]), ("passed", self.made))
+                    self.assertEqual(result["summary"]["rows_retired"], 0)
+                self.assertNotIn("export_lacks_event_14d", result["summary"]["review_kinds"])
                 for key in head:
-                    self.assertEqual(bills_guard.regressions(head[key], self.doc(key), cutoff=cutoff), [], key)
-                if retires:  # the allowance is what lets them go, and only for rows the export's day covers
-                    self.assertTrue(bills_guard.regressions(head[reading_key], self.doc(reading_key)))
-                    self.assertTrue(bills_guard.regressions(head[reading_key], self.doc(reading_key), cutoff=self.snapshot))
+                    self.assertEqual(bills_guard.regressions(head[key], self.doc(key)), [], key)
+                for key in self.reading_keys:  # dropping a reading the export lacks is refused
+                    self.assertIn("1 recorded stages removed",
+                                  bills_guard.regressions(head[key], self.without_overlay_rows(key, "hansard")))
+                if not assent_day:
+                    self.assertTrue(bills_guard.regressions(head[self.assent_key],
+                                                            self.without_overlay_rows(self.assent_key, "frl")))
+
+    def test_a_newer_export_that_holds_a_reading_retires_only_that_row(self):
+        head = self.head_after_overlay()
+        held_key, kept_key = self.reading_keys
+        held = {(held_key, r["stage"], r["house"], r["date"]) for r in H.own_rows(head[held_key])}
+        newest = max(r["date"] for k in head for r in H.own_rows(head[k]))
+        self.full_export(head, f"{newest}T16:00:00+00:00", self.made, holds=held)
+        result = self.run_overlay(head)
+        doc = self.doc(held_key)
+        self.assertEqual(H.own_rows(doc), [])
+        for _, stage, house, day in held:  # ParlInfo's row, once
+            self.assertEqual([r.get("url", "").startswith("https://parlinfo") for r in doc["key_dates"]
+                              if (r["stage"], r["house"], r["date"]) == (stage, house, day)], [True])
+        self.assertEqual(H.own_rows(self.doc(kept_key)), H.own_rows(head[kept_key]))
+        self.assertEqual(result["summary"]["rows_retired"], len(held) + 1)  # the reading and the FRL assent
+        for key in head:
+            self.assertEqual(bills_guard.regressions(head[key], self.doc(key)), [], key)
+        # The guard lets a row go only where the export holds its event.
+        self.assertEqual(bills_guard.superseded(head[held_key], doc), H.own_rows(head[held_key]))
+        self.assertEqual(bills_guard.superseded(head[kept_key], self.without_overlay_rows(kept_key, "hansard")), [])
+
+    def test_rows_the_export_still_lacks_after_14_days_stay_and_go_to_review(self):
+        head = self.head_after_overlay()
+        generated_at = "2026-11-20T16:00:00+00:00"  # more than 14 days after every overlay row
+        self.full_export(head, generated_at)
+        result = self.run_overlay(head)
+        flagged = {(e["bill"], e["stage"], e["house"], e["date"]): e for e in result["review"]
+                   if e["kind"] == "export_lacks_event_14d"}
+        expected = {(k, r["stage"], r["house"], r["date"]) for k in head for r in H.own_rows(head[k])}
+        self.assertEqual({f for f in flagged if f[0] in head}, expected)
+        for bill, stage, house, day in flagged:  # every flagged row is one still published
+            self.assertIn((stage, house, day), {(r["stage"], r["house"], r["date"]) for r in H.own_rows(self.doc(bill))})
+        self.assertTrue(all(e["basis"].startswith("the export of 2026-11-20 does not record this event")
+                            for e in flagged.values()))
+        for key in head:  # still published
+            self.assertEqual(H.own_rows(self.doc(key)), H.own_rows(head[key]), key)
+            self.assertEqual(bills_guard.regressions(head[key], self.doc(key)), [], key)
+        doc = self.doc(self.assent_key)
+        self.assertEqual((doc["status"], doc["status_as_of"]), ("passed", self.made))
+        for key in self.reading_keys:  # and the guard refuses to let them go
+            self.assertTrue(bills_guard.regressions(head[key], self.without_overlay_rows(key, "hansard")))
+        self.assertTrue(bills_guard.regressions(head[self.assent_key], self.without_overlay_rows(self.assent_key, "frl")))
+        # Within 14 days nothing is flagged.
+        self.full_export(head, "2026-10-26T16:00:00+00:00")
+        again = self.run_overlay(head)
+        self.assertNotIn("export_lacks_event_14d", again["summary"]["review_kinds"])
 
     def test_heading_stage_reads_only_the_last_segment(self):
         self.assertEqual(H.heading_stage("Example Bill 2026; Second Reading"), "second_reading")

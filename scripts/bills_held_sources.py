@@ -22,7 +22,9 @@ we do not hold, exact-title matches (each flagged with its basis, never
 published), a third reading that was negatived or not recorded as read, a second
 reading section with a negatived question and no record of the bill read a
 second time, readings on or after a chamber-day that could not be read, an Act
-for a bill recorded dead.
+for a bill recorded dead. The list also names published rows a newer export
+still lacks more than 14 days after their date (export_lacks_event_14d), so a
+person checks them; those rows stay published.
 
 Rows it adds carry `source` ("hansard" or "frl"). FRL rows also carry
 `retrieved`, the day (Sydney) the Act's metadata was downloaded, which the CC BY
@@ -33,11 +35,14 @@ read without a gap and the day the register was last read, and never earlier
 than the Sydney day of `generated_at`. It is the progress date only. A bill's
 `status_as_of` stays its latest recorded event.
 
-When a full export has run (ParlInfo back), rows this overlay published at HEAD
-and the new export lacks are carried forward while they are newer than the
-export's own day. Rows the export's day covers are retired (the export's record
-replaces them, and bills_guard allows exactly those to go), and an FRL Royal
-Assent is never carried onto a bill whose export already records one.
+When a full export has run (ParlInfo back), a row this overlay published at
+HEAD is retired only when the export's own record holds the same event: the
+same stage, house and date, or for an FRL Royal Assent any Royal Assent
+(bills_registry/held_rows.py, the rule bills_guard allows removals by). Every
+other row is carried forward, whatever its date, because ParlInfo may not have
+caught up. A row the export still lacks more than 14 days after its date stays
+published and is listed for review (export_lacks_event_14d). Acts and FRL
+sources are carried unless the file already holds the same URI.
 
 Read-only on the database. Writes only the bill files whose content changed, in
 their own layout, then the index if it changed.
@@ -62,6 +67,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT))
 import export_bills as eb  # noqa: E402
+from bills_registry.held_rows import (OVERLAY_SOURCES as OWN_SOURCES, REVIEW_AFTER_DAYS,  # noqa: E402
+                                      days_behind, export_holds, signature)
 from corrections.apply import apply as apply_corrections, load as load_corrections  # noqa: E402
 from parli.ingest.tvfy_bill_links import official_ref  # noqa: E402
 
@@ -79,7 +86,6 @@ HANSARD_STAGES = {
     "third reading": "third_reading",
 }
 EXACT_LINK_RULE = "tvfy-official-id"
-OWN_SOURCES = ("hansard", "frl")
 # A bill still before parliament may become passed on an Act; anything else is review.
 ALIVE_STATUSES = {None, "before_parliament", "before_house", "introduced"}
 FRL_LICENCE = "CC BY 4.0"
@@ -341,10 +347,6 @@ def exact_division_links(db) -> dict[str, list[str]]:
 # --- applying ---------------------------------------------------------------
 
 
-def signature(row: dict) -> tuple:
-    return (row.get("stage"), row.get("house"), row.get("date"))
-
-
 def insert_row(rows: list[dict], row: dict) -> None:
     """Insert after the last dated row on or before the new row's date."""
     at = len(rows)
@@ -360,41 +362,50 @@ def own_rows(doc: dict) -> list[dict]:
     return [r for r in doc.get("key_dates") or [] if r.get("source") in OWN_SOURCES]
 
 
-def carry_forward(doc: dict, head: dict | None, since: str) -> tuple[int, int]:
+def carry_forward(doc: dict, head: dict | None, since: str) -> tuple[int, int, list[dict]]:
     """Re-add the rows, Acts and FRL sources this overlay published at HEAD and
-    the current file lacks (a full export rewrote it). (rows carried, retired).
+    the current file lacks (a full export rewrote it). (rows carried, rows
+    retired, review entries).
 
-    A row dated on or before `since`, the export's own day, is retired: the
-    export now covers that day and its record replaces ours. An FRL Royal Assent
-    is never carried onto a bill whose file already records one, whatever its
-    house or day (the register's making date can be a day off ParlInfo's)."""
-    if not head:
-        return 0, 0
+    A row is retired only when the export's own record holds the same event
+    (held_rows.export_holds): the same stage, house and date, or for an FRL
+    Royal Assent any Royal Assent, so a Royal Assent is never duplicated. Every
+    other row is carried whatever its date: `since`, the export's own day, says
+    when ParlInfo was read, not that it had recorded everything by then. A row
+    the export still lacks more than REVIEW_AFTER_DAYS after its date stays
+    published and is listed for review. Acts and FRL sources are carried unless
+    the file already holds the same URI."""
     carried = retired = 0
     rows = doc.setdefault("key_dates", [])
-    have = {signature(r) for r in rows}
-    assented = any(r.get("stage") == "royal_assent" for r in rows)
-    for row in own_rows(head):
-        if not row.get("date") or signature(row) in have:
-            continue
-        if row["date"] <= since or (row.get("stage") == "royal_assent" and assented):
-            retired += 1
-            continue
-        insert_row(rows, dict(row))
-        have.add(signature(row))
-        assented = assented or row.get("stage") == "royal_assent"
-        carried += 1
-    acts = doc.setdefault("acts", [])
-    for act in head.get("acts") or []:
-        if act.get("retrieved") and act.get("frl_uri") and (act.get("assent_date") or "") > since \
-                and all(a.get("frl_uri") != act["frl_uri"] for a in acts):
-            acts.append(dict(act))
-    sources = doc.setdefault("sources", [])
-    for source in head.get("sources") or []:
-        if source.get("retrieved") and (source.get("document_date") or "") > since \
-                and all(s.get("url") != source.get("url") for s in sources):
-            sources.append(dict(source))
-    return carried, retired
+    if head:
+        have = {signature(r) for r in rows}
+        for row in own_rows(head):
+            if not row.get("date"):
+                continue
+            if export_holds(rows, row):
+                retired += 1
+                continue
+            if signature(row) in have:  # still in the file: no export rewrote it
+                continue
+            insert_row(rows, dict(row))
+            have.add(signature(row))
+            carried += 1
+        acts = doc.setdefault("acts", [])
+        for act in head.get("acts") or []:
+            if act.get("retrieved") and act.get("frl_uri") and all(a.get("frl_uri") != act["frl_uri"] for a in acts):
+                acts.append(dict(act))
+        sources = doc.setdefault("sources", [])
+        for source in head.get("sources") or []:
+            if source.get("retrieved") and source.get("url") and all(s.get("url") != source["url"] for s in sources):
+                sources.append(dict(source))
+    review = []
+    for row in own_rows(doc):
+        if row.get("date") and (behind := days_behind(row["date"], since)) > REVIEW_AFTER_DAYS:
+            review.append({"source": row["source"], "kind": "export_lacks_event_14d", "bill": doc["key"],
+                           "stage": row.get("stage"), "house": row.get("house"), "date": row["date"],
+                           "basis": f"the export of {since} does not record this event {behind} days after it; "
+                                    "the row stays published until the export holds it or a person corrects it"})
+    return carried, retired, review
 
 
 def apply_assent(doc: dict, act: dict) -> str | None:
@@ -476,9 +487,10 @@ def overlay(directory: Path, divisions_dir: Path, db, stage_dir: Path, today: st
 
     head = head or {}
     for doc in docs:
-        carried, retired = carry_forward(doc, head.get(doc["key"]), snapshot)
+        carried, retired, lagging = carry_forward(doc, head.get(doc["key"]), snapshot)
         counts["rows_carried"] += carried
         counts["rows_retired"] += retired
+        review += lagging
 
     # Royal Assent from FRL, by exact originatingBillUri bill code.
     applied_acts = []
