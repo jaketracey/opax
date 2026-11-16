@@ -556,6 +556,12 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
         "max_tokens": 1600,
         "temperature": 0,
         "reasoning_effort": "none",
+        # No-train, zero-retention routing on every OpenRouter call (hub ruling
+        # 16 Nov 2026; https://openrouter.ai/docs/features/provider-routing).
+        # A request-level provider object replaces the preset's own, so the
+        # preset's provider pin does not apply here: OpenRouter picks among the
+        # endpoints that satisfy both fields, or refuses the request.
+        "provider": {"data_collection": "deny", "zdr": True},
         "messages": [{"role": "user", "content": prompt}],
         "tools": [{"type": "function", "function": {
             "name": name, "description": schema["description"],

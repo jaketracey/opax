@@ -1,7 +1,7 @@
 /** Anonymous projections of the same offline assets used by the election pages. */
 import {appJson, appRead, readOnly} from './app-http'
 import {candidatePartyPath} from './vic-election-parties'
-import {findSeats, keyDateRows, latest, titledVotes, vicElectionCopy, vicElectionState, visibleResults, VIC_ELECTION_ABOUT, type Contest, type Member, type Seat, type VicElection, type VicPlaces} from './vic-election'
+import {findSeats, keyDateRows, latest, recorded, rosterDate, titledVotes, vicElectionCopy, vicElectionState, visibleResults, VIC_ELECTION_ABOUT, type Contest, type Member, type Seat, type VicElection, type VicPlaces} from './vic-election'
 import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_CACHE, vicElectionEnabled} from '../public/vic-election.js'
 import {validateVicElection, validateVicPlaces, VIC_ELECTION_SOURCE_KEYS as SOURCE_KEYS} from './vic-election-data'
 
@@ -67,7 +67,7 @@ function seatRow(s: Seat) {
   const candidates = s.candidates?.list.length ?? 0
   const r = latest(s)
   return s.kind === 'district'
-    ? {...base, kind:'district' as const, region:s.region!, member:memberName(s.members[0]),
+    ? {...base, kind:'district' as const, region:s.region!, member:memberName(recorded(s)[0]),
       result:r ? {date:r.date, kind:r.kind, party:r.party, margin:r.margin} : null, candidates}
     : {...base, kind:'region' as const, members:s.members.map(memberName), districts:s.districts.length, candidates}
 }
@@ -81,7 +81,7 @@ function overview(d: VicElection, now: Date) {
     term_start:d.term_start, term_end:d.term_end, key_dates:keyDateRows(d,now),
     notice:d.notice ? {text:d.notice.text, link:d.notice.link ? {label:d.notice.link.label, url:d.notice.link.url} : null} : null,
     candidates_published:d.seats.find(s=>s.candidates)?.candidates?.published ?? null,
-    results_fetched:d.results_fetched, roster_date:d.seats.map(s=>s.roster_date).sort().at(-1)!,
+    results_fetched:d.results_fetched, roster_date:rosterDate(d),
     districts:d.seats.filter(s=>s.kind === 'district').map(seatRow), regions:d.seats.filter(s=>s.kind === 'region').map(seatRow),
     sources:Object.fromEntries(SOURCE_KEYS.map(k=>[k,d.sources[k]])), about:VIC_ELECTION_ABOUT,
     methods_url:ORIGIN + '/methods#vic-election', authorisation:d.authorisation,
@@ -101,7 +101,7 @@ function seatDetail(d: VicElection, s: Seat, now: Date) {
     candidates:s.candidates ? {published:s.candidates.published, url:s.candidates.url,
       list:s.candidates.list.map(c=>({...candidateRow(c),
         ...s.kind === 'region' ? {group:c.group ?? null, group_name:c.group_name?.trim() || null} : {}}))} : null,
-    members:s.members.map(m=>({...memberRef(m), source_url:m.source_url,
+    members:recorded(s).map(m=>({...memberRef(m), source_url:m.source_url,
       speeches:m.speeches ? {count:m.speeches.count, first:m.speeches.first, last:m.speeches.last, within_term:m.speeches.within_term} : null,
       speech_gap:m.speech_gap, votes:m.votes ? {count:m.votes.count, ayes:m.votes.ayes, noes:m.votes.noes} : null,
       recent_votes:titledVotes(m).map(v=>({date:v.date, title:v.title, href:v.href, vote:v.vote, source_url:v.source_url}))})),

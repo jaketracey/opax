@@ -70,9 +70,9 @@ test('disabled electoral share cards are refused before any cached card can be r
     }
   } finally {globalThis.caches=saved;}
 });
-test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, results, dates and no unheld sections',async()=>{
+test('enabled SSR renders all 88 districts and 8 regions, 127 existing people (Brunswick is vacant), results, dates and no unheld sections',async()=>{
   assert.equal(data.seats.filter(s=>s.kind==='district').length,88);assert.equal(data.seats.filter(s=>s.kind==='region').length,8);
-  assert.equal(data.seats.reduce((n,s)=>n+s.members.length,0),128);assert.equal(data.pages.length,97);
+  assert.equal(data.seats.reduce((n,s)=>n+s.members.length,0),127);assert.deepEqual(data.seats.filter(s=>s.vacancy).map(s=>s.name),['Brunswick']);assert.equal(data.pages.length,97);
   const {PERSON_PATHS}=await import('../public/person-paths.js');const paths=new Set(Object.values(PERSON_PATHS.exact));
   for (const s of data.seats) {
     const page=await vicElectionPage(s.path.split('/').at(-1),read,{VIC_ELECTION_HUB_ENABLED:'true'});
@@ -186,7 +186,8 @@ test('individual donor data is absent outside official candidate lists, with no 
   const all=JSON.stringify(withoutCandidates)+[null,...withoutCandidates.seats].map(s=>renderVicElection(withoutCandidates,s).html).join('\n');
   // A donor label can coincide with a sitting member's name.
   // Their existing roster identity is allowed only in its member context.
-  const memberNames=new Set(data.seats.flatMap(s=>s.members.map(m=>personNameKey(m.name))));
+  // A vacant seat's last member is named once, on that seat's page, as its last member.
+  const memberNames=new Set(data.seats.flatMap(s=>[...s.members,...s.vacancy?[s.vacancy.last]:[]].map(m=>personNameKey(m.name))));
   for(const name of individuals)if(!memberNames.has(personNameKey(name)))assert.ok(!all.includes(name),name);
   for(const s of data.seats)for(const m of s.members)assert.deepEqual(Object.keys(m).sort(),['name','party','href','source_url','speeches','speech_gap','votes','detailed_count','divisions'].sort());
   // Results keep parties and shares only: no candidate names.
@@ -337,6 +338,8 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
     try {
       for(const path of ['electorates/manifest.json','parliamentarians.json','votes.json','divisions/index.json','interests/index.json','corpus.json','person-paths.js']){await mkdir(dirname(join(out,path)),{recursive:true});await writeFile(join(out,path),await readFile(new URL(path,root)));}
       const manifest=await json('electorates/manifest.json');await mkdir(dirname(join(out,manifest.index_url)),{recursive:true});await writeFile(join(out,manifest.index_url),await readFile(new URL(manifest.index_url.slice(1),root)));
+      // A seat recorded vacant is read from its own detail file (public/seat-vacancy.js).
+      for(const e of (await json(manifest.index_url.slice(1))).electorates.filter(e=>e.jurisdiction==='vic'&&e.representation_status==='verified'&&!e.representatives.length))await writeFile(join(out,e.detail_url),await readFile(new URL(e.detail_url.slice(1),root)));
       for(const row of (await json('divisions/index.json')).divisions.filter(d=>/^vic-(la|lc)-/.test(d.key))){await mkdir(join(out,'divisions'),{recursive:true});await writeFile(join(out,`divisions/${row.slug}.json`),await readFile(new URL(`divisions/${row.slug}.json`,root)));}
       // Missing optional input still builds without any candidate sections.
       const candidateSource=await readFile(join(dir,'vic-candidates-2026.json'),'utf8');

@@ -30,7 +30,7 @@ import { fundingResearchFollowUp, rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay, mentionsOfficePay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { buildPersonOverview, isPersonOverviewCandidate, isPersonOverviewIntent, isPersonRecentCandidate, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, OVERVIEW_CAPS, OVERVIEW_RETRIEVAL_MS, OVERVIEW_FIRST_ANSWER_MS, OVERVIEW_VERIFICATION_MS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
-import { researchModelId, researchProvider, researchReasoning, researchModelOverride, researchModelKey } from './research-model'
+import { researchModelOverride, researchModelKey } from './research-model'
 import { AskDeadline, AskPackCache } from './ask-deadline'
 import { personFollowups } from '../public/ask-person.js'
 import { firstSpeechTurn } from './position-evidence'
@@ -132,7 +132,7 @@ import { agenticAskPayload } from './agentic-response'
 import { linkAskSources } from './ask-source-links'
 import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
-import { createOpenRouter } from '@openrouter/ai-sdk-provider'
+import { openRouterModel } from './openrouter'
 import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
@@ -310,6 +310,12 @@ async function modelBudgetSpent(env: Env): Promise<boolean> {
   }
 }
 const MODEL_BUDGET_HEADER = 'x-opax-model-budget'
+/** Ask fails closed when OpenRouter refuses the privacy-flagged route (hub ruling, 16 November 2026). */
+const providerRefusedResponse = (research?: unknown): Response => {
+  const res = json({ error: 'OPAX could not answer just now. Please try again.', ...(research ? { research } : {}) }, 503)
+  res.headers.set('retry-after', '60')
+  return res
+}
 const modelBudgetResponse = (): Response => new Response(JSON.stringify({ error: 'The model call budget for this minute is spent.' }), {
   status: 429, headers: { 'content-type': 'application/json; charset=utf-8', 'retry-after': '60', [MODEL_BUDGET_HEADER]: 'spent' },
 })
@@ -4944,8 +4950,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const vicRows=p.representation?.some(r=>r.jurisdiction==='vic') ? (await loadElectorates(env).catch(()=>null))?.electorates ?? null : null
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicRows)})
+        const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? await loadElectorates(env).catch(()=>null) : null
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null)})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5399,8 +5405,9 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
-  const vicRows = p.representation?.some(r => r.jurisdiction === 'vic') ? (await loadElectorates(env).catch(() => null))?.electorates ?? null : null
-  const vicEnded = vicEndedSeat(p, vicRows)
+  const vicData = p.representation?.some(r => r.jurisdiction === 'vic') ? await loadElectorates(env).catch(() => null) : null
+  const vicRows = vicData?.electorates ?? null
+  const vicEnded = vicEndedSeat(p, vicRows, vicData?.people ?? null)
   if (p.rosterOnly) {
     const description = clip(vicEnded
       ? `${display}, ${vicEnded.member ? `${vicEnded.member.role} ${vicEnded.member.until.phrase}` : `former representative for ${p.rosterOnly.seats.join(', ')}`}${p.party ? ` (${p.party})` : ''}. No speech count for them yet.`
@@ -6815,7 +6822,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
     plannerTrail: true,
     ...(env.RESEARCH_LOOP === 'route' ? {
       research: createResearch({
-        model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })(researchModelId(env.RESEARCH_LOOP_MODEL_ID), { usage: { include: true }, ...(researchProvider(env.RESEARCH_LOOP_PROVIDER) ? { provider: researchProvider(env.RESEARCH_LOOP_PROVIDER) } : {}), ...(researchReasoning(env.RESEARCH_LOOP_REASONING) ? { extraBody: { reasoning: researchReasoning(env.RESEARCH_LOOP_REASONING) } } : {}) }) : undefined,
+        model: openRouterModel(env),
         steps: env.RESEARCH_LOOP_STEPS, wallMs: researchLimits({ wallMs: env.RESEARCH_LOOP_MS }).wallMs, tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
         dailyBudget: env.RESEARCH_EVAL ? unmeteredResearchBudget : researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
@@ -7044,6 +7051,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   let lastResearch: ResearchPayload | undefined, failureLogged = false
   const trackRun = (run: AgenticPayload) => { lastResearch = run.research; failureLogged ||= !!run.research_failure; onRun?.(run) }
   const routedFallback = async (research?: ResearchPayload) => {
+    // OpenRouter refused the no-train, zero-retention route: a retryable error, never the older engine (which generates on another route).
+    if (research?.failure === 'provider_refused') return providerRefusedResponse(research)
     if (loopRoute && !research?.failure) {
       const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
       research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }

@@ -38,7 +38,7 @@ test('the privacy page lists exactly the nine App Store and Google Play label ty
     'then your device asks for microphone permission the first time you start a call (on Android, after the app explains why it needs it).',
     'Cloudflare, ElevenLabs, PostHog, Progress Agentic RAG and OpenRouter',
     'the app\'s counts and crash reports, and your IP address forwarded by OPAX\'s server with both',
-    'An account holds up to 50', 'Your location is never sent', 'Last updated 15 November 2026',
+    'An account holds up to 50', 'Your location is never sent', 'Last updated 16 November 2026',
     'Community is on the website only', 'Before your first question is sent, Ask asks your permission',
     'nothing is sent until you agree', 'After an answer, Report this answer opens the support page'])
     assert.ok(body.includes(fact), fact);

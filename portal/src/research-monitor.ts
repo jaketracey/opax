@@ -4,7 +4,7 @@ import type { AnswerTally } from './research-evidence'
 
 /** Existing Workers observability sink; never log source text, args or errors. */
 export async function recordResearchFailure(question: string, failure: ResearchError): Promise<void> {
-  console.log(JSON.stringify({ kind: 'research_loop_fallback', question_hash: await questionHash(question), reason: failure.reason,
+  console.log(JSON.stringify({ kind: failure.reason === 'provider_refused' ? 'research_provider_refused' : 'research_loop_fallback', question_hash: await questionHash(question), reason: failure.reason,
     rounds: failure.stats.rounds, tokens: failure.stats.tokens, cost_usd: failure.stats.costUsd ?? null,
     turns: failure.stats.turns ?? [], cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) ?? [], ...answerCounts(failure.stats.answer) }))
 }

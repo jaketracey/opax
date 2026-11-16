@@ -4,6 +4,7 @@ import {shortDate} from '../public/format.js'
 import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_DAY_START, VIC_ELECTION_EARLY_OPEN, VIC_ELECTION_EARLY_CLOSE, VIC_ELECTION_RESULTS_URL, VIC_ASSEMBLY_EXPIRED_AT, vicAssemblyExpiredPhrase, vicCouncilExpiredPhrase, vicAssemblyEnded, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
 import {vicSeatVacantAtExpiry, vicVacantSentence} from '../public/vic-term.js'
+import {lastMemberText} from '../public/seat-vacancy.js'
 import {hubShell, type HubFooterConfig} from './hubs'
 import {trail} from './nav-model.mjs'
 import {validateVicElection} from './vic-election-data'
@@ -27,6 +28,10 @@ export interface Seat {
   result: {general: Contest; since: Contest | null} | null;
   candidates: {published: string; url: string; list: Candidate[]} | null;
   electorate_url: string; roster_date: string; members: Member[];
+  /** A district the electorate release records vacant when the Assembly expired (public/seat-vacancy.js):
+   *  `members` is empty, `on` is the day the term ended, `last` the last member and `to` the day their
+   *  service ended. */
+  vacancy?: {on: string; at: 'expiry'; to: string; last: Member} | null;
 }
 export interface VicElection {
   current_results?: VicResults | null;
@@ -71,6 +76,11 @@ export function vicElectionState(d: VicElection, now = new Date()): VicElectionS
 }
 /** dissolved_for by district name, from the electorates index rows that carry the key. The reviewed
  *  dissolution record writes it and the export of the new parliament's roster clears it. */
+/** The newest roster date among seats that have members: a vacancy's date speaks for its own seat only. */
+export const rosterDate = (d: VicElection) => d.seats.filter(s=>s.members.length).map(s=>s.roster_date).sort().at(-1)!
+/** The people whose records a seat carries. The app's district row and seat detail must name one (the
+ *  shipped decoders require it) and word it "Last held by": for a vacant seat, its last member. */
+export const recorded = (s: Seat): Member[] => s.members.length ? s.members : s.vacancy ? [s.vacancy.last] : []
 export type AssemblyIndex = ReadonlyMap<string, string | null>
 /** Whether a district's roster member is no longer a member: the Assembly has expired and the new
  *  parliament's roster has not loaded. The electorates index answers for each seat it speaks for;
@@ -306,7 +316,7 @@ export function findSeats(q: string, d: VicElection, places: VicPlaces | null, n
 export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFooterConfig = {}, now = new Date(), find: {place: string; hits: PlaceHit[]} | null = null, index: AssemblyIndex | null = null) {
   const path = s?.path || VIC_ELECTION_PATH
   const copy = vicElectionCopy(d,now,s), closed = pollsClosed(now)
-  const rosterNote = closed ? `Members are from the published roster dated ${shortDate(d.seats.map(s=>s.roster_date).sort().at(-1)!)}. ` : ''
+  const rosterNote = closed ? `Members are from the published roster dated ${shortDate(rosterDate(d))}. ` : ''
   const districts = d.seats.filter(x=>x.kind === 'district'), regions = d.seats.filter(x=>x.kind === 'region')
   const expired = (x: Seat) => assemblyExpired(d,x,now,index), until = vicAssemblyExpiredPhrase()
   // Until the polls close no seat page carries a record section for anyone: the roster member, who may be
@@ -314,7 +324,8 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
   const campaign = !closed
   // A reviewed exception (public/vic-term.js): the roster names a member whose service ended, with no
   // by-election, before the Assembly expired. The seat was vacant, and nobody is named its member.
-  const vacant = (x: Seat) => expired(x) && vicSeatVacantAtExpiry({jurisdiction:'vic',chamber:'vic_la',name:x.name})
+  // The electorate release records the same vacancy as data (`vacancy`, with the last member); either says so.
+  const vacant = (x: Seat) => Boolean(x.vacancy) || expired(x) && vicSeatVacantAtExpiry({jurisdiction:'vic',chamber:'vic_la',name:x.name})
   const councilEnded = (x: Seat) => councilExpired(d,x,now,index), untilCouncil = vicCouncilExpiredPhrase()
   // Nobody is called a member of a house that no longer sits: the rows name who was the member until it expired.
   const districtNote = campaign ? 'Each row shows the winning margin at the 2022 election, in percentage points, unless a later by-election is named, and the number of candidates.'
@@ -354,7 +365,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + candidates(s)
       // Apart from the candidates and below them: who was the member when the last parliament ended, once,
       // as a dated line with a plain link to their own page.
-      + section('last-parliament',ended ? 'Last parliament' : 'Member',`<dl class="vic-facts">${empty ? `<div><dt>Member</dt><dd>${esc(vicVacantSentence({chamber:'vic_la'}))}</dd></div>` : `<div><dt>${ended ? esc(`Member for ${s.name} ${until}${closed ? `, from the published roster dated ${shortDate(s.roster_date)}` : ''}`) : closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>`}</dl>`)
+      + section('last-parliament',ended ? 'Last parliament' : 'Member',`<dl class="vic-facts">${empty ? `<div><dt>Member</dt><dd>${esc(vicVacantSentence({chamber:'vic_la'}))}${s.vacancy ? ` ${lastMemberText(link(s.vacancy.last.href,s.vacancy.last.name),s.vacancy.to)}` : ''}</dd></div>` : `<div><dt>${ended ? esc(`Member for ${s.name} ${until}${closed ? `, from the published roster dated ${shortDate(s.roster_date)}` : ''}`) : closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>`}</dl>`)
       + (campaign || empty ? '' : section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''})))
       + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.${councilEnded(region) ? ` Listed are the members for ${esc(region.name)} Region ${untilCouncil}.` : ''}`)
       + keyDates(d,now)
