@@ -1,4 +1,4 @@
-import {ASK_ATTRIBUTION_RULE,ASK_EVIDENCE_RULES} from './ask-writing-rules'
+import {ASK_ATTRIBUTION_RULE,ASK_EVIDENCE_RULES,ASK_SELF_REFERENCE_RULE} from './ask-writing-rules'
 import {RECEIPTS_WRITING_RULE,industryModifier} from './receipt-copy'
 /** Tools supply evidence; only checked, newly written prose reaches an Ask reader. */
 import type { Fact, Period } from './agentic-ask'
@@ -17,7 +17,7 @@ import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './researc
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
-import {quotationFails,failedQuotations,looseQuotationOf} from './research-evidence'
+import {quotationFails,failedQuotations,looseQuotationOf,unescapedQuotes} from './research-evidence'
 import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
@@ -627,7 +627,7 @@ function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingI
 /** The writer's raw sentences, assembled as written, less any with a quotation a hearing transcript does not hold. */
 export function draftWrittenAnswer(raw:unknown,input:WritingInput):QualitativeAnswer|null {
   if(!raw||typeof raw!=='object'||!Array.isArray((raw as {sentences?:unknown}).sentences))return null
-  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
+  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,text:unescapedQuotes(s.text),facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
   const decision=answerDecision(raw)
   return {...assemble(lines,input,!!decision&&decision!=='answer'),...(decision?{answer_decision:decision}:{}),machine_written:true}
 }
@@ -640,7 +640,8 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   const declared=answerDecision(obj)
   const lines: WrittenSentence[]=[], seen=new Map<string,WrittenSentence>(), claims=new Set<string>(),figuresSeen=new Set<string>(); let coverage=false
   for (const value of obj.sentences.slice(0,16)) {
-    const line=value as WrittenSentence
+    const read=value as WrittenSentence
+    const line=typeof read?.text==='string'?{...read,text:unescapedQuotes(read.text)}:read
     if (typeof line?.text!=='string' || !line.text.trim() || rawToolEcho(line.text)) continue
     const ids=[...new Set(Array.isArray(line.facts)?line.facts:[])].filter(id=>Number.isInteger(id) && input.facts.some(f=>f.id===id))
     const facts=ids.map(id=>input.facts.find(f=>f.id===id)!)
@@ -683,7 +684,7 @@ export function writingPrompt(input: WritingInput): string {
   return JSON.stringify({question:input.question,period:input.period,facts:input.facts.map(f=>({...f,source:undefined,speaker:f.source.speaker,...(f.source.chamber?{chamber:f.source.chamber}:{}),...(f.source.receipt?{receipt:f.source.receipt}:{}),atoms:f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)})),contract: ASK_EVIDENCE_RULES + RECEIPTS_WRITING_RULE + ' ' +
     'Answer the question directly and fully from these facts, and use general knowledge for context. The first sentence must answer the question with the requested name, figure, date or outcome. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each, ' + NAMED_PEOPLE_EXCEPTION + '; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. ' + ASK_ATTRIBUTION_RULE + 'Name the chamber a fact records in its chamber field (senate is the Senate, representatives the House of Representatives). Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Use complete sentences in your own words. For counts, start with the count, what was counted, chamber and period. For comparisons, retain every side, named term, value and supported direction. Keep every requested year or month group and its count; record totals retain their snapshot date. Each claim keeps its structured entity, metric, unit, chamber, period and supporting fact id together. Equal values belonging to different entities remain distinct claims. ' +
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
-    'Hearing excerpts give the hearing day/date and transcript page, with a short literal quotation and fact id. An excerpt that names no speaker is attributed to the transcript, never to a named person, a witness or counsel. Identify the material once as hearing evidence; licence details belong in the source card. ' + TRANSCRIPT_NAMED_PEOPLE_RULE + ' ' +
+    'Hearing excerpts give the hearing day/date and transcript page, with a short literal quotation and fact id. An excerpt that names no speaker is attributed to the transcript, never to a named person, a witness or counsel. Identify the material once as hearing evidence; licence details belong in the source card. ' + TRANSCRIPT_NAMED_PEOPLE_RULE + ' ' + ASK_SELF_REFERENCE_RULE +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
     'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
 }

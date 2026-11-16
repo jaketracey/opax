@@ -87,6 +87,16 @@ export function failedQuotations(claim: string, evidence: string): string[] {
 /** Whether quoted words share a run of at least five words with a text: a loose quotation of it, not of something else. */
 export const looseQuotationOf = (inner: string, text: string): boolean => !!passageSpan(text, inner, 5) && words(inner).length >= 5
 
+/** The fixed line an answer is left with when nothing a record supports remains. */
+export const NO_SUPPORTED_ANSWER = 'OPAX cannot establish the requested answer from the selected records.'
+/** A model's JSON text sometimes arrives over-escaped: a backslash left standing before a quotation mark ("the word
+ * used is \"cleared\""). The backslash is decoding residue, not a character the model wrote for the reader. */
+export const unescapedQuotes = (text: string): string => text.replace(/\\+(?=["“”‘’'])/g, '')
+/** Labels of the model's own input that it sometimes echoes into an answer: "[fact 1]", "(fact 3)", "[facts 1, 2]",
+ * "fact id fact-25/turn/1/t/body/0", "fact-25/turn/1", "fact-3/t/body/0". Fixed machine tokens, never prose. Ordinary
+ * wording ("the fact that", "fact 3 of the report" without brackets, a "[1]" marker) is not one of these. */
+export const MACHINE_LABELS = [/[ \t]*\[facts? \d+(?:(?:, ?| and )\d+)*\]/gi, /[ \t]*\(facts? \d+(?:(?:, ?| and )\d+)*\)/gi, /[ \t]*\(?\bfact ids? fact-\d+(?:\/[\w-]+)*\)?/gi, /[ \t]*\(?\bfact-\d+(?:\/turn\/\d+)?(?:\/t\/body\/\d+(?:-\d+)?)?(?=\/|\)|[\s.,;:]|$)(?:\/[\w-]+)*\)?/gi]
+
 export interface AnswerTally { points_in:number;points_kept:number;points_uncited:number;repairs:Record<string,number>;drops:Record<string,number>;uncited:Record<string,number>;mode?:'points'|'record_list'|'facts'|'uncited';salvaged?:string }
 export const emptyTally=():AnswerTally=>({points_in:0,points_kept:0,points_uncited:0,repairs:{},drops:{},uncited:{}})
 export function pointsDraft(points:AnswerPoint[]):AnswerDraft {
@@ -130,7 +140,7 @@ export function verifyResearchPoints(points:unknown,passages:Map<string,Passage>
  for(const point of points){
   if(typeof point?.claim!=='string')continue
   const passage=passages.get(point.id),evidence=passage?.text??''
-  const claim=repairQuotes(fullName(point.claim,passage?.speaker),evidence,label=>{tally.repairs[label]=(tally.repairs[label]??0)+1})
+  const claim=repairQuotes(fullName(unescapedQuotes(point.claim),passage?.speaker),evidence,label=>{tally.repairs[label]=(tally.repairs[label]??0)+1})
   const key=normal(claim).toLowerCase()
   if(passage){const ids=references.get(key)??new Set<string>();ids.add(point.id);references.set(key,ids)}
   // Citation upgrades preserve the first copy's wording, which may already be on screen.

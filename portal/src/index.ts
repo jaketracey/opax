@@ -16,6 +16,7 @@ import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationI
 import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
 import { repairQuotes } from './research-evidence'
+import { quotedOrNothing, hearingFallbackPayload } from './ask-hearing-fallback'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { votedAgainstParty } from '../public/division-against-party.js'
@@ -139,7 +140,7 @@ import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
 import { cacheableAskAnswer, cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { researchSentenceStream, interruptedResearchAnswer } from './research-sentence-stream'
-import { groundAnswerPayload } from './research-grounding'
+import { groundAnswerPayload, withoutMachineLabels } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
 import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
@@ -7072,6 +7073,9 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   const routedFallback = async (research?: ResearchPayload) => {
     // OpenRouter refused the no-train, zero-retention route: a retryable error, never the older engine (which generates on another route).
     if (research?.failure === 'provider_refused') return providerRefusedResponse(research)
+    // A hearing-evidence question never falls to the older engine's prose (unrelated passages, general knowledge and
+    // process notes): the excerpts research held, quoted by code, or one fixed line (ask-hearing-fallback.ts).
+    if (loopRoute && !request.signal.aborted && quotedOrNothing(question)) return json(withTranscriptNote(withoutMachineLabels(hearingFallbackPayload(question, research))))
     if (loopRoute && !research?.failure) {
       const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
       research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }
@@ -7157,7 +7161,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
       // The transcript line goes on after linking, so its source numbers are the ones the reader sees.
-      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload,run.source_links,SITE_ORIGIN))
+      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):withoutMachineLabels(payload),run.source_links,SITE_ORIGIN))
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)

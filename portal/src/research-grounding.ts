@@ -9,7 +9,7 @@ import {passageExcerpt} from './research-evidence'
 import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
-import {repairQuotes} from './research-evidence'
+import {repairQuotes,MACHINE_LABELS} from './research-evidence'
 import {distinctSummary} from './research-writing'
 import {leadWithWho} from './research-who-lead'
 type SelectedSource=WritingInput['facts'][number]['source']
@@ -95,7 +95,7 @@ function completePersonOverview(original:Record<string,unknown>,result:Record<st
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string,fixedPrefix='',partial=false):Record<string,unknown> {
   // Recovery runs every normal shape check. A necessary correction uses retry, never a prefix exemption.
   if((payload.research as {answer_stats?:{salvaged?:unknown}}|undefined)?.answer_stats?.salvaged)fixedPrefix=''
-  let out=plainAnswerPayload(payload)
+  let out=withoutMachineLabels(plainAnswerPayload(payload))
   const audit=auditPayload(question,out)
   researchTrace('grounding.audit',{question,counts:audit.counts,findings:audit.findings})
   const edits=moneySentenceEdits(out)
@@ -128,6 +128,12 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   if(!partial)out=completePersonOverview(payload,out,question)
   const research=out.research&&typeof out.research==='object'?out.research as Record<string,unknown>:undefined
   return {...out,...(research?{research:{...research,claim_audit:audit.counts}}:{})}
+}
+/** An answer with the model's echoed input labels taken out (research-evidence.ts MACHINE_LABELS), citations kept in
+ * step. For every answer on its way out, whichever engine wrote it. */
+export function withoutMachineLabels<T extends Record<string,unknown>>(payload:T):T {
+  if(typeof payload.answer!=='string'||!/\bfacts?[ -]\d|\bfact ids?\b/i.test(payload.answer))return payload
+  return rewriteAnswerPayload(payload,replace=>{for(const label of MACHINE_LABELS)replace(label,'');replace(/ +([.,;:])/g,'$1')})
 }
 /** Quoted words stay quoted only when a source the sentence cites (or, for an uncited sentence, any source of the
  * answer) holds them verbatim; otherwise the marks come off and the words stand as paraphrase. */

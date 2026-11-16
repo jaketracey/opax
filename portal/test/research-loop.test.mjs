@@ -34,6 +34,7 @@ test('loop answer instructions require a direct first point, unique facts and se
  assert.match(instructions,/where a person is named only inside a verbatim quotation; Hansard and parliamentary committee hearings keep their names\./);
  assert.match(instructions,/found about each, except people named in hearing transcript evidence; for why/);
  assert.match(instructions,/Name each passage speaker and date as recorded\. /);
+ assert.match(instructions,/Write about the records only: leave out any mention of your own answer, your points, your search or yourself/);
  assert.match(instructions,/Name the people the records name, including private individuals, except people named in hearing transcript evidence\./);
  assert.doesNotMatch(instructions,/including private individuals\.|found about each; for why|name the people they name/);
  assert.match(instructions,/say who said it/);assert.match(instructions,/by the name on the record/);
