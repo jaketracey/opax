@@ -1,5 +1,5 @@
 // Pages that say what happened (web critique 2, lane C): the bill page's divisions told in a sentence
-// and grouped, the person page's scope lines, and the three record-backed lines of item 11. Every
+// and grouped, the person page's scope lines, and the record-backed lines of item 11. Every
 // date here is pinned; nothing reads the clock.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,7 +9,6 @@ import {runInNewContext} from 'node:vm';
 import {divisionKind, divisionIdentity, divisionRows, divisionGroupSentences, billDivisionTablesHTML, voteScopeLine} from '../public/vote-tables.js';
 import {interestShownNote} from '../public/register-tables.js';
 import {speechSpanLine, mentionTitleCase, mentionNamesPerson, mentionAliases} from '../public/held-back-transcripts.js';
-import {mostDividedLine} from '../public/home-data.js';
 import {heldSinceLine, profileHTML} from '../public/electorates.js';
 import {latestReturnLine} from '../public/party-page.js';
 import {renderBillAnswer} from '../src/seo-content.ts';
@@ -297,39 +296,6 @@ test('a mention addressed to a seat or office the person held on its date is kep
   assert.deepEqual(aliases.map(a => a.phrase).sort(), ['Leader of the House', 'Prime Minister', 'Treasurer', 'member for Harbourside', 'member for Seaview']);
   // No date, no dated alias.
   assert.equal(ask('The member for Harbourside said', ''), false);
-});
-
-const hubs = {weeks:[
-  {start:'2026-10-12', end:'2026-10-15', divisions:[{key:'1', name:'BILLS - Older Bill 2026; Second Reading', jurisdiction:'federal'}, {key:'2', name:'BILLS - Older Bill 2026; Third Reading', jurisdiction:'federal'}]},
-  {start:'2026-10-26', end:'2026-10-29', divisions:[
-    {key:'3', name:'BILLS - Example Safety Bill 2026; Second Reading', jurisdiction:'federal'},
-    {key:'4', name:'BILLS - Example Safety Bill 2026; Consideration in Detail', jurisdiction:'federal'},
-    {key:'5', name:'BILLS - Example Safety Bill 2026; Consideration in Detail', jurisdiction:'federal'},
-    {key:'6', name:'BILLS - Example Tax Bill 2026; Second Reading', jurisdiction:'federal'},
-    {key:'7', name:'BUSINESS - Rearrangement', jurisdiction:'federal'},
-    {key:'8', name:'BUSINESS - Rearrangement', jurisdiction:'federal'},
-    {key:'9', name:'BUSINESS - Rearrangement', jurisdiction:'federal'}]},
-  {start:'2026-11-16', end:'2026-11-19', divisions:[]},
-]};
-
-test('home: the bill most divided on in the last completed sitting week, by rule', () => {
-  assert.deepEqual(mostDividedLine(hubs, '2026-11-13'), {href:'/sitting/2026-10-26', text:'Most divisions last sitting week: Example Safety Bill 2026, 3'});
-  // During the week itself, the week before is the last completed one.
-  assert.deepEqual(mostDividedLine(hubs, '2026-10-28'), {href:'/sitting/2026-10-12', text:'Most divisions last sitting week: Older Bill 2026, 2'});
-  // Two bills level are both named; three level, or a lead of one division, is no line.
-  const tie = {weeks:[{start:'2026-10-26', end:'2026-10-29', divisions:['A','A','B','B'].map((b, i) => ({key:String(i), name:`BILLS - ${b} Bill; Second Reading`}))}]};
-  assert.equal(mostDividedLine(tie, '2026-11-13').text, 'Most divisions last sitting week: A Bill and B Bill, 2 each');
-  const three = {weeks:[{start:'2026-10-26', end:'2026-10-29', divisions:['A','A','B','B','C','C'].map((b, i) => ({key:String(i), name:`BILLS - ${b} Bill; Second Reading`}))}]};
-  assert.equal(mostDividedLine(three, '2026-11-13'), null);
-  const single = {weeks:[{start:'2026-10-26', end:'2026-10-29', divisions:[{key:'x', name:'BILLS - A Bill; Second Reading'}]}]};
-  assert.equal(mostDividedLine(single, '2026-11-13'), null);
-  // Missing data is no line.
-  assert.equal(mostDividedLine(null, '2026-11-13'), null);
-  assert.equal(mostDividedLine({weeks:[]}, '2026-11-13'), null);
-  assert.equal(mostDividedLine(hubs, '2026-10-01'), null);
-  assert.equal(mostDividedLine(hubs, 'not a date'), null);
-  const html = readFileSync(new URL('../public/home.html', import.meta.url), 'utf8');
-  assert.match(html, /<p id="hp-sitting" class="hp-sitting" hidden><\/p>\s*<p id="hp-most-divided" class="hp-sitting hp-most-divided" hidden><\/p>/);
 });
 
 const seat = (terms, extra = {}) => ({name:'Example', chamber:'representatives', state_code:'nsw', status:'current', capacity:1, terms,

@@ -14,7 +14,10 @@ import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
 import { FRL_NAME, frlAttribution, frlRetrieved } from '../public/frl-attribution.js'
 import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
-import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
+import { photosFor, photoFor, billPhotosFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
+import { coverTitleFits } from './og'
+import { PROCEDURAL_TITLES_PATH } from '../public/vote-tables.js'
+import { decidingDivision, type BillReading, type DivisionOutcomeWord } from '../public/bill-division.js'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
 export type DailyPostKind = typeof DAILY_POST_KINDS[number]
@@ -176,6 +179,41 @@ export function clip(text: string, limit: number): string {
   return (atWord.length >= limit * 0.6 ? atWord : cut).replace(/[\s,;:]+$/, '') + '…'
 }
 
+/**
+ * A bill's name cut to fit, keeping the words in its brackets. An amending bill's name says what it is about only
+ * there: "Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026" gives way
+ * before its brackets ("Military Rehabilitation… (Veterans’ Allied Health Care) Bill 2026"), then sheds its
+ * "Bill 2026", then keeps the bracketed words alone, and only when even they cannot fit is it cut at its end. A
+ * "(No. 2)" is a number, not those words. `fits` is the room: a character count, or the slide's own measure.
+ */
+export function shortTitle(title: string, fits: (text: string) => boolean): string {
+  const t = title.replace(/\s+/g, ' ').trim()
+  if (fits(t)) return t
+  // A cut name ends on a word that carries meaning, not on "and" or "of".
+  const cut = (words: string[], n: number) => {
+    const kept = words.slice(0, n)
+    while (kept.length > 1 && /^(?:and|or|of|the|for|to|in|on|with|a|an|&)$/i.test(kept[kept.length - 1])) kept.pop()
+    return `${kept.join(' ').replace(/[\s,;:]+$/, '')}…`
+  }
+  const bracket = /\((?!No\.?\s*\d+\))([^()]*[A-Za-z][^()]*)\)/.exec(t)
+  if (bracket && bracket.index > 0) {
+    const open = bracket.index
+    const head = t.slice(0, open).trim().split(' ')
+    const close = t.lastIndexOf(')')
+    const tails = [t.slice(open), ...(close + 1 < t.length ? [t.slice(open, close + 1)] : [])]
+    // More of the name before "Bill 2026": each length of the head is tried with the tail, then without it.
+    for (let n = head.length - 1; n >= 1; n--) for (const tail of tails) {
+      const s = `${cut(head, n)} ${tail}`
+      if (fits(s)) return s
+    }
+    // Room for the bracketed words and nothing else: they are what the bill is about.
+    if (fits(bracket[1].trim())) return bracket[1].trim()
+  }
+  const words = t.split(' ')
+  for (let n = words.length - 1; n >= 1; n--) if (fits(cut(words, n))) return cut(words, n)
+  return cut(words, 1)
+}
+
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return ''
   const [y, m, d] = iso.slice(0, 10).split('-').map(Number)
@@ -324,15 +362,63 @@ async function recipientShard(sources: DailyPostSources, graph: GrantsGraph | nu
   return shard?.[fileKey] ?? null
 }
 
-/** The electorate slide: the seat's federal awards in the record, and who holds it. */
-function electorateSlide(kicker: string, graph: GrantsGraph | null, name: string | null | undefined, line?: string): StorySlide | null {
+// The seat classes in the grants export, in words; a class not listed is left out rather than shown as its code.
+const MARGIN_CLASS: Record<string, string> = { marginal: 'marginal', fairly_safe: 'fairly safe', safe: 'safe' }
+// Party codes in the grants export, in words. A code not listed here, or a party history ("LP; IND LIB from Oct
+// 1977"), is left out rather than shown as it is stored.
+const PARTY_CODES: Record<string, string> = { 'A.L.P.': 'Labor', ALP: 'Labor', LP: 'Liberal', LIB: 'Liberal', NAT: 'Nationals', NP: 'Nationals',
+  NATS: 'Nationals', LNP: 'LNP', KAP: "Katter's Australian Party", GRN: 'Greens', UAP: 'United Australia Party', IND: 'Independent', CA: 'Centre Alliance' }
+export function partyName(raw: string | null | undefined): string {
+  const text = prettyParty(raw)
+  if (PARTY_CODES[text]) return PARTY_CODES[text]
+  return !text || text.includes(';') || /^[A-Z][A-Z.\- ]*$/.test(text) ? '' : text
+}
+
+/**
+ * Who holds the seat now: the roster's current federal member for that House seat (parliamentarians.json). No one
+ * for a seat with no current member, such as a seat abolished in 2025 (North Sydney, Stirling, Higgins), or when
+ * the roster names two different people. The grants export's own list of members is not read: it holds every
+ * member the seat has had, its 2025 winners have no dates, and an old member's end is often missing.
+ */
+export function seatHolder(people: SeatPerson[] | null | undefined, seat: string | null | undefined): { name: string; party: string } | null {
+  const fold = (text: string | null | undefined) => (text ?? '').replace(/\s+/g, ' ').trim().toLowerCase()
+  if (!fold(seat)) return null
+  // One person can be listed under two spellings (O'Connor and O’Connor): the same person once, by the spelling
+  // with more speeches.
+  const held = new Map<string, SeatPerson>()
+  for (const p of people ?? []) {
+    if (p?.current !== true || typeof p.name !== 'string' || !p.name.trim()) continue
+    if (!(p.representation ?? []).some(r => r?.jurisdiction === 'federal' && r.chamber === 'representatives' && fold(r.electorate) === fold(seat))) continue
+    const key = fold(p.name.replace(/[‘’ʼ`]/g, "'"))
+    const had = held.get(key)
+    if (!had || (p.speeches ?? 0) > (had.speeches ?? 0)) held.set(key, p)
+  }
+  const [one, ...more] = held.values()
+  return one && !more.length ? { name: one.name, party: partyName(one.party_now) } : null
+}
+type SeatPerson = Pick<Person, 'name' | 'speeches' | 'current' | 'party_now' | 'representation'>
+
+/**
+ * The seat's margin, always with the election it is from ("At the 2022 election it was a fairly safe Liberal seat,
+ * margin 3.59%."), so a margin from an earlier parliament never reads as today's. The party is named only when it
+ * is not the holder's own. '' when there is no margin.
+ */
+export function seatMargin(margin: Record<string, [number, string, string]> | null | undefined, heldBy = ''): string {
+  const year = Object.keys(margin ?? {}).filter(y => /^\d{4}$/.test(y)).sort().at(-1)
+  const [pct, party, kind] = (year && margin?.[year]) || []
+  if (!year || typeof pct !== 'number' || !Number.isFinite(pct)) return ''
+  const named = partyName(party)
+  const words = [MARGIN_CLASS[kind ?? ''], named && named !== heldBy ? named : ''].filter(Boolean).join(' ')
+  return words ? ` At the ${year} election it was ${/^[aeiou]/i.test(words) ? 'an' : 'a'} ${words} seat, margin ${pct}%.` : ` At the ${year} election the margin was ${pct}%.`
+}
+
+/** The electorate slide: the seat's federal awards in the record, and who holds it now (from the roster, `people`). */
+function electorateSlide(kicker: string, graph: GrantsGraph | null, name: string | null | undefined, line?: string, people?: SeatPerson[] | null): StorySlide | null {
   if (!name) return null
   const seat = graph?.electorates?.find(e => e.n === name)
   if (!seat || !Number.isFinite(seat.t) || !seat.t || !seat.c) return null
-  const mp = seat.mps?.[0]
-  const years = Object.keys(seat.margin ?? {}).sort()
-  const latest = years.length ? seat.margin![years[years.length - 1]] : null
-  const held = mp?.[0] ? `Held by ${mp[0]}${mp[1] ? `, ${prettyParty(mp[1])}` : ''}.${latest ? ` ${sentenceCase(latest[2])} seat, margin ${latest[0]} at the ${years[years.length - 1]} election.` : ''}` : ''
+  const mp = line ? null : seatHolder(people, name)
+  const held = mp ? `Held by ${mp.name}${mp.party ? `, ${mp.party}` : ''}.${seatMargin(seat.margin, mp.party)}` : ''
   const label = `in federal grant awards in the record: ${formatNumber(seat.c)} awards${seat.r ? ` to ${formatNumber(seat.r)} recipients` : ''}`
   return { type: 'number', kicker, title: name, lines: [line ?? held].filter(Boolean), value: shortMoney(seat.t as number), label,
     alt: `${kicker}: ${name}, ${shortMoney(seat.t as number)} ${label}. ${line ?? held}`.trim() }
@@ -578,7 +664,7 @@ export function billRegisterCredit(record: BillFile | null): string {
  * loosened, or if this function is called for a bill chosen some other way.
  */
 export function billPostText(bill: BillIndexItem, sentence: string, statusShort: string, by: string, url: string): string {
-  const name = clip(bill.short_title || bill.title, 110)
+  const name = shortTitle(bill.short_title || bill.title, text => [...text].length <= 110)
   const dated = bill.status === 'passed' ? bill.status_as_of : bill.introduced
   if (dated) {
     const who = by.trim().replace(/^by\s+/, 'Sponsor: ').replace(/^\((.+) portfolio\)$/, '$1 portfolio')
@@ -587,8 +673,9 @@ export function billPostText(bill: BillIndexItem, sentence: string, statusShort:
   return fit([`${MACHINE_SUMMARY_WORDS} ${clip(sentence, 120)}`], [name], url)
 }
 
-interface BillDivision { key?: string; date?: string; house?: string; stage?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }
+interface BillDivision { key?: string; date?: string; house?: string; stage?: string; question?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }
 interface BillFile {
+  status?: string | null
   originating_house?: string | null
   summary?: { sentences?: string[]; affected?: string | null; attribution?: string | null }
   /** `source` "frl" or "hansard": a stage read from a held source while ParlInfo was paused; `retrieved` dates an frl one. */
@@ -600,7 +687,6 @@ interface BillFile {
 }
 
 const HOUSE_NAMES: Record<string, string> = { senate: 'Senate', representatives: 'House of Representatives' }
-const STAGE_TITLES: Record<string, string> = { 'limitation of debate': 'Limiting debate', 'second reading': 'Second reading', 'third reading': 'Third reading', 'first reading': 'First reading' }
 const SOURCE_LABELS: Record<string, string> = {
   em: 'Explanatory memorandum on ParlInfo', em_supp: 'Supplementary explanatory memorandum on ParlInfo', em_revised: 'Revised explanatory memorandum on ParlInfo',
   billhome: 'Bill home page on ParlInfo', frl_act: 'The Act on the Federal Register of Legislation', frl: 'The Federal Register of Legislation',
@@ -610,14 +696,22 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const catalogue = await photoCatalogue(sources)
   const billPhotos: StoryPhotos = { catalogue, used: [] }
   const divisions = (record?.divisions ?? []).filter(d => Number.isFinite(d.ayes) && Number.isFinite(d.noes) && d.date)
-  const latest = [...divisions].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))[0] ?? null
-  const house = latest?.house ?? record?.originating_house ?? null
-  const ids = photosFor(catalogue, `bill:${bill.key}`, 'bill', house)
+  // The vote that decided the bill, never a vote on how the debate ran; with none, no division slide.
+  const procedural = divisions.length ? await sources.asset(PROCEDURAL_TITLES_PATH).catch(() => null) as Record<string, string> | null : null
+  const house = billHouse(bill, record)
+  const decided = decidingDivision(divisions, { proceduralTitles: procedural, originatingHouse: house,
+    // A bill that passed lost none of its readings, nor did one that went on in that house: such a "Not agreed" is
+    // a misread record. No slide, and the log names it.
+    bill: { status: record?.status ?? bill.status ?? null, key_dates: record?.key_dates ?? null },
+    onContradicted: ({ division: d, reading }) => console.warn(`daily-post: no vote slide for ${bill.key}: ${d.key ?? 'a division'} reads as a lost ${reading} reading, which the bill's record contradicts`) })
+  // The bill's own chamber: a House bill shows the House, a Senate bill the Senate, and never the other one.
+  const ids = billPhotosFor(catalogue, `bill:${bill.key}`, house)
   const kicker = words.sponsor ? `Bill · ${words.sponsor}${words.party ? ` (${words.party})` : ''}` : bill.portfolio ? `Bill · ${bill.portfolio} portfolio` : 'Bill'
   // The headline is the bill's own name without its "Bill 2026" tail: always
   // grammatical, where a clipped summary sentence is not. The sentence is the line.
   const headline = (bill.short_title || bill.title).replace(/\s+Bill\s+(?:\(No\.?\s*\d+\)\s+)?\d{4}(?:\s+\[.*\])?$/i, '').replace(/\s+/g, ' ').trim() || bill.title
-  const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
+  // A long name gives way before its brackets, which say what an amending bill is about; the slide's own measure is the room.
+  const cover: StorySlide = { type: 'cover', kicker, title: shortTitle(headline, coverTitleFits), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
     // The line opens with the summary's first sentence: the slide says who wrote it, in a small line under it.
     note: MACHINE_SUMMARY_LABEL, photo: takePhoto(billPhotos, ids, 0),
     // The alt text says who wrote the sentence, as the image now does and as the share card's alt does.
@@ -626,16 +720,17 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',
     alt: `What it does: ${sentences.slice(0, 3).join(' ')}` }
   const timeline = billTimeline(record)
-  const division = latest ? divisionSlide(latest, divisions.length) : null
+  const division = decided ? divisionSlide(decided.division, decided.reading, decided.outcome, divisions.length) : null
   const affected = (record?.summary?.affected ?? '').trim()
   const speeches = record?.speeches ?? []
   const first = speeches.filter(sp => sp.speaker && sp.date).sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''))[0]
-  const secondPhoto = affected ? takePhoto(billPhotos, ids, 1) : null
+  // A second photograph of the same chamber if the catalogue has one; otherwise the cover's again, never the other chamber.
+  const secondPhoto = affected ? (ids.length > 1 ? takePhoto(billPhotos, ids, 1) : cover.photo) : null
   const touches: StorySlide | null = affected && secondPhoto ? { type: 'picture', kicker: 'Who it touches', title: clip(affected.replace(/\.$/, ''), 96), photo: secondPhoto, quote: null,
     lines: [speeches.length ? `Speeches in the record: ${formatNumber(speeches.length)}${first ? `, beginning with ${first.speaker} on ${formatDate(first.date)}` : ''}.` : ''].filter(Boolean),
     alt: `Who it touches: ${affected}${speeches.length ? ` Speeches in the record: ${speeches.length}.` : ''}` } : null
   const rows = [...new Map((record?.sources ?? []).filter(src => src.kind && SOURCE_LABELS[src.kind]).map(src => [SOURCE_LABELS[src.kind as string], `${SOURCE_LABELS[src.kind as string]}${src.licence ? `, ${src.licence}` : ''}`])).values()].slice(0, 3)
-  if (divisions.length) rows.push('Division record: theyvoteforyou.org.au')
+  if (division) rows.push('Division record: theyvoteforyou.org.au')
   // A Royal Assent day from the Federal Register: its dated sentence leads the rows, the full wording is in the alt text.
   const credit = billRegisterCredit(record)
   if (credit) rows.unshift(credit.split('. ')[0] + '.')
@@ -671,13 +766,20 @@ function billTimeline(record: BillFile | null): StorySlide | null {
     alt: `How it moved: ${events.map(e => `${e.text.toLowerCase()} ${e.date}`).join(', ')}.` }
 }
 
-function divisionSlide(d: BillDivision, count: number): StorySlide | null {
+/** The house a bill belongs to: where it was introduced, from its record, else its key (r: the House, s: the Senate). */
+function billHouse(bill: BillIndexItem, record: BillFile | null): 'senate' | 'representatives' | null {
+  const named = (h: string | null | undefined) => h === 'senate' || h === 'representatives' ? h : null
+  return named(record?.originating_house) ?? named(record?.key_dates?.find(k => k.stage === 'introduced')?.house)
+    ?? (/^au-federal-r\d/.test(bill.key) ? 'representatives' : /^au-federal-s\d/.test(bill.key) ? 'senate' : null)
+}
+
+function divisionSlide(d: BillDivision, reading: BillReading, outcome: DivisionOutcomeWord, count: number): StorySlide | null {
   const ayes = d.ayes as number, noes = d.noes as number
   const split = (side: 'ayes' | 'noes'): [string, number][] => Object.entries(d.party_splits ?? {}).map(([party, n]) => [prettyParty(party), Number(n?.[side] ?? 0)] as [string, number]).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1])
-  const stage = (d.stage ?? '').trim()
-  const title = `${STAGE_TITLES[stage.toLowerCase()] ?? (stage ? sentenceCase(stage) : 'Division')}, ${ayes} to ${noes}`
+  // The outcome, as the division's result says it (bill-division.js): a third reading carried is the bill passing that house.
+  const title = `${outcome} at the ${reading} reading, ${ayes} to ${noes}`
   const house = HOUSE_NAMES[d.house ?? ''] ?? 'Parliament'
-  const kicker = count === 1 ? 'The only recorded division' : `The latest of ${dayWords(count).toLowerCase()} recorded divisions`
+  const kicker = count === 1 ? 'The only recorded division' : `One of ${dayWords(count).toLowerCase()} recorded divisions`
   const ayeParties = split('ayes'), noParties = split('noes')
   return { type: 'division', kicker, title, ayes, noes, ayeParties, noParties, line: `${house}, ${formatDate(d.date)}. Party split from They Vote For You.`,
     alt: `${kicker}: ${title.toLowerCase()}. Ayes: ${ayeParties.map(([p, n]) => `${p} ${n}`).join(', ') || ayes}. Noes: ${noParties.map(([p, n]) => `${p} ${n}`).join(', ') || noes}. ${house}, ${formatDate(d.date)}.` }
@@ -805,7 +907,8 @@ async function grantSlides(grant: GrantPublicationRecord, { sources, graph, reci
     alt: `The purpose as published: ${grant.purpose}` } : null
   const selection = award ? selectionSlide(award, graph) : null
   const siblings = siblingsSlide(recipient)
-  const electorate = electorateSlide('The electorate', graph, seat)
+  const roster = seat ? await sources.asset('/parliamentarians.json').catch(() => null) as { people?: SeatPerson[] } | null : null
+  const electorate = electorateSlide('The electorate', graph, seat, undefined, roster?.people)
   const source = sourceSlide('Check it', 'Every figure links to its record',
     [`GrantConnect award ${grant.id}, Department of Finance, CC BY 3.0 AU`, 'A published award value, not evidence of payments received', 'Program and electorate totals: GrantConnect awards as collected by OPAX'],
     url, `Check it: GrantConnect award ${grant.id}. Every figure links to its record at opax.com.au/money/grants.`)
