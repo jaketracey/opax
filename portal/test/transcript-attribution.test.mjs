@@ -13,7 +13,8 @@ import { build } from 'esbuild'
 import { MockLanguageModelV4 } from 'ai/test'
 
 const built = await build({ stdin: { contents: [
-  "export {excerpt, speakerRoles, pageTurns, noteKind, pageHits, textIndex} from './src/tools/transcript-text'",
+  "export {excerpt, pageTurns, pageHits, textIndex} from './src/tools/transcript-text'",
+  "export {transcriptRoles} from './src/tools/transcript-roles'",
   "export {callTool} from './src/tools/index'",
   "export * from './src/transcript-answer'",
   "export {writingFacts, writingPrompt, verifyWrittenAnswer, draftWrittenAnswer, unattributedTranscriptSentences, wordedTranscriptFact, proseFallback, ANSWER_WRITING_VERSION} from './src/research-writing'",
@@ -65,122 +66,113 @@ const NSW_LATER = [
   { n: 6, folio: '605', text: 'THE COMMISSIONER: Thank you both.\n<THE WITNESSES WITHDREW\n<ROWAN JOHN PROXY, VIA VIDEO-CONFERENCE, SWORN [12.02 pm]\n<EXAMINATION BY MR SAMPLE:\nMR SAMPLE: Q. What is your role at the pathology service?\nA. I am the director of the pathology service and have been since the merger.\nQ. When did the merger take effect?\nA. The merger took effect in the winter of that year.' },
   { n: 7, folio: '606', text: 'THE COMMISSIONER: We will take the next witness.\n<THE WITNESS WITHDREW\n<SAM DUMMY, BY TELEPHONE FROM THE REGIONAL OFFICE\nMR SAMPLE: Q. Can you hear us on the telephone line?\nA. I can hear you clearly on the telephone line.' },
 ]
-const hit = (pages, n, words) => api.excerpt(pages.find(p => p.n === n).text, words, { roleOf: api.speakerRoles(pages) })
+const hit = (pages, n, words) => api.excerpt(pages.find(p => p.n === n).text, words, api.transcriptRoles(pages))
+// Each turn of a page that has words, as its role or, with no role, what opens it.
+const turnsOf = (pages, n) => { const parsed = api.pageTurns(pages.find(p => p.n === n).text), roleFor = api.transcriptRoles(pages); return parsed.turns.filter(t => t.end > t.start).map(t => roleFor(parsed, t) ?? `no role (${t.opens})`) }
 const NAMES = /Specimen|Sample|Placeholder|Standin|Fixture|Mockup|Template|Dummy|Proxy|Example/
 
-test('Robodebt layout: commissioner, counsel assisting, a sworn witness and counsel for a party, each from the transcript itself', () => {
-  const role = api.speakerRoles(ROBODEBT)
-  assert.equal(role('COMMISSIONER'), 'commissioner'); assert.equal(role('MR SAMPLE'), 'counsel assisting')
-  assert.equal(role('MS SPECIMEN'), 'witness'); assert.equal(role('MS PLACEHOLDER'), 'counsel for a party'); assert.equal(role('MR STANDIN'), 'counsel for a party')
-  // "for the Hon Morgan Fixture" names a party someone appears for. Not sworn in this transcript, they have no role
-  // here; they are never read as counsel.
-  assert.equal(role('THE HON MORGAN FIXTURE'), undefined)
-  // A turn that opens on the page under its own label carries that speaker's role, and never a name.
+test('Robodebt layout: the commissioner by the role word, counsel by the cover page; a witness under their own name has no role', () => {
+  // A turn that opens on the page under its own heading carries that speaker's role, and never a name.
   assert.deepEqual(hit(ROBODEBT, 2, ['legal', 'advice']), { excerpt: 'Did you see the legal advice about income averaging before the measure began?', speaker_role: 'counsel assisting' })
   assert.deepEqual(hit(ROBODEBT, 2, ['object']), { excerpt: 'Commissioner, I object to the form of the question about averaging.', speaker_role: 'counsel for a party' })
-  assert.deepEqual(hit(ROBODEBT, 2, ['time']), { excerpt: 'I did not see any legal advice about income averaging at that time.', speaker_role: 'witness' })
+  assert.deepEqual(hit(ROBODEBT, 3, ['thank']), { excerpt: 'Thank you.', speaker_role: 'commissioner' })
+  // The witness's heading is their name. No name is read from a "<" line to make them a witness, so there is no role.
+  assert.deepEqual(hit(ROBODEBT, 2, ['time']), { excerpt: 'I did not see any legal advice about income averaging at that time.' })
+  // "for the Hon Morgan Fixture" names a party someone appears for: never read as counsel.
   assert.deepEqual(hit(ROBODEBT, 2, ['recall']), { excerpt: 'I recall the averaging brief only in general terms.' })
-  // A turn that runs over the page has no speaker and no role there: nothing is carried across a page break.
+  // A turn that runs over the page has no role there: nothing is carried across a page break.
   assert.deepEqual(hit(ROBODEBT, 3, ['attention']), { excerpt: 'It was not something that was brought to my attention, and the averaging method was already in use by then.' })
-  // A word found only in a procedural line or a label opens the turn that follows; the line itself is never quoted.
-  const marker = hit(ROBODEBT, 2, ['affirmed'])
-  assert.doesNotMatch(marker.excerpt, /<|AFFIRMED|EXAMINATION/)
+  assert.deepEqual(turnsOf(ROBODEBT, 2), ['commissioner', 'counsel assisting', 'counsel assisting', 'no role (heading)', 'counsel for a party', 'no role (heading)'])
+  assert.deepEqual(turnsOf(ROBODEBT, 3), ['no role (page)', 'commissioner'])
+  // A word found only in a procedural line is never quoted.
+  assert.doesNotMatch(hit(ROBODEBT, 2, ['affirmed']).excerpt, /<|AFFIRMED|EXAMINATION/)
 })
 
-test('Antisemitism layout: wrapped appearances; a witness titled Commissioner is a witness, not the commissioner', () => {
-  const role = api.speakerRoles(ANTISEMITISM)
-  assert.equal(role('COMMISSIONER'), 'commissioner')
-  for (const label of ['MR SAMPLE SC', 'MS PLACEHOLDER', 'MR STANDIN']) assert.equal(role(label), 'counsel assisting', label)
-  for (const label of ['MR FIXTURE SC', 'MR MOCKUP SC', 'MS TEMPLATE', 'MR DUMMY']) assert.equal(role(label), 'counsel for a party', label)
-  assert.equal(role('COMMISSIONER SPECIMEN AM'), 'witness')
-  assert.equal(role('UNCLE PROXY'), undefined, 'a name above an unrelated line takes no role from it')
-  assert.deepEqual(hit(ANTISEMITISM, 2, ['received']), { excerpt: 'We received more reports about online abuse than in any earlier year.', speaker_role: 'witness' })
-  assert.equal(hit(ANTISEMITISM, 2, ['tender']).speaker_role, 'counsel for a party')
+test('Antisemitism layout: wrapped appearances; a witness titled Commissioner is not the commissioner', () => {
+  assert.deepEqual(hit(ANTISEMITISM, 2, ['many']), { excerpt: 'How many reports about online abuse did your office receive last year?', speaker_role: 'counsel assisting' })
+  assert.deepEqual(hit(ANTISEMITISM, 2, ['tender']), { excerpt: 'Commissioner, may I be heard on the tender of the abuse reports?', speaker_role: 'counsel for a party' })
+  // "COMMISSIONER <NAME>" is not the role word, and the name is one a "<" line prints: no role.
+  assert.deepEqual(hit(ANTISEMITISM, 2, ['received']), { excerpt: 'We received more reports about online abuse than in any earlier year.' })
+  // A name above an unrelated line of the cover takes no role from it.
   assert.deepEqual(hit(ANTISEMITISM, 2, ['welcome']), { excerpt: 'I welcome everyone here to talk about online abuse today.' })
+  assert.deepEqual(turnsOf(ANTISEMITISM, 2), ['commissioner', 'counsel assisting', 'counsel assisting', 'no role (heading)', 'counsel for a party', 'no role (heading)'])
 })
 
-test('NSW Healthcare Funding layout: an "A." on an examination page is a witness, unnamed; only a labelled "Q." has a role', () => {
-  const role = api.speakerRoles(NSW)
-  assert.equal(role('THE COMMISSIONER'), 'commissioner'); assert.equal(role('MR SAMPLE'), 'counsel assisting'); assert.equal(role('MR PLACEHOLDER'), 'counsel assisting')
-  assert.equal(role('MR STANDIN'), 'counsel for a party'); assert.equal(role('MS FIXTURE'), 'counsel for a party'); assert.equal(role('MS SPECIMEN'), 'witness')
+test('NSW Healthcare Funding layout: an "A." is a witness, a bare "Q." is a question with no asker, "HEADING: Q." has the heading\'s role', () => {
+  // "MR PLACEHOLDER: Q." is that heading's question. The bare "Q." after it prints no speaker: a question, no asker.
+  assert.deepEqual(hit(NSW, 2, ['explain']), { excerpt: 'Can you explain how the duress alarms came to be installed at the unit?', speaker_role: 'counsel assisting' })
+  assert.deepEqual(hit(NSW, 2, ['failing']), { excerpt: 'Who was told about the alarms failing?', speaker_role: 'question' })
   const answer = hit(NSW, 2, ['members'])
   assert.deepEqual(Object.keys(answer).sort(), ['excerpt', 'speaker_role']); assert.equal(answer.speaker_role, 'witness')
   assert.match(answer.excerpt, /^Yes\. The duress alarms were installed after members raised the issue/)
   assert.doesNotMatch(answer.excerpt, /Q\.|A\.|Who was told/, 'one turn only: the next question is not part of the answer')
-  // "MR PLACEHOLDER: Q." is that speaker's question: the label and the letter are one heading.
-  assert.deepEqual(hit(NSW, 2, ['explain']), { excerpt: 'Can you explain how the duress alarms came to be installed at the unit?', speaker_role: 'counsel assisting' })
-  // A bare "Q." names nobody on the page. The examiner is not carried to it across the marks between.
-  assert.deepEqual(hit(NSW, 2, ['failing']), { excerpt: 'Who was told about the alarms failing?' })
-  // The answer that began on the page before has no speaker and no role on this page.
+  // The answer that began on the page before has no role on this page.
   assert.deepEqual(hit(NSW, 3, ['ministry']), { excerpt: 'We also told the ministry about the staffing roster at the same meeting, and nothing changed for some months.' })
-  // Two witnesses sworn together: an "A." is a witness's answer, and the transcript does not say which.
+  // Two witnesses sworn together: an "A." is a witness's answer, and nobody is named.
   assert.deepEqual(hit(NSW, 3, ['activity']), { excerpt: 'The funding model is activity based, with a block grant for the smaller sites.', speaker_role: 'witness' })
-  // Without the document's roles: the words only.
+  assert.deepEqual(turnsOf(NSW, 2), ['commissioner', 'counsel assisting', 'witness', 'question', 'witness'])
+  assert.deepEqual(turnsOf(NSW, 3), ['no role (page)', 'counsel for a party', 'counsel assisting', 'witness'])
+  // Without the transcript's roles: the words only.
   assert.deepEqual(api.excerpt('MS SPECIMEN: I did not see it.', ['see']), { excerpt: 'I did not see it.' })
 })
 
-test('review P1-1: no answer is ever given the name of a witness, whatever the witness line before it says', () => {
-  // The witness on page 6 is sworn by a line with a clause between the name and "SWORN". The first pattern missed
-  // it, and every "A." after it was given the name of the witness sworn pages earlier.
-  for (const [n, words] of [[6, ['director']], [6, ['winter']], [7, ['clearly']]]) {
-    const answer = hit(NSW_LATER, n, words)
-    assert.deepEqual(Object.keys(answer).sort(), ['excerpt', 'speaker_role'], JSON.stringify(answer))
-    assert.equal(answer.speaker_role, 'witness')
-  }
-  // No excerpt on any page of any layout names a speaker, and no label is left in the quoted words.
+test('review P1-1: no answer is given a witness\'s name, and no "<" line makes anyone a witness', () => {
+  // Page 6: the witness is sworn by a line with a clause between the name and "SWORN". The first version missed it
+  // and gave every "A." after it the name of the witness sworn pages earlier. Page 7: a "<" line in no known form.
+  for (const [n, words] of [[6, ['director']], [6, ['winter']], [7, ['clearly']]]) assert.deepEqual(Object.keys(hit(NSW_LATER, n, words)).sort().join() + ' ' + hit(NSW_LATER, n, words).speaker_role, 'excerpt,speaker_role witness')
+  assert.deepEqual(turnsOf(NSW_LATER, 6), ['commissioner', 'counsel assisting', 'witness', 'question', 'witness'])
+  // No excerpt on any page of any layout carries more than its words and a role.
   for (const pages of [ROBODEBT, ANTISEMITISM, NSW_LATER]) for (const page of pages.slice(1)) for (const word of page.text.toLowerCase().match(/[a-z]{6,}/g)) {
     const out = hit(pages, page.n, [word])
-    assert.equal('speaker' in out || 'speaker_label' in out, false)
     assert.ok(Object.keys(out).every(k => k === 'excerpt' || k === 'speaker_role'), Object.keys(out).join())
+    assert.doesNotMatch(out.excerpt, /[\u0000-\u0008]/)
   }
-  // The witness line is read in each published form, so the witness's own label has the witness role.
-  for (const line of ['<ROWAN JOHN PROXY, VIA VIDEO-CONFERENCE, SWORN [12.02 pm]', '<QUINN TEMPLATE, VIA VIDEO-CONFERENCE, AFFIRMED [2.12 pm]', '<SÉAN-ANDRÉ MOCKUP, affirmed: [10.01am]', "<DREW D'MOCKUP,sworn:", '<TAYLOR JAMIE SPECIMEN, CALLED', '<TAYLOR SPECIMEN, recalled, on former oath: [2pm]', '<TAYLOR SPECIMEN AFFIRMED VIA VIDEO-CONFERENCE [2pm]']) assert.equal(api.noteKind(line), 'sworn', line)
-  assert.equal(api.speakerRoles(NSW_LATER)('MR PROXY'), 'witness')
-  // A witness leaving, a line about the sitting, and a line no pattern places. Nothing is read from the last.
-  for (const line of ['<THE WITNESS WITHDREW', '<THE WITNESSES WERE RELEASED', '<WITNESSES EXCUSED', '<MS SPECIMEN WITHDREW', '<THE WITNESS STOOD DOWN']) assert.equal(api.noteKind(line), 'left', line)
-  for (const line of ['<EXAMINATION BY MR SAMPLE:', '<CROSS-EXAMINATION BY MS FIXTURE SC', '<THE HEARING ADJOURNED AT 4.00 PM', '<EXHIBIT 4206 TENDERED AND MARKED', '<RESUMED 12:21 PM']) assert.equal(api.noteKind(line), 'procedural', line)
-  assert.equal(api.noteKind('<SAM DUMMY, BY TELEPHONE FROM THE REGIONAL OFFICE'), 'unrecognised')
-  assert.equal(api.speakerRoles(NSW_LATER)('MR DUMMY'), undefined, 'a line no pattern places makes nobody a witness')
-  assert.notEqual(api.noteKind('<THE WITNESS RECALLED'), 'sworn', 'never a witness named "THE WITNESS"')
+  // Counsel whose surname a "<" line also prints (a witness of the same name) takes no role from the cover.
+  const twin = [NSW[0], { n: 2, folio: '700', text: '<JAMIE SAMPLE, sworn: [10am]\nMR PLACEHOLDER: Q. What is your name?\nA. Jamie Sample.\nQ. Your role?\nA. Director.\nQ. Since when?\nA. Since 2020.\nMR SAMPLE: May I be heard?' }]
+  assert.deepEqual(turnsOf(twin, 2), ['counsel assisting', 'witness', 'question', 'witness', 'question', 'witness', 'no role (heading)'])
+  // A line that opens "A." in a transcript not printed as questions and answers is not an answer.
+  assert.deepEqual(turnsOf([ROBODEBT[0], { n: 2, folio: 'P-8', text: 'MR SAMPLE: The schedule has two parts.\nA. The first part lists the payments.' }], 2), ['counsel assisting', 'no role (mark)'])
+  // Two turns running under one heading: one may be the publisher's slip, so neither has a role.
+  const slip = [ROBODEBT[0], { n: 2, folio: 'P-9', text: 'COMMISSIONER: Yes.\nMR SAMPLE: Did you read the brief?\nMR SAMPLE: I read it that week.\nCOMMISSIONER: Thank you.' }]
+  assert.deepEqual(turnsOf(slip, 2), ['commissioner', 'no role (heading)', 'no role (heading)', 'commissioner'])
 })
 
-test('review P1-2: across a page break a question and an answer never swap speakers; a lone "Q." or "A." is still a boundary', () => {
-  // Page 4: the top runs on from the witness's answer on page 3, then one "Q." and no "A.". The first version dropped
-  // the lone letter's page from the look-back and gave the top to the examiner and the question to the witness.
-  const top = hit(NSW_LATER, 4, ['quarter'])
-  assert.deepEqual(top, { excerpt: 'grant, and the smaller sites report against it each quarter to the district, which is how the shortfall was found.' })
+test('review P1-2: across a page break a question and an answer never swap speakers; nothing is carried to a "Q." or an "A."', () => {
+  // Page 4: the top runs on from the witness's answer on page 3, then one "Q." and no "A.". The first version gave
+  // the top to the examiner and the question to the witness.
+  assert.deepEqual(hit(NSW_LATER, 4, ['quarter']), { excerpt: 'grant, and the smaller sites report against it each quarter to the district, which is how the shortfall was found.' })
   const question = hit(NSW_LATER, 4, ['reserve'])
-  assert.deepEqual(Object.keys(question), ['excerpt']); assert.match(question.excerpt, /^(?:\.\.\.)?[^.]*the reserve would be used/)
+  assert.equal(question.speaker_role, 'question'); assert.match(question.excerpt, /the reserve would be used/)
   assert.doesNotMatch(question.excerpt, /shortfall was found\.|Q\./, 'the question does not run on from the answer above it')
   // Page 5: the top runs on from that question, then one "A." and no "Q.".
   assert.deepEqual(hit(NSW_LATER, 5, ['minutes']), { excerpt: 'I ask because the board minutes record two different accounts of that decision about the reserve.' })
-  assert.deepEqual(hit(NSW_LATER, 5, ['executive']), { excerpt: 'The chief executive decided it, and the board was told at its next meeting in the ordinary way.' })
-  // How sure the page makes each stretch: the audit's three classes (scripts/transcript-parser-audit.mjs).
-  const basis = n => api.pageTurns(NSW_LATER.find(p => p.n === n).text, api.speakerRoles(NSW_LATER)).map(t => `${t.basis}${t.speaker_role ? ':' + t.speaker_role : ''}`)
-  assert.deepEqual(basis(4), ['page_top', 'uncertain']); assert.deepEqual(basis(5), ['page_top', 'uncertain'])
-  assert.deepEqual(basis(6), ['confident:commissioner', 'confident:counsel assisting', 'confident:witness', 'uncertain', 'confident:witness'])
-})
-
-test('review P2: the marks\' control characters never reach a quoted excerpt', () => {
-  for (const pages of [ROBODEBT, ANTISEMITISM, NSW_LATER]) for (const page of pages.slice(1)) for (const word of page.text.toLowerCase().match(/[a-z]{5,}/g)) assert.doesNotMatch(hit(pages, page.n, [word]).excerpt, /[\u0000-\u0008]/, `${page.n} ${word}`)
-  // A long turn that is cut at 280 characters, on a page whose only letter is a lone "A.".
-  const long = 'A. ' + 'The reserve was drawn down in stages over the year. '.repeat(8) + '\nTHE COMMISSIONER: Thank you.'
-  for (const word of ['reserve', 'stages', 'thank']) assert.doesNotMatch(api.excerpt(long, [word]).excerpt, /[\u0000-\u0008]/)
+  assert.deepEqual(hit(NSW_LATER, 5, ['executive']), { excerpt: 'The chief executive decided it, and the board was told at its next meeting in the ordinary way.', speaker_role: 'witness' })
+  assert.deepEqual(turnsOf(NSW_LATER, 4), ['no role (page)', 'question']); assert.deepEqual(turnsOf(NSW_LATER, 5), ['no role (page)', 'witness'])
+  // The published page this is shaped on prints "THE COMMISSIONER: Q.", an answer, then a bare "Q.": nothing printed
+  // says who asked the second, so it is a question with no asker, never the Commissioner's or counsel's.
+  const broken = [NSW[0], { n: 2, folio: '710', text: 'MR SAMPLE: Q. Was the alarm tested?\nA. It was.\nTHE COMMISSIONER: Q. When?\nA. In the spring.\nQ. Was that before the ward opened?\nA. Before it opened.' }]
+  assert.deepEqual(turnsOf(broken, 2), ['counsel assisting', 'witness', 'commissioner', 'witness', 'question', 'witness'])
+  // A heading in title case is counsel addressing someone, not that person speaking; a bare role word in title case is the role.
+  const addressed = [NSW[0], { n: 2, folio: '711', text: 'MR SAMPLE: Thank you.\nMr Standin: at the time you were the director, were you not?\nCommissioner: Yes, go on.' }]
+  assert.deepEqual(turnsOf(addressed, 2).filter(r => r !== 'counsel assisting').every(r => r === 'commissioner' || r.startsWith('no role')), true)
+  assert.ok(!turnsOf(addressed, 2).includes('counsel for a party'))
 })
 
 // ---- the published data: what it carries today
 
 const SEARCHES = [['robodebt', 'cth-robodebt', 'income averaging'], ['antisemitism', 'cth-antisemitism', 'curriculum'], ['nsw-healthcare-funding', 'nsw-healthcare-funding', 'duress alarms']]
-test('the three indexed commissions: every quoted passage has a page, a date and its commission\'s record id; roles ride in the citation and read back typed, with no name', async () => {
+test('the three indexed commissions: every quoted passage has a page, a date and its commission\'s record id; a role rides in the citation and reads back typed, with no name', async () => {
+  let withRole = 0
   for (const [commission, id, words] of SEARCHES) {
     const out = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission, words, limit: 8 })
-    let quoted = 0, withRole = 0
+    let quoted = 0
     for (const [i, row] of out.rows.entries()) {
       const hits = (row.text_matches?.hits ?? []).filter(h => h.excerpt !== null)
       if (!hits.length) continue
       assert.equal(row.commission_id, id); assert.match(String(row.date), /^\d{4}-\d{2}-\d{2}$/)
       const turns = api.transcriptTurns(out.citations[i + 1].text)
       assert.equal(turns.length, hits.length, out.citations[i + 1].text)
+      assert.doesNotMatch(out.citations[i + 1].text, /hearing turn by /)
       for (const [n, h] of hits.entries()) {
         quoted++
         assert.ok(h.transcript_page, `${id} ${row.key}: page`)
@@ -189,37 +181,42 @@ test('the three indexed commissions: every quoted passage has a page, a date and
         const t = turns[n]
         assert.deepEqual({ role: t.role, page: t.page, pdf_page: t.pdf_page, commission: t.commission, source: t.source, excerpt: t.excerpt },
           { role: h.speaker_role, page: h.transcript_page, pdf_page: h.pdf_page, commission: row.commission, source: id, excerpt: h.excerpt })
-        assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', 'transcript_page', 'url', ...(h.speaker_role ? ['speaker_role'] : [])].sort(), 'a hit names no speaker')
+        assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', 'transcript_page', 'url', ...(h.speaker_role ? ['speaker_role'] : [])].sort(), 'a hit carries its words, its page and at most a role')
         assert.doesNotMatch(h.excerpt, /[\u0000-\u0008]/); assert.equal(api.writerMayWord(t), true)
-        assert.doesNotMatch(out.citations[i + 1].text, /hearing turn by /)
         assert.match(t.date, /^\d{1,2} [A-Z][a-z]+ \d{4}$/)
       }
     }
     assert.ok(quoted >= 4, `${id}: ${quoted} quoted passages`)
-    assert.ok(withRole >= quoted / 3, `${id}: ${withRole} of ${quoted} passages carry a role`)
   }
+  assert.ok(withRole >= 3, `${withRole} passages carry a role`)
 })
 
-test('coverage of the published text: every quotable page has a page number; role coverage per commission stays above its floor', async () => {
+test('coverage of the published text: every quotable page has a page number; the share of turns with a role stays above its floor', async () => {
   const ix = await asset('/transcripts/index.json')
-  const LABELS = /(?<=^|\s)((?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}):(?=\s)/g
   const seen = {}
   for (const row of ix.docs) {
     if (row.quote_policy !== 'quote') continue
-    const doc = await asset(row.file), role = api.speakerRoles(doc.pages), c = seen[row.commission] ??= { pages: 0, unpaged: 0, turns: 0, roles: 0 }
+    const doc = await asset(row.file), roleFor = api.transcriptRoles(doc.pages), c = seen[row.commission] ??= { pages: 0, unpaged: 0, turns: 0, roles: 0, carried: 0 }
     for (const page of doc.pages) {
       c.pages++; if (!page.folio) c.unpaged++
-      for (const m of String(page.text).replace(/^[ \t]*<[^\n]*$/gm, ' ').replace(/\s+/g, ' ').matchAll(LABELS)) { c.turns++; if (role(m[1])) c.roles++ }
+      const parsed = api.pageTurns(String(page.text))
+      for (const t of parsed.turns) {
+        if (t.end <= t.start) continue
+        const role = roleFor(parsed, t)
+        c.turns++; if (role) c.roles++
+        // Never a role on text that runs on from the page before or that follows a "<" line.
+        if (role && (t.opens === 'page' || t.opens === 'note')) c.carried++
+      }
     }
     cache.delete(row.file)
   }
-  // Measured 16 Nov 2026 (labelled turns given a role): Robodebt 97.8%, NSW Healthcare Funding 97.3%, Antisemitism 87.6%.
-  // The rest are speakers the cover does not list and no witness line names: quoted with "the transcript records".
-  const floors = { 'cth-robodebt': 0.95, 'nsw-healthcare-funding': 0.95, 'cth-antisemitism': 0.85 }
+  // Measured 16 Nov 2026 (scripts/transcript-parser-audit.mjs). The rest are quoted with "the transcript records".
+  const floors = { 'cth-robodebt': 0.45, 'nsw-healthcare-funding': 0.7, 'cth-antisemitism': 0.36 }
   assert.deepEqual(Object.keys(seen).sort(), Object.keys(floors).sort())
   for (const [id, c] of Object.entries(seen)) {
     assert.equal(c.unpaged, 0, `${id}: every quotable page carries the transcript's page number`)
-    assert.ok(c.roles / c.turns >= floors[id], `${id}: ${c.roles} of ${c.turns} labelled turns have a role`)
+    assert.equal(c.carried, 0, `${id}: no role is carried`)
+    assert.ok(c.roles / c.turns >= floors[id], `${id}: ${c.roles} of ${c.turns} turns have a role`)
   }
 })
 
@@ -247,7 +244,7 @@ const mixedFacts = () => api.writingFacts(undefined, [fact(1, ROBODEBT_CITE, 'ht
 const plainFacts = () => api.writingFacts(undefined, [fact(1, GRANT, 'https://opax.test/grants/example')])
 const question = 'What was said about income averaging at the Robodebt Royal Commission?'
 
-const RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.'
+const RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.'
 const POINT_RULE = 'Never word what was said, asked or put at a royal commission, integrity or inquiry hearing in a point or in reply text, in your own words or quoted, never state it as fact and never name who spoke: select the transcript excerpt\'s numeric record fact id instead, and the writer attributes it with the speaker\'s role, hearing date and page. '
 
 test('the writer rule for transcript sources is fixed text', () => {
@@ -386,6 +383,13 @@ test('with no model, each passage is quoted with its role, date and page; no rol
   assert.equal(nsw.answer.split('\n\n')[1], 'The transcript records on 20 February 2024 (page 640): “The roster was changed without notice to the ward.”')
   assert.equal(nsw.answer_decision, 'answer')
   assert.doesNotMatch(out.answer + nsw.answer, NAMES)
+  // A "Q." that prints no speaker: a question was put, and nobody is said to have asked it.
+  const put = { role: 'question', commission: 'Special Commission of Inquiry into Healthcare Funding', source: 'nsw-healthcare-funding', date: '26 February 2024', page: '1062', excerpt: 'Was the alarm tested?' }
+  assert.equal(api.transcriptLead(put), 'A question was put on 26 February 2024 (page 1062)')
+  assert.equal(api.transcriptCitation(put), `Special Commission of Inquiry into Healthcare Funding, hearing transcript, 26 February 2024, page 1062: A question was put. ${LABEL}.`)
+  assert.equal(api.transcriptFactLine(put), `A question was put at Special Commission of Inquiry into Healthcare Funding (26 February 2024), transcript page 1062: "Was the alarm tested?". ${LABEL}. Commission record: nsw-healthcare-funding.`)
+  assert.deepEqual(api.transcriptTurns(api.transcriptFactLine(put))[0], put)
+  assert.equal(api.transcriptAttribution(put).speaker_role, 'question')
 })
 
 test('claim plan: a transcript sentence without the attributed mark is left out, and only that sentence', () => {

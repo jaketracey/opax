@@ -40,7 +40,7 @@ function validRanges(payload) {
   }
 }
 function hearingAnswer(out) {
-  assert.match(out.answer,/^A witness said on 10 March 2023 \(page P-4899\): “/)
+  assert.match(out.answer,/^The transcript records on 10 March 2023 \(page P-4899\): “/)
   assert.match(out.answer,/evidence, not findings/)
   assert.doesNotMatch(out.answer,/startup|founders|fabricated|PDF page|©|CC BY|^-/m)
   assert.ok(out.sources.filter(s=>s.cited&&!s.coverage).every(s=>s.url.startsWith('https://robodebt.royalcommission.gov.au/')))

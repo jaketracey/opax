@@ -184,35 +184,47 @@ lines rather than rewritten.
 "Hearing transcript" here means royal commission, integrity-body and inquiry hearings. It
 does not cover Hansard or committee and estimates Hansard.
 
-Each quoted passage carries `speaker_role` where the page it is on settles one:
-`commissioner`, `counsel assisting`, `witness` or `counsel for a party`, and the citation
-reads "hearing turn (counsel assisting)". The role is read from the transcript and never
-from what was said: the cover page's list of appearances ("Senior Counsel Assisting", "for
-the Commonwealth"), a "<NAME, SWORN" or "<NAME, AFFIRMED" line, and the labels "THE
-COMMISSIONER" and "THE WITNESS". A name after "for" on the cover is a party someone
-appears for, and takes no role from it; a witness whose title is Commissioner is a witness.
+A quoted passage carries `speaker_role` only where the page it is on makes the role
+certain: `commissioner`, `counsel assisting`, `witness`, `counsel for a party`, or
+`question` (a question was put; who asked it is not printed). The citation reads "hearing
+turn (counsel assisting)". Roles are built in `portal/src/tools/transcript-roles.ts`, only
+on the turns `pageTurns` (`portal/src/tools/transcript-text.ts`) reads from a page, and
+only the role leaves that file: a heading's text, and so anyone's name, never does.
 
-A passage has a role only when its turn opens on the same page under the transcript's own
-heading (a confident turn): a speaker label ("MR EXAMPLE:", also "MR EXAMPLE: Q."), or an
-"A." on a page that has both "Q." and "A.", which is a witness's answer. Nothing is
-carried from elsewhere. A bare "Q.", a lone "Q." or "A.", and text after a "<" procedural
-line are turn boundaries with no role (uncertain turns). Text at the top of a page that
-runs on from the page before has no role (page-top continuations): nothing is carried
-across a page break. A "<" line that no pattern places is read as nothing.
+- A turn under a heading has a role when the heading is a role word ("THE COMMISSIONER",
+  "THE WITNESS") or when the cover page's list of appearances gives the whole heading a
+  role ("Senior Counsel Assisting", "for the Commonwealth"). A name after "for" on the
+  cover is a party someone appears for. A heading with a digit or a quote mark, or in
+  title case other than a bare role word, gives no role ("Dr Surname: at the time you
+  were ..." is counsel addressing a witness). A surname that a "<" line also prints may be
+  a witness of the same name and takes no role from the cover. No "<" line is read for a
+  name, so a witness who speaks under their own name has no role.
+- "HEADING: Q." is that heading's question. A bare "Q." is a question with no asker; the
+  last headed "Q." is not carried to it. An "A." is a witness's answer, never which
+  witness, and only in a transcript printed as questions and answers.
+- Text at the top of a page that runs on from the page before, and text after a "<" line,
+  have no role. Nothing is carried across a page break.
+- Two turns running under the same heading have no role: one may be the publisher's slip.
 
-`portal/scripts/transcript-parser-audit.mjs` counts these over the published text (run
-from `portal/`, no network). 16 November 2026:
+The publisher's own slips cannot be seen by any parser: a transcript sometimes prints a
+witness's answer under counsel's heading (one Robodebt page of 30 January 2023 does), and
+the role is then wrong. The audit counts the two forms a page does show: two turns running
+under one heading (left without a role), and a one-to-three-word reply ("Yes.",
+"Correct.") under a counsel heading straight after a question (counted only, since counsel
+answering the Commissioner looks the same).
 
-| Commission | Transcripts | Pages | Confident turns | of which with a role | Uncertain turns | Page-top continuations | Excerpts (one a page) with a role | Witness lines read | Unrecognised "<" lines |
+`portal/scripts/transcript-parser-audit.mjs` counts all of this over the published text
+(run from `portal/`, no network). 16 November 2026:
+
+| Commission | Transcripts | Pages | Confident turns (a role) | Uncertain turns (no role) | Page-top continuations (no role) | Excerpts, one a page, with a role | "<" lines: examination / other | Possible label slips (no role given) | Replies under a counsel heading (counted only) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| cth-antisemitism | 16 | 1,288 | 13,252 (96.5%) | 11,702 | 8 (0.1%) | 475 (3.5%) | 1,031 of 1,288 (80.0%) | 70 | 0 |
-| cth-robodebt | 29 | 3,138 | 43,597 (98.3%) | 42,653 | 3 (0.0%) | 749 (1.7%) | 2,863 of 3,137 (91.3%) | 74 | 0 |
-| nsw-healthcare-funding | 62 | 6,230 | 37,008 (64.7%) | 36,532 | 15,886 (27.8%) | 4,276 (7.5%) | 3,897 of 6,230 (62.6%) | 245 | 0 |
+| cth-antisemitism | 16 | 1,288 | 5,742 (41.8%) | 7,507 (54.7%) | 475 (3.5%) | 454 of 1,280 (35.5%) | 2 / 193 | 0 | 38 |
+| cth-robodebt | 29 | 3,138 | 22,136 (50.0%) | 21,464 (48.5%) | 688 (1.6%) | 1,656 of 3,116 (53.1%) | 94 / 252 | 95 | 200 |
+| nsw-healthcare-funding | 62 | 6,230 | 45,306 (79.3%) | 7,573 (13.3%) | 4,250 (7.4%) | 3,913 of 6,204 (63.1%) | 174 / 189 | 93 | 183 |
 
-Every quotable page carries the transcript's own page number. The NSW Healthcare Funding
-transcripts print examinations as "Q." and "A." with the examiner named once, so more of
-their text is a bare question or runs over a page; those passages are quoted with "the
-transcript records", the date and the page.
+Every quotable page carries the transcript's own page number. A passage with no role is
+quoted with "the transcript records", the date and the page. In Robodebt and Antisemitism
+that is mostly witnesses, who speak under their own names.
 
 Each citation ends with the commission's record id ("Commission record: cth-robodebt."),
 and one predicate, `writerMayWord` in `portal/src/transcript-answer.ts`, decides by that
@@ -229,7 +241,8 @@ statement to the role of who said it and where, give the role only and never a p
 name, never state evidence, an allegation or a question as fact, do not characterise
 credibility, draw no conclusion the commission has not published as a finding, and carry
 nothing said at a hearing in a sentence with no fact id. A passage with no role is quoted
-only, introduced by "the transcript records" with the date and page. The source card is
+only, introduced by "the transcript records" with the date and page; a `question` is
+written as a question that was put, with no asker. The source card is
 built from the typed facts ("Royal Commission into the Robodebt Scheme, hearing
 transcript, 10 March 2023, page P-4899: A witness."), so its date, page and role do not
 depend on the answer's wording. The writer marks each sentence that uses a transcript
