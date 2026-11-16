@@ -63,20 +63,26 @@ test('the Brunswick election page says vacant and names nobody as holding the se
   assert.deepEqual(seat.members, []);
   const page = renderVicElection(hub, seat, {}, new Date());
   const body = text(page.html);
-  assert.ok(body.includes(`Member${VACANT} ${LAST}`), body.slice(0, 600));
+  // The line sits in the Last parliament section, below the candidates, never in the facts block above them.
+  const doc = new JSDOM(page.html).window.document;
+  assert.equal(doc.querySelector('#last-parliament .vic-facts > div').textContent, `Member${VACANT} ${LAST}`);
+  assert.deepEqual([...doc.querySelectorAll('.vic-hub > .vic-facts, #candidates, #last-parliament')].map(n => n.id || 'result'), ['result', 'candidates', 'last-parliament']);
+  assert.doesNotMatch(doc.querySelector('.vic-hub > .vic-facts').textContent, /Tim Read|Vacant/);
   assert.match(page.html, /Last member: <a href="\/subject\/person\/tim-read">Tim Read<\/a>, to 19 September 2026\./);
   assert.doesNotMatch(body, /Held by|Who holds|Tim Read MP|Member for Brunswick(?!,)/);
   // He is named once, as the last member; the page has no record section for a member of the seat.
   assert.equal(page.html.split('Tim Read').length - 1, 1);
   assert.equal(new JSDOM(page.html).window.document.querySelector('#record'), null);
   // The meta description, the share card and the structured data name no holder.
-  assert.ok(page.description.startsWith('Brunswick was vacant when the Assembly expired on 3 November. See the 2022 election result and winning margin.'));
+  assert.ok(page.description.startsWith('Brunswick district: the candidates and the 2022 election result and winning margin. Brunswick was vacant when the Assembly expired on 3 November.'));
   for (const outward of [page.description, JSON.stringify(page.card), JSON.stringify(page.jsonLd), page.title]) assert.doesNotMatch(outward, /Tim Read/);
+  // During the campaign, and after it, the seat's structured data names nobody.
   assert.equal(page.jsonLd['@graph'].find(n => n['@type'] === 'ItemList').numberOfItems, 0);
+  assert.equal(renderVicElection(hub, seat, {}, new Date('2026-11-28T19:00:00+11:00')).jsonLd['@graph'].find(n => n['@type'] === 'ItemList').numberOfItems, 0);
   assert.doesNotMatch(page.html, FORBIDDEN);
   // After the polls close the wording is the same: no "Member in published roster" line for this seat.
   const closed = renderVicElection(hub, seat, {}, new Date('2026-11-28T19:00:00+11:00'));
-  assert.ok(text(closed.html).includes(`Member${VACANT} ${LAST}`));
+  assert.equal(new JSDOM(closed.html).window.document.querySelector('#last-parliament .vic-facts > div').textContent, `Member${VACANT} ${LAST}`);
   assert.doesNotMatch(text(closed.html), /Member in published roster dated/);
 });
 
@@ -95,7 +101,9 @@ test('the finder returns no member for Brunswick, by district, suburb, postcode 
     const html = renderVicElection(hub, null, {}, new Date(), {place: q, hits}).html;
     const results = new JSDOM(html).window.document.querySelector('.vic-hits');
     const rowText = [...results.querySelectorAll('a.vic-seat')].find(a => a.querySelector('.vic-seat-name').textContent === 'Brunswick').textContent;
-    assert.match(rowText, /Vacant/, q);
+    // During the campaign Brunswick's row is like every other seat's: its margin and its candidates.
+    assert.match(rowText, /\d+ candidates$/, q);
+    assert.doesNotMatch(rowText, /Vacant/, q);
     assert.doesNotMatch(results.textContent, /Tim Read/, q);
   }
 });
@@ -135,9 +143,10 @@ test('no other Victorian seat changes: 87 districts and 8 regions keep their mem
       const pick = d => path ? d.seats.find(s => s.path === path) : null;
       const a = rows(renderVicElection(hub, pick(hub), {}, now).html), b = rows(renderVicElection(before, pick(before), {}, now).html);
       assert.equal(a.length, b.length);
-      // Brunswick's row reads Vacant either way (the page rule already said so); no row names him.
+      // Brunswick's row is the same either way: "N candidates" during the campaign like every other seat,
+      // "Vacant" once the polls close. No row names him.
       assert.deepEqual(a, b);
-      assert.match(a.find(t => t.startsWith('Brunswick')), /^Brunswick.*Vacant/);
+      assert.match(a.find(t => t.startsWith('Brunswick')), now < new Date('2026-11-28T18:00:00+11:00') ? /^Brunswick.*\d+ candidates$/ : /^Brunswick.*Vacant/);
       assert.ok(!a.some(t => t.includes('Tim Read')));
     }
   }
@@ -164,7 +173,7 @@ test('the electorate page says vacant with the last member, and the directory ro
     const spec = await directorySpec();
     const rows = spec.items.filter(e => e.jurisdiction === 'vic').map(e => [e.name, e.chamber, new JSDOM(spec.row(e)).window.document.querySelector('.el-holders').textContent]);
     assert.deepEqual(rows.filter(([, , holders]) => /Vacant/.test(holders)).map(([name]) => name), ['Brunswick']);
-    assert.match(rows.find(([name, chamber]) => name === 'Brunswick' && chamber === 'vic_la')[2], /^VacantVerified 3 Nov 2026$/);
+    assert.match(rows.find(([name, chamber]) => name === 'Brunswick' && chamber === 'vic_la')[2], /^Vacant$/);
     assert.ok(!rows.some(([, , holders]) => /Tim Read|not yet verified/.test(holders)));
     assert.ok(!spec.text(spec.items.find(e => e.electorate_id === row.electorate_id)).includes('Tim Read'));
   } finally { globalThis.fetch = realFetch; }
@@ -230,7 +239,7 @@ test('the Worker: the Brunswick electorate and election pages name no holder in 
   const personCard = JSON.stringify(await (await worker.fetch('/og/subject/person/tim-read.png')).json());
   assert.doesNotMatch(personCard, /Tim Read MP|Sitting|Member for Brunswick(?!,)/);
   const election = await page(seat.path);
-  assert.ok(election.querySelector('meta[name="description"]').content.startsWith('Brunswick was vacant when the Assembly expired on 3 November.'));
+  assert.ok(election.querySelector('meta[name="description"]').content.includes('Brunswick was vacant when the Assembly expired on 3 November.'));
   assert.doesNotMatch(outward(election), /Tim Read/);
   assert.ok(election.querySelector('main').textContent.replace(/\s+/g, ' ').includes(`${VACANT} ${LAST}`));
   // Another seat still names its member.
