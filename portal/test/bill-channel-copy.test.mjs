@@ -160,6 +160,23 @@ test('the share image is redrawn for links already shared, its alt text says who
   }
 });
 
+test('a bill edition\'s cover slide carries the small "Machine-written summary" note; the other slides and other editions do not', async () => {
+  const post = await compose('au-federal-x1'), cover = post.slides[0];
+  assert.equal(cover.type, 'cover');
+  assert.ok(cover.line.startsWith(S1), 'the cover line opens with the summary sentence');
+  assert.equal(cover.note, 'Machine-written summary');
+  for (const slide of post.slides.slice(1)) assert.ok(!('note' in slide) || slide.type === 'list', slide.type);
+  // What the widget and the app's plate read off the cover is unchanged: the line, and nothing of the note.
+  assert.equal(widgetEdition(post, null).line, 'Introduced 7 Sep 2026; before parliament');
+  assert.ok(!JSON.stringify(widgetEdition(post, null)).includes('Machine-written'));
+  // The app edition carries the slides as stored, so the cover has the one new key and every other value as before.
+  const stored = storedEdition(row(post)).slides[0];
+  const { note, ...rest } = stored;
+  assert.equal(note, 'Machine-written summary');
+  assert.deepEqual(Object.keys(rest), Object.keys(cover).filter(k => k !== 'note'));
+});
+
+
 // ---------------------------------------------------------------- with photographs
 const catalogue = { photos: {
   senate: { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://example.test/senate', author: 'Jo Sample', licence: 'CC BY-SA 3.0', credit: 'Photo: Jo Sample, CC BY-SA 3.0, via Wikimedia Commons' },
