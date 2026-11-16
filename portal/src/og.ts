@@ -645,15 +645,22 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
   const credit = [images.photo ? images.credit : null, images.inset ? images.insetCredit : null].filter(Boolean).join(' · ')
   if (!photo) {
     // No approved photograph: the engraving card, as the portrait card draws it.
+    // A cover with a note (a bill's) has one more row of words. On that cover the words never give way: each is held
+    // at its own height, the engraving is drawn smaller to stay in view, and if the rows still run long it is the
+    // engraving's box that shrinks and is clipped, never a row pressed into the next. A cover with no note is drawn
+    // exactly as it was.
+    const noted = !!coverNote(slide.note)
+    const firm = (el: El | null): El | null => noted && el ? { ...el, props: { ...el.props, style: { ...(el.props.style as object), flexShrink: 0 } } } as El : el
+    const engraving = noted ? { width: 400, height: 364, top: 40 } : { width: 520, height: 474, top: 56 }
     return storyFrame(g, [
       storyMasthead(),
       storyBody([
         inset,
-        storyKicker(slide.kicker),
-        storyHeadline(slide.title, 128, 2),
-        ...storyLines([slide.line], false, 3),
-        coverNote(slide.note),
-        h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 520, height: 474, style: { opacity: 0.9 } })),
+        firm(storyKicker(slide.kicker)),
+        firm(storyHeadline(slide.title, 128, 2)),
+        ...storyLines([slide.line], false, 3).map(firm),
+        firm(coverNote(slide.note)),
+        h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: engraving.top, ...(noted ? { flexShrink: 1, minHeight: 0, overflow: 'hidden' } : {}) } }, h('img', { src: ENGRAVING_URI, width: engraving.width, height: engraving.height, style: { opacity: 0.9 } })),
       ]),
       storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
     ])

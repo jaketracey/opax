@@ -645,3 +645,16 @@ test('every daily kind retains mandatory authorisation when its content discusse
   }
   assert.ok(!WEEK.includes('hub'), 'no hub composer in the daily rotation');
 });
+
+test('only a bill\'s cover slide carries the "Machine-written summary" note: a member, a grant and a topic cover have none', async () => {
+  const bill = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
+  assert.equal(bill.slides[0].note, 'Machine-written summary');
+  for (const kind of ['politician', 'topic', 'grant', 'program', 'largest']) {
+    const post = await composeDailyPost('2026-09-10', sources(), kind);
+    if (!post?.slides) continue;
+    assert.equal(post.slides[0].type, 'cover', kind);
+    assert.ok(!('note' in post.slides[0]), kind + ' cover has no note');
+  }
+  const member = await composeDailyPost('2026-09-10', sources(), 'politician');
+  assert.ok(member.slides && !('note' in member.slides[0]), 'a member edition was composed and checked');
+});
