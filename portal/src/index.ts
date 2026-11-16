@@ -7731,7 +7731,7 @@ export default {
       return
     }
     const result = await runSocialPublication(env, {
-      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env, _ctx),
+      now: controller.scheduledTime, holdStranded: true, personTopics: name => personTopicsFor(name, env, _ctx),
       sourceResponse: async (target, method = 'HEAD') => {
         const url = new URL(target)
         const request = new Request(target, { method })

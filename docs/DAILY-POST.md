@@ -29,7 +29,12 @@ DMs, automate replies, or imply a funding relationship proves wrongdoing.
 The first schedule is 22:00 UTC (08:00 AEST / 09:00 AEDT). Checks at +5 and +10
 minutes finish an Instagram container that is still processing. They do not resend
 successful posts. A container still pending after the third check is held for
-operator review (`review_required`); the following day is a new edition.
+operator review (`review_required`); the following day is a new edition. Each cron
+run first holds any delivery still `preparing` under an earlier date for review, with
+the detail `Stranded`: a row left for a check that never fired, or by a run that
+stopped before its channel's own error handling. A stranded row is never retried and
+nothing is posted for it; its container and progress stay for reconciliation. Rows
+already held for review, `sending` and `failed` rows are left as they are.
 
 ## The week and the grant kinds (live from 30 Sep 2026)
 
@@ -287,6 +292,7 @@ for a request that got no HTTP answer (or the runtime's "Network connection lost
 `Timeout (DOMException)`, `Database error (Error)` for D1's documented `D1_` and `D1
 DB` messages, `Worker limit (subrequests)` for the Workers subrequest limit, and
 `Unexpected error (<class>)` for anything else. The log line keeps the message.
+`Stranded` marks a delivery the next day's cron found still `preparing` (see above).
 
 In the test harness, one run of the publisher made about 160 to 270 subrequests
 with every channel on, and about 340 for a ten-slide story with composition, against
