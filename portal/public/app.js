@@ -96,7 +96,7 @@ function loadMachineNotice() { if (!machineNoticeHelpers) import('/machine-notic
 const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
   // The transcript line for a conversation saved before every answer citing a hearing transcript carried it.
-  import('/transcript-note.js?v=c1bfeff62c').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
+  import('/transcript-note.js?v=c3fa52c9c1').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
   // The fixed error notice under a machine-written answer, for a live turn and for a saved one.
   import('/machine-notice.js?v=d28b077381').then(module => { machineNoticeHelpers = module; }).catch(() => {}),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
