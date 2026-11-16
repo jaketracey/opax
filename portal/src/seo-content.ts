@@ -15,7 +15,7 @@ import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, b
 import {votedAgainstParty, votedAgainstPartyHTML} from '../public/division-against-party.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
-import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
+import {chamberLabel, machineLabelHTML, machineNoticeHTML, partyLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
 import {voteTableConfig, personVoteKeys, personVoteRecords, votingRows, voteTablePage, voteTableHTML, billDivisionTablesHTML, voteScopeLine} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
@@ -463,7 +463,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const divisionSlot = '<!--bill-divisions-->'
   body += divisionSlot
 
-  if (b.summary) body += `<h2>Plain-language summary</h2><p>${machineLabelHTML({pill:true,notRecord:true})} ${b.summary.as_of ? `As at ${escapeHtml(b.summary.as_of)}` : 'Date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
+  if (b.summary) body += `<h2>Plain-language summary</h2><p>${machineLabelHTML({pill:true,notRecord:true})} ${b.summary.as_of ? `As at ${escapeHtml(b.summary.as_of)}` : 'Date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}${machineNoticeHTML()}`
   const sameSponsor = related.filter(r=>r.key!==b.key && !!b.sponsor && fold(r.sponsor || '')===fold(b.sponsor)).slice(0,20)
   const samePortfolio = related.filter(r=>r.key!==b.key && !!b.portfolio && fold(r.portfolio || '')===fold(b.portfolio)).slice(0,20)
   for(const [label,rows] of [['Other bills from this sponsor',sameSponsor],['Other bills in this portfolio',samePortfolio]] as const) {

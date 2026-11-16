@@ -19,7 +19,7 @@ import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { votedAgainstParty } from '../public/division-against-party.js'
-import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
+import { chamberLabel, PARTY_MAP, machineNoticeHTML } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
@@ -166,7 +166,7 @@ import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote, transcriptNoteResponse } from './transcript-answer'
-import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice } from './machine-notice'
+import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse } from './machine-notice'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
 import { serveMedia } from './media'
@@ -3025,6 +3025,13 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   })
   cacheStore(ctx, cacheKey, out, RESOURCE_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
+}
+
+/** A record page whose server-rendered paragraph is the record's stored brief (a model wrote it) prints the error
+ * notice directly under that paragraph, for crawlers and readers without scripts. Otherwise nothing: the page
+ * keeps the paragraph every record gets (meta.prerender, filled where the page is assembled). */
+function briefPrerender(heading: string, description: string, summary: unknown): { prerender?: string } {
+  return typeof summary === 'string' && summary.trim() ? { prerender: answerBlock(heading, description, machineNoticeHTML()) } : {}
 }
 
 /** KB counters for the front-page meter, cached 5 minutes. */
@@ -6054,6 +6061,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       ...generic,
       title: `${headline} · OPAX`,
       description,
+      ...briefPrerender(headline, description, r.summary),
       jsonLd: {
         '@context': 'https://schema.org',
         '@type': 'Article',
@@ -6107,6 +6115,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     ...generic,
     title: `${speaker}${date ? `, ${longDate(date)}` : ''} · From the record · OPAX`,
     description,
+    ...briefPrerender(`${speaker}${date ? `, ${longDate(date)}` : ''} · From the record`, description, r.summary),
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'Article',
@@ -7650,7 +7659,7 @@ export default {
     }))
     if ((url.pathname === '/api/search-all' || url.pathname === '/api/suggest') && request.method === 'GET') {
       try {
-        const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx, { suggest: url.pathname === '/api/suggest' })), url)
+        const response = withSecurityHeaders(await storedNoticeResponse(await display(await apiUnifiedSearch(request, url, env, ctx, { suggest: url.pathname === '/api/suggest' })), url.pathname), url)
         if (env.STAGING_API) response.headers.set('x-robots-tag', 'noindex, nofollow')
         return response
       } catch {
@@ -7687,7 +7696,9 @@ export default {
         )
         return withSecurityHeaders(new Response(null, got), url)
       }
-      return withSecurityHeaders(await display(await route(request, url, env, ctx)), url)
+      // Stored machine-written text (a record's brief, briefs, a bill summary in a search row) leaves with its
+      // error notice, `machine_notice` (machine-notice.ts). Only here, at the reader's exit.
+      return withSecurityHeaders(await storedNoticeResponse(await display(await route(request, url, env, ctx)), url.pathname), url)
     } catch (err) {
       // The detail goes to the log, never to the client: upstream error text
       // can carry request echoes and internal identifiers.

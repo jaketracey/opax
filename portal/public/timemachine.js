@@ -38,7 +38,7 @@ import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, grou
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { machineLabelHTML } from './labels.js?v=ffd32d5678'
+import { machineLabelHTML, machineNoticeHTML } from './labels.js?v=bde9ce7b53'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026
@@ -1625,13 +1625,15 @@ export function mountTimeMachine(container, opts = {}) {
   async function applyBriefs(rids, seq, signal) {
     if (!rids.length) return
     let briefs = {}
+    let data
     try {
-      const data = await fetchJSON(`/api/brief?rids=${encodeURIComponent(rids.join(','))}`, signal)
+      data = await fetchJSON(`/api/brief?rids=${encodeURIComponent(rids.join(','))}`, signal)
       briefs = data?.briefs || {}
     } catch {
       return
     }
     if (seq !== searchSeq) return
+    let shown = false
     for (const card of cardsEl.querySelectorAll('.tm-card[data-rid]')) {
       const text = briefs[card.dataset.rid]
       if (!text) continue
@@ -1645,7 +1647,10 @@ export function mountTimeMachine(container, opts = {}) {
       const quote = card.querySelector('.tm-card-snippet')
       if (quote) quote.replaceWith(brief)
       else card.insertBefore(brief, card.querySelector('.tm-read'))
+      shown = true
     }
+    // The error notice, once, directly under the cards that now carry briefs: the Worker's words.
+    if (shown && !cardsEl.querySelector(':scope > .answer-notice')) cardsEl.insertAdjacentHTML('beforeend', machineNoticeHTML({ notice: data?.machine_notice, className: 'tm-cards-notice' }))
   }
 
   // ---- the year in brief + voices (static JSON, scripts/generate_years.py) --
@@ -1697,6 +1702,9 @@ export function mountTimeMachine(container, opts = {}) {
       })
       briefEl.appendChild(more)
     }
+    // The error notice under the brief and above the speeches it drew on. A year's brief is read from a static
+    // file, so the words are the fixed ones (machine-notice.js, through labels.js).
+    briefEl.insertAdjacentHTML('beforeend', machineNoticeHTML())
 
     const sources = Array.isArray(brief.sources) ? brief.sources : []
     const cited = sources.filter((s) => s.cited).length
