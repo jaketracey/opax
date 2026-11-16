@@ -43,7 +43,7 @@ const READ = /^\/(?:slug|resource)\/([^/?]+)(\?.*)?$/
 export function guardKbRequest(target: string, body: unknown, policy: SourcePolicy = POLICY): { target: string, body: unknown } {
   const read = READ.exec(target)
   if (read && target.startsWith('/slug/') && policy.withheld({ documents: [decodeURIComponent(read[1])] })) return { target: `/slug/${read[1]}?show=basic&show=origin&show=extra`, body }
-  if (!QUERY_PATHS.has(target) || !body || typeof body !== 'object' || Array.isArray(body)) return { target, body }
+  if (!QUERY_PATHS.has(pathOf(target)) || !body || typeof body !== 'object' || Array.isArray(body)) return { target, body }
   const clauses: Row[] = [
     ...policy.withheldSources.flatMap(id => [{ not: { prop: 'label', labelset: 'source', label: id } }, { not: { prop: 'origin_source', id } }]),
     ...policy.withheldDocuments.filter(id => !id.includes('/')).map(slug => ({ not: { prop: 'resource', slug } })),
@@ -108,9 +108,27 @@ function scrubMap(holder: Row, key: string, policy: SourcePolicy): string[] {
   if (gone.length) holder[key] = Object.fromEntries(Object.entries(map).filter(([rid]) => !gone.includes(rid)))
   return gone
 }
+const matchRid = (entry: unknown) => { const e = object(entry); return String(typeof entry === 'string' ? entry : e.id ?? e.rid ?? '') }
+const without = (list: unknown, gone: string[]) => Array.isArray(list) ? list.filter(entry => !gone.some(rid => matchRid(entry) === rid || matchRid(entry).startsWith(rid + '/'))) : list
+/** One result set (a /find, /search or /catalog answer, the retrieval of an /ask, or one prequery): closed
+ * resources leave its map, its best matches and its paragraph, full-text and sentence lists. Returns their rids. */
+function scrubResults(set: Row, policy: SourcePolicy): string[] {
+  const gone = scrubMap(set, 'resources', policy)
+  if (!gone.length) return gone
+  set.best_matches = without(set.best_matches, gone)
+  for (const key of ['paragraphs', 'fulltext', 'sentences', 'relations']) {
+    const part = object(set[key])
+    if (Array.isArray(part.results)) set[key] = { ...part, results: without(part.results, gone) }
+  }
+  return gone
+}
+
+/** The path of a request without its query string: GET /catalog?… and /search?… are checked like the POST forms. */
+const pathOf = (target: string) => target.split('?')[0]
 
 /** A parsed knowledge base response with closed resources taken out. A single read becomes a listing row; a
- * result set loses the resource and its matches; a generated answer that drew on one is not passed on. */
+ * result set loses the resource and its matches; a generated answer that drew on one, in its retrieval or in a
+ * prequery, is not passed on. */
 export function scrubKbPayload(target: string, data: unknown, policy: SourcePolicy = POLICY): unknown {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return data
   const out = { ...data as Row }
@@ -119,29 +137,87 @@ export function scrubKbPayload(target: string, data: unknown, policy: SourcePoli
     // Hidden: nothing of the resource, not even that it is there. The resource API answers it as not found.
     return !refusal ? out : refusal.mode === 'hide' ? { hidden: true } : listedKbResource(out)
   }
-  const gone = scrubMap(out, 'resources', policy)
+  scrubResults(out, policy)
+  let used = false
   if (out.retrieval_results && typeof out.retrieval_results === 'object') {
     const results = { ...object(out.retrieval_results) }
-    const removed = scrubMap(results, 'resources', policy)
-    if (removed.length) {
-      if (Array.isArray(results.best_matches)) results.best_matches = results.best_matches.filter(id => !removed.some(rid => String(typeof id === 'string' ? id : object(id).id ?? '').startsWith(rid + '/')))
-      out.retrieval_results = results
-      // The model saw the passage: its answer and citations are not passed on.
-      if (typeof out.answer === 'string') out.answer = ''
-      if ('citations' in out) out.citations = {}
-      gone.push(...removed)
-    }
+    if (scrubResults(results, policy).length) { out.retrieval_results = results; used = true }
   }
-  if (gone.length && Array.isArray(out.best_matches)) out.best_matches = out.best_matches.filter(id => !gone.some(rid => String(typeof id === 'string' ? id : object(id).id ?? '').startsWith(rid + '/')))
+  if (out.prequeries && typeof out.prequeries === 'object' && !Array.isArray(out.prequeries)) {
+    const prequeries = Object.fromEntries(Object.entries(out.prequeries as Row).map(([id, value]) => {
+      const set = { ...object(value) }
+      if (scrubResults(set, policy).length) used = true
+      return [id, set]
+    }))
+    out.prequeries = prequeries
+  }
+  // The model saw the passage: its answer and citations are not passed on.
+  if (used) { if (typeof out.answer === 'string') out.answer = ''; if ('citations' in out) out.citations = {}; if ('answer_json' in out) out.answer_json = null }
   return out
 }
 
-/** The response to hand on. JSON responses are checked as their body is read, so the caller still gets the
- * response as soon as its headers arrive and its own deadlines and cancellation apply to the body unchanged. A
- * streamed answer is not checked; it relies on the request filter and on withheld resources having been deleted
- * from the knowledge base. */
+const names = (text: string, policy: SourcePolicy) => policy.closedIds.some(id => text.includes(id.includes('/') ? id.split('/')[0] : id))
+const STREAMED_ANSWER = new Set(['answer', 'answer_json', 'citations', 'footnote_citations', 'text', 'json'])
+
+/** A streamed /ask (NDJSON), checked line by line as it passes. The retrieval item loses any closed resource; if
+ * it held one, the model saw it, so no answer text or citation that follows is passed on. Answer lines that
+ * arrive before the retrieval item are held until it comes. A line that names nothing closed passes unchanged;
+ * one that cannot be parsed and names a closed id is dropped. */
+function guardNdjson(response: Response, policy: SourcePolicy): Response {
+  const decoder = new TextDecoder(), encoder = new TextEncoder()
+  let rest = '', seenRetrieval = false, used = false
+  const held: string[] = []
+  const line = (raw: string, emit: (text: string) => void) => {
+    if (!raw.trim()) return emit(raw)
+    let parsed: Row
+    try { parsed = object(JSON.parse(raw)) } catch { if (!names(raw, policy)) emit(raw); return }
+    const item = object(parsed.item ?? parsed.chunk ?? parsed), type = String(item.type ?? '')
+    const results = item.results && typeof item.results === 'object' ? { ...object(item.results) } : null
+    if (type === 'retrieval' || results?.resources) {
+      const gone = results ? scrubResults(results, policy) : []
+      seenRetrieval = true
+      if (gone.length) used = true
+      emit(gone.length ? JSON.stringify({ ...parsed, item: { ...item, results } }) : raw)
+      for (const waiting of held.splice(0)) if (!used) emit(waiting)
+      return
+    }
+    if (type === 'prequeries' && item.results && typeof item.results === 'object') {
+      const sets = Object.fromEntries(Object.entries(object(item.results)).map(([id, value]) => { const set = { ...object(value) }; if (scrubResults(set, policy).length) used = true; return [id, set] }))
+      return emit(JSON.stringify({ ...parsed, item: { ...item, results: sets } }))
+    }
+    if (STREAMED_ANSWER.has(type)) {
+      if (used) return
+      if (!seenRetrieval) { held.push(raw); return }
+    }
+    if (names(raw, policy)) return
+    emit(raw)
+  }
+  const body = response.body!.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
+    transform(chunk, controller) {
+      rest += decoder.decode(chunk, { stream: true })
+      const lines = rest.split('\n')
+      rest = lines.pop() ?? ''
+      for (const raw of lines) line(raw, text => controller.enqueue(encoder.encode(text + '\n')))
+    },
+    flush(controller) {
+      const emit = (text: string) => controller.enqueue(encoder.encode(text + '\n'))
+      if (rest) line(rest, emit)
+      // No retrieval item ever came: nothing was retrieved, so what was held is the whole answer.
+      for (const waiting of held.splice(0)) if (!used) emit(waiting)
+    },
+  }))
+  return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers })
+}
+
+/** The response to hand on. A JSON response is checked as its body is read, so the caller still gets the
+ * response as soon as its headers arrive and its own deadlines and cancellation apply to the body unchanged;
+ * one that cannot be parsed and names a closed id is an error, never passed through. A streamed answer is
+ * checked line by line. */
 export function guardKbResponse(target: string, response: Response, policy: SourcePolicy = POLICY): Response {
-  if (!policy.active || !response.ok || !response.body || !(READ.test(target) || QUERY_PATHS.has(target)) || !(response.headers.get('content-type') ?? '').includes('application/json')) return response
+  if (!policy.active || !response.ok || !response.body) return response
+  const path = pathOf(target), type = response.headers.get('content-type') ?? ''
+  if (type.includes('ndjson')) return path === '/ask' ? guardNdjson(response, policy) : response
+  if (!(READ.test(target) || QUERY_PATHS.has(path)) || !type.includes('application/json')) return response
   const reader = response.body.getReader(), chunks: Uint8Array[] = []
   const body = new ReadableStream<Uint8Array>({
     async pull(controller) {
@@ -156,11 +232,11 @@ export function guardKbResponse(target: string, response: Response, policy: Sour
         for (const chunk of chunks) { bytes.set(chunk, at); at += chunk.length }
         const text = new TextDecoder().decode(bytes)
         // Untouched bytes pass through unless the body names a closed source or document.
-        if (!policy.closedIds.some(id => text.includes(id.includes('/') ? id.split('/')[0] : id))) controller.enqueue(bytes)
+        if (!names(text, policy)) controller.enqueue(bytes)
         else {
-          let out = text
-          try { out = JSON.stringify(scrubKbPayload(target, JSON.parse(text), policy)) } catch { /* not JSON after all: nothing to check */ }
-          controller.enqueue(new TextEncoder().encode(out))
+          let parsed: unknown
+          try { parsed = JSON.parse(text) } catch { throw new Error('record lookup unavailable') }
+          controller.enqueue(new TextEncoder().encode(JSON.stringify(scrubKbPayload(path === '/ask' || READ.test(target) ? target : path, parsed, policy))))
         }
         controller.close()
       } catch (error) { controller.error(error) }
@@ -170,6 +246,37 @@ export function guardKbResponse(target: string, response: Response, policy: Sour
   const headers = new Headers(response.headers)
   headers.delete('content-length')
   return new Response(body, { status: response.status, statusText: response.statusText, headers })
+}
+
+/** The rid of a request for one field of a resource (/resource/<rid>/text/<field>): the path names no slug or
+ * source, so the caller checks the resource itself first. */
+export const fieldReadRid = (target: string): string | null => /^\/resource\/([0-9a-f]{32})\/[a-z]+\/[^/?]+/i.exec(target)?.[1] ?? null
+/** True when a guarded read of a resource came back closed (a listing row or hidden). */
+export const closedRead = (resource: unknown): boolean => { const r = object(resource); return r.hidden === true || typeof r.unavailable === 'string' }
+
+type Ref = { slug?: unknown; resource?: unknown }
+const ridOf = (value: unknown) => /^[0-9a-f]{32}/i.exec(String(value ?? ''))?.[0]?.toLowerCase()
+/** Which of the records a client names (by slug, or by knowledge base id) are withheld. Slugs are checked
+ * against the list; ids are read through `read`, a guarded basic read, at most 16 of them. */
+export async function closedRefs(refs: Ref[], read: (rid: string) => Promise<unknown>, policy: SourcePolicy = POLICY): Promise<(ref: Ref) => boolean> {
+  if (!policy.withheldCount) return () => false
+  const rids = [...new Set(refs.map(r => ridOf(r.resource)).filter((r): r is string => !!r))].slice(0, 16), closed = new Set<string>()
+  await Promise.all(rids.map(async rid => { try { if (closedRead(await read(rid))) closed.add(rid) } catch { closed.add(rid) } }))
+  const known = new Set(rids)
+  return ref => (typeof ref.slug === 'string' && !!policy.withheld({ documents: [ref.slug] })) || (() => { const rid = ridOf(ref.resource); return !!rid && (closed.has(rid) || !known.has(rid)) })()
+}
+
+/** What a client sends back from earlier turns, before any request is built from it: an answer turn that cited
+ * a withheld record is dropped with its sources, and a withheld record is taken out of prior_resources. The
+ * reader's own turns stay. */
+export async function withoutWithheldHistory<T extends Row>(input: T, read: (rid: string) => Promise<unknown>, policy: SourcePolicy = POLICY): Promise<T> {
+  if (!policy.withheldCount) return input
+  const turns = Array.isArray(input.context) ? input.context as Row[] : [], prior = Array.isArray(input.prior_resources) ? input.prior_resources as unknown[] : []
+  const sources = turns.flatMap(t => Array.isArray(object(t).sources) ? object(t).sources as Ref[] : [])
+  const closed = await closedRefs([...sources, ...prior.map(resource => ({ resource }))], read, policy)
+  return { ...input,
+    ...(Array.isArray(input.context) ? { context: turns.filter(t => object(t).author !== 'answer' || !(Array.isArray(object(t).sources) ? object(t).sources as Ref[] : []).some(closed)) } : {}),
+    ...(Array.isArray(input.prior_resources) ? { prior_resources: prior.filter(resource => !closed({ resource })) } : {}) }
 }
 
 const slugPart = (value: unknown) => String(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')

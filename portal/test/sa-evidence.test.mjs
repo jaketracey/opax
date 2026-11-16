@@ -1,4 +1,4 @@
-import { guardKbRequest, guardKbResponse, guardKbGeneration, hiddenKbRead, guardSearchRows, openForKbGeneration, POLICY as SOURCE_POLICY } from '../src/source-policy.ts';
+import { guardKbRequest, guardKbResponse, guardKbGeneration, hiddenKbRead, fieldReadRid, closedRead, closedRefs, guardSearchRows, openForKbGeneration, POLICY as SOURCE_POLICY } from '../src/source-policy.ts';
 import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
 const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
@@ -147,7 +147,7 @@ test('follow-up prompts cap both SA evidence and legacy copied answers before ge
     ASK_EVIDENCE_RULES:'Use supplied evidence. ',saEvidenceRecord,saEvidenceText,isSaHansard,Response,URL,AbortSignal,
     FOLLOWUP_MIN_CONTEXT:200,FOLLOWUP_WANT:3,FOLLOWUP_ANSWER_BUDGET:2500,FOLLOWUP_PASSAGE_BUDGET:6000,
     json:Response.json,cacheRequest:()=>new Request('https://cache.test/followup'),sha256Hex:async()=>'',cacheBypass:()=>true,rateLimited:async()=>null,
-    withCacheStatus:r=>r,kbFetch:async(_env,_path,init)=>{request=init.body;return Response.json({answer:''});},parseFollowUpLines:()=>[],selectFollowUps:()=>[],openForKbGeneration,SOURCE_POLICY,
+    withCacheStatus:r=>r,kbFetch:async(_env,_path,init)=>{request=init.body;return Response.json({answer:''});},parseFollowUpLines:()=>[],selectFollowUps:()=>[],openForKbGeneration,SOURCE_POLICY,closedRefs,
   });
   const req=()=>new Request('https://opax.test/api/followups',{method:'POST',body:JSON.stringify({question:'statement 30',answer:sa.text,passages:[null,{...sa,title:'SA record',text:sa.text}]})});
   await followups(req(),{SA_HANSARD_FULL_TEXT:'false'},{});
@@ -162,7 +162,7 @@ test('the shared KB call retrieves without generation and caps SA before the aut
   const fn=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='kbFetch').getText(ast);
   const calls=[];
   const kb=runInNewContext(ts.transpile(fn)+';kbFetch',{
-    sourceIdentity,saGenerationResponse,guardKbRequest,guardKbResponse,guardKbGeneration,hiddenKbRead,guardSearchRows,modelBudgetSpent:async()=>false,ragBase:()=> 'https://fixture.test/kb',
+    sourceIdentity,saGenerationResponse,guardKbRequest,guardKbResponse,guardKbGeneration,hiddenKbRead,fieldReadRid,closedRead,closedRefs,SOURCE_POLICY,guardSearchRows,modelBudgetSpent:async()=>false,ragBase:()=> 'https://fixture.test/kb',
     fetch:async(url,init)=>{calls.push({url,...init,body:JSON.parse(init.body)});return url.endsWith('/ask')?Response.json(retrieval()):new Response(bytes({type:'text',text:'Generated words.'}));},
   });
   const response=await kb({SA_HANSARD_FULL_TEXT:'false',ARAG_KB_TOKEN:'fixture'},'/ask',{body:{query:'statement 30'},headers:{accept:'application/x-ndjson'}});

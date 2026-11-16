@@ -363,6 +363,127 @@ test('an unreadable store fails closed: record, search, Ask, MCP and report rout
   await withWorker(undefined, async w => assert.equal((await w.fetch('/api/resource/speech-1?nocache=1')).status, 200));
 });
 
+// ---- four ways text used to get past the guard (security review P1-1), and what the client sends back
+
+const RID = slug => createHash('md5').update(slug).digest('hex');
+/** A Worker whose knowledge base holds a withheld speech and an open one, answering reads by rid or slug. */
+async function withKb(raw, run) {
+  return withWorker(raw, async (w, ctx) => {
+    const sent = [];
+    globalThis.fetch = async (input, init) => {
+      const url = new URL(String(input.url ?? input)), path = url.pathname.replace(/^.*\/kb\/[^/]+/, '') + url.search;
+      sent.push({ path, body: init?.body ? JSON.parse(init.body) : undefined });
+      const rid = /^\/resource\/([0-9a-f]{32})/.exec(path)?.[1], slug = rid === RID('speech-424242') ? 'speech-424242' : 'speech-1';
+      if (/^\/resource\/[0-9a-f]{32}\/text\//.test(path)) return Response.json({ value: { body: `SECRET BRIEF of ${slug}` } });
+      if (rid) return Response.json(resource(slug, 'speech', 'openaustralia'));
+      if (path.startsWith('/slug/')) return Response.json(resource(/\/slug\/([^?]+)/.exec(path)[1], 'speech', 'openaustralia'));
+      return Response.json(path.startsWith('/ask') ? { answer: '', citations: {}, retrieval_results: { resources: {} } } : { resources: {}, fulltext: { total: 0, facets: {} } });
+    };
+    return run(w, { ...ctx, sent });
+  });
+}
+const HELD = store(entry({ document: 'speech-424242' }));
+
+test('/api/brief: the machine summary of a withheld record is not served by its rid, and the cache key carries the epoch', async () => {
+  for (const mode of MODES) await withKb(store(entry({ document: 'speech-424242' }, 'legal_order', mode)), async (w, { sent, logs }) => {
+    const keys = [];
+    globalThis.caches = { default: { match: async key => { keys.push(key.url); return undefined; }, put: async () => {} } };
+    const res = await w.fetch(`/api/brief?rids=${RID('speech-424242')},${RID('speech-1')}`), body = await res.json();
+    assert.deepEqual(body.briefs, { [RID('speech-1')]: 'SECRET BRIEF of speech-1' });
+    assert.ok(!sent.some(r => r.path.startsWith(`/resource/${RID('speech-424242')}/text/`)), 'the summary of the withheld record is never requested');
+    assert.ok(keys.length && keys.every(k => k.includes(encodeURIComponent(w.env.CACHE_EPOCH))), 'an epoch bump retires cached briefs: ' + keys[0]);
+    absent(logs.join('\n'), ['424242'], 'logs');
+  });
+  // With nothing withheld a brief costs one read, as before.
+  await withKb(undefined, async (w, { sent }) => {
+    assert.deepEqual(Object.keys((await (await w.fetch(`/api/brief?rids=${RID('speech-1')}`)).json()).briefs), [RID('speech-1')]);
+    assert.equal(sent.length, 1);
+  });
+});
+
+const ndjson = items => new Response(items.map(i => JSON.stringify({ item: i })).join('\n') + '\n', { headers: { 'content-type': 'application/x-ndjson' } });
+test('a streamed answer that drew on a withheld resource is not passed on; an untouched stream passes byte for byte', async () => {
+  const policy = policyOf(entry({ document: 'speech-424242' }));
+  const held = resource('speech-424242', 'speech', 'openaustralia'), open = resource('speech-1', 'speech', 'nsw_hansard');
+  const stream = resources => ndjson([{ type: 'retrieval', results: { resources, best_matches: Object.keys(resources).map(r => r + '/t/body/0-9') } }, { type: 'answer', text: 'The record says SECRET ' }, { type: 'answer', text: 'BODY TEXT.' },
+    { type: 'citations', citations: { 'r2/t/body/0-9': [[0, 4]] } }, { type: 'status', code: '0' }]);
+  const out = await guardKbResponse('/ask', stream({ r1: open, r2: held }), policy).text();
+  const items = out.trim().split('\n').map(line => JSON.parse(line).item);
+  absent(out, ['speech-424242', 'The record says', 'BODY TEXT.'], 'stream');
+  assert.deepEqual(Object.keys(items.find(i => i.type === 'retrieval').results.resources), ['r1']);
+  assert.ok(!items.some(i => i.type === 'answer' && i.text) && !items.some(i => i.type === 'citations' && Object.keys(i.citations).length));
+  assert.ok(items.some(i => i.type === 'status'), 'the stream still ends as a stream');
+  const clean = stream({ r1: open });
+  assert.equal(await guardKbResponse('/ask', clean.clone(), policy).text(), await clean.text());
+  // A line that cannot be parsed and names a closed id is dropped, never passed through.
+  const broken = new Response('{"item":{"type":"answer","text":"about speech-424242"\n{"item":{"type":"status","code":"0"}}\n', { headers: { 'content-type': 'application/x-ndjson' } });
+  absent(await guardKbResponse('/ask', broken, policy).text(), ['speech-424242'], 'broken line');
+});
+
+test('prequeries: a withheld resource named in prior_resources is not searched, and a response that used one is not passed on', async () => {
+  const policy = policyOf(entry({ document: 'speech-424242' }));
+  const held = resource('speech-424242', 'speech', 'openaustralia'), open = resource('speech-1', 'speech', 'nsw_hansard');
+  const out = scrubKbPayload('/ask', { answer: 'An answer from SECRET BODY TEXT.', citations: { x: [[0, 2]] }, retrieval_results: { resources: { r1: open } },
+    prequeries: { q1: { resources: { r2: held }, best_matches: ['r2/t/body/0-9'] }, q2: { resources: { r1: open }, best_matches: ['r1/t/body/0-9'] } } }, policy);
+  assert.deepEqual([out.answer, out.citations, Object.keys(out.prequeries.q1.resources), out.prequeries.q1.best_matches, Object.keys(out.prequeries.q2.resources)], ['', {}, [], [], ['r1']]);
+  absent(out, ['speech-424242'], 'prequeries');
+  // The Worker checks the rids a client sends back before it builds any request.
+  await withKb(HELD, async (w, { sent }) => {
+    const context = [{ author: 'user', text: 'What was said about housing supply?' }, { author: 'answer', text: 'Members debated housing supply.' }];
+    await w.fetch('/api/ask', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question: 'What did members say about rents in 2024?', context, prior_resources: [RID('speech-424242'), RID('speech-1')] }) });
+    const asks = sent.filter(r => r.path === '/ask');
+    assert.ok(asks.some(a => JSON.stringify(a.body).includes(RID('speech-1'))), 'the open record is still searched');
+    for (const { body } of asks) assert.ok(!JSON.stringify(body.rag_strategies ?? []).includes(RID('speech-424242')), 'no prequery searches the withheld record');
+  });
+});
+
+test('/search and a listing read with a query string: paragraph, full-text and sentence results of a withheld resource are removed', async () => {
+  const policy = policyOf(entry({ document: 'speech-424242' }));
+  const held = resource('speech-424242', 'speech', 'openaustralia'), open = resource('speech-1', 'speech', 'nsw_hansard');
+  const results = { resources: { r1: open, r2: held }, paragraphs: { results: [{ rid: 'r1', text: 'kept' }, { rid: 'r2', text: 'SECRET PARAGRAPH' }] },
+    fulltext: { results: [{ rid: 'r2', text: 'SECRET FULLTEXT' }, { rid: 'r1', text: 'kept' }] }, sentences: { results: [{ rid: 'r2', text: 'SECRET SENTENCE' }] } };
+  const out = scrubKbPayload('/search', results, policy);
+  assert.deepEqual([Object.keys(out.resources), out.paragraphs.results, out.fulltext.results, out.sentences.results], [['r1'], [{ rid: 'r1', text: 'kept' }], [{ rid: 'r1', text: 'kept' }], []]);
+  absent(out, ['SECRET PARAGRAPH', 'SECRET FULLTEXT', 'SECRET SENTENCE', 'speech-424242'], '/search');
+  // GET /catalog?… and /search?… carry their arguments in the path: they are checked like the POST forms.
+  for (const target of ['/catalog?page_number=0&page_size=14&sort_field=created', '/search?query=x']) {
+    const listed = await (await guardKbResponse(target, Response.json({ resources: { r1: open, r2: held } }), policy)).json();
+    assert.deepEqual(Object.keys(listed.resources), ['r1'], target);
+  }
+});
+
+test('a response that cannot be parsed and names a closed id fails closed', async () => {
+  const policy = policyOf(entry({ document: 'speech-424242' }));
+  const res = guardKbResponse('/find', new Response('{"resources": {"r2": {"slug": "speech-424242", "text": "SECRET"', { headers: { 'content-type': 'application/json' } }), policy);
+  const text = await res.text().catch(() => 'stream error');
+  absent(text, ['speech-424242', 'SECRET'], 'unparseable response');
+  // One that names nothing closed is passed through as it came.
+  assert.equal(await guardKbResponse('/find', new Response('{"resources": {', { headers: { 'content-type': 'application/json' } }), policy).text(), '{"resources": {');
+});
+
+test('what the client sends back: an earlier answer that cited a withheld record, and a passage of one, never reach a request', async () => {
+  await withKb(HELD, async (w, { sent }) => {
+    const cited = slug => [{ resource: RID(slug), slug, title: `Title of ${slug}`, url: `https://opax.com.au/doc/${slug}`, snippet: 'CLIENT HELD TEXT of ' + slug, cited: true }];
+    const context = [{ author: 'user', text: 'What did the first member say?' }, { author: 'answer', text: 'CLIENT HELD ANSWER one.', sources: cited('speech-424242') },
+      { author: 'user', text: 'And the second?' }, { author: 'answer', text: 'An answer from the open record.', sources: cited('speech-1') }];
+    await w.fetch('/api/ask', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question: 'and after that?', context }) });
+    assert.ok(sent.some(r => r.path === '/ask'), 'a request was built');
+    for (const { path, body } of sent.filter(r => r.body)) {
+      // The retrieval filter names the record in order to exclude it; nothing else in the request may.
+      absent({ ...body, filter_expression: undefined }, ['CLIENT HELD ANSWER', 'CLIENT HELD TEXT of speech-424242', 'speech-424242', RID('speech-424242')], path);
+    }
+    assert.ok(sent.some(r => JSON.stringify(r.body ?? '').includes('An answer from the open record.')), 'the open turn still travels');
+    sent.length = 0;
+    const passages = [{ slug: 'speech-424242', resource: RID('speech-424242'), title: 'A debate', text: 'CLIENT HELD PASSAGE. '.repeat(20), kind: 'speech', cited: true },
+      { slug: 'speech-1', resource: RID('speech-1'), title: 'Another debate', text: 'Rents rose across the capital cities over the year, the member told the chamber. '.repeat(5), kind: 'speech', cited: true }];
+    await w.fetch('/api/followups', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question: 'What was said about rents?', answer: 'Members debated rents at length in the chamber.', passages }) });
+    const asks = sent.filter(r => r.path === '/ask');
+    assert.ok(asks.length >= 1);
+    for (const { body } of asks) absent(body, ['CLIENT HELD PASSAGE'], 'follow-ups');
+    assert.ok(asks.some(a => String(a.body.query).includes('Rents rose across the capital cities')));
+  });
+});
+
 // ---- the builds: applied at deploy from the Actions secret, never committed, never logged
 
 test('the committed files carry the public tiers only, and the build steps read the list from the environment, not from a file', () => {

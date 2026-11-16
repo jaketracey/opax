@@ -12,7 +12,7 @@ import {offMapDonorNote,donorDisclosure,donorLabelHTML,receiptTypeLine,hasPartyR
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
-import { guardKbRequest, guardKbResponse, guardKbGeneration, openForKbGeneration, hiddenKbRead, guardSearchRows, withheldDigest, withheldReady, dependsOnWithheld, withheldUnavailable, POLICY as SOURCE_POLICY } from './source-policy'
+import { guardKbRequest, guardKbResponse, guardKbGeneration, openForKbGeneration, hiddenKbRead, fieldReadRid, closedRead, closedRefs, withoutWithheldHistory, guardSearchRows, withheldDigest, withheldReady, dependsOnWithheld, withheldUnavailable, POLICY as SOURCE_POLICY } from './source-policy'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
@@ -341,6 +341,14 @@ async function kbFetch(
     const { target, body } = guardKbRequest(path, guardKbGeneration(path, sent))
     const hidden = hiddenKbRead(path)
     if (hidden) return hidden
+    // One field of a resource, asked for by its id (the machine summary behind /api/brief): the path names no
+    // slug or source, so with a list in force the resource itself is read and checked first.
+    const fieldOf = SOURCE_POLICY.withheldCount ? fieldReadRid(path) : null
+    if (fieldOf) {
+      const basic = await call(`/resource/${fieldOf}?show=basic&show=origin`, undefined, headers)
+      // Unreadable counts as closed: the field is not served on a guess.
+      if (!basic.ok || closedRead(await basic.json().catch(() => ({ hidden: true })))) return new Response(JSON.stringify({ detail: 'Resource does not exist' }), { status: 404, headers: { 'content-type': 'application/json' } })
+    }
     const generation = env.RESEARCH_EVAL && (target === '/predict/chat' || target === '/ask' && (body as Record<string, unknown> | undefined)?.generate_answer !== false)
     const answered = await fetch(`${ragBase(env)}${target}`, {
       method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
@@ -2824,7 +2832,10 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   // Suggestions are generated through the knowledge base. An answer drawn from a source closed to that path gets
   // none, and a passage from one is not put in the request (source-policy.ts).
   if (SOURCE_POLICY.kbGenerationExcluded(answer)) return json({ questions: [] })
-  const inputPassages = openForKbGeneration((Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p)))
+  // A passage the client holds from a record that is now withheld is checked server-side and left out.
+  const sentPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
+  const closedPassage = await closedRefs(sentPassages, async rid => { const res = await kbFetch(env, `/resource/${rid}?show=basic&show=origin`); return res.ok ? res.json() : res.status === 404 ? {} : { hidden: true } })
+  const inputPassages = openForKbGeneration(sentPassages.filter(p => !closedPassage(p)))
   const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
   // Older clients may send a previous answer containing full source quotations.
   const priorAnswer = restricted ? saEvidenceText({},answer,env.SA_HANSARD_FULL_TEXT,'',true) : answer
@@ -3300,7 +3311,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
     .slice(0, BRIEF_MAX)
   if (!rids.length) return json({ briefs: {} })
   const cache = caches.default
-  const cacheKey = new Request(`https://opax.com.au/api/brief?v=${BRIEF_CACHE_VERSION}&rids=${rids.join(',')}`)
+  // Keyed by the cache epoch, so a bump retires every cached brief (a takedown's first step).
+  const cacheKey = new Request(`https://opax.com.au/api/brief?v=${BRIEF_CACHE_VERSION}&epoch=${encodeURIComponent(env.CACHE_EPOCH)}&rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
   if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const briefs: Record<string, string> = {}
@@ -3318,7 +3330,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
     }),
   )
   const out = json({ briefs })
-  out.headers.set('cache-control', 'public, max-age=3600')
+  // Five minutes in a browser: a copy there cannot be recalled, so it is kept short. The edge copy lasts the hour.
+  out.headers.set('cache-control', 'public, max-age=300')
   await cache.put(cacheKey, await Promise.resolve(out.clone()))
   return withCacheStatus(await Promise.resolve(out), 'MISS')
 }
@@ -6994,6 +7007,10 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     answerQuestion=question;routedInput=body.value
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
+    // What the client sends back from earlier turns is checked against the withheld list before any request is
+    // built from it: an answer that cited a withheld record, and a withheld record in prior_resources, are dropped.
+    const checked = await withoutWithheldHistory(body.value, async rid => { const res = await kbFetch(selected, `/resource/${rid}?show=basic&show=origin`, { signal: request.signal }); return res.ok ? res.json() : res.status === 404 ? {} : { hidden: true } })
+    if (checked !== body.value) { body.value = checked; body.text = JSON.stringify(checked); routedInput = checked }
     const identity = await identityAnswer(body.value as AskInput, agenticToolDeps(selected, request.signal, ctx))
     if (identity) return identityResponse(identity, request)
     const money=await federalPartyMoneyAnswer(body.value as AskInput,selected.ASSETS)
