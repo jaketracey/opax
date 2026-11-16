@@ -23,11 +23,47 @@ export function guardKbRequest(target: string, body: unknown, policy: SourcePoli
     ...policy.withheldDocuments.filter(id => !id.includes('/')).map(slug => ({ not: { prop: 'resource', slug } })),
   ]
   if (!clauses.length) return { target, body }
-  // /catalog filters resources; the search endpoints filter fields, and a resource clause there excludes
-  // every field of that resource.
+  return { target, body: withFilter(target, body as Row, clauses) }
+}
+
+/** /catalog filters resources; the search endpoints filter fields, and a resource clause there excludes every
+ * field of that resource. */
+function withFilter(target: string, body: Row, clauses: Row[]): Row {
   const key = target === '/catalog' ? 'resource' : 'field'
-  const expression = object((body as Row).filter_expression), existing = expression[key]
-  return { target, body: { ...body as Row, filter_expression: { ...expression, [key]: { and: [...(existing ? [existing] : []), ...clauses] } } } }
+  const expression = object(body.filter_expression), all = [...(expression[key] ? [expression[key] as Row] : []), ...clauses]
+  return { ...body, filter_expression: { ...expression, [key]: all.length === 1 ? all[0] : { and: all } } }
+}
+
+// ---- paths where the knowledge base itself generates text
+// The older Ask engine and planner, follow-up rewriting and suggestions, search summaries, position recovery,
+// journey stories and the money overview all ask the knowledge base to generate, and it reaches a model through
+// a preset this code cannot flag. A source reaches those paths only at the full tier with kb_generation: allowed,
+// and the sources in KB_GENERATION_NEVER never do. It is kept out twice: the retrieval the knowledge base runs
+// for the request is filtered, and nothing of the source is put in the request where it is assembled.
+
+/** True for a request that makes the knowledge base generate text. */
+export const isKbGeneration = (target: string, body: unknown): boolean =>
+  target === '/predict/chat' || target === '/ask' && object(body).generate_answer !== false
+
+/** The records, facts, passages or turns that may go into a knowledge base generation request. */
+export const openForKbGeneration = <T>(items: readonly T[], policy: SourcePolicy = POLICY): T[] => items.filter(item => !policy.kbGenerationExcluded(item))
+
+/** The last step before a generation request leaves: the knowledge base's own retrieval is filtered, and any
+ * supplied context entry or earlier answer that names an excluded source is taken out. The reader's own words
+ * (the question, their earlier turns) are theirs and stay. */
+export function guardKbGeneration(target: string, body: unknown, policy: SourcePolicy = POLICY): unknown {
+  if (!body || typeof body !== 'object' || Array.isArray(body) || !(target === '/ask' || target === '/predict/chat')) return body
+  // /ask retrieves even when it does not generate, and what it retrieves is then sent to /predict/chat: the
+  // retrieval filter goes on every /ask.
+  const filtered = target === '/ask' && policy.kbGenerationClosed.length ? withFilter(target, body as Row, policy.kbGenerationClosed.map(id => ({ not: { prop: 'label', labelset: 'source', label: id } }))) : body as Row
+  if (!isKbGeneration(target, body)) return filtered
+  const out = { ...filtered }
+  const open = (value: unknown) => !policy.kbGenerationExcluded(value)
+  if (Array.isArray(out.extra_context)) out.extra_context = out.extra_context.filter(open)
+  if (Array.isArray(out.query_context)) out.query_context = out.query_context.filter(open)
+  else if (out.query_context && typeof out.query_context === 'object') out.query_context = Object.fromEntries(Object.entries(out.query_context as Row).filter(([id, text]) => open([id, text])))
+  if (Array.isArray(out.chat_history)) out.chat_history = out.chat_history.filter(turn => object(turn).author !== 'NUCLIA' || open(turn))
+  return out
 }
 
 /** What a closed resource shows: its title, date and publisher link with the label, and no text, summary,

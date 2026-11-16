@@ -168,7 +168,7 @@ def test_registry_is_well_formed():
         for f in c.get("facts", []):
             assert f["field"] in ("established", "commissioner") and f["page"] >= 1
             # A fact read from a source that is not quotable holds no quotation; every other fact holds one.
-            assert bool(f.get("quote")) == (POLICY.use(c["id"], f"{c['id']}/{f['doc']}") == "quotable"), c["id"]
+            assert bool(f.get("quote")) == source_policy.allows(POLICY.use(c["id"], f"{c['id']}/{f['doc']}"), "quote"), c["id"]
 
 
 def manual_entry(sha):
@@ -236,8 +236,8 @@ def test_registry_transcripts_are_manual_dated_and_carry_rights():
     for c in reg["commissions"]:
         for d in c["documents"]:
             if d["kind"] == "hearing_transcript":
-                # The date line is held only where the source is quotable or has no recorded policy.
-                assert bool(d.get("date_quote")) == (POLICY.use(c["id"]) == "quotable"), (c["id"], d["key"])
+                # The date line is held only where the source's tier allows quotation or it has no recorded policy.
+                assert bool(d.get("date_quote")) == source_policy.allows(POLICY.use(c["id"]), "quote"), (c["id"], d["key"])
     for d in transcripts:
         assert d["source"] == "manual" and len(d["sha256"]) == 64
         assert d["date"] and d["date_page"] == 1 and d["rights"]

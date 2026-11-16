@@ -34,12 +34,12 @@ export function shardOf(term: string, shards: number): number {
 
 /** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
  * public text or every word is too common to narrow the search. */
-/** Text is read only for a commission the source policy lists as quotable, and never for a withheld transcript
- * (parli/ingest/source_policy.json). documents_only and search_only sources have no text here. */
-const textOpen = (policy: SourcePolicy, commission: string, key: unknown) => policy.listed(commission) && policy.textAllowed({ documents: [`${commission}/${String(key)}`] })
+/** Text is read only for a commission whose tier allows quotation (full or quote_and_cite), and never for a
+ * withheld transcript (parli/ingest/source_policy.json). documents_only and search_only sources have no text here. */
+const textOpen = (policy: SourcePolicy, commission: string, key: unknown) => policy.listed(commission) && policy.can('quote', { documents: [`${commission}/${String(key)}`] })
 
 export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string, policy: SourcePolicy = POLICY): Promise<{ keys: Set<string>, terms: string[] } | null> {
-  if (!object(ix.commissions[commission]).name || !policy.listed(commission) || policy.use(commission) !== 'quotable' || policy.withheld({ sources: [commission] })) return null
+  if (!object(ix.commissions[commission]).name || !policy.listed(commission) || !policy.can('quote', { sources: [commission] })) return null
   const terms = [...new Set(tokens(words, ix.stop))]
   const narrow = terms.filter(t => !ix.common.has(t))
   if (!narrow.length) return null

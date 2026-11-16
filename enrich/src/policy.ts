@@ -2,15 +2,16 @@
 // parli/ingest/source_policy.mjs). A resource that is withheld, or whose source is not quotable, is never
 // summarised or labelled: discovery does not queue it, and every read through policyKb sees it as absent, so
 // no caller can put its text in a prompt or write a brief or topic back to it.
-import { POLICY, kbRefusal, type SourcePolicy } from '../../parli/ingest/source_policy.mjs'
+import { POLICY, kbIds, kbRefusal, type SourcePolicy } from '../../parli/ingest/source_policy.mjs'
 import type { KbApi, KbResource } from './kb.ts'
 
 export { POLICY }
 export type { SourcePolicy }
 
-/** True when this resource's text may not be sent to a model. Reads its slug and source label. */
+/** True when this resource may not be summarised or labelled: it is withheld, its tier keeps it out of the
+ * knowledge base, or its source's record does not say summaries: allowed. Reads its slug and source label. */
 export const closedResource = (resource: Pick<KbResource, 'slug' | 'usermetadata'> | null | undefined, policy: SourcePolicy = POLICY): boolean =>
-  !!resource && kbRefusal(resource, policy) !== null
+  !!resource && (kbRefusal(resource, policy) !== null || !policy.summaries(kbIds(resource)))
 
 export class SourceWithheld extends Error {
   constructor(rid: string) {
@@ -21,7 +22,6 @@ export class SourceWithheld extends Error {
 
 /** The knowledge box as the policy allows it to be seen. */
 export function policyKb<T extends KbApi>(kb: T, policy: SourcePolicy = POLICY): T {
-  if (!policy.active) return kb
   const closed = new Set<string>(), open = new Set<string>()
   const seen = <T extends KbResource | null>(rid: string, resource: T): T | null => {
     if (!resource) return resource

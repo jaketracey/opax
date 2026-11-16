@@ -457,10 +457,10 @@ def check_fact(fact, docs, texts):
 
 def build_commission(rc, run: Path, texts: Texts, trackers, policy=None):
     policy = policy or source_policy.load()
-    quotable = lambda key: policy.use(rc["id"], f"{rc['id']}/{key}") == "quotable"  # noqa: E731
+    quotable = lambda key: source_policy.allows(policy.use(rc["id"], f"{rc['id']}/{key}"), "quote")  # noqa: E731
     docs, reports, responses, transcripts, recs = {}, [], [], [], []
     notes, gaps = list(rc.get("notes", [])), list(rc.get("gaps", []))
-    if policy.use(rc["id"]) != "quotable" and any(ch in n for n in notes for ch in '"\u201c\u201d'):
+    if not source_policy.allows(policy.use(rc["id"]), "quote") and any(ch in n for n in notes for ch in '"\u201c\u201d'):
         raise Held(f"{rc['id']}: a note carries a quotation but the source is not quotable")
     if rc.get("inquiry_type") not in INQUIRY_TYPES:
         raise Held(f"{rc['id']}: unknown inquiry type {rc.get('inquiry_type')!r}")

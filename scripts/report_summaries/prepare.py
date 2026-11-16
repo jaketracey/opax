@@ -56,8 +56,8 @@ def candidates() -> list[dict]:
     rows: list[dict] = []
     for f in sorted((PUBLIC / "royal-commissions").glob("commission-*.json")):
         c = json.loads(f.read_text())["commission"]
-        # Never summarise a withheld document or one whose source is not quotable (parli/source_policy.py).
-        reps = [r for r in c.get("reports") or [] if not r.get("withheld") and POLICY.text_allowed(documents=[f"{c['id']}/{r['key']}"]) and any((RC_TEXT / f"{x.get('sha256')}.json").exists()
+        # Never summarise a withheld document, or a listed source whose record does not say summaries: allowed (parli/source_policy.py).
+        reps = [r for r in c.get("reports") or [] if not r.get("withheld") and POLICY.summaries(documents=[f"{c['id']}/{r['key']}"]) and any((RC_TEXT / f"{x.get('sha256')}.json").exists()
                                                           for x in r.get("files") or [] if x.get("sha256"))]
         base = {"slug": f"royal-commission-{slug_part(c['id'])}", "type": "royal_commission",
                 "subtype": c.get("inquiry_type"), "title": c["name"], "body": c["name"],

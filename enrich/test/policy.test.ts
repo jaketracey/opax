@@ -12,7 +12,7 @@ import { FakeAi, FakeKb, GOOD_SUMMARY, makeD1, makeDeps, rows, speechText } from
 
 const START = Date.parse('2026-10-13T00:00:00Z'), HOUR = 3600_000
 const entry = (id: Record<string, string>, reason = 'publisher_request') => ({ ...id, reason, date: '2026-11-16' })
-const policy = (withheld: unknown[] = [], use: Record<string, string> = {}) => sourcePolicy({ schema: 1, use, withheld })
+const policy = (withheld: unknown[] = [], sources: Record<string, Record<string, unknown>> = {}) => sourcePolicy({ schema: 2, sources, withheld })
 const both = JSON.stringify({ summary: GOOD_SUMMARY, topics: ['housing'] })
 /** The real client's catalog rows carry the slug; the shared fake's do not. */
 class SlugKb extends FakeKb {
@@ -32,9 +32,21 @@ function box() {
 const CLOSED = {
   'a withheld source': policy([entry({ source: 'vic_hansard' }, 'legal_order')]),
   'a withheld document': policy([entry({ document: 'speech-held' })]),
-  'a search-only source': policy([], { vic_hansard: 'search_only' }),
-  'a documents-only source': policy([], { vic_hansard: 'documents_only' }),
+  'a search-only source': policy([], { vic_hansard: { use: 'search_only' } }),
+  'a documents-only source': policy([], { vic_hansard: { use: 'documents_only' } }),
+  'a quote-and-cite source': policy([], { vic_hansard: { use: 'quote_and_cite', names: ['A Name For This Source'] } }),
+  // Machine summaries and topic labels are off for a listed source, whatever its tier, until its record allows them.
+  'a full source whose record does not say summaries: allowed': policy([], { vic_hansard: { use: 'full' } }),
 }
+
+test('a full source whose record says summaries: allowed is summarised and labelled as before', async () => {
+  const allowed = policy([], { vic_hansard: { use: 'full', summaries: 'allowed' } })
+  assert.equal(closedResource({ slug: 'speech-held', usermetadata: { classifications: [{ labelset: 'source', label: 'vic_hansard' }] } }, allowed), false)
+  const kb = box(), guarded = policyKb(kb, allowed)
+  assert.ok(await guarded.getResource('held'))
+  await guarded.patchSummary('held', 'A brief.')
+  assert.deepEqual(kb.writes(), ['PATCH summary held'])
+})
 
 test('the published policy withholds nothing', () => {
   assert.deepEqual(POLICY.withheldSources, [])

@@ -1,4 +1,5 @@
 // Offline projection of the four published datasets. Never fetches source sites.
+import { POLICY } from '../parli/ingest/source_policy.mjs';
 import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
@@ -26,7 +27,7 @@ async function withTranscripts(r, read) {
 /** Shared page/API projection. `record`, `facts`, `headline` and each table's
  * `rows` retain the dataset's values, labels, units, citations and status fields.
  * One annual_report record is one Commonwealth body and reporting year. */
-export async function projectReports(read) {
+export async function projectReports(read, policy = POLICY) {
   const out = [];
   const add = (type, id, title, body, jurisdiction, date, dateBasis, year, snippet, citation, record, meta, publisher, extra = {}) => {
     if (!citation) throw new Error(`Report has no official citation: ${id}`);
@@ -121,7 +122,8 @@ export async function projectReports(read) {
     const detail = bySlug.get(slug);
     if (!detail) throw new Error(`Report summary has no record: ${slug}`);
     // A summary describes one file. If the record no longer holds that file, the summary is stale and is left off.
-    if (shas(detail.record).has(s.sha256)) detail.summary = s.summary;
+    // ... and a listed source carries a machine summary only when its record says summaries: allowed (source policy).
+    if (shas(detail.record).has(s.sha256) && (detail.report_type !== 'royal_commission' || policy.summaries({ sources: [detail.record.id] }))) detail.summary = s.summary;
   }
   return out;
 }

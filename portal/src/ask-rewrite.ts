@@ -1,3 +1,4 @@
+import { POLICY } from './source-policy'
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 /**
  * A follow-up in a conversation, rewritten as one standalone question so the
@@ -106,7 +107,9 @@ export async function rewriteFollowUp(
 ): Promise<FollowUpRewrite> {
   const question = String(input.question ?? '').replace(/\s+/g, ' ').trim()
   const turns = (input.context ?? [])
-    .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
+    // The rewrite is generated through the knowledge base: an earlier answer drawn from a source closed to that
+    // path, and its record hints, are left out. The reader's own turns stay.
+    .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0 && (t.author !== 'answer' || !POLICY.kbGenerationExcluded(t)))
     .slice(-8)
   if (!question || question.length > 2000 || !turns.some((t) => t.author !== 'answer')) return null
   if (contentFree(question)) return { unclear: true }

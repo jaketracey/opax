@@ -12,7 +12,7 @@ import { build } from 'esbuild';
 import { importBundle } from './fixtures/import-bundle.mjs';
 import { loadWorker } from './worker-harness.mjs';
 import { runPython, pythonSkip } from './helpers/python.mjs';
-import { POLICY, LABELS, REASONS, sourcePolicy, redactCommission, kbRefusal } from '../../parli/ingest/source_policy.mjs';
+import { POLICY, LABELS, REASONS, USES, CAPABILITIES, KB_GENERATION_NEVER, sourcePolicy, redactCommission, kbRefusal } from '../../parli/ingest/source_policy.mjs';
 import { guardKbRequest, guardKbResponse, scrubKbPayload, guardToolResult } from '../src/source-policy.ts';
 import { applySourcePolicy } from '../../scripts/apply_source_policy.mjs';
 import { catalogWithheld } from '../../scripts/build_search_catalog.mjs';
@@ -22,7 +22,15 @@ const PUBLIC = new URL('../public/', import.meta.url).pathname;
 const json = path => JSON.parse(readFileSync(join(PUBLIC, path), 'utf8'));
 const VIC = 'vic-major-infrastructure', ROBODEBT = 'cth-robodebt';
 const entry = (id, reason = 'publisher_request') => ({ ...id, reason, date: '2026-11-16' });
-const policyData = (withheld = [], use = json('../../parli/ingest/source_policy.json').use) => ({ schema: 1, use, withheld });
+/** The published policy with tiers changed: id -> tier name. A source moved off the full tier loses its flags. */
+const policyData = (withheld = [], tiers = {}) => {
+  const sources = structuredClone(json('../../parli/ingest/source_policy.json').sources);
+  for (const [id, use] of Object.entries(tiers)) {
+    const { hosts, names } = sources[id] ?? {};
+    sources[id] = id.includes('/') ? { use } : { use, ...(hosts ? { hosts } : {}), ...(names ? { names } : use === 'quote_and_cite' ? { names: ['A Name For This Source'] } : {}) };
+  }
+  return { schema: 2, sources, withheld };
+};
 const policyOf = (withheld, use) => sourcePolicy(policyData(withheld, use));
 /** Bundles read the policy from one file; a test swaps that file's contents. */
 const withPolicy = data => ({ name: 'source-policy-fixture', setup(b) { b.onLoad({ filter: /source_policy\.json$/ }, () => ({ contents: JSON.stringify(data), loader: 'json' })); } });
@@ -37,21 +45,33 @@ test('the published policy withholds nothing and lists the commission as documen
   assert.deepEqual(file.withheld, []);
   assert.deepEqual([POLICY.withheldSources, POLICY.withheldDocuments], [[], []]);
   assert.equal(POLICY.use(VIC), 'documents_only');
-  assert.equal(POLICY.textAllowed({ documents: [`${VIC}/transcript-2026-11-09`] }), false);
+  for (const capability of ['index', 'quote', 'narrative', 'kb']) assert.equal(POLICY.can(capability, { documents: [`${VIC}/transcript-2026-11-09`] }), false, capability);
+  assert.equal(POLICY.summaries({ sources: [VIC] }), false);
+  assert.equal(POLICY.kbGeneration(VIC), false);
   assert.deepEqual(Object.keys(LABELS), REASONS);
   assert.equal(LABELS.publisher_request, "Withheld at the publisher's request");
   assert.equal(LABELS.legal_order, 'Withheld: subject to a legal order');
 });
 
 const BAD = [
-  { schema: 1, use: {} },
-  { schema: 1, use: {}, withheld: [], notes: 'free text' },
-  { schema: 1, use: { 'a-source': 'summarise' }, withheld: [] },
-  { schema: 1, use: {}, withheld: [{ source: 'a-source', reason: 'publisher_request', date: '2026-11-16', note: 'why' }] },
-  { schema: 1, use: {}, withheld: [{ source: 'a-source', reason: 'because', date: '2026-11-16' }] },
-  { schema: 1, use: {}, withheld: [{ source: 'a-source', reason: 'legal_order', date: '2026-02-30' }] },
-  { schema: 1, use: {}, withheld: [{ source: 'A source with words', reason: 'legal_order', date: '2026-11-16' }] },
-  { schema: 1, use: {}, withheld: [entry({ source: 'a-source' }), entry({ source: 'a-source' })] },
+  { schema: 2, sources: {} },
+  { schema: 2, sources: {}, withheld: [], notes: 'free text' },
+  { schema: 2, sources: { 'a-source': { use: 'summarise' } }, withheld: [] },
+  { schema: 2, sources: { 'a-source': 'full' }, withheld: [] },
+  { schema: 1, use: { 'a-source': 'quotable' }, withheld: [] },
+  { schema: 2, sources: { 'a-source': { use: 'full', note: 'free text' } }, withheld: [] },
+  { schema: 2, sources: { 'a-source': { use: 'full', summaries: 'yes' } }, withheld: [] },
+  { schema: 2, sources: { 'a-source': { use: 'quote_and_cite', names: ['A Name For This Source'], summaries: 'allowed' } }, withheld: [] },
+  { schema: 2, sources: { 'a-source': { use: 'search_only', kb_generation: 'allowed' } }, withheld: [] },
+  { schema: 2, sources: { 'vic-major-infrastructure': { use: 'full', kb_generation: 'allowed' } }, withheld: [] },
+  { schema: 2, sources: { 'a-source': { use: 'quote_and_cite' } }, withheld: [] },
+  { schema: 2, sources: { 'a-source': { use: 'full', hosts: ['https://example.org/path'] } }, withheld: [] },
+  { schema: 2, sources: { 'a-source/doc': { use: 'full', summaries: 'allowed' } }, withheld: [] },
+  { schema: 2, sources: {}, withheld: [{ source: 'a-source', reason: 'publisher_request', date: '2026-11-16', note: 'why' }] },
+  { schema: 2, sources: {}, withheld: [{ source: 'a-source', reason: 'because', date: '2026-11-16' }] },
+  { schema: 2, sources: {}, withheld: [{ source: 'a-source', reason: 'legal_order', date: '2026-02-30' }] },
+  { schema: 2, sources: {}, withheld: [{ source: 'A source with words', reason: 'legal_order', date: '2026-11-16' }] },
+  { schema: 2, sources: {}, withheld: [entry({ source: 'a-source' }), entry({ source: 'a-source' })] },
 ];
 test('a malformed policy is refused: an entry is an id, a reason class and a date, with no free text', () => {
   for (const bad of BAD) assert.throws(() => sourcePolicy(bad), /source policy/, JSON.stringify(bad));
@@ -70,7 +90,8 @@ const POLICIES = () => {
     'a withheld source': policyData([entry({ source: ROBODEBT }, 'legal_order')]),
     'search only': policyData([], { [ROBODEBT]: 'search_only' }),
     'documents only': policyData([], { [ROBODEBT]: 'documents_only' }),
-    'a quotable report in a documents-only source': policyData([], { [ROBODEBT]: 'documents_only', [`${ROBODEBT}/${c.reports[0].key}`]: 'quotable' }),
+    'a quotable report in a documents-only source': policyData([], { [ROBODEBT]: 'documents_only', [`${ROBODEBT}/${c.reports[0].key}`]: 'full' }),
+    'quote and cite': policyData([], { [ROBODEBT]: 'quote_and_cite' }),
   };
 };
 
@@ -86,10 +107,13 @@ def refused(bad):
     except sp.PolicyError:
         return True
     return False
-print(json.dumps({"redacted": {k: sp.redact_commission(data["commission"], sp.Policy(v)) for k, v in data["policies"].items()}, "refused": [refused(b) for b in data["bad"]]}))
+print(json.dumps({"redacted": {k: sp.redact_commission(data["commission"], sp.Policy(v)) for k, v in data["policies"].items()}, "refused": [refused(b) for b in data["bad"]],
+    "tiers": {"uses": list(sp.USES), "capabilities": sp.CAPABILITIES, "never": list(sp.KB_GENERATION_NEVER), "reasons": list(sp.REASONS), "labels": sp.LABELS}}))
 `], { input, maxBuffer: 64 * 1024 * 1024 }));
   for (const [name, data] of Object.entries(POLICIES())) assert.deepEqual(redactCommission(COMMISSION(), sourcePolicy(data)), out.redacted[name], name);
   assert.deepEqual(out.refused, BAD.map(() => true));
+  // One definition of the tiers, the same in both languages.
+  assert.deepEqual(out.tiers, { uses: USES, capabilities: CAPABILITIES, never: KB_GENERATION_NEVER, reasons: REASONS, labels: LABELS });
 });
 
 // ---- the commission record: what a withheld document shows

@@ -85,14 +85,14 @@ def check(c, policy):
         if r.get("status") and not has_cite(r["status"].get("cite")):
             raise Held(f"commission {c['id']} recommendation {r['number']} has a status without a citation")
     held = {f.get("url") for d in c["reports"] + c["responses"] + c["transcripts"]
-            if d.get("withheld") or policy.use(c["id"], f"{c['id']}/{d['key']}") != "quotable" for f in d.get("files") or []}
+            if d.get("withheld") or not policy.can("quote", documents=[f"{c['id']}/{d['key']}"]) for f in d.get("files") or []}
     for fact in ([c["established"]] if c.get("established") else []) + c.get("commissioners", []):
         # A fact read from a document that is not quotable is cited to its page and holds no quotation.
         unquoted = fact.get("cite", {}).get("url") in held or bool(c.get("withheld"))
         if not has_cite(fact.get("cite")) or (unquoted and (fact.get("quote") or not fact["cite"].get("page"))) or (not unquoted and not fact.get("quote")):
             raise Held(f"commission {c['id']} has a fact without a citation, or with a quote its source does not allow")
     for doc in c["reports"] + c["responses"] + c["transcripts"]:
-        if (doc.get("withheld") or policy.use(c["id"], f"{c['id']}/{doc['key']}") != "quotable") and any(k in doc for k in source_policy.TEXT_KEYS):
+        if (doc.get("withheld") or not policy.can("quote", documents=[f"{c['id']}/{doc['key']}"])) and any(k in doc for k in source_policy.TEXT_KEYS):
             raise Held(f"commission {c['id']} document {doc.get('key')} carries text its source policy does not allow")
 
 
@@ -158,7 +158,7 @@ def main(argv=None):
     text = full_text()
     for c in commissions:
         for t in c["transcripts"]:
-            if (c["id"], t["key"]) in text and not t.get("withheld") and policy.text_allowed(documents=[f"{c['id']}/{t['key']}"]):
+            if (c["id"], t["key"]) in text and not t.get("withheld") and policy.can("quote", documents=[f"{c['id']}/{t['key']}"]):
                 t["full_text"] = text[(c["id"], t["key"])]
     files, rows = {}, []
     for c in commissions:

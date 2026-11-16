@@ -16,7 +16,7 @@ The data is static JSON at `/royal-commissions/`. Ask and the MCP read it throug
 * `established` and `commissioners`: each carries a quote from an official document
   and the page it is on. The build checks every quote is verbatim on that page, that a
   commissioner's name is in the quote and that an establishment date is the date in
-  the quote. Roles are as the document gives them. Where the source is not quotable
+  the quote. Roles are as the document gives them. Where the source's tier allows no quotation
   (see "Source policy and takedown"), the fact carries no quote: the build checks that
   the name, or the date in words, is printed on the cited page and keeps the page
   reference and link only.
@@ -37,7 +37,7 @@ The data is static JSON at `/royal-commissions/`. Ask and the MCP read it throug
 * `responses`: government responses and implementation reports, listed as documents.
   OPAX does not grade acceptance or implementation.
 * `use`: on a commission listed in the source policy, how its text may be used:
-  `documents_only`, `search_only` or `quotable`.
+  `documents_only`, `search_only`, `quote_and_cite` or `full`.
 * `withheld`: on a document (or a whole commission) in the takedown list: the reason
   class, the date and the label. The document is then a listing row only.
 * `transcripts`: hearing transcripts of a commission that is still sitting. They are
@@ -177,6 +177,15 @@ page only; every citation links the publisher's PDF at that page and ends with t
 and the CC BY attribution. Every other commission's transcripts stay listed with a link to
 the publisher.
 
+In Ask, every claim taken from a hearing transcript is attributed to who said it and where. Each
+transcript fact reaches the writer with a typed attribution (speaker, the role where the
+transcript's own label records one, hearing day or date, transcript page, and "evidence, not
+finding"), and the writer's contract says to name the speaker and page for every sentence and
+never to state evidence, an allegation or a question as fact or as a finding
+(`TRANSCRIPT_ATTRIBUTION_RULE` in `portal/src/research-writing.ts`). Where no model writes, the
+fixed lines read "Ms Preston said on hearing day 46 (10 March 2023), transcript page P-4899:
+“…”". This shapes what the model is asked to write; it is not a check on what it wrote.
+
 An excerpt stays inside one speaker's turn. The turn's label ("MS HOGAN-DORAN:") is taken
 out of the quoted words and given as `speaker` ("Ms Hogan-Doran", with the label as printed
 in `speaker_label`), and the citation reads "hearing turn by Ms Hogan-Doran". A turn that
@@ -210,13 +219,14 @@ transcript listing rows is given in the tool's own lines rather than rewritten.
 withheld sources and documents. [TAKEDOWN.md](TAKEDOWN.md) sets out the fields, every
 consumer that honours them and the steps a maintainer takes. In short:
 
-* `quotable`: the Antisemitism, Robodebt and NSW Healthcare Funding commissions (CC BY 4.0).
-  Transcript text is built only for these.
+* `full`, with `summaries` and `kb_generation` allowed: the Antisemitism, Robodebt and NSW
+  Healthcare Funding commissions (CC BY 4.0). Transcript text is built only for these.
 * `documents_only`: the Victorian major infrastructure royal commission. The build holds
   (exit 3) if its record carries a quotation, a date line, an extraction rule or a note
   with quotation marks.
-* `search_only` is defined and enforced (no text reaches a model, a summary or an excerpt)
-  but no source uses it and no private index is built.
+* `quote_and_cite` (passages shown as they stand, attributed, with no model-written account)
+  and `search_only` (no text reaches a model, a summary or an excerpt) are defined and enforced,
+  but no source uses them and no private index is built.
 * The other commissions listed by their transcripts only have no entry yet. They keep the
   date line read from page 1 of each transcript and no other text; give each a `use` when
   its terms are settled.

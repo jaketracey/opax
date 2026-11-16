@@ -116,7 +116,7 @@ function transcriptCite(t: RecordRow): ToolCitation {
  * its dates and counts. Empty when the record or its quotes are not built. */
 async function findingCites(env: ToolEnv, c: RecordRow): Promise<ToolCitation[]> {
   // No quotation from a source that is withheld or not quotable, or from a commission with a withheld report.
-  if (!ID.test(String(c.id)) || !POLICY.textAllowed({ sources: [String(c.id)] }) || records(c.reports).some(r => r.withheld)) return []
+  if (!ID.test(String(c.id)) || !POLICY.can('quote', { sources: [String(c.id)] }) || records(c.reports).some(r => r.withheld)) return []
   const record = object(await readToolAsset(env, `/report-records/royal-commission-${c.id}.json`).catch(() => null))
   return records(object(object(record.summary).quotes).items).slice(0, 4).flatMap(q => {
     const cite = object(q.cite), url = sourceUrl(cite.url), quote = String(q.quote ?? '').trim()
@@ -220,6 +220,7 @@ export const tool: ToolDefinition = {
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
           notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(found ? [`Words are matched in the title, date and, for this commission, the transcript text (CC BY 4.0). Excerpts are the publisher's words; a transcript recording a non-publication order or a pseudonymous witness is pointed to by page, not quoted.`] : []),
             ...(ix && args.words && !found && object(ix.commissions[String(c.id)]).name ? ['Those words are too common to search the transcript text; add a more specific word.'] : []),
+            ...(c.use === 'quote_and_cite' ? ['OPAX quotes this inquiry\'s transcripts with the speaker and page, and does not summarise them.'] : []),
             ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
     }
 

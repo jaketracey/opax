@@ -12,7 +12,7 @@ import {offMapDonorNote,donorDisclosure,donorLabelHTML,receiptTypeLine,hasPartyR
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
-import { guardKbRequest, guardKbResponse } from './source-policy'
+import { guardKbRequest, guardKbResponse, guardKbGeneration, openForKbGeneration, POLICY as SOURCE_POLICY } from './source-policy'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
@@ -331,7 +331,8 @@ async function kbFetch(
     // An MCP request counts (and, without an account, spends) each query just before it goes (mcp-access.ts).
     await env.KB_METER?.(path, init?.hedge)
     // The source policy: a query never asks for a withheld source or document (source-policy.ts).
-    const { target, body } = guardKbRequest(path, sent)
+    // ... and a generation request carries nothing of a source closed to knowledge base generation.
+    const { target, body } = guardKbRequest(path, guardKbGeneration(path, sent))
     const generation = env.RESEARCH_EVAL && (target === '/predict/chat' || target === '/ask' && (body as Record<string, unknown> | undefined)?.generate_answer !== false)
     const answered = await fetch(`${ragBase(env)}${target}`, {
       method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
@@ -1067,7 +1068,8 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
     max_tokens: 1800,
     reranker: 'predict',
     show: ['basic', 'origin', 'extra'],
-    extra_context: recordContext(records.records),
+    // Catalogue records and earlier answers from a source closed to knowledge base generation stay out (source-policy.ts).
+    extra_context: recordContext(openForKbGeneration(records.records)),
     rag_strategies: [
       { name: 'neighbouring_paragraphs', before: 1, after: 1 },
       // Index speaker metadata is unsafe for debates containing several speakers.
@@ -1094,7 +1096,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
   if (Array.isArray(context) && context.length > 0) {
     turns.push(
       ...context
-        .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
+        .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0 && (t.author !== 'answer' || !SOURCE_POLICY.kbGenerationExcluded(t)))
         .slice(-(24 - turns.length))
         .map((t) => ({
           author: t.author === 'answer' ? 'NUCLIA' : 'USER',
@@ -1509,6 +1511,8 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
  * costs the answer nothing but the timeout.
  */
 async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext, request: Request): Promise<{ overview: string; why: string }> {
+  // Figures that name a source closed to knowledge base generation go out without a written paragraph.
+  if (SOURCE_POLICY.kbGenerationExcluded(facts)) return { overview: '', why: 'source-policy' }
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
@@ -2278,7 +2282,8 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
   const graph = (await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
-  if (!context) return json({error:'Journey not available'},404)
+  // A journey that names a source closed to knowledge base generation has no generated story.
+  if (!context || SOURCE_POLICY.kbGenerationExcluded(context)) return json({error:'Journey not available'},404)
   const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
   const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(cached,'HIT',false)
@@ -2804,7 +2809,10 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
-  const inputPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
+  // Suggestions are generated through the knowledge base. An answer drawn from a source closed to that path gets
+  // none, and a passage from one is not put in the request (source-policy.ts).
+  if (SOURCE_POLICY.kbGenerationExcluded(answer)) return json({ questions: [] })
+  const inputPassages = openForKbGeneration((Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p)))
   const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
   // Older clients may send a previous answer containing full source quotations.
   const priorAnswer = restricted ? saEvidenceText({},answer,env.SA_HANSARD_FULL_TEXT,'',true) : answer

@@ -138,7 +138,8 @@ test('a transcript document id with an exact quote selects the record for writin
 test('repeated final grounding of an unsplit transcript record never restores the tool block, and keeps the draft as paraphrase',()=>{
   const source={resource:'fact-1',slug:'',kind:'record',title:text,snippet:text,url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',href:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',cited:true}
   const fallback=api.proseFallback({...input(),facts:[{id:1,text,source}]})
-  assert.doesNotMatch(fallback.answer,/PDF page|CC BY|transcript page|©/)
+  // The tool block never comes back; the attributed lines name the transcript page each quotation is on.
+  assert.doesNotMatch(fallback.answer,/PDF page|CC BY|©/);assert.match(fallback.answer,/, transcript page P-4899: “/)
   assert.match(fallback.answer,/Ms Preston said on hearing day 46/)
   validRanges(fallback)
   const draft='Invented Witness said “A fabricated quote.” on hearing day 99.'

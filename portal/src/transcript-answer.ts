@@ -24,7 +24,11 @@ export function hearingEvidenceQuestion(question: string): boolean {
 
 
 const EXCERPT = /\btranscript page \S+/
-export interface TranscriptTurn { speaker: string; day?: string; date?: string; page: string; excerpt: string }
+export interface TranscriptTurn { speaker: string; role?: 'commissioner' | 'witness'; day?: string; date?: string; page: string; excerpt: string }
+/** The role a transcript's own speaker label records ("THE COMMISSIONER", "THE WITNESS"); none when the label is a name. */
+export const transcriptRole = (speaker: string): TranscriptTurn['role'] | undefined =>
+  /^(?:the )?commissioner\b/i.test(speaker.trim()) ? 'commissioner' : /^the witness$/i.test(speaker.trim()) ? 'witness' : undefined
+const withRole = (turn: TranscriptTurn): TranscriptTurn => { const role = transcriptRole(turn.speaker); return role ? { ...turn, role } : turn }
 /** Split a published citation into attributed turns before writing. Restricted transcripts never supply
  * quotations, even if malformed input happens to contain quotation marks. */
 export function transcriptTurns(text: string): TranscriptTurn[] {
@@ -32,10 +36,10 @@ export function transcriptTurns(text: string): TranscriptTurn[] {
   const day = /\b(?:Hearing )?Day (\d+)\b/i.exec(text)?.[1]
   const date = /\((\d{1,2} [A-Z][a-z]+ \d{4})\)/.exec(text)?.[1]
   const turns = [...text.matchAll(/transcript page (\S+) \(PDF page \d+\), hearing turn by ([^:]+): "([\s\S]*?)"(?= transcript page | Hearing transcript:|$)/g)]
-    .map(m => ({ speaker: m[2], page: m[1], excerpt: m[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }))
+    .map(m => withRole({ speaker: m[2], page: m[1], excerpt: m[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }))
   if (turns.length) return turns
   const written = /^(.+?) said at .+?, transcript page (\S+): "([\s\S]+)"\. Hearing transcript:/.exec(text)
-  return written ? [{ speaker: written[1], page: written[2], excerpt: written[3], ...(day ? { day } : {}), ...(date ? { date } : {}) }] : []
+  return written ? [withRole({ speaker: written[1], page: written[2], excerpt: written[3], ...(day ? { day } : {}), ...(date ? { date } : {}) })] : []
 }
 
 /** Keep at most 32 source words, without adding an ellipsis inside a quotation. */

@@ -1,3 +1,4 @@
+import { openForKbGeneration, POLICY as SOURCE_POLICY } from '../src/source-policy.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -8,7 +9,7 @@ import {build} from 'esbuild';
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const start=index.indexOf('function buildAskBody('),end=index.indexOf('/** The portal',start);
 const compiled=ts.transpileModule(index.slice(start,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
-const buildAskBody=runInNewContext(compiled+';buildAskBody',{
+const buildAskBody=runInNewContext(compiled+';buildAskBody',{openForKbGeneration,SOURCE_POLICY,
  askRetrievalQuery:input=>input.question,recordContext:rows=>rows.map(r=>JSON.stringify(r)),
  filterExpression:f=>({field:f}),integrityQuestion:()=>false,
  isNamedPositionQuestion:input=>Boolean(input.speaker),RECORD_GROUNDING:'',POSITION_GROUNDING:'',

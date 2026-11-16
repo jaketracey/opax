@@ -22,7 +22,9 @@ VIC = "vic-major-infrastructure"
 
 
 def policy(use=None, withheld=()):
-    return sp.Policy({"schema": 1, "use": use or {}, "withheld": list(withheld)})
+    """use: source or document id -> a tier name, or a whole record."""
+    sources = {k: (v if isinstance(v, dict) else {"use": v, **({"names": ["A Name For This Source"]} if v == "quote_and_cite" else {})}) for k, v in (use or {}).items()}
+    return sp.Policy({"schema": 2, "sources": sources, "withheld": list(withheld)})
 
 
 def entry(reason="publisher_request", **ident):
@@ -36,21 +38,53 @@ def test_published_policy_holds_no_withheld_entry_and_lists_the_commission_as_do
     assert data["withheld"] == []
     p = sp.load()
     assert p.use(VIC) == "documents_only" and p.listed(VIC)
-    assert not p.text_allowed(documents=[f"{VIC}/transcript-2026-11-09"])
-    assert {k for k, v in data["use"].items() if v == "quotable"} == set(ft.COMMISSIONS)
+    assert not p.can("index", documents=[f"{VIC}/transcript-2026-11-09"]) and not p.can("quote", sources=[VIC])
+    assert not p.summaries(sources=[VIC]) and not p.kb_generation(VIC)
+    assert {k for k, v in data["sources"].items() if v["use"] == "full"} == set(ft.COMMISSIONS)
+    assert set(data["sources"][VIC]) == {"use", "hosts", "names"}
+
+
+def test_one_table_defines_the_four_tiers():
+    assert sp.USES == ("documents_only", "search_only", "quote_and_cite", "full")
+    assert sp.CAPABILITIES == {"documents_only": [], "search_only": ["index"], "quote_and_cite": ["index", "quote"],
+                               "full": ["index", "quote", "narrative", "kb"]}
+    tiers = {"a": "documents_only", "b": "search_only", "c": "quote_and_cite", "d": "full"}
+    p = policy(use=tiers)
+    # indexed; quoted; written about by a model; pushed to the knowledge base
+    assert [[p.can(cap, sources=[s]) for cap in ("index", "quote", "narrative", "kb")] for s in "abcd"] == [
+        [False, False, False, False], [True, False, False, False], [True, True, False, False], [True, True, True, True]]
+    # Summaries and knowledge base generation are off for every listed source until its record allows them.
+    assert [p.summaries(sources=[s]) for s in "abcd"] == [False] * 4 and [p.kb_generation(s) for s in "abcd"] == [False] * 4
+    allowed = policy(use={"d": {"use": "full", "summaries": "allowed", "kb_generation": "allowed"}})
+    assert allowed.summaries(sources=["d"]) and allowed.kb_generation("d")
+    # A source with no record is governed by its own pipeline, as before.
+    assert p.can("kb", sources=["openaustralia"]) and p.summaries(sources=["openaustralia"]) and p.kb_generation("openaustralia")
+    # The commission can never reach knowledge base generation, and a withheld source cannot either.
+    assert sp.KB_GENERATION_NEVER == (VIC,) and not policy().kb_generation(VIC)
+    assert not policy(use={"d": {"use": "full", "kb_generation": "allowed"}}, withheld=[entry(source="d")]).kb_generation("d")
 
 
 @pytest.mark.parametrize("bad", [
-    {"schema": 1, "use": {}},  # no withheld list
-    {"schema": 1, "use": {}, "withheld": [], "notes": "free text"},
-    {"schema": 1, "use": {"a-source": "summarise"}, "withheld": []},
-    {"schema": 1, "use": {}, "withheld": [{"source": "a-source", "reason": "publisher_request", "date": "2026-11-16", "note": "why"}]},
-    {"schema": 1, "use": {}, "withheld": [{"source": "a-source", "reason": "because", "date": "2026-11-16"}]},
-    {"schema": 1, "use": {}, "withheld": [{"source": "a-source", "reason": "legal_order", "date": "16 November 2026"}]},
-    {"schema": 1, "use": {}, "withheld": [{"source": "a-source", "reason": "legal_order", "date": "2026-02-30"}]},
-    {"schema": 1, "use": {}, "withheld": [{"source": "A source with words", "reason": "legal_order", "date": "2026-11-16"}]},
-    {"schema": 1, "use": {}, "withheld": [{"source": "a", "document": "b", "reason": "legal_order", "date": "2026-11-16"}]},
-    {"schema": 1, "use": {}, "withheld": [entry(source="a-source"), entry(source="a-source")]},
+    {"schema": 2, "sources": {}},  # no withheld list
+    {"schema": 2, "sources": {}, "withheld": [], "notes": "free text"},
+    {"schema": 2, "sources": {"a-source": {"use": "summarise"}}, "withheld": []},
+    {"schema": 2, "sources": {"a-source": "full"}, "withheld": []},  # a record, not a bare tier
+    {"schema": 1, "use": {"a-source": "quotable"}, "withheld": []},  # the first schema
+    {"schema": 2, "sources": {"a-source": {"use": "full", "note": "free text"}}, "withheld": []},
+    {"schema": 2, "sources": {"a-source": {"use": "full", "summaries": "yes"}}, "withheld": []},
+    {"schema": 2, "sources": {"a-source": {"use": "quote_and_cite", "names": ["A Name For This Source"], "summaries": "allowed"}}, "withheld": []},
+    {"schema": 2, "sources": {"a-source": {"use": "search_only", "kb_generation": "allowed"}}, "withheld": []},
+    {"schema": 2, "sources": {"vic-major-infrastructure": {"use": "full", "kb_generation": "allowed"}}, "withheld": []},
+    {"schema": 2, "sources": {"a-source": {"use": "quote_and_cite"}}, "withheld": []},  # nothing to recognise its facts by
+    {"schema": 2, "sources": {"a-source": {"use": "full", "hosts": ["https://example.org/path"]}}, "withheld": []},
+    {"schema": 2, "sources": {"a-source/doc": {"use": "full", "summaries": "allowed"}}, "withheld": []},
+    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "publisher_request", "date": "2026-11-16", "note": "why"}]},
+    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "because", "date": "2026-11-16"}]},
+    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "legal_order", "date": "16 November 2026"}]},
+    {"schema": 2, "sources": {}, "withheld": [{"source": "a-source", "reason": "legal_order", "date": "2026-02-30"}]},
+    {"schema": 2, "sources": {}, "withheld": [{"source": "A source with words", "reason": "legal_order", "date": "2026-11-16"}]},
+    {"schema": 2, "sources": {}, "withheld": [{"source": "a", "document": "b", "reason": "legal_order", "date": "2026-11-16"}]},
+    {"schema": 2, "sources": {}, "withheld": [entry(source="a-source"), entry(source="a-source")]},
 ])
 def test_a_malformed_policy_is_refused(bad):
     with pytest.raises(sp.PolicyError):
@@ -67,10 +101,10 @@ def test_an_entry_is_only_an_id_a_reason_class_and_a_date_and_carries_its_label(
 
 
 def test_a_document_use_overrides_its_source():
-    p = policy(use={"a-source": "documents_only", "a-source/final": "quotable"})
-    assert p.use("a-source", "a-source/final") == "quotable" and p.use("a-source", "a-source/day-1") == "documents_only"
-    assert p.text_allowed(documents=["a-source/final"]) and not p.text_allowed(documents=["a-source/day-1"])
-    assert policy(use={"a-source": "search_only"}).text_allowed(sources=["a-source"]) is False
+    p = policy(use={"a-source": "documents_only", "a-source/final": "full"})
+    assert p.use("a-source", "a-source/final") == "full" and p.use("a-source", "a-source/day-1") == "documents_only"
+    assert p.can("quote", documents=["a-source/final"]) and not p.can("quote", documents=["a-source/day-1"])
+    assert policy(use={"a-source": "search_only"}).can("quote", sources=["a-source"]) is False
 
 
 # ---- the knowledge base: refuse to push, delete if present
@@ -111,6 +145,7 @@ def kb_client(p, monkeypatch):
     (policy(withheld=[entry("withdrawn", document="speech-1")]), body("speech-1")),
     (policy(use={"openaustralia": "search_only"}), body("speech-1")),
     (policy(use={"openaustralia": "documents_only"}), body("speech-1")),
+    (policy(use={"openaustralia": "quote_and_cite"}), body("speech-1")),  # quoted by the transcript tools, never held in the knowledge base
 ])
 def test_the_client_every_push_path_uses_refuses_a_closed_source_or_document(p, refused, monkeypatch):
     kb, sent = kb_client(p, monkeypatch)
@@ -161,12 +196,13 @@ def keys(p):
     return [(c["id"], d["key"]) for c, d in ft.transcripts(REG, p)]
 
 
-def test_transcript_text_is_built_only_for_a_listed_quotable_source_and_never_for_a_withheld_one():
-    quotable = {"cth-robodebt": "quotable"}
+def test_transcript_text_is_published_only_for_a_listed_full_source_and_never_for_a_withheld_one():
+    quotable = {"cth-robodebt": "full"}
     assert keys(policy(use=quotable)) == [("cth-robodebt", "day-1"), ("cth-robodebt", "day-2")]
     assert keys(policy(use=quotable, withheld=[entry(document="cth-robodebt/day-2")])) == [("cth-robodebt", "day-1")]
     assert keys(policy(use=quotable, withheld=[entry("legal_order", source="cth-robodebt")])) == []
-    assert keys(policy(use={"cth-robodebt": "search_only"})) == [] and keys(policy(use={"cth-robodebt": "documents_only"})) == []
+    for tier in ("documents_only", "search_only", "quote_and_cite"):  # public text files are for CC BY sources at the full tier only
+        assert keys(policy(use={"cth-robodebt": tier})) == []
     assert keys(policy()) == []  # not listed: no text
     assert all(c["id"] != VIC for c, _ in ft.transcripts(json.loads(ft.REGISTRY.read_text()), sp.load()))
 
@@ -211,6 +247,11 @@ def test_a_withheld_source_keeps_only_listing_rows():
     text = json.dumps(out)
     for leaked in ("Do the thing", "The Court ruled", "Letters Patent dated", "Commissioner: A Person", "On Monday", "An OPAX note", ".pdf", "/transcripts/"):
         assert leaked not in text
+
+
+def test_a_quote_and_cite_source_keeps_its_quotations_and_page_pointers():
+    out = sp.redact_commission(commission(), policy(use={"a-commission": "quote_and_cite"}))
+    assert {**out, "use": None} == {**commission(), "use": None} and out["use"] == "quote_and_cite"
 
 
 @pytest.mark.parametrize("use", ["documents_only", "search_only"])

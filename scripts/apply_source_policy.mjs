@@ -6,7 +6,7 @@
 //                                      the publisher's page); a document that is not quotable carries no
 //                                      quotation; each listed commission states its `use`
 //   portal/public/transcripts/         the text file, index row and postings of a transcript that is withheld
-//                                      or not quotable are removed
+//                                      or not at the full tier are removed
 //
 // Runs first in `npm run build:search`, so every later build (report records, search catalogue, crawl pages)
 // reads files that already honour the list. `--check` writes nothing and exits 1 if a file would change.
@@ -56,7 +56,7 @@ export function applySourcePolicy({ root = PUBLIC, policy = POLICY, check = fals
   const tx = 'transcripts'
   if (existsSync(join(root, tx, 'index.json'))) {
     const index = read(join(root, tx, 'index.json'))
-    const allowed = d => policy.listed(d.commission) && policy.textAllowed({ documents: [`${d.commission}/${d.key}`] })
+    const allowed = d => policy.listed(d.commission) && policy.can('narrative', { documents: [`${d.commission}/${d.key}`] })
     const gone = index.docs.filter(d => !d.withheld && !allowed(d))
     if (gone.length) {
       const dead = new Set(gone.map(d => d.i))

@@ -144,15 +144,15 @@ def extract(pdf: Path):
 
 
 def transcripts(registry, policy=None):
-    """Transcripts whose text may be published: the commission is in COMMISSIONS and listed as quotable in
-    the source policy, and neither it nor the transcript is withheld. Anything else has no text file, no
+    """Transcripts whose text may be published: the commission is in COMMISSIONS (CC BY 4.0) and listed at the
+    full tier in the source policy, and neither it nor the transcript is withheld. Anything else has no text file, no
     index row and no postings."""
     policy = policy or source_policy.load()
     for c in registry["commissions"]:
         if c["id"] not in COMMISSIONS or not policy.listed(c["id"]):
             continue
         for d in c["documents"]:
-            if d["kind"] == "hearing_transcript" and policy.text_allowed(documents=[f"{c['id']}/{d['key']}"]):
+            if d["kind"] == "hearing_transcript" and policy.can("narrative", documents=[f"{c['id']}/{d['key']}"]):
                 yield c, d
 
 

@@ -68,7 +68,7 @@ The page names each provider by what it does and links its terms. It names no mo
 | Analytics | Google Analytics, PostHog | The browser; `/ingest` proxy | `portal/analytics/`, `src/posthog.ts` |
 | Email | Cloudflare Email Service | The Worker | `send_email` in `wrangler.jsonc` |
 
-A withheld or non-quotable source never reaches any model in this table: see [TAKEDOWN.md](TAKEDOWN.md).
+A withheld source never reaches any model in this table, and a listed source reaches one only as its tier and flags allow (the knowledge base generation rows need `kb_generation: allowed`): see [TAKEDOWN.md](TAKEDOWN.md).
 
 `/support` says each finished model-written answer in Ask and in a conversation carries the "Machine-written" label. `modelWrittenAnswer()` in `public/app.js` decides it: every answer except a calculated one, a list of passages, a coverage note or a prompt to narrow the question (`portal/test/ask-machine-label.test.mjs`). Before 16 November 2026 only overview answers carried it.
 
