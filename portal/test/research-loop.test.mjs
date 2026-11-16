@@ -27,10 +27,11 @@ test('loop answer instructions require a direct first point, unique facts and se
  // People named in hearing transcript evidence: the fixed rule is in the research model's instructions, after the
  // rule that keeps hearing evidence out of its own points. The naming sentences that could pull against it carry
  // the exception; "Name each passage speaker" does not, because passages are Hansard and keep their names.
- assert.match(instructions,/Select numeric record fact ids for transcript excerpts\. Leave what was said, asked or put at a royal commission, integrity commission or inquiry hearing out of your points and reply text/);
- assert.match(instructions,/the writer words it from the record\. For a record labelled .{1,6}Hearing transcript: evidence, not findings.{1,6} \(royal commission, integrity commission and inquiry hearings\), name a person only inside quotation marks, in words copied exactly from the cited excerpt with nothing left out or added, never in your own words\./);
+ assert.match(instructions,/Select numeric record fact ids for transcript excerpts\. Leave what a record labelled .{1,6}Hearing transcript: evidence, not findings.{1,6} \(a royal commission, integrity commission or inquiry transcript\) says out of your points and reply text/);
+ assert.match(instructions,/Hansard and parliamentary committee hearings stay in your points\. /);
+ assert.match(instructions,/stay in your points\. For a record labelled .{1,6}Hearing transcript: evidence, not findings.{1,6} \(royal commission, integrity commission and inquiry hearings\), name a person only inside quotation marks, in words copied exactly from the cited excerpt with nothing left out or added, never in your own words\./);
  assert.match(instructions,/It comes before every other instruction here about naming people or saying who said something\. Hansard speeches, committee hearings and every other record keep their names\./);
- assert.match(instructions,/Name the people the records name, except in hearing transcripts, where a person is named only inside a verbatim quotation\./);
+ assert.match(instructions,/where a person is named only inside a verbatim quotation; Hansard and parliamentary committee hearings keep their names\./);
  assert.match(instructions,/found about each, except people named in hearing transcript evidence; for why/);
  assert.match(instructions,/Name each passage speaker and date as recorded\. /);
  assert.match(instructions,/Name the people the records name, including private individuals, except people named in hearing transcript evidence\./);

@@ -12,6 +12,7 @@ for(const [name,prompt]of Object.entries(prompts))test(name+' carries one shared
  // "never in your own words" once (the positive wording did not hold in a 20-question run).
  assert.ok((outside.match(/\b(?:do not|never|must not|cannot)\b/gi)??[]).length<=4)
  assert.match(prompt,/Arithmetic belongs to the calculator/)
- assert.match(prompt,/Name the people the records name, except in hearing transcripts, where a person is named only inside a verbatim quotation\./)
+ // Tied to the record's label, so a prompt that never sees a transcript cannot read it as covering committee hearings.
+ assert.ok(prompt.includes('Name the people the records name, except in a record labelled ‘Hearing transcript: evidence, not findings’ (a royal commission, integrity commission or inquiry transcript), where a person is named only inside a verbatim quotation; Hansard and parliamentary committee hearings keep their names. '))
  assert.doesNotMatch(prompt,/name the people they name/)
 })

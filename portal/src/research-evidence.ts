@@ -72,10 +72,20 @@ export function repairQuotes(claim: string, evidence: string, note: (label: stri
 /** Whether a claim holds a quotation that its evidence does not hold word for word (repairQuotes would take the marks
  * off). The claim is then left out whole: cutting the quoted words out of a sentence would leave a fragment. */
 export function quotationFails(claim: string, evidence: string): boolean {
-  let failed = false
-  repairQuotes(claim, evidence, label => { if (label === 'unquoted') failed = true })
+  return failedQuotations(claim, evidence).length > 0
+}
+/** The quoted words in a claim that its evidence does not hold word for word. */
+export function failedQuotations(claim: string, evidence: string): string[] {
+  const failed: string[] = []
+  claim.replace(QUOTED, (match, dq?: string, sq?: string, _lead?: string, aq?: string) => {
+    const inner = dq ?? sq ?? aq ?? ''
+    if (repairQuotes(match, evidence, () => {}) !== match && !(inner.trim() && normal(evidence).includes(normal(inner)))) { const exact = passageSpan(evidence, inner, Number.MAX_SAFE_INTEGER); if (!(exact && words(exact).length === words(inner).length)) failed.push(inner) }
+    return match
+  })
   return failed
 }
+/** Whether quoted words share a run of at least five words with a text: a loose quotation of it, not of something else. */
+export const looseQuotationOf = (inner: string, text: string): boolean => !!passageSpan(text, inner, 5) && words(inner).length >= 5
 
 export interface AnswerTally { points_in:number;points_kept:number;points_uncited:number;repairs:Record<string,number>;drops:Record<string,number>;uncited:Record<string,number>;mode?:'points'|'record_list'|'facts'|'uncited';salvaged?:string }
 export const emptyTally=():AnswerTally=>({points_in:0,points_kept:0,points_uncited:0,repairs:{},drops:{},uncited:{}})

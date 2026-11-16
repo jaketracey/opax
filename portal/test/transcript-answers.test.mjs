@@ -68,10 +68,10 @@ test('people named in hearing evidence appear only inside a quotation: one fixed
   const contract = JSON.parse(api.writingPrompt({ question: 'What did the commission hear?', period: { kind: 'all', label: 'All time' }, facts: [] })).contract
   assert.ok(contract.includes(`licence details belong in the source card. ${RULE} `), 'the rule sits with the hearing excerpt sentence')
   // The shared rules carry the exception themselves, and the writer's "who" sentence carries it too.
-  assert.ok(contract.includes('Name the people the records name, except in hearing transcripts, where a person is named only inside a verbatim quotation. '))
+  assert.ok(contract.includes('Name the people the records name, except in a record labelled ‘Hearing transcript: evidence, not findings’ (a royal commission, integrity commission or inquiry transcript), where a person is named only inside a verbatim quotation; Hansard and parliamentary committee hearings keep their names. '))
   assert.ok(contract.includes('For a who question, name the people and their roles first, then what the inquiry or record found about each, except people named in hearing transcript evidence; for why, give the reason'))
   // The research model's rule for excerpts: fixed text.
-  assert.equal(api.TRANSCRIPT_POINT_RULE, 'Leave what was said, asked or put at a royal commission, integrity commission or inquiry hearing out of your points and reply text, in your own words or quoted: select the transcript excerpt\'s numeric record fact id, and the writer words it from the record. ')
+  assert.equal(api.TRANSCRIPT_POINT_RULE, 'Leave what a record labelled "Hearing transcript: evidence, not findings" (a royal commission, integrity commission or inquiry transcript) says out of your points and reply text, in your own words or quoted: select the excerpt\'s numeric record fact id, and the writer words it from the record. Hansard and parliamentary committee hearings stay in your points. ')
   // Stored answers written before the rule are retired.
   assert.equal(api.ANSWER_WRITING_VERSION, 'written-answer-33-named-people-quotes-removed')
 })

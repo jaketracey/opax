@@ -323,6 +323,10 @@ test('the eval counts people named outside quotation marks in an answer that cit
   // A name that a cited record of another kind holds (a report, a Hansard speech) may be named: it is listed apart
   // and not counted. Run 1 flagged four such names.
   const mixed = [...sources, { resource: 'speech-9', cited: true, kind: 'speech', title: 'Senate Hansard, 3 March 2023', snippet: 'Senator Robin Example: I ask the minister about the scheme.' }]
+  // A Hansard source names its speaker in a field of its own, not always in the excerpt.
+  assert.deepEqual(count('Robin Example moved a motion in the Senate, the transcript records.', [...sources, { resource: 'speech-8', cited: true, kind: 'speech', speaker: 'Robin Example', title: 'Senate', snippet: 'I move the motion.' }]).names, [])
+  // Programs, bodies and places are not people (run 2 flagged seven of these and no person).
+  assert.deepEqual(count('The transcript records evidence about the Online Compliance Intervention program, the Agency for Clinical Innovation and the Tweed Valley Hospital at 771 Example Road.').names, [])
   const both = count('Senator Example asked the minister about the scheme, and the transcript records that Ms Placeholder had the advice.', mixed)
   assert.deepEqual(both.names, ['Ms Placeholder']); assert.deepEqual(both.from_other_records, ['Senator Example'])
   // An answer that cites no hearing transcript is not measured.

@@ -17,7 +17,7 @@ import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './researc
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
-import {quotationFails} from './research-evidence'
+import {quotationFails,failedQuotations,looseQuotationOf} from './research-evidence'
 import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, transcriptPassage } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
@@ -610,10 +610,24 @@ function factsProse(input: WritingInput): QualitativeAnswer {
   if(coverage && !lines.some(l=>key(l.text)===key(coverage.text)))lines.push(coverage)
   return assemble(lines,input)
 }
-/** The writer's raw sentences, assembled as written. */
+/** Whether a writer sentence holds a loose quotation of a hearing transcript. Each quotation is checked against the
+ * facts the sentence cites, whatever kind of record they are.
+ * - It cites a transcript fact, and the facts it cites do not hold its quoted words exactly: yes.
+ * - It cites nothing, and its quoted words are not word for word in a transcript fact given to the writer but share a
+ *   run of five or more words with one (a near-quote of the hearing with no citation): yes.
+ * - Anything else (a failed quotation in a sentence that cites a report, a speech or a return) keeps the standing rule.
+ * Such a sentence is left out of the verified answer and of the stopped-writer draft alike. */
+function looseTranscriptQuotation(text:string,facts:WritingFact[],input:WritingInput):boolean {
+  const hearing=(f:WritingFact)=>!!f.transcript||f.text.includes(TRANSCRIPT_LABEL)
+  const words=(list:WritingFact[])=>list.map(f=>`${f.text}\n${f.source.snippet}`).join('\n')
+  if(facts.length)return facts.some(hearing)&&quotationFails(text,words(facts))
+  const held=words(input.facts.filter(hearing))
+  return !!held&&failedQuotations(text,held).some(inner=>looseQuotationOf(inner,held))
+}
+/** The writer's raw sentences, assembled as written, less any with a quotation a hearing transcript does not hold. */
 export function draftWrittenAnswer(raw:unknown,input:WritingInput):QualitativeAnswer|null {
   if(!raw||typeof raw!=='object'||!Array.isArray((raw as {sentences?:unknown}).sentences))return null
-  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,facts:Array.isArray(s.facts)?s.facts:[]}))
+  const obj=raw as {sentences:WrittenSentence[]},lines=obj.sentences.slice(0,16).filter(s=>s&&typeof s.text==='string').map(s=>({...s,facts:Array.isArray(s.facts)?s.facts:[]})).filter(s=>!looseTranscriptQuotation(s.text,s.facts.flatMap(id=>input.facts.filter(f=>f.id===id)),input))
   const decision=answerDecision(raw)
   return {...assemble(lines,input,!!decision&&decision!=='answer'),...(decision?{answer_decision:decision}:{}),machine_written:true}
 }
@@ -633,8 +647,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
     // Hearing transcripts: a sentence that cites a transcript fact (or cites nothing while a transcript fact is among
     // those given) and holds a quotation those facts do not hold word for word is left out, words and all. Taking only
     // the marks off would leave the words, and any name in them, standing as the writer's own prose.
-    const checkedAgainst=facts.length?facts:input.facts
-    if (checkedAgainst.some(f=>f.transcript||f.text.includes(TRANSCRIPT_LABEL)) && quotationFails(line.text,checkedAgainst.map(f=>`${f.text}\n${f.source.snippet}`).join('\n'))) continue
+    if (looseTranscriptQuotation(line.text,facts,input)) continue
     const metadata=(f:WritingFact)=>f.metadata||/^(?:Period|Financial years):/i.test(f.text)
     const isLimit=line.coverage===true || facts.length>0 && facts.every(f=>f.coverage&&!metadata(f))
     if (isLimit && coverage) continue

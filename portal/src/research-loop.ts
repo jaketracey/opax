@@ -23,7 +23,7 @@ import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
 import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, TRANSCRIPT_POINT_RULE, transcriptPassage } from './transcript-answer'
-import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, quotationFails, type AnswerDraft, type AnswerPoint } from './research-evidence'
+import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, failedQuotations, looseQuotationOf, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
 import { researchReservationUsd, researchTurnReservationUsd } from './research-budget'
@@ -519,22 +519,31 @@ export function createResearch(options: ResearchOptions): Research {
         if (held.size) {
           const ids = new Set<number>()
           let quoteDrops = 0
-          const heldText = [...held.values()].map(f => f.text).join('\n')
+          const heldText = [...held.values()].map(f => f.text).join('\n'), sourceFacts = factPassages()
           pointArgs = (args.points as unknown[]).filter(raw => {
             const quote = object(raw).quote
             const cited = object(citeRecordFacts([raw], held)[0]).id
             const fact = typeof cited === 'string' && held.has(cited) ? held.get(cited) : typeof quote === 'string' && quote.trim().length >= 20 ? [...held.values()].find(f => transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim()))) : undefined
             if (fact) ids.add(Number(fact.id.slice(5)))
             if (fact) return false
-            // With transcript excerpts held, a point whose quotation neither its own cited passage nor a held
-            // excerpt holds word for word may be a loose quotation of the hearing. It is left out whole: taking only the marks off would
-            // leave the words, and any name in them, as the model's own prose.
-            const claim = object(raw).claim, own = typeof object(raw).id === 'string' ? passages.get(String(object(raw).id))?.text ?? '' : ''
-            if (typeof claim === 'string' && quotationFails(claim, `${own}\n${heldText}`)) { quoteDrops++; return false }
+            // Each quotation is checked against the source its point cites, whatever kind of record that is, and
+            // a point that cites a transcript excerpt has already given way above. So a point that cites a passage
+            // or a record fact keeps today's rule here. What is left is a point that cites nothing: when its quoted
+            // words are not word for word in a held excerpt but share a run of five or more words with one, it is a
+            // loose quotation of the hearing with no citation, and it is left out whole. Taking only the marks off
+            // would leave the words, and any name in them, as the model's own prose.
+            const claim = object(raw).claim, id = object(citeRecordFacts([raw], sourceFacts)[0]).id
+            const cites = typeof id === 'string' && (passages.has(id) || sourceFacts.has(id))
+            if (!cites && typeof claim === 'string' && failedQuotations(claim, heldText).some(inner => looseQuotationOf(inner, heldText))) { quoteDrops++; return false }
             return true
           })
           const added = [...ids].filter(id => !facts.some(f => f.fact.id === id))
-          if (added.length) facts = [...facts, ...factLines(added, why)].slice(0, 15)
+          if (added.length) {
+            const selected = [...facts, ...factLines(added, why)]
+            // A fact past the 15-fact limit is said to be so; factLines has already said why it refused any other.
+            for (const f of selected.slice(15)) if (added.includes(f.fact.id)) why(`fact ${f.fact.id}: past the 15-fact limit; select fewer facts`)
+            facts = selected.slice(0, 15)
+          }
           if (quoteDrops) researchTrace('loop.transcript_quote_drop', { question, dropped: quoteDrops })
         }
       }

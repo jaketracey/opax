@@ -34,7 +34,7 @@ export const NAMED_PEOPLE_EXCEPTION = 'except people named in hearing transcript
 /** The research model's rule for hearing transcript excerpts, beside its instruction to select them by record fact
  * id. That model writes the answer itself (points or reply text) when the question is not a hearing-evidence question.
  * A point that cites or quotes an excerpt is dropped in code and the excerpt's fact goes to the writer. */
-export const TRANSCRIPT_POINT_RULE = 'Leave what was said, asked or put at a royal commission, integrity commission or inquiry hearing out of your points and reply text, in your own words or quoted: select the transcript excerpt\'s numeric record fact id, and the writer words it from the record. '
+export const TRANSCRIPT_POINT_RULE = 'Leave what a record labelled "Hearing transcript: evidence, not findings" (a royal commission, integrity commission or inquiry transcript) says out of your points and reply text, in your own words or quoted: select the excerpt\'s numeric record fact id, and the writer words it from the record. Hansard and parliamentary committee hearings stay in your points. '
 /** Whether a record fact holds quotable transcript passages. A research point never words one: it is read from its record. */
 export const transcriptPassage = (text: string): boolean => transcriptTurns(text).length > 0
 const EXCERPT = /\btranscript page \S+/
