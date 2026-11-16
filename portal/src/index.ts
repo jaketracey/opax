@@ -62,7 +62,7 @@ import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
 import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
-import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
+import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML, vicMemberAuthorisationHTML } from '../public/vic-election.js'
 import { vicExpiredPhrase, vicMembersAtExpiry, vicSeatEnded, vicSeatVacantAtExpiry, vicVacantSentence } from '../public/vic-term.js'
 import { vicEndedSeat } from './vic-term-role'
 import { vicElectionPage, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
@@ -4946,7 +4946,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const photos=await loadPhotos(env).catch(()=>null)
         const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? await loadElectorates(env).catch(()=>null) : null
         const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null)})
-        meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
+        meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
         if(meta.jsonLd?.['@type']==='Person') {
@@ -5408,7 +5408,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       : `${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
-      prerender: prerenderBlock(display, description),
+      prerender: prerenderBlock(display, description, indexLinks() + vicMemberAuthorisationHTML(p)),
       card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit, ...(p.representation?.some(r => r.jurisdiction === 'vic') ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}) } }
   }
   const federal = p.states.includes('federal')

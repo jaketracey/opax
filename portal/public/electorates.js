@@ -1,4 +1,4 @@
-import { vicElectionFooterHTML, VIC_ELECTION_POLLS_CLOSE, vicAssemblyEnded, vicAssemblyExpiredPhrase, vicCouncilEnded, vicCouncilExpiredPhrase } from './vic-election.js?v=a412e65c49';
+import { vicElectionFooterHTML, VIC_ELECTION_POLLS_CLOSE, vicAssemblyEnded, vicAssemblyExpiredPhrase, vicCouncilEnded, vicCouncilExpiredPhrase } from './vic-election.js?v=df44efa398';
 import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
@@ -10,7 +10,9 @@ import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=e
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
 export { rosterSeatParty, rosterListParty } from './roster-party.js';
-import { vicSeatVacantAtExpiry, vicVacantSentence } from './vic-term.js';
+import { vicSeatVacantAtExpiry, vicVacantSentence, vicTermEnd, vicExpiredPhrase } from './vic-term.js?v=240dcd3bde';
+// The person page draws a Victorian member's authorisation block through this module too.
+export { vicMemberAuthorisationHTML } from './vic-election.js?v=df44efa398';
 // A vacancy recorded in the release itself, and its last member, are read and worded in one module.
 import { seatVacancy, vacatedSeat, lastMemberText, servedText } from './seat-vacancy.js';
 export { seatVacancy, vacatedSeat };
@@ -71,6 +73,15 @@ export function recordedRepresentationHTML(representation, electorates) {
   // A statewide seat is the state itself ("New South Wales"): its code after it would say the state twice.
   const statewide = JURISDICTIONS[String(representation.state || '').toLowerCase()] === representation.electorate;
   return name + (representation.state && representation.chamber !== 'senate' && !statewide ? `, ${esc(representation.state)}` : '');
+}
+/** The person header's seat line for a member of a Victorian house whose term has ended, in the words the
+ *  server's head prints: "Member for Richmond until the Assembly expired on 3 November", the seat linked.
+ *  Empty for anyone a seat's row does not name (public/vic-term.js), who keeps the plain seat line. */
+export function personTermLineHTML(person, electorates = []) {
+  const row = person ? vicTermEnd(person, electorates)?.row : null;
+  if (!row) return '';
+  const seat = row.url ? `<a href="${esc(row.url)}">${esc(row.name)}</a>` : esc(row.name);
+  return `Member for ${seat}${row.chamber === 'vic_lc' ? ' Region' : ''} ${esc(vicExpiredPhrase(row))}`;
 }
 export function personElectorateLinksHTML(person, representations = [], electorates = []) {
   const seats = person?.electorates || [];
