@@ -4944,8 +4944,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const vicRows=p.representation?.some(r=>r.jurisdiction==='vic') ? (await loadElectorates(env).catch(()=>null))?.electorates ?? null : null
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicRows)})
+        const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? await loadElectorates(env).catch(()=>null) : null
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null)})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5399,8 +5399,9 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
-  const vicRows = p.representation?.some(r => r.jurisdiction === 'vic') ? (await loadElectorates(env).catch(() => null))?.electorates ?? null : null
-  const vicEnded = vicEndedSeat(p, vicRows)
+  const vicData = p.representation?.some(r => r.jurisdiction === 'vic') ? await loadElectorates(env).catch(() => null) : null
+  const vicRows = vicData?.electorates ?? null
+  const vicEnded = vicEndedSeat(p, vicRows, vicData?.people ?? null)
   if (p.rosterOnly) {
     const description = clip(vicEnded
       ? `${display}, ${vicEnded.member ? `${vicEnded.member.role} ${vicEnded.member.until.phrase}` : `former representative for ${p.rosterOnly.seats.join(', ')}`}${p.party ? ` (${p.party})` : ''}. No speech count for them yet.`

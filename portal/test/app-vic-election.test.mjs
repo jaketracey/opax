@@ -474,8 +474,10 @@ async function liveParity(election,index) {
     assert.deepEqual(Object.keys(detail).sort(),Object.keys(pinned).sort());
     for(const key of ['kind','name','source_url','electorate_url','roster_date','formerly','created','boundary_note','result'])
       assert.deepEqual(detail[key],seat[key],seat.name+': '+key);
-    assert.deepEqual(detail.members.map(m=>m.name),seat.members.map(m=>m.name));
-    for(const [i,m] of seat.members.entries()) {
+    // A vacant seat has no member; the app's shape needs one, so it is sent the last member (seat-vacancy.test.mjs).
+    const shown=seat.members.length?seat.members:seat.vacancy?[seat.vacancy.last]:[];
+    assert.deepEqual(detail.members.map(m=>m.name),shown.map(m=>m.name));
+    for(const [i,m] of shown.entries()) {
       for(const key of ['party','href','source_url','speeches','speech_gap','votes'])assert.deepEqual(detail.members[i][key],m[key]);
       assert.deepEqual(detail.members[i].recent_votes,titledVotes(m));
     }
@@ -487,7 +489,7 @@ async function liveParity(election,index) {
     const row=[...overview.districts,...overview.regions].find(s=>s.slug===detail.slug);
     assert.equal(row.candidates,seat.candidates?.list.length??0);
     if(seat.kind==='district') {
-      assert.deepEqual(detail.members[0].recent_votes,titledVotes(seat.members[0]));
+      assert.deepEqual(detail.members[0].recent_votes,titledVotes(shown[0]));
     } else assert.deepEqual(detail.districts.map(s=>s.name),seat.districts);
   }
   for(const q of ['3350','St Kilda','Bass','allan','9999']) {

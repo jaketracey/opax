@@ -84,9 +84,12 @@ test('no seat page carries a record section for anyone until the polls close; it
       assert.deepEqual(order,['result','candidates','last-parliament'],s.name);
       assert.equal(doc.querySelector('#last-parliament h2').textContent,'Last parliament');
       assert.equal(doc.querySelectorAll('.vic-hub > .vic-facts a[href^="/subject/person/"]').length,0,s.name);
-      if(s.name==='Brunswick') {  // vacant when the term ended: nobody is named (vic-term.test.mjs)
-        assert.equal(row.textContent,'MemberVacant when the Assembly expired on 3 November.');
-        assert.ok(!(page.html+page.description).includes(m.name));continue;
+      if(s.name==='Brunswick') {  // vacant when the term ended: nobody is named its member (vic-term.test.mjs)
+        // The release gives the last member and the day that service ended: said once, here, below the candidates.
+        const last=s.vacancy.last.name;
+        assert.equal(row.textContent,`MemberVacant when the Assembly expired on 3 November. Last member: ${last}, to 19 September 2026.`);
+        assert.equal(page.html.split(last).length-1,1);
+        assert.ok(!(page.description+JSON.stringify(page.jsonLd)+JSON.stringify(page.card)).includes(last));continue;
       }
       assert.equal(row.querySelector('dt').textContent,`Member for ${s.name} until the Assembly expired on 3 November`,s.name);
       assert.deepEqual([...row.querySelectorAll('dd a')].map(a=>[a.getAttribute('href'),a.textContent]),[[m.href,m.name]],s.name);
