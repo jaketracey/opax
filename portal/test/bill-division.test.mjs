@@ -107,6 +107,29 @@ test('the second house\'s third reading first, then the latest third reading, th
   assert.equal(divisionReading({ ...d9972, outcome: undefined }), null);
 });
 
+test('a bill whose divisions are all procedural or amendments has no deciding division: null, never the latest', () => {
+  // One bill, both houses, every division on the way to a reading but none on the reading itself. The latest
+  // (the Senate closure) is the one a "latest division" rule would have shown.
+  const bill = [
+    exported({ key: 'federal-representatives-101', house: 'representatives', stage: 'Second reading', outcome: 'negative', ayes: 40, noes: 83, date: '2026-08-18',
+      question: 'Mr Speaker The original question was that this bill be now read a second time. To this the honourable member has moved as an amendment that all words after "That" be omitted with a view to substituting other words. The question now is that the amendment be agreed to.' }),
+    exported({ key: 'federal-representatives-102', house: 'representatives', stage: 'Second reading', outcome: 'negative', ayes: 41, noes: 82, date: '2026-08-18',
+      question: 'Example Payments Bill 2026 - Second Reading - Decline to read a second time' }),
+    exported({ key: 'federal-representatives-103', house: 'representatives', stage: 'Third reading', outcome: 'affirmative', ayes: 84, noes: 40, date: '2026-08-19',
+      question: 'Mr Speaker The question is that so much of the standing orders be suspended as would prevent the bill being passed through its remaining stages without delay.' }),
+    exported({ key: 'federal-senate-104', house: 'senate', stage: 'Limitation of debate', outcome: 'affirmative', ayes: 35, noes: 30, date: '2026-08-20',
+      question: 'The President The question is that the motion for the allotment of time be agreed to.' }),
+    exported({ key: 'federal-senate-105', house: 'senate', stage: 'Third reading', outcome: 'affirmative', ayes: 36, noes: 29, date: '2026-08-20',
+      question: 'Minister I move: That the question be now put. The President The question is that the question be put.' }),
+  ];
+  assert.deepEqual(bill.map(d => divisionReading(d)), [null, null, null, null, null]);
+  assert.equal(decidingDivision(bill, { originatingHouse: 'representatives' }), null);
+  assert.equal(decidingDivision(bill), null);
+  // The same divisions as division files give them: a name and a result, no stage.
+  const files = bill.map(({ stage, outcome, ...d }) => ({ ...d, name: `Bills — Example Payments Bill 2026; ${stage}`, result: outcome }));
+  assert.equal(decidingDivision(files), null);
+});
+
 test('outcome words come from the division\'s result', () => {
   assert.equal(divisionOutcomeWord({ outcome: 'affirmative' }, 'third'), 'Passed');
   assert.equal(divisionOutcomeWord({ result: 'affirmative' }, 'second'), 'Agreed');
