@@ -16,7 +16,7 @@ const built = await build({ stdin: { contents: [
   "export {hearingFallbackPayload} from './src/ask-hearing-fallback'",
   "export {groundAnswerPayload} from './src/research-grounding'",
   "export {createResearch} from './src/research-loop'",
-  "export {runAgentic} from './src/agentic-ask'",
+  "export {runAgentic, aboveBlockCut, ABOVE_BLOCK_SENTENCES} from './src/agentic-ask'",
   "export {createResearchCreditCooldown} from './src/research-credit'",
   "export {callTool} from './src/tools/index'",
   "export {runTool} from './src/agentic-tools'",
@@ -406,7 +406,7 @@ test('headed transcripts: a turn that ends in a question is shown with the turn 
   ])
 })
 
-test('above a block the model\'s text is kept to three paragraphs, the writer is told so, and the run records what was trimmed', async () => {
+test('above a block the model\'s text is kept to three sentences, the writer is told so, and the run records what was trimmed', async () => {
   const q = 'What did the Robodebt Royal Commission recommend about debts, and what did it hear about income averaging?'
   const heard = await api.callTool(deps(true), 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 1 })
   const recs = await api.callTool(deps(true), 'royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'debts', limit: 1 })
@@ -424,9 +424,40 @@ test('above a block the model\'s text is kept to three paragraphs, the writer is
   assert.ok(lead >= 1 && lead <= 3, out.answer)
   assert.ok(lines.slice(lead + 1).every(line => BLOCK_LINE.test(line)), out.answer)
   const trimmed = out.research.above_block_trimmed
-  assert.ok(trimmed && trimmed.paragraphs >= 1 && trimmed.characters > 0, JSON.stringify(out.research.above_block_trimmed))
+  assert.ok(trimmed && trimmed.sentences === 2 && trimmed.characters === Array.from('It was made in 2023.\n\nIt is addressed to the Commonwealth.').length, JSON.stringify(out.research.above_block_trimmed))
+  assert.equal('paragraphs' in trimmed, false)
   assert.equal(JSON.stringify(out.research).includes('addressed to the Commonwealth'), false, 'the trimmed words are not kept on the record')
   validRanges(out.qualitative)
   const contract = JSON.parse(model.doGenerateCalls.at(-1).prompt.at(-1).content.map(part => part.text ?? '').join('')).contract
   assert.ok(contract.endsWith(' Passages from hearing transcripts are quoted separately, after your text: write three sentences at most, about the other records you were given.') || contract.includes('write three sentences at most, about the other records you were given.'))
+})
+
+test('the cap above a block counts sentences with the writer\'s sentence splitter, wherever the paragraph breaks fall', () => {
+  assert.equal(api.ABOVE_BLOCK_SENTENCES, 3)
+  const kept = (text, cut) => cut ? text.slice(0, cut.keep) : text
+  // One paragraph holding four sentences is cut at the end of the third.
+  const one = 'Debts were raised from averaged income. The scheme ran for years. It was found unlawful. Refunds followed in 2020.'
+  const cut = api.aboveBlockCut(one)
+  assert.deepEqual(cut, { keep: one.indexOf(' Refunds'), sentences: 1 })
+  assert.equal(kept(one, cut), 'Debts were raised from averaged income. The scheme ran for years. It was found unlawful.')
+  // Two sentences in a paragraph, then two one-sentence paragraphs: four, cut inside the third paragraph's end.
+  const mixed = 'The commission reported in 2023. It made 57 recommendations.\n\nOne concerned debts.\n\nAnother concerned records.'
+  assert.equal(kept(mixed, api.aboveBlockCut(mixed)), 'The commission reported in 2023. It made 57 recommendations.\n\nOne concerned debts.')
+  assert.equal(api.aboveBlockCut(mixed).sentences, 1)
+  // A decimal, a section reference and an abbreviation are not sentence ends: these three sentences are not trimmed,
+  // and a fourth after them is.
+  const three = 'Debts fell by 1.5 per cent in 2019. The rule in s. 44 was unchanged. Approx. 300 notices were sent, as Dr. Example told the committee.'
+  assert.equal(api.aboveBlockCut(three), null)
+  const four = `${three} The rest were withdrawn.`
+  assert.equal(kept(four, api.aboveBlockCut(four)), three)
+  // Exactly three sentences are never trimmed, in one paragraph or three.
+  assert.equal(api.aboveBlockCut('One. Two follows. Three ends it.'), null)
+  assert.equal(api.aboveBlockCut('One.\n\nTwo follows.\n\nThree ends it.'), null)
+  // A quotation holding a full stop is read whole with the sentence that holds it.
+  const quoted = 'The report said “Debts were raised. They were wrong.” in 2023. It was tabled. It was debated.'
+  assert.equal(api.aboveBlockCut(quoted), null)
+  // A line with no closing full stop still ends at its line break.
+  const lines = 'Recommendations\nThe commission made one about debts.\nIt made another about records.\nA fourth line.'
+  assert.equal(kept(lines, api.aboveBlockCut(lines)), 'Recommendations\nThe commission made one about debts.\nIt made another about records.')
+  assert.equal(api.aboveBlockCut(''), null)
 })

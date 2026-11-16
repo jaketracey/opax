@@ -189,14 +189,14 @@ test('quotes only: what the cap above the block trimmed is in an operator eval r
   globalThis.__researchModel=model();
   const operator=await evalPost('loop',false,question,'Bearer fixture-operator',{kind:'all'}),seen=await operator.json();await flush();
   assert.equal(operator.status,200,JSON.stringify(seen).slice(0,300));
-  assert.ok(seen.research.above_block_trimmed?.paragraphs>=1,JSON.stringify(seen.research.above_block_trimmed));
+  assert.ok(seen.research.above_block_trimmed?.sentences>=1,JSON.stringify(seen.research.above_block_trimmed));
   const text=JSON.stringify(seen.research.coherence??{});
   assert.ok(text.includes('above_block_trimmed_text')&&text.includes('addressed to the Commonwealth'),text.slice(0,400));
   assert.equal(seen.answer.includes('addressed to the Commonwealth'),false,'trimmed from the answer');
   // The same question with no operator header: the count is there, the trimmed words are nowhere in the response.
   globalThis.__researchModel=model();
   const open=await post(question,false,{kind:'all'}),body=await open.json();await flush();
-  assert.equal(open.status,200);assert.ok(body.research.above_block_trimmed?.paragraphs>=1);
+  assert.equal(open.status,200);assert.ok(body.research.above_block_trimmed?.sentences>=1);
   assert.equal(JSON.stringify(body).includes('addressed to the Commonwealth'),false);assert.equal(JSON.stringify(body).includes('above_block_trimmed_text'),false);
   // A wrong operator secret is a public request.
   globalThis.__researchModel=model();

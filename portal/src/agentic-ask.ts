@@ -34,8 +34,19 @@ import { ResearchError, researchSources, type Research, type ResearchPayload, ty
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION, quotationBlock, joinWritten, hearingFact, fixedLine } from './research-writing'
 import { commissionHearingQuestion, NO_PASSAGE_FOUND, transcriptPassage, TRANSCRIPT_LABEL } from './transcript-answer'
 import {rewriteAnswerPayload} from './research-language'
-/** How many paragraphs of model text may stand above a quotation block (transcript quotes-only switch). */
-export const ABOVE_BLOCK_PARTS = 3
+import { researchSentences } from './research-sentences'
+/** How many sentences of model text may stand above a quotation block (transcript quotes-only switch), as the hub ruled. */
+export const ABOVE_BLOCK_SENTENCES = 3
+/** Where model text above a quotation block is cut: at the end of its third sentence. Sentences are counted with the
+ * splitter the writer's checks and the sentence stream use (research-sentences.ts), so "1.5 per cent", "s. 44" or
+ * "Dr. Example" is not a sentence end and a quotation is read whole; a line break also ends one, so a line with no
+ * closing full stop counts as a sentence. Null when the text holds three sentences or fewer. A count, never a reading. */
+export function aboveBlockCut(text: string): { keep: number, sentences: number } | null {
+  const ends: number[] = []
+  for (const line of text.matchAll(/[^\n]+/g)) for (const part of researchSentences(line[0])) ends.push(line.index! + part.at + part.text.length)
+  if (ends.length <= ABOVE_BLOCK_SENTENCES) return null
+  return { keep: ends[ABOVE_BLOCK_SENTENCES - 1], sentences: ends.length - ABOVE_BLOCK_SENTENCES }
+}
 import {researchTrace} from './research-trace'
 import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
 import { whoBasis } from './research-who-lead'
@@ -736,14 +747,14 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const nothingToWord=!!block&&!writerFacts.some(f=>!f.coverage&&!f.metadata)
     const written = nothingToWord?{answer:'',citations:{},sources:[],machine_written:false} as QualitativeAnswer:await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
     // The block goes last, after the written sentences and the model's own points, so nothing is worded between quotations.
-    // Above a block the model's text is kept short: its first ABOVE_BLOCK_PARTS paragraphs (the writer writes one
-    // sentence to a paragraph, so this is a short paragraph's worth). A count of paragraphs, never a reading of them.
-    // How much was trimmed goes on the run's record; the trimmed words go to the trace only, not into any response.
+    // Above a block the model's text is kept short: its first ABOVE_BLOCK_SENTENCES sentences (aboveBlockCut), from
+    // the writer or any other path. A count of sentences, never a reading of them. How much was trimmed goes on the
+    // run's record; the trimmed words go to the trace only, not into any public response.
     const capped=(above:QualitativeAnswer):QualitativeAnswer=>{
-      const parts=above.answer.split('\n\n')
-      if(parts.length<=ABOVE_BLOCK_PARTS)return above
-      const keep=parts.slice(0,ABOVE_BLOCK_PARTS).join('\n\n').length,trimmed=above.answer.slice(keep).trim()
-      if(run.research)run.research.above_block_trimmed={paragraphs:parts.length-ABOVE_BLOCK_PARTS,characters:Array.from(trimmed).length}
+      const cut=aboveBlockCut(above.answer)
+      if(!cut)return above
+      const keep=cut.keep,trimmed=above.answer.slice(keep).trim()
+      if(run.research)run.research.above_block_trimmed={sentences:cut.sentences,characters:Array.from(trimmed).length}
       researchTrace('quotes_only.above_block_trimmed',{question,trimmed})
       // For an operator's eval run only: the writer's coherence record is what an operator response carries
       // (research-eval.ts researchEvalUsage) and no public response does, so the trimmed words are put there, on the

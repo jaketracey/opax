@@ -33,9 +33,9 @@ export interface ResearchPayload {
   trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
   sources: { title: string; url: string; date?: string; kind: string; speaker?: string }[]
   pre_writer_sources?: QualitativeAnswer['sources']
-  /** Quotes only: model text above the quotation block that was trimmed to keep it short (paragraphs and characters
+  /** Quotes only: model text above the quotation block that was trimmed to keep it short (sentences and characters
    * taken off). The words themselves are not kept here. */
-  above_block_trimmed?: { paragraphs: number; characters: number }
+  above_block_trimmed?: { sentences: number; characters: number }
   /** Present, and true, only when the run was made with the transcript quotes-only switch on (ask-flags.ts). For reports; not shown to readers. */
   transcript_quotes_only?: boolean
   ms?: number
