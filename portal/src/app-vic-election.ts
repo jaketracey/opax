@@ -1,5 +1,6 @@
 /** Anonymous projections of the same offline assets used by the election pages. */
 import {appJson, appRead, readOnly} from './app-http'
+import {candidatePartyPath} from './vic-election-parties'
 import {findSeats, keyDateRows, latest, titledVotes, vicElectionCopy, vicElectionState, visibleResults, VIC_ELECTION_ABOUT, type Contest, type Member, type Seat, type VicElection, type VicPlaces} from './vic-election'
 import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_CACHE, vicElectionEnabled} from '../public/vic-election.js'
 import {validateVicElection, validateVicPlaces, VIC_ELECTION_SOURCE_KEYS as SOURCE_KEYS} from './vic-election-data'
@@ -98,13 +99,26 @@ function seatDetail(d: VicElection, s: Seat, now: Date) {
     districts:s.kind === 'region' ? s.districts.map(name=>seatRow(d.seats.find(x=>x.kind === 'district' && x.name === name)!)) : [],
     result:s.result ? {general:contest(s.result.general), since:s.result.since ? contest(s.result.since) : null} : null,
     candidates:s.candidates ? {published:s.candidates.published, url:s.candidates.url,
-      list:s.candidates.list.map(c=>({name:c.name, party:c.party || null,
+      list:s.candidates.list.map(c=>({...candidateRow(c),
         ...s.kind === 'region' ? {group:c.group ?? null, group_name:c.group_name?.trim() || null} : {}}))} : null,
     members:s.members.map(m=>({...memberRef(m), source_url:m.source_url,
       speeches:m.speeches ? {count:m.speeches.count, first:m.speeches.first, last:m.speeches.last, within_term:m.speeches.within_term} : null,
       speech_gap:m.speech_gap, votes:m.votes ? {count:m.votes.count, ayes:m.votes.ayes, noes:m.votes.noes} : null,
       recent_votes:titledVotes(m).map(v=>({date:v.date, title:v.title, href:v.href, vote:v.vote, source_url:v.source_url}))})),
     results_fetched:d.results_fetched, speech_updated:d.speech_updated, division_start:d.division_start, division_end:d.division_end}
+}
+
+/** A candidate as the app is sent them. App builds to 1.1.5 print `party` as a link to their own party screen,
+ *  found by the printed name with a table inside the app that holds no registered Victorian name: for 19 of the
+ *  23 parties on the lists that screen says the party is not in the record, and for 4 it opens a page. No value
+ *  of `party` is printed by those builds without the link. So `party` is always null, and the party as nominated
+ *  follows the candidate's name in `name`, on a line of its own: every party is printed in full, as the VEC lists
+ *  it, and none is a link. Later builds read the parts instead: `candidate_name`, `party_name` (as nominated;
+ *  null for none) and `party_path` (the party's register view on the website, vic-election-parties.ts; null
+ *  when the name is not on the VEC's register). Builds to 1.1.5 ignore fields they do not name. */
+function candidateRow(c: {name: string; party: string}) {
+  const party = c.party && c.party.toLowerCase() !== 'independent' ? c.party : null
+  return {name:party ? `${c.name}\n${party}` : c.name, party:null, candidate_name:c.name, party_name:c.party || null, party_path:candidatePartyPath(party)}
 }
 
 export async function appVicElection(req: Request, env: ElectionEnv, now = new Date()): Promise<Response> {

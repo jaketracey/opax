@@ -1,0 +1,176 @@
+{
+ "source": "Victorian Electoral Commission, register of political parties",
+ "url": "https://www.vec.vic.gov.au/candidates-and-parties/registered-political-parties/currently-registered-parties",
+ "licence": "CC BY 4.0",
+ "retrieved": "2026-11-16",
+ "parties": [
+  {
+   "name": "Affordable Housing Now – Sustainable Australia Party",
+   "first_registered": "2018-07-24",
+   "re_registered": "2024-11-14",
+   "abbreviation": "Sustainable Australia Party",
+   "acronym": null
+  },
+  {
+   "name": "Animal Justice Party",
+   "first_registered": "2014-10-02",
+   "re_registered": "2024-10-17",
+   "abbreviation": "AJP",
+   "acronym": null
+  },
+  {
+   "name": "Australian Greens Victoria",
+   "first_registered": "1997-08-05",
+   "re_registered": "2024-10-24",
+   "abbreviation": "The Greens",
+   "acronym": null
+  },
+  {
+   "name": "Australian Citizens Party (Victorian Division)",
+   "first_registered": "2026-07-30",
+   "re_registered": null,
+   "abbreviation": "Citizens Party",
+   "acronym": null
+  },
+  {
+   "name": "Australian Democrats",
+   "first_registered": "2026-10-15",
+   "re_registered": null,
+   "abbreviation": null,
+   "acronym": null
+  },
+  {
+   "name": "Australian Labor Party - Victorian Branch",
+   "first_registered": "1985-03-26",
+   "re_registered": "2024-10-03",
+   "abbreviation": "Australian Labor Party",
+   "acronym": null
+  },
+  {
+   "name": "Christian Alliance Party - Reform AU",
+   "first_registered": "2022-09-19",
+   "re_registered": "2024-11-21",
+   "abbreviation": "Christian Alliance Party",
+   "acronym": "CAP"
+  },
+  {
+   "name": "Climate Action Now",
+   "first_registered": "2026-10-07",
+   "re_registered": null,
+   "abbreviation": "CAN",
+   "acronym": null
+  },
+  {
+   "name": "Democratic Labour Party (DLP)",
+   "first_registered": "1985-03-26",
+   "re_registered": "2024-12-18",
+   "abbreviation": "Labour DLP",
+   "acronym": null
+  },
+  {
+   "name": "Family First Victoria",
+   "first_registered": "2022-10-06",
+   "re_registered": "2024-11-25",
+   "abbreviation": "Family First",
+   "acronym": null
+  },
+  {
+   "name": "Free Palestine",
+   "first_registered": "2026-08-05",
+   "re_registered": null,
+   "abbreviation": null,
+   "acronym": null
+  },
+  {
+   "name": "I'm Voting to Avoid the Fine",
+   "first_registered": "2026-10-09",
+   "re_registered": null,
+   "abbreviation": null,
+   "acronym": null
+  },
+  {
+   "name": "Legalise Cannabis Victoria",
+   "first_registered": "2022-10-13",
+   "re_registered": "2024-11-21",
+   "abbreviation": "Legalise Cannabis",
+   "acronym": null
+  },
+  {
+   "name": "Liberal Party of Australia – Victorian Division",
+   "first_registered": "1985-03-26",
+   "re_registered": "2024-10-03",
+   "abbreviation": "Liberal",
+   "acronym": null
+  },
+  {
+   "name": "Libertarian Party (formerly Liberal Democrats)",
+   "first_registered": "2014-11-03",
+   "re_registered": "2024-11-14",
+   "abbreviation": "Libertarian (formerly Liberal Democrats)",
+   "acronym": null
+  },
+  {
+   "name": "National Party of Australia - Victoria",
+   "first_registered": "1985-03-26",
+   "re_registered": "2024-11-14",
+   "abbreviation": "The Nationals",
+   "acronym": null
+  },
+  {
+   "name": "One Nation Victoria",
+   "first_registered": "2018-05-31",
+   "re_registered": "2024-11-07",
+   "abbreviation": "One Nation",
+   "acronym": "ON"
+  },
+  {
+   "name": "Put Australia First, Save the Environment",
+   "first_registered": "2022-10-06",
+   "re_registered": "2024-11-25",
+   "abbreviation": "Put Australia First",
+   "acronym": null
+  },
+  {
+   "name": "Safety Victoria - Violent Crime Prevention",
+   "first_registered": "2022-09-29",
+   "re_registered": "2024-11-21",
+   "abbreviation": null,
+   "acronym": null
+  },
+  {
+   "name": "Shooters, Fishers and Farmers Party Victoria",
+   "first_registered": "2014-10-21",
+   "re_registered": "2024-12-02",
+   "abbreviation": "Shooters, Fishers & Farmers Vic",
+   "acronym": null
+  },
+  {
+   "name": "Socialist Alliance",
+   "first_registered": "2026-10-15",
+   "re_registered": null,
+   "abbreviation": null,
+   "acronym": null
+  },
+  {
+   "name": "The Republican Make Australia Great Again",
+   "first_registered": "2026-09-30",
+   "re_registered": null,
+   "abbreviation": "The Republican",
+   "acronym": null
+  },
+  {
+   "name": "The West Party",
+   "first_registered": "2026-08-06",
+   "re_registered": null,
+   "abbreviation": "West",
+   "acronym": "TWP"
+  },
+  {
+   "name": "Victorian Socialists",
+   "first_registered": "2018-06-06",
+   "re_registered": "2024-11-07",
+   "abbreviation": null,
+   "acronym": null
+  }
+ ]
+}

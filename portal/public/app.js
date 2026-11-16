@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=8e57d7d220").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=db8977e3ec").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=4ee4bb8063").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=0f8215c3cf").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -64,9 +64,9 @@ const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => {
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=73435700a9').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=f264a22cd2').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=e6cfb1af2d').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=ffd32d5678').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1610,7 +1610,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=5bfd1f1bc9' : '/ledger.js?v=cb72e8c441');
+    const mod = await import(grants ? '/grants.js?v=ddab2e7d34' : '/ledger.js?v=a4c0381c59');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1641,7 +1641,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=2272ef5ef7');
+    const mod = await import('/money-explain.js?v=50379b7794');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1660,7 +1660,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=1e067b6697');
+    const mod = await import('/grant-recipient.js?v=b0970d1145');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1913,7 +1913,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=5bb7c51d8c");
+    const module = await import("/suppliers.js?v=5582d9243b");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4355,6 +4355,18 @@ async function renderDeclaredPage(params, manageFocus) {
 // CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
 // members by a name slug the index resolves. The slot is placed synchronously
 // so the section keeps its position however long the fetches take.
+/* A Victorian member's page carries the election authorisation under its sections until the polls
+   close (vic-election.js decides by the clock), in the block the seat pages use. */
+async function renderPersonVicAuthorisation(roster, sections) {
+  if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
+  const key = currentSubjectKey;
+  const module = await loadElectorateModule().catch(() => null);
+  if (currentSubjectKey !== key || !sections.isConnected) return;
+  const html = module?.vicMemberAuthorisationHTML?.(roster) || '';
+  const main = sections.parentElement;
+  main.querySelector(':scope > .authorisation')?.remove();
+  if (html) sections.insertAdjacentHTML('afterend', html);
+}
 async function renderPersonVicGifts(name, sections, roster) {
   if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
   const styled = vicGiftsStyles();
@@ -5626,7 +5638,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=313f458310'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=7ededa022f'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -6701,6 +6713,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // said only of a sitting member in one house, where the roster says so; otherwise the seat.
   const seatWord = roster?.current && electorateLinks
     ? (house === "Senate" ? "Senator for " : /council/i.test(house) ? "MLC for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
+  const termLine = roster && electorateReference ? electorateReference.module.personTermLineHTML?.(roster, electorateReference.data.electorates) || "" : "";
   // One meta line (principle 3): party, seat, house, parliament. The Quick
   // facts box said each of these again; its other facts are in the source
   // sheet under this line.
@@ -6709,7 +6722,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // A roster party is dated beside the chip, as the server's person answer dates it.
     seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
-    electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
+    // A member of an expired Victorian house keeps the server's line ("Member for X until the Assembly
+    // expired on 3 November") instead of the bare seat name.
+    termLine ? `<span>${termLine}</span>` : electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     // Each house with its parliament as one part, so the pair wraps together; a former
     // house says so and comes last.
     ...housesHeld.rows.filter((r) => r.status === "current" || r.status === "").map((r) => `<span>${esc(r.label)}</span>`),
@@ -6786,6 +6801,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   voteQuestions.catch(() => {}).then(() => { if (currentSubjectKey === key) nextSteps?.fillNextSteps($("person-next"), [], "No votes on bills in the record for this member."); });
   const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
+  renderPersonVicAuthorisation(roster, sections);
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });
@@ -7806,7 +7822,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=c2b14d5af4").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=e4a7324408").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -10243,7 +10259,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=2272ef5ef7"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=50379b7794"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10259,14 +10275,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8ebc029b59", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=5f1b3fb8c5", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=cb72e8c441", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=5bfd1f1bc9", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=a4c0381c59", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ddab2e7d34", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=17f948089c", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ac411bee7b", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {

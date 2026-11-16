@@ -69,15 +69,24 @@
     "list": [
       {
         "name": "Wren Halloway",
-        "party": null
+        "party": null,
+        "candidate_name": "Wren Halloway",
+        "party_name": null,
+        "party_path": null
       },
       {
         "name": "Avery Quill",
-        "party": "Independent"
+        "party": null,
+        "candidate_name": "Avery Quill",
+        "party_name": "Independent",
+        "party_path": null
       },
       {
-        "name": "Rowan Ketch",
-        "party": "Example Party"
+        "name": "Rowan Ketch\nExample Party",
+        "party": null,
+        "candidate_name": "Rowan Ketch",
+        "party_name": "Example Party",
+        "party_path": null
       }
     ]
   },
