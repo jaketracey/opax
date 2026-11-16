@@ -273,7 +273,20 @@ def pdf_lines(path: Path) -> list[dict]:
                     # procedural line ("Debate resumed."), which ends in a stop or a colon; a heading does not.
                     "heading": allbold and not quote and even and (x0 > 100 or not text.endswith((".", ":"))),
                 })
-    return out
+    return unmark_wrapped_lines(out)
+
+
+def unmark_wrapped_lines(lines: list[dict]) -> list[dict]:
+    """A long procedural line wraps too ("Amendments 1, 3 to 6, ... 114 to 451" / "and 453 agreed to."): its first
+    line fills the measure, in bold, with no stop, exactly as a long heading's does. What follows tells them
+    apart: a heading's next line is centred; a procedural line's continuation starts at the margin."""
+    for k, ln in enumerate(lines[:-1]):
+        nxt = lines[k + 1]
+        if ln["heading"] and ln["x"] <= 100 and nxt["allbold"] and not nxt["quote"] and nxt["x"] <= 100 \
+                and nxt["page"] == ln["page"] and 0 < nxt["y"] - ln["y"] < 16:
+            ln["heading"] = False
+    return lines
+
 
 
 MEMBER_CELL_RE = re.compile(r"^[A-Za-z][A-Za-z’' -]*, [A-Z]")

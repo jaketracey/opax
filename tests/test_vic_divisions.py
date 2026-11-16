@@ -143,6 +143,20 @@ def test_the_motion_put_straight_after_its_lost_amendment_takes_the_motion_print
     assert {d["name"] for d in good} == {"Health infrastructure"}
 
 
+def test_a_wrapped_procedural_line_is_not_a_heading():
+    title = {**line("Example Bill 2026", "heading"), "x": 250.0, "y": 100.0}
+    wide = {**line("Amendments 1, 3 to 6, 9 to 22, 24 to 31, 34 to 37, 40 to 46, 51 to 58, 62 to 85, 87 to 99, 114 to 451", "heading"), "y": 300.0}
+    rest = {**line("and 453 agreed to.", "bold"), "y": 312.6}
+    lines = V.unmark_wrapped_lines([title, wide, rest, *[{**ln, "y": 400.0 + 12 * k} for k, ln in enumerate(division())]])
+    assert [ln["heading"] for ln in lines[:3]] == [True, False, False]
+    good, _ = parse(lines)
+    assert good[0]["name"] == "Example Bill 2026"
+    # A long heading set over two lines keeps both: its second line is centred, not at the margin.
+    two = V.unmark_wrapped_lines([{**line("Justice Legislation Amendment (Family Violence, Coercive Control, Risk", "heading"), "y": 100.0},
+                                  {**line("Assessment and Other Matters) Bill 2026", "heading"), "x": 210.0, "y": 112.6}])
+    assert [ln["heading"] for ln in two] == [True, True]
+
+
 def test_a_mismatch_keeps_its_number_so_later_ids_do_not_move():
     good, bad = parse([*division(noes="Noes (1): Zed Unknown"), *division()])
     assert bad[0]["id"] == "vic-lc-2023-02-23-1" and good[0]["id"] == "vic-lc-2023-02-23-2"

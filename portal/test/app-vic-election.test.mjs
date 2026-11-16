@@ -29,6 +29,7 @@ async function compile(entry) {
   return import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
 }
 const {appVicElection} = await compile('../src/app-vic-election.ts');
+const {vicSeatVacantAtExpiry} = await import('../public/vic-term.js');
 const {renderVicElection,findSeats,titledVotes,contestName,vicElectionPage} = await compile('../src/vic-election.ts');
 const {default:worker} = await compile('../src/index.ts');
 const slug = s=>s.path.split('/').at(-1);
@@ -480,7 +481,14 @@ async function liveParity(election,index) {
     assert.equal(row.candidates,seat.candidates?.list.length??0);
     if(seat.kind==='district') {
       const page=JSDOM.fragment(renderVicElection(election,seat).html);
-      assert.deepEqual(detail.members[0].recent_votes.map(v=>v.title),[...page.querySelectorAll('.vic-votes a')].map(a=>a.textContent));
+      const listed=[...page.querySelectorAll('.vic-votes a')].map(a=>a.textContent);
+      // A seat vacant when the Assembly expired shows no member record on its page (Brunswick), so no votes
+      // list either; the app still carries the last member's titled votes. Any other page lists the same titles.
+      if(page.querySelector('.vic-member'))assert.deepEqual(detail.members[0].recent_votes.map(v=>v.title),listed);
+      else {
+        assert.equal(vicSeatVacantAtExpiry({jurisdiction:'vic',chamber:'vic_la',name:seat.name}),true,seat.name);
+        assert.deepEqual(listed,[]);
+      }
     } else assert.deepEqual(detail.districts.map(s=>s.name),seat.districts);
   }
   for(const q of ['3350','St Kilda','Bass','allan','9999']) {
