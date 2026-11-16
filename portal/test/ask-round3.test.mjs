@@ -99,7 +99,7 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
   const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/^A witness said/);validRanges(grounded)
-  assert.match(api.writingPrompt(input()),/question by counsel or a commissioner is a question/)
+  assert.match(api.writingPrompt(input()),/names no speaker is attributed to the transcript, never to a named person/)
 })
 test('writer accepts a named, dated transcript summary; an unverified quotation stays as paraphrase',()=>{
   const raw={answer_decision:'answer',sentences:[{text:'A witness said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1],attributed:true}]}

@@ -207,7 +207,7 @@ from `portal/`, no network). 16 November 2026:
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | cth-antisemitism | 16 | 1,288 | 13,252 (96.5%) | 11,702 | 8 (0.1%) | 475 (3.5%) | 1,031 of 1,288 (80.0%) | 70 | 0 |
 | cth-robodebt | 29 | 3,138 | 43,597 (98.3%) | 42,653 | 3 (0.0%) | 749 (1.7%) | 2,863 of 3,137 (91.3%) | 74 | 0 |
-| nsw-healthcare-funding | 62 | 6,230 | 37,007 (64.7%) | 36,531 | 15,886 (27.8%) | 4,276 (7.5%) | 3,897 of 6,230 (62.6%) | 245 | 0 |
+| nsw-healthcare-funding | 62 | 6,230 | 37,008 (64.7%) | 36,532 | 15,886 (27.8%) | 4,276 (7.5%) | 3,897 of 6,230 (62.6%) | 245 | 0 |
 
 Every quotable page carries the transcript's own page number. The NSW Healthcare Funding
 transcripts print examinations as "Q." and "A." with the examiner named once, so more of

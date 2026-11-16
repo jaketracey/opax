@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises'
 import { build } from 'esbuild'
 
 const built = await build({ stdin: { contents: [
-  "export {excerpt, dayWords, spanWords} from './src/tools/transcript-text'",
+  "export {excerpt, speakerName, dayWords, spanWords} from './src/tools/transcript-text'",
   "export {callTool} from './src/tools/index'",
   "export {transcriptListingOnly, withTranscriptNote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
   "export {groundAnswerPayload} from './src/research-grounding'",
@@ -60,7 +60,7 @@ test('the writer is skipped only when every fact is a transcript listing row', a
   assert.equal(api.transcriptListingOnly([row, coverage]), true)
   assert.equal(api.transcriptListingOnly([coverage]), false)
   assert.equal(api.transcriptListingOnly([row, { text: 'NSW ICAC, Operation Wyvern report, page 12: "a finding".' }]), false)
-  assert.equal(api.transcriptListingOnly([{ text: `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn (witness): "income averaging". ${LABEL}.` }]), false, 'excerpts go to the writer')
+  assert.equal(api.transcriptListingOnly([{ text: `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}.` }]), false, 'excerpts go to the writer')
   for (const file of ['royal-commissions', 'integrity-reports']) assert.match(await readFile(new URL(`../src/tools/${file}.ts`, import.meta.url), 'utf8'), new RegExp(`TRANSCRIPT_LABEL = '${api.TRANSCRIPT_LABEL}'`))
 })
 
@@ -76,26 +76,63 @@ test('transcript counts give their dates in words', async () => {
   assert.match(ibac.citations[0].text, /, dated 4 February 2019 to 1 March 2019, newest first\./)
 })
 
-test('an excerpt stays inside one speaker turn; the label leaves the words and no speaker is named', () => {
-  const page = 'that is the position.\nMS SPECIMEN: Thank you, Commissioner. I want to ask about income averaging and how\nthe scheme applied it to each debt.\nCOMMISSIONER: Yes.\nMR SAMPLE SC: Income averaging was raised later.'
+test('an excerpt stays inside one labelled turn, keeps the label out of the text and names no speaker', () => {
+  const page = 'that is the position.\nMS SPECIMEN: Thank you, Commissioner. I want to ask about income averaging and how\nthe scheme applied it to each debt.\nCOMMISSIONER: Yes.\nMR SMITH SC: Income averaging was raised later.'
   const one = api.excerpt(page, ['income', 'averaging'])
   assert.deepEqual(one, { excerpt: 'Thank you, Commissioner. I want to ask about income averaging and how the scheme applied it to each debt.' })
   const carried = api.excerpt('averaging continued from the last page, said the witness. THE COMMISSIONER: Noted.', ['averaging'])
-  assert.deepEqual(carried, { excerpt: 'averaging continued from the last page, said the witness.' }, 'a turn begun on an earlier page has no speaker here')
+  assert.deepEqual(carried, { excerpt: 'averaging continued from the last page, said the witness.' })
+  // Counsel's label, then unlabelled "Q." and "A." turns: the answer is the witness's, so the label must not name it.
+  const qa = 'that was the position, said the witness.\nMS QUELLWORTH: Q. Did the scheme rely on income averaging?\nA. Yes, income averaging was applied to each debt.\nCOMMISSIONER: Yes.'
+  const answer = api.excerpt(qa, ['applied'])
+  assert.deepEqual(Object.keys(answer), ['excerpt']); assert.match(answer.excerpt, /averaging was applied to each debt/)
+  // The search word is the surname in the label: the excerpt is the turn the label opens, with the label cut.
+  const surname = api.excerpt(qa, ['quellworth', 'income', 'averaging'])
+  // Each "Q." and "A." is a boundary too, so the question does not run on into the answer.
+  assert.deepEqual(surname, { excerpt: 'Did the scheme rely on income averaging?' }); assert.doesNotMatch(surname.excerpt, LABELLED)
+  // A label that closes the page, and a label with a doubled colon, are still labels.
+  assert.deepEqual(api.excerpt('The averaging was applied to each debt.\nMS QUELLWORTH:', ['averaging']), { excerpt: 'The averaging was applied to each debt.' })
+  assert.deepEqual(api.excerpt('MS QUELLWORTH:: The averaging was applied.\nMR VANTERPOOL:', ['vanterpool']), { excerpt: '' })
+  assert.deepEqual(api.excerpt('MS QUELLWORTH:: The averaging was applied.\nMR VANTERPOOL:', ['applied']), { excerpt: 'The averaging was applied.' })
+  assert.equal(api.speakerName('MS EXAMPLE-SAMPLE'), 'Ms Example-Sample'); assert.equal(api.speakerName('MR STANDIN SC'), 'Mr Standin SC')
+  assert.equal(api.speakerName('McSAMPLE'), 'McSample'); assert.equal(api.speakerName("MR O'MOCKUP"), "Mr O'Mockup"); assert.equal(api.speakerName('THE COMMISSIONER'), 'The Commissioner')
 })
 
-test('quoted CC BY excerpts carry no speaker labels and name no speaker; the hearing turn gives a role where the page settles it', async () => {
-  const out = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 8 })
-  let roles = 0
-  for (const [i, r] of out.rows.entries()) for (const h of r.text_matches?.hits ?? []) {
-    if (h.excerpt === null) continue
-    assert.ok(!/(?:^|\s)(?:THE |MR |MS |DR )?[A-Z][A-Za-z'’.-]*[A-Z]:\s/.test(h.excerpt), h.excerpt)
-    assert.equal('speaker' in h || 'speaker_label' in h, false)
-    assert.ok(out.citations[i + 1].text.includes(`hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`))
-    assert.doesNotMatch(out.citations[i + 1].text, /hearing turn by /)
-    if (h.speaker_role) roles++
+/** A turn label, as transcript-text.ts reads one. No excerpt may hold one. */
+const LABELLED = /(?<=^|\s)(?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}:+(?=\s|$)/
+test('no transcript excerpt names a speaker: tool rows, citations and every quotable page', async () => {
+  let quoted = 0
+  for (const [commission, words] of [['robodebt', 'income averaging'], ['robodebt', 'debt'], ['healthcare-funding', 'funding'], ['healthcare-funding', 'hospital workforce'], ['antisemitism', 'university']]) {
+    const out = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission, words, limit: 8 })
+    for (const c of out.citations) assert.ok(!/hearing turn by /.test(c.text), c.text)
+    for (const [i, r] of out.rows.entries()) for (const h of r.text_matches?.hits ?? []) {
+      assert.ok(!('speaker' in h) && !('speaker_label' in h), `${commission} ${r.key} page ${h.pdf_page}`)
+      if (h.excerpt === null) continue
+      assert.ok(!/(?:^|\s)(?:THE |MR |MS |DR )?[A-Z][A-Za-z'’.-]*[A-Z]:\s/.test(h.excerpt), h.excerpt)
+      quoted++; assert.ok(out.citations[i + 1].text.includes(`(PDF page ${h.pdf_page}), hearing turn${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`))
+    }
   }
-  assert.ok(roles > 0)
+  assert.ok(quoted > 0)
+  // Every page that may be quoted, with a word from the middle of the page as the search word.
+  const index = await env.asset('/transcripts/index.json')
+  let pages = 0, checked = 0
+  for (const d of index.docs) {
+    const doc = await env.asset(d.file)
+    if (doc.quote_policy !== 'quote') continue
+    for (const p of doc.pages) {
+      if (typeof p.text !== 'string') continue
+      const found = p.text.toLowerCase().match(/[a-z]{5,}/g) ?? []
+      // A word from the middle of the page, then each word of each label on the page (a search for a surname).
+      const inLabels = (p.text.replace(/\s+/g, ' ').match(new RegExp(LABELLED.source, 'g')) ?? []).flatMap(l => l.toLowerCase().match(/[a-z0-9]{2,}/g) ?? [])
+      pages++
+      for (const w of new Set([found[found.length >> 1], ...inLabels])) {
+        const got = api.excerpt(p.text, w ? [w] : []); checked++
+        assert.deepEqual(Object.keys(got), ['excerpt'], `${d.key} page ${p.n}`)
+        assert.doesNotMatch(got.excerpt, LABELLED, `${d.key} page ${p.n} "${w}"`)
+      }
+    }
+  }
+  assert.ok(pages > 1000 && checked > 2 * pages)
 })
 
 test('a royal commission transcript count opens the way the integrity count does', async () => {
@@ -111,7 +148,7 @@ test('a royal commission transcript count opens the way the integrity count does
 })
 
 test('an answer citing only hearing transcripts says they are evidence, not findings', async () => {
-  const turn = `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn (witness): "income averaging". ${LABEL}. CC BY 4.0.`
+  const turn = `Royal Commission into the Robodebt Scheme, Day 12 (1 November 2022), transcript page 1203 (PDF page 9), hearing turn by Ms Smith: "income averaging". ${LABEL}. CC BY 4.0.`
   const answer = 'Witnesses described how income averaging was applied to each debt.'
   const payload = { answered: true, answer_decision: 'answer', answer, citations: { 'fact-1/t/body/0': [[0, answer.length]] },
     sources: [{ resource: 'fact-1', kind: 'record', url: 'https://robodebt.royalcommission.gov.au/t12.pdf', title: turn, snippet: turn, cited: true },

@@ -60,8 +60,13 @@ export function dayWords(iso: unknown): string {
 export const spanWords = (first: unknown, last: unknown) => first === last ? dayWords(first) : `${dayWords(first)} to ${dayWords(last)}`
 
 // A turn opens with the speaker's label in capitals: "MS EXAMPLE-SAMPLE:", "THE COMMISSIONER:", "MR STANDIN SC:".
-const LABEL = /(?<=^|\s)((?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}):(?=\s)/g
+const LABEL = /(?<=^|\s)((?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}):+(?=\s|$)/g
 const KEEP = new Set(['SC', 'KC', 'QC', 'AM', 'AO', 'AC', 'OAM', 'PSM', 'APM'])
+/** The label as a name: "MS EXAMPLE-SAMPLE" as "Ms Example-Sample", "McSAMPLE" as "McSample". No excerpt uses it. */
+export function speakerName(label: string): string {
+  return label.split(' ').map(word => KEEP.has(word) ? word
+    : word.replace(/^Mc(?=[A-Z])/, 'Mc\u0000').toLowerCase().replace(/(^|[-'’\u0000])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase()).replace('\u0000', '')).join(' ')
+}
 
 /** What a speaker is at the hearing, as the transcript itself gives it: its cover page lists the commissioner,
  * counsel assisting and who appears for a party; a "<NAME, SWORN" or "<NAME, AFFIRMED" line marks a witness; and
@@ -140,7 +145,7 @@ export function speakerRoles(pages: RecordRow[]): RoleOf {
 // One turn boundary on a page: a speaker label, a "Q." or "A." of an examination, or a "<" procedural line.
 type Mark = { at: number, end: number, kind: 'label' | 'q' | 'a' | 'note', label?: string }
 
-const flatten = (text: string) => text.replace(MARKER_LINE, m => `\u0002${m.trim()}\u0003`).replace(/(^[ \t]*|[A-Z]:[ \t]+)(Q|A)\.(?=\s)/gm, '$1\u0001$2.').replace(/\s+/g, ' ').trim()
+const flatten = (text: string) => text.replace(MARKER_LINE, m => `\u0002${m.trim()}\u0003`).replace(/(^[ \t]*|[A-Z]:+[ \t]+)(Q|A)\.(?=\s)/gm, '$1\u0001$2.').replace(/\s+/g, ' ').trim()
 /** Every "Q." and "A." at the start of a line is a boundary, so no excerpt runs from one turn into the next. */
 function marksIn(flat: string): Mark[] {
   const notes: Mark[] = [...flat.matchAll(/\u0002([^\u0003]*)\u0003/g)].map(m => ({ at: m.index!, end: m.index! + m[0].length, kind: 'note' }))
