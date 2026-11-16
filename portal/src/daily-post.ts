@@ -14,6 +14,8 @@ import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
 import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
 import { photosFor, photoFor, billPhotosFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
+import { PROCEDURAL_TITLES_PATH } from '../public/vote-tables.js'
+import { decidingDivision, type BillReading, type DivisionOutcomeWord } from '../public/bill-division.js'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
 export type DailyPostKind = typeof DAILY_POST_KINDS[number]
@@ -573,7 +575,7 @@ export function billPostText(bill: BillIndexItem, sentence: string, statusShort:
   return fit([`${MACHINE_SUMMARY_WORDS} ${clip(sentence, 120)}`], [name], url)
 }
 
-interface BillDivision { key?: string; date?: string; house?: string; stage?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }
+interface BillDivision { key?: string; date?: string; house?: string; stage?: string; question?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }
 interface BillFile {
   originating_house?: string | null
   summary?: { sentences?: string[]; affected?: string | null; attribution?: string | null }
@@ -584,7 +586,6 @@ interface BillFile {
 }
 
 const HOUSE_NAMES: Record<string, string> = { senate: 'Senate', representatives: 'House of Representatives' }
-const STAGE_TITLES: Record<string, string> = { 'limitation of debate': 'Limiting debate', 'second reading': 'Second reading', 'third reading': 'Third reading', 'first reading': 'First reading' }
 const SOURCE_LABELS: Record<string, string> = {
   em: 'Explanatory memorandum on ParlInfo', em_supp: 'Supplementary explanatory memorandum on ParlInfo', em_revised: 'Revised explanatory memorandum on ParlInfo',
   billhome: 'Bill home page on ParlInfo', frl_act: 'The Act on the Federal Register of Legislation', frl: 'The Federal Register of Legislation',
@@ -594,8 +595,10 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const catalogue = await photoCatalogue(sources)
   const billPhotos: StoryPhotos = { catalogue, used: [] }
   const divisions = (record?.divisions ?? []).filter(d => Number.isFinite(d.ayes) && Number.isFinite(d.noes) && d.date)
-  const latest = [...divisions].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))[0] ?? null
+  // The vote that decided the bill, never a vote on how the debate ran; with none, no division slide.
+  const procedural = divisions.length ? await sources.asset(PROCEDURAL_TITLES_PATH).catch(() => null) as Record<string, string> | null : null
   const house = billHouse(bill, record)
+  const decided = decidingDivision(divisions, { proceduralTitles: procedural, originatingHouse: house })
   // The bill's own chamber: a House bill shows the House, a Senate bill the Senate, and never the other one.
   const ids = billPhotosFor(catalogue, `bill:${bill.key}`, house)
   const kicker = words.sponsor ? `Bill · ${words.sponsor}${words.party ? ` (${words.party})` : ''}` : bill.portfolio ? `Bill · ${bill.portfolio} portfolio` : 'Bill'
@@ -611,7 +614,7 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',
     alt: `What it does: ${sentences.slice(0, 3).join(' ')}` }
   const timeline = billTimeline(record)
-  const division = latest ? divisionSlide(latest, divisions.length) : null
+  const division = decided ? divisionSlide(decided.division, decided.reading, decided.outcome, divisions.length) : null
   const affected = (record?.summary?.affected ?? '').trim()
   const speeches = record?.speeches ?? []
   const first = speeches.filter(sp => sp.speaker && sp.date).sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''))[0]
@@ -621,7 +624,7 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
     lines: [speeches.length ? `Speeches in the record: ${formatNumber(speeches.length)}${first ? `, beginning with ${first.speaker} on ${formatDate(first.date)}` : ''}.` : ''].filter(Boolean),
     alt: `Who it touches: ${affected}${speeches.length ? ` Speeches in the record: ${speeches.length}.` : ''}` } : null
   const rows = [...new Map((record?.sources ?? []).filter(src => src.kind && SOURCE_LABELS[src.kind]).map(src => [SOURCE_LABELS[src.kind as string], `${SOURCE_LABELS[src.kind as string]}${src.licence ? `, ${src.licence}` : ''}`])).values()].slice(0, 3)
-  if (divisions.length) rows.push('Division record: theyvoteforyou.org.au')
+  if (division) rows.push('Division record: theyvoteforyou.org.au')
   const source = sourceSlide('Read the bill', 'The bill, its progress and the source documents', rows.length ? rows : ['Bill documents on ParlInfo, Commonwealth copyright'],
     `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`, `Read the bill at opax.com.au/bill/${bill.key}.`)
   return { slides: [cover, what, timeline, division, touches, source], photos: billPhotos }
@@ -661,13 +664,13 @@ function billHouse(bill: BillIndexItem, record: BillFile | null): 'senate' | 're
     ?? (/^au-federal-r\d/.test(bill.key) ? 'representatives' : /^au-federal-s\d/.test(bill.key) ? 'senate' : null)
 }
 
-function divisionSlide(d: BillDivision, count: number): StorySlide | null {
+function divisionSlide(d: BillDivision, reading: BillReading, outcome: DivisionOutcomeWord, count: number): StorySlide | null {
   const ayes = d.ayes as number, noes = d.noes as number
   const split = (side: 'ayes' | 'noes'): [string, number][] => Object.entries(d.party_splits ?? {}).map(([party, n]) => [prettyParty(party), Number(n?.[side] ?? 0)] as [string, number]).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1])
-  const stage = (d.stage ?? '').trim()
-  const title = `${STAGE_TITLES[stage.toLowerCase()] ?? (stage ? sentenceCase(stage) : 'Division')}, ${ayes} to ${noes}`
+  // The outcome, as the division's result says it (bill-division.js): a third reading carried is the bill passing that house.
+  const title = `${outcome} at the ${reading} reading, ${ayes} to ${noes}`
   const house = HOUSE_NAMES[d.house ?? ''] ?? 'Parliament'
-  const kicker = count === 1 ? 'The only recorded division' : `The latest of ${dayWords(count).toLowerCase()} recorded divisions`
+  const kicker = count === 1 ? 'The only recorded division' : `One of ${dayWords(count).toLowerCase()} recorded divisions`
   const ayeParties = split('ayes'), noParties = split('noes')
   return { type: 'division', kicker, title, ayes, noes, ayeParties, noParties, line: `${house}, ${formatDate(d.date)}. Party split from They Vote For You.`,
     alt: `${kicker}: ${title.toLowerCase()}. Ayes: ${ayeParties.map(([p, n]) => `${p} ${n}`).join(', ') || ayes}. Noes: ${noParties.map(([p, n]) => `${p} ${n}`).join(', ') || noes}. ${house}, ${formatDate(d.date)}.` }

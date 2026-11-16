@@ -61,7 +61,8 @@ const shard23 = { 'abn-97694995462': { n: 'The Trustee for the Qantas Foundation
 const passedBillFile = { originating_house: 'representatives',
   summary: { sentences: ['It changes how the tax system treats eligible household payments.', 'The Commissioner would administer the change.', 'It would commence on Royal Assent.'], affected: 'The ATO and households receiving eligible payments.', attribution: 'Written by a model from the explanatory memorandum; not the record' },
   key_dates: [{ stage: 'introduced', date: '2026-03-01', house: 'representatives' }, { stage: 'third_reading', date: '2026-05-12', house: 'representatives' }, { stage: 'introduced', date: '2026-06-17', house: 'senate' }, { stage: 'passed', date: '2026-08-20', house: 'senate' }, { stage: 'royal_assent', date: '2026-08-26', house: 'senate' }],
-  divisions: [{ key: 'federal-senate-1', date: '2026-08-20', house: 'senate', stage: 'Limitation of debate', ayes: 34, noes: 26, outcome: 'affirmative', party_splits: { Labor: { ayes: 24, noes: 0 }, Greens: { ayes: 9, noes: 0 }, Liberal: { ayes: 0, noes: 19 }, LNP: { ayes: 0, noes: 3 }, 'One Nation': { ayes: 0, noes: 3 }, Nationals: { ayes: 0, noes: 1 }, Independent: { ayes: 1, noes: 0 } } }],
+  divisions: [{ key: 'federal-senate-1', date: '2026-08-20', house: 'senate', stage: 'Limitation of debate', question: 'The question is that the motion for the allotment of time be agreed to.', ayes: 34, noes: 26, outcome: 'affirmative', party_splits: { Labor: { ayes: 24, noes: 0 }, Greens: { ayes: 9, noes: 0 }, Liberal: { ayes: 0, noes: 19 }, LNP: { ayes: 0, noes: 3 }, 'One Nation': { ayes: 0, noes: 3 }, Nationals: { ayes: 0, noes: 1 }, Independent: { ayes: 1, noes: 0 } } },
+    { key: 'federal-senate-2', date: '2026-08-20', house: 'senate', stage: 'Third reading', question: 'The question is that the bill be now read a third time.', ayes: 33, noes: 27, outcome: 'affirmative', party_splits: { Labor: { ayes: 24, noes: 0 }, Greens: { ayes: 9, noes: 0 }, Liberal: { ayes: 0, noes: 20 }, LNP: { ayes: 0, noes: 3 }, 'One Nation': { ayes: 0, noes: 3 }, Nationals: { ayes: 0, noes: 1 } } }],
   speeches: [{ slug: 's1', speaker: 'Daniel Mulino', date: '2026-03-01' }, { slug: 's2', speaker: 'Tony Sheldon', date: '2026-03-02' }],
   sources: [{ kind: 'em', licence: 'CC BY-NC-ND 4.0' }, { kind: 'billhome', licence: 'CC BY-NC-ND 4.0' }, { kind: 'frl_act', licence: 'CC BY 4.0' }] };
 function sources(recent = [], { photos = true, extras = true } = {}) {
@@ -408,10 +409,11 @@ test('a bill with a division and dates gets a timeline and the division; one wit
   assert.equal(timeline.title, '178 days');
   assert.equal(timeline.events.length, 5);
   assert.deepEqual(timeline.events.map(e => e.date), ['1 Mar 2026', '12 May 2026', '17 Jun 2026', '20 Aug 2026', '26 Aug 2026']);
-  assert.equal(division.title, 'Limiting debate, 34 to 26');
-  assert.equal(division.kicker, 'The only recorded division');
-  assert.deepEqual(division.ayeParties, [['Labor', 24], ['Greens', 9], ['Independent', 1]]);
-  assert.deepEqual(division.noParties, [['Liberal', 19], ['LNP', 3], ['One Nation', 3], ['Nationals', 1]]);
+  // The third reading, never the guillotine motion that came before it on the same day.
+  assert.equal(division.title, 'Passed at the third reading, 33 to 27');
+  assert.equal(division.kicker, 'One of two recorded divisions');
+  assert.deepEqual(division.ayeParties, [['Labor', 24], ['Greens', 9]]);
+  assert.deepEqual(division.noParties, [['Liberal', 20], ['LNP', 3], ['One Nation', 3], ['Nationals', 1]]);
   assert.equal(division.line, 'Senate, 20 Aug 2026. Party split from They Vote For You.');
   assert.equal(touches.photo, 'house', 'one House photograph: the picture shows it again rather than the Senate');
   assert.match(touches.lines[0], /Speeches in the record: 2, beginning with Daniel Mulino on 1 Mar 2026\./);
