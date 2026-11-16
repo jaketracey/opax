@@ -21,6 +21,8 @@ import { divisionPlain } from '../public/division-markdown.js'
 import { votedAgainstParty } from '../public/division-against-party.js'
 import { chamberLabel, PARTY_MAP, machineNoticeHTML } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
+import {partyReturnRows, latestReturnLine, partySitting, partyTagLineHTML, partyYearsText, partyReturnLineHTML, partyHistoryHTML, partyActionsHTML, partyRailBlocks, partyLabelHTML, HEAD_ICONS, type PartyReturnEntry} from '../public/party-page.js'
+import {pageMenuHTML} from '../public/page-actions-menu.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -5229,6 +5231,13 @@ function personPath(people: PeopleData | null, name: string): string {
 /** Resolve host, historical shapes and path aliases before issuing one redirect.
  * Entity redirects require a locally exported target; unknown identities stay 404. */
 let partyPagesMemo: Promise<PartyPage[]> | null = null
+/** The AEC register's party returns, debts and associated entities (scripts/export_aec_extras.py), as
+ *  the party page's receipts block reads them: here for the money line under a party's title. */
+let aecExtrasMemo: Promise<{ parties?: Record<string, PartyReturnEntry> } | null> | null = null
+function loadAecExtras(env: Env) {
+  aecExtrasMemo ??= assetJson<{ parties?: Record<string, PartyReturnEntry> }>(env, '/graph/aec-extras.json').catch(() => { aecExtrasMemo = null; return null })
+  return aecExtrasMemo
+}
 let partyLabelsMemo: Promise<string[]> | null = null
 let divisionSummariesMemo: Promise<Map<string,Division>> | null = null
 function loadDivisionSummaries(env: Env): Promise<Map<string,Division>> {
@@ -5783,6 +5792,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let memberNames: string[] = []
   let memberRows: {name: string; labels: string[]}[] = []
   let sponsored: PartyBill[] = []
+  let partyHead: { head: string; attrs: string } | null = null
   if (dir === 'party') {
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
     // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
@@ -5824,6 +5834,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       lines: independent ? [INDEPENDENTS_DESCRIPTION, ...parts] : parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
       dot: node?.colour ?? null,
     }
+    partyHead = await partyHeadPrerender(display, heading, node, people, recorded, indexed, sponsored.length > 0, env)
   } else if (node) {
     const what = node.industry === 'individual' ? 'donor' : `${industryLabel(node.industry)} donor`
     // The page's own measure (receiptFigures): the parties' returns, each gift once.
@@ -5881,12 +5892,72 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
-    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${node && receiptTypeLine(node) ? `<p class="entry-scope">${escHtml(receiptTypeLine(node))}.</p>` : ''}${donorRecordsHTML(offMapRecords)}${indexLinks()}`
-      : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : dir === 'party' ? `<h2>Members</h2><p>${escHtml(PARTY_NO_MEMBERS)}</p>` : '')
+    prerender: withPartyHead(prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${node && receiptTypeLine(node) ? `<p class="entry-scope">${escHtml(receiptTypeLine(node))}.</p>` : ''}${donorRecordsHTML(offMapRecords)}${indexLinks()}`
+      // A party's name history is in its head (partyHeadPrerender), with the registers' notices.
+      : (partyHead ? '' : historyHTML) + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : dir === 'party' ? `<h2>Members</h2><p>${escHtml(PARTY_NO_MEMBERS)}</p>` : '')
         + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>{const as=recordedAsText(display,[b.party ?? ''],'sponsor recorded as');return `<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}${as ? `, ${escHtml(as)}` : ''}</li>`}).join('')}</ul>` : '')
-        + indexLinks()) + table,
+        + indexLinks()), partyHead) + table,
     card,
   }
+}
+
+/** Two party labels for one party as app.js samePartyLabel reads them, so the head the Worker draws
+ *  counts and names what the app's own head will (partySitting, partySpeechLabel, partyReturnRows). */
+function samePartyAsApp(a: string, b: string): boolean {
+  const code = (label: string) => PARTY_MAP[String(label).toLowerCase()]?.[1] || String(label)
+  return code(a) === code(b)
+}
+
+/**
+ * A party's head as app.js draws it (openSubject's money entry, renderRosterParty, renderPartyMembers,
+ * renderPartyDebts), from the files those read: the meta line with how many sit for the party and its
+ * years, the money line from its latest annual return, its name history and its actions. In the first
+ * paint the page's head has its final height, and the app keeps it (app.js seatBootParty), so the record
+ * under it is never pushed down as those files arrive. `attrs` tell the app which blocks the "On this
+ * page" rail will list and the party's money-map node, so the rail and the map hold their places too.
+ * The menu's links are the app's own except its question, which the app's render redraws.
+ */
+async function partyHeadPrerender(label: string, heading: string, node: MoneyEntry | null, people: PeopleData | null,
+  divisions: NonNullable<Parameters<typeof partyMembers>[1]>['divisions'],
+  indexed: { parties?: Record<string, number> } | null, sponsored: boolean, env: Env): Promise<{ head: string; attrs: string }> {
+  const h = { esc: (s: unknown) => escHtml(String(s ?? '')) }
+  const independent = isIndependent(label)
+  // The app's entry follows the federal money map (money-receipts.json); any other party is drawn from its people.
+  const federal = node?.jurisdiction === 'federal' ? node : null
+  const returns = partyReturnRows(label, (await loadAecExtras(env))?.parties, samePartyAsApp)
+  let years: string
+  if (federal) {
+    const own = partyReturnFigures(federal as Parameters<typeof partyReturnFigures>[0])
+    years = partyYearsText({ first: own.firstYear ?? federal.firstYear, last: own.lastYear ?? federal.lastYear, returns: true })
+  } else {
+    const members = partyMembers(label, { roster: people, divisions, same: samePartyAsApp })
+    const everyone = [...members.current, ...members.former]
+    years = partyYearsText({ first: Math.min(...everyone.map(m => m.first || 9999)), last: Math.max(0, ...everyone.map(m => m.last || 0)), independent })
+  }
+  const lead = federal ? partyLabelHTML(label, { full: true })
+    : independent ? `<span>${h.esc(INDEPENDENTS_DESCRIPTION)}</span>` : partyLabelHTML(label, { full: true }) || `<span>${h.esc(label)}</span>`
+  const tag = partyTagLineHTML({ lead, sitting: partySitting(label, people?.people, samePartyAsApp), active: years }, h)
+  // app.js iconSvg, with the two icons the head can draw (party-page.js HEAD_ICONS).
+  const icon = (name: keyof typeof HEAD_ICONS) => `<svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${HEAD_ICONS[name]}</svg>`
+  const speeches = federal ? null : partySpeechLabel(label, { indexed, roster: people, same: samePartyAsApp })
+  const primary = federal
+    ? `<a class="ui-button" data-explain-link href="${h.esc(`/money/explain?${new URLSearchParams({ to: federal.id })}`)}">${icon('map')}<span>Explain where the money comes from</span></a>`
+    : speeches ? `<a class="ui-button" data-variant="primary" href="${h.esc(`/ask?view=search&${new URLSearchParams({ q: '*', party: speeches.label, kind: 'speech', mode: 'keyword', sort: 'newest' })}`)}">${icon('search')}<span>Their speeches</span></a>` : ''
+  const menu = pageMenuHTML([
+    { href: `/ask?q=${encodeURIComponent(`What has parliament said about ${heading}?`)}`, label: 'Ask what parliament said about them' },
+    { href: `/ask?${new URLSearchParams({ view: 'search', q: `"${label}"` })}`, label: 'Search mentions in the record' },
+    federal ? { href: `/money?focus=${encodeURIComponent(federal.id)}`, label: 'Open the full money map' } : { href: '/subject/party', label: 'All parties' },
+    federal && { href: '/graph/money-receipts.json', label: 'Download receipt data', detail: 'JSON, uncapped party receipts' },
+  ], independent ? 'More about independents' : 'More about this party', { id: 'party-head-menu' })
+  const head = `<div class="subject-head"><h1>${h.esc(heading)}</h1><p class="subject-tag">${tag}</p>` +
+    `${partyReturnLineHTML(latestReturnLine(returns.rows, money), h)}${partyHistoryHTML(label, h)}${partyActionsHTML(primary, menu)}</div>`
+  const rail = partyRailBlocks({ money: Boolean(federal), members: true, sponsored, state: !federal && Boolean(node), returns })
+  return { head, attrs: ` data-rail="${h.esc(rail.join(' '))}"${federal ? ` data-node="${h.esc(federal.id)}"` : ''}` }
+}
+
+/** The page's crawler block opening on the party's head (partyHeadPrerender) in place of its bare h1. */
+function withPartyHead(html: string, party: { head: string; attrs: string } | null): string {
+  return party ? html.replace(/<section id="prerender" class="wrap"><h1>[\s\S]*?<\/h1>/, () => `<section id="prerender" class="wrap subject-party"${party.attrs}>${party.head}`) : html
 }
 
 /**

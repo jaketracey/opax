@@ -39,3 +39,13 @@ export function partyHistory(label: string, renames?: import('./labels.js').Part
 export function partyHistoryHTML(label: string, h: { esc: (s: unknown) => string }, renames?: import('./labels.js').PartyRename[]): string;
 export function partyLodgedAsText(node: { return_by_name?: Record<string, [number, number, string | null, string | null]> } | null | undefined, fmtMoney: (value: number) => string): string;
 export function partyReturns(label: string, parties: Record<string, { returns?: unknown[][] }> | null | undefined, same?: (a: string, b: string) => boolean): { rows: unknown[][]; names: string[]; note: string; entry: { returns?: unknown[][] } | null };
+export function latestReturnLine(rows: unknown[][] | null | undefined, money?: (value: number) => string): { year: string; receipts: number; text: string } | null;
+export interface PartyReturnEntry { returns?: unknown[][]; debts?: unknown; benefits?: unknown; associated_entities?: unknown[] }
+export function partyReturnRows(label: string, parties: Record<string, PartyReturnEntry> | null | undefined, same?: (a: string, b: string) => boolean): { lodged: ReturnType<typeof partyReturns>; entry: PartyReturnEntry | null; rows: unknown[][] };
+export function partySitting(label: string, people: { pid?: string | null; name: string; full?: string | null; current?: boolean | null; party?: string | null; party_now?: string | null; parties?: string[] }[] | null | undefined, same?: (a: string, b: string) => boolean): { count: number; party: string };
+export function partyTagLineHTML(parts: { lead: string; sitting?: { count: number; party: string } | null; active?: string }, h: { esc: (s: unknown) => string }): string;
+export function partyYearsText(opts?: { first?: number | null; last?: number | null; returns?: boolean; independent?: boolean }): string;
+export function partyReturnLineHTML(line: { text: string } | null | undefined, h: { esc: (s: unknown) => string }): string;
+export const HEAD_ICONS: { search: string; map: string };
+export function partyActionsHTML(primary: string, menu: string): string;
+export function partyRailBlocks(blocks?: { money?: boolean; members?: boolean; sponsored?: boolean; state?: boolean; returns?: { rows?: unknown[][]; entry?: PartyReturnEntry | null } | null }): string[];

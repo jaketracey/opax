@@ -298,6 +298,10 @@
    personHeadPrerender): portrait circle, name and meta line, laid out as the
    app lays them out, so the app fills the head in place. */
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head { display: block; }
+/* A party's head is drawn whole (src/index.ts partyHeadPrerender) and the app keeps it. Its summary
+   stays under it until the app routes, as it stood under the bare title before: the page's largest
+   first paint, so the largest paint is not left to the money map a second later. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender.subject-party > .subject-head + p { display: block; }
 @media (min-width: 701px) { .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head:has(.subject-portrait) { display: grid; } }
 /* On a phone the routed page sits under its crumb line (nav.css): no top
    padding, and a small margin over the portrait. The boot head does the same. */

@@ -67,6 +67,8 @@ test('party and donor skeletons reserve their map before waiting for route helpe
       currentSubjectKey:'fixture',key:'fixture', growthModulesReady:gate,voteTablesReady:gate,nextStepsReady:gate,
       $:id=>id === 'subject-body' ? element : {classList:{add(){}}},
       subjectSkeleton:()=>'<fixture>',reserveSubjectMap:()=>events.push('map-space'),
+      // No Worker-drawn party head to keep: a page reached in the app, not landed on.
+      seatBootParty:()=>null,
     });
     assert.deepEqual(events,kind === 'person' ? ['skeleton'] : ['skeleton','map-space']);
     release();
