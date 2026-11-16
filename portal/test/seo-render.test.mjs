@@ -380,6 +380,12 @@ test('grants server rendering supplies filtered D1 rows, canonical and noindex s
   assert.equal(hydrated.total, 55); assert.equal(hydrated.page, 2);
   assert.equal((filtered.match(/<tbody\b[^>]*>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g)||[]).length,5);
 });
+test('the Worker serves the home page with its one title and no status lines above it',async()=>{
+  const html=await get('/');
+  assert.equal((html.match(/<h1\b/g)||[]).length,1);
+  assert.match(html,/<div class="hp-purpose">\s*<h1 id="hp-title">Your guide to the public record<\/h1>/);
+  assert.doesNotMatch(html,/hp-sitting|hp-most-divided/);
+});
 test('homepage schema includes website, search, organisation and breadcrumb; stats is a dataset',async()=>{
   const html=await get('/');const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1])['@graph'];for(const type of ['WebSite','Organization','BreadcrumbList'])assert.ok(graph.some(n=>n['@type']===type));assert.equal(graph.find(n=>n['@type']==='WebSite').potentialAction.target,origin+'/ask?view=search&q={search_term_string}');assert.ok(checkHtml(await get('/stats')).some(n=>n['@type']==='Dataset'));
 });
