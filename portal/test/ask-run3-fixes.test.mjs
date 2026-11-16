@@ -235,9 +235,9 @@ test('the writer is not asked for a fact id in its prose, and its own "(fact N)"
 })
 
 test('a hearing-evidence question with no excerpt held is told to search the transcript text with every lookup result, from the first round', async () => {
-  // The gating run on 16 November: every word of "the 2015 budget measure and who prepared the executive minute" is too
-  // common for the transcript word index, the model searched recommendations instead, and it first heard that an
-  // excerpt was needed when its answer was refused in round 7 of 8.
+  // The gating run on 16 November: the model's transcript searches matched nothing (every word of the question was
+  // then left out of the word index), it searched recommendations instead, and it first heard that an excerpt was
+  // needed when its answer was refused in round 7 of 8.
   assert.equal(api.NO_EXCERPT_YET, 'This question asks what was said in evidence, and no hearing transcript excerpt is held yet. Search the transcript text now (royal_commissions view=transcripts with words): search the specific words or short phrases of the question, one search each, until excerpts come back. An answer needs at least one excerpt.')
   const asset = async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))
   const deps = { origin: 'https://offline.test', asset, kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }) }
@@ -246,9 +246,9 @@ test('a hearing-evidence question with no excerpt held is told to search the tra
   const named = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
   const run = async question => {
     let call = 0
-    // The recorded shape: words too common to match, then a recommendations search, then a rarer word, then the answer.
+    // The recorded shape: a search that matches nothing, then a recommendations search, then one that does, then the answer.
     const model = new MockLanguageModelV4({ doGenerate: async () => { call++
-      return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'executive minute' })
+      return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'xylophonist' })
         : call === 2 ? reply('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'Cabinet' })
         : call === 3 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 1 })
         : call === 4 ? reply('answer', { facts: [] }) : { content: [{ type: 'text', text: 'not json' }], finishReason: { unified: 'stop', raw: 'stop' }, usage, warnings: [] } } })
