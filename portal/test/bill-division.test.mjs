@@ -1,9 +1,19 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { decidingDivision, divisionReading, divisionOutcomeWord } from '../public/bill-division.js';
+import { contradictedByRecord, decidingDivision, divisionReading, divisionOutcomeWord } from '../public/bill-division.js';
 
-const json = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
+// Real bill and division records, pinned (see its _about): a data refresh does not move these tests, and they run
+// on branches whose exports are older.
+const RECORDS = JSON.parse(readFileSync(new URL('./fixtures/bill-division-records.json', import.meta.url), 'utf8'));
+const bill = (key) => RECORDS.bills[`au-federal-${key}`];
+const division = (b, key) => b.divisions.find(d => d.key === key);
+/** The deciding division as the vote slide asks for it: the bill's house and its own progress. */
+const decided = (b) => {
+  const contradicted = [];
+  const found = decidingDivision(b.divisions, { originatingHouse: b.originating_house, bill: b, onContradicted: (x) => contradicted.push(x.division.key) });
+  return { found, contradicted, line: found ? `${found.division.key} ${found.reading} ${found.outcome} ${found.division.ayes}-${found.division.noes}` : null };
+};
 
 // The Senate's third reading of the Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025, 4 March
 // 2026: a closure moved on the third reading (9971) and the third reading itself (9972), filed under one name.
@@ -32,14 +42,106 @@ test('9971/9972: the closure on the third reading is never the vote on the bill;
   assert.equal(decidingDivision([d9971]), null);
 });
 
-test('9971/9972 as the repo exports them: the bill file and the two division files', () => {
-  const bill = json('../public/bills/au-federal-r7378.json');
-  const found = decidingDivision(bill.divisions, { originatingHouse: bill.originating_house });
+test('9971/9972 as the exports held them: the bill file and the two division files', () => {
+  const r7378 = bill('r7378');
+  const found = decidingDivision(r7378.divisions, { originatingHouse: r7378.originating_house, bill: r7378 });
   assert.equal(found?.division.key, 'federal-senate-9972');
   assert.equal(found?.outcome, 'Passed');
-  const files = ['federal-senate-9971', 'federal-senate-9972'].map(key => json(`../public/divisions/division-${key}.json`));
+  const files = ['federal-senate-9971', 'federal-senate-9972'].map(key => RECORDS.divisions[key]);
   assert.equal(files[0].name, files[1].name);
   assert.deepEqual(files.map(d => divisionReading(d)), [null, 'third']);
+});
+
+test('only the division record decides: a Hansard extract that quotes no Chair\'s question decides nothing, whatever its speeches say', () => {
+  // r7456 passed and had Royal Assent on 27 Mar 2026. Its Senate division of 26 Mar (10126, 10 to 25, lost) is filed
+  // under "Second reading", and its text is the minister's "I move: That this bill be now read a second time" and
+  // the speech after it: the division was on something else. r5760 and r5761 (4421, 12 to 45, lost) are the same.
+  for (const [key, div] of [['r7456', 'federal-senate-10126'], ['r5760', 'federal-senate-4421'], ['r5761', 'federal-senate-4421']]) {
+    const b = bill(key);
+    const d = division(b, div);
+    assert.equal(d.outcome, 'negative', div);
+    assert.match(d.question, /I move:? that (?:this|the|these) bills? be now read a second time/i, div);
+    assert.doesNotMatch(d.question, /\bquestion (?:now )?is\b/i, div);
+    assert.equal(divisionReading(d), null, div);
+    assert.equal(decided(b).line, null, key);
+  }
+  // The same motion and speech under a third-reading stage decide nothing either.
+  const speech = division(bill('r7456'), 'federal-senate-10126');
+  assert.equal(divisionReading({ ...speech, stage: 'Third reading', question: speech.question.replace(/second time/gi, 'third time') }), null);
+  // The division record still decides: a They Vote For You summary (first sentence), a division's name, the Chair's question.
+  const base = { stage: 'Second reading', outcome: 'negative' };
+  assert.equal(divisionReading({ ...base, question: 'The majority voted against a motion to read the bill for a second time. The minister moved amendments.' }), 'second');
+  assert.equal(divisionReading({ ...base, question: 'This division relates to the Policy For x. The majority voted against a motion to read the bill for a second time.' }), 'second');
+  assert.equal(divisionReading({ ...base, question: 'Example Bill 2026 - Second Reading - Read a second time' }), 'second');
+  assert.equal(divisionReading({ ...base, question: 'Sue Lines The question is that the bill be now read a second time.' }), 'second');
+  // The summary's opening line about the policy is not the motion: r5271's Senate third reading (3243), Passed 39 to 11.
+  assert.equal(decided(bill('r5271')).line, 'federal-senate-3243 third Passed 39-11');
+});
+
+test('the Chair\'s question decides only if the record\'s result agrees with the division', () => {
+  // r5790, House, 29 Nov 2016: 4444 (69 to 79, lost) quotes the second reading last, then "Bill read a second time":
+  // the reading was carried, so the lost division was on the amendment put before it.
+  const r5790 = bill('r5790');
+  const d4444 = division(r5790, 'federal-representatives-4444');
+  assert.equal(d4444.outcome, 'negative');
+  assert.match(d4444.question, /Bill read a second time/);
+  assert.equal(divisionReading(d4444), null);
+  assert.equal(decided(r5790).line, 'federal-senate-4510 third Passed 43-19');
+  assert.equal(divisionReading({ stage: 'Second reading', outcome: 'affirmative', question: 'The question is that the bill be now read a second time. Question negatived.' }), null);
+  assert.equal(divisionReading({ stage: 'Second reading', outcome: 'negative', question: 'The question is that the bill be now read a second time. Question negatived.' }), 'second');
+});
+
+test('a lost reading the bill\'s own record contradicts is dropped, never shown as "Not agreed", and reported', () => {
+  // r5738 lost a Senate second reading (4425, 30 to 31) and then passed: alone, 4425 would be its vote.
+  const r5738 = bill('r5738');
+  const d4425 = division(r5738, 'federal-senate-4425');
+  assert.equal(decidingDivision([d4425])?.outcome, 'Not agreed');
+  const seen = [];
+  assert.equal(decidingDivision([d4425], { bill: r5738, onContradicted: (x) => seen.push(`${x.division.key} ${x.reading}`) }), null);
+  assert.deepEqual(seen, ['federal-senate-4425 second']);
+  // A bill that passed, or has Royal Assent, lost none of its readings.
+  assert.equal(contradictedByRecord(d4425, 'second', { status: 'passed' }), true);
+  assert.equal(contradictedByRecord(d4425, 'second', { status: 'lapsed', key_dates: [{ stage: 'royal_assent', date: '2016-12-02', house: 'senate' }] }), true);
+  // Nor did one that went on in that house the same day or later; a later stage in the other house, or an earlier
+  // one, says nothing.
+  const lapsed = (stage, date, house = 'senate') => ({ status: 'lapsed', key_dates: [{ stage, date, house }] });
+  assert.equal(contradictedByRecord(d4425, 'second', lapsed('committee', '2016-11-23')), true);
+  assert.equal(contradictedByRecord(d4425, 'second', lapsed('third_reading', '2016-11-24')), true);
+  assert.equal(contradictedByRecord(d4425, 'second', lapsed('third_reading', '2016-11-24', 'representatives')), false);
+  assert.equal(contradictedByRecord(d4425, 'second', lapsed('third_reading', '2016-11-22')), false);
+  assert.equal(contradictedByRecord(d4425, 'second', lapsed('second_reading', '2016-11-24')), false);
+  assert.equal(contradictedByRecord({ ...d4425, outcome: 'affirmative' }, 'second', { status: 'passed' }), false);
+  // A lost third reading: the bill's later passing in that house, or a later third reading there.
+  const third = { ...d4425, stage: 'Third reading' };
+  assert.equal(contradictedByRecord(third, 'third', lapsed('third_reading', '2016-11-23')), false);
+  assert.equal(contradictedByRecord(third, 'third', lapsed('third_reading', '2016-11-24')), true);
+  assert.equal(contradictedByRecord(third, 'third', lapsed('passed', '2016-11-23')), true);
+  // Every pinned bill that passed: never "Not agreed".
+  for (const b of Object.values(RECORDS.bills)) {
+    if (b.status !== 'passed' && !b.key_dates.some(k => k.stage === 'royal_assent')) continue;
+    assert.notEqual(decided(b).found?.outcome, 'Not agreed', b.key);
+  }
+});
+
+test('They Vote For You\'s usual second-reading wordings count: "the bill\'s main idea", "the main idea of the bill"', () => {
+  // s1470, Senate, 24 Jun 2026: "voted against a motion to agree with the bill's main idea".
+  assert.equal(decided(bill('s1470')).line, 'federal-senate-10327 second Not agreed 27-34');
+  // r7408, House, 10 Feb 2026: "voted in favour of a motion to agree with the main idea of the bill".
+  assert.equal(decided(bill('r7408')).line, 'federal-representatives-9906 second Agreed 97-38');
+  // s1430: the 2026 vote (9890, "- Second Reading - Agree with bill's main idea") is the latest, not the 2024 one (9176).
+  const s1430 = bill('s1430');
+  assert.equal(divisionReading(division(s1430, 'federal-senate-9890')), 'second');
+  assert.equal(decided(s1430).line, 'federal-senate-9890 second Not agreed 12-29');
+  for (const question of [
+    'The majority voted in favour of agreeing with the main idea of the bill.',
+    'The majority voted in favour of the main idea of the bills.',
+    'Example Bill 2026 - Second Reading - Agree with the bills\' main idea',
+  ]) assert.equal(divisionReading({ stage: 'Second reading', outcome: 'affirmative', question }), 'second', question);
+  // Their negations are motions against the bill, not its reading.
+  for (const question of [
+    'Example Bill 2026 - Second Reading - Don\'t agree with the main idea of the bill',
+    'Example Bill 2026 - Second Reading - Don\'t agree with the bill\'s main idea',
+  ]) assert.equal(divisionReading({ stage: 'Second reading', outcome: 'negative', question }), null, question);
 });
 
 test('procedural questions are never the bill\'s division, whatever stage they sit under', () => {
