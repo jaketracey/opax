@@ -347,13 +347,18 @@ const plain = (name) => name.replace(/['’]s$/i, '')
  *   - a title and a name ("Ms Surname", "MR SURNAME", "Dr Surname's")
  *   - a bare surname that a cited excerpt or source title prints after a title or inside a full name
  *   - a full name ("First Surname"), whether or not the excerpts hold it
- * Each is returned with the words around it, for a person to read. This is a report for the eval, target zero. It is
+ * A name that a cited record of another kind also holds (a report, a Hansard speech) is not counted: it may be named.
+ * Those are listed apart (from_other_records). Each counted name is returned with the words around it, to be read. This is a report for the eval, target zero. It is
  * rough both ways (a place or a body can read as a name; a name it has never seen spelt can pass), so A COUNT OF 0 IS
  * NOT PROOF: the answers are still read in full. It gates nothing and is never run on the way to a reader. */
 export function namedPeopleOutsideQuotes(answer, payload) {
   const cited = (Array.isArray(payload?.sources) ? payload.sources : []).filter((s) => s && s.cited === true && `${s.snippet ?? ''} ${s.title ?? ''}`.includes(TRANSCRIPT_SOURCE))
-  if (!cited.length) return { applies: false, count: 0, names: [], spans: [], quotations: { total: 0, not_verbatim: 0 } }
+  if (!cited.length) return { applies: false, count: 0, names: [], spans: [], from_other_records: [], quotations: { total: 0, not_verbatim: 0 } }
   const text = String(answer ?? ''), evidence = cited.map((s) => `${s.snippet ?? ''}\n${s.title ?? ''}`).join('\n'), held = foldQuote(evidence)
+  // A name that a cited record of another kind holds (a report, a Hansard speech, a return) may be named: the rule
+  // covers people named in hearing evidence only.
+  const elsewhere = (Array.isArray(payload?.sources) ? payload.sources : []).filter((s) => s && s.cited === true && !cited.includes(s)).map((s) => `${s.snippet ?? ''}\n${s.title ?? ''}`).join('\n').toLowerCase()
+  const allowed = (name) => { const last = plain(name).split(' ').at(-1).toLowerCase(); return new RegExp(String.raw`(?<![\p{L}])${last.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\p{L}])`, 'u').test(elsewhere) }
   // Quotations: verbatim ones are blanked out; one that is not word for word in a cited excerpt is read as prose.
   let prose = text, total = 0, loose = 0
   for (const m of text.matchAll(/“([^”]*)”|"([^"]*)"/g)) {
@@ -378,8 +383,9 @@ export function namedPeopleOutsideQuotes(answer, payload) {
   }
   for (const m of prose.matchAll(new RegExp(String.raw`(?<![\p{L}])${NAME_WORD}(?![\p{L}])`, 'gu'))) if (surnames.has(plain(m[0]).toLowerCase())) add(m[0], m.index, m[0].length)
   // One person, one line: a bare surname gives way to the title-and-surname or full name that holds it.
-  const spans = [...found].filter(([key]) => ![...found.keys()].some((k) => k !== key && k.endsWith(' ' + key))).map(([, span]) => span)
-  return { applies: true, count: spans.length, names: spans.map((s) => s.name), spans, quotations: { total, not_verbatim: loose } }
+  const all = [...found].filter(([key]) => ![...found.keys()].some((k) => k !== key && k.endsWith(' ' + key))).map(([, span]) => span)
+  const spans = all.filter((span) => !allowed(span.name)), from_other_records = all.filter((span) => allowed(span.name)).map((span) => span.name)
+  return { applies: true, count: spans.length, names: spans.map((s) => s.name), spans, from_other_records, quotations: { total, not_verbatim: loose } }
 }
 
 export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) {
@@ -530,7 +536,7 @@ export function renderMarkdown(report) {
   L.push('', '| mode | no tool echo P/p/F | no duplicates P/p/F | coherence P/p/F | direct first sentence P/p/F | required components P/p/F | date checks P/p/F | declines P/p/F |', '|---|---|---|---|---|---|---|')
   for(const [mode,s] of Object.entries(report.summary))L.push(`| ${mode} | ${grades(s.no_tool_echo)} | ${grades(s.no_duplicates)} | ${grades(s.coherence)} | ${grades(s.direct_first_sentence)} | ${grades(s.required_components)} | ${grades(s.constraints)} | ${grades(s.decline)} |`)
   L.push('', 'P/p/F = pass / partial / fail counts. Grades are structural (facts, citations, quotations, invented figures and names); the judge reads the answers below for usefulness.', '')
-  if (report.questions.some((q) => report.modes.some((m) => q.by_mode[m]?.grade?.named_people?.applies))) L.push('**Named people outside quotations.** For each answer that cites a hearing transcript the report counts people named in the answer\'s own words and prints each one with the words around it. The count is rough: it can miss a name and it can flag a place or a body. A count of 0 is not proof; read each transcript answer in full.', '')
+  if (report.questions.some((q) => report.modes.some((m) => q.by_mode[m]?.grade?.named_people?.applies))) L.push('**Named people outside quotations.** For each answer that cites a hearing transcript the report counts people named in the answer\'s own words and prints each one with the words around it. It counts only a name that a cited transcript excerpt holds, or that no cited source holds, and not a name that a cited record of another kind holds (a report, a Hansard speech), which may be named. The count is rough: it can miss a name and it can flag a place or a body. A count of 0 is not proof; read each transcript answer in full.', '')
   L.push('## Side by side', '')
   for (const q of report.questions) {
     L.push(`### ${q.id} · ${q.kind}${q.shape ? ' · ' + q.shape : ''}`, '', `**Q:** ${q.question}`, '')
@@ -551,7 +557,8 @@ export function renderMarkdown(report) {
     for (const m of modes) for (const span of row(m)?.grade?.named_people?.spans ?? []) L.push(`- ${m}, named outside a quotation, **${span.name}**: …${span.text}…`)
     if (modes.some((m) => row(m)?.grade?.named_people?.spans?.length)) L.push('')
     for (const m of modes) {
-      const r = row(m); if (!r || r.error) continue
+      const r = row(m); if (r?.error && (r.status !== undefined || r.response_body)) L.push(`**${m} failed**: ${r.error}${r.status !== undefined ? ` (status ${r.status})` : ''}${r.response_body ? `. Body: ${r.response_body}` : ''}`, '')
+      if (!r || r.error) continue
       L.push(`**${m} answer**`, '', `> ${clip(r.answer)}`, '')
       const failed = r.grade.checks.filter((c) => c.status !== 'pass')
       if (failed.length) L.push(`${m} checks not passed: ${failed.map((c) => `${c.part ? c.part + '/' : ''}${c.type} ${c.status} (${c.detail})`).join('; ')}`, '')

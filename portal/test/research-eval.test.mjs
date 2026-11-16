@@ -10,7 +10,7 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { build } from 'esbuild'
 import { namedPeopleOutsideQuotes, plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck, answerStyleChecks } from '../../scripts/research_eval_grade.mjs'
-import { parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
+import { failureBody, parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const run = promisify(execFile)
@@ -320,8 +320,13 @@ test('the eval counts people named outside quotation marks in an answer that cit
   assert.match(count('The transcript records that Ms Placeholder had the advice.').spans[0].text, /records that Ms Placeholder had the advice/)
   // Roles, bodies, places and dates are not people; "page" and "May" in ordinary use are not either.
   assert.deepEqual(names('A witness told the Royal Commission on 10 March 2023 (page P-4899) that an officer had the Services Australia advice; the Commissioner asked when. In May the Department of Human Services replied.'), [])
+  // A name that a cited record of another kind holds (a report, a Hansard speech) may be named: it is listed apart
+  // and not counted. Run 1 flagged four such names.
+  const mixed = [...sources, { resource: 'speech-9', cited: true, kind: 'speech', title: 'Senate Hansard, 3 March 2023', snippet: 'Senator Robin Example: I ask the minister about the scheme.' }]
+  const both = count('Senator Example asked the minister about the scheme, and the transcript records that Ms Placeholder had the advice.', mixed)
+  assert.deepEqual(both.names, ['Ms Placeholder']); assert.deepEqual(both.from_other_records, ['Senator Example'])
   // An answer that cites no hearing transcript is not measured.
-  assert.deepEqual(count('Ms Placeholder spoke in the Senate.', [{ resource: 'speech-1', cited: true, kind: 'speech', title: 'Senate', snippet: 'Ms Placeholder: I rise.' }]), { applies: false, count: 0, names: [], spans: [], quotations: { total: 0, not_verbatim: 0 } })
+  assert.deepEqual(count('Ms Placeholder spoke in the Senate.', [{ resource: 'speech-1', cited: true, kind: 'speech', title: 'Senate', snippet: 'Ms Placeholder: I rise.' }]), { applies: false, count: 0, names: [], spans: [], from_other_records: [], quotations: { total: 0, not_verbatim: 0 } })
   // The grade carries the count and a flag, and no axis moves.
   const q = evals.questions.find((x) => x.kind === 'qualitative') ?? evals.questions[0]
   const named = { answered: true, answer: 'A witness said that Ms Placeholder had the advice.', citations: { 'fact-1/t/body/0': [[0, 49]] }, sources }
@@ -333,5 +338,20 @@ test('the eval counts people named outside quotation marks in an answer that cit
   // The report says in its header that a count of 0 is not proof, and prints each flagged span.
   const md = renderMarkdown({ generated: '2026-11-16', base_host: null, set: 'file', modes: ['loop'], limit: 1, prices: { input: 0.44, output: 1.32 }, summary: {}, questions: [{ id: 'T1', kind: 'qualitative', question: 'What was said?', by_mode: { loop: { answer: named.answer, ms: 1, usage: {}, grade: a } } }] })
   assert.match(md, /A count of 0 is not proof; read each transcript answer in full\./)
+  assert.match(md, /It counts only a name that a cited transcript excerpt holds, or that no cited source holds/)
   assert.match(md, /named outside a quotation, \*\*Ms Placeholder\*\*: …A witness said that Ms Placeholder had the advice\.…/)
+})
+
+test('a failed request keeps its status and the start of its body in the report, with anything key-shaped struck out', async () => {
+  assert.equal(failureBody('{"error":"OPAX could not answer just now"}'), '{"error":"OPAX could not answer just now"}')
+  assert.equal(failureBody('x'.repeat(10) + ' ' + 'word '.repeat(200)).length, 400)
+  assert.doesNotMatch(failureBody('denied for Bearer sk-abcdefghijklmnop and token 0123456789abcdef0123456789abcdef0123'), /abcdefghijklmnop|0123456789abcdef/)
+  // One request, no retry; the row carries the status and body so a fail-closed 503 can be told from an at-capacity one.
+  let calls = 0
+  const fetcher = async () => { calls++; return new Response('{"error":"OPAX is answering a lot of questions right now"}', { status: 503, headers: { 'content-type': 'application/json' } }) }
+  const questions = [{ id: 'T1', set: 'file', kind: 'qualitative', question: 'What was said?', must: [] }]
+  const { report, rows } = await runEval({ questions, modes: ['loop'], bases: { loop: 'http://127.0.0.1:8962' }, route: 'ask', secret: 's', fetchImpl: fetcher, limit: 1, roster: [], parties: new Map(), set: 'file' })
+  assert.equal(calls, 1); assert.equal(rows[0].error, 'HTTP 503'); assert.equal(rows[0].status, 503)
+  assert.equal(rows[0].response_body, '{"error":"OPAX is answering a lot of questions right now"}')
+  assert.match(renderMarkdown(report), /\*\*loop failed\*\*: HTTP 503 \(status 503\)\. Body: \{"error":"OPAX is answering a lot of questions right now"\}/)
 })

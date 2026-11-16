@@ -41,6 +41,11 @@ export function spendOf(usage, requestReserveUsd = 0.75) {
   return typeof cost === 'number' && Number.isFinite(cost) && cost >= 0 ? cost : requestReserveUsd
 }
 
+/** The first 400 characters of a failed response's body, with anything shaped like a key or token struck out. */
+export function failureBody(body) {
+  return String(body ?? '').replace(/\b(?:Bearer\s+)?(?:sk|pk|key|tok|secret)[-_][A-Za-z0-9_-]{8,}|\b[A-Za-z0-9_-]{32,}\b|\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9._-]+/g, '[removed]').replace(/\s+/g, ' ').trim().slice(0, 400)
+}
+
 export function parseArgs(argv) {
   const opts = { mode: 'both', limit: DEFAULT_LIMIT, set: 'research', route: 'auto', prod: false, operator: false, prices: { ...DEFAULT_PRICES }, timeoutMs: DEFAULT_TIMEOUT_MS, out: resolve(ROOT, 'portal/private/research-evals') }
   const rest = []
@@ -193,7 +198,12 @@ export async function runEval(opts) {
       const row = { id: q.id, set: q.set, kind: q.kind, mode, route: r.route, ms: r.ms, server_ms: r.server_ms ?? r.payload?.research?.ms ?? r.payload?.agentic?.ms ?? null }
       // Error responses can also report a billable cost (or an explicit zero).
       if (r.payload && typeof r.payload === 'object') row.usage = usageOf(r.payload, prices)
-      if (r.error || !r.payload || typeof r.payload !== 'object') row.error = r.error ?? 'empty payload'
+      if (r.error || !r.payload || typeof r.payload !== 'object') {
+        row.error = r.error ?? 'empty payload'
+        // A failed request keeps its status and the start of its body, so one 503 can be told from another.
+        if (r.status !== undefined) row.status = r.status
+        if (typeof r.response_body === 'string') row.response_body = failureBody(r.response_body)
+      }
       else {
         row.answer = String(r.payload.answer ?? '')
         row.grade = gradeRow(q, r.payload, { roster, parties })

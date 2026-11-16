@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "about": "People named in hearing evidence (the named-people prompt rule). Twenty Ask questions, ten on the Robodebt Royal Commission and ten on the NSW Healthcare Funding inquiry, worded to surface people named in the evidence. For scripts/research_eval.mjs --questions. Pass: reading each answer in full, no person is named outside quotation marks. The report's named-people count helps the reader; a count of 0 is not proof.",
+ "about": "People named in hearing evidence (the named-people prompt rule). Twenty Ask questions, ten on the Robodebt Royal Commission and ten on the NSW Healthcare Funding inquiry, worded to surface people named in the evidence. For scripts/research_eval.mjs --questions. Pass: reading each answer in full, no person is named outside quotation marks. The report's named-people count helps the reader; a count of 0 is not proof. Five controls follow the transcript questions: in each, names are expected (a Senate estimates witness, a Question Time answer, who moved a bill, a donor in a return, and a mixed question where the Hansard speaker keeps their name and people named only in the hearing evidence do not).",
  "questions": [
   {
    "id": "NP-RBD-01",
@@ -120,6 +120,36 @@
    "id": "NP-NSW-10",
    "kind": "qualitative",
    "question": "What did the NSW Healthcare Funding inquiry hear about a doctor who left for Queensland and why?",
+   "must": []
+  },
+  {
+   "id": "NP-CTRL-01",
+   "kind": "qualitative",
+   "question": "Who gave evidence for Services Australia at Senate estimates in 2023, and what were they asked about?",
+   "must": []
+  },
+  {
+   "id": "NP-CTRL-02",
+   "kind": "qualitative",
+   "question": "What did the Prime Minister say in Question Time about the cost of living in 2024?",
+   "must": []
+  },
+  {
+   "id": "NP-CTRL-03",
+   "kind": "qualitative",
+   "question": "Who moved the National Anti-Corruption Commission Bill 2022 in the House of Representatives?",
+   "must": []
+  },
+  {
+   "id": "NP-CTRL-04",
+   "kind": "qualitative",
+   "question": "Which donors gave the most to the Liberal Party in 2022-23?",
+   "must": []
+  },
+  {
+   "id": "NP-MIX-01",
+   "kind": "qualitative",
+   "question": "What did the Robodebt Royal Commission hear about income averaging, and what did the Minister for Government Services say in Parliament about the scheme?",
    "must": []
   }
  ]
