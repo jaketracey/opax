@@ -151,7 +151,7 @@ test('the closing slide is the page address alone: no path line under it, no wor
 
 test('the Victorian CTA keeps the address-only design and the exact small authorisation outside its clipped body', () => {
   const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
-  assert.equal(STORY_VERSION, 5, 'a changed cover drawing invalidates the version 4 cache');
+  assert.equal(STORY_VERSION, 6, 'a changed cover wording invalidates the version 5 cache');
   const slide = {...slides.source, path: 'legacy path must not be drawn', authorisation: line};
   for (const format of ['feed', 'story']) {
     const tree = storySlideTree(slide, {}, format);

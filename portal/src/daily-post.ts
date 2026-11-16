@@ -502,27 +502,26 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   const sponsor = prettySponsor(bill.sponsor)
   const party = prettyParty(bill.sponsor_party)
   const by = sponsor ? ` by ${sponsor}${party ? ` (${party})` : ''}` : (bill.portfolio ? ` (${bill.portfolio} portfolio)` : '')
+  // The day a bill passed is the day the record says it passed. `status_as_of` on a passed bill is the day of Royal
+  // Assent, usually some days later, so it is named as that and only when the record holds no passing day
+  // (billStanding). Every string that states it, on a channel, a slide or in an app, reads the same sentence.
+  const standing = billStanding(bill, record) ?? `Passed ${formatDate(bill.status_as_of)}.`
   const status = bill.status === 'exposure_draft'
     ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Not yet introduced to parliament.`
     : bill.status === 'passed'
-    ? `Passed ${formatDate(bill.status_as_of)}. Introduced ${formatDate(bill.introduced)}${by}.`
+    ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.`
     : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
   const statusShort = bill.status === 'exposure_draft' ? `Draft released ${formatDate(bill.introduced)}; not introduced.`
-    : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : `Introduced ${formatDate(bill.introduced)}; before parliament.`
-  // For the channels, the day a bill passed is the day the record says it passed. `status_as_of` on a passed bill is
-  // the day of Royal Assent, usually some days later, so it is named as that and only when no passing day is recorded.
-  const standing = billStanding(bill, record)
+    : bill.status === 'passed' ? standing : `Introduced ${formatDate(bill.introduced)}; before parliament.`
   const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : ''
   const post: DailyPost = {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
-    // What the apps show under their own label: unchanged.
+    // What the apps show under their own label.
     text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
-    record_text: billPostText(bill, sentences[0], standing ?? statusShort, by, url),
+    record_text: billPostText(bill, sentences[0], statusShort, by, url),
     // Facebook and Instagram: the caption opens by saying a model wrote the summary, once.
-    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${sentences[0]}`, bill.title,
-      bill.status === 'passed' && standing ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.` : status,
-      more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
+    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${sentences[0]}`, bill.title, status, more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
     caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
   }
   const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort })

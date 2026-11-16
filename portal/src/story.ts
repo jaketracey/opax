@@ -45,8 +45,9 @@ export const STORY_MAX_SLIDES = 10
  *  the slide cache and the slide URLs only; the landscape and portrait cards keep theirs.
  *  3: the source slide closes on the page's address alone (no path line, no wordmark).
  *  4: adds the authorisation line on Victorian electoral slides.
- *  5: a cover whose line is a summary sentence carries a small "Machine-written summary" line under it. */
-export const STORY_VERSION = 5
+ *  5: a cover whose line is a summary sentence carries a small "Machine-written summary" line under it.
+ *  6: a bill's cover says "Passed" with the day it passed, or "Royal Assent" with that day; never the one as the other. */
+export const STORY_VERSION = 6
 
 /** Where a slide is drawn: the feed carousel at 4:5, or a story frame at 9:16. */
 export type StoryFormat = 'feed' | 'story'
