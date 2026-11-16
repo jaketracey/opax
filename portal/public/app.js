@@ -381,6 +381,15 @@ function partyChipHTML(party, opts) { return uiLabels.partyLabelHTML(party, opts
 function statusLabelHTML(word, tone) { return uiLabels.statusLabelHTML(word, tone); }
 function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
+/** Answers a language model did not write: a calculation from the records, a list of passages, a note that the
+ *  records do not cover the question, or a prompt to narrow it. Everything else Ask shows is model-written. */
+const NOT_MODEL_WRITTEN = new Set(["calculated", "evidence_only", "evidence_gap", "needs_scope", "needs_period", "needs_question"]);
+/** True when Ask's answer was written by a language model, so it carries the Machine-written label. A written
+ *  overview paragraph (money_overview) counts even above a calculated answer. */
+function modelWrittenAnswer(data, text) {
+  if (!data || data.answered === false) return false;
+  return !!data.money_overview || (!!String(text || "").trim() && !NOT_MODEL_WRITTEN.has(data.answer_status));
+}
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
 /** A chamber code's reader name (labels.js); '' for a code it does not know, never the code. */
@@ -10780,6 +10789,8 @@ async function runAsk(question) {
           // trimmings; the first paint is a timer tick away.
           $("ask-answer").replaceChildren();
           $("ask-result").querySelector(".kicker").textContent = "Answer";
+          // Only a model's words stream, so they are labelled from the first of them.
+          $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false;
           $("ask-stamp").textContent = "";
           $("ask-sources").hidden = true;
           $("ask-result").querySelector(".action-row").hidden = true;
@@ -10848,7 +10859,8 @@ async function runAsk(question) {
     $("ask-stamp").hidden = needsClarification || noAnswer;
     $("ask-result").querySelector(".kicker").textContent = noAnswer ? "Records found" : needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
-    if (data.is_overview_intent && !noAnswer) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
+    // Every answer a language model wrote carries the label, above any overview paragraph it also wrote.
+    if (modelWrittenAnswer(data, answerText)) { $("ask-overview").insertAdjacentHTML("afterbegin", machineLabelHTML()); $("ask-overview").hidden = false; }
     if (noAnswer) {
       $("ask-overview").hidden = true;
       renderNoAnswer($("ask-answer"), data);
@@ -12094,7 +12106,7 @@ function chatAnswerEl(msg) {
     wrap.appendChild(line);
     renderAskStepsLine(line, msg.agentic);
   }
-  if (msg.is_overview_intent && msg.answered !== false) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
+  if (modelWrittenAnswer(msg, msg.text)) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
   if (msg.money_overview) {
     const overview = document.createElement("div");
     overview.className = "answer-overview";
@@ -12105,6 +12117,8 @@ function chatAnswerEl(msg) {
   body.className = "answer";
   const citedSources = (msg.sources || []).filter((s) => s.cited);
   body.askEvidence = citedSources.length ? citedSources : (msg.sources || []);
+  // A blank answer is kept as the fixed words "(no answer)", which no model wrote.
+  if (msg.text === "(no answer)" && !msg.money_overview) wrap.querySelector(".ui-machine")?.remove();
   renderAnswer(body, msg.text || "(no answer)", msg);
   if (msg.pay_answer) renderPayNextSteps(body, msg.pay_next);
   wrap.appendChild(body);
@@ -12432,6 +12446,8 @@ async function sendChat(question, carry) {
           dots.setAttribute("aria-hidden", "true");
           dots.append(document.createElement("i"), document.createElement("i"), document.createElement("i"));
           liveWrap.append(body, dots);
+          // Only a model's words stream, so they are labelled from the first of them.
+          liveWrap.insertAdjacentHTML("afterbegin", machineLabelHTML());
           slot.insertAdjacentElement("afterend", liveWrap);
           live = streamRenderer(body, alive);
         }
