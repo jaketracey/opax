@@ -7,8 +7,10 @@ no source requests) and writes ``portal/public/transcripts/``:
 
   index.json               the transcripts, attribution and licence per commission, the
                            tokeniser's stopwords and the terms too common to post
-  terms/<nn>.json          term -> transcripts containing it (index into index.json docs),
-                           sharded by FNV-1a of the term
+  terms/<nn>.json          term -> [transcripts containing it (index into index.json docs),
+                           the number of pages of each that hold it], sharded by FNV-1a of the
+                           term. The page counts let a word search put the transcripts that
+                           dwell on a word ahead of ones that mention it once (schema 2).
   <commission>/<key>.json  one transcript: its pages with the publisher's own transcript page
                            number, the cleaned text of each page, and term -> pages
 
@@ -20,6 +22,11 @@ point to the hearing and page without quoting it. The Epiq word-index pages at t
 NSW transcripts are dropped (they are a concordance, not evidence).
 
 Run after a transcript is added to the registry:  python scripts/build_transcript_fulltext.py
+
+``--postings-only`` rebuilds terms/ and the index's schema number from the published transcript
+files (each holds term -> pages for every word), with no PDF read: for a change to the postings'
+shape on a machine without the PDF cache. ``--check`` with it writes nothing and exits 1 if the
+published postings differ from what the published transcripts give.
 """
 from __future__ import annotations
 
@@ -38,7 +45,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "parli" / "ingest" / "royal_commissions.json"
 OUT = ROOT / "portal" / "public" / "transcripts"
 CACHE = Path(os.environ.get("OPAX_RC_CACHE", Path.home() / ".cache" / "autoresearch" / "royal-commissions")) / "manual"
-SCHEMA = 1
+SCHEMA = 2  # the index and its postings; a transcript file keeps DOC_SCHEMA
+DOC_SCHEMA = 1
 SHARDS = 64
 LABEL = "Hearing transcript: evidence, not findings"
 CC_BY = "https://creativecommons.org/licenses/by/4.0/"
@@ -159,7 +167,7 @@ def build_doc(c, d, pages):
             by_term[t].append(n)
     meta = COMMISSIONS[c["id"]]
     out = {
-        "schema": SCHEMA, "label": LABEL, "commission": c["id"], "commission_name": c["name"], "key": d["key"],
+        "schema": DOC_SCHEMA, "label": LABEL, "commission": c["id"], "commission_name": c["name"], "key": d["key"],
         "title": d["title"], "date": d.get("date"), "hearing": d.get("hearing"),
         "pdf_url": d["url"], "page_url": d.get("page"), "sha256": d["sha256"], "pdf_pages": len(pages),
         "attribution": f"{meta['attribution']}, {c['name']}, licensed under CC BY 4.0", "licence": "CC BY 4.0", "licence_url": CC_BY, "copyright_url": meta["copyright_url"],
@@ -169,7 +177,7 @@ def build_doc(c, d, pages):
         "pages": [{"n": n, "folio": folio, **({"text": text} if quote else {})} for n, folio, text in kept],
         "terms": {t: ns for t, ns in sorted(by_term.items())},
     }
-    return out, set(by_term)
+    return out, {t: len(ns) for t, ns in by_term.items()}
 
 
 def write(path: Path, value):
@@ -177,11 +185,50 @@ def write(path: Path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 
+def shard_files(postings, total_docs):
+    """(common terms, the shard dicts) for term -> [(transcript, pages holding the term)]."""
+    common = sorted(t for t, ds in postings.items() if len(ds) > total_docs // 2)
+    held = set(common)
+    shards: list[dict] = [{} for _ in range(SHARDS)]
+    for t, ds in sorted(postings.items()):
+        if t not in held:
+            shards[shard(t)][t] = [[i for i, _ in ds], [n for _, n in ds]]
+    return common, shards
+
+
+def postings_only(out: Path, check: bool) -> int:
+    """terms/ and the index schema from the published transcript files; nothing else is touched."""
+    index = json.loads((out / "index.json").read_text(encoding="utf-8"))
+    postings = defaultdict(list)
+    for d in index["docs"]:
+        doc = json.loads((out.parent / d["file"].lstrip("/")).read_text(encoding="utf-8"))
+        for t, pages in doc["terms"].items():
+            postings[t].append((d["i"], len(pages)))
+    common, shards = shard_files(postings, len(index["docs"]))
+    if common != index["common_terms"]:
+        print("[build_transcript_fulltext] HELD: the published transcripts give a different common-term list", file=sys.stderr)
+        return 3
+    if check:
+        same = index.get("schema") == SCHEMA and all(
+            json.loads((out / "terms" / f"{n:02d}.json").read_text(encoding="utf-8")) == s for n, s in enumerate(shards))
+        print(f"[build_transcript_fulltext] postings {'agree with' if same else 'DIFFER from'} the published transcripts", flush=True)
+        return 0 if same else 1
+    for n, s in enumerate(shards):
+        write(out / "terms" / f"{n:02d}.json", s)
+    write(out / "index.json", {**index, "schema": SCHEMA})
+    print(f"[build_transcript_fulltext] postings rebuilt: terms={len(postings)} common={len(common)}", flush=True)
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--postings-only", action="store_true", help="rebuild terms/ from the published transcript files; no PDF is read")
+    ap.add_argument("--check", action="store_true", help="with --postings-only: write nothing, exit 1 on a difference")
     args = ap.parse_args(argv)
     out = Path(args.out)
+    if args.postings_only:
+        return postings_only(out, args.check)
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
     rows = sorted(transcripts(registry), key=lambda cd: (cd[0]["id"], cd[1].get("date") or "", cd[1]["key"]))
     missing = [d["key"] for _, d in rows if not (CACHE / f"{d['sha256']}.pdf").exists()]
@@ -195,16 +242,12 @@ def main(argv=None):
         doc, terms = build_doc(c, d, extract(CACHE / f"{d['sha256']}.pdf"))
         file = f"{c['id']}/{d['key']}.json"
         write(tmp / file, doc)
-        for t in terms:
-            postings[t].append(i)
+        for t, n in terms.items():
+            postings[t].append((i, n))
         docs.append({"i": i, "commission": c["id"], "key": d["key"], "title": d["title"], "date": d.get("date"),
                      "file": f"/transcripts/{file}", "pdf_url": d["url"], "pages": len(doc["pages"]),
                      "quote_policy": doc["quote_policy"]})
-    common = sorted(t for t, ds in postings.items() if len(ds) > len(docs) // 2)
-    shards: list[dict] = [{} for _ in range(SHARDS)]
-    for t, ds in sorted(postings.items()):
-        if t not in common:
-            shards[shard(t)][t] = ds
+    common, shards = shard_files(postings, len(docs))
     for n, s in enumerate(shards):
         write(tmp / "terms" / f"{n:02d}.json", s)
     counts = {cid: {"transcripts": sum(1 for x in docs if x["commission"] == cid),
