@@ -110,6 +110,29 @@ test('a cover whose line is a summary sentence draws one small "Machine-written 
   assert.ok(validStory([noted, slides.number, slides.source]), 'a noted cover is a valid story');
 });
 
+test('a long cover sentence gives way to the bill\'s standing: the status and its date stay on the slide', async () => {
+  const sentence = 'This bill is part of a package that creates the Australian Tertiary Education Commission as the main oversight body for the higher education system.';
+  for (const status of ['Passed 1 Apr 2026.', 'Royal Assent 27 Aug 2026.', 'Introduced 7 Sep 2026; before parliament.']) {
+    const long = { ...slides.cover, line: `${sentence} ${status}`, note: 'Machine-written summary' };
+    for (const [format, images] of [['feed', { photo, credit }], ['story', { photo, credit }], ['feed', {}]]) {
+      const drawn = texts(storySlideTree(long, images, format)).find(t => t.startsWith('This bill is part'));
+      assert.ok(drawn, format);
+      assert.ok(drawn.endsWith(' ' + status), `${format}: the standing is whole and last: ${drawn}`);
+      assert.ok(drawn.includes('… ' + status), 'the sentence is the part that is cut');
+      assert.ok(drawn.length < long.line.length);
+      assert.ok(sentence.startsWith(drawn.slice(0, drawn.indexOf('…'))), 'cut on a word, nothing reordered');
+    }
+    const jpeg = decode(await renderJpeg(long, { photo, credit })); assert.deepEqual([jpeg.width, jpeg.height], [1080, 1350]);
+  }
+  // A line that fits is drawn whole, exactly as before.
+  const short = { ...slides.cover, line: 'It would move the reporting date. Passed 19 Aug 2026.', note: 'Machine-written summary' };
+  assert.ok(texts(storySlideTree(short, { photo, credit })).includes(short.line));
+  // A cover with no note (every other kind of edition) is clipped from the end, as it always was.
+  const plainLong = { ...slides.cover, line: `${sentence} ${sentence}` };
+  const end = texts(storySlideTree(plainLong, { photo, credit })).find(t => t.startsWith('This bill is part'));
+  assert.ok(end.endsWith('…'));
+});
+
 test('the number slide sets the figure at the card statistic size; the ledger clips long text on a word', () => {
   const number = storySlideTree(slides.number);
   const value = walk(number).find(n => n.props?.children === '$11.3m');
