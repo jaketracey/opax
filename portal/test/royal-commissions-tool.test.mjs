@@ -275,3 +275,110 @@ test('every CC BY transcript has a text file and every no-quote file holds no pa
     assert.equal(ix.docs.filter(d => d.commission === id).length, c.transcripts.length);
   }
 });
+
+// ---- A word search orders transcripts by fit, not by date (16 November 2026) ----
+const fitOf = async (key, words) => {
+  const ix = await asset('/transcripts/index.json'), doc = await asset(ix.docs.find(d => d.key === key).file);
+  const counts = words.map(w => (doc.terms[w] ?? []).length);
+  return { least: Math.min(...counts), pages: counts.reduce((a, b) => a + b, 0) };
+};
+
+test('a word search lists the transcripts that dwell on the words first: by the fewest pages any one word is on, then the sum, then newest', async () => {
+  for (const [commission, words, terms] of [['robodebt', 'averaging', ['averaging']], ['robodebt', 'income averaging', ['income', 'averaging']], ['nsw-healthcare-funding', 'Queensland', ['queensland']], ['nsw-healthcare-funding', 'duress alarm', ['duress', 'alarm']]]) {
+    const out = await call({ view: 'transcripts', commission, words, limit: 8 }); cited(out);
+    const fits = await Promise.all(out.rows.map(r => fitOf(r.key, terms)));
+    for (let i = 1; i < fits.length; i++) {
+      const a = fits[i - 1], b = fits[i];
+      assert.ok(a.least > b.least || a.least === b.least && (a.pages > b.pages || a.pages === b.pages && String(out.rows[i - 1].date) >= String(out.rows[i].date)), `${words}: row ${i} out of order ${JSON.stringify([a, b])}`);
+    }
+    // Before, the first rows were simply the newest matching hearing days.
+    const dates = out.rows.map(r => String(r.date));
+    assert.notDeepEqual(dates, [...dates].sort().reverse(), `${words}: no longer in date order`);
+    assert.ok(fits[0].least > 1, `${words}: the first transcript holds the words on more than one page`);
+  }
+});
+
+test('the whole order of a word search is the stated rule, ties included: least, then the sum, then newest', async () => {
+  const ix = await asset('/transcripts/index.json');
+  let tiesOnLeast = 0;
+  for (const [commission, id, words, terms] of [['robodebt', 'cth-robodebt', 'income averaging', ['income', 'averaging']], ['nsw-healthcare-funding', 'nsw-healthcare-funding', 'duress alarm', ['duress', 'alarm']], ['robodebt', 'cth-robodebt', 'ombudsman whistleblower', ['ombudsman', 'whistleblower']]]) {
+    const keys = [];
+    for (let offset = 0, turns = 0; offset !== null && turns < 60; turns++) { const page = await call({ view: 'transcripts', commission, words, limit: 8, offset }); keys.push(...page.rows.map(r => r.key)); offset = page.next_offset ?? null; }
+    // The same order worked out here from the transcript files alone.
+    const matched = [];
+    for (const d of ix.docs.filter(d => d.commission === id)) { const doc = await asset(d.file); if (terms.every(t => doc.terms[t])) { const counts = terms.map(t => doc.terms[t].length); matched.push({ key: d.key, date: String(d.date), least: Math.min(...counts), pages: counts.reduce((a, b) => a + b, 0) }); } }
+    matched.sort((a, b) => b.least - a.least || b.pages - a.pages || b.date.localeCompare(a.date) || a.key.localeCompare(b.key));
+    assert.deepEqual(keys, matched.map(m => m.key), words);
+    for (let i = 1; i < matched.length; i++) if (matched[i - 1].least === matched[i].least && matched[i - 1].pages !== matched[i].pages) tiesOnLeast++;
+  }
+  // The data holds rows that tie on the first part and are told apart only by the sum.
+  assert.ok(tiesOnLeast >= 3, `${tiesOnLeast} ties decided by the sum`);
+});
+
+test('a title or date match comes first even when a text match fits better', async () => {
+  // "Melbourne" is in the title of ten antisemitism transcripts and in the text of others.
+  const ix = await asset('/transcripts/index.json');
+  const rows = [];
+  for (let offset = 0, turns = 0; offset !== null && turns < 60; turns++) { const page = await call({ view: 'transcripts', commission: 'antisemitism', words: 'Melbourne', limit: 8, offset }); rows.push(...page.rows); offset = page.next_offset ?? null; }
+  const titled = rows.map(r => /melbourne/i.test(String(r.title)));
+  const named = titled.filter(Boolean).length;
+  assert.ok(named >= 2 && named < rows.length, `${named} of ${rows.length}`);
+  // Every transcript titled with the word is listed before any other,
+  assert.deepEqual(titled, [...Array(named).fill(true), ...Array(rows.length - named).fill(false)]);
+  // though some other transcript holds the word on more pages than a titled one does.
+  const count = async key => ((await asset(ix.docs.find(d => d.key === key).file)).terms.melbourne ?? []).length;
+  const namedCounts = await Promise.all(rows.slice(0, named).map(r => count(r.key))), otherCounts = await Promise.all(rows.slice(named).map(r => count(r.key)));
+  assert.ok(Math.max(...otherCounts) > Math.min(...namedCounts), `${Math.max(...otherCounts)} against ${Math.min(...namedCounts)}`);
+  // And among themselves the titled ones are newest first, as a listing always was.
+  const dates = rows.slice(0, named).map(r => String(r.date));
+  assert.deepEqual(dates, [...dates].sort().reverse());
+});
+
+test('a transcript whose title or date holds the words still comes first, and a listing with no words is newest first as before', async () => {
+  const dated = await call({ view: 'transcripts', commission: 'robodebt', words: '10 March 2023', limit: 3 }); cited(dated);
+  assert.equal(dated.rows[0].date, '2023-03-10');
+  const listed = await call({ view: 'transcripts', commission: 'robodebt', limit: 8 }); cited(listed);
+  const dates = listed.rows.map(r => String(r.date));
+  assert.deepEqual(dates, [...dates].sort().reverse()); assert.equal(listed.total, 47);
+});
+
+test('paging through a word search covers every match once, in the same order', async () => {
+  const whole = await call({ view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 8 });
+  const keys = [];
+  // (A page holds as many rows as fit the payload limit; next_offset says where the next one starts.)
+  for (let offset = 0, turns = 0; offset !== null && turns < 60; turns++) { const page = await call({ view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 8, offset }); keys.push(...page.rows.map(r => r.key)); offset = page.next_offset ?? null; }
+  assert.equal(keys.length, whole.total); assert.equal(new Set(keys).size, whole.total);
+  assert.deepEqual(keys.slice(0, whole.rows.length), whole.rows.map(r => r.key));
+});
+
+test('a word search opens no transcript beyond the rows it returns: the order comes from the postings alone', async () => {
+  const reads = [];
+  const counting = { ...env, asset: async path => { reads.push(path); return asset(path); } };
+  const out = await api.callTool(counting, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 4 });
+  const opened = reads.filter(p => /^\/transcripts\/[a-z0-9-]+\/transcript-/.test(p));
+  assert.equal(out.rows.length, 4); assert.equal(new Set(opened).size, 4, 'one transcript file per returned row');
+  assert.deepEqual([...new Set(opened)].sort(), out.rows.map(r => r.text_matches.file).sort());
+  // The index once and one shard per searched word (two words here, both posted).
+  assert.equal(reads.filter(p => p === '/transcripts/index.json').length, 1);
+  assert.ok(new Set(reads.filter(p => /^\/transcripts\/terms\//.test(p))).size <= 2);
+  assert.equal(out.total > 40, true, 'of more than forty matching transcripts');
+});
+
+test('the postings agree with the published transcripts: every word, every transcript, and the number of its pages holding the word', async () => {
+  const ix = await asset('/transcripts/index.json');
+  assert.equal(ix.schema, 2);
+  const want = new Map();
+  for (const d of ix.docs) {
+    const doc = JSON.parse(await readFile(new URL('../public' + d.file, import.meta.url), 'utf8'));
+    for (const [term, pages] of Object.entries(doc.terms)) { if (!want.has(term)) want.set(term, [[], []]); want.get(term)[0].push(d.i); want.get(term)[1].push(pages.length); }
+  }
+  const common = new Set(ix.common_terms);
+  let posted = 0;
+  for (let n = 0; n < ix.shards; n++) {
+    const shard = await asset(`/transcripts/terms/${String(n).padStart(2, '0')}.json`);
+    for (const [term, posting] of Object.entries(shard)) { posted++; assert.equal(common.has(term), false, term); assert.deepEqual(posting, want.get(term), term); }
+  }
+  // Every word of every transcript is posted or on the too-common list; nothing else.
+  assert.equal(posted + common.size, want.size);
+  for (const term of common) assert.ok(want.get(term)[0].length > ix.docs.length / 2, term);
+});
