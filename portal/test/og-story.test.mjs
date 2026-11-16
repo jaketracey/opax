@@ -133,6 +133,36 @@ test('a long cover sentence gives way to the bill\'s standing: the status and it
   assert.ok(end.endsWith('…'));
 });
 
+test('the engraving cover with a note holds every row of words at its height: a two-row title at its largest over a three-row line does not press the note into the line', async () => {
+  // No photograph, a title that sets at 128 px on two rows, a kicker on two rows and a line on three: the tallest cover.
+  const tall = { type: 'cover', kicker: 'Bill · Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio', title: 'Combatting Illicit Tobacco',
+    line: 'This bill is part of a package that creates the Australian Tertiary Education Commission as the main oversight body for the higher education system. Passed 31 Mar 2026.', note: 'Machine-written summary', photo: null, alt: 'x' };
+  const tree = storySlideTree(tall, {}), nodes = walk(tree);
+  const headline = nodes.find(n => n.props?.children === 'Combatting Illicit Tobacco');
+  const titleSize = headline.props.style.fontSize;
+  assert.ok(titleSize >= 112 && titleSize <= 128, 'the case the fix is for: the title at the engraving cover\'s largest size, on two rows (' + titleSize + ' px)');
+  const words = [nodes.find(n => typeof n.props?.children === 'string' && n.props.children.startsWith('Bill ·')), headline,
+    nodes.find(n => typeof n.props?.children === 'string' && n.props.children.startsWith('This bill is part')), nodes.find(n => n.props?.children === 'Machine-written summary')];
+  for (const node of words) { assert.ok(node); assert.equal(node.props.style.flexShrink, 0, 'a row of words is never squeezed: ' + String(node.props.children).slice(0, 30)); }
+  // The engraving is drawn smaller, and its box is what gives way and is clipped if the rows run long.
+  const engraving = images(tree).find(n => n.props.height === 364);
+  assert.ok(engraving, 'the smaller engraving'); assert.equal(engraving.props.width, 400);
+  const box = nodes.find(n => n.props?.children === engraving);
+  assert.deepEqual([box.props.style.flexShrink, box.props.style.minHeight, box.props.style.overflow, box.props.style.marginTop], [1, 0, 'hidden', 40]);
+  // The rows fit the body at the feed size with room to spare: their heights by the drawing's own measures.
+  const rows = { kicker: 2, title: 2, line: 3 };
+  const needed = rows.kicker * 32 * 1.35 + 22 + rows.title * titleSize * 1.08 + 30 + rows.line * 40 * 1.35 + 14 + 30 * 1.3 + 40 + 364;
+  assert.ok(needed < 1017, 'about ' + Math.round(needed) + ' px of rows and engraving in a body of about 1,017 px');
+  const jpeg = decode(await renderJpeg(tall, {})); assert.deepEqual([jpeg.width, jpeg.height], [1080, 1350]);
+  // The same cover with no note is drawn exactly as it was: the full engraving and no held heights.
+  const { note, ...bare } = tall;
+  const plain = storySlideTree(bare, {});
+  assert.ok(images(plain).some(n => n.props.width === 520 && n.props.height === 474));
+  assert.ok(!walk(plain).some(n => n.props?.style?.flexShrink === 0), 'nothing held on a cover with no note');
+  // And the photograph cover is untouched by this: its column has the room.
+  assert.ok(!walk(storySlideTree(tall, { photo, credit })).some(n => n.props?.style?.flexShrink === 0));
+});
+
 test('the number slide sets the figure at the card statistic size; the ledger clips long text on a word', () => {
   const number = storySlideTree(slides.number);
   const value = walk(number).find(n => n.props?.children === '$11.3m');
