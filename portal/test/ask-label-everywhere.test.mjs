@@ -16,7 +16,7 @@ const app = read('../public/app.js');
 const source = ts.createSourceFile('app.js', app, ts.ScriptTarget.Latest, true);
 const fn = name => source.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === name).getText(source);
 const constant = name => source.statements.find(node => ts.isVariableStatement(node) && node.declarationList.declarations.some(d => d.name.getText(source) === name)).getText(source);
-const indexHtml = read('../public/index.html').replace(/<script\b[\s\S]*?<\/script>/g, '');
+const indexHtml = read('../public/index.html'); // its scripts do not run: the fixture evaluates code from outside only
 
 // A stand-in for anything the fixture does not define: callable, indexable, empty, and not a promise.
 const nothing = new Proxy(function () {}, {
