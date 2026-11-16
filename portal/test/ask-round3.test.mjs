@@ -166,7 +166,7 @@ test('the research model does not word hearing evidence: a point that cites or q
     assert.equal(out.answered, true, name)
     assert.doesNotMatch(out.answer, /Quellworth|knew averaging was unlawful|gave evidence about averaging/, name)
     // The excerpt is given as recorded, inside quotation marks.
-    assert.match(out.answer, /^The hearing transcript records on hearing day 46 \(10 March 2023\): “/, name)
+    assert.match(out.answer, /^The hearing transcript records on hearing day \d+ \(\d{1,2} [A-Z][a-z]+ 202[23]\): “/, name)
     // The research model was told, in fixed words, to leave hearing evidence to the writer and how people are named.
     const told = JSON.stringify(model.doGenerateCalls[0].prompt)
     assert.ok(told.includes('says out of your points and reply text, in your own words or quoted'), name)

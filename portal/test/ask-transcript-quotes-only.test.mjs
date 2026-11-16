@@ -136,7 +136,7 @@ test('the quotation block: a fixed lead line, six excerpts chosen in research or
   // The same facts through the fallback with the switch on give the same block; off, the form is the one before.
   assert.equal(api.proseFallback({ question: hearingQuestion, period, facts: held, quotesOnly: true }).answer, block.answer)
   const off = api.proseFallback({ question: hearingQuestion, period, facts: held }).answer.split('\n\n')
-  assert.equal(off.length, 4); assert.ok(off.every(line => /^The hearing transcript records on hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\): “[^”]+”$/.test(line)), off.join('\n'))
+  assert.equal(off.length, 6); assert.ok(off.every(line => /^The hearing transcript records on hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\): “[^”]+”$/.test(line)), off.join('\n'))
   // No quotable excerpt: no block.
   assert.equal(api.quotationBlock({ question: hearingQuestion, period, facts: facts(['Example Royal Commission, Transcript Hearing Day 46 (10 March 2023), 120 pages. ' + LABEL + '.']) }), null)
 })

@@ -3,6 +3,7 @@ import type {Passage,QualitativeAnswer} from './research-types'
 import {isPlaceNameMention} from './ask-person-slot'
 import {readableDate} from './tools/record-common'
 import {sentenceSpans} from './sentence-bounds.mjs'
+import {quotationSpans} from './research-claim-audit.mjs'
 export interface AnswerCitation { id:string; quote:string; start:number; end:number }
 export interface AnswerDraft { text:string; citations:AnswerCitation[] }
 export interface AnswerPoint { claim:string; id?:string; quote?:string }
@@ -105,12 +106,49 @@ export const MACHINE_LABELS = [
   /[ \t]*(?<![\p{L}\p{N}-])\(?\bfact ids? (?:fact-\d+(?:\/[\w-]+)*|\d+(?:(?:, ?| and )\d+)*)\)?/giu,
   /[ \t]*(?<![\p{L}\p{N}-])\(?\bfact-\d+(?:\/turn\/\d+(?:\/t\/body\/\d+(?:-\d+)?)?|\/t\/body\/\d+(?:-\d+)?)\)?/giu,
 ]
-/** The writer's own "(fact 7)" or "(facts 2 and 3)", straight after a sentence end or a closing quotation mark, where
- * every number is the id of a fact the writer was given in that call. The label goes; the sentence keeps one full
- * stop. The same words anywhere else, or with a number the writer was not given, are ordinary prose and stay. */
+/** The writer's own "(fact 7)" or "(facts 2 and 3)" at the end of a sentence, where every number is the id of a fact
+ * the writer was given in that call: straight after a sentence end or a closing quotation mark, or straight before
+ * the sentence's closing full stop ("... in 2023 (fact 3)."). The label goes; the sentence keeps one full stop.
+ * The same words in the middle of a sentence, inside a quotation, or with a number the writer was not given, are
+ * ordinary prose and stay. */
 export function withoutGivenFactLabels(text:string,given:ReadonlySet<number>):string {
-  return text.replace(/(?<=[.!?"”’])[ \t]*\(facts? (\d+(?:(?:, ?| and )\d+)*)\)(\.?)/giu,(all:string,ids:string,stop:string,at:number,whole:string)=>
-    (ids.match(/\d+/g)??[]).every(n=>given.has(Number(n)))?(/[.!?]["”’]?$/.test(whole.slice(0,at))?'':stop):all)
+  const quoted=quotationSpans(text)
+  return text.replace(/(?<=[.!?"”’])[ \t]*\(facts? (\d+(?:(?:, ?| and )\d+)*)\)(\.?)|[ \t]*\(facts? (\d+(?:(?:, ?| and )\d+)*)\)(?=[.!?](?:["”’]?(?:\s|$)))/giu,(all:string,after:string|undefined,stop:string|undefined,before:string|undefined,at:number,whole:string)=>{
+    const ids=after??before??''
+    if(!(ids.match(/\d+/g)??[]).every(n=>given.has(Number(n))))return all
+    // The label's own opening bracket decides: inside a quotation it is the source's words.
+    const bracket=at+all.indexOf('(')
+    if(quoted.some((q:{at:number;end:number})=>bracket>q.at&&bracket<q.end-1))return all
+    if(before!==undefined)return ''
+    return /[.!?]["”’]?$/.test(whole.slice(0,at))?'':stop??''
+  })
+}
+/** Whether a sentence is written in another script: outside its quotations, most of its letters are not Latin. A
+ * count of characters, never a reading of the words. A verbatim quotation in any script does not count. */
+export function otherScript(text:string):boolean {
+  let outside=text
+  for(const q of [...quotationSpans(text)].reverse())outside=outside.slice(0,q.at)+outside.slice(q.end)
+  const letters=outside.match(/\p{L}/gu)??[]
+  return letters.length>=4&&letters.filter(c=>!/\p{Script=Latin}/u.test(c)).length*2>letters.length
+}
+/** A quotation that starts or ends where its excerpt was cut keeps the excerpt's own "...": a model sometimes writes
+ * a full stop there, which makes a cut-off passage read as a finished sentence. Only the marks at a cut end change;
+ * the words are already checked to be the excerpt's. */
+export function withSourceEllipses(sentence:string,excerpts:string[]):string {
+  const flat=(s:string)=>s.replace(/\s+/g,' ').trim()
+  let out=sentence
+  for(const q of [...quotationSpans(sentence)].reverse()){
+    const inner=q.value,core=flat(inner.replace(/^[.…\s]+|[.…!?\s]+$/g,''))
+    if(core.split(' ').length<2)continue
+    let next=inner
+    for(const excerpt of excerpts){
+      const body=flat(excerpt.replace(/^(?:\.\.\.|…)|(?:\.\.\.|…)$/g,''))
+      if(/(?:\.\.\.|…)$/.test(excerpt.trim())&&body.endsWith(core)&&!/(?:\.\.\.|…|-\s?-)\s*$/.test(next))next=next.replace(/[.!?\s]+$/,'')+'...'
+      if(/^(?:\.\.\.|…)/.test(excerpt.trim())&&body.startsWith(core)&&!/^\s*(?:\.\.\.|…)/.test(next))next='...'+next.replace(/^[.\s]+/,'')
+    }
+    if(next!==inner)out=out.slice(0,q.at+1)+next+out.slice(q.end-1)
+  }
+  return out
 }
 /** Words that say nothing by themselves: a sentence left with only these once its labels are gone is dropped. */
 export const EMPTY_WORDS = /^(?:see|also|and|or|the|a|an|at|in|on|of|for|as|it|is|are|was|were|to|by|with|from|this|that|these|those|recorded|quoted|cited|details?|more|words?|here|there|both)$/i
@@ -157,6 +195,8 @@ export function verifyResearchPoints(points:unknown,passages:Map<string,Passage>
  const seen=new Set<string>(),kept:AnswerPoint[]=[],references=new Map<string,Set<string>>()
  for(const point of points){
   if(typeof point?.claim!=='string')continue
+  // A point written in another script is left out (a count of characters; research-evidence otherScript).
+  if(otherScript(point.claim)){tally.drops.other_script=(tally.drops.other_script??0)+1;why?.('a point was not in English and was left out');continue}
   const passage=passages.get(point.id),evidence=passage?.text??''
   const claim=repairQuotes(fullName(unescapedQuotes(point.claim),passage?.speaker),evidence,label=>{tally.repairs[label]=(tally.repairs[label]??0)+1})
   const key=normal(claim).toLowerCase()
