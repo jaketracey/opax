@@ -140,7 +140,7 @@ test('the Worker has one way out for Ask, and it sets the field there', async ()
   assert.match(index, /async function apiAskReply\([^)]*\): Promise<Response> \{\n[^\n]*\n  return transcriptNoteResponse\(await apiAskRouted\([^\n]*\)\)\.then\(machineNoticeResponse\)/)
   assert.equal(index.match(/\bapiAskRouted\(/g).length, 2, 'the route and voice reach Ask only through the wrapped entry point')
   // The operator's gold route builds its own reply; it sets the field too.
-  assert.match(index, /linkAskSources\(withMachineNotice\(withTranscriptNote\(agenticAskPayload\(run, q\)\)\)/)
+  assert.match(index, /json\(withMachineNotice\(withTranscriptNote\(linkAskSources\(agenticAskPayload\(run, q\)/)
   // The other two routes where a model writes for a reader.
   assert.match(index, /mapAnswerPayload\(await apiSearchSummary\(request, url, env, ctx\), withSummaryNotice\)/)
   assert.match(index, /mapAnswerPayload\(await apiJourneyStory\(request,body\.value,env,ctx\), withStoryNotice\)/)

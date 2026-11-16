@@ -341,4 +341,6 @@ test('the page and the Worker decide who wrote an answer by one rule', t => {
     assert.equal(machineNoticeModule.machineNotice(payload) !== null, kind in WRITTEN, kind);
   }
   assert.match(app, /import\('\/machine-notice\.js\?v=[^']+'\)\.then\(module => \{ machineNoticeHelpers = module; \}\)\.catch/);
+  // Stamped by its content, so the page never runs an older wording than the Worker.
+  assert.match(app, /import\('\/machine-notice\.js\?v=[0-9a-f]{10}'\)/, 'run npm run stamp');
 });

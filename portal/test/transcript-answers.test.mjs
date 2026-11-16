@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { build } from 'esbuild'
+import { createHash } from 'node:crypto'
 
 const built = await build({ stdin: { contents: [
   "export {excerpt, speakerName, dayWords, spanWords} from './src/tools/transcript-text'",
@@ -9,6 +10,7 @@ const built = await build({ stdin: { contents: [
   "export {transcriptListingOnly, withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
   "export {askOpaxResult} from './src/voice-sources'",
   "export {groundAnswerPayload} from './src/research-grounding'",
+  "export {linkAskSources} from './src/ask-source-links'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const savedFetch = globalThis.fetch
@@ -136,7 +138,9 @@ test('an answer citing only hearing transcripts says they are evidence, not find
   assert.equal(api.withTranscriptNote(listed), listed)
   const written = { ...payload, answer: `Ms Smith said on hearing day 12 (1 November 2022): “income averaging” ${api.TRANSCRIPT_NOTE}` }
   assert.equal(api.withTranscriptNote(written), written, "the transcript writer's own line is not repeated")
-  assert.match(await readFile(new URL('../src/index.ts', import.meta.url), 'utf8'), /linkAskSources\(withTranscriptNote\(/, 'applied to the final Ask payload')
+  const index = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8')
+  assert.equal(index.match(/withTranscriptNote\(linkAskSources\(/g).length, 2, 'applied to the final Ask payload, after its source rows are linked')
+  assert.ok(!/linkAskSources\(withTranscriptNote\(/.test(index))
 })
 
 test('a mixed answer names which cited sources are hearing transcripts, by the number the reader sees', () => {
@@ -158,6 +162,88 @@ test('no hearing transcript cited: no line, and a Hansard speech about a transcr
     const payload = { answered: true, answer_decision: 'answer', answer: 'The Senate debated the bill.', citations: {}, sources }
     assert.equal(api.withTranscriptNote(payload), payload)
   }
+})
+
+const VOTES = { resource: 'fact-v', kind: 'count', url: 'https://opax.test/votes?member=1', title: 'Voted for the bill in 2 of 2 divisions.', snippet: 'Voted for the bill in 2 of 2 divisions.', cited: true }
+const VOTE_LINKS = { lists: [], related: { [VOTES.url]: [{ label: 'Division 1, 3 March 2023', url: 'https://opax.test/division/1' }, { label: 'Division 2, 4 March 2023', url: 'https://opax.test/division/2' }] } }
+
+test('the real order: checks, linked sources, the line, then the way out, and Source N is the number the reader sees', async () => {
+  const answer = 'The member voted for the bill in 2 of 2 divisions. A witness described income averaging.'
+  const payload = { answered: true, answer_decision: 'answer', answer, citations: { 'fact-v/t/body/0': [[0, 50]], 'fact-t1/t/body/0': [[51, answer.length]] }, sources: [VOTES, turnSource(1)] }
+  const checked = api.groundAnswerPayload(payload, 'How did the member vote, and what did witnesses say about income averaging?')
+  const linked = api.linkAskSources(checked.answered === false ? payload : checked, VOTE_LINKS, 'https://opax.test')
+  const cited = linked.sources.filter(s => s.cited)
+  const place = cited.findIndex(s => s.title.includes(LABEL)) + 1
+  assert.deepEqual(cited.slice(0, 3).map(s => s.url), [VOTES.url, 'https://opax.test/division/1', 'https://opax.test/division/2'], 'both divisions sit between the count and the transcript')
+  assert.equal(place, 4)
+  const noted = api.withTranscriptNote(linked)
+  assert.ok(noted.answer.endsWith('\n\nSource 4 is a hearing transcript: evidence, not findings.'), noted.answer)
+  // The way out sees the stored payload again, and an answer cached before the rule: the same line, once.
+  for (const stored of [noted, linked]) {
+    const out = await (await api.transcriptNoteResponse(Response.json(stored))).json()
+    assert.equal(out.answer, noted.answer)
+    assert.equal(out.answer.match(/evidence, not findings/g).length, 1)
+    assert.equal(doneOf(await (await api.transcriptNoteResponse(chunked(sse([['done', stored]]), 13))).text()).answer, noted.answer)
+  }
+  // The old order numbered the line before the division rows went in.
+  assert.ok(api.withTranscriptNote(payload).answer.endsWith('Source 2 is a hearing transcript: evidence, not findings.'))
+  assert.equal(api.withTranscriptNote(api.linkAskSources(api.withTranscriptNote(payload), VOTE_LINKS, 'https://opax.test')).answer, `${answer}\n\nSource 4 is a hearing transcript: evidence, not findings.`, 'a line numbered too early is put right, not doubled')
+})
+
+test('a count of transcripts is not a transcript, and a coverage row by any name is not a source either way', () => {
+  const answer = 'The commission held 47 hearing days. Its report found the scheme unlawful.'
+  const note = sources => api.withTranscriptNote({ answered: true, answer_decision: 'answer', answer, citations: {}, sources }).answer.slice(answer.length).trim()
+  const count = { resource: 'fact-1', kind: 'count', url: 'https://opax.test/royal-commissions/robodebt', title: `OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023. ${LABEL}.`, snippet: '', cited: true }
+  assert.equal(note([count, REPORT]), '', 'a count beside a report: no source is a transcript')
+  assert.equal(note([REPORT, count, turnSource(1)]), 'Source 3 is a hearing transcript: evidence, not findings.', 'the count keeps its number and is not named')
+  assert.equal(note([count, turnSource(1), turnSource(2)]), api.TRANSCRIPT_NOTE, 'a count beside transcripts only: the unnumbered line')
+  assert.equal(note([VOTES, turnSource(1)]), 'Source 2 is a hearing transcript: evidence, not findings.', 'a count of something else is a source like any other')
+  // The older engine's coverage row has a resource and no flag; the linker's are coverage-<name>.
+  const { coverage: _flag, ...unflagged } = COVERAGE
+  for (const row of [unflagged, { ...unflagged, resource: 'coverage-divisions' }]) {
+    assert.equal(note([turnSource(1), turnSource(2), row]), api.TRANSCRIPT_NOTE)
+    assert.equal(note([row, REPORT, turnSource(1)]), 'Source 3 is a hearing transcript: evidence, not findings.')
+    assert.equal(note([row]), '')
+  }
+  assert.equal(note([{ ...REPORT, resource: 'coverage-report' }, turnSource(1)]), api.TRANSCRIPT_NOTE)
+})
+
+test('the answer ends with the line, in the form its sources call for', () => {
+  const base = { answered: true, answer_decision: 'answer', citations: {} }
+  // A line with text after it does not end the answer.
+  const mid = { ...base, answer: `Ms Smith said: “income averaging” ${api.TRANSCRIPT_NOTE}\n\nThe department continued the scheme.`, sources: [turnSource(1)] }
+  const ended = api.withTranscriptNote(mid)
+  assert.equal(ended.answer, `${mid.answer}\n\n${api.TRANSCRIPT_NOTE}`)
+  assert.ok(ended.answer.startsWith(mid.answer), 'the text before it is as it was')
+  assert.equal(api.withTranscriptNote(ended), ended)
+  // The transcript writer's all-transcripts sentence under a mixed set of sources: that sentence alone becomes the numbered form.
+  const prose = 'The report found the scheme unlawful.\n\nMs Smith said on hearing day 1 (1 November 2022): “income averaging”\n\n'
+  const at = Array.from(prose).length, end = at + api.TRANSCRIPT_NOTE.length
+  const written = { ...base, answer: prose + api.TRANSCRIPT_NOTE, citations: { 'fact-2/t/body/0': [[0, 37]], 'fact-t1/t/body/0': [[39, at - 2], [at, end]] }, sources: [REPORT, turnSource(1)] }
+  const mixed = api.withTranscriptNote(written), line = 'Source 2 is a hearing transcript: evidence, not findings.'
+  assert.equal(mixed.answer, prose + line)
+  assert.deepEqual(mixed.citations, { 'fact-2/t/body/0': [[0, 37]], 'fact-t1/t/body/0': [[39, at - 2], [at, at + line.length]] }, 'only the range over the fixed line moves, and it stays inside the answer')
+  assert.equal(api.withTranscriptNote(mixed), mixed)
+  // And the other way: a numbered line over sources that are all transcripts.
+  assert.equal(api.withTranscriptNote({ ...base, answer: `A witness spoke.\n\n${line}`, sources: [turnSource(1), turnSource(2)] }).answer, `A witness spoke.\n\n${api.TRANSCRIPT_NOTE}`)
+  // A saved turn's rows are clipped, so the line it was saved with stands.
+  const saved = { ...base, answer: `A witness spoke.\n\n${line}`, sources: [turnSource(1)] }
+  assert.equal(api.withTranscriptNote(saved, true), saved)
+})
+
+test('voice: a written answer past 4,000 characters is cut in its prose and still ends with the line', () => {
+  const long = 'The commission heard about income averaging at length. '.repeat(90).trim()
+  const text = sources => api.askOpaxResult(api.withTranscriptNote({ answered: true, answer: long, citations: {}, sources }), 'https://opax.test').answer
+  for (const [sources, line] of [[[turnSource(1)], api.TRANSCRIPT_NOTE], [[REPORT, turnSource(1)], 'Source 2 is a hearing transcript: evidence, not findings.']]) {
+    const out = text(sources)
+    assert.ok(long.length > 4_000 && out.length <= 4_000, String(out.length))
+    assert.ok(out.endsWith(`\n${line}`), out.slice(-80))
+    assert.ok(long.startsWith(out.slice(0, -line.length - 1)), 'the prose is only shortened')
+    assert.equal(out.match(/evidence, not findings/g).length, 1)
+  }
+  assert.equal(text([REPORT]), long.slice(0, 4_000))
+  const short = api.askOpaxResult(api.withTranscriptNote({ answered: true, answer: 'A witness spoke.', citations: {}, sources: [turnSource(1)] }), 'https://opax.test').answer
+  assert.equal(short, `A witness spoke.\n${api.TRANSCRIPT_NOTE}`, 'the uncut answer has the same shape')
 })
 
 const sse = events => events.map(([event, data]) => `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`).join('')
@@ -221,6 +307,11 @@ test('voice: the caller hears the line last, without source numbers', () => {
 test('a conversation saved before the rule gains the line when it is restored', async () => {
   const { withTranscriptNote } = await import('../public/transcript-note.js')
   const app = await readFile(new URL('../public/app.js', import.meta.url), 'utf8')
+  // The page loads the helper by its content hash, written by the stamp step like its sibling imports.
+  const { MODULE_STAMPS } = await import('../../scripts/stamp_assets.mjs')
+  assert.ok(MODULE_STAMPS.some(([importer, mod]) => importer === 'app.js' && mod === 'transcript-note.js'))
+  const hash = createHash('sha256').update(await readFile(new URL('../public/transcript-note.js', import.meta.url))).digest('hex').slice(0, 10)
+  assert.ok(app.includes(`import('/transcript-note.js?v=${hash}')`), 'run npm run stamp')
   assert.match(app, /import\('\/transcript-note\.js\?v=[^']+'\)\.then\(module => \{ transcriptNoteHelpers = module; \}\)\.catch/)
   assert.match(app, /function renderChatThread[\s\S]{0,600}transcriptNoteHelpers\.withTranscriptNote\(\{answer:msg\.text, sources:msg\.sources, answered:msg\.answered\}, true\)/)
   // trimTurn keeps 240 characters of each source field, so a long excerpt loses its label; its page pointer remains.

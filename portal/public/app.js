@@ -94,9 +94,9 @@ let saFullTextFlag = 'false';
 const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
   // The transcript line for a conversation saved before every answer citing a hearing transcript carried it.
-  import('/transcript-note.js?v=transcript-line-1').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
+  import('/transcript-note.js?v=c1bfeff62c').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
   // The fixed error notice under a machine-written answer, for the first streamed words and for a saved turn.
-  import('/machine-notice.js?v=machine-notice-1').then(module => { machineNoticeHelpers = module; }).catch(() => {}),
+  import('/machine-notice.js?v=d28b077381').then(module => { machineNoticeHelpers = module; }).catch(() => {}),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]));
 

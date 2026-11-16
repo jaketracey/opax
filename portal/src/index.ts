@@ -6941,7 +6941,7 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
   const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
-  return json(linkAskSources(withMachineNotice(withTranscriptNote(agenticAskPayload(run, q))), run.source_links, SITE_ORIGIN))
+  return json(withMachineNotice(withTranscriptNote(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN))))
 }
 /** Requests whose answers apiAsk must not store in the shared cache: fallbacks run within a shortened caller budget. */
 const UNSHARED_ASK_REQUESTS = new WeakSet<Request>()
@@ -7145,7 +7145,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload),run.source_links,SITE_ORIGIN)
+      // The transcript line goes on after linking, so its source numbers are the ones the reader sees.
+      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload,run.source_links,SITE_ORIGIN))
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
