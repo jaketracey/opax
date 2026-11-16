@@ -14,7 +14,7 @@ export type TextHits = { file: string, quote_policy: string, attribution: string
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
   const data = object(await readToolAsset(env, '/transcripts/index.json'))
-  if (data.schema !== 2 || !Array.isArray(data.docs)) return null
+  if (data.schema !== 3 || !Array.isArray(data.docs)) return null
   return { docs: records(data.docs), stop: new Set((data.stopwords as string[]) ?? []), common: new Set((data.common_terms as string[]) ?? []),
     shards: Number(data.shards) || 64, commissions: object(data.commissions) }
 }
@@ -33,19 +33,27 @@ export function shardOf(term: string, shards: number): number {
 
 /** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
  * public text or every word is too common to narrow the search. */
-/** How well a transcript fits a word search, from the postings alone (no transcript is opened): `least` is the
- * smallest number of its pages holding any one of the searched words, a floor on how much of it is about all of
- * them; `pages` is the sum over the words. A transcript that dwells on the words comes before one that mentions
- * them once. Words too common to be posted (ix.common) take no part. */
+/** A word search reads one postings file for each searched word, so the words are capped. A longer search keeps its
+ * specific words first and leaves out everyday ones (ix.common: words in more than half the transcripts), then the
+ * later words; the caller says which were left out. */
+export const TEXT_SEARCH_WORDS = 6
+/** How well a transcript fits a word search, from the postings alone (no transcript is opened): `least` is the page
+ * count of the searched word that is on the fewest of its pages, and transcripts with the highest such count come
+ * first; `pages` is the sum of the searched words' page counts. A hearing day that discusses every searched word at
+ * length comes before one where a word appears once. */
 export type TextFit = { least: number, pages: number }
-/** The transcripts of a commission whose text holds every searched word, with each one's fit. */
-export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[], fit: Map<string, TextFit> } | null> {
+/** The transcripts of a commission whose text holds every searched word, with each one's fit. Every word is posted,
+ * everyday ones included, so "executive minute" or "general practice training" can be searched. `skipped` are the
+ * words past the cap, which took no part. Null when the words hold nothing to search (stopwords, or years alone). */
+export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[], fit: Map<string, TextFit>, skipped: string[] } | null> {
   if (!object(ix.commissions[commission]).name) return null
   const terms = [...new Set(tokens(words, ix.stop))]
-  const narrow = terms.filter(t => !ix.common.has(t))
-  if (!narrow.length) return null
+  const ordered = [...terms.filter(t => !ix.common.has(t)), ...terms.filter(t => ix.common.has(t))]
+  const searched = ordered.slice(0, TEXT_SEARCH_WORDS), skipped = ordered.slice(TEXT_SEARCH_WORDS)
+  // A year by itself ("2023-03", "10 March 2023") is a date lookup, answered from titles and dates as before.
+  if (!searched.some(t => /[a-z]/.test(t))) return null
   let docs = new Map<number, TextFit>(ix.docs.filter(d => d.commission === commission).map(d => [Number(d.i), { least: Number.MAX_SAFE_INTEGER, pages: 0 }]))
-  for (const t of narrow) {
+  for (const t of searched) {
     const path = `/transcripts/terms/${String(shardOf(t, ix.shards)).padStart(2, '0')}.json`
     if (!SHARD.test(path)) return null
     // A posting is [transcripts, pages of each holding the word].
@@ -55,7 +63,7 @@ export async function textMatches(env: ToolEnv, ix: TextIndex, commission: strin
     if (!docs.size) break
   }
   const matched = ix.docs.filter(d => docs.has(Number(d.i)))
-  return { keys: new Set(matched.map(d => String(d.key))), terms, fit: new Map(matched.map(d => [String(d.key), docs.get(Number(d.i))!])) }
+  return { keys: new Set(matched.map(d => String(d.key))), terms, fit: new Map(matched.map(d => [String(d.key), docs.get(Number(d.i))!])), skipped }
 }
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']

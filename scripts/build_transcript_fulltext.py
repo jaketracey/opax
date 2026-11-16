@@ -6,11 +6,15 @@ commissions in ``COMMISSIONS`` from the verified manual cache (``<cache>/manual/
 no source requests) and writes ``portal/public/transcripts/``:
 
   index.json               the transcripts, attribution and licence per commission, the
-                           tokeniser's stopwords and the terms too common to post
+                           tokeniser's stopwords and the everyday terms (in more than half the
+                           transcripts), which a long search leaves out first
   terms/<nn>.json          term -> [transcripts containing it (index into index.json docs),
                            the number of pages of each that hold it], sharded by FNV-1a of the
                            term. The page counts let a word search put the transcripts that
                            dwell on a word ahead of ones that mention it once (schema 2).
+                           Every term is posted, the everyday ones too (schema 3): before, a
+                           search made only of everyday words ("executive minute", "general
+                           practice training") could match no text at all.
   <commission>/<key>.json  one transcript: its pages with the publisher's own transcript page
                            number, the cleaned text of each page, and term -> pages
 
@@ -45,7 +49,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "parli" / "ingest" / "royal_commissions.json"
 OUT = ROOT / "portal" / "public" / "transcripts"
 CACHE = Path(os.environ.get("OPAX_RC_CACHE", Path.home() / ".cache" / "autoresearch" / "royal-commissions")) / "manual"
-SCHEMA = 2  # the index and its postings; a transcript file keeps DOC_SCHEMA
+SCHEMA = 3  # the index and its postings; a transcript file keeps DOC_SCHEMA
 DOC_SCHEMA = 1
 SHARDS = 64
 LABEL = "Hearing transcript: evidence, not findings"
@@ -188,11 +192,9 @@ def write(path: Path, value):
 def shard_files(postings, total_docs):
     """(common terms, the shard dicts) for term -> [(transcript, pages holding the term)]."""
     common = sorted(t for t, ds in postings.items() if len(ds) > total_docs // 2)
-    held = set(common)
     shards: list[dict] = [{} for _ in range(SHARDS)]
     for t, ds in sorted(postings.items()):
-        if t not in held:
-            shards[shard(t)][t] = [[i for i, _ in ds], [n for _, n in ds]]
+        shards[shard(t)][t] = [[i for i, _ in ds], [n for _, n in ds]]
     return common, shards
 
 

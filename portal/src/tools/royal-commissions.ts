@@ -2,7 +2,7 @@
 import { clip, fold, siteUrl } from './record-common'
 import { object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
-import { dayWords, pageHits, spanWords, textIndex, textMatches, type TextHits } from './transcript-text'
+import { dayWords, pageHits, spanWords, textIndex, textMatches, TEXT_SEARCH_WORDS, type TextHits } from './transcript-text'
 
 const VIEWS = ['list', 'profile', 'recommendations', 'transcripts'] as const
 const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
@@ -215,6 +215,8 @@ export const tool: ToolDefinition = {
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
           notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(found ? [`Words are matched in the title, date and, for this commission, the transcript text (CC BY 4.0). Excerpts are the publisher's words; a transcript recording a non-publication order or a pseudonymous witness is pointed to by page, not quoted.`] : []),
             ...(ix && args.words && !found && object(ix.commissions[String(c.id)]).name ? ['Those words are too common to search the transcript text; add a more specific word.'] : []),
+            // Said in the notes, which every result already carries: no field is added to the result.
+            ...(found?.skipped.length ? [`A transcript text search reads at most ${TEXT_SEARCH_WORDS} words. Not searched: ${found.skipped.join(', ')}.`] : []),
             ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
     }
 

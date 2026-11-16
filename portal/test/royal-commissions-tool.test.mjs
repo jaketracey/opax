@@ -328,21 +328,72 @@ test('a word search opens no transcript beyond the rows it returns: the order co
   assert.equal(out.total > 40, true, 'of more than forty matching transcripts');
 });
 
-test('the postings agree with the published transcripts: every word, every transcript, and the number of its pages holding the word', async () => {
+test('the postings agree with the published transcripts: every word, everyday ones included, every transcript, and the number of its pages holding the word', async () => {
   const ix = await asset('/transcripts/index.json');
-  assert.equal(ix.schema, 2);
+  assert.equal(ix.schema, 3);
   const want = new Map();
   for (const d of ix.docs) {
     const doc = JSON.parse(await readFile(new URL('../public' + d.file, import.meta.url), 'utf8'));
     for (const [term, pages] of Object.entries(doc.terms)) { if (!want.has(term)) want.set(term, [[], []]); want.get(term)[0].push(d.i); want.get(term)[1].push(pages.length); }
   }
-  const common = new Set(ix.common_terms);
   let posted = 0;
   for (let n = 0; n < ix.shards; n++) {
     const shard = await asset(`/transcripts/terms/${String(n).padStart(2, '0')}.json`);
-    for (const [term, posting] of Object.entries(shard)) { posted++; assert.equal(common.has(term), false, term); assert.deepEqual(posting, want.get(term), term); }
+    for (const [term, posting] of Object.entries(shard)) { posted++; assert.deepEqual(posting, want.get(term), term); }
   }
-  // Every word of every transcript is posted or on the too-common list; nothing else.
-  assert.equal(posted + common.size, want.size);
-  for (const term of common) assert.ok(want.get(term)[0].length > ix.docs.length / 2, term);
+  // Every word of every transcript is posted; the everyday list is the words in more than half the transcripts.
+  assert.equal(posted, want.size);
+  assert.equal(ix.common_terms.length, 1570);
+  assert.deepEqual(ix.common_terms, [...want].filter(([, p]) => p[0].length > Math.floor(ix.docs.length / 2)).map(([t]) => t).sort());
+});
+
+// ---- Everyday words are searchable (16 November 2026) ----
+test('a search made only of everyday words now matches transcript text, ordered by fit', async () => {
+  const ix = await asset('/transcripts/index.json'), common = new Set(ix.common_terms);
+  // Each of these returned no text match before: every word in them is in more than half the transcripts.
+  for (const [commission, words, terms] of [['robodebt', 'executive minute', ['executive', 'minute']], ['nsw-healthcare-funding', 'general practice training', ['general', 'practice', 'training']], ['robodebt', '2015 budget measure', ['2015', 'budget', 'measure']], ['robodebt', 'legal advice', ['legal', 'advice']]]) {
+    assert.ok(terms.every(t => common.has(t)), words);
+    const out = await call({ view: 'transcripts', commission, words, limit: 4 }); cited(out);
+    assert.ok(out.rows.length >= 1 && out.rows.every(r => r.text_matches?.hits.length), words);
+    assert.equal(out.notes.some(n => /too common to search/.test(n)), false, words);
+    const fits = await Promise.all(out.rows.map(r => fitOf(r.key, terms)));
+    for (let i = 1; i < fits.length; i++) assert.ok(fits[i - 1].least >= fits[i].least, `${words}: row ${i}`);
+    // The quoted pages hold the words: for a quotable transcript the first page picked holds every one of them.
+    for (const r of out.rows) {
+      const doc = await asset(r.text_matches.file), first = r.text_matches.hits[0].pdf_page;
+      if (terms.every(t => doc.terms[t].some(n => terms.every(u => doc.terms[u].includes(n))))) assert.ok(terms.every(t => doc.terms[t].includes(first)), `${words}: ${r.key} page ${first}`);
+    }
+  }
+  // Words that are only stopwords still hold nothing to search, and say so as before.
+  const none = await call({ view: 'transcripts', commission: 'robodebt', words: 'the was of', limit: 4 });
+  assert.ok(none.notes.some(n => n === 'Those words are too common to search the transcript text; add a more specific word.'));
+});
+
+test('a search reads at most six postings files: specific words first, everyday and later words left out, and the notes say which', async () => {
+  const ix = await asset('/transcripts/index.json');
+  const reads = [];
+  const counting = { ...env, asset: async path => { reads.push(path); return asset(path); } };
+  // Nine searchable words: three specific, six everyday.
+  const words = 'general practice training budget averaging evidence department ombudsman whistleblower';
+  const out = await api.callTool(counting, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words, limit: 4 });
+  const shards = reads.filter(p => /^\/transcripts\/terms\//.test(p));
+  assert.ok(shards.length <= 6, `${shards.length} postings reads`);
+  const note = out.notes.find(n => n.startsWith('A transcript text search reads at most 6 words. Not searched: '));
+  assert.ok(note, JSON.stringify(out.notes));
+  const skipped = note.replace(/^.*Not searched: /, '').replace(/\.$/, '').split(', ');
+  assert.equal(skipped.length, 3);
+  const common = new Set(ix.common_terms);
+  // Everything left out is an everyday word; every specific word was searched.
+  assert.ok(skipped.every(w => common.has(w)), note);
+  for (const specific of ['averaging', 'ombudsman', 'whistleblower']) assert.equal(skipped.includes(specific), false);
+  // The note is one more string in the notes the result already carries: no new field.
+  const short = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 4 });
+  assert.deepEqual(Object.keys(out).sort(), Object.keys(short).sort());
+  assert.equal(short.notes.some(n => /Not searched/.test(n)), false);
+  // A search of the commonest words is bounded by `limit` like any other, and opens only the rows it returns.
+  const wide = []; const widely = { ...env, asset: async path => { wide.push(path); return asset(path); } };
+  const every = await api.callTool(widely, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'the evidence was', limit: 4 });
+  assert.equal(every.total, 47); assert.equal(every.rows.length, 4);
+  assert.equal(new Set(wide.filter(p => /^\/transcripts\/[a-z0-9-]+\/transcript-/.test(p))).size, 4);
+  assert.equal(wide.filter(p => /^\/transcripts\/terms\//.test(p)).length, 1);
 });
