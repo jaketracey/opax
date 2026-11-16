@@ -63,7 +63,7 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
       for (const [i, turn] of turns.entries()) {
         const resource = `${source.resource.replace(/\/turn\/\d+$/, '')}/turn/${i + 1}`
         const when = `${turn.day ? ` on hearing day ${turn.day}` : ''}${turn.date ? ` (${turn.date})` : ''}, transcript page ${turn.page}`
-        const line = `${turn.speaker ? `${turn.speaker} said at ${text.split(',')[0]}${when}:` : `The transcript of ${text.split(',')[0]}${when}, records:`} "${turn.excerpt}". ${TRANSCRIPT_LABEL}.`
+        const line = `${turn.speaker ? `${turn.speaker} said at ${text.split(',')[0]}${when}:` : `The transcript of ${/^the\s/i.test(text) ? '' : 'the '}${text.split(',')[0]}${when}, records:`} "${turn.excerpt}". ${TRANSCRIPT_LABEL}.`
         const before = out.length
         add(line, { ...source, resource, ...(turn.speaker ? { speaker: turn.speaker } : {}), snippet: source.snippet + '\n' + line }, coverage, turn)
         if (out.length > before) out[out.length - 1].transcript = turn

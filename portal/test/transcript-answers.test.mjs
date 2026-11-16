@@ -83,12 +83,22 @@ test('an excerpt stays inside one labelled turn, keeps the label out of the text
   const carried = api.excerpt('averaging continued from the last page, said the witness. THE COMMISSIONER: Noted.', ['averaging'])
   assert.deepEqual(carried, { excerpt: 'averaging continued from the last page, said the witness.' })
   // Counsel's label, then unlabelled "Q." and "A." turns: the answer is the witness's, so the label must not name it.
-  const answer = api.excerpt('MS PRESTON: Q. Did the scheme rely on income averaging?\nA. Yes, income averaging was applied to each debt.\nQ. Thank you.', ['applied'])
+  const qa = 'that was the position, said the witness.\nMS QUELLWORTH: Q. Did the scheme rely on income averaging?\nA. Yes, income averaging was applied to each debt.\nCOMMISSIONER: Yes.'
+  const answer = api.excerpt(qa, ['applied'])
   assert.deepEqual(Object.keys(answer), ['excerpt']); assert.match(answer.excerpt, /averaging was applied to each debt/)
+  // The search word is the surname in the label: the excerpt is the turn the label opens, with the label cut.
+  const surname = api.excerpt(qa, ['quellworth', 'income', 'averaging'])
+  assert.deepEqual(surname, { excerpt: 'Q. Did the scheme rely on income averaging? A. Yes, income averaging was applied to each debt.' }); assert.doesNotMatch(surname.excerpt, LABELLED)
+  // A label that closes the page, and a label with a doubled colon, are still labels.
+  assert.deepEqual(api.excerpt('The averaging was applied to each debt.\nMS QUELLWORTH:', ['averaging']), { excerpt: 'The averaging was applied to each debt.' })
+  assert.deepEqual(api.excerpt('MS QUELLWORTH:: The averaging was applied.\nMR VANTERPOOL:', ['vanterpool']), { excerpt: '' })
+  assert.deepEqual(api.excerpt('MS QUELLWORTH:: The averaging was applied.\nMR VANTERPOOL:', ['applied']), { excerpt: 'The averaging was applied.' })
   assert.equal(api.speakerName('MS HOGAN-DORAN'), 'Ms Hogan-Doran'); assert.equal(api.speakerName('MR LANCASTER SC'), 'Mr Lancaster SC')
   assert.equal(api.speakerName('McLEOD'), 'McLeod'); assert.equal(api.speakerName("MR O'BRIEN"), "Mr O'Brien"); assert.equal(api.speakerName('THE COMMISSIONER'), 'The Commissioner')
 })
 
+/** A turn label, as transcript-text.ts reads one. No excerpt may hold one. */
+const LABELLED = /(?<=^|\s)(?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}:+(?=\s|$)/
 test('no transcript excerpt names a speaker: tool rows, citations and every quotable page', async () => {
   let quoted = 0
   for (const [commission, words] of [['robodebt', 'income averaging'], ['robodebt', 'debt'], ['healthcare-funding', 'funding'], ['healthcare-funding', 'hospital workforce'], ['antisemitism', 'university']]) {
@@ -104,17 +114,24 @@ test('no transcript excerpt names a speaker: tool rows, citations and every quot
   assert.ok(quoted > 0)
   // Every page that may be quoted, with a word from the middle of the page as the search word.
   const index = await env.asset('/transcripts/index.json')
-  let pages = 0
+  let pages = 0, checked = 0
   for (const d of index.docs) {
     const doc = await env.asset(d.file)
     if (doc.quote_policy !== 'quote') continue
     for (const p of doc.pages) {
       if (typeof p.text !== 'string') continue
       const found = p.text.toLowerCase().match(/[a-z]{5,}/g) ?? []
-      pages++; assert.deepEqual(Object.keys(api.excerpt(p.text, found.length ? [found[found.length >> 1]] : [])), ['excerpt'], `${d.key} page ${p.n}`)
+      // A word from the middle of the page, then each word of each label on the page (a search for a surname).
+      const inLabels = (p.text.replace(/\s+/g, ' ').match(new RegExp(LABELLED.source, 'g')) ?? []).flatMap(l => l.toLowerCase().match(/[a-z0-9]{2,}/g) ?? [])
+      pages++
+      for (const w of new Set([found[found.length >> 1], ...inLabels])) {
+        const got = api.excerpt(p.text, w ? [w] : []); checked++
+        assert.deepEqual(Object.keys(got), ['excerpt'], `${d.key} page ${p.n}`)
+        assert.doesNotMatch(got.excerpt, LABELLED, `${d.key} page ${p.n} "${w}"`)
+      }
     }
   }
-  assert.ok(pages > 1000)
+  assert.ok(pages > 1000 && checked > 2 * pages)
 })
 
 test('a royal commission transcript count opens the way the integrity count does', async () => {

@@ -60,7 +60,7 @@ export function dayWords(iso: unknown): string {
 export const spanWords = (first: unknown, last: unknown) => first === last ? dayWords(first) : `${dayWords(first)} to ${dayWords(last)}`
 
 // A turn opens with the speaker's label in capitals: "MS HOGAN-DORAN:", "THE COMMISSIONER:", "MR LANCASTER SC:".
-const LABEL = /(?<=^|\s)((?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}):(?=\s)/g
+const LABEL = /(?<=^|\s)((?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}):+(?=\s|$)/g
 const KEEP = new Set(['SC', 'KC', 'QC', 'AM', 'AO', 'AC', 'OAM', 'PSM', 'APM'])
 /** The label as a name: "MS HOGAN-DORAN" as "Ms Hogan-Doran", "McLEOD" as "McLeod". */
 export function speakerName(label: string): string {
@@ -78,8 +78,10 @@ export function excerpt(text: string, terms: string[]): { excerpt: string } {
     const m = new RegExp(`\\b${t.replace(/[^a-z0-9]/g, '')}`, 'i').exec(flat)
     if (m && (at < 0 || m.index < at)) at = m.index
   }
-  const point = at < 0 ? 0 : at
   const labels = [...flat.matchAll(LABEL)].map(m => ({ at: m.index!, end: m.index! + m[0].length, label: m[1] }))
+  // A query word found inside a label (a surname) points at the turn that label opens, so the label is still cut.
+  const inside = labels.find(l => l.at <= at && at < l.end)
+  const point = at < 0 ? 0 : inside ? inside.end : at
   const turn = labels.filter(l => l.end <= point).at(-1) ?? (at < 0 ? labels.find(l => l.at === 0) : undefined)
   let from = turn ? turn.end : 0
   while (flat[from] === ' ') from++
