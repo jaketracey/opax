@@ -83,9 +83,18 @@ def check(c):
             raise Held(f"commission {c['id']} recommendation {r.get('number')} lacks text or a page citation")
         if r.get("status") and not has_cite(r["status"].get("cite")):
             raise Held(f"commission {c['id']} recommendation {r['number']} has a status without a citation")
+    bare = c.get("use") == rc.DOCUMENTS_ONLY
     for fact in ([c["established"]] if c.get("established") else []) + c.get("commissioners", []):
-        if not has_cite(fact.get("cite")) or not fact.get("quote"):
-            raise Held(f"commission {c['id']} has a fact without a quote and citation")
+        # A fact from a documents-only commission is cited to its page and holds no quotation.
+        if not has_cite(fact.get("cite")) or (bool(fact.get("quote")) == bare) or (bare and not fact["cite"].get("page")):
+            raise Held(f"commission {c['id']} has a fact without a citation, or without the quote its use requires")
+    if bare:
+        # Documents only: no extracted text on any document, no recommendations, no quotation in a note.
+        for doc in c["reports"] + c["responses"] + c["transcripts"]:
+            if any(doc.get(k) for k in rc.TEXT_KEYS):
+                raise Held(f"commission {c['id']} document {doc.get('key')} carries text but is documents only")
+        if c["recommendations"] or any(ch in n for n in c.get("notes", []) + c.get("gaps", []) for ch in rc.QUOTE_MARKS):
+            raise Held(f"commission {c['id']} carries extracted text or a quotation but is documents only")
 
 
 def summary(c, file):
@@ -104,6 +113,7 @@ def summary(c, file):
         "status_as_published": dict(sorted(statuses.items())),
         "recommendations_status": c["recommendations_status"],
         "status_source": c["status_source"], "file": "/royal-commissions/" + file,
+        **({"use": c["use"]} if c.get("use") else {}),
     }
 
 
@@ -145,7 +155,7 @@ def main(argv=None):
     text = full_text()
     for c in commissions:
         for t in c["transcripts"]:
-            if (c["id"], t["key"]) in text:
+            if (c["id"], t["key"]) in text and c.get("use") != rc.DOCUMENTS_ONLY:
                 t["full_text"] = text[(c["id"], t["key"])]
     files, rows = {}, []
     for c in commissions:

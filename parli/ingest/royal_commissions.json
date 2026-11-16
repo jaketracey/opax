@@ -2106,6 +2106,7 @@
    "name": "Royal Commission into the Integrity of Major Public and Civil Infrastructure Construction Projects in Victoria",
    "inquiry_type": "royal_commission",
    "jurisdiction": "Vic",
+   "use": "documents_only",
    "site": "https://www.rcimcp.vic.gov.au/",
    "documents": [
     {
@@ -2120,7 +2121,6 @@
      "rights": "Transcript produced by Epiq for the Royal Commission; the document carries no reuse notice. OPAX links to the publisher's copy and does not reproduce evidence.",
      "page": "https://www.rcimcp.vic.gov.au/hearing-block-1-9-20-november-2026",
      "date": "2026-11-09",
-     "date_quote": "On Monday, 9 November 2026 at 10.00 am",
      "date_page": 1,
      "hearing": "Hearing block 1, 9 to 20 November 2026"
     },
@@ -2136,7 +2136,6 @@
      "rights": "Transcript produced by Epiq for the Royal Commission; the document carries no reuse notice. OPAX links to the publisher's copy and does not reproduce evidence.",
      "page": "https://www.rcimcp.vic.gov.au/hearing-block-1-9-20-november-2026",
      "date": "2026-11-10",
-     "date_quote": "On Tuesday, 10 November 2026 at 10.00 am",
      "date_page": 1,
      "hearing": "Hearing block 1, 9 to 20 November 2026"
     }
@@ -2153,14 +2152,13 @@
      "value": "The Honourable Chris Kourakis AC SC",
      "role": "Commissioner",
      "doc": "transcript-2026-11-09",
-     "page": 1,
-     "quote": "Commissioner: The Honourable Chris Kourakis AC SC"
+     "page": 1
     }
    ],
    "notes": [
     "The commission is still sitting and has published no report. Hearing transcripts are evidence given to the commission, not findings; OPAX lists them as documents only and extracts nothing from them.",
-    "The commission's opening remarks on 9 November 2026 state \"Non-publication orders may be made\" (transcript page 30). OPAX does not reproduce evidence and follows any such orders by linking only to the commission's published copy.",
-    "The Commissioner stated on 9 November 2026 (transcript page 33): \"The Letters Patent require the Commission to deliver its final report by 20 August 2027.\""
+    "The commission has said that it may make non-publication orders (transcript of 9 November 2026, page 30: https://www.rcimcp.vic.gov.au/sites/default/files/2026-11/Transcript-9-November-2026.pdf). OPAX does not reproduce evidence and links only to the commission's published copies.",
+    "The commission is due to deliver its final report by 20 August 2027, as the Commissioner said at the hearing on 9 November 2026 (transcript page 33: https://www.rcimcp.vic.gov.au/sites/default/files/2026-11/Transcript-9-November-2026.pdf)."
    ],
    "gaps": [
     "The commission's letters patent are not loaded, so no establishment date is recorded. Transcripts are a manual supplement supplied by the OPAX maintainer; the refresh does not fetch the commission's site."

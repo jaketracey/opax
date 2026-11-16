@@ -139,7 +139,10 @@ test('a sitting commission lists hearing transcripts as documents, with no recom
   for (const t of listed.rows) { assert.ok(t.hearing); assert.equal(t.recommendations, undefined); assert.equal(t.label, 'Hearing transcript: evidence, not findings'); }
   assert.ok(row.reference_pages.some(p => p.url === 'https://www.rcimcp.vic.gov.au/hearing-block-1-9-20-november-2026'));
   assert.match(row.notes.join(' '), /evidence given to the commission, not findings/);
-  assert.match(row.notes.join(' '), /Non-publication orders may be made/);
+  // The notes are OPAX's own words with a page reference: no extract from a transcript is held (documents only).
+  assert.match(row.notes.join(' '), /may make non-publication orders \(transcript of 9 November 2026, page 30/);
+  assert.match(row.notes.join(' '), /final report by 20 August 2027/);
+  assert.ok(!/["\u201c\u201d]/.test(row.notes.join(' ')));
 });
 
 test('court rulings on a report travel with it, quoted from the official page', async () => {
@@ -220,7 +223,7 @@ test('transcript paging is stable at the edges: first page, last page and past t
   assert.equal(past.rows.length, 0); assert.equal(past.total, 71); assert.equal(past.next_offset, null);
   for (const r of all) { assert.ok(r.date && r.pages >= 1 && /^https:\/\//.test(r.pdf_url) && typeof r.publisher_redacted === 'boolean'); }
   const vic = await call({ view: 'transcripts', commission: 'vic-major-infrastructure' }); cited(vic);
-  assert.ok(vic.rows.every(r => r.order_notes?.some(n => /Non-publication orders/.test(n))));
+  assert.ok(vic.rows.every(r => r.order_notes?.some(n => /may make non-publication orders/.test(n))));
 });
 
 test('CC BY transcripts are searchable by their text: verbatim excerpts with page citations, no quotes where an order is noted', async () => {
