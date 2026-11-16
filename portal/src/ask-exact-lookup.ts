@@ -48,7 +48,7 @@ function requestedPerson(question: string): string | null {
  * Unavailable indexes remain unknown. A missing indexed record does not mean an event never happened. */
 export async function exactRecordLookup(question: string, deps: ToolDeps, period: Period, named?: NamedScope): Promise<LookupDecision | null> {
   question = named?.resolvedQuestion ?? question
-  if (offScopeQuestion(question)) return { terminal: true, answer: { answer: 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.', answer_decision: 'refusal', citations: {}, sources: [] } }
+  if (offScopeQuestion(question)) return { terminal: true, answer: { answer: 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.', answer_decision: 'refusal', citations: {}, sources: [], machine_written: false } }
   const read = async (path: string) => { try { return await deps.asset(path) } catch { return null } }
   const today = new Date().toISOString().slice(0, 10)
   // A future event or an unmatched name, bill or division is a miss: the agent answers it.
