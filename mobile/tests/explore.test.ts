@@ -22,7 +22,6 @@ import {
   plainQuestion,
   pointsLine,
   quizAmpersandNames,
-  quizId,
   quizShareText,
   rangeLabels,
   rankFor,
@@ -454,6 +453,13 @@ test('every question names who produced its fact, and Hansard never publishes a 
       );
     else if (q.template.startsWith('money-'))
       expect(publisher).toBe('AEC annual returns');
+    else if (q.template.startsWith('bill-')) expect(publisher).toBe('ParlInfo');
+    else if (q.template.startsWith('division-'))
+      expect(publisher).toBe('They Vote For You');
+    else if (q.template.startsWith('grant-'))
+      expect(publisher).toBe('GrantConnect');
+    else if (q.template.startsWith('contract-'))
+      expect(publisher).toBe('AusTender');
     else expect(publisher).toBe('OPAX');
     const details = quizSourceDetails(q, rounds.generated);
     expect(details.asOf).toBe(rounds.generated);
@@ -572,41 +578,4 @@ test('every quiz link opens a native OPAX page, and Ask links only draft', () =>
       to: '2023',
     },
   });
-});
-
-test('the front-page deck is the bundled quiz subset Today reads, each with a stable id', () => {
-  const templates = new Set([
-    'words-topic-higher-lower',
-    'words-topic-figure',
-    'words-year-order',
-    'words-peak-year',
-    'words-portrait-topic',
-    'words-year-voice',
-    'words-biggest-source',
-    'words-record-true-false',
-    'money-party-peak-year',
-    'money-party-from-industry',
-    'money-true-false',
-  ]);
-  const derived = new Map<string, Question & { id: string }>();
-  for (const deck of ['mixed', 'money', 'words'] as const)
-    for (const round of rounds.rounds[deck] as Question[][])
-      for (const q of round)
-        if (templates.has(q.template) && !derived.has(quizId(q)))
-          derived.set(quizId(q), { id: quizId(q), ...q });
-  expect(frontPage).toEqual(
-    [...derived.values()].sort((a, b) => (a.id < b.id ? -1 : 1)),
-  );
-  const ids = frontPage.map((q) => q.id);
-  expect(new Set(ids).size).toBe(ids.length);
-  for (const q of frontPage as (Question & { id: string })[]) {
-    expect(q.id).toBe(quizId({ template: q.template, prompt: q.prompt }));
-    expect(q.template).not.toMatch(/donor|industry-(most|magnitude)/);
-    const answer =
-      q.kind === 'order' || q.kind === 'year' || q.kind === 'slider'
-        ? q.answer!
-        : q.options!.findIndex((o) => o.correct);
-    expect(grade(q, answer).correct).toBe(true);
-  }
-  expect(quizId({ template: 'a', prompt: 'b' })).toMatch(/^q[0-9a-f]{8}$/);
 });

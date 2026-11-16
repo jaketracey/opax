@@ -26,6 +26,7 @@ import {
 import { quizSession } from '../src/features/explore/quiz-session';
 import { quizStore } from '../src/features/explore/quiz-store';
 import { choicePortrait } from '../src/features/explore/quiz/ChoiceList';
+import { QuizSourceLine } from '../src/features/explore/quiz/Reveal';
 import { frontPageDeck, quizRounds } from '../src/features/explore/quiz/data';
 
 let mockRecord: QuizRecord | null = null;
@@ -440,10 +441,11 @@ test("Today's question with no round offers a Mixed round; an unknown id opens t
 });
 
 test('a speaker link in a source sheet drafts in Ask and never sends', async () => {
-  const q = frontPageDeck.find((item) => item.template === 'words-year-voice')!;
-  await mount(<Quiz q={q.id} />);
-  await answer(q);
-  await press('quiz-confirm');
+  // Speaker years are round questions; Today's deck asks about records.
+  const q = Object.values(quizRounds)
+    .flat(2)
+    .find((item) => item.template === 'words-year-voice')!;
+  await mount(<QuizSourceLine q={q} testID="quiz-source-0" />);
   const source = withProp('quiz-source-0', 'citation');
   let extra!: TestRenderer.ReactTestRenderer;
   act(() => {

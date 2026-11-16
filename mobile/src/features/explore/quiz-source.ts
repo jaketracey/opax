@@ -13,6 +13,9 @@ export const QUIZ_PUBLISHERS = [
   'Hansard',
   'Wikimedia Commons',
   'OPAX quiz questions',
+  'They Vote For You',
+  'GrantConnect',
+  'AusTender',
 ] as const;
 export type QuizPublisher = (typeof QUIZ_PUBLISHERS)[number];
 
@@ -49,6 +52,9 @@ export function quizPublisher(q: Question): QuizPublisher {
   if (topicTemplates.has(t)) return 'OPAX topics';
   if (opaxTemplates.has(t)) return 'OPAX';
   if (t.startsWith('bill-')) return 'ParlInfo';
+  if (t.startsWith('division-')) return 'They Vote For You';
+  if (t.startsWith('grant-')) return 'GrantConnect';
+  if (t.startsWith('contract-')) return 'AusTender';
   if (t.startsWith('speech-')) return 'Hansard';
   if (t.startsWith('photo-')) return 'Wikimedia Commons';
   if (/^AEC\b/.test(q.source)) return 'AEC annual returns';
@@ -87,6 +93,18 @@ export function quizSourceNotes(q: Question): string[] {
       return ['From the bill as published on ParlInfo.'];
     case 'Hansard':
       return ['From the speech as published in Hansard.'];
+    case 'They Vote For You':
+      return [
+        'From the division as They Vote For You publishes it from the parliament’s own record of the vote.',
+      ];
+    case 'GrantConnect':
+      return [
+        'From grants published on GrantConnect, the Australian Government grants register, counted by financial year.',
+      ];
+    case 'AusTender':
+      return [
+        'From contract notices published on AusTender. Values are contract awards at their latest notice, not money spent.',
+      ];
     default:
       return q.template.startsWith('money-')
         ? ['From how OPAX builds its money data from AEC annual returns.']

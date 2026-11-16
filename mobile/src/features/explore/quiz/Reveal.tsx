@@ -13,7 +13,7 @@ import { quizDestination } from '../quiz-links';
 import { useQuizMoneyGraph } from './money-graph';
 import { pointsLine, type Question, type QuizResponse } from '../quiz-model';
 import { quizSourceDetails } from '../quiz-source';
-import { quizAsOf } from './data';
+import { questionAsOf } from './data';
 
 /**
  * A question's dated source line. Its sheet holds the question's record
@@ -40,7 +40,7 @@ export function QuizSourceLine({ q, testID }: { q: Question; testID: string }) {
     ) : undefined;
   return (
     <SourceLine
-      {...quizSourceDetails(q, quizAsOf, graph)}
+      {...quizSourceDetails(q, questionAsOf(q), graph)}
       {...(extra ? { extra } : {})}
       testID={testID}
     />

@@ -1,0 +1,14 @@
+{
+  "asOf": {
+    "bill": "2026-10-04",
+    "division": "2026-10-29",
+    "grant": "2026-11-11",
+    "contract": "2026-11-15"
+  },
+  "hashes": {
+    "bills": "59b53ffd3828e78ec42cf05b8f959d560ac39b670d6f67d8a8cca795f9150193",
+    "divisions": "22043c0849786815e0ea7199b23d95e0e6cfd54c5babdbcfb9aa484e5fcc6912",
+    "grants": "f63f040ad5f80cf072b0fe3c2313badad8e224eda0b17c26b5e51b4209f070c2",
+    "agencies": "73324d07ab2e50647ef910012bb02bdb41c32aec20be055c3a6e4b7d07effbcd"
+  }
+}

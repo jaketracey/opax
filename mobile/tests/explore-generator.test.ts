@@ -69,18 +69,6 @@ test('the generator imports quiz.js by file URL, so its relative imports resolve
   }
 });
 
-test('the generator writes the front-page deck the README rule describes', () => {
-  const out = runNode(
-    `import { frontPageDeck } from ${JSON.stringify(engineModule)};
-     import { readFileSync } from 'node:fs';
-     const snap = JSON.parse(readFileSync(${JSON.stringify(
-       resolve(__dirname, '../src/features/explore/quiz-rounds.json'),
-     )}, 'utf8'));
-     console.log(JSON.stringify(frontPageDeck(snap.rounds)));`,
-  );
-  expect(out).toEqual(frontPage);
-});
-
 // The record each receipt counted once (portal donor-disclosure.js receiptGraph
 // over graph/money.json), pinned to the money export the deck was built from.
 // Regenerating from a newer export changes the hash: re-read these totals from
