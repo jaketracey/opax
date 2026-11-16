@@ -223,7 +223,9 @@ function pairedPassage(pages: RecordRow[], n: number, terms: string[]): { excerp
   // shown with the turn printed straight after it, called only "the next turn" (who speaks next is not read: it may
   // be the witness, the Commissioner or other counsel). Both turns must open with a heading; the heading's own text
   // is not part of either passage. The pair is given whichever of the two holds the searched word.
-  const headed = (t: PageTurn | undefined) => !!t && t.opens === 'heading' && !t.mark
+  // A heading is not always a speaker ("RE:" in a quoted email, a document id): only one that starts with a title or
+  // is a role word opens a turn for this purpose. The test is of the heading's form; who it names is not read.
+  const headed = (t: PageTurn | undefined) => !!t && t.opens === 'heading' && !t.mark && !!t.heading && (TITLE.test(t.heading.split(' ')[0]) || ROLE.test(t.heading))
   const asks = (found: { flat: string, turn: PageTurn } | undefined) => !!found && headed(found.turn) && /\?["”’')\]]*$/.test(found.flat.slice(found.turn.start, found.turn.end).trimEnd())
   if (headed(turn)) {
     if (asks({ flat, turn }) && /\?["”’')\]]*$/.test(excerpt)) { const after = other(1); const next = headed(after?.turn) ? side(after, 'start') : undefined; if (next) return { excerpt, next } }

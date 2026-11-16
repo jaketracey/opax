@@ -367,7 +367,9 @@ test('headed transcripts: a turn that ends in a question is shown with the turn 
           if (!hit) continue
           const nextOnPage = turns[i + 1], nextPage = doc.pages.find(p => p.n === page.n + 1)
           const after = nextOnPage ? { turn: nextOnPage, flat, folio: page.folio } : typeof nextPage?.text === 'string' ? (() => { const read = api.pageTurns(nextPage.text, nextPage.n); return read.turns[0] ? { turn: read.turns[0], flat: read.text, folio: nextPage.folio } : null })() : null
-          if (!after || after.turn.opens !== 'heading' || after.turn.mark || after.turn.end <= after.turn.start) { assert.equal(hit.next, undefined, `${d.key} page ${page.n}: nothing headed follows`); continue }
+          const speaker = t => /^(?:THE|MR|MS|MRS|DR|PROFESSOR|COMMISSIONER|SENATOR|COUNSEL|JUSTICE)\b/.test(t.heading ?? '')
+          if (!speaker(turn)) continue
+          if (!after || after.turn.opens !== 'heading' || after.turn.mark || after.turn.end <= after.turn.start || !speaker(after.turn)) { if (!after || after.turn.opens !== 'heading') assert.equal(hit.next, undefined, `${d.key} page ${page.n}: nothing headed follows`); continue }
           if (!/\?["”’')\]]*$/.test(hit.excerpt)) continue
           assert.ok(hit.next, `${d.key} page ${page.n}: ${word}`)
           checked++; found.pairs++
@@ -376,7 +378,12 @@ test('headed transcripts: a turn that ends in a question is shown with the turn 
           const spoken = after.flat.slice(after.turn.start, after.turn.end)
           assert.ok(spoken.startsWith(hit.next.text.replace(/\.\.\.$/, '')), `${d.key} page ${page.n}`); assert.ok(hit.next.text.length <= 283)
           // The speaker headings are in neither quotation.
-          for (const heading of [turn.heading, after.turn.heading]) { assert.ok(heading); assert.equal(hit.excerpt.includes(heading), false, heading); assert.equal(hit.next.text.startsWith(heading), false, heading) }
+          // Each passage lies wholly inside its turn's spoken words, which start after the heading: the heading
+          // itself ("MR SURNAME:", "THE COMMISSIONER:") is in neither quotation.
+          assert.ok(turn.heading && after.turn.heading)
+          assert.ok(body.includes(hit.excerpt.replace(/^\.\.\.|\.\.\.$/g, '')), `${d.key} page ${page.n}`)
+          assert.equal(flat.slice(turn.from, turn.start).includes(turn.heading), true)
+          for (const heading of [turn.heading, after.turn.heading]) { assert.equal(hit.excerpt.startsWith(heading), false, heading); assert.equal(hit.next.text.startsWith(heading), false, heading) }
           if (/COMMISSIONER/.test(after.turn.heading)) found.commissioner++
           if (!nextOnPage) found.acrossPages++
         }
