@@ -6,7 +6,8 @@
 // Node .mjs script both load it as it is.
 //
 // The rule: the bill's third reading in the second house; failing that, its latest third reading;
-// failing that, its latest second reading. Never a vote on how the debate ran (closure, the gag or
+// failing that, its latest second reading. A lost reading the bill's own record contradicts (the bill passed,
+// or went on in that house) is dropped, not replaced. Never a vote on how the debate ran (closure, the gag or
 // guillotine, suspending standing orders, adjourning, "that the question be now put"), never an
 // amendment, and nothing at all when no division put the bill's own reading. A division's name is not
 // enough: a closure moved during the third reading is filed under the same name as the third reading
@@ -21,6 +22,10 @@
  *   outcome?: string, result?: string, ayes?: number, noes?: number }} BillDivisionRecord
  */
 /** @typedef {'third' | 'second'} BillReading */
+/**
+ * What the bill export says of the bill's own progress: its `status` and `key_dates`.
+ * @typedef {{ status?: string | null, key_dates?: { stage?: string, date?: string, house?: string }[] | null }} BillProgress
+ */
 /** @typedef {'Passed' | 'Agreed' | 'Not agreed'} DivisionOutcomeWord */
 /**
  * @template {BillDivisionRecord} [D=BillDivisionRecord]
@@ -36,21 +41,25 @@ const plain = (text) => String(text ?? '')
   .replace(/\s+/g, ' ')
   .trim();
 
+// The Chair's result in words: "Question agreed to.", "Question negatived.", "Bill read a second time."
+const RESULT_WORDS = /\b(?:question (agreed to|negatived|resolved in the (?:affirmative|negative))|bills? read a (?:second|third) time)\b/i;
+
 /**
- * The question the Chair put, in the Chair's words: the last "the question is that ..." in the text, and what
- * the record says after it (where a closure moved on that question would show).
+ * The question the Chair put, in the Chair's words: the last "the question is that ..." in the text; what the
+ * record says after it, up to the Chair's result (where a closure moved on that question would show); and that
+ * result, if the record gives it in words ('carried' or 'negatived').
  * @param {string} text
- * @returns {{ put: string, after: string } | null}
+ * @returns {{ put: string, after: string, said: 'carried' | 'negatived' | null } | null}
  */
 function questionPut(text) {
-  /** @type {{ put: string, after: string } | null} */
+  /** @type {{ put: string, after: string, said: 'carried' | 'negatived' | null } | null} */
   let last = null;
   // A bill's "(No. 2)" is not the end of the question.
   for (const m of text.matchAll(/\bquestion (?:now |before the (?:house|senate|chamber) )?is(?: now)?,?(?: that)? ((?:\bNo\.(?=\s*\d)|[^.?!])*)/gi)) {
-    // Up to the Chair's result ("Question agreed to.", "Bill read a second time."): later business is not this division.
     const after = text.slice((m.index ?? 0) + m[0].length);
-    const end = after.search(/\b(?:question (?:agreed to|negatived|resolved)|bills? read a)\b/i);
-    last = { put: m[1], after: end >= 0 ? after.slice(0, end) : after };
+    const result = RESULT_WORDS.exec(after);
+    const said = !result ? null : /negat/i.test(result[0]) ? 'negatived' : 'carried';
+    last = { put: m[1], after: result ? after.slice(0, result.index) : after, said };
   }
   return last;
 }
@@ -82,6 +91,10 @@ const THIRD = new RegExp([
 ].join('|'), 'i');
 // Stages that never decide a bill: what a summary says under one of these is about a step on the way.
 const NOT_A_READING = /\b(?:in committee|committee of the whole|consideration in detail|consideration of (?:senate|house(?: of representatives)?) messages?|first reading|reference to committee|adoption of report|documents|business motion|committee motion|declaration of urgency)\b/i;
+// A division's name as They Vote For You files it: "X Bill 2014 - Second Reading - Read a second time".
+const DIVISION_NAME = /\s-\s(?:second|third) reading\s-\s/i;
+// A They Vote For You summary: "The majority voted ...", at times after a sentence naming the policy.
+const SUMMARY = /^(?:this division relates to[^.]*\.\s*)?(the majority\b[\s\S]*)$/i;
 const SECOND = new RegExp([
   String.raw`\bread (?:the bills? |this bill |these bills |it |them )?(?:for )?a second time\b`,
   String.raw`\bagree with (?:the )?bills?'? main idea\b`, String.raw`\bsecond reading - agree with the bills?\b`,
@@ -120,12 +133,18 @@ export function divisionReading(d, proceduralTitles = null) {
   if (chair) {
     // A closure or adjournment moved after the question was put is what the division was on.
     if (PROCEDURAL.test(chair.put) || AMENDMENT.test(chair.put) || PROCEDURAL.test(chair.after)) return null;
+    // The record says the question went the other way ("Bill read a second time" on a division that was lost):
+    // the division was on something else, such as an amendment put just before.
+    if ((chair.said === 'carried' && result === 'negative') || (chair.said === 'negatived' && result === 'affirmative')) return null;
     return THIRD.test(chair.put) ? 'third' : SECOND.test(chair.put) ? 'second' : null;
   }
   // With no question quoted, a They Vote For You summary says what was voted on in its first sentence (later
-  // sentences explain the bill and may mention amendments); a Hansard extract or a division's name is read whole.
+  // sentences explain the bill and may mention amendments), and a division's name says it whole. A Hansard extract
+  // that quotes no question opens with the minister's own motion ("I move: That this bill be now read a second
+  // time") and the speech after it, whatever the division was on: it decides nothing.
   // (No lookbehind: this file is in public/, and Safari before 16.4 cannot parse one; see browser-errors.test.mjs.)
-  const text = /^the majority\b/i.test(all) ? (/^[\s\S]*?[.!?]["'”’]?(?=\s*[A-Z(#])/.exec(all)?.[0] ?? all) : all;
+  const summary = SUMMARY.exec(all);
+  const text = summary ? (/^[\s\S]*?[.!?]["'”’]?(?=\s*[A-Z(#])/.exec(summary[1])?.[0] ?? summary[1]) : DIVISION_NAME.test(all) ? all : '';
   if (!text || NOT_A_READING.test(stage) || PROCEDURAL.test(stage) && !/limitation of debate/i.test(stage)) return null;
   if (PROCEDURAL.test(text) || AMENDMENT.test(text)) return null;
   const third = THIRD.test(text), second = SECOND.test(text);
@@ -149,16 +168,42 @@ export function divisionOutcomeWord(d, reading) {
 const order = (d) => `${d.date ?? ''}#${String(/(\d+)$/.exec(d.key ?? '')?.[1] ?? '').padStart(8, '0')}`;
 
 /**
+ * Whether the bill's own record contradicts a reading negatived in a division. A bill that passed (status
+ * 'passed', or Royal Assent) lost none of its readings. Nor did a bill that went on in that house on or after
+ * the day: a committee stage, a third reading or its passing after a lost second reading; its passing, or a
+ * later third reading, after a lost third reading. Then the division was not what its text says.
+ * @param {BillDivisionRecord} d
+ * @param {BillReading} reading
+ * @param {BillProgress | null | undefined} bill
+ */
+export function contradictedByRecord(d, reading, bill) {
+  if ((d.outcome ?? d.result) !== 'negative' || !bill) return false;
+  const keyDates = Array.isArray(bill.key_dates) ? bill.key_dates : [];
+  if (bill.status === 'passed' || keyDates.some(k => k?.stage === 'royal_assent')) return true;
+  if (!d.date || !d.house) return false;
+  const day = d.date.slice(0, 10);
+  return keyDates.some(k => {
+    const at = String(k?.date ?? '').slice(0, 10);
+    if (k?.house !== d.house || !/^\d{4}-\d{2}-\d{2}$/.test(at) || at < day) return false;
+    return reading === 'second' ? ['committee', 'third_reading', 'passed'].includes(k.stage ?? '')
+      : k.stage === 'passed' || (k.stage === 'third_reading' && at > day);
+  });
+}
+
+/**
  * The division that decided the bill: its third reading in the second house (the house it was not
  * introduced in), else its latest third reading, else its latest second reading; null when no division put
- * either reading. Never falls back to the latest division of any kind.
+ * either reading. Never falls back to the latest division of any kind. Given the bill's progress (`bill`), a
+ * lost reading the record contradicts gives null, never a false "Not agreed", and is passed to
+ * `onContradicted` so the caller can log it.
  * @template {BillDivisionRecord} D
  * @param {D[]} divisions
- * @param {{ proceduralTitles?: Record<string, string> | null, originatingHouse?: string | null }} [options]
+ * @param {{ proceduralTitles?: Record<string, string> | null, originatingHouse?: string | null,
+ *   bill?: BillProgress | null, onContradicted?: (found: { division: D, reading: BillReading }) => void }} [options]
  * @returns {DecidingDivision<D> | null}
  */
 export function decidingDivision(divisions, options = {}) {
-  const { proceduralTitles = null, originatingHouse = null } = options;
+  const { proceduralTitles = null, originatingHouse = null, bill = null, onContradicted } = options;
   /** @type {{ division: D, reading: BillReading }[]} */
   const read = [];
   for (const division of divisions ?? []) {
@@ -169,5 +214,10 @@ export function decidingDivision(divisions, options = {}) {
   const latest = (keep) => read.filter(keep).sort((a, b) => order(b.division).localeCompare(order(a.division)))[0];
   const found = (originatingHouse ? latest(r => r.reading === 'third' && !!r.division.house && r.division.house !== originatingHouse) : undefined)
     ?? latest(r => r.reading === 'third') ?? latest(r => r.reading === 'second');
-  return found ? { ...found, outcome: divisionOutcomeWord(found.division, found.reading) } : null;
+  if (!found) return null;
+  if (contradictedByRecord(found.division, found.reading, bill)) {
+    onContradicted?.(found);
+    return null;
+  }
+  return { ...found, outcome: divisionOutcomeWord(found.division, found.reading) };
 }
