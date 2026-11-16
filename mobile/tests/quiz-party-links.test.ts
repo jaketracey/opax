@@ -20,7 +20,8 @@ const partyLinks = questions.filter((q) =>
 );
 
 test('every quiz party link resolves to one recorded party', () => {
-  expect(partyLinks).toHaveLength(33);
+  // All from the rounds: Today's record questions link no party page.
+  expect(partyLinks).toHaveLength(25);
   const resolved = new Map<string, string | null>();
   for (const q of partyLinks) {
     const destination = quizDestination(q);

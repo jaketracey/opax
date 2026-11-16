@@ -479,7 +479,13 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
                     {view === 'contracts' && supplierFilter ? (
                       <LinkRow
                         title="Show all contracts"
-                        detail={supplierFilter.name}
+                        detail={
+                          // A link may carry the supplier's id alone.
+                          supplierFilter.name ??
+                          profile?.suppliers.find(
+                            (s) => s.id === supplierFilter.id,
+                          )?.name
+                        }
                         onPress={() => setSupplierFilter(null)}
                         testID="agency-clear-supplier"
                       />

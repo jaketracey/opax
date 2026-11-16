@@ -3,6 +3,8 @@ import type { SourceOriginal } from '../../design/source';
 import type { MoneyGraph } from '../money/data';
 import { donorNodeFor, loadedMoneyGraph } from '../money/lookup';
 import { askRoute } from '../../navigation/routes/ask';
+import { billRoute } from '../../navigation/routes/bills';
+import { moneyFromWebPath } from '../money-public/routes';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
 import { moneyRecordRoute } from '../../navigation/routes/public-money';
@@ -21,8 +23,10 @@ type AskScope = Parameters<typeof askRoute>[0];
  * - `original`: the record row in the reveal's source sheet. Its `url` is the
  *   web path the sheet resolves natively (`fromWebPath`), and `route` is the
  *   same destination from its group's route builder: a donor's money record,
- *   the in-tab money map filtered to an industry, a party or topic page, or
- *   Methods ("How OPAX is built").
+ *   the in-tab money map filtered to an industry, a party or topic page,
+ *   Methods ("How OPAX is built"), or for Today's question a bill or one of
+ *   its divisions, a grant program, or an agency's contracts filtered to a
+ *   supplier.
  *   A donor round names its donor; the record opens by the donor's graph id,
  *   as the money page's "Largest donors" rows do, so the name is matched on
  *   the federal money graph (`donorNodeFor`, the map search's normalised
@@ -97,6 +101,47 @@ export function quizDestination(
       route: () => topicRoute(name, {}, label),
     };
   }
+  // Today's record questions: a bill (or one of its divisions), a grant
+  // program, or an agency's contracts. Each row is named for its record.
+  const bill = /^\/bill\/([a-z0-9-]+)\/?$/.exec(url.pathname);
+  if (bill?.[1]) {
+    const key = bill[1];
+    const division = url.searchParams.get('division');
+    return {
+      kind: 'original',
+      original: {
+        label: q.link.label,
+        url: path,
+        record: division
+          ? /-senate-/.test(division)
+            ? 'Senate division'
+            : 'House division'
+          : 'bill',
+      },
+      route: () =>
+        billRoute(
+          key,
+          undefined,
+          division ? { section: 'divisions', division } : {},
+        ),
+    };
+  }
+  const money =
+    (url.pathname === '/money/grants' && url.searchParams.get('program')) ||
+    /^\/subject\/agency\/[^/]+\/?$/.test(url.pathname)
+      ? moneyFromWebPath(path)
+      : null;
+  if (money)
+    return {
+      kind: 'original',
+      original: {
+        label: q.link.label,
+        url: path,
+        record:
+          url.pathname === '/money/grants' ? 'grant program' : 'contracts',
+      },
+      route: () => money,
+    };
   if (url.pathname === '/methods')
     return {
       kind: 'original',

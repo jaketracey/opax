@@ -1,84 +1,10 @@
 [
   {
-    "id": "q1021bd29",
-    "template": "words-topic-figure",
-    "deck": "words",
-    "kind": "slider",
-    "prompt": "How many speeches does the Housing report find?",
-    "answer": 19369,
-    "min": 3335,
-    "max": 53156,
-    "scale": "log",
-    "format": "count",
-    "fact": "Housing: 19,369 speeches",
-    "explanation": "The range runs from the smallest to the largest real topic-report count.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/housing",
-      "label": "Read the Housing report"
-    }
-  },
-  {
-    "id": "q103d5eee",
-    "template": "words-year-order",
-    "deck": "words",
-    "kind": "order",
-    "prompt": "Order these years by how much parliament talked about first nations, busiest first.",
-    "options": [
-      {
-        "label": "2007",
-        "value": 329
-      },
-      {
-        "label": "2003",
-        "value": 139
-      },
-      {
-        "label": "2019",
-        "value": 689
-      }
-    ],
-    "answer": ["2019", "2007", "2003"],
-    "fact": "2019 689; 2007 329; 2003 139",
-    "explanation": "The report counts speeches touching on the topic in each calendar year.",
-    "source": "Parliamentary record via OPAX's First Nations report",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "q119b06e2",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about first nations, David Shoebridge or Warren Snowdon?",
-    "options": [
-      {
-        "label": "David Shoebridge",
-        "correct": false,
-        "photo": "/photos/11010.webp"
-      },
-      {
-        "label": "Warren Snowdon",
-        "correct": true,
-        "photo": "/photos/10599.webp"
-      }
-    ],
-    "fact": "Warren Snowdon: 508 speeches",
-    "explanation": "David Shoebridge appears 201 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's First Nations report",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "q155defa3",
-    "template": "words-record-true-false",
+    "id": "q5cbf1c49",
+    "template": "bill-became-law",
     "deck": "words",
     "kind": "tf",
-    "prompt": "True or false: The searchable record includes state parliaments as well as federal Hansard.",
+    "prompt": "True or false: The Customs Amendment (Safeguard Inquiries) Bill 2026 became law.",
     "options": [
       {
         "label": "True",
@@ -89,749 +15,192 @@
         "correct": false
       }
     ],
-    "fact": "True",
-    "explanation": "Several state parliaments appear alongside the federal chambers in OPAX's source list.",
-    "source": "OPAX source counts",
+    "fact": "True. It received Royal Assent on 28 September 2026.",
+    "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
+    "source": "ParlInfo bill record",
     "link": {
-      "href": "/methods",
-      "label": "Read how the record is built"
+      "href": "/bill/au-federal-s1495",
+      "label": "Customs Amendment (Safeguard Inquiries) Bill 2026"
     }
   },
   {
-    "id": "q25eb3b0a",
-    "template": "words-topic-higher-lower",
-    "deck": "words",
-    "kind": "higher-lower",
-    "prompt": "Does media ownership appear in more or fewer speeches?",
-    "comparison": {
-      "shownLabel": "Gambling",
-      "shownValue": 3335,
-      "shownDisplay": "3,335 speeches",
-      "hiddenLabel": "Media Ownership",
-      "hiddenValue": 19456,
-      "hiddenDisplay": "19,456 speeches"
-    },
-    "options": [
-      {
-        "label": "Higher",
-        "correct": true
-      },
-      {
-        "label": "Lower",
-        "correct": false
-      }
-    ],
-    "fact": "Media Ownership: 19,456 speeches",
-    "explanation": "Gambling appears in 3,335, making Media Ownership the higher figure.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/media-communications",
-      "label": "Read the Media Ownership report"
-    }
-  },
-  {
-    "id": "q2808d44b",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about immigration, David Shoebridge or Philip Ruddock?",
-    "options": [
-      {
-        "label": "David Shoebridge",
-        "correct": false,
-        "photo": "/photos/11010.webp"
-      },
-      {
-        "label": "Philip Ruddock",
-        "correct": true,
-        "photo": "/photos/10553.webp"
-      }
-    ],
-    "fact": "Philip Ruddock: 1,214 speeches",
-    "explanation": "David Shoebridge appears 416 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Immigration report",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "q34aaed2b",
-    "template": "money-party-peak-year",
-    "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did Katter's Australian Party receive its largest disclosed total?",
-    "answer": 2011,
-    "min": 2011,
-    "max": 2024,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2011: $2.2 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
-    "link": {
-      "href": "/subject/party/Katter's%20Australian%20Party",
-      "label": "Open Katter's Australian Party in the record"
-    }
-  },
-  {
-    "id": "q3a6c5ec2",
-    "template": "words-record-true-false",
-    "deck": "words",
-    "kind": "tf",
-    "prompt": "True or false: The searchable record contains fewer than 100,000 speeches and documents.",
-    "options": [
-      {
-        "label": "True",
-        "correct": false
-      },
-      {
-        "label": "False",
-        "correct": true
-      }
-    ],
-    "fact": "False: 964,517 are collected",
-    "explanation": "OPAX's source counts put the collection comfortably above that mark.",
-    "source": "OPAX source counts",
-    "link": {
-      "href": "/methods",
-      "label": "Read how the record is built"
-    }
-  },
-  {
-    "id": "q3f72657c",
-    "template": "money-true-false",
-    "deck": "money",
-    "kind": "tf",
-    "prompt": "True or false: Taxpayer money the AEC pays parties after each election (public electoral funding) is counted in these receipt totals.",
-    "options": [
-      {
-        "label": "True",
-        "correct": false
-      },
-      {
-        "label": "False",
-        "correct": true
-      }
-    ],
-    "fact": "False",
-    "explanation": "The methodology leaves public electoral funding out (107 rows excluded).",
-    "source": "OPAX money data methodology",
-    "link": {
-      "href": "/methods",
-      "label": "Read how the record is built"
-    }
-  },
-  {
-    "id": "q40bf506b",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about climate & energy, Greg Combet or Julia Gillard?",
-    "options": [
-      {
-        "label": "Greg Combet",
-        "correct": false,
-        "photo": "/photos/10139.webp"
-      },
-      {
-        "label": "Julia Gillard",
-        "correct": true,
-        "photo": "/photos/10257.webp"
-      }
-    ],
-    "fact": "Julia Gillard: 832 speeches",
-    "explanation": "Greg Combet appears 476 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Climate & Energy report",
-    "link": {
-      "href": "/subject/topic/climate-environment",
-      "label": "Read the Climate & Energy report"
-    }
-  },
-  {
-    "id": "q491fbf30",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about climate & energy, Julia Gillard or Tony Abbott?",
-    "options": [
-      {
-        "label": "Julia Gillard",
-        "correct": true,
-        "photo": "/photos/10257.webp"
-      },
-      {
-        "label": "Tony Abbott",
-        "correct": false,
-        "photo": "/photos/10001.webp"
-      }
-    ],
-    "fact": "Julia Gillard: 832 speeches",
-    "explanation": "Tony Abbott appears 562 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Climate & Energy report",
-    "link": {
-      "href": "/subject/topic/climate-environment",
-      "label": "Read the Climate & Energy report"
-    }
-  },
-  {
-    "id": "q4df2ad96",
-    "template": "words-topic-figure",
-    "deck": "words",
-    "kind": "slider",
-    "prompt": "How many speeches does the Immigration report find?",
-    "answer": 24028,
-    "min": 3335,
-    "max": 53156,
-    "scale": "log",
-    "format": "count",
-    "fact": "Immigration: 24,028 speeches",
-    "explanation": "The range runs from the smallest to the largest real topic-report count.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "q51f6b398",
-    "template": "money-party-from-industry",
+    "id": "qa4167c0f",
+    "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which party has reported the most receipts from unions?",
+    "prompt": "Which agency runs the Jobs, Land and the Economy program?",
     "options": [
       {
-        "label": "Greens",
-        "correct": false
-      },
-      {
-        "label": "Nationals",
-        "correct": false
-      },
-      {
-        "label": "Labor",
+        "label": "National Indigenous Australians Agency",
         "correct": true
+      },
+      {
+        "label": "Department of Employment and Workplace Relations",
+        "correct": false
+      },
+      {
+        "label": "Attorney-General's Department",
+        "correct": false
+      },
+      {
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
       }
     ],
-    "fact": "Labor: $182 million",
-    "explanation": "That is the largest total in receipts from unions; Greens follows on $2.8 million.",
-    "source": "AEC disclosures via OPAX's money data",
-    "scope": "All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns",
+    "fact": "National Indigenous Australians Agency",
+    "explanation": "Across 5 funding rounds with grants in 2025-26, the program awarded 562 grants worth $1.71 billion, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
     "link": {
-      "href": "/money?industry=unions",
-      "label": "Open this industry on the money map"
+      "href": "/money/grants?program=GO7748",
+      "label": "Jobs, Land and the Economy"
     }
   },
   {
-    "id": "q5865904e",
-    "template": "words-topic-figure",
+    "id": "q925aec13",
+    "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "How many speeches does the First Nations report find?",
-    "answer": 16923,
-    "min": 3335,
-    "max": 53156,
-    "scale": "log",
-    "format": "count",
-    "fact": "First Nations: 16,923 speeches",
-    "explanation": "The range runs from the smallest to the largest real topic-report count.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "q59d68e7b",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2020?",
-    "options": [
-      {
-        "label": "V.A. Chapman",
-        "correct": false,
-        "photo": "/photos/wd-Q7925455.webp"
-      },
-      {
-        "label": "Anthony Albanese",
-        "correct": true,
-        "photo": "/photos/10007.webp"
-      }
-    ],
-    "fact": "Anthony Albanese: 5 sampled speeches",
-    "explanation": "V.A. Chapman appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2020 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Anthony+Albanese&from=2020&to=2020",
-      "label": "Search Anthony Albanese in the 2020 record"
-    }
-  },
-  {
-    "id": "q59db0ba9",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2026?",
-    "options": [
-      {
-        "label": "Barbara Pocock",
-        "correct": false,
-        "photo": "/photos/11008.webp"
-      },
-      {
-        "label": "Steve Georganas",
-        "correct": true,
-        "photo": "/photos/10245.webp"
-      }
-    ],
-    "fact": "Steve Georganas: 3 sampled speeches",
-    "explanation": "Barbara Pocock appears 2 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2026 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Steve+Georganas&from=2026&to=2026",
-      "label": "Search Steve Georganas in the 2026 record"
-    }
-  },
-  {
-    "id": "q5f8b0220",
-    "template": "money-party-peak-year",
-    "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did Labor receive its largest disclosed total?",
-    "answer": 2007,
-    "min": 1998,
-    "max": 2024,
+    "prompt": "The Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026 passed the Senate at its third reading on 20 August 2026. How many senators voted for it?",
+    "answer": 33,
+    "min": 0,
+    "max": 76,
     "scale": "linear",
-    "format": "year",
-    "fact": "2007: $60.6 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
-    "link": {
-      "href": "/subject/party/Labor",
-      "label": "Open Labor in the record"
-    }
-  },
-  {
-    "id": "q5fa16f7d",
-    "template": "words-year-order",
-    "deck": "words",
-    "kind": "order",
-    "prompt": "Order these years by how much parliament talked about climate & energy, busiest first.",
-    "options": [
-      {
-        "label": "2008",
-        "value": 1070
-      },
-      {
-        "label": "2002",
-        "value": 641
-      },
-      {
-        "label": "2009",
-        "value": 1635
-      }
-    ],
-    "answer": ["2009", "2008", "2002"],
-    "fact": "2009 1,635; 2008 1,070; 2002 641",
-    "explanation": "The report counts speeches touching on the topic in each calendar year.",
-    "source": "Parliamentary record via OPAX's Climate & Energy report",
-    "link": {
-      "href": "/subject/topic/climate-environment",
-      "label": "Read the Climate & Energy report"
-    }
-  },
-  {
-    "id": "q601116d9",
-    "template": "words-year-order",
-    "deck": "words",
-    "kind": "order",
-    "prompt": "Order these years by how much parliament talked about gambling, busiest first.",
-    "options": [
-      {
-        "label": "2015",
-        "value": 90
-      },
-      {
-        "label": "2018",
-        "value": 249
-      },
-      {
-        "label": "2023",
-        "value": 136
-      }
-    ],
-    "answer": ["2018", "2023", "2015"],
-    "fact": "2018 249; 2023 136; 2015 90",
-    "explanation": "The report counts speeches touching on the topic in each calendar year.",
-    "source": "Parliamentary record via OPAX's Gambling report",
-    "link": {
-      "href": "/subject/topic/gambling",
-      "label": "Read the Gambling report"
-    }
-  },
-  {
-    "id": "q6273a66d",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about media ownership, Peter McGauran or Paul Fletcher?",
-    "options": [
-      {
-        "label": "Peter McGauran",
-        "correct": true,
-        "photo": "/photos/10436.webp"
-      },
-      {
-        "label": "Paul Fletcher",
-        "correct": false,
-        "photo": "/photos/10723.webp"
-      }
-    ],
-    "fact": "Peter McGauran: 606 speeches",
-    "explanation": "Paul Fletcher appears 458 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Media Ownership report",
-    "link": {
-      "href": "/subject/topic/media-communications",
-      "label": "Read the Media Ownership report"
-    }
-  },
-  {
-    "id": "q6305d043",
-    "template": "words-year-order",
-    "deck": "words",
-    "kind": "order",
-    "prompt": "Order these years by how much parliament talked about housing, busiest first.",
-    "options": [
-      {
-        "label": "2005",
-        "value": 109
-      },
-      {
-        "label": "2007",
-        "value": 230
-      },
-      {
-        "label": "2018",
-        "value": 1062
-      }
-    ],
-    "answer": ["2018", "2007", "2005"],
-    "fact": "2018 1,062; 2007 230; 2005 109",
-    "explanation": "The report counts speeches touching on the topic in each calendar year.",
-    "source": "Parliamentary record via OPAX's Housing report",
-    "link": {
-      "href": "/subject/topic/housing",
-      "label": "Read the Housing report"
-    }
-  },
-  {
-    "id": "q6c3faf65",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2017?",
-    "options": [
-      {
-        "label": "Julia Banks",
-        "correct": false,
-        "photo": "/photos/10862.webp"
-      },
-      {
-        "label": "Josh Frydenberg",
-        "correct": true,
-        "photo": "/photos/10741.webp"
-      }
-    ],
-    "fact": "Josh Frydenberg: 8 sampled speeches",
-    "explanation": "Julia Banks appears 4 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2017 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Josh+Frydenberg&from=2017&to=2017",
-      "label": "Search Josh Frydenberg in the 2017 record"
-    }
-  },
-  {
-    "id": "q6c442c93",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2015?",
-    "options": [
-      {
-        "label": "Tony Abbott",
-        "correct": true,
-        "photo": "/photos/10001.webp"
-      },
-      {
-        "label": "Peter Dutton",
-        "correct": false,
-        "photo": "/photos/10188.webp"
-      }
-    ],
-    "fact": "Tony Abbott: 9 sampled speeches",
-    "explanation": "Peter Dutton appears 4 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2015 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Tony+Abbott&from=2015&to=2015",
-      "label": "Search Tony Abbott in the 2015 record"
-    }
-  },
-  {
-    "id": "q6c50f886",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2010?",
-    "options": [
-      {
-        "label": "George Brandis",
-        "correct": false,
-        "photo": "/photos/10067.webp"
-      },
-      {
-        "label": "Mathias Cormann",
-        "correct": true,
-        "photo": "/photos/10148.webp"
-      }
-    ],
-    "fact": "Mathias Cormann: 5 sampled speeches",
-    "explanation": "George Brandis appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2010 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Mathias+Cormann&from=2010&to=2010",
-      "label": "Search Mathias Cormann in the 2010 record"
-    }
-  },
-  {
-    "id": "q6d443ea3",
-    "template": "money-party-peak-year",
-    "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did Nationals receive its largest disclosed total?",
-    "answer": 2004,
-    "min": 1998,
-    "max": 2024,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2004: $6.2 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
-    "link": {
-      "href": "/subject/party/Nationals",
-      "label": "Open Nationals in the record"
-    }
-  },
-  {
-    "id": "q6ec0b6a1",
-    "template": "words-topic-figure",
-    "deck": "words",
-    "kind": "slider",
-    "prompt": "How many speeches does the Gambling report find?",
-    "answer": 3335,
-    "min": 3335,
-    "max": 53156,
-    "scale": "log",
     "format": "count",
-    "fact": "Gambling: 3,335 speeches",
-    "explanation": "The range runs from the smallest to the largest real topic-report count.",
-    "source": "Parliamentary record via OPAX's topic reports",
+    "fact": "Passed: 33 for, 9 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 33 senators voted for it and 9 against.",
+    "source": "Division record from They Vote For You",
     "link": {
-      "href": "/subject/topic/gambling",
-      "label": "Read the Gambling report"
+      "href": "/bill/au-federal-r7449?section=divisions&division=federal-senate-10729",
+      "label": "Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026, third reading"
     }
   },
   {
-    "id": "q74d9ac07",
-    "template": "money-party-from-industry",
+    "id": "q2aa6ac61",
+    "template": "contract-largest-supplier",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which party has reported the most receipts from media companies?",
+    "prompt": "Which company holds the largest Department of Defence contract that starts in 2026? It is worth $5.23 billion.",
     "options": [
       {
-        "label": "LNP",
-        "correct": false
-      },
-      {
-        "label": "Labor",
+        "label": "Austal Defence Shipbuilding Australia Pty Ltd",
         "correct": true
       },
       {
-        "label": "Liberal",
+        "label": "Ventia Australia Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "BAE Systems Australia Limited",
+        "correct": false
+      },
+      {
+        "label": "ASC Pty Ltd",
         "correct": false
       }
     ],
-    "fact": "Labor: $12.1 million",
-    "explanation": "That is the largest total in receipts from media companies; Liberal follows on $5.5 million.",
-    "source": "AEC disclosures via OPAX's money data",
-    "scope": "All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns",
+    "fact": "Austal Defence Shipbuilding Australia Pty Ltd",
+    "explanation": "Contract CN4227142 runs from 12 March 2026 to 30 December 2038. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
     "link": {
-      "href": "/money?industry=media",
-      "label": "Open this industry on the money map"
+      "href": "/subject/agency/a-aaa167b0097858604254?section=contracts&supplier=s-8c51cb6dbbb63f8e3757",
+      "label": "Department of Defence"
     }
   },
   {
-    "id": "q79881dc9",
-    "template": "words-portrait-topic",
+    "id": "qdca2a6db",
+    "template": "bill-portfolio",
     "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about first nations, Jenny Macklin or Warren Snowdon?",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Regulatory Reform Omnibus Bill 2026?",
     "options": [
       {
-        "label": "Jenny Macklin",
-        "correct": false,
-        "photo": "/photos/10409.webp"
+        "label": "Home Affairs",
+        "correct": false
       },
       {
-        "label": "Warren Snowdon",
-        "correct": true,
-        "photo": "/photos/10599.webp"
+        "label": "Finance",
+        "correct": true
+      },
+      {
+        "label": "Treasury",
+        "correct": false
+      },
+      {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
       }
     ],
-    "fact": "Warren Snowdon: 508 speeches",
-    "explanation": "Jenny Macklin appears 189 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's First Nations report",
+    "fact": "Finance",
+    "explanation": "The Regulatory Reform Omnibus Bill 2026 is a government bill from the Finance portfolio, introduced on 13 May 2026.",
+    "source": "ParlInfo bill record",
     "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
+      "href": "/bill/au-federal-r7481",
+      "label": "Regulatory Reform Omnibus Bill 2026"
     }
   },
   {
-    "id": "q7b5ea2ea",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about first nations, Kerrynne Liddle or Jenny Macklin?",
-    "options": [
-      {
-        "label": "Kerrynne Liddle",
-        "correct": true,
-        "photo": "/photos/11005.webp"
-      },
-      {
-        "label": "Jenny Macklin",
-        "correct": false,
-        "photo": "/photos/10409.webp"
-      }
-    ],
-    "fact": "Kerrynne Liddle: 286 speeches",
-    "explanation": "Jenny Macklin appears 189 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's First Nations report",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "q7b5eb47b",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about immigration, Peter Dutton or Philip Ruddock?",
-    "options": [
-      {
-        "label": "Peter Dutton",
-        "correct": false,
-        "photo": "/photos/10188.webp"
-      },
-      {
-        "label": "Philip Ruddock",
-        "correct": true,
-        "photo": "/photos/10553.webp"
-      }
-    ],
-    "fact": "Philip Ruddock: 1,214 speeches",
-    "explanation": "Peter Dutton appears 541 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Immigration report",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "q7fafead5",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2004?",
-    "options": [
-      {
-        "label": "Peter Costello",
-        "correct": true,
-        "photo": "/photos/10149.webp"
-      },
-      {
-        "label": "Wayne Swan",
-        "correct": false,
-        "photo": "/photos/10617.webp"
-      }
-    ],
-    "fact": "Peter Costello: 13 sampled speeches",
-    "explanation": "Wayne Swan appears 6 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2004 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Peter+Costello&from=2004&to=2004",
-      "label": "Search Peter Costello in the 2004 record"
-    }
-  },
-  {
-    "id": "q7fb46803",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2006?",
-    "options": [
-      {
-        "label": "Gavan O’Connor",
-        "correct": false,
-        "photo": "/photos/wd-Q5527997.webp"
-      },
-      {
-        "label": "John Howard",
-        "correct": true,
-        "photo": "/photos/10313.webp"
-      }
-    ],
-    "fact": "John Howard: 8 sampled speeches",
-    "explanation": "Gavan O’Connor appears 5 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2006 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=John+Howard&from=2006&to=2006",
-      "label": "Search John Howard in the 2006 record"
-    }
-  },
-  {
-    "id": "q7fc133f6",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2003?",
-    "options": [
-      {
-        "label": "Simon Crean",
-        "correct": true,
-        "photo": "/photos/10158.webp"
-      },
-      {
-        "label": "Kevin Rudd",
-        "correct": false,
-        "photo": "/photos/10552.webp"
-      }
-    ],
-    "fact": "Simon Crean: 7 sampled speeches",
-    "explanation": "Kevin Rudd appears 5 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2003 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Simon+Crean&from=2003&to=2003",
-      "label": "Search Simon Crean in the 2003 record"
-    }
-  },
-  {
-    "id": "q83c39631",
-    "template": "money-true-false",
+    "id": "qaabc3515",
+    "template": "grant-program-year-total",
     "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Commonwealth Home Support Program award in grants in 2025-26?",
+    "answer": 7497189963,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$7.5 billion across 5,773 grants",
+    "explanation": "The Department of Health, Disability and Ageing runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7466",
+      "label": "Commonwealth Home Support Program"
+    }
+  },
+  {
+    "id": "q41681f98",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Interactive Gambling Amendment (Gambling Reform) Bill 2026 passed the House of Representatives at its third reading on 18 August 2026. How many members of the House voted for it?",
+    "answer": 103,
+    "min": 0,
+    "max": 150,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 103 for, 14 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 103 members of the House voted for it and 14 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7520?section=divisions&division=federal-representatives-10611",
+      "label": "Interactive Gambling Amendment (Gambling Reform) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "qbd8922de",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Department of Home Affairs contract that starts in 2026 worth?",
+    "answer": 4319144780,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$4.32 billion",
+    "explanation": "Contract CN4239669 with Metrea Australia Pty Ltd runs from 30 April 2026 to 30 December 2039. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-7d43ef20eda15f18fe8c?section=contracts&supplier=s-ef4e3fc94ca94a57765e",
+      "label": "Department of Home Affairs"
+    }
+  },
+  {
+    "id": "q69604be3",
+    "template": "bill-became-law",
+    "deck": "words",
     "kind": "tf",
-    "prompt": "True or false: The OPAX money map shows every donor who has ever disclosed a donation.",
+    "prompt": "True or false: The Freedom of Information Amendment Bill 2025 became law.",
     "options": [
       {
         "label": "True",
@@ -842,453 +211,388 @@
         "correct": true
       }
     ],
-    "fact": "False",
-    "explanation": "Donor->party flows from rows with a canonical party recipient; amounts aggregated per (canonical donor entity, party) using ext_donor_aliases, so every spelling of a donor counts once. Top 250 donors by lifetime total shown, plus donors under that cut-off holding $50,000,000+ in Commonwealth contracts and grants.",
-    "source": "OPAX money data methodology",
+    "fact": "False. It was discharged from the Notice Paper on 5 March 2026.",
+    "explanation": "That took it off parliament's list of business before it passed both houses, so it did not become law.",
+    "source": "ParlInfo bill record",
     "link": {
-      "href": "/methods",
-      "label": "Read how the record is built"
+      "href": "/bill/au-federal-r7371",
+      "label": "Freedom of Information Amendment Bill 2025"
     }
   },
   {
-    "id": "q841b6665",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about climate & energy, Julia Gillard or Penny Sharpe?",
+    "id": "q1342ef12",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Discovery Projects program?",
     "options": [
       {
-        "label": "Julia Gillard",
-        "correct": true,
-        "photo": "/photos/10257.webp"
+        "label": "Australian Research Council",
+        "correct": true
       },
       {
-        "label": "Penny Sharpe",
-        "correct": false,
-        "photo": "/photos/wd-Q7164431.webp"
+        "label": "National Indigenous Australians Agency",
+        "correct": false
+      },
+      {
+        "label": "Department of Employment and Workplace Relations",
+        "correct": false
+      },
+      {
+        "label": "Department of Climate Change, Energy, the Environment and Water",
+        "correct": false
       }
     ],
-    "fact": "Julia Gillard: 832 speeches",
-    "explanation": "Penny Sharpe appears 474 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Climate & Energy report",
+    "fact": "Australian Research Council",
+    "explanation": "Across 4 funding rounds with grants in 2025-26, the program awarded 669 grants worth $465 million, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
     "link": {
-      "href": "/subject/topic/climate-environment",
-      "label": "Read the Climate & Energy report"
+      "href": "/money/grants?program=GO7575",
+      "label": "Discovery Projects"
     }
   },
   {
-    "id": "q84dbfcf9",
-    "template": "words-portrait-topic",
+    "id": "q4fab4c70",
+    "template": "division-third-reading",
     "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about media ownership, Peter McGauran or Malcolm Turnbull?",
+    "kind": "slider",
+    "prompt": "The Northern Australia Infrastructure Facility Amendment Bill 2026 passed the Senate at its third reading on 30 June 2026. How many senators voted for it?",
+    "answer": 29,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 29 for, 10 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 29 senators voted for it and 10 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7445?section=divisions&division=federal-senate-10516",
+      "label": "Northern Australia Infrastructure Facility Amendment Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "q89dd3091",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Department of Climate Change, Energy, the Environment and Water contract that starts in 2026? It is worth $431 million.",
     "options": [
       {
-        "label": "Peter McGauran",
-        "correct": true,
-        "photo": "/photos/10436.webp"
+        "label": "Aware Water Group Pty Ltd",
+        "correct": false
       },
       {
-        "label": "Malcolm Turnbull",
-        "correct": false,
-        "photo": "/photos/10643.webp"
+        "label": "State Street Australia Ltd",
+        "correct": true
+      },
+      {
+        "label": "Zantta Family Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "Jones Lang LaSalle (ACT) Pty Limited",
+        "correct": false
       }
     ],
-    "fact": "Peter McGauran: 606 speeches",
-    "explanation": "Malcolm Turnbull appears 452 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Media Ownership report",
+    "fact": "State Street Australia Ltd",
+    "explanation": "Contract CN4250371 runs from 24 May 2026 to 23 November 2026. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/topic/media-communications",
-      "label": "Read the Media Ownership report"
+      "href": "/subject/agency/a-a5e4384bbb1bc8c02dfc?section=contracts&supplier=s-c51fd9a6c5672d752b6f",
+      "label": "Department of Climate Change, Energy, the Environment and Water"
     }
   },
   {
-    "id": "q89af2155",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about immigration, Julia Gillard or Philip Ruddock?",
-    "options": [
-      {
-        "label": "Julia Gillard",
-        "correct": false,
-        "photo": "/photos/10257.webp"
-      },
-      {
-        "label": "Philip Ruddock",
-        "correct": true,
-        "photo": "/photos/10553.webp"
-      }
-    ],
-    "fact": "Philip Ruddock: 1,214 speeches",
-    "explanation": "Julia Gillard appears 491 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Immigration report",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "q8a399f2d",
-    "template": "words-biggest-source",
+    "id": "qbbf4f486",
+    "template": "bill-portfolio",
     "deck": "words",
     "kind": "mc",
-    "prompt": "OPAX gathers the record from many places. Which of these sources contributes the most documents?",
+    "prompt": "Which government portfolio is responsible for the Universities Accord (Opening the Doors of Opportunity) Bill 2026?",
     "options": [
       {
-        "label": "ACT Legislative Assembly",
-        "correct": false
-      },
-      {
-        "label": "Federal bill records",
-        "correct": false
-      },
-      {
-        "label": "Senate committee hearings",
+        "label": "Education",
         "correct": true
+      },
+      {
+        "label": "Treasury",
+        "correct": false
+      },
+      {
+        "label": "Home Affairs",
+        "correct": false
+      },
+      {
+        "label": "Climate Change, Energy, the Environment and Water",
+        "correct": false
       }
     ],
-    "fact": "Senate committee hearings: 127,581 documents",
-    "explanation": "Its 2025–2026 collection is larger than 9,964 from ACT Legislative Assembly and 2,994 from Federal bill records.",
-    "source": "OPAX source counts",
+    "fact": "Education",
+    "explanation": "The Universities Accord (Opening the Doors of Opportunity) Bill 2026 is a government bill from the Education portfolio, introduced on 25 June 2026.",
+    "source": "ParlInfo bill record",
     "link": {
-      "href": "/methods",
-      "label": "Read how the record is built"
+      "href": "/bill/au-federal-r7501",
+      "label": "Universities Accord (Opening the Doors of Opportunity) Bill 2026"
     }
   },
   {
-    "id": "q8a62cc15",
-    "template": "money-party-peak-year",
+    "id": "q17235701",
+    "template": "grant-program-year-total",
     "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did Liberal receive its largest disclosed total?",
-    "answer": 2024,
-    "min": 1998,
-    "max": 2024,
+    "kind": "slider",
+    "prompt": "How much did the Australian Apprenticeships Incentive System award in grants in 2025-26?",
+    "answer": 950644698,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$951 million across 31 grants",
+    "explanation": "The Department of Employment and Workplace Relations runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO5667",
+      "label": "Australian Apprenticeships Incentive System"
+    }
+  },
+  {
+    "id": "q164d5174",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026 passed the Senate at its third reading on 29 June 2026. How many senators voted for it?",
+    "answer": 33,
+    "min": 0,
+    "max": 76,
     "scale": "linear",
-    "format": "year",
-    "fact": "2024: $68.3 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
+    "format": "count",
+    "fact": "Passed: 33 for, 24 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 33 senators voted for it and 24 against.",
+    "source": "Division record from They Vote For You",
     "link": {
-      "href": "/subject/party/Liberal",
-      "label": "Open Liberal in the record"
+      "href": "/bill/au-federal-r7436?section=divisions&division=federal-senate-10639",
+      "label": "Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026, third reading"
     }
   },
   {
-    "id": "q8c47602a",
-    "template": "words-peak-year",
-    "deck": "words",
-    "kind": "year",
-    "prompt": "Which year was parliament's peak for gambling?",
-    "answer": 2025,
-    "min": 1998,
-    "max": 2025,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2025: 448 speeches",
-    "explanation": "No other complete year in the report records as many speeches on the topic.",
-    "source": "Parliamentary record via OPAX's Gambling report",
-    "link": {
-      "href": "/subject/topic/gambling",
-      "label": "Read the Gambling report"
-    }
-  },
-  {
-    "id": "q8d7d2535",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about gambling, Justin Field or Andrew Wilkie?",
-    "options": [
-      {
-        "label": "Justin Field",
-        "correct": true,
-        "photo": "/photos/wd-Q26701430.webp"
-      },
-      {
-        "label": "Andrew Wilkie",
-        "correct": false,
-        "photo": "/photos/10727.webp"
-      }
-    ],
-    "fact": "Justin Field: 87 speeches",
-    "explanation": "Andrew Wilkie appears 58 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Gambling report",
-    "link": {
-      "href": "/subject/topic/gambling",
-      "label": "Read the Gambling report"
-    }
-  },
-  {
-    "id": "q8d8c7c57",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about immigration, Peter Dutton or David Shoebridge?",
-    "options": [
-      {
-        "label": "Peter Dutton",
-        "correct": true,
-        "photo": "/photos/10188.webp"
-      },
-      {
-        "label": "David Shoebridge",
-        "correct": false,
-        "photo": "/photos/11010.webp"
-      }
-    ],
-    "fact": "Peter Dutton: 541 speeches",
-    "explanation": "David Shoebridge appears 416 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Immigration report",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "q8e4ce46c",
-    "template": "money-party-peak-year",
+    "id": "q531c915f",
+    "template": "contract-largest-value",
     "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did LNP receive its largest disclosed total?",
-    "answer": 2024,
-    "min": 2008,
-    "max": 2024,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2024: $24.8 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
+    "kind": "slider",
+    "prompt": "How much is the largest Department of Health, Disability and Ageing contract that starts in 2026 worth?",
+    "answer": 415000000,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$415 million",
+    "explanation": "Contract CN4257170 with Glaxosmithkline Australia Pty Ltd runs from 30 June 2026 to 29 June 2027. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
     "link": {
-      "href": "/subject/party/LNP",
-      "label": "Open LNP in the record"
+      "href": "/subject/agency/a-991bfa422634e5c478f8?section=contracts&supplier=s-3a526e2d700c22013a71",
+      "label": "Department of Health, Disability and Ageing"
     }
   },
   {
-    "id": "q940af910",
-    "template": "words-peak-year",
+    "id": "qb5c7526b",
+    "template": "bill-became-law",
     "deck": "words",
-    "kind": "year",
-    "prompt": "Which year was parliament's peak for media ownership?",
-    "answer": 2025,
-    "min": 1998,
-    "max": 2025,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2025: 2,346 speeches",
-    "explanation": "No other complete year in the report records as many speeches on the topic.",
-    "source": "Parliamentary record via OPAX's Media Ownership report",
-    "link": {
-      "href": "/subject/topic/media-communications",
-      "label": "Read the Media Ownership report"
-    }
-  },
-  {
-    "id": "q96267ebd",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about gambling, Andrew Wilkie or Justin Field?",
-    "options": [
-      {
-        "label": "Andrew Wilkie",
-        "correct": false,
-        "photo": "/photos/10727.webp"
-      },
-      {
-        "label": "Justin Field",
-        "correct": true,
-        "photo": "/photos/wd-Q26701430.webp"
-      }
-    ],
-    "fact": "Justin Field: 87 speeches",
-    "explanation": "Andrew Wilkie appears 58 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's Gambling report",
-    "link": {
-      "href": "/subject/topic/gambling",
-      "label": "Read the Gambling report"
-    }
-  },
-  {
-    "id": "q9cc91f29",
-    "template": "words-topic-higher-lower",
-    "deck": "words",
-    "kind": "higher-lower",
-    "prompt": "Does immigration appear in more or fewer speeches?",
-    "comparison": {
-      "shownLabel": "Gambling",
-      "shownValue": 3335,
-      "shownDisplay": "3,335 speeches",
-      "hiddenLabel": "Immigration",
-      "hiddenValue": 24028,
-      "hiddenDisplay": "24,028 speeches"
-    },
-    "options": [
-      {
-        "label": "Higher",
-        "correct": true
-      },
-      {
-        "label": "Lower",
-        "correct": false
-      }
-    ],
-    "fact": "Immigration: 24,028 speeches",
-    "explanation": "Gambling appears in 3,335, making Immigration the higher figure.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "q9deed4f8",
-    "template": "words-topic-higher-lower",
-    "deck": "words",
-    "kind": "higher-lower",
-    "prompt": "Does housing appear in more or fewer speeches?",
-    "comparison": {
-      "shownLabel": "Climate & Energy",
-      "shownValue": 53156,
-      "shownDisplay": "53,156 speeches",
-      "hiddenLabel": "Housing",
-      "hiddenValue": 19369,
-      "hiddenDisplay": "19,369 speeches"
-    },
-    "options": [
-      {
-        "label": "Higher",
-        "correct": false
-      },
-      {
-        "label": "Lower",
-        "correct": true
-      }
-    ],
-    "fact": "Housing: 19,369 speeches",
-    "explanation": "Climate & Energy appears in 53,156, making Housing the lower figure.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/housing",
-      "label": "Read the Housing report"
-    }
-  },
-  {
-    "id": "qa98b4be9",
-    "template": "words-peak-year",
-    "deck": "words",
-    "kind": "year",
-    "prompt": "Which year was parliament's peak for immigration?",
-    "answer": 2025,
-    "min": 1998,
-    "max": 2025,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2025: 2,493 speeches",
-    "explanation": "No other complete year in the report records as many speeches on the topic.",
-    "source": "Parliamentary record via OPAX's Immigration report",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "qaa93f5da",
-    "template": "words-topic-higher-lower",
-    "deck": "words",
-    "kind": "higher-lower",
-    "prompt": "Does climate & energy appear in more or fewer speeches?",
-    "comparison": {
-      "shownLabel": "Gambling",
-      "shownValue": 3335,
-      "shownDisplay": "3,335 speeches",
-      "hiddenLabel": "Climate & Energy",
-      "hiddenValue": 53156,
-      "hiddenDisplay": "53,156 speeches"
-    },
-    "options": [
-      {
-        "label": "Higher",
-        "correct": true
-      },
-      {
-        "label": "Lower",
-        "correct": false
-      }
-    ],
-    "fact": "Climate & Energy: 53,156 speeches",
-    "explanation": "Gambling appears in 3,335, making Climate & Energy the higher figure.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/climate-environment",
-      "label": "Read the Climate & Energy report"
-    }
-  },
-  {
-    "id": "qab89eeb2",
-    "template": "words-topic-higher-lower",
-    "deck": "words",
-    "kind": "higher-lower",
-    "prompt": "Does gambling appear in more or fewer speeches?",
-    "comparison": {
-      "shownLabel": "Immigration",
-      "shownValue": 24028,
-      "shownDisplay": "24,028 speeches",
-      "hiddenLabel": "Gambling",
-      "hiddenValue": 3335,
-      "hiddenDisplay": "3,335 speeches"
-    },
-    "options": [
-      {
-        "label": "Higher",
-        "correct": false
-      },
-      {
-        "label": "Lower",
-        "correct": true
-      }
-    ],
-    "fact": "Gambling: 3,335 speeches",
-    "explanation": "Immigration appears in 24,028, making Gambling the lower figure.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/gambling",
-      "label": "Read the Gambling report"
-    }
-  },
-  {
-    "id": "qada7cdf2",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about first nations, Warren Snowdon or David Shoebridge?",
-    "options": [
-      {
-        "label": "Warren Snowdon",
-        "correct": true,
-        "photo": "/photos/10599.webp"
-      },
-      {
-        "label": "David Shoebridge",
-        "correct": false,
-        "photo": "/photos/11010.webp"
-      }
-    ],
-    "fact": "Warren Snowdon: 508 speeches",
-    "explanation": "David Shoebridge appears 201 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's First Nations report",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "qae4512b7",
-    "template": "money-true-false",
-    "deck": "money",
     "kind": "tf",
-    "prompt": "True or false: Every political donation in Australia appears in this data, no matter how small.",
+    "prompt": "True or false: The Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": true
+      },
+      {
+        "label": "False",
+        "correct": false
+      }
+    ],
+    "fact": "True. It received Royal Assent on 18 September 2026.",
+    "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7499",
+      "label": "Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026"
+    }
+  },
+  {
+    "id": "qd919a214",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Investigator Grants program?",
+    "options": [
+      {
+        "label": "Department of Social Services",
+        "correct": false
+      },
+      {
+        "label": "National Health and Medical Research Council (NHMRC)",
+        "correct": true
+      },
+      {
+        "label": "Department of Climate Change, Energy, the Environment and Water",
+        "correct": false
+      },
+      {
+        "label": "Attorney-General's Department",
+        "correct": false
+      }
+    ],
+    "fact": "National Health and Medical Research Council (NHMRC)",
+    "explanation": "Across 2 funding rounds with grants in 2025-26, the program awarded 227 grants worth $423 million, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7020",
+      "label": "Investigator Grants"
+    }
+  },
+  {
+    "id": "qa7ee2f58",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026 passed the Senate at its third reading on 14 May 2026. How many senators voted for it?",
+    "answer": 34,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 34 for, 27 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 34 senators voted for it and 27 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-s1493?section=divisions&division=federal-senate-10220",
+      "label": "Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "q759c4d3a",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Department of Foreign Affairs and Trade contract that starts in 2026? It is worth $232 million.",
+    "options": [
+      {
+        "label": "Tetra Tech International Development Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "Johnstaff International Development Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "DT Global Asia Pacific Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Palladium International Pty Ltd",
+        "correct": false
+      }
+    ],
+    "fact": "DT Global Asia Pacific Pty Ltd",
+    "explanation": "Contract CN4233163 runs from 12 April 2026 to 27 February 2031. AusTender lists it under the Department of Foreign Affairs and Trade - Australian Aid Program. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-3a413b064b4b6ded113e?section=contracts&supplier=s-ea1286d8a2b718dc184a",
+      "label": "Department of Foreign Affairs and Trade - Australian Aid Program"
+    }
+  },
+  {
+    "id": "q13d310ac",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026?",
+    "options": [
+      {
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      },
+      {
+        "label": "Climate Change, Energy, the Environment and Water",
+        "correct": true
+      },
+      {
+        "label": "Home Affairs",
+        "correct": false
+      },
+      {
+        "label": "Finance",
+        "correct": false
+      }
+    ],
+    "fact": "Climate Change, Energy, the Environment and Water",
+    "explanation": "The Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026 is a government bill from the Climate Change, Energy, the Environment and Water portfolio, introduced on 20 August 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7532",
+      "label": "Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026"
+    }
+  },
+  {
+    "id": "q2e5b886a",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Medicare Urgent Care Clinics program award in grants in 2025-26?",
+    "answer": 839080119,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$839 million across 31 grants",
+    "explanation": "The Department of Health, Disability and Ageing runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7846",
+      "label": "Medicare Urgent Care Clinics"
+    }
+  },
+  {
+    "id": "q45c36704",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The National Health Amendment (Passive Immunological Products) Bill 2026 passed the Senate at its third reading on 1 April 2026. How many senators voted for it?",
+    "answer": 39,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 39 for, 5 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 39 senators voted for it and 5 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7423?section=divisions&division=federal-senate-10189",
+      "label": "National Health Amendment (Passive Immunological Products) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "q3fd6cc9f",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Australian Digital Health Agency contract that starts in 2026 worth?",
+    "answer": 161556495,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$162 million",
+    "explanation": "Contract CN4273297 with Accenture Australia Pty Limited runs from 27 August 2026 to 26 August 2029. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-0e4ebbaef2e28dc387bc?section=contracts&supplier=s-8f22c19d3fc22a56c78a",
+      "label": "Australian Digital Health Agency"
+    }
+  },
+  {
+    "id": "q98bf004b",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Defence Amendment (Defence Honours and Awards Appeals Tribunal) Bill 2025 became law.",
     "options": [
       {
         "label": "True",
@@ -1299,621 +603,1227 @@
         "correct": true
       }
     ],
-    "fact": "False",
-    "explanation": "Donations below the AEC threshold are not reported, so every visible total remains a floor.",
-    "source": "AEC disclosure rules; OPAX's money data",
+    "fact": "False. It was discharged from the Notice Paper on 24 November 2025.",
+    "explanation": "That took it off parliament's list of business before it passed both houses, so it did not become law.",
+    "source": "ParlInfo bill record",
     "link": {
-      "href": "/methods",
-      "label": "Read how the record is built"
+      "href": "/bill/au-federal-r7359",
+      "label": "Defence Amendment (Defence Honours and Awards Appeals Tribunal) Bill 2025"
     }
   },
   {
-    "id": "qb2b86553",
-    "template": "words-topic-figure",
-    "deck": "words",
-    "kind": "slider",
-    "prompt": "How many speeches does the Media Ownership report find?",
-    "answer": 19456,
-    "min": 3335,
-    "max": 53156,
-    "scale": "log",
-    "format": "count",
-    "fact": "Media Ownership: 19,456 speeches",
-    "explanation": "The range runs from the smallest to the largest real topic-report count.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/media-communications",
-      "label": "Read the Media Ownership report"
-    }
-  },
-  {
-    "id": "qc39873d2",
-    "template": "words-peak-year",
-    "deck": "words",
-    "kind": "year",
-    "prompt": "Which year was parliament's peak for climate & energy?",
-    "answer": 2025,
-    "min": 1998,
-    "max": 2025,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2025: 7,090 speeches",
-    "explanation": "No other complete year in the report records as many speeches on the topic.",
-    "source": "Parliamentary record via OPAX's Climate & Energy report",
-    "link": {
-      "href": "/subject/topic/climate-environment",
-      "label": "Read the Climate & Energy report"
-    }
-  },
-  {
-    "id": "qcac1dc92",
-    "template": "words-peak-year",
-    "deck": "words",
-    "kind": "year",
-    "prompt": "Which year was parliament's peak for housing?",
-    "answer": 2025,
-    "min": 1998,
-    "max": 2025,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2025: 2,843 speeches",
-    "explanation": "No other complete year in the report records as many speeches on the topic.",
-    "source": "Parliamentary record via OPAX's Housing report",
-    "link": {
-      "href": "/subject/topic/housing",
-      "label": "Read the Housing report"
-    }
-  },
-  {
-    "id": "qccb91931",
-    "template": "words-peak-year",
-    "deck": "words",
-    "kind": "year",
-    "prompt": "Which year was parliament's peak for first nations?",
-    "answer": 2025,
-    "min": 1998,
-    "max": 2025,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2025: 2,486 speeches",
-    "explanation": "No other complete year in the report records as many speeches on the topic.",
-    "source": "Parliamentary record via OPAX's First Nations report",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "qccf0aa89",
-    "template": "words-topic-figure",
-    "deck": "words",
-    "kind": "slider",
-    "prompt": "How many speeches does the Climate & Energy report find?",
-    "answer": 53156,
-    "min": 3335,
-    "max": 53156,
-    "scale": "log",
-    "format": "count",
-    "fact": "Climate & Energy: 53,156 speeches",
-    "explanation": "The range runs from the smallest to the largest real topic-report count.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/climate-environment",
-      "label": "Read the Climate & Energy report"
-    }
-  },
-  {
-    "id": "qcd78c3eb",
-    "template": "money-party-peak-year",
-    "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did One Nation receive its largest disclosed total?",
-    "answer": 1998,
-    "min": 1998,
-    "max": 2024,
-    "scale": "linear",
-    "format": "year",
-    "fact": "1998: $4.1 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
-    "link": {
-      "href": "/subject/party/One%20Nation",
-      "label": "Open One Nation in the record"
-    }
-  },
-  {
-    "id": "qd54b721a",
-    "template": "money-party-peak-year",
-    "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did Greens receive its largest disclosed total?",
-    "answer": 2024,
-    "min": 1998,
-    "max": 2024,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2024: $11.4 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
-    "link": {
-      "href": "/subject/party/Greens",
-      "label": "Open Greens in the record"
-    }
-  },
-  {
-    "id": "qd72983a1",
-    "template": "words-portrait-topic",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who has given more speeches about first nations, David Shoebridge or Kerrynne Liddle?",
-    "options": [
-      {
-        "label": "David Shoebridge",
-        "correct": false,
-        "photo": "/photos/11010.webp"
-      },
-      {
-        "label": "Kerrynne Liddle",
-        "correct": true,
-        "photo": "/photos/11005.webp"
-      }
-    ],
-    "fact": "Kerrynne Liddle: 286 speeches",
-    "explanation": "David Shoebridge appears 201 times in the same topic report.",
-    "source": "Parliamentary record via OPAX's First Nations report",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "qd961edcf",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 1999?",
-    "options": [
-      {
-        "label": "John Moore",
-        "correct": false,
-        "photo": "/photos/wd-Q6249252.webp"
-      },
-      {
-        "label": "Alexander Downer",
-        "correct": true,
-        "photo": "/photos/10179.webp"
-      }
-    ],
-    "fact": "Alexander Downer: 9 sampled speeches",
-    "explanation": "John Moore appears 6 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 1999 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Alexander+Downer&from=1999&to=1999",
-      "label": "Search Alexander Downer in the 1999 record"
-    }
-  },
-  {
-    "id": "qd9d147cd",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2022?",
-    "options": [
-      {
-        "label": "James Stevens",
-        "correct": false,
-        "photo": "/photos/10940.webp"
-      },
-      {
-        "label": "P.B. Malinauskas",
-        "correct": true,
-        "photo": "/photos/wd-Q7175622.webp"
-      }
-    ],
-    "fact": "P.B. Malinauskas: 4 sampled speeches",
-    "explanation": "James Stevens appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2022 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=P.B.+Malinauskas&from=2022&to=2022",
-      "label": "Search P.B. Malinauskas in the 2022 record"
-    }
-  },
-  {
-    "id": "qd9d38664",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2023?",
-    "options": [
-      {
-        "label": "Karen Grogan",
-        "correct": true,
-        "photo": "/photos/10965.webp"
-      },
-      {
-        "label": "Zoe McKenzie",
-        "correct": false,
-        "photo": "/photos/10976.webp"
-      }
-    ],
-    "fact": "Karen Grogan: 4 sampled speeches",
-    "explanation": "Zoe McKenzie appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2023 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Karen+Grogan&from=2023&to=2023",
-      "label": "Search Karen Grogan in the 2023 record"
-    }
-  },
-  {
-    "id": "qd9e05257",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2024?",
-    "options": [
-      {
-        "label": "Tim Read",
-        "correct": false,
-        "photo": "/photos/wd-Q59327502.webp"
-      },
-      {
-        "label": "Katherine Copsey",
-        "correct": true,
-        "photo": "/photos/wd-Q115697050.webp"
-      }
-    ],
-    "fact": "Katherine Copsey: 9 sampled speeches",
-    "explanation": "Tim Read appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2024 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Katherine+Copsey&from=2024&to=2024",
-      "label": "Search Katherine Copsey in the 2024 record"
-    }
-  },
-  {
-    "id": "qe2761eca",
-    "template": "words-year-order",
-    "deck": "words",
-    "kind": "order",
-    "prompt": "Order these years by how much parliament talked about immigration, busiest first.",
-    "options": [
-      {
-        "label": "2005",
-        "value": 649
-      },
-      {
-        "label": "2012",
-        "value": 1079
-      },
-      {
-        "label": "2021",
-        "value": 1316
-      }
-    ],
-    "answer": ["2021", "2012", "2005"],
-    "fact": "2021 1,316; 2012 1,079; 2005 649",
-    "explanation": "The report counts speeches touching on the topic in each calendar year.",
-    "source": "Parliamentary record via OPAX's Immigration report",
-    "link": {
-      "href": "/subject/topic/immigration",
-      "label": "Read the Immigration report"
-    }
-  },
-  {
-    "id": "qea761b20",
-    "template": "money-party-peak-year",
-    "deck": "money",
-    "kind": "year",
-    "prompt": "In which year did Family First receive its largest disclosed total?",
-    "answer": 2013,
-    "min": 2003,
-    "max": 2024,
-    "scale": "linear",
-    "format": "year",
-    "fact": "2013: $4.3 million",
-    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
-    "source": "AEC disclosures via OPAX's money data",
-    "link": {
-      "href": "/subject/party/Family%20First",
-      "label": "Open Family First in the record"
-    }
-  },
-  {
-    "id": "qeb099109",
-    "template": "words-topic-higher-lower",
-    "deck": "words",
-    "kind": "higher-lower",
-    "prompt": "Does first nations appear in more or fewer speeches?",
-    "comparison": {
-      "shownLabel": "Climate & Energy",
-      "shownValue": 53156,
-      "shownDisplay": "53,156 speeches",
-      "hiddenLabel": "First Nations",
-      "hiddenValue": 16923,
-      "hiddenDisplay": "16,923 speeches"
-    },
-    "options": [
-      {
-        "label": "Higher",
-        "correct": false
-      },
-      {
-        "label": "Lower",
-        "correct": true
-      }
-    ],
-    "fact": "First Nations: 16,923 speeches",
-    "explanation": "Climate & Energy appears in 53,156, making First Nations the lower figure.",
-    "source": "Parliamentary record via OPAX's topic reports",
-    "link": {
-      "href": "/subject/topic/indigenous-affairs",
-      "label": "Read the First Nations report"
-    }
-  },
-  {
-    "id": "qebfda9e9",
-    "template": "words-year-order",
-    "deck": "words",
-    "kind": "order",
-    "prompt": "Order these years by how much parliament talked about media ownership, busiest first.",
-    "options": [
-      {
-        "label": "2022",
-        "value": 252
-      },
-      {
-        "label": "2014",
-        "value": 607
-      },
-      {
-        "label": "2008",
-        "value": 322
-      }
-    ],
-    "answer": ["2014", "2008", "2022"],
-    "fact": "2014 607; 2008 322; 2022 252",
-    "explanation": "The report counts speeches touching on the topic in each calendar year.",
-    "source": "Parliamentary record via OPAX's Media Ownership report",
-    "link": {
-      "href": "/subject/topic/media-communications",
-      "label": "Read the Media Ownership report"
-    }
-  },
-  {
-    "id": "qec3a68b7",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2019?",
-    "options": [
-      {
-        "label": "Tim Wilson",
-        "correct": false,
-        "photo": "/photos/10894.webp"
-      },
-      {
-        "label": "Josh Frydenberg",
-        "correct": true,
-        "photo": "/photos/10741.webp"
-      }
-    ],
-    "fact": "Josh Frydenberg: 8 sampled speeches",
-    "explanation": "Tim Wilson appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2019 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Josh+Frydenberg&from=2019&to=2019",
-      "label": "Search Josh Frydenberg in the 2019 record"
-    }
-  },
-  {
-    "id": "qec497341",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2013?",
-    "options": [
-      {
-        "label": "John Williams",
-        "correct": false,
-        "photo": "/photos/10716.webp"
-      },
-      {
-        "label": "Scott Morrison",
-        "correct": true,
-        "photo": "/photos/10468.webp"
-      }
-    ],
-    "fact": "Scott Morrison: 13 sampled speeches",
-    "explanation": "John Williams appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2013 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Scott+Morrison&from=2013&to=2013",
-      "label": "Search Scott Morrison in the 2013 record"
-    }
-  },
-  {
-    "id": "qec4bb1d8",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2012?",
-    "options": [
-      {
-        "label": "Julia Gillard",
-        "correct": true,
-        "photo": "/photos/10257.webp"
-      },
-      {
-        "label": "Simon Birmingham",
-        "correct": false,
-        "photo": "/photos/10044.webp"
-      }
-    ],
-    "fact": "Julia Gillard: 10 sampled speeches",
-    "explanation": "Simon Birmingham appears 5 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2012 year brief and voices sample",
-    "link": {
-      "href": "/ask?view=search&speaker=Julia+Gillard&from=2012&to=2012",
-      "label": "Search Julia Gillard in the 2012 record"
-    }
-  },
-  {
-    "id": "qfc61b601",
-    "template": "money-party-from-industry",
+    "id": "qae2c980f",
+    "template": "grant-program-agency",
     "deck": "money",
     "kind": "mc",
-    "prompt": "Which party has reported the most receipts from the mining industry?",
+    "prompt": "Which agency runs the Ideas Grants program?",
     "options": [
       {
-        "label": "Liberal",
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
         "correct": false
       },
       {
-        "label": "United Australia Party",
+        "label": "Department of Industry, Science and Resources",
+        "correct": false
+      },
+      {
+        "label": "Organ and Tissue Authority",
+        "correct": false
+      },
+      {
+        "label": "National Health and Medical Research Council (NHMRC)",
+        "correct": true
+      }
+    ],
+    "fact": "National Health and Medical Research Council (NHMRC)",
+    "explanation": "Across 2 funding rounds with grants in 2025-26, the program awarded 195 grants worth $293 million, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7599",
+      "label": "Ideas Grants"
+    }
+  },
+  {
+    "id": "qa5e5a86f",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Universities Accord (Australian Tertiary Education Commission) Bill 2025 passed the Senate at its third reading on 30 March 2026. How many senators voted for it?",
+    "answer": 36,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 36 for, 27 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 36 senators voted for it and 27 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7416?section=divisions&division=federal-senate-10151",
+      "label": "Universities Accord (Australian Tertiary Education Commission) Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "qff37c19d",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Department of Veterans' Affairs contract that starts in 2026? It is worth $145 million.",
+    "options": [
+      {
+        "label": "CBRE (V) Pty Limited",
+        "correct": false
+      },
+      {
+        "label": "ResMed Asia Pacific Limited",
         "correct": true
       },
       {
-        "label": "Nationals",
+        "label": "Family First Home Care Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "MedHealth Pty Limited",
         "correct": false
       }
     ],
-    "fact": "United Australia Party: $62.5 million",
-    "explanation": "That is the largest total in receipts from the mining industry; Liberal follows on $7.1 million.",
-    "source": "AEC disclosures via OPAX's money data",
-    "scope": "All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns",
+    "fact": "ResMed Asia Pacific Limited",
+    "explanation": "Contract CN4280784 runs from 31 July 2026 to 30 July 2029. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
     "link": {
-      "href": "/money?industry=mining",
-      "label": "Open this industry on the money map"
+      "href": "/subject/agency/a-7261205f59a3b96c292c?section=contracts&supplier=s-5b065ad19e68f9e2a3a1",
+      "label": "Department of Veterans' Affairs"
     }
   },
   {
-    "id": "qffa86590",
-    "template": "words-year-voice",
+    "id": "q339d9e58",
+    "template": "bill-portfolio",
     "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2009?",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026?",
     "options": [
       {
-        "label": "John Williams",
-        "correct": true,
-        "photo": "/photos/10716.webp"
+        "label": "Attorney-General",
+        "correct": false
       },
       {
-        "label": "Barnaby Joyce",
-        "correct": false,
-        "photo": "/photos/10350.webp"
+        "label": "Education",
+        "correct": false
+      },
+      {
+        "label": "Treasury",
+        "correct": false
+      },
+      {
+        "label": "Home Affairs",
+        "correct": true
       }
     ],
-    "fact": "John Williams: 4 sampled speeches",
-    "explanation": "Barnaby Joyce appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2009 year brief and voices sample",
+    "fact": "Home Affairs",
+    "explanation": "The Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026 is a government bill from the Home Affairs portfolio, introduced on 12 March 2026.",
+    "source": "ParlInfo bill record",
     "link": {
-      "href": "/ask?view=search&speaker=John+Williams&from=2009&to=2009",
-      "label": "Search John Williams in the 2009 record"
+      "href": "/bill/au-federal-r7448",
+      "label": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026"
     }
   },
   {
-    "id": "qffb7701a",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2007?",
-    "options": [
-      {
-        "label": "Rachel Siewert",
-        "correct": false,
-        "photo": "/photos/10584.webp"
-      },
-      {
-        "label": "Penny Wong",
-        "correct": true,
-        "photo": "/photos/10678.webp"
-      }
-    ],
-    "fact": "Penny Wong: 8 sampled speeches",
-    "explanation": "Rachel Siewert appears 4 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2007 year brief and voices sample",
+    "id": "qcfbf28f7",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Emergency Relief program award in grants in 2025-26?",
+    "answer": 333503032,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$334 million across 191 grants",
+    "explanation": "The Department of Social Services runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
     "link": {
-      "href": "/ask?view=search&speaker=Penny+Wong&from=2007&to=2007",
-      "label": "Search Penny Wong in the 2007 record"
+      "href": "/money/grants?program=GO7242",
+      "label": "Emergency Relief"
     }
   },
   {
-    "id": "qffb9aeb1",
-    "template": "words-year-voice",
+    "id": "qf5a7e3a3",
+    "template": "division-third-reading",
     "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2000?",
-    "options": [
-      {
-        "label": "Philip Ruddock",
-        "correct": false,
-        "photo": "/photos/10553.webp"
-      },
-      {
-        "label": "Peter Costello",
-        "correct": true,
-        "photo": "/photos/10149.webp"
-      }
-    ],
-    "fact": "Peter Costello: 20 sampled speeches",
-    "explanation": "Philip Ruddock appears 5 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2000 year brief and voices sample",
+    "kind": "slider",
+    "prompt": "The Migration Amendment (2026 Measures No. 1) Bill 2026 passed the Senate at its third reading on 12 March 2026. How many senators voted for it?",
+    "answer": 26,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 26 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 26 senators voted for it and 11 against.",
+    "source": "Division record from They Vote For You",
     "link": {
-      "href": "/ask?view=search&speaker=Peter+Costello&from=2000&to=2000",
-      "label": "Search Peter Costello in the 2000 record"
+      "href": "/bill/au-federal-r7447?section=divisions&division=federal-senate-10082",
+      "label": "Migration Amendment (2026 Measures No. 1) Bill 2026, third reading"
     }
   },
   {
-    "id": "qffbbed48",
-    "template": "words-year-voice",
-    "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2001?",
-    "options": [
-      {
-        "label": "Philip Ruddock",
-        "correct": true,
-        "photo": "/photos/10553.webp"
-      },
-      {
-        "label": "Simon Crean",
-        "correct": false,
-        "photo": "/photos/10158.webp"
-      }
-    ],
-    "fact": "Philip Ruddock: 8 sampled speeches",
-    "explanation": "Simon Crean appears 6 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2001 year brief and voices sample",
+    "id": "qe0adee3e",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Digital Transformation Agency contract that starts in 2026 worth?",
+    "answer": 101739821,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$102 million",
+    "explanation": "Contract CN4253616 with Microsoft Pty Ltd runs from 31 May 2026 to 29 June 2029. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
     "link": {
-      "href": "/ask?view=search&speaker=Philip+Ruddock&from=2001&to=2001",
-      "label": "Search Philip Ruddock in the 2001 record"
+      "href": "/subject/agency/a-7431f054588d4251c0b4?section=contracts&supplier=s-6c52a6bfc2fcee4ab010",
+      "label": "Digital Transformation Agency"
     }
   },
   {
-    "id": "qffbe2bdf",
-    "template": "words-year-voice",
+    "id": "q3d198eba",
+    "template": "bill-became-law",
     "deck": "words",
-    "kind": "portrait",
-    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2002?",
+    "kind": "tf",
+    "prompt": "True or false: The Biosecurity Amendment (Improving Operational Efficiency) Bill 2026 became law.",
     "options": [
       {
-        "label": "John Murphy",
-        "correct": true,
-        "photo": "/photos/10473.webp"
+        "label": "True",
+        "correct": true
       },
       {
-        "label": "Simon Crean",
-        "correct": false,
-        "photo": "/photos/10158.webp"
+        "label": "False",
+        "correct": false
       }
     ],
-    "fact": "John Murphy: 8 sampled speeches",
-    "explanation": "Simon Crean appears 5 times in the same retrieval sample; this is a sample, not a full-year tally.",
-    "source": "OPAX's cited 2002 year brief and voices sample",
+    "fact": "True. It received Royal Assent on 15 September 2026.",
+    "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
+    "source": "ParlInfo bill record",
     "link": {
-      "href": "/ask?view=search&speaker=John+Murphy&from=2002&to=2002",
-      "label": "Search John Murphy in the 2002 record"
+      "href": "/bill/au-federal-r7518",
+      "label": "Biosecurity Amendment (Improving Operational Efficiency) Bill 2026"
+    }
+  },
+  {
+    "id": "qf69b2424",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Cooperative Research Centres Programme?",
+    "options": [
+      {
+        "label": "Department of Defence",
+        "correct": false
+      },
+      {
+        "label": "Department of Industry, Science and Resources",
+        "correct": true
+      },
+      {
+        "label": "Australian Renewable Energy Agency",
+        "correct": false
+      },
+      {
+        "label": "Department of Education",
+        "correct": false
+      }
+    ],
+    "fact": "Department of Industry, Science and Resources",
+    "explanation": "Across 2 funding rounds with grants in 2025-26, the program awarded 28 grants worth $144 million, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7700",
+      "label": "Cooperative Research Centres Programme"
+    }
+  },
+  {
+    "id": "q52a6017b",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 passed the Senate at its third reading on 4 March 2026. How many senators voted for it?",
+    "answer": 30,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 30 for, 18 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 30 senators voted for it and 18 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7378?section=divisions&division=federal-senate-9972",
+      "label": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "q54beac9e",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Australian Prudential Regulation Authority contract that starts in 2026? It is worth $64.8 million.",
+    "options": [
+      {
+        "label": "Hunter Mason (VIC) Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "HAYS Specialist Recruitment (Australia) PTY Limited",
+        "correct": false
+      },
+      {
+        "label": "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
+        "correct": true
+      },
+      {
+        "label": "DXC Technology Australia Pty Limited",
+        "correct": false
+      }
+    ],
+    "fact": "Charter HALL REAL Estate Management Services (NSW) Pty Limited",
+    "explanation": "Contract CN4159115 runs from 30 September 2026 to 29 September 2033. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-5231d6c038e044c36237?section=contracts&supplier=s-6e720147af21faac9ceb",
+      "label": "Australian Prudential Regulation Authority"
+    }
+  },
+  {
+    "id": "q7018c6a4",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the National Student Ombudsman Levy Bill 2026?",
+    "options": [
+      {
+        "label": "Climate Change, Energy, the Environment and Water",
+        "correct": false
+      },
+      {
+        "label": "Education",
+        "correct": true
+      },
+      {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
+      },
+      {
+        "label": "Home Affairs",
+        "correct": false
+      }
+    ],
+    "fact": "Education",
+    "explanation": "The National Student Ombudsman Levy Bill 2026 is a government bill from the Education portfolio, introduced on 10 September 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7541",
+      "label": "National Student Ombudsman Levy Bill 2026"
+    }
+  },
+  {
+    "id": "q6905e3b8",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Industry Growth Program award in grants in 2025-26?",
+    "answer": 125021434,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$125 million across 53 grants",
+    "explanation": "The Department of Industry, Science and Resources runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO6633",
+      "label": "Industry Growth Program"
+    }
+  },
+  {
+    "id": "q95e982cc",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Administrative Review Tribunal and Other Legislation Amendment Bill 2025 passed the Senate at its third reading on 5 February 2026. How many senators voted for it?",
+    "answer": 32,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 32 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 32 senators voted for it and 11 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7365?section=divisions&division=federal-senate-9892",
+      "label": "Administrative Review Tribunal and Other Legislation Amendment Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "q6b71beb1",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Australian Competition and Consumer Commission contract that starts in 2026 worth?",
+    "answer": 25177606,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$25.2 million",
+    "explanation": "Contract CN4219569 with Datacom Systems (AU) Pty Ltd runs from 2 February 2026 to 1 February 2029. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-32a10e56bd708fd30db5?section=contracts&supplier=s-828d512472eedc897c04",
+      "label": "Australian Competition and Consumer Commission"
+    }
+  },
+  {
+    "id": "qff21bfe2",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Agriculture (Biosecurity Protection) Charges Bill 2024 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False. It was discharged from the Notice Paper on 12 February 2025.",
+    "explanation": "That took it off parliament's list of business before it passed both houses, so it did not become law.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7157",
+      "label": "Agriculture (Biosecurity Protection) Charges Bill 2024"
+    }
+  },
+  {
+    "id": "q6014e7f3",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Linkage Projects program?",
+    "options": [
+      {
+        "label": "Attorney-General's Department",
+        "correct": false
+      },
+      {
+        "label": "Organ and Tissue Authority",
+        "correct": false
+      },
+      {
+        "label": "Department of Home Affairs",
+        "correct": false
+      },
+      {
+        "label": "Australian Research Council",
+        "correct": true
+      }
+    ],
+    "fact": "Australian Research Council",
+    "explanation": "Across 4 funding rounds with grants in 2025-26, the program awarded 166 grants worth $88.9 million, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO6639",
+      "label": "Linkage Projects"
+    }
+  },
+  {
+    "id": "q7360b831",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 passed the House of Representatives at its third reading on 20 January 2026. How many members of the House voted for it?",
+    "answer": 96,
+    "min": 0,
+    "max": 150,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 96 for, 45 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 96 members of the House voted for it and 45 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7421?section=divisions&division=federal-representatives-9809",
+      "label": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026, third reading"
+    }
+  },
+  {
+    "id": "q8ccd6d12",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Bureau of Meteorology contract that starts in 2026? It is worth $15.8 million.",
+    "options": [
+      {
+        "label": "Leidos Australia Pty Limited",
+        "correct": false
+      },
+      {
+        "label": "Ventia Property Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "NTT Australia PTY LTD",
+        "correct": true
+      },
+      {
+        "label": "Unisys Australia Pty Limited",
+        "correct": false
+      }
+    ],
+    "fact": "NTT Australia PTY LTD",
+    "explanation": "Contract CN4269260 runs from 30 July 2026 to 29 July 2029. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-c241462e1470c73a4c4e?section=contracts&supplier=s-7051cdfc41d7d3c8624e",
+      "label": "Bureau of Meteorology"
+    }
+  },
+  {
+    "id": "q4a6e6241",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Wine and Other Legislation Amendment Bill 2026?",
+    "options": [
+      {
+        "label": "Agriculture, Fisheries and Forestry",
+        "correct": true
+      },
+      {
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      },
+      {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
+      },
+      {
+        "label": "Climate Change, Energy, the Environment and Water",
+        "correct": false
+      }
+    ],
+    "fact": "Agriculture, Fisheries and Forestry",
+    "explanation": "The Wine and Other Legislation Amendment Bill 2026 is a government bill from the Agriculture, Fisheries and Forestry portfolio, introduced on 1 July 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7519",
+      "label": "Wine and Other Legislation Amendment Bill 2026"
+    }
+  },
+  {
+    "id": "q22099d77",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Supporting Multicultural Communities Infrastructure program award in grants in 2025-26?",
+    "answer": 113837300,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$114 million across 35 grants",
+    "explanation": "The Department of Home Affairs runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO8040",
+      "label": "Supporting Multicultural Communities Infrastructure"
+    }
+  },
+  {
+    "id": "q153f89f0",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Defence Housing Australia Amendment Bill 2025 passed the Senate at its third reading on 25 August 2025. How many senators voted for it?",
+    "answer": 29,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 29 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 29 senators voted for it and 11 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7337?section=divisions&division=federal-senate-9696",
+      "label": "Defence Housing Australia Amendment Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "q038310e9",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Australian Submarine Agency contract that starts in 2026 worth?",
+    "answer": 14557259,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$14.6 million",
+    "explanation": "Contract CN4268271 with Accenture Australia Pty Limited runs from 9 August 2026 to 29 June 2029. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-5e7f6cdc53a9dd00fbdb?section=contracts&supplier=s-8f22c19d3fc22a56c78a",
+      "label": "Australian Submarine Agency"
+    }
+  },
+  {
+    "id": "q548c10ef",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": true
+      },
+      {
+        "label": "False",
+        "correct": false
+      }
+    ],
+    "fact": "True. It received Royal Assent on 26 August 2026.",
+    "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7339",
+      "label": "Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025"
+    }
+  },
+  {
+    "id": "q0ea9b7b8",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Commonwealth Financial Counselling and Financial Capability program?",
+    "options": [
+      {
+        "label": "Department of Employment and Workplace Relations",
+        "correct": false
+      },
+      {
+        "label": "Department of Education",
+        "correct": false
+      },
+      {
+        "label": "Department of Social Services",
+        "correct": true
+      },
+      {
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
+      }
+    ],
+    "fact": "Department of Social Services",
+    "explanation": "The program awarded 57 grants worth $110 million in 2025-26, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7241",
+      "label": "Commonwealth Financial Counselling and Financial Capability"
+    }
+  },
+  {
+    "id": "q1db92341",
+    "template": "division-third-reading",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "The Universities Accord (Cutting Student Debt by 20 Per Cent) Bill 2025 passed the Senate at its third reading on 31 July 2025. How many senators voted for it?",
+    "answer": 36,
+    "min": 0,
+    "max": 76,
+    "scale": "linear",
+    "format": "count",
+    "fact": "Passed: 36 for, 3 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 36 senators voted for it and 3 against.",
+    "source": "Division record from They Vote For You",
+    "link": {
+      "href": "/bill/au-federal-r7342?section=divisions&division=federal-senate-9672",
+      "label": "Universities Accord (Cutting Student Debt by 20 Per Cent) Bill 2025, third reading"
+    }
+  },
+  {
+    "id": "qed5d862d",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Geoscience Australia contract that starts in 2026? It is worth $14.2 million.",
+    "options": [
+      {
+        "label": "Evolve FM Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "Cirrus Networks (ACT) Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Geoplex Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "Onneer Pty Ltd",
+        "correct": false
+      }
+    ],
+    "fact": "Cirrus Networks (ACT) Pty Ltd",
+    "explanation": "Contract CN4264846 runs from 29 June 2026 to 29 June 2028. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-2aceed43d5eed08e7dc1?section=contracts&supplier=s-224c9eeedaa6913df323",
+      "label": "Geoscience Australia"
+    }
+  },
+  {
+    "id": "qb4b98e64",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Statute Update Bill 2026?",
+    "options": [
+      {
+        "label": "Climate Change, Energy, the Environment and Water",
+        "correct": false
+      },
+      {
+        "label": "Attorney-General",
+        "correct": true
+      },
+      {
+        "label": "Finance",
+        "correct": false
+      },
+      {
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      }
+    ],
+    "fact": "Attorney-General",
+    "explanation": "The Statute Update Bill 2026 is a government bill from the Attorney-General's portfolio, introduced on 25 June 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7500",
+      "label": "Statute Update Bill 2026"
+    }
+  },
+  {
+    "id": "q41ef01e8",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Major and Local Community Infrastructure Program award in grants in 2025-26?",
+    "answer": 110980000,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$111 million across 33 grants",
+    "explanation": "The Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7867",
+      "label": "Major and Local Community Infrastructure Program"
+    }
+  },
+  {
+    "id": "qb9d81d43",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Australian Signals Directorate contract that starts in 2026 worth?",
+    "answer": 10913456,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$10.9 million",
+    "explanation": "Contract CN4215599 with SFDC Australia Pty Limited runs from 28 January 2026 to 27 January 2028. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-f797be002809b666b887?section=contracts&supplier=s-d73e743fbedc610a1b73",
+      "label": "Australian Signals Directorate"
+    }
+  },
+  {
+    "id": "q2268d3c1",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Nature Positive (Environment Protection Australia) Bill 2024 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False. It was discharged from the Notice Paper on 5 February 2025.",
+    "explanation": "That took it off parliament's list of business before it passed both houses, so it did not become law.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7192",
+      "label": "Nature Positive (Environment Protection Australia) Bill 2024"
+    }
+  },
+  {
+    "id": "q3c0aacc6",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Community Legal Services Program?",
+    "options": [
+      {
+        "label": "Department of Education",
+        "correct": false
+      },
+      {
+        "label": "Department of Employment and Workplace Relations",
+        "correct": false
+      },
+      {
+        "label": "Attorney-General's Department",
+        "correct": true
+      },
+      {
+        "label": "National Indigenous Australians Agency",
+        "correct": false
+      }
+    ],
+    "fact": "Attorney-General's Department",
+    "explanation": "The program awarded 14 grants worth $78.4 million in 2025-26, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7587",
+      "label": "Community Legal Services Program"
+    }
+  },
+  {
+    "id": "q2c887dd9",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Department of Social Services contract that starts in 2026? It is worth $10.5 million.",
+    "options": [
+      {
+        "label": "Sureway Employment and Training Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "Karingal St Laurence Limited",
+        "correct": false
+      },
+      {
+        "label": "Redhill Partners Investment Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Job Futures Ltd",
+        "correct": false
+      }
+    ],
+    "fact": "Redhill Partners Investment Pty Ltd",
+    "explanation": "Contract CN4202016 runs from 15 March 2026 to 14 March 2036. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-1b123f8e6c5ba22fa727?section=contracts&supplier=s-e9c9ff4b55530b4d2b97",
+      "label": "Department of Social Services"
+    }
+  },
+  {
+    "id": "q9a69ab43",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Criminal Code Amendment (National Sport Integrity Offences) Bill 2026?",
+    "options": [
+      {
+        "label": "Attorney-General",
+        "correct": true
+      },
+      {
+        "label": "Treasury",
+        "correct": false
+      },
+      {
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      },
+      {
+        "label": "Education",
+        "correct": false
+      }
+    ],
+    "fact": "Attorney-General",
+    "explanation": "The Criminal Code Amendment (National Sport Integrity Offences) Bill 2026 is a government bill from the Attorney-General's portfolio, introduced on 20 August 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7531",
+      "label": "Criminal Code Amendment (National Sport Integrity Offences) Bill 2026"
+    }
+  },
+  {
+    "id": "qd73841d4",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the News Media Assistance Program award in grants in 2025-26?",
+    "answer": 74713604,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$74.7 million across 185 grants",
+    "explanation": "The Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7976",
+      "label": "News Media Assistance Program"
+    }
+  },
+  {
+    "id": "qb64b55e3",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest National Emergency Management Agency contract that starts in 2026 worth?",
+    "answer": 6904954,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$6.9 million",
+    "explanation": "Contract CN4247050 with Mediabrands Australia Pty Ltd runs from 14 May 2026 to 30 December 2026. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-2623b1d75f1e96ed31f0?section=contracts&supplier=s-7eb16e70c806b9718d65",
+      "label": "National Emergency Management Agency"
+    }
+  },
+  {
+    "id": "q09695865",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Combatting Illicit Tobacco Bill 2026 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": true
+      },
+      {
+        "label": "False",
+        "correct": false
+      }
+    ],
+    "fact": "True. It received Royal Assent on 26 August 2026.",
+    "explanation": "A bill becomes law when both houses pass it and the Governor-General gives Royal Assent.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7458",
+      "label": "Combatting Illicit Tobacco Bill 2026"
+    }
+  },
+  {
+    "id": "q863ffb6e",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Support Plantation Establishment program?",
+    "options": [
+      {
+        "label": "Department of Agriculture, Fisheries and Forestry",
+        "correct": true
+      },
+      {
+        "label": "Department of the Prime Minister and Cabinet",
+        "correct": false
+      },
+      {
+        "label": "Organ and Tissue Authority",
+        "correct": false
+      },
+      {
+        "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
+      }
+    ],
+    "fact": "Department of Agriculture, Fisheries and Forestry",
+    "explanation": "The program awarded 40 grants worth $49.5 million in 2025-26, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7209",
+      "label": "Support Plantation Establishment"
+    }
+  },
+  {
+    "id": "q433698ad",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Australian Public Service Commission contract that starts in 2026? It is worth $4.1 million.",
+    "options": [
+      {
+        "label": "CPD Live Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Compass Group B&I Hospitality Services Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "SFDC Australia Pty Limited",
+        "correct": false
+      },
+      {
+        "label": "Accenture Australia Pty Limited",
+        "correct": false
+      }
+    ],
+    "fact": "CPD Live Pty Ltd",
+    "explanation": "Contract CN4216707 runs from 4 January 2026 to 3 January 2028. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-fa94b561079ff33e8041?section=contracts&supplier=s-35ca8075f86eb2d403c4",
+      "label": "Australian Public Service Commission"
+    }
+  },
+  {
+    "id": "q7c81de4f",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the Passenger Movement Charge Amendment Bill 2026?",
+    "options": [
+      {
+        "label": "Education",
+        "correct": false
+      },
+      {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": false
+      },
+      {
+        "label": "Health, Disability and Ageing",
+        "correct": false
+      },
+      {
+        "label": "Home Affairs",
+        "correct": true
+      }
+    ],
+    "fact": "Home Affairs",
+    "explanation": "The Passenger Movement Charge Amendment Bill 2026 is a government bill from the Home Affairs portfolio, introduced on 12 August 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7523",
+      "label": "Passenger Movement Charge Amendment Bill 2026"
+    }
+  },
+  {
+    "id": "q62a8f0b6",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Local Environmental Projects program award in grants in 2025-26?",
+    "answer": 58943666,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$58.9 million across 34 grants",
+    "explanation": "The Department of Climate Change, Energy, the Environment and Water runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7781",
+      "label": "Local Environmental Projects"
+    }
+  },
+  {
+    "id": "q36979dcc",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Australian Skills Quality Authority contract that starts in 2026 worth?",
+    "answer": 3397982,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$3.4 million",
+    "explanation": "Contract CN4265754 with Jones Lang LaSalle (ACT) Pty Limited runs from 30 June 2026 to 29 June 2027. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-d32a68a9a1c0d3539a6e?section=contracts&supplier=s-bcc757e4b693412cb4a6",
+      "label": "Australian Skills Quality Authority"
+    }
+  },
+  {
+    "id": "q84af3159",
+    "template": "bill-became-law",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024 became law.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False. It was voted down on 4 July 2024.",
+    "explanation": "A vote in parliament went against the bill, so it did not become law.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7201",
+      "label": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024"
+    }
+  },
+  {
+    "id": "qf98d18f5",
+    "template": "grant-program-agency",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which agency runs the Export Market Development program?",
+    "options": [
+      {
+        "label": "Department of Health, Disability and Ageing",
+        "correct": false
+      },
+      {
+        "label": "Australian Renewable Energy Agency",
+        "correct": false
+      },
+      {
+        "label": "Department of Home Affairs",
+        "correct": false
+      },
+      {
+        "label": "Australian Trade and Investment Commission (Austrade)",
+        "correct": true
+      }
+    ],
+    "fact": "Australian Trade and Investment Commission (Austrade)",
+    "explanation": "The program awarded 533 grants worth $48.4 million in 2025-26, as published on GrantConnect by 11 November 2026.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO7108",
+      "label": "Export Market Development"
+    }
+  },
+  {
+    "id": "qe8e1e5f8",
+    "template": "contract-largest-supplier",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which company holds the largest Aged Care Quality and Safety Commission contract that starts in 2026? It is worth $2.8 million.",
+    "options": [
+      {
+        "label": "Synechron Data Australia Pty Ltd",
+        "correct": false
+      },
+      {
+        "label": "HAYS Specialist Recruitment (Australia) PTY Limited",
+        "correct": false
+      },
+      {
+        "label": "Corporate Travel Management Group Pty Ltd",
+        "correct": true
+      },
+      {
+        "label": "Hudson Global Resources (AUST) Pty Limited",
+        "correct": false
+      }
+    ],
+    "fact": "Corporate Travel Management Group Pty Ltd",
+    "explanation": "Contract CN4270747 runs from 30 June 2026 to 29 June 2027. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. The other companies are among the agency's largest suppliers.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-69d355cb0ebc6b4b4e5f?section=contracts&supplier=s-0640b3118bf07d0c66d2",
+      "label": "Aged Care Quality and Safety Commission"
+    }
+  },
+  {
+    "id": "qc5f83597",
+    "template": "bill-portfolio",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "Which government portfolio is responsible for the National Self-exclusion Register (Cost Recovery Levy) Amendment Bill 2026?",
+    "options": [
+      {
+        "label": "Education",
+        "correct": false
+      },
+      {
+        "label": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "correct": true
+      },
+      {
+        "label": "Home Affairs",
+        "correct": false
+      },
+      {
+        "label": "Finance",
+        "correct": false
+      }
+    ],
+    "fact": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+    "explanation": "The National Self-exclusion Register (Cost Recovery Levy) Amendment Bill 2026 is a government bill from the Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio, introduced on 2 July 2026.",
+    "source": "ParlInfo bill record",
+    "link": {
+      "href": "/bill/au-federal-r7521",
+      "label": "National Self-exclusion Register (Cost Recovery Levy) Amendment Bill 2026"
+    }
+  },
+  {
+    "id": "qf4613188",
+    "template": "grant-program-year-total",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much did the Play Our Way Participation and Equipment Stream program award in grants in 2025-26?",
+    "answer": 12006518,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$12 million across 15 grants",
+    "explanation": "The Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts runs it. The figure counts grants published on GrantConnect by 11 November 2026 for the 2025-26 financial year.",
+    "source": "GrantConnect grant awards",
+    "link": {
+      "href": "/money/grants?program=GO6763",
+      "label": "Play Our Way Participation and Equipment Stream"
+    }
+  },
+  {
+    "id": "qf78bc237",
+    "template": "contract-largest-value",
+    "deck": "money",
+    "kind": "slider",
+    "prompt": "How much is the largest Tertiary Education Quality and Standards Agency contract that starts in 2026 worth?",
+    "answer": 2399155,
+    "min": 1000000,
+    "max": 10000000000,
+    "scale": "log",
+    "format": "money",
+    "fact": "$2.4 million",
+    "explanation": "Contract CN4220264 with MediaMonks Australia Pty Ltd runs from 6 January 2026 to 30 November 2027. Of the contracts starting in 2026 that AusTender had published by 15 November 2026, it is the largest. Values are contract awards, not money spent.",
+    "source": "AusTender contract notices",
+    "link": {
+      "href": "/subject/agency/a-5ae8149297b124ae470b?section=contracts&supplier=s-d3057210d079143c3af8",
+      "label": "Tertiary Education Quality and Standards Agency"
     }
   }
 ]

@@ -51,12 +51,13 @@ exports, read from an up-to-date portal main checkout (not this repo's own
 `portal/public` copy, which lags). The engine is imported by file URL
 (`scripts/explore-engine.mjs`), so its own imports such as
 `donor-disclosure.js` resolve and donor figures count each receipt once, as on
-the web. Prompts, answers, grading and donor names follow that engine. The
-same run writes `quiz-front-page.json`. From `mobile/`, regenerate with:
+the web. Prompts, answers, grading and donor names follow that engine.
+Today's question has its own generator (below). From `mobile/`, regenerate
+with:
 
 ```sh
 node scripts/generate-explore.mjs --portal <portal main checkout>/portal
-npx prettier --write src/features/explore/quiz-rounds.json src/features/explore/quiz-front-page.json
+npx prettier --write src/features/explore/quiz-rounds.json
 ```
 
 After regenerating, update the pinned money hash and donor totals in
@@ -73,58 +74,119 @@ with a comma on screen and writes "and" in the topic and industry names in
 
 ### `quiz-front-page.json` (Today's question)
 
-The deck Today's `QuestionCard` reads (wave 5). An array of questions in the
-engine's own shape, each with a stable `id`:
+The deck Today's `QuestionCard` reads. It asks about the public record, never
+about OPAX: one fact from one record each. It keeps the shape every shipped
+build reads (1.1.3 build 57 onwards): an array of questions in the engine's
+shape, each with a stable `id`:
 
 ```ts
 type FrontPageQuestion = {
   id: string; // "q" + 8 hex digits: FNV-1a of `${template}\n${prompt}` (quizId)
-  template: string; // the engine template, e.g. "words-peak-year"
+  template: string; // e.g. "bill-became-law"
   deck: 'money' | 'words';
-  kind: 'mc' | 'tf' | 'higher-lower' | 'portrait' | 'order' | 'slider' | 'year';
+  kind: 'mc' | 'tf' | 'slider'; // (the type also allows the rounds' kinds)
   prompt: string; // the question: what Today's card shows
-  fact: string; // the answer as the engine writes it
+  fact: string; // the answer, the one place it is written
   explanation: string;
   source: string;
-  link: { href: string; label: string };
-  options?: {
-    label: string;
-    correct?: boolean;
-    value?: number;
-    photo?: string;
-  }[];
-  answer?: number | string[];
+  link: { href: string; label: string }; // label: the record's name
+  options?: { label: string; correct: boolean }[];
+  answer?: number;
   min?: number;
   max?: number;
   scale?: 'log' | 'linear';
-  format?: 'money' | 'count' | 'year';
-  comparison?: {
-    shownLabel: string;
-    shownDisplay: string;
-    hiddenLabel: string;
-    hiddenDisplay: string;
-  };
+  format?: 'money' | 'count';
 }[];
 ```
 
-- Its source date is `quiz-rounds.json`'s `generated` (`quizAsOf` in
-  `quiz/data.ts`); both files come from the same engine run.
+From `mobile/`, regenerate from an up-to-date portal main checkout (only
+`bills/`, `divisions/`, `grants/federal/programs/`, `agencies.json` and
+`agencies/` are read; no network, no model):
+
+```sh
+node scripts/generate-today-question.mjs --portal <portal main checkout>/portal
+npx prettier --write src/features/explore/quiz-front-page.json src/features/explore/quiz-front-page-sources.json tests/fixtures/today-question-records.json
+```
+
+- Templates (`scripts/today-question.mjs`), each answer one field of one
+  record:
+  - `bill-became-law` (true or false). True: a government bill this
+    parliament with Royal Assent (`status`, the `royal_assent` key date).
+    False: a government bill whose ending the record dates (`ended` of
+    negatived, discharged, removed or not proceeding, with `status_as_of`
+    equal to its last key date). A lapse is never asked: the record does not
+    date it. Nor is a bill dropped on the day a sibling from its package
+    (same portfolio and introduction date) passed, as the Build to Rent bill
+    was: the measure may have gone through in the sibling. True and False
+    take turns, so neither is a safe guess.
+  - `bill-portfolio`: `portfolio`; the wrong options are other portfolios
+    with five or more bills this parliament. Never when a word of the
+    portfolio, in any form ("Sport", "Sporting"), is in the title. Bills whose
+    title year is later than their introduction are left out.
+  - `division-third-reading`: the `ayes` of the division that decided the
+    bill at its third reading, chosen by the shared rule in
+    `portal/public/bill-division.js` (`decidingDivision`, also behind the
+    daily post's vote slide) from the question the Chair put, so never a
+    closure filed under the same name (Senate 9971 and 9972). No question
+    when the rule finds no third reading: no fallback to another division.
+    The slider runs to 76 (Senate) or 150 (House) and reads in votes. Do
+    not edit the helper here: it changes in the social lane's copy.
+  - `grant-program-agency` and `grant-program-year-total`: a GrantConnect
+    program is every round (GO id) that carries its name, under one agency.
+    The agency question sums the rounds with grants in 2025-26 and says so
+    ("Across 2 funding rounds with grants in 2025-26"). The year total is
+    asked only of a one-round program, so the figure is the one its page
+    shows. Both say "published on GrantConnect by" the date of the files the
+    figures come from (`generated`). Agency names AusTender lists with no 2026 contract (a
+    renamed department) are never an answer or a wrong option, and of twin
+    names ("Incentive System", "Incentives Programme") one is asked.
+  - `contract-largest-supplier` and `contract-largest-value`: each
+    department's largest contract starting in 2026 (`supplier`, `amount`),
+    counted across all its AusTender records ("Department of Foreign Affairs
+    and Trade" and "... - Australian Aid Program"). The link opens the record
+    that lists the contract. Only suppliers the record calls a company are
+    named, never a person or a trust. The name is the one that record shows:
+    its contract row and its supplier entry must agree, or there is no
+    question. When the ABN's legal name differs, the reveal adds "X is now Y
+    (same ABN)". "Largest" is as at the export: the reveal says "AusTender had
+    published by" the `agencies.json` date, since more 2026 contracts appear
+    later.
+  - Regenerate from main's exports, never this repo's `portal/public` copy:
+    that copy is an older export (21 September 2026 at the time of writing)
+    with older supplier names and fewer contracts.
+- Left out: royal commissions (and RC acronyms), the Victorian Big Build
+  commission, class actions, hearings and transcripts, anything Victorian,
+  private members' bills, and any text with "OPAX", "report" or "speeches".
+  No two options in a question are near twins, and one answer is right at
+  most twice in a deck.
+- Order: a fixed rotation (bill, grant, vote, contract, portfolio, grant
+  total, vote, contract value) in which no family follows itself, even
+  across the wrap from the last day to the first. Each record is asked once.
+- `quiz-front-page-sources.json` holds each template's as-at date, keyed by
+  template name (bills: the bills index; votes: the latest division; grants
+  and contracts: their exports), and input hashes. `questionAsOf` in
+  `quiz/data.ts` dates each record question's source line from it by its
+  exact template; the rounds keep `quizAsOf`.
+- Each link opens its record natively from the reveal's source sheet
+  (`quizDestination`): a bill, a bill's division, a grant program, or an
+  agency's Contracts filtered to the supplier. Publishers: ParlInfo, They
+  Vote For You, GrantConnect and AusTender.
+- `tests/fixtures/today-question-records.json` holds each question's record
+  excerpt; `tests/today-question.test.ts` checks every answer against it, the
+  stored shape against build 57's, the banned words and the balance. It also
+  feeds the generator small records that reproduce each wrong question the
+  #485 review found (a closure on the third reading, a program split across
+  rounds, a department split across records, a sibling bill that passed) and
+  checks the answers against those records. `tests/quiz.test.tsx` opens new
+  questions through the reveal and checks the source line.
+- A person reviews the deck before it ships: write it out as a table
+  (question, answer, figure, record) for that review.
 - Today picks index = (days since 1 January 2026, Sydney) mod the deck's
   length, shows `prompt`, and links to `exploreQuizRoute(id)`
   (`/explore/quiz?q=<id>`). Read it through `frontPageDeck` and
-  `frontPageQuestion(id)` in `quiz/data.ts`, which apply the same on-screen
-  punctuation as the quiz.
-- `generate-explore.mjs` writes it from the rounds by this rule: every
-  question in `quiz-rounds.json` whose subject a general reader
-  recognises (parliament, its record, parliamentarians, parties, the AEC's
-  rules), one per id, sorted by id. Templates: `words-topic-higher-lower`,
-  `words-topic-figure`, `words-year-order`, `words-peak-year`,
-  `words-portrait-topic`, `words-year-voice`, `words-biggest-source`,
-  `words-record-true-false`, `money-party-peak-year`,
-  `money-party-from-industry`, `money-true-false`. No donor or industry
-  question. `tests/explore.test.ts` checks the file against this rule.
-- 77 questions today. It is a candidate for the reviewed deck (DIRECTION
-  data lane D5): Jake reviews it before ship.
+  `frontPageQuestion(id)` in `quiz/data.ts`.
+- Builds before this deck keep their own bundled questions: a new deck
+  reaches readers in the next app build.
 
 ## Tools
 

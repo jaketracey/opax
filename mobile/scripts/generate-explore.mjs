@@ -9,12 +9,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve, dirname } from 'node:path';
-import {
-  frontPageDeck,
-  loadEngine,
-  partyLinks,
-  topicLinks,
-} from './explore-engine.mjs';
+import { loadEngine, partyLinks, topicLinks } from './explore-engine.mjs';
 
 const mobile = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (name) => {
@@ -90,9 +85,5 @@ write('quiz-rounds.json', {
   hashes,
   rounds,
 });
-// Today's question deck comes from the same run, so it shares the date.
-const front = frontPageDeck(rounds);
-write('quiz-front-page.json', front);
-console.log(
-  `Generated 48 eight-question rounds and ${front.length} front-page questions from ${publicRoot}.`,
-);
+// Today's question has its own generator (generate-today-question.mjs).
+console.log(`Generated 48 eight-question rounds from ${publicRoot}.`);

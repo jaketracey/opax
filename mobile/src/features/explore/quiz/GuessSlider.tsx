@@ -19,6 +19,7 @@ import { PlainPressable as Pressable } from '../../../design/pressable';
 import { useAccessibilitySize } from '../../../design/accessibility';
 import { Button, Field } from '../../../design/controls';
 import { Icon } from '../../../design/icon';
+import { spokenFigures } from '../../../design/format';
 import { Text } from '../../../design/text';
 import { colors, minimumTarget, rhythm } from '../../../design/tokens';
 import {
@@ -220,7 +221,7 @@ export function GuessSlider({
       </View>
       <View
         style={[styles.range, stacked ? styles.rangeStacked : null]}
-        accessibilityLabel={`From ${low} to ${high}`}
+        accessibilityLabel={spokenFigures(`From ${low} to ${high}`)}
         accessible
       >
         <Text variant="footnote" tone="inkSoft">

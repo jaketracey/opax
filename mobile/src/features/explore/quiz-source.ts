@@ -13,6 +13,9 @@ export const QUIZ_PUBLISHERS = [
   'Hansard',
   'Wikimedia Commons',
   'OPAX quiz questions',
+  'They Vote For You',
+  'GrantConnect',
+  'AusTender',
 ] as const;
 export type QuizPublisher = (typeof QUIZ_PUBLISHERS)[number];
 
@@ -29,6 +32,17 @@ const opaxTemplates = new Set([
   'words-year-voice',
   'words-biggest-source',
   'words-record-true-false',
+]);
+
+/** Today's question templates (scripts/today-question.mjs), by name. */
+const recordTemplates = new Map<string, QuizPublisher>([
+  ['bill-became-law', 'ParlInfo'],
+  ['bill-portfolio', 'ParlInfo'],
+  ['division-third-reading', 'They Vote For You'],
+  ['grant-program-agency', 'GrantConnect'],
+  ['grant-program-year-total', 'GrantConnect'],
+  ['contract-largest-supplier', 'AusTender'],
+  ['contract-largest-value', 'AusTender'],
 ]);
 
 /**
@@ -48,6 +62,8 @@ export function quizPublisher(q: Question): QuizPublisher {
   if (t.startsWith('money-')) return 'AEC annual returns';
   if (topicTemplates.has(t)) return 'OPAX topics';
   if (opaxTemplates.has(t)) return 'OPAX';
+  const record = recordTemplates.get(t);
+  if (record) return record;
   if (t.startsWith('bill-')) return 'ParlInfo';
   if (t.startsWith('speech-')) return 'Hansard';
   if (t.startsWith('photo-')) return 'Wikimedia Commons';
@@ -87,6 +103,18 @@ export function quizSourceNotes(q: Question): string[] {
       return ['From the bill as published on ParlInfo.'];
     case 'Hansard':
       return ['From the speech as published in Hansard.'];
+    case 'They Vote For You':
+      return [
+        'From the division as They Vote For You publishes it from the parliament’s own record of the vote.',
+      ];
+    case 'GrantConnect':
+      return [
+        'From grants published on GrantConnect, the Australian Government grants register, counted by financial year.',
+      ];
+    case 'AusTender':
+      return [
+        'From contract notices published on AusTender. Values are contract awards at their latest notice, not money spent.',
+      ];
     default:
       return q.template.startsWith('money-')
         ? ['From how OPAX builds its money data from AEC annual returns.']

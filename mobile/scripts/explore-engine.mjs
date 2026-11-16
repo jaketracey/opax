@@ -62,21 +62,6 @@ export function partyLinks(question) {
   };
 }
 
-/** Templates Today's question may use (see src/features/explore/README.md). */
-export const FRONT_PAGE_TEMPLATES = new Set([
-  'words-topic-higher-lower',
-  'words-topic-figure',
-  'words-year-order',
-  'words-peak-year',
-  'words-portrait-topic',
-  'words-year-voice',
-  'words-biggest-source',
-  'words-record-true-false',
-  'money-party-peak-year',
-  'money-party-from-industry',
-  'money-true-false',
-]);
-
 /** The same FNV-1a id as quizId in src/features/explore/quiz-model.ts. */
 export function questionId(q) {
   const text = `${q.template}\n${q.prompt}`;
@@ -86,17 +71,4 @@ export function questionId(q) {
     hash = Math.imul(hash, 0x01000193) >>> 0;
   }
   return `q${hash.toString(16).padStart(8, '0')}`;
-}
-
-/** Today's deck: each eligible question in the rounds once, sorted by id. */
-export function frontPageDeck(rounds) {
-  const derived = new Map();
-  for (const deck of ['mixed', 'money', 'words'])
-    for (const round of rounds[deck])
-      for (const q of round) {
-        const id = questionId(q);
-        if (FRONT_PAGE_TEMPLATES.has(q.template) && !derived.has(id))
-          derived.set(id, { id, ...q });
-      }
-  return [...derived.values()].sort((a, b) => (a.id < b.id ? -1 : 1));
 }

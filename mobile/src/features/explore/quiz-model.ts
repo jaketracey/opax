@@ -221,11 +221,11 @@ export function roundGuess(q: Question, value: number): number {
 export function sliderStart(q: Question): number {
   return roundGuess(q, fromSlider(q, isLog(q) ? 0.5 : (q.min! + q.max!) / 2));
 }
-/** "speeches" where the prompt counts speeches. */
+/** "votes" for a vote count, "speeches" where the prompt counts speeches. */
 export function guessUnit(q: Question): string {
-  return q.format === 'count' && /\bspeech(es)?\b/i.test(q.prompt)
-    ? 'speeches'
-    : '';
+  if (q.format !== 'count') return '';
+  if (q.template === 'division-third-reading') return 'votes';
+  return /\bspeech(es)?\b/i.test(q.prompt) ? 'speeches' : '';
 }
 /** The readout: "$930,000", "24,000 speeches", "2013". */
 export function formatGuess(q: Question, value: number): string {

@@ -55,9 +55,14 @@ export const largestGrantsRoute = (month?: string) => ({
   params: { ...(month ? { month } : {}) },
 });
 export const agenciesRoute = { pathname: '/agencies' as const };
-export const agencyRoute = (id: string, name?: string) => ({
+/** An agency's page; `options` opens it on a section, filtered to a supplier. */
+export const agencyRoute = (
+  id: string,
+  name?: string,
+  options: { section?: 'contracts' | 'suppliers'; supplier?: string } = {},
+) => ({
   pathname: '/agency' as const,
-  params: { id, ...(name ? { name } : {}) },
+  params: { id, ...(name ? { name } : {}), ...options },
 });
 export const connectionsRoute = { pathname: '/connections' as const };
 export const grantsAllocationRoute = {

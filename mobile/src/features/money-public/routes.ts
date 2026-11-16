@@ -92,7 +92,17 @@ export function moneyFromWebPath(path: string) {
   }
   if (/^\/subject\/agency\/?$/.test(pathname)) return agenciesRoute;
   const agency = /^\/subject\/agency\/([^/]+)\/?$/.exec(pathname);
-  if (agency?.[1]) return agencyRoute(decodeURIComponent(agency[1]));
+  if (agency?.[1]) {
+    // `?section=contracts&supplier=s-…` opens on Contracts, filtered.
+    const section = p.get('section');
+    const supplier = p.get('supplier');
+    return agencyRoute(decodeURIComponent(agency[1]), undefined, {
+      ...(section === 'contracts' || section === 'suppliers'
+        ? { section }
+        : {}),
+      ...(supplier ? { supplier } : {}),
+    });
+  }
   if (/^\/connections\/?$/.test(pathname)) {
     const entity = p.get('entity');
     return entity && /^[a-f0-9]{24}$/.test(entity)

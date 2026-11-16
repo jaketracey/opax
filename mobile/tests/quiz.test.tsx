@@ -26,7 +26,10 @@ import {
 import { quizSession } from '../src/features/explore/quiz-session';
 import { quizStore } from '../src/features/explore/quiz-store';
 import { choicePortrait } from '../src/features/explore/quiz/ChoiceList';
+import { QuizSourceLine } from '../src/features/explore/quiz/Reveal';
 import { frontPageDeck, quizRounds } from '../src/features/explore/quiz/data';
+import frontPageSources from '../src/features/explore/quiz-front-page-sources.json';
+import { updatedText } from '../src/design/source';
 
 let mockRecord: QuizRecord | null = null;
 jest.mock('../src/features/explore/quiz-store', () => ({
@@ -439,11 +442,42 @@ test("Today's question with no round offers a Mixed round; an unknown id opens t
   expect(has('quiz-start')).toBe(true);
 });
 
+test("a record question's reveal cites its own publisher, date and record", async () => {
+  const cases = [
+    ['grant-program-year-total', 'GrantConnect', 'grant program'],
+    ['contract-largest-supplier', 'AusTender', 'contracts'],
+    ['division-third-reading', 'They Vote For You', 'Senate division'],
+  ] as const;
+  for (const [template, publisher, record] of cases) {
+    const q = frontPageDeck.find(
+      (item) =>
+        item.template === template &&
+        (template !== 'division-third-reading' ||
+          /\bsenators\b/.test(item.prompt)),
+    )!;
+    await mount(<Quiz q={q.id} />);
+    await answer(q);
+    await press('quiz-confirm');
+    const source = withProp('quiz-source-0', 'citation');
+    const asOf = (frontPageSources.asOf as Record<string, string>)[template]!;
+    expect(source.props.citation).toBe(publisher);
+    expect(source.props.asOf).toBe(asOf);
+    expect(source.props.originals).toEqual([
+      { label: q.link.label, url: q.link.href, record },
+    ]);
+    expect(allText()).toContain(updatedText(asOf)!);
+    act(() => renderer!.unmount());
+    renderer = null;
+    act(() => quizSession.clear());
+  }
+});
+
 test('a speaker link in a source sheet drafts in Ask and never sends', async () => {
-  const q = frontPageDeck.find((item) => item.template === 'words-year-voice')!;
-  await mount(<Quiz q={q.id} />);
-  await answer(q);
-  await press('quiz-confirm');
+  // Speaker years are round questions; Today's deck asks about records.
+  const q = Object.values(quizRounds)
+    .flat(2)
+    .find((item) => item.template === 'words-year-voice')!;
+  await mount(<QuizSourceLine q={q} testID="quiz-source-0" />);
   const source = withProp('quiz-source-0', 'citation');
   let extra!: TestRenderer.ReactTestRenderer;
   act(() => {

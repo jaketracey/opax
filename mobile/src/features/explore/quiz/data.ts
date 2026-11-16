@@ -8,9 +8,19 @@ import {
 } from '../quiz-model';
 import snapshot from '../quiz-rounds.json';
 import frontPage from '../quiz-front-page.json';
+import frontPageSources from '../quiz-front-page-sources.json';
 
-/** The date the engine wrote both files: the quiz's source date. */
+/** The date the engine wrote the rounds: the quiz's source date. */
 export const quizAsOf: string = snapshot.generated;
+
+/**
+ * A question's source date. Today's record questions carry their own
+ * export's date, keyed by template name; the rest are the rounds'.
+ */
+export function questionAsOf(q: Pick<Question, 'template'>): string {
+  const asOf: Record<string, string> = frontPageSources.asOf;
+  return Object.hasOwn(asOf, q.template) ? asOf[q.template]! : quizAsOf;
+}
 
 const rounds = Object.fromEntries(
   (['money', 'words', 'mixed'] as const).map((deck) => [
@@ -28,7 +38,7 @@ export function drawRound(deck: Deck): Question[] {
   return list[isE2E ? 0 : Math.floor(Math.random() * list.length)]!;
 }
 
-/** Today's question deck: every question carries its id. */
+/** Today's question deck (generate-today-question.mjs): each with its id. */
 export const frontPageDeck: readonly FrontPageQuestion[] = (
   frontPage as Question[]
 ).map((q) => plainQuestion({ ...q, id: quizId(q) }));
