@@ -6,7 +6,8 @@ import { tool as memberDivisions } from './member-divisions'
 import { resolveMember } from './member-records'
 import { tool as sponsoredBills } from './sponsored-bills'
 import { tool as corpus } from './corpus-records'
-import { billFields, clip, siteUrl } from './record-common'
+import { billFields, billsExportedAt, clip, siteUrl } from './record-common'
+import { billProgressAsAt } from '../../public/bill-titles.js'
 import { inWindow, object, records, sourceUrl, validWindow, wordsMatch, type RecordRow } from './published-records'
 import { cursorProp, DATE, detailProp, full, limitProp, badCursor, outputSchema, page, readCursor, result, writeCursor } from './mcp-common'
 import { readToolAsset, ToolInputError, type ToolDefinition } from './types'
@@ -172,6 +173,8 @@ export const billSearch: ToolDefinition = {
     const index = object(await readToolAsset(env, '/bills/index.json'))
     if (!Array.isArray(index.bills)) throw new Error('Bill index unavailable')
     const as_at = typeof index.generated_at === 'string' ? index.generated_at.slice(0, 10) : null
+    // How old every status here is, in the bill page's words ("Bill progress as at 4 Oct 2026."), as a note of its own.
+    const progress = billProgressAsAt(index.generated_at), progressNote = progress ? [`${progress}.`] : []
     const item = (b: RecordRow, sponsor: unknown) => ({ bill_id: b.key, title: b.title, introduced: b.introduced ?? null, chamber: b.originating_house ?? null, status: b.status ?? null, status_as_of: b.status_as_of ?? null,
       sponsor: sponsor ?? null, url: siteUrl(env, '/bill/' + b.key),
       ...(full(args) ? { parliament: b.parliament ?? null, portfolio: b.portfolio ?? null, divisions: b.divisions ?? null, speeches: b.speeches ?? null, acts: b.acts ?? null } : {}) })
@@ -184,7 +187,7 @@ export const billSearch: ToolDefinition = {
       const rows = records(data.rows), total = Number(data.total) || 0, end = offset + rows.length
       return result({ items: rows.map(row => item(byKey.get(String(row.bill_id)) ?? { key: row.bill_id, title: row.title, introduced: row.introduced, originating_house: row.originating_house, status: row.status, status_as_of: row.status_as_of }, data.person)),
         total, next_cursor: rows.length && end < total ? writeCursor('bill_search', args, { o: end }) : null, as_at, url: siteUrl(env, '/bills'),
-        ...(data.candidates ? { candidates: data.candidates } : {}), notes: data.notes })
+        ...(data.candidates ? { candidates: data.candidates } : {}), notes: [...data.notes as string[], ...progressNote] })
     }
     const query = typeof args.query === 'string' ? args.query : '', exact = query ? byKey.get(query) : undefined, seen = new Set<string>()
     const matches = (exact ? [exact] : records(index.bills).filter(b => {
@@ -195,7 +198,7 @@ export const billSearch: ToolDefinition = {
     const paged = page('bill_search', args, matches, 10)
     return result({ ...paged, items: paged.items.map(b => item(b, b.sponsor)), as_at, url: siteUrl(env, '/bills'), notes: [
       ...(matches.length ? [] : ['No federal bill in the published index matches. State bills are not in this index.']),
-      'status is the latest recorded status; status_as_of is when it was observed, not a passage or assent date. Open bill_detail for dated stages.'] })
+      'status is the latest recorded status; status_as_of is when it was observed, not a passage or assent date. Open bill_detail for dated stages.', ...progressNote] })
   },
 }
 
@@ -219,9 +222,10 @@ export const billDetail: ToolDefinition = {
   validate: args => (args.bill_id === undefined) !== (args.title === undefined) && (!args.title || tokens(args.title).length > 0),
   stepLabel: args => ({ label: 'Reading a bill', arg: clip(args.bill_id ?? args.title, 60) }),
   async handler(env, args) {
-    let key = typeof args.bill_id === 'string' ? args.bill_id : null
+    let key = typeof args.bill_id === 'string' ? args.bill_id : null, exportedAt: string | null = null
     if (!key) {
       const index = object(await readToolAsset(env, '/bills/index.json'))
+      exportedAt = typeof index.generated_at === 'string' ? index.generated_at : null
       if (!Array.isArray(index.bills)) throw new Error('Bill index unavailable')
       const all = records(index.bills).filter(b => typeof b.key === 'string' && /^au-federal-[a-z0-9-]+$/.test(b.key)), wanted = normalize(String(args.title))
       const exact = all.filter(b => [b.title, b.short_title].some(t => t && normalize(t) === wanted)), matches = [...new Map((exact.length ? exact : all.filter(b => wordsMatch(args.title, [b.title]))).map(b => [b.key, b])).values()]
@@ -234,6 +238,7 @@ export const billDetail: ToolDefinition = {
     // The same lifecycle reading as the bill page and Ask; the file is not fetched twice.
     const life = await billFields({ ...env, asset: p => p === path ? Promise.resolve(raw) : readToolAsset(env, p) }, key)
     const source_url = records(raw.sources).map(s => sourceUrl(s.url)).find(Boolean) ?? null
+    const progress = billProgressAsAt(exportedAt ?? await billsExportedAt(env))
     const stages = life.key_dates.map(event => ({ stage: stageName(event.stage), date: event.date, chamber: ['passed', 'passed_both', 'passed_both_houses', 'royal_assent', 'assent', 'assented'].includes(event.stage) ? null : event.house,
       url, source_url: sourceUrl(event.url), ...(event.event_raw ? { source_wording: clip(event.event_raw, 300) } : {}) }))
     const summary = object(raw.summary), divisions = records(raw.divisions)
@@ -249,6 +254,8 @@ export const billDetail: ToolDefinition = {
     return result({ ...page('bill_detail', args, stages, 50), bill, url, notes: [
       ...(stages.length ? [] : ['No dated stage is recorded for this bill.']),
       ...(life.status ? [`Status ${stageName(life.status)}${life.status_as_of ? ' as observed on ' + life.status_as_of : ''}. status_as_of is not an introduction, passage or assent date.`] : []),
+      // How old the status and stages are, in the bill page's words, as a note of its own.
+      ...(progress ? [`${progress}.`] : []),
       ...(life.sponsors.length ? [] : ['No sponsor is recorded. Government bills often carry no sponsor name.']),
       ...(full(args) && divisions.length > 40 ? [`Showing 40 of ${divisions.length} linked divisions. Use division_votes with bill for the rest.`] : []),
       ...(full(args) && bill.summary ? ['summary is written by a model from the explanatory memorandum. Quote the stages and the source documents, not the summary, as the record.'] : [])] })

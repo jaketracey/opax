@@ -1,3 +1,4 @@
+import {shortDate} from './format.js';
 /**
  * The bill fields the app and profiles read from /bills/index.json (1.8 MB), in index order:
  * - key, titles, aliases and jurisdiction: the server-rendered profile links recorded votes to
@@ -22,6 +23,22 @@ export const BILLS_DATE_PATH = '/growth/bills-date.json';
 export function billsDateFile(index) {
   if (typeof index?.generated_at !== 'string') throw new Error('bills date: no generated_at');
   return {generated_at: index.generated_at};
+}
+/** How old a bill's recorded status and stages are: the bills export's day, from its generated_at. The words are
+ *  one line wherever a bill's status is shown (the bill page, the daily edition, Ask and MCP results), and the
+ *  story cover keeps the line with the bill's standing when it clips (og.ts). */
+export const BILL_PROGRESS_WORDS = 'Bill progress as at';
+/** "4 Oct 2026": the export's day as its generated_at writes it, never shifted by a time zone; '' when it is not a date. */
+export function billsAsAtDay(generatedAt) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(typeof generatedAt === 'string' ? generatedAt.trim() : '');
+  if (!m) return '';
+  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])], date = new Date(Date.UTC(y, mo - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === mo - 1 && date.getUTCDate() === d ? shortDate(m[0]) : '';
+}
+/** "Bill progress as at 4 Oct 2026", or '' when the export's generated_at is missing or not a date. */
+export function billProgressAsAt(generatedAt) {
+  const day = billsAsAtDay(generatedAt);
+  return day ? `${BILL_PROGRESS_WORDS} ${day}` : '';
 }
 /** The bills with recorded divisions, in index order, with the fields a party page sorts them by:
  *  the party page's "Bills they divided on" picks its newest candidates from these (app.js

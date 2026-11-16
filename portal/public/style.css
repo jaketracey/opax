@@ -3802,6 +3802,8 @@ html[data-panel="chat"] footer { display: none; }
 .bill-title, .bill-short, .bill-related { max-width: var(--size-readable); }
 .bill-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); margin: 0 0 var(--space-line); }
 .bill-status-as { font: var(--type-fine); color: var(--ink-soft); }
+/* How old the status and stages are (the bills export's day): plain fine print bound to the status line. */
+.bill-progress-as-at { font: var(--type-fine); color: var(--ink-soft); margin: 0 0 var(--space-line); }
 /* Two drawn actions: Ask as a secondary pill, the rest under ⋯. */
 .bill-head .page-actions { margin-top: var(--space-block); }
 

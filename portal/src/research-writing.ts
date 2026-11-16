@@ -574,8 +574,8 @@ function factsProse(input: WritingInput): QualitativeAnswer {
     }
     if(!rows.length)for(const f of available.slice(0,/each year|by year|year-by-year|trend|over time/i.test(input.question)?30:Math.min(30,Number(/top (\d+)/i.exec(input.question)?.[1])||8))) {
       const count=/^([^:]+): (\d[\d,]*)(.*)/.exec(f.text), total=/^(\d[\d,]*) (.+)/.exec(f.text)
-      const cohort=/^(\d[\d,]*) bill records in the introduction cohort (.+?); (\d[\d,]*) have snapshot status (\w+) \(([\d.]+)%\)/.exec(f.text)
-      if(cohort&&available.some(other=>other!==f&&other.text.startsWith(cohort[3]+' '+cohort[4]+' bill records'))){lines.push({text:`The introduction cohort contained ${cohort[1]} bill records ${cohort[2]}; ${cohort[5]}% had snapshot status ${cohort[4]}.`,facts:[f.id]})}
+      const cohort=/^(\d[\d,]*) bill records in the introduction cohort (.+?); (\d[\d,]*) have snapshot status (\w+) \(([\d.]+)%\)(?:, as at ([^.;]+))?/.exec(f.text)
+      if(cohort&&available.some(other=>other!==f&&other.text.startsWith(cohort[3]+' '+cohort[4]+' bill records'))){lines.push({text:`The introduction cohort contained ${cohort[1]} bill records ${cohort[2]}; ${cohort[5]}% had snapshot status ${cohort[4]}${cohort[6]?' as at '+cohort[6]:''}.`,facts:[f.id]})}
       else if(count){const who=count[1], detail=count[3].replace(/^([^()]*)/,part=>/^\d{4}$/.test(who)?part.replace(/\s+from \d{4}-\d{2}-\d{2}(?: to \d{4}-\d{2}-\d{2})?/,''):part).replace(/\s*\([^)]*\)/g,'').replace(/[.;]+$/,'');lines.push({text:/^\d{4}$/.test(who)?`In ${who}, there were ${count[2]}${detail}.`:`${who} ${lines.length===0&&/most|highest|top|largest/i.test(input.question)?'led the selected ranking with':'recorded'} ${count[2]}${detail}.`,facts:[f.id]})}
       else if(total)lines.push({text:`There were ${total[1]} ${total[2].replace(/[.;]+$/,'')}.`,facts:[f.id]})
       else if(/\b(?:divisions|all aye|all no)\b/.test(f.text) && !rawToolEcho(f.text))lines.push({text:finish(f.text),facts:[f.id]})

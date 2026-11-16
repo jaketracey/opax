@@ -24,7 +24,7 @@ import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.j
 import {recentVotesBucket, recentVotesBucketPath, votesBucketPath, VOTES_NAMES_PATH} from '../public/recent-votes-buckets.js'
 import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
 import {SUPPLIER_ID_RE, supplierRowsPath, SUPPLIERS_META_PATH} from '../public/supplier-row-buckets.js'
-import {BILL_TITLES_PATH} from '../public/bill-titles.js'
+import {BILL_TITLES_PATH,billProgressAsAt} from '../public/bill-titles.js'
 import {readPartyPages, partyPageCoverage} from '../public/party-page.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
@@ -54,6 +54,8 @@ interface Bill {
   divisions?: Division[];
   division_titles?: Record<string,string>;
   summary?: { attribution?: string; sentences?: string[]; changes?: string[]; affected?: string; as_of?: string };
+  /** The bills export's generated_at (/bills/index.json): the day the status and stages shown are as at. */
+  exported_at?: string;
 }
 export interface Division {
   key: string; slug?: string; name?: string; question?: string; date?: string; house?: string | null;
@@ -456,7 +458,9 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
     const person = sponsorPerson(s.name, s.person_id ?? undefined, people) as Person | null
     return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party && sponsorParties.includes(s.party) ? ` (${escapeHtml(s.party)})` : '')
   })
-  let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}${coSponsors.length ? `<dt>Co-sponsors</dt><dd>${coSponsors.join(', ')}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(portfolio || 'Not recorded')}</dd></dl>`
+  // How old the status and stages are: the bills export's day, under the status line (public/bill-titles.js).
+  const asAt = billProgressAsAt(b.exported_at)
+  let body = `${asAt ? `<p class="bill-progress-as-at">${escapeHtml(asAt)}</p>` : ''}<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}${coSponsors.length ? `<dt>Co-sponsors</dt><dd>${coSponsors.join(', ')}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(portfolio || 'Not recorded')}</dd></dl>`
   const stages = billStageLines(b.key_dates || []).map(d=>`<li>${escapeHtml(d.label)} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`)
   if (stages.length) body += `<h2>Recorded stages</h2><ul>${stages.join('')}</ul>`
   const divisions = b.divisions || []

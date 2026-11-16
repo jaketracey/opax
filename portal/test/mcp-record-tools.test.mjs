@@ -7,6 +7,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { z } from 'zod';
 import { resource, speeches } from './fixtures/ask-person.mjs';
+import { shortDate } from '../public/format.js';
 
 const compiled = await build({ stdin: { contents: "export {callTool, askToolSpecs, listTools, getTool, tools, ToolInputError} from './src/tools/index'; export {communityMcp} from './src/community-mcp';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' });
 const api = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
@@ -411,6 +412,38 @@ test('bill_detail returns the dated stage history in order, and keeps the model 
   assert.equal(paged.items.length, 2); assert.ok(paged.next_cursor);
   const rest = await run('bill_detail', { bill_id: 'au-federal-r7534', limit: 100, cursor: paged.next_cursor });
   assert.deepEqual([...paged.items, ...rest.items], out.items);
+});
+// How old a bill's status is (hub ruling (c), 16 Nov 2026): a note of its own in the bill page's words, from the bills
+// export's generated_at. The listing, the schemas and every other note are as they were.
+test('bill_search and bill_detail say "Bill progress as at" the export\'s day in a note, and a fresher export moves it', async () => {
+  const index = await asset('/bills/index.json');
+  const day = shortDate(index.generated_at), line = `Bill progress as at ${day}.`;
+  const STATUS_NOTE = 'status is the latest recorded status; status_as_of is when it was observed, not a passage or assent date. Open bill_detail for dated stages.';
+  const found = await run('bill_search', { query: 'interactive gambling', limit: 3 });
+  assert.deepEqual(found.notes, [STATUS_NOTE, line]);
+  const none = await run('bill_search', { query: 'zzzqqq nonexistent' });
+  assert.deepEqual(none.notes, ['No federal bill in the published index matches. State bills are not in this index.', STATUS_NOTE, line]);
+  const bySponsor = await run('bill_search', { sponsor: 'David Pocock', limit: 3 });
+  assert.equal(bySponsor.notes.at(-1), line);
+  assert.equal(bySponsor.notes.filter(n => n.startsWith('Bill progress as at')).length, 1);
+  for (const args of [{ bill_id: 'au-federal-r7534' }, { title: (await asset('/bills/au-federal-r7534.json')).title }]) {
+    const out = await run('bill_detail', args);
+    const status = out.notes.findIndex(n => /^Status .*status_as_of is not an introduction, passage or assent date\.$/.test(n));
+    assert.ok(status >= 0, 'the status note is unchanged');
+    assert.equal(out.notes[status + 1], line, JSON.stringify(args));
+    assert.equal(out.notes.filter(n => n.startsWith('Bill progress as at')).length, 1);
+  }
+  // A fresher export moves the note on its own: the date file and the index both say the new day.
+  const FRESH = '2026-11-20T03:00:00+00:00';
+  const fresher = { ...env, asset: async path => path === '/bills/index.json' ? { ...index, generated_at: FRESH } : path === '/growth/bills-date.json' ? { generated_at: FRESH } : asset(path) };
+  assert.equal((await run('bill_search', { query: 'interactive gambling', limit: 3 }, fresher)).notes.at(-1), 'Bill progress as at 20 Nov 2026.');
+  assert.equal((await run('bill_search', { sponsor: 'David Pocock', limit: 3 }, fresher)).notes.at(-1), 'Bill progress as at 20 Nov 2026.');
+  for (const args of [{ bill_id: 'au-federal-r7534' }, { title: (await asset('/bills/au-federal-r7534.json')).title }])
+    assert.ok((await run('bill_detail', args, fresher)).notes.includes('Bill progress as at 20 Nov 2026.'), JSON.stringify(args));
+  // No date to give: no note, and the rest are as they were.
+  const undated = { ...env, asset: async path => path === '/bills/index.json' ? { ...index, generated_at: undefined } : path === '/growth/bills-date.json' ? null : asset(path) };
+  assert.deepEqual((await run('bill_search', { query: 'interactive gambling', limit: 3 }, undated)).notes, [STATUS_NOTE]);
+  assert.ok(!(await run('bill_detail', { bill_id: 'au-federal-r7534' }, undated)).notes.some(n => n.startsWith('Bill progress')));
 });
 test('bill_detail asks for a choice when a title matches several bills, and reports an unknown id', async () => {
   const many = await run('bill_detail', { title: 'interactive gambling' });

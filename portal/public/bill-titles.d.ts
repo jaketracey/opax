@@ -5,6 +5,9 @@ export function billTitlesFile(index: { generated_at?: string; bills: Record<str
 };
 export const BILLS_DATE_PATH: string;
 export function billsDateFile(index: { generated_at?: string }): { generated_at: string };
+export const BILL_PROGRESS_WORDS: string;
+export function billsAsAtDay(generatedAt: unknown): string;
+export function billProgressAsAt(generatedAt: unknown): string;
 export const DIVISION_BILLS_PATH: string;
 export function divisionBillsFile(index: { generated_at?: string; bills: Record<string, unknown>[] }): {
   generated_at?: string;

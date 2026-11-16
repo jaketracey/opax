@@ -214,12 +214,19 @@ test('politician publisher keeps a colliding roster row at its distinct canonica
   assert.equal(post.slides.find(s=>s.type==='source').url,post.url.replace(/^https:\/\//,''));
 });
 
+// au-federal-r7537 as the snapshot records it, before parliament, and as if it had since passed.
+const passedTwin = { ...bills.bills[0], status: 'passed', status_as_of: '2026-09-09' }
+const withBills = (list, recent = []) => { const base = sources(recent); return { ...base, async asset(path) { return path === '/bills/index.json' ? { bills: list } : base.asset(path); } }; };
+
 test('bill post uses the summary sentences and a readable sponsor', async () => {
-  const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
+  // The bill before parliament is never featured (hub ruling, 16 Nov 2026): with the other two featured, the day hands over.
+  const handed = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
+  assert.notEqual(handed?.kind, 'bill', 'a bill before parliament is not featured');
+  const post = await composeDailyPost('2026-09-10', withBills([passedTwin]), 'bill');
   assert.equal(post.kind, 'bill');
   assert.equal(post.subject, 'bill:au-federal-r7537');
   assert.ok(post.text.startsWith('This bill would require providers'));
-  assert.ok(post.text.includes('before parliament.'));
+  assert.ok(post.text.includes('Recorded as passed, as at 9 Sep 2026.'));
   assert.ok(post.caption.includes('Introduced 7 Sep 2026 by Andrew Gee (Independent).'));
   assert.ok(post.caption.includes('Machine-written summary;'));
   assert.ok(post.text.includes('This bill would require providers'));
@@ -240,8 +247,8 @@ test('an exposure draft is a bill candidate and says it is a draft', async () =>
 });
 
 test('a long first summary sentence is clipped to fit rather than dropped', async () => {
-  const long = { ...billFiles, 'au-federal-r7537': { summary: { sentences: ['This bill changes the Customs Tariff Act 1995 to remove customs duties on goods brought in under the Geelong Treaty, a nuclear submarine partnership agreement with the United Kingdom signed on 26 July 2025, and it goes on and on well past the character budget.'] } } };
-  const src = { ...sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), async asset(path) { const m = path.match(/^\/bills\/(.+)\.json$/); return m && m[1] !== 'index' ? long[decodeURIComponent(m[1])] : sources().asset(path); } };
+  const long = { ...billFiles, 'au-federal-r7400': { summary: { sentences: ['This bill changes the Customs Tariff Act 1995 to remove customs duties on goods brought in under the Geelong Treaty, a nuclear submarine partnership agreement with the United Kingdom signed on 26 July 2025, and it goes on and on well past the character budget.'] } } };
+  const src = { ...sources(['bill:au-federal-r7537', 'bill:au-federal-ed-draft-2026']), async asset(path) { const m = path.match(/^\/bills\/(.+)\.json$/); return m && m[1] !== 'index' ? long[decodeURIComponent(m[1])] : sources().asset(path); } };
   const post = await composeDailyPost('2026-09-10', src, 'bill');
   assert.ok(post.text.includes('This bill changes the Customs Tariff Act 1995'), post.text);
   assert.ok(post.text.includes('…'));
@@ -283,15 +290,15 @@ test('grant editions keep the award amount, purpose, start date and exact recipi
 test('bill publication skips future dates and missing summaries', async () => {
   const src = { ...sources(), async asset(path) {
     if(path==='/bills/index.json')return {bills:[
-      {key:'future',title:'Future Bill',introduced:'2027-01-01',status:'before_parliament',has_summary:true},
-      {key:'empty',title:'Empty Bill',introduced:'2026-09-01',status:'before_parliament',has_summary:true},
-      bills.bills[0],
+      {key:'future',title:'Future Bill',introduced:'2027-01-01',status:'exposure_draft',has_summary:true},
+      {key:'empty',title:'Empty Bill',introduced:'2026-09-01',status:'exposure_draft',has_summary:true},
+      bills.bills[3],
     ]};
     return sources().asset(path);
   } };
   const post=await composeDailyPost('2026-09-14',src,'bill');
-  assert.equal(post.subject,'bill:au-federal-r7537');
-  assert.ok(post.text.startsWith('This bill would require'));
+  assert.equal(post.subject,'bill:au-federal-ed-draft-2026');
+  assert.ok(post.text.startsWith('It would impose a duty of care'));
 });
 
 test('OAuth 1.0a signature matches the reference vector from the X docs', async () => {
@@ -417,10 +424,12 @@ test('a bill with a division and dates gets a timeline and the division; one wit
   assert.match(touches.lines[0], /Speeches in the record: 2, beginning with Daniel Mulino on 1 Mar 2026\./);
   assert.deepEqual(source.rows, ['Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0', 'Bill home page on ParlInfo, CC BY-NC-ND 4.0', 'The Act on the Federal Register of Legislation, CC BY 4.0', 'Division record: theyvoteforyou.org.au']);
   assert.match(passed.caption, /Photos: JJ Harrison, CC BY-SA 3\.0, via Wikimedia Commons\./);
-  const fresh = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
-  assert.equal(fresh.subject, 'bill:au-federal-r7537');
+  const fresh = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-r7537']), 'bill');
+  assert.equal(fresh.subject, 'bill:au-federal-ed-draft-2026');
   assert.deepEqual(types(fresh), ['cover', 'list', 'source'], 'no dates, divisions or affected parties: the story is the summary');
-  assert.equal(fresh.slides[0].kicker, 'Bill · Andrew Gee (Independent)');
+  assert.equal(fresh.slides[0].kicker, 'Bill · Communications portfolio');
+  const sponsored = await composeDailyPost('2026-09-10', withBills([passedTwin]), 'bill');
+  assert.equal(sponsored.slides[0].kicker, 'Bill · Andrew Gee (Independent)');
 });
 
 test('a member gets the electorate slide and the portrait inset; a senator gets neither', async () => {
@@ -647,7 +656,8 @@ test('every daily kind retains mandatory authorisation when its content discusse
 });
 
 test('only a bill\'s cover slide carries the "Machine-written summary" note: a member, a grant and a topic cover have none', async () => {
-  const bill = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
+  const bill = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-r7537']), 'bill');
+  assert.equal(bill.kind, 'bill');
   assert.equal(bill.slides[0].note, 'Machine-written summary');
   for (const kind of ['politician', 'topic', 'grant', 'program', 'largest']) {
     const post = await composeDailyPost('2026-09-10', sources(), kind);

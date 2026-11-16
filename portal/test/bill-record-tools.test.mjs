@@ -55,14 +55,16 @@ const complete = {
 
 const token = 'opax_' + 'B'.repeat(43);
 const tokenHash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)))].map(value => value.toString(16).padStart(2, '0')).join('');
-function fixture(detail = complete, catalogueRows = [catalogueBill], details = { [key]: detail }) {
+function fixture(detail = complete, catalogueRows = [catalogueBill], details = { [key]: detail }, { exported = null, index = null } = {}) {
   const paths = [];
   const assets = {
     catalogueRows,
     async fetch(request) {
       const path = new URL(request.url).pathname;
       paths.push(path);
-      if (path === '/bills/index.json') return new Response('missing', { status: 404 });
+      // The bills export's day (public/bill-titles.js BILLS_DATE_PATH), when the release wrote it.
+      if (path === '/growth/bills-date.json') return exported ? Response.json({ generated_at: exported }) : new Response('missing', { status: 404 });
+      if (path === '/bills/index.json') return index ? Response.json(index) : new Response('missing', { status: 404 });
       const selectedKey = /^\/bills\/(au-[a-z0-9-]+)\.json$/.exec(path)?.[1];
       assert.ok(selectedKey && Object.hasOwn(details, selectedKey), 'only the matched bill detail may be fetched');
       const selected = details[selectedKey];
@@ -318,7 +320,8 @@ test('non-bill catalogue rows remain discovery hits without bill lifecycle field
   const result = await callTool(f.env, 'find_records', { query: 'Sample Estuary' });
   assert.deepEqual(result.rows[0], { kind: 'person', title: person.title, summary: person.snippet, url: 'https://opax.com.au' + person.href });
   assert.equal(result.rows[1].introduced, complete.introduced);
-  assert.deepEqual(f.paths, ['/bills/' + key + '.json']);
+  // A bill hit reads how old bill statuses are: the release's date file, then the index when it has none.
+  assert.deepEqual(f.paths, ['/growth/bills-date.json', '/bills/index.json', '/bills/' + key + '.json']);
 });
 
 test('a malformed bill link cannot choose an asset outside the bill directory', async () => {
@@ -327,4 +330,29 @@ test('a malformed bill link cannot choose an asset outside the bill directory', 
   assert.deepEqual(f.paths, ['/bills/index.json']);
   assert.equal(result.rows[0].lifecycle_available, false);
   assert.equal(result.rows[0].introduced, null);
+});
+
+// Hub ruling (c), 16 Nov 2026: the bills source has been paused since 10 Oct, so a bill's status is said with the day
+// the bills export was made (its generated_at), as the bill page says it, never the day of the bill's last stage.
+test('a bill status is stated as at the bills export day, read from the date file; a fresher export moves it on its own', async () => {
+  for (const [exported, day] of [['2026-10-04T16:27:54+00:00', '4 Oct 2026'], ['2026-11-20T02:00:00+00:00', '20 Nov 2026']]) {
+    const f = fixture(complete, [catalogueBill], { [key]: complete }, { exported });
+    const result = await callTool(f.env, 'find_records', { query: 'Sample Estuary' });
+    const status = result.citations.find(c => /has recorded status/.test(c.text));
+    assert.equal(status.text, `The ${title} has recorded status passed as at ${day}.`);
+    assert.deepEqual(f.paths, ['/growth/bills-date.json', '/bills/' + key + '.json'], 'the small date file, never the whole index');
+  }
+});
+
+test('a bill named by title states its status as at the day of the index it was found in, without a second read', async () => {
+  const f = fixture(complete, [catalogueBill], { [key]: complete }, { exported: '2026-11-20T02:00:00+00:00', index: { generated_at: '2026-10-04T16:27:54+00:00', bills: [{ key, title, short_title: title, jurisdiction: 'federal' }] } });
+  const result = await callTool(f.env, 'find_records', { query: title, kind: 'bill' });
+  assert.equal(result.citations.find(c => /has recorded status/.test(c.text)).text, `The ${title} has recorded status passed as at 4 Oct 2026.`);
+  assert.deepEqual(f.paths, ['/bills/index.json', '/bills/' + key + '.json']);
+});
+
+test('with no readable export date a status keeps the date it had: the bill\'s own status date', async () => {
+  const f = fixture(complete, [catalogueBill]);
+  const result = await callTool(f.env, 'find_records', { query: 'Sample Estuary' });
+  assert.equal(result.citations.find(c => /has recorded status/.test(c.text)).text, `The ${title} has recorded status passed as at 9 October 2026.`);
 });

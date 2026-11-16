@@ -233,6 +233,18 @@ test('status counts expose the unfiltered denominator and the share for the same
   assert.equal(empty.share_percent, null);
 });
 
+test('a status share is said as at the bills export\'s day, and a fresher export moves it', async () => {
+  const cohortText = result => result.citations.find(c => /introduction cohort/.test(c.text)).text;
+  assert.equal(cohortText(await count({ record_type: 'bills', date: '2024-02-29', status: 'passed' })),
+    '3 bill records in the introduction cohort in federal parliament on 2024-02-29; 1 have snapshot status passed (33.33%), as at 4 Oct 2026');
+  const fresher = fixture({ '/bills/index.json': { generated_at: '2026-11-20T03:00:00+00:00', count: bills.length, meta: { mode: 'registry', parliament_floor: '1998-11-10' }, bills } });
+  assert.match(cohortText(await count({ record_type: 'bills', date: '2024-02-29', status: 'passed' }, fresher)), /\(33\.33%\), as at 20 Nov 2026$/);
+  // An empty cohort has no share to date; an export with no date gives the share alone, as before.
+  assert.match(cohortText(await count({ record_type: 'bills', date: '2024-04-01', status: 'passed' })), /; a share cannot be calculated for an empty cohort$/);
+  const undated = fixture({ '/bills/index.json': { count: bills.length, meta: { mode: 'registry', parliament_floor: '1998-11-10' }, bills } });
+  assert.match(cohortText(await count({ record_type: 'bills', date: '2024-02-29', status: 'passed' }, undated)), /\(33\.33%\)$/);
+});
+
 test('including bill titles has a presentation cap while the total retains every matching bill', async () => {
   const manyBills = Array.from({ length: 61 }, (_, i) => ({ ...bills[0], key: `au-federal-many-${i}`, title: `Fixture Bill ${i}` }));
   const f = fixture({ '/bills/index.json': { generated_at: GENERATED_AT, count: manyBills.length, bills: manyBills } });

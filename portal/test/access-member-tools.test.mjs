@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
+import { shortDate } from '../public/format.js';
 // MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
 const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
@@ -153,6 +154,15 @@ test('sponsored bills use the complete index with real status, dates, source cit
   assert.equal(out.rows[0].introduced, '2021-08-04'); assert.equal(out.rows[0].status, 'lapsed'); assert.ok(out.sponsor_metadata_missing > 2000);
   const detail = await api.callTool(env, 'sponsored_bills', out.rows[0].follow_up); cited(detail); assert.ok(detail.rows[0].lifecycle.key_dates.length);
   assert.ok(out.rows[0].source_url); assert.equal(out.citations[1].url, out.rows[0].source_url);
+});
+test('a sponsored bill\'s status is stated as at the bills export\'s day, and a fresher export moves it', async () => {
+  const index = await asset('/bills/index.json');
+  const statusText = out => out.citations.find(c => c.kind === 'record' && /is the recorded sponsor of/.test(c.text)).text;
+  const out = await api.callTool(env, 'sponsored_bills', { person: 'Katy Gallagher', limit: 1 });
+  assert.match(statusText(out), new RegExp(`; status lapsed(?: \\([^)]+\\))? as at ${shortDate(index.generated_at)}\\.`));
+  const raw = { ...index, generated_at: '2026-11-20T03:00:00+00:00' };
+  const fresher = await api.callTool({ ...env, asset: path => path === '/bills/index.json' ? Promise.resolve(raw) : asset(path) }, 'sponsored_bills', { person: 'Katy Gallagher', limit: 1 });
+  assert.match(statusText(fresher), /; status lapsed(?: \([^)]+\))? as at 20 Nov 2026\./);
 });
 test('sponsored bill counts exceed growth limits and pagination does not change them', async () => {
   const all = await api.callTool(env, 'sponsored_bills', { person: 'Sarah Hanson-Young', limit: 8 }); cited(all);

@@ -9074,6 +9074,16 @@ function loadBillsDate() {
   return billsDatePromise;
 }
 
+/** "Bill progress as at 4 Oct 2026" from the bills export's generated_at, or "" when it is not a date: a copy of
+ *  billProgressAsAt in /bill-titles.js (this is a classic script and cannot import it), held to it by
+ *  test/bill-progress-asat.test.mjs. The bill page shows it under the status. */
+function billProgressAsAt(generatedAt) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(typeof generatedAt === "string" ? generatedAt.trim() : "");
+  if (!m) return "";
+  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])], date = new Date(Date.UTC(y, mo - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === mo - 1 && date.getUTCDate() === d ? `Bill progress as at ${fmtDate(m[0])}` : "";
+}
+
 /** One bill's full record; null when the projection has no such file (404). Any other
  *  failure rejects and is not kept, so the bill page can say so and a retry fetches again. */
 function fetchBill(key) {
@@ -9967,6 +9977,8 @@ async function openBill(key, manageFocus) {
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
   const statusWord = billStatusWord(bill) || "Status not recorded";
+  // How old the status and the stages under it are: the bills export's day, one plain line under the status.
+  const progressAsAt = billProgressAsAt(bill.exportedAt);
   // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
   // repeat of the same three buttons is gone.
   const actions = `<div class="page-actions bill-actions">
@@ -9980,6 +9992,7 @@ async function openBill(key, manageFocus) {
     <div class="ui-page-head bill-head">
       <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
         bill.status_as_of ? `<span class="bill-status-as">Status as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
+      ${progressAsAt ? `<p class="bill-progress-as-at">${esc(progressAsAt)}</p>` : ""}
       <h1 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h1>
       ${bill.short_title && bill.short_title !== title
         ? `<p class="ui-page-meta bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}

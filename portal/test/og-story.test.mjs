@@ -136,6 +136,23 @@ test('a long cover sentence gives way to the bill\'s standing: the status and it
   assert.ok(end.endsWith('…'));
 });
 
+test('a bill cover keeps "Bill progress as at" whole with the standing when the summary sentence is cut', async () => {
+  const sentence = 'This bill is part of a package that creates the Australian Tertiary Education Commission as the main oversight body for the higher education system.';
+  for (const status of ['Passed 1 Apr 2026. Bill progress as at 4 Oct 2026.', 'Royal Assent 27 Aug 2026. Bill progress as at 20 Nov 2026.', 'Draft released 7 Sep 2026; not introduced. Bill progress as at 4 Oct 2026.']) {
+    const long = { ...slides.cover, line: `${sentence} ${status}`, note: 'Machine-written summary' };
+    for (const [format, images] of [['feed', { photo, credit }], ['story', { photo, credit }], ['feed', {}]]) {
+      const drawn = texts(storySlideTree(long, images, format)).find(t => t.startsWith('This bill is part'));
+      assert.ok(drawn, format);
+      assert.ok(drawn.endsWith('… ' + status), `${format}: the standing and its as-at day are whole and last: ${drawn}`);
+      assert.ok(sentence.startsWith(drawn.slice(0, drawn.indexOf('…'))), 'cut on a word, nothing reordered');
+    }
+    const jpeg = decode(await renderJpeg(long, { photo, credit })); assert.deepEqual([jpeg.width, jpeg.height], [1080, 1350]);
+  }
+  // A line that fits is drawn whole.
+  const short = { ...slides.cover, line: 'It would move the reporting date. Passed 19 Aug 2026. Bill progress as at 4 Oct 2026.', note: 'Machine-written summary' };
+  assert.ok(texts(storySlideTree(short, { photo, credit })).includes(short.line));
+});
+
 test('the engraving cover with a note holds every row of words at its height: a two-row title at its largest over a three-row line does not press the note into the line', async () => {
   // No photograph, a title that sets at 128 px on two rows, a kicker on two rows and a line on three: the tallest cover.
   const tall = { type: 'cover', kicker: 'Bill · Infrastructure, Transport, Regional Development, Communications, Sport and the Arts portfolio', title: 'Combatting Illicit Tobacco',
@@ -207,7 +224,7 @@ test('the closing slide is the page address alone: no path line under it, no wor
 
 test('the Victorian CTA keeps the address-only design and the exact small authorisation outside its clipped body', () => {
   const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
-  assert.equal(STORY_VERSION, 6, 'a changed cover wording invalidates the version 5 cache');
+  assert.equal(STORY_VERSION, 7, 'a bill cover that now keeps "Bill progress as at" with its standing invalidates the version 6 cache');
   const slide = {...slides.source, path: 'legacy path must not be drawn', authorisation: line};
   for (const format of ['feed', 'story']) {
     const tree = storySlideTree(slide, {}, format);
