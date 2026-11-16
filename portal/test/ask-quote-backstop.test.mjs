@@ -7,7 +7,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { build } from 'esbuild'
 
-const built = await build({ stdin: { contents: "export {groundAnswerPayload, NO_SUPPORTED_ANSWER} from './src/research-grounding'", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'browser', format: 'esm', logLevel: 'silent' })
+const built = await build({ stdin: { contents: "export {groundAnswerPayload, NO_SUPPORTED_ANSWER} from './src/research-grounding';export {researchSentenceStream} from './src/research-sentence-stream';export {checkedAnswerPayload} from './src/research-response'", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'browser', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 
 const LABEL = 'Hearing transcript: evidence, not findings'
@@ -86,7 +86,7 @@ test('an answer whose only sentence is removed still says something: the fixed l
   assert.equal(again.answer, api.NO_SUPPORTED_ANSWER)
 })
 
-test('an uncited sentence is checked against every source: with a transcript among them a failed quotation goes', () => {
+test('an uncited sentence that loosely quotes a held transcript excerpt goes', () => {
   const uncited = 'One account was that “Mr Placeholder approved the use of income averaging in that year”.'
   const out = ground(payload([[uncited], [SAID, 'speech-7']], [heard, speech]))
   assert.doesNotMatch(out.answer, /Placeholder/); assert.match(out.answer, /Robin Example said/)
@@ -117,4 +117,116 @@ test('a streamed preview is checked the same way, so a sentence that will be rem
   assert.doesNotMatch(done.answer, /Placeholder/)
   // A preview that is only the failing sentence shows the fixed line's place as nothing to release, never the words.
   assert.doesNotMatch(ground(payload([[NEAR, 'fact-1']], [heard]), true).answer, /Placeholder/)
+})
+
+// ---- Review of 16 November 2026 (REQUEST CHANGES): each case below failed before its fix. ----
+const EXCERPT2 = 'Mr Placeholder had approved the use of income averaging in that year, and nobody raised the legal advice. I didn’t see the advice until No. 4 was signed.'
+const heard2 = { ...heard, snippet: heard.snippet.replace(EXCERPT, EXCERPT2) }
+const TAIL = 'The commission reported in July 2023.'
+
+test('every form of quotation is read in a sentence citing a transcript: over a line break, single marks, marks inside marks, a dash, a mark never closed', () => {
+  const rows = [
+    'The transcript records: “Did Mr Placeholder approve it?\nYes, Mr Placeholder approved all of it.”',
+    'A witness said ‘I didn’t ever tell Mr Placeholder a thing’.',
+    "A witness said 'Mr Placeholder didn't approve any of it'.",
+    'A witness said “Mr Placeholder had approved "the fraud" in that year”.',
+    "A witness said—'Mr Placeholder approved all of it'—under oath.",
+    'A witness said “Mr Placeholder approved all of it.',
+  ]
+  for (const row of rows) {
+    const out = ground(payload([[SAID, 'speech-7'], [row, 'fact-1']], [heard2, speech], '\n'))
+    assert.equal(out.answer, SAID, row); rangesHold(out)
+  }
+  // The same marks around words the transcript does hold are untouched.
+  for (const row of ['A witness said ‘I didn’t see the advice until No. 4 was signed’.', 'The transcript records: “Mr Placeholder had approved the use of income averaging in that year, and nobody raised the legal advice. I didn’t see the advice until No. 4 was signed.”']) {
+    const out = ground(payload([[SAID, 'speech-7'], [row, 'fact-1']], [heard2, speech], '\n'))
+    assert.ok(out.answer.includes(row.replace(/‘([^’]*’[^’]*)’\./, '‘$1’.')) || out.answer.includes('didn’t see the advice until No. 4 was signed'), out.answer)
+  }
+})
+
+test('Hansard and every other record behave exactly as on main, with a transcript among the sources or not', () => {
+  // The four uncited sentences the review ran. On main each loses its marks and keeps its words.
+  const cases = [
+    ['Robin Example told the House the scheme “applied income averaging to all debts whatsoever”.', 'Robin Example told the House the scheme applied income averaging to all debts whatsoever.'],
+    ['The scheme became known as “robodebt” in the press.', 'The scheme became known as robodebt in the press.'],
+    ['The “Social Services Legislation Amendment Bill 2023” was then introduced.', 'The Social Services Legislation Amendment Bill 2023 was then introduced.'],
+  ]
+  const count = { resource: 'fact-3', slug: '', kind: 'count', cited: true, url: 'https://opax.test/rc', href: 'https://opax.test/rc', title: 'Example Royal Commission', snippet: `OPAX lists 46 hearing transcripts from the Example Royal Commission, dated 1 November 2022 to 10 March 2023. ${LABEL}.` }
+  for (const [uncited, want] of cases) {
+    // The same answer with no transcript anywhere is main's own output; a transcript or a listing row changes nothing.
+    const plain = ground(payload([[SAID, 'speech-7'], [uncited]], [speech], '\n'))
+    assert.equal(plain.answer, SAID + '\n' + want)
+    for (const sources of [[heard, speech], [count, speech], [heard, count, speech]]) assert.equal(ground(payload([[SAID, 'speech-7'], [uncited]], sources, '\n')).answer, plain.answer, uncited)
+  }
+  // A listing or count row carries the label and holds no evidence: a sentence citing it keeps the standing rule.
+  const listed = ground(payload([['OPAX lists 46 transcripts, which one member called “a mountain of paper”.', 'fact-3']], [count, speech]))
+  assert.match(listed.answer, /called a mountain of paper/)
+  // A sentence citing a speech and a transcript is checked as a transcript sentence (intended): a loose quotation goes.
+  const both = ground(payload([[SAID, 'speech-7'], ['Robin Example said the scheme “applied income averaging to all debts whatsoever”.', 'speech-7', 'fact-1']], [heard, speech], '\n'))
+  assert.equal(both.answer, SAID)
+})
+
+test('a loose quotation of a held excerpt goes whatever the sentence cites; a loose quotation of the cited record itself keeps the standing rule', () => {
+  // Cites the speech, near-quotes the transcript.
+  const borrowed = 'Robin Example said “Mr Placeholder approved the use of income averaging in that year”.'
+  const out = ground(payload([[SAID, 'speech-7'], [borrowed, 'speech-7']], [heard, speech], '\n'))
+  assert.equal(out.answer, SAID); rangesHold(out)
+  // The transcript is not among the answer's sources, but its excerpt was among the facts given to the writer.
+  const given = { ...payload([[SAID, 'speech-7'], [borrowed, 'speech-7'], ['One account was that “nobody raised the legal advice at all that year”.']], [speech], '\n'), research: { mode: 'loop', pre_writer_sources: [speech, heard] } }
+  assert.equal(ground(given).answer, SAID)
+  // Cites the speech, loosely quotes the speech: marks off, words stay.
+  const own = ground(payload([['Robin Example said the scheme “applied income averaging to all debts whatsoever”.', 'speech-7']], [heard, speech]))
+  assert.match(own.answer, /said the scheme applied income averaging to all debts whatsoever\./)
+})
+
+/** Feeds each preview to the real sentence stream, then runs the final boundary as the done frame does. */
+async function streamed(previews, final) {
+  const sent = [], stream = api.researchSentenceStream(question, async text => { sent.push(text) })
+  for (const preview of previews) await stream.preview(preview)
+  stream.close()
+  const released = sent.join(''), done = api.checkedAnswerPayload(final, question, false, released)
+  return { sent, released, done }
+}
+const written = (parts, sources) => ({ ...payload(parts, sources, '\n'), machine_written: true, research: { mode: 'loop', pre_writer_sources: [speech, heard] } })
+
+test('a sentence released to a streamed reader is never removed afterwards, and the fixed line is never released', async () => {
+  const TERM = 'The scheme became known as “robodebt” in the press.', VERB = 'A witness said “nobody raised the legal advice”.'
+  // The writer lane: a draft's source list holds only the facts cited so far. An uncited quoted term is released, then
+  // a sentence citing the transcript arrives. The released sentence stays: the answer extends what was shown.
+  const grew = await streamed([written([[SAID, 'speech-7'], [TERM]], [speech]), written([[SAID, 'speech-7'], [TERM], [VERB, 'fact-1']], [speech, heard])], written([[SAID, 'speech-7'], [TERM], [VERB, 'fact-1']], [speech, heard]))
+  assert.ok(grew.released.includes('The scheme became known as robodebt in the press.'), JSON.stringify(grew.sent))
+  assert.ok(String(grew.done.answer).startsWith(grew.released), `final: ${grew.done.answer}\nshown: ${grew.released}`)
+  assert.ok(String(grew.done.answer).includes('The scheme became known as robodebt in the press.'))
+  // The same with points and no pre_writer_sources: sources grow from a speech to a speech and a transcript.
+  const points = (parts, sources) => ({ ...payload(parts, sources, '\n'), machine_written: true })
+  const loop = await streamed([points([[SAID, 'speech-7'], [TERM]], [speech]), points([[SAID, 'speech-7'], [TERM], [VERB, 'fact-1']], [speech, heard])], points([[SAID, 'speech-7'], [TERM], [VERB, 'fact-1']], [speech, heard]))
+  assert.ok(String(loop.done.answer).startsWith(loop.released), `final: ${loop.done.answer}\nshown: ${loop.released}`)
+  // The first sentence is the failing one: nothing is released for it, least of all the fixed line.
+  const first = await streamed([points([[NEAR, 'fact-1']], [heard]), points([[NEAR, 'fact-1'], [SAID, 'speech-7']], [heard, speech])], points([[NEAR, 'fact-1'], [SAID, 'speech-7'], [TAIL]], [heard, speech]))
+  assert.ok(first.sent.every(text => !text.includes('OPAX cannot establish') && !text.includes('Placeholder')), JSON.stringify(first.sent))
+  assert.ok(String(first.done.answer).startsWith(first.released)); assert.doesNotMatch(String(first.done.answer), /Placeholder/)
+  // Every sentence fails: nothing is released, and the finished answer is the fixed line.
+  const none = await streamed([points([[NEAR, 'fact-1']], [heard])], points([[NEAR, 'fact-1']], [heard]))
+  assert.deepEqual(none.sent, []); assert.equal(none.done.answer, api.NO_SUPPORTED_ANSWER)
+  assert.equal(ground(payload([[NEAR, 'fact-1']], [heard]), true).answer, '', 'a preview with nothing left is empty, not the fixed line')
+})
+
+test('marks that do not pair take only their own sentence, and a mark never closed only its own line', () => {
+  for (const row of ['A witness said "Mr Placeholder approved all of it”.', 'A witness said “Mr Placeholder approved all of it".']) {
+    const out = ground(payload([[SAID, 'speech-7'], [row, 'fact-1'], [TAIL]], [heard, speech]))
+    assert.equal(out.answer, `${SAID} ${TAIL}`, row); rangesHold(out)
+  }
+  const open = ground(payload([[SAID, 'speech-7'], ['A witness said “Mr Placeholder approved all of it.', 'fact-1'], [TAIL]], [heard, speech], '\n'))
+  assert.equal(open.answer, `${SAID}\n${TAIL}`); rangesHold(open)
+})
+
+test('an emptied answer reads as a limitation written by code, not as a machine-written answer', () => {
+  const out = ground({ ...payload([[NEAR, 'fact-1']], [heard]), machine_written: true })
+  assert.equal(out.answer, api.NO_SUPPORTED_ANSWER); assert.equal(out.answer_decision, 'limitation'); assert.equal(out.machine_written, false)
+  assert.deepEqual(out.citations, {}); assert.ok(out.sources.every(s => s.cited !== true))
+})
+
+test('a term quoted from a transcript row\'s own header is held by that row', () => {
+  const out = ground(payload([['The hearing was held by the “Example Royal Commission”.', 'fact-1']], [heard]))
+  assert.match(out.answer, /“Example Royal Commission”/)
 })
