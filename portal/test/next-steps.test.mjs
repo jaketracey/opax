@@ -24,6 +24,20 @@ const compile = async (entry) => {
   return import('data:text/javascript;base64,' + Buffer.from(r.outputFiles[0].text).toString('base64'));
 };
 
+test('a row drawn with its fact is drawn as it is: only a reserved place is held to two lines', () => {
+  const items = [
+    { kind: 'Electorate', href: '/subject/electorate/a', text: 'A seat', meta: 'House of Representatives' },
+    { kind: 'Party', href: '/subject/party/b', text: 'A party', meta: 'Members and disclosed receipts' },
+    { kind: 'All bills', href: '/bills', text: 'Bills before the parliaments', meta: 'Search by title, status and sponsor' },
+  ];
+  const drawn = [...dom(nextStepsHTML(items)).querySelectorAll('li')];
+  assert.equal(drawn.length, 3);
+  // Array.map passes each row's index: rows after the first used to arrive as held.
+  for (const li of drawn) assert.equal(li.classList.contains('next-steps-held'), false, 'a known row keeps its natural height');
+  const reserved = [...dom(nextStepsHTML(items.slice(0, 2), { reserve: 2 })).querySelectorAll('li')];
+  assert.deepEqual(reserved.map((li) => li.classList.contains('next-steps-held')), [false, false, true, true]);
+});
+
 test('a row needs a label, words and a site or http(s) address; one row per address; text is escaped', () => {
   const rows = nextStepRows([
     { kind: 'Member', href: '/subject/person/a', text: 'A <b>Person</b>', meta: 'Labor' },

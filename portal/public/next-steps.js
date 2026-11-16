@@ -67,7 +67,7 @@ export function nextStepsHTML(items = [], { pageType = 'page', id = 'next-steps'
     : pendingRowHTML().repeat(held);
   return `<nav class="next-steps" id="${esc(id)}" aria-labelledby="${esc(id)}-title" data-module="next" data-page-type="${esc(pageType)}" data-module-position="1"${held && !filled ? ' aria-busy="true"' : ''}>`
     + `<${h} class="next-steps-title" id="${esc(id)}-title">${NEXT_STEPS_TITLE}</${h}>`
-    + `<ul class="next-steps-list" role="list">${rows.map(nextStepRowHTML).join('')}${heldHTML}</ul></nav>`;
+    + `<ul class="next-steps-list" role="list">${rows.map((row) => nextStepRowHTML(row)).join('')}${heldHTML}</ul></nav>`;
 }
 
 /**
