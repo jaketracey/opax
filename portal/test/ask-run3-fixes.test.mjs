@@ -457,7 +457,7 @@ test('a quotation that ends where its excerpt was cut keeps the excerpt\'s "..."
 
 test('every call that writes prose is told what it may say about a gap: that the passages found do not address it, nothing about what the record lacks', async () => {
   const { ASK_ABSENCE_RULE } = await import('data:text/javascript;base64,' + Buffer.from((await build({ stdin: { contents: "export {ASK_ABSENCE_RULE} from './src/ask-writing-rules'", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, format: 'esm', logLevel: 'silent' })).outputFiles[0].text).toString('base64'))
-  assert.equal(ASK_ABSENCE_RULE, 'Where the passages you hold leave part of the question unanswered, say only that "the passages found don\'t address this"; what the transcripts, the hearing or the record as a whole hold or lack is left unsaid. ')
+  assert.equal(ASK_ABSENCE_RULE, 'Describe only what the cited passages say. Where they leave part of the question unanswered, say "the passages found don\'t address this" and stop there. ')
   // Worded as what to do: none of the words the prompt cap counts.
   assert.doesNotMatch(ASK_ABSENCE_RULE, /\b(?:do not|never|must not|cannot)\b/i)
   const text = excerpt('P-4899', 'The executive minute was prepared in the department and went to the committee in March.')
@@ -470,5 +470,5 @@ test('every call that writes prose is told what it may say about a gap: that the
   const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
   await api.runAgentic('What did the Robodebt Royal Commission hear about income averaging?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
   assert.ok(model.doGenerateCalls.length >= 2)
-  for (const made of model.doGenerateCalls) assert.ok(JSON.stringify(made.prompt).includes('say only that \\"the passages found don\'t address this\\"'), JSON.stringify(made.prompt).slice(0, 200))
+  for (const made of model.doGenerateCalls) assert.ok(JSON.stringify(made.prompt).includes('say \\"the passages found don\'t address this\\" and stop there.'), JSON.stringify(made.prompt).slice(0, 200))
 })

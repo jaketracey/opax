@@ -8,4 +8,4 @@ export const ASK_ATTRIBUTION_RULE = 'A claim that comes only from a speech, ques
 export const ASK_SELF_REFERENCE_RULE = 'Write about the records only: leave out any mention of your own answer, your points, your search, the material you were given or yourself ("I", "my points", "as summarised earlier", "the excerpts provided here", "returned by the search"). '
 /** What the record lacks is not for a model to state: it has seen a few passages, not the record. The one thing it may
  * say is that the passages found do not address a point. For every call that writes Ask prose; worded as what to do. */
-export const ASK_ABSENCE_RULE = 'Where the passages you hold leave part of the question unanswered, say only that "the passages found don\'t address this"; what the transcripts, the hearing or the record as a whole hold or lack is left unsaid. '
+export const ASK_ABSENCE_RULE = 'Describe only what the cited passages say. Where they leave part of the question unanswered, say "the passages found don\'t address this" and stop there. '
