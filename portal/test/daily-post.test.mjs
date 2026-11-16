@@ -38,8 +38,8 @@ const catalogue = { version: 1, accepted_licences: ['CC0', 'Public domain', 'CC 
     'roof': { file: '/social/photos/roof.jpg', width: 1200, height: 794, description: 'The roof', source_title: 'File:Roof.jpg', page: 'https://commons.wikimedia.org/wiki/File:Roof.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
     'twilight': { file: '/social/photos/twilight.jpg', width: 1200, height: 900, description: 'Twilight', source_title: 'File:Twilight.jpg', page: 'https://commons.wikimedia.org/wiki/File:Twilight.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
     'aph': { file: '/social/photos/aph.jpg', width: 1200, height: 900, description: 'Parliament House', source_title: 'File:APH.jpg', page: 'https://commons.wikimedia.org/wiki/File:APH.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
-    'senate': { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://commons.wikimedia.org/wiki/File:Senate.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' },
-    'house': { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://commons.wikimedia.org/wiki/File:House.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' },
+    'senate': { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://commons.wikimedia.org/wiki/File:Senate.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons', chamber: 'senate' },
+    'house': { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://commons.wikimedia.org/wiki/File:House.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons', chamber: 'representatives' },
     'unlicensed': { file: '/social/photos/unlicensed.jpg', width: 1200, height: 800, description: 'Not free', source_title: 'File:X.jpg', page: 'https://example.org', author: 'Someone', licence: 'All rights reserved', credit: 'Photo: Someone' },
   },
   subjects: { 'grant:GA34203': ['roof', 'twilight'], 'topic:housing': ['unlicensed'] },
@@ -402,7 +402,7 @@ test('a bill with a division and dates gets a timeline and the division; one wit
   assert.equal(cover.kicker, 'Bill · Treasury portfolio');
   assert.equal(cover.title, 'Recently Passed', 'the cover headline is the bill\'s own name without its Bill 2026 tail')
   assert.match(cover.line, /^It changes how the tax system treats eligible household payments\. Passed 20 Aug 2026\.$/);
-  assert.equal(cover.photo, 'senate', 'the division house chooses the chamber photo');
+  assert.equal(cover.photo, 'house', 'a bill introduced in the House shows the House, though its deciding division was in the Senate');
   assert.equal(list.items.length, 3);
   assert.equal(list.note, 'Written by a model from the explanatory memorandum; not the record.');
   assert.equal(timeline.title, '178 days');
@@ -413,10 +413,10 @@ test('a bill with a division and dates gets a timeline and the division; one wit
   assert.deepEqual(division.ayeParties, [['Labor', 24], ['Greens', 9], ['Independent', 1]]);
   assert.deepEqual(division.noParties, [['Liberal', 19], ['LNP', 3], ['One Nation', 3], ['Nationals', 1]]);
   assert.equal(division.line, 'Senate, 20 Aug 2026. Party split from They Vote For You.');
-  assert.equal(touches.photo, 'house');
+  assert.equal(touches.photo, 'house', 'one House photograph: the picture shows it again rather than the Senate');
   assert.match(touches.lines[0], /Speeches in the record: 2, beginning with Daniel Mulino on 1 Mar 2026\./);
   assert.deepEqual(source.rows, ['Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0', 'Bill home page on ParlInfo, CC BY-NC-ND 4.0', 'The Act on the Federal Register of Legislation, CC BY 4.0', 'Division record: theyvoteforyou.org.au']);
-  assert.match(passed.caption, /Photos: JJ Harrison, CC BY-SA 3\.0, via Wikimedia Commons\./);
+  assert.match(passed.caption, /Photo: JJ Harrison, CC BY-SA 3\.0, via Wikimedia Commons\./);
   const fresh = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(fresh.subject, 'bill:au-federal-r7537');
   assert.deepEqual(types(fresh), ['cover', 'list', 'source'], 'no dates, divisions or affected parties: the story is the summary');

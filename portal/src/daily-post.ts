@@ -13,7 +13,7 @@ import { TOPIC_NAMES } from './topic-names.mjs'
 import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
 import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
-import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
+import { photosFor, photoFor, billPhotosFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
 export type DailyPostKind = typeof DAILY_POST_KINDS[number]
@@ -595,8 +595,9 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const billPhotos: StoryPhotos = { catalogue, used: [] }
   const divisions = (record?.divisions ?? []).filter(d => Number.isFinite(d.ayes) && Number.isFinite(d.noes) && d.date)
   const latest = [...divisions].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))[0] ?? null
-  const house = latest?.house ?? record?.originating_house ?? null
-  const ids = photosFor(catalogue, `bill:${bill.key}`, 'bill', house)
+  const house = billHouse(bill, record)
+  // The bill's own chamber: a House bill shows the House, a Senate bill the Senate, and never the other one.
+  const ids = billPhotosFor(catalogue, `bill:${bill.key}`, house)
   const kicker = words.sponsor ? `Bill · ${words.sponsor}${words.party ? ` (${words.party})` : ''}` : bill.portfolio ? `Bill · ${bill.portfolio} portfolio` : 'Bill'
   // The headline is the bill's own name without its "Bill 2026" tail: always
   // grammatical, where a clipped summary sentence is not. The sentence is the line.
@@ -614,7 +615,8 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const affected = (record?.summary?.affected ?? '').trim()
   const speeches = record?.speeches ?? []
   const first = speeches.filter(sp => sp.speaker && sp.date).sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''))[0]
-  const secondPhoto = affected ? takePhoto(billPhotos, ids, 1) : null
+  // A second photograph of the same chamber if the catalogue has one; otherwise the cover's again, never the other chamber.
+  const secondPhoto = affected ? (ids.length > 1 ? takePhoto(billPhotos, ids, 1) : cover.photo) : null
   const touches: StorySlide | null = affected && secondPhoto ? { type: 'picture', kicker: 'Who it touches', title: clip(affected.replace(/\.$/, ''), 96), photo: secondPhoto, quote: null,
     lines: [speeches.length ? `Speeches in the record: ${formatNumber(speeches.length)}${first ? `, beginning with ${first.speaker} on ${formatDate(first.date)}` : ''}.` : ''].filter(Boolean),
     alt: `Who it touches: ${affected}${speeches.length ? ` Speeches in the record: ${speeches.length}.` : ''}` } : null
@@ -650,6 +652,13 @@ function billTimeline(record: BillFile | null): StorySlide | null {
   const title = days > 0 ? `${dayWords(days)} day${days === 1 ? '' : 's'}` : 'One sitting day'
   return { type: 'timeline', kicker: 'How it moved', title, lines: [], events: events.slice(0, 5),
     alt: `How it moved: ${events.map(e => `${e.text.toLowerCase()} ${e.date}`).join(', ')}.` }
+}
+
+/** The house a bill belongs to: where it was introduced, from its record, else its key (r: the House, s: the Senate). */
+function billHouse(bill: BillIndexItem, record: BillFile | null): 'senate' | 'representatives' | null {
+  const named = (h: string | null | undefined) => h === 'senate' || h === 'representatives' ? h : null
+  return named(record?.originating_house) ?? named(record?.key_dates?.find(k => k.stage === 'introduced')?.house)
+    ?? (/^au-federal-r\d/.test(bill.key) ? 'representatives' : /^au-federal-s\d/.test(bill.key) ? 'senate' : null)
 }
 
 function divisionSlide(d: BillDivision, count: number): StorySlide | null {

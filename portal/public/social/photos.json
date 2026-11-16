@@ -6,7 +6,7 @@
   "CC BY",
   "CC BY-SA"
  ],
- "note": "Approved photographs for the daily edition covers. Every entry was chosen by a person; the Worker never posts a photo that is not in this file. Credit lines are drawn on the slide and repeated in the caption.",
+ "note": "Approved photographs for the daily edition covers. Every entry was chosen by a person; the Worker never posts a photo that is not in this file. Credit lines are drawn on the slide and repeated in the caption. A photograph of a chamber says which (chamber: senate or representatives); a bill shows only its own house's chamber.",
  "photos": {
   "qantas-founders-roof": {
    "file": "/social/photos/qantas-founders-roof.jpg",
@@ -66,7 +66,8 @@
    "author": "JJ Harrison",
    "licence": "CC BY-SA 3.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
-   "credit": "Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons"
+   "credit": "Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons",
+   "chamber": "senate"
   },
   "house-chamber": {
    "file": "/social/photos/house-chamber.jpg",
@@ -78,7 +79,8 @@
    "author": "JJ Harrison",
    "licence": "CC BY-SA 3.0",
    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
-   "credit": "Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons"
+   "credit": "Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons",
+   "chamber": "representatives"
   },
   "parliament-house-front": {
    "file": "/social/photos/parliament-house-front.jpg",
