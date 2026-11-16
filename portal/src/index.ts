@@ -4967,7 +4967,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         // The member in the electorate file, as app.js finds them: their seats, and which are current now.
         const seatPerson=electorates ? findPerson(electorates.people,p.name) : null
         // The source line, ask block and "Next in the record" the app keeps when it takes the page over.
-        const boot=personBootBlocks(p,{party:content.party,voteRows:content.voteRows,seatPerson,rosterUpdated:people.rosterUpdated})
+        const boot=personBootBlocks(p,{party:content.party,voteRows:content.voteRows,voteQuestions:content.voteQuestions,seatPerson,rosterUpdated:people.rosterUpdated})
         const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null),
           seatsNow:p.current ? (seatPerson?.electorates || []).filter(e=>e.current) : [],...boot})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
