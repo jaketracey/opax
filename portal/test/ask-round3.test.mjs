@@ -94,7 +94,7 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   const f=facts();assert.equal(f.length,2);assert.equal(f[0].transcript.role,'witness');assert.equal(f[1].transcript.role,'counsel assisting');assert.ok(f.every(x=>x.source.speaker===undefined))
   assert.equal(api.transcriptListingOnly(f),false,'attributed excerpt facts still reach the writer');assert.equal(f[0].transcript.day,'46');assert.equal(f[0].transcript.page,'P-4899')
   assert.doesNotMatch(f[0].text,/©|CC BY/);assert.match(f[0].source.snippet,/CC BY 4.0/)
-  // This fixture's turns carry no role, so each is quoted with "The transcript records", the date and the page.
+  // Each of this fixture's turns carries a role, so each is quoted under it with the date and the page.
   const out=api.proseFallback(input());assert.match(out.answer,/^A witness said on 10 March 2023 \(page P-4899\): “Income averaging/);assert.match(out.answer,/Counsel assisting asked on 10 March 2023 \(page P-4933\)/)
   assert.doesNotMatch(out.answer,/evidence, not findings/,'the way out of /api/ask adds the line, not the writer');assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
