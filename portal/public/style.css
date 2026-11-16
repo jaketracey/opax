@@ -766,8 +766,10 @@ button.primary:disabled { opacity: 0.55; cursor: wait; }
   .ask-builder-modes > select { display: block; }
 }
 .ask-builder-form { display: flex; align-items: flex-end; gap: var(--sp-8) var(--sp-20); flex-wrap: wrap; margin-top: var(--sp-16); }
+/* The question being built is interface copy, so sans. No role fits a sentence
+   that holds fields: it keeps its size and the double line height the fields need. */
 .ask-builder-sentence {
-  flex: 1 1 420px; margin: 0; font: var(--weight-regular) var(--text-22)/2 var(--serif); color: var(--ink);
+  flex: 1 1 420px; margin: 0; font: var(--weight-regular) var(--text-22)/2 var(--sans); color: var(--ink);
 }
 /* Outranks the site's boxed input[type="text"] and select rules: a blank is a
    bronze underline, nothing more. */
@@ -2813,7 +2815,7 @@ mark.privacy-confirm {
   align-items: end; margin: 0 0 var(--sp-40);
 }
 #panel-subject .topic-index-head h1 { margin: 0; }
-#panel-subject .topic-index-lede { margin: var(--sp-12) 0 0; max-width: 60ch; font: var(--type-record); color: var(--ink-soft); }
+#panel-subject .topic-index-lede { margin: var(--sp-12) 0 0; max-width: 60ch; font: var(--type-body); color: var(--ink-soft); }
 #panel-subject .topic-index-head .subject-tag { margin: 0; align-items: end; gap: var(--sp-40); flex-wrap: nowrap; }
 #panel-subject .topic-index-stat { display: grid; gap: var(--sp-4); text-align: right; font: var(--type-fine); color: var(--ink-faint); white-space: nowrap; }
 #panel-subject .topic-index-stat b { display: block; font: var(--type-display); color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -4965,7 +4967,7 @@ h3 {
 .grant-recipient-header { max-width: 76ch; }
 .grant-recipient-header h1 { margin: 0 0 var(--space-line); font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
 .grant-recipient-meta { margin: 0 0 var(--sp-16); color: var(--ink-soft); font: var(--type-metadata); }
-.grant-recipient-intro { margin: 0; max-width: 68ch; font: var(--weight-regular) var(--text-17)/var(--leading-loose) var(--serif); }
+.grant-recipient-intro { margin: 0; max-width: 68ch; font: var(--type-body); }
 .grant-recipient-actions, .grant-recipient-jump { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-24); }
 .grant-recipient-actions { margin-top: var(--sp-12); }
 .grant-recipient-actions a, .grant-recipient-jump a { display: inline-flex; align-items: center; min-height: 44px; color: var(--bronze-ink); font: var(--type-label); }
