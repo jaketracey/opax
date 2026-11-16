@@ -16,7 +16,10 @@ The data is static JSON at `/royal-commissions/`. Ask and the MCP read it throug
 * `established` and `commissioners`: each carries a quote from an official document
   and the page it is on. The build checks every quote is verbatim on that page, that a
   commissioner's name is in the quote and that an establishment date is the date in
-  the quote. Roles are as the document gives them.
+  the quote. Roles are as the document gives them. Where the source is not quotable
+  (see "Source policy and takedown"), the fact carries no quote: the build checks that
+  the name, or the date in words, is printed on the cited page and keeps the page
+  reference and link only.
 * `reports`: interim, final and progress reports, with the PDF files, their SHA-256,
   and a date with its basis: `tabled_vic` (tabled in the Parliament of Victoria),
   `stated` (dated on the document itself, checked verbatim on the cited page),
@@ -33,6 +36,10 @@ The data is static JSON at `/royal-commissions/`. Ask and the MCP read it throug
   Elsewhere the status is `null`: unknown, not unimplemented.
 * `responses`: government responses and implementation reports, listed as documents.
   OPAX does not grade acceptance or implementation.
+* `use`: on a commission listed in the source policy, how its text may be used:
+  `documents_only`, `search_only` or `quotable`.
+* `withheld`: on a document (or a whole commission) in the takedown list: the reason
+  class, the date and the label. The document is then a listing row only.
 * `transcripts`: hearing transcripts of a commission that is still sitting. They are
   evidence given to the commission, not its findings. OPAX lists them as documents
   with their date and hearing block, links the commission's own hearing page and
@@ -116,7 +123,8 @@ keeps the acquisition and rights notes recorded for it in the intake.
 | Scientific Inquiry into Hydraulic Fracturing in the Northern Territory | 5 | hearing excerpts; review before republication |
 
 Each transcript's date is the one printed on it, checked verbatim on page 1
-(`date_quote`). One Antisemitism transcript prints "THURSDAY, AUGUST 2026" on its
+(`date_quote`). A `documents_only` source holds no `date_quote`: the build checks that
+the date is printed on page 1 and records the page (`date_cite`). One Antisemitism transcript prints "THURSDAY, AUGUST 2026" on its
 cover; its date is read from the page header "13/08/2026". Titles are the publisher's,
 with file-size suffixes such as "(PDF, 840KB)" removed and generic link text
 ("Download transcript") replaced by "Hearing transcript, <date>".
@@ -187,11 +195,35 @@ transcript listing rows is given in the tool's own lines rather than rewritten.
   recommendations are extracted from the report yet.
 * The Victorian major infrastructure royal commission is still sitting. Its transcripts
   note that non-publication orders may be made; OPAX reproduces no evidence and links
-  only the commission's published copies.
+  only the commission's published copies. Its use is `documents_only`: since
+  16 November 2026 its record holds no quotation from the transcripts, only each
+  transcript's title, date, publisher links, page count, hash and rights note, the
+  commissioner's name with its page reference, and three notes in OPAX's own words.
 * Robodebt: the report refers to 57 recommendations; 56 are numbered. The unnumbered
   one, in the closing observations, is noted on the record and not loaded as numbered.
 * The Antisemitism interim report's recommendations 8 to 12 say they are contained in
   the confidential interim report; their text is loaded exactly as published.
+
+## Source policy and takedown
+
+`parli/ingest/source_policy.json` records the use of each listed source and the list of
+withheld sources and documents. [TAKEDOWN.md](TAKEDOWN.md) sets out the fields, every
+consumer that honours them and the steps a maintainer takes. In short:
+
+* `quotable`: the Antisemitism, Robodebt and NSW Healthcare Funding commissions (CC BY 4.0).
+  Transcript text is built only for these.
+* `documents_only`: the Victorian major infrastructure royal commission. The build holds
+  (exit 3) if its record carries a quotation, a date line, an extraction rule or a note
+  with quotation marks.
+* `search_only` is defined and enforced (no text reaches a model, a summary or an excerpt)
+  but no source uses it and no private index is built.
+* The other commissions listed by their transcripts only have no entry yet. They keep the
+  date line read from page 1 of each transcript and no other text; give each a `use` when
+  its terms are settled.
+
+`node scripts/apply_source_policy.mjs` applies the policy to the published files without
+the PDFs; it runs first in `npm run build:search`, and `npm run check` fails if a file
+does not honour it.
 
 ## Loader and export
 

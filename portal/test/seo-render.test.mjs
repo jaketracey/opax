@@ -247,7 +247,7 @@ test('report transcripts API: the app envelope, top level and paged, newest firs
     const past=await fetchJson(`/api/report/${slug}/transcripts?offset=500`);assert.equal(past.items.length,0);assert.equal(past.next_offset,null);assert.equal(past.count,count);
   }
   const last=await fetchJson('/api/report/royal-commission-nsw-healthcare-funding/transcripts?offset=60&limit=20');assert.equal(last.items.length,11);assert.equal(last.next_offset,null);
-  const vic=(await fetchJson('/api/report/royal-commission-vic-major-infrastructure')).transcripts;assert.ok(vic.items.every(i=>i.notes.some(n=>/Non-publication orders/.test(n))));
+  const vic=(await fetchJson('/api/report/royal-commission-vic-major-infrastructure')).transcripts;assert.ok(vic.items.every(i=>i.notes.some(n=>/may make non-publication orders/.test(n))&&!i.notes.some(n=>/["\u201c\u201d]/.test(n))));
   const ibacIndex=await read('/integrity-reports/reports-vic-ibac.json');const glo=ibacIndex.records.find(r=>r.transcripts);
   const ibac=(await fetchJson('/api/report/integrity-report-'+glo.id)).transcripts;assert.equal(ibac.count,17);assert.equal(ibac.first_date,'2019-02-04');assert.equal(ibac.last_date,'2019-03-01');
   ibac.items.forEach(checkItem);assert.ok(ibac.items.some(i=>i.orders.length&&i.case==='Operation Gloucester'));
@@ -670,7 +670,7 @@ test('/privacy and /support are served whole, from their panels, with canonical 
 
 test('/terms and /security are served whole as HTML, with canonical links and no drafting marks',async()=>{
   for(const [path,name,title,facts] of [
-    ['/terms','terms','Terms of use · OPAX',['Using OPAX','Last updated 14 November 2026','Noice Pty Ltd (ABN 91 634 536 360)','the law of Victoria, Australia','You keep the rights in what you write','support@opax.com.au','href="/security"','Australian Consumer Law']],
+    ['/terms','terms','Terms of use · OPAX',['Using OPAX','Last updated 16 November 2026','Takedown: changed, withdrawn or restricted documents','and acts on them the same day.','Noice Pty Ltd (ABN 91 634 536 360)','the law of Victoria, Australia','You keep the rights in what you write','support@opax.com.au','href="/security"','Australian Consumer Law']],
     ['/security','security','Security · OPAX',['Reporting a security problem','Last updated 14 November 2026','https://github.com/jaketracey/opax/security/advisories/new','mailto:support@opax.com.au?subject=Security','within 5 working days','Testing in good faith','href="/terms"']]]){
     const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
     assert.equal(r.status,200,path);

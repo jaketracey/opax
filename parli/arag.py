@@ -33,6 +33,7 @@ from typing import Any, Optional
 
 import requests
 from parli.ingest.http import honest_headers
+from parli import source_policy
 
 DEFAULT_ZONE = "aws-ap-southeast-2-1"
 
@@ -325,11 +326,23 @@ class KbClient:
                 or (body.get("origin") or {}).get("source_id") == "news"
                 or any(c.get("labelset") == "kind" and c.get("label") == "news" for c in labels)):
             raise ValueError("News articles are excluded from the OPAX corpus")
+        self._refuse_withheld(body)
         return _request(
             "POST", self._rag("/resources"), self._headers, body, max_retries=max_retries
         )
 
+    def _refuse_withheld(self, body: dict) -> None:
+        """Every push path ends here: a withheld or non-quotable source or document is never written
+        (parli/ingest/source_policy.json). The policy is read once per client."""
+        policy = getattr(self, "_source_policy", None)
+        if policy is None:
+            policy = self._source_policy = source_policy.load()
+        reason = policy.kb_refusal(body)
+        if reason:
+            raise source_policy.Withheld(f"{body.get('slug') or 'resource'} not written: {reason}")
+
     def patch_resource_by_slug(self, slug: str, body: dict) -> Any:
+        self._refuse_withheld({**body, "slug": slug})
         return _request("PATCH", self._rag(f"/slug/{slug}"), self._headers, body)
 
     def delete_resource_by_slug(self, slug: str) -> None:

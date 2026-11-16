@@ -3,6 +3,7 @@
  * suppression order or a pseudonymous witness carries no text: only the pages a word appears on. */
 import { object, records, type RecordRow } from './published-records'
 import { readToolAsset, type ToolEnv } from './types'
+import { POLICY, type SourcePolicy } from '../source-policy'
 
 const SHARD = /^\/transcripts\/terms\/\d{2}\.json$/
 const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
@@ -33,12 +34,16 @@ export function shardOf(term: string, shards: number): number {
 
 /** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
  * public text or every word is too common to narrow the search. */
-export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[] } | null> {
-  if (!object(ix.commissions[commission]).name) return null
+/** Text is read only for a commission the source policy lists as quotable, and never for a withheld transcript
+ * (parli/ingest/source_policy.json). documents_only and search_only sources have no text here. */
+const textOpen = (policy: SourcePolicy, commission: string, key: unknown) => policy.listed(commission) && policy.textAllowed({ documents: [`${commission}/${String(key)}`] })
+
+export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string, policy: SourcePolicy = POLICY): Promise<{ keys: Set<string>, terms: string[] } | null> {
+  if (!object(ix.commissions[commission]).name || !policy.listed(commission) || policy.use(commission) !== 'quotable' || policy.withheld({ sources: [commission] })) return null
   const terms = [...new Set(tokens(words, ix.stop))]
   const narrow = terms.filter(t => !ix.common.has(t))
   if (!narrow.length) return null
-  let docs = new Set<number>(ix.docs.filter(d => d.commission === commission).map(d => Number(d.i)))
+  let docs = new Set<number>(ix.docs.filter(d => d.commission === commission && textOpen(policy, commission, d.key)).map(d => Number(d.i)))
   for (const t of narrow) {
     const path = `/transcripts/terms/${String(shardOf(t, ix.shards)).padStart(2, '0')}.json`
     if (!SHARD.test(path)) return null
@@ -95,10 +100,10 @@ export function excerpt(text: string, terms: string[]): { excerpt: string, speak
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
  * quoting is allowed. */
-export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: string[], max = 2): Promise<TextHits | null> {
+export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: string[], max = 2, policy: SourcePolicy = POLICY): Promise<TextHits | null> {
   const row = ix.docs.find(d => d.key === key)
   const file = String(row?.file ?? '')
-  if (!FILE.test(file)) return null
+  if (!row || !FILE.test(file) || !textOpen(policy, String(row.commission), key)) return null
   const doc = object(await readToolAsset(env, file))
   if (doc.key !== key) return null
   const index = object(doc.terms), pages = records(doc.pages)

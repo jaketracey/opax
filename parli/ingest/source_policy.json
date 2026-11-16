@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "use": {
+    "cth-antisemitism": "quotable",
+    "cth-robodebt": "quotable",
+    "nsw-healthcare-funding": "quotable",
+    "vic-major-infrastructure": "documents_only"
+  },
+  "withheld": []
+}

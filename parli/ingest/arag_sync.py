@@ -36,6 +36,7 @@ from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 from parli.ingest import nsw_publication, backfill_guard as growth
+from parli import source_policy
 from itertools import groupby
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
 from parli.ingest import senate_backfill_policy as senate_policy
@@ -453,7 +454,48 @@ def _push_pool(kb, bodies, tstate, guard=None, deadline=None):
                 tstate['failed'].pop(slug, None)
 
 
-def _push_batch(kb, bodies, tstate, publication=None):
+def purge_withheld(kb, policy=None) -> dict:
+    """Delete every withheld document and every resource of a withheld source from the knowledge base.
+
+    Documents are deleted by slug; a source's resources are found by its ``source`` label or origin
+    source id, listed in full, then deleted. Safe to re-run: an absent resource counts as done."""
+    policy = policy or source_policy.load()
+    slugs = {d for d in policy.withheld_documents if "/" not in d}
+    for source in policy.withheld_sources:
+        page = 0
+        while True:
+            res = kb.catalog_post({
+                "filter_expression": {"resource": {"or": [
+                    {"prop": "label", "labelset": "source", "label": source},
+                    {"prop": "origin_source", "id": source},
+                ]}},
+                "page_size": 200, "page_number": page,
+            })
+            slugs.update(r["slug"] for r in (res.get("resources") or {}).values() if r.get("slug"))
+            if not (res.get("fulltext") or {}).get("next_page"):
+                break
+            page += 1
+    deleted = absent = 0
+    for slug in sorted(slugs):
+        try:
+            kb.delete_resource_by_slug(slug)
+            deleted += 1
+        except AragError as e:
+            if e.status != 404:
+                raise
+            absent += 1
+    return {"deleted": deleted, "absent": absent}
+
+
+def _push_batch(kb, bodies, tstate, publication=None, policy=None):
+    # A withheld or non-quotable source or document is never pushed and never queued for retry.
+    policy = policy or source_policy.load()
+    refused = [b for b in bodies if policy.kb_refusal(b)]
+    if refused:
+        for body in refused:
+            tstate['failed'].pop(body['slug'], None)
+        print(f'  WITHHELD {len(refused)} resources not pushed (source policy)', file=sys.stderr)
+        bodies = [b for b in bodies if not policy.kb_refusal(b)]
     publication = publication or BackfillPublication(kb)
     def cohort(body):
         stage = growth.stage_for(body)
@@ -944,6 +986,8 @@ def main() -> None:
                         help=f"maximum resource PATCHes this run (hard cap {MAX_SPEECH_REPAIRS_PER_RUN})")
     parser.add_argument("--repair-batch-size", type=int, default=100)
     parser.add_argument("--repair-state", default=str(SPEECH_REPAIR_STATE_PATH))
+    parser.add_argument("--purge-withheld", action="store_true",
+                        help="delete withheld sources and documents from the knowledge base, then exit")
     args = parser.parse_args()
 
     if args.repair_limit < 1 or args.repair_limit > MAX_SPEECH_REPAIRS_PER_RUN:
@@ -958,6 +1002,15 @@ def main() -> None:
     if not args.dry_run and not cfg.kb_configured:
         sys.exit("ARAG_KB_ID / ARAG_KB_TOKEN not set — run scripts/arag_provision.py create")
 
+    # The takedown list is honoured before anything is read or pushed: what it names is deleted if present.
+    # --purge-withheld needs only the knowledge base credentials, not the corpus database.
+    policy = source_policy.load()
+    kb = None if args.dry_run else KbClient(cfg)
+    if kb is not None and (policy.withheld_sources or policy.withheld_documents):
+        print(f"[withheld] {json.dumps(purge_withheld(kb, policy))}")
+    if args.purge_withheld:
+        return
+
     limit = 10**12 if args.full else args.limit
     if not args.full and args.limit > SAFETY_LIMIT:
         sys.exit(f"--limit above {SAFETY_LIMIT} needs --full (cost guard: a full corpus "
@@ -970,8 +1023,6 @@ def main() -> None:
         new_only = not args.repair_speech_text and not args.retry_failed
         checkpoint = load_state()["tables"].get("speeches", {}).get("after", 0) if new_only else None
         prepare_dedupe(db, args.since, checkpoint)
-    kb = None if args.dry_run else KbClient(cfg)
-
     if args.repair_speech_text:
         result = repair_speech_texts(
             kb,

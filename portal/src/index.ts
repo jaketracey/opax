@@ -12,6 +12,7 @@ import {offMapDonorNote,donorDisclosure,donorLabelHTML,receiptTypeLine,hasPartyR
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
+import { guardKbRequest, guardKbResponse } from './source-policy'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
@@ -324,11 +325,13 @@ async function kbFetch(
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal; hedge?: boolean },
 ): Promise<Response> {
   if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
-  const call = async (target: string, body: unknown = init?.body, headers = init?.headers) => {
+  const call = async (path: string, sent: unknown = init?.body, headers = init?.headers) => {
     // An MCP request counts (and, without an account, spends) each query just before it goes (mcp-access.ts).
-    await env.KB_METER?.(target, init?.hedge)
+    await env.KB_METER?.(path, init?.hedge)
+    // The source policy: a query never asks for a withheld source or document (source-policy.ts).
+    const { target, body } = guardKbRequest(path, sent)
     const generation = env.RESEARCH_EVAL && (target === '/predict/chat' || target === '/ask' && (body as Record<string, unknown> | undefined)?.generate_answer !== false)
-    const response = await fetch(`${ragBase(env)}${target}`, {
+    const answered = await fetch(`${ragBase(env)}${target}`, {
       method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
       headers: {
         'content-type': 'application/json',
@@ -340,6 +343,8 @@ async function kbFetch(
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: init?.signal,
     })
+    // ... and no response carries the text of a resource that is withheld or not quotable.
+    const response = guardKbResponse(path, answered)
     return generation ? observeEvalModelResponse(response, env.RESEARCH_EVAL!, researchPrices(env.AGENTIC_INPUT_USD_PER_MILLION, env.AGENTIC_OUTPUT_USD_PER_MILLION), headers?.accept === 'application/x-ndjson') : response
   }
   if (path === '/ask' && init?.body && typeof init.body === 'object') return saGenerationResponse(init.body as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT, (target, body, stream) => {
@@ -2954,6 +2959,18 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     }
     extra?: { metadata?: Record<string, unknown> }
     data?: { texts?: Record<string, { value?: { body?: string } }> }
+    withheld?: { reason?: string; date?: string; label: string }
+  }
+  // A withheld record, or one whose source is not quotable, is a listing row: its title, date, the label and
+  // the publisher's link. kbFetch has already removed everything else (source-policy.ts).
+  if (r.withheld) {
+    const kind = r.usermetadata?.classifications?.find(c => c.labelset === 'kind')?.label
+    const listed = json({ slug, title: r.title ?? slug, speaker: null, speaker_attribution: null,
+      url: r.origin?.url ?? (typeof r.extra?.metadata?.source_url === 'string' ? r.extra.metadata.source_url : null),
+      labels: kind ? { kind } : {}, topics: [], metadata: typeof r.extra?.metadata?.date === 'string' ? { date: r.extra.metadata.date } : {},
+      summary: null, withheld: r.withheld, text: '' })
+    cacheStore(ctx, cacheKey, listed, RESOURCE_CACHE_TTL)
+    return withCacheStatus(listed, bypass ? 'BYPASS' : 'MISS')
   }
   // Source publishers use body or t-body. Prefer the standard family when
   // both exist, and never include generated summary fields in the source text.

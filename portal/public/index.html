@@ -1509,7 +1509,7 @@
     <section id="panel-privacy" class="panel policy-page" hidden aria-labelledby="privacy-title">
       <div class="ui-page-head">
       <h1 id="privacy-title">What OPAX collects and who receives it</h1>
-      <p class="ui-page-meta">Last updated 15 November 2026. This page covers the OPAX website and the
+      <p class="ui-page-meta">Last updated 16 November 2026. This page covers the OPAX website and the
       OPAX app for iPhone, iPad and Android.</p>
       <p class="ui-lede">The Open Parliamentary Accountability Exchange (OPAX) publishes the public
       record of Australian politics. Reading it needs no account. This page sets out what the OPAX
@@ -1598,21 +1598,28 @@
         match.</li>
         <li><strong>Search summaries.</strong> Unless you have turned summaries off, a search for
         words also asks for a short summary of the records it found, even when it searched only
-        the catalogs. The search words, filters and those records go through Progress to a
-        language model reached through OpenRouter.</li>
+        the catalogs. The search words, filters and those records go to Progress, which sends
+        them to a language model through OpenRouter.</li>
         <li><strong>Questions</strong> on the Ask page and in a conversation go to Progress, which
-        finds passages, then with those passages to the language model through OpenRouter.
-        Follow-up questions carry the conversation's earlier turns with them.</li>
+        finds passages. OPAX's server then sends the question and those passages to a language
+        model through OpenRouter, which writes the answer. Follow-up questions carry the
+        conversation's earlier turns with them. Where that step fails, and for suggested
+        follow-up questions and a few kinds of answer, Progress sends the question and passages
+        to the model through OpenRouter instead.</li>
       </ul>
       <p>Searches made by the voice assistant and by research tools follow the same paths. OPAX's
       code adds no account details or other identifier to these requests. Progress can still
       receive your IP address with them: Cloudflare, which runs OPAX's server, documents that it
       adds the visitor's IP address to requests the server makes to services outside Cloudflare,
-      and Progress is outside it. OpenRouter is called by Progress, not by OPAX's server.</p>
-      <p>What these services keep, and for how long, is set by their own terms:
+      and Progress is outside it. OpenRouter is called both by OPAX's server and by Progress, and
+      may receive your IP address in the same way when OPAX's server calls it.</p>
+      <p>OPAX names these services by what they do, not by model, because the model and the
+      company that runs it can change. OpenRouter passes each request to a model provider that
+      OPAX chooses. What these services keep, and for how long, is set by their own terms:
       <a href="https://www.progress.com/legal/privacy-policy" rel="noopener">Progress's privacy
       policy</a>, <a href="https://openrouter.ai/privacy" rel="noopener">OpenRouter's privacy
-      policy</a>, and the policy of the provider OpenRouter sends the request to.</p>
+      policy</a> and <a href="https://openrouter.ai/terms" rel="noopener">terms</a>, and the
+      policy of the provider OpenRouter sends the request to.</p>
       <p>So that a repeated question needs no new work, Cloudflare keeps copies of answers to
       opening questions, search results and summaries for between ten minutes and seven days.
       The copies are filed by the question, not by who asked it.</p>
@@ -1901,7 +1908,8 @@
       ElevenLabs your email address or account details. ElevenLabs can receive your IP address
       with the connection, because Cloudflare adds the visitor's IP address to requests that
       OPAX's server makes to services outside Cloudflare. When the assistant looks something up,
-      its search runs through OPAX's own search, as described under
+      it uses OPAX's own search and Ask, so the words of the look-up go to Progress and to the
+      language model reached through OpenRouter, as described under
       <a href="#privacy-questions">Questions and searches</a>.</p>
       <h3>What is kept</h3>
       <p>When OPAX last checked (9 September 2026), its voice assistant was set at ElevenLabs
@@ -1981,9 +1989,12 @@
         <a href="#privacy-questions">Questions and searches</a>, including those made by the
         voice assistant and by research tools. It can receive your IP address with them. OPAX's
         knowledge box is in its AWS Sydney zone.</li>
-        <li><strong>OpenRouter</strong>, and the model provider it routes to, receives from
-        Progress the questions, search words and passages needed to write answers and
-        summaries.</li>
+        <li><strong>OpenRouter</strong>, and the model provider it routes to, receives the
+        questions, earlier turns of a conversation, search words and passages needed to write
+        answers and summaries. It receives them from OPAX's server for answers in Ask and in a
+        conversation, and from Progress for search summaries, suggested follow-up questions and
+        the other answers described under <a href="#privacy-questions">Questions and
+        searches</a>.</li>
         <li><strong>ElevenLabs</strong> receives voice audio, messages typed during a call and
         the call's random identifier, and can receive your IP address with the connection. The
         language model ElevenLabs runs for the assistant receives the words of the conversation
@@ -2095,9 +2106,12 @@
 
       <h2 id="support-answers">Answers from Ask and Talk to OPAX</h2>
       <p>Ask and Talk to OPAX use AI language models. Their answers are written from records
-      OPAX finds in the public record, are labelled as machine-written, and link the records they
-      draw on. They are not the record, and they can be wrong: check the linked records before you
-      rely on one.</p>
+      OPAX finds in the public record and link the records they draw on. On the website, each
+      finished answer that a language model wrote in Ask or in a conversation carries the label
+      "Machine-written"; an answer OPAX works out from the records without a model, such as a
+      total or a ranking, is headed by where its figures come from instead. The voice panel says
+      that it is an AI voice. These answers are not the record, and they can be wrong: check the
+      linked records before you rely on one.</p>
       <ul class="about-list">
         <li><strong>In the app</strong>, choose Report this answer after an answer in Ask, or
         under More in Talk to OPAX. It opens this page with the record you chose, and sends
@@ -2157,7 +2171,7 @@
     <section id="panel-terms" class="panel policy-page" hidden aria-labelledby="terms-title">
       <div class="ui-page-head">
       <h1 id="terms-title">Using OPAX</h1>
-      <p class="ui-page-meta">Last updated 14 November 2026.</p>
+      <p class="ui-page-meta">Last updated 16 November 2026.</p>
       <p class="ui-lede">These terms cover the OPAX website at opax.com.au, the OPAX app for iPhone,
       iPad and Android, and OPAX's research tools for AI assistants (its MCP service). By using any
       of them you agree to these terms. If you do not agree, please do not use OPAX.</p>
@@ -2240,6 +2254,33 @@
       <p>The makers of the AI assistant you use have their own terms and privacy policies, which
       apply to your use of that assistant. OPAX is not responsible for what an assistant writes
       from OPAX's records.</p>
+
+      <h2 id="terms-takedown">Takedown: changed, withdrawn or restricted documents</h2>
+      <p>If a document that OPAX holds or links to has been amended, withdrawn or made subject to
+      a legal order, or you publish a document and want OPAX to stop using it, email
+      <a href="mailto:support@opax.com.au">support@opax.com.au</a>. A person reads these requests
+      and acts on them the same day.</p>
+      <p>What OPAX does:</p>
+      <ul class="about-list">
+        <li>Withholds the document, or the whole source, by adding it to OPAX's withheld list.
+        A withheld document stays as one line with its title and date, a label such as
+        "Withheld at the publisher's request" or "Withheld: subject to a legal order", and a link
+        to the publisher. OPAX shows no text, excerpt or summary of it, and Ask, search and the
+        research tools do not use it.</li>
+        <li>Removes it from the knowledge base that Ask and search read.</li>
+        <li>Clears OPAX's own stored copies of answers, searches and pages, by starting a new
+        cache period and publishing the site again.</li>
+        <li>Tells the search engines that take part in IndexNow which pages changed.</li>
+      </ul>
+      <p>What OPAX cannot do:</p>
+      <ul class="about-list">
+        <li>Remove a copy of an answer or a conversation that is already saved on a reader's own
+        device.</li>
+        <li>Change the copies held by other sites or by search engines. OPAX notifies the search
+        engines that use IndexNow; when they update is up to them.</li>
+      </ul>
+      <p>Today OPAX acts when it is told about a change, or when a maintainer sees one. There is no
+      automatic check of a publisher's site for amended or withdrawn documents yet.</p>
 
       <h2 id="terms-accounts">Accounts and the community</h2>
       <p>An account is optional. Accounts and voice are for people aged 16 and over. If you have
@@ -2369,11 +2410,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=b29c61d680" defer></script>
+<script src="/spa-shell.js?v=43144d210c" defer></script>
 <script src="/navigation.js?v=eac2c03e68" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=c41ffbad52" defer></script>
+<script src="/app.js?v=4b6dc3965f" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=74cbe557c0" defer></script>
 </body>

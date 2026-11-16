@@ -235,6 +235,7 @@ function documentRow(d: RecordRow, mainDocument: string, extra = '', flag = true
   ])
   return `<li class="rr-doc"><h3 class="rr-doc-title">${href ? link(href, title) : esc(title)}</h3>` +
     (flag && d.kind === 'hearing_transcript' ? text('Hearing transcript: evidence, not findings.', 'rr-doc-flag') : '') +
+    withheldNote(d).map(n => text(n, 'rr-doc-note')).join('') +
     (meta ? `<p class="rr-doc-meta">${meta}</p>` : '') +
     (files.length > 1 ? `<ul class="rr-doc-files" role="list">${files.map((f, i) => `<li>${link(f.url, `${isPdf(String(f.url)) ? 'PDF' : 'File'} ${i + 1} of ${files.length}`)}${[finite(f.pages) ? plural(f.pages, 'page') : '', bytes(f.bytes)].filter(Boolean).map(x => ` · ${esc(x)}`).join('')}</li>`).join('')}</ul>` : '') +
     (d.text ? text(d.text) : '') + (d.cite && ![href, page].includes(url(object(d.cite).url)) ? citeLine(d.cite, mainDocument) : '') +
@@ -255,6 +256,8 @@ export function reportTranscripts(r: Pick<ReportDetail, 'report_type' | 'record'
 const ORDER_NOTE = /non-publication|suppression|publication order/i
 /** One transcript in the app's envelope: the publisher's PDF as `url`, the hearing date, notes (including any
  * publication restrictions the publisher or commission records) and order links. */
+/** A withheld document's label (parli/ingest/source_policy.json): the row shows it and links the publisher only. */
+const withheldNote = (d: RecordRow): string[] => d.withheld && object(d.withheld).label ? [`${object(d.withheld).label}.`] : []
 export function transcriptItem(r: Pick<ReportDetail, 'record'>, t: RecordRow): RecordRow {
   const file = object(records(t.files)[0])
   const pdf = url(t.url) || url(file.url) || url(t.page_url)
@@ -265,7 +268,7 @@ export function transcriptItem(r: Pick<ReportDetail, 'record'>, t: RecordRow): R
     ...(finite(t.pages) ? { pages: t.pages } : finite(file.pages) ? { pages: file.pages } : {}), url: pdf,
     ...(url(t.page_url) && url(t.page_url) !== pdf ? { page_url: t.page_url } : {}),
     publisher_redacted: typeof t.publisher_redacted === 'boolean' ? t.publisher_redacted : /redact/i.test(`${file.url ?? ''} ${t.title ?? ''}`),
-    notes: [...own, ...orderNotes, ...restricted], orders: (Array.isArray(t.orders) ? t.orders : []).map(String).filter(o => url(o)) }
+    notes: [...withheldNote(t), ...own, ...orderNotes, ...restricted], orders: (Array.isArray(t.orders) ? t.orders : []).map(String).filter(o => url(o)) }
 }
 /** The transcripts envelope shared by the top-level `transcripts` field of GET /api/report/<slug> (first page) and
  * GET /api/report/<slug>/transcripts?offset=&limit=: newest first, ties by id, so an offset names the same row on
@@ -307,7 +310,7 @@ function transcriptRow(t: RecordRow, shared: Shared): string {
   const dayPage = page && page !== pdf && page !== shared.page ? link(page, 'Hearing page').replace('</a>', `<span class="visually-hidden">: ${esc(title)}</span></a>`) : ''
   const meta = [kind && !same(kind, 'hearing transcript') ? esc(kind) : '', when, finite(pages) ? esc(plural(pages, 'page')) : '',
     pdf && isPdf(pdf) ? `PDF${bytes(size) ? `, ${esc(bytes(size))}` : ''}` : esc(bytes(size)), dayPage].filter(Boolean).join(' · ')
-  const notes = [t.publisher_redacted ? 'The publisher\'s copy is redacted.' : '', ...(Array.isArray(t.orders) ? t.orders : []).filter(o => !url(o)).map(String), ...(Array.isArray(t.notes) ? t.notes : []).map(String),
+  const notes = [...withheldNote(t), t.publisher_redacted ? 'The publisher\'s copy is redacted.' : '', ...(Array.isArray(t.orders) ? t.orders : []).filter(o => !url(o)).map(String), ...(Array.isArray(t.notes) ? t.notes : []).map(String),
     t.note ? String(t.note) : '', t.transcript_pages ? `Transcript pages ${t.transcript_pages}.` : '', t.session_time ? `Session: ${t.session_time}.` : ''].filter(Boolean)
   const orders = (Array.isArray(t.orders) ? t.orders : []).filter(o => url(o)).map((o, i, all) => link(o, `Publication order${all.length > 1 ? ` ${i + 1}` : ''} on ${host(String(o))}`))
   const detail = kv([['How OPAX got it', !shared.acquisition && t.acquisition ? esc(t.acquisition) : ''],

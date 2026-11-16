@@ -246,6 +246,10 @@ jobs:
           uv run --frozen --with pytest pytest -q tests/test_nsw_backfill.py tests/test_nsw_publication.py tests/test_backfill_guard.py
           bash -n scripts/vm/nightly.sh scripts/vm/nsw_hansard_backfill.sh
           uv run --frozen bash scripts/vm/test_nsw_hansard_backfill.sh
+      - name: Test the source policy and the takedown list
+        run: >-
+          uv run --frozen --with pytest pytest -q -p no:cacheprovider
+          tests/test_source_policy.py tests/test_royal_commissions.py tests/test_transcript_fulltext.py
 
   senate-refresh:
     runs-on: ubuntu-latest
@@ -329,6 +333,9 @@ jobs:
       - name: Test portal
         # Equivalent to npm test, with Node's shard option before the file list.
         run: nice -n 10 node --test --test-concurrency=4 --test-shard=${{ matrix.shard }}/4 test/*.test.mjs
+      - name: Test the enrichment Worker's source policy
+        if: matrix.shard == 1
+        run: node --test ../enrich/test/policy.test.ts
       - name: Test portal Python loaders
         if: matrix.shard == 1
         working-directory: .

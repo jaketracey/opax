@@ -29,6 +29,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from parli.ingest import royal_commissions as rc  # noqa: E402
+from parli import source_policy  # noqa: E402
 
 OUT = ROOT / "portal" / "public" / "royal-commissions"
 SCHEMA = 1
@@ -65,7 +66,7 @@ def has_cite(c):
     return bool(c) and str(c.get("url", "")).startswith("https://") and bool(c.get("document"))
 
 
-def check(c):
+def check(c, policy):
     for key in ("id", "name", "inquiry_type", "jurisdiction", "reports", "recommendations", "responses", "transcripts", "court_context"):
         if key not in c:
             raise Held(f"commission {c.get('id')} lacks {key}")
@@ -83,9 +84,16 @@ def check(c):
             raise Held(f"commission {c['id']} recommendation {r.get('number')} lacks text or a page citation")
         if r.get("status") and not has_cite(r["status"].get("cite")):
             raise Held(f"commission {c['id']} recommendation {r['number']} has a status without a citation")
+    held = {f.get("url") for d in c["reports"] + c["responses"] + c["transcripts"]
+            if d.get("withheld") or policy.use(c["id"], f"{c['id']}/{d['key']}") != "quotable" for f in d.get("files") or []}
     for fact in ([c["established"]] if c.get("established") else []) + c.get("commissioners", []):
-        if not has_cite(fact.get("cite")) or not fact.get("quote"):
-            raise Held(f"commission {c['id']} has a fact without a quote and citation")
+        # A fact read from a document that is not quotable is cited to its page and holds no quotation.
+        unquoted = fact.get("cite", {}).get("url") in held or bool(c.get("withheld"))
+        if not has_cite(fact.get("cite")) or (unquoted and (fact.get("quote") or not fact["cite"].get("page"))) or (not unquoted and not fact.get("quote")):
+            raise Held(f"commission {c['id']} has a fact without a citation, or with a quote its source does not allow")
+    for doc in c["reports"] + c["responses"] + c["transcripts"]:
+        if (doc.get("withheld") or policy.use(c["id"], f"{c['id']}/{doc['key']}") != "quotable") and any(k in doc for k in source_policy.TEXT_KEYS):
+            raise Held(f"commission {c['id']} document {doc.get('key')} carries text its source policy does not allow")
 
 
 def summary(c, file):
@@ -104,6 +112,7 @@ def summary(c, file):
         "status_as_published": dict(sorted(statuses.items())),
         "recommendations_status": c["recommendations_status"],
         "status_source": c["status_source"], "file": "/royal-commissions/" + file,
+        **({"use": c["use"]} if c.get("use") else {}), **({"withheld": c["withheld"]} if c.get("withheld") else {}),
     }
 
 
@@ -132,8 +141,12 @@ def main(argv=None):
     ids = [c["id"] for c in commissions]
     if not commissions or len(ids) != len(set(ids)):
         raise Held("no commissions, or duplicate commission ids")
+    # The source policy is applied to the public projection: a withheld document is a listing row and a
+    # document that is not quotable carries no quotation (parli/source_policy.py).
+    policy = source_policy.load()
+    commissions = [source_policy.redact_commission(c, policy) for c in commissions]
     for c in commissions:
-        check(c)
+        check(c, policy)
     old = json.loads((out / "manifest.json").read_text()) if (out / "manifest.json").exists() else {}
     total = sum(len(c["recommendations"]) for c in commissions)
     prev = (old.get("counts") or {}).get("recommendations")
@@ -145,7 +158,7 @@ def main(argv=None):
     text = full_text()
     for c in commissions:
         for t in c["transcripts"]:
-            if (c["id"], t["key"]) in text:
+            if (c["id"], t["key"]) in text and not t.get("withheld") and policy.text_allowed(documents=[f"{c['id']}/{t['key']}"]):
                 t["full_text"] = text[(c["id"], t["key"])]
     files, rows = {}, []
     for c in commissions:

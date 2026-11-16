@@ -13,6 +13,7 @@
 
 import { readConfig, type Env } from './env.ts'
 import { Kb } from './kb.ts'
+import { policyKb } from './policy.ts'
 import { parseCanaryBody, runCanary } from './canary.ts'
 import { buildStatus, bearerOk } from './status.ts'
 import { runTick } from './tick.ts'
@@ -27,7 +28,7 @@ export default {
     ctx.waitUntil(
       runTick({
         db: env.DB,
-        kb: new Kb(env),
+        kb: policyKb(new Kb(env)),
         ai: { run: (model, body) => (env.AI as unknown as { run(m: string, b: unknown): Promise<unknown> }).run(model, body) },
         cfg: readConfig(env),
         now: () => Date.now(),
@@ -50,7 +51,7 @@ export default {
     if (route === 'GET /status') return json(await buildStatus(env.DB, readConfig(env), Date.now()))
 
     if (batchRoute) {
-      const d = { db: env.DB, kb: new Kb(env), now: () => Date.now(), live: readConfig(env).live }
+      const d = { db: env.DB, kb: policyKb(new Kb(env)), now: () => Date.now(), live: readConfig(env).live }
       try {
         if (route === 'GET /backfill/batch/reservations') {
           const run = url.searchParams.get('run_id') ?? '', limit = Number(url.searchParams.get('limit') ?? 200), after = url.searchParams.get('after') ?? ''
@@ -85,7 +86,7 @@ export default {
       if ('error' in parsed) return json({ error: parsed.error }, 400)
       try {
         const action = route === 'POST /backfill/release' ? releaseHistoric : reconcileHistoric
-        return json(await action({ db: env.DB, kb: new Kb(env), now: () => Date.now(), historicHold: readConfig(env).historicHold }, parsed.slugs))
+        return json(await action({ db: env.DB, kb: policyKb(new Kb(env)), now: () => Date.now(), historicHold: readConfig(env).historicHold }, parsed.slugs))
       } catch {
         // KB errors can contain slug or metadata text; return only a generic retry instruction.
         return json({ error: 'backfill operation incomplete; verify historic push-log entries and retry' }, 503)
@@ -95,7 +96,7 @@ export default {
     const parsed = parseCanaryBody(await request.json().catch(() => null))
     if ('error' in parsed) return json({ error: parsed.error }, 400)
     const out = await runCanary(
-      { db: env.DB, kb: new Kb(env), historicHold: readConfig(env).historicHold, now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
+      { db: env.DB, kb: policyKb(new Kb(env)), historicHold: readConfig(env).historicHold, now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
       parsed.rids,
     )
     return json(out)

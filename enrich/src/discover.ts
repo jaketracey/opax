@@ -6,6 +6,7 @@ import { isHistoricSpeech } from './historic.ts'
 import { ownedBudget, assertBudgetOwnership, resourceBudget, admissionBudget, type AdmissionBudget } from './run-budget.ts'
 import { readConfig, type Config } from './env.ts'
 import { readClassifications } from './classify.ts'
+import { POLICY, closedResource, type SourcePolicy } from './policy.ts'
 
 export const DISCOVERY_KINDS: ReadonlyArray<{ kind: string; tasks: readonly TaskName[] }> = [
   { kind: 'speech', tasks: ['speech_summary', 'speech_topics'] },
@@ -57,6 +58,8 @@ export interface DiscoveryOptions {
   slowPageMs?: number
   /** Shared across both kinds, counting catalog, metadata and D1 requests. */
   maxSubrequests?: number
+  /** The source policy: a withheld or non-quotable resource is never queued. Defaults to the published file. */
+  policy?: SourcePolicy
 }
 export interface DiscoveryResult {
   seen: Record<string, number>
@@ -185,6 +188,8 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryResult>
           const capacity = Math.floor((maxRequests - requestCount() - CONTROL_REQUESTS - 3) / 13)
           const chunk = got.rows.slice(w.offset, w.offset + Math.min(METADATA_CONCURRENCY, capacity))
           const prepared = await Promise.allSettled(chunk.map(async row => {
+            // Never summarised or labelled: no work is queued for a withheld or non-quotable resource.
+            if (closedResource(row, opts.policy ?? POLICY)) return []
             let basic: KbResource | null | undefined
             let held = false
             if (opts.historicHold && kind === 'speech') {

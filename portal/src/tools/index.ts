@@ -1,3 +1,4 @@
+import { guardToolResult } from '../source-policy'
 import { z } from 'zod'
 import { tool as personQuotes } from './person-quotes'
 import { search, readPassage, personOverview } from './corpus-aliases'
@@ -114,7 +115,8 @@ export async function callTool(env: ToolEnv, name: string, args: unknown, ask = 
   try {
     const parsed = await validateToolArgs(env, name, args, ask)
     // Canonical wire JSON is identical in Ask and MCP, including optional metadata.
-    const data = JSON.parse(JSON.stringify(await tool!.handler(ask ? { ...env, ask: true } : env, parsed))) as StructuredToolResult
+    // The source policy has the last word on what leaves a tool: a withheld record is a title and a label.
+    const data = guardToolResult(JSON.parse(JSON.stringify(await tool!.handler(ask ? { ...env, ask: true } : env, parsed))) as StructuredToolResult)
     // Every record set names an OPAX page to cite: its own listing or record page where it has one, else the register's page.
     if (Array.isArray(data.rows) && typeof data.opax_url !== 'string') {
       const origin = new URL(env.origin ?? env.COMMUNITY_ORIGIN ?? 'https://opax.com.au').origin

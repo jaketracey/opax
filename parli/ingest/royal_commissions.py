@@ -51,6 +51,7 @@ from urllib.parse import urlsplit
 
 from parli.ingest import http as source_http
 from parli.ingest import pdf_recommendations as pr
+from parli import source_policy
 
 ROOT = Path(__file__).resolve().parents[2]
 CACHE = Path(os.environ.get("OPAX_ROYAL_COMMISSIONS_CACHE", "~/.cache/autoresearch/royal-commissions")).expanduser()
@@ -102,6 +103,12 @@ def url_key(url: str) -> str:
 
 def registry(path: Path = REGISTRY):
     return json.loads(path.read_text())
+
+
+def day_words(iso):
+    """"2026-11-09" as "9 November 2026", the way a document prints its own date."""
+    y, m, d = (int(x) for x in iso.split("-"))
+    return f"{d} {[k for k, v in MONTHS.items() if v == m][0].capitalize()} {y}"
 
 
 def iso_date(text):
@@ -433,20 +440,27 @@ def fv_status(page_html):
 
 
 def check_fact(fact, docs, texts):
-    """A registry fact whose quote is verbatim on the cited page of one of the commission's PDFs."""
+    """A registry fact checked against the cited page of one of the commission's PDFs: its quote is
+    verbatim there, or, where the source is not quotable and no quote is held, its value (a name, or a
+    date in words) appears there."""
     doc = docs.get(fact["doc"])
     if not doc or not doc["files"]:
         raise Held(f"fact cites document {fact['doc']!r}, which has no PDF")
     url = doc["files"][fact.get("file", 0)]["url"]
     page = int(fact["page"])
-    if not pr.verbatim(fact["quote"], texts.texts(url)[page - 1]):
-        raise Held(f"fact quote not found on {url} page {page}: {fact['quote'][:80]!r}")
+    seen = fact["quote"] if fact.get("quote") else day_words(fact["value"]) if fact["field"] == "established" else fact["value"]
+    if not pr.verbatim(seen, texts.texts(url)[page - 1]):
+        raise Held(f"fact not found on {url} page {page}: {fact['field']}")
     return cite(url, doc["title"], page)
 
 
-def build_commission(rc, run: Path, texts: Texts, trackers):
+def build_commission(rc, run: Path, texts: Texts, trackers, policy=None):
+    policy = policy or source_policy.load()
+    quotable = lambda key: policy.use(rc["id"], f"{rc['id']}/{key}") == "quotable"  # noqa: E731
     docs, reports, responses, transcripts, recs = {}, [], [], [], []
     notes, gaps = list(rc.get("notes", [])), list(rc.get("gaps", []))
+    if policy.use(rc["id"]) != "quotable" and any(ch in n for n in notes for ch in '"\u201c\u201d'):
+        raise Held(f"{rc['id']}: a note carries a quotation but the source is not quotable")
     if rc.get("inquiry_type") not in INQUIRY_TYPES:
         raise Held(f"{rc['id']}: unknown inquiry type {rc.get('inquiry_type')!r}")
     for doc in rc["documents"]:
@@ -492,6 +506,16 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
                           "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
         if doc["source"] == "parliament_vic" and not files and doc.get("files", ".") != "^$":
             notes.append(f"The Parliament lists {title} without a matching online document.")
+        if not quotable(doc["key"]) and (doc.get("date_quote") or doc.get("recommendations")):
+            raise Held(f"{rc['id']}/{doc['key']}: holds a quotation or an extraction rule but is not quotable")
+        if doc.get("date") and doc.get("date_page") and not doc.get("date_quote"):
+            # A date printed on the document, checked on the cited page without holding its words.
+            page = int(doc["date_page"])
+            url = files[doc.get("date_file", 0)]["url"] if files else None
+            if not url or not pr.verbatim(day_words(doc["date"]), texts.texts(url)[page - 1]):
+                raise Held(f"{rc['id']}/{doc['key']}: date {doc['date']} is not printed on page {page}")
+            date, basis = doc["date"], "stated"
+            extra["date_cite"] = cite(url, title, page)
         if doc.get("date_quote"):
             # A date printed on the document itself, checked verbatim on the cited page.
             quote, page = doc["date_quote"], int(doc["date_page"])
@@ -581,18 +605,25 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
 
     facts = {"established": None, "commissioners": []}
     for fact in rc.get("facts", []):
+        if fact.get("quote") and not quotable(fact["doc"]):
+            raise Held(f"{rc['id']}: a fact quotes {fact['doc']!r}, which is not quotable")
+        if not fact.get("quote") and quotable(fact["doc"]):
+            raise Held(f"{rc['id']}: a fact from a quotable document needs its quote")
         c = check_fact(fact, docs, texts)
-        if fact.get("instrument") and fact["instrument"].lower() not in fact["quote"].lower():
+        quoted = {"quote": fact["quote"]} if fact.get("quote") else {}
+        if not quoted:
+            pass  # checked on the page by value; nothing of the document's wording is held
+        elif fact.get("instrument") and fact["instrument"].lower() not in fact["quote"].lower():
             raise Held(f"{rc['id']}: fact instrument {fact['instrument']!r} is not in its quote")
-        if fact["field"] != "established" and pr._norm(fact["value"]) not in pr._norm(fact["quote"]):
+        elif fact["field"] != "established" and pr._norm(fact["value"]) not in pr._norm(fact["quote"]):
             raise Held(f"{rc['id']}: fact value {fact['value']!r} is not in its quote")
-        if fact["field"] == "established" and iso_date(fact["quote"]) != fact["value"]:
+        elif fact["field"] == "established" and iso_date(fact["quote"]) != fact["value"]:
             raise Held(f"{rc['id']}: established date {fact['value']} is not the date in its quote")
         if fact["field"] == "established":
-            facts["established"] = {"date": fact["value"], "instrument": fact.get("instrument"), "quote": fact["quote"], "cite": c}
+            facts["established"] = {"date": fact["value"], "instrument": fact.get("instrument"), **quoted, "cite": c}
         elif fact["field"] == "commissioner":
             facts["commissioners"].append({"name": fact["value"], "role": fact.get("role", "Commissioner"),
-                                           "quote": fact["quote"], "cite": c})
+                                           **quoted, "cite": c})
         else:
             raise Held(f"{rc['id']}: unknown fact field {fact['field']!r}")
     for kind in ("interim_report", "final_report"):

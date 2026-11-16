@@ -6,6 +6,7 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { hasBackfill } from '../../src/db.ts'
 import { Kb } from '../../src/kb.ts'
+import { policyKb } from '../../src/policy.ts'
 import { COMMANDS, parseArgs, REQUIRED } from './args.ts'
 import { d1Rest, type MiniD1 } from './d1rest.ts'
 import { acquireLock, Ledger, liveReserve, StopRun, usdToNeurons, USD_PER_NEURON, utcDayOf, WORKER_DAILY_BUDGET, WORKER_STEADY_BUDGET, type Caps } from './guard.ts'
@@ -52,7 +53,7 @@ function d1(): MiniD1 {
 
 function kb(): Kb {
   const env = Object.fromEntries(readFileSync(KB_ENV_FILE, 'utf8').split('\n').filter((l) => l.includes('=')).map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()]))
-  return new Kb({ ARAG_ZONE: env.ARAG_ZONE, ARAG_KB_ID: env.ARAG_KB_ID, ARAG_KB_TOKEN: env.ARAG_KB_TOKEN })
+  return policyKb(new Kb({ ARAG_ZONE: env.ARAG_ZONE, ARAG_KB_ID: env.ARAG_KB_ID, ARAG_KB_TOKEN: env.ARAG_KB_TOKEN }))
 }
 
 /**

@@ -21,6 +21,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from parli import source_policy  # noqa: E402
+
+POLICY = source_policy.load()
 PUBLIC = ROOT / "portal" / "public"
 CACHE = Path("~/.cache/autoresearch").expanduser()
 INTEGRITY_TEXT = CACHE / "integrity-commissions" / "text"
@@ -52,7 +56,8 @@ def candidates() -> list[dict]:
     rows: list[dict] = []
     for f in sorted((PUBLIC / "royal-commissions").glob("commission-*.json")):
         c = json.loads(f.read_text())["commission"]
-        reps = [r for r in c.get("reports") or [] if any((RC_TEXT / f"{x.get('sha256')}.json").exists()
+        # Never summarise a withheld document or one whose source is not quotable (parli/source_policy.py).
+        reps = [r for r in c.get("reports") or [] if not r.get("withheld") and POLICY.text_allowed(documents=[f"{c['id']}/{r['key']}"]) and any((RC_TEXT / f"{x.get('sha256')}.json").exists()
                                                           for x in r.get("files") or [] if x.get("sha256"))]
         base = {"slug": f"royal-commission-{slug_part(c['id'])}", "type": "royal_commission",
                 "subtype": c.get("inquiry_type"), "title": c["name"], "body": c["name"],

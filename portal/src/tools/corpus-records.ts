@@ -3,6 +3,7 @@ import { firstSpeechTurn } from '../position-evidence'
 import { resolvePersonName } from '../person-name-matching'
 import { searchPartyLabels } from '../party-labels'
 import { belongsToScope, isUnattributed, personScope, printSpeakers, splitSpeakers } from '../../public/speech-attribution.js'
+import { guardKbRequest, scrubKbPayload } from '../source-policy'
 import { isSaHansard, saExcerpt, saOfficialUrl } from '../../public/sa-hansard.js'
 import { clip, fold, siteUrl } from './record-common'
 import { inWindow, object, publishedResult, records, sourceUrl, validWindow, type RecordRow } from './published-records'
@@ -22,12 +23,14 @@ export function corpusKb(env: Pick<Env, 'ARAG_ZONE' | 'ARAG_KB_ID' | 'ARAG_KB_TO
     if (!(['/find', '/catalog', '/search'].includes(path) && body !== undefined || /^\/slug\/(?:speech-\d+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)\?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text$/.test(path) && body === undefined)) throw new Error('Unsupported corpus read')
     if (!env.ARAG_KB_ID || !env.ARAG_KB_TOKEN || !/^[a-z0-9-]+$/.test(env.ARAG_ZONE)) throw new Error('Corpus binding unavailable')
     signal?.throwIfAborted()
-    const response = await fetch(`https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${encodeURIComponent(env.ARAG_KB_ID)}${path}`, {
+    // The source policy applies here as it does in the Worker's kbFetch (source-policy.ts).
+    const sent = guardKbRequest(path, body)
+    const response = await fetch(`https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${encodeURIComponent(env.ARAG_KB_ID)}${sent.target}`, {
       method: body === undefined ? 'GET' : 'POST', headers: { 'X-NUCLIA-SERVICEACCOUNT': 'Bearer ' + env.ARAG_KB_TOKEN, ...(body === undefined ? {} : { 'content-type': 'application/json' }) },
-      ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal,
+      ...(body === undefined ? {} : { body: JSON.stringify(sent.body) }), signal,
     })
     if (!response.ok) throw new Error('Corpus read unavailable')
-    const data = await response.json() as RecordRow
+    const data = scrubKbPayload(path, await response.json()) as RecordRow
     signal?.throwIfAborted()
     return data
   }
