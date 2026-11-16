@@ -67,6 +67,7 @@ function fixture(t,surface='docked') {
       return {answer:__saved.text,sources:__saved.sources};
     };
     const renderAnswer=(el,text)=>{el.textContent=text};
+    const machineLabelHTML=()=>'<details class="ui-machine"><summary>Machine-written</summary></details>';
     const researchOf=()=>undefined,setStatus=(el,message)=>{el.textContent=message};
     const rendered=[];
     const chatAnswerEl=msg=>{rendered.push(msg);const node=document.createElement('blockquote');node.className='chat-turn-answer';node.textContent=msg.text;return node;};

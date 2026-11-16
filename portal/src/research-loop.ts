@@ -451,7 +451,7 @@ export function createResearch(options: ResearchOptions): Research {
       const calculated = facts.length === 1 && !points ? results.find(r => r.data?.calculated_answer && r.cite.some(c => c.label === facts[0].fact.text)) : undefined
       if (calculated) {
         const p = calculated.data!.payload as QualitativeAnswer
-        return { answer: p.answer, answer_decision:answerDecision(p)??'answer', citations: p.citations, sources: p.sources.map(s => ({ ...s, url: new URL(s.url ?? s.href, context.deps.origin ?? 'https://opax.com.au').href, slug: s.slug ?? '' })) }
+        return { answer: p.answer, answer_decision:answerDecision(p)??'answer', citations: p.citations, sources: p.sources.map(s => ({ ...s, url: new URL(s.url ?? s.href, context.deps.origin ?? 'https://opax.com.au').href, slug: s.slug ?? '' })), machine_written: false }
       }
       let text = ''
       const citations: QualitativeAnswer['citations'] = {}, sources: QualitativeAnswer['sources'] = []
@@ -488,7 +488,9 @@ export function createResearch(options: ResearchOptions): Research {
       if (points && facts.length) { const led = leadWithModelAnswer({ answer: text, citations }, points, question); text = led.answer; for (const key of Object.keys(citations)) delete citations[key]; Object.assign(citations, led.citations) }
       // Research that found nothing still answers; the coverage note says the records did not cover it.
       const general = !facts.length && !passages.size && !!points && !Object.keys(points.citations).length
+      // Record lines are not model-written; with the model's points among them, the answer is as the points are.
       return { answer: text, answer_decision:!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}),
+        ...(!points ? { machine_written: false } : typeof points.machine_written === 'boolean' ? { machine_written: points.machine_written } : {}),
         ...(general ? { coverage: { note: 'OPAX’s records did not cover this question, so this answer draws on general knowledge.' } } : {}) }
     }
     // One answer call, checked: cited points, uncited points that failed only soft checks, record facts; else, with
@@ -610,7 +612,7 @@ export function createResearch(options: ResearchOptions): Research {
       inputSchema: jsonSchema<{ reason: string }>({ type: 'object', properties: { reason: { type: 'string', enum: ['out_of_scope'] } }, required: ['reason'], additionalProperties: false }),
       execute: args => invoke({ tool: 'decline', args }, async () => {
         const answer = 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.'
-        qualitative = { answer, answer_decision: 'refusal', citations: {}, sources: [] }; finished = true
+        qualitative = { answer, answer_decision: 'refusal', citations: {}, sources: [], machine_written: false }; finished = true
         return { tool: 'decline', ok: true, data: {}, cite: [], notes: [] }
       }, true),
     })
@@ -712,8 +714,8 @@ export function createResearch(options: ResearchOptions): Research {
       const held = passagesAnswer(passages, question)
       const offset = held ? Array.from(text).length + 2 : 0
       const points: QualitativeAnswer = held
-        ? { answer: text + '\n\n' + held.answer, citations: Object.fromEntries(Object.entries(held.citations).map(([id, ranges]) => [id, ranges.map(([a, b]) => [a + offset, b + offset] as [number, number])])), sources: held.sources, answer_status: 'partly_cited' }
-        : { answer: text, citations: {}, sources: [], answer_status: 'uncited' }
+        ? { answer: text + '\n\n' + held.answer, citations: Object.fromEntries(Object.entries(held.citations).map(([id, ranges]) => [id, ranges.map(([a, b]) => [a + offset, b + offset] as [number, number])])), sources: held.sources, answer_status: 'partly_cited', machine_written: true }
+        : { answer: text, citations: {}, sources: [], answer_status: 'uncited', machine_written: true }
       const { all, tools, coverage } = recordFacts()
       const lines = factLines(focussedIds() ?? all.filter(f => tools.has(f.id) && !coverage.has(f.id)).map(f => f.id).slice(0, 8), () => {})
       stats.answer = { ...emptyTally(), mode: held || lines.length ? 'points' : 'uncited' }
