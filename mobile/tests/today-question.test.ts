@@ -28,6 +28,7 @@ import { questionIndex } from '../src/features/today/rules';
 import { fromWebPath } from '../src/navigation/routes';
 import records from './fixtures/today-question-records.json';
 import closurePair from './fixtures/today-question-9971-9972.json';
+import guillotinePair from './fixtures/today-question-9818-10151.json';
 
 const deck = frontPage as FrontPageQuestion[];
 type Excerpt = { path: string; fields: Record<string, unknown> };
@@ -1029,6 +1030,60 @@ test('a vote question asks about the third reading, never the closure moved on i
       ),
     ).toBe(false);
   }
+});
+
+test('a guillotined Senate passing vote is asked about, and a vote that passed two bills at once is not (review P3, 9818 and 10151)', () => {
+  // The real records: r7421 passed the Senate under a limitation of debate,
+  // and its passing vote (9818, 38 to 26) has no text but its name; r7416's
+  // Senate third reading (10151) is "... Bill 2025 and another - Third
+  // Reading - Pass the bills".
+  const inputs = world();
+  inputs.bills.push(...(guillotinePair.bills as never[]));
+  inputs.divisions = guillotinePair.divisions;
+  const votes = buildDeck(inputs).deck.filter(
+    (q) => q.template === 'division-third-reading',
+  );
+  expect(votes.map((q) => q.link.href)).toEqual([
+    '/bill/au-federal-r7421?section=divisions&division=federal-senate-9818',
+  ]);
+  expect(votes[0]!.prompt).toBe(
+    'The Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 passed the Senate at its third reading on 20 January 2026. How many senators voted for it?',
+  );
+  expect(votes[0]!.fact).toBe('Passed: 38 for, 26 against');
+  const packages = runNode(
+    `import { packageVote } from ${JSON.stringify(library)};
+     console.log(JSON.stringify(${JSON.stringify([
+       'Universities Accord (Australian Tertiary Education Commission) Bill 2025 and another - Third Reading - Pass the bills',
+       'Bills \u2014 A Bill 2026, B Bill 2026; Third Reading',
+       'Example Bill 2025 and 3 others - Third Reading - Pass the bills',
+       'Example Bill 2026 - Limitation of Debate - Pass the bills',
+       'Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 - Limitation of Debate - Pass the bill',
+       'Example Bill 2026 - Third Reading - Pass the bill',
+       null,
+     ])}.map(packageVote)));`,
+  );
+  expect(packages).toEqual([true, true, true, true, false, false, false]);
+});
+
+test('a legal name in capitals reads in title case, with its joining words in lower case (review P3)', () => {
+  expect(
+    runNode(
+      `import { legalCase } from ${JSON.stringify(library)};
+       console.log(JSON.stringify(${JSON.stringify([
+         'DT GLOBAL ASIA PACIFIC PTY LTD',
+         'SMITH AND JONES PTY LTD',
+         'THE TRUSTEE FOR THE ABC TRUST',
+         'BANK OF QUEENSLAND LIMITED',
+         'ABC FOR KIDS PTY LTD',
+       ])}.map(legalCase)));`,
+    ),
+  ).toEqual([
+    'DT Global Asia Pacific Pty Ltd',
+    'Smith and Jones Pty Ltd',
+    'The Trustee for the ABC Trust',
+    'Bank of Queensland Limited',
+    'ABC for Kids Pty Ltd',
+  ]);
 });
 
 test('a supplier is named as the record the link opens names it, with its current legal name (hub check)', () => {

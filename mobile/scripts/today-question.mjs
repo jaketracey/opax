@@ -321,6 +321,20 @@ const HOUSES = {
  * under the same name. Null when that is not a third reading, when its
  * division file is missing, or when it decided a package of bills at once.
  */
+/**
+ * Whether a division's name says it decided several bills at once:
+ * "Bills — A Bill 2026, B Bill 2026; Third Reading" names each one, and They
+ * Vote For You's "A Bill 2025 and another - Third Reading - Pass the bills"
+ * (federal-senate-10151) names one and counts the rest.
+ */
+export function packageVote(name) {
+  const text = name ?? '';
+  return (
+    (text.match(/\bBill\b/g)?.length ?? 0) > 1 ||
+    /\band (?:another|others|\d+ others)\b|\bpass the bills\b/i.test(text)
+  );
+}
+
 export function billThirdReading(bill, divisionFiles) {
   const listed = (bill.divisions ?? []).map((d) => ({
     ...d,
@@ -332,8 +346,7 @@ export function billThirdReading(bill, divisionFiles) {
   if (!deciding || deciding.reading !== 'third') return null;
   const d = divisionFiles.get(deciding.division.key);
   if (!d || !HOUSES[d.house]) return null;
-  // "Bills — A Bill 2026, B Bill 2026; Third Reading" is a package vote.
-  if ((d.name ?? '').match(/\bBill\b/g)?.length > 1) return null;
+  if (packageVote(d.name)) return null;
   return { d, outcome: deciding.outcome };
 }
 
@@ -695,17 +708,27 @@ const contractRecord = (department, largest, optionNames, asOf) => ({
     suppliers: optionNames,
   },
 });
-/** "DT GLOBAL ASIA PACIFIC PTY LTD" as "DT Global Asia Pacific Pty Ltd". */
+/**
+ * "DT GLOBAL ASIA PACIFIC PTY LTD" as "DT Global Asia Pacific Pty Ltd", and
+ * "SMITH AND JONES PTY LTD" as "Smith and Jones Pty Ltd": other short words
+ * stay as written, since they are often initials.
+ */
 const SUFFIX_CASE = { PTY: 'Pty', LTD: 'Ltd', LIMITED: 'Limited', INC: 'Inc' };
-const legalCase = (name) =>
+/** Joining words, lower case inside a name and capitalised at its start. */
+const JOINING = new Set(['AND', 'OF', 'FOR', 'THE']);
+export const legalCase = (name) =>
   name
     .split(/\s+/)
     .map(
-      (w) =>
+      (w, i) =>
         SUFFIX_CASE[w.replace(/\W/g, '')] ??
-        (w.length <= 3 || /\d/.test(w)
-          ? w
-          : w.charAt(0) + w.slice(1).toLowerCase()),
+        (JOINING.has(w)
+          ? i === 0
+            ? capital(w.toLowerCase())
+            : w.toLowerCase()
+          : w.length <= 3 || /\d/.test(w)
+            ? w
+            : w.charAt(0) + w.slice(1).toLowerCase()),
     )
     .join(' ');
 const sameName = (a, b) => {
