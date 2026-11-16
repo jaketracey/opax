@@ -1,0 +1,14 @@
+{
+  "about": "Every Victorian state by-election and supplementary election of the 2022-26 term, with the elected member as the Victorian Electoral Commission's result page names them. The every-seat test (test/vic-term.test.mjs) requires each one's winner to be the member the electorates index names for the seat when the term ended.",
+  "source": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline",
+  "licence": "CC BY 4.0, © Victorian Electoral Commission",
+  "fetched": "2026-11-16",
+  "by_elections": [
+    {"district": "Narracan", "date": "2023-01-28", "kind": "supplementary", "elected": "FARNHAM, Wayne"},
+    {"district": "Warrandyte", "date": "2023-08-26", "kind": "by-election", "elected": "WERNER, Nicole"},
+    {"district": "Mulgrave", "date": "2023-11-18", "kind": "by-election", "elected": "FOSTER, Eden"},
+    {"district": "Prahran", "date": "2025-02-08", "kind": "by-election", "elected": "WESTAWAY, Rachel"},
+    {"district": "Werribee", "date": "2025-02-08", "kind": "by-election", "elected": "LISTER, John"},
+    {"district": "Nepean", "date": "2026-05-02", "kind": "by-election", "elected": "MARSH, Anthony"}
+  ]
+}
