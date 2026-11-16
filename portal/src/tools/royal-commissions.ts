@@ -2,7 +2,7 @@
 import { clip, fold, siteUrl } from './record-common'
 import { object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
-import { dayWords, pageHits, spanWords, textIndex, textMatches, type TextHits } from './transcript-text'
+import { dayWords, pageHits, spanWords, textIndex, textMatches, TEXT_SEARCH_WORDS, type TextHits } from './transcript-text'
 
 const VIEWS = ['list', 'profile', 'recommendations', 'transcripts'] as const
 const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
@@ -200,7 +200,14 @@ export const tool: ToolDefinition = {
       const all = byDate(records(c.transcripts))
       const ix = args.words ? await textIndex(env).catch(() => null) : null
       const found = ix && args.words ? await textMatches(env, ix, String(c.id), String(args.words)) : null
-      const hits = all.filter(d => (!args.words || wordsMatch(args.words, [d.title, d.hearing, d.date]) || !!found?.keys.has(String(d.key))))
+      const named = (d: RecordRow) => !!args.words && wordsMatch(args.words, [d.title, d.hearing, d.date])
+      // A word search lists the transcripts whose title or date holds the words first, newest first as before, then
+      // those whose text holds them by fit (textMatches: the page count of the searched word that is on the fewest of
+      // its pages, most first; then the sum of the words' page counts, most first), newest first among equals.
+      // Before, every match was in date order, so a general word returned the latest hearing days whatever was asked.
+      const fit = (d: RecordRow) => found?.fit.get(String(d.key)) ?? { least: 0, everyday: 0, pages: 0 }
+      const hits = !args.words ? all : [...all.filter(named), ...all.filter(d => !named(d) && !!found?.keys.has(String(d.key)))
+        .map((d, at) => ({ d, at })).sort((a, b) => fit(b.d).least - fit(a.d).least || fit(b.d).everyday - fit(a.d).everyday || fit(b.d).pages - fit(a.d).pages || a.at - b.at).map(o => o.d)]
       const picked = await Promise.all(hits.slice(offset, offset + limit).map(async d => {
         const row = transcriptOut(env, c, d)
         const text = ix && found?.keys.has(String(d.key)) ? await pageHits(env, ix, String(d.key), found.terms) : null
@@ -212,6 +219,8 @@ export const tool: ToolDefinition = {
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
           notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(found ? [`Words are matched in the title, date and, for this commission, the transcript text (CC BY 4.0). Excerpts are the publisher's words; a transcript recording a non-publication order or a pseudonymous witness is pointed to by page, not quoted.`] : []),
             ...(ix && args.words && !found && object(ix.commissions[String(c.id)]).name ? ['Those words are too common to search the transcript text; add a more specific word.'] : []),
+            // Said in the notes, which every result already carries: no field is added to the result.
+            ...(found?.skipped.length ? [`A transcript text search reads at most ${TEXT_SEARCH_WORDS} words. Not searched: ${found.skipped.join(', ')}.`] : []),
             ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
     }
 

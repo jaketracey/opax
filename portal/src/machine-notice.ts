@@ -1,9 +1,9 @@
 /** The error notice on every machine-written answer (public/machine-notice.js holds the two fixed wordings).
  * The Worker sets it as one additive string field, `machine_notice`, and every client prints that string under
  * the answer and above its sources. A payload no model wrote any part of carries no such field. */
-import { MACHINE_NOTICE, MACHINE_NOTICE_STORED, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten } from '../public/machine-notice.js'
+import { MACHINE_NOTICE, MACHINE_NOTICE_STORED, MACHINE_NOTICE_TRANSCRIPT, MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL, machineNotice, modelWritten } from '../public/machine-notice.js'
 import { transcriptNote } from '../public/transcript-note.js'
-export { MACHINE_NOTICE, MACHINE_NOTICE_STORED, MACHINE_NOTICE_TRANSCRIPT, machineNotice, modelWritten }
+export { MACHINE_NOTICE, MACHINE_NOTICE_STORED, MACHINE_NOTICE_TRANSCRIPT, MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL, machineNotice, modelWritten }
 
 type Row = Record<string, unknown>
 const row = (payload: unknown): Row | null => payload && typeof payload === 'object' && !Array.isArray(payload) ? payload as Row : null

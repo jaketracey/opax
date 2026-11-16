@@ -235,9 +235,9 @@ test('the writer is not asked for a fact id in its prose, and its own "(fact N)"
 })
 
 test('a hearing-evidence question with no excerpt held is told to search the transcript text with every lookup result, from the first round', async () => {
-  // The gating run on 16 November: every word of "the 2015 budget measure and who prepared the executive minute" is too
-  // common for the transcript word index, the model searched recommendations instead, and it first heard that an
-  // excerpt was needed when its answer was refused in round 7 of 8.
+  // The gating run on 16 November: the model's transcript searches matched nothing (every word of the question was
+  // then left out of the word index), it searched recommendations instead, and it first heard that an excerpt was
+  // needed when its answer was refused in round 7 of 8.
   assert.equal(api.NO_EXCERPT_YET, 'This question asks what was said in evidence, and no hearing transcript excerpt is held yet. Search the transcript text now (royal_commissions view=transcripts with words): search the specific words or short phrases of the question, one search each, until excerpts come back. An answer needs at least one excerpt.')
   const asset = async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))
   const deps = { origin: 'https://offline.test', asset, kb: async () => ({ resources: {} }), generate: async () => ({ text: '{}' }) }
@@ -246,9 +246,9 @@ test('a hearing-evidence question with no excerpt held is told to search the tra
   const named = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
   const run = async question => {
     let call = 0
-    // The recorded shape: words too common to match, then a recommendations search, then a rarer word, then the answer.
+    // The recorded shape: a search that matches nothing, then a recommendations search, then one that does, then the answer.
     const model = new MockLanguageModelV4({ doGenerate: async () => { call++
-      return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'executive minute' })
+      return call === 1 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'xylophonist' })
         : call === 2 ? reply('royal_commissions', { view: 'recommendations', commission: 'robodebt', words: 'Cabinet' })
         : call === 3 ? reply('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 1 })
         : call === 4 ? reply('answer', { facts: [] }) : { content: [{ type: 'text', text: 'not json' }], finishReason: { unified: 'stop', raw: 'stop' }, usage, warnings: [] } } })
@@ -368,13 +368,13 @@ test('the research model says what each selected excerpt is for, in the question
 })
 
 test('a transcript text search says to search further, until four have been made', async () => {
-  assert.equal(api.SEARCH_TRANSCRIPTS_FURTHER, 'Transcript searches list the newest matching hearing days first, four at a time. Search each specific word or two-word phrase of the question in its own search before answering, then select only the excerpts that answer the question.')
+  assert.equal(api.SEARCH_TRANSCRIPTS_FURTHER, 'Each transcript search returns only a few hearing days. Search each specific word or two-word phrase of the question in its own search before answering, then select only the excerpts that answer the question.')
   const run = async steps => {
     let call = 0
     const model = new MockLanguageModelV4({ doGenerate: async () => { const step = steps[call++]; return step ? calls('royal_commissions', step) : says('not json') } })
     const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
     await api.runAgentic('What did the Robodebt Royal Commission hear about income averaging?', { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
-    return model.doGenerateCalls.map(c => JSON.stringify(c.prompt).split('Transcript searches list the newest matching hearing days first').length - 1)
+    return model.doGenerateCalls.map(c => JSON.stringify(c.prompt).split('Each transcript search returns only a few hearing days').length - 1)
   }
   const search = words => ({ view: 'transcripts', commission: 'robodebt', words, limit: 1 })
   // Before each of the model's calls: said with the results of text searches 1, 2 and 3.
@@ -569,7 +569,7 @@ test('the search-further line is for questions about a hearing or its evidence o
     const model = new MockLanguageModelV4({ doGenerate: async () => { call++; return call === 1 ? calls('royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 1 }) : says('not json') } })
     const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) }, creditCooldown: api.createResearchCreditCooldown() }), { write: undefined })
     await api.runAgentic(question, { ...offline, research }, async () => {}, 40000, undefined, {}, nobody).catch(() => {})
-    return JSON.stringify(model.doGenerateCalls[1].prompt).includes('Transcript searches list the newest matching hearing days first')
+    return JSON.stringify(model.doGenerateCalls[1].prompt).includes('Each transcript search returns only a few hearing days')
   }
   assert.equal(await shown('What did the Robodebt Royal Commission hear about income averaging?'), true)
   assert.equal(await shown('What did the Robodebt Royal Commission recommend about debts?'), false)

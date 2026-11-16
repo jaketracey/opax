@@ -73,9 +73,9 @@ export function replyAnswer(text: string): AnswerArgs | null {
   } catch { return null }
 }
 /** Said to the research model when it answers a hearing-evidence question while holding no transcript excerpt. */
-/** Said with the result of a transcript text search until four such searches have been made. The search lists the
- * newest matching hearing days first, four at a time, so one general word returns recent days whatever was asked. */
-export const SEARCH_TRANSCRIPTS_FURTHER = 'Transcript searches list the newest matching hearing days first, four at a time. Search each specific word or two-word phrase of the question in its own search before answering, then select only the excerpts that answer the question.'
+/** Said with the result of a transcript text search on a hearing question until four such searches have been made.
+ * Each search returns only a few hearing days, so one search rarely holds every excerpt the question needs. */
+export const SEARCH_TRANSCRIPTS_FURTHER = 'Each transcript search returns only a few hearing days. Search each specific word or two-word phrase of the question in its own search before answering, then select only the excerpts that answer the question.'
 const TRANSCRIPT_SEARCHES_WANTED = 4
 /** How the research model says what a selected excerpt is for. Fixed words in its instructions. */
 export const BEARS_ON_RULE = 'Select only the transcript excerpts that answer the question, and say what each is for in "bears_on": {"<fact id>": "<the words of the question that excerpt answers>"}, using words from the question only. '
