@@ -1,0 +1,1272 @@
+{
+ "_about": "Bill and division records as public/bills/<key>.json and public/divisions/division-<key>.json held them on 17 Nov 2026 (main 750bdd0fb), cut to the fields bill-division.js reads. Pinned so the helper's tests do not move with a data refresh, and run where the exports are older.",
+ "bills": {
+  "au-federal-r7378": {
+   "key": "au-federal-r7378",
+   "title": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2025-10-08",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-10-08",
+     "house": "representatives"
+    },
+    {
+     "stage": "other",
+     "date": "2025-10-29",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-10-29",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-10-30",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-11-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "other",
+     "date": "2025-11-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-11-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "committee",
+     "date": "2025-11-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2025-11-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2025-11-06",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-11-06",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-05",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-05",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2026-02-05",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2026-03-02",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2026-03-03",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2026-03-03",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2026-03-03",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2026-03-04",
+     "house": "senate"
+    },
+    {
+     "stage": "passed",
+     "date": "2026-03-04",
+     "house": "senate"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2026-03-13",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-senate-9899",
+     "date": "2026-02-05",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 31,
+     "noes": 10,
+     "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2026-02-05.46.2) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a second time. This means they can now discuss the bill in greater detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd023), which is a document put together by the parliamentary library: > *The security situation in the Indo–Pacific region is challenging and deteriorating. Australian defence spending and activity is increasing in response. Due to security risks, an increasing number of defence matters cannot be properly scrutinised in public hearings of the Joint Standing Committee on Foreign Affairs, Defence and Trade (JSCFADT).* > > *The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 (the Bill) proposes a Parliamentary Joint Committee on Defence (the Committee), to take on JSCFADT’s Defence-related functions. The Committee is modelled on the Parliamentary Joint Committee on Intelligence and Security (PJCIS).* > > *A Bill in very similar terms, the Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024 (the 2024 Bill), was introduced to the 47th Parliament but negatived at third reading in the Senate. Despite proposal of a number of amendments, consensus could not be reached on Committee membership.* > > *There are very few changes from the 2024 Bill and those changes are technical rather than substantive. In particular, the membership provisions are unchanged.* > > *At the time of writing, the Bill had not been referred to or reported on by any parliamentary committees. However, the 2024 Bill was considered by the Senate Scrutiny of Bills Committee and the Parliamentary Joint Committee on Human Rights. Those committees raised concerns relating to:* > > * *whether it is appropriate for the executive to be able to limit a parliamentary comm"
+    },
+    {
+     "key": "federal-senate-9900",
+     "date": "2026-02-05",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "negative",
+     "ayes": 12,
+     "noes": 26,
+     "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-02-05.52.2) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it was unsuccessful. ### Amendment text > *(1) Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute:* > >> *(2) The Committee is to consist of 13 members:* >> >>> *(a) 7 Government members, including at least:* >>> >>>> *(i) 2 Senators; and* >>>> >>>> *(ii) 2 members of the House of Representatives; and* >>> >>> *(b) 6 non‑Government members:* >>> >>>> *(i) 2 Opposition Senators; and* >>>> >>>> *(ii) 2 Opposition members of the House of Representatives; and* >>>> >>>> *(iii) 1 Senator who is not a member of the Government or the Opposition; and* >>>> >>>> *(iv) 1 member of the House of Representatives who is not a member of the Government or the Opposition.* >>>> >>>> *Note: For more detailed provisions on the appointment of Committee members, see Division 5.*"
+    },
+    {
+     "key": "federal-senate-9901",
+     "date": "2026-02-05",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "negative",
+     "ayes": 13,
+     "noes": 28,
+     "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-02-05.69.1) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means it failed. ### Amendment text > *(1) Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute:* > >> *(2) The Committee is to consist of up to 13 Committee members and must include at least:* >> >>> *(a) 2 Senators who are Government members; and* >>> >>> *(b) 2 members of the House of Representatives who are Government members; and* >>> >>> *(c) 2 Senators who are Opposition members; and* >>> >>> *(d) 2 members of the House of Representatives who are Opposition members; and* >>> >>> *(e) 1 Senator or member of the House of Representatives from each minority party.* >>> >>> *Note: For more detailed provisions on the appointment of Committee members, see Division 5.* >> >> *(3) In this section:* >> >>> *minority party means a party that:* >>> >>>> *(a) is not part of the Government or the Opposition; and* >>>> >>>> *(b) has at least 5 members in the Parliament.*"
+    },
+    {
+     "key": "federal-senate-9951",
+     "date": "2026-03-03",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "negative",
+     "ayes": 16,
+     "noes": 28,
+     "question": "Varun Ghosh The committee is considering the Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025. Yesterday evening a division on amendment (1) on sheet 3472 moved by Senator Shoebridge was deferred. The vote on that amendment will be held now. The question is that the amendment be agreed to."
+    },
+    {
+     "key": "federal-senate-9971",
+     "date": "2026-03-04",
+     "house": "senate",
+     "stage": "Third reading",
+     "outcome": "affirmative",
+     "ayes": 29,
+     "noes": 18,
+     "question": "Jenny McAllister I move: That the question be now put. Nick McKim On a point of order, I would like to make a contribution on the third reading, and I would ask for the minister's indulgence to withdraw— Sue Lines As you are aware, it is the minister's prerogative to move that the question be put. You can vote either way, but the motion has been moved. Steph Hodgins-May The question is that the question be put on the third reading."
+    },
+    {
+     "key": "federal-senate-9972",
+     "date": "2026-03-04",
+     "house": "senate",
+     "stage": "Third reading",
+     "outcome": "affirmative",
+     "ayes": 30,
+     "noes": 18,
+     "question": "Steph Hodgins-May The question now is that the bill be read a third time."
+    }
+   ]
+  },
+  "au-federal-r7456": {
+   "key": "au-federal-r7456",
+   "title": "Treasury Laws Amendment (Doubling Penalties for ACCC Enforcement) Bill 2026",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2026-03-25",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-25",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-26",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-26",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2026-03-26",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2026-03-26",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-26",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-26",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-26",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2026-03-26",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2026-03-26",
+     "house": "senate"
+    },
+    {
+     "stage": "passed",
+     "date": "2026-03-26",
+     "house": "senate"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2026-03-27",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-representatives-10111",
+     "date": "2026-03-26",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 43,
+     "noes": 93,
+     "question": "Tim Wilson We're very happy to see that this legislation, the Treasury Laws Amendment (Doubling Penalties for ACCC Enforcement) Bill 2026, is being debated, though we're very disappointed that the government has gone through a shambled process, to introduce the Fair Work Amendment (Fairer Fuel) Bill 2026 this morning. They have tried to force it through the parliament before anyone in the entire country has read it. The Leader of the House understands full well the scale of the legislation he is trying to introduce, and he is now trying to ram it through the parliament on the basis that he has no interest in the opposition or anyone outside this parliament scrutinising it. It's a very dangerous precedent. This is in comparison to the schedules that are being updated in the context of the Competition and Consumer Act which are focused very squarely on making sure penalties are imposed on those who seek to price gouge or harm Australians. It's a straightforward exercise that they have dawdled on every step of the way. The response from the minister has been to not bring the legislation to the House, to bring it to a vote to resolve the matter and to up the penalties, but instead he has allowed time to drift. We are simply asking that that matter, which is simple, straightforward and clear, be resolved. Instead, what the government is now doing is a shambolic process to try and shut down parliamentary scrutiny and parliamentary accountability. I'll remind the House this Fair Work legislation was introduced this morning. A copy has not even, as far as I am aware, been made available to the opposition—or, if it has, we certainly haven't had the chance to read it yet. When you're making such substantial changes to industrial relations legislation—and I know the Labor Party works for the trade union movement; it doesn't work for Australians—at some point you actually have to factor Australians into the conversation. We hope and pray sanity prevails and that the government "
+    },
+    {
+     "key": "federal-senate-10126",
+     "date": "2026-03-26",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 10,
+     "noes": 25,
+     "question": "Katy Gallagher I move: That this bill be now read a second time. I seek leave to have the second reading speech incorporated in _Hansard_. Leave granted. _The speech read as follows—_ Today, I introduce the Treasury Laws Amendment (Doubling Penalties for ACCC Enforcement) Bill 2026. This bill amends the Competition and Consumer Act 2010 to double maximum penalties for misconduct under competition law and the Australian Consumer Law, from $50 million to $100 million. These laws help tackle price gouging at its source, outlawing: The even stronger penalties we are introducing will empower the ACCC to throw the book at any companies who illegally and unfairly increase their prices. Since the start of the war, we have seen much higher prices for petrol and diesel across the country. It has put more pressure on motorists and families already doing it tough. Our message to petrol retailers has been clear: you are on notice; do not use the conflict to take advantage of Australians. Now they'll face penalties up to $100 million per offence if they do. These penalties apply across the economy. This will help ensure all retailers and suppliers, from fuel companies to supermarkets and the entire supply chain in between, do not use the war in the Middle East as an excuse for illegal and unfair pricing. The states and territories share the Albanese government's sense of urgency. Reforms to the Australian Consumer Law require agreement of the states and territories, and I want to thank every one of them for swiftly confirming their agreement to support these reforms. The ACCC has been clear they won't hesitate to take action to protect consumers and markets, and they'll seek the highest penalties appropriate in any case they take to court. This bill is an important way we are protecting consumers and securing Australia's fuel security, but it's not the only way. We have already: The bill also brings Australia's competition law penalties into closer alignment with comparable econo"
+    },
+    {
+     "key": "federal-senate-10127",
+     "date": "2026-03-26",
+     "house": "senate",
+     "stage": "Limitation of debate",
+     "outcome": "negative",
+     "ayes": 11,
+     "noes": 26,
+     "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7456_amend_8a68fb97-c4c9-4976-adec-df30f2f30977%22;rec=0) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it was unsuccessful. ### Amendment text > *Page 6 (after line 9), at the end of the Bill, add:* > > *Schedule 2 — Price gouging* > > *Competition and Consumer Act 2010* > > *1 Subsection 4(1)* > >> *Insert:* >> >>> *competitive price has the meaning given by subsection 46(2B).* > > *2 Before subsection 46(1)* > >> *Insert:* >> >>> *Substantially lessening competition* > > *3 After subsection 46(1)* > >> *Insert:* >> >>> *Price gouging* >>> >>> *(2) A corporation that has a substantial degree of power in a market must not engage in conduct that results, or is likely to result, in:* >>> >>>> *(a) a good or service being acquired by another person, or supplied to another person, at a price that is excessive; or* >>>> >>>> *(b) an offer being made to another person for the other person to acquire a good or service, or for the other person to be supplied a good or service, at a price that is excessive; or* >>>> >>>> *(c) an agreement being entered into by another person for the other person to acquire a good or service, or for the other person to be supplied a good or service, at a price that is excessive.* >>> >>> *(2A) For the purposes of subsection (2), in determining whether a price for the acquisition or supply of a good or service is excessive, regard must be had to the competitive price for the good or service.* >>> >>> *(2B) The competitive price , for a good or service, is the price at which the good or service would have been acquired by, or supplied to, the other person if the corporation did not have a substantial degree of power in that market.* >>> >>> *(2C) Subsection (2) does not apply i"
+    }
+   ]
+  },
+  "au-federal-r5760": {
+   "key": "au-federal-r5760",
+   "title": "Treasury Laws Amendment (Fair and Sustainable Superannuation) Bill 2016",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2016-11-09",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-09",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-22",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-22",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-11-22",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "passed",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2016-11-29",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-senate-4421",
+     "date": "2016-11-23",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 12,
+     "noes": 45,
+     "question": "Mathias Cormann I move: That these bills be now read a second time. I seek leave to have the second reading speech incorporated in _Hansard_. Leave granted. _The speech read as follows—_ TREASURY LAWS AMENDMENT (FAIR AND SUSTAINABLE SUPERANNUATION) BILL 2016 SUPERANNUATION (EXCESS TRANSFER BALANCE TAX) IMPOSITION BILL 2016 These Bills implement the Government's election commitment to improve the fairness, sustainability, flexibility and integrity of the superannuation system. We want superannuation to keep working for all Australians in their retirement as we move through the twenty-first century and grapple with some key challenges, including the ageing of our population and the need to return the Budget to surplus. The measures in these Bills also reduce the extent to which the superannuation system can be used for tax minimisation and estate planning. But the changes recognise that in a modern economy, working patterns are changing across the population and over the course of people's lives. That's why our reforms will allow the system to work more flexibly for Australians; it will reflect their changing work-life patterns, particularly for those whose work patterns and incomes vary over time. While some measures place limits on the amount of contributions that can be made to superannuation or amounts that will receive tax-free earnings status, at the same time these measures target the tax concessions to ensure they are fairer and more fiscally sustainable. A key change to ensure the sustainability of the superannuation system is the introduction of the transfer balance cap, which is contained in Schedule 1 to the Fair and Sustainable Superannuation Bill. This introduces a $1.6 million cap on the total amount of superannuation savings that can be transferred from an 'accumulation account', where earnings are concessionally taxed, to a 'retirement account', where earnings are tax-free. Importantly, the cap only limits the amount that can be transferred into the t"
+    },
+    {
+     "key": "federal-senate-4422",
+     "date": "2016-11-23",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "negative",
+     "ayes": 30,
+     "noes": 33,
+     "question": "Katy Gallagher by leave—In relation to the Treasury Laws Amendment (Fair and Sustainable Superannuation) Bill 2016, I move opposition amendments (1) to (4) on sheet 7980: (1) Schedule 2, item 15, page 61 (lines 5 and 6), omit the item, substitute: 15 Section 293-1 Omit \"$300,000\", substitute \"$200,000\". (2) Schedule 2, item 17, page 61 (lines 9 and 10), omit the item, substitute: 17 Section 293-10 Omit \"$300,000\", substitute \"$200,000\". (3) Schedule 2, item 18, page 61 (lines 11 and 12), omit the item, substitute: 18 Subsections 293-20(1), 293-155(1) and 293-200(1) Omit \"$300,000\", substitute \"$200,000\". (4) Schedule 2, item 19, page 61 (lines 14 and 15), omit the item, substitute: 19 Subsection 133-15(1) in Schedule 1 (note) Omit \"$300,000\", substitute \"$200,000\". We also oppose schedules 3 to 6 in the following terms: (5) Schedule 3, item 2, page 63 (line 20) to page 65 (line 2), subsections 292-85(3) to (6) to be opposed. (6) Schedule 5, page 77 (line 1) to page 78 (line 29), Schedule 5 to be opposed. (7) Schedule 6, page 79 (line 1) to page 80 (line 25), Schedule 6 to be opposed. With regard to senators having the opportunity to consider these amendments, I acknowledge that they were circulated quite late this morning. I would say, however, that these amendments go directly to the position that the Labor Party announced publicly when we considered the revised government bills, once they had been released. I would like to draw senators' attention to item (5): Schedule 3, item 2, page 63 (line 20) to page 65 (line 2), subsections 292-85(3) to (6) to be opposed. Item (5) relates to non-concessional contributions. There is an error in that item. The item as drafted seeks to oppose subsections 292-85(3) to (6). I would like to amend that amendment to reflect opposition to subsection 292-85(2)(a). That is a fault of ours. I am sorry if that is not very clear. Taken as a group, these amendments implement Labor's position, which seeks to lower the higher income superann"
+    },
+    {
+     "key": "federal-senate-4423",
+     "date": "2016-11-23",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "negative",
+     "ayes": 30,
+     "noes": 33,
+     "question": "Sue Lines The question now is that schedules 5 and 6 stand as printed."
+    }
+   ]
+  },
+  "au-federal-r5761": {
+   "key": "au-federal-r5761",
+   "title": "Superannuation (Excess Transfer Balance Tax) Imposition Bill 2016",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2016-11-09",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-09",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-22",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-22",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-11-22",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "passed",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2016-11-29",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-senate-4421",
+     "date": "2016-11-23",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 12,
+     "noes": 45,
+     "question": "Mathias Cormann I move: That these bills be now read a second time. I seek leave to have the second reading speech incorporated in _Hansard_. Leave granted. _The speech read as follows—_ TREASURY LAWS AMENDMENT (FAIR AND SUSTAINABLE SUPERANNUATION) BILL 2016 SUPERANNUATION (EXCESS TRANSFER BALANCE TAX) IMPOSITION BILL 2016 These Bills implement the Government's election commitment to improve the fairness, sustainability, flexibility and integrity of the superannuation system. We want superannuation to keep working for all Australians in their retirement as we move through the twenty-first century and grapple with some key challenges, including the ageing of our population and the need to return the Budget to surplus. The measures in these Bills also reduce the extent to which the superannuation system can be used for tax minimisation and estate planning. But the changes recognise that in a modern economy, working patterns are changing across the population and over the course of people's lives. That's why our reforms will allow the system to work more flexibly for Australians; it will reflect their changing work-life patterns, particularly for those whose work patterns and incomes vary over time. While some measures place limits on the amount of contributions that can be made to superannuation or amounts that will receive tax-free earnings status, at the same time these measures target the tax concessions to ensure they are fairer and more fiscally sustainable. A key change to ensure the sustainability of the superannuation system is the introduction of the transfer balance cap, which is contained in Schedule 1 to the Fair and Sustainable Superannuation Bill. This introduces a $1.6 million cap on the total amount of superannuation savings that can be transferred from an 'accumulation account', where earnings are concessionally taxed, to a 'retirement account', where earnings are tax-free. Importantly, the cap only limits the amount that can be transferred into the t"
+    },
+    {
+     "key": "federal-senate-4422",
+     "date": "2016-11-23",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "negative",
+     "ayes": 30,
+     "noes": 33,
+     "question": "Katy Gallagher by leave—In relation to the Treasury Laws Amendment (Fair and Sustainable Superannuation) Bill 2016, I move opposition amendments (1) to (4) on sheet 7980: (1) Schedule 2, item 15, page 61 (lines 5 and 6), omit the item, substitute: 15 Section 293-1 Omit \"$300,000\", substitute \"$200,000\". (2) Schedule 2, item 17, page 61 (lines 9 and 10), omit the item, substitute: 17 Section 293-10 Omit \"$300,000\", substitute \"$200,000\". (3) Schedule 2, item 18, page 61 (lines 11 and 12), omit the item, substitute: 18 Subsections 293-20(1), 293-155(1) and 293-200(1) Omit \"$300,000\", substitute \"$200,000\". (4) Schedule 2, item 19, page 61 (lines 14 and 15), omit the item, substitute: 19 Subsection 133-15(1) in Schedule 1 (note) Omit \"$300,000\", substitute \"$200,000\". We also oppose schedules 3 to 6 in the following terms: (5) Schedule 3, item 2, page 63 (line 20) to page 65 (line 2), subsections 292-85(3) to (6) to be opposed. (6) Schedule 5, page 77 (line 1) to page 78 (line 29), Schedule 5 to be opposed. (7) Schedule 6, page 79 (line 1) to page 80 (line 25), Schedule 6 to be opposed. With regard to senators having the opportunity to consider these amendments, I acknowledge that they were circulated quite late this morning. I would say, however, that these amendments go directly to the position that the Labor Party announced publicly when we considered the revised government bills, once they had been released. I would like to draw senators' attention to item (5): Schedule 3, item 2, page 63 (line 20) to page 65 (line 2), subsections 292-85(3) to (6) to be opposed. Item (5) relates to non-concessional contributions. There is an error in that item. The item as drafted seeks to oppose subsections 292-85(3) to (6). I would like to amend that amendment to reflect opposition to subsection 292-85(2)(a). That is a fault of ours. I am sorry if that is not very clear. Taken as a group, these amendments implement Labor's position, which seeks to lower the higher income superann"
+    },
+    {
+     "key": "federal-senate-4423",
+     "date": "2016-11-23",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "negative",
+     "ayes": 30,
+     "noes": 33,
+     "question": "Sue Lines The question now is that schedules 5 and 6 stand as printed."
+    }
+   ]
+  },
+  "au-federal-r5790": {
+   "key": "au-federal-r5790",
+   "title": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2)",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2016-11-28",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-28",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-29",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-29",
+     "house": "representatives"
+    },
+    {
+     "stage": "committee",
+     "date": "2016-11-29",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-11-29",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2016-11-30",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-30",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-30",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-30",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2016-11-30",
+     "house": "senate"
+    },
+    {
+     "stage": "other",
+     "date": "2016-11-30",
+     "house": "senate"
+    },
+    {
+     "stage": "other",
+     "date": "2016-11-30",
+     "house": "representatives"
+    },
+    {
+     "stage": "other",
+     "date": "2016-12-01",
+     "house": "representatives"
+    },
+    {
+     "stage": "other",
+     "date": "2016-12-01",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-12-01",
+     "house": "senate"
+    },
+    {
+     "stage": "passed",
+     "date": "2016-12-01",
+     "house": "senate"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2016-12-02",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-representatives-4443",
+     "date": "2016-11-29",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 79,
+     "noes": 69,
+     "question": "Mark Coulton The question now is that the amendment be agreed to. Scott Morrison I move: That the question be put. Tony Smith The question is that the motion be put."
+    },
+    {
+     "key": "federal-representatives-4444",
+     "date": "2016-11-29",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 69,
+     "noes": 79,
+     "question": "Tony Smith The original question was that this bill be now read a second time. To this the honourable member for McMahon has moved as an amendment that all words after 'That' be omitted with a view to substituting other words. The question now is that that amendment be agreed to. The question is that the bill be now read a second time. Bill read a second time."
+    },
+    {
+     "key": "federal-representatives-4445",
+     "date": "2016-11-29",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 78,
+     "noes": 69,
+     "question": ""
+    },
+    {
+     "key": "federal-representatives-4446",
+     "date": "2016-11-29",
+     "house": "representatives",
+     "stage": "Consideration in detail",
+     "outcome": "negative",
+     "ayes": 70,
+     "noes": 78,
+     "question": "Chris Bowen Eighteen months of rolling farce only for the government to gag legislation. Eighteen months of mistakes, mis-steps and lack of consultation, and all of a sudden, after failing to bring it into the House and the Senate last week, after failing to deal with this matter comprehensively, the government takes the decisive action of a gag. Why? To allow National Party members to vote for a 15 per cent backpacker tax. That is what happened in the House a few moments ago: Nationals and rural Liberals voted for a backpacker tax rate of 15 per cent when they could have shown a bit of backbone, a bit of courage, and insisted on a 10½ per cent backpacker tax rate. We will give them another opportunity. We will give them another opportunity, because we will move now, in detail, an amendment which would substitute 10½ per cent for 15 per cent. This is an opportunity for the National Party to grow a spine. This is an opportunity for the National Party to stand up, in Canberra, to the Liberals. This is an opportunity now for this parliament, yet again, to tell this Treasurer that he is out of touch and he has got it wrong. It is an opportunity to tell this Treasurer that he is not up to the job and to go back to the drawing board. It is an opportunity to give us a backpacker tax rate that is competitive with New Zealand so that the horticultural, agricultural, hospitality and tourism sectors can be competitive and attract backpackers, and in those regions those backpackers can then spend their earnings. I have a little update for the Treasurer, who says, 'The Labor Party wants backpackers in Australia to pay no tax.' Well, 10½ per cent is not nothing. That is my update for the Treasurer. It has a zero in it, in the 10. I do accept that fact. I concede that point to the Treasurer, who has been going around saying, 'Bill Shorten and the Labor Party don't want backpackers to pay any tax.' That has never been true. It is not true now. And 10½ is more than zero. It is a rat"
+    },
+    {
+     "key": "federal-senate-4458",
+     "date": "2016-11-30",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "affirmative",
+     "ayes": 35,
+     "noes": 32,
+     "question": "Katy Gallagher by leave—I move amendments (1) and (2) on sheet 8018: (1) Schedule 1, item 6, page 5 (line 15) omit \"15%\", substitute \"10.5%\". [tax rate for part of working holiday income not exceeding $37,000] (2) Schedule 1, item 7, page 5 (table item 1), omit \"15%\", substitute \"10.5%\". [tax rate for part of working holiday income not exceeding $37,000] And I move that the question be put. The CHAIR: The question is that the question be now put. The CHAIR: The question is that the requests standing in the name of Senator Gallagher be agreed to. The CHAIR: The question is that the bill be passed subject to requests. Bill reported with requests."
+    },
+    {
+     "key": "federal-senate-4459",
+     "date": "2016-11-30",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "affirmative",
+     "ayes": 35,
+     "noes": 32,
+     "question": ""
+    },
+    {
+     "key": "federal-senate-4460",
+     "date": "2016-11-30",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "affirmative",
+     "ayes": 33,
+     "noes": 32,
+     "question": ""
+    },
+    {
+     "key": "federal-representatives-4479",
+     "date": "2016-12-01",
+     "house": "representatives",
+     "stage": "Consideration of Senate message",
+     "outcome": "affirmative",
+     "ayes": 79,
+     "noes": 70,
+     "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - Consideration of Senate Message - Speed things along"
+    },
+    {
+     "key": "federal-representatives-4480",
+     "date": "2016-12-01",
+     "house": "representatives",
+     "stage": "Consideration of Senate message",
+     "outcome": "affirmative",
+     "ayes": 79,
+     "noes": 70,
+     "question": "Tony Smith The question now is that the requested amendments be not made."
+    },
+    {
+     "key": "federal-senate-4507",
+     "date": "2016-12-01",
+     "house": "senate",
+     "stage": "Returned from the House of Representatives",
+     "outcome": "affirmative",
+     "ayes": 40,
+     "noes": 20,
+     "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?id=2016-12-01.205.2) to deal with the bill (and the message returned by the House of Representatives) right now, rather than waiting any longer. The message from the House of Representatives was that the House refused to agree to the amendments suggested in the Senate. This means that the Senate now have to discuss whether or not to insist on the amendments or just let the bill pass as is. ### What is this bill? The Government has already tried to pass this bill once in November but was unsuccessful because the Senate [wanted to make changes](https://theyvoteforyou.org.au/divisions/senate/2016-11-24/2) to the bill that the House of Representatives [didn't agree with](https://theyvoteforyou.org.au/divisions/representatives/2016-11-24/2). It is part of a series of bills to change the income tax arrangements for working holiday visa holders. If passed, they will mean that visa holders will be taxed from the first dollar earned, rather than having the usual tax free threshold. The [original version](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5740) of this bill would have applied a tax rate of 19% for visa holders earning up to $37,000. This [new version](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5790) will apply a tax rate of 15%."
+    },
+    {
+     "key": "federal-senate-4508",
+     "date": "2016-12-01",
+     "house": "senate",
+     "stage": "In committee",
+     "outcome": "affirmative",
+     "ayes": 39,
+     "noes": 23,
+     "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - in Committee - Don't insist on amendments"
+    },
+    {
+     "key": "federal-senate-4509",
+     "date": "2016-12-01",
+     "house": "senate",
+     "stage": "Third reading",
+     "outcome": "affirmative",
+     "ayes": 39,
+     "noes": 23,
+     "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - Third Reading - Speeding things along"
+    },
+    {
+     "key": "federal-senate-4510",
+     "date": "2016-12-01",
+     "house": "senate",
+     "stage": "Third reading",
+     "outcome": "affirmative",
+     "ayes": 43,
+     "noes": 19,
+     "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - Third Reading - Pass the bill"
+    }
+   ]
+  },
+  "au-federal-r5738": {
+   "key": "au-federal-r5738",
+   "title": "Passenger Movement Charge Amendment Bill 2016",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2016-10-12",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-10-12",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-10-17",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-10-17",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-10-17",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2016-11-07",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-07",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-23",
+     "house": "senate"
+    },
+    {
+     "stage": "other",
+     "date": "2016-11-24",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2016-11-24",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-11-24",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2016-11-24",
+     "house": "senate"
+    },
+    {
+     "stage": "passed",
+     "date": "2016-11-24",
+     "house": "senate"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2016-12-02",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-representatives-4348",
+     "date": "2016-10-17",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 76,
+     "noes": 69,
+     "question": "Graham Perrett I rise to speak on the Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016. This bill places a new tax on the wages of foreign backpackers when they are in Australia on a working holiday. This was a measure announced by the government in the 2015 budget. In that announcement, the Abbott government proposed a 32.5 per cent tax on backpackers. Not surprisingly, in what is becoming a familiar chaotic style, the Liberal-National party government is back-pedalling from the original 32½ per cent tax and is now proposing a 19 per cent tax on backpackers. Sadly, the number of backpackers coming to Australia to work was decreasing before the government announced this measure in 2015, but, in so announcing that tax on the wages of backpackers, it has made the situation worse. The impact of fewer backpackers working in Australia has dire consequences for our horticulture growers. I know this because the Brisbane markets is in my electorate and I have had feedback from several growers about some of the concerns they have. Growers face the prospect of seeing their fruit rot on their trees because they do not have anyone to pick it. Even at 19 per cent, Treasury modelling shows that the backpacker tax will have a detrimental effect on the number of backpackers willing to travel to Australia on a working holiday. Obviously, that in turn will have a flow-on consequence for our farmers. The uncertainty that the Turnbull government has created around this proposed tax has caused unnecessary stress for farmers, whose very livelihoods are at stake—in Tasmania, the north-west of Western Australia, Queensland and everywhere in between. This is obviously a tax grab by the government. The original proposal was going to rake in $540 million from foreign backpackers. Sadly, the Turnbull government, particularly the Deputy Prime Minister, have handled this issue very badly. They did not consult with stakeholders or do any modelling when they put forward this pro"
+    },
+    {
+     "key": "federal-representatives-4350",
+     "date": "2016-10-17",
+     "house": "representatives",
+     "stage": "Consideration in detail",
+     "outcome": "affirmative",
+     "ayes": 80,
+     "noes": 65,
+     "question": "Joel Fitzgibbon This government is treating our farmers and our tourism operators in this country— Tony Smith The member for Hunter will resume his seat. The Treasurer. Scott Morrison I move: That the question be now put."
+    },
+    {
+     "key": "federal-representatives-4351",
+     "date": "2016-10-17",
+     "house": "representatives",
+     "stage": "Third reading",
+     "outcome": "affirmative",
+     "ayes": 80,
+     "noes": 65,
+     "question": "Scott Morrison I ask leave of the House to move the third reading immediately. Leave not granted. I move: That so much of standing orders be suspended as would prevent the motion for the third reading being moved without delay. Tony Burke Speaking to the motion, Mr Speaker, we are gagging debate when the Senate is not going to meet for three weeks. The bill has to make it 300 metres— Tony Smith The Manager of Opposition Business will resume his seat. The Treasurer has the call. Scott Morrison I move: That the question be now put. Tony Smith The question now is that the motion moved by the Treasurer be agreed to. Question agreed to."
+    },
+    {
+     "key": "federal-senate-4425",
+     "date": "2016-11-23",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 30,
+     "noes": 31,
+     "question": "Passenger Movement Charge Amendment Bill 2016 - Second Reading - Agree with the bill's main idea"
+    },
+    {
+     "key": "federal-senate-4430",
+     "date": "2016-11-24",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 35,
+     "noes": 34,
+     "question": "Passenger Movement Charge Amendment Bill 2016 - Second Reading - Agree to the bill's main idea (re-vote)"
+    },
+    {
+     "key": "federal-senate-4431",
+     "date": "2016-11-24",
+     "house": "senate",
+     "stage": "Third reading",
+     "outcome": "affirmative",
+     "ayes": 36,
+     "noes": 33,
+     "question": "Passenger Movement Charge Amendment Bill 2016 - Third Reading - Pass the bill"
+    }
+   ]
+  },
+  "au-federal-s1470": {
+   "key": "au-federal-s1470",
+   "title": "Superannuation Legislation Amendment (Tackling the Gender Super Gap) Bill 2025",
+   "status": "lapsed",
+   "originating_house": "senate",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2025-09-04",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-09-04",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-11-05",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-05-13",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-06-24",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-06-24",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-senate-10327",
+     "date": "2026-06-24",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 27,
+     "noes": 34,
+     "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2026-06-24.4.2) to agree with the bill's main idea. In parliamentary jargon, they voted against reading it a second time, which means it will no longer be considered by parliament. This bill was a private members bill that was introduced by Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal). ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1470), the bill: > *Amends the Superannuation Industry (Supervision) Act 1993, Superannuation Industry (Supervision) Regulations 1994 and Income Tax Assessment Act 1997 to enable spouses to split their collective superannuation balances between them on an ongoing annual basis.*"
+    }
+   ]
+  },
+  "au-federal-s1430": {
+   "key": "au-federal-s1430",
+   "title": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024",
+   "status": "lapsed",
+   "originating_house": "senate",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2024-09-16",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2024-09-16",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2024-10-09",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2024-10-09",
+     "house": "senate"
+    },
+    {
+     "stage": "other",
+     "date": "2025-08-26",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-05",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-05",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-05",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-senate-9394",
+     "date": "2024-09-16",
+     "house": "senate",
+     "stage": "First Reading",
+     "outcome": "affirmative",
+     "ayes": 41,
+     "noes": 4,
+     "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - First Reading - Suspend the usual rules"
+    },
+    {
+     "key": "federal-senate-9173",
+     "date": "2024-10-09",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 41,
+     "noes": 18,
+     "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - Second Reading - Put the question"
+    },
+    {
+     "key": "federal-senate-9174",
+     "date": "2024-10-09",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 18,
+     "noes": 41,
+     "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-10-09.7.1) introduced by Victorian Senator [Jess Walsh](https://theyvoteforyou.org.au/people/senate/victoria/jess_walsh) (Labor), which means it failed. The amendment would have changed the wording of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *Omit all words after \"That\", substitute \"the bill be referred to the Economics Legislation Committee for inquiry and report by 28 March 2025\".* #### No rebellion West Australian Senator [Fatima Payman](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Independent) is currently listed as a rebel voter against the Labor Party, but this is inaccurate because she is no longer part of the Labor Party."
+    },
+    {
+     "key": "federal-senate-9176",
+     "date": "2024-10-09",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 16,
+     "noes": 29,
+     "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - Second Reading - Agree with the bill's main idea"
+    },
+    {
+     "key": "federal-senate-9890",
+     "date": "2026-02-05",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 12,
+     "noes": 29,
+     "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - Second Reading - Agree with bill's main idea"
+    }
+   ]
+  },
+  "au-federal-r7408": {
+   "key": "au-federal-r7408",
+   "title": "Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Bill 2025",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2025-11-26",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2025-11-26",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-09",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-02-10",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2026-02-10",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2026-03-03",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-03",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-30",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2026-03-30",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2026-03-30",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2026-03-30",
+     "house": "senate"
+    },
+    {
+     "stage": "passed",
+     "date": "2026-03-30",
+     "house": "senate"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2026-04-01",
+     "house": "senate"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-representatives-9906",
+     "date": "2026-02-10",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 97,
+     "noes": 38,
+     "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2026-02-10.6.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd038), which is a document prepared by the parliamentary library: > *The Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Bill 2025 (the C&T Bill) amends related legislation to implement the Bill, including transferring responsibilities for the Higher Education Standards Framework to [Australian Tertiary Education Commission (ATEC)](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd038), and enabling information sharing between the Department of Education and ATEC.*"
+    }
+   ]
+  },
+  "au-federal-r5271": {
+   "key": "au-federal-r5271",
+   "title": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014",
+   "status": "passed",
+   "originating_house": "representatives",
+   "key_dates": [
+    {
+     "stage": "introduced",
+     "date": "2014-06-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2014-06-05",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2014-06-17",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2014-06-18",
+     "house": "representatives"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2014-06-18",
+     "house": "representatives"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2014-06-18",
+     "house": "representatives"
+    },
+    {
+     "stage": "introduced",
+     "date": "2014-06-19",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2014-06-19",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2014-06-23",
+     "house": "senate"
+    },
+    {
+     "stage": "second_reading",
+     "date": "2014-06-23",
+     "house": "senate"
+    },
+    {
+     "stage": "committee",
+     "date": "2014-06-23",
+     "house": "senate"
+    },
+    {
+     "stage": "third_reading",
+     "date": "2014-06-23",
+     "house": "senate"
+    },
+    {
+     "stage": "other",
+     "date": "2014-06-23",
+     "house": "representatives"
+    },
+    {
+     "stage": "passed",
+     "date": "2014-06-23",
+     "house": "representatives"
+    },
+    {
+     "stage": "royal_assent",
+     "date": "2014-06-30",
+     "house": "representatives"
+    }
+   ],
+   "divisions": [
+    {
+     "key": "federal-representatives-3237",
+     "date": "2014-06-18",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 55,
+     "noes": 79,
+     "question": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014 - Second Reading - Decline to read a second time"
+    },
+    {
+     "key": "federal-representatives-3238",
+     "date": "2014-06-18",
+     "house": "representatives",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 80,
+     "noes": 53,
+     "question": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014 - Second Reading - Read a second time"
+    },
+    {
+     "key": "federal-senate-3241",
+     "date": "2014-06-23",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "negative",
+     "ayes": 9,
+     "noes": 42,
+     "question": "This division relates to the Policy _[For limiting availability of welfare payments](/policies/34)_. The majority voted against an amendment to the original motion, introduced by Greens Senator Sarah Hanson-Young. The original motion was \"that the bill be now read a second time\"(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) to which Senator Hanson-Young moved the following amendment: _At the end of the motion, add:_ _but the Senate is of the opinion that, rather than punishing families, revenue should be raised from big miners, bankers and polluters through:_ _(a) applying a 'public insurance' levy on the big four banks that are too big to fail;_ _(b) removing fossil fuel subsidised fuel for big mining companies;_ _(c) retaining the billions in revenue from the carbon price;_ _(d) implementing the original super profits mining tax;_ _(e) imposing a millionaires tax;_ _(f) taxing discretionary trusts as corporations; and_ _(g) imposing a levy on thermal coal imports exports._ Because the majority voted against this amendment, it was unsuccessful _Background to the bill_ The [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5271) was introduced primarily to amend the [A New Tax System (Family Assistance) Act 1999](http://www.austlii.edu.au/au/legis/cth/consol_act/antsaa1999357/) in order to: - maintain the indexation pause on the [Child Care Rebate](http://www.humanservices.gov.au/customer/services/centrelink/child-care-rebate) (CCR) limit at $7500 for three years from 1 July 2014; and - maintain the [Child Care Benefit](http://www.humanservices.gov.au/customer/services/centrelink/child-care-benefit) (CCB) income thresholds at the amounts applicable as at 30 June 2014 for three years from 1 July 2014. Normally, the CCR limit and CCB income test thresholds are indexed on an annual basis to the Consumer Price Index (CPI). "
+    },
+    {
+     "key": "federal-senate-3242",
+     "date": "2014-06-23",
+     "house": "senate",
+     "stage": "Second reading",
+     "outcome": "affirmative",
+     "ayes": 41,
+     "noes": 9,
+     "question": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014 - Second Reading - Read a second time"
+    },
+    {
+     "key": "federal-senate-3243",
+     "date": "2014-06-23",
+     "house": "senate",
+     "stage": "Third reading",
+     "outcome": "affirmative",
+     "ayes": 39,
+     "noes": 11,
+     "question": "This division relates to the Policy _[For limiting availability of welfare payments](/policies/34)_. The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?id=2014-06-23.24.1) to read the bill for a third time.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) This means that the majority agree with the bill and want it to pass through the Senate. The bill will now be returned to the House of Representatives for them to consider the [amendment](http://www.openaustralia.org/senate/?gid=2014-06-23.21.2) agreed to in the Senate during the in committee stage.(See the transcript for the in committee stage [here](http://www.openaustralia.org/senate/?id=2014-06-23.21.1). ) The amendment removed all references to the [Child Care Benefit](http://www.humanservices.gov.au/customer/services/centrelink/child-care-benefit) in the bill. Labor Senator [Kim Carr](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Kim_Carr&mpc=Senate&house=senate), who introduced the amendment, explained that it \"effectively will split the bill\" and \"will allow the Senate ... to consider the change to the childcare rebate as a separate issue\".(See Mr Carr's full explanation [here](http://www.openaustralia.org/senate/?gid=2014-06-23.11.2). Read Liberal Senator [Marise Payne](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Marise_Payne&mpc=Senate&house=senate)'s explanation for why the Government agreed to this amendment [here](http://www.openaustralia.org/senate/?gid=2014-06-23.17.1). ) _Background to the bill_ The [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5271) was introduced primarily to amend the [A New Tax System (Family Assistance) Act 1999](http://www.austlii.edu.au/au/legis/cth/consol_act/antsaa1999357/) in order to: - maintain the indexation pause on the [Child Care Rebate](http://www."
+    }
+   ]
+  }
+ },
+ "divisions": {
+  "federal-senate-9971": {
+   "key": "federal-senate-9971",
+   "date": "2026-03-04",
+   "house": "senate",
+   "name": "Bills — Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025; Third Reading",
+   "question": "Jenny McAllister I move: That the question be now put. Nick McKim On a point of order, I would like to make a contribution on the third reading, and I would ask for the minister's indulgence to withdraw— Sue Lines As you are aware, it is the minister's prerogative to move that the question be put. You can vote either way, but the motion has been moved. Steph Hodgins-May The question is that the question be put on the third reading.",
+   "result": "affirmative",
+   "ayes": 29,
+   "noes": 18
+  },
+  "federal-senate-9972": {
+   "key": "federal-senate-9972",
+   "date": "2026-03-04",
+   "house": "senate",
+   "name": "Bills — Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025; Third Reading",
+   "question": "Steph Hodgins-May The question now is that the bill be read a third time.",
+   "result": "affirmative",
+   "ayes": 30,
+   "noes": 18
+  }
+ }
+}
