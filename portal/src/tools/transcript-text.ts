@@ -4,6 +4,7 @@
 import { object, records, type RecordRow } from './published-records'
 import { readToolAsset, type ToolEnv } from './types'
 import { answeredQuestion, transcriptRoles, type RoleFor, type SpeakerRole } from './transcript-roles'
+import { transcriptUse } from '../transcript-answer'
 
 const SHARD = /^\/transcripts\/terms\/\d{2}\.json$/
 const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
@@ -177,9 +178,9 @@ export function excerpt(text: string, terms: string[], pdfPage?: number, roleFor
   let end = Math.min(until, start + EXCERPT)
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
   const body = flat.slice(start, Math.min(end, until)).trim()
-  const role = body ? roleFor?.({ text: flat, turns }, turn) : undefined
+  const role = body ? roleFor?.({ text: flat, turns, pdfPage }, turn) : undefined
   // A one-line answer shown whole comes with the question it replied to (transcript-roles.ts), inside the same cap.
-  const question = roleFor && role && start === from && end >= until ? answeredQuestion({ text: flat, turns }, turn, roleFor, EXCERPT - body.length) : undefined
+  const question = roleFor && role && start === from && end >= until ? answeredQuestion({ text: flat, turns, pdfPage }, turn, roleFor, EXCERPT - body.length) : undefined
   return { excerpt: `${start > from ? '...' : ''}${body}${end < until ? '...' : ''}`, ...(role ? { speaker_role: role } : {}), ...(question ? { question } : {}) }
 }
 
@@ -194,15 +195,18 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
   const index = object(doc.terms), pages = records(doc.pages)
   const score = new Map<number, number>()
   for (const t of terms) for (const n of (index[t] as number[]) ?? []) score.set(n, (score.get(n) ?? 0) + 1)
-  const quote = doc.quote_policy === 'quote', roleFor = quote ? transcriptRoles(pages) : undefined
+  const quote = doc.quote_policy === 'quote', roleFor = quote ? transcriptRoles(pages, key) : undefined
+  // A one-line answer's question is attached only for a source whose passages the writer may word.
+  const wordable = transcriptUse(typeof row?.commission === 'string' ? row.commission : undefined) === 'writer'
   // The best pages first; a page whose match leaves nothing to quote (a heading with no words after it, a word
   // index) is passed over for the next best.
   const hits: PageHit[] = []
   for (const [n] of [...score].sort((a, b) => b[1] - a[1] || a[0] - b[0])) {
     if (hits.length >= max) break
     const page = pages.find(p => p.n === n) ?? {}
-    const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
-      ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms, n, roleFor) : { excerpt: null }) }
+    const found: { excerpt: string | null, speaker_role?: SpeakerRole, question?: { text: string, role?: SpeakerRole } } = quote && typeof page.text === 'string' ? excerpt(page.text, terms, n, roleFor) : { excerpt: null }
+    if (!wordable) delete found.question
+    const hit = { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`, ...found }
     if (hit.excerpt === null || /[^.\s]/.test(hit.excerpt)) hits.push(hit)
   }
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),

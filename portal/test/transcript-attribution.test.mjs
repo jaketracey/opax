@@ -14,7 +14,8 @@ import { MockLanguageModelV4 } from 'ai/test'
 
 const built = await build({ stdin: { contents: [
   "export {excerpt, pageTurns, pageHits, textIndex} from './src/tools/transcript-text'",
-  "export {transcriptRoles, answeredQuestion} from './src/tools/transcript-roles'",
+  "export {transcriptRoles, answeredQuestion, mismarkedPages, APPEARING} from './src/tools/transcript-roles'",
+  "export {default as MISMARKED} from './src/tools/transcript-mismarked-pages.json'",
   "export {callTool} from './src/tools/index'",
   "export * from './src/transcript-answer'",
   "export {writingFacts, writingPrompt, verifyWrittenAnswer, draftWrittenAnswer, unattributedTranscriptSentences, wordedTranscriptFact, proseFallback, ANSWER_WRITING_VERSION} from './src/research-writing'",
@@ -68,13 +69,13 @@ const NSW_LATER = [
 ]
 const hit = (pages, n, words) => api.excerpt(pages.find(p => p.n === n).text, words, n, api.transcriptRoles(pages))
 // Each turn of a page that has words, as its role or, with no role, what opens it.
-const turnsOf = (pages, n) => { const parsed = api.pageTurns(pages.find(p => p.n === n).text, n), roleFor = api.transcriptRoles(pages); return parsed.turns.filter(t => t.end > t.start).map(t => roleFor(parsed, t) ?? `no role (${t.opens})`) }
+const turnsOf = (pages, n, key) => { const parsed = { ...api.pageTurns(pages.find(p => p.n === n).text, n), pdfPage: n }, roleFor = api.transcriptRoles(pages, key); return parsed.turns.filter(t => t.end > t.start).map(t => roleFor(parsed, t) ?? `no role (${t.opens})`) }
 const NAMES = /Specimen|Sample|Placeholder|Standin|Fixture|Mockup|Template|Dummy|Proxy|Example/
 
 test('Robodebt layout: the commissioner by the role word, counsel by the cover page; a witness under their own name has no role', () => {
   // A turn that opens on the page under its own heading carries that speaker's role, and never a name.
   assert.deepEqual(hit(ROBODEBT, 2, ['legal', 'advice']), { excerpt: 'Did you see the legal advice about income averaging before the measure began?', speaker_role: 'counsel assisting' })
-  assert.deepEqual(hit(ROBODEBT, 2, ['object']), { excerpt: 'Commissioner, I object to the form of the question about averaging.', speaker_role: 'counsel for a party' })
+  assert.deepEqual(hit(ROBODEBT, 2, ['object']), { excerpt: 'Commissioner, I object to the form of the question about averaging.', speaker_role: 'lawyer appearing at the hearing' })
   assert.deepEqual(hit(ROBODEBT, 3, ['thank']), { excerpt: 'Thank you.', speaker_role: 'commissioner' })
   // The witness's heading is their name. No name is read from a "<" line to make them a witness, so there is no role.
   assert.deepEqual(hit(ROBODEBT, 2, ['time']), { excerpt: 'I did not see any legal advice about income averaging at that time.' })
@@ -82,7 +83,7 @@ test('Robodebt layout: the commissioner by the role word, counsel by the cover p
   assert.deepEqual(hit(ROBODEBT, 2, ['recall']), { excerpt: 'I recall the averaging brief only in general terms.' })
   // A turn that runs over the page has no role there: nothing is carried across a page break.
   assert.deepEqual(hit(ROBODEBT, 3, ['attention']), { excerpt: 'It was not something that was brought to my attention, and the averaging method was already in use by then.' })
-  assert.deepEqual(turnsOf(ROBODEBT, 2), ['commissioner', 'counsel assisting', 'counsel assisting', 'no role (heading)', 'counsel for a party', 'no role (heading)'])
+  assert.deepEqual(turnsOf(ROBODEBT, 2), ['commissioner', 'counsel assisting', 'counsel assisting', 'no role (heading)', 'lawyer appearing at the hearing', 'no role (heading)'])
   assert.deepEqual(turnsOf(ROBODEBT, 3), ['no role (page)', 'commissioner'])
   // A word found only in a procedural line is never quoted.
   assert.doesNotMatch(hit(ROBODEBT, 2, ['affirmed']).excerpt, /<|AFFIRMED|EXAMINATION/)
@@ -90,12 +91,12 @@ test('Robodebt layout: the commissioner by the role word, counsel by the cover p
 
 test('Antisemitism layout: wrapped appearances; a witness titled Commissioner is not the commissioner', () => {
   assert.deepEqual(hit(ANTISEMITISM, 2, ['many']), { excerpt: 'How many reports about online abuse did your office receive last year?', speaker_role: 'counsel assisting' })
-  assert.deepEqual(hit(ANTISEMITISM, 2, ['tender']), { excerpt: 'Commissioner, may I be heard on the tender of the abuse reports?', speaker_role: 'counsel for a party' })
+  assert.deepEqual(hit(ANTISEMITISM, 2, ['tender']), { excerpt: 'Commissioner, may I be heard on the tender of the abuse reports?', speaker_role: 'lawyer appearing at the hearing' })
   // "COMMISSIONER <NAME>" is not the role word, and the name is one a "<" line prints: no role.
   assert.deepEqual(hit(ANTISEMITISM, 2, ['received']), { excerpt: 'We received more reports about online abuse than in any earlier year.' })
   // A name above an unrelated line of the cover takes no role from it.
   assert.deepEqual(hit(ANTISEMITISM, 2, ['welcome']), { excerpt: 'I welcome everyone here to talk about online abuse today.' })
-  assert.deepEqual(turnsOf(ANTISEMITISM, 2), ['commissioner', 'counsel assisting', 'counsel assisting', 'no role (heading)', 'counsel for a party', 'no role (heading)'])
+  assert.deepEqual(turnsOf(ANTISEMITISM, 2), ['commissioner', 'counsel assisting', 'counsel assisting', 'no role (heading)', 'lawyer appearing at the hearing', 'no role (heading)'])
 })
 
 test('NSW Healthcare Funding layout: an "A." is a witness, a bare "Q." is a question with no asker, "HEADING: Q." has the heading\'s role', () => {
@@ -111,7 +112,7 @@ test('NSW Healthcare Funding layout: an "A." is a witness, a bare "Q." is a ques
   // Two witnesses sworn together: an "A." is a witness's answer, and nobody is named.
   assert.deepEqual(hit(NSW, 3, ['activity']), { excerpt: 'The funding model is activity based, with a block grant for the smaller sites.', speaker_role: 'witness' })
   assert.deepEqual(turnsOf(NSW, 2), ['commissioner', 'counsel assisting', 'witness', 'question', 'witness'])
-  assert.deepEqual(turnsOf(NSW, 3), ['no role (page)', 'counsel for a party', 'counsel assisting', 'witness'])
+  assert.deepEqual(turnsOf(NSW, 3), ['no role (page)', 'lawyer appearing at the hearing', 'counsel assisting', 'witness'])
   // Without the transcript's roles: the words only.
   assert.deepEqual(api.excerpt('MS SPECIMEN: I did not see it.', ['see']), { excerpt: 'I did not see it.' })
 })
@@ -155,7 +156,126 @@ test('review P1-2: across a page break a question and an answer never swap speak
   // A heading in title case is counsel addressing someone, not that person speaking; a bare role word in title case is the role.
   const addressed = [NSW[0], { n: 2, folio: '711', text: 'MR SAMPLE: Thank you.\nMr Standin: at the time you were the director, were you not?\nCommissioner: Yes, go on.' }]
   assert.deepEqual(turnsOf(addressed, 2).filter(r => r !== 'counsel assisting').every(r => r === 'commissioner' || r.startsWith('no role')), true)
-  assert.ok(!turnsOf(addressed, 2).includes('counsel for a party'))
+  assert.ok(!turnsOf(addressed, 2).includes('lawyer appearing at the hearing'))
+})
+
+// ---- second review (16 November 2026): wrong roles found by construction
+
+// The two covers the review names, with invented names. A cover that sets each appearance on its own line with
+// " | ", one of them not a lawyer; and a cover whose entries wrap, with a police officer on a line of their own and
+// a solicitor.
+const COVER_LINES = [
+  { n: 1, folio: null, text: 'TRANSCRIPT OF PROCEEDINGS\nROYAL COMMISSION ON ANTISEMITISM\nAND SOCIAL COHESION\nTUESDAY, 24 FEBRUARY 2026\nAT 10:30AM (AEDT)\nOPENING HEARING\nAPPEARANCES\nTHE HONOURABLE ALEX EXAMPLE AC SC | COMMISSIONER\nUNCLE ROWAN PROXY | WELCOME TO COUNTRY\nJORDAN SAMPLE SC | COUNSEL ASSISTING\nAny person who publishes any part of this transcript in any way and to any person contrary\nto a direction against publication commits an offence.' },
+  { n: 2, folio: 'P-1', text: 'COMMISSIONER: I invite Uncle Rowan to welcome us.\nUNCLE PROXY: I welcome everyone gathered here on country this morning.\nMR SAMPLE SC: May it please the Commission.' },
+]
+const COVER_WRAPPED = [
+  { n: 1, folio: null, text: 'TRANSCRIPT OF PROCEEDINGS\nROYAL COMMISSION ON ANTISEMITISM\nAND SOCIAL COHESION\nFRIDAY, 24 JULY 2026\nAT 10:00AM (AEST)\nHEARING BLOCK 5, DAY 5\nTHE HONOURABLE ALEX EXAMPLE AC SC,\nCOMMISSIONER\nJORDAN SAMPLE SC AND MS RILEY PLACEHOLDER, COUNSEL\nASSISTING\nMR CASEY STANDIN AND MS MORGAN FIXTURE, COMMONWEALTH\nOF AUSTRALIA\nMS DREW MOCKUP SC AND MR QUINN TEMPLATE, STATE OF NSW\nMR SAM DUMMY, WA POLICE\nTAYLOR SPECIMEN, SOLICITOR FOR THE EXAMPLE COUNCIL OF\nAUSTRALIA, THE EXAMPLE BOARD OF DEPUTIES, AND THE EXAMPLE FOUNDATION' },
+  { n: 2, folio: 'P-500', text: 'COMMISSIONER: Yes.\nMR SAMPLE SC: I call the next witness.\nMS PLACEHOLDER: The statement is tendered.\nMR STANDIN: No questions for the Commonwealth.\nMR DUMMY: The police have no questions.\nMR SPECIMEN: I appear for the council and have two questions.' },
+]
+
+test('second review P1-1 and the label ruling: a cover entry does not run on into another person\'s line; a solicitor is a lawyer appearing', () => {
+  // The Welcome to Country speaker sits on the line above counsel assisting's. The first version joined the two.
+  assert.deepEqual(turnsOf(COVER_LINES, 2), ['commissioner', 'no role (heading)', 'counsel assisting'])
+  assert.deepEqual(hit(COVER_LINES, 2, ['gathered']), { excerpt: 'I welcome everyone gathered here on country this morning.' })
+  // A wrapped role word ("..., COUNSEL / ASSISTING") is still read; "COMMONWEALTH OF AUSTRALIA" and "WA POLICE" close
+  // with no role word, and the police officer takes nothing from the solicitor's line below.
+  assert.deepEqual(turnsOf(COVER_WRAPPED, 2), ['commissioner', 'counsel assisting', 'counsel assisting', 'no role (heading)', 'no role (heading)', 'lawyer appearing at the hearing'])
+  assert.equal(api.APPEARING, 'lawyer appearing at the hearing')
+  assert.equal(api.transcriptLead({ role: api.APPEARING, date: '24 July 2026', page: 'P-500', excerpt: 'I have two questions.' }), 'A lawyer appearing at the hearing said on 24 July 2026 (page P-500)')
+  // A role word in the middle of another person's next line gives nothing to the line above it.
+  const above = [{ n: 1, folio: null, text: 'APPEARANCES\nMR CASEY STANDIN\nMS MORGAN FIXTURE SC, COUNSEL ASSISTING' }, { n: 2, folio: '1', text: 'MR STANDIN: I am here to observe.\nMS FIXTURE SC: Thank you.' }]
+  assert.deepEqual(turnsOf(above, 2), ['no role (heading)', 'counsel assisting'])
+})
+
+test('second review P1-3: two bare marks of the same letter running have no role; listed mis-marked pages have none at all', async () => {
+  // The publisher printed counsel's next question under "A." and the witness's answer under "Q.".
+  const slip = [NSW[0], { n: 2, folio: '730', text: 'MR SAMPLE: Q. Was the alarm tested?\nA. It was.\nA. And when was that?\nQ. In the spring.\nQ. Thank you.\nA. Yes.' }]
+  assert.deepEqual(turnsOf(slip, 2), ['counsel assisting', 'no role (mark)', 'no role (mark)', 'no role (mark)', 'no role (mark)', 'witness'])
+  assert.deepEqual(hit(slip, 2, ['when']), { excerpt: 'And when was that?' })
+  // The list: transcript key and PDF page only, no names. One line adds a page.
+  assert.ok(api.MISMARKED.pages.length >= 9)
+  for (const entry of api.MISMARKED.pages) { assert.deepEqual(Object.keys(entry), ['transcript', 'pdf_page']); assert.match(entry.transcript, /^transcript-\d{4}-\d{2}-\d{2}-[0-9a-f]{12}$/); assert.ok(Number.isInteger(entry.pdf_page) && entry.pdf_page > 1) }
+  assert.doesNotMatch(JSON.stringify(api.MISMARKED.pages), /[A-Z]/)
+  // On a listed page no turn has a role, whatever its heading or mark; the page before it is untouched.
+  const listed = api.MISMARKED.pages[0]
+  assert.deepEqual(turnsOf(NSW, 2, listed.transcript).filter(r => !r.startsWith('no role')).length, 5)
+  const moved = NSW.map(p => p.n === 2 ? { ...p, n: listed.pdf_page } : p)
+  assert.ok(turnsOf(moved, listed.pdf_page, listed.transcript).every(r => r.startsWith('no role')))
+  assert.ok(turnsOf(moved, listed.pdf_page, 'transcript-2024-02-20-000000000000').some(r => !r.startsWith('no role')), 'only for the listed transcript')
+  // Every listed page of the published text: no turn and no excerpt carries a role, and none carries a question.
+  const ix = await asset('/transcripts/index.json')
+  for (const entry of api.MISMARKED.pages) {
+    const row = ix.docs.find(d => d.key === entry.transcript); assert.ok(row && row.quote_policy === 'quote', entry.transcript)
+    const doc = await asset(row.file), page = doc.pages.find(p => p.n === entry.pdf_page), roleFor = api.transcriptRoles(doc.pages, row.key)
+    const parsed = { ...api.pageTurns(page.text, page.n), pdfPage: page.n }
+    assert.ok(parsed.turns.length > 2); assert.ok(parsed.turns.every(t => roleFor(parsed, t) === undefined), `${entry.transcript} page ${entry.pdf_page}`)
+    for (const word of new Set(page.text.toLowerCase().match(/[a-z]{5,}/g))) assert.deepEqual(Object.keys(api.excerpt(page.text, [word], page.n, roleFor)), ['excerpt'])
+    cache.delete(row.file)
+  }
+})
+
+test('second review P3-1: an end-of-day line is the publisher\'s, not the last speaker\'s words', () => {
+  const day = [NSW[0], { n: 2, folio: '740', text: 'THE COMMISSIONER: We will adjourn until Monday.\nAT 4.08PM THE COMMISSION WAS ADJOURNED TO MONDAY,\n29 APRIL 2024 AT 10.00AM' }]
+  assert.deepEqual(hit(day, 2, ['adjourn']), { excerpt: 'We will adjourn until Monday.', speaker_role: 'commissioner' })
+  for (const line of ['AT 12.00PM THE SPECIAL COMMISSION OF INQUIRY WAS ADJOURNED', 'AT 4PM THE COMMISSION WAS ADJOURNED TO TUESDAY, 30 APRIL 2024', 'AT 3.10 PM THE INQUIRY WAS ADJOURNED TO 9.30 AM ON', 'THE HEARING WAS ADJOURNED TO 10AM ON MONDAY'])
+    assert.deepEqual(api.pageTurns(`THE COMMISSIONER: Thank you.\n${line}`, 2).turns.map(t => t.opens), ['heading', 'note'], line)
+  // A sentence someone says about an adjournment is still their words.
+  assert.equal(api.pageTurns('THE COMMISSIONER: At 4pm the commission was adjourned yesterday, I am told.', 2).turns.length, 1)
+})
+
+test('second review P2-3: on every published page, a role the cover gives rests on a role word in that person\'s own cover entry', async () => {
+  // Written apart from coverRoles: for each heading that has a cover role, find the cover line that holds the surname
+  // and read that entry only (the line, plus following lines while it ends in a comma, "AND", "WITH" or a split
+  // "COUNSEL", or the next line opens with the role word). The role's own word must be there, after the surname.
+  const ix = await asset('/transcripts/index.json')
+  const WORD = { commissioner: /\bCOMMISSIONER\b/i, 'counsel assisting': /\bCOUNSEL\s+ASSISTING/i, 'lawyer appearing at the hearing': /\bFOR\b/i }
+  const OPENS = /^\W*(?:COUNSEL ASSISTING|COUNSEL FOR|FOR|COMMISSIONER)\b/i
+  let checked = 0, sameMark = 0
+  for (const row of ix.docs) {
+    if (row.quote_policy !== 'quote') continue
+    const doc = await asset(row.file), roleFor = api.transcriptRoles(doc.pages, row.key)
+    const cover = String(doc.pages[0]?.text ?? '').split('\n').map(l => l.trim()).filter(Boolean), seen = new Set()
+    for (const page of doc.pages) {
+      const parsed = { ...api.pageTurns(String(page.text), page.n), pdfPage: page.n }
+      for (const [i, t] of parsed.turns.entries()) {
+        const role = roleFor(parsed, t)
+        // No role on a bare mark that follows, or is followed by, a bare mark of the same letter.
+        const twin = [parsed.turns[i - 1], parsed.turns[i + 1]].some(o => o && o.opens === 'mark' && !o.heading && t.opens === 'mark' && !t.heading && o.mark === t.mark)
+        if (twin) { sameMark++; assert.equal(role, undefined, `${row.key} page ${page.n}: a role on a same-mark run`) }
+        if (!role || !t.heading || !WORD[role] || /^(?:THE )?(?:COMMISSIONER|WITNESS)$/i.test(t.heading) || seen.has(t.heading + role)) continue
+        seen.add(t.heading + role)
+        const surname = t.heading.toUpperCase().replace(/[.,]/g, '').split(/\s+/).filter(w => !['SC', 'KC', 'QC', 'AM', 'AO', 'AC', 'OAM', 'PSM', 'APM'].includes(w)).at(-1)
+        const entries = cover.flatMap((line, n) => {
+          const at = line.toUpperCase().search(new RegExp(`(?<![A-Z'’-])${surname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Z'’-])`))
+          if (at < 0) return []
+          let entry = line.slice(at)
+          for (let k = n; k < n + 3 && cover[k + 1] && (/(?:,|\bAND|\bWITH|\bCOUNSEL)\s*$/i.test(cover[k]) || OPENS.test(cover[k + 1])); k++) entry += ' ' + cover[k + 1]
+          return [entry]
+        })
+        checked++
+        assert.ok(entries.some(e => WORD[role].test(e)), `${row.key}: a ${role} heading whose own cover entry has no such role word`)
+        if (role === 'counsel assisting') assert.ok(entries.some(e => WORD[role].test(e) && !/\bSOLICITOR\b/i.test(e.slice(0, e.search(WORD[role])))), `${row.key}: a solicitor read as counsel assisting`)
+      }
+    }
+    cache.delete(row.file)
+  }
+  assert.ok(checked > 150, `${checked} cover-given roles checked`); assert.ok(sameMark >= 10, `${sameMark} same-mark turns seen`)
+})
+
+test('second review P2-2 and P3-4: a source no model may word reaches the research model as a page pointer, and its rows carry no question', async () => {
+  for (const held of [UNLISTED_CITE, UNTAGGED_CITE]) {
+    const shown = api.transcriptTextForModel(held)
+    assert.equal(shown, `Example Board of Inquiry, hearing transcript, 4 May 2026, transcript page T-88. ${LABEL}. The words are not shown here: select this fact and they are quoted to the reader as recorded.`)
+    assert.doesNotMatch(shown, /tender was let/)
+  }
+  // A wordable source, and anything that is not a transcript excerpt, is shown as it is.
+  assert.equal(api.transcriptTextForModel(ROBODEBT_CITE), ROBODEBT_CITE); assert.equal(api.transcriptTextForModel(GRANT), GRANT)
+  const hits = [{ pdf_page: 9, transcript_page: 'T-88', url: 'https://inquiry.example/day2.pdf#page=9', excerpt: 'Yes.', speaker_role: 'witness', question: { text: 'Was the tender let early?' } }]
+  const row = commission_id => ({ commission: 'Example Board of Inquiry', commission_id, key: 'transcript-x', text_matches: { file: '/transcripts/x.json', quote_policy: 'quote', hits } })
+  assert.deepEqual(api.transcriptRowForModel(row('example-board-of-inquiry')).text_matches.hits, [{ pdf_page: 9, transcript_page: 'T-88', url: 'https://inquiry.example/day2.pdf#page=9' }])
+  assert.deepEqual(api.transcriptRowForModel(row(undefined)).text_matches.hits[0].excerpt, undefined)
+  assert.deepEqual(api.transcriptRowForModel(row('cth-robodebt')).text_matches.hits, hits)
+  assert.deepEqual(api.transcriptRowForModel({ id: 'cth-robodebt', name: 'A commission row' }), { id: 'cth-robodebt', name: 'A commission row' })
 })
 
 // ---- the published data: what it carries today
@@ -184,7 +304,7 @@ test('the three indexed commissions: every quoted passage has a page, a date and
         assert.deepEqual(Object.keys(h).sort(), ['excerpt', 'pdf_page', 'transcript_page', 'url', ...(h.speaker_role ? ['speaker_role'] : []), ...(h.question ? ['question'] : [])].sort(), 'a hit carries its words, its page, at most a role and, for a one-line answer, its question')
         // Hub ruling: the source title that reaches the follow-ups model (and the card) is commission, hearing,
         // date, page and a role from a fixed list. No heading text, so no name, can be in it.
-        for (const f of api.writingFacts(undefined, [fact(1, out.citations[i + 1].text, h.url)])) assert.match(f.source.title, new RegExp(`^${row.commission.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}, hearing transcript, \\d{1,2} [A-Z][a-z]+ \\d{4}, page \\S+: (?:A witness|Counsel assisting|The Commissioner|Counsel for a party|A question was put|speaker's role not recorded)\\. ${LABEL}\\.$`))
+        for (const f of api.writingFacts(undefined, [fact(1, out.citations[i + 1].text, h.url)])) assert.match(f.source.title, new RegExp(`^${row.commission.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}, hearing transcript, \\d{1,2} [A-Z][a-z]+ \\d{4}, page \\S+: (?:A witness|Counsel assisting|The Commissioner|A lawyer appearing at the hearing|A question was put|speaker's role not recorded)\\. ${LABEL}\\.$`))
         assert.doesNotMatch(h.excerpt, /[\u0000-\u0008]/); assert.equal(api.writerMayWord(t), true)
         assert.match(t.date, /^\d{1,2} [A-Z][a-z]+ \d{4}$/)
       }
@@ -231,7 +351,7 @@ const ROBODEBT_CITE = cite('Royal Commission into the Robodebt Scheme', 'Transcr
   ['P-4933', 49, ' (counsel assisting)', 'Do you agree that this approach described income averaging?']], 'cth-robodebt')
 const ANTISEMITISM_CITE = cite('Royal Commission on Antisemitism and Social Cohesion', 'Transcript Day 3, Sydney', '1 July 2026', [
   ['P-180', 4, ' (commissioner)', 'What does the platform do when a report of abuse is made?'],
-  ['P-181', 5, ' (counsel for a party)', 'The State does not oppose the tender of the report.']], 'cth-antisemitism')
+  ['P-181', 5, ' (lawyer appearing at the hearing)', 'The State does not oppose the tender of the report.']], 'cth-antisemitism')
 const NSW_CITE = cite('Special Commission of Inquiry into Healthcare Funding', 'Day 006 – 20 February 2024', '20 February 2024', [
   ['601', 3, ' (witness)', 'The duress alarms did not work reliably when we first tested them.'],
   ['640', 42, '', 'The roster was changed without notice to the ward.']], 'nsw-healthcare-funding')
@@ -248,7 +368,7 @@ const plainFacts = () => api.writingFacts(undefined, [fact(1, GRANT, 'https://op
 const question = 'What was said about income averaging at the Robodebt Royal Commission?'
 
 const NAMED = 'For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words. Outside a quotation, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page; never infer a role. This covers everyone named in the evidence, commissioners and counsel included.'
-const RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. A fact whose attribution has question_quoted is a short answer, and question_quoted is the question it replied to: use the answer only together with that question, and give the question only in its own words inside quotation marks, as a question that was put (by question_role where given), never paraphrased. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + NAMED
+const RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "a lawyer appearing at the hearing". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. A fact whose attribution has question_quoted is a short answer, and question_quoted is the question it replied to: use the answer only together with that question, and give the question only in its own words inside quotation marks, as a question that was put (by question_role where given), never paraphrased. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + NAMED
 const POINT_RULE = 'Never word what was said, asked or put at a royal commission, integrity or inquiry hearing in a point or in reply text, in your own words or quoted, never state it as fact and never name who spoke: select the transcript excerpt\'s numeric record fact id instead, and the writer attributes it with the speaker\'s role, hearing date and page. ' + NAMED + ' '
 
 test('the writer rule for transcript sources is fixed text', () => {
@@ -277,7 +397,7 @@ test('the writer prompt for a transcript-sourced answer holds the rule and each 
     { ...plan, speaker_role: 'witness', ...robodebt, transcript_page: 'P-4899' },
     { ...plan, speaker_role: 'counsel assisting', ...robodebt, transcript_page: 'P-4933' },
     { ...plan, speaker_role: 'commissioner', ...antisemitism, transcript_page: 'P-180' },
-    { ...plan, speaker_role: 'counsel for a party', ...antisemitism, transcript_page: 'P-181' },
+    { ...plan, speaker_role: 'lawyer appearing at the hearing', ...antisemitism, transcript_page: 'P-181' },
     { ...plan, speaker_role: 'witness', ...nsw, transcript_page: '601' },
     // A turn whose speaker the page does not settle: quoted with "the transcript records", never as a bare claim.
     { ...plan, speaker_role: 'not recorded', ...nsw, transcript_page: '640' },
@@ -323,7 +443,7 @@ test('the citation a reader sees is built from the typed facts: commission, hear
     `Royal Commission into the Robodebt Scheme, hearing transcript, 10 March 2023, page P-4899: A witness. ${LABEL}.`,
     `Royal Commission into the Robodebt Scheme, hearing transcript, 10 March 2023, page P-4933: Counsel assisting. ${LABEL}.`,
     `Royal Commission on Antisemitism and Social Cohesion, hearing transcript, 1 July 2026, page P-180: The Commissioner. ${LABEL}.`,
-    `Royal Commission on Antisemitism and Social Cohesion, hearing transcript, 1 July 2026, page P-181: Counsel for a party. ${LABEL}.`,
+    `Royal Commission on Antisemitism and Social Cohesion, hearing transcript, 1 July 2026, page P-181: A lawyer appearing at the hearing. ${LABEL}.`,
     `Special Commission of Inquiry into Healthcare Funding, hearing transcript, 20 February 2024, page 601: A witness. ${LABEL}.`,
     `Special Commission of Inquiry into Healthcare Funding, hearing transcript, 20 February 2024, page 640: speaker's role not recorded. ${LABEL}.`,
   ])
@@ -383,7 +503,7 @@ test('with no model, each passage is quoted with its role, date and page; no rol
     'A witness said on 10 March 2023 (page P-4899): “Income averaging did not make sense to me.”',
     'Counsel assisting asked on 10 March 2023 (page P-4933): “Do you agree that this approach described income averaging?”',
     'The Commissioner asked on 1 July 2026 (page P-180): “What does the platform do when a report of abuse is made?”',
-    'Counsel for a party said on 1 July 2026 (page P-181): “The State does not oppose the tender of the report.”',
+    'A lawyer appearing at the hearing said on 1 July 2026 (page P-181): “The State does not oppose the tender of the report.”',
   ].join('\n\n'), 'the evidence, not findings line is added on the way out of /api/ask, not here')
   const nsw = api.proseFallback({ question, period, facts: api.writingFacts(undefined, [fact(1, NSW_CITE, 'https://healthcarefunding.specialcommission.nsw.gov.au/TRA.0006.pdf#page=3')]) })
   assert.equal(nsw.answer.split('\n\n')[0], 'A witness said on 20 February 2024 (page 601): “The duress alarms did not work reliably when we first tested them.”')
@@ -567,7 +687,7 @@ test('a point that cites a transcript excerpt selects the record for the writer;
     // What the research model reads back from the tool (rows and citation text) names no speaker.
     for (const c of model.doGenerateCalls) { const seen = JSON.stringify(c.prompt); assert.doesNotMatch(seen, /hearing turn by |speaker_label|\\"speaker\\"/) }
     assert.doesNotMatch(out.answer, /knew income averaging was unlawful/, JSON.stringify(point))
-    assert.match(out.answer, /^(?:A witness|Counsel assisting|The Commissioner|Counsel for a party|The transcript records)[^\n]* on 10 March 2023 \(page P-\d+\): “/)
+    assert.match(out.answer, /^(?:A witness|Counsel assisting|The Commissioner|A lawyer appearing at the hearing|The transcript records)[^\n]* on 10 March 2023 \(page P-\d+\): “/)
     const cards = out.qualitative.sources.filter(s => s.cited && !s.coverage)
     assert.ok(cards.length && cards.every(s => s.transcript?.claim === 'attributed' && /hearing transcript, 10 March 2023, page P-\d+: /.test(s.title)), JSON.stringify(cards.map(s => s.title)))
   }

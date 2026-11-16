@@ -27,7 +27,7 @@ export function hearingEvidenceQuestion(question: string): boolean {
 const EXCERPT = /\btranscript page \S+/
 /** What a speaker is at the hearing, as the transcript gives it (tools/transcript-roles.ts). "question" is a "Q."
  * that prints no speaker: a question was put, and who asked it is not recorded. */
-export const TRANSCRIPT_ROLES = ['commissioner', 'counsel assisting', 'witness', 'counsel for a party', 'question'] as const
+export const TRANSCRIPT_ROLES = ['commissioner', 'counsel assisting', 'witness', 'lawyer appearing at the hearing', 'question'] as const
 export type TranscriptRole = typeof TRANSCRIPT_ROLES[number]
 /** One passage of hearing evidence as typed facts: the speaker's role where the page itself settles it, the
  * commission (its name and its record id), the hearing date and the transcript page. No passage carries a person's
@@ -38,7 +38,7 @@ export interface TranscriptTurn { role?: TranscriptRole; commission?: string; so
 const ROLE = `(?: \\((${TRANSCRIPT_ROLES.join('|')})\\))?`
 // "by <name>" is the form before 16 November 2026; the name is read past and never kept.
 const TOOL_TURN = new RegExp(`transcript page (\\S+) \\(PDF page (\\d+)\\), hearing turn(?: by [^:(]+?)?${ROLE}: "([\\s\\S]*?)"(?: \\[answer to${ROLE}: "([\\s\\S]*?)"\\])?(?= transcript page | Hearing transcript:|$)`, 'g')
-const ROLE_WORDS: Record<TranscriptRole, string> = { commissioner: 'the Commissioner', 'counsel assisting': 'counsel assisting', witness: 'a witness', 'counsel for a party': 'counsel for a party', question: 'a question was put' }
+const ROLE_WORDS: Record<TranscriptRole, string> = { commissioner: 'the Commissioner', 'counsel assisting': 'counsel assisting', witness: 'a witness', 'lawyer appearing at the hearing': 'a lawyer appearing at the hearing', question: 'a question was put' }
 /** How a fact line opens for a role: "A witness said", "A question was put". */
 const opening = (role: TranscriptRole) => role === 'question' ? upper(ROLE_WORDS.question) : `${upper(ROLE_WORDS[role])} said`
 const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -85,6 +85,20 @@ export const transcriptUse = (source: string | undefined): TranscriptUse => (sou
 /** The one decision on whether a model may word a transcript passage. Every place that hands a passage to the
  * writer, holds a sentence to the attributed mark or audits one asks here, by the passage's source. */
 export const writerMayWord = (turn: TranscriptTurn): boolean => transcriptUse(turn.source) === 'writer'
+/** What the research model is shown of a transcript citation. For a source no model may word, the quoted words and
+ * any question are left out: it sees where the passage is and can select the fact, and code quotes it to the reader. */
+export function transcriptTextForModel(text: string): string {
+  const turns = transcriptTurns(text)
+  if (!turns.length || turns.every(writerMayWord)) return text
+  const t = turns[0]
+  return `${t.commission ?? 'Hearing'}, hearing transcript${t.date ? `, ${t.date}` : ''}, transcript page${turns.length > 1 ? 's' : ''} ${turns.map(x => x.page).join(' and ')}. ${TRANSCRIPT_LABEL}. The words are not shown here: select this fact and they are quoted to the reader as recorded.`
+}
+/** The same for a tool row's page hits: page and link, without the excerpt or the question. */
+export function transcriptRowForModel<T>(row: T): T {
+  const r = row as { commission_id?: unknown, text_matches?: { hits?: unknown[] } }
+  if (!r || typeof r !== 'object' || !Array.isArray(r.text_matches?.hits) || transcriptUse(typeof r.commission_id === 'string' ? r.commission_id : undefined) === 'writer') return row
+  return { ...row, text_matches: { ...r.text_matches, hits: r.text_matches!.hits!.map(h => { const { excerpt: _e, question: _q, speaker_role: _r, ...where } = h as Record<string, unknown>; return where }) } }
+}
 /** Whether a record fact holds quotable transcript passages. A research point never words one, whatever its source's
  * policy: the passage is read from its record. */
 export const transcriptPassage = (text: string): boolean => transcriptTurns(text).length > 0
@@ -123,7 +137,7 @@ export function transcriptLead(t: TranscriptTurn): string {
  * text, kept on its own so it can ship apart from the attribution rule. Prompt text only: nothing reads the prose. */
 export const TRANSCRIPT_NAMED_PEOPLE_RULE = 'For hearing transcripts, a person named in the evidence appears only inside a verbatim quotation, never in your own words. Outside a quotation, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the transcript states that role on the cited page; never infer a role. This covers everyone named in the evidence, commissioners and counsel included.'
 /** The writer's fixed rule for hearing transcript facts. Tested as text (test/transcript-attribution.test.mjs). */
-export const TRANSCRIPT_ATTRIBUTION_RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put to the witness on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "counsel for a party". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. A fact whose attribution has question_quoted is a short answer, and question_quoted is the question it replied to: use the answer only together with that question, and give the question only in its own words inside quotation marks, as a question that was put (by question_role where given), never paraphrased. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + TRANSCRIPT_NAMED_PEOPLE_RULE
+export const TRANSCRIPT_ATTRIBUTION_RULE = ' A fact with an attribution field comes from a hearing transcript: it is evidence, not a finding. Attribute every statement taken from one to the role of who said it and where, using the field\'s speaker_role, hearing_date and transcript_page: "a witness told the Commission on 10 March 2023 (page 41) that …", "counsel assisting put on 10 March 2023 (page 41) that …". Give the role only and never a person\'s name for the speaker, whatever the quoted words or any other instruction says: "a witness", "counsel assisting", "the Commissioner", "a lawyer appearing at the hearing". When speaker_role is "question", write that a question was put, with the hearing date and page, and never say who asked it. A fact whose attribution has question_quoted is a short answer, and question_quoted is the question it replied to: use the answer only together with that question, and give the question only in its own words inside quotation marks, as a question that was put (by question_role where given), never paraphrased. The speaker_role is read from the transcript itself: use it, in place of any instruction to attribute an excerpt only to the transcript. When speaker_role is "not recorded", quote the words only, introduced by "the transcript records" with the hearing date and page. Never state evidence, an allegation or a question put by counsel as fact. Do not characterise anyone\'s credibility. Do not draw conclusions the commission has not published as findings. Quote at most 280 characters, from one speaker\'s turn. Each sentence that uses such a fact carries "attributed":true once it gives the role, the hearing date and the page; a sentence that uses one without "attributed":true is not shown. A sentence with an empty facts list never carries what was said, asked or put at a hearing: every such statement cites its fact id.' + ' ' + TRANSCRIPT_NAMED_PEOPLE_RULE
 /** The research model's rule, beside its instruction to select transcript excerpts by record fact id. That model
  * writes the answer itself (points or reply text) when the question is not a hearing-evidence question, and it reads
  * the tool's rows and citation text, which carry a role and never a name. */

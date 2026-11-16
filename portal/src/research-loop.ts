@@ -22,7 +22,7 @@ import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agenti
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
-import { transcriptTurns, transcriptPassage, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_POINT_RULE } from './transcript-answer'
+import { transcriptTurns, transcriptPassage, transcriptTextForModel, transcriptRowForModel, hearingEvidenceQuestion, TRANSCRIPT_LABEL, TRANSCRIPT_POINT_RULE } from './transcript-answer'
 import { verifyResearchAnswer, verifyResearchPoints, passagesAnswer, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
@@ -186,8 +186,10 @@ export function createResearch(options: ResearchOptions): Research {
       // Canonical callers keep the rows. The model already receives every count as a fact below.
       if (data && result.tool === 'count_records') delete data.rows
       if (data && getAskTool(result.tool)?.evidenceKind === 'passages' && Array.isArray(data.rows) && Array.isArray(data.passages)) data.rows = data.rows.map(raw => { const { excerpt: _excerpt, ...row } = object(raw); return row })
+      // A transcript passage from a source no model may word reaches the research model as a page pointer only.
+      if (data && ['royal_commissions', 'integrity_reports'].includes(result.tool) && Array.isArray(data.rows)) data.rows = data.rows.map(transcriptRowForModel)
       const { cite: _cite, query: _query, ...shown } = result
-      const value = { ...shown, ...(data ? { data } : {}), research_state: { remaining_calls: RESEARCH_MAX_CALLS - calls, remaining_rounds: limits.rounds - round, remaining_ms: Math.max(0, limits.wallMs - (Date.now() - started)), recovery_required: recoveryOwed(), answer_target_reached: Date.now() - started >= ASK_ANSWER_TARGET_MS }, facts: index < 0 ? [] : factSheet([result]).facts.map(f => ({ id: f.id + offset, text: f.text })) }
+      const value = { ...shown, ...(data ? { data } : {}), research_state: { remaining_calls: RESEARCH_MAX_CALLS - calls, remaining_rounds: limits.rounds - round, remaining_ms: Math.max(0, limits.wallMs - (Date.now() - started)), recovery_required: recoveryOwed(), answer_target_reached: Date.now() - started >= ASK_ANSWER_TARGET_MS }, facts: index < 0 ? [] : factSheet([result]).facts.map(f => ({ id: f.id + offset, text: transcriptTextForModel(f.text) })) }
       if (bytes(value) > RESEARCH_RESULT_BYTES) fail('result_size')
       return value
     }

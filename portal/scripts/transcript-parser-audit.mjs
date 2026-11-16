@@ -35,14 +35,14 @@ const REVIEW_PAGES = { 'transcript-2024-09-17-80b238a4a479': [48, 50], 'transcri
 const out = {}, sample = []
 for (const [d, row] of index.docs.entries()) {
   if (row.quote_policy !== 'quote') continue
-  const doc = await json(row.file), roleFor = api.transcriptRoles(doc.pages)
+  const doc = await json(row.file), roleFor = api.transcriptRoles(doc.pages, row.key)
   const c = out[row.commission] ??= { transcripts: 0, pages: 0, turns: { confident: 0, uncertain: 0, page_top: 0 }, characters: { confident: 0, uncertain: 0, page_top: 0 }, roles: {},
     excerpts: { total: 0, with_role: 0, no_role: 0, empty: 0 }, notes: { examination: 0, other: 0 }, possible_label_slips: 0, replies_under_counsel: 0, named_headings_no_role: 0, short_answers: { total: 0, with_question: 0 } }
   c.transcripts++
   for (const page of doc.pages) {
     if (typeof page.text !== 'string') continue
     c.pages++
-    const parsed = api.pageTurns(page.text, page.n)
+    const parsed = { ...api.pageTurns(page.text, page.n), pdfPage: page.n }
     for (const [i, t] of parsed.turns.entries()) {
       if (t.opens === 'note') c.notes[/EXAMINATION BY/i.test(parsed.text.slice(t.from, t.start)) ? 'examination' : 'other']++
       if (t.opens === 'heading' && parsed.turns[i - 1]?.opens === 'heading' && parsed.turns[i - 1].heading === t.heading) c.possible_label_slips++
@@ -54,7 +54,7 @@ for (const [d, row] of index.docs.entries()) {
       if (!role && t.heading) c.named_headings_no_role++
       if (role === 'witness' && t.opens === 'mark' && parsed.text.slice(t.start, t.end).trim().split(/\s+/).length <= api.SHORT_ANSWER_WORDS) { c.short_answers.total++; if (api.answeredQuestion(parsed, t, roleFor, 280 - (t.end - t.start))) c.short_answers.with_question++ }
       const words = parsed.text.slice(t.start, t.end), prior = parsed.turns[i - 1]
-      if (t.opens === 'heading' && /^counsel/.test(role ?? '') && words.split(' ').length <= 3 && REPLY.test(words) && prior && /\?\s*$/.test(parsed.text.slice(prior.start, prior.end))) c.replies_under_counsel++
+      if (t.opens === 'heading' && /^(?:counsel|lawyer)/.test(role ?? '') && words.split(' ').length <= 3 && REPLY.test(words) && prior && /\?\s*$/.test(parsed.text.slice(prior.start, prior.end))) c.replies_under_counsel++
     }
     const words = api.tokens(page.text, stop)
     if (!words.length) continue

@@ -1,5 +1,5 @@
 /** The role of whoever holds a turn of a hearing transcript: the commissioner, counsel assisting, a witness or
- * counsel for a party; or, for a "Q." that prints no speaker, that it is a question, with no asker. Built only on
+ * a lawyer appearing at the hearing; or, for a "Q." that prints no speaker, that it is a question, with no asker. Built only on
  * the turns pageTurns (transcript-text.ts) reads from a page. A role is given only when the page itself makes it
  * certain; anything else has none and is quoted as "the transcript records". Only the role leaves this file: a
  * heading's text, and so anyone's name, never does.
@@ -9,10 +9,14 @@
  * the one form of it a page shows, and both are left without a role. */
 import type { RecordRow } from './published-records'
 import type { PageTurn } from './transcript-text'
+import MISMARKED from './transcript-mismarked-pages.json'
 
-export const SPEAKER_ROLES = ['commissioner', 'counsel assisting', 'witness', 'counsel for a party', 'question'] as const
+/** Everyone the cover lists as appearing "for" someone, counsel or solicitor, for a party or for one witness. The
+ * cover does not always say which, so the label is one that is true of all of them. One line to change. */
+export const APPEARING = 'lawyer appearing at the hearing'
+export const SPEAKER_ROLES = ['commissioner', 'counsel assisting', 'witness', APPEARING, 'question'] as const
 export type SpeakerRole = typeof SPEAKER_ROLES[number]
-export type ParsedPage = { text: string, turns: PageTurn[] }
+export type ParsedPage = { text: string, turns: PageTurn[], pdfPage?: number }
 /** The role of one of a page's turns, or undefined. */
 export type RoleFor = (page: ParsedPage, turn: PageTurn) => SpeakerRole | undefined
 
@@ -40,7 +44,7 @@ function coverRoles(pages: RecordRow[]): (heading: string) => SpeakerRole | unde
   const noted = new Set<string>()
   for (const p of pages) if (typeof p.text === 'string') for (const line of p.text.match(/^[ \t]*<[^\n]*$/gm) ?? [])
     if (!/EXAMINATION/i.test(line)) for (const w of nameWords(line.replace(/[<\[\]:]/g, ' '))) noted.add(w)
-  const role = (word: string): SpeakerRole => /assisting/i.test(word) ? 'counsel assisting' : /commissioner/i.test(word) ? 'commissioner' : 'counsel for a party'
+  const role = (word: string): SpeakerRole => /assisting/i.test(word) ? 'counsel assisting' : /commissioner/i.test(word) ? 'commissioner' : APPEARING
   const cache = new Map<string, SpeakerRole | undefined>()
   const find = (heading: string): SpeakerRole | undefined => {
     const words = nameWords(heading), surname = words.at(-1) ?? ''
@@ -54,14 +58,14 @@ function coverRoles(pages: RecordRow[]): (heading: string) => SpeakerRole | unde
       if (!words.slice(0, -1).every(w => entry.includes(w) || (w.length === 1 && entry.some(e => e.startsWith(w))))) continue
       // The entry runs on to the next line only when this line ends in a comma, "and" or "with", when the role
       // word opens the next line, or when the role word is split over the break ("..., COUNSEL / ASSISTING"). A
-      // name above another person's line takes no role from it. An entry that says "solicitor" before its role
-      // word is not counsel, and has no role.
+      // name above another person's line takes no role from it. "X, SOLICITOR FOR ..." is an appearance like
+      // counsel's: a lawyer appearing at the hearing.
       let tail = line.slice(m.index + m[0].length), last = tail
       const previous = cover.slice(0, n).reverse().map(l => [...l.matchAll(new RegExp(ROLE_WORD, 'gi'))].at(-1)?.[1]).find(Boolean)
       const wrapped = !(previous && /for$/i.test(previous)) || OPENS_ENTRY.test(line)
       for (const next of [...cover.slice(n + 1, n + 4), '']) {
         const closes = ROLE_WORD.exec(tail)
-        if (closes) { if (!/[0-9:]/.test(tail.slice(0, closes.index)) && !/\bsolicitors?\b/i.test(tail.slice(0, closes.index))) found.add(role(closes[1])); break }
+        if (closes) { if (!/[0-9:]/.test(tail.slice(0, closes.index))) found.add(role(closes[1])); break }
         if (!next || !wrapped || /[0-9:]/.test(tail)) break
         const joined = `${tail} ${next}`, ahead = ROLE_WORD.exec(joined)
         const lastWord = tail.trimEnd().lastIndexOf(' ') + 1
@@ -93,8 +97,12 @@ const MARK_ROLES = true
  *    answers (three or more of each; the other two commissions' transcripts have none): elsewhere a line that
  *    opens "A." is a list item, not an answer.
  *  - Text at the top of a page (it runs on from the page before) and text after a "<" line have no role. */
-export function transcriptRoles(pages: RecordRow[]): RoleFor {
-  const onCover = coverRoles(pages)
+/** Pages where the publisher printed a wrong or missing "Q.", "A." or heading (transcript-mismarked-pages.json:
+ * transcript key and PDF page, no names). No turn on a listed page has a role. Adding a page is one line there. */
+export const mismarkedPages = (key: string | undefined): Set<number> => new Set((MISMARKED.pages as { transcript: string, pdf_page: number }[]).filter(p => p.transcript === key).map(p => p.pdf_page))
+
+export function transcriptRoles(pages: RecordRow[], key?: string): RoleFor {
+  const onCover = coverRoles(pages), mismarked = mismarkedPages(key)
   const lines = (mark: string) => pages.reduce((n, p) => n + (typeof p.text === 'string' ? (p.text.match(new RegExp(`^[ \\t]*(?:[^\\n:]{1,70}:+[ \\t]+)?${mark}[.:](?=\\s|$)`, 'gm')) ?? []).length : 0), 0)
   const examined = lines('Q') >= 3 && lines('A') >= 3
   const headingRole = (heading: string) => {
@@ -105,6 +113,7 @@ export function transcriptRoles(pages: RecordRow[]): RoleFor {
   return (page, turn) => {
     const i = page.turns.indexOf(turn)
     if (i < 0 || turn.opens === 'page' || turn.opens === 'note') return undefined
+    if (page.pdfPage !== undefined && mismarked.has(page.pdfPage)) return undefined
     if (turn.opens === 'heading') {
       const before = page.turns[i - 1], after = page.turns[i + 1]
       if ([before, after].some(t => t?.opens === 'heading' && t.heading === turn.heading)) return undefined
