@@ -33,10 +33,11 @@ export function shardOf(term: string, shards: number): number {
 
 /** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
  * public text or every word is too common to narrow the search. */
-/** How well a transcript fits a word search, from the postings alone (no transcript is opened): `least` is the
- * smallest number of its pages holding any one of the searched words, a floor on how much of it is about all of
- * them; `pages` is the sum over the words. A transcript that dwells on the words comes before one that mentions
- * them once. Words too common to be posted (ix.common) take no part. */
+/** How well a transcript fits a word search, from the postings alone (no transcript is opened): `least` is the page
+ * count of the searched word that is on the fewest of its pages, and transcripts are listed most first by it;
+ * `pages` is the sum of the searched words' page counts, most first among equals. A hearing day that discusses every
+ * searched word at length comes before one where a word appears once. Words too common to be posted (ix.common) take
+ * no part. */
 export type TextFit = { least: number, pages: number }
 /** The transcripts of a commission whose text holds every searched word, with each one's fit. */
 export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[], fit: Map<string, TextFit> } | null> {

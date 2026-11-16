@@ -222,7 +222,7 @@ def postings_only(out: Path, check: bool) -> int:
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--out", default=str(OUT), help="the output folder; with --postings-only it must be named 'transcripts', because the index gives each transcript's file as /transcripts/<commission>/<key>.json")
     ap.add_argument("--postings-only", action="store_true", help="rebuild terms/ from the published transcript files; no PDF is read")
     ap.add_argument("--check", action="store_true", help="with --postings-only: write nothing, exit 1 on a difference")
     args = ap.parse_args(argv)

@@ -298,6 +298,38 @@ test('a word search lists the transcripts that dwell on the words first: by the 
   }
 });
 
+test('the whole order of a word search is the stated rule, ties included: least, then the sum, then newest', async () => {
+  const ix = await asset('/transcripts/index.json');
+  let tiesOnLeast = 0;
+  for (const [commission, id, words, terms] of [['robodebt', 'cth-robodebt', 'income averaging', ['income', 'averaging']], ['nsw-healthcare-funding', 'nsw-healthcare-funding', 'duress alarm', ['duress', 'alarm']], ['robodebt', 'cth-robodebt', 'ombudsman whistleblower', ['ombudsman', 'whistleblower']]]) {
+    const keys = [];
+    for (let offset = 0, turns = 0; offset !== null && turns < 60; turns++) { const page = await call({ view: 'transcripts', commission, words, limit: 8, offset }); keys.push(...page.rows.map(r => r.key)); offset = page.next_offset ?? null; }
+    // The same order worked out here from the transcript files alone.
+    const matched = [];
+    for (const d of ix.docs.filter(d => d.commission === id)) { const doc = await asset(d.file); if (terms.every(t => doc.terms[t])) { const counts = terms.map(t => doc.terms[t].length); matched.push({ key: d.key, date: String(d.date), least: Math.min(...counts), pages: counts.reduce((a, b) => a + b, 0) }); } }
+    matched.sort((a, b) => b.least - a.least || b.pages - a.pages || b.date.localeCompare(a.date) || a.key.localeCompare(b.key));
+    assert.deepEqual(keys, matched.map(m => m.key), words);
+    for (let i = 1; i < matched.length; i++) if (matched[i - 1].least === matched[i].least && matched[i - 1].pages !== matched[i].pages) tiesOnLeast++;
+  }
+  // The data holds rows that tie on the first part and are told apart only by the sum.
+  assert.ok(tiesOnLeast >= 3, `${tiesOnLeast} ties decided by the sum`);
+});
+
+test('a title or date match comes first even when a text match fits better', async () => {
+  // "March" is in the date of nine Robodebt transcripts and in the text of others.
+  const out = await call({ view: 'transcripts', commission: 'robodebt', words: 'March', limit: 8 }); cited(out);
+  const ix = await asset('/transcripts/index.json');
+  const named = out.rows.filter(r => /march/i.test(`${r.title} ${r.date_words ?? ''}`) || /-03-/.test(String(r.date)));
+  assert.ok(named.length >= 1 && /-03-/.test(String(out.rows[0].date)), JSON.stringify(out.rows.map(r => r.date)));
+  // Some transcript not dated in March holds the word on more pages than the first row does, and still comes later.
+  const first = await fitOf(out.rows[0].key, ['march']);
+  let better = 0;
+  for (const d of ix.docs.filter(d => d.commission === 'cth-robodebt' && !/-03-/.test(String(d.date)))) { const doc = await asset(d.file); if ((doc.terms.march ?? []).length > first.least) better++; }
+  assert.ok(better >= 1, 'a text match with a higher page count exists');
+  const dates = out.rows.map(r => String(r.date)), lastMarch = dates.map(d => /-03-/.test(d)).lastIndexOf(true), firstOther = dates.findIndex(d => !/-03-/.test(d));
+  assert.ok(firstOther < 0 || firstOther > lastMarch, 'every March transcript is listed before any other');
+});
+
 test('a transcript whose title or date holds the words still comes first, and a listing with no words is newest first as before', async () => {
   const dated = await call({ view: 'transcripts', commission: 'robodebt', words: '10 March 2023', limit: 3 }); cited(dated);
   assert.equal(dated.rows[0].date, '2023-03-10');
