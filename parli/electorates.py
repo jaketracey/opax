@@ -333,6 +333,116 @@ def dissolved_for(electorate: dict, dissolutions: list, contests: list, roster: 
     return None
 
 
+VACANCY_FIELDS = {"jurisdiction", "chamber", "electorate", "as_of", "at", "last_member", "sources", "reviewed", "note"}
+LAST_MEMBER_FIELDS = {"person_id", "name", "party", "source_party_label", "start", "end"}
+VACANCY_SOURCE_FIELDS = {"label", "url", "fetched_at", "sha256", "licence", "evidence"}
+
+
+def apply_vacancies(bundle: dict, vacancies: list) -> dict:
+    """The bundle with each reviewed vacancy record (scripts/hubs/electorate-vacancies.json) written into it.
+
+    A roster lists who holds a seat on its date; it cannot say a seat has since fallen vacant. A reviewed
+    record says so from the parliament's own member page, and becomes rows of the kinds the bundle already
+    holds, so every reader sees a vacancy through the existing fields:
+
+      - a complete roster observation dated `as_of` with no members: the index row then has no
+        representatives, representation_status "verified" and representation_as_of `as_of`;
+      - the last member's dated service record (a term) with the start and end the source gives;
+      - the record's sources.
+
+    The roster row carries `vacant_at` ("expiry": vacant when the house's term ended, so `as_of` must be the
+    `dissolved_on` of a dissolution record for that house) for the readers that word it.
+
+    Like a correction, a record applies only while the bundle still holds what it was reviewed against: the
+    seat's newest roster before `as_of` must list exactly the last member. Anything else raises, naming the
+    record, and nothing is written. Once the seat has a later roster (the post-election reload) the record is
+    superseded and skipped; it may then be removed. Applying a record twice changes nothing. No cause is
+    recorded: the term carries no end_reason.
+    """
+    if not vacancies:
+        return bundle
+    out = {**bundle, **{name: list(bundle.get(name, [])) for name in ("sources", "rosters", "terms")}}
+    people = {p["person_id"]: p for p in bundle.get("people", [])}
+
+    def put(table: str, key: str, row: dict) -> None:
+        out[table] = [r for r in out[table] if r[key] != row[key]] + [row]
+
+    for record in vacancies:
+        label = f"{record.get('electorate')} ({record.get('chamber')})" if isinstance(record, dict) else repr(record)
+        if not isinstance(record, dict) or set(record) - VACANCY_FIELDS:
+            raise ValueError(f"Vacancy {label}: unknown fields")
+        seats = [e for e in bundle.get("electorates", []) if (e["jurisdiction"], e["chamber"], e["name"]) ==
+                 (record.get("jurisdiction"), record.get("chamber"), record.get("electorate")) and e.get("status") == "current"]
+        if len(seats) != 1:
+            raise ValueError(f"Vacancy {label}: names no one current electorate in this bundle")
+        seat = seats[0]
+        eid, as_of = seat["electorate_id"], record.get("as_of")
+        if not isinstance(as_of, str) or not isinstance(record.get("reviewed"), str):
+            raise ValueError(f"Vacancy {label}: needs as_of and reviewed dates")
+        _iso(as_of); _iso(record["reviewed"])
+        if record["reviewed"] < as_of:
+            raise ValueError(f"Vacancy {label}: reviewed before the day it speaks for")
+        if record.get("at") != "expiry":
+            raise ValueError(f"Vacancy {label}: at must be \"expiry\"")
+        if not any((d["jurisdiction"], d["chamber"], d["dissolved_on"]) == (seat["jurisdiction"], seat["chamber"], as_of)
+                   for d in bundle.get("dissolutions", [])):
+            raise ValueError(f"Vacancy {label}: no dissolution record ends that house's term on {as_of}")
+        last = record.get("last_member")
+        if not isinstance(last, dict) or set(last) != LAST_MEMBER_FIELDS or not all(isinstance(last[k], str) and last[k] for k in last):
+            raise ValueError(f"Vacancy {label}: last_member needs exactly {', '.join(sorted(LAST_MEMBER_FIELDS))}")
+        _iso(last["start"]); _iso(last["end"])
+        if not last["start"] < last["end"] <= as_of:
+            raise ValueError(f"Vacancy {label}: the last member's service must end on or before {as_of}")
+        if people.get(last["person_id"], {}).get("name") != last["name"]:
+            raise ValueError(f"Vacancy {label}: last_member is not that person in this bundle")
+        sources = record.get("sources")
+        if not isinstance(sources, list) or not sources:
+            raise ValueError(f"Vacancy {label}: needs sources")
+        for s in sources:
+            if (not isinstance(s, dict) or set(s) != VACANCY_SOURCE_FIELDS or not all(isinstance(v, str) and v.strip() for v in s.values())
+                    or not s["url"].startswith("https://") or not re.fullmatch(r"[0-9a-f]{64}", s["sha256"])):
+                raise ValueError(f"Vacancy {label}: each source needs {', '.join(sorted(VACANCY_SOURCE_FIELDS))}")
+            _iso(s["fetched_at"])
+            if s["fetched_at"] < as_of:
+                raise ValueError(f"Vacancy {label}: a source read before {as_of} cannot show the seat vacant then")
+        roster_id = stable_id("roster", f"vacancy:{eid}:{as_of}")
+        if any(r["electorate_id"] == eid and r["as_of"] > as_of for r in bundle.get("rosters", [])):
+            continue  # superseded: a later roster speaks for the seat, and this record is history
+        before = sorted((r for r in bundle.get("rosters", []) if r["electorate_id"] == eid and r["roster_id"] != roster_id
+                         and r["as_of"] <= as_of), key=lambda r: (r["as_of"], r.get("priority", 0)), reverse=True)
+        if not before or not before[0].get("complete") or [m["person_id"] for m in before[0]["members"]] != [last["person_id"]]:
+            raise ValueError(f"Vacancy {label}: the roster before {as_of} does not list {last['name']} alone; review the record")
+        if before[0]["as_of"] >= last["end"]:
+            raise ValueError(f"Vacancy {label}: a roster dated {before[0]['as_of']} lists {last['name']} after the service ended")
+        ids = []
+        for s in sources:
+            sid = stable_id("source", f"vacancy:{s['url']}:{s['fetched_at']}")
+            put("sources", "source_id", {"source_id": sid, **{k: s[k] for k in ("label", "url", "fetched_at", "sha256", "licence")}})
+            ids.append(sid)
+        put("rosters", "roster_id", {"roster_id": roster_id, "electorate_id": eid, "as_of": as_of, "capacity": seat.get("capacity", 1),
+                                     "complete": True, "members": [], "sources": ids, "vacant_at": record["at"]})
+        put("terms", "representation_id", {
+            "representation_id": stable_id("term", f"vacancy:{eid}:{last['person_id']}:{last['start']}"),
+            "electorate_id": eid, "person_id": last["person_id"], "start": last["start"], "start_precision": "day",
+            "end": last["end"], "end_precision": "day", "observed_through": record["reviewed"],
+            "party_periods": [{"party": last["party"], "start": last["start"], "end": last["end"]}],
+            "source_party_label": last["source_party_label"], "sources": ids[:1]})
+        # The bundle's own coverage counts for that parliament, as its ingest counts them: every roster date,
+        # the members of each seat's newest roster, and the service records.
+        coverage = (out.get("coverage") or {}).get("jurisdictions", {}).get(seat["jurisdiction"])
+        if coverage is not None:
+            home = {e["electorate_id"] for e in bundle.get("electorates", []) if e["jurisdiction"] == seat["jurisdiction"]}
+            rosters = [r for r in out["rosters"] if r["electorate_id"] in home]
+            newest = {}
+            for r in sorted(rosters, key=lambda r: (r["as_of"], r.get("priority", 0))):
+                newest[r["electorate_id"]] = r
+            out["coverage"] = {**out["coverage"], "jurisdictions": {**out["coverage"]["jurisdictions"], seat["jurisdiction"]: {
+                **coverage, "roster_dates": sorted({r["as_of"] for r in rosters}),
+                "roster_members": sum(len(r["members"]) for r in newest.values()),
+                "terms": sum(t["electorate_id"] in home for t in out["terms"])}}}
+    return out
+
+
 def export_bundle(bundle: dict, directory: Path, *, generated: str) -> dict:
     """Content-addressed release assets; publish manifest last. No truncation of data."""
     validate(bundle)

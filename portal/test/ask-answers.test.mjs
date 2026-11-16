@@ -292,3 +292,19 @@ test('the causal decline only replaces receipt figures, not a passage answer',()
  const out=api.groundAnswerPayload({answer:draft,answer_decision:'answer',citations:{'p/t/body/0':[[2,draft.length]]},sources:[passage],research:evidence(input)},question)
  assert.notEqual(out.answer_decision,'refusal');assert.ok(out.answer.includes('$5,000,000'))
 })
+test('a refused writer call is logged, makes no second request, and the facts answer',async()=>{
+ const seen=[],log=console.log;console.log=value=>{try{seen.push(JSON.parse(value))}catch{}}
+ try{
+  for(const status of [403,404]){
+   seen.length=0
+   const {write,calls}=writer(()=>{throw Object.assign(new Error('provider returned an error'),{statusCode:status,responseBody:'{"error":{"code":'+status+'}}'})})
+   const out=await write(moneyInput(gambling,'Labor'),stats(),undefined,3000)
+   assert.match(out.answer,/Tabcorp Holdings Limited/);assert.equal(calls(),1)
+   assert.deepEqual(seen.filter(r=>r.kind==='research_provider_refused'),[{kind:'research_provider_refused',stage:'writer',reason:'provider_refused',count:1}])
+  }
+  seen.length=0
+  const {write}=writer(()=>{throw Object.assign(new Error('server error'),{statusCode:500})})
+  await write(moneyInput(gambling,'Labor'),stats(),undefined,3000)
+  assert.equal(seen.filter(r=>r.kind==='research_provider_refused').length,0)
+ }finally{console.log=log}
+})

@@ -37,6 +37,11 @@ page and official constituency/member sources. The four curly/straight-apostroph
 vote-index variants use the existing canonical name normalization; no new alias
 or cross-person identity join is introduced.
 
+Brunswick was vacant when the Assembly expired on 3 November 2026 (reviewed
+record of 16 November 2026: [ELECTORATE_REFERENCE.md](ELECTORATE_REFERENCE.md),
+vacancy records). The hub then holds 127 roster members; its Brunswick row
+below gives the last member's record.
+
 | Constituency | Sitting member (existing profile) | Speech export | 2026 vote participations | Detailed division rows |
 | --- | --- | --- | ---: | ---: |
 | Albert Park District | [Nina Taylor](https://opax.com.au/subject/person/nina-taylor) | 367 (2023–2026; term years) | 15 | 14 |
@@ -52,7 +57,7 @@ or cross-person identity join is introduced.
 | Box Hill District | [Paul Hamer](https://opax.com.au/subject/person/paul-hamer) | 221 (2022–2026; cutoff unavailable) | 15 | 14 |
 | Brighton District | [James Newbury](https://opax.com.au/subject/person/james-newbury) | 549 (2023–2026; term years) | 15 | 14 |
 | Broadmeadows District | [Kathleen Matthews-Ward](https://opax.com.au/subject/person/kathleen-matthews-ward) | 220 (2023–2026; term years) | 15 | 14 |
-| Brunswick District | [Tim Read](https://opax.com.au/subject/person/tim-read) | 244 (2022–2026; cutoff unavailable) | Unavailable | 0 |
+| Brunswick District | Vacant when the Assembly expired on 3 November. Last member: [Tim Read](https://opax.com.au/subject/person/tim-read), to 19 September 2026 | 244 (2022–2026; cutoff unavailable) | Unavailable | 0 |
 | Bulleen District | [Matthew Guy](https://opax.com.au/subject/person/matthew-guy) | 166 (2023–2026; term years) | 15 | 14 |
 | Bundoora District | [Colin Brooks](https://opax.com.au/subject/person/colin-brooks) | 143 (2023–2026; term years) | 15 | 14 |
 | Carrum District | [Sonya Kilkenny](https://opax.com.au/subject/person/sonya-kilkenny) | 201 (2022–2026; cutoff unavailable) | 15 | 14 |

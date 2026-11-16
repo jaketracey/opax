@@ -1603,23 +1603,29 @@
         <li><strong>Questions</strong> on the Ask page and in a conversation go to Progress, which
         finds passages. OPAX's server then sends the question and those passages to a language
         model through OpenRouter, which writes the answer. Follow-up questions carry the
-        conversation's earlier turns with them. Where that step fails, and for suggested
-        follow-up questions and a few kinds of answer, Progress sends the question and passages
-        to the model through OpenRouter instead.</li>
+        conversation's earlier turns with them. For suggested follow-up questions and a few
+        kinds of answer, and when that step times out or is unavailable, Progress sends the
+        question and passages to the model through OpenRouter instead.</li>
       </ul>
       <p>Searches made by the voice assistant and by research tools follow the same paths. OPAX's
       code adds no account details or other identifier to these requests. Progress can still
       receive your IP address with them: Cloudflare, which runs OPAX's server, documents that it
       adds the visitor's IP address to requests the server makes to services outside Cloudflare,
-      and Progress is outside it. OpenRouter is called both by OPAX's server and by Progress, and
-      may receive your IP address in the same way when OPAX's server calls it.</p>
-      <p>OPAX names these services by what they do, not by model, because the model and the
-      company that runs it can change. OpenRouter passes each request to a model provider that
-      OPAX chooses. What these services keep, and for how long, is set by their own terms:
+      and Progress is outside it. OpenRouter is called both by OPAX's server and by Progress.</p>
+      <p id="privacy-model-providers">When OPAX's server writes an answer in Ask, it sends the
+      question and the retrieved records through OpenRouter to one model provider, Together, with
+      settings in each request that exclude providers that train on prompts and require zero data
+      retention. If that route is refused, Ask returns an error and does not use another route.
+      When OPAX writes an answer or summary through Progress, the text goes through OpenRouter
+      to the same provider, Together, under settings that exclude providers that train on prompts
+      and require zero data retention. Last checked 16 November 2026.</p>
+      <p>What these services keep, and for how long, is set by their own terms:
       <a href="https://www.progress.com/legal/privacy-policy" rel="noopener">Progress's privacy
       policy</a>, <a href="https://openrouter.ai/privacy" rel="noopener">OpenRouter's privacy
-      policy</a> and <a href="https://openrouter.ai/terms" rel="noopener">terms</a>, and the
-      policy of the provider OpenRouter sends the request to.</p>
+      policy</a>, <a href="https://openrouter.ai/terms" rel="noopener">terms</a> and
+      <a href="https://openrouter.ai/docs/guides/privacy/provider-logging" rel="noopener">table of
+      providers' data policies</a>, and
+      <a href="https://www.together.ai/privacy" rel="noopener">Together's privacy policy</a>.</p>
       <p>So that a repeated question needs no new work, Cloudflare keeps copies of answers to
       opening questions, search results and summaries for between ten minutes and seven days.
       The copies are filed by the question, not by who asked it.</p>
@@ -1983,15 +1989,19 @@
       <ul class="about-list">
         <li><strong>Cloudflare</strong> runs OPAX's servers, database, logs, rate limits and
         email, and handles every request with your IP address. OPAX's community database is held
-        in Cloudflare's Oceania region.</li>
+        in Cloudflare's Oceania region. Cloudflare Workers AI also writes the short summaries and
+        topic labels stored with records. It is given published record text only, never anything
+        from readers, under Cloudflare's
+        <a href="https://developers.cloudflare.com/workers-ai/platform/data-usage/" rel="noopener">Workers
+        AI data terms</a>.</li>
         <li><strong>Progress Agentic RAG</strong> receives questions, searches of the record's
         documents and the inputs to search summaries, as set out under
         <a href="#privacy-questions">Questions and searches</a>, including those made by the
         voice assistant and by research tools. It can receive your IP address with them. OPAX's
         knowledge box is in its AWS Sydney zone.</li>
-        <li><strong>OpenRouter</strong>, and the model provider it routes to, receives the
-        questions, earlier turns of a conversation, search words and passages needed to write
-        answers and summaries. It receives them from OPAX's server for answers in Ask and in a
+        <li><strong>OpenRouter</strong>, and Together, the model provider it routes to, receive
+        the questions, earlier turns of a conversation, search words and passages needed to write
+        answers and summaries. They receive them from OPAX's server for answers in Ask and in a
         conversation, and from Progress for search summaries, suggested follow-up questions and
         the other answers described under <a href="#privacy-questions">Questions and
         searches</a>.</li>
@@ -2411,11 +2421,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=f3bd6556c7" defer></script>
+<script src="/spa-shell.js?v=d95a492469" defer></script>
 <script src="/navigation.js?v=eac2c03e68" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=bbced11299" defer></script>
+<script src="/app.js?v=5054d110f5" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=74cbe557c0" defer></script>
 </body>

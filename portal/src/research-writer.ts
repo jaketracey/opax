@@ -1,4 +1,5 @@
 import { generateResearchText, answerEntryScanner, researchPreviewGuard } from './research-generation'
+import { routingRefused } from './research-model'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
 import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, appendWrittenPoints, type WritingInput } from './research-writing'
@@ -137,6 +138,8 @@ export function createAnswerWriter(options: ResearchOptions) {
         if(lastDraft&&saysLent(lastDraft.answer)&&!saysLent(required.answer))return ground(required)
         return withRequired(ground(verified))
       }catch(error){
+        // The writer makes no further request after a refusal (the answer is assembled from the gathered facts); count it.
+        if(routingRefused(error)||isResearchCreditError(error))console.log(JSON.stringify({kind:'research_provider_refused',stage:'writer',reason:'provider_refused',count:1}))
         if(isResearchCreditError(error)){credits.exhaust();receipt=0;stats.usageUnknown=false;if(turn)Object.assign(turn,{input:0,output:0,cost_usd:0})}
         return fallback()
       }finally{

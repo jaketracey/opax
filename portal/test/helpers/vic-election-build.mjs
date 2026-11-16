@@ -13,7 +13,10 @@ export async function withVicElectionBuild(run) {
     const read=async path=>JSON.parse(await readFile(new URL(path,publicRoot),'utf8'));
     const manifest=await read('electorates/manifest.json');
     const divisions=await read('divisions/index.json');
-    const paths=['electorates/manifest.json',manifest.index_url.replace(/^\//,''),'parliamentarians.json','votes.json',
+    // A seat recorded vacant is read from its own detail file (public/seat-vacancy.js).
+    const vacant=(await read(manifest.index_url.replace(/^\//,''))).electorates
+      .filter(e=>e.jurisdiction==='vic'&&e.representation_status==='verified'&&!e.representatives.length).map(e=>e.detail_url.replace(/^\//,''));
+    const paths=['electorates/manifest.json',manifest.index_url.replace(/^\//,''),...vacant,'parliamentarians.json','votes.json',
       'divisions/index.json','interests/index.json','corpus.json','person-paths.js',
       ...divisions.divisions.filter(d=>/^vic-(la|lc)-/.test(d.key)).map(d=>`divisions/${d.slug}.json`)];
     for(const path of paths) {
