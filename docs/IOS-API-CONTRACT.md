@@ -144,6 +144,8 @@ type AskPayload = {
     chamber?:string,from?:string,to?:string}; answer_status?: string;
   evidence_excerpts?: {resource:string,text:string}[];
   evidence_kind?: 'original_position_proposal';
+  machine_written?: boolean; // true when a language model wrote text in this payload
+  machine_notice?: string;   // the error notice to print; absent when no model wrote any of it
 }; // sources contain source identity, links, cited flags and optional answer ranges
 type SummaryPayload = {
   status: 'empty' | 'ready';
@@ -151,14 +153,28 @@ type SummaryPayload = {
   sources: {id:string,title:string,href:string,snippet:string,kind:string,
     evidence:string[],speaker?:string,party?:string,state?:string,date?:string}[];
   reviewed_count?: number; partial?: boolean;
+  machine_notice?: string; // present on every `ready` overview
 };
 ```
+
+#### `machine_notice`: the error notice on machine-written answers
+
+Every response in which a language model wrote text for a reader carries `machine_notice`, a plain string a client prints as it is: one small secondary-ink line under the answer text and above the sources, visible without a tap, read by a screen reader in that order. The "Machine-written" label stays as it is; the notice is in addition to it. Code sets the string, never a model. There are two wordings today:
+
+- Default: "Machine-written answers can contain errors. Check the original record before relying on one."
+- When the answer cites a hearing transcript (a cited source row that the evidence line in `portal/public/transcript-note.js` counts as one): "Machine-written answers can contain errors. Check the original transcript before relying on it."
+
+A client must not match on the wording or keep its own copy: it prints whatever string arrives, so a later wording needs no app release. The field is absent, not empty, when no model wrote any part of the payload (a calculated table, passages from the record, a decline, a prompt to narrow the question with no suggested question, an error). A calculated answer under a written `money_overview` paragraph carries it, and so does a clarify prompt whose `suggested_question` the rewrite model wrote.
+
+`/api/ask` sets it at its single exit (`apiAskReply` in `portal/src/index.ts`, with `portal/src/machine-notice.ts`), so both engines, blocking JSON, the streamed `done` frame, a cached answer and a cached replay all carry it; an answer cached before the field existed gains it as it is served. `delta` frames never carry it: only a model's words stream, so a client may hold the line's place from the first `delta` and fill it from `done`. `/api/search-summary` (JSON and its `done` frame) and `/api/journey-story` carry the default wording on every written overview or story. `/api/followups` returns suggested questions, not answers, and has no notice. Voice `ask_opax` results do not carry the field (the spoken form is not built).
+
+The field is additive. The shipped Ask decoders (`decodeAnswer` in `mobile/src/features/ask/model.ts` at tags `ios-1.1.3-b57` and `ios-1.1.4-b73`, the same JavaScript on Android) copy a fixed list of known keys out of the payload and never reject or enumerate unknown ones, and the stream reader hands the `done` payload to the same decoder, so shipped builds ignore the field. The apps read and print it from version 1.1.6.
 
 | Method and path | Input and output | Source / cost class | Auth; internal cache; limits; blocks |
 | --- | --- | --- | --- |
 | POST `/api/ask` | JSON at most 16 KiB: `question` at most 2,000 characters, filters, optional context and prior resources. `AskPayload`; `stream=1` or SSE Accept header enables status, delta `{text}`, retry, done and error events. | ARAG retrieval and configured OpenRouter-compatible writer; model generation. Money overview and position-recovery branches are part of this handler, not separate public endpoints. | Public; Cache API and KV up to seven days for cacheable cited, nonconversational answers; `A20` on ordinary misses and on every conversation turn before its paid rewrite; the later check avoids charging a turn twice. Conversation turns are never cached. `G`. |
 | GET `/api/search-summary` | Search parameters and optional stream; `SummaryPayload`. SSE emits point, done and error. | Unified search plus ARAG writer and possible repair; model generation. | Public; Cache API and KV 24 hours; search quota plus `F20` on generation miss; `G`. |
-| POST `/api/journey-story` | `{jurisdiction:'federal'\|'qld'\|'vic'\|'tas',lens,focus}`; focus at most 500 characters. `{steps:{title,body,evidence:string[]}[],generated:true,version:string}`. | Static money graph context plus ARAG writer; model generation. | Public; Cache API and KV seven days; `F20` on miss; `G`. |
+| POST `/api/journey-story` | `{jurisdiction:'federal'\|'qld'\|'vic'\|'tas',lens,focus}`; focus at most 500 characters. `{steps:{title,body,evidence:string[]}[],generated:true,version:string,machine_notice:string}`. | Static money graph context plus ARAG writer; model generation. | Public; Cache API and KV seven days; `F20` on miss; `G`. |
 | POST `/api/followups` | `{question,answer,passages?:{title,text}[]}`; `{questions:string[]}`. Failure may produce an empty list. | ARAG writer; model generation. | Public; Cache API seven days, no KV write in this handler; `F20` on miss; `G`. |
 
 ### Community routes
