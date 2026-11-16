@@ -35,12 +35,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import sys as _donor_sys
 from pathlib import Path as _DonorPath
 _donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
-from parli.electorates import covered_by_dissolution, dissolved_for, export_bundle, import_bundle, read_bundle
+from parli.electorates import (TABLES, apply_vacancies, canonical_json, covered_by_dissolution, dissolved_for, export_bundle,
+                               import_bundle, read_bundle)
 from scripts.corrections import apply as corrections
 
 ROSTER_CORRECTIONS = "electorate-rosters"
 
 DISSOLUTIONS = Path(__file__).resolve().parent / "hubs" / "electorate-dissolutions.json"
+VACANCIES = Path(__file__).resolve().parent / "hubs" / "electorate-vacancies.json"
 # The Ask gold cases quote the release they were computed from (scripts/agentic_ask_electorates_gold.mjs);
 # a republish changes no value they read, only that id, so it is carried forward with the release.
 GOLD = Path(__file__).resolve().parents[1] / "portal" / "test" / "fixtures" / "agentic-ask-gold.json"
@@ -60,6 +62,11 @@ def load_dissolutions(path: Path) -> list[dict]:
             record["seated_on"] = row["seated_on"]
         records.append(record)
     return sorted(records, key=lambda r: (r["jurisdiction"], r["chamber"], r["election_day"]))
+
+
+def load_vacancies(path: Path) -> list[dict]:
+    """The reviewed vacancy records, as parli.electorates.apply_vacancies reads them."""
+    return json.loads(path.read_text())["vacancies"]
 
 
 def expected_dissolved_for(bundle: dict, on: str) -> dict[str, str | None]:
@@ -130,9 +137,10 @@ def overdue_dissolutions(out_dir: Path, as_of: str, days: int = OVERDUE_DAYS) ->
     return lines
 
 
-def republish(out_dir: Path, dissolutions: list[dict], as_of: str, gold: Path | None = None) -> dict | None:
-    """Publish a new release from the published bundle when the dissolution state changed or a reviewed
-    roster correction applies; None when neither did."""
+def republish(out_dir: Path, dissolutions: list[dict], as_of: str, gold: Path | None = None,
+              vacancies: list[dict] | None = None) -> dict | None:
+    """Publish a new release from the published bundle when the dissolution state changed, a reviewed
+    roster correction applies or a vacancy record changed the bundle; None when none did."""
     manifest = json.loads((out_dir / "manifest.json").read_text())
     if not manifest.get("reference_url"):
         return None  # a release with no bundle to republish from
@@ -145,7 +153,11 @@ def republish(out_dir: Path, dissolutions: list[dict], as_of: str, gold: Path | 
         current.pop("dissolutions")
     corrected, absent = correct_rosters(current)
     report_corrections(corrected, absent)
-    if not corrected and bundle.get("dissolutions", []) == dissolutions and published == expected_dissolved_for(current, as_of):
+    current = apply_vacancies(current, vacancies or [])
+    rows = lambda b: canonical_json({name: sorted(b.get(name, []), key=lambda r: r[key]) for name, (key, _) in TABLES.items()}  # noqa: E731
+                                    | {"coverage": b.get("coverage")})
+    if (not corrected and bundle.get("dissolutions", []) == dissolutions and published == expected_dissolved_for(current, as_of)
+            and rows(bundle) == rows(current)):
         return None
     new = export_bundle(current, out_dir, generated=as_of)
     if gold and gold.is_file():
@@ -162,10 +174,12 @@ def main():
     p.add_argument("--overdue", action="store_true",
                    help="print a line for each house still published as dissolved four weeks after its election day")
     p.add_argument("--dissolutions", type=Path, default=DISSOLUTIONS)
+    p.add_argument("--vacancies", type=Path, default=VACANCIES)
     p.add_argument("--out-dir", type=Path, default=Path("portal/public/electorates"))
     p.add_argument("--as-of", default=date.today().isoformat())
     args = p.parse_args()
     dissolutions = load_dissolutions(args.dissolutions) if args.dissolutions.is_file() else []
+    vacancies = load_vacancies(args.vacancies) if args.vacancies.is_file() else []
     if args.overdue:
         for line in overdue_dissolutions(args.out_dir, args.as_of):
             print(line)
@@ -173,9 +187,9 @@ def main():
     if args.republish:
         if args.bundle or args.db:
             p.error("--republish reads the published release; it takes no --bundle or --db")
-        manifest = republish(args.out_dir, dissolutions, args.as_of, GOLD)
+        manifest = republish(args.out_dir, dissolutions, args.as_of, GOLD, vacancies)
         print(f"Republished electorate references: {manifest['release_id']}" if manifest
-              else "Electorate references unchanged: no dissolution began or cleared, no roster correction to apply")
+              else "Electorate references unchanged: no dissolution began or cleared, no roster correction to apply, no vacancy record changed")
         return
     if not args.bundle and not args.db:
         p.error("--bundle, --db or --republish is required")
@@ -190,6 +204,7 @@ def main():
             if dissolutions:
                 bundle["dissolutions"] = dissolutions
     report_corrections(*correct_rosters(bundle))
+    bundle = apply_vacancies(bundle, vacancies)
     manifest = export_bundle(bundle, args.out_dir, generated=args.as_of)
     print(f"Published {len(bundle['electorates'])} electorate references: {manifest['release_id']}")
 

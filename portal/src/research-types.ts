@@ -96,7 +96,7 @@ export type Research = ((question: string, context: ResearchContext) => Promise<
 import type { AnswerTally } from './research-evidence'
 export interface ResearchStats {
   reservedCostUsd?: number; coherence?: {writer_passes?:number;second_passes?:number;fallback?:boolean}; answer?: AnswerTally; rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[]; rejections?: string[] }
-export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted' | 'spend'
+export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted' | 'spend' | 'provider_refused'
 export class ResearchError extends Error {
   constructor(readonly reason: ResearchStop, readonly stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 } }) {
     super('Research loop stopped: ' + reason)

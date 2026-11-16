@@ -1,5 +1,6 @@
 import {ASK_ATTRIBUTION_RULE,ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
+import { routingRefused } from './research-model'
 import { researchPhaseWallMs } from './research-time'
 import { ASK_MAX_MODEL_USD, ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_MAX_ROUNDS, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS, ASK_TURN_OUTPUT_TOKENS, ASK_RESULT_BYTES, reserveQuestionTurn } from './ask-budgets'
 export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
@@ -685,6 +686,13 @@ export function createResearch(options: ResearchOptions): Research {
         stats.costUsd = (stats.costUsd ?? 0) + (receipt ?? (input * inputPrice + output * outputPrice) / 1e6)
         stats.turns!.push({ round: stats.rounds + 1, input, output, cached_input: result.usage.inputTokenDetails?.cacheReadTokens ?? 0, cached: result.usage.inputTokenDetails?.cacheReadTokens ?? 0, provider: '', reasoning: result.usage.outputTokenDetails?.reasoningTokens ?? 0, input_reserve: inputTokens, ms: Date.now() - callStarted, cost_usd: receipt ?? null })
       } catch (error) {
+        // A refused final-answer request fails closed like a refused turn: whatever stopped the loop first, no
+        // other generation request is built for this question (the planner and older engine would be next).
+        if (routingRefused(error) || isResearchCreditError(error)) {
+          if (isResearchCreditError(error)) credits.exhaust()
+          failed = 'provider_refused'
+          throw new ResearchError('provider_refused', stats)
+        }
         // Asked for the answer tool, the model may still reply in prose; that prose can be the answer.
         if (ToolChoiceViolationError.isInstance(error)) heardProse(error.content)
         return null
@@ -920,6 +928,9 @@ export function createResearch(options: ResearchOptions): Research {
         credits.exhaust(); failed = 'research_credit_exhausted'; turnCost = 0; stats.usageUnknown = false
         if (pendingTurn !== undefined) Object.assign(stats.turns![pendingTurn], { input: 0, output: 0, cached: 0, cached_input: 0, reasoning: 0, cost_usd: 0 })
       }
+      // A refused request fails closed: no salvage and no final-answer call, so no further request is built.
+      // A credit refusal (402) is one too; its cooldown above still applies to later questions.
+      if (!(error instanceof ResearchError) && (routingRefused(error) || isResearchCreditError(error))) { failed = 'provider_refused'; controller.abort(error); throw new ResearchError('provider_refused', stats) }
       // A forced terminal turn answered with another tool (or with text) is a call the model was not offered.
       if (!(error instanceof ResearchError) && !failed && ToolChoiceViolationError.isInstance(error)) failed = 'malformed_args'
       if (ToolChoiceViolationError.isInstance(error)) heardProse(error.content)

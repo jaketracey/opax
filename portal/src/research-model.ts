@@ -4,6 +4,7 @@
 // provider preferences as JSON, e.g. {"sort":"throughput"} or
 // {"order":["fireworks","together"],"allow_fallbacks":true}. Operator-authorised
 // eval requests may pick another model from RESEARCH_LOOP_MODEL_ALLOW per request.
+// Whatever is configured here, openrouter.ts adds data_collection "deny" and zdr true to every request.
 
 export const DEFAULT_RESEARCH_MODEL = '@preset/opax-pro'
 const SORTS = new Set(['throughput', 'latency', 'price'])
@@ -91,4 +92,30 @@ export function researchModelOverride(model: string | null, sort: string | null,
 export function researchModelKey(model: unknown, provider: unknown, reasoning?: unknown): string {
   const p = researchProvider(provider), r = researchReasoning(reasoning)
   return researchModelId(model) + (p ? '+' + JSON.stringify(p) : '') + (r ? '~' + JSON.stringify(r) : '')
+}
+
+/**
+ * True when OpenRouter refused a request as sent. Ask then fails closed: no other generation request is made
+ * for that question (hub rulings, 16 November 2026). OpenRouter documents no error code specific to the privacy
+ * fields (https://openrouter.ai/docs/api-reference/errors, read 16 November 2026), so every 4xx counts except
+ * 408 (timed out) and 429 (rate limited), plus 503, the status documented for "no available model provider
+ * that meets your routing requirements", unless its typed code says the provider was only overloaded.
+ * Timeouts, aborts, 408, 429 and other 5xx are not refusals.
+ */
+export function routingRefused(error: unknown): boolean {
+  const seen = new Set<unknown>()
+  const visit = (value: unknown, depth: number): boolean => {
+    if (!value || typeof value !== 'object' || seen.has(value) || depth > 6) return false
+    seen.add(value)
+    const e = value as { statusCode?: unknown; responseBody?: unknown; cause?: unknown; lastError?: unknown; error?: unknown; errors?: unknown }
+    if (typeof e.statusCode === 'number' && e.statusCode >= 400 && e.statusCode < 500) return e.statusCode !== 408 && e.statusCode !== 429
+    if (e.statusCode === 503) {
+      let type: unknown
+      try { type = (JSON.parse(String(e.responseBody ?? '')) as { error?: { metadata?: { error_type?: unknown } } }).error?.metadata?.error_type } catch { /* no typed code */ }
+      return type !== 'provider_overloaded'
+    }
+    if (typeof e.statusCode === 'number') return false
+    return visit(e.cause, depth + 1) || visit(e.lastError, depth + 1) || visit(e.error, depth + 1) || (Array.isArray(e.errors) && e.errors.some(inner => visit(inner, depth + 1)))
+  }
+  return visit(error, 0)
 }
