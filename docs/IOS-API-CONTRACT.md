@@ -179,10 +179,11 @@ Text a model wrote earlier, which OPAX stores and shows under the "Machine-writt
 | GET `/api/resource/:slug` | `summary` (the stored brief) is a non-empty string | `summary` is null: no brief written, or a short speech turn |
 | GET `/api/brief` | `briefs` holds at least one brief | `briefs` is empty |
 | GET `/api/search`, GET `/api/search-all` | a row in `results` has `machine: true` (a bill row whose `snippet` is its summary sentences) | no such row |
+| GET `/bill-texts/<key>/<version>.json` | `enrichment.brief` (a model's overview of that version) is a non-empty string | no overview; the `index.json` file |
 
 The field is a top-level sibling of `summary`, `briefs` and `results`, never inside them. None of this text is a summary of a hearing transcript, so the transcript wording is not used here. Static files a model's text is read from (`/bills/<key>.json` `summary` and `speeches[].brief`, `/years/<year>.json` `brief`, `/reports/<slug>.json`) are files, not API responses, and carry no field; the web prints the same fixed words from `portal/public/machine-notice.js`. `/api/suggest` and `/api/app/v1/edition/latest` are unchanged: the edition decoder in shipped apps rejects any key it does not name.
 
-Shipped decoders at tag `ios-1.1.4-b73` read named keys through `shape` (`mobile/src/api/validation.ts`) and drop unknown top-level keys: `decodeDocument` (`mobile/src/features/records/model.ts`) for the record, the `{briefs}` shape in `mobile/src/features/people/model.ts` for briefs, and the search page decoders in `mobile/src/features/search/decoders.ts` and `mobile/src/api/catalog-decoders.ts` for search. So shipped builds ignore the field.
+Shipped decoders at tag `ios-1.1.4-b73` read named keys through `shape` (`mobile/src/api/validation.ts`) and drop unknown top-level keys: `decodeDocument` (`mobile/src/features/records/model.ts`) for the record, the `{briefs}` shape in `mobile/src/features/people/model.ts` for briefs, and the search page decoders in `mobile/src/features/search/decoders.ts` and `mobile/src/api/catalog-decoders.ts` for search, and `decodeBillText` (`mobile/src/features/records/model.ts`) for a bill text version. So shipped builds ignore the field.
 
 | Method and path | Input and output | Source / cost class | Auth; internal cache; limits; blocks |
 | --- | --- | --- | --- |

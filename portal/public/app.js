@@ -394,10 +394,12 @@ function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
 function machineNoticeHTML(opts) { return uiLabels.machineNoticeHTML(opts); }
 // The words /api/brief last sent with its briefs; the lists of briefs print them under the list.
 let briefNotice = "";
-/** Puts the notice directly after a list of briefs that filled in after the list was drawn; once, never twice. */
-function ensureListNotice(list, notice = briefNotice) {
-  if (!list || list.nextElementSibling?.matches?.(".answer-notice")) return;
-  list.insertAdjacentHTML("afterend", machineNoticeHTML({ notice }));
+/** Puts the notice beside a list of briefs that filled in after the list was drawn; once, never twice. A short
+ *  list takes it directly under ("afterend"); a long one at its head ("beforebegin"), where it is seen. */
+function ensureListNotice(list, where = "afterend", notice = briefNotice) {
+  const beside = where === "beforebegin" ? list?.previousElementSibling : list?.nextElementSibling;
+  if (!list || beside?.matches?.(".answer-notice")) return;
+  list.insertAdjacentHTML(where, machineNoticeHTML({ notice }));
 }
 /** Answers a language model did not write: a calculation from the records, a list of passages, a note that the
  *  records do not cover the question, or a prompt to narrow it. Everything else Ask shows is model-written. */
@@ -7506,7 +7508,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
               passage.replaceWith(p, open);
             }
           }
-          if (results.some((r) => briefs[r.resource])) ensureListNotice(mount.querySelector('.topic-arc-list'));
+          if (results.some((r) => briefs[r.resource])) ensureListNotice(mount.querySelector('.topic-arc-list'), 'beforebegin');
           const counts = mount.querySelector('.topic-arc-counts');
           if (counts) {
             const n = results.filter((r) => briefs[r.resource]).length;
@@ -7536,7 +7538,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
           <button type="button" class="ui-button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
         </div></div>
         ${topicArcVoicesHTML(results, briefCount)}
-        <ol class="topic-arc-list">${rowsHTML(items)}</ol>${briefCount ? machineNoticeHTML({ notice: briefNotice }) : ""}
+        ${briefCount ? machineNoticeHTML({ notice: briefNotice }) : ""}<ol class="topic-arc-list">${rowsHTML(items)}</ol>
         <p class="fineprint topic-arc-note">Machine briefs are automated summaries and stand in for the passage where one exists; passages are extracts from the record, opened by the title. This view shows the newest labelled matches, not the whole debate.</p>
         <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
         ${items.length < results.length ? `<button type="button" class="ui-button" data-ui-size="compact" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
@@ -9002,9 +9004,11 @@ async function openBillText(bill) {
   const generation = billTextGeneration;
   const slot = $('bill-text-slot');
   try {
-    const module = await import('/bill-text.js?v=p3f-20261010');
+    const module = await import('/bill-text.js?v=p3f-20261116');
     if (generation !== billTextGeneration || billView !== `bill:${bill.key}` || !slot?.isConnected) return;
     const handle = billTextHandle = module.mountBillText(slot, { bill,
+      // The error notice under the model's overview of a version, in the shared wording (labels.js).
+      machineNotice: uiLabels.machineNoticeText(),
       requestedVersion: new URLSearchParams(location.search).get('text-version'),
       open: location.hash === '#bill-full-text',
       onVersion(id) {
@@ -10327,7 +10331,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=44e376627d", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=09ee665884", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=80ef285ef6", mount: "mountLedger" },
@@ -13326,12 +13330,14 @@ function syncSearchReadBar() {
   }
 }
 
-/** One error notice directly under the results while any row shows a machine-written brief; gone otherwise. */
+/** One error notice at the head of the results while any row shows machine-written text: a bill row whose text
+ *  is its summary (`machine`), or, in Briefs mode, a record's brief. Gone otherwise. The Worker's words. */
 function syncSearchBriefsNotice(results = []) {
   const list = $("search-results");
-  if (list.nextElementSibling?.matches(".search-briefs-notice")) list.nextElementSibling.remove();
-  const shown = searchReadMode === "briefs" && results.some((r) => !Object.hasOwn(r, "href") && r.kind !== "division" && lastSearch.briefs[r.resource]);
-  if (shown) list.insertAdjacentHTML("afterend", machineNoticeHTML({ notice: briefNotice, className: "search-briefs-notice" }));
+  if (list.previousElementSibling?.matches(".search-machine-notice")) list.previousElementSibling.remove();
+  const shown = results.some((r) => Object.hasOwn(r, "href") ? r.machine === true
+    : searchReadMode === "briefs" && r.kind !== "division" && !!lastSearch.briefs[r.resource]);
+  if (shown) list.insertAdjacentHTML("beforebegin", machineNoticeHTML({ notice: lastSearch.machine_notice || briefNotice, className: "search-machine-notice" }));
 }
 
 function setSearchReadMode(mode) {
@@ -13370,7 +13376,7 @@ function renderResults(results) {
           ${r.kind === "speech" ? `<div class="result-byline">${speechIdentityHTML(r)}</div>` : ""}
           ${r.machine ? machineLabelHTML({ className: "search-result-machine", note: "The summary sentences in this row were written by a model from the bill's explanatory material. They are not the record: open the bill for its own documents." }) : ""}
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
-          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>${r.machine ? machineNoticeHTML({ notice: lastSearch.machine_notice }) : ""}${excerptNoticeHTML(r)}`;
+          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>${excerptNoticeHTML(r)}`;
         return li;
       }
       const brief = lastSearch.briefs[r.resource];
@@ -13415,7 +13421,8 @@ function renderResults(results) {
       return li;
     }),
   );
-  // Briefs mode: the briefs are machine-written, so the list ends with the error notice, once.
+  // Rows that carry machine-written text (a bill's summary, or a brief in Briefs mode): one error notice at the
+  // head of the list, never one per row.
   syncSearchBriefsNotice(results);
   decorateMetaPortraits($("search-results"));
   requestAnimationFrame(refreshSearchPassageFolds);

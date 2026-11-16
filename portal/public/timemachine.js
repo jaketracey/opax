@@ -1399,7 +1399,7 @@ export function mountTimeMachine(container, opts = {}) {
   const onOuterDialogClose = () => closeGallery(false)
 
   function renderSkeletons() {
-    cardsEl.replaceChildren()
+    clearCards()
     cardsEl.setAttribute('aria-busy', 'true')
     for (let i = 0; i < 3; i++) cardsEl.appendChild(el('div', 'tm-skeleton', { 'aria-hidden': 'true' }))
   }
@@ -1622,6 +1622,12 @@ export function mountTimeMachine(container, opts = {}) {
   // has reached a speech: swap the opening passage for the summary, labelled
   // as machine-written. One small /api/brief call per render; speeches the
   // pass has not reached keep their passage, so the list never waits on this.
+  /** Empties the cards, and takes the briefs' error notice with them: the next cards may carry no brief. */
+  function clearCards() {
+    if (cardsEl.previousElementSibling?.matches('.tm-cards-notice')) cardsEl.previousElementSibling.remove()
+    cardsEl.replaceChildren()
+  }
+
   async function applyBriefs(rids, seq, signal) {
     if (!rids.length) return
     let briefs = {}
@@ -1649,8 +1655,9 @@ export function mountTimeMachine(container, opts = {}) {
       else card.insertBefore(brief, card.querySelector('.tm-read'))
       shown = true
     }
-    // The error notice, once, directly under the cards that now carry briefs: the Worker's words.
-    if (shown && !cardsEl.querySelector(':scope > .answer-notice')) cardsEl.insertAdjacentHTML('beforeend', machineNoticeHTML({ notice: data?.machine_notice, className: 'tm-cards-notice' }))
+    // The error notice, once, at the head of the cards that now carry briefs, in the Worker's words. It sits
+    // just outside the cards' live region, so it is read in order and never announced as an update.
+    if (shown && !cardsEl.previousElementSibling?.matches('.tm-cards-notice')) cardsEl.insertAdjacentHTML('beforebegin', machineNoticeHTML({ notice: data?.machine_notice, className: 'tm-cards-notice' }))
   }
 
   // ---- the year in brief + voices (static JSON, scripts/generate_years.py) --
@@ -1832,7 +1839,7 @@ export function mountTimeMachine(container, opts = {}) {
   // must not pretend to know which — and must not read as "parliament was
   // quiet about this".
   function renderEmptyTopicYear() {
-    cardsEl.replaceChildren()
+    clearCards()
     const box = el('div', 'tm-empty', { role: 'status' })
 
     const head = el('strong')
@@ -1860,7 +1867,7 @@ export function mountTimeMachine(container, opts = {}) {
       renderEmptyTopicYear()
       return
     }
-    cardsEl.replaceChildren()
+    clearCards()
     const box = el('div', 'tm-empty', { role: 'status' })
 
     const head = el('strong')
@@ -1888,7 +1895,7 @@ export function mountTimeMachine(container, opts = {}) {
   }
 
   function renderErrorState() {
-    cardsEl.replaceChildren()
+    clearCards()
     const box = el('div', 'tm-empty', { role: 'status' })
     // One plain sentence and a way to try again, never the raw failure.
     const head = el('strong')
@@ -1964,7 +1971,7 @@ export function mountTimeMachine(container, opts = {}) {
       return
     }
     if (year > lastGoodYear) lastGoodYear = year
-    cardsEl.replaceChildren()
+    clearCards()
     for (const { probe, r } of picks) cardsEl.appendChild(makeCard(probe.label, r))
     fillPortraits(cardsEl)
     applyBriefs(picks.map(({ r }) => r).filter(briefWanted).map((r) => r.resource).filter(Boolean), seq, signal)

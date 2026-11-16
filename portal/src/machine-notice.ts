@@ -65,9 +65,16 @@ export function withResultsNotice<T>(payload: T): T {
   return noticed(payload, Array.isArray(results) && results.some(r => row(r)?.machine === true && words(row(r)?.snippet)))
 }
 
+/** A bill text version (/bill-texts/<key>/<version>.json): `enrichment.brief` is a model's overview of that
+ * version, shown as "In this version". The index file and a version with no overview carry no notice. */
+export function withBillTextNotice<T>(payload: T): T {
+  return noticed(payload, words(row(row(payload)?.enrichment)?.brief))
+}
+
 /** The map for a public API path that serves stored machine-written text, or null. */
 export function storedNoticeMap(pathname: string): (<T>(payload: T) => T) | null {
   if (pathname === '/api/brief') return withBriefsNotice
+  if (/^\/bill-texts\/[^/]+\/[^/]+\.json$/.test(pathname) && !pathname.endsWith('/index.json')) return withBillTextNotice
   if (/^\/api\/resource\/[^/]+$/.test(pathname)) return withRecordNotice
   if (pathname === '/api/search' || pathname === '/api/search-all') return withResultsNotice
   return null
