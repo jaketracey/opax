@@ -143,7 +143,9 @@ export function pageTurns(page: string, pdfPage?: number): { text: string, turns
   }
   for (const t of turns) { while (t.start < t.end && text[t.start] === ' ') t.start++; if (t.start >= t.end) t.start = t.end = Math.max(t.start, t.end) }
   const listed = (pattern: RegExp) => lines.filter(l => pattern.test(l)).length
-  const exhibits = /^Exhibit (?:List$|Document ID\b)/.test(`${lines[0] ?? ''} ${lines[1] ?? ''}`.trim()) || lines[0] === 'Exhibit List'
+  // An exhibit table can also open with the exhibit's own title on the same line as the column heads
+  // ("Exhibit 1 - Letter ... Document ID Exhibit number").
+  const exhibits = /^Exhibit (?:List$|Document ID\b)/.test(`${lines[0] ?? ''} ${lines[1] ?? ''}`.trim()) || lines[0] === 'Exhibit List' || /^Exhibit\b.*\bDocument ID\b/.test(lines[0] ?? '')
   if (pdfPage === 1 || exhibits || listed(REFERENCE) * 5 >= lines.length * 2 || (listed(DOCUMENT) >= 4 && listed(DOCUMENT) * 3 >= lines.length)) return { text, turns: [] }
   return { text, turns: turns.filter((t, i) => i > 0 || t.end > t.start) }
 }

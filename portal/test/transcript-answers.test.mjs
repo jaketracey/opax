@@ -129,7 +129,7 @@ test('a page is read into turns one line at a time, each with its heading as pri
   const exhibits = ['12. ABC.0001.0002.0003 Letter to the board', 'RE: the request', '13. ABC.0001.0002.0004 Reply from the board', 'FW: the reply', 'dated 1 February 2020', '14. ABC.0001.0002.0005 Minute', '15. ABC.0001.0002.0006 Email'].join('\n')
   for (const page of [index, exhibits]) { assert.deepEqual(api.pageTurns(page).turns, []); assert.deepEqual(api.excerpt(page, ['board', 'able']), { excerpt: '' }) }
   // An exhibit list is also known by how it opens, whatever its rows hold.
-  for (const top of ['Exhibit List', 'Exhibit\nDocument ID Document title Date', 'Exhibit Document ID Document title Date']) assert.deepEqual(api.pageTurns(`${top}\n12. Letter to the board\nMS QUELLWORTH: wrote on 1 February.`).turns, [])
+  for (const top of ['Exhibit List', 'Exhibit\nDocument ID Document title Date', 'Exhibit Document ID Document title Date', 'Exhibit 1 – Letter from the agency with 5 enclosures Document ID Exhibit number']) assert.deepEqual(api.pageTurns(`${top}\n12. Letter to the board\nMS QUELLWORTH: wrote on 1 February.`).turns, [])
   assert.equal(api.pageTurns('Exhibit 12 is the letter.\nMS QUELLWORTH: Thank you.').turns.length, 2, 'evidence that opens with the word is still read')
   // A line marking a document for identification is a note.
   assert.deepEqual(read('MS QUELLWORTH: I ask that it be marked.\nMFI #4 OUTLINE OF EVIDENCE OF ALEX EXAMPLE\nTHE COMMISSIONER: Yes.'), [['heading', 'MS QUELLWORTH', 'I ask that it be marked.'], ['note', null, ''], ['heading', 'THE COMMISSIONER', 'Yes.']])
@@ -240,6 +240,9 @@ test('over every quotable page: no excerpt holds a heading, a mark or a note lin
       if (found.length) search.add(found[found.length >> 1])
       for (const [i, line] of lines.entries()) {
         kind = opener(line, kind === 'note', heads)
+        // Page 1 is the cover and is never quoted. A transcript that opens its evidence there would be silently
+        // unquotable, so it fails here instead.
+        assert.ok(p.n !== 1 || !kind || kind === 'note', `${d.key}: page 1 holds a ${kind} line ("${line.slice(0, 12)}..."), so it is not only a cover`)
         if (kind) {
           barred.push([at, kind === 'note' ? at + line.length : at + 1])
           // Search for the words of the opener itself, the word before it and the first long word after it.
