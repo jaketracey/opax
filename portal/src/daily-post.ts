@@ -12,7 +12,7 @@ import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
-import { MACHINE_SUMMARY_WORDS } from './machine-notice'
+import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX } from './machine-notice'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
@@ -47,6 +47,15 @@ export interface DailyPost {
   url: string
   /** Longer, source-qualified copy for Facebook and Instagram. */
   caption?: string
+  /**
+   * What the channels post, where that differs from what the apps show. The apps read `text`, `caption` and `slides`
+   * (app-edition.ts, app-widget.ts) and lay them out under their own "Machine-written" label, so those stay as they
+   * are. A bill's post on X and Bluesky is `record_text`: the bill's name, where it stands and its sponsor, from the
+   * record. Its caption on Facebook and Instagram is `channel_caption`, which opens with who wrote the summary.
+   * social-publication.ts uses each where present; neither is sent to an app.
+   */
+  record_text?: string
+  channel_caption?: string
   /**
    * The edition as a carousel (see story.ts): a cover, one fact a slide, the
    * source last. Absent on editions stored before carousels existed, which
@@ -501,9 +510,19 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
   const statusShort = bill.status === 'exposure_draft' ? `Draft released ${formatDate(bill.introduced)}; not introduced.`
     : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : `Introduced ${formatDate(bill.introduced)}; before parliament.`
+  // For the channels, the day a bill passed is the day the record says it passed. `status_as_of` on a passed bill is
+  // the day of Royal Assent, usually some days later, so it is named as that and only when no passing day is recorded.
+  const standing = billStanding(bill, record)
+  const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : ''
   const post: DailyPost = {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
-    text: billPostText(bill, sentences[0], statusShort, by, url),
+    // What the apps show under their own label: unchanged.
+    text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
+    record_text: billPostText(bill, sentences[0], standing ?? statusShort, by, url),
+    // Facebook and Instagram: the caption opens by saying a model wrote the summary, once.
+    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${sentences[0]}`, bill.title,
+      bill.status === 'passed' && standing ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.` : status,
+      more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
     caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
   }
   const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort })
@@ -514,6 +533,27 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
  * The short post text for a bill (X, Bluesky, the app's edition card). It is written from the record: the bill's
  * name, where it stands and on what date, and its sponsor or portfolio. A model's summary sentence is used only when
  * the record gives no dated fact to state, and then it follows the words "Machine-written summary.".
+ */
+/** The stages that record a bill passing a house; the last of them is the day it passed parliament. */
+const PASSED_STAGES = new Set(['passed', 'passed_both', 'passed_both_houses'])
+/**
+ * Where a passed bill stands, in the record's own terms: "Passed <the day it passed>." when the record holds a
+ * passing stage; "Royal Assent <day>." when it holds only the assent; and when it holds neither stage, the date the
+ * status was recorded, named as that. Never an assent date under the word "Passed". null for a bill that has not passed.
+ */
+export function billStanding(bill: BillIndexItem, record: BillFile | null): string | null {
+  if (bill.status !== 'passed') return null
+  const last = (stages: (stage: string) => boolean) => (record?.key_dates ?? []).filter(k => k.stage && stages(k.stage) && /^\d{4}-\d{2}-\d{2}/.test(k.date ?? '')).map(k => (k.date as string).slice(0, 10)).sort().at(-1)
+  const passed = last(stage => PASSED_STAGES.has(stage)), assent = last(stage => stage === 'royal_assent')
+  if (passed) return `Passed ${formatDate(passed)}.`
+  if (assent) return `Royal Assent ${formatDate(assent)}.`
+  return bill.status_as_of ? `Recorded as passed, as at ${formatDate(bill.status_as_of)}.` : null
+}
+
+/**
+ * The marked branch below is a guard, not a path the daily post takes today: the composer only chooses a bill whose
+ * status date is a valid date, which is the same date this function asks for. It can fire only if that filter is
+ * loosened, or if this function is called for a bill chosen some other way.
  */
 export function billPostText(bill: BillIndexItem, sentence: string, statusShort: string, by: string, url: string): string {
   const name = clip(bill.short_title || bill.title, 110)
@@ -1067,12 +1107,12 @@ export async function composeDailyPost(date: string, sources: DailyPostSources, 
 export function authoriseVicPost(post: DailyPost, victorianMember = false): DailyPost {
   if(post.donor){
     const donor=donorDisclosure(post.donor)
-    const reference=`${post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor'}: ${donor.name} — ${returnReference(donor.returns[0] || {}) || donor.reference}`
+    const reference=`${post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor'}: ${donor.name}, ${returnReference(donor.returns[0] || {}) || donor.reference}`
     // A source-only reference is no donation: its post points at the source, not at its page.
     const nameLink=donor.href && post.donor.kind!=='reference' ? new URL(donor.href,ORIGIN).href : null
     const source=post.donor.returnReferences?.[0]?.url || `${ORIGIN}/money/receipts`
     const url=/\/subject\/(?:donor|person|organisation)\//.test(post.url) ? nameLink || source : post.url
-    const append=(text:string)=>text.includes(reference) ? text : [reference,text].filter(Boolean).join(' — ')
+    const append=(text:string)=>text.includes(reference) ? text : [reference,text].filter(Boolean).join('. ')
     const slides=post.slides?.map(slide=>{
       const shown=slide.type==='cover' || slide.type==='division' ? {...slide,line:append(slide.line || '')}
         : slide.type==='source' ? {...slide,rows:slide.rows.includes(reference) ? slide.rows : [reference,...slide.rows],url}
@@ -1085,7 +1125,7 @@ export function authoriseVicPost(post: DailyPost, victorianMember = false): Dail
     post={...post,donor:{...post.donor,match:post.donor.match ? {...post.donor.match,href:donor.href} : undefined},url,text,
       caption:caption.includes(reference)?caption:caption+'\n\n'+reference,slides}
   }
-  const material = [post.title, post.text, post.caption, post.url, JSON.stringify(post.slides ?? [])].join(' ')
+  const material = [post.title, post.text, post.caption, post.record_text, post.channel_caption, post.url, JSON.stringify(post.slides ?? [])].join(' ')
   if (!victorianMember && !post.authorisation && !vicElectionMaterial(material)) return post
   const line = VIC_ELECTION_AUTHORISATION_LINE
   const text = post.text.split('\n\n').filter(p => !/^Authorised by /.test(p) && p !== post.url).join('\n\n')
@@ -1093,6 +1133,9 @@ export function authoriseVicPost(post: DailyPost, victorianMember = false): Dail
   return {...post, authorisation: line,
     text: fit([text], [], [line, post.url].join('\n\n')),
     caption: [caption, line].join('\n\n'),
+    // The channel-only copies carry the same approved line, the same way.
+    ...(post.record_text ? {record_text: fit([post.record_text.split('\n\n').filter(p => !/^Authorised by /.test(p) && p !== post.url).join('\n\n')], [], [line, post.url].join('\n\n'))} : {}),
+    ...(post.channel_caption ? {channel_caption: [post.channel_caption.split('\n\n').filter(p => !/^Authorised by /.test(p)).join('\n\n'), line].join('\n\n')} : {}),
     slides: post.slides?.map(slide => ({...slide, authorisation: line})),
   }
 }

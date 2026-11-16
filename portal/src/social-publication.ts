@@ -56,17 +56,20 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   image.searchParams.set('v', OG_VERSION)
   // Instagram's feed and grid are portrait; the landscape card is cropped there.
   if (channel === 'instagram') image.searchParams.set('format', 'portrait')
-  const full = (post.caption || post.text).replace(post.url, '').split('\n\n').filter(p => p !== post.authorisation).join('\n\n').trim()
+  // A bill's channel copies (daily-post.ts): record facts on X and Bluesky, and a caption that opens with who wrote
+  // the summary on Facebook and Instagram. Every other edition, and one stored before these existed, posts as before.
+  const short = post.record_text || post.text
+  const full = (post.channel_caption || post.caption || post.text).replace(post.url, '').split('\n\n').filter(p => p !== post.authorisation).join('\n\n').trim()
   // The line is mandatory; reserve its space before truncating a channel caption.
   const captionFor = (limit: number) => post.authorisation
     ? `${clip(full, limit - post.authorisation.length - 2)}\n\n${post.authorisation}`
     : full.slice(0, limit)
-  const xText = post.text.replace(post.url, link.toString())
+  const xText = short.replace(post.url, link.toString())
   // Bluesky allows 300 graphemes and the link rides in the card, so the text drops the URL.
   const text = channel === 'x' ? (xLength(`${xText}\n\n${AUSPOL}`) <= 280 ? `${xText}\n\n${AUSPOL}` : xText)
-    : channel === 'bluesky' ? `${clip(post.text.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300 - AUSPOL.length - 2)}\n\n${AUSPOL}`
+    : channel === 'bluesky' ? `${clip(short.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300 - AUSPOL.length - 2)}\n\n${AUSPOL}`
     : channel === 'facebook' ? `${captionFor(4900)}\n\n${AUSPOL}`
-    : `${captionFor(1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n${instagramTags(post).join(' ')}`
+    : `${captionFor(1850)}\n\nExplore ${post.title} at opax.com.au, link in bio.\n\n${instagramTags(post).join(' ')}`
   // A story channel posts a few of the slides as 9:16 frames (story.ts chooses which); the feed channels post them all at 4:5.
   const frames = isStoryChannel(channel) ? storyFrames(post.slides) : undefined
   const slides = frames
