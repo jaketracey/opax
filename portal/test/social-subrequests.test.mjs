@@ -123,10 +123,13 @@ async function harness({ status = () => 'FINISHED', worker } = {}) {
     globalThis.fetch = fetch; globalThis.caches = caches;
     // The publisher's waits between container status reads pass at once; every other timer keeps its delay.
     globalThis.setTimeout = (fn, ms, ...args) => CONTAINER_WAITS.includes(ms) ? (waits++, saved.setTimeout(fn, 0, ...args)) : saved.setTimeout(fn, ms, ...args);
+    // The wall clock starts at the tick, as an on-time invocation's does, and moves on as the run takes time.
+    const realNow = Date.now, started = realNow();
+    Date.now = () => scheduledTime + (realNow() - started);
     try {
       await worker.scheduled({ cron: '0,5,10 22 * * *', scheduledTime }, env, ctx);
       await Promise.all(pending.splice(0));
-    } finally { Object.assign(globalThis, saved); }
+    } finally { Object.assign(globalThis, saved); Date.now = realNow; }
     const calls = log.slice(from);
     return { total: calls.length, ...Object.fromEntries(KINDS.map(k => [k, calls.filter(c => c.kind === k).length])), calls };
   };
@@ -188,9 +191,11 @@ test('the longest story Instagram allows stays inside the budget on each tick, p
   const ticks = [];
   for (const m of [0, 5, 10]) ticks.push(await h.tick(DAYS[0][1] + m * 60000));
   assert.ok(h.waits() > 0, 'the run waited between status reads');
-  // Each tick publishes what finished and leaves the next frame processing: the carousel posts at 22:05,
-  // the Instagram story is still going after 22:10 (Facebook's photos need no status read).
-  assert.deepEqual(h.rows(), { ...everyChannel, instagram_story: 'preparing' });
+  // Each tick publishes what finished and leaves the next frame processing: the carousel posts at 22:05, and
+  // the Instagram story, its fourth frame still processing at 22:10, is held for review (Facebook's photos need
+  // no status read).
+  assert.deepEqual(h.rows(), { ...everyChannel, instagram_story: 'review_required' });
+  assert.equal(h.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram_story'").get().detail, 'Instagram container still processing');
   // The same edition with every container finished at its first read: the most a single run publishes.
   const all = await harness();
   all.sqlite.prepare('INSERT INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').run(base.date, base.subject, JSON.stringify({ ...base, slides }), new Date(DAYS[0][1]).toISOString());

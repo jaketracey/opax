@@ -166,18 +166,21 @@ const META_WRITE_TIMEOUT = 90000
 /**
  * A container still processing is read again after each of these waits before the run leaves it for the next
  * tick. Meta advises reading a container's status about once a minute for no more than five minutes, and the
- * ticks are five minutes apart, so a run adds at most two reads and thirty seconds per container.
+ * ticks are five minutes apart, so a run adds at most two reads and thirty seconds per container. A run that
+ * has already gone WAIT_UNTIL past its start reads once and waits no more, so it does not hold the row longer.
  */
 export const CONTAINER_WAITS = [10_000, 20_000]
+const WAIT_UNTIL = 3 * 60_000
 /**
  * Meta's "The media is not ready for publishing, please wait for a moment" (HTTP 400, code 9007, subcode
  * 2207027), answered to a publish of a container whose status read FINISHED. Meta's fix is to wait and publish
  * the same container. Nothing was published, so the delivery may wait for a later tick: at most
- * NOT_READY_WAITS times, and only on a tick before the day's last. A refusal at 22:10 UTC, or from a run at
- * any other time, goes to review as before.
+ * NOT_READY_WAITS times, and only when the run may leave a container for the next tick (leaveBy).
  */
 const NOT_READY = 'Provider HTTP 400 code 9007/2207027'
 const NOT_READY_WAITS = 2
+/** A container still processing when the run may not leave it for a later tick: held for review. */
+const STILL_PROCESSING = 'Instagram container still processing'
 /**
  * A container that reads PUBLISHED when the run comes to publish it: a publish Meta answered with an error
  * went through after all. It is never published again. A container has no field naming the media it became
@@ -185,11 +188,18 @@ const NOT_READY_WAITS = 2
  * be recorded as posted with its id: it is held for review.
  */
 const ALREADY_PUBLISHED = 'Instagram container already published'
-/** The cron's ticks are 22:00, 22:05 and 22:10 UTC (wrangler.jsonc). True only for a run that starts before the last of them. */
-export function beforeLastTick(now: number): boolean {
+/**
+ * The cron's ticks are 22:00, 22:05 and 22:10 UTC (wrangler.jsonc). A run that starts at `now`, before the last
+ * of them, may hand a delivery back as `preparing` for the next tick to finish, but only by a minute before that
+ * tick: a row still `sending` when the next tick reaches it is passed over, and after 22:10 no tick comes. This
+ * is that deadline on the wall clock (22:04 for the 22:00 run, 22:09 for the 22:05 run), or null for a run that
+ * starts outside 22:00 to 22:10, the last tick included.
+ */
+export function leaveBy(now: number): number | null {
   const d = new Date(now)
   const minute = d.getUTCHours() * 60 + d.getUTCMinutes()
-  return minute >= 22 * 60 && minute < 22 * 60 + 10
+  if (minute < 22 * 60 || minute >= 22 * 60 + 10) return null
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 22, minute < 22 * 60 + 5 ? 5 : 10) - 60_000
 }
 function returnedId(body: Record<string, unknown>): string {
   if (typeof body.id !== 'string' || !/^[\d_]+$/.test(body.id)) throw new Error('Provider omitted post id')
@@ -263,6 +273,8 @@ export async function runSocialPublication(env: SocialEnv, options: {
   date?: string; kind?: DailyPostKind; subject?: string; channels?: Channel[]
   /** How the run waits between container status reads (tests pass one that returns at once). */
   sleep?: (ms: number) => Promise<void>
+  /** The wall clock, read when the run decides whether it may leave a container for a later tick (tests pass their own). */
+  clock?: () => number
 }): Promise<unknown> {
   const ready = readiness(env)
   const channels = CHANNELS.filter(c => ready[c].ready && (!options.channels || options.channels.includes(c)))
@@ -278,12 +290,20 @@ export async function runSocialPublication(env: SocialEnv, options: {
     try { return await baseFetch(input, init) } catch (error) { if (error !== null && typeof error === 'object') failedFetches.add(error); throw error }
   }
   const sleep = options.sleep ?? ((ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms)))
+  // A Worker's clock moves on after I/O, so it is current right after the provider's answer it is read for.
+  const clock = options.clock ?? (() => Date.now())
+  const deadline = leaveBy(now)
+  /**
+   * Whether a container may be left for a later tick: only the cron's own date, and only while the next tick is
+   * sure to read the row (leaveBy). Otherwise nothing would read it again that day, so it is held for review.
+   */
+  const mayLeave = () => deadline !== null && date === melbourneDate(now) && clock() < deadline
   /** An Instagram container's status_code, read again after each of CONTAINER_WAITS while it is still IN_PROGRESS. */
   const containerStatus = async (container: string): Promise<unknown> => {
     const read = async () => (await api(`${graphOrigin(env)}/${container}?fields=status_code`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl)).status_code
     let status = await read()
     for (const ms of CONTAINER_WAITS) {
-      if (status !== 'IN_PROGRESS') break
+      if (status !== 'IN_PROGRESS' || clock() >= now + WAIT_UNTIL) break
       await sleep(ms)
       status = await read()
     }
@@ -294,7 +314,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
     try {
       return returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { creation_id: container }))
     } catch (error) {
-      if (error instanceof Error && error.message === NOT_READY && refused < NOT_READY_WAITS && beforeLastTick(now)) return null
+      if (error instanceof Error && error.message === NOT_READY && refused < NOT_READY_WAITS && mayLeave()) return null
       throw error
     }
   }
@@ -368,7 +388,11 @@ export async function runSocialPublication(env: SocialEnv, options: {
               await saveProgress(progress)
             }
             const status = await containerStatus(handle)
-            if (status === 'IN_PROGRESS') { waiting = true; break }
+            if (status === 'IN_PROGRESS') {
+              // Too late for a later tick to finish it: held for review, as a publish in doubt is.
+              if (!mayLeave()) { writeStarted = true; throw new Error(STILL_PROCESSING) }
+              waiting = true; break
+            }
             if (status === 'PUBLISHED') { writeStarted = true; throw new Error(ALREADY_PUBLISHED) }
             if (status !== 'FINISHED') throw new Error('Instagram container not publishable')
             writeStarted = true
@@ -444,6 +468,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
         }
         const status = await containerStatus(container)
         if (status === 'IN_PROGRESS') {
+          if (!mayLeave()) { writeStarted = true; throw new Error(STILL_PROCESSING) }
           await db.prepare("UPDATE social_deliveries SET status='preparing',updated_at=? WHERE edition_date=? AND channel=?").bind(at, date, channel).run()
           results[channel] = 'preparing'; continue
         }
@@ -477,7 +502,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
 }
 
 /** The journal's own reasons, stored as thrown. Meta's numeric error code (digits only, never its message) rides on the status: api() above. */
-const KNOWN_DETAIL = /^(Provider HTTP \d+(?: code \d+(?:\/\d+)?)?|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable|container already published)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured|Bluesky (?:session HTTP \d+|API HTTP \d+|account mismatch|did not return a post uri))$/
+const KNOWN_DETAIL = /^(Provider HTTP \d+(?: code \d+(?:\/\d+)?)?|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable|container already published|container still processing)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured|Bluesky (?:session HTTP \d+|API HTTP \d+|account mismatch|did not return a post uri))$/
 
 /**
  * What the journal records for a failed delivery. A known reason is kept as it is. Any other error is
@@ -499,9 +524,13 @@ export function failureDetail(error: unknown, fetchFailed = false): string {
   if (fetchFailed || /^Network connection lost\.?$/.test(message)) return `Network error (${name})`
   return `Unexpected error (${name})`
 }
-/** The constructor's name (TypeError, DOMException, Error), or the type of a thrown non-object; bounded, never free text. */
+/**
+ * An Error's constructor name (TypeError, DOMException, Error), or the type of anything else thrown ('object',
+ * 'string'); bounded, never free text. A plain object's `constructor` is its own data (a parsed body), so it is
+ * never read.
+ */
 function errorClass(error: unknown): string {
-  const name = error !== null && typeof error === 'object' ? (error as { constructor?: { name?: unknown } }).constructor?.name : typeof error
+  const name = error instanceof Error ? error.constructor?.name : error === null ? 'null' : typeof error
   return typeof name === 'string' && /^[A-Za-z_$][\w$]{0,39}$/.test(name) ? name : 'unknown'
 }
 

@@ -28,8 +28,8 @@ DMs, automate replies, or imply a funding relationship proves wrongdoing.
 
 The first schedule is 22:00 UTC (08:00 AEST / 09:00 AEDT). Checks at +5 and +10
 minutes finish an Instagram container that is still processing. They do not resend
-successful posts. A container still pending after the third check needs operator
-review; the following day is a new edition.
+successful posts. A container still pending after the third check is held for
+operator review (`review_required`); the following day is a new edition.
 
 ## The week and the grant kinds (live from 30 Sep 2026)
 
@@ -160,15 +160,25 @@ after Meta has fetched the image, so those calls are given 90 seconds (reads kee
 20); a call that still runs out is recorded as `Provider timeout`. A container still
 processing is read again after 10 and then 20 seconds before the run leaves it for
 the next tick (Meta advises reading a status about once a minute, for at most five
-minutes). When Meta refuses a publish as not ready (`Provider HTTP 400 code
-9007/2207027`, "The media is not ready for publishing") even though the container
-read `FINISHED`, nothing was published: the delivery keeps the container and stays
-`preparing` for the next tick, at most twice and only before the 22:10 UTC tick. A
-refusal at 22:10, a third one, or one in an operator's run at any other time goes to
-`review_required` as before, so nothing carries into the next day. A container that
-reads `PUBLISHED` when the run comes to publish it (a refused publish went through
-after all) is never published again; Meta's container names no media id, so the
-delivery is held for review as `Instagram container already published`.
+minutes); a run already three minutes past its start reads once and does not wait.
+When Meta refuses a publish as not ready (`Provider HTTP 400 code 9007/2207027`,
+"The media is not ready for publishing") even though the container read `FINISHED`,
+nothing was published: the delivery keeps the container and stays `preparing` for
+the next tick, at most twice.
+
+A run leaves a container for the next tick, still processing or refused as not
+ready, only when that tick is sure to read the row. The run must be the 22:00 or
+22:05 UTC run under its own date, and the wall clock when Meta's answer arrives must
+be more than a minute before the next tick: before 22:04 for the 22:00 run, before
+22:09 for the 22:05 run. The next tick passes over a row that is still `sending`,
+and after 22:10 no tick comes for that date. So a run that ran long or started late,
+the 22:10 run, a third refusal, and an operator's run at another time or for another
+date all hold the delivery as `review_required`, with `Instagram container still
+processing` or the refusal's code. A held row is never retried, an operator's run of
+yesterday's date included. A container that reads `PUBLISHED` when the run comes to
+publish it (a refused publish went through after all) is never published again;
+Meta's container names no media id, so the delivery is held for review as
+`Instagram container already published`.
 
 ## Source selection and refresh
 
@@ -276,10 +286,14 @@ for a request that got no HTTP answer (or the runtime's "Network connection lost
 DB` messages, `Worker limit (subrequests)` for the Workers subrequest limit, and
 `Unexpected error (<class>)` for anything else. The log line keeps the message.
 
-One run of the publisher makes about 160 to 270 subrequests with every channel on,
-and about 340 at most (a ten-slide story with composition), against the 10,000 per
-invocation of the Workers Paid plan. `test/social-subrequests.test.mjs` counts them
-through the real scheduled handler and fails above a tenth of the limit. With
+In the test harness, one run of the publisher made about 160 to 270 subrequests
+with every channel on, and about 340 for a ten-slide story with composition, against
+the 10,000 per invocation of the Workers Paid plan. These are harness counts, not a
+ceiling: the harness's table database is empty and the knowledge box answers 404, so
+lookups that would follow real rows are not made, and the counts move with the
+generated `public/` files (a tree without the built `/growth/*` files measured 297
+and 369). `test/social-subrequests.test.mjs` counts them through the real scheduled
+handler and fails above a tenth of the limit. With
 `OPAX_SOCIAL_CPU=1` it also times a 22:00 run with the real rasteriser: on a Mac
 (17 Nov 2026) the ten-slide edition took about 2.5 s of CPU from a cold isolate,
 nearly all of it drawing the 16 cards and slides, against the 30 s a cron on an

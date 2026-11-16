@@ -5,7 +5,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';
 const built = await build({ entryPoints: [new URL('../src/social-publication.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication, socialEngagement, todayRedirect, tagFacets, instagramTags, failureDetail, beforeLastTick, CONTAINER_WAITS } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication, socialEngagement, todayRedirect, tagFacets, instagramTags, failureDetail, leaveBy, CONTAINER_WAITS } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const storyBuilt = await build({ entryPoints: [new URL('../src/story.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { STORY_VERSION, storyFrames } = await import('data:text/javascript;base64,' + Buffer.from(storyBuilt.outputFiles[0].text).toString('base64'));
 const post = { date: '2026-09-13', subject: 'person:Test Member', kind: 'politician', title: 'Test Member', text: 'Check the parliamentary record.\n\nhttps://opax.com.au/subject/person/Test%20Member', caption: 'The longer source-qualified caption.\n\nhttps://opax.com.au/subject/person/Test%20Member', url: 'https://opax.com.au/subject/person/Test%20Member' };
@@ -54,9 +54,9 @@ function harness(overrides = {}, handler) {
   if(url.endsWith('/789/media_publish'))return Response.json({id:JSON.parse(init.body).creation_id==='999'||JSON.parse(init.body).creation_id.startsWith('9')?'1003':'1'+JSON.parse(init.body).creation_id});
   throw Error('Unexpected request '+url);
  };
- // The waits between container status reads are recorded, not slept.
+ // The waits between container status reads are recorded, not slept. The wall clock stands at the run's tick unless a test moves it.
  const sleeps=[];
- const run=(at=now)=>runSocialPublication(env,{now:at,personTopics:async()=>Response.json({}),fetchImpl,sleep:async ms=>{sleeps.push(ms)}});
+ const run=(at=now,clock=()=>at,more={})=>runSocialPublication(env,{now:at,clock,personTopics:async()=>Response.json({}),fetchImpl,sleep:async ms=>{sleeps.push(ms)},...more});
  return {env,db,sqlite,calls,run,fetchImpl,sleeps};
 }
 test('platform copy uses attribution, real JPEG, a portrait card and a bio CTA for Instagram',()=>{
@@ -414,7 +414,7 @@ test('all six electoral channel templates retain the exact line even after capti
 
 test('a failure outside the known reasons is journalled as a category and the error class, never its text',()=>{
  // Every known reason is kept exactly as thrown.
- for(const m of ['Provider HTTP 500','Provider timeout','Provider omitted post id','X identity HTTP 401','X API HTTP 403','X account mismatch','X did not return a post id','Facebook Page token mismatch','Instagram account mismatch','Instagram container not publishable','Source page or matching image unavailable','Grant award image mismatch','Portrait image unavailable','Story slide unavailable','Meta API version not configured','Bluesky session HTTP 401','Bluesky API HTTP 400','Bluesky account mismatch','Bluesky did not return a post uri'])assert.equal(failureDetail(new Error(m)),m);
+ for(const m of ['Provider HTTP 500','Provider timeout','Provider omitted post id','X identity HTTP 401','X API HTTP 403','X account mismatch','X did not return a post id','Facebook Page token mismatch','Instagram account mismatch','Instagram container not publishable','Instagram container already published','Instagram container still processing','Source page or matching image unavailable','Grant award image mismatch','Portrait image unavailable','Story slide unavailable','Meta API version not configured','Bluesky session HTTP 401','Bluesky API HTTP 400','Bluesky account mismatch','Bluesky did not return a post uri'])assert.equal(failureDetail(new Error(m)),m);
  // Meta's numeric code rides on the status, digits only.
  assert.equal(failureDetail(new Error('Provider HTTP 400 code 9007/2207027')),'Provider HTTP 400 code 9007/2207027');
  assert.equal(failureDetail(new Error('Provider HTTP 403 code 10')),'Provider HTTP 403 code 10');
@@ -437,6 +437,10 @@ test('a failure outside the known reasons is journalled as a category and the er
  assert.equal(failureDetail(undefined),'Unexpected error (undefined)');
  class Odd extends Error {} Object.defineProperty(Odd,'name',{value:'Odd name with page-token'});
  assert.equal(failureDetail(new Odd('x')),'Unexpected error (unknown)');
+ // Only an Error's class is read: a thrown plain object's `constructor` is its own data, never stored.
+ assert.equal(failureDetail({constructor:{name:'EAAGtoken1234'}}),'Unexpected error (object)');
+ assert.equal(failureDetail({name:'TimeoutError',constructor:{name:'EAAGtoken1234'}}),'Timeout (object)');
+ assert.equal(failureDetail(null),'Unexpected error (null)');
 });
 test('a story publish that fails without an HTTP answer is held for review under its category, never its text, and is not tried again',async()=>{
  const only={...storyEnv,FACEBOOK_STORY_ENABLED:'false',FACEBOOK_POST_ENABLED:'false',INSTAGRAM_POST_ENABLED:'false',DAILY_POST_ENABLED:'false'};
@@ -474,11 +478,11 @@ test('a Meta refusal keeps its numeric code in the journal',async()=>{
 // Meta's "The media is not ready for publishing, please wait for a moment".
 const notReady=()=>Response.json({error:{message:'The media is not ready for publishing, please wait for a moment',code:9007,error_subcode:2207027}},{status:400});
 const tick=minutes=>now+minutes*60000; // the harness's `now` is 22:00 UTC
-test('the not-ready wait ends at the last of the cron\'s three ticks',()=>{
+test('a run may leave a container for the next tick only until a minute before it, and never after the last of the three',()=>{
  const crons=/"crons":\s*\[([^\]]*)\]/.exec(readFileSync(new URL('../wrangler.jsonc',import.meta.url),'utf8'))[1];
  assert.match(crons,/"0,5,10 22 \* \* \*"/,'the daily ticks are 22:00, 22:05 and 22:10 UTC');
- assert.deepEqual([0,5,9,10,15].map(m=>beforeLastTick(tick(m))),[true,true,true,false,false]);
- assert.equal(beforeLastTick(tick(-1)),false);
+ assert.deepEqual([0,3,5,8,9,10,15,-1].map(m=>leaveBy(tick(m))),[tick(4),tick(4),tick(9),tick(9),tick(9),null,null,null]);
+ assert.equal(leaveBy(tick(10)-1),tick(9),'22:09:59 still counts as before the last tick, with its deadline already gone');
 });
 test('a container still processing is read again within the run, and published when it finishes',async()=>{
  let reads=0;const h=harness({},async url=>url.endsWith('/999?fields=status_code')?Response.json({status_code:reads++<1?'IN_PROGRESS':'FINISHED'}):null);
@@ -559,4 +563,81 @@ test('a container that reads PUBLISHED after a not-ready refusal is held for rev
  assert.equal(h.calls.filter(c=>c.body?.media_type==='STORIES').length,3,'no later frame is started');
  await h.run(tick(10));
  assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length,publishes,'22:10 tries nothing');
+});
+test('a refusal that reaches a run after the next tick has passed its row over is held for review',async()=>{
+ // Refused at 22:00. The 22:05 run is still publishing when the whole 22:10 run goes by and passes over the
+ // row (it is `sending`); then Meta's second not-ready answer reaches the 22:05 run, on a clock now past 22:10.
+ let wall=null,inner=null;
+ const h=harness({},async url=>{
+  if(!url.endsWith('/789/media_publish'))return null;
+  if(wall===tick(5)){wall=tick(10);inner=await h.run(tick(10))}
+  return notReady();
+ });
+ assert.equal((await h.run(tick(0))).channels.instagram,'preparing');
+ wall=tick(5);
+ const late=await h.run(tick(5),()=>wall);
+ assert.equal(inner.channels.instagram,'sending','the 22:10 run passed over the row the 22:05 run held');
+ assert.equal(late.channels.instagram,'review_required');
+ assert.deepEqual({...h.sqlite.prepare("SELECT status,detail FROM social_deliveries WHERE channel='instagram'").get()},{status:'review_required',detail:'Provider HTTP 400 code 9007/2207027'});
+ const publishes=h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length;
+ assert.equal(publishes,2);
+ await h.run(tick(15));await h.run(tick(60));
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length,publishes,'nothing is tried again');
+});
+test('a frame still processing when the next tick has passed its row over is held for review, with no more waits',async()=>{
+ let wall=null,inner=null;
+ const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async url=>{
+  if(!url.endsWith('/803?fields=status_code'))return null;
+  if(wall===tick(5)){wall=tick(10);inner=await h.run(tick(10))}
+  return Response.json({status_code:'IN_PROGRESS'});
+ });
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ assert.equal((await h.run(tick(0))).channels.instagram_story,'preparing');
+ const waited=h.sleeps.length;
+ wall=tick(5);
+ const late=await h.run(tick(5),()=>wall);
+ assert.equal(inner.channels.instagram_story,'sending');
+ assert.equal(late.channels.instagram_story,'review_required');
+ assert.equal(h.sleeps.length,waited,'a run past its waiting time reads once and waits no more');
+ const row=h.sqlite.prepare("SELECT status,detail,progress FROM social_deliveries WHERE channel='instagram_story'").get();
+ assert.equal(row.status,'review_required');assert.equal(row.detail,'Instagram container still processing');
+ const p=JSON.parse(row.progress);assert.equal(p.done.length,2,'the frames already in the tray stay recorded');assert.equal(p.container,'803');
+});
+test('four minutes past its tick a run holds a refusal or a processing container for review; three minutes past, it reads once and hands the row back',async()=>{
+ for(const [label,clock,want] of [['3:59 past',()=>tick(4)-1000,'preparing'],['4:00 past',()=>tick(4),'review_required']]){
+  const h=harness({},async url=>url.endsWith('/789/media_publish')?notReady():null);
+  assert.equal((await h.run(tick(0),clock)).channels.instagram,want,label);
+ }
+ const processing=async url=>url.endsWith('/999?fields=status_code')?Response.json({status_code:'IN_PROGRESS'}):null;
+ const h=harness({},processing);
+ assert.equal((await h.run(tick(0),()=>tick(4))).channels.instagram,'review_required');
+ assert.equal(h.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram'").get().detail,'Instagram container still processing');
+ const h2=harness({},processing);
+ assert.equal((await h2.run(tick(0),()=>tick(3))).channels.instagram,'preparing');
+ assert.deepEqual(h2.sleeps,[]);assert.equal(h2.calls.filter(c=>c.url.endsWith('/999?fields=status_code')).length,1);
+});
+test('a container still processing at the last tick is held for review, and nothing is tried again',async()=>{
+ const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async url=>/\/(999|801)\?fields=status_code$/.test(url)?Response.json({status_code:'IN_PROGRESS'}):null);
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const states=[];
+ for(const m of [0,5,10]){const r=await h.run(tick(m));states.push([r.channels.instagram,r.channels.instagram_story])}
+ assert.deepEqual(states,[['preparing','preparing'],['preparing','preparing'],['review_required','review_required']]);
+ for(const channel of ['instagram','instagram_story'])assert.deepEqual({...h.sqlite.prepare('SELECT status,detail FROM social_deliveries WHERE channel=?').get(channel)},{status:'review_required',detail:'Instagram container still processing'},channel);
+ const reads=h.calls.filter(c=>c.url.endsWith('?fields=status_code')).length;
+ await h.run(tick(15));await h.run(tick(60));
+ assert.equal(h.calls.filter(c=>c.url.endsWith('?fields=status_code')).length,reads,'no later run reads them again');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length,0);
+});
+test('an operator\'s run for yesterday inside the cron\'s window holds a refusal or a processing container for review',async()=>{
+ const yesterday='2026-09-12';
+ const cases=[
+  ['not ready',url=>url.endsWith('/789/media_publish')?notReady():null,'Provider HTTP 400 code 9007/2207027'],
+  ['processing',url=>url.endsWith('?fields=status_code')?Response.json({status_code:'IN_PROGRESS'}):null,'Instagram container still processing'],
+ ];
+ for(const [label,handler,detail] of cases){
+  const h=harness({},async url=>handler(url));
+  h.sqlite.prepare('INSERT INTO social_editions VALUES(?,?,?,?)').run(yesterday,post.subject,JSON.stringify({...post,date:yesterday}),new Date(now).toISOString());
+  assert.equal((await h.run(tick(2),()=>tick(2),{date:yesterday})).channels.instagram,'review_required',label);
+  assert.deepEqual({...h.sqlite.prepare('SELECT status,detail FROM social_deliveries WHERE edition_date=? AND channel=?').get(yesterday,'instagram')},{status:'review_required',detail},label);
+ }
 });
