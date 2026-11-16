@@ -2,19 +2,45 @@
  * Never model prose from another engine: the older engine answers from unrelated passages and general knowledge,
  * and a hearing-evidence answer with no hearing source must not be shown. The reader gets the transcript excerpts
  * research did hold, quoted by code as recorded, or else one fixed line. */
-import { hearingEvidenceQuestion, transcriptPassage } from './transcript-answer'
+import { hearingEvidenceQuestion, transcriptPassage, TRANSCRIPT_LABEL } from './transcript-answer'
 import { proseFallback, writingFacts } from './research-writing'
 import { NO_SUPPORTED_ANSWER } from './research-evidence'
 import { inferPeriod } from './ask-period'
 import type { Fact } from './agentic-ask'
+import NAMES from './commission-names.json'
 
-/** The one predicate: for which questions an answer with no accepted research may never fall to the older engine's
- * prose. Hearing-evidence questions today. Returning true here would apply it to every question. */
-export const quotedOrNothing = (question: string): boolean => hearingEvidenceQuestion(question)
+/** The one predicate: for which failed runs the answer may never fall to the older engine's prose. Returning true here
+ * would apply it to every question. Today, any of:
+ *  - the question is worded as a hearing-evidence question;
+ *  - the run called the royal commissions or integrity reports tool, or holds a source with the hearing transcript
+ *    label (most questions about what an inquiry heard are not worded as "evidence at");
+ *  - the question names a royal commission, a special commission or commission of inquiry, or a board of inquiry;
+ *  - the question names a registered commission or inquiry by its name or an alias (commission-names.json, built
+ *    from the registry, so a newly registered one is covered with no change here). These two are for a run that
+ *    failed before any tool was called. The bare words "inquiry", "Senate inquiry" or "inquiry into" are not
+ *    enough: a parliamentary committee inquiry is Hansard. */
+const NAMES_A_COMMISSION = /\broyal commission\b|\b(?:special )?commission of inquiry\b|\bboard of inquiry\b/i
+const squashed = (text: string) => ` ${text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()} `
+const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flatMap(c => c.names.map(squashed))
+/** Whether a question names a registered commission or inquiry, as a whole phrase, whatever the case or punctuation. */
+export const namesRegisteredCommission = (question: string): boolean => { const q = squashed(question); return REGISTERED.some(name => q.includes(name)) }
+const COMMISSION_TOOLS = new Set(['royal_commissions', 'integrity_reports'])
+type Run = { sources?: unknown[]; trail?: unknown[] } | undefined
+export function quotedOrNothing(question: string, research?: Run): boolean {
+  if (hearingEvidenceQuestion(question) || NAMES_A_COMMISSION.test(question) || namesRegisteredCommission(question)) return true
+  if ((research?.trail ?? []).some(step => COMMISSION_TOOLS.has(String((step as { tool?: unknown })?.tool ?? '')))) return true
+  if (Array.isArray((research as { held_transcripts?: unknown })?.held_transcripts) && (research as { held_transcripts: unknown[] }).held_transcripts.length) return true
+  return ((research?.sources ?? []) as Found[]).some(s => `${String(s?.snippet ?? '')} ${String(s?.title ?? '')}`.includes(TRANSCRIPT_LABEL))
+}
 
 type Found = { title?: unknown; url?: unknown; snippet?: unknown }
-export function hearingFallbackPayload(question: string, research: { sources?: unknown[] } | undefined): Record<string, unknown> {
-  const held = ((research?.sources ?? []) as Found[]).flatMap(s => {
+export function hearingFallbackPayload(question: string, found: { sources?: unknown[]; held_transcripts?: unknown } | undefined): Record<string, unknown> {
+  // Neither engine wrote this answer, so the run is recorded under its own mode, with the loop's failure reason.
+  const { held_transcripts: _held, ...record } = found ?? {}
+  const research = { rounds: 0, trail: [], sources: [], ...record, mode: 'hearing_fallback' }
+  // The excerpts the stopped run held (research-loop.ts keepHeld), then any transcript source its record lists.
+  const kept = (Array.isArray(found?.held_transcripts) ? found.held_transcripts : []) as { text?: unknown; url?: unknown }[]
+  const held = [...kept.map((k): Found => ({ snippet: k?.text, url: k?.url })), ...((research?.sources ?? []) as Found[])].flatMap(s => {
     const text = [s?.snippet, s?.title].find(v => typeof v === 'string' && transcriptPassage(v)) as string | undefined
     return text && typeof s.url === 'string' ? [{ text, url: s.url }] : []
   }).filter((s, i, all) => all.findIndex(o => o.text === s.text) === i).slice(0, 8)

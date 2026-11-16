@@ -705,7 +705,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   try {
     const primary=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal},deps.research?loopProgress:progress,budgetMs,period,filters,resolvedScope,started)
     const run = await (reserveEnabled?bounded(primary,selectionLeft(),deps.signal):primary(deps.signal))
-    if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
+    if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.research?.held_transcripts ? { heldTranscripts: run.research.held_transcripts } : {}), ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
     return otherMatchLine(completeLookup(await writeRun(run)))
   }
   catch (error) {
@@ -724,7 +724,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
         facts: [], notes: [], steps, events: attempted, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.costUsd ?? null,
         over_budget: Date.now() - started >= budgetMs, version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
         timings: { plan_ms: Date.now() - started, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
-        research: { mode: 'planner', rounds: failure.stats.rounds, trail: researchTrail(attempted, steps), sources: [], failure: failure.reason, ms: Date.now() - started, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.usageUnknown ? null : failure.stats.costUsd ?? 0, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) }, research_failure: failure.reason })
+        research: { mode: 'planner', rounds: failure.stats.rounds, trail: researchTrail(attempted, steps), sources: [], ...(failure.stats.heldTranscripts ? { held_transcripts: failure.stats.heldTranscripts } : {}), failure: failure.reason, ms: Date.now() - started, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.usageUnknown ? null : failure.stats.costUsd ?? 0, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) }, research_failure: failure.reason })
     }
     const offset = attempted.length
     const shifted: Progress = async (event, data) => {
@@ -742,7 +742,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const fallback = await (reserveEnabled?bounded(recover,selectionLeft(),deps.signal):recover(deps.signal))
     fallback.events = fallback.events.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) fallback.research.trail = fallback.research.trail.map(e => ({ ...e, id: e.id + offset }))
-    if (fallback.research) Object.assign(fallback.research, { failure: failure.reason, reserved_cost_usd: fallbackSpend.reservedCostUsd, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
+    if (fallback.research) Object.assign(fallback.research, { ...(failure.stats.heldTranscripts ? { held_transcripts: failure.stats.heldTranscripts } : {}), failure: failure.reason, reserved_cost_usd: fallbackSpend.reservedCostUsd, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
     fallback.tokens.input += failure.stats.tokens.input; fallback.tokens.output += failure.stats.tokens.output
     if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
     fallback.timings.total_ms = Date.now() - started
@@ -779,7 +779,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ ...(otherMatches.length ? { other_matches: otherMatches } : {}), answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
     ...(researched?.constraints?{answer_scope:researched.constraints}:{}),
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
-    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, reserved_cost_usd:researched.reservedCostUsd, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
+    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, reserved_cost_usd:researched.reservedCostUsd, trail: researchTrail(events, steps), sources: [], ...(researched.heldTranscripts ? { held_transcripts: researched.heldTranscripts } : {}), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
     ...over, source_links: sourceLinks(results), timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
   if (!deps.research && !electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })

@@ -172,7 +172,9 @@ export function createResearch(options: ResearchOptions): Research {
     let failed: ResearchStop | undefined
     const inFlight = new Set<Promise<unknown>>()
     // SDK tool throws become tool-error parts; retain failure for stopWhen/check.
-    const fail = (reason: ResearchStop): never => { failed = reason; throw new ResearchError(reason, stats) }
+    // A run that stops keeps the transcript excerpts it held, so a fallback can quote them by code (ask-hearing-fallback.ts).
+    const keepHeld = () => { const held = factSheet(results).facts.filter(f => f.cite.url && transcriptPassage(f.text)).slice(0, 8).map(f => ({ text: f.text, url: f.cite.url })); if (held.length) stats.heldTranscripts = held }
+    const fail = (reason: ResearchStop): never => { failed = reason; keepHeld(); throw new ResearchError(reason, stats) }
     const check = () => {
       if (controller.signal.aborted) fail(context.signal.aborted ? 'aborted' : 'timeout')
       if (Date.now() - started >= limits.wallMs) fail('timeout')
@@ -968,6 +970,7 @@ export function createResearch(options: ResearchOptions): Research {
       if (!(error instanceof ResearchError) && !failed && ToolChoiceViolationError.isInstance(error)) failed = 'malformed_args'
       if (ToolChoiceViolationError.isInstance(error)) heardProse(error.content)
       controller.abort(error)
+      keepHeld()
       const stop = error instanceof ResearchError ? error : new ResearchError(failed ?? (context.signal.aborted ? 'aborted' : 'error'), stats)
       // An answer beats no answer: a run that stops after the model answered returns that answer under the same
       // checks, and one that stops before it, with verified passages in hand, returns those in their own words.

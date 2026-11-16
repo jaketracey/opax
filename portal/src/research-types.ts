@@ -23,7 +23,9 @@ export interface ReceiptFact {
 }
 export interface ResearchPayload {
   reserved_cost_usd?: number
-  mode: 'loop' | 'planner'
+  /** Hearing transcript excerpts a stopped run held, for the code-quoted fallback; taken off before a reply is sent. */
+  held_transcripts?: { text: string; url: string }[]
+  mode: 'loop' | 'planner' | 'hearing_fallback'
   rounds: number
   trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
   sources: { title: string; url: string; date?: string; kind: string; speaker?: string }[]
@@ -78,6 +80,7 @@ export interface ResearchContext {
   execute: (step: PlanStep, round: number, custom?: (deps: ToolDeps) => Promise<ToolResult>, signal?: AbortSignal) => Promise<ToolResult>
 }
 export interface ResearchResult {
+  heldTranscripts?: { text: string; url: string }[]
   reservedCostUsd?: number
   constraints?: import('./ask-constraints').AskConstraints
   steps: PlanStep[]
@@ -98,6 +101,8 @@ export type Research = ((question: string, context: ResearchContext) => Promise<
 }
 import type { AnswerTally } from './research-evidence'
 export interface ResearchStats {
+  /** Hearing transcript excerpts the run held when it stopped (citation text and link), for the code-quoted fallback. */
+  heldTranscripts?: { text: string; url: string }[];
   reservedCostUsd?: number; coherence?: {writer_passes?:number;second_passes?:number;fallback?:boolean}; answer?: AnswerTally; rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[]; rejections?: string[] }
 export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted' | 'spend' | 'provider_refused'
 export class ResearchError extends Error {

@@ -6932,7 +6932,7 @@ async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: Exe
       facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
       over_budget: Date.now() - started >= budgetMs,
       timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable',
-      ...(failure ? { research_failure: failure.reason, research: { mode: 'planner', rounds: failure.stats.rounds, trail: [], sources: [], failure: failure.reason, turns: failure.stats.turns } } : {}) }
+      ...(failure ? { research_failure: failure.reason, research: { mode: 'planner', rounds: failure.stats.rounds, trail: [], sources: [], ...(failure.stats.heldTranscripts ? { held_transcripts: failure.stats.heldTranscripts } : {}), failure: failure.reason, turns: failure.stats.turns } } : {}) }
   }
   monitorAgentic(env, ctx, question, run)
   onRun?.(run)
@@ -7075,7 +7075,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     if (research?.failure === 'provider_refused') return providerRefusedResponse(research)
     // A hearing-evidence question never falls to the older engine's prose (unrelated passages, general knowledge and
     // process notes): the excerpts research held, quoted by code, or one fixed line (ask-hearing-fallback.ts).
-    if (loopRoute && !request.signal.aborted && quotedOrNothing(question)) return json(withTranscriptNote(withoutMachineLabels(hearingFallbackPayload(question, research))))
+    if (loopRoute && !request.signal.aborted && quotedOrNothing(question, research)) return json(withTranscriptNote(withoutMachineLabels(hearingFallbackPayload(question, research))))
     if (loopRoute && !research?.failure) {
       const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
       research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }

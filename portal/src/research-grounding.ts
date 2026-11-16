@@ -9,7 +9,7 @@ import {passageExcerpt} from './research-evidence'
 import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
-import {repairQuotes,MACHINE_LABELS} from './research-evidence'
+import {repairQuotes,MACHINE_LABELS,EMPTY_WORDS} from './research-evidence'
 import {distinctSummary} from './research-writing'
 import {leadWithWho} from './research-who-lead'
 type SelectedSource=WritingInput['facts'][number]['source']
@@ -130,10 +130,32 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   return {...out,...(research?{research:{...research,claim_audit:audit.counts}}:{})}
 }
 /** An answer with the model's echoed input labels taken out (research-evidence.ts MACHINE_LABELS), citations kept in
- * step. For every answer on its way out, whichever engine wrote it. */
+ * step. A sentence that held a label and is left with no word that says anything ("See also and.") goes whole. For
+ * every answer on its way out, whichever engine wrote it. */
 export function withoutMachineLabels<T extends Record<string,unknown>>(payload:T):T {
-  if(typeof payload.answer!=='string'||!/\bfacts?[ -]\d|\bfact ids?\b/i.test(payload.answer))return payload
-  return rewriteAnswerPayload(payload,replace=>{for(const label of MACHINE_LABELS)replace(label,'');replace(/ +([.,;:])/g,'$1')})
+  const text=typeof payload.answer==='string'?payload.answer:''
+  if(!/\bfact ids?\b|\[facts? \d|\bfact-\d+\//i.test(text))return payload
+  const labelled=(part:string)=>MACHINE_LABELS.some(label=>{label.lastIndex=0;return label.test(part)})
+  const bare=(part:string)=>MACHINE_LABELS.reduce((rest,label)=>rest.replace(label,''),part)
+  const cleaned=(dropEmpty:boolean)=>rewriteAnswerPayload(payload,replace=>{
+    if(dropEmpty)for(const part of sentenceParts(text).reverse()){
+      if(!labelled(part.text))continue
+      const words=bare(part.text).match(/[\p{L}\p{N}]+/gu)??[]
+      if(words.every(word=>EMPTY_WORDS.test(word))){
+        const line=text.lastIndexOf('\n',part.at-1)+1,led=/^\s*(?:[-*]\s*)?$/.test(text.slice(line,part.at))
+        let start=led?line:part.at,end=part.at+part.text.length
+        while(text[end]===' '||text[end]==='\t')end++
+        if(led&&text[end]==='\n')end++
+        else if(!led&&(end===text.length||text[end]==='\n'))while(start>line&&/[ \t]/.test(text[start-1]))start--
+        replace(new RegExp(`(?<=^[\\s\\S]{${start}})[\\s\\S]{${end-start}}`,'g'),'')
+      }
+    }
+    for(const label of MACHINE_LABELS)replace(label,'')
+    replace(/ +[.,;:]/g,found=>found.trim());replace(/\n{3,}/g,'\n\n');replace(/\s+$/g,'')
+  })
+  // Never an empty answer: if dropping such sentences would leave nothing, only the labels go.
+  const out=cleaned(true)
+  return /[\p{L}\p{N}]/u.test(String(out.answer??''))?out:cleaned(false)
 }
 /** Quoted words stay quoted only when a source the sentence cites (or, for an uncited sentence, any source of the
  * answer) holds them verbatim; otherwise the marks come off and the words stand as paraphrase. */

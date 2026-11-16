@@ -92,10 +92,21 @@ export const NO_SUPPORTED_ANSWER = 'OPAX cannot establish the requested answer f
 /** A model's JSON text sometimes arrives over-escaped: a backslash left standing before a quotation mark ("the word
  * used is \"cleared\""). The backslash is decoding residue, not a character the model wrote for the reader. */
 export const unescapedQuotes = (text: string): string => text.replace(/\\+(?=["“”‘’'])/g, '')
-/** Labels of the model's own input that it sometimes echoes into an answer: "[fact 1]", "(fact 3)", "[facts 1, 2]",
- * "fact id fact-25/turn/1/t/body/0", "fact-25/turn/1", "fact-3/t/body/0". Fixed machine tokens, never prose. Ordinary
- * wording ("the fact that", "fact 3 of the report" without brackets, a "[1]" marker) is not one of these. */
-export const MACHINE_LABELS = [/[ \t]*\[facts? \d+(?:(?:, ?| and )\d+)*\]/gi, /[ \t]*\(facts? \d+(?:(?:, ?| and )\d+)*\)/gi, /[ \t]*\(?\bfact ids? fact-\d+(?:\/[\w-]+)*\)?/gi, /[ \t]*\(?\bfact-\d+(?:\/turn\/\d+)?(?:\/t\/body\/\d+(?:-\d+)?)?(?=\/|\)|[\s.,;:]|$)(?:\/[\w-]+)*\)?/gi]
+/** Labels of the writer's or research model's own input that it sometimes echoes into an answer. Only the exact
+ * token forms that input uses, each with nothing word-like or hyphenated straight before it:
+ *   "[fact 1]", "[facts 1, 2]", "[fact 1 and 2]"          a fact number in square brackets
+ *   "fact id 3", "(fact id 3)", "fact ids 3 and 4"         the words "fact id" and a number
+ *   "fact id fact-25/turn/1/t/body/0", "(fact id fact-3)"  the words "fact id" and an evidence id
+ *   "fact-25/turn/1", "fact-3/t/body/0"                    a bare evidence id with its path
+ * Not labels, and left alone: "(fact 7)", "(Facts 2 and 3)", "the fact that", "fact 3 of the report", "[1]",
+ * "fact-finding", "post-fact-3 analysis", "fact-3" with no path. */
+export const MACHINE_LABELS = [
+  /[ \t]*(?<![\p{L}\p{N}-])\[facts? \d+(?:(?:, ?| and )\d+)*\]/giu,
+  /[ \t]*(?<![\p{L}\p{N}-])\(?\bfact ids? (?:fact-\d+(?:\/[\w-]+)*|\d+(?:(?:, ?| and )\d+)*)\)?/giu,
+  /[ \t]*(?<![\p{L}\p{N}-])\(?\bfact-\d+(?:\/turn\/\d+(?:\/t\/body\/\d+(?:-\d+)?)?|\/t\/body\/\d+(?:-\d+)?)\)?/giu,
+]
+/** Words that say nothing by themselves: a sentence left with only these once its labels are gone is dropped. */
+export const EMPTY_WORDS = /^(?:see|also|and|or|the|a|an|at|in|on|of|for|as|it|is|are|was|were|to|by|with|from|this|that|these|those|recorded|quoted|cited|details?|more|words?|here|there|both)$/i
 
 export interface AnswerTally { points_in:number;points_kept:number;points_uncited:number;repairs:Record<string,number>;drops:Record<string,number>;uncited:Record<string,number>;mode?:'points'|'record_list'|'facts'|'uncited';salvaged?:string }
 export const emptyTally=():AnswerTally=>({points_in:0,points_kept:0,points_uncited:0,repairs:{},drops:{},uncited:{}})

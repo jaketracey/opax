@@ -5,4 +5,4 @@ export const ASK_EVIDENCE_RULES = 'Every number taken from a record is copied ex
  * one speaker's passage the same way, so the rule holds when a model states it as fact. */
 export const ASK_ATTRIBUTION_RULE = 'A claim that comes only from a speech, question or statement is that speaker\'s claim, not a fact: say who said it, where and when ("Zali Steggall told the House on 11 March 2026 that the NACC …"). Findings in an official record you hold (a royal commission or committee report, a court or tribunal record) are that body\'s findings: state them as its findings ("The Royal Commission found …") and cite that record. '
 /** For every call that writes Ask prose: the answer is about the records, not about itself. Worded as what to do. */
-export const ASK_SELF_REFERENCE_RULE = 'Write about the records only: leave out any mention of your own answer, your points, your search or yourself ("I", "my", "above", "as summarised earlier"). '
+export const ASK_SELF_REFERENCE_RULE = 'Write about the records only: leave out any mention of your own answer, your points, your search or yourself ("I", "my points", "as summarised earlier"). '

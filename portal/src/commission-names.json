@@ -1,0 +1,151 @@
+{
+ "about": "Built by scripts/build_commission_names.mjs from parli/ingest/royal_commissions.json. Do not edit.",
+ "commissions": [
+  {
+   "id": "cth-antisemitism",
+   "names": [
+    "Royal Commission on Antisemitism and Social Cohesion",
+    "Antisemitism Royal Commission",
+    "Royal Commission on Antisemitism",
+    "Royal Commission into Antisemitism"
+   ]
+  },
+  {
+   "id": "cth-defence-veteran-suicide",
+   "names": [
+    "Royal Commission into Defence and Veteran Suicide"
+   ]
+  },
+  {
+   "id": "cth-robodebt",
+   "names": [
+    "Royal Commission into the Robodebt Scheme",
+    "Robodebt Royal Commission",
+    "Royal Commission into Robodebt"
+   ]
+  },
+  {
+   "id": "cth-disability",
+   "names": [
+    "Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability"
+   ]
+  },
+  {
+   "id": "cth-natural-disasters",
+   "names": [
+    "Royal Commission into National Natural Disaster Arrangements"
+   ]
+  },
+  {
+   "id": "cth-financial-services",
+   "names": [
+    "Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry"
+   ]
+  },
+  {
+   "id": "cth-trade-union",
+   "names": [
+    "Royal Commission into Trade Union Governance and Corruption"
+   ]
+  },
+  {
+   "id": "cth-child-sexual-abuse",
+   "names": [
+    "Royal Commission into Institutional Responses to Child Sexual Abuse"
+   ]
+  },
+  {
+   "id": "vic-major-infrastructure",
+   "names": [
+    "Royal Commission into the Integrity of Major Public and Civil Infrastructure Construction Projects in Victoria"
+   ]
+  },
+  {
+   "id": "vic-yoorrook",
+   "names": [
+    "Yoorrook Justice Commission"
+   ]
+  },
+  {
+   "id": "vic-casino-operator",
+   "names": [
+    "Royal Commission into the Casino Operator and Licence"
+   ]
+  },
+  {
+   "id": "vic-mental-health",
+   "names": [
+    "Royal Commission into Victoria's Mental Health System"
+   ]
+  },
+  {
+   "id": "vic-police-informants",
+   "names": [
+    "Royal Commission into the Management of Police Informants"
+   ]
+  },
+  {
+   "id": "vic-family-violence",
+   "names": [
+    "Royal Commission into Family Violence"
+   ]
+  },
+  {
+   "id": "vic-bushfires-2009",
+   "names": [
+    "2009 Victorian Bushfires Royal Commission"
+   ]
+  },
+  {
+   "id": "qld-forensic-dna",
+   "names": [
+    "Commission of Inquiry into Forensic DNA Testing in Queensland"
+   ]
+  },
+  {
+   "id": "wa-perth-casino",
+   "names": [
+    "Perth Casino Royal Commission"
+   ]
+  },
+  {
+   "id": "act-criminal-justice",
+   "names": [
+    "Board of Inquiry into the Criminal Justice System"
+   ]
+  },
+  {
+   "id": "nsw-healthcare-funding",
+   "names": [
+    "Special Commission of Inquiry into Healthcare Funding",
+    "Healthcare Funding inquiry",
+    "Inquiry into Healthcare Funding",
+    "Healthcare Funding Special Commission"
+   ]
+  },
+  {
+   "id": "nt-hydraulic-fracturing",
+   "names": [
+    "Scientific Inquiry into Hydraulic Fracturing in the Northern Territory"
+   ]
+  },
+  {
+   "id": "qld-child-safety",
+   "names": [
+    "Child Safety Commission of Inquiry"
+   ]
+  },
+  {
+   "id": "sa-domestic-family-sexual-violence",
+   "names": [
+    "Royal Commission into Domestic, Family and Sexual Violence"
+   ]
+  },
+  {
+   "id": "tas-institutional-child-sexual-abuse",
+   "names": [
+    "Commission of Inquiry into the Tasmanian Government’s Responses to Child Sexual Abuse in Institutional Settings"
+   ]
+  }
+ ]
+}
