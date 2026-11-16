@@ -4,11 +4,13 @@
     python3 scripts/vm/step_tails.py --pipe ~/.cache/autoresearch/pipeline --env0 dump --env-file .env \
         --env-file ~/.config/opax/nightly.env [--out tails.json] ipea x_fits
 
-nightly.sh puts the result in status.json as `failed_step_logs`, so a failed step can be explained without
-logging in to the box (16 Nov 2026: `ipea (rc=1)` and nothing else to go on). status.json is force-pushed to
+nightly.sh puts the result in status.json as `failed_step_logs` (and `stale_step_logs` for the steps a source
+refused), so a failed step can be explained without logging in to the box (16 Nov 2026: `ipea (rc=1)` and nothing
+else to go on). It passes the directory of copies its keep_step_logs took when each refresh returned, not the
+pipeline directory itself: a later step of the same name overwrites `<step>.log`. status.json is force-pushed to
 the `nightly-status` branch of a PUBLIC repository, so every line here is treated as published:
 
-  * only steps named as failed, only `<pipe>/<step>.log`, and a step name must be a plain identifier;
+  * only steps named as failed or stale, only `<pipe>/<step>.log`, and a step name must be a plain identifier;
   * at most the last MAX_LINES lines and MAX_BYTES bytes per step, each line cut at MAX_LINE characters;
   * both passes read the line as the step wrote it and only mark stretches of it; the marked stretches are
     merged and replaced in one go, so no pass sees another's placeholder and no order can unmask anything;

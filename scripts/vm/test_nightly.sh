@@ -400,6 +400,8 @@ if mode not in ("none", "locked"):
     open(p, "w").write(json.dumps(d) + "\n")
 PYEOF
 [ "${FAKE_WEEKLY_MODE:-ok}" = crash ] && exit 137
+# a periodic step's own log, written as run_step writes it: over whatever a daily step of the same name left there
+[ -z "${FAKE_WEEKLY_LOG_STEP:-}" ] || printf '%s\n' "${FAKE_WEEKLY_LOG_LINE:-periodic step output}" > "$PIPE/$FAKE_WEEKLY_LOG_STEP.log"
 if [ "${FAKE_WEEKLY_MODE:-ok}" = locked ]; then echo "$(date '+%F %T') another weekly refresh is still running (lock held); exiting" >> "$PIPE/weekly.log"; exit 0; fi
 [ "${FAKE_WEEKLY_MODE:-ok}" = noblock ] && exit 0
 {
@@ -845,7 +847,41 @@ PYEOF
 check "the file left on the box is tonight's too" bash -c "grep -q '$TODAY' '$HOME/.cache/autoresearch/pipeline/nightly-last.json' && ! grep -q 2000-01-01 '$HOME/.cache/autoresearch/pipeline/nightly-last.json'"
 new_sandbox s3c
 FAKE_MODE=ok nightly
-check "a night with no failed step publishes no log tails" bash -c "! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q failed_step_logs"
+check "a night with no failed step publishes no log tails" bash -c "! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -Eq 'failed_step_logs|stale_step_logs'"
+new_sandbox s3f
+# the daily ipea step fails, then the monthly group runs its own step called ipea, which writes the same ipea.log
+FAKE_FAILED_STEPS="ipea" FAKE_MODE=failsteps OPAX_FORCE_GROUPS=monthly FAKE_WEEKLY_MODE=ok FAKE_WEEKLY_LOG_STEP=ipea FAKE_WEEKLY_LOG_LINE="monthly ipea step: 0 quarters loaded" nightly
+status_json > "$SB/status.json"
+check "the periodic step of the same name really overwrote the log on the box" bash -c "grep -q 'monthly ipea step' '$HOME/.cache/autoresearch/pipeline/ipea.log' && ! grep -q 'line 39' '$HOME/.cache/autoresearch/pipeline/ipea.log'"
+check "a daily step that failed is published with its own log, not the one a periodic step of the same name wrote later" python3 - "$SB/status.json" <<'PYEOF'
+import json, sys
+s = json.load(open(sys.argv[1]))
+assert s["status"] == "failed" and any("daily_refresh.sh reported failed steps: ipea" in f for f in s["failures"]), s["failures"]
+logs = s["failed_step_logs"]
+assert list(logs) == ["ipea"], list(logs)
+assert logs["ipea"][-1].endswith("line 39") and not any("monthly ipea step" in l for l in logs["ipea"]), logs["ipea"][-2:]
+assert "stale_step_logs" not in s, s.get("stale_step_logs")
+PYEOF
+new_sandbox s3g
+FAKE_MODE=ok OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=failsteps FAKE_WEEKLY_LOG_STEP=x_fits FAKE_WEEKLY_LOG_LINE="KeyError: 'activities'" nightly
+check "a failed periodic step is published as periodic_<step>, so it cannot be read as the daily step of that name" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"failed_step_logs\"] == {\"periodic_x_fits\": [\"KeyError: \\x27activities\\x27\"]}, s.get(\"failed_step_logs\")'"
+new_sandbox s3h
+# what keeps the frl group owed: the crawl exits 3 and says why on the last line of its log, which only the box had
+mkdir -p "$SB/leak"; printf 'ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=Qp4Lm8Rs2Vt6Hd5Jk9Nx\n' > "$REPO/.env"
+FAKE_MODE=ok OPAX_FORCE_GROUPS=frl FAKE_WEEKLY_MODE=stale FAKE_STALE_STEPS=frl_instruments FAKE_WEEKLY_LOG_STEP=frl_instruments \
+  FAKE_WEEKLY_LOG_LINE="$(printf 'token=Qp4Lm8Rs2Vt6Hd5Jk9Nx in %s/opax\nFRL HELD: Quiet window ending; checkpoint kept for the next quiet window' "$HOME")" nightly
+status_json > "$SB/status.json"
+check "a stale step: the night is ok, and the status carries what the source said under stale_step_logs, redacted" python3 - "$SB/status.json" "$HOME" <<'PYEOF'
+import json, sys
+s = json.load(open(sys.argv[1]))
+assert s["status"] == "ok" and any("frl_instruments" in w for w in s["warnings"]), s
+assert "failed_step_logs" not in s, s.get("failed_step_logs")
+lines = s["stale_step_logs"]["periodic_frl_instruments"]
+assert lines[-1] == "FRL HELD: Quiet window ending; checkpoint kept for the next quiet window", lines
+text = json.dumps(s["stale_step_logs"])
+assert "Qp4Lm8Rs2Vt6Hd5Jk9Nx" not in text and sys.argv[2] not in text, text
+PYEOF
+check "the frl group stays owed after a stale night" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; g=json.load(sys.stdin)[\"periodic_state\"][\"groups\"][\"frl\"]; assert \"due\" in g and \"last_success\" not in g, g'"
 
 echo "== 4. a bill loses its brief: bills reverted, the rest pushes, status failed"
 new_sandbox s4
@@ -1463,6 +1499,7 @@ check "exit 1" test "$NRC" -eq 1
 check "the shrunken speakers.json was not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 check "votes and corpus still went out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member' && git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
 check "status says which group failed validation" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'validation failed for speakers'"
+check "and why: the validator's own FAIL line is published like a failed step's log" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; l=json.load(sys.stdin)[\"failed_step_logs\"][\"validate_speakers\"]; assert any(x.startswith(\"FAIL speakers: \") for x in l), l'"
 new_sandbox s25b
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=failsteps nightly
 check "failed steps: exit 1, but the finished exports are published" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101'"

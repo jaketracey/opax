@@ -110,8 +110,11 @@ FAILURES=()
 BACKFILL_FAILURES=()
 COVERAGE_FAILURES=()
 WARNINGS=()
-# the refresh steps reported as failed tonight: write_status publishes the redacted end of each one's log
+# the refresh steps reported as failed tonight, and the ones a source refused (stale): write_status publishes the
+# redacted end of each one's log. Both hold the names keep_step_logs filed the copies under.
 FAILED_STEP_NAMES=()
+STALE_STEP_NAMES=()
+STEP_LOG_KEEP="$PIPE/step-logs-kept"
 STAMPED_FILES=()
 COMMIT_SHA=""
 DEPLOY="not pushed"
@@ -154,6 +157,7 @@ log "===== nightly start $TODAY (repo=$REPO pid=$$) ====="
 # scratch directories of a status build that was interrupted (a TERM during it, a power cut): one may hold a dump
 # of the credentials. This run holds the lock, so none of them is in use.
 rm -rf "$PIPE"/.status.* 2>/dev/null || true
+rm -rf "$STEP_LOG_KEEP" 2>/dev/null || true   # last night's kept step logs (keep_step_logs)
 
 # ---- environment -------------------------------------------------------------------
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
@@ -172,6 +176,26 @@ mapfile -t DATA_PATHS < <(tracked_data_paths)
 # and every network git call has a time limit so a stalled connection cannot eat the night.
 export GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -o BatchMode=yes -o ConnectTimeout=20}"
 gitn() { timeout "${OPAX_GIT_TIMEOUT:-300}" git "$@"; }
+
+# keep_step_logs KIND PREFIX STEP...: a private copy of the end of each step's log as it stands now, for the tails
+# in the status. KIND is failed or stale; the copy is $STEP_LOG_KEEP/<PREFIX><STEP>.log and <PREFIX><STEP> is the
+# name the status shows. A step's log is $PIPE/<step>.log, written afresh each time the step runs, and the daily
+# and the periodic refresh both have steps called ipea, contract_suppliers, grant_recipients, x_suppliers, x_interests
+# and x_grants:
+# read at the end of the night, the log of a daily step that failed is the periodic step's whenever a periodic
+# group ran afterwards (while a group is owed, that is most nights). So the copy is taken when the refresh that
+# ran the step returns, and the periodic steps are filed as periodic_<step>. Only the last 128 KiB is kept: the
+# tail reads the last 64 KiB and drops a first line that may start mid-line, as it would on the log itself.
+keep_step_logs() {
+  local kind=$1 prefix=$2 name; shift 2
+  (umask 077; mkdir -p "$STEP_LOG_KEEP") 2>/dev/null || true
+  for name in "$@"; do
+    [[ "$name" =~ ^[A-Za-z0-9_]{1,48}$ ]] || continue
+    if [ "$kind" = stale ]; then STALE_STEP_NAMES+=("$prefix$name"); else FAILED_STEP_NAMES+=("$prefix$name"); fi
+    [ -f "$PIPE/$name.log" ] && [ ! -L "$PIPE/$name.log" ] || continue
+    (umask 077; tail -c 131072 "$PIPE/$name.log" > "$STEP_LOG_KEEP/$prefix$name.log") 2>/dev/null || rm -f "$STEP_LOG_KEEP/$prefix$name.log"
+  done
+}
 
 # Publish the run's outcome where the freshness watchdog can read it without any credential:
 # a single parentless commit, force-pushed to the status branch, so main's history gets no
@@ -198,16 +222,19 @@ write_status() {
   local status=$1 scratch tails="" new
   scratch=$(umask 077; mktemp -d "$PIPE/.status.XXXXXX") || scratch=""
   new="${scratch:-$PIPE}/status.json"
-  # Why a step failed, without a login to the box: the last lines of each failed step's log, cut short and
-  # redacted (scripts/vm/step_tails.py says how). The status branch is public, so anything doubtful is masked.
+  # Why a step failed, or what a source that refused said, without a login to the box: the last lines of each
+  # failed or stale step's log (the copy keep_step_logs took), cut short and redacted (scripts/vm/step_tails.py
+  # says how). The status branch is public, so anything doubtful is masked. Failed steps come first: when the
+  # tails run out of room it is the stale ones that are left out.
   # The credentials to mask come from bash itself: the env files are sourced in a clean shell and its environment
   # dumped, so the values are exactly the ones the steps saw. The dump and the tails stay in a private directory
   # (files, not arguments or environment: one over 128 KiB cannot be passed to a program) that is removed below.
-  if [ -n "$scratch" ] && [ "${#FAILED_STEP_NAMES[@]}" -gt 0 ] && [ -f "$REPO/scripts/vm/step_tails.py" ]; then
+  if [ -n "$scratch" ] && [ $((${#FAILED_STEP_NAMES[@]} + ${#STALE_STEP_NAMES[@]})) -gt 0 ] && [ -f "$REPO/scripts/vm/step_tails.py" ]; then
     (umask 077; env -i PATH="$PATH" HOME="$HOME" bash -c 'set -a; for f; do [ -f "$f" ] && . "$f"; done; env -0' _ \
        "$REPO/.env" "$ENV_FILE" > "$scratch/env0" 2>/dev/null) || true
-    if timeout 60 "$PY" "$REPO/scripts/vm/step_tails.py" --pipe "$PIPE" --env0 "$scratch/env0" \
-         --env-file "$REPO/.env" --env-file "$ENV_FILE" --out "$scratch/tails.json" "${FAILED_STEP_NAMES[@]}" 2>/dev/null; then
+    if timeout 60 "$PY" "$REPO/scripts/vm/step_tails.py" --pipe "$STEP_LOG_KEEP" --env0 "$scratch/env0" \
+         --env-file "$REPO/.env" --env-file "$ENV_FILE" --out "$scratch/tails.json" \
+         "${FAILED_STEP_NAMES[@]+"${FAILED_STEP_NAMES[@]}"}" "${STALE_STEP_NAMES[@]+"${STALE_STEP_NAMES[@]}"}" 2>/dev/null; then
       tails="$scratch/tails.json"
     fi
     rm -f "$scratch/env0"   # the credentials are needed no longer: a run stopped after this leaves none behind
@@ -231,7 +258,7 @@ write_status() {
 # Python block that follows it): $1 the status, $2 where to write it, $3 a file of step log tails or "".
 write_status_file() {
   local status=$1
-  OPAX_STATUS_OUT="$2" OPAX_STEP_TAILS_FILE="$3" "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF'
+  OPAX_STATUS_OUT="$2" OPAX_STEP_TAILS_FILE="$3" OPAX_STALE_STEP_NAMES="${STALE_STEP_NAMES[*]-}" "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF'
 import json, os, sys, datetime
 path, status, day, run, started, sha, deploy, summary, nwarn, nfail, *rest = sys.argv[1:]
 try:
@@ -239,6 +266,9 @@ try:
     if not isinstance(failed_step_logs, dict): failed_step_logs = {}
 except (OSError, ValueError):
     failed_step_logs = {}
+# one file of tails, two fields: the steps a source refused (stale) are not failures
+stale_names = set(os.environ.get("OPAX_STALE_STEP_NAMES", "").split())
+stale_step_logs = {k: failed_step_logs.pop(k) for k in list(failed_step_logs) if k in stale_names}
 nwarn, nfail = int(nwarn), int(nfail)
 warnings, failures, coverage_alerts = rest[:nwarn], rest[nwarn:nwarn + nfail], rest[nwarn + nfail:]
 from pathlib import Path
@@ -259,6 +289,7 @@ json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
            **({"failed_step_logs": failed_step_logs} if failed_step_logs else {}),
+           **({"stale_step_logs": stale_step_logs} if stale_step_logs else {}),
            **backfill_fields,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
           open(os.environ.get("OPAX_STATUS_OUT") or path, "w"), indent=1)
@@ -521,10 +552,11 @@ else
   fi
   if [ "$rc" -ne 0 ]; then
     failed_steps=$(grep -E 'Incomplete refresh: failed steps' "$DAILY_LOG" | tail -1 | sed 's/.*failed steps //')
-    read -ra failed_names <<<"$failed_steps"; FAILED_STEP_NAMES+=("${failed_names[@]+"${failed_names[@]}"}")
+    read -ra failed_names <<<"$failed_steps"; keep_step_logs failed "" "${failed_names[@]+"${failed_names[@]}"}"
     fail "daily_refresh.sh reported failed steps: ${failed_steps:-unknown} (rc=$rc); the rest was still published"
   fi
   stale=$(last_run_line "$DAILY_LOG" 'Stale daily refresh:' | sed 's/.*register: //')
+  read -ra stale_names <<<"$stale"; keep_step_logs stale "" "${stale_names[@]+"${stale_names[@]}"}"
   [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
   partial=$(last_run_line "$DAILY_LOG" 'Partial daily refresh:' | sed 's/.*next run: //')
   [ -z "$partial" ] || warn "cut by its time limit tonight, resumes from its checkpoint next run: $partial (the knowledge box takes only ~12-30k resources an hour)"
@@ -589,7 +621,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
       fail "weekly_refresh.sh ($groups) did not complete a run (rc=$prc); the periodic files were put back to HEAD"
     elif [ "$prc" -ne 0 ]; then
       failed_steps=$(grep -E 'Incomplete weekly refresh: failed steps' "$WEEKLY_LOG" | tail -1 | sed 's/.*failed steps //')
-      read -ra failed_names <<<"$failed_steps"; FAILED_STEP_NAMES+=("${failed_names[@]+"${failed_names[@]}"}")
+      read -ra failed_names <<<"$failed_steps"; keep_step_logs failed periodic_ "${failed_names[@]+"${failed_names[@]}"}"
       fail "weekly_refresh.sh ($groups) reported failed steps: ${failed_steps:-unknown} (rc=$prc); the rest was still published"
     elif [ -n "${OPAX_ONLY:-}" ]; then
       # run_step deliberately returns success for excluded debugging steps.
@@ -599,6 +631,8 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
       PERIODIC_ACCEPTED=1
     fi
     stale=$(last_run_line "$WEEKLY_LOG" 'Stale weekly refresh:' | sed 's/.*register: //')
+    # what the source said (frl_instruments ends "FRL HELD: <reason>"): a group stays owed while a step of it is stale
+    read -ra stale_names <<<"$stale"; keep_step_logs stale periodic_ "${stale_names[@]+"${stale_names[@]}"}"
     [ -z "$stale" ] || PERIODIC_ACCEPTED=0
     [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
     held=$(last_run_line "$WEEKLY_LOG" 'Roster held:' | sed 's/.*Roster held: //')
@@ -755,7 +789,12 @@ fi
 for group in "${DATA_GROUPS[@]}"; do
   case $group in corpus|wrangler) continue ;; esac
   if [ "$group" != bills ] && [ "$group" != votes ] && ! group_changed "$group"; then continue; fi
-  if ! run "$PY" scripts/vm/validate_data.py "$group"; then
+  # the validator's own lines ("FAIL <group>: <what>") are kept like a failed step's log, so the status says why
+  vstep="validate_${group//-/_}"
+  run "$PY" scripts/vm/validate_data.py "$group" > "$PIPE/$vstep.log"; vrc=$?
+  cat "$PIPE/$vstep.log" 2>/dev/null
+  if [ "$vrc" -ne 0 ]; then
+    keep_step_logs failed "" "$vstep"
     revert_group "$group"
     fail "validation failed for $group: reverted to HEAD and not published tonight"
   fi
