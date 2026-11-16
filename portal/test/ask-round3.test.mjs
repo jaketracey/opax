@@ -98,7 +98,7 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
   const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/Ms Preston/);validRanges(grounded)
-  assert.match(api.writingPrompt(input()),/question by counsel or a commissioner is a question/)
+  assert.match(api.writingPrompt(input()),/names no speaker is attributed to the transcript, never to a named person/)
 })
 test('writer accepts a named, dated transcript summary; an unverified quotation stays as paraphrase',()=>{
   const raw={answer_decision:'answer',sentences:[{text:'Ms Preston said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1]}]}
@@ -130,7 +130,7 @@ test('a transcript document id with an exact quote selects the record for writin
   const model=new MockLanguageModelV4({doGenerate:[reply('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}),reply('answer',{points:[{id:'transcript-document-key',quote:turn.excerpt,claim:'A fabricated finding that must never be accepted.'}]})]})
   const research=api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown()})
   const out=await api.runAgentic(input().question,{...deps,research},async()=>{},40000,undefined,{},named)
-  assert.equal(out.answered,true);assert.match(out.answer,/Ms Preston (?:said|asked) on hearing day 46/)
+  assert.equal(out.answered,true);assert.match(out.answer,/^The hearing transcript records on hearing day 46/);assert.doesNotMatch(out.answer,/Ms Preston|Mr Scott/)
   assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/fabricated|CC BY|©|PDF page|OPAX lists/)
   validRanges(out.qualitative)
 })
@@ -185,7 +185,7 @@ test('an unrelated speech selection cannot replace retrieved hearing evidence',a
   ]})
   const research=api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),readRecord:async()=>({text:speech,speaker:'Example Speaker',labels:{kind:'speech'},metadata:{date:'2026-06-15'}})})
   const out=await api.runAgentic(input().question,{origin:'https://offline.test',asset,research,generate:async()=>({text:'{}'}),kb:async()=>({resources:{'speech-999999':{slug:'speech-999999',title:'Example Speaker: income averaging tax debate',fields:{body:{paragraphs:{[id]:{text:speech}}}}}}})},async()=>{},40000,undefined,{},named)
-  assert.equal(out.answered,true);assert.match(out.answer,/Ms Preston .*hearing day 46/)
+  assert.equal(out.answered,true);assert.match(out.answer,/^The hearing transcript records on hearing day 46/);assert.doesNotMatch(out.answer,/Ms Preston|Mr Scott/)
   assert.doesNotMatch(out.answer,/startup|founders|tax paid|parliamentary speaker/)
   assert.ok(out.qualitative.sources.filter(s=>s.cited&&!s.coverage).every(s=>s.url.startsWith('https://robodebt.royalcommission.gov.au/')))
   validRanges(out.qualitative)

@@ -9,7 +9,7 @@ const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker?: string, speaker_label?: string }
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -68,9 +68,10 @@ export function speakerName(label: string): string {
     : word.replace(/^Mc(?=[A-Z])/, 'Mc\u0000').toLowerCase().replace(/(^|[-'’\u0000])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase()).replace('\u0000', '')).join(' ')
 }
 
-/** A verbatim excerpt around the first query word, kept within one speaker's turn. The turn's label is returned
- * as the speaker rather than left in the text; a turn that began on an earlier page has no speaker here. */
-export function excerpt(text: string, terms: string[]): { excerpt: string, speaker?: string, speaker_label?: string } {
+/** A verbatim excerpt around the first query word, cut at the capital labels either side so no label sits in the
+ * text. No speaker is returned: the last label before the words does not always name who said them (a "Q." or
+ * "A." turn, a sworn line or a page break can lie between), and a wrong name is worse than none. */
+export function excerpt(text: string, terms: string[]): { excerpt: string } {
   const flat = text.replace(/\s+/g, ' ').trim()
   let at = -1
   for (const t of terms) {
@@ -89,8 +90,7 @@ export function excerpt(text: string, terms: string[]): { excerpt: string, speak
   let end = Math.min(until, start + EXCERPT)
   if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
   const body = flat.slice(start, end).trim()
-  return { excerpt: `${start > from ? '...' : ''}${body}${end < flat.length && end < until ? '...' : ''}`,
-    ...(turn ? { speaker: speakerName(turn.label), speaker_label: turn.label } : {}) }
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < flat.length && end < until ? '...' : ''}` }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
