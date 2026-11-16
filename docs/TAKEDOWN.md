@@ -93,5 +93,12 @@ Known limits, stated plainly:
   query filter and on step 3.
 * The integrity, annual and agency report datasets are not keyed by this list yet. To withhold
   one of those documents, remove it in its own ingest and follow steps 4 to 7.
+* Withholding a commission that has loaded recommendations removes them from its file. The
+  refresh's shrink guards (`scripts/vm/validate_data.py`, `--allow-shrink` on the build and
+  export) will hold the next refresh until a maintainer accepts the drop.
+* The build machine keeps the publisher PDFs it was given (`<cache>/manual/`), to count pages
+  and check hashes. For a source that is not quotable the build stores no extracted text. Text
+  cached before 16 November 2026 (`<cache>/text/<sha256>.json`) and the PDF of a withheld
+  document have to be deleted there by hand.
 * Until step 4 is deployed, cached copies of an answer or a record can still be served for up to
   seven days.

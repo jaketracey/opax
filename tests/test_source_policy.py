@@ -268,6 +268,8 @@ def test_a_documents_only_source_is_built_with_checked_facts_and_no_document_wor
     assert t["files"][0]["pages"] == 2 and t["files"][0]["sha256"] == sha
     blob = json.dumps(out)
     assert "Evidence that must not be held" not in blob and "9.30 am" not in blob and "Presiding:" not in blob
+    # ... and the build keeps no extracted text of the document on disk either
+    assert not (texts.cache / "text").exists()
 
 
 @pytest.mark.parametrize("changes", [

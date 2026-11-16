@@ -400,6 +400,7 @@ class Texts:
     def __init__(self, cache: Path):
         self.cache, self._data, self._texts, self._lines = cache, {}, {}, {}
         self.manual = {}  # publisher URL -> sha256 of a manually supplied copy
+        self.uncached = set()  # URLs of documents that are not quotable: their text is read, never stored
 
     def data(self, url):
         if url not in self._data:
@@ -417,7 +418,7 @@ class Texts:
 
     def texts(self, url):
         if url not in self._texts:
-            self._texts[url] = pr.page_texts(self.data(url), self.cache)
+            self._texts[url] = pr.page_texts(self.data(url), None if url in self.uncached else self.cache)
         return self._texts[url]
 
     def lines(self, url):
@@ -469,6 +470,9 @@ def build_commission(rc, run: Path, texts: Texts, trackers, policy=None):
         if doc["source"] == "manual":
             # A publisher PDF supplied by the OPAX maintainer, cited to the publisher's own URL.
             texts.manual[doc["url"]] = doc["sha256"]
+            if not quotable(doc["key"]):
+                # Read once to count pages and check the date and names; no extracted text is kept on disk.
+                texts.uncached.add(doc["url"])
             page_url, page_html, title = doc.get("page") or doc["url"], None, doc["title"]
             date = basis = None
             source = cite(page_url, title)
