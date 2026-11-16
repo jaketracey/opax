@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=7403e0d9f8").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=11b27173e8").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=4ee4bb8063").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=0f8215c3cf").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -64,9 +64,9 @@ const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => {
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=73435700a9').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=f264a22cd2').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=e6cfb1af2d').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=ffd32d5678').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -381,6 +381,19 @@ function partyChipHTML(party, opts) { return uiLabels.partyLabelHTML(party, opts
 function statusLabelHTML(word, tone) { return uiLabels.statusLabelHTML(word, tone); }
 function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
+/** Answers a language model did not write: a calculation from the records, a list of passages, a note that the
+ *  records do not cover the question, or a prompt to narrow it. Everything else Ask shows is model-written. */
+const NOT_MODEL_WRITTEN = new Set(["calculated", "evidence_only", "evidence_gap", "needs_scope", "needs_period", "needs_question"]);
+/** True when Ask's answer was written by a language model, so it carries the Machine-written label. The Worker says
+ *  so (machine_written). A saved turn or cached answer from before it did goes by its status: a written overview
+ *  paragraph (money_overview) counts even above a calculated answer, and so does a suggested question, which the
+ *  rewrite model wrote. */
+function modelWrittenAnswer(data, text) {
+  if (!data || data.answered === false) return false;
+  const shown = !!data.money_overview || !!String(text || "").trim();
+  if (typeof data.machine_written === "boolean") return data.machine_written && shown;
+  return !!data.money_overview || (shown && (!!data.suggested_question || !NOT_MODEL_WRITTEN.has(data.answer_status)));
+}
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
 /** A chamber code's reader name (labels.js); '' for a code it does not know, never the code. */
@@ -1610,7 +1623,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=09a2804936' : '/ledger.js?v=f834f4cd73');
+    const mod = await import(grants ? '/grants.js?v=7f62cabcf0' : '/ledger.js?v=03842fdef4');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1641,7 +1654,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=412bbaf5e4');
+    const mod = await import('/money-explain.js?v=127202ac8e');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1660,7 +1673,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=773c6bdbfb');
+    const mod = await import('/grant-recipient.js?v=9142130d77');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1913,7 +1926,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=89965106e8");
+    const module = await import("/suppliers.js?v=e9a7889dd3");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4355,6 +4368,18 @@ async function renderDeclaredPage(params, manageFocus) {
 // CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
 // members by a name slug the index resolves. The slot is placed synchronously
 // so the section keeps its position however long the fetches take.
+/* A Victorian member's page carries the election authorisation under its sections until the polls
+   close (vic-election.js decides by the clock), in the block the seat pages use. */
+async function renderPersonVicAuthorisation(roster, sections) {
+  if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
+  const key = currentSubjectKey;
+  const module = await loadElectorateModule().catch(() => null);
+  if (currentSubjectKey !== key || !sections.isConnected) return;
+  const html = module?.vicMemberAuthorisationHTML?.(roster) || '';
+  const main = sections.parentElement;
+  main.querySelector(':scope > .authorisation')?.remove();
+  if (html) sections.insertAdjacentHTML('afterend', html);
+}
 async function renderPersonVicGifts(name, sections, roster) {
   if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
   const styled = vicGiftsStyles();
@@ -5626,7 +5651,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=1e61f08538'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=a7097118bf'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -6043,7 +6068,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   // Divisions held back from the record that name this member (public/data/vote-coverage.json): said with the counts.
   const coverage = await fetch(voteTables.VOTE_COVERAGE_PATH).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   if (currentSubjectKey !== key || !slot.isConnected) return;
-  const coverageNotes = voteTables.voteCoverageNotes(coverage, name);
+  const coverageNotes = voteTables.voteCoverageNotes(coverage, name, years);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
   nextSteps?.fillNextSteps($("person-next"), nextSteps.memberVoteSteps(rows), "No votes on bills in the record for this member.");
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
@@ -6076,6 +6101,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
       notes: [
         "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
         "This list covers the votes OPAX holds. A bill missing here was not necessarily unvoted on.",
+        ...(jurs.includes("vic") ? ["Victorian Hansard lists the members who voted aye or no. It does not record pairs, tellers or absences, so a division missing from this record does not mean the member was absent or abstained."] : []),
         "Party position is shown only when this vote's source records it. Open a division for the question and the party tallies.",
       ],
       licence: "They Vote For You (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.",
@@ -6706,6 +6732,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // said only of a sitting member in one house, where the roster says so; otherwise the seat.
   const seatWord = roster?.current && electorateLinks
     ? (house === "Senate" ? "Senator for " : /council/i.test(house) ? "MLC for " : /representatives|assembly/i.test(house) ? "Member for " : "") : "";
+  const termLine = roster && electorateReference ? electorateReference.module.personTermLineHTML?.(roster, electorateReference.data.electorates) || "" : "";
   // One meta line (principle 3): party, seat, house, parliament. The Quick
   // facts box said each of these again; its other facts are in the source
   // sheet under this line.
@@ -6714,7 +6741,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // A roster party is dated beside the chip, as the server's person answer dates it.
     seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
-    electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
+    // A member of an expired Victorian house keeps the server's line ("Member for X until the Assembly
+    // expired on 3 November") instead of the bare seat name.
+    termLine ? `<span>${termLine}</span>` : electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     // Each house with its parliament as one part, so the pair wraps together; a former
     // house says so and comes last.
     ...housesHeld.rows.filter((r) => r.status === "current" || r.status === "").map((r) => `<span>${esc(r.label)}</span>`),
@@ -6791,6 +6820,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   voteQuestions.catch(() => {}).then(() => { if (currentSubjectKey === key) nextSteps?.fillNextSteps($("person-next"), [], "No votes on bills in the record for this member."); });
   const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
+  renderPersonVicAuthorisation(roster, sections);
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });
@@ -7811,7 +7841,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=e051413bf6").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=a54cd83c44").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -10248,7 +10278,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=412bbaf5e4"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=127202ac8e"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10264,14 +10294,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=59e9e876c7", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=70c5ba1337", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=ae1ac0e1f3", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=f834f4cd73", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=09a2804936", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=03842fdef4", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=7f62cabcf0", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=6dc79a4d44", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=808e583528", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -10785,6 +10815,8 @@ async function runAsk(question) {
           // trimmings; the first paint is a timer tick away.
           $("ask-answer").replaceChildren();
           $("ask-result").querySelector(".kicker").textContent = "Answer";
+          // Only a model's words stream, so they are labelled from the first of them.
+          $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false;
           $("ask-stamp").textContent = "";
           $("ask-sources").hidden = true;
           $("ask-result").querySelector(".action-row").hidden = true;
@@ -10832,7 +10864,7 @@ async function runAsk(question) {
     if (askSteps) liveSteps = askSteps.steps();
     const research = researchOf(data, liveSteps);
     const researchExtras = researchSourceExtras(research, sources);
-    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, machine_written: data.machine_written, suggested_question: data.suggested_question };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
@@ -10853,7 +10885,8 @@ async function runAsk(question) {
     $("ask-stamp").hidden = needsClarification || noAnswer;
     $("ask-result").querySelector(".kicker").textContent = noAnswer ? "Records found" : needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
-    if (data.is_overview_intent && !noAnswer) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
+    // Every answer a language model wrote carries the label, above any overview paragraph it also wrote.
+    if (modelWrittenAnswer(data, answerText)) { $("ask-overview").insertAdjacentHTML("afterbegin", machineLabelHTML()); $("ask-overview").hidden = false; }
     if (noAnswer) {
       $("ask-overview").hidden = true;
       renderNoAnswer($("ask-answer"), data);
@@ -11779,7 +11812,7 @@ async function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next, machine_written: seed.machine_written, suggested_question: seed.suggested_question },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -12099,7 +12132,7 @@ function chatAnswerEl(msg) {
     wrap.appendChild(line);
     renderAskStepsLine(line, msg.agentic);
   }
-  if (msg.is_overview_intent && msg.answered !== false) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
+  if (modelWrittenAnswer(msg, msg.text)) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
   if (msg.money_overview) {
     const overview = document.createElement("div");
     overview.className = "answer-overview";
@@ -12110,6 +12143,8 @@ function chatAnswerEl(msg) {
   body.className = "answer";
   const citedSources = (msg.sources || []).filter((s) => s.cited);
   body.askEvidence = citedSources.length ? citedSources : (msg.sources || []);
+  // A blank answer is kept as the fixed words "(no answer)", which no model wrote.
+  if (msg.text === "(no answer)" && !msg.money_overview) wrap.querySelector(".ui-machine")?.remove();
   renderAnswer(body, msg.text || "(no answer)", msg);
   if (msg.pay_answer) renderPayNextSteps(body, msg.pay_next);
   wrap.appendChild(body);
@@ -12437,6 +12472,8 @@ async function sendChat(question, carry) {
           dots.setAttribute("aria-hidden", "true");
           dots.append(document.createElement("i"), document.createElement("i"), document.createElement("i"));
           liveWrap.append(body, dots);
+          // Only a model's words stream, so they are labelled from the first of them.
+          liveWrap.insertAdjacentHTML("afterbegin", machineLabelHTML());
           slot.insertAdjacentElement("afterend", liveWrap);
           live = streamRenderer(body, alive);
         }
@@ -12486,6 +12523,9 @@ async function sendChat(question, carry) {
       reason: data.reason,
       next_step: data.next_step,
       answer_status: data.answer_status,
+      // Whether a model wrote this turn, kept so a reopened conversation labels it the same way.
+      machine_written: data.machine_written,
+      suggested_question: data.suggested_question,
       money_ranking: data.money_ranking,
       money_context: data.money_context,
       money_overview: data.money_overview,
@@ -14108,6 +14148,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
     ${questionHTML}
+    <div id="division-reading-notes"></div>
     ${divisionBillsHTML(bills)}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
@@ -14117,6 +14158,12 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       ], "More about this division")}
     </div>`;
   $("doc-bill").hidden = false;
+  // How to read this record (vote-tables.js divisionReadingNotes): a "stand part" question, a record with no
+  // motion text, and what Victorian Hansard's lists leave out. The module loads lazily, so the lines follow it.
+  voteTablesReady.then(() => {
+    const slot = currentDocSlug === slug && document.getElementById("division-reading-notes");
+    if (slot) slot.innerHTML = voteTables.divisionReadingNotes(d).map((note) => `<p class="result-meta division-reading-note">${esc(note)}</p>`).join("");
+  });
   pageMenusReady.then(() => {
     if (currentDocSlug !== slug) return;
     $("doc-bill").querySelector('[data-more-action="copy-division"]')?.addEventListener("click", (e) => copyText(siteUrl(`/doc/${slug}`), e.currentTarget));

@@ -16,7 +16,7 @@ interface ServicePerson { name: string; aliases?: string[]; electorates: Service
 interface PayPerson { name: string; chamber: string; from: string; to: string | null; sitting: boolean; spells?: [string, string | null, ...unknown[]][] }
 interface PayData { meta?: { from?: string; as_of?: string }; people?: Record<string, PayPerson> }
 export interface IdentityAnswer {
-  answer: string; answer_status: string; answer_source: 'template'; identity_fact: true
+  answer: string; answer_status: string; answer_source: 'template'; machine_written: false; identity_fact: true
   citations: Record<string, number[][]>
   sources: { resource: string; title: string; kind: 'person'; href: string; url: string; snippet: string; cited: boolean; answer_ranges: number[][] }[]
 }
@@ -53,7 +53,7 @@ export async function identityAnswer(input: RecordQuestion, deps: ToolDeps): Pro
   if (input.speaker && fold(input.speaker) !== fold(best.name)) return null
   const origin = deps.origin ?? 'https://opax.com.au'
   const profile = found.cite.find(c => c.label === best.name)?.url ?? `${origin}/subject/person/${encodeURIComponent(best.name)}`
-  const out: IdentityAnswer = { answer: '', answer_status: 'answered', answer_source: 'template', identity_fact: true, citations: {}, sources: [] }
+  const out: IdentityAnswer = { answer: '', answer_status: 'answered', answer_source: 'template', machine_written: false, identity_fact: true, citations: {}, sources: [] }
   const add = (text: string, url = profile) => {
     if (out.answer) out.answer += '\n'
     const start = Array.from(out.answer).length
@@ -96,17 +96,19 @@ export async function identityAnswer(input: RecordQuestion, deps: ToolDeps): Pro
     // a Victorian member is never answered as current from them: the seat rows decide (public/vic-term.js).
     const victorian = selected.some(s => s.jurisdiction === 'vic') || (best.representation ?? []).some(r => r.jurisdiction === 'vic')
     const index = victorian && manifest?.index_url && /^\/electorates\/releases\/[a-z0-9]+\/index\.json$/.test(manifest.index_url)
-      ? await deps.asset(manifest.index_url) as { electorates?: VicTermRow[] } | null : null
+      ? await Promise.resolve(deps.asset(manifest.index_url)).catch(() => null) as { electorates?: VicTermRow[] } | null : null
+    // Without the seat rows nothing is said of a Victorian person's currency: the roster flags cannot be trusted for them.
+    const unknown = victorian && !Array.isArray(index?.electorates)
     const term = vicTermEnd(best, index?.electorates)
-    const endedSeat = (s: ServiceSeat) => s.jurisdiction === 'vic' && !!term
-    let current: boolean | null = term ? false : best.current
-    if (!term && current !== true && selected.length) current = selected.some(s => s.current)
+    const endedSeat = (s: ServiceSeat) => s.jurisdiction === 'vic' && (!!term || unknown)
+    let current: boolean | null = unknown ? null : term ? false : best.current
+    if (!unknown && !term && current !== true && selected.length) current = selected.some(s => s.current)
     let pay: PayData | null = null
     let paid: PayPerson | undefined
     if (!periods.length || current === null) {
       pay = await deps.asset('/pay.json') as PayData | null
       paid = Object.values(pay?.people ?? {}).find(p => fold(p.name) === fold(best.name) && (!chamber || chamber === p.chamber) && (!input.state || input.state === 'federal'))
-      if (current === null && paid && !term) current = paid.sitting
+      if (current === null && paid && !term && !unknown) current = paid.sitting
     }
     if (request.fields.includes('service')) {
       if (periods.length) for (const p of periods) add(`${best.name} represented ${p.seat.name} from ${date(p.start)}${p.end ? ` to ${date(p.end)}` : p.seat.current && !endedSeat(p.seat) ? ' and is recorded as a current representative' : '; no end date is recorded'}.`, p.seat.url ? new URL(p.seat.url, origin).href : profile)

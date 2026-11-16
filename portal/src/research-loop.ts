@@ -1,5 +1,6 @@
 import {ASK_ATTRIBUTION_RULE,ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
+import { routingRefused } from './research-model'
 import { researchPhaseWallMs } from './research-time'
 import { ASK_MAX_MODEL_USD, ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_MAX_ROUNDS, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS, ASK_TURN_OUTPUT_TOKENS, ASK_RESULT_BYTES, reserveQuestionTurn } from './ask-budgets'
 export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
@@ -450,7 +451,7 @@ export function createResearch(options: ResearchOptions): Research {
       const calculated = facts.length === 1 && !points ? results.find(r => r.data?.calculated_answer && r.cite.some(c => c.label === facts[0].fact.text)) : undefined
       if (calculated) {
         const p = calculated.data!.payload as QualitativeAnswer
-        return { answer: p.answer, answer_decision:answerDecision(p)??'answer', citations: p.citations, sources: p.sources.map(s => ({ ...s, url: new URL(s.url ?? s.href, context.deps.origin ?? 'https://opax.com.au').href, slug: s.slug ?? '' })) }
+        return { answer: p.answer, answer_decision:answerDecision(p)??'answer', citations: p.citations, sources: p.sources.map(s => ({ ...s, url: new URL(s.url ?? s.href, context.deps.origin ?? 'https://opax.com.au').href, slug: s.slug ?? '' })), machine_written: false }
       }
       let text = ''
       const citations: QualitativeAnswer['citations'] = {}, sources: QualitativeAnswer['sources'] = []
@@ -487,7 +488,9 @@ export function createResearch(options: ResearchOptions): Research {
       if (points && facts.length) { const led = leadWithModelAnswer({ answer: text, citations }, points, question); text = led.answer; for (const key of Object.keys(citations)) delete citations[key]; Object.assign(citations, led.citations) }
       // Research that found nothing still answers; the coverage note says the records did not cover it.
       const general = !facts.length && !passages.size && !!points && !Object.keys(points.citations).length
+      // Record lines are not model-written; with the model's points among them, the answer is as the points are.
       return { answer: text, answer_decision:!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}),
+        ...(!points ? { machine_written: false } : typeof points.machine_written === 'boolean' ? { machine_written: points.machine_written } : {}),
         ...(general ? { coverage: { note: 'OPAX’s records did not cover this question, so this answer draws on general knowledge.' } } : {}) }
     }
     // One answer call, checked: cited points, uncited points that failed only soft checks, record facts; else, with
@@ -609,7 +612,7 @@ export function createResearch(options: ResearchOptions): Research {
       inputSchema: jsonSchema<{ reason: string }>({ type: 'object', properties: { reason: { type: 'string', enum: ['out_of_scope'] } }, required: ['reason'], additionalProperties: false }),
       execute: args => invoke({ tool: 'decline', args }, async () => {
         const answer = 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.'
-        qualitative = { answer, answer_decision: 'refusal', citations: {}, sources: [] }; finished = true
+        qualitative = { answer, answer_decision: 'refusal', citations: {}, sources: [], machine_written: false }; finished = true
         return { tool: 'decline', ok: true, data: {}, cite: [], notes: [] }
       }, true),
     })
@@ -685,6 +688,13 @@ export function createResearch(options: ResearchOptions): Research {
         stats.costUsd = (stats.costUsd ?? 0) + (receipt ?? (input * inputPrice + output * outputPrice) / 1e6)
         stats.turns!.push({ round: stats.rounds + 1, input, output, cached_input: result.usage.inputTokenDetails?.cacheReadTokens ?? 0, cached: result.usage.inputTokenDetails?.cacheReadTokens ?? 0, provider: '', reasoning: result.usage.outputTokenDetails?.reasoningTokens ?? 0, input_reserve: inputTokens, ms: Date.now() - callStarted, cost_usd: receipt ?? null })
       } catch (error) {
+        // A refused final-answer request fails closed like a refused turn: whatever stopped the loop first, no
+        // other generation request is built for this question (the planner and older engine would be next).
+        if (routingRefused(error) || isResearchCreditError(error)) {
+          if (isResearchCreditError(error)) credits.exhaust()
+          failed = 'provider_refused'
+          throw new ResearchError('provider_refused', stats)
+        }
         // Asked for the answer tool, the model may still reply in prose; that prose can be the answer.
         if (ToolChoiceViolationError.isInstance(error)) heardProse(error.content)
         return null
@@ -704,8 +714,8 @@ export function createResearch(options: ResearchOptions): Research {
       const held = passagesAnswer(passages, question)
       const offset = held ? Array.from(text).length + 2 : 0
       const points: QualitativeAnswer = held
-        ? { answer: text + '\n\n' + held.answer, citations: Object.fromEntries(Object.entries(held.citations).map(([id, ranges]) => [id, ranges.map(([a, b]) => [a + offset, b + offset] as [number, number])])), sources: held.sources, answer_status: 'partly_cited' }
-        : { answer: text, citations: {}, sources: [], answer_status: 'uncited' }
+        ? { answer: text + '\n\n' + held.answer, citations: Object.fromEntries(Object.entries(held.citations).map(([id, ranges]) => [id, ranges.map(([a, b]) => [a + offset, b + offset] as [number, number])])), sources: held.sources, answer_status: 'partly_cited', machine_written: true }
+        : { answer: text, citations: {}, sources: [], answer_status: 'uncited', machine_written: true }
       const { all, tools, coverage } = recordFacts()
       const lines = factLines(focussedIds() ?? all.filter(f => tools.has(f.id) && !coverage.has(f.id)).map(f => f.id).slice(0, 8), () => {})
       stats.answer = { ...emptyTally(), mode: held || lines.length ? 'points' : 'uncited' }
@@ -920,6 +930,9 @@ export function createResearch(options: ResearchOptions): Research {
         credits.exhaust(); failed = 'research_credit_exhausted'; turnCost = 0; stats.usageUnknown = false
         if (pendingTurn !== undefined) Object.assign(stats.turns![pendingTurn], { input: 0, output: 0, cached: 0, cached_input: 0, reasoning: 0, cost_usd: 0 })
       }
+      // A refused request fails closed: no salvage and no final-answer call, so no further request is built.
+      // A credit refusal (402) is one too; its cooldown above still applies to later questions.
+      if (!(error instanceof ResearchError) && (routingRefused(error) || isResearchCreditError(error))) { failed = 'provider_refused'; controller.abort(error); throw new ResearchError('provider_refused', stats) }
       // A forced terminal turn answered with another tool (or with text) is a call the model was not offered.
       if (!(error instanceof ResearchError) && !failed && ToolChoiceViolationError.isInstance(error)) failed = 'malformed_args'
       if (ToolChoiceViolationError.isInstance(error)) heardProse(error.content)

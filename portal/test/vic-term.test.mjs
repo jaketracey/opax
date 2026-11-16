@@ -85,10 +85,12 @@ test('each by-election winner of the term is the named member, not the member wh
 });
 
 test('a member whose service ended with no by-election leaves the seat vacant when the term ended',()=>{
-  const row=vic.find(e=>e.chamber==='vic_la'&&e.name==='Brunswick'),last=row.representatives[0];
+  // The release records the vacancy itself (scripts/hubs/electorate-vacancies.json): the row names nobody.
+  const row=vic.find(e=>e.chamber==='vic_la'&&e.name==='Brunswick');
+  assert.deepEqual(row.representatives,[]);assert.equal(row.representation_status,'verified');
   assert.equal(vicSeatVacantAtExpiry(row),true);assert.deepEqual(vicMembersAtExpiry(row,rows),[]);
   assert.equal(vicVacantSentence(row),'Vacant when the Assembly expired on 3 November.');
-  const p=people.find(x=>vicIsMember(last,x));
+  const p=people.find(x=>x.name==='Tim Read');
   assert.deepEqual(vicTermEnd(p,rows),{row:null});
   assert.doesNotMatch(title(p),/ MP,|until|expired/);
   // The rule, not the seat: any reviewed vacancy behaves so, and a seat with a by-election winner never does.
@@ -147,6 +149,13 @@ test('Ask never answers a Victorian member as current: the seat rows decide',asy
     assert.doesNotMatch(answer,/current member|until|expired|vacan/i,name);
   }
   for(const p of named.filter(x=>roster.includes(x)).slice(0,40)) assert.doesNotMatch((await ask(`Is ${p.name} a current member of parliament?`))?.answer??'',/is recorded as a current member/,p.name);
+  // If the seat rows cannot be read, nothing is said of a Victorian person's currency: never "current member".
+  const blind=(question)=>identityAnswer({question},{origin:'https://example.test',kb:async()=>{throw Error('no search')},asset:async path=>path==='/parliamentarians.json'?{people:roster}:path===manifest.index_url?Promise.reject(new Error('unavailable')):assets[path]??null});
+  for(const name of ['Nina Taylor','Harriet Shing','Sam Groth']) {
+    const answer=(await blind(`Is ${name} still in parliament?`)).answer;
+    assert.match(answer,new RegExp(`${name}'s current membership of parliament is not established by the roster\\.`),name);
+    assert.doesNotMatch(answer,/is recorded as a current member|no longer serving/,name);
+  }
   // A federal member is answered from the federal roster as before.
   const federal=roster.find(p=>p.current===true&&p.states.length===1&&p.states[0]==='federal');
   assert.match((await ask(`Is ${federal.name} still in parliament?`)).answer,/is recorded as a current member of parliament/);
@@ -159,10 +168,15 @@ test('seat pages and electorate profiles name the row’s member, or say the sea
   const index=new Map(vic.filter(e=>e.chamber==='vic_la').map(e=>[e.name,e.dissolved_for]));
   for(const seat of hub.seats.filter(s=>s.kind==='district')) {
     const row=vic.find(e=>e.chamber==='vic_la'&&e.name===seat.name),page=renderVicElection(hub,seat,{},NOW,null,index);
-    const doc=new JSDOM(page.html).window.document,fact=doc.querySelector('.vic-facts > div');
+    const doc=new JSDOM(page.html).window.document,fact=doc.querySelector('#last-parliament .vic-facts > div');
     if(vicSeatVacantAtExpiry(row)) {
-      assert.equal(fact.querySelector('dd').textContent,'Vacant when the Assembly expired on 3 November.');
-      assert.ok(!(page.html+page.description+JSON.stringify(page.jsonLd)).includes(seat.members[0].name),seat.name+': nobody is named');
+      // Nobody is named its member. The page gives the last member once, with the day that service ended
+      // (seat-vacancy.test.mjs); the description, share card and structured data name nobody.
+      const last=seat.vacancy.last.name;
+      assert.deepEqual(seat.members,[]);
+      assert.equal(fact.querySelector('dd').textContent,`Vacant when the Assembly expired on 3 November. Last member: ${last}, to 19 September 2026.`);
+      assert.equal(page.html.split(last).length-1,1,seat.name+': the last member is named once');
+      assert.ok(!(page.title+page.description+JSON.stringify(page.jsonLd)+JSON.stringify(page.card)).includes(last),seat.name+': nobody is named');
       assert.equal(doc.querySelector('#record'),null);
       assert.doesNotMatch(page.html+page.description,/the late|died|death|tribute|resign/i);
     } else {
@@ -170,8 +184,8 @@ test('seat pages and electorate profiles name the row’s member, or say the sea
       assert.equal(rosterFold(fact.querySelector('dd a').textContent),rosterFold(vicMembersAtExpiry(row,rows)[0].person.name),seat.name);
     }
   }
-  const brunswick=hub.seats.find(s=>s.name==='Brunswick'),last=brunswick.members[0].name;
-  const home=new JSDOM(renderVicElection(hub,null,{},NOW,null,index).html).window.document;
+  const brunswick=hub.seats.find(s=>s.name==='Brunswick'),last=brunswick.vacancy.last.name;
+  const home=new JSDOM(renderVicElection(hub,null,{},new Date('2026-11-29T10:00:00+11:00'),null,index).html).window.document;
   const rowOf=name=>[...home.querySelectorAll('#districts .vic-seat')].find(a=>a.querySelector('.vic-seat-name').textContent===name);
   assert.equal(rowOf('Brunswick').querySelector('.vic-seat-held').textContent,'Vacant');
   assert.ok(!home.body.textContent.includes(last));
@@ -181,6 +195,6 @@ test('seat pages and electorate profiles name the row’s member, or say the sea
   const row=vic.find(e=>e.chamber==='vic_la'&&e.name==='Brunswick'),detail=await json('../public'+row.detail_url);
   const held=new JSDOM(profileHTML(detail)).window.document.querySelector('#el-held');
   assert.equal(held.querySelector('h2').textContent,'Member');
-  assert.equal(held.querySelector('.ui-empty').textContent,'Vacant when the Assembly expired on 3 November.');
+  assert.equal(held.querySelector('.ui-empty').textContent,`Vacant when the Assembly expired on 3 November. Last member: ${last}, to 19 September 2026.`);
   assert.equal(held.querySelectorAll('.el-members li').length,0);
 });

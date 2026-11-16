@@ -713,6 +713,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const failure = error instanceof ResearchError ? error : new ResearchError(deps.signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
     await deps.onResearchFailure?.(failure)
     if (deps.signal?.aborted) throw error
+    // OpenRouter refused the no-train, zero-retention route: fail closed. The older planner generates on another route.
+    if (failure.reason === 'provider_refused') throw failure
     // Research already wrote from whatever it gathered (or from general knowledge) before throwing; past the spend cap
     // nothing more can be written, and the response says it is unanswered rather than showing a budget line.
     if (failure.reason === 'spend' || (failure.stats.reservedCostUsd ?? 0) + ASK_FALLBACK_RESERVE_USD > ASK_MAX_MODEL_USD) return { ...lookupPayload({ answer: '', citations: {}, sources: [] }), answered: false, reason: 'declined', answer_source: 'none', tokens: failure.stats.tokens, cost_usd: failure.stats.costUsd ?? null, events: attempted, research_failure: 'spend', research: { mode: 'loop', rounds: failure.stats.rounds, trail: researchTrail(attempted, []), sources: [], failure: 'spend', turns: failure.stats.turns, reserved_cost_usd: failure.stats.reservedCostUsd } }

@@ -77,7 +77,7 @@ function divisionPage() {
     setStatus() {}, setCrumbs() {}, crumbsFor: () => [], billOutcomeLabelHTML: (r) => r || '', fmtDate: (d) => d,
     askHash: (q) => `/ask?q=${encodeURIComponent(q)}`, safeUrl: (u) => u, billSplitParts: () => null, BILL_SPLIT_LEGEND: '',
     moreMenuHTML: (items) => items.filter(Boolean).map((i) => `<a href="${i.href || '#'}">${i.label}</a>`).join(''),
-    billNoteHTML: (t) => `<p>${t}</p>`, entityHrefAttr: () => '', billHash: () => '', pageMenusReady: new Promise(() => {}),
+    billNoteHTML: (t) => `<p>${t}</p>`, entityHrefAttr: () => '', billHash: () => '', pageMenusReady: new Promise(() => {}), voteTablesReady: new Promise(() => {}),
     loadDivisionNames: () => new Promise(() => {}), sentenceCase: (s) => String(s || ''),
   };
   runInNewContext(`${fn('chamberLabel')}\n${fn('sourceLineHTML')}\n${constLine('billHouse')}\n${fn('billStage')}\n${fn('billQuestion')}

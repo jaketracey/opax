@@ -3,7 +3,7 @@ import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datata
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=e6cfb1af2d';
+import {statusLabelHTML} from './labels.js?v=ffd32d5678';
 import {divisionPlain} from './division-markdown.js?v=9914870fea';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -101,20 +101,49 @@ const COVERAGE_HOUSES = {vic_la: 'Victorian Legislative Assembly', vic_lc: 'Vict
 const COVERAGE_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const coverageDay = iso => { const [y, m, d] = String(iso ?? '').split('-').map(Number); return y && m && d ? `${d} ${COVERAGE_MONTHS[m - 1]} ${y}` : ''; };
 const coverageName = name => String(name ?? '').normalize('NFKD').replace(/[\u0300-\u036f'’‘ʼ`.]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-/** What a held-division note says, with its count and dates (public/data/vote-coverage.json, written by
+const COVERAGE_WHY = {
+  'unresolved-name': n => `${n === 1 ? 'It is' : 'They are'} held back until a former member named in ${n === 1 ? 'it' : 'them'} is added to the OPAX roster.`,
+  'result-contradicts-tally': n => `${n === 1 ? 'It is' : 'They are'} held back because the result Hansard prints does not agree with the tally it prints.`,
+  'numbering-differs-from-published': n => `${n === 1 ? 'It is' : 'They are'} held back because an earlier import missed ${n === 1 ? 'it' : 'them'}, and the records after ${n === 1 ? 'it' : 'them'} on that day need renumbering first.`,
+  'text-unconfirmed': n => `${n === 1 ? 'It is' : 'They are'} held back because the motion text beside ${n === 1 ? 'it' : 'them'} in Hansard could not be confirmed as the question voted on.`,
+};
+/** What a held-division note says, with its count, dates and reason (public/data/vote-coverage.json, written by
  *  parli/ingest/vic_divisions.py). `whose`: "this member's" on a person page, "members'" on a coverage page. */
 export function voteCoverageText(note, whose = 'members’') {
   const held = Number(note?.held) || 0, house = COVERAGE_HOUSES[note?.house], from = coverageDay(note?.from), to = coverageDay(note?.to);
-  if (!held || !house || !from || !to || note.reason !== 'unresolved-name') return '';
+  const why = COVERAGE_WHY[note?.reason];
+  if (!held || !house || !from || !to || !why) return '';
   const n = held.toLocaleString('en-AU');
-  return `${n} ${house} division${held === 1 ? '' : 's'} from ${from} to ${to} ${held === 1 ? 'is' : 'are'} not in this record, so ${whose} vote counts for that period are incomplete. ${held === 1 ? 'It is' : 'They are'} held back until a former member named in ${held === 1 ? 'it' : 'them'} is added to the OPAX roster.`;
+  const when = from === to ? `of ${from}` : `from ${from} to ${to}`;
+  return `${n} ${house} division${held === 1 ? '' : 's'} ${when} ${held === 1 ? 'is' : 'are'} not in this record, so ${whose} vote counts for ${from === to ? 'that day' : 'that period'} are incomplete. ${why(held)}`;
 }
-/** The held-division notes that apply to a person: those whose held divisions name them (any of `names`). */
-export function voteCoverageNotes(coverage, names) {
+/** The held-division notes that apply to a person: those whose held divisions name them (any of `names`).
+ *  `years`, when given, are the years the person's vote counts span (votes.json `years`, first and last): a
+ *  note is shown only when its dates overlap that span, so it never describes a period the panel does not count
+ *  (before the Victorian back-catalogue is loaded the counts start in 2026). */
+export function voteCoverageNotes(coverage, names, years = null) {
   const mine = new Set((Array.isArray(names) ? names : [names]).map(coverageName).filter(Boolean));
+  const span = (Array.isArray(years) ? years : []).map(Number).filter(Number.isFinite);
+  const first = span.length ? Math.min(...span) : null, last = span.length ? Math.max(...span) : null;
+  const inCounts = note => !Array.isArray(years) || (first !== null
+    && Number(String(note.from).slice(0, 4)) <= last && Number(String(note.to).slice(0, 4)) >= first);
   return (Array.isArray(coverage?.notes) ? coverage.notes : [])
-    .filter(note => (note.members || []).some(member => mine.has(coverageName(member))))
+    .filter(note => (note.members || []).some(member => mine.has(coverageName(member))) && inCounts(note))
     .map(note => voteCoverageText(note, 'this member’s')).filter(Boolean);
+}
+/** Plain-language lines a reader needs beside one division record, each only where it applies.
+ *  Victorian Hansard: who is and is not in its lists; a record with no motion text; a "stand part" question. */
+export function divisionReadingNotes(d) {
+  const notes = [];
+  const question = String(d?.question || '');
+  if (/\bwords? proposed to be omitted stand part\b/i.test(question))
+    notes.push('On this question an aye is a vote to keep the words as they are. Members voting aye opposed the amendment, and members voting no supported it.');
+  if (d?.jurisdiction === 'vic') {
+    if (/^(?:Assembly|Council|House|Committee) divided\b/.test(question))
+      notes.push('Hansard prints no motion text directly before this division, so none is shown. The title is the heading the division was taken under; the Hansard page has the debate that led to it.');
+    notes.push('Victorian Hansard lists the members who voted aye or no. It does not record pairs, tellers or absences, so a member not listed was not necessarily absent and did not necessarily abstain.');
+  }
+  return notes;
 }
 export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];

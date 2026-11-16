@@ -2,7 +2,7 @@
 parli.ingest.vic_divisions -- every division of a Victorian Parliament, from the daily Hansard PDFs.
 
 The sampled Victorian path (`votes_state.py vic`) reads the newest few sitting
-days. This module walks a whole Parliament with the same source, the same ids
+days. This module reads every sitting day of a Parliament with the same source, the same ids
 (`vic-{la|lc}-{date}-{n}`) and the same unified Division / Vote rows, in two
 steps that never mix:
 
@@ -327,6 +327,78 @@ def member_list(path: Path) -> list[tuple[str, str | None]]:
     return out
 
 
+SERVICE_NOTE_RE = re.compile(r"\b(Sworn in|Appointed|Elected|Resigned|Died|Retired)\b[^0-9]*?(\d{1,2} [A-Z][a-z]+ \d{4})")
+_MONTHS = {m: i for i, m in enumerate(("January February March April May June July August September October "
+                                       "November December").split(), 1)}
+
+
+def _iso_day(text: str) -> str:
+    """ISO date of "7 Dec 2023" / "27 September 2023". A month it cannot read raises: a service date is never guessed."""
+    d, month, year = text.split()
+    number = next(i for name, i in _MONTHS.items() if name.startswith(month.rstrip(".")[:3]))   # "Dec", "Sept."
+    return f"{int(year):04d}-{number:02d}-{int(d):02d}"
+
+
+def member_service(path: Path) -> list[dict]:
+    """Each member on the list at the front of a Hansard PDF, with the service dates its footnotes give.
+
+    The list names every member of that house in the Parliament so far; a member who
+    joined or left during it carries a footnote ("Sworn in 4 March 2025", "Resigned
+    27 September 2023"). Returns {surname, given, seat, start, end, notes}: `start`
+    from a sworn-in, appointed or elected note, `end` from a resigned, died or
+    retired note, None where the list gives none (the member sat from the general
+    election, or still sits). A footnote that is not about service ("ALP until 29
+    April 2024") is kept in `notes` and dates nothing."""
+    try:
+        import pymupdf  # type: ignore
+    except ImportError as e:  # pragma: no cover
+        raise SystemExit("parse needs PyMuPDF: pip install pymupdf") from e
+    out = []
+    with pymupdf.open(path) as doc:
+        for page in list(doc)[:8]:
+            spans = [(s["bbox"][0], s["bbox"][1], s["bbox"][2], s["text"].strip(), s["size"])
+                     for b in page.get_text("dict")["blocks"] for ln in b.get("lines", []) for s in ln["spans"]
+                     if s["text"].strip()]
+            seats = sorted(x for x, _, _, t, _ in spans if t in ("District", "Region"))
+            top = min((y for _, y, _, t, _ in spans if t == "Member"), default=None)
+            if top is None or not seats:
+                continue
+            marks = [(x, y, t) for x, y, _, t, size in spans if size < 7 and re.fullmatch(r"\d+(?:\s*,\s*\d+)*", t)]
+            # Two cells can arrive as one piece of text ("Greens  Payne, Rachel"): split on the gap, as member_list does.
+            body = []
+            for x, y, x1, t, size in spans:
+                if size < 7:
+                    continue
+                width = (x1 - x) / max(len(t), 1)
+                for piece in re.finditer(r"\S+(?: \S+)*", t):
+                    body.append((x + width * piece.start(), y, x + width * piece.end(), piece.group()))
+            # A footnote: its number at the start of a line, its text beside it.
+            notes = {}
+            for x, y, t in marks:
+                text = sorted((bx, bt) for bx, by, _, bt in body if -1 <= bx - x < 14 and abs(by - y) < 6)
+                if text and not MEMBER_CELL_RE.match(text[0][1]):
+                    notes[t] = text[0][1]
+            for x, y, x1, text in body:
+                column = next((k for k, sx in enumerate(seats) if x < sx and (k == 0 or x > seats[k - 1] + 40)), None)
+                if column is None or y <= top or not MEMBER_CELL_RE.match(text):
+                    continue
+                near = sorted((abs(sy - y), t) for sx, sy, _, t in body if abs(sx - seats[column]) < 12 and abs(sy - y) < 7)
+                # The member's own footnote numbers: the small figures set just after the name.
+                own = [n.strip() for mx, my, t in marks if -3 <= mx - x1 < 8 and abs(my - y) < 8 for n in t.split(",")]
+                texts = [notes[n] for n in own if n in notes]
+                start = end = None
+                for note in texts:
+                    m = SERVICE_NOTE_RE.search(note)
+                    if m and m.group(1) in ("Sworn in", "Appointed", "Elected"):
+                        start = _iso_day(m.group(2))
+                    elif m:
+                        end = _iso_day(m.group(2))
+                surname, _, given = text.partition(",")
+                out.append({"surname": surname.strip(), "given": given.strip(), "seat": near[0][1] if near else None,
+                            "start": start, "end": end, "notes": texts, "marks": own})
+    return out
+
+
 def _heading(lines: list[dict], i: int) -> tuple[str | None, str | None]:
     """(heading, stage) the line at i sits under: the nearest centred bold heading above it, with the lines
     of a heading set over two or three joined, and the centred italic stage line below it ("Third reading")."""
@@ -346,6 +418,92 @@ def _heading(lines: list[dict], i: int) -> tuple[str | None, str | None]:
             return " ".join(parts), stage
         b -= 1
     return None, None
+
+
+# What may introduce a motion as put: a member moving it, the Chair stating the question, or Hansard's own
+# "Debate resumed on motion of ...:" / "And ...'s amendment:". Nothing else does: "incorporated the following:"
+# introduces a speech set in the same small type.
+MOTION_LEAD_RE = re.compile(r"(?:\bmove(?:, by leave)?|\bquestion is(?: therefore)?|\bdivide on the question"
+                            r"|\bmotion of [^:]+|\bamendments?):$", re.I)
+# The Chair stating the question; only such a turn may run on after the text ("Those supporting ... should vote no.").
+CHAIR_QUESTION_RE = re.compile(r"(?:\bquestion is(?: therefore)?|\bdivide on the question):$", re.I)
+QUESTION_MAX = 2000        # characters; a longer "question" is checked by a person before it is published
+# Speech, not a motion: an incorporated speech, a timestamp, a speaker's turn ("Jane CITIZEN (Seat):"), the first person.
+SPEECH_RE = re.compile(r"\bincorporated\b|\(\d{1,2}:\d{2}\)|\b[A-Z][a-z]+ [A-Z]{3,}[A-Z’'-]*(?: \([^)]*\))*:"
+                       r"|\bI (?:rise|thank|want|think|believe|am|was|will|would|have|commend|acknowledge)\b"
+                       r"|\b(?:[Ww]e (?:are|have|will)|[Mm]y|[Oo]ur)\b")
+# A procedural report line, not the heading a division sits under.
+PROCEDURAL_NAME_RE = re.compile(r"^(?!That\b).*\b(?:agreed to|negatived|defeated|not agreed to)\b"
+                                r"|^Reported to (?:the )?house\b|;", re.I)
+# The standing forms of a question, which many divisions share word for word.
+STANDING_FORM_RE = re.compile(r"^That (?:this|the) bill (?:be now read|do pass)\b"
+                              r"|^That the words? proposed to be omitted stand part\b"
+                              r"|^That the question be now put\b|^That the sitting be extended\b", re.I)
+DIVISION_LINE_RE = re.compile(r"^(?:Assembly|Council|House|Committee) divided\b")
+FURNITURE_NAME_RE = re.compile(r"\d|\b(?:Legislative|Assembly|Council)\b")
+
+
+# Reviewed exceptions to text_faults, each checked by a person against the cached Hansard page: {id: {fault: why}}.
+REVIEWED_TEXT = {
+    "vic-lc-2026-09-22-1": {
+        "question-too-long": "A genuine motion of 13,624 characters: 264 lines of small type under 'Richard WELCH "
+                             "(North-Eastern Metropolitan) (21:47): I move:', pages 92 to 98 of the Council Hansard of "
+                             "22 September 2026, ending at the division line. It divides a bill in two and lists every "
+                             "change. Checked 17 November 2026.",
+    },
+    "vic-lc-2026-08-27-13": {
+        "question-not-in-staged-parse": "Published by the earlier import under this number; it is that day's 14th division "
+                                        "and is held for renumbering, so the staged import has no reading under this id. "
+                                        "Page 109 of the Council Hansard of 27 August 2026: 'Third reading', the minister's "
+                                        "'I move: That the bill be now read a third time and do pass.', then 'Bells rung.' and "
+                                        "a point of order, then 'Council divided on motion:' (Ayes 34, Noes 3). The published "
+                                        "text is the motion moved. Checked 17 November 2026.",
+    },
+}
+
+
+def text_faults(record: dict) -> list[str]:
+    """Why a division's printed text may not be what was voted on. Used twice: the parser sends a division with
+    any of these to the mismatch list, and tests/test_vic_divisions.py runs it over the committed data.
+
+      question-lead-not-a-motion    text taken from a block no motion lead introduces
+      question-too-long             over QUESTION_MAX characters
+      question-reads-as-speech      a speaker's turn, an incorporated speech or the first person inside it
+      heading-is-a-procedural-line  `name` is a report line ("Amendments agreed to; ..."), not a heading
+
+    A `question` that is the division line itself ("Council divided on amendment") is exempt from the first
+    three: it claims no motion text."""
+    extra = record.get("extra") or {}
+    faults = []
+    question = record.get("question") or ""
+    if extra.get("question_basis") != "division-line":
+        if not MOTION_LEAD_RE.search(extra.get("question_lead") or ""):
+            faults.append("question-lead-not-a-motion")
+        if SPEECH_RE.search(question):
+            faults.append("question-reads-as-speech")
+    if len(question) > QUESTION_MAX:
+        faults.append("question-too-long")
+    name = record.get("name") or ""
+    if name != (extra.get("division_line") or "").rstrip(":") and PROCEDURAL_NAME_RE.search(name):
+        faults.append("heading-is-a-procedural-line")
+    reviewed = REVIEWED_TEXT.get(record.get("id") or record.get("key") or "", {})
+    return [f for f in faults if f not in reviewed]
+
+
+def shared_question_faults(records: list[dict]) -> list[tuple[str, str]]:
+    """(id, id) pairs that print one motion text for two different things: an amendment and the motion it amends,
+    under one heading on one chamber-day. The standing forms ("That the question be now put.") repeat by nature
+    and are not faults; this is the case of an amendment's text published on the vote for the motion."""
+    kind = lambda r: "amendment" if "amendment" in (r["extra"].get("divided_on") or "") else "motion"
+    seen, pairs = {}, []
+    for r in records:
+        if r["extra"].get("question_basis") == "division-line":
+            continue
+        key = (r["house"], r["date"], r["name"], re.sub(r"\s+", " ", r["question"]).strip().casefold())
+        other = seen.setdefault(key, r)
+        if other is not r and kind(other) != kind(r):
+            pairs.append((other["id"], r["id"]))
+    return pairs
 
 
 def question_before(lines: list[dict], i: int, tail_allowed: bool = True) -> tuple[str | None, str | None, int]:
@@ -372,7 +530,7 @@ def question_before(lines: list[dict], i: int, tail_allowed: bool = True) -> tup
     lead = lines[b]["text"] if b >= 0 else ""
     if not lead.endswith(":"):
         return None, None, -1
-    if tail and not lead.endswith("The question is:"):
+    if tail and not CHAIR_QUESTION_RE.search(lead):
         return None, None, -1
     text = " ".join(ln["text"] for ln in lines[b + 1:end + 1]).strip()
     return (text or None), lead, b
@@ -487,8 +645,31 @@ def _has_surname(name_key: str, surname: str) -> bool:
     return bool(s) and (name_key == s or name_key.endswith(" " + s))
 
 
-def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[str, str | None]]
-              ) -> tuple[list[dict], list[dict]]:
+def service_fault(printed: str, day: str, service: list[dict] | None) -> str | None:
+    """Why a member listed in a division on `day` cannot have voted then, by the House's own member list, or None.
+
+    `service` is member_service() of the Parliament's last sitting day for that house: every member of the
+    Parliament, with the day a member who joined during it was sworn in and the day one who left resigned.
+    A name is matched by surname, and by the first letter of the given name where two members share one
+    ("Josh Bull", "Tim Bull"). No list (None) checks nothing; a name not on it, or not one member of it, is a fault."""
+    if service is None:
+        return None
+    key = person_key(printed) or ""
+    hits = [m for m in service if _has_surname(key, m["surname"])]
+    if len(hits) > 1:
+        hits = [m for m in hits if (person_key(m["given"]) or " ")[0] == key[:1]]
+    if not hits:
+        return "name-not-on-hansard-member-list"
+    if len(hits) > 1:
+        return "member-list-name-ambiguous"
+    start, end = hits[0]["start"], hits[0]["end"]
+    if (start and day < start) or (end and day > end):
+        return "vote-outside-service-dates"
+    return None
+
+
+def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[str, str | None]],
+              service: list[dict] | None = None) -> tuple[list[dict], list[dict]]:
     """(reconciled divisions, mismatches) for one chamber-day. Every division line takes a number, so the
     ids do not move when a mismatch is later resolved."""
     good, bad = [], []
@@ -549,13 +730,16 @@ def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[
             a, n = stated.get("ayes"), stated.get("noes")
             if a is not None and n is not None and a != n and (a > n) != (result == "affirmative"):
                 reasons.append("result-contradicts-tally")
-        votes, unresolved, seen = [], [], Counter()
+        votes, unresolved, outside, seen = [], [], [], Counter()
         for side, vote in (("ayes", "aye"), ("noes", "no")):
             for raw in names.get(side, []):
                 who = roster.resolve(day["house"], raw, members)
                 seen[person_key(raw)] += 1
                 if not who:
                     unresolved.append(raw)
+                fault = service_fault(raw, day["date"], service)
+                if fault:
+                    outside.append((fault, raw))
                 # The printed name is kept unless Hansard printed another form of it than the roster holds.
                 listed_form = bool(who) and who["basis"].startswith("hansard-member-list")
                 votes.append({"person_raw": raw, "person_name": who["name"] if listed_form else normalize_speaker(raw),
@@ -563,6 +747,7 @@ def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[
                               "roster_basis": who and who["basis"]})
         if unresolved:
             reasons.append("unresolved-name")
+        reasons += sorted({fault for fault, _ in outside})
         if any(count > 1 for count in seen.values()):
             reasons.append("name-listed-twice")
         heading, stage = _heading(lines, start)
@@ -585,12 +770,16 @@ def parse_day(lines: list[dict], day: dict, roster: Roster, members: list[tuple[
                       "question_lead": lead, "result_text": result_text, "members_listed": parsed},
             "votes": votes,
         }
+        reasons += text_faults(record)
         if reasons:
             bad.append({"id": div_id, "date": day["date"], "house": day["house"], "source_url": url,
                         "online_url": day.get("online"), "division_line": printed_line,
                         "stated": {"ayes": stated.get("ayes"), "noes": stated.get("noes")},
                         "parsed": {"ayes": parsed.get("ayes"), "noes": parsed.get("noes")},
                         "reasons": reasons, "unresolved_names": sorted(set(unresolved)),
+                        "service_faults": sorted({f"{raw}: {fault}" for fault, raw in outside}),
+                        "name": record["name"], "question_lead": lead,
+                        "question_start": (question or "")[:300] if "division-line" != basis else None,
                         # Whose vote counts lack this division while it is held: the members it names.
                         "members": sorted({v["person_name"] for v in votes if v["roster_basis"]})})
         else:
@@ -623,6 +812,17 @@ def run_parse(args) -> None:
     days = [d for house in ("la", "lc") for d in listing(None, cache, house, args.start, args.end)]
     days = sorted((d for d in days if not only or d["date"] in only), key=lambda d: (d["date"], d["house"]))
     good, bad, files, missing, members_short = [], [], [], [], []
+    # Service dates: the member list of each house's last sitting day in the cache, which names every member
+    # of the Parliament and footnotes those who joined or left during it.
+    service, service_sources = {}, {}
+    for house in ("vic_la", "vic_lc"):
+        last = max((d for d in days if d["house"] == house and pdf_path(cache, d).is_file()),
+                   key=lambda d: d["date"], default=None)
+        if last and not only:
+            service[house] = member_service(pdf_path(cache, last))
+            service_sources[house] = {"date": last["date"], "source_url": last["pdf"], "members": len(service[house]),
+                                      "dated": [{k: m[k] for k in ("surname", "given", "seat", "start", "end", "notes")}
+                                                for m in service[house] if m["start"] or m["end"]]}
     for day in days:
         path = pdf_path(cache, day)
         if not path.is_file():
@@ -631,7 +831,7 @@ def run_parse(args) -> None:
         members = member_list(path)
         if len(members) < (80 if day["house"] == "vic_la" else 38):
             members_short.append({"date": day["date"], "house": day["house"], "listed": len(members)})
-        g, b = parse_day(pdf_lines(path), day, roster, members)
+        g, b = parse_day(pdf_lines(path), day, roster, members, service.get(day["house"]))
         good += g
         bad += b
         files.append({"date": day["date"], "house": day["house"], "id": day["id"], "status": day["status"],
@@ -651,6 +851,7 @@ def run_parse(args) -> None:
         "mismatch_list": len(bad), "mismatch_divisions_by_reason": dict(sorted(reasons.items())),
         "votes": sum(len(g["votes"]) for g in good),
         "member_lists_short": members_short,
+        "service_dates": service_sources,
         "name_basis": dict(sorted(Counter(v["roster_basis"] for g in good for v in g["votes"]).items())),
         "question_basis": dict(sorted(Counter(g["extra"]["question_basis"] for g in good).items())),
         "requests_made": sum(1 for _ in log.open(encoding="utf-8")) if log.is_file() else None,
@@ -680,10 +881,11 @@ def hold_published_conflicts(good: list[dict], published: Path) -> tuple[list[di
     day whose later numbers are taken. Those go on the mismatch list (reason
     `numbering-differs-from-published`) for a reviewed renumbering; nothing
     published is replaced and no second copy of a published division is added."""
-    held = {}
+    held, voters = {}, {}
     for path in published.glob("division-vic-*.json"):
         record = json.loads(path.read_text(encoding="utf-8"))
         held[record["key"]] = (record.get("ayes"), record.get("noes"))
+        voters[record["key"]] = frozenset((person_key(m.get("name")), m.get("vote")) for m in record.get("members", []))
     days = {key.rsplit("-", 1)[0] for key in held}
     disputed = {g["id"].rsplit("-", 1)[0] for g in good
                 if g["id"] in held and held[g["id"]] != (g["ayes_count"], g["noes_count"])}
@@ -692,34 +894,117 @@ def hold_published_conflicts(good: list[dict], published: Path) -> tuple[list[di
         day = g["id"].rsplit("-", 1)[0]
         differs = g["id"] in held and held[g["id"]] != (g["ayes_count"], g["noes_count"])
         if differs or (day in disputed and day in days and g["id"] not in held):
+            # The same division under another number: same tallies and the same members voting the same way.
+            mine = frozenset((person_key(v["person_name"]), v["vote"]) for v in g["votes"])
+            elsewhere = sorted(k for k in held if k.rsplit("-", 1)[0] == day and voters[k] == mine
+                               and held[k] == (g["ayes_count"], g["noes_count"]))
             out.append({"id": g["id"], "date": g["date"], "house": g["house"], "source_url": g["source_url"],
                         "online_url": g["extra"].get("online_url"), "division_line": g["extra"]["division_line"],
                         "stated": {"ayes": g["ayes_count"], "noes": g["noes_count"]},
                         "parsed": dict(g["extra"]["members_listed"]),
                         "reasons": ["numbering-differs-from-published"], "unresolved_names": [],
-                        "published": {"ayes": held[g["id"]][0], "noes": held[g["id"]][1]} if g["id"] in held else None})
+                        "members": sorted({v["person_name"] for v in g["votes"]}),
+                        "published": {"ayes": held[g["id"]][0], "noes": held[g["id"]][1]} if g["id"] in held else None,
+                        "published_as": elsewhere[0] if len(elsewhere) == 1 else None})
         else:
             keep.append(g)
     return keep, out
 
 
-def vote_coverage(bad: list[dict]) -> dict:
-    """What member pages must say about held divisions: one note a house, for the unresolved-name hold.
+COVERAGE_REASONS = ("unresolved-name", "result-contradicts-tally", "numbering-differs-from-published")
 
-    A division held because one name is not in the roster is missing from the
-    vote counts of every other member it names. The note carries the count, the
-    dates and those members, so the site says it on their pages and on the
-    coverage page (portal/public/vote-tables.js voteCoverageNotes). No held
+
+def vote_coverage(bad: list[dict]) -> dict:
+    """What the site must say about held divisions: one note for each house and reason.
+
+    A held division is missing from the vote counts of every member it names,
+    whatever it is held for. Each note carries the count, the dates, the reason
+    and those members, so the site says it on their pages and on the coverage
+    page (portal/public/vote-tables.js voteCoverageNotes). The reason is one of
+    COVERAGE_REASONS, or `text-unconfirmed` for a division whose printed motion
+    text or heading could not be confirmed. A division already published under
+    another number (`published_as`) is not missing and is not counted. No held
     divisions, no notes."""
-    notes = []
-    for house in ("vic_la", "vic_lc"):
-        held = [b for b in bad if b["house"] == house and b["reasons"] == ["unresolved-name"]]
-        if held:
-            notes.append({"id": f"{house}-unresolved-name", "jurisdiction": "vic", "house": house,
-                          "reason": "unresolved-name", "held": len(held),
-                          "from": min(b["date"] for b in held), "to": max(b["date"] for b in held),
-                          "members": sorted({m for b in held for m in b.get("members", [])})})
+    groups: dict[tuple[str, str], list[dict]] = {}
+    for b in bad:
+        if not b.get("id") or b.get("published_as"):
+            continue
+        reason = next((r for r in COVERAGE_REASONS if r in b["reasons"]), "text-unconfirmed")
+        groups.setdefault((b["house"], reason), []).append(b)
+    notes = [{"id": f"{house}-{reason}", "jurisdiction": "vic", "house": house, "reason": reason, "held": len(held),
+              "from": min(b["date"] for b in held), "to": max(b["date"] for b in held),
+              "divisions": sorted(b["id"] for b in held),
+              "members": sorted({m for b in held for m in b.get("members", [])})}
+             for (house, reason), held in sorted(groups.items())]
     return {"schema": 1, "source": "data/staged/vic-divisions/mismatches.json", "notes": notes}
+
+
+def sweep_published(public: Path, staged: Path) -> dict[str, list]:
+    """Every published Victorian division checked for text that is not what was voted on. {class: [ids]}.
+
+    Runs over the committed records (portal/public/divisions/division-vic-*.json), reading each one's lead
+    from the staged import. A clean record is in no class; REVIEWED_TEXT lists the reviewed exceptions.
+
+      question-not-in-staged-parse   a published motion text the staged import does not give for that id,
+                                     so nothing vouches for its lead
+      question-lead-not-a-motion     the text sits under a line that does not introduce a motion
+      question-reads-as-speech       "incorporated", a timestamp, a speaker's turn or the first person
+      question-too-long              over QUESTION_MAX characters
+      long-question-shared           one text of 100 characters or more on divisions under different headings,
+                                     other than a standing form
+      amendment-text-on-motion       one text on an amendment and on the motion it amends
+      heading-is-a-procedural-line   `name` is a report line
+      member-name-carries-furniture  a member name with a page number or the name of a house in it"""
+    flat = lambda t: re.sub(r"\s+", " ", t or "").strip()
+    held = {}
+    for line in (staged / "divisions.jsonl").read_text(encoding="utf-8").splitlines():
+        d = json.loads(line)
+        held[d["id"]] = d
+    out = {k: [] for k in ("question-not-in-staged-parse", "question-lead-not-a-motion", "question-reads-as-speech",
+                           "question-too-long", "long-question-shared", "amendment-text-on-motion",
+                           "heading-is-a-procedural-line", "member-name-carries-furniture")}
+    out["standing-form-shared"] = []      # reported, not a fault
+    records = []
+    for path in sorted(public.glob("division-vic-*.json")):
+        r = json.loads(path.read_text(encoding="utf-8"))
+        key, question, name = r["key"], flat(r.get("question")), flat(r.get("name"))
+        reviewed = REVIEWED_TEXT.get(key, {})
+        has_text = bool(question) and not DIVISION_LINE_RE.match(question)
+        s = held.get(key)
+        vouched = bool(s) and flat(s["question"]) == question and s["extra"].get("question_basis") != "division-line"
+        if has_text and not vouched and "question-not-in-staged-parse" not in reviewed:
+            out["question-not-in-staged-parse"].append(key)
+        if has_text and vouched and not MOTION_LEAD_RE.search(s["extra"].get("question_lead") or ""):
+            out["question-lead-not-a-motion"].append(key)
+        if has_text and SPEECH_RE.search(question):
+            out["question-reads-as-speech"].append(key)
+        if len(question) > QUESTION_MAX and "question-too-long" not in reviewed:
+            out["question-too-long"].append(key)
+        if not DIVISION_LINE_RE.match(name) and PROCEDURAL_NAME_RE.search(name):
+            out["heading-is-a-procedural-line"].append(key)
+        if any(FURNITURE_NAME_RE.search(m.get("name") or "") for m in r.get("members", [])):
+            out["member-name-carries-furniture"].append(key)
+        if has_text:
+            records.append({"id": key, "house": r["house"], "date": r["date"], "name": name, "question": question,
+                            "extra": {"divided_on": (s or {}).get("extra", {}).get("divided_on"),
+                                      "question_basis": "printed"}})
+    groups: dict[str, list[dict]] = {}
+    for r in records:
+        if len(r["question"]) >= 100:
+            groups.setdefault(r["question"].casefold(), []).append(r)
+    for rows in groups.values():
+        if len({r["name"] for r in rows}) > 1:
+            ids = sorted(r["id"] for r in rows)
+            out["standing-form-shared" if STANDING_FORM_RE.match(rows[0]["question"]) else "long-question-shared"].append(ids)
+    out["amendment-text-on-motion"] = [list(pair) for pair in shared_question_faults(records)]
+    return out
+
+
+def run_sweep(args) -> None:
+    result = sweep_published(Path(args.public), Path(args.staged))
+    print(json.dumps({k: {"count": len(v), "records": v} for k, v in result.items()}, indent=1, ensure_ascii=False))
+    if any(v for k, v in result.items() if k != "standing-form-shared"):
+        raise SystemExit(1)
 
 
 def read_staged(staged: Path) -> tuple[list[Division], list[Vote]]:
@@ -734,8 +1019,22 @@ def read_staged(staged: Path) -> tuple[list[Division], list[Vote]]:
 
 
 def run_unified(args) -> None:
-    divisions, votes = read_staged(Path(args.staged))
-    write_out(args.out, divisions, votes, {"source": SOURCE, "staged": str(args.staged)})
+    """The staged divisions as one votes_state file for the database load.
+
+    The load replaces whole chamber-days. A chamber-day with a division held for renumbering is left out: the
+    database's rows for that day are the published records, and replacing them with the staged day minus its
+    held divisions would take published divisions out of the database."""
+    staged = Path(args.staged)
+    divisions, votes = read_staged(staged)
+    held = json.loads((staged / "mismatches.json").read_text(encoding="utf-8"))
+    skip = {(b["house"], b["date"]) for b in held if "numbering-differs-from-published" in b["reasons"]}
+    keep = {d.id for d in divisions if (d.house, d.date) not in skip}
+    divisions = [d for d in divisions if d.id in keep]
+    votes = [v for v in votes if v.division_id in keep]
+    write_out(args.out, divisions, votes, {"source": SOURCE, "staged": str(args.staged),
+                                           "chamber_days_left_out": sorted(f"{h} {d}" for h, d in skip)})
+    print(f"{len(divisions)} divisions, {len(votes)} votes, {len({(d.house, d.date) for d in divisions})} chamber-days; "
+          f"left out for renumbering: {', '.join(sorted(f'{h} {d}' for h, d in skip)) or 'none'}", file=sys.stderr)
 
 
 def main() -> None:
@@ -762,6 +1061,10 @@ def main() -> None:
     p.add_argument("--coverage-out", default=str(REPO_ROOT / "portal" / "public" / "data" / "vote-coverage.json"),
                    help="where to write the held-division note for member pages ('' for none)")
     p.set_defaults(run=run_parse)
+    w = sub.add_parser("sweep", help="check every published Victorian division's text; exit 1 on any fault")
+    w.add_argument("--public", default=str(REPO_ROOT / "portal" / "public" / "divisions"))
+    w.add_argument("--staged", default=str(REPO_ROOT / "data" / "staged" / "vic-divisions"))
+    w.set_defaults(run=run_sweep)
     u = sub.add_parser("unified", help="staged divisions -> the votes_state JSON shape")
     u.add_argument("--staged", default=str(REPO_ROOT / "data" / "staged" / "vic-divisions"))
     u.add_argument("--out", required=True)

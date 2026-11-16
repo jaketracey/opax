@@ -104,6 +104,42 @@ def registry(path: Path = REGISTRY):
     return json.loads(path.read_text())
 
 
+def day_words(iso):
+    """"2026-11-09" as "9 November 2026", the way a document prints its own date."""
+    y, m, d = (int(x) for x in iso.split("-"))
+    return f"{d} {[k for k, v in MONTHS.items() if v == m][0].capitalize()} {y}"
+
+
+# A commission whose registry entry has "use": "documents_only" is listed by its documents alone: the
+# build reads its PDFs to count pages and to check dates and names, and holds none of their wording.
+DOCUMENTS_ONLY = "documents_only"
+TEXT_KEYS = ("date_quote", "quote", "quotes", "excerpt", "excerpts", "text", "full_text", "snippet", "text_matches")
+# A quotation: any double quotation mark or guillemet, or a single one that opens a word. An
+# apostrophe (the commission's, the commissioners') has a letter before it and is not one.
+QUOTATION = re.compile("[\"\u201c\u201d\u201e\u201f\u00ab\u00bb\u2039\u203a]|(?<![A-Za-z0-9])['\u2018\u2019\u201a\u201b](?=\\w)")
+
+
+def quotation(texts):
+    """True when any of the texts holds a quotation."""
+    return any(QUOTATION.search(t) for t in texts)
+
+
+def held_text(value, path=""):
+    """Paths of every field, at any depth, named as holding a document's wording and carrying a value."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if k in TEXT_KEYS and v:
+                yield f"{path}/{k}"
+            yield from held_text(v, f"{path}/{k}")
+    elif isinstance(value, list):
+        for i, v in enumerate(value):
+            yield from held_text(v, f"{path}[{i}]")
+
+
+def documents_only(rc):
+    return rc.get("use") == DOCUMENTS_ONLY
+
+
 def iso_date(text):
     n = re.fullmatch(r"\s*(\d{1,2})/(\d{1,2})/(\d{4})\s*", text or "")
     if n and 1 <= int(n.group(2)) <= 12 and 1 <= int(n.group(1)) <= 31:
@@ -393,6 +429,7 @@ class Texts:
     def __init__(self, cache: Path):
         self.cache, self._data, self._texts, self._lines = cache, {}, {}, {}
         self.manual = {}  # publisher URL -> sha256 of a manually supplied copy
+        self.uncached = set()  # URLs of documents-only sources: their text is read, never stored
 
     def data(self, url):
         if url not in self._data:
@@ -410,7 +447,10 @@ class Texts:
 
     def texts(self, url):
         if url not in self._texts:
-            self._texts[url] = pr.page_texts(self.data(url), self.cache)
+            if url in self.uncached:
+                # Text an earlier build cached for this document is removed, and none is written.
+                (self.cache / "text" / (hashlib.sha256(self.data(url)).hexdigest() + ".json")).unlink(missing_ok=True)
+            self._texts[url] = pr.page_texts(self.data(url), None if url in self.uncached else self.cache)
         return self._texts[url]
 
     def lines(self, url):
@@ -433,20 +473,27 @@ def fv_status(page_html):
 
 
 def check_fact(fact, docs, texts):
-    """A registry fact whose quote is verbatim on the cited page of one of the commission's PDFs."""
+    """A registry fact checked on the cited page of one of the commission's PDFs: its quote is verbatim
+    there or, where no quote is held (a documents-only source), its value (a name, or a date in words) is."""
     doc = docs.get(fact["doc"])
     if not doc or not doc["files"]:
         raise Held(f"fact cites document {fact['doc']!r}, which has no PDF")
     url = doc["files"][fact.get("file", 0)]["url"]
     page = int(fact["page"])
-    if not pr.verbatim(fact["quote"], texts.texts(url)[page - 1]):
-        raise Held(f"fact quote not found on {url} page {page}: {fact['quote'][:80]!r}")
+    seen = fact.get("quote") or (day_words(fact["value"]) if fact["field"] == "established" else fact["value"])
+    if not pr.verbatim(seen, texts.texts(url)[page - 1]):
+        raise Held(f"fact not found on {url} page {page}: {fact['field']}")
     return cite(url, doc["title"], page)
 
 
 def build_commission(rc, run: Path, texts: Texts, trackers):
     docs, reports, responses, transcripts, recs = {}, [], [], [], []
     notes, gaps = list(rc.get("notes", [])), list(rc.get("gaps", []))
+    bare = documents_only(rc)
+    if rc.get("use") not in (None, DOCUMENTS_ONLY):
+        raise Held(f"{rc['id']}: unknown use {rc['use']!r}")
+    if bare and quotation(notes + gaps):
+        raise Held(f"{rc['id']}: a note carries a quotation but the commission is documents only")
     if rc.get("inquiry_type") not in INQUIRY_TYPES:
         raise Held(f"{rc['id']}: unknown inquiry type {rc.get('inquiry_type')!r}")
     for doc in rc["documents"]:
@@ -486,12 +533,25 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
         if not title:
             raise Held(f"{rc['id']}/{doc['key']}: no title")
         files = []
+        if bare:
+            if doc.get("date_quote") or doc.get("recommendations"):
+                raise Held(f"{rc['id']}/{doc['key']}: holds a quotation or an extraction rule but is documents only")
+            # Read once to count pages and check the date and names; no extracted text is kept on disk.
+            texts.uncached.update(doc_pdf_urls(doc, page_html if doc["source"] == "parliament_vic" else None))
         for url in doc_pdf_urls(doc, page_html if doc["source"] == "parliament_vic" else None):
             data = texts.data(url)
             files.append({"url": url, "name": url.rsplit("/", 1)[-1], "pages": len(texts.texts(url)),
                           "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
         if doc["source"] == "parliament_vic" and not files and doc.get("files", ".") != "^$":
             notes.append(f"The Parliament lists {title} without a matching online document.")
+        if bare and doc.get("date") and doc.get("date_page"):
+            # A date printed on the document, checked on the cited page without holding its words.
+            page = int(doc["date_page"])
+            url = files[doc.get("date_file", 0)]["url"] if files else None
+            if not url or not pr.verbatim(day_words(doc["date"]), texts.texts(url)[page - 1]):
+                raise Held(f"{rc['id']}/{doc['key']}: date {doc['date']} is not printed on page {page}")
+            date, basis = doc["date"], "stated"
+            extra["date_cite"] = cite(url, title, page)
         if doc.get("date_quote"):
             # A date printed on the document itself, checked verbatim on the cited page.
             quote, page = doc["date_quote"], int(doc["date_page"])
@@ -581,18 +641,23 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
 
     facts = {"established": None, "commissioners": []}
     for fact in rc.get("facts", []):
+        if bool(fact.get("quote")) == bare:
+            raise Held(f"{rc['id']}: a fact needs its quote, or holds one from a documents-only source")
         c = check_fact(fact, docs, texts)
-        if fact.get("instrument") and fact["instrument"].lower() not in fact["quote"].lower():
+        quoted = {"quote": fact["quote"]} if fact.get("quote") else {}
+        if not quoted:
+            pass  # checked on the page by value; nothing of the document's wording is held
+        elif fact.get("instrument") and fact["instrument"].lower() not in fact["quote"].lower():
             raise Held(f"{rc['id']}: fact instrument {fact['instrument']!r} is not in its quote")
-        if fact["field"] != "established" and pr._norm(fact["value"]) not in pr._norm(fact["quote"]):
+        elif fact["field"] != "established" and pr._norm(fact["value"]) not in pr._norm(fact["quote"]):
             raise Held(f"{rc['id']}: fact value {fact['value']!r} is not in its quote")
-        if fact["field"] == "established" and iso_date(fact["quote"]) != fact["value"]:
+        elif fact["field"] == "established" and iso_date(fact["quote"]) != fact["value"]:
             raise Held(f"{rc['id']}: established date {fact['value']} is not the date in its quote")
         if fact["field"] == "established":
-            facts["established"] = {"date": fact["value"], "instrument": fact.get("instrument"), "quote": fact["quote"], "cite": c}
+            facts["established"] = {"date": fact["value"], "instrument": fact.get("instrument"), **quoted, "cite": c}
         elif fact["field"] == "commissioner":
             facts["commissioners"].append({"name": fact["value"], "role": fact.get("role", "Commissioner"),
-                                           "quote": fact["quote"], "cite": c})
+                                           **quoted, "cite": c})
         else:
             raise Held(f"{rc['id']}: unknown fact field {fact['field']!r}")
     for kind in ("interim_report", "final_report"):
@@ -618,7 +683,25 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
                 "no_report" if not reports
                 else "extracted" if all(r["recommendations_status"] == "extracted" for r in reports)
                 else "partial" if recs else "not_extracted"),
-            "status_source": tracker, "notes": notes, "gaps": gaps}
+            "status_source": tracker, "notes": notes, "gaps": gaps, **({"use": rc["use"]} if bare else {})}
+
+
+def without_extracts(record, rc):
+    """A record of a documents-only commission with nothing of its documents' wording: no date line,
+    quote or excerpt on a document or a fact, and the notes and gaps as the registry now words them."""
+    def strip(value):
+        if isinstance(value, dict):
+            return {k: strip(v) for k, v in value.items() if k not in TEXT_KEYS}
+        return [strip(v) for v in value] if isinstance(value, list) else value
+    out = dict(record)
+    for group in ("reports", "responses", "transcripts", "commissioners"):
+        out[group] = strip(record.get(group, []))
+    out["established"] = strip(record["established"]) if record.get("established") else None
+    out["recommendations"] = []  # a documents-only commission has no extraction rule
+    out["notes"], out["gaps"], out["use"] = list(rc.get("notes", [])), list(rc.get("gaps", [])), rc["use"]
+    if quotation(out["notes"] + out["gaps"]):
+        raise Held(f"{rc['id']}: a note carries a quotation but the commission is documents only")
+    return out
 
 
 def carried(rc, cache: Path = CACHE):
@@ -626,8 +709,15 @@ def carried(rc, cache: Path = CACHE):
 
     The weekly refresh runs where the maintainer-supplied PDFs are absent; their records were
     built where the PDFs were present and are carried forward unchanged, from the previous
-    snapshot or, failing that, the published export in git.
+    snapshot or, failing that, the published export in git. A documents-only commission is
+    carried without any extract an earlier build held (``without_extracts``).
     """
+    if documents_only(rc):
+        return without_extracts(_carried(rc, cache), rc)
+    return _carried(rc, cache)
+
+
+def _carried(rc, cache: Path):
     snap = cache / "snapshot.json"
     if snap.exists():
         for c in json.loads(snap.read_text()).get("commissions", []):

@@ -29,7 +29,7 @@ async function compile(entry) {
   return import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
 }
 const {appVicElection} = await compile('../src/app-vic-election.ts');
-const {vicSeatVacantAtExpiry} = await import('../public/vic-term.js');
+const {registeredParty,registeredPartyPath} = await compile('../src/vic-election-parties.ts');
 const {renderVicElection,findSeats,titledVotes,contestName,vicElectionPage} = await compile('../src/vic-election.ts');
 const {default:worker} = await compile('../src/index.ts');
 const slug = s=>s.path.split('/').at(-1);
@@ -43,6 +43,11 @@ function environment(election=data,index=places,flag='true') {
     return new Response(JSON.stringify(value),{headers:{'content-type':'application/json'}});
   }}};
 }
+// A candidate as the app is sent them (app-vic-election.ts candidateRow): `party` is always null, so no shipped
+// build draws a party link; the party as nominated follows the name on its own line; later builds read the parts.
+const appCandidate=(c,path=null)=>{const party=c.party&&c.party.toLowerCase()!=='independent'?c.party:null;
+  return {name:party?`${c.name}\n${party}`:c.name,party:null,candidate_name:c.name,party_name:c.party||null,party_path:path};};
+const registerViewPath=name=>{const p=registeredParty(name);return p?registeredPartyPath(p):null;};
 const request=(path='',options={})=>new Request('https://opax.com.au'+ROOT+path,options);
 const get=(path='',env=environment(),options={})=>appVicElection(request(path,options),env);
 async function payload(path='',env=environment()) {
@@ -163,13 +168,12 @@ for(const date of ['2026-11-02T10:00:00+11:00','2026-11-12T10:00:00+11:00','2026
   });
 }
 
-test('every district recent-vote title equals the rendered page; regions use the same filter',async()=>{
+test('the app keeps each member\'s titled votes; the web page features none',async()=>{
   for(const s of data.seats) {
     const api=await payload('/seat/'+slug(s));
     for(const [i,m] of s.members.entries())assert.deepEqual(api.members[i].recent_votes,titledVotes(m));
     if(s.kind==='district') {
-      const titles=[...JSDOM.fragment(renderVicElection(data,s).html).querySelectorAll('.vic-votes a')].map(a=>a.textContent);
-      assert.deepEqual(api.members[0].recent_votes.map(v=>v.title),titles,s.name);
+      assert.doesNotMatch(renderVicElection(data,s).html,/Recent votes|vic-votes/,s.name);
     }
   }
 });
@@ -211,7 +215,9 @@ test('seat variants retain subsequent contests, former names, created districts 
 
 test('injected candidates keep ballot order, normalise empty party to null, and supply publication date',async()=>{
   const d=candidateData();const api=await payload('/seat/albert-park',environment(d));
-  assert.deepEqual(api.candidates.list,d.seats[0].candidates.list.map(c=>({...c,party:c.party||null})));
+  assert.deepEqual(api.candidates.list,d.seats[0].candidates.list.map(c=>appCandidate(c)));
+  // No party is sent as a link target, whatever it is; each is printed after the name, and "Independent" is not a party.
+  assert.deepEqual(api.candidates.list.map(c=>[c.name,c.party]),[['Wren Halloway',null],['Avery Quill',null],['Rowan Ketch\nExample Party',null]]);
   const overview=await payload('',environment(d));assert.equal(overview.candidates_published,'2026-11-10');
   assert.equal(overview.districts[0].candidates,3);await pin('albert-park-candidates','/seat/albert-park',d);
 });
@@ -219,7 +225,8 @@ test('injected candidates keep ballot order, normalise empty party to null, and 
 test('frozen Council candidates retain ballot groups and normalise blank or absent group names to null',async()=>{
   const d=councilCandidateData(),api=await payload('/seat/northern-metropolitan',environment(d));
   assert.equal(api.schema_version,1);
-  assert.deepEqual(api.candidates.list.map(c=>c.name),councilCandidates.list.map(c=>c.name));
+  assert.deepEqual(api.candidates.list.map(c=>c.candidate_name),councilCandidates.list.map(c=>c.name));
+  assert.ok(api.candidates.list.every(c=>c.party===null));
   assert.deepEqual(api.candidates.list.map(c=>[c.group,c.group_name]),[
     ['A','Example Alliance'],['A','Example Alliance'],['B',null],['Z',null],[null,null],[null,null],
   ]);
@@ -228,7 +235,7 @@ test('frozen Council candidates retain ballot groups and normalise blank or abse
   const district=candidateData();
   Object.assign(district.seats[0].candidates.list[0],{group:'A',group_name:'Example Alliance',private_field:'hidden'});
   const districtApi=await payload('/seat/albert-park',environment(district));
-  assert.deepEqual(districtApi.candidates.list[0],{name:'Wren Halloway',party:null});
+  assert.deepEqual(districtApi.candidates.list[0],{name:'Wren Halloway',party:null,candidate_name:'Wren Halloway',party_name:null,party_path:null});
 });
 
 test('invalid Council group letters or names make the reader reject the asset',async()=>{
@@ -429,9 +436,9 @@ test('shape pin covers every response and nested contract type; internal fields 
     }
   }
   const candidate=(await payload('/seat/albert-park',environment(candidateData()))).candidates;
-  keys(candidate,'published url list');candidate.list.forEach(c=>keys(c,'name party'));
+  keys(candidate,'published url list');candidate.list.forEach(c=>keys(c,'name party candidate_name party_name party_path'));
   const council=(await payload('/seat/northern-metropolitan',environment(councilCandidateData()))).candidates;
-  keys(council,'published url list');council.list.forEach(c=>keys(c,'name party group group_name'));
+  keys(council,'published url list');council.list.forEach(c=>keys(c,'name party candidate_name party_name party_path group group_name'));
   const notice=(await payload('',environment({...data,notice:{text:'Election update.',link:{label:'VEC',url:data.sources.election}}}))).notice;
   keys(notice,'text link');keys(notice.link,'label url');
   for(const q of ['3350','Bass','Metropolitan','allan']) {
@@ -467,28 +474,22 @@ async function liveParity(election,index) {
     assert.deepEqual(Object.keys(detail).sort(),Object.keys(pinned).sort());
     for(const key of ['kind','name','source_url','electorate_url','roster_date','formerly','created','boundary_note','result'])
       assert.deepEqual(detail[key],seat[key],seat.name+': '+key);
-    assert.deepEqual(detail.members.map(m=>m.name),seat.members.map(m=>m.name));
-    for(const [i,m] of seat.members.entries()) {
+    // A vacant seat has no member; the app's shape needs one, so it is sent the last member (seat-vacancy.test.mjs).
+    const shown=seat.members.length?seat.members:seat.vacancy?[seat.vacancy.last]:[];
+    assert.deepEqual(detail.members.map(m=>m.name),shown.map(m=>m.name));
+    for(const [i,m] of shown.entries()) {
       for(const key of ['party','href','source_url','speeches','speech_gap','votes'])assert.deepEqual(detail.members[i][key],m[key]);
       assert.deepEqual(detail.members[i].recent_votes,titledVotes(m));
     }
     assert.deepEqual(detail.candidates,seat.candidates?{
       published:seat.candidates.published,url:seat.candidates.url,
-      list:seat.candidates.list.map(c=>({name:c.name,party:c.party||null,
+      list:seat.candidates.list.map(c=>({...appCandidate(c,registerViewPath(c.party)),
         ...seat.kind==='region'?{group:c.group??null,group_name:c.group_name?.trim()||null}:{}})),
     }:null);
     const row=[...overview.districts,...overview.regions].find(s=>s.slug===detail.slug);
     assert.equal(row.candidates,seat.candidates?.list.length??0);
     if(seat.kind==='district') {
-      const page=JSDOM.fragment(renderVicElection(election,seat).html);
-      const listed=[...page.querySelectorAll('.vic-votes a')].map(a=>a.textContent);
-      // A seat vacant when the Assembly expired shows no member record on its page (Brunswick), so no votes
-      // list either; the app still carries the last member's titled votes. Any other page lists the same titles.
-      if(page.querySelector('.vic-member'))assert.deepEqual(detail.members[0].recent_votes.map(v=>v.title),listed);
-      else {
-        assert.equal(vicSeatVacantAtExpiry({jurisdiction:'vic',chamber:'vic_la',name:seat.name}),true,seat.name);
-        assert.deepEqual(listed,[]);
-      }
+      assert.deepEqual(detail.members[0].recent_votes,titledVotes(shown[0]));
     } else assert.deepEqual(detail.districts.map(s=>s.name),seat.districts);
   }
   for(const q of ['3350','St Kilda','Bass','allan','9999']) {

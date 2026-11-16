@@ -11,9 +11,10 @@ export function billDivisionTablesHTML(divisions?: object[], titles?: Record<str
 export function divisionTableConfig(params?: Record<string,string>, caption?: string, pageType?: string): DataTableConfig;
 export function voteScopeLine(shown: number, total: number, recorded?: boolean): string;
 export const VOTE_COVERAGE_PATH: string;
-export interface VoteCoverageNote { id?: string; jurisdiction?: string; house?: string; reason?: string; held?: number; from?: string; to?: string; members?: string[] }
+export interface VoteCoverageNote { id?: string; jurisdiction?: string; house?: string; reason?: string; held?: number; from?: string; to?: string; divisions?: string[]; members?: string[] }
 export function voteCoverageText(note: VoteCoverageNote | null | undefined, whose?: string): string;
-export function voteCoverageNotes(coverage: {notes?: VoteCoverageNote[]} | null | undefined, names: string | string[]): string[];
+export function voteCoverageNotes(coverage: {notes?: VoteCoverageNote[]} | null | undefined, names: string | string[], years?: number[] | null): string[];
+export function divisionReadingNotes(d: {jurisdiction?: string; question?: string | null} | null | undefined): string[];
 export function voteTableConfig(person: string | string[], caption?: string): DataTableConfig;
 export function personVoteKeys(name: string, personId?: string, votes?: Record<string,unknown> | null): string[];
 export function personVoteRecords(keys?: string[], votes?: Record<string,unknown> | null, recentData?: object | null): {rows: object[]; recorded: boolean};

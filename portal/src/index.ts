@@ -30,7 +30,7 @@ import { fundingResearchFollowUp, rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay, mentionsOfficePay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { buildPersonOverview, isPersonOverviewCandidate, isPersonOverviewIntent, isPersonRecentCandidate, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, OVERVIEW_CAPS, OVERVIEW_RETRIEVAL_MS, OVERVIEW_FIRST_ANSWER_MS, OVERVIEW_VERIFICATION_MS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
-import { researchModelId, researchProvider, researchReasoning, researchModelOverride, researchModelKey } from './research-model'
+import { researchModelOverride, researchModelKey } from './research-model'
 import { AskDeadline, AskPackCache } from './ask-deadline'
 import { personFollowups } from '../public/ask-person.js'
 import { firstSpeechTurn } from './position-evidence'
@@ -62,7 +62,7 @@ import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
 import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
-import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
+import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML, vicMemberAuthorisationHTML } from '../public/vic-election.js'
 import { vicExpiredPhrase, vicMembersAtExpiry, vicSeatEnded, vicSeatVacantAtExpiry, vicVacantSentence } from '../public/vic-term.js'
 import { vicEndedSeat } from './vic-term-role'
 import { vicElectionPage, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
@@ -132,7 +132,7 @@ import { agenticAskPayload } from './agentic-response'
 import { linkAskSources } from './ask-source-links'
 import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
-import { createOpenRouter } from '@openrouter/ai-sdk-provider'
+import { openRouterModel } from './openrouter'
 import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
@@ -310,6 +310,12 @@ async function modelBudgetSpent(env: Env): Promise<boolean> {
   }
 }
 const MODEL_BUDGET_HEADER = 'x-opax-model-budget'
+/** Ask fails closed when OpenRouter refuses the privacy-flagged route (hub ruling, 16 November 2026). */
+const providerRefusedResponse = (research?: unknown): Response => {
+  const res = json({ error: 'OPAX could not answer just now. Please try again.', ...(research ? { research } : {}) }, 503)
+  res.headers.set('retry-after', '60')
+  return res
+}
 const modelBudgetResponse = (): Response => new Response(JSON.stringify({ error: 'The model call budget for this minute is spent.' }), {
   status: 429, headers: { 'content-type': 'application/json; charset=utf-8', 'retry-after': '60', [MODEL_BUDGET_HEADER]: 'spent' },
 })
@@ -1172,7 +1178,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData, verifiedOnly = false): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData, verifiedOnly = false): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[]; machine_written?: boolean } {
   const resources = Object.fromEntries(Object.entries(verifiedOnly ? {} : answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
@@ -1271,6 +1277,8 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
     ...(scope ? { scope } : {}),
     citations,
     sources: [...recordSources(records.records, citations), ...sources],
+    // The generated answer: a language model wrote it. Steps that swap in excerpts or fixed wording say so.
+    machine_written: true,
   }
 }
 
@@ -1381,7 +1389,7 @@ function evidenceOnlyAnswer(payload: AskPayload, raw: AskAnswer, question: strin
     citations[excerpt.id] = [[end - 1, end]]
   }
   const used = new Set(Object.keys(citations).map(id => id.split('/')[0]))
-  return { ...payload, answer, citations, answer_status: 'evidence_only',
+  return { ...payload, answer, citations, answer_status: 'evidence_only', machine_written: false,
     evidence_excerpts: selected.map(({ resource, text }) => ({ resource, text })),
     sources: sources.map(s => ({ ...s, cited: used.has(s.resource),
       ...(used.has(s.resource) ? { snippet: candidates.get(s.resource)!.text } : {}) })) }
@@ -1601,14 +1609,15 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
       // The sheet is for writing the opening, never for the reader: it leaves
       // with the answer only as the paragraph it produced.
       const { money_facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }
-      if (!money_facts) return timed(json(payload))
+      // A calculated answer is not model-written; the opening paragraph, when there is one, is.
+      if (!money_facts) return timed(json({ ...payload, machine_written: false }))
       const { overview, why } = await moneyOverview(money_facts, env, ctx, request)
       mark('overview')
       // Why an answer has no opening is worth being able to see from outside
       // (a rejected paragraph and an unavailable model read the same to a
       // reader); the paragraph itself, and nothing about the reader, is all
       // that goes in the body.
-      const res = timed(json(overview ? { ...payload, money_overview: overview } : payload))
+      const res = timed(json(overview ? { ...payload, money_overview: overview, machine_written: true } : { ...payload, machine_written: false }))
       res.headers.set('x-opax-overview', why)
       return res
     }
@@ -1949,7 +1958,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   }))
   const sources = reads.flatMap(r => r.status === 'fulfilled' && r.value ? [r.value] : [])
   if (!sources.length && reads.some(r => r.status === 'rejected')) throw new Error('Original speeches unavailable')
-  const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap'}
+  const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap',machine_written:false}
   if (!sources.length) return gap
   const payload: AskPayload = {...gap,sources}
   // A paraphrase must not invent who qualifies. Quote the recorded criteria
@@ -2030,7 +2039,7 @@ function quotedPositionAnswer(payload: AskPayload, query: string, question = '')
       answer += '\n\n'
     }
   }
-  return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',sources:sources.map(source => ({
+  return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',machine_written:false,sources:sources.map(source => ({
     ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quotes.join(' … '),cited:true,
   }))}
 }
@@ -2121,7 +2130,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
         }))]
         text += '- ' + point.text + (dates.length ? ' (' + dates.map(shortDate).join('; ') + ')' : '') + '\n'
       }
-      return {answer:text.trim(),citations:{},scope:payload.scope,answer_status:'uncited',sources:sources.map(source => ({...sourceRows.find(s => s.href === source.href)!,resource:source.id,cited:false}))}
+      return {answer:text.trim(),citations:{},scope:payload.scope,answer_status:'uncited',machine_written:true,sources:sources.map(source => ({...sourceRows.find(s => s.href === source.href)!,resource:source.id,cited:false}))}
     }
     if (!summary?.points.length && drafted.length) {
       await progress?.('status', { phase: 'writing', attempt: 2 })
@@ -4944,9 +4953,9 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const vicRows=p.representation?.some(r=>r.jurisdiction==='vic') ? (await loadElectorates(env).catch(()=>null))?.electorates ?? null : null
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicRows)})
-        meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
+        const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? await loadElectorates(env).catch(()=>null) : null
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null)})
+        meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
         if(meta.jsonLd?.['@type']==='Person') {
@@ -5399,15 +5408,16 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
-  const vicRows = p.representation?.some(r => r.jurisdiction === 'vic') ? (await loadElectorates(env).catch(() => null))?.electorates ?? null : null
-  const vicEnded = vicEndedSeat(p, vicRows)
+  const vicData = p.representation?.some(r => r.jurisdiction === 'vic') ? await loadElectorates(env).catch(() => null) : null
+  const vicRows = vicData?.electorates ?? null
+  const vicEnded = vicEndedSeat(p, vicRows, vicData?.people ?? null)
   if (p.rosterOnly) {
     const description = clip(vicEnded
       ? `${display}, ${vicEnded.member ? `${vicEnded.member.role} ${vicEnded.member.until.phrase}` : `former representative for ${p.rosterOnly.seats.join(', ')}`}${p.party ? ` (${p.party})` : ''}. No speech count for them yet.`
       : `${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
-      prerender: prerenderBlock(display, description),
+      prerender: prerenderBlock(display, description, indexLinks() + vicMemberAuthorisationHTML(p)),
       card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit, ...(p.representation?.some(r => r.jurisdiction === 'vic') ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}) } }
   }
   const federal = p.states.includes('federal')
@@ -6815,7 +6825,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
     plannerTrail: true,
     ...(env.RESEARCH_LOOP === 'route' ? {
       research: createResearch({
-        model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })(researchModelId(env.RESEARCH_LOOP_MODEL_ID), { usage: { include: true }, ...(researchProvider(env.RESEARCH_LOOP_PROVIDER) ? { provider: researchProvider(env.RESEARCH_LOOP_PROVIDER) } : {}), ...(researchReasoning(env.RESEARCH_LOOP_REASONING) ? { extraBody: { reasoning: researchReasoning(env.RESEARCH_LOOP_REASONING) } } : {}) }) : undefined,
+        model: openRouterModel(env),
         steps: env.RESEARCH_LOOP_STEPS, wallMs: researchLimits({ wallMs: env.RESEARCH_LOOP_MS }).wallMs, tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
         dailyBudget: env.RESEARCH_EVAL ? unmeteredResearchBudget : researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
@@ -7044,6 +7054,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   let lastResearch: ResearchPayload | undefined, failureLogged = false
   const trackRun = (run: AgenticPayload) => { lastResearch = run.research; failureLogged ||= !!run.research_failure; onRun?.(run) }
   const routedFallback = async (research?: ResearchPayload) => {
+    // OpenRouter refused the no-train, zero-retention route: a retryable error, never the older engine (which generates on another route).
+    if (research?.failure === 'provider_refused') return providerRefusedResponse(research)
     if (loopRoute && !research?.failure) {
       const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
       research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }

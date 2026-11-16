@@ -57,6 +57,18 @@ authorised, re-fetch and re-run the diff (`/tmp/aph_diff.json` on desktop was th
 session's dry run), apply, then `export_parliamentarians.py` on desktop and copy the JSON in.
 Do it after every by-election, casual vacancy or defection; quarterly otherwise.
 
+## A seat that falls vacant (2026-11-16)
+
+A state member who leaves a seat between roster fetches stays on the electorate
+release's roster for that seat until someone records the vacancy. The reviewed
+path is a vacancy record in `scripts/hubs/electorate-vacancies.json`
+([ELECTORATE_REFERENCE.md](ELECTORATE_REFERENCE.md), vacancy records), not an
+edit to `parliamentarians.json`: the seat then has no representative, the
+person is no longer current in the release, and their person page gives the
+seat with the dates of their service from the parliament's member page. The
+speech roster row is unchanged; it carries no `current` flag for a state
+member.
+
 ## State party corrections (2026-10-03)
 
 Annabelle Cleeland is the Victorian member for Euroa, [The Nationals](https://www.parliament.vic.gov.au/members/annabelle-cleeland/).
