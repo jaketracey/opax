@@ -11,6 +11,7 @@
 import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertExportsCurrent } from './export-freshness.mjs';
 import { buildTodayDeck, loadTodayInputs } from './today-question.mjs';
 
 const mobile = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -28,6 +29,12 @@ if (!portal) {
 const publicRoot = resolve(portal, 'public');
 if (!existsSync(resolve(publicRoot, 'bills', 'index.json')))
   throw new Error(`No bills/index.json under ${publicRoot}`);
+// Never from exports older than main's, such as this branch's own snapshot.
+assertExportsCurrent(publicRoot, [
+  'bills/index.json',
+  'agencies.json',
+  'divisions/index.json',
+]);
 
 const inputs = loadTodayInputs(publicRoot);
 const { deck, records, asOf } = buildTodayDeck(inputs);
