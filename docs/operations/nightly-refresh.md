@@ -815,13 +815,28 @@ script and `gate_hold.txt` are read after the sync and need no restart. `test_ni
 
 **Why a step failed, from the status.** When the daily or periodic refresh reports failed steps, `status.json` carries
 `failed_step_logs`: for each failed step, the end of `pipeline/<step>.log` (`scripts/vm/step_tails.py`; on 16 Nov 2026
-the status said `ipea (rc=1)` and nothing else, and the log is only on the box). The status branch is public, so the
+the status said `ipea (rc=1)` and nothing else, and the log is only on the box). A step's log is written afresh each
+time the step runs, and six step names are used by both the daily and the periodic refresh (`ipea`,
+`contract_suppliers`, `grant_recipients`, `x_suppliers`, `x_interests`, `x_grants`), so the nightly copies the end of
+each named log when the refresh that ran the step returns (`keep_step_logs`, into `pipeline/step-logs-kept`, emptied at
+the start of each night) and the tails are read from the copies: a daily step is `<step>`, a periodic step is
+`periodic_<step>`. A group that fails validation is there too, as `validate_<group>`, with the validator's own
+`FAIL <group>: ...` line. The validator runs before that log is written: a log that cannot be written is a status warning and
+no tail, and the group is published or put back on the validator's verdict alone. `stale_step_logs` carries the same for each step a source refused (exit 3): a periodic group
+stays owed while one of its steps is stale, and the reason is the last line of that log (`frl_instruments` ends
+`FRL HELD: <reason>`). Failed steps are placed first, so when the tails run out of room the stale ones are left out.
+A repair stage the growth guard holds (`senate_backfill` in the backfill warnings) is there as well, cut to the
+exception lines of its log: the guard reports any error in its counters check with one fixed message, and the error
+itself sits above the last traceback.
+The status branch is public, so the
 tail is treated as published: at most 15 lines and 2 KB per step, failed steps only; every value `.env` and
 `nightly.env` give a step (bash sources them in a clean shell and its environment is read, so quotes, comments and
 `export` mean what they mean to the steps) and every credential-named environment variable is replaced, raw and
 percent-encoded; then anything shaped
 like a secret is masked (authorisation headers, `key=value` secrets, URL credentials and query strings, email and IP
-addresses, home directories, long hex or base64 runs). It errs towards masking: a commit hash goes too. Known values
+addresses, home directories (the prefix becomes `~`), internal host names (`<host>`: EC2 `ip-...` and `ec2-...`
+names, anything under `.internal`, `.local`, `.lan` or `.localdomain`, and the box's own name unless it is a plain
+word; the public hosts the steps fetch from are left), long hex or base64 runs). It errs towards masking: a commit hash goes too. Known values
 are also matched as JSON or repr prints them and line by line when they span lines. Residual risk, not covered: a
 value under 6 characters, an all-digit value under 8, and a value a step wraps across two lines or transforms before
 printing. A tail that
