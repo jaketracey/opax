@@ -41,7 +41,7 @@ function validRanges(payload) {
 }
 function hearingAnswer(out) {
   assert.match(out.answer,/The hearing transcript records on hearing day 46/);assert.doesNotMatch(out.answer,/\b(?:Mr|Ms|Mrs|Dr) \p{Lu}\p{L}+ (?:said|asked)\b/u)
-  assert.match(out.answer,/evidence, not findings/)
+  assert.doesNotMatch(out.answer,/evidence, not findings/,'the way out of /api/ask adds the line, not the writer')
   assert.doesNotMatch(out.answer,/startup|founders|fabricated|PDF page|©|CC BY|^-/m)
   assert.ok(out.sources.filter(s=>s.cited&&!s.coverage).every(s=>s.url.startsWith('https://robodebt.royalcommission.gov.au/')))
   validRanges(out)

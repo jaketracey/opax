@@ -7,6 +7,8 @@
  * date inside the title or a raw slug.
  */
 
+import { spokenTranscriptNote, transcriptNoteEnd } from '../public/transcript-note.js'
+
 type Row = Record<string, unknown>
 export interface VoiceSource { title: string; record_title: string; speaker: string | null; date: string | null; type: string; url: string }
 export interface AskOpaxResult {
@@ -217,7 +219,14 @@ export function askOpaxResult(payload: Row, origin: string): AskOpaxResult {
   const gathered = !written && payload.partial === true && sources.length
     ? `I ran out of time to write a full answer, but the research found ${sources.length === 1 ? 'one record' : sources.length + ' records'} on this. They are in the sources for this answer, and Ask in the app can write it up in full.`
     : null
-  const spoken = written ? spokenAnswer(answer) : gathered ?? fallback
+  // The transcript line is the last thing heard, however long the answer: the opening sentences, then the line.
+  // A listener has no source numbers, so the numbered form is spoken as "Some of these sources".
+  const noteAt = transcriptNoteEnd(answer), note = spokenTranscriptNote(answer)
+  const opening = noteAt === null ? spokenAnswer(answer) : answer.slice(0, noteAt).trim() ? spokenAnswer(answer.slice(0, noteAt)) : ''
+  const spoken = written ? [opening, note].filter(Boolean).join(' ') : gathered ?? fallback
   const url = sources[0]?.url ?? origin + '/ask'
-  return { answered, spoken_answer: spoken, answer: written.slice(0, 4_000), sources, source_url: url, source_notice: NOTICE }
+  // A long answer is cut in its prose, never in the transcript line that ends it.
+  const line = noteAt === null ? '' : plainAnswer(answer.slice(noteAt))
+  const text = line && written.length > 4_000 ? `${plainAnswer(answer.slice(0, noteAt!)).slice(0, 4_000 - line.length - 1).trimEnd()}\n${line}` : written.slice(0, 4_000)
+  return { answered, spoken_answer: spoken, answer: text, sources, source_url: url, source_notice: NOTICE }
 }
