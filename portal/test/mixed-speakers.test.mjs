@@ -19,7 +19,7 @@ function renderers(row) {
     photoUrlFor:()=>'/photos/fixture.webp',hasEntityId:()=>true,loadPhotoMap:async()=>{},decorateMetaPortraits:()=>{},
     STATE_NAMES:{federal:'Federal'},PARLIAMENT_NAMES:{federal:'Federal Parliament'},isCommitteeChamber:()=>false,
     GENERIC_DEBATE_RE:/^Questions without Notice$/,titleSubject:r=>r.nameOnly ? '' : r.debate || 'Debate heading',displayTitle:r=>r.debate || 'Debate heading',
-    cleanPassage:s=>s||'',fmtDate:s=>s,partyChipHTML:s=>s,machineLabelHTML:()=>'',excerptNoticeHTML:()=>'',
+    cleanPassage:s=>s||'',fmtDate:s=>s,partyChipHTML:s=>s,machineLabelHTML:()=>'',machineNoticeHTML:()=>'',syncSearchBriefsNotice:()=>{},excerptNoticeHTML:()=>'',
     titleKey:s=>s,searchResultHref:r=>'/doc/'+r.slug,URL,location:{origin:'https://local.test'},metaLabel:()=>'',
     recordTypeLink:()=> 'Speech',highlightHTML:s=>s,searchReadMode:'passages',requestAnimationFrame:()=>{},refreshSearchPassageFolds:()=>{},
     lastSearch:{briefs:{},query:'',filters:{}},$:id=>document.getElementById(id),BILL_SPEECH_BRIEF_NOTE:'Fixture',billStage:s=>s,sourceLineHTML:()=>'',

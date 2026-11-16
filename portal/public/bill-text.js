@@ -39,7 +39,7 @@ export function billTextDefault(manifest, requested) {
     || versions.find(version => version.status === 'complete') || versions[0] || null;
 }
 
-export function mountBillText(container, { bill, requestedVersion = null, open = false, onVersion = () => {} }) {
+export function mountBillText(container, { bill, requestedVersion = null, open = false, onVersion = () => {}, machineNotice = '' }) {
   const aborter = new AbortController();
   let destroyed = false, generation = 0, manifest, selected, loadedId, loadedComplete = false, textAborter, downloadUrl;
   const root = element('section', null, 'ui-section bill-section bill-text-reader'); root.id = 'bill-full-text'; root.setAttribute('aria-labelledby', 'bill-text-title');
@@ -122,6 +122,10 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
         const overview = element('aside', null, 'bill-text-overview');
         overview.setAttribute('aria-label', 'Overview of this version');
         overview.append(element('h3', 'In this version'), element('p', enrichment.brief));
+        // The error notice directly under the model's overview: the Worker's words (machine_notice), else the
+        // page's copy of the same fixed wording.
+        const warning = typeof document.machine_notice === 'string' && document.machine_notice.trim() ? document.machine_notice.trim() : machineNotice;
+        if (warning) overview.append(element('p', warning, 'answer-notice'));
         const topics = element('div', null, 'bill-text-topics');
         for (const topic of Array.isArray(enrichment.topics) ? enrichment.topics : []) {
           if (typeof topic !== 'string' || !/^[a-z]+(?:-[a-z]+)*$/.test(topic)) continue;

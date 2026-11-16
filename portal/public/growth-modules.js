@@ -3,7 +3,7 @@ import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=d28448a137
 import { shortDate } from './format.js';
 import { isOrganisationDonor } from './donor-entity.js?v=3fd3e51b56';
 export { isOrganisationDonor };
-import { sourceLineHTML } from './labels.js?v=ffd32d5678';
+import { sourceLineHTML } from './labels.js?v=bde9ce7b53';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';

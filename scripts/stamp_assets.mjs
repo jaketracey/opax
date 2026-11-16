@@ -205,6 +205,8 @@ export const MODULE_STAMPS = [
   ['app.js', 'transcript-note.js'],
   // The error notice for a streamed or restored answer: the same file the Worker reads its wording from.
   ['app.js', 'machine-notice.js'],
+  // The same wording under stored machine-written text, through the label module every page and the Worker read.
+  ['labels.js', 'machine-notice.js'],
   ['app.js', 'held-back-transcripts.js'],
   ['app.js', 'money-map.js'], ['app.js', 'grant-recipient.js'],
   // /money/explain: the explainer, its stylesheet and the modules it reads.
