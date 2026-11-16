@@ -192,7 +192,7 @@ test('the longest story Instagram allows stays inside the budget on each tick, p
   for (const m of [0, 5, 10]) ticks.push(await h.tick(DAYS[0][1] + m * 60000));
   assert.ok(h.waits() > 0, 'the run waited between status reads');
   // Each tick publishes what finished and leaves the next frame processing: the carousel posts at 22:05, and
-  // the Instagram story, its fourth frame still processing at 22:10, is held for review (Facebook's photos need
+  // the Instagram story, its third frame still processing at 22:10, is held for review (Facebook's photos need
   // no status read).
   assert.deepEqual(h.rows(), { ...everyChannel, instagram_story: 'review_required' });
   assert.equal(h.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram_story'").get().detail, 'Instagram container still processing');
