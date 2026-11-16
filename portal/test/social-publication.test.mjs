@@ -537,3 +537,26 @@ test('the not-ready wait is capped at two, holds only before the last tick, and 
  assert.equal((await h3.run(tick(0))).channels.instagram,'review_required');
  assert.equal(h3.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram'").get().detail,'Provider HTTP 400 code 24/2207008');
 });
+test('a container that reads PUBLISHED after a not-ready refusal is held for review and never published again',async()=>{
+ // Meta answered "not ready" at 22:00 but published anyway: at 22:05 the container reads PUBLISHED.
+ const refused=new Set();
+ const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async(url,init)=>{
+  if(url.endsWith('/789/media_publish')){const id=JSON.parse(init.body).creation_id;if(id==='999'||id==='803'){refused.add(id);return notReady()}}
+  const read=/\/(\d+)\?fields=status_code$/.exec(url);
+  if(read&&refused.has(read[1]))return Response.json({status_code:'PUBLISHED'});
+  return null;
+ });
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const first=await h.run(tick(0));
+ assert.equal(first.channels.instagram,'preparing');assert.equal(first.channels.instagram_story,'preparing');
+ const publishes=h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length;
+ const second=await h.run(tick(5));
+ assert.equal(second.channels.instagram,'review_required');assert.equal(second.channels.instagram_story,'review_required');
+ for(const channel of ['instagram','instagram_story'])assert.deepEqual({...h.sqlite.prepare('SELECT status,detail FROM social_deliveries WHERE channel=?').get(channel)},{status:'review_required',detail:'Instagram container already published'},channel);
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length,publishes,'no publish after the PUBLISHED read');
+ const p=JSON.parse(h.sqlite.prepare("SELECT progress FROM social_deliveries WHERE channel='instagram_story'").get().progress);
+ assert.equal(p.done.length,2);assert.equal(p.container,'803','the journal keeps the frame that went through');
+ assert.equal(h.calls.filter(c=>c.body?.media_type==='STORIES').length,3,'no later frame is started');
+ await h.run(tick(10));
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')).length,publishes,'22:10 tries nothing');
+});

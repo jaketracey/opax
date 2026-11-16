@@ -165,7 +165,10 @@ minutes). When Meta refuses a publish as not ready (`Provider HTTP 400 code
 read `FINISHED`, nothing was published: the delivery keeps the container and stays
 `preparing` for the next tick, at most twice and only before the 22:10 UTC tick. A
 refusal at 22:10, a third one, or one in an operator's run at any other time goes to
-`review_required` as before, so nothing carries into the next day.
+`review_required` as before, so nothing carries into the next day. A container that
+reads `PUBLISHED` when the run comes to publish it (a refused publish went through
+after all) is never published again; Meta's container names no media id, so the
+delivery is held for review as `Instagram container already published`.
 
 ## Source selection and refresh
 
@@ -273,10 +276,15 @@ for a request that got no HTTP answer (or the runtime's "Network connection lost
 DB` messages, `Worker limit (subrequests)` for the Workers subrequest limit, and
 `Unexpected error (<class>)` for anything else. The log line keeps the message.
 
-One run of the publisher makes about 160 to 300 subrequests with every channel on,
-and about 370 at most (a ten-slide story with composition), against the 10,000 per
+One run of the publisher makes about 160 to 270 subrequests with every channel on,
+and about 340 at most (a ten-slide story with composition), against the 10,000 per
 invocation of the Workers Paid plan. `test/social-subrequests.test.mjs` counts them
-through the real scheduled handler and fails above a tenth of the limit.
+through the real scheduled handler and fails above a tenth of the limit. With
+`OPAX_SOCIAL_CPU=1` it also times a 22:00 run with the real rasteriser: on a Mac
+(17 Nov 2026) the ten-slide edition took about 2.5 s of CPU from a cold isolate,
+nearly all of it drawing the 16 cards and slides, against the 30 s a cron on an
+interval under an hour is given (wrangler.jsonc sets no `limits.cpu_ms`). A Mac core
+is not a Worker's, so read that as distance from the limit, not as the bill.
 
 Before publishing, the runner checks that the source page and matching JPEG return
 success. A generic fallback image or mismatched route prevents posting. PNG cards

@@ -178,6 +178,13 @@ export const CONTAINER_WAITS = [10_000, 20_000]
  */
 const NOT_READY = 'Provider HTTP 400 code 9007/2207027'
 const NOT_READY_WAITS = 2
+/**
+ * A container that reads PUBLISHED when the run comes to publish it: a publish Meta answered with an error
+ * went through after all. It is never published again. A container has no field naming the media it became
+ * (Meta's IG Container reference: id, status, status_code, copyright_check_status), so the delivery cannot
+ * be recorded as posted with its id: it is held for review.
+ */
+const ALREADY_PUBLISHED = 'Instagram container already published'
 /** The cron's ticks are 22:00, 22:05 and 22:10 UTC (wrangler.jsonc). True only for a run that starts before the last of them. */
 export function beforeLastTick(now: number): boolean {
   const d = new Date(now)
@@ -362,6 +369,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
             }
             const status = await containerStatus(handle)
             if (status === 'IN_PROGRESS') { waiting = true; break }
+            if (status === 'PUBLISHED') { writeStarted = true; throw new Error(ALREADY_PUBLISHED) }
             if (status !== 'FINISHED') throw new Error('Instagram container not publishable')
             writeStarted = true
             const published = await publishContainer(handle, progress.refused ?? 0)
@@ -439,6 +447,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
           await db.prepare("UPDATE social_deliveries SET status='preparing',updated_at=? WHERE edition_date=? AND channel=?").bind(at, date, channel).run()
           results[channel] = 'preparing'; continue
         }
+        if (status === 'PUBLISHED') { writeStarted = true; throw new Error(ALREADY_PUBLISHED) }
         if (status !== 'FINISHED') throw new Error('Instagram container not publishable')
         writeStarted = true
         const progress = parseProgress(receipt?.progress)
@@ -468,7 +477,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
 }
 
 /** The journal's own reasons, stored as thrown. Meta's numeric error code (digits only, never its message) rides on the status: api() above. */
-const KNOWN_DETAIL = /^(Provider HTTP \d+(?: code \d+(?:\/\d+)?)?|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured|Bluesky (?:session HTTP \d+|API HTTP \d+|account mismatch|did not return a post uri))$/
+const KNOWN_DETAIL = /^(Provider HTTP \d+(?: code \d+(?:\/\d+)?)?|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable|container already published)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured|Bluesky (?:session HTTP \d+|API HTTP \d+|account mismatch|did not return a post uri))$/
 
 /**
  * What the journal records for a failed delivery. A known reason is kept as it is. Any other error is
