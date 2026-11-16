@@ -94,14 +94,15 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   const f=facts();assert.equal(f.length,2);assert.equal(f[0].source.speaker,'Ms Preston');assert.equal(f[1].source.speaker,'Mr Scott')
   assert.equal(api.transcriptListingOnly(f),false,'attributed excerpt facts still reach the writer');assert.equal(f[0].transcript.day,'46');assert.equal(f[0].transcript.page,'P-4899')
   assert.doesNotMatch(f[0].text,/©|CC BY/);assert.match(f[0].source.snippet,/CC BY 4.0/)
-  const out=api.proseFallback(input());assert.match(out.answer,/Ms Preston said on hearing day 46 \(10 March 2023\)/);assert.match(out.answer,/Mr Scott asked/)
+  // This fixture's turns carry no role, so each is quoted with "The transcript records", the date and the page.
+  const out=api.proseFallback(input());assert.match(out.answer,/^The transcript records Ms Preston saying on 10 March 2023 \(page P-4899\): “Income averaging/);assert.match(out.answer,/The transcript records Mr Scott saying on 10 March 2023 \(page P-4933\)/)
   assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
   const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/Ms Preston/);validRanges(grounded)
   assert.match(api.writingPrompt(input()),/question by counsel or a commissioner is a question/)
 })
 test('writer accepts a named, dated transcript summary; an unverified quotation stays as paraphrase',()=>{
-  const raw={answer_decision:'answer',sentences:[{text:'Ms Preston said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1]}]}
+  const raw={answer_decision:'answer',sentences:[{text:'Ms Preston said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1],attributed:true}]}
   const out=api.verifyWrittenAnswer(raw,input());assert.ok(out);assert.match(out.answer,/Ms Preston/);validRanges(out)
   const bad=api.verifyWrittenAnswer({...raw,sentences:[{...raw.sentences[0],text:'Ms Preston said on hearing day 46 that “A fabricated quote.”'}]},input())
   const grounded=api.groundAnswerPayload(bad,input().question)
@@ -130,7 +131,7 @@ test('a transcript document id with an exact quote selects the record for writin
   const model=new MockLanguageModelV4({doGenerate:[reply('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}),reply('answer',{points:[{id:'transcript-document-key',quote:turn.excerpt,claim:'A fabricated finding that must never be accepted.'}]})]})
   const research=api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown()})
   const out=await api.runAgentic(input().question,{...deps,research},async()=>{},40000,undefined,{},named)
-  assert.equal(out.answered,true);assert.match(out.answer,/Ms Preston (?:said|asked) on hearing day 46/)
+  assert.equal(out.answered,true);assert.match(out.answer,/^A witness, Ms Preston, said on 10 March 2023 \(page P-4899\): “/)
   assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/fabricated|CC BY|©|PDF page|OPAX lists/)
   validRanges(out.qualitative)
 })
@@ -139,7 +140,7 @@ test('repeated final grounding of an unsplit transcript record never restores th
   const source={resource:'fact-1',slug:'',kind:'record',title:text,snippet:text,url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',href:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',cited:true}
   const fallback=api.proseFallback({...input(),facts:[{id:1,text,source}]})
   assert.doesNotMatch(fallback.answer,/PDF page|CC BY|transcript page|©/)
-  assert.match(fallback.answer,/Ms Preston said on hearing day 46/)
+  assert.match(fallback.answer,/^The transcript records Ms Preston saying on 10 March 2023 \(page P-4899\)/)
   validRanges(fallback)
   const draft='Invented Witness said “A fabricated quote.” on hearing day 99.'
   let out={answer:draft,answer_decision:'answer',citations:{'fact-1/t/body/0':[[0,Array.from(draft).length]]},sources:[source]}
@@ -185,7 +186,7 @@ test('an unrelated speech selection cannot replace retrieved hearing evidence',a
   ]})
   const research=api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),readRecord:async()=>({text:speech,speaker:'Example Speaker',labels:{kind:'speech'},metadata:{date:'2026-06-15'}})})
   const out=await api.runAgentic(input().question,{origin:'https://offline.test',asset,research,generate:async()=>({text:'{}'}),kb:async()=>({resources:{'speech-999999':{slug:'speech-999999',title:'Example Speaker: income averaging tax debate',fields:{body:{paragraphs:{[id]:{text:speech}}}}}}})},async()=>{},40000,undefined,{},named)
-  assert.equal(out.answered,true);assert.match(out.answer,/Ms Preston .*hearing day 46/)
+  assert.equal(out.answered,true);assert.match(out.answer,/^A witness, Ms Preston, said on 10 March 2023 \(page P-4899\)/)
   assert.doesNotMatch(out.answer,/startup|founders|tax paid|parliamentary speaker/)
   assert.ok(out.qualitative.sources.filter(s=>s.cited&&!s.coverage).every(s=>s.url.startsWith('https://robodebt.royalcommission.gov.au/')))
   validRanges(out.qualitative)

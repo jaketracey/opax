@@ -91,9 +91,10 @@ function transcriptCite(t: RecordRow): ToolCitation {
   const text = t.text_matches as TextHits | undefined
   if (text?.hits.length) {
     const where = (h: TextHits['hits'][number]) => `transcript page ${h.transcript_page ?? '?'} (PDF page ${h.pdf_page})`
-    // A speaker's label leaves the quoted words; the hearing turn names who spoke.
+    // A speaker's label leaves the quoted words; the hearing turn names who spoke and, where the transcript gives
+    // it, their role at the hearing (transcript-answer.ts reads both back as typed facts for the Ask writer).
     const body = text.quote_policy === 'quote'
-      ? text.hits.map(h => `${where(h)}, hearing turn${h.speaker ? ` by ${h.speaker}` : ''}: "${h.excerpt}"`).join(' ')
+      ? text.hits.map(h => `${where(h)}, hearing turn${h.speaker ? ` by ${h.speaker}` : ''}${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`).join(' ')
       : `the words appear on ${text.hits.map(where).join(' and ')}. Not quoted: the publisher's transcript records a non-publication order, a direction not to publish or a pseudonymous witness; read the publisher's edition.`
     return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
   }

@@ -433,7 +433,8 @@ export function createResearch(options: ResearchOptions): Research {
     const squash = (v: string) => v.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim().toLowerCase()
     const factPassages = (): Map<string, Passage> => {
       const { all, tools, coverage } = recordFacts(), out = new Map<string, Passage>()
-      for (const f of all) if (tools.has(f.id) && !coverage.has(f.id) && f.cite.url) out.set(`fact-${f.id}`, { id: `fact-${f.id}`, resource: `fact-${f.id}`, slug: '', title: f.cite.label, text: f.text, url: f.cite.url, kind: f.cite.kind })
+      // A hearing transcript excerpt is never a point's passage: only the writer words it, under the attribution rule.
+      for (const f of all) if (tools.has(f.id) && !coverage.has(f.id) && f.cite.url && !transcriptTurns(f.text).length) out.set(`fact-${f.id}`, { id: `fact-${f.id}`, resource: `fact-${f.id}`, slug: '', title: f.cite.label, text: f.text, url: f.cite.url, kind: f.cite.kind })
       return out
     }
     const citeRecordFacts = (points: unknown[], facts: Map<string, Passage>): unknown[] => points.map(raw => {
@@ -505,18 +506,26 @@ export function createResearch(options: ResearchOptions): Research {
         const selected = facts.filter(f => eligible.some(t => t.id === f.fact.id))
         facts = selected.length ? selected : factLines(eligible.slice(0, 8).map(f => f.id), why)
       }
-      // Transcript tools return record facts, not KB passage IDs. A model may select an exact excerpt
-      // using the transcript's document key. Recover that record selection, never its unchecked claim,
-      // rather than falling through to unrelated Hansard passages. Restricted transcripts have no turns.
-      if (!hearing && !facts.length && Array.isArray(args.points)) {
-        const { all, tools } = recordFacts()
-        const ids = (args.points as unknown[]).flatMap(raw => {
-          const quote = object(raw).quote
-          if (typeof quote !== 'string' || quote.trim().length < 20) return []
-          const matching = all.filter(f => ['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim())))
-          return matching.length ? [matching[0].id] : []
-        })
-        if (ids.length) facts = factLines([...new Set(ids)].slice(0, 15), why)
+      // Transcript tools return record facts, not KB passage IDs. A point that names a transcript excerpt (its fact
+      // id or link) or quotes it selects that record fact, never the point's own wording: the excerpt goes to the
+      // writer with its typed speaker role, hearing date and page, and the point is not used beside it. Restricted
+      // transcripts have no turns.
+      let pointArgs = args.points
+      if (!hearing && Array.isArray(args.points)) {
+        const { all, tools } = recordFacts(), held = new Map<string, Passage>()
+        for (const f of all) if (['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && f.cite.url && transcriptTurns(f.text).length) held.set(`fact-${f.id}`, { id: `fact-${f.id}`, resource: `fact-${f.id}`, slug: '', title: f.cite.label, text: f.text, url: f.cite.url, kind: f.cite.kind })
+        if (held.size) {
+          const ids = new Set<number>()
+          pointArgs = (args.points as unknown[]).filter(raw => {
+            const quote = object(raw).quote
+            const cited = object(citeRecordFacts([raw], held)[0]).id
+            const fact = typeof cited === 'string' && held.has(cited) ? held.get(cited) : typeof quote === 'string' && quote.trim().length >= 20 ? [...held.values()].find(f => transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim()))) : undefined
+            if (fact) ids.add(Number(fact.id.slice(5)))
+            return !fact
+          })
+          const added = [...ids].filter(id => !facts.some(f => f.fact.id === id))
+          if (added.length) facts = [...facts, ...factLines(added, why)].slice(0, 15)
+        }
       }
       const overview = broadTopicOverview(question)
       // One lifecycle per source can support an overview, without crowding out what was said.
@@ -524,7 +533,7 @@ export function createResearch(options: ResearchOptions): Research {
       const tally = stats.answer = emptyTally()
       const { named } = context
       const recordPassages = factPassages(), citable = new Map([...recordPassages, ...passages])
-      const written = focus || hearing ? null : Array.isArray(args.points) && args.points.length ? verifyResearchPoints(citeRecordFacts(overview ? args.points.slice(0,8-facts.length) : args.points, recordPassages), citable, question, named, options.positionQuery, roster, why, tally)
+      const written = focus || hearing ? null : Array.isArray(pointArgs) && pointArgs.length ? verifyResearchPoints(citeRecordFacts(overview ? (pointArgs as unknown[]).slice(0,8-facts.length) : pointArgs as unknown[], recordPassages), citable, question, named, options.positionQuery, roster, why, tally)
         : typeof args.text === 'string' && args.text.trim() ? verifyResearchAnswer({ text: args.text, citations: Array.isArray(args.citations) ? args.citations as AnswerDraft['citations'] : [] }, citable, question, named) : null
       // A chamber named for a cited speaker is the one their passage records (ask-chamber-phrases.ts).
       const points = written && withRecordedChambers(written, id => { const p = passages.get(id); return p ? { chamber: p.chamber ?? null, speaker: p.speaker } : undefined })

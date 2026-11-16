@@ -175,10 +175,55 @@ the publisher.
 
 An excerpt stays inside one speaker's turn. The turn's label ("MS HOGAN-DORAN:") is taken
 out of the quoted words and given as `speaker` ("Ms Hogan-Doran", with the label as printed
-in `speaker_label`), and the citation reads "hearing turn by Ms Hogan-Doran". A turn that
-began on an earlier page has no speaker on that hit. Counts and dates in the tool's text
-use words ("27 September 2022 to 10 March 2023"). In Ask, an answer whose facts are only
-transcript listing rows is given in the tool's own lines rather than rewritten.
+in `speaker_label`), and the citation reads "hearing turn by Ms Hogan-Doran (counsel for a
+party)". A turn that began on an earlier page keeps the speaker who was already speaking.
+In an examination printed as "Q." and "A.", an answer is the sworn witness's (named when
+one witness is sworn, "a witness" when several are) and a question is the examiner's.
+Counts and dates in the tool's text use words ("27 September 2022 to 10 March 2023"). In
+Ask, an answer whose facts are only transcript listing rows is given in the tool's own
+lines rather than rewritten.
+
+#### Speaker role, date and page in Ask, 16 November 2026
+
+Each quoted passage carries `speaker_role` where the transcript itself gives one:
+`commissioner`, `counsel assisting`, `witness` or `counsel for a party`. The role is read
+from the transcript and never from what was said: the cover page's list of appearances
+("Senior Counsel Assisting", "for the Commonwealth"), a "<NAME, SWORN" or "<NAME,
+AFFIRMED" line, and the labels "THE COMMISSIONER" and "THE WITNESS". A name after "for" on
+the cover is a party someone appears for, and takes no role from it; a witness whose title
+is Commissioner is a witness. A speaker the transcript does not place has no role.
+
+Measured on the published text, 16 November 2026. Every quotable page carries the
+transcript's own page number.
+
+| Commission | Quotable transcripts | Quotable pages | Labelled turns given a role | Passages with a speaker | Passages with a role |
+| --- | --- | --- | --- | --- | --- |
+| Robodebt | 29 | 3,138 | 97.8% | 99.6% | 96.7% |
+| NSW Healthcare Funding | 62 | 6,230 | 97.3% | 97.8% | 96.9% |
+| Antisemitism and Social Cohesion | 16 | 1,288 | 87.6% | 99.4% | 86.4% |
+
+The passage columns are one probe word in the middle of each page, the way a search lands
+on it. Five transcripts give a role to fewer than four in five of their labelled turns:
+Antisemitism 27 May, 29 July and 18 August 2026 (the cover names counsel without a role,
+or a witness is not sworn on that day's pages) and NSW Healthcare Funding 27 and 28
+November 2024. Elsewhere the speakers without a role are mostly parties' counsel given
+leave during a hearing and witnesses continuing from an earlier day.
+
+Ask hands the writer each passage as typed facts (speaker role, speaker where named,
+commission, hearing date, page) under one fixed rule (`TRANSCRIPT_ATTRIBUTION_RULE` in
+`portal/src/transcript-answer.ts`): attribute every statement to who said it and where,
+never state evidence, an allegation or a question as fact, do not characterise
+credibility, draw no conclusion the commission has not published as a finding. A passage
+with no role is quoted only, introduced by "the transcript records" with the date and
+page. The source card is built from the typed facts ("Royal Commission into the Robodebt
+Scheme, hearing transcript, 10 March 2023, page P-4899: A witness, Ms ..."), so its date,
+page and role do not depend on the answer's wording. The writer marks each sentence that
+uses a transcript passage as attributed; an unmarked one gets one repair pass and is then
+left out, that sentence only. With no model, the passages are quoted in the same form.
+A research point never words a transcript passage itself: a point that cites or quotes
+one sends that passage to the writer instead. `portal/test/transcript-attribution.test.mjs`
+pins all of this without a model call; the words a live model writes under the rule are
+not pinned by any test.
 
 ### Particular care
 

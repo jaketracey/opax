@@ -40,7 +40,7 @@ function validRanges(payload) {
   }
 }
 function hearingAnswer(out) {
-  assert.match(out.answer,/Ms Preston.*hearing day 46/)
+  assert.match(out.answer,/^A witness, Ms Preston, said on 10 March 2023 \(page P-4899\): “/)
   assert.match(out.answer,/evidence, not findings/)
   assert.doesNotMatch(out.answer,/startup|founders|fabricated|PDF page|©|CC BY|^-/m)
   assert.ok(out.sources.filter(s=>s.cited&&!s.coverage).every(s=>s.url.startsWith('https://robodebt.royalcommission.gov.au/')))
@@ -83,8 +83,8 @@ test('a written quotation not in the transcript loses its quote marks; a verbati
   const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',label:text}}])
   let turn=0
   const model=new MockLanguageModelV4({doGenerate:async()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:[
-    ...(turn++===0?[{text:'Ms Preston said “A fabricated quotation about averaging.”',facts:[1]}]:[]),
-    {text:'Mr Scott asked on hearing day 46 (10 March 2023): “Do you agree that this approach described income averaging?”',facts:[2]},
+    ...(turn++===0?[{text:'Ms Preston said “A fabricated quotation about averaging.”',facts:[1],attributed:true}]:[]),
+    {text:'Mr Scott asked on hearing day 46 (10 March 2023): “Do you agree that this approach described income averaging?”',facts:[2],attributed:true},
   ]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})})
   const stats={rounds:0,tokens:{input:0,output:0},turns:[]}
   const write=api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})

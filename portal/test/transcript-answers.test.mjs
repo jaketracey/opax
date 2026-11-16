@@ -93,7 +93,7 @@ test('quoted CC BY excerpts carry no speaker labels, and a hearing turn supports
     if (h.excerpt === null) continue
     assert.ok(!/(?:^|\s)(?:THE |MR |MS |DR )?[A-Z][A-Za-z'’.-]*[A-Z]:\s/.test(h.excerpt), h.excerpt)
     if (!h.speaker) continue
-    named++; assert.ok(out.citations[i + 1].text.includes(`hearing turn by ${h.speaker}: "${h.excerpt}"`))
+    named++; assert.ok(out.citations[i + 1].text.includes(`hearing turn by ${h.speaker}${h.speaker_role ? ` (${h.speaker_role})` : ''}: "${h.excerpt}"`))
   }
   assert.ok(named > 0)
 })
