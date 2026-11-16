@@ -197,7 +197,14 @@ export const tool: ToolDefinition = {
       const all = byDate(records(c.transcripts))
       const ix = args.words ? await textIndex(env).catch(() => null) : null
       const found = ix && args.words ? await textMatches(env, ix, String(c.id), String(args.words)) : null
-      const hits = all.filter(d => (!args.words || wordsMatch(args.words, [d.title, d.hearing, d.date]) || !!found?.keys.has(String(d.key))))
+      const named = (d: RecordRow) => !!args.words && wordsMatch(args.words, [d.title, d.hearing, d.date])
+      // A word search lists the transcripts whose title or date holds the words first, newest first as before, then
+      // those whose text holds them by fit (textMatches: the page count of the searched word that is on the fewest of
+      // its pages, most first; then the sum of the words' page counts, most first), newest first among equals.
+      // Before, every match was in date order, so a general word returned the latest hearing days whatever was asked.
+      const fit = (d: RecordRow) => found?.fit.get(String(d.key)) ?? { least: 0, pages: 0 }
+      const hits = !args.words ? all : [...all.filter(named), ...all.filter(d => !named(d) && !!found?.keys.has(String(d.key)))
+        .map((d, at) => ({ d, at })).sort((a, b) => fit(b.d).least - fit(a.d).least || fit(b.d).pages - fit(a.d).pages || a.at - b.at).map(o => o.d)]
       const picked = await Promise.all(hits.slice(offset, offset + limit).map(async d => {
         const row = transcriptOut(env, c, d)
         const text = ix && found?.keys.has(String(d.key)) ? await pageHits(env, ix, String(d.key), found.terms) : null
