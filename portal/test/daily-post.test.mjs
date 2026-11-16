@@ -379,7 +379,8 @@ test('the grant story carries the selection, the same recipient and the electora
   assert.equal(ledger.total.amount, '$11,729,541');
   assert.equal(electorate.title, 'Kennedy');
   assert.equal(electorate.value, '$1.45bn');
-  assert.match(electorate.lines[0], /Held by Bob Katter, Katter's Australian Party\. Safe seat, margin 13\.1 at the 2022 election\./);
+  // The margin with its election and its class in words, never as stored ("fairly_safe"); the holder's own party is not repeated.
+  assert.match(electorate.lines[0], /Held by Bob Katter, Katter's Australian Party\. At the 2022 election it was a safe seat, margin 13\.1%\./);
   assert.equal(source.url, 'opax.com.au/money/grants/federal/recipient/abn:97694995462?award=GA34203');
   assert.match(post.caption, /\n\nPhotos: Kgbo, CC BY-SA 4\.0, via Wikimedia Commons\.\n\nhttps:\/\/opax\.com\.au\//, 'the credit sits before the URL');
   const thin = await composeDailyPost('2026-09-14', grantSources({ extras: false }), 'grant');

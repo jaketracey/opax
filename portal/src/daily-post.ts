@@ -361,15 +361,48 @@ async function recipientShard(sources: DailyPostSources, graph: GrantsGraph | nu
   return shard?.[fileKey] ?? null
 }
 
+// The seat classes in the grants export, in words; a class not listed is left out rather than shown as its code.
+const MARGIN_CLASS: Record<string, string> = { marginal: 'marginal', fairly_safe: 'fairly safe', safe: 'safe' }
+// Party codes in the grants export, in words. A code not listed here, or a party history ("LP; IND LIB from Oct
+// 1977"), is left out rather than shown as it is stored.
+const PARTY_CODES: Record<string, string> = { 'A.L.P.': 'Labor', ALP: 'Labor', LP: 'Liberal', LIB: 'Liberal', NAT: 'Nationals', NP: 'Nationals',
+  NATS: 'Nationals', LNP: 'LNP', KAP: "Katter's Australian Party", GRN: 'Greens', UAP: 'United Australia Party', IND: 'Independent', CA: 'Centre Alliance' }
+export function partyName(raw: string | null | undefined): string {
+  const text = prettyParty(raw)
+  if (PARTY_CODES[text]) return PARTY_CODES[text]
+  return !text || text.includes(';') || /^[A-Z][A-Z.\- ]*$/.test(text) ? '' : text
+}
+
+/**
+ * Who holds the seat now: the member whose term has no end, latest first. The export lists every member the seat
+ * has had, oldest first, and an old member's end is often missing, so the first entry can be a member of 1901.
+ */
+export function seatHolder(mps: [string, string | null, string | null, string | null][] | null | undefined): { name: string; party: string } | null {
+  const open = (mps ?? []).filter(m => m?.[0] && !m[3]).sort((a, b) => (b[2] ?? '').localeCompare(a[2] ?? ''))[0]
+  return open ? { name: open[0], party: partyName(open[1]) } : null
+}
+
+/**
+ * The seat's margin, always with the election it is from ("At the 2022 election it was a fairly safe Liberal seat,
+ * margin 3.59%."), so a margin from an earlier parliament never reads as today's. The party is named only when it
+ * is not the holder's own. '' when there is no margin.
+ */
+export function seatMargin(margin: Record<string, [number, string, string]> | null | undefined, heldBy = ''): string {
+  const year = Object.keys(margin ?? {}).filter(y => /^\d{4}$/.test(y)).sort().at(-1)
+  const [pct, party, kind] = (year && margin?.[year]) || []
+  if (!year || typeof pct !== 'number' || !Number.isFinite(pct)) return ''
+  const named = partyName(party)
+  const words = [MARGIN_CLASS[kind ?? ''], named && named !== heldBy ? named : ''].filter(Boolean).join(' ')
+  return words ? ` At the ${year} election it was ${/^[aeiou]/i.test(words) ? 'an' : 'a'} ${words} seat, margin ${pct}%.` : ` At the ${year} election the margin was ${pct}%.`
+}
+
 /** The electorate slide: the seat's federal awards in the record, and who holds it. */
 function electorateSlide(kicker: string, graph: GrantsGraph | null, name: string | null | undefined, line?: string): StorySlide | null {
   if (!name) return null
   const seat = graph?.electorates?.find(e => e.n === name)
   if (!seat || !Number.isFinite(seat.t) || !seat.t || !seat.c) return null
-  const mp = seat.mps?.[0]
-  const years = Object.keys(seat.margin ?? {}).sort()
-  const latest = years.length ? seat.margin![years[years.length - 1]] : null
-  const held = mp?.[0] ? `Held by ${mp[0]}${mp[1] ? `, ${prettyParty(mp[1])}` : ''}.${latest ? ` ${sentenceCase(latest[2])} seat, margin ${latest[0]} at the ${years[years.length - 1]} election.` : ''}` : ''
+  const mp = seatHolder(seat.mps)
+  const held = mp ? `Held by ${mp.name}${mp.party ? `, ${mp.party}` : ''}.${seatMargin(seat.margin, mp.party)}` : ''
   const label = `in federal grant awards in the record: ${formatNumber(seat.c)} awards${seat.r ? ` to ${formatNumber(seat.r)} recipients` : ''}`
   return { type: 'number', kicker, title: name, lines: [line ?? held].filter(Boolean), value: shortMoney(seat.t as number), label,
     alt: `${kicker}: ${name}, ${shortMoney(seat.t as number)} ${label}. ${line ?? held}`.trim() }
