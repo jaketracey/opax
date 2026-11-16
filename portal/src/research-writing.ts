@@ -17,7 +17,7 @@ import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './researc
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
-import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, type TranscriptTurn } from './transcript-answer'
+import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, type TranscriptTurn } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
@@ -327,7 +327,9 @@ function transcriptLines(input: WritingInput): WrittenSentence[] | null {
     const t = f.transcript!, verb = /\?\s*$/.test(t.excerpt) ? 'asked' : 'said'
     return { text: `${t.speaker ? `${t.speaker} ${verb}` : 'The hearing transcript records'}${t.day ? ` on hearing day ${t.day}` : ''}${t.date ? ` (${t.date})` : ''}: “${shortTranscriptQuote(t.excerpt, input.question)}”`, facts: [f.id] }
   })
-  return [...lines, { text: TRANSCRIPT_NOTE, facts: turns.map(f => f.id) }]
+  // The evidence, not findings line is not written here: the way out of /api/ask adds it, once, in the form the
+  // final cited sources call for (public/transcript-note.js).
+  return lines
 }
 /** Final-boundary and provider-failure fallbacks also accept unsplit record facts. Keep the same
  * attributed-turn representation there, rather than rendering the original tool block as a record. */

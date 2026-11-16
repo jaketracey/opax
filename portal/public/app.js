@@ -88,9 +88,12 @@ let heldBackHelpers;
 const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=1ac63b9250').then(module => { heldBackHelpers = module; }));
 
 let saDisplayHelpers;
+let transcriptNoteHelpers;
 let saFullTextFlag = 'false';
 const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
+  // The transcript line for a conversation saved before every answer citing a hearing transcript carried it.
+  import('/transcript-note.js?v=c3fa52c9c1').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]));
 
@@ -12017,6 +12020,11 @@ function renderChatThread({ landed = false, rise = false } = {}) {
     if (msg.role === 'user') return msg;
     const safe = saDisplayHelpers.saDisplayPayload({...msg, answer:msg.text}, saFullTextFlag);
     return {...msg, ...safe, text:safe.answer};
+  });
+  if (transcriptNoteHelpers) chatThread = chatThread.map(msg => {
+    if (msg.role !== 'answer') return msg;
+    const text = transcriptNoteHelpers.withTranscriptNote({answer:msg.text, sources:msg.sources, answered:msg.answered}, true).answer;
+    return text === msg.text ? msg : {...msg, text};
   });
   syncAskChatViewport();
   renderChatScope();

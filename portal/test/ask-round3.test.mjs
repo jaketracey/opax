@@ -95,7 +95,7 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   assert.equal(api.transcriptListingOnly(f),false,'attributed excerpt facts still reach the writer');assert.equal(f[0].transcript.day,'46');assert.equal(f[0].transcript.page,'P-4899')
   assert.doesNotMatch(f[0].text,/©|CC BY/);assert.match(f[0].source.snippet,/CC BY 4.0/)
   const out=api.proseFallback(input());assert.match(out.answer,/Ms Quellworth said on hearing day 46 \(10 March 2023\)/);assert.match(out.answer,/Mr Vanterpool asked/)
-  assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
+  assert.doesNotMatch(out.answer,/evidence, not findings/,'the way out of /api/ask adds the line, not the writer');assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
   const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/Ms Quellworth/);validRanges(grounded)
   assert.match(api.writingPrompt(input()),/names no speaker is attributed to the transcript, never to a named person/)
@@ -131,7 +131,7 @@ test('a transcript document id with an exact quote selects the record for writin
   const research=api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown()})
   const out=await api.runAgentic(input().question,{...deps,research},async()=>{},40000,undefined,{},named)
   assert.equal(out.answered,true);assert.match(out.answer,/^The hearing transcript records on hearing day 46/);assert.doesNotMatch(out.answer,/\b(?:Mr|Ms|Mrs|Dr) \p{Lu}\p{L}+ (?:said|asked)\b/u)
-  assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/fabricated|CC BY|©|PDF page|OPAX lists/)
+  assert.doesNotMatch(out.answer,/evidence, not findings/,'the way out of /api/ask adds the line, not the writer');assert.doesNotMatch(out.answer,/fabricated|CC BY|©|PDF page|OPAX lists/)
   validRanges(out.qualitative)
 })
 

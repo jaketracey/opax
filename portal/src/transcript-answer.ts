@@ -5,7 +5,8 @@
  * a listing row, the transcript tool's own lines are the answer. Excerpts from transcript text still go to
  * the writer, which quotes or paraphrases them. */
 import {sentenceSpans} from './sentence-bounds.mjs'
-export const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
+import {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd} from '../public/transcript-note.js'
+export {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd}
 /** Evidence before an inquiry is a different record from parliamentary discussion about its topic. */
 export function hearingEvidenceQuestion(question: string): boolean {
   // Reader text is bounded before tokenisation. Inspect a fixed word window rather than backtracking
@@ -60,18 +61,36 @@ export function transcriptListingOnly(facts: { text: string, coverage?: boolean 
   return rows.length > 0 && rows.every(f => f.text.includes(TRANSCRIPT_LABEL) && !EXCERPT.test(f.text))
 }
 
-/** The line an answer gets when every source it cites is a hearing transcript, so a paraphrase of what a witness
- * or counsel said is never read as a commission's finding. Listing answers already carry the label in their
- * count line and are left alone. */
-export const TRANSCRIPT_NOTE = 'These are from hearing transcripts: evidence, not findings.'
-
-type NoteSource = { snippet?: unknown, title?: unknown, cited?: unknown, coverage?: unknown }
-
-export function withTranscriptNote<T extends Record<string, unknown>>(payload: T): T {
-  const answer = typeof payload.answer === 'string' ? payload.answer : ''
-  if (!answer.trim() || payload.answered === false || (payload.answer_decision != null && payload.answer_decision !== 'answer')) return payload
-  if (/\bevidence,? not findings\b/i.test(answer)) return payload
-  const cited = (Array.isArray(payload.sources) ? payload.sources as NoteSource[] : []).filter(s => s.cited === true && !s.coverage)
-  if (!cited.length || !cited.every(s => `${s.snippet ?? ''} ${s.title ?? ''}`.includes(TRANSCRIPT_LABEL))) return payload
-  return { ...payload, answer: `${answer.trimEnd()}\n\n${TRANSCRIPT_NOTE}` }
+/** Every /api/ask reply ends with the fixed transcript line when it cites a hearing transcript
+ * (public/transcript-note.js): the research loop and the older engine, blocking and streamed, and an answer cached
+ * before the rule, which gains the line as it is served. Anything that cannot be read goes out as it came. */
+export async function transcriptNoteResponse(response: Response): Promise<Response> {
+  if (!response.ok || !response.body) return response
+  const type = response.headers.get('content-type') ?? ''
+  const headers = () => { const h = new Headers(response.headers); h.delete('content-length'); h.delete('etag'); return h }
+  if (type.includes('application/json')) {
+    try {
+      const body = await response.clone().text(), payload: unknown = JSON.parse(body), noted = withTranscriptNote(payload)
+      return noted === payload ? response : new Response(JSON.stringify(noted), { status: response.status, headers: headers() })
+    } catch { return response }
+  }
+  if (!type.includes('text/event-stream')) return response
+  // Frames pass through as they complete; only `done`, which carries the whole payload, is rewritten.
+  const decoder = new TextDecoder(), encoder = new TextEncoder()
+  let held = ''
+  const frame = (value: string) => /^event: done\r?$/m.test(value) ? value.replace(/^data: (.+?)(\r?)$/m, (line, data: string, cr: string) => {
+    try { const payload: unknown = JSON.parse(data), noted = withTranscriptNote(payload); return noted === payload ? line : 'data: ' + JSON.stringify(noted) + cr }
+    catch { return line }
+  }) : value
+  const pass = (flush: boolean) => {
+    let out = ''
+    for (let m; (m = /\r?\n\r?\n/.exec(held));) { out += frame(held.slice(0, m.index)) + m[0]; held = held.slice(m.index + m[0].length) }
+    if (flush) { out += frame(held); held = '' }
+    return out
+  }
+  const stream = response.body.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
+    transform(chunk, controller) { held += decoder.decode(chunk, { stream: true }); const out = pass(false); if (out) controller.enqueue(encoder.encode(out)) },
+    flush(controller) { held += decoder.decode(); const out = pass(true); if (out) controller.enqueue(encoder.encode(out)) },
+  }))
+  return new Response(stream, { status: response.status, headers: response.headers })
 }
