@@ -27,6 +27,7 @@ export const CAPABILITIES: Record<SourceUse, Capability[]>
 export const KB_GENERATION_NEVER: string[]
 export const REASONS: WithheldReason[]
 export const MODES: WithheldMode[]
+export const CORE_SOURCES: string[]
 export const NOTICE: string
 export let POLICY: SourcePolicy
 export function loadWithheld(raw?: string | null): SourcePolicy

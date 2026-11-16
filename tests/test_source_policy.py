@@ -200,7 +200,13 @@ def test_the_digest_names_nothing_and_changes_with_the_list():
 
 class FakeKb:
     def __init__(self, catalog=()):
-        self.pushed, self.deleted, self.pages = [], [], list(catalog)
+        self.pushed, self.deleted, self.read, self.pages, self.asked = [], [], [], list(catalog), None
+
+    def get_resource_by_slug(self, slug, **params):
+        self.read.append(slug)
+        if slug == "speech-gone":
+            raise arag.AragError(404, "url", "not found")
+        return {"slug": slug}
 
     def create_resource(self, body, max_retries=0):
         self.pushed.append(body["slug"])
@@ -275,28 +281,53 @@ def test_sync_does_not_push_queue_or_mention_a_withheld_resource(capsys, caplog)
     quiet(capsys, caplog)
 
 
-def test_purge_deletes_withheld_documents_and_every_resource_of_a_withheld_source(capsys, caplog):
+def test_purge_is_a_dry_run_unless_applied_and_never_deletes_by_source(capsys, caplog):
     p = policy(withheld=[entry(document=FAKE["document"]), entry(document="speech-gone"), entry(document="a-commission/day-1"),
                          entry(document="integrity-report-fake-424242"), entry("legal_order", source=FAKE["source"])])
-    pages = lambda: [{"resources": {"r1": {"slug": "speech-7"}, "r2": {"slug": "speech-8"}}, "fulltext": {"next_page": True}},  # noqa: E731
-                     {"resources": {"r3": {"slug": "speech-9"}}, "fulltext": {"next_page": False}}]
-    dry = FakeKb(catalog=pages())
-    # The dry run lists what it would delete, for the operator's own terminal, and deletes nothing.
-    assert arag_sync.purge_withheld(dry, p, dry_run=True) == {"would_delete": ["integrity-report-fake-424242", "speech-424242", "speech-7", "speech-8", "speech-9", "speech-gone"]}
-    assert dry.deleted == []
-    kb = FakeKb(catalog=pages())
-    assert arag_sync.purge_withheld(kb, p) == {"deleted": 5, "absent": 1}
-    assert kb.deleted == ["integrity-report-fake-424242", "speech-424242", "speech-7", "speech-8", "speech-9"]
-    assert kb.asked["filter_expression"]["resource"]["or"] == [{"prop": "label", "labelset": "source", "label": FAKE["source"]}, {"prop": "origin_source", "id": FAKE["source"]}]
-    assert arag_sync.purge_withheld(FakeKb(), policy()) == {"deleted": 0, "absent": 0}
-    quiet(capsys, caplog)  # the function itself prints nothing; only the operator's command prints its return value
+    dry = FakeKb()
+    assert arag_sync.purge_withheld(dry, p) == {"would_delete": 2, "absent": 1, "source_entries_not_purged": 1, "dry_run": True}
+    assert dry.deleted == [] and dry.asked is None, "a dry run deletes nothing and never lists a source's resources"
+    kb = FakeKb()
+    assert arag_sync.purge_withheld(kb, p, apply=True) == {"deleted": 2, "absent": 1, "source_entries_not_purged": 1}
+    # Only documents named one by one: the source entry is counted, not purged, and the catalogue is never asked.
+    assert kb.deleted == ["integrity-report-fake-424242", "speech-424242"] and kb.asked is None
+    assert arag_sync.purge_withheld(FakeKb(), policy(), apply=True) == {"deleted": 0, "absent": 0, "source_entries_not_purged": 0}
+    quiet(capsys, caplog)
 
 
-def test_the_nightly_sync_purges_silently_and_only_the_operators_command_prints(monkeypatch, capsys):
+def test_purge_refuses_above_the_ceiling_before_touching_anything(capsys, caplog):
+    many = policy(withheld=[entry(document=f"speech-{9000 + i}") for i in range(arag_sync.PURGE_CEILING + 1)])
+    for apply in (False, True):
+        kb = FakeKb()
+        with pytest.raises(arag_sync.PurgeRefused) as refused:
+            arag_sync.purge_withheld(kb, many, apply=apply)
+        assert kb.deleted == [] and kb.read == []
+        assert str(refused.value) == "purge refused: 26 documents is above the ceiling of 25; nothing was deleted (--purge-ceiling 26 to allow it)"
+        assert "speech-9" not in str(refused.value)
+    kb = FakeKb()
+    assert arag_sync.purge_withheld(kb, many, apply=True, ceiling=26)["deleted"] == 26
+    quiet(capsys, caplog)
+
+
+@pytest.mark.parametrize("core", ["opax-parli", "open-australian-legal-corpus", "openaustralia"])
+def test_a_core_source_cannot_be_withheld_as_a_whole(core):
+    """opax-parli is the origin id of every speech: one entry would close, and once could have deleted, Hansard."""
+    assert core in sp.CORE_SOURCES
+    with pytest.raises(sp.PolicyError, match="core source"):
+        policy(withheld=[entry(source=core)])
+    assert policy(withheld=[entry(document="speech-1")]).withheld(sources=[core], documents=["speech-1"]) == {"mode": "list_only"}
+
+
+def test_a_sync_never_purges_and_the_command_is_explicit_dry_by_default_and_prints_counts_only():
     source = (ROOT / "parli" / "ingest" / "arag_sync.py").read_text()
-    assert "print(json.dumps(purge_withheld(KbClient(cfg), policy, dry_run=args.dry_run)))" in source
-    assert "    if kb is not None and (policy.withheld_sources or policy.withheld_documents):\n        purge_withheld(kb, policy)\n" in source
-    assert "WITHHELD" not in source and "[withheld]" not in source
+    assert source.count("purge_withheld(") == 2, "its definition and the operator's command; no call from any sync path"
+    assert "print(json.dumps(purge_withheld(KbClient(cfg), source_policy.load(), apply=args.apply, ceiling=args.purge_ceiling)))" in source
+    assert 'parser.add_argument("--apply", action="store_true"' in source
+    main = source[source.index("def main()"):]
+    assert main.index("if args.purge_withheld:") < main.index("sqlite3.connect") and "return" in main[main.index("if args.purge_withheld:"):main.index("if args.apply:")]
+    assert "WITHHELD" not in source and "[withheld]" not in source and "would_delete\": sorted" not in source
+    for script in list((ROOT / "scripts").glob("**/*.sh")) + list((ROOT / "scripts").glob("**/*.py")):
+        assert "purge-withheld" not in script.read_text(errors="ignore"), f"{script.name} must not run the purge"
 
 
 # ---- transcript full text: a committed output, built from the tiers alone

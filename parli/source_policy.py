@@ -63,6 +63,9 @@ CAPABILITIES = {
 KB_GENERATION_NEVER = ("vic-major-infrastructure",)
 REASONS = ("publisher_request", "legal_order", "withdrawn", "amended_pending")
 MODES = ("list_only", "hide")
+# Sources that can never be withheld as a whole: each is the origin or label of a core corpus, so one entry
+# would close (and, before the purge guard, delete) most of the record. Their documents are withheld one by one.
+CORE_SOURCES = ("opax-parli", "open-australian-legal-corpus", "openaustralia")
 # The only wording a reader sees for a withheld item, whatever the reason.
 NOTICE = "Not available on OPAX. Open the publisher's copy."
 PRIVATE_SCHEMA = 1
@@ -134,6 +137,8 @@ class Policy:
             ident = entry[kind]
             if not isinstance(ident, str) or not (SOURCE_ID if kind == "source" else DOCUMENT_ID).match(ident):
                 raise PolicyError("a withheld id is not well formed")
+            if kind == "source" and ident in CORE_SOURCES:
+                raise PolicyError("a core source cannot be withheld as a whole; list its documents")
             held = self._sources if kind == "source" else self._documents
             if ident in held:
                 raise PolicyError("a withheld id is listed twice")

@@ -26,6 +26,9 @@ export const KB_GENERATION_NEVER = ['vic-major-infrastructure']
 export const REASONS = ['publisher_request', 'legal_order', 'withdrawn', 'amended_pending']
 /** How a withheld item is shown: one neutral line with the publisher's link, or not at all. */
 export const MODES = ['list_only', 'hide']
+/** Sources that can never be withheld as a whole: each is the origin or label of a core corpus, so one entry would
+ * close most of the record. Their documents are withheld one by one. */
+export const CORE_SOURCES = ['opax-parli', 'open-australian-legal-corpus', 'openaustralia']
 /** The only wording a reader sees for a withheld item, whatever the reason. The reason is never public. */
 export const NOTICE = "Not available on OPAX. Open the publisher's copy."
 const SOURCE_ID = /^[a-z0-9][a-z0-9._-]{0,199}$/
@@ -69,6 +72,7 @@ export function sourcePolicy(data = file, withheldEntries = []) {
     if (!REASONS.includes(entry.reason) || !realDate(entry.date) || ('mode' in entry && !MODES.includes(entry.mode))) fail('a withheld entry needs a known reason class, an ISO date and a known mode')
     const kind = 'source' in entry ? 'source' : 'document', id = entry[kind], held = kind === 'source' ? sources : documents
     if (typeof id !== 'string' || !(kind === 'source' ? SOURCE_ID : DOCUMENT_ID).test(id)) fail('a withheld id is not well formed')
+    if (kind === 'source' && CORE_SOURCES.includes(id)) fail('a core source cannot be withheld as a whole; list its documents')
     if (held.has(id)) fail('a withheld id is listed twice')
     // Only the mode leaves this loader. The reason and date stay in the private store.
     held.set(id, { mode: entry.mode ?? 'list_only' })

@@ -103,7 +103,7 @@ changes static files; and the refresh box file is what stops the item being push
 | Consumer | Where | What it does |
 | --- | --- | --- |
 | Knowledge base pushes (every path) | `KbClient.create_resource`, `patch_resource_by_slug` in `parli/arag.py` | Skips a withheld item without a word and returns an ordinary result, so no log or error marks it |
-| Knowledge base sync | `parli/ingest/arag_sync.py` | Deletes what the list names before any push, silently; `--purge-withheld` is the operator's command |
+| Knowledge base sync | `parli/ingest/arag_sync.py` | Never pushes a withheld item. Deleting one is the operator's explicit `--purge-withheld --apply`: dry by default, documents only, with a ceiling |
 | Published files at deploy | `scripts/apply_source_policy.mjs`, run by `scripts/withheld_overlay.sh` in the Deploy workflow | Rewrites royal commission records, transcript text, and integrity, agency and annual report data; never committed |
 | Report records and the search catalogue | `scripts/build_report_catalog.mjs`, `scripts/build_search_catalog.mjs` | The neutral row, or no row |
 | Search, Ask retrieval, the resource API, MCP `read_record`, corpus tools | `portal/src/source-policy.ts`, called by `kbFetch`, `corpusKb`, `apiUnifiedSearch` | A query excludes the item; a response loses it; a read is the neutral row or "not found" |
@@ -130,9 +130,11 @@ A takedown is **not done until the epoch bump and the deploy have both run and b
    * `gh secret set OPAX_WITHHELD_JSON < withheld.json`
    * `npx wrangler secret put OPAX_WITHHELD_JSON < withheld.json` in `enrich/`
    * copy the file to the refresh box as `~/.config/opax/withheld.json`, `chmod 600`
-2. On the refresh box: `uv run python -m parli.ingest.arag_sync --purge-withheld --dry-run`,
-   read what it would delete, then run it without `--dry-run`. This deletes the document, or
-   every resource of the source, from the knowledge base. Do not paste its output anywhere.
+2. On the refresh box: `uv run python -m parli.ingest.arag_sync --purge-withheld`. This is a
+   dry run: it prints how many of the listed documents the knowledge base holds and deletes
+   nothing. Check the count is the number you expect, then add `--apply`. The purge is never
+   part of a sync, deletes only documents the list names one by one (never a whole source), and
+   refuses more than 25 at once unless you pass `--purge-ceiling`. It prints counts only.
 3. **Bump the cache epoch.** `python3 scripts/bump_cache_epoch.py <date>-refresh` (a neutral
    name), commit ("Cache epoch") and merge. The new epoch retires OPAX's cached answers,
    searches, record bodies and share cards, and starts an IndexNow run for the pages that changed.
@@ -190,8 +192,8 @@ printf '{"schema":1,"withheld":[{"document":"%s","reason":"publisher_request","d
 (cd portal && time npx wrangler secret put OPAX_WITHHELD_JSON --env staging < /tmp/withheld-staging.json)
 # 4. confirm it is gone (the three commands of step 2, and read_record); time each
 # 5. purge: dry run, then real, with the same store on the refresh box for this command only
-time OPAX_WITHHELD_JSON="$(cat /tmp/withheld-staging.json)" uv run python -m parli.ingest.arag_sync --purge-withheld --dry-run   # must list exactly $SLUG
-time OPAX_WITHHELD_JSON="$(cat /tmp/withheld-staging.json)" uv run python -m parli.ingest.arag_sync --purge-withheld             # {"deleted": 1, "absent": 0}
+time OPAX_WITHHELD_JSON="$(cat /tmp/withheld-staging.json)" uv run python -m parli.ingest.arag_sync --purge-withheld           # dry run: {"would_delete": 1, "absent": 0, ...}
+time OPAX_WITHHELD_JSON="$(cat /tmp/withheld-staging.json)" uv run python -m parli.ingest.arag_sync --purge-withheld --apply   # {"deleted": 1, "absent": 0, ...}
 uv run python - <<PY
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 load_dotenv(); kb = KbClient(AragConfig.from_env())
