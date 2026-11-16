@@ -882,6 +882,17 @@ text = json.dumps(s["stale_step_logs"])
 assert "Qp4Lm8Rs2Vt6Hd5Jk9Nx" not in text and sys.argv[2] not in text, text
 PYEOF
 check "the frl group stays owed after a stale night" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; g=json.load(sys.stdin)[\"periodic_state\"][\"groups\"][\"frl\"]; assert \"due\" in g and \"last_success\" not in g, g'"
+new_sandbox s3i
+# the growth guard held the Senate stage: the log left from that night ends in two tracebacks, and the first one's
+# last line is the error the guard's fixed message hides
+{ for i in $(seq 1 30); do echo "Senate backfill 2014-02-$i: +3 rows; $i/10 days"; done
+  echo "config: token=Qp4Lm8Rs2Vt6Hd5Jk9Nx"
+  printf 'Traceback (most recent call last):\n  File "%s/opax/parli/ingest/backfill_guard.py", line 287, in check\n    raise ValueError(\x27invalid counters\x27)\nValueError: invalid counters\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n' "$HOME"
+  for f in 1 2 3 4 5 6; do printf '  File "%s/opax/parli/ingest/senate_backfill.py", line %s, in run\n    guard.check(kb, \x27senate\x27)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^\n' "$HOME" "$f"; done
+  echo "parli.ingest.backfill_guard.Stopped: KB counters unavailable or growth ledger invalid; repair held closed"
+} > "$HOME/.cache/autoresearch/pipeline/senate_backfill.log"
+FAKE_MODE=backfill nightly
+check "a held repair stage: only the exception lines of its log are published, so the error behind the guard's message is there" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); l=s[\"stale_step_logs\"][\"senate_backfill\"]; assert l == [\"ValueError: invalid counters\", \"parli.ingest.backfill_guard.Stopped: KB counters unavailable or growth ledger invalid; repair held closed\"], l; assert \"failed_step_logs\" not in s and s[\"status\"] == \"ok\", s'"
 
 echo "== 4. a bill loses its brief: bills reverted, the rest pushes, status failed"
 new_sandbox s4

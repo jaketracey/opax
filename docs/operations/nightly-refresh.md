@@ -824,6 +824,9 @@ the start of each night) and the tails are read from the copies: a daily step is
 `FAIL <group>: ...` line. `stale_step_logs` carries the same for each step a source refused (exit 3): a periodic group
 stays owed while one of its steps is stale, and the reason is the last line of that log (`frl_instruments` ends
 `FRL HELD: <reason>`). Failed steps are placed first, so when the tails run out of room the stale ones are left out.
+A repair stage the growth guard holds (`senate_backfill` in the backfill warnings) is there as well, cut to the
+exception lines of its log: the guard reports any error in its counters check with one fixed message, and the error
+itself sits above the last traceback.
 The status branch is public, so the
 tail is treated as published: at most 15 lines and 2 KB per step, failed steps only; every value `.env` and
 `nightly.env` give a step (bash sources them in a clean shell and its environment is read, so quotes, comments and

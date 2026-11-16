@@ -186,14 +186,23 @@ gitn() { timeout "${OPAX_GIT_TIMEOUT:-300}" git "$@"; }
 # group ran afterwards (while a group is owed, that is most nights). So the copy is taken when the refresh that
 # ran the step returns, and the periodic steps are filed as periodic_<step>. Only the last 128 KiB is kept: the
 # tail reads the last 64 KiB and drops a first line that may start mid-line, as it would on the log itself.
+# KIND errors is for a repair stage the growth guard holds (published with the stale steps): only the exception
+# lines of its log are kept, the "Name: message" lines of a traceback. The guard reports any error in its counters
+# check as "KB counters unavailable or growth ledger invalid", and the error itself is the line before the last
+# traceback, too far up for a 15-line tail. While backfill.STOP stands the stage does not run, so its log is
+# still the one from the night the guard stopped it.
 keep_step_logs() {
   local kind=$1 prefix=$2 name; shift 2
   (umask 077; mkdir -p "$STEP_LOG_KEEP") 2>/dev/null || true
   for name in "$@"; do
     [[ "$name" =~ ^[A-Za-z0-9_]{1,48}$ ]] || continue
-    if [ "$kind" = stale ]; then STALE_STEP_NAMES+=("$prefix$name"); else FAILED_STEP_NAMES+=("$prefix$name"); fi
+    if [ "$kind" = failed ]; then FAILED_STEP_NAMES+=("$prefix$name"); else STALE_STEP_NAMES+=("$prefix$name"); fi
     [ -f "$PIPE/$name.log" ] && [ ! -L "$PIPE/$name.log" ] || continue
-    (umask 077; tail -c 131072 "$PIPE/$name.log" > "$STEP_LOG_KEEP/$prefix$name.log") 2>/dev/null || rm -f "$STEP_LOG_KEEP/$prefix$name.log"
+    if [ "$kind" = errors ]; then
+      (umask 077; tail -c 131072 "$PIPE/$name.log" | grep -aE '^([A-Za-z_][A-Za-z0-9_]*\.)*[A-Z][A-Za-z0-9_]*: ' > "$STEP_LOG_KEEP/$prefix$name.log") 2>/dev/null || rm -f "$STEP_LOG_KEEP/$prefix$name.log"
+    else
+      (umask 077; tail -c 131072 "$PIPE/$name.log" > "$STEP_LOG_KEEP/$prefix$name.log") 2>/dev/null || rm -f "$STEP_LOG_KEEP/$prefix$name.log"
+    fi
   done
 }
 
@@ -565,7 +574,8 @@ else
   # the existing scheduled GitHub workflow email, with no new alert channel.
   coverage_status
   backfill=$(last_run_line "$DAILY_LOG" 'Backfill warnings:' | sed 's/.*Backfill warnings: //')
-  for repair in $backfill; do backfill_warn "$repair"; done
+  # each is step(reason): senate_backfill(rc=1), senate_backfill(shared-stop). Read only: nothing here touches the guard.
+  for repair in $backfill; do backfill_warn "$repair"; keep_step_logs errors "" "${repair%%(*}"; done
 fi
 
 # NSW repair has its own cap and wall budget, including source-calendar discovery.
