@@ -113,8 +113,27 @@ def day_words(iso):
 # A commission whose registry entry has "use": "documents_only" is listed by its documents alone: the
 # build reads its PDFs to count pages and to check dates and names, and holds none of their wording.
 DOCUMENTS_ONLY = "documents_only"
-TEXT_KEYS = ("date_quote", "quote", "quotes", "excerpt", "excerpts", "text", "full_text", "snippet")
-QUOTE_MARKS = '"\u201c\u201d'
+TEXT_KEYS = ("date_quote", "quote", "quotes", "excerpt", "excerpts", "text", "full_text", "snippet", "text_matches")
+# A quotation: any double quotation mark or guillemet, or a single one that opens a word. An
+# apostrophe (the commission's, the commissioners') has a letter before it and is not one.
+QUOTATION = re.compile("[\"\u201c\u201d\u201e\u201f\u00ab\u00bb\u2039\u203a]|(?<![A-Za-z0-9])['\u2018\u2019\u201a\u201b](?=\\w)")
+
+
+def quotation(texts):
+    """True when any of the texts holds a quotation."""
+    return any(QUOTATION.search(t) for t in texts)
+
+
+def held_text(value, path=""):
+    """Paths of every field, at any depth, named as holding a document's wording and carrying a value."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if k in TEXT_KEYS and v:
+                yield f"{path}/{k}"
+            yield from held_text(v, f"{path}/{k}")
+    elif isinstance(value, list):
+        for i, v in enumerate(value):
+            yield from held_text(v, f"{path}[{i}]")
 
 
 def documents_only(rc):
@@ -473,7 +492,7 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
     bare = documents_only(rc)
     if rc.get("use") not in (None, DOCUMENTS_ONLY):
         raise Held(f"{rc['id']}: unknown use {rc['use']!r}")
-    if bare and any(ch in n for n in notes + gaps for ch in QUOTE_MARKS):
+    if bare and quotation(notes + gaps):
         raise Held(f"{rc['id']}: a note carries a quotation but the commission is documents only")
     if rc.get("inquiry_type") not in INQUIRY_TYPES:
         raise Held(f"{rc['id']}: unknown inquiry type {rc.get('inquiry_type')!r}")
@@ -670,15 +689,17 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
 def without_extracts(record, rc):
     """A record of a documents-only commission with nothing of its documents' wording: no date line,
     quote or excerpt on a document or a fact, and the notes and gaps as the registry now words them."""
-    def strip(row):
-        return {k: v for k, v in row.items() if k not in TEXT_KEYS}
+    def strip(value):
+        if isinstance(value, dict):
+            return {k: strip(v) for k, v in value.items() if k not in TEXT_KEYS}
+        return [strip(v) for v in value] if isinstance(value, list) else value
     out = dict(record)
     for group in ("reports", "responses", "transcripts", "commissioners"):
-        out[group] = [strip(row) for row in record.get(group, [])]
+        out[group] = strip(record.get(group, []))
     out["established"] = strip(record["established"]) if record.get("established") else None
     out["recommendations"] = []  # a documents-only commission has no extraction rule
     out["notes"], out["gaps"], out["use"] = list(rc.get("notes", [])), list(rc.get("gaps", [])), rc["use"]
-    if any(ch in n for n in out["notes"] + out["gaps"] for ch in QUOTE_MARKS):
+    if quotation(out["notes"] + out["gaps"]):
         raise Held(f"{rc['id']}: a note carries a quotation but the commission is documents only")
     return out
 

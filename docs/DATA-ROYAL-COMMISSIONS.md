@@ -196,9 +196,11 @@ transcript listing rows is given in the tool's own lines rather than rewritten.
   publisher links, page count, hash and rights note, the commissioner's name with its
   page reference, and notes in OPAX's own words with page references. The build holds
   (exit 3) if such an entry carries a quote, a date line, an extraction rule or a note
-  with quotation marks, reads its PDFs without caching their text, and drops any extract
-  from a record it carries forward. `tests/test_rc_no_extracts.py` and
-  `portal/test/rc-no-extracts.test.mjs` pin the extracts once held by hash.
+  with quotation marks (double, single or typographic), reads its PDFs without caching
+  their text, and drops any extract, at any depth, from a record it carries forward. The
+  export takes `use` from the registry and stops if a snapshot disagrees, so a snapshot
+  built before the entry was marked cannot be published. `tests/test_rc_no_extracts.py` and
+  `portal/test/rc-no-extracts.test.mjs` pin the extracts once held by hash, whole and in runs of five words.
 * Robodebt: the report refers to 57 recommendations; 56 are numbered. The unnumbered
   one, in the closing observations, is noted on the record and not loaded as numbered.
 * The Antisemitism interim report's recommendations 8 to 12 say they are contained in

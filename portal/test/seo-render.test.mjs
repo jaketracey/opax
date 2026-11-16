@@ -260,14 +260,14 @@ test('report transcripts API: the app envelope, top level and paged, newest firs
 const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
 test('documents-only commission: its page, report API, transcripts API, search rows and sitemaps hold no transcript extract',async()=>{
   // The extracts once held are pinned by hash in held-extracts.mjs; see rc-no-extracts.test.mjs for the record and the tools.
-  const {SLUG,COMMISSION,heldExtracts,assertNoExtract,textFields}=await import('./held-extracts.mjs');
+  const {SLUG,COMMISSION,heldExtracts,liftedRuns,assertNoExtract,textFields}=await import('./held-extracts.mjs');
   const text=async path=>{const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();};
   const html=await text('/report/'+SLUG);
-  assert.deepEqual(heldExtracts(html),[]);assert.deepEqual(heldExtracts(stripTags(html)),[]);
+  assert.deepEqual(heldExtracts(html),[]);assert.deepEqual(heldExtracts(stripTags(html)),[]);assert.deepEqual(liftedRuns(prerenderBody(html)),[]);
   assert.ok(!/<q>|<blockquote|Printed as|Date as printed/.test(prerenderBody(html)),'no quotation block');
-  assert.ok(html.includes('The Honourable Chris Kourakis AC SC'));assert.ok(html.includes('final report by 20 August 2027'));
+  assert.ok(html.includes('The Honourable Chris Kourakis AC SC'));assert.ok(html.includes('final report is due on or before 20 August 2027'));
   const api=JSON.parse(await text('/api/report/'+SLUG));
-  assert.deepEqual(heldExtracts(JSON.stringify(api)),[]);assertNoExtract(assert,api.record,'the report API record');
+  assert.deepEqual(heldExtracts(JSON.stringify(api)),[]);assert.deepEqual(liftedRuns(JSON.stringify(api)),[]);assertNoExtract(assert,api.record,'the report API record');
   assert.equal(api.record.use,'documents_only');assert.deepEqual(textFields(api.transcripts),[]);
   const paged=JSON.parse(await text('/api/report/'+SLUG+'/transcripts'));
   assert.equal(paged.count,2);assertNoExtract(assert,paged,'the transcripts API');

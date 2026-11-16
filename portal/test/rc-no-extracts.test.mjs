@@ -9,7 +9,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
-import { COMMISSION, SLUG, PINNED, QUOTE_MARKS, assertNoExtract, heldExtracts, pin, strings, textFields } from './held-extracts.mjs';
+import { COMMISSION, SLUG, PINNED, QUOTATION, SHINGLES, assertNoExtract, heldExtracts, liftedRuns, pin, shingles, strings, textFields } from './held-extracts.mjs';
 import { projectReports } from '../../scripts/build_report_catalog.mjs';
 import { renderReport } from '../src/report-records.ts';
 
@@ -30,6 +30,13 @@ test('the detector finds a pinned line inside other text, whatever its case, spa
   assert.equal(heldExtracts('{"note":"Before. AN EXAMPLE line, that nobody   said; after."}', made).length, 1);
   assert.equal(heldExtracts('An example line that nobody heard', made).length, 0);
   assert.equal(PINNED.length, 5);
+  // A partial lift: five consecutive words of a pinned line, inside other words, are found; four are not.
+  const runs = shingles('An example line that nobody said');
+  assert.equal(runs.size, 2); assert.equal(SHINGLES.size, 22);
+  assert.equal(liftedRuns('It was, he wrote, an example line that nobody could place.', runs).length, 1);
+  assert.equal(liftedRuns('It was an example line that few could place.', runs).length, 0);
+  for (const [text, quoted] of [["the commission's letters", false], ["the commissioners' names", false], ['OPAX\u2019s own words', false],
+    ["said 'orders may be made'", true], ['said \u2018orders\u2019', true], ['\u201corders\u201d', true], ['\u00aborders\u00bb', true], ['a "b"', true]]) assert.equal(QUOTATION.test(text), quoted, text);
   assert.deepEqual(textFields({ a: [{ date_quote: 'x', quote: '', b: { excerpt: 'y' } }] }), ['/a[0]/date_quote', '/a[0]/b/excerpt']);
 });
 
@@ -54,7 +61,7 @@ test('the facts stay in OPAX\'s own words, each with its page reference and link
   assert.equal(person.cite.page, 1); assert.match(person.cite.url, /^https:\/\/www\.rcimcp\.vic\.gov\.au\/.+\.pdf$/);
   const notes = record.notes.join(' ');
   assert.match(notes, /may make non-publication orders \(transcript of 9 November 2026, page 30: https:\/\/www\.rcimcp\.vic\.gov\.au\/\S+\.pdf\)/);
-  assert.match(notes, /final report by 20 August 2027, as the Commissioner said at the hearing on 9 November 2026 \(transcript page 33: https:\/\/www\.rcimcp\.vic\.gov\.au\/\S+\.pdf\)/);
+  assert.match(notes, /Its final report is due on or before 20 August 2027, according to the Commissioner at the hearing on 9 November 2026 \(transcript page 33: https:\/\/www\.rcimcp\.vic\.gov\.au\/\S+\.pdf\)/);
 });
 
 test('the royal_commissions tool (MCP and Ask) returns no extract in its list, profile or transcripts views', async () => {
@@ -65,35 +72,37 @@ test('the royal_commissions tool (MCP and Ask) returns no extract in its list, p
     const label = 'royal_commissions ' + JSON.stringify(args);
     const mcp = await api.callTool(env, 'royal_commissions', args).catch(e => ({ error: String(e.message) }));
     assert.deepEqual(heldExtracts(JSON.stringify(mcp)), [], label);
+    assert.deepEqual(liftedRuns(JSON.stringify(mcp)), [], label + ' shares a run of five words with a removed extract');
     // Rows about this commission: no field with a document's wording and no quotation anywhere in them.
     const rows = (mcp.rows ?? []).filter(r => [r.id, r.commission_id].includes(COMMISSION));
     if (args.commission && !args.words && args.view !== 'recommendations') assert.ok(rows.length, label + ' returned no row');
     assertNoExtract(assert, rows, label + ' rows');
     // Citation notes about this commission, the text Ask shows beside an answer: no quotation.
     const cites = (mcp.citations ?? []).filter(c => /rcimcp\.vic\.gov\.au|vic-major-infrastructure|Major Public and Civil Infrastructure/.test(c.url + ' ' + c.text));
-    assert.deepEqual(cites.filter(c => QUOTE_MARKS.test(c.text)).map(c => c.text), [], label + ' citations');
+    assert.deepEqual(cites.filter(c => QUOTATION.test(c.text)).map(c => c.text), [], label + ' citations');
     const ask = await api.runTool({ asset, kb: async () => { throw Error('no KB reads'); }, origin: 'https://opax.test', toolEnv: env }, 'royal_commissions', args);
     assert.deepEqual(heldExtracts(JSON.stringify(ask)), [], label + ' through Ask');
+    assert.deepEqual(liftedRuns(JSON.stringify(ask)), [], label + ' through Ask shares a run of five words with a removed extract');
     if (args.commission && args.view !== 'recommendations') {
       assert.equal(ask.ok, true, label);
-      assert.deepEqual(strings(ask.cite).filter(s => QUOTE_MARKS.test(s)), [], label + ' Ask citations');
+      assert.deepEqual(strings(ask.cite).filter(s => QUOTATION.test(s)), [], label + ' Ask citations');
     }
   }
   const profile = await api.callTool(env, 'royal_commissions', { view: 'profile', commission: COMMISSION });
   assert.deepEqual(profile.rows[0].commissioners.map(p => [p.name, p.page]), [['The Honourable Chris Kourakis AC SC', 1]]);
-  assert.ok(profile.citations.some(c => /\(OPAX note\): The commission is due to deliver its final report by 20 August 2027/.test(c.text)));
+  assert.ok(profile.citations.some(c => /\(OPAX note\): Its final report is due on or before 20 August 2027/.test(c.text)));
 });
 
 test('the search catalogue entry and the report page built from the record hold no extract', async () => {
   const projected = (await projectReports(async path => json(path))).find(r => r.row.slug === SLUG);
   assert.ok(projected);
-  assert.deepEqual(heldExtracts(JSON.stringify(projected)), []);
+  assert.deepEqual(heldExtracts(JSON.stringify(projected)), []); assert.deepEqual(liftedRuns(JSON.stringify(projected)), []);
   assertNoExtract(assert, projected.detail.record, 'the report record');
   assert.deepEqual(textFields(projected.row).filter(p => p !== '/snippet'), []);
   // The catalogue snippet is the commission's name, not words from a transcript.
   assert.equal(projected.row.snippet, record.name);
   const html = renderReport(projected.detail);
-  assert.deepEqual(heldExtracts(html), []);
+  assert.deepEqual(heldExtracts(html), []); assert.deepEqual(liftedRuns(html), []);
   assert.ok(!/<q>|<blockquote|Printed as|Date as printed/.test(html), 'the page shows no quotation block');
   assert.ok(html.includes('The Honourable Chris Kourakis AC SC')); assert.ok(html.includes('20 August 2027'));
 });
