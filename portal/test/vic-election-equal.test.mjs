@@ -109,3 +109,29 @@ test('no seat page carries a record section for anyone until the polls close; it
   const notStanding=data.seats.find(s=>s.name==='Bendigo West');
   assert.equal(render(notStanding,new Date(CLOSE-1)).doc.querySelector('#record'),null);
 });
+
+test('until the polls close the hub’s rows name no person, and a seat page’s structured data lists nobody',()=>{
+  const CLOSE=Date.parse(VIC_ELECTION_POLLS_CLOSE),names=data.seats.flatMap(s=>s.members.map(m=>m.name));
+  const region=data.seats.find(s=>s.kind==='region'),district=data.seats.find(s=>s.kind==='district'&&s.name==='Richmond');
+  for(const now of [new Date('2026-11-16T10:00:00+11:00'),new Date(CLOSE-1)]) {
+    const hub=new JSDOM(renderVicElection(data,null,{},now).html).window.document;
+    for(const row of hub.querySelectorAll('.vic-seat')) {
+      const seat=data.seats.find(s=>s.name===row.querySelector('.vic-seat-name').textContent);
+      // The previous result is the seat's; beside it is the number of candidates, never a person or a party label.
+      assert.equal(row.querySelector('.vic-seat-held').textContent,`${seat.candidates.list.length} candidates`,seat.name);
+      assert.equal(row.querySelectorAll('.ui-party').length,0,seat.name);
+    }
+    assert.equal(hub.querySelectorAll('#regions .ui-party').length,0);
+    const text=hub.querySelector('.vic-hub').textContent;
+    for(const name of names) assert.ok(!text.includes(name),name);
+    assert.doesNotMatch(text,/Each row shows the member/);
+    // The same rows on a region page.
+    const page=new JSDOM(renderVicElection(data,region,{},now).html).window.document;
+    assert.equal(page.querySelectorAll('#districts .ui-party').length,0);
+    for(const s of [district,region]) assert.equal(renderVicElection(data,s,{},now).jsonLd['@graph'][1].numberOfItems,0,s.name);
+  }
+  const after=new Date(CLOSE);
+  assert.ok(new JSDOM(renderVicElection(data,null,{},after).html).window.document.querySelectorAll('#districts .ui-party').length>=87);
+  assert.deepEqual(renderVicElection(data,district,{},after).jsonLd['@graph'][1].itemListElement.map(x=>x.name),district.members.map(m=>m.name));
+  assert.equal(renderVicElection(data,region,{},after).jsonLd['@graph'][1].numberOfItems,5);
+});

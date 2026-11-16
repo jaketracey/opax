@@ -61,9 +61,10 @@ test('the wording changes when the new parliament’s roster loads',()=>{
 });
 
 test('the hub rows and the finder say member until the Assembly expired',()=>{
-  const hub=renderVicElection(data,null,{},NOW,null,index(data.election_day)).html;
+  // The rows name members only after the polls close (vic-election-equal.test.mjs): then, until the new roster loads, as members until expiry.
+  const hub=renderVicElection(data,null,{},AFTER,null,index(data.election_day)).html;
   assert.match(hub,new RegExp(`Each row shows the member ${PHRASE} and the winning margin`));
-  assert.match(renderVicElection(data,null,{},BEFORE,null,index(data.election_day)).html,/Each row shows the member and the winning margin/);
+  assert.match(renderVicElection(data,null,{},AFTER,null,index(null)).html,/Each row shows the member and the winning margin/);
   const hits=[{name:member,kind:'Member',seats:[{seat,share:null}]}];
   const found=JSDOM.fragment(renderVicElection(data,null,{},NOW,{place:member,hits},index(data.election_day)).html).querySelector('.vic-hit-place span').textContent;
   assert.equal(found,`Member ${PHRASE}`);
@@ -131,7 +132,7 @@ test('a region page names its members until the Council expired, following the A
   assert.equal(councilExpired(data,{...region,roster_date:'2026-12-20'},new Date('2026-12-21T10:00:00+11:00'),null),false);
   assert.equal(councilExpired(data,seat,NOW,null),false);
   // The hub's region list and a district page's region section say the same.
-  assert.match(renderVicElection(data,null,{},NOW,null,index(data.election_day)).html,new RegExp(`Each region elects five members\\. Each row shows the members ${COUNCIL}\\.`));
+  assert.match(renderVicElection(data,null,{},AFTER,null,index(data.election_day)).html,new RegExp(`Each region elects five members\\. Each row shows the members ${COUNCIL}\\.`));
   assert.doesNotMatch(renderVicElection(data,null,{},BEFORE).html,/Council expired/);
   const own=data.seats.find(r=>r.kind==='region'&&r.name===seat.region);
   assert.match(JSDOM.fragment(renderVicElection(data,seat,{},NOW,null,index(data.election_day)).html).querySelector('#region .ui-section-note').textContent,new RegExp(`Listed are the members for ${own.name} Region ${COUNCIL}\\.$`));

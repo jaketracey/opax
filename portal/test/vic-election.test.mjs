@@ -257,7 +257,8 @@ test('VEC results: 2022 seat totals, later by-elections and margins as records',
   assert.equal(districts.find(s=>s.name==='Narracan').result.general.kind,'supplementary');
   const prahran=renderVicElection(data,districts.find(s=>s.name==='Prahran')).html;
   assert.match(prahran,/2025 by-election<\/dt><dd>Liberal 51\.4%, Greens 48\.6% after preferences/);assert.match(prahran,/2022 election<\/dt><dd>Greens 62\.0%/);
-  assert.match(renderVicElection(data,null).html,/Liberal by 1\.4<\/span><span class="vic-seat-held">Rachel Westaway/);
+  assert.match(renderVicElection(data,null,{},AFTER_POLLS).html,/Liberal by 1\.4<\/span><span class="vic-seat-held">Rachel Westaway/);
+  assert.match(renderVicElection(data,null).html,/Liberal by 1\.4<\/span><span class="vic-seat-held">\d+ candidates</);
 });
 test('seat finder: suburbs, postcodes and council areas from ABS splits, exact names first, never indexed',async()=>{
   assert.equal(places.suburb.length>2900&&places.postcode.length>650&&places.council.length===80,true);

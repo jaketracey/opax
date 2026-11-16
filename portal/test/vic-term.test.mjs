@@ -147,6 +147,13 @@ test('Ask never answers a Victorian member as current: the seat rows decide',asy
     assert.doesNotMatch(answer,/current member|until|expired|vacan/i,name);
   }
   for(const p of named.filter(x=>roster.includes(x)).slice(0,40)) assert.doesNotMatch((await ask(`Is ${p.name} a current member of parliament?`))?.answer??'',/is recorded as a current member/,p.name);
+  // If the seat rows cannot be read, nothing is said of a Victorian person's currency: never "current member".
+  const blind=(question)=>identityAnswer({question},{origin:'https://example.test',kb:async()=>{throw Error('no search')},asset:async path=>path==='/parliamentarians.json'?{people:roster}:path===manifest.index_url?Promise.reject(new Error('unavailable')):assets[path]??null});
+  for(const name of ['Nina Taylor','Harriet Shing','Sam Groth']) {
+    const answer=(await blind(`Is ${name} still in parliament?`)).answer;
+    assert.match(answer,new RegExp(`${name}'s current membership of parliament is not established by the roster\\.`),name);
+    assert.doesNotMatch(answer,/is recorded as a current member|no longer serving/,name);
+  }
   // A federal member is answered from the federal roster as before.
   const federal=roster.find(p=>p.current===true&&p.states.length===1&&p.states[0]==='federal');
   assert.match((await ask(`Is ${federal.name} still in parliament?`)).answer,/is recorded as a current member of parliament/);
@@ -171,7 +178,7 @@ test('seat pages and electorate profiles name the row’s member, or say the sea
     }
   }
   const brunswick=hub.seats.find(s=>s.name==='Brunswick'),last=brunswick.members[0].name;
-  const home=new JSDOM(renderVicElection(hub,null,{},NOW,null,index).html).window.document;
+  const home=new JSDOM(renderVicElection(hub,null,{},new Date('2026-11-29T10:00:00+11:00'),null,index).html).window.document;
   const rowOf=name=>[...home.querySelectorAll('#districts .vic-seat')].find(a=>a.querySelector('.vic-seat-name').textContent===name);
   assert.equal(rowOf('Brunswick').querySelector('.vic-seat-held').textContent,'Vacant');
   assert.ok(!home.body.textContent.includes(last));
