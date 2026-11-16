@@ -3,7 +3,7 @@ import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datata
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=edef476377';
+import {statusLabelHTML} from './labels.js?v=ffd32d5678';
 import {divisionPlain} from './division-markdown.js?v=9914870fea';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
