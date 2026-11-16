@@ -199,11 +199,12 @@ export const tool: ToolDefinition = {
       const found = ix && args.words ? await textMatches(env, ix, String(c.id), String(args.words)) : null
       const named = (d: RecordRow) => !!args.words && wordsMatch(args.words, [d.title, d.hearing, d.date])
       // A word search lists the transcripts whose title or date holds the words first, newest first as before, then
-      // those whose text holds them by fit (textMatches: the pages that hold the words), newest first among equals.
+      // those whose text holds them by fit (textMatches: the page count of the searched word that is on the fewest of
+      // its pages, most first; then the sum of the words' page counts, most first), newest first among equals.
       // Before, every match was in date order, so a general word returned the latest hearing days whatever was asked.
-      const fit = (d: RecordRow) => found?.fit.get(String(d.key)) ?? { least: 0, pages: 0 }
+      const fit = (d: RecordRow) => found?.fit.get(String(d.key)) ?? { least: 0, everyday: 0, pages: 0 }
       const hits = !args.words ? all : [...all.filter(named), ...all.filter(d => !named(d) && !!found?.keys.has(String(d.key)))
-        .map((d, at) => ({ d, at })).sort((a, b) => fit(b.d).least - fit(a.d).least || fit(b.d).pages - fit(a.d).pages || a.at - b.at).map(o => o.d)]
+        .map((d, at) => ({ d, at })).sort((a, b) => fit(b.d).least - fit(a.d).least || fit(b.d).everyday - fit(a.d).everyday || fit(b.d).pages - fit(a.d).pages || a.at - b.at).map(o => o.d)]
       const picked = await Promise.all(hits.slice(offset, offset + limit).map(async d => {
         const row = transcriptOut(env, c, d)
         const text = ix && found?.keys.has(String(d.key)) ? await pageHits(env, ix, String(d.key), found.terms) : null

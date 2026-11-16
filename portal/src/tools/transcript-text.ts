@@ -8,14 +8,16 @@ const SHARD = /^\/transcripts\/terms\/\d{2}\.json$/
 const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
-export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
+/** `commonPages`: for each everyday word, the pages holding it across all transcripts (how common it is). */
+export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, commonPages: Map<string, number>, shards: number, commissions: RecordRow }
 export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
   const data = object(await readToolAsset(env, '/transcripts/index.json'))
   if (data.schema !== 3 || !Array.isArray(data.docs)) return null
-  return { docs: records(data.docs), stop: new Set((data.stopwords as string[]) ?? []), common: new Set((data.common_terms as string[]) ?? []),
+  const common = (data.common_terms as string[]) ?? [], pages = (data.common_pages as number[]) ?? []
+  return { docs: records(data.docs), stop: new Set((data.stopwords as string[]) ?? []), common: new Set(common), commonPages: new Map(common.map((t, at) => [t, Number(pages[at]) || 0])),
     shards: Number(data.shards) || 64, commissions: object(data.commissions) }
 }
 
@@ -33,34 +35,55 @@ export function shardOf(term: string, shards: number): number {
 
 /** Keys of one commission's transcripts containing every searchable word, or null when the commission has no
  * public text or every word is too common to narrow the search. */
-/** A word search reads one postings file for each searched word, so the words are capped. A longer search keeps its
- * specific words first and leaves out everyday ones (ix.common: words in more than half the transcripts), then the
- * later words; the caller says which were left out. */
+/** A word search reads one postings file for each searched word, so the words are capped. Specific words (those not
+ * in ix.common) are kept first, in the order given. Everyday words fill what is left, least common first (by the
+ * number of pages holding the word across all transcripts, carried in the index), so the commonest are the ones left
+ * out; the caller says which words were left out. */
 export const TEXT_SEARCH_WORDS = 6
-/** How well a transcript fits a word search, from the postings alone (no transcript is opened): `least` is the page
- * count of the searched word that is on the fewest of its pages, and transcripts with the highest such count come
- * first; `pages` is the sum of the searched words' page counts. A hearing day that discusses every searched word at
- * length comes before one where a word appears once. */
-export type TextFit = { least: number, pages: number }
-/** The transcripts of a commission whose text holds every searched word, with each one's fit. Every word is posted,
- * everyday ones included, so "executive minute" or "general practice training" can be searched. `skipped` are the
- * words past the cap, which took no part. Null when the words hold nothing to search (stopwords, or years alone). */
+/** How well a transcript fits a word search, from the postings alone (no transcript is opened), each part most first:
+ * `least` is the page count of the required word that is on the fewest of its pages; `everyday` is the same for the
+ * everyday words that only rank (zero when the transcript lacks one of them, or when there are none); `pages` is the
+ * sum of every searched word's page count. A hearing day that discusses every searched word at length comes before
+ * one where a word appears once. */
+export type TextFit = { least: number, everyday: number, pages: number }
+/** The transcripts of a commission that match a word search, with each one's fit.
+ * - With a specific word in the search, a transcript must hold every specific word. Everyday words (in more than half
+ *   the transcripts) then only rank: they never remove a transcript, so the set is the one the specific words give.
+ * - With only everyday words ("executive minute", "general practice training"), a transcript must hold every one.
+ * `skipped` are the words past the cap, which took no part. Null when the words hold nothing to search (stopwords, or
+ * years alone). */
 export async function textMatches(env: ToolEnv, ix: TextIndex, commission: string, words: string): Promise<{ keys: Set<string>, terms: string[], fit: Map<string, TextFit>, skipped: string[] } | null> {
   if (!object(ix.commissions[commission]).name) return null
   const terms = [...new Set(tokens(words, ix.stop))]
-  const ordered = [...terms.filter(t => !ix.common.has(t)), ...terms.filter(t => ix.common.has(t))]
-  const searched = ordered.slice(0, TEXT_SEARCH_WORDS), skipped = ordered.slice(TEXT_SEARCH_WORDS)
+  const specific = terms.filter(t => !ix.common.has(t))
+  const everyday = terms.filter(t => ix.common.has(t)).map((t, at) => ({ t, at })).sort((a, b) => (ix.commonPages.get(a.t) ?? 0) - (ix.commonPages.get(b.t) ?? 0) || a.at - b.at).map(o => o.t)
+  const required = specific.slice(0, TEXT_SEARCH_WORDS), ranking = everyday.slice(0, TEXT_SEARCH_WORDS - required.length)
+  const skipped = [...specific.slice(TEXT_SEARCH_WORDS), ...everyday.slice(ranking.length)]
   // A year by itself ("2023-03", "10 March 2023") is a date lookup, answered from titles and dates as before.
-  if (!searched.some(t => /[a-z]/.test(t))) return null
-  let docs = new Map<number, TextFit>(ix.docs.filter(d => d.commission === commission).map(d => [Number(d.i), { least: Number.MAX_SAFE_INTEGER, pages: 0 }]))
-  for (const t of searched) {
+  if (![...required, ...ranking].some(t => /[a-z]/.test(t))) return null
+  const posting = async (t: string): Promise<Map<number, number> | null> => {
     const path = `/transcripts/terms/${String(shardOf(t, ix.shards)).padStart(2, '0')}.json`
     if (!SHARD.test(path)) return null
     // A posting is [transcripts, pages of each holding the word].
-    const posting = object(await readToolAsset(env, path))[t] as [number[], number[]] | undefined
-    const held = new Map<number, number>((posting?.[0] ?? []).map((i, at) => [i, Number(posting?.[1]?.[at]) || 1]))
-    docs = new Map([...docs].flatMap(([i, fit]): [number, TextFit][] => { const n = held.get(i); return n ? [[i, { least: Math.min(fit.least, n), pages: fit.pages + n }]] : [] }))
+    const shard = object(await readToolAsset(env, path)), held = Object.hasOwn(shard, t) ? shard[t] as [number[], number[]] : undefined
+    return new Map<number, number>((held?.[0] ?? []).map((i, at) => [i, Number(held?.[1]?.[at]) || 1]))
+  }
+  // With no specific word the everyday words are the required ones.
+  const must = required.length ? required : ranking, rank = required.length ? ranking : []
+  let docs = new Map<number, TextFit>(ix.docs.filter(d => d.commission === commission).map(d => [Number(d.i), { least: Number.MAX_SAFE_INTEGER, everyday: 0, pages: 0 }]))
+  for (const t of must) {
+    const held = await posting(t)
+    if (!held) return null
+    docs = new Map([...docs].flatMap(([i, fit]): [number, TextFit][] => { const n = held.get(i); return n ? [[i, { ...fit, least: Math.min(fit.least, n), pages: fit.pages + n }]] : [] }))
     if (!docs.size) break
+  }
+  if (docs.size && rank.length) {
+    for (const fit of docs.values()) fit.everyday = Number.MAX_SAFE_INTEGER
+    for (const t of rank) {
+      const held = await posting(t)
+      if (!held) return null
+      for (const [i, fit] of docs) { const n = held.get(i) ?? 0; fit.everyday = Math.min(fit.everyday, n); fit.pages += n }
+    }
   }
   const matched = ix.docs.filter(d => docs.has(Number(d.i)))
   return { keys: new Set(matched.map(d => String(d.key))), terms, fit: new Map(matched.map(d => [String(d.key), docs.get(Number(d.i))!])), skipped }

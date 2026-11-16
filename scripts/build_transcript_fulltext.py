@@ -192,10 +192,13 @@ def write(path: Path, value):
 def shard_files(postings, total_docs):
     """(common terms, the shard dicts) for term -> [(transcript, pages holding the term)]."""
     common = sorted(t for t, ds in postings.items() if len(ds) > total_docs // 2)
+    # How common each everyday term is: the pages holding it across all transcripts. A long search keeps the least
+    # common of them.
+    common_pages = [sum(n for _, n in postings[t]) for t in common]
     shards: list[dict] = [{} for _ in range(SHARDS)]
     for t, ds in sorted(postings.items()):
         shards[shard(t)][t] = [[i for i, _ in ds], [n for _, n in ds]]
-    return common, shards
+    return common, common_pages, shards
 
 
 def postings_only(out: Path, check: bool) -> int:
@@ -206,25 +209,26 @@ def postings_only(out: Path, check: bool) -> int:
         doc = json.loads((out.parent / d["file"].lstrip("/")).read_text(encoding="utf-8"))
         for t, pages in doc["terms"].items():
             postings[t].append((d["i"], len(pages)))
-    common, shards = shard_files(postings, len(index["docs"]))
+    common, common_pages, shards = shard_files(postings, len(index["docs"]))
     if common != index["common_terms"]:
         print("[build_transcript_fulltext] HELD: the published transcripts give a different common-term list", file=sys.stderr)
         return 3
     if check:
-        same = index.get("schema") == SCHEMA and all(
+        same = index.get("schema") == SCHEMA and index.get("common_pages") == common_pages and all(
             json.loads((out / "terms" / f"{n:02d}.json").read_text(encoding="utf-8")) == s for n, s in enumerate(shards))
         print(f"[build_transcript_fulltext] postings {'agree with' if same else 'DIFFER from'} the published transcripts", flush=True)
         return 0 if same else 1
     for n, s in enumerate(shards):
         write(out / "terms" / f"{n:02d}.json", s)
-    write(out / "index.json", {**index, "schema": SCHEMA})
+    write(out / "index.json", {**{k: v for k, v in index.items() if k not in ("docs", "caveats", "common_pages")}, "schema": SCHEMA,
+                               "common_pages": common_pages, "docs": index["docs"], "caveats": index["caveats"]})
     print(f"[build_transcript_fulltext] postings rebuilt: terms={len(postings)} common={len(common)}", flush=True)
     return 0
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--out", default=str(OUT), help="the output folder; with --postings-only it must be named 'transcripts', because the index gives each transcript's file as /transcripts/<commission>/<key>.json")
     ap.add_argument("--postings-only", action="store_true", help="rebuild terms/ from the published transcript files; no PDF is read")
     ap.add_argument("--check", action="store_true", help="with --postings-only: write nothing, exit 1 on a difference")
     args = ap.parse_args(argv)
@@ -249,7 +253,7 @@ def main(argv=None):
         docs.append({"i": i, "commission": c["id"], "key": d["key"], "title": d["title"], "date": d.get("date"),
                      "file": f"/transcripts/{file}", "pdf_url": d["url"], "pages": len(doc["pages"]),
                      "quote_policy": doc["quote_policy"]})
-    common, shards = shard_files(postings, len(docs))
+    common, common_pages, shards = shard_files(postings, len(docs))
     for n, s in enumerate(shards):
         write(tmp / "terms" / f"{n:02d}.json", s)
     counts = {cid: {"transcripts": sum(1 for x in docs if x["commission"] == cid),
@@ -262,7 +266,7 @@ def main(argv=None):
         "commissions": {c["id"]: {"name": c["name"], "attribution": f"{COMMISSIONS[c['id']]['attribution']}, {c['name']}, licensed under CC BY 4.0",
                                  "copyright_url": COMMISSIONS[c["id"]]["copyright_url"], "counts": counts[c["id"]]}
                         for c in registry["commissions"] if c["id"] in COMMISSIONS},
-        "order_notice": ORDER_NOTICE, "shards": SHARDS, "stopwords": STOPWORDS, "common_terms": common, "docs": docs,
+        "order_notice": ORDER_NOTICE, "shards": SHARDS, "stopwords": STOPWORDS, "common_terms": common, "common_pages": common_pages, "docs": docs,
         "caveats": [
             "Hearing transcripts are evidence and submissions, not findings of the commission.",
             "Text is the publisher's own text layer with margin line numbers, headers and footers removed. Redactions are the publisher's.",

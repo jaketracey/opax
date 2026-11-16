@@ -298,6 +298,42 @@ test('a word search lists the transcripts that dwell on the words first: by the 
   }
 });
 
+test('the whole order of a word search is the stated rule, ties included: least, then the sum, then newest', async () => {
+  const ix = await asset('/transcripts/index.json');
+  let tiesOnLeast = 0;
+  for (const [commission, id, words, terms] of [['robodebt', 'cth-robodebt', 'income averaging', ['income', 'averaging']], ['nsw-healthcare-funding', 'nsw-healthcare-funding', 'duress alarm', ['duress', 'alarm']], ['robodebt', 'cth-robodebt', 'ombudsman whistleblower', ['ombudsman', 'whistleblower']]]) {
+    const keys = [];
+    for (let offset = 0, turns = 0; offset !== null && turns < 60; turns++) { const page = await call({ view: 'transcripts', commission, words, limit: 8, offset }); keys.push(...page.rows.map(r => r.key)); offset = page.next_offset ?? null; }
+    // The same order worked out here from the transcript files alone.
+    const matched = [];
+    for (const d of ix.docs.filter(d => d.commission === id)) { const doc = await asset(d.file); if (terms.every(t => doc.terms[t])) { const counts = terms.map(t => doc.terms[t].length); matched.push({ key: d.key, date: String(d.date), least: Math.min(...counts), pages: counts.reduce((a, b) => a + b, 0) }); } }
+    matched.sort((a, b) => b.least - a.least || b.pages - a.pages || b.date.localeCompare(a.date) || a.key.localeCompare(b.key));
+    assert.deepEqual(keys, matched.map(m => m.key), words);
+    for (let i = 1; i < matched.length; i++) if (matched[i - 1].least === matched[i].least && matched[i - 1].pages !== matched[i].pages) tiesOnLeast++;
+  }
+  // The data holds rows that tie on the first part and are told apart only by the sum.
+  assert.ok(tiesOnLeast >= 3, `${tiesOnLeast} ties decided by the sum`);
+});
+
+test('a title or date match comes first even when a text match fits better', async () => {
+  // "Melbourne" is in the title of ten antisemitism transcripts and in the text of others.
+  const ix = await asset('/transcripts/index.json');
+  const rows = [];
+  for (let offset = 0, turns = 0; offset !== null && turns < 60; turns++) { const page = await call({ view: 'transcripts', commission: 'antisemitism', words: 'Melbourne', limit: 8, offset }); rows.push(...page.rows); offset = page.next_offset ?? null; }
+  const titled = rows.map(r => /melbourne/i.test(String(r.title)));
+  const named = titled.filter(Boolean).length;
+  assert.ok(named >= 2 && named < rows.length, `${named} of ${rows.length}`);
+  // Every transcript titled with the word is listed before any other,
+  assert.deepEqual(titled, [...Array(named).fill(true), ...Array(rows.length - named).fill(false)]);
+  // though some other transcript holds the word on more pages than a titled one does.
+  const count = async key => ((await asset(ix.docs.find(d => d.key === key).file)).terms.melbourne ?? []).length;
+  const namedCounts = await Promise.all(rows.slice(0, named).map(r => count(r.key))), otherCounts = await Promise.all(rows.slice(named).map(r => count(r.key)));
+  assert.ok(Math.max(...otherCounts) > Math.min(...namedCounts), `${Math.max(...otherCounts)} against ${Math.min(...namedCounts)}`);
+  // And among themselves the titled ones are newest first, as a listing always was.
+  const dates = rows.slice(0, named).map(r => String(r.date));
+  assert.deepEqual(dates, [...dates].sort().reverse());
+});
+
 test('a transcript whose title or date holds the words still comes first, and a listing with no words is newest first as before', async () => {
   const dated = await call({ view: 'transcripts', commission: 'robodebt', words: '10 March 2023', limit: 3 }); cited(dated);
   assert.equal(dated.rows[0].date, '2023-03-10');
@@ -345,6 +381,8 @@ test('the postings agree with the published transcripts: every word, everyday on
   assert.equal(posted, want.size);
   assert.equal(ix.common_terms.length, 1570);
   assert.deepEqual(ix.common_terms, [...want].filter(([, p]) => p[0].length > Math.floor(ix.docs.length / 2)).map(([t]) => t).sort());
+  // How common each everyday word is: the pages holding it across all transcripts.
+  assert.deepEqual(ix.common_pages, ix.common_terms.map(t => want.get(t)[1].reduce((a, b) => a + b, 0)));
 });
 
 // ---- Everyday words are searchable (16 November 2026) ----
@@ -369,23 +407,23 @@ test('a search made only of everyday words now matches transcript text, ordered 
   assert.ok(none.notes.some(n => n === 'Those words are too common to search the transcript text; add a more specific word.'));
 });
 
-test('a search reads at most six postings files: specific words first, everyday and later words left out, and the notes say which', async () => {
+test('a search reads at most six postings files: specific words first, then the least common everyday words, and the notes say which were left out', async () => {
   const ix = await asset('/transcripts/index.json');
   const reads = [];
   const counting = { ...env, asset: async path => { reads.push(path); return asset(path); } };
   // Nine searchable words: three specific, six everyday.
-  const words = 'general practice training budget averaging evidence department ombudsman whistleblower';
+  const everyday = ['general', 'practice', 'training', 'budget', 'evidence', 'department'];
+  const words = `${everyday.slice(0, 4).join(' ')} averaging ${everyday.slice(4).join(' ')} ombudsman whistleblower`;
   const out = await api.callTool(counting, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words, limit: 4 });
   const shards = reads.filter(p => /^\/transcripts\/terms\//.test(p));
   assert.ok(shards.length <= 6, `${shards.length} postings reads`);
   const note = out.notes.find(n => n.startsWith('A transcript text search reads at most 6 words. Not searched: '));
   assert.ok(note, JSON.stringify(out.notes));
   const skipped = note.replace(/^.*Not searched: /, '').replace(/\.$/, '').split(', ');
-  assert.equal(skipped.length, 3);
-  const common = new Set(ix.common_terms);
-  // Everything left out is an everyday word; every specific word was searched.
-  assert.ok(skipped.every(w => common.has(w)), note);
-  for (const specific of ['averaging', 'ombudsman', 'whistleblower']) assert.equal(skipped.includes(specific), false);
+  // The three left out are the three commonest of the six everyday words, by pages holding them across all transcripts.
+  const pages = Object.fromEntries(ix.common_terms.map((t, at) => [t, ix.common_pages[at]]));
+  assert.ok(everyday.every(t => pages[t] > 0));
+  assert.deepEqual([...skipped].sort(), [...everyday].sort((a, b) => pages[b] - pages[a]).slice(0, 3).sort(), note);
   // The note is one more string in the notes the result already carries: no new field.
   const short = await api.callTool(env, 'royal_commissions', { view: 'transcripts', commission: 'robodebt', words: 'averaging', limit: 4 });
   assert.deepEqual(Object.keys(out).sort(), Object.keys(short).sort());
@@ -396,4 +434,44 @@ test('a search reads at most six postings files: specific words first, everyday 
   assert.equal(every.total, 47); assert.equal(every.rows.length, 4);
   assert.equal(new Set(wide.filter(p => /^\/transcripts\/[a-z0-9-]+\/transcript-/.test(p))).size, 4);
   assert.equal(wide.filter(p => /^\/transcripts\/terms\//.test(p)).length, 1);
+});
+
+/** Every key a word search returns, paged to the end. */
+const allKeys = async (commission, words) => {
+  const keys = []; let total = 0;
+  for (let offset = 0, turns = 0; offset !== null && turns < 80; turns++) { const page = await call({ view: 'transcripts', commission, words, limit: 8, offset }); keys.push(...page.rows.map(r => r.key)); total = page.total; offset = page.next_offset ?? null; }
+  assert.equal(keys.length, total, words);
+  return keys;
+};
+
+test('everyday words rank and never filter: with a specific word in the search, the transcripts found are exactly those the specific words find', async () => {
+  const ix = await asset('/transcripts/index.json'), common = new Set(ix.common_terms);
+  // The ruled example.
+  const alone = await allKeys('robodebt', 'averaging'), withEveryday = await allKeys('robodebt', 'legal advice averaging');
+  assert.deepEqual([...withEveryday].sort(), [...alone].sort());
+  assert.notDeepEqual(withEveryday, alone, 'the order is not the same: the everyday words rank');
+  // Among transcripts that tie on the specific word, those where "legal" and "advice" are both on more pages come first.
+  const counts = async (key, terms) => { const doc = await asset(ix.docs.find(d => d.key === key).file); return terms.map(t => (doc.terms[t] ?? []).length); };
+  let decided = 0;
+  for (let i = 1; i < withEveryday.length; i++) {
+    const [a] = await counts(withEveryday[i - 1], ['averaging']), [b] = await counts(withEveryday[i], ['averaging']);
+    assert.ok(a >= b, `row ${i}: the specific word decides first`);
+    if (a !== b) continue;
+    const ea = Math.min(...await counts(withEveryday[i - 1], ['legal', 'advice'])), eb = Math.min(...await counts(withEveryday[i], ['legal', 'advice']));
+    assert.ok(ea >= eb, `row ${i}: then the weaker of the everyday words`);
+    if (ea !== eb) decided++;
+  }
+  assert.ok(decided >= 1, 'at least one tie on the specific word is decided by the everyday words');
+  // The property, over many searches: one to three specific words, with and without everyday words mixed in.
+  const specific = ['averaging', 'ombudsman', 'whistleblower', 'cabinet', 'drafted', 'duress', 'alarm', 'locum', 'queensland', 'neurosurgery'].filter(t => !common.has(t));
+  const everyday = ['legal', 'advice', 'general', 'practice', 'budget', 'minister', 'evidence'].filter(t => common.has(t));
+  assert.ok(specific.length >= 8 && everyday.length >= 6);
+  let checked = 0;
+  for (const commission of ['robodebt', 'nsw-healthcare-funding']) for (let i = 0; i < specific.length; i++) for (const more of [[], [specific[(i + 3) % specific.length]]]) {
+    const base = [specific[i], ...more], plain = await allKeys(commission, base.join(' '));
+    for (const mixed of [[everyday[i % everyday.length], ...base], [...base, everyday[(i + 1) % everyday.length], everyday[(i + 2) % everyday.length]], [everyday[(i + 3) % everyday.length], base[0], everyday[(i + 4) % everyday.length], ...base.slice(1)]]) {
+      assert.deepEqual([...await allKeys(commission, mixed.join(' '))].sort(), [...plain].sort(), `${commission}: ${mixed.join(' ')}`); checked++;
+    }
+  }
+  assert.ok(checked >= 100, `${checked} searches`);
 });
