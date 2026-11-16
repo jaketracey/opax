@@ -88,19 +88,20 @@ test('provider billing receipts allow settlement refunds and own the reported co
  const settled=[],responses=[reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])].map(r=>({...r,providerMetadata:{openrouter:{usage:{cost:0.00002}}}}));
  const f=fixtures(model(responses),{dailyBudget:{reserve:async()=>({settle:async actual=>settled.push(actual)})}}),run=await f.run();assert.deepEqual(settled,[0.00002,0.00002]);assert.equal(run.cost_usd,0.00004);
 });
-test('credit exhaustion falls back without retry, blocks further turns for 15 minutes, then recovers',async()=>{
+test('credit exhaustion fails closed without retry, blocks further turns for 15 minutes, then recovers',async()=>{
  for(const failure of [Object.assign(Error('payment refused'),{statusCode:402}),Error('Your credit balance is too low'),{cause:{responseBody:JSON.stringify({error:{message:'Insufficient credits'}})}}]){
   let now=0,refund;const cooldown=api.createResearchCreditCooldown(()=>now),m=model(()=>{throw failure});
   const f=fixtures(m,{creditCooldown:cooldown,dailyBudget:{reserve:async()=>({settle:async actual=>{refund=actual}})}});
-  assert.equal((await f.run()).research.mode,'planner');assert.equal(f.failures[0].reason,'research_credit_exhausted');assert.equal(m.doGenerateCalls.length,1);assert.equal(refund,0);
-  await f.run();assert.equal(m.doGenerateCalls.length,1);assert.equal(f.failures[1].reason,'research_credit_exhausted');assert.equal(f.plannerCalls,2);
-  now=api.RESEARCH_CREDIT_COOLDOWN_MS;await f.run();assert.equal(m.doGenerateCalls.length,2);
+  // The refused request itself fails closed (no planner generation); during the cooldown no request is sent and the planner answers as before.
+  await assert.rejects(f.run(),error=>error.reason==='provider_refused');assert.equal(f.failures[0].reason,'provider_refused');assert.equal(m.doGenerateCalls.length,1);assert.equal(refund,0);assert.equal(f.plannerCalls,0);
+  assert.equal((await f.run()).research.mode,'planner');assert.equal(m.doGenerateCalls.length,1);assert.equal(f.failures[1].reason,'research_credit_exhausted');assert.equal(f.plannerCalls,1);
+  now=api.RESEARCH_CREDIT_COOLDOWN_MS;await assert.rejects(f.run(),error=>error.reason==='provider_refused');assert.equal(m.doGenerateCalls.length,2);assert.equal(f.plannerCalls,1);
  }
  assert.equal(api.isResearchCreditError(Error('generic network failure')),false);
 });
-test('a credit refund that stalls cannot delay the planner fallback',async()=>{
+test('a credit refund that stalls cannot delay the refusal',async()=>{
  const pending=[],m=model(()=>{throw Object.assign(Error('402'),{statusCode:402})}),f=fixtures(m,{cleanup:work=>pending.push(work),dailyBudget:{reserve:async()=>({settle:()=>new Promise(()=>{})})}});
- const started=Date.now();const run=await f.run();assert.ok(Date.now()-started<1000);assert.equal(run.research.mode,'planner');assert.equal(pending.length,1);assert.equal(m.doGenerateCalls.length,1);
+ const started=Date.now();await assert.rejects(f.run(),error=>error.reason==='provider_refused');assert.ok(Date.now()-started<1000);assert.equal(f.plannerCalls,0);assert.equal(pending.length,1);assert.equal(m.doGenerateCalls.length,1);
 });
 test('disconnect aborts the model without a paid fallback',async()=>{
  const controller=new AbortController();let providerSignal,start;const started=new Promise(r=>start=r),m=model(options=>{providerSignal=options.abortSignal;start();return new Promise(()=>{})}),f=fixtures(m,{signal:controller.signal});const work=f.run();await started;controller.abort();await assert.rejects(work);assert.equal(providerSignal.aborted,true);assert.equal(f.plannerCalls,0);assert.equal(f.failures[0].reason,'aborted');
