@@ -30,6 +30,11 @@ export interface ResearchPayload {
   trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
   sources: { title: string; url: string; date?: string; kind: string; speaker?: string }[]
   pre_writer_sources?: QualitativeAnswer['sources']
+  /** Quotes only: model text above the quotation block that was trimmed to keep it short (sentences and characters
+   * taken off). The words themselves are not kept here. */
+  above_block_trimmed?: { sentences: number; characters: number }
+  /** Present, and true, only when the run was made with the transcript quotes-only switch on (ask-flags.ts). For reports; not shown to readers. */
+  transcript_quotes_only?: boolean
   ms?: number
   tokens?: { input: number; output: number } | null
   cost_usd?: number | null
@@ -101,12 +106,14 @@ export interface ResearchResult {
 export type Research = ((question: string, context: ResearchContext) => Promise<ResearchResult>) & {
   write?: ReturnType<typeof import('./research-writer').createAnswerWriter>
   writingWallMs?: number
+  /** The transcript quotes-only switch was on when this research was built (ask-flags.ts). */
+  transcriptQuotesOnly?: boolean
 }
 import type { AnswerTally } from './research-evidence'
 export interface ResearchStats {
   /** Hearing transcript excerpts the run held when it stopped (citation text and link), for the code-quoted fallback. */
   heldTranscripts?: { text: string; url: string }[];
-  reservedCostUsd?: number; coherence?: {writer_passes?:number;second_passes?:number;fallback?:boolean;fallback_reason?:string;left_out?:Record<string,number>;uncited_left_out?:string[];excerpt_labels?:{held:number;labelled:number;sent:boolean}}; answer?: AnswerTally; rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[]; rejections?: string[] }
+  reservedCostUsd?: number; coherence?: {writer_passes?:number;second_passes?:number;fallback?:boolean;fallback_reason?:string;left_out?:Record<string,number>;uncited_left_out?:string[];excerpt_labels?:{held:number;labelled:number;sent:boolean};above_block_trimmed_text?:string}; answer?: AnswerTally; rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[]; rejections?: string[] }
 export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted' | 'spend' | 'provider_refused'
 export class ResearchError extends Error {
   constructor(readonly reason: ResearchStop, readonly stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 } }) {

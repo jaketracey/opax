@@ -179,7 +179,7 @@ export function ensureAnswerText(payload: Record<string, unknown>, question?: st
   // Reuse the writer's period, scope and grounding checks. A tool fact is never model-authored fallback text.
   const write = (question: string) => {
     const period = inferPeriod(question), constraints = { ...(payload.answer_scope as import('./ask-constraints').AskConstraints | undefined), period }
-    const written = proseFallback({ question, period, constraints, facts })
+    const written = proseFallback({ question, period, constraints, facts, ...((research as { transcript_quotes_only?: unknown } | undefined)?.transcript_quotes_only === true ? { quotesOnly: true } : {}) })
     const checked = groundAnswerPayload({ ...payload, ...written, answer_scope: constraints }, question)
     return typeof checked.answer === 'string' && checked.answer.trim() ? { ...checked, answered: true } : null
   }

@@ -2,7 +2,7 @@
  * Never model prose from another engine: the older engine answers from unrelated passages and general knowledge,
  * and a hearing-evidence answer with no hearing source must not be shown. The reader gets the transcript excerpts
  * research did hold, quoted by code as recorded, or else one fixed line. */
-import { hearingEvidenceQuestion, transcriptPassage, TRANSCRIPT_LABEL, parliamentaryQuestion, hearingWorded, namesRegisteredCommission } from './transcript-answer'
+import { hearingEvidenceQuestion, transcriptPassage, TRANSCRIPT_LABEL, parliamentaryQuestion, hearingWorded, namesRegisteredCommission, NO_PASSAGE_FOUND } from './transcript-answer'
 export { namesRegisteredCommission }
 import { proseFallback, writingFacts } from './research-writing'
 import { NO_SUPPORTED_ANSWER } from './research-evidence'
@@ -39,10 +39,10 @@ export function quotedOrNothing(question: string, research?: Run): boolean {
 }
 
 type Found = { title?: unknown; url?: unknown; snippet?: unknown }
-export function hearingFallbackPayload(question: string, found: { sources?: unknown[]; held_transcripts?: unknown } | undefined): Record<string, unknown> {
+export function hearingFallbackPayload(question: string, found: { sources?: unknown[]; held_transcripts?: unknown } | undefined, quotesOnly = false): Record<string, unknown> {
   // Neither engine wrote this answer, so the run is recorded under its own mode, with the loop's failure reason.
   const { held_transcripts: _held, ...record } = found ?? {}
-  const research = { rounds: 0, trail: [], sources: [], ...record, mode: 'hearing_fallback' }
+  const research = { rounds: 0, trail: [], sources: [], ...record, mode: 'hearing_fallback', ...(quotesOnly ? { transcript_quotes_only: true } : {}) }
   // The excerpts the stopped run held (research-loop.ts keepHeld), then any transcript source its record lists.
   const kept = (Array.isArray(found?.held_transcripts) ? found.held_transcripts : []) as { text?: unknown; url?: unknown }[]
   const held = [...kept.map((k): Found => ({ snippet: k?.text, url: k?.url })), ...((research?.sources ?? []) as Found[])].flatMap(s => {
@@ -53,8 +53,10 @@ export function hearingFallbackPayload(question: string, found: { sources?: unkn
   // commission recommended, say) excerpts that happened to be held are not an answer to it: the fixed line.
   if (held.length && (hearingEvidenceQuestion(question) || hearingWorded(question))) {
     const facts = writingFacts(undefined, held.map((s, i): Fact => ({ id: i + 1, text: s.text, cite: { kind: 'record', url: s.url, label: s.text } })))
-    const quoted = proseFallback({ question, period: inferPeriod(question), facts })
+    const quoted = proseFallback({ question, period: inferPeriod(question), facts, ...(quotesOnly ? { quotesOnly: true } : {}) })
     if (/[\p{L}\p{N}]/u.test(quoted.answer)) return { answered: true, ...quoted, answer_decision: 'answer', machine_written: false, followups: [], research }
   }
-  return { answered: true, answer: NO_SUPPORTED_ANSWER, answer_decision: 'limitation', citations: {}, sources: [], machine_written: false, followups: [], research }
+  // With the quotes-only switch on, a run that searched the transcripts and holds nothing says so in the fixed words.
+  const searchedNothing = quotesOnly && Array.isArray(found?.held_transcripts) && !held.length
+  return { answered: true, answer: searchedNothing ? NO_PASSAGE_FOUND : NO_SUPPORTED_ANSWER, answer_decision: 'limitation', citations: {}, sources: [], machine_written: false, followups: [], research }
 }

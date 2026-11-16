@@ -77,6 +77,8 @@ interface Env {
   RESEARCH_LOOP?: 'off' | 'shadow' | 'route'
   RESEARCH_LOOP_STEPS?: string
   RESEARCH_LOOP_MS?: string
+  /** A local override of the transcript quotes-only switch (ask-flags.ts): "on" or "off". Unset in production. */
+  ASK_TRANSCRIPT_QUOTES_ONLY?: string
   RESEARCH_LOOP_TOKENS?: string
   RESEARCH_LOOP_DAILY_USD?: string
   /** OpenRouter model for the research loop: a preset or a slug (default @preset/opax-pro). */

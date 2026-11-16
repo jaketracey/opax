@@ -142,3 +142,14 @@ test('stopping a group that has already gone, or a non-group pid, does nothing',
   assert.equal(await stopGroup(1), 'gone');
   assert.equal(stopGroupOnExit(1), false);
 });
+
+test('--var sets only the transcript quotes-only switch, to on or off; any other name or value stops the runner before it starts', async () => {
+  const run = (...args) => new Promise(resolve => { const child = spawn(process.execPath, [fileURLToPath(new URL('../../scripts/research_local.mjs', import.meta.url)), '--serve', ...args], {stdio: ['ignore', 'ignore', 'pipe']}); let err = ''; child.stderr.on('data', d => { err += d; }); child.on('close', code => resolve({code, err})); });
+  for (const bad of ['OPENROUTER_API_KEY=x', 'ASK_TRANSCRIPT_QUOTES_ONLY=yes', 'ASK_TRANSCRIPT_QUOTES_ONLY', 'RESEARCH_LOOP=route']) {
+    const {code, err} = await run('--var', bad);
+    assert.equal(code, 2, bad); assert.match(err, /--var takes ASK_TRANSCRIPT_QUOTES_ONLY=on\|off/);
+  }
+  // The generated config always carries the switch, "off" unless asked, so a local Worker never reads the production key.
+  const source = readFileSync(fileURLToPath(new URL('../../scripts/research_local.mjs', import.meta.url)), 'utf8');
+  assert.match(source, /const setVars = \{ASK_TRANSCRIPT_QUOTES_ONLY: 'off'\};/); assert.match(source, /INDEXNOW_DRY_RUN: 'true', \.\.\.setVars\}/);
+});
