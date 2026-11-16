@@ -63,6 +63,9 @@ export interface QualitativeAnswer {
     transcript?: import('./transcript-answer').TranscriptAttribution }[]
   /** Some or all of the answer's points could not be matched to a passage and carry no citation. */
   answer_status?: 'uncited' | 'partly_cited'
+  /** Whether a language model wrote the answer text a reader sees: true for a writer's or the loop's own words, false
+   * for record facts, passages and fixed wording. Unset where a step does not know. The web labels from it. */
+  machine_written?: boolean
   coherence?: { fallback?: boolean; method?: string; stripped_ratio?: number }
 }
 export interface ResearchContext {

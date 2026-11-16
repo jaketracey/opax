@@ -16,7 +16,7 @@ interface ServicePerson { name: string; aliases?: string[]; electorates: Service
 interface PayPerson { name: string; chamber: string; from: string; to: string | null; sitting: boolean; spells?: [string, string | null, ...unknown[]][] }
 interface PayData { meta?: { from?: string; as_of?: string }; people?: Record<string, PayPerson> }
 export interface IdentityAnswer {
-  answer: string; answer_status: string; answer_source: 'template'; identity_fact: true
+  answer: string; answer_status: string; answer_source: 'template'; machine_written: false; identity_fact: true
   citations: Record<string, number[][]>
   sources: { resource: string; title: string; kind: 'person'; href: string; url: string; snippet: string; cited: boolean; answer_ranges: number[][] }[]
 }
@@ -53,7 +53,7 @@ export async function identityAnswer(input: RecordQuestion, deps: ToolDeps): Pro
   if (input.speaker && fold(input.speaker) !== fold(best.name)) return null
   const origin = deps.origin ?? 'https://opax.com.au'
   const profile = found.cite.find(c => c.label === best.name)?.url ?? `${origin}/subject/person/${encodeURIComponent(best.name)}`
-  const out: IdentityAnswer = { answer: '', answer_status: 'answered', answer_source: 'template', identity_fact: true, citations: {}, sources: [] }
+  const out: IdentityAnswer = { answer: '', answer_status: 'answered', answer_source: 'template', machine_written: false, identity_fact: true, citations: {}, sources: [] }
   const add = (text: string, url = profile) => {
     if (out.answer) out.answer += '\n'
     const start = Array.from(out.answer).length

@@ -134,6 +134,8 @@ export function clarifyPayload(question: string, suggestion?: string) {
     citations: {} as Record<string, never>,
     sources: [] as never[],
     answer_status: 'needs_question' as const,
+    // The suggested question is the rewrite model's own guess; the rest is fixed wording.
+    machine_written: Boolean(suggestion),
     ...(suggestion ? { suggested_question: suggestion } : {}),
   }
 }
