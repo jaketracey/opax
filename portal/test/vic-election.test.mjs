@@ -275,10 +275,11 @@ test('seat finder: no person\'s name finds a seat until the polls close, and pla
   const page=async(q,at)=>(await vicElectionPage(null,read,{VIC_ELECTION_HUB_ENABLED:'true'},q,at)).html;
   assert.match(await page(former,LAST),/No suburb, postcode or district matches/);assert.doesNotMatch(await page(former,LAST),/<div class="vic-hits">|<span>Member/);
   assert.ok((await page(former,CLOSE)).includes(`<strong>${former}</strong>`));
-  // Brunswick was vacant when the term ended: its last member's name finds nothing before the close.
-  const last=districts.find(s=>s.name==='Brunswick').members[0].name;
-  for(const q of [last,...last.split(' ')])for(const at of [CAMPAIGN,LAST])assert.ok(findSeats(q,data,places,at).every(h=>h.kind!=='Member'),'Brunswick before the close');
-  assert.deepEqual(findSeats(last,data,places,LAST),[]);assert.match(await page(last,LAST),/No suburb, postcode or district matches/);
+  // Brunswick's last member, as an invented fixture name so the test does not depend on the roster's Brunswick entry.
+  const last='Avery Quillvane',wm=wendouree.members[0];
+  const fixture={...data,seats:data.seats.map(s=>s.kind==='district'&&s.name==='Brunswick'?{...s,members:[{...wm,name:last}]}:s)};
+  for(const q of [last,...last.split(' ')])for(const at of [CAMPAIGN,LAST])assert.deepEqual(findSeats(q,fixture,places,at),[],'Brunswick before the close');
+  assert.deepEqual(shape(findSeats(last,fixture,places,CLOSE)),[{name:last,kind:'Member',seats:[['Brunswick',null]]}]);
   // Suburb, postcode, council area, district and region matching is the same on both sides of the close.
   for(const q of ['3350','3056','Ballarat','fitzroy','Wendouree','bass','Mt Waverley','St Kilda','Brunswick','Metropolitan','zzqx']) {
     assert.deepEqual(shape(findSeats(q,data,places,LAST)),shape(findSeats(q,data,places,CAMPAIGN)),q);
