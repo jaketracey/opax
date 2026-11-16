@@ -53,31 +53,6 @@
           "share": null
         }
       ]
-    },
-    {
-      "name": "Jacinta Allan",
-      "kind": "Member",
-      "seats": [
-        {
-          "kind": "district",
-          "slug": "bendigo-east",
-          "name": "Bendigo East",
-          "electorate_url": "/subject/electorate/vic-vic-la-vic-bendigo-east",
-          "region": "Northern Victoria",
-          "member": {
-            "name": "Jacinta Allan",
-            "party": "Labor"
-          },
-          "result": {
-            "date": "2022-11-26",
-            "kind": "general",
-            "party": "Labor",
-            "margin": 10.91
-          },
-          "candidates": 0,
-          "share": null
-        }
-      ]
     }
   ],
   "split": false,

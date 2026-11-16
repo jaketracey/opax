@@ -260,6 +260,33 @@ test('VEC results: 2022 seat totals, later by-elections and margins as records',
   assert.match(renderVicElection(data,null,{},AFTER_POLLS).html,/Liberal by 1\.4<\/span><span class="vic-seat-held">Rachel Westaway/);
   assert.match(renderVicElection(data,null).html,/Liberal by 1\.4<\/span><span class="vic-seat-held">\d+ candidates</);
 });
+test('seat finder: no person\'s name finds a seat until the polls close, and places match the same before and after',async()=>{
+  const LAST=new Date('2026-11-28T17:59:59+11:00'),CLOSE=new Date('2026-11-28T18:00:00+11:00'),CAMPAIGN=new Date('2026-11-16T10:00:00+11:00');
+  const shape=hits=>hits.map(h=>({name:h.name,kind:h.kind,seats:h.seats.map(x=>[x.seat.name,x.share])}));
+  const districts=data.seats.filter(s=>s.kind==='district');
+  // Every roster member, by full name and by each word of it, on the web page's path and the bare matcher.
+  for(const s of districts)for(const m of s.members)for(const q of [m.name,...m.name.split(' ')]) {
+    for(const at of [CAMPAIGN,LAST])assert.ok(findSeats(q,data,places,at).every(h=>h.kind!=='Member'),s.name+' before the close');
+    assert.ok(findSeats(m.name,data,places,CLOSE).some(h=>h.kind==='Member'&&h.seats[0].seat===s),s.name+' at the close');
+  }
+  const wendouree=districts.find(s=>s.name==='Wendouree'),former=wendouree.members[0].name;
+  assert.deepEqual(findSeats(former,data,places,LAST),[]);
+  assert.deepEqual(shape(findSeats(former,data,places,CLOSE)),[{name:former,kind:'Member',seats:[['Wendouree',null]]}]);
+  const page=async(q,at)=>(await vicElectionPage(null,read,{VIC_ELECTION_HUB_ENABLED:'true'},q,at)).html;
+  assert.match(await page(former,LAST),/No suburb, postcode or district matches/);assert.doesNotMatch(await page(former,LAST),/<div class="vic-hits">|<span>Member/);
+  assert.ok((await page(former,CLOSE)).includes(`<strong>${former}</strong>`));
+  // Brunswick was vacant when the term ended: its last member's name finds nothing before the close.
+  const last=districts.find(s=>s.name==='Brunswick').members[0].name;
+  for(const q of [last,...last.split(' ')])for(const at of [CAMPAIGN,LAST])assert.ok(findSeats(q,data,places,at).every(h=>h.kind!=='Member'),'Brunswick before the close');
+  assert.deepEqual(findSeats(last,data,places,LAST),[]);assert.match(await page(last,LAST),/No suburb, postcode or district matches/);
+  // Suburb, postcode, council area, district and region matching is the same on both sides of the close.
+  for(const q of ['3350','3056','Ballarat','fitzroy','Wendouree','bass','Mt Waverley','St Kilda','Brunswick','Metropolitan','zzqx']) {
+    assert.deepEqual(shape(findSeats(q,data,places,LAST)),shape(findSeats(q,data,places,CAMPAIGN)),q);
+    assert.deepEqual(shape(findSeats(q,data,places,CLOSE).filter(h=>h.kind!=='Member')),shape(findSeats(q,data,places,LAST)),q);
+  }
+  assert.equal(findSeats('3350',data,places,LAST)[0].kind,'Postcode');assert.equal(findSeats('Wendouree',data,places,LAST)[0].kind,'District');
+  assert.equal(findSeats('St Kilda',data,places,LAST)[0].kind,'Suburb');
+});
 test('seat finder: suburbs, postcodes and council areas from ABS splits, exact names first, never indexed',async()=>{
   assert.equal(places.suburb.length>2900&&places.postcode.length>650&&places.council.length===80,true);
   assert.deepEqual(places.districts,data.seats.filter(s=>s.kind==='district').map(s=>s.name).sort());
@@ -273,7 +300,7 @@ test('seat finder: suburbs, postcodes and council areas from ABS splits, exact n
   assert.deepEqual(names(findSeats('bass',data,places)),['District:Bass']);
   assert.ok(['Suburb:Ballarat Central','Suburb:Ballarat North','Suburb:Ballarat East'].every(n=>names(ballarat).includes(n)));
   assert.deepEqual(names(findSeats('Mt Waverley',data,places)).slice(0,1),['Suburb:Mount Waverley']);
-  assert.deepEqual(findSeats('Addison',data,null).map(h=>`${h.kind}:${h.seats[0].seat.name}`),['Member:Wendouree']);
+  assert.deepEqual(findSeats('Addison',data,null,AFTER_POLLS).map(h=>`${h.kind}:${h.seats[0].seat.name}`),['Member:Wendouree']);
   assert.deepEqual(findSeats('zzqx',data,places),[]);assert.deepEqual(findSeats('   ',data,places),[]);
   const found=await vicElectionPage(null,read,{VIC_ELECTION_HUB_ENABLED:'true'},'3350');
   assert.equal(found.noindex,true);assert.match(found.html,/<strong>3350<\/strong> <span>Postcode<\/span>/);assert.match(found.html,/Check your exact address with the VEC/);

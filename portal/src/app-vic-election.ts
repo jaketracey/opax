@@ -126,7 +126,7 @@ export async function appVicElection(req: Request, env: ElectionEnv, now = new D
     let body: unknown
     if (find) {
       const places = await cachedAsset(env.ASSETS,VIC_ELECTION_PLACES,cached.places.asset,value=>validateVicPlaces(value,d)).catch(()=>null)
-      const hits = findSeats(q!,d,places).map(h=>({name:h.name, kind:h.kind,
+      const hits = findSeats(q!,d,places,now).map(h=>({name:h.name, kind:h.kind,
         seats:h.seats.map(x=>({...seatRow(x.seat), share:h.seats.length > 1 ? x.share : null}))}))
       body = {schema_version:1, state:vicElectionState(d,now), q:q!, places_searched:places !== null, hits, split:hits.some(h=>h.seats.length > 1),
         empty:hits.length ? null : /^\d{4}$/.test(q!) ? 'postcode' : 'place', address_url:d.sources.address,

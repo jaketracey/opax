@@ -269,6 +269,21 @@ test('find trims and truncates q to 60 characters, and distinguishes empty place
   assert.ok((await payload('/find?q=Metropolitan')).hits.some(h=>h.kind==='Region'));
 });
 
+test('find returns no Member hit until the polls close, and the same places before and after',async t=>{
+  const former=data.seats.find(s=>s.name==='Wendouree').members[0].name,last=data.seats.find(s=>s.name==='Brunswick').members[0].name;
+  const at=async(when,q)=>{t.mock.timers.setTime(Date.parse(when));return payload('/find?q='+encodeURIComponent(q));};
+  const places=hits=>hits.filter(h=>h.kind!=='Member').map(h=>({name:h.name,kind:h.kind,seats:h.seats.map(s=>[s.slug,s.share])}));
+  for(const q of [former,last]) {
+    const before=await at('2026-11-28T17:59:59+11:00',q);assert.deepEqual(before.hits,[]);assert.equal(before.empty,'place');
+  }
+  const after=await at('2026-11-28T18:00:00+11:00',former);
+  assert.deepEqual(after.hits.map(h=>[h.name,h.kind,h.seats.map(s=>s.slug)]),[[former,'Member',['wendouree']]]);
+  for(const q of ['3350','St Kilda','Bass','allan','Wendouree']) {
+    const before=await at('2026-11-28T17:59:59+11:00',q),later=await at('2026-11-28T18:00:00+11:00',q);
+    assert.ok(before.hits.length&&before.hits.every(h=>h.kind!=='Member'),q);assert.deepEqual(places(later.hits),before.hits.map(h=>({name:h.name,kind:h.kind,seats:h.seats.map(s=>[s.slug,s.share])})),q);
+  }
+});
+
 test('unavailable or malformed places retain seat/member search and declare that places were not searched',async()=>{
   for(const index of [new Error('missing places'),null,{}, {...places,postcode:[['9999',[[999,1000]],1]]},
     {...places,districts:places.districts.map((name,i)=>i===0?'Unknown district':name)}]) {
