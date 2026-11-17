@@ -2418,6 +2418,7 @@ function resetAsk() {
   $("ask-money").hidden = true;
   $("quote-rail").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
+  $("ask-machine").replaceChildren(); $("ask-machine").hidden = true;
   lastAsk = { question: "", sources: [] };
   renderChips();
 }
@@ -10857,6 +10858,7 @@ async function runAsk(question) {
   $("ask-keep").hidden = true;
   $("ask-again").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
+  $("ask-machine").replaceChildren(); $("ask-machine").hidden = true;
   renderAnswerNotice($("ask-notice"), "");
   loadMachineNotice();
   $("ask-answer").askEvidence = [];
@@ -10939,7 +10941,7 @@ async function runAsk(question) {
           $("ask-answer").replaceChildren();
           $("ask-result").querySelector(".kicker").textContent = "Answer";
           // Only a model's words stream, so they are labelled from the first of them.
-          $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false;
+          $("ask-machine").innerHTML = machineLabelHTML(); $("ask-machine").hidden = false;
           // Their notice holds its line from the first words, so nothing moves when the answer completes.
           renderAnswerNotice($("ask-notice"), machineNoticeHelpers?.MACHINE_NOTICE);
           $("ask-stamp").textContent = "";
@@ -11010,11 +11012,15 @@ async function runAsk(question) {
     $("ask-stamp").hidden = needsClarification || noAnswer;
     $("ask-result").querySelector(".kicker").textContent = noAnswer ? "Records found" : needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
-    // Every answer a language model wrote carries the label, above any overview paragraph it also wrote.
-    if (modelWrittenAnswer(data, answerText)) { $("ask-overview").insertAdjacentHTML("afterbegin", machineLabelHTML()); $("ask-overview").hidden = false; }
+    // Every answer a language model wrote carries the label on a line of its own, above any overview paragraph it
+    // also wrote. The sunken panel is that paragraph's alone: with no paragraph it stays hidden, never an empty bar.
+    const askWritten = modelWrittenAnswer(data, answerText);
+    $("ask-machine").innerHTML = askWritten ? machineLabelHTML() : "";
+    $("ask-machine").hidden = !askWritten;
     renderAnswerNotice($("ask-notice"), noAnswer ? "" : answerNoticeText(data, answerText));
     if (noAnswer) {
       $("ask-overview").hidden = true;
+      $("ask-machine").hidden = true;
       renderNoAnswer($("ask-answer"), data);
     } else if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
