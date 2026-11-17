@@ -117,6 +117,15 @@ test('the homepage is five blocks with one primary action and no in-site arrows'
  assert.match(home,/<script src="\/ui-source\.js\?v=[\w]+" defer><\/script>/);
 });
 
+test('the home title is the first line of its block, with no status lines above it to fill or reserve',()=>{
+ assert.match(main,/<div class="hp-purpose">\s*<h1 id="hp-title">Your guide to the public record<\/h1>/);
+ assert.doesNotMatch(home,/hp-sitting|hp-most-divided/);
+ for (const file of ['home.js','home-data.js','home.css']) {
+  const text=readFileSync(new URL(`../public/${file}`,import.meta.url),'utf8');
+  assert.doesNotMatch(text,/hp-sitting|hp-most-divided|sitting-days\.json|hubs\/index\.json/,file);
+ }
+});
+
 test('the home page ships its declaration rows in the same shape the script redraws, each dot inside the part after it',()=>{
  const home=readFileSync(new URL('../public/home.html',import.meta.url),'utf8');
  const details=[...home.matchAll(/<p class="hp-row-detail">(.*?)<\/p>/g)].map(m=>m[1]).filter(d=>/recorded/.test(d));
