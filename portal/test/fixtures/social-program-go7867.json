@@ -1,0 +1,288 @@
+{
+ "note": "The 9 Nov 2026 edition's program, as public/social/programs.json held it before bcbb3ce5c (11 Nov 2026) dropped it from the export. Used by social-content-fixes.test.mjs to compose that edition again.",
+ "programs": [
+  {
+   "id": "GO7867",
+   "key": "go7867",
+   "n": "Major and Local Community Infrastructure Program",
+   "ag": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+   "t": 267729542,
+   "c": 103,
+   "r": 67,
+   "y0": "2025-26",
+   "y1": "2026-27",
+   "sel": [
+    [
+     "Closed Non-Competitive",
+     160128835,
+     22
+    ]
+   ],
+   "selKnown": [
+    160128835,
+    22
+   ],
+   "adhoc": 0,
+   "mapped": [
+    139448835,
+    20
+   ],
+   "groups": {
+    "Labor": [
+     120548835,
+     17
+    ],
+    "Coalition": [
+     18900000,
+     3
+    ],
+    "Crossbench": [
+     0,
+     0
+    ]
+   },
+   "seatShare": {
+    "Labor": 0.6214569654640809,
+    "Coalition": 0.27474939525780423,
+    "Crossbench": 0.10379363927811498
+   },
+   "governed": {
+    "Labor": 267729542
+   },
+   "split": [
+    {
+     "group": "Labor",
+     "d": 120548835,
+     "c": 17,
+     "pct": 86,
+     "seatPct": 62
+    },
+    {
+     "group": "Coalition",
+     "d": 18900000,
+     "c": 3,
+     "pct": 14,
+     "seatPct": 28
+    },
+    {
+     "group": "Crossbench",
+     "d": 0,
+     "c": 0,
+     "pct": 0,
+     "seatPct": 10
+    }
+   ],
+   "blocSplit": {
+    "gov": [
+     120548835,
+     17
+    ],
+    "opp": [
+     18900000,
+     3
+    ],
+    "cross": [
+     0,
+     0
+    ]
+   },
+   "era": "Labor",
+   "first": "2026-04-24",
+   "last": "2026-08-27",
+   "seatCount": 17,
+   "seats": [
+    {
+     "n": "Fraser",
+     "st": "vic",
+     "t": 35000000,
+     "c": 3,
+     "gov": 35000000,
+     "opp": 0,
+     "cross": 0,
+     "holders": [
+      [
+       "Daniel Mulino",
+       "Labor",
+       35000000
+      ]
+     ]
+    },
+    {
+     "n": "Eden-Monaro",
+     "st": "nsw",
+     "t": 16000000,
+     "c": 1,
+     "gov": 16000000,
+     "opp": 0,
+     "cross": 0,
+     "holders": [
+      [
+       "Kristy McBain",
+       "Labor",
+       16000000
+      ]
+     ]
+    },
+    {
+     "n": "Corangamite",
+     "st": "vic",
+     "t": 10452260,
+     "c": 2,
+     "gov": 10452260,
+     "opp": 0,
+     "cross": 0,
+     "holders": [
+      [
+       "Libby Coker",
+       "Labor",
+       10452260
+      ]
+     ]
+    },
+    {
+     "n": "Canning",
+     "st": "wa",
+     "t": 10000000,
+     "c": 1,
+     "gov": 0,
+     "opp": 10000000,
+     "cross": 0,
+     "holders": [
+      [
+       "Andrew Hastie",
+       "Liberal",
+       10000000
+      ]
+     ]
+    },
+    {
+     "n": "Cunningham",
+     "st": "nsw",
+     "t": 10000000,
+     "c": 1,
+     "gov": 10000000,
+     "opp": 0,
+     "cross": 0,
+     "holders": [
+      [
+       "Alison Byrnes",
+       "Labor",
+       10000000
+      ]
+     ]
+    },
+    {
+     "n": "Chifley",
+     "st": "nsw",
+     "t": 9500000,
+     "c": 1,
+     "gov": 9500000,
+     "opp": 0,
+     "cross": 0,
+     "holders": [
+      [
+       "Ed Husic",
+       "Labor",
+       9500000
+      ]
+     ]
+    },
+    {
+     "n": "Hasluck",
+     "st": "wa",
+     "t": 5500000,
+     "c": 1,
+     "gov": 5500000,
+     "opp": 0,
+     "cross": 0,
+     "holders": [
+      [
+       "Tania Lawrence",
+       "Labor",
+       5500000
+      ]
+     ]
+    },
+    {
+     "n": "Parramatta",
+     "st": "nsw",
+     "t": 5000000,
+     "c": 1,
+     "gov": 5000000,
+     "opp": 0,
+     "cross": 0,
+     "holders": [
+      [
+       "Andrew Charlton",
+       "Labor",
+       5000000
+      ]
+     ]
+    }
+   ],
+   "recipients": [
+    [
+     "abn:29352754296",
+     "Moorabool Shire Council",
+     "council",
+     25000000,
+     1
+    ],
+    [
+     "abn:26987935332",
+     "Bega Valley Shire Council",
+     "council",
+     19250000,
+     3
+    ],
+    [
+     "abn:18374210672",
+     "City of Greater Geelong",
+     "council",
+     15452260,
+     4
+    ],
+    [
+     "abn:43320295742",
+     "Casey City Council",
+     "council",
+     12430000,
+     3
+    ],
+    [
+     "abn:63139525939",
+     "Wollongong City Council",
+     "council",
+     10000000,
+     1
+    ]
+   ],
+   "timing": {
+    "0_3": [
+     0,
+     0
+    ],
+    "3_6": [
+     0,
+     0
+    ],
+    "6_12": [
+     0,
+     0
+    ],
+    "12_24": [
+     0,
+     0
+    ],
+    "over_24": [
+     0,
+     0
+    ],
+    "unknown": [
+     267729542,
+     103
+    ]
+   }
+  }
+ ]
+}

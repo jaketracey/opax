@@ -38,8 +38,8 @@ const catalogue = { version: 1, accepted_licences: ['CC0', 'Public domain', 'CC 
     'roof': { file: '/social/photos/roof.jpg', width: 1200, height: 794, description: 'The roof', source_title: 'File:Roof.jpg', page: 'https://commons.wikimedia.org/wiki/File:Roof.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
     'twilight': { file: '/social/photos/twilight.jpg', width: 1200, height: 900, description: 'Twilight', source_title: 'File:Twilight.jpg', page: 'https://commons.wikimedia.org/wiki/File:Twilight.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
     'aph': { file: '/social/photos/aph.jpg', width: 1200, height: 900, description: 'Parliament House', source_title: 'File:APH.jpg', page: 'https://commons.wikimedia.org/wiki/File:APH.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
-    'senate': { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://commons.wikimedia.org/wiki/File:Senate.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' },
-    'house': { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://commons.wikimedia.org/wiki/File:House.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' },
+    'senate': { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://commons.wikimedia.org/wiki/File:Senate.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons', chamber: 'senate' },
+    'house': { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://commons.wikimedia.org/wiki/File:House.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons', chamber: 'representatives' },
     'unlicensed': { file: '/social/photos/unlicensed.jpg', width: 1200, height: 800, description: 'Not free', source_title: 'File:X.jpg', page: 'https://example.org', author: 'Someone', licence: 'All rights reserved', credit: 'Photo: Someone' },
   },
   subjects: { 'grant:GA34203': ['roof', 'twilight'], 'topic:housing': ['unlicensed'] },
@@ -61,7 +61,8 @@ const shard23 = { 'abn-97694995462': { n: 'The Trustee for the Qantas Foundation
 const passedBillFile = { originating_house: 'representatives',
   summary: { sentences: ['It changes how the tax system treats eligible household payments.', 'The Commissioner would administer the change.', 'It would commence on Royal Assent.'], affected: 'The ATO and households receiving eligible payments.', attribution: 'Written by a model from the explanatory memorandum; not the record' },
   key_dates: [{ stage: 'introduced', date: '2026-03-01', house: 'representatives' }, { stage: 'third_reading', date: '2026-05-12', house: 'representatives' }, { stage: 'introduced', date: '2026-06-17', house: 'senate' }, { stage: 'passed', date: '2026-08-20', house: 'senate' }, { stage: 'royal_assent', date: '2026-08-26', house: 'senate' }],
-  divisions: [{ key: 'federal-senate-1', date: '2026-08-20', house: 'senate', stage: 'Limitation of debate', ayes: 34, noes: 26, outcome: 'affirmative', party_splits: { Labor: { ayes: 24, noes: 0 }, Greens: { ayes: 9, noes: 0 }, Liberal: { ayes: 0, noes: 19 }, LNP: { ayes: 0, noes: 3 }, 'One Nation': { ayes: 0, noes: 3 }, Nationals: { ayes: 0, noes: 1 }, Independent: { ayes: 1, noes: 0 } } }],
+  divisions: [{ key: 'federal-senate-1', date: '2026-08-20', house: 'senate', stage: 'Limitation of debate', question: 'The question is that the motion for the allotment of time be agreed to.', ayes: 34, noes: 26, outcome: 'affirmative', party_splits: { Labor: { ayes: 24, noes: 0 }, Greens: { ayes: 9, noes: 0 }, Liberal: { ayes: 0, noes: 19 }, LNP: { ayes: 0, noes: 3 }, 'One Nation': { ayes: 0, noes: 3 }, Nationals: { ayes: 0, noes: 1 }, Independent: { ayes: 1, noes: 0 } } },
+    { key: 'federal-senate-2', date: '2026-08-20', house: 'senate', stage: 'Third reading', question: 'The question is that the bill be now read a third time.', ayes: 33, noes: 27, outcome: 'affirmative', party_splits: { Labor: { ayes: 24, noes: 0 }, Greens: { ayes: 9, noes: 0 }, Liberal: { ayes: 0, noes: 20 }, LNP: { ayes: 0, noes: 3 }, 'One Nation': { ayes: 0, noes: 3 }, Nationals: { ayes: 0, noes: 1 } } }],
   speeches: [{ slug: 's1', speaker: 'Daniel Mulino', date: '2026-03-01' }, { slug: 's2', speaker: 'Tony Sheldon', date: '2026-03-02' }],
   sources: [{ kind: 'em', licence: 'CC BY-NC-ND 4.0' }, { kind: 'billhome', licence: 'CC BY-NC-ND 4.0' }, { kind: 'frl_act', licence: 'CC BY 4.0' }] };
 function sources(recent = [], { photos = true, extras = true } = {}) {
@@ -354,7 +355,10 @@ test('every kind tells a valid story from the same records, and X stays exactly 
 function grantSources(opts = {}) {
   const grant = { id: 'GA34203', recipientId: 'abn:97694995462', recipient: 'The Trustee for the Qantas Foundation Memorial Trust', amount: 11300000, start: '2026-08-27', purpose: 'Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld', agency: 'Department of Infrastructure, Transport, Regional Development, Communications and the Arts', program: 'Community Development Grants', category: 'Regional Development', sourceUrl: 'https://www.grants.gov.au/Ga/Show/verified-guid' };
   const base = sources([], opts);
-  return { ...base, async asset(path) { return path === '/social/grants.json' ? { grants: [grant] } : base.asset(path); } };
+  // The seat's holder comes from the roster: Kennedy's current member.
+  const katter = { name: 'Bob Katter', speeches: 3000, current: true, party_now: "Katter's Australian Party", representation: [{ jurisdiction: 'federal', chamber: 'representatives', electorate: 'Kennedy', state: 'QLD' }] };
+  const people = opts.people ?? [...roster.people, katter];
+  return { ...base, async asset(path) { return path === '/social/grants.json' ? { grants: [grant] } : path === '/parliamentarians.json' ? { people } : base.asset(path); } };
 }
 
 test('the grant story carries the selection, the same recipient and the electorate when the shard and graph do', async () => {
@@ -378,7 +382,14 @@ test('the grant story carries the selection, the same recipient and the electora
   assert.equal(ledger.total.amount, '$11,729,541');
   assert.equal(electorate.title, 'Kennedy');
   assert.equal(electorate.value, '$1.45bn');
-  assert.match(electorate.lines[0], /Held by Bob Katter, Katter's Australian Party\. Safe seat, margin 13\.1 at the 2022 election\./);
+  // The margin with its election and its class in words, never as stored ("fairly_safe"); the holder's own party is not repeated.
+  assert.match(electorate.lines[0], /Held by Bob Katter, Katter's Australian Party\. At the 2022 election it was a safe seat, margin 13\.1%\./);
+  // With no current member for the seat in the roster (a seat abolished at the election), no "Held by" line and no
+  // margin: the seat's awards only. The grants export's own member list is never read for it.
+  const vacant = await composeDailyPost('2026-09-14', grantSources({ people: roster.people }), 'grant');
+  const seat = vacant.slides.find(s => s.title === 'Kennedy');
+  assert.deepEqual(seat.lines, []);
+  assert.doesNotMatch(JSON.stringify(vacant), /Held by|margin/);
   assert.equal(source.url, 'opax.com.au/money/grants/federal/recipient/abn:97694995462?award=GA34203');
   assert.match(post.caption, /\n\nPhotos: Kgbo, CC BY-SA 4\.0, via Wikimedia Commons\.\n\nhttps:\/\/opax\.com\.au\//, 'the credit sits before the URL');
   const thin = await composeDailyPost('2026-09-14', grantSources({ extras: false }), 'grant');
@@ -402,21 +413,22 @@ test('a bill with a division and dates gets a timeline and the division; one wit
   assert.equal(cover.kicker, 'Bill · Treasury portfolio');
   assert.equal(cover.title, 'Recently Passed', 'the cover headline is the bill\'s own name without its Bill 2026 tail')
   assert.match(cover.line, /^It changes how the tax system treats eligible household payments\. Passed 20 Aug 2026\.$/);
-  assert.equal(cover.photo, 'senate', 'the division house chooses the chamber photo');
+  assert.equal(cover.photo, 'house', 'a bill introduced in the House shows the House, though its deciding division was in the Senate');
   assert.equal(list.items.length, 3);
   assert.equal(list.note, 'Written by a model from the explanatory memorandum; not the record.');
   assert.equal(timeline.title, '178 days');
   assert.equal(timeline.events.length, 5);
   assert.deepEqual(timeline.events.map(e => e.date), ['1 Mar 2026', '12 May 2026', '17 Jun 2026', '20 Aug 2026', '26 Aug 2026']);
-  assert.equal(division.title, 'Limiting debate, 34 to 26');
-  assert.equal(division.kicker, 'The only recorded division');
-  assert.deepEqual(division.ayeParties, [['Labor', 24], ['Greens', 9], ['Independent', 1]]);
-  assert.deepEqual(division.noParties, [['Liberal', 19], ['LNP', 3], ['One Nation', 3], ['Nationals', 1]]);
+  // The third reading, never the guillotine motion that came before it on the same day.
+  assert.equal(division.title, 'Passed at the third reading, 33 to 27');
+  assert.equal(division.kicker, 'One of two recorded divisions');
+  assert.deepEqual(division.ayeParties, [['Labor', 24], ['Greens', 9]]);
+  assert.deepEqual(division.noParties, [['Liberal', 20], ['LNP', 3], ['One Nation', 3], ['Nationals', 1]]);
   assert.equal(division.line, 'Senate, 20 Aug 2026. Party split from They Vote For You.');
-  assert.equal(touches.photo, 'house');
+  assert.equal(touches.photo, 'house', 'one House photograph: the picture shows it again rather than the Senate');
   assert.match(touches.lines[0], /Speeches in the record: 2, beginning with Daniel Mulino on 1 Mar 2026\./);
   assert.deepEqual(source.rows, ['Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0', 'Bill home page on ParlInfo, CC BY-NC-ND 4.0', 'The Act on the Federal Register of Legislation, CC BY 4.0', 'Division record: theyvoteforyou.org.au']);
-  assert.match(passed.caption, /Photos: JJ Harrison, CC BY-SA 3\.0, via Wikimedia Commons\./);
+  assert.match(passed.caption, /Photo: JJ Harrison, CC BY-SA 3\.0, via Wikimedia Commons\./);
   const fresh = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(fresh.subject, 'bill:au-federal-r7537');
   assert.deepEqual(types(fresh), ['cover', 'list', 'source'], 'no dates, divisions or affected parties: the story is the summary');
