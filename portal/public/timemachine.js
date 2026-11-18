@@ -409,10 +409,11 @@ const CSS = `
 .tm-hero-kicker { font: var(--type-metadata); font-family: var(--serif); font-style: italic; color: var(--ink-faint); }
 .tm-hero-row { display: flex; align-items: center; justify-content: center; gap: var(--space-row); }
 .tm-year-lockup { position: relative; display: flex; flex-direction: column; align-items: center; }
-/* The dial's readout is the one figure outside the six sizes: the tool is
-   built around it, the way a page is built around its title. */
+/* The dial's readout is a figure (the figure role's sans 700, tabular), at the
+   one size outside the six: the tool is built around it, the way a page is
+   built around its title. */
 .tm-year {
-  font-family: var(--serif); font-weight: 700;
+  font: var(--type-display);
   font-size: clamp(3.4rem, 14vw, 6rem); line-height: 1.05;
   color: var(--navy); font-variant-numeric: tabular-nums;
   min-width: 4ch; text-align: center; margin: 0;

@@ -986,9 +986,11 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 
 /* ---- answer + sources --------------------------------------------------- */
 
-/* Answers render as parsed blocks (see renderAnswer), not pre-wrapped text. */
+/* Answers render as parsed blocks (see renderAnswer), not pre-wrapped text.
+   An answer is OPAX's own writing, so its paragraphs take the body role, as the
+   app's AnswerBody does; a quote keeps the record's serif (below). */
 .answer {
-  font: var(--type-record); color: var(--ink);
+  font: var(--type-body); color: var(--ink);
   max-width: 72ch; margin: 0;
 }
 .answer > * { margin: 0 0 var(--sp-20); }
@@ -1007,7 +1009,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 .answer li > ul > li::before { content: "\2013\2002"; }
 .answer li::marker { color: var(--ink-faint); }
 .answer blockquote {
-  margin-left: 0; padding-left: var(--sp-16); font-style: italic; color: var(--ink-soft);
+  margin-left: 0; padding-left: var(--sp-16); font-family: var(--serif); font-style: italic; color: var(--ink-soft);
   background: linear-gradient(to right, var(--bronze) 0 2px, transparent 2px)
     no-repeat left / 2px 100%;
 }
@@ -2891,7 +2893,7 @@ mark.privacy-confirm {
 }
 /* ==== page-ask: Ask and the chat view (/ask, /chat) ==== */
 #panel-ask .answer, #panel-chat .answer {
-  max-width: 65ch; font: var(--type-record); overflow-wrap: anywhere;
+  max-width: 65ch; font: var(--type-body); overflow-wrap: anywhere;
 }
 #panel-ask .answer p, #panel-chat .answer p { margin: 0 0 var(--space-block); }
 #panel-ask .answer h3, #panel-chat .answer h3 { font: var(--type-heading); margin: var(--sp-40) 0 var(--space-heading); }
@@ -3367,8 +3369,10 @@ a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: u
 .subject-party .party-benefits { margin: var(--space-group) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink); }
 @media (max-width: 560px) { .subject-party .party-debts .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-/* In parliament: the record's words, in the record's serif. */
-#panel-subject .party-mentions .snippet, #panel-subject .party-mention-brief { display: block; margin: var(--space-tight) 0 0; max-width: var(--size-readable); font: var(--type-record); color: var(--ink); -webkit-line-clamp: unset; overflow: visible; }
+/* In parliament: the record's words, in the record's serif; a machine-written
+   brief in their place is OPAX's words, in the body role (the app's year brief). */
+#panel-subject .party-mentions .snippet, #panel-subject .party-mention-brief { display: block; margin: var(--space-tight) 0 0; max-width: var(--size-readable); color: var(--ink); -webkit-line-clamp: unset; overflow: visible; }
+#panel-subject .party-mentions .snippet { font: var(--type-record); }
 #panel-subject .party-mention-brief { font: var(--type-body); }
 #panel-subject .party-mentions .source-title { display: block; margin: 0; font: var(--type-row-record); }
 #panel-subject .party-mentions .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sp-4); margin: var(--space-line) 0 0; font: var(--type-fine); }
@@ -3470,10 +3474,12 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-results .search-result-heading { margin-top: var(--space-tight); }
 #panel-search .snippet, #panel-search .search-result-brief {
   display: block; max-width: var(--size-readable); padding: 0; margin: var(--space-tight) 0 0; background: none;
-  font: var(--type-record); color: var(--ink); overflow-wrap: anywhere;
+  color: var(--ink); overflow-wrap: anywhere;
 }
-/* A brief is OPAX's words: the sans, under the list's one machine label. */
-#panel-search .search-result-brief { font: var(--type-body); line-height: var(--leading-loose); }
+#panel-search .snippet { font: var(--type-record); }
+/* A brief is OPAX's words, under the list's one machine label: the body role,
+   as the app's year brief. */
+#panel-search .search-result-brief { font: var(--type-body); }
 /* Who spoke, under the title: the name and their party label. */
 #panel-search .result-byline { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sp-8); font: var(--type-metadata); color: var(--ink-soft); }
 #panel-search .result-byline a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
@@ -5261,7 +5267,7 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: var(--sp-16);
 }
 .answer-overview[hidden] { display: none; }
-.answer-overview p { margin: 0; font: var(--type-record); color: var(--ink); }
+.answer-overview p { margin: 0; font: var(--type-body); color: var(--ink); }
 @media (prefers-reduced-motion: no-preference) {
   .answer-overview { animation: answerIn var(--duration-gentle) var(--ease-standard) backwards; }
 }
