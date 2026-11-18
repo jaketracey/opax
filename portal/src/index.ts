@@ -96,6 +96,7 @@ import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import { referenceOnlyPeople } from '../public/roster-party.js'
+import { findPerson } from '../public/member-seats.js'
 import { NO_HANSARD_HELD } from '../public/held-back-transcripts.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
@@ -157,7 +158,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, homeMapSpan, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, personBootBlocks, homeMapFallbackHTML, homeMapSpan, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
@@ -4169,7 +4170,7 @@ interface Person {
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
   rosterOnly?: { asOf?: string; seats: string[] }
 }
-interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
+interface PeopleData { generated: string; rosterUpdated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
 
 async function speakerAttribution(env: Env, raw: string | null | undefined): Promise<SpeechScope | null> {
   if (!raw) return null
@@ -4307,7 +4308,7 @@ async function assetJson<T>(env: Env, path: string): Promise<T> {
 
 let peopleMemo: Promise<PeopleData> | null = null
 function loadPeople(env: Env): Promise<PeopleData> {
-  peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
+  peopleMemo ??= assetJson<{ meta?: { generated?: string; representation?: { updated?: string } }; people: Person[] }>(env, '/parliamentarians.json')
     .then(async (raw) => {
       const reference = await loadElectorates(env).catch(() => null)
       // One rule with the party index (scripts/build_party_index.mjs), so party pages count them alike.
@@ -4318,7 +4319,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
           chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
           rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
       }
-      return { generated: raw.meta?.generated ?? '', people: raw.people, ...personIndex(raw.people) }
+      return { generated: raw.meta?.generated ?? '', rosterUpdated: raw.meta?.representation?.updated || raw.meta?.generated || '', people: raw.people, ...personIndex(raw.people) }
     })
     .catch((err) => {
       peopleMemo = null
@@ -4961,8 +4962,14 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? await loadElectorates(env).catch(()=>null) : null
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null)})
+        const electorates=await loadElectorates(env).catch(()=>null)
+        const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? electorates : null
+        // The member in the electorate file, as app.js finds them: their seats, and which are current now.
+        const seatPerson=electorates ? findPerson(electorates.people,p.name) : null
+        // The source line, ask block and "Next in the record" the app keeps when it takes the page over.
+        const boot=personBootBlocks(p,{party:content.party,voteRows:content.voteRows,seatPerson,rosterUpdated:people.rosterUpdated})
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null),
+          seatsNow:p.current ? (seatPerson?.electorates || []).filter(e=>e.current) : [],...boot})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}

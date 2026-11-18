@@ -4,7 +4,11 @@ import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,receiptGraph,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate, shortMoney } from '../public/format.js'
-import { profileHouses } from '../public/profile-jurisdictions.js'
+import { profileHouses, profileAffiliations } from '../public/profile-jurisdictions.js'
+import { askBlockHTML } from '../public/growth-modules.js'
+import { nextStepsHTML, memberNextSteps, memberVoteSteps } from '../public/next-steps.js'
+import { sourceLineHTML } from '../public/party-page.js' // labels.js, through its stamped re-export: one copy in the bundle
+import { memberSeats, type ElectoratePersonSeat } from '../public/member-seats.js'
 import { receiptHeadline } from '../public/money-explain.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
@@ -29,7 +33,7 @@ import {readPartyPages, partyPageCoverage} from '../public/party-page.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
-export interface RenderedContent { html: string; description?: string; prev?: string; next?: string; page?: number; party?: string }
+export interface RenderedContent { html: string; description?: string; prev?: string; next?: string; page?: number; party?: string; voteRows?: readonly object[] }
 interface Person {
   name: string; full?: string; pid?: string; party?: string | null; party_now?: string | null;
   current?: boolean; states: string[]; chambers: string[]; speeches?: number | null;
@@ -284,16 +288,19 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   body += noHansardHeldHTML(p) + heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
+  // The rows "Next in the record" takes its latest votes from (personBootBlocks); none read for a scoped speaker.
+  let voteRows: ReturnType<typeof votingRows> | undefined
   if (!p.speech_scope) {
     const {keys, voteData} = await personVotesFor(read,p)
     const {rows, recorded: hasRecent} = personVoteRecords(keys,voteData,await recentVotesFor(read,keys))
     const votes = (rows as Vote[]).sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
+    voteRows = votingRows(votes,bills?.bills || [])
     if (votes.length) {
       const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest bill votes')
       config.id += '-ssr'
       const divisionsTotal = keys.reduce((sum,key)=>sum+(Number((voteData as Record<string,{divisions_total?: unknown}> | null)?.[key]?.divisions_total)||0),0)
       body += `<p class="votes-scope">${escapeHtml(voteScopeLine(votes.length,divisionsTotal,hasRecent))}</p>`
-      body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
+      body += voteTableHTML(config,voteTablePage(voteRows,config,tableQuery))
       body += '<p>This list covers the votes in OPAX’s published data. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
       body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote data') : `${link('/votes.json','OPAX bill-vote data')} (They Vote For You and state Hansard)`}.</p>`
     }
@@ -325,7 +332,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
   if (owned.length) body += `<h2>Bills sponsored</h2><ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>`
-  return {html:answerBlock(display,description,body),description,party:party || undefined}
+  return {html:answerBlock(display,description,body),description,party:party || undefined,voteRows}
 }
 
 /**
@@ -336,15 +343,16 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
  * name does not drop down the page when the portrait arrives. The answer's
  * summary sentence stays as the paragraph after the head.
  */
-export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'current'|'states'|'chambers'|'representation'|'speech_scope'>, opts: {party?: string; portraitId?: string | null; ended?: EndedSeat}): string {
+export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'current'|'states'|'chambers'|'representation'|'speech_scope'>, opts: {party?: string; portraitId?: string | null; ended?: EndedSeat; source?: string; blocks?: string; seatsNow?: readonly {chamber?: string; jurisdiction?: string}[]}): string {
   const display = p.full && p.speech_scope ? p.full : p.name
   const portrait = opts.portraitId
     ? `<img class="subject-portrait" src="/photos/${encodeURIComponent(opts.portraitId)}.webp" alt="${/^\d+$/.test(opts.portraitId) ? 'Official portrait' : 'Portrait'} of ${escapeHtml(display)}" width="112" height="112">`
     : '<span class="subject-portrait subject-portrait-blank" aria-hidden="true"></span>'
   // The app's own rule (profileHouses): a house the roster shows a sitting member in now,
-  // "formerly" for any other, and none where nothing says which is current. The server
-  // reads no seat roster, so only an open dated service record makes a house current here.
-  const held = profileHouses(p)
+  // "formerly" for any other, and none where nothing says which is current. A sitting member's
+  // current seats in the electorate file (seatsNow, as app.js reads them) make a house current;
+  // without them only an open dated service record does.
+  const held = profileHouses(p, opts.seatsNow ? [...opts.seatsNow] : undefined)
   const nowHouses = held.rows.filter(r => r.status === 'current')
   const recorded = (p.representation || []).filter(r => !nowHouses.length || nowHouses.some(h => h.chamber === r.chamber))
   const seats = [...new Set(recorded.map(r => r.electorate).filter(Boolean))]
@@ -362,8 +370,40 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
     ...held.rows.filter(r => r.status === 'former').map(r => `<span>formerly ${escapeHtml(r.label)}</span>`),
   ].filter(Boolean)
   const tag = parts.map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join('') || '<span>From the parliamentary record</span>'
-  const head = `<div class="subject-head">${portrait}<h1>${escapeHtml(display)}</h1><p class="subject-tag">${tag}</p></div>`
-  return html.replace(/<section id="prerender" class="wrap"><h1>[\s\S]*?<\/h1>/, `<section id="prerender" class="wrap subject-person">${head}`)
+  const head = `<div class="subject-head">${portrait}<h1>${escapeHtml(display)}</h1><p class="subject-tag">${tag}</p>${opts.source || ''}</div>`
+  // The answer's summary sentence stays the paragraph after the head (unseen while the app boots);
+  // the blocks the app keeps (personBootBlocks) follow it.
+  return html.replace(/<section id="prerender" class="wrap"><h1>[\s\S]*?<\/h1>(<p>[\s\S]*?<\/p>)?/, (_, summary = '') => `<section id="prerender" class="wrap subject-person">${head}${summary}${opts.blocks || ''}`)
+}
+
+/**
+ * What a member's page draws between the name and the record, in the Worker's first paint and
+ * in app.js openSubject's own markup: the head's source line, the ask block (with one question
+ * pill's room held) and "Next in the record" with the member's latest votes on bills. The app
+ * keeps these nodes when it takes the page over (app.js takeBootPerson), so they are painted
+ * once, at their final height: the record under them never moves (CLS), and the latest vote,
+ * often the largest text on the screen, is in the first paint (LCP). The source line's sheet
+ * holds only the originals; the app redraws it in place, on the same one line, with its facts.
+ * A scoped speaker's votes are not read here: their two rows are held for the app to fill.
+ */
+export function personBootBlocks(p: Pick<Person,'name'|'full'|'states'>, opts: {party?: string; voteRows?: readonly object[]; seatPerson?: {electorates?: readonly ElectoratePersonSeat[]} | null; rosterUpdated?: string}): {source: string; blocks: string} {
+  const {seatPerson} = opts
+  const source = sourceLineHTML({
+    updated: seatPerson?.electorates?.find(e => e.current)?.as_of || opts.rosterUpdated || '',
+    dateLabel: 'As at',
+    source: 'Parliamentary roster',
+    originals: [
+      p.states?.includes('federal') ? {label: 'Parliamentary profile', href: `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${encodeURIComponent(p.name)}`} : null,
+      ...profileAffiliations(p).map((r: {source_url?: string; jurisdictionLabel?: string}) => r.source_url ? {label: `${r.jurisdictionLabel} service record`, href: r.source_url} : null),
+    ].filter((o): o is {label: string; href: string} => Boolean(o)),
+  })
+  const promptName = p.full || p.name
+  const ask = askBlockHTML({name: promptName, pageType: 'person', seed: `What has ${promptName} said in parliament?`, held: 1})
+  const next = nextStepsHTML(memberNextSteps({seats: memberSeats(seatPerson), party: opts.party ? {name: opts.party, href: partyUrl(opts.party)} : null}), {
+    pageType: 'person', id: 'person-next', reserve: 2,
+    fill: opts.voteRows ? memberVoteSteps(opts.voteRows) : null, empty: 'No votes on bills in the record for this member.',
+  })
+  return {source, blocks: ask + next}
 }
 
 /**
