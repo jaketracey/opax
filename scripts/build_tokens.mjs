@@ -293,7 +293,7 @@ function webDeclarations(source) {
     const lineHeight = role.lineHeight > 3 ? ratio(role.lineHeight, role.size) : role.lineHeight
     return `${role.weight} ${size}/${lineHeight} var(--${role.family})`
   }
-  push('type: eleven roles; serif speaks for the record, sans for OPAX', [
+  push('type: the web roles, each following an app role; serif speaks for the record, sans for OPAX', [
     decl('--serif', families.serif),
     decl('--sans', families.sans),
     ...webTypeRoles(source).map(({ name, role, description }) => decl(`--type-${kebab(name)}`, font(role), firstSentence(description))),
@@ -380,9 +380,32 @@ function webDeclarations(source) {
   return { groups, regular, wide, compact, highContrast }
 }
 
+/**
+ * Metric-matched local faces for the web's fonts (font.*.webFallback). Each
+ * stack names its fallback straight after its webfont, so while the webfont
+ * loads the text already takes the space it will keep, and nothing moves when
+ * it arrives. One face per weight the web sets: a bold drawn from the local
+ * regular would be a faked bold of the wrong width, so bold titles would wrap
+ * differently once the webfont arrived.
+ */
+export function fallbackFaces(source) {
+  return own(source.font)
+    .filter(([, font]) => font.webFallback)
+    .flatMap(([name, { web, webFallback: fallback }]) => {
+      if (!web.includes(`"${fallback.family}"`)) throw new Error(`font.${name}.web does not name its fallback "${fallback.family}"`)
+      if (!fallback.faces?.length) throw new Error(`font.${name}.webFallback has no faces`)
+      return fallback.faces.map((face) => {
+        const src = face.local.map((local) => `local("${local}")`).join(', ')
+        return `@font-face { font-family: "${fallback.family}"; src: ${src}; font-weight: ${face.weight}; size-adjust: ${face.sizeAdjust}; ascent-override: ${fallback.ascent}; descent-override: ${fallback.descent}; line-gap-override: ${fallback.lineGap}; }`
+      })
+    })
+}
+
 export function buildCss(source) {
   const { groups, regular, wide, compact, highContrast } = webDeclarations(source)
+  const faces = fallbackFaces(source)
   const blocks = [
+    ...(faces.length ? [['/* fallback faces: local fonts sized to the webfonts, so text keeps its place while they load */', ...faces].join('\n')] : []),
     [':root {', `  color-scheme: ${source.themes.web.colorScheme};`, ...groups.flatMap(({ title, lines }) => ['', `  /* ${title} */`, ...lines]), '}'].join('\n'),
   ]
   if (regular.length) blocks.push(`@media (min-width: ${source.layout.regular.$value + 1}px) {\n  :root {\n${regular.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
@@ -617,8 +640,14 @@ export function docsWithTables(docs, source) {
 
 // --- share images and the money map -------------------------------------------
 
-/** The first family in a CSS font stack: '"Merriweather", Georgia' gives Merriweather. */
-const firstFamily = (stack) => /^\s*"?([^",]+)"?/.exec(stack)[1].trim()
+/** Names that ask for the device's own face, which a share image cannot use. */
+const SYSTEM_FACES = new Set(['-apple-system', 'BlinkMacSystemFont', 'system-ui'])
+/** The first webfont in a CSS font stack: '-apple-system, "Public Sans", Arial' gives Public Sans. */
+const firstFamily = (stack) =>
+  stack
+    .split(',')
+    .map((name) => name.trim().replace(/^["']|["']$/g, ''))
+    .find((name) => !SYSTEM_FACES.has(name))
 
 /** The web's palette, chart colours and families for code that draws without CSS (portal/src/tokens.generated.ts). */
 export function buildShareTs(source) {

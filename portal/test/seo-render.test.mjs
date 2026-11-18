@@ -584,6 +584,14 @@ test('exposure draft and sponsor full-name bodies return 200 with direct aliases
   assert.match(await get('/bill/au-federal-s1479'),/href="\/subject\/person\/mehreen-faruqi">Mehreen Faruqi<\/a>/);
 });
 
+test('a bill or division page marks its first-paint h1 as the record title (style.css --type-record-title)',async()=>{
+  // The app titles a record in the serif record title; the Worker's h1 must match it, or the swap moves the page.
+  for(const path of ['/bill/au-federal-s1479','/doc/division-federal-senate-10701'])
+    assert.match(prerenderBody(await get(path)),/^<section id="prerender" data-record-title[ >]/,path);
+  assert.doesNotMatch(prerenderBody(await get('/subject/party/labor')),/data-record-title/,'a party page keeps the screen title');
+  assert.match(readFileSync(new URL('style.css',pub),'utf8'),/#prerender\[data-record-title\] > h1 \{ font:var\(--type-record-title\); \}/);
+});
+
 test('discovery endpoints redirect www once with 301 and serve apex directly',async()=>{
   for(const path of ['/sitemap.xml','/sitemaps/bills-1.xml','/robots.txt','/llms.txt']) for(const method of ['GET','HEAD']) {
     const redirect=await worker.fetch(new Request('https://www.opax.com.au'+path,{method}),env,{});

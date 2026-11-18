@@ -5028,6 +5028,11 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     const identity = new URL(meta.canonical)
     meta.prerender = meta.prerender.replace('id="prerender"', `id="prerender" data-record-core data-record-path="${escHtml(identity.pathname+identity.search)}"`)
   }
+  // A bill, division or speech is titled in the record's own type (style.css
+  // --type-record-title). The mark lets the first paint's h1 match the title
+  // the app draws in its place, so the swap moves nothing.
+  if ((route.kind === 'bill' || route.kind === 'doc') && meta.status === 200 && meta.prerender)
+    meta.prerender = meta.prerender.replace('id="prerender"', 'id="prerender" data-record-title')
   // An empty address draws the one not-found block, whichever route it reached
   // (public/not-found.js). A 503 is not this: the data could not be read.
   const empty = meta.status === 404 ? notFoundKindFor(route, url) : null

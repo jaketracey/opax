@@ -23,11 +23,12 @@
 .mx-fine { max-width: var(--size-readable); margin: var(--space-tight) 0 0; color: var(--ink-soft); font: var(--type-fine); }
 .mx-page a { color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.18em; }
 
-/* What the record shows: four figures, then the sentences. */
+/* What the record shows: four figures, then the sentences. The figures sit two to a row, so they
+   take the tile figure (the app's stat tiles), which fits a 360px phone's column. */
 .mx-figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-group) var(--space-block); margin: 0 0 var(--space-group); }
 .mx-figure { display: flex; flex-direction: column-reverse; gap: var(--space-line); min-width: 0; }
 .mx-figure dt { color: var(--ink-soft); font: var(--type-fine); }
-.mx-figure dd { margin: 0; color: var(--ink); font: var(--type-display); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.mx-figure dd { margin: 0; color: var(--ink); font: var(--type-tile-figure); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 /* What the figures above count, on its own line. */
 .mx-scope { max-width: var(--size-readable); margin: calc(-1 * var(--space-block)) 0 var(--space-group); color: var(--ink-soft); font: var(--type-fine); }
 .mx-story p { max-width: var(--size-readable); margin: 0 0 var(--space-block); color: var(--ink); font: var(--type-record); }

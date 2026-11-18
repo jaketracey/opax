@@ -1692,7 +1692,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=4177dc6736');
+    const mod = await import('/money-explain.js?v=2a86bfddf0');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -4068,7 +4068,7 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
  *  Its look in an action column lives in money-explain.css, linked once here. */
 function explainBtn(query, label, { primary = false } = {}) {
   if (!document.querySelector("link[data-money-explain]")) {
-    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=9d581f0740" });
+    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=4a6b2e0cce" });
     sheet.dataset.moneyExplain = "";
     document.head.append(sheet);
   }
@@ -10318,7 +10318,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=4177dc6736"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=2a86bfddf0"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }

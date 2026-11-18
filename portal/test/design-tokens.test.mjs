@@ -52,8 +52,11 @@ function resolved(props, name, seen = []) {
 // A pair is [701px and wider, 700px and narrower]. Colours keep their values;
 // the 12 Oct 2026 web uplift (docs/design/uplift-2026-10) moved the old space
 // and heading names onto the 4/8 scale and the six type sizes, and lightened the
-// row hairline, so those names still resolve, to the new values.
-const SERIF = '"Merriweather", Georgia, "Times New Roman", serif';
+// row hairline, so those names still resolve, to the new values. The 17 Nov 2026
+// typography step moved the web's type onto the app's roles (the system face on
+// Apple devices, metric-matched fallbacks): the old heading names follow.
+const SERIF = '"Merriweather", "Merriweather Fallback", Georgia, "Times New Roman", serif';
+const SANS = '-apple-system, BlinkMacSystemFont, "Public Sans", "Public Sans Fallback", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 const BEFORE = {
   '--paper': '#FAF9F6', '--paper-raised': '#FFFFFF', '--paper-sunken': '#F1EFE8',
   '--ink': '#23271F', '--ink-soft': '#575C52', '--ink-faint': '#6F7468',
@@ -65,10 +68,10 @@ const BEFORE = {
   '--party-alp': '#B02E33', '--party-lib': '#1D4F91', '--party-nat': '#8F6E00', '--party-lnp': '#4A90D9',
   '--party-grn': '#2E7D32', '--party-onp': '#BF5B15', '--party-ind': '#3E5B77', '--party-oth': '#7C6690',
   '--serif': SERIF,
-  '--sans': '"Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-  '--heading-page': `400 clamp(2rem, 1.25rem + 2.2vw, 3rem)/1.15 ${SERIF}`,
-  '--heading-section': `600 1.5rem/1.25 ${SERIF}`,
-  '--heading-subsection': `600 1.0625rem/1.4 ${SERIF}`,
+  '--sans': SANS,
+  '--heading-page': `700 2.125rem/1.206 ${SANS}`,
+  '--heading-section': `700 1.375rem/1.273 ${SANS}`,
+  '--heading-subsection': `600 1.0625rem/1.294 ${SANS}`,
   '--heading-tracking': '0',
   '--space-1': '0.25rem', '--space-2': '0.5rem', '--space-3': '0.75rem', '--space-4': '1rem',
   '--space-5': '1.5rem', '--space-6': ['3rem', '2rem'], '--space-7': ['5rem', '3rem'],
@@ -160,7 +163,7 @@ const TYPE_BASELINE = {
   'public/quiz.js': 4,
   'public/st-test.html': 1,
   'public/stages.js': 2,
-  'public/style.css': 9,
+  'public/style.css': 8,
   'public/thenvsnow.js': 2,
   'public/timemachine.js': 15,
   'public/ui-controls.css': 2,
@@ -227,7 +230,7 @@ test('no new raw hex colours outside the tokens', (t) => {
 // token marked web.omit is the app's alone.
 test('web type roles follow app roles, and app-only tokens stay off the web', () => {
   const roles = webTypeRoles(source);
-  assert.deepEqual(roles.map((role) => role.name), ['title', 'display', 'heading', 'subheading', 'record', 'body', 'strong', 'metadata', 'fine', 'label', 'control']);
+  assert.deepEqual(roles.map((role) => role.name), ['title', 'recordTitle', 'display', 'tileFigure', 'heading', 'subheading', 'rowRecord', 'record', 'body', 'strong', 'metadata', 'fine', 'label', 'control']);
   for (const { name, follows } of roles) assert.ok(source.type[follows], `webRoles.${name} follows ${follows}`);
   const css = readFileSync(join(PORTAL, 'public/tokens.css'), 'utf8');
   const kebab = (name) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
