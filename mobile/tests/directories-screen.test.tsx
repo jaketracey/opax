@@ -352,6 +352,79 @@ test('a failed read is a whole-screen state with the plain reason and Try again'
   await act(async () => renderer.unmount());
 });
 
+describe('Electorates while the Victorian Parliament’s term has ended for an election', () => {
+  // The live index: every Assembly row carries the election day, or null
+  // once the result is loaded; Council rows carry nothing.
+  const district = index.electorates.find(
+    (e) =>
+      e.chamber === 'vic_la' &&
+      e.representation_status === 'verified' &&
+      e.representatives.length === 1 &&
+      !!e.representatives[0]!.party,
+  )!;
+  const region = index.electorates.find(
+    (e) =>
+      e.chamber === 'vic_lc' &&
+      e.representation_status === 'verified' &&
+      e.representatives.length === 5,
+  )!;
+  const federal = index.electorates.find(
+    (e) => e.name === 'Grayndler' && e.jurisdiction === 'federal',
+  )!;
+  const member = district.representatives[0]!;
+  const house = 'Victorian Legislative Assembly';
+  const council = 'Victorian Legislative Council';
+  const drawn = async (value: string | null) => {
+    const renderer = await open('electorate', {
+      ...empty,
+      electorates: [{ ...district, dissolved_for: value }, region, federal],
+    });
+    const row = (seat: typeof district) => {
+      const node = renderer.root.find(
+        (n) =>
+          n.props.testID === `directory-electorate-${seat.slug}` &&
+          typeof n.props.accessibilityLabel === 'string',
+      );
+      return { text: said(node), label: node.props.accessibilityLabel };
+    };
+    const rows = {
+      district: row(district),
+      region: row(region),
+      federal: row(federal),
+    };
+    await act(async () => renderer.unmount());
+    return rows;
+  };
+
+  test('a district reads "Last member: name · party" and a region "Last members: 5", drawn and spoken', async () => {
+    const rows = await drawn('2026-11-28');
+    expect(rows.district.text).toContain(
+      `Last member: ${member.person.name} · `,
+    );
+    expect(rows.district.label).toBe(
+      `${district.name}, ${house}, Last member: ${member.person.name}, ${member.party}`,
+    );
+    expect(rows.region.text).toContain('Last members: 5');
+    expect(rows.region.text).not.toContain('5 members');
+    expect(rows.region.label).toBe(
+      `${region.name}, ${council}, Last members: 5`,
+    );
+    // A federal seat is untouched.
+    expect(rows.federal.label).not.toContain('Last member');
+  });
+
+  test('once the result is loaded (null) both read as before', async () => {
+    const rows = await drawn(null);
+    expect(rows.district.text).toContain(`${member.person.name} · `);
+    expect(rows.district.text).not.toContain('Last member');
+    expect(rows.district.label).toBe(
+      `${district.name}, ${house}, ${member.person.name}, ${member.party}`,
+    );
+    expect(rows.region.text).toContain('5 members');
+    expect(rows.region.label).toBe(`${region.name}, ${council}, 5 members`);
+  });
+});
+
 test('unconfirmed members are explained once in the electorate directory footer', async () => {
   const unknown = { ...index.electorates[0]!, representatives: [] };
   const renderer = await open('electorate', {

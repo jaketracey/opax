@@ -1,5 +1,11 @@
 import { animatedScroll } from '../../design/accessibility';
 import { MyMemberProvider } from '../your-mp/useIsMyMember';
+import {
+  endedParliaments,
+  rowTermEnded,
+  termEndedFor,
+  type EndedTerm,
+} from '../your-mp/term-ended';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -118,10 +124,13 @@ function DirectoryRow({
   item,
   selected,
   onSelect,
+  ended,
 }: {
   item: Row;
   selected?: boolean;
   onSelect?: (entry: RecordEntry) => void;
+  /** Parliaments whose term has ended for an election, from the index. */
+  ended: ReadonlyMap<string, EndedTerm>;
 }) {
   if ('profile' in item)
     return (
@@ -136,6 +145,12 @@ function DirectoryRow({
       item={item}
       selected={selected}
       onSelect={onSelect}
+      // A district's own row answers. A Council region's row carries no
+      // field, so it takes its Parliament's answer.
+      last={
+        rowTermEnded(item) ||
+        (item.dissolved_for === undefined && !!termEndedFor(item, ended))
+      }
     />
   );
 }
@@ -365,11 +380,15 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
     },
     [sections, setSelectionParams],
   );
+  const ended = useMemo(
+    () => endedParliaments(record?.electorates ?? []),
+    [record],
+  );
   const renderRow = useCallback(
     ({ item }: SectionListRenderItemInfo<Row, Section>) => (
-      <DirectoryRow item={item} />
+      <DirectoryRow item={item} ended={ended} />
     ),
-    [],
+    [ended],
   );
   const renderSplitRow = useCallback(
     ({ item }: SectionListRenderItemInfo<Row, Section>) => (
@@ -377,9 +396,10 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         item={item}
         selected={encodeEntry(entryFor(item)) === selectedKey}
         onSelect={select}
+        ended={ended}
       />
     ),
-    [selectedKey, select],
+    [selectedKey, select, ended],
   );
   const entries = useMemo(
     () =>

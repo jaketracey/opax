@@ -37,6 +37,7 @@ import { partyFromCode } from '../bills/party-codes';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
 import type { RecordEntry } from '../split/entry';
 import { placeLine, type PartyRow, type PeopleRow } from './model';
+import { rowTermEnded } from '../your-mp/term-ended';
 
 type Select = (entry: RecordEntry) => void;
 interface RowProps<T> {
@@ -185,8 +186,16 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
  * An electorate's two lines: the house and state in short form ("Federal,
  * South Australia", "Western Australian Legislative Assembly"), then its
  * member and party, "Member not confirmed", or "No longer used".
+ *
+ * `last`: the seat's house has no members while its Parliament's term has
+ * ended for an election, so the record names the last member ("Last member:
+ * Name", "Last members: 5"). A district's own row says so; a Council region
+ * carries no field, so its caller asks the index (`termEndedFor`).
  */
-export function electorateLines(item: Electorate): {
+export function electorateLines(
+  item: Electorate,
+  last = rowTermEnded(item),
+): {
   house: string;
   member: string;
   party: string | null;
@@ -208,12 +217,16 @@ export function electorateLines(item: Electorate): {
   if (members.length > 1)
     return {
       house,
-      member: `${formatCount(members.length)} ${item.chamber === 'senate' ? 'senators' : 'members'}`,
+      member: last
+        ? `Last members: ${formatCount(members.length)}`
+        : `${formatCount(members.length)} ${item.chamber === 'senate' ? 'senators' : 'members'}`,
       party: null,
     };
   return {
     house,
-    member: members[0]!.person.name,
+    member: last
+      ? `Last member: ${members[0]!.person.name}`
+      : members[0]!.person.name,
     party: members[0]!.party?.trim() || null,
   };
 }
@@ -221,7 +234,11 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
   item,
   selected,
   onSelect,
-}: RowProps<Electorate>) {
+  last,
+}: RowProps<Electorate> & {
+  /** The seat's house has no members (see `electorateLines`). */
+  last?: boolean;
+}) {
   const follow = useRowFollow('electorate', item.electorate_id, item.name);
   const set = useSetAsMyElectorate(item);
   const highlight = useRowHighlight();
@@ -230,7 +247,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
   const split = selected !== undefined;
   useRowSelected(!!selected);
   const splitBleed = useSplitBleed();
-  const lines = electorateLines(item);
+  const lines = electorateLines(item, last);
   const select = onSelect ? () => onSelect(entryFor(item)) : undefined;
   const row = (
     <Pressable
