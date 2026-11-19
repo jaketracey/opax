@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, cloneElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import * as Native from 'react-native';
 import {
@@ -162,6 +162,32 @@ describe('pull to refresh', () => {
       refreshing: true,
       onRefresh: refresh,
       tintColor: 'red',
+    });
+  });
+
+  test('Android: a scroll view’s clone reaches the system control, style and child', () => {
+    // ScrollView on Android clones its refresh control with its own style
+    // and puts the scrolling view inside it. A wrapper that dropped either
+    // would draw an empty or unsized page.
+    system('android', 'dark');
+    const refresh = jest.fn();
+    const tree = draw(
+      cloneElement(
+        <PullRefresh refreshing={false} onRefresh={refresh} />,
+        { style: { flex: 1 } },
+        <View testID="inner" />,
+      ),
+    );
+    const native = tree.root.findByType(RefreshControl);
+    expect(native.props.style).toEqual({ flex: 1 });
+    // Jest's stand-in for the system control draws no children, so the
+    // child is read from the props it was handed.
+    expect(native.props.children).toEqual(<View testID="inner" />);
+    expect(native.props).toMatchObject({
+      refreshing: false,
+      onRefresh: refresh,
+      colors: [dark.navy],
+      progressBackgroundColor: dark.raised,
     });
   });
 });
