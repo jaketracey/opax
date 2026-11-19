@@ -1,0 +1,3971 @@
+{
+ "source": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/",
+ "permission": "docs/SOURCES-ACCESS.md (Parliament of Victoria, 13 October 2026)",
+ "from": "2022-12-20",
+ "to": "2026-09-24",
+ "sitting_days_listed": 377,
+ "sitting_days_parsed": 377,
+ "sitting_days_missing": [],
+ "divisions_found": 1113,
+ "reconciled": 1106,
+ "mismatch_list": 7,
+ "mismatch_divisions_by_reason": {
+  "numbering-differs-from-published": 3,
+  "question-lead-not-a-motion": 1,
+  "question-reads-as-speech": 1,
+  "question-too-long": 1,
+  "result-contradicts-tally": 3
+ },
+ "votes": 55939,
+ "member_lists_short": [],
+ "service_dates": {
+  "vic_la": {
+   "date": "2026-09-24",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1a3/globalassets/hansard-daily-pdfs/hansard-2145855009-37599/hansard-2145855009-37599.pdf",
+   "members": 93,
+   "dated": [
+    {
+     "surname": "Andrews",
+     "given": "Daniel",
+     "seat": "Mulgrave",
+     "start": null,
+     "end": "2023-09-27",
+     "notes": [
+      "Resigned 27 September 2023"
+     ]
+    },
+    {
+     "surname": "Marsh",
+     "given": "Anthony",
+     "seat": "Nepean",
+     "start": "2026-06-02",
+     "end": null,
+     "notes": [
+      "Sworn in 2 June 2026"
+     ]
+    },
+    {
+     "surname": "Pallas",
+     "given": "Tim",
+     "seat": "Werribee",
+     "start": null,
+     "end": "2025-01-06",
+     "notes": [
+      "Resigned 6 January 2025"
+     ]
+    },
+    {
+     "surname": "Read",
+     "given": "Tim",
+     "seat": "Brunswick",
+     "start": null,
+     "end": "2026-09-19",
+     "notes": [
+      "Died 19 September 2026"
+     ]
+    },
+    {
+     "surname": "Smith",
+     "given": "Ryan",
+     "seat": "Warrandyte",
+     "start": null,
+     "end": "2023-07-07",
+     "notes": [
+      "Resigned 7 July 2023"
+     ]
+    },
+    {
+     "surname": "Foster",
+     "given": "Eden",
+     "seat": "Mulgrave",
+     "start": "2024-02-06",
+     "end": null,
+     "notes": [
+      "Sworn in 6 February 2024"
+     ]
+    },
+    {
+     "surname": "Groth",
+     "given": "Sam",
+     "seat": "Nepean",
+     "start": null,
+     "end": "2026-02-13",
+     "notes": [
+      "Resigned 13 February 2026"
+     ]
+    },
+    {
+     "surname": "Hibbins",
+     "given": "Sam",
+     "seat": "Prahran",
+     "start": null,
+     "end": "2024-11-23",
+     "notes": [
+      "Greens until 1 November 2024",
+      "Resigned 23 November 2024"
+     ]
+    },
+    {
+     "surname": "Werner",
+     "given": "Nicole",
+     "seat": "Warrandyte",
+     "start": "2023-10-03",
+     "end": null,
+     "notes": [
+      "Sworn in 3 October 2023"
+     ]
+    },
+    {
+     "surname": "Westaway",
+     "given": "Rachel",
+     "seat": "Prahran",
+     "start": "2025-03-04",
+     "end": null,
+     "notes": [
+      "Sworn in 4 March 2025"
+     ]
+    },
+    {
+     "surname": "Lister",
+     "given": "John",
+     "seat": "Werribee",
+     "start": "2025-03-04",
+     "end": null,
+     "notes": [
+      "Sworn in 4 March 2025"
+     ]
+    }
+   ]
+  },
+  "vic_lc": {
+   "date": "2026-09-24",
+   "source_url": "https://www.parliament.vic.gov.au/4aa28a/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf",
+   "members": 42,
+   "dated": [
+    {
+     "surname": "Bach",
+     "given": "Matthew",
+     "seat": "North-Eastern Metropolitan",
+     "start": null,
+     "end": "2023-12-07",
+     "notes": [
+      "Resigned 7 Dec 2023"
+     ]
+    },
+    {
+     "surname": "Ratnam",
+     "given": "Samantha",
+     "seat": "Northern Metropolitan",
+     "start": null,
+     "end": "2024-11-08",
+     "notes": [
+      "Resigned 8 Nov 2024"
+     ]
+    },
+    {
+     "surname": "Gray-Barberio",
+     "given": "Anasina",
+     "seat": "Northern Metropolitan",
+     "start": "2024-11-14",
+     "end": null,
+     "notes": [
+      "Appointed 14 Nov 2024"
+     ]
+    },
+    {
+     "surname": "Welch",
+     "given": "Richard",
+     "seat": "North-Eastern Metropolitan",
+     "start": "2024-02-07",
+     "end": null,
+     "notes": [
+      "Appointed 7 Feb 2024"
+     ]
+    }
+   ]
+  }
+ },
+ "name_basis": {
+  "hansard-member-list:release-roster": 90,
+  "people-directory": 1311,
+  "release-roster": 54538
+ },
+ "question_basis": {
+  "division-line": 851,
+  "printed-before-amendment-division": 1,
+  "printed-before-division": 254
+ },
+ "requests_made": 406,
+ "files": [
+  {
+   "date": "2022-12-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18359",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa264/globalassets/hansard-daily-pdfs/hansard-2145855009-18359/hansard-2145855009-18359.pdf",
+   "sha256": "d99b987812a29726c68d9a5e620e2f5d2a4cb7503d5c1631c8cf0dbadb83d246",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2022-12-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-19961",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0ec/globalassets/hansard-daily-pdfs/hansard-974425065-19961/hansard-974425065-19961.pdf",
+   "sha256": "ba5ab9aa405af9172d1fdf13d5a5bba0c709f9c938fc29de7d9dc3fd61ef5719",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-02-07",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18433",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa249/globalassets/hansard-daily-pdfs/hansard-2145855009-18433/hansard-2145855009-18433.pdf",
+   "sha256": "9869bba544e33ceba5a93bf371d5a1a6b54a407ac649aea41a000e2837904853",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-02-07",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20022",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-974425065-20022/hansard-974425065-20022.pdf",
+   "sha256": "21b660281597a368e592338d52fca624544f5e712a156b4b55c86dadad725cec",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-02-08",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18517",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa257/globalassets/hansard-daily-pdfs/hansard-2145855009-18517/hansard-2145855009-18517.pdf",
+   "sha256": "ebde78887c4e7b8f1603e2f19102e16df3532415c018a5774ed7ba8c97a381d9",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-02-08",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20083",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0e1/globalassets/hansard-daily-pdfs/hansard-974425065-20083/hansard-974425065-20083.pdf",
+   "sha256": "c7a8be9c673f89f7d1e240cac2d9072e24ccad276d847826000ea6d17a37752c",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-02-09",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18593",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa266/globalassets/hansard-daily-pdfs/hansard-2145855009-18593/hansard-2145855009-18593.pdf",
+   "sha256": "efd07a2f8ecaf01146a8136b157cafc311563d9f78de7459f5cd7b439c58178f",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-02-09",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20139",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0d6/globalassets/hansard-daily-pdfs/hansard-974425065-20139/hansard-974425065-20139.pdf",
+   "sha256": "7875f0a03ac546ef12875ce3d594d6cb22098b75a6c747633c4be21a4012117f",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-02-21",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18669",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa274/globalassets/hansard-daily-pdfs/hansard-2145855009-18669/hansard-2145855009-18669.pdf",
+   "sha256": "e5c0c8c8c8cf236a01de07e9f3e48acbddf0f2d9ec5e56c2df5aa4000e466f22",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-02-21",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20209",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0be/globalassets/hansard-daily-pdfs/hansard-974425065-20209/hansard-974425065-20209.pdf",
+   "sha256": "399c65be7b63e8023fa4cdb815ab5a87f53193c3934a8ed46ca6a89bd7212a9e",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-02-22",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18759",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa25c/globalassets/hansard-daily-pdfs/hansard-2145855009-18759/hansard-2145855009-18759.pdf",
+   "sha256": "d5822d0fe5afe77e7aa0260a4cc5f5a3f4310fb095b2e61cfdee50fd93a26414",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-02-22",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20278",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0c9/globalassets/hansard-daily-pdfs/hansard-974425065-20278/hansard-974425065-20278.pdf",
+   "sha256": "ba1d769265529956f1d7b08be873ffe57798dae24fd01f091d0ec71f52a00143",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-02-23",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18843",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa26d/globalassets/hansard-daily-pdfs/hansard-2145855009-18843/hansard-2145855009-18843.pdf",
+   "sha256": "3b5608b700651407638ef1e9b14b00cce4fac6471d2d8fe5283eff353e8eac88",
+   "divisions": 5,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-02-23",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20349",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-974425065-20349/hansard-974425065-20349.pdf",
+   "sha256": "b5fd1da98b2bd2a70abc2af178b71edbbba0cf21cffcea798bd7a8ea709bc5c4",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-03-07",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-18930",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa27b/globalassets/hansard-daily-pdfs/hansard-2145855009-18930/hansard-2145855009-18930.pdf",
+   "sha256": "2047ecbf288db0f57d96405a332a6d2ca8ed99ad593c28da41b7d00cb22cd2de",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-03-07",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20423",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0c7/globalassets/hansard-daily-pdfs/hansard-974425065-20423/hansard-974425065-20423.pdf",
+   "sha256": "9c2730f296f1507527ca157f4ad90a397196da77660f16158e9a66b3dd26d4b8",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-03-08",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19008",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa28b/globalassets/hansard-daily-pdfs/hansard-2145855009-19008/hansard-2145855009-19008.pdf",
+   "sha256": "3565780ace0d838a08898b24ae01f434fa585708f6c8330a7058069bf621b332",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-03-08",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20512",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0a7/globalassets/hansard-daily-pdfs/hansard-974425065-20512/hansard-974425065-20512.pdf",
+   "sha256": "be1fc0743014ed80eb4587e58362e487df967b24f07f58e705cc373d0be78fa3",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-03-09",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19088",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa274/globalassets/hansard-daily-pdfs/hansard-2145855009-19088/hansard-2145855009-19088.pdf",
+   "sha256": "f09c0cb1e3e378bb5c8a3580ba352c6267665e7f5ed5bdfb6bbd194fd587364e",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-03-09",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20583",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf",
+   "sha256": "b5424eb07974535093381cfd3fe8514631834608e396d224f2d7564d1a4511ee",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2023-03-21",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19175",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa282/globalassets/hansard-daily-pdfs/hansard-2145855009-19175/hansard-2145855009-19175.pdf",
+   "sha256": "3482e4bca3ddcdeddf29506a4b6fd2ecbc46c4d0a75a406d3c4904a52c6ce322",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-03-21",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20662",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0bd/globalassets/hansard-daily-pdfs/hansard-974425065-20662/hansard-974425065-20662.pdf",
+   "sha256": "013d354c508430741c6b411d3a0060c4870f6066f7a9809775f170fc7533a376",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-03-22",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19264",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa291/globalassets/hansard-daily-pdfs/hansard-2145855009-19264/hansard-2145855009-19264.pdf",
+   "sha256": "9f6a42a0e3a3de6979369dd9fb849bcff344a4cb06e8fb4162d25fe6bc87f93a",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-03-22",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20749",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0a1/globalassets/hansard-daily-pdfs/hansard-974425065-20749/hansard-974425065-20749.pdf",
+   "sha256": "3e6df5ee46247d96d952d5bf99146b29c84f47215b0604343a81f87813887ea2",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-03-23",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19346",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2a2/globalassets/hansard-daily-pdfs/hansard-2145855009-19346/hansard-2145855009-19346.pdf",
+   "sha256": "4c170832b7f8dc608ae157f644d46973a63311d9f38f45d18fa8a13b7f80a0f8",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2023-03-23",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-20813",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0b1/globalassets/hansard-daily-pdfs/hansard-974425065-20813/hansard-974425065-20813.pdf",
+   "sha256": "78135a2b01ed8c287969a85fb5ed07de8c411cdab5bbe345c678f68de9d10069",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-05-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19660",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2b3/globalassets/hansard-daily-pdfs/hansard-2145855009-19660/hansard-2145855009-19660.pdf",
+   "sha256": "735c356b463e02b8df2d79535723242e879dfaac67906c02c9b420b394d0f1ae",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-05-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-21326",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa07f/globalassets/hansard-daily-pdfs/hansard-974425065-21326/hansard-974425065-21326.pdf",
+   "sha256": "0df58c4deaa4644f23a7f217ac86315dfe337c4c61e5ff5a143546a525a13f8a",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-05-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19769",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2ea/globalassets/hansard-daily-pdfs/hansard-2145855009-19769/hansard-2145855009-19769.pdf",
+   "sha256": "3cc2caf7694b4f73016fdaf83de2aa4aaa366d3cbd3dda47ac0dde8b6df233f9",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-05-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-21403",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa08f/globalassets/hansard-daily-pdfs/hansard-974425065-21403/hansard-974425065-21403.pdf",
+   "sha256": "40291752578a5ceba8b1d73c1421cbca3c6b9df7668ed16aa00c014d8bd817e1",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-05-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-19862",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2c1/globalassets/hansard-daily-pdfs/hansard-2145855009-19862/hansard-2145855009-19862.pdf",
+   "sha256": "e1833f8a0627a0e48485fc65774d0de7be8127e986a0cda0e112324e0cc8993e",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-05-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-21478",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf",
+   "sha256": "466f97f09d85b0de8924f7b856da7198f817c62a05fe027374e92ed5e6b7a9fa",
+   "divisions": 10,
+   "reconciled": 10
+  },
+  {
+   "date": "2023-05-16",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20055",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2be/globalassets/hansard-daily-pdfs/hansard-2145855009-20055/hansard-2145855009-20055.pdf",
+   "sha256": "223e7d480c2e6b0b2c42ac60036c60ee05356b2b2c382090586cb69efa301d97",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-05-16",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-21751",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa071/globalassets/hansard-daily-pdfs/hansard-974425065-21751/hansard-974425065-21751.pdf",
+   "sha256": "8215644f6ec1b9a5f149905de22d019457891131210b4b364f11ceb6ea482464",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-05-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20139",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2cd/globalassets/hansard-daily-pdfs/hansard-2145855009-20139/hansard-2145855009-20139.pdf",
+   "sha256": "564939baf4669856aa9f4f90b7db31c3e0d0df3d111db3635eda40a55e19d816",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-05-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-21831",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa055/globalassets/hansard-daily-pdfs/hansard-974425065-21831/hansard-974425065-21831.pdf",
+   "sha256": "2414c67cc6de197b4b8389eb2b9393821d0afbdf4839208c949c3dad581a21e6",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-05-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20226",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2b9/globalassets/hansard-daily-pdfs/hansard-2145855009-20226/hansard-2145855009-20226.pdf",
+   "sha256": "b9ae047238a318c3d08262c128a705701c6f4625ded4d06f3ab062f2e76b8aec",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-05-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-21911",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa064/globalassets/hansard-daily-pdfs/hansard-974425065-21911/hansard-974425065-21911.pdf",
+   "sha256": "9274bbeb0eea429b3e144516f7b5efd7102f472705a5450f78ef74b29be18705",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-05-23",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20315",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2c9/globalassets/hansard-daily-pdfs/hansard-2145855009-20315/hansard-2145855009-20315.pdf",
+   "sha256": "42049ca8c84014b0062565dd9b38ad44c798287559f502473d082f1ebbd46cce",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-05-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20410",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2d9/globalassets/hansard-daily-pdfs/hansard-2145855009-20410/hansard-2145855009-20410.pdf",
+   "sha256": "8b1d453bacbe6fdcc52099ada7b9aa788f6e51223a14db72fd594d50e93c2b22",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2023-05-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22003",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa05b/globalassets/hansard-daily-pdfs/hansard-974425065-22003/hansard-974425065-22003.pdf",
+   "sha256": "14e36e6a98aea7737f49ba78dd77b3f1bc00ef0a71ee7a5a2bb519438873e27b",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-05-31",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20496",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2da/globalassets/hansard-daily-pdfs/hansard-2145855009-20496/hansard-2145855009-20496.pdf",
+   "sha256": "fa3c1c70f62ec13e99774de6cf7e15ea20031f92ba552e821987b1e814fc6732",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-05-31",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22087",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa06a/globalassets/hansard-daily-pdfs/hansard-974425065-22087/hansard-974425065-22087.pdf",
+   "sha256": "842c4e383593e4049a3ee1511e0a492af35b67a51584bbbc1f7a58d3aec1ba0c",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-06-01",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22164",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa03e/globalassets/hansard-daily-pdfs/hansard-974425065-22164/hansard-974425065-22164.pdf",
+   "sha256": "6c08daa8f37ef874ff038d87f872e958ffb70f3c3318ed2d0b24f2dc0788b2a7",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-06-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20585",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2ea/globalassets/hansard-daily-pdfs/hansard-2145855009-20585/hansard-2145855009-20585.pdf",
+   "sha256": "a7d7ee73acada81868183afca7597847b0ba9515a924a223dee0f750d1b86bcb",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-06-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22255",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf",
+   "sha256": "1f5b8e7f3e46c4f7a75f57ef46fc648d2e1c05632275c2558e9ce221d7dbad1b",
+   "divisions": 10,
+   "reconciled": 10
+  },
+  {
+   "date": "2023-06-21",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20770",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2fa/globalassets/hansard-daily-pdfs/hansard-2145855009-20770/hansard-2145855009-20770.pdf",
+   "sha256": "6eedc88196b4389c8e522c3ffa2560bca9996515b11d77dcbceaa1f7b969de23",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-06-21",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22324",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa032/globalassets/hansard-daily-pdfs/hansard-974425065-22324/hansard-974425065-22324.pdf",
+   "sha256": "4b16bc80bd845188962dbc4f74f5ab098b5be3989155c8781bb24a15443cc4c8",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-06-22",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-20861",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2e7/globalassets/hansard-daily-pdfs/hansard-2145855009-20861/hansard-2145855009-20861.pdf",
+   "sha256": "33f302eafaf9e64c8915677f47b6a949b73a911357b2b1183e218548fbfab3dc",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-06-22",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22412",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa038/globalassets/hansard-daily-pdfs/hansard-974425065-22412/hansard-974425065-22412.pdf",
+   "sha256": "bad43a3134a3de0d182bb86827f7837a5ccea4f1a3d01831b0f27343fba516db",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-08-01",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21245",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa30e/globalassets/hansard-daily-pdfs/hansard-2145855009-21245/hansard-2145855009-21245.pdf",
+   "sha256": "d17fbde474d603b76a2b4c17e59006d2b429d7d55f2b39f5157716c506e4597a",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-08-01",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22835",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa023/globalassets/hansard-daily-pdfs/hansard-974425065-22835/hansard-974425065-22835.pdf",
+   "sha256": "912436c904d66f98e6bd9b099430e1e32e169f4e1aafcbc0ce8b085e7bf55d03",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-08-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21334",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa31f/globalassets/hansard-daily-pdfs/hansard-2145855009-21334/hansard-2145855009-21334.pdf",
+   "sha256": "336b8c7788a4d7c5353f2afefd745ba56df92e66b14d5626b70c8d4b6af2244a",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-08-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22913",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa00f/globalassets/hansard-daily-pdfs/hansard-974425065-22913/hansard-974425065-22913.pdf",
+   "sha256": "9a0f50bcee9033b6d7b78802d87c7348b975ee34da6960cf05a9cd54a9edd713",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-08-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21424",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa330/globalassets/hansard-daily-pdfs/hansard-2145855009-21424/hansard-2145855009-21424.pdf",
+   "sha256": "511e1b45e425ed6ba2b95ce062f29b66f96b4736bfb0c4ead89adc2050ca0029",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-08-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-22996",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa006/globalassets/hansard-daily-pdfs/hansard-974425065-22996/hansard-974425065-22996.pdf",
+   "sha256": "74456f9f1913f8e239c070b6407bd6e00017e1e67aa302a51fe9390db39d5d07",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-08-15",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21515",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa360/globalassets/hansard-daily-pdfs/hansard-2145855009-21515/hansard-2145855009-21515.pdf",
+   "sha256": "d67a6bb3f9c344ce1f9b2c41e0b6d2170e3fcf2f534b12c49f0fe3bdffbad514",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-08-15",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23084",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa014/globalassets/hansard-daily-pdfs/hansard-974425065-23084/hansard-974425065-23084.pdf",
+   "sha256": "94006604aad415ccb187eafc19aaaf2ef16c563b93e482cb33ca011a15991320",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-08-16",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21619",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa31a/globalassets/hansard-daily-pdfs/hansard-2145855009-21619/hansard-2145855009-21619.pdf",
+   "sha256": "77e2121520a0afa1c3ff966b3e18659d07f202aaf62ceadb9878f107cace0cdd",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-08-16",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23163",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fed/globalassets/hansard-daily-pdfs/hansard-974425065-23163/hansard-974425065-23163.pdf",
+   "sha256": "33dc57ec9ac7df7db0be4416b6d1040d175fe205fb469b77eee75dda53f5d73b",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-08-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21708",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa32e/globalassets/hansard-daily-pdfs/hansard-2145855009-21708/hansard-2145855009-21708.pdf",
+   "sha256": "2a0c8d060d768d63aeaecf9b943897dbb5d3ed7fe973a65c94a0a746549edbb8",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-08-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23242",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa00e/globalassets/hansard-daily-pdfs/hansard-974425065-23242/hansard-974425065-23242.pdf",
+   "sha256": "53eb3771cf78f3ec8593236fdad0a4d8f2ed8ab4f272491b44e835a0044dbc99",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-08-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21821",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa33d/globalassets/hansard-daily-pdfs/hansard-2145855009-21821/hansard-2145855009-21821.pdf",
+   "sha256": "a069c87df4bf883f94f103eb6518dcaa1db1b8245c5f8e0fdd04d8a511a751f2",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-08-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23323",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ff8/globalassets/hansard-daily-pdfs/hansard-974425065-23323/hansard-974425065-23323.pdf",
+   "sha256": "f2977d4f8c8ebb67f0f4ec84fa9e716ad7b1fcdc44816792588ccde69cc20b19",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-08-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-21919",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa32c/globalassets/hansard-daily-pdfs/hansard-2145855009-21919/hansard-2145855009-21919.pdf",
+   "sha256": "018ffa56a183464748801ebe2fe15ec6dbc2354157a774bfd651c45b72f82588",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-08-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23401",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ff1/globalassets/hansard-daily-pdfs/hansard-974425065-23401/hansard-974425065-23401.pdf",
+   "sha256": "8c956740d057d36090c0de3821f26b4432bf6a9dac9e75f7b8f613036f4ab92f",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-08-31",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22010",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa33f/globalassets/hansard-daily-pdfs/hansard-2145855009-22010/hansard-2145855009-22010.pdf",
+   "sha256": "62cd53e50e7727013af2ea5c8c2f287af624052475c12499a1883e6970a86911",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-08-31",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23484",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fff/globalassets/hansard-daily-pdfs/hansard-974425065-23484/hansard-974425065-23484.pdf",
+   "sha256": "759e09145fa08354dfbfdebf7150f133cd80f93ae886eadbb62772c43985d2a1",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-10-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22109",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa34f/globalassets/hansard-daily-pdfs/hansard-2145855009-22109/hansard-2145855009-22109.pdf",
+   "sha256": "4eea93da3b5ae44be57c6230878e57a622f00fc27679ec5187c10e12ab7bddf8",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-10-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23567",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fd6/globalassets/hansard-daily-pdfs/hansard-974425065-23567/hansard-974425065-23567.pdf",
+   "sha256": "fde38d93d26c994c2036639495eb2fcbde3c2b8a9538359824f70a5c72683700",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-10-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22202",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9de7/globalassets/hansard-daily-pdfs/hansard-2145855009-22202/hansard-2145855009-22202.pdf",
+   "sha256": "1121cc03e87aefed79fd2084ce6ac3ddc61802c80dd9f52c87965659b799db21",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-10-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23645",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fe3/globalassets/hansard-daily-pdfs/hansard-974425065-23645/hansard-974425065-23645.pdf",
+   "sha256": "cec99125208b7323ecf9644fcd0f1e051ec9204b9fe201efe56ab27df0a91ee3",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-10-05",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22288",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9df9/globalassets/hansard-daily-pdfs/hansard-2145855009-22288/hansard-2145855009-22288.pdf",
+   "sha256": "eef7eb8891aad6c1f229a38024b857d64bb92b2fac5a2fe95c3b8680c2918f65",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-10-05",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23719",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf",
+   "sha256": "992a7c27c34f24816786df2a4f8e276058a272c55083355aba190c662dffb94e",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2023-10-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22386",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e0b/globalassets/hansard-daily-pdfs/hansard-2145855009-22386/hansard-2145855009-22386.pdf",
+   "sha256": "c5883b3cbd5d380a01e0c4e3d9294a6617b7f147b57bd50cda8e1a444d97fb88",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2023-10-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23801",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fc1/globalassets/hansard-daily-pdfs/hansard-974425065-23801/hansard-974425065-23801.pdf",
+   "sha256": "228643d2ee85f58bc6f5e86f70197dfaa38cecfddfd540994d3cab6084979f5e",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-10-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22483",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9dfa/globalassets/hansard-daily-pdfs/hansard-2145855009-22483/hansard-2145855009-22483.pdf",
+   "sha256": "be568e92cb01771cde40919c14c0fb209a6bf0e26f7b00321b6f733dba84af7d",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-10-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23877",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fcf/globalassets/hansard-daily-pdfs/hansard-974425065-23877/hansard-974425065-23877.pdf",
+   "sha256": "911c1072c57f73a1c23fd17558792806b5fd4bd05e08b41f9f9e03bd9551823b",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-10-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22561",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e0c/globalassets/hansard-daily-pdfs/hansard-2145855009-22561/hansard-2145855009-22561.pdf",
+   "sha256": "8bfe35f1fd6cd1e68f12b5fa53093b5358a6dccfa8b9bfe7e0d6046fb58bc393",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2023-10-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-23953",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-974425065-23953/hansard-974425065-23953.pdf",
+   "sha256": "2c10349d9f8432092493102de8acbcb305e2cd07399c91f220ecda8ab429520f",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2023-10-31",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22654",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e1c/globalassets/hansard-daily-pdfs/hansard-2145855009-22654/hansard-2145855009-22654.pdf",
+   "sha256": "6d09a7f6e1616d7a6cf4ee02cd9605a82994e846a12a175fa19c593e0ed88df3",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-10-31",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24031",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fbb/globalassets/hansard-daily-pdfs/hansard-974425065-24031/hansard-974425065-24031.pdf",
+   "sha256": "5b8f086dd39c87e26b4f533cb655570c078ef11045aa8a351e93c8ffdfeb1143",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-11-01",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22764",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e2c/globalassets/hansard-daily-pdfs/hansard-2145855009-22764/hansard-2145855009-22764.pdf",
+   "sha256": "d345931579fad5827602dcb051eb419a59959aa6ccf05c176a1b05e0427a05b4",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-11-01",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24120",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fc9/globalassets/hansard-daily-pdfs/hansard-974425065-24120/hansard-974425065-24120.pdf",
+   "sha256": "b38fa07266ef72fff25c0096d3d1312f97e6ef95f5513dd880be4f20e899234b",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-11-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22852",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e1a/globalassets/hansard-daily-pdfs/hansard-2145855009-22852/hansard-2145855009-22852.pdf",
+   "sha256": "1f02e4feef95cae0b9a374cbe90920979e2833914286cc050b7625233884d791",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2023-11-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24193",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fad/globalassets/hansard-daily-pdfs/hansard-974425065-24193/hansard-974425065-24193.pdf",
+   "sha256": "33e25a2cecd294542b6824264b15e5cf82511dfb6e46f1b378728216df38dcf2",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-11-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-22944",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e2a/globalassets/hansard-daily-pdfs/hansard-2145855009-22944/hansard-2145855009-22944.pdf",
+   "sha256": "9d1fcc88d202e221de57a63f8a909cafc6b8f6f99d6a56c584caddacc4ff8b50",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-11-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24274",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fc5/globalassets/hansard-daily-pdfs/hansard-974425065-24274/hansard-974425065-24274.pdf",
+   "sha256": "5e883e6440aa761aab69d98d698163998811ede80f0b1e7ba34d316a9609016d",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-11-15",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-23047",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e35/globalassets/hansard-daily-pdfs/hansard-2145855009-23047/hansard-2145855009-23047.pdf",
+   "sha256": "2a1670898dcabb03af6240c1eb5cf1ae88c81c0df29978cedbe661f5607701e8",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-11-15",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24339",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9faa/globalassets/hansard-daily-pdfs/hansard-974425065-24339/hansard-974425065-24339.pdf",
+   "sha256": "e06a6e734c3eada6f9095d3d289f09b49e422357f29970b50644c24900ea21fc",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-11-16",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-23137",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e39/globalassets/hansard-daily-pdfs/hansard-2145855009-23137/hansard-2145855009-23137.pdf",
+   "sha256": "9c7655367be02cdc11e7456939cd8e9474f433f1ce0aeab5b47a6b914201585a",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2023-11-16",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24429",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fb5/globalassets/hansard-daily-pdfs/hansard-974425065-24429/hansard-974425065-24429.pdf",
+   "sha256": "5282076c793cbf07722f2725256fbaa1f267ac87e561c453881736b3a252da90",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-11-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-23240",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e23/globalassets/hansard-daily-pdfs/hansard-2145855009-23240/hansard-2145855009-23240.pdf",
+   "sha256": "ec063937ac63aff844d70f275a2bab76cb7604fad56489cbcc4786a561e32e5e",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2023-11-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24516",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fa2/globalassets/hansard-daily-pdfs/hansard-974425065-24516/hansard-974425065-24516.pdf",
+   "sha256": "d83383e76e5ba488c32dc1d2c72bd747a8d00cf4b327278a28156e337f7d270e",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-11-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-23342",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e49/globalassets/hansard-daily-pdfs/hansard-2145855009-23342/hansard-2145855009-23342.pdf",
+   "sha256": "60a8264c197adb00733f0ff254660b173e4dfbd957480d5411ac8d0322d4ce29",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2023-11-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24609",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fb2/globalassets/hansard-daily-pdfs/hansard-974425065-24609/hansard-974425065-24609.pdf",
+   "sha256": "1e307030e9c1a931e82a16aa7ca8032e473e6be07325992269603e76a65caf32",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2023-11-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-23446",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e5c/globalassets/hansard-daily-pdfs/hansard-2145855009-23446/hansard-2145855009-23446.pdf",
+   "sha256": "6e400bee95e887ab0449e8095179ed89f5a699559df094dedae19d7e9a3f26f9",
+   "divisions": 9,
+   "reconciled": 7
+  },
+  {
+   "date": "2023-11-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-24712",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f96/globalassets/hansard-daily-pdfs/hansard-974425065-24712/hansard-974425065-24712.pdf",
+   "sha256": "c7c4aa1b843459bf02f2cf0dc2703b780112b4581bdfa3c0f693f93f5c09af49",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-02-06",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24202",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e4a/globalassets/hansard-daily-pdfs/hansard-2145855009-24202/hansard-2145855009-24202.pdf",
+   "sha256": "61a65226f33003f0dec028e277d0f5e9f4d16a9b13806f378b53758662887499",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-02-06",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25057",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f9a/globalassets/hansard-daily-pdfs/hansard-974425065-25057/hansard-974425065-25057.pdf",
+   "sha256": "b76b64a0bc04ae18094982287c2d3dcd3cf97c1e40502c0ee362bff0e9383961",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2024-02-07",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24308",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e5d/globalassets/hansard-daily-pdfs/hansard-2145855009-24308/hansard-2145855009-24308.pdf",
+   "sha256": "9cae384b6329f112eb3f0ab9839ef490b9cb0d8ba0839c6130240b2e8ec75edd",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-02-07",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25138",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f87/globalassets/hansard-daily-pdfs/hansard-974425065-25138/hansard-974425065-25138.pdf",
+   "sha256": "81574be3f2b3bc915af0d3bdd6f83de5b0ab6a8f97b30237fa1fda2426bc6cca",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-02-08",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24393",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e72/globalassets/hansard-daily-pdfs/hansard-2145855009-24393/hansard-2145855009-24393.pdf",
+   "sha256": "a6cafcc9c1bb8b0d79947c531f84b0c53d87f5966f53120515c326398be7b217",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-02-08",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25219",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f8b/globalassets/hansard-daily-pdfs/hansard-974425065-25219/hansard-974425065-25219.pdf",
+   "sha256": "d648d19f252ec5bc4ce9c553411b238c111bb748af80dcdd279e66cdc02798d5",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-02-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24491",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e5c/globalassets/hansard-daily-pdfs/hansard-2145855009-24491/hansard-2145855009-24491.pdf",
+   "sha256": "ab474bdbe64522f936e9ef71edd297ac7010b0179d3febf5f86d6f7bbd835468",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-02-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25303",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f6f/globalassets/hansard-daily-pdfs/hansard-974425065-25303/hansard-974425065-25303.pdf",
+   "sha256": "dd24cd621c3429c569c1d9b2dd1ccf42683b47770db84a7302d5bbf8565f3520",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-02-21",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24583",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e6c/globalassets/hansard-daily-pdfs/hansard-2145855009-24583/hansard-2145855009-24583.pdf",
+   "sha256": "8d5b8706bcee982b4edaf28d037907b93e38f31d4b0fc0340f3b16adf9ed219c",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-02-21",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25379",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f7c/globalassets/hansard-daily-pdfs/hansard-974425065-25379/hansard-974425065-25379.pdf",
+   "sha256": "925b0766fb6059b5c689eb8a999324bcb29e0493a016aa521f312619fbb1b4a9",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-02-22",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24670",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e7d/globalassets/hansard-daily-pdfs/hansard-2145855009-24670/hansard-2145855009-24670.pdf",
+   "sha256": "016b4081e79bf6268d7b3f7f8ad3451360bdc9dedc80740fc41e3ff9c3c4b3f1",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-02-22",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25457",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f82/globalassets/hansard-daily-pdfs/hansard-974425065-25457/hansard-974425065-25457.pdf",
+   "sha256": "8c2dc52964647b6b39c9c1ffd0191fc67982d46347206c27c5aa8912e89e66a4",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-03-05",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24766",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e69/globalassets/hansard-daily-pdfs/hansard-2145855009-24766/hansard-2145855009-24766.pdf",
+   "sha256": "cd4a6680e5526b6f1b8dfbbf74dcefcbc84a3712686e5bd617f00e1ea5d8f42a",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-03-05",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25564",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f70/globalassets/hansard-daily-pdfs/hansard-974425065-25564/hansard-974425065-25564.pdf",
+   "sha256": "b6439124309a3b772848cdc5b4f05e556bf7a08fe4d4e64ff41c56956bbb93b1",
+   "divisions": 24,
+   "reconciled": 24
+  },
+  {
+   "date": "2024-03-06",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24862",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e79/globalassets/hansard-daily-pdfs/hansard-2145855009-24862/hansard-2145855009-24862.pdf",
+   "sha256": "93f50f3bf10f9f4cf41324352363a6fd4b89c4b0eea29c9fc4f76757727e16d8",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-03-06",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25620",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f53/globalassets/hansard-daily-pdfs/hansard-974425065-25620/hansard-974425065-25620.pdf",
+   "sha256": "2f988faffdc46af1277ee0b666dcd59ec26aac1d9930da9d67e89a2018423ec4",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-03-07",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-24955",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e8d/globalassets/hansard-daily-pdfs/hansard-2145855009-24955/hansard-2145855009-24955.pdf",
+   "sha256": "5b08b31d125b74c981d5b197103e050ef4884af7142cf22daf33389c0b0c4384",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-03-07",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25705",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f60/globalassets/hansard-daily-pdfs/hansard-974425065-25705/hansard-974425065-25705.pdf",
+   "sha256": "02b4677fa8257b6f984308b5c29ab46f33aa0d8c8134bf813ac7fd4e7f882062",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2024-03-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25134",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e9d/globalassets/hansard-daily-pdfs/hansard-2145855009-25134/hansard-2145855009-25134.pdf",
+   "sha256": "af45eaa3ac490ca0f2d1a51564474b8741181e7f79959513b10b99e7caa1b187",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-03-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25787",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f6a/globalassets/hansard-daily-pdfs/hansard-974425065-25787/hansard-974425065-25787.pdf",
+   "sha256": "895dadd55268d451ff6bd130d23ff5c71529a83e07c09c5f1a5afba08fed537d",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-03-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25246",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e87/globalassets/hansard-daily-pdfs/hansard-2145855009-25246/hansard-2145855009-25246.pdf",
+   "sha256": "71e31690102011711013da70846437a07467252d82275923363eaaded7e4fcb6",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-03-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25863",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f5c/globalassets/hansard-daily-pdfs/hansard-974425065-25863/hansard-974425065-25863.pdf",
+   "sha256": "ba380fb05ddbcc0f789b408f8c6e0607c3a77ad949676f2dd020155b99abf25b",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-03-21",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25342",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e9b/globalassets/hansard-daily-pdfs/hansard-2145855009-25342/hansard-2145855009-25342.pdf",
+   "sha256": "05fd80cb8e599303b608738e48699a2a20bd49ef1df16d4ff7eae2a17b4afbdc",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-03-21",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-25950",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f3b/globalassets/hansard-daily-pdfs/hansard-974425065-25950/hansard-974425065-25950.pdf",
+   "sha256": "df0413251b2a98b46888d49396c4d50823b836d15e16489b4834a9c96160bb27",
+   "divisions": 11,
+   "reconciled": 11
+  },
+  {
+   "date": "2024-04-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26047",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f4a/globalassets/hansard-daily-pdfs/hansard-974425065-26047/hansard-974425065-26047.pdf",
+   "sha256": "a11a15917d428d3e529bafab61a0d708c9ef97d24c43b1cbd580ccb2e483860a",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-04-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25451",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9eab/globalassets/hansard-daily-pdfs/hansard-2145855009-25451/hansard-2145855009-25451.pdf",
+   "sha256": "b3d78807bbc6bbe9e094d4ba556c9496222b7d98ae2b98cb30dd727b06314c64",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-04-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26218",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f52/globalassets/hansard-daily-pdfs/hansard-974425065-26218/hansard-974425065-26218.pdf",
+   "sha256": "16ef3319a04e3f901818fc3bceb9726cc8effc84d27f8d895f87649ff39f05d5",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2024-05-01",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25554",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e97/globalassets/hansard-daily-pdfs/hansard-2145855009-25554/hansard-2145855009-25554.pdf",
+   "sha256": "4e97a2ba844dc213294b820fdb39a81bd5351f17839b8c09e9ecfc1d5c33f25d",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-05-01",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26304",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f41/globalassets/hansard-daily-pdfs/hansard-974425065-26304/hansard-974425065-26304.pdf",
+   "sha256": "c7925cdc6c93d5aa4b6291313e8dae61fd3f9b97030b35aec6f0068a6bc9cb34",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-05-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25642",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ea9/globalassets/hansard-daily-pdfs/hansard-2145855009-25642/hansard-2145855009-25642.pdf",
+   "sha256": "9a999d1d5b28266a35f8ac9e3d6074bc74c735a8f0375ba54417844d9c7c563f",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-05-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26391",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f31/globalassets/hansard-daily-pdfs/hansard-974425065-26391/hansard-974425065-26391.pdf",
+   "sha256": "f6a8b5cc945c334f12a1e8e2b4ade02e2242d25b371013ac862f40e4ff29b249",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2024-05-07",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25733",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9eb8/globalassets/hansard-daily-pdfs/hansard-2145855009-25733/hansard-2145855009-25733.pdf",
+   "sha256": "a01e1d92ae03cb2657310ee5e34c0b6c52d4f51752c2966dde45cfbabb7ca135",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-05-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25838",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ec7/globalassets/hansard-daily-pdfs/hansard-2145855009-25838/hansard-2145855009-25838.pdf",
+   "sha256": "0e8b0516da200f6f8053c809310c6d679bc3d64fecb386a52b5b7a6d67aca59d",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-05-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26482",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f31/globalassets/hansard-daily-pdfs/hansard-974425065-26482/hansard-974425065-26482.pdf",
+   "sha256": "f0913713d4059076be0e91903785a6fc4bcca1f08cab8a6e6a703beaa0634473",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-05-15",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-25923",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9eb4/globalassets/hansard-daily-pdfs/hansard-2145855009-25923/hansard-2145855009-25923.pdf",
+   "sha256": "bac9819a22875200baa8bb4118ce441680f907b5c989bc2c175d910001b46648",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-05-15",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26582",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f1f/globalassets/hansard-daily-pdfs/hansard-974425065-26582/hansard-974425065-26582.pdf",
+   "sha256": "e35a53f3b00b686f2e37831f82a6ce528a56e7ade31c458da920411a9a660baa",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-05-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26013",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ec3/globalassets/hansard-daily-pdfs/hansard-2145855009-26013/hansard-2145855009-26013.pdf",
+   "sha256": "171f66c8c6cfbd0693500e8c07ac14345b0fd102d2a67f1c4f8fb597b587980e",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-05-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26669",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f11/globalassets/hansard-daily-pdfs/hansard-974425065-26669/hansard-974425065-26669.pdf",
+   "sha256": "00190c0ef29af6a480011c588e86ed9a7df0bc9daacb6293fd13b8c984b320eb",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-05-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26115",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ed3/globalassets/hansard-daily-pdfs/hansard-2145855009-26115/hansard-2145855009-26115.pdf",
+   "sha256": "186db242025a719ee5bf40a7eff736d9583711e5a48a2a986a1c532a16842c28",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-05-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26824",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f23/globalassets/hansard-daily-pdfs/hansard-974425065-26824/hansard-974425065-26824.pdf",
+   "sha256": "283ea3dc44523831ff375f56baaee272c307c37c6054c68f5aa475e321c8a036",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-05-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26211",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ee5/globalassets/hansard-daily-pdfs/hansard-2145855009-26211/hansard-2145855009-26211.pdf",
+   "sha256": "dbc9c8d0de53f934a52bb068aa41144c19b88bcca968f0f43f6de924c9e770e5",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-05-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-26915",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f24/globalassets/hansard-daily-pdfs/hansard-974425065-26915/hansard-974425065-26915.pdf",
+   "sha256": "cfb22d180d3ba3836951c70cab5c5d0625a9eb7271665fd6fea75943a0583c29",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-06-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26312",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ed0/globalassets/hansard-daily-pdfs/hansard-2145855009-26312/hansard-2145855009-26312.pdf",
+   "sha256": "a0729c023de7ca72ba5664baca457072010f3628f9e759e0a8d02a93d0136af9",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-06-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27014",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f12/globalassets/hansard-daily-pdfs/hansard-974425065-27014/hansard-974425065-27014.pdf",
+   "sha256": "f7f7f17751dc7f72a0a0cfc6254b155ba09860ae86693192fdf8598e987ffc40",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2024-06-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26425",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ee2/globalassets/hansard-daily-pdfs/hansard-2145855009-26425/hansard-2145855009-26425.pdf",
+   "sha256": "4557a20339632301ee20ec7d58c8d98ee3c2856b7c6c619e5a2107a01470cb14",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-06-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27093",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f03/globalassets/hansard-daily-pdfs/hansard-974425065-27093/hansard-974425065-27093.pdf",
+   "sha256": "f3c6fc8f72cf22b5c9172ac1d0a6974bce1d8bf179958850114b60d6f61ef2e4",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-06-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26521",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ef8/globalassets/hansard-daily-pdfs/hansard-2145855009-26521/hansard-2145855009-26521.pdf",
+   "sha256": "88a6096b4c8caa4175efd5e73c1e32c0191ff277a610a4a9affce899d5bd14e3",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-06-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27187",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ef0/globalassets/hansard-daily-pdfs/hansard-974425065-27187/hansard-974425065-27187.pdf",
+   "sha256": "bbd68c5c7d30d999532303d33f19adff9ba8e01b396b1fc84edae631ba4d656d",
+   "divisions": 11,
+   "reconciled": 11
+  },
+  {
+   "date": "2024-07-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26616",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ee4/globalassets/hansard-daily-pdfs/hansard-2145855009-26616/hansard-2145855009-26616.pdf",
+   "sha256": "80e1e2dae8360d65624c29bfc57e800569776eec4792e93b589357653c7354a7",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-07-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27289",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ef3/globalassets/hansard-daily-pdfs/hansard-974425065-27289/hansard-974425065-27289.pdf",
+   "sha256": "d958e1718da2c9ddf0340c8b74f71b4a92c229a504d5f47627754de3f799bbb2",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-07-31",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26720",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ef7/globalassets/hansard-daily-pdfs/hansard-2145855009-26720/hansard-2145855009-26720.pdf",
+   "sha256": "852e17a22990f609429241a636df2bb61bdf450ddff03d043908dc433a2b1e4d",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-07-31",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27371",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f06/globalassets/hansard-daily-pdfs/hansard-974425065-27371/hansard-974425065-27371.pdf",
+   "sha256": "09ad0c5952a31a524dc0d24da4a7d31ae5dde3d2322e4f9051adbe55c33922a8",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-08-01",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26855",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f0a/globalassets/hansard-daily-pdfs/hansard-2145855009-26855/hansard-2145855009-26855.pdf",
+   "sha256": "9b9e63bf07c6ad2fc81dae1ead892b7d3229a281ef3ebe26977c7ddc0604d5ff",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-08-01",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27461",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9edf/globalassets/hansard-daily-pdfs/hansard-974425065-27461/hansard-974425065-27461.pdf",
+   "sha256": "ee72b27cb30a6742264e75ed0536bc28a537be49645ed2e7fdfb1c3c4ae8dbe9",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2024-08-13",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-26941",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ef4/globalassets/hansard-daily-pdfs/hansard-2145855009-26941/hansard-2145855009-26941.pdf",
+   "sha256": "efece60a7abb1770fa070d1cd88b76e32e9285e52e24163bb75abeaf5934e547",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-08-13",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27543",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ef3/globalassets/hansard-daily-pdfs/hansard-974425065-27543/hansard-974425065-27543.pdf",
+   "sha256": "8ae1a237760587c6831be3e415bc862a435a0c42f3584866ea632c53c511b4ea",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-08-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27078",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f04/globalassets/hansard-daily-pdfs/hansard-2145855009-27078/hansard-2145855009-27078.pdf",
+   "sha256": "4c0560797e345a520baf5ad6695632d8704b83b05dc72a638f66d28950052038",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-08-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27624",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ed3/globalassets/hansard-daily-pdfs/hansard-974425065-27624/hansard-974425065-27624.pdf",
+   "sha256": "8620bb680c8d2a56f1c09c72cd5ede8cdd4de24f56e1decbec0bbb8f7082874b",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2024-08-15",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27196",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f16/globalassets/hansard-daily-pdfs/hansard-2145855009-27196/hansard-2145855009-27196.pdf",
+   "sha256": "6d9907c057a90d322b252c3083a120a7d57d1e24a899d748ea78aa4deef65660",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-08-15",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27701",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ee2/globalassets/hansard-daily-pdfs/hansard-974425065-27701/hansard-974425065-27701.pdf",
+   "sha256": "6a9fe931f60afc7f9f5fac871610c34304d0550747398f39cf5dafcf37f068e5",
+   "divisions": 31,
+   "reconciled": 31
+  },
+  {
+   "date": "2024-08-27",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27290",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f25/globalassets/hansard-daily-pdfs/hansard-2145855009-27290/hansard-2145855009-27290.pdf",
+   "sha256": "7e46e3504caca0626711a2ef0795809543c24bd1db250c3e67cdb76e5a5918f4",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-08-27",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27791",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ed8/globalassets/hansard-daily-pdfs/hansard-974425065-27791/hansard-974425065-27791.pdf",
+   "sha256": "62beb2a3d3abf75c12356a513c1a910b8ffc27bbeaf171c922584ab931911d40",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-08-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27395",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f0f/globalassets/hansard-daily-pdfs/hansard-2145855009-27395/hansard-2145855009-27395.pdf",
+   "sha256": "8ea4cd82e67a2316134068b93272802daf743d3cbc1610ada8d200690fe6556d",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-08-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27875",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ec3/globalassets/hansard-daily-pdfs/hansard-974425065-27875/hansard-974425065-27875.pdf",
+   "sha256": "bb48d02b35b8c055dab72b11bef6f1767ece8da87b91bbb68ec62b4449f1576a",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-08-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27480",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f20/globalassets/hansard-daily-pdfs/hansard-2145855009-27480/hansard-2145855009-27480.pdf",
+   "sha256": "8fedb3e2fc84f5697e10ac69a19adfa7fce267f3441c1f4a27d8f1effa1aa3c8",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-08-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-27960",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ec8/globalassets/hansard-daily-pdfs/hansard-974425065-27960/hansard-974425065-27960.pdf",
+   "sha256": "de466410b45a9b9856d9e8f8d290956cffabd92270e6cd377e6b2e3ed9ec932d",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-09-10",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27575",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f2e/globalassets/hansard-daily-pdfs/hansard-2145855009-27575/hansard-2145855009-27575.pdf",
+   "sha256": "8461b8b8b31a1b6c3687b32542c80f2aa8cb6072d4f2c01cb8cd300dfd7b0c68",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-09-10",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28055",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ecc/globalassets/hansard-daily-pdfs/hansard-974425065-28055/hansard-974425065-28055.pdf",
+   "sha256": "4941f9df3d70b6479f302bea2815add433f3deac6f9e090ae06db98ad69bd819",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-09-11",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27679",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f3e/globalassets/hansard-daily-pdfs/hansard-2145855009-27679/hansard-2145855009-27679.pdf",
+   "sha256": "4853e98a6edf18c6e77191be5991c473f763019486eec1eb739b0407bf46c948",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-09-11",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28140",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9eb7/globalassets/hansard-daily-pdfs/hansard-974425065-28140/hansard-974425065-28140.pdf",
+   "sha256": "7c0228164edef1ea6cc4463942c23a6d4d9b2c13cc2b22e9eba4ae65008ee2a2",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-09-12",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27805",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f2b/globalassets/hansard-daily-pdfs/hansard-2145855009-27805/hansard-2145855009-27805.pdf",
+   "sha256": "e735dfd1d90fbb8046509a692145e212808dfc8223ec636be0ead71dee8478a7",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2024-09-12",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28230",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ea8/globalassets/hansard-daily-pdfs/hansard-974425065-28230/hansard-974425065-28230.pdf",
+   "sha256": "734eab9d114c87c06dedde672ad54d973f298e5b40490b90844188a42f249f25",
+   "divisions": 17,
+   "reconciled": 17
+  },
+  {
+   "date": "2024-10-15",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27890",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f3e/globalassets/hansard-daily-pdfs/hansard-2145855009-27890/hansard-2145855009-27890.pdf",
+   "sha256": "2fb2a2b272b5be7aae2dc9bb7a8fe877eb5aacd5627d9d8f88b835fd88fbaae0",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-10-15",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28328",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ebb/globalassets/hansard-daily-pdfs/hansard-974425065-28328/hansard-974425065-28328.pdf",
+   "sha256": "b340f1daf1672680c0f8dcd0891b88478eaa9369c5dbbb41c33ad052bb2355df",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-10-16",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-27991",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f4d/globalassets/hansard-daily-pdfs/hansard-2145855009-27991/hansard-2145855009-27991.pdf",
+   "sha256": "e072b60ee2f24bec93db74fe95abfcc3c40c92f2dfab02b0e2e1cb722ce53587",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-10-16",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28413",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e96/globalassets/hansard-daily-pdfs/hansard-974425065-28413/hansard-974425065-28413.pdf",
+   "sha256": "b6dc3199657ca1017cc6f888b8f68bcfdf936da0109a01e19381670ae2ec1479",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-10-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28105",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f39/globalassets/hansard-daily-pdfs/hansard-2145855009-28105/hansard-2145855009-28105.pdf",
+   "sha256": "75e529552f498450e3162f409cad702160fd0dad109a36edc23a0789fe7299a1",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2024-10-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28497",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9eaa/globalassets/hansard-daily-pdfs/hansard-974425065-28497/hansard-974425065-28497.pdf",
+   "sha256": "a1dc7713720424268b807eac084dc18c1b6b88158dc770b349a801d882e33b42",
+   "divisions": 12,
+   "reconciled": 12
+  },
+  {
+   "date": "2024-10-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28208",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f4c/globalassets/hansard-daily-pdfs/hansard-2145855009-28208/hansard-2145855009-28208.pdf",
+   "sha256": "ca758d1b27304fff0e120ab0dfadacde8167b277153e1eb544b31f500c49905d",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2024-10-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28587",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e99/globalassets/hansard-daily-pdfs/hansard-974425065-28587/hansard-974425065-28587.pdf",
+   "sha256": "6544a38d55d89561ea97309db60bc0bfa180c1bf85f453495c20b2e9983760bb",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2024-10-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28344",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f5e/globalassets/hansard-daily-pdfs/hansard-2145855009-28344/hansard-2145855009-28344.pdf",
+   "sha256": "62836ad2eaa0b7c7221f0f69284dd8bd35467d30544361f21fb1a4e164148a5e",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-10-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28670",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e89/globalassets/hansard-daily-pdfs/hansard-974425065-28670/hansard-974425065-28670.pdf",
+   "sha256": "857b3b968db66b02a132515e80d88e80626c6f65cd0267c51af026d71eb3ef20",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-10-31",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28441",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f4d/globalassets/hansard-daily-pdfs/hansard-2145855009-28441/hansard-2145855009-28441.pdf",
+   "sha256": "245540e13e6392a6cbca0a094d9078498c33257cc65f0de1ad160ae599fabef5",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-10-31",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28765",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e99/globalassets/hansard-daily-pdfs/hansard-974425065-28765/hansard-974425065-28765.pdf",
+   "sha256": "53259b4ef03b1e74a76d8fd56399ec6d44eaa0429c5e145419a4de65abc068b4",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2024-11-12",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28540",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f5e/globalassets/hansard-daily-pdfs/hansard-2145855009-28540/hansard-2145855009-28540.pdf",
+   "sha256": "12c0435b54016286a4bcea5a39b494c6300e282b4bdab7ceaa706f24f49ee1e5",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-11-12",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28859",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e87/globalassets/hansard-daily-pdfs/hansard-974425065-28859/hansard-974425065-28859.pdf",
+   "sha256": "cda89c0acc137117a22f69070486e1637cc8ea0015027305aa100d73d098567c",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2024-11-13",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28666",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f6f/globalassets/hansard-daily-pdfs/hansard-2145855009-28666/hansard-2145855009-28666.pdf",
+   "sha256": "c4f871596cc3043ed1e9e853fe3f6f176839046d8686e123fa363ffe844280c1",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-11-13",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-28938",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e78/globalassets/hansard-daily-pdfs/hansard-974425065-28938/hansard-974425065-28938.pdf",
+   "sha256": "78cc36cb7571c68b7a847fbe82dc93822d251d03633c78fb6c38813f1b358a21",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-11-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28761",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f84/globalassets/hansard-daily-pdfs/hansard-2145855009-28761/hansard-2145855009-28761.pdf",
+   "sha256": "95aadd9992910ecf6d641e1a454736c82792e418ff8343deadaf7e0dbef46c71",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-11-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29035",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e8a/globalassets/hansard-daily-pdfs/hansard-974425065-29035/hansard-974425065-29035.pdf",
+   "sha256": "d804d3c7e3b736bac08f538edea4658cfb56449768946e41a332f7ec6a926d9f",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2024-11-26",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28855",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f6f/globalassets/hansard-daily-pdfs/hansard-2145855009-28855/hansard-2145855009-28855.pdf",
+   "sha256": "9822edfe8c506f723e4e8812a741a3f64d3dae9fb2f92827af00517102999bac",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2024-11-26",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29121",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e79/globalassets/hansard-daily-pdfs/hansard-974425065-29121/hansard-974425065-29121.pdf",
+   "sha256": "cd5559dfed0096c48f6660b78d4f1b930679cb3fd8c914a9be7e3e2812811573",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2024-11-27",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-28980",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f7f/globalassets/hansard-daily-pdfs/hansard-2145855009-28980/hansard-2145855009-28980.pdf",
+   "sha256": "1ae25021db797bd5d5ebfee93440bcd1f0e318eae4e33cd4bcb3aad53492b7ef",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2024-11-27",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29211",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e69/globalassets/hansard-daily-pdfs/hansard-974425065-29211/hansard-974425065-29211.pdf",
+   "sha256": "e3047c22820df108f57fb19461ef83e86ff41decee464acb9c6796214b2f7722",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2024-11-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29128",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f94/globalassets/hansard-daily-pdfs/hansard-2145855009-29128/hansard-2145855009-29128.pdf",
+   "sha256": "a0f0ae98ad0db44e1af6030a719c1b3311b08eb5c57c4192d69c60ec85ff0251",
+   "divisions": 12,
+   "reconciled": 12
+  },
+  {
+   "date": "2024-11-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29318",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e53/globalassets/hansard-daily-pdfs/hansard-974425065-29318/hansard-974425065-29318.pdf",
+   "sha256": "beadf21f1266d31dbcb803e18048f007afb3f736c0a4ceef5d2c155e94244aa3",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-02-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29222",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f86/globalassets/hansard-daily-pdfs/hansard-2145855009-29222/hansard-2145855009-29222.pdf",
+   "sha256": "dca4bf341b6e9363bd61fce4cfa7bd4426af24824cd5dd290c90c3382f612325",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-02-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29422",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e5a/globalassets/hansard-daily-pdfs/hansard-974425065-29422/hansard-974425065-29422.pdf",
+   "sha256": "b0e40167ae23555a5c141972920e2ffd254a0f8ac9ddb8e06189828e8559179f",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-02-05",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29334",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fb0/globalassets/hansard-daily-pdfs/hansard-2145855009-29334/hansard-2145855009-29334.pdf",
+   "sha256": "e5305fb3c2dd45f35624bccec6bf32ff6c5cf8a336d173780ae590d66e49126e",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-02-05",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29510",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e68/globalassets/hansard-daily-pdfs/hansard-974425065-29510/hansard-974425065-29510.pdf",
+   "sha256": "014612797aefe6629d433461ac5584b0baf2795127b6df83aaed99b9cce50f7c",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-02-06",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29415",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f94/globalassets/hansard-daily-pdfs/hansard-2145855009-29415/hansard-2145855009-29415.pdf",
+   "sha256": "776db3b0b7bfc107df03bc1d2ce145f74588fa4171533ec6335a915ec282818e",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-02-06",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29600",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e4f/globalassets/hansard-daily-pdfs/hansard-974425065-29600/hansard-974425065-29600.pdf",
+   "sha256": "a1b865502be735e5c52e51b2acfe19dd3eb90b5332369fb9843344c57d206c6c",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-02-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29508",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fa2/globalassets/hansard-daily-pdfs/hansard-2145855009-29508/hansard-2145855009-29508.pdf",
+   "sha256": "d2af2e136cbf0b1c08bf26a6a1769c3066bf6f692150b0f0a9be7caa1762e09c",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-02-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29689",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e3c/globalassets/hansard-daily-pdfs/hansard-974425065-29689/hansard-974425065-29689.pdf",
+   "sha256": "9dcd94d72c91633ab27cec995767865bf66f41b9fd97cb0a5e3f8ddbcfc35efb",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-02-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29610",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9f9d/globalassets/hansard-daily-pdfs/hansard-2145855009-29610/hansard-2145855009-29610.pdf",
+   "sha256": "8918204e0420811695b1f91387e4e7c830f2a5bb4aac2468d70c69e3c65895c0",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-02-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29778",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e4b/globalassets/hansard-daily-pdfs/hansard-974425065-29778/hansard-974425065-29778.pdf",
+   "sha256": "c4b891d98f42bca766c2ce5151b1bfcb6a2422cd7ed9000ec7be24e8be1eeb02",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-02-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29697",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9faf/globalassets/hansard-daily-pdfs/hansard-2145855009-29697/hansard-2145855009-29697.pdf",
+   "sha256": "76ad079ff147133be7a71f1ab17ec97c6da98cc51b9a33ab71c757ba26dd8806",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-02-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29864",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e41/globalassets/hansard-daily-pdfs/hansard-974425065-29864/hansard-974425065-29864.pdf",
+   "sha256": "c1af7ca0dbe320f19fbb31fde9a4af743f65be7bf0a77cabda92ca71240eb551",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-03-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29794",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fbc/globalassets/hansard-daily-pdfs/hansard-2145855009-29794/hansard-2145855009-29794.pdf",
+   "sha256": "f21eb99f7ff8107fd23c6c8a02a09eff1c472910fedf2dafb6c410fa68036e64",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-03-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-29951",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e24/globalassets/hansard-daily-pdfs/hansard-974425065-29951/hansard-974425065-29951.pdf",
+   "sha256": "8919efb02b22074aeb0a38a050306ee342daaed1ca564cf1813cfcefa8bb9917",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-03-05",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29891",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fc1/globalassets/hansard-daily-pdfs/hansard-2145855009-29891/hansard-2145855009-29891.pdf",
+   "sha256": "9738755c03083ea76827551fca7d444269a37a6cbb3c9c353d0c79959368bbfc",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-03-05",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30036",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e32/globalassets/hansard-daily-pdfs/hansard-974425065-30036/hansard-974425065-30036.pdf",
+   "sha256": "1e87f7e29f6f20d293a0b6e433f9057ae747daf8aabd07642b13c941e96447c9",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-03-06",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-29977",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fca/globalassets/hansard-daily-pdfs/hansard-2145855009-29977/hansard-2145855009-29977.pdf",
+   "sha256": "b918c7981e26249b434f0484cd09b4fc8bdd1ea098b727f4b120aac1a6569e61",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-03-06",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30126",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e1c/globalassets/hansard-daily-pdfs/hansard-974425065-30126/hansard-974425065-30126.pdf",
+   "sha256": "e86dd2c0f5b5c247fc0f22b9a9c51ab91d1816491deec50f9ee0b49eef81b092",
+   "divisions": 13,
+   "reconciled": 13
+  },
+  {
+   "date": "2025-03-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30068",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fb3/globalassets/hansard-daily-pdfs/hansard-2145855009-30068/hansard-2145855009-30068.pdf",
+   "sha256": "c6c35a92b7aed63f41626b25321b76fb93f3458d9842b2595ce02deaa71bf44a",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-03-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30208",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e2b/globalassets/hansard-daily-pdfs/hansard-974425065-30208/hansard-974425065-30208.pdf",
+   "sha256": "a9fd63733f34e91cd1852d68eafae8e34168207687e3826a3ca92708c8c9d3b6",
+   "divisions": 12,
+   "reconciled": 12
+  },
+  {
+   "date": "2025-03-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30166",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fd1/globalassets/hansard-daily-pdfs/hansard-2145855009-30166/hansard-2145855009-30166.pdf",
+   "sha256": "06cf8b0927b7cc40b6f26e1af577961db0241b23588b54d34e32735862f614d2",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-03-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30291",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e3b/globalassets/hansard-daily-pdfs/hansard-974425065-30291/hansard-974425065-30291.pdf",
+   "sha256": "c9e93f29dcddbf0d0b88f3a142757be65f75587416cd753212c042858af7e414",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-03-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30254",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fe0/globalassets/hansard-daily-pdfs/hansard-2145855009-30254/hansard-2145855009-30254.pdf",
+   "sha256": "456f7da13a30281510b2f8abd59a80fe02b3108621a8e639e118a8d252df3ce2",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2025-03-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30363",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e0e/globalassets/hansard-daily-pdfs/hansard-974425065-30363/hansard-974425065-30363.pdf",
+   "sha256": "24d6c6701401fb4f060d94619452142b2fec7aa862d96c13b760b705ea8ff517",
+   "divisions": 13,
+   "reconciled": 13
+  },
+  {
+   "date": "2025-04-01",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30348",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fcb/globalassets/hansard-daily-pdfs/hansard-2145855009-30348/hansard-2145855009-30348.pdf",
+   "sha256": "e77f489a96489586e362f25405f1159cad7e9e480e862744f9c65ca603c34061",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-04-01",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30455",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e23/globalassets/hansard-daily-pdfs/hansard-974425065-30455/hansard-974425065-30455.pdf",
+   "sha256": "381fa353d6167d08fe1153a0350c5024f0f6a907840ca2228edf7914ad8d368e",
+   "divisions": 12,
+   "reconciled": 12
+  },
+  {
+   "date": "2025-04-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30447",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-2145855009-30447/hansard-2145855009-30447.pdf",
+   "sha256": "4b56db3cda3e54ab1ceb912d1c7f356c3f7f90a955f51c7b27470d60b0a3aced",
+   "divisions": 8,
+   "reconciled": 8
+  },
+  {
+   "date": "2025-04-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30532",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e04/globalassets/hansard-daily-pdfs/hansard-974425065-30532/hansard-974425065-30532.pdf",
+   "sha256": "ac258dd2c0d5fb29707fd903573b59fb7b62cc7e4d9b4a9c2699f8755a2cec1f",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-04-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30535",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fe8/globalassets/hansard-daily-pdfs/hansard-2145855009-30535/hansard-2145855009-30535.pdf",
+   "sha256": "4f5930565c29388c005de90f865c9c5f1514a871e4cc13dd50155d789ce1d2d8",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2025-04-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30617",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e12/globalassets/hansard-daily-pdfs/hansard-974425065-30617/hansard-974425065-30617.pdf",
+   "sha256": "c59ed6e72a971be86530556e6f407921d217fd5c5fe5313457d0086144c9d87c",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-05-13",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30628",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ff5/globalassets/hansard-daily-pdfs/hansard-2145855009-30628/hansard-2145855009-30628.pdf",
+   "sha256": "8ebe75a183424d6b9c9c29d4b2d1851cc287a77503299935a4ece60f78785782",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-05-13",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30715",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9e0c/globalassets/hansard-daily-pdfs/hansard-974425065-30715/hansard-974425065-30715.pdf",
+   "sha256": "76313270c46480805a0a2db8447edc6d58e220e9a0b3d4928a9f8c4daf2bac3f",
+   "divisions": 8,
+   "reconciled": 8
+  },
+  {
+   "date": "2025-05-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30717",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa010/globalassets/hansard-daily-pdfs/hansard-2145855009-30717/hansard-2145855009-30717.pdf",
+   "sha256": "8990c82b4e5ee071eb2f8aca4f1860c4966ae02e912aee1f8e4e9a973d23ba4b",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-05-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30795",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9df6/globalassets/hansard-daily-pdfs/hansard-974425065-30795/hansard-974425065-30795.pdf",
+   "sha256": "d5132e53fe2ac5d731a1521c5d6b3c0a145d5b3c38d32cc8e139da414a8a6a55",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-05-15",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30810",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fdf/globalassets/hansard-daily-pdfs/hansard-2145855009-30810/hansard-2145855009-30810.pdf",
+   "sha256": "4910675a3bc12cbe2cf909731fa3a87fae35d182893c4b4daf5f322f96b4b2d1",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2025-05-15",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30876",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ddc/globalassets/hansard-daily-pdfs/hansard-974425065-30876/hansard-974425065-30876.pdf",
+   "sha256": "440043037a4a1deadda520c31cfca503ddde2fc778d16e142f9a764cf0bbee52",
+   "divisions": 7,
+   "reconciled": 6
+  },
+  {
+   "date": "2025-05-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-30898",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ff0/globalassets/hansard-daily-pdfs/hansard-2145855009-30898/hansard-2145855009-30898.pdf",
+   "sha256": "7440fbc1977fc3a0daf2a85d2f581b17090293a5f038b21655574d7d38c05d7c",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-05-27",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31008",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9fff/globalassets/hansard-daily-pdfs/hansard-2145855009-31008/hansard-2145855009-31008.pdf",
+   "sha256": "bf9a3fdf3478d4d82fff3380f8f1b0ecf1c4e59518a37082c64d7b7dac26def1",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-05-27",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-30963",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9dee/globalassets/hansard-daily-pdfs/hansard-974425065-30963/hansard-974425065-30963.pdf",
+   "sha256": "5e2960195632e932231829d909008b307685796902b92eade0b88956291550fa",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-05-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31100",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9ffa/globalassets/hansard-daily-pdfs/hansard-2145855009-31100/hansard-2145855009-31100.pdf",
+   "sha256": "e984c6000ea572797322f7f39626eba5e534a5f5bdd029ead36510acb47b3f54",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-05-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31057",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4a9dfc/globalassets/hansard-daily-pdfs/hansard-974425065-31057/hansard-974425065-31057.pdf",
+   "sha256": "1136bf7d8e15685370538e666f3599b3b6d89536a2f83c4dcadb69ff5a13fc79",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-05-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31138",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa356/globalassets/hansard-daily-pdfs/hansard-974425065-31138/hansard-974425065-31138.pdf",
+   "sha256": "2f26d330cab699f9c533774d650bb96f0806d1ee0faddd773a3dd1739c5e4d2e",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-06-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31197",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa009/globalassets/hansard-daily-pdfs/hansard-2145855009-31197/hansard-2145855009-31197.pdf",
+   "sha256": "f2c5994903405be9efee9ace15b381f091142d2eeda6484a692ae88452d43db1",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-06-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31225",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa349/globalassets/hansard-daily-pdfs/hansard-974425065-31225/hansard-974425065-31225.pdf",
+   "sha256": "e24ca16902666d8334337e401ef5cec663a81ae729ac583b9ff33d69f54de2fa",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-06-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31288",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa018/globalassets/hansard-daily-pdfs/hansard-2145855009-31288/hansard-2145855009-31288.pdf",
+   "sha256": "73dbacdceef5652da38c82c1d533cfe41846332a3d2d86f535ec11f07e92d44e",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-06-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31311",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa34c/globalassets/hansard-daily-pdfs/hansard-974425065-31311/hansard-974425065-31311.pdf",
+   "sha256": "c6f7f0c30ddb316724bc65194d377443ff9cf4cb69eb45ad1e6995cd73595a9b",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-06-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31382",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa026/globalassets/hansard-daily-pdfs/hansard-2145855009-31382/hansard-2145855009-31382.pdf",
+   "sha256": "f50154327d9f9f6dacd2eadc1f1c639ca1698aec79d229c56601e15bcf049e9c",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-06-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31414",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa336/globalassets/hansard-daily-pdfs/hansard-974425065-31414/hansard-974425065-31414.pdf",
+   "sha256": "2b8cbc7fe89baacff1bf598074bfa100c77116b53f62c032bd5d7696aafbebd6",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2025-07-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31477",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa013/globalassets/hansard-daily-pdfs/hansard-2145855009-31477/hansard-2145855009-31477.pdf",
+   "sha256": "2fcdd6f796ec3654a54b3d1a98b78e410a54c57dbf478ae33d4e4e43b4f43667",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-07-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31507",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa330/globalassets/hansard-daily-pdfs/hansard-974425065-31507/hansard-974425065-31507.pdf",
+   "sha256": "a18a7ffa56e9c0736584ab14245d69f04665dfdd7a69b34be19d4e8e801ad21e",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-07-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31568",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa023/globalassets/hansard-daily-pdfs/hansard-2145855009-31568/hansard-2145855009-31568.pdf",
+   "sha256": "fba4c8b63b882cc82ebb12aecab369f5cd627e2ec6e7a0fc8fa5ea27c94f3ab5",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-07-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31594",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa33e/globalassets/hansard-daily-pdfs/hansard-974425065-31594/hansard-974425065-31594.pdf",
+   "sha256": "f699db8390d5e4108975062ee2354bb7916f8b5a6965d8316be49bf420d3e1d9",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-07-31",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31647",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa033/globalassets/hansard-daily-pdfs/hansard-2145855009-31647/hansard-2145855009-31647.pdf",
+   "sha256": "44f2a5ff11e0b9d24df438ed566054bca366e03ea4778ffcfcad8bab18e66bc3",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2025-07-31",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31674",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa322/globalassets/hansard-daily-pdfs/hansard-974425065-31674/hansard-974425065-31674.pdf",
+   "sha256": "d770256f08660cd767e9d332b7936ba0d385be3fcdaeecd1a001c88e078c1c95",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2025-08-12",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31738",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa01b/globalassets/hansard-daily-pdfs/hansard-2145855009-31738/hansard-2145855009-31738.pdf",
+   "sha256": "b355bd45577bdfe2fa283d63a851df6861dc571a5e6129593ac8681f609bc6ca",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-08-12",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31772",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa313/globalassets/hansard-daily-pdfs/hansard-974425065-31772/hansard-974425065-31772.pdf",
+   "sha256": "d8b500a3de74e0c8eedeab1d373aee4c389cf8a178ffc1bdd04d48021e2fb935",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-08-13",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31840",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa029/globalassets/hansard-daily-pdfs/hansard-2145855009-31840/hansard-2145855009-31840.pdf",
+   "sha256": "73897c3ba927b8fa2033da551d97e17ffabef4d3a4aebed79c9a5958e9f31184",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-08-13",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31863",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa315/globalassets/hansard-daily-pdfs/hansard-974425065-31863/hansard-974425065-31863.pdf",
+   "sha256": "de60b43d024ee5b455206dcf69b3bee3919c7125a53f78df336a33f794fe7543",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-08-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-31934",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa038/globalassets/hansard-daily-pdfs/hansard-2145855009-31934/hansard-2145855009-31934.pdf",
+   "sha256": "84abcb44efcd8f284fc4267eb7c4ef57ec79697f45b92b72dae462ac055f9b24",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-08-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-31952",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa324/globalassets/hansard-daily-pdfs/hansard-974425065-31952/hansard-974425065-31952.pdf",
+   "sha256": "bc6684aabcec5dc0a3b0f6bcc5d8e27def234de7e6a8f301c0bde4f352174c67",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2025-08-26",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32029",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa047/globalassets/hansard-daily-pdfs/hansard-2145855009-32029/hansard-2145855009-32029.pdf",
+   "sha256": "4e7f8e0772c760645cc3a620b92c9de9d6df5beaf06ef881451ed915f5b7d6b4",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-08-26",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32053",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa305/globalassets/hansard-daily-pdfs/hansard-974425065-32053/hansard-974425065-32053.pdf",
+   "sha256": "e427a722dc9874dfe31f626200e4dabd5513db07f5a503cb960b9f613a65392e",
+   "divisions": 11,
+   "reconciled": 11
+  },
+  {
+   "date": "2025-08-27",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32130",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa056/globalassets/hansard-daily-pdfs/hansard-2145855009-32130/hansard-2145855009-32130.pdf",
+   "sha256": "61486b73dc5dd438aad2142b862dbaa898219731fcf7e62975b0e41588c394de",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-08-27",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32125",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa31d/globalassets/hansard-daily-pdfs/hansard-974425065-32125/hansard-974425065-32125.pdf",
+   "sha256": "5f3ece85df1b41dad7c5031ad211d97de24fc71d7c50beec8a9e22bf5da689ab",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2025-08-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32217",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa042/globalassets/hansard-daily-pdfs/hansard-2145855009-32217/hansard-2145855009-32217.pdf",
+   "sha256": "bf347e6da310a878ae4a1626a74901cf7ab32f813b8a8777dd41fc205bb35664",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-08-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32214",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa30c/globalassets/hansard-daily-pdfs/hansard-974425065-32214/hansard-974425065-32214.pdf",
+   "sha256": "963fa915abff6ae68f7a10967f88d6e0f2efb00e03728143e44b057d9231567f",
+   "divisions": 10,
+   "reconciled": 10
+  },
+  {
+   "date": "2025-09-09",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32303",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa057/globalassets/hansard-daily-pdfs/hansard-2145855009-32303/hansard-2145855009-32303.pdf",
+   "sha256": "bd37f461e11932825b5698c8df4c3e26445ca6cd3cc4ade939842541827ed04d",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2025-09-09",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32304",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2ef/globalassets/hansard-daily-pdfs/hansard-974425065-32304/hansard-974425065-32304.pdf",
+   "sha256": "4631c6ba9e76a9b14c49a6e7a88280c0a4479e794528283d0dc310ad3265c9c8",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-09-10",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32400",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa065/globalassets/hansard-daily-pdfs/hansard-2145855009-32400/hansard-2145855009-32400.pdf",
+   "sha256": "ac47ea60d9d9b41ebd215310e92a45b8570fd4cb9f76ab09bcc0e10180b5021c",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-09-10",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32391",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2fe/globalassets/hansard-daily-pdfs/hansard-974425065-32391/hansard-974425065-32391.pdf",
+   "sha256": "b0470cd8d0daac9eda74c24a06e136fa3bda46eb1bc1dc5a519fe0cdc2a0c0a0",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-09-11",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32495",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa04f/globalassets/hansard-daily-pdfs/hansard-2145855009-32495/hansard-2145855009-32495.pdf",
+   "sha256": "a0ef41ec1120f0d09591365c816fc8a684020b63d8d82310a845ae8fabbcdb83",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-09-11",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32478",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa307/globalassets/hansard-daily-pdfs/hansard-974425065-32478/hansard-974425065-32478.pdf",
+   "sha256": "97966021caf0d26bbfd881261750b97189004eea00e2396261832acb1a1671b2",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-10-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32591",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa05f/globalassets/hansard-daily-pdfs/hansard-2145855009-32591/hansard-2145855009-32591.pdf",
+   "sha256": "2013bd3265dd8a9adb6071559e4758a89a376d519534f4632dd1a2f7c8945306",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-10-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32571",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2eb/globalassets/hansard-daily-pdfs/hansard-974425065-32571/hansard-974425065-32571.pdf",
+   "sha256": "5b74a2a4640ab1bfed243b86f95e6c33fd4741e3f495f7b59bf4137a79b00906",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2025-10-15",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32696",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa06f/globalassets/hansard-daily-pdfs/hansard-2145855009-32696/hansard-2145855009-32696.pdf",
+   "sha256": "1f7bc8dc11df7cf5c3357908263d9f07f8f12da9774e742cb1d132c4fd6fd573",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-10-15",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32656",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2fa/globalassets/hansard-daily-pdfs/hansard-974425065-32656/hansard-974425065-32656.pdf",
+   "sha256": "f4880b3af4ca0be29eeb3d995d22370e971ae85f5be3bb1bafabec22e25b3827",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-10-16",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32778",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa083/globalassets/hansard-daily-pdfs/hansard-2145855009-32778/hansard-2145855009-32778.pdf",
+   "sha256": "077a80bb9a4e2bd2b02ffe9811b56bdd96848e50751b86622b7c86c3b67e16f1",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-10-16",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32746",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2dc/globalassets/hansard-daily-pdfs/hansard-974425065-32746/hansard-974425065-32746.pdf",
+   "sha256": "69dfac06070458a0c7f9bda16a18e0ad5ac736a0fda6236f0f1b21bd06ede429",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-10-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32907",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa06d/globalassets/hansard-daily-pdfs/hansard-2145855009-32907/hansard-2145855009-32907.pdf",
+   "sha256": "33c3bac2aafec9237260e2cea2ff9b9240fd85dc1c643dca6edd4bcdd037ab14",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2025-10-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32829",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2e3/globalassets/hansard-daily-pdfs/hansard-974425065-32829/hansard-974425065-32829.pdf",
+   "sha256": "ef52214ff5f96a8daa7d074964c19d46ca28176436490fc51b8beb60e64ec8c4",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-10-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-32974",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa07c/globalassets/hansard-daily-pdfs/hansard-2145855009-32974/hansard-2145855009-32974.pdf",
+   "sha256": "16a482d6aae0045c8fe115eaf20bee6dd29b115ffc1ecabf3676c77d21305d76",
+   "divisions": 10,
+   "reconciled": 10
+  },
+  {
+   "date": "2025-10-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-32929",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2f1/globalassets/hansard-daily-pdfs/hansard-974425065-32929/hansard-974425065-32929.pdf",
+   "sha256": "585006113d8cc6289437039e64b67ee18bf6340f5848658956621cd28205b34c",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-10-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33068",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa08d/globalassets/hansard-daily-pdfs/hansard-2145855009-33068/hansard-2145855009-33068.pdf",
+   "sha256": "074339962f862116dee3302357e82b35b6ef47ced92d851b5fed20f4931c25e1",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-10-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33021",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2d1/globalassets/hansard-daily-pdfs/hansard-974425065-33021/hansard-974425065-33021.pdf",
+   "sha256": "c93730685729d36a2a8f4032b86ead37d26cea99e3b94d4ff44f516ac67de5a5",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-11-12",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33155",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa09b/globalassets/hansard-daily-pdfs/hansard-2145855009-33155/hansard-2145855009-33155.pdf",
+   "sha256": "b15b17c4049ec9cfea8951fba03d4be48a934da2495823fb44337590e6199c2f",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-11-12",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33103",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2c3/globalassets/hansard-daily-pdfs/hansard-974425065-33103/hansard-974425065-33103.pdf",
+   "sha256": "91da847dad4e646f5599e3a502ae06c7efc603dd07f878b5f334d26ab76f2a93",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-11-13",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33254",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa087/globalassets/hansard-daily-pdfs/hansard-2145855009-33254/hansard-2145855009-33254.pdf",
+   "sha256": "b719b4dc779dde05040c2a10c15cf198f4d02c359f855d07007d61cb24b2d67f",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-11-13",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33190",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2c9/globalassets/hansard-daily-pdfs/hansard-974425065-33190/hansard-974425065-33190.pdf",
+   "sha256": "980255c4546bdc6bd4c8b14dfbb353eb5eb3295c55ed3eeae3594d6e02a42c57",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-11-14",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33335",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa099/globalassets/hansard-daily-pdfs/hansard-2145855009-33335/hansard-2145855009-33335.pdf",
+   "sha256": "d8a420cd6c76a4d9865d5ca797db1da265bf4912987b3adfc26b7359d53bb765",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-11-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33268",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2d7/globalassets/hansard-daily-pdfs/hansard-974425065-33268/hansard-974425065-33268.pdf",
+   "sha256": "b43f0bb52d535a76cf8bf9ce0617d511fe262354706a7fdeac1ce6b7f2fee020",
+   "divisions": 15,
+   "reconciled": 15
+  },
+  {
+   "date": "2025-11-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33417",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0a7/globalassets/hansard-daily-pdfs/hansard-2145855009-33417/hansard-2145855009-33417.pdf",
+   "sha256": "8d4ca873295dba801c4ef9299893a05eaa17be5040e90adb03d0b6f44ac8c8da",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-11-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33345",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2ac/globalassets/hansard-daily-pdfs/hansard-974425065-33345/hansard-974425065-33345.pdf",
+   "sha256": "4528b1015e8191a434aed67cfa56ca49492def36d519873ee69d7eb220370b4c",
+   "divisions": 16,
+   "reconciled": 16
+  },
+  {
+   "date": "2025-11-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33523",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0ab/globalassets/hansard-daily-pdfs/hansard-2145855009-33523/hansard-2145855009-33523.pdf",
+   "sha256": "d9db7bb9f3478442f496752fbbcb0356fea04f2be9976828f6a39823ebf42dbb",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-11-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33423",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2bc/globalassets/hansard-daily-pdfs/hansard-974425065-33423/hansard-974425065-33423.pdf",
+   "sha256": "fc474fa596e0ee1a2c441305a04d16150d7380d4b24e0a70eb208378266c09d2",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2025-11-20",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33606",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa08e/globalassets/hansard-daily-pdfs/hansard-2145855009-33606/hansard-2145855009-33606.pdf",
+   "sha256": "f3278d6fb2145a5c582b3361aac56f75443e0931bd63f4a9068be86094c4e738",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-11-20",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33508",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa299/globalassets/hansard-daily-pdfs/hansard-974425065-33508/hansard-974425065-33508.pdf",
+   "sha256": "52726bdc9d3d6dc2a75a14a6a947a1ae0f0c71192681960309b332bdbce3753c",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-12-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33704",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa09c/globalassets/hansard-daily-pdfs/hansard-2145855009-33704/hansard-2145855009-33704.pdf",
+   "sha256": "68c6fb2fb8b0808c53e4e0ab03596577f00a76e2b99300bfa5246d104c0e8b2d",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2025-12-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33639",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2aa/globalassets/hansard-daily-pdfs/hansard-974425065-33639/hansard-974425065-33639.pdf",
+   "sha256": "f733f294b7f413ea2c8c0d3738dbefb859edf3274c803a11c9ac33cdc8835adb",
+   "divisions": 10,
+   "reconciled": 10
+  },
+  {
+   "date": "2025-12-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33802",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0bf/globalassets/hansard-daily-pdfs/hansard-2145855009-33802/hansard-2145855009-33802.pdf",
+   "sha256": "05f1d6982e92735755f4bf10ca28aba6e6f744310391c8d2226f9f6680dcb669",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-12-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33704",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa2c1/globalassets/hansard-daily-pdfs/hansard-974425065-33704/hansard-974425065-33704.pdf",
+   "sha256": "59d813eca14a3583cb61a14d46f073f14cb25d44b070d5ae08be83298be8605d",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2025-12-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33891",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0af/globalassets/hansard-daily-pdfs/hansard-2145855009-33891/hansard-2145855009-33891.pdf",
+   "sha256": "11f2855d61570a694ad51680f46ea71ee3f431adad1dcdfee6ca9a3f4a14f891",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2025-12-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33790",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa288/globalassets/hansard-daily-pdfs/hansard-974425065-33790/hansard-974425065-33790.pdf",
+   "sha256": "7ba972e16e11c532994123cff1ef19fae8cef3eb517dce061726d2fd04bc8ede",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2025-12-09",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-33988",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0bc/globalassets/hansard-daily-pdfs/hansard-2145855009-33988/hansard-2145855009-33988.pdf",
+   "sha256": "59e4f66f886ef3d55dd84da13686b0062fbb2b55ff3385f0c6d37ea8fcbcf06a",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2025-12-09",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33874",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa29f/globalassets/hansard-daily-pdfs/hansard-974425065-33874/hansard-974425065-33874.pdf",
+   "sha256": "6cbadbc190f02518e67aa8c298d85ff8c8d3d6d0e70a5a201af84c45869544a6",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2026-02-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34081",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0cb/globalassets/hansard-daily-pdfs/hansard-2145855009-34081/hansard-2145855009-34081.pdf",
+   "sha256": "e208148937868e2cb5894895daf3c875ddcccba01cbea976738678b1f06effb6",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-02-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-33976",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa290/globalassets/hansard-daily-pdfs/hansard-974425065-33976/hansard-974425065-33976.pdf",
+   "sha256": "75c7c54a296dff44ba19e8694af9d6b5417260cd72da8a0154273ffea76ba0e0",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-02-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34178",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0da/globalassets/hansard-daily-pdfs/hansard-2145855009-34178/hansard-2145855009-34178.pdf",
+   "sha256": "37a8c2044f29871c271cee58fd5126f17bbbcd6f1aaf3c8f998022667741e2ab",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-02-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34052",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa283/globalassets/hansard-daily-pdfs/hansard-974425065-34052/hansard-974425065-34052.pdf",
+   "sha256": "c72a5885fb061b72b006879d90e4f4da8f68156ceba92a3540d9d1cd9783a006",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-02-05",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34265",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0c5/globalassets/hansard-daily-pdfs/hansard-2145855009-34265/hansard-2145855009-34265.pdf",
+   "sha256": "8d87c33dfb7fc4e07127ffccd103ad3e3e1da395078ac5496f78ebbc741d119c",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2026-02-05",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34141",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa274/globalassets/hansard-daily-pdfs/hansard-974425065-34141/hansard-974425065-34141.pdf",
+   "sha256": "acf972d77a03b32388147c061d6a5c24fc4bd6c7d4d8aa46e1ed41e11112a4cd",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-02-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34343",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-2145855009-34343/hansard-2145855009-34343.pdf",
+   "sha256": "97c024c009e3d00110d7ea4bbe423cdaedd4a1f260f9e7e32bb25e3efc776faa",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-02-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34220",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa27f/globalassets/hansard-daily-pdfs/hansard-974425065-34220/hansard-974425065-34220.pdf",
+   "sha256": "ed38afad04746b78e1407c3201b8644239d862fa472e5a6d5d6c95dfd01b4ead",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-02-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34426",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0e1/globalassets/hansard-daily-pdfs/hansard-2145855009-34426/hansard-2145855009-34426.pdf",
+   "sha256": "9a6b571f3a4adcf435409d6a970c189904d9ebae7fb50f1bb53c8f8ea5d85c9f",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-02-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34303",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa28b/globalassets/hansard-daily-pdfs/hansard-974425065-34303/hansard-974425065-34303.pdf",
+   "sha256": "acd21e427d611908e7394cb291bd036e2a984bc357a72672cb34e94452dd84c2",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-02-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34509",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0ef/globalassets/hansard-daily-pdfs/hansard-2145855009-34509/hansard-2145855009-34509.pdf",
+   "sha256": "fbc8f1ff3b174329bdf1d92bd763e840d208a75f8c55ae5bdf7ed565337ac7f1",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-02-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34383",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa271/globalassets/hansard-daily-pdfs/hansard-974425065-34383/hansard-974425065-34383.pdf",
+   "sha256": "79901275b48f8674cb3d3c4fa1af80345e01d23ff92f7fa9296030ea824c419c",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2026-03-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34602",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0d8/globalassets/hansard-daily-pdfs/hansard-2145855009-34602/hansard-2145855009-34602.pdf",
+   "sha256": "a4f0fe5fbbf4fa5e33daef262a75b5f6a6b2b8ed4c29a390fbf854c2244a0f65",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2026-03-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34474",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa262/globalassets/hansard-daily-pdfs/hansard-974425065-34474/hansard-974425065-34474.pdf",
+   "sha256": "78394cf2a66543bbe624fd42fd9d4a771eac8ec634d2db2f6773adac07479d65",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-03-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34690",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0e6/globalassets/hansard-daily-pdfs/hansard-2145855009-34690/hansard-2145855009-34690.pdf",
+   "sha256": "c6b6b283bb7f06cce741437d00ccdd351e09a1a8d950ddf07b121c89b43e021c",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-03-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34564",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa278/globalassets/hansard-daily-pdfs/hansard-974425065-34564/hansard-974425065-34564.pdf",
+   "sha256": "4b4e615dc7fc9654edb3b79dc9b0f04f593189c3e1ab2d146fee582bf01cf19d",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-03-05",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34782",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0f5/globalassets/hansard-daily-pdfs/hansard-2145855009-34782/hansard-2145855009-34782.pdf",
+   "sha256": "4f83e31b2d776f3362a6bd6042553b352d60bdb8fb56930bb2cba5457b1f7b42",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-03-05",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34645",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa26b/globalassets/hansard-daily-pdfs/hansard-974425065-34645/hansard-974425065-34645.pdf",
+   "sha256": "e5169fa9f3e6807aa2c98559104c174d6e2b3a8d9ed4bb03160d2e6fe27f468e",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2026-03-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34874",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa104/globalassets/hansard-daily-pdfs/hansard-2145855009-34874/hansard-2145855009-34874.pdf",
+   "sha256": "2ddc80f2acdcde5d7a7c2f9bdd1375dc1adfd27487af86e58709609996b0b4d0",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-03-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34719",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa25f/globalassets/hansard-daily-pdfs/hansard-974425065-34719/hansard-974425065-34719.pdf",
+   "sha256": "d3744538569a43d9861547059467a7d3a6ec296adb48b44ed4c020ca189fb228",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2026-03-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-34980",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa0ec/globalassets/hansard-daily-pdfs/hansard-2145855009-34980/hansard-2145855009-34980.pdf",
+   "sha256": "00fda8e98f212d1af22353ce80b430f3233bfef58b0e68f0c29a74d9605da71a",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-03-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34800",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa252/globalassets/hansard-daily-pdfs/hansard-974425065-34800/hansard-974425065-34800.pdf",
+   "sha256": "0e5e449ec2cffa6f302d0b7f542fee0d516613d61f8fc1dea6501b8036330211",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-03-19",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35063",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa101/globalassets/hansard-daily-pdfs/hansard-2145855009-35063/hansard-2145855009-35063.pdf",
+   "sha256": "d1ac8ce5c7496e1dba1332057e70cfee8dc62de1bd28fcf2313e56271f50cc98",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-03-19",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34884",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa267/globalassets/hansard-daily-pdfs/hansard-974425065-34884/hansard-974425065-34884.pdf",
+   "sha256": "58d50edbb29f79fa9fd9ac2f6845c4fe09ba159c09ac81222af044a2fd08360c",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2026-03-31",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35154",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa10e/globalassets/hansard-daily-pdfs/hansard-2145855009-35154/hansard-2145855009-35154.pdf",
+   "sha256": "523600a1b6da5623448692ab280f74f7d97fbf8e9f37c6a578c0a89d15640a3b",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-03-31",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-34968",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa25a/globalassets/hansard-daily-pdfs/hansard-974425065-34968/hansard-974425065-34968.pdf",
+   "sha256": "04d984a4b23fb7313d043ccd70818905a69db1b44d9831db73fb33e2560cae3b",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-04-01",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35252",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa11d/globalassets/hansard-daily-pdfs/hansard-2145855009-35252/hansard-2145855009-35252.pdf",
+   "sha256": "de580cacc0ba212569247cba9794dd6f94394b8c82df860b02045eca069d64f2",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-04-01",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35051",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa23b/globalassets/hansard-daily-pdfs/hansard-974425065-35051/hansard-974425065-35051.pdf",
+   "sha256": "ccb99d46c8534b76a3134e4c5fb83333feea89426e05e8ea6af40676e3dcc4a0",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-04-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35341",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa109/globalassets/hansard-daily-pdfs/hansard-2145855009-35341/hansard-2145855009-35341.pdf",
+   "sha256": "81c0e805e87a70ad76c75ef6681741b7e5167f9a5b6496147eb664c6df8ea482",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2026-04-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35137",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa248/globalassets/hansard-daily-pdfs/hansard-974425065-35137/hansard-974425065-35137.pdf",
+   "sha256": "74787ec08fb6fd631e36ccad1c7ea7a5ac0944cd8c525388a2d781ff4fa0e747",
+   "divisions": 13,
+   "reconciled": 13
+  },
+  {
+   "date": "2026-05-05",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35436",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa118/globalassets/hansard-daily-pdfs/hansard-2145855009-35436/hansard-2145855009-35436.pdf",
+   "sha256": "9794032650755ef7a73f4344a556e457d8a6c74d8625e8346b3f67796ba84403",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-05-12",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35539",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa127/globalassets/hansard-daily-pdfs/hansard-2145855009-35539/hansard-2145855009-35539.pdf",
+   "sha256": "c56b863a3c995f6c4f1233b07998bac019829a9d54927f82d687684ef67bf044",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-05-12",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35235",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa241/globalassets/hansard-daily-pdfs/hansard-974425065-35235/hansard-974425065-35235.pdf",
+   "sha256": "c192640779dd83e47675d33ae2f1dd691faf7545e6f7b4daf432330b695fb892",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-05-13",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35618",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa138/globalassets/hansard-daily-pdfs/hansard-2145855009-35618/hansard-2145855009-35618.pdf",
+   "sha256": "1bb8e142fcdef04199951edaf47fc3e02bc227b900bf5e109f6d0e8c959ddd1d",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-05-13",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35329",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa250/globalassets/hansard-daily-pdfs/hansard-974425065-35329/hansard-974425065-35329.pdf",
+   "sha256": "ed3eb945c808633e023b6a6699bd5ddbeabef481f70fdde1c22bc71e1eebe504",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-06-02",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35713",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa121/globalassets/hansard-daily-pdfs/hansard-2145855009-35713/hansard-2145855009-35713.pdf",
+   "sha256": "3a61ca92952450b41d8ffc877e7365334b8aaf0dc3f94e45916cc9c5f37a7a9b",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-06-02",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35427",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa232/globalassets/hansard-daily-pdfs/hansard-974425065-35427/hansard-974425065-35427.pdf",
+   "sha256": "b921dade086a9a2e86ea7363035a3241cdb8b955fbef78711441071ed5518c79",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-06-03",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35815",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa12f/globalassets/hansard-daily-pdfs/hansard-2145855009-35815/hansard-2145855009-35815.pdf",
+   "sha256": "f732962964b48308c0811edd3b6040e052552033d3d1310063318e2262077636",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2026-06-03",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35509",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa225/globalassets/hansard-daily-pdfs/hansard-974425065-35509/hansard-974425065-35509.pdf",
+   "sha256": "a85343bec772f88ab43524648e0dbb460f49860b02a315fa0f6bc7ade80bd32d",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-06-04",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-35913",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa142/globalassets/hansard-daily-pdfs/hansard-2145855009-35913/hansard-2145855009-35913.pdf",
+   "sha256": "842231faf377d87d3f7d69917cf0d8491d811110d5784134910abfe3be576efd",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-06-04",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35593",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa235/globalassets/hansard-daily-pdfs/hansard-974425065-35593/hansard-974425065-35593.pdf",
+   "sha256": "bdd27b96a54586ac2e453337a945973f18f349de5d3fcba3fb09a8a8a4953f5f",
+   "divisions": 7,
+   "reconciled": 7
+  },
+  {
+   "date": "2026-06-16",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36002",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa133/globalassets/hansard-daily-pdfs/hansard-2145855009-36002/hansard-2145855009-36002.pdf",
+   "sha256": "d2aca3c1fe44ef30883c44e13ce56850a222afcb9d4f99412b76267226d89057",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-06-16",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35683",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa224/globalassets/hansard-daily-pdfs/hansard-974425065-35683/hansard-974425065-35683.pdf",
+   "sha256": "91bf2e7d8646abe28586afae0372b1f98b05c8480fd26f17fb6f8ef1e92dfe10",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-06-17",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36107",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa141/globalassets/hansard-daily-pdfs/hansard-2145855009-36107/hansard-2145855009-36107.pdf",
+   "sha256": "a324567c92c5151937682aa10eb215c04da210eea99ecb6555d61e3d88b36577",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-06-17",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35771",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa200/globalassets/hansard-daily-pdfs/hansard-974425065-35771/hansard-974425065-35771.pdf",
+   "sha256": "4b1f0d9bd77bef8b2dd29bd4aa505931256f443e38c106669afb0816f60c6d04",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-06-18",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36201",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa152/globalassets/hansard-daily-pdfs/hansard-2145855009-36201/hansard-2145855009-36201.pdf",
+   "sha256": "e0b8b025a10a8ed8cbcf5a137f9d4130435d2d6a4bab674100cdc507ada9e44c",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-06-18",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35858",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa20e/globalassets/hansard-daily-pdfs/hansard-974425065-35858/hansard-974425065-35858.pdf",
+   "sha256": "4160966a28575103f5856d3d5ab57a38c4574fb807ac96ca7827caf08038f19e",
+   "divisions": 18,
+   "reconciled": 18
+  },
+  {
+   "date": "2026-07-28",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36296",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa160/globalassets/hansard-daily-pdfs/hansard-2145855009-36296/hansard-2145855009-36296.pdf",
+   "sha256": "7acc6f823e3665b7c250b152ec422fef5cccc55b4a2e826472fa2e9fc2612691",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-07-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-35949",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa215/globalassets/hansard-daily-pdfs/hansard-974425065-35949/hansard-974425065-35949.pdf",
+   "sha256": "3f85c0fb2c2dc54a5a958fac819c9347e304e651ab474fb73e2248f7f7bedc28",
+   "divisions": 3,
+   "reconciled": 3
+  },
+  {
+   "date": "2026-07-29",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36406",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa149/globalassets/hansard-daily-pdfs/hansard-2145855009-36406/hansard-2145855009-36406.pdf",
+   "sha256": "dfd3e50184e34735feaa728970231f2cf11df15ba5fd810f6c311e349f6da593",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-07-29",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36036",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa207/globalassets/hansard-daily-pdfs/hansard-974425065-36036/hansard-974425065-36036.pdf",
+   "sha256": "41cec632ed23f33a29ae293918781546018952fb33d3c6408e6adec8e7d4a844",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-07-30",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36495",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa15a/globalassets/hansard-daily-pdfs/hansard-2145855009-36495/hansard-2145855009-36495.pdf",
+   "sha256": "efe408b881261efab93633166d97d4ac09e5df3748bf923124140eff9b6b6a0a",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-07-30",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36116",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1f8/globalassets/hansard-daily-pdfs/hansard-974425065-36116/hansard-974425065-36116.pdf",
+   "sha256": "dbfaa073c9bc0d31f7d421e40bf2964db87187b2f7f7f6421bf86a1c12461859",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-08-11",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36586",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa167/globalassets/hansard-daily-pdfs/hansard-2145855009-36586/hansard-2145855009-36586.pdf",
+   "sha256": "a7768fee8a034bbdb8041e3203cabf7109997f30575c1197a353b13763774004",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-08-11",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36194",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1e2/globalassets/hansard-daily-pdfs/hansard-974425065-36194/hansard-974425065-36194.pdf",
+   "sha256": "cd0bcfee040153a3a34868bf9baef3a16981cb1041a11de86301906c5d37836a",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2026-08-12",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36692",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa168/globalassets/hansard-daily-pdfs/hansard-2145855009-36692/hansard-2145855009-36692.pdf",
+   "sha256": "d92a547866d1859d220c65d07ebd4356e26c7e3e8c60b1d1ede731544db0bf81",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-08-12",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36278",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1f2/globalassets/hansard-daily-pdfs/hansard-974425065-36278/hansard-974425065-36278.pdf",
+   "sha256": "5a956b5b0c1ed0369b35b382cd17cd6bae232b015d21ec54a5e3ca8ebeeaf4f7",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-08-13",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36780",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa17c/globalassets/hansard-daily-pdfs/hansard-2145855009-36780/hansard-2145855009-36780.pdf",
+   "sha256": "72d03722167375be34db8e1ceadcc6e7debbeffa8f34cd5c33e984ef9338e708",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2026-08-13",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36355",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa202/globalassets/hansard-daily-pdfs/hansard-974425065-36355/hansard-974425065-36355.pdf",
+   "sha256": "ca7023199dd32e31883f68abb65ea509106fdd41765eced643f26c5d38fd7376",
+   "divisions": 15,
+   "reconciled": 15
+  },
+  {
+   "date": "2026-08-14",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36410",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1ed/globalassets/hansard-daily-pdfs/hansard-974425065-36410/hansard-974425065-36410.pdf",
+   "sha256": "03f127a08d22b95f52b3a18ef29265006eda30d38dd064523cdf7c9945027b4e",
+   "divisions": 12,
+   "reconciled": 12
+  },
+  {
+   "date": "2026-08-25",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36881",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa176/globalassets/hansard-daily-pdfs/hansard-2145855009-36881/hansard-2145855009-36881.pdf",
+   "sha256": "2686344f9c3724445dead8f0eb2179435fbc9055feba9c870c50492b34743270",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-08-25",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36500",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1e5/globalassets/hansard-daily-pdfs/hansard-974425065-36500/hansard-974425065-36500.pdf",
+   "sha256": "572912f4634dc209ed166e65ab3612ac59d3befe520148aa320354c9833df72b",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2026-08-26",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-36989",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa186/globalassets/hansard-daily-pdfs/hansard-2145855009-36989/hansard-2145855009-36989.pdf",
+   "sha256": "386db33bfe6a8343d60da23c8fb775728567d2e496632163308e3c6a34d0b773",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-08-26",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36590",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1d0/globalassets/hansard-daily-pdfs/hansard-974425065-36590/hansard-974425065-36590.pdf",
+   "sha256": "37203baf22e15bb621772df71c16ff18a40f1a55338d7e4f1ba0ee59a55accc8",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-08-27",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-37081",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa174/globalassets/hansard-daily-pdfs/hansard-2145855009-37081/hansard-2145855009-37081.pdf",
+   "sha256": "aac4b1912193477e12ba84a3fb9f71fae9d48d3b20de6473300208c988931253",
+   "divisions": 5,
+   "reconciled": 5
+  },
+  {
+   "date": "2026-08-27",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36663",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1c8/globalassets/hansard-daily-pdfs/hansard-974425065-36663/hansard-974425065-36663.pdf",
+   "sha256": "6dc8468c641a4bd260bb7693fc18bb0a242a4495b08d8bc0f1dc0f38fd0a4336",
+   "divisions": 14,
+   "reconciled": 14
+  },
+  {
+   "date": "2026-08-28",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36740",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1d8/globalassets/hansard-daily-pdfs/hansard-974425065-36740/hansard-974425065-36740.pdf",
+   "sha256": "57b1e13e38fb7fb3fd9e0b130c0842175278313874e826b757f100e2681a1a20",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-09-08",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-37195",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa182/globalassets/hansard-daily-pdfs/hansard-2145855009-37195/hansard-2145855009-37195.pdf",
+   "sha256": "89a2d6b72a9f5bd04c2ba94840d38abe6f8eb6c9d2370fd32a2256cfc64ce71d",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-09-08",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36842",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1db/globalassets/hansard-daily-pdfs/hansard-974425065-36842/hansard-974425065-36842.pdf",
+   "sha256": "92b56312ec61b21f2c39db62d5e5ea870b5f4a025a10ce2988f5966430295f18",
+   "divisions": 4,
+   "reconciled": 4
+  },
+  {
+   "date": "2026-09-09",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-37291",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa195/globalassets/hansard-daily-pdfs/hansard-2145855009-37291/hansard-2145855009-37291.pdf",
+   "sha256": "791a657e1be8cf10d4d698f75a465b1d067e2e1f87a3afc9f5b200c27f89cc63",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-09-09",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-36927",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1cc/globalassets/hansard-daily-pdfs/hansard-974425065-36927/hansard-974425065-36927.pdf",
+   "sha256": "6227748a4757d68e66dbda8f739ebe36a66b8df9e7ec28274a37bbb9fba4f576",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-09-10",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-37384",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1a5/globalassets/hansard-daily-pdfs/hansard-2145855009-37384/hansard-2145855009-37384.pdf",
+   "sha256": "b9b99245e559618e41e272812c5fa4377f245b3419bd7bfd17d3c6c5a40ca195",
+   "divisions": 6,
+   "reconciled": 6
+  },
+  {
+   "date": "2026-09-10",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-37008",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1bc/globalassets/hansard-daily-pdfs/hansard-974425065-37008/hansard-974425065-37008.pdf",
+   "sha256": "73dfa67e2c337ecde8df62fba039da7069b61a1eade32cc88214ea5cf5cff736",
+   "divisions": 12,
+   "reconciled": 12
+  },
+  {
+   "date": "2026-09-22",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-37397",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa18f/globalassets/hansard-daily-pdfs/hansard-2145855009-37397/hansard-2145855009-37397.pdf",
+   "sha256": "db168221414c70563c666bf14908457a64d2bd9487398c7f7d0d29ce6a790870",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-09-22",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-37098",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1c3/globalassets/hansard-daily-pdfs/hansard-974425065-37098/hansard-974425065-37098.pdf",
+   "sha256": "ddc48a07bee6974e3888cee3f963e379b923da656c36604077854f8f26bc682d",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-09-23",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-37507",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa191/globalassets/hansard-daily-pdfs/hansard-2145855009-37507/hansard-2145855009-37507.pdf",
+   "sha256": "82f2d5c9e1a131f90f4073650b6225ac0ac820904a5eab1eddfcaed31636d491",
+   "divisions": 1,
+   "reconciled": 1
+  },
+  {
+   "date": "2026-09-23",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-37180",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1ad/globalassets/hansard-daily-pdfs/hansard-974425065-37180/hansard-974425065-37180.pdf",
+   "sha256": "b1eca4f00e9ca5acb73c50ca9a52f0178ba010bc34362c0a7b182eba570d2a11",
+   "divisions": 2,
+   "reconciled": 2
+  },
+  {
+   "date": "2026-09-24",
+   "house": "vic_la",
+   "id": "HANSARD-2145855009-37599",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa1a3/globalassets/hansard-daily-pdfs/hansard-2145855009-37599/hansard-2145855009-37599.pdf",
+   "sha256": "d844f84f733e4e144c9e957b1764b3dd798846dfd8329a35e304649c972eddfa",
+   "divisions": 0,
+   "reconciled": 0
+  },
+  {
+   "date": "2026-09-24",
+   "house": "vic_lc",
+   "id": "HANSARD-974425065-37279",
+   "status": "Final",
+   "source_url": "https://www.parliament.vic.gov.au/4aa28a/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf",
+   "sha256": "813e2f9e456a228b1935bd3bfa9a464a3f3a422e13807a0926ddb642cef7100b",
+   "divisions": 4,
+   "reconciled": 4
+  }
+ ]
+}

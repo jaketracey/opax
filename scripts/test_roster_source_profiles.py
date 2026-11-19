@@ -276,6 +276,40 @@ def test_a_reviewed_term_start_dates_a_list_row_and_a_bad_one_is_held(tmp_path):
     assert list_problem('Ada Example', unsourced, root=tmp_path)
 
 
+def test_a_reviewed_term_end_makes_a_former_members_profile_and_a_bad_one_is_held(tmp_path):
+    from scripts.roster_source_profiles import enrich_lists, list_problem, list_row, state_evidence
+    snap, doc, evidence = list_fixture(tmp_path)
+    acc, _ = list_accept(doc, snap, evidence)
+    former = copy.deepcopy(acc['new']['Ada Example'])
+    former['term_start'] = dict(start='2020-03-02', url='https://example.org/ada', checked='2026-11-16', note='fixture')
+    former['term_end'] = dict(end='2026-12-07', url='https://example.org/ada', checked='2026-11-16', note='fixture')
+    former['service'].update(start='2020-03-02', end='2026-12-07')
+    row = list_row(former, state_evidence(tmp_path))
+    assert (row['first'], row['last'], row['party'], row['speeches'], row['roster_only']) == (2020, 2026, 'Labor', 0, True)
+    assert 'current' not in row and 'party_now' not in row
+    assert row['representation'][0]['basis'] == ('Official member record: service 2020-03-02 to 2026-12-07; '
+                                                 'source-only profile, no speech attribution')
+    former['row'] = row
+    assert list_problem('Ada Example', former, root=tmp_path) is None
+    assert roster_accept.new_row_problem('Ada Example', former, evidence, root=tmp_path) is None
+    # An export reproduces exactly that row, once.
+    acc['new'] = {'Ada Example': former}
+    out = enrich_lists(copy.deepcopy(doc), acc, state_evidence(tmp_path), tmp_path)
+    assert [p for p in out['people'] if p['name'] == 'Ada Example'] == [row]
+    # The service must carry the reviewed end; the end must be sourced, ISO, not before the record's date,
+    # and stated with a reviewed start.
+    open_ended = copy.deepcopy(former)
+    open_ended['service']['end'] = None
+    assert list_problem('Ada Example', open_ended, root=tmp_path)
+    for field, value in (('end', '2026-11-12'), ('end', '7 Dec 2026'), ('url', 'http://example.org/ada'), ('note', ' ')):
+        bad = copy.deepcopy(former)
+        bad['term_end'][field] = value
+        assert list_problem('Ada Example', bad, root=tmp_path), (field, value)
+    unstarted = copy.deepcopy(former)
+    del unstarted['term_start']
+    assert list_problem('Ada Example', unstarted, root=tmp_path)
+
+
 def service_fixture(tmp_path, periods=(('Liberal', '2006-05-04', '2017-02-07', None), ('Independent', '2017-02-07', None, '2020-01-20')),
                     service_end='2020-01-20', current=False):
     """The list fixture with Cory Sample linked, a Handbook record for his Senate service and a service group."""

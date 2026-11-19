@@ -432,6 +432,9 @@
       {"name": "Melanie Selwood", "aliases": [], "electorate": "South Australia", "party": "Greens"},
       {"name": "Robert Simms", "aliases": ["Robert Andrew Simms"], "electorate": "South Australia", "party": "Greens", "prints": ["R.A. Simms"]},
       {"name": "Russell Wortley", "aliases": ["Russell Paul Wortley"], "electorate": "South Australia", "party": "Labor", "prints": ["R.P. Wortley"]}
+    ]},
+    {"source_url": "https://www.parliament.vic.gov.au/members/matthew-bach/", "source_label": "Parliament of Victoria member page (former member), fetched 16 November 2026", "sha256": "1c1ca797ab2fe16664db9a933510ed8fa1ac93f5a8d9c32375686e8c7f55979a", "as_of": "2023-11-30", "jurisdiction": "vic", "chamber": "vic_lc", "note": "One former member, from his own member page: North-Eastern Metropolitan (26 November 2022 - 7 December 2023), Liberal Party. The date is the last sitting day on which Hansard lists him in a division, inside that period.", "members": [
+      {"name": "Matthew Bach", "aliases": ["Matthew Donald Andrew Bach"], "electorate": "North-Eastern Metropolitan", "party": "Liberal"}
     ]}
   ]
 }

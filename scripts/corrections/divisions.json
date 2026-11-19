@@ -348,45 +348,5 @@
   "evidence": "The PRESIDENT: 'The question is that this bill be now read a third time.' The House divided, Ayes 18, Noes 8; 'Motion agreed to.'",
   "finding": "divisions-votes-007",
   "reviewed": "2026-11-10"
- },
- {
-  "id": "vic-lc-2026-08-14-7",
-  "field": "name",
-  "from": "That the bill be now read a third time and do pass.",
-  "to": "Consumer Legislation Amendment Bill 2026",
-  "evidence_url": "https://www.parliament.vic.gov.au/4a47c4/globalassets/hansard-daily-pdfs/hansard-974425065-36410/hansard-974425065-36410.pdf",
-  "evidence": "Legislative Council, Friday 14 August 2026: the bill heading 'Consumer Legislation Amendment Bill 2026' (p 3345) opens the second reading and committee stage; then, under 'Third reading' (p 3407), 'That the bill be now read a third time and do pass.' and 'Council divided on motion: Ayes (29) ... Noes (2) ... Motion agreed to.', with no other bill heading between.",
-  "finding": "divisions-votes-011",
-  "reviewed": "2026-11-10"
- },
- {
-  "id": "vic-lc-2026-08-14-12",
-  "field": "name",
-  "from": "That the bill be now read a third time and do pass.",
-  "to": "Racing Legislation Amendment (Entity Governance and Other Matters) Bill 2026",
-  "evidence_url": "https://www.parliament.vic.gov.au/4a47c4/globalassets/hansard-daily-pdfs/hansard-974425065-36410/hansard-974425065-36410.pdf",
-  "evidence": "Legislative Council, Friday 14 August 2026: the bill heading 'Racing Legislation Amendment (Entity Governance and Other Matters) Bill 2026' (p 3407) opens the second reading and committee stage; then, under 'Third reading' (p 3441), 'That the bill be now read a third time and do pass.' and 'Council divided on motion: Ayes (26) ... Noes (6) ... Motion agreed to.', with no other bill heading between.",
-  "finding": "divisions-votes-011",
-  "reviewed": "2026-11-10"
- },
- {
-  "id": "vic-la-2026-08-27-3",
-  "field": "name",
-  "from": "That this bill be now read a second time and a third time.",
-  "to": "Workplace Legislation Amendment (Accident Compensation and Other Matters) Bill 2026",
-  "evidence_url": "https://www.parliament.vic.gov.au/4a475c/globalassets/hansard-daily-pdfs/hansard-2145855009-37081/hansard-2145855009-37081.pdf",
-  "evidence": "Legislative Assembly, Thursday 27 August 2026, p 3637: bill heading 'Workplace Legislation Amendment (Accident Compensation and Other Matters) Bill 2026', 'Second reading', then 'The SPEAKER: The question is: That this bill be now read a second time and a third time.' and 'Assembly divided on question: Ayes (52) ... Noes (27) ... Question agreed to.'",
-  "finding": "divisions-votes-011",
-  "reviewed": "2026-11-10"
- },
- {
-  "id": "vic-la-2026-08-27-5",
-  "field": "name",
-  "from": "Other Matters) Bill 2026",
-  "to": "Education and Training Reform Amendment (Apprenticeships, Traineeships, Schools and Other Matters) Bill 2026",
-  "evidence_url": "https://www.parliament.vic.gov.au/4a475c/globalassets/hansard-daily-pdfs/hansard-2145855009-37081/hansard-2145855009-37081.pdf",
-  "evidence": "Legislative Assembly, Thursday 27 August 2026, p 3639: bill heading 'Education and Training Reform Amendment (Apprenticeships, Traineeships, Schools and / Other Matters) Bill 2026' (set over two lines), 'Second reading', then 'The SPEAKER: The question is: That this bill be now read a second time and a third time.' and 'Assembly divided on question: Ayes (52) ... Noes (27) ... Question agreed to.' The published name kept only the heading's second line.",
-  "finding": "divisions-votes-011",
-  "reviewed": "2026-11-10"
  }
 ]

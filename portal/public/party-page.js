@@ -7,7 +7,7 @@ import {fy} from './money-scope.js';
    Pure functions; app.js passes in its helpers. */
 
 import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=3d4c26573f';
-import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=9ce13e7ba5';
+import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=9939367926';
 // sponsor-party-aliases:begin
 // Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
 const SPONSOR_PARTY_ALIASES = {
@@ -57,7 +57,7 @@ const SPONSOR_PARTY_ALIASES = {
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
 export * from './labels.js?v=3d4c26573f';
-export * from './canonical-urls.js?v=9ce13e7ba5';
+export * from './canonical-urls.js?v=9939367926';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** The party URL's last segment; the same spelling as canonical-urls.js entitySlug. */
@@ -197,9 +197,12 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   for (const [party, members] of Object.entries(divisions?.parties || {})) {
     if (!same(party, label)) continue;
     for (const m of members) {
+      // A seat-roster member with no roster row of their own (a `reference` entry above) who also votes
+      // under this party is one person: the division row joins that entry by name, and is not listed twice.
+      const seated = seatMembers.find(s => s.m.reference && fold(s.m.name) === fold(m.name))?.id;
       const id = m.slug
-        ? byAddress.get(personAddresses.get(m.slug) || `/subject/person/${m.slug}`) || `slug:${m.slug}`
-        : byName.get(fold(m.name)) || `name:${fold(m.name)}`;
+        ? byAddress.get(personAddresses.get(m.slug) || `/subject/person/${m.slug}`) || seated || `slug:${m.slug}`
+        : byName.get(fold(m.name)) || seated || `name:${fold(m.name)}`;
       const r = row(id, {name: m.name, last: Number(String(m.last || '').slice(0, 4)) || 0});
       r.divisions += m.divisions || 0;
       recordedAs(r, party);

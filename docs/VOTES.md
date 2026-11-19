@@ -543,3 +543,284 @@ Expected finish ≈ 2.5 h after 10:17 AEST.
   collaborator strings.
 - Retrieval pollution check (GATE 3c) numbers are in the probe results below; if divisions
   crowd out speeches under `kind=all`, keep the default at `speech` (as now).
+
+## Victorian divisions of the 60th Parliament, from the daily Hansard (16 and 17 November 2026)
+
+`parli/ingest/vic_divisions.py` reads every sitting day of the 60th Parliament (20 December 2022 to
+24 September 2026, both houses) with the same source, ids and unified rows as the sampled
+`votes_state.py vic` path. Reuse is by permission of the Parliament of Victoria
+([SOURCES-ACCESS.md](SOURCES-ACCESS.md), 13 October 2026): fairly and accurately, without misleading
+readers, free of charge.
+
+**The record is not complete.** 7 divisions are held (below). Nothing on the site or in these documents may
+describe the 2022 to 2026 record as complete while any is held. The 109 Council divisions of 2023 that were
+held for an unresolved name are published now.
+
+Before the first content request the run read `robots.txt` (it names two Facebook crawlers only and
+disallows nothing) and the site's copyright and disclaimer pages (copyright, reuse beyond personal and
+research use by permission of the Presiding Officers; neither restricts automated reading). That run
+identified itself as `opax-improve-audit`, as the hub directed; the committed importer sends the shared OPAX
+agent through the shared transport's request, like every other source.
+
+| Step | Count |
+| --- | ---: |
+| Requests made, all to www.parliament.vic.gov.au, one at a time, two seconds or more apart, none refused | 405 (and 1 member page for the follow-up) |
+| Sitting days fetched (Assembly 188, Council 189), each a Final daily Hansard PDF | 377 |
+| Divisions found | 1,113 |
+| Reconciled | 1,106 (997 before the roster addition) |
+| Held on the mismatch list, not published | 7 (116 before) |
+| Published Victorian division records | 1,108 (925 new, then 109; 74 from the earlier import) |
+
+### What a division must pass to be published
+
+1. The names parsed for each side equal the tally Hansard prints, and Hansard prints a result line.
+2. The result line agrees with the tally.
+3. Every name is exactly one person of that house in the committed roster.
+4. Every member voted inside their service dates. The dates are the House's own: the member list at the front
+   of each house's last sitting day names every member of the Parliament and footnotes those who were sworn
+   in or appointed during it and those who resigned or died (`member_service`; 11 Assembly and 4 Council
+   members carry a date). A vote before a member's start or after their end, or a name the list does not hold
+   once, holds the division. No vote in the 1,113 divisions failed this.
+5. The printed text is what was voted on (`text_faults`): the motion text sits under a real motion lead, is not
+   speech, and is under 2,000 characters unless a person has reviewed it; the title is a heading, not a
+   procedural report line.
+6. Its number on the chamber-day does not dispute a record already published under that id.
+
+In all 1,113 divisions the names parsed equal the tallies Hansard states. Nothing is held for a count fault.
+
+### The mismatch list (`data/staged/vic-divisions/mismatches.json`)
+
+- **unresolved-name, 0 (was 109).** Council divisions from 7 February 2023 to 30 November 2023 that list
+  Matthew Bach, who was in no committed roster file. He was added as a former member through the accept list
+  ([DATA-MEMBERS.md](DATA-MEMBERS.md), "A former Victorian member with no Hansard in the corpus"), `parse` was
+  run again from the cache with no fetch, and all 109 passed every rule, the service dates and the text checks
+  included. Their coverage note is gone; the notes for the 7 still held remain.
+- **result-contradicts-tally, 3.** Hansard's own result line disagrees with its tally: `vic-la-2023-02-23-4`
+  (Ayes 52, Noes 28, "Question defeated.") and `vic-la-2023-11-30-5` and `-7` ("divided on omission (members
+  in favour vote no)").
+- **numbering-differs-from-published, 3.** The earlier import missed one Council division on 27 August 2026
+  (Ayes 15, Noes 21, page 104), so the published `vic-lc-2026-08-27-12` and `-13` are that day's 13th and
+  14th. The missed division is published nowhere; the other two are published under the number before their
+  own (`published_as`). The fix is a renumbering in its own change.
+- **text unconfirmed, 1.** `vic-lc-2025-05-15-1` (below).
+
+### The false motion text of 15 May 2025, its cause, and the sweep
+
+`vic-lc-2025-05-15-1` (Council, Fire Services Property Amendment (Emergency Services and Volunteers Fund) Bill
+2025, second reading, Ayes 22, Noes 18) was published with a member's incorporated speech of 4,961 characters
+as its `question`.
+
+**Cause.** Hansard sets a motion as put in smaller indented type under a line that ends in a colon ("I
+move:"). It sets an incorporated speech the same way: small indented type under "David ETTERSHANK (Western
+Metropolitan) incorporated the following:". `question_before` took any block of small type that ended directly
+before the division line as the question, provided the line above it ended in a colon. On 15 May 2025 the last
+thing before "Council divided on motion:" was that incorporated speech, so the speech was taken. The motion
+itself ("Debate resumed on motion of Harriet Shing: That the bill be now read a second time.") is printed 42
+pages earlier, at the start of the debate, with the whole debate between it and the division.
+
+**Fix.** A block is a question only under a real motion lead (`MOTION_LEAD_RE`): a member moving ("I move:",
+"I move, by leave:"), the Chair putting the question ("The question is:", "The house will divide on the
+question:"), or Hansard's own "Debate resumed on motion of ...:" and "And ...'s amendment:". Small type under
+any other lead directly before a division holds the division (`question-lead-not-a-motion`); so does text that
+reads as speech ("incorporated", a timestamp, a speaker's turn, the first person) and text over 2,000
+characters that no person has reviewed. For this record the text Hansard ties to the division cannot be
+established from the page, so it is held and its published file removed.
+
+**Sweep.** `python3 -m parli.ingest.vic_divisions sweep` runs every class over every committed Victorian
+record (`portal/public/divisions/division-vic-*.json`), reading each lead from the staged import, and
+`tests/test_vic_divisions.py` pins it: a record may match a class only through a reviewed entry in
+`REVIEWED_TEXT`. Counts at the reviewed head (`7ca4a90c7`, 1,000 records) and now (999):
+
+| Class | Before | Now | Records and what happened |
+| --- | ---: | ---: | --- |
+| Motion text under a lead that is not a motion lead | 1 | 0 | `vic-lc-2025-05-15-1`: held, file removed |
+| Speech markers in the motion text | 1 | 0 | the same record |
+| Motion text over 2,000 characters | 1 | 0 | the same record. `vic-lc-2026-09-22-1` is a genuine motion of 13,624 characters (264 lines under "I move:", pages 92 to 98, dividing a bill in two): reviewed, allow-listed, and now published in full (the earlier import published a 199-character sentence that the Final Hansard does not print) |
+| Published motion text the staged reading does not give for that id | 14 | 0 | all from the earlier import; 13 corrected from the staged reading (list below); `vic-lc-2026-08-27-13` checked by hand against page 109 and allow-listed (it is the right text, under a number held for renumbering) |
+| One text on an amendment and on the motion it amends | 1 pair | 0 | `vic-la-2026-09-10-3` and `-4`: the lost amendment's text was on the vote for the motion; `-4` now carries the motion |
+| A long text shared by different titles, other than a standing form | 0 | 0 | |
+| A long standing form shared by different titles (not a fault) | 2 pairs | 2 pairs | the Assembly's second-reading question with government amendments: `vic-la-2025-02-20-3` with `vic-la-2026-06-18-3`, and `vic-la-2026-02-05-4` with `vic-la-2026-08-27-4`; each checked on its page |
+| Title taken from a procedural report line | 0 | 0 | five were fixed before that head |
+| Member name carrying page furniture | 3 | 0 | `vic-lc-2026-09-10-2`, `-9` ("Sheena Watt 4198 Legislative Council") and `vic-la-2026-09-10-6` ("Meng 3948 Legislative Assembly Heang Tak"): corrected |
+
+The sweep also showed that 17 new records had only their division line as the question although the Chair
+states the question directly before the division ("the question is:" not at the start of a sentence, or "The
+house will divide on the question:"). They now carry that text; nothing else in them changed.
+
+### Records from the earlier import, corrected from the staged reading
+
+`scripts/export_division_pages.py --correct-from-staged` replaces the name, question and Hansard link (and a
+member name with page furniture in it) of a published record with the staged reading of the same division,
+and only when the date, house, tallies, result and every vote are the same. Each change is carried on the
+record as `_meta.corrections` with its Hansard page. Of the 74 earlier records, 67 are corrected and 7 are
+untouched (5 already read the same; 2 are the renumbering pair).
+
+Seventeen had wrong or unconfirmable text, or furniture in a member name:
+
+| Record | Was | Now |
+| --- | --- | --- |
+| `vic-la-2026-09-10-4` | the lost amendment's text ("That the following words be inserted ...") as title and question | title "Health infrastructure"; question "That this house condemns the Leader of the Opposition for her plan ..." (the motion of Melissa Horne) |
+| `vic-lc-2026-09-08-4`, `vic-lc-2026-09-10-12` | "That the report be now adopted." | "That the bill be now read a third time and do pass." (moved directly before the division) |
+| `vic-lc-2026-09-22-1` | a 199-character sentence not in the Final Hansard | the motion as moved, in full |
+| `vic-la-2026-08-26-1` | "That the amendments be agreed to." run on into the minister's speech | the division line |
+| `vic-la-2026-09-10-5` | the division line | the motion printed directly before it |
+| `vic-lc-2026-08-14-11`, `vic-lc-2026-08-27-8`, `vic-lc-2026-09-24-1` | a nearby "That ..." paragraph Hansard does not tie to the division (one cut off at "That this house:") | the division line |
+| `vic-lc-2026-08-14-2`, `-3`, `-4`, `vic-lc-2026-08-27-6`, `-7` | the bill title as the question | the division line |
+| `vic-lc-2026-09-10-2`, `-9`, `vic-la-2026-09-10-6` | a member name with a page number and the house name in it | the member's name |
+
+The other 50 change in title only: the earlier import titled them with their division line or their motion
+text, and they now carry the heading the division sits under, as every new record does. Every corrected link
+now opens on the division's page.
+
+### Hand check of 20 records
+
+Seed `20261117`, `random.sample` over the 999 sorted keys, before the title corrections above: 14 Assembly and
+6 Council; 2023 (3), 2024 (3), 2025 (6), 2026 (8). Each was read against its cached Hansard page: the heading
+above the division, the lines directly before the division line, and the result line.
+
+`vic-la-2023-03-07-1`, `vic-la-2023-05-18-1`, `vic-la-2023-10-17-1`, `vic-la-2024-08-27-1`,
+`vic-la-2025-03-19-2`, `vic-la-2025-04-02-5`, `vic-la-2025-04-02-6`, `vic-la-2025-06-19-2`,
+`vic-la-2025-11-20-1`, `vic-la-2026-02-03-1`, `vic-la-2026-02-05-4`, `vic-la-2026-07-30-1`,
+`vic-la-2026-08-11-1`, `vic-la-2026-08-27-2`, `vic-lc-2024-06-20-7`, `vic-lc-2024-08-15-1`,
+`vic-lc-2025-10-28-1`, `vic-lc-2026-05-12-2`, `vic-lc-2026-07-28-1`, `vic-lc-2026-09-23-2`.
+
+- Tallies and result: 20 of 20.
+- Motion text: 19 of 20 exact. `vic-la-2023-05-18-1` carried its division line although Hansard prints "The
+  house will divide on the question: That the words proposed to be omitted stand part of the question."
+  directly before it. Nothing false was shown, but the printed question was missed; the lead rule now takes
+  it, with 16 like it.
+- Title: 18 of 20 exact. `vic-la-2026-08-27-2` and `vic-lc-2026-09-23-2`, both from the earlier import, were
+  titled by their division line where the page has a heading ("Associations Incorporation Reform Amendment
+  Bill 2026", "Sex work regulation"). They are among the 50 title corrections.
+
+After the changes all 20 match on both.
+
+### What each record keeps, and how it is read
+
+- `source_url`: the day's Hansard PDF at the division's page; `date`: the sitting day.
+- `name`: the heading the division sits under (a bill title, "Program", "Sessional orders").
+- `question`: the motion or amendment only where Hansard prints it directly before the division line under a
+  motion lead (241 of the 999), and otherwise the division line itself ("Council divided on amendment", 758).
+  No text is summarised or reworded.
+- **The 758 with only a division line.** The amendment or motion is usually moved pages earlier (an amendment
+  in committee is moved, debated, then put), and several may be before the committee at once, so the page does
+  not tie one text to the division. No text is attached. Beside the record, apart from the question, the page
+  says the kind of question and that the record names nothing more: "Amendment: the record names no further
+  detail." (or "Motion:", "Clause:", "New clause:", as the division line has it). The link opens the Hansard page.
+- **"Words proposed to be omitted stand part".** The page says, in OPAX's words: "On this question a Yes vote
+  (aye) keeps the words as they are, which is a vote against the amendment. A No vote takes the words out,
+  which is a vote for the amendment."
+- **What Hansard's lists leave out.** "Hansard's division lists do not record pairs, tellers or absences. A
+  member who is not listed was not necessarily absent and did not necessarily abstain." The record's page and
+  the member voting section say so.
+- These three lines are OPAX's own words. They are shown in their own lines beside the record and are never
+  written into `question` or `name`, which stay as Hansard prints them.
+- **Presiding officers.** The Speaker is listed among the ayes on `vic-la-2024-02-22-3` and `vic-la-2025-02-20-2`.
+  Both pages were read: "Maree Edwards" is printed inside the alphabetical Ayes list, between Paul Edbrooke
+  and Eden Foster. Hansard records the vote; it is not page furniture.
+- Member names as printed, published by name slug as the earlier records are. The roster's person ids are in
+  the staged file (`roster_person_id`), not on the published record.
+
+### Held divisions are said wherever a count is read
+
+`parse` writes `portal/public/data/vote-coverage.json`: one note for each house and reason, with the count,
+the dates, the division ids and the members those divisions name. A division published under another number
+is not counted. The same sentence (`voteCoverageText` in `portal/public/vote-tables.js`) shows:
+
+- on the coverage page, in the "Recorded division catalogue" row;
+- on the voting section of each member a held division names, in the browser and on the server page, and only
+  when the note's dates fall inside the years that member's published counts span. Before the box load the
+  counts start in 2026, so a member sees the note for 27 August 2026 and not the notes for 2023 and 2025;
+  after it they see every note that names them;
+- in the `member_divisions` and `count_records` tools that Ask and the MCP server use, for the chamber, period
+  and member asked about, including when the period lies outside the index.
+
+An empty list removes every note.
+
+### Reproduce
+
+```
+python3 -m parli.ingest.vic_divisions fetch --cache ~/opax-work/vic-hansard-cache --from 2022-12-20
+python3 -m parli.ingest.vic_divisions parse --cache ~/opax-work/vic-hansard-cache --out data/staged/vic-divisions
+python3 scripts/export_division_pages.py --add-staged data/staged/vic-divisions
+python3 -m parli.ingest.vic_divisions sweep
+```
+
+The cache lives outside the repository; `parse` and `sweep` make no requests. `--add-staged` writes only
+records that are not published yet and rebuilds the index. Parties come from the same dated-roster rule as
+every other division.
+
+### The box load (not done here: it writes to the database)
+
+The nightly does not load these divisions unaided. Until someone runs the load on the refresh box, the nightly
+division export keeps the new records flagged `refresh_retained: missing-division` and the corrected earlier
+records flagged `source-facts-changed` (all stay published as committed), and `votes.json` (member vote counts)
+and `seo/recent-votes.json` cover Victoria from 14 August 2026 only.
+
+Run from the repository checkout on the box, on main after this change is merged. `DB=~/.cache/autoresearch/parli.db`,
+`PY=.venv/bin/python`.
+
+**1. Look first.**
+
+```sh
+sqlite3 "$DB" "SELECT count(*), min(date), max(date) FROM ext_divisions WHERE source='vic_hansard_pdf'; SELECT count(*) FROM ext_votes WHERE source='vic_hansard_pdf';"
+```
+
+Expected: 74 divisions, 2026-08-14 to 2026-09-24. Keep a copy to roll back from:
+
+```sh
+sqlite3 "$DB" ".mode insert ext_divisions" ".output /tmp/vic_divisions_before.sql" "SELECT * FROM ext_divisions WHERE source='vic_hansard_pdf';" ".mode insert ext_votes" ".output /tmp/vic_votes_before.sql" "SELECT * FROM ext_votes WHERE source='vic_hansard_pdf';"
+```
+
+**2. Build the load file and rehearse it.**
+
+```sh
+$PY -m parli.ingest.vic_divisions unified --staged data/staged/vic-divisions --out /tmp/votes_vic_60.json
+$PY -m parli.ingest.votes_state load /tmp/votes_vic_60.json --db "$DB" --dry-run
+```
+
+Expected from the first: `1095 divisions, 55531 votes, 311 chamber-days; left out for renumbering: vic_lc 2026-08-27`.
+The load replaces whole chamber-days, so that one day (11 staged of its 14 divisions) is left out and the
+database keeps its 13 published rows.
+
+**3. Load.**
+
+```sh
+$PY -m parli.ingest.votes_state load /tmp/votes_vic_60.json --db "$DB"
+```
+
+Expected: `ext_divisions` inserted 1,095, deleted 61 (the 74 less the 13 kept) if the earlier load has not been run, or 986 if it has; `ext_votes` inserted 55,531.
+
+**4. Validate before anything is published.**
+
+```sh
+sqlite3 "$DB" "SELECT count(*), min(date), max(date) FROM ext_divisions WHERE source='vic_hansard_pdf'; SELECT count(*) FROM ext_votes WHERE source='vic_hansard_pdf';"   # 1108, 2022-12-20, 2026-09-24; 56013
+$PY scripts/export_division_pages.py && $PY -m parli.ingest.vic_divisions sweep && git status --short portal/public/divisions | grep -c 'division-vic'
+```
+
+Expected: the sweep prints every class at 0 (two standing-form pairs) and exits 0. The export may rewrite
+Victorian records only in `_meta` (the retained flags clear, the source reads `parli.db-ext-divisions`, parties
+are refilled): no `name`, `question`, `source_url`, tally or vote changes. `$PY -m pytest tests/test_vic_divisions.py -q`
+fails if any published text has moved off the staged reading.
+Then `scripts/refresh_divisions.sh`'s last three lines write `votes.json`:
+
+```sh
+tmp=$(mktemp); $PY scripts/export_votes.py > "$tmp"; $PY scripts/vm/keep_if_unchanged.py portal/public/votes.json "$tmp"; $PY scripts/vm/divisions_guard.py --votes-only
+```
+
+Expected: Victorian members' `years` now start in 2022 or 2023 and their `divisions_total` rises; no federal
+figure moves.
+
+This was rehearsed here on a scratch copy of the vote tables as they stood on 10 November 2026 (65 Victorian
+rows, not the box's 74) with the load file before the roster addition: 986 inserted, 999 Victorian divisions afterwards, and an export from that copy changed
+no published Victorian text, link, tally or vote, before the load or after it.
+
+**Rollback.** `sqlite3 "$DB" "DELETE FROM ext_votes WHERE source='vic_hansard_pdf'; DELETE FROM ext_divisions WHERE source='vic_hansard_pdf';"`,
+then `sqlite3 "$DB" < /tmp/vic_divisions_before.sql` and `sqlite3 "$DB" < /tmp/vic_votes_before.sql`, and
+`git checkout -- portal/public/votes.json portal/public/divisions portal/public/seo/recent-votes.json`. The
+published division records do not depend on the load: they are as committed either way.
+
+**One thing the load depends on.** Four reviewed title corrections for Victorian records
+(`divisions-votes-011` in `scripts/corrections/divisions.json`) are removed by this change. The records they
+corrected now carry the staged reading, and a correction whose `from` value the database no longer holds stops
+the export. With them gone the export runs before the load and after it.

@@ -8,6 +8,16 @@ Both modes use committed bill links, without a title guess, to link each divisio
 back to its bills. One JSON file per slug avoids a runtime scan of the corpus.
 --refresh-parties rechecks the published snapshot using held dated records,
 without a database or fetch, keeping its source facts and retention reasons.
+--correct-from-staged replaces the printed text (name, question, Hansard link and
+any member name that carries page furniture) of records already published with
+the staged import's reading of the same division, and only when the date,
+house, tallies, result and every vote are the same; each change is carried on
+the record as _meta.corrections.
+--add-staged adds reconciled divisions from a staged import (data/staged/
+vic-divisions, written by parli/ingest/vic_divisions.py) that are not published
+yet: each new record is written, the index is rebuilt, and no published record
+is touched. It is how a reviewed back-catalogue reaches a pull request before
+the refresh box holds it in ext_divisions.
 
 Every refresh preserves the existing division set and recorded member evidence.
 A degraded candidate retains the complete previous record and declares why in
@@ -493,6 +503,133 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     return guarded
 
 
+STAGED_SOURCE = "vic-hansard-pdf-staged"
+
+
+def staged_projection(staged, previous):
+    """Reconciled divisions of a staged import that are not published yet, shaped as the database's are.
+
+    Reads the staged file itself (one division a line, its named votes with it), so the exporter needs
+    no importer module beside it."""
+    records = {}
+    for line in (Path(staged) / "divisions.jsonl").read_text(encoding="utf-8").splitlines():
+        d = json.loads(line)
+        key = d["id"]
+        if key in previous or key in records or not publishable_key(key):
+            continue  # a published record is never replaced from a staged file
+        record = records[key] = {
+            "key": key, "slug": f"division-{key}", "name": d["name"], "question": d.get("question") or d["name"],
+            "date": d["date"], "house": d["house"], "jurisdiction": d["jurisdiction"],
+            "ayes": d["ayes_count"], "noes": d["noes_count"], "result": d["result"], "source_url": d["source_url"],
+            "members": [], "bills": [],
+            "_meta": {"member_coverage": "recorded", "source": STAGED_SOURCE, "schema": 1},
+        }
+        seen = set()
+        for v in sorted(d.get("votes", []), key=lambda v: v.get("person_name") or ""):
+            name = v.get("person_name")
+            if name and name not in seen:
+                record["members"].append(rules.publishable_member(
+                    {"name": name, "person_id": None, "person_slug": person_slug(name), "vote": v["vote"]}))
+                seen.add(name)
+    label_coverage(records)
+    short = sorted(k for k, d in records.items() if d["_meta"]["member_coverage"] != "recorded")
+    if short:
+        raise ValueError(f"Staged divisions whose named votes do not equal their tallies: {', '.join(short[:10])}")
+    return records
+
+
+CORRECTION_FINDING = "vic-divisions-453-printed-text"
+
+
+def _name_tokens(name):
+    return set(person_slug(name).split("-"))
+
+
+def corrected_from_staged(record, staged, reviewed):
+    """`record` with the staged reading's name, question and Hansard link, or a ValueError saying why not.
+
+    The two must be one division: same date, house, tallies and result, and the same votes. A published member
+    name the staged reading does not have must be a staged name with page furniture inside it ("Sheena Watt
+    4198 Legislative Council"): same vote, and every word of exactly one staged name. Nothing else is changed."""
+    for field, other in (("date", "date"), ("house", "house"), ("ayes", "ayes_count"), ("noes", "noes_count"), ("result", "result")):
+        if record.get(field) != staged.get(other):
+            raise ValueError(f"{record['key']}: {field} differs from the staged reading")
+    wanted = {(v["person_name"], v["vote"]) for v in staged["votes"]}
+    have = {(m["name"], m["vote"]) for m in record["members"]}
+    renames = {}
+    for name, vote in sorted(have - wanted):
+        fits = [n for n, v in wanted - have if v == vote and _name_tokens(n) <= _name_tokens(name)]
+        if len(fits) != 1:
+            raise ValueError(f"{record['key']}: {name} is not one staged member")
+        renames[name] = fits[0]
+    if {(renames.get(n, n), v) for n, v in have} != wanted:
+        raise ValueError(f"{record['key']}: the votes differ from the staged reading")
+    out = deepcopy(record)
+    changes = []
+    for field in ("name", "question", "source_url"):
+        if out.get(field) != staged[field]:
+            changes.append((field, out.get(field), staged[field]))
+            out[field] = staged[field]
+    for member in out["members"]:
+        if member["name"] in renames:
+            changes.append((f"members[name={member['name']}].name", member["name"], renames[member["name"]]))
+            member["name"] = renames[member["name"]]
+            member["person_slug"] = person_slug(member["name"])
+    out["members"].sort(key=lambda m: (m["name"], str(m.get("person_id"))))
+    if changes:
+        out["_meta"].setdefault("corrections", []).extend(
+            {"field": f, "from": a, "to": b, "finding": CORRECTION_FINDING, "evidence_url": staged["source_url"],
+             "reviewed": reviewed} for f, a, b in changes)
+    return out, changes
+
+
+def write_corrected(keys, staged_dir, output, reviewed):
+    """Correct the named published records from the staged import; write them and the index."""
+    output = Path(output)
+    previous = read_previous_projection(output)
+    staged = {}
+    for line in (Path(staged_dir) / "divisions.jsonl").read_text(encoding="utf-8").splitlines():
+        d = json.loads(line)
+        staged[d["id"]] = d
+    report = {}
+    for key in keys:
+        if key not in previous or key not in staged:
+            raise ValueError(f"{key}: not both published and in the staged import")
+        previous[key], report[key] = corrected_from_staged(previous[key], staged[key], reviewed)
+        previous[key]["_meta"].update(member_counts(previous[key]))
+    encode = lambda obj: (json.dumps(obj, ensure_ascii=False, separators=(",", ":"), sort_keys=True, allow_nan=False) + "\n").encode("utf-8")
+    for key in keys:
+        (output / f"division-{key}.json").write_bytes(encode(previous[key]))
+    (output / "index.json").write_bytes(encode(projection_index(previous)))
+    return report
+
+
+def write_added(new, previous, output, party_evidence=None):
+    """Write only the new shards, then the index over the published set plus the new records."""
+    output = Path(output)
+    added = guard_projection(new, {})
+    if party_evidence is not None and getattr(party_evidence, "check_labels", True):
+        vote_parties.fill_dated_parties(added.values(), party_evidence)
+    for record in added.values():
+        for member in record.get("members", []):
+            rules.publishable_member(member)
+        record["question"] = rules.publishable_question(record.get("question"))
+    records = {**previous, **added}
+    encode = lambda obj: (json.dumps(obj, ensure_ascii=False, separators=(",", ":"), sort_keys=True, allow_nan=False) + "\n").encode("utf-8")
+    payloads = {f"{r['slug']}.json": encode(r) for r in added.values()}
+    payloads["index.json"] = encode(projection_index(records))
+    with tempfile.TemporaryDirectory(prefix=".division-refresh-", dir=output) as staging:
+        staged = Path(staging)
+        for filename, payload in payloads.items():
+            with (staged / filename).open("wb") as file:
+                file.write(payload)
+                file.flush()
+                os.fsync(file.fileno())
+        for filename in [*(f for f in payloads if f != "index.json"), "index.json"]:
+            os.replace(staged / filename, output / filename)
+    return records, added
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db", default=DEFAULT_DB)
@@ -502,8 +639,38 @@ def main():
     mode.add_argument("--from-bills", action="store_true")
     mode.add_argument("--refresh-parties", action="store_true",
                       help="Recheck the published snapshot using held dated evidence, without a DB or fetch")
+    mode.add_argument("--add-staged", type=Path, metavar="DIR",
+                      help="Add the reconciled divisions of a staged import that are not published yet; "
+                           "published records are left as they are")
+    mode.add_argument("--correct-from-staged", nargs="+", metavar="KEY",
+                      help="Replace the printed text of these published records with the staged import's reading "
+                           "of the same division (needs --staged and --reviewed)")
+    parser.add_argument("--staged", type=Path, default=ROOT / "data/staged/vic-divisions")
+    parser.add_argument("--reviewed", help="the ISO date a person checked the corrections against Hansard")
     parser.add_argument("--strict-refresh", action="store_true", help="Refuse evidence regression before publishing any files")
     args = parser.parse_args()
+    if args.correct_from_staged:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.reviewed or ""):
+            parser.error("--correct-from-staged needs --reviewed YYYY-MM-DD")
+        for key, changes in write_corrected(args.correct_from_staged, args.staged, args.out, args.reviewed).items():
+            print(f"{key}: {', '.join(f for f, _a, _b in changes) or 'no change'}")
+        return
+    if args.add_staged:
+        previous = read_previous_projection(args.out)
+        new = staged_projection(args.add_staged, previous)
+        # Wikidata terms come from the database when one is at hand (read only); without it the
+        # new rows take only the parties the committed dated lists give.
+        if Path(args.db).is_file():
+            with closing(sqlite3.connect(f"file:{Path(args.db).resolve()}?mode=ro", uri=True)) as db:
+                db.execute("PRAGMA query_only=ON")
+                evidence = vote_parties.load_evidence(ROOT, db)
+        else:
+            evidence = vote_parties.load_evidence(ROOT)
+        records, added = write_added(new, previous, args.out, party_evidence=evidence)
+        print(f"Added {len(added)} staged divisions ({sum(len(d['members']) for d in added.values())} named votes, "
+              f"{sum(not m.get('party') for d in added.values() for m in d['members'])} without a party); "
+              f"{len(previous)} published records left as they are; {len(records)} in the index.")
+        return
     published = {} if args.refresh_parties else bill_projection(args.bills)
     if args.refresh_parties:
         records = read_previous_projection(args.out)

@@ -1,7 +1,7 @@
 {
   "as_of": "2026-11-14",
   "audit_reported_candidates": 878,
-  "candidates": 853,
+  "candidates": 854,
   "procedural": 788,
   "bill_pages": 113,
   "exceptions": [
@@ -264,6 +264,10 @@
     {
       "key": "federal-senate-9567",
       "title": "Documents - Non-Disclosure Agreements - Order for the Production of Documents"
+    },
+    {
+      "key": "vic-la-2024-11-28-1",
+      "title": "Family Violence (Right to Disclosure of Information) Bill 2024"
     }
   ]
 }

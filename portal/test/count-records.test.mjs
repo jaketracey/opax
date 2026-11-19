@@ -155,7 +155,9 @@ test('counts read every published division, with anchored chamber and jurisdicti
   assert.equal((await count({ record_type: 'divisions', date: '2024-02-29', chamber: 'nsw_lc' }, f)).total, 1, 'a state chamber infers its jurisdiction');
   assert.equal((await count({ record_type: 'divisions', date: '2024-02-29', jurisdiction: 'vic', chamber: 'vic_la' }, f)).total, 1);
   assert.equal((await count({ record_type: 'divisions', date: '2024-02-29', jurisdiction: 'qld', chamber: 'qld_la' }, f)).total, 1);
-  assert.ok(f.reads.every(path => path === '/divisions/index.json'));
+  // The index, and the held-division notes that go with any count of it (public/data/vote-coverage.json).
+  assert.ok(f.reads.every(path => path === '/divisions/index.json' || path === '/data/vote-coverage.json'));
+  assert.ok(f.reads.includes('/divisions/index.json'));
 });
 
 test('day, leap month, year, financial year and inclusive ranges keep exact boundaries', async () => {

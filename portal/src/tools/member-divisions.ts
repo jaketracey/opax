@@ -4,6 +4,7 @@ import { memberResolutionNotes, resolveMember } from './member-records'
 import { clip, fold, siteUrl } from './record-common'
 import { inWindow, object, publishedResult, records, sourceUrl, validWindow, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, ToolInputError, type ToolCitation, type ToolDefinition } from './types'
+import { heldDivisionNotes } from './vote-coverage'
 
 const CHAMBERS = ['senate', 'representatives', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'qld_la', 'sa_ha', 'sa_lc', 'act_la', 'nt_la', 'wa_la', 'wa_lc', 'tas_ha', 'tas_lc']
 const KEY = /^(?:federal-(?:senate|representatives)|(?:nsw|vic|sa|qld|act|nt|wa|tas)-(?:la|lc|ha))-[a-z0-9-]+$/
@@ -111,11 +112,15 @@ export const tool: ToolDefinition = {
     const next_cursor = position < candidates.length ? `${scan_id}-${position}` : null
     const scope = [args.chamber ?? args.jurisdiction ?? 'published member jurisdictions', args.since ? 'since ' + args.since : '', args.until ? 'until ' + args.until : '', args.bill ? 'bill ' + (billTitle || args.bill) : '', args.topic ? 'title words ' + args.topic : ''].filter(Boolean).join(', ')
     const countCite: ToolCitation = { kind: 'count', url: siteUrl(env, '/divisions/index.json'), text: `${person.name} (${scope}), scanned segment ${start}-${position} of ${candidates.length} scoped division records: ${counts.aye} aye, ${counts.no} no, ${counts.absent} explicitly absent, ${counts.paired} paired; ${counts.against_party_majority} against a party majority out of ${counts.party_comparisons} eligible comparisons. ${counts.member_unrecorded} matching divisions have no member row, not an absence.${next_cursor || start ? ' These are segment counts; combine all disjoint segments from this scan_id before stating a full selection total.' : ' This call examined the complete scoped index selection.'}` }
+    // Divisions held back from the record that name this member, inside the scope asked for: the counts lack them.
+    const held = await heldDivisionNotes(env, { jurisdiction: args.jurisdiction ? String(args.jurisdiction) : null, chamber: args.chamber ? String(args.chamber) : null,
+      since: args.since ? String(args.since) : null, until: args.until ? String(args.until) : null, member: [person.name, ...(typeof person.full === 'string' ? [person.full] : []), ...(Array.isArray(person.aliases) ? person.aliases.map(String) : [])] })
     return publishedResult(rows, [countCite, ...citations], { person: person.name, counts, scan_id, segment: { start, end: position, examined: position - start },
       scoped_divisions: candidates.length, scan_complete: next_cursor === null, counts_complete_for_scope: start === 0 && next_cursor === null,
       counts_scope: 'this scanned segment only', next_cursor, next_call: next_cursor ? { ...args, person: person.name, cursor: next_cursor } : null,
       coverage: index.coverage, notes: ['Missing member rows do not establish absence. Absent and paired counts require explicit source votes.',
         'Dissent is calculated from published party labels in reconciled complete lists, with at least five party aye/no votes and a strict majority. It is not independently verified historical floor crossing.',
+        ...held,
         ...(next_cursor ? ['More divisions remain. Continue with next_call and combine disjoint segment counts; these counts are not a whole-history total.'] : []),
         ...(counts.member_unrecorded || counts.ambiguous_member ? ['Some matching divisions have no unambiguous member row; their voting direction cannot be established.'] : [])] })
   },
