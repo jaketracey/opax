@@ -29,6 +29,7 @@ import { electorateRoute } from '../../navigation/routes/your-mp';
 import { topicRoute } from '../../navigation/routes/search';
 import { openOnWeb } from '../../navigation/external';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
+import { endedParliaments, termEndedFor } from '../your-mp/term-ended';
 import { CachedPortrait } from '../CachedPortrait';
 import { fold, type Match } from './ranking';
 import { openSuggestedPerson } from './navigation';
@@ -83,10 +84,15 @@ export function serviceStatus(
  * sits now (`serviceStatus`). A former member is said to be one. Where the
  * record does not say, the line names the seat alone ("Watson, New South
  * Wales", "Senate, Tasmania") and claims nothing about service.
+ *
+ * A state seat in a house whose Parliament's term has ended for an election
+ * (the electorates index, `termEndedFor`) has no member: the line names the
+ * seat alone, whatever the federal record says of the person.
  */
 export function placeLine(
   person: Person,
   status: PartyStatus = serviceStatus(person),
+  sources: Pick<RowSources, 'electorates'> = {},
 ): string | null {
   const seat =
     (person.representation ?? []).find(
@@ -105,9 +111,14 @@ export function placeLine(
         )
       : said('Senator', 'Former senator', 'Senate');
   const where = [seat.electorate, state].filter(Boolean).join(', ');
-  return where
-    ? said(`Member for ${where}`, `Former member for ${where}`, where)
-    : null;
+  if (!where) return null;
+  if (
+    status === 'current' &&
+    seat.jurisdiction !== 'federal' &&
+    termEndedFor(seat, endedParliaments(sources.electorates?.electorates ?? []))
+  )
+    return where;
+  return said(`Member for ${where}`, `Former member for ${where}`, where);
 }
 
 /** The canonical person ID the people catalogue holds for a roster row. */
@@ -226,7 +237,10 @@ function PersonMatch({
     () => serviceStatus(person, sources),
     [person, sources],
   );
-  const place = id ? placeLine(person, status) : null;
+  const place = useMemo(
+    () => (id ? placeLine(person, status, sources) : null),
+    [id, person, status, sources],
+  );
   const party = id ? person.party_now || person.party : null;
   const rowID =
     testID ?? `search-suggestion-person-${person.pid ?? person.name}`;

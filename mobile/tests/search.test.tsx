@@ -736,4 +736,56 @@ describe('a person’s place line claims only what the record says', () => {
     expect(row(false, true)).toBe('Former senator for Tasmania');
     expect(row(undefined, true)).toBe('Senate, Tasmania');
   });
+
+  describe('while the Victorian Parliament’s term has ended for an election', () => {
+    // The live index: every Assembly row carries the election day, or null
+    // once the result is loaded; Council rows carry nothing.
+    const withIndex = (value: string | null) => ({
+      ...sources,
+      people,
+      electorates: {
+        ...index,
+        electorates: index.electorates.map((s) =>
+          s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+        ),
+      },
+    });
+    // The pinned roster's rows whose place line names a Victorian state seat.
+    const victorian = roster.people.filter((p) => {
+      const seat =
+        (p.representation ?? []).find(
+          (r) =>
+            r.jurisdiction === 'federal' && r.chamber !== 'senate_committee',
+        ) ?? p.representation?.[0];
+      return seat?.jurisdiction === 'vic';
+    });
+    const lines = (from: ReturnType<typeof withIndex>) =>
+      victorian.map((item) => {
+        const row = rowOf({ item, sources: from } as never);
+        return { name: item.name, place: row.place, quick: row.quick };
+      });
+
+    test('Search and quick search call nobody the member for a Victorian state seat', () => {
+      expect(victorian.length).toBeGreaterThan(100);
+      const dated = lines(withIndex('2026-11-28'));
+      for (const row of dated) {
+        expect(`${row.name}: ${row.place}`).not.toMatch(/: Member for /);
+        expect(`${row.name}: ${row.quick}`).not.toMatch(/: Member for /);
+      }
+      // The roster's surname row for a sitting senator records a Victorian
+      // district: the one line that said "Member for" (it still does with
+      // no ended term, as in 1.1.5).
+      expect(dated.find((r) => r.name === 'Watt')).toMatchObject({
+        place: 'Burwood, Victoria',
+      });
+      const loaded = lines(withIndex(null));
+      expect(loaded.find((r) => r.name === 'Watt')).toMatchObject({
+        place: 'Member for Burwood, Victoria',
+      });
+      // Nothing else moves between the two indexes.
+      expect(dated.filter((r) => r.name !== 'Watt')).toEqual(
+        loaded.filter((r) => r.name !== 'Watt'),
+      );
+    });
+  });
 });
