@@ -78,6 +78,14 @@ export function termEndWords(
   electionDay: string,
   stateCode: string,
 ): string | null {
+  const ended = termEndDate(electionDay, stateCode);
+  return ended ? dayWords(ended) : null;
+}
+/** The same day as a date, for a dated view to compare against. */
+export function termEndDate(
+  electionDay: string,
+  stateCode: string,
+): Date | null {
   const day = dayOf(electionDay);
   if (!day || stateCode.toLowerCase() !== 'vic') return null;
   const nextWeek = new Date(day.getTime() + 7 * 86_400_000);
@@ -86,7 +94,7 @@ export function termEndWords(
     day.getUTCMonth() === 10 &&
     nextWeek.getUTCMonth() !== 10;
   if (!lastSaturdayOfNovember) return null;
-  return dayWords(new Date(day.getTime() - TERM_ENDS_DAYS_BEFORE * 86_400_000));
+  return new Date(day.getTime() - TERM_ENDS_DAYS_BEFORE * 86_400_000);
 }
 
 /**

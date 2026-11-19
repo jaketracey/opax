@@ -1,3 +1,4 @@
+import { formatDate } from '../src/design/format';
 import { SourceAffordance } from '../src/design/source';
 import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
@@ -1248,9 +1249,55 @@ describe('while the Victorian Parliament’s term has ended for an election', ()
     },
   );
 
-  test('a federal seat in Victoria is untouched', async () => {
+  test.each([
+    ['Richmond', 'Last member', 'Member'],
+    ['Northern Metropolitan', 'Last members', 'Members'],
+  ])(
+    'View on a date for %s: from the day the term ended the section is "%s" with the term line; before it, dated history',
+    async (name, last, dated) => {
+      load(name, 'vic');
+      assembly('2026-11-28');
+      // The day the term ended, the day the live seat files hold a roster
+      // for, and any later day.
+      for (const day of ['2026-11-03', '2026-11-10', '2026-11-28']) {
+        mockParams.asof = day;
+        const r = await render(<Electorate />);
+        expect({ day, heading: heading(r) }).toEqual({ day, heading: last });
+        expect(text(r)).toContain(TERM);
+        expect(text(r)).not.toMatch(/Members? on \d/);
+        await act(async () => r.unmount());
+      }
+      // The day before, and the pinned roster's own day: dated history.
+      for (const day of ['2026-11-02', '2026-09-09']) {
+        mockParams.asof = day;
+        const r = await render(<Electorate />);
+        expect({ day, heading: heading(r) }).toEqual({
+          day,
+          heading: `${dated} on ${formatDate(day)}`,
+        });
+        expect(text(r)).not.toContain(TERM);
+        expect(has(r, 'electorate-term-ended')).toBe(false);
+        await act(async () => r.unmount());
+      }
+      // Once the result is loaded a later date is dated history again.
+      assembly(null);
+      mockParams.asof = '2026-11-10';
+      const r = await render(<Electorate />);
+      expect(heading(r)).toBe(`${dated} on ${formatDate('2026-11-10')}`);
+      expect(text(r)).not.toContain(TERM);
+      await act(async () => r.unmount());
+    },
+  );
+
+  test('a federal seat in Victoria is untouched, on today’s view and on a date', async () => {
     load('Higgins');
     assembly('2026-11-28');
+    mockParams.asof = '2026-11-10';
+    const dated = await render(<Electorate />);
+    expect(heading(dated)).toBe(`Member on ${formatDate('2026-11-10')}`);
+    expect(has(dated, 'electorate-term-ended')).toBe(false);
+    await act(async () => dated.unmount());
+    delete mockParams.asof;
     const r = await render(<Electorate />);
     expect(has(r, 'electorate-term-ended')).toBe(false);
     await act(async () => r.unmount());

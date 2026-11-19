@@ -97,6 +97,7 @@ import { FaceStackRow, byFamilyName } from './your-mp/FaceStackRow';
 import { RepresentativeRows, sinceLine } from './your-mp/RepresentativeRows';
 import {
   endedParliaments,
+  endedTermDay,
   endedTermLine,
   termEndedFor,
 } from './your-mp/term-ended';
@@ -810,24 +811,28 @@ function MembersSection({
   const shown = rows.length > 6 ? rows.slice(0, 6) : rows;
   // The seat's house has no members while its Parliament's term has ended
   // for an election: the rows are its last members, and the section says so.
-  const ended =
-    asof || abolished
-      ? null
-      : termEndedFor(
-          identity,
-          endedParliaments(directory.electorates.data.electorates),
-        );
-  const header = asof
-    ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
-    : abolished
-      ? 'Past members'
-      : ended
-        ? many
-          ? 'Last members'
-          : 'Last member'
-        : many
-          ? 'Members'
-          : 'Member';
+  const term = abolished
+    ? null
+    : termEndedFor(
+        identity,
+        endedParliaments(directory.electorates.data.electorates),
+      );
+  // A chosen date on or after the day the term ended has no member either:
+  // whoever the record holds for that day is the seat's last member. Dates
+  // before it stay dated history.
+  const ended = term && (!asof || asof >= endedTermDay(term)) ? term : null;
+  const header =
+    asof && !ended
+      ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
+      : abolished
+        ? 'Past members'
+        : ended
+          ? many
+            ? 'Last members'
+            : 'Last member'
+          : many
+            ? 'Members'
+            : 'Member';
   const observed =
     view.terms
       .map((t) => t.observed_through)

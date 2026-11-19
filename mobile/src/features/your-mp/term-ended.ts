@@ -1,5 +1,5 @@
 import type { Electorate } from '../../api/catalogs';
-import { formFromIndex, termLine } from '../today/dissolution';
+import { formFromIndex, termEndDate, termLine } from '../today/dissolution';
 
 type IndexRow = Pick<
   Electorate,
@@ -74,6 +74,18 @@ export function termEndedFor(
  */
 export function rowTermEnded(seat: Pick<Electorate, 'dissolved_for'>): boolean {
   return formFromIndex(seat)?.kind === 'dissolved';
+}
+
+/**
+ * The day a term ended, as the data writes days ("2026-11-03"): a view of a
+ * seat on a chosen date shows its last members from this day on. Where the
+ * rule gives no day (`termLine`), the election day, by which it had ended.
+ */
+export function endedTermDay(term: EndedTerm): string {
+  const ended = termEndDate(term.electionDay, term.stateCode);
+  return ended
+    ? ended.toISOString().slice(0, 10)
+    : term.electionDay.slice(0, 10);
 }
 
 /** "Parliament’s term ended on 3 November for the 28 November election". */
