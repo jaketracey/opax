@@ -782,10 +782,57 @@ describe('a person’s place line claims only what the record says', () => {
       expect(loaded.find((r) => r.name === 'Watt')).toMatchObject({
         place: 'Member for Burwood, Victoria',
       });
+      // The people the index lists for their seat held it when the term
+      // ended: "Last member for", in Search and in quick search. The rows
+      // Search suggests carry the ID that joins them to the catalogue.
+      const suggested = (from: ReturnType<typeof withIndex>) =>
+        from.roster.people
+          .filter((p) => victorian.some((v) => v.name === p.name))
+          .map((item) => {
+            const row = rowOf({ item, sources: from } as never);
+            return { name: item.name, place: row.place, quick: row.quick };
+          });
+      const last = /^Last member for .+, Victoria$/;
+      const then = suggested(withIndex('2026-11-28'));
+      expect(
+        then.filter((r) => last.test(r.place ?? '')).length,
+      ).toBeGreaterThan(50);
+      expect(
+        then.filter((r) => last.test(r.quick ?? '')).length,
+      ).toBeGreaterThan(50);
+      expect(then.find((r) => r.name === 'Jacinta Allan')).toMatchObject({
+        place: 'Last member for Bendigo East, Victoria',
+        quick: 'Last member for Bendigo East, Victoria',
+      });
+      for (const row of then) {
+        expect(`${row.name}: ${row.place}`).not.toMatch(/: Member for /);
+        expect(`${row.name}: ${row.quick}`).not.toMatch(/: Member for /);
+      }
+      // Once the result is loaded they read as before.
+      const after = suggested(withIndex(null));
+      expect(after.find((r) => r.name === 'Jacinta Allan')).toMatchObject({
+        place: 'Member for Bendigo East, Victoria',
+        quick: 'Member for Bendigo East, Victoria',
+      });
+      expect(
+        after.some((r) => last.test(r.place ?? '') || last.test(r.quick ?? '')),
+      ).toBe(false);
+      // The stub is not the person the index lists for Burwood.
+      expect(
+        String(then.find((r) => r.name === 'Watt')?.place ?? ''),
+      ).not.toMatch(/Last member|Member for/);
       // Nothing else moves between the two indexes.
-      expect(dated.filter((r) => r.name !== 'Watt')).toEqual(
-        loaded.filter((r) => r.name !== 'Watt'),
-      );
+      const seatAlone = (line: string | null | undefined) =>
+        typeof line === 'string' ? line.replace(/^Last member for /, '') : line;
+      expect(
+        dated
+          .filter((r) => r.name !== 'Watt')
+          .map((r) => ({
+            ...r,
+            place: seatAlone(r.place),
+            quick: seatAlone(r.quick),
+          })),
+      ).toEqual(loaded.filter((r) => r.name !== 'Watt'));
     });
   });
 });

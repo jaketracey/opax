@@ -31,10 +31,12 @@ import { openOnWeb } from '../../navigation/external';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
 import {
   endedParliaments,
+  lastMemberFor,
   rowTermEnded,
   termEndedFor,
 } from '../your-mp/term-ended';
 import { CachedPortrait } from '../CachedPortrait';
+import { nameKey } from '../../api/ids';
 import { fold, type Match } from './ranking';
 import { openSuggestedPerson } from './navigation';
 import { useSplitRow } from './split';
@@ -90,8 +92,10 @@ export function serviceStatus(
  * Wales", "Senate, Tasmania") and claims nothing about service.
  *
  * A state seat in a house whose Parliament's term has ended for an election
- * (the electorates index, `termEndedFor`) has no member: the line names the
- * seat alone, whatever the federal record says of the person.
+ * (the electorates index, `termEndedFor`) has no member. The person the
+ * index lists for that seat reads "Last member for Essendon, Victoria";
+ * anyone else the record calls current gets the seat alone, whatever the
+ * federal record says of the person.
  */
 export function placeLine(
   person: Person,
@@ -116,12 +120,27 @@ export function placeLine(
       : said('Senator', 'Former senator', 'Senate');
   const where = [seat.electorate, state].filter(Boolean).join(', ');
   if (!where) return null;
+  const index = sources.electorates?.electorates ?? [];
   if (
-    status === 'current' &&
     seat.jurisdiction !== 'federal' &&
-    termEndedFor(seat, endedParliaments(sources.electorates?.electorates ?? []))
-  )
-    return where;
+    termEndedFor(seat, endedParliaments(index))
+  ) {
+    // The person the index lists for the seat held it when the term ended.
+    if (
+      index.some(
+        (e) =>
+          e.jurisdiction === seat.jurisdiction &&
+          e.chamber === seat.chamber &&
+          nameKey(e.name) === nameKey(seat.electorate) &&
+          e.representatives.some(
+            (r) => nameKey(r.person.name) === nameKey(person.name),
+          ),
+      )
+    )
+      return lastMemberFor(where);
+    // Anyone else the record calls current gets the seat alone.
+    if (status === 'current') return where;
+  }
   return said(`Member for ${where}`, `Former member for ${where}`, where);
 }
 
