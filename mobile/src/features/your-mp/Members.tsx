@@ -18,6 +18,7 @@ import { byFamilyName } from './FaceStackRow';
 import { representativeProfile, type Directory } from './model';
 import { stateInRunningCopy } from './state-names';
 import { isRegion } from './StateMembers';
+import { endedParliaments, endedTermLine, termEndedFor } from './term-ended';
 
 type Loaded = {
   directory: Directory;
@@ -26,16 +27,23 @@ type Loaded = {
   since: Record<string, string>;
 };
 
-/** "Senators for New South Wales" or "Members for Western Victoria Region". */
+/**
+ * "Senators for New South Wales" or "Members for Western Victoria Region".
+ * `ended`: the seat's house has no members while its Parliament's term has
+ * ended for an election, so the list is of its last members.
+ */
 export function membersTitle(
   seat: Pick<Electorate, 'chamber' | 'name' | 'state_code'>,
+  ended = false,
 ) {
   return seat.chamber === 'senate'
     ? {
         bar: 'Senators',
         page: `Senators for ${stateInRunningCopy(seat.state_code)}`,
       }
-    : { bar: 'Members', page: `Members for ${seat.name}` };
+    : ended
+      ? { bar: 'Last members', page: `Last members for ${seat.name}` }
+      : { bar: 'Members', page: `Members for ${seat.name}` };
 }
 
 /**
@@ -48,7 +56,13 @@ export default function Members() {
   const [failed, setFailed] = useState<'missing' | 'error' | null>(null);
   const [attempt, setAttempt] = useState(0);
   const titleRef = useRef<View>(null);
-  const titles = loaded ? membersTitle(loaded.seat) : null;
+  const ended = loaded
+    ? termEndedFor(
+        loaded.seat,
+        endedParliaments(loaded.directory.electorates.data.electorates),
+      )
+    : null;
+  const titles = loaded ? membersTitle(loaded.seat, !!ended) : null;
   const title = useTitleOnScroll(titleRef, titles?.bar);
   useEffect(() => {
     let active = true;
@@ -159,6 +173,11 @@ export default function Members() {
             {victoria ? 'Legislative Council, Victoria' : 'Legislative Council'}
           </Text>
         ) : null}
+        {ended ? (
+          <Text wordSafe variant="secondary" testID="members-term-ended">
+            {endedTermLine(ended)}
+          </Text>
+        ) : null}
       </Group>
       {rows.length ? (
         <InsetGroup>
@@ -174,7 +193,8 @@ export default function Members() {
                 party={profile?.party ?? r.party}
                 partyStatus={profile?.partyStatus ?? 'current'}
                 detail={
-                  since[r.person_id]
+                  // "Since" is said of a member; the last members have none.
+                  !ended && since[r.person_id]
                     ? `Since ${formatDate(since[r.person_id]!, 'short')}`
                     : null
                 }

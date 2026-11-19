@@ -118,6 +118,15 @@ export function termEndedFor(
     : term;
 }
 
+/**
+ * Whether the index row itself says its house's term has ended: a district
+ * row drawn with no index at hand. A Council region's row carries no field
+ * of its own; ask `termEndedFor` with the whole index for those.
+ */
+export function rowTermEnded(seat: Pick<Electorate, 'dissolved_for'>): boolean {
+  return seat.dissolved_for != null;
+}
+
 /** "Parliament’s term ended on 3 November for the 28 November election". */
 export function endedTermLine(term: EndedTerm): string {
   return termLine(term.electionDay, term.stateCode);

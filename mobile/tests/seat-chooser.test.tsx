@@ -583,6 +583,47 @@ describe('the Victorian scope', () => {
     expect(byID(r, 'seat-vic-regions')).toHaveLength(0);
     await act(async () => r.unmount());
   });
+  test('while the Parliament’s term has ended, district and region rows name last members, never members', async () => {
+    const assembly = (value: string | null) =>
+      (runtime.directory as jest.Mock).mockResolvedValue({
+        ...directory,
+        electorates: result({
+          ...index,
+          electorates: index.electorates.map((s) =>
+            s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+          ),
+        }),
+      });
+    const names = (seat: typeof wendouree) => {
+      const m = seat.representatives[0]!;
+      return { name: m.person.name, party: m.party };
+    };
+    try {
+      assembly('2026-11-28');
+      let r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+      for (const seat of [wendouree, westernVictoria]) {
+        const { name, party } = names(seat);
+        const row = one(r, `seat-row-${seat.slug}`);
+        expect(row.props.last).toBe(true);
+        expect(words(r)).toContain(`Last member: ${name}`);
+        expect(
+          row.findAll((n) => typeof n.props.accessibilityLabel === 'string')[0]!
+            .props.accessibilityLabel,
+        ).toContain(
+          `${seat.name}. Last member: ${[name, party].filter(Boolean).join(', ')}.`,
+        );
+      }
+      await act(async () => r.unmount());
+      assembly(null);
+      r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+      for (const seat of [wendouree, westernVictoria])
+        expect(one(r, `seat-row-${seat.slug}`).props.last).toBe(false);
+      expect(words(r)).not.toContain('Last member');
+      await act(async () => r.unmount());
+    } finally {
+      (runtime.directory as jest.Mock).mockResolvedValue(directory);
+    }
+  });
   test('choosing a district sets its region too, in one write', async () => {
     jest.useFakeTimers();
     (runtime.electorate as jest.Mock).mockResolvedValue({
