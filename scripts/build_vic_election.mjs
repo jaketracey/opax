@@ -24,15 +24,39 @@ export function projectVicResults(source, electionDay, districtNames) {
     districts:Object.entries(source.districts ?? {}).map(([name,row])=>({name,result:contest(row.general)}))},electionDay,districtNames);
 }
 
+// The hub is the record of the Parliament whose term ended for this election, so its members are
+// pinned to the electorates release published when the Assembly expired (config.roster_release),
+// never the latest one in electorates/manifest.json. This is deliberate; do not unpin it.
+// - After the declaration the latest release lists the new members. App builds iOS 1.1.6 and
+//   Android 1.1.5 label the hub's members "Last members" and "Last held by" with no other check,
+//   and the web hub heads them "Last parliament" (portal/src/vic-election.ts, assemblyExpired).
+// - A part-declared release would fail the strict roster checks below and stop the whole deploy.
+// Newly declared members appear in the results (current_results) and on electorate and person
+// pages, which read the latest release; never here.
+export function pinnedRosterIndex(config) {
+  if (!/^[0-9a-f]{16}$/.test(config.roster_release ?? '')) throw new Error('The election hub needs its pinned roster release');
+  return `/electorates/releases/${config.roster_release}/index.json`;
+}
+
+// The pinned release must be the one taken when the Assembly expired: every district carries
+// dissolved_for the election that ends this term (config.term_end; results rehearsals relabel
+// election_day, never the term).
+export function assertOutgoingRoster(index, config) {
+  const districts = index.electorates.filter(s => s.jurisdiction === 'vic' && s.chamber === 'vic_la' && s.status === 'current');
+  if (districts.length !== 88 || districts.some(s => s.dissolved_for !== config.term_end))
+    throw new Error(`Pinned roster release ${config.roster_release} is not the outgoing roster for ${config.term_end}`);
+}
+
 export async function buildVicElection(root, configPath = fileURLToPath(new URL('./hubs/vic-election-2026.json',import.meta.url))) {
   const read = async path => JSON.parse(await readFile(join(root,path.replace(/^\//,'')),'utf8'));
   const sibling = name => fileURLToPath(new URL(name,new URL('.',`file://${configPath}`)));
-  const [config, results, places, manifest, roster, votes, divisions, interests, corpus] = await Promise.all([
+  const [config, results, places, roster, votes, divisions, interests, corpus] = await Promise.all([
     JSON.parse(await readFile(configPath,'utf8')),JSON.parse(await readFile(sibling('vic-results-2022.json'),'utf8')),
-    JSON.parse(await readFile(sibling('vic-places-2025.json'),'utf8')),read('electorates/manifest.json'),read('parliamentarians.json'),
+    JSON.parse(await readFile(sibling('vic-places-2025.json'),'utf8')),read('parliamentarians.json'),
     read('votes.json'),read('divisions/index.json'),read('interests/index.json'),read('corpus.json'),
   ]);
-  const index = await read(manifest.index_url);
+  const index = await read(pinnedRosterIndex(config));
+  assertOutgoingRoster(index,config);
   // Candidates exist only once the VEC publishes them after nominations close (noon 9 November).
   const nominated = await readFile(sibling('vic-candidates-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return null;throw e;});
   const currentSource = await readFile(sibling('vic-results-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return undefined;throw e;});

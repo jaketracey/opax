@@ -337,9 +337,13 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
     const out=await mkdtemp(join(tmpdir(),'vic-candidates-out-'));
     try {
       for(const path of ['electorates/manifest.json','parliamentarians.json','votes.json','divisions/index.json','interests/index.json','corpus.json','person-paths.js']){await mkdir(dirname(join(out,path)),{recursive:true});await writeFile(join(out,path),await readFile(new URL(path,root)));}
-      const manifest=await json('electorates/manifest.json');await mkdir(dirname(join(out,manifest.index_url)),{recursive:true});await writeFile(join(out,manifest.index_url),await readFile(new URL(manifest.index_url.slice(1),root)));
-      // A seat recorded vacant is read from its own detail file (public/seat-vacancy.js).
-      for(const e of (await json(manifest.index_url.slice(1))).electorates.filter(e=>e.jurisdiction==='vic'&&e.representation_status==='verified'&&!e.representatives.length))await writeFile(join(out,e.detail_url),await readFile(new URL(e.detail_url.slice(1),root)));
+      // The manifest's index and the hub's pinned roster release (scripts/build_vic_election.mjs) may differ.
+      const manifest=await json('electorates/manifest.json'),pinned=JSON.parse(await readFile(join(dir,'vic-election-2026.json'),'utf8')).roster_release;
+      for(const url of new Set([manifest.index_url,`/electorates/releases/${pinned}/index.json`])) {
+        await mkdir(dirname(join(out,url)),{recursive:true});await writeFile(join(out,url),await readFile(new URL(url.slice(1),root)));
+        // A seat recorded vacant is read from its own detail file (public/seat-vacancy.js).
+        for(const e of (await json(url.slice(1))).electorates.filter(e=>e.jurisdiction==='vic'&&e.representation_status==='verified'&&!e.representatives.length))await writeFile(join(out,e.detail_url),await readFile(new URL(e.detail_url.slice(1),root)));
+      }
       for(const row of (await json('divisions/index.json')).divisions.filter(d=>/^vic-(la|lc)-/.test(d.key))){await mkdir(join(out,'divisions'),{recursive:true});await writeFile(join(out,`divisions/${row.slug}.json`),await readFile(new URL(`divisions/${row.slug}.json`,root)));}
       // Missing optional input still builds without any candidate sections.
       const candidateSource=await readFile(join(dir,'vic-candidates-2026.json'),'utf8');
