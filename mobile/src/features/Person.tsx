@@ -1,3 +1,4 @@
+import { PullRefresh } from './people/PullRefresh';
 import { RouteOptions } from '../navigation/preview';
 import { emptyBarTitle } from '../navigation/useTitleOnScroll';
 import { useScreenReady } from '../analytics/timing';
@@ -14,7 +15,6 @@ import {
 import {
   AccessibilityInfo,
   Platform,
-  RefreshControl,
   StyleSheet,
   View,
   type LayoutChangeEvent,
@@ -436,7 +436,7 @@ export function ProfileScreen({
             column="wide"
             testID="person-pending-screen"
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+              <PullRefresh refreshing={refreshing} onRefresh={refresh} />
             }
           >
             <PersonSkeleton
@@ -455,7 +455,7 @@ export function ProfileScreen({
             testID="person-pending-screen"
             barTitle={load.status === 'not-found' ? 'No profile' : undefined}
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+              <PullRefresh refreshing={refreshing} onRefresh={refresh} />
             }
           >
             {load.status === 'not-found' ? (
@@ -1297,7 +1297,7 @@ function ProfileContent({
           : null
       }
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        <PullRefresh refreshing={refreshing} onRefresh={refresh} />
       }
     >
       <ReadableColumn style={styles.top} testID="person">

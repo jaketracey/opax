@@ -1,6 +1,8 @@
 import { View, useWindowDimensions } from 'react-native';
-import { colors } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 export function NewDot({ testID }: { testID?: string }) {
+  const colors = useColors();
+
   const { fontScale } = useWindowDimensions();
   const size = 8 * fontScale;
   return (

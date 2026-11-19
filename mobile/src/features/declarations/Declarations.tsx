@@ -1,10 +1,10 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  RefreshControl,
   SectionList,
   StyleSheet,
   View,
@@ -31,7 +31,8 @@ import {
 import { useListSearchBar } from '../../design/search-bar';
 import type { SourceDetails } from '../../design/source';
 import { StatePageProvider } from '../../design/states';
-import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
+import { layout, minimumTarget, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { personRoute } from '../../navigation/routes';
 import { filtersRoute } from '../../navigation/routes/filters';
@@ -83,6 +84,9 @@ function useFeedFilters() {
  * The source line and the count close the list.
  */
 export default function Declarations() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const load = useCallback(
     (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
       catalogs.declarations(refresh, signal),
@@ -335,7 +339,7 @@ export default function Declarations() {
         <SectionList<Run, Week>
           testID="declarations-screen"
           refreshControl={
-            <RefreshControl
+            <PullRefresh
               refreshing={refreshing}
               onRefresh={refresh}
               tintColor={colors.navy}
@@ -390,31 +394,33 @@ export default function Declarations() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingBottom: rhythm.section + rhythm.block,
-  },
-  header: { paddingTop: rhythm.tight, gap: rhythm.tight },
-  filterLine: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    columnGap: rhythm.tight,
-  },
-  grow: { flexGrow: 1, flexShrink: 1 },
-  clear: {
-    minHeight: minimumTarget,
-    minWidth: minimumTarget,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionHeader: {
-    backgroundColor: colors.paper,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.tight,
-  },
-  empty: { gap: rhythm.block, paddingTop: rhythm.block },
-  foot: { gap: rhythm.tight, paddingTop: rhythm.block },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: {
+      paddingHorizontal: layout.screenMargin,
+      paddingBottom: rhythm.section + rhythm.block,
+    },
+    header: { paddingTop: rhythm.tight, gap: rhythm.tight },
+    filterLine: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      columnGap: rhythm.tight,
+    },
+    grow: { flexGrow: 1, flexShrink: 1 },
+    clear: {
+      minHeight: minimumTarget,
+      minWidth: minimumTarget,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    sectionHeader: {
+      backgroundColor: colors.paper,
+      paddingTop: rhythm.block,
+      paddingBottom: rhythm.tight,
+    },
+    empty: { gap: rhythm.block, paddingTop: rhythm.block },
+    foot: { gap: rhythm.tight, paddingTop: rhythm.block },
+  }),
+);

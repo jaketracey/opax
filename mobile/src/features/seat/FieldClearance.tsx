@@ -11,7 +11,8 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { currentRule, useLayout } from '../../design/adaptive';
 import { designFlags } from '../../design/flags';
 import { liquidGlass } from '../../design/glass';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 
 /** iOS 26's bottom search field on iPhone, as drawn (w4-seat-01, -ax5-01). */
 export const BOTTOM_FIELD_HEIGHT = 48;
@@ -112,6 +113,8 @@ export function useFieldClearsKeyboard(): boolean {
 
 /** The chooser's list, ended above the bottom search field (see above). */
 export function FieldClearance({ children }: { children: ReactNode }) {
+  const colors = useColors();
+
   const resting = useRestingClearance();
   const keyboard = useKeyboardHeight(resting > 0);
   const clearance = fieldClearanceAboveKeyboard(resting, keyboard);

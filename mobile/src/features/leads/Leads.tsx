@@ -1,7 +1,8 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
@@ -18,7 +19,8 @@ import {
   Text,
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { leadsKindRoute } from '../../navigation/routes/money-map';
 import { leadRoute } from '../../navigation/routes/public-money';
@@ -94,6 +96,8 @@ export function leadsCitation(leads: readonly LeadView[]) {
  * leads not shown live in each source sheet's notes.
  */
 export default function Leads() {
+  const colors = useColors();
+
   const params = useLocalSearchParams<{ category?: string; item?: string }>();
   const category = useMemo(
     () => categoryFrom(params.category),
@@ -356,7 +360,7 @@ export default function Leads() {
         grouped
         testID="leads-screen"
         refreshControl={
-          <RefreshControl
+          <PullRefresh
             refreshing={refreshing}
             onRefresh={refresh}
             tintColor={colors.navy}

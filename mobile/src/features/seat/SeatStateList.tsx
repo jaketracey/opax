@@ -8,7 +8,8 @@ import { InsetGroup, Screen } from '../../design/layout';
 import { useListSearchBar } from '../../design/search-bar';
 import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { headerItems } from '../../navigation/chrome';
 import { firstRunChosen, firstRunSkipped } from '../../onboarding/measure';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
@@ -50,6 +51,8 @@ export function SeatStateList({
   code: string;
   presentation: SeatPresentation;
 }) {
+  const colors = useColors();
+
   const navigation = useNavigation();
   const welcome = presentation === 'welcome';
   const { state, retry } = useSeatDirectory();

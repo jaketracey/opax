@@ -12,7 +12,8 @@ import {
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
-import { colors, radii, rhythm } from '../../design/tokens';
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { copyText, shareTextFile } from './actions';
 import { citationsFor } from './citations';
 import {
@@ -39,6 +40,8 @@ const COPIED_FOR = 2000;
  * and one Copy and one Share. The formats are the web's (`citations.ts`).
  */
 export default function Citations() {
+  const sheet = useSheet();
+
   const { slug = '' } = useLocalSearchParams<{ slug: string }>();
   const load = useCallback(
     (signal?: AbortSignal) => records.document(slug, signal),
@@ -186,6 +189,8 @@ export default function Citations() {
 
 /** The sheet's final shape while the record loads (records.md 3.3). */
 function CitationSkeleton() {
+  const sheet = useSheet();
+
   return (
     <LoadingStatus
       accessible
@@ -223,23 +228,25 @@ function CitationSkeleton() {
   );
 }
 
-const sheet = StyleSheet.create({
-  header: { gap: rhythm.line },
-  body: { gap: rhythm.block },
-  cell: { paddingVertical: rhythm.row, gap: rhythm.tight },
-  // InsetGroup's shape: its container corners and 16 pt text inset.
-  group: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    paddingHorizontal: rhythm.block,
-  },
-  actions: { flexDirection: 'row', gap: rhythm.tight, flexWrap: 'wrap' },
-  stacked: { flexDirection: 'column' },
-  bar: {
-    borderRadius: 4,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  onRaised: { backgroundColor: colors.sunken },
-});
+const useSheet = makeStyles((colors) =>
+  StyleSheet.create({
+    header: { gap: rhythm.line },
+    body: { gap: rhythm.block },
+    cell: { paddingVertical: rhythm.row, gap: rhythm.tight },
+    // InsetGroup's shape: its container corners and 16 pt text inset.
+    group: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      paddingHorizontal: rhythm.block,
+    },
+    actions: { flexDirection: 'row', gap: rhythm.tight, flexWrap: 'wrap' },
+    stacked: { flexDirection: 'column' },
+    bar: {
+      borderRadius: 4,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    onRaised: { backgroundColor: colors.sunken },
+  }),
+);

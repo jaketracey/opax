@@ -9,7 +9,8 @@ import { PartyLabel, Portrait } from '../../design/people';
 import { RowLink, rowMenus, useRowFollow } from '../../design/row-link';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { partyText, type PartyContext } from '../../design/party';
 import {
   ownsRowPadding,
@@ -71,6 +72,8 @@ export function MemberHeroRow({
   official?: OfficialPage | null;
   testID?: string;
 }) {
+  const colors = useColors();
+
   const stacked = useAccessibilitySize();
   const cellStyle = useRowCellStyle();
   useRowInset(stacked ? 16 : 16 + portraitSize + rhythm.tight);

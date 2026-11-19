@@ -12,7 +12,8 @@ import {
   StatePageProvider,
 } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { billRoute } from '../../navigation/routes';
 import { loadProfile, type Loaded } from '../Person';
 import { BlockSource, votesSource } from '../your-mp/Evidence';
@@ -141,6 +142,8 @@ function BlockUnavailable({
  * narrowed to For or Against. Each row opens the division on its bill.
  */
 export function PersonVotes() {
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{ slug: string; name?: string }>();
   const slug = one(params.slug) ?? '';
   const { load, retry } = useProfile(slug);
@@ -281,6 +284,8 @@ export function PersonVotes() {
  * sticky group per register category, each entry in the member's words.
  */
 export function PersonInterests() {
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{ slug: string; name?: string }>();
   const slug = one(params.slug) ?? '';
   const { load, retry } = useProfile(slug);
@@ -392,15 +397,19 @@ export function PersonInterests() {
 
 /** Module level: an inline separator is a new component type each render. */
 function InsetSeparator() {
+  const styles = useStyles();
+
   return <View style={styles.inset} />;
 }
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: colors.paper },
-  content: { paddingBottom: rhythm.section },
-  picker: { paddingVertical: rhythm.tight },
-  header: { backgroundColor: colors.paper, paddingVertical: rhythm.tight },
-  entry: { paddingVertical: rhythm.tight, gap: rhythm.line },
-  rule: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
-  inset: { height: hairline, backgroundColor: colors.dividerSubtle },
-  foot: { paddingTop: rhythm.group, gap: rhythm.line },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    page: { flex: 1, backgroundColor: colors.paper },
+    content: { paddingBottom: rhythm.section },
+    picker: { paddingVertical: rhythm.tight },
+    header: { backgroundColor: colors.paper, paddingVertical: rhythm.tight },
+    entry: { paddingVertical: rhythm.tight, gap: rhythm.line },
+    rule: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+    inset: { height: hairline, backgroundColor: colors.dividerSubtle },
+    foot: { paddingTop: rhythm.group, gap: rhythm.line },
+  }),
+);

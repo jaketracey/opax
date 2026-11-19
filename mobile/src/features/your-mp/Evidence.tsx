@@ -14,7 +14,8 @@ import {
   licenceText,
   type SourceDetails,
 } from '../../design/primitives';
-import { colors, hairline, rhythm, type Accent } from '../../design/tokens';
+import { hairline, rhythm, type Accent } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { votingMetaFor, type EvidenceBlock, type ProfileView } from './model';
 
 /** What a block's source line reads from: its date, sources and state. */
@@ -362,6 +363,8 @@ export function RecordBlock<T>({
   /** The Sources and licences entry the source sheet's licence opens. */
   licenceDataset?: string;
 }) {
+  const styles = useStyles();
+
   if (collapse && block.status !== 'loading' && block.data === null)
     return null;
   const body = (
@@ -440,12 +443,14 @@ export function RecordBlock<T>({
   );
 }
 
-const styles = StyleSheet.create({
-  sub: { gap: rhythm.tight },
-  subRuled: {
-    marginTop: rhythm.tight,
-    paddingTop: rhythm.block,
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerSubtle,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    sub: { gap: rhythm.tight },
+    subRuled: {
+      marginTop: rhythm.tight,
+      paddingTop: rhythm.block,
+      borderTopWidth: hairline,
+      borderTopColor: colors.dividerSubtle,
+    },
+  }),
+);

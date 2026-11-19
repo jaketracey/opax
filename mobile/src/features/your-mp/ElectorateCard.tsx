@@ -14,13 +14,8 @@ import { SourceLine, type SourceDetails } from '../../design/source';
 import { Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import {
-  colors,
-  hairline,
-  minimumTarget,
-  radii,
-  rhythm,
-} from '../../design/tokens';
+import { hairline, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import {
   electorateRoute,
   personRoute,
@@ -100,6 +95,8 @@ export function ElectorateCard({
   view: ElectorateView;
   directory?: Directory;
 }) {
+  const styles = useStyles();
+
   const census = censusHeadline(newestCensus(view));
   const election = latestElection(view, seat.jurisdiction);
   const winner = election?.winner;
@@ -236,36 +233,38 @@ export function ElectorateCard({
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { gap: 0 },
-  top: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderCurve: 'continuous',
-  },
-  body: { padding: rhythm.block, gap: rhythm.tight },
-  // The outline already has an inset below its drawing.
-  afterOutline: { paddingTop: 0 },
-  block: { gap: rhythm.line },
-  electionText: { flex: 1 },
-  party: { minHeight: minimumTarget },
-  election: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: rhythm.tight,
-  },
-  chevronOnly: { alignItems: 'flex-end' },
-  // The card's foot: same surface, after an inset hairline, so the line sits
-  // inside the card while staying its own element (not in the card's link).
-  foot: {
-    backgroundColor: colors.raised,
-    borderBottomLeftRadius: radii.container,
-    borderBottomRightRadius: radii.container,
-    borderCurve: 'continuous',
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerSubtle,
-    marginTop: -1,
-    paddingHorizontal: rhythm.block,
-    paddingBottom: rhythm.tight,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    wrap: { gap: 0 },
+    top: {
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      borderCurve: 'continuous',
+    },
+    body: { padding: rhythm.block, gap: rhythm.tight },
+    // The outline already has an inset below its drawing.
+    afterOutline: { paddingTop: 0 },
+    block: { gap: rhythm.line },
+    electionText: { flex: 1 },
+    party: { minHeight: minimumTarget },
+    election: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      gap: rhythm.tight,
+    },
+    chevronOnly: { alignItems: 'flex-end' },
+    // The card's foot: same surface, after an inset hairline, so the line sits
+    // inside the card while staying its own element (not in the card's link).
+    foot: {
+      backgroundColor: colors.raised,
+      borderBottomLeftRadius: radii.container,
+      borderBottomRightRadius: radii.container,
+      borderCurve: 'continuous',
+      borderTopWidth: hairline,
+      borderTopColor: colors.dividerSubtle,
+      marginTop: -1,
+      paddingHorizontal: rhythm.block,
+      paddingBottom: rhythm.tight,
+    },
+  }),
+);

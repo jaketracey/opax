@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 
 /** Android's in-content find controls wrap instead of crowding the app bar. */
 export function FindControls({
@@ -19,6 +20,9 @@ export function FindControls({
   onNext: () => void;
   onDone: () => void;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   return (
     <View style={styles.find} testID="doc-find">
       <Text
@@ -72,24 +76,26 @@ export function FindControls({
   );
 }
 
-const styles = StyleSheet.create({
-  find: {
-    gap: rhythm.tight,
-    padding: rhythm.block,
-    marginBottom: rhythm.block,
-    borderRadius: 12,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
-  action: {
-    minHeight: 48,
-    minWidth: 48,
-    maxWidth: '100%',
-    justifyContent: 'center',
-    paddingHorizontal: rhythm.tight,
-    borderRadius: 8,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    find: {
+      gap: rhythm.tight,
+      padding: rhythm.block,
+      marginBottom: rhythm.block,
+      borderRadius: 12,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    actions: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
+    action: {
+      minHeight: 48,
+      minWidth: 48,
+      maxWidth: '100%',
+      justifyContent: 'center',
+      paddingHorizontal: rhythm.tight,
+      borderRadius: 8,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+  }),
+);

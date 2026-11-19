@@ -17,7 +17,8 @@ import {
   StatePageProvider,
 } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRecordRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
@@ -35,6 +36,8 @@ const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
  * with the list's source line and count at its foot.
  */
 export default function PartySources() {
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{ slug?: string; name?: string }>();
   const input = one(params.name) ?? one(params.slug) ?? '';
   const load = useCallback(
@@ -192,9 +195,11 @@ export default function PartySources() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: colors.paper },
-  content: { paddingBottom: rhythm.section },
-  header: { backgroundColor: colors.paper, paddingVertical: rhythm.tight },
-  foot: { paddingTop: rhythm.group, gap: rhythm.line },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    page: { flex: 1, backgroundColor: colors.paper },
+    content: { paddingBottom: rhythm.section },
+    header: { backgroundColor: colors.paper, paddingVertical: rhythm.tight },
+    foot: { paddingTop: rhythm.group, gap: rhythm.line },
+  }),
+);

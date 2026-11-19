@@ -1,3 +1,4 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { router } from 'expo-router';
 import { RouteOptions } from '../../navigation/preview';
 import {
@@ -17,7 +18,6 @@ import {
   ActivityIndicator,
   Keyboard,
   Platform,
-  RefreshControl,
   SectionList,
   StyleSheet,
   useWindowDimensions,
@@ -49,13 +49,13 @@ import { LoadingStatus, StatePageProvider } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading } from '../../design/text';
 import {
-  colors,
   layout,
   minimumTarget,
   radii,
   rhythm,
   type TextVariant,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { ClearBarRest } from '../../design/layout';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
@@ -255,6 +255,8 @@ const BONE_SECTIONS = [3, 2];
  * accessibility sizes). Rows use `LinkRow` and `DivisionRow`'s tokens.
  */
 function HistoryBones({ inset }: { inset: number }) {
+  const styles = useStyles();
+
   const { fontScale } = useWindowDimensions();
   const bone = (width: DimensionValue, height: number, round = false) => (
     <View
@@ -338,6 +340,8 @@ const BillHeader = memo(function BillHeader({
 }: {
   section: HistorySection;
 }) {
+  const styles = useStyles();
+
   const report = useContext(ReportInset);
   const header = useRef<View>(null);
   const probe = useRef<View>(null);
@@ -383,6 +387,9 @@ let lists = 0;
 
 /** Votes in parliament: every recorded vote on a bill, grouped by bill. */
 export default function DivisionHistory() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const load = useCallback(
     (
       refresh: boolean,
@@ -792,7 +799,7 @@ export default function DivisionHistory() {
                   contentInsetAdjustmentBehavior="automatic"
                   keyboardDismissMode="on-drag"
                   refreshControl={
-                    <RefreshControl
+                    <PullRefresh
                       refreshing={refreshing}
                       onRefresh={refresh}
                       tintColor={colors.navy}
@@ -859,6 +866,8 @@ export default function DivisionHistory() {
   );
 }
 function Separator() {
+  const styles = useStyles();
+
   const inset = useContext(VoteInset);
   return <View style={[styles.separator, { marginLeft: inset }]} />;
 }
@@ -878,6 +887,8 @@ function SavedNote({
   onRetry: () => void;
   testID: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.note}>
       <View
@@ -900,65 +911,67 @@ function SavedNote({
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  searchFilters: {
-    flexDirection: 'row',
-    paddingHorizontal: layout.screenMargin,
-    paddingVertical: rhythm.tight,
-    backgroundColor: colors.paper,
-  },
-  content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.section,
-  },
-  header: { gap: rhythm.tight },
-  // The partial-read error's own row, so the note holds its place.
-  note: {
-    gap: rhythm.heading,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-  },
-  noteWords: { flexShrink: 1, maxWidth: '100%' },
-  count: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: rhythm.tight,
-  },
-  billHeader: { marginTop: rhythm.section, marginBottom: rhythm.tight },
-  probe: { position: 'absolute', left: 0, top: 0, width: 0, height: 0 },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.dividerSubtle,
-  },
-  footer: { paddingTop: rhythm.heading, gap: rhythm.block },
-  unseen: { opacity: 0 },
-  bone: {
-    backgroundColor: colors.sunken,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-  },
-  boneRound: { borderRadius: radii.capsule, borderCurve: 'continuous' },
-  // `LinkRow` and `DivisionRow`'s own row: target height, padding and gap.
-  boneRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-  },
-  // The header's title starts a gap in from its text column (the probe).
-  boneBillWords: { flex: 1, gap: rhythm.line, paddingLeft: rhythm.tight },
-  boneVoteWords: { flex: 1, gap: rhythm.line },
-  boneCapsule: {
-    alignSelf: 'flex-start',
-    minHeight: 22,
-    paddingHorizontal: rhythm.tight,
-    paddingVertical: rhythm.line,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    searchFilters: {
+      flexDirection: 'row',
+      paddingHorizontal: layout.screenMargin,
+      paddingVertical: rhythm.tight,
+      backgroundColor: colors.paper,
+    },
+    content: {
+      paddingHorizontal: layout.screenMargin,
+      paddingTop: rhythm.block,
+      paddingBottom: rhythm.section,
+    },
+    header: { gap: rhythm.tight },
+    // The partial-read error's own row, so the note holds its place.
+    note: {
+      gap: rhythm.heading,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      alignSelf: 'stretch',
+    },
+    noteWords: { flexShrink: 1, maxWidth: '100%' },
+    count: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: rhythm.tight,
+    },
+    billHeader: { marginTop: rhythm.section, marginBottom: rhythm.tight },
+    probe: { position: 'absolute', left: 0, top: 0, width: 0, height: 0 },
+    separator: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: colors.dividerSubtle,
+    },
+    footer: { paddingTop: rhythm.heading, gap: rhythm.block },
+    unseen: { opacity: 0 },
+    bone: {
+      backgroundColor: colors.sunken,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+    },
+    boneRound: { borderRadius: radii.capsule, borderCurve: 'continuous' },
+    // `LinkRow` and `DivisionRow`'s own row: target height, padding and gap.
+    boneRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    },
+    // The header's title starts a gap in from its text column (the probe).
+    boneBillWords: { flex: 1, gap: rhythm.line, paddingLeft: rhythm.tight },
+    boneVoteWords: { flex: 1, gap: rhythm.line },
+    boneCapsule: {
+      alignSelf: 'flex-start',
+      minHeight: 22,
+      paddingHorizontal: rhythm.tight,
+      paddingVertical: rhythm.line,
+    },
+  }),
+);

@@ -2,6 +2,7 @@ import { Children, useState, type ReactNode } from 'react';
 import {
   Platform,
   StyleSheet,
+  useColorScheme,
   View,
   useWindowDimensions,
   type TextLayoutEvent,
@@ -14,8 +15,9 @@ import { LinkRow } from '../../design/rows';
 import { FollowButton } from '../../design/controls';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { partyDotSize } from '../../design/people';
-import { partyDot } from '../../design/party';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { partyDot, partyWash } from '../../design/party';
+import { hairline, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import type { FollowKind } from '../follows/store';
 import { TermText } from '../../design/term';
 import { roleTerm } from '../learn/term-map';
@@ -48,7 +50,8 @@ export function PartyDot({
   line?: { y: number; height: number } | null;
 }) {
   const { fontScale } = useWindowDimensions();
-  const colour = partyDot(party);
+  const scheme = useColorScheme();
+  const colour = partyDot(party, scheme === 'dark' ? 'dark' : 'light');
   const size = partyDotSize(fontScale);
   return colour ? (
     <View
@@ -133,7 +136,17 @@ export function ProfileHeader({
   titleTestID?: string;
   onTitleLayout?: () => void;
 }) {
+  const styles = useStyles();
+
   const large = useAccessibilitySize();
+  // A party's title sits on its own wash in dark, where the page is near
+  // black and the wash carries the party's hue (dark mode, 19 Nov 2026).
+  // Light keeps the plain page: its header was never washed.
+  const dark = useColorScheme() === 'dark';
+  const plate =
+    variant === 'party' && dark
+      ? [styles.partyPlate, { backgroundColor: partyWash(name, 'dark') }]
+      : null;
   const centred = variant === 'person' && !large;
   const align = centred ? styles.centre : styles.leading;
   // The party title's first line, measured, so its dot sits on that line
@@ -164,7 +177,7 @@ export function ProfileHeader({
         <View
           style={
             variant === 'party'
-              ? styles.partyTitle
+              ? [styles.partyTitle, plate]
               : centred
                 ? styles.centre
                 : styles.leading
@@ -253,20 +266,28 @@ export function ProfileHeader({
   );
 }
 
-const styles = StyleSheet.create({
-  header: { gap: rhythm.block },
-  identity: { gap: rhythm.tight },
-  centre: { alignItems: 'center' },
-  leading: { alignItems: 'flex-start' },
-  centredText: { textAlign: 'center' },
-  shrink: { flexShrink: 1 },
-  partyTitle: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  yourMP: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
-  followFull: { alignSelf: 'stretch' },
-  inset: { height: hairline, backgroundColor: colors.dividerSubtle },
-  end: { height: hairline, backgroundColor: colors.dividerSubtle },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    header: { gap: rhythm.block },
+    identity: { gap: rhythm.tight },
+    centre: { alignItems: 'center' },
+    leading: { alignItems: 'flex-start' },
+    centredText: { textAlign: 'center' },
+    shrink: { flexShrink: 1 },
+    partyTitle: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    partyPlate: {
+      alignSelf: 'stretch',
+      padding: rhythm.block,
+      borderRadius: radii.tile,
+      borderCurve: 'continuous',
+    },
+    yourMP: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
+    followFull: { alignSelf: 'stretch' },
+    inset: { height: hairline, backgroundColor: colors.dividerSubtle },
+    end: { height: hairline, backgroundColor: colors.dividerSubtle },
+  }),
+);

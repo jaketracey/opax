@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { Fragment, useMemo, type ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import type { BillSplit, billSplits } from '../../api/bill-transforms';
 import { billName } from '../../api/bill-transforms';
@@ -20,12 +20,12 @@ import {
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
 import {
-  colors,
   interfaceFonts as fonts,
   minimumTarget,
   radii,
   rhythm,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import {
   canonicalUrl,
   openOnWeb,
@@ -134,10 +134,15 @@ export function SplitRow({
   max: number;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   const linked = !notParty(split);
   const Container = linked ? Pressable : View;
-  const dot = partyDot(split.party) && partyDot(split.label);
+  const appearance = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const dot =
+    partyDot(split.party, appearance) && partyDot(split.label, appearance);
   const frame = [styles.split, stacked ? styles.splitStacked : null];
   const bar = (
     <View
@@ -220,6 +225,8 @@ export function DivisionSplits({
   /** Each row is `<rowTestID>-<party>`: "bill-division-0-splits-labor". */
   rowTestID?: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.splitList} testID={testID}>
       {splits.map((split) => (
@@ -253,6 +260,8 @@ export function Disclosure({
   bodyTestID?: string;
   children: ReactNode | (() => ReactNode);
 }) {
+  const styles = useStyles();
+
   return (
     <DisclosureRow
       label={label}
@@ -290,6 +299,8 @@ function Runs({
   lines: readonly (readonly QuestionRun[])[];
   heading?: boolean;
 }) {
+  const styles = useStyles();
+
   return lines.map((line, l) => (
     <Fragment key={l}>
       {l ? '\n' : null}
@@ -331,6 +342,8 @@ function Blocks({
   blocks: readonly QuestionBlock[];
   quoted?: boolean;
 }) {
+  const styles = useStyles();
+
   const tone = quoted ? 'inkSoft' : undefined;
   return blocks.map((block, index) => {
     if (block.kind === 'quote')
@@ -385,6 +398,8 @@ export function DivisionQuestion({
   text: string;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const blocks = useMemo(() => questionBlocks(text), [text]);
   return (
     <View style={styles.question} testID={testID}>
@@ -410,6 +425,8 @@ export function MachineSummary({
   sentences: string[];
   testID: string;
 }) {
+  const styles = useStyles();
+
   return (
     <>
       <SectionHeader
@@ -448,6 +465,8 @@ export function MachineBrief({
   brief: string;
   testID: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.brief}>
       <MachinePill
@@ -486,6 +505,8 @@ export function dateSpan(
 
 /** A bulleted item whose bullet VoiceOver skips. */
 export function Bullet({ children }: { children: string }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.bullet}>
       <Text
@@ -504,9 +525,11 @@ export function Bullet({ children }: { children: string }) {
 
 /** A party dot and its label as the record names it (no current/former claim). */
 export function RecordedParty({ party }: { party: string }) {
+  const styles = useStyles();
+
   const identity = partyIdentity(party);
   const recorded = isPartyLabel(party);
-  const dot = partyDot(party);
+  const dot = partyDot(party, useColorScheme() === 'dark' ? 'dark' : 'light');
   const Container = recorded ? Pressable : View;
   return (
     <Container
@@ -534,93 +557,95 @@ export function RecordedParty({ party }: { party: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  statusLine: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  stacked: {
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    alignItems: 'flex-start',
-  },
-  grow: { flexShrink: 1, flexGrow: 1 },
-  full: { width: '100%' },
-  pressed: { backgroundColor: colors.sunken },
-  splitList: { gap: rhythm.line },
-  // One line per party: name, bar, counts; 44pt so a linked row is a target.
-  split: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.heading,
-    minHeight: minimumTarget,
-    marginHorizontal: -rhythm.line,
-    paddingHorizontal: rhythm.line,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-  },
-  splitStacked: {
-    flexWrap: 'wrap',
-    rowGap: rhythm.line,
-    paddingVertical: rhythm.line,
-  },
-  // A shared name column, so the bars start together.
-  partyColumn: { width: '34%' },
-  party: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  dot: { width: 10, height: 10, borderRadius: 5, borderCurve: 'continuous' },
-  track: {
-    flexDirection: 'row',
-    height: 6,
-    borderRadius: 3,
-    overflow: 'hidden',
-    backgroundColor: colors.sunken,
-    borderCurve: 'continuous',
-  },
-  trackInline: { flex: 1 },
-  bar: { height: 6 },
-  // The counts keep their line; the party name wraps.
-  counts: { flexShrink: 0, minWidth: 44, textAlign: 'right' },
-  disclosed: { gap: rhythm.block },
-  showMore: { alignItems: 'flex-start' },
-  partyVotes: { gap: rhythm.block },
-  bloc: { gap: rhythm.line },
-  voteRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    marginHorizontal: -rhythm.line,
-    paddingHorizontal: rhythm.line,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-  },
-  partyName: { flexShrink: 1, maxWidth: '60%' },
-  voteTrack: {
-    flexDirection: 'row',
-    height: 6,
-    borderRadius: 3,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-    backgroundColor: colors.sunken,
-  },
-  voteCounts: { flexShrink: 0 },
-  question: { gap: rhythm.heading },
-  recordStrong: { fontFamily: fonts.serifBold },
-  emphasis: { fontStyle: 'italic' },
-  link: { textDecorationLine: 'underline' },
-  quote: {
-    gap: rhythm.tight,
-    paddingLeft: rhythm.heading + 2,
-    borderLeftWidth: 2,
-    borderLeftColor: colors.navy,
-  },
-  list: { gap: rhythm.line },
-  bullet: { flexDirection: 'row', gap: rhythm.tight },
-  brief: { gap: rhythm.line },
-  machineText: { gap: rhythm.tight },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    statusLine: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    stacked: {
+      flexDirection: 'column',
+      flexWrap: 'nowrap',
+      alignItems: 'flex-start',
+    },
+    grow: { flexShrink: 1, flexGrow: 1 },
+    full: { width: '100%' },
+    pressed: { backgroundColor: colors.sunken },
+    splitList: { gap: rhythm.line },
+    // One line per party: name, bar, counts; 44pt so a linked row is a target.
+    split: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.heading,
+      minHeight: minimumTarget,
+      marginHorizontal: -rhythm.line,
+      paddingHorizontal: rhythm.line,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+    },
+    splitStacked: {
+      flexWrap: 'wrap',
+      rowGap: rhythm.line,
+      paddingVertical: rhythm.line,
+    },
+    // A shared name column, so the bars start together.
+    partyColumn: { width: '34%' },
+    party: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+    dot: { width: 10, height: 10, borderRadius: 5, borderCurve: 'continuous' },
+    track: {
+      flexDirection: 'row',
+      height: 6,
+      borderRadius: 3,
+      overflow: 'hidden',
+      backgroundColor: colors.sunken,
+      borderCurve: 'continuous',
+    },
+    trackInline: { flex: 1 },
+    bar: { height: 6 },
+    // The counts keep their line; the party name wraps.
+    counts: { flexShrink: 0, minWidth: 44, textAlign: 'right' },
+    disclosed: { gap: rhythm.block },
+    showMore: { alignItems: 'flex-start' },
+    partyVotes: { gap: rhythm.block },
+    bloc: { gap: rhythm.line },
+    voteRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      marginHorizontal: -rhythm.line,
+      paddingHorizontal: rhythm.line,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+    },
+    partyName: { flexShrink: 1, maxWidth: '60%' },
+    voteTrack: {
+      flexDirection: 'row',
+      height: 6,
+      borderRadius: 3,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+      backgroundColor: colors.sunken,
+    },
+    voteCounts: { flexShrink: 0 },
+    question: { gap: rhythm.heading },
+    recordStrong: { fontFamily: fonts.serifBold },
+    emphasis: { fontStyle: 'italic' },
+    link: { textDecorationLine: 'underline' },
+    quote: {
+      gap: rhythm.tight,
+      paddingLeft: rhythm.heading + 2,
+      borderLeftWidth: 2,
+      borderLeftColor: colors.navy,
+    },
+    list: { gap: rhythm.line },
+    bullet: { flexDirection: 'row', gap: rhythm.tight },
+    brief: { gap: rhythm.line },
+    machineText: { gap: rhythm.tight },
+  }),
+);
 
 /** A menu item for a bill's ⋯: the same items on the bar and in the iPad pane. */
 export interface BillMenuItem {
@@ -686,6 +711,8 @@ export function ShowMoreButton({
   onToggle: () => void;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.showMore}>
       <Button
@@ -724,6 +751,8 @@ export function PartyVotes({
   recorded: boolean;
   testID: string;
 }) {
+  const styles = useStyles();
+
   if (!recorded || !splits.length)
     return (
       <Text variant="footnote" tone="inkSoft" testID={`${testID}-none`}>
@@ -791,6 +820,9 @@ function PartyVoteRow({
   max: number;
   testID: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   const linked = !notParty(split);
   const bar = (

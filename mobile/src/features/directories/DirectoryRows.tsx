@@ -21,6 +21,7 @@ import {
   useRowSelected,
 } from '../../design/row-padding';
 import { selectedWash, useSplitBleed } from '../../design/selection';
+import { useColors } from '../../design/use-colors';
 import { counted, formatCount } from '../../design/format';
 import { isPartyLabel, partySlug } from '../../design/party';
 import { chamberName, jurisdictionName } from '../../design/parliament';
@@ -213,6 +214,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
   selected,
   onSelect,
 }: RowProps<Electorate>) {
+  const colors = useColors();
   const follow = useRowFollow('electorate', item.electorate_id, item.name);
   const set = useSetAsMyElectorate(item);
   const highlight = useRowHighlight();
@@ -246,7 +248,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
         split ? splitBleed : null,
         cellStyle,
         selected
-          ? selectedWash()
+          ? selectedWash(colors)
           : pressed
             ? { backgroundColor: highlight }
             : null,

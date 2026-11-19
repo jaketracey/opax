@@ -13,7 +13,6 @@ import {
   Image,
   Linking,
   Platform,
-  RefreshControl,
   Share,
   StyleSheet,
 } from 'react-native';
@@ -67,6 +66,7 @@ import {
   slugs,
 } from './pinned';
 import { menuTitle } from '../src/design/menu-title';
+import { PullRefresh } from '../src/features/people/PullRefresh';
 jest.mock('../src/analytics', () => ({
   ...jest.requireActual('../src/analytics'),
   track: jest.fn(),
@@ -947,7 +947,8 @@ describe('Your MP tab', () => {
         refreshing: boolean;
         onRefresh: () => void;
       }>;
-    expect(control().type).toBe(RefreshControl);
+    // The lane's control: the system one, in the colours on screen on Android.
+    expect(control().type).toBe(PullRefresh);
     await act(async () => control().props.onRefresh());
     expect(control().props.refreshing).toBe(false);
     await act(async () => r.unmount());

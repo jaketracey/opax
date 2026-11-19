@@ -32,7 +32,8 @@ import {
   menuLeaves,
   type RowMenuLeaf,
 } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { formatCount, formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
 import { symbols } from '../../design/symbols';
@@ -81,6 +82,8 @@ export default function BillTextReader({
   recordKey,
   embedded = false,
 }: { recordKey?: string; embedded?: boolean } = {}) {
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{ key: string; version?: string }>();
   const key = recordKey ?? params.key ?? '';
   const asked = recordKey ? undefined : params.version;
@@ -627,6 +630,9 @@ function Passage({
   quote: string;
   onPress: () => void;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -651,6 +657,8 @@ function Passage({
 
 /** The text area while a newly chosen version loads. */
 function TextSkeleton() {
+  const styles = useStyles();
+
   return (
     <LoadingStatus
       accessible
@@ -675,6 +683,8 @@ function TextSkeleton() {
 
 /** The header's final shape, then text lines (records.md 4.3). */
 function BillTextSkeleton() {
+  const styles = useStyles();
+
   const bar = (width: `${number}%`, height: number, key?: number) => (
     <View key={key} style={[styles.bar, { width, height }]} />
   );
@@ -715,20 +725,22 @@ function BillTextSkeleton() {
   );
 }
 
-const styles = StyleSheet.create({
-  meta: { marginBottom: rhythm.line },
-  stage: { marginTop: rhythm.line },
-  rows: { marginTop: rhythm.tight },
-  block: { marginTop: rhythm.block, gap: rhythm.tight },
-  brief: { gap: rhythm.tight },
-  beforeText: { height: rhythm.section },
-  endSource: { marginTop: rhythm.group },
-  after: { marginTop: rhythm.section },
-  passage: { gap: rhythm.line, paddingVertical: rhythm.row },
-  skeleton: { gap: rhythm.block },
-  bar: {
-    borderRadius: 4,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    meta: { marginBottom: rhythm.line },
+    stage: { marginTop: rhythm.line },
+    rows: { marginTop: rhythm.tight },
+    block: { marginTop: rhythm.block, gap: rhythm.tight },
+    brief: { gap: rhythm.tight },
+    beforeText: { height: rhythm.section },
+    endSource: { marginTop: rhythm.group },
+    after: { marginTop: rhythm.section },
+    passage: { gap: rhythm.line, paddingVertical: rhythm.row },
+    skeleton: { gap: rhythm.block },
+    bar: {
+      borderRadius: 4,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+  }),
+);

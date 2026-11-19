@@ -1,6 +1,7 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useState } from 'react';
-import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Screen, InsetGroup } from '../../design/layout';
@@ -18,7 +19,8 @@ import { confirmAction } from '../../design/menu';
 import { phoneCopy } from '../../design/phone-copy';
 import { useReduceMotion } from '../../design/accessibility';
 import { HeightReveal, revealMotion } from '../../design/reveal';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { ownsRowPadding, useRowCellStyle } from '../../design/row-padding';
 import { headerItems, pageMenu } from '../../navigation/chrome';
 import { familyNameKey, useFaceURIs } from '../your-mp/FaceStackRow';
@@ -167,6 +169,8 @@ function useOwnMemberIds(): ReadonlySet<string> {
  * unfollows one at a time or all at once; a row's menu ends with Unfollow.
  */
 export default function Following() {
+  const colors = useColors();
+
   const params = useLocalSearchParams<{ edit?: string }>();
   const [refresh, setRefresh] = useState(0);
   const { follows, states, sources, refreshing } = useFollowStates(refresh);
@@ -305,7 +309,7 @@ export default function Following() {
       centred={follows !== null && count === 0}
       testID="follows-screen"
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={checkAgain} />
+        <PullRefresh refreshing={refreshing} onRefresh={checkAgain} />
       }
     >
       <RouteOptions

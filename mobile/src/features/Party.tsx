@@ -1,3 +1,4 @@
+import { PullRefresh } from './people/PullRefresh';
 import { associatedLine, donorAssociatedTo } from '../api/associated';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
@@ -10,13 +11,7 @@ import {
   useState,
   type RefObject,
 } from 'react';
-import {
-  Platform,
-  RefreshControl,
-  StyleSheet,
-  View,
-  type ScrollView,
-} from 'react-native';
+import { Platform, StyleSheet, View, type ScrollView } from 'react-native';
 import type { PartyPageRecord } from '../api/catalogs';
 import { nameKey } from '../api/ids';
 import type { PartyMember } from '../api/party-page';
@@ -315,7 +310,7 @@ export function PartyPage({
         // "Not a party" makes no read, so a pull would spin forever.
         refreshControl={
           notAParty ? undefined : (
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            <PullRefresh refreshing={refreshing} onRefresh={refresh} />
           )
         }
       >

@@ -12,7 +12,8 @@ import {
   useRowInset,
 } from '../../design/row-padding';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { CachedPortrait } from '../CachedPortrait';
 import { seatCopy, seatLabel, seatMember, type PersonLead } from './seat-model';
 
@@ -172,6 +173,8 @@ function RowFrame({
   portrait: ReactNode;
   children: ReactNode;
 }) {
+  const colors = useColors();
+
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();

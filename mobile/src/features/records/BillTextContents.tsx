@@ -6,13 +6,8 @@ import { PlainPressable as Pressable } from '../../design/pressable';
 import { Skeleton, Text } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
 import { StatePageProvider } from '../../design/states';
-import {
-  colors,
-  hairline,
-  layout,
-  minimumTarget,
-  rhythm,
-} from '../../design/tokens';
+import { hairline, layout, minimumTarget, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { publishContents } from './contentsChannel';
 import { RecordLoadError } from './RecordLoadError';
 import { records } from './runtime';
@@ -28,6 +23,9 @@ const SEARCH_FROM = 20;
  * nothing navigates. Reads the version from the session cache.
  */
 export default function BillTextContents() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const { key = '', version = '' } = useLocalSearchParams<{
     key: string;
     version?: string;
@@ -146,20 +144,24 @@ export default function BillTextContents() {
 }
 
 function Separator() {
+  const styles = useStyles();
+
   return <View style={styles.separator} />;
 }
 
-const styles = StyleSheet.create({
-  list: { flex: 1, backgroundColor: colors.paper },
-  row: {
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-    paddingVertical: rhythm.row,
-    paddingHorizontal: layout.screenMargin,
-  },
-  separator: {
-    height: hairline,
-    marginLeft: layout.screenMargin,
-    backgroundColor: colors.dividerSubtle,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    list: { flex: 1, backgroundColor: colors.paper },
+    row: {
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+      paddingVertical: rhythm.row,
+      paddingHorizontal: layout.screenMargin,
+    },
+    separator: {
+      height: hairline,
+      marginLeft: layout.screenMargin,
+      backgroundColor: colors.dividerSubtle,
+    },
+  }),
+);

@@ -15,6 +15,7 @@ import Person from '../src/features/Person';
 import Search from '../src/features/Search';
 import { pinned, slugs } from './pinned';
 
+import { PullRefresh } from '../src/features/people/PullRefresh';
 jest.mock('../src/api/runtime', () => ({
   apiClient: { get: jest.fn() },
   catalogs: {
@@ -172,7 +173,9 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
         refreshing: boolean;
         onRefresh: () => void;
       }>;
-    expect(control().type).toBe(RefreshControl);
+    // People and Parliament screens pass their own control, which draws the
+    // system one in the colours on screen on Android.
+    expect([RefreshControl, PullRefresh]).toContain(control().type);
     expect(control().props.refreshing).toBe(false);
     // Idle Search draws no suggestions, so no placeholder stands in for them
     // while they load (TestFlight build 32); the other screens show one.

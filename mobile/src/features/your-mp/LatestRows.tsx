@@ -14,7 +14,8 @@ import {
 } from '../../design/row-padding';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { openSource } from '../../navigation/external';
 import { shareSourceLink, trackShare } from '../../navigation/share';
 import { billRoute, personRoute } from '../../navigation/routes';
@@ -239,6 +240,8 @@ export function LatestRow({
   testID?: string;
   onPress?: () => void;
 }) {
+  const colors = useColors();
+
   const cellStyle = useRowCellStyle();
   const large = useAccessibilitySize();
   useRowInset(44);
