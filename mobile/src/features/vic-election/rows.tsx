@@ -140,7 +140,7 @@ export function SeatRow({
                     {d.member.name}
                   </Text>
                   {d.member.party ? (
-                    <PartyLabel party={d.member.party} nested />
+                    <PartyLabel party={d.member.party} nested neutralDot />
                   ) : null}
                 </View>
               )}

@@ -223,6 +223,7 @@ export function PartyLabel({
   compact = false,
   singleLine = false,
   prefix,
+  neutralDot = false,
 }: Omit<PartyContext, 'status'> & {
   status?: PartyStatus;
   dense?: boolean;
@@ -244,12 +245,21 @@ export function PartyLabel({
   /** Compact bill previews on Today. */
   singleLine?: boolean;
   prefix?: string;
+  /**
+   * Election material (Victorian election, until 6 pm on 28 November 2026):
+   * every party's dot is the same grey, ink-faint, as the web hub's
+   * `party-grey`. Colour would mark out the parties that have one from the
+   * rest. The party's name is unchanged.
+   */
+  neutralDot?: boolean;
 }) {
   const styles = useStyles();
+  const colors = useColors();
 
   const identity = partyIdentity(party);
   const scheme = useColorScheme();
-  const dot = partyDot(party, scheme === 'dark' ? 'dark' : 'light');
+  const partyColour = partyDot(party, scheme === 'dark' ? 'dark' : 'light');
+  const dot = partyColour && neutralDot ? colors.inkFaint : partyColour;
   const text = partyText({ party, status, formerly }, dense);
   const partyLinked = linked && (!!href || isPartyLabel(party));
   const previousLinked = linked && !!text.previous && isPartyLabel(formerly);
