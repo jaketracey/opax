@@ -88,7 +88,7 @@ export const vicCopy = {
     `No suburb, postcode or district matches “${q}”. Try a nearby suburb.`,
   findFailed: 'Places couldn’t be searched.',
   placesMissing:
-    'Suburbs and postcodes couldn’t be searched just now. Districts and members are shown.',
+    'Suburbs and postcodes couldn’t be searched just now. Districts and who last held them are shown.',
   found: (n: number) => (n ? `${n} places found` : 'No matches'),
   about: (s: string) =>
     `About this data: ${s.charAt(0).toLowerCase()}${s.slice(1)}`,
@@ -97,7 +97,7 @@ export const vicCopy = {
   formerly: (n: string) => `Called ${n} before 2022.`,
   created: 'First contested in 2022.',
   regionHead: (members: number, n: number) =>
-    `Upper house region with ${members === 5 ? 'five' : members} members and ${n} districts.`,
+    `Upper house region that elects ${members === 5 ? 'five' : members} members, with ${n} districts.`,
   candidates: 'Candidates',
   candidateGroup: (group: string, name?: string) =>
     `Group ${group}${name ? ` · ${name}` : ''}`,
@@ -124,8 +124,10 @@ export const vicCopy = {
   upper: (n: string) => `Upper house: ${n} Region`,
   upperDetail: (n: string, m: number) =>
     `Voters in ${n} also elect this region’s ${m === 5 ? 'five' : m} upper house members.`,
-  records: 'Members and their records',
-  memberList: 'Members',
+  records: 'Last members and their records',
+  // The fallback when the term's years cannot be read: nobody is a member
+  // of the Council while the Parliament's term has ended.
+  memberList: 'Last members',
   members: (a: string, b: string) => `Members, ${a} to ${b}`,
   memberSpeeches: (n: number, a: number, b: number) =>
     `${n} speeches, ${a}${a === b ? '' : ` to ${b}`}`,
