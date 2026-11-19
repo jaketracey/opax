@@ -446,10 +446,10 @@ const groupRank: Record<SittingGroup, number> = {
  * house is sitting.
  */
 export function sittingGroup(
-  p: Pick<PeopleRow, 'profile'> & Partial<Pick<PeopleRow, 'seats'>>,
+  p: Pick<PeopleRow, 'profile' | 'seats'>,
 ): SittingGroup {
   const status = p.profile.partyStatus;
-  const held = (p.seats ?? []).filter((s) => s.current);
+  const held = p.seats.filter((s) => s.current);
   return status === 'current'
     ? held.length && held.every((s) => s.ended)
       ? 'ended'
@@ -542,6 +542,11 @@ export interface PartyRow {
   speeches: number;
   /** Unique sitting members across federal, state and territory parliaments. */
   members: number;
+  /**
+   * People whose every seat for the party is in a house whose Parliament's
+   * term has ended for an election: its last members, never counted sitting.
+   */
+  last: number;
   money: Record<string, { total: number; source: string; asAt: string }>;
   total: number;
 }
@@ -573,7 +578,15 @@ export function partyRows(
     if (!p)
       rows.set(
         name,
-        (p = { key: name, name, speeches: 0, members: 0, money: {}, total: 0 }),
+        (p = {
+          key: name,
+          name,
+          speeches: 0,
+          members: 0,
+          last: 0,
+          money: {},
+          total: 0,
+        }),
       );
     return p;
   };
@@ -606,9 +619,13 @@ export function partyRows(
       r.speeches += p.speeches ?? 0;
     }
   for (const p of rows.values()) {
-    p.members = held.filter((m) =>
-      m.seats.some((s) => !s.ended && sameMemberParty(s.party, p.name)),
-    ).length;
+    // A person sits for the party where any seat they hold for it is in a
+    // house with members; otherwise they are one of its last members.
+    for (const m of held) {
+      const own = m.seats.filter((s) => sameMemberParty(s.party, p.name));
+      if (own.some((s) => !s.ended)) p.members++;
+      else if (own.length) p.last++;
+    }
     p.total =
       p.money.federal?.total ??
       Math.max(0, ...Object.values(p.money).map((m) => m.total));

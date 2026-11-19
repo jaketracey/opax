@@ -99,7 +99,7 @@ import {
   type Directory,
   type ProfileView,
 } from './your-mp/model';
-import { endedParliaments, type EndedTerm } from './your-mp/term-ended';
+import { endedParliaments, type EndedTerms } from './your-mp/term-ended';
 import { useIsMyMember } from './your-mp/useIsMyMember';
 import { savedSeatDirectory } from './your-mp/useSeat';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
@@ -163,7 +163,7 @@ export type Loaded = {
   /** The sitting House member's seat, for "Set … as my electorate". */
   seat: Electorate | null;
   /** Parliaments whose term has ended for an election (`endedParliaments`). */
-  ended?: ReadonlyMap<string, EndedTerm>;
+  ended?: EndedTerms;
 };
 type Load =
   | { status: 'loading' }

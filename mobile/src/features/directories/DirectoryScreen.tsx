@@ -67,6 +67,7 @@ import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { loadDirectory, type DirectoryRecord } from './data';
 import {
   ElectorateDirectoryRow,
+  EndedTermsContext,
   PartyDirectoryRow,
   PersonDirectoryRow,
   entryFor,
@@ -87,6 +88,7 @@ import {
   type PeopleRow,
 } from './model';
 import { directoryNotes } from './notes';
+import { endedParliaments } from '../your-mp/term-ended';
 import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const titles: Record<DirectoryKind, string> = {
@@ -290,6 +292,12 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
             ? matchingParties(record.parties, filters, query)
             : matchingElectorates(record.electorates, filters, query),
     [kind, record, filters, query],
+  );
+  // Houses with no members while their Parliament's term has ended for an
+  // election: the electorate rows name last members (`electorateLines`).
+  const endedTerms = useMemo(
+    () => endedParliaments(record?.electorates ?? []),
+    [record],
   );
   const sections = useMemo<Section[]>(
     () =>
@@ -523,45 +531,47 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
     ) : null;
   const path = `/subject/${kind}`;
   const list = (
-    <StatePageProvider refreshing={refreshing}>
-      <SectionList<Row, Section>
-        ref={listRef}
-        testID={`directory-${kind}-screen`}
-        style={styles.screen}
-        contentContainerStyle={[styles.content, foot]}
-        contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        automaticallyAdjustKeyboardInsets
-        refreshControl={
-          <PullRefresh refreshing={refreshing} onRefresh={refresh} />
-        }
-        sections={sections}
-        keyExtractor={rowKey}
-        renderItem={split ? renderSplitRow : renderRow}
-        renderSectionHeader={({ section }) => (
-          <SectionTitle section={section} />
-        )}
-        stickySectionHeadersEnabled
-        extraData={split ? selectedKey : undefined}
-        onViewableItemsChanged={adaptive ? onViewable : undefined}
-        // A row not yet measured: scroll near it; the next step lands on it.
-        onScrollToIndexFailed={({ index: at, averageItemLength }) =>
-          listRef.current?.getScrollResponder()?.scrollTo({
-            y: averageItemLength * at,
-            animated: animatedScroll(),
-          })
-        }
-        ItemSeparatorComponent={separator}
-        initialNumToRender={10}
-        maxToRenderPerBatch={8}
-        windowSize={7}
-        removeClippedSubviews={false}
-        ListHeaderComponent={statusHeader}
-        ListEmptyComponent={unavailable}
-        ListFooterComponent={footer}
-      />
-    </StatePageProvider>
+    <EndedTermsContext.Provider value={endedTerms}>
+      <StatePageProvider refreshing={refreshing}>
+        <SectionList<Row, Section>
+          ref={listRef}
+          testID={`directory-${kind}-screen`}
+          style={styles.screen}
+          contentContainerStyle={[styles.content, foot]}
+          contentInsetAdjustmentBehavior="automatic"
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          automaticallyAdjustKeyboardInsets
+          refreshControl={
+            <PullRefresh refreshing={refreshing} onRefresh={refresh} />
+          }
+          sections={sections}
+          keyExtractor={rowKey}
+          renderItem={split ? renderSplitRow : renderRow}
+          renderSectionHeader={({ section }) => (
+            <SectionTitle section={section} />
+          )}
+          stickySectionHeadersEnabled
+          extraData={split ? selectedKey : undefined}
+          onViewableItemsChanged={adaptive ? onViewable : undefined}
+          // A row not yet measured: scroll near it; the next step lands on it.
+          onScrollToIndexFailed={({ index: at, averageItemLength }) =>
+            listRef.current?.getScrollResponder()?.scrollTo({
+              y: averageItemLength * at,
+              animated: animatedScroll(),
+            })
+          }
+          ItemSeparatorComponent={separator}
+          initialNumToRender={10}
+          maxToRenderPerBatch={8}
+          windowSize={7}
+          removeClippedSubviews={false}
+          ListHeaderComponent={statusHeader}
+          ListEmptyComponent={unavailable}
+          ListFooterComponent={footer}
+        />
+      </StatePageProvider>
+    </EndedTermsContext.Provider>
   );
   return (
     <>

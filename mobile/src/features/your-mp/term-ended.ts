@@ -4,11 +4,24 @@ import { formFromIndex, termLine } from '../today/dissolution';
 type IndexRow = Pick<
   Electorate,
   'jurisdiction' | 'chamber' | 'state_code' | 'dissolved_for'
->;
-/** A seat as any record names it: the parliament and the house. */
-type Seat = { jurisdiction: string; chamber: string };
+> &
+  Partial<Pick<Electorate, 'electorate_id'>>;
+/**
+ * A seat as any record names it: the parliament and the house. An index row
+ * also carries its own `dissolved_for`; a people-catalogue seat carries the
+ * `electorate_id` of its index row.
+ */
+type Seat = {
+  jurisdiction: string;
+  chamber: string;
+  electorate_id?: string;
+  dissolved_for?: string | null;
+  state_code?: string;
+};
 
-const isCouncil = (chamber: string) => /_lc$|upper|council/i.test(chamber);
+/** A state upper house, by its chamber code ("vic_lc", "nsw_lc"). */
+export const isCouncil = (chamber: string) =>
+  /_lc$|upper|council/i.test(chamber);
 
 /**
  * Whether a parliament's upper house ends on the day its lower house does.
@@ -28,15 +41,23 @@ export function councilEndsWithAssembly(jurisdiction: string): boolean {
 export type EndedTerm = { electionDay: string; stateCode: string };
 
 /**
+ * The parliaments whose term has ended, by jurisdiction. `resumed` is the
+ * seats of those parliaments whose own index row says otherwise: a district
+ * whose `dissolved_for` is already null while other rows still carry the
+ * election day. Empty for an index whose rows all agree.
+ */
+export type EndedTerms = ReadonlyMap<string, EndedTerm> & {
+  readonly resumed?: ReadonlySet<string>;
+};
+
+/**
  * The parliaments whose term has ended for an election, by jurisdiction,
  * as the electorates index says it (`formFromIndex`): one entry while any
  * lower-house row of the jurisdiction carries an election day, none once
  * the result is loaded and the field is null, none from an index without
  * the field.
  */
-export function endedParliaments(
-  electorates: readonly IndexRow[],
-): ReadonlyMap<string, EndedTerm> {
+export function endedParliaments(electorates: readonly IndexRow[]): EndedTerms {
   const ended = new Map<string, EndedTerm>();
   for (const row of electorates) {
     if (row.dissolved_for == null || ended.has(row.jurisdiction)) continue;
@@ -47,21 +68,64 @@ export function endedParliaments(
         stateCode: row.state_code,
       });
   }
-  return ended;
+  const resumed = new Set<string>();
+  if (ended.size)
+    for (const row of electorates)
+      if (
+        row.electorate_id &&
+        ended.has(row.jurisdiction) &&
+        ownAnswer(row) === false
+      )
+        resumed.add(row.electorate_id);
+  return Object.assign(ended, { resumed });
+}
+
+/**
+ * What a seat's own index row says of its house: true while it carries an
+ * election day, false once it is null, undefined where the row has no field
+ * and so borrows its parliament's answer. A Council row whose Council ends
+ * with the Assembly always borrows: its null cannot mean its house sits
+ * while the Assembly's term has ended (`councilEndsWithAssembly`).
+ */
+function ownAnswer(seat: Seat): boolean | undefined {
+  if (seat.dissolved_for === undefined) return undefined;
+  if (formFromIndex(seat)?.kind === 'dissolved') return true;
+  return isCouncil(seat.chamber) && councilEndsWithAssembly(seat.jurisdiction)
+    ? undefined
+    : false;
 }
 
 /**
  * The ended term a seat belongs to, or null while its house has members: a
  * lower-house seat of an ended parliament, and a Council seat where the
  * Council ends with the Assembly (`councilEndsWithAssembly`).
+ *
+ * A seat's own index row decides where it speaks: the row passed in, by its
+ * `dissolved_for`, or the row a people-catalogue seat names by
+ * `electorate_id` (`resumed`). So a district whose result is loaded has a
+ * member again while other districts' rows still carry the election day.
+ * Only a row with no field of its own (the Council's) borrows the
+ * parliament's answer.
  */
-export function termEndedFor(
-  seat: Seat,
-  ended: ReadonlyMap<string, EndedTerm>,
-): EndedTerm | null {
+export function termEndedFor(seat: Seat, ended: EndedTerms): EndedTerm | null {
   if (seat.jurisdiction === 'federal') return null;
   const term = ended.get(seat.jurisdiction);
+  const own = ownAnswer(seat);
+  if (own === false) return null;
+  if (own) {
+    const form = formFromIndex(seat);
+    // The parliament's own entry where the row agrees with it, as before.
+    if (form?.kind === 'dissolved' && term?.electionDay === form.electionDay)
+      return term;
+    return form?.kind === 'dissolved'
+      ? {
+          electionDay: form.electionDay,
+          stateCode: seat.state_code ?? term?.stateCode ?? seat.jurisdiction,
+        }
+      : null;
+  }
   if (!term) return null;
+  if (seat.electorate_id && ended.resumed?.has(seat.electorate_id)) return null;
   return isCouncil(seat.chamber) && !councilEndsWithAssembly(seat.jurisdiction)
     ? null
     : term;

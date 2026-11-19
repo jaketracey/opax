@@ -26,7 +26,11 @@ import {
 import { nameKey } from './ids';
 import { personPartyFor } from './party-transforms';
 import { formatMoney } from '../design/format';
-import { termEndedFor, type EndedTerm } from '../features/your-mp/term-ended';
+import {
+  termEndedFor,
+  type EndedTerm,
+  type EndedTerms,
+} from '../features/your-mp/term-ended';
 export { resolveParty } from '../design/party';
 
 // Codes in the parliamentary roster, expanded for membership comparisons.
@@ -102,9 +106,9 @@ export function partyMembers(
     p.seats.filter((s) => !s.ended).map(row),
   );
   // Someone who also sits for the party in a house with members is sitting.
-  const last: PartyMember[] = held
+  const last: PartyEndedMember[] = held
     .filter((p) => p.seats.every((s) => s.ended))
-    .flatMap((p) => p.seats.map(row));
+    .flatMap((p) => p.seats.map((s) => ({ ...row(s), term: s.ended! })));
   const recorded: PartyMember[] = [];
   const sources = new Map<string, Manifest['sources'][number]>();
   for (const { profile } of held)
@@ -248,8 +252,6 @@ function* partyMemberProfiles(
   }
 }
 
-/** The parliaments whose term has ended for an election (`endedParliaments`). */
-export type EndedTerms = ReadonlyMap<string, EndedTerm>;
 type SittingSeat = PartyMember & { party: string };
 /** A seat the record calls current, and the ended term of its house, if any. */
 type HeldSeat = SittingSeat & { ended: EndedTerm | null };
@@ -353,6 +355,8 @@ export interface PartyMember {
   /** The label the record carries, when it is a former name of the party. */
   recordedAs?: string;
 }
+/** The last member for a seat in a house whose Parliament's term has ended. */
+export type PartyEndedMember = PartyMember & { term: EndedTerm };
 /** The record's former party name, as recorded, for a "Recorded as" line. */
 const recordedAs = (party: string | null | undefined) => {
   const former = formerPartyName(party);
