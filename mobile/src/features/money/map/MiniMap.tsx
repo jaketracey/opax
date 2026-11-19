@@ -4,12 +4,12 @@ import { StyleSheet } from 'react-native';
 import { PlainPressable as Pressable } from '../../../design/pressable';
 import { useDerivedValue, type SharedValue } from 'react-native-reanimated';
 import { SizedCanvas } from '../../../design/canvas';
-import { paletteFor } from '../../../design/palette';
 import { hairline, radii } from '../../../design/tokens';
 import { makeStyles, useColors } from '../../../design/use-colors';
 import type { Bounds, Viewport } from './camera';
 import type { Centre } from './layout';
 import type { MapModel } from './model';
+import { useMapTheme } from '../ported/palette';
 import { paintOverview } from './scene';
 import { recordPicture } from './skia-painter';
 
@@ -43,7 +43,7 @@ export function MiniMap({
   const colors = useColors();
   const styles = useStyles();
 
-  const palette = paletteFor('light');
+  const theme = useMapTheme();
   // The overview's own camera: the layout box fitted into the thumbnail.
   const scale = useMemo(() => {
     const bw = Math.max(1, bounds.maxX - bounds.minX);
@@ -120,7 +120,7 @@ export function MiniMap({
           y={frameY}
           width={frameW}
           height={frameH}
-          color={palette.ink}
+          color={theme.ink}
           style="stroke"
           strokeWidth={1.5}
         />

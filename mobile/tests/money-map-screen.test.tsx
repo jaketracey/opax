@@ -3,6 +3,7 @@ import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
 import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import { colors } from '../src/design/tokens';
+import { partyColors, partyColorsDark } from '../src/design/palette';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { apiClient } from '../src/api/runtime';
@@ -963,4 +964,53 @@ test('map actions send the action and how many filters are set, never the record
     /Labor|mineralogy|1000|donor:|party:/i,
   );
   act(() => r.unmount());
+});
+
+test('a system switch while the map is open builds its marks again in the new colours', async () => {
+  // Skia draws hex, so the model holds one appearance's colours. Were it
+  // kept across the switch, a dark page would show the light map's inks.
+  // The scheme is a store here, as it is on a device: only what reads it
+  // draws again, so the view the model is made from stays the same object.
+  const React = jest.requireActual<typeof import('react')>('react');
+  const Native =
+    jest.requireActual<typeof import('react-native')>('react-native');
+  let now: 'light' | 'dark' = 'light';
+  const readers = new Set<() => void>();
+  const watch = (changed: () => void) => {
+    readers.add(changed);
+    return () => void readers.delete(changed);
+  };
+  const scheme = jest
+    .spyOn(Native, 'useColorScheme')
+    .mockImplementation(() => React.useSyncExternalStore(watch, () => now));
+  const live = jest
+    .spyOn(Native.Appearance, 'getColorScheme')
+    .mockImplementation(() => now);
+  const turn = (next: 'light' | 'dark') =>
+    act(async () => {
+      now = next;
+      readers.forEach((changed) => changed());
+    });
+  const r = await render();
+  const light = stage().model;
+  expect(light.appearance).toBe('light');
+  const labor = (model: typeof light) =>
+    model.nodes.find((n: MapNode) => n.label === 'Labor')!;
+  expect(labor(light).colour).toBe(partyColors.labor);
+
+  await turn('dark');
+  const dark = stage().model;
+  expect(dark).not.toBe(light);
+  expect(dark.appearance).toBe('dark');
+  expect(dark.nodes.map((n: MapNode) => n.id)).toEqual(
+    light.nodes.map((n: MapNode) => n.id),
+  );
+  expect(labor(dark).colour).toBe(partyColorsDark.labor);
+
+  await turn('light');
+  expect(stage().model.appearance).toBe('light');
+  expect(labor(stage().model).colour).toBe(partyColors.labor);
+  scheme.mockRestore();
+  live.mockRestore();
+  await act(async () => r.unmount());
 });

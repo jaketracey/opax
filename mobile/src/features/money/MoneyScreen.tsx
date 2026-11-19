@@ -103,6 +103,7 @@ import {
   phoneSceneFloor,
 } from './map/regions';
 import { buildModel, nextAlongFlows, type MapModel } from './map/model';
+import { useMapTheme } from './ported/palette';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
 import { useMoneyFilters } from './MoneyFilters';
@@ -663,7 +664,14 @@ function MapMode({
   );
   const view = data?.view ?? null;
   const filters = data?.filters ?? null;
-  const model = useMemo(() => (view ? buildModel(view) : null), [view]);
+  // The model holds every colour the map draws, as hex for one appearance.
+  // Keyed on the theme, so a system switch builds the marks again in the
+  // new colours (the stage's pictures, names and legend all follow it).
+  const mapTheme = useMapTheme();
+  const model = useMemo(
+    () => (view ? buildModel(view, mapTheme) : null),
+    [view, mapTheme],
+  );
   // Map analytics: the action and how many filters are set, never which
   // filters, records or search text.
   const filterCount = data ? moneyFilterCount(data.graph, data.filters) : 0;

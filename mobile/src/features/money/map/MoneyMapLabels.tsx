@@ -11,6 +11,7 @@ import { Text } from '../../../design/primitives';
 import { motion } from '../../../design/tokens';
 import { makeStyles } from '../../../design/use-colors';
 import { clusterLabelOpacity, nameOpacity } from './camera';
+import { useMapTheme } from '../ported/palette';
 import type { LabelSlot } from './labels';
 
 /** The label box the de-overlap pass assumes, in points at the default size. */
@@ -38,7 +39,16 @@ const LabelText = memo(function LabelText({
   sub?: string;
 }) {
   const styles = useStyles();
-
+  // The halo is the page's own paper, which follows the system. Only the
+  // light sheet on a dark page (palette.ts DARK_MAP 'sheet') has a ground
+  // that is not the page's, and takes the sheet's colours instead.
+  const theme = useMapTheme();
+  const sheet = theme.sheet
+    ? {
+        halo: { textShadowColor: theme.surface },
+        soft: { color: theme.inkSoft },
+      }
+    : null;
   const variant = strong ? 'capsule' : 'footnote';
   // A paper halo keeps a name legible over the lines it sits on: the same
   // text in paper beneath, blurred a little, under the inked text.
@@ -49,7 +59,11 @@ const LabelText = memo(function LabelText({
         wordSafe
         maxFontSizeMultiplier={LABEL_MAX_SCALE}
         accessible={false}
-        style={[styles.underlay, styles.halo]}
+        style={[
+          styles.underlay,
+          styles.halo,
+          sheet ? [sheet.halo, { color: theme.surface }] : null,
+        ]}
       >
         {text}
       </Text>
@@ -58,7 +72,7 @@ const LabelText = memo(function LabelText({
         wordSafe
         maxFontSizeMultiplier={LABEL_MAX_SCALE}
         accessible={false}
-        style={[styles.halo, { color: ink }]}
+        style={[styles.halo, sheet?.halo, { color: ink }]}
       >
         {text}
       </Text>
@@ -69,7 +83,7 @@ const LabelText = memo(function LabelText({
           tone="inkSoft"
           maxFontSizeMultiplier={LABEL_MAX_SCALE}
           accessible={false}
-          style={styles.halo}
+          style={[styles.halo, sheet?.halo, sheet?.soft]}
         >
           {sub}
         </Text>

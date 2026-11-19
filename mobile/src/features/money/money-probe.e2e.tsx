@@ -8,7 +8,7 @@ import {
 } from 'react-native-reanimated';
 import { isE2E } from '../../design/environment';
 import { formatDisclosureYear } from '../../design/format';
-import { paletteFor } from '../../design/palette';
+import { useMapTheme } from './ported/palette';
 import { Button, Group } from '../../design/primitives';
 import type {
   CanvasRef,
@@ -78,9 +78,11 @@ export const useMoneyMapProbe: MoneyMapProbe = (
   enabled: boolean,
 ) => {
   const [pixels, setPixels] = useState(0);
+  const paper = useMapTheme().surface;
   useEffect(() => {
     if (!isE2E || !enabled) return;
-    const paper = paletteFor('light').paper;
+    // The map's own paper (hub centres and disc rims are drawn in it): on a
+    // dark map those are dark, and are not counted either.
     const pr = parseInt(paper.slice(1, 3), 16),
       pg = parseInt(paper.slice(3, 5), 16),
       pb = parseInt(paper.slice(5, 7), 16);
@@ -115,7 +117,7 @@ export const useMoneyMapProbe: MoneyMapProbe = (
       active = false;
       clearInterval(timer);
     };
-  }, [ref, enabled]);
+  }, [ref, enabled, paper]);
   return isE2E && pixels > 40
     ? `money-map-drawn-pixels-${pixels}`
     : 'money-map-canvas';
