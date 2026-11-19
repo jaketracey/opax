@@ -59,13 +59,13 @@ import {
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
 import {
-  colors,
   hairline,
   minimumTarget,
   radii,
   rhythm,
   textStyles,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import {
   barBacking,
   fixedPageBar,
@@ -103,10 +103,12 @@ import {
   phoneSceneFloor,
 } from './map/regions';
 import { buildModel, nextAlongFlows, type MapModel } from './map/model';
+import { useMapTheme } from './ported/palette';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
 import { useMoneyFilters } from './MoneyFilters';
-import { moneyPartyGroups, PartyMoneyRow } from './parts';
+import { moneyPartyGroups, PartyMoneyRow, raisedEdge } from './parts';
+import { useRefreshColours } from '../money-public/parts';
 import { moneyMode, type MoneyMode } from './screen-reader';
 import {
   donationsCaveat,
@@ -315,6 +317,8 @@ function sharePath(params: MoneyParams) {
  * `/filters/money`, which writes this screen's params live.
  */
 export default function MoneyScreen() {
+  const styles = useStyles();
+
   const params = useLocalSearchParams<MoneyParams>();
   const navigation = useNavigation();
   const router = useRouter();
@@ -559,6 +563,8 @@ export default function MoneyScreen() {
  * first frames of a cold start straight onto this page.
  */
 function PendingMode({ options }: { options: Record<string, unknown> }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.root} testID="money-pending">
       <RouteOptions options={options} />
@@ -612,6 +618,10 @@ function MapMode({
   hooks: React.ReactNode;
   offline: React.ReactNode;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+  const refreshColours = useRefreshColours();
+
   const setOptions = useSafeSetOptions();
   // List mode's title fades in by scroll and is hidden at rest; that hidden
   // title survived the switch to the map, which then had no title at all
@@ -634,7 +644,7 @@ function MapMode({
       ...fixedPageBar(plainClear, rail, colors.paper),
       headerTitle: barTitle,
     });
-  }, [setOptions, barTitle, rail, plainClear]);
+  }, [setOptions, barTitle, rail, plainClear, colors]);
   const navigation = useNavigation();
   const router = useRouter();
   const { regular } = useLayout();
@@ -654,7 +664,14 @@ function MapMode({
   );
   const view = data?.view ?? null;
   const filters = data?.filters ?? null;
-  const model = useMemo(() => (view ? buildModel(view) : null), [view]);
+  // The model holds every colour the map draws, as hex for one appearance.
+  // Keyed on the theme, so a system switch builds the marks again in the
+  // new colours (the stage's pictures, names and legend all follow it).
+  const mapTheme = useMapTheme();
+  const model = useMemo(
+    () => (view ? buildModel(view, mapTheme) : null),
+    [view, mapTheme],
+  );
   // Map analytics: the action and how many filters are set, never which
   // filters, records or search text.
   const filterCount = data ? moneyFilterCount(data.graph, data.filters) : 0;
@@ -1530,7 +1547,7 @@ function MapMode({
                   <RefreshControl
                     refreshing={refreshing}
                     onRefresh={refresh}
-                    tintColor={colors.navy}
+                    {...refreshColours}
                   />
                 }
                 testID="money-map-unavailable"
@@ -1662,6 +1679,10 @@ function ListMode({
   body: React.ReactNode;
   hooks: React.ReactNode;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+  const refreshColours = useRefreshColours();
+
   // The bar title fades in by scroll with no width at rest, so the back
   // button keeps its label (money-03), and truncates inside the bar items.
   const barTitleRef = useRef<View>(null);
@@ -1681,7 +1702,7 @@ function ListMode({
         ? barBacking(colors.paper)
         : { headerBackground: undefined }),
     });
-  }, [setOptions, rail, clear]);
+  }, [setOptions, rail, clear, colors]);
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />
@@ -1693,7 +1714,7 @@ function ListMode({
           <RefreshControl
             refreshing={refreshing}
             onRefresh={refresh}
-            tintColor={colors.navy}
+            {...refreshColours}
           />
         }
       >
@@ -1744,6 +1765,8 @@ function ListBody({
   view: MoneyGraph;
   jurisdiction: MoneyJurisdiction;
 }) {
+  const styles = useStyles();
+
   const graph = record.data;
   const column = useScreenColumn('wide');
   const donations = useMemo(
@@ -1934,38 +1957,51 @@ function ListBody({
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.paper },
-  section: { gap: rhythm.tight },
-  chrome: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
-  top: {
-    paddingHorizontal: rhythm.block,
-    paddingTop: rhythm.tight,
-    width: '100%',
-  },
-  topScroll: { flexGrow: 0, flexShrink: 1 },
-  cardCapped: { flexShrink: 1 },
-  cardScroll: { gap: rhythm.tight },
-  card: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    padding: rhythm.block,
-    gap: rhythm.tight,
-  },
-  // Floating under the card, at the head of the room between it and the
-  // panel, out of the column so the expanded panel keeps its share of the
-  // stage.
-  controls: { position: 'absolute', top: rhythm.block, right: rhythm.block },
-  unavailable: { flexGrow: 1, justifyContent: 'center', padding: rhythm.block },
-  // Laid out, never seen or read: it keeps the place of words still to come.
-  unseen: { opacity: 0 },
-  unseenRoom: { justifyContent: 'center' },
-  lineProbe: { position: 'absolute', left: 0, top: 0, opacity: 0 },
-  bandProbe: { position: 'absolute', left: 0, bottom: 0, width: 1, opacity: 0 },
-  grow: { flex: 1 },
-  panelHost: { width: '100%' },
-  panelRegular: { maxWidth: 480 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    root: { flex: 1, backgroundColor: colors.paper },
+    section: { gap: rhythm.tight },
+    chrome: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+    top: {
+      paddingHorizontal: rhythm.block,
+      paddingTop: rhythm.tight,
+      width: '100%',
+    },
+    topScroll: { flexGrow: 0, flexShrink: 1 },
+    cardCapped: { flexShrink: 1 },
+    cardScroll: { gap: rhythm.tight },
+    card: {
+      ...raisedEdge(colors),
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      padding: rhythm.block,
+      gap: rhythm.tight,
+    },
+    // Floating under the card, at the head of the room between it and the
+    // panel, out of the column so the expanded panel keeps its share of the
+    // stage.
+    controls: { position: 'absolute', top: rhythm.block, right: rhythm.block },
+    unavailable: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      padding: rhythm.block,
+    },
+    // Laid out, never seen or read: it keeps the place of words still to come.
+    unseen: { opacity: 0 },
+    unseenRoom: { justifyContent: 'center' },
+    lineProbe: { position: 'absolute', left: 0, top: 0, opacity: 0 },
+    bandProbe: {
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      width: 1,
+      opacity: 0,
+    },
+    grow: { flex: 1 },
+    panelHost: { width: '100%' },
+    panelRegular: { maxWidth: 480 },
+  }),
+);

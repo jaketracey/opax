@@ -41,7 +41,6 @@ import { useAdaptiveDevice } from '../../../design/adaptive';
 import { SizedCanvas } from '../../../design/canvas';
 import { useReservedRegions } from '../../../design/fold-area';
 import { placeClear } from '../../../design/fold';
-import { paletteFor } from '../../../design/palette';
 import { motion } from '../../../design/tokens';
 import type { MoneyGraph } from '../data';
 import { useMoneyMapPerf, useMoneyMapProbe } from '../money-probe';
@@ -84,6 +83,7 @@ import {
 import { MINI_HEIGHT, MINI_WIDTH, MiniMap } from './MiniMap';
 import type { MapModel } from './model';
 import { LABEL_HEIGHT, LABEL_WIDTH, MoneyMapLabels } from './MoneyMapLabels';
+import { useMapTheme } from '../ported/palette';
 import { paintEdges, paintFocus, paintNodes } from './scene';
 import { settleLayout } from './settle';
 import { recordPicture } from './skia-painter';
@@ -215,7 +215,11 @@ export function MoneyMap({
   const safeLeft = safe?.left ?? 0;
   const safeRight = safe?.right ?? 0;
   const regions = useReservedRegions();
-  const palette = paletteFor('light');
+  // The map's colours as hex, for the appearance on screen. The pictures
+  // below are recorded with them, so each is keyed on the theme: a system
+  // switch records them again (a picture kept from the other appearance
+  // would leave paper rims on a dark map).
+  const theme = useMapTheme();
   const window = useWindowDimensions();
   const [size, setSize] = useState({ width: 0, height: 0 });
   // The size the camera works from: the stage's, or the one held. The stage
@@ -276,21 +280,21 @@ export function MoneyMap({
       thinEdges: record((p) => paintEdges(p, model, at, 'thin')),
       thickEdges: record((p) => paintEdges(p, model, at, 'thick')),
       smallNodes: record((p) =>
-        paintNodes(p, model, at, 'small', palette.paper),
+        paintNodes(p, model, at, 'small', theme.surface),
       ),
       largeNodes: record((p) =>
-        paintNodes(p, model, at, 'large', palette.paper),
+        paintNodes(p, model, at, 'large', theme.surface),
       ),
     };
-  }, [settled, model, at, bounds, palette.paper]);
+  }, [settled, model, at, bounds, theme]);
   const focusPicture: SkPicture | null = useMemo(
     () =>
       focusIndex === null || !settled
         ? null
         : recordPicture(bounds, (p) =>
-            paintFocus(p, model, at, focusIndex, palette.ink, palette.paper),
+            paintFocus(p, model, at, focusIndex, theme.ink, theme.surface),
           ),
-    [settled, focusIndex, model, at, bounds, palette.ink, palette.paper],
+    [settled, focusIndex, model, at, bounds, theme],
   );
   const slots: LabelSlot[] = useMemo(() => {
     void bounds;
@@ -895,7 +899,13 @@ export function MoneyMap({
 
   return (
     <View
-      style={styles.stage}
+      // The fallback for dark (palette.ts DARK_MAP 'sheet'): the map keeps
+      // its light marks, on a sheet of light paper the stage paints.
+      style={
+        theme.sheet
+          ? [styles.stage, { backgroundColor: theme.surface }]
+          : styles.stage
+      }
       onLayout={(event) => {
         const { width, height } = event.nativeEvent.layout;
         setSize((previous) =>

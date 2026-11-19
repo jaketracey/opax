@@ -53,7 +53,7 @@ import {
   type SourceOriginal,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
@@ -85,6 +85,7 @@ import {
   type GrantRecipient,
 } from './organisation';
 import { moneyPartyGroups, PartyDot, PartyMoneyRow, rowCompact } from './parts';
+import { useRefreshColours } from '../money-public/parts';
 import {
   bothRegistersCaveat,
   filtersFromParams,
@@ -187,6 +188,8 @@ function Page({
   onRefresh?: () => void;
   children: ReactNode;
 }) {
+  const refreshColours = useRefreshColours();
+
   const titleRef = useRef<View>(null);
   const scrollTitle = useTitleOnScroll(titleRef, title);
   return (
@@ -207,7 +210,7 @@ function Page({
             <RefreshControl
               refreshing={!!refreshing}
               onRefresh={onRefresh}
-              tintColor={colors.navy}
+              {...refreshColours}
             />
           ) : undefined
         }

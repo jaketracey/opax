@@ -35,6 +35,7 @@ import {
   moneyCitation,
   readableDates,
   recordSource,
+  useRefreshColours,
 } from './parts';
 import { privateNote, unnamedRecipient, unnamedSupplier } from './privacy';
 import { loadRecipientGrant } from './recipient-grant';
@@ -716,6 +717,7 @@ export default function MoneyItem() {
 }
 
 function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
+  const refreshColours = useRefreshColours();
   const params = itemParams(raw);
   const key = JSON.stringify(params);
   const load = useCallback(
@@ -751,6 +753,7 @@ function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
           <RefreshControl
             refreshing={status.refreshing}
             onRefresh={status.refresh}
+            {...refreshColours}
           />
         }
       >

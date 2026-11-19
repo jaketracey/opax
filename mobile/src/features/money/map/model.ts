@@ -1,6 +1,11 @@
-import { paletteFor } from '../../../design/palette';
 import type { MoneyGraph, MoneyNode } from '../data';
-import { clusterColour } from '../ported/palette';
+import {
+  clusterColour,
+  mapTheme,
+  nodeColour,
+  type MapAppearance,
+  type MapTheme,
+} from '../ported/palette';
 import { industryLabel } from '../records';
 import { moneyFlowType } from '../view';
 import {
@@ -12,7 +17,6 @@ import {
   PUBLIC_MONEY,
   publicEdgeWidth,
 } from './scales';
-import { partyDot } from '../../../design/party';
 
 /**
  * The map's model: the graph as marks. Every number here is the record's
@@ -64,6 +68,8 @@ export interface MapCluster {
   nodes: number[];
 }
 export interface MapModel {
+  /** The appearance the colours were chosen for: a model is one theme's marks. */
+  appearance: MapAppearance;
   nodes: MapNode[];
   edges: MapEdge[];
   clusters: MapCluster[];
@@ -112,29 +118,34 @@ export function clusterLabel(key: string) {
  * The model for a view (`moneyView`). Nodes outside the view are not in it;
  * the layout keeps every node of the full graph, so switching a filter never
  * moves a node, only shows or hides it.
+ *
+ * Every colour is chosen here, for one theme (`useMapTheme()`): the scene,
+ * the names and the legend all draw from the model, so a model built again
+ * for the new theme is the whole of a live switch.
  */
-export function buildModel(view: MoneyGraph): MapModel {
-  const palette = paletteFor('light');
+export function buildModel(
+  view: MoneyGraph,
+  theme: MapTheme = mapTheme('light'),
+): MapModel {
+  const { appearance } = theme;
   const sourceById = new Map(view.nodes.map((n) => [n.id, n]));
   const nodes: MapNode[] = view.nodes.map((n, index) => {
     const cluster = clusterOf(n);
     const kind: MapNodeKind =
       n.kind === 'party' ? 'party' : n.kind === 'grantor' ? 'hub' : 'donor';
+    // A party's disc takes its own colour (the app's party dots; TestFlight
+    // AA8AR3Xv). Labels keep the neutral ink, and the largest parties are
+    // named, so colour is never the only cue.
     const colour =
-      kind === 'hub'
-        ? (n.colour ?? palette.moneyInk)
-        : kind === 'party'
-          ? // A party's disc takes its own colour (the app's party dots;
-            // TestFlight AA8AR3Xv). Labels keep the neutral ink, and the
-            // largest parties are named, so colour is never the only cue.
-            (partyDot(n.label) ?? clusterColour(PARTIES).colour)
-          : (n.colour ?? clusterColour(n.group).colour);
+      kind === 'hub' && !n.colour
+        ? theme.moneyInk
+        : nodeColour({ ...n, kind }, appearance);
     const ink =
       kind === 'hub'
-        ? palette.moneyInk
+        ? theme.moneyInk
         : kind === 'party'
-          ? clusterColour(PARTIES).ink
-          : clusterColour(n.group).ink;
+          ? clusterColour(PARTIES, appearance).ink
+          : clusterColour(n.group, appearance).ink;
     return {
       index,
       id: n.id,
@@ -213,11 +224,16 @@ export function buildModel(view: MoneyGraph): MapModel {
       key,
       label: clusterLabel(key),
       colour:
-        key === PUBLIC_MONEY ? palette.moneyInk : clusterColour(key).colour,
-      ink: key === PUBLIC_MONEY ? palette.moneyInk : clusterColour(key).ink,
+        key === PUBLIC_MONEY
+          ? theme.moneyInk
+          : clusterColour(key, appearance).colour,
+      ink:
+        key === PUBLIC_MONEY
+          ? theme.moneyInk
+          : clusterColour(key, appearance).ink,
       nodes: members,
     }));
-  return { nodes, edges, clusters, byId, flows, totals };
+  return { appearance, nodes, edges, clusters, byId, flows, totals };
 }
 
 /** The other end of an edge from a node. */

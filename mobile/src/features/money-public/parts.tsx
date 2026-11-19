@@ -2,6 +2,7 @@ import { type Href } from 'expo-router';
 import {
   useCallback,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
   type Ref,
@@ -38,7 +39,8 @@ import {
   Skeleton,
   StatePageProvider,
 } from '../../design/states';
-import { colors, hairline, layout, rhythm } from '../../design/tokens';
+import { hairline, layout, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
@@ -329,6 +331,8 @@ export function TitleAlias({
   title: string;
   testID: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View
       accessible={false}
@@ -375,6 +379,8 @@ export function MoneyStatus({
   };
   testID: string;
 }) {
+  const styles = useStyles();
+
   const { record, error } = status;
   if (record)
     return record.stale && !record.staleReason ? (
@@ -436,6 +442,23 @@ export function MoneyStatus({
  * rows follow with inset separators; then the footer rows. No "End of
  * record": the `*-end` view is 1 pt, kept for flows.
  */
+/**
+ * A pull to refresh in the colours on screen. iOS takes the tint; Android
+ * ignores it and takes the arrow and its disc (white by default, which
+ * stayed white on a dark page).
+ */
+export function useRefreshColours() {
+  const colors = useColors();
+  return useMemo(
+    () => ({
+      tintColor: colors.navy,
+      colors: [colors.navy],
+      progressBackgroundColor: colors.raised,
+    }),
+    [colors],
+  );
+}
+
 export function MoneyList<T>({
   rows,
   rowKey,
@@ -477,6 +500,9 @@ export function MoneyList<T>({
    */
   largeTitle?: boolean;
 }) {
+  const styles = useStyles();
+  const refreshColours = useRefreshColours();
+
   const column = useScreenColumn('readable');
   const foot = useFloatingBarFoot();
   // Under the clear bar UIKit's soft edge alone left rows printed through
@@ -532,7 +558,11 @@ export function MoneyList<T>({
           windowSize={7}
           removeClippedSubviews={false}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={refresh}
+              {...refreshColours}
+            />
           }
           ListHeaderComponent={
             <RegionProvider value={column.inner}>
@@ -572,6 +602,8 @@ export function MoneyList<T>({
   );
 }
 function Separator() {
+  const styles = useStyles();
+
   return <View style={styles.separator} />;
 }
 /** A list's first page: ten rows. */
@@ -586,23 +618,25 @@ export function sourceIndex(rows: number, columns = 1): number {
   return last - (last % columns);
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.section,
-  },
-  header: { paddingBottom: rhythm.tight },
-  footer: { paddingTop: rhythm.block },
-  separator: { height: hairline, backgroundColor: colors.dividerSubtle },
-  rule: {
-    height: hairline,
-    backgroundColor: colors.dividerSubtle,
-    marginTop: -rhythm.block,
-    marginBottom: rhythm.block,
-  },
-  end: { height: 1 },
-  skeleton: { gap: rhythm.block },
-  alias: { height: 0, width: 0, opacity: 0, overflow: 'hidden' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: {
+      paddingHorizontal: layout.screenMargin,
+      paddingTop: rhythm.block,
+      paddingBottom: rhythm.section,
+    },
+    header: { paddingBottom: rhythm.tight },
+    footer: { paddingTop: rhythm.block },
+    separator: { height: hairline, backgroundColor: colors.dividerSubtle },
+    rule: {
+      height: hairline,
+      backgroundColor: colors.dividerSubtle,
+      marginTop: -rhythm.block,
+      marginBottom: rhythm.block,
+    },
+    end: { height: 1 },
+    skeleton: { gap: rhythm.block },
+    alias: { height: 0, width: 0, opacity: 0, overflow: 'hidden' },
+  }),
+);

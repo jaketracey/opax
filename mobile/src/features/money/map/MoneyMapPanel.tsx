@@ -3,6 +3,7 @@ import {
   donorAssociated,
   donorAssociatedTo,
 } from '../../../api/associated';
+import { raisedEdge } from '../parts';
 import { AssociatedEntityLabel } from '../../../design/AssociatedEntityLabel';
 import type { Href } from 'expo-router';
 import {
@@ -49,13 +50,13 @@ import {
 import { LoadingStatus } from '../../../design/states';
 import { symbols } from '../../../design/symbols';
 import {
-  colors,
   hairline,
   minimumTarget,
   motion,
   radii,
   rhythm,
 } from '../../../design/tokens';
+import { makeStyles } from '../../../design/use-colors';
 import { useRecordLink } from '../../../navigation/record-link';
 import { RowOpenListener } from '../../../design/row-link';
 import { moneyMapEntityRoute } from '../record-routes';
@@ -198,6 +199,8 @@ export function MoneyMapPanel({
   /** A record opened from the panel (analytics only; never which). */
   onOpenRecord?: () => void;
 }) {
+  const styles = useStyles();
+
   const reduced = useReduceMotion();
   const entityRoute = focus
     ? moneyMapEntityRoute(focus.node, focus.record)
@@ -599,79 +602,82 @@ export function MoneyMapPanel({
 const HANDLE = 20;
 /** How long after the reader's action a new height still glides (ms). */
 const PANEL_GLIDE_WINDOW = 600;
-const styles = StyleSheet.create({
-  panel: {
-    backgroundColor: colors.raised,
-    borderTopLeftRadius: radii.container,
-    borderTopRightRadius: radii.container,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderBottomWidth: 0,
-    borderColor: colors.dividerSubtle,
-    overflow: 'hidden',
-  },
-  handleRow: {
-    height: HANDLE,
-    minHeight: HANDLE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // Preserve the strip's layout. The panel clips any target extension above
-    // it; a full target needs a design change (SCREEN_A11Y.md).
-    paddingVertical: (minimumTarget - HANDLE) / 2,
-    marginVertical: -((minimumTarget - HANDLE) / 2),
-    zIndex: 1,
-  },
-  handle: {
-    width: 36,
-    height: 5,
-    borderRadius: 3,
-    borderCurve: 'continuous',
-    backgroundColor: colors.dividerDefault,
-  },
-  content: {
-    paddingHorizontal: rhythm.block,
-    // Air under the handle, so a figure never crowds it.
-    paddingTop: rhythm.tight,
-    paddingBottom: rhythm.block,
-    gap: rhythm.block,
-  },
-  block: { gap: rhythm.tight },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  grow: { flex: 1, gap: 2 },
-  entityLink: {
-    flex: 1,
-    minHeight: minimumTarget,
-    minWidth: minimumTarget,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  pressed: { opacity: 0.6 },
-  restRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    // The figures share one top line whatever their captions wrap to.
-    alignItems: 'flex-start',
-    gap: rhythm.block,
-  },
-  // The figures share the row and the Legend button hugs its end; only a
-  // large type size wraps them.
-  figure: { gap: 2, flexGrow: 1, flexShrink: 1 },
-  legendButton: { marginLeft: 'auto', alignSelf: 'center' },
-  // Laid out, never seen: it keeps the place of a figure still to come.
-  unseen: { opacity: 0 },
-  bone: {
-    position: 'absolute',
-    top: 4,
-    bottom: 4,
-    left: 0,
-    width: 96,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    panel: {
+      ...raisedEdge(colors),
+      backgroundColor: colors.raised,
+      borderTopLeftRadius: radii.container,
+      borderTopRightRadius: radii.container,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderBottomWidth: 0,
+      borderColor: colors.dividerSubtle,
+      overflow: 'hidden',
+    },
+    handleRow: {
+      height: HANDLE,
+      minHeight: HANDLE,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // Preserve the strip's layout. The panel clips any target extension above
+      // it; a full target needs a design change (SCREEN_A11Y.md).
+      paddingVertical: (minimumTarget - HANDLE) / 2,
+      marginVertical: -((minimumTarget - HANDLE) / 2),
+      zIndex: 1,
+    },
+    handle: {
+      width: 36,
+      height: 5,
+      borderRadius: 3,
+      borderCurve: 'continuous',
+      backgroundColor: colors.dividerDefault,
+    },
+    content: {
+      paddingHorizontal: rhythm.block,
+      // Air under the handle, so a figure never crowds it.
+      paddingTop: rhythm.tight,
+      paddingBottom: rhythm.block,
+      gap: rhythm.block,
+    },
+    block: { gap: rhythm.tight },
+    titleRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    grow: { flex: 1, gap: 2 },
+    entityLink: {
+      flex: 1,
+      minHeight: minimumTarget,
+      minWidth: minimumTarget,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    pressed: { opacity: 0.6 },
+    restRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      // The figures share one top line whatever their captions wrap to.
+      alignItems: 'flex-start',
+      gap: rhythm.block,
+    },
+    // The figures share the row and the Legend button hugs its end; only a
+    // large type size wraps them.
+    figure: { gap: 2, flexGrow: 1, flexShrink: 1 },
+    legendButton: { marginLeft: 'auto', alignSelf: 'center' },
+    // Laid out, never seen: it keeps the place of a figure still to come.
+    unseen: { opacity: 0 },
+    bone: {
+      position: 'absolute',
+      top: 4,
+      bottom: 4,
+      left: 0,
+      width: 96,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+  }),
+);

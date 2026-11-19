@@ -63,8 +63,12 @@ export function labelSlots(
       kind,
       text: node.label,
       ...(associated ? { sub: associated } : {}),
-      // A party's name is set in its colour, darkened to read on paper.
-      ink: node.kind === 'party' ? partyMapColour(node.label).ink : node.ink,
+      // A party's name is set in its colour, as an ink that reads on the
+      // map's surface: darkened for paper, lightened for dark.
+      ink:
+        node.kind === 'party'
+          ? partyMapColour(node.label, model.appearance).ink
+          : node.ink,
       x: p.x,
       y: p.y,
       r: clearRim(model, at, index),

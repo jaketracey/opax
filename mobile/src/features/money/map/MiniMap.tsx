@@ -1,14 +1,16 @@
 import { Group, Picture, Rect } from '@shopify/react-native-skia';
+import { raisedEdge } from '../parts';
 import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { PlainPressable as Pressable } from '../../../design/pressable';
 import { useDerivedValue, type SharedValue } from 'react-native-reanimated';
 import { SizedCanvas } from '../../../design/canvas';
-import { paletteFor } from '../../../design/palette';
-import { colors, hairline, radii } from '../../../design/tokens';
+import { hairline, radii } from '../../../design/tokens';
+import { makeStyles, useColors } from '../../../design/use-colors';
 import type { Bounds, Viewport } from './camera';
 import type { Centre } from './layout';
 import type { MapModel } from './model';
+import { useMapTheme } from '../ported/palette';
 import { paintOverview } from './scene';
 import { recordPicture } from './skia-painter';
 
@@ -39,7 +41,10 @@ export function MiniMap({
   viewport: Viewport;
   onJump: (x: number, y: number) => void;
 }) {
-  const palette = paletteFor('light');
+  const colors = useColors();
+  const styles = useStyles();
+
+  const theme = useMapTheme();
   // The overview's own camera: the layout box fitted into the thumbnail.
   const scale = useMemo(() => {
     const bw = Math.max(1, bounds.maxX - bounds.minX);
@@ -116,7 +121,7 @@ export function MiniMap({
           y={frameY}
           width={frameW}
           height={frameH}
-          color={palette.ink}
+          color={theme.ink}
           style="stroke"
           strokeWidth={1.5}
         />
@@ -125,15 +130,18 @@ export function MiniMap({
   );
 }
 
-const styles = StyleSheet.create({
-  frame: {
-    width: MINI_WIDTH,
-    height: MINI_HEIGHT,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    backgroundColor: colors.raised,
-    overflow: 'hidden',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    frame: {
+      width: MINI_WIDTH,
+      height: MINI_HEIGHT,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      ...raisedEdge(colors),
+      backgroundColor: colors.raised,
+      overflow: 'hidden',
+    },
+  }),
+);

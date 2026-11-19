@@ -279,6 +279,7 @@ describe('nextAlongFlows', () => {
     }) satisfies MapEdge;
   const edges = [edge(0, 0, 1, 500), edge(1, 0, 2, 100), edge(2, 3, 1, 300)];
   const small: MapModel = {
+    appearance: 'light',
     nodes: [0, 1, 2, 3].map(node),
     edges,
     clusters: [],

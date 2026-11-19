@@ -19,7 +19,8 @@ import {
 } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading, Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { ApiError } from '../../api/errors';
 import { electorateRoute } from '../../navigation/routes/your-mp';
 import {
@@ -41,6 +42,7 @@ import {
   noMoneyBar,
   readableDates,
   recordSource,
+  useRefreshColours,
 } from './parts';
 import type { Href } from 'expo-router';
 
@@ -71,6 +73,7 @@ type Destination = {
  * excerpts that name it.
  */
 export default function Connection() {
+  const refreshColours = useRefreshColours();
   const { id = '', name: routeName } = useLocalSearchParams<{
     id: string;
     name?: string;
@@ -131,6 +134,7 @@ export default function Connection() {
               index.refresh();
               excerpts.refresh();
             }}
+            {...refreshColours}
           />
         }
       >
@@ -254,6 +258,8 @@ const MORE_SLOP = { top: 12, bottom: 12, left: 8, right: 8 };
  * (the shard carries no document slug).
  */
 function Excerpt({ excerpt, index }: { excerpt: ExcerptData; index: number }) {
+  const styles = useStyles();
+
   const text = passageText(excerpt.text);
   const [open, setOpen] = useState(false);
   const [long, setLong] = useState(text.length > LONG_PASSAGE);
@@ -384,8 +390,10 @@ function useDestinations(
   return found;
 }
 
-const styles = StyleSheet.create({
-  excerpt: { gap: rhythm.line, paddingVertical: rhythm.tight },
-  match: { backgroundColor: colors.navyWash },
-  more: { alignSelf: 'flex-start' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    excerpt: { gap: rhythm.line, paddingVertical: rhythm.tight },
+    match: { backgroundColor: colors.navyWash },
+    more: { alignSelf: 'flex-start' },
+  }),
+);

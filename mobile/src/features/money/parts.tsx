@@ -6,6 +6,8 @@ import {
 } from 'react-native';
 import type { Href } from 'expo-router';
 import { LinkRow } from '../../design/primitives';
+import { hairline } from '../../design/tokens';
+import type { Colors } from '../../design/use-colors';
 import { partyDot } from '../../design/party';
 import { partyDotSize } from '../../design/people';
 import { byPartyGroup, partyGroup } from '../../design/party-groups';
@@ -14,6 +16,20 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../../design/format';
+
+/**
+ * The dark edge of a raised surface: the `raisedOutline` hairline the
+ * shared cards draw (design/card.tsx). Clear in light, so nothing moves or
+ * changes there; in dark it is what separates a raised sheet from the page
+ * and from the map, where no shadow reads.
+ */
+export const raisedEdge = (colors: Colors) =>
+  ({
+    outlineWidth: hairline,
+    outlineOffset: -hairline,
+    outlineStyle: 'solid',
+    outlineColor: colors.raisedOutline,
+  }) as const;
 
 /** A party's colour dot, drawn only (the row says the party). */
 export function PartyDot({ party }: { party: string }) {
