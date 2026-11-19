@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import type { PartyPageRecord } from '../api/catalogs';
 import { nameKey } from '../api/ids';
-import type { PartyMember } from '../api/party-page';
+import type { PartyLastMembers, PartyMember } from '../api/party-page';
 import { apiClient, catalogs, portraits } from '../api/runtime';
 import { useAccessibilitySize, useReduceMotion } from '../design/accessibility';
 import { useLayout } from '../design/adaptive';
@@ -96,6 +96,8 @@ import { ProfileHeader } from './people/ProfileHeader';
 import { MoreFromRecord } from './people/Sections';
 import { SurfaceGrid } from './today/SurfaceGrid';
 import { profileGrid } from './split/grid';
+import { parliamentNames } from './methods/copy';
+import { endedTermLine, lastMemberFor } from './your-mp/term-ended';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 const partyArrival = (v: unknown): PartySection | undefined =>
@@ -504,10 +506,20 @@ function PartyContent({
   // In one column Receipts follows Members within a screen, so its total is
   // said there once, not also as a tile above it.
   const receiptsTile = layout.regular;
+  // Nobody sitting, and members whose house's term has ended for an
+  // election: the figure is the last members, never "0 sitting members".
+  const lastCount = members ? lastMemberCount(members.last) : 0;
+  const lastOnly = !!members && !members.currentCount && lastCount > 0;
   if (members && view.members.status !== 'error' && !named)
     tiles.push({
-      value: formatCount(members.currentCount),
-      label: members.currentCount === 1 ? 'sitting member' : 'sitting members',
+      value: formatCount(lastOnly ? lastCount : members.currentCount),
+      label: lastOnly
+        ? lastCount === 1
+          ? 'last member'
+          : 'last members'
+        : members.currentCount === 1
+          ? 'sitting member'
+          : 'sitting members',
       onPress: () => jump('members'),
       testID: 'party-figure-members',
     });
@@ -570,8 +582,12 @@ function PartyContent({
         view.members.data
           ? {
               label: 'See all',
-              accessibilityLabel: `See all ${counted(view.members.data.currentCount, `${label} member`)}`,
-              href: partyMembersRoute(label),
+              // With nobody sitting, the sitting filter would open an empty
+              // list beside the last members named here.
+              accessibilityLabel: lastOnly
+                ? `See all ${label} members`
+                : `See all ${counted(view.members.data.currentCount, `${label} member`)}`,
+              href: partyMembersRoute(label, !lastOnly),
               testID: 'party-members-all',
             }
           : undefined
@@ -608,6 +624,9 @@ function PartyContent({
               testID="party-current-count"
             />
           )}
+          {data.last.map((group) => (
+            <LastMembers key={group.jurisdiction} group={group} label={label} />
+          ))}
 
           {data.recorded.length ? (
             <Disclosure
@@ -1006,6 +1025,66 @@ function NamedMembers({
           testDrawnName
         />
       ))}
+    </View>
+  );
+}
+
+const lastMemberCount = (groups: readonly PartyLastMembers[]) =>
+  groups.reduce((n, g) => n + g.count, 0);
+
+/** "2 last members of the Victorian Parliament". */
+export const lastMembersTitle = (group: PartyLastMembers) =>
+  `${counted(group.count, 'last member')} of the ${
+    parliamentNames[group.jurisdiction] ?? 'Parliament'
+  }`;
+
+/**
+ * A party's members of a parliament whose term has ended for an election:
+ * a counted row under the sitting members, with the term line Your MP uses.
+ * It opens Parliamentarians for the party with the sitting filter off, where
+ * they stand under "Term ended for an election". A small party's are named
+ * here, never among the sitting members.
+ */
+function LastMembers({
+  group,
+  label,
+}: {
+  group: PartyLastMembers;
+  label: string;
+}) {
+  const title = lastMembersTitle(group);
+  const detail = endedTermLine(group.term);
+  const people = uniqueMembers(group.members);
+  return (
+    <View testID={`party-last-${group.jurisdiction}`}>
+      <LinkRow
+        title={title}
+        detail={detail}
+        href={partyMembersRoute(label, false)}
+        accessibilityLabel={`${title}. ${detail}`}
+        accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
+        testID={`party-last-count-${group.jurisdiction}`}
+      />
+      {group.count <= NAMED_MEMBERS && people.length === group.count
+        ? people.map((member) => (
+            <PersonRow
+              key={member.slug}
+              name={member.name}
+              portrait={
+                <CachedPortrait name={member.name} slug={member.slug} />
+              }
+              place={lastMemberFor(
+                [member.place, chamberName(member.chamber, member.jurisdiction)]
+                  .filter(Boolean)
+                  .join(', '),
+              )}
+              detail={recordedAs(member.recordedAs)}
+              href={personRoute(member.slug, member.name)}
+              testID={`party-last-${member.slug}`}
+              testDrawnName
+            />
+          ))
+        : null}
     </View>
   );
 }

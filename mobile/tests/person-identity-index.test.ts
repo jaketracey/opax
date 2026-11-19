@@ -117,6 +117,8 @@ test.each(
       current,
       recorded,
       currentCount: current.length,
+      // No ended parliaments are passed: nobody is a last member.
+      last: [],
     });
   },
 );

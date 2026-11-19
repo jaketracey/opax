@@ -245,6 +245,52 @@ test.each([
   },
 );
 
+describe('while the Victorian Parliament’s term has ended for an election', () => {
+  const dated = (value: string | null) =>
+    partyRows(
+      {
+        manifest: record(manifest),
+        roster: record(roster),
+        people: record(people),
+        slugs: record(slugs),
+        electorates: record({
+          ...index,
+          electorates: index.electorates.map((s) =>
+            s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+          ),
+        }),
+      },
+      {},
+    );
+  test.each([
+    ['2026-11-28', 'Labor', '124 sitting members'],
+    ['2026-11-28', 'Legalise Cannabis Victoria', '2 last members'],
+    ['2026-11-28', 'Animal Justice Party', '1 last member'],
+    [null, 'Labor', '193 sitting members'],
+    [null, 'Legalise Cannabis Victoria', '2 sitting members'],
+    [null, 'Animal Justice Party', '1 sitting member'],
+  ])(
+    'the Parties line never counts a last member as sitting (dissolved_for %s): %s, %s',
+    async (value, label, detail) => {
+      let row!: TestRenderer.ReactTestRenderer;
+      await act(async () => {
+        row = TestRenderer.create(
+          <PartyDirectoryRow
+            item={dated(value).find((p) => p.name === label)!}
+          />,
+        );
+      });
+      expect(strings(row.root)).toContain(detail);
+      expect(
+        row.root.findAll(
+          (n) => n.props.accessibilityLabel === `${label}, ${detail}`,
+        ).length,
+      ).toBeGreaterThan(0);
+      await act(async () => row.unmount());
+    },
+  );
+});
+
 test('sitting members lead under sticky sections; rows say party then place', async () => {
   const r = await open();
   const list = r.root.find(

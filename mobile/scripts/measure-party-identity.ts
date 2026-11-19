@@ -79,7 +79,7 @@ const directory = (join: typeof joinPerson) =>
     const args = snapshots();
     return () => joins(join, all, args);
   });
-const party = (members: typeof partyMembers) =>
+const party = (members: typeof oldMembers) =>
   samples(() => {
     const [s, r, p, m] = snapshots();
     return () => members('Labor', r, p, s, m);
@@ -100,7 +100,7 @@ const search = (resolve: typeof personSlugForResult) =>
       for (const row of rows) resolve(row, s, interests, p);
     };
   });
-const foldCalls = (members: typeof partyMembers) => {
+const foldCalls = (members: typeof oldMembers) => {
   const [s, r, p, m] = snapshots();
   const original = String.prototype.toLocaleLowerCase;
   let calls = 0;

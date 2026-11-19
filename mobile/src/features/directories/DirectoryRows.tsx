@@ -141,7 +141,11 @@ export const PersonDirectoryRow = memo(function PersonDirectoryRow(
   );
 });
 
-/** "{n} sitting members" under the party's dot and full name; no money. */
+/**
+ * "{n} sitting members" under the party's dot and full name; no money.
+ * "{n} last members" where the party's only members sat in a house whose
+ * term has ended.
+ */
 export const PartyDirectoryRow = memo(function PartyDirectoryRow({
   item,
   selected,
@@ -149,7 +153,12 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
 }: RowProps<PartyRow>) {
   const slug = partySlug(item.name);
   const follow = useRowFollow('party', slug, item.name);
-  const detail = counted(item.members, 'sitting member');
+  // Nobody sitting, and members whose house's term has ended for an
+  // election: they are counted as last members, never as sitting ones.
+  const detail =
+    !item.members && item.last
+      ? counted(item.last, 'last member')
+      : counted(item.members, 'sitting member');
   return (
     <LinkRow
       title=""
