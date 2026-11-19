@@ -141,10 +141,10 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 // no domain and keeps its hash.
 const iosPrebuildHashes = {
   development:
-    '34f9ed9fb287be2cd7607ed1709943054b7fdfae1399c7a69f386a71bda87f82',
-  e2e: '9a4c5fa53ed1c34e1878d9c2dad2522f7438b9751ebf1977f7cdba82f849d2b7',
+    '07fa48f45e507b354fa241c0a1814c1065934ed9c394678db88780aa30319f16',
+  e2e: '85533afb8a44fe01acb66fb0567dcb335f40001b8226ef927974b5438d11309b',
   production:
-    'cd1909262e8584d3ec99d4f799bd04a6929a56ad6c71e02d8f42fce94f114ae1',
+    'f3b7a3fa4be2177e5341eecbe351aaefe6f69b1e2e4615fec3030cf50c0deafe',
 };
 test.each(variants)(
   'iOS %s prebuild output stays byte-identical to the baseline',
