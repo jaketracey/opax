@@ -22,6 +22,28 @@ jest.mock('../src/navigation/preview', () => ({
     return null;
   },
 }));
+// Two hooks on the photo credits page follow the colours themselves:
+// `useStyles()` and the bar search (`useListSearchBar`). Either one draws
+// the page again on a switch, which would let a bar read at render pass by
+// accident (review of #519). Both are held still here, so the bar hook is
+// the only thing that can give either page the new paper.
+jest.mock('../src/design/use-colors', () => {
+  const actual = jest.requireActual('../src/design/use-colors');
+  return {
+    ...actual,
+    makeStyles: (factory: (colors: unknown) => unknown) => {
+      let sheet: unknown;
+      return () => (sheet ??= factory(actual.colorsFor('light')));
+    },
+  };
+});
+jest.mock('../src/design/search-bar', () => {
+  const still = {};
+  return {
+    ...jest.requireActual('../src/design/search-bar'),
+    useListSearchBar: () => still,
+  };
+});
 jest.mock('../src/features/explore/runtime', () => ({
   // Never settles: the list stays in its loading state under the bar.
   explore: { pictures: () => new Promise(() => {}) },

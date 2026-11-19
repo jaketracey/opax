@@ -317,12 +317,12 @@ describe('dark mode roles', () => {
       ).toBeGreaterThanOrEqual(3);
   });
 
-  test('roles with alpha live outside the palette the web reads', () => {
+  test('app-only roles live outside the palette the web reads', () => {
     expect(
       Object.keys(source.appOnly).filter((k) => !k.startsWith('$')),
-    ).toEqual(['scrim', 'raisedOutline']);
+    ).toEqual(['scrim', 'raisedOutline', 'portraitBlank']);
     for (const group of Object.values(source.color) as object[])
-      for (const name of ['scrim', 'raisedOutline'])
+      for (const name of ['scrim', 'raisedOutline', 'portraitBlank'])
         expect(group).not.toHaveProperty(name);
   });
 

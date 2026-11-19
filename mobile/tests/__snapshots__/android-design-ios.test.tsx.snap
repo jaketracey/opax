@@ -4868,8 +4868,8 @@ exports[`iOS design at font scale 1 PersonRow retains its iOS output 1`] = `
           {
             "backgroundColor": {
               "dynamic": {
-                "dark": "#0E100D",
-                "highContrastDark": "#0E100D",
+                "dark": "#454A41",
+                "highContrastDark": "#454A41",
                 "highContrastLight": "#F1EFE8",
                 "light": "#F1EFE8",
               },
@@ -12725,8 +12725,8 @@ exports[`iOS design at font scale 2 PersonRow retains its iOS output 1`] = `
           {
             "backgroundColor": {
               "dynamic": {
-                "dark": "#0E100D",
-                "highContrastDark": "#0E100D",
+                "dark": "#454A41",
+                "highContrastDark": "#454A41",
                 "highContrastLight": "#F1EFE8",
                 "light": "#F1EFE8",
               },
