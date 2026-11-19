@@ -118,7 +118,7 @@ describe('the edition on Today', () => {
     ]);
     expect(strings(root)).not.toMatch(/Daily edition ·|Open the bill/);
   });
-  test('dark: the outline runs round the whole card, source line included, and the link inside draws none', () => {
+  test('one outline in the raised outline role runs round the whole card, source line included, and the link inside draws none', () => {
     const root = render(
       <EditionCard edition={ready} tier="fresh" today={addDays(date, 1)} />,
     );

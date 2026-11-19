@@ -174,8 +174,11 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
         onRefresh: () => void;
       }>;
     // People and Parliament screens pass their own control, which draws the
-    // system one in the colours on screen on Android.
-    expect([RefreshControl, PullRefresh]).toContain(control().type);
+    // system one in the colours on screen on Android. Search and About pass
+    // the system control itself.
+    expect(control().type).toBe(
+      name === 'Person' || name === 'Electorate' ? PullRefresh : RefreshControl,
+    );
     expect(control().props.refreshing).toBe(false);
     // Idle Search draws no suggestions, so no placeholder stands in for them
     // while they load (TestFlight build 32); the other screens show one.

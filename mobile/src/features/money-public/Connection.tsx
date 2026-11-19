@@ -42,7 +42,7 @@ import {
   noMoneyBar,
   readableDates,
   recordSource,
-  useRefreshColours,
+  useRefreshDiscColours,
 } from './parts';
 import type { Href } from 'expo-router';
 
@@ -73,7 +73,7 @@ type Destination = {
  * excerpts that name it.
  */
 export default function Connection() {
-  const refreshColours = useRefreshColours();
+  const refreshColours = useRefreshDiscColours();
   const { id = '', name: routeName } = useLocalSearchParams<{
     id: string;
     name?: string;

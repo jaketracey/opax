@@ -459,6 +459,23 @@ export function useRefreshColours() {
   );
 }
 
+/**
+ * The Android half of `useRefreshColours()`: the arrow and its disc, with
+ * no tint. For a pull to refresh that never set a tint, so iOS keeps its
+ * own spinner (grey on paper, and it follows dark by itself) exactly as it
+ * was before dark mode. React Native drops both props on iOS.
+ */
+export function useRefreshDiscColours() {
+  const colors = useColors();
+  return useMemo(
+    () => ({
+      colors: [colors.navy],
+      progressBackgroundColor: colors.raised,
+    }),
+    [colors],
+  );
+}
+
 export function MoneyList<T>({
   rows,
   rowKey,
@@ -501,7 +518,7 @@ export function MoneyList<T>({
   largeTitle?: boolean;
 }) {
   const styles = useStyles();
-  const refreshColours = useRefreshColours();
+  const refreshColours = useRefreshDiscColours();
 
   const column = useScreenColumn('readable');
   const foot = useFloatingBarFoot();

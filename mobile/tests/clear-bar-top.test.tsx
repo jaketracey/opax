@@ -8,7 +8,6 @@ import {
 } from 'expo-router/react-navigation';
 import * as accessibility from '../src/design/accessibility';
 import { colors } from '../src/design/tokens';
-import { paperBar } from '../src/features/sources/parts';
 import { clearBarStyle, opaqueBar } from '../src/navigation/chrome';
 import { RouteOptions } from '../src/navigation/preview';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
@@ -507,7 +506,7 @@ describe('no bar colour or hairline under the clear rail bar', () => {
   // The glossary: a grouped page that sets a paper bar of its own.
   const glossary = (
     <>
-      <RouteOptions options={{ title: 'A to Z glossary', ...paperBar }} />
+      <RouteOptions options={{ title: 'A to Z glossary', ...opaqueBar() }} />
       {screen}
     </>
   );
@@ -614,7 +613,7 @@ test('a page’s own bar colour is backed in that colour under the solid rail ba
               }
             >
               <RouteOptions
-                options={{ title: 'A to Z glossary', ...paperBar }}
+                options={{ title: 'A to Z glossary', ...opaqueBar() }}
               />
               <Screen grouped>
                 <View />
@@ -825,15 +824,15 @@ describe('a presented page keeps the bar it sets itself', () => {
   ] as const)(
     'a paper bar beside a %s bar (presentation %s) takes no backing',
     (edge, presentation) => {
-      const options = set(edge, presentation, { ...paperBar }, true);
-      expect(options).toEqual({ ...paperBar });
+      const options = set(edge, presentation, opaqueBar(), true);
+      expect(options).toEqual(opaqueBar());
       expect('headerBackground' in options).toBe(false);
     },
   );
 
   test('a pushed page’s paper bar on the solid rail bar is backed in paper', () => {
     // The control for the case above.
-    const options = set('trailing', undefined, { ...paperBar }, true);
+    const options = set('trailing', undefined, opaqueBar(), true);
     expect(typeof options.headerBackground).toBe('function');
   });
 });

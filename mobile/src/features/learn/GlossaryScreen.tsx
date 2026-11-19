@@ -4,7 +4,12 @@ import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { RouteOptions } from '../../navigation/preview';
-import { matches, NoResults, paperBar, useBarSearch } from '../sources/parts';
+import {
+  matches,
+  NoResults,
+  useBarSearch,
+  usePaperBar,
+} from '../sources/parts';
 import { learnCopy } from './copy';
 import {
   foldTerm,
@@ -39,6 +44,7 @@ export function glossaryLetters(ids: readonly TermId[]) {
  */
 export default function Glossary() {
   const search = useBarSearch(glossaryCopy.search);
+  const paperBar = usePaperBar();
   const letters = useMemo(
     () =>
       glossaryLetters(

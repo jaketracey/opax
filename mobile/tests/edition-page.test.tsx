@@ -2004,14 +2004,17 @@ test('Android in dark: the plate takes the dark band and its dark ink, with no r
   Platform.OS = 'android';
   const scheme = jest.spyOn(Appearance, 'getColorScheme');
   scheme.mockReturnValue('dark');
-  const { root } = await render(<Plate edition={person} />);
-  const plate = () =>
-    StyleSheet.flatten(host(root, 'today-edition-plate')[0]!.props.style)
-      .backgroundColor;
-  expect(plate()).toBe(paletteFor('dark').bandPeople);
-  expect(paletteFor('dark').bandPeople).not.toBe(
-    paletteFor('light').bandPeople,
-  );
-  scheme.mockRestore();
-  Platform.OS = os;
+  try {
+    const { root } = await render(<Plate edition={person} />);
+    const plate = () =>
+      StyleSheet.flatten(host(root, 'today-edition-plate')[0]!.props.style)
+        .backgroundColor;
+    expect(plate()).toBe(paletteFor('dark').bandPeople);
+    expect(paletteFor('dark').bandPeople).not.toBe(
+      paletteFor('light').bandPeople,
+    );
+  } finally {
+    scheme.mockRestore();
+    Platform.OS = os;
+  }
 });
