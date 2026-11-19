@@ -1,6 +1,7 @@
 import {
   councilEndsWithAssembly,
   endedParliaments,
+  endedTermDay,
   endedTermLine,
   isCouncil,
   lastMemberFor,
@@ -217,4 +218,21 @@ describe('a remembered person page (profile-memo)', () => {
     const one = endedParliaments([vic(null), vic('2026-11-28', 'burwood')]);
     expect(sameLoaded(loaded(all), loaded(one))).toBe(false);
   });
+});
+
+test('the day a term ended, as a date view compares it', () => {
+  // Victoria's fixed-date rule: 25 days before the last Saturday of November.
+  expect(endedTermDay({ electionDay: '2026-11-28', stateCode: 'vic' })).toBe(
+    '2026-11-03',
+  );
+  expect(endedTermDay({ electionDay: '2026-11-28', stateCode: 'VIC' })).toBe(
+    '2026-11-03',
+  );
+  // No rule gives the day: the election day, by which the term had ended.
+  expect(endedTermDay({ electionDay: '2027-03-27', stateCode: 'nsw' })).toBe(
+    '2027-03-27',
+  );
+  expect(endedTermDay({ electionDay: '2026-10-17', stateCode: 'vic' })).toBe(
+    '2026-10-17',
+  );
 });
