@@ -312,16 +312,14 @@ describe('a light-only build', () => {
     build('light');
     launch('{"appearance":"dark"}');
     const sheet = render(<Sheet />);
-    expect(sheet.root.findAllByProps({ testID: 'account-appearance' })).toEqual(
-      [],
-    );
+    // Counts, not nodes: a failed comparison of render trees cannot be printed.
     expect(
       sheet.root.findAll(
         (node) =>
           typeof node.props.testID === 'string' &&
           node.props.testID.startsWith('account-appearance'),
-      ),
-    ).toEqual([]);
+      ).length,
+    ).toBe(0);
     expect(
       sheet.root.findAllByProps({ testID: 'account-links' }).length,
     ).toBeGreaterThan(0);
