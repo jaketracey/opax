@@ -102,7 +102,7 @@ const pages: [string, () => ReactElement, Record<string, string>][] = [
   ],
 ];
 
-/** The props of the page's pull to refresh, as the page wrote them. */
+/** The props of each pull to refresh on the page, as the page wrote them. */
 async function refreshProps(
   page: () => ReactElement,
   params: Record<string, string>,
@@ -117,7 +117,7 @@ async function refreshProps(
     .map((node) => node.props.refreshControl as ReactElement)
     .filter((control) => control.type === RefreshControl);
   expect(controls.length).toBeGreaterThan(0);
-  const props = controls[0]!.props as RefreshControlProps;
+  const props = controls.map((control) => control.props as RefreshControlProps);
   await act(async () => tree.unmount());
   return props;
 }
@@ -127,9 +127,10 @@ describe.each(pages)('pull to refresh on %s', (_name, page, params) => {
     'iOS in %s sets no tint, so the system draws its own spinner',
     async (scheme) => {
       system('ios', scheme);
-      const props = await refreshProps(page, params);
-      expect('tintColor' in props).toBe(false);
-      expect(typeof props.onRefresh).toBe('function');
+      for (const props of await refreshProps(page, params)) {
+        expect('tintColor' in props).toBe(false);
+        expect(typeof props.onRefresh).toBe('function');
+      }
     },
   );
 
@@ -140,10 +141,11 @@ describe.each(pages)('pull to refresh on %s', (_name, page, params) => {
     'Android in %s keeps the navy arrow on the raised disc',
     async (scheme, palette) => {
       system('android', scheme);
-      const props = await refreshProps(page, params);
-      expect(props.colors).toEqual([palette.navy]);
-      expect(props.progressBackgroundColor).toBe(palette.raised);
-      expect('tintColor' in props).toBe(false);
+      for (const props of await refreshProps(page, params)) {
+        expect(props.colors).toEqual([palette.navy]);
+        expect(props.progressBackgroundColor).toBe(palette.raised);
+        expect('tintColor' in props).toBe(false);
+      }
     },
   );
 });

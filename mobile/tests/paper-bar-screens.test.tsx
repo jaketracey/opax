@@ -22,6 +22,21 @@ jest.mock('../src/navigation/preview', () => ({
     return null;
   },
 }));
+// Style sheets stay on the light set and never draw a page again. The photo
+// credits page calls `useStyles()` itself, which redraws it on a switch and
+// would let a bar read at render pass by accident (review of #519). With the
+// sheets still, the bar hook is the only thing that can give the page the
+// new paper, on both pages.
+jest.mock('../src/design/use-colors', () => {
+  const actual = jest.requireActual('../src/design/use-colors');
+  return {
+    ...actual,
+    makeStyles: (factory: (colors: unknown) => unknown) => {
+      let sheet: unknown;
+      return () => (sheet ??= factory(actual.colorsFor('light')));
+    },
+  };
+});
 jest.mock('../src/features/explore/runtime', () => ({
   // Never settles: the list stays in its loading state under the bar.
   explore: { pictures: () => new Promise(() => {}) },
