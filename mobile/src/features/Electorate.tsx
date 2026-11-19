@@ -1,3 +1,4 @@
+import { PullRefresh } from './people/PullRefresh';
 import { PARTY_NOT_RECORDED, isPartyLabel } from '../design/party';
 import { isVictorian } from '../design/authorisation';
 import { RecordNameLink } from '../design/record';
@@ -12,7 +13,6 @@ import {
 } from 'react';
 import {
   Pressable,
-  RefreshControl,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -299,7 +299,7 @@ function ElectorateContent({
         scrollRef={scroll}
         offline={loaded?.stale ? { savedAt: loaded.savedAt } : null}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          <PullRefresh refreshing={refreshing} onRefresh={refresh} />
         }
       >
         <SkeletonCrossfade

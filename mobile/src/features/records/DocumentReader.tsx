@@ -49,11 +49,7 @@ import {
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
 import { minimumTarget, rhythm } from '../../design/tokens';
-import {
-  makeStyles,
-  useColors,
-  type Colors,
-} from '../../design/use-colors';
+import { makeStyles, useColors, type Colors } from '../../design/use-colors';
 import { headerItems, shareItem } from '../../navigation/chrome';
 import {
   billRoute,

@@ -1,3 +1,4 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { router } from 'expo-router';
 import { RouteOptions } from '../../navigation/preview';
 import {
@@ -17,7 +18,6 @@ import {
   ActivityIndicator,
   Keyboard,
   Platform,
-  RefreshControl,
   SectionList,
   StyleSheet,
   useWindowDimensions,
@@ -799,7 +799,7 @@ export default function DivisionHistory() {
                   contentInsetAdjustmentBehavior="automatic"
                   keyboardDismissMode="on-drag"
                   refreshControl={
-                    <RefreshControl
+                    <PullRefresh
                       refreshing={refreshing}
                       onRefresh={refresh}
                       tintColor={colors.navy}

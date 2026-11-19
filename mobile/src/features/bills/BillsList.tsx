@@ -1,3 +1,4 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { animatedScroll } from '../../design/accessibility';
 import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
@@ -26,7 +27,6 @@ import {
   FlatList,
   Keyboard,
   Platform,
-  RefreshControl,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -578,7 +578,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         ref={listRef}
         testID="bills-screen"
         refreshControl={
-          <RefreshControl
+          <PullRefresh
             refreshing={refreshing}
             onRefresh={refresh}
             tintColor={colors.navy}

@@ -1,8 +1,9 @@
+import { PullRefresh } from './people/PullRefresh';
 import { RouteOptions } from '../navigation/preview';
 import { useScreenReady } from '../analytics/timing';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import type { BillIndex, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
 import { Card } from '../design/card';
@@ -305,7 +306,7 @@ export default function YourMP() {
       grouped
       testID="your-mp-screen"
       refreshControl={
-        <RefreshControl
+        <PullRefresh
           refreshing={refreshing}
           // A failed seat read has no blocks yet: a pull reads the seat again.
           onRefresh={seat.status === 'error' ? seat.retry : retry}

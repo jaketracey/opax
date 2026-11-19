@@ -1,6 +1,7 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useState } from 'react';
-import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Screen, InsetGroup } from '../../design/layout';
@@ -308,7 +309,7 @@ export default function Following() {
       centred={follows !== null && count === 0}
       testID="follows-screen"
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={checkAgain} />
+        <PullRefresh refreshing={refreshing} onRefresh={checkAgain} />
       }
     >
       <RouteOptions

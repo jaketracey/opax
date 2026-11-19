@@ -1,3 +1,4 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { LoadingStatus } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
 import { useScreenReady } from '../../analytics/timing';
@@ -17,7 +18,6 @@ import {
   AccessibilityInfo,
   Platform,
   Pressable,
-  RefreshControl,
   ScrollView,
   StyleSheet,
   View,
@@ -384,7 +384,7 @@ export default function BillDetail({
           barTitle.onScroll(y);
         }}
         refreshControl={
-          <RefreshControl
+          <PullRefresh
             refreshing={refreshing}
             onRefresh={refresh}
             tintColor={colors.navy}

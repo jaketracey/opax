@@ -1,3 +1,4 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { animatedScroll } from '../../design/accessibility';
 import { MyMemberProvider } from '../your-mp/useIsMyMember';
 import { RouteOptions } from '../../navigation/preview';
@@ -6,7 +7,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  RefreshControl,
   SectionList,
   StyleSheet,
   View,
@@ -534,7 +534,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         keyboardDismissMode="on-drag"
         automaticallyAdjustKeyboardInsets
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          <PullRefresh refreshing={refreshing} onRefresh={refresh} />
         }
         sections={sections}
         keyExtractor={rowKey}

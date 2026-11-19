@@ -1,10 +1,10 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  RefreshControl,
   SectionList,
   StyleSheet,
   View,
@@ -339,7 +339,7 @@ export default function Declarations() {
         <SectionList<Run, Week>
           testID="declarations-screen"
           refreshControl={
-            <RefreshControl
+            <PullRefresh
               refreshing={refreshing}
               onRefresh={refresh}
               tintColor={colors.navy}

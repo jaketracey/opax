@@ -1,8 +1,9 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { LoadingStatus } from '../../design/states';
 import { isAbortError } from '../../api/abort';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   ContentUnavailable,
   Heading,
@@ -230,7 +231,7 @@ export default function RecentRecords() {
       offline={offline ? { savedAt: value?.savedAt ?? null } : null}
       refreshControl={
         value ? (
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          <PullRefresh refreshing={refreshing} onRefresh={refresh} />
         ) : undefined
       }
     >

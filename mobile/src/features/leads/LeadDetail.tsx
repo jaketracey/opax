@@ -1,7 +1,8 @@
+import { PullRefresh } from '../people/PullRefresh';
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { apiClient, catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
@@ -265,7 +266,7 @@ export default function LeadDetail() {
         onScroll={barTitle.onScroll}
         testID={lead ? 'lead-screen' : 'lead-pending-screen'}
         refreshControl={
-          <RefreshControl
+          <PullRefresh
             refreshing={refreshing}
             onRefresh={refresh}
             tintColor={colors.navy}
