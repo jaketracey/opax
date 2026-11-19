@@ -137,6 +137,36 @@ describe('sponsor rows', () => {
     ]);
   });
 
+  test('a sponsor whose seat is in a house with no members is its last member, never its member', () => {
+    // A Victorian member (a state bill's sponsor, or a federal one who
+    // moved to Spring Street) while the Parliament's term has ended.
+    const district = index.electorates.find(
+      (s) => s.chamber === 'vic_la' && s.name === 'Wendouree',
+    )!;
+    const name = district.representatives[0]!.person.name;
+    const with_ = (value: string | null | undefined) => ({
+      ...directory,
+      electorates: {
+        ...index,
+        electorates: index.electorates.map((s) =>
+          s.chamber === 'vic_la' && value !== undefined
+            ? { ...s, dissolved_for: value }
+            : s,
+        ),
+      },
+    });
+    const place = (value: string | null | undefined) =>
+      sponsorRows(one(name), null, null, with_(value))[0]!.place;
+    expect(place(undefined)).toBe('Member for Wendouree · Victoria');
+    expect(place('2026-11-28')).toBe('Last member for Wendouree · Victoria');
+    expect(place(null)).toBe('Member for Wendouree · Victoria');
+    // A federal member's line is as before.
+    expect(
+      sponsorRows(one('Andrew Wilkie'), null, null, with_('2026-11-28'))[0]!
+        .place,
+    ).toBe('Member for Clark · Tasmania');
+  });
+
   test("the bill's party wins over the profile's, undated", () => {
     const [row] = sponsorRows(one('Andrew Wilkie'), 'Labor', null, directory);
     expect(row).toMatchObject({

@@ -98,7 +98,16 @@ export function sameRecord(a: unknown, b: unknown, depth = 0): boolean {
   return true;
 }
 
+const NONE_ENDED: Loaded['ended'] = new Map();
+const NONE_RESUMED: ReadonlySet<string> = new Set();
 export const sameLoaded = (a: Loaded, b: Loaded) =>
   sameRecord(a.profile, b.profile) &&
   sameRecord(a.official, b.official) &&
-  sameRecord(a.seat, b.seat);
+  sameRecord(a.seat, b.seat) &&
+  // The seat rows change wording when a Parliament's term ends or resumes.
+  sameRecord(a.ended ?? NONE_ENDED, b.ended ?? NONE_ENDED) &&
+  // A district whose own row has a member again, ahead of its parliament.
+  sameRecord(
+    a.ended?.resumed ?? NONE_RESUMED,
+    b.ended?.resumed ?? NONE_RESUMED,
+  );

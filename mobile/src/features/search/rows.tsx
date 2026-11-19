@@ -29,7 +29,14 @@ import { electorateRoute } from '../../navigation/routes/your-mp';
 import { topicRoute } from '../../navigation/routes/search';
 import { openOnWeb } from '../../navigation/external';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
+import {
+  endedParliaments,
+  lastMemberFor,
+  termEndedFor,
+  type EndedTerms,
+} from '../your-mp/term-ended';
 import { CachedPortrait } from '../CachedPortrait';
+import { nameKey } from '../../api/ids';
 import { fold, type Match } from './ranking';
 import { openSuggestedPerson } from './navigation';
 import { useSplitRow } from './split';
@@ -80,13 +87,22 @@ export function serviceStatus(
  * "Formerly" (reserved for a change of party).
  *
  * "Member for" and "Senator for" are said only of someone the record says
- * sits now (`serviceStatus`). A former member is said to be one. Where the
- * record does not say, the line names the seat alone ("Watson, New South
- * Wales", "Senate, Tasmania") and claims nothing about service.
+ * sits now. A former member is said to be one. Where the record does not
+ * say, the line names the seat alone ("Watson, New South Wales", "Senate,
+ * Tasmania") and claims nothing about service.
+ *
+ * `status` is the federal claim (`serviceStatus`) and speaks for a federal
+ * seat only. A row can carry a senator's ID and status beside a state seat
+ * that was never theirs: a surname-only state stub the roster merges with a
+ * federal namesake ("Watt", Burwood). A state seat takes its claim from the
+ * dated seats alone (`stateSeatStatus`), read from `sources`: with none, it
+ * is named alone; held in a house whose Parliament's term has ended for an
+ * election, it is "Last member for Essendon, Victoria".
  */
 export function placeLine(
   person: Person,
   status: PartyStatus = serviceStatus(person),
+  sources: Pick<RowSources, 'people' | 'electorates'> = {},
 ): string | null {
   const seat =
     (person.representation ?? []).find(
@@ -94,8 +110,12 @@ export function placeLine(
     ) ?? person.representation?.[0];
   if (!seat) return null;
   const state = stateName(seat.state);
-  const said = (claim: string, former: string, plain: string | null) =>
-    status === 'current' ? claim : status === 'former' ? former : plain;
+  const claim =
+    seat.jurisdiction === 'federal'
+      ? status
+      : stateSeatStatus(person, seat, sources);
+  const said = (sits: string, former: string, plain: string | null) =>
+    claim === 'current' ? sits : claim === 'former' ? former : plain;
   if (seat.chamber === 'senate')
     return state
       ? said(
@@ -105,9 +125,90 @@ export function placeLine(
         )
       : said('Senator', 'Former senator', 'Senate');
   const where = [seat.electorate, state].filter(Boolean).join(', ');
-  return where
-    ? said(`Member for ${where}`, `Former member for ${where}`, where)
-    : null;
+  if (!where) return null;
+  if (claim === 'last') return lastMemberFor(where);
+  return said(`Member for ${where}`, `Former member for ${where}`, where);
+}
+
+type RosterSeat = NonNullable<Person['representation']>[number];
+/**
+ * What the dated seats say of a state or territory seat on a roster row:
+ * `current` where the person the row's ID names holds that very seat now,
+ * `last` where they held it when its house's term ended for an election
+ * (`termEndedFor`), and `unknown` otherwise. A row with no ID to join is
+ * also `last` where the electorates index lists the person, by name, for a
+ * seat whose house's term has ended. The roster's `current` flag and the
+ * federal status say nothing here, and no dated state seat is undated into
+ * "former".
+ */
+function stateSeatStatus(
+  person: Person,
+  seat: RosterSeat,
+  sources: Pick<RowSources, 'people' | 'electorates'>,
+): PartyStatus | 'last' {
+  const dated = person.pid
+    ? sources.people?.people.find((p) => p.legacy_person_id === person.pid)
+    : undefined;
+  const held = dated?.electorates.find(
+    (s) =>
+      s.current &&
+      s.jurisdiction === seat.jurisdiction &&
+      s.chamber === seat.chamber &&
+      fold(s.name) === fold(seat.electorate),
+  );
+  if (held)
+    return termEndedFor(held, endedIn(sources.electorates))
+      ? 'last'
+      : 'current';
+  // A row with no ID to join: the person the electorates index lists for
+  // the seat held it when its house's term ended. While the house sits the
+  // index alone claims nothing, and the seat is named alone.
+  if (dated) return 'unknown';
+  const listed = sources.electorates?.electorates.find(
+    (e) =>
+      e.jurisdiction === seat.jurisdiction &&
+      e.chamber === seat.chamber &&
+      nameKey(e.name) === nameKey(seat.electorate) &&
+      e.representatives.some(
+        (r) => nameKey(r.person.name) === nameKey(person.name),
+      ),
+  );
+  return listed && termEndedFor(listed, endedIn(sources.electorates))
+    ? 'last'
+    : 'unknown';
+}
+
+const NONE_ENDED: EndedTerms = new Map();
+const endedByIndex = new WeakMap<ElectorateIndex, EndedTerms>();
+/**
+ * The parliaments whose term has ended for an election, built once for an
+ * index object and kept while it lives: every row of a list asks.
+ */
+function endedIn(index: ElectorateIndex | null | undefined): EndedTerms {
+  if (!index) return NONE_ENDED;
+  let ended = endedByIndex.get(index);
+  if (!ended)
+    endedByIndex.set(index, (ended = endedParliaments(index.electorates)));
+  return ended;
+}
+
+/**
+ * Who a seat's row names: "Anthony Albanese", or five names for a Council
+ * region. While the seat's house has no members because its Parliament's
+ * term has ended for an election, nobody is named as the member: "Last
+ * member: Name", "Last members: Name, Name". The answer is the Electorates
+ * list's (`electorateLines`): a district's own `dissolved_for`, and the
+ * Assembly's answer from the index for a region. Empty with nobody recorded.
+ */
+export function seatMembersLine(
+  seat: Electorate,
+  sources: Pick<RowSources, 'electorates'> = {},
+): string {
+  const names = seat.representatives.map((r) => r.person.name);
+  if (!names.length) return '';
+  const line = names.join(', ');
+  if (!termEndedFor(seat, endedIn(sources.electorates))) return line;
+  return `${names.length > 1 ? 'Last members' : 'Last member'}: ${line}`;
 }
 
 /** The canonical person ID the people catalogue holds for a roster row. */
@@ -226,7 +327,7 @@ function PersonMatch({
     () => serviceStatus(person, sources),
     [person, sources],
   );
-  const place = id ? placeLine(person, status) : null;
+  const place = id ? placeLine(person, status, sources) : null;
   const party = id ? person.party_now || person.party : null;
   const rowID =
     testID ?? `search-suggestion-person-${person.pid ?? person.name}`;
@@ -285,9 +386,10 @@ function SeatMatch({
   q,
   variant,
   testID,
+  sources,
 }: MatchRowProps & { seat: Electorate }) {
   const follow = useRowFollow('electorate', seat.electorate_id, seat.name);
-  const member = seat.representatives.map((r) => r.person.name).join(', ');
+  const member = seatMembersLine(seat, sources);
   const secondary = [stateName(seat.state_code), member || 'No member recorded']
     .filter(Boolean)
     .join(' · ');

@@ -104,7 +104,7 @@ test('region uses member and district rows', () => {
   mockVic.seat.record!.data = decodeSeat(region);
   const text = words(renderVic(<Seat />));
   expect(text).toContain('Southern Metropolitan Region');
-  expect(text).toContain('Upper house region with five members');
+  expect(text).toContain('Upper house region that elects five members');
   for (const member of region.members) expect(text).toContain(member.name);
   for (const district of region.districts)
     expect(text).toContain(district.name);

@@ -10,6 +10,7 @@ import { rosterChambersFor } from '../../api/person-identity';
 import {
   partyName,
   sameMemberParty,
+  currentPartySeats,
   sittingPartyMembers,
 } from '../../api/party-page';
 import { nameKey, nameValues } from '../../api/ids';
@@ -21,6 +22,12 @@ import {
   billStage,
 } from '../../api/bill-transforms';
 import { hasParliamentaryMembership, type Directory } from '../your-mp/model';
+import {
+  endedParliaments,
+  lastMemberFor,
+  termEndedFor,
+  type EndedTerm,
+} from '../your-mp/term-ended';
 import {
   samePortraitPerson,
   type buildPortraitIndex,
@@ -70,6 +77,11 @@ export interface PlaceSeat {
   current: boolean;
   /** The latest recorded end of service in the seat. */
   end: string | null;
+  /**
+   * The seat's house has no members: its Parliament's term has ended for an
+   * election (`termEndedFor`). Absent while the house sits.
+   */
+  ended?: EndedTerm | null;
 }
 export interface PeopleRow {
   key: string;
@@ -119,12 +131,16 @@ function* peopleRowSteps(
   portraits: ReturnType<typeof buildPortraitIndex>,
 ): Generator<undefined, PeopleRow[]> {
   let sliceStart = Date.now();
+  const ended = endedParliaments(d.electorates.data.electorates);
+  // A seat in a house whose term has ended is nobody's sitting party.
   const sitting = new Map(
     sittingPartyMembers(
       d.roster.data,
       d.people.data,
       d.slugs.data,
       d.manifest.data,
+      undefined,
+      ended,
     ).map(({ profile, seats }) => [
       profile.canonicalPersonId ?? profile.rosterPersonId ?? profile.name,
       [...new Set(seats.map((s) => s.party))],
@@ -218,6 +234,7 @@ function* peopleRowSteps(
           stateCode(federalSeatState(s.url)) ??
           stateCode(s.jurisdiction),
         current: s.current,
+        ended: s.current ? termEndedFor(s, ended) : null,
         end:
           (s.periods ?? [])
             .map((p) => p.end)
@@ -355,6 +372,7 @@ export function placeLine(
   person: Pick<PeopleRow, 'seats' | 'profile'>,
 ): string | null {
   const group = sittingGroup(person);
+  const last = group === 'ended';
   const seats = person.seats.filter(
     (s) => s.chamber !== 'senate_committee' && chamberName(s.chamber),
   );
@@ -369,6 +387,11 @@ export function placeLine(
   const state = jurisdictionName(seat.state);
   const said = (claim: string, former: string, plain: string) =>
     group === 'sitting' ? claim : group === 'former' ? former : plain;
+  // The house's term has ended for an election: nobody is its member.
+  if (last)
+    return lastMemberFor(
+      `${seat.name}, ${chamberName(seat.chamber, seat.jurisdiction)!}`,
+    );
   if (seat.jurisdiction === 'federal' && seat.chamber === 'senate') {
     const where = state ?? seat.name;
     return said(
@@ -403,21 +426,34 @@ export function placeLine(
  * members; the chosen sort applies within each group. The group is the
  * profile's party status, the one that draws a "Former member" line.
  */
-export type SittingGroup = 'sitting' | 'unrecorded' | 'former';
+export type SittingGroup = 'sitting' | 'ended' | 'unrecorded' | 'former';
 export const sittingGroupTitles: Record<SittingGroup, string> = {
   sitting: 'Sitting members',
+  ended: 'Term ended for an election',
   unrecorded: 'Status not confirmed',
   former: 'Former members',
 };
 const groupRank: Record<SittingGroup, number> = {
   sitting: 0,
-  unrecorded: 1,
-  former: 2,
+  ended: 1,
+  unrecorded: 2,
+  former: 3,
 };
-export function sittingGroup(p: Pick<PeopleRow, 'profile'>): SittingGroup {
+/**
+ * `ended`: every seat the person holds is in a house whose Parliament's
+ * term has ended for an election, so the record's "current" names the last
+ * member, not a sitting one. Someone who also holds a seat in a sitting
+ * house is sitting.
+ */
+export function sittingGroup(
+  p: Pick<PeopleRow, 'profile' | 'seats'>,
+): SittingGroup {
   const status = p.profile.partyStatus;
+  const held = p.seats.filter((s) => s.current);
   return status === 'current'
-    ? 'sitting'
+    ? held.length && held.every((s) => s.ended)
+      ? 'ended'
+      : 'sitting'
     : status === 'former'
       ? 'former'
       : 'unrecorded';
@@ -506,20 +542,32 @@ export interface PartyRow {
   speeches: number;
   /** Unique sitting members across federal, state and territory parliaments. */
   members: number;
+  /**
+   * People whose every seat for the party is in a house whose Parliament's
+   * term has ended for an election: its last members, never counted sitting.
+   */
+  last: number;
   money: Record<string, { total: number; source: string; asAt: string }>;
   total: number;
 }
 /** Parties only: "Independent" and presiding roles are not listed. */
 export function partyRows(
-  directory: Pick<Directory, 'roster' | 'people' | 'slugs' | 'manifest'>,
+  directory: Pick<
+    Directory,
+    'roster' | 'people' | 'slugs' | 'manifest' | 'electorates'
+  >,
   files: Record<string, PartyFile>,
 ): PartyRow[] {
-  const { roster, people, slugs, manifest } = directory;
-  const sitting = sittingPartyMembers(
+  const { roster, people, slugs, manifest, electorates } = directory;
+  // As the People list's sitting filter: a seat in a house whose term has
+  // ended for an election is not counted. Its party keeps its row.
+  const held = currentPartySeats(
     roster.data,
     people.data,
     slugs.data,
     manifest.data,
+    undefined,
+    endedParliaments(electorates.data.electorates),
   );
   const rows = new Map<string, PartyRow>();
   // A renamed party is one row, at its current name, whatever name a file
@@ -530,7 +578,15 @@ export function partyRows(
     if (!p)
       rows.set(
         name,
-        (p = { key: name, name, speeches: 0, members: 0, money: {}, total: 0 }),
+        (p = {
+          key: name,
+          name,
+          speeches: 0,
+          members: 0,
+          last: 0,
+          money: {},
+          total: 0,
+        }),
       );
     return p;
   };
@@ -547,7 +603,7 @@ export function partyRows(
         asAt: file.meta.generated,
       };
     }
-  for (const { seats } of sitting) for (const seat of seats) get(seat.party);
+  for (const { seats } of held) for (const seat of seats) get(seat.party);
   for (const p of roster.data.people)
     if (
       p.party &&
@@ -563,9 +619,13 @@ export function partyRows(
       r.speeches += p.speeches ?? 0;
     }
   for (const p of rows.values()) {
-    p.members = sitting.filter((m) =>
-      m.seats.some((s) => sameMemberParty(s.party, p.name)),
-    ).length;
+    // A person sits for the party where any seat they hold for it is in a
+    // house with members; otherwise they are one of its last members.
+    for (const m of held) {
+      const own = m.seats.filter((s) => sameMemberParty(s.party, p.name));
+      if (own.some((s) => !s.ended)) p.members++;
+      else if (own.length) p.last++;
+    }
     p.total =
       p.money.federal?.total ??
       Math.max(0, ...Object.values(p.money).map((m) => m.total));

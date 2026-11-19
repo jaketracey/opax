@@ -155,6 +155,25 @@ describe('typing', () => {
       detail: 'Member for Albert Park, Victorian Parliament',
       state: 'vic',
     });
+    // While the Victorian Parliament's term has ended for an election the
+    // lead names the last member; a senator's is as before; once the
+    // result is loaded (null) it is a member's again.
+    const assembly = (value: string | null) =>
+      electorates.map((s) =>
+        s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+      );
+    expect(matchLeads(assembly('2026-11-28'), 'Nina Taylor')[0]!.detail).toBe(
+      'Last member for Albert Park, Victorian Parliament',
+    );
+    for (const lead of matchLeads(assembly('2026-11-28'), 'a', 400))
+      if (lead.state === 'vic' && !lead.detail.startsWith('Senator'))
+        expect(lead.detail).toMatch(/^Last member for /);
+    expect(matchLeads(assembly('2026-11-28'), 'Penny Wong')[0]!.detail).toBe(
+      'Senator for South Australia',
+    );
+    expect(matchLeads(assembly(null), 'Nina Taylor')[0]!.detail).toBe(
+      'Member for Albert Park, Victorian Parliament',
+    );
     // A House member is a seat row, never a lead.
     expect(matchLeads(electorates, 'Albanese')).toEqual([]);
     const hanson = matchLeads(electorates, 'Hanson');
@@ -183,6 +202,23 @@ describe('copy', () => {
     );
     expect(seatLabel(seat('Grayndler'), seatCopy.fromLocation)).toBe(
       'Grayndler. Anthony Albanese, Labor. From your location.',
+    );
+    // A district whose Parliament's term has ended names its last member.
+    const albertPark = electorates.find(
+      (s) => s.name === 'Albert Park' && s.chamber === 'vic_la',
+    )!;
+    const member = albertPark.representatives[0]!;
+    const who = [member.person.name, member.party].filter(Boolean).join(', ');
+    expect(seatLabel({ ...albertPark, dissolved_for: '2026-11-28' })).toBe(
+      `Albert Park. Last member: ${who}.`,
+    );
+    expect(seatLabel({ ...albertPark, dissolved_for: null })).toBe(
+      `Albert Park. ${who}.`,
+    );
+    expect(seatLabel(albertPark)).toBe(`Albert Park. ${who}.`);
+    // A Council region's row carries no field: the caller says so.
+    expect(seatLabel(albertPark, undefined, true)).toBe(
+      `Albert Park. Last member: ${who}.`,
     );
   });
 });

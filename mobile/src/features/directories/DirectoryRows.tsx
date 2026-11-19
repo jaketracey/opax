@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { createContext, memo, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { router } from 'expo-router';
@@ -36,6 +36,7 @@ import {
 import { CachedPortrait } from '../CachedPortrait';
 import { partyFromCode } from '../bills/party-codes';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
+import { termEndedFor, type EndedTerms } from '../your-mp/term-ended';
 import type { RecordEntry } from '../split/entry';
 import { placeLine, type PartyRow, type PeopleRow } from './model';
 
@@ -142,7 +143,16 @@ export const PersonDirectoryRow = memo(function PersonDirectoryRow(
   );
 });
 
-/** "{n} sitting members" under the party's dot and full name; no money. */
+/**
+ * "{n} sitting members" under the party's dot and full name; no money. A
+ * party with nobody sitting and last members of a parliament whose term has
+ * ended for an election says "{n} last members", never "0 sitting members".
+ */
+export const partyRowDetail = (item: Pick<PartyRow, 'members' | 'last'>) =>
+  item.members === 0 && item.last > 0
+    ? counted(item.last, 'last member')
+    : counted(item.members, 'sitting member');
+
 export const PartyDirectoryRow = memo(function PartyDirectoryRow({
   item,
   selected,
@@ -150,7 +160,7 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
 }: RowProps<PartyRow>) {
   const slug = partySlug(item.name);
   const follow = useRowFollow('party', slug, item.name);
-  const detail = counted(item.members, 'sitting member');
+  const detail = partyRowDetail(item);
   return (
     <LinkRow
       title=""
@@ -173,12 +183,28 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
   );
 });
 
+const NONE_ENDED: EndedTerms = new Map();
+/**
+ * The parliaments whose term has ended for an election, for the electorate
+ * rows under it (`endedParliaments` of the list's whole index). A district
+ * row answers by its own `dissolved_for`; a Council region's row has no
+ * field and takes its answer from here.
+ */
+export const EndedTermsContext = createContext<EndedTerms>(NONE_ENDED);
+
 /**
  * An electorate's two lines: the house and state in short form ("Federal,
  * South Australia", "Western Australian Legislative Assembly"), then its
  * member and party, "Member not confirmed", or "No longer used".
+ *
+ * While the seat's house has no members because its Parliament's term has
+ * ended for an election (`termEndedFor`), the line names nobody as the
+ * member: "Last member: Name" and the party, or "Last members: 5".
  */
-export function electorateLines(item: Electorate): {
+export function electorateLines(
+  item: Electorate,
+  ended: EndedTerms = NONE_ENDED,
+): {
   house: string;
   member: string;
   party: string | null;
@@ -197,15 +223,20 @@ export function electorateLines(item: Electorate): {
   const members = item.representatives;
   if (item.representation_status !== 'verified' || !members.length)
     return { house, member: '', party: null };
+  const last = !!termEndedFor(item, ended);
   if (members.length > 1)
     return {
       house,
-      member: `${formatCount(members.length)} ${item.chamber === 'senate' ? 'senators' : 'members'}`,
+      member: last
+        ? `Last members: ${formatCount(members.length)}`
+        : `${formatCount(members.length)} ${item.chamber === 'senate' ? 'senators' : 'members'}`,
       party: null,
     };
   return {
     house,
-    member: members[0]!.person.name,
+    member: last
+      ? `Last member: ${members[0]!.person.name}`
+      : members[0]!.person.name,
     party: members[0]!.party?.trim() || null,
   };
 }
@@ -223,7 +254,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
   const split = selected !== undefined;
   useRowSelected(!!selected);
   const splitBleed = useSplitBleed();
-  const lines = electorateLines(item);
+  const lines = electorateLines(item, useContext(EndedTermsContext));
   const select = onSelect ? () => onSelect(entryFor(item)) : undefined;
   const row = (
     <Pressable

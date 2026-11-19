@@ -96,6 +96,12 @@ import {
 import { FaceStackRow, byFamilyName } from './your-mp/FaceStackRow';
 import { RepresentativeRows, sinceLine } from './your-mp/RepresentativeRows';
 import {
+  endedParliaments,
+  endedTermDay,
+  endedTermLine,
+  termEndedFor,
+} from './your-mp/term-ended';
+import {
   censusHeadline,
   censusOtherRows,
   electionSummary,
@@ -803,13 +809,30 @@ function MembersSection({
   const many = view.capacity > 1 || rows.length > 1;
   const senate = identity.chamber === 'senate';
   const shown = rows.length > 6 ? rows.slice(0, 6) : rows;
-  const header = asof
-    ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
-    : abolished
-      ? 'Past members'
-      : many
-        ? 'Members'
-        : 'Member';
+  // The seat's house has no members while its Parliament's term has ended
+  // for an election: the rows are its last members, and the section says so.
+  const term = abolished
+    ? null
+    : termEndedFor(
+        identity,
+        endedParliaments(directory.electorates.data.electorates),
+      );
+  // A chosen date on or after the day the term ended has no member either:
+  // whoever the record holds for that day is the seat's last member. Dates
+  // before it stay dated history.
+  const ended = term && (!asof || asof >= endedTermDay(term)) ? term : null;
+  const header =
+    asof && !ended
+      ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
+      : abolished
+        ? 'Past members'
+        : ended
+          ? many
+            ? 'Last members'
+            : 'Last member'
+          : many
+            ? 'Members'
+            : 'Member';
   const observed =
     view.terms
       .map((t) => t.observed_through)
@@ -825,6 +848,11 @@ function MembersSection({
   return (
     <View testID="electorate-members" style={{ gap: rhythm.heading }}>
       <SectionHeader title={header} testID="electorate-members-heading" />
+      {ended ? (
+        <Text wordSafe variant="secondary" testID="electorate-term-ended">
+          {endedTermLine(ended)}
+        </Text>
+      ) : null}
       {asof ? (
         <DatedMembers
           view={view}
@@ -839,7 +867,9 @@ function MembersSection({
             directory={directory}
             id="electorate-member"
             wrap={false}
-            detailFor={(personId) => sinceLine(view.terms, personId)}
+            detailFor={(personId) =>
+              ended ? null : sinceLine(view.terms, personId)
+            }
           />
           {rows.length > shown.length ? (
             <FaceStackRow

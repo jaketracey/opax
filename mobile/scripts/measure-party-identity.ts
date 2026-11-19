@@ -79,7 +79,9 @@ const directory = (join: typeof joinPerson) =>
     const args = snapshots();
     return () => joins(join, all, args);
   });
-const party = (members: typeof partyMembers) =>
+// The reference returns the list as it was; only its calls and time are read.
+type Members = (...args: Parameters<typeof partyMembers>) => unknown;
+const party = (members: Members) =>
   samples(() => {
     const [s, r, p, m] = snapshots();
     return () => members('Labor', r, p, s, m);
@@ -100,7 +102,7 @@ const search = (resolve: typeof personSlugForResult) =>
       for (const row of rows) resolve(row, s, interests, p);
     };
   });
-const foldCalls = (members: typeof partyMembers) => {
+const foldCalls = (members: Members) => {
   const [s, r, p, m] = snapshots();
   const original = String.prototype.toLocaleLowerCase;
   let calls = 0;

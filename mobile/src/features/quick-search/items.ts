@@ -9,6 +9,7 @@ import type { GroupRow } from '../search/requests';
 import {
   matchRoute,
   placeLine,
+  seatMembersLine,
   serviceStatus,
   type RowSources,
 } from '../search/rows';
@@ -91,14 +92,14 @@ export function matchItem(match: Match, sources: RowSources): QuickItem {
   if (match.kind === 'people')
     // Identity guard, as in Search: no place line before the join.
     secondary = route
-      ? (placeLine(match.item, serviceStatus(match.item, sources)) ?? undefined)
+      ? (placeLine(match.item, serviceStatus(match.item, sources), sources) ??
+        undefined)
       : undefined;
   else if (match.kind === 'bills')
     secondary = billStatusLabel(match.item.status, billEnding(match.item));
   else if (match.kind === 'electorates')
-    secondary =
-      match.item.representatives.map((r) => r.person.name).join(', ') ||
-      undefined;
+    // "Last member: Name" while the seat's house has no members.
+    secondary = seatMembersLine(match.item, sources) || undefined;
   return {
     key: `${match.kind}:${match.key}`,
     title: matchTitle(match),

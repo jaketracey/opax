@@ -50,6 +50,7 @@ import {
 import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import YourMP from '../src/features/YourMP';
+import { representativeProfile } from '../src/features/your-mp/model';
 import { billRoute, seatRoute } from '../src/navigation/routes';
 import { grantsRoute } from '../src/navigation/routes/public-money';
 import * as external from '../src/navigation/external/sheets';
@@ -952,6 +953,143 @@ describe('Your MP tab', () => {
     await act(async () => control().props.onRefresh());
     expect(control().props.refreshing).toBe(false);
     await act(async () => r.unmount());
+  });
+
+  describe('while the Victorian Parliament’s term has ended for an election', () => {
+    // The index as the live one reads: every Assembly row carries the
+    // election day (or null once the result is loaded); Council rows carry
+    // nothing.
+    const assemblyRows = (value: string | null) =>
+      mock.directory.mockResolvedValue({
+        ...directory,
+        electorates: result({
+          ...index,
+          electorates: index.electorates.map((s) =>
+            s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+          ),
+        }),
+      } as never);
+    afterEach(() => {
+      mock.directory.mockResolvedValue(directory as never);
+    });
+    const open = async () => {
+      const seat = seatNamed('Ballarat'),
+        district = seatNamed('Wendouree'),
+        region = seatNamed('Northern Metropolitan');
+      mock.yourMP.mockImplementation(async (id, chosen) =>
+        c.yourMPFor(id, index, manifest, chosen),
+      );
+      mock.profileFor.mockImplementation(async (id) =>
+        c.profileFor(id, catalogs),
+      );
+      choose(seat.electorate_id, [
+        district.electorate_id,
+        region.electorate_id,
+      ]);
+      const r = await render(<YourMP />);
+      const member = r.root
+        .findAllByType(PersonRow)
+        .find((n) =>
+          String(n.props.testID ?? '').startsWith('your-state-member-'),
+        )!;
+      const regionRow = r.root
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'your-state-region')!;
+      return { r, district, region, member, regionRow };
+    };
+    const TERM =
+      'Parliament’s term ended on 3 November for the 28 November election';
+
+    test('the district row names the last member and calls nobody the member; the portrait and the link stay', async () => {
+      assemblyRows('2026-11-28');
+      const { r, district, member } = await open();
+      expect(member.props.place).toBe(`Last member for ${district.name}`);
+      expect(member.props.detail).toBe(TERM);
+      expect(member.props.name).toBe(district.representatives[0]!.person.name);
+      expect(member.props.portrait).toBeTruthy();
+      expect(member.props.href).toBeTruthy();
+      const state = r.root.findAll(
+        (n) => n.props.testID === 'your-state' && typeof n.type === 'string',
+      )[0]!;
+      const drawn = state
+        .findAllByType(Text)
+        .flatMap((n) => words(n.props.children))
+        .join(' ');
+      expect(drawn).not.toMatch(/\bMember for\b/);
+      expect(drawn).not.toMatch(/\d+ members? for/);
+      await act(async () => r.unmount());
+    });
+
+    test('the region row says "Last members for" with the same term line (Constitution Act 1975 (Vic) s 28(2))', async () => {
+      assemblyRows('2026-11-28');
+      const { r, region, regionRow } = await open();
+      expect(region.dissolved_for).toBeUndefined();
+      expect(regionRow.props.title).toBe(`Last members for ${region.name}`);
+      expect(regionRow.props.detail).toBe(TERM);
+      expect(regionRow.props.accessibilityLabel).toBe(
+        `Last members for ${region.name}. ${TERM}`,
+      );
+      await act(async () => r.unmount());
+    });
+
+    test('the person page says "Last member for", with the term line, for a member of either house', async () => {
+      for (const seat of [
+        seatNamed('Wendouree'),
+        seatNamed('Northern Metropolitan'),
+      ]) {
+        const profileSlug = seat.representatives
+          .map((m) => representativeProfile(m.person_id, directory)?.slug)
+          .find((found) => !!found)!;
+        mockParams.slug = profileSlug;
+        const person = c.joinPerson(
+          profileSlug,
+          slugs,
+          roster,
+          people,
+          manifest,
+        );
+        mock.person.mockResolvedValue(result(person));
+        mock.profileFor.mockImplementation(async (id) =>
+          c.profileFor(id, catalogs),
+        );
+        const seatRow = async () => {
+          const r = await render(<Person />);
+          const row = r.root.findAll(
+            (n) =>
+              n.props.testID === 'person-electorate' &&
+              typeof n.type !== 'string',
+          )[0]!;
+          const drawn = text(r);
+          await act(async () => r.unmount());
+          return { row, drawn };
+        };
+        assemblyRows('2026-11-28');
+        const ended = await seatRow();
+        expect(ended.drawn).toContain(`Last member for ${seat.name}`);
+        expect(ended.drawn).toContain(TERM);
+        expect(ended.drawn).not.toMatch(/\bMember for\b/);
+        assemblyRows(null);
+        const sitting = await seatRow();
+        expect(sitting.drawn).toContain(`Member for ${seat.name}`);
+        expect(sitting.drawn).not.toContain('Last member');
+      }
+    });
+
+    test.each([
+      ['once the result is loaded (null)', null],
+      ['from an index without the field', undefined],
+    ])('both rows are members’ rows again %s', async (_, value) => {
+      if (value === null) assemblyRows(null);
+      const { r, district, region, member, regionRow } = await open();
+      expect(member.props.place).toBe(`Member for ${district.name}`);
+      expect(member.props.detail).toBeUndefined();
+      expect(regionRow.props.title).toBe(
+        `${region.representatives.length} members for ${region.name}`,
+      );
+      expect(regionRow.props.detail).toBeUndefined();
+      expect(regionRow.props.accessibilityLabel).toBe(regionRow.props.title);
+      await act(async () => r.unmount());
+    });
   });
 
   describe('the authorisation line is Victorian only', () => {

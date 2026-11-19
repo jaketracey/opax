@@ -33,6 +33,16 @@ export function jurisdictionName(id: string | null | undefined): string | null {
   return (id && jurisdictions[id.toLowerCase()]?.name) || null;
 }
 
+/** "Victorian Parliament"; null for the federal one or an unknown ID. */
+export function stateParliamentName(
+  id: string | null | undefined,
+): string | null {
+  const state = id ? jurisdictions[id.toLowerCase()] : undefined;
+  return state && id!.toLowerCase() !== 'federal'
+    ? `${state.adjective} Parliament`
+    : null;
+}
+
 /**
  * "House of Representatives", "Senate", "Victorian Legislative Assembly",
  * "South Australian House of Assembly"; null for an unknown ID, which callers

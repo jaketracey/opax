@@ -117,6 +117,8 @@ test.each(
       current,
       recorded,
       currentCount: current.length,
+      // Since the reference: last members of a house whose term has ended.
+      ended: [],
     });
   },
 );

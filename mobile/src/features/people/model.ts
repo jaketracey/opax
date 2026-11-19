@@ -20,6 +20,12 @@ import { formatDate, formatYearRange } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import type { SourceCitation } from '../../design/source';
 import type { ProfileView } from '../your-mp/model';
+import {
+  endedTermLine,
+  lastMemberFor,
+  termEndedFor,
+  type EndedTerm,
+} from '../your-mp/term-ended';
 
 const topic = shape({
   slug: nonempty,
@@ -438,9 +444,14 @@ function lastDatedRepresentation(seats: PersonProfile['seats']) {
  * 1996"; "Senator for Victoria"; a state seat names its house. A former
  * member with a last recorded seat gets one "Former member for …" row;
  * no seat at all gives no row (never "No current electorate…").
+ *
+ * `ended` is the parliaments whose term has ended for an election
+ * (`endedParliaments`): a seat held when its house ended is "Last member
+ * for Essendon" with the term-ended line, never "Member for".
  */
 export function seatRows(
   identity: Pick<PersonProfile, 'seats' | 'partyStatus' | 'rosterRow'>,
+  ended: ReadonlyMap<string, EndedTerm> = new Map(),
 ): IdentitySeat[] {
   const current = identity.seats.filter((s) => s.current);
   const shown = current.length
@@ -451,6 +462,20 @@ export function seatRows(
   return shown.map((seat) => {
     const senator = seat.chamber === 'senate';
     const former = !seat.current && identity.partyStatus === 'former';
+    const term = seat.current ? termEndedFor(seat, ended) : null;
+    if (term)
+      return {
+        key: seat.electorate_id,
+        title: lastMemberFor(seat.name),
+        detail: [
+          chamberName(seat.chamber, seat.jurisdiction),
+          endedTermLine(term),
+        ]
+          .filter(Boolean)
+          .join('. '),
+        electorateId: seat.electorate_id,
+        current: false,
+      };
     const starts = (seat.periods ?? [])
       .map((p) => p.start)
       .filter((d): d is string => !!d)
