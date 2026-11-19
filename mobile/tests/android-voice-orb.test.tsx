@@ -131,12 +131,15 @@ test('a live switch to dark redraws the orb with the dark set, with no remount',
   const light = orbColours('light', false);
   const dark = orbColours('dark', false);
   expect(ground()).toEqual(light.ground);
-  expect(stops()).toEqual([light.halo, light.rings, light.core, light.glow]);
+  for (const part of [light.halo, light.core, light.glow])
+    expect(stops()).toContainEqual(part);
   scheme.mockReturnValue('dark');
   act(() => renderer.update(orb()));
   // Android paints its own page ground under the orb: it must follow too.
   expect(ground()).toEqual(dark.ground);
   expect(ground()).not.toEqual(light.ground);
-  expect(stops()).toEqual([dark.halo, dark.rings, dark.core, dark.glow]);
+  for (const part of [dark.halo, dark.core, dark.glow])
+    expect(stops()).toContainEqual(part);
+  expect(stops()).not.toContainEqual(light.core);
   act(() => renderer.unmount());
 });

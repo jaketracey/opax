@@ -50,8 +50,12 @@ export const sourcesCopy = {
  * import; a page that holds this object itself would keep the first.
  */
 export const paperBar: NativeStackNavigationOptions = Object.defineProperties(
-  { headerShadowVisible: opaqueBar().headerShadowVisible },
+  {},
   {
+    headerShadowVisible: {
+      enumerable: true,
+      get: () => opaqueBar().headerShadowVisible,
+    },
     headerStyle: { enumerable: true, get: () => opaqueBar().headerStyle },
     headerLargeStyle: {
       enumerable: true,
