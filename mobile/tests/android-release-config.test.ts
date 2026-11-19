@@ -143,12 +143,14 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 // switch unset the only change is that the withAndroidPolicy plugin entry
 // carries `{ appearance: 'light' }`; putting the bare string back gives the
 // previous three hashes exactly, so a light build's iOS config is unchanged.
+// Re-pinned for 1.1.6: the only change is the version string; swapping it
+// back to 1.1.5 gives the previous hashes exactly.
 const iosPrebuildHashes = {
   development:
-    'ca6b3a78202202882b8cd0428cc63779a985a8eb37b47213a1f5b3db9e5fc381',
-  e2e: '178c11e30cc8cca81737086be7ee611171a05ddbb18db40f2e668e7ac6dc326e',
+    'ce35e31597cc964353904a6378069c959db61f510ce836197242bd0ac3c33df0',
+  e2e: '8a98c3167cf8d4df9e503f53ef0d9c08baa300f08c916cdc28f2620d2b85fc2c',
   production:
-    'e948d9a3fffcfe412c229ea8b1a0fb994da531c14aa1e2e4e18d7fc0d54fd4b8',
+    '852904d2dbc3b01a88faf1aad0342aee54ccbf48d250f005d3ff32303d83a596',
 };
 test.each(variants)(
   'iOS %s prebuild output stays byte-identical to the baseline',
