@@ -19,7 +19,8 @@ import {
 } from '../../design/accessibility';
 import { useAccessibilityFocusRequest } from '../../design/keyboard';
 import { ShimmerText } from '../../design/ShimmerText';
-import { colors, motion, rhythm } from '../../design/tokens';
+import { motion, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import type { AskStage, AskStep } from './stream';
 import { askStatusText } from './status';
 
@@ -142,6 +143,8 @@ export function AskStatus({
   /** This row took the send's request for VoiceOver focus. */
   onTookFocus?: () => void;
 }) {
+  const colors = useColors();
+
   const stacked = useAccessibilitySize();
   const reduceMotion = useReduceMotionSetting() !== false;
   // A tapped question that asks at once (`askNow`) lands here, not on the

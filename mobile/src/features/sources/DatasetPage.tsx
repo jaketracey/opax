@@ -16,7 +16,8 @@ import {
   ValueRow,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { licenceHubRoute } from '../../navigation/routes/reference';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { sourcesHrefs, useSourcesBase } from './base';
@@ -60,6 +61,8 @@ export function DatasetPage({
   /** The Licence sheet's root: draws the foot row to the hub. */
   licenceRoot?: boolean;
 }) {
+  const colors = useColors();
+
   const href = sourcesHrefs(useSourcesBase());
   const sources = useSources();
   const { list, loaded, settled, refreshing } = sources;

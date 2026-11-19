@@ -24,7 +24,8 @@ import {
   useRowInset,
 } from '../../design/row-padding';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { testReportTap } from '../../analytics/test-report';
 import { copyText } from '../records/actions';
 
@@ -65,6 +66,8 @@ const TILE = 29;
  * a white glyph on `bandPeople`. It grows with text to 1.5x, then stops.
  */
 export function SettingsTile({ symbol }: { symbol: SFSymbol }) {
+  const styles = useStyles();
+
   const { fontScale } = useWindowDimensions();
   const size = Math.round(TILE * Math.min(Math.max(fontScale, 1), 1.5));
   return (
@@ -130,6 +133,9 @@ export function SettingsRow({
   accessibilityHint?: string;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
@@ -214,6 +220,8 @@ const appVersion = () => {
 
 /** "OPAX 1.0.1 (36)", centred at the foot; long press or the rotor copies it. */
 export function VersionFoot() {
+  const styles = useStyles();
+
   const { version, build } = appVersion();
   const text = linksCopy.version(version, build);
   const copy = () =>
@@ -247,29 +255,31 @@ export function VersionFoot() {
   );
 }
 
-const styles = StyleSheet.create({
-  groups: { gap: rhythm.section },
-  tile: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderCurve: 'continuous',
-    backgroundColor: colors.bandPeople,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-  },
-  text: { flex: 1, gap: rhythm.line },
-  inline: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  stacked: { flexDirection: 'column', alignItems: 'flex-start' },
-  grow: { flex: 1 },
-  foot: {
-    alignSelf: 'center',
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-  },
-  centre: { textAlign: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    groups: { gap: rhythm.section },
+    tile: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderCurve: 'continuous',
+      backgroundColor: colors.bandPeople,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    },
+    text: { flex: 1, gap: rhythm.line },
+    inline: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+    stacked: { flexDirection: 'column', alignItems: 'flex-start' },
+    grow: { flex: 1 },
+    foot: {
+      alignSelf: 'center',
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+    },
+    centre: { textAlign: 'center' },
+  }),
+);

@@ -40,7 +40,8 @@ import { placeClear, type Rect } from '../../design/fold';
 import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { designFlags } from '../../design/flags';
 import { HeightReveal } from '../../design/reveal';
-import { colors, layout, rhythm } from '../../design/tokens';
+import { layout, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { closeSheetItem, androidHeaderBar } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
 import {
@@ -149,6 +150,8 @@ function exampleQuestion(): string | null {
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
 }: { onReportAnswer?: ReportAnswer } = {}) {
+  const styles = useStyles();
+
   return (
     <SafeAreaView edges={['left', 'right']} style={styles.page}>
       <ReservedRegionArea style={styles.page}>
@@ -159,6 +162,8 @@ export default function TalkScreen({
 }
 
 function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
+  const styles = useStyles();
+
   const call = useTalk();
   const exitConfirmed = useRef(false);
   const { snapshot: s } = call;
@@ -1023,47 +1028,49 @@ function TypedMessage({
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: colors.paper },
-  body: {
-    flex: 1,
-    paddingHorizontal: layout.screenMargin,
-    gap: rhythm.group,
-  },
-  pad: { width: '100%', maxWidth: 700, alignSelf: 'center' },
-  stage: {
-    flex: 1,
-    minHeight: ORB_AX,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  orbFrame: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: rhythm.tight,
-  },
-  callRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: rhythm.block,
-    paddingTop: rhythm.tight,
-  },
-  callRowStacked: { flexDirection: 'column', gap: rhythm.tight },
-  callOrb: { width: ORB_CALL, height: ORB_CALL },
-  transcript: { flex: 1 },
-  transcriptContent: {
-    gap: rhythm.block,
-    paddingTop: TRANSCRIPT_EDGE_HEIGHT + rhythm.tight,
-    paddingBottom: rhythm.tight,
-  },
-  dockScroll: { flexGrow: 0, flexShrink: 1 },
-  dock: { gap: rhythm.tight, alignItems: 'stretch' },
-  centre: { textAlign: 'center' },
-  inline: { alignItems: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    page: { flex: 1, backgroundColor: colors.paper },
+    body: {
+      flex: 1,
+      paddingHorizontal: layout.screenMargin,
+      gap: rhythm.group,
+    },
+    pad: { width: '100%', maxWidth: 700, alignSelf: 'center' },
+    stage: {
+      flex: 1,
+      minHeight: ORB_AX,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    orbFrame: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: rhythm.tight,
+    },
+    callRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: rhythm.block,
+      paddingTop: rhythm.tight,
+    },
+    callRowStacked: { flexDirection: 'column', gap: rhythm.tight },
+    callOrb: { width: ORB_CALL, height: ORB_CALL },
+    transcript: { flex: 1 },
+    transcriptContent: {
+      gap: rhythm.block,
+      paddingTop: TRANSCRIPT_EDGE_HEIGHT + rhythm.tight,
+      paddingBottom: rhythm.tight,
+    },
+    dockScroll: { flexGrow: 0, flexShrink: 1 },
+    dock: { gap: rhythm.tight, alignItems: 'stretch' },
+    centre: { textAlign: 'center' },
+    inline: { alignItems: 'center' },
+  }),
+);

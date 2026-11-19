@@ -16,14 +16,15 @@ import {
   useScreenColumn,
 } from '../../design/primitives';
 import { StatePageProvider } from '../../design/states';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { portraitCreditLine } from '../CachedPortrait';
 import { portraitTerms } from './datasets';
 import {
   CreditRow,
   matches,
   NoResults,
-  paperBar,
+  usePaperBar,
   sourcesCopy as text,
   useBarSearch,
 } from './parts';
@@ -41,9 +42,12 @@ const sortKey = (name: string) => {
  * field. No count here: the hub row says it once.
  */
 export default function PortraitsList() {
+  const styles = useStyles();
+
   const column = useScreenColumn();
   const foot = useFloatingBarFoot();
   const search = useBarSearch(text.searchPortraits);
+  const paperBar = usePaperBar();
   const [list, setList] = useState<PortraitListing[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [request, setRequest] = useState(0);
@@ -161,8 +165,10 @@ export default function PortraitsList() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: { paddingTop: rhythm.block, paddingBottom: rhythm.section },
-  header: { gap: rhythm.block, marginBottom: rhythm.block },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: { paddingTop: rhythm.block, paddingBottom: rhythm.section },
+    header: { gap: rhythm.block, marginBottom: rhythm.block },
+  }),
+);

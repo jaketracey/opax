@@ -3,7 +3,8 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { Icon } from '../../design/icon';
 import { symbols } from '../../design/symbols';
-import { colors, rhythm, textStyles } from '../../design/tokens';
+import { rhythm, textStyles } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 
 /** Material's tonal search field; its IME Search key is the submit action. */
 export function SearchField({
@@ -21,6 +22,9 @@ export function SearchField({
   onSubmitEditing: () => void;
   testID: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   return (
     <View style={styles.field}>
       <Icon name={symbols.search} size={24} tone="inkSoft" maxScale={1} />
@@ -61,30 +65,32 @@ export function SearchField({
   );
 }
 
-const styles = StyleSheet.create({
-  field: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: 56,
-    paddingLeft: rhythm.block,
-    paddingRight: rhythm.tight,
-    borderRadius: 28,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  input: {
-    ...textStyles.body,
-    flex: 1,
-    minWidth: 0,
-    minHeight: 56,
-    paddingVertical: rhythm.block,
-    color: colors.ink,
-  },
-  clear: {
-    minWidth: 48,
-    minHeight: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    field: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: 56,
+      paddingLeft: rhythm.block,
+      paddingRight: rhythm.tight,
+      borderRadius: 28,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    input: {
+      ...textStyles.body,
+      flex: 1,
+      minWidth: 0,
+      minHeight: 56,
+      paddingVertical: rhythm.block,
+      color: colors.ink,
+    },
+    clear: {
+      minWidth: 48,
+      minHeight: 48,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  }),
+);

@@ -17,7 +17,8 @@ import {
   MachinePill,
   Text,
 } from '../../design/primitives';
-import { colors, layout, rhythm } from '../../design/tokens';
+import { layout, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { openOnWeb } from '../../navigation/external';
 import { useFittedSheetHeight } from '../sheets/fitted';
 import { setConsent } from './bridge';
@@ -27,6 +28,8 @@ import { failureCopy, microphoneCopy, talkCopy } from './model';
 
 /** One line before every call (App Review 5.1.2(i) and honest AI output). */
 export function VoiceDisclosure() {
+  const styles = useStyles();
+
   return (
     <Text
       wordSafe
@@ -46,6 +49,8 @@ export function VoiceDisclosure() {
  * and the dated ElevenLabs check never drift apart (specs/account.md 2.2).
  */
 export function VoiceConsentText() {
+  const styles = useStyles();
+
   return (
     <View style={styles.paragraphs}>
       <Text wordSafe variant="body">
@@ -83,6 +88,8 @@ export { SHEET_HEADER } from '../sheets/fitted';
  * nothing.
  */
 export function ConsentSheet() {
+  const styles = useStyles();
+
   const insets = useSafeAreaInsets();
   const maxHeight = useFittedSheetHeight();
   const [busy, setBusy] = useState(false);
@@ -199,6 +206,8 @@ export function MicrophoneRationale({
   onContinue: () => void;
   onDecline: () => void;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.panel} testID="talk-microphone">
       <PanelHeading>{microphoneCopy.heading}</PanelHeading>
@@ -253,16 +262,18 @@ function PanelHeading({ children }: { children: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  centre: { textAlign: 'center' },
-  paragraphs: { gap: rhythm.block },
-  sheet: { backgroundColor: colors.paper },
-  body: {
-    gap: rhythm.block,
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
-  },
-  consentActions: { gap: rhythm.tight },
-  panel: { gap: rhythm.tight },
-  actions: { gap: rhythm.tight, marginTop: rhythm.tight },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    centre: { textAlign: 'center' },
+    paragraphs: { gap: rhythm.block },
+    sheet: { backgroundColor: colors.paper },
+    body: {
+      gap: rhythm.block,
+      paddingHorizontal: layout.screenMargin,
+      paddingTop: rhythm.block,
+    },
+    consentActions: { gap: rhythm.tight },
+    panel: { gap: rhythm.tight },
+    actions: { gap: rhythm.tight, marginTop: rhythm.tight },
+  }),
+);

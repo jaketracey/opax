@@ -4,7 +4,7 @@ import { Redirect, useLocalSearchParams } from 'expo-router';
 import { Button, useReduceMotion } from '../../design/primitives';
 import { headerItems, type TestableHeaderItem } from '../../navigation/chrome';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
-import { colors } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { ProfileScreen } from '../Person';
 import { ElectorateScreen } from '../Electorate';
 import BillDetail from '../bills/BillDetail';
@@ -27,6 +27,9 @@ const ORB = 28;
  * button returns to the call.
  */
 export function TalkRecordScreen() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const { path } = useLocalSearchParams<{ path?: string }>();
   const talk = useTalkLive();
   const reduceMotion = useReduceMotion();
@@ -116,7 +119,9 @@ export function TalkRecordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: colors.paper },
-  orb: { width: ORB, height: ORB },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    page: { flex: 1, backgroundColor: colors.paper },
+    orb: { width: ORB, height: ORB },
+  }),
+);

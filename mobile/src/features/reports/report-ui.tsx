@@ -23,13 +23,13 @@ import {
   Text as NativeText,
 } from '../../design/primitives';
 import {
-  colors,
   light,
   minimumTarget,
   radii,
   rhythm,
   textStyles,
 } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { useHighTextContrast } from '../../design/accessibility';
 import {
   dark,
@@ -42,6 +42,8 @@ import { citationLabel, pageTarget, splitRuns } from './report-model';
 
 // Shared roles resolved for both native platforms, including Android night mode.
 export function useReportColors() {
+  const colors = useColors();
+
   const scheme = useColorScheme();
   const highContrast = useHighTextContrast();
   return Platform.OS === 'ios'

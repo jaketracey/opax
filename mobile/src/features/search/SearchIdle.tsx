@@ -18,7 +18,8 @@ import {
   type SFSymbol,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { divisionHistoryRoute } from '../../navigation/routes/bills';
 import { directoryRoute } from '../../navigation/routes/people';
 import { publicMoneyRoute } from '../../navigation/routes/public-money';
@@ -185,6 +186,8 @@ export function SearchIdle({
   /** False until the screen is first opened (its reads start then). */
   visited?: boolean;
 }) {
+  const colors = useColors();
+
   const recent = useRecentSearches();
   const { fontScale } = useWindowDimensions();
   const member = useContext(MyMemberContext) ?? null;

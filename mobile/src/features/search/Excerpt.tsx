@@ -1,7 +1,7 @@
 import { Text as NativeText, StyleSheet } from 'react-native';
 import { passageText, serverPassage } from '../../api/passage-text';
 import { Text } from '../../design/primitives';
-import { colors } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 
 /** A Worker document row (32-hex resource id) carries a normalized
  * /api/search snippet; a catalog row's snippet is raw published text. */
@@ -77,6 +77,8 @@ export function Excerpt({
   prefix?: string;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const snippet = oneEllipsis(
     isWorkerSnippet(resource)
       ? serverPassage(raw, { max: PASSAGE_MAX })
@@ -106,10 +108,12 @@ export function Excerpt({
   );
 }
 
-const styles = StyleSheet.create({
-  // The search highlight: bronze wash behind the record's own ink.
-  match: { backgroundColor: colors.navyWash },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    // The search highlight: bronze wash behind the record's own ink.
+    match: { backgroundColor: colors.navyWash },
+  }),
+);
 
 /**
  * A result row's passage for `RecordRow` `compact`: the record's own words,

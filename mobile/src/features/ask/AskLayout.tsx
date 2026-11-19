@@ -32,13 +32,8 @@ import {
   type Rect,
   type Region,
 } from '../../design/fold';
-import {
-  colors,
-  hairline,
-  layout,
-  rhythm,
-  type Role,
-} from '../../design/tokens';
+import { hairline, layout, rhythm, type Role } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { KeyboardLift, type Obstacle } from './keyboard';
 
 /**
@@ -339,6 +334,8 @@ export function PhoneDock({
   docked?: boolean;
   positioned?: boolean;
 }) {
+  const colors = useColors();
+
   const margin = useScreenMargin();
   return (
     <SafeAreaView

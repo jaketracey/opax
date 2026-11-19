@@ -44,7 +44,8 @@ import {
 } from '../../design/primitives';
 import { ValueRow } from '../../design/rows';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { canonicalUrl, openSource } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
@@ -195,6 +196,8 @@ function usePage(path: string | null, onLoaded: (d: Row) => void) {
   };
 }
 function ThreadRows({ items }: { items: Row[] }) {
+  const styles = useStyles();
+
   return (
     <InsetGroup>
       {items
@@ -245,6 +248,8 @@ function MemberByline({
   action?: ReactNode;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.bylineRow}>
       <Pressable
@@ -320,6 +325,8 @@ function NativeCommunityScreen() {
   return <CommunityPage key={`${communityGeneration()}:${destination}`} />;
 }
 function CommunityPage() {
+  const styles = useStyles();
+
   const composerSurface = useRef<View>(null);
   const params = useLocalSearchParams<Record<string, string>>();
   const raw = typeof params.view === 'string' ? params.view : 'home';
@@ -1650,48 +1657,54 @@ function CommunityPage() {
   );
 }
 
-const styles = StyleSheet.create({
-  feedRow: {
-    minHeight: minimumTarget,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.heading,
-  },
-  rowContent: { flex: 1, minWidth: 0, gap: rhythm.line },
-  bylineRow: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  byline: {
-    flex: 1,
-    minHeight: minimumTarget,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.heading,
-  },
-  messageHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  grow: { flex: 1 },
-  pressed: { backgroundColor: colors.sunken },
-  actions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  like: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: minimumTarget,
-    minWidth: minimumTarget,
-    gap: rhythm.tight,
-    paddingHorizontal: rhythm.tight,
-    borderRadius: minimumTarget / 2,
-    borderCurve: 'continuous',
-  },
-  trailingActions: {
-    flexDirection: 'row',
-    gap: rhythm.tight,
-    marginLeft: 'auto',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    feedRow: {
+      minHeight: minimumTarget,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.heading,
+    },
+    rowContent: { flex: 1, minWidth: 0, gap: rhythm.line },
+    bylineRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    byline: {
+      flex: 1,
+      minHeight: minimumTarget,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.heading,
+    },
+    messageHead: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    grow: { flex: 1 },
+    pressed: { backgroundColor: colors.sunken },
+    actions: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    like: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      minHeight: minimumTarget,
+      minWidth: minimumTarget,
+      gap: rhythm.tight,
+      paddingHorizontal: rhythm.tight,
+      borderRadius: minimumTarget / 2,
+      borderCurve: 'continuous',
+    },
+    trailingActions: {
+      flexDirection: 'row',
+      gap: rhythm.tight,
+      marginLeft: 'auto',
+    },
+  }),
+);

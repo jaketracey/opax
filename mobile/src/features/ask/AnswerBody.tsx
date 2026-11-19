@@ -11,7 +11,8 @@ import { CitationMark } from '../../design/citation-mark';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { webOrigin } from '../../design/environment';
 import { Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { fromWebPath } from '../../navigation/routes';
 import {
   openSource,
@@ -87,6 +88,8 @@ export function AnswerBody({
   markFallback?: 'superscript';
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   // A final answer stays selectable (the system Copy menu, journeys/ask.md
   // 4.5). iOS only: on iOS a tap on a nested mark or link still reaches
@@ -279,6 +282,8 @@ function AnswerTable({
   /** Laid out and undrawn: the fading layer's copy of a table. */
   unseen: boolean;
 }) {
+  const styles = useStyles();
+
   if (stacked)
     return (
       <View style={[styles.stackedTable, unseen ? styles.undrawn : null]}>
@@ -329,35 +334,37 @@ function AnswerTable({
     </ScrollView>
   );
 }
-const styles = StyleSheet.create({
-  body: { gap: rhythm.block },
-  claim: { backgroundColor: colors.navyWash },
-  unseen: { color: 'transparent' },
-  undrawn: { opacity: 0 },
-  quote: {
-    borderLeftWidth: 2,
-    borderLeftColor: colors.dividerSubtle,
-    paddingLeft: rhythm.tight,
-  },
-  list: { gap: rhythm.tight },
-  item: { flexDirection: 'row', gap: rhythm.tight },
-  marker: { minWidth: 14 },
-  itemText: { flex: 1 },
-  table: { minWidth: '100%' },
-  tableRow: { flexDirection: 'row' },
-  ruled: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
-  cell: {
-    minWidth: 96,
-    maxWidth: 220,
-    paddingVertical: rhythm.tight,
-    paddingRight: rhythm.tight,
-  },
-  stackedTable: { gap: rhythm.block },
-  stackedRow: {
-    gap: rhythm.tight,
-    paddingBottom: rhythm.block,
-    borderBottomWidth: hairline,
-    borderBottomColor: colors.dividerSubtle,
-  },
-  stackedCell: { gap: rhythm.line },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    body: { gap: rhythm.block },
+    claim: { backgroundColor: colors.navyWash },
+    unseen: { color: 'transparent' },
+    undrawn: { opacity: 0 },
+    quote: {
+      borderLeftWidth: 2,
+      borderLeftColor: colors.dividerSubtle,
+      paddingLeft: rhythm.tight,
+    },
+    list: { gap: rhythm.tight },
+    item: { flexDirection: 'row', gap: rhythm.tight },
+    marker: { minWidth: 14 },
+    itemText: { flex: 1 },
+    table: { minWidth: '100%' },
+    tableRow: { flexDirection: 'row' },
+    ruled: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+    cell: {
+      minWidth: 96,
+      maxWidth: 220,
+      paddingVertical: rhythm.tight,
+      paddingRight: rhythm.tight,
+    },
+    stackedTable: { gap: rhythm.block },
+    stackedRow: {
+      gap: rhythm.tight,
+      paddingBottom: rhythm.block,
+      borderBottomWidth: hairline,
+      borderBottomColor: colors.dividerSubtle,
+    },
+    stackedCell: { gap: rhythm.line },
+  }),
+);

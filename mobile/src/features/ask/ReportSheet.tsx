@@ -25,7 +25,8 @@ import { SurfaceContext } from '../../design/row-padding';
 import { LinkRow } from '../../design/rows';
 import { ContentUnavailable, InlineError } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm, textStyles } from '../../design/tokens';
+import { minimumTarget, rhythm, textStyles } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { androidHeaderBar, headerItems } from '../../navigation/chrome';
 import { copyText } from '../records/actions';
 import { parseTurnKey } from './model';
@@ -42,6 +43,9 @@ import { chatsSnapshot } from './store';
  * report endpoint, Email becomes Send.
  */
 export default function ReportSheet() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{ turn?: string; source?: string }>();
   const found = answerTurn(params.turn);
   const margin = useScreenMargin();
@@ -222,15 +226,17 @@ export default function ReportSheet() {
     </>
   );
 }
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.sunken },
-  content: { paddingTop: rhythm.group, gap: rhythm.group },
-  note: {
-    ...textStyles.body,
-    color: colors.ink,
-    minHeight: minimumTarget * 2,
-    paddingVertical: rhythm.row,
-    textAlignVertical: 'top',
-  },
-  noMail: { gap: rhythm.tight, alignItems: 'flex-start' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.sunken },
+    content: { paddingTop: rhythm.group, gap: rhythm.group },
+    note: {
+      ...textStyles.body,
+      color: colors.ink,
+      minHeight: minimumTarget * 2,
+      paddingVertical: rhythm.row,
+      textAlignVertical: 'top',
+    },
+    noMail: { gap: rhythm.tight, alignItems: 'flex-start' },
+  }),
+);

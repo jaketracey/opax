@@ -1,7 +1,8 @@
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/primitives';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { accountCopy } from './copy';
 import { spokenWait } from './useCodeChallenge';
 
@@ -28,6 +29,9 @@ export function ResendButton({
   onPress: () => void;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const waiting = wait > 0;
   const disabled = waiting || busy;
   return (
@@ -65,15 +69,17 @@ export function ResendButton({
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    alignSelf: 'center',
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-    paddingHorizontal: rhythm.block,
-    borderRadius: minimumTarget / 2,
-    borderCurve: 'continuous',
-  },
-  pressed: { backgroundColor: colors.sunken },
-  label: { textAlign: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    button: {
+      alignSelf: 'center',
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+      paddingHorizontal: rhythm.block,
+      borderRadius: minimumTarget / 2,
+      borderCurve: 'continuous',
+    },
+    pressed: { backgroundColor: colors.sunken },
+    label: { textAlign: 'center' },
+  }),
+);

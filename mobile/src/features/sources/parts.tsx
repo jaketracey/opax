@@ -7,7 +7,8 @@ import { EXTERNAL_GLYPH, Icon } from '../../design/icon';
 import { useRowHighlight } from '../../design/row-padding';
 import { useListSearchBar } from '../../design/search-bar';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { opaqueBar } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 
@@ -42,8 +43,31 @@ export const sourcesCopy = {
   tryPublisher: 'Check the spelling or try another publisher.',
 } as const;
 
-/** A plain reference list on paper, so its bar matches its ground. */
-export const paperBar: NativeStackNavigationOptions = opaqueBar(colors.paper);
+/**
+ * A plain reference list on paper, so its bar matches its ground. The
+ * grounds are read at each spread (`{ ...paperBar }`, in a page's render),
+ * so they are the paper of the appearance on screen and not the one at
+ * import; a page that holds this object itself would keep the first.
+ */
+export const paperBar: NativeStackNavigationOptions = Object.defineProperties(
+  { headerShadowVisible: opaqueBar().headerShadowVisible },
+  {
+    headerStyle: { enumerable: true, get: () => opaqueBar().headerStyle },
+    headerLargeStyle: {
+      enumerable: true,
+      get: () => opaqueBar().headerLargeStyle,
+    },
+  },
+);
+
+/**
+ * `paperBar` for a page: the hook draws the page again when the system's
+ * appearance changes (Android), and the bar's ground with it.
+ */
+export function usePaperBar(): NativeStackNavigationOptions {
+  const colors = useColors();
+  return useMemo(() => opaqueBar(colors.paper), [colors]);
+}
 
 /** Words in any order, ignoring case: "act legislative" finds both. */
 export function matches(

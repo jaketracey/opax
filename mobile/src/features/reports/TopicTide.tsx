@@ -2,7 +2,8 @@ import { StyleSheet, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { Section, SourceLine, Text } from '../../design/primitives';
 import { counted, formatCount, formatPercent } from '../../design/format';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import type { DecadeBucket, decodeTide } from './model';
 import type { ReadMeta } from './parts';
 import { TIDE_CITATION } from './topic-copy';
@@ -28,6 +29,8 @@ export function TopicTide({
   chosen: DecadeBucket | null;
   onChoose: (decade: DecadeBucket | null) => void;
 }) {
+  const colors = useColors();
+
   const bars = (tide.topics[slug] ?? []).flatMap((point) => {
     const decade = tide.decades.find((d) => d.slug === point.decade);
     return decade ? [{ ...point, decade }] : [];

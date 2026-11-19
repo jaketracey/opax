@@ -23,7 +23,8 @@ import { useListKeys } from '../../design/list-keys';
 import { SurfaceContext } from '../../design/row-padding';
 import { PaneBar, PaneHost, type SplitPane } from '../../design/split';
 import { Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { answerBlocks } from './answer-markdown';
@@ -224,6 +225,9 @@ function SourcesPane({
   readFailed: boolean;
   offline: boolean;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const top = stack.at(-1);
   const ground = askGround();
   const pane: SplitPane<RecordEntry> = {
@@ -309,6 +313,8 @@ function SourceList({
   open: AskPane['open'];
   profiles?: Map<string, AskPerson>;
 }) {
+  const styles = useStyles();
+
   const sources = answer.result?.sources ?? answer.sources ?? [];
   const { cited, also, numbered } = citedSources(sources);
   const source = numbered ? cited[marked - 1] : undefined;
@@ -422,18 +428,20 @@ function SourceList({
   );
 }
 
-const styles = StyleSheet.create({
-  pane: {
-    height: '100%',
-    borderLeftWidth: hairline,
-    borderLeftColor: colors.dividerDefault,
-  },
-  grow: { flex: 1 },
-  content: {
-    gap: rhythm.section,
-    paddingHorizontal: rhythm.block + rhythm.line,
-    paddingVertical: rhythm.block,
-  },
-  section: { gap: rhythm.groupHeader },
-  bar: { flexDirection: 'row', justifyContent: 'flex-end' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    pane: {
+      height: '100%',
+      borderLeftWidth: hairline,
+      borderLeftColor: colors.dividerDefault,
+    },
+    grow: { flex: 1 },
+    content: {
+      gap: rhythm.section,
+      paddingHorizontal: rhythm.block + rhythm.line,
+      paddingVertical: rhythm.block,
+    },
+    section: { gap: rhythm.groupHeader },
+    bar: { flexDirection: 'row', justifyContent: 'flex-end' },
+  }),
+);

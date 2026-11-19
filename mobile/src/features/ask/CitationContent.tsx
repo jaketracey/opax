@@ -11,7 +11,8 @@ import { InsetGroup } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { SourceAffordance } from '../../design/source';
 import { Text } from '../../design/text';
-import { colors, radii, rhythm } from '../../design/tokens';
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { personRoute } from '../../navigation/routes';
 import type { SourcePlacement } from '../../analytics/events';
 import { openSource } from '../../navigation/external';
@@ -91,6 +92,8 @@ export function CitationContent({
   /** Where the citation is shown, for analytics: the answer or the pane. */
   placement?: SourcePlacement;
 }) {
+  const styles = useStyles();
+
   const title = sourceTitle(source);
   const meta = sourceMeta(source);
   const speaker = source.speaker ? personName(source.speaker) : null;
@@ -189,14 +192,20 @@ export function CitationContent({
     </View>
   );
 }
-const styles = StyleSheet.create({
-  content: { gap: rhythm.block },
-  title: { flexDirection: 'row', alignItems: 'flex-start', gap: rhythm.tight },
-  grow: { flex: 1 },
-  passage: {
-    backgroundColor: colors.navyWash,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    padding: rhythm.block,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    content: { gap: rhythm.block },
+    title: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    grow: { flex: 1 },
+    passage: {
+      backgroundColor: colors.navyWash,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      padding: rhythm.block,
+    },
+  }),
+);

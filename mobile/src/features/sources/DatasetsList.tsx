@@ -15,7 +15,7 @@ import {
 import {
   matches,
   NoResults,
-  paperBar,
+  usePaperBar,
   sourcesCopy as text,
   useBarSearch,
 } from './parts';
@@ -38,6 +38,7 @@ export default function DatasetsList() {
   const { list, settled } = useSources();
   const own = useOwnDates(ownDateIds());
   const search = useBarSearch(text.searchDatasets);
+  const paperBar = usePaperBar();
   const shown = byName(list).filter((dataset) =>
     matches(search.query, [dataset.name, dataset.publisher, dataset.licence]),
   );

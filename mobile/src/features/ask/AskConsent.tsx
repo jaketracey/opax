@@ -9,7 +9,8 @@ import { InsetGroup } from '../../design/layout';
 import { SurfaceContext } from '../../design/row-padding';
 import { LinkRow } from '../../design/rows';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { openOnWeb } from '../../navigation/external';
 import { useFittedSheetHeight } from '../sheets/fitted';
 import { machineNote } from './AnswerView';
@@ -41,6 +42,8 @@ export const consentCopy = {
  * buttons there.
  */
 export default function AskConsent() {
+  const styles = useStyles();
+
   const margin = useScreenMargin();
   const insets = useSafeAreaInsets();
   const maxHeight = useFittedSheetHeight();
@@ -108,9 +111,11 @@ export default function AskConsent() {
     </SurfaceContext.Provider>
   );
 }
-const styles = StyleSheet.create({
-  screen: { backgroundColor: colors.sunken },
-  content: { gap: rhythm.group, paddingTop: rhythm.block },
-  lead: { gap: rhythm.tight },
-  actions: { gap: rhythm.tight },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { backgroundColor: colors.sunken },
+    content: { gap: rhythm.group, paddingTop: rhythm.block },
+    lead: { gap: rhythm.tight },
+    actions: { gap: rhythm.tight },
+  }),
+);

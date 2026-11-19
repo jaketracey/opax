@@ -2,7 +2,8 @@ import { useRef } from 'react';
 import { Platform, ScrollView, StyleSheet } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 
 /** Android scope choices keep whole labels at every font size. */
 export function ScopeChips<T extends string>({
@@ -18,6 +19,9 @@ export function ScopeChips<T extends string>({
   label: string;
   testID: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const scroll = useRef<ScrollView>(null);
   const positions = useRef(new Map<T, number>());
   return (
@@ -78,20 +82,22 @@ export function ScopeChips<T extends string>({
   );
 }
 
-const styles = StyleSheet.create({
-  choices: { gap: rhythm.tight, paddingVertical: rhythm.line },
-  chip: {
-    minHeight: 48,
-    justifyContent: 'center',
-    paddingHorizontal: rhythm.block,
-    paddingVertical: rhythm.tight,
-    borderRadius: 8,
-    borderCurve: 'continuous',
-    borderWidth: 1,
-    borderColor: colors.dividerDefault,
-    overflow: 'hidden',
-    backgroundColor: colors.paper,
-  },
-  selected: { backgroundColor: colors.navyWash, borderColor: colors.navy },
-  pressed: { backgroundColor: colors.sunken },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    choices: { gap: rhythm.tight, paddingVertical: rhythm.line },
+    chip: {
+      minHeight: 48,
+      justifyContent: 'center',
+      paddingHorizontal: rhythm.block,
+      paddingVertical: rhythm.tight,
+      borderRadius: 8,
+      borderCurve: 'continuous',
+      borderWidth: 1,
+      borderColor: colors.dividerDefault,
+      overflow: 'hidden',
+      backgroundColor: colors.paper,
+    },
+    selected: { backgroundColor: colors.navyWash, borderColor: colors.navy },
+    pressed: { backgroundColor: colors.sunken },
+  }),
+);

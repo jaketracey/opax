@@ -33,18 +33,4 @@ module.exports = [
   // Lane C: Money.
   'src/features/money/**',
   'src/features/money-public/**',
-  // Lane D: Ask, Talk, Search, reports, sheets, Account.
-  'src/features/Search.tsx',
-  'src/features/account/**',
-  'src/features/ask/**',
-  'src/features/community/**',
-  'src/features/methods/**',
-  'src/features/quick-search/**',
-  'src/features/reports/**',
-  'src/features/search/**',
-  'src/features/sheets/**',
-  'src/features/sources/**',
-  'src/features/talk/**',
-  'src/test-screens/**',
-  'src/workbench/**',
 ];

@@ -24,7 +24,8 @@ import Animated, {
 import { useReduceMotionSetting } from '../../design/accessibility';
 import { moveAccessibilityFocus } from '../../design/keyboard';
 import { MachinePill } from '../../design/labels';
-import { colors, motion, rhythm } from '../../design/tokens';
+import { motion, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { parseAnswer, type Block } from './answer-markdown';
 import { AnswerBody } from './AnswerBody';
 import { machineNote } from './AnswerView';
@@ -168,6 +169,9 @@ function StreamTail({
   claimFocus: () => boolean;
   still: boolean;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const row = useRef<View>(null);
   useEffect(() => {
     // After the commit is on screen, so the row exists for VoiceOver.
@@ -251,6 +255,8 @@ export function StreamedAnswer({
   pillTestID?: string;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const blocks = streamedBlocks(text);
   if (!blocks.length) return null;
   return (
@@ -286,6 +292,8 @@ export function AskProgress({
   /** The block's bottom edge within its turn, as the answer grows. */
   onBottom?: (edge: number) => void;
 }) {
+  const styles = useStyles();
+
   const blocks = streamedBlocks(streaming);
   const started = blocks.length > 0;
   const motionOn = useReduceMotionSetting() === false;
@@ -369,18 +377,20 @@ export function AskProgress({
     </View>
   );
 }
-const styles = StyleSheet.create({
-  progress: { gap: rhythm.heading },
-  block: { gap: rhythm.tight },
-  leaving: { position: 'absolute', top: 0, left: 0, right: 0 },
-  // The small system spinner's height, at every text size.
-  tail: { height: 20, flexDirection: 'row', alignItems: 'center' },
-  dots: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    borderCurve: 'continuous',
-    backgroundColor: colors.inkSoft,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    progress: { gap: rhythm.heading },
+    block: { gap: rhythm.tight },
+    leaving: { position: 'absolute', top: 0, left: 0, right: 0 },
+    // The small system spinner's height, at every text size.
+    tail: { height: 20, flexDirection: 'row', alignItems: 'center' },
+    dots: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    dot: {
+      width: 4,
+      height: 4,
+      borderRadius: 2,
+      borderCurve: 'continuous',
+      backgroundColor: colors.inkSoft,
+    },
+  }),
+);
