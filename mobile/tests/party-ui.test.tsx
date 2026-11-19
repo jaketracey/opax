@@ -17,7 +17,11 @@ import {
 } from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
 import { combinedPartyNode } from '../src/api/party-page';
-import { apiClient, catalogs as runtime, peopleDepth } from '../src/api/runtime';
+import {
+  apiClient,
+  catalogs as runtime,
+  peopleDepth,
+} from '../src/api/runtime';
 import {
   formatCount,
   formatMoney,
@@ -62,7 +66,7 @@ import {
   resultsRoute,
 } from '../src/navigation/routes';
 import { DivisionRow, LinkRow, MoneyRow, ValueRow } from '../src/design/rows';
-import { pinned, slugs } from './pinned';
+import { manifest, pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 import { accessibilityElements } from './a11y-tree';
 jest.mock('expo-router', () => ({
@@ -236,6 +240,157 @@ test.each([
     act(() => r.unmount());
   },
 );
+
+describe('while the Victorian Parliament’s term has ended for an election', () => {
+  const TERM_LINE =
+    'Parliament’s term ended on 3 November for the 28 November election';
+  // The live index: every Assembly row carries the election day, or null
+  // once the result is loaded. `fail` is an index that cannot be read.
+  const apiWith = (value: string | null | 'fail') =>
+    new Catalogs({
+      get: async (path, decoder) => {
+        let raw = path === '/api/person-slugs' ? slugs : pinned(path);
+        if (path === manifest.index_url) {
+          if (value === 'fail') throw new Error('offline');
+          const file = raw as { electorates: { chamber: string }[] };
+          raw = {
+            ...file,
+            electorates: file.electorates.map((s) =>
+              s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+            ),
+          };
+        }
+        return { data: decoder(raw), stale: false, savedAt: 1000, asOf: null };
+      },
+    });
+  const page = async (label: string, value: string | null | 'fail') => {
+    const record = await apiWith(value).partyPage(label);
+    jest.mocked(runtime.partyPage).mockResolvedValueOnce(record);
+    return { record, r: await render(label) };
+  };
+  const row = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAllByType(LinkRow).find((n) => n.props.testID === id);
+  const membersTile = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAllByType(StatStrip)
+      .flatMap((strip) => strip.props.tiles as { testID?: string }[])
+      .find((t) => t.testID === 'party-figure-members') as
+      | { value: string; label: string }
+      | undefined;
+  const allMembers = (label: string) => ({
+    pathname: '/directory',
+    params: { kind: 'person', party: label },
+  });
+
+  test('Labor: the sitting row leaves the Victorian members out, and one row under it counts them as last members', async () => {
+    const { r } = await page('Labor', '2026-11-28');
+    expect(membersTile(r)).toMatchObject({
+      value: '124',
+      label: 'sitting members',
+    });
+    const sitting = row(r, 'party-current-count')!;
+    expect(sitting.props.title).toBe('124 sitting members');
+    expect(sitting.props.href).toEqual(partyMembersRoute('Labor'));
+    const last = row(r, 'party-last-count-vic')!;
+    expect(last.props).toMatchObject({
+      title: '69 last members of the Victorian Parliament',
+      detail: TERM_LINE,
+      accessibilityLabel: `69 last members of the Victorian Parliament. ${TERM_LINE}`,
+      href: allMembers('Labor'),
+    });
+    // Directly under the sitting row; too many to name.
+    const rows = r.root.findAllByType(LinkRow).map((n) => n.props.testID);
+    expect(rows.indexOf('party-last-count-vic')).toBe(
+      rows.indexOf('party-current-count') + 1,
+    );
+    expect(
+      r.root
+        .findAllByType(PersonRow)
+        .filter((n) => /^party-(last|sitting)-/.test(n.props.testID ?? '')),
+    ).toHaveLength(0);
+    const block = r.root
+      .findAllByType(ProfileBlock)
+      .find((n) => n.props.id === 'party-members')!;
+    expect(block.props.action).toMatchObject({
+      accessibilityLabel: 'See all 124 Labor members',
+      href: partyMembersRoute('Labor'),
+    });
+    act(() => r.unmount());
+  });
+
+  test.each([
+    ['Legalise Cannabis Victoria', 2, '2 last members', 'last members'],
+    ['Animal Justice Party', 1, '1 last member', 'last member'],
+  ])(
+    '%s: nobody is named or counted as sitting; its last members are named under their own row',
+    async (label, count, counted, tileLabel) => {
+      const { r } = await page(label, '2026-11-28');
+      // Never "0 sitting members" as the headline figure.
+      expect(membersTile(r)).toMatchObject({
+        value: String(count),
+        label: tileLabel,
+      });
+      expect(has(r, 'party-members-named')).toBe(false);
+      const people = r.root.findAllByType(PersonRow);
+      expect(
+        people.filter((n) => /^party-sitting-/.test(n.props.testID ?? '')),
+      ).toHaveLength(0);
+      const last = row(r, 'party-last-count-vic')!;
+      expect(last.props).toMatchObject({
+        title: `${counted} of the Victorian Parliament`,
+        detail: TERM_LINE,
+        accessibilityLabel: `${counted} of the Victorian Parliament. ${TERM_LINE}`,
+        href: allMembers(label),
+      });
+      const named = people.filter((n) =>
+        /^party-last-/.test(n.props.testID ?? ''),
+      );
+      expect(named).toHaveLength(count);
+      for (const person of named) {
+        expect(person.props.place).toMatch(
+          /^Last member for .+, Victorian Legislative (Assembly|Council)$/,
+        );
+        expect(person.props.href).toBeTruthy();
+      }
+      // "See all" does not open the empty sitting list.
+      const block = r.root
+        .findAllByType(ProfileBlock)
+        .find((n) => n.props.id === 'party-members')!;
+      expect(block.props.action).toMatchObject({
+        accessibilityLabel: `See all ${label} members`,
+        href: allMembers(label),
+      });
+      act(() => r.unmount());
+    },
+  );
+
+  test.each([[null], ['fail']] as const)(
+    'with the result loaded, or an index that cannot be read (%s), the page loads exactly as before',
+    async (value) => {
+      const before = await api.partyPage('Legalise Cannabis Victoria');
+      const { record, r } = await page('Legalise Cannabis Victoria', value);
+      expect(record.data!.members.status).toBe('ready');
+      expect(record.data!.members.data).toEqual(before.data!.members.data);
+      expect(record.data!.members.data!.last).toEqual([]);
+      expect(
+        r.root
+          .findAllByType(PersonRow)
+          .filter((n) => /^party-sitting-/.test(n.props.testID ?? '')),
+      ).toHaveLength(2);
+      expect(row(r, 'party-last-count-vic')).toBeUndefined();
+      expect(membersTile(r)).toBeUndefined();
+      act(() => r.unmount());
+
+      const labor = await page('Labor', value);
+      expect(labor.record.data!.members.data).toEqual(view.data!.members.data);
+      expect(row(labor.r, 'party-current-count')!.props.title).toBe(
+        '193 sitting members',
+      );
+      expect(row(labor.r, 'party-last-count-vic')).toBeUndefined();
+      act(() => labor.r.unmount());
+    },
+  );
+});
 
 test('a loaded party heading reveals its named bar title when it scrolls under the header', async () => {
   let finishLoading!: (loaded: typeof view) => void;
@@ -1337,7 +1492,13 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
         label: 'Harbourside Party',
         members: {
           ...base.members,
-          data: { current: [], recorded: [], currentCount: 0, sources: [] },
+          data: {
+            current: [],
+            recorded: [],
+            currentCount: 0,
+            last: [],
+            sources: [],
+          },
         },
         receipts: {
           ...base.receipts,

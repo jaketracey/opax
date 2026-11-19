@@ -3,6 +3,7 @@ import { throwIfAborted } from './abort';
 import { samePartyLabel } from '../design/party';
 import { decodePartyFile } from '../features/directories/party-file';
 import { publicDiscovery } from '../features/money-public/discovery';
+import { endedParliaments } from '../features/your-mp/term-ended';
 import {
   decodeRecentDivisions,
   type RecentDivisions,
@@ -254,11 +255,18 @@ export class Catalogs {
         this.slugs(refresh, signal),
         this.manifest(refresh, signal),
       ]);
-      const people = await this.people(manifest.data, refresh, signal);
+      // The electorates index says whose term has ended for an election. It
+      // is the People list's own cached read; the page loads without it,
+      // and then nobody is taken out of the sitting members.
+      const [people, electorates] = await Promise.all([
+        this.people(manifest.data, refresh, signal),
+        this.electorates(manifest.data, refresh, signal).catch(() => null),
+      ]);
+      throwIfAborted(signal);
       // A row that cannot be read drops only that row: Members draws the rest
       // and says it is partial. (b69 refused the whole block on any partial
       // cohort, so two bad roster ids took Members down on every party.)
-      return { roster, slugs, manifest, people };
+      return { roster, slugs, manifest, people, electorates };
     })();
     const coreRead = read(
       corePending.then((data) => ({
@@ -330,6 +338,9 @@ export class Catalogs {
           core.data.people.data,
           core.data.slugs.data,
           core.data.manifest.data,
+          core.data.electorates
+            ? endedParliaments(core.data.electorates.data.electorates)
+            : undefined,
         )
       : null;
     const members: Block<ReturnType<typeof partyMembers>> = {

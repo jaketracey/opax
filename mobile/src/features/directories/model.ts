@@ -10,6 +10,7 @@ import { rosterChambersFor } from '../../api/person-identity';
 import {
   partyName,
   sameMemberParty,
+  partyMembersByTerm,
   sittingPartyMembers,
 } from '../../api/party-page';
 import { nameKey, nameValues } from '../../api/ids';
@@ -119,12 +120,15 @@ export function peopleRows(
   votes: Votes,
   portraits: ReturnType<typeof buildPortraitIndex>,
 ): PeopleRow[] {
+  const ended = endedParliaments(d.electorates.data.electorates);
   const sitting = new Map(
     sittingPartyMembers(
       d.roster.data,
       d.people.data,
       d.slugs.data,
       d.manifest.data,
+      undefined,
+      ended,
     ).map(({ profile, seats }) => [
       profile.canonicalPersonId ?? profile.rosterPersonId ?? profile.name,
       [...new Set(seats.map((s) => s.party))],
@@ -139,7 +143,6 @@ export function peopleRows(
   const electorates = new Map(
     d.electorates.data.electorates.map((e) => [e.electorate_id, e]),
   );
-  const ended = endedParliaments(d.electorates.data.electorates);
   const out: PeopleRow[] = [];
   // The resolver deliberately retains surname aliases, but directory rows
   // follow Search/party membership: a full-name native identity, once per
@@ -489,20 +492,30 @@ export interface PartyRow {
   speeches: number;
   /** Unique sitting members across federal, state and territory parliaments. */
   members: number;
+  /**
+   * Unique members whose every seat is in a house whose Parliament's term
+   * has ended for an election: last members, not sitting ones.
+   */
+  last: number;
   money: Record<string, { total: number; source: string; asAt: string }>;
   total: number;
 }
 /** Parties only: "Independent" and presiding roles are not listed. */
 export function partyRows(
-  directory: Pick<Directory, 'roster' | 'people' | 'slugs' | 'manifest'>,
+  directory: Pick<Directory, 'roster' | 'people' | 'slugs' | 'manifest'> &
+    Partial<Pick<Directory, 'electorates'>>,
   files: Record<string, PartyFile>,
 ): PartyRow[] {
   const { roster, people, slugs, manifest } = directory;
-  const sitting = sittingPartyMembers(
+  const { sitting, last } = partyMembersByTerm(
     roster.data,
     people.data,
     slugs.data,
     manifest.data,
+    undefined,
+    directory.electorates
+      ? endedParliaments(directory.electorates.data.electorates)
+      : undefined,
   );
   const rows = new Map<string, PartyRow>();
   // A renamed party is one row, at its current name, whatever name a file
@@ -513,7 +526,15 @@ export function partyRows(
     if (!p)
       rows.set(
         name,
-        (p = { key: name, name, speeches: 0, members: 0, money: {}, total: 0 }),
+        (p = {
+          key: name,
+          name,
+          speeches: 0,
+          members: 0,
+          last: 0,
+          money: {},
+          total: 0,
+        }),
       );
     return p;
   };
@@ -530,7 +551,8 @@ export function partyRows(
         asAt: file.meta.generated,
       };
     }
-  for (const { seats } of sitting) for (const seat of seats) get(seat.party);
+  for (const { seats } of [...sitting, ...last])
+    for (const seat of seats) get(seat.party);
   for (const p of roster.data.people)
     if (
       p.party &&
@@ -547,6 +569,9 @@ export function partyRows(
     }
   for (const p of rows.values()) {
     p.members = sitting.filter((m) =>
+      m.seats.some((s) => sameMemberParty(s.party, p.name)),
+    ).length;
+    p.last = last.filter((m) =>
       m.seats.some((s) => sameMemberParty(s.party, p.name)),
     ).length;
     p.total =

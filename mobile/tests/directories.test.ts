@@ -40,6 +40,7 @@ import { readDivisionHistory } from '../src/features/directories/division-data';
 import { billFoldText, billName } from '../src/api/bill-transforms';
 import { partyMembers } from '../src/api/party-page';
 import { representativeProfile } from '../src/features/your-mp/model';
+import { endedParliaments } from '../src/features/your-mp/term-ended';
 jest.mock('../src/api/runtime', () => ({ catalogs: {} }));
 const record = <T>(data: T) => ({ data, stale: false, savedAt: 1, asOf: null });
 const directory = {
@@ -342,6 +343,145 @@ describe('static directory transforms', () => {
       expect(rows.map(placeLine)).toEqual(persons.map(placeLine));
       expect(persons.some((p) => sittingGroup(p) === 'ended')).toBe(false);
     });
+
+    // Party pages and the Parties list: the same people the list calls
+    // sitting, and the last members counted apart.
+    const indexWith = (value: string | null) => ({
+      ...index,
+      electorates: index.electorates.map((s) =>
+        s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+      ),
+    });
+    const partiesWith = (value: string | null) => {
+      const electorates = indexWith(value);
+      const ended = endedParliaments(electorates.electorates);
+      const rows = rowsWith(value);
+      const list = partyRows(
+        { ...directory, electorates: record(electorates) },
+        partyFiles,
+      );
+      const page = (label: string) =>
+        partyMembers(label, roster, people, slugs, manifest, ended);
+      const lastCount = (label: string) =>
+        page(label).last.reduce((n, g) => n + g.count, 0);
+      return { rows, list, page, lastCount };
+    };
+    const ids = (slugList: string[]) =>
+      [
+        ...new Set(
+          slugList.map(
+            (slug) =>
+              d.joinPerson(slug, slugs, roster, people, manifest)
+                .canonicalPersonId,
+          ),
+        ),
+      ].sort();
+
+    test.each([['2026-11-28'], [null]])(
+      'every party’s sitting count, named rows and Parties line equal its sitting list (dissolved_for %s)',
+      (value) => {
+        const { rows, list, page, lastCount } = partiesWith(value);
+        expect(list.map((p) => p.name).sort()).toEqual(
+          parties.map((p) => p.name).sort(),
+        );
+        for (const name of [...list.map((p) => p.name), 'Independent']) {
+          const members = page(name);
+          const sitting = matchingPeople(
+            rows,
+            { party: name, sitting: '1' },
+            '',
+          );
+          expect({ name, count: members.currentCount }).toEqual({
+            name,
+            count: sitting.length,
+          });
+          expect({
+            name,
+            ids: ids(members.current.map((m) => m.slug)),
+          }).toEqual({
+            name,
+            ids: sitting.map((p) => p.profile.canonicalPersonId).sort(),
+          });
+          const row = list.find((p) => p.name === name);
+          if (row)
+            expect({ name, members: row.members, last: row.last }).toEqual({
+              name,
+              members: sitting.length,
+              last: lastCount(name),
+            });
+          // The last members are in the list their row opens (the party
+          // with the sitting filter off), under "Term ended for an election".
+          const behind = matchingPeople(rows, { party: name }, '')
+            .filter((p) => sittingGroup(p) === 'ended')
+            .map((p) => p.profile.canonicalPersonId);
+          const last = ids(
+            members.last.flatMap((g) => g.members.map((m) => m.slug)),
+          );
+          expect(last).toHaveLength(lastCount(name));
+          expect(behind).toEqual(expect.arrayContaining(last));
+          if (value === null) {
+            // Nothing is taken out or added while no term has ended.
+            expect(members.last).toEqual([]);
+            const before = partyMembers(name, roster, people, slugs, manifest);
+            expect(members).toEqual(before);
+            if (row) expect(row).toEqual(parties.find((p) => p.name === name));
+          }
+        }
+      },
+    );
+
+    test('Labor: 124 sitting members and 69 last members of the Victorian Parliament; 193 sitting once the result is loaded', () => {
+      const dated = partiesWith('2026-11-28');
+      const labor = dated.page('Labor');
+      expect(labor.currentCount).toBe(124);
+      expect(labor.current.some((m) => m.jurisdiction === 'vic')).toBe(false);
+      expect(
+        labor.last.map((g) => [g.jurisdiction, g.count, g.term.electionDay]),
+      ).toEqual([['vic', 69, '2026-11-28']]);
+      expect(
+        labor.last[0]!.members.every((m) => m.jurisdiction === 'vic'),
+      ).toBe(true);
+      expect(dated.list.find((p) => p.name === 'Labor')).toMatchObject({
+        members: 124,
+        last: 69,
+      });
+      const loaded = partiesWith(null);
+      expect(loaded.page('Labor')).toMatchObject({
+        currentCount: 193,
+        last: [],
+      });
+      expect(loaded.list.find((p) => p.name === 'Labor')).toMatchObject({
+        members: 193,
+        last: 0,
+      });
+    });
+
+    test.each([
+      ['Legalise Cannabis Victoria', 2],
+      ['Animal Justice Party', 1],
+      ['Libertarian Party', 1],
+      ['Shooters, Fishers and Farmers Party Victoria', 1],
+    ])(
+      '%s: no sitting members, %i last, and a list behind the last members row',
+      (name, count) => {
+        const { rows, list, page } = partiesWith('2026-11-28');
+        const members = page(name);
+        expect(members.currentCount).toBe(0);
+        expect(members.current).toEqual([]);
+        expect(members.last.map((g) => g.count)).toEqual([count]);
+        expect(list.find((p) => p.name === name)).toMatchObject({
+          members: 0,
+          last: count,
+        });
+        // The row's link: the party, the sitting filter off.
+        const behind = matchingPeople(rows, { party: name }, '');
+        expect(behind).toHaveLength(count);
+        expect(behind.every((p) => sittingGroup(p) === 'ended')).toBe(true);
+        expect(matchingPeople(rows, { party: name, sitting: '1' }, '')).toEqual(
+          [],
+        );
+      },
+    );
   });
   test('place lines say the seat and state, never a count', () => {
     const line = (name: string) =>
