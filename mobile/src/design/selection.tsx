@@ -2,7 +2,8 @@ import { useCallback, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Divider } from './controls';
 import { ColumnMarginContext } from './row-padding';
-import { accents, colors, radii, rhythm, type Accent } from './tokens';
+import { accents, radii, rhythm } from './tokens';
+import { currentColors, type Colors } from './use-colors';
 
 // The selected fill sits this far in from the column's edges, as an iOS
 // sidebar's selection does: it reaches into the column's margin by the
@@ -60,11 +61,11 @@ export function useSplitBleed() {
 const SELECTED = accents.people;
 
 /**
- * The selected row's wash and outline, the same in every list. `accent` is
- * ignored (pass nothing); it stays optional until the callers that still
- * pass one drop it.
+ * The selected row's wash and outline, the same in every list. Pass the
+ * component's `useColors()` result, so the row draws again when the
+ * appearance changes; without it the colours are those at the call.
  */
-export function selectedWash(_accent?: Accent) {
+export function selectedWash(colors: Colors = currentColors()) {
   return {
     backgroundColor: colors[SELECTED.wash],
     borderColor: colors.lineControl,

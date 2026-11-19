@@ -4,7 +4,8 @@ import { androidSymbol } from './android-symbols';
 import { useReduceMotion } from './accessibility';
 import { designFlags } from './flags';
 import { symbols, type SFSymbol } from './symbols';
-import { accents, colors, type Accent, type Role } from './tokens';
+import { accents, type Accent, type Role } from './tokens';
+import { useColors } from './use-colors';
 
 export type { SFSymbol } from './symbols';
 export const EXTERNAL_GLYPH = symbols.external;
@@ -36,6 +37,8 @@ export function Icon({
   maxScale?: number;
   accessibilityLabel?: string;
 }) {
+  const colors = useColors();
+
   const { fontScale } = useWindowDimensions();
   const reduced = useReduceMotion();
   const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), maxScale));

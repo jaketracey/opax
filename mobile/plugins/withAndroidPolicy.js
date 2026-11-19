@@ -21,9 +21,67 @@ const fixture = `<?xml version="1.0" encoding="utf-8"?>
 </network-security-config>
 `;
 
+// The appearance switch (plugins/appearance.js) in MainActivity. `light`
+// pins AppCompat to day, as every release to 1.1.5 did. `automatic` follows
+// the system: React Native reads the scheme from the activity's
+// configuration (AppearanceModule), and the manifest keeps `uiMode` in
+// configChanges, so a change while the app is open reaches JavaScript
+// without recreating the activity. expo-system-ui would only make the same
+// AppCompat call from a string resource; it is not installed or needed.
+const nightModes = {
+  light: {
+    marker: '// OPAX Android is light-only',
+    mode: 'MODE_NIGHT_NO',
+  },
+  automatic: {
+    marker: '// OPAX Android follows the system appearance',
+    mode: 'MODE_NIGHT_FOLLOW_SYSTEM',
+  },
+};
+const nightModeLine =
+  /\n {4}\/\/ OPAX Android (?:is light-only|follows the system appearance)\n {4}androidx\.appcompat\.app\.AppCompatDelegate\.setDefaultNightMode\([^\n]*\)(?=\n)/g;
+function configureNightMode(contents, appearance) {
+  const chosen = nightModes[appearance];
+  if (!chosen)
+    throw new Error('Android appearance: expected light or automatic');
+  // A project generated under the other setting is rewritten, not doubled.
+  const cleared = contents.replace(nightModeLine, '');
+  const anchor = '    super.onCreate(null)';
+  if (!cleared.includes(anchor))
+    throw new Error(
+      'Android appearance: review the MainActivity onCreate anchor',
+    );
+  return cleared.replace(
+    anchor,
+    `    ${chosen.marker}\n    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.${chosen.mode})\n${anchor}`,
+  );
+}
+// With the system followed, the navigation bar's buttons must turn with the
+// page. React Native sets them once, when the activity is created
+// (WindowUtil.enableEdgeToEdge); the activity is not recreated on a scheme
+// change, so the configuration hook sets them again.
+const barsMarker = '// OPAX system bar buttons follow the scheme';
+const barsBlock = `
+    ${barsMarker}
+    val opaxNight = (newConfig.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+      android.content.res.Configuration.UI_MODE_NIGHT_YES
+    androidx.core.view.WindowInsetsControllerCompat(window, window.decorView)
+      .isAppearanceLightNavigationBars = !opaxNight`;
+function configureBarButtons(contents, appearance) {
+  const cleared = contents.replace(barsBlock, '');
+  if (appearance !== 'automatic') return cleared;
+  const anchor = '    super.onConfigurationChanged(newConfig)';
+  if (!cleared.includes(anchor))
+    throw new Error(
+      'Android appearance: review the MainActivity configuration hook',
+    );
+  return cleared.replace(anchor, anchor + barsBlock);
+}
+
 // Android mods only: no iOS project/config changes. A distinct Gradle build
 // type embeds JS like release and permits the emulator host only in e2e.
-module.exports = function withAndroidPolicy(config) {
+module.exports = function withAndroidPolicy(config, props = {}) {
+  const appearance = props.appearance ?? 'light';
   config = withAndroidManifest(config, (mod) => {
     const app = mod.modResults.manifest.application[0].$;
     app['android:usesCleartextTraffic'] = 'false';
@@ -136,18 +194,10 @@ android.buildTypes {
         `    opaxLinks.onCreate(savedInstanceState)\n${create}`,
       );
     }
-    const marker = '// OPAX Android is light-only';
-    if (!mod.modResults.contents.includes(marker)) {
-      const anchor = '    super.onCreate(null)';
-      if (!mod.modResults.contents.includes(anchor))
-        throw new Error(
-          'Android light theme: review the MainActivity onCreate anchor',
-        );
-      mod.modResults.contents = mod.modResults.contents.replace(
-        anchor,
-        `    ${marker}\n    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO)\n${anchor}`,
-      );
-    }
+    mod.modResults.contents = configureBarButtons(
+      configureNightMode(mod.modResults.contents, appearance),
+      appearance,
+    );
     return mod;
   });
   return withDangerousMod(config, [
@@ -202,5 +252,7 @@ android.buildTypes {
     },
   ]);
 };
+module.exports.configureNightMode = configureNightMode;
+module.exports.configureBarButtons = configureBarButtons;
 module.exports.secure = secure;
 module.exports.fixture = fixture;

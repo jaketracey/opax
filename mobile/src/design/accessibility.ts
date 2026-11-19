@@ -130,6 +130,17 @@ export function useHighTextContrast(): boolean {
     highTextContrast.get,
   );
 }
+/**
+ * High contrast text outside render (design/use-colors.ts `currentColors`).
+ * The first call starts the app's one subscription if no component has;
+ * until the system answers it is off.
+ */
+export function highTextContrastNow(): boolean {
+  if (!contrastWatch)
+    contrastWatch = highTextContrast.subscribe(() => undefined);
+  return highTextContrast.get();
+}
+let contrastWatch: (() => void) | undefined;
 export function useReduceMotion(): boolean {
   return useSyncExternalStore(
     reduceMotion.subscribe,

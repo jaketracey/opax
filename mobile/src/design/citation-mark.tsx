@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from './text';
-import { colors, textStyles } from './tokens';
+import { textStyles } from './tokens';
+import { makeStyles } from './use-colors';
 
 /**
  * Ask's citation numeral (specs/ask.md 9.1, journeys/ask.md 4.5 and 13
@@ -49,6 +50,8 @@ export function CitationMark({
   fallback?: 'superscript';
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const superscript = fallback === 'superscript';
   return (
     <>
@@ -78,6 +81,8 @@ export function CitationBadge({
   label: string;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View
       style={styles.badge}
@@ -95,31 +100,33 @@ export function CitationBadge({
     </View>
   );
 }
-const styles = StyleSheet.create({
-  filled: {
-    fontWeight: '600',
-    color: colors.navy,
-    backgroundColor: colors.navyWash,
-  },
-  selected: {
-    color: colors.raised,
-    backgroundColor: colors.navy,
-  },
-  superscript: {
-    fontWeight: '600',
-    color: colors.navy,
-    fontSize: textStyles.capsule.fontSize,
-    lineHeight: textStyles.capsule.fontSize,
-    textAlignVertical: 'top',
-  },
-  badge: {
-    alignSelf: 'flex-start',
-    minWidth: 18,
-    paddingHorizontal: 4,
-    borderRadius: 999,
-    borderCurve: 'continuous',
-    backgroundColor: colors.navyWash,
-    alignItems: 'center',
-  },
-  badgeText: { color: colors.navy, fontWeight: '600' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    filled: {
+      fontWeight: '600',
+      color: colors.navy,
+      backgroundColor: colors.navyWash,
+    },
+    selected: {
+      color: colors.raised,
+      backgroundColor: colors.navy,
+    },
+    superscript: {
+      fontWeight: '600',
+      color: colors.navy,
+      fontSize: textStyles.capsule.fontSize,
+      lineHeight: textStyles.capsule.fontSize,
+      textAlignVertical: 'top',
+    },
+    badge: {
+      alignSelf: 'flex-start',
+      minWidth: 18,
+      paddingHorizontal: 4,
+      borderRadius: 999,
+      borderCurve: 'continuous',
+      backgroundColor: colors.navyWash,
+      alignItems: 'center',
+    },
+    badgeText: { color: colors.navy, fontWeight: '600' },
+  }),
+);

@@ -12,12 +12,8 @@ import type { ButtonProps } from './controls';
 import { Icon } from './icon';
 import { Pressable } from './pressable';
 import { Text } from './text';
-import {
-  androidControls,
-  colors,
-  controlHeight,
-  interfaceFonts,
-} from './tokens';
+import { androidControls, controlHeight, interfaceFonts } from './tokens';
+import { androidRipples, useColors } from './use-colors';
 
 export function AndroidButton({
   ref,
@@ -40,6 +36,8 @@ export function AndroidButton({
   hitSlop,
   testID,
 }: ButtonProps) {
+  const colors = useColors();
+
   const stacked = useAccessibilitySize();
   const reduceMotion = useReduceMotion();
   const filled =
@@ -85,7 +83,7 @@ export function AndroidButton({
       testID={testID}
       onPress={onPress}
       android_ripple={
-        filled ? { color: androidControls.rippleOnFilled } : undefined
+        filled ? { color: androidRipples(colors).rippleOnFilled } : undefined
       }
       style={[
         styles.button,
@@ -137,6 +135,8 @@ export function AndroidSwitch({
   value: boolean;
   disabled: boolean;
 }) {
+  const colors = useColors();
+
   if (Platform.OS !== 'android') return null;
   // Load Compose only on Android; its asset transformer never runs on iOS.
   const { Host, Switch: MaterialSwitch } =
@@ -210,6 +210,8 @@ export function AndroidField({
   inputRef,
   ...input
 }: import('react').ComponentProps<typeof import('./controls').Field>) {
+  const colors = useColors();
+
   const ownRef = useRef<TextInput>(null);
   const ref = inputRef ?? ownRef;
   const [focused, setFocused] = useState(false);

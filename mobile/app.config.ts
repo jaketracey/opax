@@ -1,6 +1,7 @@
 import type { ExpoConfig } from 'expo/config';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { appearance as appearanceSwitch } from './plugins/appearance';
 import {
   policy,
   productionVoiceEnabled,
@@ -79,13 +80,15 @@ if (androidBuild && Number(buildNumber) > 2100000000) {
 if (!['development', 'e2e', 'production'].includes(variant)) {
   throw new Error('OPAX_VARIANT must be development, e2e or production');
 }
-// Capture switches never alter a production build's defaults.
+// The heading face is a capture switch: it never alters a production build.
 const headingFace = process.env.OPAX_HEADING_FACE ?? 'system';
 if (!['system', 'serif'].includes(headingFace))
   throw new Error('OPAX_HEADING_FACE must be system or serif');
-const appearance = process.env.OPAX_APPEARANCE ?? 'light';
-if (!['light', 'automatic'].includes(appearance))
-  throw new Error('OPAX_APPEARANCE must be light or automatic');
+// Light only, or follow the system: one switch for both platforms and every
+// variant, production included. The release default is one line in
+// plugins/appearance.js.
+const appearance = appearanceSwitch();
+const followsSystem = appearance === 'automatic';
 const defaultDesignFlags = {
   categorySymbols: true,
   searchTab: true,
@@ -152,10 +155,7 @@ const config: ExpoConfig = {
   version: appVersion,
   scheme: 'opax',
   platforms: ['ios', 'android'],
-  userInterfaceStyle:
-    variant !== 'production' && appearance === 'automatic'
-      ? 'automatic'
-      : 'light',
+  userInterfaceStyle: followsSystem ? 'automatic' : 'light',
   orientation: 'default',
   android: {
     package: 'au.com.opax.app',
@@ -278,12 +278,18 @@ const config: ExpoConfig = {
           ],
         ]
       : []),
-    './plugins/withAndroidPolicy.js',
+    ['./plugins/withAndroidPolicy.js', { appearance }] as [
+      string,
+      { appearance: string },
+    ],
     ...(androidBuild
       ? [
           './plugins/withAndroidUploadSigning.js',
           './plugins/withAndroidBack.js',
-          './plugins/withAndroidTheme.js',
+          ['./plugins/withAndroidTheme.js', { appearance }] as [
+            string,
+            { appearance: string },
+          ],
         ]
       : []),
     '@react-native-community/datetimepicker',
@@ -313,14 +319,12 @@ const config: ExpoConfig = {
         // place and then unfolds the name from them.
         //
         // The field is navy in both appearances, so one colour serves both.
-        // Setting a `dark` block makes the plugin switch iOS to Automatic,
-        // so release and light-only builds leave it unset; only
-        // automatic-appearance captures carry it, with the same navy.
+        // Setting a `dark` block makes the plugin switch iOS to Automatic
+        // whatever userInterfaceStyle says, so a light-only build leaves it
+        // unset; a build that follows the system carries it, with the same
+        // navy, so the night colour resource Android reads is navy too.
         backgroundColor: '#142A43',
-        dark:
-          variant !== 'production' && appearance === 'automatic'
-            ? { backgroundColor: '#142A43' }
-            : undefined,
+        dark: followsSystem ? { backgroundColor: '#142A43' } : undefined,
         image: './assets/splash/splash@3x.png',
         imageWidth: 200,
         resizeMode: 'contain',

@@ -71,11 +71,12 @@ afterEach(() => {
 function build(
   variant: string,
   headingFace = 'serif',
-  appearance = 'automatic',
+  appearance: string | null = 'automatic',
 ) {
   process.env.OPAX_VARIANT = variant;
   process.env.OPAX_HEADING_FACE = headingFace;
-  process.env.OPAX_APPEARANCE = appearance;
+  if (appearance === null) delete process.env.OPAX_APPEARANCE;
+  else process.env.OPAX_APPEARANCE = appearance;
   let config!: typeof import('../app.config').default;
   jest.isolateModules(() => {
     config = require('../app.config').default;
@@ -88,11 +89,30 @@ test('capture config exposes both switches and extra.designFlags', () => {
   expect(config.extra?.designFlags).toEqual(defaults);
   expect(config.userInterfaceStyle).toBe('automatic');
 });
-test('production ignores capture environment switches', () => {
+test('production ignores the heading face capture switch', () => {
   const config = build('production');
   expect(config.extra?.headingFace).toBe('system');
-  expect(config.userInterfaceStyle).toBe('light');
 });
+// Dark mode (19 Nov 2026): one switch for both platforms, and a production
+// build obeys it, because a TestFlight build is a production build.
+test.each(['development', 'e2e', 'production'])(
+  '%s takes the appearance switch',
+  (variant) => {
+    expect(build(variant, 'system', 'automatic').userInterfaceStyle).toBe(
+      'automatic',
+    );
+    expect(build(variant, 'system', 'light').userInterfaceStyle).toBe('light');
+  },
+);
+test.each(['development', 'e2e', 'production'])(
+  '%s with the switch unset takes the release default',
+  (variant) => {
+    const { DEFAULT_APPEARANCE } = require('../plugins/appearance');
+    expect(build(variant, 'system', null).userInterfaceStyle).toBe(
+      DEFAULT_APPEARANCE,
+    );
+  },
+);
 test('invalid build switches fail early', () => {
   expect(() => build('e2e', 'typo')).toThrow('OPAX_HEADING_FACE');
   expect(() => build('e2e', 'system', 'dark')).toThrow('OPAX_APPEARANCE');

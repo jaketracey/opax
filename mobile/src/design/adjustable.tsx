@@ -3,7 +3,7 @@ import { Platform, View } from 'react-native';
 import { Icon } from './icon';
 import { Pressable } from './pressable';
 import { Text } from './text';
-import { colors } from './tokens';
+import { useColors } from './use-colors';
 
 export interface AdjustableProps {
   label: string;
@@ -80,6 +80,8 @@ function adjustableProps(
 }
 /** Additive Android controls; existing iOS screens keep their native pickers. */
 export function Stepper(props: AdjustableProps) {
+  const colors = useColors();
+
   const actions = adjustment(props);
   if (Platform.OS !== 'android') return null;
   return (
@@ -144,6 +146,8 @@ export function Stepper(props: AdjustableProps) {
   );
 }
 export function Slider(props: AdjustableProps) {
+  const colors = useColors();
+
   const actions = adjustment(props);
   if (Platform.OS !== 'android') return null;
   const { Host, Slider: MaterialSlider } =

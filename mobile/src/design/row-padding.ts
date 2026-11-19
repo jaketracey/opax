@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useLayoutEffect } from 'react';
-import { colors, layout } from './tokens';
+import { layout } from './tokens';
+import { useColors } from './use-colors';
 
 /** Marks a row component that draws its own vertical padding in a InsetGroup. */
 export const ROW_OWNS_PADDING = Symbol.for('opax.rowOwnsPadding');
@@ -32,6 +33,8 @@ export function useRowInset(inset = 16) {
  * made a pressed row look detached from the card (TestFlight, 13 Nov).
  */
 export function useRowHighlight() {
+  const colors = useColors();
+
   const surface = useContext(SurfaceContext);
   return surface === 'sunken'
     ? colors.raised

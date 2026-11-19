@@ -12,8 +12,10 @@ import {
   AccessibilityInfo,
   Platform,
   StyleSheet,
+  useColorScheme,
   useWindowDimensions,
   View,
+  type ColorSchemeName,
   type TextStyle,
 } from 'react-native';
 import { PlainPressable as Pressable } from '../design/pressable';
@@ -107,10 +109,15 @@ type LaunchHandoffProps = {
  * The status bar icons over the cover: light on its navy, then the page's own
  * (dark on the light paper) once the fade has passed halfway, so they are never
  * white on the light page while the cover is still going. Android only: iOS
- * keeps its icons light until the cover unmounts.
+ * keeps its icons light until the cover unmounts. On a dark page the page's
+ * own icons are light too, so nothing changes at the halfway point.
  */
-export function coverBarStyle(os: string, pageShows: boolean) {
-  return os === 'android' && pageShows ? 'dark' : 'light';
+export function coverBarStyle(
+  os: string,
+  pageShows: boolean,
+  scheme?: ColorSchemeName | null,
+) {
+  return os === 'android' && pageShows && scheme !== 'dark' ? 'dark' : 'light';
 }
 
 function LaunchCover({
@@ -122,6 +129,7 @@ function LaunchCover({
   testID = 'launch-handoff',
 }: LaunchHandoffProps) {
   const frame = useWindowDimensions();
+  const scheme = useColorScheme();
   const adaptive = useAdaptiveDevice();
   const insets = useContext(SafeAreaInsetsContext);
   const regions = useReservedRegions();
@@ -333,7 +341,7 @@ function LaunchCover({
         fieldStyle,
       ]}
     >
-      <StatusBar style={coverBarStyle(Platform.OS, pageShows)} />
+      <StatusBar style={coverBarStyle(Platform.OS, pageShows, scheme)} />
       <Pressable
         feedback="none"
         accessible={false}

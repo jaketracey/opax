@@ -8,13 +8,8 @@ import { Icon } from './icon';
 import { SurfaceContext, useRowHighlight } from './row-padding';
 import { type SourceDetails } from './source';
 import { Text } from './text';
-import {
-  androidControls,
-  colors,
-  minimumTarget,
-  radii,
-  rhythm,
-} from './tokens';
+import { androidControls, minimumTarget, radii, rhythm } from './tokens';
+import { makeStyles, useColors } from './use-colors';
 
 // Labels use continuous capsules. Only MachinePill acts; its navy wash keeps
 // it distinct from an active bill's never-interactive status capsule.
@@ -49,6 +44,9 @@ export function StatusCapsule({
   hidden?: boolean;
   accessibilityLabel?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const surface = useContext(SurfaceContext);
   const active = statusTone(status) === 'active';
   return (
@@ -98,6 +96,9 @@ export function Tag({
   kind?: string;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const fixed = useAccessibilitySize();
   const highlight = useRowHighlight();
   const face = (pressed: boolean) => (
@@ -195,6 +196,9 @@ export function ChoiceChip({
   disabled?: boolean;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const fixed = useAccessibilitySize();
   if (Platform.OS === 'ios') return null;
   return (
@@ -282,76 +286,82 @@ export function ChoiceChip({
 
 const machineSymbol = 'sparkles';
 
-const styles = StyleSheet.create({
-  hug: { alignSelf: 'flex-start', maxWidth: '100%' },
-  shrink: { flexShrink: 1 },
-  center: { textAlign: 'center' },
-  status: {
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    minHeight: 22,
-    paddingHorizontal: rhythm.tight,
-    paddingVertical: rhythm.line,
-  },
-  // A linked tag: its 28pt face centred in a 44pt target.
-  tagTarget: { justifyContent: 'center', minHeight: minimumTarget },
-  tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: 28,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    backgroundColor: colors.navyWash,
-    paddingHorizontal: rhythm.tight,
-    paddingVertical: rhythm.line,
-  },
-  // The pill is 32pt drawn; its row is the 44pt target.
-  machineTarget: {
-    minHeight: minimumTarget,
-    maxWidth: '100%',
-    justifyContent: 'center',
-    marginVertical: -rhythm.tight,
-  },
-  androidMachineTarget: {
-    borderRadius: androidControls.chipRadius,
-    borderCurve: 'continuous',
-    borderWidth: 1,
-    borderColor: colors.lineControl,
-    backgroundColor: colors.navyWash,
-  },
-  androidMachineHug: { flexDirection: 'row', maxWidth: '100%', flexShrink: 1 },
-  machine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    minHeight: 32,
-    paddingLeft: rhythm.tight,
-    paddingRight: 10,
-    paddingVertical: 2,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-  },
-  machineFixed: {
-    alignSelf: 'stretch',
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-  },
-  // The row of chips decides alignment; a chip only hugs its label.
-  choice: {
-    minHeight: 36,
-    maxWidth: '100%',
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: rhythm.line,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-  },
-  choiceFixed: {
-    alignSelf: 'stretch',
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    hug: { alignSelf: 'flex-start', maxWidth: '100%' },
+    shrink: { flexShrink: 1 },
+    center: { textAlign: 'center' },
+    status: {
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      minHeight: 22,
+      paddingHorizontal: rhythm.tight,
+      paddingVertical: rhythm.line,
+    },
+    // A linked tag: its 28pt face centred in a 44pt target.
+    tagTarget: { justifyContent: 'center', minHeight: minimumTarget },
+    tag: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      minHeight: 28,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      backgroundColor: colors.navyWash,
+      paddingHorizontal: rhythm.tight,
+      paddingVertical: rhythm.line,
+    },
+    // The pill is 32pt drawn; its row is the 44pt target.
+    machineTarget: {
+      minHeight: minimumTarget,
+      maxWidth: '100%',
+      justifyContent: 'center',
+      marginVertical: -rhythm.tight,
+    },
+    androidMachineTarget: {
+      borderRadius: androidControls.chipRadius,
+      borderCurve: 'continuous',
+      borderWidth: 1,
+      borderColor: colors.lineControl,
+      backgroundColor: colors.navyWash,
+    },
+    androidMachineHug: {
+      flexDirection: 'row',
+      maxWidth: '100%',
+      flexShrink: 1,
+    },
+    machine: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+      minHeight: 32,
+      paddingLeft: rhythm.tight,
+      paddingRight: 10,
+      paddingVertical: 2,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+    },
+    machineFixed: {
+      alignSelf: 'stretch',
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+    },
+    // The row of chips decides alignment; a chip only hugs its label.
+    choice: {
+      minHeight: 36,
+      maxWidth: '100%',
+      justifyContent: 'center',
+      paddingHorizontal: 14,
+      paddingVertical: rhythm.line,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+    },
+    choiceFixed: {
+      alignSelf: 'stretch',
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+    },
+  }),
+);
 
 export interface MachineNote {
   title: string;
@@ -366,6 +376,9 @@ export function MachinePill({
   note: MachineNote;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const highlight = useRowHighlight();
   const pill = (
     <Pressable

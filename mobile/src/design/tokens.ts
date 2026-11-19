@@ -37,6 +37,7 @@ export {
   border,
   breakpoints,
   chartIndustry,
+  chartIndustryDark,
   chartRoles,
   elevation,
   motion,
@@ -49,8 +50,11 @@ export {
   typeRolesRegular,
 } from './tokens.generated';
 
-// iOS resolves appearance and Increase Contrast natively. Release builds
-// remain light through app.config.ts; capture builds can follow the system.
+// iOS resolves appearance and Increase Contrast natively, wherever a role is
+// drawn. Android has no dynamic colour value: this object holds the light hex
+// there, and a component takes the roles for the appearance on screen from
+// `useColors()` (design/use-colors.ts). A build is light-only or follows the
+// system by the appearance switch (plugins/appearance.js).
 function resolve(role: Role): ColorValue {
   const base = paletteFor('light')[role];
   if (Platform.OS !== 'ios') return base;
@@ -64,6 +68,7 @@ function resolve(role: Role): ColorValue {
 export const colors = Object.fromEntries(
   (Object.keys(light) as Role[]).map((role) => [role, resolve(role)]),
 ) as Record<Role, ColorValue>;
+const staticColors = colors;
 
 /**
  * A role in the app's own appearance, wherever it is drawn. UIKit resolves
@@ -72,8 +77,13 @@ export const colors = Object.fromEntries(
  * resolved for a dark page under the glass bar (11b-3). Increase Contrast
  * still resolves natively.
  */
-export function schemeColour(role: Role, scheme: ColorSchemeName): ColorValue {
-  if (Platform.OS !== 'ios') return colors[role];
+export function schemeColour(
+  role: Role,
+  scheme: ColorSchemeName | null | undefined,
+): ColorValue {
+  // Android has no dynamic value: the scheme's own hex.
+  if (Platform.OS !== 'ios')
+    return (scheme === 'dark' ? dark : paletteFor('light'))[role];
   const palette = scheme === 'dark' ? dark : paletteFor('light');
   const contrast = scheme === 'dark' ? darkHighContrast : lightHighContrast;
   const value = palette[role];
@@ -171,7 +181,11 @@ export interface AccentTint {
   wash: ColorValue;
   ink: ColorValue;
 }
-export function accentTint(accent: Accent): AccentTint {
+export function accentTint(
+  accent: Accent,
+  // Pass `useColors()`: the static set is the light one on Android.
+  colors: Readonly<Record<Role, ColorValue>> = staticColors,
+): AccentTint {
   const { ink, wash } = accents[accent];
   return {
     base: colors[ink],
@@ -184,7 +198,10 @@ export function accentTint(accent: Accent): AccentTint {
   };
 }
 /** A status tone's colours (statusTones): the word always beside them. */
-export function statusTint(tone: StatusTone): AccentTint {
+export function statusTint(
+  tone: StatusTone,
+  colors: Readonly<Record<Role, ColorValue>> = staticColors,
+): AccentTint {
   const { ink, wash } = statusTones[tone];
   return {
     base: colors[ink],

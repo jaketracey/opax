@@ -13,7 +13,8 @@ import {
 } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
 import { symbols } from '../design/symbols';
-import { colors, rhythm, textStyles } from '../design/tokens';
+import { rhythm, textStyles } from '../design/tokens';
+import { makeStyles, useColors } from '../design/use-colors';
 import { androidHeaderBar } from './chrome';
 
 type ReadingHeaderProps = NativeStackHeaderProps & {
@@ -47,6 +48,9 @@ function MeasuredReadingHeader({
   back,
   windowInsets = false,
 }: ReadingHeaderProps) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const insets = useSafeAreaInsets();
   const largeText = useWindowDimensions().fontScale >= 2;
   const rootItems = !options.headerLeft
@@ -140,34 +144,36 @@ function MeasuredReadingHeader({
   );
 }
 
-const styles = StyleSheet.create({
-  bar: { backgroundColor: colors.paper },
-  large: {
-    paddingHorizontal: rhythm.screen,
-    paddingVertical: rhythm.tight,
-    gap: rhythm.tight,
-  },
-  actions: { flexDirection: 'row', alignItems: 'center' },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    paddingHorizontal: rhythm.screen,
-    paddingVertical: rhythm.tight,
-  },
-  // The bar's title size (androidBar.title) is the sectionTitle role, drawn in
-  // the inline title's face; the role sets size and line height so word-safe
-  // fitting and font scale work on the size actually drawn.
-  title: {
-    flex: 1,
-    fontFamily: textStyles.inlineTitle.fontFamily,
-    fontWeight: textStyles.inlineTitle.fontWeight,
-    color: colors.ink,
-  },
-  action: {
-    width: 48,
-    minHeight: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    bar: { backgroundColor: colors.paper },
+    large: {
+      paddingHorizontal: rhythm.screen,
+      paddingVertical: rhythm.tight,
+      gap: rhythm.tight,
+    },
+    actions: { flexDirection: 'row', alignItems: 'center' },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      paddingHorizontal: rhythm.screen,
+      paddingVertical: rhythm.tight,
+    },
+    // The bar's title size (androidBar.title) is the sectionTitle role, drawn in
+    // the inline title's face; the role sets size and line height so word-safe
+    // fitting and font scale work on the size actually drawn.
+    title: {
+      flex: 1,
+      fontFamily: textStyles.inlineTitle.fontFamily,
+      fontWeight: textStyles.inlineTitle.fontWeight,
+      color: colors.ink,
+    },
+    action: {
+      width: 48,
+      minHeight: 48,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  }),
+);

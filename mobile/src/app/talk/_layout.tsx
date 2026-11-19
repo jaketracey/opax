@@ -4,7 +4,7 @@ import { useStackChrome, headerItems } from '../../navigation/chrome';
 import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { sheetOptions } from '../../navigation/stack/screen';
 import { sheetSnapListeners } from '../../navigation/sheet-snap';
-import { colors } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { copy } from '../../design/copy';
 
 export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteErrorBoundary';
@@ -19,6 +19,8 @@ export const unstable_settings = { initialRouteName: 'index' };
  * inside the sheet and returns to Talk.
  */
 export default function TalkStack() {
+  const colors = useColors();
+
   return (
     <Stack
       screenOptions={{

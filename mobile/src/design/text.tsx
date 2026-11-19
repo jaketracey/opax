@@ -14,22 +14,21 @@ import {
   type TextLayoutEvent,
   type TextProps,
 } from 'react-native';
-import { useBoldText, useHighTextContrast } from './accessibility';
+import { useBoldText } from './accessibility';
 import { spokenFigures } from './format';
-import { lightHighContrast, paletteFor } from './palette';
 import { bindRecordTitle, recordTitleRoles } from './record-title';
 import { useTextProbe } from './text-probe';
 import type { ProbeLine } from './text-probe.types';
 import { androidCapScale, textRampScale } from './text-scale';
 import {
   boldStep,
-  colors,
   contentSizeCategory,
   contentSizeScales,
   textStyles,
   type Role,
   type TextVariant,
 } from './tokens';
+import { useColors, type Colors } from './use-colors';
 
 export type TextTone =
   | Extract<
@@ -81,14 +80,12 @@ export interface OpaxTextProps extends TextProps {
 }
 
 /**
- * A role's colour. iOS resolves Increase Contrast natively; Android's High
- * contrast text takes the same stronger roles (`lightHighContrast`).
+ * A role's colour in the colours on screen (`useColors()`). iOS resolves
+ * dark and Increase Contrast natively; on Android the set passed in is the
+ * scheme's, with the stronger roles while High contrast text is on.
  */
-export function roleColour(tone: Role | 'link', strong: boolean) {
-  const role = tone === 'link' ? 'navy' : tone;
-  return strong
-    ? (lightHighContrast[role] ?? paletteFor('light')[role])
-    : colors[role];
+export function roleColour(tone: Role | 'link', colors: Colors) {
+  return colors[tone === 'link' ? 'navy' : tone];
 }
 
 /**
@@ -714,7 +711,7 @@ export function Text({
           accessibilityLabel: spoken,
         };
   const bold = useBoldText();
-  const highContrast = useHighTextContrast();
+  const colors = useColors();
   const role = textStyles[variant];
   const family =
     role.fontFamily === undefined
@@ -1059,7 +1056,7 @@ export function Text({
         : {})}
       style={[
         {
-          color: roleColour(tone ?? role.color, highContrast),
+          color: roleColour(tone ?? role.color, colors),
           ...(drawnFamily !== undefined ? { fontFamily: drawnFamily } : {}),
           fontWeight: weight,
           fontSize: role.fontSize * capScale,

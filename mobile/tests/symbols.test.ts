@@ -16,6 +16,7 @@ jest.mock('../src/design/flags', () => ({
 }));
 jest.mock('../src/design/accessibility', () => ({
   useReduceMotion: jest.fn(() => false),
+  useHighTextContrast: () => false,
 }));
 
 test('every admitted symbol has an explicit Android equivalent', () => {

@@ -157,9 +157,12 @@ test('Android drains warm links when the container is ready and the root snapsho
     });
   }
 });
+// Both platforms take `auto`: dark icons on the light page and light icons
+// on the dark one. Android was pinned to dark icons while it was light-only,
+// which would be invisible on a dark page.
 test.each([
   ['ios', 'auto'],
-  ['android', 'dark'],
+  ['android', 'auto'],
 ] as const)(
   '%s root keeps the appropriate system icon appearance',
   (os, style) => {

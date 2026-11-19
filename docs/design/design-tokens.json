@@ -5,9 +5,9 @@
     "opax.rules": ["Screens use role names, never hex values.", "Navy is the single tint. Category inks are reserved for subject symbols and figures; bands carry edition plates.", "Party colour is a dot beside a readable party name, never colour alone, never a chart series.", "inkFaint is for paper and raised surfaces only; use inkSoft on sunken surfaces and washes.", "Bronze is reserved for the mark, app icon, launch artwork and Today's decorative dot map. Links use navy.", "States change roles, never opacity."]
   },
   "themes": {
-    "$description": "Both platforms are light-only (app decision 2; the web sets color-scheme: light). Every colour role still carries a dark value, held to the same contrast rules, so a dark theme is a wiring change rather than a design pass. Increase Contrast (iOS) applies today; the web's prefers-contrast: more block is written only when `web.prefersContrast` is true.",
+    "$description": "The web is light-only (color-scheme: light). The app follows its appearance switch, OPAX_APPEARANCE (mobile/plugins/appearance.js): `light` draws the light theme only, `automatic` follows the system on iOS and Android and draws the dark theme too. Every colour role carries a dark value, held to the same contrast rules. Increase Contrast (iOS) and High contrast text (Android) draw the two Increase Contrast themes; the web's prefers-contrast: more block is written only when `web.prefersContrast` is true.",
     "light": {"rendered": true},
-    "dark": {"rendered": false},
+    "dark": {"rendered": false, "app": "with OPAX_APPEARANCE=automatic"},
     "web": {"colorScheme": "light", "prefersContrast": false}
   },
   "color": {
@@ -90,6 +90,11 @@
       "onBandSoft": {"$value": "#E6EBEE", "dark": "#C9CEC4", "highContrast": "#E6EBEE", "darkHighContrast": "#C9CEC4", "$description": "Kicker and detail on edition bands."}
     }
   },
+  "appOnly": {
+    "$description": "App colour roles that carry alpha, which the opaque role palette above cannot hold. Read only by mobile/scripts/build-design-tokens.mjs, which adds them to the app's four themes beside the photograph viewer's scrims; the web build ignores this block. Not for text.",
+    "scrim": {"$value": "rgba(35,39,31,0.4)", "dark": "rgba(0,0,0,0.6)", "$description": "The veil behind a sheet, menu or dialog the app draws itself. Light is ink at 40%, as before the role existed; dark is black at 60%, because ink is pale in dark and a pale veil lifts the page instead of dimming it."},
+    "raisedOutline": {"$value": "rgba(0,0,0,0)", "dark": "#3A3F36", "highContrast": "rgba(0,0,0,0)", "darkHighContrast": "#7E8378", "$description": "A hairline round a raised card or menu in dark, where a shadow does not read and raised is only 1.13:1 from paper. Clear in light, so the same style draws nothing there."}
+  },
   "category": {
     "$description": "A screen's subject and its accent pair (role names). People and places share navy.",
     "money": {"ink": "moneyInk", "wash": "moneyWash"},
@@ -111,23 +116,23 @@
     "baseline": {"role": "dividerSubtle", "$description": "Tracks, comparison series, gridlines."},
     "contrast": {"role": "inkFaint", "$description": "The second series where a chart compares two (noes against ayes)."},
     "industry": {
-      "$description": "The money map's 16 industry clusters, in legend order: a hue and an ink darkened for 4.5:1 text on paper. Light only. Copied today in portal/graph/palette.ts, app.js, ledger.js, home.html and the app's features/money/ported/palette.ts; those move to these values in a later pass.",
-      "parties": {"colour": "#9AA0A8", "ink": "#5A616B"},
-      "unions": {"colour": "#E15759", "ink": "#A93843"},
-      "finance": {"colour": "#4E79A7", "ink": "#365F86"},
-      "individuals": {"colour": "#79706E", "ink": "#57504E"},
-      "property": {"colour": "#F28E2B", "ink": "#A85A0F"},
-      "mining & energy": {"colour": "#9C755F", "ink": "#6E4F3D"},
-      "hospitality": {"colour": "#EDC948", "ink": "#7A6414"},
-      "media & tech": {"colour": "#76B7B2", "ink": "#3E7A75"},
-      "health & pharma": {"colour": "#59A14F", "ink": "#3B7134"},
-      "gambling": {"colour": "#B07AA1", "ink": "#7D5273"},
-      "legal & lobbying": {"colour": "#6A51A3", "ink": "#4A3775"},
-      "defence & security": {"colour": "#37474F", "ink": "#263238"},
-      "agriculture": {"colour": "#6B8E23", "ink": "#4A6318"},
-      "retail": {"colour": "#FF9DA7", "ink": "#B04A56"},
-      "tobacco & alcohol": {"colour": "#A65628", "ink": "#7A3C1B"},
-      "other": {"colour": "#999966", "ink": "#6B6B3D"}
+      "$description": "The money map's 16 industry clusters, in legend order: a hue and an ink darkened for 4.5:1 text on paper. `dark` is the app's pair for dark mode: the hue, lifted where it needs it to reach 3:1 as a mark on the dark paper and raised grounds, and an ink lifted to 5:1 on raised for text (same hue, lightness raised in OKLab). The web reads only `colour` and `ink`. Copied today in portal/graph/palette.ts, app.js, ledger.js, home.html and the app's features/money/ported/palette.ts; those move to these values in a later pass.",
+      "parties": {"colour": "#9AA0A8", "ink": "#5A616B", "dark": {"colour": "#9AA0A8", "ink": "#9AA0A8"}},
+      "unions": {"colour": "#E15759", "ink": "#A93843", "dark": {"colour": "#E15759", "ink": "#EF6465"}},
+      "finance": {"colour": "#4E79A7", "ink": "#365F86", "dark": {"colour": "#4E79A7", "ink": "#6995C5"}},
+      "individuals": {"colour": "#79706E", "ink": "#57504E", "dark": {"colour": "#79706E", "ink": "#99908E"}},
+      "property": {"colour": "#F28E2B", "ink": "#A85A0F", "dark": {"colour": "#F28E2B", "ink": "#F28E2B"}},
+      "mining & energy": {"colour": "#9C755F", "ink": "#6E4F3D", "dark": {"colour": "#9C755F", "ink": "#B18973"}},
+      "hospitality": {"colour": "#EDC948", "ink": "#7A6414", "dark": {"colour": "#EDC948", "ink": "#EDC948"}},
+      "media & tech": {"colour": "#76B7B2", "ink": "#3E7A75", "dark": {"colour": "#76B7B2", "ink": "#76B7B2"}},
+      "health & pharma": {"colour": "#59A14F", "ink": "#3B7134", "dark": {"colour": "#59A14F", "ink": "#5AA250"}},
+      "gambling": {"colour": "#B07AA1", "ink": "#7D5273", "dark": {"colour": "#B07AA1", "ink": "#B881A8"}},
+      "legal & lobbying": {"colour": "#6A51A3", "ink": "#4A3775", "dark": {"colour": "#7B63B6", "ink": "#9C84DB"}},
+      "defence & security": {"colour": "#37474F", "ink": "#263238", "dark": {"colour": "#63747C", "ink": "#82949D"}},
+      "agriculture": {"colour": "#6B8E23", "ink": "#4A6318", "dark": {"colour": "#6B8E23", "ink": "#799D35"}},
+      "retail": {"colour": "#FF9DA7", "ink": "#B04A56", "dark": {"colour": "#FF9DA7", "ink": "#FF9DA7"}},
+      "tobacco & alcohol": {"colour": "#A65628", "ink": "#7A3C1B", "dark": {"colour": "#AB5B2D", "ink": "#D07C50"}},
+      "other": {"colour": "#999966", "ink": "#6B6B3D", "dark": {"colour": "#999966", "ink": "#999966"}}
     }
   },
   "party": {

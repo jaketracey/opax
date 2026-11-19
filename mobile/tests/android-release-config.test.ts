@@ -139,12 +139,16 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 // Re-pinned for universal links: development and production add
 // ios.associatedDomains ["applinks:opax.com.au"] and nothing else; e2e claims
 // no domain and keeps its hash.
+// Re-pinned for the appearance switch (dark mode, 19 Nov 2026): with the
+// switch unset the only change is that the withAndroidPolicy plugin entry
+// carries `{ appearance: 'light' }`; putting the bare string back gives the
+// previous three hashes exactly, so a light build's iOS config is unchanged.
 const iosPrebuildHashes = {
   development:
-    '34f9ed9fb287be2cd7607ed1709943054b7fdfae1399c7a69f386a71bda87f82',
-  e2e: '9a4c5fa53ed1c34e1878d9c2dad2522f7438b9751ebf1977f7cdba82f849d2b7',
+    'ca6b3a78202202882b8cd0428cc63779a985a8eb37b47213a1f5b3db9e5fc381',
+  e2e: '178c11e30cc8cca81737086be7ee611171a05ddbb18db40f2e668e7ac6dc326e',
   production:
-    'cd1909262e8584d3ec99d4f799bd04a6929a56ad6c71e02d8f42fce94f114ae1',
+    'e948d9a3fffcfe412c229ea8b1a0fb994da531c14aa1e2e4e18d7fc0d54fd4b8',
 };
 test.each(variants)(
   'iOS %s prebuild output stays byte-identical to the baseline',

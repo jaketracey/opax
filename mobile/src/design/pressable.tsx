@@ -10,14 +10,8 @@ import { useHighTextContrast } from './accessibility';
 import { spokenFigures } from './format';
 import { rememberMenuAnchor } from './menu-anchor';
 import { useRowHighlight } from './row-padding';
-import {
-  accents,
-  border,
-  colors,
-  androidControls,
-  radii,
-  type Role,
-} from './tokens';
+import { accents, border, androidControls, radii, type Role } from './tokens';
+import { androidRipples, useColors } from './use-colors';
 
 /**
  * iOS: how long a touch rests on a surface before it highlights. Nearly every
@@ -66,6 +60,8 @@ export function Pressable({
   feedback,
   ...props
 }: PressableProps & { ref?: Ref<View>; feedback?: PressFeedback }) {
+  const colors = useColors();
+
   const [focused, setFocused] = useState(false);
   const style = usePressedStyle(feedback, props.style);
   const Component =
@@ -142,6 +138,8 @@ function AndroidPressable({
   ringed = false,
   ...props
 }: PressableProps & { ref?: Ref<View>; ringed?: boolean }) {
+  const colors = useColors();
+
   const ownRef = useRef<View>(null);
   const setRef = useCallback(
     (node: View | null) => {
@@ -166,6 +164,7 @@ function AndroidPressable({
   const onFilled = filledRoles.some(
     (role) => colors[role] === resting?.backgroundColor,
   );
+  const ripples = androidRipples(colors);
   const borderless = android_ripple?.borderless === true;
   // Absolutely positioned surfaces (chart bars, scrims) are sized by their
   // parent; a minimum there would overlap neighbours instead of growing a row.
@@ -192,10 +191,10 @@ function AndroidPressable({
               { color: 'transparent', foreground: true, borderless: false }
             : {
                 color: onFilled
-                  ? androidControls.rippleOnFilled
+                  ? ripples.rippleOnFilled
                   : contrast
-                    ? androidControls.rippleHighContrast
-                    : androidControls.ripple,
+                    ? ripples.rippleHighContrast
+                    : ripples.ripple,
                 foreground: true,
                 borderless: false,
                 ...android_ripple,

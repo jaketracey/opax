@@ -28,13 +28,14 @@ import { symbols } from './symbols';
 import { Text } from './text';
 import {
   accents,
-  colors,
+  hairline,
   minimumTarget,
   radii,
   rhythm,
   type Accent,
   type Role,
 } from './tokens';
+import { makeStyles, useColors } from './use-colors';
 
 const InCard = createContext(false);
 export const useInCard = () => useContext(InCard);
@@ -74,6 +75,9 @@ export function Card({
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const nested = useInCard();
   const { width } = useWindowDimensions();
   const dark = useColorScheme() === 'dark';
@@ -88,6 +92,8 @@ export function Card({
       : ground;
   const face = [
     nested ? undefined : styles.card,
+    // A card on its own ground (an edition band) has its own edge.
+    nested || fill ? undefined : styles.outline,
     padded && !nested ? { padding: width < 375 ? 16 : 20 } : null,
     fill ? { backgroundColor: fill } : null,
   ];
@@ -165,6 +171,9 @@ export function Tile({
   href: Href;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const lead = useContext(LeadTile);
   const [firstLineHeight, setFirstLineHeight] = useState<number>();
   return (
@@ -287,41 +296,52 @@ export function TileGrid({
     </View>
   );
 }
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  editionShadow: {
-    shadowColor: colors.ink,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 20,
-  },
-  tile: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.tile,
-    borderCurve: 'continuous',
-    padding: rhythm.block,
-    minHeight: minimumTarget,
-    gap: rhythm.tight,
-    // Fills its cell, so tiles on one line share the line's height: TileGrid
-    // stretches each cell to its line and the tile grows into it. Never a
-    // percentage: in a wrapping row Yoga resolves a percentage height
-    // against the whole grid's measured height, and every layout pass
-    // compounds it (build 36's More to explore grid laid out 48,000 pt tall
-    // once RowTrigger started carrying the tile's own style into the Link).
-    flexGrow: 1,
-  },
-  leadTile: { flexDirection: 'row', alignItems: 'center' },
-  tileText: { flexShrink: 1, gap: rhythm.line },
-  tileTextLead: { flex: 1 },
-  tileTitle: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  tileHeading: { flex: 1 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    // Elevation in dark: no shadow reads there and raised is 1.13:1 from
+    // paper, so a hairline carries the card's edge. The role is clear in
+    // light. An outline, not a border: it takes no room, so nothing moves.
+    outline: {
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
+    },
+    editionShadow: {
+      shadowColor: colors.ink,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.08,
+      shadowRadius: 20,
+    },
+    tile: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.tile,
+      borderCurve: 'continuous',
+      padding: rhythm.block,
+      minHeight: minimumTarget,
+      gap: rhythm.tight,
+      // Fills its cell, so tiles on one line share the line's height: TileGrid
+      // stretches each cell to its line and the tile grows into it. Never a
+      // percentage: in a wrapping row Yoga resolves a percentage height
+      // against the whole grid's measured height, and every layout pass
+      // compounds it (build 36's More to explore grid laid out 48,000 pt tall
+      // once RowTrigger started carrying the tile's own style into the Link).
+      flexGrow: 1,
+    },
+    leadTile: { flexDirection: 'row', alignItems: 'center' },
+    tileText: { flexShrink: 1, gap: rhythm.line },
+    tileTextLead: { flex: 1 },
+    tileTitle: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    tileHeading: { flex: 1 },
+  }),
+);

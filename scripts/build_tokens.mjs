@@ -424,9 +424,9 @@ export function buildTs(source) {
       '// tokens), never this file. tests/design-tokens.test.ts fails while it is\n' +
       '// stale. palette.ts and tokens.ts re-export it; names, aliases and\n' +
       '// deprecations: docs/design/TOKENS.md.\n',
-    exportConst('light', forTheme('light', true), { tail: ' as const', doc: 'Colour roles, light theme (the one the app renders).' }),
+    exportConst('light', forTheme('light', true), { tail: ' as const', doc: 'Colour roles, light theme.' }),
     'export type Role = keyof typeof light;\nexport type AccentPair = { ink: Role; wash: Role };\nexport type RolePair = { fg: Role; bg: Role };\nexport type ClusterColour = { colour: string; ink: string };\n',
-    exportConst('dark', forTheme('dark', false), { type: 'Record<Role, string>', doc: 'Colour roles, dark theme: held to the same contrast rules, not rendered (the app is light-only, decision 2).' }),
+    exportConst('dark', forTheme('dark', false), { type: 'Record<Role, string>', doc: 'Colour roles, dark theme: held to the same contrast rules, drawn when the build follows the system (OPAX_APPEARANCE=automatic).' }),
     exportConst('lightHighContrast', forTheme('lightHighContrast', false), { type: 'Partial<Record<Role, string>>', doc: 'Increase Contrast: each text role steps one stronger, subtle rules take the default divider, accent inks and bronzeInk reach 7:1.' }),
     exportConst('darkHighContrast', forTheme('darkHighContrast', false), { type: 'Partial<Record<Role, string>>' }),
     exportConst('partyColors', fromParties((party) => party.dot), { tail: ' as const', doc: 'Party identity: a dot beside a readable label, never colour alone.' }),
@@ -437,7 +437,11 @@ export function buildTs(source) {
     exportConst('categories', categories, { tail: ' as const satisfies Record<string, AccentPair>', doc: "A screen's subject and its accent pair." }),
     exportConst('statusTones', Object.fromEntries(own(source.status).map(([tone, pair]) => [tone, documented({ ink: pair.ink, wash: pair.wash }, firstSentence(pair.$description))])), { tail: ' as const satisfies Record<string, AccentPair>', doc: 'Status labels: always a word; the tone only reinforces it.' }),
     exportConst('chartRoles', Object.fromEntries(['mark', 'baseline', 'contrast'].map((key) => [key, documented(source.chart[key].role, firstSentence(source.chart[key].$description))])), { tail: ' as const satisfies Record<string, Role>' }),
-    exportConst('chartIndustry', own(source.chart.industry).map(([cluster, { colour, ink }]) => [cluster, { colour, ink }]), { type: 'readonly (readonly [string, ClusterColour])[]', doc: "The money map's industry clusters in legend order: a hue and a text-safe ink. Light only." }),
+    exportConst('chartIndustry', own(source.chart.industry).map(([cluster, { colour, ink }]) => [cluster, { colour, ink }]), { type: 'readonly (readonly [string, ClusterColour])[]', doc: "The money map's industry clusters in legend order: a hue and a text-safe ink, for light grounds." }),
+    exportConst('chartIndustryDark', own(source.chart.industry).map(([cluster, { dark }]) => {
+      if (!HEX.test(dark?.colour ?? '') || !HEX.test(dark?.ink ?? '')) throw new Error(`chart.industry.${cluster} needs a dark colour and ink`)
+      return [cluster, { colour: dark.colour, ink: dark.ink }]
+    }), { type: 'readonly (readonly [string, ClusterColour])[]', doc: 'The same clusters for dark grounds: the hue reaches 3:1 as a mark, the ink 4.5:1 as text, on dark paper and raised.' }),
     exportConst('fonts', Object.fromEntries(faces), { tail: ' as const', doc: 'Registered font names (app/_layout.tsx).' }),
     exportConst('headingFace', source.headingFace, { type: "'system' | 'serif'", doc: 'D1: one face switch for OPAX headings. Record text is always Merriweather.' }),
     exportConst('typeRoles', typeRoles, { tail: ' as const', doc: 'Eighteen text roles, followed by deprecated aliases.' }),
@@ -447,7 +451,7 @@ export function buildTs(source) {
     exportConst('spacing', Object.fromEntries(own(source.deprecated.app.spacing).map(([name, entry]) => [name, documented(entry.alias ? spaceStep(entry.alias) : entry.value, deprecatedDoc(entry))])), { tail: ' as const', doc: "@deprecated The web's old phone scale: use `rhythm`." }),
     exportConst('radii', Object.fromEntries(own(source.radius).filter(([, token]) => !token.app?.omit).map(([name, token]) => [name, documented(token.$value, token.alias ? `@deprecated Use radii.${token.alias}.` : firstSentence(token.$description))])), { tail: ' as const', doc: 'Continuous corners by purpose, with deprecated aliases.' }),
     exportConst('border', Object.fromEntries(own(source.border).map(([name, token]) => [name, token.$value])), { tail: ' as const' }),
-    exportConst('elevation', Object.fromEntries(own(source.elevation).map(([name, value]) => [name, { shadowColor: value.color, shadowOpacity: value.alpha, shadowRadius: value.blur / 2, shadowOffset: { width: value.x, height: value.y }, elevation: value.y, ...(name === 'edition' ? { dark: null } : {}) }])), { tail: ' as const', doc: 'Legacy overlay shadow and the light-only edition shadow; native sheets and menus draw their own.' }),
+    exportConst('elevation', Object.fromEntries(own(source.elevation).map(([name, value]) => [name, { shadowColor: value.color, shadowOpacity: value.alpha, shadowRadius: value.blur / 2, shadowOffset: { width: value.x, height: value.y }, elevation: value.y, ...(name === 'edition' ? { dark: null } : {}) }])), { tail: ' as const', doc: 'Legacy overlay shadow and the light-only edition shadow; native sheets and menus draw their own. In dark a raised surface takes the raisedOutline hairline instead.' }),
     exportConst('motion', { duration: Object.fromEntries(own(source.motion.duration).map(([name, token]) => [name, token.$value])), easing: { standard: source.motion.easing.standard.$value }, ambientLoop: source.motion.ambientLoop.$value }, { tail: ' as const', doc: 'Durations in ms and one curve (cubic-bezier control points); under Reduce Motion nothing moves.' }),
     exportConst('size', Object.fromEntries(own(source.size).flatMap(([name, token]) => [[name, token.$value], ...(token.android ? [[`${name}Android`, token.android]] : [])])), { tail: ' as const' }),
     exportConst('breakpoints', { regular: source.layout.regular.$value, wide: source.layout.wide.$value }, { tail: ' as const' }),

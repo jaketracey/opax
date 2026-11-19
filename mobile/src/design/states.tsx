@@ -39,7 +39,6 @@ import { symbols } from './symbols';
 import { Heading, Text } from './text';
 import {
   buttonCapsule,
-  colors,
   controlHeight,
   hairline,
   minimumTarget,
@@ -51,6 +50,7 @@ import {
   type Accent,
   type TextVariant,
 } from './tokens';
+import { useColors } from './use-colors';
 
 export const stateCopy = {
   offlineUncached: phoneCopy(
@@ -221,24 +221,45 @@ type SkeletonShape =
   | 'bill-header'
   | 'person-profile'
   | 'electorate-profile';
+function SkeletonBar({
+  width,
+  height,
+  onSunken,
+  round,
+}: {
+  width: DimensionValue;
+  height: number;
+  onSunken: boolean;
+  round: boolean;
+}) {
+  const colors = useColors();
+  return (
+    <View
+      style={[
+        styles.bar,
+        {
+          width,
+          height,
+          ...(round
+            ? { borderRadius: radii.capsule, borderCurve: 'continuous' }
+            : {}),
+          backgroundColor: onSunken ? colors.raised : colors.sunken,
+        },
+      ]}
+    />
+  );
+}
 const bar = (
   width: DimensionValue,
   height = 14,
   onSunken = false,
   round = false,
 ) => (
-  <View
-    style={[
-      styles.bar,
-      {
-        width,
-        height,
-        ...(round
-          ? { borderRadius: radii.capsule, borderCurve: 'continuous' }
-          : {}),
-        backgroundColor: onSunken ? colors.raised : colors.sunken,
-      },
-    ]}
+  <SkeletonBar
+    width={width}
+    height={height}
+    onSunken={onSunken}
+    round={round}
   />
 );
 /**
@@ -307,6 +328,8 @@ function DetailSkeleton({
   onSunken: boolean;
   testID?: string;
 }) {
+  const colors = useColors();
+
   const header = { ...sittingMemberBones, ...profile };
   const large = useAccessibilitySize();
   const { regular } = useLayout();
@@ -740,6 +763,8 @@ export function Skeleton({
   profile?: ProfileBones;
   testID?: string;
 }) {
+  const colors = useColors();
+
   if (shape === 'person-profile' || shape === 'electorate-profile')
     return (
       <DetailSkeleton

@@ -352,17 +352,20 @@ export const forbiddenPairs: ColourPair[] = [
   pair('bronze is reserved for launch art', 'rest', 'bronze', 'paper'),
 ];
 
-/** The pair the table lists for a drawn foreground and background, if any. */
+/**
+ * The pair the table lists for a drawn foreground and background, if any.
+ * `palette` is the theme the colours were drawn in: light unless given.
+ */
 export function listedPair(
   foreground: string,
   background: string,
   as: 'text' | 'non-text' = 'non-text',
+  palette: Palette = paletteFor('light'),
 ): ColourPair | undefined {
-  return componentPairs.find(
+  return componentPairsFor(palette).find(
     (entry) =>
       entry.foreground.toLowerCase() === foreground.toLowerCase() &&
-      paletteFor('light')[entry.background].toLowerCase() ===
-        background.toLowerCase() &&
+      palette[entry.background].toLowerCase() === background.toLowerCase() &&
       // A pair listed as text also covers icons; a non-text row never covers text.
       (as === 'non-text' || entry.kind !== 'non-text'),
   );

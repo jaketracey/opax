@@ -13,7 +13,7 @@ import {
   type PressableProps,
 } from 'react-native';
 import { PlainPressable, Pressable } from './pressable';
-import { androidControls } from './tokens';
+import { androidRipples, useColors } from './use-colors';
 import { showMenu } from './menu';
 import { menuTitle } from './menu-title';
 import { menuLeaves, menuSections, type RowMenuAction } from './row-link';
@@ -26,6 +26,7 @@ export function ContextMenu({
   items: RowMenuAction[];
   children: ReactElement<PressableProps>;
 }) {
+  const colors = useColors();
   const sections = menuSections(items);
   const leaves = menuLeaves(sections);
   const trigger = cloneElement(children, {
@@ -43,7 +44,7 @@ export function ContextMenu({
     ...(Platform.OS === 'android'
       ? {
           android_ripple: children.props.android_ripple ?? {
-            color: androidControls.ripple,
+            color: androidRipples(colors).ripple,
             foreground: true,
           },
           onLongPress: (event: import('react-native').GestureResponderEvent) =>

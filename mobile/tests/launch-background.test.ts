@@ -23,7 +23,9 @@ test.each([
   ['development', 'automatic', true],
   ['e2e', 'automatic', true],
   ['e2e', 'light', false],
-  ['production', 'automatic', false],
+  // A production build obeys the switch too (dark mode, 19 Nov 2026).
+  ['production', 'automatic', true],
+  ['production', 'light', false],
 ] as const)(
   '%s %s generates launch colour assets from the brand navy',
   async (variant, appearance, hasDark) => {
@@ -99,8 +101,10 @@ test.each([
         );
       };
       // The launch field is brand artwork: navy in both appearances, like the
-      // icon. An automatic capture build carries the same navy in its dark
-      // slot (never the dark palette's navy, which is a pale link tint).
+      // icon. A build that follows the system carries the same navy in its
+      // dark slot (never the dark palette's navy, which is a pale link tint).
+      // A light-only build carries no dark slot: the splash plugin would
+      // switch the whole app to Automatic if it did.
       expect(hex(0)).toBe(light.navy);
       expect(asset.colors).toHaveLength(hasDark ? 2 : 1);
       if (hasDark) {
@@ -109,6 +113,7 @@ test.each([
         expect(asset.colors[1]!.appearances).toEqual([
           { appearance: 'luminosity', value: 'dark' },
         ]);
+        expect(config.userInterfaceStyle).toBe('automatic');
       } else {
         expect(config.userInterfaceStyle).toBe('light');
       }

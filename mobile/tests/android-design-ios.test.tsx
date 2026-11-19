@@ -38,6 +38,7 @@ jest.mock('../src/design/accessibility', () => ({
   useIncreaseContrast: () => false,
   useBoldText: () => false,
   useHighTextContrast: () => false,
+  highTextContrastNow: () => false,
   useReduceMotion: () => true,
   useAccessibilitySize: () =>
     require('react-native').useWindowDimensions().fontScale >= 1.786,

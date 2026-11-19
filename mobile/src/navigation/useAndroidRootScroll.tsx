@@ -14,10 +14,12 @@ import {
 import {
   Platform,
   Text,
+  type ColorValue,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
-import { colors, interfaceFonts, rhythm } from '../design/tokens';
+import { interfaceFonts, rhythm } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 import { scrollToTop } from '../design/scroll-to-top';
 import { useSafeSetOptions } from './preview';
 
@@ -44,8 +46,11 @@ type ScrollTarget = {
  */
 export function useAndroidRootScroll(
   scroll: RefObject<ScrollTarget | null>,
-  ground = colors.paper,
+  groundColour?: ColorValue,
 ) {
+  const colors = useColors();
+  const ground = groundColour ?? colors.paper;
+
   const navigation = useContext(NavigationContext);
   const route = useContext(NavigationRouteContext);
   const setOptions = useSafeSetOptions();
@@ -81,7 +86,7 @@ export function useAndroidRootScroll(
         headerShadowVisible: elevated,
       });
     },
-    [root, title, name, ground, setOptions],
+    [root, title, name, ground, setOptions, colors],
   );
   useLayoutEffect(() => {
     applied.current = '';

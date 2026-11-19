@@ -1,6 +1,5 @@
 import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import { Platform } from 'react-native';
-import { colors } from '../../design/tokens';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import {
   closeSheetItem,
@@ -246,19 +245,36 @@ export function screen(
     />
   );
 }
-export const sheetOptions: NativeStackNavigationOptions = {
-  headerShown: true,
-  ...shortSheet,
-  headerTitleAlign: 'center',
-  ...opaqueBar(colors.paper),
-  // No backing from the stack (see presentedBar): a sheet that sets these
-  // options itself, as money-item does, does not pass through `screen`.
-  headerBackground: undefined,
-  ...headerItems(() => [closeSheetItem()]),
-  ...(Platform.OS === 'android'
-    ? { header: AndroidReadingHeader, headerRight: () => null }
-    : {}),
-};
+export const sheetOptions: NativeStackNavigationOptions =
+  Object.defineProperties(
+    {
+      headerShown: true,
+      ...shortSheet,
+      headerTitleAlign: 'center',
+      headerShadowVisible: Platform.OS === 'ios',
+      // No backing from the stack (see presentedBar): a sheet that sets these
+      // options itself, as money-item does, does not pass through `screen`.
+      headerBackground: undefined,
+      ...headerItems(() => [closeSheetItem()]),
+      ...(Platform.OS === 'android'
+        ? { header: AndroidReadingHeader, headerRight: () => null }
+        : {}),
+    } as NativeStackNavigationOptions,
+    {
+      // The bar's ground, read at each spread (in a stack's render) so it is
+      // the page ground of the appearance on screen and not the one at
+      // import. Defined here, not in the literal: a getter written after a
+      // spread is read once, when the object is built.
+      headerStyle: {
+        enumerable: true,
+        get: () => opaqueBar().headerStyle,
+      },
+      headerLargeStyle: {
+        enumerable: true,
+        get: () => opaqueBar().headerLargeStyle,
+      },
+    },
+  );
 
 /**
  * Today draws its dot map behind the large title, from the window's top.
