@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { Card } from '../../design/card';
+import { raisedEdge } from '../money/parts';
 import { copy } from '../../design/copy';
 import {
   formatFinancialYear,
@@ -158,6 +159,9 @@ export function QuestionCard({
     <Card
       href={href}
       testID={testID}
+      // One edge in dark: the frame's, around the card and its source line.
+      // The card's own would draw a second hairline across the frame.
+      style={styles.inner}
       accessibilityLabel={spoken}
       accessibilityHint={`Opens ${kicker}.`}
       accessibilityActions={
@@ -373,7 +377,9 @@ export function PartiesCard() {
 
 const useStyles = makeStyles((colors) =>
   StyleSheet.create({
+    inner: { outlineWidth: 0 },
     frame: {
+      ...raisedEdge(colors),
       backgroundColor: colors.raised,
       borderRadius: radii.container,
       borderCurve: 'continuous',

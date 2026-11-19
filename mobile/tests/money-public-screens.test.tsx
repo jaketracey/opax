@@ -1,6 +1,7 @@
 import { measureBarTitle } from './bar-title-metrics';
 import { SkeletonCrossfade } from '../src/design/states';
 import { act } from 'react';
+import { colors } from '../src/design/tokens';
 import { Heading } from '../src/design/text';
 import TestRenderer from 'react-test-renderer';
 import { Redirect } from 'expo-router';
@@ -2012,3 +2013,28 @@ test('a money list under the stack’s own solid bar has no fade', () =>
     expect(fadeLayers(r)).toHaveLength(0);
     await act(async () => r.unmount());
   }));
+
+test('a hub card has one dark edge: the frame’s, around the card and its source line', async () => {
+  // The shared card draws the dark outline itself. Inside the hub's frame
+  // that put a second hairline across the card, above its source line.
+  const rendered = await mount(Hub);
+  const card = rendered.root.findAll(
+    (n) => n.props.testID === 'money-card-grants' && 'style' in n.props,
+  )[0]!;
+  const face =
+    typeof card.props.style === 'function'
+      ? card.props.style({ pressed: false })
+      : card.props.style;
+  expect(StyleSheet.flatten(face).outlineWidth).toBe(0);
+  let frame = card.parent;
+  while (
+    frame &&
+    StyleSheet.flatten(frame.props.style)?.outlineColor === undefined
+  )
+    frame = frame.parent;
+  expect(StyleSheet.flatten(frame!.props.style)).toMatchObject({
+    outlineColor: colors.raisedOutline,
+    backgroundColor: colors.raised,
+  });
+  await act(async () => rendered.unmount());
+});
