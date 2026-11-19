@@ -8,6 +8,7 @@ import {
   partyColors,
   partyColorsDark,
 } from '../src/design/palette';
+import { partyDot } from '../src/design/party';
 import { chartIndustry, chartIndustryDark } from '../src/design/tokens';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { labelSlots } from '../src/features/money/map/labels';
@@ -185,18 +186,58 @@ describe('the dark model', () => {
   });
 
   test('the light model is the one the map always drew', () => {
-    const plain = buildModel(view);
-    expect(lightModel.nodes.map((n) => [n.colour, n.ink])).toEqual(
-      plain.nodes.map((n) => [n.colour, n.ink]),
-    );
+    // Every expectation is read from the token sources (the industry chart
+    // set, the party dots, the light palette), never from the map's theme
+    // or its palette helpers: a change to the light path fails here.
+    const industry = new Map(chartIndustry);
+    const pair = (group: string) =>
+      industry.get(group) ?? industry.get('other')!;
     const source = new Map(view.nodes.map((n) => [n.id, n]));
+    const seen = { party: 0, dotted: 0, hub: 0, donor: 0 };
+    expect(lightModel.nodes.length).toBe(view.nodes.length);
     for (const node of lightModel.nodes) {
       const sent = source.get(node.id)!;
-      if (node.kind === 'hub')
-        expect(node.colour).toBe(sent.colour ?? light.moneyInk);
-      if (node.kind === 'donor')
-        expect(node.colour).toBe(clusterColour(sent.group).colour);
+      seen[node.kind]++;
+      if (node.kind === 'party') {
+        // A party's disc is its dot; a label the app does not know as a
+        // party takes the neutral parties grey. Its name is the parties ink.
+        const dot = partyDot(node.label, 'light');
+        if (dot) seen.dotted++;
+        expect(node.colour).toBe(dot ?? pair('parties').colour);
+        expect(node.ink).toBe(pair('parties').ink);
+      } else if (node.kind === 'hub') {
+        // A hub is drawn in the colour the export sent, or the money ink.
+        expect(node.colour).toBe(sent.colour || light.moneyInk);
+        expect(node.ink).toBe(light.moneyInk);
+      } else {
+        expect(node.colour).toBe(sent.colour || pair(sent.group).colour);
+        expect(node.ink).toBe(pair(sent.group).ink);
+      }
     }
+    expect(seen.party).toBeGreaterThan(0);
+    expect(seen.dotted).toBeGreaterThan(0);
+    expect(seen.hub).toBeGreaterThan(0);
+    expect(seen.donor).toBeGreaterThan(0);
+    expect(partyDot('Labor', 'light')).toBe(partyColors.labor);
+    // The legend: the public money register in the money ink, every other
+    // cluster in its industry pair.
+    for (const cluster of lightModel.clusters) {
+      const money = cluster.nodes.some(
+        (i) => lightModel.nodes[i]!.kind === 'hub',
+      );
+      expect([cluster.colour, cluster.ink]).toEqual(
+        money
+          ? [light.moneyInk, light.moneyInk]
+          : [pair(cluster.key).colour, pair(cluster.key).ink],
+      );
+    }
+    // A flow takes its source's colour.
+    for (const edge of lightModel.edges)
+      expect(edge.colour).toBe(lightModel.nodes[edge.a]!.colour);
+    // The default argument is the light theme.
+    expect(buildModel(view).nodes.map((n) => [n.colour, n.ink])).toEqual(
+      lightModel.nodes.map((n) => [n.colour, n.ink]),
+    );
   });
 
   test('every mark reads on dark paper, every name as text', () => {
