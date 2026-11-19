@@ -131,6 +131,8 @@ export function DatasetPage({
       onScroll={bar.onScroll}
       refreshControl={
         <RefreshControl
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
           refreshing={refreshing}
           onRefresh={refresh}
           tintColor={colors.navy}

@@ -64,6 +64,8 @@ export function SourcesScreen() {
       testID="sources-screen"
       refreshControl={
         <RefreshControl
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
           refreshing={sources.refreshing}
           onRefresh={() => {
             sources.refresh();

@@ -28,6 +28,8 @@ export function AccountScreen() {
       testID="account-sheet"
       refreshControl={
         <RefreshControl
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
           refreshing={pulling}
           tintColor={colors.inkSoft}
           onRefresh={() => {

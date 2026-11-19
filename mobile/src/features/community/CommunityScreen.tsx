@@ -45,7 +45,7 @@ import {
 import { ValueRow } from '../../design/rows';
 import { symbols } from '../../design/symbols';
 import { minimumTarget, rhythm } from '../../design/tokens';
-import { makeStyles } from '../../design/use-colors';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { canonicalUrl, openSource } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
@@ -325,6 +325,7 @@ function NativeCommunityScreen() {
   return <CommunityPage key={`${communityGeneration()}:${destination}`} />;
 }
 function CommunityPage() {
+  const colors = useColors();
   const styles = useStyles();
 
   const composerSurface = useRef<View>(null);
@@ -1608,6 +1609,8 @@ function CommunityPage() {
         refreshControl={
           path && data ? (
             <RefreshControl
+              colors={[colors.navy]}
+              progressBackgroundColor={colors.raised}
               refreshing={busy}
               onRefresh={() => void reload(true)}
             />

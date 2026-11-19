@@ -26,6 +26,7 @@ import { ContentUnavailable, Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading, Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
@@ -158,6 +159,7 @@ function countFigure(
 const NEAR_END = 2 * 96;
 
 function TopicContent({ slug, params }: { slug: string; params: Params }) {
+  const colors = useColors();
   const title = topicLabel(topicNames[slug]!);
   const phrase = topicPhrase(slug);
   const [filters, setFilters] = useState<SpeechFilters>(() =>
@@ -327,6 +329,8 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
         }
         refreshControl={
           <RefreshControl
+            colors={[colors.navy]}
+            progressBackgroundColor={colors.raised}
             refreshing={false}
             onRefresh={() => setFresh((n) => n + 1)}
           />

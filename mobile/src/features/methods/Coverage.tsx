@@ -62,6 +62,8 @@ export default function Coverage() {
       offline={saved ? { savedAt: saved.savedAt } : null}
       refreshControl={
         <RefreshControl
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
           refreshing={summary.refreshing}
           onRefresh={refresh}
           tintColor={colors.navy}

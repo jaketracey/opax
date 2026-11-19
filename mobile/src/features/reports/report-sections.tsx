@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { useColors } from '../../design/use-colors';
 import type { OfficialReport, PublishedValue } from '../../api/report-decoders';
 import { formatCount, formatDate } from '../../design/format';
 import { Group } from '../../design/primitives';
@@ -13,7 +14,6 @@ import {
   RuleGroup,
   Text,
   useDisclosure,
-  useReportColors,
 } from './report-ui';
 import {
   asObject,
@@ -209,7 +209,7 @@ export function Items({
         : undefined;
   const counts = part === 'recommendations' ? statusCounts(report) : [];
   const total = counts.reduce((n, x) => n + x.count, 0);
-  const palette = useReportColors();
+  const colors = useColors();
   return (
     <Group gap={rhythm.group} testID={`report-${part}`}>
       {caveat ? (
@@ -281,7 +281,7 @@ export function Items({
                         borderRadius: 4,
                         borderCurve: 'continuous',
                         paddingHorizontal: rhythm.tight,
-                        backgroundColor: palette.sunken,
+                        backgroundColor: colors.sunken,
                       }}
                     >
                       <Text variant="secondary">{words(item.kind)}</Text>

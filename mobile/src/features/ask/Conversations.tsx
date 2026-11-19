@@ -327,6 +327,8 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
       refreshControl={
         canSync(status) ? (
           <RefreshControl
+            colors={[colors.navy]}
+            progressBackgroundColor={colors.raised}
             refreshing={syncing && !!chats.length}
             onRefresh={() => void sync()}
           />
