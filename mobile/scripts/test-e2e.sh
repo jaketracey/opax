@@ -265,6 +265,10 @@ check_rc() {
   [ -f "$SCRATCH/$name.shutdown" ] && [ ! -d "$SCRATCH/booted" ] && [ ! -e "$LOCK" ] || fail "$name shutdown/release"
   [ ! -s "$SCRATCH/violations" ] || fail "$name protocol violation"
 }
+# A release exports OPAX_APPEARANCE (and a lane may export the simulator's
+# OPAX_E2E_APPEARANCE) around this test. The default run is the harness with
+# neither set, so both are cleared here; each case below sets its own.
+unset OPAX_APPEARANCE OPAX_E2E_APPEARANCE
 run_lane success 01
 check_rc success 0
 grep -qx 'CONTENT_SIZE=large' "$SCRATCH/success.online.maestro-args" || fail 'flow text size differs from the device size'
