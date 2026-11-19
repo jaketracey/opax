@@ -145,9 +145,10 @@ export function EditionCard({
   ];
   return (
     <View style={!dark ? styles.shadow : undefined}>
-      <View style={styles.card} testID="today-edition-card">
+      <View style={[styles.card, styles.outline]} testID="today-edition-card">
         <Card
           padded={false}
+          ground="raised"
           href={editionRoute()}
           zoom
           menu={menu}
@@ -209,6 +210,16 @@ const useStyles = makeStyles((colors) =>
       borderRadius: radii.container,
       borderCurve: 'continuous',
       overflow: 'hidden',
+    },
+    // Dark: the card's edge is the raisedOutline hairline (clear in light),
+    // drawn here around the whole card, source line included. The link
+    // inside takes the raised ground by name so it draws no outline of its
+    // own part-way down the card.
+    outline: {
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
     },
     shadow: {
       shadowColor: colors.ink,

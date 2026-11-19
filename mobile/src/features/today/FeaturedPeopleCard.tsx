@@ -22,7 +22,7 @@ import { SurfaceContext } from '../../design/row-padding';
 import { SourceLine } from '../../design/source';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { hairline, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { makeStyles } from '../../design/use-colors';
 import { personRoute } from '../../navigation/routes/people';
 import { canShare } from '../../navigation/share';
@@ -329,11 +329,12 @@ export function FeaturedPeopleCarousel({
                 style={width ? { width: cardWidth } : styles.unmeasured}
               >
                 <View
-                  style={[styles.card, !dark && styles.shadow]}
+                  style={[styles.card, styles.outline, !dark && styles.shadow]}
                   testID={index === 0 ? 'today-edition-card' : undefined}
                 >
                   <Card
                     padded={false}
+                    ground="raised"
                     href={personRoute(person.slug, person.edition.title)}
                     testID={
                       index === 0
@@ -513,6 +514,16 @@ const useStyles = makeStyles((colors) =>
       overflow: 'hidden',
     },
     link: { flexGrow: 1 },
+    // Dark: the card's edge is the raisedOutline hairline (clear in light),
+    // drawn here around the whole card, source line included. The link
+    // inside takes the raised ground by name so it draws no outline of its
+    // own part-way down the card.
+    outline: {
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
+    },
     shadow: {
       shadowColor: colors.ink,
       shadowOffset: { width: 0, height: 6 },

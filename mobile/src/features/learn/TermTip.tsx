@@ -1,6 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/text';
@@ -66,6 +71,7 @@ export default function TermTip() {
     over?: string;
   }>();
   const window = useWindowDimensions();
+  const dark = useColorScheme() === 'dark';
   // A keyboard's focus shows as the app's ring, as on the shared Pressable.
   const [focused, setFocused] = useState(false);
   useKeyCommand('list-escape', close);
@@ -93,6 +99,7 @@ export default function TermTip() {
         testID={`term-tip-${id}`}
         style={[
           styles.bubble,
+          dark ? styles.bubbleDark : styles.bubbleShadow,
           {
             width,
             left: Math.max(
@@ -154,12 +161,18 @@ const useStyles = makeStyles((colors) =>
       paddingTop: rhythm.row,
       paddingBottom: TIP_INSET,
       gap: rhythm.line,
+    },
+    // Light: the popover floats on a soft shadow.
+    bubbleShadow: {
       shadowColor: colors.ink,
       shadowOpacity: 0.16,
       shadowRadius: 24,
       shadowOffset: { width: 0, height: 8 },
       elevation: 8,
     },
+    // Dark: no shadow reads on the near-black page, and one drawn in ink
+    // would glow. A firmer hairline carries the popover's edge instead.
+    bubbleDark: { borderColor: colors.dividerDefault },
     // On the text's trailing edge, a line's gap closer than a new block. The
     // pressed wash bleeds a little past the label on each side, as a quiet
     // button's does, without moving the label off that edge.
