@@ -21,12 +21,34 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 - **App:** `npm run tokens` runs the generator; `npm run qa` checks it before typecheck, and `tests/design-tokens.test.ts` fails while `tokens.generated.ts` is stale.
 - A checkout without `mobile/` (`main`) skips the app target; one without `portal/` skips the web target.
 
+## Dark mode in the app
+
+Decided 19 Nov 2026. The dark theme is the token palette in this file's tables: a warm near-black ground (`paper` `#161915`), warm off-white ink, and navy as a pale blue tint for links and filled buttons. Deep navy stays on the launch screen, the icon and the People edition band only; bars take the page ground. Bronze line art keeps its register (`bronzeInk` brightens to `#D9A84A`). Photographs and portraits are not dimmed. There is no in-app Light/Dark setting: the app follows the system.
+
+**The switch.** `OPAX_APPEARANCE` is `light` or `automatic`, for iOS and Android and every build variant. Unset, a build takes `DEFAULT_APPEARANCE` in `mobile/plugins/appearance.js`; that one line is the release default. `light` writes `UIUserInterfaceStyle` Light and pins Android to day (`MODE_NIGHT_NO`). `automatic` writes Automatic, lets Android follow the system, and gives Android night resources for the alert accent and the window behind React Native. `npm run qa:static` asserts the generated Info.plist says what the switch says.
+
+**How a role reaches the screen.** On iOS `colors.<role>` is a `DynamicColorIOS` value and UIKit resolves all four themes. Android has no such value, so components take roles from `useColors()` and module-level style sheets sit behind `makeStyles` (`mobile/src/design/use-colors.ts`). `mobile/scripts/codemod-use-colors.ts` converts a file; the lint rule `opax/static-colors` reports a role still read from the static object.
+
+**Roles added for dark mode.** None reaches the web: its CSS is byte-identical with and without them.
+
+| Role | Light | Dark | Increase Contrast (light / dark) | Use |
+|---|---|---|---|---|
+| `scrim` | `rgba(35,39,31,0.4)` | `rgba(0,0,0,0.6)` | none | The veil behind a sheet, menu or dialog the app draws itself. Light is ink at 40%, as it was before the role; ink is pale in dark, so dark is black at 60%. |
+| `raisedOutline` | clear | `#3A3F36` | clear / `#7E8378` | A hairline round a raised card or menu. Shadows do not read on dark and `raised` is 1.13:1 from `paper`, so in dark the outline carries the edge (1.64:1 on paper, 1.46:1 on raised; 3:1 or more under Increase Contrast). Clear in light, so one style serves both. |
+| `chartIndustryDark` | n/a | 16 pairs | none | The money map's industry clusters on dark grounds, in the same order as `chartIndustry`: `colour` is the hue, lifted where needed to 3:1 as a mark on dark `paper` and `raised`; `ink` is the hue lifted to 5:1 on `raised`, for text. Source: `chart.industry.<cluster>.dark`. |
+
+`scrim` and `raisedOutline` carry alpha, which the opaque role palette cannot hold. They live in the source's `appOnly` block; only `mobile/scripts/build-design-tokens.mjs` reads it, beside the photograph viewer's scrims.
+
+**Elevation in dark.** No shadow. A raised surface is the `raised` step plus the `raisedOutline` hairline (cards, the Android menu).
+
+**Party colours in dark.** Dots take `partyColorsDark` and party headers `partyWashesDark`. A dot is told from another by hue and always has its label beside it: by luminance no two party dots are 3:1 apart, in dark or in light. The closest pair by hue in dark is Liberal `#7EA6E6` and LNP `#7DB4EB`.
+
 ## Rules the generator keeps
 
 - **Same names, same values.** Every colour role keeps today's hex value. Web names stay as they were (`--paper-raised`, `--party-alp`); a role's web name is `--` plus its app name in kebab case unless the JSON gives one.
 - **Old names keep working for one release.** An *alias* has its replacement's value and points at it (`--line: var(--divider-subtle)`, `light.line`). A *legacy value* keeps the old look until a later pass moves its uses (for example `--space-3`). All deprecated app text roles render with their canonical replacement metrics. Both carry a deprecation comment: `/* deprecated: use ... */` in CSS, `@deprecated` in TypeScript, so editors strike them through.
-- **Dark values exist but are not drawn.** The web sets `color-scheme: light` and the app is light-only (decision 2). Every role carries a dark value held to the same contrast rules, so a dark theme is wiring, not a design pass. The generated app file exports `dark` and `darkHighContrast`; `tokens.ts` resolves the real dark and high-contrast dark values. `OPAX_APPEARANCE=automatic` enables them in non-production capture builds only.
-- **Increase Contrast** is live in the app (`lightHighContrast`). The web's `prefers-contrast: more` block is ready in the source and is written only when `themes.web.prefersContrast` is true.
+- **Dark values are the app's dark mode.** Every role carries a dark value held to the same contrast rules. The web sets `color-scheme: light` and draws none of them. The app draws them when a build follows the system: `OPAX_APPEARANCE=automatic`, in any variant, production included (see "Dark mode in the app" below). With `OPAX_APPEARANCE=light`, or unset while the default in `mobile/plugins/appearance.js` is `light`, the app is light-only on both platforms.
+- **Increase Contrast** is live in the app (`lightHighContrast`, and `darkHighContrast` in dark). Android's High contrast text draws the same two sets. The web's `prefers-contrast: more` block is ready in the source and is written only when `themes.web.prefersContrast` is true.
 - **Raw colours are counted.** `portal/test/design-tokens.test.mjs` counts hex colour literals in web sources outside the generated tokens, and `mobile/tests/design-tokens.test.ts` counts colour literals in app sources outside `tokens.generated.ts`. Each file has a baseline; a file may go down, never up, and a new file starts at zero. When a pass removes some, lower the baseline in the test so the count cannot creep back.
 
 ## Apple-design foundation (F1)

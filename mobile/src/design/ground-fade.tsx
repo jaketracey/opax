@@ -8,7 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import { colors } from './tokens';
+import { useColors } from './use-colors';
 import { useIncreaseContrast, useHighTextContrast } from './accessibility';
 import { paletteFor, darkHighContrast, lightHighContrast } from './palette';
 
@@ -91,6 +91,8 @@ export function GroundFade({
   testID?: string;
   style?: StyleProp<ViewStyle>;
 }) {
+  const colors = useColors();
+
   const id = useId();
   const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   const contrast = useIncreaseContrast();

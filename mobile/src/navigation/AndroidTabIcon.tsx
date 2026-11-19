@@ -1,7 +1,7 @@
 import { Canvas, Path } from '@shopify/react-native-skia';
 import { View } from 'react-native';
 import { Icon, type SFSymbol } from '../design/icon';
-import { colors } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 
 // The bundled Material Symbols font has no FILL axis API. Draw the four
 // selected silhouettes here; Search keeps its conventional lens in both states.
@@ -21,6 +21,8 @@ export function AndroidTabIcon({
   symbol: SFSymbol;
   focused: boolean;
 }) {
+  const colors = useColors();
+
   const path = focused ? filled[symbol] : undefined;
   return path ? (
     <View

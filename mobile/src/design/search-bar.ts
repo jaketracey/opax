@@ -8,7 +8,7 @@ import {
 import { NavigationContext } from 'expo-router/react-navigation';
 import type { SearchBarCommands, SearchBarProps } from 'react-native-screens';
 import { useKeyCommand } from './keyboard';
-import { colors } from './tokens';
+import { currentColors } from './use-colors';
 
 export interface ListSearchBarOptions {
   placeholder: string;
@@ -21,6 +21,7 @@ export interface ListSearchBarOptions {
 export function nativeSearchBarOptions(
   options: ListSearchBarOptions,
 ): SearchBarProps {
+  const colors = currentColors();
   return {
     placeholder: options.placeholder,
     hideWhenScrolling: false,

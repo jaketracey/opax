@@ -59,7 +59,7 @@ The P0 rule: every public screen works signed out from static exports and the ca
 
 - Expo SDK 57, React Native 0.86, expo-router, strict TypeScript and Hermes, in `mobile/`. Development and release builds only, never Expo Go, because voice is custom native code.
 - Continuous native generation: prebuild generates the `ios/` project, which is not committed; native settings live in the app configuration and config plugins.
-- Minimum iOS 18.4. Light appearance only in v1 unless Jake decides otherwise (decision 2).
+- Minimum iOS 18.4. Appearance is one build switch for iOS and Android, `OPAX_APPEARANCE` (`mobile/plugins/appearance.js`): `light` is light-only, as every release to 1.1.5 was; `automatic` follows the system, with the dark palette in `docs/design/TOKENS.md`. Dark mode was decided on 19 Nov 2026 (it replaces decision 2's light-only rule); the default stays `light` until the dark boards are approved. There is no in-app appearance setting.
 - Layout, set by the harness lane on `ios/harness`: `src/app/` for routes (four tabs and identifier-only stack routes), `src/features/` for screens, `src/design/` for tokens and primitives, `src/api/` for the read-only public client and cache, `src/navigation/` for web path mapping, `src/voice/` for the voice module's JavaScript surface beside its local Swift module, plus `plugins/`, `scripts/` (fixture server, gated builds and QA), `.maestro/` and `tests/`.
 
 ### Data layer

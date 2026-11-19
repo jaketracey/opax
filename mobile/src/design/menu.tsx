@@ -19,7 +19,8 @@ import { recentMenuAnchor, type MenuAnchor } from './menu-anchor';
 import { onKeyCommand } from './keyboard';
 import { Text } from './text';
 import { Icon } from './icon';
-import { androidControls, colors } from './tokens';
+import { androidControls, hairline } from './tokens';
+import { useColors } from './use-colors';
 
 export interface MenuAction {
   title: string;
@@ -172,6 +173,8 @@ export function AndroidMenuHost() {
   return Platform.OS === 'android' ? <MaterialMenuHost /> : null;
 }
 function MaterialMenuHost() {
+  const colors = useColors();
+
   const current = useSyncExternalStore(subscribe, () => menu);
   const { width, height, fontScale } = useWindowDimensions();
   const firstItem = useRef<View>(null);
@@ -246,6 +249,11 @@ function MaterialMenuHost() {
             borderCurve: 'continuous',
             backgroundColor: colors.sunken,
             elevation: 3,
+            // Elevation's shadow does not read on dark: the hairline does.
+            outlineWidth: hairline,
+            outlineOffset: -hairline,
+            outlineStyle: 'solid',
+            outlineColor: colors.raisedOutline,
             overflow: 'hidden',
           }}
         >

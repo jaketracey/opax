@@ -7,7 +7,7 @@ import { OpaxIPad } from '../../../modules/opax-ipad';
 import { isPad } from '../../design/adaptive';
 import { designFlags } from '../../design/flags';
 import { dispatchKeyCommand } from '../../design/keyboard';
-import { colors } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { noteSelectedTab } from '../../features/ask/return';
 import { requestSearchTabReset } from '../../features/search/tab-reset';
 import { AndroidTabs } from '../../navigation/AndroidTabs';
@@ -28,6 +28,8 @@ export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteError
 // Duo keeps the system tab bar on both displays, including a vertical bar.
 // Only iPad opts into the adaptable sidebar.
 export default function TabsLayout() {
+  const colors = useColors();
+
   useEffect(() => {
     if (isPad) void OpaxIPad?.configureWordSafeSidebarLabels();
   }, []);

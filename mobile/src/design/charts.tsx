@@ -32,7 +32,6 @@ import { SourceLine } from './source';
 import { Text } from './text';
 import {
   accents,
-  colors,
   hairline,
   interfaceFonts as fonts,
   radii,
@@ -41,6 +40,7 @@ import {
   size,
   type Accent,
 } from './tokens';
+import { useColors } from './use-colors';
 
 export interface ChartProvenance {
   dateRange: { start: DateInput; end: DateInput };
@@ -150,6 +150,8 @@ export function VoteSplit({
   onBand?: boolean;
   settleKey?: string;
 }) {
+  const colors = useColors();
+
   const large = useAccessibilitySize();
   const settle = useSettle(settleKey ? `vote:${settleKey}` : null);
   const total = Math.max(0, ayes) + Math.max(0, noes);
@@ -232,6 +234,8 @@ function StageTimelineContent({
    */
   caption?: boolean;
 }) {
+  const colors = useColors();
+
   const large = useAccessibilitySize();
   const regions = useReservedRegions();
   const { fontScale } = useWindowDimensions();

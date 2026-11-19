@@ -65,10 +65,14 @@ try {
     JSON.parse(readFileSync(join(dir, 'portal/public', path), 'utf8'));
   const show = (path: string): unknown =>
     JSON.parse(
-      execFileSync('git', ['-C', root, 'show', `${commit}:portal/public${path}`], {
-        encoding: 'utf8',
-        maxBuffer: 1 << 30,
-      }),
+      execFileSync(
+        'git',
+        ['-C', root, 'show', `${commit}:portal/public${path}`],
+        {
+          encoding: 'utf8',
+          maxBuffer: 1 << 30,
+        },
+      ),
     );
   const manifest = d.decodeManifest(read('electorates/manifest.json'));
   const people = d.decodePeople(show(manifest.people_url));
@@ -82,7 +86,12 @@ try {
 
   const tally = new Map<SponsorCause | 'linked', number>();
   const examples = new Map<SponsorCause, Set<string>>();
-  const listed: { bill: string; name: string; id: string | null; cause: SponsorCause }[] = [];
+  const listed: {
+    bill: string;
+    name: string;
+    id: string | null;
+    cause: SponsorCause;
+  }[] = [];
   const renamed = new Set<string>();
   let bills = 0;
   let total = 0;
@@ -95,7 +104,10 @@ try {
     bills++;
     const rows = web
       ? sponsorMembers.map((member) => ({
-          slug: webLands(member.name, sponsorMembers.length === 1 ? sponsorPersonId : null),
+          slug: webLands(
+            member.name,
+            sponsorMembers.length === 1 ? sponsorPersonId : null,
+          ),
         }))
       : sponsorRows(sponsorMembers, sponsorParty, sponsorPersonId, directory);
     rows.forEach((row, i) => {
@@ -138,15 +150,24 @@ try {
     console.log(
       `${web ? 'Web sponsor links' : 'Sponsor rows'} at ${ref} (${commit.slice(0, 8)}): ${bills} bills with a sponsor`,
     );
-    if (web) console.log('  (linked = the link opens a full-name roster person the bill names)');
+    if (web)
+      console.log(
+        '  (linked = the link opens a full-name roster person the bill names)',
+      );
     console.log(`  rows      ${total}`);
     console.log(`  linked    ${linked}`);
     console.log(`  unlinked  ${total - linked}`);
-    if (renamed.size) console.log(`  linked to another spelling: ${[...renamed].sort().join('; ')}`);
+    if (renamed.size)
+      console.log(
+        `  linked to another spelling: ${[...renamed].sort().join('; ')}`,
+      );
     for (const [cause, n] of Object.entries(report.causes))
-      console.log(`    ${String(n).padStart(5)}  ${cause}${n ? `: ${report.examples[cause]!.join('; ')}` : ''}`);
+      console.log(
+        `    ${String(n).padStart(5)}  ${cause}${n ? `: ${report.examples[cause]!.join('; ')}` : ''}`,
+      );
     if (args.includes('--list'))
-      for (const row of listed) console.log(`${row.bill}\t${row.name}\t${row.id ?? ''}\t${row.cause}`);
+      for (const row of listed)
+        console.log(`${row.bill}\t${row.name}\t${row.id ?? ''}\t${row.cause}`);
   }
 } finally {
   rmSync(dir, { recursive: true, force: true });
@@ -155,7 +176,12 @@ try {
 /** /api/person-slugs as the Worker builds it from these files. */
 function projectSlugs(roster: d.Roster, people: d.PeopleCatalog): d.Slugs {
   const fold = (s: string) =>
-    s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+    s
+      .normalize('NFKC')
+      .replace(/[‘’ʼ`]/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
   const slugOf = (s: string) =>
     s
       .normalize('NFKD')
@@ -187,7 +213,6 @@ function projectSlugs(roster: d.Roster, people: d.PeopleCatalog): d.Slugs {
   });
 }
 
-
 /**
  * Why a sponsor row stays plain text, read from the roster alone so the same
  * classifier explains any version of the resolver. First match wins.
@@ -201,13 +226,17 @@ function sponsorCause(
   const loose = (n: string) =>
     nameKey(n)
       .split(' ')
-      .filter((w) => !/^(the|hon|senator|sen|dr|mr|mrs|ms|mp|jnr|snr|jr|sr)$/.test(w))
+      .filter(
+        (w) => !/^(the|hon|senator|sen|dr|mr|mrs|ms|mp|jnr|snr|jr|sr)$/.test(w),
+      )
       .join(' ');
   const words = nameKey(name).split(' ');
   const full = (r: Row) => r.name.trim().includes(' ');
   const surname = (n: string) => loose(n).split(' ').at(-1) ?? '';
   const names = (r: Row) => [r.name, r.full].filter((n): n is string => !!n);
-  if (/\b(minister|treasurer|attorney|government|committee|office)\b/i.test(name))
+  if (
+    /\b(minister|treasurer|attorney|government|committee|office)\b/i.test(name)
+  )
     return 'non-member sponsor (an office, not a person)';
   if (
     name.includes(',') ||
@@ -238,7 +267,11 @@ function sponsorCause(
     const spaced = (n: string) => nameKey(n).replace(/-/g, ' ');
     if (
       /[-‐–]/.test(name) &&
-      roster.people.some((r) => full(r) && names(r).some((n) => spaced(n) === spaced(name) && n !== name))
+      roster.people.some(
+        (r) =>
+          full(r) &&
+          names(r).some((n) => spaced(n) === spaced(name) && n !== name),
+      )
     )
       return 'hyphenated or compound surname';
     if (id) return 'not in the roster (no OPAX profile)';
@@ -246,21 +279,33 @@ function sponsorCause(
       ? 'no person ID in the bills export'
       : 'not in the roster (no OPAX profile)';
   }
-  if (id && target.pid === id && !names(target).some((n) => surname(n) === surname(name)))
+  if (
+    id &&
+    target.pid === id &&
+    !names(target).some((n) => surname(n) === surname(name))
+  )
     return "the ID's roster row names someone else";
   const printed = target.full && !full(target) ? target.full : target.name;
-  if (printed === name) return 'roster row found but the directory join refused it';
+  if (printed === name)
+    return 'roster row found but the directory join refused it';
   if (printed.replace(/[’‘ʼ`]/g, "'") === name.replace(/[’‘ʼ`]/g, "'"))
     return 'curly vs straight apostrophe';
-  if (printed.toLowerCase() === name.toLowerCase() || nameKey(printed) === nameKey(name))
-    return /[-‐–]/.test(printed + name) && printed.replace(/[-‐–]/g, ' ') !== printed
+  if (
+    printed.toLowerCase() === name.toLowerCase() ||
+    nameKey(printed) === nameKey(name)
+  )
+    return /[-‐–]/.test(printed + name) &&
+      printed.replace(/[-‐–]/g, ' ') !== printed
       ? 'hyphenated or compound surname'
       : 'diacritics or case';
   const a = loose(printed).split(' ');
   const b = loose(name).split(' ');
-  if (a.length !== b.length && a.at(-1) === b.at(-1)) return 'middle name or initial';
+  if (a.length !== b.length && a.at(-1) === b.at(-1))
+    return 'middle name or initial';
   if (a.at(-1) !== b.at(-1)) return 'hyphenated or compound surname';
-  return id ? 'roster row found but the directory join refused it' : 'no person ID in the bills export';
+  return id
+    ? 'roster row found but the directory join refused it'
+    : 'no person ID in the bills export';
 }
 
 /**
@@ -268,16 +313,22 @@ function sponsorCause(
  * opens, or null when it opens no full-name person the bill names (no roster
  * row, a surname print, or someone holding another ID).
  */
-function webResolver(
-  roster: d.Roster,
-  release: d.PeopleCatalog,
-) {
-  type Row = { name: string; pid?: string | null; full?: string | null; speeches?: number | null };
+function webResolver(roster: d.Roster, release: d.PeopleCatalog) {
+  type Row = {
+    name: string;
+    pid?: string | null;
+    full?: string | null;
+    speeches?: number | null;
+  };
   const at = (path: string) =>
-    execFileSync('git', ['-C', root, 'show', `${commit}:portal/public/${path}`], {
-      encoding: 'utf8',
-      maxBuffer: 1 << 30,
-    });
+    execFileSync(
+      'git',
+      ['-C', root, 'show', `${commit}:portal/public/${path}`],
+      {
+        encoding: 'utf8',
+        maxBuffer: 1 << 30,
+      },
+    );
   // The bill page resolves sponsors only where app.js loads sponsor-person.js.
   const module = /import\("\/sponsor-person\.js/.test(at('app.js'))
     ? at('sponsor-person.js').replace(/^export /gm, '')
@@ -294,27 +345,47 @@ function webResolver(
   const rows: Row[] = roster.people.map((p) => ({ ...p }));
   const lower = new Set(rows.map((p) => p.name.toLowerCase()));
   for (const p of release.people) {
-    if ([p.name, ...p.aliases].some((n) => lower.has(n.toLowerCase()))) continue;
+    if ([p.name, ...p.aliases].some((n) => lower.has(n.toLowerCase())))
+      continue;
     if (!p.electorates.some((e) => e.current)) continue;
     rows.push({ name: p.name, pid: p.legacy_person_id ?? null, speeches: 0 });
     lower.add(p.name.toLowerCase());
   }
   const foldName = (n: string) =>
-    n.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+    n
+      .normalize('NFKC')
+      .replace(/[‘’ʼ`]/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
   const byName = new Map(rows.map((p) => [p.name, p]));
   const byFold = new Map<string, Row>();
   for (const p of rows) {
     const prev = byFold.get(foldName(p.name));
-    if (!prev || (p.speeches ?? 0) > (prev.speeches ?? 0)) byFold.set(foldName(p.name), p);
+    if (!prev || (p.speeches ?? 0) > (prev.speeches ?? 0))
+      byFold.set(foldName(p.name), p);
   }
   return (printed: string, id: string | null | undefined): string | null => {
-    const person = sponsorPerson ? sponsorPerson(printed, id ?? null, rows) : null;
+    const person = sponsorPerson
+      ? sponsorPerson(printed, id ?? null, rows)
+      : null;
     const target = person?.name ?? printed;
     const landed = byName.get(target) ?? byFold.get(foldName(target));
     if (!landed || !landed.name.trim().includes(' ')) return null;
-    if (sponsorKey(landed.name) !== sponsorKey(printed) && !(id && landed.pid === id)) return null;
+    if (
+      sponsorKey(landed.name) !== sponsorKey(printed) &&
+      !(id && landed.pid === id)
+    )
+      return null;
     if (id && landed.pid && landed.pid !== id) return null;
-    if (id && !landed.pid && !rows.some((r) => r.pid === id && r.full && sponsorKey(r.full) === sponsorKey(printed)))
+    if (
+      id &&
+      !landed.pid &&
+      !rows.some(
+        (r) =>
+          r.pid === id && r.full && sponsorKey(r.full) === sponsorKey(printed),
+      )
+    )
       return null;
     return landed.name;
   };

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { colors } from '../../design/tokens';
+import { currentColors } from '../../design/use-colors';
 import {
   askHeaderItems,
   glassBar,
@@ -22,6 +22,7 @@ export function askScreens(
   /** As `sharedScreens` is told: 'plain' where pushed pages are clear. */
   underBar: UnderBar = false,
 ) {
+  const colors = currentColors();
   return [
     screen('ask', 'Ask', {
       ...(segment === '(ask)'

@@ -22,14 +22,8 @@ import {
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { useRowHighlight } from './row-padding';
 import { Text } from './text';
-import {
-  colors,
-  hairline,
-  minimumTarget,
-  radii,
-  rhythm,
-  textStyles,
-} from './tokens';
+import { hairline, minimumTarget, radii, rhythm, textStyles } from './tokens';
+import { makeStyles } from './use-colors';
 
 /** One original record or register behind a block. */
 export interface SourceOriginal {
@@ -426,6 +420,8 @@ export function SourceAffordance({
   testID?: string;
   ref?: Ref<View>;
 }) {
+  const styles = useStyles();
+
   // A hugging line's width follows its text, so word-safe sizing could chase
   // its own frame. At accessibility sizes it takes the column's full width.
   const fixed = useAccessibilitySize();
@@ -537,78 +533,80 @@ export function licenceText(licence: string): string {
 
 export const sourceSymbol = 'doc.text.magnifyingglass';
 
-const styles = StyleSheet.create({
-  line: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.line + 2,
-    minHeight: minimumTarget,
-    paddingHorizontal: rhythm.tight,
-    marginHorizontal: -rhythm.tight,
-    borderRadius: radii.thumb,
-    borderCurve: 'continuous',
-  },
-  hug: { alignSelf: 'flex-start', maxWidth: '100%' },
-  // The column's full width, whatever row the line sits in.
-  fixed: { alignSelf: 'stretch', width: '100%' },
-  // Glyph and text start together; the glyph's box is the first line's
-  // height, so the glyph sits on that line's centre (not the row's).
-  lineContent: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.line + 2,
-    flexShrink: 1,
-  },
-  glyph: { justifyContent: 'center' },
-  shrink: { flexShrink: 1 },
-  pressed: { backgroundColor: colors.sunken },
-  group: { gap: rhythm.tight },
-  notes: { gap: rhythm.block },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.heading,
-    minHeight: minimumTarget,
-    paddingVertical: 6,
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerSubtle,
-  },
-  rowStacked: { alignItems: 'flex-start' },
-  rowText: { flex: 1, gap: 2 },
-  sheet: { flex: 1, backgroundColor: colors.paper },
-  bar: {
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.tight,
-    paddingBottom: rhythm.heading,
-    borderBottomWidth: hairline,
-    borderBottomColor: colors.dividerSubtle,
-  },
-  barAndroid: { paddingTop: rhythm.heading },
-  grab: {
-    alignSelf: 'center',
-    width: 36,
-    height: 5,
-    borderRadius: radii.capsule,
-    backgroundColor: colors.dividerDefault,
-    marginBottom: rhythm.heading,
-    borderCurve: 'continuous',
-  },
-  head: { flexDirection: 'row', alignItems: 'center', gap: rhythm.block },
-  title: { flex: 1 },
-  done: {
-    minHeight: minimumTarget,
-    minWidth: minimumTarget,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  content: {
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.block,
-    // The home indicator plus a section's breath.
-    paddingBottom: 34 + rhythm.section,
-    gap: rhythm.group,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    line: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.line + 2,
+      minHeight: minimumTarget,
+      paddingHorizontal: rhythm.tight,
+      marginHorizontal: -rhythm.tight,
+      borderRadius: radii.thumb,
+      borderCurve: 'continuous',
+    },
+    hug: { alignSelf: 'flex-start', maxWidth: '100%' },
+    // The column's full width, whatever row the line sits in.
+    fixed: { alignSelf: 'stretch', width: '100%' },
+    // Glyph and text start together; the glyph's box is the first line's
+    // height, so the glyph sits on that line's centre (not the row's).
+    lineContent: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.line + 2,
+      flexShrink: 1,
+    },
+    glyph: { justifyContent: 'center' },
+    shrink: { flexShrink: 1 },
+    pressed: { backgroundColor: colors.sunken },
+    group: { gap: rhythm.tight },
+    notes: { gap: rhythm.block },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.heading,
+      minHeight: minimumTarget,
+      paddingVertical: 6,
+      borderTopWidth: hairline,
+      borderTopColor: colors.dividerSubtle,
+    },
+    rowStacked: { alignItems: 'flex-start' },
+    rowText: { flex: 1, gap: 2 },
+    sheet: { flex: 1, backgroundColor: colors.paper },
+    bar: {
+      paddingHorizontal: rhythm.screen,
+      paddingTop: rhythm.tight,
+      paddingBottom: rhythm.heading,
+      borderBottomWidth: hairline,
+      borderBottomColor: colors.dividerSubtle,
+    },
+    barAndroid: { paddingTop: rhythm.heading },
+    grab: {
+      alignSelf: 'center',
+      width: 36,
+      height: 5,
+      borderRadius: radii.capsule,
+      backgroundColor: colors.dividerDefault,
+      marginBottom: rhythm.heading,
+      borderCurve: 'continuous',
+    },
+    head: { flexDirection: 'row', alignItems: 'center', gap: rhythm.block },
+    title: { flex: 1 },
+    done: {
+      minHeight: minimumTarget,
+      minWidth: minimumTarget,
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+    },
+    content: {
+      paddingHorizontal: rhythm.screen,
+      paddingTop: rhythm.block,
+      // The home indicator plus a section's breath.
+      paddingBottom: 34 + rhythm.section,
+      gap: rhythm.group,
+    },
+  }),
+);
 
 /** A date in the sheet: "4 September 2026", a year-only vintage as "2021". */
 function sheetDate(

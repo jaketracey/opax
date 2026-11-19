@@ -50,13 +50,13 @@ import { symbols } from './symbols';
 import { Text, textContent } from './text';
 import {
   accents,
-  colors,
   minimumTarget,
   radii,
   rhythm,
   textStyles,
   type Accent,
 } from './tokens';
+import { useColors } from './use-colors';
 import type { TermMatch } from '../features/learn/term-map';
 import { useTermWords, withTermAction } from './term';
 
@@ -787,6 +787,8 @@ export interface RecordRowProps {
   testID?: string;
 }
 function Highlight({ text, words }: { text: string; words?: string[] }) {
+  const colors = useColors();
+
   if (!words?.length) return <>{text}</>;
   const escaped = words
     .filter(Boolean)
@@ -1136,6 +1138,8 @@ export function DivisionRow({
   votesLine,
   metaTerm,
 }: DivisionRowProps) {
+  const colors = useColors();
+
   const metaWords = useTermWords(meta, metaTerm?.term, metaTerm?.phrase);
   const termAction = withTermAction(
     href ? [] : rowAccessibilityActions(menu ?? []),

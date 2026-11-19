@@ -26,7 +26,7 @@ import {
   useRootBarSearchOptions,
   useScreenGround,
 } from './useRootBarAppearance';
-import { colors } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 
 /** Preview destinations have placeholder navigation that rejects options. */
 export function useCanSetOptions() {
@@ -76,6 +76,8 @@ export function RouteOptions({
   /** A detail's bar items retain their identity as data and title arrive. */
   stableItems?: boolean;
 }) {
+  const colors = useColors();
+
   const setOptions = useSafeSetOptions();
   const route = useContext(NavigationRouteContext);
   const pending = useMemo(
@@ -159,6 +161,7 @@ export function RouteOptions({
     plainClear,
     root,
     screenGround,
+    colors,
   ]);
   const keepItems = stableItems || !!pending;
   useDetailRouteOptions(setOptions, keepItems ? resolvedOptions : undefined);

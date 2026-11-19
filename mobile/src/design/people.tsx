@@ -43,13 +43,13 @@ import { Text } from './text';
 import { nameProbeProps } from './text-probe';
 import { partyFromCode } from '../features/bills/party-codes';
 import {
-  colors,
   hairline,
   minimumTarget,
   rhythm,
   size as sizeTokens,
   textStyles,
 } from './tokens';
+import { makeStyles, useColors } from './use-colors';
 
 const portraitSizes = { row: sizeTokens.portraitRow, profile: 96 } as const;
 /** A circular portrait; an absent or failed image leaves a blank circle (a person symbol when unnamed). */
@@ -74,6 +74,8 @@ export function Portrait({
   onDisplay?: (visible: boolean) => void;
   loading?: boolean;
 }) {
+  const styles = useStyles();
+
   const [failed, setFailed] = useState<string | null>(null);
   const dimension = typeof size === 'number' ? size : portraitSizes[size];
   const input = localURI ?? uri;
@@ -153,6 +155,8 @@ export function FaceStack({
   portraits: (string | null)[];
   max?: number;
 }) {
+  const colors = useColors();
+
   return (
     <View
       accessibilityElementsHidden
@@ -241,6 +245,8 @@ export function PartyLabel({
   singleLine?: boolean;
   prefix?: string;
 }) {
+  const styles = useStyles();
+
   const identity = partyIdentity(party);
   const scheme = useColorScheme();
   const dot = partyDot(party, scheme === 'dark' ? 'dark' : 'light');
@@ -501,6 +507,8 @@ export function PersonRow({
   highlighted,
   statusShown = false,
 }: PersonRowProps) {
+  const styles = useStyles();
+
   const slug = personRowSlug(href, portrait);
   const ownMember = useRowIsMyMember(slug);
   const yourMP = suppliedYourMP || ownMember;
@@ -742,62 +750,64 @@ export function PersonRow({
 }
 const personChevron = 'chevron.right';
 
-const styles = StyleSheet.create({
-  portrait: {
-    backgroundColor: colors.sunken,
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-  },
-  party: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    maxWidth: '100%',
-  },
-  partyHug: { alignSelf: 'flex-start' },
-  partyFixed: { alignSelf: 'stretch', width: '100%' },
-  partyLinked: { minHeight: minimumTarget, minWidth: minimumTarget },
-  partyCompactLink: { minWidth: minimumTarget },
-  partyText: { flexShrink: 1, fontWeight: '600' },
-  dotRinged: {
-    borderWidth: 1.5,
-    borderColor: colors.raised,
-    boxSizing: 'content-box',
-  },
-  person: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.heading,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-  },
-  // The portrait sits at the top of the text block, level with the name.
-  personMain: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.heading,
-  },
-  personStacked: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  // flex: 1 allocates width beside the portrait, but becomes a zero height
-  // basis when the main axis stacks. Let the column measure all its lines.
-  personText: { gap: rhythm.line, alignSelf: 'stretch' },
-  personTextInline: { flex: 1 },
-  personName: { flexShrink: 0 },
-  personDetails: { gap: rhythm.line },
-  // Full-width layers in a row, each pulled back over the first: all take
-  // part in layout, and the cell is as tall as the tallest.
-  placeCell: { flexDirection: 'row', alignItems: 'flex-start' },
-  placeLayer: { width: '100%', flexShrink: 0 },
-  placeOver: { marginLeft: '-100%' },
-  placeUnseen: { opacity: 0 },
-  // Seat and role sit within the compact party link's expanded hit target,
-  // so only a stack without those lines needs blank space below the party.
-  personParty: { minHeight: minimumTarget },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    portrait: {
+      backgroundColor: colors.sunken,
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+    },
+    party: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      maxWidth: '100%',
+    },
+    partyHug: { alignSelf: 'flex-start' },
+    partyFixed: { alignSelf: 'stretch', width: '100%' },
+    partyLinked: { minHeight: minimumTarget, minWidth: minimumTarget },
+    partyCompactLink: { minWidth: minimumTarget },
+    partyText: { flexShrink: 1, fontWeight: '600' },
+    dotRinged: {
+      borderWidth: 1.5,
+      borderColor: colors.raised,
+      boxSizing: 'content-box',
+    },
+    person: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.heading,
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    },
+    // The portrait sits at the top of the text block, level with the name.
+    personMain: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.heading,
+    },
+    personStacked: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    // flex: 1 allocates width beside the portrait, but becomes a zero height
+    // basis when the main axis stacks. Let the column measure all its lines.
+    personText: { gap: rhythm.line, alignSelf: 'stretch' },
+    personTextInline: { flex: 1 },
+    personName: { flexShrink: 0 },
+    personDetails: { gap: rhythm.line },
+    // Full-width layers in a row, each pulled back over the first: all take
+    // part in layout, and the cell is as tall as the tallest.
+    placeCell: { flexDirection: 'row', alignItems: 'flex-start' },
+    placeLayer: { width: '100%', flexShrink: 0 },
+    placeOver: { marginLeft: '-100%' },
+    placeUnseen: { opacity: 0 },
+    // Seat and role sit within the compact party link's expanded hit target,
+    // so only a stack without those lines needs blank space below the party.
+    personParty: { minHeight: minimumTarget },
+  }),
+);
 
 ownsRowPadding(PersonRow);

@@ -355,11 +355,25 @@ in `assets/splash/` (the wordmark outlined from the bundled Merriweather
 Bold), renders every PNG from those SVGs with Core Graphics (no Homebrew, npm
 package or network) and rewrites `src/launch/geometry.generated.ts`, the
 glyph positions the animation starts from. Commit all three together. The
-field is navy in both appearances, so one `backgroundColor` serves both: the
-app stays light-only (`UIUserInterfaceStyle` Light), and a `dark` splash block
-would switch it to Automatic, which `qa-static` rejects. The status bar is
-light over the launch screen (`UIStatusBarStyle`), and the cover keeps it
-light until it goes.
+field is navy in both appearances, so one `backgroundColor` serves both. A
+`dark` splash block switches the whole app to Automatic whatever
+`userInterfaceStyle` says, so only a build that follows the system carries
+one (the same navy), and `qa-static` checks the generated Info.plist against
+the appearance switch. The status bar is light over the launch screen
+(`UIStatusBarStyle`), and the cover keeps it light until it goes.
+
+**Appearance.** `OPAX_APPEARANCE` is the one switch for iOS and Android, in
+every variant, production included: `light` is light-only, `automatic`
+follows the system. Unset, a build takes `DEFAULT_APPEARANCE` in
+`plugins/appearance.js`, which is the release default (`light` until the dark
+boards are approved). On Android `light` pins AppCompat to day and
+`automatic` follows the system, with night values for the alert accent and
+the window behind React Native (`plugins/withAndroidPolicy.js`,
+`plugins/withAndroidTheme.js`); `expo-system-ui` is not needed. Colour roles
+reach Android through `useColors()` and `makeStyles`
+(`src/design/use-colors.ts`); `npx tsx scripts/codemod-use-colors.ts <path>`
+converts a file and `opax/static-colors` in `npm run lint` reports what is
+left. See `docs/design/TOKENS.md`, "Dark mode in the app".
 
 **Animated splash.** `src/launch/splash.ts` holds the native splash until
 `LaunchHandoff` (`src/launch/LaunchHandoff.tsx`) has drawn the same two
@@ -461,7 +475,8 @@ with `startRecording`; cut frames from the `.mp4` in the run's Maestro output
 with `ffmpeg -i <mp4> -vf fps=20 <dir>/%03d.png`. `OPAX_E2E_APPEARANCE=dark`
 runs a journey with the simulator in dark appearance (default light). It is
 the harness's own switch: `OPAX_APPEARANCE` belongs to `app.config.ts` (a
-build's interface style, `light` or `automatic`) and is left alone, though
+build's interface style, `light` or `automatic`; a `light` build ignores the
+simulator's appearance) and is left alone, though
 `OPAX_APPEARANCE=dark`, the earlier spelling, still gives a dark simulator:
 
 ```sh

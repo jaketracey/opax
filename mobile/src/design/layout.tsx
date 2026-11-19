@@ -86,7 +86,6 @@ import { useLayoutProbe } from '../perf/layout-probe';
 import { ScreenSectionGapContext, StatePageProvider } from './states';
 import { Heading, Text } from './text';
 import {
-  colors,
   hairline,
   layout,
   minimumTarget,
@@ -95,6 +94,7 @@ import {
   textStyles,
   rhythmRegular,
 } from './tokens';
+import { makeStyles, useColors } from './use-colors';
 import { useStableKeyboard } from './useStableKeyboard';
 
 // The compatibility button's notes-only adapter now presents /rule.
@@ -207,6 +207,8 @@ function BarStickyHeader(props: {
   scrollAnimatedValue: Animated.Value;
   nativeID?: string | null;
 }) {
+  const styles = useStyles();
+
   const { scrollAnimatedValue } = props;
   const headerBottom = useHeaderBottom();
   const rest = useContext(PinnedRestContext);
@@ -559,6 +561,9 @@ export function Screen({
   /** The content column on regular width: `readable` (700pt) or `wide`. */
   column?: keyof typeof columns;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const { onLayout, content, inner, bar, regular } = useScreenColumn(
     column,
     contentInsetAdjustmentBehavior !== 'never',
@@ -640,6 +645,7 @@ export function Screen({
     clearRail,
     onRail,
     clearExpandedBar,
+    colors,
   ]);
   const rest = useClearBarRest();
   const safeTop = useContext(SafeAreaInsetsContext)?.top ?? 0;
@@ -1093,6 +1099,8 @@ export function KeyboardStableScreen({
   onScroll?: (y: number) => void;
   column?: keyof typeof columns;
 }) {
+  const styles = useStyles();
+
   const ownScroll = useRef<ScrollView>(null);
   const scroll = scrollRef ?? ownScroll;
   const keyboard = useStableKeyboard(scroll, keyboardTarget);
@@ -1193,6 +1201,9 @@ export function SectionHeader({
   /** Today: the title owns the band; the action keeps its full target. */
   compact?: boolean;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const [titleHeight, setTitleHeight] = useState<number>(
     textStyles.sectionTitle.lineHeight,
   );
@@ -1306,6 +1317,8 @@ export function Section({
   testID?: string;
   headingTestID?: string;
 }) {
+  const styles = useStyles();
+
   const isAction =
     action &&
     typeof action === 'object' &&
@@ -1344,6 +1357,8 @@ function InsetRow({
   grouped: boolean;
   onSelected: (id: RowKey, selected: boolean) => void;
 }) {
+  const colors = useColors();
+
   const [inset, setInset] = useState(16);
   const report = useCallback(
     (selected: boolean) => onSelected(id, selected),
@@ -1385,6 +1400,8 @@ export function InsetGroup({
   children: ReactNode;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const nested = useContext(InGroup);
   const inCard = useInCard();
   const surface = useContext(SurfaceContext);
@@ -1579,62 +1596,64 @@ function anchorHeadings(children: ReactNode): ReactNode {
   });
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  stuck: { zIndex: 10 },
-  fillPinned: { flex: 1 },
-  content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.section,
-    gap: layout.sectionGap,
-  },
-  section: { gap: rhythm.heading },
-  sectionAction: {
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-    borderRadius: radii.thumb,
-    borderCurve: 'continuous',
-  },
-  // On its own line, a long link wraps between words inside the column.
-  sectionActionWrapping: { maxWidth: '100%', flexShrink: 1 },
-  insetGroup: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  sectionHead: {
-    minHeight: minimumTarget,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  sectionHeadStacked: {
-    gap: rhythm.line,
-    marginBottom: rhythm.heading - rhythm.block,
-  },
-  sectionHeadStackedWrapping: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    columnGap: rhythm.tight,
-    rowGap: rhythm.line,
-    marginBottom: rhythm.heading - rhythm.block,
-  },
-  sectionHeadWrapping: {
-    minHeight: minimumTarget,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  sectionHeadTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
-  sectionHeadGloss: { gap: rhythm.line },
-  sectionAccessory: {
-    marginLeft: 'auto',
-    maxWidth: '100%',
-    paddingVertical: rhythm.tight,
-  },
-  grow: { flexGrow: 1, flexShrink: 1 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    stuck: { zIndex: 10 },
+    fillPinned: { flex: 1 },
+    content: {
+      paddingHorizontal: layout.screenMargin,
+      paddingTop: rhythm.block,
+      paddingBottom: rhythm.section,
+      gap: layout.sectionGap,
+    },
+    section: { gap: rhythm.heading },
+    sectionAction: {
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+      borderRadius: radii.thumb,
+      borderCurve: 'continuous',
+    },
+    // On its own line, a long link wraps between words inside the column.
+    sectionActionWrapping: { maxWidth: '100%', flexShrink: 1 },
+    insetGroup: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    sectionHead: {
+      minHeight: minimumTarget,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    sectionHeadStacked: {
+      gap: rhythm.line,
+      marginBottom: rhythm.heading - rhythm.block,
+    },
+    sectionHeadStackedWrapping: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      columnGap: rhythm.tight,
+      rowGap: rhythm.line,
+      marginBottom: rhythm.heading - rhythm.block,
+    },
+    sectionHeadWrapping: {
+      minHeight: minimumTarget,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    sectionHeadTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+    sectionHeadGloss: { gap: rhythm.line },
+    sectionAccessory: {
+      marginLeft: 'auto',
+      maxWidth: '100%',
+      paddingVertical: rhythm.tight,
+    },
+    grow: { flexGrow: 1, flexShrink: 1 },
+  }),
+);

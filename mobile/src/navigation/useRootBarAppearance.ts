@@ -13,7 +13,7 @@ import {
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
-import { colors } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 import {
   barBacking,
   clearBars,
@@ -176,6 +176,8 @@ export function useRootBarAppearance(
     underBar?: boolean;
   } = {},
 ) {
+  const colors = useColors();
+
   const navigation = useContext(NavigationContext);
   const subscribe = useCallback(
     (listener: () => void) => {

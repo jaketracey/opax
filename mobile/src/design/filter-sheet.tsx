@@ -19,7 +19,8 @@ import { LinkRow } from './rows';
 import { useListSearchBar } from './search-bar';
 import { ContentUnavailable, Skeleton } from './states';
 import { Text } from './text';
-import { colors, minimumTarget, rhythm } from './tokens';
+import { minimumTarget, rhythm } from './tokens';
+import { currentColors } from './use-colors';
 export {
   filterStore,
   registerFilterModel,
@@ -35,6 +36,7 @@ export type {
 } from '../features/sheets/filter-model';
 
 export function filterBar(onDone: () => void, onCancel?: () => void) {
+  const colors = currentColors();
   const done: NativeStackHeaderItem = {
     type: 'button',
     label: copy.done,

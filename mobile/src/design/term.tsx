@@ -22,7 +22,7 @@ import { useUnderlineTerms } from '../features/learn/settings';
 import { sheetAboveTabs } from '../navigation/sheets';
 import { useAccessibilitySize } from './accessibility';
 import { Text } from './text';
-import { colors } from './tokens';
+import { makeStyles } from './use-colors';
 
 /**
  * Inline glossary terms (newcomer design README 8.2).
@@ -147,6 +147,8 @@ function TermRun({
   cap?: number;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const press = useTermPress(id);
   // A bare run, so it inherits the surrounding text's role, size and colour.
   // Uncapped like every design Text; under a capped Text it inherits the
@@ -313,11 +315,13 @@ export function resetTermClaimsForTests() {
   listeners.clear();
 }
 
-const styles = StyleSheet.create({
-  term: {
-    textDecorationLine: 'underline',
-    // iOS draws the dots; Android ignores the style and draws a solid line.
-    textDecorationStyle: Platform.OS === 'ios' ? 'dotted' : 'solid',
-    textDecorationColor: colors.inkFaint,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    term: {
+      textDecorationLine: 'underline',
+      // iOS draws the dots; Android ignores the style and draws a solid line.
+      textDecorationStyle: Platform.OS === 'ios' ? 'dotted' : 'solid',
+      textDecorationColor: colors.inkFaint,
+    },
+  }),
+);

@@ -3,7 +3,8 @@ import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useReduceMotion } from '../design/accessibility';
 import { Text } from '../design/text';
-import { colors, minimumTarget, radii, rhythm } from '../design/tokens';
+import { minimumTarget, radii, rhythm } from '../design/tokens';
+import { makeStyles, useColors } from '../design/use-colors';
 
 /**
  * Android's sheet for a short choice or a ⋯ menu: a panel from the foot of
@@ -27,6 +28,8 @@ export function AndroidBottomSheet({
   testID?: string;
   children: ReactNode;
 }) {
+  const styles = useStyles();
+
   const insets = useSafeAreaInsets();
   const reduced = useReduceMotion();
   return (
@@ -95,6 +98,9 @@ export function AndroidSheetRow({
   onPress: () => void;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -111,35 +117,38 @@ export function AndroidSheetRow({
   );
 }
 
-const styles = StyleSheet.create({
-  handle: {
-    width: 32,
-    height: 4,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    backgroundColor: colors.inkSoft,
-    alignSelf: 'center',
-    marginBottom: rhythm.tight,
-  },
-  backdrop: { flex: 1, justifyContent: 'flex-end' },
-  // The ink at 40%: the scrim is a role, not a new colour.
-  scrim: { backgroundColor: colors.ink, opacity: 0.4 },
-  panel: {
-    backgroundColor: colors.paper,
-    borderTopLeftRadius: radii.container,
-    borderTopRightRadius: radii.container,
-    paddingTop: rhythm.block,
-    maxHeight: '85%',
-    borderCurve: 'continuous',
-  },
-  title: {
-    paddingHorizontal: rhythm.screen,
-    paddingBottom: rhythm.tight,
-  },
-  row: {
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-    paddingHorizontal: rhythm.screen,
-    paddingVertical: rhythm.row,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    handle: {
+      width: 32,
+      height: 4,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      backgroundColor: colors.inkSoft,
+      alignSelf: 'center',
+      marginBottom: rhythm.tight,
+    },
+    backdrop: { flex: 1, justifyContent: 'flex-end' },
+    // The scrim role: ink at 40% in light, black at 60% in dark, where ink
+    // is pale and would lift the page instead of dimming it.
+    scrim: { backgroundColor: colors.scrim },
+    panel: {
+      backgroundColor: colors.paper,
+      borderTopLeftRadius: radii.container,
+      borderTopRightRadius: radii.container,
+      paddingTop: rhythm.block,
+      maxHeight: '85%',
+      borderCurve: 'continuous',
+    },
+    title: {
+      paddingHorizontal: rhythm.screen,
+      paddingBottom: rhythm.tight,
+    },
+    row: {
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+      paddingHorizontal: rhythm.screen,
+      paddingVertical: rhythm.row,
+    },
+  }),
+);

@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { Pressable } from './pressable';
 import { Text } from './text';
-import { colors, minimumTarget, radii, rhythm } from './tokens';
+import { minimumTarget, radii, rhythm } from './tokens';
+import { makeStyles } from './use-colors';
 
 /**
  * A plain line under a section heading (the newcomer build's option C): a
@@ -70,6 +71,8 @@ export function Gloss({
   entry: GlossEntry;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const word = glossWord(entry.word);
   return (
     <Pressable
@@ -92,18 +95,20 @@ export function Gloss({
   );
 }
 
-const styles = StyleSheet.create({
-  target: {
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-    borderRadius: radii.thumb,
-    borderCurve: 'continuous',
-  },
-  pressed: { backgroundColor: colors.sunken },
-  rule: {
-    borderLeftWidth: 2,
-    borderLeftColor: colors.bronze,
-    paddingLeft: rhythm.row,
-    paddingVertical: rhythm.line,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    target: {
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+      borderRadius: radii.thumb,
+      borderCurve: 'continuous',
+    },
+    pressed: { backgroundColor: colors.sunken },
+    rule: {
+      borderLeftWidth: 2,
+      borderLeftColor: colors.bronze,
+      paddingLeft: rhythm.row,
+      paddingVertical: rhythm.line,
+    },
+  }),
+);

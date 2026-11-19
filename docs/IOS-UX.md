@@ -880,7 +880,7 @@ Party colours (dot only, always with a label):
 
 All light dots clear the 3:1 non-text minimum on paper. On the proposed dark ground the light colours range from 2.20:1 (Liberal) to 5.35:1 (LNP), and three of eight (ALP 2.80, Independent 2.53, Liberal 2.20) fall below 3:1, so a dark palette needs its own party set.
 
-**Proposed dark palette (a proposal, not a decision).** It keeps the broadsheet roles: a navy-black ground, warm off-white ink, bronze lightened for links.
+**Proposed dark palette (retired 19 Nov 2026).** This early proposal was not adopted. The app's dark mode uses the tested token palette in `docs/design/TOKENS.md`: a warm near-black ground (`#161915`) with navy as the one tint, not bronze links on navy-black. The table stays as a record of the proposal only; no code reads it.
 
 | Role | Proposed hex | Contrast on the dark ground |
 | --- | --- | --- |
@@ -1112,7 +1112,7 @@ Checked 3 October 2026 against the App Review Guidelines, last updated 8 June 20
 3. **Daily edition.** Approve the frozen edition endpoint (D2)?
 4. **Voice placement.** A Talk button on every root screen, or a fifth "Talk" tab?
 5. **Account deletion scope.** Settled as a requirement in IOS-APP.md: authored content and personal data are deleted, and voice usage stays without a member link. Still open: other members' replies under a deleted discussion, legal retention, and a returning email's allowance (IOS-APP.md decision 5).
-6. **Dark mode.** Keep the app light-only like the web, or adopt the proposed dark palette?
+6. **Dark mode.** Closed, 19 Nov 2026: the app follows the system on iOS and Android, with no in-app setting, behind the `OPAX_APPEARANCE` build switch (`docs/design/TOKENS.md`, "Dark mode in the app"). The palette is the tested token palette (warm near-black `#161915`), not the navy-black proposal in section 5, which is retired. The web stays light-only.
 7. **App icon.** Australia mark alone, the full masthead mark, or something else?
 8. **Private individuals.** Agree the native-page scope in section 2, including no donor pages until donors can be filtered to organisations?
 9. **Contact.** Which support URL and contact address can be published for guideline 1.5?

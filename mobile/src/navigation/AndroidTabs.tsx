@@ -5,16 +5,10 @@ import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
 // ripple's grey focus fill off, so a tab shows one ring, not two.
 import { Pressable } from '../design/pressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useHighTextContrast } from '../design/accessibility';
 import { AndroidTabIcon } from './AndroidTabIcon';
 import { requestSearchTabReset } from '../features/search/tab-reset';
-import { lightHighContrast } from '../design/palette';
-import {
-  colors,
-  interfaceFonts as fonts,
-  radii,
-  useChromeColours,
-} from '../design/tokens';
+import { interfaceFonts as fonts, radii } from '../design/tokens';
+import { makeStyles, useColors } from '../design/use-colors';
 
 const tabs = [
   ['(today)', 'today', 'Today', 'newspaper'],
@@ -44,21 +38,22 @@ export function androidTabsHidden(segments: readonly string[]) {
  * pill (things you press are pills), with one accent, navy, for the choice.
  */
 export function AndroidTabs() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const insets = useSafeAreaInsets();
   const hidden = androidTabsHidden(useSegments());
-  const chrome = useChromeColours();
-  // The labels are plain hex, so High contrast text takes the stronger role
-  // by hand, as `Text` does everywhere else. (Icons are not text.)
-  const inactive = useHighTextContrast()
-    ? (lightHighContrast.inkSoft ?? chrome.inactive)
-    : chrome.inactive;
+  // Android's roles are plain hex for the scheme, with the stronger ones
+  // while High contrast text is on, as `Text` takes them everywhere else.
+  const tint = colors.navy as string;
+  const inactive = colors.inkSoft as string;
   return (
     <Tabs
       initialRouteName="(today)"
       backBehavior="initialRoute"
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: chrome.tint,
+        tabBarActiveTintColor: tint,
         tabBarInactiveTintColor: inactive,
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: true,
@@ -128,24 +123,26 @@ export function AndroidTabs() {
   );
 }
 
-const styles = StyleSheet.create({
-  // Replaces the navigator's 31 x 28 icon box.
-  indicatorFrame: { width: 56, height: 32 },
-  indicator: {
-    width: 56,
-    height: 32,
-    borderRadius: radii.capsule,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderCurve: 'continuous',
-  },
-  chosen: { backgroundColor: colors.navyWash },
-  label: {
-    marginTop: 4,
-    fontFamily: fonts.sansSemiBold,
-    // a11y-ok(raw-font-size): the Material navigation bar label (12 sp);
-    // it follows the system font size up to LABEL_SCALE.
-    fontSize: 12,
-    lineHeight: 16,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    // Replaces the navigator's 31 x 28 icon box.
+    indicatorFrame: { width: 56, height: 32 },
+    indicator: {
+      width: 56,
+      height: 32,
+      borderRadius: radii.capsule,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderCurve: 'continuous',
+    },
+    chosen: { backgroundColor: colors.navyWash },
+    label: {
+      marginTop: 4,
+      fontFamily: fonts.sansSemiBold,
+      // a11y-ok(raw-font-size): the Material navigation bar label (12 sp);
+      // it follows the system font size up to LABEL_SCALE.
+      fontSize: 12,
+      lineHeight: 16,
+    },
+  }),
+);

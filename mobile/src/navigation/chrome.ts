@@ -21,6 +21,7 @@ import {
   View,
   useColorScheme,
   useWindowDimensions,
+  type ColorSchemeName,
   type ColorValue,
 } from 'react-native';
 import { openOnWeb } from './external';
@@ -33,7 +34,6 @@ import { menuTitle, plainMenuTitle } from '../design/menu-title';
 import { showMenu, type MenuAction } from '../design/menu';
 import type { RowMenuAction } from '../design/row-link';
 import {
-  colors,
   contentSizeCategory,
   interfaceFonts as fonts,
   headingFace,
@@ -43,6 +43,7 @@ import {
   schemeColour,
   textStyles,
 } from '../design/tokens';
+import { currentColors, useColors } from '../design/use-colors';
 import { accountSnapshot } from '../features/account/store';
 import { askReturnSnapshot } from '../features/ask/return';
 import { voiceLinked } from '../voice/linked';
@@ -106,7 +107,7 @@ export const clearBars = true;
  * indicators, and reserved an extra header-height band in sheets (wave 7).
  * Inline screens and sheets can colour both appearances.
  */
-export const opaqueBar = (ground: ColorValue = colors.paper) => ({
+export const opaqueBar = (ground: ColorValue = currentColors().paper) => ({
   headerStyle: { backgroundColor: ground },
   headerLargeStyle: { backgroundColor: ground },
   headerShadowVisible: Platform.OS === 'ios',
@@ -120,7 +121,7 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * which a clear bar covers, so the list must start at the bar's foot. The
  * pinned header is its own ground, and rows pass under it, not through it.
  */
-export const groundBar = (ground: ColorValue = colors.paper) => ({
+export const groundBar = (ground: ColorValue = currentColors().paper) => ({
   ...opaqueBar(ground),
   headerShadowVisible: false,
 });
@@ -144,7 +145,7 @@ export const groundBar = (ground: ColorValue = colors.paper) => ({
  * below the bar, preserving the large title and automatic insets.
  */
 export const largeTitleBar = (
-  ground: ColorValue = colors.paper,
+  ground: ColorValue = currentColors().paper,
   solid = false,
   underBar = false,
 ) =>
@@ -165,7 +166,7 @@ export const largeTitleBar = (
 
 /** Tab roots whose large title is disabled, including iPad split layouts. */
 export const scrollBar = (
-  ground: ColorValue = colors.paper,
+  ground: ColorValue = currentColors().paper,
   solid = false,
   edge: VerticalBarEdge = 'unspecified',
   // A vertical list without a scroll reporter retains its existing cover.
@@ -197,8 +198,8 @@ export const scrollBar = (
 /** Initial tab grounds, also used by roots with their own scrolling view. */
 export const tabRootGround = (name: string) =>
   name === 'ask' || (name !== 'bills' && designFlags.groupedSurfaces)
-    ? colors.sunken
-    : colors.paper;
+    ? currentColors().sunken
+    : currentColors().paper;
 
 /**
  * Android bar text, in sp. The native bar sets its title in sp, so the
@@ -216,7 +217,7 @@ export const androidBar = {
  * vertical bar (the map). UIKit's own bar background stops 10 pt above the
  * title band there, and the strip above it showed the system's grey.
  */
-export const barBacking = (ground: ColorValue = colors.paper) => ({
+export const barBacking = (ground: ColorValue = currentColors().paper) => ({
   headerBackground: () =>
     createElement(View, {
       pointerEvents: 'none',
@@ -238,7 +239,7 @@ export const barBacking = (ground: ColorValue = colors.paper) => ({
 export const fixedPageBar = (
   plainClear: boolean,
   rail: boolean,
-  ground: ColorValue = colors.paper,
+  ground: ColorValue = currentColors().paper,
 ) => ({
   ...(plainClear ? groundBar(ground) : opaqueBar(ground)),
   headerTransparent: false,
@@ -305,7 +306,7 @@ export function useUnderBar(headerTransparent: boolean): UnderBar {
  */
 export const solidRailBar = (
   underBar: UnderBar,
-  ground: ColorValue = colors.paper,
+  ground: ColorValue = currentColors().paper,
 ) =>
   underBar === 'plain'
     ? { headerTransparent: false, ...groundBar(ground) }
@@ -408,12 +409,20 @@ export function clearBarStyle<T extends NativeStackNavigationOptions>(
  * On iOS 26 every other layout does the same while no legibility setting
  * is on (`usePushedBar`): Today's clear bar and fade, on pushed pages too.
  */
+/** Android status bar icons for a page in the scheme: never ink on ink. */
+export const androidStatusBarStyle = (
+  scheme: ColorSchemeName | null | undefined,
+) => (scheme === 'dark' ? ('light' as const) : ('dark' as const));
+
 export function useStackChrome({
   tabStack = false,
 }: { tabStack?: boolean } = {}) {
+  const colors = useColors();
+
   const { fontScale } = useWindowDimensions();
   // Bar titles resolve in the app's appearance, not the bar's (11b-3).
-  const titleInk = schemeColour('ink', useColorScheme());
+  const scheme = useColorScheme();
+  const titleInk = schemeColour('ink', scheme);
   const barEdge = useVerticalBarEdge();
   const railBar = useRailBar();
   const pushedBar = usePushedBar();
@@ -426,7 +435,11 @@ export function useStackChrome({
   return {
     headerTintColor: colors.navy,
     ...(Platform.OS === 'android'
-      ? { headerTitleAlign: 'left' as const, statusBarStyle: 'dark' as const }
+      ? {
+          headerTitleAlign: 'left' as const,
+          // Icons that read on the page: dark on light paper, light on dark.
+          statusBarStyle: androidStatusBarStyle(scheme),
+        }
       : {}),
     // Pushed, inline and sheet layouts reserve space for a solid native bar.
     // Tab roots and explicit large-title lists opt into translucency separately.
@@ -505,6 +518,7 @@ export function rootHeaderItems(props?: {
   extra?: NativeStackHeaderItem[];
   signedIn: boolean;
 }): TestableHeaderItem[] {
+  const colors = currentColors();
   const signedIn = props?.signedIn ?? !!accountSnapshot().status?.signedIn;
   // AskScreen calls without props. Keep Talk reachable until w4-ask puts
   // it in the composer and removes that screen's own header options.
@@ -550,6 +564,7 @@ export function askBackItem(props: {
   short?: string;
   onPress: () => void;
 }): TestableHeaderItem {
+  const colors = currentColors();
   const short =
     props.short ??
     askReturnSnapshot()?.short ??
@@ -816,6 +831,7 @@ function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
  * Keep a word for actions without a symbol, including Done and Cancel.
  */
 export function androidHeaderBar(items: TestableHeaderItem[]) {
+  const colors = currentColors();
   return createElement(
     View,
     { style: { flexDirection: 'row' } },
@@ -1041,6 +1057,7 @@ export function pendingHeaderOptions(name: string, params?: object) {
  * a navy pill (pass 5, P3-8).
  */
 export function closeSheetItem(): NativeStackHeaderItem {
+  const colors = currentColors();
   return {
     type: 'button',
     label: 'Done',

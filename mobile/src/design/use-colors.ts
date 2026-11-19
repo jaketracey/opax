@@ -1,8 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import {
   Appearance,
   Platform,
-  useColorScheme,
   type ColorSchemeName,
   type ColorValue,
 } from 'react-native';
@@ -12,6 +11,7 @@ import {
   darkHighContrast,
   light,
   lightHighContrast,
+  paletteFor,
   type Role,
 } from './palette';
 import { colors as dynamicColors } from './tokens';
@@ -51,6 +51,7 @@ export type ColorTheme =
   | 'lightHighContrast'
   | 'darkHighContrast';
 
+const lightPalette = paletteFor('light');
 const androidPalettes: Record<ColorTheme, Colors> = {
   light,
   dark,
@@ -77,9 +78,27 @@ export function colorsFor(theme: ColorTheme): Colors {
   return Platform.OS === 'ios' ? dynamicColors : androidPalettes[theme];
 }
 
-/** The theme on screen now, for a component. */
+// The system's scheme, for Android only. iOS takes a constant and never
+// subscribes: its roles are dynamic, so nothing has to draw again there, and
+// UIKit reports both appearances in turn whenever the app goes to the
+// background, which would otherwise redraw every Text twice for nothing.
+const idle = () => () => undefined;
+const constantScheme = () => 'light' as const;
+const watchScheme = (changed: () => void) => {
+  const subscription = Appearance.addChangeListener(changed);
+  return () => subscription.remove();
+};
+const readScheme = () => Appearance.getColorScheme();
+
+/** The theme on screen now, for a component. Always `light` on iOS. */
 export function useColorTheme(): ColorTheme {
-  return colorTheme(useColorScheme(), useHighTextContrast());
+  const ios = Platform.OS === 'ios';
+  const scheme = useSyncExternalStore(
+    ios ? idle : watchScheme,
+    ios ? constantScheme : readScheme,
+    ios ? constantScheme : readScheme,
+  );
+  return colorTheme(scheme, useHighTextContrast());
 }
 
 /** Colour roles for the appearance on screen. See the note at the top. */
@@ -97,6 +116,24 @@ export function currentColors(): Colors {
   return colorsFor(
     colorTheme(Appearance.getColorScheme(), highTextContrastNow()),
   );
+}
+
+/**
+ * Material state layers in the colours on screen: navy at 16% (32% with
+ * High contrast text) over a page, and the filled control's own text colour
+ * at 12% over a filled control. Android only; iOS draws no ripple, and its
+ * dynamic roles are not hex, so it gets the light values it never uses.
+ */
+export function androidRipples(colors: Colors) {
+  const hex = (role: 'navy' | 'onNavy') => {
+    const value = colors[role];
+    return typeof value === 'string' ? value : lightPalette[role];
+  };
+  return {
+    ripple: `${hex('navy')}29`,
+    rippleHighContrast: `${hex('navy')}52`,
+    rippleOnFilled: `${hex('onNavy')}1F`,
+  };
 }
 
 /**

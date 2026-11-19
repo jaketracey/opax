@@ -4,6 +4,7 @@ import {
   partyColors,
   partyColorsDark,
   partyWashes,
+  partyWashesDark,
   type PartyKey,
 } from './palette';
 
@@ -174,10 +175,19 @@ export function partyDot(
     : null;
 }
 
-/** The party's tint for chips and headers; the neutral "other" wash otherwise. */
-export function partyWash(party: string | null | undefined): string {
+/**
+ * The party's tint for its own header; the neutral "other" wash otherwise.
+ * Pass the scheme (`useColorScheme()`): the dark washes are their own set,
+ * on which ink and inkSoft stay AA, as on the light ones.
+ */
+export function partyWash(
+  party: string | null | undefined,
+  appearance: 'light' | 'dark' | null = 'light',
+): string {
   const name = party?.trim();
-  return partyWashes[(name && knownParty(name)?.key) || 'other'];
+  return (appearance === 'dark' ? partyWashesDark : partyWashes)[
+    (name && knownParty(name)?.key) || 'other'
+  ];
 }
 
 /**

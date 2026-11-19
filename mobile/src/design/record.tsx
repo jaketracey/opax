@@ -25,13 +25,13 @@ import { SourceLine, type SourceDetails } from './source';
 import { Text, type TextTone } from './text';
 import {
   accents,
-  colors,
   hairline,
   minimumTarget,
   rhythm,
   type Accent,
   type TextVariant,
 } from './tokens';
+import { useColors } from './use-colors';
 import type { TermId } from '../features/learn/glossary';
 import { useTermWords, withTermAction } from './term';
 
@@ -229,6 +229,8 @@ export function StatStrip({
   tiles: StatTileProps[];
   testID?: string;
 }) {
+  const colors = useColors();
+
   const stacked = useAccessibilitySize();
   return (
     <View
@@ -314,6 +316,8 @@ export function PageFoot({
       jurisdiction: string;
     }
 )) {
+  const colors = useColors();
+
   const highlight = useRowHighlight();
   if (variant === 'authorised' && !isVictorian(jurisdiction)) return null;
   return (

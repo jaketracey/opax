@@ -23,7 +23,7 @@ import { useNavigationTiming } from '../analytics/timing';
 import { isPad, useWindowTraits } from '../design/adaptive';
 import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
-import { colors } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 import { KeyboardFrames } from '../features/ask/keyboard';
 import { installGloss } from '../features/newcomer/gloss-source';
 import { primeScreenReader } from '../features/money/screen-reader';
@@ -60,6 +60,8 @@ primeScreenReader();
 export { RouteErrorBoundary as ErrorBoundary } from '../navigation/RouteErrorBoundary';
 
 export default function Layout() {
+  const colors = useColors();
+
   // Keep traits and adaptive-device detection live throughout this session.
   useWindowTraits();
   const [loaded, error] = useFonts({
@@ -136,7 +138,9 @@ export default function Layout() {
   return (
     <SafeAreaProvider>
       <MyMemberProvider>
-        <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
+        {/* Dark icons on the light page, light icons on the dark one, on
+            both platforms. A light-only build's scheme is always light. */}
+        <StatusBar style="auto" />
         <KeyboardFrames>
           <View style={styles.app}>
             <AndroidMenuHost />

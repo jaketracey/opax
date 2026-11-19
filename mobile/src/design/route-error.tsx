@@ -3,7 +3,8 @@ import { SidebarSafe } from './adaptive';
 import { copy } from './copy';
 import { ContentUnavailable } from './states';
 import { symbols } from './symbols';
-import { colors, rhythm } from './tokens';
+import { rhythm } from './tokens';
+import { makeStyles } from './use-colors';
 
 export const routeErrorCopy = {
   title: 'This page couldn’t be shown',
@@ -27,6 +28,8 @@ export function RouteErrorBoundary({
   error: Error;
   retry: () => Promise<void>;
 }) {
+  const styles = useStyles();
+
   return (
     // Beside a vertical tab bar (the Duo's outer display) a scroll view's
     // content runs under the bar: the state is centred in the space the bar
@@ -53,11 +56,13 @@ export function RouteErrorBoundary({
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: rhythm.screen,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      padding: rhythm.screen,
+    },
+  }),
+);

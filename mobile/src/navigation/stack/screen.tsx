@@ -1,6 +1,5 @@
 import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import { Platform } from 'react-native';
-import { colors } from '../../design/tokens';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import {
   closeSheetItem,
@@ -250,7 +249,15 @@ export const sheetOptions: NativeStackNavigationOptions = {
   headerShown: true,
   ...shortSheet,
   headerTitleAlign: 'center',
-  ...opaqueBar(colors.paper),
+  // Read at each spread, in a stack's render, so the bar takes the page
+  // ground of the appearance on screen and not the one at import.
+  get headerStyle() {
+    return opaqueBar().headerStyle;
+  },
+  get headerLargeStyle() {
+    return opaqueBar().headerLargeStyle;
+  },
+  headerShadowVisible: opaqueBar().headerShadowVisible,
   // No backing from the stack (see presentedBar): a sheet that sets these
   // options itself, as money-item does, does not pass through `screen`.
   headerBackground: undefined,

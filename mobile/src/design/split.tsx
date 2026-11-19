@@ -36,7 +36,8 @@ import { Icon } from './icon';
 import { useKeyCommand } from './keyboard';
 import { symbols } from './symbols';
 import { Text } from './text';
-import { colors, hairline, minimumTarget, radii, rhythm } from './tokens';
+import { hairline, minimumTarget, radii, rhythm } from './tokens';
+import { makeStyles, useColors } from './use-colors';
 
 /**
  * The detail pane's own small stack: the selected item first, then what was
@@ -163,6 +164,8 @@ export interface SplitLayoutProps<T> {
  * list fills the screen.
  */
 export function SplitLayout<T>(props: SplitLayoutProps<T>) {
+  const styles = useStyles();
+
   return (
     <ReservedRegionArea style={styles.grow}>
       <SplitContent {...props} />
@@ -189,6 +192,8 @@ function SplitContent<T>({
   onCursor,
   testID,
 }: SplitLayoutProps<T>) {
+  const styles = useStyles();
+
   const layout = useLayout();
   // Two panes only from the split breakpoint (`splitAllowed`, 700pt on any
   // device); a narrower regular phone draws the list alone, as on iPhone.
@@ -551,6 +556,8 @@ export function PaneBar({
   onBack: () => void;
   actions?: ReactNode;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.paneBar} testID="split-pane-bar">
       {back ? <PaneBack label={back} onPress={onBack} /> : null}
@@ -561,6 +568,9 @@ export function PaneBar({
 }
 
 function PaneBack({ label, onPress }: { label: string; onPress: () => void }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   return (
     <Hoverable effect="highlight" cornerRadius={8} style={styles.backWrap}>
       <Pressable
@@ -596,6 +606,8 @@ function Divider({
   paused: boolean;
   gap: number;
 }) {
+  const styles = useStyles();
+
   const start = useRef(width);
   const latest = useRef({ width, onResize, paused });
   useEffect(() => {
@@ -670,44 +682,46 @@ function Divider({
   );
 }
 
-const styles = StyleSheet.create({
-  split: { flex: 1, flexDirection: 'row', backgroundColor: colors.paper },
-  listPane: { height: '100%' },
-  detailPane: { flex: 1, height: '100%' },
-  grow: { flex: 1 },
-  shrink: { flexShrink: 1 },
-  center: { textAlign: 'center' },
-  dividerWrap: { width: 1, zIndex: 2 },
-  dividerHit: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: -8,
-    width: 17,
-    alignItems: 'center',
-  },
-  dividerLine: {
-    width: hairline,
-    height: '100%',
-    backgroundColor: colors.dividerDefault,
-  },
-  dividerLineActive: { width: 3, backgroundColor: colors.navy },
-  paneBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    marginBottom: -rhythm.tight,
-  },
-  backWrap: { flexShrink: 1, alignSelf: 'flex-start' },
-  back: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.line,
-    minHeight: minimumTarget,
-    paddingHorizontal: rhythm.tight,
-    marginHorizontal: -rhythm.tight,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    split: { flex: 1, flexDirection: 'row', backgroundColor: colors.paper },
+    listPane: { height: '100%' },
+    detailPane: { flex: 1, height: '100%' },
+    grow: { flex: 1 },
+    shrink: { flexShrink: 1 },
+    center: { textAlign: 'center' },
+    dividerWrap: { width: 1, zIndex: 2 },
+    dividerHit: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: -8,
+      width: 17,
+      alignItems: 'center',
+    },
+    dividerLine: {
+      width: hairline,
+      height: '100%',
+      backgroundColor: colors.dividerDefault,
+    },
+    dividerLineActive: { width: 3, backgroundColor: colors.navy },
+    paneBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      marginBottom: -rhythm.tight,
+    },
+    backWrap: { flexShrink: 1, alignSelf: 'flex-start' },
+    back: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.line,
+      minHeight: minimumTarget,
+      paddingHorizontal: rhythm.tight,
+      marginHorizontal: -rhythm.tight,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+    },
+  }),
+);

@@ -27,12 +27,8 @@ import { useSafeSetOptions } from './preview';
 import { useNamedBackTitle } from './useNamedBackOptions';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import { useReduceMotionSetting } from '../design/accessibility';
-import {
-  colors,
-  isAccessibilityCategory,
-  motion,
-  textStyles,
-} from '../design/tokens';
+import { isAccessibilityCategory, motion, textStyles } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { useAdaptiveDevice } from '../design/adaptive';
@@ -284,6 +280,8 @@ export function BarTitle({
   backTitle?: string;
   person?: boolean;
 }) {
+  const colors = useColors();
+
   const reduceMotion = useReduceMotionSetting();
   const setOptions = useSafeSetOptions();
   const { width, fontScale } = useWindowDimensions();

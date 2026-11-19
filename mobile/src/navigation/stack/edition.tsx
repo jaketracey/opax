@@ -1,10 +1,11 @@
 import { screen, untitled } from './screen';
 import { StyleSheet, View } from 'react-native';
-import { colors } from '../../design/tokens';
+import { currentColors } from '../../design/use-colors';
 import { designFlags } from '../../design/flags';
 import { glassBar, groundBar, opaqueBar, type UnderBar } from '../chrome';
 
 export function editionScreens(underBar: UnderBar = false) {
+  const colors = currentColors();
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
   // Beside a vertical bar the edition runs under a clear bar like every other
   // pushed page: its own ground is then behind the bar, so there is no band
