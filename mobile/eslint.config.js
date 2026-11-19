@@ -1,6 +1,5 @@
 /* global __dirname */
 const { defineConfig } = require('eslint/config');
-const STATIC_COLOR_LANES = require('./scripts/static-colors-lanes.cjs');
 const expo = require('eslint-config-expo/flat');
 
 // Hermes evidence and the matching runtime guard: tests/hermes-runtime.js.
@@ -313,17 +312,9 @@ module.exports = defineConfig([
         ),
       ),
       // Dark mode: a role read from the static `colors` object stays light
-      // on Android (scripts/static-colors-rule.js). An error in the shared
-      // files, which are converted.
+      // on Android (scripts/static-colors-rule.js). An error everywhere:
+      // every file is converted, and no folder is let off with a warning.
       'opax/static-colors': 'error',
     },
-  },
-  {
-    // The screen lanes' files (dark mode audit, section 3) are converted by
-    // their own lanes, so the rule only warns there until each lane lands.
-    // A lane that finishes a folder removes it from this list, which makes
-    // the rule an error for that folder from then on.
-    files: STATIC_COLOR_LANES,
-    rules: { 'opax/static-colors': 'warn' },
   },
 ]);
