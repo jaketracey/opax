@@ -137,7 +137,7 @@ export function SeatRow({
               ) : (
                 <View style={[styles.line, large ? styles.stacked : null]}>
                   <Text wordSafe variant="secondary" tone="inkSoft">
-                    {d.member.name}
+                    {`${c.lastHeld} ${d.member.name}`}
                   </Text>
                   {d.member.party ? (
                     <PartyLabel party={d.member.party} nested />
@@ -162,17 +162,19 @@ export function RegionRow({
   testID?: string;
 }) {
   const names = r.members.map((m) => m.name);
-  const detail = [
-    ...names.slice(0, 3),
-    ...(names.length > 3 ? [c.more(names.length - 3)] : []),
-  ].join(', ');
+  const detail = c.lastMembers(
+    [
+      ...names.slice(0, 3),
+      ...(names.length > 3 ? [c.more(names.length - 3)] : []),
+    ].join(', '),
+  );
   return (
     <RowLink href={vicSeatRoute(r.slug)}>
       <Pressable
         feedback="wash"
         accessible
         accessibilityRole="link"
-        accessibilityLabel={`${r.name}. ${names.join(', ')}.`}
+        accessibilityLabel={`${r.name}. ${c.lastMembers(names.join(', '))}.`}
         testID={testID ?? `vic-election-region-${r.slug}`}
         style={styles.row}
       >
