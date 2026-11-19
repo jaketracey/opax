@@ -26,7 +26,8 @@ import type { RowMenuAction } from '../../design/row-link';
 import { LinkRow } from '../../design/rows';
 import { ContentUnavailable, InlineError, Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { closeSheetItem, headerItems, pageMenu } from '../../navigation/chrome';
 import { useAccount } from '../account/store';
 import {
@@ -73,6 +74,9 @@ export const conversationsCopy = {
  * Account › Ask; a row opens the conversation in the Ask tab.
  */
 export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const saved = useSyncExternalStore(
     subscribeChats,
     chatsSnapshot,
@@ -323,6 +327,8 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
       refreshControl={
         canSync(status) ? (
           <RefreshControl
+            colors={[colors.navy]}
+            progressBackgroundColor={colors.raised}
             refreshing={syncing && !!chats.length}
             onRefresh={() => void sync()}
           />
@@ -362,6 +368,8 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
 }
 
 function Footer({ text, signIn }: { text: string; signIn?: () => void }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.footer}>
       <Text
@@ -386,8 +394,10 @@ function Footer({ text, signIn }: { text: string; signIn?: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
-  fill: { flex: 1, backgroundColor: colors.sunken },
-  notice: { paddingHorizontal: rhythm.screen, paddingTop: rhythm.group },
-  footer: { gap: rhythm.group },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    fill: { flex: 1, backgroundColor: colors.sunken },
+    notice: { paddingHorizontal: rhythm.screen, paddingTop: rhythm.group },
+    footer: { gap: rhythm.group },
+  }),
+);

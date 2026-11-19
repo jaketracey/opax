@@ -12,6 +12,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  useColorScheme,
   useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
@@ -25,7 +26,6 @@ import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { chromeTextScaleCap } from '../../design/text-scale';
 import {
-  colors,
   contentSizeCategory,
   hairline,
   minimumTarget,
@@ -33,6 +33,7 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { frameOf } from '../money/map/measure';
 import { chips, clearChip, defaultOptions } from './model';
 import { askSession } from './session';
@@ -332,6 +333,9 @@ export function AskDock({
   /** How far the keyboard overlaps the screen; the height cap follows it. */
   keyboard?: number;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const s = useSyncExternalStore(
     askSession.subscribe,
     askSession.snapshot,
@@ -486,7 +490,7 @@ export function AskDock({
                   accessibilityHint="Opens Options"
                   onPress={onOptions}
                   android_ripple={{ color: colors.dividerSubtle }}
-                  style={({ pressed }) => chipStyle(pressed)}
+                  style={({ pressed }) => chipStyle(styles, pressed)}
                 >
                   <Text variant="footnote" tone="inkSoft">
                     {freshLabel}
@@ -502,7 +506,7 @@ export function AskDock({
                   accessibilityState={{ disabled: s.busy && !s.fresh }}
                   onPress={() => askSession.options(clearChip(options, tag.id))}
                   android_ripple={{ color: colors.dividerSubtle }}
-                  style={({ pressed }) => chipStyle(pressed)}
+                  style={({ pressed }) => chipStyle(styles, pressed)}
                   testID={`ask-option-remove-${tag.id}`}
                 >
                   <Text variant="footnote">{tag.value}</Text>
@@ -742,6 +746,9 @@ export function AskDock({
     </View>
   );
   const glass = Platform.OS === 'ios' && isLiquidGlassAvailable();
+  // No shadow reads on the dark ground, and Android's navy-tinted one
+  // would be a pale smudge there: the raised step and its outline carry it.
+  const dark = useColorScheme() === 'dark';
   return (
     <View onLayout={onLayout} testID="ask-dock">
       {glass ? (
@@ -756,7 +763,7 @@ export function AskDock({
         <View
           style={[
             styles.fallback,
-            Platform.OS === 'android' ? styles.androidSurface : null,
+            Platform.OS === 'android' && !dark ? styles.androidSurface : null,
           ]}
         >
           {content}
@@ -770,104 +777,112 @@ export function AskDock({
  * showed nothing on it: pressed, it takes the next step down (iOS; Android
  * has its ripple in the same colour).
  */
-const chipStyle = (pressed: boolean) => [
+const chipStyle = (styles: ReturnType<typeof useStyles>, pressed: boolean) => [
   styles.chip,
   pressed && Platform.OS === 'ios' ? styles.chipPressed : null,
 ];
-const styles = StyleSheet.create({
-  chipPressed: { backgroundColor: colors.dividerSubtle },
-  body: {
-    gap: rhythm.line,
-    paddingHorizontal: rhythm.line,
-    paddingVertical: rhythm.line,
-  },
-  glass: {
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  fallback: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-  },
-  androidSurface: { elevation: 2, shadowColor: colors.navy },
-  androidOptions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    paddingHorizontal: rhythm.tight,
-  },
-  optionScroller: { flex: 1, minWidth: 0 },
-  androidClear: {
-    minWidth: 48,
-    minHeight: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  chips: { flexDirection: 'row', gap: rhythm.tight },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: 48,
-    paddingHorizontal: rhythm.tight,
-    paddingVertical: rhythm.line,
-    borderRadius: 8,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-    backgroundColor: colors.sunken,
-  },
-  optionsLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    paddingLeft: rhythm.block - rhythm.line,
-    paddingRight: rhythm.line,
-    paddingTop: rhythm.line,
-  },
-  optionsText: { flex: 1, minHeight: 28, justifyContent: 'center' },
-  clear: {
-    minWidth: 28,
-    minHeight: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  row: { flexDirection: 'row', alignItems: 'flex-end' },
-  // One line, empty: the symbols centre on the placeholder's line.
-  rowEmpty: { alignItems: 'center' },
-  field: { flex: 1 },
-  // With options on, the Options button is a filled disc as wide as its
-  // target, and the draft's first letters touched it. Unselected, the glyph
-  // sits inside its target and leaves its own gap.
-  fieldInset: { marginLeft: rhythm.tight },
-  placeholder: {
-    position: 'absolute',
-    top: 11,
-    left: 0,
-    right: 0,
-  },
-  // The field wrapper takes the row's width; the input grows with its lines
-  // (flex here would be vertical, holding typed lines at the minimum).
-  input: {
-    paddingHorizontal: 0,
-    ...textStyles.body,
-    color: colors.ink,
-  },
-  // Android: the padding is the text view's own, and scrolls with the text.
-  inputPadded: {
-    minHeight: minimumTarget,
-    paddingTop: COMPOSER_FIELD_PADDING,
-    paddingBottom: COMPOSER_FIELD_PADDING,
-  },
-  // iOS: whole lines only; the padding is the field's (fieldPadded), so it
-  // never scrolls and no caret position leaves part of a line showing.
-  inputBare: { paddingTop: 0, paddingBottom: 0 },
-  fieldPadded: { paddingVertical: COMPOSER_FIELD_PADDING },
-  counter: { alignSelf: 'flex-end', paddingRight: rhythm.block },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    chipPressed: { backgroundColor: colors.dividerSubtle },
+    body: {
+      gap: rhythm.line,
+      paddingHorizontal: rhythm.line,
+      paddingVertical: rhythm.line,
+    },
+    glass: {
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    fallback: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      // Clear in light. In dark it draws over the border: the hairline that
+      // stands in for elevation, as on the shared cards.
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
+    },
+    androidSurface: { elevation: 2, shadowColor: colors.navy },
+    androidOptions: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      paddingHorizontal: rhythm.tight,
+    },
+    optionScroller: { flex: 1, minWidth: 0 },
+    androidClear: {
+      minWidth: 48,
+      minHeight: 48,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 8,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    chips: { flexDirection: 'row', gap: rhythm.tight },
+    chip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: 48,
+      paddingHorizontal: rhythm.tight,
+      paddingVertical: rhythm.line,
+      borderRadius: 8,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+      backgroundColor: colors.sunken,
+    },
+    optionsLine: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      paddingLeft: rhythm.block - rhythm.line,
+      paddingRight: rhythm.line,
+      paddingTop: rhythm.line,
+    },
+    optionsText: { flex: 1, minHeight: 28, justifyContent: 'center' },
+    clear: {
+      minWidth: 28,
+      minHeight: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    row: { flexDirection: 'row', alignItems: 'flex-end' },
+    // One line, empty: the symbols centre on the placeholder's line.
+    rowEmpty: { alignItems: 'center' },
+    field: { flex: 1 },
+    // With options on, the Options button is a filled disc as wide as its
+    // target, and the draft's first letters touched it. Unselected, the glyph
+    // sits inside its target and leaves its own gap.
+    fieldInset: { marginLeft: rhythm.tight },
+    placeholder: {
+      position: 'absolute',
+      top: 11,
+      left: 0,
+      right: 0,
+    },
+    // The field wrapper takes the row's width; the input grows with its lines
+    // (flex here would be vertical, holding typed lines at the minimum).
+    input: {
+      paddingHorizontal: 0,
+      ...textStyles.body,
+      color: colors.ink,
+    },
+    // Android: the padding is the text view's own, and scrolls with the text.
+    inputPadded: {
+      minHeight: minimumTarget,
+      paddingTop: COMPOSER_FIELD_PADDING,
+      paddingBottom: COMPOSER_FIELD_PADDING,
+    },
+    // iOS: whole lines only; the padding is the field's (fieldPadded), so it
+    // never scrolls and no caret position leaves part of a line showing.
+    inputBare: { paddingTop: 0, paddingBottom: 0 },
+    fieldPadded: { paddingVertical: COMPOSER_FIELD_PADDING },
+    counter: { alignSelf: 'flex-end', paddingRight: rhythm.block },
+  }),
+);

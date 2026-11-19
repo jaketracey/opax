@@ -14,7 +14,8 @@ import {
   errorMessage,
   type SourceDetails,
 } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { isOffline } from '../CatalogState';
 import { RecordRow } from '../RecordRow';
 import { citedParagraphs, type Source } from './model';
@@ -133,6 +134,8 @@ export function ShareBars({
   label: string;
   onSelect?: (index: number) => void;
 }) {
+  const colors = useColors();
+
   const max = Math.max(...points.map((p) => p.share), Number.EPSILON);
   return (
     <View

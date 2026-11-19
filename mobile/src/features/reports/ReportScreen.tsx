@@ -1,4 +1,5 @@
 import { animatedScroll } from '../../design/accessibility';
+import { useColors } from '../../design/use-colors';
 import { useCallback, useMemo, useRef, useState, type RefObject } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
@@ -37,7 +38,6 @@ import {
   RuleGroup,
   Text,
   styles,
-  useReportColors,
 } from './report-ui';
 
 function SectionBody({
@@ -182,7 +182,7 @@ export function ReportContent({
       }),
     );
   };
-  const palette = useReportColors();
+  const colors = useColors();
   const { fontScale } = useWindowDimensions();
   const [transcriptsMissing, setTranscriptsMissing] = useState(false);
   const parts = useMemo(
@@ -204,7 +204,7 @@ export function ReportContent({
         style={{
           gap: rhythm.section,
           minWidth: 0,
-          backgroundColor: palette.paper,
+          backgroundColor: colors.paper,
         }}
       >
         {report.record.court_context?.length ? (
@@ -214,8 +214,8 @@ export function ReportContent({
               styles.panel,
               {
                 borderWidth: 1,
-                borderColor: palette.dividerSubtle,
-                backgroundColor: palette.sunken,
+                borderColor: colors.dividerSubtle,
+                backgroundColor: colors.sunken,
               },
             ]}
           >
@@ -285,9 +285,9 @@ export function ReportContent({
           style={[
             styles.panel,
             {
-              backgroundColor: palette.raised,
+              backgroundColor: colors.raised,
               borderWidth: 1,
-              borderColor: palette.dividerSubtle,
+              borderColor: colors.dividerSubtle,
             },
           ]}
         >

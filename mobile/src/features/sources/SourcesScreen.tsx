@@ -4,7 +4,7 @@ import { RefreshControl } from 'react-native';
 import { portraits } from '../../api/runtime';
 import { formatCount } from '../../design/format';
 import { InsetGroup, LinkRow, Screen, Text } from '../../design/primitives';
-import { colors } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { explore } from '../explore/runtime';
 import { sourcesHrefs, useSourcesBase } from './base';
 import { code, statement } from './datasets';
@@ -47,6 +47,8 @@ function useCreditCounts(request: number) {
  * link `?dataset=<id>` opens that dataset in place of the hub.
  */
 export function SourcesScreen() {
+  const colors = useColors();
+
   const href = sourcesHrefs(useSourcesBase());
   const { dataset } = useLocalSearchParams<{ dataset?: string }>();
   const sources = useSources();
@@ -62,6 +64,8 @@ export function SourcesScreen() {
       testID="sources-screen"
       refreshControl={
         <RefreshControl
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
           refreshing={sources.refreshing}
           onRefresh={() => {
             sources.refresh();

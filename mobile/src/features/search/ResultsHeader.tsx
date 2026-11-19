@@ -13,7 +13,8 @@ import {
   symbols,
   type SourceDetails,
 } from '../../design/primitives';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { presentSource } from '../../navigation/sheets';
 import { FiltersLine } from './FiltersLine';
 
@@ -116,6 +117,8 @@ function CountLine({
   /** The held place's height (0 before it is laid out). */
   box: number;
 }) {
+  const colors = useColors();
+
   const parts = details ? sourceLineParts(details) : null;
   const lead = [count, parts?.date].filter(Boolean).join(' · ');
   const tail = parts?.rest.length ? ` · ${parts.rest.join(' · ')}` : '';

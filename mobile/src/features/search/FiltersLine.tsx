@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text, useAccessibilitySize } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 
 /**
  * The one active-filters line (journeys/search.md 3.5; specs/search.md
@@ -23,6 +24,8 @@ export function FiltersLine({
   testID?: string;
   clearTestID?: string;
 }) {
+  const colors = useColors();
+
   const stacked = useAccessibilitySize();
   if (!text) return null;
   const summary = (

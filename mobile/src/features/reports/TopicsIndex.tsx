@@ -20,6 +20,7 @@ import {
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
 import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { headerItems } from '../../navigation/chrome';
 import { coverageRoute, methodsRoute } from '../../navigation/routes/reference';
 import { resultsRoute, topicRoute } from '../../navigation/routes/search';
@@ -43,6 +44,7 @@ export function orderTopics(rows: readonly Row[], order: Order): Row[] {
 }
 
 export default function TopicsIndex() {
+  const colors = useColors();
   const [refresh, setRefresh] = useState(0);
   const load = useCallback(
     (signal?: AbortSignal) => reports.topics(refresh > 0, signal),
@@ -101,6 +103,8 @@ export default function TopicsIndex() {
         }
         refreshControl={
           <RefreshControl
+            colors={[colors.navy]}
+            progressBackgroundColor={colors.raised}
             refreshing={false}
             onRefresh={() => setRefresh((n) => n + 1)}
           />

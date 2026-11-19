@@ -10,7 +10,7 @@ import {
   useAdaptiveDevice,
   useLayout,
 } from '../design/primitives';
-import { colors } from '../design/tokens';
+import { makeStyles } from '../design/use-colors';
 import { RecordDetail, RecordShare } from './split/RecordDetail';
 import {
   encodeEntry,
@@ -32,6 +32,8 @@ import type { PaneRow } from './search/ResultsView';
  * result row rather than an empty pane.
  */
 export default function Search() {
+  const styles = useStyles();
+
   const adaptive = useAdaptiveDevice();
   if (!adaptive) return <SearchScreen />;
   return (
@@ -118,6 +120,8 @@ function SearchSplit() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+  }),
+);

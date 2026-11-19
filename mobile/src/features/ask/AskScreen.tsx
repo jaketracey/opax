@@ -45,7 +45,8 @@ import { designFlags } from '../../design/flags';
 import { useFocusRequest, useKeyCommand } from '../../design/keyboard';
 import { useScreenColumn } from '../../design/layout';
 import { SurfaceContext } from '../../design/row-padding';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { scrollToTop } from '../../design/scroll-to-top';
@@ -104,6 +105,8 @@ const announce = (text: string) =>
 const OWN_FADE_COVER = 16;
 
 export default function AskScreen() {
+  const colors = useColors();
+
   const offline = useOffline();
   const atTop = useRef(true);
   const ground = askGround();

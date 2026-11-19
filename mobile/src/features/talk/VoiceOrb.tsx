@@ -7,7 +7,7 @@ import {
   vec,
 } from '@shopify/react-native-skia';
 import { useEffect, useMemo, useState } from 'react';
-import { AppState, Platform } from 'react-native';
+import { AppState, Platform, useColorScheme } from 'react-native';
 import {
   cancelAnimation,
   Easing,
@@ -18,9 +18,17 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
-import { useIncreaseContrast } from '../../design/accessibility';
+import {
+  useHighTextContrast,
+  useIncreaseContrast,
+} from '../../design/accessibility';
 import { SizedCanvas } from '../../design/canvas';
-import { lightHighContrast, paletteFor, type Role } from '../../design/palette';
+import {
+  darkHighContrast,
+  lightHighContrast,
+  paletteFor,
+  type Role,
+} from '../../design/palette';
 
 /** What the call is doing, as the orb draws it. */
 export type OrbPhase =
@@ -54,15 +62,22 @@ const PETALS = 12;
 const SEGMENTS = 144;
 // Ring radii are multiples of the core radius R. The canvas is 4.7R across.
 const EXTENT = 2.35;
+export type OrbScheme = 'light' | 'dark';
 /**
  * A palette role as Skia's colour ([r, g, b, a], 0 to 1). Skia draws plain
- * colours, so Increase Contrast is resolved here (`strong`), as the role
- * colours resolve it natively elsewhere. `shade` scales the channels: the
- * core's lit and shadowed navy.
+ * colours, so the appearance and Increase Contrast are resolved here
+ * (`scheme`, `strong`), as the role colours resolve them natively elsewhere.
+ * `shade` scales the channels: the core's lit and shadowed navy.
  */
-function paint(role: Role, alpha = 1, strong = false, shade = 1): number[] {
-  const hex =
-    (strong ? lightHighContrast[role] : undefined) ?? paletteFor('light')[role];
+function paint(
+  scheme: OrbScheme,
+  role: Role,
+  alpha = 1,
+  strong = false,
+  shade = 1,
+): number[] {
+  const high = scheme === 'dark' ? darkHighContrast : lightHighContrast;
+  const hex = (strong ? high[role] : undefined) ?? paletteFor(scheme)[role];
   const channel = (at: number) =>
     Math.min(1, (parseInt(hex.slice(at, at + 2), 16) / 255) * shade);
   return [channel(1), channel(3), channel(5), alpha];
@@ -73,25 +88,45 @@ function paint(role: Role, alpha = 1, strong = false, shade = 1): number[] {
  * 30% (art, not a surface) on a navy core. Bronze stays in the mark, the icon
  * and the launch screen only (DIR 2.2, specs/account.md 7.3). Under Increase
  * Contrast the rings, the sweep and the core's edge draw stronger.
+ *
+ * On the dark ground navy is the pale tint, so the orb is lit, not inked: a
+ * pale core that falls away to a deep slate rim (a wider range than the
+ * light core, so it reads as a sphere and not a flat bright disc), the
+ * rosette engraved in the dark ink that sits on navy, and the same hairline
+ * rings in the pale tint. The halo is the dark navy wash, a soft bloom on
+ * the near-black page.
  */
-function orbColours(strong: boolean) {
+export function orbColours(scheme: OrbScheme, strong: boolean) {
+  const role = (name: Role, alpha = 1, high = false, shade = 1) =>
+    paint(scheme, name, alpha, high, shade);
+  const dark = scheme === 'dark';
   return {
+    ground: role('paper'),
     rings: [
-      paint('navy', strong ? 0.6 : 0.3),
-      paint('navy', strong ? 0.4 : 0.1),
-      paint('navy', 0),
+      role('navy', strong ? 0.6 : 0.3),
+      role('navy', strong ? 0.4 : 0.1),
+      role('navy', 0),
     ],
-    rosette: paint('onNavySoft', strong ? 0.35 : 0.2, strong),
-    core: [
-      paint('navyRaised', 1, false, 1.45),
-      paint('navyRaised'),
-      paint('navy'),
-      paint('navy', 1, false, 0.6),
-    ],
-    glow: [paint('navyRaised', 0.6), paint('navyRaised', 0)],
-    halo: [paint('navyWash', 0.95), paint('navyWash', 0)],
-    sweep: paint('navy', strong ? 0.9 : 0.3),
-    edge: paint('navyRaised', strong ? 1 : 0.6),
+    rosette: dark
+      ? role('onNavy', strong ? 0.55 : 0.3)
+      : role('onNavySoft', strong ? 0.35 : 0.2, strong),
+    core: dark
+      ? [
+          role('navyRaised', 1, false, 1.08),
+          role('navy'),
+          role('navy', 1, false, 0.72),
+          role('navy', 1, false, 0.42),
+        ]
+      : [
+          role('navyRaised', 1, false, 1.45),
+          role('navyRaised'),
+          role('navy'),
+          role('navy', 1, false, 0.6),
+        ],
+    glow: [role('navyRaised', dark ? 0.45 : 0.6), role('navyRaised', 0)],
+    halo: [role('navyWash', 0.95), role('navyWash', 0)],
+    sweep: role('navy', strong ? 0.9 : 0.3),
+    edge: role('navyRaised', strong ? 1 : 0.6),
   };
 }
 
@@ -152,8 +187,12 @@ export function VoiceOrb({
 }) {
   const R = size / (2 * EXTENT);
   const c = size / 2;
-  const strong = useIncreaseContrast();
-  const colours = useMemo(() => orbColours(strong), [strong]);
+  // The appearance on screen, on both platforms: Skia takes plain colours,
+  // so the orb is drawn again with the other set when the system switches.
+  const scheme: OrbScheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const increase = useIncreaseContrast();
+  const strong = useHighTextContrast() || increase;
+  const colours = useMemo(() => orbColours(scheme, strong), [scheme, strong]);
   const t = useSharedValue(0);
   const code = useSharedValue(phaseCode[phase]);
   const calm = useSharedValue(reduceMotion ? 1 : 0);
@@ -357,7 +396,7 @@ export function VoiceOrb({
       importantForAccessibility="no-hide-descendants"
     >
       {Platform.OS === 'android' ? (
-        <Circle cx={c} cy={c} r={size} color={paint('paper')} />
+        <Circle cx={c} cy={c} r={size} color={colours.ground} />
       ) : null}
       <Group transform={breathTransform} origin={centre}>
         <Circle cx={c} cy={c} r={R * EXTENT} opacity={halo}>

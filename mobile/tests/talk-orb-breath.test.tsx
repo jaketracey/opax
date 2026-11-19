@@ -18,6 +18,7 @@ const Reanimated = jest.requireMock(
 
 jest.mock('../src/design/accessibility', () => ({
   useIncreaseContrast: () => false,
+  useHighTextContrast: () => false,
 }));
 
 function shared<T>(initial: T) {

@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/primitives';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import type { TranscriptTurn, VoiceSource } from '../../voice';
 import { talkCopy } from './model';
 import { captionText } from './caption-text';
@@ -24,6 +25,8 @@ export function AnswerCaption({
   onOpenSource?: (source: VoiceSource) => void;
   onMoreSources?: () => void;
 }) {
+  const styles = useStyles();
+
   const you = turn.role === 'user';
   const text = captionText(turn);
   if (!text && !sources.length) return null;
@@ -98,26 +101,28 @@ export function AnswerCaption({
   );
 }
 
-const styles = StyleSheet.create({
-  you: { alignSelf: 'flex-end', maxWidth: '85%', paddingLeft: rhythm.group },
-  opax: { alignSelf: 'stretch' },
-  right: { textAlign: 'right' },
-  sources: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: rhythm.tight,
-    marginTop: rhythm.tight,
-  },
-  chip: {
-    minHeight: minimumTarget,
-    minWidth: minimumTarget,
-    maxWidth: '100%',
-    justifyContent: 'center',
-    paddingHorizontal: rhythm.tight,
-    paddingVertical: rhythm.line,
-    borderRadius: radii.thumb,
-    borderCurve: 'continuous',
-    backgroundColor: colors.navyWash,
-  },
-  pressed: { backgroundColor: colors.sunken },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    you: { alignSelf: 'flex-end', maxWidth: '85%', paddingLeft: rhythm.group },
+    opax: { alignSelf: 'stretch' },
+    right: { textAlign: 'right' },
+    sources: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: rhythm.tight,
+      marginTop: rhythm.tight,
+    },
+    chip: {
+      minHeight: minimumTarget,
+      minWidth: minimumTarget,
+      maxWidth: '100%',
+      justifyContent: 'center',
+      paddingHorizontal: rhythm.tight,
+      paddingVertical: rhythm.line,
+      borderRadius: radii.thumb,
+      borderCurve: 'continuous',
+      backgroundColor: colors.navyWash,
+    },
+    pressed: { backgroundColor: colors.sunken },
+  }),
+);

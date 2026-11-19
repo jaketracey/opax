@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { minimumTarget } from '../design/tokens';
+import { makeStyles } from '../design/use-colors';
 import { setConsent } from '../features/talk/bridge';
 import type {
   TranscriptTurn,
@@ -20,6 +21,7 @@ import type {
 import * as voice from '../voice';
 
 export default function VoiceBridgeTestScreen() {
+  const styles = useStyles();
   const insets = useSafeAreaInsets();
   const [state, setState] = useState('idle');
   const [history, setHistory] = useState(['idle']);
@@ -290,26 +292,28 @@ export default function VoiceBridgeTestScreen() {
     </ScrollView>
   );
 }
-const styles = StyleSheet.create({
-  page: { paddingHorizontal: 20, gap: 12, backgroundColor: '#ffffff' },
-  // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
-  title: { fontSize: 22, fontWeight: '600', color: '#152334' },
-  // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
-  text: { fontSize: 16, color: '#152334' },
-  button: {
-    minHeight: minimumTarget,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#526477',
-    borderRadius: 4,
-    borderCurve: 'continuous',
-  },
-  input: {
-    minHeight: 44,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#526477',
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    page: { paddingHorizontal: 20, gap: 12, backgroundColor: colors.raised },
     // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
-    fontSize: 16,
-  },
-});
+    title: { fontSize: 22, fontWeight: '600', color: colors.ink },
+    // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
+    text: { fontSize: 16, color: colors.ink },
+    button: {
+      minHeight: minimumTarget,
+      padding: 12,
+      borderWidth: 1,
+      borderColor: colors.lineControl,
+      borderRadius: 4,
+      borderCurve: 'continuous',
+    },
+    input: {
+      minHeight: 44,
+      padding: 12,
+      borderWidth: 1,
+      borderColor: colors.lineControl,
+      // a11y-ok(raw-font-size): voice bridge e2e harness, never in production.
+      fontSize: 16,
+    },
+  }),
+);

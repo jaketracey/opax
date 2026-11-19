@@ -19,7 +19,13 @@ import { ContentUnavailable } from '../../design/states';
 import { Icon } from '../../design/icon';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, rhythm, textStyles } from '../../design/tokens';
+import { rhythm, textStyles } from '../../design/tokens';
+import {
+  currentColors,
+  makeStyles,
+  useColors,
+  type Colors,
+} from '../../design/use-colors';
 import {
   androidHeaderBar,
   closeSheetItem,
@@ -27,17 +33,22 @@ import {
 } from '../../navigation/chrome';
 import { sheetOptions } from '../../navigation/stack/screen';
 
-export function routeSheetOptions({
-  short = false,
-  table = false,
-  citation = false,
-  accessible = false,
-}: {
-  short?: boolean;
-  table?: boolean;
-  citation?: boolean;
-  accessible?: boolean;
-} = {}): NativeStackNavigationOptions {
+export function routeSheetOptions(
+  {
+    short = false,
+    table = false,
+    citation = false,
+    accessible = false,
+  }: {
+    short?: boolean;
+    table?: boolean;
+    citation?: boolean;
+    accessible?: boolean;
+  } = {},
+  // Built in the root stack's options callback, not in a component: the
+  // colours on screen at that call (the hex set for the scheme on Android).
+  colors: Colors = currentColors(),
+): NativeStackNavigationOptions {
   return {
     ...sheetOptions,
     headerTitleStyle: textStyles.inlineTitle,
@@ -81,6 +92,9 @@ export function SheetFrame({
   children: ReactNode;
   options?: NativeStackNavigationOptions;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   // A sheet that must scroll rather than fit its content: accessibility sizes,
   // and the closed Duo's outer display. There UIKit fits a short sheet to its
   // content as measured at the first layout, before the rail's inset narrows
@@ -276,29 +290,31 @@ export function MissingPayload() {
     />
   );
 }
-const styles = StyleSheet.create({
-  androidDialog: { flex: 1, backgroundColor: colors.sunken },
-  androidScroll: { flex: 1 },
-  androidHeading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: rhythm.tight,
-  },
-  androidHeadingTop: { alignItems: 'flex-start' },
-  androidTitle: {
-    flex: 1,
-    paddingVertical: rhythm.tight,
-    paddingHorizontal: rhythm.tight,
-  },
-  androidClose: {
-    width: 48,
-    height: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  screen: { backgroundColor: colors.sunken },
-  content: {
-    paddingTop: rhythm.group,
-    gap: rhythm.group,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    androidDialog: { flex: 1, backgroundColor: colors.sunken },
+    androidScroll: { flex: 1 },
+    androidHeading: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: rhythm.tight,
+    },
+    androidHeadingTop: { alignItems: 'flex-start' },
+    androidTitle: {
+      flex: 1,
+      paddingVertical: rhythm.tight,
+      paddingHorizontal: rhythm.tight,
+    },
+    androidClose: {
+      width: 48,
+      height: 48,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    screen: { backgroundColor: colors.sunken },
+    content: {
+      paddingTop: rhythm.group,
+      gap: rhythm.group,
+    },
+  }),
+);

@@ -1,4 +1,5 @@
 import { MyMemberProvider } from '../your-mp/useIsMyMember';
+import { useColors } from '../../design/use-colors';
 import { RouteOptions } from '../../navigation/preview';
 import { useScreenReady } from '../../analytics/timing';
 import {
@@ -90,6 +91,7 @@ function SearchContent({
   /** iPad: the result rows' routes, for the pane and the keyboard. */
   onRows?: Parameters<typeof ResultsView>[0]['onRows'];
 }) {
+  const colors = useColors();
   const params = useLocalSearchParams<Record<string, string>>();
   const [contentReady, setContentReady] = useState(false);
   useScreenReady('/search', contentReady);
@@ -330,7 +332,12 @@ function SearchContent({
         scrollRef={scroll}
         scrollToOverflowEnabled
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={retry} />
+          <RefreshControl
+            colors={[colors.navy]}
+            progressBackgroundColor={colors.raised}
+            refreshing={refreshing}
+            onRefresh={retry}
+          />
         }
         pinned={
           pinScopes ? <ScopeBar value={scope} onChange={chooseScope} /> : null

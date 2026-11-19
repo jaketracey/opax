@@ -19,7 +19,7 @@ import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { methodsCopy as text, type MethodsSection } from './copy';
 import { reference, stateCoverage } from './repository';
 import { useRead, useShareItem } from './read';
-import { paperBar } from '../sources/parts';
+import { usePaperBar } from '../sources/parts';
 
 /**
  * Methods (records.md 6): a reading page on paper, in the Account stack.
@@ -29,6 +29,7 @@ import { paperBar } from '../sources/parts';
  */
 export default function Methods() {
   const summary = useRead(reference.summary);
+  const paperBar = usePaperBar();
   useShareItem({ path: '/methods', title: text.title });
   const titleRef = useRef<View>(null);
   const bar = useTitleOnScroll(titleRef, text.title);

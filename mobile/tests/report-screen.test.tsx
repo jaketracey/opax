@@ -416,7 +416,9 @@ test('largest Android font scale keeps unbounded text and 48dp targets, using th
   jest
     .spyOn(Native, 'useWindowDimensions')
     .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 3.5 });
-  jest.spyOn(Native, 'useColorScheme').mockReturnValue('dark');
+  // Reports read the shared roles (`useColors`), which on Android follow
+  // the system through Appearance.
+  jest.spyOn(Native.Appearance, 'getColorScheme').mockReturnValue('dark');
   try {
     const tree = await show(annual);
     for (const text of tree.root.findAllByType(NativeText)) {

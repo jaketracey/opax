@@ -33,7 +33,8 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow } from '../../design/rows';
 import { SourceAffordance, type SourceDetails } from '../../design/source';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import type { SourcePlacement } from '../../analytics/events';
 import { openSource, trackSourceOpen } from '../../navigation/external';
 import { personRoute } from '../../navigation/routes';
@@ -128,6 +129,8 @@ export function AnswerView({
   paneShowsSources?: boolean;
   onRephrase: (question: string) => void;
 }) {
+  const colors = useColors();
+
   const pane = useAskPane();
   const self = useRef<View>(null);
   const blockRefs = useRef(new Map<string, View | null>());

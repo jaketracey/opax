@@ -13,7 +13,6 @@ import {
   Platform,
   StyleSheet,
   View,
-  useColorScheme,
   type ViewProps,
 } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
@@ -22,53 +21,29 @@ import {
   Heading as NativeHeading,
   Text as NativeText,
 } from '../../design/primitives';
-import {
-  colors,
-  light,
-  minimumTarget,
-  radii,
-  rhythm,
-  textStyles,
-} from '../../design/tokens';
-import { useHighTextContrast } from '../../design/accessibility';
-import {
-  dark,
-  darkHighContrast,
-  lightHighContrast,
-} from '../../design/palette';
+import { minimumTarget, radii, rhythm, textStyles } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { openSource } from '../../navigation/external';
 import type { Citation } from './report-model';
 import { citationLabel, pageTarget, splitRuns } from './report-model';
 
-// Shared roles resolved for both native platforms, including Android night mode.
-export function useReportColors() {
-  const scheme = useColorScheme();
-  const highContrast = useHighTextContrast();
-  return Platform.OS === 'ios'
-    ? colors
-    : {
-        ...(scheme === 'dark' ? dark : light),
-        ...(highContrast
-          ? scheme === 'dark'
-            ? darkHighContrast
-            : lightHighContrast
-          : {}),
-      };
-}
+// Report text names its colour itself, from the shared roles for the
+// appearance on screen (`useColors`: dynamic on iOS, the scheme's hex set on
+// Android, High contrast text included).
 export function Text(props: React.ComponentProps<typeof NativeText>) {
-  const palette = useReportColors();
+  const colors = useColors();
   const tone =
     props.tone === 'link'
       ? 'navy'
       : props.tone || textStyles[props.variant || 'body'].color;
   return (
-    <NativeText {...props} style={[{ color: palette[tone] }, props.style]} />
+    <NativeText {...props} style={[{ color: colors[tone] }, props.style]} />
   );
 }
 export function Heading(props: React.ComponentProps<typeof NativeHeading>) {
-  const palette = useReportColors();
+  const colors = useColors();
   return (
-    <NativeHeading {...props} style={[{ color: palette.ink }, props.style]} />
+    <NativeHeading {...props} style={[{ color: colors.ink }, props.style]} />
   );
 }
 export function Link({
@@ -86,7 +61,7 @@ export function Link({
   onPress?: () => void;
   testID?: string;
 }) {
-  const palette = useReportColors();
+  const colors = useColors();
   return (
     <Pressable
       accessible
@@ -99,7 +74,7 @@ export function Link({
       testID={testID}
       style={({ pressed }) => [
         styles.target,
-        { backgroundColor: pressed ? palette.sunken : undefined },
+        { backgroundColor: pressed ? colors.sunken : undefined },
       ]}
     >
       <Text tone="navy">{title}</Text>
@@ -199,11 +174,11 @@ export function Disclosure({
     if (initiallyOpen) expand(id);
     return () => close(id);
   }, [expand, close, id, initiallyOpen]);
-  const palette = useReportColors();
+  const colors = useColors();
   return (
     <View
       testID={id}
-      style={[styles.panel, { backgroundColor: palette.sunken }]}
+      style={[styles.panel, { backgroundColor: colors.sunken }]}
     >
       <Pressable
         feedback="wash"
@@ -263,14 +238,14 @@ export function Prose({ text, testID }: { text: string; testID?: string }) {
   );
 }
 export function RuleGroup({ style, ...props }: ViewProps & { gap?: number }) {
-  const palette = useReportColors();
+  const colors = useColors();
   return (
     <Group
       {...props}
       style={[
         {
           borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: palette.dividerSubtle,
+          borderTopColor: colors.dividerSubtle,
           paddingTop: rhythm.block,
         },
         style,

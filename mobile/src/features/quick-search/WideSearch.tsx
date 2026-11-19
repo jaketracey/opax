@@ -17,6 +17,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  useColorScheme,
   useWindowDimensions,
 } from 'react-native';
 import { useBoldText } from '../../design/accessibility';
@@ -31,13 +32,13 @@ import { PlainPressable as Pressable } from '../../design/pressable';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import {
-  colors,
   hairline,
   minimumTarget,
   radii,
   rhythm,
   textStyles,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
 import { RouteOptions } from '../../navigation/preview';
@@ -202,6 +203,9 @@ const closePanel = () => {
 
 /** The capsule and its text field, bound to the shared state. */
 function SearchInput({ width }: { width: number }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const { text, focused, armed, dismissed } = useQuickSearch();
   const open = focused && !dismissed && armed;
   const input = useRef<TextInput>(null);
@@ -282,6 +286,8 @@ function SearchInput({ width }: { width: number }) {
 }
 
 function MastheadSearch({ columnWidth }: { columnWidth: number }) {
+  const styles = useStyles();
+
   const window = useWindowDimensions();
   const headerBottom = useHeaderBottom();
   const { armed } = useQuickSearch();
@@ -380,6 +386,8 @@ function PadBar() {
   );
 }
 function BarPanelHost({ fieldWidth }: { fieldWidth: number }) {
+  const styles = useStyles();
+
   const window = useWindowDimensions();
   const { armed } = useQuickSearch();
   const screenFocused = useScreenFocused();
@@ -487,6 +495,9 @@ function WideSearchPanel({
   /** At this place from the host's corner, instead of under the field. */
   fixed?: { top: number; left: number; right: undefined; marginTop: 0 };
 }) {
+  const styles = useStyles();
+  const dark = useColorScheme() === 'dark';
+
   const { text: q, focused: fieldFocused, armed, dismissed } = useQuickSearch();
   const open = fieldFocused && !dismissed && armed;
   const onClose = closePanel;
@@ -652,7 +663,7 @@ function WideSearchPanel({
         testID="today-wide-search-backdrop"
       />
       <View
-        style={[styles.panel, { width }, fixed]}
+        style={[styles.panel, dark ? styles.panelDark : null, { width }, fixed]}
         onAccessibilityEscape={onClose}
         testID="today-wide-search-panel"
       >
@@ -698,6 +709,8 @@ function PanelSection({
   rows: Map<string, RowPlace>;
   onRun: (action: QuickAction) => void;
 }) {
+  const styles = useStyles();
+
   const top = useRef(0);
   return (
     <View
@@ -741,6 +754,8 @@ function PanelRow({
   onLayout: (y: number, height: number) => void;
   onPress: () => void;
 }) {
+  const styles = useStyles();
+
   return (
     <Pressable
       feedback="none"
@@ -778,73 +793,83 @@ function PanelRow({
   );
 }
 
-const styles = StyleSheet.create({
-  // The bar field's dropdown hangs from this line's leading end: the
-  // masthead's top edge. It has a size: the accessibility tree drops what
-  // is under a view of none (the panel was drawn but not found, 15 Nov).
-  host: { position: 'absolute', top: 0, left: 0, right: 0, height: 1 },
-  // On the masthead's top edge, its trailing edge on the content column.
-  place: { position: 'absolute', top: 0, right: 0 },
-  field: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingLeft: rhythm.row,
-    paddingRight: rhythm.tight,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    backgroundColor: colors.raised,
-  },
-  input: {
-    ...textStyles.body,
-    flex: 1,
-    minWidth: 0,
-    paddingVertical: rhythm.tight,
-    color: colors.ink,
-  },
-  // Any tap outside the field and the panel, anywhere on Today.
-  backdrop: {
-    position: 'absolute',
-    top: -4000,
-    left: -4000,
-    width: 8000,
-    height: 8000,
-    zIndex: -1,
-  },
-  panel: {
-    position: 'absolute',
-    top: '100%',
-    right: 0,
-    marginTop: PANEL_GAP,
-    backgroundColor: colors.raised,
-    borderRadius: radii.tile,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    shadowColor: colors.ink,
-    shadowOpacity: 0.16,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 8 },
-  },
-  // The list is clipped to the panel's corners; the panel keeps its shadow.
-  clip: { borderRadius: radii.tile - hairline, borderCurve: 'continuous' },
-  list: { paddingVertical: rhythm.tight },
-  header: {
-    paddingHorizontal: rhythm.block,
-    paddingTop: rhythm.row,
-    paddingBottom: rhythm.line,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.row,
-    minHeight: minimumTarget,
-    paddingHorizontal: rhythm.block,
-    paddingVertical: rhythm.tight,
-  },
-  rowActive: { backgroundColor: colors.navyWash },
-  rowText: { flex: 1, minWidth: 0 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    // The bar field's dropdown hangs from this line's leading end: the
+    // masthead's top edge. It has a size: the accessibility tree drops what
+    // is under a view of none (the panel was drawn but not found, 15 Nov).
+    host: { position: 'absolute', top: 0, left: 0, right: 0, height: 1 },
+    // On the masthead's top edge, its trailing edge on the content column.
+    place: { position: 'absolute', top: 0, right: 0 },
+    field: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      paddingLeft: rhythm.row,
+      paddingRight: rhythm.tight,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      backgroundColor: colors.raised,
+    },
+    input: {
+      ...textStyles.body,
+      flex: 1,
+      minWidth: 0,
+      paddingVertical: rhythm.tight,
+      color: colors.ink,
+    },
+    // Any tap outside the field and the panel, anywhere on Today.
+    backdrop: {
+      position: 'absolute',
+      top: -4000,
+      left: -4000,
+      width: 8000,
+      height: 8000,
+      zIndex: -1,
+    },
+    panel: {
+      position: 'absolute',
+      top: '100%',
+      right: 0,
+      marginTop: PANEL_GAP,
+      backgroundColor: colors.raised,
+      borderRadius: radii.tile,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      shadowColor: colors.ink,
+      shadowOpacity: 0.16,
+      shadowRadius: 24,
+      shadowOffset: { width: 0, height: 8 },
+      // Clear in light. In dark it draws over the border: the hairline that
+      // stands in for elevation, as on the shared cards.
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
+    },
+    // Ink is pale in dark, so the shadow would be a glow: none is drawn.
+    panelDark: { shadowOpacity: 0 },
+    // The list is clipped to the panel's corners; the panel keeps its shadow.
+    clip: { borderRadius: radii.tile - hairline, borderCurve: 'continuous' },
+    list: { paddingVertical: rhythm.tight },
+    header: {
+      paddingHorizontal: rhythm.block,
+      paddingTop: rhythm.row,
+      paddingBottom: rhythm.line,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.row,
+      minHeight: minimumTarget,
+      paddingHorizontal: rhythm.block,
+      paddingVertical: rhythm.tight,
+    },
+    rowActive: { backgroundColor: colors.navyWash },
+    rowText: { flex: 1, minWidth: 0 },
+  }),
+);

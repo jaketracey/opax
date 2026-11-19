@@ -100,8 +100,11 @@ export const unrelated = theirs.navy;
     expect(lanes.length).toBeGreaterThan(0);
     for (const glob of lanes)
       expect(glob).toMatch(/^src\/(?:features|workbench|test-screens)\//);
-    // Lane D owns it, and the foundation left it alone.
-    expect(lanes).toContain('src/features/reports/**');
+    // Lane D is converted: its files are errors now, as the shared ones are.
+    for (const glob of lanes)
+      expect(glob).not.toMatch(
+        /^src\/(?:features\/(?:Search\.tsx|account|ask|community|methods|quick-search|reports|search|sheets|sources|talk)|test-screens|workbench)\b/,
+      );
   });
 });
 

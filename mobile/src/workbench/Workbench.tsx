@@ -43,12 +43,9 @@ import {
   useAccessibilitySize,
   type Lead,
 } from '../design/primitives';
-import {
-  colors,
-  textStyles,
-  type Role,
-  type TextVariant,
-} from '../design/tokens';
+import { paletteFor } from '../design/palette';
+import { textStyles, type Role, type TextVariant } from '../design/tokens';
+import { makeStyles, useColors } from '../design/use-colors';
 import { leadEvidenceFor } from '../features/leads/model';
 import { canonicalUrl } from '../navigation/external';
 import { shareRecord } from '../navigation/share';
@@ -101,7 +98,7 @@ const westpac: Lead = {
   ],
 };
 
-const roles = Object.keys(colors) as Role[];
+const roles = Object.keys(paletteFor('light')) as Role[];
 // The eleven current roles; the deprecated names draw as these.
 const variants = Object.keys(textStyles) as TextVariant[];
 const notice = () =>
@@ -137,6 +134,9 @@ function Anchor({ id, children }: { id: string; children: string }) {
 }
 
 export default function Workbench() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const [status, setStatus] = useState<'before' | 'recent' | 'all'>('before');
   const [filters, setFilters] = useState([
     { filter: 'kind', value: 'Declared interests' },
@@ -720,32 +720,35 @@ export default function Workbench() {
   );
 }
 
-const styles = StyleSheet.create({
-  markRow: { flexDirection: 'row', gap: 16, flexWrap: 'wrap' },
-  icon: {
-    width: 120,
-    height: 120,
-    borderRadius: 26,
-    borderCurve: 'continuous',
-  },
-  darkTile: { backgroundColor: '#000000' },
-  swatchRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  swatch: {
-    width: 28,
-    height: 28,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: colors.dividerSubtle,
-    borderCurve: 'continuous',
-  },
-  grow: { flex: 1 },
-  swatchText: { flex: 1, flexDirection: 'row', gap: 12 },
-  typeRow: { gap: 2 },
-  inline: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  wrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    alignItems: 'center',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    markRow: { flexDirection: 'row', gap: 16, flexWrap: 'wrap' },
+    icon: {
+      width: 120,
+      height: 120,
+      borderRadius: 26,
+      borderCurve: 'continuous',
+    },
+    // The dark icon's own black backing, in both appearances.
+    darkTile: { backgroundColor: colors.photoGround },
+    swatchRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+    swatch: {
+      width: 28,
+      height: 28,
+      borderRadius: 4,
+      borderWidth: 1,
+      borderColor: colors.dividerSubtle,
+      borderCurve: 'continuous',
+    },
+    grow: { flex: 1 },
+    swatchText: { flex: 1, flexDirection: 'row', gap: 12 },
+    typeRow: { gap: 2 },
+    inline: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+    wrap: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+      alignItems: 'center',
+    },
+  }),
+);
