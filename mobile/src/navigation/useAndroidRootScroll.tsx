@@ -22,6 +22,7 @@ import { interfaceFonts, rhythm } from '../design/tokens';
 import { useColors } from '../design/use-colors';
 import { scrollToTop } from '../design/scroll-to-top';
 import { useSafeSetOptions } from './preview';
+import { useRailRootReselect } from './title-pin';
 
 const titles: Record<string, string> = {
   index: 'Today',
@@ -119,6 +120,20 @@ export function useAndroidRootScroll(
       },
     );
   }, [root, navigation, scroll]);
+  // iOS beside a vertical bar: a root's own list (Bills) is handed here on
+  // every platform, and the title pin hides it from the native effect that
+  // scrolls a reselected tab to the top. Its bar is solid there (it holds a
+  // search field), so the list starts below it and its top is 0. A Screen's
+  // ref is Android's alone (null on iOS: Screen does this itself), and Ask
+  // has its own reselect.
+  useRailRootReselect(
+    () =>
+      scroll.current?.scrollToOffset?.({
+        offset: 0,
+        animated: animatedScroll(),
+      }),
+    name !== 'ask',
+  );
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
       apply(

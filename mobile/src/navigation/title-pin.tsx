@@ -1,5 +1,15 @@
 import type { NativeStackNavigationOptions } from 'expo-router';
-import type { ReactElement, ReactNode } from 'react';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
+import {
+  useContext,
+  useEffect,
+  useRef,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import { Platform, View } from 'react-native';
 import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 
@@ -68,4 +78,65 @@ export function titlePinLayout({
       {children}
     </TitlePin>
   );
+}
+
+type TabPress = {
+  target?: string;
+  data?: { isPrevented?: boolean };
+};
+type TabsNavigation = {
+  getState?: () => {
+    type?: string;
+    index: number;
+    routes: { key: string; state?: { key?: string } }[];
+  };
+  addListener?: (
+    name: never,
+    listener: (event: TabPress) => void,
+  ) => () => void;
+};
+
+/**
+ * A tab pressed again while its root is in front scrolls that root to the
+ * top. react-native-screens does this natively, for the scroll view it finds
+ * the way UIKit does, which `TitlePin` hides beside a vertical bar. There a
+ * tab root does it itself: `onReselect` runs when the root's own tab is
+ * pressed while selected and nothing is pushed over the root (a first press
+ * with pages pushed still pops them, as before).
+ *
+ * Inert off the rail, where the native effect is untouched, and on Android,
+ * which has its own listener (`useAndroidRootScroll`).
+ */
+export function useRailRootReselect(onReselect: () => void, enabled = true) {
+  const navigation = useContext(NavigationContext);
+  const route = useContext(NavigationRouteContext);
+  const rail = useVerticalBarEdge() !== 'unspecified';
+  const handler = useRef(onReselect);
+  useEffect(() => {
+    handler.current = onReselect;
+  }, [onReselect]);
+  const active = Platform.OS === 'ios' && rail && enabled;
+  const key = route?.key;
+  useEffect(() => {
+    if (!active || !navigation || !key) return;
+    const tabs = navigation.getParent?.() as TabsNavigation | undefined;
+    if (tabs?.getState?.().type !== 'tab') return;
+    return tabs.addListener?.('tabPress' as never, (event) => {
+      if (event.data?.isPrevented) return;
+      const stack = navigation.getState();
+      const tabState = tabs.getState!();
+      const owner = tabState.routes.find(
+        (item) => item.state?.key === stack.key,
+      );
+      if (
+        !owner ||
+        owner.key !== event.target ||
+        tabState.routes[tabState.index]?.key !== owner.key
+      )
+        return;
+      // The root itself, with nothing pushed over it.
+      if (stack.index !== 0 || stack.routes[0]?.key !== key) return;
+      requestAnimationFrame(() => handler.current());
+    });
+  }, [active, navigation, key]);
 }

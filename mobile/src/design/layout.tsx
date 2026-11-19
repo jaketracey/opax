@@ -49,8 +49,14 @@ import {
   useRootBarAppearance,
   useRailSolidRoot,
 } from '../navigation/useRootBarAppearance';
+import { useRailRootReselect } from '../navigation/title-pin';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
-import { useAccessibilitySize, useReduceMotion } from './accessibility';
+import {
+  animatedScroll,
+  useAccessibilitySize,
+  useReduceMotion,
+} from './accessibility';
+import { scrollToTop } from './scroll-to-top';
 import { ClearBarFade, useBarFadeScroll } from './bar-fade';
 import type { GroundFadeGround } from './ground-fade';
 import {
@@ -291,6 +297,8 @@ export function useClearBarTop(): number {
  * band cut off at the foot.
  */
 const RAIL_FADE_COVER = 12;
+/** How long a rail root's scroll to the top may run past its content (ms). */
+const RAIL_TOP_SCROLL_MS = 700;
 
 /** When a late scroll view is looked at after mount (ms). */
 const restChecks = [400, 900, 1500];
@@ -585,6 +593,8 @@ export function Screen({
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const clearance = useFloatingBarClearance();
   const androidScroll = useRef<ScrollView>(null);
+  // iOS, for a page that passes no `scrollRef` of its own.
+  const ownScroll = useRef<ScrollView>(null);
   const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const androidOwnsBar = androidRoot.ownsBar;
   const setOptions = useSafeSetOptions();
@@ -812,7 +822,30 @@ export function Screen({
     ? bounds.ref
     : Platform.OS === 'android'
       ? androidScroll
-      : scrollRef;
+      : (scrollRef ?? ownScroll);
+  // Beside a vertical bar a tab root scrolls itself to the top when its tab
+  // is pressed again (`useRailRootReselect`): the title pin hides the scroll
+  // view from the native effect. Under the clear bar the top is above 0, by
+  // the bar's height, and React Native stops a scroll at 0 unless overflow
+  // is allowed, so it is allowed for the length of that one scroll.
+  const [toTop, setToTop] = useState(0);
+  useRailRootReselect(
+    useCallback(() => setToTop((count) => count + 1), []),
+    nativeRoot,
+  );
+  const liveHeaderBottom = useRef(headerBottom);
+  useEffect(() => {
+    liveHeaderBottom.current = headerBottom;
+  }, [headerBottom]);
+  useEffect(() => {
+    if (!toTop) return;
+    // A caller's callback ref keeps the view to itself: no root passes one.
+    const view =
+      targetRef && typeof targetRef === 'object' ? targetRef.current : null;
+    scrollToTop(view, liveHeaderBottom.current, animatedScroll());
+    const done = setTimeout(() => setToTop(0), RAIL_TOP_SCROLL_MS);
+    return () => clearTimeout(done);
+  }, [toTop, targetRef]);
   return (
     <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
       <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
@@ -832,7 +865,7 @@ export function Screen({
               ]}
               contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
               contentInset={endRoom ? { bottom: endRoom } : undefined}
-              scrollToOverflowEnabled={scrollToOverflowEnabled}
+              scrollToOverflowEnabled={scrollToOverflowEnabled || toTop > 0}
               contentOffset={nativeRoot ? undefined : rest.contentOffset}
               alwaysBounceVertical={Platform.OS === 'ios'}
               keyboardShouldPersistTaps="handled"
