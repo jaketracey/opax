@@ -8,7 +8,13 @@ import { Icon } from './icon';
 import { SurfaceContext, useRowHighlight } from './row-padding';
 import { type SourceDetails } from './source';
 import { Text } from './text';
-import { androidControls, minimumTarget, radii, rhythm } from './tokens';
+import {
+  androidControls,
+  hairline,
+  minimumTarget,
+  radii,
+  rhythm,
+} from './tokens';
 import { makeStyles, useColors } from './use-colors';
 
 // Labels use continuous capsules. Only MachinePill acts; its navy wash keeps
@@ -295,8 +301,8 @@ const useStyles = makeStyles((colors) =>
     center: { textAlign: 'center' },
     // The role is clear in light, and an outline takes no room.
     neutralEdge: {
-      outlineWidth: 1,
-      outlineOffset: -1,
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
       outlineStyle: 'solid',
       outlineColor: colors.raisedOutline,
     },

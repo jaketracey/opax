@@ -115,10 +115,13 @@ let heldDark: boolean | undefined;
 let stopDarkWatch: (() => void) | undefined;
 const systemDark = () => Appearance.getColorScheme() === 'dark';
 // Behind another app or a system sheet. A state not yet known (the first
-// moments of a launch report none) is not a reason to hold.
+// moments of a launch report none) is not a reason to hold. iOS only:
+// Android reports a change once, and a hold there would only keep title ink
+// on the old scheme after `useColors()` had drawn the new one.
 const appAway = () =>
-  AppState.currentState === 'background' ||
-  AppState.currentState === 'inactive';
+  Platform.OS === 'ios' &&
+  (AppState.currentState === 'background' ||
+    AppState.currentState === 'inactive');
 const appActive = () => !appAway();
 // Active: the system's answer, remembered. Not active: the one remembered,
 // whatever UIKit reports while it takes its two snapshots.
@@ -158,10 +161,11 @@ function watchDark(changed: () => void) {
  * Use this, not `useColorScheme()`. UIKit reports both appearances in turn
  * each time the app goes to the background (it takes a snapshot of each),
  * and every `useColorScheme()` subscriber then draws twice for nothing; the
- * money map rebuilt its model and recorded its pictures twice. This hook
- * ignores a change while `AppState.currentState` is `background` or
- * `inactive` and reads the scheme again when the app becomes active, so a change made in
- * Settings while the app was behind shows on return.
+ * money map rebuilt its model and recorded its pictures twice. On iOS this
+ * hook ignores a change while `AppState.currentState` is `background` or
+ * `inactive` and reads the scheme again when the app becomes active, so a
+ * change made in Settings while the app was behind shows on return. Android
+ * follows every change at once.
  */
 export function useIsDark(): boolean {
   return useSyncExternalStore(watchDark, readDark, readDark);
