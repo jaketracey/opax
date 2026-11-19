@@ -36,6 +36,7 @@ import {
   type EndedTerms,
 } from '../your-mp/term-ended';
 import { CachedPortrait } from '../CachedPortrait';
+import { nameKey } from '../../api/ids';
 import { fold, type Match } from './ranking';
 import { openSuggestedPerson } from './navigation';
 import { useSplitRow } from './split';
@@ -134,9 +135,11 @@ type RosterSeat = NonNullable<Person['representation']>[number];
  * What the dated seats say of a state or territory seat on a roster row:
  * `current` where the person the row's ID names holds that very seat now,
  * `last` where they held it when its house's term ended for an election
- * (`termEndedFor`), and `unknown` otherwise. The roster's `current` flag and
- * the federal status say nothing here, and no dated state seat is undated
- * into "former".
+ * (`termEndedFor`), and `unknown` otherwise. A row with no ID to join is
+ * also `last` where the electorates index lists the person, by name, for a
+ * seat whose house's term has ended. The roster's `current` flag and the
+ * federal status say nothing here, and no dated state seat is undated into
+ * "former".
  */
 function stateSeatStatus(
   person: Person,
@@ -153,8 +156,26 @@ function stateSeatStatus(
       s.chamber === seat.chamber &&
       fold(s.name) === fold(seat.electorate),
   );
-  if (!held) return 'unknown';
-  return termEndedFor(held, endedIn(sources.electorates)) ? 'last' : 'current';
+  if (held)
+    return termEndedFor(held, endedIn(sources.electorates))
+      ? 'last'
+      : 'current';
+  // A row with no ID to join: the person the electorates index lists for
+  // the seat held it when its house's term ended. While the house sits the
+  // index alone claims nothing, and the seat is named alone.
+  if (dated) return 'unknown';
+  const listed = sources.electorates?.electorates.find(
+    (e) =>
+      e.jurisdiction === seat.jurisdiction &&
+      e.chamber === seat.chamber &&
+      nameKey(e.name) === nameKey(seat.electorate) &&
+      e.representatives.some(
+        (r) => nameKey(r.person.name) === nameKey(person.name),
+      ),
+  );
+  return listed && termEndedFor(listed, endedIn(sources.electorates))
+    ? 'last'
+    : 'unknown';
 }
 
 const NONE_ENDED: EndedTerms = new Map();

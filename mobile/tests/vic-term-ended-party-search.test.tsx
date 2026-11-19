@@ -480,6 +480,42 @@ describe('search rows for a state seat', () => {
     );
   });
 
+  test('a row with no ID to join: the person the index lists for the seat is its last member, and only while the term has ended', () => {
+    const listed = suggestions.people.filter((p) => {
+      const seat = stateSeat(p);
+      return (
+        !p.pid &&
+        seat?.jurisdiction === 'vic' &&
+        index.electorates.some(
+          (e) =>
+            e.chamber === seat.chamber &&
+            e.name === seat.electorate &&
+            e.representatives.some((r) => r.person.name === p.name),
+        )
+      );
+    });
+    expect(listed.length).toBeGreaterThan(5);
+    for (const person of listed) {
+      const where = `${stateSeat(person)!.electorate}, Victoria`;
+      expect(line(person, sourcesWith('2026-11-28'))).toBe(
+        `Last member for ${where}`,
+      );
+      // While the house sits the index alone claims nothing.
+      expect(line(person, sourcesWith(null))).toBe(where);
+      expect(placeLine(person, 'unknown')).toBe(where);
+    }
+    // Every Victorian row the index lists now says so; nobody is a member.
+    const said = suggestions.people
+      .filter((p) => stateSeat(p)?.jurisdiction === 'vic')
+      .map((p) => line(p, sourcesWith('2026-11-28')) ?? '');
+    expect(said.filter((l) => l.startsWith('Last member for ')).length).toBe(
+      said.length - 1,
+    );
+    expect(said.some((l) => /^(Member|Former member) for /.test(l))).toBe(
+      false,
+    );
+  });
+
   describe('as drawn', () => {
     const drawn = (
       person: (typeof suggestions.people)[number],
