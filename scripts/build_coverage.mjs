@@ -1,6 +1,7 @@
 import {fy} from '../portal/public/money-scope.js';
 import {readFileSync} from 'node:fs';
 import {nswHansardCoverageNote} from './nsw_hansard_coverage.mjs';
+import {voteCoverageText, VOTE_COVERAGE_PATH} from '../portal/public/vote-tables.js';
 
 const publicRoot = new URL('../portal/public/', import.meta.url);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
@@ -75,6 +76,9 @@ export function coverageCollections(read = path => JSON.parse(readFileSync(new U
   add('federal-bills', 'Parliament', 'Federal bill registry', '/bills', 'Parliament of Australia', `Commonwealth; ${years(bills.bills, 'introduced')}. Registry entries, distinct from corpus text versions.`, bills.count, 'bills', 'Source document terms; model summaries labelled.', 'Nightly pipeline; acquisition currently paused.', bills.generated_at, '/bills/index.json');
   const divisions = read('divisions/index.json');
   add('division-catalogue', 'Parliament', 'Recorded division catalogue', '/sitting', 'They Vote For You; Parliament of New South Wales; Parliament of Victoria; Queensland Parliament', `Federal, NSW, Victoria, Queensland; ${years(divisions.divisions, 'date')}. Individual records available through bills and member pages.`, divisions.count, 'division records', 'ODbL for TVFY database; parliamentary source terms.', 'Nightly checks; last good records retained.', corpus.version, '/divisions/index.json');
+  // Divisions held back from the record (portal/public/data/vote-coverage.json), said here and on the
+  // voting section of each member they name: the count, the house, the dates and why.
+  rows.at(-1).note = (read(VOTE_COVERAGE_PATH.slice(1)).notes || []).map(note => voteCoverageText(note)).filter(Boolean).join(' ');
   for (const [jur, name] of [['tas','Parliament of Tasmania'], ['act','ACT Legislative Assembly']]) {
     const d = read(`bills-${jur}/data.json`);
     add(`bills-${jur}`, 'Parliament', `${jur === 'tas' ? 'Tasmanian' : 'ACT'} bill register`, '/register/state-bills', name, `${jur === 'tas' ? 'Tasmania' : 'ACT'}; ${years(d.bills, 'introduced_date')}. ${d.scope}`, d.counts.bills, 'bill metadata records', `${d.licence.name}. Registry facts and original links only; document bodies withheld.`, manual, d.generated_at, `/bills-${jur}/data.json`);

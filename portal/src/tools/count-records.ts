@@ -2,6 +2,7 @@
 import { readToolAsset, type ToolArgs, type ToolCitation, type ToolDefinition } from './types'
 import { billEnding as ending, fold, siteUrl } from './record-common'
 import { recordCount } from '../research-record-answer'
+import { heldDivisionNotes } from './vote-coverage'
 
 type Row = Record<string, unknown>
 type Window = { since?: string; until?: string; label: string }
@@ -159,14 +160,19 @@ export const tool: ToolDefinition = {
       ...(window.since ? { requested_since: window.since } : {}), ...(window.until ? { requested_until: window.until } : {}),
       note: `Full published-index selection ${window.label}; ${kind === 'bills' && args.term ? 'bill parliament metadata defines the cohort; ' : ''}observed indexed dates ${range.first_record_date ?? 'unavailable'} to ${range.last_record_date ?? 'unavailable'}. Query bounds do not establish complete historical coverage.`,
       ...(object(index.coverage) ? { source_coverage: index.coverage } : {}) }
+    // Held divisions in this chamber or jurisdiction and period are not in the index, so they are not in any count of it.
+    const held = kind === 'divisions' ? await heldDivisionNotes(env, { jurisdiction, chamber: args.chamber ? String(args.chamber) : null,
+      since: dateFiltered ? window.since ?? null : null, until: dateFiltered ? window.until ?? null : null }) : []
     const outside = dateFiltered && !!(window.until && range.first_record_date && window.until < range.first_record_date || window.since && range.last_record_date && window.since > range.last_record_date)
     if (outside) return { rows: [], total: null, coverage: { ...coverage, matched: false }, citations: [{ kind: 'record', url,
       text: `The published ${kind} index covers ${range.first_record_date} to ${range.last_record_date}; it does not establish a count ${window.label}. No zero has been inferred for an uncovered period.` }],
-      notes: ['The requested period is outside the dated index. Search original corpus records for historical debates; do not treat an uncovered year as an absence.'], filter: args, query: { method: 'full-published-index', path, window } }
+      notes: ['The requested period is outside the dated index. Search original corpus records for historical debates; do not treat an uncovered year as an absence.', ...held], filter: args, query: { method: 'full-published-index', path, window } }
     const notes = [
       `Exact count of the full published ${bill ? 'bill division links' : `${kind} index`}; not a ranked sample. Coverage ${where}: ${range.first_record_date ?? 'no dated records'} to ${range.last_record_date ?? 'no dated records'}. This describes indexed records, not proof of complete parliamentary history.`,
       snapshot.generated_at ? `Published snapshot build date: ${snapshot.generated_at}. This is a build stamp, not a live data currency guarantee. Latest indexed ${field} date: ${snapshot.latest_record_date ?? 'not recorded'}.` : `Snapshot build date is not published. Latest indexed ${field} date: ${snapshot.latest_record_date ?? 'not recorded'}; this is not a generation timestamp.`,
     ]
+    // Held divisions in this chamber or jurisdiction and period are not in the index, so they are not in the count.
+    notes.push(...held)
     if ((dateFiltered || args.group_by) && range.undated_records) notes.push(`${range.undated_records} records in this chamber/jurisdiction have no usable ${field} date and cannot be assigned to a date window or year/month group.`)
     if (kind === 'bills') {
       notes.push('Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.')

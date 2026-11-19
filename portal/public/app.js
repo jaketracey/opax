@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=ebc7ce515a").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=5617a34dcb").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -5690,7 +5690,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e8d40213b9'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=2f89dd45fa'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -6104,6 +6104,10 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const recentData = await loadPersonRecentVotes(keys);
   if (currentSubjectKey !== key || !slot.isConnected) return;
   const recent = voteTables.personVoteRecords(keys, votes, recentData);
+  // Divisions held back from the record that name this member (public/data/vote-coverage.json): said with the counts.
+  const coverage = await fetch(voteTables.VOTE_COVERAGE_PATH).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  const coverageNotes = voteTables.voteCoverageNotes(coverage, name, years);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
   nextSteps?.fillNextSteps($("person-next"), nextSteps.memberVoteSteps(rows), "No votes on bills in the record for this member.");
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
@@ -6126,6 +6130,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
     ${ayes + noes ? `<div class="votes-split" role="img" aria-label="${esc(ayePct)} percent ayes, ${esc(100 - ayePct)} percent noes"><i style="width:${ayePct}%"></i></div>
     <p class="votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}.</p>` : ""}
     ${rows.length ? `<p class="votes-scope">${esc(voteTables.voteScopeLine(rows.length, total, recent.recorded))}</p>` : ""}
+    ${coverageNotes.map((note) => `<p class="votes-scope votes-coverage-note">${esc(note)}</p>`).join("")}
     ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
     ${sourceLineHTML({
       updated: votes?._meta?.content_changed_at || "",
@@ -6135,6 +6140,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
       notes: [
         "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
         "This list covers the votes OPAX holds. A bill missing here was not necessarily unvoted on.",
+        ...(jurs.includes("vic") ? ["Hansard’s division lists do not record pairs, tellers or absences. A division with no vote shown for this member does not mean they were absent or abstained."] : []),
         "Party position is shown only when this vote's source records it. Open a division for the question and the party tallies.",
       ],
       licence: "They Vote For You (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.",
@@ -14321,6 +14327,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
     ${questionHTML}
+    <div id="division-reading-notes"></div>
     ${divisionBillsHTML(bills)}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
@@ -14330,6 +14337,12 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       ], "More about this division")}
     </div>`;
   $("doc-bill").hidden = false;
+  // How to read this record (vote-tables.js divisionReadingNotes): a "stand part" question, a record with no
+  // motion text, and what Victorian Hansard's lists leave out. The module loads lazily, so the lines follow it.
+  voteTablesReady.then(() => {
+    const slot = currentDocSlug === slug && document.getElementById("division-reading-notes");
+    if (slot) slot.innerHTML = voteTables.divisionReadingNotes(d).map((note) => `<p class="result-meta division-reading-note">${esc(note)}</p>`).join("");
+  });
   pageMenusReady.then(() => {
     if (currentDocSlug !== slug) return;
     $("doc-bill").querySelector('[data-more-action="copy-division"]')?.addEventListener("click", (e) => copyText(siteUrl(`/doc/${slug}`), e.currentTarget));

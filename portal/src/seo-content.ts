@@ -21,7 +21,7 @@ import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../p
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, machineNoticeHTML, partyLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
-import {voteTableConfig, personVoteKeys, personVoteRecords, votingRows, voteTablePage, voteTableHTML, billDivisionTablesHTML, voteScopeLine} from '../public/vote-tables.js'
+import {voteTableConfig, personVoteKeys, personVoteRecords, votingRows, voteTablePage, voteTableHTML, billDivisionTablesHTML, voteScopeLine, voteCoverageNotes, divisionReadingNotes, VOTE_COVERAGE_PATH, type VoteCoverageNote} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
@@ -300,6 +300,10 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       config.id += '-ssr'
       const divisionsTotal = keys.reduce((sum,key)=>sum+(Number((voteData as Record<string,{divisions_total?: unknown}> | null)?.[key]?.divisions_total)||0),0)
       body += `<p class="votes-scope">${escapeHtml(voteScopeLine(votes.length,divisionsTotal,hasRecent))}</p>`
+      // Divisions held back from the record that name this member, with their count and dates.
+      const counted = keys.flatMap(key => { const y = (voteData as Record<string,{years?: unknown}> | null)?.[key]?.years; return Array.isArray(y) ? y.map(Number) : [] })
+      for (const note of voteCoverageNotes(await optional<{notes: VoteCoverageNote[]}>(read,VOTE_COVERAGE_PATH),[p.name, ...(p.full ? [p.full] : [])],counted))
+        body += `<p class="votes-scope votes-coverage-note">${escapeHtml(note)}</p>`
       body += voteTableHTML(config,voteTablePage(voteRows,config,tableQuery))
       body += '<p>This list covers the votes in OPAX’s published data. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
       body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote data') : `${link('/votes.json','OPAX bill-vote data')} (They Vote For You and state Hansard)`}.</p>`
@@ -567,7 +571,7 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
 export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<string,string>): RenderedContent {
   const title = divisionPlain(d.name || d.question || 'Parliamentary division').split(/(?<=[.!?])\s/)[0]
   const description = `${chamber(d.house)}, ${d.date || 'Date not recorded'}. ${d.result || d.outcome || 'Result not recorded'}: ayes ${d.ayes ?? 'not recorded'}, noes ${d.noes ?? 'not recorded'}.`
-  let body = `<h2>Question</h2><div class="division-markdown">${renderDivisionMarkdown(d.question || d.name || 'Question not recorded')}</div>${original(d.source_url || d.url)}<h2>How each member voted</h2>`
+  let body = `<h2>Question</h2><div class="division-markdown">${renderDivisionMarkdown(d.question || d.name || 'Question not recorded')}</div>${divisionReadingNotes(d).map(note=>`<p class="division-reading-note">${escapeHtml(note)}</p>`).join('')}${original(d.source_url || d.url)}<h2>How each member voted</h2>`
   body += divisionVotes(d,people,slugs)
   body += `<h2>Related bills</h2><ul>${(d.bills || []).map(b=>`<li>${link(`/bill/${b.key}`,b.title)}</li>`).join('')}</ul><p>Only formal divisions leave a per-member record. A procedural vote is not necessarily a vote for or against a bill.</p>`
   return {html:answerBlock(title,description,body),description}
