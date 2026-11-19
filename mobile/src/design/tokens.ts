@@ -37,6 +37,7 @@ export {
   border,
   breakpoints,
   chartIndustry,
+  chartIndustryDark,
   chartRoles,
   elevation,
   motion,
@@ -49,8 +50,11 @@ export {
   typeRolesRegular,
 } from './tokens.generated';
 
-// iOS resolves appearance and Increase Contrast natively. Release builds
-// remain light through app.config.ts; capture builds can follow the system.
+// iOS resolves appearance and Increase Contrast natively, wherever a role is
+// drawn. Android has no dynamic colour value: this object holds the light hex
+// there, and a component takes the roles for the appearance on screen from
+// `useColors()` (design/use-colors.ts). A build is light-only or follows the
+// system by the appearance switch (plugins/appearance.js).
 function resolve(role: Role): ColorValue {
   const base = paletteFor('light')[role];
   if (Platform.OS !== 'ios') return base;

@@ -28,7 +28,11 @@ import {
   typeRolesRegular,
   type CurrentTextVariant,
 } from '../src/design/tokens';
-import { contrastRules } from '../src/design/tokens.generated';
+import {
+  chartIndustry,
+  chartIndustryDark,
+  contrastRules,
+} from '../src/design/tokens.generated';
 
 // Design tokens (docs/design/TOKENS.md): tokens.generated.ts is fresh, every
 // name the app used before the token source keeps its value, the promised
@@ -281,6 +285,75 @@ describe('promised colour pairs pass in every theme', () => {
   test('the forbidden pairs really fail in light', () => {
     for (const { fg, bg } of contrastRules.forbidden)
       expect(contrastRatio(light[fg], light[bg])).toBeLessThan(4.5);
+  });
+});
+
+// Dark mode (19 Nov 2026): roles added for the foundation. The web reads none
+// of them.
+describe('dark mode roles', () => {
+  const source = JSON.parse(
+    readFileSync(join(MOBILE, '../docs/design/design-tokens.json'), 'utf8'),
+  );
+
+  test('the sheet scrim dims in both appearances: ink at 40% in light, black at 60% in dark', () => {
+    // Ink is pale in dark, so ink plus opacity made a pale veil there.
+    expect(light.scrim).toBe('rgba(35,39,31,0.4)');
+    expect(light.ink).toBe('#23271F');
+    expect(dark.scrim).toBe('rgba(0,0,0,0.6)');
+    expect(lightHighContrast.scrim).toBeUndefined();
+    expect(darkHighContrast.scrim).toBeUndefined();
+  });
+
+  test('the raised outline is clear in light and a visible hairline in dark', () => {
+    expect(light.raisedOutline).toBe('rgba(0,0,0,0)');
+    expect(lightHighContrast.raisedOutline).toBe('rgba(0,0,0,0)');
+    // Stronger than the raised step it stands in for (1.13:1 from paper).
+    for (const ground of [dark.paper, dark.raised])
+      expect(contrastRatio(dark.raisedOutline, ground)).toBeGreaterThan(1.4);
+    // Under Increase Contrast it is a boundary: 3:1.
+    for (const ground of [dark.paper, dark.raised])
+      expect(
+        contrastRatio(darkHighContrast.raisedOutline!, ground),
+      ).toBeGreaterThanOrEqual(3);
+  });
+
+  test('roles with alpha live outside the palette the web reads', () => {
+    expect(
+      Object.keys(source.appOnly).filter((k) => !k.startsWith('$')),
+    ).toEqual(['scrim', 'raisedOutline']);
+    for (const group of Object.values(source.color) as object[])
+      for (const name of ['scrim', 'raisedOutline'])
+        expect(group).not.toHaveProperty(name);
+  });
+
+  test('every industry cluster has a dark pair: a mark at 3:1 and text at 4.5:1 on dark grounds', () => {
+    expect(chartIndustryDark.map(([cluster]) => cluster)).toEqual(
+      chartIndustry.map(([cluster]) => cluster),
+    );
+    const failures: string[] = [];
+    for (const [cluster, { colour, ink }] of chartIndustryDark) {
+      for (const ground of ['paper', 'raised'] as const) {
+        const mark = contrastRatio(colour, dark[ground]);
+        if (mark < 3)
+          failures.push(`${cluster} colour on ${ground} ${mark.toFixed(2)}`);
+        const text = contrastRatio(ink, dark[ground]);
+        if (text < 4.5)
+          failures.push(`${cluster} ink on ${ground} ${text.toFixed(2)}`);
+      }
+    }
+    expect(failures).toEqual([]);
+  });
+
+  test('the light industry pairs are unchanged, and the web still reads only those', () => {
+    for (const [cluster, pair] of chartIndustry)
+      expect(pair).toEqual({
+        colour: source.chart.industry[cluster].colour,
+        ink: source.chart.industry[cluster].ink,
+      });
+    expect(chartIndustry[1]).toEqual([
+      'unions',
+      { colour: '#E15759', ink: '#A93843' },
+    ]);
   });
 });
 
