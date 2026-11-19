@@ -138,6 +138,21 @@ test('a region page names its members until the Council expired, following the A
   assert.match(JSDOM.fragment(renderVicElection(data,seat,{},NOW,null,index(data.election_day)).html).querySelector('#region .ui-section-note').textContent,new RegExp(`Listed are the members for ${own.name} Region ${COUNCIL}\\.$`));
 });
 
+test('no region line or link presents the ended Council’s people as its members',()=>{
+  // The region page's line describes the seat, not who sits in it.
+  for(const now of [BEFORE,NOW,AFTER]) {
+    const meta=JSDOM.fragment(renderVicElection(data,region,{},now,null,index(data.election_day)).html).querySelector('.ui-page-meta').textContent;
+    assert.ok(meta.startsWith('Upper house region that elects five members, with 11 districts'),meta);
+    assert.doesNotMatch(meta,/with five members/);
+  }
+  // A district page's link to its region says "last members" while the Council's term has ended.
+  const own=data.seats.find(r=>r.kind==='region'&&r.name===seat.region);
+  const link=(now,idx)=>[...JSDOM.fragment(renderVicElection(data,seat,{},now,null,idx).html).querySelectorAll('#region a')].map(a=>a.textContent).find(t=>t.startsWith(`${own.name} Region:`));
+  assert.equal(link(NOW,index(data.election_day)),`${own.name} Region: last members and their records`);
+  assert.equal(link(BEFORE,index(data.election_day)),`${own.name} Region: members and their records`);
+  assert.equal(link(NOW,index(null)),`${own.name} Region: members and their records`);
+});
+
 test('a Council region’s electorate profile has no current members while the Assembly’s rows say the house has ended',async()=>{
   const manifest=await json('../public/electorates/manifest.json'),rows=(await json('../public'+manifest.index_url)).electorates;
   const detail=await json('../public'+rows.find(e=>e.chamber==='vic_lc').detail_url);
