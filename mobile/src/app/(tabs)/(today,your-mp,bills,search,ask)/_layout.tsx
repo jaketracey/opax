@@ -5,6 +5,7 @@ import {
   tabRootName,
   tabSettings,
 } from '../../../navigation/stack';
+import { titlePinLayout } from '../../../navigation/title-pin';
 import { useAccount } from '../../../features/account/store';
 
 export const unstable_settings = tabSettings;
@@ -15,7 +16,11 @@ export default function TabStack({ segment }: { segment: string }) {
   const chrome = useStackChrome({ tabStack: true });
   const underBar = useUnderBar(chrome.headerTransparent);
   return (
-    <Stack initialRouteName={tabRootName(segment)} screenOptions={chrome}>
+    <Stack
+      initialRouteName={tabRootName(segment)}
+      screenOptions={chrome}
+      screenLayout={titlePinLayout}
+    >
       {[...sharedScreens(segment, !!account.status?.signedIn, underBar)]}
     </Stack>
   );

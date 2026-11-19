@@ -283,6 +283,15 @@ export function useClearBarTop(): number {
   return useClearRailBar() ? bottom : 0;
 }
 
+/**
+ * Beside a vertical bar the title is pinned (`TitlePin`), and the fade under
+ * it keeps its ground whole down to the bar's foot (pt): the fade otherwise
+ * starts to clear 12 pt above the foot, and UIKit's own edge there, which
+ * react-native-screens can no longer style, showed in that strip as a faint
+ * band cut off at the foot.
+ */
+const RAIL_FADE_COVER = 12;
+
 /** When a late scroll view is looked at after mount (ms). */
 const restChecks = [400, 900, 1500];
 /** After this long from mount the page has settled, and is the reader's. */
@@ -406,21 +415,16 @@ export function ClearBarRest({
   rest?: boolean;
 }) {
   const { list } = useClearBarRest();
-  // Under the stack's clear bar (iOS 26, off the rail) a page's own list
-  // fades into the page's ground behind the bar, as a Screen page does: a
-  // clear bar with no fade let rows run through the title. The fade follows
-  // the list's scroll on the UI thread. A detail pane has no bar of its own,
-  // and the rail's band folds away.
+  // Under the stack's clear bar (iOS 26) a page's own list fades into the
+  // page's ground behind the bar, as a Screen page does: a clear bar with no
+  // fade let rows run through the title. The fade follows the list's scroll
+  // on the UI thread. A detail pane has no bar of its own. Beside a vertical
+  // bar the title is pinned (`TitlePin`) and this fade is the only edge.
   const headerBottom = useHeaderBottom();
   const onRail = useRailBar() !== null;
   const inPane = useSplitPane() !== null;
   const fades =
-    !!list &&
-    !onRail &&
-    !inPane &&
-    clearBars &&
-    Platform.OS === 'ios' &&
-    glassBar();
+    !!list && !inPane && clearBars && Platform.OS === 'ios' && glassBar();
   const fadeScroll = useBarFadeScroll(fades);
   const { onScroll: fadeOnScroll } = fadeScroll;
   const own = children.props.onScroll;
@@ -447,7 +451,12 @@ export function ClearBarRest({
     <>
       {props ? cloneElement(children, props) : children}
       {fades ? (
-        <ClearBarFade y={fadeScroll.y} bottom={headerBottom} ground={ground} />
+        <ClearBarFade
+          y={fadeScroll.y}
+          bottom={headerBottom}
+          ground={ground}
+          cover={onRail ? RAIL_FADE_COVER : 0}
+        />
       ) : null}
     </>
   );
@@ -663,13 +672,14 @@ export function Screen({
   // bar as content goes under it, on the UI thread. A solid bar (the
   // legibility settings, read by the fade itself; a rail root's search
   // field) covers its own content.
-  // A pushed page under the stack's clear bar fades the same way (off the
-  // rail, whose band folds away); a detail pane has no bar of its own.
+  // A pushed page under the stack's clear bar fades the same way, beside a
+  // vertical bar too: the title is pinned there (`TitlePin`) and UIKit draws
+  // no edge under it. A detail pane has no bar of its own.
   const barFade =
     clearBars &&
     Platform.OS === 'ios' &&
     glassBar() &&
-    (nativeRoot ? !railSolidRoot : clearRail && !onRail && !inPane);
+    (nativeRoot ? !railSolidRoot : clearRail && !inPane);
   const fadeScroll = useBarFadeScroll(barFade);
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
   // lays the scroll view out below it: React Native's own sticky header
@@ -1016,6 +1026,7 @@ export function Screen({
                 bottom={headerBottom}
                 ground={ground}
                 tail={pinnedHere ? 0 : undefined}
+                cover={onRail ? RAIL_FADE_COVER : 0}
               />
             ) : null}
           </PinnedAtTopContext.Provider>
