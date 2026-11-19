@@ -37,7 +37,7 @@ import {
 import { createRecentStore } from '../src/features/search/recent';
 import { isLead, moneyDestination } from '../src/features/search/GroupResults';
 import { searchPhase } from '../src/features/search/SearchScreen';
-import { MatchRow } from '../src/features/search/rows';
+import { MatchRow, placeLine } from '../src/features/search/rows';
 import { allLocal } from '../src/features/search/AllResults';
 import { EmptyResults } from '../src/features/search/EmptyResults';
 import { ApiError } from '../src/api/errors';
@@ -432,5 +432,83 @@ describe('the seat menu', () => {
   test('offers "Set Grayndler as my electorate" unless it is already the reader\'s seat', () => {
     expect(menuOf(true)).toContain('Set Grayndler as my electorate');
     expect(menuOf(false)).not.toContain('Set Grayndler as my electorate');
+  });
+});
+
+describe('a person’s place line while the Victorian Parliament’s term has ended for an election', () => {
+  // The live index: every Assembly row carries the election day, or null
+  // once the result is loaded; Council rows carry nothing.
+  const withIndex = (value: string | null) => ({
+    ...sources,
+    people,
+    electorates: {
+      ...index,
+      electorates: index.electorates.map((s) =>
+        s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+      ),
+    },
+  });
+  // The pinned roster's rows whose place line names a Victorian state seat.
+  const victorian = roster.people.filter((p) => {
+    const seat =
+      (p.representation ?? []).find(
+        (r) => r.jurisdiction === 'federal' && r.chamber !== 'senate_committee',
+      ) ?? p.representation?.[0];
+    return seat?.jurisdiction === 'vic';
+  });
+  const line = (name: string, from: ReturnType<typeof withIndex>) =>
+    placeLine(roster.people.find((p) => p.name === name)!, from);
+  const drawn = (name: string, from: ReturnType<typeof withIndex>) => {
+    const item = roster.people.find((p) => p.name === name)!;
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <MatchRow
+          match={{ kind: 'people', key: item.name, tier: 0, item }}
+          q={item.name}
+          sources={from}
+          variant="suggestion"
+          testID="row"
+        />,
+      );
+    });
+    const place = (
+      r.root.find((n) => n.props.testID === 'row' && 'place' in n.props)
+        .props as { place: string | null }
+    ).place;
+    act(() => r.unmount());
+    return place;
+  };
+
+  test('nobody is called the member for a Victorian state seat, in either house', () => {
+    const dated = withIndex('2026-11-28');
+    expect(victorian.length).toBeGreaterThan(100);
+    for (const p of victorian)
+      expect(`${p.name}: ${placeLine(p, dated)}`).not.toMatch(/: Member for /);
+    // The seat's member in the index is its last member (s 28(2) for the
+    // Council); anyone else's line names the seat alone.
+    expect(line('Jacinta Allan', dated)).toBe(
+      'Last member for Bendigo East, Victoria',
+    );
+    expect(line('David Davis', dated)).toBe(
+      'Last member for Southern Metropolitan, Victoria',
+    );
+    expect(line('Daniel Andrews', dated)).toBe('Mulgrave, Victoria');
+    // The row draws the same line (a joined row: the roster's surname row
+    // for a sitting senator, which records a Victorian district).
+    expect(line('Watt', dated)).toBe('Burwood, Victoria');
+    expect(drawn('Watt', dated)).toBe('Burwood, Victoria');
+    // Federal members and senators for Victoria are untouched.
+    for (const p of roster.people.filter((p) => !victorian.includes(p)))
+      expect(placeLine(p, dated)).toBe(placeLine(p));
+  });
+
+  test('once the result is loaded (null) every line reads as before', () => {
+    const loaded = withIndex(null);
+    for (const p of victorian) expect(placeLine(p, loaded)).toBe(placeLine(p));
+    expect(line('Jacinta Allan', loaded)).toBe(
+      'Member for Bendigo East, Victoria',
+    );
+    expect(drawn('Watt', loaded)).toBe('Member for Burwood, Victoria');
   });
 });

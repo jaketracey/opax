@@ -25,6 +25,12 @@ import { electorateRoute } from '../../navigation/routes/your-mp';
 import { topicRoute } from '../../navigation/routes/search';
 import { openOnWeb } from '../../navigation/external';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
+import {
+  endedParliaments,
+  lastMemberFor,
+  termEndedFor,
+} from '../your-mp/term-ended';
+import { nameKey } from '../../api/ids';
 import { CachedPortrait } from '../CachedPortrait';
 import { fold, type Match } from './ranking';
 import { openSuggestedPerson } from './navigation';
@@ -58,8 +64,16 @@ const stateName = (code?: string | null) =>
  * South Wales", "Senator for Tasmania", "Former member for Grayndler, New
  * South Wales". Never "Recorded representation", never an ISO date, never
  * "Formerly" (reserved for a change of party).
+ *
+ * A state seat in a house whose Parliament's term has ended for an election
+ * (the electorates index, `termEndedFor`) has no member. The person the
+ * index lists for the seat is its last member ("Last member for Bendigo
+ * East, Victoria"); anyone else's line names the seat alone.
  */
-export function placeLine(person: Person): string | null {
+export function placeLine(
+  person: Person,
+  sources: Pick<RowSources, 'electorates'> = {},
+): string | null {
   const seat =
     (person.representation ?? []).find(
       (r) => r.jurisdiction === 'federal' && r.chamber !== 'senate_committee',
@@ -74,7 +88,25 @@ export function placeLine(person: Person): string | null {
         ? 'Senator'
         : 'Former senator';
   const where = [seat.electorate, state].filter(Boolean).join(', ');
-  return where ? `${sitting ? 'Member' : 'Former member'} for ${where}` : null;
+  if (!where) return null;
+  const index = sources.electorates?.electorates ?? [];
+  if (
+    sitting &&
+    seat.jurisdiction !== 'federal' &&
+    termEndedFor(seat, endedParliaments(index))
+  )
+    return index.some(
+      (e) =>
+        e.jurisdiction === seat.jurisdiction &&
+        e.chamber === seat.chamber &&
+        nameKey(e.name) === nameKey(seat.electorate) &&
+        e.representatives.some(
+          (r) => nameKey(r.person.name) === nameKey(person.name),
+        ),
+    )
+      ? lastMemberFor(where)
+      : where;
+  return `${sitting ? 'Member' : 'Former member'} for ${where}`;
 }
 
 /** The canonical person ID the people catalogue holds for a roster row. */
@@ -189,7 +221,10 @@ function PersonMatch({
   };
   // Identity guard: a person not yet joined to the people catalogue shows
   // no party or place (it may be a surname stub or a twin spelling).
-  const place = id ? placeLine(person) : null;
+  const place = useMemo(
+    () => (id ? placeLine(person, sources) : null),
+    [id, person, sources],
+  );
   const party = id ? person.party_now || person.party : null;
   const rowID =
     testID ?? `search-suggestion-person-${person.pid ?? person.name}`;
