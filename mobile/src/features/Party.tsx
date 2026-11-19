@@ -508,7 +508,11 @@ function PartyContent({
   // has ended: the tile counts those, never "0 sitting members".
   const last = members ? lastCount(members.ended) : 0;
   const noneSitting = !!members && members.currentCount === 0 && last > 0;
-  if (members && view.members.status !== 'error' && !named)
+  // A small party's last members are named under their row in Members, so
+  // their count is not said again as a tile either.
+  const lastNamed =
+    !!members && last > 0 && members.currentCount + last <= NAMED_MEMBERS;
+  if (members && view.members.status !== 'error' && !named && !lastNamed)
     tiles.push({
       value: formatCount(noneSitting ? last : members.currentCount),
       label: noneSitting

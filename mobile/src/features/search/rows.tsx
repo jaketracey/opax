@@ -33,6 +33,7 @@ import {
   endedParliaments,
   lastMemberFor,
   termEndedFor,
+  type EndedTerms,
 } from '../your-mp/term-ended';
 import { CachedPortrait } from '../CachedPortrait';
 import { fold, type Match } from './ranking';
@@ -153,12 +154,40 @@ function stateSeatStatus(
       fold(s.name) === fold(seat.electorate),
   );
   if (!held) return 'unknown';
-  return termEndedFor(
-    held,
-    endedParliaments(sources.electorates?.electorates ?? []),
-  )
-    ? 'last'
-    : 'current';
+  return termEndedFor(held, endedIn(sources.electorates)) ? 'last' : 'current';
+}
+
+const NONE_ENDED: EndedTerms = new Map();
+const endedByIndex = new WeakMap<ElectorateIndex, EndedTerms>();
+/**
+ * The parliaments whose term has ended for an election, built once for an
+ * index object and kept while it lives: every row of a list asks.
+ */
+function endedIn(index: ElectorateIndex | null | undefined): EndedTerms {
+  if (!index) return NONE_ENDED;
+  let ended = endedByIndex.get(index);
+  if (!ended)
+    endedByIndex.set(index, (ended = endedParliaments(index.electorates)));
+  return ended;
+}
+
+/**
+ * Who a seat's row names: "Anthony Albanese", or five names for a Council
+ * region. While the seat's house has no members because its Parliament's
+ * term has ended for an election, nobody is named as the member: "Last
+ * member: Name", "Last members: Name, Name". The answer is the Electorates
+ * list's (`electorateLines`): a district's own `dissolved_for`, and the
+ * Assembly's answer from the index for a region. Empty with nobody recorded.
+ */
+export function seatMembersLine(
+  seat: Electorate,
+  sources: Pick<RowSources, 'electorates'> = {},
+): string {
+  const names = seat.representatives.map((r) => r.person.name);
+  if (!names.length) return '';
+  const line = names.join(', ');
+  if (!termEndedFor(seat, endedIn(sources.electorates))) return line;
+  return `${names.length > 1 ? 'Last members' : 'Last member'}: ${line}`;
 }
 
 /** The canonical person ID the people catalogue holds for a roster row. */
@@ -336,9 +365,10 @@ function SeatMatch({
   q,
   variant,
   testID,
+  sources,
 }: MatchRowProps & { seat: Electorate }) {
   const follow = useRowFollow('electorate', seat.electorate_id, seat.name);
-  const member = seat.representatives.map((r) => r.person.name).join(', ');
+  const member = seatMembersLine(seat, sources);
   const secondary = [stateName(seat.state_code), member || 'No member recorded']
     .filter(Boolean)
     .join(' · ');

@@ -28,6 +28,7 @@ import { matchItem } from '../src/features/quick-search/items';
 import {
   MatchRow,
   placeLine,
+  seatMembersLine,
   serviceStatus,
 } from '../src/features/search/rows';
 import { endedParliaments } from '../src/features/your-mp/term-ended';
@@ -515,6 +516,109 @@ describe('search rows for a state seat', () => {
       expect(drawn(joined, sourcesWith(null))).toEqual({
         place: `Member for ${held.name}, Victoria`,
         quick: `Member for ${held.name}, Victoria`,
+      });
+    });
+
+    describe('a seat’s own row', () => {
+      const seatsOf = (value: string | null) => {
+        const all = indexWith(value).electorates;
+        return {
+          district: all.find(
+            (s) =>
+              s.chamber === 'vic_la' &&
+              s.status !== 'historical' &&
+              s.representatives.length === 1,
+          )!,
+          region: all.find(
+            (s) => s.chamber === 'vic_lc' && s.representatives.length > 1,
+          )!,
+          federal: all.find((s) => s.name === 'Grayndler')!,
+        };
+      };
+      const drawnSeat = (
+        seat: Electorate,
+        sources: ReturnType<typeof sourcesWith>,
+      ) => {
+        const match = {
+          kind: 'electorates',
+          key: seat.electorate_id,
+          tier: 0,
+          item: seat,
+        } as const;
+        const row = (variant: 'result' | 'suggestion') => {
+          let view!: TestRenderer.ReactTestRenderer;
+          act(() => {
+            view = TestRenderer.create(
+              <MatchRow
+                match={match}
+                q="x"
+                sources={sources}
+                variant={variant}
+                testID="seat-row"
+              />,
+            );
+          });
+          const host = view.root.find(
+            (n) => typeof n.type === 'string' && n.props.testID === 'seat-row',
+          );
+          const text = view.root
+            .findAllByType(Text)
+            .map((n) => [n.props.children].flat(Infinity).join(''))
+            .join(' | ');
+          const spoken = String(host.props.accessibilityLabel ?? '');
+          act(() => view.unmount());
+          return { text, spoken };
+        };
+        return {
+          result: row('result'),
+          suggestion: row('suggestion'),
+          quick: matchItem(match, sources).secondary,
+        };
+      };
+      const names = (seat: Electorate) =>
+        seat.representatives.map((r) => r.person.name).join(', ');
+
+      test('says "Last member:" or "Last members:" while the term has ended, drawn and spoken, in Search and quick search', () => {
+        const sources = sourcesWith('2026-11-28');
+        const { district, region, federal } = seatsOf('2026-11-28');
+        const one = drawnSeat(district, sources);
+        const line = `Last member: ${names(district)}`;
+        expect(one.quick).toBe(line);
+        for (const row of [one.result, one.suggestion]) {
+          expect(row.text).toContain(`Victoria · ${line}`);
+          expect(row.spoken).toContain(line);
+        }
+        expect(region.representatives.length).toBe(5);
+        const five = drawnSeat(region, sources);
+        const lines = `Last members: ${names(region)}`;
+        expect(five.quick).toBe(lines);
+        for (const row of [five.result, five.suggestion]) {
+          expect(row.text).toContain(`Victoria · ${lines}`);
+          expect(row.spoken).toContain(lines);
+        }
+        // A district answers by its own row with no index at hand; a
+        // region cannot.
+        expect(seatMembersLine(district)).toBe(line);
+        expect(seatMembersLine(region)).toBe(names(region));
+        // A federal seat in Victoria or anywhere keeps its member.
+        const fed = drawnSeat(federal, sources);
+        expect(fed.quick).toBe('Anthony Albanese');
+        expect(fed.result.text).toContain('New South Wales · Anthony Albanese');
+        expect(fed.result.text).not.toContain('Last member');
+      });
+
+      test('once the result is loaded (null) the rows name members again', () => {
+        const sources = sourcesWith(null);
+        const { district, region } = seatsOf(null);
+        for (const seat of [district, region]) {
+          const row = drawnSeat(seat, sources);
+          expect(row.quick).toBe(names(seat));
+          for (const drawnRow of [row.result, row.suggestion]) {
+            expect(drawnRow.text).toContain(`Victoria · ${names(seat)}`);
+            expect(drawnRow.text).not.toContain('Last member');
+            expect(drawnRow.spoken).not.toContain('Last member');
+          }
+        }
       });
     });
   });

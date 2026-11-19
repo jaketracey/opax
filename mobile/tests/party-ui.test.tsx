@@ -720,10 +720,10 @@ describe('while the Victorian Parliament’s term has ended for an election', ()
     expect(has(r, 'party-current-count')).toBe(false);
     expect(drawn(r)).not.toMatch(/\bMember for\b/);
     expect(drawn(r)).not.toMatch(/\b0 sitting members?\b/);
-    // The headline tile counts the last members.
-    expect(
-      tiles(r).find((t) => t.testID === 'party-figure-members'),
-    ).toMatchObject({ value: '2', label: 'last members' });
+    // The two are named below, so no tile counts them again.
+    expect(tiles(r).some((t) => t.testID === 'party-figure-members')).toBe(
+      false,
+    );
     // One row, drawn and spoken in the same words, opening the People list
     // without the sitting filter.
     const row = lastRow(r);
@@ -763,15 +763,64 @@ describe('while the Victorian Parliament’s term has ended for an election', ()
     act(() => r.unmount());
   });
 
-  test('one last member is singular, on the row and the tile', async () => {
+  test('one last member is singular', async () => {
     const r = await page('Animal Justice Party', '2026-11-28');
     expect(lastRow(r).props.title).toBe(
       '1 last member of the Victorian Parliament',
     );
+    expect(tiles(r).some((t) => t.testID === 'party-figure-members')).toBe(
+      false,
+    );
+    act(() => r.unmount());
+  });
+
+  test('nobody sitting and more last members than are named: the tile counts them, never "0 sitting members"', async () => {
+    // No pinned party is in this state: Labor's page with its sitting
+    // members taken away, leaving its Victorian last members.
+    const then = (await apiWith('2026-11-28').partyPage('Labor')).data!;
+    const data = then.members.data!;
+    const lost = new Set(data.ended.map((m) => m.slug)).size;
+    const noneSitting = (ended: typeof data.ended) => ({
+      stale: false,
+      data: {
+        ...then,
+        members: {
+          ...then.members,
+          data: { ...data, current: [], currentCount: 0, ended },
+        },
+      },
+    });
+    jest
+      .mocked(runtime.partyPage)
+      .mockResolvedValueOnce(noneSitting(data.ended));
+    const r = await render('Labor');
     expect(
       tiles(r).find((t) => t.testID === 'party-figure-members'),
-    ).toMatchObject({ value: '1', label: 'last member' });
+    ).toMatchObject({ value: formatCount(lost), label: 'last members' });
+    expect(has(r, 'party-current-count')).toBe(false);
+    expect(drawn(r)).not.toMatch(/\b0 sitting members?\b/);
+    expect(rowsOf(r, 'party-last-')).toHaveLength(0);
     act(() => r.unmount());
+    // Six is the fewest that are not named.
+    const six = data.ended
+      .filter((m, i, all) => all.findIndex((o) => o.slug === m.slug) === i)
+      .slice(0, 6);
+    jest.mocked(runtime.partyPage).mockResolvedValueOnce(noneSitting(six));
+    const few = await render('Labor');
+    expect(
+      tiles(few).find((t) => t.testID === 'party-figure-members'),
+    ).toMatchObject({ value: '6', label: 'last members' });
+    act(() => few.unmount());
+    // Five are named under their row, so the tile goes.
+    jest
+      .mocked(runtime.partyPage)
+      .mockResolvedValueOnce(noneSitting(six.slice(0, 5)));
+    const named = await render('Labor');
+    expect(tiles(named).some((t) => t.testID === 'party-figure-members')).toBe(
+      false,
+    );
+    expect(rowsOf(named, 'party-last-')).toHaveLength(5);
+    act(() => named.unmount());
   });
 
   test('a national party counts its sitting members without the Victorian ones, and says the rest in one row', async () => {
