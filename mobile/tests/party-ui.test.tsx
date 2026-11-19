@@ -687,16 +687,14 @@ describe('while the Victorian Parliament’s term has ended for an election', ()
       .findAllByType(PersonRow)
       .filter((n) => String(n.props.testID ?? '').startsWith(prefix));
   const tiles = (r: TestRenderer.ReactTestRenderer) =>
-    r.root
-      .findAllByType(StatStrip)
-      .flatMap(
-        (strip) =>
-          strip.props.tiles as {
-            testID?: string;
-            value: string;
-            label: string;
-          }[],
-      );
+    r.root.findAllByType(StatStrip).flatMap(
+      (strip) =>
+        strip.props.tiles as {
+          testID?: string;
+          value: string;
+          label: string;
+        }[],
+    );
 
   test('a Victorian-only party names nobody as sitting; its people are listed as last members', async () => {
     const r = await page('Legalise Cannabis Victoria', '2026-11-28');
