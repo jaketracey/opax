@@ -683,8 +683,8 @@ export function Screen({
   // legibility settings, read by the fade itself; a rail root's search
   // field) covers its own content.
   // A pushed page under the stack's clear bar fades the same way, beside a
-  // vertical bar too: the title is pinned there (`TitlePin`) and UIKit draws
-  // no edge under it. A detail pane has no bar of its own.
+  // vertical bar too: the title is pinned there (`TitlePin`), and this fade
+  // is the edge under it. A detail pane has no bar of its own.
   const barFade =
     clearBars &&
     Platform.OS === 'ios' &&

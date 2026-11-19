@@ -91,8 +91,8 @@ export function sharedScreens(
  *
  * Two money lists with no field are here too (Largest grants, and a seat's
  * grants on the Grants route). Beside a vertical bar the title is pinned
- * (`TitlePin`) and UIKit draws no edge under it; these lists draw no fade of
- * their own there, so their rows ran through the title. Under the solid bar
+ * (`TitlePin`) and the page's own fade is the edge under it; these lists draw
+ * none there, so their rows ran through the title. Under the solid bar
  * the rows end at the title's foot.
  */
 const railSearchRoutes = new Set([
