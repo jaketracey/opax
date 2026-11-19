@@ -376,19 +376,16 @@ describe.each(poses.map((p) => [p.name, p] as const))('%s', (_name, p) => {
  * on the rail: there the root does it from JS.
  */
 describe('a tab pressed again beside a vertical bar', () => {
-  /** The tab navigator: Today's stack is its first tab. */
-  function tabsWith(selected: number) {
+  /**
+   * The stack's parent: its own tab's screen, whose listeners hear presses
+   * on that tab alone. `focused` is whether that tab is the selected one.
+   */
+  function tabsWith(focused: boolean) {
     const listeners: ((event: object) => void)[] = [];
     return {
       listeners,
-      getState: () => ({
-        type: 'tab',
-        index: selected,
-        routes: [
-          { key: 'tab-today', state: { key: STACK_KEY } },
-          { key: 'tab-bills', state: { key: 'stack-bills' } },
-        ],
-      }),
+      getState: () => ({ type: 'tab' }),
+      isFocused: () => focused,
       addListener: (name: string, listener: (event: object) => void) => {
         if (name === 'tabPress') listeners.push(listener);
         return () => listeners.splice(listeners.indexOf(listener), 1);
@@ -410,58 +407,53 @@ describe('a tab pressed again beside a vertical bar', () => {
 
   test.each([
     [
-      'its own tab, already selected, nothing pushed',
+      'its tab pressed while selected, nothing pushed',
       'trailing',
-      0,
+      true,
       false,
-      'tab-today',
       {},
       1,
     ],
-    ['the leading rail', 'leading', 0, false, 'tab-today', {}, 1],
-    ['another tab pressed', 'trailing', 0, false, 'tab-bills', {}, 0],
+    ['the leading rail', 'leading', true, false, {}, 1],
     [
       'its tab pressed from another tab (a switch)',
       'trailing',
-      1,
       false,
-      'tab-today',
+      false,
       {},
       0,
     ],
     [
       'a page pushed over the root (the press pops it)',
       'trailing',
-      0,
       true,
-      'tab-today',
+      true,
       {},
       0,
     ],
     [
       'a press the system prevented',
       'trailing',
-      0,
+      true,
       false,
-      'tab-today',
       { isPrevented: true },
       0,
     ],
-  ] as const)('%s', (_what, edge, selected, pushed, target, data, calls) => {
+  ] as const)('%s', (_what, edge, focused, pushed, data, calls) => {
     mockEdge = edge;
-    const tabs = tabsWith(selected);
+    const tabs = tabsWith(focused);
     const onReselect = jest.fn();
     render(
       <Stack pushed={pushed} tabs={tabs}>
         <Root onReselect={onReselect} />
       </Stack>,
     );
-    press(tabs, { target, data });
+    press(tabs, { data });
     expect(onReselect).toHaveBeenCalledTimes(calls);
   });
 
   test('off the rail and on Android it listens for nothing: the native effect and Android’s own listener stand', () => {
-    const tabs = tabsWith(0);
+    const tabs = tabsWith(true);
     const onReselect = jest.fn();
     const tree = render(
       <Stack pushed={false} tabs={tabs}>
@@ -484,7 +476,7 @@ describe('a tab pressed again beside a vertical bar', () => {
     mockEdge = 'trailing';
     const scrollTo = jest.spyOn(ScrollView.prototype, 'scrollTo');
     scrollTo.mockClear();
-    const tabs = tabsWith(0);
+    const tabs = tabsWith(true);
     const tree = render(
       <Stack pushed={false} tabs={tabs}>
         {layout(
@@ -497,7 +489,7 @@ describe('a tab pressed again beside a vertical bar', () => {
     );
     const scroll = () => tree.root.findByType(ScrollView);
     expect(scroll().props.scrollToOverflowEnabled).toBe(false);
-    press(tabs, { target: 'tab-today', data: {} });
+    press(tabs, { data: {} });
     // The clear bar lies over the scroll view: its top is minus the bar.
     expect(scrollTo).toHaveBeenCalledTimes(1);
     expect(scrollTo).toHaveBeenLastCalledWith({ y: -HEADER, animated: true });
@@ -511,7 +503,7 @@ describe('a tab pressed again beside a vertical bar', () => {
 
   test('a root’s own list (Bills) goes to 0, below its solid rail bar', () => {
     mockEdge = 'trailing';
-    const tabs = tabsWith(0);
+    const tabs = tabsWith(true);
     const scrollToOffset = jest.fn();
     function List() {
       useAndroidRootScroll({ current: { scrollToOffset } });
@@ -522,7 +514,7 @@ describe('a tab pressed again beside a vertical bar', () => {
         <List />
       </Stack>,
     );
-    press(tabs, { target: 'tab-today', data: {} });
+    press(tabs, { data: {} });
     expect(scrollToOffset).toHaveBeenCalledTimes(1);
     expect(scrollToOffset).toHaveBeenLastCalledWith({
       offset: 0,

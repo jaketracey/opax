@@ -80,16 +80,11 @@ export function titlePinLayout({
   );
 }
 
-type TabPress = {
-  target?: string;
-  data?: { isPrevented?: boolean };
-};
-type TabsNavigation = {
-  getState?: () => {
-    type?: string;
-    index: number;
-    routes: { key: string; state?: { key?: string } }[];
-  };
+type TabPress = { data?: { isPrevented?: boolean } };
+/** The tab screen that holds the stack: its listeners hear its own tab. */
+type TabScreenNavigation = {
+  getState?: () => { type?: string };
+  isFocused?: () => boolean;
   addListener?: (
     name: never,
     listener: (event: TabPress) => void,
@@ -119,22 +114,17 @@ export function useRailRootReselect(onReselect: () => void, enabled = true) {
   const key = route?.key;
   useEffect(() => {
     if (!active || !navigation || !key) return;
-    const tabs = navigation.getParent?.() as TabsNavigation | undefined;
-    if (tabs?.getState?.().type !== 'tab') return;
-    return tabs.addListener?.('tabPress' as never, (event) => {
+    // The stack's parent is its own tab's screen: a listener there hears
+    // presses on that tab alone. (The tab route's nested `state` cannot name
+    // the stack: it is unset until something navigates inside the tab.)
+    const tab = navigation.getParent?.() as TabScreenNavigation | undefined;
+    if (tab?.getState?.().type !== 'tab') return;
+    return tab.addListener?.('tabPress' as never, (event) => {
       if (event.data?.isPrevented) return;
-      const stack = navigation.getState();
-      const tabState = tabs.getState!();
-      const owner = tabState.routes.find(
-        (item) => item.state?.key === stack.key,
-      );
-      if (
-        !owner ||
-        owner.key !== event.target ||
-        tabState.routes[tabState.index]?.key !== owner.key
-      )
-        return;
+      // Pressed from another tab: a switch, which leaves the page where it is.
+      if (!tab.isFocused?.()) return;
       // The root itself, with nothing pushed over it.
+      const stack = navigation.getState();
       if (stack.index !== 0 || stack.routes[0]?.key !== key) return;
       requestAnimationFrame(() => handler.current());
     });
