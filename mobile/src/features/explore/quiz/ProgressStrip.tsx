@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { useReduceMotionSetting } from '../../../design/accessibility';
 import { Text } from '../../../design/text';
-import { colors, motion, rhythm } from '../../../design/tokens';
+import { motion, rhythm } from '../../../design/tokens';
+import { makeStyles, useColors } from '../../../design/use-colors';
 import { counted } from '../../../design/format';
 import { progressLine } from '../quiz-model';
 
@@ -31,6 +32,9 @@ export function ProgressStrip({
   /** Whether each answered question was right, in order. */
   results?: readonly boolean[];
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   return (
     <View
       accessible
@@ -75,6 +79,9 @@ function Segment({
   ground: ColorValue;
   testID: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const reduced = useReduceMotionSetting();
   const [was, setWas] = useState(right);
   const [filling, setFilling] = useState(false);
@@ -117,16 +124,18 @@ function Segment({
   );
 }
 
-const styles = StyleSheet.create({
-  block: { gap: rhythm.tight },
-  segments: { flexDirection: 'row', gap: 4 },
-  segment: {
-    flex: 1,
-    height: 4,
-    borderRadius: 2,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  fill: { backgroundColor: colors.bronzeInk, transformOrigin: 'left center' },
-  line: { alignSelf: 'flex-end' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    block: { gap: rhythm.tight },
+    segments: { flexDirection: 'row', gap: 4 },
+    segment: {
+      flex: 1,
+      height: 4,
+      borderRadius: 2,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    fill: { backgroundColor: colors.bronzeInk, transformOrigin: 'left center' },
+    line: { alignSelf: 'flex-end' },
+  }),
+);

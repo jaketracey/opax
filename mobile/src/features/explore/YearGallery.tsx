@@ -10,7 +10,8 @@ import { router } from 'expo-router';
 import { Text } from '../../design/primitives';
 import { presentSource } from '../../navigation/sheets';
 import { explorePhotoRoute } from '../../navigation/routes/explore';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { Picture } from './Picture';
 import type { YearPicture } from './pictures';
@@ -90,6 +91,8 @@ export function YearGallery({
   photos: readonly YearPicture[];
   initial?: string | null;
 }) {
+  const colors = useColors();
+
   const [width, setWidth] = useState(0);
   const [page, setPage] = useState(() => photoIndex(photos, initial));
   const scroll = useRef<ScrollView>(null);

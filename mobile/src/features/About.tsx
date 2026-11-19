@@ -15,7 +15,8 @@ import {
   SourceLine,
   Text,
 } from '../design/primitives';
-import { colors, rhythm } from '../design/tokens';
+import { rhythm } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 import { coverageRoute } from '../navigation/routes/reference';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { voiceLinked } from '../voice/linked';
@@ -32,6 +33,8 @@ import { reference } from './methods/repository';
  * figure it details. Pull to refresh reads the coverage again.
  */
 export default function About() {
+  const colors = useColors();
+
   const summary = useRead(reference.summary);
   const titleRef = useRef<View>(null);
   const bar = useTitleOnScroll(titleRef, text.barTitle);
@@ -52,6 +55,8 @@ export default function About() {
           refreshing={summary.refreshing}
           onRefresh={summary.refresh}
           tintColor={colors.navy}
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
         />
       }
     >

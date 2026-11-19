@@ -1,7 +1,8 @@
 import { type RefObject } from 'react';
 import { Image, StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 import { Heading, Text } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { aboutCopy as text } from './copy';
 
 /**
@@ -15,6 +16,8 @@ export function AboutHeader({
   titleRef: RefObject<View | null>;
   onTitleLayout: (event: LayoutChangeEvent) => void;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.header} testID="about-header">
       <Image
@@ -37,17 +40,19 @@ export function AboutHeader({
   );
 }
 
-const styles = StyleSheet.create({
-  header: { alignItems: 'center', gap: rhythm.block },
-  // A 64 pt icon with the app icon's continuous corner and a 1 pt ring.
-  icon: {
-    width: 64,
-    height: 64,
-    borderRadius: 14,
-    borderCurve: 'continuous',
-    borderWidth: 1,
-    borderColor: colors.dividerSubtle,
-  },
-  titles: { alignItems: 'center', gap: rhythm.line, alignSelf: 'stretch' },
-  center: { textAlign: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    header: { alignItems: 'center', gap: rhythm.block },
+    // A 64 pt icon with the app icon's continuous corner and a 1 pt ring.
+    icon: {
+      width: 64,
+      height: 64,
+      borderRadius: 14,
+      borderCurve: 'continuous',
+      borderWidth: 1,
+      borderColor: colors.dividerSubtle,
+    },
+    titles: { alignItems: 'center', gap: rhythm.line, alignSelf: 'stretch' },
+    center: { textAlign: 'center' },
+  }),
+);

@@ -4,16 +4,6 @@
 // files are converted; the rule is then an error for them, as it already is
 // for the shared design, navigation, launch and route layout files.
 module.exports = [
-  // Lane A: Today, edition, Explore, Learn, Welcome.
-  'src/features/About.tsx',
-  'src/features/Today.tsx',
-  'src/features/about/**',
-  'src/features/edition/**',
-  'src/features/explore/**',
-  'src/features/learn/**',
-  'src/features/newcomer/**',
-  'src/features/today/**',
-  'src/features/welcome/**',
   // Lane B: People and Parliament.
   'src/features/Electorate.tsx',
   'src/features/Party.tsx',

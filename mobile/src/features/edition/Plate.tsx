@@ -24,12 +24,12 @@ import { Icon } from '../../design/icon';
 import { Portrait } from '../../design/people';
 import { Text } from '../../design/text';
 import {
-  colors,
   interfaceFonts as fonts,
   motion,
   radii,
   rhythm,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import type { YearPicture } from '../explore/pictures';
 import {
   editionInk,
@@ -67,6 +67,9 @@ export function Plate({
   titleRef?: Ref<View>;
   testID?: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const large = useAccessibilitySize();
   const ink = editionInk(edition);
   const person = edition.kind === 'politician' ? editionPerson(edition) : null;
@@ -245,6 +248,8 @@ export function PlateArt({
   still?: boolean;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const large = useAccessibilitySize();
   const { figures, events, division, bars } = edition.facts;
   if (
@@ -417,6 +422,8 @@ function StageTimeline({
   still: boolean;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const reduce = useReduceMotionSetting();
   // Decided once, at mount: a re-render never restarts or skips the draw.
   const [draws] = useState(
@@ -489,6 +496,8 @@ function TimelineStop({
   settle: SharedValue<number>;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const style = useAnimatedStyle(() => {
     const look = timelineStop(progress.value, settle.value, at, last);
     return { opacity: look.opacity, transform: [{ scale: look.scale }] };
@@ -506,6 +515,8 @@ export function ArchivePhotograph({
   onBand?: boolean;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const [image, setImage] = useState<{ file: string; uri: string } | null>(
     null,
   );
@@ -546,65 +557,67 @@ export function ArchivePhotograph({
   );
 }
 
-const styles = StyleSheet.create({
-  plate: { padding: 20, gap: rhythm.line },
-  rounded: { borderRadius: radii.container, borderCurve: 'continuous' },
-  kicker: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
-  kickerText: { flex: 1, fontWeight: '600' },
-  heading: { gap: 12, marginTop: 4 },
-  person: { flexDirection: 'row', alignItems: 'center' },
-  personDetail: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  title: { flex: 1 },
-  fixedTitle: {
-    fontFamily: fonts.serifBold,
-    fontWeight: '700',
-    // a11y-ok(raw-font-size): from AX1 up the edition card's title holds
-    // 34 pt (recordHeading's AX1 size) by design, so a long record name
-    // stays under half the screen at AX5 (Today spec, refinement 3).
-    fontSize: 34,
-    lineHeight: 44,
-    color: colors.onBand,
-  },
-  // The plate already contributes its 4 pt sibling gap to the 16 pt art spacing.
-  art: { marginTop: rhythm.block - rhythm.line },
-  stageArt: { paddingTop: 4 },
-  rail: {
-    position: 'absolute',
-    top: 8,
-    left: 5,
-    right: 5,
-    height: 2,
-    backgroundColor: colors.onBandSoft,
-    // It draws from the first stop's centre.
-    transformOrigin: 'left',
-  },
-  dots: { flexDirection: 'row', justifyContent: 'space-between' },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    borderCurve: 'continuous',
-    backgroundColor: colors.onBand,
-  },
-  ends: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 16,
-    marginTop: 8,
-  },
-  end: { flex: 1 },
-  latest: { textAlign: 'right' },
-  bars: { gap: 8 },
-  barLabel: { flexDirection: 'row', gap: 8 },
-  share: {
-    backgroundColor: colors.onBand,
-    borderRadius: 2,
-    borderCurve: 'continuous',
-  },
-  photo: {
-    width: '100%',
-    aspectRatio: 16 / 10,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    plate: { padding: 20, gap: rhythm.line },
+    rounded: { borderRadius: radii.container, borderCurve: 'continuous' },
+    kicker: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
+    kickerText: { flex: 1, fontWeight: '600' },
+    heading: { gap: 12, marginTop: 4 },
+    person: { flexDirection: 'row', alignItems: 'center' },
+    personDetail: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    title: { flex: 1 },
+    fixedTitle: {
+      fontFamily: fonts.serifBold,
+      fontWeight: '700',
+      // a11y-ok(raw-font-size): from AX1 up the edition card's title holds
+      // 34 pt (recordHeading's AX1 size) by design, so a long record name
+      // stays under half the screen at AX5 (Today spec, refinement 3).
+      fontSize: 34,
+      lineHeight: 44,
+      color: colors.onBand,
+    },
+    // The plate already contributes its 4 pt sibling gap to the 16 pt art spacing.
+    art: { marginTop: rhythm.block - rhythm.line },
+    stageArt: { paddingTop: 4 },
+    rail: {
+      position: 'absolute',
+      top: 8,
+      left: 5,
+      right: 5,
+      height: 2,
+      backgroundColor: colors.onBandSoft,
+      // It draws from the first stop's centre.
+      transformOrigin: 'left',
+    },
+    dots: { flexDirection: 'row', justifyContent: 'space-between' },
+    dot: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      borderCurve: 'continuous',
+      backgroundColor: colors.onBand,
+    },
+    ends: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 16,
+      marginTop: 8,
+    },
+    end: { flex: 1 },
+    latest: { textAlign: 'right' },
+    bars: { gap: 8 },
+    barLabel: { flexDirection: 'row', gap: 8 },
+    share: {
+      backgroundColor: colors.onBand,
+      borderRadius: 2,
+      borderCurve: 'continuous',
+    },
+    photo: {
+      width: '100%',
+      aspectRatio: 16 / 10,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+    },
+  }),
+);

@@ -6,7 +6,8 @@ import type { RowMenuAction } from '../../design/row-link';
 import { LoadingStatus } from '../../design/states';
 import { formatDate } from '../../design/format';
 import { Text } from '../../design/text';
-import { colors, radii, rhythm } from '../../design/tokens';
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { presentSheet } from '../../navigation/sheets';
@@ -68,6 +69,8 @@ function Kicker({
   ink: 'tint' | 'votes';
   children: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.kicker}>
       <Icon
@@ -125,6 +128,8 @@ export function ArchiveCard({
   /** Today in Sydney: a photograph from this year is not "the archive". */
   today?: SydneyDate;
 }) {
+  const styles = useStyles();
+
   const large = useAccessibilitySize();
   const attribution = archiveAttribution(picture);
   const { kicker, figure } = archiveLabel(year, picture.date, today);
@@ -197,6 +202,8 @@ function Bone({
   variant: 'footnote' | 'tileFigure' | 'secondary';
   width: `${number}%`;
 }) {
+  const styles = useStyles();
+
   return (
     <View>
       <Text variant={variant} numberOfLines={1} style={styles.boneLine}>
@@ -214,6 +221,8 @@ function Bone({
  * it do not move (they were pushed down about 150 pt by a shorter stand-in).
  */
 export function ArchiveSkeleton() {
+  const styles = useStyles();
+
   return (
     <LoadingStatus
       accessibilityLabel="Loading the archive photograph"
@@ -251,6 +260,8 @@ export function ArchiveSkeleton() {
  * as before.
  */
 export function QuestionCard({ question }: { question: FrontPageQuestion }) {
+  const styles = useStyles();
+
   return (
     <Card
       testID="today-question"
@@ -287,6 +298,8 @@ export function DailyPair({
   today: SydneyDate;
   attempt: number;
 }) {
+  const styles = useStyles();
+
   const read = useTodayRead(
     'pictures',
     // The manifest is optional: a failed read collapses the archive card.
@@ -333,31 +346,33 @@ export function DailyPair({
   );
 }
 
-const styles = StyleSheet.create({
-  pair: { gap: 12, alignItems: 'stretch' },
-  // The skeleton's wrappers pass the row's height on to its card, so beside
-  // a taller question card it ends where the loaded card will.
-  fill: { flexGrow: 1 },
-  // Side by side, each cell is as tall as the row, and its card fills it.
-  cell: { alignSelf: 'stretch', flexGrow: 1 },
-  // The photograph's frame, as Picture draws it before the photo arrives.
-  boneFrame: {
-    width: '100%',
-    aspectRatio: 4 / 3,
-    backgroundColor: colors.sunken,
-  },
-  boneLine: { opacity: 0 },
-  boneBar: {
-    position: 'absolute',
-    left: 0,
-    top: 3,
-    bottom: 3,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  card: { flexGrow: 1, flexShrink: 1 },
-  words: { padding: 12, gap: rhythm.line },
-  question: { gap: rhythm.tight },
-  kicker: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    pair: { gap: 12, alignItems: 'stretch' },
+    // The skeleton's wrappers pass the row's height on to its card, so beside
+    // a taller question card it ends where the loaded card will.
+    fill: { flexGrow: 1 },
+    // Side by side, each cell is as tall as the row, and its card fills it.
+    cell: { alignSelf: 'stretch', flexGrow: 1 },
+    // The photograph's frame, as Picture draws it before the photo arrives.
+    boneFrame: {
+      width: '100%',
+      aspectRatio: 4 / 3,
+      backgroundColor: colors.sunken,
+    },
+    boneLine: { opacity: 0 },
+    boneBar: {
+      position: 'absolute',
+      left: 0,
+      top: 3,
+      bottom: 3,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    card: { flexGrow: 1, flexShrink: 1 },
+    words: { padding: 12, gap: rhythm.line },
+    question: { gap: rhythm.tight },
+    kicker: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  }),
+);

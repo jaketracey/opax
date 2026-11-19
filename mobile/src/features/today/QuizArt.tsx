@@ -5,7 +5,7 @@ import {
   useIncreaseContrast,
 } from '../../design/accessibility';
 import { useDrawnColour } from '../../design/engraving';
-import { colors } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 
 /**
  * The quiz card's header: a field of dots with a question mark lit in it,
@@ -82,6 +82,8 @@ export function QuizArt({
 }: {
   testID?: string;
 }) {
+  const styles = useStyles();
+
   // Hex for the drawing, following the appearance and Increase Contrast as
   // `colors` does natively; the ground is a view, so it takes the role.
   const navy = useDrawnColour('navy');
@@ -123,13 +125,15 @@ export function QuizArt({
   );
 }
 
-const styles = StyleSheet.create({
-  // The archive photograph's frame: the card's full width, 4:3, square
-  // corners (the card clips its own).
-  frame: {
-    width: '100%',
-    aspectRatio: QUIZ_ART_RATIO,
-    overflow: 'hidden',
-    backgroundColor: colors.navyWash,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    // The archive photograph's frame: the card's full width, 4:3, square
+    // corners (the card clips its own).
+    frame: {
+      width: '100%',
+      aspectRatio: QUIZ_ART_RATIO,
+      overflow: 'hidden',
+      backgroundColor: colors.navyWash,
+    },
+  }),
+);

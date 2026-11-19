@@ -3,7 +3,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAccessibilitySize } from '../../../design/accessibility';
 import { Button } from '../../../design/controls';
 import { designFlags } from '../../../design/flags';
-import { colors, rhythm } from '../../../design/tokens';
+import { rhythm } from '../../../design/tokens';
+import { useColors } from '../../../design/use-colors';
 
 export interface FooterAction {
   label: string;
@@ -43,6 +44,8 @@ export function QuizFooter({
   /** The content column's width, so the capsule lines up with the rows. */
   width?: number;
 }) {
+  const colors = useColors();
+
   const toolbar = useToolbarFooter();
   if (!action || toolbar !== (placement === 'toolbar')) return null;
   const button = (

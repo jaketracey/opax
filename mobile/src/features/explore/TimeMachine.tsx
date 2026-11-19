@@ -12,7 +12,8 @@ import {
   Skeleton,
   copy,
 } from '../../design/primitives';
-import { colors, radii, rhythm } from '../../design/tokens';
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { scrollToTop } from '../../design/scroll-to-top';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { isOffline } from '../CatalogState';
@@ -136,6 +137,9 @@ function YearPage({
   onYear: (year: number) => void;
   scrollRef: React.RefObject<ScrollView | null>;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const loadYear = useCallback(
     (signal?: AbortSignal) => explore.year(year, signal),
     [year],
@@ -177,7 +181,12 @@ function YearPage({
       scrollToOverflowEnabled
       offline={offline && !nothing ? offline : null}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={refresh}
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
+        />
       }
     >
       <YearHeader
@@ -260,14 +269,16 @@ function YearPage({
     </Screen>
   );
 }
-const styles = StyleSheet.create({
-  photoLoading: { gap: rhythm.line },
-  // The photograph's frame first, so the page does not jump when it arrives.
-  photoFrame: {
-    width: '100%',
-    aspectRatio: 4 / 3,
-    backgroundColor: colors.sunken,
-    borderRadius: radii.thumb,
-    borderCurve: 'continuous',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    photoLoading: { gap: rhythm.line },
+    // The photograph's frame first, so the page does not jump when it arrives.
+    photoFrame: {
+      width: '100%',
+      aspectRatio: 4 / 3,
+      backgroundColor: colors.sunken,
+      borderRadius: radii.thumb,
+      borderCurve: 'continuous',
+    },
+  }),
+);

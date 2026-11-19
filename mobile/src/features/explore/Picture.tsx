@@ -16,10 +16,8 @@ import { Icon } from '../../design/icon';
 import { InlineError } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, radii, rhythm } from '../../design/tokens';
-
-/** A photo’s black ground in every scheme. */
-export const PHOTO_BLACK = colors.photoGround;
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 
 /**
  * One year photograph in its frame. Native Image reads only a device cache
@@ -47,6 +45,9 @@ export function Picture({
   /** `mark`: an unavailable preview keeps its frame, with a faint mark. */
   failure?: 'quiet' | 'inline' | 'mark';
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const [retry, setRetry] = useState(0);
   const [saved, setSaved] = useState<{
     file: string;
@@ -114,7 +115,9 @@ export function Picture({
       style={{
         width: '100%',
         aspectRatio: ratio,
-        backgroundColor: ground === 'black' ? PHOTO_BLACK : colors.sunken,
+        // A photo’s black ground is the same in every scheme.
+        backgroundColor:
+          ground === 'black' ? colors.photoGround : colors.sunken,
         borderRadius: rounded ? radii.thumb : 0,
         borderCurve: 'continuous',
         overflow: 'hidden',
@@ -178,24 +181,26 @@ export function Picture({
     </View>
   );
 }
-const styles = StyleSheet.create({
-  onBlack: { color: colors.onBand, textAlign: 'center' },
-  retry: {
-    minHeight: 48,
-    minWidth: 48,
-    justifyContent: 'center',
-    paddingHorizontal: rhythm.block,
-  },
-  failed: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: rhythm.tight,
-    padding: rhythm.block,
-  },
-  center: { textAlign: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    onBlack: { color: colors.onBand, textAlign: 'center' },
+    retry: {
+      minHeight: 48,
+      minWidth: 48,
+      justifyContent: 'center',
+      paddingHorizontal: rhythm.block,
+    },
+    failed: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: rhythm.tight,
+      padding: rhythm.block,
+    },
+    center: { textAlign: 'center' },
+  }),
+);

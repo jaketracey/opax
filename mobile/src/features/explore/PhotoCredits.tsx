@@ -15,7 +15,8 @@ import {
   type SourceOriginal,
 } from '../../design/primitives';
 import { StatePageProvider } from '../../design/states';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { useRead } from '../methods/read';
 import {
   CreditRow,
@@ -62,6 +63,8 @@ const loadPictures = (_refresh: boolean, signal?: AbortSignal) =>
  * on Wikimedia Commons. The bar search finds a year, caption or name.
  */
 export function PhotoCreditsList() {
+  const styles = useStyles();
+
   const column = useScreenColumn();
   const foot = useFloatingBarFoot();
   const search = useBarSearch(text.searchPhotos);
@@ -174,15 +177,17 @@ export function PhotoCreditsList() {
 }
 export default PhotoCreditsList;
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: { paddingTop: rhythm.block, paddingBottom: rhythm.section },
-  year: {
-    flexDirection: 'row',
-    gap: rhythm.tight,
-    paddingTop: rhythm.group,
-    paddingBottom: rhythm.groupHeader,
-  },
-  grow: { flex: 1 },
-  footer: { paddingTop: rhythm.group },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: { paddingTop: rhythm.block, paddingBottom: rhythm.section },
+    year: {
+      flexDirection: 'row',
+      gap: rhythm.tight,
+      paddingTop: rhythm.group,
+      paddingBottom: rhythm.groupHeader,
+    },
+    grow: { flex: 1 },
+    footer: { paddingTop: rhythm.group },
+  }),
+);

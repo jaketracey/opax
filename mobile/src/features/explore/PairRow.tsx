@@ -11,7 +11,8 @@ import {
   useAccessibilitySize,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { topicRoute } from '../../navigation/routes/search';
 import { speechesText, topicLabel, type Pairing } from './model';
@@ -99,6 +100,8 @@ export function pairMoneyRoute(party: string, industry: string | undefined) {
 
 /** A 6 pt ink bar on the line's flexible middle; nothing for zero. */
 function Bar({ ratio, full }: { ratio: number; full: boolean }) {
+  const styles = useStyles();
+
   return (
     <View
       style={full ? styles.trackFull : styles.track}
@@ -131,6 +134,9 @@ export function PairRow({
   moneyMax: number;
   shareMax: number;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   const moneyHref =
     row.money > 0
@@ -237,24 +243,26 @@ export function PairRow({
     </View>
   );
 }
-const styles = StyleSheet.create({
-  block: { paddingVertical: rhythm.tight },
-  header: { minHeight: 24, justifyContent: 'center' },
-  line: {
-    minHeight: minimumTarget,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  stack: { flex: 1, gap: rhythm.line, paddingVertical: rhythm.line },
-  head: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
-  track: { flex: 1, height: 6, justifyContent: 'center' },
-  trackFull: { alignSelf: 'stretch', height: 6 },
-  bar: {
-    height: 6,
-    backgroundColor: colors.ink,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    block: { paddingVertical: rhythm.tight },
+    header: { minHeight: 24, justifyContent: 'center' },
+    line: {
+      minHeight: minimumTarget,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    stack: { flex: 1, gap: rhythm.line, paddingVertical: rhythm.line },
+    head: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+    grow: { flex: 1 },
+    track: { flex: 1, height: 6, justifyContent: 'center' },
+    trackFull: { alignSelf: 'stretch', height: 6 },
+    bar: {
+      height: 6,
+      backgroundColor: colors.ink,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+    },
+  }),
+);

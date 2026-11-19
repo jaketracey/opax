@@ -17,11 +17,11 @@ import { Icon } from '../../design/icon';
 import { useKeyScope } from '../../design/keyboard';
 import { Text } from '../../design/text';
 import {
-  colors,
   contentSizeCategory,
   isAccessibilityCategory,
   rhythm,
 } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
@@ -75,6 +75,8 @@ export function WelcomePage({
   short?: boolean;
   launch?: boolean;
 }) {
+  const colors = useColors();
+
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { fontScale, width, height } = useWindowDimensions();

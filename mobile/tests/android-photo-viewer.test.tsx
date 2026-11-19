@@ -57,7 +57,6 @@ jest.mock('../src/design/keyboard', () => ({ useKeyCommand: () => {} }));
 jest.mock('../src/design/menu', () => ({ showMenu: jest.fn() }));
 jest.mock('../src/navigation/external', () => ({ openSource: jest.fn() }));
 jest.mock('../src/features/explore/Picture', () => ({
-  PHOTO_BLACK: '#000000',
   Picture: () => null,
 }));
 jest.mock('../src/features/explore/YearGallery', () => ({

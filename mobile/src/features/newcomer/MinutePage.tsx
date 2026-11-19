@@ -6,7 +6,8 @@ import { Button } from '../../design/controls';
 import { Screen } from '../../design/layout';
 import { symbols } from '../../design/symbols';
 import { Heading, Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { headerItems } from '../../navigation/chrome';
 import { RouteOptions } from '../../navigation/preview';
 import { welcomeSeatRoute } from '../../navigation/routes';
@@ -54,6 +55,9 @@ function Drawing({
  * hidden from VoiceOver. Nothing on the page moves.
  */
 export function MinutePage({ mode }: { mode: 'welcome' | 'guide' }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const window = useWindowDimensions();
   const large = useAccessibilitySize();
   const seat = useSeat();
@@ -165,27 +169,29 @@ export function MinutePage({ mode }: { mode: 'welcome' | 'guide' }) {
   );
 }
 
-const styles = StyleSheet.create({
-  head: { gap: rhythm.tight },
-  ideas: { gap: rhythm.section },
-  idea: {
-    gap: rhythm.block,
-    paddingTop: rhythm.group,
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerDefault,
-  },
-  // Grows with its digit at accessibility sizes (a fixed circle clipped it).
-  number: {
-    alignSelf: 'flex-start',
-    minWidth: 28,
-    minHeight: 28,
-    paddingHorizontal: rhythm.line,
-    borderRadius: 999,
-    borderCurve: 'continuous',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.navyWash,
-  },
-  words: { gap: rhythm.tight },
-  further: { alignItems: 'flex-start', gap: rhythm.line },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    head: { gap: rhythm.tight },
+    ideas: { gap: rhythm.section },
+    idea: {
+      gap: rhythm.block,
+      paddingTop: rhythm.group,
+      borderTopWidth: hairline,
+      borderTopColor: colors.dividerDefault,
+    },
+    // Grows with its digit at accessibility sizes (a fixed circle clipped it).
+    number: {
+      alignSelf: 'flex-start',
+      minWidth: 28,
+      minHeight: 28,
+      paddingHorizontal: rhythm.line,
+      borderRadius: 999,
+      borderCurve: 'continuous',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.navyWash,
+    },
+    words: { gap: rhythm.tight },
+    further: { alignItems: 'flex-start', gap: rhythm.line },
+  }),
+);

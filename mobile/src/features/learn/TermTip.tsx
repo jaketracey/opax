@@ -6,13 +6,13 @@ import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/text';
 import {
   border,
-  colors,
   hairline,
   minimumTarget,
   radii,
   rhythm,
   textStyles,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { learnCopy } from './copy';
 import { glossaryTerm, isTermId, termTitle } from './glossary';
 import { termRoute } from './routes';
@@ -56,6 +56,9 @@ const close = () => {
  * transparent root route, so no screen has to host it.
  */
 export default function TermTip() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const { id, x, y, over } = useLocalSearchParams<{
     id?: string;
     x?: string;
@@ -129,42 +132,44 @@ export default function TermTip() {
   );
 }
 
-const styles = StyleSheet.create({
-  focused: {
-    outlineColor: colors.navy,
-    outlineWidth: border.focus,
-    outlineOffset: border.focus,
-    outlineStyle: 'solid',
-  },
-  fill: StyleSheet.absoluteFill,
-  bubble: {
-    position: 'absolute',
-    backgroundColor: colors.raised,
-    borderRadius: radii.tile,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    // One inset on every side the action touches: "More" ends on the text's
-    // trailing edge and sits as far from the foot as from the side.
-    paddingHorizontal: TIP_INSET,
-    paddingTop: rhythm.row,
-    paddingBottom: TIP_INSET,
-    gap: rhythm.line,
-    shadowColor: colors.ink,
-    shadowOpacity: 0.16,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 8,
-  },
-  // On the text's trailing edge, a line's gap closer than a new block. The
-  // pressed wash bleeds a little past the label on each side, as a quiet
-  // button's does, without moving the label off that edge.
-  more: {
-    alignSelf: 'flex-end',
-    marginTop: rhythm.line,
-    paddingHorizontal: MORE_PADDING,
-    marginHorizontal: -MORE_PADDING,
-    borderRadius: radii.thumb,
-    borderCurve: 'continuous',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    focused: {
+      outlineColor: colors.navy,
+      outlineWidth: border.focus,
+      outlineOffset: border.focus,
+      outlineStyle: 'solid',
+    },
+    fill: StyleSheet.absoluteFill,
+    bubble: {
+      position: 'absolute',
+      backgroundColor: colors.raised,
+      borderRadius: radii.tile,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      // One inset on every side the action touches: "More" ends on the text's
+      // trailing edge and sits as far from the foot as from the side.
+      paddingHorizontal: TIP_INSET,
+      paddingTop: rhythm.row,
+      paddingBottom: TIP_INSET,
+      gap: rhythm.line,
+      shadowColor: colors.ink,
+      shadowOpacity: 0.16,
+      shadowRadius: 24,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 8,
+    },
+    // On the text's trailing edge, a line's gap closer than a new block. The
+    // pressed wash bleeds a little past the label on each side, as a quiet
+    // button's does, without moving the label off that edge.
+    more: {
+      alignSelf: 'flex-end',
+      marginTop: rhythm.line,
+      paddingHorizontal: MORE_PADDING,
+      marginHorizontal: -MORE_PADDING,
+      borderRadius: radii.thumb,
+      borderCurve: 'continuous',
+    },
+  }),
+);

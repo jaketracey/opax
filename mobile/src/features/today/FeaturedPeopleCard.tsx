@@ -22,7 +22,8 @@ import { SurfaceContext } from '../../design/row-padding';
 import { SourceLine } from '../../design/source';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { personRoute } from '../../navigation/routes/people';
 import { canShare } from '../../navigation/share';
 import { presentSheet, presentSource } from '../../navigation/sheets';
@@ -90,6 +91,8 @@ export function TodayEditionCard({
     slugs: RecordResult<Slugs>;
   } | null;
 }) {
+  const styles = useStyles();
+
   const edition = props.edition?.status === 'ready' ? props.edition.data : null;
   const tier =
     props.tier ?? (edition ? editionTier(edition.date, props.today) : null);
@@ -163,6 +166,8 @@ export function TodayEditionCard({
  * parliamentarian's, so the two-line heading is there from the first frame.
  */
 export function FeaturedHeading() {
+  const styles = useStyles();
+
   return (
     <View style={styles.heading}>
       <SectionHeader
@@ -217,6 +222,8 @@ export function FeaturedPeopleCarousel({
   savedAt?: number | null;
   rosterSavedAt?: number | null;
 }) {
+  const styles = useStyles();
+
   const scroll = useRef<ScrollView>(null);
   const [width, setWidth] = useState(rememberedWidth);
   const [page, setPage] = useState(0);
@@ -477,65 +484,67 @@ export function FeaturedPeopleCarousel({
   );
 }
 
-const styles = StyleSheet.create({
-  carousel: { gap: rhythm.heading },
-  heading: { gap: 4 },
-  // A heading to the card under it, as Today's other headed blocks (8).
-  headed: { gap: 8 },
-  pages: { marginHorizontal: -BLEED },
-  // Over the margin only: the selected card starts where this ends.
-  before: { position: 'absolute', top: 0, bottom: 0, left: 0, width: BLEED },
-  // From the next card's leading edge to where the pages are clipped.
-  after: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    width: PEEK + BLEED,
-  },
-  unmeasured: { width: '100%' },
-  // The first card's width in the carousel: the column less the next
-  // card's gap and peek.
-  pendingCard: { marginRight: GAP + PEEK },
-  card: {
-    flexGrow: 1,
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  link: { flexGrow: 1 },
-  shadow: {
-    shadowColor: colors.ink,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 20,
-  },
-  body: { padding: 20, paddingBottom: 0, gap: 12 },
-  source: { paddingHorizontal: 20, paddingBottom: 12 },
-  machine: {
-    flexDirection: 'row',
-    gap: 4,
-    backgroundColor: colors.navyWash,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-  },
-  dots: { flexDirection: 'row', justifyContent: 'center' },
-  pageTarget: {
-    width: minimumTarget,
-    height: minimumTarget,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    borderCurve: 'continuous',
-    backgroundColor: colors.inkFaint,
-  },
-  selectedDot: { width: 16, backgroundColor: colors.navy },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    carousel: { gap: rhythm.heading },
+    heading: { gap: 4 },
+    // A heading to the card under it, as Today's other headed blocks (8).
+    headed: { gap: 8 },
+    pages: { marginHorizontal: -BLEED },
+    // Over the margin only: the selected card starts where this ends.
+    before: { position: 'absolute', top: 0, bottom: 0, left: 0, width: BLEED },
+    // From the next card's leading edge to where the pages are clipped.
+    after: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      right: 0,
+      width: PEEK + BLEED,
+    },
+    unmeasured: { width: '100%' },
+    // The first card's width in the carousel: the column less the next
+    // card's gap and peek.
+    pendingCard: { marginRight: GAP + PEEK },
+    card: {
+      flexGrow: 1,
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    link: { flexGrow: 1 },
+    shadow: {
+      shadowColor: colors.ink,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.08,
+      shadowRadius: 20,
+    },
+    body: { padding: 20, paddingBottom: 0, gap: 12 },
+    source: { paddingHorizontal: 20, paddingBottom: 12 },
+    machine: {
+      flexDirection: 'row',
+      gap: 4,
+      backgroundColor: colors.navyWash,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      alignSelf: 'flex-start',
+    },
+    dots: { flexDirection: 'row', justifyContent: 'center' },
+    pageTarget: {
+      width: minimumTarget,
+      height: minimumTarget,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    dot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      borderCurve: 'continuous',
+      backgroundColor: colors.inkFaint,
+    },
+    selectedDot: { width: 16, backgroundColor: colors.navy },
+  }),
+);
