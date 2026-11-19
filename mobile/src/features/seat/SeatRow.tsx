@@ -14,7 +14,14 @@ import {
 import { Text } from '../../design/text';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { CachedPortrait } from '../CachedPortrait';
-import { seatCopy, seatLabel, seatMember, type PersonLead } from './seat-model';
+import { rowTermEnded } from '../your-mp/term-ended';
+import {
+  LAST_MEMBER,
+  seatCopy,
+  seatLabel,
+  seatMember,
+  type PersonLead,
+} from './seat-model';
 
 const PORTRAIT = 44;
 /** The chosen seat's mark (as rows.tsx draws a checkmark accessory). */
@@ -37,9 +44,16 @@ export function SeatRow({
   detail,
   accessory = 'chevron',
   disabled = false,
+  last = rowTermEnded(seat),
   testID,
 }: {
   seat: Electorate;
+  /**
+   * The seat's house has no members (its Parliament's term has ended for an
+   * election): the person is named as the last member. A district's own
+   * index row says so; pass it for a Council region, whose row does not.
+   */
+  last?: boolean;
   onPress?: () => void;
   meta?: string;
   /** Replaces the member line ("Saved", the abolished-seat sentence). */
@@ -50,7 +64,7 @@ export function SeatRow({
 }) {
   const member = seatMember(seat);
   const stacked = useAccessibilitySize();
-  const label = [seatLabel(seat, meta), detail ? `${detail}.` : '']
+  const label = [seatLabel(seat, meta, last), detail ? `${detail}.` : '']
     .filter(Boolean)
     .join(' ');
   return (
@@ -83,7 +97,7 @@ export function SeatRow({
       ) : member ? (
         <View style={styles.memberLine}>
           <Text wordSafe variant="secondary">
-            {member.name}
+            {last ? `${LAST_MEMBER}: ${member.name}` : member.name}
           </Text>
           {member.party ? (
             <PartyLabel
