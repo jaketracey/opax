@@ -105,7 +105,7 @@ function page(rows) {
     isCommitteeChamber: (chamber) => /committee/.test(String(chamber || '').toLowerCase()),
     subjectHash: (_kind, name) => '/subject/' + name, STATE_NAMES: { federal: 'Federal' }, TOPICS: {},
     titleSubject, displayTitle: (r) => titleSubject(r) || r.title, isMultiSpeaker: () => false, isUnattributed: () => false,
-    speechIdentityHTML: (r) => esc(r.speaker), partyChipHTML: (s) => esc(s), machineLabelHTML: () => '', excerptNoticeHTML: () => '',
+    speechIdentityHTML: (r) => esc(r.speaker), partyChipHTML: (s) => esc(s), machineLabelHTML: () => '', machineNoticeHTML: () => '', syncSearchBriefsNotice: () => {}, excerptNoticeHTML: () => '',
     recordTypeLink: () => '<a href="/ask?view=search&kind=speech">Speech</a>', highlightHTML: (s) => esc(s), fmtDate: (s) => s, billNoteHTML: (s) => esc(s),
     searchReadMode: 'passages', lastSearch: { briefs: {}, query: '', filters: { speaker: SPEAKER } },
     requestAnimationFrame: () => {}, refreshSearchPassageFolds: () => {}, searchResultHref: (r) => r.href, loadPhotoMap: async () => {}, decorateMetaPortraits: () => {} };

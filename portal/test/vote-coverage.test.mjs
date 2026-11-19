@@ -60,19 +60,35 @@ test('the shipped notes match the staged mismatch list: every held division is i
   }
 });
 
-test('a division record says how to read it: stand part, no motion text, and what Hansard lists leave out', () => {
-  const lists = /does not record pairs, tellers or absences, so a member not listed was not necessarily absent and did not necessarily abstain\.$/;
-  const plain = divisionReadingNotes({jurisdiction: 'vic', question: 'That the bill be now read a third time.'});
-  assert.equal(plain.length, 1);
-  assert.match(plain[0], lists);
-  const line = divisionReadingNotes({jurisdiction: 'vic', question: 'Council divided on amendment'});
-  assert.equal(line.length, 2);
-  assert.match(line[0], /^Hansard prints no motion text directly before this division, so none is shown\./);
-  const stand = divisionReadingNotes({jurisdiction: 'vic', question: 'That the words proposed to be omitted stand part of the question.'});
-  assert.match(stand[0], /^On this question an aye is a vote to keep the words as they are\. Members voting aye opposed the amendment, and members voting no supported it\.$/);
-  assert.equal(divisionReadingNotes({jurisdiction: 'federal', question: 'That the word proposed to be omitted stand part of the motion.'}).length, 1);
+test('a division record says how to read it, in OPAX’s words and apart from the question', () => {
+  const lists = 'Hansard’s division lists do not record pairs, tellers or absences. A member who is not listed was not necessarily absent and did not necessarily abstain.';
+  assert.deepEqual(divisionReadingNotes({jurisdiction: 'vic', question: 'That the bill be now read a third time.'}), [lists]);
+  // A record with only its division line names the kind of question and claims nothing more.
+  for (const [question, said] of [
+    ['Council divided on amendment', 'Amendment: the record names no further detail.'],
+    ['Council divided on amendments:', 'Amendments: the record names no further detail.'],
+    ['Assembly divided on motion.', 'Motion: the record names no further detail.'],
+    ['Council divided on new clause', 'New clause: the record names no further detail.'],
+    ['Assembly divided on Council amendment 1', 'Council amendment 1: the record names no further detail.'],
+    ['Assembly divided question', 'Question: the record names no further detail.'],
+  ]) assert.deepEqual(divisionReadingNotes({jurisdiction: 'vic', question}), [said, lists], question);
+  const stand = 'On this question a Yes vote (aye) keeps the words as they are, which is a vote against the amendment. A No vote takes the words out, which is a vote for the amendment.';
+  assert.deepEqual(divisionReadingNotes({jurisdiction: 'vic', question: 'That the words proposed to be omitted stand part of the question.'}), [stand, lists]);
+  assert.deepEqual(divisionReadingNotes({jurisdiction: 'federal', question: 'That the word proposed to be omitted stand part of the motion.'}), [stand]);
   assert.deepEqual(divisionReadingNotes({jurisdiction: 'federal', question: 'That the bill be read a second time'}), []);
   assert.deepEqual(divisionReadingNotes(null), []);
+  // Every published Victorian record whose question is a division line gets the line, and no record's own
+  // question text is changed to carry it.
+  const index = JSON.parse(readFileSync(new URL('divisions/index.json', pub), 'utf8'));
+  let lines = 0;
+  for (const row of index.divisions.filter(row => row.key.startsWith('vic-'))) {
+    const d = JSON.parse(readFileSync(new URL(`divisions/${row.slug}.json`, pub), 'utf8'));
+    const notes = divisionReadingNotes(d);
+    assert.equal(notes.at(-1), lists, row.key);
+    assert.ok(!notes.some(note => d.question.includes(note)), row.key);
+    if (/^(Assembly|Council) divided/.test(d.question)) { lines++; assert.match(notes.at(-2), /: the record names no further detail\.$/, row.key); }
+  }
+  assert.ok(lines > 700);
 });
 
 test('the server division page carries the reading notes', async () => {
@@ -81,8 +97,10 @@ test('the server division page carries the reading notes', async () => {
   try {
     const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, pub.pathname);
     const page = await (await worker.fetch('/doc/division-vic-la-2023-05-18-1')).text();
-    assert.match(page, /class="division-reading-note">On this question an aye is a vote to keep the words as they are\./);
-    assert.match(page, /It does not record pairs, tellers or absences/);
+    assert.match(page, /class="division-reading-note">On this question a Yes vote \(aye\) keeps the words as they are/);
+    assert.match(page, /division lists do not record pairs, tellers or absences/);
+    const line = await (await worker.fetch('/doc/division-vic-la-2023-03-07-1')).text();
+    assert.match(line, /class="division-reading-note">Motion: the record names no further detail\.</);
     const federal = await (await worker.fetch('/doc/division-federal-senate-1')).text();
     assert.ok(!federal.includes('division-reading-note'));
   } finally { restore(); }

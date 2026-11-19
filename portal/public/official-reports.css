@@ -23,7 +23,7 @@
 .or-results-head p{font:var(--type-metadata);margin:0;color:var(--ink-soft)}
 .or-results-head>a{font:var(--type-metadata);display:inline-flex;align-items:center;min-height:var(--size-target)}
 .or-row{overflow-wrap:anywhere}
-.or-row h3{font:var(--type-subheading);margin:0 0 var(--space-line);max-width:84ch}
+.or-row h3{font:var(--type-row-record);margin:0 0 var(--space-line);max-width:84ch}
 .or-row h3 a{display:inline-flex;align-items:center;min-height:var(--size-target);color:var(--ink);text-decoration:none}
 .or-row h3 a:hover{color:var(--bronze-ink);text-decoration:underline;text-decoration-color:var(--bronze-rule)}
 .or-row-meta{margin:0;font:var(--type-metadata);color:var(--ink-soft);max-width:100ch}

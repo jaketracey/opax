@@ -28,8 +28,8 @@ DMs, automate replies, or imply a funding relationship proves wrongdoing.
 
 The first schedule is 22:00 UTC (08:00 AEST / 09:00 AEDT). Checks at +5 and +10
 minutes finish an Instagram container that is still processing. They do not resend
-successful posts. A container still pending after the third check needs operator
-review; the following day is a new edition.
+successful posts. A container still pending after the third check is held for
+operator review (`review_required`); the following day is a new edition.
 
 ## The week and the grant kinds (live from 30 Sep 2026)
 
@@ -157,7 +157,28 @@ same container at the next check without recreating the children. Facebook's
 photos are uploaded unpublished and attached to one feed post, so an interrupted
 run leaves nothing visible. A Meta write that carries an image URL is answered only
 after Meta has fetched the image, so those calls are given 90 seconds (reads keep
-20); a call that still runs out is recorded as `Provider timeout`.
+20); a call that still runs out is recorded as `Provider timeout`. A container still
+processing is read again after 10 and then 20 seconds before the run leaves it for
+the next tick (Meta advises reading a status about once a minute, for at most five
+minutes); a run already three minutes past its start reads once and does not wait.
+When Meta refuses a publish as not ready (`Provider HTTP 400 code 9007/2207027`,
+"The media is not ready for publishing") even though the container read `FINISHED`,
+nothing was published: the delivery keeps the container and stays `preparing` for
+the next tick, at most twice.
+
+A run leaves a container for the next tick, still processing or refused as not
+ready, only when that tick is sure to read the row. The run must be the 22:00 or
+22:05 UTC run under its own date, and the wall clock when Meta's answer arrives must
+be more than a minute before the next tick: before 22:04 for the 22:00 run, before
+22:09 for the 22:05 run. The next tick passes over a row that is still `sending`,
+and after 22:10 no tick comes for that date. So a run that ran long or started late,
+the 22:10 run, a third refusal, and an operator's run at another time or for another
+date all hold the delivery as `review_required`, with `Instagram container still
+processing` or the refusal's code. A held row is never retried, an operator's run of
+yesterday's date included. A container that reads `PUBLISHED` when the run comes to
+publish it (a refused publish went through after all) is never published again;
+Meta's container names no media id, so the delivery is held for review as
+`Instagram container already published`.
 
 ## Source selection and refresh
 
@@ -228,18 +249,28 @@ through to another, never silently repeats an excluded subject.
   copy when available and per-platform captions/image URLs).
 - Optional `&kind=bill`, `politician`, `topic`, `grant`, `program` or `largest` previews that category.
 - Operator run: `POST /api/daily-post/run` with `Authorization: Bearer $DAILY_POST_OPERATOR_SECRET`
-  and a JSON body `{date, kind?, subject?, channels?, dry_run?}` composes a chosen edition
+  and a JSON body `{date, kind?, subject?, channels?, dry_run?, allow_any_date?}` composes a chosen edition
   under the given journal date (default today) and delivers it to the named channels
   (default every ready channel). `subject` may name one award as
   `grant:GA34203@abn:97694995462`, read from the recipient's source shard whatever its age.
   The journal still rules: an edition stored under that date is reused and a delivered
   channel is never posted twice, so use a date with no edition for a test post.
   `dry_run: true` returns the composed edition and per-channel copy without posting.
+  A posting run accepts only today's or yesterday's Melbourne date. Any other date
+  gets a 400 naming the allowed dates, with nothing written and no channel called,
+  unless the body carries `allow_any_date: true`. An old date would resume an expired
+  Instagram container or post a stale edition afresh to a channel with no receipt for
+  it, so use the override only after reading that date's receipts. A dry run takes any
+  date because it only reads and composes. The cron is not affected: it always posts
+  under the Melbourne date of its scheduled time.
+  Outside 22:00 to 22:10 UTC (or for any other date), an Instagram container that is still processing or
+  refused as not ready is held as `review_required` (never retried), not left `preparing` for another run.
 - Status: `/api/daily-post/status` (configuration readiness and today's receipts;
   no credentials or raw provider error bodies).
 - Logs: `npx wrangler tail --env=''`; look for `daily-post`.
 - Tests: `node --test test/daily-post.test.mjs test/social-publication.test.mjs
-  test/bill-social-card.test.mjs test/og-story.test.mjs test/social-grants-catalog.test.mjs` from portal/.
+  test/bill-social-card.test.mjs test/og-story.test.mjs test/social-grants-catalog.test.mjs
+  test/social-subrequests.test.mjs` from portal/.
 
 `posted` requires a provider post ID. A timeout or malformed success after a write
 becomes `review_required`; do not retry it without reading the platform's actual
@@ -247,6 +278,29 @@ posts. `sending` after a crash also needs reconciliation. Preflight errors are
 `failed`, and are not automatically retried that day. Check the target account,
 repair the connection, then reconcile/reset only that channel's row if confirmed
 unsent. No public endpoint can trigger posting or reset these receipts.
+
+A receipt's `detail` says why it failed or is held. The runner's own reasons are kept
+as thrown (`Story slide unavailable`, `Provider timeout`, `Provider HTTP 400 code
+100/33` with Meta's numeric code, never its message). Any other error is recorded as
+a fixed category and the error's class, never its text: `Network error (TypeError)`
+for a request that got no HTTP answer (or the runtime's "Network connection lost."),
+`Timeout (DOMException)`, `Database error (Error)` for D1's documented `D1_` and `D1
+DB` messages, `Worker limit (subrequests)` for the Workers subrequest limit, and
+`Unexpected error (<class>)` for anything else. The log line keeps the message.
+
+In the test harness, one run of the publisher made about 160 to 270 subrequests
+with every channel on, and about 340 for a ten-slide story with composition, against
+the 10,000 per invocation of the Workers Paid plan. These are harness counts, not a
+ceiling: the harness's table database is empty and the knowledge box answers 404, so
+lookups that would follow real rows are not made, and the counts move with the
+generated `public/` files (a tree without the built `/growth/*` files measured 297
+and 369). `test/social-subrequests.test.mjs` counts them through the real scheduled
+handler and fails above a tenth of the limit. With
+`OPAX_SOCIAL_CPU=1` it also times a 22:00 run with the real rasteriser: on a Mac
+(17 Nov 2026) the ten-slide edition took about 2.5 s of CPU from a cold isolate,
+nearly all of it drawing the 16 cards and slides, against the 30 s a cron on an
+interval under an hour is given (wrangler.jsonc sets no `limits.cpu_ms`). A Mac core
+is not a Worker's, so read that as distance from the limit, not as the bill.
 
 Before publishing, the runner checks that the source page and matching JPEG return
 success. A generic fallback image or mismatched route prevents posting. PNG cards

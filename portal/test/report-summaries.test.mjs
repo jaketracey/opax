@@ -48,6 +48,11 @@ test('quotes naming a person are shown word for word, with their pages, now the 
     assert.deepEqual(detail.summary.quotes.items.map(q => [q.quote, q.cite.page]), d.findings.items.map(q => [q.quote, q.cite.page]), slug);
     const api = JSON.stringify(reportApiBody(detail));
     const html = renderReport(detail);
+    // The error notice: once, directly under the generated sentences and inside their block, before the quotes.
+    {const NOTICE = '<p class="answer-notice">Machine-written summaries can contain errors. Check the original record before relying on one.</p>';
+      assert.equal(html.split(NOTICE).length, 2, detail.slug);
+      assert.ok(html.includes('</ul>' + NOTICE + '</div>'), detail.slug);
+      assert.ok(html.indexOf('rr-summary-lines') < html.indexOf(NOTICE), detail.slug);}
     for (const q of d.findings.items) {
       assert.ok(api.includes(JSON.stringify(q.quote).slice(1, -1)), `${slug} API carries the quote`);
       assert.ok(html.includes(escHtml(q.quote)), `${slug} page shows the quote`);
@@ -80,5 +85,5 @@ test('the report page leads with the summary block, and the API carries the same
   assert.match(html, /<a href="#summary"><span>Summary<\/span>/);
   assert.deepEqual(reportApiBody(r).summary, r.summary);
   const plain = bySlug.get('royal-commission-cth-banking') || projected.find(p => !p.detail.summary)?.detail;
-  if (plain && !plain.summary) assert.ok(!renderReport(plain).includes('id="summary"'));
+  if (plain && !plain.summary) { assert.ok(!renderReport(plain).includes('id="summary"')); assert.ok(!renderReport(plain).includes('answer-notice')); }
 });

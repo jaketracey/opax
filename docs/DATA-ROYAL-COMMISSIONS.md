@@ -131,9 +131,31 @@ range, newest three); `view=transcripts` pages through the rest, newest first, w
 "Hearing transcript: evidence, not findings". The count line opens the way the integrity
 tool's does: "OPAX lists 47 hearing transcripts from the Royal Commission into the
 Robodebt Scheme, dated 27 September 2022 to 10 March 2023"; the pointer to
-`view=transcripts` is a tool note, not part of the line. When every source an Ask answer
-cites is a hearing transcript, and the answer does not already carry the label, it ends
-with "These are from hearing transcripts: evidence, not findings."
+`view=transcripts` is a tool note, not part of the line.
+
+Every Ask answer that cites at least one hearing transcript ends with a fixed line, added
+by the Worker after the answer text and added once (`portal/public/transcript-note.js`):
+
+* every cited source is a hearing transcript: "These are from hearing transcripts:
+  evidence, not findings."
+* only some are: "Source 2 is a hearing transcript: evidence, not findings." or "Sources 2
+  and 4 are hearing transcripts: evidence, not findings." (three or more: "Sources 1, 3
+  and 4 are ..."). The numbers are each source's place among the cited sources, which is
+  the number the web page and the app print beside a citation.
+
+A hearing transcript here is a cited source row carrying the label above, which only the
+`royal_commissions` and `integrity_reports` tools write: hearing transcripts of royal
+commissions, commissions of inquiry and integrity commissions. A Hansard speech or a
+committee's Hansard is not one. The definition, as ruled on 16 November 2026: a hearing
+transcript is the transcript of a hearing of a royal commission, an integrity body or an
+inquiry, and not Hansard, committee Hansard or estimates Hansard. A row that counts
+transcripts is not one either. Coverage rows are not counted either way. The line goes on
+where every `/api/ask` reply leaves the Worker, so it covers the research loop and the
+older engine, blocking and streamed replies, and an answer cached before 16 November 2026,
+which gains the line as it is served. A refusal or a request to clarify gets no line.
+Voice speaks the line last, after the opening sentences, and says "Some of these sources
+are hearing transcripts: evidence, not findings." in place of the numbered form. The web
+page adds the line to a saved conversation when it is restored.
 
 ### Transcript text for the CC BY commissions, 12 November 2026
 
@@ -144,8 +166,17 @@ transcripts. `scripts/build_transcript_fulltext.py` reads the verified manual PD
 writes `portal/public/transcripts/`:
 
 - `index.json`: the transcripts, the attribution and copyright page for each commission,
-  the tokeniser's stopwords and the terms too common to post;
-- `terms/<nn>.json`: term to transcripts, sharded by FNV-1a of the term;
+  the tokeniser's stopwords, the everyday terms (in more than half the transcripts) and,
+  for each, the pages holding it across all transcripts;
+- `term-pages.json`: term to the pages holding it across all transcripts, read only by a
+  search of more than six specific terms, which leaves out the most frequent;
+- `terms/<nn>.json`: term to the transcripts holding it and, for each, the number of its
+  pages holding the term, sharded by FNV-1a of the term. Every term is posted, everyday
+  ones included (index schema 3). A word search lists transcripts by those page counts,
+  not by date; everyday terms order the result and are required only when the search
+  has no other word; a search reads at most six terms and its notes say which were left
+  out. `--postings-only` rebuilds these files from the published transcript files with
+  no PDF read;
 - `<commission>/<key>.json`: one transcript, with each PDF page's own transcript page
   number (for example "P-4899" or "6189"), its text, and term to pages.
 

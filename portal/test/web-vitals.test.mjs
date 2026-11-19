@@ -67,8 +67,10 @@ test('party and donor skeletons reserve their map before waiting for route helpe
       currentSubjectKey:'fixture',key:'fixture', growthModulesReady:gate,voteTablesReady:gate,nextStepsReady:gate,
       $:id=>id === 'subject-body' ? element : {classList:{add(){}}},
       subjectSkeleton:()=>'<fixture>',reserveSubjectMap:()=>events.push('map-space'),
+      // A member's record is held back and the Worker's blocks are seated in the same frame (person-boot.test.mjs).
+      typingIn:()=>null,settleGrid:()=>events.push('settle'),seatBootPerson:()=>events.push('seat'),subjectSegment:'fixture-entity',
     });
-    assert.deepEqual(events,kind === 'person' ? ['skeleton'] : ['skeleton','map-space']);
+    assert.deepEqual(events,kind === 'person' ? ['skeleton','settle','seat'] : ['skeleton','map-space']);
     release();
     await pending;
   }

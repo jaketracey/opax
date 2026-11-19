@@ -27,7 +27,7 @@ Every voice source, from Ask or from the quick tools, has `title`, `record_title
 
 ### Agent configuration as code
 
-`portal/voice/agent-config.json` holds the agent prompt and its eight webhook tools. Sync it with `npm run voice:agent -- --agent <agent id>` from `portal/` with `ELEVENLABS_API_KEY` set. Without `--apply` it only prints the plan. `--apply` first saves the agent and its tools to a backup outside the repository, then writes the tools, then the agent, then re-runs the plan and fails unless everything is in sync. `--restore <backup>` undoes an apply. `portal/voice/README.md` describes each step and lists the provider fields used, with their API reference pages. Apply to the staging agent first.
+`portal/voice/agent-config.json` holds the agent prompt, its opening message (`first_message`) and its eight webhook tools. Sync it with `npm run voice:agent -- --agent <agent id>` from `portal/` with `ELEVENLABS_API_KEY` set. Without `--apply` it only prints the plan. `--apply` first saves the agent and its tools to a backup outside the repository, then writes the tools, then the agent, then re-runs the plan and fails unless everything is in sync. `--restore <backup>` undoes an apply. `portal/voice/README.md` describes each step and lists the provider fields used, with their API reference pages. Apply to the staging agent first.
 
 ## Server enforcement
 

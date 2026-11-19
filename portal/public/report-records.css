@@ -36,7 +36,7 @@
 /* The official document: one raised card, its link first. */
 .rr-source { margin: 0 0 var(--space-block); padding: var(--sp-16); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised); }
 .rr-source-kicker { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
-.rr-source-title { margin: 0; font: var(--type-subheading); }
+.rr-source-title { margin: 0; font: var(--type-row-record); }
 .rr-source-meta { margin: var(--space-line) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
 .rr-source-more { margin: var(--space-row) 0 0; padding: var(--space-tight) 0 0; list-style: none; border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-metadata); }
 .rr-source-more li { padding-block: var(--space-line); }

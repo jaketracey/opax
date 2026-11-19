@@ -1,4 +1,4 @@
-import { hydrateCollections, hydrateLatest, hydrateMostDivided, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=7c82b87141';
+import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=df0c220cf4';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -421,7 +421,7 @@ async function mount() {
     $("hp-map-source").innerHTML = mapSourceHTML(graph.meta, await refreshInfo());
     // The lede's span is the Worker's (seo-content.ts homeMapSpan): the receipt headline's years, not the file's coverage.
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=9fd4185a50"
+      "/money-map.js?v=5423132a60"
     );
     if (disposed) return;
     root.replaceChildren();
@@ -499,9 +499,6 @@ OpaxQuickSearch.attach($('mast-q'), $('mast-sugg'), {idPrefix:'ms', source:heade
 
 OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => navDrawer.close()});
 
-// Whether parliament sits today, above the title: from the published calendar, or no line.
-hydrateSitting();
-hydrateMostDivided();
 // Reports and the footer's coverage line now; new bills and declarations when
 // their block nears the screen. The page ships with dated rows to fall back on.
 hydrateCollections();

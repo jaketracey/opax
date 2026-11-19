@@ -1,38 +1,48 @@
 # OPAX design tokens
 
-One source, two platforms. [`design-tokens.json`](design-tokens.json) holds every colour, type role, space step, radius, border, shadow, duration and size that the web and the app draw. The rules for using them are in [DESIGN-REVIEW-2026-10.md](DESIGN-REVIEW-2026-10.md), section 2; this page covers the pipeline and the names.
+One source for the web, the app and the share images. [`design-tokens.json`](design-tokens.json) holds every colour, type role, space step, radius, border, shadow, duration and size that they draw. The rules for using them are in [DESIGN-REVIEW-2026-10.md](DESIGN-REVIEW-2026-10.md), section 2; this page covers the pipeline and the names.
 
 ## Pipeline
 
 ```sh
 node scripts/build_tokens.mjs            # write every target in this checkout
 node scripts/build_tokens.mjs --check    # exit 1 if any target is stale
-node scripts/build_tokens.mjs --only app # or web, or docs
+node scripts/build_tokens.mjs --only web # or share or docs
 ```
 
 | Target | Written from the JSON | Read by |
 |---|---|---|
 | `portal/public/tokens.css` | `:root` custom properties, then the deprecated names | Pages and modules that need the tokens without `style.css` |
 | `portal/public/style.css`, the `tokens:begin` / `tokens:end` region | The same rules as `tokens.css`, inlined so a page needs no second request | Every page |
-| `mobile/src/design/tokens.generated.ts` | Palettes for four themes, party colours, type roles, rhythm, radii, motion, sizes, contrast rules | `palette.ts` and `tokens.ts`, which re-export it |
+| `portal/src/tokens.generated.ts` | The web's light colours (the values `tokens.css` draws), the chart colours and the two family names | `og.ts` (the share cards and story slides) and `graph/palette.ts` (the money map) |
 | This page, the `tokens:begin` / `tokens:end` region | The role and alias tables below | People |
 
 - **Web:** `npm run build:tokens` runs the generator, and `npm run build:search` (which the deploy and the GitHub deploy job run first) runs it before the catalogs. `npm run check` runs `--check`. `test/design-tokens.test.mjs` fails while a generated file is stale.
-- **App:** `npm run tokens` runs the generator; `npm run qa` checks it before typecheck, and `tests/design-tokens.test.ts` fails while `tokens.generated.ts` is stale.
-- A checkout without `mobile/` (`main`) skips the app target; one without `portal/` skips the web target.
+- **App:** the app's file, `mobile/src/design/tokens.generated.ts` (palettes for four themes, party colours, type roles, rhythm, radii, motion, sizes, contrast rules), is not a target of this script. On the app branches `npm run tokens` runs `mobile/scripts/build-design-tokens.mjs`, which calls this generator's `buildTs`, leaves out the retired aliases and adds the app's four photo roles; `tests/design-tokens.test.ts` fails while the file is stale.
+- **Share images:** `npm run build:tokens` also writes `portal/src/tokens.generated.ts`; `test/design-tokens.test.mjs` fails while it is stale, or while `og.ts` or `story.ts` writes out a colour of its own (hex, or rgb channels: a translucent token colour is `alpha(light.*, opacity)`).
+- A checkout without `portal/` skips the web and share targets.
+- **The money map** (`portal/graph/palette.ts`) takes its colours and its selection accent (the web's chart mark) from `portal/src/tokens.generated.ts`, and its industry hues and party dots from the JSON, at build time.
+
+## One file, base values and web overrides
+
+- **A token's base value is the app's.** Where the web draws something different today, the token carries a `web` block: `web.value` (a colour, space step or radius), `web.role` (the chart mark), `web.$description` (the web's own note). `web.omit` keeps an app-only token (the edition bands, the chamber inks, the app's launch timings, the app's new radius names) off the web.
+- **Type.** `type` holds the app's eighteen roles. `webRoles` holds the web's fourteen role names (`--type-title`, `--type-record-title`, `--type-row-record`, `--type-tile-figure`, `--type-body`, ...). Each follows an app role and lists beside `follows` only the fields where the web differs: family, weight, size or line height. Deleting a field moves that web role onto its app role's value; the generated table below shows what each web role draws and what it still overrides.
+- **Faces.** The web's sans stack starts with the system face, so Apple devices draw SF, as the iOS app does, and other devices draw Public Sans, as the Android app does; only the serif face is preloaded. Each webfont is followed in its stack by a metric-matched local fallback (`font.*.webFallback`, written as `@font-face` rules at the top of `tokens.css`), so text keeps its place while a webfont loads. The fallback has one face per weight the web sets (Georgia and Georgia Bold; Arial and Arial Bold, at 400, 600 and 700), each sized so a line wraps where the webfont's line will: a bold drawn from a regular face is the wrong width. The share images keep Public Sans.
+- **What the web draws without CSS.** The share images and the money map cannot read custom properties, so the generator writes the web's light colours to `portal/src/tokens.generated.ts`, from the same map (`webLight`) that writes `tokens.css`. A `web.value` reaches the pages, the share images and the money map together.
+- **The app branches read this file.** When an app branch (`ad/b78-int` and later) next merges main, it takes `docs/design/design-tokens.json`, `scripts/build_tokens.mjs` and this page from main as they are: with them, `mobile/scripts/build-design-tokens.mjs --check` reproduces the branch's `tokens.generated.ts` byte for byte, so the merge changes nothing in the app. From then on a token change lands on main once and reaches the web, the app and the share images from the same line.
 
 ## Rules the generator keeps
 
 - **Same names, same values.** Every colour role keeps today's hex value. Web names stay as they were (`--paper-raised`, `--party-alp`); a role's web name is `--` plus its app name in kebab case unless the JSON gives one.
-- **Old names keep working for one release.** An *alias* has its replacement's value and points at it (`--line: var(--divider-subtle)`, `light.line`). A *legacy value* keeps the old look until a later pass moves its uses (`--space-3`, `textStyles.caption`). Both carry a deprecation comment: `/* deprecated: use ... */` in CSS, `@deprecated` in TypeScript, so editors strike them through.
-- **Dark values exist but are not drawn.** The web sets `color-scheme: light` and the app is light-only (decision 2). Every role carries a dark value held to the same contrast rules, so a dark theme is wiring, not a design pass. The generated app file exports `dark` and `darkHighContrast`; `tokens.ts` still resolves dark to light.
+- **Old web names keep working for one release.** An *alias* has its replacement's value and points at it (`--line: var(--divider-subtle)`). A *legacy value* keeps the old look until a later pass moves its uses (`--space-6`). Both carry a `/* deprecated: use ... */` comment in CSS. The shipped app has retired its old names; the last table below lists them.
+- **Dark values are ready but not shipped.** The web sets `color-scheme: light`, and the app's release builds are light through `app.config.ts` (decision 2). On iOS, `tokens.ts` hands each role's dark value to the system, so only a non-production build set to follow the system draws dark. Every role carries a dark value held to the same contrast rules, so a dark theme is wiring, not a design pass.
 - **Increase Contrast** is live in the app (`lightHighContrast`). The web's `prefers-contrast: more` block is ready in the source and is written only when `themes.web.prefersContrast` is true.
 - **Raw colours are counted.** `portal/test/design-tokens.test.mjs` counts hex colour literals in web sources outside the generated tokens, and `mobile/tests/design-tokens.test.ts` counts colour literals in app sources outside `tokens.generated.ts`. Each file has a baseline; a file may go down, never up, and a new file starts at zero. When a pass removes some, lower the baseline in the test so the count cannot creep back.
 
 ## Adding or changing a token
 
 1. Edit `design-tokens.json`. A new colour role needs a light and a dark value; add it to `contrast` if it is text or a boundary.
-2. Run `node scripts/build_tokens.mjs` in a checkout that has both `portal/` and `mobile/`, or once on each branch.
+2. Run `node scripts/build_tokens.mjs` on main for the web, share images and docs, and `npm run tokens` in `mobile/` on the app branch. A change meant for the web only goes in the token's `web` block, or in `webRoles`.
 3. Run the token tests on both sides. They check the generated files, AA for every promised pair in light, dark and both Increase Contrast themes, and the raw-colour baselines.
 4. To retire an old name, move its uses to the replacement, delete it from `deprecated` in the JSON and regenerate.
 
@@ -52,14 +62,16 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 | text | `--ink-faint` | `inkFaint` | #6F7468 | #8A8F84 | #575C52 / #A9AEA2 | Tertiary text on paper and raised only (4.56 and 4.80:1). |
 | text | `--on-navy` | `onNavy` | #FFFFFF | #0E1A28 |  | Text and icons on a navy (or danger) fill. |
 | text | `--on-navy-soft` | `onNavySoft` | #B7C6D9 | #2A3D53 | #FFFFFF / #0E1A28 | Secondary text on navy. |
+| text | none | `link` | #142A43 | #9CB9DB |  | Semantic link tone, always the single navy tint. |
 | brand | `--navy` | `navy` | #142A43 | #9CB9DB |  | Structure and the one primary action per view. |
 | brand | `--navy-raised` | `navyRaised` | #1D3A5C | #B9CDE6 |  | Pressed and hover on navy. |
-| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D |  | Secondary button fill; the people accent's wash. |
-| brand | `--bronze` | `bronze` | #A0761B | #A87D2A |  | Rules, chart marks and the masthead rule. |
-| brand | `--bronze-ink` | `bronzeInk` | #8A5A12 | #D9A84A | #5C4318 / #EBC57F | Record links, tags, the focus ring on paper. |
-| brand | `--bronze-wash` | `bronzeWash` | #ECE4D3 (web `rgba(160, 118, 27, 0.16)`) | #332A1B |  | Tag fill, search highlight. |
+| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D | #D3D9DF / #2E3C4C | Secondary button fill; the people accent's wash. App: Secondary button fill; the people accent's wash; the selected row in a split list. |
+| brand | `--bronze` | `bronze` | #A0761B | #A87D2A |  | Rules, chart marks and the masthead rule. App: Brand artwork only: mark, icon and launch screen. |
+| brand | none | `todayDotBronze` | #C08F2C | #C08F2C |  | Today's decorative dot map highlight, at 76 percent opacity over a navy base at 23 percent. |
+| brand | `--bronze-ink` | `bronzeInk` | #8A5A12 | #D9A84A | #5C4318 / #EBC57F | Record links, tags, the focus ring on paper. App: Brand artwork only: mark, icon and launch screen. |
+| brand | `--bronze-wash` | `bronzeWash` | #ECE4D3 (web `rgba(160, 118, 27, 0.16)`) | #332A1B |  | Tag fill, search highlight. App: Brand artwork only: mark, icon and launch screen. |
 | brand | `--bronze-rule` | none | rgba(160, 118, 27, 0.55) | rgba(217, 168, 74, 0.55) |  | Link underlines on the web: present, not heavy. |
-| brand | `--bronze-bright` | `bronzeBright` | #D9A84A | #5E400B |  | Bronze legible on navy: the mark, the focus ring on navy. |
+| brand | `--bronze-bright` | `bronzeBright` | #D9A84A | #5E400B |  | Bronze legible on navy: the mark, the focus ring on navy. App: Brand artwork only: mark, icon and launch screen. |
 | line | `--divider-default` | `dividerDefault` | #B8B4A8 | #4C5047 |  | The top rule of a section; major content boundaries. |
 | line | `--divider-subtle` | `dividerSubtle` | #DFDCD2 (web `#E7E4DD`) | #30342D | #B8B4A8 / #4C5047 | Between rows, under subheadings, card outlines. |
 | line | `--line-control` | `lineControl` | #8D897B | #7E8378 |  | Field and segmented-control boundaries only (3.33:1). |
@@ -73,8 +85,67 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 | accent | `--interests-wash` | `interestsWash` | #EDE6E7 | #33232D |  | The interests tile and header wash. |
 | accent | `--bills-ink` | `billsInk` | #1F5F6B | #7FC4D0 | #205158 / #A6DAE3 | Bills: bills, stages, exposure drafts; also the machine-written label. |
 | accent | `--bills-wash` | `billsWash` | #E4EAE8 | #1B2D30 |  | The bills tile and header wash. |
+| chamber | none | `houseInk` | #3B6E58 | #93C4AE | #2F5A48 / #B3D8C7 | The House of Representatives: its green. |
+| chamber | none | `senateInk` | #A2402E | #EE9B88 | #86321F / #F5BBAE | The Senate: its red. |
+| band | none | `bandBills` | #1F5F6B | #1E4A51 | #1E5E69 / #1E4A51 | Edition plate ground. |
+| band | none | `bandMoney` | #2B6447 | #24472F | #2A6346 / #24472F | Edition plate ground. |
+| band | none | `bandVotes` | #3A4C96 | #2F3B70 | #3A4C96 / #2F3B70 | Edition plate ground. |
+| band | none | `bandInterests` | #7B3A63 | #5C2C4A | #7B3A63 / #5C2C4A | Edition plate ground. |
+| band | none | `bandPeople` | #142A43 | #1C3550 | #142A43 / #1C3550 | Edition plate ground. |
+| band | none | `onBand` | #FFFFFF | #F5F3EC | #FFFFFF / #F5F3EC | Titles and art on edition bands. |
+| band | none | `onBandSoft` | #E6EBEE | #C9CEC4 | #E6EBEE / #C9CEC4 | Kicker and detail on edition bands. |
 
-29 colour roles in 6 groups; 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash); 11 type roles over 6 sizes; 8 rhythm steps; 4 radii (sm, md, pill, round); 3 durations and 1 curve; 1 shadow.
+### Type roles
+
+Heading face: `system`. iOS interface families are unset; Android uses Public Sans.
+
+| Role | Face | Weight | Size / leading | Dynamic Type | Colour | Tabular |
+|---|---|---|---|---|---|---|
+| `largeTitle` | heading | 700 | 34 / 41 | largeTitle | ink |  |
+| `inlineTitle` | heading | 600 | 17 / 22 | headline | ink |  |
+| `pageTitle` | heading | 700 | 28 / 34 | title1 | ink |  |
+| `recordTitle` | serif | 700 | 28 / 36 | title1 | ink |  |
+| `recordHeading` | serif | 700 | 22 / 30 | title2 | ink |  |
+| `sectionTitle` | heading | 700 | 22 / 28 | title2 | ink |  |
+| `subsectionTitle` | sans | 600 | 17 / 22 | headline | ink |  |
+| `groupHeader` | sans | 400 | 13 / 18 | footnote | inkSoft |  |
+| `name` | sans | 600 | 17 / 22 | headline | ink |  |
+| `rowRecord` | serif | 700 | 17 / 23 | body | ink |  |
+| `recordText` | serif | 400 | 17 / 26 | body | ink |  |
+| `body` | sans | 400 | 17 / 22 | body | ink |  |
+| `strong` | sans | 600 | 17 / 22 | body | ink |  |
+| `secondary` | sans | 400 | 15 / 20 | subheadline | inkSoft |  |
+| `footnote` | sans | 400 | 13 / 18 | footnote | inkSoft |  |
+| `capsule` | sans | 600 | 12 / 16 | caption1 | inkSoft |  |
+| `figure` | sans | 700 | 34 / 41 | largeTitle | ink | yes |
+| `tileFigure` | sans | 600 | 22 / 28 | title2 | ink | yes |
+
+### Web type roles
+
+Each web role follows an app role; the web column is what the web draws today. An override listed here is where the web still differs from the app role.
+
+| Web role | Follows | Web | Overrides |
+|---|---|---|---|
+| `--type-title` | `largeTitle` | sans 700 34 / 41 | none |
+| `--type-record-title` | `recordTitle` | serif 700 28 / 36 | none |
+| `--type-display` | `figure` | sans 700 34 / 41 | none |
+| `--type-tile-figure` | `tileFigure` | sans 600 22 / 28 | none |
+| `--type-heading` | `sectionTitle` | sans 700 22 / 28 | none |
+| `--type-subheading` | `subsectionTitle` | sans 600 17 / 22 | none |
+| `--type-row-record` | `rowRecord` | serif 700 17 / 23 | none |
+| `--type-record` | `recordText` | serif 400 17 / 26 | none |
+| `--type-body` | `body` | sans 400 17 / 26 | lineHeight |
+| `--type-strong` | `strong` | sans 600 17 / 22 | none |
+| `--type-metadata` | `secondary` | sans 400 15 / 22 | lineHeight |
+| `--type-fine` | `footnote` | sans 400 13 / 19 | lineHeight |
+| `--type-label` | `capsule` | sans 600 13 / 18 | size, lineHeight |
+| `--type-control` | `strong` | sans 600 17 / 22 | none |
+
+Shared: 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash).
+
+App: 39 colour roles in 8 groups, plus 4 photo roles added by mobile/scripts/build-design-tokens.mjs; 18 type roles over 7 sizes; 9 rhythm steps; 6 radii (container, tile, thumb, bar, capsule, round); 6 durations and 1 curve; 2 shadows (overlay, edition).
+
+Web: 29 colour roles in 6 groups; 14 type roles; 8 rhythm steps; 4 radii (sm, md, pill, round); 3 durations and 1 curve; 1 shadow (overlay).
 
 ### Deprecated web names
 
@@ -96,8 +167,13 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 | `--row-gap` | alias (same value) | `--space-row` | nothing |
 | `--sub-gap` | legacy value `var(--sp-48)` | `--sp-48 (--sp-32 under 701px)` | nothing |
 | `--section-gap` | alias (same value) | `--space-section` | nothing |
+| `--text-16` | alias (same value) | `--text-17` | nothing |
+| `--text-24` | alias (same value) | `--text-22` | nothing |
+| `--text-32` | alias (same value) | `--text-34` | nothing |
 
-### Deprecated app names
+### Retired app names
+
+The shipped app no longer exports these: mobile/scripts/build-design-tokens.mjs leaves them out of its build. They are listed so an old name met in a branch can be traced to its replacement.
 
 | Old name | Kind | Use instead | Moving changes |
 |---|---|---|---|
@@ -105,6 +181,7 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 | `light.lineStrong` | alias (same value) | `light.lineControl` | nothing |
 | `accents.places` | alias (same value) | `accents.people` | nothing |
 | `radius` | alias (same value) | `radii.sm` | nothing |
+| `typeRolesRegular.title` | alias (same value) | `textStyles.recordTitle` | nothing |
 | `spacing.s1` | alias (same value) | `rhythm.line` | nothing |
 | `spacing.s2` | legacy value `6` | `rhythm.tight or rhythm.line` | 6 to 8 or 4 |
 | `spacing.s3` | alias (same value) | `rhythm.tight` | nothing |
@@ -112,15 +189,23 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 | `spacing.s5` | legacy value `26` | `rhythm.group` | 26 to 24 |
 | `spacing.s6` | legacy value `32` | `rhythm.section, or rhythm.screen at regular width` | 32 to 36 |
 | `spacing.s7` | legacy value `52` | `rhythm.section at regular width` | 52 to 56 |
-| `textStyles.lede` | legacy value `16/24` | `body` | 16/24 to 17/25 |
-| `textStyles.caption` | legacy value `12/16` | `fine` | 12/16 to 13/18 |
-| `textStyles.figure` | legacy value `28/34` | `display` | Public Sans Bold 28 to Merriweather Bold 34 |
-| `textStyles.figureInline` | legacy value `17/25` | `strong with tabular figures` | nothing |
-| `textStyles.tag` | legacy value `13/18` | `label in bronzeInk` | nothing |
-| `textStyles.kicker` | alias (same value) | `textStyles.label` | nothing |
-| `textStyles.chip` | legacy value `13/17` | `label` | line height 17 to 18, ink to inkSoft |
-| `textStyles.countdown` | legacy value `17/22` | `control with tabular figures` | nothing |
-| `textStyles.padTitle` | legacy value `42/52` | `title at regular width (typeRolesRegular.title)` | nothing |
-| `textStyles.padLede` | legacy value `19/30` | `body` | 19/30 to 17/25 |
+| `textStyles.title` | alias (same value) | `textStyles.recordTitle` | nothing |
+| `textStyles.display` | alias (same value) | `textStyles.figure` | nothing |
+| `textStyles.heading` | alias (same value) | `textStyles.sectionTitle` | nothing |
+| `textStyles.subheading` | alias (same value) | `textStyles.rowRecord` | nothing |
+| `textStyles.record` | alias (same value) | `textStyles.recordText` | nothing |
+| `textStyles.metadata` | alias (same value) | `textStyles.secondary` | nothing |
+| `textStyles.fine` | alias (same value) | `textStyles.footnote` | nothing |
+| `textStyles.label` | alias (same value) | `textStyles.capsule` | nothing |
+| `textStyles.control` | alias (same value) | `textStyles.strong` | nothing |
+| `textStyles.padTitle` | alias (same value) | `textStyles.recordTitle` | nothing |
+| `textStyles.padLede` | alias (same value) | `textStyles.body` | nothing |
+| `textStyles.lede` | alias (same value) | `textStyles.body` | nothing |
+| `textStyles.caption` | alias (same value) | `textStyles.footnote` | nothing |
+| `textStyles.figureInline` | alias (same value) | `textStyles.strong` | nothing |
+| `textStyles.tag` | alias (same value) | `textStyles.capsule` | nothing |
+| `textStyles.kicker` | alias (same value) | `textStyles.capsule` | nothing |
+| `textStyles.chip` | alias (same value) | `textStyles.capsule` | nothing |
+| `textStyles.countdown` | alias (same value) | `textStyles.strong` | nothing |
 
 <!-- tokens:end -->

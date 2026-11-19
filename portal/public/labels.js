@@ -8,6 +8,7 @@
    module's graph so the analytics bundle (events.js reaches labels.js through
    growth-modules.js) never carries it. */
 import { shortDate } from './format.js';
+import { MACHINE_NOTICE, MACHINE_NOTICE_STORED } from './machine-notice.js?v=5ecefd2bcd';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -256,6 +257,23 @@ export function machineLabelHTML({ note = MACHINE_NOTE, inline = false, pill = f
   if (pill) return `<span class="ui-machine-pill${cls}"${title}>${text}</span>`;
   return `<details class="ui-pop ui-machine${cls}"><summary${title}>${text}</summary>` +
     `<div class="ui-sheet"><p>${esc(note)}</p></div></details>`;
+}
+
+/** MachineNotice: the error notice under stored machine-written text (a record's
+ *  brief, a bill's summary, the year in brief, a report), one small grey line
+ *  directly under the text, in the same class as the line under an Ask answer.
+ *  `notice` is the Worker's string (`machine_notice`) where the response carried
+ *  one; text read from a static file gets the same fixed words, which live in
+ *  machine-notice.js and nowhere else. Printed once under a block or a list,
+ *  never once per row. */
+export function machineNoticeText(notice) {
+  const sent = typeof notice === 'string' ? notice.trim() : '';
+  // Stored text reads "summaries". A response a browser or an edge cached before the wording changed still
+  // carries the answers wording for up to an hour: it is the same notice, so it prints in the present words.
+  return sent && sent !== MACHINE_NOTICE ? sent : MACHINE_NOTICE_STORED;
+}
+export function machineNoticeHTML({ notice = '', className = '' } = {}) {
+  return `<p class="answer-notice${className ? ` ${esc(className)}` : ''}">${esc(machineNoticeText(notice))}</p>`;
 }
 
 // --- source line ---------------------------------------------------------------------

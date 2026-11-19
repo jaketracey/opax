@@ -244,7 +244,7 @@
 .community-tools .setup-scope{margin:var(--space-group) 0 0;max-width:62ch}
 #setup-copy-status:empty{display:none}
 #setup-copy-status:not(:empty){margin:var(--space-block) 0;padding:var(--space-row) var(--space-block);background:var(--paper-sunken);border-radius:var(--radius-sm)}
-.setup-copy-fallback{box-sizing:border-box;width:100%;min-height:6rem;margin:var(--space-tight) 0 var(--space-block);padding:var(--space-heading);border:var(--border-hairline) solid var(--line-control);border-radius:var(--radius-sm);font:var(--weight-regular) var(--text-16)/var(--leading-body) ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}
+.setup-copy-fallback{box-sizing:border-box;width:100%;min-height:6rem;margin:var(--space-tight) 0 var(--space-block);padding:var(--space-heading);border:var(--border-hairline) solid var(--line-control);border-radius:var(--radius-sm);font:var(--weight-regular) var(--text-17)/var(--leading-body) ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}
 
 @media(max-width:1000px){
  .community-feed-layout{grid-template-columns:minmax(0,1fr) 210px;gap:var(--space-group)}

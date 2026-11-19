@@ -11,10 +11,17 @@ export const CHANNELS = ['x', 'bluesky', 'facebook', 'instagram', 'instagram_sto
 export type Channel = typeof CHANNELS[number]
 type SocialEnv = Pick<Env, 'ASSETS' | 'REPORTS_ENABLED' | 'GENERATION_CACHE' | 'COMMUNITY_DB' | 'STAGING_API' | 'DAILY_POST_ENABLED' | 'X_API_KEY' | 'X_API_SECRET' | 'X_ACCESS_TOKEN' | 'X_ACCESS_TOKEN_SECRET' | 'X_ACCOUNT_ID' | 'X_USERNAME' | 'FACEBOOK_POST_ENABLED' | 'FACEBOOK_PAGE_ID' | 'FACEBOOK_PAGE_TOKEN' | 'INSTAGRAM_POST_ENABLED' | 'INSTAGRAM_STORY_ENABLED' | 'FACEBOOK_STORY_ENABLED' | 'INSTAGRAM_ACCOUNT_ID' | 'INSTAGRAM_USERNAME' | 'INSTAGRAM_ACCESS_TOKEN' | 'META_API_VERSION' | 'BLUESKY_POST_ENABLED' | 'BSKY_HANDLE' | 'BSKY_APP_PASSWORD' | 'BSKY_SERVICE'>
 interface Receipt { channel: Channel; status: string; post_id: string | null; container_id: string | null; detail: string | null; progress?: string | null; updated_at: string }
-/** A delivery made of several frames: the ids published so far, and the frame in flight with its container or photo. */
-interface Progress { done: string[]; at: number | null; container: string | null }
+/**
+ * A delivery made of several frames: the ids published so far, and the frame in flight with its container or photo.
+ * `refused` counts Meta's "not ready" answers to a publish that the delivery has waited out (Instagram only).
+ */
+interface Progress { done: string[]; at: number | null; container: string | null; refused?: number }
 const parseProgress = (raw: string | null | undefined): Progress => {
-  try { const p = raw ? JSON.parse(raw) as Partial<Progress> : null; return { done: Array.isArray(p?.done) ? p!.done.filter((d): d is string => typeof d === 'string') : [], at: typeof p?.at === 'number' ? p.at : null, container: typeof p?.container === 'string' ? p.container : null } } catch { return { done: [], at: null, container: null } }
+  try {
+    const p = raw ? JSON.parse(raw) as Partial<Progress> : null
+    const refused = typeof p?.refused === 'number' && Number.isInteger(p.refused) && p.refused > 0 ? p.refused : 0
+    return { done: Array.isArray(p?.done) ? p!.done.filter((d): d is string => typeof d === 'string') : [], at: typeof p?.at === 'number' ? p.at : null, container: typeof p?.container === 'string' ? p.container : null, ...(refused ? { refused } : {}) }
+  } catch { return { done: [], at: null, container: null } }
 }
 const isStoryChannel = (channel: Channel): boolean => channel === 'instagram_story' || channel === 'facebook_story'
 const metaVersionReady = (env: SocialEnv) => /^v\d+\.0$/.test(env.META_API_VERSION ?? '')
@@ -56,17 +63,20 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   image.searchParams.set('v', OG_VERSION)
   // Instagram's feed and grid are portrait; the landscape card is cropped there.
   if (channel === 'instagram') image.searchParams.set('format', 'portrait')
-  const full = (post.caption || post.text).replace(post.url, '').split('\n\n').filter(p => p !== post.authorisation).join('\n\n').trim()
+  // A bill's channel copies (daily-post.ts): record facts on X and Bluesky, and a caption that opens with who wrote
+  // the summary on Facebook and Instagram. Every other edition, and one stored before these existed, posts as before.
+  const short = post.record_text || post.text
+  const full = (post.channel_caption || post.caption || post.text).replace(post.url, '').split('\n\n').filter(p => p !== post.authorisation).join('\n\n').trim()
   // The line is mandatory; reserve its space before truncating a channel caption.
   const captionFor = (limit: number) => post.authorisation
     ? `${clip(full, limit - post.authorisation.length - 2)}\n\n${post.authorisation}`
     : full.slice(0, limit)
-  const xText = post.text.replace(post.url, link.toString())
+  const xText = short.replace(post.url, link.toString())
   // Bluesky allows 300 graphemes and the link rides in the card, so the text drops the URL.
   const text = channel === 'x' ? (xLength(`${xText}\n\n${AUSPOL}`) <= 280 ? `${xText}\n\n${AUSPOL}` : xText)
-    : channel === 'bluesky' ? `${clip(post.text.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300 - AUSPOL.length - 2)}\n\n${AUSPOL}`
+    : channel === 'bluesky' ? `${clip(short.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300 - AUSPOL.length - 2)}\n\n${AUSPOL}`
     : channel === 'facebook' ? `${captionFor(4900)}\n\n${AUSPOL}`
-    : `${captionFor(1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n${instagramTags(post).join(' ')}`
+    : `${captionFor(1850)}\n\nExplore ${post.title} at opax.com.au, link in bio.\n\n${instagramTags(post).join(' ')}`
   // A story channel posts a few of the slides as 9:16 frames (story.ts chooses which); the feed channels post them all at 4:5.
   const frames = isStoryChannel(channel) ? storyFrames(post.slides) : undefined
   const slides = frames
@@ -153,6 +163,44 @@ async function api(url: string, token: string, fetchImpl: typeof fetch, body?: R
 }
 const META_READ_TIMEOUT = 20000
 const META_WRITE_TIMEOUT = 90000
+/**
+ * A container still processing is read again after each of these waits before the run leaves it for the next
+ * tick. Meta advises reading a container's status about once a minute for no more than five minutes, and the
+ * ticks are five minutes apart, so a run adds at most two reads and thirty seconds per container. A run that
+ * has already gone WAIT_UNTIL past its start reads once and waits no more, so it does not hold the row longer.
+ */
+export const CONTAINER_WAITS = [10_000, 20_000]
+const WAIT_UNTIL = 3 * 60_000
+/**
+ * Meta's "The media is not ready for publishing, please wait for a moment" (HTTP 400, code 9007, subcode
+ * 2207027), answered to a publish of a container whose status read FINISHED. Meta's fix is to wait and publish
+ * the same container. Nothing was published, so the delivery may wait for a later tick: at most
+ * NOT_READY_WAITS times, and only when the run may leave a container for the next tick (leaveBy).
+ */
+const NOT_READY = 'Provider HTTP 400 code 9007/2207027'
+const NOT_READY_WAITS = 2
+/** A container still processing when the run may not leave it for a later tick: held for review. */
+const STILL_PROCESSING = 'Instagram container still processing'
+/**
+ * A container that reads PUBLISHED when the run comes to publish it: a publish Meta answered with an error
+ * went through after all. It is never published again. A container has no field naming the media it became
+ * (Meta's IG Container reference: id, status, status_code, copyright_check_status), so the delivery cannot
+ * be recorded as posted with its id: it is held for review.
+ */
+const ALREADY_PUBLISHED = 'Instagram container already published'
+/**
+ * The cron's ticks are 22:00, 22:05 and 22:10 UTC (wrangler.jsonc). A run that starts at `now`, before the last
+ * of them, may hand a delivery back as `preparing` for the next tick to finish, but only by a minute before that
+ * tick: a row still `sending` when the next tick reaches it is passed over, and after 22:10 no tick comes. This
+ * is that deadline on the wall clock (22:04 for the 22:00 run, 22:09 for the 22:05 run), or null for a run that
+ * starts outside 22:00 to 22:10, the last tick included.
+ */
+export function leaveBy(now: number): number | null {
+  const d = new Date(now)
+  const minute = d.getUTCHours() * 60 + d.getUTCMinutes()
+  if (minute < 22 * 60 || minute >= 22 * 60 + 10) return null
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 22, minute < 22 * 60 + 5 ? 5 : 10) - 60_000
+}
 function returnedId(body: Record<string, unknown>): string {
   if (typeof body.id !== 'string' || !/^[\d_]+$/.test(body.id)) throw new Error('Provider omitted post id')
   return body.id
@@ -187,6 +235,18 @@ export async function socialStatus(env: SocialEnv, date = melbourneDate()): Prom
   return { date, schedule: '08:00 AEST / 09:00 AEDT; pending Instagram containers checked at +5 and +10 minutes', channels: readiness(env), deliveries: deliveries.results }
 }
 
+/**
+ * The journal dates an operator's run may post under without the explicit
+ * override: today's Melbourne date (the one the cron uses) and the day before.
+ * An older date would resume a container that has long expired, or post a stale
+ * edition afresh to a channel with no receipt for it; a later one would take
+ * that day's journal row before its cron.
+ */
+export function operatorRunDates(now: number = Date.now()): [string, string] {
+  const today = melbourneDate(now)
+  return [today, new Date(Date.parse(today + 'T12:00:00Z') - 86400000).toISOString().slice(0, 10)]
+}
+
 export async function previewPublication(env: SocialEnv, date: string, personTopics: (name: string) => Promise<Response>, kind?: DailyPostKind, subject?: string): Promise<DailyPost | null> {
   if (!kind && !subject) {
     const existing = await env.COMMUNITY_DB.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
@@ -211,6 +271,10 @@ export async function runSocialPublication(env: SocialEnv, options: {
    * already delivered for it is not posted again.
    */
   date?: string; kind?: DailyPostKind; subject?: string; channels?: Channel[]
+  /** How the run waits between container status reads (tests pass one that returns at once). */
+  sleep?: (ms: number) => Promise<void>
+  /** The wall clock, read when the run decides whether it may leave a container for a later tick (tests pass their own). */
+  clock?: () => number
 }): Promise<unknown> {
   const ready = readiness(env)
   const channels = CHANNELS.filter(c => ready[c].ready && (!options.channels || options.channels.includes(c)))
@@ -219,7 +283,41 @@ export async function runSocialPublication(env: SocialEnv, options: {
   const date = options.date ?? melbourneDate(now)
   const at = new Date(now).toISOString()
   const db = env.COMMUNITY_DB
-  const fetchImpl = options.fetchImpl ?? fetch
+  // A request that fails before any answer comes back (no HTTP status) is remembered, so the journal can call it a network error.
+  const failedFetches = new WeakSet<object>()
+  const baseFetch = options.fetchImpl ?? fetch
+  const fetchImpl: typeof fetch = async (input, init) => {
+    try { return await baseFetch(input, init) } catch (error) { if (error !== null && typeof error === 'object') failedFetches.add(error); throw error }
+  }
+  const sleep = options.sleep ?? ((ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms)))
+  // A Worker's clock moves on after I/O, so it is current right after the provider's answer it is read for.
+  const clock = options.clock ?? (() => Date.now())
+  const deadline = leaveBy(now)
+  /**
+   * Whether a container may be left for a later tick: only the cron's own date, and only while the next tick is
+   * sure to read the row (leaveBy). Otherwise nothing would read it again that day, so it is held for review.
+   */
+  const mayLeave = () => deadline !== null && date === melbourneDate(now) && clock() < deadline
+  /** An Instagram container's status_code, read again after each of CONTAINER_WAITS while it is still IN_PROGRESS. */
+  const containerStatus = async (container: string): Promise<unknown> => {
+    const read = async () => (await api(`${graphOrigin(env)}/${container}?fields=status_code`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl)).status_code
+    let status = await read()
+    for (const ms of CONTAINER_WAITS) {
+      if (status !== 'IN_PROGRESS' || clock() >= now + WAIT_UNTIL) break
+      await sleep(ms)
+      status = await read()
+    }
+    return status
+  }
+  /** Publishes a finished container: its media id, or null when Meta answers "not ready" and the delivery may wait for a later tick. */
+  const publishContainer = async (container: string, refused: number): Promise<string | null> => {
+    try {
+      return returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { creation_id: container }))
+    } catch (error) {
+      if (error instanceof Error && error.message === NOT_READY && refused < NOT_READY_WAITS && mayLeave()) return null
+      throw error
+    }
+  }
   let edition = await db.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
   if (!edition) {
     const post = await previewPublication(env, date, options.personTopics, options.kind, options.subject)
@@ -289,12 +387,24 @@ export async function runSocialPublication(env: SocialEnv, options: {
               progress = { ...progress, at: k, container: handle }
               await saveProgress(progress)
             }
-            const state = await api(`${graphOrigin(env)}/${handle}?fields=status_code`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl)
-            if (state.status_code === 'IN_PROGRESS') { waiting = true; break }
-            if (state.status_code !== 'FINISHED') throw new Error('Instagram container not publishable')
+            const status = await containerStatus(handle)
+            if (status === 'IN_PROGRESS') {
+              // Too late for a later tick to finish it: held for review, as a publish in doubt is.
+              if (!mayLeave()) { writeStarted = true; throw new Error(STILL_PROCESSING) }
+              waiting = true; break
+            }
+            if (status === 'PUBLISHED') { writeStarted = true; throw new Error(ALREADY_PUBLISHED) }
+            if (status !== 'FINISHED') throw new Error('Instagram container not publishable')
             writeStarted = true
-            const published = returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { creation_id: handle }))
-            progress = { done: [...progress.done, published], at: null, container: null }
+            const published = await publishContainer(handle, progress.refused ?? 0)
+            if (published === null) {
+              // Refused as not ready: nothing was published. The frame keeps its container for the next tick.
+              writeStarted = false
+              progress = { ...progress, refused: (progress.refused ?? 0) + 1 }
+              await saveProgress(progress)
+              waiting = true; break
+            }
+            progress = { ...progress, done: [...progress.done, published], at: null, container: null }
             await saveProgress(progress)
             writeStarted = false
           } else {
@@ -306,7 +416,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
             writeStarted = true
             const story = await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}/photo_stories`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl, { photo_id: handle })
             const published = typeof story.post_id === 'string' && /^[\d_]+$/.test(story.post_id) ? story.post_id : returnedId(story)
-            progress = { done: [...progress.done, published], at: null, container: null }
+            progress = { ...progress, done: [...progress.done, published], at: null, container: null }
             await saveProgress(progress)
             writeStarted = false
           }
@@ -356,21 +466,31 @@ export async function runSocialPublication(env: SocialEnv, options: {
           await db.prepare('UPDATE social_deliveries SET container_id=? WHERE edition_date=? AND channel=?').bind(container, date, channel).run()
           writeStarted = false // Container creation is not publication; it is now safely recorded.
         }
-        const state = await api(`${graphOrigin(env)}/${container}?fields=status_code`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl)
-        if (state.status_code === 'IN_PROGRESS') {
+        const status = await containerStatus(container)
+        if (status === 'IN_PROGRESS') {
+          if (!mayLeave()) { writeStarted = true; throw new Error(STILL_PROCESSING) }
           await db.prepare("UPDATE social_deliveries SET status='preparing',updated_at=? WHERE edition_date=? AND channel=?").bind(at, date, channel).run()
           results[channel] = 'preparing'; continue
         }
-        if (state.status_code !== 'FINISHED') throw new Error('Instagram container not publishable')
+        if (status === 'PUBLISHED') { writeStarted = true; throw new Error(ALREADY_PUBLISHED) }
+        if (status !== 'FINISHED') throw new Error('Instagram container not publishable')
         writeStarted = true
-        id = returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { creation_id: container }))
+        const progress = parseProgress(receipt?.progress)
+        const published = await publishContainer(container, progress.refused ?? 0)
+        if (published === null) {
+          // Refused as not ready: nothing was published. The journal keeps the container for the next tick.
+          writeStarted = false
+          await db.prepare("UPDATE social_deliveries SET status='preparing',progress=?,updated_at=? WHERE edition_date=? AND channel=?").bind(JSON.stringify({ ...progress, refused: (progress.refused ?? 0) + 1 }), at, date, channel).run()
+          results[channel] = 'preparing'; continue
+        }
+        id = published
       }
       await db.prepare("UPDATE social_deliveries SET status='posted',post_id=?,detail=NULL,updated_at=? WHERE edition_date=? AND channel=?").bind(id, at, date, channel).run()
       results[channel] = 'posted'
     } catch (error) {
       // The journal keeps a bounded reason; the log keeps the message (never a token).
       console.error('daily-post', JSON.stringify({ channel, date, error: error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 300) : String(error).slice(0, 300) }))
-      const known = error instanceof Error && /^(Provider HTTP \d+|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured|Bluesky (?:session HTTP \d+|API HTTP \d+|account mismatch|did not return a post uri))$/.test(error.message) ? error.message : 'Publication request failed'
+      const known = failureDetail(error, error !== null && typeof error === 'object' && failedFetches.has(error))
       if (claimed) await db.prepare('UPDATE social_deliveries SET status=?,detail=?,updated_at=? WHERE edition_date=? AND channel=?').bind(writeStarted ? 'review_required' : 'failed', known, at, date, channel).run()
       // Preflight errors are recorded as well, so an operator can see the problem.
       else if (receipt) await db.prepare("UPDATE social_deliveries SET status='failed',detail=?,updated_at=? WHERE edition_date=? AND channel=? AND status='preparing'").bind(known, at, date, channel).run()
@@ -379,6 +499,39 @@ export async function runSocialPublication(env: SocialEnv, options: {
     }
   }
   return { date, subject: post.subject, channels: results }
+}
+
+/** The journal's own reasons, stored as thrown. Meta's numeric error code (digits only, never its message) rides on the status: api() above. */
+const KNOWN_DETAIL = /^(Provider HTTP \d+(?: code \d+(?:\/\d+)?)?|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable|container already published|container still processing)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured|Bluesky (?:session HTTP \d+|API HTTP \d+|account mismatch|did not return a post uri))$/
+
+/**
+ * What the journal records for a failed delivery. A known reason is kept as it is. Any other error is
+ * recorded as a fixed category and the error's class, never its message, because a provider's or the
+ * runtime's text can echo a request. Cloudflare documents the subrequest limit (per invocation, KV, D1
+ * and R2 included) but not the message it throws, so the word itself marks it. D1's documented messages
+ * begin `D1_` (D1_ERROR, D1_EXEC_ERROR, D1_TYPE_ERROR, D1_COLUMN_NOTFOUND) or `D1 DB` (its overload and
+ * reset errors). "Network connection lost." is the runtime's documented connection failure, for a fetch
+ * or a binding; `fetchFailed` says the error came from a request that got no HTTP answer at all.
+ */
+export function failureDetail(error: unknown, fetchFailed = false): string {
+  if (error instanceof Error && KNOWN_DETAIL.test(error.message)) return error.message
+  const message = error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+  const name = errorClass(error)
+  if (/\bsubrequests?\b/i.test(message)) return 'Worker limit (subrequests)'
+  if (/^D1(?:_[A-Z_]+\b| DB\b)/.test(message)) return `Database error (${name})`
+  const kind = error !== null && typeof error === 'object' ? (error as { name?: unknown }).name : undefined
+  if (kind === 'TimeoutError' || kind === 'AbortError') return `Timeout (${name})`
+  if (fetchFailed || /^Network connection lost\.?$/.test(message)) return `Network error (${name})`
+  return `Unexpected error (${name})`
+}
+/**
+ * An Error's constructor name (TypeError, DOMException, Error), or the type of anything else thrown ('object',
+ * 'string'); bounded, never free text. A plain object's `constructor` is its own data (a parsed body), so it is
+ * never read.
+ */
+function errorClass(error: unknown): string {
+  const name = error instanceof Error ? error.constructor?.name : error === null ? 'null' : typeof error
+  return typeof name === 'string' && /^[A-Za-z_$][\w$]{0,39}$/.test(name) ? name : 'unknown'
 }
 
 // ---------------------------------------------------------------- bluesky

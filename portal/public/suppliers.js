@@ -3,8 +3,8 @@ import {mountContractsTable} from './contracts-table.js?v=9ce0addeb6';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=1e276a233a";
-import { sourceLineHTML } from "./labels.js?v=ffd32d5678";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=62a35ee4fb";
+import { sourceLineHTML } from "./labels.js?v=3d4c26573f";
 import { partyUrl } from "./canonical-urls.js?v=9ce13e7ba5";
 import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=d28448a137";
 // "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
@@ -367,7 +367,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
+        const { mountMoneyMap } = await import("/money-map.js?v=5423132a60");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

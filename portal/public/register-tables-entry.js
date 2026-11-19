@@ -7,5 +7,5 @@ if (serverRegister || app && /^\/subject\/(?:person|party|donor)\//.test(locatio
 }
 // Sitting hubs keep their server-rendered vote table without the application.
 if (app ? /^\/(?:bill|subject)\//.test(location.pathname) : document.querySelector('[data-vote-table]')) {
-  import('./vote-tables.js?v=11b27173e8');
+  import('./vote-tables.js?v=5617a34dcb');
 }

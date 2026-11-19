@@ -274,17 +274,24 @@ const fold = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCa
 // Folding ~3,700 place names is the costly part of a search: once per parsed index.
 const folded = new WeakMap<PlaceRow[], string[]>()
 const foldedNames = (rows: PlaceRow[]) => { let names = folded.get(rows); if (!names) folded.set(rows, names = rows.map(r=>fold(r[0]))); return names }
-/** Places matching a reader's words: exact names first, then names that start with them. */
-export function findSeats(q: string, d: VicElection, places: VicPlaces | null): PlaceHit[] {
+/**
+ * Places matching a reader's words: exact names first, then names that start with them.
+ * Until the polls close a person's name finds no seat: the roster names each seat's previous
+ * member and no other candidate, so matching it would find one candidate's seat by name and
+ * nobody else's. Suburbs, postcodes, council areas, districts and regions match at any time;
+ * the roster "Member" match returns by itself at VIC_ELECTION_POLLS_CLOSE.
+ */
+export function findSeats(q: string, d: VicElection, places: VicPlaces | null, now = new Date()): PlaceHit[] {
   const want = fold(q.slice(0,60))
   if (!want) return []
+  const people = pollsClosed(now)
   const seatByName = new Map(d.seats.map(s=>[s.kind+':'+s.name,s]))
   const hits: (PlaceHit & {score: number; order: number; people: number})[] = []
   const score = (name: string, n = fold(name)) => { return n === want ? 0 : n.startsWith(want + ' ') || n.startsWith(want) && want.length >= 3 ? 1 : n.split(' ').some(w=>w.startsWith(want)) && want.length >= 3 ? 2 : -1 }
   for (const s of d.seats) {
     const own = score(s.name)
     if (own >= 0) hits.push({name:s.name,kind:s.kind === 'district' ? 'District' : 'Region',seats:[{seat:s,share:null}],score:own,order:0,people:0})
-    for (const m of s.members) if (s.kind === 'district' && fold(m.name).split(' ').concat(fold(m.name)).includes(want))
+    if (people) for (const m of s.members) if (s.kind === 'district' && fold(m.name).split(' ').concat(fold(m.name)).includes(want))
       hits.push({name:m.name,kind:'Member',seats:[{seat:s,share:null}],score:fold(m.name) === want ? 0 : 2,order:3,people:0})
   }
   if (places) {
@@ -415,8 +422,8 @@ export async function vicElectionPage(id: string | null, read: ReadAsset, config
   const index = await readAssemblyIndex(read)
   if (id === null) {
     const q = place?.trim().slice(0,60) || null
-    // Seat and member names answer without the place index; suburbs and postcodes need it.
-    const find = q ? {place:q,hits:findSeats(q,d,await read<VicPlaces>(VIC_ELECTION_PLACES).catch(()=>null))} : null
+    // Seat names (and, once the polls close, member names) answer without the place index; suburbs and postcodes need it.
+    const find = q ? {place:q,hits:findSeats(q,d,await read<VicPlaces>(VIC_ELECTION_PLACES).catch(()=>null),now)} : null
     return {...renderVicElection(d,null,config,now,find,index),status:200,noindex:Boolean(q)}
   }
   const s = d.seats.find(s=>s.path === `${VIC_ELECTION_PATH}/${id}`)

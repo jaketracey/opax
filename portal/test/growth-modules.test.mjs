@@ -71,13 +71,34 @@ test('Ask placeholders and suggestions never duplicate a seed or each other',()=
  assert.match(bill,/<ul class="growth-questions" role="list"><\/ul>/);
  const runtime=app.slice(app.indexOf('function appendGrowthQuestions('),app.indexOf('function wireGrowthAsk('));
  const links=[];
- const list={querySelectorAll:()=>links,insertAdjacentHTML:(_,html)=>{const href=html.match(/href="([^"]+)"/)[1].replaceAll('&amp;','&');links.push({href:new URL(href,'https://local.test').href});}};
+ const list={querySelectorAll:()=>links,querySelector:()=>null,insertAdjacentHTML:(_,html)=>{const href=html.match(/href="([^"]+)"/)[1].replaceAll('&amp;','&');links.push({href:new URL(href,'https://local.test').href});}};
  const root={querySelector:selector=>selector==='.growth-questions'?list:{value:'Seed question?'}};
  const {appendGrowthQuestions}=runInNewContext(runtime+';({appendGrowthQuestions})',{URL,growthModules:{questionsHTML}});
  const suggestions=['Seed question?','Other question?','Other question?'].map(question=>({question,label:question}));
  appendGrowthQuestions(root,suggestions,'person',allow);
  appendGrowthQuestions(root,suggestions,'person');
  assert.equal(links.length,1);
+});
+test('a held question pill keeps its room until the first question takes it, in the same task',()=>{
+ const held=askBlockHTML({name,pageType:'person',seed:'Seed question?',held:1});
+ assert.match(held,/<ul class="growth-questions" role="list"><li class="growth-question-held" aria-hidden="true"><a>&nbsp;<\/a><\/li><\/ul>/);
+ assert.doesNotMatch(askBlockHTML({name,pageType:'person'}),/growth-question-held/);
+ const runtime=app.slice(app.indexOf('function appendGrowthQuestions('),app.indexOf('function wireGrowthAsk('));
+ const steps=[];
+ let pill={remove:()=>{steps.push('held removed');pill=null;}};
+ const links=[];
+ const list={
+  querySelectorAll:selector=>{assert.equal(selector,'a[href]','a held pill has no address and is never read as a question');return links;},
+  querySelector:selector=>selector==='.growth-question-held'?pill:null,
+  insertAdjacentHTML:(_,html)=>{steps.push('question added');links.push({href:new URL(html.match(/href="([^"]+)"/)[1].replaceAll('&amp;','&'),'https://local.test').href});},
+ };
+ const root={querySelector:selector=>selector==='.growth-questions'?list:{value:'Seed question?'}};
+ const {appendGrowthQuestions}=runInNewContext(runtime+';({appendGrowthQuestions})',{URL,growthModules:{questionsHTML}});
+ appendGrowthQuestions(root,[{question:'Seed question?'}],'person');
+ assert.deepEqual(steps,[],'the seed is not a question: the pill keeps its room');
+ appendGrowthQuestions(root,[{question:'One?'},{question:'Two?'}],'person');
+ assert.deepEqual(steps,['held removed','question added','question added']);
+ assert.match(app,/held\.remove\(\)/,'a page whose questions all fail lets the held room go');
 });
 test('Ask module escapes record text, seeds the field and marks every question nofollow',()=>{
  const html=askBlockHTML({name:'Alex <Example>',pageType:'person',seed:'Alex "Example"',questions:['One & two?','Another?']});

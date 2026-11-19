@@ -3,7 +3,7 @@ import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=d28448a137
 import { shortDate } from './format.js';
 import { isOrganisationDonor } from './donor-entity.js?v=3fd3e51b56';
 export { isOrganisationDonor };
-import { sourceLineHTML } from './labels.js?v=ffd32d5678';
+import { sourceLineHTML } from './labels.js?v=3d4c26573f';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';
@@ -83,7 +83,11 @@ export function questionLabel(value, limit = 100) {
 }
 const suggestion = (question,label=question) => ({question,label:questionLabel(label)});
 const questionKey = value => text(value).replace(/\s+/g,' ').toLowerCase();
-export function askBlockHTML({name = '', bill = null, questions = [], pageType, seed = ''} = {}) {
+/** `held` keeps that many question pills' room while a page's questions are still loading
+ *  (the person page: its record's questions arrive with the record), so the first ones to
+ *  arrive take a place already drawn instead of pushing the page below them down. */
+export const HELD_QUESTION_HTML = '<li class="growth-question-held" aria-hidden="true"><a>&nbsp;</a></li>';
+export function askBlockHTML({name = '', bill = null, questions = [], pageType, seed = '', held = 0} = {}) {
 
   const heading = bill ? 'Ask about this bill' : `Ask about ${name}`;
   return `<section class="growth-ask" ${moduleAttrs('ask',pageType,1)} aria-labelledby="growth-ask-title">
@@ -94,7 +98,7 @@ export function askBlockHTML({name = '', bill = null, questions = [], pageType, 
       <input type="hidden" name="from" value="${esc(pageType)}">
       <button class="ui-button" data-variant="primary" type="submit">Ask</button>
     </form>
-    <ul class="growth-questions" role="list">${questionsHTML(questions,pageType,bill ? '' : seed)}</ul>
+    <ul class="growth-questions" role="list">${questionsHTML(questions,pageType,bill ? '' : seed)}${HELD_QUESTION_HTML.repeat(Math.max(0,Number(held) || 0))}</ul>
   </section>`;
 }
 export function questionsHTML(questions, pageType, seed = '') {

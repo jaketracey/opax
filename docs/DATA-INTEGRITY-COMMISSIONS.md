@@ -128,13 +128,17 @@ Each body's full gap list is in `index.json` (`bodies[].gaps`) and in `view=bodi
 | --- | --- | --- |
 | NACC | CC BY 4.0 (page 2 of each report), except the Coat of Arms, logo, third-party material, trade marks and images | Verbatim extracts with attribution |
 | IBAC | IBAC copyright in each report; tabled copies published by the Parliament of Victoria (https://www.parliament.vic.gov.au/copyright/). The Sandon progress report carries no reuse notice | Short verbatim recommendations with citations and links; the Sandon progress report is listed and linked only |
-| NSW ICAC | Copyright, all rights reserved apart from fair dealing | Short verbatim findings and recommendations with citations and links (needs Jake's confirmation; see follow-ups) |
+| NSW ICAC | Copyright, all rights reserved apart from fair dealing | Short verbatim findings and recommendations with citations and links, under fair dealing (reuse confirmed by the project owner on 17 November 2026) |
 | Qld CCC | Website material CC BY 4.0 unless otherwise noted | Verbatim extracts with attribution |
 | WA CCC | Commission copyright in each report; fair dealing only; no website licence page | Short verbatim extracts with citations and links |
 | SA ICAC | Copyright; no open licence | Short verbatim extracts with citations and links |
 | Tas | Commission copyright; reuse under the Tasmanian Government terms (https://www.tas.gov.au/codi) | Verbatim extracts with attribution |
 | ACT | Commission copyright; unaltered reproduction for personal, educational or non-commercial use with attribution | Verbatim extracts with attribution |
 | NT | Reproduction reserved except as copyright law permits; Territory Stories attribution to Library & Archives NT | Metadata and citation only (no text) |
+
+These uses do not change the build rules above: every quoted item must appear verbatim on
+its cited page with its page citation, and OPAX generates no adverse statements of its own
+about people a report names.
 
 ## Manual publisher-download supplement
 
