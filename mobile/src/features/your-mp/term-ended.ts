@@ -28,6 +28,11 @@ const dayWords = (date: Date) =>
  */
 const TERM_ENDS_DAYS_BEFORE = 25;
 function termEndWords(electionDay: Date, stateCode: string): string | null {
+  const ended = termEndDate(electionDay, stateCode);
+  return ended ? dayWords(ended) : null;
+}
+/** The same day as a date, for a dated view to compare against. */
+function termEndDate(electionDay: Date, stateCode: string): Date | null {
   if (stateCode.toLowerCase() !== 'vic') return null;
   const nextWeek = new Date(electionDay.getTime() + 7 * 86_400_000);
   const lastSaturdayOfNovember =
@@ -35,9 +40,7 @@ function termEndWords(electionDay: Date, stateCode: string): string | null {
     electionDay.getUTCMonth() === 10 &&
     nextWeek.getUTCMonth() !== 10;
   if (!lastSaturdayOfNovember) return null;
-  return dayWords(
-    new Date(electionDay.getTime() - TERM_ENDS_DAYS_BEFORE * 86_400_000),
-  );
+  return new Date(electionDay.getTime() - TERM_ENDS_DAYS_BEFORE * 86_400_000);
 }
 
 /**
@@ -125,6 +128,19 @@ export function termEndedFor(
  */
 export function rowTermEnded(seat: Pick<Electorate, 'dissolved_for'>): boolean {
   return seat.dissolved_for != null;
+}
+
+/**
+ * The day a term ended, as the data writes days ("2026-11-03"): a view of a
+ * seat on a chosen date shows its last members from this day on. Where the
+ * rule gives no day (`termLine`), the election day, by which it had ended.
+ */
+export function endedTermDay(term: EndedTerm): string {
+  const day = dayOf(term.electionDay);
+  const ended = day ? termEndDate(day, term.stateCode) : null;
+  return ended
+    ? ended.toISOString().slice(0, 10)
+    : term.electionDay.slice(0, 10);
 }
 
 /** "Parliament’s term ended on 3 November for the 28 November election". */
