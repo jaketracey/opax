@@ -1,4 +1,9 @@
 import type { Electorate, ElectorateDetail } from '../../api/catalogs';
+import {
+  endedParliaments,
+  rowTermEnded,
+  termEndedFor,
+} from '../your-mp/term-ended';
 import { nameKey } from '../../api/catalogs';
 import { jurisdictionName } from '../../design/parliament';
 import { thisDevice } from '../../design/device';
@@ -271,6 +276,7 @@ export function matchLeads(
       .filter(isHouseSeat)
       .flatMap((s) => s.representatives.map((r) => r.person_id)),
   );
+  const ended = endedParliaments(electorates);
   const leads = new Map<string, PersonLead>();
   for (const seat of electorates) {
     if (seat.status === 'historical') continue;
@@ -295,7 +301,8 @@ export function matchLeads(
         party: r.party,
         detail: senate
           ? `Senator for ${state}`
-          : `Member for ${seat.name}, Victorian Parliament`,
+          : // No members while the Parliament's term has ended.
+            `${termEndedFor(seat, ended) ? 'Last member' : 'Member'} for ${seat.name}, Victorian Parliament`,
         line: `Choose your electorate in ${state}`,
         state: code,
       });
@@ -313,13 +320,23 @@ export function seatMember(
   const r = seat.representatives[0];
   return r ? { name: r.person.name, party: r.party } : null;
 }
-/** VoiceOver: "Grayndler. Anthony Albanese, Labor." */
-export function seatLabel(seat: Electorate, extra?: string): string {
+/** How a seat row names the person of a house whose term has ended. */
+export const LAST_MEMBER = 'Last member';
+/**
+ * VoiceOver: "Grayndler. Anthony Albanese, Labor." `last`: the seat's house
+ * has no members (its Parliament's term has ended for an election), so the
+ * person is named as the last member: "Essendon. Last member: …".
+ */
+export function seatLabel(
+  seat: Electorate,
+  extra?: string,
+  last = rowTermEnded(seat),
+): string {
   const member = seatMember(seat);
   return [
     `${seat.name}.`,
     member
-      ? `${[member.name, member.party].filter(Boolean).join(', ')}.`
+      ? `${last ? `${LAST_MEMBER}: ` : ''}${[member.name, member.party].filter(Boolean).join(', ')}.`
       : `${seatCopy.noMember}.`,
     extra ? `${extra}.` : '',
   ]

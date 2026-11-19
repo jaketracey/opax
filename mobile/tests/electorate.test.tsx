@@ -18,7 +18,7 @@ import { Screen, SectionHeader } from '../src/design/layout';
 import { Platform, StyleSheet, View } from 'react-native';
 import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { AUTHORISATION_LINE } from '../src/design/authorisation';
-import Members from '../src/features/your-mp/Members';
+import Members, { membersTitle } from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
 import {
@@ -1192,6 +1192,94 @@ describe('the authorisation line is Victorian only', () => {
     asJurisdiction(j);
     const r = await render(<Members />);
     expect(text(r).includes(AUTHORISATION_LINE)).toBe(shown);
+    await act(async () => r.unmount());
+  });
+});
+
+describe('while the Victorian Parliament’s term has ended for an election', () => {
+  const TERM =
+    'Parliament’s term ended on 3 November for the 28 November election';
+  const assembly = (value: string | null) =>
+    mock.directory.mockResolvedValue({
+      ...directory,
+      electorates: result({
+        ...index,
+        electorates: index.electorates.map((e) =>
+          e.chamber === 'vic_la' ? { ...e, dissolved_for: value } : e,
+        ),
+      }),
+    } as never);
+  afterEach(() => {
+    mock.directory.mockResolvedValue(directory as never);
+  });
+  const heading = (r: TestRenderer.ReactTestRenderer) =>
+    r.root.findAll(
+      (n) =>
+        n.props.testID === 'electorate-members-heading' &&
+        typeof n.props.title === 'string',
+    )[0]!.props.title;
+  const details = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAllByType(PersonRow)
+      .filter((n) => /^(electorate-member|members)-/.test(n.props.testID ?? ''))
+      .map((n) => n.props.detail ?? null);
+
+  test.each([
+    ['Richmond', 'Last member', 'Member'],
+    ['Northern Metropolitan', 'Last members', 'Members'],
+  ])(
+    'the electorate page for %s heads the section "%s" with the term line, and no "Since"',
+    async (name, last, sitting) => {
+      load(name, 'vic');
+      assembly('2026-11-28');
+      let r = await render(<Electorate />);
+      expect(heading(r)).toBe(last);
+      expect(text(r)).toContain(TERM);
+      expect(details(r).length).toBeGreaterThan(0);
+      expect(details(r).every((d) => d === null)).toBe(true);
+      await act(async () => r.unmount());
+      // Once the result is loaded the section is the members' again.
+      assembly(null);
+      r = await render(<Electorate />);
+      expect(heading(r)).toBe(sitting);
+      expect(text(r)).not.toContain(TERM);
+      expect(has(r, 'electorate-term-ended')).toBe(false);
+      await act(async () => r.unmount());
+    },
+  );
+
+  test('a federal seat in Victoria is untouched', async () => {
+    load('Higgins');
+    assembly('2026-11-28');
+    const r = await render(<Electorate />);
+    expect(has(r, 'electorate-term-ended')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('the region’s members page is titled "Last members for", with the term line and no "Since"', async () => {
+    const region = seat('Northern Metropolitan', 'vic');
+    load('Northern Metropolitan', 'vic');
+    mockParams.seat = region.electorate_id;
+    const title = (r: TestRenderer.ReactTestRenderer) =>
+      r.root
+        .findAllByType(Heading)
+        .find((node) => node.props.testID === 'members-title')!.props.children;
+    assembly('2026-11-28');
+    let r = await render(<Members />);
+    expect(title(r)).toBe(`Last members for ${region.name}`);
+    expect(text(r)).toContain(TERM);
+    expect(details(r).length).toBe(region.representatives.length);
+    expect(details(r).every((d) => d === null)).toBe(true);
+    await act(async () => r.unmount());
+    expect(membersTitle(region, true).bar).toBe('Last members');
+    // A state's senators are never "last members".
+    expect(membersTitle(seat('New South Wales'), true).page).toBe(
+      'Senators for New South Wales',
+    );
+    assembly(null);
+    r = await render(<Members />);
+    expect(title(r)).toBe(`Members for ${region.name}`);
+    expect(has(r, 'members-term-ended')).toBe(false);
     await act(async () => r.unmount());
   });
 });

@@ -51,6 +51,7 @@ import {
   type StateCode,
 } from './seat-model';
 import { PersonLeadRow, SeatRow } from './SeatRow';
+import { endedParliaments, termEndedFor } from '../your-mp/term-ended';
 
 export type SeatPresentation = 'sheet' | 'welcome';
 const AEC_URL = 'https://electorate.aec.gov.au/';
@@ -414,12 +415,16 @@ export function SeatChooser({
     seat.status === 'chosen' ? seat.choice.stateSeatIds : [],
   );
   const busy = savingId !== null || chosenId !== null;
+  // Houses with no members while their Parliament's term has ended for an
+  // election: a region's row takes the answer from its Assembly's rows.
+  const ended = endedParliaments(electorates);
   const row = (s: Electorate) => {
     const accessory = accessoryFor(s.electorate_id, savingId, chosenId);
     return (
       <SeatRow
         key={s.electorate_id}
         seat={s}
+        last={!!termEndedFor(s, ended)}
         onPress={() => {
           method.current = 'search';
           void choose(s);
