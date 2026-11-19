@@ -19,6 +19,7 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import TalkStack from '../src/app/talk/_layout';
 import TabStack from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
+import { titlePinLayout } from '../src/navigation/title-pin';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
 import { Screen } from '../src/design/layout';
@@ -386,6 +387,9 @@ test.each([
       expect(tabs.screenOptions.scrollEdgeEffects.top).toBe(
         underBar ? 'soft' : 'hard',
       );
+      // Every page of a tab's stack, the root and the pushed ones, is
+      // wrapped by the title pin (tests/title-pin.test.tsx).
+      expect(tabs.screenLayout).toBe(titlePinLayout);
       const tabEdition = (
         tabs.children as React.ReactElement<{
           name: string;
@@ -413,6 +417,8 @@ test.each([
         'grant-program',
         'agencies',
         'learn/glossary',
+        // No field, and no fade of its own under the rail's pinned title.
+        'largest-grants',
       ]) {
         const list = (
           tabs.children as React.ReactElement<{
@@ -441,8 +447,11 @@ test.each([
         if (below && edge === 'unspecified')
           expect(list.headerShadowVisible).toBe(false);
       }
-      // A seat's grants share the Grants route but have no search field:
-      // they keep the stack's clear bar. The electorates view has a field.
+      // A seat's grants share the Grants route but have no search field.
+      // Beside a vertical bar the title is pinned and that list draws no
+      // fade under it, so it takes the solid bar there with the rest: under
+      // the clear one its rows ran through the title. Off the rail it keeps
+      // the stack's clear bar, as before.
       const grants = (
         tabs.children as React.ReactElement<{
           name: string;
@@ -454,11 +463,12 @@ test.each([
           route: { key: 'grants', name: 'grants', params },
           navigation: { getState: () => ({ index: 1, routes: [] }) },
         });
-      expect('headerTransparent' in grantsFor({ seat: 'Grayndler' })).toBe(
-        false,
+      const railed = underBar && edge !== 'unspecified';
+      expect(grantsFor({ seat: 'Grayndler' }).headerTransparent).toBe(
+        railed ? false : undefined,
       );
       expect('headerBackground' in grantsFor({ seat: 'Grayndler' })).toBe(
-        false,
+        railed,
       );
       expect(
         grantsFor({ seat: 'Grayndler', view: 'electorates' }).headerTransparent,

@@ -633,9 +633,9 @@ export function useTitleOnScroll(
   // the outer display, b65), whose bottom edge is the native header height.
   // A plain string title there sat above the page's own heading at rest (the
   // double title), so the rail takes the iPhone path: hidden while the
-  // heading is on screen, faded in once it has gone under the bar. On the
-  // outer display UIKit folds the band away as the page scrolls (before and
-  // after b67), so the page shows its heading alone. The band keeps no room
+  // heading is on screen, faded in once it has gone under the bar. The band
+  // stays as the page scrolls (`TitlePin`, build 92; UIKit folded it away
+  // before), so the title shows there as on iPhone. The band keeps no room
   // for items, which are on the rail.
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
   const barTrailingWidth = verticalBar ? 0 : trailingWidth;

@@ -33,6 +33,52 @@ own heading. The title's width keeps no room for trailing items, as they are on
 the rail. Screens without an in-content heading (Ask, search results) keep
 their stack title, which UIKit draws in the band.
 
+## The title stays pinned (build 92)
+
+The folding described in this file is UIKit's bar minimisation: from iOS 27 a
+navigation bar beside a vertical bar minimises as its page scrolls down and
+returns on the way up (`UINavigationItem.barMinimizeBehavior`, automatic).
+On build 91 every page lost its title on the way down and kept an empty strip
+in its place. The native switch is `barMinimizeBehavior = .never`, which
+react-native-screens 4.26 does not expose (`minimizeBehavior` on NativeTabs
+is the tab bar's and does not change this: tried on the simulator).
+
+`TitlePin` (`title-pin.tsx`, the tab stacks' `screenLayout`) stops it from
+JS. UIKit minimises the bar for one scroll view, found from the page's first
+view down through first children. Beside a vertical bar the page's first
+child is an empty view, so UIKit finds none and the band stays: the title
+holds at the top (the large title on a root, the inline one on a pushed
+page) and the page passes under it. Sheets and modals are left alone, and
+nothing is added on any layout without a vertical bar.
+
+What it costs on the rail, since react-native-screens finds the scroll view
+the same way:
+
+- `scrollEdgeEffects` no longer reach the scroll view there, so UIKit's
+  edges are its defaults. The page's own fade is the edge under the title:
+  Screen and `ClearBarRest` draw it on the rail too, whole down to the bar's
+  foot (`RAIL_FADE_COVER`), where UIKit's default edge otherwise showed as a
+  faint band.
+- A pushed page with neither (its own list and no fade) must take the solid
+  bar on the rail (`railSearchRoutes` in `stack/index.tsx`), or its rows run
+  through the title. Largest grants and a seat's grants do.
+- A tab pressed again scrolls its root to the top through
+  react-native-screens, which no longer finds the scroll view. On the rail a
+  root does it from JS (`useRailRootReselect`): Screen roots go to their
+  resting top, the Bills list to 0 below its solid bar, and Ask has its own.
+  The listener is on the tab's own screen (the stack's parent): the tab
+  route's nested `state` is unset until something navigates inside the tab,
+  so it cannot be used to match a press to a stack.
+
+If react-native-screens gains the option, or the app's patch sets
+`navigationItem.barMinimizeBehavior = .never` (iOS 27) in
+`RNSScreenStackHeaderConfig.mm`, remove `TitlePin`: UIKit's own soft edge
+comes back and the rules above are not needed.
+
+The paragraphs below were written while the band still folded. They stand as
+the history of each rule; where they say the band folds away, it no longer
+does.
+
 Once that band folds away, UIKit keeps the top safe area (24 pt) as bar. Under
 an opaque bar the page was laid out below it, so its heading scrolled under a
 24 pt strip and was cut off, and at rest the top 14 pt showed the system's grey

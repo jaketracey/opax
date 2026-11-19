@@ -88,8 +88,15 @@ export function sharedScreens(
  * frame and laid out again below the solid one, redrawing its scope control
  * (1 of 2 opens on the simulator). Their routes carry the solid bar from the
  * stack's first layout, as the directory and Just declared already do.
+ *
+ * Two money lists with no field are here too (Largest grants, and a seat's
+ * grants on the Grants route). Beside a vertical bar the title is pinned
+ * (`TitlePin`) and the page's own fade is the edge under it; these lists draw
+ * none there, so their rows ran through the title. Under the solid bar
+ * the rows end at the title's foot.
  */
 const railSearchRoutes = new Set([
+  'largest-grants',
   'bill-list',
   'person/[slug]/votes',
   'division-history',
@@ -120,14 +127,12 @@ type StackScreen = ReactElement<{
   options: (props: object) => NativeStackNavigationOptions;
 }>;
 function withSolidRailBar(screen: StackScreen, underBar: UnderBar) {
-  const { name, options } = screen.props;
+  const { options } = screen.props;
   return cloneElement(screen, {
-    options: (props: object) => {
-      const base = options(props);
-      return fieldless(name, props)
-        ? base
-        : { ...base, ...solidRailBar(underBar) };
-    },
+    options: (props: object) => ({
+      ...options(props),
+      ...solidRailBar(underBar),
+    }),
   });
 }
 
@@ -149,17 +154,4 @@ function withPresentedBelowBar(screen: StackScreen) {
         : base;
     },
   });
-}
-
-/**
- * A seat's grants (`/grants?seat=…`) share the Grants route but have no
- * search field, and with no field nothing would turn the clear bar back on.
- * The electorates view of that route does have one.
- */
-function fieldless(name: string, props: object): boolean {
-  if (name !== 'grants') return false;
-  const params = (
-    props as { route?: { params?: { seat?: unknown; view?: unknown } } }
-  ).route?.params;
-  return !!params?.seat && params.view !== 'electorates';
 }

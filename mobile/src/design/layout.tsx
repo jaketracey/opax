@@ -49,8 +49,14 @@ import {
   useRootBarAppearance,
   useRailSolidRoot,
 } from '../navigation/useRootBarAppearance';
+import { useRailRootReselect } from '../navigation/title-pin';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
-import { useAccessibilitySize, useReduceMotion } from './accessibility';
+import {
+  animatedScroll,
+  useAccessibilitySize,
+  useReduceMotion,
+} from './accessibility';
+import { scrollToTop } from './scroll-to-top';
 import { ClearBarFade, useBarFadeScroll } from './bar-fade';
 import type { GroundFadeGround } from './ground-fade';
 import {
@@ -283,6 +289,17 @@ export function useClearBarTop(): number {
   return useClearRailBar() ? bottom : 0;
 }
 
+/**
+ * Beside a vertical bar the title is pinned (`TitlePin`), and the fade under
+ * it keeps its ground whole down to the bar's foot (pt): the fade otherwise
+ * starts to clear 12 pt above the foot, and UIKit's own edge there, which
+ * react-native-screens can no longer style, showed in that strip as a faint
+ * band cut off at the foot.
+ */
+const RAIL_FADE_COVER = 12;
+/** How long a rail root's scroll to the top may run past its content (ms). */
+const RAIL_TOP_SCROLL_MS = 700;
+
 /** When a late scroll view is looked at after mount (ms). */
 const restChecks = [400, 900, 1500];
 /** After this long from mount the page has settled, and is the reader's. */
@@ -406,21 +423,16 @@ export function ClearBarRest({
   rest?: boolean;
 }) {
   const { list } = useClearBarRest();
-  // Under the stack's clear bar (iOS 26, off the rail) a page's own list
-  // fades into the page's ground behind the bar, as a Screen page does: a
-  // clear bar with no fade let rows run through the title. The fade follows
-  // the list's scroll on the UI thread. A detail pane has no bar of its own,
-  // and the rail's band folds away.
+  // Under the stack's clear bar (iOS 26) a page's own list fades into the
+  // page's ground behind the bar, as a Screen page does: a clear bar with no
+  // fade let rows run through the title. The fade follows the list's scroll
+  // on the UI thread. A detail pane has no bar of its own. Beside a vertical
+  // bar the title is pinned (`TitlePin`) and this fade is the only edge.
   const headerBottom = useHeaderBottom();
   const onRail = useRailBar() !== null;
   const inPane = useSplitPane() !== null;
   const fades =
-    !!list &&
-    !onRail &&
-    !inPane &&
-    clearBars &&
-    Platform.OS === 'ios' &&
-    glassBar();
+    !!list && !inPane && clearBars && Platform.OS === 'ios' && glassBar();
   const fadeScroll = useBarFadeScroll(fades);
   const { onScroll: fadeOnScroll } = fadeScroll;
   const own = children.props.onScroll;
@@ -447,7 +459,12 @@ export function ClearBarRest({
     <>
       {props ? cloneElement(children, props) : children}
       {fades ? (
-        <ClearBarFade y={fadeScroll.y} bottom={headerBottom} ground={ground} />
+        <ClearBarFade
+          y={fadeScroll.y}
+          bottom={headerBottom}
+          ground={ground}
+          cover={onRail ? RAIL_FADE_COVER : 0}
+        />
       ) : null}
     </>
   );
@@ -576,6 +593,8 @@ export function Screen({
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const clearance = useFloatingBarClearance();
   const androidScroll = useRef<ScrollView>(null);
+  // iOS, for a page that passes no `scrollRef` of its own.
+  const ownScroll = useRef<ScrollView>(null);
   const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const androidOwnsBar = androidRoot.ownsBar;
   const setOptions = useSafeSetOptions();
@@ -663,13 +682,14 @@ export function Screen({
   // bar as content goes under it, on the UI thread. A solid bar (the
   // legibility settings, read by the fade itself; a rail root's search
   // field) covers its own content.
-  // A pushed page under the stack's clear bar fades the same way (off the
-  // rail, whose band folds away); a detail pane has no bar of its own.
+  // A pushed page under the stack's clear bar fades the same way, beside a
+  // vertical bar too: the title is pinned there (`TitlePin`), and this fade
+  // is the edge under it. A detail pane has no bar of its own.
   const barFade =
     clearBars &&
     Platform.OS === 'ios' &&
     glassBar() &&
-    (nativeRoot ? !railSolidRoot : clearRail && !onRail && !inPane);
+    (nativeRoot ? !railSolidRoot : clearRail && !inPane);
   const fadeScroll = useBarFadeScroll(barFade);
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
   // lays the scroll view out below it: React Native's own sticky header
@@ -802,7 +822,30 @@ export function Screen({
     ? bounds.ref
     : Platform.OS === 'android'
       ? androidScroll
-      : scrollRef;
+      : (scrollRef ?? ownScroll);
+  // Beside a vertical bar a tab root scrolls itself to the top when its tab
+  // is pressed again (`useRailRootReselect`): the title pin hides the scroll
+  // view from the native effect. Under the clear bar the top is above 0, by
+  // the bar's height, and React Native stops a scroll at 0 unless overflow
+  // is allowed, so it is allowed for the length of that one scroll.
+  const [toTop, setToTop] = useState(0);
+  useRailRootReselect(
+    useCallback(() => setToTop((count) => count + 1), []),
+    nativeRoot,
+  );
+  const liveHeaderBottom = useRef(headerBottom);
+  useEffect(() => {
+    liveHeaderBottom.current = headerBottom;
+  }, [headerBottom]);
+  useEffect(() => {
+    if (!toTop) return;
+    // A caller's callback ref keeps the view to itself: no root passes one.
+    const view =
+      targetRef && typeof targetRef === 'object' ? targetRef.current : null;
+    scrollToTop(view, liveHeaderBottom.current, animatedScroll());
+    const done = setTimeout(() => setToTop(0), RAIL_TOP_SCROLL_MS);
+    return () => clearTimeout(done);
+  }, [toTop, targetRef]);
   return (
     <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
       <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
@@ -822,7 +865,7 @@ export function Screen({
               ]}
               contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
               contentInset={endRoom ? { bottom: endRoom } : undefined}
-              scrollToOverflowEnabled={scrollToOverflowEnabled}
+              scrollToOverflowEnabled={scrollToOverflowEnabled || toTop > 0}
               contentOffset={nativeRoot ? undefined : rest.contentOffset}
               alwaysBounceVertical={Platform.OS === 'ios'}
               keyboardShouldPersistTaps="handled"
@@ -1016,6 +1059,7 @@ export function Screen({
                 bottom={headerBottom}
                 ground={ground}
                 tail={pinnedHere ? 0 : undefined}
+                cover={onRail ? RAIL_FADE_COVER : 0}
               />
             ) : null}
           </PinnedAtTopContext.Provider>
