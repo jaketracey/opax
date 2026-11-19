@@ -6,9 +6,8 @@ import { contrastRatio } from '../src/design/contrast';
 import { dark, darkHighContrast, light } from '../src/design/palette';
 import { colors } from '../src/design/tokens';
 import { routeSheetOptions } from '../src/features/sheets/frame';
-import { paperBar, usePaperBar } from '../src/features/sources/parts';
+import { usePaperBar } from '../src/features/sources/parts';
 import { orbColours } from '../src/features/talk/VoiceOrb';
-import { opaqueBar } from '../src/navigation/chrome';
 
 // Dark mode, lane D (19 Nov 2026): Ask, Talk, Search, reports, sheets and
 // Account. What these draw that the codemod could not write: the orb's dark
@@ -104,15 +103,6 @@ describe('grounds read outside a component', () => {
       headerTintColor: colors.navy,
       contentStyle: { backgroundColor: colors.sunken },
     });
-  });
-
-  test('the paper bar reads its ground at each spread, not at import', () => {
-    system('android', 'dark');
-    expect({ ...paperBar }).toEqual(opaqueBar(dark.paper));
-    system('android', 'light');
-    expect({ ...paperBar }).toEqual(opaqueBar(light.paper));
-    system('ios', 'dark');
-    expect({ ...paperBar }).toEqual(opaqueBar(colors.paper));
   });
 
   test('a page that uses the paper bar hook is drawn again when Android switches', () => {

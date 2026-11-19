@@ -22,9 +22,9 @@ import {
   CreditRow,
   matches,
   NoResults,
-  paperBar,
   sourcesCopy as text,
   useBarSearch,
+  usePaperBar,
 } from '../sources/parts';
 import type { YearPicture } from './pictures';
 import { explore } from './runtime';
@@ -68,6 +68,7 @@ export function PhotoCreditsList() {
   const column = useScreenColumn();
   const foot = useFloatingBarFoot();
   const search = useBarSearch(text.searchPhotos);
+  const paperBar = usePaperBar();
   const read = useRead(loadPictures);
   const record = read.record;
   const sections = useMemo(
