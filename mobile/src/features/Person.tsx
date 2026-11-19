@@ -81,6 +81,7 @@ import {
 import { profileGrid } from './split/grid';
 import { BlockSource, votesSource } from './your-mp/Evidence';
 import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
+import { endedParliaments, type EndedTerm } from './your-mp/term-ended';
 import { useIsMyMember } from './your-mp/useIsMyMember';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
 import { perfMark, useDrawnMark } from '../perf/probe';
@@ -141,6 +142,8 @@ export type Loaded = {
   official: { url: string; label: string } | null;
   /** The sitting House member's seat, for "Set … as my electorate". */
   seat: Electorate | null;
+  /** Parliaments whose term has ended for an election (`endedParliaments`). */
+  ended?: ReadonlyMap<string, EndedTerm>;
 };
 type Load =
   | { status: 'loading' }
@@ -210,6 +213,7 @@ export async function loadProfile(slug: string): Promise<Loaded | null> {
   return {
     profile,
     official: sitting ? officialPage(released?.source_url) : null,
+    ended: endedParliaments(directory?.electorates.data.electorates ?? []),
     seat: house
       ? (directory?.electorates.data.electorates.find(
           (e) => e.electorate_id === house.electorate_id,
@@ -706,7 +710,7 @@ function ProfileContent({
           },
         ]
       : []),
-    ...(formerLine ? [] : seatRows(identity)).map((seat, i) => ({
+    ...(formerLine ? [] : seatRows(identity, loaded.ended)).map((seat, i) => ({
       kind: 'seat' as const,
       title: seat.title,
       detail: seat.detail,

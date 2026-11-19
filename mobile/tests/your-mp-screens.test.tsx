@@ -50,6 +50,7 @@ import {
 import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import YourMP from '../src/features/YourMP';
+import { representativeProfile } from '../src/features/your-mp/model';
 import { billRoute, seatRoute } from '../src/navigation/routes';
 import { grantsRoute } from '../src/navigation/routes/public-money';
 import * as external from '../src/navigation/external/sheets';
@@ -1027,6 +1028,49 @@ describe('Your MP tab', () => {
         `Last members for ${region.name}. ${TERM}`,
       );
       await act(async () => r.unmount());
+    });
+
+    test('the person page says "Last member for", with the term line, for a member of either house', async () => {
+      for (const seat of [
+        seatNamed('Wendouree'),
+        seatNamed('Northern Metropolitan'),
+      ]) {
+        const profileSlug = seat.representatives
+          .map((m) => representativeProfile(m.person_id, directory)?.slug)
+          .find((found) => !!found)!;
+        mockParams.slug = profileSlug;
+        const person = c.joinPerson(
+          profileSlug,
+          slugs,
+          roster,
+          people,
+          manifest,
+        );
+        mock.person.mockResolvedValue(result(person));
+        mock.profileFor.mockImplementation(async (id) =>
+          c.profileFor(id, catalogs),
+        );
+        const seatRow = async () => {
+          const r = await render(<Person />);
+          const row = r.root.findAll(
+            (n) =>
+              n.props.testID === 'person-electorate' &&
+              typeof n.type !== 'string',
+          )[0]!;
+          const drawn = text(r);
+          await act(async () => r.unmount());
+          return { row, drawn };
+        };
+        assemblyRows('2026-11-28');
+        const ended = await seatRow();
+        expect(ended.drawn).toContain(`Last member for ${seat.name}`);
+        expect(ended.drawn).toContain(TERM);
+        expect(ended.drawn).not.toMatch(/\bMember for\b/);
+        assemblyRows(null);
+        const sitting = await seatRow();
+        expect(sitting.drawn).toContain(`Member for ${seat.name}`);
+        expect(sitting.drawn).not.toContain('Last member');
+      }
     });
 
     test.each([

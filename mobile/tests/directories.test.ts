@@ -255,6 +255,94 @@ describe('static directory transforms', () => {
     expect(directoryCount('person', 1090)).toBe('1,090 parliamentarians');
     expect(directoryCount('party', 1)).toBe('1 party');
   });
+  describe('while the Victorian Parliament’s term has ended for an election', () => {
+    // The live index: every Assembly row carries the election day, or null
+    // once the result is loaded; Council rows carry nothing.
+    const rowsWith = (value: string | null) =>
+      peopleRows(
+        {
+          ...directory,
+          electorates: record({
+            ...index,
+            electorates: index.electorates.map((s) =>
+              s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+            ),
+          }),
+        },
+        catalogs.votes!,
+        portraits,
+      );
+    const victorian = (rows: typeof persons) =>
+      rows.filter((p) =>
+        p.seats.some((s) => s.current && s.jurisdiction === 'vic'),
+      );
+    const stateOnly = (rows: typeof persons) =>
+      victorian(rows).filter((p) =>
+        p.seats.every((s) => !s.current || s.jurisdiction === 'vic'),
+      );
+
+    test('the pinned release has Victorian members of both houses called sitting', () => {
+      const now = stateOnly(persons).filter(
+        (p) => sittingGroup(p) === 'sitting',
+      );
+      expect(
+        now.some((p) =>
+          /^Member for .+, Victorian Legislative Assembly$/.test(
+            placeLine(p) ?? '',
+          ),
+        ),
+      ).toBe(true);
+      expect(
+        now.some((p) =>
+          /^Member for .+, Victorian Legislative Council$/.test(
+            placeLine(p) ?? '',
+          ),
+        ),
+      ).toBe(true);
+    });
+
+    test('nobody is listed as a sitting Victorian member, in either house (s 28(2) for the Council)', () => {
+      const rows = rowsWith('2026-11-28');
+      const members = stateOnly(rows).filter(
+        (p) => p.profile.partyStatus === 'current',
+      );
+      expect(members.length).toBeGreaterThan(50);
+      for (const p of members) {
+        expect(sittingGroup(p)).toBe('ended');
+        expect(placeLine(p)).toMatch(
+          /^Last member for .+, Victorian Legislative (Assembly|Council)$/,
+        );
+      }
+      // Nothing drawn on a Victorian row says "Member for".
+      for (const p of victorian(rows))
+        if (sittingGroup(p) !== 'sitting')
+          expect(placeLine(p) ?? '').not.toMatch(/^Member for /);
+      // The section has its own title, after Sitting members; the sitting
+      // filter leaves them out.
+      const sections = peopleSections(matchingPeople(rows, {}, ''));
+      expect(sections.map((s) => s.title).slice(0, 2)).toEqual([
+        'Sitting members',
+        'Term ended for an election',
+      ]);
+      const sitting = matchingPeople(rows, { sitting: '1' }, '');
+      expect(sitting.length).toBeGreaterThan(0);
+      expect(sitting.some((p) => members.includes(p))).toBe(false);
+      expect(sitting.every((p) => sittingGroup(p) === 'sitting')).toBe(true);
+      // Federal members and senators for Victoria still sit.
+      const albanese = rows.find((p) => p.name === 'Anthony Albanese')!;
+      expect(sittingGroup(albanese)).toBe('sitting');
+      expect(
+        rows.filter((p) => placeLine(p) === 'Senator for Victoria').length,
+      ).toBeGreaterThan(0);
+    });
+
+    test('once the result is loaded (null) they are sitting members again', () => {
+      const rows = rowsWith(null);
+      expect(rows.some((p) => sittingGroup(p) === 'ended')).toBe(false);
+      expect(rows.map(placeLine)).toEqual(persons.map(placeLine));
+      expect(persons.some((p) => sittingGroup(p) === 'ended')).toBe(false);
+    });
+  });
   test('place lines say the seat and state, never a count', () => {
     const line = (name: string) =>
       placeLine(persons.find((p) => p.name === name)!);
@@ -514,7 +602,7 @@ describe('static directory transforms', () => {
       expect(new Set(sorted.map((p) => p.key))).toEqual(
         new Set(persons.map((p) => p.key)),
       );
-      const rank = { sitting: 0, unrecorded: 1, former: 2 };
+      const rank = { sitting: 0, ended: 1, unrecorded: 2, former: 3 };
       for (let i = 1; i < sorted.length; i++) {
         const a = sorted[i - 1]!,
           b = sorted[i]!;
