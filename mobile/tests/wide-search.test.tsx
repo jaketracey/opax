@@ -10,6 +10,7 @@ import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { catalogs } from '../src/api/runtime';
 import { sizeClassFor } from '../src/design/adaptive';
 import { dispatchKeyCommand } from '../src/design/keyboard';
+import { colors, hairline } from '../src/design/tokens';
 import {
   flatItems,
   matchItem,
@@ -40,10 +41,12 @@ import { bills, index, manifest, people, roster, slugs } from './pinned';
 let mockWidth = 834;
 let mockHeight = 1376;
 let mockFontScale = 1;
+let mockScheme: 'light' | 'dark' = 'light';
 jest.mock('react-native', () => {
   const actual = jest.requireActual('react-native');
   return Object.defineProperties(Object.create(actual), {
     Platform: { value: { ...actual.Platform, OS: 'ios', isPad: true } },
+    useColorScheme: { value: () => mockScheme },
     useWindowDimensions: {
       value: () => ({
         width: mockWidth,
@@ -246,6 +249,39 @@ describe('where the field is drawn', () => {
       plain.unmount();
       wide.unmount();
     });
+  });
+});
+
+describe('the panel on dark', () => {
+  afterEach(() => {
+    mockScheme = 'light';
+  });
+  const panel = (renderer: TestRenderer.ReactTestRenderer) =>
+    StyleSheet.flatten(
+      renderer.root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'today-wide-search-panel',
+      ).props.style,
+    );
+  test('light keeps its shadow; dark draws none (ink is pale there) and takes the raised outline', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    await type(renderer, 'housing');
+    expect(panel(renderer)).toMatchObject({
+      shadowOpacity: 0.16,
+      shadowRadius: 24,
+      outlineColor: colors.raisedOutline,
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+    });
+    mockScheme = 'dark';
+    await type(renderer, 'housing a');
+    expect(panel(renderer)).toMatchObject({
+      shadowOpacity: 0,
+      outlineColor: colors.raisedOutline,
+    });
+    await act(async () => renderer.unmount());
   });
 });
 

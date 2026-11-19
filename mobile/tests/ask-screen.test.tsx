@@ -60,7 +60,8 @@ import { chatsSnapshot, loadChats } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { STATUS_HOLD_MS } from '../src/features/ask/AskStatus';
-import { colors, rhythm, textStyles } from '../src/design/tokens';
+import * as palette from '../src/design/palette';
+import { colors, hairline, rhythm, textStyles } from '../src/design/tokens';
 import { chromeTextScaleCap } from '../src/design/text-scale';
 import { Icon } from '../src/design/icon';
 import { Text } from '../src/design/text';
@@ -3971,6 +3972,61 @@ test('Android dock has a tonal raised surface and removable option chips; iOS ke
     ).toHaveLength(0);
   } finally {
     act(() => dock?.unmount());
+    Platform.OS = original;
+  }
+});
+
+test('on a dark Android the dock draws no shadow: the raised step and its outline stand in', () => {
+  const original = Platform.OS;
+  const Native =
+    jest.requireActual<typeof import('react-native')>('react-native');
+  const scheme = jest.spyOn(Native, 'useColorScheme');
+  const system = jest.spyOn(Native.Appearance, 'getColorScheme');
+  let dock!: ReactTestRenderer;
+  const props = {
+    onSend: () => {},
+    onStop: () => {},
+    onOptions: () => {},
+    offline: false,
+  };
+  const surface = () =>
+    StyleSheet.flatten(
+      dock.root.find(
+        (n) =>
+          typeof n.type === 'string' &&
+          StyleSheet.flatten(n.props.style)?.outlineColor !== undefined,
+      ).props.style,
+    );
+  try {
+    Platform.OS = 'android';
+    scheme.mockReturnValue('light');
+    system.mockReturnValue('light');
+    act(() => {
+      dock = create(<AskDock {...props} />);
+    });
+    // Light: the shadow as before, and an outline that is clear.
+    expect(surface()).toMatchObject({
+      elevation: 2,
+      backgroundColor: palette.light.raised,
+      outlineColor: palette.light.raisedOutline,
+    });
+    expect(palette.light.raisedOutline).toBe('rgba(0,0,0,0)');
+    scheme.mockReturnValue('dark');
+    system.mockReturnValue('dark');
+    act(() => dock.update(<AskDock {...props} />));
+    // Dark: a navy-tinted shadow would be a pale smudge on the page.
+    expect(surface().elevation).toBeUndefined();
+    expect(surface().shadowColor).toBeUndefined();
+    expect(surface()).toMatchObject({
+      backgroundColor: palette.dark.raised,
+      outlineColor: palette.dark.raisedOutline,
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+    });
+  } finally {
+    act(() => dock?.unmount());
+    scheme.mockRestore();
+    system.mockRestore();
     Platform.OS = original;
   }
 });

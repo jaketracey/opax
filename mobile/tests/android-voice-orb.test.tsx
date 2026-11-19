@@ -1,9 +1,10 @@
 import { act, createElement, useRef } from 'react';
 import type * as SkiaTypes from '@shopify/react-native-skia';
+import * as Native from 'react-native';
 import { Platform } from 'react-native';
 import type * as ReanimatedTypes from 'react-native-reanimated';
 import TestRenderer from 'react-test-renderer';
-import { VoiceOrb } from '../src/features/talk/VoiceOrb';
+import { orbColours, VoiceOrb } from '../src/features/talk/VoiceOrb';
 import { SizedCanvas } from '../src/design/canvas';
 
 const Reanimated = jest.requireMock(
@@ -13,6 +14,7 @@ const Skia = jest.requireMock('@shopify/react-native-skia') as typeof SkiaTypes;
 
 jest.mock('../src/design/accessibility', () => ({
   useIncreaseContrast: () => false,
+  useHighTextContrast: () => false,
 }));
 
 function shared<T>(initial: T) {
@@ -103,3 +105,38 @@ test.each(['android', 'ios'] as const)(
     expect(jest.getTimerCount()).toBe(0);
   },
 );
+
+test('a live switch to dark redraws the orb with the dark set, with no remount', () => {
+  Object.defineProperty(Platform, 'OS', {
+    value: 'android',
+    configurable: true,
+  });
+  const scheme = jest.spyOn(Native, 'useColorScheme').mockReturnValue('light');
+  jest
+    .spyOn(Skia, 'RadialGradient')
+    .mockImplementation((props) => createElement('OrbGradient', props));
+  const orb = () => (
+    <VoiceOrb phase="rest" size={240} levels={levels} reduceMotion={false} />
+  );
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(orb());
+  });
+  const ground = () =>
+    renderer.root.findAllByType('OrbCircle' as never)[0]!.props.color;
+  const stops = () =>
+    renderer.root
+      .findAllByType('OrbGradient' as never)
+      .map((gradient) => gradient.props.colors);
+  const light = orbColours('light', false);
+  const dark = orbColours('dark', false);
+  expect(ground()).toEqual(light.ground);
+  expect(stops()).toEqual([light.halo, light.rings, light.core, light.glow]);
+  scheme.mockReturnValue('dark');
+  act(() => renderer.update(orb()));
+  // Android paints its own page ground under the orb: it must follow too.
+  expect(ground()).toEqual(dark.ground);
+  expect(ground()).not.toEqual(light.ground);
+  expect(stops()).toEqual([dark.halo, dark.rings, dark.core, dark.glow]);
+  act(() => renderer.unmount());
+});
