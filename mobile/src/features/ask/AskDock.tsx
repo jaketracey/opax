@@ -12,6 +12,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  useColorScheme,
   useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
@@ -745,6 +746,9 @@ export function AskDock({
     </View>
   );
   const glass = Platform.OS === 'ios' && isLiquidGlassAvailable();
+  // No shadow reads on the dark ground, and Android's navy-tinted one
+  // would be a pale smudge there: the raised step and its outline carry it.
+  const dark = useColorScheme() === 'dark';
   return (
     <View onLayout={onLayout} testID="ask-dock">
       {glass ? (
@@ -759,7 +763,7 @@ export function AskDock({
         <View
           style={[
             styles.fallback,
-            Platform.OS === 'android' ? styles.androidSurface : null,
+            Platform.OS === 'android' && !dark ? styles.androidSurface : null,
           ]}
         >
           {content}
@@ -796,6 +800,12 @@ const useStyles = makeStyles((colors) =>
       borderCurve: 'continuous',
       borderWidth: hairline,
       borderColor: colors.dividerSubtle,
+      // Clear in light. In dark it draws over the border: the hairline that
+      // stands in for elevation, as on the shared cards.
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
     },
     androidSurface: { elevation: 2, shadowColor: colors.navy },
     androidOptions: {

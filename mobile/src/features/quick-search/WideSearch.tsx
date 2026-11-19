@@ -17,6 +17,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  useColorScheme,
   useWindowDimensions,
 } from 'react-native';
 import { useBoldText } from '../../design/accessibility';
@@ -495,6 +496,7 @@ function WideSearchPanel({
   fixed?: { top: number; left: number; right: undefined; marginTop: 0 };
 }) {
   const styles = useStyles();
+  const dark = useColorScheme() === 'dark';
 
   const { text: q, focused: fieldFocused, armed, dismissed } = useQuickSearch();
   const open = fieldFocused && !dismissed && armed;
@@ -661,7 +663,7 @@ function WideSearchPanel({
         testID="today-wide-search-backdrop"
       />
       <View
-        style={[styles.panel, { width }, fixed]}
+        style={[styles.panel, dark ? styles.panelDark : null, { width }, fixed]}
         onAccessibilityEscape={onClose}
         testID="today-wide-search-panel"
       >
@@ -842,7 +844,15 @@ const useStyles = makeStyles((colors) =>
       shadowOpacity: 0.16,
       shadowRadius: 24,
       shadowOffset: { width: 0, height: 8 },
+      // Clear in light. In dark it draws over the border: the hairline that
+      // stands in for elevation, as on the shared cards.
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
     },
+    // Ink is pale in dark, so the shadow would be a glow: none is drawn.
+    panelDark: { shadowOpacity: 0 },
     // The list is clipped to the panel's corners; the panel keeps its shadow.
     clip: { borderRadius: radii.tile - hairline, borderCurve: 'continuous' },
     list: { paddingVertical: rhythm.tight },
