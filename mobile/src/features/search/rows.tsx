@@ -28,6 +28,7 @@ import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
 import {
   endedParliaments,
   lastMemberFor,
+  rowTermEnded,
   termEndedFor,
 } from '../your-mp/term-ended';
 import { nameKey } from '../../api/ids';
@@ -107,6 +108,34 @@ export function placeLine(
       ? lastMemberFor(where)
       : where;
   return `${sitting ? 'Member' : 'Former member'} for ${where}`;
+}
+
+/**
+ * Who a seat's row names: "Anthony Albanese", or five names for a Council
+ * region. While the seat's house has no members because its Parliament's
+ * term has ended for an election, nobody is named as the member: "Last
+ * member: Name", "Last members: Name, Name". The answer is the Electorates
+ * list's: a district's own `dissolved_for` (`rowTermEnded`), and for a
+ * Council region, whose row has no field, the index's (`termEndedFor`).
+ * Empty with nobody recorded.
+ */
+export function seatMembersLine(
+  seat: Electorate,
+  sources: Pick<RowSources, 'electorates'> = {},
+): string {
+  const names = seat.representatives.map((r) => r.person.name);
+  if (!names.length) return '';
+  const line = names.join(', ');
+  const last =
+    seat.dissolved_for !== undefined
+      ? rowTermEnded(seat)
+      : !!termEndedFor(
+          seat,
+          endedParliaments(sources.electorates?.electorates ?? []),
+        );
+  return last
+    ? `${names.length > 1 ? 'Last members' : 'Last member'}: ${line}`
+    : line;
 }
 
 /** The canonical person ID the people catalogue holds for a roster row. */
@@ -281,9 +310,10 @@ function SeatMatch({
   q,
   variant,
   testID,
+  sources,
 }: MatchRowProps & { seat: Electorate }) {
   const follow = useRowFollow('electorate', seat.electorate_id, seat.name);
-  const member = seat.representatives.map((r) => r.person.name).join(', ');
+  const member = seatMembersLine(seat, sources);
   const secondary = [stateName(seat.state_code), member || 'No member recorded']
     .filter(Boolean)
     .join(' · ');
