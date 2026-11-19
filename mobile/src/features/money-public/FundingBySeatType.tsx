@@ -17,7 +17,7 @@ import {
   moneyBar,
   readableDates,
   recordSource,
-  useRefreshColours,
+  useRefreshDiscColours,
 } from './parts';
 
 /**
@@ -54,7 +54,7 @@ const CPI = {
  * order. No colour, no bars, no ranking.
  */
 export default function FundingBySeatType() {
-  const refreshColours = useRefreshColours();
+  const refreshColours = useRefreshDiscColours();
   const load = useCallback(
     (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
       money.allocation(refresh, signal),
