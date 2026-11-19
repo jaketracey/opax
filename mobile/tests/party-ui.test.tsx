@@ -17,11 +17,7 @@ import {
 } from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
 import { combinedPartyNode } from '../src/api/party-page';
-import {
-  apiClient,
-  catalogs as runtime,
-  peopleDepth,
-} from '../src/api/runtime';
+import { apiClient, catalogs as runtime, peopleDepth } from '../src/api/runtime';
 import {
   formatCount,
   formatMoney,

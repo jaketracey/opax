@@ -16,9 +16,7 @@ jest.mock('expo-file-system', () => ({
   Paths: { document: 'documents' },
   File: class {
     name: string;
-    constructor(_directory: unknown, name: string) {
-      this.name = name;
-    }
+    constructor(_directory: unknown, name: string) { this.name = name; }
     get exists() {
       return mockDisk.has(this.name);
     }

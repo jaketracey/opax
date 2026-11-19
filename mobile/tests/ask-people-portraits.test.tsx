@@ -13,9 +13,9 @@ import { catalogs } from './pinned';
 // in this rendering test. portraits.test.ts checks the native yielding builder
 // against the same synchronous index, including its UI responsiveness.
 jest.mock('../src/api/portrait-index', () => {
-  const actual = jest.requireActual<typeof import('../src/api/portrait-index')>(
-    '../src/api/portrait-index',
-  );
+  const actual = jest.requireActual<
+    typeof import('../src/api/portrait-index')
+  >('../src/api/portrait-index');
   return {
     ...actual,
     buildPortraitIndexAsync: async (

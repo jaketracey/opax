@@ -20,24 +20,15 @@ const values = [
 ];
 // Current Maestro saves a hierarchy only on failure. On a passing run, the
 // completed, anchored native-ID assertion is the measured upper-bound proof.
-const underLimit =
-  '^people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})$';
+const underLimit = '^people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})$';
 const bounded = paths.some((path) => {
   const commands: unknown = JSON.parse(readFileSync(path, 'utf8'));
-  return (
-    Array.isArray(commands) &&
-    commands.some(
-      (item) =>
-        item?.metadata?.status === 'COMPLETED' &&
-        item?.metadata?.evaluatedCommand?.assertConditionCommand?.condition
-          ?.visible?.idRegex === underLimit,
-    )
+  return Array.isArray(commands) && commands.some((item) =>
+    item?.metadata?.status === 'COMPLETED' &&
+    item?.metadata?.evaluatedCommand?.assertConditionCommand?.condition?.visible?.idRegex === underLimit,
   );
 });
-assert(
-  values.length || bounded,
-  'No native drawn-title timing proof in this run',
-);
+assert(values.length || bounded, 'No native drawn-title timing proof in this run');
 assert(
   values.every((n) => n < 2000),
   'Party title exceeded 2 seconds',

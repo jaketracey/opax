@@ -6,7 +6,8 @@ const paper = tokens.color.surface.paper.$value;
 const rgb = paper.match(/^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
 if (!rgb) throw new Error('Scene lifecycle: paper must be a six-digit colour');
 const fallback = `UIColor(red: ${parseInt(rgb[1], 16)}.0 / 255.0, green: ${parseInt(rgb[2], 16)}.0 / 255.0, blue: ${parseInt(rgb[3], 16)}.0 / 255.0, alpha: 1)`;
-// The splash asset also resolves the dark capture build's paper colour.
+// The splash colour asset: navy in both appearances, with a dark slot only
+// in a build that follows the system (the appearance switch).
 const launchPaper = `UIColor(named: "SplashScreenBackground") ?? ${fallback}`;
 const windowProperty = '  var window: UIWindow?';
 const windowSetup = `${windowProperty} {

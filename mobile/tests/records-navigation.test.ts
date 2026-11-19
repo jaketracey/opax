@@ -3,9 +3,7 @@ import { router } from 'expo-router';
 import { fromWebPath } from '../src/navigation/routes';
 import { openOnWeb, openSource } from '../src/navigation/external';
 jest.mock('expo-router', () => ({
-  useIsPreview: () => false,
-  router: { push: jest.fn() },
-}));
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 beforeEach(() => jest.clearAllMocks());
 test.each([
   '/doc/speech-1205524',

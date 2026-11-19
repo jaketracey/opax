@@ -46,12 +46,10 @@ function licenceRefused(profile: unknown) {
 function historicalSelector(revision: string) {
   // These historical commits were local review heads, not public git refs.
   // Retain their exact API sources so a fresh public clone runs both sweeps.
-  const sources = (
-    baselineSources as Record<
-      string,
-      Record<string, { sha256: string; source: string }>
-    >
-  )[revision];
+  const sources = (baselineSources as Record<
+    string,
+    Record<string, { sha256: string; source: string }>
+  >)[revision];
   ok(sources, `Historical selector fixture is unavailable: ${revision}`);
   const modules = new Map<string, Record<string, unknown>>();
   const load = (path: string): Record<string, unknown> => {
@@ -60,10 +58,7 @@ function historicalSelector(revision: string) {
     const cached = modules.get(path);
     if (cached) return cached;
     const fixture = sources[path];
-    ok(
-      fixture,
-      `Historical selector module is unavailable: ${revision}:${path}`,
-    );
+    ok(fixture, `Historical selector module is unavailable: ${revision}:${path}`);
     const { source, sha256 } = fixture;
     strictEqual(
       createHash('sha256').update(source).digest('hex'),

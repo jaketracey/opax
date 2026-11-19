@@ -41,8 +41,9 @@ export MAESTRO_DRIVER_STARTUP_TIMEOUT=$((10#$MAESTRO_DRIVER_STARTUP_TIMEOUT))
 SIZE=${OPAX_CONTENT_SIZE:-large}
 # OPAX_E2E_APPEARANCE (light, the default, or dark) is the simulator's
 # appearance for the run; e2e-device.sh sets it with simctl and restores the
-# device's own afterwards. The app is light-only; dark is for checking the
-# launch screen (journey 28b).
+# device's own afterwards. A light-only build (OPAX_APPEARANCE=light, the
+# default) ignores it except on the launch screen (journey 28b); a build
+# made with OPAX_APPEARANCE=automatic draws its dark theme.
 # OPAX_APPEARANCE is a different switch: app.config.ts reads it for a build's
 # interface style (light or automatic) and rejects anything else, and this
 # run's static check evaluates that config. So it is passed on untouched,

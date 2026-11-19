@@ -116,11 +116,20 @@ assert.deepEqual(plist.UIApplicationSceneManifest, {
 });
 // The actual Sources phase must compile the patched modules rather than a
 // prebuilt framework. Grepping node_modules alone cannot prove this.
-const sources = readFileSync('ios/Pods/Pods.xcodeproj/project.pbxproj', 'utf8');
+const sources = readFileSync(
+  'ios/Pods/Pods.xcodeproj/project.pbxproj',
+  'utf8',
+);
 const pods = JSON.parse(
   execFileSync(
     '/usr/bin/plutil',
-    ['-convert', 'json', '-o', '-', 'ios/Pods/Pods.xcodeproj/project.pbxproj'],
+    [
+      '-convert',
+      'json',
+      '-o',
+      '-',
+      'ios/Pods/Pods.xcodeproj/project.pbxproj',
+    ],
     { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 },
   ),
 );
@@ -132,7 +141,9 @@ const phases = reactTarget.buildPhases.map((id) => pods.objects[id]);
 const replacement = phases.findIndex((item) =>
   item.name?.includes('[RNCore] Replace React Native Core'),
 );
-const copy = phases.findIndex((item) => item.name === '[CP] Copy XCFrameworks');
+const copy = phases.findIndex(
+  (item) => item.name === '[CP] Copy XCFrameworks',
+);
 assert(
   replacement >= 0 && copy > replacement,
   'React replacement and privacy staging precede XCFramework copying',

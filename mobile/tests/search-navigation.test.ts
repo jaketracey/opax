@@ -15,9 +15,7 @@ jest.mock('../src/api/runtime', () => ({
   catalogs: { slugs: jest.fn(), person: jest.fn() },
 }));
 jest.mock('expo-router', () => ({
-  useIsPreview: () => false,
-  router: { push: jest.fn() },
-}));
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 jest.mock('../src/navigation/external', () => ({ openOnWeb: jest.fn() }));
 
 const groups = new Map<string, string[]>();

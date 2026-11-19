@@ -45,8 +45,11 @@ test.each([
   '-OPAXWelcomeTour on',
   'OPAXPerfProbe',
   'opax-perf-marks.json',
-])('production rejects the e2e launch argument %s', (marker) => {
-  expect(() => assertNoE2ELaunchFlags(Buffer.from(marker))).toThrow(
-    /e2e launch argument/,
-  );
-});
+])(
+  'production rejects the e2e launch argument %s',
+  (marker) => {
+    expect(() => assertNoE2ELaunchFlags(Buffer.from(marker))).toThrow(
+      /e2e launch argument/,
+    );
+  },
+);

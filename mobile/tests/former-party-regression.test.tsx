@@ -10,9 +10,7 @@ import { personRowContext } from '../src/features/search/model';
 import { catalogs, index, manifest, people, roster, slugs } from './pinned';
 
 jest.mock('expo-router', () => ({
-  useIsPreview: () => false,
-  router: { push: jest.fn() },
-}));
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 const record = <T,>(data: T) => ({
   data,
   stale: false,
