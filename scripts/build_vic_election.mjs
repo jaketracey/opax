@@ -29,7 +29,7 @@ export function projectVicResults(source, electionDay, districtNames) {
 // never the latest one in electorates/manifest.json. This is deliberate; do not unpin it.
 // - After the declaration the latest release lists the new members. App builds iOS 1.1.6 and
 //   Android 1.1.5 label the hub's members "Last members" and "Last held by" with no other check,
-//   and the web hub heads them "Members, 2022 to 2026".
+//   and the web hub heads them "Last parliament" (portal/src/vic-election.ts, assemblyExpired).
 // - A part-declared release would fail the strict roster checks below and stop the whole deploy.
 // Newly declared members appear in the results (current_results) and on electorate and person
 // pages, which read the latest release; never here.

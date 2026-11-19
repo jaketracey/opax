@@ -54,12 +54,13 @@ test('the hub keeps the outgoing roster when a post-election electorates release
     const manifestPath=join(root,'electorates/manifest.json');
     const manifest=JSON.parse(await readFile(manifestPath,'utf8'));
     const index=JSON.parse(await readFile(join(root,manifest.index_url.replace(/^\//,'')),'utf8'));
-    // After the declaration: other people in every Victorian seat, no dissolved_for, and one region
-    // still part-declared, which the strict roster checks would refuse.
+    // After the declaration: other people in every Victorian seat, dissolved_for written as null on the
+    // districts (as the real export does), and one region still part-declared, which the strict roster
+    // checks would refuse.
     let partial=false;
     const declared={...index,electorates:index.electorates.map(e=>{
       if(e.jurisdiction!=='vic'||!['vic_la','vic_lc'].includes(e.chamber))return e;
-      const {dissolved_for,...rest}=e;
+      const rest='dissolved_for' in e?{...e,dissolved_for:null}:e;
       const people=e.representatives.map((r,i)=>({...r,person:{...r.person,name:`Declared Member ${e.slug} ${i}`,person_id:`person_declared_${i}`}}));
       if(e.chamber==='vic_lc'&&!partial){partial=true;return {...rest,representation_as_of:'2026-12-20',representatives:people.slice(0,2)};}
       return {...rest,representation_as_of:'2026-12-20',representatives:people};

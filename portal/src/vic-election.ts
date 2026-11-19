@@ -82,17 +82,19 @@ export const rosterDate = (d: VicElection) => d.seats.filter(s=>s.members.length
  *  shipped decoders require it) and word it "Last held by": for a vacant seat, its last member. */
 export const recorded = (s: Seat): Member[] => s.members.length ? s.members : s.vacancy ? [s.vacancy.last] : []
 export type AssemblyIndex = ReadonlyMap<string, string | null>
-/** Whether a district's roster member is no longer a member: the Assembly has expired and the new
- *  parliament's roster has not loaded. The electorates index answers for each seat it speaks for;
- *  for any other seat the page's own record decides: a roster dated before election day. */
+/** Whether a district's roster member is no longer a member: the Assembly has expired and the hub's
+ *  record is the old house's, a roster dated before election day. The hub's members are pinned to the
+ *  roster taken when the Assembly expired (scripts/build_vic_election.mjs), so the electorates index may
+ *  confirm that a seat's house has ended but never un-end it: the new parliament's roster clears
+ *  dissolved_for in the index while the hub still lists the outgoing members. */
 export const assemblyExpired = (d: VicElection, s: Seat, now: Date, index: AssemblyIndex | null = null) =>
   s.kind === 'district' && past(VIC_ASSEMBLY_EXPIRED_AT,now)
-    && (index?.has(s.name) ? index.get(s.name) != null : s.roster_date < d.election_day)
+    && (index?.get(s.name) != null || s.roster_date < d.election_day)
 /** The same for a region's members. The Council ended with the Assembly (Constitution Act 1975 s 28(2))
  *  and the index records the Assembly's seats alone, so a region follows its own districts. */
 export const councilExpired = (d: VicElection, s: Seat, now: Date, index: AssemblyIndex | null = null) =>
   s.kind === 'region' && past(VIC_ASSEMBLY_EXPIRED_AT,now)
-    && (index && s.districts.some(name=>index.has(name)) ? s.districts.some(name=>index.get(name) != null) : s.roster_date < d.election_day)
+    && (s.districts.some(name=>index?.get(name) != null) || s.roster_date < d.election_day)
 export const pollsClosed = (now: Date) => past(VIC_ELECTION_POLLS_CLOSE,now)
 export const visibleResults = (d: VicElection, now: Date) => pollsClosed(now) ? d.current_results ?? null : null
 
