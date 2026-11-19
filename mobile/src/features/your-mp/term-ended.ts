@@ -4,8 +4,7 @@ import { formFromIndex, termLine } from '../today/dissolution';
 type IndexRow = Pick<
   Electorate,
   'jurisdiction' | 'chamber' | 'state_code' | 'dissolved_for'
-> &
-  Partial<Pick<Electorate, 'electorate_id'>>;
+> & { electorate_id?: string };
 /**
  * A seat as any record names it: the parliament and the house. An index row
  * also carries its own `dissolved_for`; a people-catalogue seat carries the

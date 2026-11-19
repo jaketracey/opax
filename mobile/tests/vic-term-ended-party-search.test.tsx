@@ -5,6 +5,18 @@ import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { buildPortraitIndex } from '../src/api/portrait-index';
 import { partyMembers, sittingPartyMembers } from '../src/api/party-page';
 import { PersonRow } from '../src/design/people';
+import { Text } from '../src/design/text';
+import type { Electorate } from '../src/api/catalog-decoders';
+import {
+  ElectorateDirectoryRow,
+  EndedTermsContext,
+  electorateLines,
+  partyRowDetail,
+} from '../src/features/directories/DirectoryRows';
+import {
+  placeLine as askPlace,
+  rosterProfiles,
+} from '../src/features/ask/people';
 import {
   matchingPeople,
   partyRows,
@@ -80,6 +92,9 @@ const portraits = buildPortraitIndex({
 const members = (label: string, terms?: typeof ended) =>
   partyMembers(label, roster, people, slugs, manifest, terms);
 
+// A last member's row without its term: the seat as the sitting list had it.
+const seatOnly = <T extends { term: unknown }>({ term: _term, ...seat }: T) =>
+  seat;
 // A page member's canonical person, as the People list's rows carry it.
 const idsOf = (list: readonly { slug: string }[]) =>
   [
@@ -104,7 +119,10 @@ describe('party members while the Victorian Parliament’s term has ended', () =
     expect(then.currentCount).toBe(0);
     expect(then.current).toEqual([]);
     // The same people and seats, moved; a Council seat ends with the Assembly.
-    expect(then.ended).toEqual(now.current);
+    expect(then.ended.map(seatOnly)).toEqual(now.current);
+    expect(then.ended.every((m) => m.term.electionDay === '2026-11-28')).toBe(
+      true,
+    );
     expect(then.ended.every((m) => m.chamber === 'vic_lc')).toBe(true);
     // Their sources still stand behind the list.
     expect(then.sources).toEqual(now.sources);
@@ -119,7 +137,7 @@ describe('party members while the Victorian Parliament’s term has ended', () =
     expect(then.current).toEqual(
       now.current.filter((m) => m.jurisdiction !== 'vic'),
     );
-    expect(then.ended).toEqual(victorian);
+    expect(then.ended.map(seatOnly)).toEqual(victorian);
     expect(then.currentCount).toBe(
       now.currentCount - new Set(victorian.map((m) => m.slug)).size,
     );
@@ -499,5 +517,215 @@ describe('search rows for a state seat', () => {
         quick: `Member for ${held.name}, Victoria`,
       });
     });
+  });
+});
+
+describe('the Parties and Electorates lists while the term has ended', () => {
+  const directory = directoryWith('2026-11-28');
+  const parties = partyRows(directory, partyFiles);
+  const rows = peopleRows(directory, catalogs.votes!, portraits);
+
+  test('a party’s line counts sitting members without the ended ones, or says its last members', () => {
+    const labor = parties.find((p) => p.name === 'Labor')!;
+    expect(labor.members).toBe(members('Labor', ended).currentCount);
+    expect(labor.last).toBeGreaterThan(50);
+    expect(partyRowDetail(labor)).toBe(`${labor.members} sitting members`);
+    // Nobody sitting, some last members: never "0 sitting members".
+    const cannabis = parties.find(
+      (p) => p.name === 'Legalise Cannabis Victoria',
+    )!;
+    expect(cannabis).toMatchObject({ members: 0, last: 2 });
+    expect(partyRowDetail(cannabis)).toBe('2 last members');
+    const justice = parties.find((p) => p.name === 'Animal Justice Party')!;
+    expect(partyRowDetail(justice)).toBe('1 last member');
+    expect(partyRowDetail({ members: 0, last: 0 })).toBe('0 sitting members');
+    // Every party's last count is the list behind its page's row: the party
+    // filter with the sitting filter off, under "Term ended for an election".
+    for (const party of parties) {
+      const page = members(party.name, ended);
+      expect({ party: party.name, last: party.last }).toEqual({
+        party: party.name,
+        last: new Set(idsOf(page.ended)).size,
+      });
+      const listed = new Set(
+        matchingPeople(rows, { party: party.name }, '')
+          .filter((p) => sittingGroup(p) === 'ended')
+          .map((p) => p.profile.canonicalPersonId),
+      );
+      expect(idsOf(page.ended).every((id) => listed.has(id))).toBe(true);
+    }
+  });
+
+  test('once the result is loaded (null) no party has last members', () => {
+    const then = partyRows(directoryWith(null), partyFiles);
+    expect(then.every((p) => p.last === 0)).toBe(true);
+    expect(
+      partyRowDetail(
+        then.find((p) => p.name === 'Legalise Cannabis Victoria')!,
+      ),
+    ).toBe('2 sitting members');
+  });
+
+  describe('electorate rows', () => {
+    const seats = (value: string | null) => indexWith(value).electorates;
+    const district = (value: string | null) =>
+      seats(value).find(
+        (s) =>
+          s.chamber === 'vic_la' &&
+          s.status !== 'historical' &&
+          s.representation_status === 'verified' &&
+          s.representatives.length === 1 &&
+          !!s.representatives[0]!.party,
+      )!;
+    const region = (value: string | null) =>
+      seats(value).find(
+        (s) => s.chamber === 'vic_lc' && s.representatives.length > 1,
+      )!;
+    const draw = (seat: Electorate, terms: typeof ended) => {
+      let view!: TestRenderer.ReactTestRenderer;
+      act(() => {
+        view = TestRenderer.create(
+          <EndedTermsContext.Provider value={terms}>
+            <ElectorateDirectoryRow item={seat} />
+          </EndedTermsContext.Provider>,
+        );
+      });
+      const row = view.root.find(
+        (n) =>
+          typeof n.type === 'string' &&
+          n.props.testID === `directory-electorate-${seat.slug}`,
+      );
+      const text = view.root
+        .findAllByType(Text)
+        .map((n) => [n.props.children].flat(Infinity).join(''))
+        .join(' | ');
+      const label = row.props.accessibilityLabel as string;
+      act(() => view.unmount());
+      return { text, label };
+    };
+
+    test('a Victorian district reads "Last member: Name · Party", drawn and spoken', () => {
+      const seat = district('2026-11-28');
+      const { name } = seat.representatives[0]!.person;
+      const party = seat.representatives[0]!.party!;
+      expect(electorateLines(seat, ended)).toEqual({
+        house: 'Victorian Legislative Assembly',
+        member: `Last member: ${name}`,
+        party,
+      });
+      // The row's own field decides, with no index at hand.
+      expect(electorateLines(seat).member).toBe(`Last member: ${name}`);
+      const drawn = draw(seat, ended);
+      expect(drawn.text).toContain(`Last member: ${name} · `);
+      expect(drawn.label).toBe(
+        `${seat.name}, Victorian Legislative Assembly, Last member: ${name}, ${party}`,
+      );
+    });
+
+    test('a Council region reads "Last members: 5", from the Assembly’s answer', () => {
+      const seat = region('2026-11-28');
+      const count = seat.representatives.length;
+      expect(electorateLines(seat, ended)).toEqual({
+        house: 'Victorian Legislative Council',
+        member: `Last members: ${count}`,
+        party: null,
+      });
+      const drawn = draw(seat, ended);
+      expect(drawn.text).toContain(`Last members: ${count}`);
+      expect(drawn.label).toBe(
+        `${seat.name}, Victorian Legislative Council, Last members: ${count}`,
+      );
+      // Without the index a region's row cannot know.
+      expect(electorateLines(seat).member).toBe(`${count} members`);
+    });
+
+    test('federal seats and other states are untouched, and every Victorian row says "Last"', () => {
+      for (const seat of seats('2026-11-28')) {
+        const line = electorateLines(seat, ended).member;
+        if (!line || line === 'No longer used') continue;
+        expect({
+          seat: seat.name,
+          last: /^Last members?: /.test(line),
+        }).toEqual({ seat: seat.name, last: seat.jurisdiction === 'vic' });
+      }
+      const grayndler = seats('2026-11-28').find(
+        (s) => s.name === 'Grayndler',
+      )!;
+      expect(electorateLines(grayndler, ended).member).toBe('Anthony Albanese');
+    });
+
+    test('once the result is loaded (null) the rows name members again', () => {
+      const seat = district(null);
+      const name = seat.representatives[0]!.person.name;
+      expect(electorateLines(seat, cleared).member).toBe(name);
+      expect(draw(seat, cleared).label).not.toContain('Last member');
+      const council = region(null);
+      expect(electorateLines(council, cleared).member).toBe(
+        `${council.representatives.length} members`,
+      );
+      for (const s of seats(null))
+        expect(electorateLines(s, cleared).member).toBe(
+          electorateLines(index.electorates.find((e) => e.slug === s.slug)!)
+            .member,
+        );
+    });
+
+    test('a district whose own row has cleared names its member while the rest say "Last member"', () => {
+      const first = district('2026-11-28');
+      const mixed = seats('2026-11-28').map((s) =>
+        s.electorate_id === first.electorate_id
+          ? { ...s, dissolved_for: null }
+          : s,
+      );
+      const terms = endedParliaments(mixed);
+      const lines = mixed
+        .filter((s) => s.chamber === 'vic_la')
+        .map((s) => [s.electorate_id, electorateLines(s, terms).member]);
+      for (const [id, line] of lines)
+        if (line && line !== 'No longer used')
+          expect({ id, last: line.startsWith('Last member') }).toEqual({
+            id,
+            last: id !== first.electorate_id,
+          });
+    });
+  });
+});
+
+describe('Ask people rows', () => {
+  test('name federal seats only: no Victorian state seat is ever claimed or named', () => {
+    const profiles = rosterProfiles(roster, slugs, people);
+    const victorian = new Set(
+      index.electorates
+        .filter((s) => s.jurisdiction === 'vic')
+        .map((s) => s.name),
+    );
+    const federal = new Set(
+      index.electorates
+        .filter((s) => s.jurisdiction === 'federal')
+        .map((s) => s.name),
+    );
+    let stateOnly = 0;
+    for (const person of roster.people) {
+      const seats = person.representation ?? [];
+      const place = profiles.get(person.name)?.place ?? null;
+      if (seats.length && seats.every((r) => r.jurisdiction === 'vic')) {
+        stateOnly++;
+        // A row recorded only in the Victorian Parliament has no place line.
+        if (profiles.get(person.name)?.name === person.name)
+          expect({ name: person.name, place: askPlace(person) }).toEqual({
+            name: person.name,
+            place: null,
+          });
+      }
+      const claimed = /^(?:Former member|Member) for ([^,]+)/.exec(
+        place ?? '',
+      )?.[1];
+      if (claimed && victorian.has(claimed))
+        expect({ name: person.name, federal: federal.has(claimed) }).toEqual({
+          name: person.name,
+          federal: true,
+        });
+    }
+    expect(stateOnly).toBeGreaterThan(100);
   });
 });
