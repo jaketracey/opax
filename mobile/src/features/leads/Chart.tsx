@@ -14,12 +14,12 @@ import { symbols } from '../../design/symbols';
 import {
   accents,
   chartRoles,
-  colors,
   isAccessibilityCategory,
   minimumTarget,
   radii,
   rhythm,
 } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { chartRowLabel, type ChartRow, type LeadComparison } from './model';
 
 type Concentration = Extract<LeadComparison, { type: 'concentration' }>;
@@ -43,6 +43,8 @@ export function ConcentrationChart({
   rowHref?: (row: ChartRow) => Href | null;
   testID: string;
 }) {
+  const styles = useStyles();
+
   const [table, setTable] = useState(false);
   const [tableWidth, setTableWidth] = useState(0);
   const { fontScale } = useWindowDimensions();
@@ -136,6 +138,9 @@ function ChartRowTarget({
   testID: string;
   children: ReactNode;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const content = (
     <>
       <View style={styles.content}>{children}</View>
@@ -180,6 +185,9 @@ function ChartBar({
   href?: Href | null;
   testID: string;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   return (
     <ChartRowTarget href={href} label={chartRowLabel(row)} testID={testID}>
       <View style={styles.bar}>
@@ -232,46 +240,52 @@ function ChartBar({
   );
 }
 
-const styles = StyleSheet.create({
-  chart: { gap: rhythm.tight },
-  target: {
-    minHeight: minimumTarget,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  content: { flex: 1, minWidth: 0 },
-  tableRow: { minHeight: minimumTarget, paddingVertical: rhythm.row },
-  stackedRow: { flexDirection: 'column', gap: rhythm.line },
-  columns: { flexDirection: 'row', alignItems: 'baseline', gap: rhythm.block },
-  column: { flex: 1, minWidth: 0 },
-  value: { textAlign: 'right' },
-  grow: { flex: 1, minWidth: 0 },
-  bar: {
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.tight,
-    gap: rhythm.line,
-  },
-  barLabel: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  figures: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    flexShrink: 0,
-    alignItems: 'baseline',
-    gap: rhythm.tight,
-  },
-  figure: { flexShrink: 0 },
-  track: {
-    height: 8,
-    borderRadius: radii.bar,
-    backgroundColor: colors[chartRoles.baseline],
-    overflow: 'hidden',
-    borderCurve: 'continuous',
-  },
-  fill: { height: 8 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    chart: { gap: rhythm.tight },
+    target: {
+      minHeight: minimumTarget,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    content: { flex: 1, minWidth: 0 },
+    tableRow: { minHeight: minimumTarget, paddingVertical: rhythm.row },
+    stackedRow: { flexDirection: 'column', gap: rhythm.line },
+    columns: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      gap: rhythm.block,
+    },
+    column: { flex: 1, minWidth: 0 },
+    value: { textAlign: 'right' },
+    grow: { flex: 1, minWidth: 0 },
+    bar: {
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.tight,
+      gap: rhythm.line,
+    },
+    barLabel: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    figures: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      flexShrink: 0,
+      alignItems: 'baseline',
+      gap: rhythm.tight,
+    },
+    figure: { flexShrink: 0 },
+    track: {
+      height: 8,
+      borderRadius: radii.bar,
+      backgroundColor: colors[chartRoles.baseline],
+      overflow: 'hidden',
+      borderCurve: 'continuous',
+    },
+    fill: { height: 8 },
+  }),
+);

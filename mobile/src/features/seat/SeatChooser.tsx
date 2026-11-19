@@ -19,7 +19,8 @@ import { LinkRow } from '../../design/rows';
 import { useListSearchBar } from '../../design/search-bar';
 import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { headerItems } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { seatStateRoute, welcomeSeatStateRoute } from '../../navigation/routes';
@@ -265,6 +266,8 @@ export function SeatChooser({
   locate?: boolean;
   onChosen?: (seat: Electorate) => void;
 }) {
+  const colors = useColors();
+
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const welcome = presentation === 'welcome';
   const vic = scope === 'vic' && !welcome;

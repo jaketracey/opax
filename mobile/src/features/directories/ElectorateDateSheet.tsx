@@ -6,7 +6,8 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { headerItems } from '../../navigation/chrome';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { copy } from '../../design/copy';
 import { formatDate } from '../../design/format';
 import { LinkRow } from '../../design/rows';
@@ -39,6 +40,8 @@ const dayDate = (iso: string) => new Date(`${iso}T12:00:00`);
  * the chosen date.
  */
 export default function ElectorateDateSheet() {
+  const colors = useColors();
+
   const { id, asof } = useLocalSearchParams<{ id: string; asof?: string }>();
   const today = isoDay(new Date());
   const initial = asof && validDate(asof) ? asof : today;

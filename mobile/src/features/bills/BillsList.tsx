@@ -67,7 +67,8 @@ import {
 import { useListSearchBar } from '../../design/search-bar';
 import { useSplitSeparator } from '../../design/selection';
 import { StatePageProvider } from '../../design/states';
-import { colors, layout, rhythm } from '../../design/tokens';
+import { layout, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import {
   clearBars,
   filtersItem,
@@ -132,6 +133,8 @@ const LIST_NOTE = 'This list may not include every bill yet.';
  * left, the selected bill (and its text) in the detail pane.
  */
 export default function BillsList({ pushed = false }: { pushed?: boolean }) {
+  const styles = useStyles();
+
   const adaptive = useAdaptiveDevice();
   if (!adaptive) return <BillsScreen pushed={pushed} />;
   return (
@@ -182,6 +185,9 @@ export function listParams(params: {
 }
 
 function BillsScreen({ pushed }: { pushed: boolean }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const adaptive = useAdaptiveDevice();
   const setSelectionParams = useSplitSelectionParams();
   const params = useLocalSearchParams<{
@@ -742,6 +748,8 @@ export function ScopeControl({
   value: BillScope;
   onChange: (scope: BillScope) => void;
 }) {
+  const styles = useStyles();
+
   const [width, setWidth] = useState(0);
   const [widest, setWidest] = useState<Record<string, number>>({});
   const measure = (key: string) => (event: TextLayoutEvent) => {
@@ -845,6 +853,8 @@ export function ScopeControl({
 
 /** The iPad detail pane's bar: Ask about this bill, Share and ⋯. */
 function PaneActions({ billKey, title }: { billKey: string; title: string }) {
+  const styles = useStyles();
+
   const openAsk = useOpenAsk();
   return (
     <View style={styles.paneActions}>
@@ -865,30 +875,32 @@ function PaneActions({ billKey, title }: { billKey: string; title: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.tight,
-  },
-  header: { paddingBottom: rhythm.tight },
-  headerStack: { gap: rhythm.block },
-  footer: { paddingTop: rhythm.group },
-  count: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  countStacked: { flexDirection: 'column', alignItems: 'flex-start' },
-  grow: { flexGrow: 1, flexShrink: 1 },
-  // Each label keeps its own width: stretched, all would read as the widest.
-  probe: {
-    position: 'absolute',
-    opacity: 0,
-    left: 0,
-    top: 0,
-    alignItems: 'flex-start',
-  },
-  probeText: { fontWeight: '600' },
-  paneActions: { flexDirection: 'row', alignItems: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: {
+      paddingHorizontal: layout.screenMargin,
+      paddingTop: rhythm.tight,
+    },
+    header: { paddingBottom: rhythm.tight },
+    headerStack: { gap: rhythm.block },
+    footer: { paddingTop: rhythm.group },
+    count: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    countStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+    grow: { flexGrow: 1, flexShrink: 1 },
+    // Each label keeps its own width: stretched, all would read as the widest.
+    probe: {
+      position: 'absolute',
+      opacity: 0,
+      left: 0,
+      top: 0,
+      alignItems: 'flex-start',
+    },
+    probeText: { fontWeight: '600' },
+    paneActions: { flexDirection: 'row', alignItems: 'center' },
+  }),
+);

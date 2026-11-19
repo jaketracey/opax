@@ -16,7 +16,8 @@ import {
 } from '../../design/primitives';
 import { ClearBarRest } from '../../design/layout';
 import { StatePageProvider } from '../../design/states';
-import { colors, layout, rhythm } from '../../design/tokens';
+import { layout, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { entityMatches } from './find';
 import { useFloatingBarFoot } from '../../navigation/floating-bar';
 export interface ReaderPart {
@@ -94,6 +95,8 @@ function Marked({
   index: number;
   find?: ReaderFind | null;
 }) {
+  const styles = useStyles();
+
   const query = find?.query.trim().toLocaleLowerCase('en-AU');
   if (!query) return <>{text}</>;
   const spans: ReactNode[] = [];
@@ -144,6 +147,8 @@ export function ReaderList({
   find?: ReaderFind | null;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }) {
+  const styles = useStyles();
+
   const list = useRef<FlatList<ReaderPart>>(null);
   const pending = useRef<number | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -277,23 +282,25 @@ export function ReaderList({
     </SidebarSafe>
   );
 }
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.section * 2,
-  },
-  centred: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingBottom: rhythm.section,
-  },
-  // Paragraphs 11 apart (`row`); a part title 8 above its text.
-  part: { paddingVertical: rhythm.row / 2, gap: rhythm.heading },
-  match: { backgroundColor: colors.navyWash },
-  current: {
-    textDecorationLine: 'underline',
-    textDecorationColor: colors.navy,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: {
+      paddingHorizontal: layout.screenMargin,
+      paddingTop: rhythm.block,
+      paddingBottom: rhythm.section * 2,
+    },
+    centred: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      paddingBottom: rhythm.section,
+    },
+    // Paragraphs 11 apart (`row`); a part title 8 above its text.
+    part: { paddingVertical: rhythm.row / 2, gap: rhythm.heading },
+    match: { backgroundColor: colors.navyWash },
+    current: {
+      textDecorationLine: 'underline',
+      textDecorationColor: colors.navy,
+    },
+  }),
+);

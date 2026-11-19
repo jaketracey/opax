@@ -17,7 +17,8 @@ import {
   type RowMenuAction,
 } from '../../design/primitives';
 import { calendarDate, formatDate } from '../../design/format';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { docRoute } from '../../navigation/routes';
 import { useSpeechSpeakers } from './speaker';
 import { records } from './runtime';
@@ -71,6 +72,8 @@ function byDayAdded(rows: readonly RecentItem[]) {
  * refresh keeps the list and says it is saved.
  */
 export default function RecentRecords() {
+  const styles = useStyles();
+
   const speakerFor = useSpeechSpeakers();
   const load = useCallback(
     (signal?: AbortSignal) => records.recent(undefined, signal),
@@ -252,6 +255,8 @@ export default function RecentRecords() {
 
 /** One header bar and six record rows (records.md 5.3). */
 function RecentSkeleton() {
+  const styles = useStyles();
+
   const bar = (width: `${number}%`, height: number) => (
     <View style={[styles.bar, { width, height }]} />
   );
@@ -281,12 +286,14 @@ function RecentSkeleton() {
   );
 }
 
-const styles = StyleSheet.create({
-  groups: { gap: rhythm.group },
-  row: { gap: rhythm.line },
-  bar: {
-    borderRadius: 4,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    groups: { gap: rhythm.group },
+    row: { gap: rhythm.line },
+    bar: {
+      borderRadius: 4,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+  }),
+);

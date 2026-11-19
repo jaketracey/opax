@@ -84,7 +84,8 @@ import {
 import { HeightReveal } from '../../design/reveal';
 import { useRowFollow } from '../../design/row-link';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { sourceLineParts, type SourceDetails } from '../../design/source';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, pageMenu, shareItem } from '../../navigation/chrome';
@@ -206,6 +207,8 @@ export default function BillDetail({
   recordKey,
   embedded = false,
 }: { recordKey?: string; embedded?: boolean } = {}) {
+  const colors = useColors();
+
   const params = useLocalSearchParams<{
     key: string;
     name?: string;
@@ -484,6 +487,8 @@ export function PaneMenu({
   title: string;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const items = billMenuItems({ billKey, title });
   if (Platform.OS !== 'ios')
     return (
@@ -603,6 +608,8 @@ function BillPage({
   arrival: Arrival;
   crossfade: SkeletonCrossfadeState;
 }) {
+  const styles = useStyles();
+
   const bills = useBillNavigation();
   const changesRef = useRef<View>(null);
   const datesRef = useRef<View>(null);
@@ -777,6 +784,8 @@ function BillHead({
   onTitleLayout?: (event: LayoutChangeEvent) => void;
   directory: SponsorDirectory | null | undefined;
 }) {
+  const styles = useStyles();
+
   const event = statusEvent({
     status: identity.status,
     status_as_of: identity.statusAsOf,
@@ -954,6 +963,8 @@ function StatusLine({
   event: ReturnType<typeof statusEvent>;
   pending?: ReturnType<typeof likelyStatusEvent>;
 }) {
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   return (
     <View
@@ -1012,6 +1023,8 @@ function StatusEventBone({
 }: {
   event: Pick<NonNullable<ReturnType<typeof statusEvent>>, 'label' | 'date'>;
 }) {
+  const styles = useStyles();
+
   return (
     <View
       accessibilityElementsHidden
@@ -1036,6 +1049,8 @@ function Bone({
   height: number;
   round?: boolean;
 }) {
+  const styles = useStyles();
+
   return (
     <View
       style={[styles.bone, { width, height }, round ? styles.boneRound : null]}
@@ -1087,6 +1102,8 @@ function SeededHead({
   row: IndexRow;
   directory: SponsorDirectory | null | undefined;
 }) {
+  const styles = useStyles();
+
   const display = useMemo(() => billDisplay(row), [row]);
   // The loaded header's own sponsor rows, from what the row knows. The index
   // row carries no person ID: the bill's file confirms it.
@@ -1170,6 +1187,8 @@ function SeededBodySkeleton() {
 
 /** In short and How it moved, in their final shapes, while they load. */
 function BodySkeleton() {
+  const styles = useStyles();
+
   return (
     <View style={styles.seedBody}>
       <View style={styles.seedBlock}>
@@ -1191,6 +1210,8 @@ function BodySkeleton() {
  * header's final shape, then In short. One element, "Loading the bill".
  */
 function ColdSkeleton() {
+  const styles = useStyles();
+
   return (
     <View style={styles.headBlock}>
       <Skeleton
@@ -1474,6 +1495,8 @@ function DateRows({
   entries: readonly BillTimelineEntry[];
   freshStages: ReadonlySet<string>;
 }) {
+  const styles = useStyles();
+
   return (
     <View style={styles.dates}>
       {entries.map((entry, index) => (
@@ -1909,6 +1932,8 @@ function BillVoteRow({
     position: 'for' | 'against';
   } | null;
 }) {
+  const styles = useStyles();
+
   const id = `bill-division-${index}`;
   const stacked = useAccessibilitySize();
   const reduceMotion = useReduceMotion();
@@ -2094,6 +2119,8 @@ function Speeches({
   anchor: RefObject<View | null>;
   fresh: ReadonlySet<string>;
 }) {
+  const styles = useStyles();
+
   const speakerFor = useSpeechSpeakers();
   const [all, setAll] = useState(false);
   const speeches = useMemo(
@@ -2166,6 +2193,8 @@ function Speeches({
 }
 /** One pill for every speech brief in the block. */
 function MachinePillFor() {
+  const styles = useStyles();
+
   return (
     <View style={styles.pill}>
       <MachineNotePill />
@@ -2304,80 +2333,90 @@ function Related({
   );
 }
 
-const styles = StyleSheet.create({
-  head: { gap: rhythm.block },
-  headBlock: { gap: rhythm.block },
-  titleBlock: { gap: rhythm.line },
-  status: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    marginBottom: rhythm.line,
-  },
-  stacked: {
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    alignItems: 'flex-start',
-  },
-  capsule: { alignSelf: 'flex-start', maxWidth: '100%' },
-  unseen: { opacity: 0 },
-  added: { marginTop: rhythm.tight },
-  bone: {
-    backgroundColor: colors.sunken,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-  },
-  boneRound: { borderRadius: radii.round, borderCurve: 'continuous' },
-  seedBody: { gap: rhythm.group, marginTop: rhythm.group },
-  seedBlock: { gap: rhythm.line },
-  seedPerson: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
-  seedPersonText: { flex: 1, gap: rhythm.tight },
-  askRow: { paddingBottom: rhythm.row },
-  textRow: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.dividerSubtle,
-  },
-  dates: { gap: rhythm.tight },
-  date: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
-  dateText: { flex: 1, gap: 2 },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginTop: 8,
-    backgroundColor: colors.ink,
-    borderCurve: 'continuous',
-  },
-  grow: { flexGrow: 1, flexShrink: 1 },
-  vote: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.dividerSubtle,
-  },
-  voteRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-  },
-  voteMain: { flex: 1, gap: rhythm.line },
-  voteTitle: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  outcome: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  voteBody: { gap: rhythm.block, paddingBottom: rhythm.block },
-  pressed: { backgroundColor: colors.sunken },
-  speech: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  pill: { alignItems: 'flex-start' },
-  paneMenu: {
-    minWidth: minimumTarget,
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  paneMenuHost: { width: minimumTarget, height: minimumTarget },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    head: { gap: rhythm.block },
+    headBlock: { gap: rhythm.block },
+    titleBlock: { gap: rhythm.line },
+    status: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      marginBottom: rhythm.line,
+    },
+    stacked: {
+      flexDirection: 'column',
+      flexWrap: 'nowrap',
+      alignItems: 'flex-start',
+    },
+    capsule: { alignSelf: 'flex-start', maxWidth: '100%' },
+    unseen: { opacity: 0 },
+    added: { marginTop: rhythm.tight },
+    bone: {
+      backgroundColor: colors.sunken,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+    },
+    boneRound: { borderRadius: radii.round, borderCurve: 'continuous' },
+    seedBody: { gap: rhythm.group, marginTop: rhythm.group },
+    seedBlock: { gap: rhythm.line },
+    seedPerson: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.line,
+    },
+    seedPersonText: { flex: 1, gap: rhythm.tight },
+    askRow: { paddingBottom: rhythm.row },
+    textRow: {
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.dividerSubtle,
+    },
+    dates: { gap: rhythm.tight },
+    date: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
+    dateText: { flex: 1, gap: 2 },
+    dot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      marginTop: 8,
+      backgroundColor: colors.ink,
+      borderCurve: 'continuous',
+    },
+    grow: { flexGrow: 1, flexShrink: 1 },
+    vote: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.dividerSubtle,
+    },
+    voteRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    },
+    voteMain: { flex: 1, gap: rhythm.line },
+    voteTitle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    outcome: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: rhythm.tight,
+    },
+    voteBody: { gap: rhythm.block, paddingBottom: rhythm.block },
+    pressed: { backgroundColor: colors.sunken },
+    speech: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+    pill: { alignItems: 'flex-start' },
+    paneMenu: {
+      minWidth: minimumTarget,
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    paneMenuHost: { width: minimumTarget, height: minimumTarget },
+  }),
+);

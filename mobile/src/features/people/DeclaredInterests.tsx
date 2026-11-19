@@ -6,7 +6,8 @@ import { Disclosure } from '../../design/disclosure';
 import { counted, formatCount, formatDate } from '../../design/format';
 import { Group } from '../../design/layout';
 import { Text } from '../../design/text';
-import { colors, hairline, minimumTarget, rhythm } from '../../design/tokens';
+import { hairline, minimumTarget, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { NewDot } from '../follows/NewDot';
 import { registerCategoryLabel, registerEntry } from '../your-mp/model';
 
@@ -44,6 +45,8 @@ const LONG = 280;
 
 /** The member's own words; a long entry opens with "More". */
 function EntryText({ text }: { text: string }) {
+  const styles = useStyles();
+
   const [open, setOpen] = useState(false);
   const long = text.length > LONG;
   return (
@@ -88,6 +91,8 @@ export function DeclaredInterests({
   register: InterestDetail;
   isNew?: (row: InterestDetail['buckets'][string]['items'][number]) => boolean;
 }) {
+  const styles = useStyles();
+
   const line = statementLine(r);
   return (
     <Group gap={rhythm.tight}>
@@ -155,16 +160,18 @@ export function DeclaredInterests({
   );
 }
 
-const styles = StyleSheet.create({
-  entry: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-    paddingVertical: rhythm.tight,
-  },
-  entryText: { gap: rhythm.line, alignItems: 'flex-start' },
-  // One line of text is under 44 pt: the target keeps the full height.
-  more: { minHeight: minimumTarget, justifyContent: 'center' },
-  grow: { flex: 1, gap: rhythm.line },
-  inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    entry: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+      paddingVertical: rhythm.tight,
+    },
+    entryText: { gap: rhythm.line, alignItems: 'flex-start' },
+    // One line of text is under 44 pt: the target keeps the full height.
+    more: { minHeight: minimumTarget, justifyContent: 'center' },
+    grow: { flex: 1, gap: rhythm.line },
+    inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+  }),
+);

@@ -18,7 +18,8 @@ import {
   Text,
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { leadsKindRoute } from '../../navigation/routes/money-map';
 import { leadRoute } from '../../navigation/routes/public-money';
@@ -94,6 +95,8 @@ export function leadsCitation(leads: readonly LeadView[]) {
  * leads not shown live in each source sheet's notes.
  */
 export default function Leads() {
+  const colors = useColors();
+
   const params = useLocalSearchParams<{ category?: string; item?: string }>();
   const category = useMemo(
     () => categoryFrom(params.category),

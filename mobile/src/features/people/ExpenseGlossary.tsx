@@ -15,7 +15,8 @@ import { Screen } from '../../design/layout';
 import { InlineError, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { formatMoney } from '../../design/format';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { BlockSource, recordBlock } from '../your-mp/Evidence';
 import { closeSheetItem, headerItems } from '../../navigation/chrome';
 import { useRead } from './Sections';
@@ -35,6 +36,8 @@ export const categoryKey = (name: string) =>
  * scrolled to that category, washed in navy, with the member's own amount.
  */
 export default function ExpenseGlossary() {
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{
     category?: string;
     person?: string;
@@ -210,16 +213,18 @@ export default function ExpenseGlossary() {
   );
 }
 
-const styles = StyleSheet.create({
-  group: { marginTop: rhythm.section },
-  groupHeader: { marginBottom: rhythm.heading },
-  category: { paddingVertical: rhythm.block, gap: rhythm.line },
-  inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
-  here: {
-    backgroundColor: colors.navyWash,
-    marginHorizontal: -rhythm.block,
-    paddingHorizontal: rhythm.block,
-  },
-  source: { marginTop: rhythm.group },
-  end: { height: 1 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    group: { marginTop: rhythm.section },
+    groupHeader: { marginBottom: rhythm.heading },
+    category: { paddingVertical: rhythm.block, gap: rhythm.line },
+    inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+    here: {
+      backgroundColor: colors.navyWash,
+      marginHorizontal: -rhythm.block,
+      paddingHorizontal: rhythm.block,
+    },
+    source: { marginTop: rhythm.group },
+    end: { height: 1 },
+  }),
+);

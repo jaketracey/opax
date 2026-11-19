@@ -5,7 +5,8 @@ import { Pressable } from '../../design/pressable';
 import { useSettle } from '../../design/settle';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { openTerm } from '../learn/open-term';
 import {
   trackerStepTerm,
@@ -69,6 +70,8 @@ const reached = (state: TrackerStepState | undefined) =>
   state === 'skipped';
 
 function Mark({ state }: { state: TrackerStepState }) {
+  const styles = useStyles();
+
   if (state === 'done') {
     return (
       <View style={[styles.mark, styles.markDone]}>
@@ -133,6 +136,8 @@ function Line({
   turns: number;
   testID: string;
 }) {
+  const styles = useStyles();
+
   if (hidden) return <View style={[styles.line, styles.lineHidden]} />;
   if (!solid) return <View style={styles.line} />;
   if (!settle || turn < 0)
@@ -171,6 +176,8 @@ export function BillStageTracker({
   settleKey?: string | null;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   const { steps } = tracker;
   const lengths = railLengths(steps);
   const settle = useSettle(
@@ -261,60 +268,62 @@ export function BillStageTracker({
 }
 
 const MARK = 22;
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    paddingHorizontal: rhythm.block,
-    paddingTop: rhythm.row,
-    paddingBottom: rhythm.tight,
-    gap: rhythm.line,
-  },
-  step: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    gap: rhythm.row,
-    minHeight: minimumTarget,
-    borderRadius: radii.thumb,
-    borderCurve: 'continuous',
-  },
-  pressed: { backgroundColor: colors.sunken },
-  rail: { width: MARK, alignItems: 'center' },
-  line: { flex: 1, width: 2, backgroundColor: colors.dividerSubtle },
-  lineReached: { backgroundColor: colors.navy },
-  // The navy drawn over a plain length, from its top edge down.
-  ink: { backgroundColor: colors.navy, transformOrigin: 'top' },
-  lineHidden: { backgroundColor: 'transparent' },
-  mark: {
-    width: MARK,
-    height: MARK,
-    borderRadius: MARK / 2,
-    borderCurve: 'continuous',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  markDone: { backgroundColor: colors.navy },
-  markNow: {
-    backgroundColor: colors.bronzeWash,
-    borderWidth: 3,
-    borderColor: colors.bronze,
-  },
-  markEnded: { backgroundColor: colors.danger },
-  markOpen: {
-    backgroundColor: colors.raised,
-    borderWidth: 2,
-    borderColor: colors.dividerDefault,
-  },
-  markSkipped: {
-    width: 8,
-    height: 8,
-    marginVertical: (MARK - 8) / 2,
-    borderRadius: 4,
-    borderCurve: 'continuous',
-    backgroundColor: colors.dividerDefault,
-  },
-  words: { flex: 1, justifyContent: 'center', paddingVertical: rhythm.tight },
-  // Centred on the step, not its first line (design pass §10).
-  help: { justifyContent: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      paddingHorizontal: rhythm.block,
+      paddingTop: rhythm.row,
+      paddingBottom: rhythm.tight,
+      gap: rhythm.line,
+    },
+    step: {
+      flexDirection: 'row',
+      alignItems: 'stretch',
+      gap: rhythm.row,
+      minHeight: minimumTarget,
+      borderRadius: radii.thumb,
+      borderCurve: 'continuous',
+    },
+    pressed: { backgroundColor: colors.sunken },
+    rail: { width: MARK, alignItems: 'center' },
+    line: { flex: 1, width: 2, backgroundColor: colors.dividerSubtle },
+    lineReached: { backgroundColor: colors.navy },
+    // The navy drawn over a plain length, from its top edge down.
+    ink: { backgroundColor: colors.navy, transformOrigin: 'top' },
+    lineHidden: { backgroundColor: 'transparent' },
+    mark: {
+      width: MARK,
+      height: MARK,
+      borderRadius: MARK / 2,
+      borderCurve: 'continuous',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    markDone: { backgroundColor: colors.navy },
+    markNow: {
+      backgroundColor: colors.bronzeWash,
+      borderWidth: 3,
+      borderColor: colors.bronze,
+    },
+    markEnded: { backgroundColor: colors.danger },
+    markOpen: {
+      backgroundColor: colors.raised,
+      borderWidth: 2,
+      borderColor: colors.dividerDefault,
+    },
+    markSkipped: {
+      width: 8,
+      height: 8,
+      marginVertical: (MARK - 8) / 2,
+      borderRadius: 4,
+      borderCurve: 'continuous',
+      backgroundColor: colors.dividerDefault,
+    },
+    words: { flex: 1, justifyContent: 'center', paddingVertical: rhythm.tight },
+    // Centred on the step, not its first line (design pass §10).
+    help: { justifyContent: 'center' },
+  }),
+);

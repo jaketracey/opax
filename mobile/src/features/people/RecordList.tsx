@@ -19,7 +19,8 @@ import {
   StatePageProvider,
 } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
@@ -69,6 +70,8 @@ export default function RecordList({
   /** `/person/[slug]/speeches` fixes the kind; `record-list` reads it. */
   kind?: RecordListKind;
 } = {}) {
+  const styles = useStyles();
+
   const speakerFor = useSpeechSpeakers();
   const params = useLocalSearchParams<{
     slug?: string;
@@ -404,8 +407,10 @@ export default function RecordList({
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: colors.paper },
-  content: { paddingBottom: rhythm.section },
-  foot: { paddingTop: rhythm.group, gap: rhythm.line },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    page: { flex: 1, backgroundColor: colors.paper },
+    content: { paddingBottom: rhythm.section },
+    foot: { paddingTop: rhythm.group, gap: rhythm.line },
+  }),
+);

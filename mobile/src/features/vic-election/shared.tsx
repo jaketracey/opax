@@ -11,7 +11,8 @@ import { LinkRow } from '../../design/rows';
 import { SourceLine, type SourceDetails } from '../../design/source';
 import { ContentUnavailable, StatePageProvider } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { openSource } from '../../navigation/external';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { vicElectionRoute } from '../../navigation/routes/vic-election';
@@ -216,6 +217,8 @@ export function ElectionList({
   /** iOS: lets scrollToTop reach the rest offset above zero, under the header. */
   scrollToOverflowEnabled?: boolean;
 }) {
+  const styles = useStyles();
+
   const column = useScreenColumn();
   const foot = useFloatingBarFoot();
   return (
@@ -292,11 +295,13 @@ export function ElectionList({
     </StatePageProvider>
   );
 }
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  heading: {
-    paddingTop: rhythm.section,
-    paddingBottom: rhythm.tight,
-    gap: rhythm.tight,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    heading: {
+      paddingTop: rhythm.section,
+      paddingBottom: rhythm.tight,
+      gap: rhythm.tight,
+    },
+  }),
+);

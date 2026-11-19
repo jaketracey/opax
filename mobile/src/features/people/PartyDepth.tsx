@@ -18,7 +18,8 @@ import { ValueRow } from '../../design/rows';
 import { HeightReveal } from '../../design/reveal';
 import { InlineError, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { Amount } from './FinancialBlocks';
 import { ReadDate, useRead } from './Sections';
 import { receiptsSeries } from './model';
@@ -63,6 +64,8 @@ export function PartyReturns({
   record: Funding;
   name: string;
 }) {
+  const styles = useStyles();
+
   const rows = receiptsSeries(record.data.parties[name]?.returns);
   const latest = rows[0];
   if (!latest) return null;
@@ -127,6 +130,8 @@ export function PartyDebts({
   record: Funding;
   name: string;
 }) {
+  const styles = useStyles();
+
   const d = record.data.parties[name]?.debts;
   if (!d) return null;
   return (
@@ -185,6 +190,8 @@ function Creditors({
 }: {
   rows: readonly { name: string; amount: number }[];
 }) {
+  const styles = useStyles();
+
   const [all, setAll] = useState(false);
   const reduceMotion = useReduceMotion();
   const row = (l: { name: string; amount: number }, i: number) => (
@@ -264,6 +271,8 @@ export function PartyAccess({
   name: string;
   afterFrame?: (signal?: AbortSignal) => Promise<void>;
 }) {
+  const styles = useStyles();
+
   const { read, retry } = useRead(
     (signal?: AbortSignal) =>
       afterFrame
@@ -394,10 +403,12 @@ export function PartyAccess({
   );
 }
 
-const styles = StyleSheet.create({
-  block: { gap: rhythm.heading },
-  groupHeader: { paddingTop: rhythm.tight },
-  row: { paddingVertical: rhythm.tight, gap: rhythm.line },
-  inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
-  showAll: { alignItems: 'flex-start' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    block: { gap: rhythm.heading },
+    groupHeader: { paddingTop: rhythm.tight },
+    row: { paddingVertical: rhythm.tight, gap: rhythm.line },
+    inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+    showAll: { alignItems: 'flex-start' },
+  }),
+);

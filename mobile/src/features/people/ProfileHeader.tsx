@@ -15,7 +15,8 @@ import { FollowButton } from '../../design/controls';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { partyDotSize } from '../../design/people';
 import { partyDot } from '../../design/party';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import type { FollowKind } from '../follows/store';
 import { TermText } from '../../design/term';
 import { roleTerm } from '../learn/term-map';
@@ -133,6 +134,8 @@ export function ProfileHeader({
   titleTestID?: string;
   onTitleLayout?: () => void;
 }) {
+  const styles = useStyles();
+
   const large = useAccessibilitySize();
   const centred = variant === 'person' && !large;
   const align = centred ? styles.centre : styles.leading;
@@ -253,20 +256,22 @@ export function ProfileHeader({
   );
 }
 
-const styles = StyleSheet.create({
-  header: { gap: rhythm.block },
-  identity: { gap: rhythm.tight },
-  centre: { alignItems: 'center' },
-  leading: { alignItems: 'flex-start' },
-  centredText: { textAlign: 'center' },
-  shrink: { flexShrink: 1 },
-  partyTitle: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  yourMP: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
-  followFull: { alignSelf: 'stretch' },
-  inset: { height: hairline, backgroundColor: colors.dividerSubtle },
-  end: { height: hairline, backgroundColor: colors.dividerSubtle },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    header: { gap: rhythm.block },
+    identity: { gap: rhythm.tight },
+    centre: { alignItems: 'center' },
+    leading: { alignItems: 'flex-start' },
+    centredText: { textAlign: 'center' },
+    shrink: { flexShrink: 1 },
+    partyTitle: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    yourMP: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
+    followFull: { alignSelf: 'stretch' },
+    inset: { height: hairline, backgroundColor: colors.dividerSubtle },
+    end: { height: hairline, backgroundColor: colors.dividerSubtle },
+  }),
+);

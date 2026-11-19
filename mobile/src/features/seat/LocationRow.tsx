@@ -19,7 +19,8 @@ import {
 import { Text } from '../../design/text';
 import { Icon } from '../../design/icon';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import {
   suggestFromLocation,
   suggestStateFromLocation,
@@ -275,6 +276,8 @@ function ActionRow({
   disabled?: boolean;
   testID?: string;
 }) {
+  const colors = useColors();
+
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset(44);

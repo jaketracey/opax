@@ -28,7 +28,8 @@ import {
   type FigureSource,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
@@ -191,6 +192,9 @@ function useSubject(
  * stays in the app; the web comparison is in the ⋯ menu.
  */
 export default function LeadDetail() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const load = useCallback(
@@ -460,17 +464,23 @@ export default function LeadDetail() {
   );
 }
 
-const styles = StyleSheet.create({
-  section: { gap: rhythm.tight },
-  caveats: { gap: rhythm.tight },
-  caveat: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    borderCurve: 'continuous',
-    marginTop: 10,
-    backgroundColor: colors.inkSoft,
-  },
-  grow: { flex: 1 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    section: { gap: rhythm.tight },
+    caveats: { gap: rhythm.tight },
+    caveat: {
+      flexDirection: 'row',
+      gap: rhythm.tight,
+      alignItems: 'flex-start',
+    },
+    dot: {
+      width: 4,
+      height: 4,
+      borderRadius: 2,
+      borderCurve: 'continuous',
+      marginTop: 10,
+      backgroundColor: colors.inkSoft,
+    },
+    grow: { flex: 1 },
+  }),
+);

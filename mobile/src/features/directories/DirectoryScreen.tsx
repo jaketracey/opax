@@ -39,7 +39,8 @@ import { useSplitSeparator } from '../../design/selection';
 import { useListSearchBar } from '../../design/search-bar';
 import type { SourceDetails } from '../../design/source';
 import { StatePageProvider } from '../../design/states';
-import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
+import { layout, minimumTarget, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
@@ -140,6 +141,8 @@ function DirectoryRow({
   );
 }
 function SectionTitle({ section }: { section: SectionListData<Row, Section> }) {
+  const styles = useStyles();
+
   return section.title ? (
     <View style={styles.sectionHeader}>
       <Text
@@ -201,6 +204,8 @@ function activeFilters(kind: DirectoryKind, filters: Filters): string[] {
 }
 
 function DirectoryContent() {
+  const styles = useStyles();
+
   const adaptive = useAdaptiveDevice();
   const params = useLocalSearchParams<{ kind: string }>();
   const kind = directoryKind(params.kind);
@@ -217,6 +222,8 @@ function DirectoryContent() {
   );
 }
 function DirectoryView({ kind }: { kind: DirectoryKind }) {
+  const styles = useStyles();
+
   const adaptive = useAdaptiveDevice();
   const foot = useFloatingBarFoot();
   const setSelectionParams = useSplitSelectionParams();
@@ -625,34 +632,36 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
     </>
   );
 }
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: {
-    paddingHorizontal: layout.screenMargin,
-    paddingBottom: rhythm.section,
-  },
-  header: { paddingTop: rhythm.tight, gap: rhythm.tight },
-  filterLine: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    columnGap: rhythm.tight,
-  },
-  grow: { flexGrow: 1, flexShrink: 1 },
-  clear: {
-    minHeight: minimumTarget,
-    minWidth: minimumTarget,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionHeader: {
-    backgroundColor: colors.paper,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.tight,
-  },
-  empty: { gap: rhythm.block, paddingTop: rhythm.block },
-  footer: { gap: rhythm.tight, paddingTop: rhythm.block },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.paper },
+    content: {
+      paddingHorizontal: layout.screenMargin,
+      paddingBottom: rhythm.section,
+    },
+    header: { paddingTop: rhythm.tight, gap: rhythm.tight },
+    filterLine: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      columnGap: rhythm.tight,
+    },
+    grow: { flexGrow: 1, flexShrink: 1 },
+    clear: {
+      minHeight: minimumTarget,
+      minWidth: minimumTarget,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    sectionHeader: {
+      backgroundColor: colors.paper,
+      paddingTop: rhythm.block,
+      paddingBottom: rhythm.tight,
+    },
+    empty: { gap: rhythm.block, paddingTop: rhythm.block },
+    footer: { gap: rhythm.tight, paddingTop: rhythm.block },
+  }),
+);
 
 export default function DirectoryScreen() {
   return (

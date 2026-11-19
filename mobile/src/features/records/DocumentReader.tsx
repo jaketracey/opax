@@ -48,7 +48,12 @@ import {
   VoteSplit,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import {
+  makeStyles,
+  useColors,
+  type Colors,
+} from '../../design/use-colors';
 import { headerItems, shareItem } from '../../navigation/chrome';
 import {
   billRoute,
@@ -293,6 +298,9 @@ export default function DocumentReader({
   embedded = false,
   citedPassage,
 }: { recordSlug?: string; embedded?: boolean; citedPassage?: string } = {}) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{
     slug: string;
     cite?: string;
@@ -388,7 +396,7 @@ export default function DocumentReader({
             title: shown ? headline : '',
             ...headerItems(
               findBar
-                ? () => findItems(find)
+                ? () => findItems(find, colors)
                 : shown && target && ios
                   ? () => [
                       ...(canShare
@@ -509,7 +517,7 @@ const findLabel = (find: Find) =>
     ? `Match ${find.current + 1} of ${find.total} for ${find.query}`
     : `No matches for ${find.query}`;
 /** The find bar's controls, in the navigation bar while it is open. */
-function findItems(find: Find): NativeStackHeaderItem[] {
+function findItems(find: Find, colors: Colors): NativeStackHeaderItem[] {
   return [
     {
       type: 'button',
@@ -540,6 +548,8 @@ function findItems(find: Find): NativeStackHeaderItem[] {
 
 /** Bars in the header's final shape, then lines of text (records.md 2.5). */
 function ReaderSkeleton() {
+  const styles = useStyles();
+
   return (
     <LoadingStatus
       accessible
@@ -577,6 +587,8 @@ function ReaderSkeleton() {
   );
 }
 function Bar({ width, height }: { width: `${number}%`; height: number }) {
+  const styles = useStyles();
+
   return <View style={[styles.bar, { width, height }]} />;
 }
 
@@ -608,6 +620,8 @@ function ReaderHeader({
   askRow: (() => void) | null;
   hasText: boolean;
 }) {
+  const styles = useStyles();
+
   const meta = metaLine(doc, { date: false });
   const caveat = recordCaveat(doc);
   const organisation = organisationOf(doc);
@@ -722,6 +736,8 @@ function ReaderHeader({
  * party's majority, in the Worker's words (the web page shows the same).
  */
 function AgainstParty({ view }: { view: VotedAgainstParty }) {
+  const styles = useStyles();
+
   const navigation = useRecordNavigation();
   return (
     <View style={styles.block} testID="doc-against-party">
@@ -782,6 +798,8 @@ function Speaker({
   doc: DocumentRecord;
   row: SponsorRow | null;
 }) {
+  const styles = useStyles();
+
   const navigation = useRecordNavigation();
   const slug = row?.slug ?? '';
   const yourMP = useIsMyMember(slug);
@@ -939,6 +957,8 @@ function LinkedBillRow({ bill }: { bill: BillEntry }) {
   );
 }
 function LinkedBill({ doc }: { doc: DocumentRecord }) {
+  const styles = useStyles();
+
   const navigation = useRecordNavigation();
   const [found, setFound] = useState<{
     bill: BillEntry;
@@ -1017,6 +1037,8 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
 
 type SimilarResult = Awaited<ReturnType<Records['similar']>>;
 function Similar({ doc }: { doc: DocumentRecord }) {
+  const styles = useStyles();
+
   const speakerFor = useSpeechSpeakers();
   const navigation = useRecordNavigation();
   const [value, setValue] = useState<SimilarResult | null>(null);
@@ -1136,40 +1158,42 @@ function Similar({ doc }: { doc: DocumentRecord }) {
   );
 }
 
-const styles = StyleSheet.create({
-  findStatus: {
-    minHeight: minimumTarget,
-    justifyContent: 'center',
-    marginBottom: rhythm.block,
-  },
-  meta: { marginBottom: rhythm.line },
-  speaker: { marginTop: rhythm.block },
-  source: { marginTop: rhythm.tight },
-  caveat: { marginTop: rhythm.line },
-  rows: { marginTop: rhythm.tight },
-  block: { marginTop: rhythm.block },
-  brief: { gap: rhythm.tight },
-  beforeText: { height: rhythm.block },
-  endSource: { marginTop: rhythm.group },
-  after: { marginTop: rhythm.section },
-  similar: { gap: rhythm.tight },
-  skeleton: { gap: rhythm.block },
-  skeletonGroup: { gap: rhythm.tight, flex: 1 },
-  skeletonSpeaker: {
-    flexDirection: 'row',
-    gap: rhythm.tight,
-    alignItems: 'flex-start',
-  },
-  circle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  bar: {
-    borderRadius: 4,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    findStatus: {
+      minHeight: minimumTarget,
+      justifyContent: 'center',
+      marginBottom: rhythm.block,
+    },
+    meta: { marginBottom: rhythm.line },
+    speaker: { marginTop: rhythm.block },
+    source: { marginTop: rhythm.tight },
+    caveat: { marginTop: rhythm.line },
+    rows: { marginTop: rhythm.tight },
+    block: { marginTop: rhythm.block },
+    brief: { gap: rhythm.tight },
+    beforeText: { height: rhythm.block },
+    endSource: { marginTop: rhythm.group },
+    after: { marginTop: rhythm.section },
+    similar: { gap: rhythm.tight },
+    skeleton: { gap: rhythm.block },
+    skeletonGroup: { gap: rhythm.tight, flex: 1 },
+    skeletonSpeaker: {
+      flexDirection: 'row',
+      gap: rhythm.tight,
+      alignItems: 'flex-start',
+    },
+    circle: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    bar: {
+      borderRadius: 4,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+  }),
+);

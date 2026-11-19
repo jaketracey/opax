@@ -18,7 +18,8 @@ import {
   formatDate,
   formatPercent,
 } from '../../design/format';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import {
   fromWebPath,
   recordListRoute,
@@ -159,6 +160,8 @@ export function eraOptions(data: TopicsData) {
  * with their share, then the block's source line.
  */
 export function Topics({ name }: { name: string }) {
+  const styles = useStyles();
+
   const { read, retry } = useRead(
     (signal?: AbortSignal) => peopleDepth.topics(name, signal),
     name,
@@ -320,6 +323,8 @@ export function PersonDiary({ identity }: { identity: PersonProfile }) {
   return diaryEligible(identity) ? <Diary identity={identity} /> : null;
 }
 function Diary({ identity }: { identity: PersonProfile }) {
+  const styles = useStyles();
+
   const { read, retry } = useRead(
     (signal?: AbortSignal) => peopleDepth.access(signal),
     identity.slug,
@@ -426,11 +431,13 @@ function Diary({ identity }: { identity: PersonProfile }) {
   );
 }
 
-const styles = StyleSheet.create({
-  block: { gap: rhythm.heading },
-  meeting: { paddingVertical: rhythm.tight, gap: rhythm.line },
-  inset: {
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerSubtle,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    block: { gap: rhythm.heading },
+    meeting: { paddingVertical: rhythm.tight, gap: rhythm.line },
+    inset: {
+      borderTopWidth: hairline,
+      borderTopColor: colors.dividerSubtle,
+    },
+  }),
+);
