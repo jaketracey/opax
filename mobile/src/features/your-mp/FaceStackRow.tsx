@@ -64,6 +64,7 @@ export function byFamilyName<T>(name: (row: T) => string) {
  */
 export function FaceStackRow({
   title,
+  detail,
   people,
   href,
   testID,
@@ -71,6 +72,8 @@ export function FaceStackRow({
   menu,
 }: {
   title: string;
+  /** A second line under the title, read after it. */
+  detail?: string;
   /** Already in the list's order (family name, A to Z). */
   people: readonly FaceStackPerson[];
   href: Href;
@@ -85,8 +88,9 @@ export function FaceStackRow({
   return (
     <LinkRow
       title={title}
+      detail={detail}
       leading={<FaceStack portraits={uris} max={max} />}
-      accessibilityLabel={title}
+      accessibilityLabel={detail ? `${title}. ${detail}` : title}
       accessibilityHint={accessibilityHint}
       href={href}
       onPress={() => router.push(href)}

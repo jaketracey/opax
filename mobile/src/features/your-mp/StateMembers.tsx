@@ -20,6 +20,13 @@ import { rhythm } from '../../design/tokens';
 import { membersRoute, personRoute, seatRoute } from '../../navigation/routes';
 import { byFamilyName, FaceStackRow } from './FaceStackRow';
 import { representativeProfile, type Directory } from './model';
+import {
+  endedParliaments,
+  endedTermLine,
+  lastMemberFor,
+  termEndedFor,
+  type EndedTerm,
+} from './term-ended';
 
 const vic = (s: Pick<Electorate, 'state_code' | 'jurisdiction'>) =>
   s.state_code.toLowerCase() === 'vic' || s.jurisdiction === 'vic';
@@ -77,6 +84,11 @@ export function StateMembers({
       .filter((d): d is string => !!d)
       .sort()
       .at(-1) ?? null;
+  // While the Parliament's term has ended for an election nobody is a
+  // member: both rows name the last members and say when the term ended.
+  const ended = endedParliaments(directory.electorates.data.electorates);
+  const districtEnded = district ? termEndedFor(district, ended) : null;
+  const regionEnded = region ? termEndedFor(region, ended) : null;
   return (
     <View testID="your-state" style={{ gap: rhythm.heading }}>
       <SectionHeader title="Victorian Parliament" />
@@ -108,6 +120,7 @@ export function StateMembers({
                   seat={district}
                   directory={directory}
                   menu={stateMenu}
+                  ended={districtEnded}
                 />
               ) : (
                 <Text wordSafe style={{ padding: rhythm.block }}>
@@ -117,7 +130,12 @@ export function StateMembers({
             ) : null}
             {region && region.representatives.length ? (
               <FaceStackRow
-                title={`${counted(region.representatives.length, 'member')} for ${region.name}`}
+                title={
+                  regionEnded
+                    ? `Last members for ${region.name}`
+                    : `${counted(region.representatives.length, 'member')} for ${region.name}`
+                }
+                detail={regionEnded ? endedTermLine(regionEnded) : undefined}
                 people={[...region.representatives]
                   .sort(byFamilyName((r) => r.person.name))
                   .map((r) => ({
@@ -155,10 +173,13 @@ function StateMemberRow({
   seat,
   directory,
   menu,
+  ended,
 }: {
   seat: Electorate;
   directory: Directory;
   menu: RowMenuAction[];
+  /** The ended term, while the seat has no member; null for a member. */
+  ended: EndedTerm | null;
 }) {
   const r = seat.representatives[0]!;
   const profile = representativeProfile(r.person_id, directory);
@@ -170,7 +191,8 @@ function StateMemberRow({
       portrait={<CachedPortrait name={r.person.name} slug={profile?.slug} />}
       party={profile?.party ?? r.party}
       partyStatus={profile?.partyStatus ?? 'current'}
-      place={`Member for ${seat.name}`}
+      place={ended ? lastMemberFor(seat.name) : `Member for ${seat.name}`}
+      detail={ended ? endedTermLine(ended) : undefined}
       href={profile ? personRoute(profile.slug) : undefined}
       menu={menuSections(
         profile

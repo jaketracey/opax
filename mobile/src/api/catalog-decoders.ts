@@ -211,6 +211,22 @@ const electorateFields = {
   // Local follows compare these to notice a new election result without
   // reading each seat's detail file.
   latest_election: optional(nullable(date)),
+  // A state lower house whose term has ended for an election: the election
+  // day until the result is in, null once the post-result roster is loaded,
+  // and absent from an index that predates the field
+  // (features/your-mp/term-ended). In Victoria the term expires, the
+  // Parliament is not dissolved; the field keeps the name the index gives.
+  dissolved_for: (v: unknown): string | null | undefined => {
+    // Null and absent are different answers here, so both are kept. This
+    // build shipped without the field, so a value it cannot read says
+    // nothing (absent) and never costs the index its row.
+    if (v === null) return null;
+    try {
+      return v === undefined ? undefined : date(v);
+    } catch {
+      return undefined;
+    }
+  },
   election_count: optional(count),
 };
 const electorate = shape(electorateFields);
