@@ -10,6 +10,7 @@ import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
 import { scanNative } from './native-boundary';
 import { policy, productionVoiceEnabled } from '../plugins/voiceProduction';
+import { APPEARANCES, appearance } from '../plugins/appearance';
 import {
   assertNoCommunity,
   assertNoE2ELaunchFlags,
@@ -37,13 +38,30 @@ function config(variant: string, analyticsSwitch = '0', android = false) {
 }
 const release = config('production');
 const e2e = config('e2e');
-for (const variant of ['production', 'e2e', 'development']) {
+// This build's appearance in every variant, then production under the other
+// setting: the switch must work both ways in a release build.
+const buildAppearance = appearance();
+const otherAppearance = APPEARANCES.find(
+  (value: string) => value !== buildAppearance,
+)!;
+for (const [variant, chosen] of [
+  ['production', buildAppearance],
+  ['e2e', buildAppearance],
+  ['development', buildAppearance],
+  ['production', otherAppearance],
+] as const) {
+  const followsSystem = chosen === 'automatic';
   const introspected = JSON.parse(
     execFileSync(
       './node_modules/.bin/expo',
       ['config', '--json', '--type', 'introspect'],
       {
-        env: { ...process.env, OPAX_VARIANT: variant, EXPO_NO_TELEMETRY: '1' },
+        env: {
+          ...process.env,
+          OPAX_VARIANT: variant,
+          OPAX_APPEARANCE: chosen,
+          EXPO_NO_TELEMETRY: '1',
+        },
         encoding: 'utf8',
       },
     ),
@@ -59,12 +77,22 @@ for (const variant of ['production', 'e2e', 'development']) {
     assert.equal(native.OPAXVoiceConsentDefault, false);
     assert.deepEqual(native.OPAXVoiceAllowedRoutes, policy.routes);
   }
-  // The app is light-only. expo-splash-screen switches the whole app to
-  // Automatic when a dark splash is configured, so guard the result.
+  // The appearance switch (plugins/appearance.js) decides, in every variant:
+  // Light, or Automatic to follow the system. expo-splash-screen switches
+  // the whole app to Automatic when a dark splash is configured, whatever
+  // userInterfaceStyle says, so guard the generated plist and not the config.
   assert.equal(
     native.UIUserInterfaceStyle,
-    'Light',
-    'The app stays light-only',
+    followsSystem ? 'Automatic' : 'Light',
+    followsSystem
+      ? `${variant} follows the system appearance`
+      : `${variant} stays light-only`,
+  );
+  // The launch field is navy in both appearances; only a build that follows
+  // the system carries the dark slot.
+  assert.equal(
+    introspected.userInterfaceStyle,
+    followsSystem ? 'automatic' : 'light',
   );
   assert.equal(native.UILaunchStoryboardName, 'SplashScreen');
   assert.equal(
