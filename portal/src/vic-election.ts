@@ -367,7 +367,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       // as a dated line with a plain link to their own page.
       + section('last-parliament',ended ? 'Last parliament' : 'Member',`<dl class="vic-facts">${empty ? `<div><dt>Member</dt><dd>${esc(vicVacantSentence({chamber:'vic_la'}))}${s.vacancy ? ` ${lastMemberText(link(s.vacancy.last.href,s.vacancy.last.name),s.vacancy.to)}` : ''}</dd></div>` : `<div><dt>${ended ? esc(`Member for ${s.name} ${until}${closed ? `, from the published roster dated ${shortDate(s.roster_date)}` : ''}`) : closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>`}</dl>`)
       + (campaign || empty ? '' : section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''})))
-      + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.${councilEnded(region) ? ` Listed are the members for ${esc(region.name)} Region ${untilCouncil}.` : ''}`)
+      + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: ${councilEnded(region) ? 'last members' : 'members'} and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.${councilEnded(region) ? ` Listed are the members for ${esc(region.name)} Region ${untilCouncil}.` : ''}`)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'District map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find another seat')])}</div>`
   } else {
@@ -375,7 +375,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
     const ended = councilEnded(s)
     description = `The five ${ended ? `members for ${s.name} Region ${untilCouncil}` : `upper house members ${closed ? 'in the published roster for' : 'for'} ${s.name} Region`}, ${campaign ? '' : 'what they have done in Parliament, '}and its 11 districts. ${copy.lede}`
     crumbs = trail(VIC_ELECTION_PATH, s.name+' Region')
-    body = `<div class="ui-page-head"><h1>${esc(s.name)} Region</h1><p class="ui-page-meta">Upper house region with five members and 11 districts${s.formerly ? `. Called ${esc(s.formerly)} Region before 2022` : ''}.</p></div>`
+    body = `<div class="ui-page-head"><h1>${esc(s.name)} Region</h1><p class="ui-page-meta">Upper house region that elects five members, with 11 districts${s.formerly ? `. Called ${esc(s.formerly)} Region before 2022` : ''}.</p></div>`
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
       + candidates(s)
