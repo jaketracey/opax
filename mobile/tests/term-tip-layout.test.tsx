@@ -4,6 +4,7 @@
  * foot, with a wide gap above), and still takes a 44 pt touch.
  */
 import { act, render } from '@testing-library/react-native';
+import * as Native from 'react-native';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 import {
   border,
@@ -31,6 +32,7 @@ jest.mock('../src/design/keyboard', () => ({ useKeyCommand: jest.fn() }));
 const id = termIds[0]!;
 const originalOS = Platform.OS;
 afterEach(() => {
+  jest.restoreAllMocks();
   Platform.OS = originalOS;
   mockReplace.mockClear();
 });
@@ -138,4 +140,21 @@ test('a keyboard\'s focus shows the app\'s ring on "More", and leaves with it', 
   });
   act(() => more.props.onBlur({ nativeEvent: {} }));
   expect(outline().outlineWidth).toBeUndefined();
+});
+
+test('light floats the popover on a shadow; dark drops it for a firmer hairline', () => {
+  Platform.OS = 'ios';
+  jest.spyOn(Native, 'useColorScheme').mockReturnValue('light');
+  const light = tip().flat(`term-tip-${id}`);
+  expect(light.shadowOpacity).toBe(0.16);
+  expect(light.shadowColor).toBe(colors.ink);
+  expect(light.borderColor).toBe(colors.dividerSubtle);
+  jest.spyOn(Native, 'useColorScheme').mockReturnValue('dark');
+  const dark = tip().flat(`term-tip-${id}`);
+  // Ink is pale in dark: a shadow drawn in it would glow round the popover.
+  expect(dark.shadowColor).toBeUndefined();
+  expect(dark.shadowOpacity).toBeUndefined();
+  expect(dark.elevation).toBeUndefined();
+  expect(dark.borderColor).toBe(colors.dividerDefault);
+  expect(dark.backgroundColor).toBe(colors.raised);
 });

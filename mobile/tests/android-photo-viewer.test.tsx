@@ -5,6 +5,7 @@ import TestRenderer from 'react-test-renderer';
 import * as Reanimated from 'react-native-reanimated';
 import { router } from 'expo-router';
 import mockPictures from '../../portal/public/years/pictures.json';
+import { paletteFor } from '../src/design/palette';
 import { colors } from '../src/design/tokens';
 import { showMenu } from '../src/design/menu';
 import { AndroidPhoto } from '../src/features/explore/AndroidPhoto';
@@ -162,7 +163,11 @@ test('Android covers the tabs in a native modal, has one white Done, and system 
   });
   expect(
     StyleSheet.flatten(host(r, 'photo-viewer-caption').props.style),
-  ).toMatchObject({ maxHeight: '40%', backgroundColor: colors.photoScrim });
+  ).toMatchObject({
+    maxHeight: '40%',
+    // Android takes plain values from useColors(), not iOS's dynamic ones.
+    backgroundColor: paletteFor('light').photoScrim,
+  });
   act(() => modal.props.onRequestClose());
   expect(router.back).toHaveBeenCalledTimes(1);
   act(() =>

@@ -27,10 +27,11 @@ import {
   setWindowTraitsOverride,
   type WindowTraits,
 } from '../src/design/adaptive';
+import { Card } from '../src/design/card';
 import { GroundFade } from '../src/design/ground-fade';
 import { paletteFor } from '../src/design/palette';
 import { SurfaceContext } from '../src/design/row-padding';
-import { colors } from '../src/design/tokens';
+import { colors, hairline } from '../src/design/tokens';
 import { FeaturedPeopleCarousel } from '../src/features/today/FeaturedPeopleCard';
 import { featuredPeople } from '../src/features/today/featured-people';
 import type { TodayOrder, TodaySlot } from '../src/features/today/order';
@@ -371,6 +372,24 @@ describe('the carousel’s edges', () => {
       ]);
     },
   );
+
+  test('in dark one outline runs round each whole card, and the link inside draws none', async () => {
+    mockScheme = 'dark';
+    const root = await render(<FeaturedPeopleCarousel people={people} />);
+    await measure(root, 374);
+    const frame = StyleSheet.flatten(
+      hosts(root, 'today-edition-card')[0]!.props.style,
+    );
+    // The role is clear in light, so the same outline costs nothing there.
+    expect(frame.outlineColor).toBe(colors.raisedOutline);
+    expect(frame.outlineWidth).toBe(hairline);
+    expect(frame.shadowOpacity).toBeUndefined();
+    // A Card with no named ground outlines itself, which cut each card in
+    // two above its source line.
+    for (const card of root.findAllByType(Card))
+      expect(card.props.ground).toBe('raised');
+    mockScheme = 'light';
+  });
 
   test('Increase Contrast keeps the gradient in the ground’s colour', async () => {
     jest.mocked(useIncreaseContrast).mockReturnValue(true);

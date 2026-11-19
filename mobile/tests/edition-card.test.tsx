@@ -1,4 +1,5 @@
 import { act, type ReactElement, type ReactNode } from 'react';
+import { StyleSheet } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import {
@@ -11,6 +12,7 @@ import { editionPath } from '../src/api/policy';
 import { Button } from '../src/design/controls';
 import { Card } from '../src/design/card';
 import { SourceLine } from '../src/design/source';
+import { colors, hairline } from '../src/design/tokens';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { editionInSlot } from '../src/features/today/order';
 import { addDays, editionTier } from '../src/features/today/rules';
@@ -115,6 +117,24 @@ describe('the edition on Today', () => {
       'today-edition-sources',
     ]);
     expect(strings(root)).not.toMatch(/Daily edition ·|Open the bill/);
+  });
+  test('dark: the outline runs round the whole card, source line included, and the link inside draws none', () => {
+    const root = render(
+      <EditionCard edition={ready} tier="fresh" today={addDays(date, 1)} />,
+    );
+    const frame = StyleSheet.flatten(
+      host(root, 'today-edition-card')[0]!.props.style,
+    );
+    // Clear in light, the raised hairline in dark: the role decides.
+    expect(frame.outlineColor).toBe(colors.raisedOutline);
+    expect(frame.outlineWidth).toBe(hairline);
+    expect(frame.outlineOffset).toBe(-hairline);
+    // A Card with no named ground outlines itself, which drew a second
+    // edge across the card above its source line.
+    const card = root
+      .findAllByType(Card)
+      .find((c) => c.props.testID === 'today-edition')!;
+    expect(card.props.ground).toBe('raised');
   });
   test('an old edition is never drawn; loading is the skeleton; a 404 draws nothing', () => {
     expect(
