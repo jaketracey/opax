@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { raisedEdge } from '../parts';
 import { useAccessibilityFocusRequest } from '../../../design/keyboard';
 import { IconButton } from '../../../design/primitives';
 import { symbols } from '../../../design/symbols';
@@ -77,6 +78,7 @@ const useStyles = makeStyles((colors) =>
       marginHorizontal: 2,
     },
     stack: {
+      ...raisedEdge(colors),
       backgroundColor: colors.raised,
       borderRadius: radii.capsule,
       borderCurve: 'continuous',

@@ -3,6 +3,7 @@ import {
   donorAssociated,
   donorAssociatedTo,
 } from '../../../api/associated';
+import { raisedEdge } from '../parts';
 import { AssociatedEntityLabel } from '../../../design/AssociatedEntityLabel';
 import type { Href } from 'expo-router';
 import {
@@ -604,6 +605,7 @@ const PANEL_GLIDE_WINDOW = 600;
 const useStyles = makeStyles((colors) =>
   StyleSheet.create({
     panel: {
+      ...raisedEdge(colors),
       backgroundColor: colors.raised,
       borderTopLeftRadius: radii.container,
       borderTopRightRadius: radii.container,

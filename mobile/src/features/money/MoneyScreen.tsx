@@ -107,7 +107,7 @@ import { useMapTheme } from './ported/palette';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
 import { useMoneyFilters } from './MoneyFilters';
-import { moneyPartyGroups, PartyMoneyRow } from './parts';
+import { moneyPartyGroups, PartyMoneyRow, raisedEdge } from './parts';
 import { useRefreshColours } from '../money-public/parts';
 import { moneyMode, type MoneyMode } from './screen-reader';
 import {
@@ -1971,6 +1971,7 @@ const useStyles = makeStyles((colors) =>
     cardCapped: { flexShrink: 1 },
     cardScroll: { gap: rhythm.tight },
     card: {
+      ...raisedEdge(colors),
       backgroundColor: colors.raised,
       borderRadius: radii.container,
       borderCurve: 'continuous',

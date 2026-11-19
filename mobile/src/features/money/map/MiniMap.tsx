@@ -1,4 +1,5 @@
 import { Group, Picture, Rect } from '@shopify/react-native-skia';
+import { raisedEdge } from '../parts';
 import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { PlainPressable as Pressable } from '../../../design/pressable';
@@ -138,6 +139,7 @@ const useStyles = makeStyles((colors) =>
       borderCurve: 'continuous',
       borderWidth: hairline,
       borderColor: colors.dividerSubtle,
+      ...raisedEdge(colors),
       backgroundColor: colors.raised,
       overflow: 'hidden',
     },

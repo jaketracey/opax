@@ -1,4 +1,5 @@
 import type { Href } from 'expo-router';
+import { raisedEdge } from '../money/parts';
 import { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
@@ -374,6 +375,7 @@ export function PartiesCard() {
 const useStyles = makeStyles((colors) =>
   StyleSheet.create({
     frame: {
+      ...raisedEdge(colors),
       backgroundColor: colors.raised,
       borderRadius: radii.container,
       borderCurve: 'continuous',

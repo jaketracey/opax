@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
+import { raisedEdge } from '../parts';
 import { StyleSheet, View } from 'react-native';
 import { formatMoney, moneyAccessibilityLabel } from '../../../design/format';
 import {
@@ -127,6 +128,7 @@ export function MoneyMapSearch({
 const useStyles = makeStyles((colors) =>
   StyleSheet.create({
     card: {
+      ...raisedEdge(colors),
       backgroundColor: colors.raised,
       borderRadius: radii.container,
       borderCurve: 'continuous',

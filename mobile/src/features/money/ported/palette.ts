@@ -143,7 +143,6 @@ const toHex = (rgb: number[]) =>
         .padStart(2, '0'),
     )
     .join('')}`;
-const luminanceOf = (hex: string) => contrastRatio(hex, '#000000');
 
 /**
  * The colour moved in even steps away from the ground until it reaches the
@@ -152,7 +151,9 @@ const luminanceOf = (hex: string) => contrastRatio(hex, '#000000');
  */
 function reach(hex: string, ground: string, ratio: number): string {
   let rgb = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  const lighten = luminanceOf(ground) < luminanceOf('#777777');
+  // A ground nearer dark paper than light paper is a dark one.
+  const lighten =
+    contrastRatio(ground, SURFACE) > contrastRatio(ground, SURFACE_DARK);
   for (
     let step = 0;
     step < 48 && contrastRatio(toHex(rgb), ground) < ratio;
