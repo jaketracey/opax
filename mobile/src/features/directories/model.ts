@@ -22,6 +22,12 @@ import {
 } from '../../api/bill-transforms';
 import { hasParliamentaryMembership, type Directory } from '../your-mp/model';
 import {
+  endedParliaments,
+  lastMemberFor,
+  termEndedFor,
+  type EndedTerm,
+} from '../your-mp/term-ended';
+import {
   samePortraitPerson,
   type buildPortraitIndex,
 } from '../../api/portrait-index';
@@ -70,6 +76,11 @@ export interface PlaceSeat {
   current: boolean;
   /** The latest recorded end of service in the seat. */
   end: string | null;
+  /**
+   * The seat's house has no members: its Parliament's term has ended for an
+   * election (`termEndedFor`). Absent while the house sits.
+   */
+  ended?: EndedTerm | null;
 }
 export interface PeopleRow {
   key: string;
@@ -139,6 +150,7 @@ function* peopleRowSteps(
   const electorates = new Map(
     d.electorates.data.electorates.map((e) => [e.electorate_id, e]),
   );
+  const ended = endedParliaments(d.electorates.data.electorates);
   const out: PeopleRow[] = [];
   // The resolver deliberately retains surname aliases, but directory rows
   // follow Search/party membership: a full-name native identity, once per
@@ -218,6 +230,7 @@ function* peopleRowSteps(
           stateCode(federalSeatState(s.url)) ??
           stateCode(s.jurisdiction),
         current: s.current,
+        ended: s.current ? termEndedFor(s, ended) : null,
         end:
           (s.periods ?? [])
             .map((p) => p.end)
@@ -355,6 +368,7 @@ export function placeLine(
   person: Pick<PeopleRow, 'seats' | 'profile'>,
 ): string | null {
   const group = sittingGroup(person);
+  const last = group === 'ended';
   const seats = person.seats.filter(
     (s) => s.chamber !== 'senate_committee' && chamberName(s.chamber),
   );
@@ -369,6 +383,11 @@ export function placeLine(
   const state = jurisdictionName(seat.state);
   const said = (claim: string, former: string, plain: string) =>
     group === 'sitting' ? claim : group === 'former' ? former : plain;
+  // The house's term has ended for an election: nobody is its member.
+  if (last)
+    return lastMemberFor(
+      `${seat.name}, ${chamberName(seat.chamber, seat.jurisdiction)!}`,
+    );
   if (seat.jurisdiction === 'federal' && seat.chamber === 'senate') {
     const where = state ?? seat.name;
     return said(
@@ -403,21 +422,34 @@ export function placeLine(
  * members; the chosen sort applies within each group. The group is the
  * profile's party status, the one that draws a "Former member" line.
  */
-export type SittingGroup = 'sitting' | 'unrecorded' | 'former';
+export type SittingGroup = 'sitting' | 'ended' | 'unrecorded' | 'former';
 export const sittingGroupTitles: Record<SittingGroup, string> = {
   sitting: 'Sitting members',
+  ended: 'Term ended for an election',
   unrecorded: 'Status not confirmed',
   former: 'Former members',
 };
 const groupRank: Record<SittingGroup, number> = {
   sitting: 0,
-  unrecorded: 1,
-  former: 2,
+  ended: 1,
+  unrecorded: 2,
+  former: 3,
 };
-export function sittingGroup(p: Pick<PeopleRow, 'profile'>): SittingGroup {
+/**
+ * `ended`: every seat the person holds is in a house whose Parliament's
+ * term has ended for an election, so the record's "current" names the last
+ * member, not a sitting one. Someone who also holds a seat in a sitting
+ * house is sitting.
+ */
+export function sittingGroup(
+  p: Pick<PeopleRow, 'profile'> & Partial<Pick<PeopleRow, 'seats'>>,
+): SittingGroup {
   const status = p.profile.partyStatus;
+  const held = (p.seats ?? []).filter((s) => s.current);
   return status === 'current'
-    ? 'sitting'
+    ? held.length && held.every((s) => s.ended)
+      ? 'ended'
+      : 'sitting'
     : status === 'former'
       ? 'former'
       : 'unrecorded';
