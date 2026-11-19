@@ -7,6 +7,7 @@ import {
   type View,
 } from 'react-native';
 import { IOS_PRESS_DELAY, Pressable } from '../src/design/pressable';
+import { light } from '../src/design/palette';
 import { border, colors } from '../src/design/tokens';
 
 const originalOS = Platform.OS;
@@ -49,7 +50,9 @@ test.each(['android', 'ios'] as const)(
     fireEvent(r.getByTestId('trigger'), 'focus', event);
     expect(onFocus).toHaveBeenCalledWith(event);
     expect(currentStyle()).toMatchObject({
-      outlineColor: colors.navy,
+      // Android's roles are plain hex for the scheme on screen; iOS keeps
+      // its dynamic value.
+      outlineColor: Platform.OS === 'android' ? light.navy : colors.navy,
       outlineWidth: border.focus,
       outlineOffset: border.focus,
       padding: 8,

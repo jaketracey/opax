@@ -172,7 +172,8 @@ describe('Android tabs', () => {
     const { AndroidTabs } = jest.requireActual<
       typeof import('../src/navigation/AndroidTabs')
     >('../src/navigation/AndroidTabs');
-    render(<AndroidTabs />);
+    // The bar exists on Android only, where its roles are plain hex.
+    asPlatform('android', () => render(<AndroidTabs />));
     return mockScreens;
   };
   afterEach(() => {
@@ -204,7 +205,7 @@ describe('Android tabs', () => {
   });
 
   test('the chosen tab sits in a navy-wash pill; the others draw none', () => {
-    const { colors, radii } = jest.requireActual<
+    const { light, radii } = jest.requireActual<
       typeof import('../src/design/tokens')
     >('../src/design/tokens');
     const icon = draw()[0]!.options.tabBarIcon as (p: {
@@ -216,7 +217,8 @@ describe('Android tabs', () => {
           .props.style,
       );
     expect(style(true)).toMatchObject({
-      backgroundColor: colors.navyWash,
+      // Drawn on Android: the scheme's own hex, here the light one.
+      backgroundColor: light.navyWash,
       borderRadius: radii.capsule,
       height: 32,
     });
@@ -255,6 +257,28 @@ describe('Android tabs', () => {
       lightHighContrast.inkSoft,
     );
     expect(mockTabOptions.tabBarActiveTintColor).toBe(light.navy);
+  });
+
+  test('in dark the bar and its tints are the dark roles', () => {
+    const { dark } = jest.requireActual<typeof import('../src/design/palette')>(
+      '../src/design/palette',
+    );
+    const { Appearance, StyleSheet } =
+      jest.requireActual<typeof import('react-native')>('react-native');
+    const scheme = jest
+      .spyOn(Appearance, 'getColorScheme')
+      .mockReturnValue('dark');
+    try {
+      draw();
+      expect(mockTabOptions.tabBarActiveTintColor).toBe(dark.navy);
+      expect(mockTabOptions.tabBarInactiveTintColor).toBe(dark.inkSoft);
+      expect(StyleSheet.flatten(mockTabOptions.tabBarStyle)).toMatchObject({
+        backgroundColor: dark.paper,
+        borderTopColor: dark.dividerSubtle,
+      });
+    } finally {
+      scheme.mockRestore();
+    }
   });
 });
 

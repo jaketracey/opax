@@ -25,7 +25,9 @@ jest.mock('expo-constants', () => ({
   },
 }));
 jest.mock('expo-router', () => ({
-  useIsPreview: () => false, router: { push: jest.fn() } }));
+  useIsPreview: () => false,
+  router: { push: jest.fn() },
+}));
 jest.mock('expo/metro-config', () => ({
   getDefaultConfig: () => ({ resolver: {} }),
 }));

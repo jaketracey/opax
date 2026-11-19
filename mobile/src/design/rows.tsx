@@ -134,6 +134,7 @@ export function LinkRow({
   selected,
   highlighted,
 }: LinkRowProps) {
+  const colors = useColors();
   const recordLink = useRecordLink(href);
   const stacked = useAccessibilitySize();
   const { fontScale } = useWindowDimensions();
@@ -178,7 +179,7 @@ export function LinkRow({
         split ? splitBleed : null,
         cellStyle,
         !disabled && split && selected
-          ? selectedWash()
+          ? selectedWash(colors)
           : (pressed || highlighted || hovered) &&
               !disabled &&
               (href || select || press)
@@ -595,6 +596,7 @@ export function BillRow({
   selected,
   highlighted,
 }: BillRowProps) {
+  const colors = useColors();
   const recordLink = useRecordLink(href);
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
@@ -654,7 +656,7 @@ export function BillRow({
         split ? splitBleed : null,
         cellStyle,
         selected
-          ? selectedWash()
+          ? selectedWash(colors)
           : (pressed || highlighted || hovered) && (href || select || onPress)
             ? { backgroundColor: highlight }
             : null,

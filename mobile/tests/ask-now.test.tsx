@@ -735,7 +735,9 @@ describe('VoiceOver focus for a tapped question', () => {
     let finish!: (value: unknown) => void;
     let second!: (value: unknown) => void;
     post
-      .mockImplementationOnce(() => new Promise((resolve) => (finish = resolve)))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (finish = resolve)),
+      )
       .mockImplementationOnce(
         () => new Promise((resolve) => (second = resolve)),
       );

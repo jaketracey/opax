@@ -1981,6 +1981,19 @@ exports[`iOS design at font scale 1 Card retains its iOS output 1`] = `
         "overflow": "hidden",
       },
       {
+        "outlineColor": {
+          "dynamic": {
+            "dark": "#3A3F36",
+            "highContrastDark": "#7E8378",
+            "highContrastLight": "rgba(0,0,0,0)",
+            "light": "rgba(0,0,0,0)",
+          },
+        },
+        "outlineOffset": -1,
+        "outlineStyle": "solid",
+        "outlineWidth": 1,
+      },
+      {
         "padding": 20,
       },
       null,
@@ -9680,6 +9693,19 @@ exports[`iOS design at font scale 2 Card retains its iOS output 1`] = `
         "borderCurve": "continuous",
         "borderRadius": 22,
         "overflow": "hidden",
+      },
+      {
+        "outlineColor": {
+          "dynamic": {
+            "dark": "#3A3F36",
+            "highContrastDark": "#7E8378",
+            "highContrastLight": "rgba(0,0,0,0)",
+            "light": "rgba(0,0,0,0)",
+          },
+        },
+        "outlineOffset": -1,
+        "outlineStyle": "solid",
+        "outlineWidth": 1,
       },
       {
         "padding": 20,

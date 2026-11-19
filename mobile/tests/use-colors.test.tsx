@@ -1,6 +1,5 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import * as Native from 'react-native';
 import {
   AccessibilityInfo,
   Appearance,
@@ -15,6 +14,7 @@ import {
 } from '../src/design/palette';
 import { colors } from '../src/design/tokens';
 import {
+  androidRipples,
   colorTheme,
   colorsFor,
   currentColors,
@@ -29,7 +29,8 @@ const originalOS = Platform.OS;
 let scheme: jest.SpyInstance;
 let highContrast: ((on: boolean) => void) | undefined;
 beforeEach(() => {
-  scheme = jest.spyOn(Native, 'useColorScheme').mockReturnValue('light');
+  // The hook reads the system through Appearance, and only on Android.
+  scheme = jest.spyOn(Appearance, 'getColorScheme').mockReturnValue('light');
   jest
     .spyOn(AccessibilityInfo, 'addEventListener')
     .mockImplementation((event: string, handler: unknown) => {
@@ -99,7 +100,7 @@ test('Android High contrast text lays the Increase Contrast set over the scheme'
 
 test('outside render the same answer comes from the system', () => {
   Platform.OS = 'android';
-  const appearance = jest.spyOn(Appearance, 'getColorScheme');
+  const appearance = scheme;
   appearance.mockReturnValue('dark');
   expect(currentColors()).toBe(dark);
   appearance.mockReturnValue('light');
@@ -171,11 +172,18 @@ test('makeStyles on iOS builds once, whatever the scheme', () => {
   expect(factory).toHaveBeenCalledWith(colors);
 });
 
-test('a component draws again when the scheme changes while it is up', () => {
+test('on Android a component draws again when the system changes while it is up', () => {
   Platform.OS = 'android';
+  let changed: (() => void) | undefined;
+  jest.spyOn(Appearance, 'addChangeListener').mockImplementation((listener) => {
+    changed = listener as () => void;
+    return { remove: () => (changed = undefined) } as never;
+  });
   let seen: Colors = light;
+  let renders = 0;
   function Probe() {
     seen = useColors();
+    renders += 1;
     return null;
   }
   let tree!: TestRenderer.ReactTestRenderer;
@@ -183,7 +191,41 @@ test('a component draws again when the scheme changes while it is up', () => {
     tree = TestRenderer.create(<Probe />);
   });
   expect(seen).toBe(light);
+  expect(renders).toBe(1);
+  // The system turns dark: no prop changes, the hook alone redraws it.
   scheme.mockReturnValue('dark');
-  act(() => tree.update(<Probe />));
+  act(() => changed?.());
   expect(seen).toBe(dark);
+  expect(renders).toBe(2);
+  act(() => tree.unmount());
+  expect(changed).toBeUndefined();
+});
+
+test('iOS never listens for the scheme: its roles are dynamic, so nothing redraws', () => {
+  Platform.OS = 'ios';
+  const listen = jest.spyOn(Appearance, 'addChangeListener');
+  let renders = 0;
+  function Probe() {
+    useColors();
+    renders += 1;
+    return null;
+  }
+  act(() => {
+    TestRenderer.create(<Probe />);
+  });
+  expect(listen).not.toHaveBeenCalled();
+  expect(scheme).not.toHaveBeenCalled();
+  expect(renders).toBe(1);
+});
+
+test('ripples are built from the colours on screen', () => {
+  expect(androidRipples(light)).toEqual({
+    ripple: `${light.navy}29`,
+    rippleHighContrast: `${light.navy}52`,
+    rippleOnFilled: `${light.onNavy}1F`,
+  });
+  expect(androidRipples(dark).ripple).toBe(`${dark.navy}29`);
+  expect(androidRipples(dark).rippleOnFilled).toBe(`${dark.onNavy}1F`);
+  // iOS roles are not hex; it draws no ripple and gets the light values.
+  expect(androidRipples(colors)).toEqual(androidRipples(light));
 });

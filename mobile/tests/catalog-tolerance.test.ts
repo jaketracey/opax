@@ -114,7 +114,10 @@ test('a canonical person id in a roster pid keeps the row, read as no pid', () =
   // Any other id that breaks the rule still drops only its own row.
   const bad = d.decodeRoster({
     ...input,
-    people: [{ ...input.people[0], pid: 'Not An Id' }, ...input.people.slice(1)],
+    people: [
+      { ...input.people[0], pid: 'Not An Id' },
+      ...input.people.slice(1),
+    ],
   });
   expect(isPartialCatalog(bad)).toBe(true);
   expect(bad.people).toHaveLength(input.people.length - 1);

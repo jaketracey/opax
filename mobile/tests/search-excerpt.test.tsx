@@ -110,5 +110,7 @@ test('the app neither joins nor splits words in a pinned passage', () => {
   expect(draws(spaced)).toContain(
     'the Safer and More Affordable Housing measure',
   );
-  expect(draws(joined)).toContain('theSafer and More Affordable Housingmeasure');
+  expect(draws(joined)).toContain(
+    'theSafer and More Affordable Housingmeasure',
+  );
 });

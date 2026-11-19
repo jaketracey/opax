@@ -89,22 +89,20 @@ beforeEach(() => {
     bills,
     provenance: { people: source, electorates: source, bills: source },
   } as never);
-  jest
-    .mocked(recordSearch.search)
-    .mockImplementation(async (_q, f) =>
-      f.kind === 'report'
-        ? ({
-            ...page(),
-            data: {
-              ...page().data,
-              kind: 'report',
-              results: [],
-              count: 0,
-              total: 0,
-            },
-          } as never)
-        : (page() as never),
-    );
+  jest.mocked(recordSearch.search).mockImplementation(async (_q, f) =>
+    f.kind === 'report'
+      ? ({
+          ...page(),
+          data: {
+            ...page().data,
+            kind: 'report',
+            results: [],
+            count: 0,
+            total: 0,
+          },
+        } as never)
+      : (page() as never),
+  );
 });
 const speechCalls = () =>
   jest

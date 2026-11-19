@@ -5,13 +5,8 @@
     "source": "GrantConnect",
     "source_url": "https://www.grants.gov.au/",
     "licence": "CC BY 4.0",
-    "years": [
-      "2020-21",
-      "2021-22"
-    ],
-    "caveats": [
-      "An award is not a payment."
-    ],
+    "years": ["2020-21", "2021-22"],
+    "caveats": ["An award is not a payment."],
     "counts": {
       "programs_total": 1,
       "grants": 28,

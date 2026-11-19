@@ -19,11 +19,7 @@ import {
   servedFiles,
   slugs,
 } from './pinned';
-import {
-  joinPerson,
-  profileFor,
-  rosterProfileFor,
-} from '../src/api/catalogs';
+import { joinPerson, profileFor, rosterProfileFor } from '../src/api/catalogs';
 const result = <T>(data: T) => ({ data, stale: false, savedAt: 1, asOf: null });
 export const directory: Directory = {
   manifest: result(manifest),

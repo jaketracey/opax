@@ -113,6 +113,9 @@ export function useColors(): Colors {
  * will not draw again when the system changes.
  */
 export function currentColors(): Colors {
+  // iOS asks the system nothing: its set is the same in every theme. (A
+  // bar helper may be called while a module loads, before anything draws.)
+  if (Platform.OS === 'ios') return dynamicColors;
   return colorsFor(
     colorTheme(Appearance.getColorScheme(), highTextContrastNow()),
   );

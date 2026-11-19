@@ -160,26 +160,29 @@ test('the public allow-list admits only static federal seat files', () => {
     expect(() => assertAllowedPath(path)).toThrow();
 });
 
-test.each(['individual', 'undisclosed'])('seat grants apply the program privacy rule before presentation for kind=%s', (kind) => {
-  const page = decodeSeatGrants({
-    ...first,
-    grants: [
-      {
-        ...first.grants[0],
-        rn: 'Fixture private recipient',
-        rid: 'person:fixture',
-        k: kind,
-        n: 'Fixture private purpose',
-      },
-    ],
-  });
-  expect(page.grants[0]).toMatchObject({
-    name: 'Individual recipient',
-    recipientId: '',
-    title: '',
-  });
-  expect(JSON.stringify(page)).not.toContain('Fixture private');
-});
+test.each(['individual', 'undisclosed'])(
+  'seat grants apply the program privacy rule before presentation for kind=%s',
+  (kind) => {
+    const page = decodeSeatGrants({
+      ...first,
+      grants: [
+        {
+          ...first.grants[0],
+          rn: 'Fixture private recipient',
+          rid: 'person:fixture',
+          k: kind,
+          n: 'Fixture private purpose',
+        },
+      ],
+    });
+    expect(page.grants[0]).toMatchObject({
+      name: 'Individual recipient',
+      recipientId: '',
+      title: '',
+    });
+    expect(JSON.stringify(page)).not.toContain('Fixture private');
+  },
+);
 
 test.each([undefined, null, '', '   '])(
   'a seat grant without a recipient name (%s) stays readable without an identity link',

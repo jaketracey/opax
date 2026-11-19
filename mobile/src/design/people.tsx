@@ -507,6 +507,7 @@ export function PersonRow({
   highlighted,
   statusShown = false,
 }: PersonRowProps) {
+  const colors = useColors();
   const styles = useStyles();
 
   const slug = personRowSlug(href, portrait);
@@ -704,7 +705,7 @@ export function PersonRow({
         split ? splitBleed : null,
         cellStyle,
         selected
-          ? selectedWash()
+          ? selectedWash(colors)
           : pressed || highlighted || hovered
             ? { backgroundColor: highlight }
             : null,

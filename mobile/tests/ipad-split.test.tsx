@@ -6,6 +6,7 @@ import { dispatchKeyCommand, keyCommandSpecs } from '../src/design/keyboard';
 import { SplitLayout, usePaneBar, useSplitCursor } from '../src/design/split';
 import { LinkRow } from '../src/design/rows';
 import { selectedWash, splitRowStyles } from '../src/design/selection';
+import { dark } from '../src/design/palette';
 import { colors } from '../src/design/tokens';
 import {
   decodeEntry,
@@ -259,10 +260,14 @@ describe('split rows', () => {
     ).toBeGreaterThan(0);
   });
   test('every split list selects alike, in navy: the accent is the detail pane’s', () => {
-    expect(selectedWash('bills')).toEqual(selectedWash('people'));
-    expect(selectedWash('money')).toEqual({
+    // One wash for every list. It takes the colours on screen, not an accent.
+    expect(selectedWash()).toEqual({
       backgroundColor: colors.navyWash,
       borderColor: colors.lineControl,
+    });
+    expect(selectedWash(dark)).toEqual({
+      backgroundColor: dark.navyWash,
+      borderColor: dark.lineControl,
     });
     // The rounded wash and its outline: no leading mark style survives (b65),
     // only the bleed for a 20pt column and for a 16pt one.

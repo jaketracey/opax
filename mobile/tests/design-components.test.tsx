@@ -23,7 +23,7 @@ import {
   SegmentedPicker,
   segmentsFit,
 } from '../src/design/controls';
-import { light, lightHighContrast } from '../src/design/palette';
+import { dark, light, lightHighContrast } from '../src/design/palette';
 import { FaceStack, Portrait } from '../src/design/people';
 import {
   Button,
@@ -1021,10 +1021,15 @@ describe('Increase Contrast and Android high-contrast text', () => {
     );
   });
   test('Android: High contrast text takes the same stronger roles', () => {
-    expect(roleColour('inkSoft', true)).toBe(lightHighContrast.inkSoft);
-    expect(roleColour('billsInk', true)).toBe(lightHighContrast.billsInk);
+    const strong = { ...light, ...lightHighContrast };
+    expect(roleColour('inkSoft', strong)).toBe(lightHighContrast.inkSoft);
+    expect(roleColour('billsInk', strong)).toBe(lightHighContrast.billsInk);
     // Roles with no stronger value keep their own.
-    expect(roleColour('ink', true)).toBe(light.ink);
+    expect(roleColour('ink', strong)).toBe(light.ink);
+    // A link is the navy role, in whichever colours are on screen.
+    expect(roleColour('link', dark)).toBe(dark.navy);
+    const os = Platform.OS;
+    Platform.OS = 'android';
     mockHighText = true;
     try {
       const root = render(<Text variant="secondary">Grayndler</Text>).root;
@@ -1033,6 +1038,7 @@ describe('Increase Contrast and Android high-contrast text', () => {
       );
     } finally {
       mockHighText = false;
+      Platform.OS = os;
     }
   });
   test('accent and status tints are roles, so they need no strengthening', () => {

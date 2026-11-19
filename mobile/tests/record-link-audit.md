@@ -27,35 +27,35 @@ The three existing imperative bill/reader/pane navigation adapters also use the 
 
 For the Test name column, `T(route)` is the exact parameterised Jest name: **`route pushes a new record, preserves Back history and ignores the same record on top`**, in `tests/record-link-navigation.test.tsx:159`.
 
-| Route | Chains to itself? | Reused a screen before the fix? | Fixed how | Test name |
-| --- | --- | --- | --- | --- |
-| `/money-record` | yes | yes | Shared push and current-record guard | `T(money-record)` |
-| `/money-item` | yes | yes | Shared push and current-record guard | `T(money-item)` |
-| `/money-node` | no | no | Shared push; identity aliases money-record | `T(money-node)` |
-| `/grant-program` | yes | yes | Shared push; include seat/state in view identity | `T(grant-program)` |
-| `/source` | no | no | Shared guard; existing presenter already pushes | `T(source)` |
-| `/record-list` | no | no | Shared push and current-record guard | `T(record-list)` |
-| `/electorate-date` | no | no | Shared push and current-record guard | `T(electorate-date)` |
-| `/election` | no | no | Shared push and current-record guard | `T(election)` |
-| `/seat` | no | no | Shared push and current-record guard | `T(seat)` |
-| `/rule` | no | no | Shared guard; existing presenter already pushes | `T(rule)` |
-| `/talk/record` | no | no | Shared push and current-record guard | `T(talk/record)` |
-| `/members` | no | no | Shared push and current-record guard | `T(members)` |
-| `/grants` | yes | yes | Shared push; list filters identify the destination | `T(grants)` |
-| `/licences` | no | no | Same-identity guard | `T(licences)` |
-| `/person/[slug]` | no | no | Shared push and guard; imperative reader helper uses it | `T(person/[slug])` |
-| `/bill/[key]` | yes | no | Shared push and guard; bill helper uses it | `T(bill/[key])` |
-| `/party/[slug]` | no | no | Shared push and current-record guard | `T(party/[slug])` |
-| `/electorate/[id]` | yes | no | Shared push and current-record guard | `T(electorate/[id])` |
-| `/topic/[slug]` | no | no | Shared push and current-record guard | `T(topic/[slug])` |
-| `/doc/[slug]` | yes | no | Shared push and guard; reader helper uses it | `T(doc/[slug])` |
-| `/bill-text/[key]` | no | no | Shared push and guard; reader/bill helpers use it | `T(bill-text/[key])` |
-| `/account/sources/dataset/[id]` | no | no | Shared push and current-record guard | `T(account/sources/dataset/[id])` |
-| `/licence/[id]` | no | no | Shared push and current-record guard | `T(licence/[id])` |
-| `/licence/sources/[...path]` | yes | no | Shared push and current-record guard | `T(licence/sources/[...path])` |
-| `/agency` | no | no | Shared push and current-record guard | `T(agency)` |
-| `/connection` | no | no | Shared push and current-record guard | `T(connection)` |
-| `/lead/[id]` | no | no | Shared push and current-record guard | `T(lead/[id])` |
+| Route                           | Chains to itself? | Reused a screen before the fix? | Fixed how                                               | Test name                         |
+| ------------------------------- | ----------------- | ------------------------------- | ------------------------------------------------------- | --------------------------------- |
+| `/money-record`                 | yes               | yes                             | Shared push and current-record guard                    | `T(money-record)`                 |
+| `/money-item`                   | yes               | yes                             | Shared push and current-record guard                    | `T(money-item)`                   |
+| `/money-node`                   | no                | no                              | Shared push; identity aliases money-record              | `T(money-node)`                   |
+| `/grant-program`                | yes               | yes                             | Shared push; include seat/state in view identity        | `T(grant-program)`                |
+| `/source`                       | no                | no                              | Shared guard; existing presenter already pushes         | `T(source)`                       |
+| `/record-list`                  | no                | no                              | Shared push and current-record guard                    | `T(record-list)`                  |
+| `/electorate-date`              | no                | no                              | Shared push and current-record guard                    | `T(electorate-date)`              |
+| `/election`                     | no                | no                              | Shared push and current-record guard                    | `T(election)`                     |
+| `/seat`                         | no                | no                              | Shared push and current-record guard                    | `T(seat)`                         |
+| `/rule`                         | no                | no                              | Shared guard; existing presenter already pushes         | `T(rule)`                         |
+| `/talk/record`                  | no                | no                              | Shared push and current-record guard                    | `T(talk/record)`                  |
+| `/members`                      | no                | no                              | Shared push and current-record guard                    | `T(members)`                      |
+| `/grants`                       | yes               | yes                             | Shared push; list filters identify the destination      | `T(grants)`                       |
+| `/licences`                     | no                | no                              | Same-identity guard                                     | `T(licences)`                     |
+| `/person/[slug]`                | no                | no                              | Shared push and guard; imperative reader helper uses it | `T(person/[slug])`                |
+| `/bill/[key]`                   | yes               | no                              | Shared push and guard; bill helper uses it              | `T(bill/[key])`                   |
+| `/party/[slug]`                 | no                | no                              | Shared push and current-record guard                    | `T(party/[slug])`                 |
+| `/electorate/[id]`              | yes               | no                              | Shared push and current-record guard                    | `T(electorate/[id])`              |
+| `/topic/[slug]`                 | no                | no                              | Shared push and current-record guard                    | `T(topic/[slug])`                 |
+| `/doc/[slug]`                   | yes               | no                              | Shared push and guard; reader helper uses it            | `T(doc/[slug])`                   |
+| `/bill-text/[key]`              | no                | no                              | Shared push and guard; reader/bill helpers use it       | `T(bill-text/[key])`              |
+| `/account/sources/dataset/[id]` | no                | no                              | Shared push and current-record guard                    | `T(account/sources/dataset/[id])` |
+| `/licence/[id]`                 | no                | no                              | Shared push and current-record guard                    | `T(licence/[id])`                 |
+| `/licence/sources/[...path]`    | yes               | no                              | Shared push and current-record guard                    | `T(licence/sources/[...path])`    |
+| `/agency`                       | no                | no                              | Shared push and current-record guard                    | `T(agency)`                       |
+| `/connection`                   | no                | no                              | Shared push and current-record guard                    | `T(connection)`                   |
+| `/lead/[id]`                    | no                | no                              | Shared push and current-record guard                    | `T(lead/[id])`                    |
 
 Evidence for the existing onward paths:
 

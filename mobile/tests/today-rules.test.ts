@@ -86,7 +86,8 @@ describe('cardTitle', () => {
       cardTitle({
         ...base,
         kind: 'bill',
-        title: 'A Bill for an Act to amend the law relating to things, and for related purposes',
+        title:
+          'A Bill for an Act to amend the law relating to things, and for related purposes',
         shortTitle: 'Things Amendment Bill 2026',
       }),
     ).toBe('Things Amendment Bill 2026'));

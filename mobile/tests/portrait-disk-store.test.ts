@@ -160,7 +160,9 @@ test('year photographs retain their exact bytes in a separate origin cache witho
     saved.localURI,
   );
   expect(mockFiles.get(saved.localURI)?.bytes).toEqual(bytes);
-  expect(() => new PortraitDiskStore('https://example.test').write('10007', bytes)).toThrow();
+  expect(() =>
+    new PortraitDiskStore('https://example.test').write('10007', bytes),
+  ).toThrow();
   expect(
     await new PortraitDiskStore(
       'http://127.0.0.1:8951',
