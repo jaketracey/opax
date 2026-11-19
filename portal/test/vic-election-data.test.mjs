@@ -1,7 +1,7 @@
 import './helpers/vic-election-clock.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile, writeFile} from 'node:fs/promises';
+import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {buildVicElection} from '../../scripts/build_vic_election.mjs';
 import {validateVicElection, validateVicPlaces} from '../src/vic-election-data.ts';
@@ -43,5 +43,45 @@ test('the offline build and reader share validation, rejecting bad notices or ca
       assert.equal(await readFile(hubPath,'utf8'),goodHub,'a bad build must not replace the usable hub');
       assert.equal(await readFile(placesPath,'utf8'),goodPlaces,'a bad build must not replace the usable places');
     }
+  });
+});
+
+test('the hub keeps the outgoing roster when a post-election electorates release is published',async()=>{
+  await withVicElectionBuild(async({root,configPath})=>{
+    await buildVicElection(root,configPath);
+    const hubPath=join(root,VIC_ELECTION_ASSET);
+    const outgoing=JSON.parse(await readFile(hubPath,'utf8'));
+    const manifestPath=join(root,'electorates/manifest.json');
+    const manifest=JSON.parse(await readFile(manifestPath,'utf8'));
+    const index=JSON.parse(await readFile(join(root,manifest.index_url.replace(/^\//,'')),'utf8'));
+    // After the declaration: other people in every Victorian seat, no dissolved_for, and one region
+    // still part-declared, which the strict roster checks would refuse.
+    let partial=false;
+    const declared={...index,electorates:index.electorates.map(e=>{
+      if(e.jurisdiction!=='vic'||!['vic_la','vic_lc'].includes(e.chamber))return e;
+      const {dissolved_for,...rest}=e;
+      const people=e.representatives.map((r,i)=>({...r,person:{...r.person,name:`Declared Member ${e.slug} ${i}`,person_id:`person_declared_${i}`}}));
+      if(e.chamber==='vic_lc'&&!partial){partial=true;return {...rest,representation_as_of:'2026-12-20',representatives:people.slice(0,2)};}
+      return {...rest,representation_as_of:'2026-12-20',representatives:people};
+    })};
+    assert.ok(partial);
+    const next='/electorates/releases/ffffffffffffffff/index.json';
+    await mkdir(join(root,'electorates/releases/ffffffffffffffff'),{recursive:true});
+    await writeFile(join(root,next.slice(1)),JSON.stringify(declared));
+    await writeFile(manifestPath,JSON.stringify({...manifest,index_url:next}));
+    await buildVicElection(root,configPath);
+    const built=await readFile(hubPath,'utf8'),after=JSON.parse(built);
+    const people=d=>d.seats.map(s=>[s.name,s.roster_date,s.members.map(m=>m.name),s.vacancy?.last.name??null]);
+    assert.deepEqual(people(after),people(outgoing));
+    assert.equal(after.seats.flatMap(s=>s.members).some(m=>/^Declared Member/.test(m.name)),false);
+    // The pin must name the release taken when the Assembly expired, and it cannot be dropped.
+    const config=JSON.parse(await readFile(configPath,'utf8'));
+    await writeFile(configPath,JSON.stringify({...config,roster_release:'ffffffffffffffff'}));
+    await assert.rejects(buildVicElection(root,configPath),/not the outgoing roster/);
+    const {roster_release,...unpinned}=config;
+    assert.equal(roster_release,'aaa8abc8073f1b6e');
+    await writeFile(configPath,JSON.stringify(unpinned));
+    await assert.rejects(buildVicElection(root,configPath),/pinned roster release/);
+    assert.equal(await readFile(hubPath,'utf8'),built,'a refused build must not replace the usable hub');
   });
 });
