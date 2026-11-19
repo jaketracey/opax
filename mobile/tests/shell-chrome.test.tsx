@@ -556,7 +556,7 @@ test.each([
     }
     let view: TestRenderer.ReactTestRenderer | undefined;
     const scheme = jest
-      .spyOn(Native, 'useColorScheme')
+      .spyOn(Native.Appearance, 'getColorScheme')
       .mockReturnValue('light');
     try {
       view = tree(<Harness />);
@@ -576,7 +576,10 @@ test.each([
 
 test('bar titles resolve ink in the app appearance, whatever the bar resolves (11b-3)', () => {
   jest.replaceProperty(Platform, 'OS', 'ios');
-  const scheme = jest.spyOn(Native, 'useColorScheme').mockReturnValue('dark');
+  // useStackChrome reads the scheme through useIsDark (Appearance).
+  const scheme = jest
+    .spyOn(Native.Appearance, 'getColorScheme')
+    .mockReturnValue('dark');
   let chrome!: ReturnType<typeof useStackChrome>;
   function Harness() {
     chrome = useStackChrome();

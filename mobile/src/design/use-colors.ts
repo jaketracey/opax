@@ -114,7 +114,12 @@ const darkWatchers = new Set<() => void>();
 let heldDark: boolean | undefined;
 let stopDarkWatch: (() => void) | undefined;
 const systemDark = () => Appearance.getColorScheme() === 'dark';
-const appActive = () => AppState.currentState === 'active';
+// Behind another app or a system sheet. A state not yet known (the first
+// moments of a launch report none) is not a reason to hold.
+const appAway = () =>
+  AppState.currentState === 'background' ||
+  AppState.currentState === 'inactive';
+const appActive = () => !appAway();
 // Active: the system's answer, remembered. Not active: the one remembered,
 // whatever UIKit reports while it takes its two snapshots.
 function readDark() {
@@ -154,8 +159,8 @@ function watchDark(changed: () => void) {
  * each time the app goes to the background (it takes a snapshot of each),
  * and every `useColorScheme()` subscriber then draws twice for nothing; the
  * money map rebuilt its model and recorded its pictures twice. This hook
- * ignores a change while `AppState.currentState` is not `active` and reads
- * the scheme again when the app becomes active, so a change made in
+ * ignores a change while `AppState.currentState` is `background` or
+ * `inactive` and reads the scheme again when the app becomes active, so a change made in
  * Settings while the app was behind shows on return.
  */
 export function useIsDark(): boolean {

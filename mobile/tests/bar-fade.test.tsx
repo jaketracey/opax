@@ -248,6 +248,9 @@ describe("the fade is the page's ground token, in either scheme", () => {
   ) => {
     jest.spyOn(ReactNative, 'useColorScheme').mockReturnValue(scheme);
     jest
+      .spyOn(ReactNative.Appearance, 'getColorScheme')
+      .mockReturnValue(scheme);
+    jest
       .spyOn(AccessibilityInfo, 'isReduceTransparencyEnabled')
       .mockResolvedValue(false);
     const platform = jest.replaceProperty(Platform, 'OS', 'ios');

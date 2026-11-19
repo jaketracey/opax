@@ -24,6 +24,21 @@ jest.mock('../src/features/account/store', () => ({
 }));
 
 const tabs = ['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'] as const;
+/** The Android bar's buttons as drawn: the bar is a component (it reads the colours on screen). */
+function drawnBar(items: Parameters<typeof androidHeaderBar>[0]) {
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(androidHeaderBar(items));
+  });
+  const buttons = view.root.findAll(
+    (node) =>
+      typeof node.type !== 'string' &&
+      node.props.accessibilityRole === 'button' &&
+      typeof node.props.onLongPress === 'function' &&
+      node.parent?.props.accessibilityRole !== 'button',
+  );
+  return buttons;
+}
 
 test.each(tabs)('%s registers Account before the root mounts', (segment) => {
   const entry = sharedScreens(segment, false).find(
@@ -120,13 +135,9 @@ test('bar item dictionaries carry the exact test IDs without changing spoken lab
     },
   ]);
   expect(headerItems(() => items).unstable_headerRightItems?.()).toEqual(items);
-  const android = androidHeaderBar(items);
   expect(
-    React.Children.toArray(android.props.children)
-      .map(
-        (child) =>
-          (child as React.ReactElement<{ testID: string }>).props.testID,
-      )
+    drawnBar(items)
+      .map((button) => button.props.testID)
       .slice(0, 3),
   ).toEqual(['header-more', 'header-filters', 'header-account']);
 });
@@ -150,13 +161,8 @@ test.each(tabs)(
           os === 'ios' ? ['Feature', 'Account'] : ['Account', 'Feature'],
         );
         if (os === 'android') {
-          const bar = androidHeaderBar(items);
           expect(
-            React.Children.toArray(bar.props.children).map(
-              (child) =>
-                (child as React.ReactElement<{ accessibilityLabel: string }>)
-                  .props.accessibilityLabel,
-            ),
+            drawnBar(items).map((button) => button.props.accessibilityLabel),
           ).toEqual(['Feature', 'Account']);
         }
       }

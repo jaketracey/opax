@@ -38,6 +38,16 @@ import type { TodayOrder, TodaySlot } from '../src/features/today/order';
 import { TodayBody } from '../src/features/today/TodayBody';
 
 let mockScheme: 'light' | 'dark' = 'light';
+// useIsDark reads the system through Appearance, as the Android hooks do.
+beforeEach(() => {
+  jest
+    .spyOn(
+      jest.requireActual<typeof import('react-native')>('react-native')
+        .Appearance,
+      'getColorScheme',
+    )
+    .mockImplementation(() => mockScheme);
+});
 jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({
   default: () => mockScheme,
 }));

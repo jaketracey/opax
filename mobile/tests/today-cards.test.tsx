@@ -274,6 +274,9 @@ describe('full-width daily cards', () => {
         'fills the card in %s at font scale %s',
         async (scheme, fontScale) => {
           jest.spyOn(Native, 'useColorScheme').mockReturnValue(scheme);
+          jest
+            .spyOn(Native.Appearance, 'getColorScheme')
+            .mockReturnValue(scheme);
           jest.mocked(useWindowDimensions).mockReturnValue({
             width: 320,
             height: 874,
@@ -455,6 +458,7 @@ describe('full-width daily cards', () => {
     'the question card has a header in the archive photograph’s frame, drawn in the app palette (%s)',
     async (scheme) => {
       jest.spyOn(Native, 'useColorScheme').mockReturnValue(scheme);
+      jest.spyOn(Native.Appearance, 'getColorScheme').mockReturnValue(scheme);
       const { root } = await render(<DailyPair today={today} attempt={0} />);
       const question = root.findByType(QuestionCard);
       const card = question.findByType(Card);

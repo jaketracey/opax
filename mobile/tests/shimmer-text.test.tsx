@@ -47,7 +47,7 @@ beforeEach(() => {
   jest.mocked(useBoldText).mockReturnValue(false);
   jest.mocked(useIncreaseContrast).mockReturnValue(false);
   jest.mocked(useHighTextContrast).mockReturnValue(false);
-  jest.spyOn(Native, 'useColorScheme').mockReturnValue('light');
+  jest.spyOn(Native.Appearance, 'getColorScheme').mockReturnValue('light');
   jest
     .spyOn(Reanimated, 'interpolateColor')
     .mockImplementation((_value, _range, colors) => colors[0]!);
@@ -199,7 +199,7 @@ test('unmount cancels the native pulse', () => {
 test.each(['light', 'dark'] as const)(
   '%s pulse never weakens secondary contrast',
   (scheme) => {
-    jest.mocked(Native.useColorScheme).mockReturnValue(scheme);
+    jest.mocked(Native.Appearance.getColorScheme).mockReturnValue(scheme);
     const palette = paletteFor(scheme);
     const strong = scheme === 'dark' ? darkHighContrast : lightHighContrast;
     draw();
