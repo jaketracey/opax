@@ -6,7 +6,7 @@ import type { RowMenuAction } from '../../design/row-link';
 import { LoadingStatus } from '../../design/states';
 import { formatDate } from '../../design/format';
 import { Text } from '../../design/text';
-import { radii, rhythm } from '../../design/tokens';
+import { hairline, radii, rhythm } from '../../design/tokens';
 import { makeStyles } from '../../design/use-colors';
 import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
@@ -190,6 +190,11 @@ export function ArchiveCard({
           >{`Photo: ${attribution}`}</Text>
         ) : null}
       </View>
+      <View
+        pointerEvents="none"
+        testID="today-archive-edge"
+        style={styles.edge}
+      />
     </Card>
   );
 }
@@ -245,6 +250,11 @@ export function ArchiveSkeleton() {
             <Bone variant="secondary" width="60%" />
             <Bone variant="footnote" width="70%" />
           </View>
+          <View
+            pointerEvents="none"
+            testID="today-archive-loading-edge"
+            style={styles.edge}
+          />
         </Card>
       </View>
     </LoadingStatus>
@@ -371,6 +381,17 @@ const useStyles = makeStyles((colors) =>
       backgroundColor: colors.sunken,
     },
     card: { flexGrow: 1, flexShrink: 1 },
+    // Dark: the photograph's frame runs to the card's edge and paints over
+    // the card's own hairline, and an empty frame is the sunken step on
+    // Today's sunken ground, so the card lost its top. The same hairline is
+    // drawn again over the frame. The role is clear in light.
+    edge: {
+      ...StyleSheet.absoluteFill,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.raisedOutline,
+    },
     words: { padding: 12, gap: rhythm.line },
     question: { gap: rhythm.tight },
     kicker: { flexDirection: 'row', alignItems: 'center', gap: 6 },
