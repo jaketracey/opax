@@ -88,6 +88,8 @@ export const vicCopy = {
   residents: 'of residents',
   regionName: (n: string) => `${n} Region`,
   more: (n: number) => `and ${n} more`,
+  /** A region row's people: the Council has no members before the result. */
+  lastMembers: (names: string) => `Last members: ${names}`,
   split: 'Some places cross district lines.',
   exactAddress: 'Check your exact address with the VEC',
   address: 'Check your address with the VEC',
