@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { Fragment, useMemo, type ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import type { BillSplit, billSplits } from '../../api/bill-transforms';
 import { billName } from '../../api/bill-transforms';
@@ -140,7 +140,9 @@ export function SplitRow({
   const stacked = useAccessibilitySize();
   const linked = !notParty(split);
   const Container = linked ? Pressable : View;
-  const dot = partyDot(split.party) && partyDot(split.label);
+  const appearance = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const dot =
+    partyDot(split.party, appearance) && partyDot(split.label, appearance);
   const frame = [styles.split, stacked ? styles.splitStacked : null];
   const bar = (
     <View
@@ -527,7 +529,7 @@ export function RecordedParty({ party }: { party: string }) {
 
   const identity = partyIdentity(party);
   const recorded = isPartyLabel(party);
-  const dot = partyDot(party);
+  const dot = partyDot(party, useColorScheme() === 'dark' ? 'dark' : 'light');
   const Container = recorded ? Pressable : View;
   return (
     <Container
