@@ -16,6 +16,7 @@ import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationI
 import { withoutSaLabel } from './ask-attribution'
 import { identityAnswer, identityResponse } from './ask-identity'
 import { repairQuotes } from './research-evidence'
+import { quotedOrNothing, hearingFallbackPayload } from './ask-hearing-fallback'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { votedAgainstParty } from '../public/division-against-party.js'
@@ -140,7 +141,7 @@ import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
 import { cacheableAskAnswer, cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { researchSentenceStream, interruptedResearchAnswer } from './research-sentence-stream'
-import { groundAnswerPayload } from './research-grounding'
+import { groundAnswerPayload, withoutMachineLabels } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
 import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
@@ -166,7 +167,7 @@ import { MONEY_GRAPH_PATHS, MONEY_PARTIES_PATH } from '../public/money-parties.j
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
-import { withTranscriptNote, transcriptNoteResponse } from './transcript-answer'
+import { withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_NAMED_PEOPLE_RULE } from './transcript-answer'
 import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse, MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX } from './machine-notice'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
@@ -2858,6 +2859,8 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const prompt = [
     `Write ${asked} follow-up questions for a reader who has just been given the answer below.`,
     ASK_EVIDENCE_RULES,
+    // A follow-up question is prose a reader sees: it follows the same rule for people named in hearing evidence.
+    TRANSCRIPT_NAMED_PEOPLE_RULE,
     'Use the retrieved passages to explore details beyond the answer already given.',
     '',
     `QUESTION ALREADY ASKED: ${clipText(question, 500)}`,
@@ -6944,7 +6947,7 @@ async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: Exe
       facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
       over_budget: Date.now() - started >= budgetMs,
       timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable',
-      ...(failure ? { research_failure: failure.reason, research: { mode: 'planner', rounds: failure.stats.rounds, trail: [], sources: [], failure: failure.reason, turns: failure.stats.turns } } : {}) }
+      ...(failure ? { research_failure: failure.reason, research: { mode: 'planner', rounds: failure.stats.rounds, trail: [], sources: [], ...(failure.stats.heldTranscripts ? { held_transcripts: failure.stats.heldTranscripts } : {}), failure: failure.reason, turns: failure.stats.turns } } : {}) }
   }
   monitorAgentic(env, ctx, question, run)
   onRun?.(run)
@@ -7085,6 +7088,9 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   const routedFallback = async (research?: ResearchPayload) => {
     // OpenRouter refused the no-train, zero-retention route: a retryable error, never the older engine (which generates on another route).
     if (research?.failure === 'provider_refused') return providerRefusedResponse(research)
+    // A hearing-evidence question never falls to the older engine's prose (unrelated passages, general knowledge and
+    // process notes): the excerpts research held, quoted by code, or one fixed line (ask-hearing-fallback.ts).
+    if (loopRoute && !request.signal.aborted && quotedOrNothing(question, research)) return json(withTranscriptNote(withoutMachineLabels(hearingFallbackPayload(question, research))))
     if (loopRoute && !research?.failure) {
       const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
       research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }
@@ -7170,7 +7176,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
       // The transcript line goes on after linking, so its source numbers are the ones the reader sees.
-      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload,run.source_links,SITE_ORIGIN))
+      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):withoutMachineLabels(payload),run.source_links,SITE_ORIGIN))
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)

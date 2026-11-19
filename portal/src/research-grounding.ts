@@ -9,7 +9,8 @@ import {passageExcerpt} from './research-evidence'
 import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
-import {repairQuotes} from './research-evidence'
+import {repairQuotes,MACHINE_LABELS,EMPTY_WORDS} from './research-evidence'
+import {transcriptNoteEnd} from '../public/transcript-note.js'
 import {distinctSummary} from './research-writing'
 import {leadWithWho} from './research-who-lead'
 type SelectedSource=WritingInput['facts'][number]['source']
@@ -95,7 +96,7 @@ function completePersonOverview(original:Record<string,unknown>,result:Record<st
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string,fixedPrefix='',partial=false):Record<string,unknown> {
   // Recovery runs every normal shape check. A necessary correction uses retry, never a prefix exemption.
   if((payload.research as {answer_stats?:{salvaged?:unknown}}|undefined)?.answer_stats?.salvaged)fixedPrefix=''
-  let out=plainAnswerPayload(payload)
+  let out=withoutMachineLabels(plainAnswerPayload(withoutTranscriptNote(payload)))
   const audit=auditPayload(question,out)
   researchTrace('grounding.audit',{question,counts:audit.counts,findings:audit.findings})
   const edits=moneySentenceEdits(out)
@@ -128,6 +129,43 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   if(!partial)out=completePersonOverview(payload,out,question)
   const research=out.research&&typeof out.research==='object'?out.research as Record<string,unknown>:undefined
   return {...out,...(research?{research:{...research,claim_audit:audit.counts}}:{})}
+}
+/** An answer that already ends with the fixed hearing-transcript line (it has been through the way out once) is
+ * checked without it: the line is not prose, and the lead shaping could move it to the front, after which the way out
+ * (transcript-answer.ts transcriptNoteResponse, on every /api/ask reply) added it a second time. The way out puts it
+ * back, once, in the form the final cited sources call for. Left alone when it is all the answer holds. */
+function withoutTranscriptNote<T extends Record<string,unknown>>(payload:T):T {
+  const text=typeof payload.answer==='string'?payload.answer:'',at=transcriptNoteEnd(text.trimEnd())
+  if(at===null||!/[\p{L}\p{N}]/u.test(text.slice(0,at))||!/(?:^|\n)\s*$/.test(text.slice(0,at)))return payload
+  return rewriteAnswerPayload(payload,replace=>replace(new RegExp(`(?<=^[\\s\\S]{${text.slice(0,at).trimEnd().length}})[\\s\\S]*$`,'g'),''))
+}
+/** An answer with the model's echoed input labels taken out (research-evidence.ts MACHINE_LABELS), citations kept in
+ * step. A sentence that held a label and is left with no word that says anything ("See also and.") goes whole. For
+ * every answer on its way out, whichever engine wrote it. */
+export function withoutMachineLabels<T extends Record<string,unknown>>(payload:T):T {
+  const text=typeof payload.answer==='string'?payload.answer:''
+  if(!/\bfact ids?\b|\[facts? \d|\bfact-\d+\//i.test(text))return payload
+  const labelled=(part:string)=>MACHINE_LABELS.some(label=>{label.lastIndex=0;return label.test(part)})
+  const bare=(part:string)=>MACHINE_LABELS.reduce((rest,label)=>rest.replace(label,''),part)
+  const cleaned=(dropEmpty:boolean)=>rewriteAnswerPayload(payload,replace=>{
+    if(dropEmpty)for(const part of sentenceParts(text).reverse()){
+      if(!labelled(part.text))continue
+      const words=bare(part.text).match(/[\p{L}\p{N}]+/gu)??[]
+      if(words.every(word=>EMPTY_WORDS.test(word))){
+        const line=text.lastIndexOf('\n',part.at-1)+1,led=/^\s*(?:[-*]\s*)?$/.test(text.slice(line,part.at))
+        let start=led?line:part.at,end=part.at+part.text.length
+        while(text[end]===' '||text[end]==='\t')end++
+        if(led&&text[end]==='\n')end++
+        else if(!led&&(end===text.length||text[end]==='\n'))while(start>line&&/[ \t]/.test(text[start-1]))start--
+        replace(new RegExp(`(?<=^[\\s\\S]{${start}})[\\s\\S]{${end-start}}`,'g'),'')
+      }
+    }
+    for(const label of MACHINE_LABELS)replace(label,'')
+    replace(/ +[.,;:]/g,found=>found.trim());replace(/\n{3,}/g,'\n\n');replace(/\s+$/g,'')
+  })
+  // Never an empty answer: if dropping such sentences would leave nothing, only the labels go.
+  const out=cleaned(true)
+  return /[\p{L}\p{N}]/u.test(String(out.answer??''))?out:cleaned(false)
 }
 /** Quoted words stay quoted only when a source the sentence cites (or, for an uncited sentence, any source of the
  * answer) holds them verbatim; otherwise the marks come off and the words stand as paraphrase. */

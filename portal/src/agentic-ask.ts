@@ -653,6 +653,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // An exact-lookup correction is prepended after research; its opening cannot be streamed past.
   loopProgress.answer=lookup?undefined:progress.answer
   const writeRun = async (run: AgenticPayload) => {
+    // The research model's labels for its selected facts are for the writer only: they leave the answer here.
+    const factNotes = run.qualitative?.fact_notes ?? {}, selected = run.qualitative?.fact_notes !== undefined
+    if (run.qualitative?.fact_notes) { const { fact_notes: _notes, ...rest } = run.qualitative; run.qualitative = rest }
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
@@ -661,17 +664,23 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
     const sheet = writingFacts(recordAnswer, facts, run.notes)
+    for (const f of sheet) { const label = factNotes[/^fact-(\d+)/.exec(f.source.resource)?.[1] ?? '']; if (label && f.transcript) f.bears_on = label }
+    // How many of the excerpts handed to the writer carry a kept label, and whether the research model sent labels at
+    // all: shows how reliable the labels are. On the writer's coherence record (stats below), which only an
+    // operator's eval response carries (research-eval.ts researchEvalUsage), never a public one.
+    const excerpts = sheet.filter(f => f.transcript && !f.coverage)
+    const excerptLabels = excerpts.length ? { held: excerpts.length, labelled: excerpts.filter(f => f.bears_on).length, sent: selected } : undefined
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
     if (transcriptListingOnly(sheet)) return run
     await progress('status', {phase:'writing'})
-    const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
+    const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [],...(excerptLabels?{coherence:{excerpt_labels:excerptLabels}}:{}) }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // The model's own points follow the written sentences in the answer (combine below). The writer is told what they
     // say, so a fact one of them states is not written a second time.
     const said=(run.passage_answer?.answer??'').split(/\n+/).map(line=>line.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
-    const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
+    const input={question,period,facts:sheet,...(selected?{selected:true}:{}),constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined},...(said.length?{said}:{})}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
     let active=true,checkedPartial:QualitativeAnswer|undefined
     // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.
@@ -705,7 +714,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   try {
     const primary=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal},deps.research?loopProgress:progress,budgetMs,period,filters,resolvedScope,started)
     const run = await (reserveEnabled?bounded(primary,selectionLeft(),deps.signal):primary(deps.signal))
-    if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
+    if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.research?.held_transcripts ? { heldTranscripts: run.research.held_transcripts } : {}), ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
     return otherMatchLine(completeLookup(await writeRun(run)))
   }
   catch (error) {
@@ -724,7 +733,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
         facts: [], notes: [], steps, events: attempted, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.costUsd ?? null,
         over_budget: Date.now() - started >= budgetMs, version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
         timings: { plan_ms: Date.now() - started, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
-        research: { mode: 'planner', rounds: failure.stats.rounds, trail: researchTrail(attempted, steps), sources: [], failure: failure.reason, ms: Date.now() - started, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.usageUnknown ? null : failure.stats.costUsd ?? 0, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) }, research_failure: failure.reason })
+        research: { mode: 'planner', rounds: failure.stats.rounds, trail: researchTrail(attempted, steps), sources: [], ...(failure.stats.heldTranscripts ? { held_transcripts: failure.stats.heldTranscripts } : {}), failure: failure.reason, ms: Date.now() - started, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.usageUnknown ? null : failure.stats.costUsd ?? 0, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) }, research_failure: failure.reason })
     }
     const offset = attempted.length
     const shifted: Progress = async (event, data) => {
@@ -742,7 +751,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const fallback = await (reserveEnabled?bounded(recover,selectionLeft(),deps.signal):recover(deps.signal))
     fallback.events = fallback.events.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) fallback.research.trail = fallback.research.trail.map(e => ({ ...e, id: e.id + offset }))
-    if (fallback.research) Object.assign(fallback.research, { failure: failure.reason, reserved_cost_usd: fallbackSpend.reservedCostUsd, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
+    if (fallback.research) Object.assign(fallback.research, { ...(failure.stats.heldTranscripts ? { held_transcripts: failure.stats.heldTranscripts } : {}), failure: failure.reason, reserved_cost_usd: fallbackSpend.reservedCostUsd, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
     fallback.tokens.input += failure.stats.tokens.input; fallback.tokens.output += failure.stats.tokens.output
     if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
     fallback.timings.total_ms = Date.now() - started
@@ -779,7 +788,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ ...(otherMatches.length ? { other_matches: otherMatches } : {}), answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
     ...(researched?.constraints?{answer_scope:researched.constraints}:{}),
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
-    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, reserved_cost_usd:researched.reservedCostUsd, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
+    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, reserved_cost_usd:researched.reservedCostUsd, trail: researchTrail(events, steps), sources: [], ...(researched.heldTranscripts ? { held_transcripts: researched.heldTranscripts } : {}), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
     ...over, source_links: sourceLinks(results), timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
   if (!deps.research && !electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })

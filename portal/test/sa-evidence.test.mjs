@@ -143,7 +143,7 @@ test('follow-up prompts cap both SA evidence and legacy copied answers before ge
   const code=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.has(n.name?.text)).map(n=>n.getText(ast)).join('\n');
   let request;
   const followups=runInNewContext(ts.transpile(code)+';apiFollowups',{
-    ASK_EVIDENCE_RULES:'Use supplied evidence. ',saEvidenceRecord,saEvidenceText,isSaHansard,Response,URL,AbortSignal,
+    ASK_EVIDENCE_RULES:'Use supplied evidence. ',TRANSCRIPT_NAMED_PEOPLE_RULE:'Hearing transcript naming rule.',saEvidenceRecord,saEvidenceText,isSaHansard,Response,URL,AbortSignal,
     FOLLOWUP_MIN_CONTEXT:200,FOLLOWUP_WANT:3,FOLLOWUP_ANSWER_BUDGET:2500,FOLLOWUP_PASSAGE_BUDGET:6000,
     json:Response.json,cacheRequest:()=>new Request('https://cache.test/followup'),sha256Hex:async()=>'',cacheBypass:()=>true,rateLimited:async()=>null,
     withCacheStatus:r=>r,kbFetch:async(_env,_path,init)=>{request=init.body;return Response.json({answer:''});},parseFollowUpLines:()=>[],selectFollowUps:()=>[],
@@ -151,6 +151,9 @@ test('follow-up prompts cap both SA evidence and legacy copied answers before ge
   const req=()=>new Request('https://opax.test/api/followups',{method:'POST',body:JSON.stringify({question:'statement 30',answer:sa.text,passages:[null,{...sa,title:'SA record',text:sa.text}]})});
   await followups(req(),{SA_HANSARD_FULL_TEXT:'false'},{});
   const prompt=request.query;
+  // A follow-up question is prose a reader sees: its prompt carries the rule for people named in hearing evidence,
+  // straight after the shared rules.
+  assert.ok(prompt.includes('Use supplied evidence. \nHearing transcript naming rule.\nUse the retrieved passages'));
   cap(prompt.split('Answer already given (find the next useful detail):\n')[1].split('\n\n--- RETRIEVED')[0]);
   const evidence=prompt.split('--- RETRIEVED PASSAGES (the only source a follow-up may draw on) ---\n')[1].split('\n--- END RETRIEVED')[0].replace(/^SA record: /,'');
   cap(evidence);assert.match(evidence,/statement 30/);assert.doesNotMatch(evidence,/statement 0\./);

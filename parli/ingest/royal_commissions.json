@@ -13,6 +13,7 @@
   {
    "id": "cth-antisemitism",
    "name": "Royal Commission on Antisemitism and Social Cohesion",
+   "aliases": ["Antisemitism Royal Commission", "Royal Commission on Antisemitism", "Royal Commission into Antisemitism"],
    "inquiry_type": "royal_commission",
    "jurisdiction": "Cth",
    "documents": [
@@ -1016,6 +1017,7 @@
   {
    "id": "cth-robodebt",
    "name": "Royal Commission into the Robodebt Scheme",
+   "aliases": ["Robodebt Royal Commission", "Royal Commission into Robodebt", "Inquiry into the Robodebt Scheme"],
    "inquiry_type": "royal_commission",
    "jurisdiction": "Cth",
    "documents": [
@@ -2930,6 +2932,7 @@
   {
    "id": "nsw-healthcare-funding",
    "name": "Special Commission of Inquiry into Healthcare Funding",
+   "aliases": ["Healthcare Funding inquiry", "Inquiry into Healthcare Funding", "Healthcare Funding Special Commission"],
    "inquiry_type": "commission_of_inquiry",
    "jurisdiction": "NSW",
    "site": "https://healthcarefunding.specialcommission.nsw.gov.au/",

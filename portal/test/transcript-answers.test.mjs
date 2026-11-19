@@ -7,7 +7,8 @@ import { createHash } from 'node:crypto'
 const built = await build({ stdin: { contents: [
   "export {excerpt, pageTurns, pageHits, dayWords, spanWords} from './src/tools/transcript-text'",
   "export {callTool} from './src/tools/index'",
-  "export {transcriptListingOnly, withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
+  "export {transcriptListingOnly, withTranscriptNote, transcriptNoteResponse, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, TRANSCRIPT_NAMED_PEOPLE_RULE, NAMED_PEOPLE_EXCEPTION, TRANSCRIPT_POINT_RULE} from './src/transcript-answer'",
+  "export {writingPrompt, ANSWER_WRITING_VERSION} from './src/research-writing'",
   "export {askOpaxResult} from './src/voice-sources'",
   "export {groundAnswerPayload} from './src/research-grounding'",
   "export {linkAskSources} from './src/ask-source-links'",
@@ -56,6 +57,23 @@ test('empty list markers never ship', () => {
     assert.ok(!/^[ \t]*(?:[-*•]|\d+[.)])[ \t]*(?:\[\d+\][ \t]*)?$/m.test(out.answer), JSON.stringify(tail) + ' ' + JSON.stringify(out.answer.slice(-60)))
     assert.ok(out.answer.endsWith('as redacted by the publisher.'))
   }
+})
+
+test('people named in hearing evidence appear only inside a quotation: one fixed rule, given to the writer in every prompt', () => {
+  const RULE = 'For a record labelled "Hearing transcript: evidence, not findings" (royal commission, integrity commission and inquiry hearings), name a person only inside quotation marks, in words copied exactly from the cited excerpt with nothing left out or added, never in your own words. In your own words, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the cited transcript page states that role; with no role stated there, use the neutral description. This covers everyone named in the evidence: witnesses, people they discuss, commissioners and counsel. It comes before every other instruction here about naming people or saying who said something. Hansard speeches, committee hearings and every other record keep their names.'
+  assert.equal(api.TRANSCRIPT_NAMED_PEOPLE_RULE, RULE); assert.doesNotMatch(RULE, /—/)
+  // Tied to the record's own label, so it cannot be read as covering Hansard or committee hearings.
+  assert.ok(RULE.includes(`"${LABEL}"`))
+  assert.equal(api.NAMED_PEOPLE_EXCEPTION, 'except people named in hearing transcript evidence')
+  const contract = JSON.parse(api.writingPrompt({ question: 'What did the commission hear?', period: { kind: 'all', label: 'All time' }, facts: [] })).contract
+  assert.ok(contract.includes(`licence details belong in the source card. ${RULE} `), 'the rule sits with the hearing excerpt sentence')
+  // The shared rules carry the exception themselves, and the writer's "who" sentence carries it too.
+  assert.ok(contract.includes('Name the people the records name, except in a record labelled ‘Hearing transcript: evidence, not findings’ (a royal commission, integrity commission or inquiry transcript), where a person is named only inside a verbatim quotation; Hansard and parliamentary committee hearings keep their names. '))
+  assert.ok(contract.includes('For a who question, name the people and their roles first, then what the inquiry or record found about each, except people named in hearing transcript evidence; for why, give the reason'))
+  // The research model's rule for excerpts: fixed text.
+  assert.equal(api.TRANSCRIPT_POINT_RULE, 'Leave what a record labelled "Hearing transcript: evidence, not findings" (a royal commission, integrity commission or inquiry transcript) says out of your points and reply text, in your own words or quoted: select the excerpt\'s numeric record fact id, and the writer words it from the record. Hansard and parliamentary committee hearings stay in your points. ')
+  // Stored answers written before the rule are retired.
+  assert.equal(api.ANSWER_WRITING_VERSION, 'written-answer-35-excerpts-selected')
 })
 
 test('the writer is skipped only when every fact is a transcript listing row', async () => {

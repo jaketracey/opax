@@ -78,7 +78,33 @@ test('a caveat is kept as written, and typed refusals and clarifications survive
     assert.deepEqual(api.groundAnswerPayload(p,questions[0]),p)
   }
 })
-test('a written quotation not in the transcript loses its quote marks; a verbatim one keeps them, in one pass',async()=>{
+test('when every writer sentence holds a near-quotation of the transcript, the reader gets the passages as recorded, never the unchecked draft', async () => {
+  const text='Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn: "Mr Placeholder had approved the use of income averaging in that year." Hearing transcript: evidence, not findings.'
+  const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',label:text}}])
+  // Both passes: the same near-verbatim quotation with a name in it ("approved" for "had approved"). The second
+  // case cites nothing, which is a near-quotation of a transcript fact all the same.
+  for (const cited of [[1], []]) {
+    const draft='The transcript records a witness saying that “Mr Placeholder approved the use of income averaging in that year”.'
+    const model=new MockLanguageModelV4({doGenerate:async()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:[{text:draft,facts:cited}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})})
+    const write=api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})
+    const out=await write({question:questions[1],period:api.inferPeriod(questions[1]),facts},{rounds:0,tokens:{input:0,output:0},turns:[]},undefined,20000)
+    // Not the draft with its marks taken off (the shape that put a name in prose), and not the draft at all.
+    assert.doesNotMatch(out.answer,/saying that Mr Placeholder approved|a witness saying/,JSON.stringify(cited))
+    // The name appears only inside the quotation the record holds, word for word.
+    assert.equal(out.answer,'The hearing transcript records on hearing day 46 (10 March 2023): “Mr Placeholder had approved the use of income averaging in that year.”')
+    assert.equal(out.answer.replace(/“[^”]*”/g,'').includes('Placeholder'),false)
+    assert.ok(out.answer.trim().length>0);validRanges(out)
+  }
+  // A sentence that cites nothing, beside a cited one: on a hearing question it is left out, words and all (hub ruling,
+  // 17 Nov 2026), and its text goes on the writer's operator record. The cited verbatim quotation stays.
+  const model=new MockLanguageModelV4({doGenerate:async()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:[{text:'The scheme became known in the press as “robodebt”.',facts:[]},{text:'The transcript records: “Mr Placeholder had approved the use of income averaging in that year.”',facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})})
+  const stats={rounds:0,tokens:{input:0,output:0},turns:[]}
+  const out=await api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})({question:questions[1],period:api.inferPeriod(questions[1]),facts},stats,undefined,20000)
+  assert.doesNotMatch(out.answer,/became known in the press as|robodebt”/);assert.match(out.answer,/“Mr Placeholder had approved the use of income averaging in that year\.”/)
+  assert.deepEqual(stats.coherence?.uncited_left_out,['The scheme became known in the press as “robodebt”.'])
+})
+
+test('a written sentence whose quotation is not in the transcript is left out, words and all; a verbatim one stays, in one pass',async()=>{
   const text='Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn by Ms Quellworth: "Income averaging did not make sense to me." transcript page P-4933 (PDF page 49), hearing turn by Mr Vanterpool: "Do you agree that this approach described income averaging?" Hearing transcript: evidence, not findings.'
   const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',label:text}}])
   let turn=0
@@ -90,7 +116,8 @@ test('a written quotation not in the transcript loses its quote marks; a verbati
   const write=api.createAnswerWriter({model,dailyBudget,modelBudgetSpent:async()=>false})
   const out=await write({question:questions[1],period:api.inferPeriod(questions[1]),facts},stats,undefined,20000)
   assert.equal(model.doGenerateCalls.length,1)
-  assert.match(out.answer,/^Ms Quellworth said A fabricated quotation about averaging/);assert.doesNotMatch(out.answer,/“A fabricated/)
+  // The fabricated words do not stay as the writer's own prose (they did, with the marks taken off, before 16 Nov 2026).
+  assert.doesNotMatch(out.answer,/fabricated|Quellworth/);assert.match(out.answer,/^Mr Vanterpool asked on hearing day 46/)
   assert.match(out.answer,/Mr Vanterpool asked on hearing day 46 \(10 March 2023\): “Do you agree that this approach described income averaging/)
   validRanges(out)
 })

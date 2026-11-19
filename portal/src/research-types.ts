@@ -23,7 +23,9 @@ export interface ReceiptFact {
 }
 export interface ResearchPayload {
   reserved_cost_usd?: number
-  mode: 'loop' | 'planner'
+  /** Hearing transcript excerpts a stopped run held, for the code-quoted fallback; taken off before a reply is sent. */
+  held_transcripts?: { text: string; url: string }[]
+  mode: 'loop' | 'planner' | 'hearing_fallback'
   rounds: number
   trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
   sources: { title: string; url: string; date?: string; kind: string; speaker?: string }[]
@@ -51,6 +53,9 @@ export interface Passage {
 export type AnswerDecision = 'answer' | 'limitation' | 'clarification' | 'refusal' | 'preserve'
 export type AnswerPreview = (payload: QualitativeAnswer, accept?: (checked:QualitativeAnswer)=>boolean) => Promise<QualitativeAnswer | void>
 export interface QualitativeAnswer {
+  /** Internal, from the research loop to the writer: what each selected record fact is for, by fact id. Removed
+   * before the answer leaves agentic-ask; never in a response. */
+  fact_notes?: Record<string, string>
   answer: string
   /** Source limitations belong beside the answer, without occupying its citation ranges. */
   coverage?: { note?: string; [key: string]: unknown }
@@ -78,6 +83,7 @@ export interface ResearchContext {
   execute: (step: PlanStep, round: number, custom?: (deps: ToolDeps) => Promise<ToolResult>, signal?: AbortSignal) => Promise<ToolResult>
 }
 export interface ResearchResult {
+  heldTranscripts?: { text: string; url: string }[]
   reservedCostUsd?: number
   constraints?: import('./ask-constraints').AskConstraints
   steps: PlanStep[]
@@ -98,7 +104,9 @@ export type Research = ((question: string, context: ResearchContext) => Promise<
 }
 import type { AnswerTally } from './research-evidence'
 export interface ResearchStats {
-  reservedCostUsd?: number; coherence?: {writer_passes?:number;second_passes?:number;fallback?:boolean}; answer?: AnswerTally; rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[]; rejections?: string[] }
+  /** Hearing transcript excerpts the run held when it stopped (citation text and link), for the code-quoted fallback. */
+  heldTranscripts?: { text: string; url: string }[];
+  reservedCostUsd?: number; coherence?: {writer_passes?:number;second_passes?:number;fallback?:boolean;fallback_reason?:string;left_out?:Record<string,number>;uncited_left_out?:string[];excerpt_labels?:{held:number;labelled:number;sent:boolean}}; answer?: AnswerTally; rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[]; rejections?: string[] }
 export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted' | 'spend' | 'provider_refused'
 export class ResearchError extends Error {
   constructor(readonly reason: ResearchStop, readonly stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 } }) {

@@ -9,8 +9,8 @@ import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { build } from 'esbuild'
-import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck, answerStyleChecks } from '../../scripts/research_eval_grade.mjs'
-import { parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
+import { namedPeopleOutsideQuotes, plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck, answerStyleChecks } from '../../scripts/research_eval_grade.mjs'
+import { failureBody, parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const run = promisify(execFile)
@@ -295,3 +295,67 @@ test('direct prose can use rose or cited while a raw numeric row cannot',()=>{
  assert.equal(answerStyleChecks('What was the salary?','Robin Example is the highest paid: $100,000 a year.').direct_first_sentence,'pass');
  assert.equal(answerStyleChecks('Who spoke most and what did the funding cost?','Robin Example led with 9 speeches. The funding cost $10,000.').direct_first_sentence,'pass');
 });
+
+test('the eval counts people named outside quotation marks in an answer that cites a hearing transcript; it grades nothing', () => {
+  const snippet = 'Royal Commission into the Robodebt Scheme, Transcript Hearing Day 46 (10 March 2023), transcript page P-4899 (PDF page 15), hearing turn: "I told Jordan Sample that Ms Placeholder had the Services Australia advice, and MR PAGE agreed." Hearing transcript: evidence, not findings.'
+  const sources = [{ resource: 'fact-1', cited: true, kind: 'record', title: snippet, snippet }]
+  const count = (answer, s = sources) => namedPeopleOutsideQuotes(answer, { sources: s })
+  const names = (answer) => count(answer).names
+  // Inside a verbatim quotation a name is the evidence itself.
+  assert.deepEqual(names('The transcript records on 10 March 2023 (page P-4899): “I told Jordan Sample that Ms Placeholder had the Services Australia advice, and MR PAGE agreed.”'), [])
+  assert.deepEqual(names('The transcript records on 10 March 2023 (page P-4899) that "Ms Placeholder had the Services Australia advice".'), [])
+  // In the model's own words: a title and surname, a full name, a bare surname the excerpt prints, a possessive,
+  // all capitals, and a surname that is also an ordinary word when the excerpt prints it after a title.
+  assert.deepEqual(names('The transcript records that Ms Placeholder had the advice and that Jordan Sample was told.'), ['Ms Placeholder', 'Jordan Sample'])
+  assert.deepEqual(names('The transcript records that Placeholder had the advice.'), ['Placeholder'])
+  assert.deepEqual(names('The transcript records evidence about Placeholder\'s advice.'), ['Placeholder'])
+  assert.deepEqual(names('The transcript records that MS PLACEHOLDER had the advice.'), ['MS PLACEHOLDER'])
+  assert.deepEqual(names('The transcript records that Page agreed.'), ['Page'])
+  // A full name the excerpts do not hold (the model naming someone from its own knowledge).
+  assert.deepEqual(names('The transcript records evidence that Casey Standin was told on 10 March 2023 (page P-4899).'), ['Casey Standin'])
+  // Words in quotation marks that are not word for word in a cited excerpt are read as prose, and reported.
+  const loose = count('The transcript records that “Ms Placeholder plainly knew about the advice”.')
+  assert.deepEqual(loose.names, ['Ms Placeholder']); assert.deepEqual(loose.quotations, { total: 1, not_verbatim: 1 })
+  // Each flagged name comes with the words around it, for a person to read.
+  assert.match(count('The transcript records that Ms Placeholder had the advice.').spans[0].text, /records that Ms Placeholder had the advice/)
+  // Roles, bodies, places and dates are not people; "page" and "May" in ordinary use are not either.
+  assert.deepEqual(names('A witness told the Royal Commission on 10 March 2023 (page P-4899) that an officer had the Services Australia advice; the Commissioner asked when. In May the Department of Human Services replied.'), [])
+  // A name that a cited record of another kind holds (a report, a Hansard speech) may be named: it is listed apart
+  // and not counted. Run 1 flagged four such names.
+  const mixed = [...sources, { resource: 'speech-9', cited: true, kind: 'speech', title: 'Senate Hansard, 3 March 2023', snippet: 'Senator Robin Example: I ask the minister about the scheme.' }]
+  // A Hansard source names its speaker in a field of its own, not always in the excerpt.
+  assert.deepEqual(count('Robin Example moved a motion in the Senate, the transcript records.', [...sources, { resource: 'speech-8', cited: true, kind: 'speech', speaker: 'Robin Example', title: 'Senate', snippet: 'I move the motion.' }]).names, [])
+  // Programs, bodies and places are not people (run 2 flagged seven of these and no person).
+  assert.deepEqual(count('The transcript records evidence about the Online Compliance Intervention program, the Agency for Clinical Innovation and the Tweed Valley Hospital at 771 Example Road.').names, [])
+  const both = count('Senator Example asked the minister about the scheme, and the transcript records that Ms Placeholder had the advice.', mixed)
+  assert.deepEqual(both.names, ['Ms Placeholder']); assert.deepEqual(both.from_other_records, ['Senator Example'])
+  // An answer that cites no hearing transcript is not measured.
+  assert.deepEqual(count('Ms Placeholder spoke in the Senate.', [{ resource: 'speech-1', cited: true, kind: 'speech', title: 'Senate', snippet: 'Ms Placeholder: I rise.' }]), { applies: false, count: 0, names: [], spans: [], from_other_records: [], quotations: { total: 0, not_verbatim: 0 } })
+  // The grade carries the count and a flag, and no axis moves.
+  const q = evals.questions.find((x) => x.kind === 'qualitative') ?? evals.questions[0]
+  const named = { answered: true, answer: 'A witness said that Ms Placeholder had the advice.', citations: { 'fact-1/t/body/0': [[0, 49]] }, sources }
+  const clean = { ...named, answer: 'A witness said that an officer had the advice....' }
+  const a = gradeRow(q, named, { roster, parties }), b = gradeRow(q, clean, { roster, parties })
+  assert.equal(a.named_people.count, 1); assert.equal(b.named_people.count, 0)
+  assert.ok(a.flags.includes('named person outside a quotation: Ms Placeholder'))
+  assert.deepEqual(a.axes, b.axes); assert.equal(a.overall, b.overall)
+  // The report says in its header that a count of 0 is not proof, and prints each flagged span.
+  const md = renderMarkdown({ generated: '2026-11-16', base_host: null, set: 'file', modes: ['loop'], limit: 1, prices: { input: 0.44, output: 1.32 }, summary: {}, questions: [{ id: 'T1', kind: 'qualitative', question: 'What was said?', by_mode: { loop: { answer: named.answer, ms: 1, usage: {}, grade: a } } }] })
+  assert.match(md, /A count of 0 is not proof; read each transcript answer in full\./)
+  assert.match(md, /It counts only a name that a cited transcript excerpt holds, or that no cited source holds/)
+  assert.match(md, /named outside a quotation, \*\*Ms Placeholder\*\*: …A witness said that Ms Placeholder had the advice\.…/)
+})
+
+test('a failed request keeps its status and the start of its body in the report, with anything key-shaped struck out', async () => {
+  assert.equal(failureBody('{"error":"OPAX could not answer just now"}'), '{"error":"OPAX could not answer just now"}')
+  assert.equal(failureBody('x'.repeat(10) + ' ' + 'word '.repeat(200)).length, 400)
+  assert.doesNotMatch(failureBody('denied for Bearer sk-abcdefghijklmnop and token 0123456789abcdef0123456789abcdef0123'), /abcdefghijklmnop|0123456789abcdef/)
+  // One request, no retry; the row carries the status and body so a fail-closed 503 can be told from an at-capacity one.
+  let calls = 0
+  const fetcher = async () => { calls++; return new Response('{"error":"OPAX is answering a lot of questions right now"}', { status: 503, headers: { 'content-type': 'application/json' } }) }
+  const questions = [{ id: 'T1', set: 'file', kind: 'qualitative', question: 'What was said?', must: [] }]
+  const { report, rows } = await runEval({ questions, modes: ['loop'], bases: { loop: 'http://127.0.0.1:8962' }, route: 'ask', secret: 's', fetchImpl: fetcher, limit: 1, roster: [], parties: new Map(), set: 'file' })
+  assert.equal(calls, 1); assert.equal(rows[0].error, 'HTTP 503'); assert.equal(rows[0].status, 503)
+  assert.equal(rows[0].response_body, '{"error":"OPAX is answering a lot of questions right now"}')
+  assert.match(renderMarkdown(report), /\*\*loop failed\*\*: HTTP 503 \(status 503\)\. Body: \{"error":"OPAX is answering a lot of questions right now"\}/)
+})

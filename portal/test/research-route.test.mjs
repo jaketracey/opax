@@ -59,6 +59,70 @@ test('route counts use templates; app decoders accept loop JSON, SSE, and fallba
  for(const stream of [false,true]){globalThis.__researchModel=counted();const before=plannerCalls,mq=modelQuota,aq=quota,response=await post(q,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answered,true);assert.match(body.answer,/Taylor Example(?: recorded|:| led the recorded member ranking, with) 87/);assert.equal(plannerCalls,before);assert.equal(modelQuota,mq+2);assert.equal(quota,aq+1);assert.equal(response.headers.get('x-opax-cache'),'MISS');if(stream)assert.match(raw,/"phase":"step"/);await flush();}
  delete h.env.OPENROUTER_API_KEY;const response=await post(),body=await response.json();native(body);assert.equal(body.research.mode,'planner');assert.ok(body.research.trail.length);assert.ok(body.research.sources.every(source=>body.sources.some(s=>s.href===source.url)));h.env.OPENROUTER_API_KEY='test-only-placeholder';await flush();
 });
+test('a failed loop on a hearing-evidence question never reaches the older engine: code-quoted excerpts or the fixed line; another question falls back as before',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const hearing='What evidence was given at the Robodebt Royal Commission about income averaging?',named='What did the Robodebt Royal Commission hear about who was told of the legal advice?',nsw='What did the NSW Healthcare Funding inquiry hear about duress alarms?',other='What does the record say about housing affordability?';
+ // The model makes its first call (or none), then the provider fails on every later call.
+ const failing=first=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(first&&n++===0)return reply([first]);throw new Error('provider went away')}})};
+ const robodebt=call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}),alarms=call('royal_commissions',{view:'transcripts',commission:'nsw-healthcare-funding',words:'duress alarms',limit:4});
+ const QUOTED=/^The hearing transcript records on hearing day \d+ \(\d{1,2} [A-Z][a-z]+ \d{4}\): “[^”]+”$/,FIXED='OPAX cannot establish the requested answer from the selected records.';
+ // [question, the model's one call, what the reader must get]
+ const cases=[[hearing,robodebt,'quoted'],[named,robodebt,'quoted'],[nsw,alarms,'quoted'],[hearing,null,'fixed'],[named,null,'fixed'],[nsw,null,'fixed']];
+ for(const [question,first,want] of cases)for(const stream of [false,true]){
+  globalThis.__researchModel=failing(first);const ordinary=ordinaryCalls,plans=plannerCalls;
+  const response=await post(question,stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw),where=`${question} / ${want} / ${stream?'stream':'json'}`;
+  assert.equal(response.status,200,raw.slice(0,300));
+  // The older engine was not asked, and its prose is not what came back.
+  assert.equal(ordinaryCalls,ordinary,'no call to the older engine: '+where);assert.equal(plannerCalls,plans);
+  assert.notEqual(body.research?.mode,'planner',where);
+  assert.doesNotMatch(body.answer,/The record supports parliamentary scrutiny|general knowledge|Searched records|Next useful lookup/i);
+  assert.equal(body.machine_written,false,where);
+  const lines=body.answer.split('\n\n').filter(line=>!/evidence, not findings/.test(line));
+  if(want==='quoted'){
+   // Excerpts were held when the provider failed: the reader gets them, quoted by code as recorded, not the fixed line.
+   assert.ok(lines.length&&lines.every(line=>QUOTED.test(line)),where+': '+body.answer);
+   assert.ok(body.sources.some(s=>s.cited)&&body.sources.filter(s=>s.cited).every(s=>/Hearing transcript: evidence, not findings/.test(`${s.snippet} ${s.title}`)),where);
+  }else{
+   // Nothing was held: the one fixed line, with no source and no citation.
+   assert.equal(body.answer,FIXED,where);assert.deepEqual(body.citations,{});assert.equal(body.sources.filter(s=>s.cited).length,0);
+   assert.equal(body.research?.mode,'hearing_fallback',where);
+  }
+  await flush();
+ }
+ // A question that names no commission and used no commission tool falls to the older engine exactly as before.
+ for(const stream of [false,true]){
+  globalThis.__researchModel=failing(null);const ordinary=ordinaryCalls;
+  const response=await post(other,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
+  assert.equal(body.research.mode,'planner');assert.equal(ordinaryCalls,ordinary+1,'the older engine answered');
+  assert.notEqual(body.answer,FIXED);
+  await flush();
+ }
+});
+test('a parliamentary question in hearing-style wording, or one that only mentions a royal commission, falls back to the older engine as on main; a stopped recommendations question is not answered with hearing excerpts',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ const failing=first=>{let n=0;return new MockLanguageModelV4({doGenerate:async()=>{if(first&&n++===0)return reply([first]);throw new Error('provider went away')}})};
+ const FIXED='OPAX cannot establish the requested answer from the selected records.';
+ for(const question of ['What did witnesses tell the Senate inquiry into consulting services?','Did Labor promise a royal commission into veterans suicide in Parliament?','What did the Senate inquiry into healthcare funding hear?','What did witnesses tell the inquiry into supermarket prices?','Which senators called for a royal commission into banking?'])for(const stream of [false,true]){
+  globalThis.__researchModel=failing(null);const ordinary=ordinaryCalls;
+  const response=await post(question,stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
+  assert.equal(response.status,200,raw.slice(0,300));assert.equal(body.research.mode,'planner',question);assert.ok(ordinaryCalls>ordinary,'the older engine answered: '+question);assert.notEqual(body.answer,FIXED,question);
+  await flush();
+ }
+ // A recommendations question whose provider fails after a transcripts lookup: hearing excerpts are not its answer.
+ for(const stream of [false,true]){
+  globalThis.__researchModel=failing(call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}));const ordinary=ordinaryCalls;
+  const response=await post('What did the Robodebt Royal Commission recommend?',stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
+  assert.equal(response.status,200);assert.equal(ordinaryCalls,ordinary,'no older-engine prose on a commission question');
+  // No excerpt is quoted to it. (What it does get is main's last resort: the transcript count row and the tool's notes.)
+  assert.doesNotMatch(body.answer,/The hearing transcript records|“/,body.answer);assert.equal(body.machine_written,false);assert.ok((body.answer.match(/evidence, not findings\.(?:\n|$)/g)??[]).length<=2,body.answer);
+  // The same stop on a question about what was heard gives the excerpts, with the evidence line once, at the end.
+  globalThis.__researchModel=failing(call('royal_commissions',{view:'transcripts',commission:'robodebt',words:'income averaging',limit:1}));
+  const heard=await post('What did the Robodebt Royal Commission hear about income averaging?',stream,{kind:'all'}),heardRaw=await heard.text(),heardBody=stream?decodeStream(heardRaw):JSON.parse(heardRaw);
+  assert.match(heardBody.answer,/^The hearing transcript records on hearing day \d+ \(\d{1,2} [A-Z][a-z]+ 202[23]\)/);assert.equal(heardBody.answer.match(/evidence, not findings/g)?.length,1,heardBody.answer);assert.ok(heardBody.answer.trimEnd().endsWith('evidence, not findings.'));
+  assert.equal(JSON.stringify(heardBody).includes('bears_on'),false);assert.equal(JSON.stringify(heardBody).includes('fact_notes'),false);
+  await flush();
+ }
+});
 test('ordinary and non-speech questions go through qualitative search/answer in route mode',async()=>{
  h.env.RESEARCH_LOOP='route';for(const kind of ['speech','all','bill'])for(const stream of [false,true]){globalThis.__researchModel=qualitative();const before=ordinaryCalls,response=await post('What does the record say about housing affordability?',stream,{kind}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answer,text);assert.deepEqual(body.citations,{[id]:[[0,text.length]]});assert.equal(body.sources[0].resource,resource);assert.equal(body.research.sources[0].kind,'speech');assert.equal(body.research.sources[0].date,'2023-05-01');assert.equal(ordinaryCalls,before);await flush();}
 });

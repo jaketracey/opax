@@ -5,16 +5,48 @@
  * a listing row, the transcript tool's own lines are the answer. Excerpts from transcript text still go to
  * the writer, which quotes or paraphrases them. */
 import {sentenceSpans} from './sentence-bounds.mjs'
+import NAMES from './commission-names.json'
 import {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd} from '../public/transcript-note.js'
 export {TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, withTranscriptNote, transcriptNote, spokenTranscriptNote, transcriptNoteEnd}
+/** A question about Parliament's own record: a Senate or House committee inquiry, estimates, Hansard. */
+const PARLIAMENTARY = /\b(?:senate|house of representatives|parliament|parliamentary|committee|estimates|hansard)\b/i
+/** People words that make a question Parliament's unless it names a commission and asks what witnesses or evidence
+ * said (EVIDENCE_ASKED): "family members", "a local MP" or "senators" hearing from witnesses at a named inquiry are
+ * about its hearings, while "Which senators called for a royal commission ...?" and "What did MPs say about the ...
+ * Royal Commission's report?" are about Parliament. The bodies of Parliament (PARLIAMENTARY) always are. */
+const PARLIAMENT_PEOPLE = /\b(?:senators?|mps?|members)\b/i
+/** Words that ask what witnesses or evidence said. */
+const EVIDENCE_ASKED = /\b(?:witness(?:es)?|evidence|testimony|testif\w*|(?:tell|told) the|hear(?:d)? from|said at the hearings?)\b/i
+const COMMISSION_WORDS = /\broyal commission\b|\b(?:special )?commission of inquiry\b|\bboard of inquiry\b/i
+const squashed = (text: string) => ` ${text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()} `
+const REGISTERED = (NAMES.commissions as { id: string, names: string[] }[]).flatMap(c => c.names.map(squashed))
+/** Whether a question names a registered commission or inquiry, as a whole phrase, whatever the case or punctuation
+ * (commission-names.json, built from the registry). */
+export const namesRegisteredCommission = (question: string): boolean => { const q = squashed(question); return REGISTERED.some(name => q.includes(name)) }
+/** The fixed line for a hearing answer whose excerpts were found but none was selected as answering the question. */
+export const NO_PASSAGE_SELECTED = 'OPAX found passages in the hearing transcripts, but none that it judged to answer this question.'
+/** Whether a question names Parliament or one of its bodies. Such a question is about Hansard unless it also names a
+ * commission; "the Senate inquiry into ..." is a committee inquiry, whose evidence is Committee Hansard. */
+export const parliamentaryQuestion = (question: string): boolean => {
+  const q = question.slice(0, 2000)
+  return PARLIAMENTARY.test(q) || PARLIAMENT_PEOPLE.test(q) && !(EVIDENCE_ASKED.test(q) && (COMMISSION_WORDS.test(q) || namesRegisteredCommission(q)))
+}
+/** Whether a question uses a word for a hearing or its evidence. */
+export const hearingWorded = (question: string): boolean => /\b(?:hear|hears|heard|hearings?|evidence|witness(?:es)?|testif\w*|testimony|transcripts?|counsel assisting)\b/i.test(question.slice(0, 2000))
 /** Evidence before an inquiry is a different record from parliamentary discussion about its topic. */
 export function hearingEvidenceQuestion(question: string): boolean {
+  // A parliamentary inquiry in hearing-style wording is answered from Committee Hansard, as any Hansard question is.
+  if (parliamentaryQuestion(question) && !COMMISSION_WORDS.test(question.slice(0, 2000))) return false
   // Reader text is bounded before tokenisation. Inspect a fixed word window rather than backtracking
   // through variable-length commission names and whitespace.
   const words = question.slice(0, 2000).toLowerCase().match(/[\p{L}'’-]+/gu) ?? []
   if (!words.some(w => /^(?:said|say|tell|told|evidence|witness(?:es)?|counsel|testif\w*)$/.test(w))) return false
+  // The bare word "inquiry" is not enough: most inquiries are parliamentary committee inquiries, whose evidence is
+  // Committee Hansard ("What did witnesses tell the inquiry into supermarket prices?"). It counts only in a question
+  // that also names a commission, by a commission phrase or a registered name.
+  const commission = COMMISSION_WORDS.test(question.slice(0, 2000)) || namesRegisteredCommission(question.slice(0, 2000))
   return words.some((word, i) => {
-    if (word !== 'inquiry' && !(word === 'royal' && words[i + 1] === 'commission')) return false
+    if (!(word === 'inquiry' && commission) && !(word === 'royal' && words[i + 1] === 'commission')) return false
     const before = words.slice(Math.max(0, i - 10), i)
     if (before.some(w => w === 'at' || w === 'before')) return true
     return before.some((w, n) =>
@@ -24,6 +56,25 @@ export function hearingEvidenceQuestion(question: string): boolean {
 }
 
 
+/** A hearing question: hearingEvidenceQuestion, or a question that names a commission (by a commission phrase
+ * or a registered name), uses a word for a hearing or its evidence and does not name Parliament ("Who gave evidence to
+ * the ... inquiry about ...?"). Hansard and committee questions are never hearing questions. */
+export const commissionHearingQuestion = (question: string): boolean => hearingEvidenceQuestion(question) ||
+  hearingWorded(question) && !parliamentaryQuestion(question) && (COMMISSION_WORDS.test(question.slice(0, 2000)) || namesRegisteredCommission(question.slice(0, 2000)))
+
+/** People named in hearing evidence. One fixed text for every call that writes Ask prose from records: the research
+ * model's turns and its final answer call, the writer, and the follow-up questions. It is tied to the record's own
+ * label so it cannot be read as covering Hansard or committee hearings, and it says it comes before the other naming
+ * instructions. Prompt text only: nothing here reads, blocks or edits prose. */
+export const TRANSCRIPT_NAMED_PEOPLE_RULE = 'For a record labelled "Hearing transcript: evidence, not findings" (royal commission, integrity commission and inquiry hearings), name a person only inside quotation marks, in words copied exactly from the cited excerpt with nothing left out or added, never in your own words. In your own words, refer to them by a neutral description ("an officer", "a staff member"), or by a role only where the cited transcript page states that role; with no role stated there, use the neutral description. This covers everyone named in the evidence: witnesses, people they discuss, commissioners and counsel. It comes before every other instruction here about naming people or saying who said something. Hansard speeches, committee hearings and every other record keep their names.'
+/** The exception the standing "name the people" sentences carry, so they do not pull against the rule. */
+export const NAMED_PEOPLE_EXCEPTION = 'except people named in hearing transcript evidence'
+/** The research model's rule for hearing transcript excerpts, beside its instruction to select them by record fact
+ * id. That model writes the answer itself (points or reply text) when the question is not a hearing-evidence question.
+ * A point that cites or quotes an excerpt is dropped in code and the excerpt's fact goes to the writer. */
+export const TRANSCRIPT_POINT_RULE = 'Leave what a record labelled "Hearing transcript: evidence, not findings" (a royal commission, integrity commission or inquiry transcript) says out of your points and reply text, in your own words or quoted: select the excerpt\'s numeric record fact id, and the writer words it from the record. Hansard and parliamentary committee hearings stay in your points. '
+/** Whether a record fact holds quotable transcript passages. A research point never words one: it is read from its record. */
+export const transcriptPassage = (text: string): boolean => transcriptTurns(text).length > 0
 const EXCERPT = /\btranscript page \S+/
 /** A turn carries a speaker only when its source line names one; the transcript tools name none. */
 export interface TranscriptTurn { speaker?: string; day?: string; date?: string; page: string; excerpt: string }
