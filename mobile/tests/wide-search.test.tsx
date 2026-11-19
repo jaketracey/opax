@@ -42,6 +42,16 @@ let mockWidth = 834;
 let mockHeight = 1376;
 let mockFontScale = 1;
 let mockScheme: 'light' | 'dark' = 'light';
+// useIsDark reads the system through Appearance, as the Android hooks do.
+beforeEach(() => {
+  jest
+    .spyOn(
+      jest.requireActual<typeof import('react-native')>('react-native')
+        .Appearance,
+      'getColorScheme',
+    )
+    .mockImplementation(() => mockScheme);
+});
 jest.mock('react-native', () => {
   const actual = jest.requireActual('react-native');
   return Object.defineProperties(Object.create(actual), {

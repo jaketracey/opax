@@ -22,6 +22,9 @@ export function askScreens(
   /** As `sharedScreens` is told: 'plain' where pushed pages are clear. */
   underBar: UnderBar = false,
 ) {
+  // Read at the call. The tab stack's layout calls this on every render and
+  // draws again on a scheme change (`useStackChrome` holds `useColors()`),
+  // so these are the colours on screen after a live switch too.
   const colors = currentColors();
   return [
     screen('ask', 'Ask', {

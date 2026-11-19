@@ -3,12 +3,11 @@ import {
   AccessibilityInfo,
   Platform,
   View,
-  useColorScheme,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import { useColors } from './use-colors';
+import { useColors, useIsDark } from './use-colors';
 import { useIncreaseContrast, useHighTextContrast } from './accessibility';
 import { paletteFor, darkHighContrast, lightHighContrast } from './palette';
 
@@ -94,7 +93,7 @@ export function GroundFade({
   const colors = useColors();
 
   const id = useId();
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const scheme = useIsDark() ? 'dark' : 'light';
   const contrast = useIncreaseContrast();
   const highContrast = useHighTextContrast();
   // SVG gradient stops accept numeric colours, not DynamicColorIOS values.

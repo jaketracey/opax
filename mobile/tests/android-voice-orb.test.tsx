@@ -111,7 +111,10 @@ test('a live switch to dark redraws the orb with the dark set, with no remount',
     value: 'android',
     configurable: true,
   });
-  const scheme = jest.spyOn(Native, 'useColorScheme').mockReturnValue('light');
+  // useIsDark reads the system through Appearance.
+  const scheme = jest
+    .spyOn(Native.Appearance, 'getColorScheme')
+    .mockReturnValue('light');
   jest
     .spyOn(Skia, 'RadialGradient')
     .mockImplementation((props) => createElement('OrbGradient', props));

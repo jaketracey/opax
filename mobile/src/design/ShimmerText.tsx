@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { View, useColorScheme } from 'react-native';
+import { View } from 'react-native';
+import { useIsDark } from './use-colors';
 import Animated, {
   Easing,
   cancelAnimation,
@@ -46,7 +47,7 @@ export function ShimmerText({
 }
 
 function NativePulse({ children }: { children: string }) {
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const scheme = useIsDark() ? 'dark' : 'light';
   const contrast = useIncreaseContrast();
   const highContrast = useHighTextContrast();
   const palette = paletteFor(scheme);

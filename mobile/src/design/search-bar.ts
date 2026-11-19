@@ -8,7 +8,7 @@ import {
 import { NavigationContext } from 'expo-router/react-navigation';
 import type { SearchBarCommands, SearchBarProps } from 'react-native-screens';
 import { useKeyCommand } from './keyboard';
-import { currentColors } from './use-colors';
+import { currentColors, useColors, type Colors } from './use-colors';
 
 export interface ListSearchBarOptions {
   placeholder: string;
@@ -17,11 +17,15 @@ export interface ListSearchBarOptions {
   onCancelButtonPress: () => void;
   autoFocus?: boolean;
 }
-/** The one native list-root configuration; callers receive plain text callbacks. */
+/**
+ * The one native list-root configuration; callers receive plain text
+ * callbacks. Pass the component's `useColors()` result, as
+ * `useListSearchBar` does; without it the colours are those at the call.
+ */
 export function nativeSearchBarOptions(
   options: ListSearchBarOptions,
+  colors: Colors = currentColors(),
 ): SearchBarProps {
-  const colors = currentColors();
   return {
     placeholder: options.placeholder,
     hideWhenScrolling: false,
@@ -39,6 +43,9 @@ export function useListSearchBar(
   options: ListSearchBarOptions,
 ): SearchBarProps {
   const ref = useRef<SearchBarCommands | null>(null);
+  // Subscribed here, so the field's tint follows a live switch on Android
+  // whether or not the list itself reads a colour.
+  const colors = useColors();
   const navigation = useContext(NavigationContext);
   const subscribe = useCallback(
     (listener: () => void) => {
@@ -68,5 +75,5 @@ export function useListSearchBar(
   useEffect(() => {
     if (focused && options.autoFocus) ref.current?.focus();
   }, [focused, options.autoFocus]);
-  return { ...nativeSearchBarOptions(options), ref };
+  return { ...nativeSearchBarOptions(options, colors), ref };
 }

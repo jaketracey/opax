@@ -577,6 +577,7 @@ export function Screen({
   const clearance = useFloatingBarClearance();
   const androidScroll = useRef<ScrollView>(null);
   const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
+  const androidOwnsBar = androidRoot.ownsBar;
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
   // Content under the bar: its top has passed the bar's bottom edge. At rest
@@ -609,10 +610,16 @@ export function Screen({
     // A detail pane must not recolour its parent route's navigation bar.
     if (inPane || nativeRoot) return;
     setOptions({
+      // An Android tab root's bar belongs to useAndroidRootScroll (ground at
+      // rest, raised once scrolled). This effect runs after that hook's, so
+      // writing the ground here on a live appearance switch left a scrolled
+      // bar in the page colour.
       // Under the clear rail bar the page is the ground: no colour, no line.
-      ...(clearRail
-        ? clearBarStyle(opaqueBar(colors[ground]))
-        : opaqueBar(colors[ground])),
+      ...(androidOwnsBar
+        ? {}
+        : clearRail
+          ? clearBarStyle(opaqueBar(colors[ground]))
+          : opaqueBar(colors[ground])),
       ...(clearExpandedBar
         ? { headerLargeStyle: { backgroundColor: 'transparent' } }
         : {}),
@@ -646,6 +653,7 @@ export function Screen({
     onRail,
     clearExpandedBar,
     colors,
+    androidOwnsBar,
   ]);
   const rest = useClearBarRest();
   const safeTop = useContext(SafeAreaInsetsContext)?.top ?? 0;
@@ -1621,6 +1629,12 @@ const useStyles = makeStyles((colors) =>
       borderRadius: radii.container,
       borderCurve: 'continuous',
       overflow: 'hidden',
+      // The card's dark edge (card.tsx `outline`): the role is clear in
+      // light, and an outline takes no room, so nothing moves.
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
     },
     sectionHead: {
       minHeight: minimumTarget,

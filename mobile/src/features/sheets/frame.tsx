@@ -161,7 +161,7 @@ export function SheetFrame({
       <>
         <RouteOptions
           options={{
-            ...routeSheetOptions({ short, citation, accessible }),
+            ...routeSheetOptions({ short, citation, accessible }, colors),
             title,
           }}
         />
@@ -238,7 +238,7 @@ export function SheetFrame({
     <>
       <RouteOptions
         options={{
-          ...routeSheetOptions({ short, citation, accessible }),
+          ...routeSheetOptions({ short, citation, accessible }, colors),
           title,
           ...options,
         }}

@@ -3,13 +3,7 @@ import { Pressable } from './pressable';
 import { router, type Href } from 'expo-router';
 import type { ReactNode } from 'react';
 import { isValidElement, useState } from 'react';
-import {
-  Image,
-  StyleSheet,
-  View,
-  useColorScheme,
-  useWindowDimensions,
-} from 'react-native';
+import { Image, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { localImageURI } from '../api/image-policy';
 import type { PartyStatus } from '../api/party-transforms';
 import { partyRoute } from '../navigation/routes';
@@ -49,7 +43,7 @@ import {
   size as sizeTokens,
   textStyles,
 } from './tokens';
-import { makeStyles, useColors } from './use-colors';
+import { makeStyles, useColors, useIsDark } from './use-colors';
 
 const portraitSizes = { row: sizeTokens.portraitRow, profile: 96 } as const;
 /** A circular portrait; an absent or failed image leaves a blank circle (a person symbol when unnamed). */
@@ -248,8 +242,7 @@ export function PartyLabel({
   const styles = useStyles();
 
   const identity = partyIdentity(party);
-  const scheme = useColorScheme();
-  const dot = partyDot(party, scheme === 'dark' ? 'dark' : 'light');
+  const dot = partyDot(party, useIsDark() ? 'dark' : 'light');
   const text = partyText({ party, status, formerly }, dense);
   const partyLinked = linked && (!!href || isPartyLabel(party));
   const previousLinked = linked && !!text.previous && isPartyLabel(formerly);

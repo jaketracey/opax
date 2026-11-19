@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- CommonJS rule and config. */
 import { Linter } from 'eslint';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { transform } from '../scripts/codemod-use-colors';
 
@@ -9,7 +9,6 @@ import { transform } from '../scripts/codemod-use-colors';
 // still static. Both are what the screen lanes run on their own files.
 const MOBILE = join(__dirname, '..');
 const rule = require('../scripts/static-colors-rule.js');
-const lanes = require('../scripts/static-colors-lanes.cjs') as string[];
 const parser = require('@typescript-eslint/parser');
 
 function lint(code: string, filename = 'src/features/today/Card.tsx') {
@@ -90,21 +89,18 @@ export const unrelated = theirs.navy;
     expect(lint(code, 'src/design/card.tsx')).toHaveLength(1);
   });
 
-  test('it is an error everywhere except the screen lanes own files, where it warns', () => {
+  test('it is an error everywhere: no folder is let off with a warning', () => {
     const config = readFileSync(join(MOBILE, 'eslint.config.js'), 'utf8');
     expect(config).toContain("'opax/static-colors': 'error'");
-    expect(config).toMatch(
-      /files: STATIC_COLOR_LANES,\s*rules: \{ 'opax\/static-colors': 'warn' \}/,
+    // The screen lanes' warn list is retired (build 92): nothing may set
+    // the rule to anything but an error, and the list file is gone.
+    expect(config.match(/'opax\/static-colors':\s*[^,\n]+/g)).toEqual([
+      "'opax/static-colors': 'error'",
+    ]);
+    expect(config).not.toMatch(/STATIC_COLOR_LANES|static-colors-lanes/);
+    expect(existsSync(join(MOBILE, 'scripts/static-colors-lanes.cjs'))).toBe(
+      false,
     );
-    // Only screen-lane paths: never the shared design or navigation files.
-    expect(lanes.length).toBeGreaterThan(0);
-    for (const glob of lanes)
-      expect(glob).toMatch(/^src\/(?:features|workbench|test-screens)\//);
-    // Lane D is converted: its files are errors now, as the shared ones are.
-    for (const glob of lanes)
-      expect(glob).not.toMatch(
-        /^src\/(?:features\/(?:Search\.tsx|account|ask|community|methods|quick-search|reports|search|sheets|sources|talk)|test-screens|workbench)\b/,
-      );
   });
 });
 
@@ -204,7 +200,7 @@ export const styles = StyleSheet.create({ badge: { color: colors.ink } });
     expect(fix(code)).toEqual({ output: code, notes: [], changed: false });
   });
 
-  test('the shared files are converted: the rule finds nothing static outside the lanes', () => {
+  test('the shared files are converted: the rule finds nothing static in them', () => {
     // The gate is `npm run lint`; this pins the files the foundation owns so
     // a revert of one of them fails here by name.
     for (const file of [

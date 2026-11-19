@@ -1,6 +1,7 @@
 import { useMemo, useSyncExternalStore } from 'react';
 import {
   Appearance,
+  AppState,
   Platform,
   type ColorSchemeName,
   type ColorValue,
@@ -106,10 +107,70 @@ export function useColors(): Colors {
   return colorsFor(useColorTheme());
 }
 
+// The system's scheme for `useIsDark`, held while the app is not active.
+// One pair of system listeners serves every component, kept only while
+// something is drawn with it.
+const darkWatchers = new Set<() => void>();
+let heldDark: boolean | undefined;
+let stopDarkWatch: (() => void) | undefined;
+const systemDark = () => Appearance.getColorScheme() === 'dark';
+// Behind another app or a system sheet. A state not yet known (the first
+// moments of a launch report none) is not a reason to hold.
+const appAway = () =>
+  AppState.currentState === 'background' ||
+  AppState.currentState === 'inactive';
+const appActive = () => !appAway();
+// Active: the system's answer, remembered. Not active: the one remembered,
+// whatever UIKit reports while it takes its two snapshots.
+function readDark() {
+  if (appActive() || heldDark === undefined) heldDark = systemDark();
+  return heldDark;
+}
+function syncDark() {
+  // Each watcher reads again and draws only if its answer changed. While
+  // the app is not active nobody is told; the return to active tells them.
+  if (!appActive()) return;
+  for (const changed of [...darkWatchers]) changed();
+}
+function watchDark(changed: () => void) {
+  if (!darkWatchers.size) {
+    const scheme = Appearance.addChangeListener(syncDark);
+    const state = AppState.addEventListener('change', syncDark);
+    stopDarkWatch = () => {
+      scheme.remove();
+      state.remove();
+    };
+  }
+  darkWatchers.add(changed);
+  return () => {
+    darkWatchers.delete(changed);
+    if (darkWatchers.size) return;
+    stopDarkWatch?.();
+    stopDarkWatch = undefined;
+  };
+}
+
+/**
+ * Whether the appearance on screen is dark: the system's real scheme, on
+ * both platforms. For what a role cannot draw, such as a Skia picture, a
+ * shadow that is dropped in dark, or a hex set chosen by hand.
+ *
+ * Use this, not `useColorScheme()`. UIKit reports both appearances in turn
+ * each time the app goes to the background (it takes a snapshot of each),
+ * and every `useColorScheme()` subscriber then draws twice for nothing; the
+ * money map rebuilt its model and recorded its pictures twice. This hook
+ * ignores a change while `AppState.currentState` is `background` or
+ * `inactive` and reads the scheme again when the app becomes active, so a change made in
+ * Settings while the app was behind shows on return.
+ */
+export function useIsDark(): boolean {
+  return useSyncExternalStore(watchDark, readDark, readDark);
+}
+
 /**
  * The same answer outside render: an event handler, a navigation option
  * built in a callback, a one-shot native call. A component that draws with
- * the result must also call `useColors()` (or `useColorScheme()`), or it
+ * the result must also call `useColors()` (or `useIsDark()`), or it
  * will not draw again when the system changes.
  */
 export function currentColors(): Colors {

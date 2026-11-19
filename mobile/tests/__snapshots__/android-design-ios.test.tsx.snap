@@ -785,6 +785,7 @@ exports[`iOS design at font scale 1 BillRow retains its iOS output 1`] = `
                 },
               },
             },
+            null,
           ]
         }
       >
@@ -2813,6 +2814,19 @@ exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
                 "light": "#F1EFE8",
               },
             },
+          },
+          {
+            "outlineColor": {
+              "dynamic": {
+                "dark": "#3A3F36",
+                "highContrastDark": "#7E8378",
+                "highContrastLight": "rgba(0,0,0,0)",
+                "light": "rgba(0,0,0,0)",
+              },
+            },
+            "outlineOffset": -1,
+            "outlineStyle": "solid",
+            "outlineWidth": 1,
           },
         ]
       }
@@ -7248,6 +7262,19 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
               "minHeight": 44,
               "padding": 16,
             },
+            {
+              "outlineColor": {
+                "dynamic": {
+                  "dark": "#3A3F36",
+                  "highContrastDark": "#7E8378",
+                  "highContrastLight": "rgba(0,0,0,0)",
+                  "light": "rgba(0,0,0,0)",
+                },
+              },
+              "outlineOffset": -1,
+              "outlineStyle": "solid",
+              "outlineWidth": 1,
+            },
             null,
             null,
           ]
@@ -8453,6 +8480,7 @@ exports[`iOS design at font scale 2 BillRow retains its iOS output 1`] = `
                 },
               },
             },
+            null,
           ]
         }
       >
@@ -10629,6 +10657,19 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
                 "light": "#F1EFE8",
               },
             },
+          },
+          {
+            "outlineColor": {
+              "dynamic": {
+                "dark": "#3A3F36",
+                "highContrastDark": "#7E8378",
+                "highContrastLight": "rgba(0,0,0,0)",
+                "light": "rgba(0,0,0,0)",
+              },
+            },
+            "outlineOffset": -1,
+            "outlineStyle": "solid",
+            "outlineWidth": 1,
           },
         ]
       }
@@ -15189,6 +15230,19 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
               "gap": 8,
               "minHeight": 44,
               "padding": 16,
+            },
+            {
+              "outlineColor": {
+                "dynamic": {
+                  "dark": "#3A3F36",
+                  "highContrastDark": "#7E8378",
+                  "highContrastLight": "rgba(0,0,0,0)",
+                  "light": "rgba(0,0,0,0)",
+                },
+              },
+              "outlineOffset": -1,
+              "outlineStyle": "solid",
+              "outlineWidth": 1,
             },
             null,
             null,

@@ -17,7 +17,6 @@ import {
   StyleSheet,
   TextInput,
   View,
-  useColorScheme,
   useWindowDimensions,
 } from 'react-native';
 import { useBoldText } from '../../design/accessibility';
@@ -38,7 +37,7 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
-import { makeStyles, useColors } from '../../design/use-colors';
+import { makeStyles, useColors, useIsDark } from '../../design/use-colors';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
 import { RouteOptions } from '../../navigation/preview';
@@ -496,7 +495,7 @@ function WideSearchPanel({
   fixed?: { top: number; left: number; right: undefined; marginTop: 0 };
 }) {
   const styles = useStyles();
-  const dark = useColorScheme() === 'dark';
+  const dark = useIsDark();
 
   const { text: q, focused: fieldFocused, armed, dismissed } = useQuickSearch();
   const open = fieldFocused && !dismissed && armed;

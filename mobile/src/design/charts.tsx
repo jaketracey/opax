@@ -5,7 +5,6 @@ import {
   Animated,
   StyleSheet,
   View,
-  useColorScheme,
   useWindowDimensions,
   type AccessibilityActionEvent,
 } from 'react-native';
@@ -40,7 +39,7 @@ import {
   size,
   type Accent,
 } from './tokens';
-import { useColors } from './use-colors';
+import { useColors, useIsDark } from './use-colors';
 
 export interface ChartProvenance {
   dateRange: { start: DateInput; end: DateInput };
@@ -700,7 +699,7 @@ function BarSeriesContent({
     labels?.every,
   ).map(clearLabel);
   const xHeight = Math.max(0, ...xLabels.map((label) => label.height));
-  const darkMode = useColorScheme() === 'dark';
+  const darkMode = useIsDark();
   const contrast = useIncreaseContrast();
   const palette = darkMode
     ? contrast
@@ -1044,7 +1043,7 @@ export function ShareBar({
   sourceLine?: React.ReactNode | false;
   testID?: string;
 }) {
-  const darkMode = useColorScheme() === 'dark';
+  const darkMode = useIsDark();
   const contrast = useIncreaseContrast();
   // Increase Contrast overrides a few roles; the rest are the scheme's own.
   const base = darkMode ? dark : light;
@@ -1158,7 +1157,7 @@ export function ShareRows({
   sourceLine?: React.ReactNode;
   testID?: string;
 }) {
-  const darkMode = useColorScheme() === 'dark';
+  const darkMode = useIsDark();
   const contrast = useIncreaseContrast();
   const palette = {
     ...(darkMode ? dark : light),

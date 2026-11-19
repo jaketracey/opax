@@ -986,6 +986,14 @@ test('a system switch while the map is open builds its marks again in the new co
   const live = jest
     .spyOn(Native.Appearance, 'getColorScheme')
     .mockImplementation(() => now);
+  // The map theme listens through useIsDark, on Appearance itself.
+  const listen = jest
+    .spyOn(Native.Appearance, 'addChangeListener')
+    .mockImplementation((changed) => {
+      const reader = changed as unknown as () => void;
+      readers.add(reader);
+      return { remove: () => void readers.delete(reader) } as never;
+    });
   const turn = (next: 'light' | 'dark') =>
     act(async () => {
       now = next;
@@ -1012,5 +1020,6 @@ test('a system switch while the map is open builds its marks again in the new co
   expect(labor(stage().model).colour).toBe(partyColors.labor);
   scheme.mockRestore();
   live.mockRestore();
+  listen.mockRestore();
   await act(async () => r.unmount());
 });

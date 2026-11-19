@@ -7,7 +7,7 @@ import {
   vec,
 } from '@shopify/react-native-skia';
 import { useEffect, useMemo, useState } from 'react';
-import { AppState, Platform, useColorScheme } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import {
   cancelAnimation,
   Easing,
@@ -29,6 +29,7 @@ import {
   paletteFor,
   type Role,
 } from '../../design/palette';
+import { useIsDark } from '../../design/use-colors';
 
 /** What the call is doing, as the orb draws it. */
 export type OrbPhase =
@@ -189,7 +190,7 @@ export function VoiceOrb({
   const c = size / 2;
   // The appearance on screen, on both platforms: Skia takes plain colours,
   // so the orb is drawn again with the other set when the system switches.
-  const scheme: OrbScheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const scheme: OrbScheme = useIsDark() ? 'dark' : 'light';
   const increase = useIncreaseContrast();
   const strong = useHighTextContrast() || increase;
   const colours = useMemo(() => orbColours(scheme, strong), [scheme, strong]);
