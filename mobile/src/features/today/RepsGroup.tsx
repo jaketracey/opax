@@ -18,7 +18,8 @@ import {
 import { LinkRow } from '../../design/rows';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { CachedPortrait } from '../CachedPortrait';
 import { MyMemberContext } from '../your-mp/MyMemberContext';
 
@@ -171,6 +172,8 @@ function LinesFrame({
   /** The held place: the same lines, unseen, with a bar over each. */
   held?: boolean;
 }) {
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   useRowInset(stacked ? 16 : 16 + 44 + rhythm.tight);
   return (
@@ -202,6 +205,8 @@ function LinesFrame({
 
 /** The row's chevron; unseen in a held row, so the lines wrap alike. */
 function LinesChevron({ held = false }: { held?: boolean }) {
+  const styles = useStyles();
+
   return (
     <View style={held ? styles.boneLine : undefined}>
       <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
@@ -210,6 +215,8 @@ function LinesChevron({ held = false }: { held?: boolean }) {
 }
 
 function LinesRow({ rep }: { rep: LinesRep }) {
+  const styles = useStyles();
+
   const cell = useRowCellStyle();
   return (
     <RowLink href={rep.href} menu={menuSections(rep.menu)}>
@@ -237,6 +244,8 @@ function LinesRow({ rep }: { rep: LinesRep }) {
  * wraps as the row that lands on it does.
  */
 function LinesBone({ lines }: { lines: readonly string[] }) {
+  const styles = useStyles();
+
   const cell = useRowCellStyle();
   return (
     <View
@@ -321,6 +330,8 @@ export function Bone({
   width: `${number}%`;
   testID?: string;
 }) {
+  const styles = useStyles();
+
   return (
     <View testID={testID}>
       <Text variant={variant} numberOfLines={1} style={styles.boneLine}>
@@ -342,6 +353,8 @@ function WordsBone({
   width: `${number}%`;
   children: ReactNode;
 }) {
+  const styles = useStyles();
+
   return (
     <View>
       <View pointerEvents="none" style={styles.boneLine}>
@@ -367,6 +380,8 @@ function RepBone({
   testID: string;
   words?: RepWords;
 }) {
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   const cell = useRowCellStyle();
   useRowInset(stacked ? 16 : 16 + 44 + rhythm.tight);
@@ -412,6 +427,8 @@ function RepBone({
 
 /** The link row's place: one body line in a row's frame. */
 function LinkBone() {
+  const styles = useStyles();
+
   const cell = useRowCellStyle();
   return (
     <View testID="today-reps-loading-senators" style={[styles.link, cell]}>
@@ -468,72 +485,74 @@ export function RepsBones({
   );
 }
 
-const styles = StyleSheet.create({
-  // PersonRow's frame (design/people), so a bone row has a loaded row's box.
-  person: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.heading,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-  },
-  personMain: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.heading,
-  },
-  personStacked: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  personText: { gap: rhythm.line, alignSelf: 'stretch' },
-  personTextInline: { flex: 1 },
-  personName: { flexShrink: 0 },
-  personDetails: { gap: rhythm.line },
-  // The party line keeps its 44 pt target; the role line sits inside it.
-  personParty: { minHeight: minimumTarget },
-  // LinkRow's frame (design/rows).
-  link: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-  },
-  linkText: { flex: 1 },
-  // The unseen text sets the height, the bar sits in it.
-  boneLine: { opacity: 0 },
-  boneBar: {
-    position: 'absolute',
-    left: 0,
-    top: 3,
-    bottom: 3,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  // The bar covers the whole line's width in a held dissolved row.
-  boneWide: { right: 0 },
-  // Where a member's portrait would be: the building mark, so the lines
-  // start where the names above them do.
-  mark: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  markHeld: {
-    borderRadius: 22,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  bonePortrait: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    // PersonRow's frame (design/people), so a bone row has a loaded row's box.
+    person: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.heading,
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    },
+    personMain: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: rhythm.heading,
+    },
+    personStacked: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      gap: rhythm.tight,
+    },
+    personText: { gap: rhythm.line, alignSelf: 'stretch' },
+    personTextInline: { flex: 1 },
+    personName: { flexShrink: 0 },
+    personDetails: { gap: rhythm.line },
+    // The party line keeps its 44 pt target; the role line sits inside it.
+    personParty: { minHeight: minimumTarget },
+    // LinkRow's frame (design/rows).
+    link: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    },
+    linkText: { flex: 1 },
+    // The unseen text sets the height, the bar sits in it.
+    boneLine: { opacity: 0 },
+    boneBar: {
+      position: 'absolute',
+      left: 0,
+      top: 3,
+      bottom: 3,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    // The bar covers the whole line's width in a held dissolved row.
+    boneWide: { right: 0 },
+    // Where a member's portrait would be: the building mark, so the lines
+    // start where the names above them do.
+    mark: {
+      width: 44,
+      height: 44,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    markHeld: {
+      borderRadius: 22,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    bonePortrait: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+  }),
+);

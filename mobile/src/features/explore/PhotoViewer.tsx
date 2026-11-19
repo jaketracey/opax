@@ -24,11 +24,12 @@ import {
 } from '../../design/accessibility';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text, copy } from '../../design/primitives';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { openOnOpaxItem } from '../../navigation/chrome';
 import { exploreWebPath } from '../../navigation/routes/explore';
 import { openSource } from '../../navigation/external';
-import { PHOTO_BLACK, Picture } from './Picture';
+import { Picture } from './Picture';
 import { openPhotoSource, photoIndex, pictureKey } from './YearGallery';
 import type { YearPicture } from './pictures';
 import { explore } from './runtime';
@@ -152,6 +153,8 @@ function ZoomPage({
  * credit sit on a dark band that never takes more than 40% of the height.
  */
 export default function PhotoViewer() {
+  const colors = useColors();
+
   const params = useLocalSearchParams<{ year?: string; photo?: string }>();
   const year = /^\d{4}$/.test(params.year ?? '') ? params.year! : '';
   const read = useRead(explore.pictures);
@@ -270,7 +273,7 @@ export default function PhotoViewer() {
         pointerEvents="none"
         style={[
           StyleSheet.absoluteFill,
-          styles.black,
+          { backgroundColor: colors.photoGround },
           {
             opacity: drag.interpolate({
               inputRange: [0, height],
@@ -399,7 +402,6 @@ export default function PhotoViewer() {
 }
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  black: { backgroundColor: PHOTO_BLACK },
   zoomContent: { flexGrow: 1, justifyContent: 'center' },
   panel: {
     position: 'absolute',

@@ -11,7 +11,8 @@ import { SourceLine, type SourceCitation } from '../../design/source';
 import { InlineError, LoadingStatus } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { minimumTarget, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { openSource } from '../../navigation/external';
 import {
   electorateRoute,
@@ -114,6 +115,8 @@ function SeatHeader({
   label: string;
   testID: string;
 }) {
+  const styles = useStyles();
+
   const href = electorateRoute(seat.electorate_id, undefined, seat.name);
   const menu: RowMenuAction[] = [
     {
@@ -157,6 +160,8 @@ function SeatHeader({
 
 /** The source line's band while the group loads: its touch height. */
 function SourceBone() {
+  const styles = useStyles();
+
   return (
     <View testID="today-reps-loading-source" style={styles.boneSource}>
       <View style={styles.boneSourceBar} />
@@ -195,6 +200,8 @@ export function YourMPPending({
   /** The senators link row will draw. */
   senators?: boolean;
 }) {
+  const styles = useStyles();
+
   return (
     <View testID="today-your-mp-pending" style={styles.section}>
       <TodayHeading testID="today-reps-heading">{REPS_HEADING}</TodayHeading>
@@ -446,6 +453,8 @@ export function YourMPCard({
   attempt: number;
   onRetry: () => void;
 }) {
+  const styles = useStyles();
+
   const seatKey = `${seat.electorate_id}|${stateSeatIds.join(',')}`;
   // The directory Today already holds answers the group at once: the read
   // below asks the same directory again, so its answer lands on rows
@@ -550,6 +559,8 @@ function YourMPError({
   seat: Electorate;
   onRetry: () => void;
 }) {
+  const styles = useStyles();
+
   const state = stateInRunningCopy(seat.state_code);
   return (
     <View style={styles.section}>
@@ -782,26 +793,28 @@ export function yourMPSources(
   };
 }
 
-const styles = StyleSheet.create({
-  // The heading to its group, as the Victorian election block: tight (8).
-  section: { gap: rhythm.tight },
-  // The group to its line: group (24).
-  block: { gap: rhythm.group },
-  // The source line's band: its touch height, the bar where its text draws.
-  boneSource: { minHeight: minimumTarget, justifyContent: 'center' },
-  boneSourceBar: {
-    width: '70%',
-    height: 12,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-    backgroundColor: colors.sunken,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-  },
-  headerWords: { flex: 1, gap: 2 },
-  pressed: { opacity: 0.6 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    // The heading to its group, as the Victorian election block: tight (8).
+    section: { gap: rhythm.tight },
+    // The group to its line: group (24).
+    block: { gap: rhythm.group },
+    // The source line's band: its touch height, the bar where its text draws.
+    boneSource: { minHeight: minimumTarget, justifyContent: 'center' },
+    boneSourceBar: {
+      width: '70%',
+      height: 12,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+      backgroundColor: colors.sunken,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+    },
+    headerWords: { flex: 1, gap: 2 },
+    pressed: { opacity: 0.6 },
+  }),
+);

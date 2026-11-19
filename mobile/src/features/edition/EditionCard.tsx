@@ -6,7 +6,8 @@ import { Icon } from '../../design/icon';
 import { LoadingStatus, Skeleton } from '../../design/states';
 import { SourceLine } from '../../design/source';
 import { Text } from '../../design/text';
-import { colors, hairline, minimumTarget, radii } from '../../design/tokens';
+import { hairline, minimumTarget, radii } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { editionRoute } from '../../navigation/routes/edition';
 import { presentSource } from '../../navigation/sheets';
 import { counted, formatDate } from '../../design/format';
@@ -25,6 +26,8 @@ import { Plate } from './Plate';
  * plate vanished into Today's ground and left a square-topped body.
  */
 export function EditionSkeleton({ story = false }: { story?: boolean }) {
+  const styles = useStyles();
+
   const dark = useColorScheme() === 'dark';
   return (
     <View
@@ -90,6 +93,8 @@ export function EditionCard({
    */
   still?: boolean;
 }) {
+  const styles = useStyles();
+
   // At accessibility sizes the timeline sits far below the fold, so Today's
   // card never spends the draw where it cannot be seen.
   const large = useAccessibilitySize();
@@ -140,9 +145,10 @@ export function EditionCard({
   ];
   return (
     <View style={!dark ? styles.shadow : undefined}>
-      <View style={styles.card} testID="today-edition-card">
+      <View style={[styles.card, styles.outline]} testID="today-edition-card">
         <Card
           padded={false}
+          ground="raised"
           href={editionRoute()}
           zoom
           menu={menu}
@@ -197,55 +203,67 @@ export function EditionCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  shadow: {
-    shadowColor: colors.ink,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 20,
-  },
-  body: { padding: 20, paddingBottom: 0, gap: 12 },
-  source: { paddingHorizontal: 20, paddingBottom: 12 },
-  machine: {
-    flexDirection: 'row',
-    gap: 4,
-    backgroundColor: colors.navyWash,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-  },
-  skeleton: {
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-    backgroundColor: colors.raised,
-  },
-  // One step darker than the bars (sunken), so the plate reads on Today's
-  // sunken ground and the card's top corners show.
-  plateSkeleton: { backgroundColor: colors.dividerSubtle },
-  edge: {
-    ...StyleSheet.absoluteFill,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-  },
-  storyBody: { paddingBottom: 20 },
-  // The source line's 44 pt band, its footnote centred.
-  sourceBand: { minHeight: minimumTarget, justifyContent: 'center' },
-  sourceSkeleton: {
-    height: 14,
-    width: '60%',
-    backgroundColor: colors.sunken,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    // Dark: the card's edge is the raisedOutline hairline (clear in light),
+    // drawn here around the whole card, source line included. The link
+    // inside takes the raised ground by name so it draws no outline of its
+    // own part-way down the card.
+    outline: {
+      outlineWidth: hairline,
+      outlineOffset: -hairline,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
+    },
+    shadow: {
+      shadowColor: colors.ink,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.08,
+      shadowRadius: 20,
+    },
+    body: { padding: 20, paddingBottom: 0, gap: 12 },
+    source: { paddingHorizontal: 20, paddingBottom: 12 },
+    machine: {
+      flexDirection: 'row',
+      gap: 4,
+      backgroundColor: colors.navyWash,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      alignSelf: 'flex-start',
+    },
+    skeleton: {
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+      backgroundColor: colors.raised,
+    },
+    // One step darker than the bars (sunken), so the plate reads on Today's
+    // sunken ground and the card's top corners show.
+    plateSkeleton: { backgroundColor: colors.dividerSubtle },
+    edge: {
+      ...StyleSheet.absoluteFill,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+    },
+    storyBody: { paddingBottom: 20 },
+    // The source line's 44 pt band, its footnote centred.
+    sourceBand: { minHeight: minimumTarget, justifyContent: 'center' },
+    sourceSkeleton: {
+      height: 14,
+      width: '60%',
+      backgroundColor: colors.sunken,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+    },
+  }),
+);

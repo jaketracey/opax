@@ -18,12 +18,12 @@ import {
 } from '../../design/accessibility';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/text';
-import { colors, radii, rhythm } from '../../design/tokens';
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles, useColors } from '../../design/use-colors';
 import { androidHeaderBar } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { RouteOptions } from '../../navigation/preview';
 import { AndroidPhoto } from './AndroidPhoto';
-import { PHOTO_BLACK } from './Picture';
 import { openPhotoSource, photoIndex, pictureKey } from './YearGallery';
 import { explore } from './runtime';
 
@@ -31,6 +31,9 @@ const close = () => router.back();
 
 /** A native full-screen window covers the tabs and receives Android Back. */
 export default function PhotoViewer() {
+  const colors = useColors();
+  const styles = useStyles();
+
   const params = useLocalSearchParams<{ year?: string; photo?: string }>();
   const year = /^\d{4}$/.test(params.year ?? '') ? params.year! : '';
   const read = useRead(explore.pictures);
@@ -191,43 +194,45 @@ export default function PhotoViewer() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: PHOTO_BLACK },
-  bar: {
-    position: 'absolute',
-    zIndex: 1,
-    top: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.photoScrim,
-  },
-  action: {
-    minWidth: 64,
-    minHeight: 48,
-    paddingHorizontal: rhythm.block,
-    justifyContent: 'center',
-  },
-  light: { color: colors.onBand },
-  more: {
-    backgroundColor: colors.paper,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    margin: rhythm.tight,
-  },
-  title: { flex: 1, flexShrink: 1, textAlign: 'center' },
-  panel: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    maxHeight: '40%',
-  },
-  panelContent: {
-    gap: rhythm.line,
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.block,
-  },
-  credit: { minHeight: 48, justifyContent: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.photoGround },
+    bar: {
+      position: 'absolute',
+      zIndex: 1,
+      top: 0,
+      left: 0,
+      right: 0,
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.photoScrim,
+    },
+    action: {
+      minWidth: 64,
+      minHeight: 48,
+      paddingHorizontal: rhythm.block,
+      justifyContent: 'center',
+    },
+    light: { color: colors.onBand },
+    more: {
+      backgroundColor: colors.paper,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      margin: rhythm.tight,
+    },
+    title: { flex: 1, flexShrink: 1, textAlign: 'center' },
+    panel: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      maxHeight: '40%',
+    },
+    panelContent: {
+      gap: rhythm.line,
+      paddingHorizontal: rhythm.screen,
+      paddingTop: rhythm.block,
+    },
+    credit: { minHeight: 48, justifyContent: 'center' },
+  }),
+);

@@ -25,6 +25,7 @@ import { thisDevice } from '../design/device';
 import { Screen } from '../design/layout';
 import { ContentUnavailable } from '../design/states';
 import { rhythm } from '../design/tokens';
+import { useColors } from '../design/use-colors';
 import { releaseSplash } from '../launch/splash';
 import {
   useWelcomeDeclinedAt,
@@ -313,6 +314,7 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
  * 450 pt lower, under Your MP and the guide card).
  */
 export default function Today() {
+  const colors = useColors();
   useTodayRendered();
   const dots = useTodayDotsScroll();
   const offline = useOffline();
@@ -838,7 +840,12 @@ export default function Today() {
       keyboardInsets={false}
       scrollRef={dots.scrollRef}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={refresh}
+          colors={[colors.navy]}
+          progressBackgroundColor={colors.raised}
+        />
       }
     >
       <Masthead

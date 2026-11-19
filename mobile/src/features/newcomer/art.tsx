@@ -5,7 +5,8 @@ import { useDrawnColour } from '../../design/engraving';
 import { Icon } from '../../design/icon';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, hairline, radii, rhythm } from '../../design/tokens';
+import { hairline, radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import outline from '../today/australia-outline.json';
 import { minuteCopy } from './copy';
 
@@ -25,6 +26,8 @@ const hidden = {
 
 /** Australia, with one bronze mark: 150 electorates, one of them yours. */
 export function ElectorateArt({ height = 150 }: { height?: number }) {
+  const styles = useStyles();
+
   const wash = useDrawnColour('navyWash');
   const line = useDrawnColour('inkFaint');
   const bronze = useDrawnColour('bronze');
@@ -151,6 +154,8 @@ export function ChambersArt({
   size?: number;
   stacked?: boolean;
 }) {
+  const styles = useStyles();
+
   const house = useDrawnColour('houseInk');
   const senate = useDrawnColour('senateInk');
   // The outer row's last twelve seats: one state's block.
@@ -199,6 +204,8 @@ export function ChambersArt({
  * are a picture, not a real vote, so the captions carry no figures.
  */
 export function DivisionArt({ width = 280 }: { width?: number }) {
+  const styles = useStyles();
+
   const ayeInk = useDrawnColour('votesInk');
   const noInk = useDrawnColour('inkFaint');
   const track = useDrawnColour('dividerSubtle');
@@ -249,6 +256,8 @@ export function DivisionArt({ width = 280 }: { width?: number }) {
 
 /** What OPAX holds on each person, each line with its source mark. */
 export function RecordArt() {
+  const styles = useStyles();
+
   const rows = [
     { symbol: symbols.vote, ink: 'votes', label: minuteCopy.record.votes },
     {
@@ -282,40 +291,42 @@ export function RecordArt() {
   );
 }
 
-const styles = StyleSheet.create({
-  centre: { alignItems: 'center', justifyContent: 'center' },
-  centred: { textAlign: 'center' },
-  grow: { flex: 1 },
-  chambers: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    gap: rhythm.block,
-  },
-  chambersStacked: { flexDirection: 'column', alignItems: 'center' },
-  chamber: { alignItems: 'center', gap: rhythm.tight, flexShrink: 1 },
-  tally: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    gap: rhythm.line,
-    marginTop: rhythm.tight,
-  },
-  record: {
-    alignSelf: 'stretch',
-    backgroundColor: colors.raised,
-    borderRadius: radii.tile,
-    borderCurve: 'continuous',
-    paddingHorizontal: rhythm.block,
-  },
-  recordRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.row,
-    paddingVertical: rhythm.row,
-  },
-  recordRule: {
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerSubtle,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    centre: { alignItems: 'center', justifyContent: 'center' },
+    centred: { textAlign: 'center' },
+    grow: { flex: 1 },
+    chambers: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      gap: rhythm.block,
+    },
+    chambersStacked: { flexDirection: 'column', alignItems: 'center' },
+    chamber: { alignItems: 'center', gap: rhythm.tight, flexShrink: 1 },
+    tally: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      gap: rhythm.line,
+      marginTop: rhythm.tight,
+    },
+    record: {
+      alignSelf: 'stretch',
+      backgroundColor: colors.raised,
+      borderRadius: radii.tile,
+      borderCurve: 'continuous',
+      paddingHorizontal: rhythm.block,
+    },
+    recordRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.row,
+      paddingVertical: rhythm.row,
+    },
+    recordRule: {
+      borderTopWidth: hairline,
+      borderTopColor: colors.dividerSubtle,
+    },
+  }),
+);

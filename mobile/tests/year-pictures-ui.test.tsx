@@ -4,7 +4,7 @@ import TestRenderer from 'react-test-renderer';
 import { Image, Platform, StyleSheet, Text as NativeText } from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
 import { HeightReveal } from '../src/design/reveal';
-import { colors } from '../src/design/tokens';
+import { colorsFor } from '../src/design/use-colors';
 import { router } from 'expo-router';
 import { Button, InlineError } from '../src/design/primitives';
 import { Picture } from '../src/features/explore/Picture';
@@ -549,7 +549,7 @@ test.each(['ios', 'android'])(
         expect(StyleSheet.flatten(retry.props.style).minHeight).toBe(48);
         expect(
           StyleSheet.flatten(retry.findByType(NativeText).props.style).color,
-        ).toBe(colors.onBand);
+        ).toBe(colorsFor('light').onBand);
         await act(async () => retry.props.onPress());
         expect(yearPictures.get).toHaveBeenLastCalledWith(
           '2025-cooper-polling-place',

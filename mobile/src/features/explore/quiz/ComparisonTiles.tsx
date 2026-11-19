@@ -1,12 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from '../../../design/accessibility';
 import { Text } from '../../../design/text';
-import {
-  colors,
-  hairline,
-  minimumTarget,
-  rhythm,
-} from '../../../design/tokens';
+import { hairline, minimumTarget, rhythm } from '../../../design/tokens';
+import { makeStyles, useColors } from '../../../design/use-colors';
 import type { Question } from '../quiz-model';
 
 /**
@@ -20,6 +16,9 @@ export function ComparisonTiles({
   q: Question;
   revealed: boolean;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   const c = q.comparison;
   if (!c) return null;
@@ -68,11 +67,13 @@ export function ComparisonTiles({
   );
 }
 
-const styles = StyleSheet.create({
-  strip: { flexDirection: 'row', gap: rhythm.block },
-  stacked: { flexDirection: 'column', gap: rhythm.block },
-  tile: { minHeight: minimumTarget, gap: rhythm.line },
-  half: { flex: 1 },
-  ruleDown: { width: hairline },
-  ruleAcross: { height: hairline, backgroundColor: colors.dividerSubtle },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    strip: { flexDirection: 'row', gap: rhythm.block },
+    stacked: { flexDirection: 'column', gap: rhythm.block },
+    tile: { minHeight: minimumTarget, gap: rhythm.line },
+    half: { flex: 1 },
+    ruleDown: { width: hairline },
+    ruleAcross: { height: hairline, backgroundColor: colors.dividerSubtle },
+  }),
+);

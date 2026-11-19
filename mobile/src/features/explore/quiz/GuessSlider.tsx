@@ -21,7 +21,8 @@ import { Button, Field } from '../../../design/controls';
 import { Icon } from '../../../design/icon';
 import { spokenFigures } from '../../../design/format';
 import { Text } from '../../../design/text';
-import { colors, minimumTarget, rhythm } from '../../../design/tokens';
+import { minimumTarget, rhythm } from '../../../design/tokens';
+import { makeStyles, useColors } from '../../../design/use-colors';
 import {
   formatGuess,
   fromSlider,
@@ -61,6 +62,9 @@ export function GuessSlider({
   onChange: (guess: Guess) => void;
   onEditing: (editing: boolean) => void;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const stacked = useAccessibilitySize();
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState('');
@@ -235,33 +239,35 @@ export function GuessSlider({
   );
 }
 
-const styles = StyleSheet.create({
-  block: { gap: rhythm.tight },
-  readout: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-  },
-  readoutStacked: { flexWrap: 'wrap', alignSelf: 'flex-start' },
-  figure: { flexShrink: 1 },
-  accessory: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: rhythm.block,
-    paddingVertical: rhythm.line,
-    backgroundColor: colors.raised,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.dividerSubtle,
-  },
-  tick: {
-    position: 'absolute',
-    top: 8,
-    bottom: 8,
-    width: 2,
-    backgroundColor: colors.ink,
-  },
-  range: { flexDirection: 'row', justifyContent: 'space-between' },
-  rangeStacked: { flexDirection: 'column', gap: rhythm.line },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    block: { gap: rhythm.tight },
+    readout: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignSelf: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+    },
+    readoutStacked: { flexWrap: 'wrap', alignSelf: 'flex-start' },
+    figure: { flexShrink: 1 },
+    accessory: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      paddingHorizontal: rhythm.block,
+      paddingVertical: rhythm.line,
+      backgroundColor: colors.raised,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.dividerSubtle,
+    },
+    tick: {
+      position: 'absolute',
+      top: 8,
+      bottom: 8,
+      width: 2,
+      backgroundColor: colors.ink,
+    },
+    range: { flexDirection: 'row', justifyContent: 'space-between' },
+    rangeStacked: { flexDirection: 'column', gap: rhythm.line },
+  }),
+);

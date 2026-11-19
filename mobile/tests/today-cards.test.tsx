@@ -436,6 +436,20 @@ describe('full-width daily cards', () => {
       <ArchiveCard year={archiveYear(today)} picture={picture} />,
     );
     expect(card.root.findByType(Picture).props.failure).toBe('mark');
+    // Dark: the frame runs to the card's edge and paints over its hairline,
+    // and an empty frame is sunken on Today's sunken ground. The hairline is
+    // drawn again on top, loading and loaded. The role is clear in light.
+    for (const edge of [
+      host(root, 'today-archive-loading-edge'),
+      host(card.root, 'today-archive-edge'),
+    ]) {
+      expect(edge.props.pointerEvents).toBe('none');
+      expect(StyleSheet.flatten(edge.props.style)).toMatchObject({
+        position: 'absolute',
+        borderColor: colors.raisedOutline,
+        borderRadius: radii.container,
+      });
+    }
   });
   test.each(['light', 'dark'] as const)(
     'the question card has a header in the archive photograph’s frame, drawn in the app palette (%s)',

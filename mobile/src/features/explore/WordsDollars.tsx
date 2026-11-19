@@ -22,6 +22,7 @@ import {
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
 import { accents, rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { isOffline } from '../CatalogState';
 import type { IndustryMoney } from '../reports/model';
 import {
@@ -133,6 +134,7 @@ export function pairFigures(
  * causation. Money opens the money map; speeches open the topic.
  */
 export default function WordsDollars() {
+  const colors = useColors();
   const money = useRead(reports.money),
     matrix = useRead(explore.matrix);
   const [topic, setTopic] = useState<string | null>(null);
@@ -167,7 +169,12 @@ export default function WordsDollars() {
         barTitle="Words per dollar"
         offline={money.record?.stale ? { savedAt: money.record.savedAt } : null}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            colors={[colors.navy]}
+            progressBackgroundColor={colors.raised}
+          />
         }
       >
         <Heading level={1} kind="page">

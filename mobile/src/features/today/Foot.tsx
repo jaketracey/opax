@@ -2,7 +2,8 @@ import { StyleSheet, View } from 'react-native';
 import { copy } from '../../design/copy';
 import { PageFoot } from '../../design/record';
 import { Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { hairline, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { mastheadDate } from './Masthead';
 import { nextSitting } from './sitting';
 import type { SittingRead } from './SittingLine';
@@ -26,6 +27,8 @@ export function TodayFoot({
   /** Today's clock and its sitting calendar read (`useSittingRead`). */
   ending?: { now: Date; sitting: SittingRead | null };
 }) {
+  const styles = useStyles();
+
   return (
     <View
       testID="today-foot"
@@ -55,6 +58,8 @@ function TodayEnding({
   now: Date;
   sitting: SittingRead | null;
 }) {
+  const styles = useStyles();
+
   if (!sitting) return null;
   const file = sitting.record?.data ?? null;
   const line = copy.todayEnding(
@@ -82,16 +87,18 @@ function TodayEnding({
   );
 }
 
-const styles = StyleSheet.create({
-  // The ending, then the independence block 24 pt under it.
-  foot: { gap: rhythm.group },
-  ending: { alignItems: 'center', gap: rhythm.block },
-  // The masthead map's bronze, as a 40 pt hairline: the page's last mark
-  // answers its first. Decorative, so no contrast pair applies.
-  rule: {
-    width: 40,
-    height: hairline,
-    backgroundColor: colors.todayDotBronze,
-  },
-  centred: { textAlign: 'center' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    // The ending, then the independence block 24 pt under it.
+    foot: { gap: rhythm.group },
+    ending: { alignItems: 'center', gap: rhythm.block },
+    // The masthead map's bronze, as a 40 pt hairline: the page's last mark
+    // answers its first. Decorative, so no contrast pair applies.
+    rule: {
+      width: 40,
+      height: hairline,
+      backgroundColor: colors.todayDotBronze,
+    },
+    centred: { textAlign: 'center' },
+  }),
+);

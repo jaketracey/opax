@@ -10,7 +10,8 @@ import {
   useRowInset,
 } from '../../../design/row-padding';
 import { Text } from '../../../design/text';
-import { colors, minimumTarget, rhythm } from '../../../design/tokens';
+import { minimumTarget, rhythm } from '../../../design/tokens';
+import { makeStyles } from '../../../design/use-colors';
 import { optionValueText, ordinal, type Question } from '../quiz-model';
 
 const circle = 28;
@@ -99,6 +100,8 @@ function RankRow({
   onPress: () => void;
   testID: string;
 }) {
+  const styles = useStyles();
+
   const highlight = useRowHighlight();
   const cell = useRowCellStyle();
   // The text column starts after the cell's leading padding, the circle and its gap.
@@ -148,23 +151,25 @@ function RankRow({
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-  },
-  circle: {
-    width: circle,
-    height: circle,
-    borderRadius: circle / 2,
-    borderCurve: 'continuous',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  empty: { borderWidth: 1.5, borderColor: colors.lineControl },
-  filled: { backgroundColor: colors.navy },
-  text: { flex: 1, gap: rhythm.line },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+      paddingVertical: rhythm.row,
+    },
+    circle: {
+      width: circle,
+      height: circle,
+      borderRadius: circle / 2,
+      borderCurve: 'continuous',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    empty: { borderWidth: 1.5, borderColor: colors.lineControl },
+    filled: { backgroundColor: colors.navy },
+    text: { flex: 1, gap: rhythm.line },
+  }),
+);

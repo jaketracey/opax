@@ -24,7 +24,8 @@ import { SourceLine, SourceSection } from '../../design/source';
 import { ContentUnavailable, OfflineLine } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
+import { useColors } from '../../design/use-colors';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useOpenAsk } from '../ask/open';
@@ -50,6 +51,8 @@ import { Plate } from './Plate';
 const openStory = () => trackEdition('story_open');
 
 export function EditionStory() {
+  const colors = useColors();
+
   const { block, refreshing, refresh } = useEdition();
   const subject = useEditionSubject(
     block?.status === 'ready' ? block.data : null,
@@ -138,7 +141,12 @@ export function EditionStory() {
         }}
         onLayout={end.onLayout}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            colors={[colors.navy]}
+            progressBackgroundColor={colors.raised}
+          />
         }
       >
         {!block || block.status === 'loading' ? (

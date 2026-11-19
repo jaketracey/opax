@@ -14,7 +14,8 @@ import { LinkRow } from '../../design/rows';
 import { scrollToTop } from '../../design/scroll-to-top';
 import { Term } from '../../design/term';
 import { Heading, Text } from '../../design/text';
-import { colors, radii, rhythm } from '../../design/tokens';
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { ContentUnavailable } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
@@ -31,6 +32,8 @@ const one = (value: string | string[] | undefined) =>
 
 /** Inline runs: plain words, a glossary term, a link to a record. */
 export function Runs({ runs }: { runs: readonly LearnInline<TermId>[] }) {
+  const styles = useStyles();
+
   return (
     <>
       {runs.map((run, index) =>
@@ -133,6 +136,8 @@ function ChapterPage({
   slug?: string;
   screen?: string;
 }) {
+  const styles = useStyles();
+
   const chapter = learnChapters.find((c) => c.slug === slug);
   const total = chapter?.screens.length ?? 0;
   const start = Math.min(Math.max(Number(from) || 1, 1), Math.max(total, 1));
@@ -261,15 +266,17 @@ function ChapterPage({
   );
 }
 
-const styles = StyleSheet.create({
-  track: {
-    height: 4,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-    backgroundColor: colors.dividerSubtle,
-    overflow: 'hidden',
-  },
-  fill: { height: 4, backgroundColor: colors.navy },
-  idea: { gap: rhythm.block },
-  link: { color: colors.navy, textDecorationLine: 'underline' },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    track: {
+      height: 4,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+      backgroundColor: colors.dividerSubtle,
+      overflow: 'hidden',
+    },
+    fill: { height: 4, backgroundColor: colors.navy },
+    idea: { gap: rhythm.block },
+    link: { color: colors.navy, textDecorationLine: 'underline' },
+  }),
+);
