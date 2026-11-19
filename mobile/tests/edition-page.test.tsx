@@ -4,7 +4,14 @@ import { router, Stack } from 'expo-router';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, type ReactElement } from 'react';
-import { Dimensions, Image, Platform, StyleSheet, View } from 'react-native';
+import {
+  Appearance,
+  Dimensions,
+  Image,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
@@ -48,7 +55,9 @@ import { BillRow, LinkRow, ValueRow } from '../src/design/rows';
 import { ContentUnavailable, Skeleton } from '../src/design/states';
 import { symbols } from '../src/design/symbols';
 import { Text } from '../src/design/text';
-import { colors, textStyles } from '../src/design/tokens';
+import { paletteFor } from '../src/design/palette';
+import { textStyles } from '../src/design/tokens';
+import { colorsFor } from '../src/design/use-colors';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { EditionStory } from '../src/features/edition/EditionStory';
 import { ArchivePhotograph, Plate } from '../src/features/edition/Plate';
@@ -717,7 +726,7 @@ describe('the native edition reader', () => {
       expect(
         StyleSheet.flatten(root.findAllByType(View)[0]!.props.style)
           .backgroundColor,
-      ).toEqual(grouped ? colors.sunken : colors.paper);
+      ).toEqual(grouped ? colorsFor('light').sunken : colorsFor('light').paper);
     },
   );
   test('source notes retain standard row metrics and verbatim labels', async () => {
@@ -1372,7 +1381,7 @@ test('money and people keep category bands and incoming edition links stay nativ
   expect(
     StyleSheet.flatten(host(root, 'today-edition-plate')[0]!.props.style)
       .backgroundColor,
-  ).toEqual(colors.bandPeople);
+  ).toEqual(colorsFor('light').bandPeople);
   expect(fromWebPath('/edition?id=2026-11-08')).toEqual(
     editionRoute('2026-11-08'),
   );
@@ -1986,4 +1995,23 @@ describe('sweep 3, item 12: the parliamentarian story does not open on footnotes
       figures: bill.facts.figures,
     });
   });
+});
+
+test('Android in dark: the plate takes the dark band and its dark ink, with no restart', async () => {
+  // The hook reads the system's scheme on Android; a module-level sheet
+  // would have kept the light band for good.
+  const os = Platform.OS;
+  Platform.OS = 'android';
+  const scheme = jest.spyOn(Appearance, 'getColorScheme');
+  scheme.mockReturnValue('dark');
+  const { root } = await render(<Plate edition={person} />);
+  const plate = () =>
+    StyleSheet.flatten(host(root, 'today-edition-plate')[0]!.props.style)
+      .backgroundColor;
+  expect(plate()).toBe(paletteFor('dark').bandPeople);
+  expect(paletteFor('dark').bandPeople).not.toBe(
+    paletteFor('light').bandPeople,
+  );
+  scheme.mockRestore();
+  Platform.OS = os;
 });
