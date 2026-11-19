@@ -69,6 +69,8 @@ export function StatusCapsule({
               ? colors.raised
               : colors.sunken,
         },
+        // Neutral only: its fill is 1.08:1 from the dark page.
+        active ? null : styles.neutralEdge,
       ]}
     >
       <Text
@@ -291,6 +293,13 @@ const useStyles = makeStyles((colors) =>
     hug: { alignSelf: 'flex-start', maxWidth: '100%' },
     shrink: { flexShrink: 1 },
     center: { textAlign: 'center' },
+    // The role is clear in light, and an outline takes no room.
+    neutralEdge: {
+      outlineWidth: 1,
+      outlineOffset: -1,
+      outlineStyle: 'solid',
+      outlineColor: colors.raisedOutline,
+    },
     status: {
       borderRadius: radii.capsule,
       borderCurve: 'continuous',
