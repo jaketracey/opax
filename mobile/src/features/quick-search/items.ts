@@ -91,7 +91,8 @@ export function matchItem(match: Match, sources: RowSources): QuickItem {
   if (match.kind === 'people')
     // Identity guard, as in Search: no place line before the join.
     secondary = route
-      ? (placeLine(match.item, serviceStatus(match.item, sources)) ?? undefined)
+      ? (placeLine(match.item, serviceStatus(match.item, sources), sources) ??
+        undefined)
       : undefined;
   else if (match.kind === 'bills')
     secondary = billStatusLabel(match.item.status, billEnding(match.item));

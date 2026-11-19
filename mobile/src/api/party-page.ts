@@ -26,6 +26,7 @@ import {
 import { nameKey } from './ids';
 import { personPartyFor } from './party-transforms';
 import { formatMoney } from '../design/format';
+import { termEndedFor, type EndedTerm } from '../features/your-mp/term-ended';
 export { resolveParty } from '../design/party';
 
 // Codes in the parliamentary roster, expanded for membership comparisons.
@@ -70,28 +71,43 @@ export function partyLabels(
     ),
   ];
 }
+/**
+ * A party's members. `ended` is the parliaments whose term has ended for an
+ * election (`endedParliaments`): a seat in one of their houses is not a
+ * sitting one, so its holder leaves `current` and `currentCount` and is
+ * listed in `ended` as the seat's last member, exactly as the People list's
+ * sitting filter and its "Term ended for an election" section do. Without
+ * it (or once the index clears `dissolved_for`) every current seat counts.
+ */
 export function partyMembers(
   label: string,
   roster: Roster,
   people: PeopleCatalog,
   slugs: Slugs,
   manifest: Manifest,
+  ended?: EndedTerms,
 ) {
-  const sitting = sittingPartyMembers(roster, people, slugs, manifest, label);
+  const held = currentPartySeats(roster, people, slugs, manifest, label, ended);
+  const sitting = held.filter((p) => p.seats.some((s) => !s.ended));
+  const row = (s: HeldSeat): PartyMember => ({
+    name: s.name,
+    slug: s.slug,
+    jurisdiction: s.jurisdiction,
+    chamber: s.chamber,
+    place: s.place,
+    asAt: s.asAt,
+    ...recordedAs(s.party),
+  });
   const current: PartyMember[] = sitting.flatMap((p) =>
-    p.seats.map((s) => ({
-      name: s.name,
-      slug: s.slug,
-      jurisdiction: s.jurisdiction,
-      chamber: s.chamber,
-      place: s.place,
-      asAt: s.asAt,
-      ...recordedAs(s.party),
-    })),
+    p.seats.filter((s) => !s.ended).map(row),
   );
+  // Someone who also sits for the party in a house with members is sitting.
+  const last: PartyMember[] = held
+    .filter((p) => p.seats.every((s) => s.ended))
+    .flatMap((p) => p.seats.map(row));
   const recorded: PartyMember[] = [];
   const sources = new Map<string, Manifest['sources'][number]>();
-  for (const { profile } of sitting)
+  for (const { profile } of held)
     for (const source of profile.sources) sources.set(source.source_id, source);
   const currentNames = new Set(
     people.people
@@ -176,6 +192,8 @@ export function partyMembers(
     current: current.sort(order),
     recorded: recorded.sort(order),
     currentCount: sitting.length,
+    /** Last members of a house whose term has ended; never counted sitting. */
+    ended: last.sort(order),
     sources: [...sources.values()],
   };
 }
@@ -230,21 +248,55 @@ function* partyMemberProfiles(
   }
 }
 
-/** Unique sitting people and their current federal, state and territory affiliations. */
+/** The parliaments whose term has ended for an election (`endedParliaments`). */
+export type EndedTerms = ReadonlyMap<string, EndedTerm>;
+type SittingSeat = PartyMember & { party: string };
+/** A seat the record calls current, and the ended term of its house, if any. */
+type HeldSeat = SittingSeat & { ended: EndedTerm | null };
+
+/**
+ * Unique sitting people and their current federal, state and territory
+ * affiliations. With `ended`, a seat in a house whose Parliament's term has
+ * ended for an election is not a sitting one: it is left out, and so is a
+ * person who holds no other seat. That is the People list's sitting filter
+ * (`sittingGroup`), which reads its parties from here.
+ */
 export function sittingPartyMembers(
   roster: Roster,
   people: PeopleCatalog,
   slugs: Slugs,
   manifest: Manifest,
   label?: string,
+  ended?: EndedTerms,
+): { profile: PersonProfile; seats: SittingSeat[] }[] {
+  return currentPartySeats(
+    roster,
+    people,
+    slugs,
+    manifest,
+    label,
+    ended,
+  ).flatMap(({ profile, seats }) => {
+    const sitting = seats
+      .filter((s) => !s.ended)
+      .map(({ ended: _ended, ...seat }) => seat);
+    return sitting.length ? [{ profile, seats: sitting }] : [];
+  });
+}
+
+/** Everyone the record gives a current seat, each seat with its house's end. */
+function currentPartySeats(
+  roster: Roster,
+  people: PeopleCatalog,
+  slugs: Slugs,
+  manifest: Manifest,
+  label?: string,
+  ended?: EndedTerms,
 ) {
-  const members: {
-    profile: PersonProfile;
-    seats: (PartyMember & { party: string })[];
-  }[] = [];
+  const members: { profile: PersonProfile; seats: HeldSeat[] }[] = [];
   for (const p of partyMemberProfiles(roster, people, slugs, manifest)) {
     if (p.partyStatus !== 'current') continue;
-    const seats: (PartyMember & { party: string })[] = [];
+    const seats: HeldSeat[] = [];
     // A current seat establishes only its own affiliation. The APH current
     // flag establishes a federal affiliation only when party_now names it.
     if (p.seats.length) {
@@ -258,6 +310,7 @@ export function sittingPartyMembers(
             chamber: s.chamber,
             place: s.name,
             asAt: s.as_of,
+            ended: ended ? termEndedFor(s, ended) : null,
           });
     } else if (
       p.rosterRow?.current === true &&
@@ -279,6 +332,7 @@ export function sittingPartyMembers(
               (r) => r.jurisdiction === 'federal' && r.chamber === chamber,
             )?.electorate ?? '',
           asAt: roster.meta.generated,
+          ended: null,
         });
     }
     if (seats.length) members.push({ profile: p, seats });

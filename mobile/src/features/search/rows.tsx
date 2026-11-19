@@ -29,6 +29,11 @@ import { electorateRoute } from '../../navigation/routes/your-mp';
 import { topicRoute } from '../../navigation/routes/search';
 import { openOnWeb } from '../../navigation/external';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
+import {
+  endedParliaments,
+  lastMemberFor,
+  termEndedFor,
+} from '../your-mp/term-ended';
 import { CachedPortrait } from '../CachedPortrait';
 import { fold, type Match } from './ranking';
 import { openSuggestedPerson } from './navigation';
@@ -80,13 +85,22 @@ export function serviceStatus(
  * "Formerly" (reserved for a change of party).
  *
  * "Member for" and "Senator for" are said only of someone the record says
- * sits now (`serviceStatus`). A former member is said to be one. Where the
- * record does not say, the line names the seat alone ("Watson, New South
- * Wales", "Senate, Tasmania") and claims nothing about service.
+ * sits now. A former member is said to be one. Where the record does not
+ * say, the line names the seat alone ("Watson, New South Wales", "Senate,
+ * Tasmania") and claims nothing about service.
+ *
+ * `status` is the federal claim (`serviceStatus`) and speaks for a federal
+ * seat only. A row can carry a senator's ID and status beside a state seat
+ * that was never theirs: a surname-only state stub the roster merges with a
+ * federal namesake ("Watt", Burwood). A state seat takes its claim from the
+ * dated seats alone (`stateSeatStatus`), read from `sources`: with none, it
+ * is named alone; held in a house whose Parliament's term has ended for an
+ * election, it is "Last member for Essendon, Victoria".
  */
 export function placeLine(
   person: Person,
   status: PartyStatus = serviceStatus(person),
+  sources: Pick<RowSources, 'people' | 'electorates'> = {},
 ): string | null {
   const seat =
     (person.representation ?? []).find(
@@ -94,8 +108,12 @@ export function placeLine(
     ) ?? person.representation?.[0];
   if (!seat) return null;
   const state = stateName(seat.state);
-  const said = (claim: string, former: string, plain: string | null) =>
-    status === 'current' ? claim : status === 'former' ? former : plain;
+  const claim =
+    seat.jurisdiction === 'federal'
+      ? status
+      : stateSeatStatus(person, seat, sources);
+  const said = (sits: string, former: string, plain: string | null) =>
+    claim === 'current' ? sits : claim === 'former' ? former : plain;
   if (seat.chamber === 'senate')
     return state
       ? said(
@@ -105,9 +123,42 @@ export function placeLine(
         )
       : said('Senator', 'Former senator', 'Senate');
   const where = [seat.electorate, state].filter(Boolean).join(', ');
-  return where
-    ? said(`Member for ${where}`, `Former member for ${where}`, where)
-    : null;
+  if (!where) return null;
+  if (claim === 'last') return lastMemberFor(where);
+  return said(`Member for ${where}`, `Former member for ${where}`, where);
+}
+
+type RosterSeat = NonNullable<Person['representation']>[number];
+/**
+ * What the dated seats say of a state or territory seat on a roster row:
+ * `current` where the person the row's ID names holds that very seat now,
+ * `last` where they held it when its house's term ended for an election
+ * (`termEndedFor`), and `unknown` otherwise. The roster's `current` flag and
+ * the federal status say nothing here, and no dated state seat is undated
+ * into "former".
+ */
+function stateSeatStatus(
+  person: Person,
+  seat: RosterSeat,
+  sources: Pick<RowSources, 'people' | 'electorates'>,
+): PartyStatus | 'last' {
+  const dated = person.pid
+    ? sources.people?.people.find((p) => p.legacy_person_id === person.pid)
+    : undefined;
+  const held = dated?.electorates.find(
+    (s) =>
+      s.current &&
+      s.jurisdiction === seat.jurisdiction &&
+      s.chamber === seat.chamber &&
+      fold(s.name) === fold(seat.electorate),
+  );
+  if (!held) return 'unknown';
+  return termEndedFor(
+    held,
+    endedParliaments(sources.electorates?.electorates ?? []),
+  )
+    ? 'last'
+    : 'current';
 }
 
 /** The canonical person ID the people catalogue holds for a roster row. */
@@ -226,7 +277,7 @@ function PersonMatch({
     () => serviceStatus(person, sources),
     [person, sources],
   );
-  const place = id ? placeLine(person, status) : null;
+  const place = id ? placeLine(person, status, sources) : null;
   const party = id ? person.party_now || person.party : null;
   const rowID =
     testID ?? `search-suggestion-person-${person.pid ?? person.name}`;

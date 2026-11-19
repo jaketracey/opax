@@ -17,7 +17,11 @@ import {
 } from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
 import { combinedPartyNode } from '../src/api/party-page';
-import { apiClient, catalogs as runtime, peopleDepth } from '../src/api/runtime';
+import {
+  apiClient,
+  catalogs as runtime,
+  peopleDepth,
+} from '../src/api/runtime';
 import {
   formatCount,
   formatMoney,
@@ -1337,7 +1341,13 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
         label: 'Harbourside Party',
         members: {
           ...base.members,
-          data: { current: [], recorded: [], currentCount: 0, sources: [] },
+          data: {
+            current: [],
+            recorded: [],
+            currentCount: 0,
+            ended: [],
+            sources: [],
+          },
         },
         receipts: {
           ...base.receipts,

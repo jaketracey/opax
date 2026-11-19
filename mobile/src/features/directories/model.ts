@@ -130,12 +130,16 @@ function* peopleRowSteps(
   portraits: ReturnType<typeof buildPortraitIndex>,
 ): Generator<undefined, PeopleRow[]> {
   let sliceStart = Date.now();
+  const ended = endedParliaments(d.electorates.data.electorates);
+  // A seat in a house whose term has ended is nobody's sitting party.
   const sitting = new Map(
     sittingPartyMembers(
       d.roster.data,
       d.people.data,
       d.slugs.data,
       d.manifest.data,
+      undefined,
+      ended,
     ).map(({ profile, seats }) => [
       profile.canonicalPersonId ?? profile.rosterPersonId ?? profile.name,
       [...new Set(seats.map((s) => s.party))],
@@ -150,7 +154,6 @@ function* peopleRowSteps(
   const electorates = new Map(
     d.electorates.data.electorates.map((e) => [e.electorate_id, e]),
   );
-  const ended = endedParliaments(d.electorates.data.electorates);
   const out: PeopleRow[] = [];
   // The resolver deliberately retains surname aliases, but directory rows
   // follow Search/party membership: a full-name native identity, once per
@@ -543,15 +546,22 @@ export interface PartyRow {
 }
 /** Parties only: "Independent" and presiding roles are not listed. */
 export function partyRows(
-  directory: Pick<Directory, 'roster' | 'people' | 'slugs' | 'manifest'>,
+  directory: Pick<
+    Directory,
+    'roster' | 'people' | 'slugs' | 'manifest' | 'electorates'
+  >,
   files: Record<string, PartyFile>,
 ): PartyRow[] {
-  const { roster, people, slugs, manifest } = directory;
+  const { roster, people, slugs, manifest, electorates } = directory;
+  // As the People list's sitting filter: a seat in a house whose term has
+  // ended for an election is not counted.
   const sitting = sittingPartyMembers(
     roster.data,
     people.data,
     slugs.data,
     manifest.data,
+    undefined,
+    endedParliaments(electorates.data.electorates),
   );
   const rows = new Map<string, PartyRow>();
   // A renamed party is one row, at its current name, whatever name a file

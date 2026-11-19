@@ -351,6 +351,7 @@ describe('an invented renamed party', () => {
         people: record(fixturePeople),
         slugs: record(fixtureSlugs),
         manifest: record(manifest),
+        electorates: record({ electorates: [] }),
       } as unknown as Parameters<typeof mods.model.partyRows>[0],
       {
         federal: file([

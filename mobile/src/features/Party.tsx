@@ -71,6 +71,7 @@ import { NewDot } from './follows/NewDot';
 import { followKey, useFollows } from './follows/store';
 import { useFollowStates } from './follows/useFollowStates';
 import { ProfileBlock } from './people/Block';
+import { lastMemberFor } from './your-mp/term-ended';
 import { decodeMoneyGraph, moneyCatalogs, type MoneyGraph } from './money/data';
 import { associatedEntityRoute } from './money/record-routes';
 import { donorNodeFor } from './money/lookup';
@@ -578,6 +579,7 @@ function PartyContent({
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,
+          view.members.data?.ended.length ? ENDED_NOTE : null,
           partyPartialNote(view.members.partial),
         ],
       })}
@@ -603,6 +605,8 @@ function PartyContent({
               testID="party-current-count"
             />
           )}
+
+          {data.ended.length ? <EndedMembers members={data.ended} /> : null}
 
           {data.recorded.length ? (
             <Disclosure
@@ -1002,6 +1006,50 @@ function NamedMembers({
         />
       ))}
     </View>
+  );
+}
+
+/** The People list's heading for the same people (`sittingGroupTitles`). */
+const ENDED_TITLE = 'Term ended for an election';
+const ENDED_NOTE =
+  'A parliament’s term ends before its election. Until the result is recorded, nobody is a member of its houses: the people who held its seats are not counted as sitting, and are listed under “Term ended for an election” as each seat’s last member.';
+
+/**
+ * The party's last members for seats in a house whose Parliament's term has
+ * ended for an election: named as the People list names them, under the
+ * sitting count they are left out of. Gone once the index records a result.
+ */
+function EndedMembers({ members }: { members: readonly PartyMember[] }) {
+  const people = uniqueMembers(members);
+  return (
+    <Disclosure
+      label={ENDED_TITLE}
+      value={formatCount(people.length)}
+      testID="party-ended-toggle"
+    >
+      {() => (
+        <View testID="party-members-ended">
+          {people.map((member) => (
+            <PersonRow
+              key={member.slug}
+              name={member.name}
+              portrait={
+                <CachedPortrait name={member.name} slug={member.slug} />
+              }
+              place={lastMemberFor(
+                [member.place, chamberName(member.chamber, member.jurisdiction)]
+                  .filter(Boolean)
+                  .join(', '),
+              )}
+              detail={recordedAs(member.recordedAs)}
+              href={personRoute(member.slug, member.name)}
+              testID={`party-ended-${member.slug}`}
+              testDrawnName
+            />
+          ))}
+        </View>
+      )}
+    </Disclosure>
   );
 }
 

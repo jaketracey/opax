@@ -9,6 +9,7 @@ import { throwIfAborted } from './abort';
 import { samePartyLabel } from '../design/party';
 import { decodePartyFile } from '../features/directories/party-file';
 import { publicDiscovery } from '../features/money-public/discovery';
+import { endedParliaments } from '../features/your-mp/term-ended';
 import {
   decodeRecentDivisions,
   type RecentDivisions,
@@ -298,29 +299,46 @@ export class Catalogs {
         this.slugs(refresh, signal),
         this.manifest(refresh, signal),
       ]);
-      const people = await this.people(manifest.data, refresh, signal);
+      // The electorates index says which parliaments' terms have ended for
+      // an election (`endedParliaments`): Members reads it as the People
+      // list does, so the two count the same sitting members.
+      const [people, electorates] = await Promise.all([
+        this.people(manifest.data, refresh, signal),
+        this.electorates(manifest.data, refresh, signal),
+      ]);
       // A row that cannot be read drops only that row: Members draws the rest
       // and says it is partial. (b69 refused the whole block on any partial
       // cohort, so two bad roster ids took Members down on every party.)
-      return { roster, slugs, manifest, people };
+      return { roster, slugs, manifest, people, electorates };
     })();
     const coreRead = read(
       corePending.then((data) => ({
         data,
         ...recordFlags(
-          [data.roster, data.slugs, data.manifest, data.people].map((r) => ({
+          [
+            data.roster,
+            data.slugs,
+            data.manifest,
+            data.people,
+            data.electorates,
+          ].map((r) => ({
             staleReason: r.staleReason,
             partial: r.partial || isPartialCatalog(r.data),
           })),
         ),
-        stale: [data.roster, data.slugs, data.manifest, data.people].some(
-          (r) => r.stale,
-        ),
+        stale: [
+          data.roster,
+          data.slugs,
+          data.manifest,
+          data.people,
+          data.electorates,
+        ].some((r) => r.stale),
         savedAt: Math.min(
           data.roster.savedAt,
           data.slugs.savedAt,
           data.manifest.savedAt,
           data.people.savedAt,
+          data.electorates.savedAt,
         ),
         asOf: data.people.data.meta.generated,
       })),
@@ -374,6 +392,7 @@ export class Catalogs {
           core.data.people.data,
           core.data.slugs.data,
           core.data.manifest.data,
+          endedParliaments(core.data.electorates.data.electorates),
         )
       : null;
     const members: Block<ReturnType<typeof partyMembers>> = {
