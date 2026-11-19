@@ -11,7 +11,6 @@ import {
 import {
   StyleSheet,
   View,
-  useColorScheme,
   useWindowDimensions,
   type ColorValue,
   type StyleProp,
@@ -35,7 +34,7 @@ import {
   type Accent,
   type Role,
 } from './tokens';
-import { makeStyles, useColors } from './use-colors';
+import { makeStyles, useColors, useIsDark } from './use-colors';
 
 const InCard = createContext(false);
 export const useInCard = () => useContext(InCard);
@@ -80,7 +79,7 @@ export function Card({
 
   const nested = useInCard();
   const { width } = useWindowDimensions();
-  const dark = useColorScheme() === 'dark';
+  const dark = useIsDark();
   if (nested && __DEV__)
     console.error(
       'Cards never nest: draw the inner unit as rows or a section instead.',
@@ -185,6 +184,8 @@ export function Tile({
         testID={testID}
         style={({ pressed }) => [
           styles.tile,
+          // The card's dark edge: a tile is a raised surface too.
+          styles.outline,
           lead ? styles.leadTile : null,
           pressed ? { backgroundColor: colors.sunken } : null,
         ]}

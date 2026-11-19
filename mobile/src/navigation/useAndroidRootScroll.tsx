@@ -129,6 +129,14 @@ export function useAndroidRootScroll(
   );
   return {
     onScroll,
+    /**
+     * This hook owns the bar's colour and hairline on an Android tab root:
+     * page ground at rest, the raised wash once scrolled. A caller that also
+     * writes `headerStyle` (Screen's own bar effect) must leave it alone
+     * here. Written after this hook's, on a colour change, it put the page
+     * ground back over a scrolled bar until the scroll state next flipped.
+     */
+    ownsBar: !!root,
     title: root ? (
       <Text
         accessibilityRole="header"

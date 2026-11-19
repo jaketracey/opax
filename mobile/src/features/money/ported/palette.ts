@@ -19,7 +19,6 @@
 // is lifted until it reads as a mark.
 // ---------------------------------------------------------------------------
 
-import { useColorScheme } from 'react-native';
 import {
   useHighTextContrast,
   useIncreaseContrast,
@@ -32,6 +31,7 @@ import {
 } from '../../../design/palette';
 import { partyDot } from '../../../design/party';
 import { chartIndustry, chartIndustryDark } from '../../../design/tokens';
+import { useIsDark } from '../../../design/use-colors';
 
 export type ClusterColour = { colour: string; ink: string };
 export type MapAppearance = 'light' | 'dark';
@@ -102,7 +102,7 @@ export function mapTheme(
 
 /** The map's theme for the appearance on screen; follows a live switch. */
 export function useMapTheme(): MapTheme {
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const scheme = useIsDark() ? 'dark' : 'light';
   const contrast = useIncreaseContrast();
   const highText = useHighTextContrast();
   return mapTheme(scheme, contrast || highText);

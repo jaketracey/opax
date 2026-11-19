@@ -5,6 +5,8 @@ import { designFlags } from '../../design/flags';
 import { glassBar, groundBar, opaqueBar, type UnderBar } from '../chrome';
 
 export function editionScreens(underBar: UnderBar = false) {
+  // Read at the call, on every render of the tab stack's layout, which
+  // draws again on a scheme change (see `askScreens`).
   const colors = currentColors();
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
   // Beside a vertical bar the edition runs under a clear bar like every other

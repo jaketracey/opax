@@ -1,4 +1,4 @@
-import { useColorScheme, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
 import { useHighTextContrast, useIncreaseContrast } from './accessibility';
 import {
@@ -7,6 +7,7 @@ import {
   paletteFor,
   type Role,
 } from './palette';
+import { useIsDark } from './use-colors';
 
 /**
  * A role as a hex value, for drawings: SVG strokes and fills take numeric
@@ -14,7 +15,7 @@ import {
  * Contrast, as `colors` does natively.
  */
 export function useDrawnColour(role: Role): string {
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const scheme = useIsDark() ? 'dark' : 'light';
   const contrast = useIncreaseContrast();
   const highText = useHighTextContrast();
   const high =

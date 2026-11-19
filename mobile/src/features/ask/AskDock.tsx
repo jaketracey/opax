@@ -12,7 +12,6 @@ import {
   StyleSheet,
   TextInput,
   View,
-  useColorScheme,
   useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
@@ -33,7 +32,7 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
-import { makeStyles, useColors } from '../../design/use-colors';
+import { makeStyles, useColors, useIsDark } from '../../design/use-colors';
 import { frameOf } from '../money/map/measure';
 import { chips, clearChip, defaultOptions } from './model';
 import { askSession } from './session';
@@ -748,7 +747,7 @@ export function AskDock({
   const glass = Platform.OS === 'ios' && isLiquidGlassAvailable();
   // No shadow reads on the dark ground, and Android's navy-tinted one
   // would be a pale smudge there: the raised step and its outline carry it.
-  const dark = useColorScheme() === 'dark';
+  const dark = useIsDark();
   return (
     <View onLayout={onLayout} testID="ask-dock">
       {glass ? (

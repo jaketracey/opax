@@ -19,7 +19,6 @@ import {
   Text,
   ToastAndroid,
   View,
-  useColorScheme,
   useWindowDimensions,
   type ColorSchemeName,
   type ColorValue,
@@ -43,7 +42,7 @@ import {
   schemeColour,
   textStyles,
 } from '../design/tokens';
-import { currentColors, useColors } from '../design/use-colors';
+import { currentColors, useColors, useIsDark } from '../design/use-colors';
 import { accountSnapshot } from '../features/account/store';
 import { askReturnSnapshot } from '../features/ask/return';
 import { voiceLinked } from '../voice/linked';
@@ -421,7 +420,7 @@ export function useStackChrome({
 
   const { fontScale } = useWindowDimensions();
   // Bar titles resolve in the app's appearance, not the bar's (11b-3).
-  const scheme = useColorScheme();
+  const scheme = useIsDark() ? 'dark' : 'light';
   const titleInk = schemeColour('ink', scheme);
   const barEdge = useVerticalBarEdge();
   const railBar = useRailBar();
@@ -518,6 +517,10 @@ export function rootHeaderItems(props?: {
   extra?: NativeStackHeaderItem[];
   signedIn: boolean;
 }): TestableHeaderItem[] {
+  // Read at the call, and safe on a live switch: `tintColor` is for the iOS
+  // item API alone, where the role is dynamic. Android draws these items
+  // with `androidHeaderBar`, which takes its own colours as it draws. The
+  // same holds for `askBackItem`, `closeSheetItem` and `filterBar`.
   const colors = currentColors();
   const signedIn = props?.signedIn ?? !!accountSnapshot().status?.signedIn;
   // AskScreen calls without props. Keep Talk reachable until w4-ask puts
@@ -831,7 +834,13 @@ function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
  * Keep a word for actions without a symbol, including Done and Cancel.
  */
 export function androidHeaderBar(items: TestableHeaderItem[]) {
-  const colors = currentColors();
+  return createElement(AndroidHeaderBar, { items });
+}
+// A component, so the bar draws itself again when the appearance changes.
+// As a plain element built in `headerRight`, its ripple and word kept the
+// colours of the call until the stack happened to build its options again.
+function AndroidHeaderBar({ items }: { items: TestableHeaderItem[] }) {
+  const colors = useColors();
   return createElement(
     View,
     { style: { flexDirection: 'row' } },
