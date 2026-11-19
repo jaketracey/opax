@@ -21,6 +21,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { startAnalytics, useScreenTracking } from '../analytics';
 import { useNavigationTiming } from '../analytics/timing';
 import { isPad, useWindowTraits } from '../design/adaptive';
+import { startAppearance } from '../design/appearance-setting';
 import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
 import { useColors } from '../design/use-colors';
@@ -52,6 +53,8 @@ import {
   useTourState,
 } from '../onboarding/state';
 export const unstable_settings = rootSettings;
+// The reader's Light or Dark is applied before anything draws.
+startAppearance();
 // Plain lines under headings take the reader's setting and the guide's words.
 installGloss();
 // VoiceOver's state is in before the money map's first paint picks its view.

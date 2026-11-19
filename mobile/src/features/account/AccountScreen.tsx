@@ -7,11 +7,12 @@ import { communityHome } from '../community/entry';
 import { AccountGroups } from './AccountGroups';
 import { AccountLinks } from './AccountLinks';
 import { AccountRowsScreen } from './AccountRows';
-import { VersionFoot } from './parts';
+import { AppearanceGroup, VersionFoot } from './parts';
 import { refreshAccount } from './store';
 
 /**
- * The Account sheet (specs/account.md 2): the account groups, then about,
+ * The Account sheet (specs/account.md 2): the account groups, Appearance
+ * (in a build that follows the system, signed in or not), then about,
  * privacy and support, the welcome, and the version foot. A build without
  * voice (Android without its OpaxVoice module) draws the same sheet without
  * the account groups. Groups 4 to 6 are static, so the sheet never opens
@@ -40,6 +41,7 @@ export function AccountScreen() {
       }
     >
       <AccountGroups />
+      <AppearanceGroup />
       <AccountLinks community={communityHome} testID="account-links" />
       <VersionFoot />
     </Screen>

@@ -8,10 +8,19 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {
+  appearanceChoices,
+  appearanceSettingOffered,
+  setAppearance,
+  useAppearanceChoice,
+  type AppearanceChoice,
+} from '../../design/appearance-setting';
 import { PlainPressable as Pressable } from '../../design/pressable';
 import {
   EXTERNAL_GLYPH,
   Icon,
+  InsetGroup,
+  LinkRow,
   RowLink,
   Text,
   haptic,
@@ -51,6 +60,11 @@ export const linksCopy = {
   replayWelcome: 'Replay welcome',
   community: 'Community',
   workbench: 'Design workbench',
+  appearance: 'Appearance',
+  appearanceSystem: 'Match phone',
+  appearanceLight: 'Light',
+  appearanceDark: 'Dark',
+  appearanceFooter: 'Match phone follows your phone’s light or dark setting.',
   version: (version: string, build: string) => `OPAX ${version} (${build})`,
   versionSpoken: (version: string, build: string) =>
     `Version ${version}, build ${build}`,
@@ -195,6 +209,46 @@ export function SettingsRow({
     </RowLink>
   ) : (
     row
+  );
+}
+
+const appearanceTitles: Record<AppearanceChoice, string> = {
+  system: linksCopy.appearanceSystem,
+  light: linksCopy.appearanceLight,
+  dark: linksCopy.appearanceDark,
+};
+
+/**
+ * The Appearance group (20 Nov 2026): Match phone, Light or Dark for OPAX
+ * itself, one chosen, as the filter sheets draw a single choice (a trailing
+ * checkmark, and the selected state for VoiceOver and TalkBack). Choosing a
+ * row changes the whole app at once and is kept on this device
+ * (design/appearance-setting.ts). A light-only build draws nothing here.
+ */
+export function AppearanceGroup() {
+  const chosen = useAppearanceChoice();
+  if (!appearanceSettingOffered()) return null;
+  return (
+    <InsetGroup
+      header={linksCopy.appearance}
+      footer={linksCopy.appearanceFooter}
+      testID="account-appearance"
+    >
+      {appearanceChoices.map((choice) => (
+        <LinkRow
+          key={choice}
+          title={appearanceTitles[choice]}
+          accessory="checkmark"
+          selected={chosen === choice}
+          onPress={() => {
+            if (chosen === choice) return;
+            haptic('selection');
+            setAppearance(choice);
+          }}
+          testID={`account-appearance-${choice}`}
+        />
+      ))}
+    </InsetGroup>
   );
 }
 
