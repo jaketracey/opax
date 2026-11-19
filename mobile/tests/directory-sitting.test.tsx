@@ -104,6 +104,7 @@ const parties = partyRows(
     roster: record(roster),
     people: record(people),
     slugs: record(slugs),
+    electorates: record(index),
   },
   {},
 );
