@@ -22,11 +22,11 @@ jest.mock('../src/navigation/preview', () => ({
     return null;
   },
 }));
-// Style sheets stay on the light set and never draw a page again. The photo
-// credits page calls `useStyles()` itself, which redraws it on a switch and
-// would let a bar read at render pass by accident (review of #519). With the
-// sheets still, the bar hook is the only thing that can give the page the
-// new paper, on both pages.
+// Two hooks on the photo credits page follow the colours themselves:
+// `useStyles()` and the bar search (`useListSearchBar`). Either one draws
+// the page again on a switch, which would let a bar read at render pass by
+// accident (review of #519). Both are held still here, so the bar hook is
+// the only thing that can give either page the new paper.
 jest.mock('../src/design/use-colors', () => {
   const actual = jest.requireActual('../src/design/use-colors');
   return {
@@ -35,6 +35,13 @@ jest.mock('../src/design/use-colors', () => {
       let sheet: unknown;
       return () => (sheet ??= factory(actual.colorsFor('light')));
     },
+  };
+});
+jest.mock('../src/design/search-bar', () => {
+  const still = {};
+  return {
+    ...jest.requireActual('../src/design/search-bar'),
+    useListSearchBar: () => still,
   };
 });
 jest.mock('../src/features/explore/runtime', () => ({
