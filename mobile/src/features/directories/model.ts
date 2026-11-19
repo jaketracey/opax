@@ -10,6 +10,7 @@ import { rosterChambersFor } from '../../api/person-identity';
 import {
   partyName,
   sameMemberParty,
+  currentPartySeats,
   sittingPartyMembers,
 } from '../../api/party-page';
 import { nameKey, nameValues } from '../../api/ids';
@@ -554,8 +555,8 @@ export function partyRows(
 ): PartyRow[] {
   const { roster, people, slugs, manifest, electorates } = directory;
   // As the People list's sitting filter: a seat in a house whose term has
-  // ended for an election is not counted.
-  const sitting = sittingPartyMembers(
+  // ended for an election is not counted. Its party keeps its row.
+  const held = currentPartySeats(
     roster.data,
     people.data,
     slugs.data,
@@ -589,7 +590,7 @@ export function partyRows(
         asAt: file.meta.generated,
       };
     }
-  for (const { seats } of sitting) for (const seat of seats) get(seat.party);
+  for (const { seats } of held) for (const seat of seats) get(seat.party);
   for (const p of roster.data.people)
     if (
       p.party &&
@@ -605,8 +606,8 @@ export function partyRows(
       r.speeches += p.speeches ?? 0;
     }
   for (const p of rows.values()) {
-    p.members = sitting.filter((m) =>
-      m.seats.some((s) => sameMemberParty(s.party, p.name)),
+    p.members = held.filter((m) =>
+      m.seats.some((s) => !s.ended && sameMemberParty(s.party, p.name)),
     ).length;
     p.total =
       p.money.federal?.total ??

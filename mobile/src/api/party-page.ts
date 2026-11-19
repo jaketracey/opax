@@ -284,8 +284,12 @@ export function sittingPartyMembers(
   });
 }
 
-/** Everyone the record gives a current seat, each seat with its house's end. */
-function currentPartySeats(
+/**
+ * Everyone the record gives a current seat, each seat with the ended term
+ * of its house (null while the house has members). For a caller that must
+ * keep a party whose every seat is in an ended house: the party list.
+ */
+export function currentPartySeats(
   roster: Roster,
   people: PeopleCatalog,
   slugs: Slugs,
