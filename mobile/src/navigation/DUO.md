@@ -62,6 +62,13 @@ the same way:
 - A pushed page with neither (its own list and no fade) must take the solid
   bar on the rail (`railSearchRoutes` in `stack/index.tsx`), or its rows run
   through the title. Largest grants and a seat's grants do.
+- A tab pressed again scrolls its root to the top through
+  react-native-screens, which no longer finds the scroll view. On the rail a
+  root does it from JS (`useRailRootReselect`): Screen roots go to their
+  resting top, the Bills list to 0 below its solid bar, and Ask has its own.
+  The listener is on the tab's own screen (the stack's parent): the tab
+  route's nested `state` is unset until something navigates inside the tab,
+  so it cannot be used to match a press to a stack.
 
 If react-native-screens gains the option, or the app's patch sets
 `navigationItem.barMinimizeBehavior = .never` (iOS 27) in
