@@ -91,9 +91,10 @@
     }
   },
   "appOnly": {
-    "$description": "App colour roles that carry alpha, which the opaque role palette above cannot hold. Read only by mobile/scripts/build-design-tokens.mjs, which adds them to the app's four themes beside the photograph viewer's scrims; the web build ignores this block. Not for text.",
+    "$description": "App colour roles the web does not draw: those that carry alpha, which the opaque role palette above cannot hold, and the blank portrait tone. Read only by mobile/scripts/build-design-tokens.mjs, which adds them to the app's four themes beside the photograph viewer's scrims; the web build ignores this block. Not for text.",
     "scrim": {"$value": "rgba(35,39,31,0.4)", "dark": "rgba(0,0,0,0.6)", "$description": "The veil behind a sheet, menu or dialog the app draws itself. Light is ink at 40%, as before the role existed; dark is black at 60%, because ink is pale in dark and a pale veil lifts the page instead of dimming it."},
-    "raisedOutline": {"$value": "rgba(0,0,0,0)", "dark": "#3A3F36", "highContrast": "rgba(0,0,0,0)", "darkHighContrast": "#7E8378", "$description": "A hairline round a raised card or menu in dark, where a shadow does not read and raised is only 1.13:1 from paper. Clear in light, so the same style draws nothing there."}
+    "raisedOutline": {"$value": "rgba(0,0,0,0)", "dark": "#3A3F36", "highContrast": "rgba(0,0,0,0)", "darkHighContrast": "#7E8378", "$description": "A hairline round a raised card or menu in dark, where a shadow does not read and raised is only 1.13:1 from paper. Clear in light, so the same style draws nothing there."},
+    "portraitBlank": {"$value": "#F1EFE8", "dark": "#454A41", "$description": "The blank circle for a person with no portrait. Light is sunken, as before the role existed. Dark sunken is a well, darker than every ground, so the circle read as a hole; this tone is lighter than paper, raised and sunken (1.95, 1.73 and 2.11:1), and opaque."}
   },
   "category": {
     "$description": "A screen's subject and its accent pair (role names). People and places share navy.",
@@ -283,7 +284,7 @@
     "controlCompact": {"$value": 44, "web": 40, "$description": "The web's compact control grows to 44 on coarse pointers."},
     "control": {"$value": 48},
     "controlLarge": {"$value": 56},
-    "portraitRow": {"$value": 44, "$description": "A blank sunken circle when there is no portrait; never initials."},
+    "portraitRow": {"$value": 44, "$description": "A blank circle (portraitBlank) when there is no portrait; never initials."},
     "portraitHeader": {"$value": 72},
     "partyDot": {"$value": 10},
     "iconSm": {"$value": 16, "$description": "Three icon sizes (the app draws 11 today). Icons scale with text to 2x."},

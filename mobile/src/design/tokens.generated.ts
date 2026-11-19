@@ -93,6 +93,8 @@ export const light = {
   scrim: 'rgba(35,39,31,0.4)',
   /** A hairline round a raised card or menu in dark, where a shadow does not read and raised is only 1.13:1 from paper. */
   raisedOutline: 'rgba(0,0,0,0)',
+  /** The blank circle for a person with no portrait. */
+  portraitBlank: '#F1EFE8',
 } as const;
 
 export type Role = keyof typeof light;
@@ -147,6 +149,7 @@ export const dark: Record<Role, string> = {
   photoBarScrim: 'rgba(0,0,0,0.4)',
   scrim: 'rgba(0,0,0,0.6)',
   raisedOutline: '#3A3F36',
+  portraitBlank: '#454A41',
 };
 
 /** Increase Contrast: each text role steps one stronger, subtle rules take the default divider, accent inks and bronzeInk reach 7:1. */

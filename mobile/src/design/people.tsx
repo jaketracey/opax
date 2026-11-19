@@ -746,8 +746,10 @@ const personChevron = 'chevron.right';
 
 const useStyles = makeStyles((colors) =>
   StyleSheet.create({
+    // Its own role: sunken in light, as before; in dark a tone lighter than
+    // every ground, where sunken (a well) made the blank circle a hole.
     portrait: {
-      backgroundColor: colors.sunken,
+      backgroundColor: colors.portraitBlank,
       borderWidth: hairline,
       borderColor: colors.dividerSubtle,
     },
