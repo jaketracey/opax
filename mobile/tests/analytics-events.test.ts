@@ -15,7 +15,7 @@ import {
 // its categories, counts and flags. These tests hold the two guards to that.
 const context: AnalyticsContext = {
   platform: 'ios',
-  appVersion: '1.1.6',
+  appVersion: '1.1.7',
   appBuild: '43',
   environment: 'production',
 };
@@ -306,7 +306,7 @@ describe('scrubEvent', () => {
       $geoip_disable: true,
       platform: 'ios',
       app: 'opax',
-      app_version: '1.1.6',
+      app_version: '1.1.7',
       app_build: '43',
       environment: 'production',
     });

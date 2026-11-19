@@ -145,12 +145,14 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
 // previous three hashes exactly, so a light build's iOS config is unchanged.
 // Re-pinned for 1.1.6: the only change is the version string; swapping it
 // back to 1.1.5 gives the previous hashes exactly.
+// Re-pinned for 1.1.7: the only change is the version string; swapping it
+// back to 1.1.6 gives the previous hashes exactly.
 const iosPrebuildHashes = {
   development:
-    'ce35e31597cc964353904a6378069c959db61f510ce836197242bd0ac3c33df0',
-  e2e: '8a98c3167cf8d4df9e503f53ef0d9c08baa300f08c916cdc28f2620d2b85fc2c',
+    'f03e3d67882651dbac46b40baee204ee9f3f9de9845d0924ef3774af3e9cd212',
+  e2e: 'bd8f6f62949ed0bc79bbd7ca937b909d6b8bf0ef57d5352282255f25b87eee68',
   production:
-    '852904d2dbc3b01a88faf1aad0342aee54ccbf48d250f005d3ff32303d83a596',
+    'b8cc2bcbad7c12317f30ec2b496b312b2a78b4810dc2d71fa4e667c72a6ef8ea',
 };
 test.each(variants)(
   'iOS %s prebuild output stays byte-identical to the baseline',

@@ -15,7 +15,7 @@ const question = 'Did Senator Example vote against the 2031 housing bill?';
 const encoded = encodeURIComponent(question);
 const context: AnalyticsContext = {
   platform: 'ios',
-  appVersion: '1.1.6',
+  appVersion: '1.1.7',
   appBuild: '43',
   environment: 'production',
 };
@@ -212,7 +212,7 @@ test('only allowlisted events are sent, tagged with the platform and version', (
     expect(event.properties).toMatchObject({
       platform: 'ios',
       app: 'opax',
-      app_version: '1.1.6',
+      app_version: '1.1.7',
       app_build: '43',
       environment: 'production',
       $process_person_profile: false,
