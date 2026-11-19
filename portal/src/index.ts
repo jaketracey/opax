@@ -118,7 +118,7 @@ import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
-import { networkBlock, CRAWLER_UA } from './network-block'
+import { networkBlock, CRAWLER_UA, GENERATION_PATHS } from './network-block'
 import { openaiAppsChallenge, OPENAI_APPS_CHALLENGE_PATH } from './openai-apps-challenge'
 import { appSiteAssociationResponse, APP_SITE_ASSOCIATION_PATH } from './app-site-association'
 import { handleBillText } from './bill-text'
@@ -141,7 +141,8 @@ import { ANSWER_WRITING_VERSION } from './research-writing'
 import { cacheableAskAnswer, cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { researchSentenceStream, interruptedResearchAnswer } from './research-sentence-stream'
 import { groundAnswerPayload } from './research-grounding'
-import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
+import { askDailyBudget, combinedDailyBudget, researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
+import { ASK_PASS_HEADER, askGuard, askGuardKind, askGuardOn, limitResponse, pruneAskGuard, reserveAskSpend, summaryMayGenerate } from './ask-guard'
 import { ResearchError, type ResearchPayload } from './research-types'
 import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
 import type { ToolDeps } from './agentic-tools'
@@ -321,6 +322,11 @@ const providerRefusedResponse = (research?: unknown): Response => {
 const modelBudgetResponse = (): Response => new Response(JSON.stringify({ error: 'The model call budget for this minute is spent.' }), {
   status: 429, headers: { 'content-type': 'application/json; charset=utf-8', 'retry-after': '60', [MODEL_BUDGET_HEADER]: 'spent' },
 })
+/** The day's total (ASK_DAILY_USD, src/ask-guard.ts) has no room, or its ledger could not be reached: the call is not made.
+ * Each caller's fallback stands as for the per-minute cap; an answer says today's limit is reached. */
+const dailyBudgetResponse = (): Response => new Response(JSON.stringify({ error: 'The daily model budget is spent.' }), {
+  status: 429, headers: { 'content-type': 'application/json; charset=utf-8', 'retry-after': '3600', [MODEL_BUDGET_HEADER]: 'daily' },
+})
 const modelBudgetBusy = (): Response => {
   const res = json({ error: 'OPAX is answering a lot of questions right now. Please try again in a minute.' }, 503)
   res.headers.set('retry-after', '60')
@@ -334,6 +340,12 @@ async function kbFetch(
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal; hedge?: boolean },
 ): Promise<Response> {
   if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
+  // Every generation reserves its charge from the day's total first (ASK_SPEND, set for each request by the fetch
+  // handler; src/ask-guard.ts). No room, or no ledger, and the call is not made. Operator evals are never metered.
+  const spend = env.ASK_SPEND && path.startsWith('/ask') && (init?.body as Record<string, unknown> | undefined)?.generate_answer !== false && !env.RESEARCH_EVAL ? await env.ASK_SPEND() : undefined
+  if (spend === null) return dailyBudgetResponse()
+  // An upstream refusal generated nothing, so its charge comes back; anything else keeps the ceiling.
+  const settled = async (response: Response) => { if (spend && !response.ok) await spend.settle(0).catch(() => {}); return response }
   const call = async (target: string, body: unknown = init?.body, headers = init?.headers) => {
     // An MCP request counts (and, without an account, spends) each query just before it goes (mcp-access.ts).
     await env.KB_METER?.(target, init?.hedge)
@@ -357,8 +369,8 @@ async function kbFetch(
     if (stream) { delete headers['x-synchronous']; headers.accept = 'application/x-ndjson' }
     else { headers['x-synchronous'] = 'true'; headers.accept = 'application/json' }
     return call(target,body,headers)
-  }, init.headers?.accept === 'application/x-ndjson' && init.headers?.['x-synchronous'] !== 'true')
-  return call(path)
+  }, init.headers?.accept === 'application/x-ndjson' && init.headers?.['x-synchronous'] !== 'true').then(settled)
+  return call(path).then(settled)
 }
 
 /** Protect source payloads before SSE encoding; deltas and points are untouched. */
@@ -1755,6 +1767,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     try {
       const work = async (signal: AbortSignal) => {
         const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
+        if (res.headers.get(MODEL_BUDGET_HEADER) === 'daily') { const refused = limitResponse('ask', 'daily'); refused.headers.set(MODEL_BUDGET_HEADER, 'daily'); return refused }
         if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
         if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
         return (await res.json()) as AskAnswer
@@ -2170,7 +2183,9 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
 }
 
 /** A short overview grounded only in the same filtered public search results. */
-async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+/** `generate` is false for a GET from anything but the installed apps (src/ask-guard.ts summaryMayGenerate): a crawler
+ * or a prefetch gets a cached summary or none, never a model call. The website asks by POST. */
+async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext, generate = true): Promise<Response> {
   const searchUrl = new URL(url)
   searchUrl.pathname = '/api/search-all'
   searchUrl.searchParams.set('page', '1')
@@ -2186,6 +2201,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
   const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT', false)
+  if (!generate) { const none = json({status:'empty', points:[], sources:[]}); none.headers.set('x-opax-summary', 'cached-only'); return none }
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
   const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
@@ -6635,16 +6651,18 @@ const GA = 'https://*.google-analytics.com https://*.analytics.google.com'
 // The Senate's own videos play in YouTube's privacy-enhanced player, framed only after a press
 // (public/video-card.js). The one host, not youtube.com or any wildcard.
 const YOUTUBE_EMBED = 'https://www.youtube-nocookie.com'
+// Cloudflare Turnstile, loaded only when an Ask needs a check (public/app.js): its script and its frame, nothing else.
+const TURNSTILE = 'https://challenges.cloudflare.com'
 const CSP_PAGE = [
   "default-src 'self'",
-  `script-src 'self' 'wasm-unsafe-eval' ${GTM}`,
+  `script-src 'self' 'wasm-unsafe-eval' ${GTM} ${TURNSTILE}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: https://i.ytimg.com https://tile.openstreetmap.org ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
   "font-src 'self'",
   `connect-src 'self' wss://opax.com.au wss://staging.opax.com.au ${GTM} ${GA}`,
   "worker-src 'self'",
   "manifest-src 'self'",
-  `frame-src ${GTM} ${YOUTUBE_EMBED}`,
+  `frame-src ${GTM} ${YOUTUBE_EMBED} ${TURNSTILE}`,
   "object-src 'none'",
   "base-uri 'none'",
   "form-action 'self'",
@@ -6853,7 +6871,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         model: openRouterModel(env),
         steps: env.RESEARCH_LOOP_STEPS, wallMs: researchLimits({ wallMs: env.RESEARCH_LOOP_MS }).wallMs, tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
-        dailyBudget: env.RESEARCH_EVAL ? unmeteredResearchBudget : researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
+        dailyBudget: env.RESEARCH_EVAL ? unmeteredResearchBudget : combinedDailyBudget(researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD), askDailyBudget(env.COMMUNITY_DB, env.ASK_DAILY_USD)),
         cleanup: work => ctx.waitUntil(work),
         ...(env.RESEARCH_EVAL ? { onUsage: stats => captureLoopUsage(env.RESEARCH_EVAL!, stats) } : {}),
         inputPrice: Number(env.AGENTIC_INPUT_USD_PER_MILLION) || undefined, outputPrice: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) || undefined,
@@ -6982,6 +7000,15 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
   // Operator evals may also pick a model from RESEARCH_LOOP_MODEL_ALLOW and a provider sort for this request only.
   const modelOverride = usage ? researchModelOverride(request.headers.get('x-opax-research-model'), request.headers.get('x-opax-research-provider'), env.RESEARCH_LOOP_MODEL_ALLOW) : {}
   const selected = usage ? { ...env, ...modelOverride, RESEARCH_LOOP: override === 'loop' ? 'route' as const : 'off' as const, RESEARCH_EVAL: usage } : env
+  // A reader's question passes the Ask guard (src/ask-guard.ts). In-Worker callers (voice's ask_opax, the staging hop)
+  // and operator evals are not readers; their model calls still draw on the day's total through kbFetch.
+  let pass: string | undefined
+  if (!caller && !usage && askGuardOn(env)) {
+    const guard = await askGuard(request, env, 'ask')
+    if (guard.refused) return guard.refused
+    pass = guard.pass
+  }
+  const passed = (response: Response) => { if (!pass) return response; const out = new Response(response.body, response); out.headers.set(ASK_PASS_HEADER, pass); return out }
   let answerQuestion='',routedInput:Record<string,unknown>|undefined
   const serve = async () => {
     const body = await readJsonBody(request)
@@ -6998,7 +7025,7 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     if(money)return federalPartyMoneyResponse(money,request)
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx, undefined, caller)
   }
-  const served=await serve()
+  const served=passed(await serve())
   if (served.headers.has('x-opax-identity-route')) return usage ? withResearchEval(served, () => ({ ...researchEvalUsage(usage), model: 'deterministic-identity' })) : served
   if(served.headers.has('x-opax-money-route'))return usage?withResearchEval(served,()=>({...researchEvalUsage(usage),model:'deterministic-receipts'})):served
   answerQuestion=String(routedInput?.question??answerQuestion)
@@ -7273,8 +7300,8 @@ async function route(
       if (url.pathname === '/api/search' && request.method === 'GET') {
         return validateSearchQuery(url) ?? (await apiSearch(request, url, env, ctx))
       }
-      if (url.pathname === '/api/search-summary' && request.method === 'GET') {
-        return await mapAnswerPayload(await apiSearchSummary(request, url, env, ctx), withSummaryNotice)
+      if (url.pathname === '/api/search-summary' && (request.method === 'GET' || request.method === 'POST')) {
+        return await mapAnswerPayload(await apiSearchSummary(request, url, env, ctx, summaryMayGenerate(request.method, request.headers.get('user-agent'))), withSummaryNotice)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
         return await apiAskReply(request, url, env, ctx)
@@ -7519,6 +7546,8 @@ function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
+    // Every model call this request makes, on any path (voice and MCP included), reserves from the day's total.
+    if (askGuardOn(env)) { const guarded = env; env = { ...env, ASK_SPEND: () => reserveAskSpend(guarded) } }
     setAppStoreProvider(env.APP_STORE_PROVIDER)
     const url = new URL(request.url)
     // Universal links (src/app-site-association.ts): answered first, as Apple's fetcher follows no redirect.
@@ -7709,7 +7738,16 @@ export default {
       return preview
     }
     if (url.pathname.startsWith('/ingest/')) return proxyPostHog(request)
+    // Follow-ups, summaries and stories pass the Ask guard here: the day's total, the website's pass for follow-ups
+    // and each address's daily quota (src/ask-guard.ts). A question passes it in apiAskRouted, which knows its caller.
+    const guardKind = askGuardKind(request.method, url.pathname, request.headers.get('user-agent'))
+    if (guardKind && guardKind !== 'ask' && askGuardOn(env)) {
+      const guard = await askGuard(request, env, guardKind)
+      if (guard.refused) return withSecurityHeaders(guard.refused, url)
+    }
     try {
+      // A HEAD on a model route would run it as a GET; it has nothing to show, so it is refused.
+      if (request.method === 'HEAD' && GENERATION_PATHS.test(url.pathname)) return withSecurityHeaders(new Response(null, { status: 405, headers: { allow: 'POST' } }), url)
       // The route table only matches GET, so a HEAD (curl -I, uptime probes)
       // used to fall through to the 404. Run it as a GET and drop the body.
       if (isApi && request.method === 'HEAD') {
@@ -7738,6 +7776,7 @@ export default {
     if (controller.cron === REPLY_EMAIL_CRON) {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
+      try {await pruneAskGuard(env.COMMUNITY_DB, controller.scheduledTime)} catch {console.error(JSON.stringify({event:'ask_guard_prune_failed'}))}
       try {console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))} catch {console.error(JSON.stringify({event:'community_reply_email_dispatch_failed'}))}
       await warmCatalog(env, _ctx)
       return

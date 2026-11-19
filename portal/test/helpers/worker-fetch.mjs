@@ -66,5 +66,5 @@ export async function workerFetch(path, env = {}, init = {}, { assets: fixtures 
     const type = pathname.endsWith('.json') ? 'application/json' : pathname.endsWith('.js') ? 'text/javascript' : 'text/html';
     return new Response(readFileSync(file), { headers: { 'content-type': type, etag: '"asset"' } });
   } };
-  return fetchHandler.fetch(new Request(origin + path, init), { COMMUNITY_ORIGIN: origin, VIC_ELECTION_HUB_ENABLED: 'true', ASSETS: assets, ...env }, { waitUntil() {} });
+  return fetchHandler.fetch(new Request(origin + path, init), { ASK_GUARD: 'off', COMMUNITY_ORIGIN: origin, VIC_ELECTION_HUB_ENABLED: 'true', ASSETS: assets, ...env }, { waitUntil() {} });
 }

@@ -611,6 +611,78 @@ async function api(path, options) {
   return data;
 }
 
+/* --- the Ask check --------------------------------------------------------------
+   When the Worker asks for one (a 403 carrying x-opax-ask-check: <site key>), a
+   question goes through Cloudflare Turnstile once, and the Worker hands back a
+   signed pass (x-opax-ask-pass, about 30 minutes and 20 questions) that later
+   questions and follow-ups send instead. The pass lives in this tab's memory
+   only. Turnstile's script loads the first time a question needs it, never on
+   page load. */
+let askPass = "";
+let askCheckWidget = null;
+let askCheckScript = null;
+function askHeaders(headers = {}) {
+  return askPass ? { ...headers, "x-opax-ask-pass": askPass } : headers;
+}
+function keepAskPass(res) {
+  const pass = res.headers.get("x-opax-ask-pass");
+  if (pass) askPass = pass;
+}
+function loadTurnstile() {
+  if (window.turnstile) return Promise.resolve(window.turnstile);
+  askCheckScript ||= new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.onload = () => (window.turnstile ? resolve(window.turnstile) : reject(new Error("The check could not load.")));
+    script.onerror = () => { askCheckScript = null; reject(new Error("The check could not load. Please try again.")); };
+    document.head.appendChild(script);
+  });
+  return askCheckScript;
+}
+async function askCheckToken(sitekey, signal) {
+  const turnstile = await loadTurnstile();
+  let box = document.getElementById("ask-check");
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "ask-check";
+    box.setAttribute("role", "region");
+    box.setAttribute("aria-label", "Check before your question is asked");
+    Object.assign(box.style, { position: "fixed", left: "50%", bottom: "1rem", transform: "translateX(-50%)", zIndex: "1000" });
+    document.body.appendChild(box);
+  }
+  if (askCheckWidget !== null) { try { turnstile.remove(askCheckWidget); } catch { /* already gone */ } askCheckWidget = null; }
+  return new Promise((resolve, reject) => {
+    const fail = (message) => () => reject(new Error(message));
+    signal?.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")), { once: true });
+    askCheckWidget = turnstile.render(box, {
+      sitekey,
+      action: "ask",
+      appearance: "interaction-only",
+      callback: resolve,
+      "error-callback": fail("The check did not finish. Please try again."),
+      "expired-callback": fail("The check expired. Please try again."),
+      "timeout-callback": fail("The check timed out. Please try again."),
+    });
+  });
+}
+/** fetch() for a question or its follow-ups: sends the pass, and runs the check once if the Worker asks. */
+async function askFetch(path, init = {}) {
+  let res = await fetch(path, { ...init, headers: askHeaders(init.headers) });
+  keepAskPass(res);
+  const sitekey = res.status === 403 ? res.headers.get("x-opax-ask-check") : null;
+  if (!sitekey) return res;
+  askPass = "";
+  const token = await askCheckToken(sitekey, init.signal);
+  res = await fetch(path, { ...init, headers: { ...(init.headers || {}), "x-opax-turnstile": token } });
+  keepAskPass(res);
+  return res;
+}
+/** The day's question limit (a 429 from the Ask guard) is the Worker's last word: never asked twice. */
+function askLimitError(res, data) {
+  return Object.assign(new Error(data.error || `Request failed (${res.status})`), { shown: res.status === 429 });
+}
+
 /** How long a page waits for an aggregate count (topics, parties, stats, tide)
  *  before it renders without it. The counts are read off the live index and a
  *  cold copy can take a minute upstream; the page should not. */
@@ -673,7 +745,7 @@ async function fetchBriefMap(resources) {
  * caller knows a synchronous fallback would be replacing visible words.
  */
 async function readAskStream(body, signal, on) {
-  const res = await fetch("/api/ask?stream=1", {
+  const res = await askFetch("/api/ask?stream=1", {
     method: "POST",
     headers: { "content-type": "application/json", accept: "text/event-stream" },
     body,
@@ -683,7 +755,7 @@ async function readAskStream(body, signal, on) {
     // Not a stream (an error, or something between us answered whole): the
     // body is the synchronous payload.
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+    if (!res.ok) throw askLimitError(res, data);
     return data;
   }
   // The stream is open: the Worker has read the question, checked its cache
@@ -774,12 +846,12 @@ async function askRecordRequest(body, signal, on = {}) {
   } catch (err) {
     if (err.name === "AbortError" || err.shown) throw err;
   }
-  const once = () => api("/api/ask", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body,
-    signal,
-  });
+  const once = async () => {
+    const res = await askFetch("/api/ask", { method: "POST", headers: { "content-type": "application/json" }, body, signal });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw askLimitError(res, data);
+    return data;
+  };
   let data = await once();
   if (!(data.answer || "").trim()) data = await once();
   return data;
@@ -11543,7 +11615,7 @@ function prefetchAskFollowups(ask) {
   if (!passages.length) return;
   const promise = api("/api/followups", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: askHeaders({ "content-type": "application/json" }),
     body: JSON.stringify({ question: ask.question, answer: ask.answer, passages, person: ask.speaker || ask.subject_context?.name }),
   }).then((data) => {
     const questions = normaliseFollowups(data);
@@ -12394,7 +12466,7 @@ async function requestChatFollowups() {
       ? await inflight.promise
       : normaliseFollowups(await api("/api/followups", {
           method: "POST",
-          headers: { "content-type": "application/json" },
+          headers: askHeaders({ "content-type": "application/json" }),
           body: JSON.stringify({ question: asked.text, answer: last.text, passages, person: chatSpeaker || last.subject_context?.name }),
           signal: myAbort.signal,
         }));
@@ -13759,7 +13831,8 @@ document.fonts?.ready.then(refreshSearchLayout);
  * JSON reply (a cache hit, an empty result set, an error) is returned as is.
  */
 async function readSummaryStream(url, signal, on) {
-  const res = await fetch(url, { headers: { accept: "text/event-stream" }, signal });
+  // POST: the Worker never starts a model call for a GET (a crawler or a prefetch gets a cached summary or none).
+  const res = await fetch(url, { method: "POST", headers: { accept: "text/event-stream" }, signal });
   if (!(res.headers.get("content-type") || "").includes("text/event-stream")) {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);

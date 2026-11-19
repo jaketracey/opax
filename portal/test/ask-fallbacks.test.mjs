@@ -277,3 +277,15 @@ test('prose is used only when it reads as an answer',()=>{
   assert.equal(api.usableProse('<think>plan the search</think>'+said),said)
   assert.equal(api.modelProse([{type:'reasoning',text:'hidden'},{type:'text',text:'A '},{type:'text',text:'B'}]),'A B')
 })
+
+// The research loop draws on the day's total for every paid call (ASK_DAILY_USD, src/ask-guard.ts) as well as its own
+// ledger. A platform generation reserves exactly ASK_CALL_USD; a loop turn reserves its own ceiling, so a different amount.
+test('research-loop turns also reserve from the day total for every paid call',async()=>{
+  const prepare=daily.db.prepare.bind(daily.db),amounts=[]
+  daily.db.prepare=sql=>{const s=prepare(sql);if(!/INSERT INTO ask_daily_spend/.test(sql))return s;return {bind:(...v)=>{amounts.push(v[1]);return s.bind(...v)}}}
+  try{
+    const run=await ask(robodebt,[calls(search),prose(said)])
+    assert.equal(run.status,200)
+  }finally{daily.db.prepare=prepare}
+  assert.ok(amounts.some(micro=>micro!==20_000),`loop reservations reach the day total: ${amounts}`)
+})

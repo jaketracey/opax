@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 /** Execute the production reservation SQL against SQLite, with D1's API. */
 export function budgetDatabase() {
   const sqlite=new DatabaseSync(':memory:');
-  for(const migration of ['0016_agentic_shadow.sql','0017_research_daily_budget.sql'])
+  for(const migration of ['0016_agentic_shadow.sql','0017_research_daily_budget.sql','0020_ask_guard.sql'])
     sqlite.exec(readFileSync(new URL('../../migrations/'+migration,import.meta.url),'utf8'));
   const db={
     prepare(sql) {
@@ -14,6 +14,7 @@ export function budgetDatabase() {
         run:async()=>({success:true,meta:statement.run(...values)}),
       }}};
     },
+    async batch(statements) { return Promise.all(statements.map(s=>s.run())); },
   };
   return {db,sqlite,close:()=>sqlite.close()};
 }

@@ -341,8 +341,8 @@ needs Wrangler ≥ 4.36), keyed on `CF-Connecting-IP`:
 
 | binding | endpoint | limit |
 | --- | --- | --- |
-| `ASK_LIMITER` | `/api/ask` | 20 / 60 s |
-| `FOLLOWUPS_LIMITER` | `/api/followups` | 20 / 60 s |
+| `ASK_LIMITER` | `/api/ask` | 5 / 60 s |
+| `FOLLOWUPS_LIMITER` | `/api/followups`, `/api/search-summary`, `/api/journey-story` | 10 / 60 s |
 | `SEARCH_LIMITER` | `/api/search` | 120 / 60 s |
 | `MODEL_LIMITER` | every paid generation (one key for all readers) | 60 / 60 s |
 
@@ -353,6 +353,15 @@ open**: a binding outage, or a build without it, logs a warning and lets the
 request through. Losing the site to a limiter fault would be the worse
 failure. Miniflare implements the binding locally, so `wrangler dev`
 enforces the real thing.
+
+In front of these, `src/ask-guard.ts` checks every paid request before it is
+routed, and it **fails closed**: the day's total for every model call
+(`ASK_DAILY_USD`, a D1 ledger each generation reserves from), each address's
+daily quota (a keyed hash of the day and the address, never the address), and
+on the website a Turnstile check or a signed pass while `TURNSTILE_SECRET_KEY`
+is set. A refusal is a `429` with `{"error": …}` and `x-opax-ask-limit`;
+follow-ups get `{"questions": []}`. A GET never starts a model call: a search
+summary is generated only for a POST or an installed app's GET.
 
 The calculated money answer's opening paragraph is a paid call too: it spends
 the reader's `ASK_LIMITER` token after its own cache read, and past the limit

@@ -79,6 +79,22 @@ interface Env {
   RESEARCH_LOOP_MS?: string
   RESEARCH_LOOP_TOKENS?: string
   RESEARCH_LOOP_DAILY_USD?: string
+  /** The day's total for every paid model call, US$ (src/ask-guard.ts). Default 30; refuses past it. */
+  ASK_DAILY_USD?: string
+  /** The charge one platform generation reserves from that total, US$. Default 0.02. */
+  ASK_CALL_USD?: string
+  /** Questions per address per UTC day (default 40), and follow-ups, summaries and stories (default 120). */
+  ASK_ADDRESS_DAILY?: string
+  ASK_ADDRESS_DAILY_EXTRAS?: string
+  /** On unless exactly "off" (the offline test harnesses only). */
+  ASK_GUARD?: string
+  /** Request-local: reserve one platform generation from the day's total (set by the fetch handler; src/ask-guard.ts). */
+  ASK_SPEND?: () => Promise<import('./research-budget').ResearchReservation | null>
+  /** Secret: signs the reader's Ask pass and keys the address hash. */
+  ASK_GUARD_SECRET?: string
+  /** Turnstile on web Asks. While the secret is unset the check is off. */
+  TURNSTILE_SITE_KEY?: string
+  TURNSTILE_SECRET_KEY?: string
   /** OpenRouter model for the research loop: a preset or a slug (default @preset/opax-pro). */
   RESEARCH_LOOP_MODEL_ID?: string
   /** OpenRouter provider preferences JSON, e.g. {"sort":"throughput"}. */
