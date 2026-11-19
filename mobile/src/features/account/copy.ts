@@ -44,6 +44,13 @@ export const accountCopy = {
   community: 'Community',
   workbench: 'Design workbench',
 
+  // The Appearance group, in builds that follow the system.
+  appearance: 'Appearance',
+  appearanceSystem: 'Match phone',
+  appearanceLight: 'Light',
+  appearanceDark: 'Dark',
+  appearanceFooter: 'Match phone follows your phone’s light or dark setting.',
+
   // The page foot.
   version: (version: string, build: string) => `OPAX ${version} (${build})`,
   versionSpoken: (version: string, build: string) =>
