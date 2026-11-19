@@ -654,6 +654,129 @@ const drawn = (r: TestRenderer.ReactTestRenderer) =>
     .map((n) => [n.props.children].flat(Infinity).join(''))
     .join(' ');
 
+describe('while the Victorian Parliament’s term has ended for an election', () => {
+  // The live index: every Assembly row carries the election day, or null
+  // once the result is loaded; Council rows carry nothing.
+  const apiWith = (value: string | null) =>
+    new Catalogs({
+      get: async (path, decoder) => {
+        const raw = (path === '/api/person-slugs' ? slugs : pinned(path)) as {
+          electorates?: { chamber?: string }[];
+        };
+        const data =
+          Array.isArray(raw.electorates) &&
+          raw.electorates.some((s) => s.chamber === 'vic_la')
+            ? {
+                ...raw,
+                electorates: raw.electorates.map((s) =>
+                  s.chamber === 'vic_la' ? { ...s, dissolved_for: value } : s,
+                ),
+              }
+            : raw;
+        return { data: decoder(data), stale: false, savedAt: 1000, asOf: null };
+      },
+    });
+  const page = async (label: string, value: string | null) => {
+    jest
+      .mocked(runtime.partyPage)
+      .mockResolvedValueOnce(await apiWith(value).partyPage(label));
+    return render(label);
+  };
+  const rowsOf = (r: TestRenderer.ReactTestRenderer, prefix: string) =>
+    r.root
+      .findAllByType(PersonRow)
+      .filter((n) => String(n.props.testID ?? '').startsWith(prefix));
+  const tiles = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAllByType(StatStrip)
+      .flatMap(
+        (strip) =>
+          strip.props.tiles as {
+            testID?: string;
+            value: string;
+            label: string;
+          }[],
+      );
+
+  test('a Victorian-only party names nobody as sitting; its people are listed as last members', async () => {
+    const r = await page('Legalise Cannabis Victoria', '2026-11-28');
+    // Nobody is named as a sitting member, and nothing says "Member for".
+    expect(has(r, 'party-members-named')).toBe(false);
+    expect(rowsOf(r, 'party-sitting-')).toHaveLength(0);
+    expect(drawn(r)).not.toMatch(/\bMember for\b/);
+    expect(host(r, 'party-current-count').props.accessibilityLabel).toBe(
+      '0 sitting Legalise Cannabis Victoria members',
+    );
+    // The two people sit under their own heading, closed until asked for.
+    const toggle = host(r, 'party-ended-toggle');
+    expect(toggle.props.accessibilityLabel).toBe(
+      'Term ended for an election, 2',
+    );
+    expect(rowsOf(r, 'party-ended-')).toHaveLength(0);
+    press(r, 'party-ended-toggle');
+    const last = rowsOf(r, 'party-ended-');
+    expect(last).toHaveLength(2);
+    for (const row of last) {
+      expect(row.props.place).toMatch(
+        /^Last member for .+, Victorian Legislative Council$/,
+      );
+      expect(row.props.href).toBeTruthy();
+      expect(row.props.portrait).toBeTruthy();
+    }
+    // The block's note says why they are not counted.
+    const block = r.root
+      .findAllByType(ProfileBlock)
+      .find((n) => n.props.id === 'party-members')!;
+    expect(block.props.about().notes.join(' ')).toContain(
+      'listed under “Term ended for an election” as each seat’s last member',
+    );
+    act(() => r.unmount());
+  });
+
+  test('a national party counts its sitting members without the Victorian ones, everywhere the count is said', async () => {
+    const then = (await apiWith('2026-11-28').partyPage('Labor')).data!;
+    const count = then.members.data!.currentCount;
+    const lost = new Set(then.members.data!.ended.map((m) => m.slug)).size;
+    expect(lost).toBeGreaterThan(50);
+    expect(count).toBe(view.data!.members.data!.currentCount - lost);
+    const r = await page('Labor', '2026-11-28');
+    expect(
+      tiles(r).find((t) => t.testID === 'party-figure-members'),
+    ).toMatchObject({ value: formatCount(count), label: 'sitting members' });
+    expect(host(r, 'party-current-count').props.accessibilityLabel).toBe(
+      `${formatCount(count)} sitting Labor members`,
+    );
+    const block = r.root
+      .findAllByType(ProfileBlock)
+      .find((n) => n.props.id === 'party-members')!;
+    // "See all" opens the People list's sitting filter: the same count.
+    expect(block.props.action.accessibilityLabel).toBe(
+      `See all ${formatCount(count)} Labor members`,
+    );
+    expect(host(r, 'party-ended-toggle').props.accessibilityLabel).toBe(
+      `Term ended for an election, ${formatCount(lost)}`,
+    );
+    act(() => r.unmount());
+  });
+
+  test('once the result is loaded (null) the page is as it was', async () => {
+    const r = await page('Legalise Cannabis Victoria', null);
+    expect(rowsOf(r, 'party-sitting-')).toHaveLength(2);
+    expect(has(r, 'party-ended-toggle')).toBe(false);
+    const block = r.root
+      .findAllByType(ProfileBlock)
+      .find((n) => n.props.id === 'party-members')!;
+    expect(block.props.about().notes.join(' ')).not.toContain('Term ended');
+    act(() => r.unmount());
+    const labor = await page('Labor', null);
+    expect(
+      tiles(labor).find((t) => t.testID === 'party-figure-members')!.value,
+    ).toBe(formatCount(view.data!.members.data!.currentCount));
+    expect(has(labor, 'party-ended-toggle')).toBe(false);
+    act(() => labor.unmount());
+  });
+});
+
 test('recorded members open native profiles; the total and every block have provenance', async () => {
   const r = await render();
   press(r, 'party-recorded-toggle');
