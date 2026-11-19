@@ -47,7 +47,7 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=11b27173e8").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=5617a34dcb").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
@@ -56,7 +56,7 @@ let divisionAgainst;
 const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=0f8215c3cf").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=59feb5d9ef").then(module => { growthModules = module; }));
 // "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
 // waiting on, never ahead of it. A failed load leaves the page whole, without the block.
 let nextSteps = null;
@@ -64,9 +64,9 @@ const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => {
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=f264a22cd2').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=6d5140fb7a').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=ffd32d5678').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=3d4c26573f').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -88,9 +88,17 @@ let heldBackHelpers;
 const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=1ac63b9250').then(module => { heldBackHelpers = module; }));
 
 let saDisplayHelpers;
+let transcriptNoteHelpers;
+let machineNoticeHelpers;
 let saFullTextFlag = 'false';
+/** Starts the error notice's module loading without waiting on it, so the line is there for the first streamed words. */
+function loadMachineNotice() { if (!machineNoticeHelpers) import('/machine-notice.js?v=5ecefd2bcd').then(module => { machineNoticeHelpers = module; }).catch(() => {}); }
 const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
+  // The transcript line for a conversation saved before every answer citing a hearing transcript carried it.
+  import('/transcript-note.js?v=c3fa52c9c1').then(module => { transcriptNoteHelpers = module; }).catch(() => {}),
+  // The fixed error notice under a machine-written answer, for a live turn and for a saved one.
+  import('/machine-notice.js?v=5ecefd2bcd').then(module => { machineNoticeHelpers = module; }).catch(() => {}),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]));
 
@@ -381,6 +389,18 @@ function partyChipHTML(party, opts) { return uiLabels.partyLabelHTML(party, opts
 function statusLabelHTML(word, tone) { return uiLabels.statusLabelHTML(word, tone); }
 function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
+/** The error notice under stored machine-written text (labels.js MachineNotice): one grey line directly under a
+ *  brief, a summary or a list of briefs. `notice` is the Worker's `machine_notice` where the response had one. */
+function machineNoticeHTML(opts) { return uiLabels.machineNoticeHTML(opts); }
+// The words /api/brief last sent with its briefs; the lists of briefs print them under the list.
+let briefNotice = "";
+/** Puts the notice beside a list of briefs that filled in after the list was drawn; once, never twice. A short
+ *  list takes it directly under ("afterend"); a long one at its head ("beforebegin"), where it is seen. */
+function ensureListNotice(list, where = "afterend", notice = briefNotice) {
+  const beside = where === "beforebegin" ? list?.previousElementSibling : list?.nextElementSibling;
+  if (!list || beside?.matches?.(".answer-notice")) return;
+  list.insertAdjacentHTML(where, machineNoticeHTML({ notice }));
+}
 /** Answers a language model did not write: a calculation from the records, a list of passages, a note that the
  *  records do not cover the question, or a prompt to narrow it. Everything else Ask shows is model-written. */
 const NOT_MODEL_WRITTEN = new Set(["calculated", "evidence_only", "evidence_gap", "needs_scope", "needs_period", "needs_question"]);
@@ -393,6 +413,20 @@ function modelWrittenAnswer(data, text) {
   const shown = !!data.money_overview || !!String(text || "").trim();
   if (typeof data.machine_written === "boolean") return data.machine_written && shown;
   return !!data.money_overview || (shown && (!!data.suggested_question || !NOT_MODEL_WRITTEN.has(data.answer_status)));
+}
+/** The error notice under a machine-written answer and above its sources: the Worker's own words (machine_notice).
+ *  A turn saved before the Worker sent them gets the same fixed words wherever it carries the label. */
+function answerNoticeText(data, text) {
+  if (typeof data?.machine_notice === "string") return data.machine_notice;
+  if (!modelWrittenAnswer(data, text)) return "";
+  const notice = machineNoticeHelpers?.machineNotice({ ...data, answer: text }, !!transcriptNoteHelpers?.transcriptNote?.(data.sources, true));
+  return typeof notice === "string" ? notice : "";
+}
+/** Draws the notice in its line, or hides the line when there is none. Plain text a screen reader meets in order. */
+function renderAnswerNotice(el, notice) {
+  if (!el) return;
+  el.textContent = typeof notice === "string" ? notice : "";
+  el.hidden = !el.textContent;
 }
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
@@ -615,7 +649,9 @@ async function fetchBriefMap(resources) {
   for (let i = 0; i < rids.length; i += 24) {
     const query = new URLSearchParams({ rids: rids.slice(i, i + 24).join(",") });
     try {
-      Object.assign(briefs, (await api(`/api/brief?${query}`)).briefs || {});
+      const data = await api(`/api/brief?${query}`);
+      if (typeof data.machine_notice === "string" && data.machine_notice) briefNotice = data.machine_notice;
+      Object.assign(briefs, data.briefs || {});
     } catch { /* missing briefs leave their passages in place */ }
   }
   return briefs;
@@ -1108,10 +1144,12 @@ function exportHeader(context) {
 }
 
 function sourcesCSV(rows, context) {
-  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url,excerpt_label";
+  // machine_written: true where the row's snippet is a bill's summary sentences, which a model wrote (the row's
+  // `machine` flag); false where it is text from the record.
+  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url,excerpt_label,machine_written";
   const body = rows.map((r) =>
     [r.slug, r.kind || (r.slug || "").split("-")[0], r.title, r.speaker, r.party, r.state, r.date,
-      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || "", r.excerpt_label || ""].map(csvCell).join(",")
+      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || "", r.excerpt_label || "", r.machine === true ? "true" : "false"].map(csvCell).join(",")
   );
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
@@ -1400,7 +1438,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
+    const { mountMoneyMap } = await import("/money-map.js?v=5423132a60");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1623,7 +1661,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=7f62cabcf0' : '/ledger.js?v=03842fdef4');
+    const mod = await import(grants ? '/grants.js?v=8dfce76124' : '/ledger.js?v=65172b13a4');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1654,7 +1692,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=127202ac8e');
+    const mod = await import('/money-explain.js?v=a28744d4d0');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1673,7 +1711,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=9142130d77');
+    const mod = await import('/grant-recipient.js?v=ddeef2d9c1');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1783,7 +1821,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.classList.remove("show-key");
   root.innerHTML = MAP_DRAWING_HTML;
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=9fd4185a50"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=21c21f0f29"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=5423132a60"), loadMoneyFile(jur), import("/money-journeys.js?v=machine-notice-20261116"), import("/map-research.js?v=21c21f0f29"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1926,7 +1964,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=e9a7889dd3");
+    const module = await import("/suppliers.js?v=9d4120e4f2");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2380,6 +2418,7 @@ function resetAsk() {
   $("ask-money").hidden = true;
   $("quote-rail").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
+  $("ask-machine").replaceChildren(); $("ask-machine").hidden = true;
   lastAsk = { question: "", sources: [] };
   renderChips();
 }
@@ -4029,7 +4068,7 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
  *  Its look in an action column lives in money-explain.css, linked once here. */
 function explainBtn(query, label, { primary = false } = {}) {
   if (!document.querySelector("link[data-money-explain]")) {
-    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=9d581f0740" });
+    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=4a6b2e0cce" });
     sheet.dataset.moneyExplain = "";
     document.head.append(sheet);
   }
@@ -4765,7 +4804,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
+    const { mountMoneyMap } = await import("/money-map.js?v=5423132a60");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -5651,7 +5690,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=a7097118bf'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=b529a25c7c'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5994,7 +6033,7 @@ async function renderPartyMentions(label, sections, key) {
           return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(result.slug)}`)} class="source-title doc-title">${esc(displayTitle(result))}</a>
             <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
             <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? machineLabelHTML({ inline: true, className: "party-brief-label" }) : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p>${excerptNoticeHTML(result)}</li>`;
-        }).join("")}</ul>`;
+        }).join("")}</ul>${results.some((result) => briefs[result.resource]) ? machineNoticeHTML({ notice: briefNotice }) : ""}`;
     };
     paint({});
     const briefs = await fetchBriefMap(results);
@@ -6101,7 +6140,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
       notes: [
         "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
         "This list covers the votes OPAX holds. A bill missing here was not necessarily unvoted on.",
-        ...(jurs.includes("vic") ? ["Victorian Hansard lists the members who voted aye or no. It does not record pairs, tellers or absences, so a division missing from this record does not mean the member was absent or abstained."] : []),
+        ...(jurs.includes("vic") ? ["Hansard’s division lists do not record pairs, tellers or absences. A division with no vote shown for this member does not mean they were absent or abstained."] : []),
         "Party position is shown only when this vote's source records it. Open a division for the question and the party tallies.",
       ],
       licence: "They Vote For You (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.",
@@ -6207,6 +6246,68 @@ async function renderPersonTopics(name, sections, onRecord = () => {}, years = {
 }
 
 
+/* The Worker's first paint of a member (src/seo-content.ts personHeadPrerender and
+   personBootBlocks) already has the head's meta line and source line, the ask block and "Next in
+   the record", in this page's own markup. The page the reader landed on keeps those nodes rather
+   than drawing them again, so the top of the page is painted once, at its final height, and the
+   record under it never moves. Looked for once, by the first person opened; another person's
+   page drops them. */
+let bootPerson; // undefined: not looked for yet; null: none to keep
+function takeBootPerson(segment) {
+  if (bootPerson === undefined) {
+    bootPerson = null;
+    const pre = document.querySelector("#prerender.subject-person");
+    let landed = "";
+    try { landed = decodeURIComponent(location.pathname.split("/")[3] || ""); } catch {}
+    // Out of the hidden crawler block either way: their ids (person-next, growth-ask-input)
+    // must name the app's blocks, not copies left in #prerender.
+    const blocks = pre ? [...pre.querySelectorAll(":scope > .growth-ask, :scope > .next-steps")] : [];
+    for (const block of blocks) block.remove();
+    if (pre && location.pathname.startsWith("/subject/person/") && landed === segment) {
+      const head = pre.querySelector(":scope > .subject-head");
+      bootPerson = {
+        segment,
+        title: head?.querySelector("h1")?.textContent || "",
+        tag: head?.querySelector(".subject-tag")?.innerHTML || "",
+        source: head?.querySelector(":scope > .ui-source") || null,
+        blocks,
+      };
+    }
+  }
+  if (bootPerson && bootPerson.segment !== segment) bootPerson = null;
+  return bootPerson;
+}
+/** A reader typing in the member's ask field as the page is redrawn round it: moving the field
+ *  drops the focus, so seatBootPerson gives it back, the caret where it was. Read before the move. */
+function typingIn() {
+  const field = document.activeElement;
+  return field?.id === "growth-ask-input" ? { field, caret: [field.selectionStart, field.selectionEnd] } : null;
+}
+/** Put the landed member's kept nodes into a fresh person skeleton (subjectSkeleton). */
+function seatBootPerson(body, segment, { title = false, typing = typingIn() } = {}) {
+  const boot = takeBootPerson(segment);
+  const head = body.querySelector(".subject-head");
+  if (!boot || !head) return;
+  if (title && boot.title) $("subject-title").textContent = boot.title;
+  const tag = head.querySelector(".subject-tag");
+  if (boot.tag && tag) tag.innerHTML = boot.tag;
+  if (boot.source) (tag || head).after(boot.source);
+  head.after(...boot.blocks);
+  if (typing?.field.isConnected && document.activeElement !== typing.field) {
+    typing.field.focus({ preventScroll: true });
+    typing.field.setSelectionRange(...typing.caret);
+  }
+  wireGrowthAsk(body); // the field takes its text's height before this frame is drawn
+}
+/** A person's record stays out of the layout until the blocks above it are final (style.css
+ *  .subject-grid.is-settling): from the skeleton's first frame, or a record drawn there would
+ *  be pushed down by them. Shown by revealGrid, or after four seconds at the latest. */
+function settleGrid(body) {
+  const grid = body.querySelector(".subject-grid");
+  if (!grid) return;
+  grid.classList.add("is-settling");
+  setTimeout(() => grid.classList.remove("is-settling"), 4000);
+}
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
   if (kind === "person") {
     // The address may be a slug or a name; the page works from the name, and
@@ -6227,6 +6328,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       body.innerHTML = subjectSkeleton("Parliamentarian", "", `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`, true);
       $("subject-title").innerHTML = `<span class="visually-hidden">Loading parliamentarian</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>`;
       $("subject-infobox")?.classList.add("entry-rail");
+      settleGrid(body);
+      seatBootPerson(body, segment, { title: true });
     }
     // Never wait long on the map: a name opens without it.
     // Load the portrait lookup alongside the slug map so a known portrait
@@ -6279,6 +6382,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
+  const typing = kind === "person" ? typingIn() : null; // before the skeleton takes the field out
   body.classList.toggle("subject-person", kind === "person");
   body.classList.toggle("subject-party", kind === "party" || kind === "donor");
   const SUBJECT_LABELS = {
@@ -6295,7 +6399,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // Reserve the map in the skeleton's first frame, before a lazy helper yields.
   if (kind === "donor" || kind === "party") reserveSubjectMap(true);
   // A person's aside is the "On this page" rail, not a Quick facts card.
-  if (kind === "person") $("subject-infobox")?.classList.add("entry-rail");
+  if (kind === "person") {
+    $("subject-infobox")?.classList.add("entry-rail");
+    settleGrid(body);
+    seatBootPerson(body, subjectSegment, { typing });
+  }
   // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
   // its name, so the title is a bar until the index says what the place is.
   // An electorate's or a party's address is a slug ("vic-vic-la-vic-berwick",
@@ -6758,6 +6866,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // Who they are, dated: the identity block's one source line. Its sheet holds
   // what Quick facts held beyond the meta line, so every fact stays one tap away.
   const rosterChecked = verified || rosterData?.meta?.representation?.updated || rosterData?.meta?.generated || "";
+  // The Worker's source line (kept by seatBootPerson) gives way to this one: the same line, with its facts.
+  head.querySelector(":scope > .ui-source")?.remove();
   head.insertAdjacentHTML("beforeend", sourceLineHTML({
     updated: rosterChecked,
     dateLabel: "As at",
@@ -6786,13 +6896,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     </div>`);
   const promptName = roster?.full || name;
   if (currentSubjectKey !== key) return;
-  head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`}));
+  // One question pill's room is held: the record's questions arrive with the record. The page
+  // the reader landed on already has this block and the next one (seatBootPerson).
+  if (!body.querySelector(":scope > .growth-ask")) head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`, held: 1}));
   // Where this member's record leads: the seat and the party are known now; two rows are held
   // for their newest recorded votes, which renderPersonVotes fills (the block's height is set here).
-  const seatSteps = ((electorateReference?.person?.electorates || []).filter((e) => e.current).length
-    ? electorateReference.person.electorates.filter((e) => e.current) : electorateReference?.person?.electorates || [])
-    .map((e) => ({ name: e.name, href: e.url, chamber: electorateReference.module.CHAMBERS?.[e.chamber] || "" }));
-  body.querySelector(".growth-ask")?.insertAdjacentHTML("afterend", nextSteps?.nextStepsHTML(nextSteps.memberNextSteps({
+  const seatSteps = electorateReference?.module.memberSeats(electorateReference.person) || [];
+  if (!$("person-next")) body.querySelector(".growth-ask")?.insertAdjacentHTML("afterend", nextSteps?.nextStepsHTML(nextSteps.memberNextSteps({
     seats: seatSteps, party: party ? { name: party, href: subjectHash("party", party) || "" } : null,
   }), { pageType: "person", id: "person-next", reserve: 2 }) || "");
   const askRecord = {name: promptName};
@@ -6822,7 +6932,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
   renderPersonVicAuthorisation(roster, sections);
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
-    if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
+    if (currentSubjectKey !== key) return;
+    const ask = body.querySelector(".growth-ask");
+    ask?.setAttribute("data-questions-ready", "true");
+    // No question came: the held pill's room goes (growth-modules.js HELD_QUESTION_HTML).
+    for (const held of ask?.querySelectorAll(".growth-question-held") || []) held.remove();
   });
   renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope, notes: speechNotes, current: roster?.current === true }).then(() => refreshEntryRail(sections));
   renderPersonFirstSpeech(name, sections, roster).then(() => refreshEntryRail(sections));
@@ -6876,19 +6990,23 @@ function appendGrowthQuestions(root, questions, pageType) {
   if (!list) return;
   const field = root.querySelector('#growth-ask-input');
   const key = value => String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
-  const seen = new Set([...list.querySelectorAll("a")].map(a => key(new URL(a.href).searchParams.get("q"))));
+  const seen = new Set([...list.querySelectorAll("a[href]")].map(a => key(new URL(a.href).searchParams.get("q"))));
   seen.add(key(field?.value));
   // Full questions identify links; shortened labels never replace a focused link.
   for (const question of questions) {
     if (seen.has(key(question.question))) continue;
     seen.add(key(question.question));
+    // The first question takes the held pill's place, in the same frame (HELD_QUESTION_HTML).
+    list.querySelector(".growth-question-held")?.remove();
     list.insertAdjacentHTML("beforeend", growthModules.questionsHTML([question], pageType,""));
   }
 }
 
 function wireGrowthAsk(root) {
   const form = root.querySelector(".growth-ask-form");
-  if (!form) return;
+  // Once per form: a member's kept block is wired as its skeleton is drawn (seatBootPerson).
+  if (!form || form.dataset.wired) return;
+  form.dataset.wired = "true";
   const field = form.querySelector('[name="q"]');
   const fit = () => fitQueryField(field);
   for (const event of ["focus", "input", "blur"]) field.addEventListener(event, fit);
@@ -6921,6 +7039,9 @@ function wireGrowthAsk(root) {
     fit();
   });
   form?.addEventListener("submit", event => {
+    // A member's kept form is wired before this module has loaded: until then it submits as
+    // the Worker drew it, a GET to /ask with the question and the page type.
+    if (!growthModules) return;
     event.preventDefault();
     const question = form.querySelector('[name="q"]').value.trim();
     if (question) {
@@ -7078,7 +7199,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
           </span></a>${isMultiSpeaker(r) ? speechIdentityHTML(r) : ""}${excerptNoticeHTML(r)}</li>`;
-      }).join("")}</ul>
+      }).join("")}</ul>${any ? machineNoticeHTML({ notice: briefNotice }) : ""}
       ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun}</a></p>`}
       ${opts.notes || ""}
       ${sourceLineHTML({
@@ -7105,6 +7226,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   });
   const headRow = slot.querySelector(".person-section-head");
   if (headRow && !headRow.querySelector(".ui-machine")) headRow.insertAdjacentHTML("beforeend", machine());
+  ensureListNotice(slot.querySelector(".speech-rows"));
 }
 
 function splitSpeechSearch(speaker) {
@@ -7477,6 +7599,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
               passage.replaceWith(p, open);
             }
           }
+          if (results.some((r) => briefs[r.resource])) ensureListNotice(mount.querySelector('.topic-arc-list'), 'beforebegin');
           const counts = mount.querySelector('.topic-arc-counts');
           if (counts) {
             const n = results.filter((r) => briefs[r.resource]).length;
@@ -7506,7 +7629,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
           <button type="button" class="ui-button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
         </div></div>
         ${topicArcVoicesHTML(results, briefCount)}
-        <ol class="topic-arc-list">${rowsHTML(items)}</ol>
+        ${briefCount ? machineNoticeHTML({ notice: briefNotice }) : ""}<ol class="topic-arc-list">${rowsHTML(items)}</ol>
         <p class="fineprint topic-arc-note">Machine briefs are automated summaries and stand in for the passage where one exists; passages are extracts from the record, opened by the title. This view shows the newest labelled matches, not the whole debate.</p>
         <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
         ${items.length < results.length ? `<button type="button" class="ui-button" data-ui-size="compact" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
@@ -7841,7 +7964,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=a54cd83c44").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=05900318a8").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8972,9 +9095,11 @@ async function openBillText(bill) {
   const generation = billTextGeneration;
   const slot = $('bill-text-slot');
   try {
-    const module = await import('/bill-text.js?v=p3f-20261010');
+    const module = await import('/bill-text.js?v=p3f-20261116');
     if (generation !== billTextGeneration || billView !== `bill:${bill.key}` || !slot?.isConnected) return;
     const handle = billTextHandle = module.mountBillText(slot, { bill,
+      // The error notice under the model's overview of a version, in the shared wording (labels.js).
+      machineNotice: uiLabels.machineNoticeText(),
       requestedVersion: new URLSearchParams(location.search).get('text-version'),
       open: location.hash === '#bill-full-text',
       onVersion(id) {
@@ -9759,7 +9884,7 @@ function billSpeechesHTML(bill) {
   return `<section class="ui-section bill-section">
     <div class="ui-section-head bill-section-head"><h2 class="ui-section-title">What was said</h2>${
       briefs ? machineLabelHTML({ note: BILL_SPEECH_BRIEF_NOTE }) : ""}</div>
-    <ul class="ui-list bill-speeches" role="list">${rows}</ul>
+    <ul class="ui-list bill-speeches" role="list">${rows}</ul>${briefs ? machineNoticeHTML() : ""}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "Parliamentary Hansard",
       notes: [`Speeches the record attaches to this bill${speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}.
@@ -9817,6 +9942,7 @@ function billSummaryHTML(bill) {
     ${changes.length ? `<h3 class="bill-sub">What it changes</h3>
       <ul class="bill-changes">${changes.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>` : ""}
     ${s.affected ? `<h3 class="bill-sub">Who is affected</h3><p class="bill-affected">${esc(s.affected)}</p>` : ""}
+    ${machineNoticeHTML()}
     ${sourceLineHTML({
       // The day the summary was written; the material's own date is in the sheet.
       updated: String(s.generated_at || "").slice(0, 10), dateLabel: "Summary written", source: basis, originals,
@@ -10057,6 +10183,7 @@ async function fillBillPeek(details, entry) {
       || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
     ${growthModules.summaryWrittenHTML(summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
+    ${machineNoticeHTML()}
     <p class="fineprint">${esc(billStatusLine(entry))}.</p>
     ${foot}`;
 }
@@ -10251,6 +10378,7 @@ async function renderDocBillPanel(doc, slug) {
     ? `<div class="doc-bill-machine">${machineLabelHTML({ notRecord: true, note: `${bill.summary.attribution
          || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
        <p class="doc-bill-sentence">${esc(first)}</p>
+       ${machineNoticeHTML()}
        ${growthModules.summaryWrittenHTML(bill.summary)}`
     : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
 }
@@ -10278,7 +10406,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=127202ac8e"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=a28744d4d0"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10294,14 +10422,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=70c5ba1337", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=553327ef90", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=ae1ac0e1f3", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=03842fdef4", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=7f62cabcf0", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=65172b13a4", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=8dfce76124", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=808e583528", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=81c00cb78e", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -10736,6 +10864,9 @@ async function runAsk(question) {
   $("ask-keep").hidden = true;
   $("ask-again").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
+  $("ask-machine").replaceChildren(); $("ask-machine").hidden = true;
+  renderAnswerNotice($("ask-notice"), "");
+  loadMachineNotice();
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
   $("ask-money").hidden = true;
@@ -10816,7 +10947,9 @@ async function runAsk(question) {
           $("ask-answer").replaceChildren();
           $("ask-result").querySelector(".kicker").textContent = "Answer";
           // Only a model's words stream, so they are labelled from the first of them.
-          $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false;
+          $("ask-machine").innerHTML = machineLabelHTML(); $("ask-machine").hidden = false;
+          // Their notice holds its line from the first words, so nothing moves when the answer completes.
+          renderAnswerNotice($("ask-notice"), machineNoticeHelpers?.MACHINE_NOTICE);
           $("ask-stamp").textContent = "";
           $("ask-sources").hidden = true;
           $("ask-result").querySelector(".action-row").hidden = true;
@@ -10864,7 +10997,7 @@ async function runAsk(question) {
     if (askSteps) liveSteps = askSteps.steps();
     const research = researchOf(data, liveSteps);
     const researchExtras = researchSourceExtras(research, sources);
-    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, machine_written: data.machine_written, suggested_question: data.suggested_question };
+    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next, machine_written: data.machine_written, machine_notice: data.machine_notice, suggested_question: data.suggested_question };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
@@ -10885,10 +11018,15 @@ async function runAsk(question) {
     $("ask-stamp").hidden = needsClarification || noAnswer;
     $("ask-result").querySelector(".kicker").textContent = noAnswer ? "Records found" : needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
-    // Every answer a language model wrote carries the label, above any overview paragraph it also wrote.
-    if (modelWrittenAnswer(data, answerText)) { $("ask-overview").insertAdjacentHTML("afterbegin", machineLabelHTML()); $("ask-overview").hidden = false; }
+    // Every answer a language model wrote carries the label on a line of its own, above any overview paragraph it
+    // also wrote. The sunken panel is that paragraph's alone: with no paragraph it stays hidden, never an empty bar.
+    const askWritten = modelWrittenAnswer(data, answerText);
+    $("ask-machine").innerHTML = askWritten ? machineLabelHTML() : "";
+    $("ask-machine").hidden = !askWritten;
+    renderAnswerNotice($("ask-notice"), noAnswer ? "" : answerNoticeText(data, answerText));
     if (noAnswer) {
       $("ask-overview").hidden = true;
+      $("ask-machine").hidden = true;
       renderNoAnswer($("ask-answer"), data);
     } else if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
@@ -11812,7 +11950,7 @@ async function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next, machine_written: seed.machine_written, suggested_question: seed.suggested_question },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next, machine_written: seed.machine_written, machine_notice: seed.machine_notice, suggested_question: seed.suggested_question },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -12024,6 +12162,11 @@ function renderChatThread({ landed = false, rise = false } = {}) {
     const safe = saDisplayHelpers.saDisplayPayload({...msg, answer:msg.text}, saFullTextFlag);
     return {...msg, ...safe, text:safe.answer};
   });
+  if (transcriptNoteHelpers) chatThread = chatThread.map(msg => {
+    if (msg.role !== 'answer') return msg;
+    const text = transcriptNoteHelpers.withTranscriptNote({answer:msg.text, sources:msg.sources, answered:msg.answered}, true).answer;
+    return text === msg.text ? msg : {...msg, text};
+  });
   syncAskChatViewport();
   renderChatScope();
   renderChatContext();
@@ -12148,6 +12291,14 @@ function chatAnswerEl(msg) {
   renderAnswer(body, msg.text || "(no answer)", msg);
   if (msg.pay_answer) renderPayNextSteps(body, msg.pay_next);
   wrap.appendChild(body);
+  // The error notice: one line under the answer, above its sources, wherever the label is.
+  const notice = wrap.querySelector(".ui-machine") ? answerNoticeText(msg, msg.text) : "";
+  if (notice) {
+    const line = document.createElement("p");
+    line.className = "answer-notice";
+    renderAnswerNotice(line, notice);
+    wrap.appendChild(line);
+  }
   const sources = msg.sources || [];
   const researchExtras = researchSourceExtras(msg.research, sources);
   if (sources.length || researchExtras.length) {
@@ -12472,6 +12623,12 @@ async function sendChat(question, carry) {
           dots.setAttribute("aria-hidden", "true");
           dots.append(document.createElement("i"), document.createElement("i"), document.createElement("i"));
           liveWrap.append(body, dots);
+          if (typeof machineNoticeHelpers?.MACHINE_NOTICE === "string") {
+            const line = document.createElement("p");
+            line.className = "answer-notice";
+            renderAnswerNotice(line, machineNoticeHelpers.MACHINE_NOTICE);
+            liveWrap.append(line);
+          }
           // Only a model's words stream, so they are labelled from the first of them.
           liveWrap.insertAdjacentHTML("afterbegin", machineLabelHTML());
           slot.insertAdjacentElement("afterend", liveWrap);
@@ -12525,6 +12682,7 @@ async function sendChat(question, carry) {
       answer_status: data.answer_status,
       // Whether a model wrote this turn, kept so a reopened conversation labels it the same way.
       machine_written: data.machine_written,
+      machine_notice: data.machine_notice,
       suggested_question: data.suggested_question,
       money_ranking: data.money_ranking,
       money_context: data.money_context,
@@ -13198,6 +13356,7 @@ function clearSearchResults() {
     briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
+  syncSearchBriefsNotice();
   $("results-bar").hidden = true;
   $("search-date-ruler").hidden = true;
   $("search-date-ruler").replaceChildren();
@@ -13265,6 +13424,16 @@ function syncSearchReadBar() {
     // briefs say what they are in words, the same in either mode.
     status.textContent = `${count} ${count === 1 ? "has a machine-written brief" : "have machine-written briefs"}; the rest show the record's own text.`;
   }
+}
+
+/** One error notice at the head of the results while any row shows machine-written text: a bill row whose text
+ *  is its summary (`machine`), or, in Briefs mode, a record's brief. Gone otherwise. The Worker's words. */
+function syncSearchBriefsNotice(results = []) {
+  const list = $("search-results");
+  if (list.previousElementSibling?.matches(".search-machine-notice")) list.previousElementSibling.remove();
+  const shown = results.some((r) => Object.hasOwn(r, "href") ? r.machine === true
+    : searchReadMode === "briefs" && r.kind !== "division" && !!lastSearch.briefs[r.resource]);
+  if (shown) list.insertAdjacentHTML("beforebegin", machineNoticeHTML({ notice: lastSearch.machine_notice || briefNotice, className: "search-machine-notice" }));
 }
 
 function setSearchReadMode(mode) {
@@ -13348,6 +13517,9 @@ function renderResults(results) {
       return li;
     }),
   );
+  // Rows that carry machine-written text (a bill's summary, or a brief in Briefs mode): one error notice at the
+  // head of the list, never one per row.
+  syncSearchBriefsNotice(results);
   decorateMetaPortraits($("search-results"));
   requestAnimationFrame(refreshSearchPassageFolds);
 }
@@ -13560,6 +13732,7 @@ function resetSearchAnswer(show) {
   box.classList.remove("is-loading");
   $("search-answer-body").replaceChildren();
   $("search-answer-sources").replaceChildren();
+  renderAnswerNotice($("search-answer-notice"), "");
   $("search-answer-fold").hidden = true;
   $("search-answer-more").textContent = "";
   $("search-answer-retry").hidden = true;
@@ -13645,6 +13818,7 @@ async function runSearchAnswer(q, f, key) {
   body.setAttribute("aria-busy", "true");
   body.innerHTML = '<div class="answer-skeleton" aria-hidden="true"><i style="width:94%"></i><i style="width:86%"></i><i style="width:68%"></i></div>';
   $("search-answer-sources").replaceChildren();
+  renderAnswerNotice($("search-answer-notice"), "");
   $("search-answer-fold").hidden = true;
   $("search-answer-fold").open = false;
   $("search-answer-more").textContent = "";
@@ -13702,6 +13876,8 @@ async function runSearchAnswer(q, f, key) {
       }
       return li;
     }));
+    // The error notice the Worker sent with the overview: under its points, above its sources.
+    renderAnswerNotice($("search-answer-notice"), data.machine_notice);
     $("search-answer-sum").textContent = `Sources (${sources.size})`;
     $("search-answer-fold").hidden = false;
     $("search-answer-more").textContent = `Drawn from ${data.reviewed_count} matching records.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
@@ -13710,6 +13886,7 @@ async function runSearchAnswer(q, f, key) {
   } catch (err) {
     if (!mine()) return;
     body.replaceChildren();
+    renderAnswerNotice($("search-answer-notice"), "");
     setStatus($("search-answer-status"), "The summary could not be written. Your matching records are below.");
     $("search-answer-retry").hidden = false;
   } finally {
@@ -13785,6 +13962,8 @@ async function runSearch(page = 1) {
       years: data.years || {},
       briefs: {},
       briefsLoading: true,
+      // The Worker's error notice for rows that carry a bill's machine-written summary.
+      machine_notice: typeof data.machine_notice === "string" ? data.machine_notice : "",
     };
     if (!data.count) {
       hideLoader("search-wombat");
@@ -14341,8 +14520,11 @@ async function openDocPage(slug, manageFocus) {
     }), { pageType: "doc", id: "doc-next-steps" }) || "";
     $("doc-next").innerHTML = nextHTML;
     $("doc-next").hidden = !nextHTML;
+    // The error notice sits directly under the brief, in the Worker's words (machine_notice).
+    $("doc-brief").querySelector(".answer-notice")?.remove();
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
+      $("doc-brief-text").insertAdjacentHTML("afterend", machineNoticeHTML({ notice: doc.machine_notice }));
       $("doc-brief").hidden = false;
     }
     // The pill says what wrote the brief; its sheet says from what.
@@ -14517,7 +14699,7 @@ async function renderDocSimilar(doc) {
           <p class="doc-related-meta">${esc([label === row.speaker ? "" : row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
           <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>${excerptNoticeHTML(row)}
           <p class="doc-related-meta">${brief ? machineLabelHTML({ inline: true }) : "Passage from the record"}</p></li>`;
-      }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
+      }).join("")}</ul>${rows.some((row) => briefs[row.resource]) ? machineNoticeHTML({ notice: briefNotice }) : ""}` : '<p>No related speeches found for this subject.</p>') +
       `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
         <button type="button" class="ui-button" data-doc-close="doc-similar">Close similar</button></div>`;
   } catch {
@@ -15704,7 +15886,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=9fd4185a50");
+    const { mountMoneyMap } = await import("/money-map.js?v=5423132a60");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
@@ -15804,6 +15986,8 @@ function renderReportV2(report, slug) {
     const sources = Array.isArray(report.lede.sources) ? report.lede.sources : [];
     reportRenderProse(lede, report.lede.text, sources);
     head.appendChild(lede);
+    // The error notice for the whole report, directly under its opening and above the opening's sources.
+    head.insertAdjacentHTML("beforeend", machineNoticeHTML({ className: "report-notice" }));
     if (sources.length) head.appendChild(reportSourcesFold(sources, "Sources for this opening"));
     reportWireCitations(head, sources);
   }

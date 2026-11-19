@@ -14,7 +14,8 @@ interface SlideBase { kicker: string; title: string; alt: string; authorisation?
 
 export type StorySlide =
   /** The opening photograph, headline over its lower edge. `photo` is a catalogue id; `inset` a portrait id from /photos/jpg. */
-  | (SlideBase & { type: 'cover'; line: string; photo: string | null; inset?: string | null; insetCredit?: string | null })
+  // `note`: one small line under the cover line, for a cover whose line is a model's summary sentence.
+  | (SlideBase & { type: 'cover'; line: string; note?: string | null; photo: string | null; inset?: string | null; insetCredit?: string | null })
   /** The one figure the edition leads with. */
   | (SlideBase & { type: 'number'; lines: string[]; value: string; label: string })
   /** A framed photograph with a fact, or a quotation, beneath it. */
@@ -43,8 +44,10 @@ export const STORY_MAX_SLIDES = 10
 /** Bump when a slide's drawing changes so cached renders are not reused. It keys
  *  the slide cache and the slide URLs only; the landscape and portrait cards keep theirs.
  *  3: the source slide closes on the page's address alone (no path line, no wordmark).
- *  4: adds the authorisation line on Victorian electoral slides. */
-export const STORY_VERSION = 4
+ *  4: adds the authorisation line on Victorian electoral slides.
+ *  5: a cover whose line is a summary sentence carries a small "Machine-written summary" line under it.
+ *  6: a bill's cover says "Passed" with the day it passed, or "Royal Assent" with that day; never the one as the other. */
+export const STORY_VERSION = 6
 
 /** Where a slide is drawn: the feed carousel at 4:5, or a story frame at 9:16. */
 export type StoryFormat = 'feed' | 'story'
@@ -91,6 +94,8 @@ export interface StoryPhoto {
   licence_url?: string
   /** The line drawn on the slide and repeated in the caption. */
   credit: string
+  /** Set on a photograph of a chamber: which one. A bill's slides show only its own house's chamber (billPhotosFor). */
+  chamber?: 'senate' | 'representatives'
 }
 
 export interface PhotoCatalogue {
@@ -126,6 +131,22 @@ export function photosFor(catalogue: PhotoCatalogue | null | undefined, subject:
   ]
   const seen = new Set<string>()
   return ids.filter(id => typeof id === 'string' && /^[a-z0-9-]+$/.test(id) && !seen.has(id) && (seen.add(id), photoAllowed(catalogue.photos?.[id])))
+}
+
+/**
+ * A bill's photographs: its own, then the kind's, without any of the other chamber. A chamber photograph is
+ * marked with its chamber (photos.json); a bill shows only its own house's, and a bill whose house is not known
+ * (an exposure draft) shows neither. A photograph that shows no chamber belongs to no house and is kept. With
+ * none of its own chamber left, the building (`bill:building`), never the other chamber; with nothing at all,
+ * the cover is drawn without a photograph.
+ */
+export function billPhotosFor(catalogue: PhotoCatalogue | null | undefined, subject: string, house: 'senate' | 'representatives' | null): string[] {
+  const noOtherChamber = (id: string) => {
+    const chamber = catalogue?.photos?.[id]?.chamber
+    return !chamber || chamber === house
+  }
+  const own = photosFor(catalogue, subject, 'bill', house).filter(noOtherChamber)
+  return own.length ? own : photosFor(catalogue, subject, 'bill:building').filter(id => !catalogue?.photos?.[id]?.chamber)
 }
 
 export function photoFor(catalogue: PhotoCatalogue | null | undefined, id: string | null | undefined): StoryPhoto | null {

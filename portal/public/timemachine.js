@@ -38,7 +38,7 @@ import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, grou
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { machineLabelHTML } from './labels.js?v=ffd32d5678'
+import { machineLabelHTML, machineNoticeHTML } from './labels.js?v=3d4c26573f'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026
@@ -409,10 +409,11 @@ const CSS = `
 .tm-hero-kicker { font: var(--type-metadata); font-family: var(--serif); font-style: italic; color: var(--ink-faint); }
 .tm-hero-row { display: flex; align-items: center; justify-content: center; gap: var(--space-row); }
 .tm-year-lockup { position: relative; display: flex; flex-direction: column; align-items: center; }
-/* The dial's readout is the one figure outside the six sizes: the tool is
-   built around it, the way a page is built around its title. */
+/* The dial's readout is a figure (the figure role's sans 700, tabular), at the
+   one size outside the six: the tool is built around it, the way a page is
+   built around its title. */
 .tm-year {
-  font-family: var(--serif); font-weight: 700;
+  font: var(--type-display);
   font-size: clamp(3.4rem, 14vw, 6rem); line-height: 1.05;
   color: var(--navy); font-variant-numeric: tabular-nums;
   min-width: 4ch; text-align: center; margin: 0;
@@ -1399,7 +1400,7 @@ export function mountTimeMachine(container, opts = {}) {
   const onOuterDialogClose = () => closeGallery(false)
 
   function renderSkeletons() {
-    cardsEl.replaceChildren()
+    clearCards()
     cardsEl.setAttribute('aria-busy', 'true')
     for (let i = 0; i < 3; i++) cardsEl.appendChild(el('div', 'tm-skeleton', { 'aria-hidden': 'true' }))
   }
@@ -1622,16 +1623,24 @@ export function mountTimeMachine(container, opts = {}) {
   // has reached a speech: swap the opening passage for the summary, labelled
   // as machine-written. One small /api/brief call per render; speeches the
   // pass has not reached keep their passage, so the list never waits on this.
+  /** Empties the cards, and takes the briefs' error notice with them: the next cards may carry no brief. */
+  function clearCards() {
+    if (cardsEl.previousElementSibling?.matches('.tm-cards-notice')) cardsEl.previousElementSibling.remove()
+    cardsEl.replaceChildren()
+  }
+
   async function applyBriefs(rids, seq, signal) {
     if (!rids.length) return
     let briefs = {}
+    let data
     try {
-      const data = await fetchJSON(`/api/brief?rids=${encodeURIComponent(rids.join(','))}`, signal)
+      data = await fetchJSON(`/api/brief?rids=${encodeURIComponent(rids.join(','))}`, signal)
       briefs = data?.briefs || {}
     } catch {
       return
     }
     if (seq !== searchSeq) return
+    let shown = false
     for (const card of cardsEl.querySelectorAll('.tm-card[data-rid]')) {
       const text = briefs[card.dataset.rid]
       if (!text) continue
@@ -1645,7 +1654,11 @@ export function mountTimeMachine(container, opts = {}) {
       const quote = card.querySelector('.tm-card-snippet')
       if (quote) quote.replaceWith(brief)
       else card.insertBefore(brief, card.querySelector('.tm-read'))
+      shown = true
     }
+    // The error notice, once, at the head of the cards that now carry briefs, in the Worker's words. It sits
+    // just outside the cards' live region, so it is read in order and never announced as an update.
+    if (shown && !cardsEl.previousElementSibling?.matches('.tm-cards-notice')) cardsEl.insertAdjacentHTML('beforebegin', machineNoticeHTML({ notice: data?.machine_notice, className: 'tm-cards-notice' }))
   }
 
   // ---- the year in brief + voices (static JSON, scripts/generate_years.py) --
@@ -1697,6 +1710,9 @@ export function mountTimeMachine(container, opts = {}) {
       })
       briefEl.appendChild(more)
     }
+    // The error notice under the brief and above the speeches it drew on. A year's brief is read from a static
+    // file, so the words are the fixed ones (machine-notice.js, through labels.js).
+    briefEl.insertAdjacentHTML('beforeend', machineNoticeHTML())
 
     const sources = Array.isArray(brief.sources) ? brief.sources : []
     const cited = sources.filter((s) => s.cited).length
@@ -1824,7 +1840,7 @@ export function mountTimeMachine(container, opts = {}) {
   // must not pretend to know which — and must not read as "parliament was
   // quiet about this".
   function renderEmptyTopicYear() {
-    cardsEl.replaceChildren()
+    clearCards()
     const box = el('div', 'tm-empty', { role: 'status' })
 
     const head = el('strong')
@@ -1852,7 +1868,7 @@ export function mountTimeMachine(container, opts = {}) {
       renderEmptyTopicYear()
       return
     }
-    cardsEl.replaceChildren()
+    clearCards()
     const box = el('div', 'tm-empty', { role: 'status' })
 
     const head = el('strong')
@@ -1880,7 +1896,7 @@ export function mountTimeMachine(container, opts = {}) {
   }
 
   function renderErrorState() {
-    cardsEl.replaceChildren()
+    clearCards()
     const box = el('div', 'tm-empty', { role: 'status' })
     // One plain sentence and a way to try again, never the raw failure.
     const head = el('strong')
@@ -1956,7 +1972,7 @@ export function mountTimeMachine(container, opts = {}) {
       return
     }
     if (year > lastGoodYear) lastGoodYear = year
-    cardsEl.replaceChildren()
+    clearCards()
     for (const { probe, r } of picks) cardsEl.appendChild(makeCard(probe.label, r))
     fillPortraits(cardsEl)
     applyBriefs(picks.map(({ r }) => r).filter(briefWanted).map((r) => r.resource).filter(Boolean), seq, signal)

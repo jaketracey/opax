@@ -1,4 +1,4 @@
-import { sourceLineHTML, machineLabelHTML, statusLabelHTML } from '../public/party-page.js'
+import { sourceLineHTML, machineLabelHTML, machineNoticeHTML, statusLabelHTML } from '../public/party-page.js'
 import { shortDate, shortMoney } from '../public/format.js'
 import { houseName, orderedWeeks, day, sydneyDay } from '../public/hubs-data.js'
 import { sponsorPerson, type SponsorCandidate } from '../public/sponsor-person.js'
@@ -109,6 +109,8 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
       const summary = b.summary?.sentences?.length && summaryDate ? `<div class="hub-summary">${machineLabelHTML({pill:true})}<span class="hub-date">${day(b.summary.generated_at) ? 'Written' : 'As at'} ${date(summaryDate)}</span><p>${esc(b.summary.sentences.join(' '))}</p></div>` : ''
       return `<li><h3 class="ui-row-title">${link(href,b.title)}</h3><p class="ui-row-meta">Introduced ${date(b.introduced)} · ${esc(houseName(b.originating_house))} · ${sponsorText}</p>${summary}</li>`
     }).join('')+'</ul>'
+    // The error notice, once, directly under a list in which any bill carries a machine-written summary.
+    if (week.bills.some(b => b.summary?.sentences?.length && (day(b.summary?.generated_at) || day(b.summary?.as_of)))) body += machineNoticeHTML()
     // One dated source line closes the block; each bill's ParlInfo record is in its sheet.
     const originals = week.bills.flatMap(b => (b.sources || []).filter(s => s.kind === 'billhome').slice(0,1).map(s => ({href:s.url,label:b.title})))
     body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records',originals})+'</section>'

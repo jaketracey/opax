@@ -217,8 +217,13 @@ app API rejects the invalid asset with 503. Upper house results link to VEC.
 The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
 read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form
 (`/vic-election-2026?place=3350`), answered by the Worker without scripts; result
-pages are `noindex` and keep the hub's canonical. Seat and member names match
-without the places file. All 88 Assembly districts have one roster member and all 8 Council
+pages are `noindex` and keep the hub's canonical. Until the polls close (6 pm on
+28 November 2026 Melbourne, `VIC_ELECTION_POLLS_CLOSE`) the finder matches suburbs,
+postcodes, council areas, districts and regions only: no person's name finds a seat,
+because the roster names each seat's previous member and no other candidate. The web
+finder, the app's `/find` endpoint and the MCP postcode lookup share the one gate in
+`findSeats`; roster member names match again, with no deploy, from the close of polls.
+Seat names (and member names after the close) match without the places file. All 88 Assembly districts have one roster member and all 8 Council
 regions have five, dated to the published roster snapshot.
 
 The VEC's [district list](https://www.vec.vic.gov.au/electoral-boundaries/state-districts)

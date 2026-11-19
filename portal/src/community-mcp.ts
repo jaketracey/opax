@@ -5,6 +5,7 @@ import {body,CommunityError,json} from './community-core'
 import {challenge,limitKey,mcpCaller,McpLimitError,progressMeter,spendAnonymous,spendMember,withSession,withCors,type KbMeter} from './mcp-access'
 import {tools,getTool,toolSchema,toolOutputSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {RECORD_TEXT_NOTICE} from './tools/mcp-common'
+import {markCatalogRecord,markMachineRows,markRecordSummary,markToolResult} from './tools/machine-marks'
 import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,RECORD_READ_BYTES,MCP_REGISTERS,MCP_TEXT,REGISTER_LIST,listedSchema,mcpName,registryName} from './tools/mcp-listing'
 import {corpusKb as openCorpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
@@ -54,9 +55,10 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
     const {record,coverage}=await readCatalogRecord(slug,read)
     const href=typeof record.href==='string'&&/^\/[a-z]/i.test(record.href)&&!record.href.startsWith('//')?record.href:null
     const bill=href?/^\/bill\/([a-z0-9-]{1,120})$/.exec(href):null
-    const found={...record,slug,opax_url:env.COMMUNITY_ORIGIN+(href??'/search'),...(coverage?{coverage}:{}),
+    // A bill's catalogue record carries its model-written summary in its snippet: the record says so (machine-marks.ts).
+    const found=markCatalogRecord({...record,slug,opax_url:env.COMMUNITY_ORIGIN+(href??'/search'),...(coverage?{coverage}:{}),
      ...(bill?{bill_id:bill[1],next_step:'For this bill\'s stages, status and divisions, call bill_detail with this bill_id.'}:{}),
-     record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.',record_text_notice:RECORD_TEXT_NOTICE}
+     record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.',record_text_notice:RECORD_TEXT_NOTICE})
     const text=JSON.stringify(found)
     if(new TextEncoder().encode(text).length>MCP_OUTPUT_BYTES)return failed(JSON.stringify({error:'This catalogue record is larger than one response allows. Open its page.',url:found.opax_url}))
     return {content:[{type:'text' as const,text}],structuredContent:found}
@@ -77,6 +79,9 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
    if(!response.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:response.status===404?'Nothing was found for that request.':'The record service could not answer just now (status '+response.status+'). Try again in a minute.'})}],isError:true}
    let data:Record<string,unknown>;try{data=JSON.parse(raw)}catch{return {content:[{type:'text' as const,text:JSON.stringify({error:'The record service returned an unreadable response. Try again in a minute.'})}],isError:true}}
    if(path.startsWith('/api/resource/'))data.opax_url=env.COMMUNITY_ORIGIN+path.replace('/api/resource/','/doc/')
+   // A record's stored brief is a model's words, not the record's: it says who wrote it, before the text is measured
+   // and cut into parts, so every part carries the mark (machine-marks.ts).
+   if(resource)data=markRecordSummary(data)
    // A text longer than one response comes in parts: the largest part that fits, ending at a space, and where the next begins.
    if(resource&&typeof data.text==='string'&&(textOffset>0||new TextEncoder().encode(JSON.stringify(data)).length>MCP_OUTPUT_BYTES-1000)){
     const text=data.text as string
@@ -108,7 +113,11 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
    // Catalogue rows (bills, members, programs) have positional slugs: pin them to the index this search read, so read_record never opens a different record after a rebuild.
    if(Array.isArray(data.results))data.results=data.results.map((row:Record<string,unknown>)=>'slug' in row?{...row,slug:versionedCatalogSlug(row.slug,data.index_version)}:row)
    // Record text is quoted source material: say so in the result itself, not only in the server instructions.
-   data.record_text_notice=RECORD_TEXT_NOTICE
+   // A response that also holds model-written text carries the notice that allows for it, set with the marks.
+   if(resource){if(typeof data.machine_notice!=='string')data.record_text_notice=RECORD_TEXT_NOTICE}
+   // Search rows whose text is a bill's summary say machine: true; the result says what that means, once. A notice
+   // the search reply arrived with is not taken on trust: the plain notice is set, then the rows decide.
+   else{delete data.machine_notice;data.record_text_notice=RECORD_TEXT_NOTICE;data=markMachineRows(data)}
    return {content:[{type:'text' as const,text:JSON.stringify(data)}],structuredContent:data,isError:false}
   }
   const readOnly={readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}
@@ -202,6 +211,8 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
    if(data.error==='Published tool data is temporarily unavailable.')data.error='This record source could not be read just now. Try again in a minute; if it keeps failing, try a narrower request.'
    // MCP-only fields, added after the shared tool call so Ask's result and its size budget are unchanged.
    if(typeof data.record_text_notice!=='string')data.record_text_notice=RECORD_TEXT_NOTICE
+   // Rows that carry a model-written summary, and a bill's summary, bring their marks with them (machine-marks.ts).
+   data=markToolResult(data)
    if(!MCP_DIRECT.has(tool.name)&&!viaRegister)data.deprecated='"'+name+'" is a former tool name that will stop answering in a later release. Use '+(MCP_REPLACED[tool.name]??'query_register with register "'+mcpName(tool.name)+'"')+'.'
    const text=JSON.stringify(data)
    if(new TextEncoder().encode(text).length>MCP_OUTPUT_BYTES)return failed(JSON.stringify({error:'This result is larger than one response allows. Lower limit, or narrow the filters or dates.',url:'https://opax.com.au/methods#mcp'}))

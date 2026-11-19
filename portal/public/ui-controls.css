@@ -19,7 +19,7 @@
 }
 [data-ui-size="compact"] { --ui-height: var(--size-control-compact); --ui-font: var(--text-15); --ui-pad: var(--sp-12); }
 [data-ui-size="default"] { --ui-height: var(--size-control); --ui-font: var(--text-15); --ui-pad: var(--sp-16); }
-[data-ui-size="large"] { --ui-height: var(--size-control-large); --ui-font: var(--text-16); --ui-pad: var(--sp-20); }
+[data-ui-size="large"] { --ui-height: var(--size-control-large); --ui-font: var(--text-17); --ui-pad: var(--sp-20); }
 
 /* ---- Button: primary (navy), secondary (navy wash, no outline), quiet, danger.
    The transparent border is what forced colours draws as the button's edge. */
@@ -331,9 +331,9 @@ label.ui-chip:has(input:focus-visible), .ui-filter-bar .ui-filter-toggle:has(inp
    Safari does not zoom on focus. */
 @media (pointer: coarse) { [data-ui-size="compact"] { --ui-height: var(--size-target); } }
 /* A pill select keeps the label size on screen, but 16 on touch so Safari does not zoom when it opens. */
-@media (pointer: coarse) { .ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select { font-size: var(--text-16); } }
+@media (pointer: coarse) { .ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select { font-size: var(--text-17); } }
 @media (max-width: 1000px), (pointer: coarse) {
-  :root, [data-ui-size] { --ui-font: var(--text-16); }
+  :root, [data-ui-size] { --ui-font: var(--text-17); }
   .ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select, .ui-filter-bar .ui-filter-toggle { min-height: var(--size-target); height: var(--size-target); }
   [data-ui-size="compact"] { --ui-height: var(--size-target); }
   :is(button, a).ui-filter-chip, :is(button, a, label).ui-chip, :is(button, a).chip:not(.ui-button),

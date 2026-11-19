@@ -19,12 +19,12 @@ import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { votedAgainstParty } from '../public/division-against-party.js'
-import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
+import { chamberLabel, PARTY_MAP, machineNoticeHTML } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
-import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
+import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, operatorRunDates, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { fundingResearchFollowUp, rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay, mentionsOfficePay } from './ask-pay'
@@ -96,6 +96,7 @@ import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import { referenceOnlyPeople } from '../public/roster-party.js'
+import { findPerson } from '../public/member-seats.js'
 import { NO_HANSARD_HELD } from '../public/held-back-transcripts.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
@@ -157,7 +158,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, homeMapSpan, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, personBootBlocks, homeMapFallbackHTML, homeMapSpan, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
@@ -165,7 +166,8 @@ import { MONEY_GRAPH_PATHS, MONEY_PARTIES_PATH } from '../public/money-parties.j
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
-import { withTranscriptNote } from './transcript-answer'
+import { withTranscriptNote, transcriptNoteResponse } from './transcript-answer'
+import { withMachineNotice, machineNoticeResponse, mapAnswerPayload, withSummaryNotice, withStoryNotice, storedNoticeResponse, MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX } from './machine-notice'
 import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
 import { serveMedia } from './media'
@@ -3026,6 +3028,13 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
 }
 
+/** A record page whose server-rendered paragraph is the record's stored brief (a model wrote it) prints the error
+ * notice directly under that paragraph, for crawlers and readers without scripts. Otherwise nothing: the page
+ * keeps the paragraph every record gets (meta.prerender, filled where the page is assembled). */
+function briefPrerender(heading: string, description: string, summary: unknown): { prerender?: string } {
+  return typeof summary === 'string' && summary.trim() ? { prerender: answerBlock(heading, description, machineNoticeHTML()) } : {}
+}
+
 /** KB counters for the front-page meter, cached 5 minutes. */
 /**
  * The live index in numbers: the box's own counters (documents, passages)
@@ -4161,7 +4170,7 @@ interface Person {
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
   rosterOnly?: { asOf?: string; seats: string[] }
 }
-interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
+interface PeopleData { generated: string; rosterUpdated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
 
 async function speakerAttribution(env: Env, raw: string | null | undefined): Promise<SpeechScope | null> {
   if (!raw) return null
@@ -4299,7 +4308,7 @@ async function assetJson<T>(env: Env, path: string): Promise<T> {
 
 let peopleMemo: Promise<PeopleData> | null = null
 function loadPeople(env: Env): Promise<PeopleData> {
-  peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
+  peopleMemo ??= assetJson<{ meta?: { generated?: string; representation?: { updated?: string } }; people: Person[] }>(env, '/parliamentarians.json')
     .then(async (raw) => {
       const reference = await loadElectorates(env).catch(() => null)
       // One rule with the party index (scripts/build_party_index.mjs), so party pages count them alike.
@@ -4310,7 +4319,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
           chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
           rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
       }
-      return { generated: raw.meta?.generated ?? '', people: raw.people, ...personIndex(raw.people) }
+      return { generated: raw.meta?.generated ?? '', rosterUpdated: raw.meta?.representation?.updated || raw.meta?.generated || '', people: raw.people, ...personIndex(raw.people) }
     })
     .catch((err) => {
       peopleMemo = null
@@ -4953,8 +4962,14 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? await loadElectorates(env).catch(()=>null) : null
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null)})
+        const electorates=await loadElectorates(env).catch(()=>null)
+        const vicData=p.representation?.some(r=>r.jurisdiction==='vic') ? electorates : null
+        // The member in the electorate file, as app.js finds them: their seats, and which are current now.
+        const seatPerson=electorates ? findPerson(electorates.people,p.name) : null
+        // The source line, ask block and "Next in the record" the app keeps when it takes the page over.
+        const boot=personBootBlocks(p,{party:content.party,voteRows:content.voteRows,seatPerson,rosterUpdated:people.rosterUpdated})
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicData?.electorates ?? null,vicData?.people ?? null),
+          seatsNow:p.current ? (seatPerson?.electorates || []).filter(e=>e.current) : [],...boot})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '') + (vicMemberAuthorisationHTML(p) && `<div class="wrap">${vicMemberAuthorisationHTML(p)}</div>`)
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5020,6 +5035,11 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     const identity = new URL(meta.canonical)
     meta.prerender = meta.prerender.replace('id="prerender"', `id="prerender" data-record-core data-record-path="${escHtml(identity.pathname+identity.search)}"`)
   }
+  // A bill, division or speech is titled in the record's own type (style.css
+  // --type-record-title). The mark lets the first paint's h1 match the title
+  // the app draws in its place, so the swap moves nothing.
+  if ((route.kind === 'bill' || route.kind === 'doc') && meta.status === 200 && meta.prerender)
+    meta.prerender = meta.prerender.replace('id="prerender"', 'id="prerender" data-record-title')
   // An empty address draws the one not-found block, whichever route it reached
   // (public/not-found.js). A 503 is not this: the data could not be read.
   const empty = meta.status === 404 ? notFoundKindFor(route, url) : null
@@ -5148,7 +5168,8 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       publisher,
     },
     prerender: prerenderBlock(name, `${facts} ${tail}`),
-    card: { kicker: summary ? 'Bill summary' : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
+    // A card whose headline is the summary's first sentence says who wrote it, in the image itself (machine-notice.js).
+    card: { kicker: summary ? `Bill · ${MACHINE_SUMMARY_WORDS}` : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
   }
 }
 
@@ -6053,6 +6074,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       ...generic,
       title: `${headline} · OPAX`,
       description,
+      ...briefPrerender(headline, description, r.summary),
       jsonLd: {
         '@context': 'https://schema.org',
         '@type': 'Article',
@@ -6106,6 +6128,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     ...generic,
     title: `${speaker}${date ? `, ${longDate(date)}` : ''} · From the record · OPAX`,
     description,
+    ...briefPrerender(`${speaker}${date ? `, ${longDate(date)}` : ''} · From the record`, description, r.summary),
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'Article',
@@ -6223,7 +6246,9 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
   const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical,meta.electionState) : OG_IMAGE
-  const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
+  // A card whose headline is a bill's summary sentence (its kicker says so) is described the same way in words.
+  const summaryCard = !!meta.card?.kicker?.includes(MACHINE_SUMMARY_WORDS)
+  const imageAlt = meta.card && meta.status < 400 ? clip(`${summaryCard ? MACHINE_SUMMARY_PREFIX : ''}${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
   const gates = navGates(env)
   const rewriter = new HTMLRewriter()
     .on('html', { element(el) { if (gates) el.setAttribute('data-nav-gates', gates) } })
@@ -6940,12 +6965,16 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
   const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
-  return json(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN))
+  return json(withMachineNotice(withTranscriptNote(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN))))
 }
 /** Requests whose answers apiAsk must not store in the shared cache: fallbacks run within a shortened caller budget. */
 const UNSHARED_ASK_REQUESTS = new WeakSet<Request>()
 /** `caller` is an internal caller's deadline (voice's ask_opax in this Worker); otherwise only the staging hop's
  * budget header with ASK_INTERNAL_SECRET sets one, counted from now. A public budget header is ignored. */
+async function apiAskReply(request: Request, url: URL, env: Env, ctx: ExecutionContext, caller?: AskCaller): Promise<Response> {
+  // The one way out for every Ask reply (readers, the app and voice's ask_opax): the transcript line goes on here.
+  return transcriptNoteResponse(await apiAskRouted(request, url, env, ctx, caller)).then(machineNoticeResponse) // and the error notice, as `machine_notice` (machine-notice.ts)
+}
 async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext, caller?: AskCaller): Promise<Response> {
   caller ??= await trustedCaller(request, env.ASK_INTERNAL_SECRET)
   const override = request.headers.get('x-opax-research')
@@ -7140,7 +7169,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload),run.source_links,SITE_ORIGIN)
+      // The transcript line goes on after linking, so its source numbers are the ones the reader sees.
+      const finalPayload=withTranscriptNote(linkAskSources(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload,run.source_links,SITE_ORIGIN))
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
@@ -7244,15 +7274,15 @@ async function route(
         return validateSearchQuery(url) ?? (await apiSearch(request, url, env, ctx))
       }
       if (url.pathname === '/api/search-summary' && request.method === 'GET') {
-        return await apiSearchSummary(request, url, env, ctx)
+        return await mapAnswerPayload(await apiSearchSummary(request, url, env, ctx), withSummaryNotice)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
-        return await apiAskRouted(request, url, env, ctx)
+        return await apiAskReply(request, url, env, ctx)
       }
       if (url.pathname === '/api/journey-story' && request.method === 'POST') {
         const body = await readJsonBody(request)
         if (body instanceof Response) return body
-        return await apiJourneyStory(request,body.value,env,ctx)
+        return await mapAnswerPayload(await apiJourneyStory(request,body.value,env,ctx), withStoryNotice)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
         // The answer plus up to eight passages outgrows the 16 KB ask cap (413 on 13 Oct).
@@ -7298,6 +7328,10 @@ async function route(
         // subject such as grant:GA34203@abn:97694995462) under a journal date
         // and deliver it to chosen channels, or dry-run it. Bearer-guarded by
         // DAILY_POST_OPERATOR_SECRET; the journal prevents double delivery.
+        // A posting run takes only today's or yesterday's Melbourne date unless
+        // the body carries allow_any_date: true. A dry run reads and composes
+        // only (no journal write, no channel call), so it takes any date, like
+        // the public preview route.
         if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
         const body = await readJsonBody(request)
         if (body instanceof Response) return body
@@ -7310,6 +7344,12 @@ async function route(
         if (v.dry_run) {
           const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind, subject)
           const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
+          response.headers.set('cache-control', 'no-store')
+          return response
+        }
+        const allowedDates = operatorRunDates()
+        if (v.allow_any_date !== true && !allowedDates.includes(date)) {
+          const response = json({ error: `date ${date} is outside the allowed dates (${allowedDates.join(', ')}); nothing was posted. Send allow_any_date: true to post under another date.`, date, allowed_dates: allowedDates, override: 'allow_any_date' }, 400)
           response.headers.set('cache-control', 'no-store')
           return response
         }
@@ -7620,7 +7660,7 @@ export default {
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
-    }, voiceAsk(env, (ask, caller) => apiAskRouted(ask, new URL(ask.url), env, ctx, caller))))
+    }, voiceAsk(env, (ask, caller) => apiAskReply(ask, new URL(ask.url), env, ctx, caller))))
     // Sign in to connect: metadata, registration, consent, tokens (community-oauth.ts).
     const oauth = await oauthRoute(request, env)
     if (oauth) return communityResponse(oauth)
@@ -7644,7 +7684,7 @@ export default {
     }))
     if ((url.pathname === '/api/search-all' || url.pathname === '/api/suggest') && request.method === 'GET') {
       try {
-        const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx, { suggest: url.pathname === '/api/suggest' })), url)
+        const response = withSecurityHeaders(await storedNoticeResponse(await display(await apiUnifiedSearch(request, url, env, ctx, { suggest: url.pathname === '/api/suggest' })), url.pathname), url)
         if (env.STAGING_API) response.headers.set('x-robots-tag', 'noindex, nofollow')
         return response
       } catch {
@@ -7681,7 +7721,9 @@ export default {
         )
         return withSecurityHeaders(new Response(null, got), url)
       }
-      return withSecurityHeaders(await display(await route(request, url, env, ctx)), url)
+      // Stored machine-written text (a record's brief, briefs, a bill summary in a search row) leaves with its
+      // error notice, `machine_notice` (machine-notice.ts). Only here, at the reader's exit.
+      return withSecurityHeaders(await storedNoticeResponse(await display(await route(request, url, env, ctx)), url.pathname), url)
     } catch (err) {
       // The detail goes to the log, never to the client: upstream error text
       // can carry request echoes and internal identifiers.

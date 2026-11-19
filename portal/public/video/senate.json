@@ -1,7 +1,7 @@
 {
   "meta": {
     "schema": 1,
-    "updated": "2026-11-10",
+    "updated": "2026-11-17",
     "channel": {
       "id": "UCQptchvNlCzMKsGPU8s_6UQ",
       "title": "AuSenate: The Senate Public Information Office",
@@ -15,12 +15,21 @@
     ],
     "use": "Linked and embedded with the Senate's own YouTube player (youtube-nocookie.com, click to play). Never downloaded or re-hosted.",
     "counts": {
-      "question_time": 321,
+      "question_time": 322,
       "first_speech": 34,
       "other": 56
     }
   },
   "videos": [
+    {
+      "id": "fK_gMhA43eI",
+      "title": "Senate Question Time, 16 November 2026",
+      "published": "2026-11-16T06:21:27+00:00",
+      "kind": "question_time",
+      "date": "2026-11-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=fK_gMhA43eI"
+    },
     {
       "id": "geUwNHyIJ2A",
       "title": "Senate Question Time, 15 October 2026",

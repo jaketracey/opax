@@ -44,8 +44,9 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   for(const state of [undefined,'federal'])for(const q of ordinaryQuestions)for(const stream of [false,true]){
    const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q,kind:'speech',...(state?{state}:{})})});
    const a=await post(main),b=await post(current);assert.equal(b.status,a.status,q);
-   // machine_written is additive (whether a model wrote the answer text); every other byte is pinned.
-   assert.equal((await b.text()).replace(/,"machine_written":(?:true|false)/g,''),await a.text(),`${q} (${stream?'SSE':'JSON'}, ${state || 'unscoped'})`);bodies++;
+   // machine_written is additive (whether a model wrote the answer text), and so is machine_notice (the fixed
+   // error notice on an answer a model wrote); every other byte is pinned.
+   assert.equal((await b.text()).replace(/,"machine_written":(?:true|false)/g,'').replace(/,"machine_notice":"Machine-written answers can contain errors\. Check the original (?:record before relying on one|transcript before relying on it)\."/g,''),await a.text(),`${q} (${stream?'SSE':'JSON'}, ${state || 'unscoped'})`);bodies++;
   }
   assert.equal(bodies,192,'96 ordinary bodies plus 96 explicitly non-SA bodies');
   assert.equal(plannerCalls,0,'ordinary questions cannot silently execute a planner and then fall back');
@@ -87,7 +88,7 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   // rather than deleting or normalising any fields from the comparison.
   Date.now=()=>Date.UTC(2026,9,13,10,0,0);
   const legacyBody = (text, stream) => {
-   const legacy = data => { const payload = JSON.parse(data); delete payload.research; delete payload.machine_written; return JSON.stringify(payload) };
+   const legacy = data => { const payload = JSON.parse(data); delete payload.research; delete payload.machine_written; delete payload.machine_notice; return JSON.stringify(payload) };
    return stream ? text.replace(/(event: done\r?\ndata: )([^\r\n]+)/g, (_all, frame, data) => frame + legacy(data)) : legacy(text);
   };
   // 19 Oct plain-language sweep: count answers say "recorded under <party>", not "indexed under".

@@ -12,7 +12,11 @@ import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
-import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
+import { MACHINE_SUMMARY_WORDS, MACHINE_SUMMARY_PREFIX, MACHINE_SUMMARY_LABEL } from './machine-notice'
+import { photosFor, photoFor, billPhotosFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
+import { coverTitleFits } from './og'
+import { PROCEDURAL_TITLES_PATH } from '../public/vote-tables.js'
+import { decidingDivision, type BillReading, type DivisionOutcomeWord } from '../public/bill-division.js'
 
 export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
 export type DailyPostKind = typeof DAILY_POST_KINDS[number]
@@ -46,6 +50,15 @@ export interface DailyPost {
   url: string
   /** Longer, source-qualified copy for Facebook and Instagram. */
   caption?: string
+  /**
+   * What the channels post, where that differs from what the apps show. The apps read `text`, `caption` and `slides`
+   * (app-edition.ts, app-widget.ts) and lay them out under their own "Machine-written" label, so those stay as they
+   * are. A bill's post on X and Bluesky is `record_text`: the bill's name, where it stands and its sponsor, from the
+   * record. Its caption on Facebook and Instagram is `channel_caption`, which opens with who wrote the summary.
+   * social-publication.ts uses each where present; neither is sent to an app.
+   */
+  record_text?: string
+  channel_caption?: string
   /**
    * The edition as a carousel (see story.ts): a cover, one fact a slide, the
    * source last. Absent on editions stored before carousels existed, which
@@ -165,6 +178,41 @@ export function clip(text: string, limit: number): string {
   return (atWord.length >= limit * 0.6 ? atWord : cut).replace(/[\s,;:]+$/, '') + '…'
 }
 
+/**
+ * A bill's name cut to fit, keeping the words in its brackets. An amending bill's name says what it is about only
+ * there: "Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026" gives way
+ * before its brackets ("Military Rehabilitation… (Veterans’ Allied Health Care) Bill 2026"), then sheds its
+ * "Bill 2026", then keeps the bracketed words alone, and only when even they cannot fit is it cut at its end. A
+ * "(No. 2)" is a number, not those words. `fits` is the room: a character count, or the slide's own measure.
+ */
+export function shortTitle(title: string, fits: (text: string) => boolean): string {
+  const t = title.replace(/\s+/g, ' ').trim()
+  if (fits(t)) return t
+  // A cut name ends on a word that carries meaning, not on "and" or "of".
+  const cut = (words: string[], n: number) => {
+    const kept = words.slice(0, n)
+    while (kept.length > 1 && /^(?:and|or|of|the|for|to|in|on|with|a|an|&)$/i.test(kept[kept.length - 1])) kept.pop()
+    return `${kept.join(' ').replace(/[\s,;:]+$/, '')}…`
+  }
+  const bracket = /\((?!No\.?\s*\d+\))([^()]*[A-Za-z][^()]*)\)/.exec(t)
+  if (bracket && bracket.index > 0) {
+    const open = bracket.index
+    const head = t.slice(0, open).trim().split(' ')
+    const close = t.lastIndexOf(')')
+    const tails = [t.slice(open), ...(close + 1 < t.length ? [t.slice(open, close + 1)] : [])]
+    // More of the name before "Bill 2026": each length of the head is tried with the tail, then without it.
+    for (let n = head.length - 1; n >= 1; n--) for (const tail of tails) {
+      const s = `${cut(head, n)} ${tail}`
+      if (fits(s)) return s
+    }
+    // Room for the bracketed words and nothing else: they are what the bill is about.
+    if (fits(bracket[1].trim())) return bracket[1].trim()
+  }
+  const words = t.split(' ')
+  for (let n = words.length - 1; n >= 1; n--) if (fits(cut(words, n))) return cut(words, n)
+  return cut(words, 1)
+}
+
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return ''
   const [y, m, d] = iso.slice(0, 10).split('-').map(Number)
@@ -271,7 +319,10 @@ function withCredits(caption: string | undefined, url: string, used: StoryPhoto[
 function told(post: DailyPost, slides: (StorySlide | null)[], photos: StoryPhotos): DailyPost {
   const kept = slides.filter((s): s is StorySlide => !!s)
   if (!validStory(kept)) return post
-  return { ...post, caption: withCredits(post.caption, post.url, photos.used), slides: kept }
+  // Every caption that goes out with a photograph carries its credit: the licence requires the attribution, and the
+  // caption is where it is printed. That is the app-facing caption and the channels' own.
+  return { ...post, caption: withCredits(post.caption, post.url, photos.used),
+    ...(post.channel_caption ? { channel_caption: withCredits(post.channel_caption, post.url, photos.used) } : {}), slides: kept }
 }
 
 /** Takes the n-th approved photograph for the edition, remembering it for the credit line. */
@@ -310,15 +361,63 @@ async function recipientShard(sources: DailyPostSources, graph: GrantsGraph | nu
   return shard?.[fileKey] ?? null
 }
 
-/** The electorate slide: the seat's federal awards in the record, and who holds it. */
-function electorateSlide(kicker: string, graph: GrantsGraph | null, name: string | null | undefined, line?: string): StorySlide | null {
+// The seat classes in the grants export, in words; a class not listed is left out rather than shown as its code.
+const MARGIN_CLASS: Record<string, string> = { marginal: 'marginal', fairly_safe: 'fairly safe', safe: 'safe' }
+// Party codes in the grants export, in words. A code not listed here, or a party history ("LP; IND LIB from Oct
+// 1977"), is left out rather than shown as it is stored.
+const PARTY_CODES: Record<string, string> = { 'A.L.P.': 'Labor', ALP: 'Labor', LP: 'Liberal', LIB: 'Liberal', NAT: 'Nationals', NP: 'Nationals',
+  NATS: 'Nationals', LNP: 'LNP', KAP: "Katter's Australian Party", GRN: 'Greens', UAP: 'United Australia Party', IND: 'Independent', CA: 'Centre Alliance' }
+export function partyName(raw: string | null | undefined): string {
+  const text = prettyParty(raw)
+  if (PARTY_CODES[text]) return PARTY_CODES[text]
+  return !text || text.includes(';') || /^[A-Z][A-Z.\- ]*$/.test(text) ? '' : text
+}
+
+/**
+ * Who holds the seat now: the roster's current federal member for that House seat (parliamentarians.json). No one
+ * for a seat with no current member, such as a seat abolished in 2025 (North Sydney, Stirling, Higgins), or when
+ * the roster names two different people. The grants export's own list of members is not read: it holds every
+ * member the seat has had, its 2025 winners have no dates, and an old member's end is often missing.
+ */
+export function seatHolder(people: SeatPerson[] | null | undefined, seat: string | null | undefined): { name: string; party: string } | null {
+  const fold = (text: string | null | undefined) => (text ?? '').replace(/\s+/g, ' ').trim().toLowerCase()
+  if (!fold(seat)) return null
+  // One person can be listed under two spellings (O'Connor and O’Connor): the same person once, by the spelling
+  // with more speeches.
+  const held = new Map<string, SeatPerson>()
+  for (const p of people ?? []) {
+    if (p?.current !== true || typeof p.name !== 'string' || !p.name.trim()) continue
+    if (!(p.representation ?? []).some(r => r?.jurisdiction === 'federal' && r.chamber === 'representatives' && fold(r.electorate) === fold(seat))) continue
+    const key = fold(p.name.replace(/[‘’ʼ`]/g, "'"))
+    const had = held.get(key)
+    if (!had || (p.speeches ?? 0) > (had.speeches ?? 0)) held.set(key, p)
+  }
+  const [one, ...more] = held.values()
+  return one && !more.length ? { name: one.name, party: partyName(one.party_now) } : null
+}
+type SeatPerson = Pick<Person, 'name' | 'speeches' | 'current' | 'party_now' | 'representation'>
+
+/**
+ * The seat's margin, always with the election it is from ("At the 2022 election it was a fairly safe Liberal seat,
+ * margin 3.59%."), so a margin from an earlier parliament never reads as today's. The party is named only when it
+ * is not the holder's own. '' when there is no margin.
+ */
+export function seatMargin(margin: Record<string, [number, string, string]> | null | undefined, heldBy = ''): string {
+  const year = Object.keys(margin ?? {}).filter(y => /^\d{4}$/.test(y)).sort().at(-1)
+  const [pct, party, kind] = (year && margin?.[year]) || []
+  if (!year || typeof pct !== 'number' || !Number.isFinite(pct)) return ''
+  const named = partyName(party)
+  const words = [MARGIN_CLASS[kind ?? ''], named && named !== heldBy ? named : ''].filter(Boolean).join(' ')
+  return words ? ` At the ${year} election it was ${/^[aeiou]/i.test(words) ? 'an' : 'a'} ${words} seat, margin ${pct}%.` : ` At the ${year} election the margin was ${pct}%.`
+}
+
+/** The electorate slide: the seat's federal awards in the record, and who holds it now (from the roster, `people`). */
+function electorateSlide(kicker: string, graph: GrantsGraph | null, name: string | null | undefined, line?: string, people?: SeatPerson[] | null): StorySlide | null {
   if (!name) return null
   const seat = graph?.electorates?.find(e => e.n === name)
   if (!seat || !Number.isFinite(seat.t) || !seat.t || !seat.c) return null
-  const mp = seat.mps?.[0]
-  const years = Object.keys(seat.margin ?? {}).sort()
-  const latest = years.length ? seat.margin![years[years.length - 1]] : null
-  const held = mp?.[0] ? `Held by ${mp[0]}${mp[1] ? `, ${prettyParty(mp[1])}` : ''}.${latest ? ` ${sentenceCase(latest[2])} seat, margin ${latest[0]} at the ${years[years.length - 1]} election.` : ''}` : ''
+  const mp = line ? null : seatHolder(people, name)
+  const held = mp ? `Held by ${mp.name}${mp.party ? `, ${mp.party}` : ''}.${seatMargin(seat.margin, mp.party)}` : ''
   const label = `in federal grant awards in the record: ${formatNumber(seat.c)} awards${seat.r ? ` to ${formatNumber(seat.r)} recipients` : ''}`
   return { type: 'number', kicker, title: name, lines: [line ?? held].filter(Boolean), value: shortMoney(seat.t as number), label,
     alt: `${kicker}: ${name}, ${shortMoney(seat.t as number)} ${label}. ${line ?? held}`.trim() }
@@ -492,25 +591,77 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   const sponsor = prettySponsor(bill.sponsor)
   const party = prettyParty(bill.sponsor_party)
   const by = sponsor ? ` by ${sponsor}${party ? ` (${party})` : ''}` : (bill.portfolio ? ` (${bill.portfolio} portfolio)` : '')
+  // The day a bill passed is the day the record says it passed. `status_as_of` on a passed bill is the day of Royal
+  // Assent, usually some days later, so it is named as that and only when the record holds no passing day
+  // (billStanding). Every string that states it, on a channel, a slide or in an app, reads the same sentence.
+  const standing = billStanding(bill, record) ?? `Passed ${formatDate(bill.status_as_of)}.`
   const status = bill.status === 'exposure_draft'
     ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Not yet introduced to parliament.`
     : bill.status === 'passed'
-    ? `Passed ${formatDate(bill.status_as_of)}. Introduced ${formatDate(bill.introduced)}${by}.`
+    ? `${standing} Introduced ${formatDate(bill.introduced)}${by}.`
     : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
   const statusShort = bill.status === 'exposure_draft' ? `Draft released ${formatDate(bill.introduced)}; not introduced.`
-    : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : `Introduced ${formatDate(bill.introduced)}; before parliament.`
+    : bill.status === 'passed' ? standing : `Introduced ${formatDate(bill.introduced)}; before parliament.`
+  // The channels' own copy carries no em dash, including one that came in a stored summary sentence.
+  const plainDash = (text: string) => text.replace(/\s*\u2014\s*/g, ', ')
+  const more = sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${plainDash(s)}`).join('\n')}` : ''
   const post: DailyPost = {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
+    // What the apps show under their own label.
     text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
+    record_text: billPostText(bill, sentences[0], statusShort, by, url),
+    // Facebook and Instagram: the caption opens by saying a model wrote the summary, once.
+    channel_caption: [`${MACHINE_SUMMARY_PREFIX}${plainDash(sentences[0])}`, bill.title, status, more, 'Read the bill, its progress and the source documents. Check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
     caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
   }
   const story = await billSlides(sources, bill, record, sentences, { sponsor, party, statusShort })
   return told(post, story.slides, story.photos)
 }
 
-interface BillDivision { key?: string; date?: string; house?: string; stage?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }
+/**
+ * The short post text for a bill (X, Bluesky, the app's edition card). It is written from the record: the bill's
+ * name, where it stands and on what date, and its sponsor or portfolio. A model's summary sentence is used only when
+ * the record gives no dated fact to state, and then it follows the words "Machine-written summary.".
+ */
+/** The stages that record a bill passing a house; the last of them is the day it passed parliament. */
+const PASSED_STAGES = new Set(['passed', 'passed_both', 'passed_both_houses'])
+/**
+ * Where a passed bill stands, in the record's own terms: "Passed <the day it passed>." when the record holds a
+ * passing stage; "Royal Assent <day>." when it holds only the assent; and when it holds neither stage, the date the
+ * status was recorded, named as that. Never an assent date under the word "Passed". null for a bill that has not passed.
+ *
+ * This rests on how the bills export writes the record: one `passed` stage per bill, dated the day the bill finally
+ * passed both houses (after any return of amendments). If the export ever wrote a `passed` stage for each house, the
+ * latest one would still be the right day only while nothing later is recorded under another name.
+ */
+export function billStanding(bill: BillIndexItem, record: BillFile | null): string | null {
+  if (bill.status !== 'passed') return null
+  const last = (stages: (stage: string) => boolean) => (record?.key_dates ?? []).filter(k => k.stage && stages(k.stage) && /^\d{4}-\d{2}-\d{2}/.test(k.date ?? '')).map(k => (k.date as string).slice(0, 10)).sort().at(-1)
+  const passed = last(stage => PASSED_STAGES.has(stage)), assent = last(stage => stage === 'royal_assent')
+  if (passed) return `Passed ${formatDate(passed)}.`
+  if (assent) return `Royal Assent ${formatDate(assent)}.`
+  return bill.status_as_of ? `Recorded as passed, as at ${formatDate(bill.status_as_of)}.` : null
+}
+
+/**
+ * The marked branch below is a guard, not a path the daily post takes today: the composer only chooses a bill whose
+ * status date is a valid date, which is the same date this function asks for. It can fire only if that filter is
+ * loosened, or if this function is called for a bill chosen some other way.
+ */
+export function billPostText(bill: BillIndexItem, sentence: string, statusShort: string, by: string, url: string): string {
+  const name = shortTitle(bill.short_title || bill.title, text => [...text].length <= 110)
+  const dated = bill.status === 'passed' ? bill.status_as_of : bill.introduced
+  if (dated) {
+    const who = by.trim().replace(/^by\s+/, 'Sponsor: ').replace(/^\((.+) portfolio\)$/, '$1 portfolio')
+    return fit([name, statusShort], [who ? `${who.replace(/\.$/, '')}.` : ''], url)
+  }
+  return fit([`${MACHINE_SUMMARY_WORDS} ${clip(sentence, 120)}`], [name], url)
+}
+
+interface BillDivision { key?: string; date?: string; house?: string; stage?: string; question?: string; ayes?: number; noes?: number; outcome?: string; party_splits?: Record<string, { ayes?: number; noes?: number }> }
 interface BillFile {
+  status?: string | null
   originating_house?: string | null
   summary?: { sentences?: string[]; affected?: string | null; attribution?: string | null }
   key_dates?: { stage?: string; date?: string; house?: string }[]
@@ -520,7 +671,6 @@ interface BillFile {
 }
 
 const HOUSE_NAMES: Record<string, string> = { senate: 'Senate', representatives: 'House of Representatives' }
-const STAGE_TITLES: Record<string, string> = { 'limitation of debate': 'Limiting debate', 'second reading': 'Second reading', 'third reading': 'Third reading', 'first reading': 'First reading' }
 const SOURCE_LABELS: Record<string, string> = {
   em: 'Explanatory memorandum on ParlInfo', em_supp: 'Supplementary explanatory memorandum on ParlInfo', em_revised: 'Revised explanatory memorandum on ParlInfo',
   billhome: 'Bill home page on ParlInfo', frl_act: 'The Act on the Federal Register of Legislation', frl: 'The Federal Register of Legislation',
@@ -530,29 +680,41 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const catalogue = await photoCatalogue(sources)
   const billPhotos: StoryPhotos = { catalogue, used: [] }
   const divisions = (record?.divisions ?? []).filter(d => Number.isFinite(d.ayes) && Number.isFinite(d.noes) && d.date)
-  const latest = [...divisions].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))[0] ?? null
-  const house = latest?.house ?? record?.originating_house ?? null
-  const ids = photosFor(catalogue, `bill:${bill.key}`, 'bill', house)
+  // The vote that decided the bill, never a vote on how the debate ran; with none, no division slide.
+  const procedural = divisions.length ? await sources.asset(PROCEDURAL_TITLES_PATH).catch(() => null) as Record<string, string> | null : null
+  const house = billHouse(bill, record)
+  const decided = decidingDivision(divisions, { proceduralTitles: procedural, originatingHouse: house,
+    // A bill that passed lost none of its readings, nor did one that went on in that house: such a "Not agreed" is
+    // a misread record. No slide, and the log names it.
+    bill: { status: record?.status ?? bill.status ?? null, key_dates: record?.key_dates ?? null },
+    onContradicted: ({ division: d, reading }) => console.warn(`daily-post: no vote slide for ${bill.key}: ${d.key ?? 'a division'} reads as a lost ${reading} reading, which the bill's record contradicts`) })
+  // The bill's own chamber: a House bill shows the House, a Senate bill the Senate, and never the other one.
+  const ids = billPhotosFor(catalogue, `bill:${bill.key}`, house)
   const kicker = words.sponsor ? `Bill · ${words.sponsor}${words.party ? ` (${words.party})` : ''}` : bill.portfolio ? `Bill · ${bill.portfolio} portfolio` : 'Bill'
   // The headline is the bill's own name without its "Bill 2026" tail: always
   // grammatical, where a clipped summary sentence is not. The sentence is the line.
   const headline = (bill.short_title || bill.title).replace(/\s+Bill\s+(?:\(No\.?\s*\d+\)\s+)?\d{4}(?:\s+\[.*\])?$/i, '').replace(/\s+/g, ' ').trim() || bill.title
-  const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`, photo: takePhoto(billPhotos, ids, 0),
-    alt: `${bill.title}. ${sentences[0]} ${words.statusShort}` }
+  // A long name gives way before its brackets, which say what an amending bill is about; the slide's own measure is the room.
+  const cover: StorySlide = { type: 'cover', kicker, title: shortTitle(headline, coverTitleFits), line: `${clip(sentences[0], 150)} ${words.statusShort}`,
+    // The line opens with the summary's first sentence: the slide says who wrote it, in a small line under it.
+    note: MACHINE_SUMMARY_LABEL, photo: takePhoto(billPhotos, ids, 0),
+    // The alt text says who wrote the sentence, as the image now does and as the share card's alt does.
+    alt: `${bill.title}. ${MACHINE_SUMMARY_PREFIX}${sentences[0]} ${words.statusShort}` }
   const what: StorySlide = { type: 'list', kicker: 'What it does', title: `In ${dayWords(Math.min(3, sentences.length)).toLowerCase()} sentence${sentences.length > 1 ? 's' : ''}`,
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',
     alt: `What it does: ${sentences.slice(0, 3).join(' ')}` }
   const timeline = billTimeline(record)
-  const division = latest ? divisionSlide(latest, divisions.length) : null
+  const division = decided ? divisionSlide(decided.division, decided.reading, decided.outcome, divisions.length) : null
   const affected = (record?.summary?.affected ?? '').trim()
   const speeches = record?.speeches ?? []
   const first = speeches.filter(sp => sp.speaker && sp.date).sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''))[0]
-  const secondPhoto = affected ? takePhoto(billPhotos, ids, 1) : null
+  // A second photograph of the same chamber if the catalogue has one; otherwise the cover's again, never the other chamber.
+  const secondPhoto = affected ? (ids.length > 1 ? takePhoto(billPhotos, ids, 1) : cover.photo) : null
   const touches: StorySlide | null = affected && secondPhoto ? { type: 'picture', kicker: 'Who it touches', title: clip(affected.replace(/\.$/, ''), 96), photo: secondPhoto, quote: null,
     lines: [speeches.length ? `Speeches in the record: ${formatNumber(speeches.length)}${first ? `, beginning with ${first.speaker} on ${formatDate(first.date)}` : ''}.` : ''].filter(Boolean),
     alt: `Who it touches: ${affected}${speeches.length ? ` Speeches in the record: ${speeches.length}.` : ''}` } : null
   const rows = [...new Map((record?.sources ?? []).filter(src => src.kind && SOURCE_LABELS[src.kind]).map(src => [SOURCE_LABELS[src.kind as string], `${SOURCE_LABELS[src.kind as string]}${src.licence ? `, ${src.licence}` : ''}`])).values()].slice(0, 3)
-  if (divisions.length) rows.push('Division record: theyvoteforyou.org.au')
+  if (division) rows.push('Division record: theyvoteforyou.org.au')
   const source = sourceSlide('Read the bill', 'The bill, its progress and the source documents', rows.length ? rows : ['Bill documents on ParlInfo, Commonwealth copyright'],
     `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`, `Read the bill at opax.com.au/bill/${bill.key}.`)
   return { slides: [cover, what, timeline, division, touches, source], photos: billPhotos }
@@ -585,13 +747,20 @@ function billTimeline(record: BillFile | null): StorySlide | null {
     alt: `How it moved: ${events.map(e => `${e.text.toLowerCase()} ${e.date}`).join(', ')}.` }
 }
 
-function divisionSlide(d: BillDivision, count: number): StorySlide | null {
+/** The house a bill belongs to: where it was introduced, from its record, else its key (r: the House, s: the Senate). */
+function billHouse(bill: BillIndexItem, record: BillFile | null): 'senate' | 'representatives' | null {
+  const named = (h: string | null | undefined) => h === 'senate' || h === 'representatives' ? h : null
+  return named(record?.originating_house) ?? named(record?.key_dates?.find(k => k.stage === 'introduced')?.house)
+    ?? (/^au-federal-r\d/.test(bill.key) ? 'representatives' : /^au-federal-s\d/.test(bill.key) ? 'senate' : null)
+}
+
+function divisionSlide(d: BillDivision, reading: BillReading, outcome: DivisionOutcomeWord, count: number): StorySlide | null {
   const ayes = d.ayes as number, noes = d.noes as number
   const split = (side: 'ayes' | 'noes'): [string, number][] => Object.entries(d.party_splits ?? {}).map(([party, n]) => [prettyParty(party), Number(n?.[side] ?? 0)] as [string, number]).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1])
-  const stage = (d.stage ?? '').trim()
-  const title = `${STAGE_TITLES[stage.toLowerCase()] ?? (stage ? sentenceCase(stage) : 'Division')}, ${ayes} to ${noes}`
+  // The outcome, as the division's result says it (bill-division.js): a third reading carried is the bill passing that house.
+  const title = `${outcome} at the ${reading} reading, ${ayes} to ${noes}`
   const house = HOUSE_NAMES[d.house ?? ''] ?? 'Parliament'
-  const kicker = count === 1 ? 'The only recorded division' : `The latest of ${dayWords(count).toLowerCase()} recorded divisions`
+  const kicker = count === 1 ? 'The only recorded division' : `One of ${dayWords(count).toLowerCase()} recorded divisions`
   const ayeParties = split('ayes'), noParties = split('noes')
   return { type: 'division', kicker, title, ayes, noes, ayeParties, noParties, line: `${house}, ${formatDate(d.date)}. Party split from They Vote For You.`,
     alt: `${kicker}: ${title.toLowerCase()}. Ayes: ${ayeParties.map(([p, n]) => `${p} ${n}`).join(', ') || ayes}. Noes: ${noParties.map(([p, n]) => `${p} ${n}`).join(', ') || noes}. ${house}, ${formatDate(d.date)}.` }
@@ -719,7 +888,8 @@ async function grantSlides(grant: GrantPublicationRecord, { sources, graph, reci
     alt: `The purpose as published: ${grant.purpose}` } : null
   const selection = award ? selectionSlide(award, graph) : null
   const siblings = siblingsSlide(recipient)
-  const electorate = electorateSlide('The electorate', graph, seat)
+  const roster = seat ? await sources.asset('/parliamentarians.json').catch(() => null) as { people?: SeatPerson[] } | null : null
+  const electorate = electorateSlide('The electorate', graph, seat, undefined, roster?.people)
   const source = sourceSlide('Check it', 'Every figure links to its record',
     [`GrantConnect award ${grant.id}, Department of Finance, CC BY 3.0 AU`, 'A published award value, not evidence of payments received', 'Program and electorate totals: GrantConnect awards as collected by OPAX'],
     url, `Check it: GrantConnect award ${grant.id}. Every figure links to its record at opax.com.au/money/grants.`)
@@ -1051,25 +1221,29 @@ export async function composeDailyPost(date: string, sources: DailyPostSources, 
 export function authoriseVicPost(post: DailyPost, victorianMember = false): DailyPost {
   if(post.donor){
     const donor=donorDisclosure(post.donor)
-    const reference=`${post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor'}: ${donor.name} — ${returnReference(donor.returns[0] || {}) || donor.reference}`
+    const label=post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor', where=returnReference(donor.returns[0] || {}) || donor.reference
+    const reference=`${label}: ${donor.name}, ${where}`
+    // An edition stored before the dash was replaced carries the same reference spelled with it. It is the same
+    // reference: found either way, it is not added a second time.
+    const stated=(text:string)=>text.includes(reference) || text.includes(`${label}: ${donor.name} \u2014 ${where}`)
     // A source-only reference is no donation: its post points at the source, not at its page.
     const nameLink=donor.href && post.donor.kind!=='reference' ? new URL(donor.href,ORIGIN).href : null
     const source=post.donor.returnReferences?.[0]?.url || `${ORIGIN}/money/receipts`
     const url=/\/subject\/(?:donor|person|organisation)\//.test(post.url) ? nameLink || source : post.url
-    const append=(text:string)=>text.includes(reference) ? text : [reference,text].filter(Boolean).join(' — ')
+    const append=(text:string)=>stated(text) ? text : [reference,text].filter(Boolean).join('. ')
     const slides=post.slides?.map(slide=>{
       const shown=slide.type==='cover' || slide.type==='division' ? {...slide,line:append(slide.line || '')}
-        : slide.type==='source' ? {...slide,rows:slide.rows.includes(reference) ? slide.rows : [reference,...slide.rows],url}
+        : slide.type==='source' ? {...slide,rows:slide.rows.some(stated) ? slide.rows : [reference,...slide.rows],url}
         : slide.type==='list' ? {...slide,note:append(slide.note || '')}
-        : {...slide,lines:slide.lines.includes(reference) ? slide.lines : [reference,...slide.lines]}
+        : {...slide,lines:slide.lines.some(stated) ? slide.lines : [reference,...slide.lines]}
       return {...shown,alt:append(slide.alt)} as StorySlide
     })
     const caption=post.caption || post.text
-    const text=post.text.includes(reference) ? post.text : fit([reference],[post.text.replaceAll(post.url,'').trim()],url)
+    const text=stated(post.text) ? post.text : fit([reference],[post.text.replaceAll(post.url,'').trim()],url)
     post={...post,donor:{...post.donor,match:post.donor.match ? {...post.donor.match,href:donor.href} : undefined},url,text,
-      caption:caption.includes(reference)?caption:caption+'\n\n'+reference,slides}
+      caption:stated(caption)?caption:caption+'\n\n'+reference,slides}
   }
-  const material = [post.title, post.text, post.caption, post.url, JSON.stringify(post.slides ?? [])].join(' ')
+  const material = [post.title, post.text, post.caption, post.record_text, post.channel_caption, post.url, JSON.stringify(post.slides ?? [])].join(' ')
   if (!victorianMember && !post.authorisation && !vicElectionMaterial(material)) return post
   const line = VIC_ELECTION_AUTHORISATION_LINE
   const text = post.text.split('\n\n').filter(p => !/^Authorised by /.test(p) && p !== post.url).join('\n\n')
@@ -1077,6 +1251,9 @@ export function authoriseVicPost(post: DailyPost, victorianMember = false): Dail
   return {...post, authorisation: line,
     text: fit([text], [], [line, post.url].join('\n\n')),
     caption: [caption, line].join('\n\n'),
+    // The channel-only copies carry the same approved line, the same way.
+    ...(post.record_text ? {record_text: fit([post.record_text.split('\n\n').filter(p => !/^Authorised by /.test(p) && p !== post.url).join('\n\n')], [], [line, post.url].join('\n\n'))} : {}),
+    ...(post.channel_caption ? {channel_caption: [post.channel_caption.split('\n\n').filter(p => !/^Authorised by /.test(p)).join('\n\n'), line].join('\n\n')} : {}),
     slides: post.slides?.map(slide => ({...slide, authorisation: line})),
   }
 }

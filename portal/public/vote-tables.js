@@ -3,7 +3,7 @@ import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datata
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=ffd32d5678';
+import {statusLabelHTML} from './labels.js?v=3d4c26573f';
 import {divisionPlain} from './division-markdown.js?v=9914870fea';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -131,17 +131,21 @@ export function voteCoverageNotes(coverage, names, years = null) {
     .filter(note => (note.members || []).some(member => mine.has(coverageName(member))) && inCounts(note))
     .map(note => voteCoverageText(note, 'this member’s')).filter(Boolean);
 }
-/** Plain-language lines a reader needs beside one division record, each only where it applies.
- *  Victorian Hansard: who is and is not in its lists; a record with no motion text; a "stand part" question. */
+/** Lines in OPAX's own words that a reader needs beside one division record, each only where it applies. They
+ *  are shown apart from the question, which stays as Hansard prints it.
+ *    - a "words proposed to be omitted stand part" question: what a Yes vote and a No vote mean;
+ *    - a Victorian record whose question is only its division line ("Council divided on amendment"): the kind
+ *      of question, and that the record names nothing more ("Amendment: the record names no further detail.");
+ *    - a Victorian record: what Hansard's division lists do not carry. */
 export function divisionReadingNotes(d) {
   const notes = [];
-  const question = String(d?.question || '');
+  const question = String(d?.question || '').trim();
   if (/\bwords? proposed to be omitted stand part\b/i.test(question))
-    notes.push('On this question an aye is a vote to keep the words as they are. Members voting aye opposed the amendment, and members voting no supported it.');
+    notes.push('On this question a Yes vote (aye) keeps the words as they are, which is a vote against the amendment. A No vote takes the words out, which is a vote for the amendment.');
   if (d?.jurisdiction === 'vic') {
-    if (/^(?:Assembly|Council|House|Committee) divided\b/.test(question))
-      notes.push('Hansard prints no motion text directly before this division, so none is shown. The title is the heading the division was taken under; the Hansard page has the debate that led to it.');
-    notes.push('Victorian Hansard lists the members who voted aye or no. It does not record pairs, tellers or absences, so a member not listed was not necessarily absent and did not necessarily abstain.');
+    const line = /^(?:Assembly|Council|House|Committee) divided (?:on )?(.+?)[.:]*$/.exec(question);
+    if (line) notes.push(`${line[1].charAt(0).toUpperCase()}${line[1].slice(1)}: the record names no further detail.`);
+    notes.push('Hansard’s division lists do not record pairs, tellers or absences. A member who is not listed was not necessarily absent and did not necessarily abstain.');
   }
   return notes;
 }

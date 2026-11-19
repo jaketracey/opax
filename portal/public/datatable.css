@@ -116,7 +116,7 @@
   .dt-root[data-phone="stack"] .dt > tbody > tr > td { display: none; }
   .dt-root[data-phone="stack"] .dt > tbody > tr > :is(td[data-phone-title], td.dt-actions, td[colspan]) { display: block; position: static; min-width: 0; padding: 0; border: 0; box-shadow: none; background: transparent; text-align: start; }
   .dt-root[data-phone="stack"] .dt > tbody > tr > :is(td[data-phone-title], td[colspan]) { flex: 1 1 0; }
-  .dt-root[data-phone="stack"] .dt td[data-phone-title] > .dt-value { display: block; font: var(--type-subheading); }
+  .dt-root[data-phone="stack"] .dt td[data-phone-title] > .dt-value { display: block; font: var(--type-row-record); }
   /* A phone row is a list row, as the site's other lists are: full width, no
      card fill, 8 px either side of its hairline, the line straight under its
      title. Ten votes with two-line titles fit under 1,000 px. */

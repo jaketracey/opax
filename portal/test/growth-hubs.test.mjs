@@ -46,6 +46,14 @@ test('SSR week uses the validated sponsor, dated Machine-written label and 2D ti
   assert.match(page.html,/data-label="Ayes"[^>]*>[\s\S]*?class="dt-value">40<\/span>/);
   assert.match(page.html,/data-label="Noes"[^>]*>[\s\S]*?class="dt-value">80<\/span>/);
   assert.doesNotMatch(page.html,/Fallback title/);
+  // The error notice: once, directly under the list that holds the machine-written summary, before the source line.
+  const NOTICE='<p class="answer-notice">Machine-written summaries can contain errors. Check the original record before relying on one.</p>';
+  assert.equal(page.html.split(NOTICE).length,2);
+  assert.ok(page.html.indexOf('A model summary.')<page.html.indexOf('</ul>'+NOTICE),'the summary, then the line');
+  assert.ok(page.html.indexOf(NOTICE)<page.html.indexOf('ParlInfo bill records'));
+  // A week whose bills carry no summary has no line.
+  const bare=renderSittingWeek(data,{...fixtureWeek,bills:fixtureWeek.bills.map(({summary:_none,...b})=>b)},people,slugs);
+  assert.ok(!bare.html.includes('answer-notice'));assert.ok(!bare.html.includes('Machine-written'));
   assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');
   assert.equal(page.jsonLd['@graph'][1].numberOfItems,4);
   assert.equal(page.jsonLd['@graph'][0].endDate,'2026-10-15');

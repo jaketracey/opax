@@ -3,7 +3,7 @@ export const NEXT_STEPS_TITLE: string;
 export const NEXT_STEPS_MAX: number;
 export function nextStepRows(items?: readonly Partial<NextStep>[]): Required<NextStep>[];
 export function nextStepRowHTML(row: NextStep, held?: boolean): string;
-export function nextStepsHTML(items?: readonly Partial<NextStep>[], options?: { pageType?: string; id?: string; reserve?: number; level?: number }): string;
+export function nextStepsHTML(items?: readonly Partial<NextStep>[], options?: { pageType?: string; id?: string; reserve?: number; level?: number; fill?: readonly Partial<NextStep>[] | null; empty?: string }): string;
 export function fillNextSteps(root: Element | null | undefined, items?: readonly Partial<NextStep>[], empty?: string): void;
 export function docNextSteps(doc: unknown, helpers?: { personHref?: (name: string) => string; searchHref?: (q: string, filters: Record<string, string>, sort?: string) => string; subject?: string; attributed?: boolean }): NextStep[];
 export function supplierNextSteps(profile: unknown, helpers?: { agencyHref?: (name: string) => string; suppliers?: readonly unknown[]; contractTitle?: (contract: any) => string }): NextStep[];

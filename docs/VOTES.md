@@ -704,14 +704,17 @@ After the changes all 20 match on both.
   No text is summarised or reworded.
 - **The 758 with only a division line.** The amendment or motion is usually moved pages earlier (an amendment
   in committee is moved, debated, then put), and several may be before the committee at once, so the page does
-  not tie one text to the division. No text is attached. The record's page says so in words: "Hansard prints
-  no motion text directly before this division, so none is shown. The title is the heading the division was
-  taken under; the Hansard page has the debate that led to it." The link opens that page.
-- **"Words proposed to be omitted stand part".** On these questions an aye keeps the original words, so members
-  voting aye opposed the amendment. The record's page says so.
-- **What Hansard's lists leave out.** Victorian Hansard lists the members who voted aye or no. It does not
-  record pairs, tellers or absences, so a member not listed was not necessarily absent and did not
-  necessarily abstain. The record's page and the member voting section say so.
+  not tie one text to the division. No text is attached. Beside the record, apart from the question, the page
+  says the kind of question and that the record names nothing more: "Amendment: the record names no further
+  detail." (or "Motion:", "Clause:", "New clause:", as the division line has it). The link opens the Hansard page.
+- **"Words proposed to be omitted stand part".** The page says, in OPAX's words: "On this question a Yes vote
+  (aye) keeps the words as they are, which is a vote against the amendment. A No vote takes the words out,
+  which is a vote for the amendment."
+- **What Hansard's lists leave out.** "Hansard's division lists do not record pairs, tellers or absences. A
+  member who is not listed was not necessarily absent and did not necessarily abstain." The record's page and
+  the member voting section say so.
+- These three lines are OPAX's own words. They are shown in their own lines beside the record and are never
+  written into `question` or `name`, which stay as Hansard prints them.
 - **Presiding officers.** The Speaker is listed among the ayes on `vic-la-2024-02-22-3` and `vic-la-2025-02-20-2`.
   Both pages were read: "Maree Edwards" is printed inside the alphabetical Ayes list, between Paul Edbrooke
   and Eden Foster. Hansard records the vote; it is not page furniture.

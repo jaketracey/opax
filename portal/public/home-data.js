@@ -2,7 +2,7 @@ import {subjectUrl} from './canonical-urls.js?v=9939367926';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
-import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=ffd32d5678';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=3d4c26573f';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
@@ -153,80 +153,6 @@ export function industryGroups(graph) {
 }
 /** The footer's coverage line (labels.js): one line on every page. */
 export { coverageLineHTML };
-
-// --- whether parliament sits today ------------------------------------------------
-// /parliament/sitting-days.json (docs/DATA-SITTING-DAYS.md) is the Parliament's published calendar as dated
-// flags. Outside its coverage, after it expires, or in any shape this does not expect, sitting is unknown and
-// there is no line: never a guess.
-const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
-const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-/** Today's calendar date in Sydney, as the file's dates are. */
-export const sydneyToday = (now = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Sydney' }).format(now);
-/** "Monday 23 November" for an ISO day. */
-function longDay(iso) {
-  const [y, m, d] = iso.split('-').map(Number);
-  return `${WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]} ${d} ${MONTH_NAMES[m - 1]}`;
-}
-/** The home page's sitting line for `today` (YYYY-MM-DD, Sydney), or null when the calendar cannot say. */
-export function sittingLine(calendar, today) {
-  if (!calendar || calendar.schema_version !== 1 || calendar.timezone !== 'Australia/Sydney' || !ISO_DAY.test(today || '')) return null;
-  const { first, last } = calendar.coverage || {};
-  if (!ISO_DAY.test(first || '') || !ISO_DAY.test(last || '') || today < first || today > last) return null;
-  if (!ISO_DAY.test(calendar.expires || '') || today > calendar.expires) return null;
-  if (!Array.isArray(calendar.days)) return null;
-  const days = calendar.days.filter(d => d && ISO_DAY.test(d.date || '') && (d.house === true || d.senate === true));
-  const now = days.find(d => d.date === today);
-  if (now) return { href: '/sitting', text: now.house && now.senate ? 'Parliament is sitting today'
-    : now.senate ? 'The Senate is sitting today' : 'The House of Representatives is sitting today' };
-  const next = days.filter(d => d.date > today && d.date <= last).sort((a, b) => a.date.localeCompare(b.date))[0];
-  return next ? { href: '/sitting', text: `Next sitting day: ${longDay(next.date)}` } : null;
-}
-/* The bill most divided on in the last completed sitting week, from the sitting hubs' own division list
-   (hubs/index.json, scripts/build_hubs.mjs). A bill division's heading is "BILLS - <bill>; <stage>"; other
-   headings (business, motions) are not bills and are not counted. Two bills level on the count are both
-   named; more than two, or a top count under two, and there is no line: a fact by rule, never a pick. */
-const BILL_HEADING = /^bills\s+[-–—]\s+(.+)$/i;
-export function mostDividedLine(hubs, today) {
-  if (!ISO_DAY.test(today || '') || !Array.isArray(hubs?.weeks)) return null;
-  const week = hubs.weeks.filter(w => w && ISO_DAY.test(w.start || '') && ISO_DAY.test(w.end || '') && w.end < today && Array.isArray(w.divisions) && w.divisions.length)
-    .sort((a, b) => b.start.localeCompare(a.start))[0];
-  if (!week) return null;
-  const counts = new Map(), seen = new Set();
-  for (const d of week.divisions) {
-    if (!d || (d.jurisdiction && d.jurisdiction !== 'federal') || seen.has(d.key)) continue;
-    seen.add(d.key);
-    const heading = BILL_HEADING.exec(String(d.title || d.name || '').trim());
-    if (!heading) continue;
-    const parts = heading[1].split(/;\s*/).map(p => p.trim()).filter(Boolean);
-    const bill = (parts.length > 1 ? parts.slice(0, -1) : parts).join('; ');
-    if (bill) counts.set(bill, (counts.get(bill) || 0) + 1);
-  }
-  const ranked = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'en'));
-  const top = ranked[0]?.[1] || 0;
-  const leaders = ranked.filter(([, n]) => n === top);
-  if (top < 2 || leaders.length > 2) return null;
-  const names = leaders.map(([name]) => name);
-  return { href: `/sitting/${week.start}`,
-    text: `Most divisions last sitting week: ${names.join(' and ')}, ${top}${names.length > 1 ? ' each' : ''}` };
-}
-
-/** Fills the line above the home page's title; it stays hidden when the calendar is missing or out of range. */
-export async function hydrateSitting(slot = document.querySelector('#hp-sitting'), today = sydneyToday()) {
-  if (!slot) return;
-  const line = sittingLine(await read('/parliament/sitting-days.json').catch(() => null), today);
-  if (!line) { slot.hidden = true; slot.innerHTML = ''; return; }
-  slot.innerHTML = `<a href="${esc(line.href)}">${esc(line.text)}</a>`;
-  slot.hidden = false;
-}
-/** The line under the sitting line: hidden when the hubs are missing or no bill leads the last week. */
-export async function hydrateMostDivided(slot = document.querySelector('#hp-most-divided'), today = sydneyToday()) {
-  if (!slot) return;
-  const line = mostDividedLine(await read('/hubs/index.json').catch(() => null), today);
-  if (!line) { slot.hidden = true; slot.innerHTML = ''; return; }
-  slot.innerHTML = `<a href="${esc(line.href)}">${esc(line.text)}</a>`;
-  slot.hidden = false;
-}
 
 // --- hydration -------------------------------------------------------------------
 

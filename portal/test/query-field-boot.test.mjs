@@ -38,7 +38,7 @@ test('shared query fields defer font and layout reads until the scheduled frame'
 
 test('growth query fields schedule the first measurement and ignore height-only resize feedback',async()=>{
   const f=fixture(),field=f.field('growth');
-  const form={isConnected:true,querySelector:()=>field,addEventListener(){}};
+  const form={isConnected:true,dataset:{},querySelector:()=>field,addEventListener(){}};
   const start=app.indexOf('function wireGrowthAsk('),end=app.indexOf('/** The ask field under',start);
   runInNewContext(app.slice(start,end)+';wireGrowthAsk(root);',{...f.globals,root:{querySelector:()=>form}});
   assert.equal(f.fontReads,0);assert.deepEqual(f.fits,[]);
@@ -52,7 +52,7 @@ test('growth query fields schedule the first measurement and ignore height-only 
 });
 
 test('a departed growth form does not perform the pending layout reads',()=>{
-  const f=fixture(),form={isConnected:true,querySelector:()=>f.field('growth'),addEventListener(){}};
+  const f=fixture(),form={isConnected:true,dataset:{},querySelector:()=>f.field('growth'),addEventListener(){}};
   const start=app.indexOf('function wireGrowthAsk('),end=app.indexOf('/** The ask field under',start);
   runInNewContext(app.slice(start,end)+';wireGrowthAsk(root);',{...f.globals,root:{querySelector:()=>form}});
   form.isConnected=false;f.flush();

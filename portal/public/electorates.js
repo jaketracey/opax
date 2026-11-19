@@ -6,7 +6,7 @@ import { renderNotFound } from './not-found.js';
 // "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
 let nextSteps = null;
 export const nextStepsReady = import('./next-steps.js').then((module) => { nextSteps = module; }, () => {});
-import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=ffd32d5678';
+import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=3d4c26573f';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
 export { rosterSeatParty, rosterListParty } from './roster-party.js';
@@ -17,7 +17,9 @@ export { vicMemberAuthorisationHTML } from './vic-election.js?v=df44efa398';
 import { seatVacancy, vacatedSeat, lastMemberText, servedText } from './seat-vacancy.js';
 export { seatVacancy, vacatedSeat };
 export const JURISDICTIONS = { federal: 'Federal', nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', sa: 'South Australia', wa: 'Western Australia', tas: 'Tasmania', nt: 'Northern Territory', act: 'Australian Capital Territory' };
-export const CHAMBERS = { representatives: 'House of Representatives', senate: 'Senate', nsw_la: 'NSW Legislative Assembly', nsw_lc: 'NSW Legislative Council', vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council', qld_la: 'Queensland Legislative Assembly', sa_ha: 'SA House of Assembly', sa_lc: 'SA Legislative Council', wa_la: 'WA Legislative Assembly', wa_lc: 'WA Legislative Council', tas_ha: 'Tasmanian House of Assembly', tas_lc: 'Tasmanian Legislative Council', nt_la: 'NT Legislative Assembly', act_la: 'ACT Legislative Assembly' };
+// The seat map, the person lookup and a member's seat rows are shared with the Worker's first paint of a member.
+import { CHAMBERS, findPerson, memberSeats } from './member-seats.js';
+export { CHAMBERS, findPerson, memberSeats };
 export const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const esc = escapeHTML;
 const number = (n) => Number(n).toLocaleString('en-AU', { maximumFractionDigits: 1 });
@@ -41,11 +43,6 @@ export function representationAt(detail, on) {
     ((t.end_precision === 'day' && t.end && on < t.end) || (t.end_precision === 'open' && t.observed_through && on <= t.observed_through)));
   const members = terms.map((t) => ({ ...t, party: t.party_periods?.find((p) => p.start && p.start <= on && (!p.end || on < p.end))?.party }));
   return { status: members.length ? (members.length > detail.capacity ? 'conflicting' : 'historical') : 'unknown', members, as_of: on };
-}
-export function findPerson(people, name) {
-  const key = String(name).toLocaleLowerCase();
-  const matches = people.filter((p) => [p.name, ...(p.aliases || [])].some((n) => n.toLocaleLowerCase() === key));
-  return matches.length === 1 ? matches[0] : null;
 }
 // Recorded affiliations can be historical and can contain legacy labels.
 // Only one match in the stated parliament/chamber may become a profile link.

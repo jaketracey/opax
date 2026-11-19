@@ -9,11 +9,14 @@ import { fileURLToPath } from 'node:url';
 import {
   STYLE_BEGIN,
   STYLE_END,
+  colourRoles,
   contrastPairs,
   loadSource,
   palettes,
   parties,
   staleTargets,
+  webLight,
+  webTypeRoles,
 } from '../../scripts/build_tokens.mjs';
 import { census } from './helpers/css-census.mjs';
 
@@ -22,7 +25,7 @@ const source = loadSource();
 const style = readFileSync(join(PORTAL, 'public/style.css'), 'utf8');
 
 test('generated token files match docs/design/design-tokens.json', () => {
-  assert.deepEqual(staleTargets(['web', 'docs']), [], 'run `node scripts/build_tokens.mjs` and commit the result');
+  assert.deepEqual(staleTargets(['web', 'share', 'docs']), [], 'run `node scripts/build_tokens.mjs` and commit the result');
   const begin = style.indexOf(STYLE_BEGIN);
   assert.ok(begin >= 0 && style.includes(STYLE_END), 'style.css keeps its tokens:begin / tokens:end region');
   assert.ok(begin < style.indexOf(':root { --header-h'), 'the token region opens style.css');
@@ -49,8 +52,11 @@ function resolved(props, name, seen = []) {
 // A pair is [701px and wider, 700px and narrower]. Colours keep their values;
 // the 12 Oct 2026 web uplift (docs/design/uplift-2026-10) moved the old space
 // and heading names onto the 4/8 scale and the six type sizes, and lightened the
-// row hairline, so those names still resolve, to the new values.
-const SERIF = '"Merriweather", Georgia, "Times New Roman", serif';
+// row hairline, so those names still resolve, to the new values. The 17 Nov 2026
+// typography step moved the web's type onto the app's roles (the system face on
+// Apple devices, metric-matched fallbacks): the old heading names follow.
+const SERIF = '"Merriweather", "Merriweather Fallback", Georgia, "Times New Roman", serif';
+const SANS = '-apple-system, BlinkMacSystemFont, "Public Sans", "Public Sans Fallback", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 const BEFORE = {
   '--paper': '#FAF9F6', '--paper-raised': '#FFFFFF', '--paper-sunken': '#F1EFE8',
   '--ink': '#23271F', '--ink-soft': '#575C52', '--ink-faint': '#6F7468',
@@ -62,10 +68,10 @@ const BEFORE = {
   '--party-alp': '#B02E33', '--party-lib': '#1D4F91', '--party-nat': '#8F6E00', '--party-lnp': '#4A90D9',
   '--party-grn': '#2E7D32', '--party-onp': '#BF5B15', '--party-ind': '#3E5B77', '--party-oth': '#7C6690',
   '--serif': SERIF,
-  '--sans': '"Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-  '--heading-page': `400 clamp(2rem, 1.25rem + 2.2vw, 3rem)/1.15 ${SERIF}`,
-  '--heading-section': `600 1.5rem/1.25 ${SERIF}`,
-  '--heading-subsection': `600 1.0625rem/1.4 ${SERIF}`,
+  '--sans': SANS,
+  '--heading-page': `700 2.125rem/1.206 ${SANS}`,
+  '--heading-section': `700 1.375rem/1.273 ${SANS}`,
+  '--heading-subsection': `600 1.0625rem/1.294 ${SANS}`,
   '--heading-tracking': '0',
   '--space-1': '0.25rem', '--space-2': '0.5rem', '--space-3': '0.75rem', '--space-4': '1rem',
   '--space-5': '1.5rem', '--space-6': ['3rem', '2rem'], '--space-7': ['5rem', '3rem'],
@@ -157,9 +163,9 @@ const TYPE_BASELINE = {
   'public/quiz.js': 4,
   'public/st-test.html': 1,
   'public/stages.js': 2,
-  'public/style.css': 9,
+  'public/style.css': 8,
   'public/thenvsnow.js': 2,
-  'public/timemachine.js': 15,
+  'public/timemachine.js': 14,
   'public/ui-controls.css': 2,
   'public/ui-source.css': 1,
   'public/ui-workbench.css': 8,
@@ -217,6 +223,52 @@ function onlyDown(t, label, counts, baseline, fix) {
 
 test('no new raw hex colours outside the tokens', (t) => {
   onlyDown(t, 'raw hex colours', rawHexCounts(), HEX_BASELINE, 'use a token from tokens.css');
+});
+
+// One source for the web, the app and the share images (17 Nov 2026): the
+// app's roles are the base, each web type role follows one of them, and a
+// token marked web.omit is the app's alone.
+test('web type roles follow app roles, and app-only tokens stay off the web', () => {
+  const roles = webTypeRoles(source);
+  assert.deepEqual(roles.map((role) => role.name), ['title', 'recordTitle', 'display', 'tileFigure', 'heading', 'subheading', 'rowRecord', 'record', 'body', 'strong', 'metadata', 'fine', 'label', 'control']);
+  for (const { name, follows } of roles) assert.ok(source.type[follows], `webRoles.${name} follows ${follows}`);
+  const css = readFileSync(join(PORTAL, 'public/tokens.css'), 'utf8');
+  const kebab = (name) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+  const omitted = [
+    ...Object.values(source.color).flatMap((group) => Object.entries(group).filter(([name, token]) => !name.startsWith('$') && token.web?.omit).map(([name, token]) => token.web?.name ?? `--${kebab(name)}`)),
+    ...Object.entries(source.space).filter(([, token]) => token.web?.omit).map(([name]) => `--space-${kebab(name)}`),
+    ...Object.entries(source.radius).filter(([, token]) => token.web?.omit).map(([name]) => `--radius-${kebab(name)}`),
+    ...Object.entries(source.motion.duration).filter(([, token]) => token.web?.omit).map(([name]) => `--duration-${kebab(name)}`),
+  ];
+  assert.ok(omitted.length > 0);
+  for (const name of omitted) assert.ok(!css.includes(`${name}:`), `${name} is app-only but reached tokens.css`);
+});
+
+// A colour written out as rgb()/rgba() channels; black (a mask stop) is not a token.
+const CHANNELS = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g;
+
+test('the share images take their colours from the token source', () => {
+  for (const file of ['src/og.ts', 'src/story.ts']) {
+    const text = readFileSync(join(PORTAL, file), 'utf8');
+    assert.deepEqual(text.match(HEX) ?? [], [], `${file}: use light.* from src/tokens.generated.ts`);
+    const copies = [...text.matchAll(CHANNELS)].filter((m) => m.slice(1).some((c) => c !== '0')).map((m) => m[0]);
+    assert.deepEqual(copies, [], `${file}: write a translucent token colour as alpha(light.*, opacity)`);
+  }
+});
+
+// The web's colours reach code that draws without CSS through one map
+// (webLight, written to src/tokens.generated.ts), so a web override in the
+// JSON reaches the pages, the share images and the money map together.
+test('the share images and the money map draw the colours tokens.css draws', () => {
+  const css = readFileSync(join(PORTAL, 'public/tokens.css'), 'utf8');
+  const light = webLight(source);
+  for (const role of colourRoles(source)) {
+    if (role.onWeb) assert.ok(css.includes(`  ${role.web}: ${light[role.name]};`), `${role.web} in tokens.css is ${light[role.name]}`);
+    else assert.ok(!(role.name in light), `${role.name} is app-only and stays out of src/tokens.generated.ts`);
+  }
+  const palette = readFileSync(join(PORTAL, 'graph/palette.ts'), 'utf8');
+  assert.match(palette, /from '\.\.\/src\/tokens\.generated\.ts'/, 'graph/palette.ts reads the web colours from src/tokens.generated.ts');
+  assert.doesNotMatch(palette, /\bcolor\b[^\n]*design-tokens\.json/, 'graph/palette.ts reads no colour roles from the raw JSON, which has no web overrides applied');
 });
 
 // --- raw type values and deprecated token names ------------------------------

@@ -18,12 +18,14 @@ export const OG_HEIGHT = 630
 /** Bump when the drawing changes, or when a card's portrait or name was wrong: it is
  *  folded into every og:image URL and the Worker's card cache key, so the social
  *  crawlers (which cache by URL, some for weeks) and the edge fetch the new card.
+ *  9: a bill card whose headline is a summary sentence says "Machine-written summary.".
  *  8: Jake's 13 October address on electoral cards.
  *  7: full electoral authorisation on landscape and portrait hub cards.
  *  6: portraits taken off people they did not show (docs/PHOTOS.md, "Identity check"). */
-export const OG_VERSION = '8'
+export const OG_VERSION = '9'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
+import { fontFamily, light } from './tokens.generated'
 
 /** The faces the card sets, as served from /fonts/og/ (static instances of the
  *  same two OFL families the site self-hosts; satori cannot read a variable
@@ -61,14 +63,19 @@ export interface OgCard {
   sourceNotice?: { label: string; url: string | null }
 }
 
-// --- palette: style.css :root, the navy band's values --------------------------
-const NAVY = '#142A43'
-const WHITE = '#FFFFFF'
-const SOFT = '#B7C6D9' // --on-navy-soft
-const BRONZE_BRIGHT = '#D9A84A' // --bronze-bright, legible on navy
-const BRONZE = '#A0761B' // --bronze, the rule the masthead ends on
-const SERIF = 'Merriweather'
-const SANS = 'Public Sans'
+// --- palette: the token source's roles (docs/design/design-tokens.json) ---------
+const NAVY = light.navy
+const WHITE = light.onNavy
+const SOFT = light.onNavySoft
+const BRONZE_BRIGHT = light.bronzeBright // legible on navy
+const BRONZE = light.bronze // the rule the masthead ends on
+const SERIF = fontFamily.serif
+const SANS = fontFamily.sans
+/** A token colour (opaque hex) at an opacity, as the compact rgba() string satori reads. */
+function alpha(hex: string, opacity: number): string {
+  if (!/^#[0-9A-F]{6}$/i.test(hex)) throw new Error(`alpha() takes an opaque hex colour, not ${hex}`)
+  return `rgba(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(',')},${opacity})`
+}
 
 // --- the mark: index.html's .logo-mark paths, viewBox 0 0 176 160 ----------------
 const LAND =
@@ -153,6 +160,26 @@ function clipToLines(text: string, width: number, size: number, em: number, maxL
   return t
 }
 
+/**
+ * As clipToLines, but the text's last sentence is kept whole and the words before it give way. A bill's cover line is
+ * its summary sentence followed by where the bill stands ("Passed 19 Aug 2026."): when the two run past the rows
+ * there are, the sentence is cut, never the standing and its date. Text with one sentence is clipped as usual.
+ */
+function clipKeepingLast(text: string, width: number, size: number, em: number, maxLines: number): string {
+  const t = text.trim()
+  if (wrapLines(t, width, size, em) <= maxLines) return t
+  const cut = Math.max(t.lastIndexOf('. '), t.lastIndexOf('… '), t.lastIndexOf('? '), t.lastIndexOf('! '))
+  const tail = cut > 0 ? t.slice(cut + 2).trim() : ''
+  // A last sentence that could not share the rows with any of the text before it is not kept at that cost.
+  if (!tail || wrapLines(tail, width, size, em) >= maxLines) return clipToLines(t, width, size, em, maxLines)
+  let head = t.slice(0, cut + 1).trim()
+  while (wrapLines(`${head} ${tail}`, width, size, em) > maxLines && head.length > 12) {
+    const at = head.lastIndexOf(' ', head.length - 2)
+    head = `${head.slice(0, at > 0 ? at : head.length - 8).replace(/[\s,;:.…]+$/, '')}…`
+  }
+  return `${head} ${tail}`
+}
+
 const SERIF_EM = 0.52
 const SANS_EM = 0.47
 const TITLE_SIZES = [84, 76, 68, 60, 54, 48, 42, 38]
@@ -210,7 +237,7 @@ export function cardTree(card: OgCard): El {
     ),
   )
 
-  const rule = h('div', { style: { height: 1, margin: `24px ${PAD}px 0 ${PAD}px`, background: 'rgba(217,168,74,0.45)' } })
+  const rule = h('div', { style: { height: 1, margin: `24px ${PAD}px 0 ${PAD}px`, background: alpha(BRONZE_BRIGHT, 0.45) } })
 
   const kicker = card.kicker
     ? h(
@@ -268,7 +295,7 @@ export function cardTree(card: OgCard): El {
         { style: { display: 'flex', flexDirection: 'column', alignItems: card.stat ? 'center' : 'flex-end', justifyContent: 'center', width: artWidth, marginLeft: gutter } },
         h(
           'div',
-          { style: { display: 'flex', padding: 6, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 4 } },
+          { style: { display: 'flex', padding: 6, border: `1px solid ${alpha(BRONZE_BRIGHT, 0.7)}`, borderRadius: 4 } },
           h('img', { src: card.portrait as string, width: photoSize, height: photoSize, style: { borderRadius: 2, objectFit: 'cover' } }),
         ),
         statistic,
@@ -341,7 +368,7 @@ const P_PAD = 72
 const P_TEXT_WIDTH = PORTRAIT_WIDTH - P_PAD * 2
 const P_TITLE_SIZES = [128, 116, 104, 92, 84, 76, 68, 60, 54]
 const P_LINE_SIZE = 34
-const P_RULE = 'rgba(217,168,74,0.45)'
+const P_RULE = alpha(BRONZE_BRIGHT, 0.45)
 
 export function portraitTree(card: OgCard): El {
   if (!card.authorisation && vicElectionMaterial([card.kicker, card.title, ...card.lines].join(' '))) card = {...card, authorisation: VIC_ELECTION_AUTHORISATION_LINE}
@@ -375,7 +402,7 @@ export function portraitTree(card: OgCard): El {
         { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: P_TEXT_WIDTH } },
         h(
           'div',
-          { style: { display: 'flex', padding: 8, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 6 } },
+          { style: { display: 'flex', padding: 8, border: `1px solid ${alpha(BRONZE_BRIGHT, 0.7)}`, borderRadius: 6 } },
           h('img', { src: card.portrait as string, width: photoSize, height: photoSize, style: { borderRadius: 3, objectFit: 'cover' } }),
         ),
         card.credit
@@ -510,9 +537,9 @@ export interface StoryImages {
 }
 
 const S_TITLE_SIZES = [140, 128, 116, 104, 92, 84, 76, 68, 60]
-const S_SOFT_RULE = 'rgba(183,198,217,0.18)'
-const S_BRONZE_RULE = 'rgba(217,168,74,0.6)'
-const S_BRONZE_RING = 'rgba(217,168,74,0.75)'
+const S_SOFT_RULE = alpha(SOFT, 0.18)
+const S_BRONZE_RULE = alpha(BRONZE_BRIGHT, 0.6)
+const S_BRONZE_RING = alpha(BRONZE_BRIGHT, 0.75)
 /** The cover's photograph runs this deep before its mask has feathered it into the navy. */
 const S_PHOTO_BAND = 960
 
@@ -544,6 +571,16 @@ function fitStoryTitle(text: string, maxSize: number, maxLines: number): { size:
   }
   const size = S_TITLE_SIZES[S_TITLE_SIZES.length - 1]
   return { size, text: clipToLines(text, P_TEXT_WIDTH, size, SERIF_EM, maxLines) }
+}
+
+/**
+ * Whether a cover's title is set whole, at feed and at story size, or would be cut short with "…". The composer
+ * asks before it writes the title, so a long bill name is shortened where its words matter least (daily-post.ts
+ * shortTitle), not at its end. It measures only: nothing here changes how a slide is drawn.
+ */
+export function coverTitleFits(title: string): boolean {
+  const text = storyText(title)
+  return [140, 128].every(max => fitStoryTitle(text, max, 2).text === text)
 }
 
 /** A small chevron for the cover's "Swipe" cue: the sans has no arrow glyph. */
@@ -594,16 +631,23 @@ function storyHeadline(text: string, maxSize: number, maxLines: number, centred 
 }
 
 /** Public Sans lines under a headline, each held to `rows` lines; the first stands `first` px clear of the headline. */
-function storyLines(lines: string[], centred = false, rows = 3, first = 30, size = S_LINE): El[] {
+function storyLines(lines: string[], centred = false, rows = 3, first = 30, size = S_LINE, keepLast = false): El[] {
+  const clipped = keepLast ? clipKeepingLast : clipToLines
   return lines.map(plain).filter(Boolean).slice(0, 3).map((l, i) =>
     h('div', { style: { display: 'flex', justifyContent: centred ? 'center' : 'flex-start', fontFamily: SANS, fontSize: size, lineHeight: 1.35, color: SOFT, marginTop: i === 0 ? first : 10, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } },
-      clipToLines(l, P_TEXT_WIDTH, size, SANS_EM, rows)),
+      clipped(l, P_TEXT_WIDTH, size, SANS_EM, rows)),
   )
 }
 
 function storyNote(text: string | null | undefined, centred = false): El | null {
   const t = text ? storyText(text) : ''
   return t ? h('div', { style: { fontFamily: SANS, fontSize: S_NOTE, lineHeight: 1.4, color: SOFT, opacity: 0.85, marginTop: 40, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, S_NOTE, SANS_EM, 3)) : null
+}
+
+/** The cover's small line under its cover line: who wrote the sentence above it. One row, quieter than the line. */
+function coverNote(text: string | null | undefined): El | null {
+  const t = text ? storyText(text) : ''
+  return t ? h('div', { style: { display: 'flex', fontFamily: SANS, fontSize: S_NOTE, lineHeight: 1.3, color: SOFT, opacity: 0.85, marginTop: 14, width: P_TEXT_WIDTH } }, clipToLines(t, P_TEXT_WIDTH, S_NOTE, SANS_EM, 1)) : null
 }
 
 /** The engraving as a watermark in the lower right, behind the type; `bottom` clears the footer unless a slide has none. */
@@ -627,25 +671,35 @@ function storyFrame(g: StoryGeometry, children: (El | null)[]): El {
 function storyMedallion(src: string, size = 300): El {
   return h(
     'div',
-    { style: { display: 'flex', padding: 10, border: `1px solid ${S_BRONZE_RING}`, borderRadius: size, background: 'rgba(20,42,67,0.55)', marginBottom: 40 } },
+    { style: { display: 'flex', padding: 10, border: `1px solid ${S_BRONZE_RING}`, borderRadius: size, background: alpha(NAVY, 0.55), marginBottom: 40 } },
     h('img', { src, width: size, height: size, style: { borderRadius: size / 2, objectFit: 'cover' } }),
   )
 }
 
+// A cover that carries a note (a bill's) has a summary sentence then the bill's standing as its line: the standing and
+// its date stay on the slide when the line is too long for its rows (clipKeepingLast).
 function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: StoryImages, g: StoryGeometry): El {
   const photo = images.photo ?? null
   const inset = images.inset ? storyMedallion(images.inset) : null
   const credit = [images.photo ? images.credit : null, images.inset ? images.insetCredit : null].filter(Boolean).join(' · ')
   if (!photo) {
     // No approved photograph: the engraving card, as the portrait card draws it.
+    // A cover with a note (a bill's) has one more row of words. On that cover the words never give way: each is held
+    // at its own height, the engraving is drawn smaller to stay in view, and if the rows still run long it is the
+    // engraving's box that shrinks and is clipped, never a row pressed into the next. A cover with no note is drawn
+    // exactly as it was.
+    const noted = !!coverNote(slide.note)
+    const firm = (el: El | null): El | null => noted && el ? { ...el, props: { ...el.props, style: { ...(el.props.style as object), flexShrink: 0 } } } as El : el
+    const engraving = noted ? { width: 400, height: 364, top: 40 } : { width: 520, height: 474, top: 56 }
     return storyFrame(g, [
       storyMasthead(),
       storyBody([
         inset,
-        storyKicker(slide.kicker),
-        storyHeadline(slide.title, 128, 2),
-        ...storyLines([slide.line], false, 3),
-        h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 520, height: 474, style: { opacity: 0.9 } })),
+        firm(storyKicker(slide.kicker)),
+        firm(storyHeadline(slide.title, 128, 2)),
+        ...storyLines([slide.line], false, 3, 30, S_LINE, !!coverNote(slide.note)).map(firm),
+        firm(coverNote(slide.note)),
+        h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: engraving.top, ...(noted ? { flexShrink: 1, minHeight: 0, overflow: 'hidden' } : {}) } }, h('img', { src: ENGRAVING_URI, width: engraving.width, height: engraving.height, style: { opacity: 0.9 } })),
       ]),
       storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
     ])
@@ -657,7 +711,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
     src: photo, width: PORTRAIT_WIDTH, height: g.band,
     style: { position: 'absolute', left: 0, top: 0, objectFit: 'cover', maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 56%, rgba(0,0,0,0) 100%)' },
   })
-  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: g.band, backgroundImage: 'linear-gradient(to bottom, rgba(20,42,67,0.6) 0%, rgba(20,42,67,0.14) 24%, rgba(20,42,67,0.14) 58%, rgba(20,42,67,0.7) 100%)' } })
+  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: g.band, backgroundImage: `linear-gradient(to bottom, ${alpha(NAVY, 0.6)} 0%, ${alpha(NAVY, 0.14)} 24%, ${alpha(NAVY, 0.14)} 58%, ${alpha(NAVY, 0.7)} 100%)` } })
   return storyFrame(g, [
     band,
     wash,
@@ -668,7 +722,8 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
       inset,
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 140, 2),
-      ...storyLines([slide.line], false, 3),
+      ...storyLines([slide.line], false, 3, 30, S_LINE, !!coverNote(slide.note)),
+      coverNote(slide.note),
     ),
     storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
   ])
@@ -806,7 +861,7 @@ function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images:
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 104, 3),
       ...storyLines(slide.lines, false, 3),
-      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 16, borderLeft: '2px solid rgba(217,168,74,0.5)', paddingLeft: 46 } }, ...events),
+      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 16, borderLeft: `2px solid ${alpha(BRONZE_BRIGHT, 0.5)}`, paddingLeft: 46 } }, ...events),
     ]),
     storyFooter(null, false, slide.authorisation),
   ])
@@ -842,7 +897,7 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images:
         'div',
         { style: { display: 'flex', height: 18, width: P_TEXT_WIDTH, marginTop: 40 } },
         h('div', { style: { width: ayeWidth, height: 18, background: BRONZE_BRIGHT } }),
-        h('div', { style: { width: P_TEXT_WIDTH - 4 - ayeWidth, height: 18, marginLeft: 4, background: 'rgba(183,198,217,0.45)' } }),
+        h('div', { style: { width: P_TEXT_WIDTH - 4 - ayeWidth, height: 18, marginLeft: 4, background: alpha(SOFT, 0.45) } }),
       ),
       ...storyLines([slide.line], false, 2, 30, 36),
     ]),

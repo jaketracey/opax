@@ -99,7 +99,7 @@ type TopicProfile = {
 | --- | --- | --- | --- |
 | GET/HEAD `/api/app/v1/vic-election` | Schema 1 overview: election state, title and lede, voting and finder wording, election and polling dates, six resolved key dates, optional current results, 88 districts, eight regions, optional notice, sources and authorisation. No query. | Offline hub assets; cheap read. | Public; exact `VIC_ELECTION_HUB_ENABLED=true` required; 0/none, must-revalidate, ETag/304, noindex; disabled 404 `not_published`, no-store; `N`. |
 | GET/HEAD `/api/app/v1/vic-election/seat/<slug>` | Schema 1 district or region: results, candidates in ballot order, members and up to three titled recent votes each. Each candidate has `name` (string), `party` (always null), `candidate_name` (string), `party_name` (string or null, as nominated) and `party_path` (string or null: the party's register view on the website). App builds to 1.1.5 print `party` as a link to their own party screen, which holds no record for most registered Victorian parties, so `party` is never sent and `name` carries the candidate's name followed, on a new line, by the party as nominated: every party is printed and none is a link. Later builds must read `candidate_name`, `party_name` and `party_path` and ignore `name` and `party`. Region candidates also include `group` (one uppercase letter A to Z or null) and `group_name` (string or null); blank group names become null. District candidates omit both group fields. No query; unknown or invalid slug is 404 `not_found`. | Offline hub assets; cheap read. | Public; same election flag, cache and headers; `N`. |
-| GET/HEAD `/api/app/v1/vic-election/find?q=<text>` | Schema 1 finder: exactly one non-blank `q`, trimmed and cut to 60 characters; up to eight ordered place, seat or member hits with resident shares. Places failure retains seat/member matches with `places_searched:false`. | Offline hub and ABS places assets; cheap read. | Public; same election flag, cache and headers; `N`. All three routes reject other methods with 405, invalid queries with 400, and unavailable/malformed hub data with 503 and `Retry-After: 60`. |
+| GET/HEAD `/api/app/v1/vic-election/find?q=<text>` | Schema 1 finder: exactly one non-blank `q`, trimmed and cut to 60 characters; up to eight ordered place, seat or member hits with resident shares. No `Member` hit is returned until the polls close (`polls_close`); member-name matching returns at that instant. Places failure retains seat matches (and member matches after the close) with `places_searched:false`. | Offline hub and ABS places assets; cheap read. | Public; same election flag, cache and headers; `N`. All three routes reject other methods with 405, invalid queries with 400, and unavailable/malformed hub data with 503 and `Retry-After: 60`. |
 | GET `/api/search` | Search parameters; `SearchPage & {mode:string} & SearchRetrieval`. Public slug filtering, a bounded retrieval window and reranking. | ARAG `/find`, including keyword mode and reranker. Model-backed retrieval; hybrid/semantic also use semantic retrieval. No answer writer here. | Public; normal results: 600/600 page, 3600 retrieval-window cache, epoch; fallback results: no-store browser/page, 60-second server window; `S120` on retrieval misses; `N`. |
 | GET `/api/search-all` | Search parameters; `UnifiedSearchPage`. Catalog kinds include person, party, donor, agency, supplier, receipt, contract, grant, bill, interest, expense, access, campaigner, report, pay. | ASSETS catalog for selected catalog-only kinds; `all`, bills and document kinds can also invoke `/api/search`. Cheap read for catalog-only selection; model-backed retrieval otherwise. | Public; no-store/none for combined response; `S120` before tasks, document miss can consume another search limit; `N`. |
 | GET `/api/person-slugs` | `{generated:string,slugs:Record<string,string>}`; names to canonical public slugs. Shape checked live. | ASSETS parliamentarians plus electorate roster augmentation; cheap read. | Public; 3600/none; no limiter; `N`. No ETag observed. |
@@ -144,6 +144,8 @@ type AskPayload = {
     chamber?:string,from?:string,to?:string}; answer_status?: string;
   evidence_excerpts?: {resource:string,text:string}[];
   evidence_kind?: 'original_position_proposal';
+  machine_written?: boolean; // true when a language model wrote text in this payload
+  machine_notice?: string;   // the error notice to print; absent when no model wrote any of it
 }; // sources contain source identity, links, cited flags and optional answer ranges
 type SummaryPayload = {
   status: 'empty' | 'ready';
@@ -151,14 +153,43 @@ type SummaryPayload = {
   sources: {id:string,title:string,href:string,snippet:string,kind:string,
     evidence:string[],speaker?:string,party?:string,state?:string,date?:string}[];
   reviewed_count?: number; partial?: boolean;
+  machine_notice?: string; // present on every `ready` overview
 };
 ```
+
+#### `machine_notice`: the error notice on machine-written answers
+
+Every response in which a language model wrote text for a reader carries `machine_notice`, a plain string a client prints as it is: one small secondary-ink line under the answer text and above the sources, visible without a tap, read by a screen reader in that order. The "Machine-written" label stays as it is; the notice is in addition to it. Code sets the string, never a model. There are two wordings today:
+
+- Default: "Machine-written answers can contain errors. Check the original record before relying on one."
+- When the answer cites a hearing transcript (a cited source row that the evidence line in `portal/public/transcript-note.js` counts as one): "Machine-written answers can contain errors. Check the original transcript before relying on it."
+
+A client must not match on the wording or keep its own copy: it prints whatever string arrives, so a later wording needs no app release. The field is absent, not empty, when no model wrote any part of the payload (a calculated table, passages from the record, a decline, a prompt to narrow the question with no suggested question, an error). A calculated answer under a written `money_overview` paragraph carries it, and so does a clarify prompt whose `suggested_question` the rewrite model wrote.
+
+`/api/ask` sets it at its single exit (`apiAskReply` in `portal/src/index.ts`, with `portal/src/machine-notice.ts`), so both engines, blocking JSON, the streamed `done` frame, a cached answer and a cached replay all carry it; an answer cached before the field existed gains it as it is served. `delta` frames never carry it: only a model's words stream, so a client may hold the line's place from the first `delta` and fill it from `done`. `/api/search-summary` (JSON and its `done` frame) and `/api/journey-story` carry the default wording on every written overview or story. `/api/followups` returns suggested questions, not answers, and has no notice. Voice `ask_opax` results do not carry the field (the spoken form is not built).
+
+The field is additive. The shipped Ask decoders (`decodeAnswer` in `mobile/src/features/ask/model.ts` at tags `ios-1.1.3-b57` and `ios-1.1.4-b73`, the same JavaScript on Android) copy a fixed list of known keys out of the payload and never reject or enumerate unknown ones, and the stream reader hands the `done` payload to the same decoder, so shipped builds ignore the field. The apps will read and print it from version 1.1.6.
+
+#### `machine_notice` on stored machine-written text
+
+Text a model wrote earlier, which OPAX stores and shows under the "Machine-written" label, carries the same field in its own wording, "Machine-written summaries can contain errors. Check the original record before relying on one." (`MACHINE_NOTICE_STORED` in `portal/public/machine-notice.js`, beside the two answer wordings), and a client prints it the same way: directly under that text, or once under a list of briefs. It is set as the response leaves for a reader (`storedNoticeResponse` in `portal/src/machine-notice.ts`, at the public exit in `portal/src/index.ts`), after every cache, so cached copies and the Worker's own reads of these routes (Ask research, the MCP tools, voice) are unchanged.
+
+| Response | Carries `machine_notice` when | Absent when |
+| --- | --- | --- |
+| GET `/api/resource/:slug` | `summary` (the stored brief) is a non-empty string | `summary` is null: no brief written, or a short speech turn |
+| GET `/api/brief` | `briefs` holds at least one brief | `briefs` is empty |
+| GET `/api/search`, GET `/api/search-all` | a row in `results` has `machine: true` (a bill row whose `snippet` is its summary sentences) | no such row |
+| GET `/bill-texts/<key>/<version>.json` | `enrichment.brief` (a model's overview of that version) is a non-empty string | no overview; the `index.json` file |
+
+The field is a top-level sibling of `summary`, `briefs` and `results`, never inside them. None of this text is a summary of a hearing transcript, so the transcript wording is not used here. Static files a model's text is read from (`/bills/<key>.json` `summary` and `speeches[].brief`, `/years/<year>.json` `brief`, `/reports/<slug>.json`) are files, not API responses, and carry no field; the web prints the same fixed words from `portal/public/machine-notice.js`. `/api/suggest` and `/api/app/v1/edition/latest` are unchanged: the edition decoder in shipped apps rejects any key it does not name.
+
+Shipped decoders at tag `ios-1.1.4-b73` read named keys through `shape` (`mobile/src/api/validation.ts`) and drop unknown top-level keys: `decodeDocument` (`mobile/src/features/records/model.ts`) for the record, the `{briefs}` shape in `mobile/src/features/people/model.ts` for briefs, and the search page decoders in `mobile/src/features/search/decoders.ts` and `mobile/src/api/catalog-decoders.ts` for search, and `decodeBillText` (`mobile/src/features/records/model.ts`) for a bill text version. So shipped builds ignore the field.
 
 | Method and path | Input and output | Source / cost class | Auth; internal cache; limits; blocks |
 | --- | --- | --- | --- |
 | POST `/api/ask` | JSON at most 16 KiB: `question` at most 2,000 characters, filters, optional context and prior resources. `AskPayload`; `stream=1` or SSE Accept header enables status, delta `{text}`, retry, done and error events. | ARAG retrieval and configured OpenRouter-compatible writer; model generation. Money overview and position-recovery branches are part of this handler, not separate public endpoints. | Public; Cache API and KV up to seven days for cacheable cited, nonconversational answers; `A20` on ordinary misses and on every conversation turn before its paid rewrite; the later check avoids charging a turn twice. Conversation turns are never cached. `G`. |
 | GET `/api/search-summary` | Search parameters and optional stream; `SummaryPayload`. SSE emits point, done and error. | Unified search plus ARAG writer and possible repair; model generation. | Public; Cache API and KV 24 hours; search quota plus `F20` on generation miss; `G`. |
-| POST `/api/journey-story` | `{jurisdiction:'federal'\|'qld'\|'vic'\|'tas',lens,focus}`; focus at most 500 characters. `{steps:{title,body,evidence:string[]}[],generated:true,version:string}`. | Static money graph context plus ARAG writer; model generation. | Public; Cache API and KV seven days; `F20` on miss; `G`. |
+| POST `/api/journey-story` | `{jurisdiction:'federal'\|'qld'\|'vic'\|'tas',lens,focus}`; focus at most 500 characters. `{steps:{title,body,evidence:string[]}[],generated:true,version:string,machine_notice:string}`. | Static money graph context plus ARAG writer; model generation. | Public; Cache API and KV seven days; `F20` on miss; `G`. |
 | POST `/api/followups` | `{question,answer,passages?:{title,text}[]}`; `{questions:string[]}`. Failure may produce an empty list. | ARAG writer; model generation. | Public; Cache API seven days, no KV write in this handler; `F20` on miss; `G`. |
 
 ### Community routes
@@ -367,7 +398,7 @@ These routes are outside the native client call plan. Voice tools are provider-t
 | GET `/api/daily-post/status` | `{date,schedule,channels:Record<string,object>,deliveries:object[]}`. | D1 and configuration; D1 read. Readiness is not publication proof. | Public; no-store, no explicit limiter; `N`. |
 | GET `/api/daily-post/preview` | Optional `date=YYYY-MM-DD`, `kind=politician\|bill\|grant\|topic\|program\|largest`; `DailyPost & {publication:Record<string,object>}`. | Frozen D1 edition or recomposition from assets and possible ARAG person-topic reads. Source-only; model-service dependency possible despite GET. | Public; no-store, no explicit limiter; `N`. |
 | GET `/api/daily-post/engagement` | Optional `fresh` presence; `{at,accounts:Record<string,object>,posts:object[],errors:Record<string,string>}`. | D1 plus social-provider engagement reads; paid third-party boundary. | Operator Bearer secret; KV 600 seconds unless fresh; browser no-store; no explicit limiter; `N`. |
-| POST `/api/daily-post/run` | `{date?,kind?,subject?,channels?,dry_run?}` -> publication receipts, skip result or preview. | D1 journal, social posting, OG preflight and possible ARAG composition; paid third party/write. `dry_run` is not a cost guarantee. | Operator Bearer secret; no-store, no explicit limiter; `N`. |
+| POST `/api/daily-post/run` | `{date?,kind?,subject?,channels?,dry_run?,allow_any_date?}` -> publication receipts, skip result or preview. A posting run under a date other than today's or yesterday's (Melbourne) is refused with 400 unless `allow_any_date` is true. | D1 journal, social posting, OG preflight and possible ARAG composition; paid third party/write. `dry_run` is not a cost guarantee. | Operator Bearer secret; no-store, no explicit limiter; `N`. |
 
 `DailyPost` is `{date,kind,subject,title,text,url,caption?,slides?:StorySlide[]}`. Slides include cover, number, picture, bars, ledger, timeline, division, list and source frames. Publication variants contain text/link/image and optional slides/frames. This is an operator/publication contract, not a stable mobile edition feed. Scheduled handlers also dispatch reply email and daily publication; native clients must not invoke their operator paths to obtain a reading page.
 

@@ -26,7 +26,7 @@
  * safety: model text and all live data reach the DOM through textContent,
  * never innerHTML.
  */
-import { machineLabelHTML } from './labels.js?v=ffd32d5678'
+import { machineLabelHTML } from './labels.js?v=3d4c26573f'
 import {personUrl} from './canonical-urls.js?v=9939367926';
 import {isMultiSpeaker, isUnattributed, speakerLabel, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
 
@@ -729,6 +729,8 @@ export function mountThenVsNow (container, opts = {}) {
     }
     if (answerText) {
       renderAnswer(panel.bodyEl, answerText)
+      // The error notice the Worker sent with a machine-written answer: under it, above its speeches.
+      if (typeof data.machine_notice === 'string' && data.machine_notice) panel.bodyEl.appendChild(el('p', 'answer-notice', data.machine_notice))
     } else {
       panel.bodyEl.appendChild(el('p', 'tvn-thin',
         'The record was searched and the speeches below came back, but no written answer arrived this time.'))
