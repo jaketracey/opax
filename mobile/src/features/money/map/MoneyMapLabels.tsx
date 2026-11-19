@@ -8,7 +8,8 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import { Text } from '../../../design/primitives';
-import { colors, motion } from '../../../design/tokens';
+import { motion } from '../../../design/tokens';
+import { makeStyles } from '../../../design/use-colors';
 import { clusterLabelOpacity, nameOpacity } from './camera';
 import type { LabelSlot } from './labels';
 
@@ -36,6 +37,8 @@ const LabelText = memo(function LabelText({
   strong: boolean;
   sub?: string;
 }) {
+  const styles = useStyles();
+
   const variant = strong ? 'capsule' : 'footnote';
   // A paper halo keeps a name legible over the lines it sits on: the same
   // text in paper beneath, blurred a little, under the inked text.
@@ -99,6 +102,8 @@ function Slot({
   width: number;
   reduceMotion: boolean;
 }) {
+  const styles = useStyles();
+
   const { fontScale } = useWindowDimensions();
   // A name that gains or loses its place among the others fades (it used to
   // cut in and out as the map moved); with Reduce Motion it still cuts. The
@@ -170,6 +175,8 @@ export function MoneyMapLabels({
   width: number;
   reduceMotion?: boolean;
 }) {
+  const styles = useStyles();
+
   return (
     <View
       pointerEvents="none"
@@ -195,26 +202,28 @@ export function MoneyMapLabels({
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflow: 'hidden',
-  },
-  slot: { position: 'absolute', left: 0, top: 0 },
-  halo: {
-    textShadowColor: colors.paper,
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 3,
-  },
-  underlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    color: colors.paper,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    overlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      overflow: 'hidden',
+    },
+    slot: { position: 'absolute', left: 0, top: 0 },
+    halo: {
+      textShadowColor: colors.paper,
+      textShadowOffset: { width: 0, height: 0 },
+      textShadowRadius: 3,
+    },
+    underlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      color: colors.paper,
+    },
+  }),
+);

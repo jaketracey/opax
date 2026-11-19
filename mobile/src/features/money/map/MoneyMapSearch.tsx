@@ -9,7 +9,8 @@ import {
   useKeyCommand,
 } from '../../../design/primitives';
 import { symbols } from '../../../design/symbols';
-import { colors, hairline, radii, rhythm } from '../../../design/tokens';
+import { hairline, radii, rhythm } from '../../../design/tokens';
+import { makeStyles } from '../../../design/use-colors';
 import { normaliseOrganisation } from '../lookup';
 import { clusterLabel, type MapModel, type MapNode } from './model';
 
@@ -54,6 +55,8 @@ export function MoneyMapSearch({
    */
   onResults?: (key: string) => void;
 }) {
+  const styles = useStyles();
+
   const [query, setQuery] = useState('');
   const results = useMemo(() => searchModel(model, query), [model, query]);
   const resultsKey = results.map((node) => node.id).join('\n');
@@ -121,16 +124,18 @@ export function MoneyMapSearch({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    padding: rhythm.tight,
-    gap: rhythm.tight,
-  },
-  row: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      padding: rhythm.tight,
+      gap: rhythm.tight,
+    },
+    row: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+    grow: { flex: 1 },
+  }),
+);

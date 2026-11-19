@@ -5,7 +5,8 @@ import { PlainPressable as Pressable } from '../../../design/pressable';
 import { useDerivedValue, type SharedValue } from 'react-native-reanimated';
 import { SizedCanvas } from '../../../design/canvas';
 import { paletteFor } from '../../../design/palette';
-import { colors, hairline, radii } from '../../../design/tokens';
+import { hairline, radii } from '../../../design/tokens';
+import { makeStyles, useColors } from '../../../design/use-colors';
 import type { Bounds, Viewport } from './camera';
 import type { Centre } from './layout';
 import type { MapModel } from './model';
@@ -39,6 +40,9 @@ export function MiniMap({
   viewport: Viewport;
   onJump: (x: number, y: number) => void;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const palette = paletteFor('light');
   // The overview's own camera: the layout box fitted into the thumbnail.
   const scale = useMemo(() => {
@@ -125,15 +129,17 @@ export function MiniMap({
   );
 }
 
-const styles = StyleSheet.create({
-  frame: {
-    width: MINI_WIDTH,
-    height: MINI_HEIGHT,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    backgroundColor: colors.raised,
-    overflow: 'hidden',
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    frame: {
+      width: MINI_WIDTH,
+      height: MINI_HEIGHT,
+      borderRadius: radii.bar,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      backgroundColor: colors.raised,
+      overflow: 'hidden',
+    },
+  }),
+);

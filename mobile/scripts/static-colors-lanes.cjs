@@ -30,9 +30,6 @@ module.exports = [
   'src/features/seat/**',
   'src/features/vic-election/**',
   'src/features/your-mp/**',
-  // Lane C: Money.
-  'src/features/money/**',
-  'src/features/money-public/**',
   // Lane D: Ask, Talk, Search, reports, sheets, Account.
   'src/features/Search.tsx',
   'src/features/account/**',

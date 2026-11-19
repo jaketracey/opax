@@ -15,7 +15,8 @@ import { SourceLine, type SourceDetails } from '../../design/source';
 import { InlineError, Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, radii, rhythm } from '../../design/tokens';
+import { radii, rhythm } from '../../design/tokens';
+import { makeStyles } from '../../design/use-colors';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import {
   agenciesRoute,
@@ -143,6 +144,8 @@ export function QuestionCard({
   /** Older test IDs carried by the same card. */
   aliases?: string[];
 }) {
+  const styles = useStyles();
+
   const figure = state.status === 'ready' ? state.figure : null;
   const spoken = figure
     ? `${question} ${moneyAccessibilityLabel(figure.value, true)} ${figure.line}.`
@@ -368,16 +371,22 @@ export function PartiesCard() {
   );
 }
 
-const styles = StyleSheet.create({
-  frame: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.container,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  body: { gap: rhythm.tight },
-  kicker: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line * 2 },
-  question: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
-  source: { paddingHorizontal: 20, paddingBottom: 12 },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    frame: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.container,
+      borderCurve: 'continuous',
+      overflow: 'hidden',
+    },
+    body: { gap: rhythm.tight },
+    kicker: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.line * 2,
+    },
+    question: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+    grow: { flex: 1 },
+    source: { paddingHorizontal: 20, paddingBottom: 12 },
+  }),
+);

@@ -13,7 +13,12 @@ import { Heading, Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
-import { moneyBar, readableDates, recordSource } from './parts';
+import {
+  moneyBar,
+  readableDates,
+  recordSource,
+  useRefreshColours,
+} from './parts';
 
 /**
  * CPI's Table 3 row labels for the names `mlci.json` stores, by exact match
@@ -49,6 +54,7 @@ const CPI = {
  * order. No colour, no bars, no ranking.
  */
 export default function FundingBySeatType() {
+  const refreshColours = useRefreshColours();
   const load = useCallback(
     (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
       money.allocation(refresh, signal),
@@ -86,6 +92,7 @@ export default function FundingBySeatType() {
           <RefreshControl
             refreshing={status.refreshing}
             onRefresh={status.refresh}
+            {...refreshColours}
           />
         }
       >

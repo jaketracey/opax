@@ -2,7 +2,8 @@ import { StyleSheet, View } from 'react-native';
 import { useAccessibilityFocusRequest } from '../../../design/keyboard';
 import { IconButton } from '../../../design/primitives';
 import { symbols } from '../../../design/symbols';
-import { colors, hairline, radii } from '../../../design/tokens';
+import { hairline, radii } from '../../../design/tokens';
+import { makeStyles } from '../../../design/use-colors';
 
 /**
  * The stage's trailing stack: search, zoom in, zoom out, fit. Every map
@@ -22,6 +23,8 @@ export function MoneyMapControls({
   onFit: () => void;
   horizontal?: boolean;
 }) {
+  const styles = useStyles();
+
   // Closing search puts VoiceOver back on the button that opened it.
   const searchRef = useAccessibilityFocusRequest('money-map-search');
   return (
@@ -60,31 +63,33 @@ export function MoneyMapControls({
   );
 }
 
-const styles = StyleSheet.create({
-  horizontal: {
-    flexDirection: 'row',
-    paddingVertical: 0,
-    paddingHorizontal: 2,
-  },
-  verticalRule: {
-    width: hairline,
-    height: 20,
-    marginVertical: 0,
-    marginHorizontal: 2,
-  },
-  stack: {
-    backgroundColor: colors.raised,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
-    paddingVertical: 2,
-    alignItems: 'center',
-  },
-  rule: {
-    width: 20,
-    height: hairline,
-    backgroundColor: colors.dividerSubtle,
-    marginVertical: 2,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    horizontal: {
+      flexDirection: 'row',
+      paddingVertical: 0,
+      paddingHorizontal: 2,
+    },
+    verticalRule: {
+      width: hairline,
+      height: 20,
+      marginVertical: 0,
+      marginHorizontal: 2,
+    },
+    stack: {
+      backgroundColor: colors.raised,
+      borderRadius: radii.capsule,
+      borderCurve: 'continuous',
+      borderWidth: hairline,
+      borderColor: colors.dividerSubtle,
+      paddingVertical: 2,
+      alignItems: 'center',
+    },
+    rule: {
+      width: 20,
+      height: hairline,
+      backgroundColor: colors.dividerSubtle,
+      marginVertical: 2,
+    },
+  }),
+);

@@ -4,7 +4,8 @@ import {
   moneyAccessibilityLabel,
 } from '../../../design/format';
 import { Text } from '../../../design/primitives';
-import { colors, rhythm } from '../../../design/tokens';
+import { rhythm } from '../../../design/tokens';
+import { makeStyles, useColors } from '../../../design/use-colors';
 import type { MapModel } from './model';
 import {
   edgeCapAmount,
@@ -32,6 +33,9 @@ const PARTY_SWATCHES = 6;
  * named; the public-money registers are rings, a different measure.
  */
 export function MoneyMapLegend({ model }: { model: MapModel }) {
+  const colors = useColors();
+  const styles = useStyles();
+
   const discScale =
     LARGEST / 2 / nodeRadius(LEGEND_NODES[LEGEND_NODES.length - 1]!);
   const lineScale = 8 / edgeWidth(LEGEND_EDGES[LEGEND_EDGES.length - 1]!);
@@ -194,32 +198,38 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
   );
 }
 
-const styles = StyleSheet.create({
-  legend: { gap: rhythm.block },
-  block: { gap: rhythm.tight },
-  samples: { flexDirection: 'row', gap: rhythm.block, alignItems: 'flex-end' },
-  sample: { alignItems: 'center', gap: rhythm.line },
-  discBox: {
-    width: LARGEST,
-    height: LARGEST,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lineBox: { height: 16, justifyContent: 'center' },
-  swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
-  swatch: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.line,
-    marginRight: rhythm.tight,
-  },
-  dot: { width: 10, height: 10, borderRadius: 5, borderCurve: 'continuous' },
-  ring: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    borderCurve: 'continuous',
-    borderWidth: 2.5,
-    borderColor: colors.moneyInk,
-  },
-});
+const useStyles = makeStyles((colors) =>
+  StyleSheet.create({
+    legend: { gap: rhythm.block },
+    block: { gap: rhythm.tight },
+    samples: {
+      flexDirection: 'row',
+      gap: rhythm.block,
+      alignItems: 'flex-end',
+    },
+    sample: { alignItems: 'center', gap: rhythm.line },
+    discBox: {
+      width: LARGEST,
+      height: LARGEST,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    lineBox: { height: 16, justifyContent: 'center' },
+    swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
+    swatch: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.line,
+      marginRight: rhythm.tight,
+    },
+    dot: { width: 10, height: 10, borderRadius: 5, borderCurve: 'continuous' },
+    ring: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      borderCurve: 'continuous',
+      borderWidth: 2.5,
+      borderColor: colors.moneyInk,
+    },
+  }),
+);
