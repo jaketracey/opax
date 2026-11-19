@@ -11,6 +11,7 @@ import {
   type SeatObservation,
   type Slugs,
 } from '../../api/catalogs';
+import { endedParliaments, termEndedFor } from '../your-mp/term-ended';
 import { nameKey } from '../../api/ids';
 import type { PartyStatus } from '../../api/party-transforms';
 import { jurisdictionName } from '../../design/parliament';
@@ -135,8 +136,7 @@ export function sponsorSlug(
     // A surname row (a committee print, "Faruqi") that holds the ID vouches
     // for the full-name row of its recorded full name; it is never linked.
     const vouched = roster.people.some(
-      (row) =>
-        row.pid === id && !!row.full && sponsorKey(row.full) === wanted,
+      (row) => row.pid === id && !!row.full && sponsorKey(row.full) === wanted,
     );
     people = exact.length
       ? exact
@@ -216,7 +216,17 @@ const upper = (line: string) => line[0]!.toUpperCase() + line.slice(1);
  */
 function sponsorPlace(profile: PersonProfile, directory: SponsorDirectory) {
   const current = profile.seats.find((s) => s.current);
-  if (current) return upper(placeOf(current, directory.electorates));
+  if (current) {
+    const place = placeOf(current, directory.electorates);
+    // A seat in a house whose Parliament's term has ended for an election
+    // has no member: the sponsor is named as its last one.
+    return termEndedFor(
+      current,
+      endedParliaments(directory.electorates.electorates),
+    )
+      ? `Last ${place}`
+      : upper(place);
+  }
   if (profile.partyStatus !== 'former' || !profile.canonicalPersonId)
     return undefined;
   const ended = (seat: SeatObservation) =>
