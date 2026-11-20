@@ -282,19 +282,21 @@ test('validStory and the catalogue helpers guard what may be posted', () => {
   for (const p of Object.values(catalogue.photos)) assert.match(p.licence, /^(CC0|Public domain|CC BY(-SA)?( \d(\.\d)?)?( [A-Z]{2})?)$/, p.file);
 });
 
-test('the Worker serves /og/story/<date>/<n>.jpg from the stored edition, keyed on the slide text, and 404s otherwise', async () => {
+/** The real Worker over stored editions (an in-memory journal), with the JPEG renderer recording what it was asked to draw. */
+let storyWorkerModule;
+async function storyWorker(posts) {
   const renders = [];
   globalThis.__storyRenders = renders;
-  const compiled = await build({ entryPoints: [new URL('src/index.ts', portal).pathname], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'], plugins: [{ name: 'record-image-renderer', setup(b) {
+  storyWorkerModule ??= await build({ entryPoints: [new URL('src/index.ts', portal).pathname], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'], plugins: [{ name: 'record-image-renderer', setup(b) {
     b.onResolve({ filter: /^\.\/og-render$/ }, () => ({ path: 'image-renderer', namespace: 'og-story-test' }));
     b.onLoad({ filter: /.*/, namespace: 'og-story-test' }, () => ({ contents: 'export async function renderOgPng(){return new Uint8Array([137,80,78,71])}; export async function renderOgJpeg(){return new Uint8Array([255,216,255,224])}; export async function renderStoryJpeg(slide,images,fonts,format){globalThis.__storyRenders.push({format,slide,images});return new Uint8Array([255,216,255,224,0,1])}', loader: 'js' }));
-  } }] });
-  const { default: worker } = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+  } }] }).then(compiled => import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64')));
+  const { default: worker } = await storyWorkerModule;
   const sqlite = new DatabaseSync(':memory:');
   sqlite.exec(readFileSync(new URL('migrations/0005_social_publication.sql', portal), 'utf8')); sqlite.exec(readFileSync(new URL('migrations/0007_social_stories.sql', portal), 'utf8'));
-  const post = { date: '2026-09-15', kind: 'bill', subject: 'bill:au-federal-r7513', title: 'Cash Distribution Framework Bill 2026', url: 'https://opax.com.au/bill/au-federal-r7513', text: 'x', slides: [slides.cover, slides.list, slides.source] };
-  sqlite.prepare('INSERT INTO social_editions VALUES(?,?,?,?)').run(post.date, post.subject, JSON.stringify(post), '2026-09-14T22:00:00Z');
-  const db = { prepare(sql) { let args = []; return { bind(...a) { args = a; return this; }, async first() { return sqlite.prepare(sql).get(...args) ?? null; }, async all() { return { results: sqlite.prepare(sql).all(...args) }; }, async run() { return { meta: { changes: 0 } }; } }; } };
+  for (const post of posts) sqlite.prepare('INSERT INTO social_editions VALUES(?,?,?,?)').run(post.date, post.subject, JSON.stringify(post), '2026-09-14T22:00:00Z');
+  const writes = [];
+  const db = { prepare(sql) { if (/^\s*(?:insert|update|delete|replace)\b/i.test(sql)) writes.push(sql); let args = []; return { bind(...a) { args = a; return this; }, async first() { return sqlite.prepare(sql).get(...args) ?? null; }, async all() { return { results: sqlite.prepare(sql).all(...args) }; }, async run() { return { meta: { changes: 0 } }; } }; } };
   const store = new Map();
   globalThis.caches = { default: { async match(req) { return store.get(req.url); }, async put(req, res) { store.set(req.url, res); } } };
   const assets = [];
@@ -302,6 +304,12 @@ test('the Worker serves /og/story/<date>/<n>.jpg from the stored edition, keyed 
   const pending = [];
   const ctx = { waitUntil(p) { pending.push(p); } };
   const get = (url, method = 'GET') => worker.fetch(new Request(url, { method }), env, ctx);
+  return { get, renders, store, assets, pending, writes };
+}
+
+test('the Worker serves /og/story/<date>/<n>.jpg from the stored edition, keyed on the slide text, and 404s otherwise', async () => {
+  const post = { date: '2026-09-15', kind: 'bill', subject: 'bill:au-federal-r7513', title: 'Cash Distribution Framework Bill 2026', url: 'https://opax.com.au/bill/au-federal-r7513', text: 'x', slides: [slides.cover, slides.list, slides.source] };
+  const { get, renders, store, assets, pending } = await storyWorker([post]);
 
   const one = await get('https://opax.com.au/og/story/2026-09-15/1.jpg');
   assert.equal(one.status, 200); assert.equal(one.headers.get('content-type'), 'image/jpeg');
@@ -331,6 +339,33 @@ test('the Worker serves /og/story/<date>/<n>.jpg from the stored edition, keyed 
     assert.ok(res.status === 404 || res.status === 503, `${bad}: ${res.status}`);
     assert.notEqual(res.headers.get('content-type'), 'image/jpeg', bad);
   }
+});
+
+test('a bill edition stored before its cover carried a note is drawn with "Machine-written summary", whatever the stored cover holds; other kinds as stored, and nothing stored changes', async () => {
+  const summary = 'This bill would create a legal framework for regulating cash distribution services in Australia. Royal Assent 26 Aug 2026.';
+  const bill = (date, cover) => ({ date, kind: 'bill', subject: `bill:au-federal-r75${date.slice(-2)}`, title: 'Cash Distribution Framework Bill 2026', url: `https://opax.com.au/bill/au-federal-r75${date.slice(-2)}`, text: 'x', slides: [cover, slides.list, slides.source] });
+  const cover = { ...slides.cover, line: summary };
+  const posts = [
+    bill('2026-09-17', cover), // stored before #479: no note key
+    bill('2026-09-21', { ...cover, note: null }),
+    bill('2026-09-25', { ...cover, note: 'Something else' }),
+    bill('2026-11-19', { ...cover, note: 'Machine-written summary' }), // stored since #479
+    { date: '2026-09-16', kind: 'politician', subject: 'person:Bob Katter', title: 'Bob Katter', url: 'https://opax.com.au/subject/person/bob-katter', text: 'x', slides: [slides.coverInset, slides.list, slides.source] },
+  ];
+  const { get, renders, writes } = await storyWorker(posts);
+  for (const post of posts.filter(p => p.kind === 'bill')) for (const format of ['', '?format=story']) {
+    const res = await get(`https://opax.com.au/og/story/${post.date}/1.jpg${format}`);
+    assert.equal(res.status, 200, post.date);
+    const drawn = renders.at(-1).slide;
+    assert.equal(drawn.note, 'Machine-written summary', `${post.date}${format}: the cover is labelled`);
+    assert.deepEqual({ ...drawn, note: undefined }, { ...post.slides[0], note: undefined }, 'only the note differs from the stored cover');
+  }
+  await get('https://opax.com.au/og/story/2026-09-17/2.jpg');
+  assert.equal(renders.at(-1).slide.note, slides.list.note, 'a bill\'s other slides are drawn as stored');
+  await get('https://opax.com.au/og/story/2026-09-16/1.jpg');
+  assert.equal(renders.at(-1).slide.type, 'cover');
+  assert.equal('note' in renders.at(-1).slide, false, 'a member\'s cover gains no note');
+  assert.deepEqual(writes, [], 'the stored editions are read, never written');
 });
 
 test('a story frame is the same slide drawn at 1080x1920 with Instagram\'s bands left clear', async () => {
