@@ -152,6 +152,8 @@ test('all four operator routes use the shared constant-time guard and contain no
 // would name the wrong pair. Every channel is switched on and X is connected; the journal double answers
 // "posted" for each channel, so an accepted run proceeds through the journal and still calls no channel.
 const RUN_NOW=Date.UTC(2026,10,16,13,30),RUN_TODAY='2026-11-17',RUN_YESTERDAY='2026-11-16';
+/** The cron's sweep of earlier days' stranded deliveries (holdStranded in src/social-publication.ts). */
+const STRANDED_SWEEP=/WHERE status='preparing' AND edition_date<\?/;
 function runFixture(t,now=RUN_NOW){
  t.mock.timers.enable({apis:['Date'],now});
  const fetches=[],statements=[],logs=[];
@@ -171,7 +173,7 @@ function runFixture(t,now=RUN_NOW){
    const entry={sql,args:[]};statements.push(entry);
    return {bind(...args){entry.args=args;return this},
     async first(){if(/FROM social_editions WHERE date=\?/.test(sql))return frozen(entry.args[0]);if(/FROM social_deliveries WHERE edition_date=\? AND channel=\?/.test(sql))return {status:'posted'};throw Error('Unexpected read '+sql)},
-    async all(){throw Error('Unexpected read '+sql)},async run(){throw Error('Unexpected write '+sql)}};
+    async all(){throw Error('Unexpected read '+sql)},async run(){if(STRANDED_SWEEP.test(sql))return {meta:{changes:0}};throw Error('Unexpected write '+sql)}};
   }},
  };
  const run=body=>worker.fetch(new Request('https://opax.test/api/daily-post/run',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+env.DAILY_POST_OPERATOR_SECRET},body:JSON.stringify(body)}),env,{waitUntil:forbidden});
@@ -224,7 +226,10 @@ for(const [label,scheduledTime,date] of [['today\'s tick',Date.UTC(2026,10,16,22
  test('the daily cron is not date-guarded: '+label,async t=>{
   const f=runFixture(t,Date.UTC(2026,10,16,22,0,30));
   await worker.scheduled({cron:'0,5,10 22 * * *',scheduledTime},f.env,{waitUntil(){}});
-  assert.deepEqual(f.journalDates(),[date]);
+  // First the sweep of earlier days' stranded deliveries, cut off at the same scheduled date; then that date's journal.
+  const sweeps=f.statements.filter(s=>STRANDED_SWEEP.test(s.sql));
+  assert.deepEqual(sweeps.map(s=>s.args.at(-1)),[date]);assert.equal(f.statements[0],sweeps[0]);
+  assert.deepEqual([...new Set(f.statements.filter(s=>!sweeps.includes(s)).map(s=>s.args[0]))],[date]);
   assert.ok(f.statements.some(s=>/FROM social_deliveries/.test(s.sql)));assert.equal(f.fetches.length,0);
   assert.ok(f.logs.some(line=>line.startsWith('daily-post')&&line.includes('"cron"')));
  });

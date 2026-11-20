@@ -201,6 +201,19 @@ export function leaveBy(now: number): number | null {
   if (minute < 22 * 60 || minute >= 22 * 60 + 10) return null
   return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 22, minute < 22 * 60 + 5 ? 5 : 10) - 60_000
 }
+/**
+ * A delivery that a run left `preparing` for a later tick of its day, which no tick then finished: the 22:10 tick
+ * never fired, or a run stopped before the channel's own error handling caught it (at the KV or receipt read).
+ * No tick reads that row again on its day. Each cron run of the publisher first holds such rows from earlier days
+ * for review with this detail (holdStranded). A held row is never retried and nothing is posted for it; its
+ * container and progress stay in the journal for the operator to reconcile against the platform's own posts.
+ */
+export const STRANDED = 'Stranded'
+/** Holds every delivery still `preparing` under a date before `now`'s Melbourne date for review. Returns how many. */
+export async function holdStranded(db: SocialEnv['COMMUNITY_DB'], now: number): Promise<number> {
+  const held = await db.prepare("UPDATE social_deliveries SET status='review_required',detail=?,updated_at=? WHERE status='preparing' AND edition_date<?").bind(STRANDED, new Date(now).toISOString(), melbourneDate(now)).run()
+  return held.meta.changes ?? 0
+}
 function returnedId(body: Record<string, unknown>): string {
   if (typeof body.id !== 'string' || !/^[\d_]+$/.test(body.id)) throw new Error('Provider omitted post id')
   return body.id
@@ -275,7 +288,18 @@ export async function runSocialPublication(env: SocialEnv, options: {
   sleep?: (ms: number) => Promise<void>
   /** The wall clock, read when the run decides whether it may leave a container for a later tick (tests pass their own). */
   clock?: () => number
+  /** The cron's run: before anything else, earlier days' deliveries still `preparing` are held for review (STRANDED). */
+  holdStranded?: boolean
 }): Promise<unknown> {
+  if (options.holdStranded) {
+    // A failed sweep never costs the day's edition: the next tick sweeps again.
+    try {
+      const held = await holdStranded(env.COMMUNITY_DB, options.now ?? Date.now())
+      if (held) console.log('daily-post', JSON.stringify({ stranded: held }))
+    } catch (error) {
+      console.error('daily-post', JSON.stringify({ stranded: 'sweep failed', error: failureDetail(error) }))
+    }
+  }
   const ready = readiness(env)
   const channels = CHANNELS.filter(c => ready[c].ready && (!options.channels || options.channels.includes(c)))
   if (!channels.length) return { status: 'skipped', channels: ready }
@@ -527,10 +551,10 @@ export function failureDetail(error: unknown, fetchFailed = false): string {
 /**
  * An Error's constructor name (TypeError, DOMException, Error), or the type of anything else thrown ('object',
  * 'string'); bounded, never free text. A plain object's `constructor` is its own data (a parsed body), so it is
- * never read.
+ * never read, and an Error's is read from its prototype, never from a property set on the error itself.
  */
 function errorClass(error: unknown): string {
-  const name = error instanceof Error ? error.constructor?.name : error === null ? 'null' : typeof error
+  const name = error instanceof Error ? (Object.getPrototypeOf(error) as { constructor?: { name?: unknown } } | null)?.constructor?.name : error === null ? 'null' : typeof error
   return typeof name === 'string' && /^[A-Za-z_$][\w$]{0,39}$/.test(name) ? name : 'unknown'
 }
 

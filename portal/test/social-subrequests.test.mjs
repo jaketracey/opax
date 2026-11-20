@@ -212,6 +212,43 @@ test('the longest story Instagram allows stays inside the budget on each tick, p
   }
 });
 
+test('the 22:00 run holds an earlier day\'s stranded delivery for review first, leaves the X review rows alone, and stays inside the budget', async t => {
+  const [kind, at] = DAYS[0];
+  const clean = await harness();
+  const plain = await clean.tick(at);
+  const h = await harness();
+  const edition = h.sqlite.prepare('INSERT OR IGNORE INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)');
+  const row = h.sqlite.prepare('INSERT INTO social_deliveries(edition_date,channel,status,post_id,container_id,detail,progress,updated_at) VALUES(?,?,?,?,?,?,?,?)');
+  // Sixteen X deliveries held for review on the sixteen days before, as production has them.
+  const days = Array.from({ length: 16 }, (_, i) => new Date(at - (16 - i) * 86400000 + 12 * 3600000).toISOString().slice(0, 10));
+  for (const day of days) { edition.run(day, 'person:Earlier', '{}', `${day}T00:00:00.000Z`); row.run(day, 'x', 'review_required', null, null, 'Provider timeout', null, `${day}T22:00:01.000Z`); }
+  // Yesterday's carousel and story, left preparing for a 22:10 tick that never came.
+  const yesterday = days.at(-1);
+  row.run(yesterday, 'instagram', 'preparing', null, '555', null, null, `${yesterday}T22:05:02.000Z`);
+  row.run(yesterday, 'instagram_story', 'preparing', null, null, null, '{"done":["1801"],"at":1,"container":"556"}', `${yesterday}T22:05:03.000Z`);
+  const today = new Date(at + 12 * 3600000).toISOString().slice(0, 10);
+  const xRows = () => h.sqlite.prepare("SELECT * FROM social_deliveries WHERE channel='x' AND edition_date<? ORDER BY edition_date").all(today).map(r => ({ ...r }));
+  const before = xRows();
+  const run = await h.tick(at);
+  const todays = Object.fromEntries(h.sqlite.prepare('SELECT channel,status FROM social_deliveries WHERE edition_date=?').all(today).map(r => [r.channel, r.status]));
+  assert.deepEqual(todays, everyChannel, 'today\'s edition goes out on every channel');
+  assert.deepEqual(xRows(), before, 'the X review rows are exactly as they were');
+  const held = h.sqlite.prepare('SELECT channel,status,detail,container_id,progress FROM social_deliveries WHERE edition_date=? AND channel LIKE ? ORDER BY channel').all(yesterday, 'instagram%').map(r => ({ ...r }));
+  assert.deepEqual(held, [
+    { channel: 'instagram', status: 'review_required', detail: 'Stranded', container_id: '555', progress: null },
+    { channel: 'instagram_story', status: 'review_required', detail: 'Stranded', container_id: null, progress: '{"done":["1801"],"at":1,"container":"556"}' },
+  ]);
+  assert.equal(run.calls.filter(c => c.kind === 'fetch' && /\/55[56]\b/.test(c.what)).length, 0, 'nothing is read or published for a stranded row');
+  const resume = [await h.tick(at + 5 * 60000), await h.tick(at + 10 * 60000)];
+  assert.equal(h.sqlite.prepare("SELECT count(*) n FROM social_deliveries WHERE status='review_required'").get().n, 18);
+  // The sweep is one D1 write a tick, whatever the journal holds.
+  const sweeps = c => c.calls.filter(e => e.kind === 'd1' && e.what.includes("WHERE status='preparing' AND edition_date<?")).length;
+  assert.deepEqual([run, ...resume, plain].map(sweeps), [1, 1, 1, 1]);
+  assert.equal(run.total, plain.total, 'the held rows cost nothing beyond the sweep');
+  t.diagnostic(`${kind} with 16 X review rows and 2 stranded: 22:00 ${line(run)}, the sweep 1 of them; with an empty journal ${plain.total}; 22:05 ${resume[0].total}; 22:10 ${resume[1].total}`);
+  for (const c of [run, ...resume]) assert.ok(c.total <= BUDGET, `${c.total} subrequests, over the budget of ${BUDGET}`);
+});
+
 // The CPU a 22:00 run spends with the real rasteriser (satori and resvg in wasm, as the Worker runs them: each
 // .wasm imported as a compiled module, so compiling it is startup, not the run). Measured on demand, not in the
 // suite: OPAX_SOCIAL_CPU=1 node --test --test-name-pattern=CPU test/social-subrequests.test.mjs

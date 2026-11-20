@@ -439,6 +439,9 @@ test('a failure outside the known reasons is journalled as a category and the er
  assert.equal(failureDetail(new Odd('x')),'Unexpected error (unknown)');
  // Only an Error's class is read: a thrown plain object's `constructor` is its own data, never stored.
  assert.equal(failureDetail({constructor:{name:'EAAGtoken1234'}}),'Unexpected error (object)');
+ // An Error's class comes from its prototype: a `constructor` set on the error itself is data too.
+ assert.equal(failureDetail(Object.assign(new Error('x'),{constructor:{name:'EAAGtoken1234'}})),'Unexpected error (Error)');
+ assert.equal(failureDetail(Object.assign(new TypeError('x'),{constructor:{name:'EAAGtoken1234'}}),true),'Network error (TypeError)');
  assert.equal(failureDetail({name:'TimeoutError',constructor:{name:'EAAGtoken1234'}}),'Timeout (object)');
  assert.equal(failureDetail(null),'Unexpected error (null)');
 });
@@ -640,4 +643,52 @@ test('an operator\'s run for yesterday inside the cron\'s window holds a refusal
   assert.equal((await h.run(tick(2),()=>tick(2),{date:yesterday})).channels.instagram,'review_required',label);
   assert.deepEqual({...h.sqlite.prepare('SELECT status,detail FROM social_deliveries WHERE edition_date=? AND channel=?').get(yesterday,'instagram')},{status:'review_required',detail},label);
  }
+});
+test('the cron holds an earlier day\'s delivery still preparing for review as stranded, posts nothing for it, and leaves every other row as it was',async()=>{
+ const h=harness(storyEnv);
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const edition=h.sqlite.prepare('INSERT OR IGNORE INTO social_editions VALUES(?,?,?,?)');
+ const row=h.sqlite.prepare('INSERT INTO social_deliveries(edition_date,channel,status,post_id,container_id,detail,progress,updated_at) VALUES(?,?,?,?,?,?,?,?)');
+ // Sixteen X deliveries already held for review on earlier days (28 Aug to 12 Sep), as production has: never touched.
+ for(let i=0;i<16;i++){const day=new Date(Date.UTC(2026,7,28+i)).toISOString().slice(0,10);edition.run(day,post.subject,JSON.stringify({...post,date:day}),day+'T22:00:00.000Z');row.run(day,'x','review_required',null,null,i%2?'Provider timeout':'Unexpected error (TypeError)',null,day+'T22:00:01.000Z')}
+ const yesterday='2026-09-12',earlier='2026-09-02';
+ // Stranded: a carousel left for a 22:10 tick that never fired, a story stopped between frames, and an older one.
+ row.run(yesterday,'instagram','preparing',null,'555',null,'{"done":[],"at":null,"container":null,"refused":1}','2026-09-11T22:05:02.000Z');
+ row.run(yesterday,'instagram_story','preparing',null,null,null,'{"done":["1801"],"at":1,"container":"556"}','2026-09-11T22:00:02.000Z');
+ row.run(earlier,'instagram','preparing',null,'557',null,null,'2026-09-01T22:00:02.000Z');
+ // An earlier day's other states are not the sweep's: a crash mid-send needs reconciling, a failed preflight stays failed.
+ row.run(yesterday,'facebook','sending',null,null,null,null,'2026-09-11T22:00:03.000Z');
+ row.run(yesterday,'facebook_story','failed',null,null,'Story slide unavailable',null,'2026-09-11T22:00:04.000Z');
+ const rows=()=>h.sqlite.prepare('SELECT * FROM social_deliveries WHERE edition_date<? ORDER BY edition_date,channel').all(post.date).map(r=>({...r}));
+ const before=rows();
+ const result=await h.run(tick(0),()=>tick(0),{holdStranded:true});
+ assert.deepEqual(rows(),before.map(r=>r.status==='preparing'?{...r,status:'review_required',detail:'Stranded',updated_at:new Date(tick(0)).toISOString()}:r),'only the three preparing rows moved, keeping their container and progress');
+ assert.equal(h.sqlite.prepare("SELECT count(*) n FROM social_deliveries WHERE channel='x' AND status='review_required' AND edition_date<?").get(post.date).n,16);
+ // The day's own edition still goes out on every channel; nothing is read or published for a stranded row.
+ assert.deepEqual(result.channels,{x:'posted',facebook:'posted',instagram:'posted',instagram_story:'posted',facebook_story:'posted'});
+ const strandedCall=c=>/\/55[5-7]\b/.test(c.url)||/"(?:creation_id|photo_id)":"55[5-7]"/.test(JSON.stringify(c.body));
+ assert.equal(h.calls.filter(strandedCall).length,0);
+ // Held rows are never retried, an operator's run of yesterday's date included.
+ const calls=h.calls.length;
+ assert.deepEqual((await h.run(tick(2),()=>tick(2),{date:yesterday})).channels,{x:'review_required',facebook:'sending',instagram:'review_required',instagram_story:'review_required',facebook_story:'failed'});
+ assert.equal(h.calls.length,calls,'no request at all for yesterday');
+});
+test('only the cron sweeps, only earlier days, and a failed sweep still lets the day\'s edition go out',async()=>{
+ let ready=false;const h=harness({},async url=>url.endsWith('/999?fields=status_code')?Response.json({status_code:ready?'FINISHED':'IN_PROGRESS'}):null);
+ const yesterday='2026-09-12';
+ h.sqlite.prepare('INSERT INTO social_editions VALUES(?,?,?,?)').run(yesterday,post.subject,JSON.stringify({...post,date:yesterday}),new Date(now).toISOString());
+ h.sqlite.prepare("INSERT INTO social_deliveries(edition_date,channel,status,container_id,updated_at) VALUES(?,'instagram','preparing','555',?)").run(yesterday,'2026-09-11T22:00:02.000Z');
+ const status=(date)=>h.sqlite.prepare("SELECT status FROM social_deliveries WHERE edition_date=? AND channel='instagram'").get(date).status;
+ // A run without the sweep (an operator's) leaves yesterday's row alone; today's container is left for the next tick.
+ assert.equal((await h.run(tick(0),()=>tick(0),{date:post.date})).channels.instagram,'preparing');
+ assert.equal(status(yesterday),'preparing');
+ // The cron's 22:05 tick holds yesterday's row and finishes today's, which is its own day's and not stranded.
+ ready=true;
+ assert.equal((await h.run(tick(5),()=>tick(5),{holdStranded:true})).channels.instagram,'posted');
+ assert.equal(status(yesterday),'review_required');assert.equal(status(post.date),'posted');
+ assert.equal(h.calls.filter(c=>c.url.includes('/555')).length,0);
+ // The sweep's write fails: logged, and the run goes on.
+ const f=harness();const db=f.env.COMMUNITY_DB;
+ f.env.COMMUNITY_DB={prepare(sql){if(sql.includes("detail=?,updated_at=? WHERE status='preparing'"))throw new Error('D1_ERROR: Network connection lost.');return db.prepare(sql)}};
+ assert.deepEqual((await f.run(tick(0),()=>tick(0),{holdStranded:true})).channels,{x:'posted',facebook:'posted',instagram:'posted'});
 });
