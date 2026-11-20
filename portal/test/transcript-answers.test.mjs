@@ -11,6 +11,7 @@ const built = await build({ stdin: { contents: [
   "export {askOpaxResult} from './src/voice-sources'",
   "export {groundAnswerPayload} from './src/research-grounding'",
   "export {linkAskSources} from './src/ask-source-links'",
+  "export {checkedAnswerPayload} from './src/research-response'",
   "export {writingFacts, proseFallback} from './src/research-writing'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
@@ -350,6 +351,79 @@ test('the real order: checks, linked sources, the line, then the way out, and So
   // The old order numbered the line before the division rows went in.
   assert.ok(api.withTranscriptNote(payload).answer.endsWith('Source 2 is a hearing transcript: evidence, not findings.'))
   assert.equal(api.withTranscriptNote(api.linkAskSources(api.withTranscriptNote(payload), VOTE_LINKS, 'https://opax.test')).answer, `${answer}\n\nSource 4 is a hearing transcript: evidence, not findings.`, 'a line numbered too early is put right, not doubled')
+})
+
+test('a citation the checks drop takes its number with it: the line follows the numbers the reader sees', async () => {
+  const QUESTION = 'What did the royal commission find about the scheme, and what did witnesses say about income averaging?'
+  const found = 'The final report found that the scheme was unlawful.'
+  const said = n => `A witness said income averaging was applied to debt ${n}.`
+  const witness = n => { const row = turnSource(n), text = row.title.replace('"income averaging"', `"income averaging was applied to debt ${n}"`); return { ...row, title: text, snippet: text } }
+  const report = (resource, page) => ({ ...REPORT, resource, url: `https://opax.test/report/robodebt#${page}`, title: `Final report, page ${page}`, snippet: `Final report, page ${page}: the scheme was unlawful.` })
+  /** Sentences joined by a space, each cited to one source: [sentence, resource] in the order written. */
+  const written = (sources, parts) => {
+    let answer = ''; const citations = {}
+    for (const [text, resource] of parts) { if (answer) answer += ' '; const from = Array.from(answer).length; answer += text; (citations[`${resource}/t/body/0`] ??= []).push([from, Array.from(answer).length]) }
+    return { answered: true, answer_decision: 'answer', answer, citations, sources }
+  }
+  /** The numbers the page and the app print: a source's place among the cited rows, in the order sent. */
+  const shown = payload => payload.sources.filter(s => s.cited).map((s, i) => [i + 1, s]).filter(([, s]) => s.title.includes(LABEL)).map(([n]) => n)
+  const lastLine = payload => payload.answer.split('\n').at(-1)
+  /** The order Ask runs: the checks, the linked sources, the line (index.ts `finish`), then the way out. */
+  const served = async payload => (await api.transcriptNoteResponse(Response.json(api.withTranscriptNote(api.linkAskSources(api.checkedAnswerPayload(payload, QUESTION), { lists: [], related: {} }, 'https://opax.test'))))).json()
+
+  // The claim audit removes a claim made twice. The copy that goes was cited to the first source row.
+  const sources = [report('fact-r1', 9), witness(1), report('fact-r2', 3), witness(2)]
+  const before = written(sources, [[said(1), 'fact-t1'], [found, 'fact-r2'], [found, 'fact-r1'], [said(2), 'fact-t2']])
+  assert.deepEqual(shown(before), [2, 4])
+  assert.equal(lastLine(api.withTranscriptNote(before)), 'Sources 2 and 4 are hearing transcripts: evidence, not findings.', 'before any check')
+  const after = await served(before)
+  assert.equal(after.answer.match(/The final report found/g).length, 1, 'the repeated claim is gone')
+  assert.deepEqual(after.sources.map(s => s.cited), [false, true, true, true], 'and its source is no longer cited')
+  assert.deepEqual(shown(after), [1, 3], 'the remaining citations are renumbered')
+  assert.equal(lastLine(after), 'Sources 1 and 3 are hearing transcripts: evidence, not findings.')
+  assert.equal(after.answer.match(/evidence, not findings/g).length, 1)
+
+  // A line numbered before the drop (an early or stored copy) is put right on the way out, not kept and not doubled.
+  const early = api.withTranscriptNote(before)
+  const stale = { ...early, sources: after.sources }
+  for (const out of [await (await api.transcriptNoteResponse(Response.json(stale))).json(), doneOf(await (await api.transcriptNoteResponse(chunked(sse([['done', stale]]), 17))).text())]) {
+    assert.equal(lastLine(out), 'Sources 1 and 3 are hearing transcripts: evidence, not findings.')
+    assert.equal(out.answer.match(/evidence, not findings/g).length, 1)
+    assert.ok(out.answer.startsWith(before.answer), 'the prose is untouched')
+  }
+
+  // The dropped citation sat between the transcripts: only the later number moves.
+  const middle = await served(written(sources, [[found, 'fact-r1'], [said(1), 'fact-t1'], [found, 'fact-r2'], [said(2), 'fact-t2']]))
+  assert.deepEqual(middle.sources.map(s => s.cited), [true, true, false, true])
+  assert.deepEqual(shown(middle), [2, 3])
+  assert.equal(lastLine(middle), 'Sources 2 and 3 are hearing transcripts: evidence, not findings.')
+
+  // Three transcripts and one dropped report among them.
+  const three = await served(written([witness(1), report('fact-r1', 9), witness(2), report('fact-r2', 3), witness(3)],
+    [[said(1), 'fact-t1'], [found, 'fact-r2'], [said(2), 'fact-t2'], [found, 'fact-r1'], [said(3), 'fact-t3']]))
+  assert.deepEqual(shown(three), [1, 2, 4])
+  assert.equal(lastLine(three), 'Sources 1, 2 and 4 are hearing transcripts: evidence, not findings.')
+
+  // One transcript left among other sources after its twin is dropped.
+  const twin = written([report('fact-r1', 9), witness(1), witness(2)], [[found, 'fact-r1'], [said(1), 'fact-t2'], [said(1), 'fact-t1']])
+  const one = await served(twin)
+  assert.deepEqual(one.sources.map(s => s.cited), [true, false, true])
+  assert.equal(lastLine(one), 'Source 2 is a hearing transcript: evidence, not findings.')
+
+  // The only other source is dropped: every citation left is a transcript, and the line is the unnumbered one.
+  const only = await served(written([report('fact-r1', 9), witness(1), witness(2)], [[said(1), 'fact-t1'], [said(1), 'fact-r1'], [said(2), 'fact-t2']]))
+  assert.deepEqual(only.sources.map(s => s.cited), [false, true, true])
+  assert.equal(lastLine(only), api.TRANSCRIPT_NOTE)
+
+  // The quote check takes quotation marks off words no cited source holds. No citation goes, so no number moves.
+  const quoted = written(sources, [['The final report said the scheme was “entirely without any lawful basis whatsoever”.', 'fact-r1'], [said(1), 'fact-t1'], ['The department later ended the scheme.', 'fact-r2'], [said(2), 'fact-t2']])
+  const checked = await served(quoted)
+  assert.ok(!checked.answer.includes('“entirely without'), 'the unsupported quotation marks came off')
+  assert.deepEqual(checked.sources.map(s => s.cited), [true, true, true, true])
+  assert.equal(lastLine(checked), 'Sources 2 and 4 are hearing transcripts: evidence, not findings.')
+
+  // Whatever the checks did, the line names exactly the numbers shown.
+  for (const out of [after, middle, three, one, checked]) assert.deepEqual((lastLine(out).match(/\d+/g) ?? []).map(Number), shown(out))
 })
 
 test('a count of transcripts is not a transcript, and a coverage row by any name is not a source either way', () => {
