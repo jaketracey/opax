@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve, dirname } from 'node:path';
 import { loadEngine, partyLinks, topicLinks } from './explore-engine.mjs';
+import { assertExportsCurrent } from './export-freshness.mjs';
 
 const mobile = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (name) => {
@@ -24,6 +25,8 @@ if (!portal) {
 const publicRoot = resolve(portal, 'public');
 if (!existsSync(resolve(publicRoot, 'quiz.js')))
   throw new Error(`No quiz.js under ${publicRoot}`);
+// Never from exports older than main's, such as this branch's own snapshot.
+assertExportsCurrent(publicRoot, ['graph/money.json', 'years/index.json']);
 const output = resolve(mobile, arg('--out') ?? 'src/features/explore');
 mkdirSync(output, { recursive: true });
 

@@ -3,3 +3,6 @@
 /ui-workbench.*
 /home-prototype
 /home-prototype.html
+
+# Notes for contributors (README.md), never uploaded.
+/README.md

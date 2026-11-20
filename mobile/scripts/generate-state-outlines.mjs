@@ -1,5 +1,10 @@
 // Regenerate from checked-in public exports only. Never fetch the live Worker.
 //
+//   node scripts/generate-state-outlines.mjs [--portal <main checkout>/portal]
+//
+// The default is this repo's own portal, whose exports must not be older than
+// main's (scripts/export-freshness.mjs); on the app release line they are.
+//
 // The state electorate finder runs on the device against bundled outlines,
 // so a location never leaves the phone and no request depends on it
 // (control hub privacy rule, 10 Oct). This writes every current state and
@@ -11,8 +16,14 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve, dirname } from 'node:path';
+import { assertExportsCurrent } from './export-freshness.mjs';
 const mobile = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const publicRoot = resolve(mobile, '../portal/public');
+const portalArg = process.argv.indexOf('--portal');
+const publicRoot = resolve(
+  portalArg > 0 ? process.argv[portalArg + 1] : resolve(mobile, '../portal'),
+  'public',
+);
+assertExportsCurrent(publicRoot, ['electorates/manifest.json']);
 const output = resolve(
   mobile,
   'src/features/electorate-map/state-outlines.json',
