@@ -644,22 +644,22 @@
     }
   },
   {
-    "id": "qa5e5a86f",
+    "id": "qf5a7e3a3",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "The Universities Accord (Australian Tertiary Education Commission) Bill 2025 passed the Senate at its third reading on 30 March 2026. How many senators voted for it?",
-    "answer": 36,
+    "prompt": "The Migration Amendment (2026 Measures No. 1) Bill 2026 passed the Senate at its third reading on 12 March 2026. How many senators voted for it?",
+    "answer": 26,
     "min": 0,
     "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "Passed: 36 for, 27 against",
-    "explanation": "The third reading is the final vote on a bill in each house. 36 senators voted for it and 27 against.",
+    "fact": "Passed: 26 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 26 senators voted for it and 11 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7416?section=divisions&division=federal-senate-10151",
-      "label": "Universities Accord (Australian Tertiary Education Commission) Bill 2025, third reading"
+      "href": "/bill/au-federal-r7447?section=divisions&division=federal-senate-10082",
+      "label": "Migration Amendment (2026 Measures No. 1) Bill 2026, third reading"
     }
   },
   {
@@ -746,22 +746,22 @@
     }
   },
   {
-    "id": "qf5a7e3a3",
+    "id": "q52a6017b",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "The Migration Amendment (2026 Measures No. 1) Bill 2026 passed the Senate at its third reading on 12 March 2026. How many senators voted for it?",
-    "answer": 26,
+    "prompt": "The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 passed the Senate at its third reading on 4 March 2026. How many senators voted for it?",
+    "answer": 30,
     "min": 0,
     "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "Passed: 26 for, 11 against",
-    "explanation": "The third reading is the final vote on a bill in each house. 26 senators voted for it and 11 against.",
+    "fact": "Passed: 30 for, 18 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 30 senators voted for it and 18 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7447?section=divisions&division=federal-senate-10082",
-      "label": "Migration Amendment (2026 Measures No. 1) Bill 2026, third reading"
+      "href": "/bill/au-federal-r7378?section=divisions&division=federal-senate-9972",
+      "label": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025, third reading"
     }
   },
   {
@@ -840,22 +840,22 @@
     }
   },
   {
-    "id": "q52a6017b",
+    "id": "q95e982cc",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 passed the Senate at its third reading on 4 March 2026. How many senators voted for it?",
-    "answer": 30,
+    "prompt": "The Administrative Review Tribunal and Other Legislation Amendment Bill 2025 passed the Senate at its third reading on 5 February 2026. How many senators voted for it?",
+    "answer": 32,
     "min": 0,
     "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "Passed: 30 for, 18 against",
-    "explanation": "The third reading is the final vote on a bill in each house. 30 senators voted for it and 18 against.",
+    "fact": "Passed: 32 for, 11 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 32 senators voted for it and 11 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7378?section=divisions&division=federal-senate-9972",
-      "label": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025, third reading"
+      "href": "/bill/au-federal-r7365?section=divisions&division=federal-senate-9892",
+      "label": "Administrative Review Tribunal and Other Legislation Amendment Bill 2025, third reading"
     }
   },
   {
@@ -942,22 +942,22 @@
     }
   },
   {
-    "id": "q95e982cc",
+    "id": "q9762a75e",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "The Administrative Review Tribunal and Other Legislation Amendment Bill 2025 passed the Senate at its third reading on 5 February 2026. How many senators voted for it?",
-    "answer": 32,
+    "prompt": "The Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 passed the Senate at its third reading on 20 January 2026. How many senators voted for it?",
+    "answer": 38,
     "min": 0,
     "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "Passed: 32 for, 11 against",
-    "explanation": "The third reading is the final vote on a bill in each house. 32 senators voted for it and 11 against.",
+    "fact": "Passed: 38 for, 26 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 38 senators voted for it and 26 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7365?section=divisions&division=federal-senate-9892",
-      "label": "Administrative Review Tribunal and Other Legislation Amendment Bill 2025, third reading"
+      "href": "/bill/au-federal-r7421?section=divisions&division=federal-senate-9818",
+      "label": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026, third reading"
     }
   },
   {
@@ -1036,22 +1036,22 @@
     }
   },
   {
-    "id": "q7360b831",
+    "id": "q05db1ec7",
     "template": "division-third-reading",
     "deck": "words",
     "kind": "slider",
-    "prompt": "The Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 passed the House of Representatives at its third reading on 20 January 2026. How many members of the House voted for it?",
-    "answer": 96,
+    "prompt": "The Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 passed the Senate at its third reading on 4 September 2025. How many senators voted for it?",
+    "answer": 30,
     "min": 0,
-    "max": 150,
+    "max": 76,
     "scale": "linear",
     "format": "count",
-    "fact": "Passed: 96 for, 45 against",
-    "explanation": "The third reading is the final vote on a bill in each house. 96 members of the House voted for it and 45 against.",
+    "fact": "Passed: 30 for, 12 against",
+    "explanation": "The third reading is the final vote on a bill in each house. 30 senators voted for it and 12 against.",
     "source": "Division record from They Vote For You",
     "link": {
-      "href": "/bill/au-federal-r7421?section=divisions&division=federal-representatives-9809",
-      "label": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026, third reading"
+      "href": "/bill/au-federal-r7363?section=divisions&division=federal-senate-9785",
+      "label": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025, third reading"
     }
   },
   {
