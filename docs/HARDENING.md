@@ -34,13 +34,13 @@ Documents (from `_headers` and `CSP_PAGE`):
 
 ```
 default-src 'self';
-script-src 'self' https://www.googletagmanager.com;
+script-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com;
 style-src 'self' 'unsafe-inline';
 img-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com;
 font-src 'self';
 connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com;
 worker-src 'self'; manifest-src 'self';
-frame-src https://www.googletagmanager.com https://www.youtube-nocookie.com;
+frame-src https://www.googletagmanager.com https://www.youtube-nocookie.com https://challenges.cloudflare.com;
 object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
 ```
 

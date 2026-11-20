@@ -69,7 +69,8 @@ export async function loadWorker(entry, root, ctxOrOptions, optionsOrCtx) {
   // page replaces with its answer; serving it empty changes no rendered output, only time.
   files.set('index.html', Buffer.from(readFileSync(at('index.html'), 'utf8').replace(/(<main\b[^>]*>)[\s\S]*?(<\/main>)/, '$1$2')));
   const origin = 'https://opax.com.au';
-  const env = {COMMUNITY_ORIGIN: origin, CACHE_EPOCH: 'offline-harness', ARAG_ZONE: 'offline', ARAG_KB_ID: 'offline', ARAG_KB_TOKEN: 'offline', ASSETS: {async fetch(req) {
+  // ASK_GUARD off: the Ask guard needs the community ledger, which most offline tests fake or leave out (test/ask-guard.test.mjs turns it on).
+  const env = {ASK_GUARD: 'off', COMMUNITY_ORIGIN: origin, CACHE_EPOCH: 'offline-harness', ARAG_ZONE: 'offline', ARAG_KB_ID: 'offline', ARAG_KB_TOKEN: 'offline', ASSETS: {async fetch(req) {
     const path = new URL(req.url).pathname;
     const body = file(path === '/' ? 'index.html' : path === '/home' ? 'home.html' : path);
     if (!body) return new Response('Missing', {status: 404});

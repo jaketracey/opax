@@ -142,7 +142,7 @@ test('the Worker has one way out for Ask, and it sets the field there', async ()
   // The operator's gold route builds its own reply; it sets the field too.
   assert.match(index, /json\(withMachineNotice\(withTranscriptNote\(linkAskSources\(agenticAskPayload\(run, q\)/)
   // The other two routes where a model writes for a reader.
-  assert.match(index, /mapAnswerPayload\(await apiSearchSummary\(request, url, env, ctx\), withSummaryNotice\)/)
+  assert.match(index, /mapAnswerPayload\(await apiSearchSummary\(request, url, env, ctx, summaryMayGenerate\(request\.method, request\.headers\.get\('user-agent'\)\)\), withSummaryNotice\)/)
   assert.match(index, /mapAnswerPayload\(await apiJourneyStory\(request,body\.value,env,ctx\), withStoryNotice\)/)
   assert.equal(index.match(/\bapiSearchSummary\(/g).length, 2); assert.equal(index.match(/\bapiJourneyStory\(/g).length, 2)
 })

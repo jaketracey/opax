@@ -86,6 +86,13 @@
     "RESEARCH_LOOP": "route",
     // Research ceilings default to src/ask-budgets.ts; operator overrides may lower them.
     "RESEARCH_LOOP_DAILY_USD": "10",
+    // Every paid model call on every path against one daily total, plus each address's daily quota
+    // (src/ask-guard.ts). TURNSTILE_SITE_KEY, TURNSTILE_SECRET_KEY and ASK_GUARD_SECRET are secrets;
+    // while TURNSTILE_SECRET_KEY is unset the website's human check is off and these limits still apply.
+    "ASK_DAILY_USD": "30",
+    "ASK_CALL_USD": "0.02",
+    "ASK_ADDRESS_DAILY": "40",
+    "ASK_ADDRESS_DAILY_EXTRAS": "120",
     "RESEARCH_LOOP_MODEL_ID": "deepseek/deepseek-v4.1-flash",
     "RESEARCH_LOOP_PROVIDER": "{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}",
     "RESEARCH_LOOP_REASONING": "{\"enabled\":false}",
@@ -204,10 +211,11 @@
   // question replayed from cache costs no quota. `period` must be 10 or 60;
   // `namespace_id` is any integer unique within the account.
   "ratelimits": [
-    // Paid generative calls: one /api/ask MISS per token.
-    { "name": "ASK_LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } },
-    // Follow-up chips ride on the fast model but are still a model call.
-    { "name": "FOLLOWUPS_LIMITER", "namespace_id": "1002", "simple": { "limit": 20, "period": 60 } },
+    // Paid generative calls: one /api/ask MISS per token. Five a minute is a fast reader (17-19 Nov bot wave).
+    { "name": "ASK_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
+    // Follow-up chips ride on the fast model but are still a model call. Search summaries and journey
+    // stories share this one, so it sits above Ask's five.
+    { "name": "FOLLOWUPS_LIMITER", "namespace_id": "1002", "simple": { "limit": 10, "period": 60 } },
     // /find is cheap but not free; 120/min is far above human use.
     { "name": "SEARCH_LIMITER", "namespace_id": "1003", "simple": { "limit": 120, "period": 60 } },
     // Share images (/og/*.png) are rasterised in wasm on a cache MISS, a few
@@ -238,8 +246,8 @@
       // Rate-limit bindings are not inherited by an environment. The same limits as production,
       // under staging's own namespaces so its counters never mix with production's.
       "ratelimits": [
-        { "name": "ASK_LIMITER", "namespace_id": "2001", "simple": { "limit": 20, "period": 60 } },
-        { "name": "FOLLOWUPS_LIMITER", "namespace_id": "2002", "simple": { "limit": 20, "period": 60 } },
+        { "name": "ASK_LIMITER", "namespace_id": "2001", "simple": { "limit": 5, "period": 60 } },
+        { "name": "FOLLOWUPS_LIMITER", "namespace_id": "2002", "simple": { "limit": 10, "period": 60 } },
         { "name": "SEARCH_LIMITER", "namespace_id": "2003", "simple": { "limit": 120, "period": 60 } },
         { "name": "OG_LIMITER", "namespace_id": "2004", "simple": { "limit": 60, "period": 60 } },
         { "name": "MODEL_LIMITER", "namespace_id": "2005", "simple": { "limit": 60, "period": 60 } },

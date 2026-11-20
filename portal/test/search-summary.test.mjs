@@ -86,7 +86,7 @@ function fixture({empty=false,invalid=false,denied=false}={}){
   kbFetch:async(_env,path,options)=>{calls.push({path,body:options.body});return Response.json({answer:invalid?'invalid':JSON.stringify(draft())})}
  };
  const fn=runInNewContext(code+';apiSearchSummary',ctx);
- return {calls,run:async params=>{const u=new URL('https://opax.test/api/search-summary?'+new URLSearchParams({q:'agriculture',kind:'all',...params}));return fn(new Request(u),u,{CACHE_EPOCH:'v1'}, {})}};
+ return {calls,run:async (params,generate)=>{const u=new URL('https://opax.test/api/search-summary?'+new URLSearchParams({q:'agriculture',kind:'all',...params}));return fn(new Request(u),u,{CACHE_EPOCH:'v1'}, {},generate)}};
 }
 test('summary uses the actual filtered search with canonical relevance order and caches by scope',async()=>{
  const f=fixture(),params={party:'Nationals',topic:'agriculture',from:'1998',to:'2002',state:'federal',mode:'keyword',speaker:'Example MP',page:'5',sort:'oldest'};
@@ -102,6 +102,16 @@ test('empty search, quota and provider failure never fabricate a summary',async(
  const empty=fixture({empty:true});assert.equal((await (await empty.run()).json()).status,'empty');assert.equal(empty.calls.length,1);
  assert.equal((await fixture({denied:true}).run()).status,429);
  const invalid=fixture({invalid:true});assert.equal((await invalid.run()).status,502);await invalid.run();assert.equal(invalid.calls.filter(c=>c.path).length,4,'Failures are not cached');
+});
+// A GET from anything but the apps (a crawler, a prefetch, an old page) never starts a model call: a cached summary or none.
+test('a summary that may not generate serves only a cached one and never calls the model',async()=>{
+ const f=fixture();
+ for(const stream of [{},{stream:'1'}]){
+  const res=await f.run(stream,false);assert.equal(res.status,200);
+  assert.equal((await res.json()).status,'empty');assert.equal(f.calls.filter(c=>c.path).length,0);
+ }
+ await f.run({});assert.equal(f.calls.filter(c=>c.path).length,1,'a generating request stores the summary');
+ const cached=await f.run({},false);assert.equal((await cached.json()).status,'ready');assert.equal(f.calls.filter(c=>c.path).length,1);
 });
 test.after(()=>rmSync(dir,{recursive:true,force:true}));
 

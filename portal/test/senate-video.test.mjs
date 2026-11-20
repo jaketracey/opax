@@ -275,12 +275,12 @@ test('CSP: frame-src gains youtube-nocookie.com, img-src i.ytimg.com, and nothin
   const worker = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8');
   const csp = /Content-Security-Policy: (.+)/.exec(headers)[1];
   const directive = (policy, name) => policy.split(';').map(s => s.trim()).find(s => s.startsWith(name + ' '));
-  assert.equal(directive(csp, 'frame-src'), 'frame-src https://www.googletagmanager.com https://www.youtube-nocookie.com');
+  assert.equal(directive(csp, 'frame-src'), 'frame-src https://www.googletagmanager.com https://www.youtube-nocookie.com https://challenges.cloudflare.com');
   assert.match(directive(csp, 'img-src'), /^img-src 'self' data: https:\/\/i\.ytimg\.com /);
   assert.doesNotMatch(csp.replace('https://www.youtube-nocookie.com', '').replace('https://i.ytimg.com', ''), /youtube|ytimg|\*\.google\.com/);
   assert.match(worker, /`img-src 'self' data: https:\/\/i\.ytimg\.com /);
   assert.match(worker, /const YOUTUBE_EMBED = 'https:\/\/www\.youtube-nocookie\.com'\n/);
-  assert.match(worker, /`frame-src \$\{GTM\} \$\{YOUTUBE_EMBED\}`,/);
+  assert.match(worker, /`frame-src \$\{GTM\} \$\{YOUTUBE_EMBED\} \$\{TURNSTILE\}`,/);
   assert.equal((worker.match(/YOUTUBE_EMBED/g) || []).length, 2, 'used in frame-src only');
   assert.doesNotMatch(worker.replace(/^\/\/.*$/gm, ''), /youtube\.com(?!\/)|\*\.youtube/);
 });
