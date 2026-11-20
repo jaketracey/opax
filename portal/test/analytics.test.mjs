@@ -168,9 +168,9 @@ test('Do Not Track prevents buffering, dataLayer events and GA loading', async (
 
 test('footer partners have explicit referral UTMs and fixed tracking identifiers', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
-  for (const partner of ['progress_agentic_rag','corpuskit']) {
-    assert.match(html, new RegExp('utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=powered_by&amp;utm_content=footer" data-analytics-partner="'+partner+'"'));
-  }
+  // Progress supplied its own tag (test/progress-links.test.mjs); corpuskit keeps OPAX's.
+  assert.match(html, /utm_medium=referral&amp;utm_source=opex-au" data-analytics-partner="progress_agentic_rag"/);
+  assert.match(html, /utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=powered_by&amp;utm_content=footer" data-analytics-partner="corpuskit"/);
   assert.deepEqual(cleanEvent('opax_outbound', {host:'corpuskit.org',partner:'corpuskit',placement:'footer',url:'private'}), {host:'corpuskit.org',partner:'corpuskit',placement:'footer'});
 });
 
