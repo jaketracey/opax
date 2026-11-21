@@ -71,6 +71,10 @@
 #                         groups not cleared by then are held, the ones proven green are published
 #   OPAX_FRL_DOW          ISO weekday of the FRL instrument night (default 4, Thursday)
 #   OPAX_UV_SYNC_TIMEOUT  time limit of the `uv sync --frozen` that starts the night (default 15m)
+#   OPAX_EXPENSES_R2_SYNC 1 = the itemised expenses sync after the push really writes to R2; otherwise it is a dry run that logs counts
+#   OPAX_R2_SYNC_TIMEOUT  time limit of the itemised expenses sync to R2 after the push (default 30m), cut to what is left of
+#                         the night's limit less OPAX_R2_SYNC_RESERVE_S (600); under OPAX_R2_SYNC_MIN_S (120) left, it is skipped
+#   OPAX_R2_ENV           file holding the R2 token for that sync (default ~/.config/opax/r2.env)
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
 set -uo pipefail
@@ -80,6 +84,9 @@ ENV_FILE="${OPAX_NIGHTLY_ENV:-$HOME/.config/opax/nightly.env}"
 # nightly.env may set any OPAX_* override below, so it is read first
 # shellcheck source=/dev/null
 if [ -f "$ENV_FILE" ]; then set -a; . "$ENV_FILE"; set +a; fi
+# The R2 token is for the itemised expenses sync alone, which reads it from its own file (OPAX_R2_ENV). Wherever it
+# was set (nightly.env, the caller), it is dropped here so no refresh, export or test step inherits it.
+unset OPAX_R2_ACCOUNT_ID OPAX_R2_ACCESS_KEY_ID OPAX_R2_SECRET_ACCESS_KEY
 BRANCH="${OPAX_BRANCH:-main}"
 STATUS_BRANCH="${OPAX_STATUS_BRANCH:-nightly-status}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
@@ -349,6 +356,47 @@ nightly_exit() {
 }
 trap nightly_exit EXIT
 trap 'fail "nightly interrupted"; finish' TERM INT
+
+# ---- itemised expenses: R2 follows what is published ---------------------------------------------
+# The per-person expense lines are too big for git and live in R2 (scripts/vm/upload_expenses_itemised.py). They are
+# sent only from here, after tonight's push or on a night with nothing to publish, never before the validation and
+# the gate and never under NO_PUSH, and only while HEAD's expenses.json is the export the tree was written beside
+# (--repo): a night that holds the expenses group leaves R2 as it was. It runs every night, so a failed or held sync
+# is made up on the next one; an unchanged tree costs three list requests.
+sync_expenses_itemised() {
+  local tree="$PIPE/expenses-itemised" script="$REPO/scripts/vm/upload_expenses_itemised.py" rc=0
+  [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
+  [ -d "$tree" ] && [ -f "$script" ] || return 0
+  # The sync must end before the night's own limit does (run-nightly.sh kills the run there, status unpublished):
+  # its time limit is the smaller of OPAX_R2_SYNC_TIMEOUT and what is left of the night less a reserve for the
+  # status. A hand run has no start stamp and so no limit of its own.
+  local budget; budget=$(limit_seconds "${OPAX_R2_SYNC_TIMEOUT:-30m}" 2>/dev/null)
+  [[ "$budget" =~ ^[0-9]+$ ]] || budget=1800
+  local night="${OPAX_NIGHTLY_LIMIT:-6h}"; [ "${OPAX_EVIDENCE_RUN:-0}" != 1 ] || night="${OPAX_EVIDENCE_RUN_LIMIT:-510m}"
+  local limit; limit=$(limit_seconds "$night" 2>/dev/null)
+  if [[ "${OPAX_NIGHTLY_STARTED:-}" =~ ^[0-9]+$ ]] && [[ "$limit" =~ ^[0-9]+$ ]]; then
+    local left=$(( OPAX_NIGHTLY_STARTED + limit - $(date +%s) - ${OPAX_R2_SYNC_RESERVE_S:-600} ))
+    if [ "$left" -lt "${OPAX_R2_SYNC_MIN_S:-120}" ]; then
+      warn "itemised expenses: R2 sync skipped tonight, too little of the night's $night limit is left (${left}s after the reserve); the next night makes it up"
+      return 0
+    fi
+    [ "$left" -ge "$budget" ] || budget=$left
+  fi
+  # Until OPAX_EXPENSES_R2_SYNC=1 is set (nightly.env) this is a dry run: it lists, compares and logs the counts it
+  # would send and delete, and changes nothing in the bucket.
+  local mode=(--dry-run) what="dry run"
+  if [ "${OPAX_EXPENSES_R2_SYNC:-0}" = 1 ]; then mode=(); what="live"; fi
+  # The R2 token is read from its own file only; it is not in this script's environment (see the top).
+  log "itemised expenses: syncing R2 ($what, time limit ${budget}s)"
+  run timeout --kill-after=60 "$budget" "$PY" "$script" --tree "$tree" --repo "$REPO" \
+    --env "${OPAX_R2_ENV:-$HOME/.config/opax/r2.env}" --skip-without-credentials "${mode[@]}" || rc=$?
+  case $rc in
+    0) ;;
+    3) warn "itemised expenses: the tree is smaller than what R2 holds, so nothing was sent and the stored files are kept" ;;
+    4) warn "itemised expenses: R2 sync held, the tree was not exported beside the published expenses.json (see the log); R2 is unchanged" ;;
+    *) fail "itemised expenses sync to R2 failed (rc=$rc); R2 keeps what it has and the next night retries" ;;
+  esac
+}
 
 # ---- preflight -------------------------------------------------------------------------
 [ -x "$PY" ] || { fail "$PY missing: run scripts/vm/bootstrap.sh"; finish; }
@@ -1212,6 +1260,7 @@ if git diff --cached --quiet; then
       divisions_refresh_complete
       evidence_refresh_complete
       periodic_refresh_complete
+      sync_expenses_itemised
     fi
     finish
   fi
@@ -1278,4 +1327,6 @@ bills_refresh_complete
 divisions_refresh_complete
 evidence_refresh_complete
 periodic_refresh_complete
+# only now that expenses.json is on origin may R2 follow it
+sync_expenses_itemised
 finish

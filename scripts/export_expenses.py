@@ -117,9 +117,15 @@ def display_name(key):
     return " ".join(w[:1].upper() + w[1:] for w in key.split(" "))
 
 
-def main():
-    db = sqlite3.connect(DB, uri=True)
+def make_resolver(db):
+    """(resolve, full_name, recovered) for one open parli.db.
 
+    resolve(member_name, person_id) -> person_id or None: the loader's link when there is one, else the
+    cleaned IPEA name against members.full_name (sitting member first, then most recently departed, as
+    the loader's LINK_SQL does), else a common nickname of the first name. full_name maps person_id to
+    members.full_name; recovered collects the unlinked name variants that resolved. Shared with
+    scripts/export_expenses_itemised.py so both exports file a line under the same person.
+    """
     # members.full_name -> preferred person_id (sitting member first, then most
     # recently departed), mirroring the loader's LINK_SQL tie-break.
     full_name = {}
@@ -139,7 +145,6 @@ def main():
 
     resolved = {}
     recovered = {}
-    unresolved = defaultdict(float)
 
     def resolve(member_name, pid):
         if pid:
@@ -158,6 +163,14 @@ def main():
         if hit:
             recovered[member_name] = hit
         return hit
+
+    return resolve, full_name, recovered
+
+
+def main():
+    db = sqlite3.connect(DB, uri=True)
+    resolve, full_name, recovered = make_resolver(db)
+    unresolved = defaultdict(float)
 
     people = {}
     variants = defaultdict(set)   # pid -> cleaned IPEA name variants

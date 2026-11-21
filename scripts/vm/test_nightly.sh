@@ -9,6 +9,7 @@
 # OPAX_TEST_FOCUS=evidence-alerts runs only the enabled-build alert/deferral scenarios.
 # OPAX_TEST_FOCUS=coverage runs only the coverage watchdog scenarios.
 # OPAX_TEST_FOCUS=python-environment requires Node and tests its Python child environment.
+# OPAX_TEST_FOCUS=itemised-sync runs only the itemised expenses R2 sync scenarios.
 #
 # Nothing here touches the network, the real knowledge box, GitHub or the real repo:
 # a throwaway HOME, a bare git repo as "origin", a fake daily_refresh.sh and a knowledge-box
@@ -626,6 +627,105 @@ coverage_scenarios() {
   check "regression: status ok, the drop to zero is a coverage alert" cov_status "s['status']=='ok' and s['failures']==[] and any('senate/2025 rows 1 -> 0' in a for a in s['coverage_alerts'])"
   check "regression: the refresh watchdog pages on it" cov_pages 'senate/2025 rows 1 -> 0'
 }
+
+# The itemised expenses tree is sent to R2 only after the night's push (or on a night with nothing to publish),
+# never before it and never under NO_PUSH. A stand-in uploader records what was published when it was called.
+fake_itemised_upload() {
+  mkdir -p "$HOME/.cache/autoresearch/pipeline/expenses-itemised/11029"
+  echo '{}' > "$HOME/.cache/autoresearch/pipeline/expenses-itemised/11029/2026.json"
+  cat > "$REPO/scripts/vm/upload_expenses_itemised.py" <<'PYEOF'
+import os, subprocess, sys
+repo = sys.argv[sys.argv.index("--repo") + 1]
+git = lambda *a: subprocess.run(["git", "-C", repo, *a], capture_output=True, text=True).stdout.split()
+head, origin = git("rev-parse", "HEAD")[0], git("ls-remote", "origin", "refs/heads/main")[0]
+with open(os.path.expanduser("~/r2-sync.calls"), "a") as f:
+    f.write(("published" if head == origin else "UNPUBLISHED") + " " + " ".join(sys.argv[1:]) + "\n")
+with open(os.path.expanduser("~/r2-sync.env"), "a") as f:
+    f.write(str(sum(k.startswith("OPAX_R2_") and k != "OPAX_R2_ENV" for k in os.environ)) + "\n")
+sys.exit(int(os.environ.get("FAKE_R2_RC", "0")))
+PYEOF
+}
+itemised_sync_scenarios() {
+  echo "== itemised expenses: R2 is synced after the push, with the publish check and the box's credentials file"
+  new_sandbox r2-push
+  fake_itemised_upload
+  OPAX_EXPENSES_R2_SYNC=1 FAKE_MODE=ok nightly
+  check "exit 0 and the nightly commit reached origin" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
+  check "the sync ran once, after the push (HEAD was already on origin)" bash -c "[ \"\$(wc -l < '$HOME/r2-sync.calls')\" -eq 1 ] && grep -q '^published ' '$HOME/r2-sync.calls'"
+  check "it is told to check HEAD's expenses.json and to read the credentials file" bash -c "grep -q -- '--tree $HOME/.cache/autoresearch/pipeline/expenses-itemised --repo $REPO --env $HOME/.config/opax/r2.env --skip-without-credentials\$' '$HOME/r2-sync.calls'"
+  check "the sync starts after the push is logged, never before" bash -c "awk '/pushed [0-9a-f]+ to origin/{if(!p)p=NR} /itemised expenses: syncing R2/{if(!u)u=NR} END{exit !(p>0 && u>p)}' '$SB/nightly.out'"
+  FAKE_MODE=ok nightly
+  check "the next night syncs again, with or without a new commit (a held or failed sync is made up)" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(wc -l < '$HOME/r2-sync.calls')\" -eq 2 ] && ! grep -q UNPUBLISHED '$HOME/r2-sync.calls'"
+  check "without OPAX_EXPENSES_R2_SYNC=1 the nightly only asks for a dry run" bash -c "tail -1 '$HOME/r2-sync.calls' | grep -q -- '--skip-without-credentials --dry-run\$' && [ \"\$(grep -c -- '--dry-run' '$HOME/r2-sync.calls')\" -eq 1 ]"
+
+  echo "== itemised expenses: the R2 token reaches no step through the environment"
+  new_sandbox r2-scope
+  fake_itemised_upload
+  # the token still sits in nightly.env (and in the caller's environment); a refresh step records what it inherits
+  printf 'OPAX_R2_ACCOUNT_ID=acct\nOPAX_R2_ACCESS_KEY_ID=key\nOPAX_R2_SECRET_ACCESS_KEY=secret-value\n' > "$HOME/.config/opax/nightly.env"
+  sed -i '1a env | grep -c "^OPAX_R2_" > "$HOME/refresh-r2.count" || true' "$OPAX_DAILY_REFRESH"
+  OPAX_R2_SECRET_ACCESS_KEY=from-caller FAKE_MODE=ok nightly
+  check "the night ran and the refresh step saw no OPAX_R2_ variable" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/refresh-r2.count')\" = 0 ]"
+  check "the uploader inherits none either: it is given the token's file" bash -c "[ \"\$(cat '$HOME/r2-sync.env')\" = 0 ] && grep -q -- '--env $HOME/.config/opax/r2.env ' '$HOME/r2-sync.calls'"
+  check "the token's value is in no log or status" bash -c "! grep -rq 'secret-value\|from-caller' '$SB/nightly.out' '$HOME/.cache/autoresearch/pipeline' && ! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'secret-value\|from-caller'"
+
+  echo "== itemised expenses: NO_PUSH never syncs"
+  new_sandbox r2-nopush
+  fake_itemised_upload
+  OPAX_NIGHTLY_NO_PUSH=1 FAKE_MODE=ok nightly
+  check "exit 0, committed locally, origin untouched" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(git --git-dir='$ORIGIN' log --format=%s main | head -1)\" = seed ]"
+  check "the uploader was never called" test ! -e "$HOME/r2-sync.calls"
+
+  echo "== itemised expenses: a refused push never syncs"
+  new_sandbox r2-pushfail
+  fake_itemised_upload
+  export OPAX_PUSH_SLEEP_UNIT=0
+  printf '#!/bin/sh\necho "remote: push refused by test hook" >&2\nexit 1\n' > "$ORIGIN/hooks/pre-receive"; chmod +x "$ORIGIN/hooks/pre-receive"
+  FAKE_MODE=ok nightly
+  unset OPAX_PUSH_SLEEP_UNIT
+  check "the push failed and the uploader was never called" bash -c "[ '$NRC' -eq 1 ] && [ ! -e '$HOME/r2-sync.calls' ]"
+
+  echo "== itemised expenses: no tree, no sync; a failed sync fails the night after the data is published; a refusal is a warning"
+  new_sandbox r2-notree
+  fake_itemised_upload; rm -rf "$HOME/.cache/autoresearch/pipeline/expenses-itemised"
+  FAKE_MODE=ok nightly
+  check "without a tree the uploader is not called" bash -c "[ '$NRC' -eq 0 ] && [ ! -e '$HOME/r2-sync.calls' ]"
+  new_sandbox r2-fail
+  fake_itemised_upload
+  FAKE_R2_RC=1 FAKE_MODE=ok nightly
+  check "a failed sync exits 1 and the status names it" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"failed\" and any(\"itemised expenses sync to R2 failed (rc=1)\" in f for f in s[\"failures\"]), s'"
+  check "the night's data was still published" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
+  new_sandbox r2-held
+  fake_itemised_upload
+  FAKE_R2_RC=4 FAKE_MODE=ok nightly
+  check "a held sync (the stamp does not match what is published) is a warning in the status" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"R2 sync held\" in w for w in s[\"warnings\"]), s'"
+
+  echo "== itemised expenses: the sync is fitted inside the night's limit, or skipped with a warning"
+  new_sandbox r2-late
+  fake_itemised_upload
+  OPAX_NIGHTLY_STARTED=$(( $(date +%s) - 21000 )) OPAX_NIGHTLY_LIMIT=6h FAKE_MODE=ok nightly      # 10 minutes of the night left
+  check "with no time left after the reserve the sync is skipped and the status still publishes, with a warning" bash -c "[ '$NRC' -eq 0 ] && [ ! -e '$HOME/r2-sync.calls' ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"R2 sync skipped tonight\" in w for w in s[\"warnings\"]), s'"
+  new_sandbox r2-short
+  fake_itemised_upload
+  OPAX_NIGHTLY_STARTED=$(( $(date +%s) - 20000 )) OPAX_NIGHTLY_LIMIT=6h FAKE_MODE=ok nightly      # about 16 minutes left after the reserve
+  check "a shorter night cuts the sync's time limit below its 30 minutes" bash -c "[ '$NRC' -eq 0 ] && [ -e '$HOME/r2-sync.calls' ] && t=\$(sed -n 's/.*itemised expenses: syncing R2 (dry run, time limit \\([0-9]*\\)s).*/\\1/p' '$SB/nightly.out' | head -1) && [ \"\$t\" -gt 600 ] && [ \"\$t\" -lt 1100 ]"
+  new_sandbox r2-roomy
+  fake_itemised_upload
+  OPAX_NIGHTLY_STARTED=$(date +%s) FAKE_MODE=ok nightly
+  check "a night with room keeps the 30 minute limit" grep -q 'itemised expenses: syncing R2 (dry run, time limit 1800s)' "$SB/nightly.out"
+
+  new_sandbox r2-refused
+  fake_itemised_upload
+  FAKE_R2_RC=3 FAKE_MODE=ok nightly
+  check "a refused (shrunken) tree is a warning, not a failure" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"itemised expenses\" in w for w in s[\"warnings\"]), s'"
+}
+
+if [ "${OPAX_TEST_FOCUS:-}" = itemised-sync ]; then
+  itemised_sync_scenarios
+  echo "passed $PASS, failed $FAILN"
+  [ "$FAILN" -eq 0 ]
+  exit $?
+fi
 
 if [ "${OPAX_TEST_FOCUS:-}" = coverage ]; then
   coverage_scenarios
@@ -1993,6 +2093,7 @@ FAKE_MODE=paused FAKE_BILLS_MODE=paused nightly
 check "nightly pauses exit 0 and status contains both paused sources" bash -c "[ '$NRC' -eq 0 ] && python3 -c 'import json; d=json.load(open(\"$HOME/.cache/autoresearch/pipeline/nightly-last.json\")); assert d[\"status\"]==\"ok\" and {\"bills\",\"interests_federal\"} <= set(d[\"paused_sources\"]) and \"Paused sources:\" in d[\"summary\"]'"
 check "a refused bill source retains the published bill while votes refresh" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; assert json.load(sys.stdin)[\"status_as_of\"]==\"2026-09-01\"' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | python3 -c 'import json,sys; assert \"9999\" in json.load(sys.stdin)'"
 
+itemised_sync_scenarios
 coverage_scenarios
 evidence_alert_scenarios
 python_environment_scenario

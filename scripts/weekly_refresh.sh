@@ -288,7 +288,16 @@ if [ "$want_monthly" = 1 ]; then
   fi
 
   # --- exports ---------------------------------------------------------------------------------------------------
-  run_step x_expenses "" "$EXPORT" json portal/public/expenses.json "$PY" scripts/export_expenses.py
+  # Every IPEA line per person and year is too big for git: the tree is written outside the repo, stamped with the
+  # sha256 of the expenses.json exported beside it, and sent to R2 by the nightly only after that expenses.json is
+  # published (scripts/vm/nightly.sh, sync_expenses_itemised). Nothing is uploaded from here.
+  if run_step x_expenses "" "$EXPORT" json portal/public/expenses.json "$PY" scripts/export_expenses.py; then
+    # the stamp says "exported beside this expenses.json", so it is only written when that export ran in this run
+    stamp_arg=(); if step_selected x_expenses; then stamp_arg=(--expenses-json portal/public/expenses.json); fi
+    run_step x_expenses_itemised "" "$PY" scripts/export_expenses_itemised.py --out "$PIPE/expenses-itemised" "${stamp_arg[@]}"
+  elif step_selected x_expenses_itemised; then
+    log "[x_expenses_itemised] SKIP: the expenses export failed; the last itemised tree is kept"
+  fi
   if [ "$SUPPLIERS_READY" = 1 ]; then
     run_step x_suppliers "" "$EXPORT" dir portal/public/suppliers portal/public/agencies \
       portal/public/suppliers.json portal/public/agencies.json -- \

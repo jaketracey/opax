@@ -209,6 +209,17 @@ member), `unique_id` (stable across re-publications), `person_id`, `source_url` 
 dataset page). Loads replace per `(source, reporting_period_id)`. The legacy
 `mp_expenses` (2.47M rows incl. the pre-2017 `icacpls` scrape) is untouched.
 
+**Itemised lines.** `scripts/export_expenses_itemised.py` writes every line per person and reporting
+year (`<person_id>/<year>.json`: quarter, dates, IPEA's category tree, description, from and to, nights,
+nightly rate, amount, trip and leg, reason, notes, and each quarter's dataset page), resolved to people
+exactly as `expenses.json` is. The tree (2,675 files, 235 MB to 2026Q02) is too big for git: the monthly
+group writes it beside `expenses.json`, and the nightly sends it to R2 (`opax-media`, `expenses/v1/`)
+through `scripts/vm/upload_expenses_itemised.py` only after that `expenses.json` is published. Who travelled is a
+role only (Member, Family member, Staff): IPEA publishes family travel under the placeholder
+"Family Traveller" and staff travel as aggregated totals under the member, the export never copies the
+traveller column, blanks the free text of any line whose traveller is not the member if it carries that
+name, and `scripts/test_export_expenses_itemised.py` fails if a traveller's name reaches a file.
+
 ### 1.3 Ministerial diaries -> `ext_ministerial_meetings`
 
 | Jurisdiction | Endpoint | Format | Licence | Coverage | Cadence | Status |
