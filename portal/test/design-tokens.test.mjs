@@ -277,7 +277,7 @@ test('the share images and the money map draw the colours tokens.css draws', () 
 // in src/ (not the share-card renderer or the email, which draw outside the
 // site's stylesheet). Each count may go down, never up.
 const TYPE_DIRS = [...SCANNED, 'src'];
-const TYPE_SKIP = new Set([...SKIP, 'src/og.ts', 'src/og-render.ts', 'src/community-email.ts', 'src/community-email-mark.ts']);
+const TYPE_SKIP = new Set([...SKIP, 'src/og.ts', 'src/og-render.ts', 'src/community-email.ts', 'src/community-email-mark.ts', 'src/email-layout.ts']);
 
 // A font, font-size or font-weight set to anything but a role (var(--type-*))
 // or a keyword that defers to one: "font: 600 1rem/1.4 var(--sans)",
