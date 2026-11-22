@@ -214,7 +214,18 @@ class Session(requests.Session):
         kwargs.setdefault("timeout", 60)
         for attempt in range(3):
             pace(url)
-            response = super().request(method, url, **kwargs)
+            try:
+                response = super().request(method, url, **kwargs)
+            except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as error:
+                # A dropped connection or a slow answer is not a refusal: a read is asked again, twice at most,
+                # after a pause (data.gov.au timed out once and failed the IPEA step on 17 and 21 Nov 2026).
+                # Anything that is not a plain read is never repeated.
+                if attempt == 2 or method.upper() not in ("GET", "HEAD"):
+                    raise
+                print(f"[http] {urlsplit(url).hostname}: {type(error).__name__}, attempt {attempt + 1} of 3; retrying",
+                      flush=True)
+                time.sleep(5 * 3 ** attempt)
+                continue
             if response.status_code not in (429, 503):
                 return response
             delay = retry_after(response.headers.get("Retry-After"))
