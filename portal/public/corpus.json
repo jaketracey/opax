@@ -1,9 +1,10 @@
 {
-  "version": "2026-11-22",
-  "expected_resources": 1004307,
+  "version": "2026-11-23",
+  "expected_resources": 1004340,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 1004306,
-    "new_press_release_resources": 1
+    "live_index_before_refresh": 1004307,
+    "new_division_resources": 25,
+    "new_press_release_resources": 8
   },
   "collected_speeches": 965304,
   "sources": [
@@ -59,17 +60,17 @@
     },
     {
       "name": "Recorded divisions (TheyVoteForYou + state Hansard)",
-      "docs": 14330,
+      "docs": 14355,
       "coverage": "1998–2026"
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 744,
+      "docs": 745,
       "coverage": "2025–2026"
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5629,
+      "docs": 5634,
       "coverage": "2024–2026"
     },
     {
@@ -104,7 +105,7 @@
     },
     {
       "name": "Queensland Government ministerial statements",
-      "docs": 324,
+      "docs": 326,
       "coverage": "7–21 Sep 2026"
     },
     {
@@ -152,12 +153,12 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-11-21T20:47:09+00:00",
+    "checked_at": "2026-11-22T19:08:18+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
     "latest_bill_introduced": "2026-09-17",
-    "latest_nsw_release": "2026-11-20",
+    "latest_nsw_release": "2026-11-22",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
       "Federal Hansard is current to 2026-11-19; NSW Parliament to 2026-11-12; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-10-29. Federal committee hearings (Senate, House and Joint) are current to 2026-10-29.",
@@ -192,22 +193,21 @@
     "resource_counts": {
       "bill": 2994,
       "bill_text": 4747,
-      "division": 14330,
+      "division": 14355,
       "election_baseline": 150,
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 995,
-      "press_release": 7171,
+      "press_release": 7179,
       "research_report": 35,
       "speech": 965304
     },
     "raw_source_updates": {
-      "federal_speeches": 0,
       "nsw_speeches": 0,
       "vic_speeches": 0,
       "act_speeches": 0,
-      "nsw_releases": 0,
-      "austender_contracts": 2
+      "nsw_releases": 5,
+      "austender_contracts": 1
     },
     "structured_sources": {
       "grantconnect_awards": 369742,
@@ -241,19 +241,25 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-21T19:46:42.738230+00:00",
+        "checked_at": "2026-11-22T18:07:07.730768+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-21T16:19:19.873407+00:00",
+        "checked_at": "2026-11-22T16:22:05.874549+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
+      },
+      "fed_download": {
+        "status": "paused",
+        "host": "www.openaustralia.org.au",
+        "checked_at": "2026-11-22T16:18:43.457473+00:00",
+        "reason": "source refused the honest agent: HTTP 403"
       },
       "grants_fetch": {
         "status": "paused",
         "host": "www.grants.gov.au",
-        "checked_at": "2026-11-21T16:32:57.182046+00:00",
+        "checked_at": "2026-11-22T16:35:40.085939+00:00",
         "reason": "HTTP 403"
       },
       "integrity_nsw_icac": {
@@ -277,13 +283,13 @@
       "interests_federal": {
         "status": "paused",
         "host": "www.aph.gov.au",
-        "checked_at": "2026-11-21T16:45:01.040379+00:00",
+        "checked_at": "2026-11-22T16:48:11.231855+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld": {
         "status": "paused",
         "host": "data.parliament.qld.gov.au",
-        "checked_at": "2026-11-21T16:19:16.107520+00:00",
+        "checked_at": "2026-11-22T16:22:01.356108+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld_contracts": {
@@ -295,13 +301,13 @@
       "releases_treasury": {
         "status": "paused",
         "host": "ministers.treasury.gov.au",
-        "checked_at": "2026-11-21T16:32:05.124418+00:00",
+        "checked_at": "2026-11-22T16:34:38.740223+00:00",
         "reason": "redirect refused: destination robots policy is unavailable"
       },
       "sa": {
         "status": "paused",
         "host": "hansardsearch.parliament.sa.gov.au",
-        "checked_at": "2026-11-21T16:20:47.766544+00:00",
+        "checked_at": "2026-11-22T16:23:14.148132+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       }
     },
@@ -318,7 +324,7 @@
       "wragge_xml": "2005-12-08",
       "zenodo": "2022-09-08"
     },
-    "senate_backfill_enabled": false,
+    "senate_backfill_enabled": true,
     "federal_hansard_coverage": {
       "expected_years": [
         1993,
@@ -475,7 +481,7 @@
         2017,
         2018
       ],
-      "checked_at": "2026-11-21T16:45:02.658349+00:00"
+      "checked_at": "2026-11-22T16:48:12.805932+00:00"
     }
   },
   "enrichment": {
