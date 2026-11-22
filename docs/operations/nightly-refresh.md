@@ -791,7 +791,8 @@ Native reads use `~/opax/.env` on this box. The Mac currently has no usable KB
 credentials and can run only the public GET preview or an offline captured plan.
 
 **Reviewed holds (`scripts/vm/gate_hold.txt`).** One line per data group: the group, an expiry date (Sydney) and the
-reason. Before validation and the portal gate, the nightly puts each listed group that changed back to HEAD and reports it
+reason. The daily watchdog warns from 7 days before an expiry and goes red from 2 days before, so a hold is
+renewed or removed in a reviewed change before the night fails on it. Before validation and the portal gate, the nightly puts each listed group that changed back to HEAD and reports it
 as a status warning, so the gate's first full run tests only what may be published. A held export is not a publication,
 so the weekly and monthly groups stay owed and run again each night until the hold is lifted. Use it when an export is known to need
 a review: on 15 Nov 2026 the money, interests and speakers exports turned 17 test files red, one full suite took 2,598 s

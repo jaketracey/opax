@@ -67,8 +67,11 @@
 #   OPAX_EVIDENCE_READINESS_TIMEOUT input probe limit (default 60s, plus 5s kill grace; timeout waits)
 #   OPAX_EVIDENCE_SOURCE / LAYERS / PLACES / DECISIONS / ADDITIONAL  matching read-only SQLite inputs
 #   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
-#   OPAX_GATE_BUDGET      time limit of the portal gate and its blame search, from its first run (default 75m);
-#                         groups not cleared by then are held, the ones proven green are published
+#   OPAX_GATE_BUDGET      time limit of the portal gate and its blame search, from its first run (default 150m);
+#                         groups not cleared by then are held, the ones proven green are published. It must
+#                         hold three full suite runs: the first, a trial's reserve and the closing run. At 75m
+#                         with a 43 min suite on this box no trial could ever start, so one red test file held
+#                         every changed group (divisions among them, 19 to 23 Nov 2026)
 #   OPAX_FRL_DOW          ISO weekday of the FRL instrument night (default 4, Thursday)
 #   OPAX_UV_SYNC_TIMEOUT  time limit of the `uv sync --frozen` that starts the night (default 15m)
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
@@ -823,7 +826,7 @@ divisions_restore_dependencies
 # stamp in every importer), then the suite. Needs Node 24 and portal/node_modules (scripts/vm/bootstrap.sh installs
 # them); without them the gate is skipped and the deploy job is the only test.
 #
-# If it goes red, the groups to blame are found inside a time budget (OPAX_GATE_BUDGET, default 75m, counted from the
+# If it goes red, the groups to blame are found inside a time budget (OPAX_GATE_BUDGET, default 150m, counted from the
 # first run), never by re-running the whole suite group after group (18 Oct 2026: six identical full runs, the 6 h unit
 # limit, nothing published). Every changed group is backed up and put back to HEAD; the test files that failed are
 # re-run on that baseline (they must pass: otherwise main itself is red); then the groups are added back in halves,
@@ -944,7 +947,7 @@ sys.exit(0 if head != now and strip(head) == strip(now) else 1)
 PYEOF
       }
       duration_secs() { local v=$1; case $v in *h) echo $((${v%h} * 3600)) ;; *m) echo $((${v%m} * 60)) ;; *s) echo "${v%s}" ;; *) echo "$v" ;; esac; }
-      GATE_BUDGET_SPEC="${OPAX_GATE_BUDGET:-75m}"
+      GATE_BUDGET_SPEC="${OPAX_GATE_BUDGET:-150m}"
       GATE_BUDGET=$(duration_secs "$GATE_BUDGET_SPEC")
       GATE_START=$(date +%s); GATE_DEADLINE=$((GATE_START + GATE_BUDGET))
       # 1 when the last build was made from exactly the data that stays (a green first run, or a green closing run);

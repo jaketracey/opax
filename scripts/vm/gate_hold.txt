@@ -5,12 +5,14 @@
 # nightly.sh (section 3z) puts a listed group back to HEAD before validation and the portal gate and reports it
 # as a status warning. A group whose exporter reads a held group's files must be listed too
 # (scripts/vm/test_gate_hold.py enforces it). Remove a line in the reviewed change that fixes its cause.
-money 2026-11-18 the box export differs from main in about 200 donor industries, a few 2024-25 AEC receipts and one map donor, and drops 9 indexed donors; 14 portal test files red on 15 Nov; needs the AEC download decision
-access 2026-11-18 built from the held money graph and speaker directory
-interests 2026-11-18 built from the held money graph; one federal register missing and 12 registers changed size on 15 Nov, unreviewed
-taxcharity 2026-11-18 built from the held supplier profiles and access file
-speakers 2026-11-18 605 speakers lost speeches in the 15 Nov export, unreviewed; speaker-spellings test red
-fits 2026-11-18 built from the held money graphs and access file
-suppliers 2026-11-18 built from the held money graph
-audit 2026-11-18 its exporter reads the agency index of the held supplier profiles
-annual-reports 2026-11-18 its exporter reads the agency index of the held supplier profiles
+# The daily watchdog (scripts/refresh_watchdog.py) warns from 7 days before an expiry and goes red from 2 days
+# before, so a hold is renewed or removed before the night fails (the 18 Nov expiry failed five nights unseen).
+money 2026-12-07 the box export differs from main in about 200 donor industries, a few 2024-25 AEC receipts and one map donor, and drops 9 indexed donors; 14 portal test files red on 15 Nov; needs the AEC download decision
+access 2026-12-07 built from the held money graph and speaker directory
+interests 2026-12-07 built from the held money graph; one federal register missing and 12 registers changed size on 15 Nov, unreviewed
+taxcharity 2026-12-07 built from the held supplier profiles and access file
+speakers 2026-12-07 605 speakers lost speeches in the 15 Nov export, unreviewed; speaker-spellings test red
+fits 2026-12-07 built from the held money graphs and access file
+suppliers 2026-12-07 built from the held money graph
+audit 2026-12-07 its exporter reads the agency index of the held supplier profiles
+annual-reports 2026-12-07 its exporter reads the agency index of the held supplier profiles

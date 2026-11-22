@@ -80,6 +80,45 @@ def evaluate(corpus, status, now, max_age=20):
     return problems, notes, list(dict.fromkeys(warnings))
 
 
+HOLD_FILE = Path(__file__).resolve().parent / 'vm/gate_hold.txt'
+HOLD_WARN_DAYS = 7
+HOLD_ALERT_DAYS = 2
+
+
+def evaluate_holds(text, today, warn_days=HOLD_WARN_DAYS, alert_days=HOLD_ALERT_DAYS):
+    """Review holds (scripts/vm/gate_hold.txt) close to their expiry, before nightly.sh fails the night on one.
+
+    `today` is the Sydney date, as nightly.sh reads it. A hold is a warning from `warn_days` before its expiry and
+    a problem (a red run, so an email) from `alert_days` before, and stays one once expired. Lines that share a
+    date and a state are reported together.
+    """
+    from datetime import date
+    problems, warnings, soon, close, lapsed = [], [], {}, {}, {}
+    for line in text.splitlines():
+        parts = line.split(None, 2)
+        if not parts or parts[0].startswith('#'):
+            continue
+        try:
+            expiry = date.fromisoformat(parts[1])
+        except (IndexError, ValueError):
+            problems.append(f'review hold on {parts[0]} has no valid expiry date (scripts/vm/gate_hold.txt); the nightly fails on it')
+            continue
+        left = (expiry - today).days
+        bucket = lapsed if left < 0 else close if left <= alert_days else soon if left <= warn_days else None
+        if bucket is not None:
+            bucket.setdefault(expiry, []).append(parts[0])
+    act = 'renew or remove them in a reviewed change to scripts/vm/gate_hold.txt'
+    for expiry, groups in sorted(lapsed.items()):
+        problems.append(f"review holds expired on {expiry}: {', '.join(groups)}; the nightly reports failed until then: {act}")
+    for expiry, groups in sorted(close.items()):
+        left = (expiry - today).days
+        problems.append(f"review holds expire {'today' if left == 0 else f'in {left} day' + ('s' if left > 1 else '')} "
+                        f"({expiry}): {', '.join(groups)}; the nightly fails from the day after: {act}")
+    for expiry, groups in sorted(soon.items()):
+        warnings.append(f"review holds expire in {(expiry - today).days} days ({expiry}): {', '.join(groups)}; {act} before then")
+    return problems, warnings
+
+
 def evaluate_mcp(status):
     """Sustained no-account MCP volume is a problem; the tier being switched off is only a note."""
     problems, notes = [], []
@@ -122,6 +161,16 @@ def main():
         notes.extend(mcp_notes)
     except Exception as error:
         warnings.append(f'cannot read MCP volume status: {error}')
+    # Review holds about to lapse: the nightly fails the night on an expired one, so say so beforehand.
+    try:
+        from zoneinfo import ZoneInfo
+        hold_problems, hold_warnings = evaluate_holds(HOLD_FILE.read_text(), now.astimezone(ZoneInfo('Australia/Sydney')).date())
+        problems.extend(hold_problems)
+        warnings.extend(hold_warnings)
+    except FileNotFoundError:
+        pass
+    except Exception as error:
+        problems.append(f'cannot read the review hold list: {error}')
     # ChatGPT's server addresses get the shared ceiling in the no-account limits; OpenAI changes the list.
     try:
         from refresh_mcp_egress import FILE as egress_file, SOURCE as egress_source, missing_ranges
