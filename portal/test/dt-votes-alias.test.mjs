@@ -8,7 +8,7 @@ import {aliasVotingProfiles} from './dt-votes-aliases.mjs';
 const read=path=>readFile(new URL('../public'+path,import.meta.url),'utf8').then(JSON.parse);
 const [roster,votes,recent]=await Promise.all([read('/parliamentarians.json'),read('/votes.json'),read('/seo/recent-votes.json')]);
 const profiles=aliasVotingProfiles(roster,votes);
-assert.equal(profiles.length,2,'both affected alias profiles must be covered');
+assert.ok(profiles.length>=2,'the alias profiles in the published roster must be covered');
 const ssrRows=async person=>{
   const rendered=await renderPersonAnswer(person,read,new Map(),undefined,undefined,{});
   const tbody=rendered.html.match(/<tbody\b[^>]*>(.*?)<\/tbody>/s)?.[1] || '';
@@ -16,8 +16,11 @@ const ssrRows=async person=>{
 };
 for (const [number,{person,keys,rows,primaryRows}] of profiles.entries()) {
   test(`alias profile ${number+1} scopes SSR, hydration and export to all source IDs`,async()=>{
-    assert.equal(rows.length,14,'merged record count');
-    assert.equal(primaryRows.length,12,'primary record count');
+    // Not fixed counts: a member with a second source ID is usually still voting under it, so the merged
+    // total grows with the record (pinned at 14 and 12, this held every division back for four nights
+    // from 19 Nov 2026). What must hold is that the alias adds votes to the primary ID's own.
+    assert.ok(primaryRows.length>0,'the primary source ID has votes');
+    assert.ok(rows.length>primaryRows.length,'the alias source ID adds votes to them');
     assert.deepEqual(personVoteKeys(person.name,person.pid,votes),keys);
     // The votes table (hydration and CSV export) is projected one source ID at a time.
     const table=keys.flatMap(key=>personVoteRecords([key],votes,recent).rows);

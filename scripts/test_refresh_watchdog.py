@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import unittest
 
 from scripts.refresh_mcp_egress import held, missing_ranges, render
-from scripts.refresh_watchdog import evaluate, evaluate_mcp
+from scripts.refresh_watchdog import HOLD_FILE, evaluate, evaluate_holds, evaluate_mcp
 
 
 class Watchdog(unittest.TestCase):
@@ -120,6 +120,27 @@ class Watchdog(unittest.TestCase):
         self.assertTrue(any('monthly (due 2026-10-04)' in item for item in evaluate(self.corpus, self.status, self.now)[2]))
         self.status['periodic_state'] = {'error': 'unreadable'}
         self.assertTrue(any('periodic' in item for item in evaluate(self.corpus, self.status, self.now)[0]))
+
+    def test_a_review_hold_is_flagged_before_it_expires_not_after_the_night_failed(self):
+        from datetime import date
+        holds = '# comment\nmoney 2026-12-07 reason one\naccess 2026-12-07 reason two\nspeakers 2026-12-20 later\n'
+        self.assertEqual(evaluate_holds(holds, date(2026, 11, 29)), ([], []))
+        problems, warnings = evaluate_holds(holds, date(2026, 11, 30))
+        self.assertEqual(problems, [])
+        self.assertEqual(len(warnings), 1)
+        self.assertIn('expire in 7 days (2026-12-07): money, access', warnings[0])
+        problems, warnings = evaluate_holds(holds, date(2026, 12, 5))
+        self.assertEqual(warnings, [])
+        self.assertIn('expire in 2 days (2026-12-07): money, access', problems[0])
+        self.assertIn('expire today', evaluate_holds(holds, date(2026, 12, 7))[0][0])
+        problems, _ = evaluate_holds(holds, date(2026, 12, 8))
+        self.assertIn('expired on 2026-12-07: money, access', problems[0])
+        self.assertEqual(len(evaluate_holds('money soon reason\nfits\n', date(2026, 12, 1))[0]), 2)
+
+    def test_the_shipped_hold_list_parses_and_every_line_has_a_date(self):
+        from datetime import date
+        problems, _ = evaluate_holds(HOLD_FILE.read_text(), date(2000, 1, 1))
+        self.assertEqual(problems, [])
 
     def test_sustained_mcp_volume_without_an_account_is_a_problem(self):
         problems, notes = evaluate_mcp({'anonymous': True, 'volume': 'high', 'hours_over': 5})
