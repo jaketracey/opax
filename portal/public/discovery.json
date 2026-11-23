@@ -410,7 +410,7 @@
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 28.74,
+          "value": 28.66,
           "format": "percent"
         },
         {
@@ -420,7 +420,7 @@
         },
         {
           "label": "Total recorded value",
-          "value": 4148405287.34,
+          "value": 4159630787.34,
           "format": "currency"
         },
         {
@@ -430,7 +430,7 @@
         },
         {
           "label": "Records in comparison",
-          "value": 332.0,
+          "value": 334.0,
           "format": "number"
         }
       ],
@@ -450,34 +450,34 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Health, Disability and Ageing",
-        "group_total": 4148405287.34,
+        "group_total": 4159630787.34,
         "leading_name": "API Services Australia Pty Ltd",
         "participant_label": "supplier",
         "participant_count": 211,
-        "record_count": 332,
+        "record_count": 334,
         "participants": [
           {
             "name": "API Services Australia Pty Ltd",
             "value": 1192129400.0,
-            "share": 28.74,
+            "share": 28.66,
             "record_count": 2
           },
           {
             "name": "GlaxoSmithKline Australia Pty Ltd",
             "value": 718600000.0,
-            "share": 17.32,
+            "share": 17.28,
             "record_count": 2
           },
           {
             "name": "SYMBION PTY LTD",
             "value": 596460700.0,
-            "share": 14.38,
+            "share": 14.34,
             "record_count": 1
           },
           {
             "name": "Accenture Australia Pty Ltd",
             "value": 291811469.99,
-            "share": 7.03,
+            "share": 7.02,
             "record_count": 4
           },
           {
@@ -487,13 +487,13 @@
             "record_count": 2
           }
         ],
-        "other_total": 1212303717.35,
-        "other_share": 29.22,
+        "other_total": 1223529217.35,
+        "other_share": 29.41,
         "other_count": 206,
         "period": {
           "kind": "contract_start_date",
           "from": "2020-02-19",
-          "to": "2026-11-15",
+          "to": "2026-11-18",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -4554,7 +4554,7 @@
   ],
   "coverage": {
     "donations": 92642,
-    "contracts": 19747,
+    "contracts": 19751,
     "available_categories": [
       "donor_contract_overlap",
       "recipient_concentration",
@@ -4562,7 +4562,7 @@
     ],
     "unavailable_categories": [],
     "source_donation_rows": 199233,
-    "source_contract_rows": 19747,
+    "source_contract_rows": 19751,
     "eligible_annual_party_receipt_rows": 100482,
     "excluded_before_name_checks": 98751,
     "excluded_receipt_rows": {
@@ -4574,7 +4574,7 @@
     "financial_year_from": "1998-99",
     "financial_year_to": "2024-25",
     "receipt_scope": "AEC annual returns to canonical parties, direct classification only",
-    "snapshot_at": "2026-11-23T01:45:40.311894+00:00"
+    "snapshot_at": "2026-11-23T07:42:12.719628+00:00"
   },
   "methodology": [
     "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
@@ -4588,6 +4588,6 @@
     "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names and row amounts, and contract labels the AusTender CN ID; each is one example behind the aggregate.",
     "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence."
   ],
-  "generated_at": "2026-11-23T01:45:40.311894+00:00",
-  "export_seconds": 3.667
+  "generated_at": "2026-11-23T07:42:12.719628+00:00",
+  "export_seconds": 3.67
 }
