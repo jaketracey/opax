@@ -1,4 +1,4 @@
-import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=2a642e978a';
+import { hydrateCollections, hydrateLatest, hydrateToday, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=8fc94fdb17';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -502,10 +502,16 @@ OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:h
 // Reports and the footer's coverage line now; new bills and declarations when
 // their block nears the screen. The page ships with dated rows to fall back on.
 hydrateCollections();
-const latest = document.querySelector(".hp-latest");
-const latestObserver = new IntersectionObserver((entries) => {
-  if (!entries.some((entry) => entry.isIntersecting)) return;
-  latestObserver.disconnect();
-  hydrateLatest();
-}, { rootMargin: "600px" });
-latestObserver.observe(latest);
+const nearScreen = (selector, hydrate) => {
+  const block = document.querySelector(selector);
+  if (!block) return;
+  const observer = new IntersectionObserver((entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    observer.disconnect();
+    hydrate();
+  }, { rootMargin: "600px" });
+  observer.observe(block);
+};
+// Votes in parliament and the day's featured members, then the two older lists.
+nearScreen(".hp-today", hydrateToday);
+nearScreen(".hp-latest", hydrateLatest);

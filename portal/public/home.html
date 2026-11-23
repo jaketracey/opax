@@ -23,12 +23,12 @@
     <link rel="stylesheet" href="/style.css?v=b229cc9294" />
     <link rel="stylesheet" href="/ui-controls.css?v=5860339186" />
     <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b" />
-    <link rel="stylesheet" href="/home.css?v=ed197dfa62" />
+    <link rel="stylesheet" href="/home.css?v=f40e16a47c" />
     <link rel="stylesheet" href="/nav.css?v=0631cf4d24" />
     <script src="/quick-search.js?v=1009512e8a" defer></script>
     <script src="/ui-source.js?v=d594622c13" defer></script>
     <script type="module" id="hp-navigation" src="/navigation.js?v=eac2c03e68"></script>
-    <script type="module" src="/home.js?v=1c6cb1c06e"></script>
+    <script type="module" src="/home.js?v=482f76841c"></script>
     <!-- After home.js in execution order; PostHog replays earlier events (analytics/index.js). -->
     <script src="/analytics.js?v=74cbe557c0" defer></script>
   </head>
@@ -183,6 +183,23 @@
         </div>
         <div class="hp-source" id="hp-map-source"><details class="ui-pop ui-source" data-state="totals are a floor"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 3 Oct 2026 · <span class="ui-source-name">AEC annual returns</span> <span class="ui-source-state">· totals are a floor</span></span></summary><div class="ui-sheet"><ul class="ui-sheet-originals"><li><a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">AEC Transparency Register ↗︎</a></li><li><a href="/money/receipts">Funding records</a></li><li><a href="/methods">Methods and coverage</a></li></ul><p class="ui-sheet-asat">Financial years 1998–99 to 2025–26.</p><div class="ui-sheet-notes"><p>Lines connect donors and the parties they gave to. The map shows the largest disclosed donors, not every donor.</p><p>Totals are a floor: donations under the disclosure threshold are not reported.</p></div><p class="ui-sheet-licence">AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.</p></div></details></div>
       </section>
+
+      <div class="hp-section hp-today">
+        <section class="hp-feed" aria-labelledby="hp-votes-title">
+          <div class="hp-head"><h2 id="hp-votes-title">Votes in parliament</h2><a href="/sitting">Sitting weeks</a></div>
+          <ol class="hp-rows" id="hp-votes">
+            <li class="hp-row"><p class="hp-row-meta"><span class="ui-status" data-tone="done">Agreed</span> <span>Second reading · Senate · <time datetime="2026-11-19">19 Nov 2026</time></span></p><h3 class="hp-row-title"><a href="/doc/division-federal-senate-oa-2026-11-19-15">Defence Legislation Amendment (Accelerating Capability and Protecting Bases) Bill 2026</a></h3><p class="hp-row-detail">Ayes 31 <span>· Noes 9</span></p></li>
+            <li class="hp-row"><p class="hp-row-meta"><span class="ui-status" data-tone="done">Agreed</span> <span>Second reading · Senate · <time datetime="2026-11-18">18 Nov 2026</time></span></p><h3 class="hp-row-title"><a href="/doc/division-federal-senate-oa-2026-11-18-7">Counter-Terrorism Legislation Amendment Bill 2026</a></h3><p class="hp-row-detail">Ayes 27 <span>· Noes 10</span></p></li>
+            <li class="hp-row"><p class="hp-row-meta"><span class="ui-status" data-tone="done">Passed</span> <span>Third reading · Senate · <time datetime="2026-11-18">18 Nov 2026</time></span></p><h3 class="hp-row-title"><a href="/doc/division-federal-senate-oa-2026-11-18-5">Administrative and Judicial Review Legislation Amendment Bill 2026</a></h3><p class="hp-row-detail">Ayes 27 <span>· Noes 10</span></p></li>
+          </ol>
+          <div class="hp-source" id="hp-votes-source"><details class="ui-pop ui-source"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 22 Nov 2026 · <span class="ui-source-name">Federal Hansard divisions</span></span></summary><div class="ui-sheet"><p class="ui-sheet-asat">Divisions recorded to 19 Nov 2026.</p><div class="ui-sheet-notes"><p>The newest votes on whether a bill be read a second or third time, in the House of Representatives and the Senate. Procedural votes and amendments are left out.</p><p>Ayes and Noes are the members recorded on each side. Each vote opens its page, which lists them and links the record it was read from.</p></div></div></details></div>
+        </section>
+        <section class="hp-feed" id="hp-featured-feed" aria-labelledby="hp-featured-title">
+          <div class="hp-head"><h2 id="hp-featured-title">Featured parliamentarians</h2><a href="/subject/person">All parliamentarians</a></div>
+          <ol class="hp-rows hp-rows-held" id="hp-featured"></ol>
+          <div class="hp-source" id="hp-featured-source"><details class="ui-pop ui-source"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text">Updated 23 Nov 2026 · <span class="ui-source-name">OPAX parliamentary roster</span></span></summary><div class="ui-sheet"><div class="ui-sheet-notes"><p>A daily rotation of current federal members from the parliamentary roster. One member per political group, with Coalition parties sharing a group. Members rotate by date, without ranking speech counts.</p><p>Speech counts are speeches in the OPAX record, not all parliamentary activity.</p></div></div></details></div>
+        </section>
+      </div>
 
       <div class="hp-section hp-latest">
         <section class="hp-feed" aria-labelledby="hp-bills-title">

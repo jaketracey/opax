@@ -71,26 +71,27 @@ test('the map chips come from the export: industries by donors in the map, large
  assert.match(line,/AEC annual returns/);
  assert.match(line,/href="https:\/\/transparency.aec.gov.au\/"/);
 });
-// "Updated" is an export date. A paused source's line reads "Last checked <date>", the date of its last good
-// read, and its sheet says why it is paused and when the site was last refreshed (Jake, 13 Nov).
-test('a paused source reads as "Last checked" on the line and keeps its reason in the sheet',()=>{
+// "Updated" is an export date: the day the file last changed. A paused source has not been checked since it was
+// refused, so its line never says "checked": it reads "Last changed <date>", and its sheet says why it is paused
+// and when the site was last refreshed.
+test('a paused source reads as "Last changed" on the line and keeps its reason in the sheet',()=>{
  const money=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
  const refresh={checked_at:'2026-11-09T19:10:54+00:00',source_access:{bills:{status:'paused',host:'parlinfo.aph.gov.au',reason:'HTTP 403 verified 2026-10-10; permission requested'},interests_federal:{status:'paused',host:'www.aph.gov.au',reason:'HTTP 403'}}};
  assert.deepEqual(sourceFreshness(null,['bills']),{state:'',dateLabel:'Updated',facts:[]});
  assert.deepEqual(sourceFreshness(refresh,['nsw']),{state:'',dateLabel:'Updated',facts:[['Site refreshed','9 Nov 2026']]});
- assert.equal(sourceFreshness(refresh,['bills']).dateLabel,'Last checked');
+ assert.equal(sourceFreshness(refresh,['bills']).dateLabel,'Last changed');
  const bills=billsSourceHTML({generated_at:'2026-10-04T16:27:54+00:00',bills:[]},refresh);
- assert.match(bills,/Last checked 4 Oct 2026 · <span class="ui-source-name">Parliament of Australia<\/span>/);
- assert.doesNotMatch(bills,/source paused|ui-source-state|data-state/);
+ assert.match(bills,/Last changed 4 Oct 2026 · <span class="ui-source-name">Parliament of Australia<\/span>/);
+ assert.doesNotMatch(bills,/source paused|ui-source-state|data-state|checked 4 Oct/i);
  assert.match(bills,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);
  assert.match(bills,/<dt>Source check<\/dt><dd>parlinfo\.aph\.gov\.au: paused, HTTP 403 verified 2026-10-10; permission requested\. Entries shown are retained from the last successful read, not a current check\.<\/dd>/);
- assert.doesNotMatch(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/Last checked|Site refreshed/);
+ assert.doesNotMatch(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/Last changed|Last checked|Site refreshed/);
  assert.match(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/Updated 4 Oct 2026/);
  const declared=declarationsSourceHTML({generated:'2026-10-18',source:'Registers'},refresh);
- assert.match(declared,/Last checked 18 Oct 2026/);assert.doesNotMatch(declared,/source paused/);assert.match(declared,/www\.aph\.gov\.au: paused, HTTP 403\./);
+ assert.match(declared,/Last changed 18 Oct 2026/);assert.doesNotMatch(declared,/Last checked/);assert.doesNotMatch(declared,/source paused/);assert.match(declared,/www\.aph\.gov\.au: paused, HTTP 403\./);
  assert.match(declarationsSourceHTML({generated:'2026-10-18'},{checked_at:'2026-11-09T19:10:54+00:00',source_access:{}}),/Updated 18 Oct 2026/);
  const map=mapSourceHTML(money.meta,refresh);
- assert.match(map,/totals are a floor/);assert.match(map,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);assert.doesNotMatch(map,/source paused|Last checked/);
+ assert.match(map,/totals are a floor/);assert.match(map,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);assert.doesNotMatch(map,/source paused|Last checked|Last changed/);
  const hostile=billsSourceHTML({generated_at:'2026-10-04',bills:[]},{source_access:{bills:{status:'paused',host:'<b>x</b>',reason:'<script>'}}});
  assert.doesNotMatch(hostile,/<b>|<script>/);
 });
@@ -101,18 +102,20 @@ test('the footer coverage line is dated, and only the link survives a failed rea
  assert.equal(coverageLineHTML(null),'<a href="/stats">Sources and coverage</a>');
  assert.equal(coverageLineHTML({version:'2026-10-09',collected_speeches:1,sources:[]}),'<a href="/stats">Sources and coverage</a>');
 });
-// The page itself: five blocks, one primary action, no in-site arrows, every block with figures sourced.
+// The page itself: six blocks, one primary action, no in-site arrows, every block with figures sourced.
 const home=readFileSync(new URL('../public/home.html',import.meta.url),'utf8');
 const main=home.slice(home.indexOf('<main'),home.indexOf('</main>'));
-test('the homepage is five blocks with one primary action and no in-site arrows',()=>{
- assert.equal((main.match(/class="hp-research"|class="hp-section[ "]/g)||[]).length,5);
+test('the homepage is six blocks with one primary action and no in-site arrows',()=>{
+ assert.equal((main.match(/class="hp-research"|class="hp-section[ "]/g)||[]).length,6);
+ // What is current comes before the two lists whose sources are paused.
+ assert.ok(main.indexOf('class="hp-section hp-today"')>0 && main.indexOf('class="hp-section hp-today"')<main.indexOf('class="hp-section hp-latest"'));
  assert.equal((main.match(/data-variant="primary"/g)||[]).length,2,'Ask, and Search in its hidden panel');
  assert.match(main,/<div id="hp-search-panel" hidden>[^]*data-variant="primary"[^]*<\/form>\s*<\/div>/);
  assert.doesNotMatch(main,/→/);
  for(const arrow of main.matchAll(/<a [^>]*>[^<]*(?:<span[^>]*>)?↗/g)) assert.match(arrow[0],/href="https?:\/\//,'↗ only on links that leave OPAX');
  assert.doesNotMatch(main,/hp-spotlight|hp-ency|hp-indexed|hp-coverage|hp-topic-list/);
  assert.equal((main.match(/data-accent=/g)||[]).length,1,'one accent per view');
- for(const id of ['hp-map-source','hp-bills-source','hp-declared-source']) assert.match(main,new RegExp(`id="${id}"><details class="ui-pop ui-source"[^]*?Updated \\d{1,2} [A-Z][a-z]{2} \\d{4}`));
+ for(const id of ['hp-map-source','hp-votes-source','hp-featured-source','hp-bills-source','hp-declared-source']) assert.match(main,new RegExp(`id="${id}"><details class="ui-pop ui-source"[^]*?Updated \\d{1,2} [A-Z][a-z]{2} \\d{4}`));
  assert.match(home,/<link rel="stylesheet" href="\/ui-source\.css\?v=[\w]+"/);
  assert.match(home,/<script src="\/ui-source\.js\?v=[\w]+" defer><\/script>/);
 });

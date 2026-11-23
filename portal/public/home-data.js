@@ -3,6 +3,7 @@ import {subjectUrl} from './canonical-urls.js?v=97f48e0107';
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
 import {partyLabelHTML, statusLabelHTML, sourceLineHTML, coverageLineHTML} from './labels.js?v=3d4c26573f';
+import {divisionReading, divisionOutcomeWord} from './bill-division.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
@@ -61,16 +62,20 @@ const DECLARED_KINDS = {
   directorships: 'Directorship', gifts: 'Gift', travel: 'Sponsored travel or hospitality',
   memberships: 'Membership or office', liabilities: 'Liability', other: 'Other interest',
 };
+/** A person row's portrait: the official one when /photos/people.json has it, else a blank circle (never
+ *  initials). Official portraits only: a Commons portrait's credit belongs beside it, on the profile. */
+export function portraitHTML(name, photos = {}) {
+  const key = photos[String(name || '').toLowerCase()];
+  return /^\d+$/.test(key || '')
+    ? `<img class="hp-portrait" src="/photos/${encodeURIComponent(key)}.webp" alt="" width="44" height="44" loading="lazy" decoding="async">`
+    : '<span class="hp-portrait" aria-hidden="true"></span>';
+}
 /** PersonRow for a register entry: portrait, name and party, the entry as
  *  declared, then what it is, when the register recorded it and the register.
  *  No ↗ per row (principle 10): the register link says where it goes. */
 export function declarationRowHTML(item, { photos = {}, parties = new Map() } = {}) {
   const name = String(item.name || '');
-  // Official portraits only: a Commons portrait's credit belongs beside it, on the profile.
-  const key = photos[name.toLowerCase()];
-  const portrait = /^\d+$/.test(key || '')
-    ? `<img class="hp-portrait" src="/photos/${encodeURIComponent(key)}.webp" alt="" width="44" height="44" loading="lazy" decoding="async">`
-    : '<span class="hp-portrait" aria-hidden="true"></span>';
+  const portrait = portraitHTML(name, photos);
   const source = safeSource(item.url);
   const kind = DECLARED_KINDS[item.bucket] || 'Other interest';
   const party = partyLabelHTML(parties.get(name.toLowerCase()));
@@ -81,6 +86,129 @@ export function declarationRowHTML(item, { photos = {}, parties = new Map() } = 
     `<p class="hp-row-detail">${item.kind === 'deletion' ? `${statusLabelHTML('Removed')} ` : ''}${esc(kind)} <span>· recorded ${time(item.date)}</span>` +
     `${source ? ` <span>· <a href="${esc(source)}" rel="noopener" target="_blank" aria-label="Register entry for ${esc(name)}">Register</a></span>` : ''}</p>` +
     `</div></li>`;
+}
+
+// --- Votes in parliament (the app's Today block "How parliament voted") -------------
+/** The home page's newest reading votes, read from a small file rather than /divisions/index.json (8 MB)
+ *  and a file per division. scripts/build_growth_modules.mjs writes it at release. */
+export const RECENT_VOTES = 3;
+export const RECENT_DIVISIONS_PATH = '/growth/recent-divisions.json';
+const KEPT_VOTES = 6, VOTE_SCAN = 1500;
+const HOUSES = {senate: 'Senate', representatives: 'House'};
+const READING_WORDS = {second: 'Second reading', third: 'Third reading'};
+const divisionOrder = d => `${d.date ?? ''}#${String(/(\d+)$/.exec(d.key ?? d.slug ?? '')?.[1] ?? '').padStart(8, '0')}`;
+/** A federal division file as the row the block draws, or null when it did not decide a bill's second or
+ *  third reading: bill-division.js is the one rule, so amendments and procedural votes are left out. */
+export function readingVoteRow(d) {
+  const named = /^BILLS\s+-\s+(.+)$/i.exec(String(d?.name || '').trim());
+  if (!named || d.jurisdiction !== 'federal' || !HOUSES[d.house] || !d.slug || !d.date) return null;
+  const reading = divisionReading(d);
+  if (!reading || !Number.isFinite(d.ayes) || !Number.isFinite(d.noes)) return null;
+  const at = named[1].lastIndexOf(';');
+  const bill = (at >= 0 ? named[1].slice(0, at) : named[1]).trim();
+  if (!bill) return null;
+  return {slug: d.slug, date: d.date, house: d.house, bill, reading, outcome: divisionOutcomeWord(d, reading), ayes: d.ayes, noes: d.noes};
+}
+/** /divisions/index.json, votes.json's dates and a reader of division files -> the file the home page reads:
+ *  the newest federal reading votes, newest first. */
+export async function recentDivisionsFile(index, votesMeta, readDivision) {
+  if (!Array.isArray(index?.divisions)) throw new Error('recent divisions: no divisions');
+  const federal = index.divisions.filter(d => /^federal-/.test(String(d.key)) && d.slug && d.date)
+    .sort((a, b) => divisionOrder(b).localeCompare(divisionOrder(a)));
+  const divisions = [];
+  for (const entry of federal.slice(0, VOTE_SCAN)) {
+    const row = readingVoteRow(await readDivision(entry.slug));
+    if (row) divisions.push(row);
+    if (divisions.length >= KEPT_VOTES) break;
+  }
+  return {generated_at: votesMeta?.content_changed_at || null, latest: federal[0]?.date || null, divisions};
+}
+/** The block's rows: the newest reading votes, one a bill a day (its last reading that day). */
+export function recentVotes(file, limit = RECENT_VOTES) {
+  const rows = (Array.isArray(file?.divisions) ? file.divisions : [])
+    .filter(d => d && d.slug && d.bill && d.date && READING_WORDS[d.reading] && HOUSES[d.house])
+    .slice().sort((a, b) => divisionOrder(b).localeCompare(divisionOrder(a)));
+  return rows.filter((row, i) => rows.findIndex(other => other.bill === row.bill && other.date === row.date) === i).slice(0, limit);
+}
+const OUTCOME_TONE = {Passed: 'done', Agreed: 'done', 'Not agreed': 'ended'};
+/** DivisionRow: the outcome, the reading, the house and the day, the bill, then the count. */
+export function voteRowHTML(v) {
+  return `<li class="hp-row"><p class="hp-row-meta">${statusLabelHTML(v.outcome, OUTCOME_TONE[v.outcome] || 'ended')} ` +
+    `<span>${esc(READING_WORDS[v.reading])} · ${esc(HOUSES[v.house])} · ${time(v.date)}</span></p>` +
+    `<h3 class="hp-row-title"><a href="/doc/${encodeURIComponent(v.slug)}">${esc(v.bill)}</a></h3>` +
+    `<p class="hp-row-detail">Ayes ${esc(count(v.ayes))} <span>· Noes ${esc(count(v.noes))}</span></p></li>`;
+}
+
+// --- Featured parliamentarians (the app's Today rotation) ---------------------------
+export const FEATURED_PEOPLE = 4;
+/** The calendar day in Sydney for an instant. */
+export function sydneyDay(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', {timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit'}).formatToParts(now);
+  const part = type => parts.find(p => p.type === type)?.value;
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
+const COALITION = new Set(['liberal', 'liberal party', 'nationals', 'the nationals', 'national party', 'lnp', 'liberal national party', 'country liberal party', 'clp']);
+/** A party's political group: Coalition parties share one, so they cannot take several places. */
+export function featuredGroup(party) {
+  const name = String(party || '').trim().toLowerCase();
+  if (COALITION.has(name)) return 'coalition';
+  if (name === 'alp' || name === 'labor' || name === 'australian labor party') return 'labor';
+  return name;
+}
+const rotate = (items, n) => { const start = ((n % items.length) + items.length) % items.length; return [...items.slice(start), ...items.slice(0, start)]; };
+const dayNumber = day => { const [y, m, d] = String(day).slice(0, 10).split('-').map(Number); return Math.round((Date.UTC(y, m - 1, d) - Date.UTC(2026, 0, 1)) / 86_400_000); };
+/** A current federal member's seat. A person the roster also records in a state house is left out. */
+function federalSeat(person) {
+  const seats = Array.isArray(person?.representation) ? person.representation : [];
+  return seats.length && seats.every(seat => seat?.jurisdiction === 'federal') ? seats.find(seat => /^(senate|representatives)$/.test(seat.chamber)) || null : null;
+}
+/** The day's featured members: current federal members from the roster, one a political group, the
+ *  groups and each group's members turning by the Sydney date. No ranking by speech counts. */
+export function featuredPeople(roster, day, limit = FEATURED_PEOPLE) {
+  const groups = new Map();
+  for (const person of Array.isArray(roster?.people) ? roster.people : []) {
+    const party = String(person?.party_now || person?.party || '').trim(), seat = federalSeat(person);
+    if (person?.current !== true || !person.name || !party || !seat) continue;
+    // A surname-only roster row is drawn by its full name, or not at all.
+    const shown = String(person.full || person.name).trim();
+    if (!/\s/.test(shown)) continue;
+    const group = featuredGroup(party);
+    if (!groups.has(group)) groups.set(group, []);
+    groups.get(group).push({name: person.name, shown, party, chamber: seat.chamber, electorate: seat.electorate || '', state: seat.state || '', speeches: person.speeches});
+  }
+  if (!groups.size || !/^\d{4}-\d{2}-\d{2}/.test(String(day))) return [];
+  const n = dayNumber(day), keys = [...groups.keys()].sort(), size = keys.length, places = Math.min(limit, size);
+  const start = ((n % size) + size) % size;
+  // A group's member turns with the group's own appearances, not with the date: a group of any size
+  // reaches every member, whatever the number of groups.
+  const appearances = index => {
+    let seen = Math.floor(n / size) * places;
+    for (let d = 0; d < start; d++) if ((((index - d) % size) + size) % size < places) seen++;
+    return seen;
+  };
+  return rotate(keys, n).slice(0, places).map(group => {
+    const members = groups.get(group).sort((a, b) => a.shown.localeCompare(b.shown, 'en-AU') || a.name.localeCompare(b.name, 'en-AU'));
+    return rotate(members, appearances(keys.indexOf(group)))[0];
+  });
+}
+const STATE_NAMES = {nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', wa: 'Western Australia', sa: 'South Australia', tas: 'Tasmania', act: 'the Australian Capital Territory', nt: 'the Northern Territory'};
+/** "Senator for Victoria", "Member for Mitchell, New South Wales": who the person is to a voter, from the roster. */
+export function seatWords(person) {
+  const raw = String(person.state || '').trim().toLowerCase();
+  // The roster writes a state as its code or its name in any case ("NSW", "QUEENSLAND").
+  const state = STATE_NAMES[raw] || Object.values(STATE_NAMES).find(name => name.replace(/^the /, '').toLowerCase() === raw.replace(/^the /, '')) || String(person.state || '').trim();
+  if (person.chamber === 'senate') return state || person.electorate ? `Senator for ${state || person.electorate}` : 'Senator';
+  if (person.electorate) return `Member for ${person.electorate}${state ? `, ${state.replace(/^the /, '')}` : ''}`;
+  return 'Member of the House of Representatives';
+}
+/** PersonRow for a featured member: portrait or a blank circle, name and party, the seat, speeches in the record. */
+export function featuredRowHTML(person, { photos = {} } = {}) {
+  const speeches = Number(person.speeches) > 0 ? ` <span>· ${esc(count(person.speeches))} ${Number(person.speeches) === 1 ? 'speech' : 'speeches'}</span>` : '';
+  const shown = person.shown || person.name;
+  const portrait = [person.name, shown].map(name => portraitHTML(name, photos)).find(html => html.startsWith('<img')) || portraitHTML('', {});
+  return `<li class="hp-row hp-person-row">${portrait}<div class="hp-row-body">` +
+    `<div class="hp-row-who"><h3 class="hp-row-name"><a href="${href('person', person.name)}">${esc(shown)}</a></h3>${partyLabelHTML(person.party)}</div>` +
+    `<p class="hp-row-detail">${esc(seatWords(person))}${speeches}</p></div></li>`;
 }
 export function reportCardHTML(r) {
   return `<li class="hp-report"><h3><a href="/reports/${encodeURIComponent(r.slug)}">${esc(r.title)}</a></h3><p>${esc(r.blurb)}</p></li>`;
@@ -103,9 +231,9 @@ export function sourceFreshness(refresh, sources = []) {
   for (const [name, access] of paused) {
     facts.push(['Source check', esc(`${access.host || name}: paused, ${access.reason || 'access refused'}. Entries shown are retained from the last successful read, not a current check.`)]);
   }
-  // A paused source reads as the date of its last good read on the line ("Last checked 4 Oct 2026");
-  // the sheet keeps why it is paused.
-  return { state: '', dateLabel: paused.length ? 'Last checked' : 'Updated', facts };
+  // The line's date is the day the export last changed. A paused source has not been checked since it was
+  // refused, so its line says only that ("Last changed 4 Oct 2026"); the sheet keeps why it is paused.
+  return { state: '', dateLabel: paused.length ? 'Last changed' : 'Updated', facts };
 }
 export function billsSourceHTML(index, refresh = null) {
   const freshness = sourceFreshness(refresh, ['bills']);
@@ -119,6 +247,23 @@ export function declarationsSourceHTML(meta, refresh = null) {
   return sourceLineHTML({ updated: meta?.generated, dateLabel: freshness.dateLabel, source: 'Registers of interests', facts: freshness.facts, asAt: meta?.source ? `${meta.source}.` : '', notes: [
     'Entries as declared, not verified by OPAX.',
     'The date is when the register recorded the entry, which can differ from the date of the gift or event. Each entry links to its page in the register.',
+  ] });
+}
+export const VOTES_RULE = 'The newest votes on whether a bill be read a second or third time, in the House of Representatives and the Senate. Procedural votes and amendments are left out.';
+export function votesSourceHTML(file, refresh = null) {
+  const freshness = sourceFreshness(refresh);
+  return sourceLineHTML({ updated: file?.generated_at || file?.latest, source: 'Federal Hansard divisions', facts: freshness.facts,
+    asAt: file?.latest ? `Divisions recorded to ${date(file.latest)}.` : '', notes: [
+    VOTES_RULE,
+    'Ayes and Noes are the members recorded on each side. Each vote opens its page, which lists them and links the record it was read from.',
+  ] });
+}
+export const FEATURED_RULE = 'A daily rotation of current federal members from the parliamentary roster. One member per political group, with Coalition parties sharing a group. Members rotate by date, without ranking speech counts.';
+export function featuredSourceHTML(meta, refresh = null) {
+  const freshness = sourceFreshness(refresh);
+  return sourceLineHTML({ updated: meta?.generated, source: 'OPAX parliamentary roster', facts: freshness.facts, notes: [
+    FEATURED_RULE,
+    'Speech counts are speeches in the OPAX record, not all parliamentary activity.',
   ] });
 }
 /** "1998–99 to 2025–26" from the money export's coverage note. */
@@ -174,6 +319,34 @@ export async function hydrateCollections() {
   ]);
 }
 
+// who-is-who files, read once for the page's people rows.
+let identityRead;
+const peopleFiles = () => identityRead ??= Promise.allSettled([read('/photos/people.json', IDENTITY), read('/parliamentarians.json', IDENTITY)]);
+
+/** Votes in parliament and the day's featured members: read when the block nears the screen. A failed
+ *  votes read keeps the rows the page was published with; with no roster the featured list is withdrawn. */
+export async function hydrateToday(now = new Date()) {
+  const refresh = await refreshInfo();
+  await Promise.allSettled([
+    (async () => {
+      const file = await read(RECENT_DIVISIONS_PATH);
+      const rows = recentVotes(file);
+      if (!rows.length) return;
+      document.querySelector('#hp-votes').innerHTML = rows.map(voteRowHTML).join('');
+      document.querySelector('#hp-votes-source').innerHTML = votesSourceHTML(file, refresh);
+    })(),
+    (async () => {
+      const feed = document.querySelector('#hp-featured-feed');
+      const [photos, roster] = await peopleFiles();
+      const rows = roster.status === 'fulfilled' ? featuredPeople(roster.value, sydneyDay(now)) : [];
+      if (!rows.length) { if (feed) feed.hidden = true; return; }
+      const drawn = { photos: photos.status === 'fulfilled' ? photos.value : {} };
+      document.querySelector('#hp-featured').innerHTML = rows.map(person => featuredRowHTML(person, drawn)).join('');
+      document.querySelector('#hp-featured-source').innerHTML = featuredSourceHTML(roster.value.meta, refresh);
+    })(),
+  ]);
+}
+
 /** New bills and declarations: read when the block nears the screen. A failed
  *  read keeps the rows the page was published with, and their dated line. */
 export async function hydrateLatest() {
@@ -187,7 +360,7 @@ export async function hydrateLatest() {
       document.querySelector('#hp-bills-source').innerHTML = billsSourceHTML(index, refresh);
     })(),
     (async () => {
-      const [recent, photos, roster] = await Promise.allSettled([read('/interests/recent.json'), read('/photos/people.json', IDENTITY), read('/parliamentarians.json', IDENTITY)]);
+      const [[recent], [photos, roster]] = await Promise.all([Promise.allSettled([read('/interests/recent.json')]), peopleFiles()]);
       if (recent.status !== 'fulfilled') return;
       const rows = newest(recent.value.items,'date',3);
       if (!rows.length) return;
