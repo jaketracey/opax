@@ -218,12 +218,15 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 # The one change the overlay may install here: the rows a review dropped (roster_accept.json
                 # "drop", rows that are not a person), which the export no longer has. Everything else is kept
                 # exactly as shipped; with no reviewed drop, byte for byte.
-                drops = set(json.loads((ROOT/'scripts/roster_accept.json').read_text()).get('drop', {}))
+                # A drop already installed (the row is gone from the shipped roster) is nothing to install.
+                reviewed_drops = set(json.loads((ROOT/'scripts/roster_accept.json').read_text()).get('drop', {}))
+                drops = reviewed_drops & {p['name'] for p in shipped}
                 if drops:
                     self.assertIn(f'ROSTER OVERLAY: installed {len(drops)} reviewed change(s)', err)
                     self.assertEqual(json.loads(output)['people'], [p for p in shipped if p['name'] not in drops])
                 else:
-                    self.assertIn('ROSTER OVERLAY: kept', err)
+                    self.assertNotIn('ROSTER OVERLAY: installed', err)
+                    self.assertIn(f'kept {len(shipped)} shipped records', err)
                     self.assertEqual(output, (ROOT/ROSTER).read_bytes(), 'the shipped roster is kept byte for byte')
                 # The overlays themselves, before that merge: the reviewed path (OPAX_ROSTER_ACCEPT=1) skips it.
                 code, err, output = self.export(box, accept=True)
@@ -251,7 +254,7 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 from parli.ingest.speaker_names import normalize_speaker
                 renamed = {p['name'] for p in shipped if p['name'] in drops or normalize_speaker(p['name']) != p['name']}
                 for p in old:
-                    if p['name'] in renamed:
+                    if p['name'] in renamed or p['name'] in reviewed_drops:  # the older fixture still has the drops
                         continue
                     if p.get('witness_rows',0)*2 > p['speeches'] and p['name'] not in scoped:
                         self.assertFalse(any(by[p['name']].get(k) for k in ('full','pid','party','representation')),p['name'])
