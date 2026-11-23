@@ -103,8 +103,8 @@
 .hp-map-open { margin-top: var(--space-group); }
 .hp-map-open a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-control); }
 
-/* ---- 4. What's new: two lists in the row anatomy the app uses. */
-.hp-latest { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-group) var(--space-section); }
+/* ---- 4. Today (votes, featured members) and what's new: lists in the row anatomy the app uses. */
+.hp-latest, .hp-today { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-group) var(--space-section); }
 .hp-feed { min-width: 0; }
 .hp-rows { border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .hp-row { padding-block: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-subtle); }
@@ -119,6 +119,8 @@
   display: block; width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round);
   object-fit: cover; background: var(--paper-sunken); box-shadow: var(--ring-inset-hairline) var(--divider-subtle);
 }
+/* The day's featured members are drawn by the script: their four rows' place is held. */
+.hp-rows-held { min-height: calc(4 * (var(--size-portrait-row) + 2 * var(--space-heading) + var(--border-hairline))); }
 .hp-row-body { min-width: 0; }
 .hp-row-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); }
 .hp-page :where(main) .hp-row-name { font: var(--type-strong); }
@@ -156,7 +158,7 @@
 }
 @media (max-width: 800px) {
   .hp-research { grid-template-columns: minmax(0, 1fr); gap: var(--space-group); padding-block: var(--space-group) var(--space-section); }
-  .hp-latest { grid-template-columns: minmax(0, 1fr); gap: var(--space-section); }
+  .hp-latest, .hp-today { grid-template-columns: minmax(0, 1fr); gap: var(--space-section); }
 }
 @media (max-width: 600px) {
   .hp-query-row { flex-direction: column; }

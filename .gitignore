@@ -72,6 +72,7 @@ portal/public/growth/bills-date.json
 portal/public/growth/division-bills.json
 portal/public/growth/money-parties.json
 portal/public/growth/newest-bills.json
+portal/public/growth/recent-divisions.json
 # Local SEO HTML snapshots, CDP measurements and Wrangler state.
 portal/private/
 

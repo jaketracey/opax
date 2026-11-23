@@ -12,7 +12,7 @@ import {SUPPLIER_ID_RE,supplierRowsPath,SUPPLIERS_META_PATH} from '../portal/pub
 import {MONEY_GRAPH_PATHS,MONEY_PARTIES_PATH,moneyPartiesFile} from '../portal/public/money-parties.js';
 import {BILL_TITLES_PATH,billTitlesFile,BILLS_DATE_PATH,billsDateFile,DIVISION_BILLS_PATH,divisionBillsFile} from '../portal/public/bill-titles.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
-import {NEWEST_BILLS_PATH,newestBillsFile} from '../portal/public/home-data.js';
+import {NEWEST_BILLS_PATH,newestBillsFile,RECENT_DIVISIONS_PATH,recentDivisionsFile} from '../portal/public/home-data.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 /** A money graph's party-receipt buckets as [path, contents] pairs (portal/public/party-money-buckets.js). */
 export function partyMoneyBucketFiles(path,graph){
@@ -183,6 +183,10 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  await write(DIVISION_BILLS_PATH,divisionBillsFile(index));
  // The home page's newest bills (portal/public/home-data.js).
  await write(NEWEST_BILLS_PATH,newestBillsFile(index));
+ // The home page's newest reading votes (portal/public/home-data.js), not the 8 MB division index and a file per division.
+ // An export with no division index writes no file: the block then keeps the rows the page was published with.
+ const divisionIndex=await read('divisions/index.json').catch(error=>{if(error.code==='ENOENT')return null;throw error});
+ if(Array.isArray(divisionIndex?.divisions))await write(RECENT_DIVISIONS_PATH,await recentDivisionsFile(divisionIndex,votes._meta,slug=>read('divisions/'+slug+'.json')));
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));
  return sizes;
 }
