@@ -91,7 +91,7 @@ test('Senate service uses Handbook from/to rather than a salary spell or a roste
   const out = await api.findPeople(deps, { name: 'Penny Wong' });
   const period = out.data.people[0].service.find(p => p.chamber === 'senate');
   assert.equal(period.start, '2002-07-01'); assert.equal(period.end, null); assert.equal(period.ongoing, true);
-  assert.equal(period.electorate, 'South Australia'); assert.equal(period.as_of, '2026-10-19');
+  assert.equal(period.electorate, 'South Australia'); assert.equal(period.as_of, (await published('/pay.json')).meta.as_of); assert.match(period.as_of, /^\d{4}-\d{2}-\d{2}$/);
   assert.ok(api.factSheet([out]).facts.some(f => /1 July 2002/.test(f.text) && f.cite.url === 'https://handbook.aph.gov.au/'));
   const former = await api.findPeople(deps, { name: 'Patrick Dodson' });
   assert.deepEqual(former.data.people[0].service.map(p => [p.start, p.end, p.ongoing]), [['2016-04-28', '2024-01-26', false]]);
