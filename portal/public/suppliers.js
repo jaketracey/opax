@@ -5,7 +5,7 @@ import {mountContractsTable} from './contracts-table.js?v=9ce0addeb6';
 import { shortDate, shortMoney } from "./format.js";
 import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=62a35ee4fb";
 import { sourceLineHTML } from "./labels.js?v=3d4c26573f";
-import { partyUrl } from "./canonical-urls.js?v=9ce13e7ba5";
+import { partyUrl } from "./canonical-urls.js?v=97f48e0107";
 import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=d28448a137";
 // "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
 let nextSteps = null;

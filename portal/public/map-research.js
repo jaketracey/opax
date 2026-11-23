@@ -1,6 +1,6 @@
 import { readMoneyFilters } from './money-records.js?v=ia-ux-20260908-2';
 import {mountDataTable, guardTableURL} from './datatable.js?v=d86685a921';
-import {prepareMoneyConnectionsConfig} from './money-connections.js?v=fc0d777b52';
+import {prepareMoneyConnectionsConfig} from './money-connections.js?v=b0a1f34cb4';
 import {receiptScopeLabel} from './donor-disclosure.js?v=d28448a137';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 /**

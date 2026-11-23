@@ -1,5 +1,5 @@
 import { vicElectionFooterHTML, VIC_ELECTION_POLLS_CLOSE, vicAssemblyEnded, vicAssemblyExpiredPhrase, vicCouncilEnded, vicCouncilExpiredPhrase } from './vic-election.js?v=df44efa398';
-import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
+import { personUrl, partyUrl } from './canonical-urls.js?v=97f48e0107';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { renderNotFound } from './not-found.js';

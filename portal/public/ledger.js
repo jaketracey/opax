@@ -1,6 +1,6 @@
 import {industryName} from './money-scope.js';
 import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=d28448a137';
-import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
+import {subjectUrl} from './canonical-urls.js?v=97f48e0107';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 import { sourceLineHTML } from './labels.js?v=3d4c26573f';
 /**
