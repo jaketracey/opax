@@ -44,7 +44,9 @@ A field absent from a record is written null (the roster never holds a JSON null
   - A dropped row is a shipped record that is not a person (parli.ingest.speaker_names.non_person_name: a group
     label such as 'Government members', a bare title, a parse fragment), carries no identity value, still is exactly
     the reviewed row, and is absent from the export (drop_problem). Nothing else is ever removed: the overlay keeps
-    every other row the export drops. revert() puts dropped rows back.
+    every other row the export drops. revert() puts dropped rows back. Once a drop is installed the shipped roster
+    no longer has the row, so a group the list holds on it is judged against the reviewed row in the drop entry,
+    which must hold every `to` value (installed_drops); revert() takes the row back to its `from` values too.
   - A file that cannot be read, or is not shaped like an accept list, holds everything (read()); so do curated
     evidence files that cannot be read or are malformed (read_curated()). Every field the checks read is type-checked:
     a wrongly typed entry is held with a reason, never raised; and scripts/roster_overlay.py runs the whole accept
@@ -528,16 +530,19 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
             return why, [], []
     evidence = accept.get("evidence", {})
     have = None if shipped_people is None else {p["name"]: p for p in shipped_people}
+    gone = installed_drops(accept, shipped_people)
     groups = []
     for name, entries in accept.get("records", {}).items():
         if not isinstance(entries, list):
             groups.append((name, None, entries, "malformed record entry"))
             continue
-        row = have.get(name) if have is not None else None
+        row = have.get(name, gone.get(name)) if have is not None else None
         verdicts = []
         for i, g in enumerate(entries):
             try:
                 why = group_problem(name, g, evidence, row, curated, roster=have is not None, root=root)
+                if why is None and name in gone and state(row, g) != "applied":
+                    why = "the reviewed dropped row does not hold the group"
             except Exception as err:  # noqa: BLE001 - a group that cannot be judged is held
                 why = f"malformed group ({type(err).__name__})"
             verdicts.append((name, i, g, why))
@@ -565,6 +570,15 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
             why = f"malformed entry ({type(err).__name__})"
         new.append((name, entry, why))
     return None, groups, new
+
+
+def installed_drops(accept, shipped_people=None):
+    """{name: reviewed row} for the drops that are installed: judge_drops() passes them and the shipped roster no
+    longer has the row. The groups the list holds on such a name are read against this row."""
+    if shipped_people is None:
+        return {}
+    have = {p["name"] for p in shipped_people}
+    return {n: e["row"] for n, e, why in judge_drops(accept, shipped_people) if why is None and n not in have}
 
 
 def judge_drops(accept, shipped_people=None):
@@ -626,7 +640,7 @@ def apply(shipped_people, fresh_people, accept, root=ROOT):
             identity_match = fresh_matches(name, q, root)
         if why:
             report["held"].append((name, why))
-        elif state(shipped[name], g) == "applied":
+        elif name not in shipped or state(shipped[name], g) == "applied":  # not shipped: on an installed drop
             report["unchanged"] += 1
         elif identity_match or q is not None and all(_get(q, f) == b for f, (a, b) in g["fields"].items()):
             for f, (a, b) in g["fields"].items():
@@ -658,10 +672,14 @@ def apply(shipped_people, fresh_people, accept, root=ROOT):
 
 
 def revert(people, accept):
-    """The roster as it was before the accept list: applied groups back to `from`, accepted new rows removed."""
+    """The roster as it was before the accept list: applied groups back to `from`, accepted new rows removed,
+    dropped rows put back (as they were before their own groups)."""
     new = accept.get("new", {})
+    have = {p["name"] for p in people}
+    back = [e["row"] for n, e in accept.get("drop", {}).items()
+            if n not in have and isinstance(e, dict) and isinstance(e.get("row"), dict) and e["row"].get("name") == n]
     out = []
-    for p in people:
+    for p in [*people, *back]:
         if p["name"] in new and p == new[p["name"]]["row"]:
             continue
         p = copy.deepcopy(p)
@@ -670,9 +688,6 @@ def revert(people, accept):
                 for f, (a, b) in g["fields"].items():
                     _put(p, f, a)
         out.append(p)
-    names = {p["name"] for p in out}
-    out += [copy.deepcopy(e["row"]) for n, e in accept.get("drop", {}).items()
-            if n not in names and isinstance(e, dict) and isinstance(e.get("row"), dict)]
     return out
 
 
@@ -865,7 +880,8 @@ def main(argv=None):
     people = json.loads(a.shipped.read_text(encoding="utf-8"))["people"]
     if a.propose:
         fresh = json.loads(a.propose.read_text(encoding="utf-8"))
-        accept, held = propose(revert(people, accept), fresh["people"], accept, {p["name"]: p for p in people})
+        accept, held = propose(revert(people, accept), fresh["people"], accept,
+                               {**installed_drops(accept, people), **{p["name"]: p for p in people}})
         accept["export"] = {"generated": fresh["meta"].get("generated"), "people": len(fresh["people"]),
                             "sha256": hashlib.sha256(a.propose.read_bytes()).hexdigest()}
         a.accept.write_text(dump(accept), encoding="utf-8")

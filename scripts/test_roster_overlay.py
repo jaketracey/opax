@@ -661,6 +661,32 @@ class DropTests(unittest.TestCase):
         self.assertEqual(roster_accept.revert(merged["people"], acc)[-1], self.LABEL)
         self.assertEqual(roster_accept.validate(acc, ship["people"], NO_CURATED), [])
 
+    def test_a_group_on_an_installed_drop_stays_valid_and_reverts_with_the_row(self):
+        # 23 Nov 2026: the first weekly roster after the review installed the drops, and the groups the list held on
+        # two of the dropped rows ('Mr', 'On') were then reported as "not a shipped record".
+        ship, fresh, acc = self.docs()
+        acc["evidence"]["hansard-growth"] = {"kind": "corpus", "rule": "growth"}
+        acc["records"] = {"Government members": [{"evidence": "hansard-growth", "fields": {"speeches": [50, 56]}}]}
+        self.assertEqual(roster_accept.validate(acc, ship["people"], NO_CURATED), [])
+        merged, report = overlay(ship, fresh, acc, root=ROOT)
+        self.assertEqual(report["accepted"], 1)
+        self.assertEqual(roster_accept.validate(acc, merged["people"], NO_CURATED), [])
+        # before and after the drop, revert() gives the row as it was before the list
+        before = {**self.LABEL, "speeches": 50}
+        self.assertEqual(roster_accept.revert(ship["people"], acc)[-1], before)
+        self.assertEqual(roster_accept.revert(merged["people"], acc)[-1], before)
+        # the next night installs nothing and holds nothing
+        again, report = overlay(merged, fresh, acc, root=ROOT)
+        self.assertEqual((report["accepted"], report["accept_held"]), (0, []))
+        self.assertEqual(again["people"], merged["people"])
+        # a drop entry that does not hold the group's value is held, as is a group on a row that is simply absent
+        acc["drop"]["Government members"]["row"]["speeches"] = 50
+        self.assertEqual(roster_accept.validate(acc, merged["people"], NO_CURATED),
+                         ["Government members: the reviewed dropped row does not hold the group"])
+        acc["drop"] = {}
+        self.assertEqual(roster_accept.validate(acc, merged["people"], NO_CURATED),
+                         ["Government members: not a shipped record"])
+
     def test_the_row_stays_while_the_export_shows_it(self):
         ship, fresh, acc = self.docs()
         fresh["people"].append(copy.deepcopy(self.LABEL))

@@ -43,7 +43,11 @@ class MainPreservationTests(unittest.TestCase):
         self.assertEqual(roster_accept.validate(self.accept,self.installed),[])
         result=audit.audit(self.main,self.installed,self.reference,self.reviewed,self.accept)
         self.assertEqual(result['counts']['clean record changed'],0)
-        self.assertEqual(result['counts']['export accepted'],len(self.accept['records']))
+        # 'export accepted' counts shipped records; a reviewed drop that is installed took its row, and its groups
+        # with it (they are judged on the drop's reviewed row, and reverted with it).
+        gone=roster_accept.installed_drops(self.accept,self.installed)
+        self.assertEqual(set(gone),set(self.accept['drop'])-{p['name'] for p in self.installed})
+        self.assertEqual(result['counts']['export accepted'],len(self.accept['records'].keys()-gone.keys()))
         self.assertEqual(result['accepted_new_rows'],len(self.accept['new']))
         # every accepted group is installed, and nothing else differs from the reverted roster
         for p in self.installed:
