@@ -154,8 +154,42 @@ test('the published roster: nobody featured on any day sits in a state parliamen
       assert.match(html, /<img class="hp-portrait" src="\/photos\/\d+\.webp"|<span class="hp-portrait" aria-hidden="true"><\/span>/);
       assert.match(html, /class="ui-party party /, `${row.name} has a party label`);
       assert.doesNotMatch(html, /RCIMCP|Big Build/i);
+      assert.match(row.shown, /\S\s+\S/, `${row.name} is drawn by a whole name, never a bare surname`);
+      assert.ok(html.includes(`>${row.shown.replace(/&/g, '&amp;').replace(/'/g, '&#39;')}</a></h3>`), row.shown);
     }
   }
+});
+
+test('the published roster: every eligible member has a turn, whatever the sizes of the groups', () => {
+  const roster = json('parliamentarians.json');
+  const eligible = new Set(), groups = new Set();
+  for (const p of roster.people) {
+    const party = String(p.party_now || p.party || '').trim(), seats = p.representation || [];
+    if (p.current !== true || !party || !seats.length || !seats.every(seat => seat.jurisdiction === 'federal')) continue;
+    if (!seats.some(seat => /^(senate|representatives)$/.test(seat.chamber)) || !/\s/.test(String(p.full || p.name).trim())) continue;
+    eligible.add(p.name); groups.add(featuredGroup(party));
+  }
+  assert.ok(eligible.size > FEATURED_PEOPLE);
+  // Long enough for the largest group to turn through all its members.
+  const days = Math.ceil(groups.size / Math.min(FEATURED_PEOPLE, groups.size)) * eligible.size + groups.size;
+  const seen = new Set();
+  for (let d = 0; d < days; d++) for (const row of featuredPeople(roster, new Date(Date.UTC(2026, 0, 1 + d)).toISOString().slice(0, 10))) seen.add(row.name);
+  assert.deepEqual([...eligible].filter(name => !seen.has(name)), [], 'no eligible member is passed over');
+  assert.deepEqual([...seen].filter(name => !eligible.has(name)), []);
+});
+
+test('featured: a surname-only roster row is drawn by its full name, or left out', () => {
+  const stub = person({name: 'Gatenby', full: 'Chris Gatenby', party: 'One Nation', party_now: 'One Nation'});
+  const [row] = featuredPeople({people: [stub]}, '2026-11-23');
+  assert.equal(row.shown, 'Chris Gatenby');
+  const html = featuredRowHTML(row, {photos: {'chris gatenby': '10002'}});
+  assert.match(html, />Chris Gatenby<\/a><\/h3>/);
+  assert.doesNotMatch(html, />Gatenby<\/a>/);
+  assert.match(html, /<img class="hp-portrait" src="\/photos\/10002\.webp"/, 'the portrait is found under either name');
+  assert.deepEqual(featuredPeople({people: [person({name: 'Gatenby', full: undefined})]}, '2026-11-23'), []);
+  // Days before the rotation's first day still draw, and differ.
+  const two = {people: [person(), person({name: 'Alex Byrne'})]};
+  assert.notDeepEqual(featuredPeople(two, '2025-12-30'), featuredPeople(two, '2025-12-31'));
 });
 
 test('the published divisions: the block\'s rows are federal reading votes, each with a division page file', async () => {
@@ -191,5 +225,5 @@ test('the page: both blocks sit above the paused lists, shipped with dated sourc
   assert.match(script, /nearScreen\("\.hp-today", hydrateToday\)/);
   const css = readFileSync(publicFile('home.css'), 'utf8');
   assert.match(css, /\.hp-latest, \.hp-today \{ display: grid;/);
-  assert.match(css, /\.hp-rows-held \{ min-height:/);
+  assert.match(css, /\.hp-rows-held \{ min-height: calc\(4 \* \(/);
 });

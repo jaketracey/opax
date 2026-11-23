@@ -119,8 +119,9 @@
   display: block; width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round);
   object-fit: cover; background: var(--paper-sunken); box-shadow: var(--ring-inset-hairline) var(--divider-subtle);
 }
-/* The day's featured members are drawn by the script: their four rows' place is held. */
-.hp-rows-held { min-height: calc(4 * (var(--size-portrait-row) + 2 * var(--space-heading) + var(--border-hairline))); }
+/* The day's featured members are drawn by the script: their four rows' place is held. A row is its
+   padding, the name line (--type-strong), the gap and the seat line (--type-metadata), under a hairline. */
+.hp-rows-held { min-height: calc(4 * (2 * var(--space-heading) + 1.0625rem * 1.294 + var(--space-line) + 0.9375rem * 1.467 + var(--border-hairline)) + var(--border-hairline)); }
 .hp-row-body { min-width: 0; }
 .hp-row-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); }
 .hp-page :where(main) .hp-row-name { font: var(--type-strong); }

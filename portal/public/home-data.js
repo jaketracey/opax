@@ -169,14 +169,27 @@ export function featuredPeople(roster, day, limit = FEATURED_PEOPLE) {
   for (const person of Array.isArray(roster?.people) ? roster.people : []) {
     const party = String(person?.party_now || person?.party || '').trim(), seat = federalSeat(person);
     if (person?.current !== true || !person.name || !party || !seat) continue;
+    // A surname-only roster row is drawn by its full name, or not at all.
+    const shown = String(person.full || person.name).trim();
+    if (!/\s/.test(shown)) continue;
     const group = featuredGroup(party);
     if (!groups.has(group)) groups.set(group, []);
-    groups.get(group).push({name: person.name, party, chamber: seat.chamber, electorate: seat.electorate || '', state: seat.state || '', speeches: person.speeches});
+    groups.get(group).push({name: person.name, shown, party, chamber: seat.chamber, electorate: seat.electorate || '', state: seat.state || '', speeches: person.speeches});
   }
   if (!groups.size || !/^\d{4}-\d{2}-\d{2}/.test(String(day))) return [];
-  const n = dayNumber(day);
-  return rotate([...groups.keys()].sort(), n).slice(0, limit)
-    .map(group => rotate(groups.get(group).sort((a, b) => a.name.localeCompare(b.name, 'en-AU')), n)[0]);
+  const n = dayNumber(day), keys = [...groups.keys()].sort(), size = keys.length, places = Math.min(limit, size);
+  const start = ((n % size) + size) % size;
+  // A group's member turns with the group's own appearances, not with the date: a group of any size
+  // reaches every member, whatever the number of groups.
+  const appearances = index => {
+    let seen = Math.floor(n / size) * places;
+    for (let d = 0; d < start; d++) if ((((index - d) % size) + size) % size < places) seen++;
+    return seen;
+  };
+  return rotate(keys, n).slice(0, places).map(group => {
+    const members = groups.get(group).sort((a, b) => a.shown.localeCompare(b.shown, 'en-AU') || a.name.localeCompare(b.name, 'en-AU'));
+    return rotate(members, appearances(keys.indexOf(group)))[0];
+  });
 }
 const STATE_NAMES = {nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', wa: 'Western Australia', sa: 'South Australia', tas: 'Tasmania', act: 'the Australian Capital Territory', nt: 'the Northern Territory'};
 /** "Senator for Victoria", "Member for Mitchell, New South Wales": who the person is to a voter, from the roster. */
@@ -191,8 +204,10 @@ export function seatWords(person) {
 /** PersonRow for a featured member: portrait or a blank circle, name and party, the seat, speeches in the record. */
 export function featuredRowHTML(person, { photos = {} } = {}) {
   const speeches = Number(person.speeches) > 0 ? ` <span>· ${esc(count(person.speeches))} ${Number(person.speeches) === 1 ? 'speech' : 'speeches'}</span>` : '';
-  return `<li class="hp-row hp-person-row">${portraitHTML(person.name, photos)}<div class="hp-row-body">` +
-    `<div class="hp-row-who"><h3 class="hp-row-name"><a href="${href('person', person.name)}">${esc(person.name)}</a></h3>${partyLabelHTML(person.party)}</div>` +
+  const shown = person.shown || person.name;
+  const portrait = [person.name, shown].map(name => portraitHTML(name, photos)).find(html => html.startsWith('<img')) || portraitHTML('', {});
+  return `<li class="hp-row hp-person-row">${portrait}<div class="hp-row-body">` +
+    `<div class="hp-row-who"><h3 class="hp-row-name"><a href="${href('person', person.name)}">${esc(shown)}</a></h3>${partyLabelHTML(person.party)}</div>` +
     `<p class="hp-row-detail">${esc(seatWords(person))}${speeches}</p></div></li>`;
 }
 export function reportCardHTML(r) {
