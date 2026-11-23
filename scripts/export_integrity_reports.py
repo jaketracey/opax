@@ -208,6 +208,23 @@ def main(argv=None):
     if (out / "manifest.json").exists():
         old_manifest = json.loads((out / "manifest.json").read_text())
 
+    # A body that is published but has no snapshot on this machine (its host refuses the agent, or the
+    # cache was rebuilt) keeps its published records: without this it would crash the transcripts step
+    # or silently fall back to a "gap" and take its records off the site.
+    carried = set()
+    if (out / "index.json").exists():
+        for old in json.loads((out / "index.json").read_text()).get("bodies", []):
+            code, path = old.get("code"), out / str(old.get("file") or "").rsplit("/", 1)[-1]
+            if code in snapshots or code not in adapters or old.get("status") != "loaded" or not path.is_file():
+                continue
+            kept = json.loads(path.read_text())
+            snapshots[code] = {"body": code, "name": old["name"], "short": old["short"], "jurisdiction": old["jurisdiction"],
+                               "site": old["site"], "licence": old["licence"], "gaps": old.get("gaps") or [],
+                               "built_at": old["snapshot_at"], "records": kept["records"]}
+            carried.add(code)
+            print(f"[export_integrity_reports] CARRIED: {code} has no snapshot here; "
+                  f"its {len(kept['records'])} published records are kept as they are", flush=True)
+
     bodies, rows, files, totals = [], [], {}, Counter()
     loaded = {}
     codes = sorted(set(snapshots) | set(adapters),
@@ -216,9 +233,13 @@ def main(argv=None):
         snap = snapshots.get(code)
         if snap is None:
             continue
-        records = [tidy_record(r) for r in snap["records"]]
-        for r in records:
-            check_record(r)
+        if code in carried:
+            # already the public projection; the transcripts link is worked out again below
+            records = [{k: v for k, v in r.items() if k != "transcripts"} for r in snap["records"]]
+        else:
+            records = [tidy_record(r) for r in snap["records"]]
+            for r in records:
+                check_record(r)
         loaded[code] = (snap, records)
     transcripts = export_transcripts(out, {c: {"name": s["name"], "short": s["short"], "jurisdiction": s["jurisdiction"]} for c, (s, _) in loaded.items()},
                                      {c: recs for c, (_, recs) in loaded.items()}, files)
