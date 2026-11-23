@@ -540,6 +540,13 @@ def check_grants() -> list[str]:
     return errs
 
 
+_STAMP = re.compile(r"^(generated.*|(?!as_at$).*_at)$")  # the stamps keep_if_unchanged.py ignores (DEFAULT_IGNORE)
+
+
+def _without_stamps(meta):
+    return {k: v for k, v in meta.items() if not _STAMP.match(k)} if isinstance(meta, dict) else meta
+
+
 def _check_grant_seats(index: dict, fed: str) -> list[str]:
     """D5: every indexed seat's complete page chain reconciles with its figures."""
     seats = index.get("electorates")
@@ -576,7 +583,10 @@ def _check_grant_seats(index: dict, fed: str) -> list[str]:
             if any(page.get(k) != v for k, v in {"key": key, "n": seat["n"], "st": seat.get("st"),
                                                 "t": t, "c": c, "page": page_no, "jur": "federal"}.items()):
                 errs.append(f"{rel} identity or total/count does not match the seat index")
-            if page.get("meta") != index.get("meta"):
+            # A seat page whose grants did not change keeps its committed copy (export_step.sh puts back files
+            # that differ only by stamps), so its generation stamp may be older than the index's. Everything
+            # else in the metadata (source, fetch time, coverage, counts) must still be the index's.
+            if _without_stamps(page.get("meta")) != _without_stamps(index.get("meta")):
                 errs.append(f"{rel} source/updated metadata does not match the index")
             next_path = f"/grants/federal/seats/{key}-{page_no + 1}.json" if page_no < pages else None
             if "next" not in page or page["next"] != next_path:

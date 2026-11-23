@@ -837,13 +837,21 @@ class GrantsTests(Base):
     def test_seat_totals_count_and_metadata_must_equal_index(self):
         for key, value, message in (("t", 31, "does not match the seat index"),
                                     ("c", 3, "does not match the seat index"),
-                                    ("meta", {"generated": "old"}, "metadata does not match")):
+                                    ("meta", {"source_fetched": "another load"}, "metadata does not match")):
             with self.subTest(key=key):
                 page = f"{self.FED}/seats/bass.json"
                 good = self.load(page)
                 self.edit(page, lambda d: d.update({key: value}))
                 self.assertFails("grants", message)
                 self.write(page, good)
+
+    def test_a_seat_page_kept_from_an_earlier_night_differs_only_by_its_stamp(self):
+        # export_step.sh puts back a seat page whose grants did not change, so it keeps the older stamp.
+        page = f"{self.FED}/seats/bass.json"
+        self.edit(page, lambda d: d.update({"meta": {**d["meta"], "generated": "an earlier night"}}))
+        self.assertOk("grants")
+        self.edit(page, lambda d: d.update({"meta": {**d["meta"], "source_fetched": "another load"}}))
+        self.assertFails("grants", "metadata does not match")
 
     def test_seat_grant_sum_count_sort_and_required_fields_are_checked(self):
         page = f"{self.FED}/seats/bass.json"

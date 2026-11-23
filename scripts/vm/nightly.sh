@@ -1042,7 +1042,7 @@ PYEOF
             fi
           done
           for group in "${culprits[@]+"${culprits[@]}"}"; do
-            fail "portal tests failed against the new $group files (green without them, with ${kept[*]:-no other new group} kept): $group not published tonight"
+            fail "portal tests failed against the new $group files (green without them, with ${kept[*]:-no other new group} kept; red in the first run: ${FOCUS[*]:-whole suite}): $group not published tonight"
           done
           [ "${#untried[@]}" -eq 0 ] || fail "the portal-test blame ran out of its $GATE_BUDGET_SPEC budget: ${untried[*]} held untried, not published tonight"
         fi
