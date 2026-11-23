@@ -4554,7 +4554,7 @@
   ],
   "coverage": {
     "donations": 92642,
-    "contracts": 19751,
+    "contracts": 19762,
     "available_categories": [
       "donor_contract_overlap",
       "recipient_concentration",
@@ -4562,7 +4562,7 @@
     ],
     "unavailable_categories": [],
     "source_donation_rows": 199233,
-    "source_contract_rows": 19751,
+    "source_contract_rows": 19762,
     "eligible_annual_party_receipt_rows": 100482,
     "excluded_before_name_checks": 98751,
     "excluded_receipt_rows": {
@@ -4574,7 +4574,7 @@
     "financial_year_from": "1998-99",
     "financial_year_to": "2024-25",
     "receipt_scope": "AEC annual returns to canonical parties, direct classification only",
-    "snapshot_at": "2026-11-23T07:42:12.719628+00:00"
+    "snapshot_at": "2026-11-23T16:42:34.937284+00:00"
   },
   "methodology": [
     "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
@@ -4588,6 +4588,6 @@
     "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names and row amounts, and contract labels the AusTender CN ID; each is one example behind the aggregate.",
     "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence."
   ],
-  "generated_at": "2026-11-23T07:42:12.719628+00:00",
-  "export_seconds": 3.67
+  "generated_at": "2026-11-23T16:42:34.937284+00:00",
+  "export_seconds": 3.695
 }
