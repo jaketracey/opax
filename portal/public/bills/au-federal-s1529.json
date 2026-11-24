@@ -78,6 +78,10 @@
     "Liberal": {
      "ayes": 0,
      "noes": 2
+    },
+    "Unknown": {
+     "ayes": 1,
+     "noes": 1
     }
    },
    "party_coverage": {
@@ -117,6 +121,10 @@
     "Liberal": {
      "ayes": 0,
      "noes": 2
+    },
+    "Unknown": {
+     "ayes": 1,
+     "noes": 1
     }
    },
    "party_coverage": {

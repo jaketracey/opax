@@ -20,11 +20,11 @@ export function newest(items, key, limit) {
  *  scripts/build_growth_modules.mjs writes it at release. */
 export const LATEST_BILLS = 3;
 export const NEWEST_BILLS_PATH = '/growth/newest-bills.json';
-const NEWEST_BILL_FIELDS = ['key','title','short_title','status','introduced','jurisdiction','portfolio'];
+const NEWEST_BILL_FIELDS = ['key','title','short_title','status','introduced','jurisdiction','portfolio','record_source'];
 /** /bills/index.json -> the file the home page reads. */
 export function newestBillsFile(index) {
   if (!Array.isArray(index?.bills)) throw new Error('newest bills: no bills');
-  return {generated_at: index.generated_at, bills: newest(index.bills,'introduced',LATEST_BILLS)
+  return {generated_at: index.generated_at, ...(index.meta?.hansard_recorded ? {hansard_recorded: index.meta.hansard_recorded} : {}), bills: newest(index.bills,'introduced',LATEST_BILLS)
     .map(bill => Object.fromEntries(NEWEST_BILL_FIELDS.filter(k => bill[k] !== undefined).map(k => [k, bill[k]])))};
 }
 /** The newest-bills file, or the whole index when it is unreadable. */
@@ -45,7 +45,11 @@ export { partyLabelHTML, statusLabelHTML, sourceLineHTML };
 const BILL_STATUS = {
   before_parliament: ['Before parliament','active'], passed: ['Passed','done'],
   lapsed: ['Lapsed','ended'], exposure_draft: ['Exposure draft','draft'],
+  // Written from Hansard and divisions while the Parliament's bill page is not loaded (scripts/derive_bills_hansard.py).
+  recorded_in_parliament: ['Recorded in parliament','active'],
 };
+/** The line a bill recorded from Hansard and divisions carries wherever it is listed. */
+export const RECORDED_BILL_NOTE = 'Recorded from Hansard and divisions';
 /** BillRow: status and date, the title, the portfolio. A dead bill's exact
  *  ending (`ended_label`, "Removed from the Notice Paper") stands in for its status word. */
 export function billRowHTML(b) {
@@ -55,7 +59,7 @@ export function billRowHTML(b) {
   const when = `${b.status === 'exposure_draft' ? 'Released' : 'Introduced'} ${time(b.introduced)}${b.jurisdiction && b.jurisdiction !== 'federal' ? ` · ${esc(jur(b.jurisdiction))}` : ''}`;
   return `<li class="hp-row"><p class="hp-row-meta">${statusLabelHTML(word, tone)} <span>${when}</span></p>` +
     `<h3 class="hp-row-title"><a href="/bill/${encodeURIComponent(b.key)}">${esc(b.short_title || b.title)}</a></h3>` +
-    `${b.portfolio ? `<p class="hp-row-detail">${esc(b.portfolio)}</p>` : ''}</li>`;
+    `${b.portfolio ? `<p class="hp-row-detail">${esc(b.portfolio)}</p>` : b.record_source ? `<p class="hp-row-detail">${RECORDED_BILL_NOTE}</p>` : ''}</li>`;
 }
 const DECLARED_KINDS = {
   shareholdings: 'Shareholding', real_estate: 'Real estate', trusts: 'Trust',
@@ -235,12 +239,20 @@ export function sourceFreshness(refresh, sources = []) {
   // refused, so its line says only that ("Last changed 4 Oct 2026"); the sheet keeps why it is paused.
   return { state: '', dateLabel: paused.length ? 'Last changed' : 'Updated', facts };
 }
+/** What the list owes the reader about bills written from Hansard and divisions; '' when there are none. */
+export function recordedBillsNote(recorded) {
+  const n = Number(recorded?.count) || 0;
+  if (!n) return '';
+  const to = /^\d{4}-\d{2}-\d{2}/.test(String(recorded.current_to || '')) ? `, current to ${date(recorded.current_to)}` : '';
+  return `${n} bill${n === 1 ? '' : 's'} marked Recorded in parliament ${n === 1 ? 'is' : 'are'} written from Hansard and division records${to}. The Parliament's bill page is not yet loaded for ${n === 1 ? 'it' : 'them'}, so ${n === 1 ? 'it has' : 'they have'} no sponsor, portfolio, bill text or summary.`;
+}
 export function billsSourceHTML(index, refresh = null) {
   const freshness = sourceFreshness(refresh, ['bills']);
   return sourceLineHTML({ updated: index.generated_at, dateLabel: freshness.dateLabel, source: 'Parliament of Australia', facts: freshness.facts, notes: [
     'Bills and their dates come from the parliamentary record; each bill page links the official source it was read from.',
+    recordedBillsNote(index.hansard_recorded || index.meta?.hansard_recorded),
     'A bill missing from this list is not evidence it does not exist: the register is still being built.',
-  ] });
+  ].filter(Boolean) });
 }
 export function declarationsSourceHTML(meta, refresh = null) {
   const freshness = sourceFreshness(refresh, ['interests_federal', 'interests_qld']);

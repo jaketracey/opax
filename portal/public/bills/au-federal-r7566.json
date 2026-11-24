@@ -228,6 +228,10 @@
     "Nationals": {
      "ayes": 0,
      "noes": 11
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
     }
    },
    "party_coverage": {
@@ -347,6 +351,10 @@
     "Nationals": {
      "ayes": 0,
      "noes": 11
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
     }
    },
    "party_coverage": {
@@ -398,6 +406,10 @@
     "Nationals": {
      "ayes": 0,
      "noes": 10
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
     }
    },
    "party_coverage": {
@@ -457,6 +469,10 @@
     "United Australia Party": {
      "ayes": 1,
      "noes": 0
+    },
+    "Unknown": {
+     "ayes": 2,
+     "noes": 1
     }
    },
    "party_coverage": {

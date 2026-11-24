@@ -4258,6 +4258,8 @@ interface BillRow {
   introduced: string | null
   originating_house: string | null
   status: string | null
+  /** Set on a bill written from Hansard and divisions, not the register (scripts/derive_bills_hansard.py). */
+  record_source?: string
   /** A dead bill's exact ending and its words ("removed", "Removed from the Notice Paper"); absent otherwise. */
   ended?: string
   ended_label?: string
@@ -5108,6 +5110,8 @@ const BILL_STATUS: Record<string, string> = {
   lapsed: 'Lapsed',
   negatived: 'Not agreed',
   exposure_draft: 'Exposure draft',
+  // Written from Hansard and divisions while the Parliament's bill page is not loaded (scripts/derive_bills_hansard.py).
+  recorded_in_parliament: 'Recorded in parliament',
 }
 
 async function billMeta(key: string, env: Env): Promise<PageMeta> {
@@ -5158,6 +5162,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   // Divided bills keep both vote counts within the description's length budget.
   const tail = counts.length ? (detail?.divisions?.length ? recordLine : `${andList(counts)}: who argued for and against it.`)
     : b.status === 'exposure_draft' ? 'The draft, its consultation and what it would change.'
+    : b.record_source ? 'Recorded from Hansard and divisions. The Parliament\'s bill page is not yet loaded.'
     : 'Its progress, the bill text and every speech on it as the debate starts.'
   const portfolio = b.portfolio ? ` ${b.portfolio} portfolio.` : ''
   const facts = `${name}. ${opening}${portfolio}`.trim()

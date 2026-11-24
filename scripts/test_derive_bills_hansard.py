@@ -155,7 +155,20 @@ class Derivation(WithSite):
         division = doc["divisions"][0]
         self.assertEqual((division["ayes"], division["noes"], division["outcome"]), (2, 1, "affirmative"))
         self.assertEqual(division["party_splits"], {"Greens": {"ayes": 0, "noes": 1}, "Labor": {"ayes": 2, "noes": 0}})
+        self.assertEqual(division["party_coverage"], {"dated": 3})
         self.assertIsInstance(division["question"], str)
+
+    def test_a_voter_published_with_no_party_is_counted_as_unknown_not_dropped(self):
+        path = self.site.divisions / "division-federal-senate-oa-2026-11-16-1.json"
+        record = json.loads(path.read_text())
+        record["members"][0]["party"] = None
+        path.write_text(json.dumps(record))
+        self.site.derive()
+        division = self.site.doc("au-federal-r7601")["divisions"][0]
+        self.assertEqual(division["party_splits"]["Unknown"], {"ayes": 1, "noes": 0})
+        self.assertEqual(division["party_coverage"], {"dated": 2, "unknown": 1})
+        counted = sum(v["ayes"] + v["noes"] for v in division["party_splits"].values())
+        self.assertEqual(counted, sum(division["party_coverage"].values()))
 
     def test_an_introduction_is_claimed_only_from_a_first_reading_or_the_movers_words(self):
         self.site.derive()

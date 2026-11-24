@@ -43,6 +43,7 @@ import os
 import re
 import sys
 import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -198,22 +199,26 @@ def division_candidates(divisions: Path, since: str) -> list[dict]:
             continue
         record = eb.division_record(divisions, row["key"])
         if " Bill" in str(record.get("name") or ""):
-            out.append({**record, "_row": row})
+            out.append(record)
     return out
 
 
 def division_entry(record: dict) -> dict:
     """A bill file's division entry (docs/BILLS-CONTRACT.md) from the published record alone."""
-    row = record["_row"]
     stage = eb.division_stage(record.get("name"))
     title = eb.division_title(stage)
-    splits = {}
-    for tally in row.get("party_tallies") or []:
-        votes = tally.get("votes") or {}
-        splits[tally["party"]] = {"ayes": int(votes.get("aye", 0)), "noes": int(votes.get("no", 0))}
-    sided = sum(1 for m in record.get("members") or [] if m.get("vote") in ("aye", "no"))
-    known = sum(v["ayes"] + v["noes"] for v in splits.values())
-    coverage = {k: v for k, v in (("dated", known), ("unknown", max(0, sided - known))) if v}
+    # The party each voter is published under on the division page (already read at the division's
+    # date). A voter published with no party is counted as "Unknown", as the registry export does,
+    # so every counted vote sits in one coverage bucket.
+    splits: dict[str, dict] = {}
+    coverage = {"dated": 0, "unknown": 0}
+    for member in record.get("members") or []:
+        if member.get("vote") not in ("aye", "no"):
+            continue
+        party = member.get("party") or "Unknown"
+        coverage["unknown" if party == "Unknown" else "dated"] += 1
+        splits.setdefault(party, {"ayes": 0, "noes": 0})["ayes" if member["vote"] == "aye" else "noes"] += 1
+    coverage = {k: v for k, v in coverage.items() if v}
     return {
         "key": record["key"], "date": record["date"], "house": record["house"],
         "question": eb.division_question(record.get("question"), record.get("name")),
@@ -463,7 +468,9 @@ def derive(out: Path, divisions: Path, stage: Path | None = None, since: str | N
     meta = {k: v for k, v in (index.get("meta") or {}).items() if k != "hansard_recorded"}
     if docs:
         meta["hansard_recorded"] = {"count": len(docs), "current_to": current_to, "label": LABEL, "basis": BASIS}
-    new_index = {**index, "count": len(rows), "meta": meta,
+    # A new stamp; write_index puts the old one back when nothing but the stamp differs.
+    new_index = {**index, "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                 "count": len(rows), "meta": meta,
                  "bills": sorted(rows, key=eb.index_sort_key, reverse=True)}
     if len({r["key"] for r in rows}) != len(rows):
         raise ValueError("a recorded bill would duplicate a key in the index")
