@@ -707,6 +707,22 @@ def check_access() -> list[str]:
 def check_expenses() -> list[str]:
     errs = _check_json(f"{PUBLIC}/expenses.json", ("meta", "names", "people"), ("people", "names", "meta.rows"),
                        EXPENSES_MIN_RATIO)
+    # Every shipped app decodes `people` keyed by, and `names` pointing at, an all-digit person id, and
+    # refuses the whole people map for one other key (23 Nov 2026: `aph_25813`). Checked on every run.
+    if not errs:
+        doc, _ = _load_json(f"{PUBLIC}/expenses.json")
+        people, names = doc.get("people"), doc.get("names")
+        bad = sorted(str(k) for k in people if not re.fullmatch(r"\d+", str(k))) if isinstance(people, dict) else []
+        if bad:
+            errs.append(f"expenses.json people has {len(bad)} key(s) the apps cannot read (not all digits): {', '.join(bad[:5])}")
+        bad = sorted(f"{k} -> {v}" for k, v in names.items()
+                     if not (isinstance(v, str) and re.fullmatch(r"\d+", v))) if isinstance(names, dict) else []
+        if bad:
+            errs.append(f"expenses.json names has {len(bad)} value(s) the apps cannot read (not all digits): {', '.join(bad[:5])}")
+        if isinstance(people, dict) and isinstance(names, dict):
+            lost = sorted({v for v in names.values() if isinstance(v, str)} - set(people))
+            if lost:
+                errs.append(f"expenses.json names points at {len(lost)} id(s) that people does not hold: {', '.join(lost[:5])}")
     # A person's category bars plus net_adjustments reconcile with their total, within one
     # dollar of rounding per figure (data cleanup 2026-11-10, registers-002). Held against a
     # new export only, so the file committed before net_adjustments existed does not fail.

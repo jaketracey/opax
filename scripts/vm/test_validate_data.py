@@ -69,7 +69,10 @@ def fixture() -> dict:
         f[f"{P}/suppliers/{i:02x}.json"] = {"profiles": {f"s-{i}": {"n": i}}}
         f[f"{P}/agencies/a-{i:04x}.json"] = {"id": f"a-{i:04x}", "total": 1.5}
     f[f"{P}/access.json"] = {"meta": {"generated": "d"}, "donors": objs(N), "ministers": objs(N), "aliases": objs(N)}
-    f[f"{P}/expenses.json"] = {"meta": {"rows": 1000, "generated": "d"}, "names": objs(N), "people": objs(N)}
+    # Keyed as the apps read it: all-digit person ids, and names that point at them.
+    f[f"{P}/expenses.json"] = {"meta": {"rows": 1000, "generated": "d"},
+                               "names": {f"person {i}": str(10000 + i) for i in range(N)},
+                               "people": {str(10000 + i): {"v": i} for i in range(N)}}
     people = {**{str(10000 + i): {"name": f"P{i}", "total": 3} for i in range(10)},
               **{f"n-p{i}": {"name": f"N{i}", "total": 2} for i in range(10)}}
     by_name = {v["name"].lower(): k for k, v in people.items()}
@@ -235,6 +238,8 @@ class EveryGroupTests(Base):
                     self.edit(rel, lambda d: d["meta"].update(supplier_count=len(d["suppliers"])))
                 if g == "people":
                     self.edit(rel, lambda d: d["meta"].update(people=len(d["people"])))
+                if g == "expenses":  # a name goes with its person
+                    self.edit(rel, lambda d: d.update(names={k: v for k, v in d["names"].items() if v in d["people"]}))
                 self.assertOk(g)  # exactly at the tolerance is fine
                 self.edit(rel, lambda d: truncate(d, path, keep - 1))
                 self.assertFails(g, "fell from")
@@ -256,6 +261,9 @@ class EveryGroupTests(Base):
         for g, (rel, _, path, _) in self.SINGLE.items():
             with self.subTest(g):
                 self.edit(rel, lambda d: grow(d, path))
+                if g == "expenses":  # new people arrive on all-digit ids, the only kind the apps read
+                    self.edit(rel, lambda d: d.update(people={
+                        (k if k.isdigit() else str(20000 + i)): v for i, (k, v) in enumerate(d["people"].items())}))
                 self.assertOk(g)
                 self.git("checkout", "-q", "--", rel)
 
@@ -707,7 +715,7 @@ class TaxCharityTests(Base):
 
 class ExpensesTests(Base):
     def _people(self, d, person):
-        d["people"]["k0"] = person
+        d["people"]["10000"] = person
 
     def test_categories_plus_net_adjustments_reconcile(self):
         self.edit(f"{P}/expenses.json", lambda d: self._people(d, {
@@ -719,7 +727,20 @@ class ExpensesTests(Base):
     def test_categories_that_do_not_reconcile_fail(self):
         self.edit(f"{P}/expenses.json", lambda d: self._people(d, {
             "total": 14480101, "by_category": [["Office", 14000000], ["Travel", 489407]]}))
-        self.assertFails("expenses", "person k0: by_category plus net_adjustments is +9,306 from the total")
+        self.assertFails("expenses", "person 10000: by_category plus net_adjustments is +9,306 from the total")
+
+    def test_a_person_id_the_apps_cannot_read_holds_the_group(self):
+        # 23 Nov 2026: one `aph_25813` key and every shipped app refused the whole people map.
+        def provisional(d):
+            d["people"]["aph_25813"] = {"v": 1}
+            d["names"]["vanessa bleyer"] = "aph_25813"
+        self.edit(f"{P}/expenses.json", provisional)
+        self.assertFails("expenses", "people has 1 key(s) the apps cannot read (not all digits): aph_25813")
+        self.assertFails("expenses", "names has 1 value(s) the apps cannot read (not all digits): vanessa bleyer -> aph_25813")
+
+    def test_a_name_that_points_at_nobody_holds_the_group(self):
+        self.edit(f"{P}/expenses.json", lambda d: d["names"].update({"gone": "19999"}))
+        self.assertFails("expenses", "names points at 1 id(s) that people does not hold: 19999")
 
 
 class FitsTests(Base):
