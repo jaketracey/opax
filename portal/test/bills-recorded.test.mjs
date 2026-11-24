@@ -16,6 +16,8 @@ test('recorded bills: a home row carries its own status word and where it came f
   const row = billRowHTML(recorded);
   assert.match(row, /data-tone="active">Recorded in parliament</);
   assert.ok(row.includes(`<p class="hp-row-detail">${RECORDED_BILL_NOTE}</p>`));
+  assert.match(row, /<span>First recorded <time datetime="2026-10-27">/);
+  assert.doesNotMatch(row, /Introduced/);
   assert.ok(!billRowHTML({...recorded, record_source: undefined, status: 'before_parliament'}).includes(RECORDED_BILL_NOTE));
 });
 
@@ -46,6 +48,11 @@ test('recorded bills: the bill page and the list say it in the export\'s words',
   assert.ok(app.includes('dateLabel: "Recorded to", source: "Hansard and division records"'), 'How it moved names its real source');
   assert.ok(app.includes('billRecorded(b) ? RECORDED_BILL_NOTE : ""'), 'a list row carries the note');
   assert.ok(app.includes('billsRecordedNote(idx.meta?.hansard_recorded)'), 'the list fineprint carries the count');
+  // Only a First Reading heading is called an introduction; the mover's motion is said as what it is.
+  assert.ok(app.includes('const secondReadingMoved = billRecorded(bill) && bill.provenance?.introduced_basis !== "first_reading";'));
+  assert.ok(app.includes('draft ? "Released" : secondReadingMoved ? "Second reading moved" : "Introduced"'));
+  const worker = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
+  assert.ok(worker.includes("b.record_source ? `First recorded${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.`"));
   assert.match(app, /if \(\/before\|introduced\|current\|recorded\/\.test\(s\)\) return "active";/);
 });
 

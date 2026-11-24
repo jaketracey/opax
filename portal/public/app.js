@@ -10137,8 +10137,11 @@ async function openBill(key, manageFocus) {
   const house = billHouse(bill.originating_house);
   // One meta line: when and where it began and who brought it. "Sponsor not
   // recorded" is not drawn as a party; it is said once, in How it moved's sheet.
+  // A recorded bill's date says what Hansard holds for that day: a First Reading heading is an
+  // introduction; the mover's second reading motion is said as that, not as "Introduced".
+  const secondReadingMoved = billRecorded(bill) && bill.provenance?.introduced_basis !== "first_reading";
   const began = [
-    bill.introduced ? `${draft ? "Released" : "Introduced"} ${esc(fmtDate(bill.introduced))}` : draft ? "Government exposure draft" : "",
+    bill.introduced ? `${draft ? "Released" : secondReadingMoved ? "Second reading moved" : "Introduced"} ${esc(fmtDate(bill.introduced))}` : draft ? "Government exposure draft" : "",
     sponsorLinks.length ? `by ${sponsorLinks.slice(0, 3).join(", ")}${sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}` : "",
     house && !draft ? `in the ${esc(house)}` : "",
   ].filter(Boolean).join(" ");

@@ -5144,6 +5144,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
     status ? `${status}.` : '',
     b.introduced ? (b.status === 'exposure_draft'
       ? `Released for public consultation on ${longDate(b.introduced)}, not yet introduced to Parliament.`
+      : b.record_source ? `First recorded${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.`
       : `Introduced${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.`) : '',
   ].filter(Boolean).join(' ')
   const counts: string[] = []
@@ -5184,7 +5185,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       url: canonical,
       description,
       legislationJurisdiction: 'Australia',
-      ...(b.introduced ? { legislationDate: b.introduced } : {}),
+      ...(b.introduced && !b.record_source ? { legislationDate: b.introduced } : {}),
       ...(b.sponsor ? { creator: { '@type': 'Person', name: b.sponsor } } : {}),
       publisher,
     },

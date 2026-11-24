@@ -103,7 +103,7 @@ def day_url(house: str, day: str) -> str:
 def names(title: str, text: str) -> bool:
     """`text` names exactly this bill: the title, then a comma, a semicolon or the end.
     "X Bill 2026" does not name "X Bill 2026 [No. 2]"."""
-    return re.search(r"(?:^|, | - )" + re.escape(title) + r"(?=,|;|$)", text) is not None
+    return re.search(r"(?:^|, |\s[-\u2013\u2014]\s)" + re.escape(title) + r"(?=,|;|$)", text) is not None
 
 
 # ---------------------------------------------------------------------------
@@ -156,6 +156,7 @@ def scan_stage(stage: Path, since: str) -> tuple[dict[str, dict], str | None]:
     """Every bill Hansard prints on the staged days on or after `since`, and the last day read."""
     found: dict[str, dict] = {}
     last = None
+    unread: list[str] = []
     for house, folder in FOLDERS.items():
         for path in sorted((stage / "raw" / folder).glob("*.xml")):
             day = path.stem
@@ -164,11 +165,20 @@ def scan_stage(stage: Path, since: str) -> tuple[dict[str, dict], str | None]:
             raw = path.read_bytes()
             if not raw.strip():
                 continue  # a listed day with no sitting
-            for bid, entry in scan_day(raw, house, day).items():
+            try:
+                day_bills = scan_day(raw, house, day)
+            except (ET.ParseError, ValueError) as exc:
+                # One unreadable day must not cost the bills already recorded from the others.
+                log(f"HELD {folder}/{path.name}: the day file could not be read ({exc}); its bills wait for a good copy")
+                unread.append(f"{folder}/{path.name}")
+                continue
+            for bid, entry in day_bills.items():
                 held = found.setdefault(bid, {"title": entry["title"], "observations": []})
                 if held["title"] == entry["title"]:
                     held["observations"] += entry["observations"]
             last = max(last or day, day)
+    if unread:
+        log(f"HELD {len(unread)} Hansard day file(s) in all")
     return found, last
 
 
@@ -240,14 +250,23 @@ def divisions_for(title: str, candidates: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 
-def introduction(observations: list[dict]) -> tuple[str | None, str | None, str | None]:
-    """(date, house, basis) when the earliest recorded day is the introduction, else nulls."""
+# The house a bill started in is the first letter of the id Hansard prints: r for the House of
+# Representatives, s for the Senate.
+ID_HOUSE = {"r": "representatives", "s": "senate"}
+
+
+def introduction(observations: list[dict], bid: str) -> tuple[str | None, str | None, str | None]:
+    """(date, house, basis) when the earliest recorded day is the introduction, else nulls.
+
+    The earliest day held is not always the earliest day there was: a missing day file can leave
+    a House bill's Senate first reading as the first thing seen. So the day counts only when it
+    is in the house the printed id names; otherwise nothing is claimed."""
     if not observations:
         return None, None, None
     first_day = observations[0]["date"]
     opening = [o for o in observations if o["date"] == first_day]
     houses = {o["house"] for o in opening}
-    if len(houses) != 1:
+    if len(houses) != 1 or houses != {ID_HOUSE.get(bid[:1])}:
         return None, None, None
     if any(o["stage"] == "first_reading" for o in opening):
         return first_day, opening[0]["house"], "first_reading"
@@ -257,7 +276,7 @@ def introduction(observations: list[dict]) -> tuple[str | None, str | None, str 
 
 
 def build_doc(bid: str, title: str, observations: list[dict], divisions: list[dict]) -> dict:
-    introduced, house, basis = introduction(observations)
+    introduced, house, basis = introduction(observations, bid)
     first = observations[0]
     dates = [o["date"] for o in observations] + [d["date"] for d in divisions]
     sources, seen = [], set()
@@ -409,8 +428,13 @@ def previous_recorded(out: Path, index: dict) -> dict[str, dict]:
             doc = json.loads((out / f"{key}.json").read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
-        if doc.get("record_source") == RECORD_SOURCE and doc.get("key") == key:
+        prov = doc.get("provenance")
+        if (doc.get("record_source") == RECORD_SOURCE and doc.get("key") == key and isinstance(prov, dict)
+                and BILL_ID.fullmatch(str(prov.get("bill_id_as_printed"))) and isinstance(prov.get("observations"), list)
+                and isinstance(doc.get("title"), str)):
             docs[key] = doc
+        elif doc.get("record_source") == RECORD_SOURCE:
+            log(f"HELD {key}: its published file has no readable provenance; left as it is, not rebuilt")
     return docs
 
 
@@ -505,7 +529,17 @@ def main() -> int:
     if not (out / "index.json").exists() or not (divisions / "index.json").exists():
         log("no published bills or divisions index here; nothing read, nothing written")
         return 0
-    derive(out, divisions, Path(args.stage).expanduser(), args.since)
+    stage = Path(args.stage).expanduser()
+    try:
+        derive(out, divisions, stage, args.since)
+    except Exception as exc:  # noqa: BLE001 - nothing was written; say why and try the safer rebuild
+        log(f"FAILED with the staged Hansard ({type(exc).__name__}: {exc}); rebuilding from the published records only")
+        try:
+            derive(out, divisions, None, args.since)
+        except Exception as again:  # noqa: BLE001
+            log(f"FAILED again ({type(again).__name__}: {again}); nothing written. The caller must put the bills "
+                "back as they were: a registry export leaves the recorded bills out of the index")
+            return 1
     return 0
 
 

@@ -5,8 +5,12 @@
 No network, database or model. The fixture Hansard is written here in the shape
 OpenAustralia publishes; the last class reads the committed portal/public/bills.
 """
+import contextlib
+import io
 import json
+import os
 import re
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -196,6 +200,42 @@ class Derivation(WithSite):
         self.assertEqual({p.name: p.read_bytes() for p in self.site.out.glob("*.json")}, before)
 
 
+class IntroductionNeedsTheRightHouse(WithSite):
+    """The earliest staged day is not always the earliest day there was."""
+
+    def only_senate_day(self):
+        (self.site.stage / "raw" / dbh.FOLDERS["representatives"] / "2026-10-27.xml").unlink()
+
+    def test_a_house_bill_first_seen_at_its_senate_first_reading_claims_no_introduction(self):
+        self.only_senate_day()
+        self.site.derive()
+        doc = self.site.doc("au-federal-r7601")
+        self.assertEqual(doc["provenance"]["first_recorded_house"], "senate")
+        self.assertEqual((doc["introduced"], doc["originating_house"], doc["provenance"]["introduced_basis"]),
+                         (None, None, None))
+        # The Senate's own bill, on the same day and the same kind of heading, is introduced there.
+        self.assertEqual(self.site.doc("au-federal-s1601")["originating_house"], "senate")
+
+    def test_a_senate_second_reading_motion_on_a_house_bill_claims_no_introduction(self):
+        self.only_senate_day()
+        self.site.put("senate", "2026-11-16", "<debates>" + "".join([
+            heading(1, "BILLS", "major-heading", "lords", "2026-11-16"),
+            heading(2, "New Things Bill 2026; Second Reading", house="lords", day="2026-11-16"),
+            bills(("r7601", "New Things Bill 2026")), speech(MOVED)]) + "</debates>")
+        self.site.derive()
+        doc = self.site.doc("au-federal-r7601")
+        self.assertEqual((doc["introduced"], doc["originating_house"]), (None, None))
+        obs = [{"house": "senate", "date": "2026-11-16", "stage": "second_reading", "gid": "g", "moved": True}]
+        self.assertEqual(dbh.introduction(obs, "r7601"), (None, None, None))
+        self.assertEqual(dbh.introduction(obs, "s1601"), ("2026-11-16", "senate", "second_reading_moved"))
+
+    def test_a_division_named_with_a_long_dash_names_the_bill(self):
+        self.assertTrue(dbh.names("New Things Bill 2026", "Bills \u2014 New Things Bill 2026; Second Reading"))
+        self.assertTrue(dbh.names("New Things Bill 2026", "BILLS - Other Bill 2026, New Things Bill 2026; Second Reading"))
+        self.assertFalse(dbh.names("New Things Bill 2026", "Bills \u2014 New Things Bill 2026 [No. 2]; Second Reading"))
+        self.assertFalse(dbh.names("Things Bill 2026", "Bills \u2014 New Things Bill 2026; Second Reading"))
+
+
 class Provenance(WithSite):
     def test_the_label_is_on_the_row_the_file_and_the_index(self):
         self.site.derive()
@@ -330,6 +370,124 @@ class FailClosed(WithSite):
         keys = [r["key"] for r in self.site.index()["bills"]]
         self.assertNotIn("au-federal-s1601", keys)
         self.assertIn("au-federal-r7601", keys)
+
+
+class BadInputs(WithSite):
+    def test_an_unreadable_day_file_is_held_and_the_other_days_are_still_read(self):
+        self.site.put("senate", "2026-11-17", "<debates><major-heading>BILLS</major-head")  # cut short
+        self.site.put("senate", "2026-11-18", "<html>not Hansard</html>")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            result = self.site.derive()
+        self.assertEqual(sorted(result["docs"]), ["au-federal-r7601", "au-federal-r7603", "au-federal-s1601"])
+        self.assertIn("HELD senate_debates/2026-11-17.xml", err.getvalue())
+        self.assertIn("HELD senate_debates/2026-11-18.xml", err.getvalue())
+        self.assertIn("HELD 2 Hansard day file(s) in all", err.getvalue())
+
+    def test_a_published_file_with_no_provenance_does_not_stop_the_run(self):
+        self.site.derive()
+        path = self.site.out / "au-federal-r7603.json"
+        doc = json.loads(path.read_text())
+        del doc["provenance"]
+        path.write_text(json.dumps(doc))
+        result = self.site.derive()  # no KeyError; Hansard still holds the bill, so it is rebuilt whole
+        self.assertIn("provenance", self.site.doc("au-federal-r7603"))
+        self.assertIn("au-federal-r7603", result["docs"])
+
+
+class RegistryExportNight(unittest.TestCase):
+    """An unpaused night: the export writes the index without the recorded bills, the publication
+    guard lets that through, and this step must put them back or the whole group goes back to HEAD."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.repo = Path(tmp.name)
+        self.site = Site(self.repo / "portal" / "public")
+        self.site.out.parent.mkdir(parents=True, exist_ok=True)
+        self.git("init", "-q")
+        self.site.derive()
+        self.git("add", "-A")
+        self.git("-c", "user.name=t", "-c", "user.email=t@example.invalid", "commit", "-q", "-m", "published")
+        was = os.getcwd()
+        os.chdir(self.repo)
+        self.addCleanup(os.chdir, was)
+        # The export: registry bills only in the index; the recorded files are left on disk.
+        docs = [dict(REGISTRY), dict(DRAFT)]
+        eb.write_out(docs, {"generated_at": "2026-11-25T00:00:00+00:00", "count": 2, "meta": {"mode": "registry"},
+                            "bills": [eb.index_row(d) for d in docs]}, self.site.out, None)
+
+    def git(self, *args):
+        subprocess.run(["git", *args], cwd=self.repo, check=True, capture_output=True)
+
+    def run_step(self):
+        argv, err = sys.argv, io.StringIO()
+        sys.argv = ["derive_bills_hansard.py", "--out", str(self.site.out), "--divisions", str(self.site.divisions),
+                    "--stage", str(self.site.stage)]
+        try:
+            with contextlib.redirect_stderr(err):
+                return dbh.main(), err.getvalue()
+        finally:
+            sys.argv = argv
+
+    def recorded_rows(self):
+        return sorted(r["key"] for r in self.site.index()["bills"] if r.get("record_source"))
+
+    def guard(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            return bills_guard.check()
+
+    def test_the_guard_passes_the_export_and_the_step_puts_the_recorded_bills_back(self):
+        self.assertEqual(self.recorded_rows(), [])
+        self.guard()  # the export alone is not "existing bills disappeared"
+        rc, _ = self.run_step()
+        self.assertEqual(rc, 0)
+        self.assertEqual(self.recorded_rows(), ["au-federal-r7601", "au-federal-r7603", "au-federal-s1601"])
+        self.guard()
+        # Back to what was published: at most the index's build stamp differs, and no file is outside it.
+        changed = subprocess.run(["git", "status", "--porcelain", "--", "portal/public/bills"], cwd=self.repo,
+                                 capture_output=True, text=True).stdout.split()[1::2]
+        self.assertLessEqual(set(changed), {"portal/public/bills/index.json"})
+
+    def test_one_unparseable_day_file_does_not_drop_them(self):
+        self.site.put("senate", "2026-11-16", "<debates><minor-heading>cut sho")
+        rc, printed = self.run_step()
+        self.assertEqual(rc, 0)
+        self.assertIn("HELD senate_debates/2026-11-16.xml", printed)
+        # What that day had recorded is kept from the published copies.
+        self.assertEqual(self.recorded_rows(), ["au-federal-r7601", "au-federal-r7603", "au-federal-s1601"])
+        self.assertEqual(self.site.doc("au-federal-s1601")["introduced"], "2026-11-16")
+        self.guard()
+
+    def test_a_failure_with_the_stage_falls_back_to_the_published_records(self):
+        original = dbh.scan_stage
+        dbh.scan_stage = lambda stage, since: (_ for _ in ()).throw(RuntimeError("stage unreadable"))
+        try:
+            rc, printed = self.run_step()
+        finally:
+            dbh.scan_stage = original
+        self.assertEqual(rc, 0)
+        self.assertIn("rebuilding from the published records only", printed)
+        self.assertEqual(self.recorded_rows(), ["au-federal-r7601", "au-federal-r7603", "au-federal-s1601"])
+
+    def test_a_step_that_cannot_run_says_so_and_the_nightly_puts_the_group_back(self):
+        path = self.site.divisions / "division-federal-senate-oa-2026-11-16-1.json"
+        path.write_text(json.dumps({**json.loads(path.read_text()), "key": "someone-else"}))
+        before = {p.name: p.read_bytes() for p in self.site.out.glob("*.json")}
+        rc, printed = self.run_step()
+        self.assertEqual(rc, 1, "a non-zero exit is what tells the nightly to revert")
+        self.assertIn("nothing written", printed)
+        self.assertEqual({p.name: p.read_bytes() for p in self.site.out.glob("*.json")}, before)
+        self.assertEqual(self.recorded_rows(), [], "left alone, the export's index would drop the recorded bills")
+        # The nightly's answer, as written in scripts/vm/nightly.sh: the bills group goes back to HEAD.
+        nightly = (ROOT / "scripts/vm/nightly.sh").read_text()
+        step = nightly[nightly.index("scripts/derive_bills_hansard.py --stage"):]
+        step = step[:step.index("\nfi\n")]
+        self.assertRegex(step, r"then\n\s+fail [^\n]*reverted to HEAD[^\n]*\n\s+revert portal/public/bills$")
+        self.git("checkout", "-q", "HEAD", "--", "portal/public/bills")
+        self.git("clean", "-fdq", "--", "portal/public/bills")
+        self.assertEqual(self.recorded_rows(), ["au-federal-r7601", "au-federal-r7603", "au-federal-s1601"])
+        self.guard()
 
 
 # The strictest bill decoder on readers' phones (mobile/src/api/ids.ts and catalog-decoders.ts in

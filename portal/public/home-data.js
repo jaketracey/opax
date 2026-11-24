@@ -56,7 +56,8 @@ export function billRowHTML(b) {
   const raw = String(b.status || '').replaceAll('_',' ');
   const [status, tone] = BILL_STATUS[b.status] || [raw.replace(/^./, c => c.toUpperCase()), 'ended'];
   const word = String(b.ended_label || '').trim() || status;
-  const when = `${b.status === 'exposure_draft' ? 'Released' : 'Introduced'} ${time(b.introduced)}${b.jurisdiction && b.jurisdiction !== 'federal' ? ` · ${esc(jur(b.jurisdiction))}` : ''}`;
+  // A recorded bill's date is the first day Hansard holds for it; its page says what that day records.
+  const when = `${b.status === 'exposure_draft' ? 'Released' : b.record_source ? 'First recorded' : 'Introduced'} ${time(b.introduced)}${b.jurisdiction && b.jurisdiction !== 'federal' ? ` · ${esc(jur(b.jurisdiction))}` : ''}`;
   return `<li class="hp-row"><p class="hp-row-meta">${statusLabelHTML(word, tone)} <span>${when}</span></p>` +
     `<h3 class="hp-row-title"><a href="/bill/${encodeURIComponent(b.key)}">${esc(b.short_title || b.title)}</a></h3>` +
     `${b.portfolio ? `<p class="hp-row-detail">${esc(b.portfolio)}</p>` : b.record_source ? `<p class="hp-row-detail">${RECORDED_BILL_NOTE}</p>` : ''}</li>`;
