@@ -30,7 +30,7 @@ import urllib.request
 import urllib.error
 from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from parli.ingest import fts
@@ -72,6 +72,10 @@ BATCH_SIZE = 500
 
 # Progress tracking file
 PROGRESS_DIR = Path("~/.cache/autoresearch/nsw_hansard").expanduser()
+
+# The API can list a sitting day before its transcript is there. A day inside this window (the nightly's
+# own lookback, scripts/daily_refresh.sh OPAX_DAYS_BACK) is final only once it has stored speeches.
+RETRY_WINDOW_DAYS = 30
 
 
 def _read_body(response) -> bytes:
@@ -193,6 +197,27 @@ SPEAKER_HEADINGS = frozenset({
 })
 
 
+def _one_split_byline(paragraph: ET.Element, bylines: list[ET.Element]) -> bool:
+    """One name the source set in several adjacent spans: "The Hon. JANE" then " EXAMPLE".
+
+    The spans share a class and a parent, nothing but white space sits between them, and at most one
+    member ID is given. Anything else stays a refusal.
+    """
+    parents = {child: parent for parent in paragraph.iter() for child in parent}
+    parent = parents.get(bylines[0])
+    if parent is None or any(parents.get(e) is not parent for e in bylines):
+        return False
+    if len({e.get("class") for e in bylines}) != 1:
+        return False
+    if len({e.get("data-value") for e in bylines if e.get("data-mode") == "member" and e.get("data-value")}) > 1:
+        return False
+    siblings = list(parent)
+    first = siblings.index(bylines[0])
+    if siblings[first:first + len(bylines)] != bylines:
+        return False
+    return not any((e.tail or "").strip() for e in bylines[:-1])
+
+
 def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
     """A named byline always starts a turn. Explicit byline IDs beat anchors.
 
@@ -255,12 +280,16 @@ def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
                        and any(c.isalpha() for c in "".join(e.itertext()))]
             # Offices can have a second span naming their occupant in brackets.
             # It remains an office turn, never a second guessed personal turn.
-            if len(bylines) > 1 and not all(e.get("class", "").startswith("Office") for e in bylines):
+            split = len(bylines) > 1 and _one_split_byline(element, bylines)
+            if (len(bylines) > 1 and not split
+                    and not all(e.get("class", "").startswith("Office") for e in bylines)):
                 raise ValueError("Multiple NSW speaker bylines in one paragraph require review")
             if bylines:
                 flush()
-                byline = bylines[0]
-                name = clean_html(" ".join(byline.itertext())).rstrip(": ")
+                # A split name is read whole; the member ID is on whichever span carries it.
+                named = bylines if split else bylines[:1]
+                byline = next((e for e in named if e.get("data-mode") == "member"), named[0])
+                name = clean_html(" ".join(t for e in named for t in e.itertext())).rstrip(": ")
                 sid = byline.get("data-value") if byline.get("data-mode") == "member" else pending_id
                 normal = (normalize_speaker(name) or "").casefold()
                 matches = [t for t in talkers if normal and (normalize_speaker(t["name"]) or "").casefold() == normal]
@@ -344,6 +373,29 @@ def save_progress(progress_file: Path, toc_doc_id: str) -> None:
     progress_file.parent.mkdir(parents=True, exist_ok=True)
     with open(progress_file, "a") as f:
         f.write(toc_doc_id + "\n")
+
+
+def loaded_days(db: sqlite3.Connection, since: str) -> set[tuple[str, str]]:
+    """(date, chamber) of every NSW sitting day dated `since` or later that has stored speeches."""
+    return {(row[0], row[1]) for row in db.execute(
+        "SELECT DISTINCT date, chamber FROM speeches WHERE source = 'nsw_hansard' AND date >= ?", (since,))}
+
+
+def is_recent(sitting_date: str, today: date) -> bool:
+    return sitting_date >= (today - timedelta(days=RETRY_WINDOW_DAYS)).isoformat()
+
+
+def needs_ingest(sitting: dict, completed: set[str], loaded: set[tuple[str, str]], today: date) -> bool:
+    """A day not yet recorded, or recorded as done while recent with nothing stored (asked for too early)."""
+    if sitting["toc_doc_id"] not in completed:
+        return True
+    return is_recent(sitting["date"], today) and (sitting["date"], sitting["chamber_code"]) not in loaded
+
+
+def is_final(sitting: dict, inserted: int, loaded: set[tuple[str, str]], today: date) -> bool:
+    """Record a day as done only when it has speeches, or is too old to be still unpublished."""
+    return (inserted > 0 or (sitting["date"], sitting["chamber_code"]) in loaded
+            or not is_recent(sitting["date"], today))
 
 
 def ingest_day(
@@ -541,12 +593,19 @@ def main():
         sittings = [s for s in sittings if s["chamber_code"] == args.chamber]
         print(f"  After chamber filter: {len(sittings)}")
 
-    # Filter out already completed
-    sittings = [s for s in sittings if s["toc_doc_id"] not in completed]
+    # Filter out already completed. A recent day recorded as done with nothing stored is asked for again.
+    today = date.today()
+    loaded = loaded_days(db, start.isoformat())
+    retried = [s for s in sittings if s["toc_doc_id"] in completed and needs_ingest(s, completed, loaded, today)]
+    sittings = [s for s in sittings if needs_ingest(s, completed, loaded, today)]
     print(f"  After resume filter: {len(sittings)} remaining")
+    if retried:
+        print(f"  Retrying {len(retried)} recent day(s) recorded as done with no speeches stored: "
+              + ", ".join(f"{s['date']} {s['chamber_code']}" for s in retried))
 
     total_speeches = 0
     total_days = 0
+    failed_days: list[str] = []
 
     for i, sitting in enumerate(sittings, 1):
         label = f"[{i}/{len(sittings)}] {sitting['date']} {sitting['chamber']}"
@@ -556,14 +615,22 @@ def main():
             n = ingest_day(db, sitting, seen, dry_run=args.dry_run)
         except Exception as e:
             print(f"  ERROR: {e}")
+            if not args.dry_run:
+                db.rollback()   # turns stored before the error are not kept as a part day
+            failed_days.append(f"{sitting['date']} {sitting['chamber_code']}")
             continue
 
         total_speeches += n
         total_days += 1
         print(f"  -> {n} speeches")
 
-        if not args.dry_run:
+        if args.dry_run:
+            continue
+        if not is_final(sitting, n, loaded, today):
+            print("  Nothing published yet; not recorded as done, asked for again next run")
+        elif sitting["toc_doc_id"] not in completed:
             save_progress(progress_file, sitting["toc_doc_id"])
+            completed.add(sitting["toc_doc_id"])
 
     # Summary
     print(f"\n{'=' * 60}")
@@ -590,6 +657,12 @@ def main():
                 print(f"  FTS rebuild skipped (DB busy): {e}")
         else:
             print("\nFTS5 index not rebuilt (scripts/fts_sync.py indexes new rows; --rebuild-fts for a full rebuild)")
+
+    if failed_days:
+        # The other days are stored and recorded; the failed ones are not, and the caller must hear about them.
+        print(f"\nFAILED: {len(failed_days)} sitting day(s) raised an error and were not stored: "
+              + ", ".join(failed_days))
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
