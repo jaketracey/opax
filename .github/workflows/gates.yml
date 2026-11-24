@@ -245,7 +245,7 @@ jobs:
           uv run --frozen --with pytest pytest -q -p no:cacheprovider -rs "${suites[@]}"
       - name: Test bounded NSW repair and shared growth guard
         run: |
-          uv run --frozen --with pytest pytest -q tests/test_nsw_backfill.py tests/test_nsw_publication.py tests/test_backfill_guard.py
+          uv run --frozen --with pytest pytest -q tests/test_nsw_backfill.py tests/test_nsw_hansard_resume.py tests/test_nsw_publication.py tests/test_backfill_guard.py
           bash -n scripts/vm/nightly.sh scripts/vm/nsw_hansard_backfill.sh
           uv run --frozen bash scripts/vm/test_nsw_hansard_backfill.sh
       - name: Test that a documents-only royal commission holds no extract
