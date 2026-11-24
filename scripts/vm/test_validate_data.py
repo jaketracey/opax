@@ -238,6 +238,8 @@ class EveryGroupTests(Base):
                     self.edit(rel, lambda d: d["meta"].update(supplier_count=len(d["suppliers"])))
                 if g == "people":
                     self.edit(rel, lambda d: d["meta"].update(people=len(d["people"])))
+                if g == "expenses":  # a name goes with its person
+                    self.edit(rel, lambda d: d.update(names={k: v for k, v in d["names"].items() if v in d["people"]}))
                 self.assertOk(g)  # exactly at the tolerance is fine
                 self.edit(rel, lambda d: truncate(d, path, keep - 1))
                 self.assertFails(g, "fell from")
@@ -259,6 +261,9 @@ class EveryGroupTests(Base):
         for g, (rel, _, path, _) in self.SINGLE.items():
             with self.subTest(g):
                 self.edit(rel, lambda d: grow(d, path))
+                if g == "expenses":  # new people arrive on all-digit ids, the only kind the apps read
+                    self.edit(rel, lambda d: d.update(people={
+                        (k if k.isdigit() else str(20000 + i)): v for i, (k, v) in enumerate(d["people"].items())}))
                 self.assertOk(g)
                 self.git("checkout", "-q", "--", rel)
 
