@@ -124,10 +124,20 @@ def untexted_questions(doc: dict) -> int:
     return sum("question" in d and not isinstance(d["question"], str) for d in doc.get("divisions", []))
 
 
+def recorded(doc: dict) -> bool:
+    """A bill written from Hansard and divisions (scripts/derive_bills_hansard.py), not the registry."""
+    return bool(doc.get("record_source"))
+
+
 def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset()) -> list[str]:
     reasons = []
     if faults := untexted_questions(new):
         reasons.append(f"{faults} division questions are not text")
+    # The registry record replaces a recorded one outright: its stages and divisions are the
+    # register's own, and fewer of them is not a loss. Holding the recorded copy would keep
+    # a stand-in on the site after the real record arrived.
+    if recorded(old) and not recorded(new):
+        return reasons
     for name, was, now in (
         ("latest stage date", latest_stage_date(old), latest_stage_date(new)),
         ("status_as_of", old.get("status_as_of"), new.get("status_as_of")),
@@ -161,6 +171,16 @@ def check(apply_holds: bool = False, held_report: Path | None = None) -> str:
     current = {p.as_posix(): p.read_bytes() for p in Path(BILLS).glob("*.json")}
     old_index, old = projection(head)
     new_index, new = projection(current)
+    # A registry export does not carry the recorded bills; the derive step puts back the ones
+    # the registry still lacks. Their absence here is not a bill disappearing.
+    dropped = {key for key in set(old) - set(new) if recorded(old[key])}
+    if dropped:
+        print(f"bills: {len(dropped)} recorded bill(s) not in this export; the derive step rebuilds them", file=sys.stderr)
+        old = {key: doc for key, doc in old.items() if key not in dropped}
+        old_index = {**old_index, "count": old_index["count"] - len(dropped),
+                     "bills": [row for row in old_index["bills"] if row["key"] not in dropped]}
+        head = {path: body for path, body in head.items()
+                if path not in {f"{BILLS}/{key}.json" for key in dropped}}
     # A reviewed suppression (bills-008) removes a duplicate record only when it
     # is listed in suppressed.json and the new index redirects it to a kept bill.
     redirects = new_index.get("redirects") or {}

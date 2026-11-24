@@ -455,7 +455,7 @@ def derive(out: Path, divisions: Path, stage: Path | None = None, since: str | N
     for key, errs in refused.items():
         log(f"REFUSED {key}{' (published copy kept)' if key in kept else ''}: {'; '.join(errs[:3])}")
 
-    rows = registry + [{**eb.index_row(d), "record_source": RECORD_SOURCE} for d in docs.values()]
+    rows = registry + [eb.index_row(d) for d in docs.values()]
     current_to = max([d["status_as_of"] for d in docs.values()] + ([last_day] if last_day else []), default=None)
     was = (index.get("meta") or {}).get("hansard_recorded") or {}
     if was.get("current_to") and current_to:
@@ -494,7 +494,11 @@ def main() -> int:
                     help="staged OpenAustralia XML (raw/<chamber>_debates/<day>.xml); read only, never fetched")
     ap.add_argument("--since", default=None, help="first Hansard day to read (default: the registry's last introduction)")
     args = ap.parse_args()
-    derive(Path(args.out), Path(args.divisions), Path(args.stage).expanduser(), args.since)
+    out, divisions = Path(args.out), Path(args.divisions)
+    if not (out / "index.json").exists() or not (divisions / "index.json").exists():
+        log("no published bills or divisions index here; nothing read, nothing written")
+        return 0
+    derive(out, divisions, Path(args.stage).expanduser(), args.since)
     return 0
 
 

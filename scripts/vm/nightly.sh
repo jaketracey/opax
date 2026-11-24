@@ -710,6 +710,15 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILE
   fi
 fi
 
+# ---- 3c. bills recorded in Hansard and divisions that the registry does not hold yet -----------------
+# After the registry export, the division pages and their reconciled tallies, every night (paused or not).
+# Reads the Hansard XML the divisions refresh staged and the published division records; fetches nothing.
+# A record that breaks a rule is left out and its published copy kept; a crash writes nothing. A registry
+# record replaces a recorded one (scripts/derive_bills_hansard.py). validate_data.py bills checks each one.
+if ! run "$PY" scripts/derive_bills_hansard.py --stage "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}"; then
+  warn "bills recorded from Hansard and divisions were not rebuilt tonight; the published ones are kept"
+fi
+
 divisions_verify
 
 # ---- 3c. promote separately reviewed hub snapshots after the existing exports ------------------

@@ -64,7 +64,7 @@ new_sandbox() {
   # per-record periods in roster_accept.json among them) and an empty electorate release written below; the fixture DB
   # has no ext_state_roster, which is logged and skipped; scripts/corrections/divisions.json is left out because the
   # fixture DB has none of its records.
-  for f in scripts/vm/nsw_hansard_backfill.sh scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/vm/step_tails.py scripts/export_bills.py scripts/roster_identity.py scripts/roster_fold.py \
+  for f in scripts/vm/nsw_hansard_backfill.sh scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/vm/step_tails.py scripts/export_bills.py scripts/derive_bills_hansard.py scripts/roster_identity.py scripts/roster_fold.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
            scripts/hubs/sitting-2026.json \

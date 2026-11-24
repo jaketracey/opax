@@ -1564,6 +1564,8 @@ def index_row(d: dict) -> dict:
         "divisions": len(d["divisions"]),
         "speeches": len(d["speeches"]),
         "acts": len(d["acts"]),
+        # A bill written from Hansard and divisions says so on its row (scripts/derive_bills_hansard.py).
+        **({"record_source": d["record_source"]} if d.get("record_source") else {}),
     }
 
 
